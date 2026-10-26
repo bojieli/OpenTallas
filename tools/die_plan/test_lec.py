@@ -991,3 +991,39 @@ def test_alias_array_missing_or_unusable_driver_evidence_keeps_simulation_fallba
                       matched=[],gonly=gold,tonly=gate,hyp={},galias={k:[gate[0]] for k in gold},build=need_scoring)
     monkeypatch.setattr(lec,"slang_elements",lambda path:metadata)
     with pytest.raises(RuntimeError,match="fallback simulation reached"):lec.alias_arrays(L,[],work=tmp_path)
+
+
+def test_scoped_scalar_array_driver_names_prevent_accidental_matches(tmp_path):
+    """A gate retaining only middle elements must use semantic, not flat, indices.
+
+    Gold's flat rv[0:3] represents original rv[4:1]. Gate retains original
+    rv[2:3], so old matching paired the wrong states. The wrong gate input
+    mutant must still differ after metadata normalization.
+    """
+    aliases = {'modules': {'lec_top': {
+        'netnames': {'u_dut.g_line.rv': {'hide_name': 0, 'bits': [14, 13, 12, 11]}},
+        'cells': {f'$flatten\\u_dut.$driver$g_line.rv[{i}]':
+                  {'type': '$aldff', 'connections': {'Q': [10+i]}} for i in range(1, 5)}
+    }}}
+    f = tmp_path/'gold.aliases.json'
+    f.write_text(json.dumps(aliases))
+    em = lec.slang_elements(f)
+    assert em == {f'ff:u_dut.g_line.rv[{flat}]': f'[{4-flat}]' for flat in range(4)}
+    gm = {'input': {i: [(f'd{i+1}', 0)] for i in range(4)},
+          'latch': {i: [(f'u_dut.g_line.rv[{i}]$_DFF_P_.lecq', 0)] for i in range(4)}, 'output': {}}
+    tm = {'input': gm['input'], 'latch': {
+        0: [('u_dut.g_line.rv[2]$_DFF_P_.lecq',0)],
+        1: [('u_dut.g_line.rv[3]$_DFF_P_.lecq',0)]}, 'output': {}}
+    g = tmp_path/'g.aig'
+    g.write_bytes(b'aig 8 4 4 0 0\n8\n6\n4\n2\n')
+    for mutant in (False, True):
+        t = tmp_path/'t.aig'
+        t.write_bytes(f'aig 6 4 2 0 0\n{2 if mutant else 4}\n6\n'.encode())
+        L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+        before,_ = L.build(with_compare=True,with_hyp=False)
+        assert 'differs' in _sim_prove(before).values()
+        assert lec.normalize_gold_elements(L,em,[]) == 3
+        after,_ = L.build(with_compare=True,with_hyp=True)
+        st = _sim_prove(after)
+        assert ('differs' in st.values()) == mutant
+        assert set(L.matched) >= {'ff:u_dut.g_line.rv[2]', 'ff:u_dut.g_line.rv[3]'}

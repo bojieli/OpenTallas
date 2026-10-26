@@ -1,0 +1,31 @@
+{
+ "verdict": "FAIL",
+ "rc": 1,
+ "top_params": [
+  "V",
+  "276",
+  "IK",
+  "4",
+  "EK",
+  "5",
+  "UID",
+  "92",
+  "D",
+  "8192",
+  "IB",
+  "64",
+  "SRAM_MACRO",
+  "1",
+  "MUT",
+  "0"
+ ],
+ "errors": [
+  "ERROR: Assert `modules_.count(module->name) == 0' failed in /OpenROAD-flow-scripts/tools/yosys/kernel/rtlil.cc:1231."
+ ],
+ "command": [
+  "yosys",
+  "-q",
+  "-s",
+  "/work/rtl_lint.ys"
+ ]
+}

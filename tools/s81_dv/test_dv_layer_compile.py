@@ -180,7 +180,11 @@ def test_events_g8():
         (tree / d).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src, tree / d)
     out = tree / 'prog'
-    C.compile_layer('L0', out, tree, 's_0S', fixtures=fx)
+    # This archived G8 event-packing fixture uses the historical FG3 dates.
+    from unittest.mock import patch
+    legacy_defines = ','.join(filter(None, (os.environ.get('OT_S81_SELECTED_DEFINES', ''), 'SVCQ_ENG_FG3')))
+    with patch.dict(os.environ, {'OT_S81_SELECTED_DEFINES': legacy_defines}):
+        C.compile_layer('L0', out, tree, 's_0S', fixtures=fx, svc_timing_profile='legacy_fg3')
     die = C.Die(tree)
     sch = json.loads((out / 'schedule.json').read_text())
     T = json.loads((out / 'prog/ctl_templates.json').read_text())['templates']

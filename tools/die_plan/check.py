@@ -18,7 +18,7 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   faces       per partition face: pins / um <= face_pins_per_um averaged over every face_window_um window (all
               layers together, at most face_pin_layers layers per port); per port + layer pins / tracks <= pin_track_max
   cuts        cut sweep every cut_step_um, vertical and horizontal lines: the bits of every lane route crossing the
-              line against the tracks (partition ft layers M4-M7 x ft_track_frac); full line and per partition
+              line against the free tracks (M4-M7, core OBS union removed, per-layer FT-band shares or ft_track_frac); full line and per partition
               segment <= cut_ratio_max (the die layers M8/M9 add no signal capacity, ruling 9.3; the M8/M9-only
               ratio is still reported as research info)
   hops        every register-to-register hop of every lane <= reach (lane.reach_um, else die.reach_um; both capped
@@ -578,7 +578,33 @@ def track_density(P, names, frac):
     return sum(frac / P.layers[n]["pitch_um"] for n in names if n in P.layers)
 
 
+def cut_interval_tracks(lo, hi, pitch, frac, blocked=(), bands=()):
+    """Exact free tracks on a cut: OBS union wins; bands replace the base share.
+
+    blocked=[(lo,hi)], bands=[(lo,hi,share)] are intervals on ONE layer.
+    Integrating all boundaries avoids double-counting overlapping OBS or bands.
+    """
+    points={float(lo),float(hi)}
+    for a,b in blocked:
+        points.update((max(lo,min(hi,a)),max(lo,min(hi,b))))
+    for a,b,_ in bands:
+        points.update((max(lo,min(hi,a)),max(lo,min(hi,b))))
+    points=sorted(points);tracks=0.0
+    for a,b in zip(points,points[1:]):
+        mid=(a+b)/2
+        if b-a<=EPS or any(u<mid<v for u,v in blocked):continue
+        shares=[share for u,v,share in bands if u<=mid<=v]
+        tracks+=(b-a)*(max(shares) if shares else frac)/pitch
+    return tracks
+
+
 def check_cuts(P, R, geo):
+    # Same rectangles as the die-route capacity model: declared/routed core
+    # obstructions (union), transformed through each instance orientation,
+    # plus the explicitly reserved per-layer feedthrough bands.
+    from die_trial import die_core_rects, ft_band_rects
+    cores={L:die_core_rects(P,L) for L in {l for ls in PART_FT_LAYERS.values() for l in ls}}
+    bands=ft_band_rects(P)
     B = P.budgets
     step = B["cut_step_um"]
     lim = B["cut_ratio_max"]
@@ -618,9 +644,16 @@ def check_cuts(P, R, geo):
                     continue
                 t = P.ptype(pn)
                 frac = t.get("ft_track_frac", FT_TRACK_FRAC)
-                pden = track_density(P, PART_FT_LAYERS[wire_dir], frac)
-                seg_cap = (hi - lo) * (pden + die_den)
-                parts_cap += (hi - lo) * pden
+                seg_cap=0.0
+                for L in PART_FT_LAYERS[wire_dir]:
+                    if L not in P.layers:continue
+                    obs=[((cr[1],cr[3]) if orient=="vertical" else (cr[0],cr[2]))
+                         for cr in cores[L] if ((cr[0]+EPS<c<cr[2]-EPS) if orient=="vertical" else (cr[1]+EPS<c<cr[3]-EPS))]
+                    reserved=[(*((br[2],br[4]) if orient=="vertical" else (br[1],br[3])),br[5])
+                              for br in bands if br[0]==L and
+                              ((br[1]+EPS<c<br[3]-EPS) if orient=="vertical" else (br[2]+EPS<c<br[4]-EPS))]
+                    seg_cap+=cut_interval_tracks(lo,hi,P.layers[L]["pitch_um"],frac,obs,reserved)
+                parts_cap+=seg_cap
                 sb = sum(w for y, w in hits if lo - EPS <= y <= hi + EPS)
                 if sb:
                     loc.append((sb / seg_cap if seg_cap else math.inf, pn, sb, seg_cap))
@@ -658,7 +691,8 @@ def check_cuts(P, R, geo):
     out["worst_full"] = dict(ratio=round(worst_full[0], 4), at=worst_full[1])
     out["worst_partition_segment"] = dict(ratio=round(worst_loc[0], 4), at=worst_loc[1])
     out["model"] = dict(partition_ft_layers=PART_FT_LAYERS, ft_track_frac_default=FT_TRACK_FRAC,
-                        die_layers=die_l, cut_avail=avail, step_um=step)
+                        die_layers=die_l, cut_avail=avail, step_um=step,
+                        core_obs="declared/routed union", ft_bands="piecewise per-layer reserved shares")
     return out
 
 
