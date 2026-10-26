@@ -1,4 +1,22 @@
 {
+  "latency_changes": {
+    "unit__svc_14__eng": {
+      "old_cycles": 2,
+      "new_cycles": 4
+    },
+    "xtier__s_6S_C__eng": {
+      "old_cycles": 39,
+      "new_cycles": 40
+    },
+    "unit__eng__svc_14": {
+      "old_cycles": 2,
+      "new_cycles": 3
+    },
+    "unit__seqhost__eng": {
+      "old_cycles": 41,
+      "new_cycles": 42
+    }
+  },
   "status": "PLANNING candidate; no bind/STA/signoff adoption",
   "pins": 2690,
   "moved": 364,

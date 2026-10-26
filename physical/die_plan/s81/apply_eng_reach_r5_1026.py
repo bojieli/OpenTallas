@@ -76,7 +76,12 @@ def main():
         assert len(matched)==1,(busname,matched)
         ln=matched[0];prior=int(ln.get('fixed_cycles',0));assert prior in (0,count),(ln['id'],prior,count)
         ln['fixed_cycles']=count;priced.append(dict(lane=ln['id'],bus=busname,old_fixed=prior,new_fixed=count))
-    report=dict(status='PLANNING candidate; no bind/STA/signoff adoption',pins=len(new),moved=moved,
+    from tools.die_plan.gen import latency_table
+    old_latency=raw.get('latency',{}).get('lanes',{})
+    fresh=latency_table(S.Plan(raw,a.root/a.plan))
+    latency_changes={lid:dict(old_cycles=old_latency.get(lid,{}).get('cycles'),new_cycles=row['cycles']) for lid,row in fresh.items() if old_latency.get(lid,{}).get('cycles')!=row['cycles']}
+    raw['latency']={'lanes':fresh}
+    report=dict(latency_changes=latency_changes,status='PLANNING candidate; no bind/STA/signoff adoption',pins=len(new),moved=moved,
         parent_data_census=rows,old_station_counts={v['conn']:len(v['regs_um']) for v in before},
         new_station_counts={v['conn']:len(v['regs_um']) for v in entries},
         cycle_delta=dict(core_RTL=0,parent_xtier_i0=1,parent_unit_i1=1,geometry_added_cycles=2,geometry_added_bit_cycles=329,historical_unpriced_PCI_cycles=2,historical_unpriced_RCO_cycles=1,total_fixed_cycles_vs_raw_plan=5),priced_lanes=priced,
