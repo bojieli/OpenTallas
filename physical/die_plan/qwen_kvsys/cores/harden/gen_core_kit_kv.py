@@ -796,12 +796,10 @@ def main():
                 io_floor_ps={p: IO_BUDGET * per for p in ins_ports + outs}, port_latency_ps={}, straps=straps,
                 **({"hold_in_min_ports_ps": ioa} if ioa else {}))
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
-    shutil.copyfile(Path(a.tool) / "sdc_lint.py", kd / "sdc_lint.py")
     shutil.copyfile(Path(a.tool) / "straps.py", kd / "straps.py")
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise SystemExit(f"{tid}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
-    shutil.copyfile(Path(a.tool) / "face_guard.py", kd / "face_guard.py")
     # COORD ruling 4 (10-25): the platform adder map honours DONT_USE for every kit (HAxp5 -> generic logic; run_kit_kv.sh
     # generates /work/adder_map_dontuse.v from the image platform map before synth and FAILs a netlist with a DONT_USE cell)
     shutil.copyfile(Path(a.tool) / "adder_map_dontuse.py", kd / "adder_map_dontuse.py")
@@ -810,9 +808,7 @@ def main():
     if a.lec_hints:
         shutil.copyfile(a.lec_hints, kd / "lec_hints.json")         # lec.py reads KIT/lec_hints.json (PATH-KV-PC4)
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
-    shutil.copyfile(Path(a.tool) / "signoff.py", kd / "signoff.py")
-    shutil.copyfile(Path(a.tool) / "pair_skew.tcl", kd / "pair_skew.tcl")   # signoff.py reads it beside itself (crashed without it 10-25)
-    shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
+    subprocess.run([sys.executable, "-I", str(Path(a.tool) / "signoff.py"), "bundle", str(kd)], check=True)
     write_core_contract(kd, cj, clks, rsts)
     (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if hard_children else PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())

@@ -32,3 +32,17 @@ def test_type_keepout_union_respects_mirrors():
                    for y in (points[0][1], points[1][1])]
         assert [min(x for x, y in corners), min(y for x, y in corners),
                 max(x for x, y in corners), max(y for x, y in corners)] == [0, 0, 30, 80]
+
+
+def test_bare_hard_macro_has_one_fixed_clock_terminal():
+    # A bare hard macro (no hard_cores) larger than one R4 pitch cell keeps ONE clock port 'clk' at its LEF tap_um,
+    # exactly as die_clock.plan_taps sees it (no grid clk_t<i> ports the macro does not have).
+    raw = dict(die=dict(name='probe', outline_um=[2000, 2000], reach_um=405),
+               partition_types={'phy': dict(module='probe_phy', hard=True, outline_um=[900, 1500],
+                                            clock=dict(tap_um=[388.8, 388.8])),
+                                'soft': dict(module='probe_soft', outline_um=[900, 1500])},
+               partitions=[dict(name='a', type='phy', origin_um=[0, 0]),
+                           dict(name='b', type='soft', origin_um=[1000, 0])], ports=[], lanes=[])
+    P = S.Plan(raw)
+    assert S.tap_grid(P, 'phy') == [('clk', 388.8, 388.8)]
+    assert len(S.tap_grid(P, 'soft')) > 1
