@@ -110,7 +110,7 @@ def run(a):
         tail_driver=cells[endpoint_net['drv']]
         anchor=t['xy']
         fallback=False
-        if M.hitf(keeps,anchor):
+        if a.anchor == 'terminal' or M.hitf(keeps,anchor):
             # A PHY pin may lie over the macro. Put the die-owned delay island
             # by the already legal final tail driver, preserving that tail.
             anchor=(tail_driver['x']+M.BUF_W/2,tail_driver['y']+M.ROW_Y/2)
@@ -151,5 +151,5 @@ def run(a):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('dir');p.add_argument('--out',required=True);p.add_argument('--plan',required=True)
-    p.add_argument('--libdir',required=True);p.add_argument('--reserve-ps',type=float,default=65.0);p.add_argument('--max-cells',type=int,default=14)
+    p.add_argument('--anchor',choices=['endpoint','terminal'],default='endpoint');p.add_argument('--libdir',required=True);p.add_argument('--reserve-ps',type=float,default=65.0);p.add_argument('--max-cells',type=int,default=14)
     run(p.parse_args())
