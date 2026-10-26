@@ -616,3 +616,8 @@ Current named path = hb_coll_NW static II8 TKM stream -> L74 two-beat -> shared 
 
 ## CODEX notes — PARKED 2026-10-25 08:04 PDT
 Clean hub branchcodex/hbm-plan-0719@ecfb97d718. NamedL74/L12/L13 direct2cycles each,cutPASS0.5968, reviewed17.28capturebands; evidenceecfb/source7ffclock-data-relayfilter2testsPASS. Actualroot/tile0return remainsFAIL511.44um/75bits>405; 0cycleS-interfacefixUNIMPLEMENTED, physicalowns. Exploratoryring2liveactual-bitFT, diagnostic oldsource; no newbroadreplan. Full exact handback CODEX-LOG 2026-10-25 08:04 PDT.
+
+## CODEX notes 2026-10-25 22:06 PDT
+CODEX plan continuation codex/hbm-corridor-2149: real fixed-model998223 GRT fails H capacity+corner bands. SU86 candidate exact12/11/11 cores fit outsideNS corridor, area+2.453732mm2(+0.52%); statically50lanes+2cycles, actualstationrepair pending. Schema rootrepeater support9429ec691 ready9testsPASS. Conservative6facepacking and actual12pin-access G2 coupon parallel; no face-budget receipt invented.
+
+2026-10-25 22:18 PDT CODEX bank coupon correction: actual HC plan pins include M6/M7 and coregen --sigmax auto requests M7 routing, contradicting the G2 matched-content default OBS_M5. Four own coupons (baseline plus declared-band model) STOPPED_MODEL_INELIGIBLE; exact containers/units recorded in coupon/model_ineligible.json, all outputs retained. No 12/um face-budget receipt granted. Bank redesign must leave real corridors around the intended M7 obstructions; no route of an obvious macro wall. SU-only free-upper-layer method remains separately scoped.
