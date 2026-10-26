@@ -273,3 +273,6 @@ Native PR0 FADV-guard SAME-BINARY MUT_DATA completed: caught14write-data mismatc
 
 ## CODEX notes 2026-10-26 08:36 PDT
 PR1 native SU FADV DATA mutant now TERMINAL expected FAIL14 write-data mismatches (stream9495/serial7120); PR0 likewise caught14. Both positives PASS512lanes/storeSRAM3072/VMbanks32/VM_SRAM96/programmeSRAM378, reads32768,writes135184,scalars9. Immutable logs epyc2:codex-tok-hbm-1026/su_native_pr{0,1}_fadv/mut_DATA.log. This closes inherited PR0/PR1 functional/mutant collection, source65ea6f144d with5d28115341 guard; no physical or G5 promotion.
+
+## CODEX correction 2026-10-26 09:52 PDT — full PR batch remains active
+The 08:36 note's phrase "closes inherited PR0/PR1 functional/mutant collection" was too broad: positive and DATA stages closed, not the full batch. ADDR is now terminal CAUGHT6170/6172 errors. RF remains LIVE on epyc2 (PR0 PID2883041, PR1 PID3032539, 99.9%CPU); empty RF logs are buffered pending completion, not PASS. Existing units1951529/1951532 then run RED, CAL, EPOCH mutants and the BRIDGE_LEAF positive. No duplicates launched; these remaining batch stages will take hours. Historical positive/DATA receipts remain valid at their stated functional scope.
