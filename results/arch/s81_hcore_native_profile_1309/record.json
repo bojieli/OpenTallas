@@ -1,0 +1,54 @@
+{
+  "miter": "PASS",
+  "mutant": "CAUGHT",
+  "reset_contract": "TIMED_SYNC_INPUT",
+  "reset_input_timed": true,
+  "defaults": "CTLA, legacy RSTE, RST_TIMED all off. RST_TIMED takes priority over legacyRSTE.",
+  "scope": "Connected source-only four-head CTLA sender and private synchronous reset; no physical release.",
+  "reset_assertion_cycles_after_core_pin": 2,
+  "reset_release_cycles_after_core_pin": 2,
+  "stationary_load_transport_added_cycles": 1,
+  "stationary_load_FF_per_16head_tile": 1029,
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_s81c_attn_hcore.sv": "eafc9c83190a0845ec442f59004d996db7d514b8c896615955e29cf1f83edc50",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv": "780e80103eb6ee7436c1d44eed93e3cfc3fd5dbdafc87d9f1a10ae41e0346252"
+  },
+  "physical_view_adoption": false,
+  "physical_gate": "Fresh exact-source synthesis/LEC, actual placement/reset-sink render before CTS, TT setup+FF hold at833/60/25 and signoff.py SIGNED. Legacy EH view cannot transfer.",
+  "proof": "Actual four-head all-output benchmark, 3seeds20kcycles; reset assertion/release during traffic at5002..5006 and10002..10006. Independent sampled-edge reset reference. LegacyasyncRSTE negativecontrol.",
+  "compiler_gate": "GO+1/PO+1 load scheduling and START>=lastcorepinrelease+2; delivered synchronous core reset must be retained, no reset false path.",
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "cycles_per_seed": 20000,
+  "public_outputs": "ov/oy/oflt every cycle including active reset; after initial boot",
+  "measurements": [
+    {
+      "reset_release": 2,
+      "stage_bad": 0,
+      "load_words": 5213,
+      "reset_bad": 0
+    },
+    {
+      "reset_release": 2,
+      "stage_bad": 0,
+      "load_words": 5241,
+      "reset_bad": 0
+    },
+    {
+      "reset_release": 2,
+      "stage_bad": 0,
+      "load_words": 5310,
+      "reset_bad": 0
+    }
+  ],
+  "reset_mechanism": {
+    "cycles": 1000,
+    "bad": 0,
+    "legacy_async_mutant_violations": 305
+  },
+  "inherited_harness_fixes": "Removed duplicate RNG initializer; boot pin launches posedge, independently checked two sampled-edge history. v1 observer/seed failure retained.",
+  "bench_sha256": "e501dcf02d37e0b115878bc0e176d70caeb5e28845bd5c6316e210a1add5a9ba"
+}
