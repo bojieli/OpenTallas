@@ -26,7 +26,7 @@ rn, rb = CT.renamer(canon["type_ids"][tid]["cut_pins"], canon["ports"])
 def buses(pins):
     b = {}
     for p in pins:
-        n, i = CT.split_bit(p["name"]); b[n] = max(b.get(n, 0), (i or 0) + 1)
+        n, i = p["bus"], p["bit"]; b[n] = max(b.get(n, 0), (i or 0) + 1)
     return b
 ob = buses(json.load(open(Path(ok) / "pins.json"))); nb = buses(json.load(open(Path(mk) / "pins.json")))
 new2old = {}

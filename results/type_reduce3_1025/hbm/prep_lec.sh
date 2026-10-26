@@ -18,9 +18,9 @@ PY
 while read OV ST; do
   D=$OUT/lec/$OV; rm -rf $D; mkdir -p $D
   rsync -a --exclude run --exclude lec $OUT/old/$OV/ $D/kit/ || exit 4
-  python3 $WT/results/type_reduce3_1025/hbm/mk_variant_gate.py $MK $N $D/kit $CT "$ST" $D/gate.v > $D/mk_gate.json 2> $D/mk_gate.err || { echo "$OV GATE_EDIT_FAIL $(tail -1 $D/mk_gate.err)"; continue; }
+  python3 $WT/results/type_reduce3_1025/hbm/mk_variant_gate.py $MK $N $D/kit $CT "$ST" $D/kit/gate.v > $D/mk_gate.json 2> $D/mk_gate.err || { echo "$OV GATE_EDIT_FAIL $(tail -1 $D/mk_gate.err)"; continue; }
   cp $WT/tools/die_plan/lec.py $D/lec.py
-  printf '%s\n' "cd $D && python3 -I $D/lec.py $D/kit --netlist $D/gate.v --out $D/lec --mem $MEM --jobs 8 > $D/lec_run.log 2>&1; rc=\$?; tail -2 $D/lec_run.log; exit \$rc" > $D/run.sh
+  printf '%s\n' "cd $D && python3 -I $D/lec.py $D/kit --netlist $D/kit/gate.v --out $D/lec --mem $MEM --jobs 8 > $D/lec_run.log 2>&1; rc=\$?; tail -2 $D/lec_run.log; exit \$rc" > $D/run.sh
   echo "$OV $ST" > $D/variant.txt
   nohup ~/.local/bin/ot-run --mem $MEM --threads 8 --dir $D -- bash $D/run.sh > $D/otrun.log 2>&1 < /dev/null &
   echo "$OV launched pid $!"; sleep 2

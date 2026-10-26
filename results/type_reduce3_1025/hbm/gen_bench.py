@@ -28,6 +28,8 @@ rn, rb = CT.renamer(canon["type_ids"][tid]["cut_pins"], canon["ports"])
 cfg = (okit / "config.mk").read_text()
 files = [okit / "rtl" / Path(f).name for f in re.search(r"(?m)^export VERILOG_FILES = (.*)$", cfg).group(1).split()]
 files = [f for f in files if not f.name.endswith("__fshell.sv") and f.name != "ot_hbm_face_reg.sv"]
+for lef in sorted((okit / "macros").glob("*.lef")) if (okit / "macros").is_dir() else []:   # SRAM behavioural models
+    files.append(R / "physical/asap7_memory_macros_v2" / lef.stem / f"{lef.stem}.v")
 files.append(R / sm["wrapper"])          # copied into the bench dir below (fleet jobs see only the bench dir)
 wrapf = next(f for f in files if re.search(r"(?m)^\s*module\s+" + re.escape(omod) + r"__fcore\b", f.read_text()))
 PORT_RE = re.compile(r"(input|output)\s+wire\s+(?:\[(\d+):(\d+)\]\s+)?([A-Za-z_]\w*)")
@@ -40,9 +42,9 @@ miss = sorted(set(nports) - set(o2n.values()) - set(straps))
 bad = [o for o, d, w in ports if nports.get(o2n[o]) != (d, w)]
 if miss or bad:
     raise SystemExit(f"port correspondence FAIL: master-only {miss[:6]}, mismatched {bad[:6]}")
-L = ["`timescale 1ns/1ps", "module tb;", "  reg clk = 0; reg rst_n = 0; integer cyc = 0; integer ndiff = 0; integer nmut = 0;",
+L = ["`timescale 1ns/1ps", "module tb;", "  reg clk = 0; reg rst_n = 0; integer cyc = 0; integer ndiff = 0; integer nmut = 0; integer nact = 0;",
      "  always #1 clk = ~clk;"]
-c_ref, c_dut, c_mut, cmp_ = [], [], [], []
+c_ref, c_dut, c_mut, cmp_, stim = [], [], [], [], []
 for o, d, w in ports:
     n = o2n[o]
     if d == "input":
@@ -51,7 +53,7 @@ for o, d, w in ports:
         elif re.match(RST_RE, o) or re.match(RST_RE, n):
             sig = f"{{{w}{{rst_n}}}}" if w > 1 else "rst_n"
         else:
-            L.append(f"  reg [{w - 1}:0] i_{o};"); sig = f"i_{o}"
+            L.append(f"  reg [{w - 1}:0] i_{o} = 0;"); sig = f"i_{o}"; stim.append((o, w))
         c_ref.append(f".{o}({sig})"); c_dut.append(f".{n}({sig})"); c_mut.append(f".{n}({sig})")
     else:
         for s in ("r", "d", "m"):
@@ -66,8 +68,9 @@ L.append(f"  {omod}__fcore u_ref ({', '.join(c_ref)});")
 L.append(f"  {master} u_dut ({', '.join(c_dut)});")
 L.append(f"  {master} u_mut ({', '.join(c_mut)});")
 L.append("  always @(negedge clk) begin")
-for o, d, w in ports:
-    if d == "input" and f"reg [{w - 1}:0] i_{o};" in L:
+assert stim, "no stimulated inputs"
+for o, w in stim:
+    if True:
         L.append(f"    i_{o} <= {{{', '.join(['$urandom'] * ((w + 31) // 32))}}};")
 L.append("  end")
 L.append("  always @(posedge clk) begin")
@@ -75,7 +78,9 @@ L.append("    cyc <= cyc + 1; if (cyc == 8) rst_n <= 1;")
 for o in cmp_:
     L.append(f"    if (d_{o} !== r_{o}) begin ndiff = ndiff + 1; if (ndiff < 5) $display(\"DIFF cyc %0d {o}\", cyc); end")
     L.append(f"    if (m_{o} !== r_{o}) nmut = nmut + 1;")
-L.append(f"    if (cyc == {cycles}) begin $display(\"RESULT master={master} old={omod} straps={json.dumps(straps).replace(chr(34), '')} cycles=%0d dut_vs_ref_diffs=%0d mutant_diffs=%0d %s\", cyc, ndiff, nmut, (ndiff == 0 && nmut > 0) ? \"PASS\" : \"FAIL\"); $finish; end")
+    L.append(f"    if (r_{o} !== p_{o}) nact = nact + 1; p_{o} <= r_{o};")
+    L.insert(4, f"  reg [{dict((a, c) for a, b, c in ports)[o] - 1}:0] p_{o} = 0;")
+L.append(f"    if (cyc == {cycles}) begin $display(\"RESULT master={master} old={omod} straps={json.dumps(straps).replace(chr(34), '')} cycles=%0d dut_vs_ref_diffs=%0d mutant_diffs=%0d ref_output_changes=%0d %s\", cyc, ndiff, nmut, nact, (ndiff == 0 && nmut > 0 && nact > 0) ? \"PASS\" : \"FAIL\"); $finish; end")
 L.append("  end")
 L.append("endmodule")
 out = Path(out); out.mkdir(parents=True, exist_ok=True)
@@ -85,4 +90,4 @@ import shutil
 for f in files:
     shutil.copyfile(f, out / "rtl" / f.name)
 (out / "files.f").write_text("\n".join(f"rtl/{f.name}" for f in files) + "\n")
-print(json.dumps(dict(out=str(out), old=omod, outputs=len(cmp_), inputs=sum(1 for p in ports if p[1] == "input"), files=len(files))))
+print(json.dumps(dict(out=str(out), old=omod, outputs=len(cmp_), inputs=sum(1 for p in ports if p[1] == "input"), stimulated=len(stim), files=len(files))))

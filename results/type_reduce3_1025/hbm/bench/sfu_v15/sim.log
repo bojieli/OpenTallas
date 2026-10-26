@@ -1,0 +1,5 @@
+RESULT master=ot_hgi_sfu_split3_lane_core_strap old=ot_hgi_sfu_core_split3__lane15 straps={strap_map_lane_j: 4'b1111} cycles=3000 dut_vs_ref_diffs=0 mutant_diffs=3811 ref_output_changes=14008 PASS
+- tb.sv:137: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 6us; walltime 1.862 s; speed 3.219 us/s
+- Verilator: cpu 1.865 s on 1 threads; alloced 2046 MB

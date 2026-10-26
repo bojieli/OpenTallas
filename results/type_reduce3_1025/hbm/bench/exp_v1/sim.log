@@ -1,0 +1,5 @@
+RESULT master=ot_hbm_su_pg_lane_exp_core_strap old=ot_hbm_su_static_pgslice_lg__lane_exp1 straps={strap_lane_lane_id: 11'b00000000001} cycles=3000 dut_vs_ref_diffs=0 mutant_diffs=9226 ref_output_changes=21714 PASS
+- tb.sv:220: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 6us; walltime 1.343 s; speed 4.455 us/s
+- Verilator: cpu 1.347 s on 1 threads; alloced 2044 MB
