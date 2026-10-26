@@ -1,0 +1,23 @@
+{
+  "old_master": "ot_sram_1r1w_512x128_m4_r2c2",
+  "new_master": "ot_sram_1r1w_512x128_m4_r2c2_nr",
+  "outline_um": [
+    174.12,
+    29.736
+  ],
+  "old_signal_pins": 437,
+  "new_signal_pins": 405,
+  "removed_input_bits": 32,
+  "regular_pin_rects_identical": true,
+  "regular_pin_table_identical": true,
+  "model_comparisons": 12000,
+  "masked_writes": 8628,
+  "same_address_reads_writes": 3381,
+  "mutants": {
+    "wrong_mask": 10748,
+    "wrong_read_address": 11744
+  },
+  "added_cycles": 0,
+  "area_credit": 0,
+  "tt_ff_regular_timing_blocks_identical": true
+}

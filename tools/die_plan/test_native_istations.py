@@ -15,8 +15,17 @@ class NativeStations(unittest.TestCase):
   with self.assertRaises(ValueError):native_istations.annotate(b)
   b,L=self.fixture();L['cycles']=9
   with self.assertRaises(ValueError):native_istations.annotate(b)
+ def test_mixed_and_duplicate_metadata(self):
+  b,L=self.fixture();t=b.types['sys'];e=t['internal_stations'][0]
+  t['internal_stations'].append(copy.deepcopy(e));t['internal_stations'][-1]['note']='same geometry, another reference'
+  t['buses'].append(dict(name='i',dir='in',width=8));t['internal_stations'].append(dict(conn='bus:i',regs_um=[[99,99]]))
+  t['internal_stations'].append(dict(conn='core:a|core:b',regs_um=[[9,9]]))
+  native_istations.annotate(b);self.assertEqual(L['internal_source_cycles'],8);self.assertEqual(len(native_istations.source_entries(t)),1)
+  t['internal_stations'][1]['regs_um'][0]=[1,999]
+  with self.assertRaisesRegex(ValueError,'conflicting OUT'):native_istations.annotate(b)
+
  def test_cycle_and_mutants(self):
-  b,L=self.fixture();native_istations.annotate(b)
+  b,L=self.fixture();b.types['sys']['buses'].append(dict(name='i',dir='in',width=8));b.types['sys']['internal_stations'].append(dict(conn='bus:i',regs_um=[[99,99]]));native_istations.annotate(b)
   with tempfile.TemporaryDirectory() as tmp:
    d=Path(tmp);f=d/'rtl/vehicle.sv';f.parent.mkdir()
    f.write_text('module vehicle(input clk,input arst_n,input [7:0] d,output [8:0] o);\nwire rst_n=arst_n;\n ot_dp_st #(.W(8)) u_bout_o (.clk(clk), .rst_n(rst_n), .d(d), .ea(rst_n), .q(o[7:0]), .eq(o[8]));\nendmodule\n')

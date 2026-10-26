@@ -1,0 +1,18 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "ONE isolated CTS-only HBM reference structural prototype",
+ "picture": "hbm_shallow.png",
+ "source_geometry": "epyc1:/srv/opentallas-scratch2/claude/codex-cp1-1309/clock_geometry/hbm_tkm.tsv",
+ "actual_clock_pin_um": [317.352, 0.096],
+ "findings": [
+  "Existing 35 density tap buffers retain their identities and output nets; 22 new trunk buffers occupy free actual row/legal sites, with no pairwise or existing-cell overlap.",
+  "Five equal trunk levels including the tap buffers replace the uncontrolled deep root tree. Maximum planned edge is 328.59 um; source pin stub is 10.779 um.",
+  "No macro obstacles in this vehicle. Wide clock trunks still require actual routing and load checks; equal depth does not prove equal RC delay.",
+  "Added physical buffer area 9.6228 um2 and zero data cycles. Target remains TT250/FF202.5 ps; no clock/uncertainty/input-min change. Legacy core_tap_align tap-input rewrites are disabled for this prototype."
+ ],
+ "conditions": [
+  "Preserve all data/control connectivity and existing flop geometry; route only local tap-output trees with CTS, and audit protected trunk ownership.",
+  "Capture and review the actual post-CTS tree, per-tap TT/FF insertion/load and related-pair CPPR before any GRT/DRT or qualification claim."
+ ],
+ "independent_review": "codex/geom-1309@ba8d1e5640 and corrected-bounds bff582e1eb"
+}

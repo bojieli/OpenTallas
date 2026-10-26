@@ -60,9 +60,16 @@ module ot_v41_fadd #(
     wire        age0;
     ot_v41_ksadd #(.W(24)) u_cm0 (.a(a_man0), .b(~b_man0), .cin(1'b1), .s(dm0), .cout(age0));
     localparam integer W0 = 1 + 8 + 8 + 24 + 24 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 32;
+    // Off-default head retime: finite zero operands use the real arithmetic
+    // pipeline. Only nonfinite inputs bypass, with the same fail-closed result.
+    // Removing the unused payload eliminates its long identity-register chain.
+`ifdef OT_S81HD_FADD_ZERO_ARITH
+    wire [31:0] bypass_code0 = 32'd0;
+`else
+    wire [31:0] bypass_code0 = nonf0 ? 32'd0 : (az0 ? (bz0 ? 32'd0 : b) : a);
+`endif
     wire [W0-1:0] o0 = {valid_in, a_exp0, b_exp0, a_man0, b_man0, a[31], b[31], nonf0, az0, bz0,
-                        b_exp0 > a_exp0, b_exp0 == a_exp0, !age0,
-                        nonf0 ? 32'd0 : (az0 ? (bz0 ? 32'd0 : b) : a)};
+                        b_exp0 > a_exp0, b_exp0 == a_exp0, !age0, bypass_code0};
     wire [W0-1:0] i1;
     ot_v41_cut #(.W(W0), .EN(CUT[0])) u_c0 (.clk(clk), .rst_n(rst_n), .d(o0), .q(i1));
 
@@ -74,7 +81,16 @@ module ot_v41_fadd #(
     wire [7:0]  bigx1 = swap1 ? be1 : ae1;
     wire [7:0]  smlx1 = swap1 ? ae1 : be1;
     localparam integer W1 = 1 + 1 + 2 + 32 + 1 + 1 + 8 + 8 + 24 + 24;
-    wire [W1-1:0] o1 = {v1, nonf1 || az1 || bz1, nonf1 ? E_NONFINITE : E_NONE, code1, as1 != bs1,
+`ifdef OT_S81HD_FADD_ZERO_ARITH
+`ifdef OT_S81HD_FADD_ZERO_MUT
+    wire bypass1 = nonf1 || az1; // negative control: incorrectly discard zero+a
+`else
+    wire bypass1 = nonf1;
+`endif
+`else
+    wire bypass1 = nonf1 || az1 || bz1;
+`endif
+    wire [W1-1:0] o1 = {v1, bypass1, nonf1 ? E_NONFINITE : E_NONE, code1, as1 != bs1,
                         swap1 ? bs1 : as1, bigx1, bigx1 - smlx1, swap1 ? bm1 : am1, swap1 ? am1 : bm1};
     wire [W1-1:0] i2;
     ot_v41_cut #(.W(W1), .EN(CUT[1])) u_c1 (.clk(clk), .rst_n(rst_n), .d(o1), .q(i2));

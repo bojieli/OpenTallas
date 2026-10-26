@@ -155,12 +155,16 @@ def core_tap_pins(P, tn):
     return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
 
 
-def core_tap_rows(P, tn):
+def core_tap_rows(P, tn, corner="TT"):
     """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
     `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin."""
     insts = [c["inst"] for c in P.types[tn].get("hard_cores", []) or []]
     out = []
     for n, _, _, tp in S.core_taps(P, tn):
+        if "core_group" in tp:
+            out.extend((n, m["inst"], m["pin"], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner))
+                       for m in tp["core_group"]["members"])
+            continue
         nm = tp["name"]
         hit = None
         for i in sorted(insts, key=len, reverse=True):
@@ -172,8 +176,22 @@ def core_tap_rows(P, tn):
                 break
         if not hit:
             raise ValueError(f"type {tn}: core tap {nm} names no hard_cores[] inst")
-        out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp), float(tp.get("insertion_ps", 0.0))))
+        out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
     return out
+
+
+
+def core_tap_ff_sdc(P, tn):
+    """Corner overlay for dedicated core taps; the golden SDC retains its TT basis."""
+    seen = set()
+    lines = []
+    for n, inst, pin, early, ins in core_tap_rows(P, tn, "FF"):
+        if n in seen:
+            continue
+        seen.add(n)
+        lines.append(f"# CP2 FF core tap {n} ({inst}/{pin}: internal {ins:g} ps)\n"
+                     f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
+    return "".join(lines)
 
 
 def edge_clock_pins(P, tn):
@@ -548,7 +566,13 @@ def sdc(P, tn, pins):
            "set non_clk_in [all_inputs -no_clocks]\n"
            f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
+    source_ports = set()
+    if core_tap_rows(P, tn):
+        out += "# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc\n"
     for n, inst, pin, early, ins in core_tap_rows(P, tn):
+        if n in source_ports:
+            continue
+        source_ports.add(n)
         out += (f"# CP2 early core tap {n} ({inst}/{pin}: internal {ins:g} ps): the spine delivers it {early:g} ps early\n"
                 f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
     if slots:
@@ -759,9 +783,25 @@ def clock_phase_tcl(P, tn, before_cts=False):
             f"set_clock_latency -clock clk {t_lib(P.clock['insertion_ps']):.4f} [get_ports {{{ports}}}]\n")
 
 
+
+def _corner_libs(mlib, kd, corner):
+    """kit macro timing views of CORNER (tt/ff) for the gate/sign-off lib lists; FAIL when a macro lacks that view."""
+    out = []
+    for f in mlib:
+        m = re.match(r"^(.*)_(tt|typ|ff|ss)(\.lib(?:\.gz)?)$", Path(f).name)
+        if not m:
+            raise ValueError(f"macro lib {f}: no corner suffix")
+        name = f"{m[1]}_{corner}{m[3]}"
+        if not (kd / "macros" / name).is_file():
+            raise ValueError(f"macro lib {f}: no {corner} view {name} in the kit")
+        out.append(str(Path(f).parent / name))
+    return out
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True):
     t = P.types[tn]
+    import core_clock_groups as CG
+    grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
     ib = insertion_binding(P, tn)
     w, h = t["outline_um"]
     macros = type_macros(P, tn)
@@ -799,7 +839,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                 sibling = f.with_name(f"{match[1]}_{corner}{match[3]}")
                                 if sibling.is_file() and sibling != f:
                                     shutil.copyfile(sibling, kd / "macros" / sibling.name)
-            mplace.append(f"place_macro -macro_name {{{inst}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
+            # ODB keeps an escaped Verilog name's array brackets as \[ \] (a plan inst like g_writer[0].u_mem is not found
+            # otherwise: native59 MPL-0020, PATH-QC-A0N59 10-25); escape the bare ones
+            inst_db = re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)
+            mplace.append(f"place_macro -macro_name {{{inst_db}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
     srcs = []
     for f in rtl_files:
         dst = kd / "rtl" / Path(f).name
@@ -840,6 +883,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
+    if core_tap_rows(P, tn):
+        (kd / "core_taps_ff.sdc").write_text(core_tap_ff_sdc(P, tn))
     ioh = io_hold_tcl(P, tn)            # IO-HOLD option A: per-port min input delays for the hold_gate / sign-off overlays
     if ioh:
         (kd / "io_hold.tcl").write_text(ioh)
@@ -849,7 +894,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if RT.pipelined(P) or RT.wavefront(P):
         leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n"
                       "source /work/reset_taps.tcl\nunset rt_postplace\n")
-    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check)
+    group_hook = ""
+    if grouped["groups"]:
+        (kd / "core_clock_groups.json").write_text(json.dumps(grouped, indent=1) + "\n")
+        (kd / "core_clock_groups_apply.tcl").write_text(CG.tcl_text(grouped))
+        shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/core_clock_groups.tcl",
+                        kd / "core_clock_groups.tcl")
+        group_hook = "\nsource /work/core_clock_groups_apply.tcl\n"
+    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
@@ -953,6 +1005,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
+           # PATH-QC-A0N59 10-25: macro kits had no BC_LIB_FILES, so the post-CTS FF hold gate stopped NOT RUN
+           # ("hold gate: BC_LIB_FILES missing", native59).  Per-corner gate/sign-off lists only (implementation
+           # corner unchanged): std cells of the corner + each macro's sibling corner view copied into macros/.
+           *([f"export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) {' '.join(_corner_libs(mlib, kd, 'tt'))}",
+              f"export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) {' '.join(_corner_libs(mlib, kd, 'ff'))}"] if macros else []),
            # S81-P9 10-23: landing reset forest leaves re-clustered to identical branch flops by location after GPL
            # (forest_recluster.tcl; only kits whose sources hold ot_pl_land_reset_forest)
            *(["export POST_GLOBAL_PLACE_TCL = /work/forest_recluster.tcl"] if forest else []),
@@ -1023,6 +1080,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
     from ft_bit_sites import table as ft_bit_sites_table
     (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(t.get("ft_slots", [])))
+    ff_core_taps = {r[0]: r for r in core_tap_rows(P, tn, "FF")}
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
                signal_max=top,
@@ -1039,7 +1097,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                 for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
                           taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
-                          core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins)
+                          core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins,
+                                          early_ff_ps=ff_core_taps[n][3], insertion_ff_ps=ff_core_taps[n][4])
                                      for n, i, p_, e, ins in clat["taps"]],
                           uncertainty_split=UNC_SPLIT),
                core_latency=clat["rows"],
@@ -1063,11 +1122,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
-    shutil.copyfile(Path(__file__).with_name("signoff.py"), kd / "signoff.py")
-    if ioh:  # option-A only: legacy generated kit inventory is unchanged
-        shutil.copyfile(Path(__file__).with_name("io_hold_qualification.py"), kd / "io_hold_qualification.py")
-    shutil.copyfile(Path(__file__).with_name("pair_skew.tcl"), kd / "pair_skew.tcl")
-    shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
+    from signoff import copy_signoff_bundle
+    copy_signoff_bundle(kd)
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
     # pins.json is the data-face contract; include timed control/clock interior

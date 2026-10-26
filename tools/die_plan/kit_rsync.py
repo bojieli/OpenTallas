@@ -44,6 +44,9 @@ TREE = re.compile(r"^\s*(?://\s*OWNER RESET RULE 10-24 (?:\+ DECISION 13c )?\(to
 # reset wavefront outs (OWNER DECISION 13): port declarations / wrapper connections of an earlier conversion
 ROUT = re.compile(r"^\s*(?:output\s+wire\s+(?:rst|start)_o_\d+\s*,.*|\.(?:rst|start)_o_\d+\((?:rst|start)_o_\d+\)\s*,.*|"
                   r"input\s+wire\s+start_i\s*,.*|\.start_i\(start_i\)\s*,.*)$")
+# bind.py emits one-bit bound-only START as [0:0], often as the last
+# declaration/connection. Strip it before inserting the canonical wavefront pin.
+START_ENTRY = re.compile(r"^\s*(?:input\s+wire\s+(?:\[\s*0\s*:\s*0\s*\]\s*)?start_i\s*,?\s*(?://.*)?|\.start_i\s*\(\s*start_i\s*\)\s*,?\s*(?://.*)?)$")
 ARST_DECL = re.compile(r"^(\s*)input\s+wire\s+arst_n\s*,")
 ARST_CONN = re.compile(r"^(\s*)\.arst_n\(arst_n\)\s*,")
 
@@ -53,6 +56,11 @@ def add_reset_outs(lines, outs, conn=False, start=False):
     .rst_o_k(rst_o_k) connections after `.arst_n(arst_n),`); earlier ones are dropped first (idempotent)."""
     out, nd, nc = [], 0, 0
     for ln in lines:
+        if START_ENTRY.match(ln):
+            # Dropping a last old pin also removes its predecessor's comma.
+            if not ln.split("//", 1)[0].rstrip().endswith(",") and out:
+                out[-1] = re.sub(r",(\s*(?://[^\n]*)?\n?)$", r"\1", out[-1])
+            continue
         if ROUT.match(ln):
             continue
         out.append(ln)
@@ -85,6 +93,9 @@ def cells_text(lock=False):
             raise SystemExit(f"kit_rsync: gen_rtl.CELLS has no module {m}")
         out.append(mm.group(1).rstrip())
     return "\n".join(out) + "\n`default_nettype wire\n"
+
+
+KIT_RESET_CELLS = ("ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_rrelay", "ot_dp_rgate")
 
 
 def strip_module(txt, name):
@@ -209,7 +220,13 @@ def main(argv):
         files[0] = nw
     (kd / "kit_cells.sv").write_text(cells_text(lock=bool(tree.get("lock"))))
     if cfile is not None:
-        (kd / "bind_cells_kit.sv").write_text(strip_module(cfile.read_text(), "ot_dp_st"))
+        bc = strip_module(cfile.read_text(), "ot_dp_st")
+        # wavefront binds (10-25) also emit the reset cells; kit_cells.sv carries them (keep attributes), so drop the copies
+        for m in KIT_RESET_CELLS:
+            bc, n = re.subn(rf"(\(\*[^\n]*\*\)\n)?(//[^\n]*\n)*module {m}\b.*?\nendmodule\n", "", bc, flags=re.S)
+            if n > 1:
+                raise SystemExit(f"kit_rsync: {n} modules {m} in bind_cells.sv")
+        (kd / "bind_cells_kit.sv").write_text(bc)
     nf = []
     for f in files:
         if f == bfile:
