@@ -121,6 +121,10 @@ def run(a):
             q=(base['x']+M.BUF_W/2+(k+1)*M.BUF_W*1.12,base['y']+M.ROW_Y/2+2*M.ROW_Y)
             if not legal(q):
                 q=next(((base['x']+M.BUF_W/2+dx*M.BUF_W*1.12,base['y']+M.ROW_Y/2+dy*M.ROW_Y*2)
+                        for dy_abs in range(1,201) for dy in (dy_abs,-dy_abs) for dx in (0,1,-1,2,-2)
+                        if legal((base['x']+M.BUF_W/2+dx*M.BUF_W*1.12,base['y']+M.ROW_Y/2+dy*M.ROW_Y*2))),None)
+            if q is None:
+                q=next(((base['x']+M.BUF_W/2+dx*M.BUF_W*1.12,base['y']+M.ROW_Y/2+dy*M.ROW_Y*2)
                         for r in range(1,30) for dx in range(-r,r+1) for dy in (-r,r)
                         if legal((base['x']+M.BUF_W/2+dx*M.BUF_W*1.12,base['y']+M.ROW_Y/2+dy*M.ROW_Y*2))),None)
             if q is None: raise ValueError(f'no legal leaf trim island at {t["port"]}')
