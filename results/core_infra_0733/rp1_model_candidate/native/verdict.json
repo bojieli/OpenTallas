@@ -1,0 +1,94 @@
+{
+ "verdict": "FAIL",
+ "qualification": "NOT QUALIFIED AS 4W PLAN: router disabled NDR to reduce congestion",
+ "unchecked_by_number_check": true,
+ "unit": "oth-ubuntu-2975576-1793031268",
+ "source_commit": "eeb3ab94b",
+ "corners": {
+  "TT": {
+   "sinks": 2790,
+   "min_ps": 224.349686,
+   "mean_ps": 239.43735814014337,
+   "max_ps": 289.660767,
+   "leaf_mean_window_ps": 40.82929613636364,
+   "leaves": 64,
+   "max_leaf_load": 44,
+   "min_leaf_load": 43,
+   "grt_lines": [],
+   "disabled_ndr_nets": [
+    "mp_core_Q2B2_out",
+    "mp_core_Q0_out",
+    "mp_core_Q0B2_out",
+    "mp_core_Q0B1_out",
+    "mp_core_Q0B3_out",
+    "mp_core_Q1B2_out",
+    "mp_core_Q2_out",
+    "mp_core_Q2B1_out",
+    "mp_core_M1_out",
+    "mp_core_root_out",
+    "mp_core_Q1B2L1_out",
+    "mp_core_Q1B0_out",
+    "mp_core_Q1_out",
+    "mp_core_Q1B3_out",
+    "mp_core_Q3B0_out",
+    "mp_core_entry0_out",
+    "mp_core_entry1_out",
+    "mp_core_entry2_out",
+    "ck"
+   ],
+   "disabled_ndr_count": 19,
+   "worst_slacks_ps": [
+    [
+     "max",
+     "192.08"
+    ],
+    [
+     "min",
+     "-37.02"
+    ]
+   ]
+  },
+  "FF": {
+   "sinks": 2790,
+   "min_ps": 165.301788,
+   "mean_ps": 179.15015071684587,
+   "max_ps": 233.29744,
+   "leaf_mean_window_ps": 43.607618818181805,
+   "leaves": 64,
+   "max_leaf_load": 44,
+   "min_leaf_load": 43,
+   "grt_lines": [],
+   "disabled_ndr_nets": [
+    "mp_core_Q2B2_out",
+    "mp_core_Q0_out",
+    "mp_core_Q0B2_out",
+    "mp_core_Q0B1_out",
+    "mp_core_Q0B3_out",
+    "mp_core_Q1B2_out",
+    "mp_core_Q2B1_out",
+    "mp_core_Q2_out",
+    "mp_core_M1_out",
+    "mp_core_Q1B0_out",
+    "mp_core_Q1B2L1_out",
+    "ck",
+    "mp_core_Q1B3_out",
+    "mp_core_Q1_out",
+    "mp_core_Q3B0_out",
+    "mp_core_entry0_out"
+   ],
+   "disabled_ndr_count": 16,
+   "worst_slacks_ps": [
+    [
+     "max",
+     "294.94"
+    ],
+    [
+     "min",
+     "-101.23"
+    ]
+   ]
+  }
+ },
+ "cause": "Physical clock track/access capacity cannot preserve4W4S on19TT/16FF nets, includingcommonentry/ck; actualrouting doesnotimplementpredicted4Wstructure. PG/protectednonclockconnectivity guardsPASS.",
+ "next": "No resizeECO/rerun: model-first2W2S secondstructuralvariant pending; noDDT/signoff/freeze. Keepfirstfailure immutable."
+}

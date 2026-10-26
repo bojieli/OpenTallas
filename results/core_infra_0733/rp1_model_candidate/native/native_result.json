@@ -1,0 +1,25 @@
+{
+ "TT": {
+  "sinks": 2790,
+  "min_ps": 224.349686,
+  "mean_ps": 239.43735814014337,
+  "max_ps": 289.660767,
+  "leaf_mean_window_ps": 40.82929613636364,
+  "leaves": 64,
+  "max_leaf_load": 44,
+  "min_leaf_load": 43,
+  "grt_lines": []
+ },
+ "FF": {
+  "sinks": 2790,
+  "min_ps": 165.301788,
+  "mean_ps": 179.15015071684587,
+  "max_ps": 233.29744,
+  "leaf_mean_window_ps": 43.607618818181805,
+  "leaves": 64,
+  "max_leaf_load": 44,
+  "min_leaf_load": 43,
+  "grt_lines": []
+ },
+ "qualification": "UNCHECKED; native TT/FF GRT RC diagnostics only, no detail route/signoff;4W Cx1.3 model assumption before build"
+}
