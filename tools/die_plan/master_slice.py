@@ -142,6 +142,16 @@ def validate(sl):
         if not b.get("name"):
             errs.append(f"{w}: name required")
         _rect(b.get("rect_um"), w, errs, outline)
+        if "regions_um" in b:
+            regions = b["regions_um"]
+            if not isinstance(regions,list) or not regions:
+                errs.append(f"{w}: regions_um must be a nonempty rectangle list")
+            else:
+                for j,r in enumerate(regions):
+                    if _rect(r,f"{w}.regions_um[{j}]",errs,outline) and b.get("rect_um"):
+                        q=b["rect_um"]
+                        if r[0]<q[0]-OUTLINE_TOL_UM or r[1]<q[1]-OUTLINE_TOL_UM or r[2]>q[2]+OUTLINE_TOL_UM or r[3]>q[3]+OUTLINE_TOL_UM:
+                            errs.append(f"{w}: region outside bay envelope")
         if b.get("kind") not in BAY_KINDS:
             errs.append(f"{w}: kind expected one of {BAY_KINDS}, got {b.get('kind')!r}")
         for n in ("bits", "cell_area_um2", "fill"):
@@ -310,6 +320,9 @@ def emit_tcl(sl, dbu=1000):
         L.append(f"dict set ot_master_bays {_tcl_word(b['name'])} [dict create kind {b.get('kind')} rect_um {{{r}}} "
                  f"layer {b.get('layer', 'M7')} bits {b.get('bits', 0)} fill {b.get('fill', 0)} "
                  f"owner {_tcl_word(b.get('owner', ''))}]")
+        if b.get("regions_um"):
+            regions = " ".join("{" + " ".join(f"{v:g}" for v in q) + "}" for q in b["regions_um"])
+            L.append(f"dict set ot_master_bays {_tcl_word(b['name'])} regions_um {{{regions}}}")
     L.append("# entry pins without a bound pin name (um, type frame): name -> {layer xy_um bay path bit}; for io.tcl")
     L.append("set ot_master_entry_pins [dict create]")
     nplaced = 0
