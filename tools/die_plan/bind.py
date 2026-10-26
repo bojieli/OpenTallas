@@ -546,6 +546,45 @@ def wavefront_cells_text(driver=False):
     return "\n".join(out)
 
 
+def instance_path_params(cells, defaults, rules):
+    """Opt-in simulation image selectors, using the original elaborated leaf path.
+
+    An empty ROM INSTANCE selects no image.  Unlike connectivity or timing
+    parameters, this string must remain unique when identical partition types
+    share one emitted wrapper.  Normal type parameterization carries it through.
+    An explicit nonempty selector must already equal the original path.
+    """
+    seen, audit = set(), []
+    for rule in rules:
+        if set(rule) != {"module", "param"}:
+            raise BindError("instance_path_params: each rule needs only module and param")
+        key = (rule["module"], rule["param"])
+        if key in seen:
+            raise BindError(f"instance_path_params: duplicate rule {key}")
+        seen.add(key)
+        matched = 0
+        for c in cells:
+            if c.module != key[0]:
+                continue
+            matched += 1
+            ps = defaults.get((c.ytype, c.module), {})
+            old = c.params.get(key[1], ps.get(key[1]))
+            if old is None or not isinstance(old, str) or not old.startswith('"') or not old.endswith('"'):
+                raise BindError(f"instance_path_params: {c.path}.{key[1]} is not a declared string selector")
+            if not c.path or any(x in c.path for x in ('/', '\\', '"', '\n', '\r')):
+                raise BindError(f"instance_path_params: unsafe image identity {c.path!r}")
+            if old != '\"\"':
+                if old != json.dumps(c.path):
+                    raise BindError(f"instance_path_params: {c.path}.{key[1]} explicit selector {old} differs from original path")
+                continue
+            c.params[key[1]] = json.dumps(c.path)
+            audit.append(dict(inst=c.path, module=c.module, param=key[1], old=old,
+                              value=c.params[key[1]]))
+        if not matched:
+            raise BindError(f"instance_path_params: module {key[0]} has no elaborated leaves")
+    return audit
+
+
 class Binder:
     def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
@@ -565,6 +604,8 @@ class Binder:
             if key not in self.param_defaults:
                 self.param_defaults[key] = {k: E._pval(v)[0] for k, v in
                     yjs["modules"].get(c.ytype, {}).get("parameter_default_values", {}).items()}
+        self.instance_path_params = instance_path_params(
+            self.F.cells, self.param_defaults, self.ab.get("instance_path_params", []))
         for r in self.F.parent_variants:
             if r["dropped_net_ports"]:
                 self.errors.append(f"PARENT_VARIANT_NET {r['inst']} -> {r['variant']}: as-built nets on ports the variant "
@@ -3358,6 +3399,8 @@ def cmd_bind(a):
         [dict(path=k[0], port=k[1], module=k[2], bits=[b[0] for b in v], values="".join(str(b[1]) for b in v),
               sources=sorted({b[2] for b in v})) for k, v in sorted(B.tied_pins.items())], indent=0) + "\n")
     rep, lat = B.report()
+    if B.instance_path_params:
+        rep["instance_path_params"] = B.instance_path_params
     if getattr(B, "_reg_hard", None):
         rep["registered_pins"] = {p: dict(v, stations_removed=len(B.in_bus.get(p, [])) + len(B.out_bus.get(p, [])),
                                           station_bits_removed=sum(L["width"] + 1 for L in B.in_bus.get(p, []) +
