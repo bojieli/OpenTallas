@@ -99,7 +99,7 @@ if {$phase eq "prep"} {
     set_dont_use $::env(DONT_USE_CELLS)
     clock_tree_synthesis -clk_nets $net -sink_clustering_enable \\
       -sink_clustering_size $size -sink_clustering_max_diameter 40 \\
-      -repair_clock_nets -dont_use_dummy_load
+      -dont_use_dummy_load
   }
 }
 orfs_write_db $::env(RESULTS_DIR)/4_seq.odb
