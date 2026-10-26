@@ -19,8 +19,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools/die_plan"))
 import schema as S  # noqa: E402
+import die_clock_mesh as CLK  # noqa: E402
 
-CELL_W, CELL_H = 1.35, 0.27          # BUFx24_ASAP7_75t_R
+CELL_H = 0.27                     # Current ASAP7 RVT row height; widths are per master.
 HALO_X, HALO_Y = 0.54, 0.27          # one site / one row each side
 
 
@@ -40,6 +41,10 @@ def main():
     d = Path(a.mesh_dir)
     M = json.loads((d / "mesh.json").read_text())
     cells = json.loads((d / "place.json").read_text())
+    overlaps = CLK.placement_overlaps(cells)
+    if overlaps:
+        print(json.dumps({"cell_body_overlaps": len(overlaps), "examples": overlaps[:10]}))
+        return 1
     rects = {n: P.rect(n) for n in P.parts}
     # bucket partitions for lookup
     B = 500.0
@@ -52,8 +57,9 @@ def main():
     per_kind = defaultdict(int)
     for name, c in sorted(cells.items()):
         x, y = c["x"], c["y"]
+        cell_w = CLK.cell_width(c)
         own = [n for n in grid[(int(x // B), int(y // B))]
-               if rects[n][0] <= x and x + CELL_W <= rects[n][2] and rects[n][1] <= y and y + CELL_H <= rects[n][3]]
+               if rects[n][0] <= x and x + cell_w <= rects[n][2] and rects[n][1] <= y and y + CELL_H <= rects[n][3]]
         if len(own) > 1:
             raise SystemExit(f"{name} inside {own}")
         part = own[0] if own else "die"
@@ -61,7 +67,7 @@ def main():
         per_kind[(c["kind"], part != "die")] += 1
         if own:
             tn = P.parts[part]["type"]
-            corners = [P.to_type(part, (x + dx, y + dy)) for dx in (-HALO_X, CELL_W + HALO_X) for dy in (-HALO_Y, CELL_H + HALO_Y)]
+            corners = [P.to_type(part, (x + dx, y + dy)) for dx in (-HALO_X, cell_w + HALO_X) for dy in (-HALO_Y, CELL_H + HALO_Y)]
             r = (round(min(p[0] for p in corners), 3), round(min(p[1] for p in corners), 3),
                  round(max(p[0] for p in corners), 3), round(max(p[1] for p in corners), 3))
             isl[tn].add(r)
@@ -91,7 +97,7 @@ def main():
                              rects=[list(r) for r in merged])
     summary = dict(plan_sha256=hashlib.sha256(Path(a.plan).read_bytes()).hexdigest(), cells=len(sites),
                    in_partitions={f"{k}{'_part' if p else '_die'}": v for (k, p), v in sorted(per_kind.items())},
-                   types_with_islands=len(out_types), island_overlaps_hard_core=len(bad),
+                   cell_body_overlaps=0, types_with_islands=len(out_types), island_overlaps_hard_core=len(bad),
                    max_type_frac=max((v["frac"] for v in out_types.values()), default=0),
                    islands_per_type={k: v["islands"] for k, v in sorted(out_types.items())})
     print(json.dumps(summary, indent=1))
