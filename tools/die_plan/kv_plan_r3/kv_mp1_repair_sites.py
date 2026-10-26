@@ -92,11 +92,13 @@ def repair(raw):
                     for stage,p in enumerate(ps):
                         x,y=old['bit_sites_um'][stage][bit]
                         if overlap(x,y,cw,ch,boxes) or abs(x+cw/2-p[0])+abs(y+ch/2-p[1])>1e-5:
-                            try:q,_=al.allocate(np.array(p),1,max_radius_um=12.)
-                            except ValueError:
-                                prev=a if stage==0 else (new[stage-1][bit][0]+cw/2,new[stage-1][bit][1]+ch/2)
-                                nxt=b if stage==len(ps)-1 else ps[stage+1]
-                                q=allocate_between(al,p,prev,nxt)
+                            prev=a if stage==0 else (new[stage-1][bit][0]+cw/2,new[stage-1][bit][1]+ch/2)
+                            nxt=b if stage==len(ps)-1 else ps[stage+1]
+                            try:
+                                q,_=al.allocate(np.array(p),1,max_radius_um=12.)
+                                if U.man(prev,q[0])>405.+1e-7 or U.man(q[0],nxt)>405.+1e-7:
+                                    q=allocate_between(al,p,prev,nxt)
+                            except ValueError:q=allocate_between(al,p,prev,nxt)
                             new[stage][bit]=[round(float(q[0][0]-cw/2),6),round(float(q[0][1]-ch/2),6)]
                 worst=0.
                 for bit,(a,b,*_) in pts.items():
