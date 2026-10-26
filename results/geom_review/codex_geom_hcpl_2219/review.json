@@ -1,0 +1,22 @@
+{
+  "source": "codex/hcpl-shiftclk-2144@7461638fda",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hcpl-shiftclk-2144/kit",
+  "odb": "run/results/asap7/kl_ot_dsrom_su_hcpost_lane_pr_v1b/base/5_1_grt.odb",
+  "odb_sha1_prefix": "3da451fe26abb18e4769",
+  "pictures": ["floorplan.png", "density.png", "clock_heatmap.png"],
+  "viewed": "2026-10-25 22:25 PDT; complete outline/pins/PG/density and native TT/FF all5978 clock pins, plus owner's32group tree overlay",
+  "outline_um": [114.48,114.48],
+  "pin_shapes": 326,
+  "unique_logical_pins": 277,
+  "PG_nets": 2,
+  "macros": 0,
+  "fill": 0.361,
+  "density": "Five isolated centroid-count bins above1(max1.075), no extended hotspot, large open margins/SW; legal-placement checks and GRT0 support one trial",
+  "dataflow": "Wide inputs/outputs banked mainly on N/W faces with face register strips; compact central datapath; entire tile Manhattan diameter229um<405, no unrelayed long intra-tile hop possible",
+  "PDN": "Continuous vertical PG pairs across core and centre horizontal joins, no macro walls/notches/halo pinch; existing pin table untouched",
+  "clock": "All5978 clock pins accounted. Native TT250.799881..273.767029ps; FF192.384171..214.064529ps. Smooth gradient and deliberately earlier central shift-register groups, no isolated late island. Actual32localroots cover702FF/608delayFF, maxbranch39.42um, maxwithin-groupFFspan2.772690ps. Global range is INFO; native setup/hold and related-pair checks remain required",
+  "timing_inherited": {"TT_setup_ps":49.32376729271937,"FF_hold_ps":3.2404634531246757,"GRT_overflow":0},
+  "verdict":"PASS-COND",
+  "scope":"ONE detailed-route TRIAL only, authorized by ROOT; master-interface pending-delta check and exact route-capable source/runner still required before enqueue; preserve canary/source holds; no sign-off wave or frozen-die claim",
+  "changes":"No kit/RTL/ODB mutation by reviewer; read-only native GRT dump and native-library clock heatmap"
+}
