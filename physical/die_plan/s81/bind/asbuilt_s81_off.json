@@ -987,7 +987,7 @@
   "u_irg_\\d+\\.(sid|si)",
   "u_rsv_\\d+\\.sid",
   "ld_pv_[EW]\\.(k|nw|rb)",
-  "u_s_\\w+\\..*\\.(sid|ch_b|k)"
+  "u_s_\\w+\\..*\\.(sid|ch_b|chb|k)"
  ],
  "strap_note": "as-built declared position straps (cap30 die_port_bind straps_declared: master:port), applied to the leaves that carry them after dissolving the slice parents",
  "defines": [

@@ -1,0 +1,10 @@
+TB_QFS qc mismatch cyc 14 got v1 b1 00000000
+TB_QFS qc mismatch cyc 16 got v1 b1 80800008
+TB_QFS qc mismatch cyc 18 got v1 b1 82800028
+TB_QFS_STATS main nerr 3 qc beats 134 (exp 134) st 00000
+TB_QFS_STATS nerr 3 st 10000 mut 0 smut 1
+TB_QFS FAIL
+- rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_qfs.sv:92: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 245ns; walltime 0.001 s; speed 331.214 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

@@ -1,0 +1,37 @@
+{
+ "top": "dsdv_idx_qfs",
+ "checked": 1797,
+ "ok": 1795,
+ "fails": {
+  "shared": [
+   "qs[0]: 24 loads on u_qf/u_vqs/d[0]",
+   "ql[0]: 24 loads on u_qf/u_vql/d[0]"
+  ]
+ },
+ "flops": {
+  "qs[512]": "u_qf/qs_d_reg[511]",
+  "qs[511]": "u_qf/qs_d_reg[510]",
+  "qs[510]": "u_qf/qs_d_reg[509]",
+  "qs[509]": "u_qf/qs_d_reg[508]",
+  "qs[508]": "u_qf/qs_d_reg[507]",
+  "qs[507]": "u_qf/qs_d_reg[506]",
+  "qs[506]": "u_qf/qs_d_reg[505]",
+  "qs[505]": "u_qf/qs_d_reg[504]",
+  "qs[504]": "u_qf/qs_d_reg[503]",
+  "qs[503]": "u_qf/qs_d_reg[502]",
+  "qs[502]": "u_qf/qs_d_reg[501]",
+  "qs[501]": "u_qf/qs_d_reg[500]",
+  "qs[500]": "u_qf/qs_d_reg[499]",
+  "qs[499]": "u_qf/qs_d_reg[498]",
+  "qs[498]": "u_qf/qs_d_reg[497]",
+  "qs[497]": "u_qf/qs_d_reg[496]",
+  "qs[496]": "u_qf/qs_d_reg[495]",
+  "qs[495]": "u_qf/qs_d_reg[494]",
+  "qs[494]": "u_qf/qs_d_reg[493]",
+  "qs[493]": "u_qf/qs_d_reg[492]"
+ },
+ "fail_counts": {
+  "shared": 2
+ },
+ "verdict": "FAIL"
+}

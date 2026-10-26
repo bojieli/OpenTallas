@@ -1,0 +1,15 @@
+MISMATCH D6.ql cyc 808 got 1a42b
+MISMATCH D6.ql cyc 835 got 11c3d
+MISMATCH D4.ql cyc 857 got 1a42b
+MISMATCH D4.ql cyc 861 got 11493
+MISMATCH D4.ql cyc 865 got 007bd
+MISMATCH D4.ql cyc 869 got 1897d
+MISMATCH D4.ql cyc 873 got 1b987
+MISMATCH D6.ql cyc 873 got 10823
+MISMATCH D4.ql cyc 884 got 11c3d
+main: tp D1 96 D0 96 D3 96; ql D5 1076 D6 1061 D4 1056; D4.ca 60; bad 3178 stray 0 tmlat 0 fault 1000000 left ca 12 ql5 0 ql6 0
+FAIL lep_idxnet seed 1: main ok 0, faults 1111111 (want 0111111: D0..D5, not D6)
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_idxnet.sv:215: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 4.607 s; speed 1.406 us/s
+- Verilator: cpu 4.606 s on 1 threads; allocated 17 MB

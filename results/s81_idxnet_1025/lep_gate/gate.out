@@ -1,0 +1,21 @@
+net_s1: PASS lep_idxnet seed 1: tp D0<->D1 97/96, D2->D3 97, Q root->D5 31 words, relay->D6 24, D4 ql 0, D4.ca 72 (tm 3 edges + tree), F1-F4 faults raised
+net_s5: PASS lep_idxnet seed 5: tp D0<->D1 97/96, D2->D3 97, Q root->D5 31 words, relay->D6 24, D4 ql 0, D4.ca 72 (tm 3 edges + tree), F1-F4 faults raised
+net_r3: PASS lep_idxnet seed 1: tp D0<->D1 97/96, D2->D3 97, Q root->D5 31 words, relay->D6 24, D4 ql 0, D4.ca 72 (tm 3 edges + tree), F1-F4 faults raised
+net_t3: PASS lep_idxnet seed 1: tp D0<->D1 97/96, D2->D3 97, Q root->D5 31 words, relay->D6 24, D4 ql 0, D4.ca 72 (tm 3 edges + tree), F1-F4 faults raised
+mut_IDXDMX: FAIL lep_idxnet seed 1: main ok 0, faults 0111111 (want 0111111: D0..D5, not D6)
+mut_QBEAT: FAIL lep_idxnet seed 1: main ok 0, faults 1111111 (want 0111111: D0..D5, not D6)
+mut_QRL: FAIL lep_idxnet seed 1: main ok 0, faults 1111111 (want 0111111: D0..D5, not D6)
+mut_TPMRG: FAIL lep_idxnet seed 1: main ok 0, faults 0111111 (want 0111111: D0..D5, not D6)
+idx_s1: PASS lep_idx seed 1: 160 tree beats each way bit-exact (D0 lane2 -> D1.ca, D1 lane3 -> D0.cb), 160+160 ring beats intact, F1/F2 faults raised
+idx_s5: PASS lep_idx seed 5: 160 tree beats each way bit-exact (D0 lane2 -> D1.ca, D1 lane3 -> D0.cb), 160+160 ring beats intact, F1/F2 faults raised
+mut_IDXPAIR: FAIL lep_idx seed 1: main ok 0, F1 fault 1, F2 fault 1, bad 0, D1.ri 161/161
+mut_IDXDMX: FAIL lep_idx seed 1: main ok 0, F1 fault 1, F2 fault 1, bad 1, D1.ri 161/161
+regr_mu_t5: PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted; return to the A/B master over pairs A and B: 240 cut-through and 160 landed beats exact
+regr_lep s1: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_lep s7: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_nh s1: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_host s3: PASS lep_host: H->A 233 ring + 84 HOST + 83 KS, A->H 592 frames (51 THOST incl. 1 merge, 52 TKD) bit-exact in order; f_lf live
+regr_swap: FAIL lep: mismatches 963 recv 482/1000 481/1000 fault_main 1 overflow_fault 1
+LEP_MU_GATE PASS
+LEP_IDX_GATE PASS
+LEP_IDXNET_GATE PASS

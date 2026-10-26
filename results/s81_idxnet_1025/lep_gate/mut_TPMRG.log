@@ -1,0 +1,18 @@
+TM LATENCY cyc 883
+TM LATENCY cyc 887
+TM LATENCY cyc 891
+MISMATCH D4.ca cyc 1145 got 86e396ee76bf4229
+MISMATCH D4.ca cyc 1149 got 8122d1849691e7a9
+MISMATCH D4.ca cyc 1153 got 827c19901c4d3fe9
+MISMATCH D4.ca cyc 1157 got 6ff733ae7a20fde9
+MISMATCH D4.ca cyc 1161 got cdc6a9b60a798069
+MISMATCH D4.ca cyc 1165 got 121375fb7d33d669
+MISMATCH D4.ca cyc 1169 got 379876cfb8e434a9
+MISMATCH D4.ca cyc 1173 got bc910ff3658c8ae9
+MISMATCH D4.ca cyc 1177 got efbcc695bc0a2729
+main: tp D1 96 D0 96 D3 96; ql D5 28 D6 24 D4 0; D4.ca 48; bad 48 stray 0 tmlat 24 fault 0000000 left ca 24 ql5 0 ql6 0
+FAIL lep_idxnet seed 1: main ok 0, faults 0111111 (want 0111111: D0..D5, not D6)
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_idxnet.sv:215: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 4.228 s; speed 1.533 us/s
+- Verilator: cpu 4.226 s on 1 threads; allocated 17 MB

@@ -1,0 +1,12 @@
+STRAY ca/cb beat cyc 1145
+STRAY ca/cb beat cyc 1149
+STRAY ca/cb beat cyc 1153
+main: tp D1 0 D0 0 D3 0; ql D5 28 D6 24 D4 0; D4.ca 24; bad 0 stray 48 tmlat 0 fault 0000000 left ca 48 ql5 0 ql6 0
+MISMATCH D5.ql cyc 7410 got 01a1d
+MISMATCH D5.ql cyc 7414 got 189af
+MISMATCH D5.ql cyc 7418 got 15045
+FAIL lep_idxnet seed 1: main ok 0, faults 0111111 (want 0111111: D0..D5, not D6)
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_idxnet.sv:215: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 4.221 s; speed 1.535 us/s
+- Verilator: cpu 4.219 s on 1 threads; allocated 17 MB
