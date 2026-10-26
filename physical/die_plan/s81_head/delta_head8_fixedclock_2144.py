@@ -52,7 +52,7 @@ def propose(raw, checkpoint=None):
     reset_before = R.wf_plan(before)
     candidate = copy.deepcopy(raw)
     candidate['reset']['start'] = 'broadcast'
-    knee = K.place(candidate, ST)
+    knee = K.place(candidate, ST, reach=0.9*S.SIGNAL_REACH_UM)
     fixed = {tn: copy.deepcopy(candidate['partition_types'][tn]['clock'].get('sink_sites_um', [])) for tn in TYPES}
     for tn in TYPES:
         ck = candidate['partition_types'][tn]['clock']

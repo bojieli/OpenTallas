@@ -140,7 +140,7 @@ def allocate_bank_chain(allocator, a, b, in_face, out_face, depth, reach=405., r
     return result
 
 
-def place(raw, names):
+def place(raw, names, reach=405.):
     model = S.Plan(raw)
     ledger = []
     for name in names:
@@ -155,7 +155,7 @@ def place(raw, names):
             a = np.array([pins[(slot['name']+'_i',i)] for i in range(slot['width']+1)])
             b = np.array([pins[(slot['name']+'_o',i)] for i in range(slot['width']+1)])
             old = slot['stations']
-            path,banks,stats,hops = allocate_bank_chain(allocator,a,b,slot['in_face'],slot['out_face'],old)
+            path,banks,stats,hops = allocate_bank_chain(allocator,a,b,slot['in_face'],slot['out_face'],old,reach=reach)
             slot['stations'] = len(banks)+1
             # station 0 at the in-pin centroid, then each bank at its ALLOCATED centroid (the die plan measures hops
             # between these; the spine target can sit a half bank-width off the bits when the knee anchor is moved)
