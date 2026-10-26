@@ -499,7 +499,11 @@ SCHEMA = {
                                        "bits": {"type": "integer", "minimum": 1}, "launch": {"type": "string"},
                                        "capture": {"type": "string"}, "note": {"type": "string"},
                                        # per-bit station sites (kit_istations): bit b on its own L leaf_um <-> pin b
-                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit"]}}}},
+                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit"]},
+                                       # Exact lower-left FF banks, payload then epoch; one bank per regs_um.
+                                       "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
+                                       "bit_site_cell_um": _xy,
+                                       "face_bit_sites_um": {"type": "array", "items": _xy}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
