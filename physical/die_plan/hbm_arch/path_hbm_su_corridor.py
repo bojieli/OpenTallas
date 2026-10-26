@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""HBM SU-row corridor candidate: add 86.4um, align heavy NS FT, pack outside it.
+"""HBM SU-row corridor candidate: add 302.4um, retain NS windows with a bottom H jog, pack outside it.
 
 The matching PATH-HBM helper snapshot is required for internal/FT station and
 wavefront regeneration. Every changed cycle is published, not hidden.
@@ -22,7 +22,7 @@ def pack_columns(t,spans):
         x=math.ceil(a/8.64-1e-8)*8.64
         while x+164.16<=b+1e-6:
             cw=440.64 if x+440.64<=b+1e-6 else 164.16
-            cols.append([round(x,3),cw,8.64]);x+=cw+8.64
+            cols.append([round(x,3),cw,216.0]);x+=cw+8.64
     pos={}
     for c in sorted(t['hard_cores'],key=lambda c:(-c['outline_um'][1],-c['outline_um'][0])):
         cw,ch=c['outline_um'];opts=[z for z in cols if z[1]>=cw-1e-6 and z[2]+ch<=h-8.64+1e-6]
@@ -33,7 +33,7 @@ def pack_columns(t,spans):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--helper',type=Path,required=True)
-    ap.add_argument('--grow',type=float,default=86.4);ap.add_argument('--repair',action='store_true');a=ap.parse_args()
+    ap.add_argument('--grow',type=float,default=302.4);ap.add_argument('--repair',action='store_true');a=ap.parse_args()
     if a.out.exists():raise SystemExit('output must be new')
     sys.path.insert(0,str(a.helper.resolve()));E=importlib.import_module('path_hbm_edge');B=importlib.import_module('b2o');BN=importlib.import_module('b2n')
     p=json.loads((a.src/'die_plan.json').read_text());before=S.Plan(copy.deepcopy(p),a.src/'die_plan.json');r={'not_release_ready':True,'moves':{},'aligned':[]}
@@ -44,14 +44,6 @@ def main():
         for slot in slots:
             po=next(pr for pr in p['ports'] if pr['src']=={'part':pn,'bus':slot+'_o'})
             lo,hi=po['window_um'];local=[lo-ox,hi-ox];spans.append([local[0]-8.64,local[1]+8.64])
-            for n,q in parts.items():
-                if q['type']!=tn:continue
-                pin=next(pr for pr in p['ports'] if pr['dst']=={'part':n,'bus':slot+'_i'})
-                want=local if q.get('orient','R0')=='R0' else [t['outline_um'][0]-local[1],t['outline_um'][0]-local[0]]
-                want=[round(v+q['origin_um'][0],3) for v in want]
-                r['aligned'].append({'port':pin['id'],'before':list(pin['window_um']),'after':want});pin['window_um']=want
-                other=parts.get(pin['src']['part'])
-                if other:affected.add(other['type'])
         pos,merged,cols=pack_columns(t,spans);moves=[]
         for c in t['hard_cores']:
             old=list(c['origin_um']);new=pos[c['inst']];moves.append({'inst':c['inst'],'before':old,'after':new});c['origin_um']=new
@@ -60,7 +52,8 @@ def main():
             for tap in t.get('clock',{}).get('taps',[]):
                 if tap['name']==c['inst']:tap['xy']=[round(tap['xy'][i]+new[i]-old[i],3) for i in [0,1]]
         t['die_ft_bands']=[z for z in t.get('die_ft_bands',[]) if z['dir']!='NS']+[
-            {'dir':'NS','span_um':[round(v,3) for v in sp],'layers':['M5','M7'],'die_share':1.0,'note':'SU row: aligned core-free NS FT corridor'} for sp in merged]
+            {'dir':'EW','span_um':[8.64,207.36],'layers':['M4','M6'],'die_share':1.0,'note':'SU bottom core-free H jog preserves legal neighboring NS windows'}]+[
+            {'dir':'NS','span_um':[round(v,3) for v in sp],'layers':['M5','M7'],'die_share':1.0,'note':'SU row: core-free vertical FT run; bottom H jog preserves neighbor abutment'} for sp in merged]
         r['moves'][tn]={'cores':moves,'corridors':merged,'columns':cols}
     shutil.copytree(a.src,a.out)
     if a.repair:
