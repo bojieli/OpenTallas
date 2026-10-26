@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "small actual physical connectivity mechanism before signal GRT/DRT only",
+  "picture": "results/infra_physical_mesh_1026/review.png",
+  "findings": [
+    "Four actual BUFx24 driver/stub pairs on legal54nm sites and270nm rows; driver outputs and stub inputs lie on each M8strap.",
+    "M8/M9 mesh intersections have VIA89; eight M1pinaccess stacks each carry VIA12..VIA78.",
+    "PG M1 rails share cellVDD/VSSfaces and join separated M2trunks only with same-netVIA12.",
+    "Rootdriverinputs and stuboutputs remain for GRT/DRT; no setup/skew/IR/freezeclaim.",
+    "Corrected initial off-track M6 ports to canonical M6 track positions and 160nm landing windows; actual detailed-route pin access succeeds, DRC0."
+  ]
+}

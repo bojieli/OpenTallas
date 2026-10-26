@@ -1,0 +1,145 @@
+{
+  "schema": "opentallas.infra_mesh_connect.v1",
+  "verdict": "CONNECTED",
+  "source": "/work/mesh_straps.odb",
+  "output": "/work/mesh_connected_widthfinal.odb",
+  "mesh": {
+    "ck_mesh": {
+      "access_width_um": 0.16,
+      "native_vias_added": 68,
+      "access_segments_added": 6,
+      "landings": [
+        {
+          "terminal": "drv0.Y",
+          "pin_layer": "M1",
+          "pin_dbu": [
+            19370,
+            20214
+          ],
+          "strap_dbu": [
+            19887,
+            20115
+          ]
+        },
+        {
+          "terminal": "stub0.A",
+          "pin_layer": "M1",
+          "pin_dbu": [
+            22491,
+            20115
+          ],
+          "strap_dbu": [
+            22491,
+            20115
+          ]
+        },
+        {
+          "terminal": "drv1.Y",
+          "pin_layer": "M1",
+          "pin_dbu": [
+            79364,
+            20214
+          ],
+          "strap_dbu": [
+            79364,
+            20115
+          ]
+        },
+        {
+          "terminal": "stub1.A",
+          "pin_layer": "M1",
+          "pin_dbu": [
+            82485,
+            20115
+          ],
+          "strap_dbu": [
+            82485,
+            20115
+          ]
+        },
+        {
+          "terminal": "drv2.Y",
+          "pin_layer": "M1",
+          "pin_dbu": [
+            19370,
+            80154
+          ],
+          "strap_dbu": [
+            19887,
+            80055
+          ]
+        },
+        {
+          "terminal": "stub2.A",
+          "pin_layer": "M1",
+          "pin_dbu": [
+            22491,
+            80055
+          ],
+          "strap_dbu": [
+            22491,
+            80055
+          ]
+        },
+        {
+          "terminal": "drv3.Y",
+          "pin_layer": "M1",
+          "pin_dbu": [
+            79364,
+            80154
+          ],
+          "strap_dbu": [
+            79364,
+            80055
+          ]
+        },
+        {
+          "terminal": "stub3.A",
+          "pin_layer": "M1",
+          "pin_dbu": [
+            82485,
+            80055
+          ],
+          "strap_dbu": [
+            82485,
+            80055
+          ]
+        }
+      ]
+    }
+  },
+  "connectivity": {
+    "schema": "opentallas.infra_connectivity.v1",
+    "database": "/work/mesh_connected_widthfinal.odb",
+    "verdict": "CONNECTED",
+    "nets": {
+      "ck_mesh": {
+        "verdict": "CONNECTED",
+        "route_objects": 78,
+        "terminals": 8,
+        "physical_3d_components": 1,
+        "errors": []
+      },
+      "VDD": {
+        "verdict": "CONNECTED",
+        "route_objects": 5,
+        "terminals": 9,
+        "physical_3d_components": 1,
+        "errors": []
+      },
+      "VSS": {
+        "verdict": "CONNECTED",
+        "route_objects": 5,
+        "terminals": 9,
+        "physical_3d_components": 1,
+        "errors": []
+      }
+    },
+    "failures": {},
+    "cross_net_overlaps": [],
+    "freeze_qualified": false,
+    "note": "Actual routing-layer metal/via and transformed terminal geometry only; no DRC/timing/IR qualification"
+  },
+  "freeze_qualified": false,
+  "note": "Native mesh vias/pin-access only; review before route; DRC/timing/skew/IR remain separate"
+}

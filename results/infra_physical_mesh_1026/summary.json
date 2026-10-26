@@ -1,0 +1,53 @@
+{
+  "verdict": "ACTUAL_ROUTED_CONNECTED",
+  "freeze_qualified": false,
+  "technology": "ASAP7 native technology/stdcell LEFs; RVT TT liberty; canonical platform tracks",
+  "cell_master": "BUFx24_ASAP7_75t_R",
+  "drivers": 4,
+  "stubs": 4,
+  "source_mesh": {
+    "straps": 4,
+    "M8_M9_intersection_vias": 4,
+    "pin_access_stacks": 8,
+    "pin_access_vias": 56,
+    "terminals": 8,
+    "physical_3d_components": 1
+  },
+  "source_supply": {
+    "VDD": {
+      "rails_and_trunk": 3,
+      "vias": 2,
+      "terminals": 9,
+      "physical_3d_components": 1
+    },
+    "VSS": {
+      "rails_and_trunk": 3,
+      "vias": 2,
+      "terminals": 9,
+      "physical_3d_components": 1
+    }
+  },
+  "routed_regular_nets": [
+    "clk",
+    "o0",
+    "o1",
+    "o2",
+    "o3"
+  ],
+  "GRT_iterations_requested": 50,
+  "GRT_overflow": 0,
+  "DRT_drc_count": 0,
+  "DRT_regular_wirelength_um": 238,
+  "DRT_regular_vias": 48,
+  "source_mesh_PG_exactly_preserved": true,
+  "all_routed_nets_3D_connected": true,
+  "same_layer_cross_net_overlaps": 0,
+  "missing_intersection_vias_mutant": "REJECTED: four disconnected ck_mesh components",
+  "DRT_unit": "epyc1:oth-ubuntu-346857-1793008193",
+  "run_directory": "epyc1:/srv/opentallas-scratch2/claude/infra-physical-mesh-1026",
+  "limitations": [
+    "No clock skew, STA, power or IR qualification.",
+    "Source root-to-four-driver clock net is a small connectivity vehicle, not a balanced production die H-tree.",
+    "Fixed infrastructure source is explicitly constructed from actual native metal/via objects and pin access."
+  ]
+}

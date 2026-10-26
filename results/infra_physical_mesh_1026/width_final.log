@@ -1,0 +1,13 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/infra-physical-mesh-1026
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/infra-physical-mesh-1026
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/infra-physical-mesh-1026
+ot-run: localhost      admits   220 GB (avail 332, reserve 0, fresh 42.6, peak 4.9, headroom 0, waiters 0/0 GB) load 46/256 running 35 disk 595 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-1257178-1793009502 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+ACTUAL_WIDTH_INFERENCE_EXACT_GEOMETRY_PASS
+ot-run: RAN on localhost (unit oth-ubuntu-1257178-1793009502): exit 0

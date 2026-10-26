@@ -1,0 +1,170 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[INFO GRT-0020] Min routing layer: M1
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 32
+[INFO GRT-0019] Found 6 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 5
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical       478370        478370          0.00%
+M2         Horizontal     441858        441858          0.00%
+M3         Vertical       483372        483372          0.00%
+M4         Horizontal     362442        362442          0.00%
+M5         Vertical       362442        362442          0.00%
+M6         Horizontal     271962        271962          0.00%
+M7         Vertical       271962        271962          0.00%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 15
+[INFO GRT-0198] Via related Steiner nodes: 0
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 37
+[INFO GRT-0112] Final usage 3D: 530
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1              478370             0            0.00%             0 /  0 /  0
+M2              441858           109            0.02%             0 /  0 /  0
+M3              483372           238            0.05%             0 /  0 /  0
+M4              362442            11            0.00%             0 /  0 /  0
+M5              362442            32            0.01%             0 /  0 /  0
+M6              271962            29            0.01%             0 /  0 /  0
+M7              271962             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          2672408           419            0.02%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 253 um
+[INFO GRT-0014] Routed nets: 5
+[INFO GRT-0303] Global routing runtime = 00:00:00
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   mesh2
+Die area:                 ( 0 0 ) ( 100000 100000 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     8
+Number of terminals:      7
+Number of snets:          3
+Number of nets:           5
+
+[WARNING DRT-0421] Term o0 has no pins on routing grid
+[WARNING DRT-0421] Term o1 has no pins on routing grid
+[INFO DRT-0167] List of default vias:
+  Layer V1
+    default via: VIA12
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 2.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 120.
+[INFO DRT-0033] V1 shape region query size = 12.
+[INFO DRT-0033] M2 shape region query size = 24.
+[INFO DRT-0033] V2 shape region query size = 8.
+[INFO DRT-0033] M3 shape region query size = 16.
+[INFO DRT-0033] V3 shape region query size = 8.
+[INFO DRT-0033] M4 shape region query size = 16.
+[INFO DRT-0033] V4 shape region query size = 8.
+[INFO DRT-0033] M5 shape region query size = 16.
+[INFO DRT-0033] V5 shape region query size = 8.
+[INFO DRT-0033] M6 shape region query size = 21.
+[INFO DRT-0033] V6 shape region query size = 8.
+[INFO DRT-0033] M7 shape region query size = 16.
+[INFO DRT-0033] V7 shape region query size = 8.
+[INFO DRT-0033] M8 shape region query size = 14.
+[INFO DRT-0033] V8 shape region query size = 4.
+[INFO DRT-0033] M9 shape region query size = 6.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[ERROR DRT-0074] No access point for PIN/o1.
+[ERROR DRT-0074] No access point for PIN/o0.
+[ERROR DRT-0074] No access point for PIN/clk.
+[ERROR DRT-0074] No access point for PIN/o2.
+[ERROR DRT-0074] No access point for PIN/o3.
+Error: route.tcl, 10 DRT-0074
