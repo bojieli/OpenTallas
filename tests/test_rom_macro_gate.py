@@ -98,3 +98,55 @@ def test_verify_rejects_a_different_content_file(tmp_path):
 def test_macro_views_hold_no_content(f):
     text = (MACRO.parent / f).read_text()
     assert "viamap" not in text.lower()          # content lives only in the per-instance via map
+
+
+# ---- declared-logic allowlist (OWNER D-ROM-2 = (a), 2026-10-25 20:26) ----
+def _rom(words, width, init, src="t.sv:1.1-2.2"):
+    p = {"SIZE": _b(words), "WIDTH": _b(width), "RD_PORTS": _b(1), "WR_PORTS": _b(0), "MEMID": "$auto$proc_rom",
+         "INIT": init}
+    return {"type": "$mem_v2", "parameters": p, "attributes": {"src": src} if src else {}}
+
+
+def _entry(init, words=256, width=8, src="t.sv"):
+    import hashlib
+    return dict(id="t_tab", module="t_mod", table="case table", src=src, words=words, width=width,
+                sha256=hashlib.sha256(init.encode()).hexdigest(), reason="test")
+
+
+def test_declared_table_passes_other_content_fails():
+    init = "".join(random.Random(1).choice("01") for _ in range(256 * 8))
+    other = init[:-1] + ("0" if init[-1] == "1" else "1")                 # one bit edited
+    allow = [_entry(init)]
+    ok = gate.check_design(design(t=_rom(256, 8, init)), allowlist=allow)
+    assert ok["verdict"] == "PASS" and ok["declared"] == ["t_tab"]
+    assert ok["memories"][0]["verdict"] == "DECL"
+    assert gate.check_design(design(t=_rom(256, 8, other)), allowlist=allow)["verdict"] == "FAIL"
+    assert gate.check_design(design(t=_rom(256, 8, init)))["verdict"] == "FAIL"           # no allowlist = raw check
+    # same bits, other shape -> FAIL; other source file -> FAIL; no src attribute (kit netlists) -> hash decides
+    assert gate.check_design(design(t=_rom(128, 16, init)), allowlist=allow)["verdict"] == "FAIL"
+    assert gate.check_design(design(t=_rom(256, 8, init, src="w.sv:3.1-9.9")), allowlist=allow)["verdict"] == "FAIL"
+    assert gate.check_design(design(t=_rom(256, 8, init, src="")), allowlist=allow)["verdict"] == "PASS"
+    # a declared table beside an undeclared one: the design still FAILs on the undeclared one only
+    mix = gate.check_design(design(t=_rom(256, 8, init), w=_rom(256, 8, other)), allowlist=allow)
+    assert mix["verdict"] == "FAIL" and mix["n_fail"] == 1
+
+
+def test_repo_allowlist_is_well_formed_and_cli_uses_it(tmp_path):
+    entries = gate.load_allowlist()
+    ids = [e["id"] for e in entries]
+    assert len(ids) == len(set(ids)) >= 7
+    assert {(e["words"], e["width"]) for e in entries} >= {(512, 65), (512, 14), (256, 61), (128, 49), (1024, 10),
+                                                            (64, 32)}
+    assert not any(e["words"] == 32 and e["width"] == 32 for e in entries)   # KV dcal is D-ROM-3, never declared
+    bad = tmp_path / "allow.json"
+    bad.write_text(json.dumps({"tables": [dict(entries[0], reason="")]}))
+    with pytest.raises(SystemExit):
+        gate.load_allowlist(bad)
+    init = "".join(random.Random(2).choice("01") for _ in range(256 * 8))
+    al = tmp_path / "a.json"
+    al.write_text(json.dumps({"tables": [_entry(init)]}))
+    mj = tmp_path / "mem.json"
+    mj.write_text(json.dumps(design(t=_rom(256, 8, init))))
+    assert gate.main(["--mem-json", str(mj), "--allowlist", str(al)]) == 0
+    assert gate.main(["--mem-json", str(mj), "--allowlist", str(al), "--no-allowlist"]) == 1
+    assert gate.main(["--mem-json", str(mj)]) == 1                           # repo list does not hold this content

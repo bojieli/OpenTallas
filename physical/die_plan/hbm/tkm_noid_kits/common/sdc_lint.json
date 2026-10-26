@@ -1,0 +1,39 @@
+{
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "clock_ports": [
+  "tile_clk"
+ ],
+ "inputs": [
+  "tile_clr",
+  "tile_conv",
+  "tile_ins_b",
+  "tile_ins_v",
+  "tile_up_in"
+ ],
+ "outputs": [
+  "tile_conv_o",
+  "tile_up_out",
+  "tile_ovf_v",
+  "tile_ovf_b",
+  "tile_clr_o"
+ ],
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "time_unit_ps": 1.0,
+ "io_floor_ps": {
+  "tile_clr": 166.60000000000002,
+  "tile_conv_o": 166.60000000000002,
+  "tile_ins_v": 166.60000000000002,
+  "tile_ins_b": 166.60000000000002,
+  "tile_up_out": 166.60000000000002,
+  "tile_ovf_v": 166.60000000000002,
+  "tile_ovf_b": 166.60000000000002,
+  "tile_up_in": 166.60000000000002,
+  "tile_clr_o": 166.60000000000002,
+  "tile_conv": 166.60000000000002,
+  "tile_clk": 166.60000000000002
+ },
+ "port_latency_ps": {}
+}

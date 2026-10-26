@@ -1,0 +1,153 @@
+{
+ "schema": "opentallas.hbm_arch.core_face_shell.v1",
+ "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+ "core": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__fcore",
+ "core_def_file": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__wrap.sv",
+ "clock": "tile_clk",
+ "passthrough": [
+  "tile_clk"
+ ],
+ "scalars": [
+  "tile_clk",
+  "tile_clr",
+  "tile_clr_o",
+  "tile_conv",
+  "tile_conv_o",
+  "tile_ins_v",
+  "tile_ovf_v"
+ ],
+ "params": {},
+ "mutant": null,
+ "latency": {
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "in_to_out_extra_cycles": 2,
+  "reset_delay_cycles": 0,
+  "note": "every signal input +1, every signal output +1; clock/reset pins pass through"
+ },
+ "in_buses": 5,
+ "out_buses": 5,
+ "in_bits": 691,
+ "out_bits": 691,
+ "face_flops": 1382,
+ "dropped": [],
+ "unread_kept": [],
+ "const_out": {},
+ "const_out_bits": 0,
+ "dup_out_groups": 0,
+ "dup_out_bits": 0,
+ "dup_out": [],
+ "feedthrough": [
+  "tile_conv[0]->tile_conv_o[0]"
+ ],
+ "feedthrough_bits": 1,
+ "widths": {
+  "tile_clk": 1,
+  "tile_clr": 1,
+  "tile_clr_o": 1,
+  "tile_conv": 1,
+  "tile_conv_o": 1,
+  "tile_ins_b": 344,
+  "tile_ins_v": 1,
+  "tile_ovf_b": 344,
+  "tile_ovf_v": 1,
+  "tile_up_in": 344,
+  "tile_up_out": 344
+ },
+ "dirs": {
+  "tile_clk": "input",
+  "tile_clr": "input",
+  "tile_clr_o": "output",
+  "tile_conv": "input",
+  "tile_conv_o": "output",
+  "tile_ins_b": "input",
+  "tile_ins_v": "input",
+  "tile_ovf_b": "output",
+  "tile_ovf_v": "output",
+  "tile_up_in": "input",
+  "tile_up_out": "output"
+ },
+ "keep": {
+  "tile_clk": 1,
+  "tile_clr": 1,
+  "tile_clr_o": 1,
+  "tile_conv": 1,
+  "tile_conv_o": 1,
+  "tile_ins_b": 344,
+  "tile_ins_v": 1,
+  "tile_ovf_b": 344,
+  "tile_ovf_v": 1,
+  "tile_up_in": 344,
+  "tile_up_out": 344
+ },
+ "top_fanout_in": [
+  [
+   10,
+   "tile_ins_v[0]"
+  ],
+  [
+   9,
+   "tile_ins_b[9]"
+  ],
+  [
+   9,
+   "tile_ins_b[99]"
+  ],
+  [
+   9,
+   "tile_ins_b[98]"
+  ],
+  [
+   9,
+   "tile_ins_b[97]"
+  ],
+  [
+   9,
+   "tile_ins_b[96]"
+  ],
+  [
+   9,
+   "tile_ins_b[95]"
+  ],
+  [
+   9,
+   "tile_ins_b[94]"
+  ],
+  [
+   9,
+   "tile_ins_b[93]"
+  ],
+  [
+   9,
+   "tile_ins_b[92]"
+  ],
+  [
+   9,
+   "tile_ins_b[91]"
+  ],
+  [
+   9,
+   "tile_ins_b[90]"
+  ],
+  [
+   9,
+   "tile_ins_b[8]"
+  ],
+  [
+   9,
+   "tile_ins_b[89]"
+  ],
+  [
+   9,
+   "tile_ins_b[88]"
+  ],
+  [
+   9,
+   "tile_ins_b[87]"
+  ]
+ ],
+ "files": [
+  "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__fshell.sv",
+  "ot_hbm_face_reg.sv"
+ ]
+}
