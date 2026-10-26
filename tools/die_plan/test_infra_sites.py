@@ -74,3 +74,11 @@ class T(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_plan_without_mesh_still_builds_island_geometry():
+    import schema as S
+    p = S.Plan(S.load(Path(__file__).parent / "examples/tiny_plan.json"))
+    report = IS.run(p, mesh_dir=None, with_reset=False)
+    assert report["island_instances"]
+    assert report["summary"]["checks"]["htree_snap"] == "NOT RUN"

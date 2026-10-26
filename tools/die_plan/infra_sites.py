@@ -347,6 +347,7 @@ def run(P, mesh_dir=None, tracks_file=None, pg_file=None, m89=False, bays=None, 
     # ---------------- clock demand: drivers by containment, H-tree nodes/reps snapped to the nearest island
     demand = defaultdict(lambda: defaultdict(float))
     snap = None
+    island_rects_die = {}
     part_list = list(P.parts)
     rects = {p: P.rect(p) for p in part_list}
     bucket = defaultdict(list)
@@ -451,7 +452,6 @@ def run(P, mesh_dir=None, tracks_file=None, pg_file=None, m89=False, bays=None, 
                 parent_of[(lv, e["tag"])] = pa
         # clock cells landing per island: nodes (one per tree node <= island_level, deeper levels are the in-island
         # distribution) + leg repeaters (ceil(leg / clock_reach) - 1 after the snap, sited at islands on the leg)
-        island_rects_die = {}
         for (lv, tag), (p, c, d) in snapped.items():
             if lv <= island_level:
                 demand[p]["nodes"] += 1
