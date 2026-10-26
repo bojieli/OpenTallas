@@ -56,7 +56,10 @@ def main():
                 result = T.schedule(seg, V.DT.POS, 'S2', cost_fn=cf)
                 hits += nh
                 total += result['total_cycles']
-                rows[str(key)] = dict(cycles=result['total_cycles'], matched_records=nh)
+                rows[str(key)] = dict(cycles=result['total_cycles'], matched_records=nh,
+                    records=[dict(index=i, tag=r.tag, start=result['start'][i],
+                                  end=result['end'][i], added_work_stream_cycles=delta)
+                             for i,r in enumerate(seg) if selected(r)])
             cases[label] = dict(cycles=total, tok_s=Q.CLK / total,
                                 extra_stream_cycles_per_matched_record=delta,
                                 matched_records=hits, segments=rows)
