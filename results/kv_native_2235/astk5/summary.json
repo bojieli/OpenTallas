@@ -1,0 +1,56 @@
+{
+ "verdict": "NOT SIGNED",
+ "setup_tt": {
+  "verdict": "FAIL",
+  "wns_ps": -85.91,
+  "tns_ps": -15033.45,
+  "violators": 500.0
+ },
+ "hold_ff": {
+  "verdict": "FAIL",
+  "wns_ps": -13.22,
+  "tns_ps": -3115.68,
+  "violators": 581.0,
+  "sdc_wns_ps": -2.35,
+  "overlay": "applied vclk in_min -40 out_min 0",
+  "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 202.500000",
+  "reason": null
+ },
+ "drv": {
+  "verdict": "FAIL",
+  "by_corner": {
+   "tt": {
+    "slew": 486.0,
+    "cap": 0.0
+   },
+   "ff": {
+    "slew": 83.0,
+    "cap": 0.0
+   }
+  },
+  "failing": {
+   "tt": {
+    "slew": 486.0,
+    "cap": 0.0
+   },
+   "ff": {
+    "slew": 83.0,
+    "cap": 0.0
+   }
+  }
+ },
+ "clock_verdict": "PASS",
+ "pin_means_ps": {
+  "tt": 294.14,
+  "ff": 239.19
+ },
+ "unconstrained": "legacy dedicated strap_q[0:1]/D under false-path ID contract, source cleanup exact-tested, not waived",
+ "diagnosed_causes": [
+  "zq-index mux to shared SD write enable: actual14gate control path; AS6 kept perrow enable precompute0cycles",
+  "boundary FF q482 to polarity INV0660 separated140.96um; cluster companionINV nearFF before newplace",
+  "source boundI250/202.5 vsmeasured294.14/239.19 requires freshcorelatency+parentearlytap jointqualification",
+  "oldrunner missingio_hold_qualification crashed afterroute; owncompletebundle native collection terminalNOTSIGNED"
+ ],
+ "raw_native_dir": "/srv/opentallas-scratch2/claude/codex-kv-astk-native-2215/native",
+ "original_unchanged": "epyc1:/srv/opentallas-scratch2/claude/path-kv/astk5/kit/kv3_astk__190.08x181.44"
+}

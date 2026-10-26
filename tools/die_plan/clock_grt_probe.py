@@ -9,6 +9,7 @@ import argparse
 import json
 import math
 import re
+import shutil
 from pathlib import Path
 
 
@@ -48,7 +49,7 @@ def legalize_cells(cells, plan):
     return placed,dict(cells=len(placed),overlaps=0,keepout_hits=0,max_displacement_um=round(maximum,3),site_um=[sx,sy],master_um=[width,height])
 
 
-def build(kit, clock, out, plan=None):
+def build(kit, clock, out, plan=None, width_corrected_rc=False):
     tree = json.loads((clock/'tree.json').read_text())
     cells = json.loads((clock/'place.json').read_text())
     legalization=None
@@ -103,6 +104,7 @@ def build(kit, clock, out, plan=None):
     lines += [f'puts "OT_NDR nets4={counts[4]} nets8={counts[8]}"',
         'global_route -congestion_iterations 5 -allow_congestion -verbose -congestion_report_file /out/congestion_$::env(CORNER).rpt',
         'write_guides /out/route_$::env(CORNER).guide',
+        'write_global_route_segments /out/segments_$::env(CORNER).txt',
         'source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl',
         'delete_clock [get_clocks dck]', 'estimate_parasitics -global_routing',
         'create_clock -name vclk -period 833.000',
@@ -114,11 +116,28 @@ def build(kit, clock, out, plan=None):
         'foreach i [get_cells ck_n*] {set q [get_pins [get_full_name $i]/Y]; puts $fh "N [string range [get_full_name $i] 3 end] [get_property $q arrival_max_rise] [get_property $q arrival_min_rise]"}',
         'close $fh', 'report_check_types -max_slew -max_capacitance -violators',
         'write_db /out/combo_$::env(CORNER).odb', 'puts OT_DONE']
+    if width_corrected_rc:
+        for helper in ['mix_clock_spef.py','restore_clock_spef_caps.py']:
+            shutil.copyfile(Path(__file__).with_name(helper),out/helper)
+        rc=[
+          'foreach scale {4 8} {',
+          '  set rr 1.0; if {$scale == 4} {set cc 1.3} else {set cc 1.6}',
+          '  set_layer_rc -layer M8 -resistance [expr {8.44765e-3*$rr}] -capacitance [expr {.103962*$cc}]',
+          '  set_layer_rc -layer M9 -resistance [expr {8.89556e-3*$rr}] -capacitance [expr {.0928446*$cc}]',
+          '  estimate_parasitics -global_routing -spef_file /out/routed${scale}w_$::env(CORNER).spef',
+          '  if {![file exists /out/routed${scale}w_$::env(CORNER).spef] || [file size /out/routed${scale}w_$::env(CORNER).spef] == 0} {error "missing native estimated SPEF"}',
+          '  exec python3 /out/restore_clock_spef_caps.py /out/routed${scale}w_$::env(CORNER).spef --out /out/fixed${scale}w_$::env(CORNER).spef --width $scale --clock /clock --prefix ck_',
+          '}',
+          'exec python3 /out/mix_clock_spef.py /out/fixed4w_$::env(CORNER).spef /out/fixed8w_$::env(CORNER).spef --clock /clock --prefix ck_ --out /out/routed_mixed_$::env(CORNER).spef',
+          'read_spef /out/routed_mixed_$::env(CORNER).spef',
+          'puts OT_MIXED_NDR_RC_LOADED']
+        at=lines.index('estimate_parasitics -global_routing')
+        lines[at:at+1]=rc
     (out/'combo.tcl').write_text(t+'\n'.join(lines)+'\n')
-    (out/'probe.json').write_text(json.dumps(dict(clock_meta=tree['meta'],ndr_nets=counts,period_ps=833.0,diagnostic=True,legalization=legalization),indent=2))
+    (out/'probe.json').write_text(json.dumps(dict(clock_meta=tree['meta'],ndr_nets=counts,period_ps=833.0,diagnostic=True,legalization=legalization,width_corrected_rc=width_corrected_rc,rc_scope="Native per-net NDR R with profile C and restored terminal caps; GRT estimate, not RCX" if width_corrected_rc else "Native per-net NDR R with platform C; GRT estimate, not RCX"),indent=2))
     return dict(signal_ports=len(sp),clock_ports=len(cp),clock_cells=len(cells),ndr_nets=counts)
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('kit',type=Path);p.add_argument('clock',type=Path);p.add_argument('out',type=Path);p.add_argument('--plan',type=Path)
-    a=p.parse_args();print(json.dumps(build(a.kit,a.clock,a.out,a.plan)))
+    p.add_argument('kit',type=Path);p.add_argument('clock',type=Path);p.add_argument('out',type=Path);p.add_argument('--plan',type=Path);p.add_argument('--width-corrected-rc',action='store_true')
+    a=p.parse_args();print(json.dumps(build(a.kit,a.clock,a.out,a.plan,a.width_corrected_rc)))
