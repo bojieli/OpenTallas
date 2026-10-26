@@ -176,7 +176,81 @@ class BoundControl:
                     scope='current CTL transport to atomic XRT command pins; seqhost calendar and leaf-write readiness separate')
 
 
-def compile_control(*, layer, out, bound, inventory, timing, source_root, asbuilt_manifest, entry_program=None):
+def xr_deskew(die, sl):
+    hits=[n for n in die.units if n.startswith(sl+'.') and n.endswith('.u_xr')]
+    if len(hits)!=1:raise ValueError('one exact current XR source required for deskew: '+sl)
+    params=die.units[hits[0]].get('params',{})
+    if 'PDSK' not in params:raise ValueError('current XR evaluated deskew parameter absent: '+sl)
+    value=BoundControl._integer(params['PDSK'])
+    return [(value>>(3*k))&7 for k in range(5)]
+
+
+def retime_norm(entry, die):
+    """Proposed reorder of NORMR slots; GO dates and source span stay unchanged."""
+    from dv_layer_compile import pack_row
+    result=copy.deepcopy(entry)
+    commands=result['commands'];original={c['template']:c['issue'] for c in commands}
+    slices=die.slices();by_tier={0:[],1:[]}
+    for sl,info in slices.items():by_tier[info['sid']&1].append((info['sid'],sl))
+    for tier,units in by_tier.items():
+        ordered=sorted(units)
+        group=[c for c in commands if c['slice'] in {sl for _,sl in ordered}]
+        norms=[c for c in group if c['kind']=='NORMR']
+        gos=[c for c in group if c['kind']=='XFIN_GO']
+        if len(norms)!=40 or len(gos)!=8 or len(group)!=48:
+            raise ValueError('native retime requires exactly40 NORMR+8 GO commands per tier')
+        slots=sorted(c['issue'] for c in norms)
+        if slots!=list(range(slots[0],slots[0]+40)):
+            raise ValueError('native NORMR source slots are not the expected contiguous40-slot window')
+        for ordinal,(_,sl) in enumerate(ordered):
+            local=[c for c in norms if c['slice']==sl]
+            if sorted(c['leaf'] for c in local)!=list(range(5)):
+                raise ValueError('native norm needs all five distinct leaf commands: '+sl)
+            depths=xr_deskew(die,sl);offsets=[max(depths)-d for d in depths]
+            if sorted(offsets)!=list(range(5)):
+                raise ValueError('current deskew cannot accept five distinct consecutive command slots: '+sl)
+            for c in local:c['issue']=slots[0]+5*ordinal+offsets[c['leaf']]
+            go=next(c for c in gos if c['slice']==sl)
+            if go['issue']-max(c['issue'] for c in local)<8:
+                raise ValueError('proposed retime shortens inherited GO separation below8: '+sl)
+        if len({c['issue'] for c in group})!=48:
+            raise ValueError('native source command collision')
+    changed={c['template']:c['issue']-original[c['template']] for c in commands}
+    for row in result['rows']:
+        delta=changed[row['tix']]
+        row['issue']+=delta;row['done']+=delta
+        row['row76']=f"{pack_row(row['done'],row['issue'],row['eng'],row['arg']):019x}"
+    result['rows'].sort(key=lambda r:(r['issue'],r['eng']))
+    if len({(r['issue'],r['eng']) for r in result['rows']})!=len(result['rows']):
+        raise ValueError('native encoded engine row collision')
+    result.update(status='PROPOSED_CONTROL_RETIME',native_job_sealed=False,
+        source_command_dates_qualified=False,go_readiness_qualified=False,
+        retime=dict(normr_order='five consecutive commands per actual source SID',
+                    go_dates='unchanged from inherited unqualified prototype',
+                    source_span_added_cycles=0,min_go_after_last_normr_edges=8,
+                    arithmetic_and_payloads_changed=False,
+                    holds=['actual GO/start/first-partial contract','leaf-store residency',
+                           'global NX/rstd/XQ calendar and retirement']))
+    return result
+
+
+def norm_spacing(commands, die):
+    report={}
+    for sl in sorted({c['slice'] for c in commands}):
+        norms=sorted((c for c in commands if c['slice']==sl and c['kind']=='NORMR'),key=lambda c:c['leaf'])
+        if len(norms)!=5 or any('xr_command_pin_edge_from_age0_command' not in c for c in norms):
+            report[sl]=dict(status='BLOCKED',reason='five measured native command arrivals required');continue
+        edges=[c['xr_command_pin_edge_from_age0_command'] for c in norms]
+        deltas=[b-a for a,b in zip(edges,edges[1:])]
+        depths=xr_deskew(die,sl);aligned=[e+d for e,d in zip(edges,depths)]
+        report[sl]=dict(status='PASS_CONTROL_SPACING' if len(set(aligned))==1 else 'FAIL_CONTROL_SPACING',
+                       leaf_edges=edges,successive_leaf_edges=deltas,current_source_pdsk=depths,
+                       command_edges_plus_pdsk=aligned,
+                       scope='command-pin spacing only; partial/GO/global readiness not qualified')
+    return report
+
+
+def compile_control(*, layer, out, bound, inventory, timing, source_root, asbuilt_manifest, entry_program=None, retime_entry=False):
     """Compile actual control transport and optional native command landing dates."""
     from layer_prog.bound_die import BoundDie
     out=Path(out)
@@ -188,10 +262,14 @@ def compile_control(*, layer, out, bound, inventory, timing, source_root, asbuil
         try:paths[sl]=dict(status='PASS',**control.path(sl))
         except (ValueError,KeyError) as exc:paths[sl]=dict(status='BLOCKED',slice=sl,reason=str(exc))
     commands=[]
+    proposed=None
+    original_spacing=None
     if entry_program is not None:
         entry=json.loads(Path(entry_program).read_text())
         if entry.get('die_sha256')!=die.die_sha:
             raise ValueError('entry commands belong to a different bound top')
+        original_entry=entry
+        if retime_entry:entry=retime_norm(entry,die);proposed=entry
         table={t['i']:t for t in entry['templates']}
         for command in entry['commands']:
             sl=command['slice'];p=paths.get(sl)
@@ -212,15 +290,31 @@ def compile_control(*, layer, out, bound, inventory, timing, source_root, asbuil
                         hold='actual XR output to leaf-store transport/commit, root boot phase and global exchange not sealed')
                 except (KeyError,ValueError) as exc:rec.update(status='BLOCKED',reason=str(exc))
             commands.append(rec)
+    spacing=norm_spacing(commands,die) if commands else None
+    if proposed:
+        before=[]
+        original={c['template']:c for c in original_entry['commands']}
+        for c in commands:
+            b=dict(c);delta=original[c['template']]['issue']-c['issue'];b['issue']+=delta
+            for key in ('seqhost_output_edge_from_age0_command','xr_input_edge_from_age0_command','xr_command_pin_edge_from_age0_command'):
+                if key in b:b[key]+=delta
+            before.append(b)
+        original_spacing=norm_spacing(before,die)
     blocked=sum(p['status']!='PASS' for p in paths.values())
+    spacing_fail=bool(spacing and any(r['status']!='PASS_CONTROL_SPACING' for r in spacing.values()))
     record=dict(schema='opentallas.s81.bound_control_compile.v1',layer=layer,
         verdict='PASS_CONTROL_TRANSPORT' if not blocked else 'BLOCKED',die_sha256=die.die_sha,
         paths=paths,commands=commands,blocked_paths=blocked,
+        norm_control_spacing=spacing,inherited_norm_control_spacing=original_spacing,
+        source_asbuilt_sha256=die.inventory['source_asbuilt_sha256'],
         timing_origin='actual seqhost output-register edge0; optional command dates relative to observed age0-command event',
         legacy_geometry_used=False,legacy_local_latency_used=False,
         root_boot_phase_qualified=False,leaf_store_residency_qualified=False,
         native_job_sealed=False,full_token=False)
+    if proposed and not blocked and not spacing_fail:record['verdict']='PROPOSED_CONTROL_RETIME'
+    elif spacing_fail:record['verdict']='FAIL_CONTROL_SPACING'
     out.mkdir(parents=True)
+    if proposed:(out/'native_entry_norm_proposed.json').write_text(json.dumps(proposed,indent=1)+'\n')
     (out/'bound_control.json').write_text(json.dumps(record,indent=1)+'\n')
     print(json.dumps(dict(verdict=record['verdict'],paths=len(paths),blocked=blocked,commands=len(commands))))
-    return 2 if blocked or any(c['status']=='BLOCKED' for c in commands) else 0
+    return 2 if blocked or spacing_fail or any(c['status']=='BLOCKED' for c in commands) else 0

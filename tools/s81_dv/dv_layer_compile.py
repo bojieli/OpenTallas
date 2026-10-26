@@ -1260,6 +1260,7 @@ def main(argv=None):
     ap.add_argument('--bound-source-root', type=Path, help='Exact current implementation source root')
     ap.add_argument('--bound-asbuilt-manifest', help='Repo-relative exact as-built source selection manifest')
     ap.add_argument('--native-entry-program', type=Path, help='Optional actual bound entry command/template record')
+    ap.add_argument('--retime-native-entry', action='store_true',help='Propose consecutive per-slice NORMR commands; keep GO dates and all readiness holds')
     ap.add_argument('--entry-engram-inputs', default=None,
                     help='Checkpoint-derived Engram sidecars for actual attention-entry native rows and NX partials')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
@@ -1281,8 +1282,8 @@ def main(argv=None):
         from layer_prog.bound_control import compile_control
         raise SystemExit(compile_control(layer=a.layer,out=a.out,bound=a.bound,inventory=a.bound_inventory,
             timing=a.bound_local_timing,source_root=a.bound_source_root,asbuilt_manifest=a.bound_asbuilt_manifest,
-            entry_program=a.native_entry_program))
-    if any((a.bound,a.bound_inventory,a.bound_local_timing,a.bound_source_root,a.bound_asbuilt_manifest,a.native_entry_program)):
+            entry_program=a.native_entry_program,retime_entry=a.retime_native_entry))
+    if any((a.bound,a.bound_inventory,a.bound_local_timing,a.bound_source_root,a.bound_asbuilt_manifest,a.native_entry_program,a.retime_native_entry)):
         ap.error('native bound inputs require --bound-control-only; do not mix current and legacy ages')
     if a.dense_stage is not None and (a.mu_cal or a.mu_ctx):
         ap.error('--dense-stage MU requires corrected per-position static stage graph binding')
