@@ -89,6 +89,21 @@ class Gate(unittest.TestCase):
         ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('kvcore',why)
         del self.row['runner'];k=self.root/'kit';k.mkdir();(k/'run_kit_kv.sh').write_text('')
         self.row['kit']='epyc1:'+str(k);self.assertFalse(self.gate())
+    def test_other_die_core_change_does_not_hold_frozen_qc(self):
+        self.row['die']='qwen_compute'
+        self.runref('qc','PASS',die='qwen_compute')
+        spec_path=self.repo/'tools/flow_canary/canaries.json'
+        spec=json.loads(spec_path.read_text())
+        spec.update(watch=['tools/die_plan/*','physical/die_plan/*'],
+                    die_plans={'qwen_compute':['qwen_compute']})
+        spec_path.write_text(json.dumps(spec))
+        self.git=lambda *a,**kw:(0,'physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py\n','')
+        self.assertTrue(self.gate())
+        # A change in QC's own recipe, or the shared flow, still blocks it.
+        for path in ['physical/die_plan/qwen_compute/cores/gen.py', 'tools/die_plan/gen_phys.py']:
+            self.git=lambda *a,**kw:(0,path+'\n','')
+            self.assertFalse(self.gate())
+
     def test_adopt_never_stalls_observation(self):
         self.row['mode']='adopt';self.assertTrue(self.gate())
 

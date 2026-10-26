@@ -82,6 +82,7 @@
   "rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_lp.sv",
   "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_half_join.sv",
   "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_ingress.sv",
+  "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_ingress_hden.sv",
   "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_pv_so_program.sv",
   "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_svc_rs_pvso_entry.sv",
   "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
@@ -140,6 +141,7 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
   "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job_a0.sv",
   "rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv",
   "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
@@ -442,6 +444,7 @@
   "rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_lp.sv",
   "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_half_join.sv",
   "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_ingress.sv",
+  "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_ingress_hden.sv",
   "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
   "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_sukv_raw512.sv",
@@ -508,6 +511,7 @@
   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job_a0.sv",
   "rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv",
   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
@@ -1028,6 +1032,7 @@
   "u_s_\\w+\\..*\\.(sid|ch_b|chb|k)",
   "u_rsv_\\d+(\\.u)+\\.u_sx\\.sid",
   "u_gunit\\.u_l2\\.sid",
+  "u_rsv_\\d+(\\.u)+\\.u_att\\.u_eng\\.g_t\\[\\d+\\]\\.g_ts\\.u_t\\.u_hc\\.g_h\\[\\d+\\]\\.u_c\\.gid",
   "u_f_0L01\\.u_r0\\.u_cf\\.lk",
   "u_f_0L02\\.u_r0\\.u_cf\\.lk",
   "u_f_0L03\\.u_r0\\.u_cf\\.lk",
@@ -1101,7 +1106,7 @@
   "u_f_7R12\\.u_r0\\.u_cf\\.lk",
   "u_f_7R13\\.u_r0\\.u_cf\\.lk"
  ],
- "strap_note": "as-built declared position straps (cap30 die_port_bind straps_declared: master:port), applied to the leaves that carry them after dissolving the slice parents; PATH-S81/TIES 10-25: the u_rsv_*.sid / u_gunit.sid straps reach their leaves after the svc_rs / gunit parents dissolve (dsdv_svc_sx.sid = slice-id strap selecting its role-ROM row; dsdv_gunit_l2.sid = the gunit slot id flopped onward)",
+ "strap_note": "as-built declared position straps (cap30 die_port_bind straps_declared: master:port), applied to the leaves that carry them after dissolving the slice parents; PATH-S81/TIES 10-25: the u_rsv_*.sid / u_gunit.sid straps reach their leaves after the svc_rs / gunit parents dissolve (dsdv_svc_sx.sid = slice-id strap selecting its role-ROM row; dsdv_gunit_l2.sid = the gunit slot id flopped onward); TOK-SCHED 10-25: ot_s81c_attn_hcore.gid = the core's static tile head index 0..15 (ot_s81c_attn_hcore.sv port comment), an ID-only strap tied at the svc parent (OWNER 10-25 B)",
  "defines": [
   "DSFD_PQ_STATIC_X2",
   "S81CTRL_SRAM_FIFO",
@@ -1113,13 +1118,12 @@
   "OT_S81SL_KV_TRANSPORT",
   "OT_SVC_ALLQ",
   "SU_SMU_T",
-  "SVCQ_ENG_FG3",
   "OT_ATTN_HCORE",
   "OT_S81ENG_RR_N32",
   "OT_S81C_HCORE_CTLA",
   "OT_S81C_HCORE_RST_TIMED"
  ],
- "defines_note": "Qualified source-only hcore CTLA/WPRE2 + timed synchronous private reset, connected sender load stage; fresh physical qualification required",
+ "defines_note": "Qualified source-only hcore CTLA/WPRE2 + timed synchronous private reset, connected sender load stage; fresh physical qualification required. TOK-SCHED 10-25: SVCQ_ENG_FG3 removed: it selected the legacy FPL3/FML3 tile_l engine (E_TS 0), so OT_ATTN_HCORE had no effect and the 64 ot_s81c_attn_hcore cores the plan places in every svc partition were absent (svc_5 core reset found 0); the plan engine is FPL4 FML6 F12 tile_s (rtl/hdc/v41x/ot_s81c_attn_hcore.sv header)",
  "netlist_note": "Versioned logical adopt178 topology; current repository source definitions and plan transport elaborate afresh. Generated current bound top is a separate strict binding gate.",
  "base": "../../../..",
  "io_roles": [
@@ -1184,10 +1188,10 @@
   "$mod"
  ],
  "native_glue_note": "TOK-SCHED 10-25: the current dissolved parents (ot_s81sl_vp, dsdv_svc_att, dsdv_svc_rs_c, ot_hdc_v41x_attn_s) carry word-level primitives that _glue does not re-emit (v3c EMIT \\$memrd_v2, v4 EMIT \\$demux); each is emitted by the native Yosys backend (bind_native_glue.py; memory_collect only, no memory_map/async2sync/opt), qualified by test_bind_native_glue{,_comb}.py",
- "parameterized_interface_note": "Specialize every relay and delay instance before leaf blackboxing: Slang empty blackboxes otherwise reuse the first width and erase per-instance W/D/RESET parameters (strict-bind v10 relay/delay padding root cause). Private RTL and latency parameters remain exactly as authored.",
  "dead_input_proofs": [
   "results/token_pass/s81_dead_inputs_2148/proof.json"
  ],
+ "parameterized_interface_note": "Specialize every relay and delay instance before leaf blackboxing: Slang empty blackboxes otherwise reuse the first width and erase per-instance W/D/RESET parameters (strict-bind v10 relay/delay padding root cause). Private RTL and latency parameters remain exactly as authored.",
  "substitute_inst": [
   {
    "inst": "u_etap_15",

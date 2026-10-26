@@ -180,6 +180,7 @@ foreach pass {INPUT OUTPUT} {
     set cx [expr {$ff_x0 + (($cx - $ff_x0) / $ff_sw) * $ff_sw}]
     # orient BEFORE location: dbInst::setOrient keeps the bbox, so a later MX flip moved the flop one row down (onto
     # its neighbour: KV-P5 10-23, two FIRM flops in one site -> DPL-0033)
+    if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
     if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
     $f setLocation $cx $cy
     $f setPlacementStatus FIRM
@@ -223,7 +224,8 @@ proc ff_put_near {f x y} {
         if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"]} continue
         dict set ff_gocc "$c,$r" 1
         set cx [expr {$ff_x0 + $c * $ff_cpitch}]; set cy [expr {$ff_y0 + $r * $ff_rh}]
-        if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
+        if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
+    if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
         $f setLocation $cx $cy
         $f setPlacementStatus FIRM
         return [list $cx $cy]
@@ -271,6 +273,7 @@ foreach bt [$ff_blk getBTerms] {
       set fm [$f getMaster]
       if {[$fm getWidth] > $fw*$ff_dbu+1 || [$fm getHeight] > $fh*$ff_dbu+1} { error "FT cell exceeds allocated footprint: [$f getName]" }
       if {$cx < $ff_x0 || $cy < $ff_y0 || $cx+[$fm getWidth] > $ff_x1 || $cy+[$fm getHeight] > $ff_y1} { error "explicit FT site outside core: $key" }
+      if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
       $f setOrient [dict get $ff_orient $cy]
       $f setLocation $cx $cy
       $f setPlacementStatus FIRM

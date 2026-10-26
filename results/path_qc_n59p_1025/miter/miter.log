@@ -1,0 +1,4 @@
+run_mut3_a0l0: MITER STN=3 QB_ALIGN=0 QB_LOCAL32=0 cycles 200000 q_write_cycles 112025 read_cycles 99693 nonzero_rows 99679 bypass2_cycles 14007 mismatch_cycles 3190 (array 0, outputs 3190) =>  DIFFERENT
+run_mut_a0l0: MITER STN=2 QB_ALIGN=0 QB_LOCAL32=0 cycles 200000 q_write_cycles 112025 read_cycles 99693 nonzero_rows 99679 bypass2_cycles 15127 mismatch_cycles 199995 (array 199995, outputs 176046) =>  DIFFERENT
+run_stn_a0l0: MITER STN=1 QB_ALIGN=0 QB_LOCAL32=0 cycles 200000 q_write_cycles 112025 read_cycles 99693 nonzero_rows 99679 bypass2_cycles 15127 mismatch_cycles 0 (array 0, outputs 0) => EQUIVALENT
+run_stn_a1l1: MITER STN=1 QB_ALIGN=1 QB_LOCAL32=1 cycles 200000 q_write_cycles 112025 read_cycles 99693 nonzero_rows 99683 bypass2_cycles 15127 mismatch_cycles 0 (array 0, outputs 0) => EQUIVALENT

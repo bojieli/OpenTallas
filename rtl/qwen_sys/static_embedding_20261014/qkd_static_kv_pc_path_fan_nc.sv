@@ -3,7 +3,7 @@
 // legacy controller word ci (319 b): wires-only, the same hard children except the ci-less controller path
 // qkd_static_kv_pc_path_nc (rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv).  Port lists are the
 // originals' minus ci; the originals are unchanged.
-module qkd_static_kv_pc_path_emb_nc #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19: -> qkd_static_kv_pc_path_nc MU
+module qkd_static_kv_pc_path_emb_nc #(parameter integer MU = 0, CORE_CLOCK = 0) (   // MU-ADOPT-KV 10-19: -> qkd_static_kv_pc_path_nc MU
     input wire pll_hbm,
     input wire pll_hbm_port,
     input wire pll_hbm_ecc,
@@ -105,7 +105,7 @@ module qkd_static_kv_pc_path_emb_nc #(parameter integer MU = 0) (   // MU-ADOPT-
         .beat_v(emb_beat_v), .beat_data(emb_beat_data), .beat_token(emb_beat_token), .beat_word(emb_beat_word),
         .beat_half(emb_beat_half), .beat_scale(emb_beat_scale), .beat_epoch(emb_beat_epoch),
         .corrected(emb_corrected), .emb_outstanding(emb_outstanding), .fault(es_merge_fault));
-    qkd_static_kv_pc_path_nc #(.MU(MU)) u_path (
+    qkd_static_kv_pc_path_nc #(.MU(MU),.CORE_CLOCK(CORE_CLOCK)) u_path (
         .pll_hbm(pll_hbm),
         .pll_hbm_port(pll_hbm_port),
         .pll_hbm_ecc(pll_hbm_ecc),
@@ -180,7 +180,7 @@ module qkd_static_kv_pc_path_emb_nc #(parameter integer MU = 0) (   // MU-ADOPT-
     );
 endmodule
 
-module qkd_static_kv_pc_path_fan_nc #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19: -> qkd_static_kv_pc_path_nc MU
+module qkd_static_kv_pc_path_fan_nc #(parameter integer MU = 0, CORE_CLOCK = 0) (   // MU-ADOPT-KV 10-19: -> qkd_static_kv_pc_path_nc MU
     input wire pll_hbm,
     input wire pll_hbm_port,
     input wire pll_hbm_ecc,
@@ -287,7 +287,7 @@ module qkd_static_kv_pc_path_fan_nc #(parameter integer MU = 0) (   // MU-ADOPT-
         .emb_issue_v(s_emb_issue_v), .emb_token(s_emb_token), .emb_word_index(s_emb_word_index),
         .emb_half(s_emb_half), .emb_scale(s_emb_scale), .emb_epoch(s_emb_epoch), .emb_return_slot(s_emb_return_slot),
         .capture_slot(emb_capture_slot), .transfer_slot(emb_transfer_slot), .fault(chain_fault));
-    qkd_static_kv_pc_path_emb_nc #(.MU(MU)) u_pce (
+    qkd_static_kv_pc_path_emb_nc #(.MU(MU),.CORE_CLOCK(CORE_CLOCK)) u_pce (
         .pll_hbm(pll_hbm),
         .pll_hbm_port(pll_hbm_port),
         .pll_hbm_ecc(pll_hbm_ecc),
