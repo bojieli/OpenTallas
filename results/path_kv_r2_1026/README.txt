@@ -20,3 +20,19 @@ c3t = c3e + measured per-tap stub trim (joint TT+FF LP over the same 62,520 pair
    COMPLETE related pair TT 63.95 / FF 54.71, 0 pairs > 80 (p99 47.45/40.98); proxy 57.54/46.22;
    landed damage 122.1/115.0 vs 416.5 window; tap slew 105.9/89.1 ps. -> c3t/clock_report.json, c3t_complete_pairs.json
 Owner 06:3x audit: c3e_core_lat_audit.json (hard-core types, early taps), c3e_islands_dry.json (islands per type).
+
+== 12.8 re-measure (OWNER v4 12.8, 2026-10-26) ==
+c3t (63.95/54.71) used balance pads + per-tap stub trims = banned closure means (12.8d/f); it does NOT count.
+By-construction re-measure: d45x2/b0 = plain build (no balance, no trim), uniform sizing, on the worst-case PG grid
+(infra pg_x2.0_bp45: 45 um bumps, x2.0 power, M8 8.64 / M9 1.728), tools claude/path-kv-clktools-1026@HEAD,
+run_kv_mesh_chain.sh (MAXMOVE=500), chain stopped after b0 measure (later steps are banned means).
+Complete related pair (62,520 pairs, CPPR only at region H-tree node = last common tree node): TT 281.37 (6931 >80) / FF 229.58 (3989 >80): FAIL.
+Equal to the old untrimmed c3 on the plan grid (related 227/191 proxy), so the PG grid is not the cause.
+Root cause (structure, 12.8e): within-region tap arrival spread 120-270 ps TT from
+ (1) H-tree branches not equal length: driver site moves <=358 um, node moves <=263 um, rep slides <=171 um to find legal sites
+     (KV has no channels; partition interiors), PHY-corner driver pair fix (13,62);
+ (2) tap stubs 27..364 um (taps at partition clock pins, not lattice positions);
+ (3) unequal load per tap (no density-tap classes).
+Structural fix (12.8d): lattice-snapped H-tree with reserved island sites at every branch point (master-plan islands),
+equal-length branches, density taps of equal load per tap class at fixed stub length, core clock entries at core centre (12.8a).
+That is a master-plan / shared clock tool change (MASTER-PLAN + CLOCK-128 lanes), not a KV-local tweak.
