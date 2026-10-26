@@ -891,3 +891,4 @@ CODEX: 2026-10-25 18:25 TOK/LEC parked on explicit RESET. Main20b includes8497/e
 2026-10-25 20:43 PDT PATH-QC lead parked: rst stand-ins merged; SRAMIF2 F fails cond 1 (band-tap trial 103/120, twd1 banding next; needs D-QC-SU1713); N59 needs D-QC-N59-1C + trunk insertion fix (390 vs 250) + LEC keep fix; PENDING-DELTAs posted; see lanes/PATH-QC.md PARKED
 2026-10-25 20:54 PDT AUTOPILOT-FIX: frozen-die path-gate fix READY URGENT claude/autopilot-frozen-die-gate-1025@e584d366ec (s81_head/QC rows pass on FROZEN die; FAIL reopens); tests OK; done.
 2026-10-25 20:54 PDT ROM-MACRO: follow-up done -- D-ROM-2 allowlist claude/rom-macro-1025@211186de1 READY (0 FAIL over 758 kit mem.json); D-ROM-1 gate hook claude/rom-gate-flow-1025@0b6be8e6d READY at the next flow tag; D-ROM-3: KV dcal images dead -> no macro, D-ROM-3b batch proposal (PLAN-DELTA) to PATH-KV/TYPE-REDUCE-2. PARKED.
+2026-10-25 21:09 PDT ROM-MACRO: D-ROM-3 BMC 95 edges PASS (KV dcal images dead). PARKED.
