@@ -1,0 +1,37 @@
+{
+  "stage": "post-first-GRT/pre-second-repair",
+  "expected_driver_cells": 2690,
+  "found_driver_cells": 2690,
+  "missing_drivers": [],
+  "relay_edges": 2697,
+  "max_relay_hop_um": 436.6980000000001,
+  "over405": [
+    [
+      428.2199999999998,
+      "pr_reset_u_rrl_268_drive",
+      "pr_reset_u_rrl_280"
+    ],
+    [
+      425.8440000000003,
+      "pr_reset_u_rrl_586_drive",
+      "pr_reset_u_rrl_587"
+    ],
+    [
+      436.6980000000001,
+      "pr_reset_u_rrl_639_drive",
+      "pr_reset_u_rrl_640"
+    ],
+    [
+      409.91399999999976,
+      "pr_reset_u_rrl_1212_drive",
+      "pr_reset_u_rrl_1213"
+    ],
+    [
+      411.4259999999997,
+      "pr_reset_u_rrl_1525_drive",
+      "pr_reset_u_rrl_1526"
+    ]
+  ],
+  "max_source_to_driver_um": 113.29200000000014,
+  "added_cycles": 0
+}
