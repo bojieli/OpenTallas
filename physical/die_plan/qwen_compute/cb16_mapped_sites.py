@@ -4,6 +4,46 @@ import argparse,json,re,collections,copy
 from pathlib import Path
 import cb16_physical_pads as C
 
+def tcl_sites(sites):
+ def quote(s):return '{'+s.replace('\\','\\\\').replace('{','\\{').replace('}','\\}')+'}'
+ lines=['# Candidate placement of actual mapped FF only; fail closed on any alias or cell-count mismatch.',
+        '# Requires the real mapped ODB and ff_put_near from kit; does not create cells or stages.',
+        'array set qc_mapped_alias {}; array set qc_mapped_xy {}; array set qc_mapped_seen {}']
+ seen={}
+ for i,r in enumerate(sites):
+  lines.append('set qc_mapped_xy(%d) {%.6f %.6f}'%(i,r['x_um'],r['y_um']))
+  for a in r.get('aliases',[dict(name=r['register'],bit=r['bit'])]):
+   name=a['name'].replace('/','.').replace('\\','');names=[name+'['+str(a['bit'])+']']+([name] if a['bit']==0 else [])
+   for alias in names:
+    if alias in seen and seen[alias]!=i:raise ValueError('mapped Q alias identifies multiple FF: '+alias)
+    if alias in seen:continue
+    seen[alias]=i;lines.append('set qc_mapped_alias('+quote(alias)+') '+str(i))
+ # Tcl array indices cannot quote only the index as set arr({key}); use list-safe variable names.
+ lines=[re.sub(r'^set qc_mapped_alias\(\{(.*)\}\) (\d+)$',lambda m:'set '+quote('qc_mapped_alias('+m[1]+')')+' '+m[2],x) for x in lines]
+ lines += ["set qc_mapped_block [ord::get_db_block]; set qc_mapped_dbu [$qc_mapped_block getDbUnitsPerMicron]","set qc_mapped_found 0; set qc_mapped_unknown {}",r'''foreach qc_i [$qc_mapped_block getInsts] {
+ if {![string match "*DFF*" [[$qc_i getMaster] getName]]} continue
+ set qc_ids {}
+ foreach qc_t [$qc_i getITerms] {
+  if {[$qc_t getIoType] ne "OUTPUT"} continue
+  set qc_n [$qc_t getNet]; if {$qc_n eq "NULL"} continue
+  set qc_name [string map {\\ {} / .} [$qc_n getName]]
+  if {[info exists qc_mapped_alias($qc_name)]} {lappend qc_ids $qc_mapped_alias($qc_name)}
+ }
+ set qc_ids [lsort -unique $qc_ids]
+ if {[llength $qc_ids]!=1} {lappend qc_mapped_unknown [$qc_i getName]; continue}
+ set qc_id [lindex $qc_ids 0]
+ if {[info exists qc_mapped_seen($qc_id)]} {error "mapped FF alias matched multiple cells: $qc_id"}
+ set qc_mapped_seen($qc_id) [$qc_i getName]
+ lassign $qc_mapped_xy($qc_id) qc_x qc_y
+ set qc_ok [ff_put_near $qc_i [expr {round($qc_x*$qc_mapped_dbu)}] [expr {round($qc_y*$qc_mapped_dbu)}]]
+ if {$qc_ok eq ""} {error "no legal actual FF site: [$qc_i getName]"}
+ incr qc_mapped_found
+}''',f'set qc_mapped_expected {len(sites)}',
+ 'puts "QC_MAPPED_FF_PLACED $qc_mapped_found EXPECTED $qc_mapped_expected UNKNOWN [llength $qc_mapped_unknown]"',
+ 'if {$qc_mapped_found != $qc_mapped_expected || [llength $qc_mapped_unknown]} {error "actual mapped FF placement incomplete; unknown=[lrange $qc_mapped_unknown 0 9]"}']
+ return '\n'.join(lines)+'\n'
+
+
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('plan',type=Path);p.add_argument('--type',required=True);p.add_argument('--inventory',type=Path,required=True);p.add_argument('--physical',type=Path,required=True);p.add_argument('--rtl',type=Path,required=True);p.add_argument('--out',type=Path,required=True);q=p.parse_args();q.out.mkdir(exist_ok=False,parents=True)
  raw=json.loads(q.plan.read_text());t=raw['partition_types'][q.type];P=C.schema.Plan(raw);inv=json.loads(q.inventory.read_text());report=json.loads((q.physical/'report.json').read_text());banks=json.loads((q.physical/'banks.json').read_text());by={(b['instance'],b['stage']):b for b in banks};used=[b['box_um'] for b in banks]+[h['box_um'] for h in report['fabric_homes']];homes={h['inst']:h for h in report['fabric_homes']};groups=collections.defaultdict(list);missing=[];sites=[];extra=[];txt=q.rtl.read_text();pinrows=C.gen_phys.type_pins(P,q.type);pinby=collections.defaultdict(list)
@@ -46,5 +86,5 @@ def main():
  bins=q.out/'candidate_sink_sites.json';bins.write_text(json.dumps(dict(scope='CANDIDATE sites of actual mapped FF; not placed ODB',bin_um=0,bins=[[s['x_um'],s['y_um'],1] for s in sites]))+'\n')
  candidate=copy.deepcopy(raw);ct=candidate['partition_types'][q.type];ct['clock'].update(tap_mode='density',tap_max_sinks=1500,tap_target_sinks=1200,tap_radius_um=160,sink_sites_um=[],sink_bins_file=str(bins.resolve()));CP=C.schema.Plan(candidate);C.taps._CACHE.clear();density=C.taps.density_taps(CP,q.type)
  summary=dict(scope='CANDIDATE_SITES_FOR_ACTUAL_TECHMAPPED_SOFT_FF; native macro clocks excluded',actual_soft_ff=inv['soft_ff'],located_soft_ff=len(sites),missing_soft_ff=len(missing),categories=inv['categories'],source_declared_delay_ff=sum(b['bits'] for b in banks),mapped_delay_ff=inv['categories'].get('delay',0),optimized_delay_bits=sum(b['bits'] for b in banks)-inv['categories'].get('delay',0),clock_ports=[dict(name=n,x=x,y=y,sinks=k,max_radius_um=r) for n,x,y,k,r in density],clock_port_count=len(density),max_clock_sinks=max(r[3] for r in density),max_clock_radius_um=max(r[4] for r in density),placement_status='CANDIDATE_NOT_DPL',g2='BLOCKED actual hard views and physical clock interface adoption')
- (q.out/'sites.json').write_text(json.dumps(sites)+'\n');(q.out/'extra_banks.json').write_text(json.dumps(extra,indent=1)+'\n');(q.out/'missing.json').write_text(json.dumps(missing,indent=1)+'\n');(q.out/'summary.json').write_text(json.dumps(summary,indent=1)+'\n');print(json.dumps({k:v for k,v in summary.items() if k!='clock_ports'}))
+ (q.out/'sites.json').write_text(json.dumps(sites)+'\n');(q.out/'place_actual_mapped.tcl').write_text(tcl_sites(sites));(q.out/'extra_banks.json').write_text(json.dumps(extra,indent=1)+'\n');(q.out/'missing.json').write_text(json.dumps(missing,indent=1)+'\n');(q.out/'summary.json').write_text(json.dumps(summary,indent=1)+'\n');print(json.dumps({k:v for k,v in summary.items() if k!='clock_ports'}))
 if __name__=='__main__':main()
