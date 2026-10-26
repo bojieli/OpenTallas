@@ -371,3 +371,22 @@ FINAL PARK: idle root main-source watcherPID2264398 stopped on epyc1 by root req
   - (1) The x~8.2-9.2 / 19-20 mm stripes over su30/sm3 come from M5 OBS cores at it5. With M5 cores at 50 it they are gone (0 overflow). su30 V-cut bound is 0.34.
   - (2) Single-face b-block pin bars are not a measured blocker in the M5-ceiling probe. A y 6-7 mm gutter and moving the b-row next to the hub are not needed for GRT0. Keep them as options only if routed-view cores come back above M5.
 - STRUCTURAL ASK: build every HBM hard core (0/210 closed, so no rework) with route ceiling M5: MAX_ROUTING_LAYER M5, pins M4/M5, OBS M1-M5. Root and TKM tiles come first. The TKM v7 CTS trials 0a527901c0d3 / 7573123df5e9 are CTS-only; their route step must use the M5 ceiling.
+
+## PARKED 2026-10-26 01:20 PDT (PATH-HBM lead 23:27 -> park; next lead starts here)
+- Done:
+  - asbuilt.json is repo-relative on main (f9f678f60, PASS).
+  - B1 batch plan composed: epyc1:/srv/opentallas-scratch2/claude/path-hbm/batch_2330/plan_b1, sha 5fa3c6e64838. D-HBM-B1 is PENDING in PLAN-DELTA.
+  - Reset relay delta on B1 PASS x4: claude/path-hbm-reset-2335@401b1d4346.
+  - TKM DTSH/CTS fix: claude/path-hbm-tkmfix-1025@818ff5c514. Trial rows 0a527901c0d3 / 7573123df5e9 are PASS-COND and held only on the flow canary. Their flow files equal canary 1d335f9d9 (running since 00:07), so the hold should clear once it completes.
+  - Old r3 rows withdrawn.
+  - Cut bound + die GRT variants: see the 01:1x entry above. Core ceilings at M5 give die GRT 0.
+- Running: epyc1:/srv/opentallas-scratch2/claude/path-hbm/batch_2330/grt_rootm5_it50 (root's 41 cores at M5, bank cores at M7, 50 it). Started 00:57; it was at iteration 11/50 at 01:20, so it is not converging fast. The result lands in go.log. It tells whether bank cores at M7 can stay.
+- Next, in order:
+  - (1) COORD/owner: adopt "every HBM hard core route ceiling M5" (pins M4/M5, OBS M1-M5). The core generator and kits set MAX_ROUTING_LAYER M5. Root and TKM tiles come first; HBM has 0/210 closed, so there is no rework.
+  - (2) Re-run the die probe with the real M5 views at >= 50 it. it5 under-reports convergence: B1-M5 gave 1.17M at it5 and 0 at it50.
+  - (3) G0 107 ERR on B1. Lower-row hops, stations and faces; 12/um faces need a G2 receipt or must be widened. q_su11 clock tap is outside its outline. q_b102 reset is unreachable with M7 cores; it IS reachable once cores are M5.
+  - (4) The 4 H-cut segments above 0.60 (spu1 0.62; b002/b011 bank columns at 0.597): widen the spu1 NS band, or give the bank columns a die_ft_band.
+  - (5) Rootpipe READY 47a537213 awaits a ROOT merge, then run epyc1:/srv/opentallas-scratch2/claude/path-hbm/../codex-hbm-rootpipe-merge/start_on_source.sh.
+  - (6) After GEOM, the reset G2 q_hub_nw (reset_b1/g2, --mem 196).
+  - (7) TKM terminal closed-loop non-convergence (TT 66.8 ps) needs its own look after the v7 CTS result.
+- Worktree path-hbm-batch-2330 removed. Sub-agents: 2 used (RESET, TKMFIX), both finished.
