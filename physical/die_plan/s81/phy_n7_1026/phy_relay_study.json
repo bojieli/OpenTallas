@@ -1,0 +1,967 @@
+{
+ "plan": "main_plan.json",
+ "plan_sha256_12": "9101a4f12c38",
+ "die_outline_um": [
+  31950.72,
+  24744.96
+ ],
+ "die_mm2": 790.62,
+ "cell_um": [
+  1442.88,
+  1226.88
+ ],
+ "core_margin_um": 103.68,
+ "figures": {
+  "low": {
+   "shore_um": 3078,
+   "depth_um": 937,
+   "pitch_um": 3205.44,
+   "depth_grid_um": 941.76
+  },
+  "central": {
+   "shore_um": 3318,
+   "depth_um": 1011,
+   "pitch_um": 3447.36,
+   "depth_grid_um": 1019.52
+  }
+ },
+ "reticle_um": [
+  33000.0,
+  26000.0
+ ],
+ "options": {
+  "base_serdes_only": {
+   "S_fixed": [
+    "iqf",
+    "phy_hbm",
+    "eng",
+    "s_7S_x10"
+   ],
+   "N_fixed": [
+    "gunit",
+    "bk_sel"
+   ],
+   "S_segments": [
+    [
+     103.68,
+     10203.84
+    ],
+    [
+     23189.76,
+     31847.04
+    ]
+   ],
+   "N_segments": [
+    [
+     103.68,
+     13089.6
+    ],
+    [
+     20304.0,
+     31847.04
+    ]
+   ],
+   "fits": {
+    "low": {
+     "fit": 12,
+     "fit_junction": 10
+    },
+    "central": {
+     "fit": 10,
+     "fit_junction": 10
+    }
+   }
+  },
+  "a_corners": {
+   "corner_cells": {
+    "SW": "lk_WS2",
+    "SE": null,
+    "NW": "lk_WN2",
+    "NE": "lk_EN3"
+   },
+   "fits": {
+    "low": {
+     "fit": 12,
+     "fit_junction": 10,
+     "extra": 0
+    },
+    "central": {
+     "fit": 10,
+     "fit_junction": 10,
+     "extra": 0
+    }
+   },
+   "why": "corner cells are already SerDes (or free shore counted in the S-E segment); a corner adds no shoreline of its own (the 103.68-um core margin is the corner/seal keep-out). An L macro must stand on the W/E edge rotated, i.e. it is option b (3 fabric rows per macro)."
+  },
+  "b_side_columns": {
+   "side_length_um": 22083.84,
+   "per_side": {
+    "low": {
+     "rows_per_macro": 3,
+     "macros_per_side": 6,
+     "fabric_cells_displaced_per_side": 18,
+     "fabric_cell_width_left_um": 501.12
+    },
+    "central": {
+     "rows_per_macro": 3,
+     "macros_per_side": 6,
+     "fabric_cells_displaced_per_side": 18,
+     "fabric_cell_width_left_um": 423.36
+    }
+   },
+   "fits": {
+    "low": {
+     "zero_area": "NO: each macro takes 3 fabric rows x 942 um of a 1443-um fW/fE cell (501 um left); the qbank cores of those cells reach 1413 um from the inner face and no free cells exist to re-home them",
+     "one_side_strip_um": 941.76,
+     "die_w_um": 32892.48,
+     "fits_reticle": true,
+     "two_side_die_w_um": 33834.24,
+     "two_side_fits_reticle": false,
+     "area_delta_mm2": 23.3,
+     "area_mm2": 813.92,
+     "fit": 14,
+     "fit_junction": 14
+    },
+    "central": {
+     "zero_area": "NO: each macro takes 3 fabric rows x 1020 um of a 1443-um fW/fE cell (423 um left); the qbank cores of those cells reach 1413 um from the inner face and no free cells exist to re-home them",
+     "one_side_strip_um": 1019.52,
+     "die_w_um": 32970.24,
+     "fits_reticle": true,
+     "two_side_die_w_um": 33989.76,
+     "two_side_fits_reticle": false,
+     "area_delta_mm2": 25.23,
+     "area_mm2": 815.85,
+     "fit": 14,
+     "fit_junction": 14
+    }
+   },
+   "fabric": {
+    "W": {
+     "cells": 18,
+     "max_core_reach_from_inner_face_um": 1399.68
+    },
+    "E": {
+     "cells": 18,
+     "max_core_reach_from_inner_face_um": 1412.64
+    }
+   },
+   "w_strip_link_estimate_central": {
+    "note": "Manhattan centre-to-centre to the coll target; hops = ceil(d/405)",
+    "links": {
+     "lk_WS0": {
+      "target": "s_0S_LP",
+      "old_mm": 11.98,
+      "new_mm": 17.25,
+      "hop_delta": 13
+     },
+     "lk_WS1": {
+      "target": "s_0S_LP",
+      "old_mm": 14.87,
+      "new_mm": 13.57,
+      "hop_delta": -3
+     },
+     "lk_WS2": {
+      "target": "s_0S_LP",
+      "old_mm": 17.75,
+      "new_mm": 9.89,
+      "hop_delta": -19
+     },
+     "lk_WN0": {
+      "target": "s_0N_LP",
+      "old_mm": 8.3,
+      "new_mm": 13.57,
+      "hop_delta": 13
+     },
+     "lk_WN1": {
+      "target": "s_0N_LP",
+      "old_mm": 11.18,
+      "new_mm": 9.89,
+      "hop_delta": -3
+     },
+     "lk_WN2": {
+      "target": "s_0N_LP",
+      "old_mm": 14.07,
+      "new_mm": 13.57,
+      "hop_delta": -1
+     }
+    }
+   },
+   "rects_central": {
+    "lk_WS0": [
+     103.68,
+     1330.56,
+     1123.2,
+     5011.2
+    ],
+    "lk_WS1": [
+     103.68,
+     5011.2,
+     1123.2,
+     8691.84
+    ],
+    "lk_WS2": [
+     103.68,
+     8691.84,
+     1123.2,
+     12372.48
+    ],
+    "lk_WN0": [
+     103.68,
+     19733.76,
+     1123.2,
+     23414.4
+    ],
+    "lk_WN1": [
+     103.68,
+     16053.12,
+     1123.2,
+     19733.76
+    ],
+    "lk_WN2": [
+     103.68,
+     12372.48,
+     1123.2,
+     16053.12
+    ]
+   }
+  },
+  "c_orientation": {
+   "fits": {
+    "low": {
+     "fit": 12,
+     "fit_junction": 10,
+     "extra": 0
+    },
+    "central": {
+     "fit": 10,
+     "fit_junction": 10,
+     "extra": 0
+    }
+   },
+   "detail": {
+    "low": {
+     "row_um": 1226.8799999999999,
+     "strip_left_under_macro_um": 289.9,
+     "ft_pairs_under_macro": 1,
+     "rotated_on_NS_shore_um": 937,
+     "rotated_ok": false,
+     "stacked_rows01_ok": false,
+     "two_lane_row_macro": {
+      "shore_um": 1667.52,
+      "depth_um": 1874,
+      "needs_rows": 2,
+      "fit_segments": 24,
+      "displaced_row1_18_cells": 17,
+      "published": "NO (3 lanes x 2 rows is not the published one-row figure)"
+     }
+    },
+    "central": {
+     "row_um": 1226.8799999999999,
+     "strip_left_under_macro_um": 215.9,
+     "ft_pairs_under_macro": 0,
+     "rotated_on_NS_shore_um": 1011,
+     "rotated_ok": false,
+     "stacked_rows01_ok": false,
+     "two_lane_row_macro": {
+      "shore_um": 1788.48,
+      "depth_um": 2022,
+      "needs_rows": 2,
+      "fit_segments": 22,
+      "displaced_row1_18_cells": 18,
+      "published": "NO (3 lanes x 2 rows is not the published one-row figure)"
+     }
+    }
+   },
+   "why": "rotating on N/S puts only the 937-1011-um depth on the edge (published shore is the long side); a second macro stacked in row 1/18 is 1226.88 um off the edge; a taller edge row adds no shore. Only a 3x2-lane macro (assumption change) trades shore for depth, and it needs ~18 row-1/18 cells that are all occupied."
+  },
+  "d_move_shore_parts": {
+   "gunit+bk_sel": {
+    "moved": [
+     "gunit",
+     "bk_sel"
+    ],
+    "moved_mm2": 8.85,
+    "S_segments": [
+     [
+      103.68,
+      10203.84
+     ],
+     [
+      23189.76,
+      31847.04
+     ]
+    ],
+    "N_segments": [
+     [
+      103.68,
+      31847.04
+     ]
+    ],
+    "fits": {
+     "low": {
+      "fit": 14,
+      "fit_junction": 13
+     },
+     "central": {
+      "fit": 13,
+      "fit_junction": 12
+     }
+    }
+   },
+   "gunit+bk_sel+iqf": {
+    "moved": [
+     "gunit",
+     "bk_sel",
+     "iqf"
+    ],
+    "moved_mm2": 10.62,
+    "S_segments": [
+     [
+      103.68,
+      11646.72
+     ],
+     [
+      23189.76,
+      31847.04
+     ]
+    ],
+    "N_segments": [
+     [
+      103.68,
+      31847.04
+     ]
+    ],
+    "fits": {
+     "low": {
+      "fit": 14,
+      "fit_junction": 14
+     },
+     "central": {
+      "fit": 14,
+      "fit_junction": 13
+     }
+    }
+   },
+   "all_but_phy_hbm": {
+    "moved": [
+     "gunit",
+     "bk_sel",
+     "iqf",
+     "eng",
+     "s_7S_x10"
+    ],
+    "moved_mm2": 14.16,
+    "S_segments": [
+     [
+      103.68,
+      11646.72
+     ],
+     [
+      20304.0,
+      31847.04
+     ]
+    ],
+    "N_segments": [
+     [
+      103.68,
+      31847.04
+     ]
+    ],
+    "fits": {
+     "low": {
+      "fit": 15,
+      "fit_junction": 15
+     },
+     "central": {
+      "fit": 15,
+      "fit_junction": 14
+     }
+    }
+   },
+   "_area_book": {
+    "free_cells_rc": [
+     [
+      19,
+      8
+     ],
+     [
+      18,
+      12
+     ],
+     [
+      0,
+      20
+     ],
+     [
+      0,
+      21
+     ]
+    ],
+    "free_mm2": 7.08,
+    "serdes_growth_central_mm2": 9.65,
+    "note": "SerDes slots grow more than the free cells, so a zero-area re-lay must shrink low-fill parts (gunit 484k / bk_sel 811k cells in 3.5 / 5.3 mm2) or move a station"
+   },
+   "low_gunit_stays": {
+    "n_row_need_um": 31734.72,
+    "n_row_um": 31743.36,
+    "slack_um": 8.64,
+    "note": "low figure only: 9 N-row macros + full-size gunit fit with 8.6 um slack; only bk_sel (+ one station) moves; central figure does not"
+   }
+  },
+  "e_growth_parts_fixed": {
+   "low": {
+    "dW_um": 0.0,
+    "dE_um": 1296.0,
+    "die_w_um": 33246.72,
+    "area_delta_mm2": 32.07,
+    "area_mm2": 822.69,
+    "fits_reticle": false
+   },
+   "central": {
+    "dW_um": 820.8,
+    "dE_um": 2246.4,
+    "die_w_um": 35017.92,
+    "area_delta_mm2": 75.9,
+    "area_mm2": 866.52,
+    "fits_reticle": false
+   }
+  }
+ },
+ "candidate": {
+  "path": "b2_phyfit.json",
+  "sha256_12": "38607bd9f4ab",
+  "die_outline_um": [
+   31950.72,
+   24744.96
+  ],
+  "overlaps": [],
+  "inside_core": true,
+  "serdes": {
+   "lk_WS0": {
+    "rect": [
+     6998.4,
+     103.68,
+     10445.76,
+     1330.56
+    ],
+    "edge": "S",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_WS1": {
+    "rect": [
+     3551.04,
+     103.68,
+     6998.4,
+     1330.56
+    ],
+    "edge": "S",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_WN0": {
+    "rect": [
+     6998.4,
+     23414.4,
+     10445.76,
+     24641.28
+    ],
+    "edge": "N",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_WN1": {
+    "rect": [
+     3551.04,
+     23414.4,
+     6998.4,
+     24641.28
+    ],
+    "edge": "N",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_WN2": {
+    "rect": [
+     103.68,
+     23414.4,
+     3551.04,
+     24641.28
+    ],
+    "edge": "N",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_WN3": {
+    "rect": [
+     10445.76,
+     23414.4,
+     13893.12,
+     24641.28
+    ],
+    "edge": "N",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_ES0": {
+    "rect": [
+     23189.76,
+     103.68,
+     26637.12,
+     1330.56
+    ],
+    "edge": "S",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_ES1": {
+    "rect": [
+     26637.12,
+     103.68,
+     30084.48,
+     1330.56
+    ],
+    "edge": "S",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_EN0": {
+    "rect": [
+     20787.84,
+     23414.4,
+     24235.2,
+     24641.28
+    ],
+    "edge": "N",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_EN1": {
+    "rect": [
+     24235.2,
+     23414.4,
+     27682.56,
+     24641.28
+    ],
+    "edge": "N",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_WS2": {
+    "rect": [
+     103.68,
+     103.68,
+     3551.04,
+     1330.56
+    ],
+    "edge": "S",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_WS3": {
+    "rect": [
+     13893.12,
+     23414.4,
+     17340.48,
+     24641.28
+    ],
+    "edge": "N",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_EN2": {
+    "rect": [
+     17340.48,
+     23414.4,
+     20787.84,
+     24641.28
+    ],
+    "edge": "N",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   },
+   "lk_EN3": {
+    "rect": [
+     27682.56,
+     23414.4,
+     31129.92,
+     24641.28
+    ],
+    "edge": "N",
+    "width_um": 3447.36,
+    "ok_low": true,
+    "ok_central": true
+   }
+  },
+  "fits_low": 14,
+  "fits_central": 14,
+  "moved": {
+   "lk_WS0": {
+    "base": [
+     5875.2,
+     103.68,
+     8760.96,
+     1330.56
+    ],
+    "cand": [
+     6998.4,
+     103.68,
+     10445.76,
+     1330.56
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 1.4
+   },
+   "lk_WS1": {
+    "base": [
+     2989.44,
+     103.68,
+     5875.2,
+     1330.56
+    ],
+    "cand": [
+     3551.04,
+     103.68,
+     6998.4,
+     1330.56
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 0.84
+   },
+   "lk_WN0": {
+    "base": [
+     5875.2,
+     23414.4,
+     8760.96,
+     24641.28
+    ],
+    "cand": [
+     6998.4,
+     23414.4,
+     10445.76,
+     24641.28
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 1.4
+   },
+   "lk_WN1": {
+    "base": [
+     2989.44,
+     23414.4,
+     5875.2,
+     24641.28
+    ],
+    "cand": [
+     3551.04,
+     23414.4,
+     6998.4,
+     24641.28
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 0.84
+   },
+   "lk_WN2": {
+    "base": [
+     103.68,
+     23414.4,
+     2989.44,
+     24641.28
+    ],
+    "cand": [
+     103.68,
+     23414.4,
+     3551.04,
+     24641.28
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 0.28
+   },
+   "lk_WN3": {
+    "base": [
+     8760.96,
+     23414.4,
+     11646.72,
+     24641.28
+    ],
+    "cand": [
+     10445.76,
+     23414.4,
+     13893.12,
+     24641.28
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 1.97
+   },
+   "lk_ES0": {
+    "base": [
+     23189.76,
+     103.68,
+     26075.52,
+     1330.56
+    ],
+    "cand": [
+     23189.76,
+     103.68,
+     26637.12,
+     1330.56
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 0.28
+   },
+   "lk_ES1": {
+    "base": [
+     26075.52,
+     103.68,
+     28961.28,
+     1330.56
+    ],
+    "cand": [
+     26637.12,
+     103.68,
+     30084.48,
+     1330.56
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 0.84
+   },
+   "lk_EN0": {
+    "base": [
+     23189.76,
+     23414.4,
+     26075.52,
+     24641.28
+    ],
+    "cand": [
+     20787.84,
+     23414.4,
+     24235.2,
+     24641.28
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 2.12
+   },
+   "lk_EN1": {
+    "base": [
+     26075.52,
+     23414.4,
+     28961.28,
+     24641.28
+    ],
+    "cand": [
+     24235.2,
+     23414.4,
+     27682.56,
+     24641.28
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 1.56
+   },
+   "lk_WS2": {
+    "base": [
+     103.68,
+     103.68,
+     2989.44,
+     1330.56
+    ],
+    "cand": [
+     103.68,
+     103.68,
+     3551.04,
+     1330.56
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 0.28
+   },
+   "lk_WS3": {
+    "base": [
+     8760.96,
+     103.68,
+     10203.84,
+     2557.44
+    ],
+    "cand": [
+     13893.12,
+     23414.4,
+     17340.48,
+     24641.28
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 28.83
+   },
+   "lk_EN2": {
+    "base": [
+     20304.0,
+     23414.4,
+     23189.76,
+     24641.28
+    ],
+    "cand": [
+     17340.48,
+     23414.4,
+     20787.84,
+     24641.28
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 2.68
+   },
+   "lk_EN3": {
+    "base": [
+     28961.28,
+     23414.4,
+     31847.04,
+     24641.28
+    ],
+    "cand": [
+     27682.56,
+     23414.4,
+     31129.92,
+     24641.28
+    ],
+    "area_ratio": 1.195,
+    "dist_mm": 1.0
+   },
+   "iqf": {
+    "base": [
+     10203.84,
+     103.68,
+     11646.72,
+     1330.56
+    ],
+    "cand": [
+     10445.76,
+     103.68,
+     11646.72,
+     1330.56
+    ],
+    "area_ratio": 0.832,
+    "dist_mm": 0.12
+   },
+   "s_4N_x06": {
+    "base": [
+     15975.36,
+     22187.52,
+     17418.24,
+     23414.4
+    ],
+    "cand": [
+     30084.48,
+     103.68,
+     31527.36,
+     1330.56
+    ],
+    "area_ratio": 1.0,
+    "dist_mm": 36.19
+   },
+   "gunit": {
+    "base": [
+     13089.6,
+     23414.4,
+     15975.36,
+     24641.28
+    ],
+    "cand": [
+     8760.96,
+     1330.56,
+     10203.84,
+     2557.44
+    ],
+    "area_ratio": 0.5,
+    "dist_mm": 27.13
+   },
+   "bk_sel": {
+    "base": [
+     15975.36,
+     23414.4,
+     20304.0,
+     24641.28
+    ],
+    "cand": [
+     15975.36,
+     22187.52,
+     18861.12,
+     23414.4
+    ],
+    "area_ratio": 0.667,
+    "dist_mm": 1.95
+   }
+  },
+  "ledger": {
+   "path": "b2_ledger.json",
+   "sha256_12": "ab3b192d1e67",
+   "status": "ALLOCATED PLANNING PROTOTYPE; G0C, per-type actual placement and infra gates pending",
+   "lanes_changed": 53,
+   "cycles_added": 457,
+   "cycles_removed": -140,
+   "worst": [
+    [
+     "flt__bk_sel__gunit",
+     93
+    ],
+    [
+     "xtier__s_3N_C__gunit",
+     57
+    ],
+    [
+     "xtier__gunit__s_3N_C",
+     56
+    ],
+    [
+     "flt__gunit__s_3N_C",
+     54
+    ],
+    [
+     "coll__s_0S_LP__lk_WS3",
+     46
+    ],
+    [
+     "coll__lk_WS3__s_0S_LP",
+     37
+    ],
+    [
+     "dfi__svc_0__phy_hbm",
+     17
+    ],
+    [
+     "coll__lk_WN3__s_0N_LP",
+     10
+    ]
+   ],
+   "best": [
+    [
+     "xtier__s_4S_C__bk_sel",
+     -8
+    ],
+    [
+     "xtier__s_3S_C__gunit",
+     -17
+    ],
+    [
+     "xtier__bk_sel__seqhost",
+     -26
+    ],
+    [
+     "unit__seqhost__gunit",
+     -26
+    ],
+    [
+     "xtier__seqhost__bk_sel",
+     -29
+    ]
+   ],
+   "max_slot_hop_um": 393.1
+  }
+ }
+}
