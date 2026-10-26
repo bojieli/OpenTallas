@@ -179,3 +179,9 @@ CODEX 2026-10-25 18:24 PDT RESET QCtoken1713: candidatecodex/qc-token-1713@90e23
 - NOT done / blockers (owners): KV current bind 13 TYPE_SPLIT + P1 dead/narrow ABI (PATH-KV parent), so no aef2 strict bind and no HOST replay with the 14-image bundle; common833 RTL + PC re-close (PATH-KV-PC833); MU+833 image for the current bind (frame search, above); ASTK5 zn0 +1 in native F; QC fresh bind with the CB16 phase types (QC plan owner). No full Qwen layer token pass is possible until KV setup_ready on a current bind and a QC bind with CB16 PASS.
 - Next for the token lane: once PATH-KV posts a strict bind with 0 TYPE_SPLIT, compile the image from that bind (MU1, AGES1 96 words, the 833 profile once the RTL is in), then run whole-die E boot and HOST replay (expect setup_ready=1), then a single START at S, QC calendar S+130, P8191 history preload (intel1 codex-qc-token-1713/history_run/native_preload/kv.hex, which must be committed or referenced by commit for rule 3).
 - OWNER?: none.
+
+## PARKED 2026-10-25 20:04 PDT (TOK-QK, MU frame 833)
+- Branch claude/tok-qk-mufs-1025@cd5ccb871 (GitHub, READY; stacked on kv833c ea8d5b7dc). Root cause: mu_calendar hard-coded the 768-u beat while the 833 compile phases on 625/625 -> no legal stage begin on 36/36 stages -> compile_frame phase step loop infinite. Fixed structurally (one tick source + legal-residue jump + fail closed). MU compile img44 17.8 s; ABI MU471 PASS (F2, F3); static checks re-derived 0 collisions. Receipt results/rtl/kv_mu_frame833_1025.
+- Live jobs: none. Scratch: intel2 /srv/opentallas-scratch2/claude/{wt/tok-qk-mufs (worktree), tok-qk-mufs-run}, epyc3 /srv/opentallas-scratch2/claude/tok-qk-mufs-abi (delete after merge).
+- Next: compile the MU image (default F2 unless COORD picks F3) from the PATH-KV strict bind with the 833 RTL in; whole-die E boot + HOST replay.
+- OWNER?: none (frame of record F2 vs F3 is a COORD call).
