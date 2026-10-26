@@ -1027,3 +1027,5 @@ CODEX: 2026-10-26 02:17 PDT S81 takeover: signal-only 50-it GRT0 retained; HEADB
 
 CODEX: 2026-10-26 02:17 PDT TOKENS checker cb183e0648 READY16testsPASS; recovered real PV calendar fault4..100cy vs113/114, candidate d01c094a88 +115581FF0cycles sent KV batch. Eboot compile live intel2 unit1533480; DS checkpoint recovered, HBM/QC integration active.
 CODEX: 2026-10-26 02:18 PDT HBM M5 guard486442846 (14 testsPASS); inheritedtopk23h EXTRACT_FA diagnosed, fresh scoped no-adder-extractkitgen live; current stable-sort root extracted1312ports+M5kit3575pins/3572FF PASS, synth-only liveintel1, v8CTS stayscanaryheld.
+
+CODEX: 2026-10-26 02:18 PDT shared kit dependency bundle READY5015c984a, hub15/15PASS; HEADB/KVchain/ECO/QChold auto-ship gate imports, no clock/RTL change. Canary current-generation holds retained.
