@@ -380,13 +380,14 @@ def main():
     nfw = regrow_leaf('fr_NW', 'hb_coll_NW', 'retry_requested', 3)
     nfe = regrow_leaf('fr_NE', 'hb_coll_NE', 'retry_requested', 2)
     # tkm_SW (root) statistics: as built read by obs_SW (dropped) -> appended to obs_C (die level)
-    ob = rebuild['obs_C']['obs'] + [['tkm_SW', 'stat_cycles', 0, 31]]
+    ob = rebuild['obs_C']['obs'] + [['tkm_SW', 'stat_cycles', 0, 31], ['vm_status4', 'vmstat', 0, 18]]
     rebuild['obs_C']['obs'] = ob
     nobw = sum(e[3] - e[2] + 1 if e[0] != 'const' else e[1] for e in ob)
     remaster['obs_C']['params'] = re.sub(r'\.N\(\d+\)', f'.N({nobw})', remaster['obs_C']['params'])
     items.append(dict(id='W-FLT', kind='param+wiring', status='done',
                       what=f'fr_NW N {nfw} / fr_NE N {nfe} take every hb_coll retry lane (SYNC_MASK bits re-positioned); '
-                           f'tkm_SW.stat_cycles observed by obs_C (N {nobw}; as built by obs_SW)'))
+                           f'tkm_SW.stat_cycles and vm_status4.vmstat observed by obs_C (N {nobw}; previous readset is an unchanged prefix; ' 
+                           'VM status starts at bit 125, spans words 3/4; fixed three-edge observation leaf latency unchanged)'))
 
     # ---- W-HOST: in-band host on the N0 link (OWNER 10-24): host_N (UCIe) dropped, ep_N0 carries VC 1
     drop_inst = ['host_N']
