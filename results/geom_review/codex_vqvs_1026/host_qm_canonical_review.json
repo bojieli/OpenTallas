@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Canonical actual host pacer placement, approved for trial CTS/route subject to independent GEOM and flow release",
+  "source": "codex/kvhr-faces-1026@929a037e3",
+  "kit_hash": "b9c922f7b66d0af0",
+  "picture": "/srv/opentallas-scratch/claude/wt/codex-vqvs-1026/results/geom_review/codex_vqvs_1026/host_qm_canonical_placed.png",
+  "actual": "epyc2:/srv/opentallas-scratch2/claude/codex-vqvs-1026/host_qm/canonical/run/results/asap7/hc_qkd_hr_host_qm__77_76x77_76/base/3_place.odb",
+  "place_exit": 0,
+  "flops": 17,
+  "full_reach_arcs": 179,
+  "max_reach_um": 104.349,
+  "arcs_over405": 0,
+  "findings": [
+    "Canonical ck[0] spelling now matches plan naturally, no trial Tcl modifications",
+    "Private data landing/output FFs near corresponding faces; north in_v FF29um from face pin remains inside100um final-wire target",
+    "Logic near south credit inputs; fault and return relay FFs near west/north faces",
+    "No macros or channel/PG obstacles, no long unstaged wires, low pin density; compact logic area45um2 in fixed slot",
+    "CTS skew and TTsetup/FFhold NOT RUN; complete those on trial source before sign-off claim"
+  ],
+  "added_cycles": 0
+}
