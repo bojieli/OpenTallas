@@ -18,8 +18,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools/die_plan"))
 import schema as S  # noqa: E402
+import die_clock_mesh as CM  # noqa: E402
 
-CELL_W, CELL_H = 1.35, 0.27          # BUFx24_ASAP7_75t_R
+CELL_W, CELL_H = CM.BUF_W, CM.ROW_Y
 HALO_X, HALO_Y = 0.54, 0.27          # one site / one row each side
 
 
@@ -47,8 +48,9 @@ def main():
     per_kind = defaultdict(int)
     for name, c in sorted(cells.items()):
         x, y = c["x"], c["y"]
+        width = CM.cell_width(c)
         own = [n for n in grid[(int(x // B), int(y // B))]
-               if rects[n][0] <= x and x + CELL_W <= rects[n][2] and rects[n][1] <= y and y + CELL_H <= rects[n][3]]
+               if rects[n][0] <= x and x + width <= rects[n][2] and rects[n][1] <= y and y + CELL_H <= rects[n][3]]
         if len(own) > 1:
             raise SystemExit(f"{name} inside {own}")
         part = own[0] if own else "die"
@@ -56,7 +58,7 @@ def main():
         per_kind[(c["kind"], part != "die")] += 1
         if own:
             tn = P.parts[part]["type"]
-            corners = [P.to_type(part, (x + dx, y + dy)) for dx in (-HALO_X, CELL_W + HALO_X) for dy in (-HALO_Y, CELL_H + HALO_Y)]
+            corners = [P.to_type(part, (x + dx, y + dy)) for dx in (-HALO_X, width + HALO_X) for dy in (-HALO_Y, CELL_H + HALO_Y)]
             r = (round(min(p[0] for p in corners), 3), round(min(p[1] for p in corners), 3),
                  round(max(p[0] for p in corners), 3), round(max(p[1] for p in corners), 3))
             isl[tn].add(r)

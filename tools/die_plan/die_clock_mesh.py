@@ -719,6 +719,10 @@ def cmd_combo(a):
     d, kit = Path(a.dir), Path(a.kit)
     M = json.loads((d / "mesh.json").read_text())
     cells = json.loads((d / "place.json").read_text())
+    overlaps = placement_overlaps(cells)
+    if overlaps:
+        raise SystemExit(f"die_clock_mesh combo: {len(overlaps)} physical clock-cell overlaps; "
+                         f"rebuild with --reserve-cell-sites and actual LEF widths before routing: {overlaps[:3]}")
     data = json.loads((d / "nets.json").read_text())
     rv = (kit / "grt/route.v").read_text()
     cv = (d / "ctree.v").read_text()
