@@ -79,7 +79,7 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
 
 ## WAITS · who
 ### Waiting on the owner
-- S81 PHY dimensions, PHY power and final signal/PG bump contract.
+- (owner 10-26: none; published-figure assumptions, lane S81-PHY-ASSUME)
 ### Waiting on COORD / ROOT-MERGE
 - KV FT reservation: COORD 2026-10-25 23:42 = explicit reservation hook in the kits (routing guides/blockage on the FT tracks); G2 half-share alone is not proof. DIE-PROTO then runs it5 → KV.GRT
 - HEAD host/mesh framing, ch_b source, ctl role, rank-row mapping: spec items for PATH-S81 + TOK-SCHED (no owner input needed) → HEAD8 batch
