@@ -3408,6 +3408,7 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    rep["bound_groups"] = getattr(B, "bound_group_records", {})
     rep["type_canon_merged"] = getattr(B, "type_canon_merged", [])
     if B.param_regen:
         rep["param_regen"] = B.param_regen
@@ -3420,7 +3421,9 @@ def cmd_bind(a):
     names = {}
     for ci, p in B.cpart.items():
         if B.G.kind[ci] != "glue":
-            names[f"{sv_id(p)}.{short_id('u_' + B.rel_of(ci), 90)}"] = B.F.cells[ci].path
+            import bound_groups
+            scope = bound_groups.scope_for_member(B.types[B.parts[p]["type"]], B.rel_of(ci))
+            names[f"{sv_id(p)}.{scope}{short_id('u_' + B.rel_of(ci), 90)}"] = B.F.cells[ci].path
     (out / "bind_names.json").write_text(json.dumps(names, indent=0))
     sinks = {}
     for (ci, pn, i), d in B.sinks.items():

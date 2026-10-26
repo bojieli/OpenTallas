@@ -111,6 +111,7 @@ def cmd_verify(a):
     gen = [f for f in rep["files"]]
     top = f"{sv_id(raw['die']['name'])}_bound_top"
     dissolve = sorted({t["module"] for t in rep["types"].values()})     # as bound (variants / renamed included)
+    dissolve = sorted(set(dissolve) | {g["module"] for gs in rep.get("bound_groups", {}).values() for g in gs})
     ab = dict(netlist=[f for f in gen if f.endswith("_bound_top.sv")], top=top, dissolve=dissolve,
               defines=raw["asbuilt"].get("defines", []), substitute={})
     full = [f for f in gen if not f.endswith("_bound_top.sv")]
