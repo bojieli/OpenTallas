@@ -212,7 +212,7 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell):
     return added
 
 
-def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any"):
+def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any", prune=True):
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
@@ -363,6 +363,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     if hop_max:
         out["meta"]["split_reps"] = split_long(cells, nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows}, hop_max,
                                                cell)
+    if prune:
+        prune_dead(cells, nets, out)
     out["meta"].update(cells=len(cells), drivers=len(out["drivers"]), bufx24_drivers=sum(len(d["cells"]) for d in
                        out["drivers"].values()), nodes=sum(1 for c in cells.values() if c["kind"] == "node"),
                        reps=sum(1 for c in cells.values() if c["kind"] == "rep"), stubs=len(tap_rows),
@@ -376,6 +378,40 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                        mesh_wire_mm=round((len(ys) * (xs[-1] - xs[0]) + len(xs) * (ys[-1] - ys[0])) / 1e3, 2),
                        stub_wire_mm=round(sum(t["stub_um"] for t in tap_rows) / 1e3, 2))
     return cells, nets, ports, out
+
+
+def prune_dead(cells, nets, out):
+    """drop H-tree node/repeater cells whose subtree reaches no mesh driver (a die region with no legal driver site,
+    e.g. a whole branch over a PHY macro: those cells would sit on the macro and feed nothing).  Iterates to a fixed
+    point; records the count in meta.pruned_dead and removes their entries from 'unplaced'."""
+    gone = set()
+    while True:
+        by = {n["drv"]: n for n in nets}
+        dead = [c for c, v in cells.items() if v["kind"] in ("node", "rep", "pad") and
+                (c not in by or not by[c]["loads"])]
+        if not dead:
+            break
+        for c in dead:
+            del cells[c]
+            gone.add(c)
+        dset = set(dead)
+        nets[:] = [n for n in nets if n["drv"] not in dset]
+        for n in nets:
+            n["loads"] = [x for x in n["loads"] if x not in dset]
+    out["meta"]["pruned_dead"] = len(gone)
+    tags = {c.split("_", 2)[2] for c in gone if c.startswith("ckm_n")}
+    reps = {c for c in gone if c.startswith("ckm_r")}
+
+    def keep(u):
+        if not isinstance(u[0], str) or not u[0].startswith("h"):
+            return True
+        if u[1] == "node":
+            return u[0] not in tags
+        return not any(c.endswith(f"_{u[0]}_{u[1]}") for c in reps)
+    out["unplaced"] = [u for u in out["unplaced"] if keep(u)]
+    for h in out["htree"]:
+        if h.get("node") in gone:
+            h["pruned"] = True
 
 
 def write_verilog(cells, nets, ports, path):
@@ -413,7 +449,7 @@ def cmd_build(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
-    cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites)
+    cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites, not a.no_prune)
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
@@ -596,7 +632,7 @@ def cmd_combo(a):
           "foreach nm [split [string trim [read $fh]] \"\\n\"] { set n [$blk findNet $nm]; if {$n == \"NULL\"} "
           "{ error \"missing clock net $nm\" }; $n setNonDefaultRule $ndr; $n setSigType CLOCK; incr nn }",
           "close $fh", "puts \"OT_NDR nets=$nn\"",
-          "global_route -congestion_iterations 5 -allow_congestion -verbose -congestion_report_file "
+          f"global_route -congestion_iterations {a.congestion_iterations} -allow_congestion -verbose -congestion_report_file "
           "/out/congestion_$::env(CORNER).rpt",
           "write_guides /out/route_$::env(CORNER).guide",
           "source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl",
@@ -1036,6 +1072,7 @@ def main(argv=None):
                    help="repeater sites: equal cuts slid along the leg (balanced stage count) or greedy walk")
     b.add_argument("--sites", choices=["any", "channel"], default="any",
                    help="channel: die clock cells only outside partitions (reported as unplaced where impossible)")
+    b.add_argument("--no-prune", action="store_true", help="keep H-tree branches that reach no mesh driver")
     b.add_argument("--hop-max", type=float, default=480.0, help="split any driver->load branch longer than this")
     bl = sub.add_parser("balance")
     bl.add_argument("dir")
@@ -1048,6 +1085,8 @@ def main(argv=None):
     c = sub.add_parser("combo")
     c.add_argument("dir")
     c.add_argument("--kit", required=True)
+    c.add_argument("--congestion-iterations", type=int, default=5,
+                   help="GRT congestion iterations (die plan judgments need >= 50, COORD 10-26 01:21)")
     m = sub.add_parser("mesh")
     m.add_argument("dir")
     m.add_argument("--corner", default="TT")
