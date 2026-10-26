@@ -3,10 +3,34 @@ set ii_b [ord::get_db_block]
 set ii_t [ord::get_db_tech]
 set ii_u [$ii_t getDbUnitsPerMicron]
 proc ii_d {v} { return [expr {round($v * $::ii_u)}] }
-set ii_pb [odb::dbBlockage_create $ii_b [ii_d 128.52] [ii_d 85.32] [ii_d 139.32] [ii_d 96.12]]
-puts "INFRA_ISLAND placement keep-out 128.52 85.32 139.32 96.12"
-foreach ln {M2 M3 M4 M5} {
+set ii_pb [odb::dbBlockage_create $ii_b [ii_d 137.16] [ii_d 137.16] [ii_d 147.96] [ii_d 147.96]]
+puts "INFRA_ISLAND placement keep-out 137.16 137.16 147.96 147.96"
+foreach ln {M2 M3 M4} {
   set l [$ii_t findLayer $ln]
-  odb::dbObstruction_create $ii_b $l [ii_d 129.6] [ii_d 86.4] [ii_d 138.24] [ii_d 95.04]
+  odb::dbObstruction_create $ii_b $l [ii_d 138.24] [ii_d 138.24] [ii_d 146.88] [ii_d 146.88]
 }
-puts "INFRA_ISLAND route obstruction M2-M5 129.6 86.4 138.24 95.04"
+# M5: whole hole except the two core escape slots (clk pin -> N edge, rst_n pin -> S edge), 0.384 wide
+set l5 [$ii_t findLayer M5]
+odb::dbObstruction_create $ii_b $l5 [ii_d 138.24] [ii_d 138.24] [ii_d 142.368] [ii_d 146.88]
+odb::dbObstruction_create $ii_b $l5 [ii_d 142.752] [ii_d 138.24] [ii_d 146.88] [ii_d 146.88]
+odb::dbObstruction_create $ii_b $l5 [ii_d 142.368] [ii_d 140.592] [ii_d 142.752] [ii_d 142.368]
+puts "INFRA_ISLAND route obstruction M2-M5 138.24 138.24 146.88 146.88"
+set ii_k0 137.16; set ii_k1 137.16; set ii_k2 147.96; set ii_k3 147.96
+# cut the placement rows at the keep-out (tapcell then puts its row-end taps outside the hole; DPL-0004/0033 otherwise:
+# trial 10-26 05:58, a tap landed inside the blockage of an uncut row)
+set ii_kx0 [ii_d $ii_k0]; set ii_ky0 [ii_d $ii_k1]; set ii_kx1 [ii_d $ii_k2]; set ii_ky1 [ii_d $ii_k3]
+set ii_cut 0
+foreach r [$ii_b getRows] {
+  set z [$r getBBox]
+  if {[$z yMax] <= $ii_ky0 || [$z yMin] >= $ii_ky1 || [$z xMax] <= $ii_kx0 || [$z xMin] >= $ii_kx1} continue
+  set site [$r getSite]; set sw [$site getWidth]; set o [$r getOrient]; set nm [$r getName]
+  set x0 [$z xMin]; set x1 [$z xMax]; set y [$z yMin]
+  odb::dbRow_destroy $r
+  set nl [expr {($ii_kx0 - $x0) / $sw}]
+  if {$nl > 0} { odb::dbRow_create $ii_b ${nm}_iiL $site $x0 $y $o HORIZONTAL $nl $sw }
+  set xr [expr {$x0 + int(ceil(double($ii_kx1 - $x0) / $sw)) * $sw}]
+  set nr [expr {($x1 - $xr) / $sw}]
+  if {$nr > 0} { odb::dbRow_create $ii_b ${nm}_iiR $site $xr $y $o HORIZONTAL $nr $sw }
+  incr ii_cut
+}
+puts "INFRA_ISLAND rows cut $ii_cut"
