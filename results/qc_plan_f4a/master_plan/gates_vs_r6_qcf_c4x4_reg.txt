@@ -1,0 +1,24 @@
+reach_gap PASS -> PASS 
+bay_fill PASS -> PASS 
+corridor_tracks FAIL -> FAIL 
+entry_pins PASS -> PASS 
+clock_shield FAIL -> FAIL 
+static_ir FAIL -> FAIL 
+lot_fit PASS -> PASS 
+clock_entry FAIL -> FAIL {'fails': (128, 104)}
+core_reach FAIL -> FAIL 
+early_taps FAIL -> FAIL 
+tree_balance FAIL -> FAIL 
+core_insertion_model FAIL -> FAIL 
+die_pair_skew_model FAIL -> FAIL 
+tree_commensurate PASS -> PASS 
+clock_sites FAIL -> FAIL {'declared_islands': (14321, 14417), 'tree_nodes_off_island': (8189, 8190)}
+island_lattice FAIL -> FAIL 
+tree_on_islands FAIL -> FAIL {'leg_repeater_gap_fails': (454, 448)}
+tree_lattice PASS -> PASS 
+infra_sites FAIL -> FAIL 
+clock_rep_sites FAIL -> FAIL 
+tap_region_containment PASS -> PASS 
+footless_stubs PASS -> PASS 
+island_ft_inputs FAIL -> FAIL {'open': (14175, 14272), 'islands': (14321, 14417)}
+slices 112 differing: ['cbf_q00.json', 'cbf_q00_s2.json', 'cbf_q01.json', 'cbf_q01_s2.json', 'cbf_q11.json', 'cbn_q00.json', 'cbn_q01.json', 'cbn_q11.json', 'cbx_q10.json', 'qfd_dv_s8_crh_rp1.json', 'qfd_dv_s8x_vmr.json', 'sle_su_c__cl3c67a3d5.json', 'sle_su_c__cl78b6fe86.json', 'sle_su_c__cl99d49f55.json', 'sle_su_l0__clad02be3b.json', 'sle_su_l0__cld14716fc.json', 'sle_su_l1__cl15735621.json', 'sle_su_l1__cl3c610c2d.json', 'sle_su_l1__cl9c71a39d.json', 'slw_su_c__cl49a25f5f.json', 'slw_su_c__cl77ab230a.json', 'slw_su_c__clbb0c543d.json', 'slw_su_l0__cl0cf5548e.json', 'slw_su_l0__cl72211ea3.json', 'slw_su_l0__cle4811ba5.json', 'slw_su_l1__cl766bacee.json', 'slw_su_l1__cl8312485b.json', 'slw_su_l1__clbd68af58.json']

@@ -1,0 +1,404 @@
+{
+ "qfd_dv_s8x_btab": {
+  "method": "core_islands.site (SRAM-aware maze, equal-load, entry <= max_entry_um)",
+  "k": 4,
+  "max_entry_um": 110.0,
+  "entry_um": [
+   177.12,
+   134.808
+  ],
+  "sinks": 5648,
+  "sampled": 1500,
+  "islands": [
+   {
+    "centre_um": [
+     120.96,
+     86.4
+    ],
+    "rect_um": [
+     116.64,
+     82.08,
+     125.28,
+     90.72
+    ],
+    "entry_maze_um": 104.76,
+    "load_frac": 0.25,
+    "reach_um": {
+     "mean": 73.5,
+     "p95": 160.9,
+     "max": 175.0
+    }
+   },
+   {
+    "centre_um": [
+     120.96,
+     185.76
+    ],
+    "rect_um": [
+     116.64,
+     181.44,
+     125.28,
+     190.08
+    ],
+    "entry_maze_um": 106.92,
+    "load_frac": 0.25,
+    "reach_um": {
+     "mean": 90.1,
+     "p95": 172.8,
+     "max": 192.2
+    }
+   },
+   {
+    "centre_um": [
+     233.28,
+     95.04
+    ],
+    "rect_um": [
+     228.96,
+     90.72,
+     237.6,
+     99.36
+    ],
+    "entry_maze_um": 96.12,
+    "load_frac": 0.25,
+    "reach_um": {
+     "mean": 53.3,
+     "p95": 123.4,
+     "max": 178.2
+    }
+   },
+   {
+    "centre_um": [
+     246.24,
+     133.92
+    ],
+    "rect_um": [
+     241.92,
+     129.6,
+     250.56,
+     138.24
+    ],
+    "entry_maze_um": 70.2,
+    "load_frac": 0.25,
+    "reach_um": {
+     "mean": 54.3,
+     "p95": 116.6,
+     "max": 130.7
+    }
+   }
+  ],
+  "entry_maze_um": {
+   "min": 70.2,
+   "max": 106.92
+  },
+  "leaf_reach_um": 172.8,
+  "equal_path_um": 299.1,
+  "floor_entry_to_sink_maze_um": 281.9,
+  "verdict": "PASS"
+ },
+ "qfd_dv_s8x_prog": {
+  "method": "core_islands.site (SRAM-aware maze, equal-load, entry <= max_entry_um)",
+  "k": 4,
+  "max_entry_um": 110.0,
+  "entry_um": [
+   177.12,
+   134.808
+  ],
+  "sinks": 5295,
+  "sampled": 1500,
+  "islands": [
+   {
+    "centre_um": [
+     82.08,
+     125.28
+    ],
+    "rect_um": [
+     77.76,
+     120.96,
+     86.4,
+     129.6
+    ],
+    "entry_maze_um": 104.76,
+    "load_frac": 0.25,
+    "reach_um": {
+     "mean": 74.5,
+     "p95": 146.1,
+     "max": 163.1
+    }
+   },
+   {
+    "centre_um": [
+     285.12,
+     133.92
+    ],
+    "rect_um": [
+     280.8,
+     129.6,
+     289.44,
+     138.24
+    ],
+    "entry_maze_um": 109.08,
+    "load_frac": 0.25,
+    "reach_um": {
+     "mean": 67.5,
+     "p95": 109.1,
+     "max": 137.2
+    }
+   },
+   {
+    "centre_um": [
+     272.16,
+     120.96
+    ],
+    "rect_um": [
+     267.84,
+     116.64,
+     276.48,
+     125.28
+    ],
+    "entry_maze_um": 109.08,
+    "load_frac": 0.25,
+    "reach_um": {
+     "mean": 102.9,
+     "p95": 218.2,
+     "max": 235.4
+    }
+   },
+   {
+    "centre_um": [
+     272.16,
+     138.24
+    ],
+    "rect_um": [
+     267.84,
+     133.92,
+     276.48,
+     142.56
+    ],
+    "entry_maze_um": 98.28,
+    "load_frac": 0.25,
+    "reach_um": {
+     "mean": 67.8,
+     "p95": 125.3,
+     "max": 262.4
+    }
+   }
+  ],
+  "entry_maze_um": {
+   "min": 98.28,
+   "max": 109.08
+  },
+  "leaf_reach_um": 218.2,
+  "equal_path_um": 371.5,
+  "floor_entry_to_sink_maze_um": 298.1,
+  "verdict": "PASS"
+ },
+ "qfd_dv_s8_crh_rp1": {
+  "method": "QC-PLAN-F4A f4_g4c G4-strict L1 islands (rp1_f4a_g4c.json sha d3ddbf98b19a)",
+  "k": 6,
+  "max_entry_um": 194.4,
+  "entry_um": [
+   125.292,
+   108.0
+  ],
+  "sinks": 2208,
+  "sampled": 2208,
+  "entry_maze_um": {
+   "min": 194.4,
+   "max": 194.4
+  },
+  "leaf_reach_um": 270.54,
+  "equal_path_um": 270.54,
+  "verdict": "PASS",
+  "islands": [
+   {
+    "centre_um": [
+     8.64,
+     194.4
+    ],
+    "rect_um": [
+     4.32,
+     190.08,
+     12.96,
+     198.72
+    ],
+    "entry_maze_um": 194.4,
+    "load_frac": 0.2969
+   },
+   {
+    "centre_um": [
+     211.68,
+     12.96
+    ],
+    "rect_um": [
+     207.36,
+     8.64,
+     216.0,
+     17.28
+    ],
+    "entry_maze_um": 194.4,
+    "load_frac": 0.0625
+   },
+   {
+    "centre_um": [
+     82.08,
+     17.28
+    ],
+    "rect_um": [
+     77.76,
+     12.96,
+     86.4,
+     21.6
+    ],
+    "entry_maze_um": 194.4,
+    "load_frac": 0.1562
+   },
+   {
+    "centre_um": [
+     155.52,
+     198.72
+    ],
+    "rect_um": [
+     151.2,
+     194.4,
+     159.84,
+     203.04
+    ],
+    "entry_maze_um": 194.4,
+    "load_frac": 0.1875
+   },
+   {
+    "centre_um": [
+     155.52,
+     21.6
+    ],
+    "rect_um": [
+     151.2,
+     17.28,
+     159.84,
+     25.92
+    ],
+    "entry_maze_um": 194.4,
+    "load_frac": 0.1094
+   },
+   {
+    "centre_um": [
+     95.04,
+     198.72
+    ],
+    "rect_um": [
+     90.72,
+     194.4,
+     99.36,
+     203.04
+    ],
+    "entry_maze_um": 194.4,
+    "load_frac": 0.1875
+   }
+  ]
+ },
+ "qfd_dv_s8x_vmr": {
+  "method": "QC-PLAN-F4A f4_g4c G4-strict L1 islands (vmr_f4a_g4c.json sha dacaf0278b1b)",
+  "k": 6,
+  "max_entry_um": 195.48,
+  "entry_um": [
+   125.292,
+   108.0
+  ],
+  "sinks": 3757,
+  "sampled": 3757,
+  "entry_maze_um": {
+   "min": 195.48,
+   "max": 195.48
+  },
+  "leaf_reach_um": 244.08,
+  "equal_path_um": 244.08,
+  "verdict": "PASS",
+  "islands": [
+   {
+    "centre_um": [
+     43.2,
+     12.96
+    ],
+    "rect_um": [
+     38.88,
+     8.64,
+     47.52,
+     17.28
+    ],
+    "entry_maze_um": 195.48,
+    "load_frac": 0.1719
+   },
+   {
+    "centre_um": [
+     155.52,
+     198.72
+    ],
+    "rect_um": [
+     151.2,
+     194.4,
+     159.84,
+     203.04
+    ],
+    "entry_maze_um": 195.48,
+    "load_frac": 0.1094
+   },
+   {
+    "centre_um": [
+     198.72,
+     12.96
+    ],
+    "rect_um": [
+     194.4,
+     8.64,
+     203.04,
+     17.28
+    ],
+    "entry_maze_um": 195.48,
+    "load_frac": 0.2188
+   },
+   {
+    "centre_um": [
+     8.64,
+     194.4
+    ],
+    "rect_um": [
+     4.32,
+     190.08,
+     12.96,
+     198.72
+    ],
+    "entry_maze_um": 195.48,
+    "load_frac": 0.1562
+   },
+   {
+    "centre_um": [
+     116.64,
+     17.28
+    ],
+    "rect_um": [
+     112.32,
+     12.96,
+     120.96,
+     21.6
+    ],
+    "entry_maze_um": 195.48,
+    "load_frac": 0.2344
+   },
+   {
+    "centre_um": [
+     95.04,
+     198.72
+    ],
+    "rect_um": [
+     90.72,
+     194.4,
+     99.36,
+     203.04
+    ],
+    "entry_maze_um": 195.48,
+    "load_frac": 0.1094
+   }
+  ]
+ }
+}
