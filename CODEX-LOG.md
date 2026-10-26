@@ -4146,3 +4146,5 @@ Head source component READY 9412fd850b on codex/head-source-1026 (epyc1 scratch2
 
 ## Auxiliary milestone 2026-10-26 02:34 PDT
 Four HBM strapkit LECs collected EQ59246/57326/73368/71928; CP1R3 synthetic GRT+455.256TT/+4.386FF,pair32.82/25.82; oldqhub reset still22slewFAIL and HBMowns currentrepack. Generic LEC retry9d5d726d1 READY actualhub, baseline24retries fixed; idxalias source687ef703ff + receiptcb605f8b7c resolves33871/33871obligations; scalararray source6483d030d44testsPASS, both lane_exp original7diff gone in targetedreplay, remainingmigratedcollpoint under recovery (nofullEQ). IndependentL1c actualimage/slot PASS-COND posted; canaryholdsretained. Auxinfra child sharedPG actualcore30.6mVPASS/UCIe84.5FAIL, isolatedPHYgridfixinflight underinfra_clock. NewOWNER?none.
+
+2026-10-26 02:46 PDT PG: QC measured core30.6mVPASS/UCIe84.5mVFAIL35; separatePHYsupply/nativePGcontactstructuralfix active codex/aux-pg-1026, no owner question or freeze.
