@@ -390,6 +390,7 @@ def main():
                                   "(top-down pin assignment of unkitted hub partitions); the moved distance is reported "
                                   "as hub-internal lateral")
     ap.add_argument("--gate-mbitum", type=float, default=5.0)
+    ap.add_argument("--place", action="store_true", help="re-place stations/bit sites of changed types (ft_corridor.place)")
     a = ap.parse_args()
     raw = json.loads(Path(a.plan).read_text())
     plan = Plan(raw, a.hub)
@@ -418,8 +419,20 @@ def main():
           f"changed types {len(changed)}; E-W lateral {lateral_ew(plan2) / 1e6:.2f} M; {dict(stats)}")
     for r in rows[:20]:
         print("  %6.2fM %-12s %-32s %-5s w %4d dx %7.1f y %.0f-%.0f" % (r[0] / 1e6, *r[1:]))
+    sys.path[:0] = [str(Path(__file__).resolve().parent), str(Path(a.plan).resolve().parent)]
+    corr = None
+    if a.place and changed:
+        import ft_corridor
+        types = sorted(tn for tn in changed if raw["partition_types"][tn].get("ft_slots"))
+        corr, bad = {}, []
+        for tn in types:
+            try:
+                corr[tn] = ft_corridor.place(raw, [tn])
+            except Exception as e:                       # reach / tightening failures: reported, plan left with old sites
+                bad.append((tn, str(e)[:120]))
+        corr["_failed"] = bad
+        print(f"ft_corridor.place: {len(types) - len(bad)} types re-placed, {len(bad)} failed: {bad[:6]}")
     if a.out:
-        sys.path[:0] = [str(Path(__file__).resolve().parent), str(Path(a.plan).resolve().parent)]
         try:
             import compact_plan
             Path(a.out).write_text(compact_plan.dumps(raw))
@@ -432,7 +445,7 @@ def main():
             hub_moves=[dict(bit_um=round(m[0]), part=m[1], bus=m[2]) for m in hub_moves if m[0] > 0], changed_types=sorted(changed),
             residual_top=[dict(bit_um=round(r[0]), part=r[1], type=r[2], slot=r[3], width=r[4], dx_um=round(r[5], 1),
                                y_um=[r[6], r[7]]) for r in rows[:60]],
-            corridors=corridors(plan2, rows)), indent=1) + "\n")
+            corridors=corridors(plan2, rows), corridor_place=corr), indent=1, default=str) + "\n")
 
 
 if __name__ == "__main__":
