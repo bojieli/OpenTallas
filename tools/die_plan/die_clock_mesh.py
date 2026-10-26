@@ -45,6 +45,7 @@ COORD 2026-10-26 01:22): listed per port with its added cycles (--landing-cycles
 pricing; its region-to-region clock offset is reported against the landing window (--landing-budget-ps).
 """
 import argparse
+import bisect
 import gzip
 import json
 import math
@@ -147,6 +148,13 @@ def reserve_cell(K, name, c, width=None):
     for i in range(int(r[0] // K.b), int(r[2] // K.b) + 1):
         for j in range(int(r[1] // K.b), int(r[3] // K.b) + 1):
             K.g[(i, j)].append(r)
+    return r
+
+
+def release_cell_reservation(K, r):
+    for i in range(int(r[0] // K.b), int(r[2] // K.b) + 1):
+        for j in range(int(r[1] // K.b), int(r[3] // K.b) + 1):
+            K.g[(i, j)].remove(r)
 
 
 def placement_overlaps(cells):
@@ -168,6 +176,86 @@ def placement_overlaps(cells):
                    min(y + ROW_Y, v["y"] + ROW_Y) - max(y, v["y"]) > 1e-5:
                     out.append([old, n])
             buckets[key].append(n)
+    return out
+
+
+def hard_keepout_violations(P, cells):
+    """Check actual cell bodies, including split repeaters, against every hard/PHY clock keepout."""
+    K = DC.KeepIndex(DC.keepouts(P), die=(P.W, P.H))
+    bad = []
+    for name, c in cells.items():
+        x0, y0 = c["x"], c["y"]
+        x1, y1 = x0 + cell_width(c), y0 + ROW_Y
+        if x0 < 0 or y0 < 0 or x1 > P.W or y1 > P.H:
+            bad.append(dict(cell=name, keepout="outside die", rect_um=[x0, y0, x1, y1]))
+        seen = set()
+        for i in range(int(x0 // K.b), int(x1 // K.b) + 1):
+            for j in range(int(y0 // K.b), int(y1 // K.b) + 1):
+                for r in K.g.get((i, j), []):
+                    if tuple(r) in seen:
+                        continue
+                    seen.add(tuple(r))
+                    if x0 < r[2] and x1 > r[0] and y0 < r[3] and y1 > r[1]:
+                        bad.append(dict(cell=name, keepout=r[4], rect_um=[x0, y0, x1, y1], keepout_um=list(r[:4])))
+    return bad
+
+
+def mesh_tracks(path, P):
+    """Read the actual die kit's make_tracks commands, rather than guessing a platform offset."""
+    out = {}
+    for line in Path(path).read_text().splitlines():
+        f = line.split()
+        if len(f) < 2 or f[0] != "make_tracks" or f[1] not in ("M8", "M9"):
+            continue
+        options = dict(zip(f[2::2], f[3::2]))
+        axis = "y" if P.layers[f[1]]["dir"] == "H" else "x"
+        value = dict(pitch_um=float(options[f"-{axis}_pitch"]), offset_um=float(options[f"-{axis}_offset"]))
+        if value["pitch_um"] <= 0 or (f[1] in out and out[f[1]] != value):
+            raise ValueError(f"ambiguous routing tracks for {f[1]}")
+        out[f[1]] = value
+    if set(out) != {"M8", "M9"}:
+        raise ValueError("PG-aware mesh requires actual M8 and M9 make_tracks commands")
+    return out
+
+
+def pg_free_axis(ideal, shapes, layer, axis, span, profile, half_width, spacing, max_move):
+    """Project the mesh onto real routing tracks outside exact PG rectangles plus the clock NDR footprint.
+
+    Shapes are die_infra.pg_rects tuples (net, layer, x0, y0, x1, y1). A full mesh strap must avoid every
+    parallel PG shape on its span; an impossible PHY band fails here instead of silently shorting its supply.
+    """
+    clearance = half_width + spacing + .001   # one actual 1x-LEF DBU beyond the NDR boundary
+    intervals = sorted((r[2 + axis] - clearance, r[4 + axis] + clearance) for r in shapes if r[1] == layer)
+    merged = []
+    for lo, hi in intervals:
+        if merged and lo <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], hi)
+        else:
+            merged.append([lo, hi])
+    starts = [r[0] for r in merged]
+    pitch, offset = profile["pitch_um"], profile["offset_um"]
+    out = []
+    for target in ideal:
+        k0 = round((target - offset) / pitch)
+        best = None
+        for d in range(math.ceil(max_move / pitch) + 2):
+            ks = [k0] if d == 0 else sorted((k0 - d, k0 + d), key=lambda k: abs(offset + k * pitch - target))
+            for k in ks:
+                q = round(offset + k * pitch, 6)
+                if abs(q - target) > max_move or q < half_width + spacing or q > span - half_width - spacing:
+                    continue
+                if out and q <= out[-1]:
+                    continue
+                ix = bisect.bisect_right(starts, q) - 1
+                if ix < 0 or q >= merged[ix][1]:
+                    best = q
+                    break
+            if best is not None:
+                break
+        if best is None:
+            raise ValueError(f"no PG-free {layer} routing track within {max_move} um of mesh strap {target:.3f}; "
+                             "the clock/PHY supply geometry needs a structural revision")
+        out.append(best)
     return out
 
 
@@ -287,7 +375,7 @@ def stub_foot(K, xs, ys, x, y, limit, box=None, extent=None):
     return best[1], best[2], best[3], best[4], best[5]
 
 
-def split_long(cells, nets, K, taps_xy, hop_max, cell):
+def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None):
     """every driver -> load branch longer than hop_max (a slide / jog / node move made it long) gets equal-cut
     repeaters on its own L path (x first, then y), each at the nearest free site: no hop exceeds ~hop_max, so slew
     stays inside the limit.  Returns the number of repeaters added."""
@@ -307,7 +395,7 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell):
                 loads.append(ld)
                 continue
             corner = (pb[0], pa[1])
-            chain = []
+            planned, reservations = [], []
             for c in range(1, k + 1):
                 t = c * L / (k + 1)
                 dx = abs(corner[0] - pa[0])
@@ -316,7 +404,26 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell):
                 else:
                     p = (corner[0], pa[1] + math.copysign(t - dx, pb[1] - pa[1]))
                 q, _ = free_near(K, p, limit=hop_max / 2)
-                q = q or p
+                if q is None:
+                    break
+                probe = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y))
+                reservations.append(reserve_cell(K, f"split_probe_{c}", probe))
+                planned.append(q)
+            for r in reservations:
+                release_cell_reservation(K, r)
+            if len(planned) != k:
+                # A clock tail can traverse a PHY with its driver outside it. Never manufacture an illegal cell.
+                # Keep the direct tail only within the binding 750-um reach; actual routed slew still decides.
+                bound = L + BUF_W + ROW_Y
+                if out is not None:
+                    out.setdefault("unsplit_clock_branches", []).append(dict(driver=n["drv"], load=ld,
+                        span_bound_um=round(bound, 3), reason="no legal repeater outside hard/PHY keepouts"))
+                    if bound > 750.0:
+                        out["unplaced"].append([n["drv"], ld, "STRUCTURAL clock span exceeds 750 um", round(bound, 3)])
+                loads.append(ld)
+                continue
+            chain = []
+            for q in planned:
                 nm = cell(f"ckm_x_{added}", q[0], q[1], "rep", level=n.get("level"), split=True)
                 added += 1
                 chain.append(nm)
@@ -340,7 +447,7 @@ def part_regions(P, R):
 
 
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
-          regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False):
+          regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None):
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
@@ -349,9 +456,20 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     K = DC.KeepIndex(ko, die=(W, H))
     xs = [(i + 0.5) * W / nx for i in range(nx)]
     ys = [(j + 0.5) * H / ny for j in range(ny)]
+    axis_snap = None
+    if pg_shapes is not None:
+        if track_profile is None:
+            raise ValueError("PG-aware mesh requires the actual die-kit routing tracks")
+        old_xs, old_ys = xs, ys
+        xs = pg_free_axis(xs, pg_shapes, "M9", 0, W, track_profile["M9"], NDR[ndr]["width"] / 2, NDR[ndr]["space"], max_move)
+        ys = pg_free_axis(ys, pg_shapes, "M8", 1, H, track_profile["M8"], NDR[ndr]["width"] / 2, NDR[ndr]["space"], max_move)
+        axis_snap = dict(M9=round(max(abs(x-y) for x, y in zip(xs, old_xs)), 6),
+                         M8=round(max(abs(x-y) for x, y in zip(ys, old_ys)), 6))
     cells, nets, ports = {}, [], [("input", "root")]
     out = dict(meta=dict(nx=nx, ny=ny, m=m, rep_um=rep_um, ndr=ndr, sites=sites, W=W, H=H, pitch_um=[W / nx, H / ny]),
                xs=xs, ys=ys, drivers={}, htree=[], stubs=[], unplaced=[])
+    if axis_snap is not None:
+        out["meta"].update(pg_aware=True, pg_tracks=track_profile, pg_axis_snap_max_um=axis_snap)
     if delta_id:
         out["meta"]["delta_id"] = delta_id
     R = region_boxes(nx, ny, regions, W, H)
@@ -522,9 +640,10 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     out["taps"] = tap_rows
     if hop_max:
         out["meta"]["split_reps"] = split_long(cells, nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows}, hop_max,
-                                               cell)
+                                               cell, out)
     overlaps = placement_overlaps(cells)
     out["clock_cell_overlaps"] = overlaps
+    out["clock_hard_keepout_violations"] = hard_keepout_violations(P, cells)
     if reserve_sites:
         out["meta"]["reserve_cell_sites"] = True
     out["meta"].update(cells=len(cells), drivers=len(out["drivers"]), bufx24_drivers=sum(len(d["cells"]) for d in
@@ -532,6 +651,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                        reps=sum(1 for c in cells.values() if c["kind"] == "rep"), stubs=len(tap_rows),
                        taps_early_nonzero=sum(1 for t in tap_rows if t["early_ps"]), unplaced=len(out["unplaced"]),
                        clock_cell_overlap_pairs=len(overlaps),
+                       clock_hard_keepout_violations=len(out["clock_hard_keepout_violations"]),
                        driver_moves=sum(1 for d in out["drivers"].values() if d["move_um"] > 0),
                        driver_move_max_um=max([d["move_um"] for d in out["drivers"].values()] or [0]),
                        rep_slide_max_um=max([r["slide_um"] for h in out["htree"] for r in h["reps"]] or [0]),
@@ -585,14 +705,25 @@ def cmd_build(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
+    pg, pg_shapes, tracks = None, None, None
+    if bool(a.pg_json) != bool(a.track_file):
+        raise SystemExit("PG-aware mesh needs both --pg-json and --track-file from the actual die kit")
+    if a.pg_json:
+        import die_infra as DI
+        pg = json.loads(Path(a.pg_json).read_text())
+        pg_shapes = DI.pg_rects(P, pg["grid"])
+        tracks = mesh_tracks(a.track_file, P)
     cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
-                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites)
+                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks)
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
     import hashlib
     M["meta"]["plan"] = str(a.plan)
     M["meta"]["plan_sha256"] = hashlib.sha256(Path(a.plan).read_bytes()).hexdigest()
+    if pg is not None:
+        M["meta"].update(pg_source=str(a.pg_json), pg_sha256=hashlib.sha256(Path(a.pg_json).read_bytes()).hexdigest(),
+                         pg_feasible=pg.get("feasible"))
     M["meta"]["build_s"] = round(time.time() - t0, 1)
     (out / "mesh.json").write_text(json.dumps(M) + "\n")
     (out / "place.json").write_text(json.dumps(cells) + "\n")
@@ -719,10 +850,25 @@ def cmd_combo(a):
     d, kit = Path(a.dir), Path(a.kit)
     M = json.loads((d / "mesh.json").read_text())
     cells = json.loads((d / "place.json").read_text())
+    if M.get("unplaced") or M["meta"].get("unplaced", 0):
+        raise SystemExit("die_clock_mesh combo: unresolved/STRUCTURAL clock sites; revise before routing")
     overlaps = placement_overlaps(cells)
     if overlaps:
         raise SystemExit(f"die_clock_mesh combo: {len(overlaps)} physical clock-cell overlaps; "
                          f"rebuild with --reserve-cell-sites and actual LEF widths before routing: {overlaps[:3]}")
+    if cells:
+        plan_file = getattr(a, "plan", None) or M["meta"].get("plan")
+        if not plan_file or not Path(plan_file).is_file():
+            raise SystemExit("die_clock_mesh combo: needs --plan (or the original pinned plan) for actual hard-keepout census")
+        bad = hard_keepout_violations(S.Plan(S.load(plan_file)), cells)
+        if bad:
+            raise SystemExit(f"die_clock_mesh combo: {len(bad)} clock-cell bodies overlap hard/PHY keepouts: {bad[:3]}")
+    if M["meta"].get("pg_aware"):
+        import types
+        # Only directions are needed to parse the actual kit, so no guessed layer pitch or phase enters here.
+        actual = mesh_tracks(kit / "grt/tracks.tcl", types.SimpleNamespace(layers={"M8": {"dir": "H"}, "M9": {"dir": "V"}}))
+        if actual != M["meta"]["pg_tracks"]:
+            raise SystemExit("PG-aware mesh routing tracks do not match the actual die kit")
     data = json.loads((d / "nets.json").read_text())
     rv = (kit / "grt/route.v").read_text()
     cv = (d / "ctree.v").read_text()
@@ -1157,6 +1303,10 @@ def regional_qualification(M, corners, crossings):
         reasons.append("clock cells have no legal site")
     if M["meta"].get("clock_cell_overlap_pairs", 0):
         reasons.append("clock cell bodies overlap")
+    if M["meta"].get("clock_hard_keepout_violations", 0):
+        reasons.append("clock cell bodies overlap hard/PHY keepouts")
+    if M["meta"].get("pg_aware") and M["meta"].get("pg_feasible") is not True:
+        reasons.append("PG grid is not IR-qualified")
     if set(corners) != {"TT", "FF"}:
         reasons.append("both TT and FF clock measurements are required")
     if any(c["verdict"] != "PASS" or c.get("landed_verdict") == "FAIL" for c in corners.values()):
@@ -1263,8 +1413,8 @@ def cmd_report(a):
             + ncell * DC.BUF_CIN_FF / 1e3 + len(M["taps"]) * DC.TAP_LOAD_FF / 1e3
         r["clock_switched_cap_pF"] = round(c_tot, 1)
         r["clock_wire_power_W"] = round(c_tot * 1e-12 * VDD[corner] ** 2 / (DC.PERIOD_PS * 1e-12), 3)
-    if regd:
-        rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"])
+    if regd or M["meta"].get("pg_aware"):
+        rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"] if crossing_table else 0)
     (d / "clock_report.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps({c: {k: v for k, v in r.items() if k != "worst"} for c, r in rep["corners"].items()}, indent=1))
     return 0
@@ -1344,6 +1494,8 @@ def main(argv=None):
                    help="extend regional metal to its geometric box with an NDR gap, opening legal edge driver islands")
     b.add_argument("--reserve-cell-sites", action="store_true",
                    help="reserve every clock cell body while searching later sites; prevent overlapping clock cells")
+    b.add_argument("--pg-json", help="actual IR-sized PG file; consumes die_infra.pg_rects geometry (trial-only if infeasible)")
+    b.add_argument("--track-file", help="actual die kit grt/tracks.tcl, required with --pg-json")
     b.add_argument("--delta-id", help="plan delta tag recorded in mesh.json meta (e.g. D-QC-CLKMESH)")
     bl = sub.add_parser("balance")
     bl.add_argument("dir")
@@ -1356,6 +1508,7 @@ def main(argv=None):
     c = sub.add_parser("combo")
     c.add_argument("dir")
     c.add_argument("--kit", required=True)
+    c.add_argument("--plan", help="pinned physical plan for the all-clock-cell hard-keepout census")
     m = sub.add_parser("mesh")
     m.add_argument("dir")
     m.add_argument("--corner", default="TT")
