@@ -1,0 +1,182 @@
+{
+  "schema": "opentallas.master_plan_slice.v1",
+  "die": "tiny",
+  "kind": "core",
+  "type": "src",
+  "module": "coupon",
+  "instances": [
+    "p_src"
+  ],
+  "plan": "tools/die_plan/examples/tiny_plan.json",
+  "plan_sha256": "aa",
+  "master_plan_sha256": "mp1",
+  "frozen": false,
+  "outline_um": [
+    86.4,
+    86.4
+  ],
+  "keepouts": [],
+  "islands": [
+    {
+      "name": "clock_entry",
+      "rect_um": [
+        38.88,
+        38.88,
+        47.52,
+        47.52
+      ],
+      "centre_um": [
+        43.2,
+        43.2
+      ],
+      "clock_pin": {
+        "layer": "M5",
+        "xy_um": [
+          43.2,
+          43.2
+        ]
+      }
+    }
+  ],
+  "bays": [],
+  "entry_pins": [],
+  "hard_cores": [],
+  "latency": {
+    "common_clock_latency_ps": {
+      "TT": 250,
+      "FF": 202.5
+    },
+    "tol_ps": 40,
+    "early_taps": false
+  },
+  "corridors": [
+    {
+      "path": "L0",
+      "layer": "M7",
+      "bits": 64,
+      "polyline_um": [
+        [
+          0,
+          210
+        ],
+        [
+          864,
+          210
+        ]
+      ],
+      "band_um": 4
+    }
+  ],
+  "gates": {
+    "reach": "PASS",
+    "bay_fill": "NOT RUN"
+  },
+  "pushdown": {
+    "islands": [
+      {
+        "name": "isl0",
+        "centre_um": [
+          43.2,
+          43.2
+        ],
+        "rect_um": [
+          38.88,
+          38.88,
+          47.52,
+          47.52
+        ],
+        "driver": {
+          "cell": "BUFx16f_ASAP7_75t_R",
+          "parallel": 1
+        },
+        "ft_ports": [
+          {
+            "name": "mp_isl0_ck_i",
+            "dir": "in",
+            "layer": "M5",
+            "xy_um": [
+              41.040000000000006,
+              45.36
+            ]
+          },
+          {
+            "name": "mp_isl0_ck_o",
+            "dir": "out",
+            "layer": "M5",
+            "xy_um": [
+              45.36,
+              45.36
+            ]
+          },
+          {
+            "name": "mp_isl0_rst_i",
+            "dir": "in",
+            "layer": "M5",
+            "xy_um": [
+              41.040000000000006,
+              41.040000000000006
+            ]
+          },
+          {
+            "name": "mp_isl0_rst_o",
+            "dir": "out",
+            "layer": "M5",
+            "xy_um": [
+              45.36,
+              41.040000000000006
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "core_tree": {
+    "clock_port": "ck",
+    "nodes": [
+      {
+        "name": "ci_root",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "xy_um": [
+          43.2,
+          50
+        ],
+        "parent": "port:ck"
+      },
+      {
+        "name": "ci_w",
+        "master": "BUFx8_ASAP7_75t_R",
+        "xy_um": [
+          21.6,
+          43.2
+        ],
+        "parent": "ci_root"
+      },
+      {
+        "name": "ci_e",
+        "master": "BUFx8_ASAP7_75t_R",
+        "xy_um": [
+          64.8,
+          43.2
+        ],
+        "parent": "ci_root"
+      }
+    ],
+    "leaves": [
+      {
+        "node": "ci_w",
+        "sinks": [
+          "f0/CLK",
+          "f1/CLK"
+        ]
+      },
+      {
+        "node": "ci_e",
+        "sinks": [
+          "f2/CLK",
+          "f3/CLK"
+        ]
+      }
+    ]
+  },
+  "core_clock_port": "ck"
+}

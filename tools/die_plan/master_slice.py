@@ -279,9 +279,13 @@ def emit_tcl(sl, dbu=1000):
          "}",
          "set ms_place {}; set ms_nb 0; set ms_no 0"]
     place = []
+    pushdown = sl.get("kind") == "core" and bool(sl.get("pushdown"))
     for i in sl.get("islands", []) or []:
-        place.append((f"island {i.get('name')}", i["rect_um"]))
+        if not pushdown:
+            place.append((f"island {i.get('name')}", i["rect_um"]))
     for k in sl.get("keepouts", []) or []:
+        if pushdown and k.get("kind") == "island":
+            continue  # 12.2a1: the fixed core-owned cells replace the old hole
         if "placement" in (k.get("use") or []):
             place.append((f"keepout {k.get('name')} ({k.get('kind')})", k["rect_um"]))
     for what, r in place:
@@ -289,6 +293,8 @@ def emit_tcl(sl, dbu=1000):
         L += [f"# placement blockage: {what}",
               f"incr ms_nb [ot_ms_blockage $ms_b {x0} {y0} {x1} {y1}]; lappend ms_place [list {x0} {y0} {x1} {y1}]"]
     for k in sl.get("keepouts", []) or []:
+        if pushdown and k.get("kind") == "island":
+            continue  # no cut-out routing obstruction over pushdown cells
         x0, y0, x1, y1 = (_d(v, dbu) for v in k["rect_um"])
         for ln in k.get("layers") or []:
             L.append(f"incr ms_no [ot_ms_obstruction $ms_b {ln} {x0} {y0} {x1} {y1}]   ;# keepout {k.get('name')}")
@@ -320,6 +326,8 @@ def emit_tcl(sl, dbu=1000):
     L.append(f'puts "OT_MASTER_SLICE type={t} blockages_new=$ms_nb obstructions_new=$ms_no '
              f'bays=[dict size $ot_master_bays] entry_pins_placed={nplaced} '
              f'entry_pins_unbound=[dict size $ot_master_entry_pins]"')
+    if pushdown:
+        L.append("source /work/master_core_infra.tcl")
     L.append("}")
     return "\n".join(L) + "\n"
 
@@ -367,6 +375,9 @@ def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, 
         return TRIAL if req else None
     p, sl = resolve(slice_dir, name, outline_um, plan_raw, trial, kind)
     kd = Path(kd)
+    if sl.get("kind") == "core" and sl.get("pushdown"):
+        import core_infra
+        core_infra.install(kd, sl)
     shutil.copyfile(p, kd / "master_slice.json")
     (kd / "master_slice.tcl").write_text(emit_tcl(sl))
     if not (kd / "keepout_phys.tcl").is_file():

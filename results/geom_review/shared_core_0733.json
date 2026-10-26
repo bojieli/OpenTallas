@@ -1,0 +1,15 @@
+{
+  "vehicle": "shared core infrastructure coupon (implementation only)",
+  "picture": "results/core_infra_0733/review.png",
+  "verdict": "PASS-COND",
+  "findings": [
+    "Viewed sparse macro-free core and symmetric two-stage tree; four flops split equally across two leaves.",
+    "Clock/reset FT BUFs occupy the centre island; no blockages or LEF cutouts.",
+    "Core clock pin at centre is separate from four FT M5 pins at x +/-2.16, y +/-2.16 um.",
+    "No long-reach path, macro wall, wide bus crossing or pin-density hot spot in this tiny vehicle."
+  ],
+  "conditions": [
+    "Coupon permits implementation smoke only, no timing or die-freeze claim.",
+    "Production adapters must consume frozen slices with actual tree sink assignments, bay cells and entry pins, then receive their own geometry review before P&R."
+  ]
+}
