@@ -1087,3 +1087,5 @@ CODEX: 2026-10-26 04:06 PDT ENG F parenttransport READY3682e5dc8: F3RCOvalid/dat
 CODEX: 2026-10-26 04:07 PDT QC current source phase STRICT PASS83types/377parts/1921crossings0errors and CB16 emitted fixedpoint0; READY85f4d22bd5+native51cb5161db integrated ONEQC. Fresh88type FE+65-region landing probe live actualhub codex-qc-land-phase-1026/probe0 unit245653; no physical/G5 claim.
 
 CODEX: 2026-10-26 04:09 PDT KVX PVjoin exact production M5 access PASS (4619ports/9752nets,GRT0,233343pins NoAp0,40%reserve), earlierM7diagnostic/API failures retained; q1/q3 root-approved CTS-only rows3f3a142a974c/b2771e502dc0 held normally. q2 rename91e658f6b ready forONEKVbatch.
+
+CODEX: 2026-10-26 04:25 HEAD indexedXB READYddb9d64045 clean-main packet; source-only fullidentity/nativeSK11/default/indexed/mutants PASS. HEADB CTS40pairPASS, actual source-120 qualified; standardFF GRT-only diagnostic kit_r2 now underot-run727177 after retained Tcl-hook failure; independent/root scope reviewed. Issued-tag FIFO/livefallback extraction source9336012efd miter running727178. PATH-S81 notes hold paths/limits.
