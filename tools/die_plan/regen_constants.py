@@ -133,7 +133,7 @@ class Bound:
         """as-built value: param_regen.json changed[].asbuilt; a bind WITHOUT a param_regen hook still carries the
         as-built values in its RTL -> read them from BIND_DIR/rtl (module regex)."""
         vals = {a for (i, p), (a, b) in self.applied().items() if p == param and re.search(inst_re, i)}
-        if not vals and module and not self.param_regen.get("changed") and (self.dir / "rtl").is_dir():
+        if not vals and module and not any(c["param"] == param for c in self.param_regen.get("changed", [])) and (self.dir / "rtl").is_dir():
             vals = {v["params"][param] for v in self.rtl_insts(module).values() if param in v["params"]}
         if len(vals) > 1:
             raise RuleError(f"as-built {param} differs across {inst_re}: {sorted(vals)}")
@@ -520,6 +520,8 @@ def kv_ectl(o):
 
 def kv_ahub(o):
     B = o.B
+    if B.members(source=r"native_composite_.*astk_.*__ap$", sink=r"^ahub$"):
+        return kv_ahub_composed(o)
     asb = B.asbuilt_param(r"^ahub$", "AP_OFS", module=r"qkd_ahub_static_dw\w*")
     if asb is None:
         raise RuleError("as-built AP_OFS not in param_regen.json (bind without the KV hook)")
@@ -547,6 +549,52 @@ def kv_ahub(o):
         ms = B.members(source=rf"^ahub\.am{k}$", sink=rf"astk_{st}__u_strip_u_strip_u_ctl")
         am[st] = (ms[0]["landed"] - ms[0]["asb"] - lag[st]) if ms else None
     o.add("AM_LAG_DELTA", am, "compiler", "compiler EXP_START per stack: Delta D(am_s) - Delta L_s (kv_static_programme)",
+          group="ahub")
+
+
+def kv_ahub_composed(o):
+    """Use endpoint ports after native ASTK composition; private source paths are no longer ABI."""
+    B = o.B
+    asb = B.asbuilt_param(r"^ahub$", "AP_OFS")
+    fr0 = B.asbuilt_param(r"^ahub$", "FR_OFS")
+    if asb is None:
+        raise RuleError("composed AHUB as-built AP_OFS missing")
+    # FR_OFS can be unchanged, and therefore absent from changed[]. Read the emitted leaf in that case.
+    if fr0 is None:
+        fr0 = B.asbuilt_param(r"^ahub$", "FR_OFS", module=r"qkd_ahub_static_dw\w*")
+    if fr0 is None:
+        raise RuleError("composed AHUB FR_OFS missing from both hook changes and emitted RTL")
+    v = _int(asb)
+    ap0 = [_s16(v >> (16 * k)) for k in range(4)]
+    def delta(what, **kw):
+        ms = B.members(**kw)
+        ds = {m["landed"] - m["asb"] for m in ms}
+        if len(ds) > 1:
+            raise RuleError(f"{what}: nonuniform landed delta {sorted(ds)}")
+        return next(iter(ds)) if ds else 0
+    dap = []
+    for k in range(4):
+        ms = B.members(sink=r"^ahub$", port=rf"^ap{k}$")
+        if not ms:
+            raise RuleError(f"AHUB ap{k}: missing composed crossing")
+        dap.append(delta(f"AHUB ap{k}", sink=r"^ahub$", port=rf"^ap{k}$"))
+    dhs = delta("AHUB hs", sink=r"^ahub$", port=r"^hs_\w+$")
+    dpf = delta("AHUB pvfst", source=r"(^|\.)kvs_attn\.pvfst$", sink=r"^pvfin$")
+    daf = delta("AHUB ahfr", source=r"^ahub\.fr_\w+$", sink=r"^pvfin$")
+    dlead = delta("AHUB PV_LEAD", source=r"(^|\.)kvs_attn\.pvst$", sink=r"pvw_[01](?:__u_RH_r0)?$")
+    ap = [a + d - dhs for a, d in zip(ap0, dap)]
+    fr = _int(fr0) + dpf - dlead - daf - dhs
+    r = o.add("AP_OFS", ap, "rtl", "AP_OFS_asb + Delta(ap) - Delta(ks_ahs), composed endpoint ports",
+              dict(asbuilt=ap0, ap_delta=dap, hs_delta=dhs), inst=r"^ahub$", group="ahub")
+    r["sv_literal"] = "64'h" + "".join(f"{x & 0xffff:04x}" for x in reversed(ap))
+    o.add("FR_OFS", fr, "rtl", "FR_OFS_asb + Delta(pvfst) - Delta(PV_LEAD) - Delta(ahfr) - Delta(ks_ahs)",
+          dict(asbuilt=_int(fr0), pvfst=dpf, pvlead=dlead, ahfr=daf, hs=dhs),
+          inst=r"^ahub$", group="ahub")
+    am = {}
+    for k, st in enumerate(KV_STACKS):
+        ms = B.members(source=rf"^ahub\.am{k}$", sink=rf".*astk_{st}.*")
+        am[st] = (ms[0]["landed"] - ms[0]["asb"]) if ms else None
+    o.add("AM_LAG_DELTA", am, "compiler", "Delta(am) on the composed ASTK boundary; intra-partition absent",
           group="ahub")
 
 
