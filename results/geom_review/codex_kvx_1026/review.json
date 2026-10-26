@@ -1,0 +1,19 @@
+{
+  "verdict": "FAIL",
+  "reviewer": "CODEX-KVX",
+  "source_branch": "codex/kvx-1026",
+  "images_viewed": [
+    "epyc1:cores-kits/kvx/ectlk/k1p/review_q0/review.png",
+    "epyc1:cores-kits/kvx/ectlk/k1p/review_q1/review.png",
+    "epyc1:codex-kvx-1026/q0legal-review/placed.png",
+    "intel1:cores-kits/kvx/pv_pair/t1/postcts/render_4cts.png"
+  ],
+  "findings": [
+    "ECTLK bottom SRAM y7.068 minus halo4.32 leaves 0.048um below halo above core bottom2.7; South ports cannot reach dedicated registers in legal rows below SRAM. q0/q1/q3 pin-register p90 45.11/41.94/40.92um; max129.25/268.92/257.71um.",
+    "ECTLK all three register reach censuses PASS max303.86/264.22/251.96um and zero captures above405um.",
+    "Generic face allocator uses independent occupancy per face; retain-FIRM diagnostic causes737 overlaps,9 outside-row cells,1 site alignment error. Legal shared-site packing fixes DPL but q0 pin-register p9042.39 still fails because SRAM blocks rows.",
+    "PV pair t2 latest placement-clock TT setup -18.446ps (control c_r[0] to lane12 s1_p[11]), FF hold -27.919ps (synchronous reset input to g_reset_pin.rst_q). Regional clock grouping separates control source from data capture; reset input contract also needs physical alignment. No route or SIGNED claim."
+  ],
+  "next": "q0 bottom SRAM moved to20.088um with halos unchanged; reviewed proposal PASS-COND for placement-only trial. Need actual rebuilt macro placement, actual pin/r2r census before CTS. q2 pending plan pin rename remains held.",
+  "latency_delta_cycles": 0
+}
