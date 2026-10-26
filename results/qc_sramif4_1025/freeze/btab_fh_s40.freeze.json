@@ -1,0 +1,88 @@
+{
+ "schema": "opentallas.qc.core_freeze.v2",
+ "kit": "qfd_dv_s8x_btab_adj0",
+ "module": "qfd_dv_s8x_btab",
+ "plan_type": "slw_su_c",
+ "outline_um": [
+  354.24,
+  259.2
+ ],
+ "ref_tile": "physical/ref_tile/qfd_dv_s5_btab",
+ "spec": "86288faea:physical/ref_tile/qfd_dv_s5_btab/spec.json",
+ "spec_sha256": "77600381882fa5d59b9af3cbd61883ceb9f328c34e4a95c1f283caf071af4cf0",
+ "pins_file": "physical/die_plan/qwen_compute/cores/su/slw_su_c_u_suvm_u_vm8q_u_bt_pins_aspect1713.json",
+ "pins_sha256": "1ce40ed3e46a7935d22642bc7ca07bc7b55b823d335e27f1b10f5f8633521c57",
+ "pins": 1318,
+ "clocks": [
+  "ck"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "16d86e9cb381206e1711619b842db706464682cd3b239ad339319b5399d27d64",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "e2325b35e8",
+ "sdc_lint_sha256": "370e0378cf5e3fe4a541572a246bae9e9dfaf54e17212839d56df6d71620ae0e",
+ "face_guard_sha256": "21d4f0279e5868e62ce25fd26c8418c1bd7d57e606db1fc5df809004ef6e0811",
+ "signoff_sha256": "a838e83deb185c35f809483df6b1a3c26b9d13e426305f8642ae942d7443bd84",
+ "macros": {
+  "ot_sram_1r1w_128x256_m1_r2c2": [
+   [
+    86.4,
+    86.4,
+    "R0"
+   ],
+   [
+    86.4,
+    155.52,
+    "R0"
+   ],
+   [
+    86.4,
+    224.64,
+    "R0"
+   ],
+   [
+    86.4,
+    293.76,
+    "R0"
+   ]
+  ]
+ },
+ "rtl_patches": [
+  {
+   "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+   "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+   "sha256": "a72fa1cc213c41bb764453ff4df54a44ffb6d366cf8ba714515d8da8b9233120"
+  }
+ ],
+ "kit_hash": "5634bea64d50647e",
+ "plan": "physical/die_plan/qwen_compute/die_plan.json",
+ "plan_sha256": "54a1aeb5065d061a14e15a838e491b5f24975530a655e1c3eafb99f22ace4e9f",
+ "pins_match_kit": "exact name+xy+layer 1318/1318",
+ "source": "claude/path-qc-sramif5-1026@52bbddb407",
+ "supersedes": {
+  "freeze.stale_aspect_s5.json": {
+   "outline_um": [
+    259.2,
+    354.24
+   ],
+   "pins_file": "physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/qfd_dv_s8x_btab.lef"
+  }
+ },
+ "io_hold": {
+  "mode": "sender_min",
+  "sender_ps": 40,
+  "basis": "COORD 2026-10-26 00:19 two-sided 40 ps budget; counts once senders show the 40 ps min-output check (same release batch) + io_hold_parent receipt"
+ }
+}
