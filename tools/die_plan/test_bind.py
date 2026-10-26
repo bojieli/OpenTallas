@@ -671,3 +671,22 @@ def test_kit_inline_includes(tmp_path):
         raise AssertionError("missing include must raise")
     except bind.BindError:
         pass
+
+
+def test_kit_strip_macro_params(tmp_path):
+    """QC-KITS 10-25 tt_ctlm: content-only params on a parameterless hard-macro blackbox are stripped in the kit copy
+    (a $paramod cell would match no LEF master) and recorded; params on ordinary modules are kept."""
+    bb = tmp_path / "rom_bb.v"
+    bb.write_text('(* blackbox *)\nmodule ot_rom_x (input clk, output [1:0] q);\nendmodule\n')
+    top = tmp_path / "top.sv"
+    top.write_text('module top(input clk, output [1:0] a, b);\n'
+                   'ot_rom_x #(.INSTANCE($sformatf("t%0d", 1))) \\u_r.m0 (.clk(clk), .q(a));\n'
+                   'other #(.W(2)) u_o (.clk(clk), .q(b));\nendmodule\n')
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    out, rec = bind.kit_strip_macro_params([bb, top], kd)
+    assert out[0] == bb and out[1] == kd / "inline" / "top.sv"
+    t = out[1].read_text()
+    assert "ot_rom_x \\u_r.m0 (" in t.replace("ot_rom_x  ", "ot_rom_x ") and "other #(.W(2)) u_o" in t
+    h = rec[str(out[1])]["stripped"]
+    assert len(h) == 1 and h[0]["inst"] == "\\u_r.m0" and "INSTANCE" in h[0]["params"]

@@ -2719,6 +2719,50 @@ def kit_inline_includes(fl, kd):
     return out, rec
 
 
+def kit_strip_macro_params(fl, kd):
+    """A hard-macro blackbox view (`(* blackbox *)` module without parameters, e.g. mem_compiler ROM *_bb.v) cannot
+    take the content-only parameters the RTL passes for simulation (`ot_rom_4096x266_m8 #(.INSTANCE("calendar_m0"))`):
+    Yosys errors ("Can't find object for defparam INSTANCE", QC-KITS 10-25 tt_ctlm), and declaring them on the
+    blackbox makes Yosys derive `$paramod\\<macro>\\INSTANCE=...` cells that match no LEF master.  The macro's layout
+    is content-independent, so the kit copy drops the `#(...)` of such instantiations (KIT/inline/, sources unchanged)
+    and the manifest keeps every stripped override (inst -> text) for the content/LEC record.  -> files, {copy: record}"""
+    bb = set()
+    for f in fl:
+        t = Path(f).read_text(errors="replace")
+        for m in re.finditer(r"\(\*\s*blackbox\s*\*\)\s*module\s+(\w+)\s*\(", t):
+            bb.add(m.group(1))
+    if not bb:
+        return list(fl), {}
+    pat = re.compile(r"\b(" + "|".join(sorted(bb)) + r")(\s*)#\s*\(")
+    out, rec = [], {}
+    for f in fl:
+        f = Path(f)
+        t = f.read_text(errors="replace")
+        if not pat.search(t):
+            out.append(f)
+            continue
+        res, i, hits = [], 0, []
+        for m in pat.finditer(t):
+            if m.start() < i:
+                continue
+            j, depth = m.end(), 1
+            while depth and j < len(t):
+                depth += {"(": 1, ")": -1}.get(t[j], 0)
+                j += 1
+            inst = re.match(r"\s*(\\\S+|\w+)", t[j:])
+            hits.append(dict(module=m.group(1), inst=inst.group(1) if inst else "", params=t[m.end() - 1:j]))
+            res.append(t[i:m.start()] + m.group(1) + " ")
+            i = j
+        res.append(t[i:])
+        d = Path(kd) / "inline"
+        d.mkdir(exist_ok=True)
+        c = d / f.name
+        c.write_text("".join(res))
+        rec[str(c)] = dict(original=str(f), stripped=hits)
+        out.append(c)
+    return out, rec
+
+
 def kit_inline_imports(fl, kd):
     """Yosys read_verilog rejects a package import inside a module body ('unexpected TOK_IMPORT'): such a file is
     copied into KIT/inline/ with each `import P::*;` replaced by P's body (the tools/emb_hbm_synth_sources.py transform,
@@ -2953,6 +2997,7 @@ def cmd_kit_rtl(a):
                     [f for f in files if f.name != "bind_cells.sv"])
     fl, incl = kit_inline_includes(fl, kd)
     fl, inlined = kit_inline_imports(fl, kd)
+    fl, bbparams = kit_strip_macro_params(fl, kd)
     fl, deduped = kit_strip_dups(fl, kd, picks)
     sims = [str(f) for f in fl if SIM_FILE.search(f.name)]
     if sims:
@@ -2964,7 +3009,7 @@ def cmd_kit_rtl(a):
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
                variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, narrow_buses=narrow,
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
-               packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
+               packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, macro_params_stripped=bbparams, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())),
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
