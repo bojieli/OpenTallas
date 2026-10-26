@@ -1,0 +1,265 @@
+{
+ "ot_hgi_sfu_split3_lane_core_strap": [
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane0",
+   "old_view": "ot_hgi_sfu_core_split3__lane0@9d8e648ad19a",
+   "straps": {
+    "strap_map_lane_j": "4'b0000"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane1",
+   "old_view": "ot_hgi_sfu_core_split3__lane1@4ac2c15c8837",
+   "straps": {
+    "strap_map_lane_j": "4'b0001"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane2",
+   "old_view": "ot_hgi_sfu_core_split3__lane2@2ba0e7ec37ee",
+   "straps": {
+    "strap_map_lane_j": "4'b0010"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane3",
+   "old_view": "ot_hgi_sfu_core_split3__lane3@90d039bd5093",
+   "straps": {
+    "strap_map_lane_j": "4'b0011"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane4",
+   "old_view": "ot_hgi_sfu_core_split3__lane4@ef3314d95b46",
+   "straps": {
+    "strap_map_lane_j": "4'b0100"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane5",
+   "old_view": "ot_hgi_sfu_core_split3__lane5@9818e0f96722",
+   "straps": {
+    "strap_map_lane_j": "4'b0101"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane6",
+   "old_view": "ot_hgi_sfu_core_split3__lane6@c8a5f8831c4a",
+   "straps": {
+    "strap_map_lane_j": "4'b0110"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane7",
+   "old_view": "ot_hgi_sfu_core_split3__lane7@dec25f7e131a",
+   "straps": {
+    "strap_map_lane_j": "4'b0111"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane8",
+   "old_view": "ot_hgi_sfu_core_split3__lane8@4ab19d2ea3d5",
+   "straps": {
+    "strap_map_lane_j": "4'b1000"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane9",
+   "old_view": "ot_hgi_sfu_core_split3__lane9@9617422dda57",
+   "straps": {
+    "strap_map_lane_j": "4'b1001"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane10",
+   "old_view": "ot_hgi_sfu_core_split3__lane10@97960a525679",
+   "straps": {
+    "strap_map_lane_j": "4'b1010"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane11",
+   "old_view": "ot_hgi_sfu_core_split3__lane11@3db9e50b9251",
+   "straps": {
+    "strap_map_lane_j": "4'b1011"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane12",
+   "old_view": "ot_hgi_sfu_core_split3__lane12@c40b418bbe20",
+   "straps": {
+    "strap_map_lane_j": "4'b1100"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane13",
+   "old_view": "ot_hgi_sfu_core_split3__lane13@1e37cdb3434e",
+   "straps": {
+    "strap_map_lane_j": "4'b1101"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane14",
+   "old_view": "ot_hgi_sfu_core_split3__lane14@66f75664efb4",
+   "straps": {
+    "strap_map_lane_j": "4'b1110"
+   }
+  },
+  {
+   "old_module": "ot_hgi_sfu_core_split3__lane15",
+   "old_view": "ot_hgi_sfu_core_split3__lane15@ed3d202ade36",
+   "straps": {
+    "strap_map_lane_j": "4'b1111"
+   }
+  }
+ ],
+ "ot_hbm_su_pg_lane_exp_core_strap": [
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp1",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp1@cc6a70ac5f18",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000001"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp2",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp2@4240b9ef0b3f",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000010"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp3",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp3@565417693226",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000011"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp4",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp4@b74f1b0dd8d3",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000100"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp5",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp5@4f3a945c1229",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000101"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp6",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp6@82d218e839cd",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000110"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp7",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp7@3fa591887d18",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000111"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp8",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp8@acab94bb4422",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001000"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp9",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp9@1b3202c4b870",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001001"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp10",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp10@2912e200f83d",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001010"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp11",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp11@1510b1b6a90f",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001011"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp12",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp12@75dc9e6a2efa",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001100"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp13",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp13@2918e8eb5d6c",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001101"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp14",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp14@4a8fa8d47007",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001110"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp_l",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lane_exp_l@2e4754467283",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001111"
+   }
+  }
+ ],
+ "ot_hbm_su_pg_lanes4_core_strap": [
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3@835991219cf1",
+   "straps": {
+    "strap_lane0_lane_id": "11'b00001000000",
+    "strap_lane1_lane_id": "11'b00001000001",
+    "strap_lane2_lane_id": "11'b00001000010",
+    "strap_lane3_lane_id": "11'b00001000011"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7@80ba81b7a4cd",
+   "straps": {
+    "strap_lane0_lane_id": "11'b00001000100",
+    "strap_lane1_lane_id": "11'b00001000101",
+    "strap_lane2_lane_id": "11'b00001000110",
+    "strap_lane3_lane_id": "11'b00001000111"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11@1fc3e25183d3",
+   "straps": {
+    "strap_lane0_lane_id": "11'b00001001000",
+    "strap_lane1_lane_id": "11'b00001001001",
+    "strap_lane2_lane_id": "11'b00001001010",
+    "strap_lane3_lane_id": "11'b00001001011"
+   }
+  },
+  {
+   "old_module": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15",
+   "old_view": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15@871944876423",
+   "straps": {
+    "strap_lane0_lane_id": "11'b00001001100",
+    "strap_lane1_lane_id": "11'b00001001101",
+    "strap_lane2_lane_id": "11'b00001001110",
+    "strap_lane3_lane_id": "11'b00001001111"
+   }
+  }
+ ]
+}

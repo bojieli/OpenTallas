@@ -137,7 +137,7 @@ def make_tracks(plan):
     return "\n".join(lines) + "\n" + M123_TRACKS
 
 
-def sdc(per, ins, tol, clks, rsts, tag, common=None):
+def sdc(per, ins, tol, clks, rsts, tag, common=None, straps=()):
     io = IO_BUDGET * per
     hdr = (f"# the partition logic around the core runs on the plan common latency ({ins:g} ps): virtual IO clock\n"
            if common is None or abs(ins - common) < 1e-9 else
@@ -164,6 +164,9 @@ def sdc(per, ins, tol, clks, rsts, tag, common=None):
     if rsts:
         s += (f"# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)\n"
               f"set_input_delay -max {0.5 * per:.4f} -clock vclk [get_ports {{{' '.join(sorted(set(re.sub(r'\[\d+\]$', '', c) for c in rsts)))}}}]\n")
+    if straps:
+        s += ("# OWNER 10-25 option B: ID straps, tied at the parent (TIEHI/TIELO), quasi-static: no pin register\n"
+              f"set_false_path -from [get_ports {{{' '.join(sorted(straps))}}}]\n")
     return s + (f"set_load {IO_LOAD_FF:g} [all_outputs]\n"
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -482,6 +485,9 @@ def main():
         a.sigmax = max(["M5"] + [q["layer"] for q in pins], key=lambda L: int(L[1:]))
     names = [p["name"] for p in pins]
     pb = buses_of(names)
+    # OWNER 10-25 option B: declared ID straps of this view = its strap_* plan pins (core_templates.py; whitelist
+    # tools/die_plan/parent_id_straps.py).  Kit: straps.json, no face register, SDC set_false_path -from, sdc_lint straps.
+    straps = sorted(b for b in pb if re.match(r"^strap_[A-Za-z0-9_]+$", b))
     R = load_recipes()
     rk = a.recipe_key or (module if module in R and (HERE / "recipes_b2.json").is_file() and module in
                           json.load(open(HERE / "recipes_b2.json")) else None) or \
@@ -494,7 +500,7 @@ def main():
     # The exp-lane descriptor table is 256 x 61 bits in the proven
     # split wrapper (Yosys inventory: 15616 bits). Keep that full table;
     # the ORFS default 4096-bit inference guard rejects it before mapping.
-    if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)", module):
+    if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)|ot_hbm_su_pg_lane_exp_core_strap", module):
         rec["synth_memory_max_bits"] = max(256 * 61, rec.get("synth_memory_max_bits", 0))
         # Every exp view uses the plan's family placement.  A bulk kit
         # regeneration must not silently return to unconstrained SRAM packing.
@@ -511,6 +517,11 @@ def main():
         rec["macro_placement"] = [dict(inst=a.macro_inst_fmt.format(k=m["k"]), xy_um=m["origin_um"],
                                        orient=m.get("orient", "R0"), macro=m["macro"]) for m in mp]
         rec["macro_placement_src"] = dict(file=a.macro_placement, sha256=sha(a.macro_placement))
+    # TYPE-REDUCE-3 10-25: a strap master view (core_templates.py *_strap module: ONE hardened design for every ID
+    # replica, ID inputs = strap_* pins, OWNER option B) = the canonical master + its generated pass-through wrapper.
+    sm = v.get("strap_master")
+    if sm:
+        a.wrapper = str(REPO / sm["wrapper"])
     canon = None
     if v.get("canonical_type"):
         ct = json.load(open(HARDEN / "canonical_ports_split.json"))["types"][v["canonical_type"]]
@@ -521,6 +532,9 @@ def main():
         shutil.rmtree(kd)
     (kd / "rtl").mkdir(parents=True)
     files = list(dict.fromkeys(rec["files"]))
+    if sm:
+        cfile = json.load(open(HARDEN / "canonical_ports_split.json"))["types"][sm["canonical_type"]]["file"]
+        files = files + ([cfile] if cfile not in files else [])
     top = rec.get("top", module)
     params = dict(rec.get("params", {}))
     if canon:
@@ -619,7 +633,8 @@ def main():
                 mlibs.append(str(md_ / f"{m_}_tt.lib"))
         try:
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, CLK_RE, RST_RE,
-                             drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_})
+                             drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
+                             straps=straps)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
@@ -673,7 +688,7 @@ def main():
         ff_meas, ff_ins = None, ins
     if not 0 < ff_ins <= ins:
         raise SystemExit("IO clock binding requires 0 < FF <= TT")
-    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common))
+    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common, straps))
     sys.path.insert(0, str(TOOL))
     import sdc_lint
     ports_in = sorted({base(n) for n in names} - {base(c) for c in clks})
@@ -697,12 +712,19 @@ def main():
                 outputs=[b for b in pb if dirs.get(b) == "output"],
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
                 io_floor_ps={b: IO_BUDGET * per for b in pb}, port_latency_ps={})
+    if straps:
+        bad = [s_ for s_ in straps if dirs.get(s_) != "input"]
+        if bad:
+            raise SystemExit(f"{a.view}: straps {bad} are not input ports")
+        lctx["straps"] = straps
+        (kd / "straps.json").write_text(json.dumps(dict(straps=straps, rule="OWNER 10-25 option B: ID straps, tied at "
+                                        "the parent; no pin register; set_false_path -from"), indent=1) + "\n")
     # sdc_lint.lint_kit_files passes this file as lint(**ctx): only lint() keywords (F1 FF basis lives in freeze.json flow.f1)
     (kd / "sdc_lint.json").write_text(json.dumps({k: v for k, v in lctx.items() if k not in ("insertion_ff_ps", "insertion_basis")}, indent=1) + "\n")
     rst_in = [r for r in rsts if dirs.get(base(r)) != "output"]   # RECIPES2: a reset-named OUTPUT (remainder relay
     if rst_in != rsts:                                               # output) is a data output, never an input delay
         rsts = rst_in
-        (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common))
+        (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common, straps))
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **{k: v for k, v in lctx.items() if k not in ("insertion_ff_ps", "insertion_basis")})
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
@@ -748,7 +770,7 @@ def main():
         libs.append(f"/work/macros/{m}{cl if (md / f'{m}{cl}').is_file() else '_tt.lib'}")
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks(plan_path))
-    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
+    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts + [f"{s_}[{i_}]" for s_ in straps for i_ in range(pb[s_][0])]) + ")$"
     ff = (TOOL / "face_flops.tcl").read_text()
     ff, nskip = re.subn(r"(?m)^set ff_skip_re .*?$", lambda _: "set ff_skip_re {" + skip + "}", ff)
     assert nskip == 1, "expected exactly one face_flops clock/reset skip declaration"

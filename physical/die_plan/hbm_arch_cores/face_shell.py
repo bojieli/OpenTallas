@@ -255,7 +255,8 @@ def rename_module(files, module, new):
     return hits[0][0]
 
 
-def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None):
+def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None,
+          straps=()):
     """turn kit `kd` (generated, top = `module` with exactly the plan pins) into a shelled kit.
     local: kit RTL paths (host), srcs: /work paths (config.mk), params: top params of `module` (moved onto the core
     instance).  Returns the report (also written to kd/face_shell.json); caller removes report['dropped'] pins from the
@@ -268,6 +269,11 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
     widths, dirs = rep.pop("port_width"), rep.pop("port_dirs")
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
     passthru = {n for n in widths if re.match(clk_re, n) or (dirs[n] == "input" and re.match(rst_re, n))}
+    # OWNER 10-25 option B: declared ID straps (strap_* inputs) are quasi-static: NO pin register, straight through
+    bad = [n for n in straps if n not in widths or dirs[n] != "input" or not re.match(r"^strap_[A-Za-z0-9_]+$", n)]
+    if bad:
+        raise RuntimeError(f"face_shell: {module}: straps must be strap_* inputs of the core: {bad}")
+    passthru |= set(straps)
     clks = sorted(n for n in passthru if re.match(clk_re, n) and dirs[n] == "input")
     if not clks:
         raise RuntimeError(f"face_shell: {module}: no input clock port")

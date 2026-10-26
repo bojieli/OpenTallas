@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.hbm_arch.core_views.v1",
+ "plan": "../hbm_arch/B2n/die_plan.json",
+ "plan_sha256": "bda9c5d518d816cf54cc248f0b557c32bf98c9668cacaa0d330b591e0c0ae218",
+ "views": 3,
+ "view_list": [
+  {
+   "view": "ot_hgi_sfu_split3_lane_core_strap@ff61b449dedc",
+   "module": "ot_hgi_sfu_split3_lane_core_strap",
+   "outline_um": [
+    388.8,
+    345.6
+   ],
+   "pins_file": "cores_tmpl/ot_hgi_sfu_split3_lane_core_strap__388.8x345.6__f2371af0.json",
+   "pins_sha256": "ff61b449dedcd6fbc989bab2ed025452229a11d5f516e40364b7ebea1933d3ac",
+   "pins": 1472,
+   "family": "SFU",
+   "instances": [
+    "q_b111.u_sfucore_Q_lane4",
+    "q_b111.u_sfucore_Q_lane5",
+    "q_b112.u_sfucore_Q_lane9",
+    "q_b112.u_sfucore_Q_lane10",
+    "q_b112.u_sfucore_Q_lane13"
+   ],
+   "placed": 16,
+   "tables_for_module": 8,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hgi_sfu_core_split3__lane0__388.8x345.6"
+   ],
+   "blockers": [],
+   "strap_master": {
+    "canonical_type": "sfu_lane",
+    "wrapper": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_lane_core_strap.sv"
+   }
+  },
+  {
+   "view": "ot_hbm_su_pg_lane_exp_core_strap@7358affb5393",
+   "module": "ot_hbm_su_pg_lane_exp_core_strap",
+   "outline_um": [
+    440.64,
+    207.36
+   ],
+   "pins_file": "cores_tmpl/ot_hbm_su_pg_lane_exp_core_strap__440.64x207.36__f2371af0.json",
+   "pins_sha256": "7358affb539377566ad8b7b298c41f201f971dfd6ae009e213b4a63ad7af968c",
+   "pins": 2035,
+   "family": "PGS",
+   "instances": [
+    "q_su00.u_su_Q0_lane_exp6",
+    "q_su00.u_su_Q0_lane_exp8",
+    "q_su00.u_su_Q0_lane_exp10",
+    "q_su00.u_su_Q0_lane_exp12",
+    "q_su01.u_su_Q0_lane_exp9",
+    "q_su01.u_su_Q0_lane_exp13",
+    "q_su01.u_su_Q0_lane_exp_l",
+    "q_su10.u_su_Q1_lane_exp4",
+    "q_su10.u_su_Q1_lane_exp8"
+   ],
+   "placed": 30,
+   "tables_for_module": 10,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92"
+   ],
+   "blockers": [],
+   "strap_master": {
+    "canonical_type": "pg_lane_exp",
+    "wrapper": "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core_strap.sv"
+   }
+  },
+  {
+   "view": "ot_hbm_su_pg_lanes4_core_strap@6d0f95192ef0",
+   "module": "ot_hbm_su_pg_lanes4_core_strap",
+   "outline_um": [
+    440.64,
+    457.92
+   ],
+   "pins_file": "cores_tmpl/ot_hbm_su_pg_lanes4_core_strap__440.64x457.92__t0.json",
+   "pins_sha256": "6d0f95192ef0839544ab2f73a1cb0a757e586500874759ae762b5a9d772a483f",
+   "pins": 3865,
+   "family": "PGS",
+   "instances": [
+    "q_su00.u_su_Q0_lanes_plain0_3",
+    "q_su00.u_su_Q0_lanes_plain8_11",
+    "q_su01.u_su_Q0_lanes_plain4_7",
+    "q_su10.u_su_Q1_lanes_plain0_3",
+    "q_su10.u_su_Q1_lanes_plain8_11"
+   ],
+   "placed": 8,
+   "tables_for_module": 4,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92"
+   ],
+   "blockers": [],
+   "strap_master": {
+    "canonical_type": "pg_lanes4",
+    "wrapper": "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core_strap.sv"
+   }
+  }
+ ],
+ "note": "TYPE-REDUCE-3/HBM 10-25: strap master views (results/type_reduce3_1025/hbm/strap_views.py)"
+}
