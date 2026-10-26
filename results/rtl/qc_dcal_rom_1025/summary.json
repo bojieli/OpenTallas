@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.qc-dcal-image-rom-lockstep.v1",
+  "gate": "PASS",
+  "source_commit": "5d40987b67",
+  "cases": {
+    "ovl": {
+      "receipt": "results/rtl/qc_dcal_rom_1025/ovl/receipt.json",
+      "result": "RESULT cycles=1500000 mismatches=0 mutant_mismatches=2650 cal_starts=601 tx_rows=ffffffff rx_rows=ffffffff ready_gold=69 ready_dut=69"
+    },
+    "mu": {
+      "receipt": "results/rtl/qc_dcal_rom_1025/mu/receipt.json",
+      "result": "RESULT cycles=1500000 mismatches=0 mutant_mismatches=2650 cal_starts=601 tx_rows=ffffffff rx_rows=ffffffff ready_gold=69 ready_dut=69"
+    }
+  },
+  "model": {
+    "macro": "ot_rom_64x64_m2",
+    "area_um2": 113.171904,
+    "size_um": [
+      12.312,
+      9.192
+    ],
+    "tt_clk_to_q_ps": 250.33,
+    "ff_clk_to_q_ps": 201.209,
+    "clock_ps": 833,
+    "init_cycle_delta": 0,
+    "production_cycle_delta": 0,
+    "init_ready_gold_edge": 69,
+    "init_ready_rom_edge": 69,
+    "word_bits": 64,
+    "used_words": 32,
+    "write_bits_per_edge": 32,
+    "physical_signoff": "NOT RUN"
+  },
+  "scope": "Opt-in QC batch2 internal-macro candidate; actual LIVE OVL_C producer INIT+admission component, new full OVL wrapper lint PASS. Final bind/physical route/full token gates separate; no frozen plan adoption."
+}
