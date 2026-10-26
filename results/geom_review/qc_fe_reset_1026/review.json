@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS-COND PLACE ONLY",
+  "images": [
+    "results/qc_fe_reset_1026/geometry/slw_fe_v1.png",
+    "results/qc_fe_reset_1026/geometry/sle_fe_v1.png",
+    "results/qc_fe_reset_1026/geometry/sle_fe_v2.png"
+  ],
+  "findings": [
+    "Actual source/control FFs define every candidate; attached TIEHI cells are excluded by MASTER reference.",
+    "SLW-v1 private AGU first stage lies on the delivered-root to bottom-left control path; CMD branch crosses open logic area to east control; CHU chain follows west control band.",
+    "SLE-v1/v2 control groups lie close to the delivered root and use short local chains in existing logic space.",
+    "No port, face, payload path, macro outline or cycle count changes. Six new reset FFs per full FUP; new clock sinks are explicit in each type JSON.",
+    "Original FUP and generated E5 source byte-identical. SLE-v3 E5 has no matching reset/control FFs; no guessed sites. SLW-v2 has no placed snapshot and is held."
+  ],
+  "conditions": [
+    "Preserve private module hierarchy and both stages through synthesis; apply candidate FIRM placement after existing control anchors and release before DPL.",
+    "Complete actual post-DPL data/reset<=405 census and clock/timing gates; clock sink sites are candidates, not timing qualification.",
+    "QC infrastructure-first type-route hold remains."
+  ]
+}
