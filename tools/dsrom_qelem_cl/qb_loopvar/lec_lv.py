@@ -82,18 +82,12 @@ def main():
             news = [m for m in mods if base(m) == t]
             olds = [m for m in mods if base(m) == t + "_old"]
             pairs = []
-            for n in news:
-                o = n.replace(t, t + "_old", 1) if fe == "verilog" else None
-                if fe == "verilog" and re.match(r"^\\?\$paramod\$[0-9a-f]+", n):
-                    o = None      # hashed paramod names hash the module name too: pair by order below
-                if o in olds:
-                    pairs.append((o, n))
-            if fe == "slang":   # slang names each instance's module <M>$<instance path>: pair u_old.X <-> u_new.X
+            if fe == "verilog":   # $paramod$<param hash>\M / $paramod\M\P=.. / M: the old twin is <name>_old
+                pairs = [(n + "_old", n) for n in news if n + "_old" in olds]
+            else:                 # slang names each instance's module <M>$<instance path>: pair u_old* <-> u_new*
                 pairs = [(o, o.replace(t + f"_old${TOP}.u_old", t + f"${TOP}.u_new", 1)) for o in olds]
                 pairs = [(o, n) for o, n in pairs if n in news]
-            if not pairs:     # hashed names: pair in elaboration order (same parameter sets, same order)
-                pairs = list(zip(sorted(olds), sorted(news))) if len(olds) == len(news) else []
-            if not pairs:
+            if not pairs or len(pairs) != len(news) or len(pairs) != len(olds):
                 fr["pairs"].append({"module": t, "verdict": "NO_PAIR", "old": olds, "new": news}); rc_all = 1
                 continue
             for k, (o, n) in enumerate(pairs):
