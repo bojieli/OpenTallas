@@ -2561,6 +2561,14 @@ class Binder:
                 if not candidates:
                     modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
                     candidates = core_reset_hierarchy_candidates(F.cells, self.members[p], target, modules)
+                if not candidates and "." in target["inst"]:
+                    # TOK-SCHED 10-25: the plan core names the partition's own root by its canonical instance (u_lf
+                    # in u_slice.lf[k].u_lf) while this replica's root is u_sl.u_lf2: drop ONLY that leading root
+                    # token and match the rest exactly against rel_of (every replica token, e.g. g_ln[0], kept).
+                    rest = target["inst"].split(".", 1)[1]
+                    modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
+                    candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
+                                  F.cells[ci].module in modules and self.rel_of(ci) == rest]
                 if not candidates:
                     # Plan-local matrix names commonly compact coordinate
                     # separators (u_t00 versus RTL u_t_0_0). Accept only a unique
