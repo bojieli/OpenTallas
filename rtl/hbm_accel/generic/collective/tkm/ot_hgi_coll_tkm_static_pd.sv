@@ -16,9 +16,9 @@
 //      j[10:0] = {f[7:0],h,s} and f[7:0] = flit[519:512] - (rank*pf)[7:0] (only the low 8 product bits are used);
 //  (b) sort after the entry register: entry holds the 4 raw elements, the 4-way rank sort + tform run in the
 //      existing PIPE launch stage (entry -> entry_q), whose edge count is unchanged;
-//  (c) derived configure values (ingress_end/first/clear2/read2/second/finish/flits/cells) are computed one edge
-//      after start from the registered cfg (sentinels at tick 0, where no comparator can fire), so start -> them has
-//      no multiply/divide chain;
+//  (c) derived configure values use three of the eight idle start-up edges: product, ingress/offsets, final bounds;
+//      sentinels prevent comparisons before the bounds are ready. This removes multiply plus serial-add chains
+//      without changing any root port edge;
 //  (d) reset is control-only: data/address/config registers sit in a reset-free block, so the timed delivered
 //      rst_n is not in their enable cone.
 // Measured reason (rootfp_1025 floorplan STA, ideal clock, TT): tick -> entry -1180 ps (70 levels), tick ->
@@ -201,15 +201,19 @@ module ot_hgi_coll_tkm_static_pd #(parameter integer KMAX=2048, MUT=0, TP=96, RA
   entry_v<=busy&&(issue1||buf_valid);
   for(integer s=0;s<4;s=s+1)entry[EW*s+:EW]<=raw[s];
  end
- // (c) derived configure values one edge after start (cfg_pend); tick 0 sees sentinels on which no comparator fires
- reg cfg_pend;
+ // (c) Use three idle boot edges: product -> ingress/offsets -> final bounds.
+ // Ingress cannot start before tick8, so these stages change no root port edge.
+ reg[2:0] cfg_pipe;
+ reg[23:0] cfg_fl;
+ reg[11:0] cfg_c;
+ reg[31:0] cfg_i,cfg_clear_off,cfg_read_off,cfg_second_off,cfg_finish_off;
  localparam [31:0] SENT=32'h7FFF_FFFF;   // tk at tick 0 is 2^32-(2*PIPE+XL) >= 2^31: no equality, no >=
  // control registers (reset = control only, owner decision 2)
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin busy<=0;done<=0;fault<=0;stat_cycles<=0;tick<=0;conv_pipe<=0;cfg_pend<=0;
+  if(!rst_n)begin busy<=0;done<=0;fault<=0;stat_cycles<=0;tick<=0;conv_pipe<=0;cfg_pipe<=0;
    cap1<=0;cap2<=0;buf_wv<=0;w_v<=0;pending_r<=0;pending_o<=0;r_after_o<=0;end
   else begin
-   done<=0;w_v<=0;buf_wv<=0;cfg_pend<=0;
+   done<=0;w_v<=0;buf_wv<=0;cfg_pipe<={cfg_pipe[1:0],1'b0};
    conv_pipe<={conv_pipe[CPW-2:0],conv1||conv2};
    if(busy)begin
     tick<=tick+1;stat_cycles<=tick+1;
@@ -240,7 +244,7 @@ module ot_hgi_coll_tkm_static_pd #(parameter integer KMAX=2048, MUT=0, TP=96, RA
     else begin
      fault<=cfg_g==0||cfg_g>TP||cfg_pf!=(16'(cfg_n)+7)/8||cfg_nout==0||cfg_nout>KMAX||cfg_k>KMAX||
         cfg_nout>cfg_k||cfg_obase[3:0]!=0||cfg_rbase[3:0]!=0;
-     busy<=1;tick<=0;stat_cycles<=0;cfg_pend<=1;
+     busy<=1;tick<=0;stat_cycles<=0;cfg_pipe<=3'b001;
      cap1<=0;cap2<=0;conv_pipe<=0;pending_r<=0;pending_o<=0;r_after_o<=0;
     end
    end
@@ -285,11 +289,22 @@ module ot_hgi_coll_tkm_static_pd #(parameter integer KMAX=2048, MUT=0, TP=96, RA
    ingress_end<=SENT;first<=SENT;clear2<=SENT;read2<=SENT;second<=SENT;finish<=SENT;flits<=0;cells<=0;
    valid_pairs<=0;k<=cfg_k;nout<=cfg_nout;gb<=cfg_gbase;g<=cfg_g;pf<=cfg_pf;ob<=cfg_obase;rb<=cfg_rbase;hr<=cfg_has_r;
   end
-  if(cfg_pend)begin:configure2
-   reg[31:0]i_,c_,a_,b_,r_,s_,f_;reg[31:0]fl_;
-   fl_=32'(g)*32'(pf);i_=8+((fl_+3)/4)*8;c_=(32'(nout)+3)/4;
-   a_=i_+SETTLE;b_=a_+c_+5+XL;r_=b_+5+CLRB;s_=r_+c_+6+SETTLE;f_=s_+c_+8;
-   ingress_end<=i_;first<=a_;clear2<=b_;read2<=r_;second<=s_;finish<=f_;flits<=24'(fl_);cells<=13'(c_);
+  if(cfg_pipe[0])begin
+   cfg_fl<=24'(g)*24'(pf);
+   cfg_c<=12'((32'(nout)+3)/4);
+  end
+  if(cfg_pipe[1])begin
+   cfg_i<=8+((32'(cfg_fl)+3)/4)*8;
+   cfg_clear_off<=32'(cfg_c)+SETTLE+5+XL;
+   cfg_read_off<=32'(cfg_c)+SETTLE+10+XL+CLRB;
+   cfg_second_off<=2*32'(cfg_c)+2*SETTLE+16+XL+CLRB;
+   cfg_finish_off<=3*32'(cfg_c)+2*SETTLE+24+XL+CLRB;
+  end
+  if(cfg_pipe[2])begin
+   ingress_end<=cfg_i;first<=cfg_i+SETTLE;
+   clear2<=cfg_i+cfg_clear_off;read2<=cfg_i+cfg_read_off;
+   second<=cfg_i+cfg_second_off;finish<=cfg_i+cfg_finish_off;
+   flits<=cfg_fl;cells<=13'(cfg_c);
   end
  end
 endmodule
