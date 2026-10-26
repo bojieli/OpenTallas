@@ -25,14 +25,16 @@ def path_for(a,b,targets):
     starts=np.flatnonzero(first<=REACH)
     if not len(starts):raise ValueError('no legal cell corridor within reach of input bit')
     common=starts[last[starts]<=REACH]
-    if len(common):return [int(common[np.argmin(first[common]+last[common])])]
+    if len(common):return [int(common[np.argmin(first[common]+last[common]+.001*np.abs(targets[common]-(a+b)/2).sum(axis=1))])]
     # Greedy toward capture is normally enough when wires may cross M5 cores.
-    node=int(starts[np.argmin(last[starts])]);path=[node];seen={node}
+    desired=a+(b-a)*min(.75*REACH/float(np.abs(b-a).sum()),1.0)
+    node=int(starts[np.argmin(np.abs(targets[starts]-desired).sum(axis=1))]);path=[node];seen={node}
     while True:
         dist=np.abs(targets-targets[node]).sum(axis=1)
         ids=np.flatnonzero((dist<=REACH)&(last<last[node]-1e-6))
         if not len(ids):break
-        node=int(ids[np.argmin(last[ids])]);path.append(node)
+        desired=targets[node]+(b-targets[node])*min(.75*REACH/float(last[node]),1.0)
+        node=int(ids[np.argmin(np.abs(targets[ids]-desired).sum(axis=1))]);path.append(node)
         if last[node]<=REACH:return path
         if node in seen:break
         seen.add(node)
@@ -83,7 +85,10 @@ def repair_type(raw,tn):
     for slot in sorted(t.get('ft_slots',[]),key=lambda s:-s['width']):
         name=slot['name'];n=slot['width']+1;old=slot['stations']
         a=np.array([pins[name+'_i',i] for i in range(n)]);b=np.array([pins[name+'_o',i] for i in range(n)])
-        paths=[path_for(p,q,targets) for p,q in zip(a,b)]
+        paths=[]
+        for bit,(p,q) in enumerate(zip(a,b)):
+            try:paths.append(path_for(p,q,targets))
+            except ValueError as error:raise ValueError(f'{tn}/{name}[{bit}] {p.tolist()}->{q.tolist()}: {error}') from error
         count=max(old-1,max(map(len,paths),default=0))
         if count==0:
             for key in ('regs_um','bit_sites_um','bit_site_cell_um'):slot.pop(key,None)
@@ -96,7 +101,14 @@ def repair_type(raw,tn):
                 ids=np.flatnonzero((np.abs(targets-a[k]).sum(axis=1)<=REACH)&(np.abs(targets-b[k]).sum(axis=1)<=REACH))
                 if not len(ids):raise ValueError(tn+'/'+name+': no site to preserve existing pipeline depth')
                 path.append(int(ids[np.argmin(np.abs(targets[ids]-(a[k]+b[k])/2).sum(axis=1))]))
-            while len(path)<count:path.insert(0,path[0])
+            while len(path)<count:
+                chain=[a[k],*[targets[i] for i in path],b[k]]
+                edge=max(range(len(chain)-1),key=lambda j:float(np.abs(chain[j+1]-chain[j]).sum()))
+                left,right=chain[edge],chain[edge+1]
+                ids=np.flatnonzero((np.abs(targets-left).sum(axis=1)<=REACH)&(np.abs(targets-right).sum(axis=1)<=REACH))
+                if not len(ids):raise ValueError(tn+'/'+name+': cannot preserve static depth at legal cell sites')
+                target=int(ids[np.argmin(np.abs(targets[ids]-(left+right)/2).sum(axis=1))])
+                path.insert(edge,target)
         sites=np.empty((count,n,2))
         for bit,path in enumerate(paths):
             for stage,index in enumerate(path):
@@ -113,7 +125,7 @@ def repair_type(raw,tn):
 
 def main():
     global REACH
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--types',required=True);ap.add_argument('--bank-corridors',action='store_true');ap.add_argument('--reach-budget',type=float,default=323.0);a=ap.parse_args()
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--types',required=True);ap.add_argument('--bank-corridors',action='store_true');ap.add_argument('--su-corridors',action='store_true');ap.add_argument('--reach-budget',type=float,default=323.0);a=ap.parse_args()
     if not 0<a.reach_budget<=403:raise SystemExit('reach budget must be in(0,403]')
     REACH=a.reach_budget
     if a.out.exists():raise SystemExit('output must be new')
@@ -130,6 +142,19 @@ def main():
         if 'q_b110' in a.types.split(','):
             cores=sorted(raw['partition_types']['q_b110']['hard_cores'],key=lambda c:c['origin_um'][1])
             for c,y in zip(cores,[86.4,457.92,829.44,1200.96]):c['origin_um'][1]=y
+    if a.su_corridors:
+        for tn in a.types.split(','):
+            if tn in ('q_su21','q_su31'):
+                for c in raw['partition_types'][tn]['hard_cores']:
+                    x,y=c['origin_um']
+                    if tn=='q_su21':c['origin_um'][0]=25.92 if x<400 else 812.16
+                    else:c['origin_um'][0]=x+(17.28 if x>400 else 0)
+                    c['origin_um'][1]=51.84 if y<400 else 803.52
+            elif tn=='q_su30':
+                for c in raw['partition_types'][tn]['hard_cores']:
+                    if c['outline_um'][0]<700:continue
+                    x,y=c['origin_um'];c['origin_um'][0]=x+(8.64 if x in(803.52,1270.08) else 0)
+                    c['origin_um'][1]=51.84 if y<400 else 803.52
     shutil.copytree(a.src,a.out)
     try:
         for tn in a.types.split(','):rep[tn]=repair_type(raw,tn)
