@@ -1,0 +1,22 @@
+# v7ctl_ext: 10-20 g5r2b ledger value -> re-derived (bind bus_groups_v7.json.gz)
+lane age R_CMD | 20 -> 9 | tt_ctlm__cmd_cmd_wi asbuilt 27 landed 9
+lane age R_HR | 20 -> 9 | tt_ctlm__hr_hr_wi asbuilt 27 landed 9
+lane age R_SS | 17 -> 5 | sl_W5_fw__ss_wo_ss5 asbuilt 25 landed 5
+lane age R_AG | 18 -> 5 | sl_W5_fw__ag_wo_ag5 asbuilt 25 landed 5
+lane age R_ST | 13 -> 5 | tt_ctlm__tl_st_wi asbuilt 23 landed 5
+lane age R_DD | 20 -> 5 | sl_W5_fw__dd_wo_dd_i asbuilt 28 landed 5
+lane age R_DR | 21 -> 5 | native59__dr_o_dr_wi asbuilt 30 landed 5
+lane age R_CTX | 7 -> 10 | glue__ctx_x_ctx_x asbuilt 5 landed 10
+lane age XPF_TRANSPORT_EDGES (1 + R_HR) | 21 -> 10 | rule of lane_ages_export.py
+q3h x broadcast + rs reduction -> CB16 x-in/root/rs path | 6 @pre_qkv,pre_gu + 6 @pre_qk,pre_silu = 24/layer -> 16 | cb16_path.json binds.v7.max_root_plus_rs + cb_add 0 = 16 (max_root 8)
+dv chain slice<->slice hops | 33 -> 0 | sl_fe->sl_fw.ch_dn_i max(landed-asbuilt) 0 [sl_E0_fe__cmd_wo_cmd_ei 2->2; sl_E0_fe__dr_wo_dr_ei 2->2; sl_E0_fe__hr_wo_hr_ei 2->2; ... 34 lanes] | sl_fe->sl_fw.cmd_i max(landed-asbuilt) 0 [sl_E0_fe__hr_wo_hr_ei 2->2; sl_E0_fe__rd_wo_rd_ei 2->2; sl_E1_fe__hr_wo_hr_ei 2->2; ... 22 lanes] | sl_fe->sl_fw.st_up_i max(landed-asbuilt) 0 [sl_E0_fe__st_wo_st_ei 2->2; sl_E1_fe__st_wo_st_ei 2->2; sl_E2_fe__st_wo_st_ei 2->2; ... 11 lanes] | sl_fw->sl_fe.ag_up_i max(landed-asbuilt) 0 [sl_E0_fw__ag_eo_ag_ei 2->2; sl_E1_fw__ag_eo_ag_wi 2->2; sl_E2_fw__ag_eo_ag_wi 2->2; ... 11 lanes] | sl_fw->sl_fe.ch_up_i max(landed-asbuilt) 0 [sl_E0_fw__ard_eo_ard_ei 2->2; sl_E0_fw__arl_eo_arl_ei 2->2; sl_E0_fw__arm_eo_arm_ei 2->2; ... 66 lanes] | sl_fw->sl_fe.st_dn_i max(landed-asbuilt) 0 [sl_E0_fw__sc_eo_sc_ei 2->2; sl_E0_fw__st_eo_st_ei 2->2; sl_E1_fw__sc_eo_sc_wi 2->2; ... 22 lanes] | sl_fw->sl_fe.sc_dn_i max(landed-asbuilt) 0 [sl_E0_fw__flte 2->2; sl_E0_fw__sc_eo_sc_ei 2->2; sl_E1_fw__flte 2->2; ... 22 lanes]
+native59 split service (inside native59) | 5 -> 5 | no crossing lane: partition-internal
+NEW: tt_ctlm.native_cmd -> native59 (attention command) | 0 -> 3 | tt_ctlm->native59.native_cmd max(landed-asbuilt) 3 [tt_ctlm__native_cmd_native_cmd 0->3]
+NEW: native59.native_ret -> tt_ctlm (attention completion) | 0 -> 2 | native59->tt_ctlm.native_ret max(landed-asbuilt) 2 [native59__native_ret_native_ret 0->2]
+attention return lane dr (R_DR - 20) | 1 -> -15 | native59__dr_o_dr_wi asbuilt 30 landed 5
+attention send lane dd (R_DD - 20) | 0 -> -15 | sl_W5_fw__dd_wo_dd_i asbuilt 28 landed 5
+slice2 landed-parent forwarded lanes + taps -> s8 partition crossings | 536 (plan 327) -> 796 | pass 10 hops x (st 2x6 + ch 2x12 + sc 4x6) = 600; taps 2x(x 21 + ar 31 + mv 24 + norm 19) + su 6 = 196; x: SU xw -> stream insert 10, st tap -> stream 2, xt -> tap (ctl) 2, tap -> xhead columns 7, cw_s corridor -> clusters 0; ar: station r -> ctl 12, ctl own word -> out face 7, return tap -> ctl 12; mv: rs in-slice continuation (rs_n hc1 -> station / rs_s st_a -> st_b) 6, station -> ctl 12, ctl -> VM (su_c) 6; norm: red psum -> sc 7, sc chain tap/insert 4, sc w1 -> VM (sc -> ctl -> su_c) 8; su: SU issue ctl -> su_c 6
+NEW: qkv L9 pair word (station -> fe -> neighbour fw -> station) | 0 -> 34 | sl_st_a->sl_fe.l._c max(landed-asbuilt) 12 [sl_E0_st_a__x_st_a_fe 0->12; sl_E1_st_a__x_st_a_fe 0->12; sl_E2_st_a__x_st_a_fe 0->12; ... 12 lanes] + sl_fe->sl_fw.l._i max(landed-asbuilt) 14 [sl_E1_fe__l9_eo_l9_wi 2->16; sl_E3_fe__l9_eo_l9_wi 2->16; sl_E5_fe__l9_eo_l9_wi 2->16; ... 18 lanes] + sl_fw->sl_st_a.nb_d_p max(landed-asbuilt) 8 [sl_E0_fw__x_fw_st_a 0->8; sl_E2_fw__x_fw_st_a 0->8; sl_E4_fw__x_fw_st_a 0->8; ... 6 lanes]
+forwarded-lane class views | 0 -> 0 | bus_groups summary {'landing_groups': 2051, 'landing_misaligned_by_lanes': 38, 'landing_misaligned_after_pads': 3, 'replica_sets': 609, 'replica_unequal': 0}
+XDIE pair link (X + STATUS tail) | 221 (L0 -1) -> 221 | claude/tok-qk-xd2-1025@004bfaf96 results/token_pass/qc_kv_link_v7_1025/result.json xdie.cycles X_per_layer 8, L0_X -214, period_per_layer 7056; STATUS_DELAY 213
+die edges per layer (sum cycles x boundaries): 1095

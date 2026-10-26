@@ -1,0 +1,1332 @@
+{
+ "source": "claude/path-qc-fereach-1026@87bdf5071 physical/die_plan/qwen_compute/fe_reach_report.json (generator gen_plan.declare_fe_reach_stations + fe_reach.py, commit 85fef305f)",
+ "schema": "opentallas.die_plan.qc_fe_reach.v1",
+ "reach_um": 405.0,
+ "margin_um": 12.0,
+ "role_stations": {
+  "ag_Xi": 1,
+  "ard_Xi": 1,
+  "arl_Xi": 1,
+  "arm_Xi": 1,
+  "art_Xi": 1,
+  "arv_Xi": 1,
+  "dd_Xi": 1,
+  "flt_e_i": 1,
+  "sc_Xi": 2,
+  "st_Xi": 2,
+  "x_fw_i": 2,
+  "x_fw_p1_i": 2,
+  "x_fw_p2_i": 2,
+  "x_sc_i": 2,
+  "x_st_a_i": 2,
+  "x_st_b_i": 3,
+  "x_stm_i": 2,
+  "x_stm_p1_i": 2
+ },
+ "types": {
+  "sle_fe_v1": {
+   "in_bus_stations": {
+    "ag_wi": 1,
+    "ard_wi": 1,
+    "arl_wi": 1,
+    "arm_wi": 1,
+    "art_wi": 1,
+    "arv_wi": 1,
+    "dd_wi": 1,
+    "flt_e_i": 1,
+    "sc_wi": 2,
+    "st_wi": 2,
+    "x_fw_i": 2,
+    "x_fw_p1_i": 2,
+    "x_fw_p2_i": 2,
+    "x_sc_i": 2,
+    "x_stm_i": 2,
+    "x_stm_p1_i": 2
+   },
+   "out_bus_added": {
+    "x_fw_o": 1,
+    "x_fw_p1_o": 1,
+    "flt_o": 1,
+    "x_sc_o": 2,
+    "x_stm_o": 2,
+    "x_stm_p1_o": 2,
+    "cmd_wo": 2,
+    "dr_wo": 2,
+    "hr_wo": 2,
+    "rd_wo": 2,
+    "re_wo": 2,
+    "rl_wo": 2,
+    "rr_wo": 2,
+    "rv_wo": 2,
+    "treq_wo": 2,
+    "sc_wo": 2,
+    "st_wo": 2
+   }
+  },
+  "sle_fe_v2": {
+   "in_bus_stations": {
+    "ag_wi": 1,
+    "ard_wi": 1,
+    "arl_wi": 1,
+    "arm_wi": 1,
+    "art_wi": 1,
+    "arv_wi": 1,
+    "dd_wi": 1,
+    "flt_e_i": 1,
+    "sc_wi": 2,
+    "st_wi": 2,
+    "x_fw_i": 2,
+    "x_fw_p1_i": 2,
+    "x_fw_p2_i": 2,
+    "x_sc_i": 2,
+    "x_st_a_i": 2,
+    "x_st_b_i": 3,
+    "x_stm_i": 2,
+    "x_stm_p1_i": 2
+   },
+   "out_bus_added": {
+    "x_fw_o": 1,
+    "x_fw_p1_o": 1,
+    "flt_o": 1,
+    "x_sc_o": 2,
+    "x_stm_o": 2,
+    "x_stm_p1_o": 2,
+    "cmd_wo": 2,
+    "dr_wo": 2,
+    "hr_wo": 2,
+    "rd_wo": 2,
+    "re_wo": 2,
+    "rl_wo": 2,
+    "rr_wo": 2,
+    "rv_wo": 2,
+    "treq_wo": 2,
+    "sc_wo": 2,
+    "l9_eo": 3,
+    "st_wo": 2
+   }
+  },
+  "sle_fe_v3": {
+   "in_bus_stations": {
+    "x_st_a_i": 2,
+    "x_st_b_i": 3
+   },
+   "out_bus_added": {
+    "l9_eo": 3
+   }
+  },
+  "slw_fe_v1": {
+   "in_bus_stations": {
+    "ag_ei": 1,
+    "ard_ei": 1,
+    "arl_ei": 1,
+    "arm_ei": 1,
+    "art_ei": 1,
+    "arv_ei": 1,
+    "dd_ei": 1,
+    "flt_e_i": 1,
+    "sc_ei": 2,
+    "st_ei": 2,
+    "x_fw_i": 2,
+    "x_fw_p1_i": 2,
+    "x_fw_p2_i": 2,
+    "x_sc_i": 2,
+    "x_stm_i": 2,
+    "x_stm_p1_i": 2
+   },
+   "out_bus_added": {
+    "x_fw_o": 1,
+    "x_fw_p1_o": 1,
+    "flt_o": 1,
+    "x_sc_o": 2,
+    "x_stm_o": 2,
+    "x_stm_p1_o": 2,
+    "cmd_eo": 2,
+    "dr_eo": 2,
+    "hr_eo": 2,
+    "rd_eo": 2,
+    "re_eo": 2,
+    "rl_eo": 2,
+    "rr_eo": 2,
+    "rv_eo": 2,
+    "treq_eo": 2,
+    "sc_eo": 2,
+    "st_eo": 2
+   }
+  },
+  "slw_fe_v2": {
+   "in_bus_stations": {
+    "ag_ei": 1,
+    "ard_ei": 1,
+    "arl_ei": 1,
+    "arm_ei": 1,
+    "art_ei": 1,
+    "arv_ei": 1,
+    "dd_ei": 1,
+    "flt_e_i": 1,
+    "sc_ei": 2,
+    "st_ei": 2,
+    "x_fw_i": 2,
+    "x_fw_p1_i": 2,
+    "x_fw_p2_i": 2,
+    "x_sc_i": 2,
+    "x_st_a_i": 2,
+    "x_st_b_i": 3,
+    "x_stm_i": 2,
+    "x_stm_p1_i": 2
+   },
+   "out_bus_added": {
+    "x_fw_o": 1,
+    "x_fw_p1_o": 1,
+    "flt_o": 1,
+    "x_sc_o": 2,
+    "x_stm_o": 2,
+    "x_stm_p1_o": 2,
+    "cmd_eo": 2,
+    "dr_eo": 2,
+    "hr_eo": 2,
+    "l9_eo": 2,
+    "rd_eo": 3,
+    "treq_eo": 2,
+    "sc_eo": 2,
+    "rr_eo": 3,
+    "rv_eo": 2,
+    "re_eo": 3,
+    "rl_eo": 3,
+    "st_eo": 2
+   }
+  }
+ },
+ "stations": 111,
+ "lanes": 188,
+ "worst_hop_um": 384.6,
+ "lane_rows": [
+  {
+   "lane": "sl_W5_fw__x_fw_fe",
+   "part": "sl_W5_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_fe_p1",
+   "part": "sl_W5_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_fe_p2",
+   "part": "sl_W5_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_stm__x_stm_fe",
+   "part": "sl_W5_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_stm__x_stm_fe_p1",
+   "part": "sl_W5_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_sc__x_sc_fe",
+   "part": "sl_W5_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_st_a__x_st_a_fe",
+   "part": "sl_W5_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_st_b__x_st_b_fe",
+   "part": "sl_W5_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_fe",
+   "part": "sl_W4_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_fe_p1",
+   "part": "sl_W4_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_fe_p2",
+   "part": "sl_W4_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_stm__x_stm_fe",
+   "part": "sl_W4_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_stm__x_stm_fe_p1",
+   "part": "sl_W4_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_sc__x_sc_fe",
+   "part": "sl_W4_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_fe",
+   "part": "sl_W3_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_fe_p1",
+   "part": "sl_W3_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_fe_p2",
+   "part": "sl_W3_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_stm__x_stm_fe",
+   "part": "sl_W3_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_stm__x_stm_fe_p1",
+   "part": "sl_W3_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_sc__x_sc_fe",
+   "part": "sl_W3_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_st_a__x_st_a_fe",
+   "part": "sl_W3_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_st_b__x_st_b_fe",
+   "part": "sl_W3_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_fe",
+   "part": "sl_W2_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_fe_p1",
+   "part": "sl_W2_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_fe_p2",
+   "part": "sl_W2_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_stm__x_stm_fe",
+   "part": "sl_W2_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_stm__x_stm_fe_p1",
+   "part": "sl_W2_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_sc__x_sc_fe",
+   "part": "sl_W2_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_fe",
+   "part": "sl_W1_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_fe_p1",
+   "part": "sl_W1_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_fe_p2",
+   "part": "sl_W1_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_stm__x_stm_fe",
+   "part": "sl_W1_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_stm__x_stm_fe_p1",
+   "part": "sl_W1_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_sc__x_sc_fe",
+   "part": "sl_W1_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_st_a__x_st_a_fe",
+   "part": "sl_W1_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_st_b__x_st_b_fe",
+   "part": "sl_W1_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_fe",
+   "part": "sl_W0_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_fe_p1",
+   "part": "sl_W0_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_fe_p2",
+   "part": "sl_W0_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_stm__x_stm_fe",
+   "part": "sl_W0_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_stm__x_stm_fe_p1",
+   "part": "sl_W0_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_sc__x_sc_fe",
+   "part": "sl_W0_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_fe",
+   "part": "sl_E0_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_fe_p1",
+   "part": "sl_E0_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_fe_p2",
+   "part": "sl_E0_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_stm__x_stm_fe",
+   "part": "sl_E0_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_stm__x_stm_fe_p1",
+   "part": "sl_E0_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_sc__x_sc_fe",
+   "part": "sl_E0_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_fe",
+   "part": "sl_E1_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_fe_p1",
+   "part": "sl_E1_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_fe_p2",
+   "part": "sl_E1_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_stm__x_stm_fe",
+   "part": "sl_E1_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_stm__x_stm_fe_p1",
+   "part": "sl_E1_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_sc__x_sc_fe",
+   "part": "sl_E1_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_st_a__x_st_a_fe",
+   "part": "sl_E1_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_st_b__x_st_b_fe",
+   "part": "sl_E1_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_fe",
+   "part": "sl_E2_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_fe_p1",
+   "part": "sl_E2_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_fe_p2",
+   "part": "sl_E2_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_stm__x_stm_fe",
+   "part": "sl_E2_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_stm__x_stm_fe_p1",
+   "part": "sl_E2_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_sc__x_sc_fe",
+   "part": "sl_E2_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_fe",
+   "part": "sl_E3_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_fe_p1",
+   "part": "sl_E3_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_fe_p2",
+   "part": "sl_E3_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_stm__x_stm_fe",
+   "part": "sl_E3_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_stm__x_stm_fe_p1",
+   "part": "sl_E3_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_sc__x_sc_fe",
+   "part": "sl_E3_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_st_a__x_st_a_fe",
+   "part": "sl_E3_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_st_b__x_st_b_fe",
+   "part": "sl_E3_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_fe",
+   "part": "sl_E4_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_fe_p1",
+   "part": "sl_E4_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_fe_p2",
+   "part": "sl_E4_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_stm__x_stm_fe",
+   "part": "sl_E4_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_stm__x_stm_fe_p1",
+   "part": "sl_E4_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_sc__x_sc_fe",
+   "part": "sl_E4_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_st_a__x_st_a_fe",
+   "part": "sl_E5_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_st_b__x_st_b_fe",
+   "part": "sl_E5_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_E0_fw__ag_eo_ag_ei",
+   "part": "sl_W0_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__ard_eo_ard_ei",
+   "part": "sl_W0_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__arl_eo_arl_ei",
+   "part": "sl_W0_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__arm_eo_arm_ei",
+   "part": "sl_W0_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__art_eo_art_ei",
+   "part": "sl_W0_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__arv_eo_arv_ei",
+   "part": "sl_W0_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__dd_eo_dd_ei",
+   "part": "sl_W0_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__sc_eo_sc_ei",
+   "part": "sl_W0_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_fw__st_eo_st_ei",
+   "part": "sl_W0_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__ag_eo_ag_wi",
+   "part": "sl_E0_fe",
+   "bus": "ag_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__ard_eo_ard_wi",
+   "part": "sl_E0_fe",
+   "bus": "ard_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__arl_eo_arl_wi",
+   "part": "sl_E0_fe",
+   "bus": "arl_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__arm_eo_arm_wi",
+   "part": "sl_E0_fe",
+   "bus": "arm_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__art_eo_art_wi",
+   "part": "sl_E0_fe",
+   "bus": "art_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__arv_eo_arv_wi",
+   "part": "sl_E0_fe",
+   "bus": "arv_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__dd_eo_dd_wi",
+   "part": "sl_E0_fe",
+   "bus": "dd_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__sc_eo_sc_wi",
+   "part": "sl_E0_fe",
+   "bus": "sc_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__st_eo_st_wi",
+   "part": "sl_E0_fe",
+   "bus": "st_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_fw__ag_eo_ag_wi",
+   "part": "sl_E1_fe",
+   "bus": "ag_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__ard_eo_ard_wi",
+   "part": "sl_E1_fe",
+   "bus": "ard_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__arl_eo_arl_wi",
+   "part": "sl_E1_fe",
+   "bus": "arl_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__arm_eo_arm_wi",
+   "part": "sl_E1_fe",
+   "bus": "arm_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__art_eo_art_wi",
+   "part": "sl_E1_fe",
+   "bus": "art_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__arv_eo_arv_wi",
+   "part": "sl_E1_fe",
+   "bus": "arv_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__dd_eo_dd_wi",
+   "part": "sl_E1_fe",
+   "bus": "dd_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__sc_eo_sc_wi",
+   "part": "sl_E1_fe",
+   "bus": "sc_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_fw__st_eo_st_wi",
+   "part": "sl_E1_fe",
+   "bus": "st_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__ag_eo_ag_wi",
+   "part": "sl_E2_fe",
+   "bus": "ag_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__ard_eo_ard_wi",
+   "part": "sl_E2_fe",
+   "bus": "ard_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__arl_eo_arl_wi",
+   "part": "sl_E2_fe",
+   "bus": "arl_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__arm_eo_arm_wi",
+   "part": "sl_E2_fe",
+   "bus": "arm_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__art_eo_art_wi",
+   "part": "sl_E2_fe",
+   "bus": "art_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__arv_eo_arv_wi",
+   "part": "sl_E2_fe",
+   "bus": "arv_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__dd_eo_dd_wi",
+   "part": "sl_E2_fe",
+   "bus": "dd_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__sc_eo_sc_wi",
+   "part": "sl_E2_fe",
+   "bus": "sc_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__st_eo_st_wi",
+   "part": "sl_E2_fe",
+   "bus": "st_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_fw__ag_eo_ag_wi",
+   "part": "sl_E3_fe",
+   "bus": "ag_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__ard_eo_ard_wi",
+   "part": "sl_E3_fe",
+   "bus": "ard_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__arl_eo_arl_wi",
+   "part": "sl_E3_fe",
+   "bus": "arl_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__arm_eo_arm_wi",
+   "part": "sl_E3_fe",
+   "bus": "arm_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__art_eo_art_wi",
+   "part": "sl_E3_fe",
+   "bus": "art_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__arv_eo_arv_wi",
+   "part": "sl_E3_fe",
+   "bus": "arv_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__dd_eo_dd_wi",
+   "part": "sl_E3_fe",
+   "bus": "dd_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__sc_eo_sc_wi",
+   "part": "sl_E3_fe",
+   "bus": "sc_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_fw__st_eo_st_wi",
+   "part": "sl_E3_fe",
+   "bus": "st_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_fw__ag_eo_ag_wi",
+   "part": "sl_E4_fe",
+   "bus": "ag_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__ard_eo_ard_wi",
+   "part": "sl_E4_fe",
+   "bus": "ard_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__arl_eo_arl_wi",
+   "part": "sl_E4_fe",
+   "bus": "arl_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__arm_eo_arm_wi",
+   "part": "sl_E4_fe",
+   "bus": "arm_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__art_eo_art_wi",
+   "part": "sl_E4_fe",
+   "bus": "art_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__arv_eo_arv_wi",
+   "part": "sl_E4_fe",
+   "bus": "arv_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__dd_eo_dd_wi",
+   "part": "sl_E4_fe",
+   "bus": "dd_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__sc_eo_sc_wi",
+   "part": "sl_E4_fe",
+   "bus": "sc_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_fw__st_eo_st_wi",
+   "part": "sl_E4_fe",
+   "bus": "st_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_fw__ag_wo_ag_ei",
+   "part": "sl_W1_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__ard_wo_ard_ei",
+   "part": "sl_W1_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__arl_wo_arl_ei",
+   "part": "sl_W1_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__arm_wo_arm_ei",
+   "part": "sl_W1_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__art_wo_art_ei",
+   "part": "sl_W1_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__arv_wo_arv_ei",
+   "part": "sl_W1_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__dd_wo_dd_ei",
+   "part": "sl_W1_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__sc_wo_sc_ei",
+   "part": "sl_W1_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_fw__st_wo_st_ei",
+   "part": "sl_W1_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_fw__ag_wo_ag_ei",
+   "part": "sl_W2_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__ard_wo_ard_ei",
+   "part": "sl_W2_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__arl_wo_arl_ei",
+   "part": "sl_W2_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__arm_wo_arm_ei",
+   "part": "sl_W2_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__art_wo_art_ei",
+   "part": "sl_W2_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__arv_wo_arv_ei",
+   "part": "sl_W2_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__dd_wo_dd_ei",
+   "part": "sl_W2_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__sc_wo_sc_ei",
+   "part": "sl_W2_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_fw__st_wo_st_ei",
+   "part": "sl_W2_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_fw__ag_wo_ag_ei",
+   "part": "sl_W3_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__ard_wo_ard_ei",
+   "part": "sl_W3_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__arl_wo_arl_ei",
+   "part": "sl_W3_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__arm_wo_arm_ei",
+   "part": "sl_W3_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__art_wo_art_ei",
+   "part": "sl_W3_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__arv_wo_arv_ei",
+   "part": "sl_W3_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__dd_wo_dd_ei",
+   "part": "sl_W3_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__sc_wo_sc_ei",
+   "part": "sl_W3_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_fw__st_wo_st_ei",
+   "part": "sl_W3_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_fw__ag_wo_ag_ei",
+   "part": "sl_W4_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__ard_wo_ard_ei",
+   "part": "sl_W4_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__arl_wo_arl_ei",
+   "part": "sl_W4_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__arm_wo_arm_ei",
+   "part": "sl_W4_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__art_wo_art_ei",
+   "part": "sl_W4_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__arv_wo_arv_ei",
+   "part": "sl_W4_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__dd_wo_dd_ei",
+   "part": "sl_W4_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__sc_wo_sc_ei",
+   "part": "sl_W4_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_fw__st_wo_st_ei",
+   "part": "sl_W4_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_fw__ag_wo_ag_ei",
+   "part": "sl_W5_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__ard_wo_ard_ei",
+   "part": "sl_W5_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__arl_wo_arl_ei",
+   "part": "sl_W5_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__arm_wo_arm_ei",
+   "part": "sl_W5_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__art_wo_art_ei",
+   "part": "sl_W5_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__arv_wo_arv_ei",
+   "part": "sl_W5_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__dd_wo_dd_ei",
+   "part": "sl_W5_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__sc_wo_sc_ei",
+   "part": "sl_W5_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_fw__st_wo_st_ei",
+   "part": "sl_W5_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_fw__flte",
+   "part": "sl_W5_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__flte",
+   "part": "sl_W4_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__flte",
+   "part": "sl_W3_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__flte",
+   "part": "sl_W2_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__flte",
+   "part": "sl_W1_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__flte",
+   "part": "sl_W0_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__flte",
+   "part": "sl_E0_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__flte",
+   "part": "sl_E1_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__flte",
+   "part": "sl_E2_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__flte",
+   "part": "sl_E3_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__flte",
+   "part": "sl_E4_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  }
+ ]
+}

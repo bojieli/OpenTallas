@@ -1,0 +1,65 @@
+{
+ "v7cl_lit": [
+  "--add",
+  "add_cl_lit.json",
+  "--hop-ext",
+  "--l9-stb",
+  "--cb-add",
+  "12",
+  "--hop-add",
+  "3",
+  "--l9-add",
+  "3"
+ ],
+ "v7fecl_lit": [
+  "--add",
+  "add_fecl_lit.json",
+  "--hop-ext",
+  "--l9-stb",
+  "--cb-add",
+  "12",
+  "--hop-add",
+  "3",
+  "--l9-add",
+  "3"
+ ],
+ "v7cl_aln": [
+  "--add",
+  "add_cl_aln.json",
+  "--hop-ext",
+  "--l9-stb",
+  "--cb-add",
+  "6",
+  "--hop-add",
+  "9",
+  "--l9-add",
+  "3"
+ ],
+ "v7fecl_aln": [
+  "--add",
+  "add_fecl_aln.json",
+  "--hop-ext",
+  "--l9-stb",
+  "--cb-add",
+  "6",
+  "--hop-add",
+  "9",
+  "--l9-add",
+  "3"
+ ],
+ "v7ctl": [],
+ "v7ctl_ext": [
+  "--hop-ext",
+  "--l9-stb"
+ ],
+ "v7fe": [
+  "--add",
+  "add_fe.json",
+  "--hop-ext",
+  "--l9-stb"
+ ],
+ "v7fe_lawhop": [
+  "--add",
+  "add_fe.json"
+ ]
+}

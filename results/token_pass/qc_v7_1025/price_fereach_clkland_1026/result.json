@@ -1,0 +1,177 @@
+{
+ "schema": "opentallas.token_pass.qc_price_delta.v1",
+ "base": "claude/tok-qk-qce-1026@1121cb654 v7 re-derived (law)",
+ "base_cycles_per_token": 296341,
+ "cases": {
+  "v7cl_lit": {
+   "args": [
+    "--add",
+    "add_cl_lit.json",
+    "--hop-ext",
+    "--l9-stb",
+    "--cb-add",
+    "12",
+    "--hop-add",
+    "3",
+    "--l9-add",
+    "3"
+   ],
+   "cycles_per_token": 313945,
+   "tok_s": 3823.9,
+   "chained_per_layer": 8618,
+   "l0_cold": 9130,
+   "delta_cycles_per_token": 17604,
+   "delta_pct_cycles": 5.94,
+   "e2e_loss_pct": 5.607,
+   "edge_delta_per_layer": {
+    "q3h x broadcast + rs reduction -> CB16 x-in/root/rs path": 48,
+    "dv chain slice<->slice hops": 3,
+    "slice2 landed-parent forwarded lanes + taps -> s8 partition crossings": 429,
+    "NEW: qkv L9 pair word (station -> fe -> neighbour fw -> station)": 9
+   }
+  },
+  "v7fecl_lit": {
+   "args": [
+    "--add",
+    "add_fecl_lit.json",
+    "--hop-ext",
+    "--l9-stb",
+    "--cb-add",
+    "12",
+    "--hop-add",
+    "3",
+    "--l9-add",
+    "3"
+   ],
+   "cycles_per_token": 320569,
+   "tok_s": 3744.8,
+   "chained_per_layer": 8802,
+   "l0_cold": 9314,
+   "delta_cycles_per_token": 24228,
+   "delta_pct_cycles": 8.176,
+   "e2e_loss_pct": 7.558,
+   "edge_delta_per_layer": {
+    "q3h x broadcast + rs reduction -> CB16 x-in/root/rs path": 48,
+    "dv chain slice<->slice hops": 25,
+    "slice2 landed-parent forwarded lanes + taps -> s8 partition crossings": 589,
+    "NEW: qkv L9 pair word (station -> fe -> neighbour fw -> station)": 11
+   }
+  },
+  "v7cl_aln": {
+   "args": [
+    "--add",
+    "add_cl_aln.json",
+    "--hop-ext",
+    "--l9-stb",
+    "--cb-add",
+    "6",
+    "--hop-add",
+    "9",
+    "--l9-add",
+    "3"
+   ],
+   "cycles_per_token": 297637,
+   "tok_s": 4033.4,
+   "chained_per_layer": 8165,
+   "l0_cold": 8677,
+   "delta_cycles_per_token": 1296,
+   "delta_pct_cycles": 0.437,
+   "e2e_loss_pct": 0.435,
+   "edge_delta_per_layer": {
+    "q3h x broadcast + rs reduction -> CB16 x-in/root/rs path": 24,
+    "dv chain slice<->slice hops": 9,
+    "NEW: qkv L9 pair word (station -> fe -> neighbour fw -> station)": 3
+   }
+  },
+  "v7fecl_aln": {
+   "args": [
+    "--add",
+    "add_fecl_aln.json",
+    "--hop-ext",
+    "--l9-stb",
+    "--cb-add",
+    "6",
+    "--hop-add",
+    "9",
+    "--l9-add",
+    "3"
+   ],
+   "cycles_per_token": 304261,
+   "tok_s": 3945.6,
+   "chained_per_layer": 8349,
+   "l0_cold": 8861,
+   "delta_cycles_per_token": 7920,
+   "delta_pct_cycles": 2.673,
+   "e2e_loss_pct": 2.603,
+   "edge_delta_per_layer": {
+    "q3h x broadcast + rs reduction -> CB16 x-in/root/rs path": 24,
+    "dv chain slice<->slice hops": 31,
+    "slice2 landed-parent forwarded lanes + taps -> s8 partition crossings": 160,
+    "NEW: qkv L9 pair word (station -> fe -> neighbour fw -> station)": 5
+   }
+  },
+  "v7ctl": {
+   "args": [],
+   "cycles_per_token": 296341,
+   "tok_s": 4051.0,
+   "chained_per_layer": 8129,
+   "l0_cold": 8641,
+   "delta_cycles_per_token": 0,
+   "delta_pct_cycles": 0.0,
+   "e2e_loss_pct": 0.0,
+   "edge_delta_per_layer": {}
+  },
+  "v7ctl_ext": {
+   "args": [
+    "--hop-ext",
+    "--l9-stb"
+   ],
+   "cycles_per_token": 296341,
+   "tok_s": 4051.0,
+   "chained_per_layer": 8129,
+   "l0_cold": 8641,
+   "delta_cycles_per_token": 0,
+   "delta_pct_cycles": 0.0,
+   "e2e_loss_pct": 0.0,
+   "edge_delta_per_layer": {}
+  },
+  "v7fe": {
+   "args": [
+    "--add",
+    "add_fe.json",
+    "--hop-ext",
+    "--l9-stb"
+   ],
+   "cycles_per_token": 302965,
+   "tok_s": 3962.4,
+   "chained_per_layer": 8313,
+   "l0_cold": 8825,
+   "delta_cycles_per_token": 6624,
+   "delta_pct_cycles": 2.235,
+   "e2e_loss_pct": 2.186,
+   "edge_delta_per_layer": {
+    "dv chain slice<->slice hops": 22,
+    "slice2 landed-parent forwarded lanes + taps -> s8 partition crossings": 160,
+    "NEW: qkv L9 pair word (station -> fe -> neighbour fw -> station)": 2
+   }
+  },
+  "v7fe_lawhop": {
+   "args": [
+    "--add",
+    "add_fe.json"
+   ],
+   "cycles_per_token": 302569,
+   "tok_s": 3967.6,
+   "chained_per_layer": 8302,
+   "l0_cold": 8814,
+   "delta_cycles_per_token": 6228,
+   "delta_pct_cycles": 2.102,
+   "e2e_loss_pct": 2.058,
+   "edge_delta_per_layer": {
+    "dv chain slice<->slice hops": 11,
+    "slice2 landed-parent forwarded lanes + taps -> s8 partition crossings": 160,
+    "NEW: qkv L9 pair word (station -> fe -> neighbour fw -> station)": 2
+   }
+  }
+ }
+}
