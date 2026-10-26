@@ -366,7 +366,7 @@ class Rule128(unittest.TestCase):
         # two regions: only the die root is common
         M["taps"][1]["region"] = 1
         M["meta"]["regions"].append(dict(k=1, tag="h1"))
-        g = CM.C128.gate(M, None, [("a", "b")], late, early, rng, 1, mesh, {}, [])
+        g = CM.C128.gate(M, None, [("a", "b", "seam-edge")], late, early, rng, 1, mesh, {}, [])
         self.assertAlmostEqual(g["related_pair_max_ps"], 115.0)
 
     # (2) early-offset taps: no add-back, gate FAIL naming the core type
