@@ -97,7 +97,9 @@ def compile_inputs(die, fixtures, entry_engram_inputs=None):
     return dict(schema='opentallas.s81.entry_input_rows.v1', status='PARTIAL',
         die_sha256=die.die_sha, fixture_meta_sha256=sha(fixtures/'meta.json'), input_sources=source,
         writes=writes, readers=readers, row_count=len(writes),
-        provenance='legitimate layer input h/pre and checkpoint norm gains; no ops output injection',
+        provenance=('checkpoint-derived Engram H + genuine layer input pre and checkpoint norm gains; no ops output injection'
+                    if entry_engram_inputs is not None else
+                    'legitimate layer input h/pre and checkpoint norm gains; no ops output injection'),
         lifetimes=[dict(region='H0..31', writer='entry target5', reader='VP HLOAD a0=0',
                         release='after actual HLOAD finishes; VN owns residual H thereafter'),
                    dict(region='GAIN64..79', writer='entry target5', reader='VP GAIN a0=64',
