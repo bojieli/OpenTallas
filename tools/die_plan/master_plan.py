@@ -348,6 +348,7 @@ def core_lattice(centres, q=0.01, lat=8.64):
     the gaps that are not an integer multiple of it.  A die tree whose node/leaf pitch is an integer multiple of
     this pitch (leaf pitch 2 x pitch puts every node midpoint on a core centre) lands every node/driver on a
     core-centre island."""
+    import numpy as _np
     res = {}
     for ax in (0, 1):
         raw = sorted(c[ax] for c in centres)
@@ -366,8 +367,16 @@ def core_lattice(centres, q=0.01, lat=8.64):
         p = min(gaps)
         bad = sorted({g for g in gaps if abs(g / p - round(g / p)) > 1e-3})
 
+        va = _np.array(vs)
+
         def cover(L):        # share of lines whose +L translate is a line too (or falls past the array end)
-            hit = sum(1 for v in vs if v + L > vs[-1] + lat or any(abs(v + L - u) <= lat / 2 for u in vs))
+            # vectorised (ROOT-MERGE-20: S81 > 25 min in the O(n^3) form); same float expressions, the nearest line by
+            # bisection decides "any line within lat / 2" -> identical result
+            t = va + L
+            i = _np.searchsorted(va, t)
+            lo = _np.abs(t - va[_np.clip(i - 1, 0, len(va) - 1)])
+            hi = _np.abs(t - va[_np.clip(i, 0, len(va) - 1)])
+            hit = int(_np.count_nonzero((t > vs[-1] + lat) | (_np.minimum(lo, hi) <= lat / 2)))
             return hit / len(vs)
         # commensurate leaf pitch: smallest pairwise line distance that maps >= 90 % of the core-centre lines onto
         # lines (the repeat of the abutted core array); a tree node then lands on a centre when its half-span
