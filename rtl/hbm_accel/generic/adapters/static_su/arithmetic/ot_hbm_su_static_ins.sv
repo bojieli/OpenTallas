@@ -30,6 +30,7 @@ module ot_hbm_su_static_ins #(
             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p) canbe = 1'b1;
         end
     endfunction
+    localparam integer SPR = ((DMAX + 3) / 4 > 48) ? (DMAX + 3) / 4 : 48;  // stages per clk root
     generate
         if (DMAX == 0) begin : g_wire
             assign vo = v; assign q = d; assign coll = 1'b0; assign busy = 1'b0;
@@ -45,23 +46,23 @@ module ot_hbm_su_static_ins #(
                 if (canbe(p)) begin : g_ld
                     wire ld = v && has(p, sel);
                     assign cl[p] = ld && nxv;
-                    always @(posedge clk[(p-1)/48] or negedge rst_n)
+                    always @(posedge clk[(p-1)/SPR] or negedge rst_n)
                         if (!rst_n) rv[p] <= 1'b0; else rv[p] <= ld || nxv;
                     if (RESET_DATA != 0) begin : g_rd
-                        always @(posedge clk[(p-1)/48] or negedge rst_n)
+                        always @(posedge clk[(p-1)/SPR] or negedge rst_n)
                             if (!rst_n) r[p] <= {W{1'b0}}; else r[p] <= ld ? d : nx;
                     end else begin : g_nd
-                        always @(posedge clk[(p-1)/48]) r[p] <= ld ? d : nx;
+                        always @(posedge clk[(p-1)/SPR]) r[p] <= ld ? d : nx;
                     end
                 end else begin : g_sh
                     assign cl[p] = 1'b0;
-                    always @(posedge clk[(p-1)/48] or negedge rst_n)
+                    always @(posedge clk[(p-1)/SPR] or negedge rst_n)
                         if (!rst_n) rv[p] <= 1'b0; else rv[p] <= nxv;
                     if (RESET_DATA != 0) begin : g_rd
-                        always @(posedge clk[(p-1)/48] or negedge rst_n)
+                        always @(posedge clk[(p-1)/SPR] or negedge rst_n)
                             if (!rst_n) r[p] <= {W{1'b0}}; else r[p] <= nx;
                     end else begin : g_nd
-                        always @(posedge clk[(p-1)/48]) r[p] <= nx;
+                        always @(posedge clk[(p-1)/SPR]) r[p] <= nx;
                     end
                 end
             end

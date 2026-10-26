@@ -9,6 +9,9 @@
 // beat slices (256 b each, + v/beat) and the centre's beat control directly (same edges as the separate tiles:
 // hc_<q> output flop -> receiver pin flop).  Bank slices: W face bank 0; N face bank 2 + corners 1, 3 (fed through
 // bank 2); E face bank 4; S face bank 6 + corners 5, 7.  Every other port is the two sub-blocks' own (registered) pin.
+// W (HBM-HC 2026-10-24, default 64 = unchanged): 128 = the B2 8-SM die HALF hub (hc_NW / hc_NE under the NQ 2 root):
+// centre ot_hbm_hc_qcen_static #(W 128) -- d_nv 8 b, i_w 6 b, wc_* 14 b, s_i 4,097 b -- over 8 W 128 bank tiles.  The
+// hc_<q> LG client and the x-wave beat slices are unchanged (a wave is still 32 chunks x 8 terms).
 module ot_hbm_hc_qhub_static #(
     parameter integer K = 20480,
     parameter integer DRLY = 1,
@@ -16,7 +19,13 @@ module ot_hbm_hc_qhub_static #(
     parameter integer CHX = 0,       // HH-9 10-19: extra bank-chain edges (ot_hbm_hc_qcen_static CHX; 11 with the CPR ring)
     parameter integer RD_CAPTURE = 23,
     parameter integer GATHER_PHASE = 23,
-    parameter integer DONE_LAT = 19
+    parameter integer DONE_LAT = 19,
+    parameter integer W = 64,        // 64 (quarter hub) or 128 (B2 half hub)
+    parameter integer MUT = 0,       // bench: passed to the centre (ot_hbm_hc_qcen_static MUT)
+    // derived (do not override)
+    parameter integer NVW = (W == 128) ? 8 : 7,
+    parameter integer IWW = (W == 128) ? 6 : 5,
+    parameter integer JW  = (W == 128) ? 2 : 1
 )(
     input  wire           clk, rst_n,
     // ---- hc_<q> (ot_hbm_hc_q_static)
@@ -37,17 +46,17 @@ module ot_hbm_hc_qhub_static #(
     output wire           program_active, program_done,
     output wire           hcq_fault,
     // ---- quarter engine centre (from / to the root, ot_hbm_hc_root_static)
-    input  wire           d_v, d_ss, input wire [6:0] d_nv, input wire [9:0] d_wa, d_xa,
-    input  wire           i_v, i_kind, input wire [1:0] i_slot, input wire [4:0] i_lo, i_w,
+    input  wire           d_v, d_ss, input wire [NVW-1:0] d_nv, input wire [9:0] d_wa, d_xa,
+    input  wire           i_v, i_kind, input wire [1:0] i_slot, input wire [4:0] i_lo, input wire [IWW-1:0] i_w,
     input  wire [11:0]    i_cnt, input wire [9:0] i_word,
     output wire           ps_v, output wire [31:0] ps, output wire ps_f,
     output wire           eng_fault,
     // ---- to the bank ring
     output wire           rstb_w, rstb_e, output wire [2:0] rstb_n, rstb_s,   // bank 0 | 4 | 1,2,3 | 5,6,7 (corners via 2 / 6)
-    output wire           bd_v, bd_ss, output wire [6:0] bd_nv, output wire [9:0] bd_wa, bd_xa,   // bank 0 descriptor
-    input  wire [2048:0]  s_i,                                                                   // bank 0 chain exit
+    output wire           bd_v, bd_ss, output wire [NVW-1:0] bd_nv, output wire [9:0] bd_wa, bd_xa, // bank 0 descriptor
+    input  wire [W*32:0]  s_i,                                                                   // bank 0 chain exit
     input  wire           wf_w, wf_e, input wire [2:0] wf_n, wf_s,            // same order
-    output wire [12:0]    wc_w, wc_n, wc_e, wc_s,
+    output wire [11+JW:0] wc_w, wc_n, wc_e, wc_s,
     output wire           xb_v, output wire [1:0] xb_beat,                                     // per face copies below
     output wire           xb_v_n, xb_v_e, xb_v_s, output wire [1:0] xb_beat_n, xb_beat_e, xb_beat_s,
     output wire [255:0]   xb_d0, xb_d1, xb_d2, xb_d3, xb_d4, xb_d5, xb_d6, xb_d7
@@ -63,7 +72,7 @@ module ot_hbm_hc_qhub_static #(
         .gathered_mix_data(gathered_mix_data), .gather_done(gather_done), .result_v(result_v),
         .result_position(result_position), .result(result), .program_active(program_active),
         .program_done(program_done), .fault(hcq_fault));
-    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX)) u_cen (
+    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .MUT(MUT), .W(W)) u_cen (
         .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
         .x_v(xv), .x_beat(xbt), .x_word(xw), .s_i(s_i), .wfault_i({wf_s[2:0], wf_e, wf_n[2:0], wf_w}), .rst_b(rb),
