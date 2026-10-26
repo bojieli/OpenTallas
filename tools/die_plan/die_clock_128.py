@@ -194,11 +194,88 @@ def summarize_early(rows):
             for k, v in sorted(by.items())}
 
 
+# ------------------------------------------------------------------------------------------------ plan errors / sites
+class PlanError(Exception):
+    """CLOCK-128-R2: the plan cannot host the 12.8 clock structure (fail closed).  rows = [dict(kind, name, ...)];
+    cmd_build writes them to <out>/plan_errors.json and exits 2.  Kinds: empty_tree_net, unplaced, no_plan_site,
+    site_taken, pg_snap."""
+
+    def __init__(self, rows):
+        self.rows = list(rows)
+        kinds = defaultdict(int)
+        for r in self.rows:
+            kinds[r["kind"]] += 1
+        super().__init__(f"{len(self.rows)} plan error(s): " + ", ".join(f"{k} {v}" for k, v in sorted(kinds.items())))
+
+
+SITE_SNAP_UM = 0.5         # COORD 11:26: the only move allowed between a lattice point and its plan site (PG-track snap)
+SITES_SCHEMA = "ot_clock_sites/1"
+
+
+class SiteIndex:
+    """reserved die-frame lattice island sites from the master-plan slices (12.2a1 pushdown cells inside partitions).
+    take(p) returns the nearest unused site within snap_um of the lattice point p (Manhattan) and marks it used;
+    otherwise (None, nearest distance, nearest site) -- the caller records a plan error, never slides."""
+
+    def __init__(self, sites, snap_um=SITE_SNAP_UM, B=200.0):
+        self.snap, self.B, self.used = float(snap_um), B, {}
+        self.sites = list(sites)
+        self.bins = defaultdict(list)
+        for k, s in enumerate(self.sites):
+            self.bins[(int(s["xy_um"][0] // B), int(s["xy_um"][1] // B))].append(k)
+
+    def nearest(self, p, free=True):
+        i, j = int(p[0] // self.B), int(p[1] // self.B)
+        best = (float("inf"), None)
+        for di in (-1, 0, 1):
+            for dj in (-1, 0, 1):
+                for k in self.bins.get((i + di, j + dj), []):
+                    if free and k in self.used:
+                        continue
+                    s = self.sites[k]["xy_um"]
+                    d = abs(s[0] - p[0]) + abs(s[1] - p[1])
+                    if d < best[0]:
+                        best = (d, k)
+        return best
+
+    def take(self, p, who):
+        d, k = self.nearest(p)
+        if k is not None and d <= self.snap + 1e-9:
+            self.used[k] = who
+            return self.sites[k], d, None
+        d_any, k_any = self.nearest(p, free=False)
+        err = dict(lattice_um=[round(p[0], 4), round(p[1], 4)],
+                   nearest_um=None if k is None else round(d, 4),
+                   nearest_site=None if k is None else self.sites[k]["name"])
+        if k_any is not None and d_any <= self.snap + 1e-9:   # the right site exists but another cell already took it
+            err.update(kind="site_taken", site=self.sites[k_any]["name"], taken_by=self.used.get(k_any))
+        else:
+            err.update(kind="no_plan_site", detail=f"no reserved plan site within {self.snap} um")
+        return None, d, err
+
+
+def load_plan_sites(path, plan_sha256=None):
+    """read an ot_clock_sites/1 file (die frame; clock_plan_sites.py writes it from the master-plan slices).  The
+    file must name the same plan (sha256) as the build."""
+    import json
+    raw = json.loads(Path(path).read_text())
+    if raw.get("schema") != SITES_SCHEMA:
+        raise ValueError(f"{path}: schema {raw.get('schema')!r} is not {SITES_SCHEMA}")
+    if plan_sha256 and raw.get("plan_sha256") and raw["plan_sha256"] != plan_sha256:
+        raise ValueError(f"{path}: sites were cut from plan {raw['plan_sha256'][:12]}, build plan is {plan_sha256[:12]}")
+    if not raw.get("sites"):
+        raise ValueError(f"{path}: no sites")
+    return raw
+
+
 # ------------------------------------------------------------------------------------------------ fixed wires
-def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM):
+def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None):
     """every tree net (root, H-tree legs/nodes/leaves, split tails, stubs) as a fixed comb pre-route: one trunk on the
     net's dominant axis (M8 horizontal / M9 vertical), offset `off` from the driver pin line, plus one perpendicular
-    drop per load, offset `off` from the load pin line.  Returns [dict(name, drv, pins, segs, rc_nodes)]."""
+    drop per load, offset `off` from the load pin line.  Returns [dict(name, drv, pins, segs, rc_nodes)].
+    router (TrackRouter, CLOCK-128 shield lane): each trunk / drop goes on the nearest PG-aware routing track whose
+    clock metal + both VSS shields clear every same-layer shape of another net (die PG grid, mesh straps + shields,
+    earlier tree wires + shields); a segment with no legal track within router.max_move is a plan error."""
     txy = {t["port"]: tuple(t["xy"]) for t in M["taps"]}
     root = tuple(M["meta"]["root_um"])
 
@@ -206,7 +283,36 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM):
         if p.startswith("port:"):
             return root if p == "port:root" else txy[p[5:]]
         return _centre(cells, p, buf_w, row_y)
-    out = []
+    empty = [n["name"] for n in nets if not n["loads"]]
+    if empty:   # CLOCK-128-R2: the build prunes dead branches by construction; a loadless net here is a plan error
+        raise PlanError([dict(kind="empty_tree_net", name=x, detail="tree net without loads") for x in empty])
+    out, errs = [], []
+
+    def track(layer, ideal, a0, a1, name, what):
+        if router is None:
+            return ideal, DRAWN
+        c, mode, e = router.place(layer, ideal, a0, a1, name)
+        last_ext[0] = e
+        if c is None:
+            errs.append(dict(kind="no_clock_track", name=name, detail=f"{what} {layer} ideal {ideal:.3f} span "
+                             f"{min(a0, a1):.3f}..{max(a0, a1):.3f}: no legal shielded track within "
+                             f"{router.max_move} um (PG / clock / shield clearance)"))
+            return ideal, DRAWN
+        return c, mode
+    mm = router.max_move if router is not None else 0.0
+    last_ext = [None]
+
+    def trunk_ext(layer, c, lo, hi, mode, e_res, name):
+        """the drawn trunk is shorter than its reservation (span widened by max_move): re-derive its shield tie
+        extension on the actual span; the drawn shields must stay inside the reserved ones"""
+        if router is None or mode != DRAWN or e_res is None:
+            return e_res
+        e = router.tie_ext(layer, c, lo, hi)
+        if e is None or e > e_res + mm + 1e-6:
+            errs.append(dict(kind="shield_tie", name=name, detail=f"trunk {layer} {c:.3f} {lo:.3f}..{hi:.3f}: shield "
+                             "tie extension outside the reserved shield footprint"))
+            return e_res
+        return e
     for n in nets:
         D = xy(n["drv"])
         Ls = [(ld, xy(ld)) for ld in n["loads"]]
@@ -214,30 +320,314 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM):
         dy = max(abs(p[1] - D[1]) for _, p in Ls)
         horiz = dx >= dy
         segs, branches = [], []
+        nm = n["name"]
         if horiz:
-            ty = D[1] + off
-            xlo, xhi = min([D[0]] + [p[0] + off for _, p in Ls]), max([D[0]] + [p[0] + off for _, p in Ls])
-            if xhi > xlo:
-                segs.append(("M8", xlo, ty, xhi, ty))
+            # the trunk is reserved over its widest possible extent (drops move <= max_move)
+            ty, tm = track("M8", D[1] + off, min([D[0]] + [p[0] + off for _, p in Ls]) - mm,
+                           max([D[0]] + [p[0] + off for _, p in Ls]) + mm, nm, "trunk")
+            te = last_ext[0]
+            xs_, modes, exts = [], [], []
             for ld, p in Ls:
-                branches.append((ld, p[0] + off, p[1]))
                 if abs(p[1] - ty) > 1e-6:
-                    segs.append(("M9", p[0] + off, min(ty, p[1]), p[0] + off, max(ty, p[1])))
+                    bx, bm = track("M9", p[0] + off, ty, p[1], nm, f"drop {ld}")
+                    segs.append(("M9", bx, min(ty, p[1]), bx, max(ty, p[1])))
+                    modes.append(bm)
+                    exts.append(last_ext[0])
+                else:
+                    bx = p[0] + off
+                branches.append((ld, bx, p[1]))
+                xs_.append(bx)
+            xlo, xhi = min([D[0]] + xs_), max([D[0]] + xs_)
+            if xhi > xlo:
+                te = trunk_ext("M8", ty, xlo, xhi, tm, te, nm)
+                segs.insert(0, ("M8", xlo, ty, xhi, ty))
+                modes.insert(0, tm)
+                exts.insert(0, te)
             tap0 = (D[0], ty)
         else:
-            tx = D[0] + off
-            ylo, yhi = min([D[1]] + [p[1] + off for _, p in Ls]), max([D[1]] + [p[1] + off for _, p in Ls])
-            if yhi > ylo:
-                segs.append(("M9", tx, ylo, tx, yhi))
+            tx, tm = track("M9", D[0] + off, min([D[1]] + [p[1] + off for _, p in Ls]) - mm,
+                           max([D[1]] + [p[1] + off for _, p in Ls]) + mm, nm, "trunk")
+            te = last_ext[0]
+            ys_, modes, exts = [], [], []
             for ld, p in Ls:
-                branches.append((ld, p[0], p[1] + off))
                 if abs(p[0] - tx) > 1e-6:
-                    segs.append(("M8", min(tx, p[0]), p[1] + off, max(tx, p[0]), p[1] + off))
+                    by, bm = track("M8", p[1] + off, tx, p[0], nm, f"drop {ld}")
+                    segs.append(("M8", min(tx, p[0]), by, max(tx, p[0]), by))
+                    modes.append(bm)
+                    exts.append(last_ext[0])
+                else:
+                    by = p[1] + off
+                branches.append((ld, p[0], by))
+                ys_.append(by)
+            ylo, yhi = min([D[1]] + ys_), max([D[1]] + ys_)
+            if yhi > ylo:
+                te = trunk_ext("M9", tx, ylo, yhi, tm, te, nm)
+                segs.insert(0, ("M9", tx, ylo, tx, yhi))
+                modes.insert(0, tm)
+                exts.insert(0, te)
             tap0 = (tx, D[1])
-        out.append(dict(name=n["name"], drv=n["drv"], loads=n["loads"], horiz=horiz, drv_xy=D, trunk_tap=tap0,
-                        branches=branches, segs=segs,
+        out.append(dict(name=nm, drv=n["drv"], loads=n["loads"], horiz=horiz, drv_xy=D, trunk_tap=tap0,
+                        branches=branches, segs=segs, **(dict(shield_modes=modes, shield_ext=exts) if router is not None else {}),
                         wire_um=round(sum(abs(s[3] - s[1]) + abs(s[4] - s[2]) for s in segs), 3)))
+    if errs:
+        raise PlanError(errs)
     return out
+
+# ------------------------------------------------------------------ PG-aware shielded tracks (CLOCK-128 shield lane)
+# Every shielded clock segment occupies, on its layer, the clock metal (width w, centre c) plus one VSS shield stripe
+# (width w) on each side one NDR space away (centre c +- off, off = w/2 + s + w/2).  Shield stripes run ext = off + w/2
+# past each clock-metal end, so a drop's shields always cross its trunk's shields (shield-shield VIA89 tie) and the end
+# of a wire is shielded too.  A segment is LEGAL when no same-layer shape of another net is closer than the NDR space
+# (edge to edge, along and across): VDD/VDDPHY stripes, other clock nets and other wires' shields.  A VSS shield may
+# touch or overlap a VSS grid stripe (same net: the stripe is then also its tie).
+def shield_geom(nd):
+    hw = nd["width"] / 2
+    off = hw + nd["space"] + nd["width"] / 2
+    return hw, off, off + nd["width"] / 2
+
+
+def seg_shapes(layer, c, a0, a1, net, nd, shield, kind="tree", ext=None):
+    """[(layer, net, kind, perp_lo, perp_hi, along_lo, along_hi)] of one clock segment centred on c (y for M8, x for M9)
+    spanning a0..a1 along its axis, with its two shields when `shield` names the shield net (running `ext` past
+    each clock-metal end; default shield_geom)."""
+    hw, off, ext0 = shield_geom(nd)
+    ext = ext0 if ext is None else ext
+    a0, a1 = min(a0, a1), max(a0, a1)
+    out = [(layer, net, kind, c - hw, c + hw, a0 - hw, a1 + hw)]
+    if shield:
+        out += [(layer, shield, "shield", c + s * off - hw, c + s * off + hw, a0 - ext, a1 + ext) for s in (-1, 1)]
+    return out
+
+
+def seg_perp(seg):
+    """(layer, x0, y0, x1, y1) centre line -> (layer, centre, along_lo, along_hi)"""
+    lay, x0, y0, x1, y1 = seg
+    return (lay, y0, min(x0, x1), max(x0, x1)) if lay == "M8" else (lay, x0, min(y0, y1), max(y0, y1))
+
+
+def pg_shapes(pg_rects):
+    """die_infra.pg_rects tuples -> metal shapes (kind pg)"""
+    out = []
+    for net, lay, x0, y0, x1, y1 in pg_rects:
+        if lay == "M8":
+            out.append((lay, net, "pg", y0, y1, x0, x1))
+        elif lay == "M9":
+            out.append((lay, net, "pg", x0, x1, y0, y1))
+    return out
+
+
+class MetalIndex:
+    """same-layer special-metal occupancy, binned on the across-axis coordinate"""
+
+    def __init__(self, space, bin_um=1.0):
+        self.space, self.B = space, bin_um
+        self.shapes = []
+        self.bins = {"M8": defaultdict(list), "M9": defaultdict(list)}
+
+    def add(self, s):
+        k = len(self.shapes)
+        self.shapes.append(s)
+        b = self.bins[s[0]]
+        for i in range(int(math.floor(s[3] / self.B)), int(math.floor(s[4] / self.B)) + 1):
+            b[i].append(k)
+        return k
+
+    def hits(self, s, first=False):
+        """[(k, 'short'|'spacing')] of indexed shapes of another net closer than the space to shape s"""
+        lay, net, _, plo, phi, alo, ahi = s
+        sp, eps = self.space, 1e-6
+        b, seen, out = self.bins[lay], set(), []
+        for i in range(int(math.floor((plo - sp) / self.B)), int(math.floor((phi + sp) / self.B)) + 1):
+            for k in b.get(i, ()):
+                if k in seen:
+                    continue
+                seen.add(k)
+                t = self.shapes[k]
+                if t[1] == net:
+                    continue
+                gp = max(t[3] - phi, plo - t[4])
+                ga = max(t[5] - ahi, alo - t[6])
+                if gp < sp - eps and ga < sp - eps:
+                    out.append((k, "short" if gp < eps and ga < eps else "spacing"))
+                    if first:
+                        return out
+        return out
+
+
+VIA_HALF = 0.02     # ASAP7 1x VIA89 cut half-size (asap7_tech_1x_201209.lef RECT -0.02 -0.02 0.02 0.02)
+FLANK = "pg"        # shield mode: the two neighbouring die PG stripes are the shields (no drawn stripe)
+DRAWN = "drawn"     # shield mode: two drawn VSS stripes, via-tied to the die VSS grid
+
+
+def flank_gap(nd):
+    """max clock-edge to PG-edge gap for a PG stripe to count as a shield: no farther than a drawn shield's far edge"""
+    return nd["space"] + nd["width"]
+
+
+class TrackRouter:
+    """legal-by-construction track choice for shielded clock segments: the nearest routing track (actual die-kit
+    make_tracks pitch/offset) within max_move of the ideal centre where EITHER (drawn) the clock metal + both drawn VSS
+    shields clear every same-layer shape of another net by the NDR space, OR (pg) the clock metal alone clears them and
+    a die PG stripe flanks it on both sides along its whole span within flank_gap (the PG stripes are the shields; the
+    only option on a PG grid too dense for drawn stripes, e.g. KV M9 0.48 um every 0.864 um).  Chosen segments are
+    reserved for the following ones."""
+
+    def __init__(self, nd, shield, tracks, max_move=8.64, space=None):
+        self.nd, self.shield, self.tracks, self.max_move = nd, shield, tracks, max_move
+        self.ix = MetalIndex(nd["space"] if space is None else space)
+        self.pg = MetalIndex(self.ix.space)
+        self.moves, self.modes = [], defaultdict(int)
+        self.vss = {"M8": [], "M9": []}     # shield-net PG stripes: (centre, along_lo, along_hi) per layer
+        self.vss_c = {"M8": [], "M9": []}
+
+    def reserve(self, shapes):
+        for s in shapes:
+            self.ix.add(s)
+            if s[2] == "pg":
+                self.pg.add(s)
+                if s[1] == self.shield:
+                    self.vss[s[0]].append(((s[3] + s[4]) / 2, s[5], s[6]))
+                    self.vss_c[s[0]] = None
+
+    def tie_ext(self, layer, c, a0, a1):
+        """shield end extension past the clock metal so each drawn shield crosses >= 1 perpendicular shield-net grid
+        stripe centre (a VIA89 tie, cut half-size VIA_HALF): shield_geom ext, or longer for a short segment; None
+        when no grid stripe lies within max_move."""
+        import bisect
+        P = "M9" if layer == "M8" else "M8"
+        if self.vss_c[P] is None:
+            self.vss[P].sort()
+            self.vss_c[P] = [q[0] for q in self.vss[P]]
+        e0 = shield_geom(self.nd)[2]
+        lo, hi = min(a0, a1), max(a0, a1)
+        cs, rows = self.vss_c[P], self.vss[P]
+        best = None
+        for q in rows[bisect.bisect_left(cs, lo - e0 - self.max_move):bisect.bisect_right(cs, hi + e0 + self.max_move)]:
+            if not (q[1] - 1e-6 <= c <= q[2] + 1e-6):
+                continue
+            need = max(e0, (lo - q[0]) + VIA_HALF if q[0] < lo else (q[0] - hi) + VIA_HALF if q[0] > hi else e0)
+            best = need if best is None else min(best, need)
+            if best <= e0:
+                break
+        if best is None or best > e0 + self.max_move:
+            return None
+        return round(max(e0, best), 4)
+
+    def place(self, layer, ideal, a0, a1, net):
+        """(centre, mode) of the nearest legal track, or (None, None)"""
+        tr = self.tracks[layer]
+        pitch, offs = tr["pitch_um"], tr["offset_um"]
+        k0 = round((ideal - offs) / pitch)
+        untied = None     # nearest legal drawn track whose shields cannot reach a grid tie (reported by the tie census)
+        for d in range(int(math.ceil(self.max_move / pitch)) + 2):
+            ks = [k0] if d == 0 else sorted((k0 - d, k0 + d), key=lambda k: abs(offs + k * pitch - ideal))
+            for k in ks:
+                c = round(offs + k * pitch, 4)
+                if abs(c - ideal) > self.max_move + 1e-9:
+                    continue
+                e = self.tie_ext(layer, c, a0, a1)
+                sh = seg_shapes(layer, c, a0, a1, net, self.nd, self.shield, ext=e)
+                if self.ix.hits(sh[0], first=True):
+                    continue
+                if not any(self.ix.hits(s, first=True) for s in sh[1:]):
+                    if e is None:
+                        untied = untied or (c, sh)
+                        continue
+                    mode = DRAWN
+                elif flanked(self.pg, sh[0], flank_gap(self.nd)):
+                    mode, sh, e = FLANK, sh[:1], None
+                else:
+                    continue
+                return self._take(layer, ideal, c, mode, e, sh)
+        if untied is not None:
+            self.modes[f"{layer}:untied"] += 1
+            return self._take(layer, ideal, untied[0], DRAWN, None, untied[1])
+        return None, None, None
+
+    def _take(self, layer, ideal, c, mode, e, sh):
+        self.reserve(sh)
+        self.moves.append(abs(c - ideal))
+        self.modes[f"{layer}:{mode}"] += 1
+        return c, mode, e
+
+
+def flanked(pg_ix, s, gap):
+    """True when PG metal lies on BOTH sides of clock shape s within `gap` (edge to edge) over its whole length"""
+    lay, _, _, plo, phi, alo, ahi = s
+    eps = 1e-6
+    for side in (-1, 1):
+        lo_, hi_ = (phi, phi + gap) if side > 0 else (plo - gap, plo)
+        iv, seen = [], set()
+        for i in range(int(math.floor(lo_ / pg_ix.B)), int(math.floor(hi_ / pg_ix.B)) + 1):
+            for k in pg_ix.bins[lay].get(i, ()):
+                if k in seen:
+                    continue
+                seen.add(k)
+                t = pg_ix.shapes[k]
+                near = t[3] - phi if side > 0 else plo - t[4]
+                if -eps <= near <= gap + eps and t[6] > alo and t[5] < ahi:
+                    iv.append((t[5], t[6]))
+        reach = alo
+        for a, b in sorted(iv):
+            if a > reach + eps:
+                break
+            reach = max(reach, b)
+        if reach < ahi - eps:
+            return False
+    return True
+
+
+def clock_shapes(segs, nd, shield):
+    """metal shapes of clock segments [(layer, x0, y0, x1, y1, net, kind[, mode])] with their drawn shields (mode
+    'drawn', the default) or none (mode 'pg': the die PG stripes are the shields)"""
+    out = []
+    for row in segs:
+        lay, x0, y0, x1, y1, net, kind = row[:7]
+        mode = row[7] if len(row) > 7 else DRAWN
+        ext = row[8] if len(row) > 8 else None
+        _, c, a0, a1 = seg_perp((lay, x0, y0, x1, y1))
+        out += seg_shapes(lay, c, a0, a1, net, nd, shield if mode == DRAWN else None, kind, ext)
+    return out
+
+
+def tree_segs(wires):
+    """fixed tree wires -> clock_shapes rows (with each segment's shield mode)"""
+    n = lambda w: len(w["segs"])  # noqa: E731
+    return [tuple(s_) + (w["name"], "tree", m_, e_) for w in wires
+            for s_, m_, e_ in zip(w["segs"], w.get("shield_modes") or [DRAWN] * n(w), w.get("shield_ext") or [None] * n(w))]
+
+
+def flank_census(pg_rects, segs, nd):
+    """pg-mode segments [(layer, x0, y0, x1, y1, net, kind, 'pg')] that are NOT flanked by PG on both sides"""
+    ix = MetalIndex(nd["space"])
+    for s in pg_shapes(pg_rects):
+        ix.add(s)
+    bad = []
+    for row in segs:
+        if len(row) > 7 and row[7] == FLANK:
+            s = clock_shapes([row[:7] + (FLANK,)], nd, None)[0]
+            if not flanked(ix, s, flank_gap(nd)):
+                bad.append(list(row))
+    return bad
+
+
+def metal_census(shapes, space, limit=200):
+    """same-layer shorts / spacing violations between different nets among `shapes` (seg_shapes / pg_shapes form);
+    PG-PG pairs are the PG generator's and are not counted.  Returns counts by kind pair + the first `limit` rows."""
+    ix = MetalIndex(space)
+    shorts, spacing, rows = defaultdict(int), defaultdict(int), []
+    for s in shapes:
+        for k, what in ix.hits(s):
+                t = ix.shapes[k]
+                if s[2] == "pg" and t[2] == "pg":
+                    continue
+                key = "-".join(sorted((s[2], t[2])))
+                (shorts if what == "short" else spacing)[key] += 1
+                if len(rows) < limit:
+                    rows.append(dict(what=what, a=list(s), b=list(t)))
+        ix.add(s)
+    return dict(shorts=sum(shorts.values()), spacing=sum(spacing.values()), shorts_by_kind=dict(shorts),
+                spacing_by_kind=dict(spacing), rows=rows, shapes=len(shapes))
 
 
 def _pin(p, cells, buf, out=False):
@@ -323,46 +713,216 @@ def spef(wires, cells, buf, nd, layer_rc, via_kohm, design="die_combo"):
 def combo_tcl(wires, nd, shield):
     """tcl: each fixed tree net becomes a special CLOCK net with its M8/M9 SBoxes, VSS shields both sides and an
     obstruction over metal + shield spacing on that layer (no signal track within the shield spacing)."""
-    hw = nd["width"] / 2
-    off = hw + nd["space"] + nd["width"] / 2
+    hw, off, ext = shield_geom(nd)
     ob = hw + 2 * nd["space"] + nd["width"]
     L = [f"set pn [$blk findNet {shield}]", f"if {{$pn eq \"NULL\"}} {{ set pn [odb::dbNet_create $blk {shield}] }}",
          "$pn setSpecial", "$pn setSigType GROUND", "set fsw [odb::dbSWire_create $pn ROUTED]",
          "proc fwnet {nm} { global blk; set n [$blk findNet $nm]; if {$n == \"NULL\"} { error \"missing fixed clock "
          "net $nm\" }; $n setSpecial; $n setSigType CLOCK; foreach it [$n getITerms] { $it setSpecial }; "
          "return [odb::dbSWire_create $n ROUTED] }",
-         "proc fw {sw L x0 y0 x1 y1} { global blk l8 l9 fsw; set l [expr {$L == 8 ? $l8 : $l9}]; "
-         f"set hw {hw}; set off {off}; set ob {ob}; set sw2 {nd['width'] / 2}; "
+         "proc fw {sw L x0 y0 x1 y1 {sh 1} {ex \"\"}} { global blk l8 l9 fsw; set l [expr {$L == 8 ? $l8 : $l9}]; "
+         f"set hw {hw}; set off {off}; set ob {ob}; set ext {ext}; set sw2 {nd['width'] / 2}; "
+         "if {$ex ne \"\"} { set ext $ex; if {$ext + $hw > $ob} { set ob [expr {$ext + $hw}] } }; "
          "if {$L == 8} { odb::dbSBox_create $sw $l [um [expr {$x0-$hw}]] [um [expr {$y0-$hw}]] [um [expr {$x1+$hw}]] "
-         "[um [expr {$y0+$hw}]] STRIPE; foreach s {-1 1} { set yy [expr {$y0+$s*$off}]; odb::dbSBox_create $fsw $l "
-         "[um [expr {$x0-$hw}]] [um [expr {$yy-$sw2}]] [um [expr {$x1+$hw}]] [um [expr {$yy+$sw2}]] STRIPE }; "
+         "[um [expr {$y0+$hw}]] STRIPE; if {$sh} { foreach s {-1 1} { set yy [expr {$y0+$s*$off}]; odb::dbSBox_create $fsw $l "
+         "[um [expr {$x0-$ext}]] [um [expr {$yy-$sw2}]] [um [expr {$x1+$ext}]] [um [expr {$yy+$sw2}]] STRIPE } }; "
          "odb::dbObstruction_create $blk $l [um [expr {$x0-$ob}]] [um [expr {$y0-$ob}]] [um [expr {$x1+$ob}]] "
          "[um [expr {$y0+$ob}]] } else { odb::dbSBox_create $sw $l [um [expr {$x0-$hw}]] [um [expr {$y0-$hw}]] "
-         "[um [expr {$x0+$hw}]] [um [expr {$y1+$hw}]] STRIPE; foreach s {-1 1} { set xx [expr {$x0+$s*$off}]; "
-         "odb::dbSBox_create $fsw $l [um [expr {$xx-$sw2}]] [um [expr {$y0-$hw}]] [um [expr {$xx+$sw2}]] "
-         "[um [expr {$y1+$hw}]] STRIPE }; odb::dbObstruction_create $blk $l [um [expr {$x0-$ob}]] [um [expr {$y0-$ob}]] "
+         "[um [expr {$x0+$hw}]] [um [expr {$y1+$hw}]] STRIPE; if {$sh} { foreach s {-1 1} { set xx [expr {$x0+$s*$off}]; "
+         "odb::dbSBox_create $fsw $l [um [expr {$xx-$sw2}]] [um [expr {$y0-$ext}]] [um [expr {$xx+$sw2}]] "
+         "[um [expr {$y1+$ext}]] STRIPE } }; odb::dbObstruction_create $blk $l [um [expr {$x0-$ob}]] [um [expr {$y0-$ob}]] "
          "[um [expr {$x0+$ob}]] [um [expr {$y1+$ob}]] } }"]
     nseg = 0
     for w in wires:
         L.append(f"set sw [fwnet {w['name']}]")
-        for lay, x0, y0, x1, y1 in w["segs"]:
-            L.append(f"fw $sw {lay[1]} {x0:.4f} {y0:.4f} {x1:.4f} {y1:.4f}")
+        n_ = len(w["segs"])
+        for (lay, x0, y0, x1, y1), m_, e_ in zip(w["segs"], w.get("shield_modes") or [DRAWN] * n_,
+                                                 w.get("shield_ext") or [None] * n_):
+            L.append(f"fw $sw {lay[1]} {x0:.4f} {y0:.4f} {x1:.4f} {y1:.4f}" +
+                     (" 0" if m_ != DRAWN else f" 1 {e_:.4f}" if e_ is not None else ""))
             nseg += 1
     L.append(f"puts \"OT_FIXED_CLOCK nets {len(wires)} segs {nseg}\"")
     return L
 
 
-def shield_record(wires, shield, straps, jogs):
+def shield_stripes(segs, nd):
+    """the drawn VSS shield stripes of clock segments [(layer, x0, y0, x1, y1)] (centre lines): one stripe on each
+    side, one NDR space away, running shield_geom ext past both clock-metal ends (same geometry as combo_tcl / cmd_combo's psw).  Returns
+    [(layer, x0, y0, x1, y1)] stripe centre lines (horizontal M8: y0 == y1; vertical M9: x0 == x1)."""
+    hw, off, ext0 = shield_geom(nd)
+    out = []
+    for row in segs:
+        lay, x0, y0, x1, y1 = row[:5]
+        ext = row[5] if len(row) > 5 and row[5] is not None else ext0
+        for s in (-1, 1):
+            if lay == "M8":
+                out.append(("M8", min(x0, x1) - ext, y0 + s * off, max(x0, x1) + ext, y0 + s * off))
+            else:
+                out.append(("M9", x0 + s * off, min(y0, y1) - ext, x0 + s * off, max(y0, y1) + ext))
+    return out
+
+
+def pg_grid(P):
+    """the die PG stripe rules (die.pg.grid + each PHY domain's grid limited to its rect_um), die_infra.pg_rects form."""
+    pg = P.die.get("pg") or {}
+    grid = [dict(g) for g in pg.get("grid") or []]
+    for dm in pg.get("domains") or []:
+        for g in dm.get("grid") or []:
+            grid.append(dict(g, rect_um=list(dm["rect_um"])))
+    return grid
+
+
+def shield_ties(stripes, pg_rects, w_shield, net="VSS", tile_um=50.0, tie_pitch_um=34.56):
+    """12.7a electrical tie of the clock shields to the die VSS grid (COORD 07:04: no freeze evidence before it).
+
+    stripes: shield centre lines from shield_stripes(); pg_rects: die_infra.pg_rects tuples (net, layer, x0, y0, x1, y1).
+      * grid via: a VIA89 wherever a shield stripe crosses a perpendicular `net` stripe of the die grid (M8 shield x
+        M9 VSS, M9 shield x M8 VSS), at the crossing centre;
+      * shield-shield via: a VIA89 wherever an M8 shield crosses an M9 shield (both `net`), so a short stripe that
+        crosses no grid stripe (a drop, a jog) is tied through the shield it meets;
+      * a stripe is TIED when its connected shield component holds at least one grid via;
+      * a SHORT is a shield stripe footprint overlapping a same-layer PG stripe of another net (VDD, VDDPHY).
+    Grid ties are spaced >= tie_pitch_um along a stripe (4 grid pitches at 8.64 um), both stripe ends always tied.
+    Returns dict(grid_vias=[(x, y)], shield_vias=[(x, y)], untied=[stripe idx], shorts=[(idx, net)], counts...)."""
+    import bisect
+    hw = w_shield / 2
+    perp = {"M8": "M9", "M9": "M8"}
+    # perpendicular grid stripes of `net`, as sorted centre coordinates with their extent along the other axis
+    lines = {}
+    for L in ("M8", "M9"):
+        rows = []
+        for r in pg_rects:
+            if r[0] != net or r[1] != L:
+                continue
+            if L == "M9":       # vertical: centre x, extent y
+                rows.append(((r[2] + r[4]) / 2, r[3], r[5]))
+            else:
+                rows.append(((r[3] + r[5]) / 2, r[2], r[4]))
+        rows.sort()
+        lines[L] = ([q[0] for q in rows], rows)
+    same, own = {}, {}
+    for L in ("M8", "M9"):
+        rows = []
+        for r in pg_rects:
+            if r[0] == net and r[1] == L:   # a shield touching / overlapping a same-layer `net` stripe is tied by contact
+                own.setdefault(L, []).append(((r[2], r[4]) if L == "M9" else (r[3], r[5])) +
+                                              ((r[3], r[5]) if L == "M9" else (r[2], r[4])))
+            if r[0] == net or r[1] != L:
+                continue
+            rows.append(((r[2], r[4]) if L == "M9" else (r[3], r[5])) + ((r[3], r[5]) if L == "M9" else (r[2], r[4]))
+                        + (r[0],))
+        rows.sort()
+        same[L] = ([q[0] for q in rows], rows, max([q[1] - q[0] for q in rows] or [0.0]))
+        orow = sorted(own.get(L, []))
+        own[L] = ([q[0] for q in orow], orow, max([q[1] - q[0] for q in orow] or [0.0]))
+    parent = list(range(len(stripes)))
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    grid_vias, shorts, has_grid, used, contact = [], [], set(), set(), set()
+    for k, (L, x0, y0, x1, y1) in enumerate(stripes):
+        c, a, b = (y0, min(x0, x1), max(x0, x1)) if L == "M8" else (x0, min(y0, y1), max(y0, y1))
+        cs, rows = lines[perp[L]]
+        hit = [q for q in rows[bisect.bisect_left(cs, a):bisect.bisect_right(cs, b)] if q[1] - 1e-6 <= c <= q[2] + 1e-6]
+        keep, last = [], None       # one tie per tie_pitch_um along the stripe, both ends always tied
+        for i_, q in enumerate(hit):
+            if last is None or q[0] - last >= tie_pitch_um - 1e-6 or i_ == len(hit) - 1:
+                keep.append(q)
+                last = q[0]
+        for q in keep:
+            grid_vias.append((q[0], c) if L == "M8" else (c, q[0]))
+            used.add((perp[L], round(q[0], 4)))
+            has_grid.add(k)
+        lo_o, orows, owmax = own[L]
+        for q in orows[bisect.bisect_left(lo_o, c - hw - owmax - 1e-6):bisect.bisect_right(lo_o, c + hw + 1e-6)]:
+            if q[0] <= c + hw + 1e-6 and q[1] >= c - hw - 1e-6 and q[2] <= b + 1e-6 and q[3] >= a - 1e-6:
+                has_grid.add(k)
+                contact.add(k)
+                used.add((L, round((q[0] + q[1]) / 2, 4)))
+                break
+        lo_s, srows, wmax = same[L]
+        for q in srows[bisect.bisect_left(lo_s, c - hw - wmax):bisect.bisect_right(lo_s, c + hw)]:
+            if q[0] < c + hw - 1e-6 and q[1] > c - hw + 1e-6 and q[2] < b - 1e-6 and q[3] > a + 1e-6:
+                shorts.append((k, q[4]))
+    # shield x shield crossings (M8 x M9), bucketed on a tile grid
+    buck = defaultdict(list)
+    for k, (L, x0, y0, x1, y1) in enumerate(stripes):
+        if L != "M9":
+            continue
+        for t in range(int(min(y0, y1) // tile_um), int(max(y0, y1) // tile_um) + 1):
+            buck[(int(x0 // tile_um), t)].append(k)
+    shield_vias = set()
+    for k, (L, x0, y0, x1, y1) in enumerate(stripes):
+        if L != "M8":
+            continue
+        ty = int(y0 // tile_um)
+        for tx in range(int(min(x0, x1) // tile_um), int(max(x0, x1) // tile_um) + 1):
+            for v in buck.get((tx, ty), ()):
+                _, vx, vy0, _, vy1 = stripes[v]
+                if min(x0, x1) - 1e-6 <= vx <= max(x0, x1) + 1e-6 and min(vy0, vy1) - 1e-6 <= y0 <= max(vy0, vy1) + 1e-6:
+                    shield_vias.add((round(vx, 4), round(y0, 4)))
+                    parent[find(k)] = find(v)
+    tied_roots = {find(k) for k in has_grid}
+    untied = [k for k in range(len(stripes)) if find(k) not in tied_roots]
+    gv = sorted({(round(x, 4), round(y, 4)) for x, y in grid_vias})
+    return dict(grid_vias=gv, shield_vias=sorted(shield_vias), untied=untied, shorts=shorts, used_grid=used,
+                stripes=len(stripes), stripes_with_grid_via=len(has_grid), stripes_grid_contact=len(contact), net=net)
+
+
+def tie_tcl(ties, swire_var):
+    """tcl: the VIA89 tie cuts of shield_ties() on the shield special wire `swire_var` (tech via VIA89)."""
+    L = ["set v89 [$tech findVia VIA89]", "if {$v89 == \"NULL\"} { error \"tech via VIA89 missing\" }"]
+    for x, y in ties["grid_vias"] + ties["shield_vias"]:
+        L.append(f"odb::dbSBox_create {swire_var} $v89 [um {x:.4f}] [um {y:.4f}] STRIPE")
+    L.append(f"puts \"OT_SHIELD_TIES grid {len(ties['grid_vias'])} shield {len(ties['shield_vias'])} "
+             f"untied {len(ties['untied'])} shorts {len(ties['shorts'])}\"")
+    return L
+
+
+def grid_tcl(pg_rects, swire_var, net="VSS", used=None):
+    """tcl: the die `net` grid stripes the ties land on, as special wires of the shield net (the die PG grid that the
+    kit models as routing obstructions); `used` = set of (layer, centre) to emit, None = all."""
+    L = []
+    for r in pg_rects:
+        if r[0] != net or r[1] not in ("M8", "M9"):
+            continue
+        c = round((r[2] + r[4]) / 2 if r[1] == "M9" else (r[3] + r[5]) / 2, 4)
+        if used is not None and (r[1], c) not in used:
+            continue
+        L.append(f"odb::dbSBox_create {swire_var} $l{r[1][1]} [um {r[2]:.4f}] [um {r[3]:.4f}] [um {r[4]:.4f}] "
+                 f"[um {r[5]:.4f}] STRIPE")
+    return L
+
+
+def tie_record(ties):
+    ok = bool(ties["stripes"]) and not ties["untied"] and not ties["shorts"]
+    return dict(vss_tied=ok, tie_net=ties["net"], shield_stripes=ties["stripes"],
+                stripes_with_grid_via=ties["stripes_with_grid_via"], grid_vias=len(ties["grid_vias"]),
+                stripes_grid_contact=ties.get("stripes_grid_contact", 0),
+                shield_shield_vias=len(ties["shield_vias"]), untied_stripes=len(ties["untied"]),
+                pg_shorts=len(ties["shorts"]), pg_short_nets=sorted({n for _, n in ties["shorts"]}),
+                tie_method="VIA89 at every shield x die-VSS-stripe crossing + every M8 x M9 shield crossing; "
+                           "tied = shield component holds >= 1 grid via (die_clock_128.shield_ties)")
+
+
+def shield_record(wires, shield, straps, jogs, ties=None):
     mm = sum(w["wire_um"] for w in wires) / 1e3
-    return dict(net=shield, straps_shielded=straps, jogs_shielded=jogs, fixed_tree_nets=len(wires),
-                fixed_tree_mm=round(mm, 1), fixed_tree_segs=sum(len(w["segs"]) for w in wires),
-                grt_routed_tree_nets=0, grt_routed_tree_mm=0.0, complete=bool(shield),
-                # COORD-REVIEW-20 (2): the shield stripes are on the VSS net but carry no via to the VSS grid yet; the
-                # geometry (spacing + blocked parallel tracks) is complete, the electrical tie is not.  No freeze evidence
-                # may rely on shield return-path coupling until vss_tied is True (full-shield work, INFRA-FIRST).
-                vss_tied=False, freeze_evidence_ok=False,
-                method="12.7a: H-tree legs, split tails, stubs and root net pre-routed as fixed special M8/M9 NDR "
-                       "wires, VSS stripe both sides, obstruction over the shield spacing (die_clock_128.combo_tcl)")
+    r = dict(net=shield, straps_shielded=straps, jogs_shielded=jogs, fixed_tree_nets=len(wires),
+             fixed_tree_mm=round(mm, 1), fixed_tree_segs=sum(len(w["segs"]) for w in wires),
+             grt_routed_tree_nets=0, grt_routed_tree_mm=0.0, complete=bool(shield),
+             # COORD-REVIEW-20 (2) / COORD 07:04: no freeze evidence may rely on the shields until every shield stripe is
+             # via-tied to the die VSS grid (vss_tied).  build records False (geometry only); combo computes the ties
+             # (shield_ties) and rewrites this record with the real counts.
+             vss_tied=False, freeze_evidence_ok=False,
+             method="12.7a: H-tree legs, split tails, stubs and root net pre-routed as fixed special M8/M9 NDR "
+                    "wires, VSS stripe both sides, obstruction over the shield spacing (die_clock_128.combo_tcl)")
+    if ties is not None:
+        r.update(tie_record(ties))
+        r["freeze_evidence_ok"] = r["vss_tied"] and bool(shield)
+    return r
 
 
 # ------------------------------------------------------------------------------------------------ balance audit
