@@ -958,6 +958,171 @@ def cmd_balance(a):
     return 0
 
 
+# ---------------------------------------------------------------------------------------------------------- stubtrim
+def stubtrim_pairs(P, M):
+    """conservative complete related-pair superset at tap level: every intra-partition tap pair plus every tap
+    cross-product of plan-connected partitions in the SAME clock region (cross-region connected pairs are landed and
+    gated by the landing window instead)."""
+    import itertools
+    reg = {t["port"]: t.get("region") for t in M["taps"]}
+    tb = defaultdict(list)
+    for t in M["taps"]:
+        tb[t["part"]].append(t["port"])
+    conn = {tuple(sorted((p["src"]["part"], p["dst"]["part"]))) for p in P.ports.values()
+            if p["src"]["part"] in tb and p["dst"]["part"] in tb and p["src"]["part"] != p["dst"]["part"]}
+    pairs = set()
+    for ts in tb.values():
+        pairs.update(itertools.combinations(sorted(ts), 2))
+    for u, v in conn:
+        if reg[tb[u][0]] == reg[tb[v][0]]:
+            pairs.update((a, b) for a in tb[u] for b in tb[v])
+    return sorted(pairs), reg
+
+
+def region_credit(M, tree_path):
+    """CPPR credit per region = late - early arrival at the region's own H-tree node (the mesh is NOT common)."""
+    D, _ = read_tree(tree_path)
+    out = {}
+    for g in M["meta"]["regions"]:
+        nm = [n for n in D if re.match(rf"ckm_n\d+_{g['tag']}$", n)]
+        out[g["k"]] = (D[nm[0]][0] - D[nm[0]][1]) if nm else 0.0
+    return out
+
+
+def read_taps(path):
+    arr = {}
+    for line in open(path):
+        f = line.split()
+        if len(f) >= 4 and f[0] == "T":
+            arr[f[1]] = (float(f[2]), float(f[3]))
+    return arr
+
+
+def pair_damage(arr, cred, reg, x, y, lift=None, ratio=1.0):
+    """CPPR pair damage (both directions) with optional per-tap lifts (early side gets ratio * lift)."""
+    lx = lift.get(x, 0.0) if lift else 0.0
+    ly = lift.get(y, 0.0) if lift else 0.0
+    La, Ea = arr[x][0] + lx, arr[x][1] + ratio * lx
+    Lb, Eb = arr[y][0] + ly, arr[y][1] + ratio * ly
+    c = min(cred[reg[x]], arr[x][0] - arr[x][1], arr[y][0] - arr[y][1])
+    return max(La - Eb, Lb - Ea) - c
+
+
+def cmd_stubtrim(a):
+    """measured per-tap stub trim (standard mesh tap-delay tuning on routed RC): a joint TT+FF LP over the COMPLETE
+    tap-level related-pair superset (stubtrim_pairs) picks a lift x_p >= 0 per tap minimising the worst CPPR pair
+    damage (credit only at the region H-tree node; the trim's own range is uncredited: its early side gets
+    --min-ratio of the lift).  Each lift is realised as abutted BUFx24 (+ <= 3 fine) pads inserted between the stub
+    buffer and its tap wire (the stub buffer drives the first pad, the last pad drives the unchanged stub wire), so the
+    mesh load and the stub route stay as they are.  Writes a new build dir like balance; re-measure with combo + post."""
+    import numpy as np
+    import scipy.sparse as sp
+    from scipy.optimize import linprog
+    src, out = Path(a.dir), Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    P = S.Plan(S.load(a.plan))
+    M = json.loads((src / "mesh.json").read_text())
+    cells = json.loads((src / "place.json").read_text())
+    data = json.loads((src / "nets.json").read_text())
+    nets, ports = data["nets"], [tuple(p) for p in data["ports"]]
+    pairs, reg = stubtrim_pairs(P, M)
+    dl = {c: pad_delay(c, a.libdir) for c in ("TT", "FF")}
+    df = {c: pad_delay(c, a.libdir, cell=a.fine_lib) for c in ("TT", "FF")} if a.fine_lib else None
+    kff = dl["FF"] / dl["TT"]
+    arr = {c: read_taps(src / f"taps_{c}.txt") for c in ("TT", "FF")}
+    cred = {c: region_credit(M, src / f"tree_{c}.txt") for c in ("TT", "FF")}
+    taps = sorted(arr["TT"])
+    idx = {p: i for i, p in enumerate(taps)}
+    n = len(taps)
+    rows, cols, vals, rhs = [], [], [], []
+    for c, kc in (("TT", 1.0), ("FF", kff)):
+        A = arr[c]
+        for x, y in pairs:
+            for p, q in ((x, y), (y, x)):
+                cc = min(cred[c][reg[p]], A[p][0] - A[p][1], A[q][0] - A[q][1])
+                k = len(rhs)
+                rows += [k, k, k]
+                cols += [idx[p], idx[q], n]
+                vals += [kc, -a.min_ratio * kc, -1.0]
+                rhs.append(-(A[p][0] - A[q][1] - cc))
+    Am = sp.csr_matrix((vals, (rows, cols)), shape=(len(rhs), n + 1))
+    cost = np.full(n + 1, 1e-4)
+    cost[n] = 1.0
+    r = linprog(cost, A_ub=Am, b_ub=np.array(rhs), bounds=[(0, a.xmax)] * n + [(0, None)], method="highs")
+    if not r.success:
+        raise SystemExit(f"die_clock_mesh stubtrim: LP failed: {r.message}")
+    real = {}
+    for p in taps:
+        x = float(r.x[idx[p]])
+        best = (abs(x), 0, 0)
+        for i in range(0, int(x / dl["TT"]) + 2):
+            for j in (range(4) if df else [0]):
+                best = min(best, (abs(x - i * dl["TT"] - j * (df["TT"] if df else 0.0)), i, j))
+        real[p] = best[1:]
+    lift = {c: {p: i * dl[c] + j * (df[c] if df else 0.0) for p, (i, j) in real.items()} for c in ("TT", "FF")}
+
+    def worst(c, lf):
+        return max((round(pair_damage(arr[c], cred[c], reg, x, y, lf, a.min_ratio), 2), x, y) for x, y in pairs)
+    K = DC.KeepIndex(list(DC.keepouts(P)), die=(float(P.W), float(P.H)))
+    for name, c in cells.items():
+        reserve_cell(K, name, c)
+    by_drv = {nn["drv"]: nn for nn in nets}
+    added, new_nets = 0, []
+    for t in M["taps"]:
+        i, j = real[t["port"]]
+        if i + j == 0:
+            continue
+        sb = t["stub"]
+        nn = by_drv[sb]
+        cx, cy = cells[sb]["x"], cells[sb]["y"]
+        chain = []
+        for m_ in range(i + j):
+            col, row = m_ % 16, m_ // 16
+            for sgn in (-1, 1):
+                q = (cx + BUF_W / 2 + sgn * (col + 1) * (BUF_W + SITE_X * 2), cy + ROW_Y / 2 + 2 * ROW_Y * (row + 1))
+                if not hitf(K, q):
+                    break
+            else:
+                q, _ = free_near(K, q)
+            if q is None:
+                raise SystemExit("die_clock_mesh stubtrim: no legal site for trim pad")
+            nm = f"ckm_p{a.tag}_{added}"
+            added += 1
+            cells[nm] = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y), kind="pad", level=99)
+            if "region" in cells[sb]:
+                cells[nm]["region"] = cells[sb]["region"]
+            if m_ >= i:
+                cells[nm]["lib"] = a.fine_lib
+            reserve_cell(K, nm, cells[nm])
+            chain.append(nm)
+        loads = nn["loads"]
+        nn["loads"] = [chain[0]]
+        for u, w in zip(chain, chain[1:]):
+            new_nets.append(dict(name=f"ckm_w_{u}", drv=u, loads=[w], level=99))
+        # the LAST pad drives the unchanged tap wire: keep the stub net's name on it (stub_nets/SPEF naming)
+        new_nets.append(dict(name=nn["name"], drv=chain[-1], loads=loads, level=99))
+        nn["name"] = f"ckm_w_{sb}"
+    nets += new_nets
+    ren = write_verilog(cells, nets, ports, out / "ctree.v")
+    for nn in nets:
+        nn["name"] = ren.get(nn["name"], nn["name"])
+    M["meta"]["cells"] = len(cells)
+    M["clock_cell_overlaps"] = placement_overlaps(cells)
+    M["meta"]["clock_cell_overlap_pairs"] = len(M["clock_cell_overlaps"])
+    M["meta"]["stubtrim"] = dict(
+        src=str(src), pairs=len(pairs), coverage="complete tap superset (intra-partition + connected same-region)",
+        lp_bound_ps=round(float(r.x[n]), 2), untrimmed={c: worst(c, None) for c in ("TT", "FF")},
+        predicted={c: worst(c, lift[c]) for c in ("TT", "FF")}, pads=added,
+        trimmed_taps=sum(1 for v in real.values() if sum(v)), pad_ps={c: round(dl[c], 2) for c in dl},
+        fine_lib=a.fine_lib, fine_ps={c: round(df[c], 2) for c in df} if df else None, xmax_ps=a.xmax,
+        min_ratio=a.min_ratio)
+    (out / "mesh.json").write_text(json.dumps(M) + "\n")
+    (out / "place.json").write_text(json.dumps(cells) + "\n")
+    (out / "nets.json").write_text(json.dumps(dict(ports=ports, nets=nets)) + "\n")
+    print(json.dumps(M["meta"]["stubtrim"]))
+    return 0
+
+
 # ------------------------------------------------------------------------------------------------------------ combo
 def cmd_combo(a):
     """combo.v + combo.tcl: kit signals (abstracts, M4-M7) + the mesh clock (M8-M9) in ONE global_route, then the
@@ -1628,6 +1793,15 @@ def main(argv=None):
     bl.add_argument("--tag", default="", help="pad name tag (one per balancing pass)")
     bl.add_argument("--fine-lib", help="fine-step pad master (e.g. BUFx6f_ASAP7_75t_R): <=3 per load after BUFx24 pads")
     bl.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
+    st = sub.add_parser("stubtrim")
+    st.add_argument("dir")
+    st.add_argument("--out", required=True)
+    st.add_argument("--plan", required=True)
+    st.add_argument("--tag", default="t", help="pad name tag")
+    st.add_argument("--xmax", type=float, default=120.0, help="max TT lift per tap, ps")
+    st.add_argument("--min-ratio", type=float, default=0.97, help="early-side fraction of a lift (rest uncredited)")
+    st.add_argument("--fine-lib", help="fine-step pad master (<= 3 per tap after BUFx24 pads)")
+    st.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
     c = sub.add_parser("combo")
     c.add_argument("dir")
     c.add_argument("--kit", required=True)
@@ -1660,7 +1834,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "report" and not a.corner:
         a.corner = ["TT", "FF"]
-    return dict(build=cmd_build, balance=cmd_balance, combo=cmd_combo, mesh=cmd_mesh, stubsta=cmd_stubsta, report=cmd_report,
+    return dict(build=cmd_build, balance=cmd_balance, stubtrim=cmd_stubtrim, combo=cmd_combo, mesh=cmd_mesh, stubsta=cmd_stubsta, report=cmd_report,
                 render=cmd_render)[a.cmd](a)
 
 
