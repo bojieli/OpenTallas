@@ -3793,3 +3793,5 @@ CODEX: 2026-10-25 22:13 PDT main 5e8ce49592 pushed and verified. HBM real q3 sou
 
 ## OWNER?
 OWNER? 2026-10-25 22:21 PDT CP1 proof-cut external FT contract: r0 synthetic cut preserves external FT max766.36ps(0.92T) and min-40ps after upstream physical producers leave the pair. Measured early-clock diagnostic TTsetup-89.35ps and TTpair96.13ps; balanced clock+receiver hold pads risk incompatible setup/hold windows. May the synthetic proof harness include explicit registered upstream driver views and carry their measured output-min (+12.5ps sender contract), with actual parent seam check, instead of treating these cut links as unconstrained die inputs? No min/max waiver or outside-context relabel adopted. r0 newP&R held for diagnosis; r1 noFTports/max166.6ps progresses independently. CLOCK parent owns technical disposition.
+
+2026-10-25 22:39 PDT HBM: source3877d45df fixesTKMclockportNULL and verifiedsame-placementCTSretry; newrowsb371bea71afb/1b2e1c0d8b92 published. BankM5-OBSprototypesinadmissibleforM7corecontract; own4jobsstoppedandrecordsac75retained. SFUF6 opt-inbankmiter6704edges+4mutantsPASS,11264FFtile/0edges. No newOWNER? items.
