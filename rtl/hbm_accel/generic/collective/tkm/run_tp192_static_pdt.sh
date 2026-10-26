@@ -8,14 +8,14 @@ ROOT=$(cd "$(dirname "$0")/../../../../.." && pwd);cd "$ROOT"
 OUT=$(realpath -m "${1:?out}");STEP=${2:-all};mkdir -p "$OUT"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 C=rtl/hbm_accel/generic/collective
-src=("$C/tkm/tkm_tp192_e86_hier.vlt" "$C/tkm/tb_hgi_coll_tkm_static_pdt.sv" "$C/tkm/ot_hgi_coll_tkm_static_pd.sv" "$C/tkm/ot_hgi_coll_tkm_static.sv" "$C/tkm/ot_hgi_coll_tkm.sv" "$C/tkm/ot_hgi_coll_tkm_buffer.sv" rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
+src=("$C/tkm/tkm_tp192_e86_hier.vlt" "$C/tkm/tb_hgi_coll_tkm_static_pdt.sv" "$C/tkm/ot_hgi_coll_tkm_static_pd.sv" "$C/tkm/ot_hgi_coll_tkm_static_p.sv" "$C/tkm/ot_hgi_coll_tkm_static.sv" "$C/tkm/ot_hgi_coll_tkm.sv" "$C/tkm/ot_hgi_coll_tkm_buffer.sv" rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
 vec(){ [ -f "$OUT/vec/cases.json" ] || OPENBLAS_NUM_THREADS=1 python3 tools/hgi_coll_tkm_tp192_vectors.py --out "$OUT/vec" > "$OUT/vectors.log"; }
 build(){ # name PINNED PIPE MUTP
  # e86 wrapper = hier block (tkm_tp192_e86_hier.vlt); two make steps (TKM-3 10-18: _hier.mk's two-target rule races under -j)
  { "$V" --cc --exe --main --timing --hierarchical -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm_static_pdt -Mdir "$OUT/obj_$1" -GTP=192 -GKMAX=2048 -GPINNED=$2 -GPIPE=$3 -GMUTP=$4 ${XG:-} "${src[@]}" &&
    make -C "$OUT/obj_$1" -f Vtb_hgi_coll_tkm_static_pdt_hier.mk -j1 hier_verilation &&
    make -C "$OUT/obj_$1" -f Vtb_hgi_coll_tkm_static_pdt_hier.mk -j${JOBS:-8} hier_build; } > "$OUT/build_$1.log" 2>&1
- echo "BUILT $1"; }
+ if [ -x "$OUT/obj_$1/Vtb_hgi_coll_tkm_static_pdt" ]; then echo "BUILT $1"; else echo "BUILD_FAIL $1"; exit 1; fi; }
 case "$STEP" in
  vec) vec;sha256sum "${src[@]}" "$C/tkm/tkm_trace_lockstep.py" "$C/tkm/run_tp192_static_pdt.sh" tools/hgi_coll_tkm_tp192_vectors.py tools/hgi_coll_tkm_vectors.py > "$OUT/sources.sha256";;
  build_pin) build pin 1 0 0;;
