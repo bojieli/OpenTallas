@@ -21,3 +21,6 @@ elemB_if2f (sub-agent, epyc1 path-s81-elemb/elemB_if2f, CTS-only, sha unchanged)
 
 ## CODEX PARKED 2026-10-25 18:24 PDT
 ExplicitRESET. Sourcecodex/clock-1713@223e3c5fa7 pushed, no ownlivejobs. READYisolated9f929c5c63 fixesnominal-onlydie_clockreportgate (6tests, existingQC441re-report114.80/99.86FAIL, noSTA). DoNOTmergewholebranch asphysicalqualification:52b409 strictgeometrycandidate28stagesREJECTED;223e upper-onlyNDR profile nativeDBauditPASS butNOTROUTED. E5allnetM6/M7FAIL161546 andpartialclock-onlyFAIL798lowerpinaccess preserved; noRC/80/G2claim. Nextreviewupper-onlytrunkNDR/defaultlocalprofile, investigateactualNDRaccounting andpinaccess, thenactualRC; S2manualmacrohelper childWIP. Fullpaths/SHAs/jobs/failures inCODEX-LOG HandofftoClaude 2026-10-25 18:24 PDT.
+
+## CODEX notes 2026-10-25 21:52 PDT
+CODEX took over clock/reset group on codex/clock-2144s; detailed current/jobs/next/failures in ~/coord/codex-clock-coverage.md. E5 CTS04b inherited GRT probe collected overflow0; physical remains FAIL (trunk7 slew>80, macro CK13.2..54.1ps early). Local insertion and macro clock structural fixes underway; CP1 successor child owns sender_min+early face taps. QC wide-clock rerun owned DIE-PROTO; no duplicate whole-die STA.
