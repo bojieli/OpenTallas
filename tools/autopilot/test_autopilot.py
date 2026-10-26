@@ -84,6 +84,33 @@ class TestQueue(Base):
         self.assertEqual(list(rows.values())[0]["geom"], "PASS")
 
 
+class TestMissingAdopted(Base):
+    def test_missing_kit_is_orphan_not_running_or_physical_failure(self):
+        (j,)=self.ap.parse_queue("\t".join(ROW)).values()
+        j.update(status="RUNNING",adopted=True,history=[])
+        st={"jobs":{j["id"]:j}}
+        self.ap.hub_procs=lambda path:[]
+        self.ap.probe_job=lambda job:None
+        self.ap.rpy=lambda *a,**kw:{"exists":False}
+        self.ap.finish=lambda *a:self.fail("missing inputs are not a physical verdict")
+        self.ap.poll_adopted(st,j)
+        self.assertEqual(j["status"],"ORPHAN")
+        self.assertEqual(j["orphan_kind"],"kit-missing")
+        count=len(j["history"])
+        self.ap.poll_adopted(st,j)
+        self.assertEqual(len(j["history"]),count)
+        self.assertNotIn("cls",j)
+
+    def test_live_client_is_preserved_without_missing_probe(self):
+        (j,)=self.ap.parse_queue("\t".join(ROW)).values()
+        j.update(status="RUNNING",adopted=True,history=[])
+        self.ap.hub_procs=lambda path:[(123,99)]
+        self.ap.probe_job=lambda job:self.fail("live adopted client must be left alone")
+        self.ap.poll_adopted({"jobs":{j["id"]:j}},j)
+        self.assertEqual(j["status"],"RUNNING")
+        self.assertEqual(j["history"],[])
+
+
 class TestAppendWithdrawal(Base):
     def row(self):
         (r,) = self.ap.parse_queue("\t".join(ROW + ["route", "/srv/opentallas-scratch2/claude/run.sh", "8", "withdraw"])).values()
@@ -235,6 +262,8 @@ class TickBase(Base):
         self.ap.rbash = lambda host, script, timeout=0: (0, "", "")
         self.ap.sh = lambda cmd, timeout=0, input=None: (0, "", "")
         self.ap.hub_procs = lambda path: []
+        self.ap.resolve_provenance = lambda src, flow="": {"src_commit": "0123456789ab" + "0" * 28,
+                                                           "flow_tag": "flow-20261025-a"}
 
     def tick(self):
         self.ap.tick(type("A", (), {"dry_run": False})())
@@ -796,10 +825,12 @@ class TestOwnership(TickBase):
             {"plan": "x", "types": {"q_b000": {"verdict": "FAIL"}, "root": {"verdict": "PASS"}}}))
         (repo / "results/proto_1025/g2/res_qwen_kvsys.json").write_text(json.dumps(
             {"kv3_hg": {"classify": {"cls": "STRUCTURAL", "why": "GRT ov 5000"}}, "kv3_hg_v2": {"classify": {"cls": "CLEAN"}}}))
-        (p / "release_cache.json").write_text(json.dumps({"plans": {"s81": {"signed_types": {"slice_station__t7": ["x"]},
+        (p / "release_cache.json").write_text(json.dumps({"provenance_rule": "v1", "plans": {"s81": {"signed_types": {"slice_station__t7": ["x"]},
                                                                             "signed_cores": {}}},
                                                           "signed_records": [{"name": "kr_dsdv_gunit_l1_lfp", "top": None,
-                                                                              "path": "/a/signoff.json", "scan_host": "epyc1"}]}))
+                                                                              "path": "/a/signoff.json", "scan_host": "epyc1",
+                                                                              "versioned": True, "src_commit": "ab" * 20,
+                                                                              "flow_tag": "flow-20261025-a"}]}))
 
     def lane(self, name, text):
         (Path(self.tmp.name) / "coord" / "lanes" / f"{name}.md").write_text(text)
@@ -920,7 +951,7 @@ class TestDistinctDesigns(unittest.TestCase):
         import ownership as O
         plan, pins, canonical = self.hbm()
         sha_y = O.pin_sig(pins["cores/pc_y.json"])[0]
-        cache = {"plans": {"hbm_arch/B2n": {"signed_types": {}, "signed_cores": {
+        cache = {"provenance_rule": "v1", "plans": {"hbm_arch/B2n": {"signed_types": {}, "signed_cores": {
                      "piece__r1": ["host:/k/piece__r1/signoff.json"],
                      "pc_ctrl": [f"host:/kits/pc_ctrl_{sha_y}/signoff.json"]}}},
                  "signed_records": [{"name": "kl_pc_ctrl_c", "top": "pc_ctrl", "path": "/k/unknown/signoff.json"}]}
