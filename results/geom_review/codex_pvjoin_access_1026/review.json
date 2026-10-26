@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS-COND ONE exact pin-access G2 probe only",
+  "independent_reviewer": "/root/cores, 2026-10-26",
+  "image": "placed.png",
+  "source_kit": "epyc1:cores-kits/kvx/pv_join/k2/ot_qwen_tp8_pv_join_t__172.8x172.8",
+  "evidence": {
+    "lec": "EQUIVALENT17747/17747",
+    "cells": 72883,
+    "ff": 15763,
+    "signal_pins": 4619,
+    "pin_p90_um": 9.15,
+    "pin_max_um": 15.89,
+    "r2r_um": 248.35,
+    "r2r_above405": 0,
+    "pin_E_peak_per_um": 9.4
+  },
+  "automated_verdict": "FAIL E pin density9.4>6, retained",
+  "findings": [
+    "Macro-free continuous face register bands, open interior channels, no hot bins/slivers/macro or PG wall.",
+    "East logic beside stream pins; all data landing/reach conditions pass.",
+    "Existing KV density ruling permits up to16 only after per-type actualG2 access proof with<=0.6original trackuse."
+  ],
+  "probe": "Keep full native3_place/PDN/allcells; select only exact data port-to-dedicatedFF bufferchain nets. M2-M7,40%capacityreserved,50iterations. Require0overflow,4619/4619landings,noAPfail. Zero overflow after40%reservation gives<=0.6original-edge-capacity utilization upperbound; not fullcore routing/timing proof.",
+  "next": "No CTS or fullroute approval from this access probe. Preserve833ps andnativeSDC unchanged."
+}
