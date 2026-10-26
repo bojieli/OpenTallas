@@ -9,199 +9,248 @@
    "files": {
     "clock_family.tcl": {
      "path": "physical/common_flow/clock_family.tcl",
-     "sha256": "4d035237e7a3b21187387463d91034f019e312e82c4cfaf135ec6830dd2d7c71"
+     "sha256": "4d035237e7a3b21187387463d91034f019e312e82c4cfaf135ec6830dd2d7c71",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "config.mk": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/common/config.mk",
-     "sha256": "dba7a7d57c5dd43ad70ad3bd6a3c45cadbe7a8267a5a1c32d8504a1f9df56c5f"
+     "sha256": "dba7a7d57c5dd43ad70ad3bd6a3c45cadbe7a8267a5a1c32d8504a1f9df56c5f",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "constraint.sdc": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/common/constraint.sdc",
-     "sha256": "ffce6ca27e84d0046597ac2db1425c7d8c390582a0316056432e681540b15dc2"
+     "sha256": "ffce6ca27e84d0046597ac2db1425c7d8c390582a0316056432e681540b15dc2",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "core_density_taps.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/core_density_taps.tcl",
-     "sha256": "5e1cc293c92941fb07060d64c79c5b6a0150a0fc4177eebbb42afbe8c6160741"
+     "sha256": "5e1cc293c92941fb07060d64c79c5b6a0150a0fc4177eebbb42afbe8c6160741",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "core_grt_post.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/core_grt_post.tcl",
-     "sha256": "60fa91a786eb1b24691597f9e90a2d26b580be0fc7abce4256df55e9f7bc8fc0"
+     "sha256": "60fa91a786eb1b24691597f9e90a2d26b580be0fc7abce4256df55e9f7bc8fc0",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "core_grt_pre.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/core_grt_pre.tcl",
-     "sha256": "53796d75b25bbb90502d01162be8cf3e1750058f0c1225edff1d500ac6deef42"
+     "sha256": "53796d75b25bbb90502d01162be8cf3e1750058f0c1225edff1d500ac6deef42",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "core_tap_align.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/core_tap_align.tcl",
-     "sha256": "fe84e01b796c00483195aca89d8d8ffbd6eda07155dd47dc42712ca17617c356"
+     "sha256": "fe84e01b796c00483195aca89d8d8ffbd6eda07155dd47dc42712ca17617c356",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "corners_hbm.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/corners_hbm.tcl",
-     "sha256": "e853397b26ce4aec108ec06181034ad042b513bd1cf940bd94146e8e619f4618"
+     "sha256": "e853397b26ce4aec108ec06181034ad042b513bd1cf940bd94146e8e619f4618",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "dump_placed.py": {
      "path": "physical/die_plan/hbm_arch_cores/dump_placed.py",
-     "sha256": "a37b8b6ce91dfb71269d000b79382dbd8da658da7d2199cc761f59e30cf8375e"
+     "sha256": "a37b8b6ce91dfb71269d000b79382dbd8da658da7d2199cc761f59e30cf8375e",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "f4_chain_leaf.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/f4_chain_leaf.tcl",
-     "sha256": "0eb98aae3b639c2d88c0b5030ae52a3cba96f1b2b3808604ed5c5237a01816bb"
+     "sha256": "0eb98aae3b639c2d88c0b5030ae52a3cba96f1b2b3808604ed5c5237a01816bb",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_flops.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/face_flops.tcl",
-     "sha256": "c7b714f9a8e06718b4098d9a1471adc873aae1050ad64354ec446f2818dbb5db"
+     "sha256": "c7b714f9a8e06718b4098d9a1471adc873aae1050ad64354ec446f2818dbb5db",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_flops_release.tcl": {
      "path": "tools/die_plan/face_flops_release.tcl",
-     "sha256": "457068b2d45b81673a16f64f7077b3d54d4344005bd1bc95c9247bd3ee3c04ac"
+     "sha256": "457068b2d45b81673a16f64f7077b3d54d4344005bd1bc95c9247bd3ee3c04ac",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_guard.py": {
      "path": "tools/die_plan/face_guard.py",
-     "sha256": "483cc62aa81cc8b98080cadeeb903b6e29e499d79faf0ade6c8d95d65db61b67"
+     "sha256": "483cc62aa81cc8b98080cadeeb903b6e29e499d79faf0ade6c8d95d65db61b67",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_guard_core.py": {
      "path": "physical/die_plan/hbm_arch_cores/face_guard_core.py",
-     "sha256": "d08927a39a897d7ee8f2d536705a5edb6b7217fbc5912a743142b993218b70e7"
+     "sha256": "d08927a39a897d7ee8f2d536705a5edb6b7217fbc5912a743142b993218b70e7",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_keep.tcl": {
      "path": "tools/die_plan/face_keep.tcl",
-     "sha256": "9db82ae2e93b5ee62f955964faf355911b452b676b067c4444dd1de8710659b3"
+     "sha256": "9db82ae2e93b5ee62f955964faf355911b452b676b067c4444dd1de8710659b3",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_keep_release.tcl": {
      "path": "tools/die_plan/face_keep_release.tcl",
-     "sha256": "e7fdab6513e658ed092977854f7c2fb7caee2fb055ae4202d05a51ab59fe257c"
+     "sha256": "e7fdab6513e658ed092977854f7c2fb7caee2fb055ae4202d05a51ab59fe257c",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_shell.json": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/common/face_shell.json",
-     "sha256": "a85861c267e674e7cb3774348967542089704811033dbb4f6d4343671865594b"
+     "sha256": "a85861c267e674e7cb3774348967542089704811033dbb4f6d4343671865594b",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "ft_stations.txt": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/ft_stations.txt",
-     "sha256": "715f49540d7be2f97837544cb72cf1d3baa44b0a09958d78d9d0abc1f7d24af5"
+     "sha256": "715f49540d7be2f97837544cb72cf1d3baa44b0a09958d78d9d0abc1f7d24af5",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "hold_cap.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/hold_cap.tcl",
-     "sha256": "bb34eadbf2ba9f7e651016a333aab8e98123f233dfa5e783a0883ed6f7e871ad"
+     "sha256": "bb34eadbf2ba9f7e651016a333aab8e98123f233dfa5e783a0883ed6f7e871ad",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "hold_gate.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/hold_gate.tcl",
-     "sha256": "d8fa2ef194565281bf07000c80926819016719c325ddb7b82704eb58f0a894ac"
+     "sha256": "d8fa2ef194565281bf07000c80926819016719c325ddb7b82704eb58f0a894ac",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "io.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/common/io.tcl",
-     "sha256": "0e056ce226c0cb96119544e05bb00dbe3c5582e0053442327e4ccbc43e5e0f1a"
+     "sha256": "0e056ce226c0cb96119544e05bb00dbe3c5582e0053442327e4ccbc43e5e0f1a",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "io_hold_qualification.py": {
      "path": "tools/die_plan/io_hold_qualification.py",
-     "sha256": "1db4bdf3faa8f8b36ee6c562bdd52996c84faa44929fda0eb8ba744ca41af81d"
+     "sha256": "1db4bdf3faa8f8b36ee6c562bdd52996c84faa44929fda0eb8ba744ca41af81d",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "lec.py": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/lec.py",
-     "sha256": "10c2986fd9c6064ecd3d10e56963981b5fe1e31da47b2f4a228d51b666e5c88b"
+     "sha256": "10c2986fd9c6064ecd3d10e56963981b5fe1e31da47b2f4a228d51b666e5c88b",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "make_tracks.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/make_tracks.tcl",
-     "sha256": "6f1836c3f11060f8112fed969a738aed096aea64200bd0858850463ec06936be"
+     "sha256": "6f1836c3f11060f8112fed969a738aed096aea64200bd0858850463ec06936be",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "ot_keep_regs.tcl": {
      "path": "physical/common_flow/ot_keep_regs.tcl",
-     "sha256": "8a19ec58c67bb276f7fd8ab2d472aa54e27712b26eb81246850ad73f3a8c88f7"
+     "sha256": "8a19ec58c67bb276f7fd8ab2d472aa54e27712b26eb81246850ad73f3a8c88f7",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "pair_skew.tcl": {
      "path": "tools/die_plan/pair_skew.tcl",
-     "sha256": "e3f3d8c0ebfa7ceaa6999e3d0a2e57e1fbf9a887759a3c76d6c665a6b0d9d3a8"
+     "sha256": "e3f3d8c0ebfa7ceaa6999e3d0a2e57e1fbf9a887759a3c76d6c665a6b0d9d3a8",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "pdn.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/pdn.tcl",
-     "sha256": "cc81b5af2f1ba39464731564e5f041b1a3b739355ab4317e0e29044ae8340300"
+     "sha256": "cc81b5af2f1ba39464731564e5f041b1a3b739355ab4317e0e29044ae8340300",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "pin_audit_core.py": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/pin_audit_core.py",
-     "sha256": "b65243941f90d7e19ce6cc28b4428127cbcb0247ed34cd3bb441b139adfe4653"
+     "sha256": "b65243941f90d7e19ce6cc28b4428127cbcb0247ed34cd3bb441b139adfe4653",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "pinreg_measure.tcl": {
      "path": "tools/die_plan/pinreg_measure.tcl",
-     "sha256": "c559ee825ced2d88643457e4457bc4ae6922c44869fc44556fc9347cebfc0025"
+     "sha256": "c559ee825ced2d88643457e4457bc4ae6922c44869fc44556fc9347cebfc0025",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "pins.json": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/common/pins.json",
-     "sha256": "8f61811944aef4da03463ade5558f31c3a0527d94977685398da1ffb697c818e"
+     "sha256": "8f61811944aef4da03463ade5558f31c3a0527d94977685398da1ffb697c818e",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "port_bind_core.py": {
      "path": "physical/die_plan/hbm_arch_cores/port_bind_core.py",
-     "sha256": "632e19b945b95787e55b2de253ea0b188c5c17e76e722507e42ead284caca2fa"
+     "sha256": "632e19b945b95787e55b2de253ea0b188c5c17e76e722507e42ead284caca2fa",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "post_synth_actual.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/post_synth_actual.tcl",
-     "sha256": "6902e124a9380f60042e6e909af7ff4cabf5c733f7baf0cf266ec1614399ba36"
+     "sha256": "6902e124a9380f60042e6e909af7ff4cabf5c733f7baf0cf266ec1614399ba36",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "postcts_gate.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/postcts_gate.tcl",
-     "sha256": "613d2699276dce0154eb93a0959d02e5e580e3245f30c00b8968084f42b6988e"
+     "sha256": "613d2699276dce0154eb93a0959d02e5e580e3245f30c00b8968084f42b6988e",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hbm_face_reg.sv": {
      "path": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/ot_hbm_face_reg.sv",
-     "sha256": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5"
+     "sha256": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hgi_coll_tkm.sv": {
      "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
-     "sha256": "9dd57b88c999570f3c00bc9d6c418da2a0334baed0befded6148a9cb308a1b61"
+     "sha256": "9dd57b88c999570f3c00bc9d6c418da2a0334baed0befded6148a9cb308a1b61",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hgi_coll_tkm_static.sv": {
      "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
-     "sha256": "b0c1cb519892223d69201f72106334407b6a132cc5314be28d24bc32a4444634"
+     "sha256": "b0c1cb519892223d69201f72106334407b6a132cc5314be28d24bc32a4444634",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hgi_coll_tkm_tp192_tile_core.sv": {
      "path": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv",
-     "sha256": "3118f95a2b80427bc24e0bd240bab58369e5572691302ed189838ca387db8c9f"
+     "sha256": "3118f95a2b80427bc24e0bd240bab58369e5572691302ed189838ca387db8c9f",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__fshell.sv": {
      "path": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/noid_v2/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__fshell.sv",
-     "sha256": "695f1e753a9a61f6b5853b161c2521a69b6213940e0e63db39898595fed50083"
+     "sha256": "695f1e753a9a61f6b5853b161c2521a69b6213940e0e63db39898595fed50083",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__wrap.sv": {
      "path": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/noid_v2/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__wrap.sv",
-     "sha256": "9380ed94f45cfa171953565bf15fcad7f9b7a72d81383e362da08a079a1a245d"
+     "sha256": "9380ed94f45cfa171953565bf15fcad7f9b7a72d81383e362da08a079a1a245d",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/portlist.txt": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/rtl/portlist.txt",
-     "sha256": "7f8848b58359305e645f86dc74f9354813933aec6e316405798d36c72c3e7025"
+     "sha256": "7f8848b58359305e645f86dc74f9354813933aec6e316405798d36c72c3e7025",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "run_kit_hbm.sh": {
      "path": "physical/die_plan/hbm_arch_cores/run_kit_hbm.sh",
-     "sha256": "1963614579a4152dd16a71c850b81977bd983717570ddd42dc8873dd3b245dfd"
+     "sha256": "1963614579a4152dd16a71c850b81977bd983717570ddd42dc8873dd3b245dfd",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "sdc_lint.json": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/common/sdc_lint.json",
-     "sha256": "fb8d2f0e7302ce97a2f6b94698038dbb1c3c6520e280f87ed17bb51583737781"
+     "sha256": "fb8d2f0e7302ce97a2f6b94698038dbb1c3c6520e280f87ed17bb51583737781",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "sdc_lint.py": {
      "path": "tools/die_plan/sdc_lint.py",
-     "sha256": "3e53130aa69ea51a3f0dbb04730d800a266a0d054ccff3ac893638170e1cae9d"
+     "sha256": "3e53130aa69ea51a3f0dbb04730d800a266a0d054ccff3ac893638170e1cae9d",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "selrange_gate.py": {
      "path": "tools/die_plan/selrange_gate.py",
-     "sha256": "e21d9a48c4009732e48447807d1140ad52ad43c81a5bf873329c54ecb92f862a"
+     "sha256": "e21d9a48c4009732e48447807d1140ad52ad43c81a5bf873329c54ecb92f862a",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "setRC_rcx.tcl": {
      "path": "tools/die_plan/setRC_rcx_asap7.tcl",
-     "sha256": "1c504fd2db5d8682d095b414afe1b672256d3c518a9b2392e3376b2748e655a9"
+     "sha256": "1c504fd2db5d8682d095b414afe1b672256d3c518a9b2392e3376b2748e655a9",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "signoff.py": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/signoff.py",
-     "sha256": "3a4ca58e35466463ff66444d6344d1d1e0474d0b2a73dc5040019e39944e568c"
+     "sha256": "3a4ca58e35466463ff66444d6344d1d1e0474d0b2a73dc5040019e39944e568c",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "straps.py": {
      "path": "tools/die_plan/straps.py",
-     "sha256": "affce496fc8a682f64f369ea179993e51098f6ec9d8a50f73d55296c7c34a536"
+     "sha256": "affce496fc8a682f64f369ea179993e51098f6ec9d8a50f73d55296c7c34a536",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "tap_balance.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/tap_balance.tcl",
-     "sha256": "b29e4e672fbfc756746e9e680e5a950d0bd69423a77a06b2770d4b18f4683c27"
+     "sha256": "b29e4e672fbfc756746e9e680e5a950d0bd69423a77a06b2770d4b18f4683c27",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "vclk_corner.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/vclk_corner.tcl",
-     "sha256": "a17e6d26fee3ff5cb54a229ffbd14f96c6553a345870a007dcea362a072b4f46"
+     "sha256": "a17e6d26fee3ff5cb54a229ffbd14f96c6553a345870a007dcea362a072b4f46",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     }
    },
    "plan_sha256": "4768c4fa637759b995d8b5aba70e35d9a3d2bf8f05280431ce5dfbd26e8e1862",
@@ -215,199 +264,248 @@
    "files": {
     "clock_family.tcl": {
      "path": "physical/common_flow/clock_family.tcl",
-     "sha256": "4d035237e7a3b21187387463d91034f019e312e82c4cfaf135ec6830dd2d7c71"
+     "sha256": "4d035237e7a3b21187387463d91034f019e312e82c4cfaf135ec6830dd2d7c71",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "config.mk": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/terminal/config.mk",
-     "sha256": "01eaaf108b0db82204dba58028c58de2350cfacdd6bc9a40d075b4c5605cb9a1"
+     "sha256": "01eaaf108b0db82204dba58028c58de2350cfacdd6bc9a40d075b4c5605cb9a1",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "constraint.sdc": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/terminal/constraint.sdc",
-     "sha256": "0cf401ef969bc9a064cea5dce2a8c937f3751010b192689348add25a7f816fe1"
+     "sha256": "0cf401ef969bc9a064cea5dce2a8c937f3751010b192689348add25a7f816fe1",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "core_density_taps.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/core_density_taps.tcl",
-     "sha256": "5e1cc293c92941fb07060d64c79c5b6a0150a0fc4177eebbb42afbe8c6160741"
+     "sha256": "5e1cc293c92941fb07060d64c79c5b6a0150a0fc4177eebbb42afbe8c6160741",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "core_grt_post.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/core_grt_post.tcl",
-     "sha256": "60fa91a786eb1b24691597f9e90a2d26b580be0fc7abce4256df55e9f7bc8fc0"
+     "sha256": "60fa91a786eb1b24691597f9e90a2d26b580be0fc7abce4256df55e9f7bc8fc0",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "core_grt_pre.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/core_grt_pre.tcl",
-     "sha256": "53796d75b25bbb90502d01162be8cf3e1750058f0c1225edff1d500ac6deef42"
+     "sha256": "53796d75b25bbb90502d01162be8cf3e1750058f0c1225edff1d500ac6deef42",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "core_tap_align.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/core_tap_align.tcl",
-     "sha256": "fe84e01b796c00483195aca89d8d8ffbd6eda07155dd47dc42712ca17617c356"
+     "sha256": "fe84e01b796c00483195aca89d8d8ffbd6eda07155dd47dc42712ca17617c356",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "corners_hbm.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/corners_hbm.tcl",
-     "sha256": "e853397b26ce4aec108ec06181034ad042b513bd1cf940bd94146e8e619f4618"
+     "sha256": "e853397b26ce4aec108ec06181034ad042b513bd1cf940bd94146e8e619f4618",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "dump_placed.py": {
      "path": "physical/die_plan/hbm_arch_cores/dump_placed.py",
-     "sha256": "a37b8b6ce91dfb71269d000b79382dbd8da658da7d2199cc761f59e30cf8375e"
+     "sha256": "a37b8b6ce91dfb71269d000b79382dbd8da658da7d2199cc761f59e30cf8375e",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "f4_chain_leaf.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/f4_chain_leaf.tcl",
-     "sha256": "0eb98aae3b639c2d88c0b5030ae52a3cba96f1b2b3808604ed5c5237a01816bb"
+     "sha256": "0eb98aae3b639c2d88c0b5030ae52a3cba96f1b2b3808604ed5c5237a01816bb",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_flops.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/face_flops.tcl",
-     "sha256": "c7b714f9a8e06718b4098d9a1471adc873aae1050ad64354ec446f2818dbb5db"
+     "sha256": "c7b714f9a8e06718b4098d9a1471adc873aae1050ad64354ec446f2818dbb5db",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_flops_release.tcl": {
      "path": "tools/die_plan/face_flops_release.tcl",
-     "sha256": "457068b2d45b81673a16f64f7077b3d54d4344005bd1bc95c9247bd3ee3c04ac"
+     "sha256": "457068b2d45b81673a16f64f7077b3d54d4344005bd1bc95c9247bd3ee3c04ac",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_guard.py": {
      "path": "tools/die_plan/face_guard.py",
-     "sha256": "483cc62aa81cc8b98080cadeeb903b6e29e499d79faf0ade6c8d95d65db61b67"
+     "sha256": "483cc62aa81cc8b98080cadeeb903b6e29e499d79faf0ade6c8d95d65db61b67",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_guard_core.py": {
      "path": "physical/die_plan/hbm_arch_cores/face_guard_core.py",
-     "sha256": "d08927a39a897d7ee8f2d536705a5edb6b7217fbc5912a743142b993218b70e7"
+     "sha256": "d08927a39a897d7ee8f2d536705a5edb6b7217fbc5912a743142b993218b70e7",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_keep.tcl": {
      "path": "tools/die_plan/face_keep.tcl",
-     "sha256": "9db82ae2e93b5ee62f955964faf355911b452b676b067c4444dd1de8710659b3"
+     "sha256": "9db82ae2e93b5ee62f955964faf355911b452b676b067c4444dd1de8710659b3",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_keep_release.tcl": {
      "path": "tools/die_plan/face_keep_release.tcl",
-     "sha256": "e7fdab6513e658ed092977854f7c2fb7caee2fb055ae4202d05a51ab59fe257c"
+     "sha256": "e7fdab6513e658ed092977854f7c2fb7caee2fb055ae4202d05a51ab59fe257c",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "face_shell.json": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/terminal/face_shell.json",
-     "sha256": "b3e5389e44c5837b7eeeea03fb3960b16007543e231d38e2921b8c5d12d9f251"
+     "sha256": "b3e5389e44c5837b7eeeea03fb3960b16007543e231d38e2921b8c5d12d9f251",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "ft_stations.txt": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/ft_stations.txt",
-     "sha256": "715f49540d7be2f97837544cb72cf1d3baa44b0a09958d78d9d0abc1f7d24af5"
+     "sha256": "715f49540d7be2f97837544cb72cf1d3baa44b0a09958d78d9d0abc1f7d24af5",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "hold_cap.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/hold_cap.tcl",
-     "sha256": "bb34eadbf2ba9f7e651016a333aab8e98123f233dfa5e783a0883ed6f7e871ad"
+     "sha256": "bb34eadbf2ba9f7e651016a333aab8e98123f233dfa5e783a0883ed6f7e871ad",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "hold_gate.tcl": {
      "path": "physical/die_plan/hbm_arch_cores/hold_gate.tcl",
-     "sha256": "d8fa2ef194565281bf07000c80926819016719c325ddb7b82704eb58f0a894ac"
+     "sha256": "d8fa2ef194565281bf07000c80926819016719c325ddb7b82704eb58f0a894ac",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "io.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/terminal/io.tcl",
-     "sha256": "8d775283a5187e4d0c7fa61fdab19ea1b55b58fd3cd4c7ff0e6d2a7f301ceb45"
+     "sha256": "8d775283a5187e4d0c7fa61fdab19ea1b55b58fd3cd4c7ff0e6d2a7f301ceb45",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "io_hold_qualification.py": {
      "path": "tools/die_plan/io_hold_qualification.py",
-     "sha256": "1db4bdf3faa8f8b36ee6c562bdd52996c84faa44929fda0eb8ba744ca41af81d"
+     "sha256": "1db4bdf3faa8f8b36ee6c562bdd52996c84faa44929fda0eb8ba744ca41af81d",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "lec.py": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/lec.py",
-     "sha256": "10c2986fd9c6064ecd3d10e56963981b5fe1e31da47b2f4a228d51b666e5c88b"
+     "sha256": "10c2986fd9c6064ecd3d10e56963981b5fe1e31da47b2f4a228d51b666e5c88b",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "make_tracks.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/make_tracks.tcl",
-     "sha256": "6f1836c3f11060f8112fed969a738aed096aea64200bd0858850463ec06936be"
+     "sha256": "6f1836c3f11060f8112fed969a738aed096aea64200bd0858850463ec06936be",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "ot_keep_regs.tcl": {
      "path": "physical/common_flow/ot_keep_regs.tcl",
-     "sha256": "8a19ec58c67bb276f7fd8ab2d472aa54e27712b26eb81246850ad73f3a8c88f7"
+     "sha256": "8a19ec58c67bb276f7fd8ab2d472aa54e27712b26eb81246850ad73f3a8c88f7",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "pair_skew.tcl": {
      "path": "tools/die_plan/pair_skew.tcl",
-     "sha256": "e3f3d8c0ebfa7ceaa6999e3d0a2e57e1fbf9a887759a3c76d6c665a6b0d9d3a8"
+     "sha256": "e3f3d8c0ebfa7ceaa6999e3d0a2e57e1fbf9a887759a3c76d6c665a6b0d9d3a8",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "pdn.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/pdn.tcl",
-     "sha256": "cc81b5af2f1ba39464731564e5f041b1a3b739355ab4317e0e29044ae8340300"
+     "sha256": "cc81b5af2f1ba39464731564e5f041b1a3b739355ab4317e0e29044ae8340300",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "pin_audit_core.py": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/pin_audit_core.py",
-     "sha256": "b65243941f90d7e19ce6cc28b4428127cbcb0247ed34cd3bb441b139adfe4653"
+     "sha256": "b65243941f90d7e19ce6cc28b4428127cbcb0247ed34cd3bb441b139adfe4653",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "pinreg_measure.tcl": {
      "path": "tools/die_plan/pinreg_measure.tcl",
-     "sha256": "c559ee825ced2d88643457e4457bc4ae6922c44869fc44556fc9347cebfc0025"
+     "sha256": "c559ee825ced2d88643457e4457bc4ae6922c44869fc44556fc9347cebfc0025",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "pins.json": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/terminal/pins.json",
-     "sha256": "d653592bf242ab646aeee4e044abf1fdceb2555a20fef6b17fd8eb40b097c9f7"
+     "sha256": "d653592bf242ab646aeee4e044abf1fdceb2555a20fef6b17fd8eb40b097c9f7",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "port_bind_core.py": {
      "path": "physical/die_plan/hbm_arch_cores/port_bind_core.py",
-     "sha256": "632e19b945b95787e55b2de253ea0b188c5c17e76e722507e42ead284caca2fa"
+     "sha256": "632e19b945b95787e55b2de253ea0b188c5c17e76e722507e42ead284caca2fa",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "post_synth_actual.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/post_synth_actual.tcl",
-     "sha256": "6902e124a9380f60042e6e909af7ff4cabf5c733f7baf0cf266ec1614399ba36"
+     "sha256": "6902e124a9380f60042e6e909af7ff4cabf5c733f7baf0cf266ec1614399ba36",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "postcts_gate.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/postcts_gate.tcl",
-     "sha256": "613d2699276dce0154eb93a0959d02e5e580e3245f30c00b8968084f42b6988e"
+     "sha256": "613d2699276dce0154eb93a0959d02e5e580e3245f30c00b8968084f42b6988e",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hbm_face_reg.sv": {
      "path": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/ot_hbm_face_reg.sv",
-     "sha256": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5"
+     "sha256": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hgi_coll_tkm.sv": {
      "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
-     "sha256": "9dd57b88c999570f3c00bc9d6c418da2a0334baed0befded6148a9cb308a1b61"
+     "sha256": "9dd57b88c999570f3c00bc9d6c418da2a0334baed0befded6148a9cb308a1b61",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hgi_coll_tkm_static.sv": {
      "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
-     "sha256": "b0c1cb519892223d69201f72106334407b6a132cc5314be28d24bc32a4444634"
+     "sha256": "b0c1cb519892223d69201f72106334407b6a132cc5314be28d24bc32a4444634",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hgi_coll_tkm_tp192_tile_core.sv": {
      "path": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv",
-     "sha256": "3118f95a2b80427bc24e0bd240bab58369e5572691302ed189838ca387db8c9f"
+     "sha256": "3118f95a2b80427bc24e0bd240bab58369e5572691302ed189838ca387db8c9f",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__fshell.sv": {
      "path": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/noid_v2/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__fshell.sv",
-     "sha256": "8a7de5323e495d5423c2e6c1448f662d0579a1c1c6adc8dc3927f8c46755742e"
+     "sha256": "8a7de5323e495d5423c2e6c1448f662d0579a1c1c6adc8dc3927f8c46755742e",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__wrap.sv": {
      "path": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/noid_v2/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__wrap.sv",
-     "sha256": "c227993a36d0093c16560dbdf0d1e214c8a4c522bc0cf1e0faa6b3c581274f99"
+     "sha256": "c227993a36d0093c16560dbdf0d1e214c8a4c522bc0cf1e0faa6b3c581274f99",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "rtl/portlist.txt": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/rtl/portlist.txt",
-     "sha256": "7f8848b58359305e645f86dc74f9354813933aec6e316405798d36c72c3e7025"
+     "sha256": "7f8848b58359305e645f86dc74f9354813933aec6e316405798d36c72c3e7025",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "run_kit_hbm.sh": {
      "path": "physical/die_plan/hbm_arch_cores/run_kit_hbm.sh",
-     "sha256": "1963614579a4152dd16a71c850b81977bd983717570ddd42dc8873dd3b245dfd"
+     "sha256": "1963614579a4152dd16a71c850b81977bd983717570ddd42dc8873dd3b245dfd",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "sdc_lint.json": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/terminal/sdc_lint.json",
-     "sha256": "b5f9daa16b506176a6cd0fa4d6dac060790b9117264cad2b7367173feccec183"
+     "sha256": "b5f9daa16b506176a6cd0fa4d6dac060790b9117264cad2b7367173feccec183",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "sdc_lint.py": {
      "path": "tools/die_plan/sdc_lint.py",
-     "sha256": "3e53130aa69ea51a3f0dbb04730d800a266a0d054ccff3ac893638170e1cae9d"
+     "sha256": "3e53130aa69ea51a3f0dbb04730d800a266a0d054ccff3ac893638170e1cae9d",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "selrange_gate.py": {
      "path": "tools/die_plan/selrange_gate.py",
-     "sha256": "e21d9a48c4009732e48447807d1140ad52ad43c81a5bf873329c54ecb92f862a"
+     "sha256": "e21d9a48c4009732e48447807d1140ad52ad43c81a5bf873329c54ecb92f862a",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "setRC_rcx.tcl": {
      "path": "tools/die_plan/setRC_rcx_asap7.tcl",
-     "sha256": "1c504fd2db5d8682d095b414afe1b672256d3c518a9b2392e3376b2748e655a9"
+     "sha256": "1c504fd2db5d8682d095b414afe1b672256d3c518a9b2392e3376b2748e655a9",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "signoff.py": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/signoff.py",
-     "sha256": "3a4ca58e35466463ff66444d6344d1d1e0474d0b2a73dc5040019e39944e568c"
+     "sha256": "3a4ca58e35466463ff66444d6344d1d1e0474d0b2a73dc5040019e39944e568c",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "straps.py": {
      "path": "tools/die_plan/straps.py",
-     "sha256": "affce496fc8a682f64f369ea179993e51098f6ec9d8a50f73d55296c7c34a536"
+     "sha256": "affce496fc8a682f64f369ea179993e51098f6ec9d8a50f73d55296c7c34a536",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "tap_balance.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/tap_balance.tcl",
-     "sha256": "b29e4e672fbfc756746e9e680e5a950d0bd69423a77a06b2770d4b18f4683c27"
+     "sha256": "b29e4e672fbfc756746e9e680e5a950d0bd69423a77a06b2770d4b18f4683c27",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     },
     "vclk_corner.tcl": {
      "path": "physical/die_plan/hbm/tkm_noid_kits/shared/vclk_corner.tcl",
-     "sha256": "a17e6d26fee3ff5cb54a229ffbd14f96c6553a345870a007dcea362a072b4f46"
+     "sha256": "a17e6d26fee3ff5cb54a229ffbd14f96c6553a345870a007dcea362a072b4f46",
+     "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
     }
    },
    "plan_sha256": "4768c4fa637759b995d8b5aba70e35d9a3d2bf8f05280431ce5dfbd26e8e1862",
@@ -418,31 +516,36 @@
   "files": {
    "hbm_clock_entry.tcl": {
     "path": "physical/die_plan/hbm_arch_cores/hbm_clock_entry.tcl",
-    "sha256": "8de27f43e4ac18ad857f30bd24ab1cd942e5159bbb325631f868635fcd282237"
+    "sha256": "8de27f43e4ac18ad857f30bd24ab1cd942e5159bbb325631f868635fcd282237",
+    "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
    },
    "shallow_clock.py": {
     "path": "physical/die_plan/hbm/tkm_noid_kits/clock/shallow_clock.py",
-    "sha256": "82291262b3d51d7177a952b23238ce1af185709aab6d23dacd57dc7ba994c1a9"
+    "sha256": "82291262b3d51d7177a952b23238ce1af185709aab6d23dacd57dc7ba994c1a9",
+    "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
    },
    "shallow_clock.tcl": {
     "path": "physical/die_plan/hbm/tkm_noid_kits/clock/shallow_clock.tcl",
-    "sha256": "045ccd7314aaec6ac3ca559228c867d105d1752518a33b016061051ad4422ba7"
+    "sha256": "045ccd7314aaec6ac3ca559228c867d105d1752518a33b016061051ad4422ba7",
+    "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
    },
    "pre_cts_tkm_clock.tcl": {
     "path": "physical/die_plan/hbm/tkm_noid_kits/clock/pre_cts_tkm_clock.tcl",
-    "sha256": "852b7d794d318affe57c7f6e806c7b8b113054275e3ef2823951e9759ee595a1"
+    "sha256": "c2e9f4cd40f798bbe1d93015c94fd31a7dc09d4f4a4e84dc5e2f17f245a083e2"
    },
    "post_cts_tkm_clock.tcl": {
     "path": "physical/die_plan/hbm/tkm_noid_kits/clock/post_cts_tkm_clock.tcl",
-    "sha256": "f8df00201eb2c40502b7d3a98186e158234d255de42494038b46691fd49fbba9"
+    "sha256": "f8df00201eb2c40502b7d3a98186e158234d255de42494038b46691fd49fbba9",
+    "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
    },
    "clock_candidate.json": {
     "path": "physical/die_plan/hbm/tkm_noid_kits/clock/clock_candidate.json",
-    "sha256": "62c10c737a0e8d9cd5f07abff2096da7a9a52ed0d02ab57aa68dc7fe6b50c213"
+    "sha256": "62c10c737a0e8d9cd5f07abff2096da7a9a52ed0d02ab57aa68dc7fe6b50c213",
+    "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
    }
   },
   "config_append": "physical/die_plan/hbm/tkm_noid_kits/clock/config_append.mk",
-  "config_append_sha256": "e9ab7087a201392ee4f92595ce855fa53f990193660a24c24f3d609eefa14224",
+  "config_append_sha256": "f0c79aa240990e2cb626009738c2105bc0e274c84db3d3e78c7cbfabc262d89e",
   "freeze_clock_candidate": {
    "status": "STAGED-NOT-LAUNCHED",
    "source_api": "codex/hbm-clock-1713@205f1ef43f",
