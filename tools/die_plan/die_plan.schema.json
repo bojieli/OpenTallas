@@ -979,6 +979,9 @@
         "type": "integer",
         "minimum": 1
        },
+       "control_sinks": {
+        "type": "boolean"
+       },
        "sink_sites_um": {
         "type": "array",
         "items": {
