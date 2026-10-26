@@ -12,7 +12,7 @@ ASM=rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hbm_q3_producer_native.
 python3 tools/hbm_b2/q3prog/q3_asm_alias_loops.py "$ASM" "$D/asm.sv" "$D/alias.json"
 python3 tools/hbm_b2/q3sync/q3_assembly_sync.py --asm "$D/asm.sv" --census tools/hbm_b2/q3sync/cohort.json --gen "$D/gen" --out "$D/asm_sync.sv" --report "$D/asm_sync.json"
 python3 tools/hbm_b2/q3sync/face_native_adapter.py --face-dir "$FACE_SOURCES" --adapter-dir results/clock/q3_common_clock_2144 --assembly "$D/asm_sync.sv" --out "$D/faces" > "$D/face_adapter.log"
-mapfile -t QSRC < <(python3 - "$D" <<'PY'
+python3 - "$D" > "$D/qsrc.files" <<'PY'
 import sys,json
 c=json.load(open('tools/hbm_b2/q3sync/cohort.json'));fs=[]
 for k in c['core_filelists']:
@@ -23,14 +23,14 @@ for k in c['core_filelists']:
   if f not in fs:fs.append(f)
 print('\n'.join(fs))
 PY
-)
-mapfile -t TSRC < <(python3 - <<'PY'
+mapfile -t QSRC < "$D/qsrc.files"
+python3 - > "$D/tsrc.files" <<'PY'
 import json,hashlib
-for e in json.load(open('tools/hbm_b2/q3stageb/tkm_sources.json')):
+for e in json.load(open('tools/hbm_b2/q3stageb/tkm_faces_sources.json')):
  p=e['path'];assert hashlib.sha256(open(p,'rb').read()).hexdigest()==e['sha256']
  if not p.endswith('tb_hbm_tkm_bound_tkx_ft21.sv'):print(p)
 PY
-)
+mapfile -t TSRC < "$D/tsrc.files"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 /usr/bin/time -v "$V" --binary --timing --hierarchical --verilate-jobs 2 --build-jobs "${JOBS:-8}" -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT +define+ROOT_CB=21 +define+ROOT_CLRB=0 +define+TILE_FT +define+TKM_DELIVERED_ROOT_VIEW +define+TKM_NOID_VIEW +define+TKM_PR_ENDPOINTS +define+DUT=ot_hbm_q3_producer_native__q3sync --top-module tb_q3stageb --Mdir "$D/obj" tools/hbm_b2/q3stageb/tb_q3stageb.sv "$D/faces/asm_faces.sv" "$D/faces/native_face_adapters.sv" "$FACE_SOURCES"/*.sv "${QSRC[@]}" "${TSRC[@]}" > "$D/build.log" 2>&1
 NR=$(python3 -c "import json;print(json.load(open('$D/prog/manifest.json'))['rows'])")
