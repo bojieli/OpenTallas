@@ -500,6 +500,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                xs=xs, ys=ys, drivers={}, htree=[], stubs=[], unplaced=[])
     if axis_snap is not None:
         out["meta"].update(pg_aware=True, pg_tracks=track_profile, pg_axis_snap_max_um=axis_snap)
+    import gen_phys as GP
+    out["meta"]["tap_layer"] = P.layer_budget["partition_signal_max"]
+    out["meta"]["tap_pin_size_um"] = [GP.LAYER_W.get(out["meta"]["tap_layer"], .04), 4 * GP.PIN_LEN_UM]
     if region_spec is not None:
         out["meta"].update(region_spec=region_spec, region_axes=axes)
     if delta_id:
@@ -637,6 +640,12 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     c0 = node_xy(0, nx, 0, ny)
     sp = P.clock.get("spine", {}) or {}
     root = tuple(sp.get("die_root_um") or sp.get("root_um") or c0)
+    if pg_shapes is not None:
+        planned_root = root
+        # The actual die input is on M9; placing it on the old grid centre can short a newly sized PG rail.
+        root = (pg_free_axis([root[0]], pg_shapes, "M9", 0, W, track_profile["M9"],
+                             NDR[ndr]["width"] / 2, NDR[ndr]["space"], max_move)[0], root[1])
+        out["meta"].update(root_plan_um=list(planned_root), root_pg_shift_um=round(abs(root[0]-planned_root[0]), 6))
     q, d = free_along(K, c0, 0, 2 * rep_um)
     if q is None:
         q, d = free_near(K, c0, limit=max(W, H))
@@ -670,7 +679,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             out["unplaced"].append([tp, "stub"])
         sb = cell(f"ckm_s_{len(tap_rows)}", fq[0], fq[1], "stub", **rk)
         nets.append(dict(name=f"ckm_w_{sb}", drv=sb, loads=["port:" + tp], level=99))
-        tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], early_ps=early,
+        tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], layer=out["meta"]["tap_layer"], early_ps=early,
                              early_corner_ps=early_c.get((part, port)), stub=sb, **rk, foot=[round(fq[0], 3),
                              round(fq[1], 3)], strap=("M8", j) if axis == 0 else ("M9", i), slide_um=round(fd, 2),
                              stub_um=round(abs(fq[0] - x) + abs(fq[1] - y), 2)))
@@ -886,6 +895,7 @@ def cmd_combo(a):
     """combo.v + combo.tcl: kit signals (abstracts, M4-M7) + the mesh clock (M8-M9) in ONE global_route, then the
     native-NDR RC export of every clock net and the tree arrival at every driver A pin."""
     d, kit = Path(a.dir), Path(a.kit)
+    import gen_phys as GP
     M = json.loads((d / "mesh.json").read_text())
     cells = json.loads((d / "place.json").read_text())
     if M.get("unplaced") or M["meta"].get("unplaced", 0):
@@ -932,8 +942,11 @@ def cmd_combo(a):
     root = M["meta"]["root_um"]
     L.append(f"place_pin -pin_name root -layer M9 -location {{{root[0]:.3f} {root[1]:.3f}}} -pin_size {{0.04 0.32}}")
     for t_ in M["taps"]:
-        L.append(f"place_pin -pin_name {t_['port']} -layer M9 -location {{{t_['xy'][0]:.3f} {t_['xy'][1]:.3f}}} "
-                 f"-pin_size {{0.04 0.32}}")
+        # Match gen_phys.io_tcl: the die spine drops onto the real partition signal-max tap (currently M7).
+        tap_layer = t_.get("layer", M["meta"].get("tap_layer", "M7"))
+        pin_size = t_.get("pin_size_um", M["meta"].get("tap_pin_size_um", [GP.LAYER_W.get(tap_layer, .04), 4 * GP.PIN_LEN_UM]))
+        L.append(f"place_pin -pin_name {t_['port']} -layer {tap_layer} -location {{{t_['xy'][0]:.3f} {t_['xy'][1]:.3f}}} "
+                 f"-pin_size {{{pin_size[0]:g} {pin_size[1]:g}}}")
     for c, v_ in sorted(cells.items()):
         L.append(f"place_inst -name {c} -location {{{v_['x']} {v_['y']}}} -orient R0 -status FIRM")
     hw = nd["width"] / 2
@@ -1337,6 +1350,7 @@ def sink_arrivals(M, arr, corner, early_by_plan):
 def regional_qualification(M, corners, crossings):
     """A regional clock diagnostic is not evidence of implemented forwarded-clock landings."""
     reasons = []
+    reasons.append("related-pair coverage unproven: spatial tap pairs need an actual endpoint-to-tap ledger or conservative superset proof")
     if M.get("unplaced") or M["meta"].get("unplaced", 0):
         reasons.append("clock cells have no legal site")
     if M["meta"].get("clock_cell_overlap_pairs", 0):
@@ -1351,7 +1365,7 @@ def regional_qualification(M, corners, crossings):
         reasons.append("clock skew or landing window fails")
     if crossings:
         reasons.append("forwarded-clock landing implementation and token cycle pricing remain required")
-    return dict(scope="regional clock diagnostic; not a die freeze gate", release_verdict="BLOCKED" if reasons else
+    return dict(scope="mesh clock diagnostic; not a complete die related-pair gate", release_verdict="BLOCKED" if reasons else
                 "CLOCK-PASS", blockers=reasons, proposed_landed_crossings=crossings)
 
 
@@ -1366,7 +1380,8 @@ def cmd_report(a):
         return htree_tag(i, j, nx, ny, M["meta"].get("region_axes", ""))
     import numpy as np
     xa, ya = np.array(xs), np.array(ys)
-    rep = dict(meta=M["meta"], corners={})
+    rep = dict(meta=M["meta"], corners={}, related_pair_coverage=dict(complete=False, kind="surrogate spatial tap pairs",
+                    required="actual endpoint-to-tap pair ledger or qualified conservative all-tap superset"))
     tb = defaultdict(list)
     for t in M["taps"]:
         tb[t["part"]].append(dict(port=t["port"], part=t["part"], xy=t["xy"]))
@@ -1452,8 +1467,7 @@ def cmd_report(a):
             + ncell * DC.BUF_CIN_FF / 1e3 + len(M["taps"]) * DC.TAP_LOAD_FF / 1e3
         r["clock_switched_cap_pF"] = round(c_tot, 1)
         r["clock_wire_power_W"] = round(c_tot * 1e-12 * VDD[corner] ** 2 / (DC.PERIOD_PS * 1e-12), 3)
-    if regd or M["meta"].get("pg_aware"):
-        rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"] if crossing_table else 0)
+    rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"] if crossing_table else 0)
     (d / "clock_report.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps({c: {k: v for k, v in r.items() if k != "worst"} for c, r in rep["corners"].items()}, indent=1))
     return 0
