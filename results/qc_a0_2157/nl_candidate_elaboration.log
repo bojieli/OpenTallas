@@ -1,0 +1,450 @@
+%Warning-PINMISSING: ot_qwen_rom_tile_die.sv:115:309: Instance has missing pin: 'ck_rpair'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     ot_qwen_rom_tile_w12_land32.sv:872:33: ... Location of port declaration
+  872 |     input wire [CODE_BANKS-1:0] ck_rpair,
+      |                                 ^~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: ot_qwen_rom_tile_die.sv:115:309: Instance has missing pin: 'ck_pair1'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     ot_qwen_rom_tile_w12_land32.sv:873:33: ... Location of port declaration
+  873 |     input wire [CODE_BANKS-1:0] ck_pair1,
+      |                                 ^~~~~~~~
+%Warning-PINMISSING: ot_qwen_rom_tile_die.sv:115:309: Instance has missing pin: 'ck_rqr'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     ot_qwen_rom_tile_w12_land32.sv:874:22: ... Location of port declaration
+  874 |     input wire [1:0] ck_rqr,
+      |                      ^~~~~~
+%Warning-PINMISSING: ot_qwen_rom_tile_die.sv:115:309: Instance has missing pin: 'ck_rqre'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     ot_qwen_rom_tile_w12_land32.sv:875:22: ... Location of port declaration
+  875 |     input wire [1:0] ck_rqre,
+      |                      ^~~~~~~
+%Warning-PINMISSING: ot_qwen_rom_tile_die.sv:115:309: Instance has missing pin: 'ck_tx'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     ot_qwen_rom_tile_w12_land32.sv:876:22: ... Location of port declaration
+  876 |     input wire [7:0] ck_tx,
+      |                      ^~~~~
+%Warning-PINMISSING: ot_qwen_rom_tile_die.sv:115:309: Instance has missing pin: 'ck_reg'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     ot_qwen_rom_tile_w12_land32.sv:877:22: ... Location of port declaration
+  877 |     input wire [3:0] ck_reg,
+      |                      ^~~~~~
+%Warning-PINMISSING: ot_qwen_rom_tile_die.sv:115:309: Instance has missing pin: 'ck_rom'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     ot_qwen_rom_tile_w12_land32.sv:881:35: ... Location of port declaration
+  881 |     input wire [2*CODE_BANKS-1:0] ck_rom,
+      |                                   ^~~~~~
+%Warning-PINMISSING: ot_qwen_rom_tile_die.sv:115:309: Instance has missing pin: 'ck_lsl'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     ot_qwen_rom_tile_w12_land32.sv:882:22: ... Location of port declaration
+  882 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: ot_qwen_rom_tile_die.sv:115:309: Instance has missing pin: 'ck_node'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     ot_qwen_rom_tile_w12_land32.sv:883:16: ... Location of port declaration
+  883 |     input wire ck_node,
+      |                ^~~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'ck_rpair'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:146:33: ... Location of port declaration
+  146 |     input wire [CODE_BANKS-1:0] ck_rpair,
+      |                                 ^~~~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'ck_pair1'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:147:33: ... Location of port declaration
+  147 |     input wire [CODE_BANKS-1:0] ck_pair1,
+      |                                 ^~~~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'ck_rqr'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:148:22: ... Location of port declaration
+  148 |     input wire [1:0] ck_rqr,
+      |                      ^~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'ck_rqre'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:149:22: ... Location of port declaration
+  149 |     input wire [1:0] ck_rqre,
+      |                      ^~~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'ck_tx'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:150:22: ... Location of port declaration
+  150 |     input wire [7:0] ck_tx,
+      |                      ^~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'ck_reg'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:151:22: ... Location of port declaration
+  151 |     input wire [3:0] ck_reg,
+      |                      ^~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'ck_lsl'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:153:22: ... Location of port declaration
+  153 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'ck_node'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:154:16: ... Location of port declaration
+  154 |     input wire ck_node,
+      |                ^~~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'rom_addr_n'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:175:30: ... Location of port declaration
+  175 |     output wire [11:0]       rom_addr_n,           
+      |                              ^~~~~~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'rom_addr_b'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:176:37: ... Location of port declaration
+  176 |     output wire [CODE_BANKS*12-1:0] rom_addr_b,    
+      |                                     ^~~~~~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:224:120: Instance has missing pin: 'rom_req_m'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     ot_qwen_rom_tile_w12_land32.sv:177:39: ... Location of port declaration
+  177 |     output wire [2*CODE_BANKS*13-1:0] rom_req_m,   
+      |                                       ^~~~~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:337:188: Instance has missing pin: 'ck_lsl'
+  337 |         .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_top (
+      |                                                                                                                                                                                            ^~~~~
+                     ot_qwen_w12_matvec_land32.sv:245:22: ... Location of port declaration
+  245 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:337:188: Instance has missing pin: 'ck_tx'
+  337 |         .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_top (
+      |                                                                                                                                                                                            ^~~~~
+                     ot_qwen_w12_matvec_land32.sv:246:22: ... Location of port declaration
+  246 |     input wire [7:0] ck_tx,
+      |                      ^~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:337:188: Instance has missing pin: 'ck_reg'
+  337 |         .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_top (
+      |                                                                                                                                                                                            ^~~~~
+                     ot_qwen_w12_matvec_land32.sv:247:22: ... Location of port declaration
+  247 |     input wire [3:0] ck_reg,
+      |                      ^~~~~~
+%Warning-PINMISSING: ot_qwen_me_array_w12.sv:337:188: Instance has missing pin: 'i_split_copy'
+  337 |         .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_top (
+      |                                                                                                                                                                                            ^~~~~
+                     ot_qwen_w12_matvec_land32.sv:271:30: ... Location of port declaration
+  271 |     input  wire [3:0]        i_split_copy,
+      |                              ^~~~~~~~~~~~
+%Warning-PINMISSING: ot_qwen_w12_matvec_land32.sv:153:129: Instance has missing pin: 'ck_lsl'
+  153 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     ot_qwen_w12_matvec_land32.sv:245:22: ... Location of port declaration
+  245 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: ot_qwen_w12_matvec_land32.sv:153:129: Instance has missing pin: 'ck_tx'
+  153 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     ot_qwen_w12_matvec_land32.sv:246:22: ... Location of port declaration
+  246 |     input wire [7:0] ck_tx,
+      |                      ^~~~~
+%Warning-PINMISSING: ot_qwen_w12_matvec_land32.sv:153:129: Instance has missing pin: 'ck_reg'
+  153 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     ot_qwen_w12_matvec_land32.sv:247:22: ... Location of port declaration
+  247 |     input wire [3:0] ck_reg,
+      |                      ^~~~~~
+%Warning-IMPLICIT: qfd_tile_nl_rp2_45.sv:110:96: Signal definition not found, creating implicitly: 'ck_rqr3'
+                                               : ... Suggested alternative: 'ck_rqr0'
+  110 |         .ck_pair1({ck_rp9,ck_rp8,ck_rp7,ck_rp6,ck_rp5}), .ck_rqr({ck_rqr1,ck_rqr0}), .ck_rqre({ck_rqr3,ck_rqr2}),
+      |                                                                                                ^~~~~~~
+                   ... For warning description see https://verilator.org/warn/IMPLICIT?v=5.050
+                   ... Use "/* verilator lint_off IMPLICIT */" and lint_on around source to disable this message.
+%Warning-IMPLICIT: qfd_tile_nl_rp2_45.sv:110:104: Signal definition not found, creating implicitly: 'ck_rqr2'
+                                                : ... Suggested alternative: 'ck_rqr0'
+  110 |         .ck_pair1({ck_rp9,ck_rp8,ck_rp7,ck_rp6,ck_rp5}), .ck_rqr({ck_rqr1,ck_rqr0}), .ck_rqre({ck_rqr3,ck_rqr2}),
+      |                                                                                                        ^~~~~~~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:174:23: Operator VAR 'SPLIT_CP' expects 32 bits on the Initial value, but Initial value's CONST '1'h0' generates 1 bits.
+  174 |     parameter integer SPLIT_CP = 0,
+      |                       ^~~~~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:346:24: Operator VAR 'PRUNE' expects 32 bits on the Initial value, but Initial value's GTS generates 1 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  346 |     localparam integer PRUNE = (SMIN > 0);
+      |                        ^~~~~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:348:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                        : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  348 |     localparam integer NPG = PRUNE ? (((GT >> SMIN) < G) ? (GT >> SMIN) : G) : G;
+      |                                    ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:350:24: Operator VAR 'LANES' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  350 |     localparam integer LANES = (PART != 2);
+      |                        ^~~~~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:351:24: Operator VAR 'PORTS' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  351 |     localparam integer PORTS = (PART != 1);
+      |                        ^~~~~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:354:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'LANES' generates 32 bits.
+                                                        : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  354 |     localparam integer GL = LANES ? G : 1;
+      |                                   ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:356:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                        : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  356 |     localparam integer GR = PRUNE ? NPG : G;
+      |                                   ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:598:25: Operator VAR 'WNB' expects 19 bits on the Initial value, but Initial value's VARREF 'W' generates 32 bits.
+                                                        : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  598 |     localparam [NW:0]   WNB = W;
+      |                         ^~~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:609:29: Operator VAR 'SH_LO' expects 37 bits on the Initial value, but Initial value's REPLICATE generates 18 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  609 |     localparam [AW+PRW-1:0] SH_LO = {(AW+PRW)/2{1'b1}};    
+      |                             ^~~~~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:611:29: Operator VAR 'SH_Q0' expects 37 bits on the Initial value, but Initial value's REPLICATE generates 9 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  611 |     localparam [AW+PRW-1:0] SH_Q0 = {(AW+PRW)/4{1'b1}};
+      |                             ^~~~~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:613:44: Operator AND expects 37 bits on the RHS, but RHS's REPLICATE generates 28 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  613 |     localparam [AW+PRW-1:0] SH_Q2 = ~SH_LO & {((AW+PRW)/2 + (AW+PRW)/4 + 1){1'b1}};
+      |                                            ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1137:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1137 |     generate if (LANES && KV_PREP == 0) begin : g_kv_addr
+      |                        ^~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1143:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1143 |     end else if (LANES) begin : g_kv_addr_prep
+      |              ^~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1230:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1230 |     generate if (LANES && FAST_ISSUE != 0 && KV_PREP >= 2) begin : g_gm_fast
+      |                        ^~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1324:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1324 |     generate if (LANES && REGROOT != 0) begin : g_operand_rr
+      |                        ^~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1435:31: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1435 |     generate if (REGROOT >= 4 && LANES) begin : g_roundc
+      |                               ^~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1450:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PORTS' generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1450 |     generate if (PORTS) begin : g_atag
+      |              ^~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1711:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1711 |     generate if (LANES && HIER == 0) begin : g_lanes
+      |                        ^~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1858:35: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'PORTS' generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1858 |     generate if (INT8_WEIGHT != 0 && PORTS) begin : g_post_scale
+      |                                   ^~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:435:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'j' generates 3 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  435 |     wire             j_last = (j == IL - 1);
+      |                                  ^~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:591:90: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'sh' generates 4 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  591 |                 if (((GT >> b) & 1) != 0 && b >= sh) acc = acc + ({{PRW{1'b0}}, x} << (b - sh));
+      |                                                                                          ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:618:86: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'sh' generates 4 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  618 |         shterm = ((((GT_TS >> bb) & 1) != 0) && bb >= sh) ? ({{PRW{1'b0}}, x} << (bb - sh)) : {(AW+PRW){1'b0}};
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:662:114: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  662 |                 tsh[b] <= (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q0)
+      |                                                                                                                  ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:663:146: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  663 |                         | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 27+2*(b%2) : 2*(b%2))) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(((REGROOT >= 7) ? 27+2*(b%2) : 2*(b%2))) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q1)
+      |                                                                                                                                                  ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:664:116: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  664 |                         | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(2*(b%2)+1) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(2*(b%2)+1) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q2)
+      |                                                                                                                    ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:665:148: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  665 |                         | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 28+2*(b%2) : 2*(b%2)+1)) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(((REGROOT >= 7) ? 28+2*(b%2) : 2*(b%2)+1)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q3);
+      |                                                                                                                                                    ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:666:117: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  666 |                 osh[b] <= (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(4+2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(4+2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q0)
+      |                                                                                                                     ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:667:149: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  667 |                         | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 31+2*(b%2) : 4+2*(b%2))) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(((REGROOT >= 7) ? 31+2*(b%2) : 4+2*(b%2))) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q1)
+      |                                                                                                                                                     ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:668:117: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  668 |                         | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(5+2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(5+2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q2)
+      |                                                                                                                     ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:669:149: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  669 |                         | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 32+2*(b%2) : 5+2*(b%2))) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(((REGROOT >= 7) ? 32+2*(b%2) : 5+2*(b%2))) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q3);
+      |                                                                                                                                                     ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:671:18: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                        : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  671 |             pr_a <= GT >> spc[4*8 +: 4];
+      |                  ^~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:694:60: Operator AND expects 18 bits on the RHS, but RHS's REPLICATE generates 9 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  694 |                        | {kpad_a[NW-1:0] >> spc[4*9 +: 4]} & {(NW/2){1'b1}} : ktc[0 +: NW];    
+      |                                                            ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:698:17: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                        : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  698 |         nb_step <= pr_a * (W * IL);
+      |                 ^~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:699:17: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                        : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  699 |         lb_step <= pr_a * W;
+      |                 ^~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:735:73: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                        : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  735 |                     if (KV_PREP > 0 && i_wsrc) begin pend <= 1'b1; pcnt <= KV_PREP - 1; end
+      |                                                                         ^~
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:737:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                        : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  737 |                     if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                               ^~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:737:42: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'i_split' generates 4 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+  737 |                     if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                                          ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:1134:39: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'xc' generates 24 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1134 |             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+      |                                       ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1134:33: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1134 |             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+      |                                 ^~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:1170:51: Operator ADD expects 37 bits on the LHS, but LHS's VARREF 'gb' generates 32 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1170 |                                             : (gb + gq) >> spc[4*(10+gq) +: 4];
+      |                                                   ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1169:28: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's COND generates 37 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1169 |             wire [31:0] qv = (REGROOT >= 8) ? shro({5'd0, gbq}, sph[16*(10+gq) +: 16])
+      |                            ^
+%Warning-SELRANGE: ot_qwen_w12_matvec_land32.sv:1171:91: Selection index out of range: 239:236 outside 107:0
+                                                       : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1171 |             wire [31:0] cv = (REGROOT >= 8) ? ({5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1))
+      |                                                                                           ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-SELRANGE: ot_qwen_w12_matvec_land32.sv:1171:91: Selection index out of range: 111:108 outside 107:0
+                                                       : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1171 |             wire [31:0] cv = (REGROOT >= 8) ? ({5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1))
+      |                                                                                           ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:1172:51: Operator ADD expects 37 bits on the LHS, but LHS's VARREF 'gb' generates 32 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1172 |                                             : (gb + gq) & ((1 << spc[4*(14+gq) +: 4]) - 1);
+      |                                                   ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1171:28: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's COND generates 37 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1171 |             wire [31:0] cv = (REGROOT >= 8) ? ({5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1))
+      |                            ^
+%Warning-SELRANGE: ot_qwen_w12_matvec_land32.sv:1171:91: Selection index out of range: 243:240 outside 107:0
+                                                       : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1171 |             wire [31:0] cv = (REGROOT >= 8) ? ({5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1))
+      |                                                                                           ^
+%Warning-SELRANGE: ot_qwen_w12_matvec_land32.sv:1171:91: Selection index out of range: 115:112 outside 107:0
+                                                       : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1171 |             wire [31:0] cv = (REGROOT >= 8) ? ({5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1))
+      |                                                                                           ^
+%Warning-SELRANGE: ot_qwen_w12_matvec_land32.sv:1171:91: Selection index out of range: 247:244 outside 107:0
+                                                       : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1171 |             wire [31:0] cv = (REGROOT >= 8) ? ({5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1))
+      |                                                                                           ^
+%Warning-SELRANGE: ot_qwen_w12_matvec_land32.sv:1171:91: Selection index out of range: 119:116 outside 107:0
+                                                       : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1171 |             wire [31:0] cv = (REGROOT >= 8) ? ({5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1))
+      |                                                                                           ^
+%Warning-SELRANGE: ot_qwen_w12_matvec_land32.sv:1171:91: Selection index out of range: 251:248 outside 107:0
+                                                       : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1171 |             wire [31:0] cv = (REGROOT >= 8) ? ({5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1))
+      |                                                                                           ^
+%Warning-SELRANGE: ot_qwen_w12_matvec_land32.sv:1171:91: Selection index out of range: 123:120 outside 107:0
+                                                       : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1171 |             wire [31:0] cv = (REGROOT >= 8) ? ({5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1))
+      |                                                                                           ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1658:41: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CHILD_CLOCKS' generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1658 |                 u_lh (.clk(CHILD_CLOCKS ? ck_lsl[g] : clk), .rst_n(rst_l), .v_d(tx_q[XW-1]), .first_d(tx_q[XW-2]), .split_d(tx_q[XW-3 -: 4]),
+      |                                         ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1940:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PORTS' generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1940 |         assign result_v = PORTS ? raw_v : 1'b0;
+      |                                 ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1972:33: Operator ASSIGNW expects 13 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1972 |     wire [$clog2(GT):0] r_ports = GT >> r_split;
+      |                                 ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:1980:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_lb' generates 19 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1980 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                      ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:1980:76: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_nb' generates 19 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1980 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                                                            ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:1993:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_oa' generates 24 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1993 |             o_addr1[q*AW +: AW] <= r_oa + (gb + q) * r_ots;
+      |                                         ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:1993:33: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 1993 |             o_addr1[q*AW +: AW] <= r_oa + (gb + q) * r_ots;
+      |                                 ^~
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:2066:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 18 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 2066 |             wire [NW-1:0] row = r_nb[NW-1:0] + (gb + EQ) * (W * IL) + EL;
+      |                                              ^
+%Warning-WIDTHTRUNC: ot_qwen_w12_matvec_land32.sv:2066:31: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 2066 |             wire [NW-1:0] row = r_nb[NW-1:0] + (gb + EQ) * (W * IL) + EL;
+      |                               ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:2135:42: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 2135 |                 mx_mask[(t_mbase[LW-1:0] + rj) % W] <= 1'b1;
+      |                                          ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:2136:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 2136 |                 mx_data[32*((t_mbase[LW-1:0] + rj) % W) +: 32] <=
+      |                                              ^
+%Warning-WIDTHEXPAND: ot_qwen_w12_matvec_land32.sv:2137:25: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 't_j' generates 3 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic.u_me'
+ 2137 |                     (rj == t_j) ? (nk[31] ? {1'b0, nk[30:0]} : ~nk) : (rk[rj][31] ? {1'b0, rk[rj][30:0]} : ~rk[rj]);
+      |                         ^~
+%Warning-WIDTHTRUNC: ot_qwen_rom_tile_w12_land32.sv:203:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic'
+  203 |     wire             go_i  = IREG ? go_q : ib_go;
+      |                                   ^
+%Warning-WIDTHTRUNC: ot_qwen_rom_tile_w12_land32.sv:204:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic'
+  204 |     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
+      |                                   ^
+%Warning-WIDTHTRUNC: ot_qwen_rom_tile_w12_land32.sv:205:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic'
+  205 |     wire [TG*32-1:0] xl_r  = IREG ? xl_q : xl;
+      |                                   ^
+%Warning-WIDTHTRUNC: ot_qwen_rom_tile_w12_land32.sv:534:55: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CHILD_CLOCKS' generates 32 bits.
+                                                          : ... note: In instance 'qfd_tile_nl_a0c_m3sync.u_g.u_tile.u_tile.u_logic'
+  534 |                             u_leaf (.clk(CHILD_CLOCKS ? (col==0 ? ck_rpair[b] : ck_pair1[b]) : clk),.rst_n(rst_leaf),.ce_d(ce_pre[b]),
+      |                                                       ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 4.722 MB sources in 87 modules, into 1.218 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 1.136 s (elab=0.196, cvt=0.811, bld=0.000); cpu 1.136 s on 1 threads; allocated 112.613 MB

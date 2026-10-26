@@ -1,0 +1,357 @@
+{
+  "status": "SOURCE_BRIDGE_PASS, CANDIDATE ONLY, not a physical view",
+  "input": "/srv/opentallas-scratch/claude/codex-qc-a0-2157/old_actual_parent.sv",
+  "input_sha256": "54811185900dc782919878b79c0abc6ff5fbd562ec546c0741a514ab80643d4a",
+  "output_sha256": "fb3ad52c48379f9e3fb6c822b32df060d293ebe6fdac4cf3c58f35fcc60b2c69",
+  "outside_instance_bytes_unchanged": true,
+  "instances": [
+    {
+      "inst": "u_u_t_0_0",
+      "kind": "nk",
+      "native_clock_count": 39,
+      "physical_clock_count": 42,
+      "common_clock_net": "clk",
+      "functional_bindings": {
+        "rst_n": "rst_n_t31",
+        "tile_id": "{S_u_t_0_0_tile_id[15:4], w_u_t_0_0_tie_lo[0], w_u_t_0_0_tie_lo[0], w_u_t_0_0_tie_lo[0], w_u_t_0_0_tie_lo[0]}",
+        "tie_hi": "w_u_t_0_0_tie_hi",
+        "tie_lo": "w_u_t_0_0_tie_lo",
+        "tap": "w_u_fab_u_x_0_0_tap_d[507:0]",
+        "t_out": "w_u_t_0_0_t_out",
+        "n_a": "na_i00_q[513:0]",
+        "n_b": "nb_i00_q[513:0]",
+        "n_y": "w_u_t_0_0_n_y"
+      },
+      "physical_clock_bindings": {
+        "ck": "clk",
+        "ck_t1": "clk",
+        "ck_t2": "clk",
+        "ck_t3": "clk",
+        "ck_t4": "clk",
+        "ck_t5": "clk",
+        "ck_t6": "clk",
+        "ck_t7": "clk",
+        "ck_t8": "clk",
+        "ck_t9": "clk",
+        "ck_t10": "clk",
+        "ck_t11": "clk",
+        "ck_t12": "clk",
+        "ck_t13": "clk",
+        "ck_t14": "clk",
+        "ck_t15": "clk",
+        "ck_t16": "clk",
+        "ck_t17": "clk",
+        "ck_t18": "clk",
+        "ck_t19": "clk",
+        "ck_t20": "clk",
+        "ck_t21": "clk",
+        "ck_t22": "clk",
+        "ck_t23": "clk",
+        "ck_t24": "clk",
+        "ck_t25": "clk",
+        "ck_t26": "clk",
+        "ck_t27": "clk",
+        "ck_t28": "clk",
+        "ck_t29": "clk",
+        "ck_t30": "clk",
+        "ck_t31": "clk",
+        "ck_t32": "clk",
+        "ck_t33": "clk",
+        "ck_t34": "clk",
+        "ck_t35": "clk",
+        "ck_t36": "clk",
+        "ck_t37": "clk",
+        "ck_t38": "clk",
+        "ck_t39": "clk",
+        "ck_t40": "clk",
+        "ck_t41": "clk"
+      },
+      "cycles_added": 0,
+      "physical_view_status": "MISSING: new MODE3/noFP1 exact source trial view still required"
+    },
+    {
+      "inst": "u_u_t_0_1",
+      "kind": "nk",
+      "native_clock_count": 39,
+      "physical_clock_count": 42,
+      "common_clock_net": "clk",
+      "functional_bindings": {
+        "rst_n": "rst_n_t33",
+        "tile_id": "{S_u_t_0_1_tile_id[15:4], w_u_t_0_1_tie_lo[0], w_u_t_0_1_tie_lo[0], w_u_t_0_1_tie_hi[0], w_u_t_0_1_tie_lo[0]}",
+        "tie_hi": "w_u_t_0_1_tie_hi",
+        "tie_lo": "w_u_t_0_1_tie_lo",
+        "tap": "w_u_fab_u_x_0_1_tap_d[507:0]",
+        "t_out": "w_u_t_0_1_t_out",
+        "n_a": "d3_u_t_0_1_t_out[513:0]",
+        "n_b": "d3_u_t_1_1_t_out[513:0]",
+        "n_y": "w_u_t_0_1_n_y"
+      },
+      "physical_clock_bindings": {
+        "ck": "clk",
+        "ck_t1": "clk",
+        "ck_t2": "clk",
+        "ck_t3": "clk",
+        "ck_t4": "clk",
+        "ck_t5": "clk",
+        "ck_t6": "clk",
+        "ck_t7": "clk",
+        "ck_t8": "clk",
+        "ck_t9": "clk",
+        "ck_t10": "clk",
+        "ck_t11": "clk",
+        "ck_t12": "clk",
+        "ck_t13": "clk",
+        "ck_t14": "clk",
+        "ck_t15": "clk",
+        "ck_t16": "clk",
+        "ck_t17": "clk",
+        "ck_t18": "clk",
+        "ck_t19": "clk",
+        "ck_t20": "clk",
+        "ck_t21": "clk",
+        "ck_t22": "clk",
+        "ck_t23": "clk",
+        "ck_t24": "clk",
+        "ck_t25": "clk",
+        "ck_t26": "clk",
+        "ck_t27": "clk",
+        "ck_t28": "clk",
+        "ck_t29": "clk",
+        "ck_t30": "clk",
+        "ck_t31": "clk",
+        "ck_t32": "clk",
+        "ck_t33": "clk",
+        "ck_t34": "clk",
+        "ck_t35": "clk",
+        "ck_t36": "clk",
+        "ck_t37": "clk",
+        "ck_t38": "clk",
+        "ck_t39": "clk",
+        "ck_t40": "clk",
+        "ck_t41": "clk"
+      },
+      "cycles_added": 0,
+      "physical_view_status": "MISSING: new MODE3/noFP1 exact source trial view still required"
+    },
+    {
+      "inst": "u_u_t_1_0",
+      "kind": "nk",
+      "native_clock_count": 39,
+      "physical_clock_count": 42,
+      "common_clock_net": "clk",
+      "functional_bindings": {
+        "rst_n": "rst_n_t32",
+        "tile_id": "{S_u_t_1_0_tile_id[15:4], w_u_t_1_0_tie_lo[0], w_u_t_1_0_tie_lo[0], w_u_t_1_0_tie_lo[0], w_u_t_1_0_tie_hi[0]}",
+        "tie_hi": "w_u_t_1_0_tie_hi",
+        "tie_lo": "w_u_t_1_0_tie_lo",
+        "tap": "w_u_fab_u_x_1_0_tap_d[507:0]",
+        "t_out": "w_u_t_1_0_t_out",
+        "n_a": "d3_u_t_0_0_t_out[513:0]",
+        "n_b": "d3_u_t_1_0_t_out[513:0]",
+        "n_y": "w_u_t_1_0_n_y"
+      },
+      "physical_clock_bindings": {
+        "ck": "clk",
+        "ck_t1": "clk",
+        "ck_t2": "clk",
+        "ck_t3": "clk",
+        "ck_t4": "clk",
+        "ck_t5": "clk",
+        "ck_t6": "clk",
+        "ck_t7": "clk",
+        "ck_t8": "clk",
+        "ck_t9": "clk",
+        "ck_t10": "clk",
+        "ck_t11": "clk",
+        "ck_t12": "clk",
+        "ck_t13": "clk",
+        "ck_t14": "clk",
+        "ck_t15": "clk",
+        "ck_t16": "clk",
+        "ck_t17": "clk",
+        "ck_t18": "clk",
+        "ck_t19": "clk",
+        "ck_t20": "clk",
+        "ck_t21": "clk",
+        "ck_t22": "clk",
+        "ck_t23": "clk",
+        "ck_t24": "clk",
+        "ck_t25": "clk",
+        "ck_t26": "clk",
+        "ck_t27": "clk",
+        "ck_t28": "clk",
+        "ck_t29": "clk",
+        "ck_t30": "clk",
+        "ck_t31": "clk",
+        "ck_t32": "clk",
+        "ck_t33": "clk",
+        "ck_t34": "clk",
+        "ck_t35": "clk",
+        "ck_t36": "clk",
+        "ck_t37": "clk",
+        "ck_t38": "clk",
+        "ck_t39": "clk",
+        "ck_t40": "clk",
+        "ck_t41": "clk"
+      },
+      "cycles_added": 0,
+      "physical_view_status": "MISSING: new MODE3/noFP1 exact source trial view still required"
+    },
+    {
+      "inst": "u_u_t_1_1",
+      "kind": "nk",
+      "native_clock_count": 39,
+      "physical_clock_count": 42,
+      "common_clock_net": "clk",
+      "functional_bindings": {
+        "rst_n": "rst_n_t34",
+        "tile_id": "{S_u_t_1_1_tile_id[15:4], w_u_t_1_1_tie_lo[0], w_u_t_1_1_tie_lo[0], w_u_t_1_1_tie_hi[0], w_u_t_1_1_tie_hi[0]}",
+        "tie_hi": "w_u_t_1_1_tie_hi",
+        "tie_lo": "w_u_t_1_1_tie_lo",
+        "tap": "w_u_fab_u_x_1_1_tap_d[507:0]",
+        "t_out": "w_u_t_1_1_t_out",
+        "n_a": "d10_u_t_1_0_n_y[513:0]",
+        "n_b": "d3_u_t_0_1_n_y[513:0]",
+        "n_y": "w_u_t_1_1_n_y"
+      },
+      "physical_clock_bindings": {
+        "ck": "clk",
+        "ck_t1": "clk",
+        "ck_t2": "clk",
+        "ck_t3": "clk",
+        "ck_t4": "clk",
+        "ck_t5": "clk",
+        "ck_t6": "clk",
+        "ck_t7": "clk",
+        "ck_t8": "clk",
+        "ck_t9": "clk",
+        "ck_t10": "clk",
+        "ck_t11": "clk",
+        "ck_t12": "clk",
+        "ck_t13": "clk",
+        "ck_t14": "clk",
+        "ck_t15": "clk",
+        "ck_t16": "clk",
+        "ck_t17": "clk",
+        "ck_t18": "clk",
+        "ck_t19": "clk",
+        "ck_t20": "clk",
+        "ck_t21": "clk",
+        "ck_t22": "clk",
+        "ck_t23": "clk",
+        "ck_t24": "clk",
+        "ck_t25": "clk",
+        "ck_t26": "clk",
+        "ck_t27": "clk",
+        "ck_t28": "clk",
+        "ck_t29": "clk",
+        "ck_t30": "clk",
+        "ck_t31": "clk",
+        "ck_t32": "clk",
+        "ck_t33": "clk",
+        "ck_t34": "clk",
+        "ck_t35": "clk",
+        "ck_t36": "clk",
+        "ck_t37": "clk",
+        "ck_t38": "clk",
+        "ck_t39": "clk",
+        "ck_t40": "clk",
+        "ck_t41": "clk"
+      },
+      "cycles_added": 0,
+      "physical_view_status": "MISSING: new MODE3/noFP1 exact source trial view still required"
+    }
+  ],
+  "physical_dependency": "Actual MODE3/noFP1 A0c42/41 view with real current-source geometry/clock contract. No MODE9/FP1 rename. Native/flop-to-tap ownership still physical proof.",
+  "profiles": {
+    "nk": {
+      "body_sha256": "a7b9b740c86a4c82599d92c9f62e5c099a58a30ed284f71dcd19533811d001e8",
+      "defines": [
+        "OT_A0_CK_TAPS",
+        "OT_A0_CK_TAPS24",
+        "OT_A0_CK_TAPS31",
+        "OT_A0_CK_TAPS32",
+        "OT_A0_CK_TAPS37",
+        "OT_A0_CK_TAPS38",
+        "OT_A0_CK_TAPS42",
+        "SYNTHESIS"
+      ],
+      "data_abi": {
+        "rst_n": [
+          "input",
+          1
+        ],
+        "tile_id": [
+          "input",
+          16
+        ],
+        "tie_hi": [
+          "output",
+          1
+        ],
+        "tie_lo": [
+          "output",
+          1
+        ],
+        "tap": [
+          "input",
+          508
+        ],
+        "t_out": [
+          "output",
+          514
+        ],
+        "n_a": [
+          "input",
+          514
+        ],
+        "n_b": [
+          "input",
+          514
+        ],
+        "n_y": [
+          "output",
+          514
+        ]
+      }
+    },
+    "nl": {
+      "body_sha256": "0ed518898a4ddb3cea7bd281220a863515725fc68d1826d96f7c227b90f43c65",
+      "defines": [
+        "OT_A0_CK_TAPS",
+        "OT_A0_CK_TAPS24",
+        "OT_A0_CK_TAPS31",
+        "OT_A0_CK_TAPS32",
+        "OT_A0_CK_TAPS37",
+        "OT_A0_CK_TAPS41",
+        "SYNTHESIS"
+      ],
+      "data_abi": {
+        "rst_n": [
+          "input",
+          1
+        ],
+        "tile_id": [
+          "input",
+          16
+        ],
+        "tie_hi": [
+          "output",
+          1
+        ],
+        "tie_lo": [
+          "output",
+          1
+        ],
+        "tap": [
+          "input",
+          508
+        ],
+        "t_out": [
+          "output",
+          514
+        ]
+      }
+    }
+  }
+}
