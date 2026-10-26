@@ -460,8 +460,32 @@ def leaves_for(raw, leaf="reach", hop_um=None):
     return "\n".join(out) + "\n"
 
 
+def upstream_driver_views(pair_raw, full_raw):
+    """CP1 proof harness (COORD 2026-10-25 23:26 ruling (3)): {pair port id: driver view} for every die-edge input
+    of a pair plan that the FULL plan drives from a registered partition (not the die edge, not a die channel).  Each
+    view carries the driver type's guaranteed output-min (gen_phys.sender_out_guarantee_ps: its signed view's
+    out_hold_guarantee_ps, else the plan contract (1 - UNC_SPLIT) x UNC_HOLD_PS - out_min = +12.5 ps).  Port ids are
+    preserved by extract, so the full plan's port record is found by id."""
+    import gen_phys
+    F = S.Plan(full_raw)
+    out = {}
+    for q in pair_raw["ports"]:
+        if q["src"]["part"] != DIE_PART or q["dst"]["part"] == DIE_PART:
+            continue
+        pr = F.ports.get(q["id"])
+        if pr is None or pr["src"]["part"] in (DIE_PART,) or pr["src"]["part"] not in F.parts:
+            continue
+        if F.channel_of(q["id"]) is not None:
+            continue
+        st = F.parts[pr["src"]["part"]]["type"]
+        g, basis = gen_phys.sender_out_guarantee_ps(F, st)
+        out[q["id"]] = dict(part=pr["src"]["part"], type=st, bus=pr["src"]["bus"], out_hold_guarantee_ps=round(g, 4),
+                            basis=basis, source_plan=F.name)
+    return out
+
+
 def extract(raw, parts, channel_um=0.0, name=None, cores=False, core_taps=False, plan_dir=None, root=None,
-            leaf="reach", proof_taps=True):
+            leaf="reach", proof_taps=True, driver_views=False):
     """cores: instantiate every hard core of each type in its proof leaf (CP2); core_taps: early core taps
     (add_core_taps); plan_dir: the source plan's directory (relative hard_cores[].pins_file become absolute)."""
     P = S.Plan(raw)
@@ -607,6 +631,10 @@ def extract(raw, parts, channel_um=0.0, name=None, cores=False, core_taps=False,
            "census": {"none": f"CP1 proof pair cut from {P.name}: census coverage is checked on the full plan"}}
     if "budgets" in raw:
         out["budgets"] = copy.deepcopy(raw["budgets"])
+    if driver_views:
+        dv = upstream_driver_views(out, raw)
+        if dv:
+            out["clock"]["io_hold_driver_views"] = dv
     sp = out["clock"].setdefault("spine", {})
     # CP2 spine branch model (spine.py): keep the FULL die's spine geometry, so the pair die STA can model each
     # partition tap's branch from the real die root (the pair's own root below only routes the pair die)
@@ -650,6 +678,12 @@ def main(argv=None):
                          "density clock plan (proof_clock) only")
     ap.add_argument("--grid-taps", action="store_true",
                     help="keep the full type's tap grid on proof-leaf types (legacy; no proof_clock)")
+    ap.add_argument("--driver-views", action="store_true",
+                    help="record an explicit registered upstream driver view (clock.io_hold_driver_views) for every "
+                         "die-edge input the full plan drives from a partition (COORD 23:26 ruling (3))")
+    ap.add_argument("--driver-views-from", metavar="FULL_PLAN",
+                    help="PLAN is an existing pair plan: add clock.io_hold_driver_views from FULL_PLAN and write "
+                         "OUT/pair_plan.json (nothing else changes)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     if a.clock_only:
@@ -660,6 +694,20 @@ def main(argv=None):
         for tn, r in rep.items():
             print(f"proof clock {tn}: {r}")
         print(f"{Path(a.out) / 'pair_plan.json'}: schema " + ("PASS" if not errs else "FAIL\n  " + "\n  ".join(errs[:20])))
+        return 1 if errs else 0
+    if a.driver_views_from:
+        dv = upstream_driver_views(raw, S.load(a.driver_views_from))
+        raw["clock"]["io_hold_driver_views"] = dv
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        (Path(a.out) / "pair_plan.json").write_text(json.dumps(raw, indent=1) + "\n")
+        errs = S.validate(raw)
+        by = {}
+        for v in dv.values():
+            by.setdefault((v["type"], v["out_hold_guarantee_ps"], v["basis"]), []).append(v["bus"])
+        for (t, g, b), buses in sorted(by.items()):
+            print(f"driver view {t}: +{g:g} ps ({b}) on {len(buses)} ports")
+        print(f"{Path(a.out) / 'pair_plan.json'}: {len(dv)} driver views; schema "
+              + ("PASS" if not errs else "FAIL\n  " + "\n  ".join(errs[:20])))
         return 1 if errs else 0
     if a.leaves_only:
         Path(a.out).mkdir(parents=True, exist_ok=True)
@@ -682,7 +730,8 @@ def main(argv=None):
         print("plan invalid:\n  " + "\n  ".join(errs[:20]))
         return 1
     plan, leaves = extract(raw, a.parts.split(","), a.channel, a.name, cores=a.cores, core_taps=a.core_taps,
-                           plan_dir=str(Path(a.plan).resolve().parent), leaf=a.leaf, proof_taps=not a.grid_taps)
+                           plan_dir=str(Path(a.plan).resolve().parent), leaf=a.leaf, proof_taps=not a.grid_taps,
+                           driver_views=a.driver_views)
     for tn, r in (plan.pop("proof_clock", None) or {}).items():
         print(f"proof clock {tn}: {r}")
     added = plan.pop("core_taps_added", None)
