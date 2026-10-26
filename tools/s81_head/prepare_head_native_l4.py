@@ -80,6 +80,16 @@ def main():
     assert len(io) == 293, len(io)
     (out / "io.tcl").write_text("# Native B: unchanged coordinates of live pins only.\n" + "\n".join(io) + "\n")
     (out / "face_guard_skip.txt").write_text("^(clk|rst_n)$\n")
+    (out / "freeze.json").write_text(json.dumps(dict(
+        design="ot_s81hd_elemB_l4_native", clocks=["clk"], resets=["rst_n"]
+    ), indent=2) + "\n")
+    # A seed made before the ROM-IF correction lacks the post-face hook.
+    # Preserve custom seed hooks; append the dependency only when absent.
+    face_hook = out / "face_flops.tcl"
+    if "source /work/head_rom_if.tcl" not in face_hook.read_text():
+        with face_hook.open("a") as handle:
+            handle.write("\nuplevel #0 [list source /work/head_rom_if.tcl]\n")
+
     # Seed SDC is narrowed to actual buses without touching period, bounds or IO budgets.
     for name in ("constraint.sdc", "vclk_ff.sdc"):
         text = (out / name).read_text()

@@ -21,12 +21,12 @@ for q in pins:
  lines.append(f"place_pin -pin_name {{{n}}} -layer {q['layer']} -location {{{q['x']:.4f} {q['y']:.4f}}} -pin_size {{{size}}}")
 (k/'io.tcl').write_text('\n'.join(lines)+'\n')
 (k/'eng_reach_delta.json').write_text(json.dumps({'status':'PROPOSED_TRIAL_ONLY','rtl_changes':0,'cycle_delta':0,'changes':changes},indent=2)+'\n')
-hook='''# Zero-cycle reset-leaf placement: keep the existing third release edge.
+hook=r'''# Zero-cycle reset-leaf placement: keep the existing third release edge.
 set er_b [ord::get_db_block]
 set er_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set er_n 0
 foreach er_i [$er_b getInsts] {
- if {[string match {*u_r.g_tleaf[[]0[]].q*} [$er_i getName]]} {
+ if {[regexp {u_r[.]g_tleaf\[0\][.]q} [$er_i getName]]} {
   $er_i setLocation [expr {round(180.0*$er_dbu)}] [expr {round(240.0*$er_dbu)}]
   $er_i setPlacementStatus FIRM
   incr er_n
