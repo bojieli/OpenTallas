@@ -1621,6 +1621,19 @@ def lca(a, b):
     return a[:k]
 
 
+def mesh_connected(M):
+    """{region k: bool}: True when region k's mesh is ONE connected net in the emitted geometry (COORD 10-26 CPPR
+    ruling condition 1): every M8 strap spans the region strap box in x and every M9 strap spans it in y (strap_bounds),
+    so every M8 strap crosses every M9 strap, AND the crossings carry emitted M8-M9 vias (meta.mesh_vias, written by
+    combo --mesh-vias).  Without emitted crossing vias the mesh is connected only in the RC model -> False."""
+    vias = M["meta"].get("mesh_vias") or {}
+    out = {}
+    for g in M["meta"].get("regions") or []:
+        nh, nv = g["j1"] - g["j0"], g["i1"] - g["i0"]
+        out[g["k"]] = bool(nh > 0 and nv > 0 and int(vias.get(str(g["k"]), 0)) >= nh * nv)
+    return out
+
+
 def sink_arrivals(M, arr, corner, early_by_plan):
     """Compare equivalent sink clocks: core pins must arrive earlier by their core insertion offset.
 
@@ -1719,11 +1732,48 @@ def cmd_report(a):
                 return ebr[p]["early_branch"]["node_tag"]
             return M["meta"]["regions"][reg[p]]["tag"] if regd else "h"
 
-        def dmg(pa, pb):
+        # COORD RULING 2026-10-26 05:42 (CPPR common point on a regional mesh): two taps on the SAME connected
+        # regional mesh share the MESH NODE: the credit is the early/late range common at the mesh, i.e. the smaller
+        # of the two stub-input ranges (mesh_<corner>.json transient, all drivers).  The mesh->tap arrival spread
+        # stays in full (each tap keeps its own measured arrival), and the per-tap stub buffer + stub early/late
+        # range downstream of the mesh is never credited (pair_clock_damage also caps the credit at each tap range).
+        # Different meshes / EARLY-TAP branches: last common H-tree node (unchanged).  Gate = mesh-credited, only
+        # when the mesh is ONE connected net in the emitted geometry; the region-root-credited number is INFO.
+        Mz_ = json.loads((d / f"mesh_{corner}.json").read_text())
+        srng = {s_["port"]: s_["late"] - s_["early"] for s_ in Mz_["stubs"].values()}
+        mesh_ok = mesh_connected(M) if regd else {}
+
+        def dmg(pa, pb, mesh=True):
             c = lca(common(pa), common(pb)) or "h"
             while c not in rng and len(c) > 1:
                 c = c[:-1]
-            return DC.pair_clock_damage(late[pa], early[pa], late[pb], early[pb], rng.get(c, 0.0))["max_damage_ps"]
+            cr = rng.get(c, 0.0)
+            if (mesh and regd and pa not in ebr and pb not in ebr and reg[pa] == reg[pb]
+                    and (mesh_ok.get(reg[pa]) or mesh == "info") and pa in srng and pb in srng):
+                cr = max(cr, min(srng[pa], srng[pb]))
+            return DC.pair_clock_damage(late[pa], early[pa], late[pb], early[pb], cr)["max_damage_ps"]
+        rk_ = [dmg(x[0], x[1], mesh=False) for x in list(seam_in) + [(i[0], i[1]) for i in intra]]
+        mk_ = [dmg(x[0], x[1], mesh="info") for x in list(seam_in) + [(i[0], i[1]) for i in intra]]
+        allp_ = list(seam_in) + [(i[0], i[1]) for i in intra]
+        mo_ = [dmg(x[0], x[1]) for x in allp_ if x[0] not in ebr and x[1] not in ebr]   # no EARLY-TAP branch end
+        moi_ = [dmg(x[0], x[1], mesh="info") for x in allp_ if x[0] not in ebr and x[1] not in ebr]
+        mspread = {}
+        for v_ in Mz_["stubs"].values():
+            k_ = reg.get(v_["port"])
+            lo_, hi_ = mspread.get(k_, (1e18, -1e18))
+            mspread[k_] = (min(lo_, v_["late"]), max(hi_, v_["late"]))
+        mesh_info = dict(cppr_rule="COORD 2026-10-26 05:42: mesh node common point (gate); region root (info)",
+                         region_root_related_pair_max_ps=round(max(rk_), 2),
+                         region_root_pairs_over_80=sum(1 for v in rk_ if v > 80),
+                         mesh_credit_if_connected_related_pair_max_ps=round(max(mk_), 2),
+                         mesh_credit_if_connected_pairs_over_80=sum(1 for v in mk_ if v > 80),
+                         mesh_only_pairs=len(mo_), mesh_only_related_pair_max_ps=round(max(mo_ or [0]), 2),
+                         mesh_only_if_connected_related_pair_max_ps=round(max(moi_ or [0]), 2),
+                         mesh_only_if_connected_pairs_over_80=sum(1 for v in moi_ if v > 80),
+                         mesh_connected={str(k_): v_ for k_, v_ in mesh_ok.items()},
+                         mesh_stub_in_range_ps=[round(min(srng.values()), 2), round(max(srng.values()), 2)] if srng else None,
+                         intra_mesh_spread_ps={str(k_): round(v_[1] - v_[0], 2)
+                                               for k_, v_ in sorted(mspread.items(), key=lambda z: str(z[0]))})
         sk = [dmg(x[0], x[1]) for x in seam_in]
         ik = [dmg(x[0], x[1]) for x in intra]
         worst = sorted(((dmg(x[0], x[1]), x[0], x[1]) for x in list(seam_in) + [(i[0], i[1]) for i in intra]),
@@ -1760,7 +1810,7 @@ def cmd_report(a):
             verdict="PASS" if max(sk + ik) <= DC.GATE_PS else "FAIL",
             tap_slew_max_ps=round(max(slew.values()), 2), mesh_stub_in_slew_max_ps=Mz["stub_in_slew_max_ps"],
             tree_slew_max_ps=round(max(v[2] for v in Nn.values()), 2), mesh_cap_pF=Mz["mesh_cap_pF"],
-            worst=[[round(w, 2), x, y] for w, x, y in worst], **ex)
+            worst=[[round(w, 2), x, y] for w, x, y in worst], **ex, **mesh_info)
     # clock power: C V^2 f over every die clock wire + pin (mesh from the transient, tree/stub wire from length)
     nd = NDR[M["meta"]["ndr"]]
     cw = (DC.LAYER_RC["M8"][1] + DC.LAYER_RC["M9"][1]) / 2 * nd["cf"]
