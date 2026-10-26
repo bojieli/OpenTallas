@@ -2377,7 +2377,12 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
-            tried[(side, k, "c") if h[0] == "const" else (side, k, str(h[2]), str(h[3]))] += 1
+            # Equality candidates are looked up with an integer polarity. Keep
+            # that key unchanged when recording rejection, or they are retried
+            # in every adding round. FSM cube tuples keep their textual key.
+            tried[(side, k, "c") if h[0] == "const" else
+                  (side, k, h[2], h[3]) if h[0] == "eq" else
+                  (side, k, str(h[2]), str(h[3]))] += 1
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
