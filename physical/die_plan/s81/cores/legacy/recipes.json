@@ -160,5 +160,36 @@
   "suffix": "tpl_f6",
   "core_margin": 2.16,
   "macro_if_flops": true
+ },
+ "ot_v41_rom_elem_q_qxpq_w10": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_rom_elem_q_qxpq_w10",
+  "util": 0.6,
+  "macro_sites": {
+   "ot_rom_4096x274_m8": [
+    [
+     25.92,
+     43.392,
+     "R180"
+    ],
+    [
+     25.92,
+     115.008,
+     "MY"
+    ],
+    [
+     359.424,
+     43.392,
+     "MX"
+    ],
+    [
+     359.424,
+     115.008,
+     "R0"
+    ]
+   ]
+  },
+  "_why": "S81-CORES2/NC-H 10-25 F3/F6: g_mac[0] ROM pair on the W side (R180 below / MY above: clk/addr/130 rd on the E edge), g_mac[1] pair mirrored on the E side (MX / R0: clk/addr/130 rd on the W edge); every ROM pin band at the core centre y facing the centre logic (S/N plan pins x 136-375); the 144-bit rd edges face 26 um outer capture strips at the same y.",
+  "suffix": "lat26",
+  "_lat": "S81-CORE-LAT/QB 2026-10-26 (OWNER 05:38 common core-pin latency 250 TT / 202.5 FF): recipe + spec adopted from codex/s81-legacy-0719 (S81-CORES2/NC-H 10-25) unchanged, LEGACY master (pins/outline/ABI = plan, efs view LEF). Synth+place only for GEOM review; CTS recipe (ICG clone per sink cluster, cg_pushdown form) is a separate pending item, no CTS/route before GEOM PASS."
  }
 }

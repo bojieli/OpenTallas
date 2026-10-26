@@ -125,7 +125,7 @@ for cls, lst in r["fails"].items():
         if cls != "shared" or bit not in port_roots.values():
             other.append(f); continue
         cur, ff = F.find(bit), None
-        for _ in range(G.MAX_CHAIN + 2):
+        for _ in range(getattr(G, "MAX_CHAIN", 3) + 2):   # face_guard 49e28f506 dropped MAX_CHAIN (cycle detection)
             if len(drv[cur]) != 1: break
             ci, pn = drv[cur][0]
             m, path, pp = F.cells[ci]
