@@ -88,6 +88,15 @@ class T(unittest.TestCase):
         self.assertGreater(foot[0], 340.)
         self.assertLess(foot[0], 400.)
 
+    def test_clock_cells_are_physical_obstacles_and_abutment_is_legal(self):
+        K = CM.DC.KeepIndex([], die=(100., 100.))
+        cells = dict(a=dict(x=10., y=10.), b=dict(x=10.+CM.BUF_W, y=10.))
+        CM.reserve_cell(K, "a", cells["a"])
+        self.assertIsNotNone(K.hit(10.5, 10.1, m=0.))
+        self.assertEqual(CM.placement_overlaps(cells), [])
+        cells["b"]["x"] -= .054
+        self.assertEqual(CM.placement_overlaps(cells), [["a", "b"]])
+
     def test_core_offsets_compare_sinks_at_each_corner(self):
         M = {"taps": [dict(part="p", tap="core", port="tc", early_ps=100),
                       dict(part="p", tap="ordinary", port="to", early_ps=0)]}

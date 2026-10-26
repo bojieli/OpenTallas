@@ -128,6 +128,35 @@ def strap_bounds(g, xs, ys, axis):
     return (xs[g["i0"]], xs[g["i1"] - 1]) if axis == 0 else (ys[g["j0"]], ys[g["j1"] - 1])
 
 
+def reserve_cell(K, name, c, width=BUF_W):
+    """Occupancy is a physical keepout, including clock cells already placed during this build."""
+    r = (c["x"], c["y"], c["x"] + width, c["y"] + ROW_Y, "clock:" + name)
+    for i in range(int(r[0] // K.b), int(r[2] // K.b) + 1):
+        for j in range(int(r[1] // K.b), int(r[3] // K.b) + 1):
+            K.g[(i, j)].append(r)
+
+
+def placement_overlaps(cells):
+    """Actual cell-body overlaps; abutting rectangles are legal.  Report independently of legalization settings."""
+    buckets, out = defaultdict(list), []
+    for n, c in cells.items():
+        x, y = c["x"], c["y"]
+        keys = [(i, j) for i in range(int(x // 4), int((x + BUF_W) // 4) + 1)
+                for j in range(int(y // 1), int((y + ROW_Y) // 1) + 1)]
+        seen = set()
+        for key in keys:
+            for old in buckets[key]:
+                if old in seen:
+                    continue
+                seen.add(old)
+                v = cells[old]
+                if min(x + BUF_W, v["x"] + BUF_W) - max(x, v["x"]) > 1e-5 and \
+                   min(y + ROW_Y, v["y"] + ROW_Y) - max(y, v["y"]) > 1e-5:
+                    out.append([old, n])
+            buckets[key].append(n)
+    return out
+
+
 # ------------------------------------------------------------------------------------------------------------ build
 FOOT_M = 2.0     # keep-out test margin around a site point: two side-by-side BUFx24 (2.7 um) + one-site halo
 
@@ -297,7 +326,7 @@ def part_regions(P, R):
 
 
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
-          regions=0, delta_id=None, region_edge_straps=False):
+          regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False):
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
@@ -333,6 +362,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
 
     def cell(name, x, y, kind, **kw):
         cells[name] = dict(x=snap(x - BUF_W / 2, SITE_X), y=snap(y - ROW_Y / 2, ROW_Y), kind=kind, **kw)
+        if reserve_sites:
+            reserve_cell(K, name, cells[name])
         return name
 
     # --- driver sites: intersection, else slide along the M9 strap (y) or the M8 strap (x), whichever is nearer
@@ -478,10 +509,15 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     if hop_max:
         out["meta"]["split_reps"] = split_long(cells, nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows}, hop_max,
                                                cell)
+    overlaps = placement_overlaps(cells)
+    out["clock_cell_overlaps"] = overlaps
+    if reserve_sites:
+        out["meta"]["reserve_cell_sites"] = True
     out["meta"].update(cells=len(cells), drivers=len(out["drivers"]), bufx24_drivers=sum(len(d["cells"]) for d in
                        out["drivers"].values()), nodes=sum(1 for c in cells.values() if c["kind"] == "node"),
                        reps=sum(1 for c in cells.values() if c["kind"] == "rep"), stubs=len(tap_rows),
                        taps_early_nonzero=sum(1 for t in tap_rows if t["early_ps"]), unplaced=len(out["unplaced"]),
+                       clock_cell_overlap_pairs=len(overlaps),
                        driver_moves=sum(1 for d in out["drivers"].values() if d["move_um"] > 0),
                        driver_move_max_um=max([d["move_um"] for d in out["drivers"].values()] or [0]),
                        rep_slide_max_um=max([r["slide_um"] for h in out["htree"] for r in h["reps"]] or [0]),
@@ -536,7 +572,7 @@ def cmd_build(a):
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
-                                  a.regions, a.delta_id, a.region_edge_straps)
+                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites)
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
@@ -576,6 +612,10 @@ def cmd_balance(a):
     ko = list(DC.keepouts(P)) + ([P.rect(n) for n in P.parts] if M["meta"].get("sites") == "channel" else [])
     K = DC.KeepIndex(ko, die=(float(P.W), float(P.H)))
     cells = json.loads((src / "place.json").read_text())
+    reserve_sites = M["meta"].get("reserve_cell_sites", False)
+    if reserve_sites:
+        for name, c in cells.items():
+            reserve_cell(K, name, c)
     data = json.loads((src / "nets.json").read_text())
     nets, ports = data["nets"], [tuple(p) for p in data["ports"]]
     D, _ = read_tree(Path(a.tree) if a.tree else src / f"tree_{a.corner}.txt")
@@ -628,10 +668,14 @@ def cmd_balance(a):
                         break
                 else:
                     q, _ = free_near(K, q)
+                if q is None:
+                    raise SystemExit("die_clock_mesh balance: no legal site for clock pad")
                 nm = f"ckm_p{a.tag}_{added}"
                 added += 1
                 cells[nm] = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y), kind="pad",
                                  level=cells[x].get("level"))
+                if reserve_sites:
+                    reserve_cell(K, nm, cells[nm])
                 chain.append(nm)
             loads.append(chain[0])
             for u, w in zip(chain, chain[1:]):
@@ -643,6 +687,8 @@ def cmd_balance(a):
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
     M["meta"]["cells"] = len(cells)
+    M["clock_cell_overlaps"] = placement_overlaps(cells)
+    M["meta"]["clock_cell_overlap_pairs"] = len(M["clock_cell_overlaps"])
     M["meta"]["balance"] = dict(src=str(src), corner=a.corner, pad_ps=round(dl, 2), pads=added,
                                 total_pad_ns=round(total_pad / 1e3, 2), hist=dict(sorted(hist.items())))
     (out / "mesh.json").write_text(json.dumps(M) + "\n")
@@ -1084,6 +1130,8 @@ def regional_qualification(M, corners, crossings):
     reasons = []
     if M.get("unplaced") or M["meta"].get("unplaced", 0):
         reasons.append("clock cells have no legal site")
+    if M["meta"].get("clock_cell_overlap_pairs", 0):
+        reasons.append("clock cell bodies overlap")
     if set(corners) != {"TT", "FF"}:
         reasons.append("both TT and FF clock measurements are required")
     if any(c["verdict"] != "PASS" or c.get("landed_verdict") == "FAIL" for c in corners.values()):
@@ -1267,6 +1315,8 @@ def main(argv=None):
                    help="D > 0: 2^D clock regions (H-tree subtrees below level D), one mesh each, LANDED seams")
     b.add_argument("--region-edge-straps", action="store_true",
                    help="extend regional metal to its geometric box with an NDR gap, opening legal edge driver islands")
+    b.add_argument("--reserve-cell-sites", action="store_true",
+                   help="reserve every clock cell body while searching later sites; prevent overlapping clock cells")
     b.add_argument("--delta-id", help="plan delta tag recorded in mesh.json meta (e.g. D-QC-CLKMESH)")
     bl = sub.add_parser("balance")
     bl.add_argument("dir")
