@@ -15,6 +15,6 @@ cat >> $O/config.mk <<CFG
 export POST_GLOBAL_ROUTE_TCL = /work/hold_route.tcl
 CFG
 printf "OT_HOLD_MARGIN=$MG\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=BC CORNERS=bc'\n" > $O/variant.env
-mkdir -p $O/so/tools/die_plan; cp $O/signoff.py $O/sdc_lint.py $O/face_guard.py $O/pair_skew.tcl $O/so/tools/die_plan/; cp $O/clock_family.tcl $O/so/tools/die_plan/
+python3 -I "$O/signoff.py" bundle "$O/so/tools/die_plan" || exit 1
 printf '{"source_kit": "%s", "source_route": "%s/5_2_route.odb", "recipe": "ELEM-QK hold_eco b", "margin_ps": %s}\n' $K $RS $MG > $O/HOLD_ECO.json
 echo "ready $O"
