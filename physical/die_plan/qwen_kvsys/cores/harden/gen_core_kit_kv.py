@@ -494,6 +494,9 @@ def astk_zone_fences(kd, cfg, w, h, m, face_taps=False, balance_levels=True):
     # delay buffers to the depth of the 26k-sink zone trees -> landing-register insertion TT 294 / FF 239 vs the
     # 250 / 202.5 contract (ASTK5 probe: delaybuf_6/7 on the tap_7 branch).  --no-astk-balance-levels: tap trees keep
     # their own depth; related-pair skew + CPPR (owner MSCTS rule) is checked at sign-off.
+    # MEASURED 10-26 (ASTK7 trials): this OpenROAD prints CTS-0132 "-balance_levels is obsolete" -> the flag is a NO-OP;
+    # CTS still inserts 8 delay buffers with -delay_buffer_derate 0 too; landing insertion TT 256-273 / FF 206-221
+    # (placement RC) follows the 5.4k-sink zone trees (TT 245-271).  Contract 250/202.5 needs a structural clock change.
     cts = "-sink_clustering_enable -repair_clock_nets" + (" -balance_levels" if balance_levels else "")
     out.append("export CTS_ARGS = " + cts
                + (" -sink_clustering_size 30 -sink_clustering_max_diameter 60" if face_taps else ""))
