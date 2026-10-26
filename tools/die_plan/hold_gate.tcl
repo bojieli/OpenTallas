@@ -29,7 +29,11 @@ foreach p [all_inputs] { if {[get_full_name $p] ni $clock_ports} { lappend din $
 set hg_in -40; set hg_out 0
 if {[info exists ::env(OT_HOLD_IN_MIN)] && $::env(OT_HOLD_IN_MIN) ne ""} { set hg_in $::env(OT_HOLD_IN_MIN) }
 if {[info exists ::env(OT_HOLD_OUT_MIN)] && $::env(OT_HOLD_OUT_MIN) ne ""} { set hg_out $::env(OT_HOLD_OUT_MIN) }
-if {$hg_out > 0} { error "hold gate: min output delay $hg_out > 0 waives the sender hold check" }
+# plan clock.tap_window (gen_phys.tap_window_ps): the SDC min output delay is the contract + W (the clock ports are
+# timed W early), so the waiver guard applies to the contract part
+set hg_win 0
+if {[info exists ::env(OT_TAP_WINDOW)] && $::env(OT_TAP_WINDOW) ne ""} { set hg_win $::env(OT_TAP_WINDOW) }
+if {$hg_out - $hg_win > 0} { error "hold gate: min output delay $hg_out - window $hg_win > 0 waives the sender hold check" }
 puts "OT_HOLD_GATE contract in_min $hg_in out_min $hg_out"
 if {[llength $din]} { set_input_delay -min $hg_in -clock [lindex $vclks 0] $din }
 # IO-HOLD option A (opt-in, gen_phys.io_hold_tcl): partition-driven inputs carry their sender's guaranteed output-min
