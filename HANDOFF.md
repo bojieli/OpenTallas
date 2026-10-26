@@ -1089,3 +1089,5 @@ CODEX: 2026-10-26 04:07 PDT QC current source phase STRICT PASS83types/377parts/
 CODEX: 2026-10-26 04:09 PDT KVX PVjoin exact production M5 access PASS (4619ports/9752nets,GRT0,233343pins NoAp0,40%reserve), earlierM7diagnostic/API failures retained; q1/q3 root-approved CTS-only rows3f3a142a974c/b2771e502dc0 held normally. q2 rename91e658f6b ready forONEKVbatch.
 
 CODEX: 2026-10-26 04:25 HEAD indexedXB READYddb9d64045 clean-main packet; source-only fullidentity/nativeSK11/default/indexed/mutants PASS. HEADB CTS40pairPASS, actual source-120 qualified; standardFF GRT-only diagnostic kit_r2 now underot-run727177 after retained Tcl-hook failure; independent/root scope reviewed. Issued-tag FIFO/livefallback extraction source9336012efd miter running727178. PATH-S81 notes hold paths/limits.
+
+2026-10-26 04:21 PDT CODEX: TOK-DS80/80current XR→VP transports READY70b745d589; diagnosed/closed70buffer-boundary failures, actualsource stage0 consumed,385wordbytes unchanged; readiness holds preserved.
