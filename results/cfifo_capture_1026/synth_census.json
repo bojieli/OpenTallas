@@ -1,0 +1,24 @@
+{
+ "rows": [
+  {
+   "top": "ot_s81_land",
+   "input_bits": 276,
+   "direct_loads": {
+    "[('$dffe', 'D'), ('$dffe', 'D'), ('$dffe', 'D'), ('$dffe', 'D')]": 276
+   },
+   "flop_bits": 1400,
+   "all_input_bits_one_ff": false
+  },
+  {
+   "top": "ot_s81_land_pin_capture",
+   "input_bits": 276,
+   "direct_loads": {
+    "[('$dff', 'D')]": 276
+   },
+   "flop_bits": 1681,
+   "all_input_bits_one_ff": true
+  }
+ ],
+ "added_flop_bits_per_lane": 281,
+ "added_flop_bits_four_lanes": 1124
+}
