@@ -498,6 +498,15 @@ def astk_zone_fences(kd, cfg, w, h, m, face_taps=False):
     return out
 
 
+def _ms():
+    """METHODOLOGY 12.7c master-plan slice helper (this repo's tools/die_plan/master_slice.py, loaded by path)."""
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("master_slice", REPO / "tools/die_plan/master_slice.py")
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core-json", required=True)
@@ -585,6 +594,8 @@ def main():
                     "from hr_face_ports.sh (private port flop copies of shared output flops, merged identical input "
                     "capture flops; equiv proof + mutant in DIR/eq_rc.txt) + the macro black boxes of the core json")
     ap.add_argument("--hold-ff-margin", type=float, default=5.0, help="FF-only GRT hold repair margin (ps)")
+    MS = _ms()
+    MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
     cj = json.load(open(a.core_json))
     if a.am_g_drop:
@@ -651,6 +662,7 @@ def main():
         if not k.startswith("_") and k.endswith("*") and mod.startswith(k[:-1]):
             rec.update(v)
     kd = Path(a.out) / tid
+    MS.precheck(a.master_slice, a.trial, plan, mod)
     if kd.exists():
         shutil.rmtree(kd)
     (kd / "rtl").mkdir(parents=True)
@@ -1091,6 +1103,10 @@ def main():
         cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM, face_taps=a.astk_face_taps)
     elif a.astk_face_taps:
         raise SystemExit("--astk-face-taps needs --astk-zone-fences")
+    # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
+    # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
+    ms = MS.kit_apply(kd, hc["module"], [w, h], a.master_slice, plan, a.trial, kind="core",
+                      gpl_hook=kd / "face_flops.tcl")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
@@ -1104,6 +1120,8 @@ def main():
     import lec as LEC
     source_provenance = LEC._repo_provenance(REPO)
     fz["source_commit"] = source_provenance.get("commit")
+    if ms is not None:
+        fz["master_plan"] = ms
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     LEC.write_kit_provenance(kd, REPO, provenance=source_provenance)
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),

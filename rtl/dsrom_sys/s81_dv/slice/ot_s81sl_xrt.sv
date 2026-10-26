@@ -213,7 +213,6 @@ module ot_s81sl_xrt #(
     localparam integer NSP = 6;
     wire [NSP-1:0] sp;
     ot_rst_relay #(.REGIONS(NSP), .SYNC_STAGES(2), .TREE_STAGES(1)) u_sp (.clk(clk), .rst_n_in(rst_n), .rst_n(sp));
-    integer k, i;
     // ---------------------------------------------------------------- face landing (S81-KITS-RTLB 10-24)
     // Owner rule (register every pin, in RTL; no implemented-netlist face registers): with FACE_LAND = 1 every bit of the
     // beat-leaf interface lo_v / lo_d / p_v / p_d and of the Engram interface e_v / e_c / e_d lands in exactly ONE pin
@@ -282,13 +281,13 @@ module ot_s81sl_xrt #(
         if (DD == 0) begin : g_d0
             assign p_v_s[dk] = p_v_i[dk]; assign p_d_s[32 * dk +: 32] = p_d_i[32 * dk +: 32];
         end else begin : g_dn
-            reg [DD-1:0] sv; reg [32*DD-1:0] sd; integer q;
+            reg [DD-1:0] sv; reg [32*DD-1:0] sd;
             always @(posedge clk or negedge rs_d)
                 if (!rs_d) sv <= {DD{1'b0}};
-                else begin sv[0] <= p_v_i[dk]; for (q = 1; q < DD; q = q + 1) sv[q] <= sv[q - 1]; end
+                else begin sv[0] <= p_v_i[dk]; for (integer q = 1; q < DD; q = q + 1) sv[q] <= sv[q - 1]; end
             always @(posedge clk) begin
                 sd[31:0] <= p_d_i[32 * dk +: 32];
-                for (q = 1; q < DD; q = q + 1) sd[32 * q +: 32] <= sd[32 * (q - 1) +: 32];
+                for (integer q = 1; q < DD; q = q + 1) sd[32 * q +: 32] <= sd[32 * (q - 1) +: 32];
             end
             assign p_v_s[dk] = sv[DD-1]; assign p_d_s[32 * dk +: 32] = sd[32 * (DD - 1) +: 32];
         end
@@ -314,9 +313,9 @@ module ot_s81sl_xrt #(
     // pq capture enables (ev_c / pv drove 197 / 66 pins); the masters keep only the control decode.
     (* keep *) reg [5*16-1:0] lov_c; (* keep *) reg [5*12-1:0] evd_c; (* keep *) reg [5*4-1:0] pvd_c;
     always @(posedge clk) begin
-        for (k = 0; k < 80; k = k + 1) lov_c[k] <= lo_v_i[k / 16];
-        for (k = 0; k < 60; k = k + 1) evd_c[k] <= e_v_i[k / 12];
-        for (k = 0; k < 20; k = k + 1) pvd_c[k] <= p_v_s[k / 4];
+        for (integer k = 0; k < 80; k = k + 1) lov_c[k] <= lo_v_i[k / 16];
+        for (integer k = 0; k < 60; k = k + 1) evd_c[k] <= e_v_i[k / 12];
+        for (integer k = 0; k < 20; k = k + 1) pvd_c[k] <= p_v_s[k / 4];
     end
     always @(posedge clk) begin
         eb <= {28'd0, dl_e, 1'b0}; wb <= {28'd0, dl_w, 1'b0}; vb <= {dl_vb, 1'b0};
@@ -410,8 +409,8 @@ module ot_s81sl_xrt #(
     reg [2:0] nlo0; reg [255:0] lo_sel0;
     always @(*) begin
         nlo0 = 3'd0; lo_sel0 = 256'd0;
-        for (k = 0; k < 5; k = k + 1) nlo0 = nlo0 + lov[k];
-        for (k = 0; k < 80; k = k + 1) if (lov_c[k]) lo_sel0[16 * (k % 16) +: 16] = lo_sel0[16 * (k % 16) +: 16] | lod[16 * k +: 16];
+        for (integer k = 0; k < 5; k = k + 1) nlo0 = nlo0 + lov[k];
+        for (integer k = 0; k < 80; k = k + 1) if (lov_c[k]) lo_sel0[16 * (k % 16) +: 16] = lo_sel0[16 * (k % 16) +: 16] | lod[16 * k +: 16];
     end
     wire [V-1:0] sc_b0 = e_sc ? eb[V-1:0] : wb[V-1:0];
     // stage-1 registers
@@ -435,7 +434,7 @@ module ot_s81sl_xrt #(
         if (!rs_c1) begin cvld <= 1'b0; vct <= 1'b0; esc <= 1'b0; wsc <= 1'b0; rdv <= 1'b0; f1 <= 1'b0; tg <= 6'd0; end
         else begin
             cvld <= ce || cw || cv; vct <= v_ctl; esc <= e_sc; wsc <= w_sc; rdv <= rdv0;
-            for (k = 0; k < 6; k = k + 1) tg[k] <= (ce || cw || cv) && tgt0 == k;
+            for (integer k = 0; k < 6; k = k + 1) tg[k] <= (ce || cw || cv) && tgt0 == k;
             // input-only faults: two CTLs / two RDs / two lo beats in a cycle, an RD to leaf > 4, a CTL target > 5
             f1 <= ((ce + cw + cv) > 2'd1) || ((re + rw_ + b_rd + v_rd + local_rd) > 3'd1) || (nlo0 > 3'd1) ||
                   (rdv0 && rl0 > 3'd4) || ((ce || cw || cv) && tgt0 > 5'd5) || (v_rd && (vb[7] || |vb[275:273]));
@@ -444,7 +443,7 @@ module ot_s81sl_xrt #(
         if (!rs_c2) begin rwe <= 5'd0; rwr <= 5'd0; lov1 <= 5'd0; end
         else begin
             lov1 <= lov;
-            for (k = 0; k < 5; k = k + 1) begin
+            for (integer k = 0; k < 5; k = k + 1) begin
                 rwe[k] <= rdv0 && rl0 == k;
                 rwr[k] <= (ce || cw || cv) && tgt0 == 5'd5 && lmask0[k];
             end
@@ -452,27 +451,27 @@ module ot_s81sl_xrt #(
     always @(posedge clk) begin
         // RG-FFN: each copy group's D is (next state AND sp[j]); copies k of one decode in sub-groups of 30 take distinct
         // leaves, so every node feeds <= 30 copies (sp is 1 after reset release: same value as the master next state)
-        for (k = 0; k < 640; k = k + 1) rwe_c[k] <= rdv0 && rl0 == k / 128 && sp[((k % 128) / 30 + k / 128) % NSP];
-        for (k = 0; k < 160; k = k + 1)
+        for (integer k = 0; k < 640; k = k + 1) rwe_c[k] <= rdv0 && rl0 == k / 128 && sp[((k % 128) / 30 + k / 128) % NSP];
+        for (integer k = 0; k < 160; k = k + 1)
             rwr_c[k] <= (ce || cw || cv) && tgt0 == 5'd5 && lmask0[k / 32] && sp[((k % 32) / 30 + 2 * (k / 32)) % NSP];
-        for (k = 0; k < 8; k = k + 1) tg1_c[k] <= (ce || cw || cv) && tgt0 == 5'd1;
-        for (k = 0; k < 6; k = k + 1) tg4_c[k] <= (ce || cw || cv) && tgt0 == 5'd4;
-        for (k = 0; k < 128; k = k + 1) begin
+        for (integer k = 0; k < 8; k = k + 1) tg1_c[k] <= (ce || cw || cv) && tgt0 == 5'd1;
+        for (integer k = 0; k < 6; k = k + 1) tg4_c[k] <= (ce || cw || cv) && tgt0 == 5'd4;
+        for (integer k = 0; k < 128; k = k + 1) begin
             rse_c[k] <= re && sp[(k / 30) % NSP]; rsw_c[k] <= !re && rw_ && sp[(k / 30 + 1) % NSP];
         end
-        for (k = 0; k < 20; k = k + 1) begin bse_c[k] <= ce && sp[2]; bsw_c[k] <= !ce && cw && sp[3]; end
-        for (k = 0; k < 35; k = k + 1) begin
+        for (integer k = 0; k < 20; k = k + 1) begin bse_c[k] <= ce && sp[2]; bsw_c[k] <= !ce && cw && sp[3]; end
+        for (integer k = 0; k < 35; k = k + 1) begin
             cvc_c[k] <= v_ctl && sp[(k / 30 + 4) % NSP]; cse_c[k] <= !v_ctl && e_sc && sp[(k / 30 + 0) % NSP];
         end
 `ifdef OT_S81SL_XR_PDC
-        for (k = 0; k < 32; k = k + 1) rsv_c[k] <= pq_vrdc && sp[(k / 30 + 2) % NSP];
+        for (integer k = 0; k < 32; k = k + 1) rsv_c[k] <= pq_vrdc && sp[(k / 30 + 2) % NSP];
 `else
-        for (k = 0; k < 32; k = k + 1) rsv_c[k] <= v_rd && sp[(k / 30 + 2) % NSP];
+        for (integer k = 0; k < 32; k = k + 1) rsv_c[k] <= v_rd && sp[(k / 30 + 2) % NSP];
 `endif
         eb2 <= eb[W-1:1]; wb2 <= wb[W-1:1]; vb2 <= vb[V-1:1];
         // local copy: the ci loop-back word rides the B raw word (bb2 is only the RD-from-B source; a B RD and a local
         // RD in one cycle are the two-RD fault).  C1 (HB = 0) has no B port: bb2 is the local word only.
-        for (k = 0; k < 1024; k = k + 1)
+        for (integer k = 0; k < 1024; k = k + 1)
             bb2[k] <= lcl_c[k / LCG] ? ci_rkh[51 + k] : (HB != 0) ? bb[52 + k] : 1'b0;
 `ifdef OT_S81SL_XR_PDC
         lmask <= lmask0; rnp <= pq_vrdr ? 2'd0 : rdb0[50 +: 2]; rrow <= pq_vrdr ? vb[16:7] : rdb0[40 +: 10];
@@ -490,20 +489,20 @@ module ot_s81sl_xrt #(
     always @(posedge clk) begin
         ebx_l <= eb[47 +: 33]; wbx_l <= wb[47 +: 33]; vbx_l <= vb[47 +: 33];
         ebx_h <= eb[111 +: 32]; wbx_h <= wb[111 +: 32]; vbx_h <= vb[111 +: 32];
-        for (k = 0; k < 9; k = k + 1) begin bsex_c[k] <= ce && sp[2]; bswx_c[k] <= !ce && cw && sp[3]; end
+        for (integer k = 0; k < 9; k = k + 1) begin bsex_c[k] <= ce && sp[2]; bswx_c[k] <= !ce && cw && sp[3]; end
     end
     reg [32:0] bx_l; reg [31:0] bx_h;
     always @(*) begin
-        for (k = 0; k < 33; k = k + 1) bx_l[k] = bsex_c[k / 8] ? ebx_l[k] : bswx_c[k / 8] ? wbx_l[k] : vbx_l[k];
-        for (k = 0; k < 32; k = k + 1) bx_h[k] = bsex_c[5 + k / 8] ? ebx_h[k] : bswx_c[5 + k / 8] ? wbx_h[k] : vbx_h[k];
+        for (integer k = 0; k < 33; k = k + 1) bx_l[k] = bsex_c[k / 8] ? ebx_l[k] : bswx_c[k / 8] ? wbx_l[k] : vbx_l[k];
+        for (integer k = 0; k < 32; k = k + 1) bx_h[k] = bsex_c[5 + k / 8] ? ebx_h[k] : bswx_c[5 + k / 8] ? wbx_h[k] : vbx_h[k];
     end
     reg [1023:0] rdat; reg [159:0] body; reg [V-2:0] cix;
     always @(*) begin
-        for (k = 0; k < 1024; k = k + 1)
+        for (integer k = 0; k < 1024; k = k + 1)
             rdat[k] = (k < 256 && rsv_c[k / 8]) ? vb2[16 + k] : rse_c[k / 8] ? eb2[51 + k] : rsw_c[k / 8] ? wb2[51 + k] : bb2[k]; // selrange-ok: rsv_c[k/8] and vb2[16+k] are selected only for constant-unrolled k<256; guard false for k>=256; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3, probe p1
-        for (k = 0; k < 160; k = k + 1)
+        for (integer k = 0; k < 160; k = k + 1)
             body[k] = bse_c[k / 8] ? eb2[46 + k] : bsw_c[k / 8] ? wb2[46 + k] : vb2[46 + k];
-        for (k = 0; k < V - 1; k = k + 1)
+        for (integer k = 0; k < V - 1; k = k + 1)
 `ifdef OT_S81SL_XR_MUT_HOPS
             cix[k] = cvc_c[k / 8] ? vb2[k] :                                // mutant: re-injected CTL keeps the V hops
 `else
@@ -536,9 +535,9 @@ module ot_s81sl_xrt #(
     localparam integer NPV = (V - 1 + 15) / 16;
     (* keep *) reg [NPV-1:0] pvs_c;
     always @(posedge clk) begin
-        for (k = 0; k < 128; k = k + 1) pkw_c[k] <= (|lov) && pn_nx == k / 32 && sp[((k % 32) / 30 + k / 32) % NSP];
-        for (k = 0; k < NCI; k = k + 1) cis_c[k] <= pk_go_nx && !v_ctl && !pair_mode_nx && sp[(k / 30 + 3) % NSP];
-        for (k = 0; k < NPV; k = k + 1) pvs_c[k] <= pair_v_nx && !v_ctl && sp[5];
+        for (integer k = 0; k < 128; k = k + 1) pkw_c[k] <= (|lov) && pn_nx == k / 32 && sp[((k % 32) / 30 + k / 32) % NSP];
+        for (integer k = 0; k < NCI; k = k + 1) cis_c[k] <= pk_go_nx && !v_ctl && !pair_mode_nx && sp[(k / 30 + 3) % NSP];
+        for (integer k = 0; k < NPV; k = k + 1) pvs_c[k] <= pair_v_nx && !v_ctl && sp[5];
     end
     // S81-SMWIRE x XR7: sos_c[g] = so_go && !vct && !sc_rel && !pk_go (the SO beat owns ci_r), registered from next state;
     // reset-free (so_n is reset, so so_go_nx is 0 one clock into reset).
@@ -549,7 +548,7 @@ module ot_s81sl_xrt #(
     generate if (HB != 0) begin : g_sos
         (* keep *) reg [NCI-1:0] sos_r;
         always @(posedge clk)
-            for (k = 0; k < NCI; k = k + 1)
+            for (integer k = 0; k < NCI; k = k + 1)
                 sos_r[k] <= so_go_nx && !v_ctl && !sc_rel_nx && !(pk_go_nx && !pair_mode_nx) && !pair_v_nx &&
                             sp[(k / 30 + 0) % NSP];
         assign sos_c = sos_r;
@@ -576,7 +575,7 @@ module ot_s81sl_xrt #(
         if (tg4_c[5]) s_np <= body[42:41];
     end
     always @(posedge clk)                                        // fixed-index pair writes (decoded pn, kept copies)
-        for (k = 0; k < 128; k = k + 1) if (pkw_c[k]) pk[8 * k +: 8] <= lo_sel[8 * (k % 32) +: 8];
+        for (integer k = 0; k < 128; k = k + 1) if (pkw_c[k]) pk[8 * k +: 8] <= lo_sel[8 * (k % 32) +: 8];
     always @(*) begin
         snd = {W{1'b0}};
         snd[0] = 1'b1; snd[3:1] = s_kind; snd[8:4] = s_hops; snd[12:9] = sid_t; snd[20:13] = 8'd0;
@@ -611,15 +610,15 @@ module ot_s81sl_xrt #(
         always @(posedge clk) begin
             so_w <= bb[52 +: 512];
 `ifdef OT_S81SL_XR_MUT_SOEN
-            for (k = 0; k < 64; k = k + 1) begin
+            for (integer k = 0; k < 64; k = k + 1) begin
                 sol_c[k] <= b_so && so_n == 2'd0 && sp[(k / 30) % NSP]; soh_c[k] <= b_so && so_n == 2'd0 && sp[(k / 30 + 3) % NSP];
             end
 `else
-            for (k = 0; k < 64; k = k + 1) begin
+            for (integer k = 0; k < 64; k = k + 1) begin
                 sol_c[k] <= b_so && so_n == 2'd0 && sp[(k / 30) % NSP]; soh_c[k] <= b_so && so_n == 2'd1 && sp[(k / 30 + 3) % NSP];
             end
 `endif
-            for (i = 0; i < 512; i = i + 1) begin
+            for (integer i = 0; i < 512; i = i + 1) begin
                 if (sol_c[i / 8]) so_lo_r[i] <= so_w[i];
                 if (soh_c[i / 8]) so_hi_r[i] <= so_w[i];
             end
@@ -648,14 +647,14 @@ module ot_s81sl_xrt #(
     // local copy: lcl_c = local_rd's next state (the ci word is a local RD loop-back on the next edge), per 30 bits of bb2
     wire s_local_nx = tg[4] ? body[44] : s_local;
     wire lcl_nx = !vct && !pair_v && pk_go && !pair_mode && s_local && s_kind == K_RD && s_local_nx;
-    always @(posedge clk) for (k = 0; k < NLC; k = k + 1) lcl_c[k] <= lcl_nx && sp[(k / 30 + 1) % NSP];
+    always @(posedge clk) for (integer k = 0; k < NLC; k = k + 1) lcl_c[k] <= lcl_nx && sp[(k / 30 + 1) % NSP];
     assign ci_b = {ci_r, ci_v};      // ci_r[W-29 ..] are always 0 (no constant pins: OWNER DECISION 8)
     // S81-SMWIRE x XR7 (ROOT4 merge 10-19): the SO beat select is a KEPT registered copy per 16 bits, like cis_c; its D is
     // so_go's next state with the same priority as before the merge (send first; no SO beat beside a CTL re-injection /
     // SC relay), so ci_r is unchanged: (pk_go && !vct) ? snd : (so_go && !vct && !sc_rel) ? so_b : cix.
     wire [W-2:0] cixw = {{(W - V){1'b0}}, cix};
     reg [W-2:0] ci_r_nx;
-    always @(*) for (i = 0; i < W - 1; i = i + 1)
+    always @(*) for (integer i = 0; i < W - 1; i = i + 1)
         ci_r_nx[i] = (i < V - 1 && pvs_c[i / 16]) ? pair_word[i + 1] : cis_c[i / 16] ? snd[i + 1] : sos_c[i / 16] ? so_b[i + 1] : // selrange-ok: pvs_c[i/16] and pair_word[i+1] are selected only for constant-unrolled i<V-1; guard false at larger i; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3, probe p1
                      cixw[i];
     always @(posedge clk) begin ci_r <= ci_r_nx[W-30:0]; ci_rkl <= ci_r_nx[2:0]; ci_rkh <= ci_r_nx[W-30:36]; end
@@ -667,8 +666,8 @@ module ot_s81sl_xrt #(
         // RG-FFN: the payload clear select (512 loads) is a kept registered copy per 30 bits (pk_go's next state; s_dir
         // cannot change on a pk_go edge)
         (* keep *) reg [(BW - 1 + 29) / 30 - 1:0] bog_c;
-        always @(posedge clk) for (k = 0; k < (BW - 1 + 29) / 30; k = k + 1) bog_c[k] <= pk_go_nx && s_dir[3] && sp[4];
-        always @(posedge clk) for (i = 1; i < BW; i = i + 1) bo_r[i] <= bog_c[(i - 1) / 30] ? pk[i - 1] : 1'b0;
+        always @(posedge clk) for (integer k = 0; k < (BW - 1 + 29) / 30; k = k + 1) bog_c[k] <= pk_go_nx && s_dir[3] && sp[4];
+        always @(posedge clk) for (integer i = 1; i < BW; i = i + 1) bo_r[i] <= bog_c[(i - 1) / 30] ? pk[i - 1] : 1'b0;
         assign bo = bo_r;
     end else begin : g_nobo
         assign bo = {BW{1'b0}};                     // C1: no band port (the C1 wrapper does not expose it)
@@ -682,18 +681,18 @@ module ot_s81sl_xrt #(
     // XR7: one copy per 8 bits (was 16: 70 pins), reset-free (un_nx is a function of reset state).
     (* keep *) reg [5*32*2-1:0] un_c; reg [1:0] un_nx [0:4];
     always @(*)
-        for (k = 0; k < 5; k = k + 1) begin
+        for (integer k = 0; k < 5; k = k + 1) begin
             un_nx[k] = un[k];
             if (ub[k]) un_nx[k] = un[k] + 2'd1;
             if (rwe[k]) un_nx[k] = 2'd0;
         end
     always @(posedge clk)                                        // RG-FFN: <= 30 copies per node (sp split)
-        for (k = 0; k < 160; k = k + 1) un_c[2 * k +: 2] <= un_nx[k / 32] & {2{sp[((k % 32) / 30 + 2 * (k / 32)) % NSP]}};
+        for (integer k = 0; k < 160; k = k + 1) un_c[2 * k +: 2] <= un_nx[k / 32] & {2{sp[((k % 32) / 30 + 2 * (k / 32)) % NSP]}};
     always @(posedge clk or negedge rs_r)
-        if (!rs_r) begin ub <= 5'd0; sw_v <= 5'd0; ucol <= 1'b0; for (k = 0; k < 5; k = k + 1) un[k] <= 2'd0; end
+        if (!rs_r) begin ub <= 5'd0; sw_v <= 5'd0; ucol <= 1'b0; for (integer k = 0; k < 5; k = k + 1) un[k] <= 2'd0; end
         else begin
             ucol <= 1'b0;
-            for (k = 0; k < 5; k = k + 1) begin
+            for (integer k = 0; k < 5; k = k + 1) begin
                 sw_v[k] <= 1'b0;
                 un[k] <= un_nx[k];
                 if (ub[k]) begin
@@ -714,10 +713,10 @@ module ot_s81sl_xrt #(
         end
     wire [255:0] rwb = {128'd0, body[141:14]};
     always @(posedge clk)
-        for (k = 0; k < 5; k = k + 1) begin
+        for (integer k = 0; k < 5; k = k + 1) begin
             if (rwe[k]) begin ul[k] <= rnp; ur[k] <= rrow; end
-            for (i = 0; i < 128; i = i + 1) if (rwe_c[128 * k + i]) ud[k][8 * i +: 8] <= rdat[8 * i +: 8];
-            for (i = 0; i < 32; i = i + 1)
+            for (integer i = 0; i < 128; i = i + 1) if (rwe_c[128 * k + i]) ud[k][8 * i +: 8] <= rdat[8 * i +: 8];
+            for (integer i = 0; i < 32; i = i + 1)
                 sw_d[256 * k + 8 * i +: 8] <= rwr_c[32 * k + i] ? rwb[8 * i +: 8]
                                                               : ud[k][256 * un_c[64 * k + 2 * i +: 2] + 8 * i +: 8];
             if (rwr[k]) begin
@@ -764,7 +763,7 @@ module ot_s81sl_xrt #(
         end
     always @(posedge clk) begin
         c_d <= body;
-        for (k = 0; k < 4; k = k + 1) begin
+        for (integer k = 0; k < 4; k = k + 1) begin
             x_eps_m[8 * k +: 8] <= tg1_c[k] ? bx_l[8 * k +: 8] : x_eps_m[8 * k +: 8];
             x_scale_m[8 * k +: 8] <= tg1_c[4 + k] ? bx_h[8 * k +: 8] : x_scale_m[8 * k +: 8];
 `ifdef OT_S81SL_XR_MUT_XHOLD
@@ -792,17 +791,17 @@ module ot_s81sl_xrt #(
     always @(posedge clk) begin ev2_c <= e_v_i & {5{sp[0]}}; ev3_c <= e_v_i & {5{sp[1]}}; end reg [31:0] xs_e, xs_p;
     always @(*) begin
         xs_e = 32'd0; xs_p = 32'd0;
-        for (k = 0; k < 15; k = k + 1) begin
+        for (integer k = 0; k < 15; k = k + 1) begin
             if (eoh[k])  xs_e[15:0]  = xs_e[15:0]  | eqd[k % 5][32 * (k / 5) +: 16];
             if (eoh1[k]) xs_e[31:16] = xs_e[31:16] | eqd[k % 5][32 * (k / 5) + 16 +: 16];
         end
 `ifdef OT_S81SL_XR_MUT_PORDER
-        for (k = 0; k < 5; k = k + 1) begin                                  // mutant: partials in reverse order
+        for (integer k = 0; k < 5; k = k + 1) begin                                  // mutant: partials in reverse order
             if (poh[k])  xs_p[15:0]  = xs_p[15:0]  | pq[4 - k][15:0];
             if (poh1[k]) xs_p[31:16] = xs_p[31:16] | pq[4 - k][31:16];
         end
 `else
-        for (k = 0; k < 5; k = k + 1) begin
+        for (integer k = 0; k < 5; k = k + 1) begin
             if (poh[k])  xs_p[15:0]  = xs_p[15:0]  | pq[k][15:0];
             if (poh1[k]) xs_p[31:16] = xs_p[31:16] | pq[k][31:16];
         end
@@ -810,7 +809,7 @@ module ot_s81sl_xrt #(
     end
     always @(*) begin
         ebad = (|ev_c) && (ev_c != 5'b11111);
-        for (k = 1; k < 5; k = k + 1) if (ev_c[k] && ec_c[2 * k +: 2] != ec_c[1:0]) ebad = 1'b1;
+        for (integer k = 1; k < 5; k = k + 1) if (ev_c[k] && ec_c[2 * k +: 2] != ec_c[1:0]) ebad = 1'b1;
     end
     always @(posedge clk or negedge rs_o)
         if (!rs_o) begin prun <= 1'b0; pi <= 3'd0; x_sv <= 1'b0; rb_v <= 1'b0; erun <= 1'b0; et <= 4'd0; el <= 3'd0;
@@ -845,8 +844,8 @@ module ot_s81sl_xrt #(
         end
     wire [7:0] xsi_e = ({6'd0, ekd} * 8'd4 + {6'd0, ecp}) * 8'd5 + {5'd0, el};   // <= 79 (ekd <= 3): bit 7 is 0
     always @(posedge clk) begin
-        for (k = 0; k < 20; k = k + 1) if (pvd_c[k]) pq[k / 4][8 * (k % 4) +: 8] <= pd[8 * k +: 8];
-        for (k = 0; k < 60; k = k + 1) if (evd_c[k]) eqd[k / 12][8 * (k % 12) +: 8] <= ed_c[8 * k +: 8];
+        for (integer k = 0; k < 20; k = k + 1) if (pvd_c[k]) pq[k / 4][8 * (k % 4) +: 8] <= pd[8 * k +: 8];
+        for (integer k = 0; k < 60; k = k + 1) if (evd_c[k]) eqd[k / 12][8 * (k % 12) +: 8] <= ed_c[8 * k +: 8];
         if (|ev_c) ecp <= ec_c[1:0];
         x_si <= erx[4] ? xsi_e[6:0] : {4'd0, pi};
         x_s[7:0]   <= erx[0] ? xs_e[7:0]   : xs_p[7:0];

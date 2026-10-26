@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.hbm.hc128.dependency_cohort.v1",
+  "source_commit": "b05ef89bdd",
+  "qualification": "SOURCE_LOGIC_AND_RESET_CENSUS_PASS_PHYSICAL_GATES_PENDING",
+  "added_cycles": 0,
+  "masters_directory": "/srv/opentallas-scratch2/claude/codex-hbm-hc-native-1026/masters_drst",
+  "adapters_directory": "/srv/opentallas-scratch2/claude/codex-hbm-hc-native-1026/adapters_drst",
+  "fresh_parent_proofs": [
+    "drst/plain_result.json",
+    "drst/first_result.json"
+  ],
+  "unchanged_parent_maps": [
+    "feed",
+    "term",
+    "qhub"
+  ],
+  "unchanged_scope": "feed/term parent controls and qhub do not change; common pair leaf arithmetic is superseded by the masked DRST dependency check",
+  "leaf_gate": "drst/masked_4state.json",
+  "reset_per_pair_before": 8388,
+  "reset_per_pair_after": 260,
+  "removed_data_reset_bits_for128pairs": 1040384,
+  "pending": [
+    "M5kit synthesis/geometry/CTS",
+    "TTsetup+FFhold833ps60/25",
+    "measuredclockinsertion and relatedpairspread<=80ps",
+    "fullB1nativebodybind and modeladoption"
+  ]
+}

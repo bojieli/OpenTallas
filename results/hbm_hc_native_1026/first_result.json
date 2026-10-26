@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm.hc128.pair_miter.v1",
+  "top": "ot_hbm_hc_bankq0_static",
+  "source_sha": "5e2d78d280",
+  "defines": [],
+  "scope": "all original bank outputs + every unchanged HC-leaf/SRAM boundary input, same-cycle; parent control state checked",
+  "state_points": 50,
+  "arithmetic_leaf": "unchanged ot_hdc_v41x_hcp_lanes",
+  "split_cycles": 0,
+  "checks": {
+    "gate": {
+      "verdict": "PASS",
+      "rc": 0,
+      "proven": 22180,
+      "unproven": 0,
+      "mutation": null
+    },
+    "mutant": {
+      "verdict": "CAUGHT",
+      "rc": 1,
+      "proven": 22180,
+      "unproven": 1,
+      "mutation": "first weight SRAM write-enable tied0"
+    }
+  },
+  "verdict": "PASS"
+}

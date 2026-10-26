@@ -1,0 +1,72 @@
+{
+ "schema": "opentallas.hbm_arch.core_views.v1",
+ "plan": "plan.json",
+ "view_list": [
+  {
+   "view": "ot_hbm_hc_bank128_pair_core@dc5591d2956a",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "pins_file": "ot_hbm_hc_bank128_pair_core_pins.json",
+   "pins_sha256": "dc5591d2956a1c7a4ef4d6967b6ad858e999c579c70b389716515c6977be189d",
+   "pins": 1590,
+   "family": "HC_W128_NATIVE",
+   "placed": 112,
+   "instances": [
+    "native HC pair/subtree"
+   ],
+   "recipe_keys": [
+    "ot_hbm_hc_bank128_pair_core"
+   ],
+   "blockers": [
+    "M5 synth/CTS/route/timing/clock acceptance pending"
+   ]
+  },
+  {
+   "view": "ot_hbm_hc_bank128_pair_first_core@422308618674",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "pins_file": "ot_hbm_hc_bank128_pair_first_core_pins.json",
+   "pins_sha256": "422308618674116bae6856cfe82de45bbc749e85f6cb00c82b00942e6bd72051",
+   "pins": 1078,
+   "family": "HC_W128_NATIVE",
+   "placed": 16,
+   "instances": [
+    "native HC pair/subtree"
+   ],
+   "recipe_keys": [
+    "ot_hbm_hc_bank128_pair_first_core"
+   ],
+   "blockers": [
+    "M5 synth/CTS/route/timing/clock acceptance pending"
+   ]
+  },
+  {
+   "view": "ot_hbm_hc_subtree32_core@d7c3ec297ab4",
+   "module": "ot_hbm_hc_subtree32_core",
+   "outline_um": [
+    220.32,
+    220.32
+   ],
+   "pins_file": "ot_hbm_hc_subtree32_core_pins.json",
+   "pins_sha256": "d7c3ec297ab44d5e76d93a5bc6d2fe7fd3d47b1c3ff17d62f4c44a42d48f94b7",
+   "pins": 1091,
+   "family": "HC_W128_NATIVE",
+   "placed": 8,
+   "instances": [
+    "native HC pair/subtree"
+   ],
+   "recipe_keys": [
+    "ot_hbm_hc_subtree32_core"
+   ],
+   "blockers": [
+    "M5 synth/CTS/route/timing/clock acceptance pending"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,998 @@
+{
+ "schema": "opentallas.hbm_b1_lane_price.v1",
+ "status": "CONDITIONAL_MODEL_NOT_ADOPTED",
+ "source_commit": "ac2ad01a82a6ed2841435bb93c3e33f274eafd0a",
+ "baseline": {
+  "plan": "/srv/opentallas-scratch2/claude/path-hbm/b1c_1026/native_cut_bands_r3/die_plan.json",
+  "sha256": "0552ecf2c61cb20212c2d572b4610038a3370d9e770d299bdab66af4e88215b5",
+  "core_conns_sha256": "48e5e84872d2145b4768e02e8034a8de2bdd87c000db9b3ac14a6de6825c55ff"
+ },
+ "candidate": {
+  "plan": "/srv/opentallas-scratch2/claude/path-hbm/g0cfix_1026/plan_b1n6/die_plan.json",
+  "sha256": "60d58330698515c32bff92bb3b474b10e0953494883d9788c0238214f4cbb0b7",
+  "core_conns_sha256": "48e5e84872d2145b4768e02e8034a8de2bdd87c000db9b3ac14a6de6825c55ff"
+ },
+ "changed_lanes": {
+  "L101": {
+   "baseline": 35,
+   "candidate": 36,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_io",
+   "width": 21,
+   "on_critical_leg": [
+    "COLL"
+   ]
+  },
+  "L101m": {
+   "baseline": 35,
+   "candidate": 36,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_io",
+   "width": 21,
+   "on_critical_leg": []
+  },
+  "L119": {
+   "baseline": 23,
+   "candidate": 24,
+   "families": [],
+   "bound": "UNBOUND",
+   "src": "NW_hub",
+   "dst": "NW_b013",
+   "width": 9,
+   "on_critical_leg": []
+  },
+  "L119m": {
+   "baseline": 23,
+   "candidate": 24,
+   "families": [],
+   "bound": "UNBOUND",
+   "src": "NE_hub",
+   "dst": "NE_b013",
+   "width": 9,
+   "on_critical_leg": []
+  },
+  "L126": {
+   "baseline": 35,
+   "candidate": 36,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NW_io",
+   "dst": "NW_hub",
+   "width": 5,
+   "on_critical_leg": [
+    "COLL"
+   ]
+  },
+  "L126m": {
+   "baseline": 35,
+   "candidate": 36,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NE_io",
+   "dst": "NE_hub",
+   "width": 5,
+   "on_critical_leg": []
+  },
+  "L146": {
+   "baseline": 24,
+   "candidate": 25,
+   "families": [],
+   "bound": "UNBOUND",
+   "src": "NW_b013",
+   "dst": "NW_hub",
+   "width": 1,
+   "on_critical_leg": []
+  },
+  "L146m": {
+   "baseline": 24,
+   "candidate": 25,
+   "families": [],
+   "bound": "UNBOUND",
+   "src": "NE_b013",
+   "dst": "NE_hub",
+   "width": 1,
+   "on_critical_leg": []
+  },
+  "L15": {
+   "baseline": 19,
+   "candidate": 20,
+   "families": [
+    "HC"
+   ],
+   "bound": "BOTH",
+   "src": "NW_b001",
+   "dst": "NW_b002",
+   "width": 4128,
+   "on_critical_leg": [
+    "HC"
+   ]
+  },
+  "L15m": {
+   "baseline": 19,
+   "candidate": 20,
+   "families": [
+    "HC"
+   ],
+   "bound": "BOTH",
+   "src": "NE_b001",
+   "dst": "NE_b002",
+   "width": 4128,
+   "on_critical_leg": []
+  },
+  "L36": {
+   "baseline": 56,
+   "candidate": 58,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su00",
+   "width": 1329,
+   "on_critical_leg": [
+    "SU"
+   ]
+  },
+  "L36m": {
+   "baseline": 56,
+   "candidate": 58,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su00",
+   "width": 1329,
+   "on_critical_leg": []
+  },
+  "L51": {
+   "baseline": 31,
+   "candidate": 32,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_io",
+   "width": 612,
+   "on_critical_leg": []
+  },
+  "L51m": {
+   "baseline": 33,
+   "candidate": 34,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_io",
+   "width": 612,
+   "on_critical_leg": []
+  },
+  "L93": {
+   "baseline": 5,
+   "candidate": 6,
+   "families": [],
+   "bound": "UNBOUND",
+   "src": "NW_b013",
+   "dst": "NW_b012",
+   "width": 40,
+   "on_critical_leg": []
+  },
+  "L93m": {
+   "baseline": 5,
+   "candidate": 6,
+   "families": [],
+   "bound": "UNBOUND",
+   "src": "NE_b013",
+   "dst": "NE_b012",
+   "width": 40,
+   "on_critical_leg": []
+  }
+ },
+ "op_deltas": [
+  {
+   "op": "SU.*",
+   "families": [
+    "SU",
+    "SU_BANK"
+   ],
+   "delta_cycles": 2,
+   "parallel": false,
+   "detail": {
+    "SU": {
+     "baseline": 106,
+     "candidate": 108,
+     "delta": 2,
+     "legs_changed": {
+      "hub->su": [
+       [
+        56,
+        "L36"
+       ],
+       [
+        58,
+        "L36"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "SU_BANK": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "ARGMAX.*",
+   "families": [
+    "SU",
+    "ARGMAX"
+   ],
+   "delta_cycles": 2,
+   "parallel": false,
+   "detail": {
+    "SU": {
+     "baseline": 106,
+     "candidate": 108,
+     "delta": 2,
+     "legs_changed": {
+      "hub->su": [
+       [
+        56,
+        "L36"
+       ],
+       [
+        58,
+        "L36"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "ARGMAX": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "SFU.*",
+   "families": [
+    "SFU"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "SFU": {
+     "baseline": 77,
+     "candidate": 77,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "HC.*|FUSED.HC_*",
+   "families": [
+    "HC"
+   ],
+   "delta_cycles": 1,
+   "parallel": false,
+   "detail": {
+    "HC": {
+     "baseline": 195,
+     "candidate": 196,
+     "delta": 1,
+     "legs_changed": {},
+     "chain": [
+      [
+       144,
+       [
+        "L14",
+        "L15",
+        "L10",
+        "L16",
+        "L18",
+        "L17",
+        "L11"
+       ]
+      ],
+      [
+       145,
+       [
+        "L14",
+        "L15",
+        "L10",
+        "L16",
+        "L18",
+        "L17",
+        "L11"
+       ]
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "FUSED.QDQ*",
+   "families": [
+    "QUANT"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "QUANT": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "FUSED.*",
+   "families": [
+    "SU"
+   ],
+   "delta_cycles": 2,
+   "parallel": false,
+   "detail": {
+    "SU": {
+     "baseline": 106,
+     "candidate": 108,
+     "delta": 2,
+     "legs_changed": {
+      "hub->su": [
+       [
+        56,
+        "L36"
+       ],
+       [
+        58,
+        "L36"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "IDX.TOPK",
+   "families": [
+    "IDX",
+    "TOPK"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "IDX": {
+     "baseline": 138,
+     "candidate": 138,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "TOPK": {
+     "baseline": 18,
+     "candidate": 18,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "IDX.*",
+   "families": [
+    "IDX",
+    "COLL_INJ"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "IDX": {
+     "baseline": 138,
+     "candidate": 138,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "COLL_INJ": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "COLL.TOPK_MERGE",
+   "families": [
+    "COLL",
+    "TOPK"
+   ],
+   "delta_cycles": 2,
+   "parallel": false,
+   "detail": {
+    "COLL": {
+     "baseline": 91,
+     "candidate": 93,
+     "delta": 2,
+     "legs_changed": {
+      "hub->io": [
+       [
+        35,
+        "L101"
+       ],
+       [
+        36,
+        "L101"
+       ]
+      ],
+      "io->hub": [
+       [
+        35,
+        "L52m"
+       ],
+       [
+        36,
+        "L126"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "TOPK": {
+     "baseline": 18,
+     "candidate": 18,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "COLL.*",
+   "families": [
+    "COLL",
+    "COLL_INJ"
+   ],
+   "delta_cycles": 2,
+   "parallel": false,
+   "detail": {
+    "COLL": {
+     "baseline": 91,
+     "candidate": 93,
+     "delta": 2,
+     "legs_changed": {
+      "hub->io": [
+       [
+        35,
+        "L101"
+       ],
+       [
+        36,
+        "L101"
+       ]
+      ],
+      "io->hub": [
+       [
+        35,
+        "L52m"
+       ],
+       [
+        36,
+        "L126"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "COLL_INJ": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "SM.*|ATT.*",
+   "families": [
+    "SM"
+   ],
+   "delta_cycles": 0,
+   "parallel": true,
+   "detail": {
+    "SM": {
+     "baseline": 226,
+     "candidate": 226,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "DMA.*",
+   "families": [
+    "VM"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "VM": {
+     "baseline": 21,
+     "candidate": 21,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  }
+ ],
+ "excluded_families": [],
+ "unbound_changed": [
+  "L119",
+  "L119m",
+  "L146",
+  "L146m",
+  "L93",
+  "L93m"
+ ],
+ "family_latency": {
+  "ARGMAX": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "COLL": {
+   "baseline": 91,
+   "candidate": 93
+  },
+  "COLL_INJ": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "HC": {
+   "baseline": 195,
+   "candidate": 196
+  },
+  "IDX": {
+   "baseline": 138,
+   "candidate": 138
+  },
+  "QUANT": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "SFU": {
+   "baseline": 77,
+   "candidate": 77
+  },
+  "SM": {
+   "baseline": 226,
+   "candidate": 226
+  },
+  "SU": {
+   "baseline": 106,
+   "candidate": 108
+  },
+  "SU_BANK": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "TOPK": {
+   "baseline": 18,
+   "candidate": 18
+  },
+  "VM": {
+   "baseline": 21,
+   "candidate": 21
+  }
+ },
+ "schedule": {
+  "ds_ar": {
+   "base_cycles": 576702.4,
+   "base_tok_s": 2080.8,
+   "records": {
+    "HC.*|FUSED.HC_*": 241,
+    "SM.*|ATT.*": 1175,
+    "COLL.*": 633,
+    "DMA.*": 420,
+    "SU.*": 1356,
+    "FUSED.QDQ*": 40,
+    "IDX.TOPK": 40,
+    "IDX.*": 8,
+    "COLL.TOPK_MERGE": 9,
+    "ARGMAX.*": 1
+   },
+   "lower": {
+    "terms": [
+     [
+      "ARGMAX.LOCAL",
+      2.0
+     ],
+     [
+      "COLL.ALL_GATHER",
+      2.0
+     ],
+     [
+      "COLL.ARGMAX_MERGE",
+      2.0
+     ],
+     [
+      "COLL.GROUP_REDUCE_MCAST",
+      2.0
+     ],
+     [
+      "COLL.ROW_GATHER",
+      2.0
+     ],
+     [
+      "COLL.TOPK_MERGE",
+      2.0
+     ],
+     [
+      "FUSED.HC_POST",
+      1.0
+     ],
+     [
+      "FUSED.HC_PRE_NORM",
+      1.0
+     ],
+     [
+      "HC.HC_MIX_POST",
+      1.0
+     ],
+     [
+      "SU.VOP",
+      2.0
+     ]
+    ],
+    "cycles": 579595.5,
+    "added_cycles": 2893.1,
+    "tok_s": 2070.41,
+    "e2e_loss_pct": 0.4992
+   },
+   "upper": {
+    "terms": [
+     [
+      "ARGMAX.LOCAL",
+      2.0
+     ],
+     [
+      "COLL.ALL_GATHER",
+      2.0
+     ],
+     [
+      "COLL.ARGMAX_MERGE",
+      2.0
+     ],
+     [
+      "COLL.GROUP_REDUCE_MCAST",
+      2.0
+     ],
+     [
+      "COLL.ROW_GATHER",
+      2.0
+     ],
+     [
+      "COLL.TOPK_MERGE",
+      2.0
+     ],
+     [
+      "FUSED.HC_POST",
+      1.0
+     ],
+     [
+      "FUSED.HC_PRE_NORM",
+      1.0
+     ],
+     [
+      "HC.HC_MIX_POST",
+      1.0
+     ],
+     [
+      "SU.VOP",
+      2.0
+     ]
+    ],
+    "cycles": 579595.5,
+    "added_cycles": 2893.1,
+    "tok_s": 2070.41,
+    "e2e_loss_pct": 0.4992
+   },
+   "op_rows": {
+    "ARGMAX.LOCAL": "ARGMAX.*",
+    "ATT.PV": "SM.*|ATT.*",
+    "ATT.QK": "SM.*|ATT.*",
+    "COLL.ALL_GATHER": "COLL.*",
+    "COLL.ARGMAX_MERGE": "COLL.*",
+    "COLL.GROUP_REDUCE_MCAST": "COLL.*",
+    "COLL.ROW_GATHER": "COLL.*",
+    "COLL.TOPK_MERGE": "COLL.TOPK_MERGE",
+    "DMA.FENCE": "DMA.*",
+    "DMA.KVWB_DS": "DMA.*",
+    "DMA.LOAD": "DMA.*",
+    "FUSED.HC_POST": "HC.*|FUSED.HC_*",
+    "FUSED.HC_PRE_NORM": "HC.*|FUSED.HC_*",
+    "FUSED.QDQ_FP8": "FUSED.QDQ*",
+    "HC.HC_MIX_POST": "HC.*|FUSED.HC_*",
+    "IDX.INDEX": "IDX.*",
+    "IDX.TOPK": "IDX.TOPK",
+    "SM.MATVEC": "SM.*|ATT.*",
+    "SU.VOP": "SU.*"
+   },
+   "unmapped_ops": [
+    "CTL.FENCE",
+    "CTL.NOP"
+   ]
+  },
+  "qwen_ar": {
+   "base_cycles": 1269120.1,
+   "base_tok_s": 945.54,
+   "records": {
+    "DMA.*": 12,
+    "SU.*": 12,
+    "FUSED.*": 5,
+    "SM.*|ATT.*": 9,
+    "COLL.*": 3,
+    "SFU.*": 1,
+    "ARGMAX.*": 1
+   },
+   "lower": {
+    "terms": [
+     [
+      "ARGMAX.LOCAL",
+      2.0
+     ],
+     [
+      "COLL.ALL_REDUCE_SUM",
+      2.0
+     ],
+     [
+      "COLL.ARGMAX_MERGE",
+      2.0
+     ],
+     [
+      "FUSED.ROW_NORM",
+      2.0
+     ],
+     [
+      "SU.VOP",
+      2.0
+     ]
+    ],
+    "cycles": 1270278.1,
+    "added_cycles": 1158.0,
+    "tok_s": 944.68,
+    "e2e_loss_pct": 0.0912
+   },
+   "upper": {
+    "terms": [
+     [
+      "ARGMAX.LOCAL",
+      2.0
+     ],
+     [
+      "COLL.ALL_REDUCE_SUM",
+      2.0
+     ],
+     [
+      "COLL.ARGMAX_MERGE",
+      2.0
+     ],
+     [
+      "FUSED.ROW_NORM",
+      2.0
+     ],
+     [
+      "SU.VOP",
+      2.0
+     ]
+    ],
+    "cycles": 1270278.1,
+    "added_cycles": 1158.0,
+    "tok_s": 944.68,
+    "e2e_loss_pct": 0.0912
+   },
+   "op_rows": {
+    "ARGMAX.LOCAL": "ARGMAX.*",
+    "ATT.PV": "SM.*|ATT.*",
+    "ATT.QK": "SM.*|ATT.*",
+    "COLL.ALL_REDUCE_SUM": "COLL.*",
+    "COLL.ARGMAX_MERGE": "COLL.*",
+    "DMA.FENCE": "DMA.*",
+    "DMA.LOAD": "DMA.*",
+    "DMA.STORE": "DMA.*",
+    "FUSED.ROW_NORM": "FUSED.*",
+    "SFU.GLU": "SFU.*",
+    "SM.MATVEC": "SM.*|ATT.*",
+    "SU.VOP": "SU.*"
+   },
+   "unmapped_ops": [
+    "CTL.END",
+    "CTL.ENDLOOP",
+    "CTL.LOOP"
+   ]
+  }
+ }
+}
