@@ -1,6 +1,6 @@
 `timescale 1ns/1fs
 `default_nettype none
-module vmface_vehicle #(parameter integer GOLD=0, RT=81, EXTRA=0, FACES=0)(
+module vmface_vehicle #(parameter integer GOLD=0, RT=81, EXTRA=0, ASM_EXTRA=0, FACES=0)(
  input wire clk,rst_n,input wire [1535:0] inst,
  output wire [3:0] valid,output wire [131:0] meta,output wire [2047:0] payload,
  output wire [23:0] select_core,output wire [135:0] request_core,output wire fault);
@@ -18,7 +18,7 @@ module vmface_vehicle #(parameter integer GOLD=0, RT=81, EXTRA=0, FACES=0)(
    .dest_v(16'd0),.rc_v(1'b0),.rc_tag(3'd0),.vm_rv(rv),.vm_req_pin(rq_inner),.vm_source_meta(meta_inner),
    .vm_assembled_v(valid_inner),.protocol_fault(fault),.vm_sel_d(sel_inner));
  end else begin:g_new
-  ot_hgi_coll_q_static_ctl_v5 #(.NPT(3),.SOLO(1),.INJLAT(12),.VM_RT(RT),.VM_FACE_RT(EXTRA)) u(
+  ot_hgi_coll_q_static_ctl_v5 #(.NPT(3),.SOLO(1),.INJLAT(12),.VM_RT(RT),.VM_FACE_RT(EXTRA),.VM_ASM_FACE_RT(ASM_EXTRA)) u(
    .clk_control(clk),.rst_n(rst_n),.inst(inst),.m_idx(16'd0),.m_vm(16'd0),
    .m_iaddr_l(32'd0),.m_del_l(32'd0),.m_rgx_l(32'd0),.m_iaddr_h(16'd0),.m_del_h(16'd0),.m_rgx_h(16'd0),
    .m_lk_l(24'd0),.m_lk_h(24'd0),.hgi_start(1'b0),.hgi_busy(1'b0),.issue_done(1'b0),.tkm_done(1'b0),.tkm_busy(1'b0),
@@ -56,11 +56,11 @@ module vmface_vehicle #(parameter integer GOLD=0, RT=81, EXTRA=0, FACES=0)(
   assign assembled[j*512+i]=as_il[i*8+2*j];assign assembled[j*512+256+i]=as_il[i*8+2*j+1];
  end
  generate if(FACES)begin:g_endpoints
-  reg[2047:0] data_v,data_e;reg[131:0] meta_b,meta_e;reg[3:0] valid_b,valid_e;
+  reg[2047:0] data_v,data_b;
   always@(posedge clk)begin
-   data_v<=assembled;data_e<=data_v;meta_b<=meta_inner;meta_e<=meta_b;valid_b<=valid_inner;valid_e<=valid_b;
+   data_v<=assembled;data_b<=data_v;
   end
-  assign payload=data_e;assign meta=meta_e;assign valid=valid_e;
+  assign payload=data_b;assign meta=meta_inner;assign valid=valid_inner;
  end else begin:g_outputs assign payload=assembled;assign meta=meta_inner;assign valid=valid_inner;end endgenerate
 endmodule
 
@@ -72,7 +72,7 @@ module tb_hbm_vmface;
  wire gf,df,ff,mf,hf;
  vmface_vehicle #(.GOLD(1)) gold(clk,rst_n,inst,gv,gm,gd,gs,gr,gf);
  vmface_vehicle defaults(clk,rst_n,inst,dv,dm,dd,ds,dr,df);
- vmface_vehicle #(.EXTRA(2),.FACES(1)) faces(clk,rst_n,inst,fv,fm,fd,fs,fr,ff);
+ vmface_vehicle #(.EXTRA(2),.ASM_EXTRA(2),.FACES(1)) faces(clk,rst_n,inst,fv,fm,fd,fs,fr,ff);
  vmface_vehicle #(.FACES(1)) missing(clk,rst_n,inst,mv,mm,md,ms,mr,mf);
  vmface_vehicle #(.RT(83),.FACES(1)) global_rt(clk,rst_n,inst,hv,hm,hd,hs,hr,hf);
  reg[3:0]gvd[0:3];reg[131:0]gmd[0:3];reg[2047:0]gdd[0:3];
