@@ -92,6 +92,7 @@ def guard(text,top,kd,fz,skip):
     for p in T.ports:
         if not re.match(skip,p):
             for b in FG._bits_of(T,p):boundary[0 if T.dirs[p]=='output' else 1].add(roots[b])
+    unused_internal_outputs=[dict(classification='UNUSED_INTERNAL_STDCELL_OUTPUT',master=m,instance=path,pin=pin,net=root,top_port_consumers=[]) for root,ds in drivers.items() if not loads[root] and root not in set(roots.values()) for m,path,pin in ds if m not in models and not FG.is_ff(m)]
     cache=[{},{}];visiting=[set(),set()]
     def walk(root,sense):
         if root in cache[sense]:return cache[sense][root]
@@ -114,4 +115,14 @@ def guard(text,top,kd,fz,skip):
             if opposite:fail=fail|{'FEEDTHROUGH '+','.join(opposite)}
             ports[bit]=dict(direction=direction,endpoints=sorted(found),direct_loads=len(loads[root]),direct_drivers=len(drivers[root]))
             if fail or not found:fails[bit]=sorted(fail or {'NO_ENDPOINT'})
-    return dict(top=top,contract=contract,verdict='PASS' if not fails else 'FAIL',checked=len(ports),ok=len(ports)-len(fails),fails=fails,ports=ports,endpoints=endpoints,macro_models=models,netlist_sha256=hashlib.sha256(text.encode()).hexdigest(),required_next=['ALL_PLACED_ENDPOINT_REACH','TT_SETUP_833PS_U60','FF_HOLD_U25','RELATED_PAIR_CPPR_LE80PS','PARTITION_COMPOSED_SIGNOFF'])
+    return dict(top=top,contract=contract,verdict='PASS' if not fails else 'FAIL',checked=len(ports),ok=len(ports)-len(fails),fails=fails,ports=ports,endpoints=endpoints,unused_internal_outputs=unused_internal_outputs,macro_models=models,netlist_sha256=hashlib.sha256(text.encode()).hexdigest(),required_next=['ALL_PLACED_ENDPOINT_REACH','TT_SETUP_833PS_U60','FF_HOLD_U25','RELATED_PAIR_CPPR_LE80PS','PARTITION_COMPOSED_SIGNOFF'])
+
+
+if __name__ == '__main__':
+    import argparse,sys
+    ap=argparse.ArgumentParser();ap.add_argument('netlist',type=Path);ap.add_argument('kit',type=Path);ap.add_argument('--out',required=True,type=Path);a=ap.parse_args()
+    fz=json.loads((a.kit/'freeze.json').read_text());skip='^('+ '|'.join(re.escape(re.sub(r'\[\d+\]$','',n)) for n in fz['clocks']+fz['resets'])+')$'
+    result=guard(a.netlist.read_text(),fz['design'],a.kit,fz,skip);a.out.parent.mkdir(parents=True,exist_ok=True)
+    if a.out.exists():raise SystemExit('refusing to replace existing endpoint verdict')
+    a.out.write_text(json.dumps(result,indent=1)+'\n');print('INTERNAL_CORE',result['verdict'],result['ok'],'/',result['checked'],'signal bits;',len(result['unused_internal_outputs']),'unused internal stdcell outputs')
+    sys.exit(0 if result['verdict']=='PASS' else 1)
