@@ -18,8 +18,9 @@
     "default_250_pm40": "PASS",
     "trial_250_pm20": "FAIL upper274>270; spread52>40"
   },
-  "estimated_tt_setup_wns_ps": 116.8,
-  "related_ff_sram_clock_difference_ps": 56.92,
   "hold_ff": "NOT_RUN",
-  "route": "NOT_RUN"
+  "route": "NOT_RUN",
+  "timing_report_phase": "PRE_CTS_POST_HOOK: ORFS ctsfinal report loggedbeforecustombalance/F4; estimatedTTsetup116.8 and56.92physicalclockdifference are NOT finalODB timing. ActualfinalODBTTFFread-onlygate launched separately.",
+  "estimated_tt_setup_wns_pre_hook_ps": 116.8,
+  "related_ff_sram_clock_difference_pre_hook_ps": 56.92
 }
