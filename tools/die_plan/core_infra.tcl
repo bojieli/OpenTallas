@@ -148,11 +148,48 @@ proc ot_ci_tree_finish {} {
     }
   }
 }
-proc ot_ci_bay_cell {name x y rect} {
+proc ot_ci_union_contains {rect regions} {
+  lassign $rect x0 y0 x1 y1
+  foreach r $regions {lassign $r a b c d;if {$a <= $x0 && $b <= $y0 && $c >= $x1 && $d >= $y1} {return 1}}
+  set cuts [list $x0 $x1]
+  foreach r $regions {foreach x [list [lindex $r 0] [lindex $r 2]] {if {$x>$x0 && $x<$x1} {lappend cuts $x}}}
+  set cuts [lsort -real -unique $cuts]
+  for {set k 1} {$k<[llength $cuts]} {incr k} {
+    set x [expr {([lindex $cuts $k]+[lindex $cuts [expr {$k-1}]])/2.0}];set intervals {}
+    foreach r $regions {lassign $r a b c d;if {$a <= $x && $c >= $x} {lappend intervals [list $b $d]}}
+    set end $y0
+    foreach iv [lsort -real -index 0 $intervals] {lassign $iv a b;if {$a>$end} break;if {$b>$end} {set end $b}}
+    if {$end<$y1} {return 0}
+  }
+  return 1
+}
+proc ot_ci_bay_cell {name x y rect {regions {}}} {
   set i [$::ot_ci_b findInst $name]
   if {$i eq "NULL"} {error "OT_CORE_INFRA_BAY_CELL $name"}
   ot_ci_place $i $x $y $rect
+  if {[llength $regions]} {
+    set r [$i getBBox];set shape {}
+    foreach v [list [$r xMin] [$r yMin] [$r xMax] [$r yMax]] {lappend shape [expr {$v/double($::ot_ci_u)}]}
+    if {![ot_ci_union_contains $shape $regions]} {error "OT_CORE_INFRA_BAY_UNION_FIT $name"}
+  }
   lappend ::ot_ci_fixed $i
+}
+proc ot_ci_clock_ndr {name width_mult space_mult} {
+  set nd [$::ot_ci_b findNonDefaultRule $name]
+  set widths {};set spaces {}
+  foreach ln {M4 M5} {
+    set l [[ord::get_db_tech] findLayer $ln]
+    lappend widths $ln [expr {$width_mult*[$l getWidth]/double($::ot_ci_u)}]
+    lappend spaces $ln [expr {$space_mult*[$l getSpacing]/double($::ot_ci_u)}]
+  }
+  if {$nd eq "NULL"} {create_ndr -name $name -width $widths -spacing $spaces;set nd [$::ot_ci_b findNonDefaultRule $name]}
+  if {$nd eq "NULL"} {error "OT_CORE_INFRA_CLOCK_NDR_MISSING $name"}
+  set count 0
+  dict for {node net} $::ot_ci_tree_out {
+    if {[$net getNonDefaultRule] ne $nd} {$net setNonDefaultRule $nd}
+    $net setSigType CLOCK;incr count
+  }
+  puts "OT_CORE_CLOCK_NDR $name widths=$widths spaces=$spaces nets=$count"
 }
 proc ot_ci_entry {name x y} {
   if {[$::ot_ci_b findBTerm $name] eq "NULL"} {error "OT_CORE_INFRA_ENTRY_PIN $name"}

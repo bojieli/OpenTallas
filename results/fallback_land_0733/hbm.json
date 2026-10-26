@@ -1,0 +1,1911 @@
+{
+ "schema": "opentallas.fallback_land_analysis.v1",
+ "die": "hbm_arch_B2o",
+ "source_plan": "/srv/opentallas-scratch2/claude/codex-hbm-native-1026/die_plan_b1_interfaces.json",
+ "status": "HBM B1interfaces candidate7aaba4 B1n6+BF16+OBS144; NOT accepted programme price",
+ "parts": 88,
+ "types": 51,
+ "lanes": 308,
+ "all_plan_ports": 865,
+ "internal_same_partition_ports": [],
+ "unresolved_or_external_ports": [],
+ "kind_census": {
+  "data": {
+   "ports": 454,
+   "bit_crossings": 572011
+  },
+  "ctl": {
+   "ports": 411,
+   "bit_crossings": 13077
+  }
+ },
+ "eligible_data_control_bit_crossings": 585088,
+ "crossing_port_ids": [
+  "L12_0",
+  "L12_1",
+  "L12_2",
+  "L12m_0",
+  "L12m_1",
+  "L12m_2",
+  "L13_0",
+  "L0_0",
+  "L0_1",
+  "L0_2",
+  "L0m_0",
+  "L0m_1",
+  "L0m_2",
+  "L1_0",
+  "L1m_0",
+  "L2_0",
+  "L2_1",
+  "L2m_0",
+  "L2m_1",
+  "L3_0",
+  "L3m_0",
+  "L4_0",
+  "L4_1",
+  "L4m_0",
+  "L4m_1",
+  "L5_0",
+  "L5_1",
+  "L5_2",
+  "L5m_0",
+  "L5m_1",
+  "L5m_2",
+  "L6_0",
+  "L6_1",
+  "L6m_0",
+  "L6m_1",
+  "L7_0",
+  "L7m_0",
+  "L8_0",
+  "L8_1",
+  "L8_2",
+  "L8_3",
+  "L8_4",
+  "L8_5",
+  "L8m_0",
+  "L8m_1",
+  "L8m_2",
+  "L8m_3",
+  "L8m_4",
+  "L8m_5",
+  "L9_0",
+  "L9_1",
+  "L9_2",
+  "L9_3",
+  "L9_4",
+  "L9m_0",
+  "L9m_1",
+  "L9m_2",
+  "L9m_3",
+  "L9m_4",
+  "L10_0",
+  "L10_1",
+  "L10m_0",
+  "L10m_1",
+  "L11_0",
+  "L11_1",
+  "L11m_0",
+  "L11m_1",
+  "L14_0",
+  "L14_1",
+  "L14m_0",
+  "L14m_1",
+  "L15_0",
+  "L15_1",
+  "L15m_0",
+  "L15m_1",
+  "L16_0",
+  "L16m_0",
+  "L17_0",
+  "L17_1",
+  "L17m_0",
+  "L17m_1",
+  "L18_0",
+  "L18_1",
+  "L18m_0",
+  "L18m_1",
+  "L19_0",
+  "L19m_0",
+  "L20_0",
+  "L20m_0",
+  "L21_0",
+  "L21_1",
+  "L21_2",
+  "L21_3",
+  "L21_4",
+  "L21_5",
+  "L21m_0",
+  "L21m_1",
+  "L21m_2",
+  "L21m_3",
+  "L21m_4",
+  "L21m_5",
+  "L22_0",
+  "L22_1",
+  "L22_2",
+  "L22_3",
+  "L22_4",
+  "L22_5",
+  "L22m_0",
+  "L22m_1",
+  "L22m_2",
+  "L22m_3",
+  "L22m_4",
+  "L22m_5",
+  "L23_0",
+  "L23m_0",
+  "L24_0",
+  "L24m_0",
+  "L25_0",
+  "L25m_0",
+  "L26_0",
+  "L26m_0",
+  "L27_0",
+  "L27m_0",
+  "L28_0",
+  "L28_1",
+  "L28_2",
+  "L28_3",
+  "L28m_0",
+  "L28m_1",
+  "L28m_2",
+  "L28m_3",
+  "L29_0",
+  "L29_1",
+  "L29m_0",
+  "L29m_1",
+  "L30_0",
+  "L30_1",
+  "L30m_0",
+  "L30m_1",
+  "L31_0",
+  "L31_1",
+  "L31m_0",
+  "L31m_1",
+  "L32_0",
+  "L32_1",
+  "L32m_0",
+  "L32m_1",
+  "L33_0",
+  "L33_1",
+  "L33_2",
+  "L33m_0",
+  "L33m_1",
+  "L33m_2",
+  "L34_0",
+  "L34_1",
+  "L34m_0",
+  "L34m_1",
+  "L35_0",
+  "L35_1",
+  "L35m_0",
+  "L35m_1",
+  "L74_0",
+  "L74m_0",
+  "L74m_1",
+  "L36_0",
+  "L36_1",
+  "L36_2",
+  "L36_3",
+  "L36m_0",
+  "L36m_1",
+  "L36m_2",
+  "L36m_3",
+  "L37_0",
+  "L37m_0",
+  "L38_0",
+  "L38_1",
+  "L38m_0",
+  "L38m_1",
+  "L39_0",
+  "L39m_0",
+  "L40_0",
+  "L40_1",
+  "L40m_0",
+  "L40m_1",
+  "L41_0",
+  "L41_1",
+  "L41m_0",
+  "L41m_1",
+  "L42_0",
+  "L42_1",
+  "L42_2",
+  "L42_3",
+  "L42_4",
+  "L42m_0",
+  "L42m_1",
+  "L42m_2",
+  "L42m_3",
+  "L42m_4",
+  "L43_0",
+  "L43_1",
+  "L43_2",
+  "L43_3",
+  "L43m_0",
+  "L43m_1",
+  "L43m_2",
+  "L43m_3",
+  "L44_0",
+  "L44m_0",
+  "L45_0",
+  "L45m_0",
+  "L46_0",
+  "L46m_0",
+  "L47_0",
+  "L47m_0",
+  "L48_0",
+  "L48_1",
+  "L48_2",
+  "L48_3",
+  "L48_4",
+  "L48_5",
+  "L48_6",
+  "L48_7",
+  "L48_8",
+  "L48_9",
+  "L48_10",
+  "L48_11",
+  "L48m_0",
+  "L48m_1",
+  "L48m_2",
+  "L48m_3",
+  "L48m_4",
+  "L48m_5",
+  "L48m_6",
+  "L48m_7",
+  "L48m_8",
+  "L48m_9",
+  "L48m_10",
+  "L48m_11",
+  "L152_0",
+  "L152_1",
+  "L152_2",
+  "L152_3",
+  "L152m_0",
+  "L152m_1",
+  "L152m_2",
+  "L152m_3",
+  "L154_0",
+  "L154_1",
+  "L154_2",
+  "L49_0",
+  "L49_1",
+  "L49m_0",
+  "L49m_1",
+  "L50_0",
+  "L50_1",
+  "L50m_0",
+  "L50m_1",
+  "L151_0",
+  "L151_1",
+  "L151_2",
+  "L151_3",
+  "L151m_0",
+  "L151m_1",
+  "L151m_2",
+  "L151m_3",
+  "L153_0",
+  "L153_1",
+  "L153_2",
+  "L51_0",
+  "L51_1",
+  "L51_2",
+  "L51_3",
+  "L51_4",
+  "L51_5",
+  "L51_6",
+  "L51_7",
+  "L51_8",
+  "L51m_0",
+  "L51m_1",
+  "L51m_2",
+  "L51m_3",
+  "L51m_4",
+  "L51m_5",
+  "L51m_6",
+  "L51m_7",
+  "L51m_8",
+  "L52_0",
+  "L52_1",
+  "L52_2",
+  "L52_3",
+  "L52_4",
+  "L52_5",
+  "L52_6",
+  "L52_7",
+  "L52_8",
+  "L52m_0",
+  "L52m_1",
+  "L52m_2",
+  "L52m_3",
+  "L52m_4",
+  "L52m_5",
+  "L52m_6",
+  "L52m_7",
+  "L52m_8",
+  "L53_0",
+  "L53_1",
+  "L53_2",
+  "L53_3",
+  "L53_4",
+  "L53_5",
+  "L53_6",
+  "L53_7",
+  "L53_8",
+  "L53_9",
+  "L53_10",
+  "L53_11",
+  "L53m_0",
+  "L53m_1",
+  "L53m_2",
+  "L53m_3",
+  "L53m_4",
+  "L53m_5",
+  "L53m_6",
+  "L53m_7",
+  "L53m_8",
+  "L53m_9",
+  "L53m_10",
+  "L53m_11",
+  "L150_0",
+  "L150_1",
+  "L150_2",
+  "L150_3",
+  "L150m_0",
+  "L150m_1",
+  "L150m_2",
+  "L150m_3",
+  "L54_0",
+  "L54m_0",
+  "L55_0",
+  "L55_1",
+  "L55m_0",
+  "L55m_1",
+  "L56_0",
+  "L56m_0",
+  "L57_0",
+  "L57m_0",
+  "L58_0",
+  "L58m_0",
+  "L59_0",
+  "L59_1",
+  "L59m_0",
+  "L59m_1",
+  "L60_0",
+  "L60m_0",
+  "L61_0",
+  "L61m_0",
+  "L62_0",
+  "L62m_0",
+  "L63_0",
+  "L63_1",
+  "L63_2",
+  "L63_3",
+  "L63_4",
+  "L63m_0",
+  "L63m_1",
+  "L63m_2",
+  "L63m_3",
+  "L63m_4",
+  "L64_0",
+  "L64m_0",
+  "L65_0",
+  "L65m_0",
+  "L66_0",
+  "L66_1",
+  "L66_2",
+  "L66_3",
+  "L66_4",
+  "L66m_0",
+  "L66m_1",
+  "L66m_2",
+  "L66m_3",
+  "L66m_4",
+  "L67_0",
+  "L67_1",
+  "L67m_0",
+  "L67m_1",
+  "L68_0",
+  "L68_1",
+  "L68m_0",
+  "L68m_1",
+  "L69_0",
+  "L69_1",
+  "L69m_0",
+  "L69m_1",
+  "L70_0",
+  "L70_1",
+  "L70m_0",
+  "L70m_1",
+  "L71_0",
+  "L71_1",
+  "L71m_0",
+  "L71m_1",
+  "L72_0",
+  "L72_1",
+  "L72m_0",
+  "L72m_1",
+  "L73_0",
+  "L73_1",
+  "L73_2",
+  "L73_3",
+  "L73_4",
+  "L73_5",
+  "L73_6",
+  "L73_7",
+  "L73m_0",
+  "L73m_1",
+  "L73m_2",
+  "L73m_3",
+  "L73m_4",
+  "L73m_5",
+  "L73m_6",
+  "L73m_7",
+  "L75_0",
+  "L75m_0",
+  "L76_0",
+  "L76m_0",
+  "L77_0",
+  "L77m_0",
+  "L78_0",
+  "L78m_0",
+  "L79_0",
+  "L79_1",
+  "L79_2",
+  "L79_3",
+  "L79_4",
+  "L79m_0",
+  "L79m_1",
+  "L79m_2",
+  "L79m_3",
+  "L79m_4",
+  "L80_0",
+  "L80m_0",
+  "L81_0",
+  "L81m_0",
+  "L82_0",
+  "L82_1",
+  "L82_2",
+  "L82_3",
+  "L82_4",
+  "L82m_0",
+  "L82m_1",
+  "L82m_2",
+  "L82m_3",
+  "L82m_4",
+  "L83_0",
+  "L83_1",
+  "L83m_0",
+  "L83m_1",
+  "L84_0",
+  "L84_1",
+  "L84m_0",
+  "L84m_1",
+  "L85_0",
+  "L85_1",
+  "L85m_0",
+  "L85m_1",
+  "L86_0",
+  "L86_1",
+  "L86m_0",
+  "L86m_1",
+  "L87_0",
+  "L87_1",
+  "L87m_0",
+  "L87m_1",
+  "L88_0",
+  "L88_1",
+  "L88m_0",
+  "L88m_1",
+  "L89_0",
+  "L89m_0",
+  "L90_0",
+  "L90m_0",
+  "L91_0",
+  "L91m_0",
+  "L92_0",
+  "L92m_0",
+  "L93_0",
+  "L93_1",
+  "L93m_0",
+  "L93m_1",
+  "L94_0",
+  "L94_1",
+  "L94m_0",
+  "L94m_1",
+  "L95_0",
+  "L95_1",
+  "L95m_0",
+  "L95m_1",
+  "L100_0",
+  "L100_1",
+  "L100m_0",
+  "L100m_1",
+  "L96_0",
+  "L96_1",
+  "L96m_0",
+  "L96m_1",
+  "L97_0",
+  "L97_1",
+  "L97m_0",
+  "L97m_1",
+  "L98_0",
+  "L98_1",
+  "L98m_0",
+  "L98m_1",
+  "L99_0",
+  "L99_1",
+  "L99m_0",
+  "L99m_1",
+  "L101_0",
+  "L101_1",
+  "L101_2",
+  "L101_3",
+  "L101_4",
+  "L101_5",
+  "L101_6",
+  "L101_7",
+  "L101_8",
+  "L101m_0",
+  "L101m_1",
+  "L101m_2",
+  "L101m_3",
+  "L101m_4",
+  "L101m_5",
+  "L101m_6",
+  "L101m_7",
+  "L101m_8",
+  "L102_0",
+  "L102_1",
+  "L102m_0",
+  "L102m_1",
+  "L103_0",
+  "L103m_0",
+  "L104_0",
+  "L104_1",
+  "L104m_0",
+  "L104m_1",
+  "L105_0",
+  "L105m_0",
+  "L106_0",
+  "L106_1",
+  "L106_2",
+  "L106_3",
+  "L106_4",
+  "L106_5",
+  "L106_6",
+  "L106_7",
+  "L106m_0",
+  "L106m_1",
+  "L106m_2",
+  "L106m_3",
+  "L106m_4",
+  "L106m_5",
+  "L106m_6",
+  "L106m_7",
+  "L107_0",
+  "L107_1",
+  "L107m_0",
+  "L107m_1",
+  "L108_0",
+  "L108_1",
+  "L108m_0",
+  "L108m_1",
+  "L109_0",
+  "L109_1",
+  "L109m_0",
+  "L109m_1",
+  "L110_0",
+  "L110m_0",
+  "L111_0",
+  "L111m_0",
+  "L112_0",
+  "L112m_0",
+  "L113_0",
+  "L113m_0",
+  "L114_0",
+  "L114_1",
+  "L114_2",
+  "L114_3",
+  "L114_4",
+  "L114_5",
+  "L114m_0",
+  "L114m_1",
+  "L114m_2",
+  "L114m_3",
+  "L114m_4",
+  "L114m_5",
+  "L115_0",
+  "L115_1",
+  "L115_2",
+  "L115_3",
+  "L115_4",
+  "L115m_0",
+  "L115m_1",
+  "L115m_2",
+  "L115m_3",
+  "L115m_4",
+  "L116_0",
+  "L116_1",
+  "L116_2",
+  "L116_3",
+  "L116m_0",
+  "L116m_1",
+  "L116m_2",
+  "L116m_3",
+  "L117_0",
+  "L117_1",
+  "L117_2",
+  "L117_3",
+  "L117_4",
+  "L117_5",
+  "L117_6",
+  "L117_7",
+  "L117_8",
+  "L117m_0",
+  "L117m_1",
+  "L117m_2",
+  "L117m_3",
+  "L117m_4",
+  "L117m_5",
+  "L117m_6",
+  "L117m_7",
+  "L117m_8",
+  "L118_0",
+  "L118_1",
+  "L118_2",
+  "L119_0",
+  "L119_1",
+  "L119_2",
+  "L119_3",
+  "L119_4",
+  "L119_5",
+  "L119_6",
+  "L119_7",
+  "L119m_0",
+  "L119m_1",
+  "L119m_2",
+  "L119m_3",
+  "L119m_4",
+  "L119m_5",
+  "L119m_6",
+  "L119m_7",
+  "L120_0",
+  "L120_1",
+  "L120m_0",
+  "L120m_1",
+  "L121_0",
+  "L121_1",
+  "L121m_0",
+  "L121m_1",
+  "L122_0",
+  "L122_1",
+  "L122m_0",
+  "L122m_1",
+  "L123_0",
+  "L123_1",
+  "L123m_0",
+  "L123m_1",
+  "L124_0",
+  "L124m_0",
+  "L155_0",
+  "L155_1",
+  "L155_2",
+  "L155_3",
+  "L155_4",
+  "L155m_0",
+  "L155m_1",
+  "L155m_2",
+  "L155m_3",
+  "L155m_4",
+  "L125_0",
+  "L125_1",
+  "L125_2",
+  "L125_3",
+  "L125_4",
+  "L125_5",
+  "L125_6",
+  "L125_7",
+  "L125m_0",
+  "L125m_1",
+  "L125m_2",
+  "L125m_3",
+  "L125m_4",
+  "L125m_5",
+  "L125m_6",
+  "L125m_7",
+  "L126_0",
+  "L126_1",
+  "L126_2",
+  "L126_3",
+  "L126_4",
+  "L126_5",
+  "L126_6",
+  "L126_7",
+  "L126_8",
+  "L126m_0",
+  "L126m_1",
+  "L126m_2",
+  "L126m_3",
+  "L126m_4",
+  "L126m_5",
+  "L126m_6",
+  "L126m_7",
+  "L126m_8",
+  "L127_0",
+  "L127m_0",
+  "L128_0",
+  "L128m_0",
+  "L129_0",
+  "L129m_0",
+  "L130_0",
+  "L130m_0",
+  "L131_0",
+  "L131m_0",
+  "L132_0",
+  "L132_1",
+  "L132_2",
+  "L132_3",
+  "L132_4",
+  "L132m_0",
+  "L132m_1",
+  "L132m_2",
+  "L132m_3",
+  "L132m_4",
+  "L133_0",
+  "L133_1",
+  "L133_2",
+  "L133_3",
+  "L133m_0",
+  "L133m_1",
+  "L133m_2",
+  "L133m_3",
+  "L134_0",
+  "L134_1",
+  "L134m_0",
+  "L134m_1",
+  "L135_0",
+  "L135m_0",
+  "L136_0",
+  "L136_1",
+  "L136m_0",
+  "L136m_1",
+  "L137_0",
+  "L137m_0",
+  "L138_0",
+  "L138_1",
+  "L138_2",
+  "L138_3",
+  "L138_4",
+  "L138_5",
+  "L138_6",
+  "L138_7",
+  "L138_8",
+  "L138m_0",
+  "L138m_1",
+  "L138m_2",
+  "L138m_3",
+  "L138m_4",
+  "L138m_5",
+  "L138m_6",
+  "L138m_7",
+  "L138m_8",
+  "L139_0",
+  "L139_1",
+  "L139_2",
+  "L139_3",
+  "L139_4",
+  "L139_5",
+  "L139_6",
+  "L139_7",
+  "L139_8",
+  "L139m_0",
+  "L139m_1",
+  "L139m_2",
+  "L139m_3",
+  "L139m_4",
+  "L139m_5",
+  "L139m_6",
+  "L139m_7",
+  "L139m_8",
+  "L140_0",
+  "L140_1",
+  "L140_2",
+  "L140_3",
+  "L140_4",
+  "L140_5",
+  "L140m_0",
+  "L140m_1",
+  "L140m_2",
+  "L140m_3",
+  "L140m_4",
+  "L140m_5",
+  "L141_0",
+  "L141_1",
+  "L141_2",
+  "L142_0",
+  "L142m_0",
+  "L143_0",
+  "L143_1",
+  "L143m_0",
+  "L143m_1",
+  "L144_0",
+  "L144m_0",
+  "L145_0",
+  "L145_1",
+  "L145m_0",
+  "L145m_1",
+  "L146_0",
+  "L146_1",
+  "L146_2",
+  "L146_3",
+  "L146_4",
+  "L146_5",
+  "L146_6",
+  "L146_7",
+  "L146m_0",
+  "L146m_1",
+  "L146m_2",
+  "L146m_3",
+  "L146m_4",
+  "L146m_5",
+  "L146m_6",
+  "L146m_7",
+  "L147_0",
+  "L147_1",
+  "L147_2",
+  "L147_3",
+  "L147m_0",
+  "L147m_1",
+  "L147m_2",
+  "L147m_3",
+  "L148_0",
+  "L148_1",
+  "L148_2",
+  "L148_3",
+  "L148_4",
+  "L148m_0",
+  "L148m_1",
+  "L148m_2",
+  "L148m_3",
+  "L148m_4",
+  "L149_0",
+  "L149_1",
+  "L149_2",
+  "L149_3",
+  "L149_4",
+  "L149_5",
+  "L149m_0",
+  "L149m_1",
+  "L149m_2",
+  "L149m_3",
+  "L149m_4",
+  "L149m_5",
+  "L156_0",
+  "L28_detour",
+  "L28m_detour"
+ ],
+ "partition_pair_census": {
+  "root -> NW_b101": {
+   "ports": 5,
+   "bit_crossings": 3790
+  },
+  "NW_b101 -> NW_su31": {
+   "ports": 2,
+   "bit_crossings": 3608
+  },
+  "NW_su31 -> NW_hub": {
+   "ports": 3,
+   "bit_crossings": 3514
+  },
+  "root -> NE_b101": {
+   "ports": 5,
+   "bit_crossings": 3790
+  },
+  "NE_b101 -> NE_su31": {
+   "ports": 2,
+   "bit_crossings": 3608
+  },
+  "NE_su31 -> NE_hub": {
+   "ports": 3,
+   "bit_crossings": 3514
+  },
+  "root -> NW_hub": {
+   "ports": 5,
+   "bit_crossings": 5792
+  },
+  "NW_hub -> NW_su10": {
+   "ports": 4,
+   "bit_crossings": 6036
+  },
+  "NW_su10 -> NW_spu0": {
+   "ports": 3,
+   "bit_crossings": 3020
+  },
+  "NW_spu0 -> NW_su01": {
+   "ports": 3,
+   "bit_crossings": 3020
+  },
+  "NE_hub -> NE_su10": {
+   "ports": 4,
+   "bit_crossings": 6036
+  },
+  "NE_su10 -> NE_spu0": {
+   "ports": 3,
+   "bit_crossings": 3020
+  },
+  "NE_spu0 -> NE_su01": {
+   "ports": 3,
+   "bit_crossings": 3020
+  },
+  "NW_hub -> NW_spu1": {
+   "ports": 5,
+   "bit_crossings": 5963
+  },
+  "NW_spu1 -> NW_su21": {
+   "ports": 2,
+   "bit_crossings": 3611
+  },
+  "NE_hub -> NE_spu1": {
+   "ports": 5,
+   "bit_crossings": 5963
+  },
+  "NE_spu1 -> NE_su21": {
+   "ports": 2,
+   "bit_crossings": 3611
+  },
+  "NW_hub -> NW_su30": {
+   "ports": 4,
+   "bit_crossings": 8224
+  },
+  "NE_hub -> NE_su30": {
+   "ports": 4,
+   "bit_crossings": 8224
+  },
+  "NW_hub -> root": {
+   "ports": 7,
+   "bit_crossings": 9543
+  },
+  "root -> NE_hub": {
+   "ports": 4,
+   "bit_crossings": 3170
+  },
+  "NE_hub -> root": {
+   "ports": 5,
+   "bit_crossings": 5631
+  },
+  "NW_su30 -> NW_b100": {
+   "ports": 7,
+   "bit_crossings": 5859
+  },
+  "NW_b100 -> NW_b110": {
+   "ports": 6,
+   "bit_crossings": 3375
+  },
+  "NE_su30 -> NE_b100": {
+   "ports": 7,
+   "bit_crossings": 5859
+  },
+  "NE_b100 -> NE_b110": {
+   "ports": 6,
+   "bit_crossings": 3375
+  },
+  "NW_hub -> NW_b100": {
+   "ports": 3,
+   "bit_crossings": 2560
+  },
+  "NE_hub -> NE_b100": {
+   "ports": 3,
+   "bit_crossings": 2560
+  },
+  "NW_hub -> NW_spu0": {
+   "ports": 5,
+   "bit_crossings": 3613
+  },
+  "NW_spu0 -> NW_spt0": {
+   "ports": 5,
+   "bit_crossings": 3613
+  },
+  "NW_spt0 -> NW_spt1": {
+   "ports": 3,
+   "bit_crossings": 2896
+  },
+  "NW_spt1 -> NW_spt2": {
+   "ports": 3,
+   "bit_crossings": 2896
+  },
+  "NW_spt2 -> NW_mcb": {
+   "ports": 3,
+   "bit_crossings": 2896
+  },
+  "NW_mcb -> PHY_N": {
+   "ports": 1,
+   "bit_crossings": 2456
+  },
+  "NE_hub -> NE_spu0": {
+   "ports": 5,
+   "bit_crossings": 3613
+  },
+  "NE_spu0 -> NE_spt0": {
+   "ports": 5,
+   "bit_crossings": 3613
+  },
+  "NE_spt0 -> NE_spt1": {
+   "ports": 3,
+   "bit_crossings": 2896
+  },
+  "NE_spt1 -> NE_spt2": {
+   "ports": 3,
+   "bit_crossings": 2896
+  },
+  "NE_spt2 -> NE_mcb": {
+   "ports": 3,
+   "bit_crossings": 2896
+  },
+  "NE_mcb -> PHY_N": {
+   "ports": 1,
+   "bit_crossings": 2456
+  },
+  "root -> vsN4": {
+   "ports": 4,
+   "bit_crossings": 5584
+  },
+  "vsN4 -> vsN5": {
+   "ports": 4,
+   "bit_crossings": 5584
+  },
+  "vsN5 -> vsN6": {
+   "ports": 4,
+   "bit_crossings": 5584
+  },
+  "vsN6 -> PHY_N": {
+   "ports": 4,
+   "bit_crossings": 5584
+  },
+  "NW_b002 -> NW_b012": {
+   "ports": 8,
+   "bit_crossings": 5687
+  },
+  "NW_b012 -> NW_b003": {
+   "ports": 6,
+   "bit_crossings": 5395
+  },
+  "NE_b002 -> NE_b012": {
+   "ports": 8,
+   "bit_crossings": 5687
+  },
+  "NE_b012 -> NE_b003": {
+   "ports": 6,
+   "bit_crossings": 5395
+  },
+  "NW_b011 -> NW_b001": {
+   "ports": 9,
+   "bit_crossings": 5395
+  },
+  "NW_b001 -> NW_b010": {
+   "ports": 7,
+   "bit_crossings": 5103
+  },
+  "NE_b011 -> NE_b001": {
+   "ports": 9,
+   "bit_crossings": 5395
+  },
+  "NE_b001 -> NE_b010": {
+   "ports": 7,
+   "bit_crossings": 5103
+  },
+  "NW_b000 -> NW_b010": {
+   "ports": 12,
+   "bit_crossings": 9606
+  },
+  "NW_b010 -> NW_b001": {
+   "ports": 12,
+   "bit_crossings": 7992
+  },
+  "NE_b000 -> NE_b010": {
+   "ports": 12,
+   "bit_crossings": 9606
+  },
+  "NE_b010 -> NE_b001": {
+   "ports": 12,
+   "bit_crossings": 7992
+  },
+  "NW_b001 -> NW_b011": {
+   "ports": 11,
+   "bit_crossings": 6676
+  },
+  "NW_b011 -> NW_b002": {
+   "ports": 10,
+   "bit_crossings": 6167
+  },
+  "NE_b001 -> NE_b011": {
+   "ports": 11,
+   "bit_crossings": 6676
+  },
+  "NE_b011 -> NE_b002": {
+   "ports": 10,
+   "bit_crossings": 6167
+  },
+  "NW_b003 -> NW_b013": {
+   "ports": 6,
+   "bit_crossings": 5083
+  },
+  "NE_b003 -> NE_b013": {
+   "ports": 6,
+   "bit_crossings": 5083
+  },
+  "NW_b012 -> NW_b002": {
+   "ports": 6,
+   "bit_crossings": 4778
+  },
+  "NW_b002 -> NW_b011": {
+   "ports": 8,
+   "bit_crossings": 5072
+  },
+  "NE_b012 -> NE_b002": {
+   "ports": 6,
+   "bit_crossings": 4778
+  },
+  "NE_b002 -> NE_b011": {
+   "ports": 8,
+   "bit_crossings": 5072
+  },
+  "NW_b013 -> NW_b003": {
+   "ports": 5,
+   "bit_crossings": 4785
+  },
+  "NW_b003 -> NW_b012": {
+   "ports": 6,
+   "bit_crossings": 4786
+  },
+  "NE_b013 -> NE_b003": {
+   "ports": 5,
+   "bit_crossings": 4785
+  },
+  "NE_b003 -> NE_b012": {
+   "ports": 6,
+   "bit_crossings": 4786
+  },
+  "NW_b000 -> NW_hub": {
+   "ports": 7,
+   "bit_crossings": 4723
+  },
+  "NE_b000 -> NE_hub": {
+   "ports": 7,
+   "bit_crossings": 4723
+  },
+  "NW_b010 -> NW_b000": {
+   "ports": 7,
+   "bit_crossings": 4722
+  },
+  "NE_b010 -> NE_b000": {
+   "ports": 7,
+   "bit_crossings": 4722
+  },
+  "PHY_N -> NW_mcb": {
+   "ports": 2,
+   "bit_crossings": 4096
+  },
+  "NW_mcb -> NW_spt2": {
+   "ports": 3,
+   "bit_crossings": 4236
+  },
+  "NW_spt2 -> NW_spt1": {
+   "ports": 3,
+   "bit_crossings": 4236
+  },
+  "NW_spt1 -> NW_spt0": {
+   "ports": 3,
+   "bit_crossings": 4236
+  },
+  "NW_spt0 -> NW_spu0": {
+   "ports": 7,
+   "bit_crossings": 5379
+  },
+  "NW_spu0 -> NW_hub": {
+   "ports": 5,
+   "bit_crossings": 5368
+  },
+  "PHY_N -> NE_mcb": {
+   "ports": 2,
+   "bit_crossings": 4096
+  },
+  "NE_mcb -> NE_spt2": {
+   "ports": 3,
+   "bit_crossings": 4236
+  },
+  "NE_spt2 -> NE_spt1": {
+   "ports": 3,
+   "bit_crossings": 4236
+  },
+  "NE_spt1 -> NE_spt0": {
+   "ports": 3,
+   "bit_crossings": 4236
+  },
+  "NE_spt0 -> NE_spu0": {
+   "ports": 7,
+   "bit_crossings": 5379
+  },
+  "NE_spu0 -> NE_hub": {
+   "ports": 5,
+   "bit_crossings": 5368
+  },
+  "NW_b110 -> NW_hub": {
+   "ports": 2,
+   "bit_crossings": 1953
+  },
+  "NE_b110 -> NE_hub": {
+   "ports": 2,
+   "bit_crossings": 1953
+  },
+  "NW_su01 -> NW_hub": {
+   "ports": 5,
+   "bit_crossings": 2513
+  },
+  "NE_su01 -> NE_hub": {
+   "ports": 5,
+   "bit_crossings": 2513
+  },
+  "NW_su10 -> NW_hub": {
+   "ports": 3,
+   "bit_crossings": 1996
+  },
+  "NE_su10 -> NE_hub": {
+   "ports": 3,
+   "bit_crossings": 1996
+  },
+  "NW_su21 -> NW_hub": {
+   "ports": 5,
+   "bit_crossings": 2513
+  },
+  "NE_su21 -> NE_hub": {
+   "ports": 5,
+   "bit_crossings": 2513
+  },
+  "NW_su30 -> NW_hub": {
+   "ports": 1,
+   "bit_crossings": 1719
+  },
+  "NE_su30 -> NE_hub": {
+   "ports": 1,
+   "bit_crossings": 1719
+  },
+  "NW_hub -> NW_b000": {
+   "ports": 12,
+   "bit_crossings": 5824
+  },
+  "NW_b010 -> NW_su01": {
+   "ports": 1,
+   "bit_crossings": 1615
+  },
+  "NW_su00 -> NW_sm0": {
+   "ports": 1,
+   "bit_crossings": 1615
+  },
+  "NE_hub -> NE_b000": {
+   "ports": 12,
+   "bit_crossings": 5824
+  },
+  "NE_b010 -> NE_su01": {
+   "ports": 1,
+   "bit_crossings": 1615
+  },
+  "NE_su00 -> NE_sm0": {
+   "ports": 1,
+   "bit_crossings": 1615
+  },
+  "NW_hub -> NW_su01": {
+   "ports": 4,
+   "bit_crossings": 1674
+  },
+  "NW_su01 -> NW_sm0": {
+   "ports": 2,
+   "bit_crossings": 1637
+  },
+  "NE_hub -> NE_su01": {
+   "ports": 4,
+   "bit_crossings": 1674
+  },
+  "NE_su01 -> NE_sm0": {
+   "ports": 2,
+   "bit_crossings": 1637
+  },
+  "NW_hub -> NW_su11": {
+   "ports": 4,
+   "bit_crossings": 4580
+  },
+  "NW_su11 -> NW_sm1": {
+   "ports": 2,
+   "bit_crossings": 3230
+  },
+  "NE_hub -> NE_su11": {
+   "ports": 4,
+   "bit_crossings": 4580
+  },
+  "NE_su11 -> NE_sm1": {
+   "ports": 2,
+   "bit_crossings": 3230
+  },
+  "NW_hub -> NW_su21": {
+   "ports": 5,
+   "bit_crossings": 3003
+  },
+  "NW_su21 -> NW_sm2": {
+   "ports": 2,
+   "bit_crossings": 1637
+  },
+  "NE_hub -> NE_su21": {
+   "ports": 5,
+   "bit_crossings": 3003
+  },
+  "NE_su21 -> NE_sm2": {
+   "ports": 2,
+   "bit_crossings": 1637
+  },
+  "NW_spu1 -> NW_spb2": {
+   "ports": 4,
+   "bit_crossings": 2964
+  },
+  "NW_spb2 -> NW_sm2": {
+   "ports": 2,
+   "bit_crossings": 1788
+  },
+  "NE_spu1 -> NE_spb2": {
+   "ports": 4,
+   "bit_crossings": 2964
+  },
+  "NE_spb2 -> NE_sm2": {
+   "ports": 2,
+   "bit_crossings": 1788
+  },
+  "NW_hub -> NW_su31": {
+   "ports": 4,
+   "bit_crossings": 4580
+  },
+  "NW_su31 -> NW_sm3": {
+   "ports": 2,
+   "bit_crossings": 3230
+  },
+  "NE_hub -> NE_su31": {
+   "ports": 4,
+   "bit_crossings": 4580
+  },
+  "NE_su31 -> NE_sm3": {
+   "ports": 2,
+   "bit_crossings": 3230
+  },
+  "NE_hub -> NE_b101": {
+   "ports": 1,
+   "bit_crossings": 279
+  },
+  "NE_b101 -> root": {
+   "ports": 6,
+   "bit_crossings": 1225
+  },
+  "NW_b001 -> NW_su00": {
+   "ports": 1,
+   "bit_crossings": 1329
+  },
+  "NE_b001 -> NE_su00": {
+   "ports": 1,
+   "bit_crossings": 1329
+  },
+  "NW_su21 -> NW_su20": {
+   "ports": 3,
+   "bit_crossings": 1962
+  },
+  "NE_su21 -> NE_su20": {
+   "ports": 3,
+   "bit_crossings": 1962
+  },
+  "NW_spb2 -> NW_spu1": {
+   "ports": 6,
+   "bit_crossings": 1762
+  },
+  "NW_spu1 -> NW_hub": {
+   "ports": 3,
+   "bit_crossings": 1747
+  },
+  "NE_spb2 -> NE_spu1": {
+   "ports": 6,
+   "bit_crossings": 1762
+  },
+  "NE_spu1 -> NE_hub": {
+   "ports": 3,
+   "bit_crossings": 1747
+  },
+  "NW_b110 -> NW_su31": {
+   "ports": 6,
+   "bit_crossings": 1314
+  },
+  "NE_b110 -> NE_su31": {
+   "ports": 6,
+   "bit_crossings": 1314
+  },
+  "NW_b111 -> NW_su20": {
+   "ports": 2,
+   "bit_crossings": 1298
+  },
+  "NE_b111 -> NE_su20": {
+   "ports": 2,
+   "bit_crossings": 1298
+  },
+  "NW_b112 -> NW_su11": {
+   "ports": 2,
+   "bit_crossings": 684
+  },
+  "NE_b112 -> NE_su11": {
+   "ports": 2,
+   "bit_crossings": 684
+  },
+  "NW_b113 -> NW_su00": {
+   "ports": 2,
+   "bit_crossings": 671
+  },
+  "NE_b113 -> NE_su00": {
+   "ports": 2,
+   "bit_crossings": 671
+  },
+  "NW_io -> NW_b102": {
+   "ports": 1,
+   "bit_crossings": 634
+  },
+  "NW_b102 -> NW_b103": {
+   "ports": 1,
+   "bit_crossings": 634
+  },
+  "NW_b103 -> NW_b111": {
+   "ports": 1,
+   "bit_crossings": 634
+  },
+  "NW_su20 -> NW_su21": {
+   "ports": 4,
+   "bit_crossings": 1152
+  },
+  "NW_su21 -> NW_spu1": {
+   "ports": 2,
+   "bit_crossings": 635
+  },
+  "NW_spu1 -> NW_su30": {
+   "ports": 5,
+   "bit_crossings": 650
+  },
+  "NW_su31 -> NW_b101": {
+   "ports": 4,
+   "bit_crossings": 649
+  },
+  "NW_b101 -> root": {
+   "ports": 5,
+   "bit_crossings": 946
+  },
+  "NE_io -> NE_b102": {
+   "ports": 1,
+   "bit_crossings": 634
+  },
+  "NE_b102 -> NE_b103": {
+   "ports": 1,
+   "bit_crossings": 634
+  },
+  "NE_b103 -> NE_b111": {
+   "ports": 1,
+   "bit_crossings": 634
+  },
+  "NE_su20 -> NE_su21": {
+   "ports": 4,
+   "bit_crossings": 1152
+  },
+  "NE_su21 -> NE_spu1": {
+   "ports": 2,
+   "bit_crossings": 635
+  },
+  "NE_spu1 -> NE_su30": {
+   "ports": 5,
+   "bit_crossings": 650
+  },
+  "NE_su31 -> NE_b101": {
+   "ports": 4,
+   "bit_crossings": 649
+  },
+  "NW_spb2 -> NW_spb1": {
+   "ports": 1,
+   "bit_crossings": 632
+  },
+  "NW_spb1 -> NW_spb0": {
+   "ports": 1,
+   "bit_crossings": 632
+  },
+  "NE_spb2 -> NE_spb1": {
+   "ports": 1,
+   "bit_crossings": 632
+  },
+  "NE_spb1 -> NE_spb0": {
+   "ports": 1,
+   "bit_crossings": 632
+  },
+  "root -> vsN2": {
+   "ports": 1,
+   "bit_crossings": 632
+  },
+  "vsN2 -> vsN1": {
+   "ports": 1,
+   "bit_crossings": 632
+  },
+  "vsN1 -> vsN0": {
+   "ports": 1,
+   "bit_crossings": 632
+  },
+  "NW_spb0 -> NW_spb1": {
+   "ports": 3,
+   "bit_crossings": 628
+  },
+  "NW_spb1 -> NW_spb2": {
+   "ports": 3,
+   "bit_crossings": 628
+  },
+  "NE_spb0 -> NE_spb1": {
+   "ports": 3,
+   "bit_crossings": 628
+  },
+  "NE_spb1 -> NE_spb2": {
+   "ports": 3,
+   "bit_crossings": 628
+  },
+  "vsN0 -> vsN1": {
+   "ports": 3,
+   "bit_crossings": 628
+  },
+  "vsN1 -> vsN2": {
+   "ports": 3,
+   "bit_crossings": 628
+  },
+  "vsN2 -> root": {
+   "ports": 3,
+   "bit_crossings": 628
+  },
+  "NW_b013 -> NW_io": {
+   "ports": 2,
+   "bit_crossings": 633
+  },
+  "NE_b013 -> NE_io": {
+   "ports": 2,
+   "bit_crossings": 633
+  },
+  "NW_io -> NW_b013": {
+   "ports": 2,
+   "bit_crossings": 617
+  },
+  "NE_io -> NE_b013": {
+   "ports": 2,
+   "bit_crossings": 617
+  },
+  "NW_su31 -> NW_b110": {
+   "ports": 3,
+   "bit_crossings": 1130
+  },
+  "NW_b110 -> NW_b100": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NW_b100 -> NW_su30": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NW_su30 -> NW_spu1": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NW_su20 -> NW_b111": {
+   "ports": 3,
+   "bit_crossings": 1130
+  },
+  "NW_b111 -> NW_b103": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NW_b103 -> NW_b102": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NW_b102 -> NW_io": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NE_su31 -> NE_b110": {
+   "ports": 3,
+   "bit_crossings": 1130
+  },
+  "NE_b110 -> NE_b100": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NE_b100 -> NE_su30": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NE_su30 -> NE_spu1": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NE_su20 -> NE_b111": {
+   "ports": 3,
+   "bit_crossings": 1130
+  },
+  "NE_b111 -> NE_b103": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NE_b103 -> NE_b102": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NE_b102 -> NE_io": {
+   "ports": 1,
+   "bit_crossings": 612
+  },
+  "NW_hub -> NW_b112": {
+   "ports": 1,
+   "bit_crossings": 560
+  },
+  "NW_b112 -> root": {
+   "ports": 4,
+   "bit_crossings": 578
+  },
+  "root -> NE_b112": {
+   "ports": 3,
+   "bit_crossings": 596
+  },
+  "NE_b112 -> NE_hub": {
+   "ports": 2,
+   "bit_crossings": 576
+  },
+  "NE_hub -> NE_b112": {
+   "ports": 1,
+   "bit_crossings": 560
+  },
+  "NE_b112 -> root": {
+   "ports": 4,
+   "bit_crossings": 578
+  },
+  "root -> NW_b112": {
+   "ports": 3,
+   "bit_crossings": 596
+  },
+  "NW_b112 -> NW_hub": {
+   "ports": 2,
+   "bit_crossings": 576
+  },
+  "NW_su00 -> NW_b113": {
+   "ports": 3,
+   "bit_crossings": 538
+  },
+  "NE_su00 -> NE_b113": {
+   "ports": 3,
+   "bit_crossings": 538
+  },
+  "NW_su00 -> NW_su01": {
+   "ports": 4,
+   "bit_crossings": 525
+  },
+  "NE_su00 -> NE_su01": {
+   "ports": 4,
+   "bit_crossings": 525
+  },
+  "NW_su11 -> NW_b112": {
+   "ports": 5,
+   "bit_crossings": 536
+  },
+  "NE_su11 -> NE_b112": {
+   "ports": 5,
+   "bit_crossings": 536
+  },
+  "NW_su11 -> NW_hub": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "NE_su11 -> NE_hub": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "NW_sm0 -> NW_su01": {
+   "ports": 2,
+   "bit_crossings": 277
+  },
+  "NE_sm0 -> NE_su01": {
+   "ports": 2,
+   "bit_crossings": 277
+  },
+  "NW_sm1 -> NW_su10": {
+   "ports": 2,
+   "bit_crossings": 277
+  },
+  "NE_sm1 -> NE_su10": {
+   "ports": 2,
+   "bit_crossings": 277
+  },
+  "NW_sm2 -> NW_su21": {
+   "ports": 2,
+   "bit_crossings": 277
+  },
+  "NE_sm2 -> NE_su21": {
+   "ports": 2,
+   "bit_crossings": 277
+  },
+  "NW_sm3 -> NW_b100": {
+   "ports": 2,
+   "bit_crossings": 277
+  },
+  "NW_b100 -> NW_hub": {
+   "ports": 3,
+   "bit_crossings": 279
+  },
+  "NE_sm3 -> NE_b100": {
+   "ports": 2,
+   "bit_crossings": 277
+  },
+  "NE_b100 -> NE_hub": {
+   "ports": 3,
+   "bit_crossings": 279
+  },
+  "NW_spb2 -> NW_sm3": {
+   "ports": 1,
+   "bit_crossings": 173
+  },
+  "NE_spb2 -> NE_sm3": {
+   "ports": 1,
+   "bit_crossings": 173
+  },
+  "NW_spt0 -> NW_sm0": {
+   "ports": 1,
+   "bit_crossings": 173
+  },
+  "NE_spt0 -> NE_sm0": {
+   "ports": 1,
+   "bit_crossings": 173
+  },
+  "NW_spt0 -> NW_sm1": {
+   "ports": 1,
+   "bit_crossings": 173
+  },
+  "NE_spt0 -> NE_sm1": {
+   "ports": 1,
+   "bit_crossings": 173
+  },
+  "NW_b100 -> NW_sm3": {
+   "ports": 1,
+   "bit_crossings": 22
+  },
+  "NE_b100 -> NE_sm3": {
+   "ports": 1,
+   "bit_crossings": 22
+  },
+  "NW_su10 -> NW_sm1": {
+   "ports": 1,
+   "bit_crossings": 22
+  },
+  "NE_su10 -> NE_sm1": {
+   "ports": 1,
+   "bit_crossings": 22
+  },
+  "NW_su01 -> NW_su00": {
+   "ports": 3,
+   "bit_crossings": 1656
+  },
+  "NE_su01 -> NE_su00": {
+   "ports": 3,
+   "bit_crossings": 1656
+  },
+  "NW_su11 -> NW_su10": {
+   "ports": 2,
+   "bit_crossings": 21
+  },
+  "NW_b113 -> NW_io": {
+   "ports": 1,
+   "bit_crossings": 20
+  },
+  "NE_su11 -> NE_su10": {
+   "ports": 2,
+   "bit_crossings": 21
+  },
+  "NE_b113 -> NE_io": {
+   "ports": 1,
+   "bit_crossings": 20
+  },
+  "PHY_N -> vsN6": {
+   "ports": 2,
+   "bit_crossings": 32
+  },
+  "vsN6 -> vsN5": {
+   "ports": 2,
+   "bit_crossings": 32
+  },
+  "vsN5 -> vsN4": {
+   "ports": 2,
+   "bit_crossings": 32
+  },
+  "vsN4 -> root": {
+   "ports": 2,
+   "bit_crossings": 32
+  },
+  "NW_spu0 -> NW_su10": {
+   "ports": 4,
+   "bit_crossings": 19
+  },
+  "NW_su10 -> NW_su11": {
+   "ports": 4,
+   "bit_crossings": 19
+  },
+  "NE_spu0 -> NE_su10": {
+   "ports": 4,
+   "bit_crossings": 19
+  },
+  "NE_su10 -> NE_su11": {
+   "ports": 4,
+   "bit_crossings": 19
+  },
+  "NW_io -> NW_b113": {
+   "ports": 1,
+   "bit_crossings": 7
+  },
+  "NW_su01 -> NW_spu0": {
+   "ports": 2,
+   "bit_crossings": 8
+  },
+  "NE_io -> NE_b113": {
+   "ports": 1,
+   "bit_crossings": 7
+  },
+  "NE_su01 -> NE_spu0": {
+   "ports": 2,
+   "bit_crossings": 8
+  },
+  "NE_b101 -> NE_hub": {
+   "ports": 1,
+   "bit_crossings": 2
+  },
+  "NW_b101 -> NW_hub": {
+   "ports": 1,
+   "bit_crossings": 2
+  },
+  "NW_su01 -> NW_b010": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "NW_b010 -> NW_su20": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "NE_su01 -> NE_b010": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "NE_b010 -> NE_su20": {
+   "ports": 1,
+   "bit_crossings": 1
+  }
+ },
+ "scenarios": {
+  "2": {
+   "extra_cycles_per_crossed_partition_seam": 2,
+   "gross_new_ff_bit_sites": 1170176,
+   "gross_legal_ff_envelope_um2": 443590.31808000006,
+   "token_throughput": "UNPRICED",
+   "critical_path_added_cycles": "UNPRICED: current programme-operation to traversed seam map required"
+  },
+  "3": {
+   "extra_cycles_per_crossed_partition_seam": 3,
+   "gross_new_ff_bit_sites": 1755264,
+   "gross_legal_ff_envelope_um2": 665385.47712,
+   "token_throughput": "UNPRICED",
+   "critical_path_added_cycles": "UNPRICED: current programme-operation to traversed seam map required"
+  }
+ },
+ "area_basis": "Gross stage-bit sites times canonical1.404x0.27um legal FF envelope; not synthesizedcellarea, notnetincrementalarea. Existingbanks/sourcefanoutsharing/notlandableprotocolsnotdeducted.",
+ "limitations": [
+  "Only explicit plan partition seams, not unenumerated hard-core/datapath cuts within partition types.",
+  "Clock/reset/PG not landed; their networks are separate plan contracts.",
+  "Adding latency changes handshakes/reset/epoch/calendar; no scalar totalstationcount pricing.",
+  "No rule, plan, programme, RTL or physical build changed."
+ ]
+}

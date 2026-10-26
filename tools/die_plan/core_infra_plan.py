@@ -13,11 +13,27 @@ import core_infra as CI
 
 def read_technology(path):
     """Read the small OpenDB technology.tsv snapshot produced before planning."""
-    import tkinter
-    interp = tkinter.Tcl()
+    try:
+        import tkinter
+        interp = tkinter.Tcl()
+        records = [list(interp.splitlist(line)) for line in open(path)]
+    except ModuleNotFoundError:
+        # Fleet Python can omit Tk while tclsh is installed. Parse list data
+        # with Tcl itself, never eval snapshot strings or shell interpolation.
+        import base64
+        import subprocess
+        script = """set f [open [lindex $argv 0] r]
+while {[gets $f row] >= 0} {
+ set fields {}
+ foreach item $row {lappend fields [binary encode base64 -maxlen 0 [encoding convertto utf-8 $item]]}
+ puts [join $fields "\t"]
+}
+close $f
+"""
+        result = subprocess.run(['tclsh', '/dev/stdin', str(path)], input=script, text=True, capture_output=True, check=True)
+        records = [[base64.b64decode(x).decode('utf-8') for x in line.split('\t')] if line else [] for line in result.stdout.splitlines()]
     out = dict(rows=[], masters={}, obstacles=[])
-    for line in open(path):
-        f = list(interp.splitlist(line))
+    for f in records:
         if not f:
             continue
         if f[0] == "DBU": out["dbu"] = int(f[1])
@@ -111,7 +127,16 @@ def _mst_length(points):
     return total
 
 
-def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_c_ff_um, input_slew_ps=40.):
+def sink_cap(value, corner):
+    """Actual per-corner pin capacitance, or explicitly shared scalar input."""
+    result = value[corner] if isinstance(value, dict) else value
+    result = float(result)
+    if not math.isfinite(result) or result < 0:
+        raise CI.InfraError(f"invalid sink capacitance at {corner}")
+    return result
+
+
+def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_c_ff_um, input_slew_ps=40., routing_model=None):
     """NLDM buffer delay at total branch load + Elmore branch wires.
 
     libraries: {corner: die_clock_128.lib_cells(...)}; sink points/caps identify
@@ -136,21 +161,30 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
             name=n["name"];point=cells[name]["xy_um"]
             if n["parent"].startswith("port:"):arrivals[name]=0.;slews[name]=input_slew_ps
             targets=[(q,cells[q]["xy_um"],libs[cells[q]["master"]]["cap"]) for q in children[name]]
-            targets += [(q,sink_points[q],sink_caps_ff[q]) for q in leaves[name]]
+            targets += [(q,sink_points[q],sink_cap(sink_caps_ff[q],corner)) for q in leaves[name]]
             if not targets:continue
             wire=_mst_length([point]+[q[1] for q in targets]);load=sum(q[2] for q in targets)
+            rc=None
+            if routing_model is not None:
+                from core_infra_wire import rooted_rc
+                branch=routing_model.get('nodes',{}).get(name)
+                if branch is None:branch=routing_model['nonleaf' if children[name] else 'leaf']
+                rc=rooted_rc([point]+[q[1] for q in targets],[q[2] for q in targets],**branch)
+                wire=rc['wire_um'];wire_load=rc['wire_cap_ff']
+            else:wire_load=wire*wire_c_ff_um
             lib=libs[cells[name]["master"]]
-            delay=C128._bilin(lib["delay"],slews[name],wire*wire_c_ff_um+load)
-            slew=C128._bilin(lib["trans"],slews[name],wire*wire_c_ff_um+load)
-            for target,q,cap in targets:
+            delay=C128._bilin(lib["delay"],slews[name],wire_load+load)
+            slew=C128._bilin(lib["trans"],slews[name],wire_load+load)
+            for k,(target,q,cap) in enumerate(targets):
                 length=abs(point[0]-q[0])+abs(point[1]-q[1])
-                elmore=length*wire_r_kohm_um*(length*wire_c_ff_um/2+cap)
+                elmore=rc['target_elmore_ps'][k] if rc else length*wire_r_kohm_um*(length*wire_c_ff_um/2+cap)
                 arrival=arrivals[name]+delay+elmore
                 if target in cells:
                     arrivals[target]=arrival;slews[target]=math.hypot(slew,2.2*elmore)
                 else:sink_arr[target]=arrival
             nets.append(dict(driver=name,fanout=len(targets),wire_um=round(wire,3),load_ff=round(load,3),
-                             cell_delay_ps=round(delay,3),input_arrival_ps=round(arrivals[name],3)))
+                             cell_delay_ps=round(delay,3),input_arrival_ps=round(arrivals[name],3),
+                             wire_geometry={k:rc[k] for k in ('original_tree_wire_um','overlap_removed_um','overlap_removed_fraction','network_cycles') if k in rc} if rc else {}))
         vals=list(sink_arr.values());leaf_means=[]
         for leaf in tree["leaves"]:
             v=[sink_arr[q] for q in leaf["sinks"]]
@@ -158,5 +192,5 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
                                    min_ps=min(v),mean_ps=sum(v)/len(v),max_ps=max(v)))
         answer[corner]=dict(sinks=len(vals),min_ps=min(vals),mean_ps=sum(vals)/len(vals),max_ps=max(vals),
                             window_ps=max(vals)-min(vals),leaf_means=leaf_means,nets=nets)
-    return dict(basis="Geometry/ASAP7 NLDM + Manhattan-MST branch C + Elmore path R; no clock measurements/pad selection",
-                wire_r_kohm_um=wire_r_kohm_um,wire_c_ff_um=wire_c_ff_um,input_slew_ps=input_slew_ps,corners=answer)
+    return dict(basis=("Geometry/ASAP7 NLDM + directional rooted shared-subtree RC prototype; no clock measurements/pad selection" if routing_model is not None else "Geometry/ASAP7 NLDM + historical Manhattan-MST branch C/direct branch R; no clock measurements/pad selection"),
+                wire_r_kohm_um=wire_r_kohm_um,wire_c_ff_um=wire_c_ff_um,input_slew_ps=input_slew_ps,routing_model=routing_model,corners=answer)

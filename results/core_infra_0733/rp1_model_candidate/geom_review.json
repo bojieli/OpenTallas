@@ -1,0 +1,18 @@
+{
+ "verdict": "PASS-COND",
+ "picture": "review.png",
+ "planned_cells": 96,
+ "clock_nodes": 94,
+ "max_clock_node_edge_um": 136.404,
+ "findings": [
+  "Viewed actual post-data-hook source geometry, SRAMs/4.32um halos and plan-legalized clock cells",
+  "All clockcells fixed by per-type row/site origins before build; nativePG binds beforeprotect; original data logic retained",
+  "4W4S core clocks only M4/M5, no M8/M9 use; common entry three BUFx10 stages selected from geometry/NLDM beforebuild",
+  "Dedicated FT ports remain isolated from core clock/reset logic"
+ ],
+ "conditions": [
+  "ONE CTS-equivalent planned-tree+GRT diagnostic only, no DRT or sign-off",
+  "Cfactor1.3 is stated model assumption; measure nativeRC response, do not claim closure fromprediction",
+  "Original64 namedRP1 memberships retained; VMR-specific MIFpair naming is absent in RP1"
+ ]
+}

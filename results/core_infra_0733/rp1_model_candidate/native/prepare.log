@@ -1,0 +1,78 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+OLD_CLOCK_REMOVED buffers=93 original_clock_sinks=2792
+[WARNING ODB-1003] (M1) layer's width from (mp_core_clock_4w4s) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M2) layer's width from (mp_core_clock_4w4s) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M3) layer's width from (mp_core_clock_4w4s) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M6) layer's width from (mp_core_clock_4w4s) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M7) layer's width from (mp_core_clock_4w4s) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M8) layer's width from (mp_core_clock_4w4s) NDR is not defined. Using the default value 0.04
+[WARNING ODB-1003] (M9) layer's width from (mp_core_clock_4w4s) NDR is not defined. Using the default value 0.04
+[WARNING ODB-1003] (Pad) layer's width from (mp_core_clock_4w4s) NDR is not defined. Using the default value 0.04
+OT_CORE_CLOCK_NDR mp_core_clock_4w4s widths=M4 0.096 M5 0.096 spaces=M4 0.096 M5 0.096 nets=95
+OT_CORE_INFRA cells=96 ports=4 bay_cells=0 added_data_cycles=0 added_reset_cycles=0
+[INFO DPL-0006] Core area: 67109.99 um^2
+[INFO DPL-0007] Movable instances area: 1357.50 um^2
+[INFO DPL-0008] Fixed instances area within core: 24821.04 um^2
+[INFO DPL-0009] Utilization: 39.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 15563 cells
+[INFO DPL-0393]   height 262 row(s): 2 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         76 |         8 |        68
+        1 |        114 |         8 |       106
+        2 |        103 |         7 |        96
+        3 |         94 |         6 |        88
+        4 |         87 |         6 |        81
+        5 |         84 |         4 |        80
+        6 |         74 |         4 |        70
+        7 |         74 |         4 |        70
+        8 |         42 |         2 |        40
+        9 |         34 |         2 |        32
+       10 |         34 |         2 |        32
+       17 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 17.
+[INFO DPL-0500] Runtime: 0.77s
+Placement Analysis
+---------------------------------
+total displacement         67.6 u
+average displacement        0.0 u
+max displacement            3.2 u
+original HPWL          151448.5 u
+legalized HPWL         151491.3 u
+delta HPWL                    0 %
+
+OT_CORE_CLOCK_NDR mp_core_clock_4w4s widths=M4 0.096 M5 0.096 spaces=M4 0.096 M5 0.096 nets=95
+OT_CORE_INFRA cells=96 ports=4 bay_cells=0 added_data_cycles=0 added_reset_cycles=0
+PRE_ROUTE_GATES period833 uncertainty60_25 PG=checked 31130 roles {POWER 15565 GROUND 15565} failures {} failure_count 0 nonclock_connectivity_protection_IDENTICAL ndr_clock_nets=95 FT_ARC_QUALIFICATION_NOT_RUN
+PLAN_CTS_PREPARED exact_named_tree=1 automatic_CTS=0 no_data_cycles_added=1

@@ -37,3 +37,51 @@ def test_predictor_detects_wire_load_imbalance_without_changing_plan():
     pts['d/CLK']=[800,430]
     imbalanced=CP.predict_tree(s,libs,pts,caps,.02,.1)
     assert imbalanced['corners']['TT']['window_ps']>1 and s==saved
+
+
+def test_actual_corner_caps_and_declared_source_slew_propagate():
+    from core_infra_search import Model
+    s=sample();s['core_tree']=dict(clock_port='clk',nodes=[
+      dict(name='root',master='BUFx16f_ASAP7_75t_R',xy_um=[430,430],parent='port:clk')],
+      leaves=[dict(node='root',sinks=['a/CLK'])])
+    lib=dict(delay=([0,100],[0,100],[[10,30],[20,40]]),trans=([0,100],[0,100],[[10,30],[20,40]]),cap=1.)
+    libs={c:{'BUFx16f_ASAP7_75t_R':lib} for c in ('TT','FF')}
+    pts={'a/CLK':[435,430]};caps={'a/CLK':{'TT':.5,'FF':.8}}
+    result=CP.predict_tree(s,libs,pts,caps,.02,.1,input_slew_ps=0.)
+    fast=Model(s,libs,pts,caps,.02,.1,input_slew_ps=0.).evaluate(['BUFx16f_ASAP7_75t_R'])
+    for c in libs:assert fast[c]['mean']==pytest.approx(result['corners'][c]['mean_ps'])
+    assert fast['FF']['mean']>fast['TT']['mean']
+    slower=Model(s,libs,pts,caps,.02,.1,input_slew_ps=40.).evaluate(['BUFx16f_ASAP7_75t_R'])
+    assert slower['TT']['mean']>fast['TT']['mean']
+    with pytest.raises(KeyError):CP.sink_cap({'TT':.5},'FF')
+
+
+def test_cached_rooted_model_matches_shared_predictor_after_driver_change():
+    from core_infra_search import Model
+    s=sample();s['core_tree']=dict(clock_port='clk',nodes=[
+      dict(name='root',master='BUFx16f_ASAP7_75t_R',xy_um=[430,430],parent='port:clk'),
+      dict(name='leaf',master='BUFx8_ASAP7_75t_R',xy_um=[440,440],parent='root')],
+      leaves=[dict(node='leaf',sinks=['a/CLK','b/CLK'])])
+    lib=dict(delay=([0,100],[0,100],[[10,30],[20,40]]),trans=([0,100],[0,100],[[10,30],[20,40]]),cap=1.)
+    other={**lib,'cap':2.}
+    libs={c:{'BUFx16f_ASAP7_75t_R':lib,'BUFx8_ASAP7_75t_R':other} for c in ('TT','FF')}
+    pts={'a/CLK':[450,440],'b/CLK':[460,440]};caps={p:{'TT':.5,'FF':.8} for p in pts}
+    profile=dict(horizontal_rc=[.1,.2],vertical_rc=[.2,.3],merge_collinear=True);routing=dict(nonleaf=profile,leaf=profile)
+    model=Model(s,libs,pts,caps,0,0,input_slew_ps=0,routing_model=routing)
+    for chosen in ('BUFx8_ASAP7_75t_R','BUFx16f_ASAP7_75t_R'):
+        changed=copy.deepcopy(s);changed['core_tree']['nodes'][1]['master']=chosen
+        detailed=CP.predict_tree(changed,libs,pts,caps,0,0,input_slew_ps=0,routing_model=routing)
+        fast=model.evaluate(['BUFx16f_ASAP7_75t_R',chosen])
+        for corner in libs:
+            assert fast[corner]['mean']==pytest.approx(detailed['corners'][corner]['mean_ps'])
+            assert fast[corner]['all_max']==pytest.approx(detailed['corners'][corner]['max_ps'])
+
+
+def test_snapshot_tcl_list_parser_without_python_tk(tmp_path,monkeypatch):
+    import sys
+    monkeypatch.setitem(sys.modules,'tkinter',None)
+    p=tmp_path/'technology.tsv'
+    p.write_text('DBU 1000\nCORE 0 0 100 100\nOBSTACLE {g_bank\\[0\\].u_m} macro 1 2 3 4\n')
+    data=CP.read_technology(p)
+    assert data['obstacles'][0]['name']==r'g_bank\[0\].u_m'
+    assert data['obstacles'][0]['rect']==[1,2,3,4]

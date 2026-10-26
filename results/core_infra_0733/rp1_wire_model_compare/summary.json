@@ -1,0 +1,41 @@
+{
+ "qualification": "MODEL-ONLY CONDITIONAL; unchangedfrozenRP1plan,0psinput,actualcornercaps; unmergedrootedMSTnotextractedtopology; no designchoicefrommeasurements orrouteauthorization",
+ "corners": {
+  "M6_M5_unimplemented_capacity_unreserved": {
+   "TT": {
+    "mean_ps": 248.15287410821017,
+    "register_leaf_window_ps": 27.521286937668435,
+    "all_pin_window_ps": 37.20891902790055
+   },
+   "FF": {
+    "mean_ps": 183.9244276243302,
+    "register_leaf_window_ps": 27.188864698827473,
+    "all_pin_window_ps": 35.99336835948813
+   }
+  },
+  "actual_leaf_layer_prototype": {
+   "TT": {
+    "mean_ps": 251.37117714218468,
+    "register_leaf_window_ps": 41.447209162533426,
+    "all_pin_window_ps": 91.35911620150893
+   },
+   "FF": {
+    "mean_ps": 186.97377817788663,
+    "register_leaf_window_ps": 43.875956433863564,
+    "all_pin_window_ps": 89.32127153113288
+   }
+  },
+  "forced_all_M4_M5_unimplemented": {
+   "TT": {
+    "mean_ps": 248.19704502893364,
+    "register_leaf_window_ps": 27.914687541322905,
+    "all_pin_window_ps": 42.11486100155952
+   },
+   "FF": {
+    "mean_ps": 183.99608356143779,
+    "register_leaf_window_ps": 27.22879876966647,
+    "all_pin_window_ps": 41.06276558913362
+   }
+  }
+ }
+}

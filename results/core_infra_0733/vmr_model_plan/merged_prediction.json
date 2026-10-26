@@ -1,0 +1,7379 @@
+{
+ "basis": "Geometry/ASAP7 NLDM + directional rooted shared-subtree RC prototype; no clock measurements/pad selection",
+ "wire_r_kohm_um": 0,
+ "wire_c_ff_um": 0,
+ "input_slew_ps": 0,
+ "routing_model": {
+  "nonleaf": {
+   "horizontal_rc": [
+    0.00901825,
+    0.14025
+   ],
+   "vertical_rc": [
+    0.00949675,
+    0.1078
+   ],
+   "obstacles": [
+    [
+     43.272000000000006,
+     86.4,
+     217.87199999999999,
+     156.888
+    ],
+    [
+     43.272000000000006,
+     181.44,
+     217.87199999999999,
+     251.928
+    ]
+   ],
+   "vertical_obstacles": [],
+   "clearance": 0.0,
+   "merge_collinear": true
+  },
+  "leaf": {
+   "horizontal_rc": [
+    0.0297127,
+    0.1675
+   ],
+   "vertical_rc": [
+    0.031287,
+    0.1315
+   ],
+   "obstacles": [
+    [
+     43.2,
+     86.4,
+     217.944,
+     156.888
+    ],
+    [
+     43.2,
+     181.44,
+     217.944,
+     251.928
+    ]
+   ],
+   "vertical_obstacles": [
+    [
+     43.2,
+     86.4,
+     217.944,
+     156.888
+    ],
+    [
+     43.2,
+     181.44,
+     217.944,
+     251.928
+    ]
+   ],
+   "clearance": 0.0,
+   "merge_collinear": true
+  },
+  "nodes": {
+   "mp_core_macro0": {
+    "horizontal_rc": [
+     0.00901825,
+     0.14025
+    ],
+    "vertical_rc": [
+     0.00949675,
+     0.1078
+    ],
+    "obstacles": [
+     [
+      43.272000000000006,
+      86.4,
+      217.87199999999999,
+      156.888
+     ],
+     [
+      43.272000000000006,
+      181.44,
+      217.87199999999999,
+      251.928
+     ]
+    ],
+    "vertical_obstacles": [],
+    "clearance": 0.0,
+    "merge_collinear": true
+   },
+   "mp_core_macro1": {
+    "horizontal_rc": [
+     0.00901825,
+     0.14025
+    ],
+    "vertical_rc": [
+     0.00949675,
+     0.1078
+    ],
+    "obstacles": [
+     [
+      43.272000000000006,
+      86.4,
+      217.87199999999999,
+      156.888
+     ],
+     [
+      43.272000000000006,
+      181.44,
+      217.87199999999999,
+      251.928
+     ]
+    ],
+    "vertical_obstacles": [],
+    "clearance": 0.0,
+    "merge_collinear": true
+   }
+  }
+ },
+ "corners": {
+  "TT": {
+   "sinks": 4310,
+   "min_ps": 246.75907614170814,
+   "mean_ps": 256.0838520282126,
+   "max_ps": 269.56709841911356,
+   "window_ps": 22.808022277405428,
+   "leaf_means": [
+    {
+     "node": "mp_core_Q0B0L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 249.09711179809915,
+     "mean_ps": 249.80108377711053,
+     "max_ps": 250.46269899838182
+    },
+    {
+     "node": "mp_core_Q0B0L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 257.7485492847753,
+     "mean_ps": 258.0400421006607,
+     "max_ps": 258.2296954870532
+    },
+    {
+     "node": "mp_core_Q0B0L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 263.41101581132597,
+     "mean_ps": 263.6843416766244,
+     "max_ps": 263.8716710318507
+    },
+    {
+     "node": "mp_core_Q0B0L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 249.69852775643105,
+     "mean_ps": 251.0762659522393,
+     "max_ps": 251.7870069398728
+    },
+    {
+     "node": "mp_core_Q0B0L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 249.54059090220366,
+     "mean_ps": 250.39146621157323,
+     "max_ps": 251.28244098652902
+    },
+    {
+     "node": "mp_core_Q0B0L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 248.28076108792226,
+     "mean_ps": 248.98708007937694,
+     "max_ps": 249.42849817982363
+    },
+    {
+     "node": "mp_core_Q0B0L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 249.65534166922393,
+     "mean_ps": 250.3796403863337,
+     "max_ps": 250.93336837178853
+    },
+    {
+     "node": "mp_core_Q0B0L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 251.04581791158122,
+     "mean_ps": 253.60468549697518,
+     "max_ps": 255.60208895769776
+    },
+    {
+     "node": "mp_core_Q0B1L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 250.06593606962485,
+     "mean_ps": 250.5575014252898,
+     "max_ps": 250.87607051811835
+    },
+    {
+     "node": "mp_core_Q0B1L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 250.26185880525514,
+     "mean_ps": 251.06096502279075,
+     "max_ps": 251.6427333843471
+    },
+    {
+     "node": "mp_core_Q0B1L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 250.42034987498926,
+     "mean_ps": 250.75184012942782,
+     "max_ps": 250.96789952349656
+    },
+    {
+     "node": "mp_core_Q0B1L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 250.66227804077766,
+     "mean_ps": 251.39585739544594,
+     "max_ps": 252.13888567102563
+    },
+    {
+     "node": "mp_core_Q0B1L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 246.75907614170814,
+     "mean_ps": 250.4045561149705,
+     "max_ps": 253.5856494550722
+    },
+    {
+     "node": "mp_core_Q0B1L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 250.42454994455142,
+     "mean_ps": 252.97052544127848,
+     "max_ps": 254.4001791927366
+    },
+    {
+     "node": "mp_core_Q0B1L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 250.23170298788105,
+     "mean_ps": 250.46514344796057,
+     "max_ps": 250.60196365903752
+    },
+    {
+     "node": "mp_core_Q0B1L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 257.7499333420116,
+     "mean_ps": 258.5006291901935,
+     "max_ps": 259.025257199644
+    },
+    {
+     "node": "mp_core_Q0B2L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 250.88130243089276,
+     "mean_ps": 251.95959378159415,
+     "max_ps": 252.27436935453977
+    },
+    {
+     "node": "mp_core_Q0B2L1",
+     "kind": "register",
+     "sinks": 17,
+     "min_ps": 252.70504340705386,
+     "mean_ps": 252.96741951951546,
+     "max_ps": 253.03584648544052
+    },
+    {
+     "node": "mp_core_Q0B2L2",
+     "kind": "register",
+     "sinks": 8,
+     "min_ps": 251.36740813832702,
+     "mean_ps": 251.42580403282605,
+     "max_ps": 251.4672047823073
+    },
+    {
+     "node": "mp_core_Q0B2L3",
+     "kind": "register",
+     "sinks": 4,
+     "min_ps": 250.48370545154648,
+     "mean_ps": 250.51498639288383,
+     "max_ps": 250.53956211602883
+    },
+    {
+     "node": "mp_core_Q0B2L4",
+     "kind": "register",
+     "sinks": 5,
+     "min_ps": 250.58873409010152,
+     "mean_ps": 250.77026293590166,
+     "max_ps": 251.2533969943755
+    },
+    {
+     "node": "mp_core_Q0B2L5",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 249.83041790601197,
+     "mean_ps": 250.22062193147147,
+     "max_ps": 250.50539629991508
+    },
+    {
+     "node": "mp_core_Q0B2L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 255.10608510848408,
+     "mean_ps": 255.5485790708449,
+     "max_ps": 255.91745060418762
+    },
+    {
+     "node": "mp_core_Q0B2L7",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 250.06148637567642,
+     "mean_ps": 250.29735864910657,
+     "max_ps": 250.47700502102614
+    },
+    {
+     "node": "mp_core_Q0B2L8",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 261.414844994672,
+     "mean_ps": 261.57169311943295,
+     "max_ps": 261.67406150123685
+    },
+    {
+     "node": "mp_core_Q0B2L9",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 261.5757559113048,
+     "mean_ps": 261.73205841183756,
+     "max_ps": 261.91545448369874
+    },
+    {
+     "node": "mp_core_Q0B2L10",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 262.31531143499063,
+     "mean_ps": 262.55972820658576,
+     "max_ps": 262.7662445109706
+    },
+    {
+     "node": "mp_core_Q0B3L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 249.8944154667695,
+     "mean_ps": 250.27512817888993,
+     "max_ps": 250.47143259714844
+    },
+    {
+     "node": "mp_core_Q0B3L1",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 250.14475735490447,
+     "mean_ps": 250.4417416092765,
+     "max_ps": 250.75671422710863
+    },
+    {
+     "node": "mp_core_Q0B3L2",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 249.8063519788419,
+     "mean_ps": 250.47485344731103,
+     "max_ps": 251.051965039945
+    },
+    {
+     "node": "mp_core_Q0B3L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 249.73532479907416,
+     "mean_ps": 250.11535431957364,
+     "max_ps": 250.5962287153707
+    },
+    {
+     "node": "mp_core_Q0B3L4",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 250.0521371176094,
+     "mean_ps": 250.42818360267708,
+     "max_ps": 250.75061388788663
+    },
+    {
+     "node": "mp_core_Q0B3L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 250.08224892973084,
+     "mean_ps": 250.48258074821365,
+     "max_ps": 250.68460564937294
+    },
+    {
+     "node": "mp_core_Q0B3L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 249.7374317343803,
+     "mean_ps": 250.13967359916992,
+     "max_ps": 250.57593953566456
+    },
+    {
+     "node": "mp_core_Q0B3L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 250.12228668680447,
+     "mean_ps": 250.30631576626195,
+     "max_ps": 250.4221139662125
+    },
+    {
+     "node": "mp_core_Q1B0L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 254.10817223689443,
+     "mean_ps": 254.6252424599887,
+     "max_ps": 255.0384856676634
+    },
+    {
+     "node": "mp_core_Q1B0L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 255.87004499819074,
+     "mean_ps": 256.41267636751627,
+     "max_ps": 256.7859675137434
+    },
+    {
+     "node": "mp_core_Q1B0L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 254.86773968201678,
+     "mean_ps": 255.15547119945558,
+     "max_ps": 255.39146026061172
+    },
+    {
+     "node": "mp_core_Q1B0L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 255.37354329568248,
+     "mean_ps": 256.4423090744239,
+     "max_ps": 257.06590087705473
+    },
+    {
+     "node": "mp_core_Q1B0L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 253.64045438972727,
+     "mean_ps": 253.82785392348018,
+     "max_ps": 253.96319604963958
+    },
+    {
+     "node": "mp_core_Q1B0L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 254.37967270602846,
+     "mean_ps": 255.53338277726544,
+     "max_ps": 256.2584470927136
+    },
+    {
+     "node": "mp_core_Q1B0L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 254.71486565546056,
+     "mean_ps": 255.1233586413513,
+     "max_ps": 255.29435088250557
+    },
+    {
+     "node": "mp_core_Q1B0L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 255.75114396207613,
+     "mean_ps": 256.27184921481216,
+     "max_ps": 256.77188892449874
+    },
+    {
+     "node": "mp_core_Q1B1L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 259.80408637374506,
+     "mean_ps": 261.7133858472767,
+     "max_ps": 263.33911075729276
+    },
+    {
+     "node": "mp_core_Q1B1L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 259.610050314169,
+     "mean_ps": 260.2959046906962,
+     "max_ps": 261.0922920133999
+    },
+    {
+     "node": "mp_core_Q1B1L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 251.2863528729693,
+     "mean_ps": 255.2277203791421,
+     "max_ps": 257.8058357308452
+    },
+    {
+     "node": "mp_core_Q1B1L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 261.8469257646887,
+     "mean_ps": 262.826174276505,
+     "max_ps": 264.0663343465857
+    },
+    {
+     "node": "mp_core_Q1B1L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 248.04727744396556,
+     "mean_ps": 248.21360344890638,
+     "max_ps": 248.36752646609924
+    },
+    {
+     "node": "mp_core_Q1B1L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 248.37120913494476,
+     "mean_ps": 248.73372359507084,
+     "max_ps": 248.97752398983178
+    },
+    {
+     "node": "mp_core_Q1B1L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 248.565687418585,
+     "mean_ps": 249.06764676735003,
+     "max_ps": 249.4095735987219
+    },
+    {
+     "node": "mp_core_Q1B1L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 248.70541961234534,
+     "mean_ps": 249.4610969992899,
+     "max_ps": 250.08818866591605
+    },
+    {
+     "node": "mp_core_Q1B2L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 259.62585395431375,
+     "mean_ps": 260.08025304414366,
+     "max_ps": 260.366558515254
+    },
+    {
+     "node": "mp_core_Q1B2L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 259.69957869164824,
+     "mean_ps": 260.04464463377354,
+     "max_ps": 260.52566790456285
+    },
+    {
+     "node": "mp_core_Q1B2L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 259.68674075725875,
+     "mean_ps": 259.9394375741574,
+     "max_ps": 260.1928515239804
+    },
+    {
+     "node": "mp_core_Q1B2L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 260.01273763728597,
+     "mean_ps": 260.3643823024916,
+     "max_ps": 260.72979187192044
+    },
+    {
+     "node": "mp_core_Q1B2L4",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 255.07286955266827,
+     "mean_ps": 255.7318689825306,
+     "max_ps": 256.31102839612936
+    },
+    {
+     "node": "mp_core_Q1B2L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 257.3813583173666,
+     "mean_ps": 257.87405059509456,
+     "max_ps": 258.0513141713533
+    },
+    {
+     "node": "mp_core_Q1B2L6",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 254.0244130455579,
+     "mean_ps": 254.5419066116924,
+     "max_ps": 254.9679750418579
+    },
+    {
+     "node": "mp_core_Q1B2L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 254.68640663687844,
+     "mean_ps": 255.28984875110496,
+     "max_ps": 255.56398960174224
+    },
+    {
+     "node": "mp_core_Q1B3L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 254.59110307783183,
+     "mean_ps": 254.89895731200698,
+     "max_ps": 255.07188077378044
+    },
+    {
+     "node": "mp_core_Q1B3L1",
+     "kind": "register",
+     "sinks": 17,
+     "min_ps": 256.4572194260617,
+     "mean_ps": 256.6842479013297,
+     "max_ps": 256.88930778038906
+    },
+    {
+     "node": "mp_core_Q1B3L2",
+     "kind": "register",
+     "sinks": 4,
+     "min_ps": 247.32237058483665,
+     "mean_ps": 247.41772938132735,
+     "max_ps": 247.6685291928558
+    },
+    {
+     "node": "mp_core_Q1B3L3",
+     "kind": "register",
+     "sinks": 5,
+     "min_ps": 248.03553731069937,
+     "mean_ps": 248.21556995794307,
+     "max_ps": 248.4023576289851
+    },
+    {
+     "node": "mp_core_Q1B3L4",
+     "kind": "register",
+     "sinks": 8,
+     "min_ps": 249.27513941236907,
+     "mean_ps": 249.38119236704594,
+     "max_ps": 249.45667677454017
+    },
+    {
+     "node": "mp_core_Q1B3L5",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 254.44257868780667,
+     "mean_ps": 255.18681173840625,
+     "max_ps": 255.87034692716549
+    },
+    {
+     "node": "mp_core_Q1B3L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 258.36741710922536,
+     "mean_ps": 259.04212137362384,
+     "max_ps": 260.8232686796931
+    },
+    {
+     "node": "mp_core_Q1B3L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 255.39969098213803,
+     "mean_ps": 255.74840233731933,
+     "max_ps": 256.1056556052482
+    },
+    {
+     "node": "mp_core_Q1B3L8",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 254.66108519564128,
+     "mean_ps": 255.08400532493204,
+     "max_ps": 255.2833526064477
+    },
+    {
+     "node": "mp_core_Q1B3L9",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 254.88595674507297,
+     "mean_ps": 255.11723162766643,
+     "max_ps": 255.4307738804946
+    },
+    {
+     "node": "mp_core_Q1B3L10",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 254.89285827928177,
+     "mean_ps": 255.47175463435772,
+     "max_ps": 256.02886380890493
+    },
+    {
+     "node": "mp_core_Q2B0L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 252.92996225651072,
+     "mean_ps": 253.49912361408215,
+     "max_ps": 253.97781387989286
+    },
+    {
+     "node": "mp_core_Q2B0L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 254.32360214771327,
+     "mean_ps": 255.67367720866775,
+     "max_ps": 256.7557596511347
+    },
+    {
+     "node": "mp_core_Q2B0L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 253.2104834914738,
+     "mean_ps": 253.5855894904793,
+     "max_ps": 253.79756046312818
+    },
+    {
+     "node": "mp_core_Q2B0L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 254.4863982406,
+     "mean_ps": 254.65019133446143,
+     "max_ps": 254.79033647355556
+    },
+    {
+     "node": "mp_core_Q2B0L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 253.59992617007066,
+     "mean_ps": 254.6377929395308,
+     "max_ps": 255.20506745206964
+    },
+    {
+     "node": "mp_core_Q2B0L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 253.90364562237565,
+     "mean_ps": 254.51933522064493,
+     "max_ps": 254.9612811647606
+    },
+    {
+     "node": "mp_core_Q2B0L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 255.9494245108559,
+     "mean_ps": 256.8033397995796,
+     "max_ps": 257.5881239459798
+    },
+    {
+     "node": "mp_core_Q2B0L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 260.0186494549657,
+     "mean_ps": 261.0163539243651,
+     "max_ps": 262.12706884942673
+    },
+    {
+     "node": "mp_core_Q2B1L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 249.05705891430247,
+     "mean_ps": 249.39991251907972,
+     "max_ps": 249.62760261230417
+    },
+    {
+     "node": "mp_core_Q2B1L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 250.19705362326496,
+     "mean_ps": 250.45053175983423,
+     "max_ps": 250.62488565180706
+    },
+    {
+     "node": "mp_core_Q2B1L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 249.12103692742735,
+     "mean_ps": 249.551305255342,
+     "max_ps": 249.94860931600724
+    },
+    {
+     "node": "mp_core_Q2B1L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 249.88816401641196,
+     "mean_ps": 251.02436573722727,
+     "max_ps": 251.50150725434386
+    },
+    {
+     "node": "mp_core_Q2B1L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 250.40896416172527,
+     "mean_ps": 251.33823028215699,
+     "max_ps": 251.97883456880916
+    },
+    {
+     "node": "mp_core_Q2B1L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 258.4170240847072,
+     "mean_ps": 263.6019348840916,
+     "max_ps": 266.25727414297313
+    },
+    {
+     "node": "mp_core_Q2B1L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 251.69054132764137,
+     "mean_ps": 252.74432308963108,
+     "max_ps": 253.1229476156036
+    },
+    {
+     "node": "mp_core_Q2B1L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 251.6247367098464,
+     "mean_ps": 252.22834106804052,
+     "max_ps": 252.67900121985016
+    },
+    {
+     "node": "mp_core_Q2B2L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 251.7580946605794,
+     "mean_ps": 252.13952961674167,
+     "max_ps": 252.39467232468616
+    },
+    {
+     "node": "mp_core_Q2B2L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 252.6046151983565,
+     "mean_ps": 253.20307453042412,
+     "max_ps": 253.55415694849358
+    },
+    {
+     "node": "mp_core_Q2B2L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 252.76018522550046,
+     "mean_ps": 253.5869293446622,
+     "max_ps": 254.03831952316355
+    },
+    {
+     "node": "mp_core_Q2B2L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 258.2284781478134,
+     "mean_ps": 259.8998271188742,
+     "max_ps": 261.80762114705857
+    },
+    {
+     "node": "mp_core_Q2B2L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 251.88459946393976,
+     "mean_ps": 252.95108625484318,
+     "max_ps": 253.74921814875282
+    },
+    {
+     "node": "mp_core_Q2B2L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 253.17922621586985,
+     "mean_ps": 254.0791568551891,
+     "max_ps": 254.44243217661142
+    },
+    {
+     "node": "mp_core_Q2B2L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 252.8529004117411,
+     "mean_ps": 253.7189989376645,
+     "max_ps": 254.24340009078483
+    },
+    {
+     "node": "mp_core_Q2B2L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 257.45560210062945,
+     "mean_ps": 260.0859451859543,
+     "max_ps": 263.10815021312317
+    },
+    {
+     "node": "mp_core_Q2B3L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 251.6800431665458,
+     "mean_ps": 252.0017100855365,
+     "max_ps": 252.23328312516932
+    },
+    {
+     "node": "mp_core_Q2B3L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 251.76326120752307,
+     "mean_ps": 252.51604984520563,
+     "max_ps": 252.97566583346753
+    },
+    {
+     "node": "mp_core_Q2B3L2",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 252.0827102353084,
+     "mean_ps": 252.57055864170403,
+     "max_ps": 253.0153127465135
+    },
+    {
+     "node": "mp_core_Q2B3L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 252.1685835909136,
+     "mean_ps": 252.44888897784233,
+     "max_ps": 252.66620672742062
+    },
+    {
+     "node": "mp_core_Q2B3L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 251.6163121310742,
+     "mean_ps": 252.5112692735707,
+     "max_ps": 252.78930052159336
+    },
+    {
+     "node": "mp_core_Q2B3L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 258.12280709130806,
+     "mean_ps": 259.379004958528,
+     "max_ps": 260.8588536709232
+    },
+    {
+     "node": "mp_core_Q2B3L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 252.37356120009508,
+     "mean_ps": 253.30319748062652,
+     "max_ps": 253.83204351267156
+    },
+    {
+     "node": "mp_core_Q2B3L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 255.37589460721424,
+     "mean_ps": 256.10355940536965,
+     "max_ps": 256.94841214828574
+    },
+    {
+     "node": "mp_core_Q3B0L0",
+     "kind": "register",
+     "sinks": 16,
+     "min_ps": 260.1193076638073,
+     "mean_ps": 260.2516951192855,
+     "max_ps": 260.4081891801569
+    },
+    {
+     "node": "mp_core_Q3B0L1",
+     "kind": "register",
+     "sinks": 8,
+     "min_ps": 250.46551540554069,
+     "mean_ps": 250.54416022674215,
+     "max_ps": 250.5751745440834
+    },
+    {
+     "node": "mp_core_Q3B0L2",
+     "kind": "register",
+     "sinks": 9,
+     "min_ps": 257.4328031937717,
+     "mean_ps": 258.36334477987486,
+     "max_ps": 259.0390847698461
+    },
+    {
+     "node": "mp_core_Q3B0L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 260.4758968381019,
+     "mean_ps": 262.06667341615065,
+     "max_ps": 263.204614044178
+    },
+    {
+     "node": "mp_core_Q3B0L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 263.9209761103487,
+     "mean_ps": 264.5901720559463,
+     "max_ps": 265.39571125987163
+    },
+    {
+     "node": "mp_core_Q3B0L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 260.22794912080116,
+     "mean_ps": 261.10043504108086,
+     "max_ps": 261.7244022159784
+    },
+    {
+     "node": "mp_core_Q3B0L6",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 264.34497501794976,
+     "mean_ps": 264.720979249701,
+     "max_ps": 265.1499458549171
+    },
+    {
+     "node": "mp_core_Q3B0L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 263.81628597034427,
+     "mean_ps": 264.157593160801,
+     "max_ps": 264.333759398659
+    },
+    {
+     "node": "mp_core_Q3B0L8",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 259.3906739487553,
+     "mean_ps": 260.0713362624135,
+     "max_ps": 260.5456054828001
+    },
+    {
+     "node": "mp_core_Q3B0L9",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 261.54019600816247,
+     "mean_ps": 262.6424776595541,
+     "max_ps": 263.3592370434443
+    },
+    {
+     "node": "mp_core_Q3B1L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 255.93496107668892,
+     "mean_ps": 257.539016090548,
+     "max_ps": 258.9583576402137
+    },
+    {
+     "node": "mp_core_Q3B1L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 255.122079452714,
+     "mean_ps": 255.76497191375734,
+     "max_ps": 256.2326107800953
+    },
+    {
+     "node": "mp_core_Q3B1L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 261.6171683259272,
+     "mean_ps": 265.5969530858874,
+     "max_ps": 269.56709841911356
+    },
+    {
+     "node": "mp_core_Q3B1L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 256.70611888692116,
+     "mean_ps": 257.87401989065694,
+     "max_ps": 258.6499570144462
+    },
+    {
+     "node": "mp_core_Q3B1L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 253.87987217669615,
+     "mean_ps": 254.81016458188384,
+     "max_ps": 255.71601371001788
+    },
+    {
+     "node": "mp_core_Q3B1L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 254.69886435198336,
+     "mean_ps": 255.04007971117372,
+     "max_ps": 255.30754705731243
+    },
+    {
+     "node": "mp_core_Q3B1L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 257.5569292303045,
+     "mean_ps": 258.0180939638529,
+     "max_ps": 258.2680943202107
+    },
+    {
+     "node": "mp_core_Q3B1L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 260.40582093871757,
+     "mean_ps": 261.80432475453,
+     "max_ps": 262.749414016818
+    },
+    {
+     "node": "mp_core_Q3B2L0",
+     "kind": "register",
+     "sinks": 16,
+     "min_ps": 260.9525870124244,
+     "mean_ps": 261.9945191815885,
+     "max_ps": 262.7430480664326
+    },
+    {
+     "node": "mp_core_Q3B2L1",
+     "kind": "register",
+     "sinks": 17,
+     "min_ps": 264.44554183047416,
+     "mean_ps": 265.2111948005525,
+     "max_ps": 266.9990010986734
+    },
+    {
+     "node": "mp_core_Q3B2L2",
+     "kind": "register",
+     "sinks": 4,
+     "min_ps": 254.8075338966751,
+     "mean_ps": 254.81372224555588,
+     "max_ps": 254.82689877771082
+    },
+    {
+     "node": "mp_core_Q3B2L3",
+     "kind": "register",
+     "sinks": 2,
+     "min_ps": 251.92436675495173,
+     "mean_ps": 251.92662082681383,
+     "max_ps": 251.92887489867593
+    },
+    {
+     "node": "mp_core_Q3B2L4",
+     "kind": "register",
+     "sinks": 2,
+     "min_ps": 253.0046613222903,
+     "mean_ps": 253.0053324273569,
+     "max_ps": 253.0060035324235
+    },
+    {
+     "node": "mp_core_Q3B2L5",
+     "kind": "register",
+     "sinks": 8,
+     "min_ps": 254.78358487579018,
+     "mean_ps": 254.84008487524352,
+     "max_ps": 254.86903536664633
+    },
+    {
+     "node": "mp_core_Q3B2L6",
+     "kind": "register",
+     "sinks": 18,
+     "min_ps": 265.05451956880177,
+     "mean_ps": 265.1900359560399,
+     "max_ps": 265.30196775779234
+    },
+    {
+     "node": "mp_core_Q3B2L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 266.2708033932615,
+     "mean_ps": 266.75461006931795,
+     "max_ps": 267.287988171829
+    },
+    {
+     "node": "mp_core_Q3B2L8",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 266.3767232764057,
+     "mean_ps": 266.7158538265857,
+     "max_ps": 267.0554435219744
+    },
+    {
+     "node": "mp_core_Q3B2L9",
+     "kind": "register",
+     "sinks": 32,
+     "min_ps": 264.7647116752512,
+     "mean_ps": 265.1379931262571,
+     "max_ps": 265.4280128716522
+    },
+    {
+     "node": "mp_core_Q3B2L10",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 263.9386138462366,
+     "mean_ps": 264.2271901154166,
+     "max_ps": 264.4451748553313
+    },
+    {
+     "node": "mp_core_Q3B2L11",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 263.91325756650235,
+     "mean_ps": 264.2660026128379,
+     "max_ps": 264.38857583971424
+    },
+    {
+     "node": "mp_core_Q3B2L12",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 263.17418306300954,
+     "mean_ps": 263.5661172497414,
+     "max_ps": 264.05895030576266
+    },
+    {
+     "node": "mp_core_Q3B3L0",
+     "kind": "register",
+     "sinks": 16,
+     "min_ps": 259.25412939708553,
+     "mean_ps": 259.99879948811855,
+     "max_ps": 260.4953872066743
+    },
+    {
+     "node": "mp_core_Q3B3L1",
+     "kind": "register",
+     "sinks": 4,
+     "min_ps": 253.25954972461622,
+     "mean_ps": 253.29432968191495,
+     "max_ps": 253.3243454115591
+    },
+    {
+     "node": "mp_core_Q3B3L2",
+     "kind": "register",
+     "sinks": 2,
+     "min_ps": 254.7744412634368,
+     "mean_ps": 254.77506781495418,
+     "max_ps": 254.77569436647153
+    },
+    {
+     "node": "mp_core_Q3B3L3",
+     "kind": "register",
+     "sinks": 2,
+     "min_ps": 250.00068553713416,
+     "mean_ps": 250.00135664220076,
+     "max_ps": 250.00202774726736
+    },
+    {
+     "node": "mp_core_Q3B3L4",
+     "kind": "register",
+     "sinks": 8,
+     "min_ps": 252.45468779665154,
+     "mean_ps": 252.51943552924806,
+     "max_ps": 252.55828854984233
+    },
+    {
+     "node": "mp_core_Q3B3L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 260.94024965415684,
+     "mean_ps": 261.5166747261794,
+     "max_ps": 261.99565360924447
+    },
+    {
+     "node": "mp_core_Q3B3L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 261.0849498188664,
+     "mean_ps": 261.61012783776414,
+     "max_ps": 261.90932408973856
+    },
+    {
+     "node": "mp_core_Q3B3L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 261.59882473667744,
+     "mean_ps": 261.9842028887209,
+     "max_ps": 262.4218141484047
+    },
+    {
+     "node": "mp_core_Q3B3L8",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 261.9279199846287,
+     "mean_ps": 262.48333326682877,
+     "max_ps": 262.96700952699894
+    },
+    {
+     "node": "mp_core_Q3B3L9",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 261.86214596122704,
+     "mean_ps": 262.51143470599516,
+     "max_ps": 263.0668827283984
+    },
+    {
+     "node": "mp_core_Q3B3L10",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 261.46817907970666,
+     "mean_ps": 262.01043460228715,
+     "max_ps": 262.5349676576545
+    },
+    {
+     "node": "mp_core_Q3B3L11",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 258.5417080906102,
+     "mean_ps": 259.84101878155406,
+     "max_ps": 261.6233508915858
+    },
+    {
+     "node": "mp_core_macro0",
+     "kind": "macro",
+     "sinks": 1,
+     "min_ps": 249.12234944932746,
+     "mean_ps": 249.12234944932746,
+     "max_ps": 249.12234944932746
+    },
+    {
+     "node": "mp_core_macro1",
+     "kind": "macro",
+     "sinks": 1,
+     "min_ps": 260.7396247548963,
+     "mean_ps": 260.7396247548963,
+     "max_ps": 260.7396247548963
+    }
+   ],
+   "nets": [
+    {
+     "driver": "mp_core_entry0",
+     "fanout": 1,
+     "wire_um": 0.648,
+     "load_ff": 2.35,
+     "cell_delay_ps": 18.623,
+     "input_arrival_ps": 0.0,
+     "wire_geometry": {
+      "original_tree_wire_um": 0.6480000000000246,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_entry1",
+     "fanout": 1,
+     "wire_um": 0.918,
+     "load_ff": 1.202,
+     "cell_delay_ps": 21.573,
+     "input_arrival_ps": 18.637,
+     "wire_geometry": {
+      "original_tree_wire_um": 0.9180000000000064,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_root",
+     "fanout": 4,
+     "wire_um": 280.53,
+     "load_ff": 3.673,
+     "cell_delay_ps": 41.382,
+     "input_arrival_ps": 40.221,
+     "wire_geometry": {
+      "original_tree_wire_um": 287.54999999999995,
+      "overlap_removed_um": 7.019999999999982,
+      "overlap_removed_fraction": 0.024413145539906044,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_M0",
+     "fanout": 1,
+     "wire_um": 60.237,
+     "load_ff": 0.539,
+     "cell_delay_ps": 42.668,
+     "input_arrival_ps": 84.255,
+     "wire_geometry": {
+      "original_tree_wire_um": 60.237000000000016,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0",
+     "fanout": 4,
+     "wire_um": 82.944,
+     "load_ff": 9.399,
+     "cell_delay_ps": 48.328,
+     "input_arrival_ps": 129.321,
+     "wire_geometry": {
+      "original_tree_wire_um": 82.94399999999999,
+      "overlap_removed_um": 1.4210854715202004e-14,
+      "overlap_removed_fraction": 1.713307136767217e-16,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0",
+     "fanout": 8,
+     "wire_um": 45.198,
+     "load_ff": 15.717,
+     "cell_delay_ps": 38.893,
+     "input_arrival_ps": 179.177,
+     "wire_geometry": {
+      "original_tree_wire_um": 48.97800000000001,
+      "overlap_removed_um": 3.780000000000001,
+      "overlap_removed_fraction": 0.07717750826901876,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1",
+     "fanout": 9,
+     "wire_um": 58.671,
+     "load_ff": 17.98,
+     "cell_delay_ps": 39.858,
+     "input_arrival_ps": 178.134,
+     "wire_geometry": {
+      "original_tree_wire_um": 61.34399999999997,
+      "overlap_removed_um": 2.6729999999999947,
+      "overlap_removed_fraction": 0.043573943661971766,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2",
+     "fanout": 11,
+     "wire_um": 59.184,
+     "load_ff": 20.639,
+     "cell_delay_ps": 40.629,
+     "input_arrival_ps": 179.773,
+     "wire_geometry": {
+      "original_tree_wire_um": 59.18399999999997,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3",
+     "fanout": 8,
+     "wire_um": 19.494,
+     "load_ff": 18.798,
+     "cell_delay_ps": 38.914,
+     "input_arrival_ps": 180.564,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.113999999999997,
+      "overlap_removed_um": 1.6200000000000045,
+      "overlap_removed_fraction": 0.07672634271099767,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_M1",
+     "fanout": 1,
+     "wire_um": 101.79,
+     "load_ff": 2.343,
+     "cell_delay_ps": 43.045,
+     "input_arrival_ps": 95.048,
+     "wire_geometry": {
+      "original_tree_wire_um": 101.78999999999999,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1",
+     "fanout": 4,
+     "wire_um": 162.648,
+     "load_ff": 6.691,
+     "cell_delay_ps": 30.456,
+     "input_arrival_ps": 146.396,
+     "wire_geometry": {
+      "original_tree_wire_um": 167.07600000000002,
+      "overlap_removed_um": 4.428000000000026,
+      "overlap_removed_fraction": 0.02650290885585018,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0",
+     "fanout": 8,
+     "wire_um": 31.05,
+     "load_ff": 5.037,
+     "cell_delay_ps": 29.618,
+     "input_arrival_ps": 179.025,
+     "wire_geometry": {
+      "original_tree_wire_um": 34.506,
+      "overlap_removed_um": 3.4559999999999995,
+      "overlap_removed_fraction": 0.1001564945226917,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1",
+     "fanout": 9,
+     "wire_um": 117.72,
+     "load_ff": 5.946,
+     "cell_delay_ps": 28.579,
+     "input_arrival_ps": 177.967,
+     "wire_geometry": {
+      "original_tree_wire_um": 117.72,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2",
+     "fanout": 8,
+     "wire_um": 23.22,
+     "load_ff": 6.161,
+     "cell_delay_ps": 30.654,
+     "input_arrival_ps": 184.331,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.273999999999994,
+      "overlap_removed_um": 0.054000000000002046,
+      "overlap_removed_fraction": 0.0023201856148492763,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3",
+     "fanout": 11,
+     "wire_um": 65.151,
+     "load_ff": 9.171,
+     "cell_delay_ps": 29.751,
+     "input_arrival_ps": 185.774,
+     "wire_geometry": {
+      "original_tree_wire_um": 65.93400000000001,
+      "overlap_removed_um": 0.7830000000000013,
+      "overlap_removed_fraction": 0.011875511875511892,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_M2",
+     "fanout": 1,
+     "wire_um": 69.12,
+     "load_ff": 1.202,
+     "cell_delay_ps": 44.495,
+     "input_arrival_ps": 96.437,
+     "wire_geometry": {
+      "original_tree_wire_um": 69.11999999999999,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2",
+     "fanout": 4,
+     "wire_um": 62.91,
+     "load_ff": 2.893,
+     "cell_delay_ps": 27.431,
+     "input_arrival_ps": 144.166,
+     "wire_geometry": {
+      "original_tree_wire_um": 62.91,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0",
+     "fanout": 8,
+     "wire_um": 34.776,
+     "load_ff": 5.037,
+     "cell_delay_ps": 32.382,
+     "input_arrival_ps": 172.561,
+     "wire_geometry": {
+      "original_tree_wire_um": 36.18000000000001,
+      "overlap_removed_um": 1.4039999999999964,
+      "overlap_removed_fraction": 0.038805970149253625,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1",
+     "fanout": 8,
+     "wire_um": 45.117,
+     "load_ff": 4.946,
+     "cell_delay_ps": 29.939,
+     "input_arrival_ps": 172.187,
+     "wire_geometry": {
+      "original_tree_wire_um": 46.035000000000004,
+      "overlap_removed_um": 0.9180000000000064,
+      "overlap_removed_fraction": 0.019941348973607175,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2",
+     "fanout": 8,
+     "wire_um": 33.696,
+     "load_ff": 5.037,
+     "cell_delay_ps": 31.967,
+     "input_arrival_ps": 172.151,
+     "wire_geometry": {
+      "original_tree_wire_um": 38.44800000000002,
+      "overlap_removed_um": 4.7520000000000095,
+      "overlap_removed_fraction": 0.1235955056179777,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3",
+     "fanout": 8,
+     "wire_um": 31.428,
+     "load_ff": 5.037,
+     "cell_delay_ps": 31.643,
+     "input_arrival_ps": 172.433,
+     "wire_geometry": {
+      "original_tree_wire_um": 32.616,
+      "overlap_removed_um": 1.1880000000000024,
+      "overlap_removed_fraction": 0.036423841059602724,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_M3",
+     "fanout": 1,
+     "wire_um": 114.21,
+     "load_ff": 2.342,
+     "cell_delay_ps": 41.19,
+     "input_arrival_ps": 87.796,
+     "wire_geometry": {
+      "original_tree_wire_um": 114.21000000000001,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3",
+     "fanout": 4,
+     "wire_um": 223.506,
+     "load_ff": 4.804,
+     "cell_delay_ps": 33.049,
+     "input_arrival_ps": 138.203,
+     "wire_geometry": {
+      "original_tree_wire_um": 223.506,
+      "overlap_removed_um": -2.842170943040401e-14,
+      "overlap_removed_fraction": -1.2716307137349336e-16,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0",
+     "fanout": 10,
+     "wire_um": 72.495,
+     "load_ff": 7.604,
+     "cell_delay_ps": 40.626,
+     "input_arrival_ps": 174.444,
+     "wire_geometry": {
+      "original_tree_wire_um": 74.22300000000004,
+      "overlap_removed_um": 1.7280000000000086,
+      "overlap_removed_fraction": 0.023281193161149613,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1",
+     "fanout": 8,
+     "wire_um": 39.123,
+     "load_ff": 4.855,
+     "cell_delay_ps": 34.294,
+     "input_arrival_ps": 173.851,
+     "wire_geometry": {
+      "original_tree_wire_um": 40.499999999999986,
+      "overlap_removed_um": 1.3769999999999811,
+      "overlap_removed_fraction": 0.033999999999999544,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2",
+     "fanout": 13,
+     "wire_um": 115.56,
+     "load_ff": 9.632,
+     "cell_delay_ps": 37.995,
+     "input_arrival_ps": 180.882,
+     "wire_geometry": {
+      "original_tree_wire_um": 117.01799999999997,
+      "overlap_removed_um": 1.4579999999999984,
+      "overlap_removed_fraction": 0.012459621596677423,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3",
+     "fanout": 12,
+     "wire_um": 104.49,
+     "load_ff": 10.377,
+     "cell_delay_ps": 32.861,
+     "input_arrival_ps": 188.497,
+     "wire_geometry": {
+      "original_tree_wire_um": 106.10999999999997,
+      "overlap_removed_um": 1.6200000000000045,
+      "overlap_removed_fraction": 0.01526717557251913,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L0",
+     "fanout": 33,
+     "wire_um": 20.736,
+     "load_ff": 15.666,
+     "cell_delay_ps": 29.651,
+     "input_arrival_ps": 219.312,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.86999999999992,
+      "overlap_removed_um": 1.1340000000000003,
+      "overlap_removed_fraction": 0.05185185185185206,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L1",
+     "fanout": 34,
+     "wire_um": 22.248,
+     "load_ff": 16.141,
+     "cell_delay_ps": 38.611,
+     "input_arrival_ps": 219.007,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.328000000000007,
+      "overlap_removed_um": 1.0800000000000196,
+      "overlap_removed_fraction": 0.046296296296297126,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L2",
+     "fanout": 33,
+     "wire_um": 20.952,
+     "load_ff": 15.666,
+     "cell_delay_ps": 44.362,
+     "input_arrival_ps": 218.887,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.35599999999993,
+      "overlap_removed_um": 1.4039999999999822,
+      "overlap_removed_fraction": 0.06280193236714915,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L3",
+     "fanout": 34,
+     "wire_um": 30.348,
+     "load_ff": 16.141,
+     "cell_delay_ps": 30.144,
+     "input_arrival_ps": 219.492,
+     "wire_geometry": {
+      "original_tree_wire_um": 31.319999999999975,
+      "overlap_removed_um": 0.9720000000000049,
+      "overlap_removed_fraction": 0.03103448275862087,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L4",
+     "fanout": 33,
+     "wire_um": 19.71,
+     "load_ff": 15.666,
+     "cell_delay_ps": 29.636,
+     "input_arrival_ps": 219.489,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.682000000000063,
+      "overlap_removed_um": 0.9719999999999978,
+      "overlap_removed_fraction": 0.04699738903394231,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L5",
+     "fanout": 34,
+     "wire_um": 33.21,
+     "load_ff": 16.141,
+     "cell_delay_ps": 27.527,
+     "input_arrival_ps": 219.756,
+     "wire_geometry": {
+      "original_tree_wire_um": 34.55999999999999,
+      "overlap_removed_um": 1.3499999999999872,
+      "overlap_removed_fraction": 0.039062499999999646,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L6",
+     "fanout": 34,
+     "wire_um": 24.138,
+     "load_ff": 16.141,
+     "cell_delay_ps": 29.909,
+     "input_arrival_ps": 219.73,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.893999999999956,
+      "overlap_removed_um": 0.7560000000000002,
+      "overlap_removed_fraction": 0.030368763557483795,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L7",
+     "fanout": 34,
+     "wire_um": 58.212,
+     "load_ff": 16.141,
+     "cell_delay_ps": 28.091,
+     "input_arrival_ps": 219.91,
+     "wire_geometry": {
+      "original_tree_wire_um": 59.832000000000036,
+      "overlap_removed_um": 1.6199999999999761,
+      "overlap_removed_fraction": 0.027075812274367814,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L0",
+     "fanout": 33,
+     "wire_um": 20.628,
+     "load_ff": 15.666,
+     "cell_delay_ps": 30.368,
+     "input_arrival_ps": 219.696,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.438000000000013,
+      "overlap_removed_um": 0.8099999999999632,
+      "overlap_removed_fraction": 0.03778337531485972,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L1",
+     "fanout": 34,
+     "wire_um": 18.684,
+     "load_ff": 16.141,
+     "cell_delay_ps": 30.417,
+     "input_arrival_ps": 219.828,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.655999999999985,
+      "overlap_removed_um": 0.9720000000000013,
+      "overlap_removed_fraction": 0.04945054945054955,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L2",
+     "fanout": 33,
+     "wire_um": 20.304,
+     "load_ff": 15.666,
+     "cell_delay_ps": 30.389,
+     "input_arrival_ps": 220.007,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.545999999999953,
+      "overlap_removed_um": 1.2419999999999867,
+      "overlap_removed_fraction": 0.05764411027568873,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L3",
+     "fanout": 34,
+     "wire_um": 19.98,
+     "load_ff": 16.141,
+     "cell_delay_ps": 30.509,
+     "input_arrival_ps": 220.093,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.790000000000013,
+      "overlap_removed_um": 0.809999999999981,
+      "overlap_removed_fraction": 0.03896103896103802,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L4",
+     "fanout": 33,
+     "wire_um": 40.689,
+     "load_ff": 15.666,
+     "cell_delay_ps": 27.214,
+     "input_arrival_ps": 219.05,
+     "wire_geometry": {
+      "original_tree_wire_um": 43.92899999999992,
+      "overlap_removed_um": 3.2399999999999594,
+      "overlap_removed_fraction": 0.07375537799631145,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L5",
+     "fanout": 34,
+     "wire_um": 48.87,
+     "load_ff": 16.141,
+     "cell_delay_ps": 31.475,
+     "input_arrival_ps": 218.858,
+     "wire_geometry": {
+      "original_tree_wire_um": 49.68000000000002,
+      "overlap_removed_um": 0.8100000000000023,
+      "overlap_removed_fraction": 0.016304347826086994,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L6",
+     "fanout": 34,
+     "wire_um": 15.66,
+     "load_ff": 16.141,
+     "cell_delay_ps": 30.31,
+     "input_arrival_ps": 219.815,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.63200000000002,
+      "overlap_removed_um": 0.9719999999999871,
+      "overlap_removed_fraction": 0.0584415584415576,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L7",
+     "fanout": 34,
+     "wire_um": 13.446,
+     "load_ff": 16.141,
+     "cell_delay_ps": 37.874,
+     "input_arrival_ps": 219.872,
+     "wire_geometry": {
+      "original_tree_wire_um": 13.986000000000047,
+      "overlap_removed_um": 0.5400000000000134,
+      "overlap_removed_fraction": 0.038610038610039435,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L0",
+     "fanout": 33,
+     "wire_um": 21.546,
+     "load_ff": 15.666,
+     "cell_delay_ps": 26.74,
+     "input_arrival_ps": 223.802,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.301999999999946,
+      "overlap_removed_um": 0.7559999999999825,
+      "overlap_removed_fraction": 0.033898305084745055,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L1",
+     "fanout": 17,
+     "wire_um": 11.826,
+     "load_ff": 8.071,
+     "cell_delay_ps": 28.929,
+     "input_arrival_ps": 223.742,
+     "wire_geometry": {
+      "original_tree_wire_um": 12.635999999999992,
+      "overlap_removed_um": 0.8099999999999987,
+      "overlap_removed_fraction": 0.06410256410256404,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L2",
+     "fanout": 8,
+     "wire_um": 6.912,
+     "load_ff": 3.798,
+     "cell_delay_ps": 27.677,
+     "input_arrival_ps": 223.659,
+     "wire_geometry": {
+      "original_tree_wire_um": 7.127999999999975,
+      "overlap_removed_um": 0.21599999999999753,
+      "overlap_removed_fraction": 0.03030303030303006,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L3",
+     "fanout": 4,
+     "wire_um": 6.156,
+     "load_ff": 1.899,
+     "cell_delay_ps": 27.143,
+     "input_arrival_ps": 223.31,
+     "wire_geometry": {
+      "original_tree_wire_um": 6.155999999999976,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L4",
+     "fanout": 5,
+     "wire_um": 37.368,
+     "load_ff": 2.374,
+     "cell_delay_ps": 28.142,
+     "input_arrival_ps": 221.609,
+     "wire_geometry": {
+      "original_tree_wire_um": 37.638,
+      "overlap_removed_um": 0.2700000000000031,
+      "overlap_removed_fraction": 0.007173601147776267,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L5",
+     "fanout": 33,
+     "wire_um": 11.232,
+     "load_ff": 15.666,
+     "cell_delay_ps": 27.268,
+     "input_arrival_ps": 222.474,
+     "wire_geometry": {
+      "original_tree_wire_um": 11.232,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L6",
+     "fanout": 34,
+     "wire_um": 15.282,
+     "load_ff": 16.141,
+     "cell_delay_ps": 32.053,
+     "input_arrival_ps": 222.994,
+     "wire_geometry": {
+      "original_tree_wire_um": 15.281999999999961,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L7",
+     "fanout": 33,
+     "wire_um": 13.554,
+     "load_ff": 15.666,
+     "cell_delay_ps": 27.413,
+     "input_arrival_ps": 222.59,
+     "wire_geometry": {
+      "original_tree_wire_um": 14.741999999999877,
+      "overlap_removed_um": 1.1879999999999455,
+      "overlap_removed_fraction": 0.08058608058607757,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L8",
+     "fanout": 34,
+     "wire_um": 15.174,
+     "load_ff": 16.141,
+     "cell_delay_ps": 38.617,
+     "input_arrival_ps": 222.674,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.68599999999995,
+      "overlap_removed_um": 1.5119999999999578,
+      "overlap_removed_fraction": 0.09061488673138933,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L9",
+     "fanout": 34,
+     "wire_um": 14.85,
+     "load_ff": 16.141,
+     "cell_delay_ps": 38.54,
+     "input_arrival_ps": 222.88,
+     "wire_geometry": {
+      "original_tree_wire_um": 15.551999999999964,
+      "overlap_removed_um": 0.701999999999984,
+      "overlap_removed_fraction": 0.045138888888887965,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L10",
+     "fanout": 34,
+     "wire_um": 19.008,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.223,
+     "input_arrival_ps": 223.04,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.81799999999994,
+      "overlap_removed_um": 0.8100000000000023,
+      "overlap_removed_fraction": 0.04087193460490487,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L0",
+     "fanout": 33,
+     "wire_um": 22.41,
+     "load_ff": 15.666,
+     "cell_delay_ps": 29.624,
+     "input_arrival_ps": 219.882,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.246000000000027,
+      "overlap_removed_um": 1.836000000000002,
+      "overlap_removed_fraction": 0.0757238307349666,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L1",
+     "fanout": 33,
+     "wire_um": 27.918,
+     "load_ff": 15.666,
+     "cell_delay_ps": 29.816,
+     "input_arrival_ps": 219.841,
+     "wire_geometry": {
+      "original_tree_wire_um": 29.861999999999945,
+      "overlap_removed_um": 1.9439999999999849,
+      "overlap_removed_fraction": 0.06509945750452041,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L2",
+     "fanout": 34,
+     "wire_um": 19.548,
+     "load_ff": 16.141,
+     "cell_delay_ps": 29.653,
+     "input_arrival_ps": 219.908,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.76400000000003,
+      "overlap_removed_um": 0.21600000000000819,
+      "overlap_removed_fraction": 0.010928961748634277,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L3",
+     "fanout": 34,
+     "wire_um": 19.494,
+     "load_ff": 16.141,
+     "cell_delay_ps": 29.644,
+     "input_arrival_ps": 219.656,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.87200000000005,
+      "overlap_removed_um": 0.3780000000000143,
+      "overlap_removed_fraction": 0.019021739130435457,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L4",
+     "fanout": 34,
+     "wire_um": 23.004,
+     "load_ff": 16.141,
+     "cell_delay_ps": 29.752,
+     "input_arrival_ps": 219.839,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.867999999999967,
+      "overlap_removed_um": 0.8640000000000008,
+      "overlap_removed_fraction": 0.036199095022624514,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L5",
+     "fanout": 34,
+     "wire_um": 24.408,
+     "load_ff": 16.141,
+     "cell_delay_ps": 29.81,
+     "input_arrival_ps": 219.794,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.83999999999996,
+      "overlap_removed_um": 0.43199999999998795,
+      "overlap_removed_fraction": 0.01739130434782563,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L6",
+     "fanout": 34,
+     "wire_um": 21.276,
+     "load_ff": 16.141,
+     "cell_delay_ps": 29.717,
+     "input_arrival_ps": 219.657,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.194000000000003,
+      "overlap_removed_um": 0.9179999999999993,
+      "overlap_removed_fraction": 0.04136253041362527,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L7",
+     "fanout": 34,
+     "wire_um": 21.006,
+     "load_ff": 16.141,
+     "cell_delay_ps": 29.709,
+     "input_arrival_ps": 219.867,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.78800000000006,
+      "overlap_removed_um": 1.7819999999999965,
+      "overlap_removed_fraction": 0.07819905213270106,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L0",
+     "fanout": 33,
+     "wire_um": 18.576,
+     "load_ff": 15.666,
+     "cell_delay_ps": 45.096,
+     "input_arrival_ps": 208.826,
+     "wire_geometry": {
+      "original_tree_wire_um": 18.953999999999976,
+      "overlap_removed_um": 0.37799999999998235,
+      "overlap_removed_fraction": 0.019943019943019037,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L1",
+     "fanout": 34,
+     "wire_um": 25.92,
+     "load_ff": 16.141,
+     "cell_delay_ps": 47.084,
+     "input_arrival_ps": 208.786,
+     "wire_geometry": {
+      "original_tree_wire_um": 26.730000000000018,
+      "overlap_removed_um": 0.8100000000000129,
+      "overlap_removed_fraction": 0.030303030303030765,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L2",
+     "fanout": 33,
+     "wire_um": 23.652,
+     "load_ff": 15.666,
+     "cell_delay_ps": 46.061,
+     "input_arrival_ps": 208.721,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.462000000000003,
+      "overlap_removed_um": 0.8099999999999952,
+      "overlap_removed_fraction": 0.033112582781456755,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L3",
+     "fanout": 34,
+     "wire_um": 23.598,
+     "load_ff": 16.141,
+     "cell_delay_ps": 46.643,
+     "input_arrival_ps": 208.727,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.191999999999986,
+      "overlap_removed_um": 0.5940000000000083,
+      "overlap_removed_fraction": 0.024553571428571785,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L4",
+     "fanout": 33,
+     "wire_um": 17.82,
+     "load_ff": 15.666,
+     "cell_delay_ps": 44.784,
+     "input_arrival_ps": 208.789,
+     "wire_geometry": {
+      "original_tree_wire_um": 18.467999999999993,
+      "overlap_removed_um": 0.6479999999999926,
+      "overlap_removed_fraction": 0.035087719298245224,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L5",
+     "fanout": 34,
+     "wire_um": 18.198,
+     "load_ff": 16.141,
+     "cell_delay_ps": 45.502,
+     "input_arrival_ps": 208.817,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.439999999999984,
+      "overlap_removed_um": 1.241999999999976,
+      "overlap_removed_fraction": 0.0638888888888877,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L6",
+     "fanout": 34,
+     "wire_um": 19.818,
+     "load_ff": 16.141,
+     "cell_delay_ps": 45.826,
+     "input_arrival_ps": 208.881,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.006000000000018,
+      "overlap_removed_um": 1.188000000000013,
+      "overlap_removed_fraction": 0.05655526992287975,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L7",
+     "fanout": 34,
+     "wire_um": 24.354,
+     "load_ff": 16.141,
+     "cell_delay_ps": 46.736,
+     "input_arrival_ps": 208.919,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.595999999999997,
+      "overlap_removed_um": 1.2419999999999973,
+      "overlap_removed_fraction": 0.04852320675105475,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L0",
+     "fanout": 33,
+     "wire_um": 48.6,
+     "load_ff": 15.666,
+     "cell_delay_ps": 49.745,
+     "input_arrival_ps": 209.754,
+     "wire_geometry": {
+      "original_tree_wire_um": 50.057999999999986,
+      "overlap_removed_um": 1.4580000000000055,
+      "overlap_removed_fraction": 0.02912621359223313,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L1",
+     "fanout": 34,
+     "wire_um": 41.364,
+     "load_ff": 16.141,
+     "cell_delay_ps": 49.075,
+     "input_arrival_ps": 210.114,
+     "wire_geometry": {
+      "original_tree_wire_um": 44.27999999999998,
+      "overlap_removed_um": 2.915999999999997,
+      "overlap_removed_fraction": 0.06585365853658533,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L2",
+     "fanout": 33,
+     "wire_um": 35.586,
+     "load_ff": 15.666,
+     "cell_delay_ps": 40.285,
+     "input_arrival_ps": 210.346,
+     "wire_geometry": {
+      "original_tree_wire_um": 38.016000000000005,
+      "overlap_removed_um": 2.430000000000021,
+      "overlap_removed_fraction": 0.06392045454545509,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L3",
+     "fanout": 34,
+     "wire_um": 51.246,
+     "load_ff": 16.141,
+     "cell_delay_ps": 51.118,
+     "input_arrival_ps": 210.421,
+     "wire_geometry": {
+      "original_tree_wire_um": 52.81199999999999,
+      "overlap_removed_um": 1.5660000000000096,
+      "overlap_removed_fraction": 0.029652351738241496,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L4",
+     "fanout": 33,
+     "wire_um": 15.012,
+     "load_ff": 15.666,
+     "cell_delay_ps": 38.845,
+     "input_arrival_ps": 209.09,
+     "wire_geometry": {
+      "original_tree_wire_um": 15.552000000000007,
+      "overlap_removed_um": 0.5399999999999991,
+      "overlap_removed_fraction": 0.034722222222222154,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L5",
+     "fanout": 34,
+     "wire_um": 13.824,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.128,
+     "input_arrival_ps": 209.206,
+     "wire_geometry": {
+      "original_tree_wire_um": 14.147999999999996,
+      "overlap_removed_um": 0.32399999999999807,
+      "overlap_removed_fraction": 0.022900763358778494,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L6",
+     "fanout": 34,
+     "wire_um": 14.904,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.301,
+     "input_arrival_ps": 209.262,
+     "wire_geometry": {
+      "original_tree_wire_um": 15.551999999999971,
+      "overlap_removed_um": 0.647999999999989,
+      "overlap_removed_fraction": 0.04166666666666604,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L7",
+     "fanout": 34,
+     "wire_um": 15.66,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.421,
+     "input_arrival_ps": 209.285,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.577999999999975,
+      "overlap_removed_um": 0.9179999999999993,
+      "overlap_removed_fraction": 0.05537459283387626,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L0",
+     "fanout": 33,
+     "wire_um": 16.2,
+     "load_ff": 15.666,
+     "cell_delay_ps": 44.428,
+     "input_arrival_ps": 215.198,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.793999999999997,
+      "overlap_removed_um": 0.5939999999999941,
+      "overlap_removed_fraction": 0.0353697749196138,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L1",
+     "fanout": 34,
+     "wire_um": 13.5,
+     "load_ff": 16.141,
+     "cell_delay_ps": 44.483,
+     "input_arrival_ps": 215.172,
+     "wire_geometry": {
+      "original_tree_wire_um": 14.148000000000039,
+      "overlap_removed_um": 0.6480000000000032,
+      "overlap_removed_fraction": 0.045801526717557356,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L2",
+     "fanout": 33,
+     "wire_um": 16.524,
+     "load_ff": 15.666,
+     "cell_delay_ps": 44.551,
+     "input_arrival_ps": 215.116,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.57799999999998,
+      "overlap_removed_um": 0.05399999999999494,
+      "overlap_removed_fraction": 0.0032573289902277113,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L3",
+     "fanout": 34,
+     "wire_um": 15.606,
+     "load_ff": 16.141,
+     "cell_delay_ps": 44.953,
+     "input_arrival_ps": 215.025,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.146000000000008,
+      "overlap_removed_um": 0.5400000000000063,
+      "overlap_removed_fraction": 0.03344481605351208,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L4",
+     "fanout": 34,
+     "wire_um": 21.816,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.621,
+     "input_arrival_ps": 215.143,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.787999999999965,
+      "overlap_removed_um": 0.9720000000000013,
+      "overlap_removed_fraction": 0.04265402843601908,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L5",
+     "fanout": 34,
+     "wire_um": 23.922,
+     "load_ff": 16.141,
+     "cell_delay_ps": 41.819,
+     "input_arrival_ps": 215.214,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.001999999999992,
+      "overlap_removed_um": 1.0799999999999947,
+      "overlap_removed_fraction": 0.043196544276457687,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L6",
+     "fanout": 33,
+     "wire_um": 18.09,
+     "load_ff": 15.666,
+     "cell_delay_ps": 38.584,
+     "input_arrival_ps": 215.113,
+     "wire_geometry": {
+      "original_tree_wire_um": 18.846000000000004,
+      "overlap_removed_um": 0.7560000000000002,
+      "overlap_removed_fraction": 0.04011461318051576,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L7",
+     "fanout": 34,
+     "wire_um": 18.954,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.178,
+     "input_arrival_ps": 215.194,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.19600000000002,
+      "overlap_removed_um": 1.2420000000000044,
+      "overlap_removed_fraction": 0.06149732620320872,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L0",
+     "fanout": 33,
+     "wire_um": 22.788,
+     "load_ff": 15.666,
+     "cell_delay_ps": 37.399,
+     "input_arrival_ps": 217.035,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.245999999999917,
+      "overlap_removed_um": 1.4579999999999984,
+      "overlap_removed_fraction": 0.06013363028953243,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L1",
+     "fanout": 17,
+     "wire_um": 14.04,
+     "load_ff": 8.071,
+     "cell_delay_ps": 39.449,
+     "input_arrival_ps": 216.992,
+     "wire_geometry": {
+      "original_tree_wire_um": 14.256000000000029,
+      "overlap_removed_um": 0.21600000000000286,
+      "overlap_removed_fraction": 0.015151515151515322,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L2",
+     "fanout": 4,
+     "wire_um": 17.172,
+     "load_ff": 1.899,
+     "cell_delay_ps": 30.386,
+     "input_arrival_ps": 216.724,
+     "wire_geometry": {
+      "original_tree_wire_um": 17.172000000000015,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L3",
+     "fanout": 5,
+     "wire_um": 24.786,
+     "load_ff": 2.374,
+     "cell_delay_ps": 31.195,
+     "input_arrival_ps": 216.375,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.786,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L4",
+     "fanout": 8,
+     "wire_um": 18.144,
+     "load_ff": 3.798,
+     "cell_delay_ps": 32.115,
+     "input_arrival_ps": 217.009,
+     "wire_geometry": {
+      "original_tree_wire_um": 18.144000000000005,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L5",
+     "fanout": 33,
+     "wire_um": 20.952,
+     "load_ff": 15.666,
+     "cell_delay_ps": 37.245,
+     "input_arrival_ps": 217.168,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.762000000000015,
+      "overlap_removed_um": 0.8100000000000094,
+      "overlap_removed_fraction": 0.03722084367245698,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L6",
+     "fanout": 34,
+     "wire_um": 42.282,
+     "load_ff": 16.141,
+     "cell_delay_ps": 41.228,
+     "input_arrival_ps": 217.134,
+     "wire_geometry": {
+      "original_tree_wire_um": 43.52399999999999,
+      "overlap_removed_um": 1.2419999999999831,
+      "overlap_removed_fraction": 0.028535980148882995,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L7",
+     "fanout": 34,
+     "wire_um": 22.572,
+     "load_ff": 16.141,
+     "cell_delay_ps": 37.971,
+     "input_arrival_ps": 216.998,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.11199999999999,
+      "overlap_removed_um": 0.5400000000000027,
+      "overlap_removed_fraction": 0.023364485981308535,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L8",
+     "fanout": 34,
+     "wire_um": 17.442,
+     "load_ff": 16.141,
+     "cell_delay_ps": 37.178,
+     "input_arrival_ps": 217.01,
+     "wire_geometry": {
+      "original_tree_wire_um": 17.820000000000043,
+      "overlap_removed_um": 0.3780000000000143,
+      "overlap_removed_fraction": 0.021212121212121966,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L9",
+     "fanout": 34,
+     "wire_um": 19.926,
+     "load_ff": 16.141,
+     "cell_delay_ps": 37.552,
+     "input_arrival_ps": 216.896,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.141999999999946,
+      "overlap_removed_um": 0.21600000000000108,
+      "overlap_removed_fraction": 0.010723860589812414,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L10",
+     "fanout": 34,
+     "wire_um": 20.574,
+     "load_ff": 16.141,
+     "cell_delay_ps": 37.615,
+     "input_arrival_ps": 216.918,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.546000000000014,
+      "overlap_removed_um": 0.9719999999999942,
+      "overlap_removed_fraction": 0.04511278195488692,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L0",
+     "fanout": 33,
+     "wire_um": 20.952,
+     "load_ff": 15.666,
+     "cell_delay_ps": 47.627,
+     "input_arrival_ps": 205.293,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.517999999999976,
+      "overlap_removed_um": 1.5660000000000025,
+      "overlap_removed_fraction": 0.06954436450839348,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L1",
+     "fanout": 34,
+     "wire_um": 24.462,
+     "load_ff": 16.141,
+     "cell_delay_ps": 49.018,
+     "input_arrival_ps": 205.298,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.163999999999998,
+      "overlap_removed_um": 0.7019999999999946,
+      "overlap_removed_fraction": 0.027896995708154296,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L2",
+     "fanout": 33,
+     "wire_um": 20.736,
+     "load_ff": 15.666,
+     "cell_delay_ps": 47.632,
+     "input_arrival_ps": 205.382,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.193999999999985,
+      "overlap_removed_um": 1.4579999999999806,
+      "overlap_removed_fraction": 0.06569343065693348,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L3",
+     "fanout": 34,
+     "wire_um": 24.084,
+     "load_ff": 16.141,
+     "cell_delay_ps": 48.935,
+     "input_arrival_ps": 205.421,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.839999999999996,
+      "overlap_removed_um": 0.7559999999999931,
+      "overlap_removed_fraction": 0.03043478260869538,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L4",
+     "fanout": 33,
+     "wire_um": 23.652,
+     "load_ff": 15.666,
+     "cell_delay_ps": 48.254,
+     "input_arrival_ps": 205.139,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.948000000000036,
+      "overlap_removed_um": 1.2960000000000207,
+      "overlap_removed_fraction": 0.0519480519480527,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L5",
+     "fanout": 34,
+     "wire_um": 23.706,
+     "load_ff": 16.141,
+     "cell_delay_ps": 48.911,
+     "input_arrival_ps": 204.976,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.462000000000028,
+      "overlap_removed_um": 0.7560000000000038,
+      "overlap_removed_fraction": 0.030905077262693276,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L6",
+     "fanout": 34,
+     "wire_um": 32.832,
+     "load_ff": 16.141,
+     "cell_delay_ps": 50.793,
+     "input_arrival_ps": 205.024,
+     "wire_geometry": {
+      "original_tree_wire_um": 33.85799999999999,
+      "overlap_removed_um": 1.0260000000000105,
+      "overlap_removed_fraction": 0.03030303030303062,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L7",
+     "fanout": 34,
+     "wire_um": 53.406,
+     "load_ff": 16.141,
+     "cell_delay_ps": 54.445,
+     "input_arrival_ps": 205.081,
+     "wire_geometry": {
+      "original_tree_wire_um": 54.701999999999984,
+      "overlap_removed_um": 1.2959999999999923,
+      "overlap_removed_fraction": 0.02369200394866719,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L0",
+     "fanout": 33,
+     "wire_um": 20.898,
+     "load_ff": 15.666,
+     "cell_delay_ps": 46.309,
+     "input_arrival_ps": 202.736,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.464000000000002,
+      "overlap_removed_um": 1.5659999999999847,
+      "overlap_removed_fraction": 0.06971153846153777,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L1",
+     "fanout": 34,
+     "wire_um": 23.004,
+     "load_ff": 16.141,
+     "cell_delay_ps": 47.424,
+     "input_arrival_ps": 202.687,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.51600000000001,
+      "overlap_removed_um": 1.5119999999999862,
+      "overlap_removed_fraction": 0.061674008810572105,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L2",
+     "fanout": 33,
+     "wire_um": 20.844,
+     "load_ff": 15.666,
+     "cell_delay_ps": 46.253,
+     "input_arrival_ps": 202.535,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.30199999999993,
+      "overlap_removed_um": 1.4579999999999451,
+      "overlap_removed_fraction": 0.06537530266343601,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L3",
+     "fanout": 34,
+     "wire_um": 22.302,
+     "load_ff": 16.141,
+     "cell_delay_ps": 47.165,
+     "input_arrival_ps": 202.722,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.65199999999996,
+      "overlap_removed_um": 1.349999999999973,
+      "overlap_removed_fraction": 0.05707762557077521,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L4",
+     "fanout": 33,
+     "wire_um": 26.136,
+     "load_ff": 15.654,
+     "cell_delay_ps": 47.541,
+     "input_arrival_ps": 202.73,
+     "wire_geometry": {
+      "original_tree_wire_um": 27.431999999999995,
+      "overlap_removed_um": 1.2959999999999994,
+      "overlap_removed_fraction": 0.04724409448818896,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L5",
+     "fanout": 34,
+     "wire_um": 54.783,
+     "load_ff": 16.129,
+     "cell_delay_ps": 54.865,
+     "input_arrival_ps": 202.782,
+     "wire_geometry": {
+      "original_tree_wire_um": 56.510999999999974,
+      "overlap_removed_um": 1.7279999999999802,
+      "overlap_removed_fraction": 0.03057811753463894,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L6",
+     "fanout": 34,
+     "wire_um": 26.46,
+     "load_ff": 16.141,
+     "cell_delay_ps": 48.099,
+     "input_arrival_ps": 202.899,
+     "wire_geometry": {
+      "original_tree_wire_um": 27.37800000000002,
+      "overlap_removed_um": 0.9180000000000064,
+      "overlap_removed_fraction": 0.03353057199211066,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L7",
+     "fanout": 34,
+     "wire_um": 28.296,
+     "load_ff": 16.141,
+     "cell_delay_ps": 48.397,
+     "input_arrival_ps": 203.01,
+     "wire_geometry": {
+      "original_tree_wire_um": 29.807999999999964,
+      "overlap_removed_um": 1.511999999999972,
+      "overlap_removed_fraction": 0.05072463768115854,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L0",
+     "fanout": 33,
+     "wire_um": 20.034,
+     "load_ff": 15.666,
+     "cell_delay_ps": 47.244,
+     "input_arrival_ps": 204.398,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.005999999999986,
+      "overlap_removed_um": 0.9720000000000049,
+      "overlap_removed_fraction": 0.046272493573265044,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L1",
+     "fanout": 34,
+     "wire_um": 21.492,
+     "load_ff": 16.141,
+     "cell_delay_ps": 48.164,
+     "input_arrival_ps": 204.389,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.841999999999924,
+      "overlap_removed_um": 1.3499999999999481,
+      "overlap_removed_fraction": 0.059101654846333625,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L2",
+     "fanout": 33,
+     "wire_um": 25.056,
+     "load_ff": 15.666,
+     "cell_delay_ps": 48.313,
+     "input_arrival_ps": 204.343,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.704000000000008,
+      "overlap_removed_um": 0.6479999999999855,
+      "overlap_removed_fraction": 0.025210084033612874,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L3",
+     "fanout": 34,
+     "wire_um": 44.28,
+     "load_ff": 16.141,
+     "cell_delay_ps": 52.838,
+     "input_arrival_ps": 204.394,
+     "wire_geometry": {
+      "original_tree_wire_um": 45.19800000000001,
+      "overlap_removed_um": 0.9179999999999922,
+      "overlap_removed_fraction": 0.020310633213858842,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L4",
+     "fanout": 33,
+     "wire_um": 20.412,
+     "load_ff": 15.666,
+     "cell_delay_ps": 47.305,
+     "input_arrival_ps": 204.562,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.923999999999968,
+      "overlap_removed_um": 1.5119999999999791,
+      "overlap_removed_fraction": 0.06896551724137846,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L5",
+     "fanout": 34,
+     "wire_um": 21.816,
+     "load_ff": 16.141,
+     "cell_delay_ps": 48.189,
+     "input_arrival_ps": 204.642,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.35600000000004,
+      "overlap_removed_um": 0.5400000000000063,
+      "overlap_removed_fraction": 0.024154589371980912,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L6",
+     "fanout": 34,
+     "wire_um": 21.222,
+     "load_ff": 16.141,
+     "cell_delay_ps": 48.161,
+     "input_arrival_ps": 204.684,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.977999999999945,
+      "overlap_removed_um": 0.7559999999999718,
+      "overlap_removed_fraction": 0.034398034398033205,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L7",
+     "fanout": 34,
+     "wire_um": 38.556,
+     "load_ff": 16.141,
+     "cell_delay_ps": 51.54,
+     "input_arrival_ps": 204.731,
+     "wire_geometry": {
+      "original_tree_wire_um": 41.471999999999994,
+      "overlap_removed_um": 2.916000000000011,
+      "overlap_removed_fraction": 0.07031250000000028,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L0",
+     "fanout": 33,
+     "wire_um": 21.654,
+     "load_ff": 15.666,
+     "cell_delay_ps": 47.309,
+     "input_arrival_ps": 204.364,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.924,
+      "overlap_removed_um": 0.2699999999999818,
+      "overlap_removed_fraction": 0.012315270935959763,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L1",
+     "fanout": 34,
+     "wire_um": 19.386,
+     "load_ff": 16.141,
+     "cell_delay_ps": 47.46,
+     "input_arrival_ps": 204.244,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.466,
+      "overlap_removed_um": 1.0799999999999947,
+      "overlap_removed_fraction": 0.0527704485488124,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L2",
+     "fanout": 34,
+     "wire_um": 21.33,
+     "load_ff": 16.141,
+     "cell_delay_ps": 47.829,
+     "input_arrival_ps": 204.233,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.59999999999996,
+      "overlap_removed_um": 0.2699999999999605,
+      "overlap_removed_fraction": 0.012499999999998195,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L3",
+     "fanout": 34,
+     "wire_um": 20.682,
+     "load_ff": 16.141,
+     "cell_delay_ps": 47.763,
+     "input_arrival_ps": 204.271,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.546000000000113,
+      "overlap_removed_um": 0.8640000000000185,
+      "overlap_removed_fraction": 0.040100250626567066,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L4",
+     "fanout": 33,
+     "wire_um": 20.628,
+     "load_ff": 15.666,
+     "cell_delay_ps": 47.171,
+     "input_arrival_ps": 204.438,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.437999999999967,
+      "overlap_removed_um": 0.8100000000000094,
+      "overlap_removed_fraction": 0.03778337531486196,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L5",
+     "fanout": 34,
+     "wire_um": 46.98,
+     "load_ff": 16.141,
+     "cell_delay_ps": 52.964,
+     "input_arrival_ps": 204.485,
+     "wire_geometry": {
+      "original_tree_wire_um": 47.89799999999998,
+      "overlap_removed_um": 0.9180000000000064,
+      "overlap_removed_fraction": 0.019165727170236894,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L6",
+     "fanout": 34,
+     "wire_um": 21.924,
+     "load_ff": 16.141,
+     "cell_delay_ps": 48.13,
+     "input_arrival_ps": 204.194,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.571999999999957,
+      "overlap_removed_um": 0.6479999999999713,
+      "overlap_removed_fraction": 0.02870813397129065,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L7",
+     "fanout": 34,
+     "wire_um": 36.99,
+     "load_ff": 16.141,
+     "cell_delay_ps": 50.899,
+     "input_arrival_ps": 204.216,
+     "wire_geometry": {
+      "original_tree_wire_um": 38.23199999999994,
+      "overlap_removed_um": 1.241999999999969,
+      "overlap_removed_fraction": 0.032485875706213925,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L0",
+     "fanout": 16,
+     "wire_um": 12.312,
+     "load_ff": 7.596,
+     "cell_delay_ps": 43.266,
+     "input_arrival_ps": 216.786,
+     "wire_geometry": {
+      "original_tree_wire_um": 12.473999999999972,
+      "overlap_removed_um": 0.16200000000000614,
+      "overlap_removed_fraction": 0.012987012987013508,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L1",
+     "fanout": 8,
+     "wire_um": 5.886,
+     "load_ff": 3.798,
+     "cell_delay_ps": 33.666,
+     "input_arrival_ps": 216.778,
+     "wire_geometry": {
+      "original_tree_wire_um": 5.993999999999938,
+      "overlap_removed_um": 0.10800000000000409,
+      "overlap_removed_fraction": 0.01801801801801889,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L2",
+     "fanout": 9,
+     "wire_um": 50.436,
+     "load_ff": 4.273,
+     "cell_delay_ps": 40.143,
+     "input_arrival_ps": 216.466,
+     "wire_geometry": {
+      "original_tree_wire_um": 53.35200000000005,
+      "overlap_removed_um": 2.9160000000000252,
+      "overlap_removed_fraction": 0.054655870445344555,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L3",
+     "fanout": 34,
+     "wire_um": 37.8,
+     "load_ff": 16.141,
+     "cell_delay_ps": 45.213,
+     "input_arrival_ps": 215.19,
+     "wire_geometry": {
+      "original_tree_wire_um": 39.20399999999992,
+      "overlap_removed_um": 1.4039999999999608,
+      "overlap_removed_fraction": 0.03581267217630761,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L4",
+     "fanout": 33,
+     "wire_um": 18.954,
+     "load_ff": 15.666,
+     "cell_delay_ps": 48.448,
+     "input_arrival_ps": 215.366,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.92600000000008,
+      "overlap_removed_um": 0.9720000000000262,
+      "overlap_removed_fraction": 0.04878048780487917,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L5",
+     "fanout": 34,
+     "wire_um": 32.562,
+     "load_ff": 16.141,
+     "cell_delay_ps": 44.57,
+     "input_arrival_ps": 215.154,
+     "wire_geometry": {
+      "original_tree_wire_um": 33.58799999999998,
+      "overlap_removed_um": 1.0259999999999678,
+      "overlap_removed_fraction": 0.03054662379421128,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L6",
+     "fanout": 33,
+     "wire_um": 20.304,
+     "load_ff": 15.666,
+     "cell_delay_ps": 48.7,
+     "input_arrival_ps": 215.562,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.275999999999982,
+      "overlap_removed_um": 0.9720000000000013,
+      "overlap_removed_fraction": 0.04568527918781736,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L7",
+     "fanout": 34,
+     "wire_um": 14.472,
+     "load_ff": 16.141,
+     "cell_delay_ps": 48.111,
+     "input_arrival_ps": 215.663,
+     "wire_geometry": {
+      "original_tree_wire_um": 15.389999999999867,
+      "overlap_removed_um": 0.9179999999999904,
+      "overlap_removed_fraction": 0.05964912280701743,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L8",
+     "fanout": 34,
+     "wire_um": 25.164,
+     "load_ff": 16.141,
+     "cell_delay_ps": 43.56,
+     "input_arrival_ps": 215.748,
+     "wire_geometry": {
+      "original_tree_wire_um": 27.054000000000055,
+      "overlap_removed_um": 1.8900000000000183,
+      "overlap_removed_fraction": 0.0698602794411183,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L9",
+     "fanout": 34,
+     "wire_um": 37.53,
+     "load_ff": 16.141,
+     "cell_delay_ps": 45.473,
+     "input_arrival_ps": 215.833,
+     "wire_geometry": {
+      "original_tree_wire_um": 38.98800000000003,
+      "overlap_removed_um": 1.4580000000000268,
+      "overlap_removed_fraction": 0.03739612188365717,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L0",
+     "fanout": 33,
+     "wire_um": 29.106,
+     "load_ff": 15.666,
+     "cell_delay_ps": 47.231,
+     "input_arrival_ps": 208.689,
+     "wire_geometry": {
+      "original_tree_wire_um": 29.86200000000002,
+      "overlap_removed_um": 0.7560000000000215,
+      "overlap_removed_fraction": 0.025316455696203236,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L1",
+     "fanout": 34,
+     "wire_um": 22.95,
+     "load_ff": 16.141,
+     "cell_delay_ps": 46.487,
+     "input_arrival_ps": 208.631,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.839999999999755,
+      "overlap_removed_um": 1.8899999999998727,
+      "overlap_removed_fraction": 0.07608695652173475,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L2",
+     "fanout": 33,
+     "wire_um": 54.162,
+     "load_ff": 15.666,
+     "cell_delay_ps": 51.857,
+     "input_arrival_ps": 208.301,
+     "wire_geometry": {
+      "original_tree_wire_um": 55.565999999999974,
+      "overlap_removed_um": 1.4040000000000035,
+      "overlap_removed_fraction": 0.02526724975704575,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L3",
+     "fanout": 34,
+     "wire_um": 33.264,
+     "load_ff": 16.141,
+     "cell_delay_ps": 48.37,
+     "input_arrival_ps": 208.249,
+     "wire_geometry": {
+      "original_tree_wire_um": 34.12799999999997,
+      "overlap_removed_um": 0.8639999999999972,
+      "overlap_removed_fraction": 0.025316455696202472,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L4",
+     "fanout": 33,
+     "wire_um": 19.008,
+     "load_ff": 15.666,
+     "cell_delay_ps": 45.023,
+     "input_arrival_ps": 208.524,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.438000000000052,
+      "overlap_removed_um": 2.430000000000028,
+      "overlap_removed_fraction": 0.11335012594458542,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L5",
+     "fanout": 34,
+     "wire_um": 21.006,
+     "load_ff": 16.141,
+     "cell_delay_ps": 46.064,
+     "input_arrival_ps": 208.551,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.194000000000003,
+      "overlap_removed_um": 1.1879999999999882,
+      "overlap_removed_fraction": 0.05352798053527927,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L6",
+     "fanout": 34,
+     "wire_um": 24.705,
+     "load_ff": 16.141,
+     "cell_delay_ps": 49.137,
+     "input_arrival_ps": 208.377,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.245000000000076,
+      "overlap_removed_um": 0.539999999999992,
+      "overlap_removed_fraction": 0.021390374331550423,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L7",
+     "fanout": 34,
+     "wire_um": 42.228,
+     "load_ff": 16.141,
+     "cell_delay_ps": 51.959,
+     "input_arrival_ps": 208.425,
+     "wire_geometry": {
+      "original_tree_wire_um": 43.98299999999996,
+      "overlap_removed_um": 1.7549999999999315,
+      "overlap_removed_fraction": 0.03990178023327042,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L0",
+     "fanout": 16,
+     "wire_um": 40.338,
+     "load_ff": 7.596,
+     "cell_delay_ps": 33.671,
+     "input_arrival_ps": 226.359,
+     "wire_geometry": {
+      "original_tree_wire_um": 40.878000000000014,
+      "overlap_removed_um": 0.539999999999992,
+      "overlap_removed_fraction": 0.013210039630118691,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L1",
+     "fanout": 17,
+     "wire_um": 35.154,
+     "load_ff": 8.071,
+     "cell_delay_ps": 38.401,
+     "input_arrival_ps": 225.451,
+     "wire_geometry": {
+      "original_tree_wire_um": 36.01799999999995,
+      "overlap_removed_um": 0.8639999999999972,
+      "overlap_removed_fraction": 0.023988005997001453,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L2",
+     "fanout": 4,
+     "wire_um": 2.133,
+     "load_ff": 1.899,
+     "cell_delay_ps": 29.738,
+     "input_arrival_ps": 225.045,
+     "wire_geometry": {
+      "original_tree_wire_um": 2.3760000000000012,
+      "overlap_removed_um": 0.242999999999995,
+      "overlap_removed_fraction": 0.10227272727272511,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L3",
+     "fanout": 2,
+     "wire_um": 0.864,
+     "load_ff": 0.949,
+     "cell_delay_ps": 26.971,
+     "input_arrival_ps": 224.949,
+     "wire_geometry": {
+      "original_tree_wire_um": 0.8640000000000008,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L4",
+     "fanout": 2,
+     "wire_um": 4.32,
+     "load_ff": 0.949,
+     "cell_delay_ps": 33.696,
+     "input_arrival_ps": 219.267,
+     "wire_geometry": {
+      "original_tree_wire_um": 4.319999999999993,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L5",
+     "fanout": 8,
+     "wire_um": 7.884,
+     "load_ff": 3.798,
+     "cell_delay_ps": 35.338,
+     "input_arrival_ps": 219.337,
+     "wire_geometry": {
+      "original_tree_wire_um": 7.883999999999958,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L6",
+     "fanout": 18,
+     "wire_um": 9.882,
+     "load_ff": 8.545,
+     "cell_delay_ps": 45.49,
+     "input_arrival_ps": 219.409,
+     "wire_geometry": {
+      "original_tree_wire_um": 9.881999999999977,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L7",
+     "fanout": 34,
+     "wire_um": 20.196,
+     "load_ff": 16.141,
+     "cell_delay_ps": 46.26,
+     "input_arrival_ps": 219.571,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.46599999999998,
+      "overlap_removed_um": 0.27000000000001023,
+      "overlap_removed_fraction": 0.013192612137203678,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L8",
+     "fanout": 34,
+     "wire_um": 21.168,
+     "load_ff": 16.141,
+     "cell_delay_ps": 46.348,
+     "input_arrival_ps": 219.597,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.14000000000007,
+      "overlap_removed_um": 0.9720000000000368,
+      "overlap_removed_fraction": 0.04390243902439177,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L9",
+     "fanout": 32,
+     "wire_um": 14.418,
+     "load_ff": 15.192,
+     "cell_delay_ps": 44.754,
+     "input_arrival_ps": 219.725,
+     "wire_geometry": {
+      "original_tree_wire_um": 14.525999999999982,
+      "overlap_removed_um": 0.10800000000000409,
+      "overlap_removed_fraction": 0.007434944237918507,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L10",
+     "fanout": 34,
+     "wire_um": 21.708,
+     "load_ff": 16.141,
+     "cell_delay_ps": 43.733,
+     "input_arrival_ps": 219.799,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.16599999999994,
+      "overlap_removed_um": 1.4579999999999842,
+      "overlap_removed_fraction": 0.06293706293706242,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L11",
+     "fanout": 34,
+     "wire_um": 21.6,
+     "load_ff": 16.141,
+     "cell_delay_ps": 43.656,
+     "input_arrival_ps": 219.804,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.057999999999993,
+      "overlap_removed_um": 1.4579999999999984,
+      "overlap_removed_fraction": 0.06323185011709596,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L12",
+     "fanout": 34,
+     "wire_um": 24.678,
+     "load_ff": 16.141,
+     "cell_delay_ps": 42.798,
+     "input_arrival_ps": 219.817,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.919999999999973,
+      "overlap_removed_um": 1.241999999999976,
+      "overlap_removed_fraction": 0.04791666666666579,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L0",
+     "fanout": 16,
+     "wire_um": 24.516,
+     "load_ff": 7.596,
+     "cell_delay_ps": 31.95,
+     "input_arrival_ps": 226.569,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.541999999999916,
+      "overlap_removed_um": 1.0259999999999678,
+      "overlap_removed_fraction": 0.04016913319238788,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L1",
+     "fanout": 4,
+     "wire_um": 6.723,
+     "load_ff": 1.899,
+     "cell_delay_ps": 26.932,
+     "input_arrival_ps": 226.301,
+     "wire_geometry": {
+      "original_tree_wire_um": 6.9659999999999656,
+      "overlap_removed_um": 0.242999999999995,
+      "overlap_removed_fraction": 0.03488372093023201,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L2",
+     "fanout": 2,
+     "wire_um": 2.052,
+     "load_ff": 0.949,
+     "cell_delay_ps": 28.618,
+     "input_arrival_ps": 226.14,
+     "wire_geometry": {
+      "original_tree_wire_um": 2.0519999999999925,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L3",
+     "fanout": 2,
+     "wire_um": 4.32,
+     "load_ff": 0.949,
+     "cell_delay_ps": 28.444,
+     "input_arrival_ps": 221.516,
+     "wire_geometry": {
+      "original_tree_wire_um": 4.320000000000022,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L4",
+     "fanout": 8,
+     "wire_um": 7.722,
+     "load_ff": 3.798,
+     "cell_delay_ps": 30.907,
+     "input_arrival_ps": 221.453,
+     "wire_geometry": {
+      "original_tree_wire_um": 7.72199999999998,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L5",
+     "fanout": 34,
+     "wire_um": 20.25,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.244,
+     "input_arrival_ps": 221.465,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.35799999999989,
+      "overlap_removed_um": 0.10800000000000409,
+      "overlap_removed_fraction": 0.005305039787798638,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L6",
+     "fanout": 34,
+     "wire_um": 19.062,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.058,
+     "input_arrival_ps": 221.739,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.763999999999868,
+      "overlap_removed_um": 0.7019999999999698,
+      "overlap_removed_fraction": 0.035519125683058816,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L7",
+     "fanout": 34,
+     "wire_um": 20.844,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.351,
+     "input_arrival_ps": 221.842,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.923999999999893,
+      "overlap_removed_um": 1.079999999999984,
+      "overlap_removed_fraction": 0.04926108374384188,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L8",
+     "fanout": 34,
+     "wire_um": 21.654,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.476,
+     "input_arrival_ps": 222.081,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.11200000000005,
+      "overlap_removed_um": 1.4580000000000268,
+      "overlap_removed_fraction": 0.06308411214953373,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L9",
+     "fanout": 34,
+     "wire_um": 21.762,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.501,
+     "input_arrival_ps": 222.015,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.841999999999956,
+      "overlap_removed_um": 1.0800000000000125,
+      "overlap_removed_fraction": 0.047281323877069195,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L10",
+     "fanout": 34,
+     "wire_um": 19.926,
+     "load_ff": 16.141,
+     "cell_delay_ps": 39.227,
+     "input_arrival_ps": 222.159,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.898000000000053,
+      "overlap_removed_um": 0.97199999999998,
+      "overlap_removed_fraction": 0.04651162790697567,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L11",
+     "fanout": 34,
+     "wire_um": 40.23,
+     "load_ff": 16.141,
+     "cell_delay_ps": 34.287,
+     "input_arrival_ps": 222.211,
+     "wire_geometry": {
+      "original_tree_wire_um": 40.77000000000001,
+      "overlap_removed_um": 0.539999999999992,
+      "overlap_removed_fraction": 0.013245033112582584,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_macro0",
+     "fanout": 1,
+     "wire_um": 4.68,
+     "load_ff": 9.346,
+     "cell_delay_ps": 39.745,
+     "input_arrival_ps": 208.969,
+     "wire_geometry": {
+      "original_tree_wire_um": 4.680000000000007,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_macro1",
+     "fanout": 1,
+     "wire_um": 4.68,
+     "load_ff": 9.346,
+     "cell_delay_ps": 40.59,
+     "input_arrival_ps": 219.741,
+     "wire_geometry": {
+      "original_tree_wire_um": 4.679999999999993,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    }
+   ]
+  },
+  "FF": {
+   "sinks": 4310,
+   "min_ps": 181.03082923323763,
+   "mean_ps": 192.10915088525584,
+   "max_ps": 204.37641226860237,
+   "window_ps": 23.34558303536474,
+   "leaf_means": [
+    {
+     "node": "mp_core_Q0B0L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 183.4938325632544,
+     "mean_ps": 184.2572569711317,
+     "max_ps": 184.9747534331158
+    },
+    {
+     "node": "mp_core_Q0B0L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 188.78657983741752,
+     "mean_ps": 189.10235307655375,
+     "max_ps": 189.307140238086
+    },
+    {
+     "node": "mp_core_Q0B0L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 192.8344661777014,
+     "mean_ps": 193.13067541956423,
+     "max_ps": 193.33416937173675
+    },
+    {
+     "node": "mp_core_Q0B0L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.00731630346,
+     "mean_ps": 185.49418796387062,
+     "max_ps": 186.2615130769298
+    },
+    {
+     "node": "mp_core_Q0B0L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 183.9868934026947,
+     "mean_ps": 184.9096886413301,
+     "max_ps": 185.8755828126379
+    },
+    {
+     "node": "mp_core_Q0B0L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 183.12451233185794,
+     "mean_ps": 183.88759981585503,
+     "max_ps": 184.36377542937612
+    },
+    {
+     "node": "mp_core_Q0B0L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.05195726952613,
+     "mean_ps": 184.8352985511203,
+     "max_ps": 185.42851902783747
+    },
+    {
+     "node": "mp_core_Q0B0L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 185.51588706586642,
+     "mean_ps": 188.23643559562788,
+     "max_ps": 190.3755283952842
+    },
+    {
+     "node": "mp_core_Q0B1L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 184.08680418293997,
+     "mean_ps": 184.61944461194912,
+     "max_ps": 184.96545136542213
+    },
+    {
+     "node": "mp_core_Q0B1L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.30313136574995,
+     "mean_ps": 185.16935855995467,
+     "max_ps": 185.79929092519782
+    },
+    {
+     "node": "mp_core_Q0B1L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 184.49066964247206,
+     "mean_ps": 184.8503530839256,
+     "max_ps": 185.0848704181534
+    },
+    {
+     "node": "mp_core_Q0B1L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.7318270709115,
+     "mean_ps": 185.52634810766753,
+     "max_ps": 186.33060539968858
+    },
+    {
+     "node": "mp_core_Q0B1L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 181.03082923323763,
+     "mean_ps": 184.92976107731198,
+     "max_ps": 188.32408635649983
+    },
+    {
+     "node": "mp_core_Q0B1L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.05301775414998,
+     "mean_ps": 186.78207610621573,
+     "max_ps": 188.33741315581423
+    },
+    {
+     "node": "mp_core_Q0B1L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.2478444928234,
+     "mean_ps": 184.50164955315668,
+     "max_ps": 184.65006592278922
+    },
+    {
+     "node": "mp_core_Q0B1L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 188.911589621887,
+     "mean_ps": 189.72909015290344,
+     "max_ps": 190.30036899504802
+    },
+    {
+     "node": "mp_core_Q0B2L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 185.66306666164508,
+     "mean_ps": 186.83115285567828,
+     "max_ps": 187.17317361366383
+    },
+    {
+     "node": "mp_core_Q0B2L1",
+     "kind": "register",
+     "sinks": 17,
+     "min_ps": 187.16670325743675,
+     "mean_ps": 187.45201063666403,
+     "max_ps": 187.52616732295297
+    },
+    {
+     "node": "mp_core_Q0B2L2",
+     "kind": "register",
+     "sinks": 8,
+     "min_ps": 186.03339684311322,
+     "mean_ps": 186.09647193584107,
+     "max_ps": 186.14087249121872
+    },
+    {
+     "node": "mp_core_Q0B2L3",
+     "kind": "register",
+     "sinks": 4,
+     "min_ps": 185.1862440633649,
+     "mean_ps": 185.21965221278498,
+     "max_ps": 185.24496747793165
+    },
+    {
+     "node": "mp_core_Q0B2L4",
+     "kind": "register",
+     "sinks": 5,
+     "min_ps": 184.8475645832453,
+     "mean_ps": 185.02997199165836,
+     "max_ps": 185.5252743201241
+    },
+    {
+     "node": "mp_core_Q0B2L5",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 184.55115605557833,
+     "mean_ps": 184.97713648273185,
+     "max_ps": 185.2878322356946
+    },
+    {
+     "node": "mp_core_Q0B2L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 188.0610606712328,
+     "mean_ps": 188.5425579032389,
+     "max_ps": 188.94163314885873
+    },
+    {
+     "node": "mp_core_Q0B2L7",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 184.76012274748564,
+     "mean_ps": 185.01710738960034,
+     "max_ps": 185.21211751755297
+    },
+    {
+     "node": "mp_core_Q0B2L8",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 192.48924233396954,
+     "mean_ps": 192.6600080353423,
+     "max_ps": 192.77126377465171
+    },
+    {
+     "node": "mp_core_Q0B2L9",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 192.70661393767756,
+     "mean_ps": 192.87642895332567,
+     "max_ps": 193.07546028808332
+    },
+    {
+     "node": "mp_core_Q0B2L10",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 193.23034210391634,
+     "mean_ps": 193.49561330764323,
+     "max_ps": 193.7213493980765
+    },
+    {
+     "node": "mp_core_Q0B3L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 184.48293385388865,
+     "mean_ps": 184.89564269478947,
+     "max_ps": 185.10853657481073
+    },
+    {
+     "node": "mp_core_Q0B3L1",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 184.68908041536193,
+     "mean_ps": 185.0107469119281,
+     "max_ps": 185.35373691053405
+    },
+    {
+     "node": "mp_core_Q0B3L2",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.3878857329729,
+     "mean_ps": 185.11487769103303,
+     "max_ps": 185.74371482092596
+    },
+    {
+     "node": "mp_core_Q0B3L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.30781646828586,
+     "mean_ps": 184.7205093038207,
+     "max_ps": 185.24430730584373
+    },
+    {
+     "node": "mp_core_Q0B3L4",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.62077900058284,
+     "mean_ps": 185.02847251220598,
+     "max_ps": 185.38030799836238
+    },
+    {
+     "node": "mp_core_Q0B3L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.6325404394719,
+     "mean_ps": 185.06604021035656,
+     "max_ps": 185.2861355289758
+    },
+    {
+     "node": "mp_core_Q0B3L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.28605660658457,
+     "mean_ps": 184.72204671636044,
+     "max_ps": 185.19612871462758
+    },
+    {
+     "node": "mp_core_Q0B3L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 184.71158686726076,
+     "mean_ps": 184.91122398397786,
+     "max_ps": 185.036510162098
+    },
+    {
+     "node": "mp_core_Q1B0L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 191.5900431229489,
+     "mean_ps": 192.15159390998477,
+     "max_ps": 192.60186577151592
+    },
+    {
+     "node": "mp_core_Q1B0L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 192.71819211893748,
+     "mean_ps": 193.30443643766816,
+     "max_ps": 193.69784426251798
+    },
+    {
+     "node": "mp_core_Q1B0L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 192.01508361412948,
+     "mean_ps": 192.32620746023156,
+     "max_ps": 192.5810112775788
+    },
+    {
+     "node": "mp_core_Q1B0L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 192.36436169456954,
+     "mean_ps": 193.52101933454975,
+     "max_ps": 194.1973001086823
+    },
+    {
+     "node": "mp_core_Q1B0L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 191.2123692619364,
+     "mean_ps": 191.415759045062,
+     "max_ps": 191.56184705254643
+    },
+    {
+     "node": "mp_core_Q1B0L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 191.7580535163623,
+     "mean_ps": 193.01129231969213,
+     "max_ps": 193.79929949068259
+    },
+    {
+     "node": "mp_core_Q1B0L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 191.98586939357816,
+     "mean_ps": 192.42899330621472,
+     "max_ps": 192.61502221196392
+    },
+    {
+     "node": "mp_core_Q1B0L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 192.73159576617388,
+     "mean_ps": 193.29502985451956,
+     "max_ps": 193.8380916117269
+    },
+    {
+     "node": "mp_core_Q1B1L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 196.95286592418935,
+     "mean_ps": 198.98843307042796,
+     "max_ps": 200.7269037377146
+    },
+    {
+     "node": "mp_core_Q1B1L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 197.09466099667267,
+     "mean_ps": 197.8308150684474,
+     "max_ps": 198.6844206747034
+    },
+    {
+     "node": "mp_core_Q1B1L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 191.38230419455311,
+     "mean_ps": 195.62484581547722,
+     "max_ps": 198.40338021841904
+    },
+    {
+     "node": "mp_core_Q1B1L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 198.6990196324681,
+     "mean_ps": 199.74958525219878,
+     "max_ps": 201.01842397002713
+    },
+    {
+     "node": "mp_core_Q1B1L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 188.8310501796957,
+     "mean_ps": 189.0121237288319,
+     "max_ps": 189.1785527051396
+    },
+    {
+     "node": "mp_core_Q1B1L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 189.10672149106577,
+     "mean_ps": 189.50168031736666,
+     "max_ps": 189.76837969449318
+    },
+    {
+     "node": "mp_core_Q1B1L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 189.25347791460777,
+     "mean_ps": 189.79944543564108,
+     "max_ps": 190.17046605826218
+    },
+    {
+     "node": "mp_core_Q1B1L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 189.35914640257417,
+     "mean_ps": 190.1805253801374,
+     "max_ps": 190.86301630084554
+    },
+    {
+     "node": "mp_core_Q1B2L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 197.55435126316337,
+     "mean_ps": 198.0481594894911,
+     "max_ps": 198.35780590984353
+    },
+    {
+     "node": "mp_core_Q1B2L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 197.6536198609712,
+     "mean_ps": 198.0295135360395,
+     "max_ps": 198.55399350986954
+    },
+    {
+     "node": "mp_core_Q1B2L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 197.56941347117765,
+     "mean_ps": 197.84379447085783,
+     "max_ps": 198.11848784052958
+    },
+    {
+     "node": "mp_core_Q1B2L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 197.7996988135865,
+     "mean_ps": 198.18217649163805,
+     "max_ps": 198.58070570076077
+    },
+    {
+     "node": "mp_core_Q1B2L4",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 194.31264048888218,
+     "mean_ps": 195.02733397214885,
+     "max_ps": 195.65678528763925
+    },
+    {
+     "node": "mp_core_Q1B2L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 196.2861850516277,
+     "mean_ps": 196.82012779847034,
+     "max_ps": 197.01284702243353
+    },
+    {
+     "node": "mp_core_Q1B2L6",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 193.57120327488465,
+     "mean_ps": 194.13341129462114,
+     "max_ps": 194.59757863383297
+    },
+    {
+     "node": "mp_core_Q1B2L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 194.07538944407517,
+     "mean_ps": 194.7312048143724,
+     "max_ps": 195.02915056643343
+    },
+    {
+     "node": "mp_core_Q1B3L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 195.84449778894725,
+     "mean_ps": 196.1785106476688,
+     "max_ps": 196.3662805561412
+    },
+    {
+     "node": "mp_core_Q1B3L1",
+     "kind": "register",
+     "sinks": 17,
+     "min_ps": 197.03897508236994,
+     "mean_ps": 197.28432749172933,
+     "max_ps": 197.5067253006698
+    },
+    {
+     "node": "mp_core_Q1B3L2",
+     "kind": "register",
+     "sinks": 4,
+     "min_ps": 190.65273019954753,
+     "mean_ps": 190.74921507736846,
+     "max_ps": 191.0002385484169
+    },
+    {
+     "node": "mp_core_Q1B3L3",
+     "kind": "register",
+     "sinks": 5,
+     "min_ps": 190.50836064159333,
+     "mean_ps": 190.69448543897425,
+     "max_ps": 190.88494783854242
+    },
+    {
+     "node": "mp_core_Q1B3L4",
+     "kind": "register",
+     "sinks": 8,
+     "min_ps": 191.6980631133347,
+     "mean_ps": 191.81116527566482,
+     "max_ps": 191.8906324674068
+    },
+    {
+     "node": "mp_core_Q1B3L5",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 195.75239243191066,
+     "mean_ps": 196.5591836375825,
+     "max_ps": 197.30025028557014
+    },
+    {
+     "node": "mp_core_Q1B3L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 198.3939044047677,
+     "mean_ps": 199.11162825868973,
+     "max_ps": 200.94351134551272
+    },
+    {
+     "node": "mp_core_Q1B3L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 196.53210667703294,
+     "mean_ps": 196.91011862442386,
+     "max_ps": 197.29751962736208
+    },
+    {
+     "node": "mp_core_Q1B3L8",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 196.05855198847246,
+     "mean_ps": 196.519253620707,
+     "max_ps": 196.7353589744707
+    },
+    {
+     "node": "mp_core_Q1B3L9",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 196.143069378621,
+     "mean_ps": 196.3943307971408,
+     "max_ps": 196.73407602473216
+    },
+    {
+     "node": "mp_core_Q1B3L10",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 196.12601749432338,
+     "mean_ps": 196.75480253020262,
+     "max_ps": 197.36202584651375
+    },
+    {
+     "node": "mp_core_Q2B0L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 187.69398821793672,
+     "mean_ps": 188.31067678584185,
+     "max_ps": 188.82995114250855
+    },
+    {
+     "node": "mp_core_Q2B0L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 188.66979371530286,
+     "mean_ps": 190.12954885644118,
+     "max_ps": 191.3001503606656
+    },
+    {
+     "node": "mp_core_Q2B0L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 187.99350992087966,
+     "mean_ps": 188.400395825916,
+     "max_ps": 188.62885550061088
+    },
+    {
+     "node": "mp_core_Q2B0L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 188.87822062393948,
+     "mean_ps": 189.05536979726946,
+     "max_ps": 189.207274966658
+    },
+    {
+     "node": "mp_core_Q2B0L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 188.16286475164495,
+     "mean_ps": 189.28576532666264,
+     "max_ps": 189.9005311499827
+    },
+    {
+     "node": "mp_core_Q2B0L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 188.26689307925386,
+     "mean_ps": 188.932813337148,
+     "max_ps": 189.4077849400882
+    },
+    {
+     "node": "mp_core_Q2B0L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 189.7016767115294,
+     "mean_ps": 190.62006000465718,
+     "max_ps": 191.46066361106824
+    },
+    {
+     "node": "mp_core_Q2B0L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 192.58290293337802,
+     "mean_ps": 193.64839051692312,
+     "max_ps": 194.84534735298556
+    },
+    {
+     "node": "mp_core_Q2B1L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 185.10955299218577,
+     "mean_ps": 185.48105161124025,
+     "max_ps": 185.7275037819466
+    },
+    {
+     "node": "mp_core_Q2B1L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 185.92529136298717,
+     "mean_ps": 186.19990940501594,
+     "max_ps": 186.38945178900573
+    },
+    {
+     "node": "mp_core_Q2B1L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 185.20333730815227,
+     "mean_ps": 185.66962157558314,
+     "max_ps": 186.10001311376305
+    },
+    {
+     "node": "mp_core_Q2B1L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 185.6964899806228,
+     "mean_ps": 186.92636386123493,
+     "max_ps": 187.4444761872979
+    },
+    {
+     "node": "mp_core_Q2B1L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 186.05723142403684,
+     "mean_ps": 187.05979511944778,
+     "max_ps": 187.75024698545042
+    },
+    {
+     "node": "mp_core_Q2B1L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 192.2596121904024,
+     "mean_ps": 197.81099068833336,
+     "max_ps": 200.6642679717592
+    },
+    {
+     "node": "mp_core_Q2B1L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 187.25860470680334,
+     "mean_ps": 188.39736749894934,
+     "max_ps": 188.80798223958078
+    },
+    {
+     "node": "mp_core_Q2B1L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 187.06512472468802,
+     "mean_ps": 187.71760231325095,
+     "max_ps": 188.20742722545177
+    },
+    {
+     "node": "mp_core_Q2B2L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 186.80613498418057,
+     "mean_ps": 187.21967692594495,
+     "max_ps": 187.49358479326915
+    },
+    {
+     "node": "mp_core_Q2B2L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 187.3843326524324,
+     "mean_ps": 188.0328433417329,
+     "max_ps": 188.41363762609797
+    },
+    {
+     "node": "mp_core_Q2B2L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 187.4496649159936,
+     "mean_ps": 188.34376729800314,
+     "max_ps": 188.8327753722029
+    },
+    {
+     "node": "mp_core_Q2B2L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 191.52075573518775,
+     "mean_ps": 193.30616827511702,
+     "max_ps": 195.31267419245088
+    },
+    {
+     "node": "mp_core_Q2B2L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 186.91429848071664,
+     "mean_ps": 188.07027170316553,
+     "max_ps": 188.93675624174563
+    },
+    {
+     "node": "mp_core_Q2B2L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 187.99231653128643,
+     "mean_ps": 188.96780186888418,
+     "max_ps": 189.3621061972713
+    },
+    {
+     "node": "mp_core_Q2B2L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 187.6497519512732,
+     "mean_ps": 188.5874512113857,
+     "max_ps": 189.15470512289454
+    },
+    {
+     "node": "mp_core_Q2B2L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 191.22305313510154,
+     "mean_ps": 194.042537546752,
+     "max_ps": 197.28106416416992
+    },
+    {
+     "node": "mp_core_Q2B3L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 186.8616348032053,
+     "mean_ps": 187.20991019637677,
+     "max_ps": 187.4598551920042
+    },
+    {
+     "node": "mp_core_Q2B3L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 186.93379686726786,
+     "mean_ps": 187.7508936495524,
+     "max_ps": 188.24910220078502
+    },
+    {
+     "node": "mp_core_Q2B3L2",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 187.1280478549728,
+     "mean_ps": 187.6566034769565,
+     "max_ps": 188.1376855131169
+    },
+    {
+     "node": "mp_core_Q2B3L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 187.2479750982113,
+     "mean_ps": 187.5523125836658,
+     "max_ps": 187.78595377357053
+    },
+    {
+     "node": "mp_core_Q2B3L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 186.84811696254243,
+     "mean_ps": 187.81819785363905,
+     "max_ps": 188.11805350963579
+    },
+    {
+     "node": "mp_core_Q2B3L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 191.51369441746795,
+     "mean_ps": 192.8666598035251,
+     "max_ps": 194.41140340403715
+    },
+    {
+     "node": "mp_core_Q2B3L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 187.31943303313844,
+     "mean_ps": 188.32633240639348,
+     "max_ps": 188.8979466638556
+    },
+    {
+     "node": "mp_core_Q2B3L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 189.42512536150187,
+     "mean_ps": 190.20482620212067,
+     "max_ps": 191.07834039965837
+    },
+    {
+     "node": "mp_core_Q3B0L0",
+     "kind": "register",
+     "sinks": 16,
+     "min_ps": 194.59647584910678,
+     "mean_ps": 194.739672271974,
+     "max_ps": 194.90885599431658
+    },
+    {
+     "node": "mp_core_Q3B0L1",
+     "kind": "register",
+     "sinks": 8,
+     "min_ps": 187.58150631060488,
+     "mean_ps": 187.66694197065732,
+     "max_ps": 187.70097731994696
+    },
+    {
+     "node": "mp_core_Q3B0L2",
+     "kind": "register",
+     "sinks": 9,
+     "min_ps": 192.3442806132945,
+     "mean_ps": 193.3148415670117,
+     "max_ps": 194.00519858981548
+    },
+    {
+     "node": "mp_core_Q3B0L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 194.34295838174322,
+     "mean_ps": 196.0529641714848,
+     "max_ps": 197.25806635167237
+    },
+    {
+     "node": "mp_core_Q3B0L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 197.03156097464543,
+     "mean_ps": 197.7575106607248,
+     "max_ps": 198.63187214610988
+    },
+    {
+     "node": "mp_core_Q3B0L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 194.34395087575624,
+     "mean_ps": 195.28529994935082,
+     "max_ps": 195.96103613224443
+    },
+    {
+     "node": "mp_core_Q3B0L6",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 197.38206935355757,
+     "mean_ps": 197.79025275109402,
+     "max_ps": 198.2568599366643
+    },
+    {
+     "node": "mp_core_Q3B0L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 197.09428482194406,
+     "mean_ps": 197.4663974682419,
+     "max_ps": 197.65880221036085
+    },
+    {
+     "node": "mp_core_Q3B0L8",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 193.8470425795791,
+     "mean_ps": 194.5834230412367,
+     "max_ps": 195.09533013725886
+    },
+    {
+     "node": "mp_core_Q3B0L9",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 195.37501347799727,
+     "mean_ps": 196.56106942679992,
+     "max_ps": 197.33691991361712
+    },
+    {
+     "node": "mp_core_Q3B1L0",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 191.73254573679472,
+     "mean_ps": 193.46068130529264,
+     "max_ps": 194.9886854177189
+    },
+    {
+     "node": "mp_core_Q3B1L1",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 191.20182885988154,
+     "mean_ps": 191.8977535256771,
+     "max_ps": 192.40507827228305
+    },
+    {
+     "node": "mp_core_Q3B1L2",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 195.94403523981129,
+     "mean_ps": 200.1789218549138,
+     "max_ps": 204.37641226860237
+    },
+    {
+     "node": "mp_core_Q3B1L3",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 192.14538661934395,
+     "mean_ps": 193.40565570584056,
+     "max_ps": 194.25000554317165
+    },
+    {
+     "node": "mp_core_Q3B1L4",
+     "kind": "register",
+     "sinks": 33,
+     "min_ps": 190.42154627200378,
+     "mean_ps": 191.43007665396118,
+     "max_ps": 192.41176405972683
+    },
+    {
+     "node": "mp_core_Q3B1L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 190.91993732639529,
+     "mean_ps": 191.28980673963656,
+     "max_ps": 191.5798156728867
+    },
+    {
+     "node": "mp_core_Q3B1L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 193.33852745415308,
+     "mean_ps": 193.83692846220058,
+     "max_ps": 194.10708755215262
+    },
+    {
+     "node": "mp_core_Q3B1L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 195.25000999295057,
+     "mean_ps": 196.74776357757833,
+     "max_ps": 197.74239783483094
+    },
+    {
+     "node": "mp_core_Q3B2L0",
+     "kind": "register",
+     "sinks": 16,
+     "min_ps": 199.3052872982643,
+     "mean_ps": 200.42149105083413,
+     "max_ps": 201.19424299342936
+    },
+    {
+     "node": "mp_core_Q3B2L1",
+     "kind": "register",
+     "sinks": 17,
+     "min_ps": 201.25082751300587,
+     "mean_ps": 202.05532860498334,
+     "max_ps": 203.91076692155693
+    },
+    {
+     "node": "mp_core_Q3B2L2",
+     "kind": "register",
+     "sinks": 4,
+     "min_ps": 194.00865227091896,
+     "mean_ps": 194.01531970876886,
+     "max_ps": 194.02953416118888
+    },
+    {
+     "node": "mp_core_Q3B2L3",
+     "kind": "register",
+     "sinks": 2,
+     "min_ps": 191.83298654340507,
+     "mean_ps": 191.8354402885883,
+     "max_ps": 191.83789403377153
+    },
+    {
+     "node": "mp_core_Q3B2L4",
+     "kind": "register",
+     "sinks": 2,
+     "min_ps": 191.01556534157433,
+     "mean_ps": 191.01627437187176,
+     "max_ps": 191.01698340216922
+    },
+    {
+     "node": "mp_core_Q3B2L5",
+     "kind": "register",
+     "sinks": 8,
+     "min_ps": 192.0159212196709,
+     "mean_ps": 192.07704646885992,
+     "max_ps": 192.1081269284923
+    },
+    {
+     "node": "mp_core_Q3B2L6",
+     "kind": "register",
+     "sinks": 18,
+     "min_ps": 199.60189574014092,
+     "mean_ps": 199.74938353999653,
+     "max_ps": 199.8714993308557
+    },
+    {
+     "node": "mp_core_Q3B2L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 201.07233477428395,
+     "mean_ps": 201.5978692172924,
+     "max_ps": 202.17896756746276
+    },
+    {
+     "node": "mp_core_Q3B2L8",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 201.1516747319867,
+     "mean_ps": 201.51977535643755,
+     "max_ps": 201.8898271841229
+    },
+    {
+     "node": "mp_core_Q3B2L9",
+     "kind": "register",
+     "sinks": 32,
+     "min_ps": 199.9882179129474,
+     "mean_ps": 200.39480403531627,
+     "max_ps": 200.7118997232827
+    },
+    {
+     "node": "mp_core_Q3B2L10",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 199.09367653837452,
+     "mean_ps": 199.4074816922614,
+     "max_ps": 199.6453425173291
+    },
+    {
+     "node": "mp_core_Q3B2L11",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 199.0993747043669,
+     "mean_ps": 199.48229701328745,
+     "max_ps": 199.6158698440812
+    },
+    {
+     "node": "mp_core_Q3B2L12",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 199.1449870835148,
+     "mean_ps": 199.5700660149098,
+     "max_ps": 200.10579690349047
+    },
+    {
+     "node": "mp_core_Q3B3L0",
+     "kind": "register",
+     "sinks": 16,
+     "min_ps": 201.39870932753328,
+     "mean_ps": 202.19832050156558,
+     "max_ps": 202.7337179805262
+    },
+    {
+     "node": "mp_core_Q3B3L1",
+     "kind": "register",
+     "sinks": 4,
+     "min_ps": 196.69344958104858,
+     "mean_ps": 196.73075333292542,
+     "max_ps": 196.76303516426202
+    },
+    {
+     "node": "mp_core_Q3B3L2",
+     "kind": "register",
+     "sinks": 2,
+     "min_ps": 198.14009868689578,
+     "mean_ps": 198.14076316364398,
+     "max_ps": 198.14142764039218
+    },
+    {
+     "node": "mp_core_Q3B3L3",
+     "kind": "register",
+     "sinks": 2,
+     "min_ps": 192.95257723996397,
+     "mean_ps": 192.9532862702614,
+     "max_ps": 192.95399530055886
+    },
+    {
+     "node": "mp_core_Q3B3L4",
+     "kind": "register",
+     "sinks": 8,
+     "min_ps": 194.4480220939494,
+     "mean_ps": 194.51801079542383,
+     "max_ps": 194.55976346774992
+    },
+    {
+     "node": "mp_core_Q3B3L5",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 200.78367147007012,
+     "mean_ps": 201.4095408818202,
+     "max_ps": 201.93190557562482
+    },
+    {
+     "node": "mp_core_Q3B3L6",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 201.01693357058764,
+     "mean_ps": 201.58738596833132,
+     "max_ps": 201.9148824620493
+    },
+    {
+     "node": "mp_core_Q3B3L7",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 201.4528317732268,
+     "mean_ps": 201.87142058575392,
+     "max_ps": 202.34526366562602
+    },
+    {
+     "node": "mp_core_Q3B3L8",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 201.76111618280166,
+     "mean_ps": 202.36433338169115,
+     "max_ps": 202.89039215006656
+    },
+    {
+     "node": "mp_core_Q3B3L9",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 201.67811365806224,
+     "mean_ps": 202.3826956287455,
+     "max_ps": 202.98422506982587
+    },
+    {
+     "node": "mp_core_Q3B3L10",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 201.3668016410743,
+     "mean_ps": 201.95510746529538,
+     "max_ps": 202.52153171179575
+    },
+    {
+     "node": "mp_core_Q3B3L11",
+     "kind": "register",
+     "sinks": 34,
+     "min_ps": 199.92113303875027,
+     "mean_ps": 201.31373247949614,
+     "max_ps": 203.18203666017823
+    },
+    {
+     "node": "mp_core_macro0",
+     "kind": "macro",
+     "sinks": 1,
+     "min_ps": 189.5488038879634,
+     "mean_ps": 189.5488038879634,
+     "max_ps": 189.5488038879634
+    },
+    {
+     "node": "mp_core_macro1",
+     "kind": "macro",
+     "sinks": 1,
+     "min_ps": 191.3534854277681,
+     "mean_ps": 191.3534854277681,
+     "max_ps": 191.3534854277681
+    }
+   ],
+   "nets": [
+    {
+     "driver": "mp_core_entry0",
+     "fanout": 1,
+     "wire_um": 0.648,
+     "load_ff": 2.607,
+     "cell_delay_ps": 14.429,
+     "input_arrival_ps": 0.0,
+     "wire_geometry": {
+      "original_tree_wire_um": 0.6480000000000246,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_entry1",
+     "fanout": 1,
+     "wire_um": 0.918,
+     "load_ff": 1.333,
+     "cell_delay_ps": 16.369,
+     "input_arrival_ps": 14.445,
+     "wire_geometry": {
+      "original_tree_wire_um": 0.9180000000000064,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_root",
+     "fanout": 4,
+     "wire_um": 280.53,
+     "load_ff": 4.054,
+     "cell_delay_ps": 29.178,
+     "input_arrival_ps": 30.826,
+     "wire_geometry": {
+      "original_tree_wire_um": 287.54999999999995,
+      "overlap_removed_um": 7.019999999999982,
+      "overlap_removed_fraction": 0.024413145539906044,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_M0",
+     "fanout": 1,
+     "wire_um": 60.237,
+     "load_ff": 0.582,
+     "cell_delay_ps": 29.422,
+     "input_arrival_ps": 62.69,
+     "wire_geometry": {
+      "original_tree_wire_um": 60.237000000000016,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0",
+     "fanout": 4,
+     "wire_um": 82.944,
+     "load_ff": 10.429,
+     "cell_delay_ps": 34.94,
+     "input_arrival_ps": 94.534,
+     "wire_geometry": {
+      "original_tree_wire_um": 82.94399999999999,
+      "overlap_removed_um": 1.4210854715202004e-14,
+      "overlap_removed_fraction": 1.713307136767217e-16,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0",
+     "fanout": 8,
+     "wire_um": 45.198,
+     "load_ff": 17.412,
+     "cell_delay_ps": 28.163,
+     "input_arrival_ps": 131.1,
+     "wire_geometry": {
+      "original_tree_wire_um": 48.97800000000001,
+      "overlap_removed_um": 3.780000000000001,
+      "overlap_removed_fraction": 0.07717750826901876,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1",
+     "fanout": 9,
+     "wire_um": 58.671,
+     "load_ff": 19.913,
+     "cell_delay_ps": 28.919,
+     "input_arrival_ps": 129.989,
+     "wire_geometry": {
+      "original_tree_wire_um": 61.34399999999997,
+      "overlap_removed_um": 2.6729999999999947,
+      "overlap_removed_fraction": 0.043573943661971766,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2",
+     "fanout": 11,
+     "wire_um": 59.184,
+     "load_ff": 22.828,
+     "cell_delay_ps": 29.596,
+     "input_arrival_ps": 131.721,
+     "wire_geometry": {
+      "original_tree_wire_um": 59.18399999999997,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3",
+     "fanout": 8,
+     "wire_um": 19.494,
+     "load_ff": 20.859,
+     "cell_delay_ps": 28.308,
+     "input_arrival_ps": 132.566,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.113999999999997,
+      "overlap_removed_um": 1.6200000000000045,
+      "overlap_removed_fraction": 0.07672634271099767,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_M1",
+     "fanout": 1,
+     "wire_um": 101.79,
+     "load_ff": 2.602,
+     "cell_delay_ps": 30.225,
+     "input_arrival_ps": 73.641,
+     "wire_geometry": {
+      "original_tree_wire_um": 101.78999999999999,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1",
+     "fanout": 4,
+     "wire_um": 162.648,
+     "load_ff": 7.374,
+     "cell_delay_ps": 22.575,
+     "input_arrival_ps": 112.408,
+     "wire_geometry": {
+      "original_tree_wire_um": 167.07600000000002,
+      "overlap_removed_um": 4.428000000000026,
+      "overlap_removed_fraction": 0.02650290885585018,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0",
+     "fanout": 8,
+     "wire_um": 31.05,
+     "load_ff": 5.547,
+     "cell_delay_ps": 21.413,
+     "input_arrival_ps": 137.199,
+     "wire_geometry": {
+      "original_tree_wire_um": 34.506,
+      "overlap_removed_um": 3.4559999999999995,
+      "overlap_removed_fraction": 0.1001564945226917,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1",
+     "fanout": 9,
+     "wire_um": 117.72,
+     "load_ff": 6.52,
+     "cell_delay_ps": 21.126,
+     "input_arrival_ps": 136.142,
+     "wire_geometry": {
+      "original_tree_wire_um": 117.72,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2",
+     "fanout": 8,
+     "wire_um": 23.22,
+     "load_ff": 6.737,
+     "cell_delay_ps": 22.447,
+     "input_arrival_ps": 142.696,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.273999999999994,
+      "overlap_removed_um": 0.054000000000002046,
+      "overlap_removed_fraction": 0.0023201856148492763,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3",
+     "fanout": 11,
+     "wire_um": 65.151,
+     "load_ff": 9.943,
+     "cell_delay_ps": 22.467,
+     "input_arrival_ps": 144.224,
+     "wire_geometry": {
+      "original_tree_wire_um": 65.93400000000001,
+      "overlap_removed_um": 0.7830000000000013,
+      "overlap_removed_fraction": 0.011875511875511892,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_M2",
+     "fanout": 1,
+     "wire_um": 69.12,
+     "load_ff": 1.333,
+     "cell_delay_ps": 31.234,
+     "input_arrival_ps": 75.056,
+     "wire_geometry": {
+      "original_tree_wire_um": 69.11999999999999,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2",
+     "fanout": 4,
+     "wire_um": 62.91,
+     "load_ff": 3.17,
+     "cell_delay_ps": 19.578,
+     "input_arrival_ps": 109.611,
+     "wire_geometry": {
+      "original_tree_wire_um": 62.91,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0",
+     "fanout": 8,
+     "wire_um": 34.776,
+     "load_ff": 5.547,
+     "cell_delay_ps": 23.055,
+     "input_arrival_ps": 130.182,
+     "wire_geometry": {
+      "original_tree_wire_um": 36.18000000000001,
+      "overlap_removed_um": 1.4039999999999964,
+      "overlap_removed_fraction": 0.038805970149253625,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1",
+     "fanout": 8,
+     "wire_um": 45.117,
+     "load_ff": 5.436,
+     "cell_delay_ps": 21.27,
+     "input_arrival_ps": 129.796,
+     "wire_geometry": {
+      "original_tree_wire_um": 46.035000000000004,
+      "overlap_removed_um": 0.9180000000000064,
+      "overlap_removed_fraction": 0.019941348973607175,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2",
+     "fanout": 8,
+     "wire_um": 33.696,
+     "load_ff": 5.547,
+     "cell_delay_ps": 22.759,
+     "input_arrival_ps": 129.758,
+     "wire_geometry": {
+      "original_tree_wire_um": 38.44800000000002,
+      "overlap_removed_um": 4.7520000000000095,
+      "overlap_removed_fraction": 0.1235955056179777,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3",
+     "fanout": 8,
+     "wire_um": 31.428,
+     "load_ff": 5.547,
+     "cell_delay_ps": 22.55,
+     "input_arrival_ps": 130.051,
+     "wire_geometry": {
+      "original_tree_wire_um": 32.616,
+      "overlap_removed_um": 1.1880000000000024,
+      "overlap_removed_fraction": 0.036423841059602724,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_M3",
+     "fanout": 1,
+     "wire_um": 114.21,
+     "load_ff": 2.597,
+     "cell_delay_ps": 28.624,
+     "input_arrival_ps": 66.302,
+     "wire_geometry": {
+      "original_tree_wire_um": 114.21000000000001,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3",
+     "fanout": 4,
+     "wire_um": 223.506,
+     "load_ff": 5.322,
+     "cell_delay_ps": 24.957,
+     "input_arrival_ps": 104.42,
+     "wire_geometry": {
+      "original_tree_wire_um": 223.506,
+      "overlap_removed_um": -2.842170943040401e-14,
+      "overlap_removed_fraction": -1.2716307137349336e-16,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0",
+     "fanout": 10,
+     "wire_um": 72.495,
+     "load_ff": 8.287,
+     "cell_delay_ps": 29.56,
+     "input_arrival_ps": 132.632,
+     "wire_geometry": {
+      "original_tree_wire_um": 74.22300000000004,
+      "overlap_removed_um": 1.7280000000000086,
+      "overlap_removed_fraction": 0.023281193161149613,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1",
+     "fanout": 8,
+     "wire_um": 39.123,
+     "load_ff": 5.324,
+     "cell_delay_ps": 25.113,
+     "input_arrival_ps": 132.024,
+     "wire_geometry": {
+      "original_tree_wire_um": 40.499999999999986,
+      "overlap_removed_um": 1.3769999999999811,
+      "overlap_removed_fraction": 0.033999999999999544,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2",
+     "fanout": 13,
+     "wire_um": 115.56,
+     "load_ff": 10.511,
+     "cell_delay_ps": 27.6,
+     "input_arrival_ps": 139.214,
+     "wire_geometry": {
+      "original_tree_wire_um": 117.01799999999997,
+      "overlap_removed_um": 1.4579999999999984,
+      "overlap_removed_fraction": 0.012459621596677423,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3",
+     "fanout": 12,
+     "wire_um": 104.49,
+     "load_ff": 11.281,
+     "cell_delay_ps": 24.744,
+     "input_arrival_ps": 147.078,
+     "wire_geometry": {
+      "original_tree_wire_um": 106.10999999999997,
+      "overlap_removed_um": 1.6200000000000045,
+      "overlap_removed_fraction": 0.01526717557251913,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L0",
+     "fanout": 33,
+     "wire_um": 20.736,
+     "load_ff": 17.226,
+     "cell_delay_ps": 22.741,
+     "input_arrival_ps": 160.608,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.86999999999992,
+      "overlap_removed_um": 1.1340000000000003,
+      "overlap_removed_fraction": 0.05185185185185206,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L1",
+     "fanout": 34,
+     "wire_um": 22.248,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.37,
+     "input_arrival_ps": 160.275,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.328000000000007,
+      "overlap_removed_um": 1.0800000000000196,
+      "overlap_removed_fraction": 0.046296296296297126,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L2",
+     "fanout": 33,
+     "wire_um": 20.952,
+     "load_ff": 17.226,
+     "cell_delay_ps": 32.512,
+     "input_arrival_ps": 160.146,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.35599999999993,
+      "overlap_removed_um": 1.4039999999999822,
+      "overlap_removed_fraction": 0.06280193236714915,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L3",
+     "fanout": 34,
+     "wire_um": 30.348,
+     "load_ff": 17.748,
+     "cell_delay_ps": 23.136,
+     "input_arrival_ps": 160.805,
+     "wire_geometry": {
+      "original_tree_wire_um": 31.319999999999975,
+      "overlap_removed_um": 0.9720000000000049,
+      "overlap_removed_fraction": 0.03103448275862087,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L4",
+     "fanout": 33,
+     "wire_um": 19.71,
+     "load_ff": 17.226,
+     "cell_delay_ps": 22.738,
+     "input_arrival_ps": 160.798,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.682000000000063,
+      "overlap_removed_um": 0.9719999999999978,
+      "overlap_removed_fraction": 0.04699738903394231,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L5",
+     "fanout": 34,
+     "wire_um": 33.21,
+     "load_ff": 17.748,
+     "cell_delay_ps": 20.962,
+     "input_arrival_ps": 161.087,
+     "wire_geometry": {
+      "original_tree_wire_um": 34.55999999999999,
+      "overlap_removed_um": 1.3499999999999872,
+      "overlap_removed_fraction": 0.039062499999999646,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L6",
+     "fanout": 34,
+     "wire_um": 24.138,
+     "load_ff": 17.748,
+     "cell_delay_ps": 22.971,
+     "input_arrival_ps": 161.063,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.893999999999956,
+      "overlap_removed_um": 0.7560000000000002,
+      "overlap_removed_fraction": 0.030368763557483795,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B0L7",
+     "fanout": 34,
+     "wire_um": 58.212,
+     "load_ff": 17.748,
+     "cell_delay_ps": 21.015,
+     "input_arrival_ps": 161.26,
+     "wire_geometry": {
+      "original_tree_wire_um": 59.832000000000036,
+      "overlap_removed_um": 1.6199999999999761,
+      "overlap_removed_fraction": 0.027075812274367814,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L0",
+     "fanout": 33,
+     "wire_um": 20.628,
+     "load_ff": 17.226,
+     "cell_delay_ps": 23.316,
+     "input_arrival_ps": 160.769,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.438000000000013,
+      "overlap_removed_um": 0.8099999999999632,
+      "overlap_removed_fraction": 0.03778337531485972,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L1",
+     "fanout": 34,
+     "wire_um": 18.684,
+     "load_ff": 17.748,
+     "cell_delay_ps": 23.371,
+     "input_arrival_ps": 160.914,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.655999999999985,
+      "overlap_removed_um": 0.9720000000000013,
+      "overlap_removed_fraction": 0.04945054945054955,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L2",
+     "fanout": 33,
+     "wire_um": 20.304,
+     "load_ff": 17.226,
+     "cell_delay_ps": 23.354,
+     "input_arrival_ps": 161.11,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.545999999999953,
+      "overlap_removed_um": 1.2419999999999867,
+      "overlap_removed_fraction": 0.05764411027568873,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L3",
+     "fanout": 34,
+     "wire_um": 19.98,
+     "load_ff": 17.748,
+     "cell_delay_ps": 23.461,
+     "input_arrival_ps": 161.204,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.790000000000013,
+      "overlap_removed_um": 0.809999999999981,
+      "overlap_removed_fraction": 0.03896103896103802,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L4",
+     "fanout": 33,
+     "wire_um": 40.689,
+     "load_ff": 17.226,
+     "cell_delay_ps": 20.438,
+     "input_arrival_ps": 160.062,
+     "wire_geometry": {
+      "original_tree_wire_um": 43.92899999999992,
+      "overlap_removed_um": 3.2399999999999594,
+      "overlap_removed_fraction": 0.07375537799631145,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L5",
+     "fanout": 34,
+     "wire_um": 48.87,
+     "load_ff": 17.748,
+     "cell_delay_ps": 24.125,
+     "input_arrival_ps": 159.83,
+     "wire_geometry": {
+      "original_tree_wire_um": 49.68000000000002,
+      "overlap_removed_um": 0.8100000000000023,
+      "overlap_removed_fraction": 0.016304347826086994,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L6",
+     "fanout": 34,
+     "wire_um": 15.66,
+     "load_ff": 17.748,
+     "cell_delay_ps": 23.281,
+     "input_arrival_ps": 160.851,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.63200000000002,
+      "overlap_removed_um": 0.9719999999999871,
+      "overlap_removed_fraction": 0.0584415584415576,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B1L7",
+     "fanout": 34,
+     "wire_um": 13.446,
+     "load_ff": 17.748,
+     "cell_delay_ps": 27.996,
+     "input_arrival_ps": 160.911,
+     "wire_geometry": {
+      "original_tree_wire_um": 13.986000000000047,
+      "overlap_removed_um": 0.5400000000000134,
+      "overlap_removed_fraction": 0.038610038610039435,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L0",
+     "fanout": 33,
+     "wire_um": 21.546,
+     "load_ff": 17.226,
+     "cell_delay_ps": 20.287,
+     "input_arrival_ps": 165.009,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.301999999999946,
+      "overlap_removed_um": 0.7559999999999825,
+      "overlap_removed_fraction": 0.033898305084745055,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L1",
+     "fanout": 17,
+     "wire_um": 11.826,
+     "load_ff": 8.874,
+     "cell_delay_ps": 22.187,
+     "input_arrival_ps": 164.943,
+     "wire_geometry": {
+      "original_tree_wire_um": 12.635999999999992,
+      "overlap_removed_um": 0.8099999999999987,
+      "overlap_removed_fraction": 0.06410256410256404,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L2",
+     "fanout": 8,
+     "wire_um": 6.912,
+     "load_ff": 4.176,
+     "cell_delay_ps": 21.148,
+     "input_arrival_ps": 164.851,
+     "wire_geometry": {
+      "original_tree_wire_um": 7.127999999999975,
+      "overlap_removed_um": 0.21599999999999753,
+      "overlap_removed_fraction": 0.03030303030303006,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L3",
+     "fanout": 4,
+     "wire_um": 6.156,
+     "load_ff": 2.088,
+     "cell_delay_ps": 20.685,
+     "input_arrival_ps": 164.468,
+     "wire_geometry": {
+      "original_tree_wire_um": 6.155999999999976,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L4",
+     "fanout": 5,
+     "wire_um": 37.368,
+     "load_ff": 2.61,
+     "cell_delay_ps": 21.354,
+     "input_arrival_ps": 162.618,
+     "wire_geometry": {
+      "original_tree_wire_um": 37.638,
+      "overlap_removed_um": 0.2700000000000031,
+      "overlap_removed_fraction": 0.007173601147776267,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L5",
+     "fanout": 33,
+     "wire_um": 11.232,
+     "load_ff": 17.226,
+     "cell_delay_ps": 20.907,
+     "input_arrival_ps": 163.548,
+     "wire_geometry": {
+      "original_tree_wire_um": 11.232,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L6",
+     "fanout": 34,
+     "wire_um": 15.282,
+     "load_ff": 17.748,
+     "cell_delay_ps": 23.894,
+     "input_arrival_ps": 164.103,
+     "wire_geometry": {
+      "original_tree_wire_um": 15.281999999999961,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L7",
+     "fanout": 33,
+     "wire_um": 13.554,
+     "load_ff": 17.226,
+     "cell_delay_ps": 21.022,
+     "input_arrival_ps": 163.675,
+     "wire_geometry": {
+      "original_tree_wire_um": 14.741999999999877,
+      "overlap_removed_um": 1.1879999999999455,
+      "overlap_removed_fraction": 0.08058608058607757,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L8",
+     "fanout": 34,
+     "wire_um": 15.174,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.594,
+     "input_arrival_ps": 163.761,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.68599999999995,
+      "overlap_removed_um": 1.5119999999999578,
+      "overlap_removed_fraction": 0.09061488673138933,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L9",
+     "fanout": 34,
+     "wire_um": 14.85,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.556,
+     "input_arrival_ps": 163.98,
+     "wire_geometry": {
+      "original_tree_wire_um": 15.551999999999964,
+      "overlap_removed_um": 0.701999999999984,
+      "overlap_removed_fraction": 0.045138888888887965,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B2L10",
+     "fanout": 34,
+     "wire_um": 19.008,
+     "load_ff": 17.748,
+     "cell_delay_ps": 29.022,
+     "input_arrival_ps": 164.152,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.81799999999994,
+      "overlap_removed_um": 0.8100000000000023,
+      "overlap_removed_fraction": 0.04087193460490487,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L0",
+     "fanout": 33,
+     "wire_um": 22.41,
+     "load_ff": 17.226,
+     "cell_delay_ps": 22.743,
+     "input_arrival_ps": 161.319,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.246000000000027,
+      "overlap_removed_um": 1.836000000000002,
+      "overlap_removed_fraction": 0.0757238307349666,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L1",
+     "fanout": 33,
+     "wire_um": 27.918,
+     "load_ff": 17.226,
+     "cell_delay_ps": 22.889,
+     "input_arrival_ps": 161.273,
+     "wire_geometry": {
+      "original_tree_wire_um": 29.861999999999945,
+      "overlap_removed_um": 1.9439999999999849,
+      "overlap_removed_fraction": 0.06509945750452041,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L2",
+     "fanout": 34,
+     "wire_um": 19.548,
+     "load_ff": 17.748,
+     "cell_delay_ps": 22.774,
+     "input_arrival_ps": 161.347,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.76400000000003,
+      "overlap_removed_um": 0.21600000000000819,
+      "overlap_removed_fraction": 0.010928961748634277,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L3",
+     "fanout": 34,
+     "wire_um": 19.494,
+     "load_ff": 17.748,
+     "cell_delay_ps": 22.764,
+     "input_arrival_ps": 161.07,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.87200000000005,
+      "overlap_removed_um": 0.3780000000000143,
+      "overlap_removed_fraction": 0.019021739130435457,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L4",
+     "fanout": 34,
+     "wire_um": 23.004,
+     "load_ff": 17.748,
+     "cell_delay_ps": 22.849,
+     "input_arrival_ps": 161.272,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.867999999999967,
+      "overlap_removed_um": 0.8640000000000008,
+      "overlap_removed_fraction": 0.036199095022624514,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L5",
+     "fanout": 34,
+     "wire_um": 24.408,
+     "load_ff": 17.748,
+     "cell_delay_ps": 22.893,
+     "input_arrival_ps": 161.222,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.83999999999996,
+      "overlap_removed_um": 0.43199999999998795,
+      "overlap_removed_fraction": 0.01739130434782563,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L6",
+     "fanout": 34,
+     "wire_um": 21.276,
+     "load_ff": 17.748,
+     "cell_delay_ps": 22.82,
+     "input_arrival_ps": 161.072,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.194000000000003,
+      "overlap_removed_um": 0.9179999999999993,
+      "overlap_removed_fraction": 0.04136253041362527,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q0B3L7",
+     "fanout": 34,
+     "wire_um": 21.006,
+     "load_ff": 17.748,
+     "cell_delay_ps": 22.816,
+     "input_arrival_ps": 161.302,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.78800000000006,
+      "overlap_removed_um": 1.7819999999999965,
+      "overlap_removed_fraction": 0.07819905213270106,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L0",
+     "fanout": 33,
+     "wire_um": 18.576,
+     "load_ff": 17.226,
+     "cell_delay_ps": 32.583,
+     "input_arrival_ps": 158.806,
+     "wire_geometry": {
+      "original_tree_wire_um": 18.953999999999976,
+      "overlap_removed_um": 0.37799999999998235,
+      "overlap_removed_fraction": 0.019943019943019037,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L1",
+     "fanout": 34,
+     "wire_um": 25.92,
+     "load_ff": 17.748,
+     "cell_delay_ps": 33.956,
+     "input_arrival_ps": 158.762,
+     "wire_geometry": {
+      "original_tree_wire_um": 26.730000000000018,
+      "overlap_removed_um": 0.8100000000000129,
+      "overlap_removed_fraction": 0.030303030303030765,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L2",
+     "fanout": 33,
+     "wire_um": 23.652,
+     "load_ff": 17.226,
+     "cell_delay_ps": 33.228,
+     "input_arrival_ps": 158.694,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.462000000000003,
+      "overlap_removed_um": 0.8099999999999952,
+      "overlap_removed_fraction": 0.033112582781456755,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L3",
+     "fanout": 34,
+     "wire_um": 23.598,
+     "load_ff": 17.748,
+     "cell_delay_ps": 33.66,
+     "input_arrival_ps": 158.701,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.191999999999986,
+      "overlap_removed_um": 0.5940000000000083,
+      "overlap_removed_fraction": 0.024553571428571785,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L4",
+     "fanout": 33,
+     "wire_um": 17.82,
+     "load_ff": 17.226,
+     "cell_delay_ps": 32.374,
+     "input_arrival_ps": 158.766,
+     "wire_geometry": {
+      "original_tree_wire_um": 18.467999999999993,
+      "overlap_removed_um": 0.6479999999999926,
+      "overlap_removed_fraction": 0.035087719298245224,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L5",
+     "fanout": 34,
+     "wire_um": 18.198,
+     "load_ff": 17.748,
+     "cell_delay_ps": 32.897,
+     "input_arrival_ps": 158.796,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.439999999999984,
+      "overlap_removed_um": 1.241999999999976,
+      "overlap_removed_fraction": 0.0638888888888877,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L6",
+     "fanout": 34,
+     "wire_um": 19.818,
+     "load_ff": 17.748,
+     "cell_delay_ps": 33.114,
+     "input_arrival_ps": 158.863,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.006000000000018,
+      "overlap_removed_um": 1.188000000000013,
+      "overlap_removed_fraction": 0.05655526992287975,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B0L7",
+     "fanout": 34,
+     "wire_um": 24.354,
+     "load_ff": 17.748,
+     "cell_delay_ps": 33.724,
+     "input_arrival_ps": 158.904,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.595999999999997,
+      "overlap_removed_um": 1.2419999999999973,
+      "overlap_removed_fraction": 0.04852320675105475,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L0",
+     "fanout": 33,
+     "wire_um": 48.6,
+     "load_ff": 17.226,
+     "cell_delay_ps": 36.042,
+     "input_arrival_ps": 160.583,
+     "wire_geometry": {
+      "original_tree_wire_um": 50.057999999999986,
+      "overlap_removed_um": 1.4580000000000055,
+      "overlap_removed_fraction": 0.02912621359223313,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L1",
+     "fanout": 34,
+     "wire_um": 41.364,
+     "load_ff": 17.748,
+     "cell_delay_ps": 35.683,
+     "input_arrival_ps": 160.959,
+     "wire_geometry": {
+      "original_tree_wire_um": 44.27999999999998,
+      "overlap_removed_um": 2.915999999999997,
+      "overlap_removed_fraction": 0.06585365853658533,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L2",
+     "fanout": 33,
+     "wire_um": 35.586,
+     "load_ff": 17.226,
+     "cell_delay_ps": 29.476,
+     "input_arrival_ps": 161.203,
+     "wire_geometry": {
+      "original_tree_wire_um": 38.016000000000005,
+      "overlap_removed_um": 2.430000000000021,
+      "overlap_removed_fraction": 0.06392045454545509,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L3",
+     "fanout": 34,
+     "wire_um": 51.246,
+     "load_ff": 17.748,
+     "cell_delay_ps": 37.092,
+     "input_arrival_ps": 161.282,
+     "wire_geometry": {
+      "original_tree_wire_um": 52.81199999999999,
+      "overlap_removed_um": 1.5660000000000096,
+      "overlap_removed_fraction": 0.029652351738241496,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L4",
+     "fanout": 33,
+     "wire_um": 15.012,
+     "load_ff": 17.226,
+     "cell_delay_ps": 28.783,
+     "input_arrival_ps": 159.926,
+     "wire_geometry": {
+      "original_tree_wire_um": 15.552000000000007,
+      "overlap_removed_um": 0.5399999999999991,
+      "overlap_removed_fraction": 0.034722222222222154,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L5",
+     "fanout": 34,
+     "wire_um": 13.824,
+     "load_ff": 17.748,
+     "cell_delay_ps": 29.016,
+     "input_arrival_ps": 160.05,
+     "wire_geometry": {
+      "original_tree_wire_um": 14.147999999999996,
+      "overlap_removed_um": 0.32399999999999807,
+      "overlap_removed_fraction": 0.022900763358778494,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L6",
+     "fanout": 34,
+     "wire_um": 14.904,
+     "load_ff": 17.748,
+     "cell_delay_ps": 29.141,
+     "input_arrival_ps": 160.11,
+     "wire_geometry": {
+      "original_tree_wire_um": 15.551999999999971,
+      "overlap_removed_um": 0.647999999999989,
+      "overlap_removed_fraction": 0.04166666666666604,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B1L7",
+     "fanout": 34,
+     "wire_um": 15.66,
+     "load_ff": 17.748,
+     "cell_delay_ps": 29.225,
+     "input_arrival_ps": 160.134,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.577999999999975,
+      "overlap_removed_um": 0.9179999999999993,
+      "overlap_removed_fraction": 0.05537459283387626,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L0",
+     "fanout": 33,
+     "wire_um": 16.2,
+     "load_ff": 17.226,
+     "cell_delay_ps": 32.183,
+     "input_arrival_ps": 165.37,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.793999999999997,
+      "overlap_removed_um": 0.5939999999999941,
+      "overlap_removed_fraction": 0.0353697749196138,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L1",
+     "fanout": 34,
+     "wire_um": 13.5,
+     "load_ff": 17.748,
+     "cell_delay_ps": 32.262,
+     "input_arrival_ps": 165.343,
+     "wire_geometry": {
+      "original_tree_wire_um": 14.148000000000039,
+      "overlap_removed_um": 0.6480000000000032,
+      "overlap_removed_fraction": 0.045801526717557356,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L2",
+     "fanout": 33,
+     "wire_um": 16.524,
+     "load_ff": 17.226,
+     "cell_delay_ps": 32.265,
+     "input_arrival_ps": 165.283,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.57799999999998,
+      "overlap_removed_um": 0.05399999999999494,
+      "overlap_removed_fraction": 0.0032573289902277113,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L3",
+     "fanout": 34,
+     "wire_um": 15.606,
+     "load_ff": 17.748,
+     "cell_delay_ps": 32.576,
+     "input_arrival_ps": 165.186,
+     "wire_geometry": {
+      "original_tree_wire_um": 16.146000000000008,
+      "overlap_removed_um": 0.5400000000000063,
+      "overlap_removed_fraction": 0.03344481605351208,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L4",
+     "fanout": 34,
+     "wire_um": 21.816,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.666,
+     "input_arrival_ps": 165.312,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.787999999999965,
+      "overlap_removed_um": 0.9720000000000013,
+      "overlap_removed_fraction": 0.04265402843601908,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L5",
+     "fanout": 34,
+     "wire_um": 23.922,
+     "load_ff": 17.748,
+     "cell_delay_ps": 30.522,
+     "input_arrival_ps": 165.388,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.001999999999992,
+      "overlap_removed_um": 1.0799999999999947,
+      "overlap_removed_fraction": 0.043196544276457687,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L6",
+     "fanout": 33,
+     "wire_um": 18.09,
+     "load_ff": 17.226,
+     "cell_delay_ps": 27.936,
+     "input_arrival_ps": 165.279,
+     "wire_geometry": {
+      "original_tree_wire_um": 18.846000000000004,
+      "overlap_removed_um": 0.7560000000000002,
+      "overlap_removed_fraction": 0.04011461318051576,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B2L7",
+     "fanout": 34,
+     "wire_um": 18.954,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.369,
+     "input_arrival_ps": 165.366,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.19600000000002,
+      "overlap_removed_um": 1.2420000000000044,
+      "overlap_removed_fraction": 0.06149732620320872,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L0",
+     "fanout": 33,
+     "wire_um": 22.788,
+     "load_ff": 17.226,
+     "cell_delay_ps": 27.4,
+     "input_arrival_ps": 168.274,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.245999999999917,
+      "overlap_removed_um": 1.4579999999999984,
+      "overlap_removed_fraction": 0.06013363028953243,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L1",
+     "fanout": 17,
+     "wire_um": 14.04,
+     "load_ff": 8.874,
+     "cell_delay_ps": 28.793,
+     "input_arrival_ps": 168.228,
+     "wire_geometry": {
+      "original_tree_wire_um": 14.256000000000029,
+      "overlap_removed_um": 0.21600000000000286,
+      "overlap_removed_fraction": 0.015151515151515322,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L2",
+     "fanout": 4,
+     "wire_um": 17.172,
+     "load_ff": 2.088,
+     "cell_delay_ps": 22.479,
+     "input_arrival_ps": 167.945,
+     "wire_geometry": {
+      "original_tree_wire_um": 17.172000000000015,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L3",
+     "fanout": 5,
+     "wire_um": 24.786,
+     "load_ff": 2.61,
+     "cell_delay_ps": 22.431,
+     "input_arrival_ps": 167.586,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.786,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L4",
+     "fanout": 8,
+     "wire_um": 18.144,
+     "load_ff": 4.176,
+     "cell_delay_ps": 23.278,
+     "input_arrival_ps": 168.259,
+     "wire_geometry": {
+      "original_tree_wire_um": 18.144000000000005,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L5",
+     "fanout": 33,
+     "wire_um": 20.952,
+     "load_ff": 17.226,
+     "cell_delay_ps": 27.305,
+     "input_arrival_ps": 168.415,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.762000000000015,
+      "overlap_removed_um": 0.8100000000000094,
+      "overlap_removed_fraction": 0.03722084367245698,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L6",
+     "fanout": 34,
+     "wire_um": 42.282,
+     "load_ff": 17.748,
+     "cell_delay_ps": 30.01,
+     "input_arrival_ps": 168.379,
+     "wire_geometry": {
+      "original_tree_wire_um": 43.52399999999999,
+      "overlap_removed_um": 1.2419999999999831,
+      "overlap_removed_fraction": 0.028535980148882995,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L7",
+     "fanout": 34,
+     "wire_um": 22.572,
+     "load_ff": 17.748,
+     "cell_delay_ps": 27.818,
+     "input_arrival_ps": 168.247,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.11199999999999,
+      "overlap_removed_um": 0.5400000000000027,
+      "overlap_removed_fraction": 0.023364485981308535,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L8",
+     "fanout": 34,
+     "wire_um": 17.442,
+     "load_ff": 17.748,
+     "cell_delay_ps": 27.284,
+     "input_arrival_ps": 168.261,
+     "wire_geometry": {
+      "original_tree_wire_um": 17.820000000000043,
+      "overlap_removed_um": 0.3780000000000143,
+      "overlap_removed_fraction": 0.021212121212121966,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L9",
+     "fanout": 34,
+     "wire_um": 19.926,
+     "load_ff": 17.748,
+     "cell_delay_ps": 27.529,
+     "input_arrival_ps": 168.138,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.141999999999946,
+      "overlap_removed_um": 0.21600000000000108,
+      "overlap_removed_fraction": 0.010723860589812414,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q1B3L10",
+     "fanout": 34,
+     "wire_um": 20.574,
+     "load_ff": 17.748,
+     "cell_delay_ps": 27.573,
+     "input_arrival_ps": 168.162,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.546000000000014,
+      "overlap_removed_um": 0.9719999999999942,
+      "overlap_removed_fraction": 0.04511278195488692,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L0",
+     "fanout": 33,
+     "wire_um": 20.952,
+     "load_ff": 17.226,
+     "cell_delay_ps": 34.076,
+     "input_arrival_ps": 153.607,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.517999999999976,
+      "overlap_removed_um": 1.5660000000000025,
+      "overlap_removed_fraction": 0.06954436450839348,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L1",
+     "fanout": 34,
+     "wire_um": 24.462,
+     "load_ff": 17.748,
+     "cell_delay_ps": 35.049,
+     "input_arrival_ps": 153.612,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.163999999999998,
+      "overlap_removed_um": 0.7019999999999946,
+      "overlap_removed_fraction": 0.027896995708154296,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L2",
+     "fanout": 33,
+     "wire_um": 20.736,
+     "load_ff": 17.226,
+     "cell_delay_ps": 34.08,
+     "input_arrival_ps": 153.701,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.193999999999985,
+      "overlap_removed_um": 1.4579999999999806,
+      "overlap_removed_fraction": 0.06569343065693348,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L3",
+     "fanout": 34,
+     "wire_um": 24.084,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.995,
+     "input_arrival_ps": 153.743,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.839999999999996,
+      "overlap_removed_um": 0.7559999999999931,
+      "overlap_removed_fraction": 0.03043478260869538,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L4",
+     "fanout": 33,
+     "wire_um": 23.652,
+     "load_ff": 17.226,
+     "cell_delay_ps": 34.495,
+     "input_arrival_ps": 153.444,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.948000000000036,
+      "overlap_removed_um": 1.2960000000000207,
+      "overlap_removed_fraction": 0.0519480519480527,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L5",
+     "fanout": 34,
+     "wire_um": 23.706,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.977,
+     "input_arrival_ps": 153.272,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.462000000000028,
+      "overlap_removed_um": 0.7560000000000038,
+      "overlap_removed_fraction": 0.030905077262693276,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L6",
+     "fanout": 34,
+     "wire_um": 32.832,
+     "load_ff": 17.748,
+     "cell_delay_ps": 36.237,
+     "input_arrival_ps": 153.323,
+     "wire_geometry": {
+      "original_tree_wire_um": 33.85799999999999,
+      "overlap_removed_um": 1.0260000000000105,
+      "overlap_removed_fraction": 0.03030303030303062,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B0L7",
+     "fanout": 34,
+     "wire_um": 53.406,
+     "load_ff": 17.748,
+     "cell_delay_ps": 38.671,
+     "input_arrival_ps": 153.384,
+     "wire_geometry": {
+      "original_tree_wire_um": 54.701999999999984,
+      "overlap_removed_um": 1.2959999999999923,
+      "overlap_removed_fraction": 0.02369200394866719,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L0",
+     "fanout": 33,
+     "wire_um": 20.898,
+     "load_ff": 17.226,
+     "cell_delay_ps": 33.39,
+     "input_arrival_ps": 151.707,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.464000000000002,
+      "overlap_removed_um": 1.5659999999999847,
+      "overlap_removed_fraction": 0.06971153846153777,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L1",
+     "fanout": 34,
+     "wire_um": 23.004,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.178,
+     "input_arrival_ps": 151.654,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.51600000000001,
+      "overlap_removed_um": 1.5119999999999862,
+      "overlap_removed_fraction": 0.061674008810572105,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L2",
+     "fanout": 33,
+     "wire_um": 20.844,
+     "load_ff": 17.226,
+     "cell_delay_ps": 33.349,
+     "input_arrival_ps": 151.495,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.30199999999993,
+      "overlap_removed_um": 1.4579999999999451,
+      "overlap_removed_fraction": 0.06537530266343601,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L3",
+     "fanout": 34,
+     "wire_um": 22.302,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.005,
+     "input_arrival_ps": 151.69,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.65199999999996,
+      "overlap_removed_um": 1.349999999999973,
+      "overlap_removed_fraction": 0.05707762557077521,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L4",
+     "fanout": 33,
+     "wire_um": 26.136,
+     "load_ff": 17.207,
+     "cell_delay_ps": 34.209,
+     "input_arrival_ps": 151.699,
+     "wire_geometry": {
+      "original_tree_wire_um": 27.431999999999995,
+      "overlap_removed_um": 1.2959999999999994,
+      "overlap_removed_fraction": 0.04724409448818896,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L5",
+     "fanout": 34,
+     "wire_um": 54.783,
+     "load_ff": 17.729,
+     "cell_delay_ps": 39.684,
+     "input_arrival_ps": 151.754,
+     "wire_geometry": {
+      "original_tree_wire_um": 56.510999999999974,
+      "overlap_removed_um": 1.7279999999999802,
+      "overlap_removed_fraction": 0.03057811753463894,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L6",
+     "fanout": 34,
+     "wire_um": 26.46,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.636,
+     "input_arrival_ps": 151.876,
+     "wire_geometry": {
+      "original_tree_wire_um": 27.37800000000002,
+      "overlap_removed_um": 0.9180000000000064,
+      "overlap_removed_fraction": 0.03353057199211066,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B1L7",
+     "fanout": 34,
+     "wire_um": 28.296,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.839,
+     "input_arrival_ps": 151.992,
+     "wire_geometry": {
+      "original_tree_wire_um": 29.807999999999964,
+      "overlap_removed_um": 1.511999999999972,
+      "overlap_removed_fraction": 0.05072463768115854,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L0",
+     "fanout": 33,
+     "wire_um": 20.034,
+     "load_ff": 17.226,
+     "cell_delay_ps": 33.866,
+     "input_arrival_ps": 152.815,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.005999999999986,
+      "overlap_removed_um": 0.9720000000000049,
+      "overlap_removed_fraction": 0.046272493573265044,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L1",
+     "fanout": 34,
+     "wire_um": 21.492,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.524,
+     "input_arrival_ps": 152.805,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.841999999999924,
+      "overlap_removed_um": 1.3499999999999481,
+      "overlap_removed_fraction": 0.059101654846333625,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L2",
+     "fanout": 33,
+     "wire_um": 25.056,
+     "load_ff": 17.226,
+     "cell_delay_ps": 34.581,
+     "input_arrival_ps": 152.756,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.704000000000008,
+      "overlap_removed_um": 0.6479999999999855,
+      "overlap_removed_fraction": 0.025210084033612874,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L3",
+     "fanout": 34,
+     "wire_um": 44.28,
+     "load_ff": 17.748,
+     "cell_delay_ps": 37.643,
+     "input_arrival_ps": 152.81,
+     "wire_geometry": {
+      "original_tree_wire_um": 45.19800000000001,
+      "overlap_removed_um": 0.9179999999999922,
+      "overlap_removed_fraction": 0.020310633213858842,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L4",
+     "fanout": 33,
+     "wire_um": 20.412,
+     "load_ff": 17.226,
+     "cell_delay_ps": 33.908,
+     "input_arrival_ps": 152.988,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.923999999999968,
+      "overlap_removed_um": 1.5119999999999791,
+      "overlap_removed_fraction": 0.06896551724137846,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L5",
+     "fanout": 34,
+     "wire_um": 21.816,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.542,
+     "input_arrival_ps": 153.073,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.35600000000004,
+      "overlap_removed_um": 0.5400000000000063,
+      "overlap_removed_fraction": 0.024154589371980912,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L6",
+     "fanout": 34,
+     "wire_um": 21.222,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.523,
+     "input_arrival_ps": 153.117,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.977999999999945,
+      "overlap_removed_um": 0.7559999999999718,
+      "overlap_removed_fraction": 0.034398034398033205,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B2L7",
+     "fanout": 34,
+     "wire_um": 38.556,
+     "load_ff": 17.748,
+     "cell_delay_ps": 36.784,
+     "input_arrival_ps": 153.167,
+     "wire_geometry": {
+      "original_tree_wire_um": 41.471999999999994,
+      "overlap_removed_um": 2.916000000000011,
+      "overlap_removed_fraction": 0.07031250000000028,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L0",
+     "fanout": 33,
+     "wire_um": 21.654,
+     "load_ff": 17.226,
+     "cell_delay_ps": 33.949,
+     "input_arrival_ps": 152.904,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.924,
+      "overlap_removed_um": 0.2699999999999818,
+      "overlap_removed_fraction": 0.012315270935959763,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L1",
+     "fanout": 34,
+     "wire_um": 19.386,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.092,
+     "input_arrival_ps": 152.777,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.466,
+      "overlap_removed_um": 1.0799999999999947,
+      "overlap_removed_fraction": 0.0527704485488124,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L2",
+     "fanout": 34,
+     "wire_um": 21.33,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.339,
+     "input_arrival_ps": 152.767,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.59999999999996,
+      "overlap_removed_um": 0.2699999999999605,
+      "overlap_removed_fraction": 0.012499999999998195,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L3",
+     "fanout": 34,
+     "wire_um": 20.682,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.294,
+     "input_arrival_ps": 152.807,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.546000000000113,
+      "overlap_removed_um": 0.8640000000000185,
+      "overlap_removed_fraction": 0.040100250626567066,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L4",
+     "fanout": 33,
+     "wire_um": 20.628,
+     "load_ff": 17.226,
+     "cell_delay_ps": 33.857,
+     "input_arrival_ps": 152.984,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.437999999999967,
+      "overlap_removed_um": 0.8100000000000094,
+      "overlap_removed_fraction": 0.03778337531486196,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L5",
+     "fanout": 34,
+     "wire_um": 46.98,
+     "load_ff": 17.748,
+     "cell_delay_ps": 37.767,
+     "input_arrival_ps": 153.034,
+     "wire_geometry": {
+      "original_tree_wire_um": 47.89799999999998,
+      "overlap_removed_um": 0.9180000000000064,
+      "overlap_removed_fraction": 0.019165727170236894,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L6",
+     "fanout": 34,
+     "wire_um": 21.924,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.54,
+     "input_arrival_ps": 152.726,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.571999999999957,
+      "overlap_removed_um": 0.6479999999999713,
+      "overlap_removed_fraction": 0.02870813397129065,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q2B3L7",
+     "fanout": 34,
+     "wire_um": 36.99,
+     "load_ff": 17.748,
+     "cell_delay_ps": 36.393,
+     "input_arrival_ps": 152.749,
+     "wire_geometry": {
+      "original_tree_wire_um": 38.23199999999994,
+      "overlap_removed_um": 1.241999999999969,
+      "overlap_removed_fraction": 0.032485875706213925,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L0",
+     "fanout": 16,
+     "wire_um": 12.312,
+     "load_ff": 8.352,
+     "cell_delay_ps": 30.566,
+     "input_arrival_ps": 163.957,
+     "wire_geometry": {
+      "original_tree_wire_um": 12.473999999999972,
+      "overlap_removed_um": 0.16200000000000614,
+      "overlap_removed_fraction": 0.012987012987013508,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L1",
+     "fanout": 8,
+     "wire_um": 5.886,
+     "load_ff": 4.176,
+     "cell_delay_ps": 23.609,
+     "input_arrival_ps": 163.949,
+     "wire_geometry": {
+      "original_tree_wire_um": 5.993999999999938,
+      "overlap_removed_um": 0.10800000000000409,
+      "overlap_removed_fraction": 0.01801801801801889,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L2",
+     "fanout": 9,
+     "wire_um": 50.436,
+     "load_ff": 4.698,
+     "cell_delay_ps": 27.853,
+     "input_arrival_ps": 163.625,
+     "wire_geometry": {
+      "original_tree_wire_um": 53.35200000000005,
+      "overlap_removed_um": 2.9160000000000252,
+      "overlap_removed_fraction": 0.054655870445344555,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L3",
+     "fanout": 34,
+     "wire_um": 37.8,
+     "load_ff": 17.748,
+     "cell_delay_ps": 31.949,
+     "input_arrival_ps": 162.316,
+     "wire_geometry": {
+      "original_tree_wire_um": 39.20399999999992,
+      "overlap_removed_um": 1.4039999999999608,
+      "overlap_removed_fraction": 0.03581267217630761,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L4",
+     "fanout": 33,
+     "wire_um": 18.954,
+     "load_ff": 17.226,
+     "cell_delay_ps": 34.411,
+     "input_arrival_ps": 162.505,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.92600000000008,
+      "overlap_removed_um": 0.9720000000000262,
+      "overlap_removed_fraction": 0.04878048780487917,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L5",
+     "fanout": 34,
+     "wire_um": 32.562,
+     "load_ff": 17.748,
+     "cell_delay_ps": 31.521,
+     "input_arrival_ps": 162.281,
+     "wire_geometry": {
+      "original_tree_wire_um": 33.58799999999998,
+      "overlap_removed_um": 1.0259999999999678,
+      "overlap_removed_fraction": 0.03054662379421128,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L6",
+     "fanout": 33,
+     "wire_um": 20.304,
+     "load_ff": 17.226,
+     "cell_delay_ps": 34.581,
+     "input_arrival_ps": 162.712,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.275999999999982,
+      "overlap_removed_um": 0.9720000000000013,
+      "overlap_removed_fraction": 0.04568527918781736,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L7",
+     "fanout": 34,
+     "wire_um": 14.472,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.229,
+     "input_arrival_ps": 162.819,
+     "wire_geometry": {
+      "original_tree_wire_um": 15.389999999999867,
+      "overlap_removed_um": 0.9179999999999904,
+      "overlap_removed_fraction": 0.05964912280701743,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L8",
+     "fanout": 34,
+     "wire_um": 25.164,
+     "load_ff": 17.748,
+     "cell_delay_ps": 30.848,
+     "input_arrival_ps": 162.909,
+     "wire_geometry": {
+      "original_tree_wire_um": 27.054000000000055,
+      "overlap_removed_um": 1.8900000000000183,
+      "overlap_removed_fraction": 0.0698602794411183,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B0L9",
+     "fanout": 34,
+     "wire_um": 37.53,
+     "load_ff": 17.748,
+     "cell_delay_ps": 32.124,
+     "input_arrival_ps": 162.999,
+     "wire_geometry": {
+      "original_tree_wire_um": 38.98800000000003,
+      "overlap_removed_um": 1.4580000000000268,
+      "overlap_removed_fraction": 0.03739612188365717,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L0",
+     "fanout": 33,
+     "wire_um": 29.106,
+     "load_ff": 17.226,
+     "cell_delay_ps": 34.008,
+     "input_arrival_ps": 157.709,
+     "wire_geometry": {
+      "original_tree_wire_um": 29.86200000000002,
+      "overlap_removed_um": 0.7560000000000215,
+      "overlap_removed_fraction": 0.025316455696203236,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L1",
+     "fanout": 34,
+     "wire_um": 22.95,
+     "load_ff": 17.748,
+     "cell_delay_ps": 33.551,
+     "input_arrival_ps": 157.647,
+     "wire_geometry": {
+      "original_tree_wire_um": 24.839999999999755,
+      "overlap_removed_um": 1.8899999999998727,
+      "overlap_removed_fraction": 0.07608695652173475,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L2",
+     "fanout": 33,
+     "wire_um": 54.162,
+     "load_ff": 17.226,
+     "cell_delay_ps": 37.086,
+     "input_arrival_ps": 157.301,
+     "wire_geometry": {
+      "original_tree_wire_um": 55.565999999999974,
+      "overlap_removed_um": 1.4040000000000035,
+      "overlap_removed_fraction": 0.02526724975704575,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L3",
+     "fanout": 34,
+     "wire_um": 33.264,
+     "load_ff": 17.748,
+     "cell_delay_ps": 34.806,
+     "input_arrival_ps": 157.246,
+     "wire_geometry": {
+      "original_tree_wire_um": 34.12799999999997,
+      "overlap_removed_um": 0.8639999999999972,
+      "overlap_removed_fraction": 0.025316455696202472,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L4",
+     "fanout": 33,
+     "wire_um": 19.008,
+     "load_ff": 17.226,
+     "cell_delay_ps": 32.526,
+     "input_arrival_ps": 157.535,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.438000000000052,
+      "overlap_removed_um": 2.430000000000028,
+      "overlap_removed_fraction": 0.11335012594458542,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L5",
+     "fanout": 34,
+     "wire_um": 21.006,
+     "load_ff": 17.748,
+     "cell_delay_ps": 33.266,
+     "input_arrival_ps": 157.564,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.194000000000003,
+      "overlap_removed_um": 1.1879999999999882,
+      "overlap_removed_fraction": 0.05352798053527927,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L6",
+     "fanout": 34,
+     "wire_um": 24.705,
+     "load_ff": 17.748,
+     "cell_delay_ps": 35.913,
+     "input_arrival_ps": 157.38,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.245000000000076,
+      "overlap_removed_um": 0.539999999999992,
+      "overlap_removed_fraction": 0.021390374331550423,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B1L7",
+     "fanout": 34,
+     "wire_um": 42.228,
+     "load_ff": 17.748,
+     "cell_delay_ps": 37.797,
+     "input_arrival_ps": 157.43,
+     "wire_geometry": {
+      "original_tree_wire_um": 43.98299999999996,
+      "overlap_removed_um": 1.7549999999999315,
+      "overlap_removed_fraction": 0.03990178023327042,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L0",
+     "fanout": 16,
+     "wire_um": 40.338,
+     "load_ff": 8.352,
+     "cell_delay_ps": 23.827,
+     "input_arrival_ps": 174.509,
+     "wire_geometry": {
+      "original_tree_wire_um": 40.878000000000014,
+      "overlap_removed_um": 0.539999999999992,
+      "overlap_removed_fraction": 0.013210039630118691,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L1",
+     "fanout": 17,
+     "wire_um": 35.154,
+     "load_ff": 8.874,
+     "cell_delay_ps": 27.056,
+     "input_arrival_ps": 173.565,
+     "wire_geometry": {
+      "original_tree_wire_um": 36.01799999999995,
+      "overlap_removed_um": 0.8639999999999972,
+      "overlap_removed_fraction": 0.023988005997001453,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L2",
+     "fanout": 4,
+     "wire_um": 2.133,
+     "load_ff": 2.088,
+     "cell_delay_ps": 20.836,
+     "input_arrival_ps": 173.146,
+     "wire_geometry": {
+      "original_tree_wire_um": 2.3760000000000012,
+      "overlap_removed_um": 0.242999999999995,
+      "overlap_removed_fraction": 0.10227272727272511,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L3",
+     "fanout": 2,
+     "wire_um": 0.864,
+     "load_ff": 1.044,
+     "cell_delay_ps": 18.781,
+     "input_arrival_ps": 173.047,
+     "wire_geometry": {
+      "original_tree_wire_um": 0.8640000000000008,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L4",
+     "fanout": 2,
+     "wire_um": 4.32,
+     "load_ff": 1.044,
+     "cell_delay_ps": 23.741,
+     "input_arrival_ps": 167.23,
+     "wire_geometry": {
+      "original_tree_wire_um": 4.319999999999993,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L5",
+     "fanout": 8,
+     "wire_um": 7.884,
+     "load_ff": 4.176,
+     "cell_delay_ps": 24.593,
+     "input_arrival_ps": 167.306,
+     "wire_geometry": {
+      "original_tree_wire_um": 7.883999999999958,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L6",
+     "fanout": 18,
+     "wire_um": 9.882,
+     "load_ff": 9.396,
+     "cell_delay_ps": 32.05,
+     "input_arrival_ps": 167.383,
+     "wire_geometry": {
+      "original_tree_wire_um": 9.881999999999977,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L7",
+     "fanout": 34,
+     "wire_um": 20.196,
+     "load_ff": 17.748,
+     "cell_delay_ps": 33.038,
+     "input_arrival_ps": 167.556,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.46599999999998,
+      "overlap_removed_um": 0.27000000000001023,
+      "overlap_removed_fraction": 0.013192612137203678,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L8",
+     "fanout": 34,
+     "wire_um": 21.168,
+     "load_ff": 17.748,
+     "cell_delay_ps": 33.099,
+     "input_arrival_ps": 167.584,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.14000000000007,
+      "overlap_removed_um": 0.9720000000000368,
+      "overlap_removed_fraction": 0.04390243902439177,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L9",
+     "fanout": 32,
+     "wire_um": 14.418,
+     "load_ff": 16.704,
+     "cell_delay_ps": 31.956,
+     "input_arrival_ps": 167.721,
+     "wire_geometry": {
+      "original_tree_wire_um": 14.525999999999982,
+      "overlap_removed_um": 0.10800000000000409,
+      "overlap_removed_fraction": 0.007434944237918507,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L10",
+     "fanout": 34,
+     "wire_um": 21.708,
+     "load_ff": 17.748,
+     "cell_delay_ps": 30.853,
+     "input_arrival_ps": 167.8,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.16599999999994,
+      "overlap_removed_um": 1.4579999999999842,
+      "overlap_removed_fraction": 0.06293706293706242,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L11",
+     "fanout": 34,
+     "wire_um": 21.6,
+     "load_ff": 17.748,
+     "cell_delay_ps": 30.801,
+     "input_arrival_ps": 167.806,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.057999999999993,
+      "overlap_removed_um": 1.4579999999999984,
+      "overlap_removed_fraction": 0.06323185011709596,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B2L12",
+     "fanout": 34,
+     "wire_um": 24.678,
+     "load_ff": 17.748,
+     "cell_delay_ps": 30.719,
+     "input_arrival_ps": 167.82,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.919999999999973,
+      "overlap_removed_um": 1.241999999999976,
+      "overlap_removed_fraction": 0.04791666666666579,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L0",
+     "fanout": 16,
+     "wire_um": 24.516,
+     "load_ff": 8.352,
+     "cell_delay_ps": 23.456,
+     "input_arrival_ps": 177.157,
+     "wire_geometry": {
+      "original_tree_wire_um": 25.541999999999916,
+      "overlap_removed_um": 1.0259999999999678,
+      "overlap_removed_fraction": 0.04016913319238788,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L1",
+     "fanout": 4,
+     "wire_um": 6.723,
+     "load_ff": 2.088,
+     "cell_delay_ps": 19.787,
+     "input_arrival_ps": 176.878,
+     "wire_geometry": {
+      "original_tree_wire_um": 6.9659999999999656,
+      "overlap_removed_um": 0.242999999999995,
+      "overlap_removed_fraction": 0.03488372093023201,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L2",
+     "fanout": 2,
+     "wire_um": 2.052,
+     "load_ff": 1.044,
+     "cell_delay_ps": 21.411,
+     "input_arrival_ps": 176.711,
+     "wire_geometry": {
+      "original_tree_wire_um": 2.0519999999999925,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L3",
+     "fanout": 2,
+     "wire_um": 4.32,
+     "load_ff": 1.044,
+     "cell_delay_ps": 20.925,
+     "input_arrival_ps": 171.983,
+     "wire_geometry": {
+      "original_tree_wire_um": 4.320000000000022,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L4",
+     "fanout": 8,
+     "wire_um": 7.722,
+     "load_ff": 4.176,
+     "cell_delay_ps": 22.427,
+     "input_arrival_ps": 171.919,
+     "wire_geometry": {
+      "original_tree_wire_um": 7.72199999999998,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L5",
+     "fanout": 34,
+     "wire_um": 20.25,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.597,
+     "input_arrival_ps": 171.936,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.35799999999989,
+      "overlap_removed_um": 0.10800000000000409,
+      "overlap_removed_fraction": 0.005305039787798638,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L6",
+     "fanout": 34,
+     "wire_um": 19.062,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.475,
+     "input_arrival_ps": 172.229,
+     "wire_geometry": {
+      "original_tree_wire_um": 19.763999999999868,
+      "overlap_removed_um": 0.7019999999999698,
+      "overlap_removed_fraction": 0.035519125683058816,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L7",
+     "fanout": 34,
+     "wire_um": 20.844,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.674,
+     "input_arrival_ps": 172.339,
+     "wire_geometry": {
+      "original_tree_wire_um": 21.923999999999893,
+      "overlap_removed_um": 1.079999999999984,
+      "overlap_removed_fraction": 0.04926108374384188,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L8",
+     "fanout": 34,
+     "wire_um": 21.654,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.764,
+     "input_arrival_ps": 172.595,
+     "wire_geometry": {
+      "original_tree_wire_um": 23.11200000000005,
+      "overlap_removed_um": 1.4580000000000268,
+      "overlap_removed_fraction": 0.06308411214953373,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L9",
+     "fanout": 34,
+     "wire_um": 21.762,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.779,
+     "input_arrival_ps": 172.524,
+     "wire_geometry": {
+      "original_tree_wire_um": 22.841999999999956,
+      "overlap_removed_um": 1.0800000000000125,
+      "overlap_removed_fraction": 0.047281323877069195,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L10",
+     "fanout": 34,
+     "wire_um": 19.926,
+     "load_ff": 17.748,
+     "cell_delay_ps": 28.599,
+     "input_arrival_ps": 172.678,
+     "wire_geometry": {
+      "original_tree_wire_um": 20.898000000000053,
+      "overlap_removed_um": 0.97199999999998,
+      "overlap_removed_fraction": 0.04651162790697567,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_Q3B3L11",
+     "fanout": 34,
+     "wire_um": 40.23,
+     "load_ff": 17.748,
+     "cell_delay_ps": 24.99,
+     "input_arrival_ps": 172.735,
+     "wire_geometry": {
+      "original_tree_wire_um": 40.77000000000001,
+      "overlap_removed_um": 0.539999999999992,
+      "overlap_removed_fraction": 0.013245033112582584,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_macro0",
+     "fanout": 1,
+     "wire_um": 4.68,
+     "load_ff": 10.373,
+     "cell_delay_ps": 29.3,
+     "input_arrival_ps": 159.797,
+     "wire_geometry": {
+      "original_tree_wire_um": 4.680000000000007,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    },
+    {
+     "driver": "mp_core_macro1",
+     "fanout": 1,
+     "wire_um": 4.68,
+     "load_ff": 10.373,
+     "cell_delay_ps": 30.132,
+     "input_arrival_ps": 160.77,
+     "wire_geometry": {
+      "original_tree_wire_um": 4.679999999999993,
+      "overlap_removed_um": 0.0,
+      "overlap_removed_fraction": 0.0,
+      "network_cycles": 0
+     }
+    }
+   ]
+  }
+ }
+}

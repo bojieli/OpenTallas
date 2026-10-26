@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.qwen.ctlm-lane-ages.v1",
+ "die": "qwen_compute bind v7 (bus_groups.json.gz)",
+ "why": "TOK-QK-QCE: lane age = landed register stages of the bind lane, pin to pin (results/token_pass/qc_v7_1025/rederive_edges.py)",
+ "source": "results/token_pass/qc_v7_1025/bus_groups.json.gz",
+ "lanes": {
+  "R_CMD": {
+   "lane": "tt_ctlm__cmd_cmd_wi",
+   "landed_stages": 9,
+   "asbuilt_stages": 27
+  },
+  "R_HR": {
+   "lane": "tt_ctlm__hr_hr_wi",
+   "landed_stages": 9,
+   "asbuilt_stages": 27
+  },
+  "R_SS": {
+   "lane": "sl_W5_fw__ss_wo_ss5",
+   "landed_stages": 5,
+   "asbuilt_stages": 25
+  },
+  "R_AG": {
+   "lane": "sl_W5_fw__ag_wo_ag5",
+   "landed_stages": 5,
+   "asbuilt_stages": 25
+  },
+  "R_ST": {
+   "lane": "tt_ctlm__tl_st_wi",
+   "landed_stages": 5,
+   "asbuilt_stages": 23
+  },
+  "R_DD": {
+   "lane": "sl_W5_fw__dd_wo_dd_i",
+   "landed_stages": 5,
+   "asbuilt_stages": 28
+  },
+  "R_DR": {
+   "lane": "native59__dr_o_dr_wi",
+   "landed_stages": 5,
+   "asbuilt_stages": 30
+  },
+  "R_CTX": {
+   "lane": "glue__ctx_x_ctx_x",
+   "landed_stages": 10,
+   "asbuilt_stages": 5
+  }
+ },
+ "R_CMD": 9,
+ "R_HR": 9,
+ "R_SS": 5,
+ "R_AG": 5,
+ "R_ST": 5,
+ "R_DD": 5,
+ "R_DR": 5,
+ "R_CTX": 10,
+ "XPF_TRANSPORT_EDGES": 10
+}

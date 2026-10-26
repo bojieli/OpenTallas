@@ -1,0 +1,888 @@
+{
+ "result": {
+  "TT": {
+   "mean": 249.9083117912799,
+   "leaf_min": 234.7045538995909,
+   "leaf_max": 274.6266811402978,
+   "leaf_window": 39.922127240706914,
+   "all_min": 234.7045538995909,
+   "all_max": 321.80183166099613,
+   "all_window": 87.09727776140522,
+   "slew_max": 153.12448054772673
+  },
+  "FF": {
+   "mean": 185.84285679922536,
+   "leaf_min": 175.57800140576867,
+   "leaf_max": 217.24444125540435,
+   "leaf_window": 41.66643984963568,
+   "all_min": 175.57800140576867,
+   "all_max": 260.75724910645073,
+   "all_window": 85.17924770068205,
+   "slew_max": 147.4112130330942
+  }
+ },
+ "routing_model": {
+  "nonleaf": {
+   "horizontal_rc": [
+    0.00901825,
+    0.14025
+   ],
+   "vertical_rc": [
+    0.00949675,
+    0.1078
+   ],
+   "obstacles": [
+    [
+     43.272000000000006,
+     86.4,
+     217.87199999999999,
+     156.888
+    ],
+    [
+     43.272000000000006,
+     181.44,
+     217.87199999999999,
+     251.928
+    ]
+   ],
+   "vertical_obstacles": [],
+   "clearance": 0.0,
+   "merge_collinear": true
+  },
+  "leaf": {
+   "horizontal_rc": [
+    0.0297127,
+    0.1675
+   ],
+   "vertical_rc": [
+    0.031287,
+    0.1315
+   ],
+   "obstacles": [
+    [
+     43.2,
+     86.4,
+     217.944,
+     156.888
+    ],
+    [
+     43.2,
+     181.44,
+     217.944,
+     251.928
+    ]
+   ],
+   "vertical_obstacles": [
+    [
+     43.2,
+     86.4,
+     217.944,
+     156.888
+    ],
+    [
+     43.2,
+     181.44,
+     217.944,
+     251.928
+    ]
+   ],
+   "clearance": 0.0,
+   "merge_collinear": true
+  },
+  "nodes": {
+   "mp_core_macro0": {
+    "horizontal_rc": [
+     0.00901825,
+     0.14025
+    ],
+    "vertical_rc": [
+     0.00949675,
+     0.1078
+    ],
+    "obstacles": [
+     [
+      43.272000000000006,
+      86.4,
+      217.87199999999999,
+      156.888
+     ],
+     [
+      43.272000000000006,
+      181.44,
+      217.87199999999999,
+      251.928
+     ]
+    ],
+    "vertical_obstacles": [],
+    "clearance": 0.0,
+    "merge_collinear": true
+   },
+   "mp_core_macro1": {
+    "horizontal_rc": [
+     0.00901825,
+     0.14025
+    ],
+    "vertical_rc": [
+     0.00949675,
+     0.1078
+    ],
+    "obstacles": [
+     [
+      43.272000000000006,
+      86.4,
+      217.87199999999999,
+      156.888
+     ],
+     [
+      43.272000000000006,
+      181.44,
+      217.87199999999999,
+      251.928
+     ]
+    ],
+    "vertical_obstacles": [],
+    "clearance": 0.0,
+    "merge_collinear": true
+   }
+  }
+ },
+ "wire_geometry": [
+  {
+   "node": "mp_core_entry0",
+   "wire_um": 0.2969999999999686,
+   "original_tree_wire_um": 0.2969999999999686,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_root",
+   "wire_um": 202.49999999999997,
+   "original_tree_wire_um": 202.49999999999997,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_M0",
+   "wire_um": 60.209999999999994,
+   "original_tree_wire_um": 60.209999999999994,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0",
+   "wire_um": 78.219,
+   "original_tree_wire_um": 81.378,
+   "overlap_removed_um": 3.159000000000006,
+   "overlap_removed_fraction": 0.03881884538818853,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B0",
+   "wire_um": 36.88200000000002,
+   "original_tree_wire_um": 37.20600000000002,
+   "overlap_removed_um": 0.32399999999999807,
+   "overlap_removed_fraction": 0.0087082728592162,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B1",
+   "wire_um": 24.786000000000023,
+   "original_tree_wire_um": 24.786000000000023,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B2",
+   "wire_um": 10.043999999999983,
+   "original_tree_wire_um": 10.151999999999987,
+   "overlap_removed_um": 0.10800000000000409,
+   "overlap_removed_fraction": 0.010638297872340843,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B3",
+   "wire_um": 11.825999999999972,
+   "original_tree_wire_um": 11.825999999999972,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_M1",
+   "wire_um": 76.14,
+   "original_tree_wire_um": 76.14,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1",
+   "wire_um": 65.93400000000001,
+   "original_tree_wire_um": 68.31000000000002,
+   "overlap_removed_um": 2.3760000000000048,
+   "overlap_removed_fraction": 0.03478260869565224,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B0",
+   "wire_um": 34.45199999999998,
+   "original_tree_wire_um": 34.64099999999998,
+   "overlap_removed_um": 0.18900000000000006,
+   "overlap_removed_fraction": 0.005455962587685118,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B1",
+   "wire_um": 15.227999999999994,
+   "original_tree_wire_um": 16.848,
+   "overlap_removed_um": 1.6200000000000045,
+   "overlap_removed_fraction": 0.09615384615384642,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B2",
+   "wire_um": 15.929999999999996,
+   "original_tree_wire_um": 16.037999999999997,
+   "overlap_removed_um": 0.10800000000000054,
+   "overlap_removed_fraction": 0.006734006734006769,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B3",
+   "wire_um": 26.378999999999998,
+   "original_tree_wire_um": 29.078999999999994,
+   "overlap_removed_um": 2.6999999999999957,
+   "overlap_removed_fraction": 0.0928505106778086,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_M2",
+   "wire_um": 110.43,
+   "original_tree_wire_um": 110.43,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2",
+   "wire_um": 149.47199999999998,
+   "original_tree_wire_um": 162.108,
+   "overlap_removed_um": 12.636000000000024,
+   "overlap_removed_fraction": 0.0779480346435711,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B0",
+   "wire_um": 15.066000000000003,
+   "original_tree_wire_um": 15.066,
+   "overlap_removed_um": -1.7763568394002505e-15,
+   "overlap_removed_fraction": -1.1790500726139986e-16,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B1",
+   "wire_um": 89.154,
+   "original_tree_wire_um": 89.154,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B2",
+   "wire_um": 68.391,
+   "original_tree_wire_um": 68.931,
+   "overlap_removed_um": 0.539999999999992,
+   "overlap_removed_fraction": 0.007833920877399023,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B3",
+   "wire_um": 247.806,
+   "original_tree_wire_um": 247.806,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_M3",
+   "wire_um": 90.99,
+   "original_tree_wire_um": 90.99,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3",
+   "wire_um": 189.94500000000005,
+   "original_tree_wire_um": 195.02100000000004,
+   "overlap_removed_um": 5.075999999999993,
+   "overlap_removed_fraction": 0.02602796621902253,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B0",
+   "wire_um": 17.54999999999999,
+   "original_tree_wire_um": 17.54999999999999,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B1",
+   "wire_um": 81.45900000000003,
+   "original_tree_wire_um": 84.21300000000002,
+   "overlap_removed_um": 2.7539999999999907,
+   "overlap_removed_fraction": 0.03270278935556256,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B2",
+   "wire_um": 85.34699999999998,
+   "original_tree_wire_um": 85.34699999999998,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B3",
+   "wire_um": 19.656000000000006,
+   "original_tree_wire_um": 20.709000000000003,
+   "overlap_removed_um": 1.0529999999999973,
+   "overlap_removed_fraction": 0.0508474576271185,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B0L0",
+   "wire_um": 28.512000000000008,
+   "original_tree_wire_um": 29.700000000000006,
+   "overlap_removed_um": 1.1879999999999988,
+   "overlap_removed_fraction": 0.03999999999999995,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B0L1",
+   "wire_um": 48.762,
+   "original_tree_wire_um": 50.220000000000006,
+   "overlap_removed_um": 1.4580000000000055,
+   "overlap_removed_fraction": 0.029032258064516234,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B0L2",
+   "wire_um": 48.599999999999966,
+   "original_tree_wire_um": 50.75999999999989,
+   "overlap_removed_um": 2.1599999999999255,
+   "overlap_removed_fraction": 0.04255319148936033,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B0L3",
+   "wire_um": 86.18400000000007,
+   "original_tree_wire_um": 87.58800000000011,
+   "overlap_removed_um": 1.404000000000039,
+   "overlap_removed_fraction": 0.01602959309494494,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B1L0",
+   "wire_um": 75.92399999999991,
+   "original_tree_wire_um": 77.92199999999991,
+   "overlap_removed_um": 1.9980000000000047,
+   "overlap_removed_fraction": 0.02564102564102573,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B1L1",
+   "wire_um": 19.97999999999994,
+   "original_tree_wire_um": 21.221999999999888,
+   "overlap_removed_um": 1.2419999999999476,
+   "overlap_removed_fraction": 0.05852417302798766,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B1L2",
+   "wire_um": 19.76399999999994,
+   "original_tree_wire_um": 20.03399999999992,
+   "overlap_removed_um": 0.2699999999999818,
+   "overlap_removed_fraction": 0.013477088948786208,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B1L3",
+   "wire_um": 20.46599999999996,
+   "original_tree_wire_um": 21.11399999999994,
+   "overlap_removed_um": 0.6479999999999819,
+   "overlap_removed_fraction": 0.030690537084398208,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B2L0",
+   "wire_um": 23.32800000000006,
+   "original_tree_wire_um": 23.81400000000007,
+   "overlap_removed_um": 0.4860000000000113,
+   "overlap_removed_fraction": 0.020408163265306537,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B2L1",
+   "wire_um": 23.382000000000083,
+   "original_tree_wire_um": 24.732000000000085,
+   "overlap_removed_um": 1.3500000000000014,
+   "overlap_removed_fraction": 0.05458515283842782,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B2L2",
+   "wire_um": 23.32799999999996,
+   "original_tree_wire_um": 23.92199999999997,
+   "overlap_removed_um": 0.5940000000000083,
+   "overlap_removed_fraction": 0.024830699774266746,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B2L3",
+   "wire_um": 22.571999999999996,
+   "original_tree_wire_um": 23.597999999999992,
+   "overlap_removed_um": 1.0259999999999962,
+   "overlap_removed_fraction": 0.04347826086956507,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B3L0",
+   "wire_um": 23.003999999999962,
+   "original_tree_wire_um": 24.191999999999986,
+   "overlap_removed_um": 1.1880000000000237,
+   "overlap_removed_fraction": 0.04910714285714386,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B3L1",
+   "wire_um": 24.67799999999992,
+   "original_tree_wire_um": 25.75799999999989,
+   "overlap_removed_um": 1.0799999999999699,
+   "overlap_removed_fraction": 0.0419287211740032,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B3L2",
+   "wire_um": 23.81399999999995,
+   "original_tree_wire_um": 25.16399999999993,
+   "overlap_removed_um": 1.34999999999998,
+   "overlap_removed_fraction": 0.05364806866952725,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q0B3L3",
+   "wire_um": 27.378000000000085,
+   "original_tree_wire_um": 28.1340000000001,
+   "overlap_removed_um": 0.7560000000000144,
+   "overlap_removed_fraction": 0.026871401151631894,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B0L0",
+   "wire_um": 24.515999999999984,
+   "original_tree_wire_um": 25.81199999999997,
+   "overlap_removed_um": 1.2959999999999852,
+   "overlap_removed_fraction": 0.05020920502091999,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B0L1",
+   "wire_um": 83.02500000000003,
+   "original_tree_wire_um": 84.26700000000005,
+   "overlap_removed_um": 1.2420000000000186,
+   "overlap_removed_fraction": 0.014738865748157854,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B0L2",
+   "wire_um": 23.16600000000006,
+   "original_tree_wire_um": 24.732000000000035,
+   "overlap_removed_um": 1.565999999999974,
+   "overlap_removed_fraction": 0.06331877729257528,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B0L3",
+   "wire_um": 44.738999999999976,
+   "original_tree_wire_um": 46.08899999999994,
+   "overlap_removed_um": 1.349999999999966,
+   "overlap_removed_fraction": 0.029291154071469712,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B1L0",
+   "wire_um": 37.25999999999999,
+   "original_tree_wire_um": 39.20399999999998,
+   "overlap_removed_um": 1.9439999999999884,
+   "overlap_removed_fraction": 0.04958677685950386,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B1L1",
+   "wire_um": 23.112000000000016,
+   "original_tree_wire_um": 24.35400000000002,
+   "overlap_removed_um": 1.2420000000000044,
+   "overlap_removed_fraction": 0.050997782705099914,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B1L2",
+   "wire_um": 28.619999999999983,
+   "original_tree_wire_um": 29.861999999999973,
+   "overlap_removed_um": 1.2419999999999902,
+   "overlap_removed_fraction": 0.04159132007233244,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B1L3",
+   "wire_um": 28.35000000000003,
+   "original_tree_wire_um": 29.592000000000027,
+   "overlap_removed_um": 1.2419999999999973,
+   "overlap_removed_fraction": 0.0419708029197079,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B2L0",
+   "wire_um": 25.001999999999985,
+   "original_tree_wire_um": 25.43399999999998,
+   "overlap_removed_um": 0.43199999999999505,
+   "overlap_removed_fraction": 0.016985138004246104,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B2L1",
+   "wire_um": 33.102000000000004,
+   "original_tree_wire_um": 35.261999999999986,
+   "overlap_removed_um": 2.1599999999999824,
+   "overlap_removed_fraction": 0.06125574272588007,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B2L2",
+   "wire_um": 26.513999999999978,
+   "original_tree_wire_um": 28.34999999999997,
+   "overlap_removed_um": 1.8359999999999914,
+   "overlap_removed_fraction": 0.06476190476190453,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B2L3",
+   "wire_um": 24.840000000000018,
+   "original_tree_wire_um": 27.16199999999998,
+   "overlap_removed_um": 2.3219999999999636,
+   "overlap_removed_fraction": 0.08548707753478997,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B3L0",
+   "wire_um": 29.91599999999992,
+   "original_tree_wire_um": 30.941999999999915,
+   "overlap_removed_um": 1.0259999999999962,
+   "overlap_removed_fraction": 0.03315881326352527,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B3L1",
+   "wire_um": 30.07800000000005,
+   "original_tree_wire_um": 31.32000000000002,
+   "overlap_removed_um": 1.2419999999999725,
+   "overlap_removed_fraction": 0.0396551724137922,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B3L2",
+   "wire_um": 48.086999999999975,
+   "original_tree_wire_um": 48.97799999999998,
+   "overlap_removed_um": 0.8910000000000053,
+   "overlap_removed_fraction": 0.018191841234840248,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q1B3L3",
+   "wire_um": 68.93099999999998,
+   "original_tree_wire_um": 72.00899999999997,
+   "overlap_removed_um": 3.0779999999999887,
+   "overlap_removed_fraction": 0.04274465691788513,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B0L0",
+   "wire_um": 31.644,
+   "original_tree_wire_um": 33.20999999999999,
+   "overlap_removed_um": 1.5659999999999883,
+   "overlap_removed_fraction": 0.04715447154471512,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B0L1",
+   "wire_um": 27.864,
+   "original_tree_wire_um": 29.42999999999999,
+   "overlap_removed_um": 1.5659999999999883,
+   "overlap_removed_fraction": 0.05321100917431155,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B0L2",
+   "wire_um": 26.00099999999999,
+   "original_tree_wire_um": 27.215999999999994,
+   "overlap_removed_um": 1.2150000000000034,
+   "overlap_removed_fraction": 0.044642857142857276,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B0L3",
+   "wire_um": 26.567999999999994,
+   "original_tree_wire_um": 28.349999999999973,
+   "overlap_removed_um": 1.7819999999999787,
+   "overlap_removed_fraction": 0.06285714285714217,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B1L0",
+   "wire_um": 98.06400000000001,
+   "original_tree_wire_um": 100.22399999999998,
+   "overlap_removed_um": 2.159999999999968,
+   "overlap_removed_fraction": 0.021551724137930724,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B1L1",
+   "wire_um": 60.938999999999965,
+   "original_tree_wire_um": 63.47699999999993,
+   "overlap_removed_um": 2.5379999999999683,
+   "overlap_removed_fraction": 0.039982985963419364,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B1L2",
+   "wire_um": 30.779999999999973,
+   "original_tree_wire_um": 31.535999999999966,
+   "overlap_removed_um": 0.7559999999999931,
+   "overlap_removed_fraction": 0.023972602739725835,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B1L3",
+   "wire_um": 26.675999999999995,
+   "original_tree_wire_um": 27.215999999999987,
+   "overlap_removed_um": 0.539999999999992,
+   "overlap_removed_fraction": 0.01984126984126956,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B2L0",
+   "wire_um": 99.036,
+   "original_tree_wire_um": 101.89799999999997,
+   "overlap_removed_um": 2.8619999999999663,
+   "overlap_removed_fraction": 0.028086910439851294,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B2L1",
+   "wire_um": 17.118000000000002,
+   "original_tree_wire_um": 17.226000000000006,
+   "overlap_removed_um": 0.10800000000000409,
+   "overlap_removed_fraction": 0.006269592476489264,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B2L2",
+   "wire_um": 17.98199999999997,
+   "original_tree_wire_um": 18.683999999999976,
+   "overlap_removed_um": 0.7020000000000053,
+   "overlap_removed_fraction": 0.037572254335260444,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B2L3",
+   "wire_um": 17.387999999999998,
+   "original_tree_wire_um": 18.25199999999999,
+   "overlap_removed_um": 0.8639999999999901,
+   "overlap_removed_fraction": 0.04733727810650836,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B3L0",
+   "wire_um": 29.105999999999998,
+   "original_tree_wire_um": 30.50999999999998,
+   "overlap_removed_um": 1.4039999999999822,
+   "overlap_removed_fraction": 0.04601769911504369,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B3L1",
+   "wire_um": 120.09599999999998,
+   "original_tree_wire_um": 121.82399999999996,
+   "overlap_removed_um": 1.7279999999999802,
+   "overlap_removed_fraction": 0.014184397163120411,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B3L2",
+   "wire_um": 187.27200000000002,
+   "original_tree_wire_um": 187.92000000000002,
+   "overlap_removed_um": 0.6479999999999961,
+   "overlap_removed_fraction": 0.0034482758620689447,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q2B3L3",
+   "wire_um": 28.02600000000001,
+   "original_tree_wire_um": 30.23999999999996,
+   "overlap_removed_um": 2.213999999999949,
+   "overlap_removed_fraction": 0.07321428571428412,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B0L0",
+   "wire_um": 29.915999999999983,
+   "original_tree_wire_um": 31.319999999999958,
+   "overlap_removed_um": 1.403999999999975,
+   "overlap_removed_fraction": 0.044827586206895816,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B0L1",
+   "wire_um": 25.676999999999985,
+   "original_tree_wire_um": 27.080999999999904,
+   "overlap_removed_um": 1.4039999999999182,
+   "overlap_removed_fraction": 0.051844466600196565,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B0L2",
+   "wire_um": 28.026000000000035,
+   "original_tree_wire_um": 29.48399999999998,
+   "overlap_removed_um": 1.4579999999999451,
+   "overlap_removed_fraction": 0.04945054945054762,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B0L3",
+   "wire_um": 27.647999999999936,
+   "original_tree_wire_um": 28.94399999999993,
+   "overlap_removed_um": 1.2959999999999958,
+   "overlap_removed_fraction": 0.04477611940298504,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B1L0",
+   "wire_um": 30.455999999999985,
+   "original_tree_wire_um": 32.61599999999997,
+   "overlap_removed_um": 2.159999999999986,
+   "overlap_removed_fraction": 0.06622516556291354,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B1L1",
+   "wire_um": 32.562000000000026,
+   "original_tree_wire_um": 33.85800000000001,
+   "overlap_removed_um": 1.2959999999999852,
+   "overlap_removed_fraction": 0.038277511961722036,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B1L2",
+   "wire_um": 104.00399999999999,
+   "original_tree_wire_um": 106.37999999999998,
+   "overlap_removed_um": 2.3759999999999906,
+   "overlap_removed_fraction": 0.022335025380710576,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B1L3",
+   "wire_um": 51.00300000000007,
+   "original_tree_wire_um": 52.920000000000115,
+   "overlap_removed_um": 1.9170000000000442,
+   "overlap_removed_fraction": 0.03622448979591912,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B2L0",
+   "wire_um": 26.02800000000005,
+   "original_tree_wire_um": 27.324000000000055,
+   "overlap_removed_um": 1.2960000000000065,
+   "overlap_removed_fraction": 0.047430830039525834,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B2L1",
+   "wire_um": 30.239999999999938,
+   "original_tree_wire_um": 31.535999999999945,
+   "overlap_removed_um": 1.2960000000000065,
+   "overlap_removed_fraction": 0.04109589041095918,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B2L2",
+   "wire_um": 108.37799999999996,
+   "original_tree_wire_um": 110.37599999999995,
+   "overlap_removed_um": 1.9979999999999905,
+   "overlap_removed_fraction": 0.018101761252446107,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B2L3",
+   "wire_um": 65.63699999999994,
+   "original_tree_wire_um": 69.25499999999994,
+   "overlap_removed_um": 3.617999999999995,
+   "overlap_removed_fraction": 0.05224171539961011,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B3L0",
+   "wire_um": 25.81199999999987,
+   "original_tree_wire_um": 26.729999999999848,
+   "overlap_removed_um": 0.917999999999978,
+   "overlap_removed_fraction": 0.03434343434343371,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B3L1",
+   "wire_um": 34.533000000000044,
+   "original_tree_wire_um": 36.20700000000005,
+   "overlap_removed_um": 1.6740000000000066,
+   "overlap_removed_fraction": 0.04623415361670407,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B3L2",
+   "wire_um": 33.858000000000004,
+   "original_tree_wire_um": 35.099999999999966,
+   "overlap_removed_um": 1.2419999999999618,
+   "overlap_removed_fraction": 0.03538461538461433,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_Q3B3L3",
+   "wire_um": 66.66299999999993,
+   "original_tree_wire_um": 67.5809999999999,
+   "overlap_removed_um": 0.917999999999978,
+   "overlap_removed_fraction": 0.01358369956052706,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_macro0",
+   "wire_um": 5.382000000000005,
+   "original_tree_wire_um": 5.382000000000005,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  },
+  {
+   "node": "mp_core_macro1",
+   "wire_um": 5.381999999999991,
+   "original_tree_wire_um": 5.381999999999991,
+   "overlap_removed_um": 0.0,
+   "overlap_removed_fraction": 0.0,
+   "network_cycles": 0
+  }
+ ],
+ "qualification": "MODEL-ONLY conditional; merged same-layer conductor union, onlydeclaredturn/pinvias, loops solved; zeroR/Cvias/no coupling orfullcapacitymargin; no empiricalcorrection ordriverchange"
+}
