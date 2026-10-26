@@ -9,10 +9,11 @@ module ot_hgi_coll_tkm_tp192_tile_core (
     input wire tile_clk,
     input wire tile_clr,
     input wire tile_conv,
+    output reg tile_clr_o,
+    output wire tile_conv_o,
     input wire tile_ins_v,
     input wire [343:0] tile_ins_b,
     input wire [343:0] tile_up_in,
-    input wire [5:0] tile_tid,
     output wire tile_ovf_v,
     output wire [343:0] tile_ovf_b,
     output wire [343:0] tile_up_out
@@ -59,7 +60,7 @@ module ot_hgi_coll_tkm_tp192_tile_core (
     assign u_tile__clk_r1 = tile_clk;
     assign u_tile__clk_r2 = tile_clk;
     assign u_tile__clk_r3 = tile_clk;
-    assign u_tile__tid = tile_tid;   // strap (replica constant at the parent)
+    assign u_tile__tid = 6'b000000;   // dead tau-only ID; owner ruling 10-25 14:44
     assign u_tile__clr = tile_clr;
     assign u_tile__conv = tile_conv;
     assign u_tile__tau_t[0] = 1'b0;
@@ -81,5 +82,8 @@ module ot_hgi_coll_tkm_tp192_tile_core (
     assign tile_ovf_b[343:0] = u_tile__ovf_b[343:0];
     assign u_tile__up_in[343:0] = tile_up_in[343:0];
     assign tile_up_out[343:0] = u_tile__up_out[343:0];
+    // Native chain control: clr +1 core edge; conv +0 core edge (shells remain separately priced).
+    always @(posedge tile_clk) tile_clr_o <= tile_clr;
+    assign tile_conv_o = tile_conv;
 endmodule
 `default_nettype wire
