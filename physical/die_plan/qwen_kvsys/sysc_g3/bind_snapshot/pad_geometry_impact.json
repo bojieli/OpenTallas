@@ -1,0 +1,4518 @@
+{
+ "status": "GEOMETRY OWED; NO ROUTE AUTHORIZATION",
+ "bound_types": 51,
+ "main_types": 40,
+ "extra_physical_masters": [
+  "kv3_hg_v1p2",
+  "kv3_hg_v1p3",
+  "kv3_hg_v1p4",
+  "kv3_hg_v1p5",
+  "kv3_hg_v1p6",
+  "kv3_pv_v1n",
+  "kv3_pv_v2n",
+  "kv3_pv_v3n",
+  "kv3_pv_v4n",
+  "kv3_pv_v5n",
+  "kv3_pv_v6n"
+ ],
+ "direct_landing_ff": 44740,
+ "position_bank_ff": 1456,
+ "total_emitted_landing_ff": 46196,
+ "notes": [
+  "All new pad banks must receive explicit macro-free cell placement and clock taps before P&R/STA",
+  "Anchor bands are source-port guidance, not a free-space or consumer-reach proof",
+  "Existing FT station slots remain distinct; no claim they host these new landing FFs",
+  "Physical type additions are real copied plan entries, not aliases"
+ ],
+ "types": [
+  {
+   "type": "kv3_hg",
+   "module": "kv3_hg_part",
+   "canonical_base": "kv3_hg",
+   "new_physical_master": false,
+   "instances": [
+    "hg_EN_0",
+    "hg_ES_0",
+    "hg_WN_0",
+    "hg_WS_0"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hg_v1",
+   "module": "kv3_hg_v1_part",
+   "canonical_base": "kv3_hg_v1",
+   "new_physical_master": false,
+   "instances": [
+    "hg_EN_1",
+    "hg_ES_1",
+    "hg_WN_1",
+    "hg_WS_1"
+   ],
+   "direct_landing_ff_per_master": 801,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 267,
+   "anchors": [
+    {
+     "bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "reference": "hg_EN_1",
+     "ff": 801,
+     "max_depth": 3,
+     "required_cell_area_um2": 233.57160000000002,
+     "consumers": [
+      [
+       "u_astk_u_strip_u_strip_g_ep_p_u_ep",
+       "qkd_astk_ep_s_e",
+       "xi"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1215.6756000000003,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "module": "kv3_hg_v1p2",
+   "canonical_base": "kv3_hg_v1",
+   "new_physical_master": true,
+   "instances": [
+    "hg_EN_2",
+    "hg_ES_2",
+    "hg_WN_2",
+    "hg_WS_2"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "module": "kv3_hg_v1p3",
+   "canonical_base": "kv3_hg_v1",
+   "new_physical_master": true,
+   "instances": [
+    "hg_EN_3",
+    "hg_ES_3",
+    "hg_WN_3",
+    "hg_WS_3"
+   ],
+   "direct_landing_ff_per_master": 801,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 267,
+   "anchors": [
+    {
+     "bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "reference": "hg_EN_3",
+     "ff": 801,
+     "max_depth": 3,
+     "required_cell_area_um2": 233.57160000000002,
+     "consumers": [
+      [
+       "u_astk_u_strip_u_strip_g_ep_p_u_ep",
+       "qkd_astk_ep_s_e",
+       "xi"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1215.6756000000003,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "module": "kv3_hg_v1p4",
+   "canonical_base": "kv3_hg_v1",
+   "new_physical_master": true,
+   "instances": [
+    "hg_EN_4",
+    "hg_ES_4",
+    "hg_WN_4",
+    "hg_WS_4"
+   ],
+   "direct_landing_ff_per_master": 15,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 5,
+   "anchors": [
+    {
+     "bus": "i_kvs_hroot_Q_o_cN",
+     "reference": "hg_EN_4",
+     "ff": 15,
+     "max_depth": 3,
+     "required_cell_area_um2": 4.3740000000000006,
+     "consumers": [
+      [
+       "u_ectl",
+       "qkd_ectl3_kiss_st",
+       "cfg"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      648.8667999999996,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "module": "kv3_hg_v1p5",
+   "canonical_base": "kv3_hg_v1",
+   "new_physical_master": true,
+   "instances": [
+    "hg_EN_5",
+    "hg_ES_5",
+    "hg_WN_5",
+    "hg_WS_5"
+   ],
+   "direct_landing_ff_per_master": 816,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 272,
+   "anchors": [
+    {
+     "bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "reference": "hg_EN_5",
+     "ff": 801,
+     "max_depth": 3,
+     "required_cell_area_um2": 233.57160000000002,
+     "consumers": [
+      [
+       "u_astk_u_strip_u_strip_g_ep_p_u_ep",
+       "qkd_astk_ep_s_e",
+       "xi"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1215.6756000000003,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_kvs_hroot_Q_o_cN",
+     "reference": "hg_EN_5",
+     "ff": 15,
+     "max_depth": 3,
+     "required_cell_area_um2": 4.3740000000000006,
+     "consumers": [
+      [
+       "u_ectl",
+       "qkd_ectl3_kiss_st",
+       "cfg"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      648.8667999999996,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "module": "kv3_hg_v1p6",
+   "canonical_base": "kv3_hg_v1",
+   "new_physical_master": true,
+   "instances": [
+    "hg_EN_6",
+    "hg_ES_6",
+    "hg_WN_6",
+    "hg_WS_6"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hg_v3",
+   "module": "kv3_hg_v3_part",
+   "canonical_base": "kv3_hg_v3",
+   "new_physical_master": false,
+   "instances": [
+    "hg_EN_7",
+    "hg_ES_7",
+    "hg_WN_7",
+    "hg_WS_7"
+   ],
+   "direct_landing_ff_per_master": 801,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 267,
+   "anchors": [
+    {
+     "bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "reference": "hg_EN_7",
+     "ff": 801,
+     "max_depth": 3,
+     "required_cell_area_um2": 233.57160000000002,
+     "consumers": [
+      [
+       "u_astk_u_strip_u_strip_g_ep_p_u_ep",
+       "qkd_astk_ep_s_e",
+       "xi"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1215.6756000000003,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_hgi",
+   "module": "kv3_hgi_part",
+   "canonical_base": "kv3_hgi",
+   "new_physical_master": false,
+   "instances": [
+    "hgi_ES_0",
+    "hgi_WS_0"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "module": "kv3_hgi_v1_part",
+   "canonical_base": "kv3_hgi_v1",
+   "new_physical_master": false,
+   "instances": [
+    "hgi_ES_1",
+    "hgi_ES_2",
+    "hgi_ES_3",
+    "hgi_ES_4",
+    "hgi_ES_5",
+    "hgi_ES_6",
+    "hgi_WS_1",
+    "hgi_WS_2",
+    "hgi_WS_3",
+    "hgi_WS_4",
+    "hgi_WS_5",
+    "hgi_WS_6"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "module": "kv3_hgi_v2_part",
+   "canonical_base": "kv3_hgi_v2",
+   "new_physical_master": false,
+   "instances": [
+    "hgi_ES_7",
+    "hgi_WS_7"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "module": "kv3_hgi_v3_part",
+   "canonical_base": "kv3_hgi_v3",
+   "new_physical_master": false,
+   "instances": [
+    "hgi_EN_0"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "module": "kv3_hgi_v4_part",
+   "canonical_base": "kv3_hgi_v4",
+   "new_physical_master": false,
+   "instances": [
+    "hgi_EN_1",
+    "hgi_EN_2",
+    "hgi_EN_3",
+    "hgi_EN_4",
+    "hgi_EN_5",
+    "hgi_EN_6"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "module": "kv3_hgi_v5_part",
+   "canonical_base": "kv3_hgi_v5",
+   "new_physical_master": false,
+   "instances": [
+    "hgi_EN_7"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "module": "kv3_hgi_v6_part",
+   "canonical_base": "kv3_hgi_v6",
+   "new_physical_master": false,
+   "instances": [
+    "hgi_WN_0"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "module": "kv3_hgi_v7_part",
+   "canonical_base": "kv3_hgi_v7",
+   "new_physical_master": false,
+   "instances": [
+    "hgi_WN_1",
+    "hgi_WN_2",
+    "hgi_WN_3",
+    "hgi_WN_4",
+    "hgi_WN_5",
+    "hgi_WN_6"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "module": "kv3_hgi_v8_part",
+   "canonical_base": "kv3_hgi_v8",
+   "new_physical_master": false,
+   "instances": [
+    "hgi_WN_7"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hroot",
+   "module": "kv3_hroot_part",
+   "canonical_base": "kv3_hroot",
+   "new_physical_master": false,
+   "instances": [
+    "hroot_EN",
+    "hroot_ES",
+    "hroot_WN",
+    "hroot_WS"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hub_C",
+   "module": "kv3_hub_C_part",
+   "canonical_base": "kv3_hub_C",
+   "new_physical_master": false,
+   "instances": [
+    "hub_C"
+   ],
+   "direct_landing_ff_per_master": 2500,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 866,
+   "anchors": [
+    {
+     "bus": "i_astk_WN__g_phys_fault_u_fault_q",
+     "reference": "hub_C",
+     "ff": 4,
+     "max_depth": 4,
+     "required_cell_area_um2": 1.1664,
+     "consumers": [
+      [
+       "u_ahub",
+       "qkd_ahub_static_dw",
+       "ap0"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      116.6239999999998
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_seq__g_fan_N__u_fan_af_o_d3",
+     "reference": "hub_C",
+     "ff": 7,
+     "max_depth": 7,
+     "required_cell_area_um2": 2.0412000000000003,
+     "consumers": [
+      [
+       "u_ahub",
+       "qkd_ahub_static_dw",
+       "ap0"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      1665.4479999999985
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_astk_WS__g_phys_fault_u_fault_q",
+     "reference": "hub_C",
+     "ff": 2,
+     "max_depth": 2,
+     "required_cell_area_um2": 0.5832,
+     "consumers": [
+      [
+       "u_ahub",
+       "qkd_ahub_static_dw",
+       "ap1"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      1661.4079999999994
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_astk_WS__u_strip_u_strip_u_ctl_ap",
+     "reference": "hub_C",
+     "ff": 40,
+     "max_depth": 1,
+     "required_cell_area_um2": 11.664000000000001,
+     "consumers": [
+      [
+       "u_ahub",
+       "qkd_ahub_static_dw",
+       "ap1"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      1646.4959999999992
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_seq__g_fan_N__u_fan_af_o_d1",
+     "reference": "hub_C",
+     "ff": 7,
+     "max_depth": 7,
+     "required_cell_area_um2": 2.0412000000000003,
+     "consumers": [
+      [
+       "u_ahub",
+       "qkd_ahub_static_dw",
+       "ap3"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      1197.105599999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_astk_EN__u_strip_u_strip_u_ctl_ap",
+     "reference": "hub_C",
+     "ff": 41,
+     "max_depth": 1,
+     "required_cell_area_um2": 11.9556,
+     "consumers": [
+      [
+       "u_ahub",
+       "qkd_ahub_static_dw",
+       "ap3"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      1086.7759999999998
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_att_tx_beat",
+     "reference": "hub_C",
+     "ff": 20,
+     "max_depth": 4,
+     "required_cell_area_um2": 5.832000000000001,
+     "consumers": [
+      [
+       "u_kvs_attn",
+       "qkd_kvs_attn_fl",
+       "d2d__att_tx_beat"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      1146.095199999998
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_att_tx_kind",
+     "reference": "hub_C",
+     "ff": 16,
+     "max_depth": 4,
+     "required_cell_area_um2": 4.6656,
+     "consumers": [
+      [
+       "u_kvs_attn",
+       "qkd_kvs_attn_fl",
+       "d2d__att_tx_kind"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      1148.848
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_att_tx_slot",
+     "reference": "hub_C",
+     "ff": 4,
+     "max_depth": 4,
+     "required_cell_area_um2": 1.1664,
+     "consumers": [
+      [
+       "u_kvs_attn",
+       "qkd_kvs_attn_fl",
+       "d2d__att_tx_slot"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      1160.3719999999994
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_kvn_word_generation",
+     "reference": "hub_C",
+     "ff": 12,
+     "max_depth": 6,
+     "required_cell_area_um2": 3.4992,
+     "consumers": [
+      [
+       "u_kvs_attn",
+       "qkd_kvs_attn_fl",
+       "d2d__rx_payload"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      1151.4807999999994
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_kvn_word_identity",
+     "reference": "hub_C",
+     "ff": 295,
+     "max_depth": 5,
+     "required_cell_area_um2": 86.022,
+     "consumers": [
+      [
+       "u_kvs_attn",
+       "qkd_kvs_attn_fl",
+       "d2d__rx_payload"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      1056.2775999999994
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_skw",
+     "reference": "hub_C",
+     "ff": 12,
+     "max_depth": 1,
+     "required_cell_area_um2": 3.4992,
+     "consumers": [
+      [
+       "u_kvs_attn",
+       "qkd_kvs_attn_fl",
+       "d2d__srx"
+      ],
+      [
+       "u_kvs_ctl",
+       "qkd_kvs_ctl",
+       "d2d__srx"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      1139.6855999999989
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_srx",
+     "reference": "hub_C",
+     "ff": 1056,
+     "max_depth": 2,
+     "required_cell_area_um2": 307.92960000000005,
+     "consumers": [
+      [
+       "u_kvs_attn",
+       "qkd_kvs_attn_fl",
+       "d2d__srx"
+      ],
+      [
+       "u_kvs_ctl",
+       "qkd_kvs_ctl",
+       "d2d__kvn_word_generation"
+      ],
+      [
+       "u_kvs_ctl",
+       "qkd_kvs_ctl",
+       "d2d__kvn_word_identity"
+      ],
+      [
+       "u_kvs_ctl",
+       "qkd_kvs_ctl",
+       "d2d__skw"
+      ],
+      [
+       "u_kvs_ctl",
+       "qkd_kvs_ctl",
+       "d2d__srx"
+      ],
+      [
+       "u_seq_u_core",
+       "qkd_seq_core_static_s",
+       "kvn_word_tag"
+      ],
+      [
+       "u_seq_u_core",
+       "qkd_seq_core_static_s",
+       "kvn_word_valid"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      614.7399999999998
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_svc",
+     "reference": "hub_C",
+     "ff": 984,
+     "max_depth": 6,
+     "required_cell_area_um2": 286.93440000000004,
+     "consumers": [
+      [
+       "u_kvs_ctl",
+       "qkd_kvs_ctl",
+       "d2d__svc"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      924.0487999999987
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "module": "kv3_hub_Ei_part",
+   "canonical_base": "kv3_hub_Ei",
+   "new_physical_master": false,
+   "instances": [
+    "hub_Ei"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "module": "kv3_hub_Eo_part",
+   "canonical_base": "kv3_hub_Eo",
+   "new_physical_master": false,
+   "instances": [
+    "hub_Eo"
+   ],
+   "direct_landing_ff_per_master": 1650,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 550,
+   "anchors": [
+    {
+     "bus": "i_astk_EN__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "reference": "hub_Eo",
+     "ff": 801,
+     "max_depth": 3,
+     "required_cell_area_um2": 233.57160000000002,
+     "consumers": [
+      [
+       "u_astk_EN",
+       "kv3_astk",
+       "u_strip_u_strip_u_ctl__xi"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1248.9080000000004,
+      1676.1599999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_kvs_attn_acal_ES",
+     "reference": "hub_Eo",
+     "ff": 48,
+     "max_depth": 3,
+     "required_cell_area_um2": 13.9968,
+     "consumers": [
+      [
+       "u_astk_ES",
+       "kv3_astk",
+       "u_strip_u_strip_u_ctl__cal"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      585.7194999999992
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_astk_ES__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "reference": "hub_Eo",
+     "ff": 801,
+     "max_depth": 3,
+     "required_cell_area_um2": 233.57160000000002,
+     "consumers": [
+      [
+       "u_astk_ES",
+       "kv3_astk",
+       "u_strip_u_strip_u_ctl__xi"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1248.9080000000004,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "module": "kv3_hub_Wi_part",
+   "canonical_base": "kv3_hub_Wi",
+   "new_physical_master": false,
+   "instances": [
+    "hub_Wi"
+   ],
+   "direct_landing_ff_per_master": 6802,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 1198,
+   "anchors": [
+    {
+     "bus": "i_dNd_kv_emb_tx_slot",
+     "reference": "hub_Wi",
+     "ff": 15,
+     "max_depth": 15,
+     "required_cell_area_um2": 4.3740000000000006,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "abort_drained"
+      ],
+      [
+       "u_kvs_emb",
+       "qkd_kvs_emb",
+       "d2d__svc"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      331.37850000000026,
+      1676.1599999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_lpf",
+     "reference": "hub_Wi",
+     "ff": 15,
+     "max_depth": 15,
+     "required_cell_area_um2": 4.3740000000000006,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "abort_drained"
+      ],
+      [
+       "u_kvs_emb",
+       "qkd_kvs_emb",
+       "d2d__svc"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      331.94060000000036,
+      1676.1599999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_lup",
+     "reference": "hub_Wi",
+     "ff": 15,
+     "max_depth": 15,
+     "required_cell_area_um2": 4.3740000000000006,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "abort_drained"
+      ],
+      [
+       "u_kvs_emb",
+       "qkd_kvs_emb",
+       "d2d__svc"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      329.8063000000002,
+      1676.1599999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_ES_N_ao",
+     "reference": "hub_Wi",
+     "ff": 32,
+     "max_depth": 1,
+     "required_cell_area_um2": 9.3312,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "chain_a"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      1278.7199999999998,
+      1507.152
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_WS_N_co",
+     "reference": "hub_Wi",
+     "ff": 128,
+     "max_depth": 4,
+     "required_cell_area_um2": 37.3248,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "chain_c"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      394.4495999999981
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_ES_N_co",
+     "reference": "hub_Wi",
+     "ff": 96,
+     "max_depth": 3,
+     "required_cell_area_um2": 27.9936,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "chain_c"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      1278.7199999999998,
+      1510.2319999999982
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_EN_N_co",
+     "reference": "hub_Wi",
+     "ff": 64,
+     "max_depth": 2,
+     "required_cell_area_um2": 18.6624,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "chain_c"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      1278.7199999999998,
+      1491.7199999999993
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_rcy",
+     "reference": "hub_Wi",
+     "ff": 512,
+     "max_depth": 16,
+     "required_cell_area_um2": 149.2992,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "engine_result_cause"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "engine_result_cycles"
+      ],
+      [
+       "u_kvs_emb",
+       "qkd_kvs_emb",
+       "d2d__svc"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      7.826099999999769,
+      1676.1599999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_rec_rx",
+     "reference": "hub_Wi",
+     "ff": 4342,
+     "max_depth": 8,
+     "required_cell_area_um2": 1266.1272000000001,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "engine_result_cycles"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "engine_result_done"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "engine_result_gen"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "engine_result_tag"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "engine_result_token"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "engine_result_v"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "engine_result_value"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "execution_active"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "link_up"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "native_admit_ready"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "native_collective_busy"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "native_collective_drained"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "native_host_drained"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "native_kv_drained"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "native_kv_flush"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "native_link_reset_seen"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "native_links_drained"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "native_retrained"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "native_vm_drained"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "obs_d2d_recovery_cycles"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "record_rx"
+      ],
+      [
+       "u_kvs_emb",
+       "qkd_kvs_emb",
+       "d2d__svc"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      581.3941,
+      1676.1599999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dNd_kv_svc",
+     "reference": "hub_Wi",
+     "ff": 1002,
+     "max_depth": 6,
+     "required_cell_area_um2": 292.1832,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "record_rx"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "record_rx_v"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "record_send_kind"
+      ],
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "record_witness_slot"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1252.4522000000002,
+      1676.1599999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_WS_N_sko",
+     "reference": "hub_Wi",
+     "ff": 32,
+     "max_depth": 1,
+     "required_cell_area_um2": 9.3312,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "slice_ack"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      404.771999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_WN_N_sko",
+     "reference": "hub_Wi",
+     "ff": 64,
+     "max_depth": 2,
+     "required_cell_area_um2": 18.6624,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "slice_ack"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      384.1272000000008
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_EN_N_sko",
+     "reference": "hub_Wi",
+     "ff": 96,
+     "max_depth": 3,
+     "required_cell_area_um2": 27.9936,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "slice_ack"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      1278.7199999999998,
+      1500.9920000000002
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_WN_N_sdo",
+     "reference": "hub_Wi",
+     "ff": 32,
+     "max_depth": 1,
+     "required_cell_area_um2": 9.3312,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "slice_boot_done"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      377.2456000000002
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_EN_N_sdo",
+     "reference": "hub_Wi",
+     "ff": 96,
+     "max_depth": 3,
+     "required_cell_area_um2": 27.9936,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "slice_boot_done"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      1278.7199999999998,
+      1494.815999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_WS_N_sfo",
+     "reference": "hub_Wi",
+     "ff": 32,
+     "max_depth": 1,
+     "required_cell_area_um2": 9.3312,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "slice_boot_fault"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      401.3311999999987
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_ES_N_sfo",
+     "reference": "hub_Wi",
+     "ff": 32,
+     "max_depth": 1,
+     "required_cell_area_um2": 9.3312,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "slice_boot_fault"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      1278.7199999999998,
+      1516.391999999998
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_EN_N_sfo",
+     "reference": "hub_Wi",
+     "ff": 64,
+     "max_depth": 2,
+     "required_cell_area_um2": 18.6624,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "slice_boot_fault"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      1278.7199999999998,
+      1497.9119999999984
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_WS_N_soo",
+     "reference": "hub_Wi",
+     "ff": 32,
+     "max_depth": 1,
+     "required_cell_area_um2": 9.3312,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "slice_boot_ok"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      408.21279999999933
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_hsl_EN_N_soo",
+     "reference": "hub_Wi",
+     "ff": 96,
+     "max_depth": 3,
+     "required_cell_area_um2": 27.9936,
+     "consumers": [
+      [
+       "u_host",
+       "qkd_host_root_admission_obsx_bo1_c45",
+       "slice_boot_ok"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      1278.7199999999998,
+      1504.0719999999983
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_dcal_dob",
+     "reference": "hub_Wi",
+     "ff": 5,
+     "max_depth": 5,
+     "required_cell_area_um2": 1.4580000000000002,
+     "consumers": [
+      [
+       "u_kvs_emb",
+       "qkd_kvs_emb",
+       "d2d__emb_tx_slot"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      329.1082000000001,
+      1676.1599999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "module": "kv3_hub_Wo_part",
+   "canonical_base": "kv3_hub_Wo",
+   "new_physical_master": false,
+   "instances": [
+    "hub_Wo"
+   ],
+   "direct_landing_ff_per_master": 1650,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 550,
+   "anchors": [
+    {
+     "bus": "i_astk_WN__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "reference": "hub_Wo",
+     "ff": 801,
+     "max_depth": 3,
+     "required_cell_area_um2": 233.57160000000002,
+     "consumers": [
+      [
+       "u_astk_WN",
+       "kv3_astk",
+       "u_strip_u_strip_u_ctl__xi"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      29.812000000000126,
+      1676.1599999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_kvs_attn_acal_WS",
+     "reference": "hub_Wo",
+     "ff": 48,
+     "max_depth": 3,
+     "required_cell_area_um2": 13.9968,
+     "consumers": [
+      [
+       "u_astk_WS",
+       "kv3_astk",
+       "u_strip_u_strip_u_ctl__cal"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      1278.72,
+      1181.648799999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_astk_WS__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "reference": "hub_Wo",
+     "ff": 801,
+     "max_depth": 3,
+     "required_cell_area_um2": 233.57160000000002,
+     "consumers": [
+      [
+       "u_astk_WS",
+       "kv3_astk",
+       "u_strip_u_strip_u_ctl__xi"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      29.812000000000126,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_io_cor",
+   "module": "kv3_io_cor_part",
+   "canonical_base": "kv3_io_cor",
+   "new_physical_master": false,
+   "instances": [
+    "io_W3"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "module": "kv3_io_cor_v1_part",
+   "canonical_base": "kv3_io_cor_v1",
+   "new_physical_master": false,
+   "instances": [
+    "io_E5"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_io_ft",
+   "module": "kv3_io_ft_part",
+   "canonical_base": "kv3_io_ft",
+   "new_physical_master": false,
+   "instances": [
+    "io_W2"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_io_ft_v1",
+   "module": "kv3_io_ft_v1_part",
+   "canonical_base": "kv3_io_ft_v1",
+   "new_physical_master": false,
+   "instances": [
+    "io_E6"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_pc",
+   "module": "kv3_pc_part",
+   "canonical_base": "kv3_pc",
+   "new_physical_master": false,
+   "instances": [
+    "pc_EN_0",
+    "pc_ES_0",
+    "pc_WN_0",
+    "pc_WS_0"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 52,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_pc_v1",
+   "module": "kv3_pc_v1_part",
+   "canonical_base": "kv3_pc_v1",
+   "new_physical_master": false,
+   "instances": [
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 52,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_pc_v3",
+   "module": "kv3_pc_v3_part",
+   "canonical_base": "kv3_pc_v3",
+   "new_physical_master": false,
+   "instances": [
+    "pc_EN_7",
+    "pc_ES_7",
+    "pc_WN_7",
+    "pc_WS_7"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_phy",
+   "module": "kv3_phy_part",
+   "canonical_base": "kv3_phy",
+   "new_physical_master": false,
+   "instances": [
+    "phy_EN_0",
+    "phy_ES_0",
+    "phy_WN_0",
+    "phy_WS_0"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_phy_v1",
+   "module": "kv3_phy_v1_part",
+   "canonical_base": "kv3_phy_v1",
+   "new_physical_master": false,
+   "instances": [
+    "phy_EN_1",
+    "phy_EN_2",
+    "phy_EN_3",
+    "phy_EN_4",
+    "phy_EN_5",
+    "phy_EN_6",
+    "phy_EN_7",
+    "phy_ES_1",
+    "phy_ES_2",
+    "phy_ES_3",
+    "phy_ES_4",
+    "phy_ES_5",
+    "phy_ES_6",
+    "phy_ES_7",
+    "phy_WN_1",
+    "phy_WN_2",
+    "phy_WN_3",
+    "phy_WN_4",
+    "phy_WN_5",
+    "phy_WN_6",
+    "phy_WN_7",
+    "phy_WS_1",
+    "phy_WS_2",
+    "phy_WS_3",
+    "phy_WS_4",
+    "phy_WS_5",
+    "phy_WS_6",
+    "phy_WS_7"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_pv",
+   "module": "kv3_pv_part",
+   "canonical_base": "kv3_pv",
+   "new_physical_master": false,
+   "instances": [
+    "pv_S_0"
+   ],
+   "direct_landing_ff_per_master": 404,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 128,
+   "anchors": [
+    {
+     "bus": "i_vport_E_N_vo_d1",
+     "reference": "pv_S_0",
+     "ff": 36,
+     "max_depth": 3,
+     "required_cell_area_um2": 10.4976,
+     "consumers": [
+      [
+       "u_pv_u_g0_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pe2"
+      ],
+      [
+       "u_pv_u_g0_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pe2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1130.6692000000003,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_E_N_vo",
+     "reference": "pv_S_0",
+     "ff": 272,
+     "max_depth": 4,
+     "required_cell_area_um2": 79.3152,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1114.7448000000004,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_E_N_vo_d3",
+     "reference": "pv_S_0",
+     "ff": 12,
+     "max_depth": 1,
+     "required_cell_area_um2": 3.4992,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1162.518,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_W_N_vo_d2",
+     "reference": "pv_S_0",
+     "ff": 12,
+     "max_depth": 1,
+     "required_cell_area_um2": 3.4992,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1716.8336,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_W_N_vo",
+     "reference": "pv_S_0",
+     "ff": 48,
+     "max_depth": 4,
+     "required_cell_area_um2": 13.9968,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1684.9848000000002,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_W_N_vo_d3",
+     "reference": "pv_S_0",
+     "ff": 24,
+     "max_depth": 2,
+     "required_cell_area_um2": 6.9984,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1732.7579999999998,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "module": "kv3_pv_v1_part",
+   "canonical_base": "kv3_pv_v1",
+   "new_physical_master": false,
+   "instances": [
+    "pv_S_1"
+   ],
+   "direct_landing_ff_per_master": 66,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 42,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_S_1",
+     "ff": 1,
+     "max_depth": 1,
+     "required_cell_area_um2": 0.2916,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_6_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_6_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      490.96520000000055,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_S_1",
+     "ff": 1,
+     "max_depth": 1,
+     "required_cell_area_um2": 0.2916,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_6_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_6_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      549.0220000000008,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_E_N_vo",
+     "reference": "pv_S_1",
+     "ff": 36,
+     "max_depth": 3,
+     "required_cell_area_um2": 10.4976,
+     "consumers": [
+      [
+       "u_pv_u_g0_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pe2"
+      ],
+      [
+       "u_pv_u_g0_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pe2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1004.2451000000001,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_t",
+     "reference": "pv_S_1",
+     "ff": 28,
+     "max_depth": 1,
+     "required_cell_area_um2": 8.164800000000001,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      17.345500000000357,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "module": "kv3_pv_v12_part",
+   "canonical_base": "kv3_pv_v12",
+   "new_physical_master": false,
+   "instances": [
+    "pv_N_7"
+   ],
+   "direct_landing_ff_per_master": 2611,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 230,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_N_7",
+     "ff": 14,
+     "max_depth": 7,
+     "required_cell_area_um2": 4.082400000000001,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_42_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_42_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_42_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      17.01419999999962,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_N_7",
+     "ff": 14,
+     "max_depth": 7,
+     "required_cell_area_um2": 4.082400000000001,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_42_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_42_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_42_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1570.2142000000003,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_E_N_vo",
+     "reference": "pv_N_7",
+     "ff": 388,
+     "max_depth": 4,
+     "required_cell_area_um2": 113.14080000000001,
+     "consumers": [
+      [
+       "u_pv_u_g0_b0",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b4",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b0",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b4",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b0",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b4",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b0",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b4",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1652.9989999999998,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_E_N_vo_d1",
+     "reference": "pv_N_7",
+     "ff": 485,
+     "max_depth": 5,
+     "required_cell_area_um2": 141.42600000000002,
+     "consumers": [
+      [
+       "u_pv_u_g0_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1666.565200000001,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_t",
+     "reference": "pv_N_7",
+     "ff": 1596,
+     "max_depth": 59,
+     "required_cell_area_um2": 465.39360000000005,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      284.15279999999984,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_valid",
+     "reference": "pv_N_7",
+     "ff": 114,
+     "max_depth": 59,
+     "required_cell_area_um2": 33.2424,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      302.9179000000004,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "module": "kv3_pv_v1n",
+   "canonical_base": "kv3_pv_v1",
+   "new_physical_master": true,
+   "instances": [
+    "pv_N_1"
+   ],
+   "direct_landing_ff_per_master": 30,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 30,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_N_1",
+     "ff": 1,
+     "max_depth": 1,
+     "required_cell_area_um2": 0.2916,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_6_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_6_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      490.96520000000055,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_N_1",
+     "ff": 1,
+     "max_depth": 1,
+     "required_cell_area_um2": 0.2916,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_6_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_6_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      549.0220000000008,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_t",
+     "reference": "pv_N_1",
+     "ff": 28,
+     "max_depth": 1,
+     "required_cell_area_um2": 8.164800000000001,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      17.345500000000357,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "module": "kv3_pv_v2_part",
+   "canonical_base": "kv3_pv_v2",
+   "new_physical_master": false,
+   "instances": [
+    "pv_S_2"
+   ],
+   "direct_landing_ff_per_master": 42,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 16,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_S_2",
+     "ff": 3,
+     "max_depth": 2,
+     "required_cell_area_um2": 0.8748,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_12_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_12_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_12_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      491.2313000000004,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_S_2",
+     "ff": 3,
+     "max_depth": 2,
+     "required_cell_area_um2": 0.8748,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_12_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_12_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_12_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      549.4655000000002,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_E_N_vo",
+     "reference": "pv_S_2",
+     "ff": 36,
+     "max_depth": 3,
+     "required_cell_area_um2": 10.4976,
+     "consumers": [
+      [
+       "u_pv_u_g0_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pe2"
+      ],
+      [
+       "u_pv_u_g0_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pe2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1104.8461000000007,
+      1520.6399999999999
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "module": "kv3_pv_v2n",
+   "canonical_base": "kv3_pv_v2",
+   "new_physical_master": true,
+   "instances": [
+    "pv_N_2"
+   ],
+   "direct_landing_ff_per_master": 6,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 4,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_N_2",
+     "ff": 3,
+     "max_depth": 2,
+     "required_cell_area_um2": 0.8748,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_12_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_12_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_12_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      491.2313000000004,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_N_2",
+     "ff": 3,
+     "max_depth": 2,
+     "required_cell_area_um2": 0.8748,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_12_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_12_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_12_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      549.4655000000002,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "module": "kv3_pv_v3_part",
+   "canonical_base": "kv3_pv_v3",
+   "new_physical_master": false,
+   "instances": [
+    "pv_S_3"
+   ],
+   "direct_landing_ff_per_master": 302,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 36,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_S_3",
+     "ff": 6,
+     "max_depth": 3,
+     "required_cell_area_um2": 1.7496,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_18_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_18_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_18_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      16.132700000000114,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_S_3",
+     "ff": 6,
+     "max_depth": 3,
+     "required_cell_area_um2": 1.7496,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_18_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_18_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_18_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1159.6234999999997,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_t",
+     "reference": "pv_S_3",
+     "ff": 280,
+     "max_depth": 10,
+     "required_cell_area_um2": 81.64800000000001,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1161.8559999999998,
+      1520.6400000000003
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_valid",
+     "reference": "pv_S_3",
+     "ff": 10,
+     "max_depth": 5,
+     "required_cell_area_um2": 2.9160000000000004,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      599.0032000000001,
+      1520.6400000000003
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "module": "kv3_pv_v3n",
+   "canonical_base": "kv3_pv_v3",
+   "new_physical_master": true,
+   "instances": [
+    "pv_N_3"
+   ],
+   "direct_landing_ff_per_master": 302,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 36,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_N_3",
+     "ff": 6,
+     "max_depth": 3,
+     "required_cell_area_um2": 1.7496,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_18_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_18_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_18_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      16.132700000000114,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_N_3",
+     "ff": 6,
+     "max_depth": 3,
+     "required_cell_area_um2": 1.7496,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_18_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_18_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_18_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1159.6234999999997,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_t",
+     "reference": "pv_N_3",
+     "ff": 280,
+     "max_depth": 10,
+     "required_cell_area_um2": 81.64800000000001,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1161.8559999999998,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_valid",
+     "reference": "pv_N_3",
+     "ff": 10,
+     "max_depth": 5,
+     "required_cell_area_um2": 2.9160000000000004,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      599.0032000000001,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "module": "kv3_pv_v4_part",
+   "canonical_base": "kv3_pv_v4",
+   "new_physical_master": false,
+   "instances": [
+    "pv_S_4"
+   ],
+   "direct_landing_ff_per_master": 480,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 122,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_S_4",
+     "ff": 8,
+     "max_depth": 4,
+     "required_cell_area_um2": 2.3328,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_24_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_24_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_24_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      580.3328000000001,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_S_4",
+     "ff": 8,
+     "max_depth": 4,
+     "required_cell_area_um2": 2.3328,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_24_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_24_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_24_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1667.5295999999998,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_W_N_vo",
+     "reference": "pv_S_4",
+     "ff": 464,
+     "max_depth": 4,
+     "required_cell_area_um2": 135.3024,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1102.4927000000007,
+      1520.6400000000003
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "module": "kv3_pv_v4n",
+   "canonical_base": "kv3_pv_v4",
+   "new_physical_master": true,
+   "instances": [
+    "pv_N_4"
+   ],
+   "direct_landing_ff_per_master": 480,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 122,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_N_4",
+     "ff": 8,
+     "max_depth": 4,
+     "required_cell_area_um2": 2.3328,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_24_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_24_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_24_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      580.3328000000001,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_N_4",
+     "ff": 8,
+     "max_depth": 4,
+     "required_cell_area_um2": 2.3328,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_24_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_24_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_24_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1667.5295999999998,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_W_N_vo",
+     "reference": "pv_N_4",
+     "ff": 464,
+     "max_depth": 4,
+     "required_cell_area_um2": 135.3024,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1102.4927000000007,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "module": "kv3_pv_v5_part",
+   "canonical_base": "kv3_pv_v5",
+   "new_physical_master": false,
+   "instances": [
+    "pv_S_5"
+   ],
+   "direct_landing_ff_per_master": 1135,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 36,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_S_5",
+     "ff": 10,
+     "max_depth": 5,
+     "required_cell_area_um2": 2.9160000000000004,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_30_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_30_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_30_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      15.246900000000096,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_S_5",
+     "ff": 10,
+     "max_depth": 5,
+     "required_cell_area_um2": 2.9160000000000004,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_30_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_30_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_30_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1690.0105000000003,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_t",
+     "reference": "pv_S_5",
+     "ff": 1050,
+     "max_depth": 39,
+     "required_cell_area_um2": 306.18,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      587.768,
+      1520.6400000000003
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_valid",
+     "reference": "pv_S_5",
+     "ff": 65,
+     "max_depth": 34,
+     "required_cell_area_um2": 18.954,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      21.943999999999505,
+      1520.6400000000003
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "module": "kv3_pv_v5n",
+   "canonical_base": "kv3_pv_v5",
+   "new_physical_master": true,
+   "instances": [
+    "pv_N_5"
+   ],
+   "direct_landing_ff_per_master": 1135,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 36,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_N_5",
+     "ff": 10,
+     "max_depth": 5,
+     "required_cell_area_um2": 2.9160000000000004,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_30_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_30_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_30_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      15.246900000000096,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_N_5",
+     "ff": 10,
+     "max_depth": 5,
+     "required_cell_area_um2": 2.9160000000000004,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_30_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_30_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_30_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1690.0105000000003,
+      6.821210263296962e-13
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_t",
+     "reference": "pv_N_5",
+     "ff": 1050,
+     "max_depth": 39,
+     "required_cell_area_um2": 306.18,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      587.768,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_valid",
+     "reference": "pv_N_5",
+     "ff": 65,
+     "max_depth": 34,
+     "required_cell_area_um2": 18.954,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      21.943999999999505,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "module": "kv3_pv_v6_part",
+   "canonical_base": "kv3_pv_v6",
+   "new_physical_master": false,
+   "instances": [
+    "pv_S_6"
+   ],
+   "direct_landing_ff_per_master": 24,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 6,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_S_6",
+     "ff": 12,
+     "max_depth": 6,
+     "required_cell_area_um2": 3.4992,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_36_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_36_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_36_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      487.0640000000003,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_S_6",
+     "ff": 12,
+     "max_depth": 6,
+     "required_cell_area_um2": 3.4992,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_36_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_36_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_36_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      541.9920000000002,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "module": "kv3_pv_v6n",
+   "canonical_base": "kv3_pv_v6",
+   "new_physical_master": true,
+   "instances": [
+    "pv_N_6"
+   ],
+   "direct_landing_ff_per_master": 24,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 6,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_N_6",
+     "ff": 12,
+     "max_depth": 6,
+     "required_cell_area_um2": 3.4992,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_36_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_36_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_36_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      487.0640000000003,
+      -1.1368683772161603e-12
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_N_6",
+     "ff": 12,
+     "max_depth": 6,
+     "required_cell_area_um2": 3.4992,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_36_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_36_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_36_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      541.9920000000002,
+      -1.1368683772161603e-12
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "module": "kv3_pv_v7_part",
+   "canonical_base": "kv3_pv_v7",
+   "new_physical_master": false,
+   "instances": [
+    "pv_S_7"
+   ],
+   "direct_landing_ff_per_master": 2641,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 230,
+   "anchors": [
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b",
+     "reference": "pv_S_7",
+     "ff": 14,
+     "max_depth": 7,
+     "required_cell_area_um2": 4.082400000000001,
+     "consumers": [
+      [
+       "u_pv_u_T0Q0_42_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T0Q0_42_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T0Q1_42_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      17.01419999999962,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_TNQN_N_rN_b_d2",
+     "reference": "pv_S_7",
+     "ff": 14,
+     "max_depth": 7,
+     "required_cell_area_um2": 4.082400000000001,
+     "consumers": [
+      [
+       "u_pv_u_T1Q0_42_r0",
+       "qkd_rlyi_258s",
+       "s"
+      ],
+      [
+       "u_pv_u_T1Q0_42_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ],
+      [
+       "u_pv_u_T1Q1_42_r0",
+       "qkd_rlyi_258s",
+       "y"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1570.2142000000003,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_E_N_vo",
+     "reference": "pv_S_7",
+     "ff": 388,
+     "max_depth": 4,
+     "required_cell_area_um2": 113.14080000000001,
+     "consumers": [
+      [
+       "u_pv_u_g0_b0",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b4",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b0",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b4",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b0",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b4",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b0",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b4",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1652.9989999999998,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_E_N_vo_d1",
+     "reference": "pv_S_7",
+     "ff": 485,
+     "max_depth": 5,
+     "required_cell_area_um2": 141.42600000000002,
+     "consumers": [
+      [
+       "u_pv_u_g0_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b2",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b6",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "S",
+     "source_pin_band_centre_um": [
+      1666.565200000001,
+      0.0
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_t",
+     "reference": "pv_S_7",
+     "ff": 1624,
+     "max_depth": 60,
+     "required_cell_area_um2": 473.55840000000006,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_t"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      284.15279999999984,
+      1520.6399999999994
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_pvw__u_ctl_req_valid",
+     "reference": "pv_S_7",
+     "ff": 116,
+     "max_depth": 60,
+     "required_cell_area_um2": 33.8256,
+     "consumers": [
+      [
+       "u_vport_E",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ],
+      [
+       "u_vport_W",
+       "qkd_pv16_vport_b",
+       "pr_valid"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      302.9179000000004,
+      1520.6399999999994
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "module": "kv3_pv_v8_part",
+   "canonical_base": "kv3_pv_v8",
+   "new_physical_master": false,
+   "instances": [
+    "pv_N_0"
+   ],
+   "direct_landing_ff_per_master": 652,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 116,
+   "anchors": [
+    {
+     "bus": "i_vport_E_N_vo",
+     "reference": "pv_N_0",
+     "ff": 544,
+     "max_depth": 8,
+     "required_cell_area_um2": 158.6304,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1114.7448000000004,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_E_N_vo_d3",
+     "reference": "pv_N_0",
+     "ff": 24,
+     "max_depth": 2,
+     "required_cell_area_um2": 6.9984,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1162.518,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_W_N_vo_d2",
+     "reference": "pv_N_0",
+     "ff": 12,
+     "max_depth": 1,
+     "required_cell_area_um2": 3.4992,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1716.8336,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_W_N_vo",
+     "reference": "pv_N_0",
+     "ff": 48,
+     "max_depth": 4,
+     "required_cell_area_um2": 13.9968,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1684.9848000000002,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_vport_W_N_vo_d3",
+     "reference": "pv_N_0",
+     "ff": 24,
+     "max_depth": 2,
+     "required_cell_area_um2": 6.9984,
+     "consumers": [
+      [
+       "u_pv_u_g0_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g0_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g1_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g2_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b3",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ],
+      [
+       "u_pv_u_g3_b7",
+       "ot_qwen_tp8_pv_slice_t",
+       "pv2"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "N",
+     "source_pin_band_centre_um": [
+      1732.7579999999998,
+      1520.64
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  },
+  {
+   "type": "kv3_sys_SD",
+   "module": "kv3_sys_SD_part",
+   "canonical_base": "kv3_sys_SD",
+   "new_physical_master": false,
+   "instances": [
+    "sys_SW"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_sys_SD_v1",
+   "module": "kv3_sys_SD_v1_part",
+   "canonical_base": "kv3_sys_SD_v1",
+   "new_physical_master": false,
+   "instances": [
+    "sys_SE"
+   ],
+   "direct_landing_ff_per_master": 0,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 0,
+   "anchors": []
+  },
+  {
+   "type": "kv3_sys_c",
+   "module": "kv3_sys_c_part",
+   "canonical_base": "kv3_sys_c",
+   "new_physical_master": false,
+   "instances": [
+    "sys_c"
+   ],
+   "direct_landing_ff_per_master": 8868,
+   "position_bank_ff_per_master": 0,
+   "direct_landing_instances_per_master": 1732,
+   "anchors": [
+    {
+     "bus": "i_kvs_attn_attn__tx_payload",
+     "reference": "sys_c",
+     "ff": 5480,
+     "max_depth": 10,
+     "required_cell_area_um2": 1597.968,
+     "consumers": [
+      [
+       "u_d2d_kv",
+       "qkd_d2d_static_sfm",
+       "att_tx_payload"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      698.8941999999988
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_kvs_emb_rowtx__emb_tx_payload",
+     "reference": "sys_c",
+     "ff": 2740,
+     "max_depth": 5,
+     "required_cell_area_um2": 798.984,
+     "consumers": [
+      [
+       "u_d2d_kv",
+       "qkd_d2d_static_sfm",
+       "emb_tx_payload"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      870.6623999999974
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_host_boot_go",
+     "reference": "sys_c",
+     "ff": 7,
+     "max_depth": 7,
+     "required_cell_area_um2": 2.0412000000000003,
+     "consumers": [
+      [
+       "u_d2d_kv",
+       "qkd_d2d_static_sfm",
+       "host_boot_begin"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      388.48719999999594
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_host_host_drained_local",
+     "reference": "sys_c",
+     "ff": 5,
+     "max_depth": 5,
+     "required_cell_area_um2": 1.4580000000000002,
+     "consumers": [
+      [
+       "u_d2d_kv",
+       "qkd_d2d_static_sfm",
+       "host_drained_local"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      560.7535999999964
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_kvs_ctl_kvi",
+     "reference": "sys_c",
+     "ff": 61,
+     "max_depth": 1,
+     "required_cell_area_um2": 17.7876,
+     "consumers": [
+      [
+       "u_d2d_kv",
+       "qkd_d2d_static_sfm",
+       "kvn_compiled_generation"
+      ],
+      [
+       "u_d2d_kv",
+       "qkd_d2d_static_sfm",
+       "kvn_compiled_identity"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      901.25
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_host_rec_tx",
+     "reference": "sys_c",
+     "ff": 549,
+     "max_depth": 1,
+     "required_cell_area_um2": 160.0884,
+     "consumers": [
+      [
+       "u_d2d_kv",
+       "qkd_d2d_static_sfm",
+       "record_tx"
+      ],
+      [
+       "u_d2d_kv",
+       "qkd_d2d_static_sfm",
+       "record_tx_observed_v"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      720.268799999998
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_host_token_epoch",
+     "reference": "sys_c",
+     "ff": 16,
+     "max_depth": 1,
+     "required_cell_area_um2": 4.6656,
+     "consumers": [
+      [
+       "u_d2d_kv",
+       "qkd_d2d_static_sfm",
+       "status_epoch16"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "W",
+     "source_pin_band_centre_um": [
+      0.0,
+      795.5095999999976
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_kvs_ctl_boot__link_cfg_addr",
+     "reference": "sys_c",
+     "ff": 6,
+     "max_depth": 1,
+     "required_cell_area_um2": 1.7496,
+     "consumers": [
+      [
+       "u_dcal",
+       "qkd_d2d_cal_seq_pin_bc4",
+       "bcfg_addr"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      793.4847999999984
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_kvs_ctl_boot__link_cfg_rx_we",
+     "reference": "sys_c",
+     "ff": 2,
+     "max_depth": 2,
+     "required_cell_area_um2": 0.5832,
+     "consumers": [
+      [
+       "u_dcal",
+       "qkd_d2d_cal_seq_pin_bc4",
+       "bcfg_rx_we"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      847.6593999999968
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    },
+    {
+     "bus": "i_kvs_ctl_boot__link_cfg_tx_we",
+     "reference": "sys_c",
+     "ff": 2,
+     "max_depth": 2,
+     "required_cell_area_um2": 0.5832,
+     "consumers": [
+      [
+       "u_dcal",
+       "qkd_d2d_cal_seq_pin_bc4",
+       "bcfg_tx_we"
+      ]
+     ],
+     "status": "UNALLOCATED: existing FT stations do not cover these pad flops",
+     "type_face": "E",
+     "source_pin_band_centre_um": [
+      2160.0,
+      871.9546999999984
+     ],
+     "source_band": "start 6um inward of existing boundary FF band; allocate up to24um inward, length from actual FF area at<=55% util",
+     "consumer_band": "anchor final pad stages beside listed real consumer pins; every consecutive FF hop<=405um; no floating placement"
+    }
+   ]
+  }
+ ]
+}

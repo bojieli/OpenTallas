@@ -1,0 +1,14 @@
+{
+ "verdict": "FAIL",
+ "rc": 1,
+ "top_params": [],
+ "errors": [
+  "/work/rtl/ot_rst_pipe.sv:49: ERROR: Identifier `\\q' is implicitly declared and `default_nettype is set to none."
+ ],
+ "command": [
+  "yosys",
+  "-q",
+  "-s",
+  "/work/rtl_lint.ys"
+ ]
+}
