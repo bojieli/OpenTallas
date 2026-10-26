@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "reviewer": "CODEX auxiliary independent review",
+ "reviewed": "2026-10-26 03:19 PDT",
+ "request": "CODEX-S81-L0-COMPACT-V2",
+ "source": "codex/s81-legacy-1026@25ad21d5a",
+ "kit": "dsdv_gunit_l0_compact26v2",
+ "kit_hash": "f2d991045effaecd",
+ "image": "/srv/opentallas-scratch/claude/codex-s81-legacy-1026/l0_v2_review/place.png",
+ "verdict": "PASS-COND",
+ "scope": "data geometry candidate only; no route adoption",
+ "findings": [
+  "Viewed macrofree77.76x82.08 outline with N/S/E registerbands and open central routing area.3655FFs for3499ports and24.46%fill support pin-capacity-limited registered-forwarding layout;59.29%emptycenter is acceptable for this candidate.",
+  "Full suppliedr2r max131.11um/0>405 cures old477um/182violations.",
+  "Independently read actualpin table: N679M5+680M3,S701M5+702M3,E735M4; no duplicate positions. Minimumsame-layer pitch M5/M4.096um,M3.072um. Ehistogram10.5vs10.42 is finite-bin rounding, not a trackcollision."
+ ],
+ "conditions": [
+  "ParentB2embedding/interface fit/adjacentpinorders must pass before adoption of changedoutline.",
+  "Near-capacityN/S pinbars need actual routedpin-access/congestion assessment afterreviewedclock/PDN; no route/SIGNEDclaim from geometry."
+ ]
+}

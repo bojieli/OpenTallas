@@ -69,3 +69,5 @@ bad_cones={key:[kind[v] for v in sorted(m.cone_inputs(m.outs[m.onames.index(key)
 (w/'replay.log').write_text('\n'.join(log))
 (w/'hyp.json').write_text(json.dumps([[sd,k,list(h)] for (sd,k),h in sorted(L.hyp.items())]))
 print(json.dumps(dict(proved=len(st)-len(bad),total=len(st),bad=bad,added=n,elapsed=time.time()-t)),flush=True)
+
+raise SystemExit(1 if bad else 0)

@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "reviewer": "CODEX auxiliary independent review",
+ "reviewed": "2026-10-26 02:47 PDT",
+ "request": "CODEX-ENG-REACH-R5",
+ "source": "codex/s81-head-eng-1026@7f56929224",
+ "image": "/home/ubuntu/coord/codex-head-eng-1026/eng_reach_r5_data.png",
+ "verdict": "PASS-COND",
+ "scope": "data placement geometry candidate only; no route/STA adoption",
+ "findings": [
+  "Viewed15macro placement in410.4x466.56slot: smallROM columns left,largeROM stack right,central vertical logic channel and open lower/outer flanks; macro IF registerbanks align to accessfaces.",
+  "Full20451endpoint reachcensus max346.68um,0>405 vs prior638/265violations;2688datapins p90/max8.28/11.151;2414capture<=10.401 and2145launch<=14.439.",
+  "364data/status/control pin moves shorten true source->registerlegs; resetleaf0 lies on real centered row; fill9.37%/peak0.67 has routing headroom."
+ ],
+ "conditions": [
+  "Compose the364pin moves into one S81B2 plan event and check parent face alignment/capacity before adoption.",
+  "Clock is excluded from reviewedplot; render clockregions/taps and measure actualTT/FFpair/insertion+macroCKIF/reset/PDN next before any route/STA claim.",
+  "No RTL/data cycles added; no current canary/signoff/token credit from this geometry verdict."
+ ]
+}
