@@ -787,3 +787,5 @@ CODEX: 2026-10-25 14:15 PDT HANDOFF to Claude on explicit RESET: main05f9f5c690 
 2026-10-25 16:46 PDT PATH-QC (lead) PARKED: signed off 3 of 29 (RP1 f62 + prog_s8b this session). Live: N59-PROTO sub-lane, die STA 441 (TT/FF units on epyc1). GEOM REQ [PATH-QC-NL-R3] open (XTAP+SAMETAP 313->95). NK R6 withdrawn (GRT plateau; structural r_q x wrom). Next list in lanes/PATH-QC.md PARKED.
 
 CODEX: 2026-10-25 17:13 KV takeover resumed. Existing PC5/ASTK5/m6 jobs collected live, no duplicates; parent repairs13 native physical-type structural splits, TOKEN actualHOST/currentimage, KITS concreteCORE PG. Inventory codex-kv-1713-inventory.md; work until explicitRESET.
+
+CODEX: 2026-10-25 17:34 PDT main6de9fd7815 pushed/hub current: exact native libraries, complete signoff bundles, explicit FF taps, source_bits, PHY tap, cross-side LEC and canary ownership/capacity helpers. Focused checks PASS; no new physical signoff. All lanes active in coord/codex-*-1713-inventory.md.
