@@ -20,6 +20,13 @@ def run(a):
     wanted={(r[0],r[1]) for r in mesh['unplaced'] if len(r)>=4 and r[2]=='STRUCTURAL clock span exceeds 750 um'}
     byport={t['port']:t['xy'] for t in mesh['taps']};extra=[];done=set();routes=[]
     def centre(c):return (c['x']+M.cell_width(c)/2,c['y']+M.ROW_Y/2)
+    for n in data['nets']:
+        if n['drv'].startswith('port:'): continue
+        pa=centre(cells[n['drv']])
+        for ld in n['loads']:
+            pb=tuple(byport[ld[5:]]) if ld.startswith('port:') else centre(cells[ld])
+            if abs(pa[0]-pb[0])+abs(pa[1]-pb[1])+M.BUF_W+M.ROW_Y>750:
+                wanted.add((n['drv'],ld))
     for net in list(data['nets']):
         updated=[]
         for load in net['loads']:
@@ -47,15 +54,26 @@ def run(a):
             if not names or max(hops)>750:raise ValueError(f'relay reach failed {net["drv"]}->{load}: {max(hops):.3f} um')
             updated.append(names[0])
             for u,v in zip(names,names[1:]+[load]):extra.append({'name':'ckm_w_'+u,'drv':u,'loads':[v],'level':net.get('level')})
-            done.add((net['drv'],load));routes.append({'from':net['drv'],'to':load,'points_um':actual,'cells':names,'max_hop_um':max(hops)})
+            done.add((net['drv'],load));routes.append({'from':net['drv'],'to':load,'points_um':actual,'cells':names,'max_hop_um':max(hops),'extra_wire_um':sum(abs(u[0]-v[0])+abs(u[1]-v[1]) for u,v in zip(actual,actual[1:]))-abs(pa[0]-pb[0])-abs(pa[1]-pb[1])})
         net['loads']=updated
     data['nets']+=extra
     mesh['unplaced']=[r for r in mesh['unplaced'] if (r[0],r[1]) not in done]
     bad=M.hard_keepout_violations(P,cells);over=M.placement_overlaps(cells)
     if bad or over:raise ValueError(f'placement illegal: {len(bad)} hard, {len(over)} clock overlaps')
+    all_hops=[]
+    for n in data['nets']:
+        if n['drv'].startswith('port:'): continue
+        pa=centre(cells[n['drv']])
+        for ld in n['loads']:
+            pb=tuple(byport[ld[5:]]) if ld.startswith('port:') else centre(cells[ld])
+            all_hops.append(abs(pa[0]-pb[0])+abs(pa[1]-pb[1])+M.BUF_W+M.ROW_Y)
+    if max(all_hops,default=0)>750:raise ValueError('complete clock-hop census exceeds 750 um')
+    extra_mm=sum(r['extra_wire_um'] for r in routes)/1000
+    mesh['meta']['htree_wire_mm']+=extra_mm
+    mesh['meta']['reps']=sum(c.get('kind')=='rep' for c in cells.values())
     mesh['edge_repair']=routes
     mesh['meta'].update(cells=len(cells),unplaced=len(mesh['unplaced']),clock_cell_overlap_pairs=0,clock_hard_keepout_violations=0)
-    mesh['meta']['edge_repair']={'source':str(src),'branches':len(done),'added_cells':len(extra),'max_hop_um':max((r['max_hop_um'] for r in routes),default=0),'qualification':'NOT RUN: actual routed RC and skew required'}
+    mesh['meta']['edge_repair']={'source':str(src),'branches':len(done),'added_cells':len(extra),'max_hop_um':max(all_hops,default=0),'extra_wire_mm':extra_mm,'qualification':'NOT RUN: actual routed RC and skew required'}
     out.mkdir(parents=True);ren=M.write_verilog(cells,data['nets'],data['ports'],out/'ctree.v')
     for n in data['nets']:n['name']=ren.get(n['name'],n['name'])
     for name,obj in [('mesh.json',mesh),('place.json',cells),('nets.json',data)]: (out/name).write_text(json.dumps(obj)+'\n')
