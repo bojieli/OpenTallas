@@ -2,7 +2,7 @@
 """Trial die runs (early full-chip prototype) from a die_plan.json: every partition as an abstract, the die clock tree,
 the die global route, die STA on budget stand-ins and die IR -- integration problems found long before G4.
 
-    die_trial.py kit    PLAN.json --out DIR [--views VIEWDIR] [--leaf-um 600] [--rep-um 450] [--coarse-um 0.72]
+    die_trial.py kit    PLAN.json --out DIR [--views VIEWDIR] [--leaf-um 600] [--rep-um 450] [--tap-drivers] [--coarse-um 0.72]
     die_trial.py report DIR                       # parse grt / clock / psm / sta outputs -> DIR/trial.json
     die_trial.py clock  DIR                       # clock skew post-processing only (DIR/clock/*)
 
@@ -223,8 +223,26 @@ def build_htree(P, taps, leaf_um=600.0):
     return nodes
 
 
-def tree_netlist(nodes, taps, rep_um=450.0):
+def tap_driver_xy(nx, ny, tx, ty, rep_um):
+    """--tap-drivers placement of the one per-tap last-mile driver: at the leaf node when the L leg (H on M8 from
+    the node, then V on M9 to the tap) is <= rep_um, else at the leg's path midpoint (both halves <= rep_um for every
+    leg <= 2 rep_um: leaf region <= leaf_um)."""
+    L = abs(tx - nx) + abs(ty - ny)
+    if L <= rep_um:
+        return nx, ny
+    h = L / 2
+    dx = abs(tx - nx)
+    if h <= dx:
+        return nx + (h if tx >= nx else -h), ny
+    return tx, ny + ((h - dx) if ty >= ny else -(h - dx))
+
+
+def tree_netlist(nodes, taps, rep_um=450.0, tap_drivers=False):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
+    tap_drivers (opt-in, default off = the original tree): every tap gets its OWN last-mile BUF fed by the leaf node
+    buffer, so no driver carries more than one tap leg (a leaf with k taps otherwise drives k L-legs on one net:
+    KV it5 3-tap leaves = ~970 um of wire, 483 ps slew).  Exactly one tap driver on every root->tap path, so the
+    tap-to-tap structure stays uniform; legs > rep_um get the driver at the leg midpoint (spacing <= rep_um).
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
     cells, place, wires = [], [], []
     node_buf, parent_of = {}, {}
@@ -262,10 +280,18 @@ def tree_netlist(nodes, taps, rep_um=450.0):
         place.append((node_buf[i], nd["x"], nd["y"]))
     tap_ports = []
     for i, nd in sorted(nodes.items()):
-        for (part, port, x, y) in nd["taps"]:
+        for k_, (part, port, x, y) in enumerate(nd["taps"]):
             tp = f"t_{sv(part)}__{port}"
             tap_ports.append((tp, x, y, part, port, i))
-            cells.append(f"  assign {tp} = {net(i)};")
+            if tap_drivers:
+                inst, o = f"d{i}_{k_}", f"dn{i}_{k_}"
+                cells.append(f"  {BUF} {inst} (.A({net(i)}), .Y({o}));")
+                wires.append(o)
+                place.append((inst, *tap_driver_xy(nd["x"], nd["y"], x, y, rep_um)))
+                parent_of[inst] = node_buf[i]
+                cells.append(f"  assign {tp} = {o};")
+            else:
+                cells.append(f"  assign {tp} = {net(i)};")
     v = ["module ctree (root, " + ", ".join(t[0] for t in tap_ports) + ");", "  input root;"]
     v += [f"  output {t[0]};" for t in tap_ports]
     v += [f"  wire {w};" for w in wires]
@@ -275,12 +301,12 @@ def tree_netlist(nodes, taps, rep_um=450.0):
     return "\n".join(v) + "\n", place, tap_ports, node_buf, parent_of
 
 
-def clock_kit(P, out, leaf_um, rep_um):
+def clock_kit(P, out, leaf_um, rep_um, tap_drivers=False):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
     nodes = build_htree(P, taps, leaf_um)
-    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um)
+    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, tap_drivers)
     (out / "ctree.v").write_text(v)
     segs = []
     for i, nd in nodes.items():
@@ -326,6 +352,7 @@ def clock_kit(P, out, leaf_um, rep_um):
     meta = dict(leaf_um=leaf_um, rep_um=rep_um, buffer=BUF, wire_r_kohm_um=WIRE_R, wire_c_ff_um=WIRE_C,
                 tap_load_ff=TAP_LOAD_FF, nodes=len(nodes), leaves=sum(1 for n in nodes.values() if n["taps"]),
                 repeaters=sum(1 for i, *_ in place if i.startswith("r")), taps=len(tap_ports),
+                tap_drivers=sum(1 for i, *_ in place if i.startswith("d")),
                 wire_um=round(sum(abs(a - c) + abs(b - d) for a, b, c, d, _ in segs) +
                               sum(abs(a - c) + abs(b - d) for a, b, c, d in leaf_legs), 1),
                 levels=max(n["level"] for n in nodes.values()))
@@ -983,7 +1010,7 @@ exit $rc
 """
 
 
-def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15):
+def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, tap_drivers=False):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1021,7 +1048,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["die_io"] = [dict(name=w["name"], part=w.get("part"), iface=w.get("iface"), rect_um=w["rect_um"],
                            sites=w.get("sites"), signals=w.get("signals"), host=w.get("host", False)) for w in io]
     # clock
-    nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um)
+    nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, tap_drivers)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -1562,6 +1589,8 @@ def main(argv=None):
     k.add_argument("--views")
     k.add_argument("--leaf-um", type=float, default=600.0)
     k.add_argument("--rep-um", type=float, default=450.0)
+    k.add_argument("--tap-drivers", action="store_true",
+                   help="one last-mile BUF per clock tap (leaf node -> driver -> tap; midpoint if leg > --rep-um)")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     r = sub.add_parser("report")
@@ -1619,7 +1648,7 @@ def main(argv=None):
         print(json.dumps(dict(cell=die_sta.bhold_cell(a.tol_ps), types=len(tot), input_bits=sum(tot.values())), indent=1))
         return 0
     if a.cmd == "kit":
-        m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density)
+        m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.tap_drivers)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
