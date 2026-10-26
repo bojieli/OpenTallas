@@ -206,7 +206,7 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
 def _man(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0, leg_extra_um=None, spatial_2d=False, avoid_macros=False, corridor_helper=None, even_stages=False, medoid_level=0):
+def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0, leg_extra_um=None, spatial_2d=False, avoid_macros=False, corridor_helper=None, even_stages=False, medoid_level=0, spine=None):
     """topology 'htree' (default): symmetric 2x2 H-tree over the tap region,
     pruned where a quadrant has no tap; every tap gets a private leg from its
     H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
@@ -259,6 +259,41 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
             else: add_taps(cid,pts,level)
             return cid
         build(g['taps'],box,1)
+    elif topology=='spine':
+        # CLOCK-RESET E5-SPINE (opt-in OT_DTSH_TOPOLOGY=spine): vertical spine of private legs up/down the logic column
+        # from its midpoint M (both halves equal stage count), spine points on the horizontal channel rows, ribs =
+        # private legs from a spine point to tap hubs (<= hub taps each, compact 25 um bins), <= ribcap rib legs per
+        # spine cluster (extra clusters on the same row).  One repeater count per level, no balancing wire.
+        sx=spine['x']*u; ys_=[y*u for y in spine['ys']]; hub=spine['hub']; cap=spine['ribcap']
+        def macro_h(y,x0,x1):
+            lo,hi=min(x0,x1),max(x0,x1)
+            return any(cc[5] and cc[2]<y<cc[4] and lo<cc[3] and hi>cc[1] for cc in g['cells'])
+        bins={}
+        for t in g['taps']: bins.setdefault((t['xy'][0]//(25*u),t['xy'][1]//(25*u)),[]).append(t)
+        hubs=[]
+        for k_ in sorted(bins):
+            v=sorted(bins[k_],key=lambda t:(t['xy'][1],t['xy'][0],t['name'])); n_=math.ceil(len(v)/hub)
+            for i in range(n_): hubs.append(v[i*len(v)//n_:(i+1)*len(v)//n_])
+        ym=(ys_[0]+ys_[-1])/2; rows={}
+        for grp in hubs:
+            c0=cent(grp); best=None
+            for y in ys_:
+                if macro_h(y,sx,c0[0]): continue
+                d=abs(c0[0]-sx)+abs(c0[1]-y); v_=(d+abs(y-ym),d,y)
+                if best is None or v_<best: best=v_
+            rows.setdefault(best[2],[]).append(grp)
+        clusters.append(dict(id=0,level=1,point=[sx,ym],taps=[t['name'] for t in g['taps']],legs=[]))
+        for y in sorted(rows):
+            grps=sorted(rows[y],key=lambda grp:cent(grp)[0]); m_=math.ceil(len(grps)/cap)
+            for j in range(m_):
+                sub=grps[j*len(grps)//m_:(j+1)*len(grps)//m_]
+                sid=len(clusters); clusters.append(dict(id=sid,level=2,point=[sx,y],taps=[t['name'] for grp in sub for t in grp],legs=[]))
+                link(0,sid,1)
+                for grp in sub:
+                    c0=cent(grp); hid=len(clusters)
+                    pt=list(min(grp,key=lambda t:(_man(t['xy'],c0),t['name']))['xy'])
+                    clusters.append(dict(id=hid,level=3,point=pt,taps=[t['name'] for t in grp],legs=[]))
+                    link(sid,hid,2); add_taps(hid,grp,3)
     else: raise ValueError(f'unknown trunk topology {topology}')
     # cluster points on legal free logic sites (a centre may fall on a macro).
     # H-tree: keep the symmetry -- among free sites near the ideal centre pick
@@ -657,7 +692,9 @@ def main():
                     leg_extra_um=float(env['OT_DTSH_LEG_EXTRA_UM']) if 'OT_DTSH_LEG_EXTRA_UM' in env else None,
                     spatial_2d=env.get('OT_DTSH_SPATIAL_2D','')=='1',avoid_macros=env.get('OT_DTSH_AVOID_MACROS','')=='1',
                     corridor_helper=env.get('OT_DTSH_CORRIDOR_HELPER'),even_stages=env.get('OT_DTSH_EVEN_STAGES','')=='1',
-                    medoid_level=int(env.get('OT_DTSH_HTREE_MEDOID_LEVEL','0')))
+                    medoid_level=int(env.get('OT_DTSH_HTREE_MEDOID_LEVEL','0')),
+                    spine=dict(x=float(env.get('OT_DTSH_SPINE_X','0')),ys=[float(v) for v in env.get('OT_DTSH_SPINE_YS','').split(',') if v],
+                               hub=int(env.get('OT_DTSH_SPINE_HUB','8')),ribcap=int(env.get('OT_DTSH_SPINE_RIBCAP','12'))) if env.get('OT_DTSH_TOPOLOGY')=='spine' else None)
     else:
         p=plan(g)
     Path(a.out).write_text(json.dumps(p,indent=1)+'\n')

@@ -5,3 +5,7 @@ R100: reps lead/spine/rib/tap 2/2/2/0, 10 stages for every tap, 1786 BUFx24; wir
 R60 : 4/3/4/0, 15 stages, 2218 BUFx24; wire spread 385; Elmore spread 43 ps.
 Finding: any snake-free tree from one drive point has wire spread >= max-min Manhattan(M,tap) ~= 380 um here; <=40 um is reachable only with balancing wire (banned) or H-tree geometry (failed, trial A). Equal stage count + short segments bound the delay spread instead.
 Open: spine points 216 (54 rib legs) and 76 (34) need rib sub-points (<=12 legs per island) before CTS.
+2026-10-26 00:37 PDT SP2 trial (opt-in OT_DTSH_TOPOLOGY=spine in physical/common_flow/shallow_clock.py; config_spine.mk): spine rows 15,76,216,261,300,356,400,452
+(132/170 dropped: 8.6-um SRAM channels have no repeater rows inside the 4.32-um halos), RMAX 60, hubs<=8 taps (210), <=12 rib legs/spine cluster (23 spine legs).
+Plan: reps lead/spine/rib/tap 4/3/6/0 = 17 stages every tap, 2690 BUFx24, max hop 109 um (3 hops >100), wire 273-650 um (spread 377).
+CTS (epyc2 e5_spine/kit, 3_place 40988e77 unchanged): placement-RC tap spread 107.4 TT / 91.7 FF (trial A H-tree: 161.7 / 127.9).
