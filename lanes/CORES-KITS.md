@@ -111,3 +111,15 @@ OWNER? None from KVHR. Broader 11 raw-cut face contracts remain with PATH-KV; no
 - Codex CDC jobs to collect: cdc_ch2 epyc2 oth-ubuntu-1926405-1793012702, cdc_pc intel2 oth-ubuntu-3452140-1793007034 (28/32 GB), proof-bit epyc2 1749452 (diagnostic). Check proof/eq_rc.txt for 'emitted_v rc=0' (gen --hr-face-ports requires it).
 - PHYpad3 image viewed: AUTO FAIL real (fill 17%, W/SW half empty) -> compact outline in KV batch (PATH-KV). 13 other qkd_hr_* NEEDS-KIT wait PATH-KV face contracts; qkd_kvs_ctl waits B32 bound regen from KV lead.
 - OWNER? none.
+
+## PARKED 2026-10-26 04:46 PDT CORES-KITS/S81 (inherited codex s81-legacy 04:23)
+- Canary-pinned source: claude/cores-kits-s81-canary-1026@f88a9bf4ca = codex/s81-legacy-1026@591b667fd7 + watched flow files pinned to main e68117ea12 (S81 canary s81_e68117ea1_1026_042301 running, ETA ~05:50). Rows release only if that canary is NO-REGRESSION.
+- L1c: k26c regen (same RTL/pins/config, only flow copies differ) epyc1:.../cores-kits/s81/kits_c/dsdv_gunit_l1c_k26c, AP 62d12bfc444c PASS-COND [CODEX-S81-L1C-1026]; old 6a3ab1a7d74e WITHDRAWN. HOLD canary.
+- L4: k26c kits_c/dsdv_gunit_l4_k26c, AP bfa2f05473be PASS-COND [CODEX-S81-L4-1026]; old 8a3fdff7dd83 WITHDRAWN. HOLD canary.
+- BK-g compact: compact26 LEC 10197 EQ, face 3559 PASS, r2r 304.18/0>405; GEOM-REVIEW-15 PASS-COND one trial on canary-flow regen + PLAN-DELTA (outline 216x172.8->159.84x164.16). Regen kits_c/dsdv_bk_g_compact26c (hash 78a5d83a, identical but flow copies) PLACE live ot-run oth-ubuntu-2663182-1793015119, log cores-kits/s81/logs/dsdv_bk_g_compact26c.place.otrun.log. Next: confirm metrics reproduce, add D-S81 outline delta, enqueue --mode trial.
+- qbank_S / cfg7_seq_bfp RSZ-0060: IO-hold frame (input min -40 vs vclk), GEOM-REVIEW-14 FAIL STRUCTURAL. Fix: claude/cores-kits-s81-hold-1026@f442e65a90 recipe io_hold: sender_min (+ tap_target_ps 215 for qbank_S, its GRT FF tree 197..216 > 202.5). Residual qbank_S 2 EP (l_go, rn), cfg7 8 EP reset removal. GEOM REQ [CORES-KITS/S81 dsfd_qbank_S-HOLD] / [.. ot_s81_cfg7_seq_bfp-HOLD]. Needs COORD/FLOW OK of sender_min frame.
+- TX phys26b: GPL-0305 diverged (util 1.5%, 10 SRAMs south-edge M4 pins, 36% GRT tiles overflow, N-S 536 um). Structural re-floorplan (mirrored macro pairs, shared >=40 um channels, spine pins, mid-hop) owed; no relaunch. Images epyc1:.../cores-kits/s81/diag/tx_phys26b/.
+- XRT1 k26b LEC NOT EQ 305/33818 (un_c 256, sw_a 36 lanes 0,1,3,4, un 8, ub 4, ucol 1; lane 2 OK): un/ub unpacker state invariant class (like L3/bksel); ROOT LEC helper owner.
+- Live, not duplicated (old flow, need k26c regen after verdict): L1 width26 LEC (oth-ubuntu-533090), L5 k26b LEC (4072870), XFIN k26b LEC (2698320), EG k26 LEC intel2 (1331639), XRT3 LEC 64g (416181).
+- Blocked on source/plan adoption: qxpq_w10 (gb master unadopted), vsw (LB_STAGE unadopted), cfifo_crs4 (/root/cores), capc5r/bksel_q (unsigned children), L0r (pin recut unstarted), L0 v2 (no route permission).
+- BLOCKER: every S81 flow release invalidates queued kits (newest canary binds); each kit must be regenerated per release.
