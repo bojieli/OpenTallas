@@ -39,7 +39,11 @@
  },
  "ot_s81dv_xfin": {
   "ref_tile": "physical/ref_tile/s81dv_xfin",
-  "rtl_dirs": true
+  "rtl_dirs": true,
+  "omit_default_top_params": [
+   "NS",
+   "NVL"
+  ]
  },
  "ot_s81sl_capc5r": {
   "ref_tile": "physical/ref_tile/s81sl_capc5r"

@@ -895,6 +895,21 @@ def main():
         gpl = "/work/pre_place.tcl"
     m_ = rec.get("core_margin", CORE_MARGIN_UM)   # tiny station cores: 1.08 (4 rows)
     params = dict(spec.get("params", {}) or {}, **rec.get("params", {}))
+    # CORES-KITS/S81 10-26: recipe "omit_default_top_params" drops top params whose value equals the RTL default (checked
+    # here, fail-closed): rtl_lint.py "hierarchy -chparam" asserts in Yosys (rtlil.cc:1231 modules_.count) when every
+    # chparam equals the default (ot_s81dv_xfin NS 16 NVL 5); the elaborated design is identical without them.
+    for pn in rec.get("omit_default_top_params", []):
+        hdr = None
+        for f in sorted((kd / "rtl").glob("*.*v")):
+            mm = re.search(r"\bmodule\s+" + re.escape(mod) + r"\s*#\s*\((.*?)\)\s*\(", f.read_text(errors="replace"), re.S)
+            if mm:
+                hdr = mm.group(1)
+                break
+        dm = re.search(r"\bparameter\s+(?:integer\s+)?" + re.escape(pn) + r"\s*=\s*([0-9]+)\b", hdr or "")
+        if not dm or pn not in params or str(params[pn]) != dm.group(1):
+            sys.exit(f"{mod}: omit_default_top_params {pn}: value {params.get(pn)} is not the RTL default "
+                     f"{dm.group(1) if dm else None} (refused)")
+        params.pop(pn)
     defines = list(spec.get("defines", []) or []) + rec.get("defines", [])
     util = rec.get("util", (spec.get("route") or {}).get("pd", 0.5))
     cts = rec.get("cts_args", "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5")
