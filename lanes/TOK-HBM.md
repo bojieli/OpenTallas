@@ -267,3 +267,6 @@ OWNER?/HBM-SU: choose canonical SU backend-control fix (a) RTL pipeline vs (b) c
 
 ## CODEX notes 2026-10-26 07:38 PDT
 COLLECTED native SU PR0/PR1 FADV-guard replays: nominal PASS (unchecked independent reviewer) lanes512/storeSRAM3072/nativeVMbanks32/VM_SRAM96/programmeSRAM378, reads32768/writes135184/scalars9; PR0 serial7116/stream9489, PR1 serial7120/stream9495. Their MUT_DATA controls still live epyc2 exact PIDs2540273/2619332 (units1951529/1951532), preserve. No G5/physical claim. SU31 held-control1046/1046 already collected by Claude, canonical backend controls remain owner choice; no duplicate simulation.
+
+## CODEX notes 2026-10-26 08:01 PDT
+Native PR0 FADV-guard SAME-BINARY MUT_DATA completed: caught14write-data mismatches, expected FAIL. PR0 positive passed beforehand32768reads/135184writes (source65ea6f144d); PR1 positive also passed, PR1 data mutant still live. No duplicate. B1 reprice still needs actual ledger/native link-class mapping: current generic stages_arch.py does not price the q_b100 internal IDX edge, so simply summing geometric stations would miss the approved+2cycles. Pending FT deltas remain tracked06:04.

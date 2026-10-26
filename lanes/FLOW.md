@@ -148,3 +148,6 @@ Staging991549 and bundle5015 merged. PG finalhook review local codex/flow-pg-102
 
 ## CODEX notes 2026-10-26 07:38 PDT
 CODEX took over FLOW/canary on codex/flow-token-0733@328b71b81 (own sparse worktree, pushed). FIX READY: KV canary reference now runs required hold_step after unsigned route (semicolon), stages mk_eco sibling tools run_kit_kv.sh/corners.tcl/pin_audit_core.py. 21 focused tests PASS incl actual unsigned-route shell control. Inherited manual ECO1120589 still routes, no duplicate. mscts PG defect traced to custom kit cf/mscts_core recipe, absent main; native_pg_binding already provides correct bind-before-protect API, current QC recipe owner notified; old s8b sign-off remains invalid.
+
+## CODEX notes 2026-10-26 08:01 PDT
+READY HBM placement runner fix codex/flow-token-0733@3420de582: GOAL=place/floorplan skips premature CTS; bash syntax PASS (one-line correction, root reviewing). KV hold ECO1120589 progressed GRT599s then DRT; no regrade yet. HBM canonical canary still active GRT FF repair (~2030iterations), no release tag cut.

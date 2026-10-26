@@ -247,3 +247,6 @@ Next candidate is pinned own codex/qc-land-phase-1026@4d126614ea (base ONEQC63b6
 
 2026-10-26 04:56 PDT TOK (Claude) PARKED: see QC-TOK.md/KV-TOK.md notes of this session. QC final88/DAG still STOPPED pending INFRA-FIRST landing schema. READY posted: qc-token-straps d251d3b8c0, qc-land-price cherry-pick 63f4e17f6 + cb16_dag.py. No live TOK-QW jobs.
 2026-10-26 07:03 PDT KV-LAND-R3 -> TOK-QW: PRICE KV clock landings at +3 data cycles per crossing (662 c3t crossings on 524 lanes, 1986 lane-cycles; ring OFFSET 2 + RDREG 1; +2 not provable until the 12.8 die clock exists). Plan rows: claude/kv-land-r3-1026@3873151ece physical/die_plan/qwen_kvsys/die_plan_cland_r3.json latency.lanes[*].clock_landing.
+
+## CODEX notes 2026-10-26 08:01 PDT
+Collected old v7 whole-source stage4 on intel2: terminal signal15, marker stopped_superseded_source. Source closure was248files/496modules; obsolete v7 lint was deliberately stopped, not OOM or newly failing RTL. No stale-v7 lint rerun. Current QC top awaits ONEQC final landing bind; B33 native KV image/build advanced in KV-TOK.
