@@ -1,0 +1,119 @@
+# Sun Oct 25 20:57:27 PDT 2026 host=tender-ray commit=766902b86348a5e3be1711982f06066668acdbfa variant=pass runs=400 seed=4
+# build rc=0
+WARM_RESET n=1 cyc=151 phase_target=0 hold=5
+WARM_RESET n=2 cyc=444 phase_target=1 hold=10
+WARM_RESET n=3 cyc=596 phase_target=2 hold=35
+WARM_RESET n=4 cyc=737 phase_target=3 hold=35
+WARM_RESET n=5 cyc=1061 phase_target=4 hold=10
+WARM_RESET n=6 cyc=1162 phase_target=5 hold=18
+WARM_RESET n=7 cyc=1444 phase_target=6 hold=2
+WARM_RESET n=8 cyc=1447 phase_target=7 hold=1
+WARM_RESET n=9 cyc=1706 phase_target=8 hold=40
+WARM_RESET n=10 cyc=1968 phase_target=0 hold=11
+WARM_RESET n=11 cyc=2420 phase_target=1 hold=30
+WARM_RESET n=12 cyc=2605 phase_target=2 hold=36
+WARM_RESET n=13 cyc=2912 phase_target=3 hold=37
+WARM_RESET n=14 cyc=3350 phase_target=4 hold=11
+WARM_RESET n=15 cyc=3562 phase_target=5 hold=16
+WARM_RESET n=16 cyc=3876 phase_target=6 hold=2
+WARM_RESET n=17 cyc=3879 phase_target=7 hold=3
+WARM_RESET n=18 cyc=4157 phase_target=8 hold=26
+WARM_RESET n=19 cyc=4402 phase_target=0 hold=21
+WARM_RESET n=20 cyc=4781 phase_target=1 hold=25
+WARM_RESET n=21 cyc=5131 phase_target=2 hold=38
+WARM_RESET n=22 cyc=5269 phase_target=3 hold=25
+WARM_RESET n=23 cyc=5677 phase_target=4 hold=19
+WARM_RESET n=24 cyc=6080 phase_target=5 hold=42
+WARM_RESET n=25 cyc=6352 phase_target=6 hold=3
+WARM_RESET n=26 cyc=6356 phase_target=7 hold=1
+WARM_RESET n=27 cyc=6594 phase_target=8 hold=16
+WARM_RESET n=28 cyc=6920 phase_target=0 hold=9
+WARM_RESET n=29 cyc=7037 phase_target=1 hold=3
+WARM_RESET n=30 cyc=7133 phase_target=2 hold=16
+WARM_RESET n=31 cyc=7240 phase_target=3 hold=18
+WARM_RESET n=32 cyc=7619 phase_target=4 hold=33
+WARM_RESET n=33 cyc=7794 phase_target=5 hold=23
+WARM_RESET n=34 cyc=7965 phase_target=6 hold=3
+WARM_RESET n=35 cyc=7969 phase_target=7 hold=1
+WARM_RESET n=36 cyc=8075 phase_target=8 hold=31
+WARM_RESET n=37 cyc=8160 phase_target=0 hold=30
+WARM_RESET n=38 cyc=8486 phase_target=1 hold=27
+WARM_RESET n=39 cyc=8582 phase_target=2 hold=30
+WARM_RESET n=40 cyc=8825 phase_target=3 hold=20
+WARM_RESET n=41 cyc=9047 phase_target=4 hold=28
+WARM_RESET n=42 cyc=9108 phase_target=5 hold=23
+WARM_RESET n=43 cyc=9456 phase_target=6 hold=2
+WARM_RESET n=44 cyc=9459 phase_target=7 hold=2
+WARM_RESET n=45 cyc=9598 phase_target=8 hold=29
+WARM_RESET n=46 cyc=9811 phase_target=0 hold=39
+WARM_RESET n=47 cyc=10189 phase_target=1 hold=7
+DONTCARE cyc=10197 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10198 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10199 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10200 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10201 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10202 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10203 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10204 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10205 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10206 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10207 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10208 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10209 arg_out_flit v=0 fault=0 nreset=47
+DONTCARE cyc=10210 arg_out_flit v=0 fault=0 nreset=47
+WARM_RESET n=48 cyc=10277 phase_target=2 hold=35
+WARM_RESET n=49 cyc=10575 phase_target=3 hold=13
+WARM_RESET n=50 cyc=10721 phase_target=4 hold=31
+WARM_RESET n=51 cyc=10886 phase_target=5 hold=25
+WARM_RESET n=52 cyc=11060 phase_target=6 hold=2
+WARM_RESET n=53 cyc=11063 phase_target=7 hold=3
+WARM_RESET n=54 cyc=11458 phase_target=8 hold=24
+WARM_RESET n=55 cyc=11548 phase_target=0 hold=27
+WARM_RESET n=56 cyc=11599 phase_target=1 hold=33
+WARM_RESET n=57 cyc=11757 phase_target=2 hold=17
+WARM_RESET n=58 cyc=11861 phase_target=3 hold=3
+WARM_RESET n=59 cyc=12054 phase_target=4 hold=11
+WARM_RESET n=60 cyc=12074 phase_target=5 hold=8
+WARM_RESET n=61 cyc=12518 phase_target=6 hold=2
+WARM_RESET n=62 cyc=12521 phase_target=7 hold=1
+WARM_RESET n=63 cyc=12774 phase_target=8 hold=39
+WARM_RESET n=64 cyc=13154 phase_target=0 hold=16
+WARM_RESET n=65 cyc=13515 phase_target=1 hold=11
+WARM_RESET n=66 cyc=13719 phase_target=2 hold=29
+WARM_RESET n=67 cyc=13838 phase_target=3 hold=7
+WARM_RESET n=68 cyc=14012 phase_target=4 hold=31
+WARM_RESET n=69 cyc=14158 phase_target=5 hold=36
+WARM_RESET n=70 cyc=14288 phase_target=6 hold=3
+WARM_RESET n=71 cyc=14292 phase_target=7 hold=2
+WARM_RESET n=72 cyc=14563 phase_target=8 hold=20
+WARM_RESET n=73 cyc=14645 phase_target=0 hold=25
+WARM_RESET n=74 cyc=14713 phase_target=1 hold=19
+WARM_RESET n=75 cyc=15136 phase_target=2 hold=40
+WARM_RESET n=76 cyc=15320 phase_target=3 hold=33
+WARM_RESET n=77 cyc=15536 phase_target=4 hold=41
+WARM_RESET n=78 cyc=15767 phase_target=5 hold=19
+WARM_RESET n=79 cyc=16079 phase_target=6 hold=3
+WARM_RESET n=80 cyc=16083 phase_target=7 hold=3
+WARM_RESET n=81 cyc=16148 phase_target=8 hold=14
+WARM_RESET n=82 cyc=16358 phase_target=0 hold=24
+WARM_RESET n=83 cyc=16521 phase_target=1 hold=17
+WARM_RESET n=84 cyc=16937 phase_target=2 hold=42
+WARM_RESET n=85 cyc=17104 phase_target=3 hold=6
+WARM_RESET n=86 cyc=17288 phase_target=4 hold=8
+WARM_RESET n=87 cyc=17547 phase_target=5 hold=22
+WARM_RESET n=88 cyc=17602 phase_target=6 hold=3
+WARM_RESET n=89 cyc=17606 phase_target=7 hold=2
+WARM_RESET n=90 cyc=17781 phase_target=8 hold=25
+WARM_RESET n=91 cyc=17911 phase_target=0 hold=29
+WARM_RESET n=92 cyc=17975 phase_target=1 hold=22
+WARM_RESET n=93 cyc=18188 phase_target=2 hold=16
+WARM_RESET n=94 cyc=18405 phase_target=3 hold=3
+WARM_RESET n=95 cyc=18512 phase_target=4 hold=6
+EDGE_SCHED runs_started=400 runs_published=325 aborted_by_reset=75 warm_resets=95 compared=16924 mismatches=0 dontcare_flit_v0=14 (of which fault=1: 0) golden_ok=325 golden_bad=0 fault_cycles=0 in_reset_diff=174 pending=0
+EDGE_SCHED warm_reset_phase_hits dlv=11 flush_pub=11 on_pub=11 pub+1=11 idle=11 on_start=10 b2b_first=10 b2b_second=10 pub+2=10
+EDGE_SCHED PASS
+- /srv/opentallas-scratch2/claude/tok-hbm-2010/edge_sched_r6/seed4/pass/tb.sv:463: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 37us; walltime 1.902 s; speed 19.696 us/s
+- Verilator: cpu 1.902 s on 1 threads; allocated 7 MB
+# sim rc=0 Sun Oct 25 20:57:45 PDT 2026
