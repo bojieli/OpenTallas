@@ -143,6 +143,48 @@ def recipe_from_census(core, census, profile_dir, root=REPO):
 
 
 
+
+def canonical_oneclk_map(core, recipe, receipt, native_clocks, root=REPO):
+    """Keep every legacy q2 data/reset alias; replace certified clock aggregate."""
+    path = Path(root) / 'physical/die_plan/hbm/cores/harden/canonical_ports_split.json'
+    types = json.loads(path.read_text())['types']
+    candidates = [(k, v) for k, v in types.items() if v.get('top') == TOPS[core]]
+    if len(candidates) != 1:
+        raise ValueError('ambiguous canonical q2 type')
+    key, canonical = candidates[0]
+    entries = list(canonical['type_ids'].values())
+    if len(entries) != 1:
+        raise ValueError('ambiguous canonical q2 interface')
+    old = entries[0]['cut_pins']
+    native = {n: (d, w) for n, d, w in receipt['port_inventory']['ports']}
+    if native.get('clk') != ('input', 1):
+        raise ValueError('canonical q2 adapter requires one scalar input clk')
+    clocks = set(native_clocks)
+    mapping, covered, old_clocks = {}, set(), set()
+    for alias, destinations in old.items():
+        names = set(destinations)
+        if names & clocks:
+            if not names <= clocks:
+                raise ValueError('mixed clock/data canonical alias')
+            old_clocks |= names
+            continue
+        if len(destinations) != 1:
+            raise ValueError('ambiguous canonical data alias')
+        port, width = next(iter(destinations.items()))
+        if port not in native or native[port][1] != width or port in covered:
+            raise ValueError('canonical data alias width/coverage mismatch: ' + alias)
+        mapping[alias] = dict(destinations)
+        covered.add(port)
+    if old_clocks != clocks or covered != set(native) - {'clk'} or 'clk' in mapping:
+        raise ValueError('canonical q2 map must cover every exact nonclock port')
+    mapping['clk'] = {'clk': 1}
+    recipe['canonical_pin_map'] = mapping
+    receipt['canonical_pin_map'] = dict(canonical_type=key, source_sha256=sha(path),
+        preserved_nonclock_aliases=len(mapping)-1, data_cycle_delta=0,
+        map=mapping, physical_clock_pin='clk')
+    return recipe, receipt
+
+
 def stage_physical_macros(recipe, staged, receipt, profile_dir, root=REPO):
     """Use opaque physical SRAMs with the exact provider's fixed ANSI ports.
 
@@ -208,10 +250,13 @@ def main():
             if not path.is_relative_to(REPO):
                 ap.error('external plan requires --diagnostic-plan: ' + str(path))
     recipe, staged, receipt = materialize(a.core, a.profile_dir)
+    native_clocks = list(receipt['clock_ports'])
     if a.common_clock_dir:
         sys.path.insert(0, str(REPO / 'tools/hbm_b2/q3sync'))
         from q3_common_clock import adapt_recipe
         recipe, staged, receipt = adapt_recipe(a.core, recipe, staged, receipt, a.common_clock_dir)
+        if a.core in ('reduce', 'ring_ag') and selected_view['module'] != TOPS[a.core]:
+            recipe, receipt = canonical_oneclk_map(a.core, recipe, receipt, native_clocks)
     recipe, staged, receipt = stage_physical_macros(recipe, staged, receipt, a.profile_dir)
     receipt['diagnostic_inputs'] = bool(a.diagnostic_plan)
     receipt['plan_module'] = selected_view['module']
