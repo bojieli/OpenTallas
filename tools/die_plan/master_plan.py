@@ -433,11 +433,11 @@ def pushdown_island(k, rect, centre, role, drive_len_um, sinks):
                 ft_ports=[dict(name=f"mp_isl{k}_ck_i", dir="in", layer="M5", xy_um=[r3(cx - 2.16), r3(cy + 2.16)],
                                connect="die M9 clock stack (M9->M5 at the island centre)"),
                           dict(name=f"mp_isl{k}_ck_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy + 2.16)],
-                               connect="die mesh/tree net" if role != "clock_entry" else "core clock tree root"),
+                               connect="die mesh/tree feed-through net; independent core clock pin"),
                           dict(name=f"mp_isl{k}_rst_i", dir="in", layer="M5", xy_um=[r3(cx - 2.16), r3(cy - 2.16)],
                                connect="die regional reset stack (M9->M5)"),
                           dict(name=f"mp_isl{k}_rst_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy - 2.16)],
-                               connect="core reset tree root")],
+                               connect="die reset feed-through net; independent core reset pin")],
                 driver=dict(size_driver(drive_len_um, sinks), placement="fixed dont_touch at centre_um",
                             basis="12.8 d1: plan geometry only (driven length %.1f um, %d sinks)" % (drive_len_um, sinks)),
                 lec="die-owned feed-through: no core logic on mp_isl* ports (12.2a1)")
@@ -693,22 +693,33 @@ def ring_cells(cx, cy, ring):
         yield cx + ring, cy + j
 
 
-def place_pins(occ, bay, n, limit, P=None):
+def place_pins(occ, bay, n, limit, P=None, bounds=None, reach_um=None):
     """n M7 entry pins (down + up via per bit at a repeater/station drop) in the gcells nearest the bay, filling each
     gcell to <= limit across all bays (occ = shared per-gcell count).  Pins sit on every other M7 track (0.128) and
     every other M8 row (0.16), staggered."""
     cx, cy = int(((bay[0] + bay[2]) / 2) // G), int(((bay[1] + bay[3]) / 2) // G)
+    if limit <= 0:
+        return []
     out, ring = [], 0
-    while len(out) < n and ring < 400:
+    max_ring = min(400, int(math.ceil(reach_um / G)) + 2) if reach_um is not None else 400
+    while len(out) < n and ring < max_ring:
         for gx, gy in ring_cells(cx, cy, ring):
             if gx < 0 or gy < 0 or (P and (gx * G > P.W or gy * G > P.H)):
                 continue
             while occ[(gx, gy)] < limit and len(out) < n:
                 k = occ[(gx, gy)]
                 col, row = k % 84, k // 84
-                out.append((r3(gx * G + 0.064 + col * 0.128),
-                            r3(gy * G + 0.08 + row * 0.32 + (0.16 if col % 2 else 0.0))))
+                xy = (r3(gx * G + 0.064 + col * 0.128),
+                      r3(gy * G + 0.08 + row * 0.32 + (0.16 if col % 2 else 0.0)))
+                # Cursor includes unusable edge slots: never recycle a physical
+                # track or spill a bay drop into a different partition.
                 occ[(gx, gy)] += 1
+                if bounds is not None and not (bounds[0] <= xy[0] <= bounds[2] and bounds[1] <= xy[1] <= bounds[3]):
+                    continue
+                dist = max(bay[0]-xy[0], 0, xy[0]-bay[2]) + max(bay[1]-xy[1], 0, xy[1]-bay[3])
+                if reach_um is not None and dist > reach_um + 1e-6:
+                    continue
+                out.append(xy)
             if len(out) >= n:
                 break
         ring += 1
@@ -1125,6 +1136,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     def _same(u, v):
         return abs(u[0] - v[0]) + abs(u[1] - v[1]) < 1e-3
     n_bound = 0
+    entry_missing = []
     drops = defaultdict(int)             # (part, path) -> drop counter: entry pin names stay unique per partition
     for sgm in m89_segs:
         lg = (pmap[sgm["path"]]["legs"][sgm["leg"]] if sgm.get("leg") is not None and sgm["path"] in pmap
@@ -1132,6 +1144,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         for end, other in ((sgm["a"], sgm["b"]), (sgm["b"], sgm["a"])):
             cand = [b for b in near[sgm["path"]] if b["part"] == sgm["part"]]
             if not cand:
+                entry_missing.append(dict(part=sgm["part"], path=sgm["path"], requested=2*sgm["bits"],
+                                          placed=0, reason="no bay for die-to-partition drop"))
                 continue
             bb = min(cand, key=lambda b: abs(b["xy_um"][0] - end[0]) + abs(b["xy_um"][1] - end[1]))
             # pin pairs per bit: even = down (die M8/M9 -> M7 -> partition, dir in), odd = up (dir out).  A segment
@@ -1145,7 +1159,12 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                     bind = (lg["slot"] + "_o", 1)
             dk = drops[(sgm["part"], sgm["path"])]
             drops[(sgm["part"], sgm["path"])] += 1
-            for i, xy in enumerate(place_pins(occ, bb["rect_um"], 2 * sgm["bits"], lim, P)):
+            placed = place_pins(occ, bb["rect_um"], 2 * sgm["bits"], lim, P,
+                                bounds=P.rect(sgm["part"]), reach_um=reach)
+            if len(placed) != 2 * sgm["bits"]:
+                entry_missing.append(dict(part=sgm["part"], path=sgm["path"], requested=2*sgm["bits"],
+                                          placed=len(placed), reason="entry capacity within partition/reach exhausted"))
+            for i, xy in enumerate(placed):
                 pin = f"{bind[0]}[{i // 2}]" if bind and i % 2 == bind[1] else None
                 n_bound += pin is not None
                 pins.append(dict(part=sgm["part"], path=sgm["path"], bit=i, layer="M7", xy_um=list(xy),
@@ -1348,7 +1367,9 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         corridor_tracks=dict(verdict="PASS" if not worst_cells and not blocked else "FAIL", limit=track_max,
                              layers=use, worst_gcells=worst_cells, blocked_sections=len(blocked),
                              blocked=blocked[:20], m89_roads=len(m89_segs)),
-        entry_pins=dict(verdict="PASS" if pin_max <= lim else "FAIL", pins=len(pins), max_per_gcell=pin_max,
+        entry_pins=dict(verdict="PASS" if pin_max <= lim and not entry_missing else "FAIL", pins=len(pins), max_per_gcell=pin_max,
+                        unplaced=sum(x["requested"]-x["placed"] for x in entry_missing),
+                        failed_drops=len(entry_missing), missing_examples=entry_missing[:20], max_drop_reach_um=reach,
                         limit_per_gcell=lim, free_tracks_per_gcell=free_t, derivation=deriv),
         clock_shield=shield,
         static_ir=ir,

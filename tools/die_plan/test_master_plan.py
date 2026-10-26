@@ -292,3 +292,14 @@ def test_entry_pin_ring_keeps_exact_prior_order():
         for r in range(12):
             old = [(cx+i,cy+j) for i in range(-r,r+1) for j in range(-r,r+1) if max(abs(i),abs(j))==r]
             assert list(M.ring_cells(cx,cy,r)) == old
+
+
+def test_entry_pins_cannot_escape_partition_or_reach():
+    import master_plan as M
+    occ=M.defaultdict(int)
+    box=(0,0,21.6,21.6)
+    p=M.place_pins(occ,(0,0,10,10),500,2,bounds=box,reach_um=10)
+    assert len(p)<500
+    assert all(0<=x<=21.6 and 0<=y<=21.6 for x,y in p)
+    assert all(max(x-10,0)+max(y-10,0)<=10+1e-6 for x,y in p)
+    assert M.place_pins(M.defaultdict(int),(0,0,10,10),1,0)==[]
