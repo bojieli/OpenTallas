@@ -5,7 +5,7 @@ from pathlib import Path
 DLY=re.compile(r'(?:^|[./])(u_(?:lpad_[A-Za-z0-9_]+|d[0-9]+_[A-Za-z0-9_]+|pd[0-9]+_[A-Za-z0-9_]+))[./]r\[([0-9]+)\]$')
 
 def census(design,top):
- modules=design['modules'];rows=[];hard=[];unknown=[]
+ modules=design['modules'];rows=[];hard=[];unknown=[];cell_types=collections.Counter();metadata=collections.Counter()
  def walk(module,prefix):
   m=modules[module];aliases=collections.defaultdict(list)
   for name,row in m.get('netnames',{}).items():
@@ -16,6 +16,8 @@ def census(design,top):
    if typ in modules:
     if int(str(modules[typ].get('attributes',{}).get('blackbox','0')),2):hard.append(dict(instance=path,module=typ));continue
     walk(typ,path+'/');continue
+   if typ in {'$scopeinfo'}:metadata[typ]+=1;continue
+   cell_types[typ]+=1
    if 'DFF' not in typ.upper():
     if 'LATCH' in typ.upper():unknown.append(dict(instance=path,type=typ))
     continue
@@ -28,7 +30,7 @@ def census(design,top):
      mm=DLY.search(n);row.update(delay_instance=mm[1],stage=int(mm[2]))
     rows.append(row)
  walk(top,'')
- return dict(scope='ACTUAL_TECHMAPPED_SOFT_LOGIC_ONLY',top=top,soft_ff=len(rows),categories=dict(collections.Counter(r['category'] for r in rows)),ff_types=dict(collections.Counter(r['type'] for r in rows)),hard_blackboxes=hard,unqualified_other_state=unknown,registers=rows)
+ return dict(scope='ACTUAL_TECHMAPPED_SOFT_LOGIC_ONLY',top=top,soft_cells=sum(cell_types.values()),soft_cell_types=dict(cell_types),excluded_metadata=dict(metadata),mapped_cell_kind='GENERIC_YOSYS_TECHMAP_NOT_ASAP7' if all(t.startswith('$_') for t in cell_types) else 'MIXED_OR_UNQUALIFIED',soft_ff=len(rows),categories=dict(collections.Counter(r['category'] for r in rows)),ff_types=dict(collections.Counter(r['type'] for r in rows)),hard_blackboxes=hard,unqualified_other_state=unknown,registers=rows)
 
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('mapped',type=Path);p.add_argument('--top',required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();r=census(json.loads(a.mapped.read_text()),a.top);a.out.write_text(json.dumps(r,indent=1)+'\n');print(json.dumps({k:v for k,v in r.items() if k!='registers'}))

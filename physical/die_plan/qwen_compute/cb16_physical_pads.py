@@ -249,7 +249,7 @@ if {[llength $qc_pad_missing] || [llength $qc_pad_ambiguous]} {error "actual CB1
     return '\n'.join(out)+'\n'
 
 
-def build(raw,tn,txt,plan_dir):
+def build(raw,tn,txt,plan_dir,include_clock_inventory=True):
     t=raw['partition_types'][tn];ls=leafs(txt);homes=fabric_homes(t,ls,plan_dir);used=[q['box_um'] for q in homes.values()];bs=boxes(t);banks=[];unplaced=[];chains=[]
     stations={e['conn'][4:]:e for e in t.get('internal_stations',[]) if e.get('conn','').startswith('bus:')}
     buses={b['name']:b for b in t.get('buses',[])}
@@ -315,7 +315,7 @@ def build(raw,tn,txt,plan_dir):
     routes=interface_routes(raw,tn,t,ls,homes,plan_dir,txt)
     other_soft=[dict(inst=l['inst'],module=l['module']) for l in ls if not physical_name(l['inst']).startswith('u_t')]
     # Full inventory must eventually come from mapped cells, not inferred core sink counts.
-    report=dict(type=tn,scope='ACTUAL_DELAY_BANK_PREPARATION_ONLY',banks=len(banks),placed_delay_ff=sum(b['bits'] for b in banks),unplaced_delay_ff=sum(z['ff'] for z in unplaced),unplaced=unplaced,chains=chains,hard_view_blockers=hard_missing,other_soft_modules_need_mapped_inventory=other_soft,fabric_homes=list(homes.values()),interface_routes=routes,clock_inventory=clock_inventory(raw,tn,txt,banks),
+    report=dict(type=tn,scope='ACTUAL_DELAY_BANK_PREPARATION_ONLY',banks=len(banks),placed_delay_ff=sum(b['bits'] for b in banks),unplaced_delay_ff=sum(z['ff'] for z in unplaced),unplaced=unplaced,chains=chains,hard_view_blockers=hard_missing,other_soft_modules_need_mapped_inventory=other_soft,fabric_homes=list(homes.values()),interface_routes=routes,clock_inventory=clock_inventory(raw,tn,txt,banks) if include_clock_inventory else dict(scope='Deferred to full actual mapped FF census'),
         cells_area_um2=sum(b['bits'] for b in banks)*CELL_W*CELL_H,new_pipeline_cycles=0,
         release_capacity_verdict='BLOCKED' if hard_missing or unplaced or other_soft else 'NOT_RUN',
         g2='NOT_RUN: actual hard-view ABI and full mapped soft-register inventory required; no skeleton substitute')
