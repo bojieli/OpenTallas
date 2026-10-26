@@ -1,0 +1,10 @@
+# S81 KITS takeover 17:13 — initial inventory
+Current hub main c51d6d9303; own scratch worktree codex/s81-kits-1713. No children.
+- V1 hcpost is now unsigned pending277-pin re-kit. Current generator lacked its recipe (KeyError); added minimal existing s81sl_hcpl recipe, preserving ML7/AL6 and114.48square. Fresh kit codex-s81-kits-1713/hcpl/ot_dsrom_su_hcpost_lane_pr_v1, hashddb051de99ff74c5,277pins,0macros. Render/review next, then admitted CTS run with LEC.
+- Original c03 directed CS proof COMPLETE: baseline PASS, m1/m2/muv caught6/18/1361 mismatches. Current X2 rebase control m0 still compiling on epyc2:path-s81-x2ctl/m0, not a verdict. PLAN sibling owns current m0/m1 collection, no duplicate launch here.
+- Original RQ0unroll32768 terminalFAIL: Liberty-imported macro blackbox lacks CB parameter; Claude's port-only BB successors address it. Current rq0_bb, rq0_kvbank, rq0_kvpool all active OPT on hub:path-s81-kv. Split sizing pending, no result. Wholeleaf is not a physical candidate; do not substitute HARD_RQ1 without actual qualified profile/model.
+- ST3 inherited13 CTS jobs all terminal:12 rc4, t47 rc0. Known reset entry/relay sites missing from planned sink census cause long late clock branches. No failed station route. Existing delta reset-site fixed-point extension is not yet in branch tip; coordinate CLOCK/PLAN, no broad new wave.
+- Histbank hb1309m remains planning-only/canary-held; old51bb withdrawn. Requires fresh current-main source/actual LEC+placement review before route; parent435pin ABI pending child SIGNED.
+- V2 SRAM repair inputs5120bits: own no-repair macro/source subset task. Existing macro compiler supports zero spare rows/columns; inspect and qualify port-subset model before bind changes, no fake old view transfer.
+- F2 hard-child overrides owned parent: proof54,432 lane1 ties removed; builders HOLD until coherent hard_params source+sidecars land. Old gunit d82 queue rows held; withdraw instead of stale requeue.
+Next: launch reviewed277pin hcpost CTS, collect split sizing and advance bank/pool model/decomposition; finish V2 no-repair interface and coordinate station reset-sink correction.
