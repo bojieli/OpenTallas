@@ -11,10 +11,7 @@
 # M2 / M3 keep the platform adjustment (the die model blocks M2/M3 over partitions, reservation 0 there); M4-M7 get
 # adjustment 0: the explicit stripes replace the uniform ORFS 25%.  Data: ft_reserve.tcl (kit generator) sets
 #   ot_ftres_slots {slot ...}  ot_ftres_ft {{L x0 y0 x1 y1} ...}  ot_ftres_nonft {{L x0 y0 x1 y1} ...}   (um, kit frame)
-# Sourced from grt_pre.tcl (PRE_GLOBAL_ROUTE).  It wraps global_route: the FIRST full (non-incremental) call runs the
-# two passes; incremental calls (repair_design / repair_timing DPL reroutes) go to the stock command unchanged.
-# Limitation: incremental reroutes after the merge use the pass-OWN grid (FT stripes blocked), so an FT net that the
-# GRT repair buffers is re-routed off the stripes; the post-GRT audit (ot_ftres_audit) counts such nets.
+# Audit: ft_reserve.py audit PLAN TYPE RESULTS/ftres_ft.guide RESULTS/ftres_own.guide.
 # ORFS sources step hooks inside a proc (source_step_tcl): the data goes to the global scope explicitly.
 set ::ot_ftres_dir [file dirname [file normalize [info script]]]
 if {![info exists ::ot_ftres_slots]} { uplevel #0 [list source [file join $::ot_ftres_dir ft_reserve.tcl]] }
@@ -110,7 +107,7 @@ proc ot_ftres_run {args} {
   # pass FT
   ot_ftres_set_special $own 1
   set obs [ot_ftres_obs $::ot_ftres_nonft]
-  set r1 [catch { uplevel #0 [list ::ot_ftres_orig_global_route {*}$args] } e1]
+  set r1 [catch { uplevel #0 [list global_route {*}$args] } e1]
   ot_ftres_unobs $obs
   ot_ftres_set_special $own 0
   if {$r1} { error "OT_FTRES pass FT: $e1" }
@@ -118,7 +115,7 @@ proc ot_ftres_run {args} {
   # pass OWN
   ot_ftres_set_special $ft 1
   set obs [ot_ftres_obs $::ot_ftres_ft]
-  set r2 [catch { uplevel #0 [list ::ot_ftres_orig_global_route {*}$args] } e2]
+  set r2 [catch { uplevel #0 [list global_route {*}$args] } e2]
   write_guides $wd/ftres_own.guide
   ot_ftres_unobs $obs
   ot_ftres_set_special $ft 0
@@ -127,16 +124,22 @@ proc ot_ftres_run {args} {
   read_guides $wd/ftres_all.guide
   puts "OT_FTRES merged guides $wd/ftres_all.guide"
 }
-if {![llength [info commands ::ot_ftres_orig_global_route]]} {
-  rename ::global_route ::ot_ftres_orig_global_route
-  set ::ot_ftres_done 0
-  proc ::global_route {args} {
-    if {$::ot_ftres_done || "-start_incremental" in $args || "-end_incremental" in $args} {
-      return [uplevel 1 [list ::ot_ftres_orig_global_route {*}$args]]
-    }
-    set ::ot_ftres_done 1
-    return [ot_ftres_run {*}$args]
-  }
+# stage pre  (grt_pre.tcl, PRE_GLOBAL_ROUTE): M4-M7 adjustment 0; the stock flow (planning global_route, repair_design /
+#             repair_timing with their incremental reroutes) runs on the union of both classes' tracks.
+# stage post (grt_post.tcl, first line, POST_GLOBAL_ROUTE): the repaired netlist is routed again with the explicit
+#             reservation (two passes, merged, read_guides) and route.guide is rewritten; 5_1_grt.odb carries it.
+# (A wrapper around the FIRST global_route failed in the kit: the post-repair incremental reroute ran on the pass-OWN
+# grid, where the FT pins sit on blocked stripes: GRT-0183 heap underflow, kv3_io_ft 10-26 00:44.)
+proc ot_ftres_post {} {
+  ot_ftres_run -congestion_iterations 30 -congestion_report_file $::env(REPORTS_DIR)/congestion_ftres.rpt
+  write_guides $::env(RESULTS_DIR)/route.guide
+  set blk [ord::get_db_block]; set ng 0; set nn 0
+  foreach n [$blk getNets] { if {[$n isSpecial]} { continue }; incr nn; if {[llength [$n getGuides]]} { incr ng } }
+  puts "OT_FTRES post: route.guide rewritten from the reservation passes; db guides on $ng of $nn nets"
 }
-set_global_routing_layer_adjustment M4-M7 0
-puts "OT_FTRES hook armed: M4-M7 adjustment 0, explicit FT stripes (ft_reserve.tcl), two-pass GRT"
+if {![info exists ::ot_ftres_stage] || $::ot_ftres_stage eq "pre"} {
+  set_global_routing_layer_adjustment M4-M7 0
+  puts "OT_FTRES pre: M4-M7 adjustment 0 (explicit FT stripes replace the uniform 25%); reservation route in POST"
+} else {
+  ot_ftres_post
+}

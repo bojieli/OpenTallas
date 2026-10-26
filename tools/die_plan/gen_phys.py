@@ -1096,9 +1096,16 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         import ft_reserve as FR
         (kd / "ft_reserve.tcl").write_text(FR.hook_tcl(P, tn))
         shutil.copyfile(Path(__file__).with_name("ft_grt.tcl"), kd / "ft_grt.tcl")
+        # pre: M4-M7 adjustment 0 for the stock planning route + GRT repair; post (FIRST, before the GRT-RC tap pass):
+        # the repaired netlist re-routed with the reservation, route.guide rewritten (ft_grt.tcl)
         with open(kd / "grt_pre.tcl", "a") as fh:
-            fh.write("\n# PATH-KV-FTRES 10-26: explicit FT track reservation (ft_reserve.tcl data, two-pass GRT)\n"
-                     "source [file join $gp_dir ft_grt.tcl]\n")
+            fh.write("\n# PATH-KV-FTRES 10-26: explicit FT track reservation (ft_reserve.tcl data, ft_grt.tcl)\n"
+                     "set ::ot_ftres_stage pre\nsource [file join $gp_dir ft_grt.tcl]\n")
+        post = (kd / "grt_post.tcl").read_text()
+        (kd / "grt_post.tcl").write_text(
+            "# PATH-KV-FTRES 10-26: reservation route of the repaired netlist (two passes, merged; ft_grt.tcl)\n"
+            "set ::ot_ftres_stage post\nsource [file join [file dirname [file normalize [info script]]] ft_grt.tcl]\n"
+            + post)
         ftres = dict(tool="tools/die_plan/ft_reserve.py hook + ft_grt.tcl", layers=list(FR.RESERVE_LAYERS),
                      share={L: v["share"] for L, v in FR.share(P).items()},
                      slots=[s_["name"] for s_ in t.get("ft_slots", [])], m4_m7_layer_adjustment=0,
