@@ -20,12 +20,19 @@ def derive(bg):
             if d <= 0 or not g['sink'].startswith(('pvw_0__', 'pvw_1__')) or not m['source'].startswith(('pvw_0__', 'pvw_1__')):
                 continue
             pair = int(g['sink'][4])
+            if int(m['source'][4]) != pair:
+                raise ValueError('cross-pair PV path')
             a = re.fullmatch(r'pvw_[01]__u_T([01])Q([01])_24_r0', g['sink'])
-            if a and m['sink_port'] == 'a' and re.fullmatch(r'pvw_[01]__u_T[01]Q[01]_21_r0.b', m['source']):
-                extra[pair, int(a[1]), int(a[2]), 'link'] = d
-            elif g['sink'].endswith('__u_RH_r0') and m['sink_port'] in ('a0', 'a1', 'b0', 'b1'):
-                extra[pair, int(m['sink_port'][0] == 'b'), int(m['sink_port'][1]), 'head'] = d
-            elif m['sink_port'] not in ('y', 'a0t', 'a1t', 'a0v', 'a1v'):
+            if a and m['sink_port'] in ('a', 'y') and m['source'] == f'pvw_{pair}__u_T{a[1]}Q{a[2]}_21_r0.b':
+                if m['sink_port'] == 'a':
+                    extra[pair, int(a[1]), int(a[2]), 'link'] = d
+            elif g['sink'].endswith('__u_RH_r0') and m['sink_port'] in ('a0', 'a1', 'b0', 'b1', 'a0t', 'a1t', 'a0v', 'a1v'):
+                c,q=int(m['sink_port'][0] == 'b'),int(m['sink_port'][1])
+                if m['source'] != f'pvw_{pair}__u_T{c}Q{q}_45_r0.b':
+                    raise ValueError('unmapped header producer')
+                if len(m['sink_port']) == 2:
+                    extra[pair,c,q,'head'] = d
+            else:
                 raise ValueError('unmapped changed PV path: ' + str((g['sink'], m)))
     pairs = []
     for p in range(2):
