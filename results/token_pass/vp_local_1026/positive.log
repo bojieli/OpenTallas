@@ -1,0 +1,58 @@
+AGE COMMIT row=0 event=40 commit=42 age=2
+AGE COMMIT row=1 event=42 commit=44 age=2
+AGE COMMIT row=2 event=44 commit=46 age=2
+AGE COMMIT row=3 event=46 commit=48 age=2
+AGE COMMIT row=4 event=48 commit=50 age=2
+AGE COMMIT row=5 event=50 commit=52 age=2
+AGE COMMIT row=6 event=52 commit=54 age=2
+AGE COMMIT row=7 event=54 commit=56 age=2
+AGE COMMIT row=8 event=56 commit=58 age=2
+AGE COMMIT row=9 event=58 commit=60 age=2
+AGE COMMIT row=10 event=60 commit=62 age=2
+AGE COMMIT row=11 event=62 commit=64 age=2
+AGE COMMIT row=12 event=64 commit=66 age=2
+AGE COMMIT row=13 event=66 commit=68 age=2
+AGE COMMIT row=14 event=68 commit=70 age=2
+AGE COMMIT row=15 event=70 commit=72 age=2
+AGE COMMIT row=16 event=72 commit=74 age=2
+AGE COMMIT row=17 event=74 commit=76 age=2
+AGE COMMIT row=18 event=76 commit=78 age=2
+AGE COMMIT row=19 event=78 commit=80 age=2
+AGE COMMIT row=20 event=80 commit=82 age=2
+AGE COMMIT row=21 event=82 commit=84 age=2
+AGE COMMIT row=22 event=84 commit=86 age=2
+AGE COMMIT row=23 event=86 commit=88 age=2
+AGE COMMIT row=24 event=88 commit=90 age=2
+AGE COMMIT row=25 event=90 commit=92 age=2
+AGE COMMIT row=26 event=92 commit=94 age=2
+AGE COMMIT row=27 event=94 commit=96 age=2
+AGE COMMIT row=28 event=96 commit=98 age=2
+AGE COMMIT row=29 event=98 commit=100 age=2
+AGE COMMIT row=30 event=100 commit=102 age=2
+AGE COMMIT row=31 event=102 commit=104 age=2
+AGE COMMIT row=64 event=104 commit=106 age=2
+AGE COMMIT row=65 event=106 commit=108 age=2
+AGE COMMIT row=66 event=108 commit=110 age=2
+AGE COMMIT row=67 event=110 commit=112 age=2
+AGE COMMIT row=68 event=112 commit=114 age=2
+AGE COMMIT row=69 event=114 commit=116 age=2
+AGE COMMIT row=70 event=116 commit=118 age=2
+AGE COMMIT row=71 event=118 commit=120 age=2
+AGE COMMIT row=72 event=120 commit=122 age=2
+AGE COMMIT row=73 event=122 commit=124 age=2
+AGE COMMIT row=74 event=124 commit=126 age=2
+AGE COMMIT row=75 event=126 commit=128 age=2
+AGE COMMIT row=76 event=128 commit=130 age=2
+AGE COMMIT row=77 event=130 commit=132 age=2
+AGE COMMIT row=78 event=132 commit=134 age=2
+AGE COMMIT row=79 event=134 commit=136 age=2
+AGE COMMIT row=1008 event=136 commit=138 age=2
+AGE HLOAD event=146 last=166 age=20
+AGE GAIN event=192 last=204 age=12
+AGE RDOUT event=223 last=228 age=5
+VP_LOCAL counts commits49 hw=16 wl=8 lo=1 fault=0 bad=0 mutant=0
+VP_LOCAL PASS
+- /srv/opentallas-scratch2/claude/codex-vp-local-1026/src/tools/s81_dv/vp_local_1026/tb_vp_local.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 211ns; walltime 0.116 s; speed 1.825 us/s
+- Verilator: cpu 0.116 s on 1 threads; allocated 10 MB
