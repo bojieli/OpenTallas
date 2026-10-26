@@ -113,3 +113,22 @@ def test_depth0_terminal_clusters_hold_leaf_fanout_taps():
     # one more bisection level: equal stage count kept, honest insertion cost (+1 level of legs)
     assert legacy['summary']['trunk_levels']<fixed['summary']['trunk_levels']<=legacy['summary']['trunk_levels']+2
     assert S.plan_legs(g,fanout=4,leaf_fanout=2,rmax_um=120)['summary']==legacy['summary']   # default unchanged
+
+
+def test_island_compact_leg_starts():
+    """CLOCK-RESET S1b: with island_um every cluster's leg-start buffers sit in one compact island
+    (max pairwise <= island span) on free sites, even where the cluster point is crowded."""
+    g=geometry()
+    # crowd the region around every tap: a row-filling cell band 30 um wide around each tap row
+    for t in g['taps'][:40]:
+        x,y=t['xy'];g['cells'].append([f"crowd_{t['name']}",x-15000,y-3000,x+15000,y+3000,0])
+    p=S.plan_legs(g,depth0=True,island_um=10.0)
+    S.validate(p)
+    starts={}
+    for L in p['legs']:
+        if L['parent'] is not None: starts.setdefault(L['parent'],[]).append(L['bufs'][0])
+    xy={n['name']:n['xy'] for n in p['nodes']}
+    span=lambda names:max(S._man(xy[a],xy[b]) for a in names for b in names)/1000
+    assert max(span(v) for v in starts.values())<=10.0+1e-6
+    # no two planned buffers overlap, none on the crowd cells
+    ll=[tuple(n['ll']) for n in p['nodes']];assert len(ll)==len(set(ll))

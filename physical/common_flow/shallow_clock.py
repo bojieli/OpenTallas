@@ -77,7 +77,42 @@ class FreeSites:
         if best is None: raise ValueError('no free row-legal clock buffer footprint')
         _,i,x,y,orient=best
         if reserve: bisect.insort(self.busy[i],(x,x+self.w))
-        return dict(ll=[x,y],xy=[x+self.w/2,y+self.h/2],orient=orient)
+        return dict(ll=[x,y],xy=[x+self.w/2,y+self.h/2],orient=orient,row=i)
+
+    def take(self, site):
+        """Reserve an already chosen footprint (island site) on its row."""
+        bisect.insort(self.busy[site['row']],(site['ll'][0],site['ll'][0]+self.w))
+
+    def release(self, site):
+        self.busy[site['row']].remove((site['ll'][0],site['ll'][0]+self.w))
+
+    def island(self, xy, k, span, step, reach):
+        """CLOCK-RESET S1b: k compact free footprints (max pairwise Manhattan
+        distance of their centres <= span DBU) for one cluster's leg-start
+        buffers, centred as near xy as the existing placement allows.  Searched
+        on square rings of pitch step out to reach DBU; the reservation is
+        made on the frozen placement (white space only, nothing moves).  Falls
+        back to the most compact candidate seen."""
+        best=None
+        rings=int(reach//step)
+        for r in range(rings+1):
+            cands=[(0,0)] if r==0 else [(dx,dy) for dx in range(-r,r+1) for dy in range(-r,r+1) if max(abs(dx),abs(dy))==r]
+            for dx,dy in sorted(cands,key=lambda q:(abs(q[0])+abs(q[1]),q)):
+                c=[xy[0]+dx*step,xy[1]+dy*step]
+                got=[]
+                try:
+                    for _ in range(k): got.append(self.legal(c,reserve=True))
+                except ValueError:
+                    pass
+                for s_ in got: self.release(s_)
+                if len(got)<k: continue
+                sp=max((_man(a['xy'],b['xy']) for a in got for b in got),default=0)
+                off=_man([sum(s_['xy'][0] for s_ in got)/k,sum(s_['xy'][1] for s_ in got)/k],xy)
+                v=(sp>span,sp if sp>span else off,off)
+                if best is None or v<best[0]: best=(v,got)
+            if best is not None and not best[0][0]: break
+        if best is None: raise ValueError('no free clock buffer island')
+        return best[1]
 
 
 def split(points, count):
@@ -99,7 +134,7 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
     def build(pts,parent,remaining,depth,desired=None):
         nm=f'ot_dtsh_{len(nodes)}'
         xy=desired or [sum(p['xy'][j] for p in pts)/len(pts) for j in (0,1)]
-        node=dict(name=nm,parent=parent,depth=depth,**sites.legal(xy))
+        node=dict(name=nm,parent=parent,depth=depth,**{k_:v_ for k_,v_ in sites.legal(xy).items() if k_!='row'})
         nodes.append(node)
         if parent: edges.append([parent,nm])
         if remaining:
@@ -108,7 +143,7 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
             for t in pts: edges.append([nm,t['name']])
     # One common lead from the physical pin to the spatial tree. It is common
     # to every tap, instead of making four long high-load branches at the pin.
-    lead=dict(name='ot_dtsh_0',parent=None,depth=1,**sites.legal(g['root']))
+    lead=dict(name='ot_dtsh_0',parent=None,depth=1,**{k_:v_ for k_,v_ in sites.legal(g['root']).items() if k_!='row'})
     nodes.append(lead)
     build(g['taps'],lead['name'],level,2)
     xy={n['name']:n['xy'] for n in nodes}|{t['name']:t['xy'] for t in g['taps']}
@@ -140,7 +175,7 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
 def _man(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False):
+def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0):
     """topology 'htree' (default): symmetric 2x2 H-tree over the tap region,
     pruned where a quadrant has no tap; every tap gets a private leg from its
     H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
@@ -214,6 +249,19 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
                 cost=4*max(0.0,_man(P,q)-dn)+_man(q,I)
                 if best is None or cost<best[0]: best=(cost,q)
         cl['point']=best[1]
+    # S1b (opt-in island_um > 0): reserve a compact island of free footprints for
+    # every cluster's leg-start buffers (one per out-leg) at the cluster point, so
+    # the cluster net (parent leg -> k leg starts) is a short fan, not k buffers
+    # legalised up to ~100 um apart along a row.  The cluster point becomes the
+    # island centre; the islands are reserved first in every realize().
+    if island_um>0:
+        isl=FreeSites(g)
+        for cl in sorted(clusters,key=lambda c:(c['level'],c['id'])):
+            sites_=isl.island(cl['point'],len(cl['legs']),island_um*u,max(1.0,island_um/2)*u,island_reach_um*u)
+            for s_ in sites_: isl.take(s_)
+            cl['island']=[dict(ll=s_['ll'],xy=s_['xy'],orient=s_['orient'],row=s_['row']) for s_ in sites_]
+            cl['island_span_um']=max((_man(a['xy'],b['xy']) for a in sites_ for b in sites_),default=0)/u
+            cl['point']=[sum(s_['xy'][0] for s_ in sites_)/len(sites_),sum(s_['xy'][1] for s_ in sites_)/len(sites_)]
     lead=dict(id=len(legs),level=0,parent=None,child=['cluster',0]); legs.append(lead); clusters[0]['in_leg']=lead['id']
     tapxy={t['name']:t['xy'] for t in g['taps']}
     for L in legs:
@@ -307,6 +355,11 @@ def realize(p,g):
     length knob: a free site on the L1 ellipse of the requested length."""
     sites=FreeSites(g); nodes=[]; edges=[]
     last={}; u=p['dbu']
+    pool={}
+    for cl in p['clusters']:
+        if cl.get('island'):
+            for s_ in cl['island']: sites.take(s_)
+            pool[cl['id']]=[dict(ll=list(s_['ll']),xy=list(s_['xy']),orient=s_['orient']) for s_ in cl['island']]
     for L in sorted(p['legs'],key=lambda L:(L['level'],L['id'])):
         n=L['n'];A,C=L['A'],L['C'];d=L['d']
         poly=leg_path(A,C,d,p['core'])
@@ -320,7 +373,11 @@ def realize(p,g):
                 done=sum(_man(a,b) for a,b in zip(pos,pos[1:]))
                 R=max(_man(B,C),L['d']+L['x']-done)
                 xy=ellipse_pick(sites,B,C,R,L.get('qprev'),p['core'],p['rmax_um'],u)
-            node=dict(name=nm,parent=parent,depth=L['level'],leg=L['id'],**sites.legal(xy))
+            if i==0 and L['parent'] is not None and pool.get(L['parent']):
+                site=pool[L['parent']].pop(0)
+            else:
+                site={k_:v_ for k_,v_ in sites.legal(xy).items() if k_!='row'}
+            node=dict(name=nm,parent=parent,depth=L['level'],leg=L['id'],**site)
             pos.append(node['xy'])
             nodes.append(node)
             if parent: edges.append([parent,nm])
@@ -336,6 +393,7 @@ def realize(p,g):
     p['summary']=dict(mode='closed_loop',new_buffers=len(nodes),tap_buffers=len(p['taps']),
                       trunk_levels=sum(n+1 for n in p['reps'].values()),reps={str(k):v for k,v in p['reps'].items()},
                       max_hop_um=hop,rmax_um=p['rmax_um'],added_cycles=0,
+                      island_span_max_um=max((cl.get('island_span_um',0) for cl in p['clusters']),default=0),
                       added_area_um2=len(nodes)*p['width']*p['height']/p['dbu']**2)
     validate(p)
     return p
@@ -527,7 +585,8 @@ def main():
     if a.closed_loop:
         p=plan_legs(g,fanout=int(env.get('OT_DTSH_FANOUT','4')),leaf_fanout=int(env.get('OT_DTSH_LEAF_FANOUT','2')),
                     rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')),topology=env.get('OT_DTSH_TOPOLOGY','bisect'),
-                    levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')),depth0=env.get('OT_DTSH_DEPTH0','')=='1')
+                    levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')),depth0=env.get('OT_DTSH_DEPTH0','')=='1',
+                    island_um=float(env.get('OT_DTSH_ISLAND_UM','0')),island_reach_um=float(env.get('OT_DTSH_ISLAND_REACH_UM','40')))
     else:
         p=plan(g)
     Path(a.out).write_text(json.dumps(p,indent=1)+'\n')

@@ -405,15 +405,46 @@ proc ::ot_dtsh::measure_sinks {path} {
   }
   close $fh
 }
+# RC source of a closed-loop measurement.  "placement" (default) = estimate_parasitics -placement.
+# "grt" (OT_DTSH_CL_GRT=1, CLOCK-RESET CTS04b; sink phase only): balance against ROUTED clock wiring --
+# one full global route with the explicit clock layer range (OT_DTSH_CL_GRT_CLK, default M4-M5; the
+# kit's later GRT must use the same range), then every trunk move is re-routed incrementally
+# (global_route -start_incremental / -end_incremental) and timed on estimate_parasitics -global_routing.
+proc ::ot_dtsh::rc {mode} {
+  variable grt_state
+  if {$mode ne "grt"} { estimate_parasitics -placement; return }
+  if {![info exists grt_state]} {
+    set sig [expr {[info exists ::env(MIN_ROUTING_LAYER)] && [info exists ::env(MAX_ROUTING_LAYER)] ? "$::env(MIN_ROUTING_LAYER)-$::env(MAX_ROUTING_LAYER)" : "M2-M5"}]
+    set clk [expr {[info exists ::env(OT_DTSH_CL_GRT_CLK)] ? $::env(OT_DTSH_CL_GRT_CLK) : "M4-M5"}]
+    set adj [expr {[info exists ::env(OT_DTSH_CL_GRT_ADJ)] ? $::env(OT_DTSH_CL_GRT_ADJ) : 0.25}]
+    set_routing_layers -signal $sig -clock $clk
+    set_global_routing_layer_adjustment $sig $adj
+    puts "OT_DTSH CL GRT: signal $sig clock $clk adjustment $adj"
+    pin_access
+    global_route -congestion_iterations 30 -allow_congestion
+    set grt_state routed
+  } elseif {$grt_state eq "incr"} {
+    global_route -end_incremental
+    set grt_state routed
+  }
+  estimate_parasitics -global_routing
+}
+proc ::ot_dtsh::rc_moves {mode moves} {
+  variable grt_state
+  if {$mode eq "grt" && [info exists grt_state] && $grt_state eq "routed"} { global_route -start_incremental; set grt_state incr }
+  uplevel #0 [list source $moves]
+}
 proc ::ot_dtsh::closed_loop {dir geom plan {meas_proc measure} {tag ""}} {
   set iters [expr {[info exists ::env(OT_DTSH_CL_ITERS)] ? $::env(OT_DTSH_CL_ITERS) : 12}]
   set target [expr {[info exists ::env(OT_DTSH_CL_TARGET_PS)] ? $::env(OT_DTSH_CL_TARGET_PS) : 12}]
+  set mode [expr {$tag eq "_sink" && [info exists ::env(OT_DTSH_CL_GRT)] && $::env(OT_DTSH_CL_GRT) eq "1" ? "grt" : "placement"}]
   set py [list python3 /work/shallow_clock.py $geom --out $plan]
   set_propagated_clock [all_clocks]
   if {$tag ne ""} { puts "OT_DTSH CL [exec {*}$py --new-phase $tag]" }
+  puts "OT_DTSH CL phase '$tag' RC $mode"
   set last ""; set done 0
   for {set i 1} {$i <= $iters} {incr i} {
-    estimate_parasitics -placement
+    rc $mode
     set meas [file join $dir ot_dtsh_meas${tag}_$i.tsv]
     $meas_proc $meas
     set moves [file join $dir ot_dtsh_moves${tag}_$i.tcl]
@@ -421,21 +452,21 @@ proc ::ot_dtsh::closed_loop {dir geom plan {meas_proc measure} {tag ""}} {
     set last [exec {*}$py --cl-step $meas --apply $moves --target-ps $target]
     puts "OT_DTSH CL $last"
     if {![file exists $moves]} { set done 1; break }
-    uplevel #0 [list source $moves]
+    rc_moves $mode $moves
   }
   if {!$done} {
     # keep the best measured iteration, then record the final state
     set moves [file join $dir ot_dtsh_moves${tag}_best.tcl]
     file delete -force $moves
     puts "OT_DTSH CL [exec {*}$py --restore-best --apply $moves]"
-    if {[file exists $moves]} { uplevel #0 [list source $moves] }
-    estimate_parasitics -placement
+    if {[file exists $moves]} { rc_moves $mode $moves }
+    rc $mode
     set meas [file join $dir ot_dtsh_meas${tag}_final.tsv]
     $meas_proc $meas
     set last [exec {*}$py --cl-step $meas --target-ps 1e9]
   }
   unset_propagated_clock [all_clocks]
-  puts "OT_DTSH CLOSED-LOOP DONE: $last"
+  puts "OT_DTSH CLOSED-LOOP DONE ($mode RC): $last"
 }
 proc ::ot_dtsh::setup {block tap_list root_net cell} {
   variable active; variable blk; variable root; variable master; variable taps; variable nodes; variable leaves; variable root_extra

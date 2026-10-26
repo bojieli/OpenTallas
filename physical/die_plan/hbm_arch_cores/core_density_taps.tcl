@@ -8,6 +8,11 @@
 # env: OT_DTAP_TARGET (max sinks per tap, default 1250), OT_DTAP_DMAX_UM (max tap region side, robust 2-98%, default 80;
 #      ASAP7 placement-RC wire delay grows ~quadratically, so long strips are split), OT_DTAP_MIN (no split below 2x, default 150),
 #      OT_DTAP_CELL (default BUFx24_ASAP7_75t_R), OT_DTAP_PORT (default clk), OT_DTAP_OUT (optional report file)
+#      OT_DTAP_MACRO_GROUP=1 (opt-in, CLOCK-RESET S2 10-25): every hard macro + ALL its interface registers (on a macro
+#        signal pin directly or through one BUF/INV, within DMAX of the macro) get ONE dedicated tap, so the macro CK
+#        and its IF registers share one local tree (TritonCTS macro/register balance inside that tree).
+#      OT_DTAP_MACRO_SPLIT=1 (opt-in, CLOCK-RESET S1 10-25): a tap region never straddles a macro (sinks on both sides of
+#        a macro within its span are split at the macro), so no local leaf net is routed across a macro.
 uplevel #0 {
 set dt_blk [ord::get_db_block]
 set dt_u [$dt_blk getDbUnitsPerMicron]
@@ -31,6 +36,28 @@ proc dt_ext {v} {
   set n [llength $v]; set lo [lindex $v [expr {int(0.02 * ($n - 1))}]]; set hi [lindex $v [expr {int(0.98 * ($n - 1))}]]
   return [expr {$hi - $lo}]
 }
+set dt_mgrp_on [expr {[info exists ::env(OT_DTAP_MACRO_GROUP)] && $::env(OT_DTAP_MACRO_GROUP) eq "1"}]
+set dt_msplit_on [expr {[info exists ::env(OT_DTAP_MACRO_SPLIT)] && $::env(OT_DTAP_MACRO_SPLIT) eq "1"}]
+set dt_mbox {}
+foreach p $dt_mac { set bb [[[lindex $p 2] getInst] getBBox]; lappend dt_mbox [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]] }
+# macro straddle: the macro with the most sinks on BOTH sides inside its own span -> {axis cut} (empty if none)
+proc dt_straddle {pts} {
+  global dt_mbox
+  set best {}; set bn [expr {[info exists ::env(OT_DTAP_MACRO_SPLIT_MIN)] ? $::env(OT_DTAP_MACRO_SPLIT_MIN) - 1 : 7}]
+  foreach m $dt_mbox {
+    lassign $m x0 y0 x1 y1
+    foreach ax {0 1} lo [list $x0 $y0] hi [list $x1 $y1] olo [list $y0 $x0] ohi [list $y1 $x1] {
+      set a 0; set b 0
+      foreach p $pts {
+        set o [lindex $p [expr {1 - $ax}]]; if {$o < $olo || $o > $ohi} continue
+        set v [lindex $p $ax]; if {$v < $lo} { incr a } elseif {$v > $hi} { incr b }
+      }
+      set n [expr {min($a, $b)}]
+      if {$n > $bn} { set bn $n; set best [list $ax [expr {($lo + $hi) / 2}]] }   ;# >= MIN (default 8) sinks each side
+    }
+  }
+  return $best
+}
 proc dt_split {pts} {
   global dt_target dt_dmax dt_min
   set n [llength $pts]
@@ -39,6 +66,14 @@ proc dt_split {pts} {
   # leaf: within the sink cap and DMAX in BOTH directions (no small-set exception: f790 v3e tap 10 = 129 W-face flops
   # over 193 um behind the SRAM column, one leaf tree 577..753 ps -> dout -> pin_flit hold -140 ps); only a handful of
   # sinks (< 16) may form a leaf beyond DMAX
+  if {$::dt_msplit_on && $n > 1} {
+    set st [dt_straddle $pts]
+    if {[llength $st]} {
+      lassign $st ax cut; set A {}; set B {}
+      foreach p $pts { if {[lindex $p $ax] < $cut} { lappend A $p } else { lappend B $p } }
+      return [concat [dt_split $A] [dt_split $B]]
+    }
+  }
   if {$n <= $dt_target && (($w <= $dt_dmax && $h <= $dt_dmax) || $n < 16)} { return [list $pts] }
   # count-median bisection along the longer side (weighted-median bisection, taps.py density_taps)
   set ax [expr {$w >= $h ? 0 : 1}]
@@ -46,7 +81,66 @@ proc dt_split {pts} {
   set m [expr {$n / 2}]
   return [concat [dt_split [lrange $s 0 [expr {$m - 1}]]] [dt_split [lrange $s $m end]]]
 }
+# S2 macro groups: interface registers of every macro (direct or through one BUF/INV on a macro signal pin, within
+# DMAX of the macro bbox) -> one dedicated set per macro; a register on several macros goes to the one it touches most
+set dt_mgrp [dict create]; set dt_mset {}
+if {$dt_mgrp_on} {
+  set dt_ffi [dict create]
+  foreach p $dt_ff { dict set dt_ffi [[[lindex $p 2] getInst] getName] $p }
+  proc dt_if_regs {net depth} {
+    global dt_ffi
+    set out {}
+    foreach it [$net getITerms] {
+      set i [$it getInst]; set nm [$i getName]
+      if {[dict exists $dt_ffi $nm]} { lappend out $nm; continue }
+      if {$depth > 0 && [regexp {^(BUF|INV|HB)} [[$i getMaster] getName]]} {
+        foreach o [$i getITerms] {
+          set on [$o getNet]
+          if {$on eq "NULL" || $on eq "" || $on eq $net || [$on getSigType] ne "SIGNAL"} continue
+          lappend out {*}[dt_if_regs $on 0]
+        }
+      }
+    }
+    return $out
+  }
+  set dt_rc [dict create]
+  set k 0
+  foreach p $dt_mac {
+    set mi [[lindex $p 2] getInst]; lassign [lindex $dt_mbox $k] x0 y0 x1 y1
+    foreach t [$mi getITerms] {
+      set n [$t getNet]
+      if {$n eq "NULL" || $n eq "" || [$n getSigType] ne "SIGNAL"} continue
+      foreach r [dt_if_regs $n 1] {
+        set q [dict get $dt_ffi $r]; set qx [lindex $q 0]; set qy [lindex $q 1]
+        set dx [expr {$qx < $x0 ? $x0 - $qx : ($qx > $x1 ? $qx - $x1 : 0)}]; set dy [expr {$qy < $y0 ? $y0 - $qy : ($qy > $y1 ? $qy - $y1 : 0)}]
+        if {$dx + $dy > $dt_dmax} continue
+        dict set dt_rc $r $k [expr {[dict exists $dt_rc $r $k] ? [dict get $dt_rc $r $k] + 1 : 1}]
+      }
+    }
+    incr k
+  }
+  dict for {r cs} $dt_rc {
+    set bk ""; set bc 0
+    dict for {k c} $cs { if {$c > $bc} { set bc $c; set bk $k } }
+    dict set dt_mgrp $r $bk
+  }
+  set rest {}
+  foreach p $dt_ff { if {![dict exists $dt_mgrp [[[lindex $p 2] getInst] getName]]} { lappend rest $p } }
+  set dt_ff_all $dt_ff; set dt_ff $rest
+}
 set dt_sets [dt_split $dt_ff]
+# set index -> macro index for the S2 macro groups (each macro with >= 1 interface register)
+set dt_set_mac [dict create]
+if {$dt_mgrp_on} {
+  for {set k 0} {$k < [llength $dt_mac]} {incr k} {
+    set S {}
+    foreach p $dt_ff_all { set nm [[[lindex $p 2] getInst] getName]; if {[dict exists $dt_mgrp $nm] && [dict get $dt_mgrp $nm] == $k} { lappend S $p } }
+    if {![llength $S]} continue
+    dict set dt_set_mac [llength $dt_sets] $k
+    lappend dt_sets $S
+  }
+  set dt_ff $dt_ff_all
+}
 set dt_taps {}
 set dt_of [dict create]
 # medoid of every set: the sink nearest the set centroid (a placed register = legal logic area, never on a macro)
@@ -68,7 +162,7 @@ foreach S $dt_sets {
   lassign [lindex $dt_med $k] mx my
   foreach p $S {
     set t $k
-    if {abs([lindex $p 0] - $mx) + abs([lindex $p 1] - $my) > $dt_dmax} {
+    if {![dict exists $dt_set_mac $k] && abs([lindex $p 0] - $mx) + abs([lindex $p 1] - $my) > $dt_dmax} {
       set bd 1e30
       for {set j 0} {$j < [llength $dt_med]} {incr j} {
         lassign [lindex $dt_med $j] qx qy
@@ -110,7 +204,7 @@ dict for {nm p} $dt_pt {
     set n [$o getNet]; if {$n eq "NULL" || $n eq ""} continue
     if {[$n getSigType] ne "SIGNAL"} continue
     foreach c [dt_d_sinks $n 1] {
-      if {![dict exists $dt_tp $c] || [dict get $dt_tp $c] == $t} continue
+      if {![dict exists $dt_tp $c] || [dict get $dt_tp $c] == $t || [dict exists $dt_mgrp $c]} continue
       set q [dict get $dt_pt $c]
       if {abs([lindex $q 0] - [lindex $p 0]) + abs([lindex $q 1] - [lindex $p 1]) > $dt_dmax / 2} continue
       dict set dt_tp $c $t; incr dt_f4
@@ -170,6 +264,8 @@ foreach p $dt_mac {
     if {$c > $bc} { set bc $c; set bt $t }
   }
   set how "interface regs $bc"
+  set mk [lsearch -exact $dt_mac $p]
+  dict for {si mi} $dt_set_mac { if {$mi == $mk} { set bt $si; set how "macro group tap (S2)" } }
   if {$bt eq ""} {
     set bd 1e30; set how nearest
     foreach t $dt_taps { set d [expr {abs([lindex $t 1] - $x) + abs([lindex $t 2] - $y)}]; if {$d < $bd} { set bd $d; set bt [lindex $t 0] } }
@@ -187,6 +283,7 @@ foreach t $dt_taps {
 }
 foreach l $dt_lines { puts $l }
 foreach l $dt_mrep { puts "OT_DTAP macro $l" }
+puts "OT_DTAP S2 macro groups [dict size $dt_set_mac] ([dict size $dt_mgrp] interface regs), macro split $dt_msplit_on"
 puts "OT_DTAP done: $dt_moved stray sinks re-homed; $dt_f4 zero-logic capture regs joined their launch tap (F4); [llength $dt_taps] density taps for [llength $dt_ff] register sinks (target $dt_target/tap), [llength $dt_mac] macro clock pins on nearest tap"
 if {[info exists ::env(OT_DTAP_OUT)]} { set fh [open $::env(OT_DTAP_OUT) w]; puts $fh [join [concat $dt_lines $dt_mrep] "\n"]; close $fh }
 }
