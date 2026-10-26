@@ -1,0 +1,22 @@
+q_hub_nw: S=4 cores 81 -> 156, boundary bits [95644, 102363, 106552]
+  height 3654.72 probe
+  height 4570.56 probe
+  height 5719.68 probe
+  height 7153.92 probe
+  height 8942.4 probe
+  height 11180.16 probe
+  height 13979.52 probe
+  height 17478.72 probe
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/wt/path-hbm-r9-1026/tools/die_plan/hbm_r9_delta.py", line 430, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch2/claude/wt/path-hbm-r9-1026/tools/die_plan/hbm_r9_delta.py", line 418, in main
+    rep = run(a.plan_dir, a.out, [x for x in a.hubs.split(",") if x], a.segments, a.height_um, a.kx, a.tree_bits,
+              route=not a.no_route)
+  File "/srv/opentallas-scratch2/claude/wt/path-hbm-r9-1026/tools/die_plan/hbm_r9_delta.py", line 343, in run
+    Hn = min_height(t, Q, H, log=log) if height == "auto" else float(height)
+         ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/wt/path-hbm-r9-1026/tools/die_plan/hbm_r9_delta.py", line 312, in min_height
+    raise ValueError("no hub height packs")
+ValueError: no hub height packs

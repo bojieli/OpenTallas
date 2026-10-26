@@ -1,0 +1,116 @@
+{
+ "q_hub_nw": {
+  "core_mm2": 9.89,
+  "hub_mm2": 23.995,
+  "S2": {
+   "cores": 104,
+   "core_mm2": 14.443,
+   "added_mm2": 4.553,
+   "seg_core_mm2": 7.221,
+   "seg_w_um": 4108.32,
+   "boundary_bits": [
+    116952
+   ],
+   "hub_h_at_41pct_um": 4287.1
+  },
+  "S3": {
+   "cores": 130,
+   "core_mm2": 19.178,
+   "added_mm2": 9.288,
+   "seg_core_mm2": 6.393,
+   "seg_w_um": 2738.88,
+   "boundary_bits": [
+    100997,
+    110389
+   ],
+   "hub_h_at_41pct_um": 5692.7
+  },
+  "S4": {
+   "cores": 156,
+   "core_mm2": 23.913,
+   "added_mm2": 14.023,
+   "seg_core_mm2": 5.978,
+   "seg_w_um": 2054.16,
+   "boundary_bits": [
+    95644,
+    102363,
+    106552
+   ],
+   "hub_h_at_41pct_um": 7098.3
+  },
+  "S8": {
+   "cores": 272,
+   "core_mm2": 45.699,
+   "added_mm2": 35.81,
+   "seg_core_mm2": 5.712,
+   "seg_w_um": 1027.08,
+   "boundary_bits": [
+    54694,
+    77764,
+    81546,
+    85146,
+    88607,
+    88515,
+    86125
+   ],
+   "hub_h_at_41pct_um": 13565.4
+  }
+ },
+ "q_hub_ne": {
+  "core_mm2": 9.899,
+  "hub_mm2": 23.995,
+  "S2": {
+   "cores": 102,
+   "core_mm2": 14.462,
+   "added_mm2": 4.562,
+   "seg_core_mm2": 7.231,
+   "seg_w_um": 4108.32,
+   "boundary_bits": [
+    101472
+   ],
+   "hub_h_at_41pct_um": 4292.8
+  },
+  "S3": {
+   "cores": 127,
+   "core_mm2": 19.206,
+   "added_mm2": 9.307,
+   "seg_core_mm2": 6.402,
+   "seg_w_um": 2738.88,
+   "boundary_bits": [
+    90964,
+    100060
+   ],
+   "hub_h_at_41pct_um": 5701.2
+  },
+  "S4": {
+   "cores": 152,
+   "core_mm2": 23.951,
+   "added_mm2": 14.052,
+   "seg_core_mm2": 5.988,
+   "seg_w_um": 2054.16,
+   "boundary_bits": [
+    85298,
+    93148,
+    95985
+   ],
+   "hub_h_at_41pct_um": 7109.6
+  },
+  "S8": {
+   "cores": 264,
+   "core_mm2": 45.775,
+   "added_mm2": 35.876,
+   "seg_core_mm2": 5.722,
+   "seg_w_um": 1027.08,
+   "boundary_bits": [
+    43388,
+    67175,
+    71607,
+    75733,
+    78804,
+    77679,
+    73109
+   ],
+   "hub_h_at_41pct_um": 13587.9
+  }
+ }
+}
