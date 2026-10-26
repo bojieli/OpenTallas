@@ -31,7 +31,8 @@ def replace_once(text, old, new, label):
 def side_depth(lm, la):
     exp = 7*lm+8*la+4
     softplus_sqrt = exp+la+19+lm+8*(lm+la)+lm+lm+la+31
-    return dict(exp=exp, softplus_sqrt=softplus_sqrt)
+    return dict(exp=exp, sigmoid=exp+la+19, rsqrt=1+3*(3*lm+la), sqrt=31,
+                softplus_sqrt=softplus_sqrt, engram_gate=33+exp+la+19)
 
 
 def materialize(root, out, full_qid, wiring=None):
