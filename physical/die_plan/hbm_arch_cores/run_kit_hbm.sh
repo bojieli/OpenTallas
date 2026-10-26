@@ -53,10 +53,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
       if [ \$? != 0 ]; then cat /work/pre_route_ff_hold.log | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != cts ] && [ $GOAL != synth ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
-  if [ \$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
-  if [ \$rc = 0 ] && [ -f /work/infra_islands.json ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then RA=\$(ls -d /work/run/results/asap7/*/base | head -1); \
-    for L in \$RA/*.lef; do ISL=/work/infra_islands.json ODB=\$RA/6_final.odb LEF=\$L OUT=/work/island_abstract.json openroad -python -exit /work/island_abstract.py > /work/island_abstract.log 2>&1; done; \
-    grep -q 'OT_ISLAND_ABSTRACT PASS' /work/island_abstract.log || { echo 'FAIL island_abstract (strip/window LEF cutouts + strip PG rails)'; rc=7; }; grep OT_ISLAND_ABSTRACT /work/island_abstract.log; fi; fi; \
+  if [ \$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then \$M do-generate_abstract; rc=\$?; fi; fi; \
   R=\$(ls -d /work/run/results/asap7/*/base | head -1); \
   O=\$(ls \$R/5_route.odb \$R/6_final.odb 2>/dev/null | tail -1); \
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit_core.py > /work/pin_audit.log 2>&1; fi; \

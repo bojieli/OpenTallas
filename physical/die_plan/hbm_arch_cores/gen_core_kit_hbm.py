@@ -548,8 +548,9 @@ def infra_islands_tcl(ent, w, h):
 
 def infra_islands_hook(kd, cfg, path, module, w, h):
     """Write the island Tcl into the kit: windows prefixed to pdn.tcl (before pdngen), the strip chained in front of
-    the existing PRE_GLOBAL_PLACE hook, and the island entry + island_abstract.py for the post-abstract LEF rewrite
-    (strip/window cutouts in OBS + strip rails exposed as VDD/VSS ports; run_kit_hbm.sh runs it fail-closed)."""
+    the existing PRE_GLOBAL_PLACE hook, and the island entry (infra_islands.json).  METHODOLOGY 12.2a1 (owner 06:39):
+    islands are PUSHDOWN cells in the core netlist + dedicated ft ports; LEF hole cutouts are NOT used (the
+    island_abstract.py LEF rewrite of 50b8dd801 was removed).  The strip stays the reserved site for those cells."""
     doc = json.load(open(path))
     ent = doc["islands"].get(module)
     if not ent or ent.get("action") != "ISLAND":
@@ -558,7 +559,6 @@ def infra_islands_hook(kd, cfg, path, module, w, h):
     pdn.write_text(infra_islands_pdn_tcl(ent, w, h) + pdn.read_text())
     (kd / "infra_islands.tcl").write_text(infra_islands_tcl(ent, w, h))
     shutil.copyfile(TOOL / "keepout_phys.tcl", kd / "keepout_phys.tcl")
-    shutil.copyfile(HERE / "island_abstract.py", kd / "island_abstract.py")
     eo = ent.get("outline_um")
     if eo and (abs(eo[0] - w) > 1e-3 or abs(eo[1] - h) > 1e-3):
         raise SystemExit(f"--infra-islands: island outline {eo} != kit outline {[w, h]} for {module} (stale island slice)")
@@ -569,7 +569,7 @@ def infra_islands_hook(kd, cfg, path, module, w, h):
     cfg.append("override export PRE_GLOBAL_PLACE_TCL = /work/infra_islands_gpl.tcl")
     return dict(file=str(path), sha256=sha(Path(path)), strip_um=ent["strip_um"], windows=len(ent["windows_um"]),
                 core_blockage=ent["core_blockage"], previous_gpl_hook=prev, plan_sha256=doc.get("plan_sha256"),
-                pdn_window_cut="pre-pdngen M3-M5 obstructions", abstract="island_abstract.py (OBS cutouts + strip rails as PG ports)")
+                pdn_window_cut="pre-pdngen M3-M5 obstructions", abstract="plain (12.2a1 pushdown: no LEF cutouts)")
 
 
 def main(recipe_overrides=None, source_overrides=None, source_profile=None):
