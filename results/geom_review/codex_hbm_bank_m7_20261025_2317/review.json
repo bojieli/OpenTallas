@@ -1,0 +1,18 @@
+{
+  "status": "PASS-COND",
+  "scope": "q_b001 and q_b010 repaired FT geometry; scoped G2 only after paired reset footprint PASS",
+  "plan": "epyc1:/srv/opentallas-scratch2/claude/codex-hbm-2144/bank_g2/plan/die_plan.json",
+  "basis": "bank_primary_final, source_b544 conservative M7 OBS and actual station-cell coordinates",
+  "reviewed_image": "bank_tiles.png",
+  "observations": [
+    "q_b001 24040 actual FT cells; cores below920.16um; continuous west core-free corridor",
+    "q_b010 32957 actual FT cells; cores below920.16um; continuous east core-free corridor",
+    "FT stations avoid all three M7 core boxes; default six face budget; upper free band retained"
+  ],
+  "conditions": [
+    "Actual reset FF+BUFx4f grown-box/row pair preflight must pass before G2",
+    "Fresh probes must use fused relay-driver/pad-spread source and same geometry",
+    "Scope is ideal-clock TT/FF833ps diagnostic only; no full clock PG GRT signoff claim",
+    "Other lower-row macro-wall geometry remains open; no12-per-um receipt"
+  ]
+}
