@@ -103,17 +103,33 @@ def allocate(raw,manifest,names,plan_path,explicit_map):
     if not ends:raise ValueError('bank has no actual consumers')
     depth=int(entry['depth']);final=target_last(source,ends,budget,al,depth)
     if md(source,final)>depth*budget:raise ValueError('priced bank depth cannot span source/consumer reach')
-    seg=[source,(final[0],source[1]),final];length=sum(md(a,b) for a,b in zip(seg,seg[1:]));points=[]
-    for j in range(depth):
-     dist=length*(j+1)/depth;target=seg[0]
-     for a,b in zip(seg,seg[1:]):
-      step=md(a,b)
-      if dist<=step+1e-8:
-       frac=0 if step==0 else dist/step;target=(a[0]+frac*(b[0]-a[0]),a[1]+frac*(b[1]-a[1]));break
-      dist-=step
-     target=al.project(target);q,_=al.allocate(target,1,max_radius_um=12.);points.append(tuple(q[0]))
-    hops=[md(a,b) for a,b in zip([source]+points,points)]+[md(points[-1],p) for p in ends]
-    if max(hops)>budget+1e-6:raise ValueError(f'actual allocated conservative hop {max(hops):.3f}>403')
+    paths=[[source,(final[0],source[1]),final],[source,(source[0],final[1]),final]]
+    for fraction in (.125,.25,.375,.5,.625,.75,.875):
+     x=source[0]+fraction*(final[0]-source[0]);y=source[1]+fraction*(final[1]-source[1])
+     paths += [[source,(x,source[1]),(x,final[1]),final],[source,(source[0],y),(final[0],y),final]]
+    choices=[]
+    for seg in paths:
+     length=sum(md(a,b) for a,b in zip(seg,seg[1:]));targets=[]
+     for j in range(depth):
+      dist=length*(j+1)/depth;target=seg[0]
+      for a,b in zip(seg,seg[1:]):
+       step=md(a,b)
+       if dist<=step+1e-8:
+        frac=0 if step==0 else dist/step;target=(a[0]+frac*(b[0]-a[0]),a[1]+frac*(b[1]-a[1]));break
+       dist-=step
+      targets.append(al.project(target))
+     estimate=max([md(a,b) for a,b in zip([source]+targets,targets)]+[md(targets[-1],p) for p in ends]);choices.append((estimate,targets))
+    initial=set(al.used);failure='no legal existing-depth path'
+    for estimate,targets in sorted(choices,key=lambda z:z[0]):
+     al.used=set(initial);points=[]
+     try:
+      for target in targets:
+       q,_=al.allocate(target,1,max_radius_um=12.);points.append(tuple(q[0]))
+      hops=[md(a,b) for a,b in zip([source]+points,points)]+[md(points[-1],p) for p in ends]
+      if max(hops)>budget+1e-6:raise ValueError(f'actual allocated conservative hop {max(hops):.3f}>403')
+      break
+     except ValueError as ex:failure=str(ex)
+    else:raise ValueError(failure)
     row.update(status='ALLOCATED_CANDIDATE',source_xy_um=source,consumer_xy_um=ends,consumer_mapping=mapping,
       sites_ll_um=[[round(x-cell[0]/2,6),round(y-cell[1]/2,6)] for x,y in points],cell_envelope_um=list(cell),max_hop_um=max(hops))
    except (ValueError,KeyError,FileNotFoundError) as ex:
