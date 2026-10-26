@@ -308,21 +308,7 @@ SCHEMA = {
                                        "layers": _lays, "order": _order, "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
-                        # Accepted die mesh profile and immutable generated cell-site ledger.
-            "mesh": {"type": "object", "additionalProperties": False,
-                     "properties": {
-                         "nx": {"type": "integer", "minimum": 1}, "ny": {"type": "integer", "minimum": 1},
-                         "m": {"type": "integer", "minimum": 1}, "rep_um": _pos, "ndr": {"type": "string"},
-                         "pitch_um": {"type": "array", "items": _pos, "minItems": 2, "maxItems": 2},
-                         "delta": {"type": "string"}, "tool": {"type": "string"},
-                         "layers": {"type": "object", "additionalProperties": False,
-                                    "properties": {"straps_h": _layer, "straps_v": _layer}},
-                         "sites_file": {"type": "string"},
-                         "sites_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-                         "regions_depth": {"type": "integer", "minimum": 0},
-                         "regions": {"type": "array", "minItems": 1, "items": _clock_mesh_region},
-                         "cells": {"type": "integer", "minimum": 1}}},
-            # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
+                        # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
                         # (insertion_ps = TT, insertion_ff_ps = FF) = the signed view's routed RCX pin-register mean,
                         # or the parent budget before the first sign-off; insertion_basis says which
                         "insertion_ff_ps": _pos, "insertion_basis": {"type": "string"},
@@ -569,6 +555,18 @@ SCHEMA = {
                            "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "insertion_ps": _pos, "insertion_tol_ps": _nonneg, "neighbour_skew_ps": _pos,
+            # Accepted die mesh profile and immutable generated cell-site ledger.
+            "mesh": {"type": "object", "additionalProperties": False,
+                     "properties": {
+                         "nx": {"type": "integer", "minimum": 1}, "ny": {"type": "integer", "minimum": 1},
+                         "m": {"type": "integer", "minimum": 1}, "rep_um": _pos, "ndr": {"type": "string"},
+                         "pitch_um": {"type": "array", "items": _pos, "minItems": 2, "maxItems": 2},
+                         "delta": {"type": "string"}, "tool": {"type": "string"},
+                         "layers": {"type": "object", "additionalProperties": False,
+                                    "properties": {"straps_h": _layer, "straps_v": _layer}},
+                         "sites_file": {"type": "string"},
+                         "sites_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                         "cells": {"type": "integer", "minimum": 1}}},
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
