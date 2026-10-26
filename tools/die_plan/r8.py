@@ -56,6 +56,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import schema as S  # noqa: E402
+import bind_position_bank as PB  # noqa: E402
 
 SCHEMA = "opentallas.die_plan.r8_landing.v1"
 
@@ -303,9 +304,15 @@ def check(bg, raw, landing=None, replica="all", bus="part", limit=40):
                 continue
             norm = (rx.sub("*", g["sink"]) if rx else g["sink"], m["sink_port"], str(m["sink_bits"]),
                     rx.sub("*", m["source"]) if rx else m["source"], m["asbuilt_stages"])
-            want[t][norm].add(dep(g, m) - m["bound_stages"])
+            physical_pad = dep(g, m) - m["bound_stages"]
+            if m.get("position_bank"):
+                try:
+                    physical_pad = PB.physical_key(m["position_bank"], physical_pad)
+                except ValueError as exc:
+                    msgs.append(("ERROR", f"R8 position bank {g['sink']}.{m['sink_port']}: {exc}"))
+            want[t][norm].add(physical_pad)
         for t, d in sorted(want.items()):
-            conf = {k: sorted(v) for k, v in d.items() if len(v) > 1}
+            conf = {k: sorted(v, key=repr) for k, v in d.items() if len(v) > 1}
             if conf:
                 bad_t += 1
                 k, v = next(iter(sorted(conf.items())))

@@ -341,10 +341,20 @@ def main(argv):
                 txt = "".join(out)
                 txt = re.sub(r"(\n\s*endmodule\b)", "\n" + "\n".join(decl + body) + r"\1", txt, count=1)
         else:
-            m = re.search(rf"^(\s*ot_dp_ste?\s+#\(\.W\({W}\)\)\s+u_bout_{re.escape(n)}\s*\(.*?\.d\()([^)]*)(\),\s*\.ea\()([^)]*)(\).*)$",
+            m = re.search(rf"^(\s*ot_dp_ste?\s+#\(\.W\((\d+)\)\)\s+u_bout_{re.escape(n)}\s*\(.*?\.d\()([^)]*)(\),\s*\.ea\()([^)]*)(\).*)$",
                           txt, re.M)
             if need and not m:
                 raise SystemExit(f"kit_istations: {tn}: no u_bout_{n} face register line to feed")
+            if m and int(m.group(2)) != W:
+                # a bound (native) module drives only the live bits of the plan bus (the binder packs the as-built
+                # crossing bits, e.g. KV N-column pv: 267 of 268); the stations carry exactly those bits.  A wider
+                # face register than the plan bus is an error.
+                if int(m.group(2)) > W:
+                    raise SystemExit(f"kit_istations: {tn} {bus}: u_bout W={m.group(2)} > plan width {W}")
+                W = int(m.group(2))
+            if m:   # drop the W group so the groups below keep their meaning
+                m = re.search(rf"^(\s*ot_dp_ste?\s+#\(\.W\({W}\)\)\s+u_bout_{re.escape(n)}\s*\(.*?\.d\()([^)]*)(\),\s*\.ea\()([^)]*)(\).*)$",
+                              txt, re.M)
             if need:
                 d0, ea0 = m.group(2), m.group(4)
                 decl, body = [], []

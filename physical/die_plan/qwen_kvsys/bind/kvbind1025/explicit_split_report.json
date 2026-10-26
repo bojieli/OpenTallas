@@ -1,0 +1,206 @@
+{
+ "schema": "opentallas.kv.explicit_split.v1",
+ "splits": [
+  {
+   "type": "kv3_pv_v1",
+   "new_type": "kv3_pv_v1n",
+   "instances": [
+    "pv_N_1"
+   ],
+   "kept": [
+    "pv_S_1"
+   ],
+   "cycles": 0,
+   "plan_cells": "copied"
+  },
+  {
+   "type": "kv3_pv_v2",
+   "new_type": "kv3_pv_v2n",
+   "instances": [
+    "pv_N_2"
+   ],
+   "kept": [
+    "pv_S_2"
+   ],
+   "cycles": 0
+  },
+  {
+   "type": "kv3_pv_v3",
+   "new_type": "kv3_pv_v3n",
+   "instances": [
+    "pv_N_3"
+   ],
+   "kept": [
+    "pv_S_3"
+   ],
+   "cycles": 0,
+   "plan_cells": "copied"
+  },
+  {
+   "type": "kv3_pv_v4",
+   "new_type": "kv3_pv_v4n",
+   "instances": [
+    "pv_N_4"
+   ],
+   "kept": [
+    "pv_S_4"
+   ],
+   "cycles": 0
+  },
+  {
+   "type": "kv3_pv_v5",
+   "new_type": "kv3_pv_v5n",
+   "instances": [
+    "pv_N_5"
+   ],
+   "kept": [
+    "pv_S_5"
+   ],
+   "cycles": 0,
+   "plan_cells": "copied"
+  },
+  {
+   "type": "kv3_pv_v6",
+   "new_type": "kv3_pv_v6n",
+   "instances": [
+    "pv_N_6"
+   ],
+   "kept": [
+    "pv_S_6"
+   ],
+   "cycles": 0
+  },
+  {
+   "type": "kv3_hg_v1",
+   "new_type": "kv3_hg_v1p2",
+   "instances": [
+    "hg_EN_2",
+    "hg_ES_2",
+    "hg_WN_2",
+    "hg_WS_2"
+   ],
+   "kept": [
+    "hg_EN_1",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_EN_6",
+    "hg_ES_1",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_ES_6",
+    "hg_WN_1",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WN_6",
+    "hg_WS_1",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5",
+    "hg_WS_6"
+   ],
+   "cycles": 0,
+   "plan_cells": "copied"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "new_type": "kv3_hg_v1p3",
+   "instances": [
+    "hg_EN_3",
+    "hg_ES_3",
+    "hg_WN_3",
+    "hg_WS_3"
+   ],
+   "kept": [
+    "hg_EN_1",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_EN_6",
+    "hg_ES_1",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_ES_6",
+    "hg_WN_1",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WN_6",
+    "hg_WS_1",
+    "hg_WS_4",
+    "hg_WS_5",
+    "hg_WS_6"
+   ],
+   "cycles": 0,
+   "plan_cells": "copied"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "new_type": "kv3_hg_v1p4",
+   "instances": [
+    "hg_EN_4",
+    "hg_ES_4",
+    "hg_WN_4",
+    "hg_WS_4"
+   ],
+   "kept": [
+    "hg_EN_1",
+    "hg_EN_5",
+    "hg_EN_6",
+    "hg_ES_1",
+    "hg_ES_5",
+    "hg_ES_6",
+    "hg_WN_1",
+    "hg_WN_5",
+    "hg_WN_6",
+    "hg_WS_1",
+    "hg_WS_5",
+    "hg_WS_6"
+   ],
+   "cycles": 0,
+   "plan_cells": "copied"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "new_type": "kv3_hg_v1p5",
+   "instances": [
+    "hg_EN_5",
+    "hg_ES_5",
+    "hg_WN_5",
+    "hg_WS_5"
+   ],
+   "kept": [
+    "hg_EN_1",
+    "hg_EN_6",
+    "hg_ES_1",
+    "hg_ES_6",
+    "hg_WN_1",
+    "hg_WN_6",
+    "hg_WS_1",
+    "hg_WS_6"
+   ],
+   "cycles": 0,
+   "plan_cells": "copied"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "new_type": "kv3_hg_v1p6",
+   "instances": [
+    "hg_EN_6",
+    "hg_ES_6",
+    "hg_WN_6",
+    "hg_WS_6"
+   ],
+   "kept": [
+    "hg_EN_1",
+    "hg_ES_1",
+    "hg_WN_1",
+    "hg_WS_1"
+   ],
+   "cycles": 0,
+   "plan_cells": "copied"
+  }
+ ],
+ "types_before": 40,
+ "types_after": 51
+}

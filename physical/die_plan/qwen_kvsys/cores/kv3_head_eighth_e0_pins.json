@@ -2,7 +2,7 @@
  "schema": "opentallas.die_plan.core_pins.v1",
  "core": "kv3_head_eighth_e0",
  "frame": "core R0, origin (0,0), outline 216 x 216",
- "source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | v3.8x KVG3-CORES: re-spread onto 216 x 216 (core_pins_resize_v38x.py: same faces / order / spreading rule; was 285.12 x 285.12) | even head strap master, exact f26 ID pin coordinates",
+ "source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | v3.8x KVG3-CORES: re-spread onto 216 x 216 (core_pins_resize_v38x.py: same faces / order / spreading rule; was 285.12 x 285.12) | even head strap master, exact f26 ID pin coordinates | PATH-KV-BIND 10-25 head_clk_merge.py: one clock pin per core (kit clocks every flop from it); dropped unloaded per-member clock pins ['g_t_0_u_l8__clk', 'g_t_0_u_stin__clk', 'g_t_0_u_stk__clk', 'g_t_1_u_l8__clk', 'g_t_1_u_stin__clk', 'g_t_1_u_stk__clk', 'u_kt__clk']",
  "faces": {
   "N": {
    "pins": 1332,
@@ -4879,27 +4879,9 @@
    "y": 215.904
   },
   {
-   "name": "g_t_0_u_l8__clk[0]",
-   "layer": "M5",
-   "x": 130.968,
-   "y": 215.904
-  },
-  {
-   "name": "g_t_0_u_stin__clk[0]",
-   "layer": "M5",
-   "x": 131.112,
-   "y": 215.904
-  },
-  {
    "name": "g_t_0_u_stin__rst_n[0]",
    "layer": "M5",
    "x": 131.304,
-   "y": 215.904
-  },
-  {
-   "name": "g_t_0_u_stk__clk[0]",
-   "layer": "M5",
-   "x": 131.448,
    "y": 215.904
   },
   {
@@ -4909,39 +4891,15 @@
    "y": 215.904
   },
   {
-   "name": "g_t_1_u_l8__clk[0]",
-   "layer": "M5",
-   "x": 131.736,
-   "y": 215.904
-  },
-  {
-   "name": "g_t_1_u_stin__clk[0]",
-   "layer": "M5",
-   "x": 131.928,
-   "y": 215.904
-  },
-  {
    "name": "g_t_1_u_stin__rst_n[0]",
    "layer": "M5",
    "x": 132.072,
    "y": 215.904
   },
   {
-   "name": "g_t_1_u_stk__clk[0]",
-   "layer": "M5",
-   "x": 132.216,
-   "y": 215.904
-  },
-  {
    "name": "g_t_1_u_stk__rst_n[0]",
    "layer": "M5",
    "x": 132.408,
-   "y": 215.904
-  },
-  {
-   "name": "u_kt__clk[0]",
-   "layer": "M5",
-   "x": 132.552,
    "y": 215.904
   },
   {

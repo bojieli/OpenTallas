@@ -1,0 +1,244 @@
+{
+ "verdict": "FAIL",
+ "note": "Full leaf/type R8 candidate cannot keep one physical pad implementation in these four types; no full R8 release claim.",
+ "conflicts": [
+  {
+   "type": "kv3_hg_v1p3",
+   "site": [
+    "ectl_*_1",
+    "cfg",
+    "[[0, 4]]",
+    "kvs_hroot_*.o_c1",
+    24
+   ],
+   "instances": [
+    {
+     "sink_part": "hg_ES_3",
+     "sink": "ectl_ES_1",
+     "source": "kvs_hroot_ES.o_c1",
+     "sink_port": "cfg",
+     "asbuilt": 24,
+     "bound": 26,
+     "pad": 3,
+     "landed": 29,
+     "lane": "L1550"
+    },
+    {
+     "sink_part": "hg_WS_3",
+     "sink": "ectl_WS_1",
+     "source": "kvs_hroot_WS.o_c1",
+     "sink_port": "cfg",
+     "asbuilt": 24,
+     "bound": 26,
+     "pad": 4,
+     "landed": 30,
+     "lane": "L1590"
+    }
+   ]
+  },
+  {
+   "type": "kv3_hg_v1",
+   "site": [
+    "ectl_*_5",
+    "cfg",
+    "[[0, 4]]",
+    "kvs_hroot_*.o_c5",
+    33
+   ],
+   "instances": [
+    {
+     "sink_part": "hg_ES_1",
+     "sink": "ectl_ES_5",
+     "source": "kvs_hroot_ES.o_c5",
+     "sink_port": "cfg",
+     "asbuilt": 33,
+     "bound": 36,
+     "pad": 5,
+     "landed": 41,
+     "lane": "L1552"
+    },
+    {
+     "sink_part": "hg_WN_1",
+     "sink": "ectl_WN_5",
+     "source": "kvs_hroot_WN.o_c5",
+     "sink_port": "cfg",
+     "asbuilt": 33,
+     "bound": 36,
+     "pad": 2,
+     "landed": 38,
+     "lane": "L1572"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pc_v1",
+   "site": [
+    "slg_*_1",
+    "x__tep",
+    "[[0, 15]]",
+    "kvs_emb.px_tep",
+    72
+   ],
+   "instances": [
+    {
+     "sink_part": "pc_EN_3",
+     "sink": "slg_EN_1",
+     "source": "kvs_emb.px_tep",
+     "sink_port": "x__tep",
+     "asbuilt": 72,
+     "bound": 50,
+     "pad": 30,
+     "landed": 80,
+     "lane": "L1486"
+    },
+    {
+     "sink_part": "pc_ES_3",
+     "sink": "slg_ES_1",
+     "source": "kvs_emb.px_tep",
+     "sink_port": "x__tep",
+     "asbuilt": 72,
+     "bound": 49,
+     "pad": 31,
+     "landed": 80,
+     "lane": "L1478"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pc_v1",
+   "site": [
+    "slg_*_2",
+    "x__tok",
+    "[[0, 17]]",
+    "kvs_emb.px_tok",
+    32
+   ],
+   "instances": [
+    {
+     "sink_part": "pc_EN_4",
+     "sink": "slg_EN_2",
+     "source": "kvs_emb.px_tok",
+     "sink_port": "x__tok",
+     "asbuilt": 32,
+     "bound": 41,
+     "pad": 4,
+     "landed": 45,
+     "lane": "L1519"
+    },
+    {
+     "sink_part": "pc_WN_4",
+     "sink": "slg_WN_2",
+     "source": "kvs_emb.px_tok",
+     "sink_port": "x__tok",
+     "asbuilt": 32,
+     "bound": 43,
+     "pad": 2,
+     "landed": 45,
+     "lane": "L1502"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pc_v1",
+   "site": [
+    "slg_*_3",
+    "x__tok",
+    "[[0, 17]]",
+    "kvs_emb.px_tok",
+    28
+   ],
+   "instances": [
+    {
+     "sink_part": "pc_EN_5",
+     "sink": "slg_EN_3",
+     "source": "kvs_emb.px_tok",
+     "sink_port": "x__tok",
+     "asbuilt": 28,
+     "bound": 36,
+     "pad": 4,
+     "landed": 40,
+     "lane": "L1518"
+    },
+    {
+     "sink_part": "pc_WN_5",
+     "sink": "slg_WN_3",
+     "source": "kvs_emb.px_tok",
+     "sink_port": "x__tok",
+     "asbuilt": 28,
+     "bound": 38,
+     "pad": 2,
+     "landed": 40,
+     "lane": "L1501"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pc",
+   "site": [
+    "slg_*_4",
+    "x__tok",
+    "[[0, 17]]",
+    "kvs_emb.px_tok",
+    49
+   ],
+   "instances": [
+    {
+     "sink_part": "pc_EN_0",
+     "sink": "slg_EN_4",
+     "source": "kvs_emb.px_tok",
+     "sink_port": "x__tok",
+     "asbuilt": 49,
+     "bound": 61,
+     "pad": 4,
+     "landed": 65,
+     "lane": "L1523"
+    },
+    {
+     "sink_part": "pc_WN_0",
+     "sink": "slg_WN_4",
+     "source": "kvs_emb.px_tok",
+     "sink_port": "x__tok",
+     "asbuilt": 49,
+     "bound": 63,
+     "pad": 2,
+     "landed": 65,
+     "lane": "L1506"
+    }
+   ]
+  },
+  {
+   "type": "kv3_pc_v1",
+   "site": [
+    "slg_*_*",
+    "x__tok",
+    "[[0, 17]]",
+    "kvs_emb.px_tok",
+    24
+   ],
+   "instances": [
+    {
+     "sink_part": "pc_EN_6",
+     "sink": "slg_EN_6",
+     "source": "kvs_emb.px_tok",
+     "sink_port": "x__tok",
+     "asbuilt": 24,
+     "bound": 31,
+     "pad": 5,
+     "landed": 36,
+     "lane": "L1517"
+    },
+    {
+     "sink_part": "pc_WN_6",
+     "sink": "slg_WN_6",
+     "source": "kvs_emb.px_tok",
+     "sink_port": "x__tok",
+     "asbuilt": 24,
+     "bound": 33,
+     "pad": 3,
+     "landed": 36,
+     "lane": "L1500"
+    }
+   ]
+  }
+ ]
+}

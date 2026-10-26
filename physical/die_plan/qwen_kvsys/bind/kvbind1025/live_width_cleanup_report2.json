@@ -1,0 +1,207 @@
+{
+ "schema": "opentallas.kv.live_width_cleanup.v1",
+ "plan_in": "/tmp/tmp.9kKOTUIYld/b.json",
+ "evidence": "physical/die_plan/qwen_kvsys/bind/kvbind1025/b7_bind_latency.json.gz",
+ "dead_lanes": [],
+ "removed": {},
+ "latency_groups_touched": [],
+ "narrow": [
+  {
+   "lane": "L1527",
+   "src": "hg_EN_7.o_kvs_hroot_Q_o_cN",
+   "live": 35,
+   "planned": 40,
+   "action": "narrowed to 35"
+  },
+  {
+   "lane": "L1528",
+   "src": "hg_EN_6.o_kvs_hroot_Q_o_cN",
+   "live": 30,
+   "planned": 40,
+   "action": "narrowed to 30"
+  },
+  {
+   "lane": "L1529",
+   "src": "hg_EN_5.o_kvs_hroot_Q_o_cN",
+   "live": 25,
+   "planned": 40,
+   "action": "narrowed to 25"
+  },
+  {
+   "lane": "L1530",
+   "src": "hg_EN_4.o_kvs_hroot_Q_o_cN",
+   "live": 20,
+   "planned": 40,
+   "action": "narrowed to 20"
+  },
+  {
+   "lane": "L1531",
+   "src": "hg_EN_3.o_kvs_hroot_Q_o_cN",
+   "live": 15,
+   "planned": 40,
+   "action": "narrowed to 15"
+  },
+  {
+   "lane": "L1532",
+   "src": "hg_EN_2.o_kvs_hroot_Q_o_cN",
+   "live": 10,
+   "planned": 40,
+   "action": "narrowed to 10"
+  },
+  {
+   "lane": "L1533",
+   "src": "hg_EN_1.o_kvs_hroot_Q_o_cN",
+   "live": 5,
+   "planned": 40,
+   "action": "narrowed to 5"
+  },
+  {
+   "lane": "L1547",
+   "src": "hg_ES_7.o_kvs_hroot_Q_o_cN",
+   "live": 35,
+   "planned": 40,
+   "action": "narrowed to 35"
+  },
+  {
+   "lane": "L1548",
+   "src": "hg_ES_6.o_kvs_hroot_Q_o_cN",
+   "live": 30,
+   "planned": 40,
+   "action": "narrowed to 30"
+  },
+  {
+   "lane": "L1549",
+   "src": "hg_ES_5.o_kvs_hroot_Q_o_cN",
+   "live": 25,
+   "planned": 40,
+   "action": "narrowed to 25"
+  },
+  {
+   "lane": "L1550",
+   "src": "hg_ES_4.o_kvs_hroot_Q_o_cN",
+   "live": 20,
+   "planned": 40,
+   "action": "narrowed to 20"
+  },
+  {
+   "lane": "L1551",
+   "src": "hg_ES_3.o_kvs_hroot_Q_o_cN",
+   "live": 15,
+   "planned": 40,
+   "action": "narrowed to 15"
+  },
+  {
+   "lane": "L1552",
+   "src": "hg_ES_2.o_kvs_hroot_Q_o_cN",
+   "live": 10,
+   "planned": 40,
+   "action": "narrowed to 10"
+  },
+  {
+   "lane": "L1553",
+   "src": "hg_ES_1.o_kvs_hroot_Q_o_cN",
+   "live": 5,
+   "planned": 40,
+   "action": "narrowed to 5"
+  },
+  {
+   "lane": "L1567",
+   "src": "hg_WN_7.o_kvs_hroot_Q_o_cN",
+   "live": 35,
+   "planned": 40,
+   "action": "narrowed to 35"
+  },
+  {
+   "lane": "L1568",
+   "src": "hg_WN_6.o_kvs_hroot_Q_o_cN",
+   "live": 30,
+   "planned": 40,
+   "action": "narrowed to 30"
+  },
+  {
+   "lane": "L1569",
+   "src": "hg_WN_5.o_kvs_hroot_Q_o_cN",
+   "live": 25,
+   "planned": 40,
+   "action": "narrowed to 25"
+  },
+  {
+   "lane": "L1570",
+   "src": "hg_WN_4.o_kvs_hroot_Q_o_cN",
+   "live": 20,
+   "planned": 40,
+   "action": "narrowed to 20"
+  },
+  {
+   "lane": "L1571",
+   "src": "hg_WN_3.o_kvs_hroot_Q_o_cN",
+   "live": 15,
+   "planned": 40,
+   "action": "narrowed to 15"
+  },
+  {
+   "lane": "L1572",
+   "src": "hg_WN_2.o_kvs_hroot_Q_o_cN",
+   "live": 10,
+   "planned": 40,
+   "action": "narrowed to 10"
+  },
+  {
+   "lane": "L1573",
+   "src": "hg_WN_1.o_kvs_hroot_Q_o_cN",
+   "live": 5,
+   "planned": 40,
+   "action": "narrowed to 5"
+  },
+  {
+   "lane": "L1587",
+   "src": "hg_WS_7.o_kvs_hroot_Q_o_cN",
+   "live": 35,
+   "planned": 40,
+   "action": "narrowed to 35"
+  },
+  {
+   "lane": "L1588",
+   "src": "hg_WS_6.o_kvs_hroot_Q_o_cN",
+   "live": 30,
+   "planned": 40,
+   "action": "narrowed to 30"
+  },
+  {
+   "lane": "L1589",
+   "src": "hg_WS_5.o_kvs_hroot_Q_o_cN",
+   "live": 25,
+   "planned": 40,
+   "action": "narrowed to 25"
+  },
+  {
+   "lane": "L1590",
+   "src": "hg_WS_4.o_kvs_hroot_Q_o_cN",
+   "live": 20,
+   "planned": 40,
+   "action": "narrowed to 20"
+  },
+  {
+   "lane": "L1591",
+   "src": "hg_WS_3.o_kvs_hroot_Q_o_cN",
+   "live": 15,
+   "planned": 40,
+   "action": "narrowed to 15"
+  },
+  {
+   "lane": "L1592",
+   "src": "hg_WS_2.o_kvs_hroot_Q_o_cN",
+   "live": 10,
+   "planned": 40,
+   "action": "narrowed to 10"
+  },
+  {
+   "lane": "L1593",
+   "src": "hg_WS_1.o_kvs_hroot_Q_o_cN",
+   "live": 5,
+   "planned": 40,
+   "action": "narrowed to 5"
+  }
+ ],
+ "live_lane_cycles_changed": 0
+}

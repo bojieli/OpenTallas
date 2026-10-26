@@ -1,0 +1,462 @@
+{
+ "die": "qwen_kvsys",
+ "partitions": 160,
+ "crossings": 2545,
+ "crossing_bits": 430554,
+ "proof": {
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 2070,
+  "plan_driven": 1935
+ },
+ "n_errors": 0,
+ "type_splits": [],
+ "position_banks": {
+  "abi": "kv_pc_r8_position_bank_v1",
+  "instances": [
+   {
+    "inst": "slg_EN_0",
+    "partition": "pc_EN_2",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 3,
+    "group": 0,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_EN_1",
+    "partition": "pc_EN_3",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 3,
+    "group": 1,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_EN_2",
+    "partition": "pc_EN_4",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 3,
+    "group": 2,
+    "token_cycles": 2,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_EN_3",
+    "partition": "pc_EN_5",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 3,
+    "group": 3,
+    "token_cycles": 2,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_EN_4",
+    "partition": "pc_EN_0",
+    "module": "qkd_kvs_grp_h_r2c_r8pos",
+    "stack": 3,
+    "group": 4,
+    "token_cycles": 2,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_EN_5",
+    "partition": "pc_EN_1",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 3,
+    "group": 5,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_EN_6",
+    "partition": "pc_EN_6",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 3,
+    "group": 6,
+    "token_cycles": 2,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_ES_0",
+    "partition": "pc_ES_2",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 2,
+    "group": 0,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_ES_1",
+    "partition": "pc_ES_3",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 2,
+    "group": 1,
+    "token_cycles": 0,
+    "epoch_cycles": 1
+   },
+   {
+    "inst": "slg_ES_2",
+    "partition": "pc_ES_4",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 2,
+    "group": 2,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_ES_3",
+    "partition": "pc_ES_5",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 2,
+    "group": 3,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_ES_4",
+    "partition": "pc_ES_0",
+    "module": "qkd_kvs_grp_h_r2c_r8pos",
+    "stack": 2,
+    "group": 4,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_ES_5",
+    "partition": "pc_ES_1",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 2,
+    "group": 5,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_ES_6",
+    "partition": "pc_ES_6",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 2,
+    "group": 6,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WN_0",
+    "partition": "pc_WN_2",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 1,
+    "group": 0,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WN_1",
+    "partition": "pc_WN_3",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 1,
+    "group": 1,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WN_2",
+    "partition": "pc_WN_4",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 1,
+    "group": 2,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WN_3",
+    "partition": "pc_WN_5",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 1,
+    "group": 3,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WN_4",
+    "partition": "pc_WN_0",
+    "module": "qkd_kvs_grp_h_r2c_r8pos",
+    "stack": 1,
+    "group": 4,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WN_5",
+    "partition": "pc_WN_1",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 1,
+    "group": 5,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WN_6",
+    "partition": "pc_WN_6",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 1,
+    "group": 6,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WS_0",
+    "partition": "pc_WS_2",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 0,
+    "group": 0,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WS_1",
+    "partition": "pc_WS_3",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 0,
+    "group": 1,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WS_2",
+    "partition": "pc_WS_4",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 0,
+    "group": 2,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WS_3",
+    "partition": "pc_WS_5",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 0,
+    "group": 3,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WS_4",
+    "partition": "pc_WS_0",
+    "module": "qkd_kvs_grp_h_r2c_r8pos",
+    "stack": 0,
+    "group": 4,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WS_5",
+    "partition": "pc_WS_1",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 0,
+    "group": 5,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   },
+   {
+    "inst": "slg_WS_6",
+    "partition": "pc_WS_6",
+    "module": "qkd_kvs_grp_r2c_r8pos",
+    "stack": 0,
+    "group": 6,
+    "token_cycles": 0,
+    "epoch_cycles": 0
+   }
+  ],
+  "kept_flops_per_instance": 52,
+  "kept_flops_total": 1456,
+  "new_partition_pins": 0,
+  "arbitrary_delay_selectors": 0
+ },
+ "param_regen": {
+  "file": "physical/die_plan/qwen_kvsys/bind/kvbind1025/regen_agebounds_2144.py",
+  "changed": [
+   {
+    "inst": "pvw_0__u_ctl",
+    "param": "FIRST_INPUT_AGE",
+    "asbuilt": "127",
+    "bound": 255
+   },
+   {
+    "inst": "pvw_1__u_ctl",
+    "param": "FIRST_INPUT_AGE",
+    "asbuilt": "127",
+    "bound": 255
+   },
+   {
+    "inst": "vport_EN_0",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_EN_1",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_EN_2",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_EN_3",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_ES_0",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_ES_1",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_ES_2",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_ES_3",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WN_0",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WN_1",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WN_2",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WN_3",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WS_0",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WS_1",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WS_2",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WS_3",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   }
+  ],
+  "record": {
+   "counts": {
+    "FIRST_INPUT_AGE": 2,
+    "RT": 16
+   },
+   "added_schedule_cycles": 0,
+   "source": "PATH-KV decision 2026-10-25 21:21; RTL source 453dda0da433"
+  }
+ },
+ "bus_groups": {
+  "landing_groups": 5294,
+  "landing_misaligned_by_lanes": 1740,
+  "landing_misaligned_after_pads": 1668,
+  "replica_sets": 234,
+  "replica_unequal": 138,
+  "internal_changed_edges": 151
+ },
+ "landing_alignment": {
+  "groups": 5733,
+  "padded_groups": 398,
+  "padded_bits": 17036,
+  "pad_flops": 44740,
+  "max_pad": 60,
+  "mode": "r8",
+  "table": "/srv/opentallas-scratch2/claude/codex-kv-bind-bank-2144/tree/physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+  "table_sha": "f374a80dba87f0de",
+  "table_summary": {
+   "members": 5733,
+   "classes": 3804,
+   "replica_links": 9,
+   "padded_members": 382,
+   "padded_bits": 17056,
+   "pad_flops": 67665,
+   "max_pad": 16,
+   "max_depth_before": 68,
+   "max_depth_after": 68,
+   "max_offset_before": 64,
+   "max_offset_after": 64,
+   "binder_landed_max": 71,
+   "landed_bundles": 0,
+   "landed_over_margin": 0
+  },
+  "members": 5733,
+  "stale": 0,
+  "uncovered": 0,
+  "excluded_bits": 0,
+  "r8_excluded": [],
+  "async_bits": 15794,
+  "table_exempt": [],
+  "table_bus": "leaf",
+  "table_replica": "type",
+  "renamed_cells": 0,
+  "gone_pad0": [],
+  "position_bank_members": 952,
+  "extra_tables": [
+   {
+    "table": "/srv/opentallas-scratch2/claude/codex-kv-bind-bank-2144/tree/physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/vport_request_extra.json",
+    "sha": "627500ef005294c9",
+    "replaced": 32,
+    "added": 0,
+    "inner": 0
+   }
+  ],
+  "inner": {
+   "members": 0,
+   "self_noop": 0,
+   "matched": 0,
+   "changed_bits": 0,
+   "stale": 0,
+   "dly_sets_before": 441,
+   "dly_sets_after": 441
+  }
+ }
+}

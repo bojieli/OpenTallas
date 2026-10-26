@@ -29,6 +29,9 @@ VERIFY_RULES = {
         {"module": "ot_dp_rrelay", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
         # decision 13c consumer-tap relay: reset traced through d; the START (run) leg is checked by the lockstep tests
         {"module": "ot_dp_rgate", "map": {"q": "d"}, "drop_in": ["clk", "run"], "stages": 1},
+        # Connectivity follows reset through its PLL qualification; por_gate checks the declared lock wiring and
+        # release qualification independently (this comparison does not compare reset flight cycles).
+        {"module": "ot_dp_lockq", "map": {"q": "d"}, "drop_in": ["clk", "locked"], "stages": 1},
     ],
     "reducers": [{"module": "ot_dp_or", "out": "y"}, {"module": "ot_dp_and", "out": "y", "op": "and"}],
     "sources": [{"module": "ot_reset_sync|ot_dp_rsync_s[23]", "kind": "reset", "outputs": {"sync_rst_n": "low"},
@@ -210,6 +213,11 @@ def cmd_verify(a):
                     # registered-pin hard partition (bind.py reg_hard): no synchroniser of ours inside the bare
                     # macro, its leaf reset is the delivered die reset (arst_n) as in a wavefront hard partition
                     got = want
+                if want == ["rootpad"]:
+                    import reset_tree as RT
+                    ps = RT.pad_spec(__import__("schema").Plan(raw, Path(a.plan)))
+                    if ps and got == ["top", ps["port"]]:
+                        got = want
                 if want == ["start"] and got == ["rst", "low"]:
                     # local START tap start_t<k> = ot_dp_rgate(raw reset, run): its reset leg traces to the die reset
                     # (run is dropped like on every gated tap); START timing is proven by the lockstep tests
@@ -226,7 +234,10 @@ def cmd_verify(a):
     from bind import plan_base
     ab0 = raw["asbuilt"]
     base = plan_base(a.plan, raw)
-    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []), base)
+    # Composition emits real RTL outside rtl_roots; preference alone does not index its module definitions.
+    extra_lib = rep.get("extra_lib", [])
+    cells = [f for f in rep["files"] if Path(f).name == "bind_cells.sv"]
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []) + extra_lib + cells, base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])]
     leafm = sorted({c.module for ci, c in enumerate(F.cells) if G.kind[ci] == "leaf"})
     prefer += rep.get("extra_lib", [])

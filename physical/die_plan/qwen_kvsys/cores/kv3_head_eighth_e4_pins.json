@@ -2,7 +2,7 @@
 "schema": "opentallas.die_plan.core_pins.v1",
 "core": "kv3_head_eighth_e4",
 "frame": "core R0, origin (0,0), outline 216 x 216",
-"source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | v3.8x KVG3-CORES: re-spread onto 216 x 216 (core_pins_resize_v38x.py: same faces / order / spreading rule; was 285.12 x 285.12)",
+"source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | v3.8x KVG3-CORES: re-spread onto 216 x 216 (core_pins_resize_v38x.py: same faces / order / spreading rule; was 285.12 x 285.12) | PATH-KV-BIND 10-25 head_clk_merge.py: one clock pin per core (kit clocks every flop from it); dropped unloaded per-member clock pins ['g_t_8_u_l8__clk', 'g_t_8_u_stin__clk', 'g_t_8_u_stk__clk', 'g_t_9_u_l8__clk', 'g_t_9_u_stin__clk', 'g_t_9_u_stk__clk']",
 "faces": {
 "S": {
 "pins": 888,
@@ -4879,27 +4879,9 @@
 "y": 0.096
 },
 {
-"name": "g_t_8_u_l8__clk[0]",
-"layer": "M5",
-"x": 195.384,
-"y": 0.096
-},
-{
-"name": "g_t_8_u_stin__clk[0]",
-"layer": "M5",
-"x": 195.624,
-"y": 0.096
-},
-{
 "name": "g_t_8_u_stin__rst_n[0]",
 "layer": "M5",
 "x": 195.864,
-"y": 0.096
-},
-{
-"name": "g_t_8_u_stk__clk[0]",
-"layer": "M5",
-"x": 196.104,
 "y": 0.096
 },
 {
@@ -5113,27 +5095,9 @@
 "y": 0.096
 },
 {
-"name": "g_t_9_u_l8__clk[0]",
-"layer": "M5",
-"x": 204.648,
-"y": 0.096
-},
-{
-"name": "g_t_9_u_stin__clk[0]",
-"layer": "M5",
-"x": 204.888,
-"y": 0.096
-},
-{
 "name": "g_t_9_u_stin__rst_n[0]",
 "layer": "M5",
 "x": 205.128,
-"y": 0.096
-},
-{
-"name": "g_t_9_u_stk__clk[0]",
-"layer": "M5",
-"x": 205.368,
 "y": 0.096
 },
 {

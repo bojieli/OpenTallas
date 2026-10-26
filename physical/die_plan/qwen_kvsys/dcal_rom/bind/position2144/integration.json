@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.kv-dcal-rom.v1",
+  "recipe": "physical/die_plan/qwen_kvsys/dcal_rom/bind/position2144/recipe_position_2144.rom64.json",
+  "source_recipe": "physical/die_plan/qwen_kvsys/bind/kvbind1025/recipe_position_2144.json",
+  "source_profile": "physical/die_plan/qwen_kvsys/dcal_rom/profiles/cal_pair1024/kv_dcal.profile.json",
+  "source_profile_sha256": "63b639225caf9c541a4f715e61d9df270c399e27e0f99a21f025e33709cd914d",
+  "macro": "ot_rom_64x32_m2",
+  "macro_sheet": "physical/asap7_memory_macros_v2/ot_rom_64x32_m2/ot_rom_64x32_m2.json",
+  "manifest": "physical/die_plan/qwen_kvsys/dcal_rom/bind/position2144/content/kv_dcal.personalisation.json",
+  "macro_view_area_um2": 81.404352,
+  "macro_size_um": [
+    8.856,
+    9.192
+  ],
+  "macro_instance": "dcal.u_profile",
+  "cache_scalar_bits": 256,
+  "scalar_read_order": [
+    39,
+    40,
+    36,
+    37,
+    38,
+    41,
+    42,
+    43
+  ],
+  "existing_init_edges": 66,
+  "new_boot_edges": 0,
+  "new_production_edges": 0,
+  "layer_read_lead_edges_max": 2,
+  "layer_start_gap_min": 8012,
+  "physical_obligations": "Add macro LEF and TT/FF libraries and place the81.4um2 generated macro inside the sys_c dcal region; review before any route. New physical signoff required; no preexisting view reused."
+}
