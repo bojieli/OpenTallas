@@ -1,0 +1,25 @@
+{
+  "component": "actual HSF0 issued identity FIFO and untagged position",
+  "entries": 2,
+  "identity_bits": 31,
+  "storage_bits": 62,
+  "control_bits": 33,
+  "data_reset": false,
+  "push": "externally accepted issue; no autoissue",
+  "pop": "actual local-final acceptance; not job retirement",
+  "latency": "original delayed kept write enables;0added edges",
+  "position": "increment one edge after accepted untagged issue only",
+  "source_only": true,
+  "macs_per_cycle": 0,
+  "replicas": 1,
+  "physical_slot": "controller unassigned",
+  "bits_per_cycle": 31,
+  "control_breakdown": {
+    "occupancy": 2,
+    "write_select": 1,
+    "read_select_and_copies": 4,
+    "delayed_issue": 1,
+    "fallback_position": 21,
+    "kept_delayed_write_enables": 4
+  }
+}
