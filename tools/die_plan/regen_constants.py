@@ -179,6 +179,25 @@ class RuleError(Exception):
 
 
 # ----------------------------------------------------------------------------------------------------- accumulator
+def _sv_int(v):
+    """an SV literal (N'hX / N'bX / N'dX / 'hX, '_' allowed) or a plain decimal -> int; None if neither"""
+    m = re.fullmatch(r"\s*(\d*)'([sS]?)([hHbBdDoO])([0-9a-fA-F_]+)\s*", str(v))
+    if m:
+        return int(m.group(4).replace("_", ""), {"h": 16, "b": 2, "d": 10, "o": 8}[m.group(3).lower()])
+    try:
+        return int(str(v).strip())
+    except ValueError:
+        return None
+
+
+def _same_value(a, b):
+    """bind-applied vs regenerated: equal as text, or as numbers (param_regen.json records 32'h03030471 as 50529393)"""
+    if str(a) == str(b):
+        return True
+    x, y = _sv_int(a), _sv_int(b)
+    return x is not None and x == y
+
+
 class Out:
     def __init__(self, die, B):
         self.die, self.B = die, B
@@ -225,11 +244,11 @@ class Out:
             if not got:
                 r["bind_applied"] = "not in param_regen.json (as-built value kept by the bind, or no hook)"
                 continue
-            bad = sorted({b for i, b in got if str(b) != str(exp)})
+            bad = sorted({b for i, b in got if not _same_value(b, exp)})
             r["bind_applied"] = sorted({b for _, b in got})
             if bad:
                 r["status"] = "MISMATCH"
-                r["mismatch"] = f"bind applied {bad} on {len([1 for i, b in got if str(b) != str(exp)])} inst, regen {exp}"
+                r["mismatch"] = f"bind applied {bad} on {len([1 for i, b in got if not _same_value(b, exp)])} inst, regen {exp}"
 
     def rtl_check(self, table):
         """the bound RTL itself (BIND_DIR/rtl) must carry the regenerated values: table = [(constant, module_re, param)];
