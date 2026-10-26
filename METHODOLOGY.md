@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4.2, 2026-10-26 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4.3, 2026-10-26 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -248,7 +248,7 @@ Per die, in order (supersedes "route signals, then fit the clock"; amends 7 and 
 - 11.3 Reset: die wavefront (B#13): rst_n -> root partition; parent rst_o_<k> -> child arst_n die hops; START beside it.
 - 11.4 PG, clock and reset are frozen as FIXED pre-routes (special nets / fixed wires + NDR footprint obstructions in the die kit) so die GRT sees the exact leftover capacity; skew gate (like-edge related pairs, CPPR, TT+FF, <= 80 ps) on the pre-routed clock alone.
 - 11.5 Die signal GRT on the leftover, >= 50 iterations: M4-M7 + leftover M8/M9 per 12.1.
-- 11.6 Die plan freezes on GRT0 incl. clock + related-pair skew <= 80 TT/FF.
+- 11.6 Die plan freezes per 12.4a (die STA with real clock on related pairs; 80 ps skew = target).
 - 11.7 THE DIE ABSORBS RESIDUALS: a tile's measured clock insertion that differs from plan is compensated at die level (per-tile mesh stub trim / declared core-latency offset in the die clock tool), not by a tile rebuild -- EXCEPT the owner 10-26 core-latency rebuild (12.3). Boundary timing rests on registered pins + channel repeaters. A tile is rebuilt only for its own internal failures.
 - 11.8 PRE-FREEZE TRIAL PLACEMENT: every tile type gets a quick place with its clock islands and pre-route keep-outs in, showing fit, pin access and an r2r reach census, before the die plan freezes.
 - 11.9 Order: QC (prototype) -> S81-HEAD -> KV / S81 / HBM inside their current batches.
@@ -277,7 +277,12 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   restructure their CTS to meet it, shallow cores pad up. No early taps by design. Cores are rebuilt in parallel to it, signed cores included
   (owner 10-26). Early-tap branches are RETIRED (12.8): diagnostic evidence only, never a closure path.
 - 12.4 GATES (all dies, die_infra.py).
-  a. Freeze = die GRT0 incl. clock (>= 50 it) AND related-pair skew <= 80 ps TT+FF (CPPR, routed RC).
+  a. Freeze (OWNER 10-26 06:33) = die GRT0 incl. clock (>= 50 it) AND DIE STA WITH THE REAL CLOCK on related pairs: TT setup >= 0 and FF hold >= 0
+     for every related launch/capture pair (intra-partition, seam, die links), propagated clock arrivals from the routed die clock (routed RC, CPPR to
+     the last common tree node), blocks as interface timing models (pin-register clock latency + clk->q/setup/hold from the kit; declared 12.3 budget
+     until a kit exists, labelled). Related-pair skew <= 80 ps TT/FF is the CLOCK DESIGN TARGET and a reported diagnostic, NOT a pass/fail gate.
+     Hold is made safe by STRUCTURE (zero-logic register pairs share a clock leaf; die crossings are landed/forwarded hops), never by post-measurement
+     padding (12.8). Release gate stays die STA on real (signed) views + token pass.
   b. CPPR (OWNER 10-26 06:07, 12.8): the GATE number credits CPPR only to the last common H-tree/tree node (region root for same-mesh pairs);
      no credit at the mesh node. The mesh-node-credited number (COORD 10-26 early ruling) is INFO only.
   c. Site sufficiency: max gap between legal station/repeater sites along each die net corridor <= 405 um; corridor track use <= 0.6;
@@ -301,6 +306,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 06:07 OWNER: root-cause clock structure, no tweaks (12.8): plan-defined centre clock entry + structured core trees; early taps, stub trims, clock ECOs, mesh-node CPPR credit banned as closure means = CURRENT.
   - 10-26 06:11 OWNER: 12.8 d1 plan-computed per-tap sizing before build ALLOWED (post-measurement values banned); core split = last resort after internal H-tree = CURRENT.
   - 10-26 06:15 OWNER: 12.9 execution rules (one owner per die clock/plan, QC critical path, rule freeze, predict-before-build, per-die flow releases, independent number check) = CURRENT.
+  - 10-26 06:33 OWNER: freeze gate = die STA with the real clock (TT setup, FF hold) on related pairs; 80 ps related-pair skew becomes design target/diagnostic (12.4a) = CURRENT. Supersedes the 10-26 01:0x skew-gate form.
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 05:58, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
