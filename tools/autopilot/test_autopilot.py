@@ -219,7 +219,8 @@ class FakeHosts:
         if code is self.ap.PROBE_KIT:
             return {"exists": True, "config": True, "has_run": k.get("has_run", False), "signoff_dirs": [],
                     "routed": k.get("routed", []), "fail_marks": k.get("fail_marks", []), "busy": k.get("busy", False),
-                    "log_age_s": k.get("log_age_s"), "runner": "/srv/opentallas-scratch2/claude/s81/kits/run_kit.sh"}
+                    "log_age_s": k.get("log_age_s"), "runner": "/srv/opentallas-scratch2/claude/s81/kits/run_kit.sh",
+                    **{x: k[x] for x in ("signoff_missing", "signoff_goals", "gds_gap", "route_runs_finish") if x in k}}
         if code is self.ap.PROBE_CLASSIFY:
             return dict(k.get("classify", {}), last_log_mtime=k.get("mtime", 0))
         if code is self.ap.PROBE_DELETE:
@@ -381,6 +382,21 @@ class TestTick(TickBase):
         self.assertEqual(len(self.f.launched), 2)        # once only
         self.assertEqual(list(jobs.values())[0]["status"], "DONE-CRASH")
         self.assertIn("CRASH/infra-oom", (Path(self.tmp.name) / "structural.tsv").read_text())
+
+    def test_signoff_bundle_gap_rejected_before_route(self):
+        self.f.kits["/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"] = {"signoff_missing": ["pair_skew.tcl"]}
+        self.queue(ROW)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "REJECTED")
+        self.assertIn("pair_skew.tcl", j["history"][-1][2])
+        self.assertEqual(self.f.launched, [])
+
+    def test_goal_follows_runner_signoff_contract(self):
+        self.f.kits["/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"] = {"signoff_goals": ["finish", "post"]}
+        self.queue(ROW + ["route"])
+        self.tick()
+        argv = self.f.launched[0][1]
+        self.assertEqual(argv[argv.index("--") + 4], "finish")
 
     def test_segfault_is_marked_not_resubmitted(self):
         self.queue(ROW)
@@ -1139,3 +1155,70 @@ class TestSharedShaRows(Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCrashTriage1025(unittest.TestCase):
+    """CRASH-TRIAGE 2026-10-25: signatures of the 48 DONE-CRASH rows"""
+
+    def setUp(self):
+        import autopilot
+        self.ap = autopilot
+
+    def classify_probe(self, runlog, files=None):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "run_route.log").write_text(runlog)
+            for n, txt in (files or {}).items():
+                (Path(d) / n).parent.mkdir(parents=True, exist_ok=True)
+                (Path(d) / n).write_text(txt)
+            o = subprocess.run([sys.executable, "-c", self.ap.PROBE_CLASSIFY, json.dumps({"kit": d, "goal": "route"})],
+                               capture_output=True, text=True, env={"PATH": ""}, timeout=60).stdout
+            return json.loads(o.split("AP_JSON ", 1)[1])
+
+    def test_error_247_at_mem_cap_is_infra_oom(self):
+        c = self.classify_probe("[INFO PSM-0040] All shapes on net VDD are connected.\n"
+                                "make[1]: *** [Makefile:654: do-6_report] Error 247\nmake: *** [Makefile:672: do-finish] Error 2\n")
+        self.assertEqual(self.ap.classify(c, {"exit": 2})[:2], ("CRASH", "infra-oom"))
+        c = self.classify_probe("make[1]: *** [Makefile:589: do-5_2_route] Error 1\n")
+        self.assertEqual(self.ap.classify(c, {"exit": 2})[:2], ("CRASH", "flow-error"))
+
+    def test_printed_gate_fail_is_structural(self):
+        for line in ("CORE_PREFLIGHT FAIL /work/x/1_2_yosys.v {'shared': 1716}",
+                     "RP1_GATE FAIL: FF hold -2.65 < 0 -- stop before detailed route",
+                     "SDC_LINT FAIL /work errors 1 liberty 16"):
+            c = self.classify_probe("x\n" + line + "\n")
+            self.assertEqual(self.ap.classify(c, {"exit": 1})[:2], ("STRUCTURAL", "gate"), line)
+        c = self.classify_probe("SDC_LINT PASS\n")
+        self.assertNotIn("gate_fail", c)
+
+    def test_adopted_without_logs_is_infra_lost(self):
+        self.assertEqual(self.ap.classify({"last_log": "", "runlog_tail": ""}, {})[:2], ("CRASH", "infra-lost"))
+
+    def probe_kit(self, files):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d:
+            for n, txt in files.items():
+                (Path(d) / n).write_text(txt)
+            o = subprocess.run([sys.executable, "-c", self.ap.PROBE_KIT, json.dumps({"kit": d, "runner": ""})],
+                               capture_output=True, text=True, env={"PATH": ""}, timeout=60).stdout
+            return json.loads(o.split("AP_JSON ", 1)[1])
+
+    def test_probe_kit_signoff_bundle_and_goals(self):
+        so = 'x = HERE / "pair_skew.tcl"\ndef f():\n    import sdc_lint\n    import face_guard\n'
+        hbm = ('if { [ "$GOAL" = finish ] || [ "$GOAL" = post ]; } && [ $((rc % 100)) = 0 ]; then\n  SO="$K/signoff"\n'
+               '  python3 "$K/signoff.py" run --run-dir "$K/run"\nfi\n')
+        p = self.probe_kit({"config.mk": "export ADDITIONAL_LEFS = /work/macros/a.lef\n", "signoff.py": so,
+                            "sdc_lint.py": "", "run_kit_hbm.sh": hbm})
+        self.assertEqual(p["signoff_missing"], ["face_guard.py", "pair_skew.tcl"])
+        self.assertEqual(p["signoff_goals"], ["finish", "post"])
+        self.assertTrue(p["gds_gap"])
+        self.assertFalse(p["route_runs_finish"])
+
+    def test_runner_goal(self):
+        rg = self.ap.runner_goal
+        self.assertEqual(rg("route", {"signoff_goals": ["finish", "post"]}), "finish")
+        self.assertEqual(rg("finish", {"signoff_goals": ["finish", "route"], "gds_gap": True, "route_runs_finish": True}),
+                         "route")
+        self.assertEqual(rg("finish", {"signoff_goals": ["finish", "route"], "gds_gap": False}), "finish")
+        self.assertEqual(rg("cts", {"signoff_goals": ["finish"]}), "cts")
+        self.assertEqual(rg("route", {}), "route")
