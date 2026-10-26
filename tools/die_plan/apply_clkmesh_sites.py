@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""D-QC-CLKMESH plan item: reserve the die clock cell sites (mesh drivers, H-tree nodes/repeaters, tap stubs) built by
-die_clock_mesh.py build.  usage: apply_clkmesh_sites.py PLAN MESH_DIR [--write]
+"""Die clock mesh plan item (D-<DIE>-CLKMESH, e.g. D-QC-CLKMESH / D-KV-CLKMESH): reserve the die clock cell sites (mesh
+drivers, H-tree nodes/repeaters, tap stubs) built by die_clock_mesh.py build.
+usage: apply_clkmesh_sites.py PLAN MESH_DIR [--write --delta-id D-<DIE>-CLKMESH]
 
 * die level: plan.clock.mesh = the mesh profile + a pointer (repo-relative) to clock_mesh_sites.json (every die clock
   cell: name, kind, die xy, owning partition or "die" for a channel).
@@ -29,7 +30,11 @@ def main():
     ap.add_argument("mesh_dir")
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--sites-out")
+    ap.add_argument("--delta-id", help="plan delta tag written to plan.clock.mesh.delta (required with --write), "
+                    "e.g. D-QC-CLKMESH, D-KV-CLKMESH")
     a = ap.parse_args()
+    if a.write and not a.delta_id:
+        ap.error("--write needs --delta-id (the die's plan delta tag, e.g. D-KV-CLKMESH)")
     raw = json.loads(Path(a.plan).read_text())
     P = S.Plan(S.load(a.plan))
     d = Path(a.mesh_dir)
@@ -97,7 +102,9 @@ def main():
         sp = Path(a.sites_out or Path(a.plan).parent / "clock_mesh_sites.json")
         sp.write_text(json.dumps(dict(meta=M["meta"], sites=sites)) + "\n")
         mm = {k: M["meta"][k] for k in ("nx", "ny", "m", "rep_um", "ndr", "pitch_um")}
-        raw["clock"]["mesh"] = dict(mm, delta="D-QC-CLKMESH", layers={"straps_h": "M8", "straps_v": "M9"},
+        if M["meta"].get("regions_depth"):
+            mm.update(regions_depth=M["meta"]["regions_depth"], regions=M["meta"]["regions"])
+        raw["clock"]["mesh"] = dict(mm, delta=a.delta_id, layers={"straps_h": "M8", "straps_v": "M9"},
                                     tool="tools/die_plan/die_clock_mesh.py build", sites_file=sp.name,
                                     sites_sha256=hashlib.sha256(sp.read_bytes()).hexdigest(), cells=len(sites))
         types = raw["partition_types"]
