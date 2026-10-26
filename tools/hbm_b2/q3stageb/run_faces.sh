@@ -24,11 +24,13 @@ for k in c['core_filelists']:
 print('\n'.join(fs))
 PY
 mapfile -t QSRC < "$D/qsrc.files"
-python3 - > "$D/tsrc.files" <<'PY'
-import json,hashlib
+python3 - "$FACE_SOURCES/ot_hbm_face_reg.sv" > "$D/tsrc.files" <<'PY'
+import json,hashlib,sys
 for e in json.load(open('tools/hbm_b2/q3stageb/tkm_faces_sources.json')):
  p=e['path'];assert hashlib.sha256(open(p,'rb').read()).hexdigest()==e['sha256']
- if not p.endswith('tb_hbm_tkm_bound_tkx_ft21.sv'):print(p)
+ if p.endswith('ot_hbm_face_reg.sv'):
+  assert open(p,'rb').read()==open(sys.argv[1],'rb').read(), 'different physical face-register cells'
+ elif not p.endswith('tb_hbm_tkm_bound_tkx_ft21.sv'):print(p)
 PY
 mapfile -t TSRC < "$D/tsrc.files"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
