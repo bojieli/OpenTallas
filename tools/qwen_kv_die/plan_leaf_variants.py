@@ -121,7 +121,7 @@ VARIANTS = [
     dict(name='qkd_kvs_pc_h_head_p', src=TILE_SRC, module='qkd_kvs_pc_h',
          die='qkd_kvs_pc_h.pc__pc (0) + pc__fi (chain head kvpc_*_0)', param=[('pc__pc', 'PC')], head=['pc__fi'],
          children=[dict(inst='u_pc', module='qkd_static_kv_pc_path_fan_nc_b', new='qkd_static_kv_pc_path_fan_nc_b_head_p',
-                        params={'PC': 'PC'}, drop={'pc': 'PC', 'fi': 'pc__fi'})],
+                        params={'PC': 'PC', 'CORE_CLOCK': '1'}, drop={'pc': 'PC', 'fi': 'pc__fi'})],
          vals=[[0], [17]], mut=[[0], [1]], probes=['u_pc.u_chain.spc'],
          libs=PCPATH_LIBS + ['rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv',
                              'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv',
