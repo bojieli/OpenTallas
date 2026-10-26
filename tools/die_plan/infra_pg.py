@@ -75,6 +75,11 @@ UBUMP_UM = 45.0                     # PHY_ASSUMPTIONS BUMP.UBUMP (2.5D micro-bum
 PHY_PG_SHARE = {"ucie": 0.30, "serdes": 0.45, "hbm": 0.45, "other": 0.45}   # UCIE.A.PG_SHARE / UCIE.S.PG_SHARE / HBM 45%
 
 
+def _pg_io(P, plan_dir):
+    """die IO windows that carry PHY supply/power: a die_root_pad (one signal pad, e.g. the KV POR pin) is not a PHY window."""
+    return [w for w in D.io_windows(P, plan_dir) if w.get("kind") != "die_root_pad"]
+
+
 def phy_kind(iface, mod=""):
     t = f"{iface} {mod}".lower()
     return next((k for k in ("serdes", "ucie", "hbm") if k in t), "other")
@@ -130,7 +135,7 @@ def phy_power(P, w, phy_w_per_macro):
 def load_model(P, plan_dir, power=None, phy_w_per_macro=4.37, core_w_mm2=None, core_watts=None):
     """-> dict(loads=[(rect, W/mm2)], regions=[...], part_w={part: W}, basis=[...])"""
     power = power or {}
-    io = D.io_windows(P, plan_dir)
+    io = _pg_io(P, plan_dir)
     basis = []
     if core_w_mm2 is None:
         core_w_mm2 = power.get("core_w_mm2")
@@ -386,7 +391,7 @@ def estimate(P, model, grid, bump_pitch=150.0, vdd=0.7, domain=None, regions=Non
     core = model["core_w_mm2"]
     loc = (cell_drop(grid, core, bump_pitch, vdd) - _coarse_cell(rx, ry, core, bump_pitch, vdd=vdd)) if core > 0 else 0.0
     dom = domain or (0.0, 0.0, P.W, P.H)
-    io = D.io_windows(P, Path(P.path).parent if getattr(P, "path", None) else ".")
+    io = _pg_io(P, Path(P.path).parent if getattr(P, "path", None) else ".")
     phy = [r for r in model["regions"] if r["kind"] == "phy"]
     xs, ys, u = coarse_map(P, model, grid, bump_pitch, _bump_origin(P, bump_pitch), dom,
                            D.bump_grid(P, io, pitch=bump_pitch), [r["rect_um"] for r in phy], vdd=vdd)
@@ -557,7 +562,7 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     w, h = x1 - x0, y1 - y0
     Pg = _PG(P, pg["grid"])
     model = load_model(P, plan_dir, power, phy_w, core_w_mm2 if core_w_mm2 is not None else pg.get("core_w_mm2"))
-    io = D.io_windows(P, plan_dir)
+    io = _pg_io(P, plan_dir)
     bp = pg.get("bump_pitch_um", 150.0)
     allb = pg_bumps(P, io, pitch=bp)
     bumps = [(n, round(x - x0, 3), round(y - y0, 3)) for n, x, y in allb if x0 < x < x1 and y0 < y < y1]
@@ -632,7 +637,7 @@ def die_kit(P, plan_dir, pg, kit, out):
     Pg = _PG(P, pg["grid"])
     lefs = sorted(f.name for f in (out / "abstracts").glob("*.lef"))
     power = {n: pg["part_w"].get(n, 0.0) for n in P.parts}
-    bumps = pg_bumps(P, D.io_windows(P, plan_dir), pitch=pg.get("bump_pitch_um", 150.0))
+    bumps = pg_bumps(P, _pg_io(P, plan_dir), pitch=pg.get("bump_pitch_um", 150.0))
     (out / "psm" / "pdn.tcl").write_text(D.psm_pdn_tcl(Pg))
     (out / "psm" / "bumps.tcl").write_text(D.bumps_tcl(Pg, bumps))
     (out / "psm" / "power.tcl").write_text("\n".join(f"set_pdnsim_inst_power -inst {D.sv(n)} -power {w:.6f}"
