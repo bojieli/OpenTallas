@@ -1,0 +1,4 @@
+Overlay on the elemB_if2d kit (codex/head-knees0719@464724fb56, 3_place 08:11 GEOM placement PASS): append config_overlay.mk to config.mk;
+copy prects_dtap.tcl, run_gate.sh, ckdump2.tcl and from main physical/die_plan/hbm_arch_cores/{core_density_taps,core_tap_align,f4_chain_leaf,clock_family}.tcl,
+tools/die_plan/postcts_gate.tcl and the RCX-calibrated setRC (LAYER_PARASITICS_FILE) into the kit. Variant b = variant_b.diff (2500 sinks / 110 um).
+Kits: epyc1:/srv/opentallas-scratch2/claude/path-s81-elemb/elemB_if2e{,_b}.

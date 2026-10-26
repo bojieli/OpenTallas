@@ -363,6 +363,63 @@ def tile_image(image: list[int], data_bits: int, spec: RomSpec, tile_data_bits: 
     return tiles
 
 
+def verify_personalisation(manifest_path: Path, image_path: Path | None = None) -> dict[str, Any]:
+    """Functional / LEC check of one content against its macro: the via maps ARE the content.
+
+    For every instance of a personalisation manifest: the via-map file hashes to the recorded SHA-256, its read-back
+    (the behavioural model's exact read path: physical row a // mux, column b * mux + a % mux) equals the tile of
+    the logical image (SECDED-encoded when the manifest says so, and every codeword decodes clean), and the CRC-32
+    BIST signature of the read-back equals the recorded one.  The content signature over all instances is
+    recomputed.  This is equivalence of the generated ROM (macro + via layer) against the weight file, word by word.
+    """
+    man = json.loads(manifest_path.read_text())
+    image_path = image_path or Path(man["image"])
+    if asap7.sha256_file(image_path) != man["image_sha256"]:
+        return {"verdict": "FAIL", "error": f"image {image_path} does not hash to the manifest image_sha256"}
+    base = manifest_path.parent
+    macro_json = None
+    for cand in (ROOT / "physical" / "asap7_memory_macros_v2" / man["macro"] / f"{man['macro']}.json",
+                 ROOT / "physical" / "asap7_memory_macros" / man["macro"] / f"{man['macro']}.json"):
+        if cand.exists():
+            macro_json = cand
+            break
+    if macro_json is None:
+        return {"verdict": "FAIL", "error": f"no datasheet for {man['macro']}"}
+    spec = spec_from_sheet(macro_json)
+    tiles = tile_image(read_hex(image_path), man["data_bits"], spec, man["tile_data_bits"], man["ecc"])
+    prefix = manifest_path.name[:-len(".personalisation.json")]
+    by_name = {f"{prefix}_r{r}_c{c}": ws for (r, c), ws in tiles.items()}
+    bad, words_checked = [], 0
+    for rec in man["instances"]:
+        vm = base / rec["viamap"]
+        text = vm.read_text()
+        if hashlib.sha256(text.encode()).hexdigest() != rec["viamap_sha256"]:
+            bad.append(f"{rec['instance']}: via map hash differs from the manifest")
+            continue
+        got = read_back(spec, [int(x, 16) for x in text.split()])
+        want = by_name.get(rec["instance"])
+        if want is None:
+            bad.append(f"{rec['instance']}: no tile of the image maps to this instance")
+            continue
+        want = list(want) + [0] * (spec.words - len(want))
+        diff = [a for a in range(spec.words) if got[a] != want[a]]
+        if diff:
+            bad.append(f"{rec['instance']}: {len(diff)} words differ from the image (first address {diff[0]})")
+        if man["ecc"] == "secded":
+            unclean = [a for a in range(rec["words_programmed"])
+                       if ecc.decode(got[a], man["tile_data_bits"])[1] != "ok"]
+            if unclean:
+                bad.append(f"{rec['instance']}: {len(unclean)} codewords do not decode clean")
+        if f"{ecc.signature_fast(got, spec.bits):08x}" != rec["signature_crc32"]:
+            bad.append(f"{rec['instance']}: BIST signature differs")
+        words_checked += spec.words
+    sig = die_signature(man["instances"])
+    if sig != man["content_signature"]:
+        bad.append("content signature differs")
+    return {"verdict": "FAIL" if bad else "PASS", "macro": man["macro"], "instances": len(man["instances"]),
+            "words_checked": words_checked, "content_signature": sig, "errors": bad[:20]}
+
+
 def spec_from_sheet(path: Path) -> RomSpec:
     return RomSpec(**json.loads(path.read_text())["spec"])
 
@@ -385,7 +442,14 @@ def main() -> int:
     p.add_argument("--ecc", choices=("none", "secded"), default="none")
     p.add_argument("--instance-prefix", required=True)
     p.add_argument("--out", type=Path, required=True)
+    v = sub.add_parser("verify", help="per-content functional/LEC check: via maps against the weight image")
+    v.add_argument("--manifest", type=Path, required=True, help="<prefix>.personalisation.json")
+    v.add_argument("--image", type=Path, default=None, help="the content file (default: the manifest's)")
     args = ap.parse_args()
+    if args.cmd == "verify":
+        res = verify_personalisation(args.manifest, args.image)
+        print(json.dumps(res, indent=1, sort_keys=True))
+        return 0 if res["verdict"] == "PASS" else 1
     if args.cmd == "compile":
         specs = []
         if args.config:

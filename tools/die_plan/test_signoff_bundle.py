@@ -61,10 +61,10 @@ def test_ambiguous_or_path_overlay_marker_rejected(tmp_path):
 ])
 def test_postcts_actual_tcl_overlay_fragment(tmp_path,corner,marker,available,expected):
     source=(Path(signoff.__file__).with_name('postcts_gate.tcl')).read_text()
-    fragment=source[source.index('set ot_core_tap_fd'):source.index('set bound')].replace('/work/',str(tmp_path)+'/')
+    fragment=source[source.index('set ot_core_tap_fd'):source.index('set ot_pg_bound')].replace('/work/',str(tmp_path)+'/')
     (tmp_path/'constraint.sdc').write_text('# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc\n' if marker else '# no overlay\n')
     if available:(tmp_path/'core_taps_ff.sdc').write_text('set_clock_latency -source -109 [get_ports ck_core]\n')
-    script=tmp_path/'probe.tcl';script.write_text('set C '+corner+'\nset reads 0\nproc read_sdc {p} {incr ::reads}\n'+fragment+'\nputs "READS $reads"\n')
+    script=tmp_path/'probe.tcl';script.write_text('set C '+corner+'\nset ot_pg_C '+corner+'\nset reads 0\nproc read_sdc {p} {incr ::reads}\n'+fragment+'\nputs "READS $reads"\n')
     result=subprocess.run(['tclsh',str(script)],text=True,capture_output=True)
     if expected=='missing marked':assert result.returncode!=0 and expected in result.stderr
     else:assert result.returncode==0 and expected in result.stdout,result.stderr

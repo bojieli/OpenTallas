@@ -31,7 +31,7 @@ import argparse, collections, datetime, glob, json, os, re, subprocess, sys
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 DIES = [('s81', False), ('qwen_compute', False), ('qwen_kvsys', False), ('hbm', False), ('s81_head', True)]
 B2 = {'die': 'hbm_b2r2', 'branch': 'claude/hbm-arch-1024', 'path': 'physical/die_plan/hbm_arch/B2r2/die_plan.json'}
-HOSTS = ['localhost', 'epyc2', 'epyc3', 'intel1', 'intel2']
+HOSTS = ['localhost', 'epyc2', 'intel1', 'intel2']   # epyc3 retired 2026-10-25
 SCAN_ROOTS = ['/srv/opentallas-scratch', '/srv/opentallas-scratch2', '~/ot-scratch', '~/scratch']
 PRUNE = ['numeric_e*', 'reduction_s8*', 'part-cap*', '.git', 'moved', 's81_halfclock_truth_1020', 'sram*', 'proc']
 OLD_HOST_RE = re.compile(r'^(ot-|rtx-pro|agidock|pve)')

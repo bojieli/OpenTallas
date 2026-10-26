@@ -689,6 +689,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  // terms, -149 ps); dv_fault = their OR on the same edge (exact).
  reg[3:0]dvf;wire dv_fault=|dvf;
  wire src_fault=context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault|hp_host_fault;
+ reg[58:0]dr_tag; // declared before generated landing instances (strict Slang)
  reg dr_s;                            // slot whose VM write is in dr_o (the landing fence of that slot checks it)
  genvar gs;
  generate for(gs=0;gs<NS;gs=gs+1)begin:g_slot
@@ -803,7 +804,6 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   end
  // ---------------------------------------------------------------- dr_o: group 0 attention result / group 1 embedding row
  wire g0=vm_write_v;
- reg[58:0]dr_tag;
  wire g1;
  generate if(EMB_RELAY==0)begin:g_emb_direct
   assign g1=e3;

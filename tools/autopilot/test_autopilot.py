@@ -84,6 +84,33 @@ class TestQueue(Base):
         self.assertEqual(list(rows.values())[0]["geom"], "PASS")
 
 
+class TestMissingAdopted(Base):
+    def test_missing_kit_is_orphan_not_running_or_physical_failure(self):
+        (j,)=self.ap.parse_queue("\t".join(ROW)).values()
+        j.update(status="RUNNING",adopted=True,history=[])
+        st={"jobs":{j["id"]:j}}
+        self.ap.hub_procs=lambda path:[]
+        self.ap.probe_job=lambda job:None
+        self.ap.rpy=lambda *a,**kw:{"exists":False}
+        self.ap.finish=lambda *a:self.fail("missing inputs are not a physical verdict")
+        self.ap.poll_adopted(st,j)
+        self.assertEqual(j["status"],"ORPHAN")
+        self.assertEqual(j["orphan_kind"],"kit-missing")
+        count=len(j["history"])
+        self.ap.poll_adopted(st,j)
+        self.assertEqual(len(j["history"]),count)
+        self.assertNotIn("cls",j)
+
+    def test_live_client_is_preserved_without_missing_probe(self):
+        (j,)=self.ap.parse_queue("\t".join(ROW)).values()
+        j.update(status="RUNNING",adopted=True,history=[])
+        self.ap.hub_procs=lambda path:[(123,99)]
+        self.ap.probe_job=lambda job:self.fail("live adopted client must be left alone")
+        self.ap.poll_adopted({"jobs":{j["id"]:j}},j)
+        self.assertEqual(j["status"],"RUNNING")
+        self.assertEqual(j["history"],[])
+
+
 class TestAppendWithdrawal(Base):
     def row(self):
         (r,) = self.ap.parse_queue("\t".join(ROW + ["route", "/srv/opentallas-scratch2/claude/run.sh", "8", "withdraw"])).values()
@@ -192,7 +219,8 @@ class FakeHosts:
         if code is self.ap.PROBE_KIT:
             return {"exists": True, "config": True, "has_run": k.get("has_run", False), "signoff_dirs": [],
                     "routed": k.get("routed", []), "fail_marks": k.get("fail_marks", []), "busy": k.get("busy", False),
-                    "log_age_s": k.get("log_age_s"), "runner": "/srv/opentallas-scratch2/claude/s81/kits/run_kit.sh"}
+                    "log_age_s": k.get("log_age_s"), "runner": "/srv/opentallas-scratch2/claude/s81/kits/run_kit.sh",
+                    **{x: k[x] for x in ("signoff_missing", "signoff_goals", "gds_gap", "route_runs_finish") if x in k}}
         if code is self.ap.PROBE_CLASSIFY:
             return dict(k.get("classify", {}), last_log_mtime=k.get("mtime", 0))
         if code is self.ap.PROBE_DELETE:
@@ -235,6 +263,8 @@ class TickBase(Base):
         self.ap.rbash = lambda host, script, timeout=0: (0, "", "")
         self.ap.sh = lambda cmd, timeout=0, input=None: (0, "", "")
         self.ap.hub_procs = lambda path: []
+        self.ap.resolve_provenance = lambda src, flow="": {"src_commit": "0123456789ab" + "0" * 28,
+                                                           "flow_tag": "flow-20261025-a"}
 
     def tick(self):
         self.ap.tick(type("A", (), {"dry_run": False})())
@@ -352,6 +382,21 @@ class TestTick(TickBase):
         self.assertEqual(len(self.f.launched), 2)        # once only
         self.assertEqual(list(jobs.values())[0]["status"], "DONE-CRASH")
         self.assertIn("CRASH/infra-oom", (Path(self.tmp.name) / "structural.tsv").read_text())
+
+    def test_signoff_bundle_gap_rejected_before_route(self):
+        self.f.kits["/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"] = {"signoff_missing": ["pair_skew.tcl"]}
+        self.queue(ROW)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "REJECTED")
+        self.assertIn("pair_skew.tcl", j["history"][-1][2])
+        self.assertEqual(self.f.launched, [])
+
+    def test_goal_follows_runner_signoff_contract(self):
+        self.f.kits["/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"] = {"signoff_goals": ["finish", "post"]}
+        self.queue(ROW + ["route"])
+        self.tick()
+        argv = self.f.launched[0][1]
+        self.assertEqual(argv[argv.index("--") + 4], "finish")
 
     def test_segfault_is_marked_not_resubmitted(self):
         self.queue(ROW)
@@ -796,10 +841,12 @@ class TestOwnership(TickBase):
             {"plan": "x", "types": {"q_b000": {"verdict": "FAIL"}, "root": {"verdict": "PASS"}}}))
         (repo / "results/proto_1025/g2/res_qwen_kvsys.json").write_text(json.dumps(
             {"kv3_hg": {"classify": {"cls": "STRUCTURAL", "why": "GRT ov 5000"}}, "kv3_hg_v2": {"classify": {"cls": "CLEAN"}}}))
-        (p / "release_cache.json").write_text(json.dumps({"plans": {"s81": {"signed_types": {"slice_station__t7": ["x"]},
+        (p / "release_cache.json").write_text(json.dumps({"provenance_rule": "v1", "plans": {"s81": {"signed_types": {"slice_station__t7": ["x"]},
                                                                             "signed_cores": {}}},
                                                           "signed_records": [{"name": "kr_dsdv_gunit_l1_lfp", "top": None,
-                                                                              "path": "/a/signoff.json", "scan_host": "epyc1"}]}))
+                                                                              "path": "/a/signoff.json", "scan_host": "epyc1",
+                                                                              "versioned": True, "src_commit": "ab" * 20,
+                                                                              "flow_tag": "flow-20261025-a"}]}))
 
     def lane(self, name, text):
         (Path(self.tmp.name) / "coord" / "lanes" / f"{name}.md").write_text(text)
@@ -920,7 +967,7 @@ class TestDistinctDesigns(unittest.TestCase):
         import ownership as O
         plan, pins, canonical = self.hbm()
         sha_y = O.pin_sig(pins["cores/pc_y.json"])[0]
-        cache = {"plans": {"hbm_arch/B2n": {"signed_types": {}, "signed_cores": {
+        cache = {"provenance_rule": "v1", "plans": {"hbm_arch/B2n": {"signed_types": {}, "signed_cores": {
                      "piece__r1": ["host:/k/piece__r1/signoff.json"],
                      "pc_ctrl": [f"host:/kits/pc_ctrl_{sha_y}/signoff.json"]}}},
                  "signed_records": [{"name": "kl_pc_ctrl_c", "top": "pc_ctrl", "path": "/k/unknown/signoff.json"}]}
@@ -934,6 +981,25 @@ class TestDistinctDesigns(unittest.TestCase):
         other = [k for k in st if k.startswith("pc_ctrl") and k != f"pc_ctrl_{sha_y}"]
         self.assertEqual([st[k]["state"] for k in other], ["NEEDS-KIT"])   # module-level record: table unknown
         self.assertTrue(any("types 2 cores 3" in h for h in head))
+
+    def test_generated_memory_macro_is_never_a_design_to_kit(self):
+        import ownership as O
+        rom = {"module": "ot_rom_4096x72_m8", "outline_um": [38.04, 62.952], "pins_file": "cores/rom.json",
+               "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef"}
+        core = {"module": "q_elem", "outline_um": [10, 10], "lef": "physical/s81_die_views/q/q_elem.lef"}
+        plan = {"partition_types": {"col": {"module": "col_m", "hard_cores": [rom, dict(rom), core]}},
+                "partitions": [{"type": "col"}, {"type": "col"}]}
+        items = {it["item"]: it for it in O.plan_items("s81", plan, {"cores/rom.json": self.pins((0, 1), (2, 3))})}
+        self.assertEqual(items["ot_rom_4096x72_m8"]["kind"], "macro")
+        self.assertEqual(items["ot_rom_4096x72_m8"]["replicas"], 4)
+        self.assertEqual(items["q_elem"]["kind"], "core")
+        rows, gaps, head = O.build(dict(plans={"s81": plan}), now=time.time())
+        st = {r["item"]: r for r in rows}
+        self.assertEqual(st["ot_rom_4096x72_m8"]["state"], "GENERATED")
+        self.assertEqual(st["ot_rom_4096x72_m8"]["default_owner"], "ROM-MACRO")
+        self.assertEqual(st["q_elem"]["state"], "NEEDS-KIT")
+        self.assertFalse(any("ot_rom_4096x72_m8" in str(g) for g in gaps))     # never an UNOWNED-ITEM gap
+        self.assertTrue(any("generated macros 1 (placed 4)" in h for h in head))
 
     def test_job_of_one_table_routes_only_that_design(self):
         import ownership as O
@@ -1108,3 +1174,70 @@ class TestSharedShaRows(Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCrashTriage1025(unittest.TestCase):
+    """CRASH-TRIAGE 2026-10-25: signatures of the 48 DONE-CRASH rows"""
+
+    def setUp(self):
+        import autopilot
+        self.ap = autopilot
+
+    def classify_probe(self, runlog, files=None):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "run_route.log").write_text(runlog)
+            for n, txt in (files or {}).items():
+                (Path(d) / n).parent.mkdir(parents=True, exist_ok=True)
+                (Path(d) / n).write_text(txt)
+            o = subprocess.run([sys.executable, "-c", self.ap.PROBE_CLASSIFY, json.dumps({"kit": d, "goal": "route"})],
+                               capture_output=True, text=True, env={"PATH": ""}, timeout=60).stdout
+            return json.loads(o.split("AP_JSON ", 1)[1])
+
+    def test_error_247_at_mem_cap_is_infra_oom(self):
+        c = self.classify_probe("[INFO PSM-0040] All shapes on net VDD are connected.\n"
+                                "make[1]: *** [Makefile:654: do-6_report] Error 247\nmake: *** [Makefile:672: do-finish] Error 2\n")
+        self.assertEqual(self.ap.classify(c, {"exit": 2})[:2], ("CRASH", "infra-oom"))
+        c = self.classify_probe("make[1]: *** [Makefile:589: do-5_2_route] Error 1\n")
+        self.assertEqual(self.ap.classify(c, {"exit": 2})[:2], ("CRASH", "flow-error"))
+
+    def test_printed_gate_fail_is_structural(self):
+        for line in ("CORE_PREFLIGHT FAIL /work/x/1_2_yosys.v {'shared': 1716}",
+                     "RP1_GATE FAIL: FF hold -2.65 < 0 -- stop before detailed route",
+                     "SDC_LINT FAIL /work errors 1 liberty 16"):
+            c = self.classify_probe("x\n" + line + "\n")
+            self.assertEqual(self.ap.classify(c, {"exit": 1})[:2], ("STRUCTURAL", "gate"), line)
+        c = self.classify_probe("SDC_LINT PASS\n")
+        self.assertNotIn("gate_fail", c)
+
+    def test_adopted_without_logs_is_infra_lost(self):
+        self.assertEqual(self.ap.classify({"last_log": "", "runlog_tail": ""}, {})[:2], ("CRASH", "infra-lost"))
+
+    def probe_kit(self, files):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d:
+            for n, txt in files.items():
+                (Path(d) / n).write_text(txt)
+            o = subprocess.run([sys.executable, "-c", self.ap.PROBE_KIT, json.dumps({"kit": d, "runner": ""})],
+                               capture_output=True, text=True, env={"PATH": ""}, timeout=60).stdout
+            return json.loads(o.split("AP_JSON ", 1)[1])
+
+    def test_probe_kit_signoff_bundle_and_goals(self):
+        so = 'x = HERE / "pair_skew.tcl"\ndef f():\n    import sdc_lint\n    import face_guard\n'
+        hbm = ('if { [ "$GOAL" = finish ] || [ "$GOAL" = post ]; } && [ $((rc % 100)) = 0 ]; then\n  SO="$K/signoff"\n'
+               '  python3 "$K/signoff.py" run --run-dir "$K/run"\nfi\n')
+        p = self.probe_kit({"config.mk": "export ADDITIONAL_LEFS = /work/macros/a.lef\n", "signoff.py": so,
+                            "sdc_lint.py": "", "run_kit_hbm.sh": hbm})
+        self.assertEqual(p["signoff_missing"], ["face_guard.py", "pair_skew.tcl"])
+        self.assertEqual(p["signoff_goals"], ["finish", "post"])
+        self.assertTrue(p["gds_gap"])
+        self.assertFalse(p["route_runs_finish"])
+
+    def test_runner_goal(self):
+        rg = self.ap.runner_goal
+        self.assertEqual(rg("route", {"signoff_goals": ["finish", "post"]}), "finish")
+        self.assertEqual(rg("finish", {"signoff_goals": ["finish", "route"], "gds_gap": True, "route_runs_finish": True}),
+                         "route")
+        self.assertEqual(rg("finish", {"signoff_goals": ["finish", "route"], "gds_gap": False}), "finish")
+        self.assertEqual(rg("cts", {"signoff_goals": ["finish"]}), "cts")
+        self.assertEqual(rg("route", {}), "route")
