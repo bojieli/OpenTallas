@@ -1,0 +1,116 @@
+{
+  "same_4cts_sha256": "76035acc835e28545531caeab97d19e32bfc7512a924dc8f040b0021decb102f",
+  "source": "0c87522f27fa",
+  "candidate_flow": "20b6f41993f65d4b79f7627c090d9737345cf589",
+  "rtl_change": false,
+  "added_cycles": 0,
+  "native_tt_vclk_ps": 250,
+  "native_ff_vclk_ps": 202.5,
+  "rows": {
+    "baseline": {
+      "tt": {
+        "corner": "TT",
+        "pinreg_n": 1133,
+        "pinreg_mean_ps": 216.86,
+        "pinreg_min_ps": 184.52,
+        "pinreg_max_ps": 241.21,
+        "bound_ps": 250.0,
+        "dev_ps": 33.14,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": -31.28,
+        "hold_wns_est_ps": 22.5,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "FAIL"
+      },
+      "ff": {
+        "corner": "FF",
+        "pinreg_n": 1133,
+        "pinreg_mean_ps": 173.49,
+        "pinreg_min_ps": 142.3,
+        "pinreg_max_ps": 195.04,
+        "bound_ps": 202.5,
+        "dev_ps": 29.01,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 2.7,
+        "hold_wns_est_ps": 4.82,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "FAIL"
+      },
+      "hold_buffers": 1801,
+      "repair_only": "baseline",
+      "grt_overflow": 0
+    },
+    "candidate": {
+      "tt": {
+        "corner": "TT",
+        "pinreg_n": 1133,
+        "pinreg_mean_ps": 216.87,
+        "pinreg_min_ps": 184.52,
+        "pinreg_max_ps": 241.66,
+        "bound_ps": 250.0,
+        "dev_ps": 33.13,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 25.74,
+        "hold_wns_est_ps": -39.46,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "FAIL"
+      },
+      "ff": {
+        "corner": "FF",
+        "pinreg_n": 1133,
+        "pinreg_mean_ps": 173.5,
+        "pinreg_min_ps": 142.3,
+        "pinreg_max_ps": 195.5,
+        "bound_ps": 202.5,
+        "dev_ps": 29.0,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 40.16,
+        "hold_wns_est_ps": -44.57,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "FAIL"
+      },
+      "hold_buffers": 6,
+      "repair_only": "MCMM tc+bc",
+      "grt_overflow": 0
+    },
+    "seq_tt": {
+      "tt": {
+        "corner": "TT",
+        "pinreg_n": 1133,
+        "pinreg_mean_ps": 216.87,
+        "pinreg_min_ps": 184.52,
+        "pinreg_max_ps": 241.66,
+        "bound_ps": 250.0,
+        "dev_ps": 33.13,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 25.74,
+        "hold_wns_est_ps": -39.46,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "FAIL"
+      },
+      "ff": {
+        "corner": "FF",
+        "pinreg_n": 1133,
+        "pinreg_mean_ps": 173.5,
+        "pinreg_min_ps": 142.3,
+        "pinreg_max_ps": 195.5,
+        "bound_ps": 202.5,
+        "dev_ps": 29.0,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 40.16,
+        "hold_wns_est_ps": -44.57,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "FAIL"
+      },
+      "hold_buffers": 0,
+      "repair_only": "seq_tt",
+      "grt_overflow": 0
+    }
+  }
+}

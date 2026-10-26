@@ -1,0 +1,10 @@
+{
+  "source": "0c87522f27fa",
+  "candidate_flow": "20b6f41993f65d4b79f7627c090d9737345cf589",
+  "pictures": [
+    "results/flow_2144/genphys_hd_turn_a/floorplan.png",
+    "results/flow_2144/genphys_hd_turn_a/density.png"
+  ],
+  "review": "Actual4_cts hd_turn_a viewed before GRT:172.8x1036.8 tall transit tile, no macros/halos/walls; low density/no hotspots; uninterrupted PG stripes; west+south bus banks and central clock entry. Existing clock insertion216.86/173.49 vs250/202.5 remains failed. Same-checkpoint diagnostic isolates corner repair only, no interface, geometry,clock or RTL change. Wide buses unchanged, no long-wire claims newly qualified.",
+  "verdict": "PASS-COND diagnostic GRT A/B only; no DRT/adoption/signoff"
+}

@@ -1,0 +1,17 @@
+{
+  "status": "MCMM_FAIL_SEQUENTIAL_RUNNING",
+  "source": "0c87522f27fa",
+  "candidate": "20b6f41993f65d4b79f7627c090d9737345cf589",
+  "same_4cts_sha256": "76035acc835e28545531caeab97d19e32bfc7512a924dc8f040b0021decb102f",
+  "mcmm": {
+    "tt_setup_ps": 25.74,
+    "ff_hold_ps": -44.57,
+    "hold_buffers": 6,
+    "grt_overflow": 0
+  },
+  "sequential_host": "intel2",
+  "sequential_unit": "oth-ubuntu-2802334-1792990665",
+  "baseline_host": "epyc1",
+  "baseline_unit": "oth-ubuntu-2316846-1792990431",
+  "adoption": "REJECT_MCMM_DEFAULT; no DRT; sequential proof in progress"
+}
