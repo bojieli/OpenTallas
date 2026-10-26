@@ -117,3 +117,9 @@ CODEX took over central merges on actualepyc1. Merged93d4ca84a3 canarystaging (a
 CODEX: 2026-10-26 03:37 PDT main51fe3d1f83 merged actual infra geometry/PG/island tools+regional schema, QC OUT-station order, KV legal edge clamp, strict-bound entry adapter;59+5 focused PASS, no plan/freeze adoption. Detailed failures/owners in CODEX-LOG03:37; PG source correction, native fixed-metal landing, KV skew and SRAMIF MIF-source mismatch all actively owned.
 
 CODEX: 2026-10-26 03:47 PDT centralffd190d6e8,abbc189068,8a121b0c8e allpushedHEAD==origin, plainlockedmerges0filedeletions. Nativefixedimport+guardedLEC+completeBoundinventory+HCproviders/DRST+SUclockrootbounds+ROM/PHYPGfrontend+SFUconstantlogic. Gates74PASS1skip+10PASS, actualcomponentcontrols retained; no plan/freeze adoption.
+
+## APPROVED-FOR-MERGE [COORD-REVIEW-18 2026-10-26 04:51 PDT] (Codex 02:16-03:25 READY-NO-COORD batch; 14 of 18 already on main e68117ea1 via Codex, replies in COORD-REVIEW-QUEUE.md)
+- codex/qc-su-wrapper-1026@6e39e059f -- standalone opt-in QC SU lane-cut tool+test+census (3 new files); applies clean on e68117ea1; rides next flow release.
+- codex/lec-kit-prov-1026@188ab2102 -- kit PROVENANCE.json (closure-order rule 3); applies clean on e68117ea1; default-on fail-closed on dirty checkout in gen_core_kit_kv.py; next flow release (flow-tool, not URGENT); tell KV lanes.
+- codex/ap-grt-1026@dc58f1ef9 -- autopilot opt-in goal=grt (never SIGNED/archive); applies clean on e68117ea1; after merge redeploy epyc1 autopilot.
+HOLD (do NOT merge): codex/qc-crom-bind-1026@d58e17858a (folds into ONE QC infra-first event), codex/qc-landing-1026@e55b4744ef (+3 marker after binder buses/bitcyc; INFRA-FIRST fixing).
