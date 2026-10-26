@@ -15,7 +15,13 @@ module qfd_dv_s8_crh_rp1 (
     integer l, s, lc;
     genvar gl, gk, bk;
     reg rl0, rl1;
-    always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    generate if (MIF == 0) begin : g_legacy_reset
+        always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    end else begin : g_timed_reset
+        // The SIGNED MIF1 profile takes a synchronous delivered reset input.
+        // Keep the same two-edge release relay and zero normal data-cycle delta.
+        always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    end endgenerate
     reg [7:0] pcr_re; reg [8*24-1:0] pcr_addr;
     always @(posedge ck) begin pcr_re <= cr_re; pcr_addr <= cr_addr; end
     reg ptw_we; reg [1:0] ptw_kind; reg [23:0] ptw_addr; reg [511:0] ptw_d;

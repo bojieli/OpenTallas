@@ -52,7 +52,12 @@ module qfd_dv_s8x_vmr #(parameter integer MUT = 0, parameter integer MIF = 0) (
     integer l, b, s, k, lc;   // lc: clocked-block loop only (no shared loop variable between processes)
     genvar gl, gb, gs, gk, bk;
     reg rl0, rl1;
-    always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    generate if (MIF == 0) begin : g_legacy_reset
+        always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    end else begin : g_timed_reset
+        // Timed reset input of the physical MIF1 profile; release depth stays2.
+        always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    end endgenerate
     // ---------------------------------------------------------------- input pin registers
     reg [7:0] pa_re; reg [8*24-1:0] pa_addr;
     always @(posedge ck) begin pa_re <= re; pa_addr <= addr; end
@@ -493,7 +498,12 @@ module qfd_dv_s8x_btab #(parameter integer MIF = 0) (
 );
     genvar gk, bk;
     reg rl0, rl1;
-    always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    generate if (MIF == 0) begin : g_legacy_reset
+        always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    end else begin : g_timed_reset
+        // Timed reset input of the physical MIF1 profile; release depth stays2.
+        always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    end endgenerate
     reg pbs_re; reg [23:0] pbs_addr;
     always @(posedge ck) begin pbs_re <= bs_re; pbs_addr <= bs_addr; end
     reg ptw_we; reg [1:0] ptw_kind; reg [8:2] ptw_addr; reg [1023:0] ptw_data;
