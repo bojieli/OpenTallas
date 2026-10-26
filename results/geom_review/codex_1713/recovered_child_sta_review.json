@@ -1,0 +1,22 @@
+{
+  "reviewed_at": "2026-10-25 18:10 PDT",
+  "verdict": "PASS-COND ONE current-policy read-only TT/FF STA and endpoint export; no new P&R",
+  "root": "intel2:/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery",
+  "children": [
+    {
+      "kind": "ROM",
+      "source": "4fe0c00bdac38425b00cd71dbe6411678889c1cb",
+      "odb_sha256": "3c5fa2cae4d51b19ac17bee260b7ecd75c21a1d1312457ab9b67beb0dc3602f4",
+      "image": "recovered_rom.webp",
+      "findings": "Central macro with continuous W/S register/expansion bands and clear halo/E/N room. W port density requires retained actualDRC/F6/ABI qualification."
+    },
+    {
+      "kind": "LSL",
+      "source": "95304531231d21eec0908bc4429571e7556b9cb7",
+      "odb_sha256": "9626e077fa133e545c58f5cddc69860c10d3d2a5af3b9f41cf8f699d491405a1",
+      "image": "recovered_lsl.webp",
+      "findings": "Macrofree distributed arithmetic and E-facing registered boundary; no obvious wall. Box-span bound is geometric only."
+    }
+  ],
+  "scope": "Exact recovered immutable final ODB/SPEF/v/SDC, exact native libs; source/ABI/current clock/reset/DRC and endpoint coverage gates required. RECOVERY current_signed=false. No historical-to-current SIGNED transfer or parent expanded-clock credit from image."
+}
