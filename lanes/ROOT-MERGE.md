@@ -115,3 +115,5 @@ gate = tools/die_plan pytest + plain G0 on s81, s81_head, qwen_compute, qwen_kvs
 CODEX took over central merges on actualepyc1. Merged93d4ca84a3 canarystaging (actualepyc2spillPASS), c495508ed2 nativePHYterminal+regen+B2composer (4geometrychecksPASS; productioncomposePASS),22c9932821 sharedkithelperbundle (15hubchecksPASS)+LECretrykey (43focusedPASS). Plainmerges,0filedeletions,pushedHEAD==origin each. Pendingphysicalplan events remain held; nofalsefreeze.
 
 CODEX: 2026-10-26 03:37 PDT main51fe3d1f83 merged actual infra geometry/PG/island tools+regional schema, QC OUT-station order, KV legal edge clamp, strict-bound entry adapter;59+5 focused PASS, no plan/freeze adoption. Detailed failures/owners in CODEX-LOG03:37; PG source correction, native fixed-metal landing, KV skew and SRAMIF MIF-source mismatch all actively owned.
+
+CODEX: 2026-10-26 03:47 PDT centralffd190d6e8,abbc189068,8a121b0c8e allpushedHEAD==origin, plainlockedmerges0filedeletions. Nativefixedimport+guardedLEC+completeBoundinventory+HCproviders/DRST+SUclockrootbounds+ROM/PHYPGfrontend+SFUconstantlogic. Gates74PASS1skip+10PASS, actualcomponentcontrols retained; no plan/freeze adoption.
