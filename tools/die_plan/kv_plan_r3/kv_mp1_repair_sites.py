@@ -46,9 +46,10 @@ def allocate_between(al,target,prev,nxt):
     al.used.add(int(ids[j]));return np.array([[x[j],y[j]]])
 
 
-def repair(raw):
+def repair(raw, only_types=None, budget=395.):
     P=S.Plan(raw); report=[]
     for tn,ty in raw['partition_types'].items():
+        if only_types and tn not in only_types:continue
         slots=list(ty.get('ft_slots',[]))
         if not slots:continue
         boxes=list(S.placed_macro_boxes(ty,halo=0).values())
@@ -99,13 +100,13 @@ def repair(raw):
                 direct=max(U.man(a,b) for a,b,*_ in pts.values())
                 if direct>k*405.+1e-6:raise ValueError(f'minimum direct reach needs {math.ceil(direct/405.)} stations, priced {k}; plan window/station delta required')
                 if k<2:raise ValueError('direct slot exceeds reach; no internal station at unchanged depth')
-                moved=U._move(pts,list(pts),k,grow,free,395.,tn,name)
+                moved=U._move(pts,list(pts),k,grow,free,budget,tn,name)
                 # A moved endpoint can invalidate otherwise macro-free old
                 # stations. Re-solve that bit at the same depth as well.
                 for bit,(a,b,r,L,ps) in list(pts.items()):
                     chain=[a,*ps,b]
-                    if max(U.man(u,v) for u,v in zip(chain,chain[1:]))>395.:
-                        pts[bit]=(a,b,r,L,U.layered(a,b,ps,k,grow,395.,tn,name,bit))
+                    if max(U.man(u,v) for u,v in zip(chain,chain[1:]))>budget:
+                        pts[bit]=(a,b,r,L,U.layered(a,b,ps,k,grow,budget,tn,name,bit))
                 new=copy.deepcopy(s['bit_sites_um'])
                 for bit,(a,b,r,L,ps) in pts.items():
                     for stage,p in enumerate(ps):
@@ -136,8 +137,8 @@ def repair(raw):
 
 
 def main():
-    ap=argparse.ArgumentParser(description=__doc__.splitlines()[0]);ap.add_argument('plan');ap.add_argument('--out',required=True);ap.add_argument('--report',required=True);a=ap.parse_args()
-    raw=json.loads(Path(a.plan).read_text());rows=repair(raw)
+    ap=argparse.ArgumentParser(description=__doc__.splitlines()[0]);ap.add_argument('plan');ap.add_argument('--out',required=True);ap.add_argument('--report',required=True);ap.add_argument('--types');ap.add_argument('--budget',type=float,default=395.);a=ap.parse_args();assert 0<a.budget<=405.
+    raw=json.loads(Path(a.plan).read_text());rows=repair(raw,set(a.types.split(',')) if a.types else None,a.budget)
     Path(a.out).write_text(json.dumps(raw,indent=1)+'\n');Path(a.report).write_text(json.dumps(rows,indent=1)+'\n')
     print(f"REPAIR slots={len(rows)} PASS={sum(x['status']=='PASS' for x in rows)} FAIL={sum(x['status']=='FAIL' for x in rows)}",flush=True)
 
