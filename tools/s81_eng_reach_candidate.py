@@ -1,7 +1,7 @@
 """Candidate D-S81-B2 engine pin reassignment; zero RTL/cycle changes.
 Never changes a canonical plan: emits a trial pin table and placement hooks.
 """
-import argparse, collections, json, re
+import argparse, collections, json, re, shutil
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('kit',type=Path);a=p.parse_args();k=a.kit
 pins=json.loads((k/'pins.json').read_text());assert len(pins)==2690
@@ -39,3 +39,6 @@ puts "ENG_REACH reset leaf0 placed at180,240 without adding an edge"
 (k/'eng_reach.tcl').write_text(hook)
 with (k/'gpl_hooks.tcl').open('a') as f:f.write('\nsource /work/eng_reach.tcl\n')
 print('CANDIDATE',len(changes),'pins moved; existing reset leaf0 centered; zero RTL/cycle changes')
+
+shutil.copy2(Path(__file__).with_name("s81_eng_reach_site.tcl"), k/"eng_reach_site.tcl")
+with (k/"dpl_hooks.tcl").open("a") as handle: handle.write("\nsource /work/eng_reach_site.tcl\n")
