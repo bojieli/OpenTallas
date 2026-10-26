@@ -1,0 +1,1164 @@
+{
+  "status": "PROPOSAL_ONLY; no launch before fixed-depth generator + slice + review",
+  "target_ps": {
+    "TT": 250.0,
+    "FF": 202.5
+  },
+  "rc": {
+    "M4": {
+      "r_kohm_um": 0.0180365,
+      "c_ff_um": 0.1275
+    },
+    "M5": {
+      "r_kohm_um": 0.0189935,
+      "c_ff_um": 0.098
+    }
+  },
+  "ndr": {
+    "width_scale": 4,
+    "cap_factor_assumption": 1.6,
+    "base_width_um": 0.032,
+    "spacing_um": 0.128
+  },
+  "actual_liberty_clock_caps": {
+    "TT": {
+      "DFFASRHQNx1_ASAP7_75t_R": 0.462899,
+      "DFFHQNx1_ASAP7_75t_R": 0.474736,
+      "DFFHQNx2_ASAP7_75t_R": 0.474859,
+      "DFFHQNx3_ASAP7_75t_R": 0.475262,
+      "DFFHQx4_ASAP7_75t_R": 0.475542,
+      "DFFLQNx1_ASAP7_75t_R": 0.480775,
+      "DFFLQNx2_ASAP7_75t_R": 0.480785,
+      "DFFLQNx3_ASAP7_75t_R": 0.481092,
+      "DFFLQx4_ASAP7_75t_R": 0.481649
+    },
+    "FF": {
+      "DFFASRHQNx1_ASAP7_75t_R": 0.503152,
+      "DFFHQNx1_ASAP7_75t_R": 0.52201,
+      "DFFHQNx2_ASAP7_75t_R": 0.521959,
+      "DFFHQNx3_ASAP7_75t_R": 0.522174,
+      "DFFHQx4_ASAP7_75t_R": 0.522765,
+      "DFFLQNx1_ASAP7_75t_R": 0.522936,
+      "DFFLQNx2_ASAP7_75t_R": 0.522945,
+      "DFFLQNx3_ASAP7_75t_R": 0.523229,
+      "DFFLQx4_ASAP7_75t_R": 0.523809
+    }
+  },
+  "liberty_evidence": {
+    "TT": {
+      "file": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    "FF": {
+      "file": "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    }
+  },
+  "quad_counts": {
+    "WS": 8200,
+    "WN": 2953,
+    "ES": 8613,
+    "EN": 8955
+  },
+  "candidates": [
+    {
+      "max_sinks_per_leaf": 16,
+      "max_leaves": 560,
+      "fixed_local_levels": 5,
+      "corners": {
+        "TT": {
+          "insertion_ps": 332.21435268660645,
+          "target_ps": 250.0,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.481649,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 4.69956,
+              "delay_ps": 26.39809354176333,
+              "slew_ps": 10.373000538969409
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 47.84999993273354,
+              "slew_ps": 45.99259038579807
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 59.14224562503199,
+              "slew_ps": 46.37063842337865
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.34978,
+              "delay_ps": 33.94434860775052,
+              "slew_ps": 10.301106935228587
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.60818389999802,
+              "slew_ps": 17.759017862252744
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.71580030670581,
+              "slew_ps": 14.927843175479845
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.643282489718512,
+              "slew_ps": 13.703471559270962
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.012496382119004,
+              "slew_ps": 13.469850321193029
+            },
+            {
+              "name": "local4",
+              "wire_um": 8.0,
+              "load_ff": 9.39912,
+              "delay_ps": 25.931596603833654,
+              "slew_ps": 13.46903160410913
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 7.706384,
+              "delay_ps": 28.968305296952046,
+              "slew_ps": 16.71017024232138
+            }
+          ]
+        },
+        "FF": {
+          "insertion_ps": 267.044510609882,
+          "target_ps": 202.5,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.523809,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 5.2147,
+              "delay_ps": 21.12060028531875,
+              "slew_ps": 8.340577873000829
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 40.9062633033481,
+              "slew_ps": 43.63768992475988
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 49.948064098347274,
+              "slew_ps": 44.01196830800074
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.60735,
+              "delay_ps": 26.325957285090258,
+              "slew_ps": 8.444346142410328
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.80607270695592,
+              "slew_ps": 14.924424041115978
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.413715536680833,
+              "slew_ps": 12.269439504011192
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.60504923378951,
+              "slew_ps": 11.172684173303464
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.08737369724506,
+              "slew_ps": 10.966127256337412
+            },
+            {
+              "name": "local4",
+              "wire_um": 8.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.02621998710073,
+              "slew_ps": 10.963834891562154
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 8.380944,
+              "delay_ps": 22.80519447600561,
+              "slew_ps": 13.814749336861814
+            }
+          ]
+        }
+      },
+      "model_pass": false
+    },
+    {
+      "max_sinks_per_leaf": 24,
+      "max_leaves": 374,
+      "fixed_local_levels": 5,
+      "corners": {
+        "TT": {
+          "insertion_ps": 333.89163327472363,
+          "target_ps": 250.0,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.481649,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 4.69956,
+              "delay_ps": 26.39809354176333,
+              "slew_ps": 10.373000538969409
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 47.84999993273354,
+              "slew_ps": 45.99259038579807
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 59.14224562503199,
+              "slew_ps": 46.37063842337865
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.34978,
+              "delay_ps": 33.94434860775052,
+              "slew_ps": 10.301106935228587
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.60818389999802,
+              "slew_ps": 17.759017862252744
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.71580030670581,
+              "slew_ps": 14.927843175479845
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.643282489718512,
+              "slew_ps": 13.703471559270962
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.012496382119004,
+              "slew_ps": 13.469850321193029
+            },
+            {
+              "name": "local4",
+              "wire_um": 8.0,
+              "load_ff": 9.39912,
+              "delay_ps": 25.931596603833654,
+              "slew_ps": 13.46903160410913
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 11.559576,
+              "delay_ps": 30.645585885069213,
+              "slew_ps": 19.131585939001916
+            }
+          ]
+        },
+        "FF": {
+          "insertion_ps": 268.6262801230697,
+          "target_ps": 202.5,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.523809,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 5.2147,
+              "delay_ps": 21.12060028531875,
+              "slew_ps": 8.340577873000829
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 40.9062633033481,
+              "slew_ps": 43.63768992475988
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 49.948064098347274,
+              "slew_ps": 44.01196830800074
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.60735,
+              "delay_ps": 26.325957285090258,
+              "slew_ps": 8.444346142410328
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.80607270695592,
+              "slew_ps": 14.924424041115978
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.413715536680833,
+              "slew_ps": 12.269439504011192
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.60504923378951,
+              "slew_ps": 11.172684173303464
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.08737369724506,
+              "slew_ps": 10.966127256337412
+            },
+            {
+              "name": "local4",
+              "wire_um": 8.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.02621998710073,
+              "slew_ps": 10.963834891562154
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 12.571416,
+              "delay_ps": 24.38696398919331,
+              "slew_ps": 16.125871800904388
+            }
+          ]
+        }
+      },
+      "model_pass": false
+    },
+    {
+      "max_sinks_per_leaf": 32,
+      "max_leaves": 280,
+      "fixed_local_levels": 5,
+      "corners": {
+        "TT": {
+          "insertion_ps": 335.56891386284076,
+          "target_ps": 250.0,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.481649,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 4.69956,
+              "delay_ps": 26.39809354176333,
+              "slew_ps": 10.373000538969409
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 47.84999993273354,
+              "slew_ps": 45.99259038579807
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 59.14224562503199,
+              "slew_ps": 46.37063842337865
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.34978,
+              "delay_ps": 33.94434860775052,
+              "slew_ps": 10.301106935228587
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.60818389999802,
+              "slew_ps": 17.759017862252744
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.71580030670581,
+              "slew_ps": 14.927843175479845
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.643282489718512,
+              "slew_ps": 13.703471559270962
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.012496382119004,
+              "slew_ps": 13.469850321193029
+            },
+            {
+              "name": "local4",
+              "wire_um": 8.0,
+              "load_ff": 9.39912,
+              "delay_ps": 25.931596603833654,
+              "slew_ps": 13.46903160410913
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 15.412768,
+              "delay_ps": 32.32286647318638,
+              "slew_ps": 21.58920545285688
+            }
+          ]
+        },
+        "FF": {
+          "insertion_ps": 270.2080496362574,
+          "target_ps": 202.5,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.523809,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 5.2147,
+              "delay_ps": 21.12060028531875,
+              "slew_ps": 8.340577873000829
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 40.9062633033481,
+              "slew_ps": 43.63768992475988
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 49.948064098347274,
+              "slew_ps": 44.01196830800074
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.60735,
+              "delay_ps": 26.325957285090258,
+              "slew_ps": 8.444346142410328
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.80607270695592,
+              "slew_ps": 14.924424041115978
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.413715536680833,
+              "slew_ps": 12.269439504011192
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.60504923378951,
+              "slew_ps": 11.172684173303464
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.08737369724506,
+              "slew_ps": 10.966127256337412
+            },
+            {
+              "name": "local4",
+              "wire_um": 8.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.02621998710073,
+              "slew_ps": 10.963834891562154
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 16.761888,
+              "delay_ps": 25.968733502381,
+              "slew_ps": 18.479954802331527
+            }
+          ]
+        }
+      },
+      "model_pass": false
+    },
+    {
+      "max_sinks_per_leaf": 40,
+      "max_leaves": 224,
+      "fixed_local_levels": 4,
+      "corners": {
+        "TT": {
+          "insertion_ps": 311.31488132830907,
+          "target_ps": 250.0,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.481649,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 4.69956,
+              "delay_ps": 26.39809354176333,
+              "slew_ps": 10.373000538969409
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 47.84999993273354,
+              "slew_ps": 45.99259038579807
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 59.14224562503199,
+              "slew_ps": 46.37063842337865
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.34978,
+              "delay_ps": 33.94434860775052,
+              "slew_ps": 10.301106935228587
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.60818389999802,
+              "slew_ps": 17.759017862252744
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.71580030670581,
+              "slew_ps": 14.927843175479845
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.643282489718512,
+              "slew_ps": 13.703471559270962
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.012496382119004,
+              "slew_ps": 13.469850321193029
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 19.26596,
+              "delay_ps": 34.00043054248836,
+              "slew_ps": 24.07194463777563
+            }
+          ]
+        },
+        "FF": {
+          "insertion_ps": 251.7642758432155,
+          "target_ps": 202.5,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.523809,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 5.2147,
+              "delay_ps": 21.12060028531875,
+              "slew_ps": 8.340577873000829
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 40.9062633033481,
+              "slew_ps": 43.63768992475988
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 49.948064098347274,
+              "slew_ps": 44.01196830800074
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.60735,
+              "delay_ps": 26.325957285090258,
+              "slew_ps": 8.444346142410328
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.80607270695592,
+              "slew_ps": 14.924424041115978
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.413715536680833,
+              "slew_ps": 12.269439504011192
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.60504923378951,
+              "slew_ps": 11.172684173303464
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.08737369724506,
+              "slew_ps": 10.966127256337412
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 20.95236,
+              "delay_ps": 27.55117969643983,
+              "slew_ps": 20.86247860276273
+            }
+          ]
+        }
+      },
+      "model_pass": false
+    },
+    {
+      "max_sinks_per_leaf": 48,
+      "max_leaves": 187,
+      "fixed_local_levels": 4,
+      "corners": {
+        "TT": {
+          "insertion_ps": 312.99216190958015,
+          "target_ps": 250.0,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.481649,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 4.69956,
+              "delay_ps": 26.39809354176333,
+              "slew_ps": 10.373000538969409
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 47.84999993273354,
+              "slew_ps": 45.99259038579807
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 59.14224562503199,
+              "slew_ps": 46.37063842337865
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.34978,
+              "delay_ps": 33.94434860775052,
+              "slew_ps": 10.301106935228587
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.60818389999802,
+              "slew_ps": 17.759017862252744
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.71580030670581,
+              "slew_ps": 14.927843175479845
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.643282489718512,
+              "slew_ps": 13.703471559270962
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.012496382119004,
+              "slew_ps": 13.469850321193029
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 23.119152,
+              "delay_ps": 35.677711123759444,
+              "slew_ps": 26.572759955810024
+            }
+          ]
+        },
+        "FF": {
+          "insertion_ps": 253.3460448644246,
+          "target_ps": 202.5,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.523809,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 5.2147,
+              "delay_ps": 21.12060028531875,
+              "slew_ps": 8.340577873000829
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 40.9062633033481,
+              "slew_ps": 43.63768992475988
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 49.948064098347274,
+              "slew_ps": 44.01196830800074
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.60735,
+              "delay_ps": 26.325957285090258,
+              "slew_ps": 8.444346142410328
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.80607270695592,
+              "slew_ps": 14.924424041115978
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.413715536680833,
+              "slew_ps": 12.269439504011192
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.60504923378951,
+              "slew_ps": 11.172684173303464
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.08737369724506,
+              "slew_ps": 10.966127256337412
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 25.142832,
+              "delay_ps": 29.132948717648933,
+              "slew_ps": 23.264675370132515
+            }
+          ]
+        }
+      },
+      "model_pass": false
+    },
+    {
+      "max_sinks_per_leaf": 64,
+      "max_leaves": 140,
+      "fixed_local_levels": 4,
+      "corners": {
+        "TT": {
+          "insertion_ps": 316.34672307212236,
+          "target_ps": 250.0,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.481649,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 4.69956,
+              "delay_ps": 26.39809354176333,
+              "slew_ps": 10.373000538969409
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 47.84999993273354,
+              "slew_ps": 45.99259038579807
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 4.69956,
+              "delay_ps": 59.14224562503199,
+              "slew_ps": 46.37063842337865
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.34978,
+              "delay_ps": 33.94434860775052,
+              "slew_ps": 10.301106935228587
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.60818389999802,
+              "slew_ps": 17.759017862252744
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 9.39912,
+              "delay_ps": 28.71580030670581,
+              "slew_ps": 14.927843175479845
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.643282489718512,
+              "slew_ps": 13.703471559270962
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 9.39912,
+              "delay_ps": 26.012496382119004,
+              "slew_ps": 13.469850321193029
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 30.825536,
+              "delay_ps": 39.03227228630162,
+              "slew_ps": 31.611436778094106
+            }
+          ]
+        },
+        "FF": {
+          "insertion_ps": 256.5095829068428,
+          "target_ps": 202.5,
+          "within_20": false,
+          "clock_pin_cap_upper_ff": 0.523809,
+          "stages": [
+            {
+              "name": "entry",
+              "wire_um": 2.0,
+              "load_ff": 5.2147,
+              "delay_ps": 21.12060028531875,
+              "slew_ps": 8.340577873000829
+            },
+            {
+              "name": "centre",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 40.9062633033481,
+              "slew_ps": 43.63768992475988
+            },
+            {
+              "name": "side",
+              "wire_um": 164.16,
+              "load_ff": 5.2147,
+              "delay_ps": 49.948064098347274,
+              "slew_ps": 44.01196830800074
+            },
+            {
+              "name": "quadrant",
+              "wire_um": 4.32,
+              "load_ff": 2.60735,
+              "delay_ps": 26.325957285090258,
+              "slew_ps": 8.444346142410328
+            },
+            {
+              "name": "local0",
+              "wire_um": 40.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.80607270695592,
+              "slew_ps": 14.924424041115978
+            },
+            {
+              "name": "local1",
+              "wire_um": 20.0,
+              "load_ff": 10.4294,
+              "delay_ps": 22.413715536680833,
+              "slew_ps": 12.269439504011192
+            },
+            {
+              "name": "local2",
+              "wire_um": 10.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.60504923378951,
+              "slew_ps": 11.172684173303464
+            },
+            {
+              "name": "local3",
+              "wire_um": 8.0,
+              "load_ff": 10.4294,
+              "delay_ps": 20.08737369724506,
+              "slew_ps": 10.966127256337412
+            },
+            {
+              "name": "leaf",
+              "wire_um": 40.0,
+              "load_ff": 33.523776,
+              "delay_ps": 32.29648676006715,
+              "slew_ps": 28.10791608924211
+            }
+          ]
+        }
+      },
+      "model_pass": false
+    }
+  ],
+  "selected": {
+    "max_sinks_per_leaf": 40,
+    "max_leaves": 224,
+    "fixed_local_levels": 4,
+    "corners": {
+      "TT": {
+        "insertion_ps": 311.31488132830907,
+        "target_ps": 250.0,
+        "within_20": false,
+        "clock_pin_cap_upper_ff": 0.481649,
+        "stages": [
+          {
+            "name": "entry",
+            "wire_um": 2.0,
+            "load_ff": 4.69956,
+            "delay_ps": 26.39809354176333,
+            "slew_ps": 10.373000538969409
+          },
+          {
+            "name": "centre",
+            "wire_um": 164.16,
+            "load_ff": 4.69956,
+            "delay_ps": 47.84999993273354,
+            "slew_ps": 45.99259038579807
+          },
+          {
+            "name": "side",
+            "wire_um": 164.16,
+            "load_ff": 4.69956,
+            "delay_ps": 59.14224562503199,
+            "slew_ps": 46.37063842337865
+          },
+          {
+            "name": "quadrant",
+            "wire_um": 4.32,
+            "load_ff": 2.34978,
+            "delay_ps": 33.94434860775052,
+            "slew_ps": 10.301106935228587
+          },
+          {
+            "name": "local0",
+            "wire_um": 40.0,
+            "load_ff": 9.39912,
+            "delay_ps": 28.60818389999802,
+            "slew_ps": 17.759017862252744
+          },
+          {
+            "name": "local1",
+            "wire_um": 20.0,
+            "load_ff": 9.39912,
+            "delay_ps": 28.71580030670581,
+            "slew_ps": 14.927843175479845
+          },
+          {
+            "name": "local2",
+            "wire_um": 10.0,
+            "load_ff": 9.39912,
+            "delay_ps": 26.643282489718512,
+            "slew_ps": 13.703471559270962
+          },
+          {
+            "name": "local3",
+            "wire_um": 8.0,
+            "load_ff": 9.39912,
+            "delay_ps": 26.012496382119004,
+            "slew_ps": 13.469850321193029
+          },
+          {
+            "name": "leaf",
+            "wire_um": 40.0,
+            "load_ff": 19.26596,
+            "delay_ps": 34.00043054248836,
+            "slew_ps": 24.07194463777563
+          }
+        ]
+      },
+      "FF": {
+        "insertion_ps": 251.7642758432155,
+        "target_ps": 202.5,
+        "within_20": false,
+        "clock_pin_cap_upper_ff": 0.523809,
+        "stages": [
+          {
+            "name": "entry",
+            "wire_um": 2.0,
+            "load_ff": 5.2147,
+            "delay_ps": 21.12060028531875,
+            "slew_ps": 8.340577873000829
+          },
+          {
+            "name": "centre",
+            "wire_um": 164.16,
+            "load_ff": 5.2147,
+            "delay_ps": 40.9062633033481,
+            "slew_ps": 43.63768992475988
+          },
+          {
+            "name": "side",
+            "wire_um": 164.16,
+            "load_ff": 5.2147,
+            "delay_ps": 49.948064098347274,
+            "slew_ps": 44.01196830800074
+          },
+          {
+            "name": "quadrant",
+            "wire_um": 4.32,
+            "load_ff": 2.60735,
+            "delay_ps": 26.325957285090258,
+            "slew_ps": 8.444346142410328
+          },
+          {
+            "name": "local0",
+            "wire_um": 40.0,
+            "load_ff": 10.4294,
+            "delay_ps": 22.80607270695592,
+            "slew_ps": 14.924424041115978
+          },
+          {
+            "name": "local1",
+            "wire_um": 20.0,
+            "load_ff": 10.4294,
+            "delay_ps": 22.413715536680833,
+            "slew_ps": 12.269439504011192
+          },
+          {
+            "name": "local2",
+            "wire_um": 10.0,
+            "load_ff": 10.4294,
+            "delay_ps": 20.60504923378951,
+            "slew_ps": 11.172684173303464
+          },
+          {
+            "name": "local3",
+            "wire_um": 8.0,
+            "load_ff": 10.4294,
+            "delay_ps": 20.08737369724506,
+            "slew_ps": 10.966127256337412
+          },
+          {
+            "name": "leaf",
+            "wire_um": 40.0,
+            "load_ff": 20.95236,
+            "delay_ps": 27.55117969643983,
+            "slew_ps": 20.86247860276273
+          }
+        ]
+      }
+    },
+    "model_pass": false
+  },
+  "prediction_verdict": "FAIL_MODEL_NO_BUILD",
+  "generator_requirements": [
+    "Consume explicit per-node sink sets from the master-plan slice.",
+    "Same fixed fanout/depth in all quadrants; no delay-buffer balance or clock ECO.",
+    "Leaf total capacitance bounded by actual per-master CK caps plus planned wire cap.",
+    "PG-connect fixed cells before dont_touch; dedicated FT arcs isolated from core IO."
+  ]
+}
