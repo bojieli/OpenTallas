@@ -673,8 +673,8 @@ def apply(plan, out, cc):
         'NE_hub keeps q_hub / 2341-b L74m (NE_b101 keeps q_b101): when NE gets its tkx TX (NE NLINK2 re-split, not in '
         'this scope) q_b101_nw folds back into q_b101',
         'pin partners of non-qout body ports remain name-based (q2 slot map) until the build_split_tops conn list',
-        '64 projected flit bits are not in the 2116-b compact root del_flit (fieldmap compact_flit): they face TX '
-        'but the TX discards them (selected actual core cut)']
+        'RAW2341 preserves ALL2180 native flit bits through TX and1171x2 transport; the64 metadata bits '
+        'are omitted ONLY by the postRX semantic2116-bit root extraction (never beforeTX)' ]
     return rep
 
 
