@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "trial QC regional clock, actual1.62um BUF24, occupancy-aware build and balanced pads",
+  "pictures": [
+    "/srv/opentallas-scratch/claude/codex-regional-mesh-1026/r3_legal162/mesh.png",
+    "results/geom_review/qc_regional_legal162_pad_zoom_1026.png"
+  ],
+  "findings": [
+    "Viewed full-die and densest balance-pad patch:8regular independentmeshes; no new macro walls; separated drivers and short local pad chains in open rows.",
+    "Actual current ORFS RVT LEF footprint used:BUF24=1.62x0.27um.25481cells incl2927balancepads;0physicalbody overlaps;0unplaced.",
+    "Pad zoom near25580,16260 shows11pads beside macro boundary with clear channel; longest new local chain fits its island.",
+    "Tree balance is seeded from predecessor raw routed driver arrivals only; actual successor50iterationGRT/RC measurement decides skew and slew.",
+    "SignalRTL/pins/cycles unchanged. Regional landings and PG/reset fixedpre-route integration are independent blockers; no diefreeze or signoff claim."
+  ]
+}
