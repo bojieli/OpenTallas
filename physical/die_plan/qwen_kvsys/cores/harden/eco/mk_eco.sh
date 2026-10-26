@@ -32,9 +32,7 @@ cp $HERE/eco_route.tcl $OUT/
 { echo 'source /work/eco_route.tcl'; test -f $OUT/grt_post_core.tcl && echo 'source /work/grt_post_core.tcl'; } > $OUT/eco_post.tcl
 cp $HERE/../run_kit_kv.sh $HERE/../corners.tcl $HERE/../pin_audit_core.py $OUT/
 # the whole signoff.py tool bundle (signoff.SIGNOFF_BUNDLE; io_hold_qualification.py missing -> signoff refuses)
-cp $SO/tools/die_plan/signoff.py $SO/tools/die_plan/pair_skew.tcl $SO/tools/die_plan/face_guard.py $SO/tools/die_plan/sdc_lint.py $OUT/
-test -f $SO/tools/die_plan/io_hold_qualification.py && cp $SO/tools/die_plan/io_hold_qualification.py $OUT/
-for cf in $SO/tools/die_plan/clock_family.tcl $SO/physical/common_flow/clock_family.tcl; do test -f $cf && { cp $cf $OUT/; break; }; done
+python3 -I "$SO/tools/die_plan/signoff.py" bundle "$OUT" || exit 1
 # macro (SRAM) liberty per corner: the CORNERS=... route reads only <CORNER>_LIB_FILES, so the kit's ADDITIONAL_LIBS
 # (<macro>_tt.lib) must be added per corner (_tt -> TC, _ff -> BC; refuse if the _ff file is missing)
 ML_TT=$(sed -n 's/^export ADDITIONAL_LIBS = //p' $OUT/config.mk)
