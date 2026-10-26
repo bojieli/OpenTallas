@@ -565,17 +565,6 @@ SCHEMA = {
             # input's min input delay is its driving partition's guaranteed output-min, the related tap pair skew is
             # checked at the parent (io_hold_parent.py); "legacy" / absent = the flat contract above
             "io_hold": {"enum": ["legacy", "sender_min"]},
-            # CP1 proof harness (COORD 2026-10-25 23:26 ruling (3), CLOCK-RESET): a cut-out proof die keeps, for each
-            # die-edge input that the FULL plan drives from a registered partition, an explicit registered upstream
-            # driver view {port id: part, type, bus, out_hold_guarantee_ps, basis}; under io_hold sender_min that
-            # port takes the driver's guaranteed output-min (gen_phys.input_hold_min) and the seam is checked on the
-            # real parent (io_hold_parent.py) -- never an unconstrained die input, never a waiver
-            "io_hold_driver_views": {"type": "object", "additionalProperties": {
-                "type": "object", "additionalProperties": False,
-                "required": ["part", "type", "bus", "out_hold_guarantee_ps", "basis"],
-                "properties": {"part": {"type": "string"}, "type": {"type": "string"}, "bus": {"type": "string"},
-                               "out_hold_guarantee_ps": {"type": "number"}, "basis": {"type": "string"},
-                               "source_plan": {"type": "string"}}}},
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.

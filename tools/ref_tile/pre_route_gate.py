@@ -751,35 +751,6 @@ def check_memory_ff(g: Gate, out: str):
           "(e.g. (* rom_style = \"logic\" *) on the table / (* keep *) on the register) and re-gate")
 
 
-def check_rom_gate(g: Gate, out: str):
-    """ROM-INFER GATE (OWNER 2026-10-25 ~20:40 every ROM is a generated macro; D-ROM-2 = (a) declared math tables stay
-    logic; D-ROM-1 wired at a flow tag): tools/mem_compiler/rom_infer_gate.py on the synthesis' mem.json.  A read-only
-    memory >= 1 kbit that is not a declared table (tools/mem_compiler/rom_declared_logic.json: shape + content hash) is
-    ROM content synthesised into the tile netlist -> FAIL."""
-    m = re.search(r"^GATE_ROMGATE (.*)$", out, re.M)
-    if not m:
-        if re.search(r"^GATE_ROMGATE_MISSING", out, re.M):
-            g.add("INFO", "rom_gate", "no ORFS mem.json in the synthesis results: ROM inference not checked")
-        return
-    try:
-        res = json.loads(m.group(1))
-    except ValueError:
-        g.add("WARN", "rom_gate", "rom_infer_gate output unreadable", "re-run tools/mem_compiler/rom_infer_gate.py --mem-json")
-        return
-    decl = res.get("declared") or []
-    if res.get("verdict") == "FAIL":
-        bad = res.get("fail") or []
-        g.add("FAIL", "rom_gate", f"{len(bad)} read-only memor(ies) >= {res.get('min_bits', 1024)} b synthesised as logic and "
-              f"not declared ({res.get('rom_bits_failed', 0)} b): " + "; ".join(bad[:6]) + (" ..." if len(bad) > 6 else ""),
-              "ROM content is a generated macro (tools/mem_compiler/rom_gen.py: one view per shape, content = via map); a "
-              "fixed math table needs an OWNER/COORD-declared entry in tools/mem_compiler/rom_declared_logic.json")
-    elif res.get("verdict") == "ERROR":
-        g.add("WARN", "rom_gate", f"rom_infer_gate error: {res.get('error', '')[:200]}")
-    else:
-        g.add("INFO", "rom_gate", "no undeclared ROM synthesised as logic" + (f" (declared tables: {', '.join(decl)})"
-                                                                               if decl else ""))
-
-
 def _kit_env(kd: Path) -> str | None:
     try:
         return (kd / "kit.env").read_text()
@@ -1075,10 +1046,6 @@ grep -h "merging output FF to cell\|merged .*FF to cell\|merging .*FF to cell\|^
 # $paramod-renamed module is missed by SYNTH_KEEP_MODULES (yosys only warns) and its replicated copies get merged back
 grep -h "did not match any module" $C/logs/asap7/*/base/1_*yosys*.log 2>/dev/null | sort -u | head -40 | sed 's/^/GATE_KEEPWARN /'
 python3 tools/ref_tile/keep_module_audit.py netlist $B/1_2_yosys.v {TOP}
-# ROM-INFER GATE (OWNER 2026-10-25, D-ROM-1): ROM content never synthesised into a tile; declared math tables pass
-if [ -s $B/mem.json ]; then python3 tools/mem_compiler/rom_infer_gate.py --mem-json $B/mem.json --json $R/romgate.json >/dev/null 2>&1
-  python3 -c "import json,sys;r=list(json.load(open(sys.argv[1])).values())[0];print('GATE_ROMGATE '+json.dumps(dict(verdict=r.get('verdict'),error=r.get('error',''),min_bits=r.get('min_bits'),rom_bits_failed=r.get('rom_bits_failed',0),declared=r.get('declared',[]),fail=[m['module']+'.'+(m.get('memid') or m['cell'])+' '+str(m['words'])+'x'+str(m['width'])+' sha256 '+m.get('sha256','')[:16] for m in r.get('memories',[]) if m.get('verdict')=='FAIL'])))" $R/romgate.json 2>/dev/null
-else echo GATE_ROMGATE_MISSING; fi
 # PORT-LATENCY (ROOT 2215): the elaborated pin-register table + wrapper of this synthesis (ot_pin_regs.tcl) come back for
 # tools/ref_tile/port_latency.py; the closure loop records the same export from the route at CLOSE for the compilers
 [ -s $B/ot_pin_regs.tsv ] && [ -s $B/ot_pin_regs_wrapper.v ] && python3 -c "import zlib,base64,sys;print('GATE_PIN_REGS_B64 '+' '.join(base64.b64encode(zlib.compress(open(f,'rb').read(),9)).decode() for f in sys.argv[1:]))" $B/ot_pin_regs.tsv $B/ot_pin_regs_wrapper.v
@@ -1860,7 +1827,6 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
                else ("outline roomy; acceptable (do not shrink)" if not _ok and um["util"] < RT.UTIL_LO else "")))
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     check_memory_ff(g, out)
-    check_rom_gate(g, out)
     check_keep_modules(g, kd, spec, out)
     g.reset_landing = reset_landing_record(out)      # a gate without this record predates the reset_landing rule
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):

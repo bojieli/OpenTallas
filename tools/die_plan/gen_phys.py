@@ -392,13 +392,6 @@ def input_hold_min(P, tn):
                 break
             for pid, pr in prs:
                 s = pr["src"]["part"]
-                dv = (P.clock.get("io_hold_driver_views") or {}).get(pid)
-                if s == DIE_PART and dv:
-                    # CP1 proof harness: explicit registered upstream driver view of the full plan (COORD 23:26 (3));
-                    # the seam itself is checked on the real parent (io_hold_parent.py)
-                    vals.append((float(dv["out_hold_guarantee_ps"]), f"driver view {dv['type']} ({dv['basis']})",
-                                 dv["type"]))
-                    continue
                 if s == DIE_PART or s not in P.parts:
                     why = f"{pid} from the die edge"
                 elif P.channel_of(pid) is not None:
@@ -469,10 +462,6 @@ def root_async_reset(P, tn):
     """
     import reset_tree as RT
     if not RT.wavefront(P) or P.types[tn].get("hard"):
-        return False
-    if RT.pad_false_path_pins(P, tn):
-        # a declared die reset pad plan (PATH-KV-POR) already emits the ONE root CDC exception (raw pad ->
-        # u_rst_root async + PLL analog); a second one would double the waiver (test_por_gate)
         return False
     if RT.wf_solve(P)["root_type"] != tn:
         return False
