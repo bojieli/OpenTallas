@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Restore pin-access wire caps omitted by OpenROAD rsz::SpefWriter.
 
-Scope: die_clock's BUFx24_ASAP7_75t_R cells (M1 terminals) and M9 top ports.
+Scope: the explicitly checked ASAP7 RVT clock buffers (M1 terminals) and M9 top ports.
 The native exporter records the pin-access resistors but excludes terminal-node
 ground caps. Infer each missing half-cap from its native resistor and the SAME cap-profile estimate, retaining the
 native via resistance. STANDARD layer R is used: native NDR width credit is
@@ -14,6 +14,12 @@ import json
 from pathlib import Path
 from mix_clock_spef import header,sections
 
+# Checked A/Y pin geometry in ORFS asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef:
+# every listed buffer has only M1 terminals, so the same M2 attachment + V1 wire-cap reconstruction applies.
+# Cell input capacitance is supplied by Liberty, not inferred here. Other masters remain rejected.
+M1_CLOCK_BUFFERS = {f"BUFx{s}_ASAP7_75t_R" for s in
+                    ("2", "3", "4", "4f", "5", "6f", "8", "10", "12", "12f", "16f", "24")}
+
 
 def restore(lines,width):
     total=float(lines[0].split()[2]);pininfo={};caps={};res=[];mode=None
@@ -23,7 +29,8 @@ def restore(lines,width):
         if f[0] in ['*CONN','*CAP','*RES','*END']:mode=f[0];continue
         if mode=='*CONN':
             if f[0]=='*I':
-                if len(f)<5 or f[3]!='*D' or f[4]!='BUFx24_ASAP7_75t_R':raise ValueError('pinCAP model requires native BUFx24 M1 pins')
+                if len(f)<5 or f[3]!='*D' or f[4] not in M1_CLOCK_BUFFERS or f[1].rsplit(':',1)[-1] not in ('A','Y'):
+                    raise ValueError('pinCAP model requires a checked native RVT clock-buffer M1 A/Y pin')
                 pininfo[f[1]]='cell'
             elif f[0]=='*P':pininfo[f[1]]='port'
         elif mode=='*CAP':
@@ -48,10 +55,10 @@ def restore(lines,width):
         if pin in caps:continue
         if len(adj[pin])!=1:raise ValueError('terminal must have exactly one native pin-access resistor')
         if kind=='port':ports.append(pin);continue
-        # All native die_clock cells have M1 terminals. The M2 attachment
+        # All checked native clock buffers have M1 terminals. The M2 attachment
         # resistor includes one V1, which must never receive NDR scaling.
         r=adj[pin][0][1];length=(r-.0172)/.0297127
-        if length < -1e-3:raise ValueError('pin-access resistor inconsistent with BUFx24 M1/M2/V1 model')
+        if length < -1e-3:raise ValueError('pin-access resistor inconsistent with clock-buffer M1/M2/V1 model')
         new[pin]=max(0.,length)*.174942/2
     if len(ports)>1:raise ValueError('clock native net has more than one public port; cap budget ambiguous')
     if ports:
