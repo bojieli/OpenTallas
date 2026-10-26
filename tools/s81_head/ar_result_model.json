@@ -1,0 +1,20 @@
+{
+  "component": "ot_s81hd_result_landing_hsf0",
+  "role": "Extract the actual rank-merge to RESULT holding/formatting mechanism, before the real sequencer",
+  "reference": "04718b43a55f742397eebf564a20adaa3e0bacd6:ot_s81hd_ctl RESULT -> dsfd_mtp_seq",
+  "clock_ps": 833,
+  "macs_per_cycle": 0,
+  "input_bits": {"merged_identity": 31, "row_bits": 49, "live_destination_header": 16},
+  "held_payload_bits": 96,
+  "output_bits_per_transfer": 512,
+  "memory_bytes_per_cycle": 0,
+  "sustained_budget": "one result per statically admitted head position; the current bundle streams 8269 edges at SK11",
+  "capacity": "one result per receiver grant; transport grants are the existing sequencer boundary, not a new scheduler",
+  "storage_flops_estimate": {"held": 96, "held_payload_pipeline": 96, "landed_enable_copies": 6, "valid_pending": 2, "link_payload": 512, "link_control": 3},
+  "replicas": 1,
+  "new_mux_demux": 0,
+  "added_cycles_vs_actual_reference": 0,
+  "physical_slot": "unassigned component; no fit, routing or timing claim",
+  "routing": "80-bit merged record plus live16-bit header, one512-bit flit output; physical pin/track mapping remains unmeasured",
+  "adoption": "No canonical plan/provider or headline rate change; full current controller must supply actual context, grants and compiled admission"
+}
