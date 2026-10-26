@@ -185,3 +185,4 @@ CODEX 2026-10-25 18:24 PDT RESET QCtoken1713: candidatecodex/qc-token-1713@90e23
 - Live jobs: none. Scratch: intel2 /srv/opentallas-scratch2/claude/{wt/tok-qk-mufs (worktree), tok-qk-mufs-run}, epyc3 /srv/opentallas-scratch2/claude/tok-qk-mufs-abi (delete after merge).
 - Next: compile the MU image (default F2 unless COORD picks F3) from the PATH-KV strict bind with the 833 RTL in; whole-die E boot + HOST replay.
 - OWNER?: none (frame of record F2 vs F3 is a COORD call).
+2026-10-25 20:30 PDT TOK-QK (fresh 20:25): (1)/(2) KV MU image + token gate wait on PATH-KV-BIND strict bind (b5 live, not duplicated); meanwhile staging the boot_v36 rtl6 as-built inputs into the repo (rule 3) and dry-running run_rebind on the current-plan bus_groups. Sub-lanes LIVE: TOK-QK-QCL (QC per-layer token on plan 441d1401, branch claude/tok-qk-qcl-1025), TOK-QK-XD (QC<->KV tp8/xdie/ovl4u on 441, branch claude/tok-qk-xd-1025).
