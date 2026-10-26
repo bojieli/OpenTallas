@@ -1,0 +1,134 @@
+{
+  "schema": "opentallas.master_plan_slice.v1",
+  "die": "qwen_compute",
+  "kind": "core",
+  "type": "qfd_dv_s8_crh_rp1",
+  "module": "qfd_dv_s8_crh_rp1",
+  "instances": [
+    "p_src"
+  ],
+  "plan": "tools/die_plan/examples/tiny_plan.json",
+  "plan_sha256": "aa",
+  "master_plan_sha256": "TRIAL-QC-SU-R4-ENTRY-ONLY-NOT-FROZEN",
+  "frozen": false,
+  "outline_um": [
+    259.2,
+    276.48
+  ],
+  "keepouts": [],
+  "islands": [
+    {
+      "name": "clock_entry",
+      "rect_um": [
+        125.28,
+        164.16,
+        133.92,
+        172.8
+      ],
+      "centre_um": [
+        129.6,
+        169.0
+      ],
+      "clock_pin": {
+        "layer": "M5",
+        "xy_um": [
+          129.6,
+          169.0
+        ]
+      }
+    }
+  ],
+  "bays": [],
+  "entry_pins": [],
+  "hard_cores": [],
+  "latency": {
+    "common_clock_latency_ps": {
+      "TT": 250,
+      "FF": 202.5
+    },
+    "tol_ps": 40,
+    "early_taps": false
+  },
+  "corridors": [
+    {
+      "path": "L0",
+      "layer": "M7",
+      "bits": 64,
+      "polyline_um": [
+        [
+          0,
+          210
+        ],
+        [
+          864,
+          210
+        ]
+      ],
+      "band_um": 4
+    }
+  ],
+  "gates": {
+    "reach": "PASS",
+    "bay_fill": "NOT RUN"
+  },
+  "pushdown": {
+    "islands": [
+      {
+        "name": "isl0",
+        "centre_um": [
+          129.6,
+          169.0
+        ],
+        "rect_um": [
+          125.28,
+          164.16,
+          133.92,
+          172.8
+        ],
+        "driver": {
+          "cell": "BUFx16f_ASAP7_75t_R",
+          "parallel": 1
+        },
+        "ft_ports": [
+          {
+            "name": "mp_isl0_ck_i",
+            "dir": "in",
+            "layer": "M5",
+            "xy_um": [
+              127.44,
+              171.16
+            ]
+          },
+          {
+            "name": "mp_isl0_ck_o",
+            "dir": "out",
+            "layer": "M5",
+            "xy_um": [
+              131.76,
+              171.16
+            ]
+          },
+          {
+            "name": "mp_isl0_rst_i",
+            "dir": "in",
+            "layer": "M5",
+            "xy_um": [
+              127.44,
+              166.84
+            ]
+          },
+          {
+            "name": "mp_isl0_rst_o",
+            "dir": "out",
+            "layer": "M5",
+            "xy_um": [
+              131.76,
+              166.84
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "core_clock_port": "ck"
+}

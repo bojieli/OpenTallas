@@ -1,0 +1,15 @@
+{
+  "vehicle": "actual RP1 R3 own-copy core infrastructure trial",
+  "source_picture": "epyc1:/srv/opentallas-scratch2/claude/qc-su-lat/rp1_R3/rp1_f62_review.png",
+  "verdict": "PASS-COND",
+  "findings": [
+    "Viewed real two-SRAM RP1 placement: core centre clock-entry island sits in the clear inter-row SRAM channel.",
+    "Shared BUF footprints are [129.006,169.290,130.194,169.560] and [129.438,168.210,129.816,168.480] um, inside planned [125.28,164.16,133.92,172.80].",
+    "Core clock and dedicated FT pin pairs stay separate; original functional cell connectivity is unchanged.",
+    "No macro movement, wide bus movement or new long reach. Native PG binding occurs before new buffer protection."
+  ],
+  "conditions": [
+    "Structural implementation trial only. No CTS, route, STA or SIGNED claim.",
+    "The full RP1 common clock tree must use exact planned sink identities and pass its own trial/review before routing."
+  ]
+}

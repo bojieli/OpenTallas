@@ -363,7 +363,8 @@ def resolve(slice_dir, name, outline_um, plan_raw=None, trial=False, kind=None):
     return p, sl
 
 
-def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, kind=None, gpl_hook=None):
+def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, kind=None, gpl_hook=None,
+              clock_ports=None, reset_ports=None):
     """Generator hook.  Returns the budget value: stamp dict (slice given), TRIAL (required, --trial, no slice) or
     None (not required, no slice: the kit is unchanged).  Raises SystemExit when a sign-off kit has no slice, and
     SliceError when the slice does not fit.  gpl_hook: a kit Tcl file (PRE_GLOBAL_PLACE) the guarded
@@ -377,7 +378,16 @@ def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, 
     kd = Path(kd)
     if sl.get("kind") == "core" and sl.get("pushdown"):
         import core_infra
-        core_infra.install(kd, sl)
+        effective = sl
+        explicit = [p for p in (clock_ports or []) if p]
+        if explicit:
+            if len(explicit) != 1:
+                raise SliceError("core infrastructure needs exactly one manifest clock port")
+            declared = sl.get("core_clock_port") or (sl.get("core_tree") or {}).get("clock_port")
+            if declared and declared != explicit[0]:
+                raise SliceError(f"slice clock port {declared!r} differs from generator manifest {explicit[0]!r}")
+            effective = dict(sl, core_clock_port=explicit[0])
+        core_infra.install(kd, effective)
     shutil.copyfile(p, kd / "master_slice.json")
     (kd / "master_slice.tcl").write_text(emit_tcl(sl))
     if not (kd / "keepout_phys.tcl").is_file():

@@ -1,0 +1,102 @@
+{
+  "module": "qfd_dv_s8_crh_rp1",
+  "outline_um": [
+    259.2,
+    276.48
+  ],
+  "cells": [
+    {
+      "name": "mp_isl0_ck0",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "xy_um": [
+        129.6,
+        169.54
+      ],
+      "rect_um": [
+        125.28,
+        164.16,
+        133.92,
+        172.8
+      ]
+    },
+    {
+      "name": "mp_isl0_rst0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "xy_um": [
+        129.6,
+        168.46
+      ],
+      "rect_um": [
+        125.28,
+        164.16,
+        133.92,
+        172.8
+      ]
+    }
+  ],
+  "ports": [
+    {
+      "name": "mp_isl0_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        127.44,
+        171.16
+      ],
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl0_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        131.76,
+        171.16
+      ],
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl0_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        127.44,
+        166.84
+      ],
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl0_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        131.76,
+        166.84
+      ],
+      "direction": "OUTPUT"
+    }
+  ],
+  "arcs": [
+    {
+      "cell": "mp_isl0_ck0",
+      "source": "mp_isl0_ck_i",
+      "sink": "mp_isl0_ck_o"
+    },
+    {
+      "cell": "mp_isl0_rst0",
+      "source": "mp_isl0_rst_i",
+      "sink": "mp_isl0_rst_o"
+    }
+  ],
+  "core_tree": null,
+  "core_clock_port": "ck",
+  "clock_entry": {
+    "layer": "M5",
+    "xy_um": [
+      129.6,
+      169.0
+    ]
+  },
+  "bays": [],
+  "entry_pins": []
+}

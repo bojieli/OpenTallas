@@ -88,3 +88,23 @@ def test_separate_core_and_feedthrough_pins_cannot_overlap():
     s=sample()
     s["pushdown"]["islands"][0]["ft_ports"][0]["xy_um"]=[432,432]
     with pytest.raises(CI.InfraError, match="pin shapes overlap"): CI.compile_slice(s)
+
+
+def test_kit_manifest_binds_clock_without_rewriting_slice(tmp_path):
+    s = sample(); s.pop("core_clock_port")
+    src = tmp_path/"slices"; src.mkdir()
+    path = src / (s["type"]+".json")
+    path.write_text(json.dumps(s, indent=1))
+    kd = tmp_path/"kit";kd.mkdir()
+    stamp = MS.kit_apply(kd,s["type"],s["outline_um"],src,clock_ports=["clk"],reset_ports=["rst_n"])
+    assert stamp["slice_sha256"] == MS.digest(s)
+    assert (kd/"master_slice.json").read_bytes() == path.read_bytes()
+    assert "ot_ci_clock_entry {clk}" in (kd/"master_core_infra.tcl").read_text()
+    with pytest.raises(MS.SliceError,match="exactly one"):
+        MS.kit_apply(kd,s["type"],s["outline_um"],src,clock_ports=["ck","other"])
+
+
+def test_wrapper_preserves_original_packed_bus_range():
+    s=sample()
+    v=CI.emit_wrapper(s,"logic_only",{"d":{"direction":"input","width":8,"offset":4,"upto":True}})
+    assert "input wire [4:11] d" in v
