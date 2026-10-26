@@ -37,3 +37,7 @@ one reset, no macros; all seven emitted RTL files match the measured cohort.
 No old timing view transfers. Any changed inventory or clock contract fails
 closed; the 32-group / 608-line-FF guards run before CTS. Current die/flow gates
 and independent geometry approval still govern any future route.
+
+Conditional single DRT trial
+
+ROOT subsequently authorized ONE DRT TRIAL after independent full-outline/pin/PG/density/clock review and exact unaffected-master impact check (results/geom_review/codex_hcpl_shiftclk_2144_impact_raw.json). The separate run_hcpl_trial_route_2144.sh is the only trial route entry point. It requires a kit-relative immutable hcpl_trial_cohort.json (master/outline, input+GRT hashes, exact native TT/FF logs, 32-group ownership), receives the normal autopilot KIT/finish/MEM/THREADS arguments, preserves all existing stage1-5.1 checkpoints, then runs normal DRT/finish/abstract/pin/signoff. Submit only as mode=trial with the explicit independent review tag; no canary/source gate is bypassed and no frozen-die/signoff-wave claim is made. The ordinary apply/phase entry point remains non-routing. Native setup/hold stay833ps/60/25ps andTT250/FF202.5boundarycontracts.
