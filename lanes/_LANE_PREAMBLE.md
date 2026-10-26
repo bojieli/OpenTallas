@@ -54,3 +54,5 @@ Near misses (OWNER revised 10-25): small ECOs are allowed when the root cause is
 
 ### Rule 1 amendment (OWNER APPROVED 2026-10-25 ~21:00 PDT)
 Per die: once die GRT passes with overflow 0 INCLUDING the die clock, the die plan is FROZEN (FROZEN line in lanes/PATH-FREEZE.md) and ALL its tiles (path and non-path) route to sign-off at full breadth against the frozen interfaces. Die STA on real views stays the release gate. Frozen now: QC plan 441d1401, S81-HEAD plan d7b8d1eb. Failing dies (S81, KV, HBM): fix only the failing regions; tiles no fix touches proceed now (rule 4). Prefer re-using existing closed tiles that fit a frozen slot unchanged. No new gates until a die passes die STA on real views.
+
+0. BEFORE any layer / feedthrough / island / clock-latency / CPPR decision or proposal: read ~/coord/METHODOLOGY.md section 12 (canonical physical-infrastructure rules + decision history). Never re-impose a superseded line from 12.6; contradicting 12.x needs a new OWNER decision.

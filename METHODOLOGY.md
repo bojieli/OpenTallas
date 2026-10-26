@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v1, 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v2, 2026-10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -102,8 +102,8 @@ Sources: B = ~/coord/BRIEFING.md "OWNER DECISIONS 2026-10-24" #n; A = AGENTS.md 
 
 ## 5. Physical
 
-5.1 Layers: partition signals and feedthrough <= M7; ft stations registered every <= 405 um. M8/M9 reserved for
-    die clock spine, die reset and PG. [B#12 10-24] (see 9.3)
+5.1 Layers: SUPERSEDED by 12.1 (v2, owner 10-26). Partition signals + pushed-down ft <= M7; die-top signal nets may
+    use M8/M9 left after the PG/clock/reset pre-routes. [B#12 10-24 -> D-INFRA-FIRST 10-26]
 5.2 Pin faces: H layers (M4/M6) on E/W faces, V (M5/M7) on N/S; <= 2 layers per face; pins on die lattice tracks
     (grid 8.64 um); pin/track <= 0.6; <= 6 pins/um per 10-um window. [P conventions, budgets]
 5.3 Repeaters every <= 450 um on die-layer nets (600 breaks the 320-ps slew limit); repeaters inside a registered hop
@@ -228,7 +228,7 @@ Sources: B = ~/coord/BRIEFING.md "OWNER DECISIONS 2026-10-24" #n; A = AGENTS.md 
 ## 10. Coordinator rulings on section 9 (2026-10-24 21:42 PDT) -- binding until the owner says otherwise
 - 9.1 Never -X ours/theirs; AGENTS.md updated to match.
 - 9.2 Spread > 80 ps is INFO; signoff.py/die_sta switch to related-pair skew + CPPR when the kit-clock branches merge (CLOCK lane).
-- 9.3 ALL signal routing (partition ft AND die-top nets) on <= M7; M8/M9 only die clock spine / reset / PG (dec. 12 supersedes the 10-22 M9-for-signals record). Tools drop M8/M9 ft; reach = 405 um.
+- 9.3 SUPERSEDED 10-26 by 12.1 (owner D-INFRA-FIRST step 5): die-top signals may use leftover M8/M9; partition ft stays <= M7; reach = 405 um on every layer.
 - 9.4 ft_station_max_um default 405.
 - 9.5 Wavefront reset (RESET lane); README reset section rewritten when the tool lands.
 - 9.6 RULED by owner decision 16: single 1.2 GHz domain if FP32 add fits LAT4 at 833 ps (check running).
@@ -244,11 +244,57 @@ Sources: B = ~/coord/BRIEFING.md "OWNER DECISIONS 2026-10-24" #n; A = AGENTS.md 
 ## 11. Die method: infrastructure first [OWNER D-INFRA-FIRST 2026-10-26 01:37 PDT; COORD additions 01:4x; tool lane lanes/INFRA-FIRST.md]
 Per die, in order (supersedes "route signals, then fit the clock"; amends 7 and 3 where they differ):
 - 11.1 PG first: die grid on M9 + part of M8, sized from per-region IR (PDNSim per region; published PHY power, owner 10-26 4.37 W per 112G macro; core power per type). Report the % of M8/M9 tracks taken.
-- 11.2 Clock: equal-length H-tree feeding one mesh per clock region; LANDED (forwarded-clock) crossings at region seams (COORD 01:22); mesh drivers / H-tree buffers in reserved driver islands in tiles (apply_clkmesh_sites.py), never on hard cores.
+- 11.2 Clock: equal-length H-tree feeding one mesh per clock region; LANDED (forwarded-clock) crossings at region seams (COORD 01:22); mesh drivers / H-tree buffers in reserved driver islands (12.2): in partition channels, or INSIDE a hard core where no channel site exists (owner 10-26, cores rebuilt with the island).
 - 11.3 Reset: die wavefront (B#13): rst_n -> root partition; parent rst_o_<k> -> child arst_n die hops; START beside it.
 - 11.4 PG, clock and reset are frozen as FIXED pre-routes (special nets / fixed wires + NDR footprint obstructions in the die kit) so die GRT sees the exact leftover capacity; skew gate (like-edge related pairs, CPPR, TT+FF, <= 80 ps) on the pre-routed clock alone.
-- 11.5 Die signal GRT on the leftover (M4-M7; plus leftover M8/M9 only if FT-M89-PROBE justifies), >= 50 iterations.
+- 11.5 Die signal GRT on the leftover, >= 50 iterations: M4-M7 + leftover M8/M9 per 12.1.
 - 11.6 Die plan freezes on GRT0 incl. clock + related-pair skew <= 80 TT/FF.
-- 11.7 THE DIE ABSORBS RESIDUALS: a tile's measured clock insertion that differs from plan is compensated at die level (per-tile mesh stub trim / declared core-latency offset in the die clock tool), never by a tile rebuild. Boundary timing rests on registered pins + channel repeaters. A tile is rebuilt only for its own internal failures.
+- 11.7 THE DIE ABSORBS RESIDUALS: a tile's measured clock insertion that differs from plan is compensated at die level (per-tile mesh stub trim / declared core-latency offset in the die clock tool), not by a tile rebuild -- EXCEPT the owner 10-26 core-latency rebuild (12.3). Boundary timing rests on registered pins + channel repeaters. A tile is rebuilt only for its own internal failures.
 - 11.8 PRE-FREEZE TRIAL PLACEMENT: every tile type gets a quick place with its clock islands and pre-route keep-outs in, showing fit, pin access and an r2r reach census, before the die plan freezes.
 - 11.9 Order: QC (prototype) -> S81-HEAD -> KV / S81 / HBM inside their current batches.
+
+## 12. PHYSICAL INFRASTRUCTURE RULES -- CANONICAL (v2, OWNER 2026-10-26). Read this before ANY layer / feedthrough / island / clock-latency proposal.
+Any lane, sub-agent or coordinator message that contradicts 12.x is wrong; 12.x changes only by a new OWNER decision
+recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or chat.
+- 12.1 LAYERS.
+  a. Tiles / partitions / hard cores route their own logic on <= M7 (new tiles default M5 ceiling, M:m5-cap). They never use M8/M9.
+  b. Die order (section 11): PG (M9 + part of M8, sized from IR) -> clock (H-tree + regional mesh, M8/M9, NDR) -> reset -> FROZEN pre-routes.
+  c. Die-top signal nets then route on M4-M7 PLUS whatever M8/M9 is left after the pre-routes (owner 10-26 01:1x). M4-M7 is preferred; the
+     router may use the leftover M8/M9 freely, subject to 12.4 gates.
+  d. Partition feedthroughs are PUSHED DOWN: ft stations/repeaters are partition logic (partition netlist, FT slots, <= M7), timed + signed
+     off with the partition. Partitions abut; no die-level std cells for signals.
+  e. Reach: plan 405 um per registered hop on EVERY layer (M8/M9 included; the measured 1001/1013 um M8/M9 figures are not used for planning).
+     Repeaters <= 450 um. A die-top net on M8/M9 drops to a partition repeater bay at least every 405 um.
+- 12.2 SITES.
+  a. INFRA ISLAND = top-owned placement hole + M9->M1 via stack, used ONLY for die clock drivers (H-tree / mesh) and the regional reset register +
+     repeaters. Location: the partition channel cross where one exists (QC: the A0 channel cross); otherwise INSIDE the hard core (core rebuilt
+     with it).
+  b. REPEATER BAY = partition- or core-owned reserved site rows for pushed-down ft stations/repeaters, along ft corridors / under die-top routes,
+     <= 405 um apart, sized from measured demand. In-core bays only where a core longer than reach blocks a corridor and leftover M8/M9 + a
+     bay outside the core cannot close the gap.
+  c. The die H-tree lattice is snapped to the partition lattice so tree nodes land on island sites (report max node displacement).
+- 12.3 CLOCK LATENCY. One common per-die clock-latency target at every hard-core clock pin (default 250 ps TT; FF stated per die); deep cores
+  restructure their CTS to meet it, shallow cores pad up. No early taps by design. Cores are rebuilt in parallel to it, signed cores included
+  (owner 10-26). Early-tap branches are a fallback only.
+- 12.4 GATES (all dies, die_infra.py).
+  a. Freeze = die GRT0 incl. clock (>= 50 it) AND related-pair skew <= 80 ps TT+FF (CPPR, routed RC).
+  b. CPPR on a regional mesh (COORD 10-26): common point = the mesh node when the mesh is one connected net; measured intra-mesh spread added in
+     full; per-tap buffer + stub early/late not credited; pairs on different meshes credit only to their last common H-tree node. Report the
+     region-root-credited number as INFO.
+  c. Site sufficiency: max gap between legal station/repeater sites along each die net corridor <= 405 um; corridor track use <= 0.6;
+     via-field porosity + per-gcell pin-stack limit on every M8/M9 -> bay drop and every island stack; bay fill <= 60 %; mesh-driver
+     power density / EM in islands.
+  d. Signals adjacent to clock mesh/spine on M8/M9 keep the clock NDR spacing/shield; the skew gate is re-run after signal GRT (not only on
+     the clock alone).
+  e. PG IR is closed BEFORE signal GRT; any later PG growth re-runs signal GRT.
+- 12.5 Known risks (watch, do not re-litigate): pin-stack hot spots on M8/M9 drops (HBM FT-M89: 108k stacks, max 168/gcell); signal-to-clock
+  coupling on M8/M9; PG growth after signal routing (QC UCIe IR open); tool paths that still drop M8/M9 ft from the 9.3-era code
+  (must be switched by the infra tool lane, then one tool for all dies).
+- 12.6 DECISION HISTORY (M8/M9 + ft). Superseded lines are listed so nobody revives them:
+  - 10-20 M9 = PG/clock only. SUPERSEDED 10-22.
+  - 10-22 M9 opened for die signals M2-M9 (21M GRT overflow from vertical starvation). SUPERSEDED 10-23.
+  - 10-23 ft pushdown into blocks + M8/M9 reserved budget (channel-only relays starved routing; M8 relay pins 24.6M vs 269k). KEPT (pushdown).
+  - 10-24 B#12: all signals <= M7, M8/M9 = clock/reset/PG. SUPERSEDED 10-26 for die-top nets only.
+  - 10-25 proposal of over-tile ft (type count) withdrawn: no measured failure. Lesson: no layer change without a measured failure.
+  - 10-26 01:1x OWNER D-INFRA-FIRST: PG/clock/reset first, die signals on M4-M7 + leftover M8/M9 = CURRENT (12.1).
+  - 10-26 ~06:3x OWNER: common core clock-latency target + in-core islands on all dies, rebuilt in parallel = CURRENT (12.2a, 12.3).
