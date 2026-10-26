@@ -75,7 +75,7 @@
     "The nine critical merges and 576702.4-cycle baseline are assumptions copied from the existing S2 proposed ledger row, not a new die binding or rate of record.",
     "The selected component bench omits q_hub_nw internal 26 out + 26 return stations.",
     "Do not add the full 271 or 323 edges to the model until existing split, e86, PHY and transport terms are reconciled; they may already charge some stages.",
-    "The internal shell term is analytically recurring, but matched cold/warm operation launch-to-write/done measurement is pending the current connected stageB vehicle.",
+    "The internal shell term is recurring and the connected minimum stageB vehicle now has matching cold/loaded operation ages; full-production operation mapping and old model charges still require reconciliation.",
     "No physical SIGNED view, final G5 or new headline rate is established."
   ],
   "stat_counter_attribution": {
@@ -86,5 +86,21 @@
     "split_pipeline": 2,
     "root_face_registers_in_counter": 0,
     "warning": "The counter delta 258 and the output-path face term 258 are numerically equal but have different attribution. Do not add them together."
+  },
+  "matched_runtime_witness": {
+    "source_branch": "codex/hbm-stageb-2145",
+    "source_component_commit": "93a705b402",
+    "clock_period_fs": 833000,
+    "missions": [
+      2048,
+      4096
+    ],
+    "raw_start": 95,
+    "root_write": 613,
+    "native_vm_write": 616,
+    "root_done": 620,
+    "root_stat_cycles": 510,
+    "native_q3_done": 631,
+    "result": "Both cold and loaded relaunch have identical relative write/done ages, zero numeric/identity/reservation errors; boot is not included in these relative edges."
   }
 }
