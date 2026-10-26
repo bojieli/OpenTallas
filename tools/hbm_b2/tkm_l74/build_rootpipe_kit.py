@@ -51,6 +51,8 @@ def main():
     generated.write_text(original.read_text().replace(build_rootpipe.BASE + '__pfd21', build_rootpipe.BASE))
     commit = subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip()
     gen_path = ROOT / 'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py'
+    # The standalone generator imports its sibling face-shell module at runtime.
+    sys.path.insert(0, str(gen_path.parent))
     spec = importlib.util.spec_from_file_location('rootpipe_coregen', gen_path)
     gen = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(gen)
