@@ -51,3 +51,9 @@ Yosys single_bit_vector metadata on all width-one top ports, matching canonical
 plan p[0] pin identity. The emitted host_qm clock is now input [0:0] ck and that
 metadata survives actual synthesis (epyc2 unit1395055-1793006690). No bit widths,
 logic or cycles change. Placement repair/trial is owned by CORES legacy_vqvs.
+
+Generic exactness guard: capture merging also distinguishes initial state, and
+private output duplication retains known init values on both internal and
+private Q nets. Otherwise moving an initialized output name to the private copy
+could remove the original internal state's init. Six focused controls pass,
+including different-init rejection and preservation of both copies' init.

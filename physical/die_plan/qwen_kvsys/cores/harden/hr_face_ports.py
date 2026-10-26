@@ -50,6 +50,17 @@ def transform(J, top, mutant=False):
     for pn, port in ports.items():
         if len(port["bits"]) == 1:
             M["netnames"][pn].setdefault("attributes", {})["single_bit_vector"] = ONE
+    init_by_bit = {}
+    for net in M["netnames"].values():
+        if "init" not in net.get("attributes", {}):
+            continue
+        vals = pbits(net["attributes"]["init"], len(net["bits"]))[::-1]
+        for bit, val in zip(net["bits"], vals):
+            if val not in "01":
+                continue
+            if bit in init_by_bit and init_by_bit[bit] != val:
+                raise ValueError(f"conflicting initial values on net bit {bit}")
+            init_by_bit[bit] = val
     nid = [max([b for c in cells.values() for v in c["connections"].values() for b in v if isinstance(b, int)] +
                [b for p in ports.values() for b in p["bits"] if isinstance(b, int)] +
                [b for n in M["netnames"].values() for b in n["bits"] if isinstance(b, int)] + [1])]
@@ -95,9 +106,17 @@ def transform(J, top, mutant=False):
         c.setdefault("attributes", {})["keep"] = ONE
         # Preserve the actual Q nets across write_verilog/proc round trips.
         # A kept alias of the output produces a real buffer load on the face.
+        original_q = c["connections"]["Q"][i]
         for net in M["netnames"].values():
-            if c["connections"]["Q"][i] in net["bits"]:
+            if original_q in net["bits"]:
                 net.setdefault("attributes", {})["keep"] = ONE
+        if original_q in init_by_bit:
+            init_by_bit[q] = init_by_bit[original_q]
+            # The original initialized name may be the output port that is
+            # about to move to the private Q. Keep its internal state init too.
+            M["netnames"][f"hrfp_{tag}_internal_init"] = dict(
+                hide_name=0, bits=[original_q],
+                attributes=dict(keep=ONE, init=init_by_bit[original_q]))
         return q, nc
 
     for pn, p in ports.items():
@@ -158,6 +177,7 @@ def transform(J, top, mutant=False):
                         return (c["type"], tuple((k, tuple(c["connections"][k])) for k in CTRL if k in c["connections"]),
                                 tuple((k, v) for k, v in sorted(c["parameters"].items()) if k.endswith("POLARITY")),
                                 tuple((k, c["connections"][k][x[2]]) for k in WIDE if k not in ("D", "Q") and k in c["connections"]),
+                                init_by_bit.get(c["connections"]["Q"][x[2]]),
                                 tuple(pbits(c["parameters"][k], w)[::-1][x[2]] for k in VAL if k in c["parameters"]))
                     if len({key(x) for x in ld}) == 1:
                         keep = ld[0]
@@ -178,6 +198,10 @@ def transform(J, top, mutant=False):
                         rep["merged_in"].append(dict(pin=nm_, kept=keep[0], merged=[x[0] for x in ld[1:]], cycles=0))
                         continue
                 rep["multi_in"].append(f"{nm_}: " + ", ".join(f"{cells[cn]['type']}.{pp}" for cn, pp, _ in ld[:4]))
+    for net in M["netnames"].values():
+        if any(bit in init_by_bit for bit in net["bits"]):
+            net.setdefault("attributes", {})["init"] = "".join(
+                init_by_bit.get(bit, "x") for bit in reversed(net["bits"]))
     rep["added_ff_bits"] = len(rep["private_out"])
     for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out"):
         rep["n_" + k] = len(rep[k])
