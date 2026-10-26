@@ -744,3 +744,17 @@ def test_run_keeps_plan_path_for_plan_relative_files(tmp_path, monkeypatch):
     check.run(json.loads((HERE / "examples" / "tiny_plan.json").read_text()), plan_dir=tmp_path)
     P = seen[-1]  # schema.validate builds its own path-free structural Plan first
     assert P.path is not None and Path(P.path).parent == tmp_path
+
+
+def test_core_face_output_station_uses_exact_launch_core():
+    def stations(t):
+        t['internal_stations'] = [
+            dict(conn='bus:x_o', launch='u_core.x', capture='face flop',
+                 from_um=[864,410], to_um=[216,432], regs_um=[[700,432],[100,432]]),
+            dict(conn='bus:x_o', launch='u_other.x', capture='face flop',
+                 from_um=[864,410], to_um=[648,432], regs_um=[[700,432]])]
+    assert errs(_face_core(dict(din='W', x='W'), conns=stations), 'core_faces') == []
+    assert len(errs(_face_core(dict(din='W', x='E'), conns=stations), 'core_faces')) == 1
+    def wrong(t):
+        stations(t);t['internal_stations'][0]['launch']='u_core.other_pin'
+    assert len(errs(_face_core(dict(din='W', x='W'), conns=wrong), 'core_faces')) == 1

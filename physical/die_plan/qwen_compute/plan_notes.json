@@ -1,7 +1,7 @@
 {
  "variant": "B",
  "partitions": 377,
- "types": 69,
+ "types": 77,
  "types_merged": 122,
  "ports": 3005,
  "lanes": 1933,
@@ -25,85 +25,94 @@
  ],
  "cells_per_type": {
   "cbf_q00": {
-   "cells": 782764,
-   "instances": 23,
+   "cells": 792534,
+   "instances": 17,
    "outline_um": [
     1235.52,
     2609.28
    ],
-   "macros": 40
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
   },
   "cbf_q00_s2": {
-   "cells": 782764,
+   "cells": 792534,
    "instances": 1,
    "outline_um": [
     1235.52,
     2609.28
    ],
-   "macros": 40
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
   },
   "cbf_q01": {
-   "cells": 782764,
-   "instances": 23,
+   "cells": 787394,
+   "instances": 17,
    "outline_um": [
     1235.52,
     2617.92
    ],
-   "macros": 40
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
   },
   "cbf_q01_s2": {
-   "cells": 782764,
+   "cells": 787394,
    "instances": 1,
    "outline_um": [
     1235.52,
     2617.92
    ],
-   "macros": 40
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
   },
   "cbf_q11": {
-   "cells": 782764,
-   "instances": 24,
+   "cells": 785338,
+   "instances": 18,
    "outline_um": [
     1235.52,
     2617.92
    ],
-   "macros": 40
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
   },
   "cbn_q00": {
-   "cells": 782764,
-   "instances": 24,
+   "cells": 791502,
+   "instances": 12,
    "outline_um": [
     1235.52,
     2609.28
    ],
-   "macros": 40
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
   },
   "cbn_q01": {
-   "cells": 782764,
-   "instances": 24,
+   "cells": 787394,
+   "instances": 18,
    "outline_um": [
     1235.52,
     2617.92
    ],
-   "macros": 40
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
   },
   "cbn_q11": {
-   "cells": 782764,
-   "instances": 24,
+   "cells": 785338,
+   "instances": 18,
    "outline_um": [
     1235.52,
     2617.92
    ],
-   "macros": 40
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
   },
   "cbx_q10": {
-   "cells": 782764,
-   "instances": 48,
+   "cells": 783796,
+   "instances": 30,
    "outline_um": [
     1235.52,
     2609.28
    ],
-   "macros": 40
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
   },
   "coll_core": {
    "cells": 120000,
@@ -644,6 +653,186 @@
     518.4
    ],
    "macros": 0
+  },
+  "cbf_q00_na00d16": {
+   "cells": 791004,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 4,
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
+  },
+  "cbf_q01_nb12d11": {
+   "cells": 788429,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 4,
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
+  },
+  "cbf_q11_na22d2": {
+   "cells": 784824,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
+  },
+  "cbn_q00_xb10d1_na00d16": {
+   "cells": 791521,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 4,
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
+  },
+  "cbn_q00_xb00d1": {
+   "cells": 792018,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
+  },
+  "cbn_q01_nb12d11": {
+   "cells": 788429,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 4,
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
+  },
+  "cbn_q11_na22d2": {
+   "cells": 784824,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
+  },
+  "cbx_q10_xb30d1": {
+   "cells": 783280,
+   "instances": 12,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
+  },
+  "cbx_q10_xb30d2": {
+   "cells": 783798,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 4,
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
+  },
+  "cbf_q00_na00d17": {
+   "cells": 792534,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; native OUT/control and clock buffer mapped census required",
+   "base_family_flat_cells": 782764
+  },
+  "cbf_q01_nb12d8": {
+   "cells": 787908,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
+  },
+  "cbn_q00_xb10d1_na00d17": {
+   "cells": 792018,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; native OUT/control and clock buffer mapped census required",
+   "base_family_flat_cells": 782764
+  },
+  "cbn_q01_nb12d8": {
+   "cells": 787908,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
+  },
+  "cbx_q10_xb30d3": {
+   "cells": 784312,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
+  },
+  "sle_ctl_r8phase": {
+   "cells": 253360,
+   "instances": 6,
+   "outline_um": [
+    1226.88,
+    1339.2
+   ],
+   "macros": 0,
+   "basis": "Conservative copy of same functional family flat estimate; class adds no lane cycles and has fewer R8 pad FF"
+  },
+  "sle_fw_v1_r8phase": {
+   "cells": 60000,
+   "instances": 2,
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "macros": 0,
+   "basis": "Conservative copy of same functional family flat estimate; class adds no lane cycles and has fewer R8 pad FF"
+  },
+  "cbf_q00_na00d18": {
+   "cells": 793048,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
+  },
+  "cbn_q00_xb10d1_na00d18": {
+   "cells": 792532,
+   "instances": 6,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "base_family_flat_cells": 782764,
+   "basis": "MODEL base-family flat estimate plus actual payload-only DAG FF; generic and ASAP7 cell scopes remain distinct, actual physical clock views required"
   }
  },
  "su_core_cells": {
@@ -5328,5 +5517,13 @@
    "bits": 598
   }
  ],
- "census_dropped_bits": {}
+ "census_dropped_bits": {},
+ "cb16_phase_model": {
+  "payload_ff": 848784,
+  "emitted_per_leaf_epoch_ff": 0,
+  "actual_additional_ff": 848784,
+  "max_actual_ff_per_part": 10284,
+  "conservative_optional_epoch_budget": 1650,
+  "note": "Fresh v7 strict-bound DAG emits payload-only W1 u_pd. Whole-lane native OUT and u_lpad epoch exist separately. Actual generic logical FF/cell inventory is not ASAP7 cell qualification."
+ }
 }

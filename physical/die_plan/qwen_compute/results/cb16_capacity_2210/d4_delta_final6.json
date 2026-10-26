@@ -1,0 +1,6020 @@
+{
+ "scope": "UNADOPTED physical station plan delta; fresh R8/DAG/token and actual P&R gates required",
+ "types": 18,
+ "changed_bus_counts": 8,
+ "repositioned_bus_banks": 115,
+ "additional_stations_per_type": 8,
+ "changed_lanes": 72,
+ "lane_delta_histogram": {
+  "1": 72
+ },
+ "lanes": [
+  {
+   "lane": "c_W5_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W5_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W5_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W5_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W4_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W4_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W4_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W4_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W3_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W3_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W3_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W3_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W2_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W2_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W2_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W2_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W1_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W1_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W1_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W1_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W0_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W0_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W0_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W0_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E0_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E0_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E0_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E0_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E1_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E1_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E1_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E1_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E2_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E2_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E2_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E2_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E3_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E3_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E3_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E3_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E4_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E4_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E4_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E4_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E5_bf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E5_bn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E5_tn_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_E5_tf_01__b00",
+   "old_fixed_cycles": 10,
+   "new_fixed_cycles": 11,
+   "delta": 1
+  },
+  {
+   "lane": "c_W5_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W5_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W4_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W4_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W3_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W3_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W2_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W2_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W1_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W1_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W0_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_W0_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E0_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E0_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E1_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E1_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E2_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E2_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E3_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E3_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E4_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E4_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E5_tn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  },
+  {
+   "lane": "c_E5_bn_00__rsn",
+   "old_fixed_cycles": 3,
+   "new_fixed_cycles": 4,
+   "delta": 1
+  }
+ ],
+ "buses": [
+  {
+   "type": "cbf_q00",
+   "bus": "bc_o01",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1133.1808890175148,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     2371.6800000000003
+    ],
+    [
+     427.68,
+     2604.96
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o01",
+    "bits": 517,
+    "launch": "u_xstn01.a_d",
+    "capture": "face flop",
+    "from_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "to_um": [
+     574.2239999999939,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      429.84,
+      2604.96
+     ],
+     [
+      574.5600000000001,
+      2373.84
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00",
+   "bus": "bc_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 617.5656936596923,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     2302.56
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o11",
+    "bits": 517,
+    "launch": "u_xstn11.a_d",
+    "capture": "face flop",
+    "from_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "to_um": [
+     661.2959999999944,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      660.96,
+      2306.88
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00",
+   "bus": "na_i00",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2187.0228207472487,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     436.32,
+     2546.64
+    ],
+    [
+     550.8,
+     2285.28
+    ],
+    [
+     550.8,
+     1920.24
+    ],
+    [
+     550.8,
+     1557.36
+    ],
+    [
+     550.8,
+     1192.32
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:na_i00",
+    "from_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "regs_um": [
+     [
+      436.32,
+      2546.64
+     ],
+     [
+      550.8,
+      2285.28
+     ],
+     [
+      550.8,
+      1920.24
+     ],
+     [
+      550.8,
+      1557.36
+     ],
+     [
+      550.8,
+      1192.32
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_a",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00",
+   "bus": "y_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 670.0046612821666,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     918.0,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o11",
+    "bits": 515,
+    "launch": "u_t11.n_y",
+    "capture": "face flop",
+    "from_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "to_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      918.0,
+      2546.64
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00",
+   "bus": "nb_i00",
+   "direction": "in",
+   "old_stations": 7,
+   "new_stations": 7,
+   "delta": 0,
+   "route_um": 2323.984995746318,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     896.4,
+     2604.96
+    ],
+    [
+     604.8,
+     2604.96
+    ],
+    [
+     550.8,
+     2380.32
+    ],
+    [
+     550.8,
+     2090.88
+    ],
+    [
+     550.8,
+     1799.28
+    ],
+    [
+     550.8,
+     1509.84
+    ],
+    [
+     550.8,
+     1218.24
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i00",
+    "from_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "regs_um": [
+     [
+      896.4,
+      2604.96
+     ],
+     [
+      604.8,
+      2604.96
+     ],
+     [
+      550.8,
+      2380.32
+     ],
+     [
+      550.8,
+      2090.88
+     ],
+     [
+      550.8,
+      1799.28
+     ],
+     [
+      550.8,
+      1509.84
+     ],
+     [
+      550.8,
+      1218.24
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00",
+   "bus": "bc_i00",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1206.0823063403284,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     375.84,
+     73.44
+    ],
+    [
+     550.8,
+     302.4
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn00.b_d",
+    "from_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      378.0,
+      73.44
+     ],
+     [
+      550.8,
+      311.04
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00",
+   "bus": "bc_i10",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 690.467110982506,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     343.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn10.b_d",
+    "from_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      660.96,
+      339.12
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00",
+   "bus": "y_o00",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1535.29357561104,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     550.8,
+     745.2
+    ],
+    [
+     550.8,
+     362.88
+    ],
+    [
+     447.12,
+     73.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o00",
+    "from_um": [
+     138.92186407767002,
+     0.0
+    ],
+    "to_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "regs_um": [
+     [
+      447.12,
+      73.44
+     ],
+     [
+      550.8,
+      362.88
+     ],
+     [
+      550.8,
+      745.2
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t00.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01",
+   "bus": "bc_i02",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1197.4423063403278,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     380.16,
+     64.8
+    ],
+    [
+     565.9200000000001,
+     280.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i02",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn02.b_d",
+    "from_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      384.48,
+      64.8
+     ],
+     [
+      574.5600000000001,
+      278.64000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01",
+   "bus": "bc_i12",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 681.8271109825056,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     339.12
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i12",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn12.b_d",
+    "from_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      660.96,
+      334.8
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01",
+   "bus": "y_o12",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 4,
+   "delta": 1,
+   "route_um": 1616.8316260964907,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     686.88,
+     797.04
+    ],
+    [
+     686.88,
+     475.2
+    ],
+    [
+     686.88,
+     151.2
+    ],
+    [
+     930.96,
+     64.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o12",
+    "from_um": [
+     1186.7761864077686,
+     0.0
+    ],
+    "to_um": [
+     691.2959999999941,
+     1121.3514396887163
+    ],
+    "regs_um": [
+     [
+      848.88,
+      64.8
+     ],
+     [
+      686.88,
+      313.2
+     ],
+     [
+      686.88,
+      717.12
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t12.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01",
+   "bus": "nb_i12",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2194.0689103094064,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     1153.44,
+     2287.44
+    ],
+    [
+     1153.44,
+     1922.4
+    ],
+    [
+     1153.44,
+     1557.36
+    ],
+    [
+     1112.4,
+     1233.36
+    ],
+    [
+     747.36,
+     1233.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i12",
+    "from_um": [
+     1235.5200000000088,
+     2569.0521009708705
+    ],
+    "to_um": [
+     691.2959999999941,
+     919.2071906614789
+    ],
+    "regs_um": [
+     [
+      1153.44,
+      2287.44
+     ],
+     [
+      1153.44,
+      1922.4
+     ],
+     [
+      1153.44,
+      1557.36
+     ],
+     [
+      1112.4,
+      1233.36
+     ],
+     [
+      747.36,
+      1233.36
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t12.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10",
+   "bus": "bc_o21",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1034.7007961741947,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     557.2800000000001,
+     2339.28
+    ],
+    [
+     483.84,
+     2604.96
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o21",
+    "bits": 517,
+    "launch": "u_xstn21.a_d",
+    "capture": "face flop",
+    "from_um": [
+     138.7524951644102,
+     2609.280000000022
+    ],
+    "to_um": [
+     565.5840000000011,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      486.0,
+      2604.96
+     ],
+     [
+      565.9200000000001,
+      2341.44
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10",
+   "bus": "bc_o31",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 631.4528890175134,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     2309.04
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o31",
+    "bits": 517,
+    "launch": "u_xstn31.a_d",
+    "capture": "face flop",
+    "from_um": [
+     662.3524023210828,
+     2609.280000000022
+    ],
+    "to_um": [
+     669.9359999999922,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      669.6,
+      2304.7200000000003
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10",
+   "bus": "y_o21",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 481.7128088549962,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     401.76,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o21",
+    "from_um": [
+     228.519751456311,
+     2609.280000000022
+    ],
+    "to_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      401.76,
+      2546.64
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t21.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10",
+   "bus": "bc_i20",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1152.2164649476854,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     401.76,
+     73.44
+    ],
+    [
+     542.16,
+     324.0
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i20",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn20.b_d",
+    "from_um": [
+     94.1382437137331,
+     0.0
+    ],
+    "to_um": [
+     565.5840000000011,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      406.08,
+      73.44
+     ],
+     [
+      542.16,
+      330.48
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10",
+   "bus": "bc_i30",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 704.3543063403271,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     336.96000000000004
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i30",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn30.b_d",
+    "from_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "to_um": [
+     669.9359999999922,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      669.6,
+      341.28000000000003
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11",
+   "bus": "bc_i22",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1098.9622134970082,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     505.44,
+     4.32
+    ],
+    [
+     557.2800000000001,
+     313.20000000000005
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i22",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn22.b_d",
+    "from_um": [
+     138.7524951644102,
+     0.0
+    ],
+    "to_um": [
+     565.5840000000011,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      507.6,
+      4.32
+     ],
+     [
+      565.9200000000001,
+      311.04
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11",
+   "bus": "bc_i32",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 695.7143063403266,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     332.64000000000004
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i32",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn32.b_d",
+    "from_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "to_um": [
+     669.9359999999922,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      669.6,
+      336.96000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11",
+   "bus": "y_o22",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 661.3646612821572,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     313.2,
+     1233.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o22",
+    "bits": 515,
+    "launch": "u_t22.n_y",
+    "capture": "face flop",
+    "from_um": [
+     0.0,
+     1247.1321009708727
+    ],
+    "to_um": [
+     535.5840000000007,
+     1121.3514396887163
+    ],
+    "regs_um": [
+     [
+      313.2,
+      1233.36
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11",
+   "bus": "na_i22",
+   "direction": "in",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1305.759501582865,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     308.88,
+     64.8
+    ],
+    [
+     542.16,
+     166.32
+    ],
+    [
+     542.16,
+     492.48
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:na_i22",
+    "from_um": [
+     48.743813592232996,
+     0.0
+    ],
+    "to_um": [
+     535.5840000000007,
+     818.9193151750972
+    ],
+    "regs_um": [
+     [
+      308.88,
+      64.8
+     ],
+     [
+      542.16,
+      166.32
+     ],
+     [
+      542.16,
+      492.48
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t22.n_a",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11",
+   "bus": "y_o23",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 670.0046612821557,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     308.88,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o23",
+    "bits": 515,
+    "launch": "u_t23.n_y",
+    "capture": "face flop",
+    "from_um": [
+     0.0,
+     2569.0521009708705
+    ],
+    "to_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      308.88,
+      2546.64
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11",
+   "bus": "nb_i22",
+   "direction": "in",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1226.2714392051685,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     468.72,
+     64.8
+    ],
+    [
+     542.16,
+     306.72
+    ],
+    [
+     542.16,
+     613.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i22",
+    "from_um": [
+     228.519751456311,
+     0.0
+    ],
+    "to_um": [
+     535.5840000000007,
+     919.2071906614789
+    ],
+    "regs_um": [
+     [
+      468.72,
+      64.8
+     ],
+     [
+      542.16,
+      306.72
+     ],
+     [
+      542.16,
+      613.44
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t22.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00",
+   "bus": "bc_o01",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1133.1808890175148,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     2371.6800000000003
+    ],
+    [
+     427.68,
+     2604.96
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o01",
+    "bits": 517,
+    "launch": "u_xstn01.a_d",
+    "capture": "face flop",
+    "from_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "to_um": [
+     574.2239999999939,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      429.84,
+      2604.96
+     ],
+     [
+      574.5600000000001,
+      2373.84
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00",
+   "bus": "bc_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 617.5656936596923,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     2302.56
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o11",
+    "bits": 517,
+    "launch": "u_xstn11.a_d",
+    "capture": "face flop",
+    "from_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "to_um": [
+     661.2959999999944,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      660.96,
+      2306.88
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00",
+   "bus": "na_i00",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2187.0228207472487,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     436.32,
+     2546.64
+    ],
+    [
+     550.8,
+     2285.28
+    ],
+    [
+     550.8,
+     1920.24
+    ],
+    [
+     550.8,
+     1557.36
+    ],
+    [
+     550.8,
+     1192.32
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:na_i00",
+    "from_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "regs_um": [
+     [
+      436.32,
+      2546.64
+     ],
+     [
+      550.8,
+      2285.28
+     ],
+     [
+      550.8,
+      1920.24
+     ],
+     [
+      550.8,
+      1557.36
+     ],
+     [
+      550.8,
+      1192.32
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_a",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00",
+   "bus": "y_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 670.0046612821666,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     918.0,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o11",
+    "bits": 515,
+    "launch": "u_t11.n_y",
+    "capture": "face flop",
+    "from_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "to_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      918.0,
+      2546.64
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00",
+   "bus": "nb_i00",
+   "direction": "in",
+   "old_stations": 7,
+   "new_stations": 7,
+   "delta": 0,
+   "route_um": 2323.984995746318,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     896.4,
+     2604.96
+    ],
+    [
+     604.8,
+     2604.96
+    ],
+    [
+     550.8,
+     2380.32
+    ],
+    [
+     550.8,
+     2090.88
+    ],
+    [
+     550.8,
+     1799.28
+    ],
+    [
+     550.8,
+     1509.84
+    ],
+    [
+     550.8,
+     1218.24
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i00",
+    "from_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "regs_um": [
+     [
+      896.4,
+      2604.96
+     ],
+     [
+      604.8,
+      2604.96
+     ],
+     [
+      550.8,
+      2380.32
+     ],
+     [
+      550.8,
+      2090.88
+     ],
+     [
+      550.8,
+      1799.28
+     ],
+     [
+      550.8,
+      1509.84
+     ],
+     [
+      550.8,
+      1218.24
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00",
+   "bus": "bc_i00",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 774.0823063403283,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     302.40000000000003
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn00.b_d",
+    "from_um": [
+     480.9124023210833,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      574.5600000000001,
+      298.08000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00",
+   "bus": "bc_i10",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 709.7729523751564,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     334.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn10.b_d",
+    "from_um": [
+     690.2982437137331,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      660.96,
+      330.48
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00",
+   "bus": "y_o00",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 4,
+   "delta": 1,
+   "route_um": 1617.4021426013314,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     550.8,
+     805.68
+    ],
+    [
+     550.8,
+     483.84
+    ],
+    [
+     550.8,
+     159.84
+    ],
+    [
+     304.56,
+     73.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o00",
+    "from_um": [
+     56.81329708737866,
+     0.0
+    ],
+    "to_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "regs_um": [
+     [
+      384.48,
+      73.44
+     ],
+     [
+      550.8,
+      321.84
+     ],
+     [
+      550.8,
+      725.76
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t00.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01",
+   "bus": "bc_i02",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1197.4423063403278,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     380.16,
+     64.8
+    ],
+    [
+     565.9200000000001,
+     280.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i02",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn02.b_d",
+    "from_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      384.48,
+      64.8
+     ],
+     [
+      574.5600000000001,
+      278.64000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01",
+   "bus": "bc_i12",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 681.8271109825056,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     339.12
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i12",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn12.b_d",
+    "from_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      660.96,
+      334.8
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01",
+   "bus": "y_o12",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 4,
+   "delta": 1,
+   "route_um": 1616.8316260964907,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     686.88,
+     797.04
+    ],
+    [
+     686.88,
+     475.2
+    ],
+    [
+     686.88,
+     151.2
+    ],
+    [
+     930.96,
+     64.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o12",
+    "from_um": [
+     1186.7761864077686,
+     0.0
+    ],
+    "to_um": [
+     691.2959999999941,
+     1121.3514396887163
+    ],
+    "regs_um": [
+     [
+      848.88,
+      64.8
+     ],
+     [
+      686.88,
+      313.2
+     ],
+     [
+      686.88,
+      717.12
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t12.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01",
+   "bus": "nb_i12",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2194.0689103094064,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     1153.44,
+     2287.44
+    ],
+    [
+     1153.44,
+     1922.4
+    ],
+    [
+     1153.44,
+     1557.36
+    ],
+    [
+     1112.4,
+     1233.36
+    ],
+    [
+     747.36,
+     1233.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i12",
+    "from_um": [
+     1235.5200000000088,
+     2569.0521009708705
+    ],
+    "to_um": [
+     691.2959999999941,
+     919.2071906614789
+    ],
+    "regs_um": [
+     [
+      1153.44,
+      2287.44
+     ],
+     [
+      1153.44,
+      1922.4
+     ],
+     [
+      1153.44,
+      1557.36
+     ],
+     [
+      1112.4,
+      1233.36
+     ],
+     [
+      747.36,
+      1233.36
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t12.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01",
+   "bus": "bc_o03",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1141.8208890174901,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     2373.84
+    ],
+    [
+     429.84,
+     2613.6
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o03",
+    "bits": 517,
+    "launch": "u_xstn03.a_d",
+    "capture": "face flop",
+    "from_um": [
+     48.91240232108314,
+     2617.9199999999973
+    ],
+    "to_um": [
+     574.2239999999939,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      432.0,
+      2613.6
+     ],
+     [
+      574.5600000000001,
+      2376.0
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01",
+   "bus": "bc_o13",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 626.2056936596676,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     2306.88
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o13",
+    "bits": 517,
+    "launch": "u_xstn13.a_d",
+    "capture": "face flop",
+    "from_um": [
+     670.9924023210827,
+     2617.9199999999973
+    ],
+    "to_um": [
+     661.2959999999944,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      660.96,
+      2311.2000000000003
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11",
+   "bus": "bc_i22",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1098.9622134970082,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     505.44,
+     4.32
+    ],
+    [
+     557.2800000000001,
+     313.20000000000005
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i22",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn22.b_d",
+    "from_um": [
+     138.7524951644102,
+     0.0
+    ],
+    "to_um": [
+     565.5840000000011,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      507.6,
+      4.32
+     ],
+     [
+      565.9200000000001,
+      311.04
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11",
+   "bus": "bc_i32",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 695.7143063403266,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     332.64000000000004
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i32",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn32.b_d",
+    "from_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "to_um": [
+     669.9359999999922,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      669.6,
+      336.96000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11",
+   "bus": "y_o22",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 661.3646612821572,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     313.2,
+     1233.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o22",
+    "bits": 515,
+    "launch": "u_t22.n_y",
+    "capture": "face flop",
+    "from_um": [
+     0.0,
+     1247.1321009708727
+    ],
+    "to_um": [
+     535.5840000000007,
+     1121.3514396887163
+    ],
+    "regs_um": [
+     [
+      313.2,
+      1233.36
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11",
+   "bus": "na_i22",
+   "direction": "in",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1305.759501582865,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     308.88,
+     64.8
+    ],
+    [
+     542.16,
+     166.32
+    ],
+    [
+     542.16,
+     492.48
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:na_i22",
+    "from_um": [
+     48.743813592232996,
+     0.0
+    ],
+    "to_um": [
+     535.5840000000007,
+     818.9193151750972
+    ],
+    "regs_um": [
+     [
+      308.88,
+      64.8
+     ],
+     [
+      542.16,
+      166.32
+     ],
+     [
+      542.16,
+      492.48
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t22.n_a",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11",
+   "bus": "y_o23",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 670.0046612821557,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     308.88,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o23",
+    "bits": 515,
+    "launch": "u_t23.n_y",
+    "capture": "face flop",
+    "from_um": [
+     0.0,
+     2569.0521009708705
+    ],
+    "to_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      308.88,
+      2546.64
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11",
+   "bus": "nb_i22",
+   "direction": "in",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1226.2714392051685,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     468.72,
+     64.8
+    ],
+    [
+     542.16,
+     306.72
+    ],
+    [
+     542.16,
+     613.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i22",
+    "from_um": [
+     228.519751456311,
+     0.0
+    ],
+    "to_um": [
+     535.5840000000007,
+     919.2071906614789
+    ],
+    "regs_um": [
+     [
+      468.72,
+      64.8
+     ],
+     [
+      542.16,
+      306.72
+     ],
+     [
+      542.16,
+      613.44
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t22.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11",
+   "bus": "bc_o23",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1087.9550476248473,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     557.2800000000001,
+     2356.56
+    ],
+    [
+     455.76,
+     2613.6
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o23",
+    "bits": 517,
+    "launch": "u_xstn23.a_d",
+    "capture": "face flop",
+    "from_um": [
+     94.1382437137331,
+     2617.9199999999973
+    ],
+    "to_um": [
+     565.5840000000011,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      460.08,
+      2613.6
+     ],
+     [
+      565.9200000000001,
+      2358.7200000000003
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11",
+   "bus": "bc_o33",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 640.0928890174887,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     2313.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o33",
+    "bits": 517,
+    "launch": "u_xstn33.a_d",
+    "capture": "face flop",
+    "from_um": [
+     662.3524023210828,
+     2617.9199999999973
+    ],
+    "to_um": [
+     669.9359999999922,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      669.6,
+      2309.04
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01_s2",
+   "bus": "bc_i02",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1197.4423063403278,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     380.16,
+     64.8
+    ],
+    [
+     565.9200000000001,
+     280.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i02",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn02.b_d",
+    "from_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      384.48,
+      64.8
+     ],
+     [
+      574.5600000000001,
+      278.64000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01_s2",
+   "bus": "bc_i12",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 681.8271109825056,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     339.12
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i12",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn12.b_d",
+    "from_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      660.96,
+      334.8
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01_s2",
+   "bus": "y_o12",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 4,
+   "delta": 1,
+   "route_um": 1616.8316260964907,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     686.88,
+     797.04
+    ],
+    [
+     686.88,
+     475.2
+    ],
+    [
+     686.88,
+     151.2
+    ],
+    [
+     930.96,
+     64.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o12",
+    "from_um": [
+     1186.7761864077686,
+     0.0
+    ],
+    "to_um": [
+     691.2959999999941,
+     1121.3514396887163
+    ],
+    "regs_um": [
+     [
+      848.88,
+      64.8
+     ],
+     [
+      686.88,
+      313.2
+     ],
+     [
+      686.88,
+      717.12
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t12.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01_s2",
+   "bus": "nb_i12",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2194.0689103094064,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     1153.44,
+     2287.44
+    ],
+    [
+     1153.44,
+     1922.4
+    ],
+    [
+     1153.44,
+     1557.36
+    ],
+    [
+     1112.4,
+     1233.36
+    ],
+    [
+     747.36,
+     1233.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i12",
+    "from_um": [
+     1235.5200000000088,
+     2569.0521009708705
+    ],
+    "to_um": [
+     691.2959999999941,
+     919.2071906614789
+    ],
+    "regs_um": [
+     [
+      1153.44,
+      2287.44
+     ],
+     [
+      1153.44,
+      1922.4
+     ],
+     [
+      1153.44,
+      1557.36
+     ],
+     [
+      1112.4,
+      1233.36
+     ],
+     [
+      747.36,
+      1233.36
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t12.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_s2",
+   "bus": "bc_o01",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1133.1808890175148,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     2371.6800000000003
+    ],
+    [
+     427.68,
+     2604.96
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o01",
+    "bits": 517,
+    "launch": "u_xstn01.a_d",
+    "capture": "face flop",
+    "from_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "to_um": [
+     574.2239999999939,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      429.84,
+      2604.96
+     ],
+     [
+      574.5600000000001,
+      2373.84
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_s2",
+   "bus": "bc_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 617.5656936596923,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     2302.56
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o11",
+    "bits": 517,
+    "launch": "u_xstn11.a_d",
+    "capture": "face flop",
+    "from_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "to_um": [
+     661.2959999999944,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      660.96,
+      2306.88
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_s2",
+   "bus": "na_i00",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2187.0228207472487,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     436.32,
+     2546.64
+    ],
+    [
+     550.8,
+     2285.28
+    ],
+    [
+     550.8,
+     1920.24
+    ],
+    [
+     550.8,
+     1557.36
+    ],
+    [
+     550.8,
+     1192.32
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:na_i00",
+    "from_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "regs_um": [
+     [
+      436.32,
+      2546.64
+     ],
+     [
+      550.8,
+      2285.28
+     ],
+     [
+      550.8,
+      1920.24
+     ],
+     [
+      550.8,
+      1557.36
+     ],
+     [
+      550.8,
+      1192.32
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_a",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_s2",
+   "bus": "y_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 670.0046612821666,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     918.0,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o11",
+    "bits": 515,
+    "launch": "u_t11.n_y",
+    "capture": "face flop",
+    "from_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "to_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      918.0,
+      2546.64
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_s2",
+   "bus": "nb_i00",
+   "direction": "in",
+   "old_stations": 7,
+   "new_stations": 7,
+   "delta": 0,
+   "route_um": 2323.984995746318,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     896.4,
+     2604.96
+    ],
+    [
+     604.8,
+     2604.96
+    ],
+    [
+     550.8,
+     2380.32
+    ],
+    [
+     550.8,
+     2090.88
+    ],
+    [
+     550.8,
+     1799.28
+    ],
+    [
+     550.8,
+     1509.84
+    ],
+    [
+     550.8,
+     1218.24
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i00",
+    "from_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "regs_um": [
+     [
+      896.4,
+      2604.96
+     ],
+     [
+      604.8,
+      2604.96
+     ],
+     [
+      550.8,
+      2380.32
+     ],
+     [
+      550.8,
+      2090.88
+     ],
+     [
+      550.8,
+      1799.28
+     ],
+     [
+      550.8,
+      1509.84
+     ],
+     [
+      550.8,
+      1218.24
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_s2",
+   "bus": "bc_i00",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1206.0823063403284,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     375.84,
+     73.44
+    ],
+    [
+     550.8,
+     302.4
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn00.b_d",
+    "from_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      378.0,
+      73.44
+     ],
+     [
+      550.8,
+      311.04
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_s2",
+   "bus": "bc_i10",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 690.467110982506,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     343.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn10.b_d",
+    "from_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      660.96,
+      339.12
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_s2",
+   "bus": "y_o00",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1535.29357561104,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     550.8,
+     745.2
+    ],
+    [
+     550.8,
+     362.88
+    ],
+    [
+     447.12,
+     73.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o00",
+    "from_um": [
+     138.92186407767002,
+     0.0
+    ],
+    "to_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "regs_um": [
+     [
+      447.12,
+      73.44
+     ],
+     [
+      550.8,
+      362.88
+     ],
+     [
+      550.8,
+      745.2
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t00.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_na00d17",
+   "bus": "bc_o01",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1133.1808890175148,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     2371.6800000000003
+    ],
+    [
+     427.68,
+     2604.96
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o01",
+    "bits": 517,
+    "launch": "u_xstn01.a_d",
+    "capture": "face flop",
+    "from_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "to_um": [
+     574.2239999999939,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      429.84,
+      2604.96
+     ],
+     [
+      574.5600000000001,
+      2373.84
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_na00d17",
+   "bus": "bc_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 617.5656936596923,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     2302.56
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o11",
+    "bits": 517,
+    "launch": "u_xstn11.a_d",
+    "capture": "face flop",
+    "from_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "to_um": [
+     661.2959999999944,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      660.96,
+      2306.88
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_na00d17",
+   "bus": "na_i00",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2187.0228207472487,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     436.32,
+     2546.64
+    ],
+    [
+     550.8,
+     2285.28
+    ],
+    [
+     550.8,
+     1920.24
+    ],
+    [
+     550.8,
+     1557.36
+    ],
+    [
+     550.8,
+     1192.32
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:na_i00",
+    "from_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "regs_um": [
+     [
+      436.32,
+      2546.64
+     ],
+     [
+      550.8,
+      2285.28
+     ],
+     [
+      550.8,
+      1920.24
+     ],
+     [
+      550.8,
+      1557.36
+     ],
+     [
+      550.8,
+      1192.32
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_a",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_na00d17",
+   "bus": "y_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 670.0046612821666,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     918.0,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o11",
+    "bits": 515,
+    "launch": "u_t11.n_y",
+    "capture": "face flop",
+    "from_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "to_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      918.0,
+      2546.64
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_na00d17",
+   "bus": "nb_i00",
+   "direction": "in",
+   "old_stations": 7,
+   "new_stations": 7,
+   "delta": 0,
+   "route_um": 2323.984995746318,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     896.4,
+     2604.96
+    ],
+    [
+     604.8,
+     2604.96
+    ],
+    [
+     550.8,
+     2380.32
+    ],
+    [
+     550.8,
+     2090.88
+    ],
+    [
+     550.8,
+     1799.28
+    ],
+    [
+     550.8,
+     1509.84
+    ],
+    [
+     550.8,
+     1218.24
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i00",
+    "from_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "regs_um": [
+     [
+      896.4,
+      2604.96
+     ],
+     [
+      604.8,
+      2604.96
+     ],
+     [
+      550.8,
+      2380.32
+     ],
+     [
+      550.8,
+      2090.88
+     ],
+     [
+      550.8,
+      1799.28
+     ],
+     [
+      550.8,
+      1509.84
+     ],
+     [
+      550.8,
+      1218.24
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_na00d17",
+   "bus": "bc_i00",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1206.0823063403284,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     375.84,
+     73.44
+    ],
+    [
+     550.8,
+     302.4
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn00.b_d",
+    "from_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      378.0,
+      73.44
+     ],
+     [
+      550.8,
+      311.04
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_na00d17",
+   "bus": "bc_i10",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 690.467110982506,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     343.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn10.b_d",
+    "from_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      660.96,
+      339.12
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q00_na00d17",
+   "bus": "y_o00",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1535.29357561104,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     550.8,
+     745.2
+    ],
+    [
+     550.8,
+     362.88
+    ],
+    [
+     447.12,
+     73.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o00",
+    "from_um": [
+     138.92186407767002,
+     0.0
+    ],
+    "to_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "regs_um": [
+     [
+      447.12,
+      73.44
+     ],
+     [
+      550.8,
+      362.88
+     ],
+     [
+      550.8,
+      745.2
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t00.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01_nb12d8",
+   "bus": "bc_i02",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1197.4423063403278,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     380.16,
+     64.8
+    ],
+    [
+     565.9200000000001,
+     280.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i02",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn02.b_d",
+    "from_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      384.48,
+      64.8
+     ],
+     [
+      574.5600000000001,
+      278.64000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01_nb12d8",
+   "bus": "bc_i12",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 681.8271109825056,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     339.12
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i12",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn12.b_d",
+    "from_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      660.96,
+      334.8
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01_nb12d8",
+   "bus": "y_o12",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 4,
+   "delta": 1,
+   "route_um": 1616.8316260964907,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     686.88,
+     797.04
+    ],
+    [
+     686.88,
+     475.2
+    ],
+    [
+     686.88,
+     151.2
+    ],
+    [
+     930.96,
+     64.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o12",
+    "from_um": [
+     1186.7761864077686,
+     0.0
+    ],
+    "to_um": [
+     691.2959999999941,
+     1121.3514396887163
+    ],
+    "regs_um": [
+     [
+      848.88,
+      64.8
+     ],
+     [
+      686.88,
+      313.2
+     ],
+     [
+      686.88,
+      717.12
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t12.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q01_nb12d8",
+   "bus": "nb_i12",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2194.0689103094064,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     1153.44,
+     2287.44
+    ],
+    [
+     1153.44,
+     1922.4
+    ],
+    [
+     1153.44,
+     1557.36
+    ],
+    [
+     1112.4,
+     1233.36
+    ],
+    [
+     747.36,
+     1233.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i12",
+    "from_um": [
+     1235.5200000000088,
+     2569.0521009708705
+    ],
+    "to_um": [
+     691.2959999999941,
+     919.2071906614789
+    ],
+    "regs_um": [
+     [
+      1153.44,
+      2287.44
+     ],
+     [
+      1153.44,
+      1922.4
+     ],
+     [
+      1153.44,
+      1557.36
+     ],
+     [
+      1112.4,
+      1233.36
+     ],
+     [
+      747.36,
+      1233.36
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t12.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11_na22d2",
+   "bus": "bc_i22",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1098.9622134970082,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     505.44,
+     4.32
+    ],
+    [
+     557.2800000000001,
+     313.20000000000005
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i22",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn22.b_d",
+    "from_um": [
+     138.7524951644102,
+     0.0
+    ],
+    "to_um": [
+     565.5840000000011,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      507.6,
+      4.32
+     ],
+     [
+      565.9200000000001,
+      311.04
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11_na22d2",
+   "bus": "bc_i32",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 695.7143063403266,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     332.64000000000004
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i32",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn32.b_d",
+    "from_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "to_um": [
+     669.9359999999922,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      669.6,
+      336.96000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11_na22d2",
+   "bus": "y_o22",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 661.3646612821572,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     313.2,
+     1233.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o22",
+    "bits": 515,
+    "launch": "u_t22.n_y",
+    "capture": "face flop",
+    "from_um": [
+     0.0,
+     1247.1321009708727
+    ],
+    "to_um": [
+     535.5840000000007,
+     1121.3514396887163
+    ],
+    "regs_um": [
+     [
+      313.2,
+      1233.36
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11_na22d2",
+   "bus": "na_i22",
+   "direction": "in",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1305.759501582865,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     308.88,
+     64.8
+    ],
+    [
+     542.16,
+     166.32
+    ],
+    [
+     542.16,
+     492.48
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:na_i22",
+    "from_um": [
+     48.743813592232996,
+     0.0
+    ],
+    "to_um": [
+     535.5840000000007,
+     818.9193151750972
+    ],
+    "regs_um": [
+     [
+      308.88,
+      64.8
+     ],
+     [
+      542.16,
+      166.32
+     ],
+     [
+      542.16,
+      492.48
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t22.n_a",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11_na22d2",
+   "bus": "y_o23",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 670.0046612821557,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     308.88,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o23",
+    "bits": 515,
+    "launch": "u_t23.n_y",
+    "capture": "face flop",
+    "from_um": [
+     0.0,
+     2569.0521009708705
+    ],
+    "to_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      308.88,
+      2546.64
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbf_q11_na22d2",
+   "bus": "nb_i22",
+   "direction": "in",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1226.2714392051685,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     468.72,
+     64.8
+    ],
+    [
+     542.16,
+     306.72
+    ],
+    [
+     542.16,
+     613.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i22",
+    "from_um": [
+     228.519751456311,
+     0.0
+    ],
+    "to_um": [
+     535.5840000000007,
+     919.2071906614789
+    ],
+    "regs_um": [
+     [
+      468.72,
+      64.8
+     ],
+     [
+      542.16,
+      306.72
+     ],
+     [
+      542.16,
+      613.44
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t22.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb10d1_na00d17",
+   "bus": "bc_o01",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1133.1808890175148,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     2371.6800000000003
+    ],
+    [
+     427.68,
+     2604.96
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o01",
+    "bits": 517,
+    "launch": "u_xstn01.a_d",
+    "capture": "face flop",
+    "from_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "to_um": [
+     574.2239999999939,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      429.84,
+      2604.96
+     ],
+     [
+      574.5600000000001,
+      2373.84
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb10d1_na00d17",
+   "bus": "bc_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 617.5656936596923,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     2302.56
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o11",
+    "bits": 517,
+    "launch": "u_xstn11.a_d",
+    "capture": "face flop",
+    "from_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "to_um": [
+     661.2959999999944,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      660.96,
+      2306.88
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb10d1_na00d17",
+   "bus": "na_i00",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2187.0228207472487,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     436.32,
+     2546.64
+    ],
+    [
+     550.8,
+     2285.28
+    ],
+    [
+     550.8,
+     1920.24
+    ],
+    [
+     550.8,
+     1557.36
+    ],
+    [
+     550.8,
+     1192.32
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:na_i00",
+    "from_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "regs_um": [
+     [
+      436.32,
+      2546.64
+     ],
+     [
+      550.8,
+      2285.28
+     ],
+     [
+      550.8,
+      1920.24
+     ],
+     [
+      550.8,
+      1557.36
+     ],
+     [
+      550.8,
+      1192.32
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_a",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb10d1_na00d17",
+   "bus": "y_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 670.0046612821666,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     918.0,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o11",
+    "bits": 515,
+    "launch": "u_t11.n_y",
+    "capture": "face flop",
+    "from_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "to_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      918.0,
+      2546.64
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb10d1_na00d17",
+   "bus": "nb_i00",
+   "direction": "in",
+   "old_stations": 7,
+   "new_stations": 7,
+   "delta": 0,
+   "route_um": 2323.984995746318,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     896.4,
+     2604.96
+    ],
+    [
+     604.8,
+     2604.96
+    ],
+    [
+     550.8,
+     2380.32
+    ],
+    [
+     550.8,
+     2090.88
+    ],
+    [
+     550.8,
+     1799.28
+    ],
+    [
+     550.8,
+     1509.84
+    ],
+    [
+     550.8,
+     1218.24
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i00",
+    "from_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "regs_um": [
+     [
+      896.4,
+      2604.96
+     ],
+     [
+      604.8,
+      2604.96
+     ],
+     [
+      550.8,
+      2380.32
+     ],
+     [
+      550.8,
+      2090.88
+     ],
+     [
+      550.8,
+      1799.28
+     ],
+     [
+      550.8,
+      1509.84
+     ],
+     [
+      550.8,
+      1218.24
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb10d1_na00d17",
+   "bus": "bc_i00",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 774.0823063403283,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     302.40000000000003
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn00.b_d",
+    "from_um": [
+     480.9124023210833,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      574.5600000000001,
+      298.08000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb10d1_na00d17",
+   "bus": "bc_i10",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 709.7729523751564,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     334.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn10.b_d",
+    "from_um": [
+     690.2982437137331,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      660.96,
+      330.48
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb10d1_na00d17",
+   "bus": "y_o00",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 4,
+   "delta": 1,
+   "route_um": 1617.4021426013314,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     550.8,
+     805.68
+    ],
+    [
+     550.8,
+     483.84
+    ],
+    [
+     550.8,
+     159.84
+    ],
+    [
+     304.56,
+     73.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o00",
+    "from_um": [
+     56.81329708737866,
+     0.0
+    ],
+    "to_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "regs_um": [
+     [
+      384.48,
+      73.44
+     ],
+     [
+      550.8,
+      321.84
+     ],
+     [
+      550.8,
+      725.76
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t00.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb00d1",
+   "bus": "bc_o01",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1133.1808890175148,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     2371.6800000000003
+    ],
+    [
+     427.68,
+     2604.96
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o01",
+    "bits": 517,
+    "launch": "u_xstn01.a_d",
+    "capture": "face flop",
+    "from_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "to_um": [
+     574.2239999999939,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      429.84,
+      2604.96
+     ],
+     [
+      574.5600000000001,
+      2373.84
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb00d1",
+   "bus": "bc_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 617.5656936596923,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     2302.56
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o11",
+    "bits": 517,
+    "launch": "u_xstn11.a_d",
+    "capture": "face flop",
+    "from_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "to_um": [
+     661.2959999999944,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      660.96,
+      2306.88
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb00d1",
+   "bus": "na_i00",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2187.0228207472487,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     436.32,
+     2546.64
+    ],
+    [
+     550.8,
+     2285.28
+    ],
+    [
+     550.8,
+     1920.24
+    ],
+    [
+     550.8,
+     1557.36
+    ],
+    [
+     550.8,
+     1192.32
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:na_i00",
+    "from_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "regs_um": [
+     [
+      436.32,
+      2546.64
+     ],
+     [
+      550.8,
+      2285.28
+     ],
+     [
+      550.8,
+      1920.24
+     ],
+     [
+      550.8,
+      1557.36
+     ],
+     [
+      550.8,
+      1192.32
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_a",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb00d1",
+   "bus": "y_o11",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 670.0046612821666,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     918.0,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o11",
+    "bits": 515,
+    "launch": "u_t11.n_y",
+    "capture": "face flop",
+    "from_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "to_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      918.0,
+      2546.64
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb00d1",
+   "bus": "nb_i00",
+   "direction": "in",
+   "old_stations": 7,
+   "new_stations": 7,
+   "delta": 0,
+   "route_um": 2323.984995746318,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     896.4,
+     2604.96
+    ],
+    [
+     604.8,
+     2604.96
+    ],
+    [
+     550.8,
+     2380.32
+    ],
+    [
+     550.8,
+     2090.88
+    ],
+    [
+     550.8,
+     1799.28
+    ],
+    [
+     550.8,
+     1509.84
+    ],
+    [
+     550.8,
+     1218.24
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i00",
+    "from_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "to_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "regs_um": [
+     [
+      896.4,
+      2604.96
+     ],
+     [
+      604.8,
+      2604.96
+     ],
+     [
+      550.8,
+      2380.32
+     ],
+     [
+      550.8,
+      2090.88
+     ],
+     [
+      550.8,
+      1799.28
+     ],
+     [
+      550.8,
+      1509.84
+     ],
+     [
+      550.8,
+      1218.24
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t00.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb00d1",
+   "bus": "bc_i00",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 774.0823063403283,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     302.40000000000003
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn00.b_d",
+    "from_um": [
+     480.9124023210833,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      574.5600000000001,
+      298.08000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb00d1",
+   "bus": "bc_i10",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 709.7729523751564,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     334.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn10.b_d",
+    "from_um": [
+     690.2982437137331,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      660.96,
+      330.48
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q00_xb00d1",
+   "bus": "y_o00",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 4,
+   "delta": 1,
+   "route_um": 1617.4021426013314,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     550.8,
+     805.68
+    ],
+    [
+     550.8,
+     483.84
+    ],
+    [
+     550.8,
+     159.84
+    ],
+    [
+     304.56,
+     73.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o00",
+    "from_um": [
+     56.81329708737866,
+     0.0
+    ],
+    "to_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "regs_um": [
+     [
+      384.48,
+      73.44
+     ],
+     [
+      550.8,
+      321.84
+     ],
+     [
+      550.8,
+      725.76
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t00.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01_nb12d8",
+   "bus": "bc_i02",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1197.4423063403278,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     380.16,
+     64.8
+    ],
+    [
+     565.9200000000001,
+     280.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i02",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn02.b_d",
+    "from_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "to_um": [
+     574.2239999999939,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      384.48,
+      64.8
+     ],
+     [
+      574.5600000000001,
+      278.64000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01_nb12d8",
+   "bus": "bc_i12",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 681.8271109825056,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     339.12
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i12",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn12.b_d",
+    "from_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "to_um": [
+     661.2959999999944,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      660.96,
+      334.8
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01_nb12d8",
+   "bus": "y_o12",
+   "direction": "out",
+   "old_stations": 3,
+   "new_stations": 4,
+   "delta": 1,
+   "route_um": 1616.8316260964907,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     686.88,
+     797.04
+    ],
+    [
+     686.88,
+     475.2
+    ],
+    [
+     686.88,
+     151.2
+    ],
+    [
+     930.96,
+     64.8
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o12",
+    "from_um": [
+     1186.7761864077686,
+     0.0
+    ],
+    "to_um": [
+     691.2959999999941,
+     1121.3514396887163
+    ],
+    "regs_um": [
+     [
+      848.88,
+      64.8
+     ],
+     [
+      686.88,
+      313.2
+     ],
+     [
+      686.88,
+      717.12
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t12.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01_nb12d8",
+   "bus": "nb_i12",
+   "direction": "in",
+   "old_stations": 5,
+   "new_stations": 5,
+   "delta": 0,
+   "route_um": 2194.0689103094064,
+   "minimum_stations": 5,
+   "signal_order_targets_um": [
+    [
+     1153.44,
+     2287.44
+    ],
+    [
+     1153.44,
+     1922.4
+    ],
+    [
+     1153.44,
+     1557.36
+    ],
+    [
+     1112.4,
+     1233.36
+    ],
+    [
+     747.36,
+     1233.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i12",
+    "from_um": [
+     1235.5200000000088,
+     2569.0521009708705
+    ],
+    "to_um": [
+     691.2959999999941,
+     919.2071906614789
+    ],
+    "regs_um": [
+     [
+      1153.44,
+      2287.44
+     ],
+     [
+      1153.44,
+      1922.4
+     ],
+     [
+      1153.44,
+      1557.36
+     ],
+     [
+      1112.4,
+      1233.36
+     ],
+     [
+      747.36,
+      1233.36
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t12.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01_nb12d8",
+   "bus": "bc_o03",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1141.8208890174901,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     565.9200000000001,
+     2373.84
+    ],
+    [
+     429.84,
+     2613.6
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o03",
+    "bits": 517,
+    "launch": "u_xstn03.a_d",
+    "capture": "face flop",
+    "from_um": [
+     48.91240232108314,
+     2617.9199999999973
+    ],
+    "to_um": [
+     574.2239999999939,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      432.0,
+      2613.6
+     ],
+     [
+      574.5600000000001,
+      2376.0
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q01_nb12d8",
+   "bus": "bc_o13",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 626.2056936596676,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     669.6,
+     2306.88
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o13",
+    "bits": 517,
+    "launch": "u_xstn13.a_d",
+    "capture": "face flop",
+    "from_um": [
+     670.9924023210827,
+     2617.9199999999973
+    ],
+    "to_um": [
+     661.2959999999944,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      660.96,
+      2311.2000000000003
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11_na22d2",
+   "bus": "bc_i22",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1098.9622134970082,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     505.44,
+     4.32
+    ],
+    [
+     557.2800000000001,
+     313.20000000000005
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i22",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn22.b_d",
+    "from_um": [
+     138.7524951644102,
+     0.0
+    ],
+    "to_um": [
+     565.5840000000011,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      507.6,
+      4.32
+     ],
+     [
+      565.9200000000001,
+      311.04
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11_na22d2",
+   "bus": "bc_i32",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 695.7143063403266,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     332.64000000000004
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i32",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn32.b_d",
+    "from_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "to_um": [
+     669.9359999999922,
+     680.1307086614172
+    ],
+    "regs_um": [
+     [
+      669.6,
+      336.96000000000004
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11_na22d2",
+   "bus": "y_o22",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 661.3646612821572,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     313.2,
+     1233.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o22",
+    "bits": 515,
+    "launch": "u_t22.n_y",
+    "capture": "face flop",
+    "from_um": [
+     0.0,
+     1247.1321009708727
+    ],
+    "to_um": [
+     535.5840000000007,
+     1121.3514396887163
+    ],
+    "regs_um": [
+     [
+      313.2,
+      1233.36
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11_na22d2",
+   "bus": "na_i22",
+   "direction": "in",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1305.759501582865,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     308.88,
+     64.8
+    ],
+    [
+     542.16,
+     166.32
+    ],
+    [
+     542.16,
+     492.48
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:na_i22",
+    "from_um": [
+     48.743813592232996,
+     0.0
+    ],
+    "to_um": [
+     535.5840000000007,
+     818.9193151750972
+    ],
+    "regs_um": [
+     [
+      308.88,
+      64.8
+     ],
+     [
+      542.16,
+      166.32
+     ],
+     [
+      542.16,
+      492.48
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t22.n_a",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11_na22d2",
+   "bus": "y_o23",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 670.0046612821557,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     308.88,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o23",
+    "bits": 515,
+    "launch": "u_t23.n_y",
+    "capture": "face flop",
+    "from_um": [
+     0.0,
+     2569.0521009708705
+    ],
+    "to_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      308.88,
+      2546.64
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11_na22d2",
+   "bus": "nb_i22",
+   "direction": "in",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "route_um": 1226.2714392051685,
+   "minimum_stations": 3,
+   "signal_order_targets_um": [
+    [
+     468.72,
+     64.8
+    ],
+    [
+     542.16,
+     306.72
+    ],
+    [
+     542.16,
+     613.44
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:nb_i22",
+    "from_um": [
+     228.519751456311,
+     0.0
+    ],
+    "to_um": [
+     535.5840000000007,
+     919.2071906614789
+    ],
+    "regs_um": [
+     [
+      468.72,
+      64.8
+     ],
+     [
+      542.16,
+      306.72
+     ],
+     [
+      542.16,
+      613.44
+     ]
+    ],
+    "bits": 515,
+    "launch": "face flop",
+    "capture": "u_t22.n_b",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11_na22d2",
+   "bus": "bc_o23",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1087.9550476248473,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     557.2800000000001,
+     2356.56
+    ],
+    [
+     455.76,
+     2613.6
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o23",
+    "bits": 517,
+    "launch": "u_xstn23.a_d",
+    "capture": "face flop",
+    "from_um": [
+     94.1382437137331,
+     2617.9199999999973
+    ],
+    "to_um": [
+     565.5840000000011,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      460.08,
+      2613.6
+     ],
+     [
+      565.9200000000001,
+      2358.7200000000003
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbn_q11_na22d2",
+   "bus": "bc_o33",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 640.0928890174887,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     2313.36
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o33",
+    "bits": 517,
+    "launch": "u_xstn33.a_d",
+    "capture": "face flop",
+    "from_um": [
+     662.3524023210828,
+     2617.9199999999973
+    ],
+    "to_um": [
+     669.9359999999922,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      669.6,
+      2309.04
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d1",
+   "bus": "bc_o21",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1034.7007961741947,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     557.2800000000001,
+     2339.28
+    ],
+    [
+     483.84,
+     2604.96
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o21",
+    "bits": 517,
+    "launch": "u_xstn21.a_d",
+    "capture": "face flop",
+    "from_um": [
+     138.7524951644102,
+     2609.280000000022
+    ],
+    "to_um": [
+     565.5840000000011,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      486.0,
+      2604.96
+     ],
+     [
+      565.9200000000001,
+      2341.44
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d1",
+   "bus": "bc_o31",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 631.4528890175134,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     2309.04
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o31",
+    "bits": 517,
+    "launch": "u_xstn31.a_d",
+    "capture": "face flop",
+    "from_um": [
+     662.3524023210828,
+     2609.280000000022
+    ],
+    "to_um": [
+     669.9359999999922,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      669.6,
+      2304.7200000000003
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d1",
+   "bus": "y_o21",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 481.7128088549962,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     401.76,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o21",
+    "from_um": [
+     228.519751456311,
+     2609.280000000022
+    ],
+    "to_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      401.76,
+      2546.64
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t21.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d1",
+   "bus": "bc_i20",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1152.2164649476854,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     401.76,
+     73.44
+    ],
+    [
+     542.16,
+     324.0
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i20",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn20.b_d",
+    "from_um": [
+     94.1382437137331,
+     0.0
+    ],
+    "to_um": [
+     565.5840000000011,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      406.08,
+      73.44
+     ],
+     [
+      542.16,
+      330.48
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d1",
+   "bus": "bc_i30",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 704.3543063403271,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     336.96000000000004
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i30",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn30.b_d",
+    "from_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "to_um": [
+     669.9359999999922,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      669.6,
+      341.28000000000003
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d3",
+   "bus": "bc_o21",
+   "direction": "out",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1034.7007961741947,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     557.2800000000001,
+     2339.28
+    ],
+    [
+     483.84,
+     2604.96
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o21",
+    "bits": 517,
+    "launch": "u_xstn21.a_d",
+    "capture": "face flop",
+    "from_um": [
+     138.7524951644102,
+     2609.280000000022
+    ],
+    "to_um": [
+     565.5840000000011,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      486.0,
+      2604.96
+     ],
+     [
+      565.9200000000001,
+      2341.44
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d3",
+   "bus": "bc_o31",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 631.4528890175134,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     2309.04
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_o31",
+    "bits": 517,
+    "launch": "u_xstn31.a_d",
+    "capture": "face flop",
+    "from_um": [
+     662.3524023210828,
+     2609.280000000022
+    ],
+    "to_um": [
+     669.9359999999922,
+     1993.410708661418
+    ],
+    "regs_um": [
+     [
+      669.6,
+      2304.7200000000003
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d3",
+   "bus": "y_o21",
+   "direction": "out",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 481.7128088549962,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     401.76,
+     2546.64
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:y_o21",
+    "from_um": [
+     228.519751456311,
+     2609.280000000022
+    ],
+    "to_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "regs_um": [
+     [
+      401.76,
+      2546.64
+     ]
+    ],
+    "bits": 515,
+    "launch": "u_t21.n_y",
+    "capture": "face flop",
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d3",
+   "bus": "bc_i20",
+   "direction": "in",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "route_um": 1152.2164649476854,
+   "minimum_stations": 2,
+   "signal_order_targets_um": [
+    [
+     401.76,
+     73.44
+    ],
+    [
+     542.16,
+     324.0
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i20",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn20.b_d",
+    "from_um": [
+     94.1382437137331,
+     0.0
+    ],
+    "to_um": [
+     565.5840000000011,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      406.08,
+      73.44
+     ],
+     [
+      542.16,
+      330.48
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d3",
+   "bus": "bc_i30",
+   "direction": "in",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "route_um": 704.3543063403271,
+   "minimum_stations": 1,
+   "signal_order_targets_um": [
+    [
+     678.24,
+     336.96000000000004
+    ]
+   ],
+   "placement": "SNAPPED_CORE_CLEAR_TARGETS_NOT_DPL",
+   "before": {
+    "conn": "bus:bc_i30",
+    "bits": 517,
+    "launch": "face flop",
+    "capture": "u_xstn30.b_d",
+    "from_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "to_um": [
+     669.9359999999922,
+     688.7707086614176
+    ],
+    "regs_um": [
+     [
+      669.6,
+      341.28000000000003
+     ]
+    ],
+    "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
+   }
+  }
+ ],
+ "preserved_old_stage_counts": true,
+ "soft_clock_interface": "87 soft drops is mapped max-profile candidate; native hard clocks additional; not adopted",
+ "outline_change": false
+}

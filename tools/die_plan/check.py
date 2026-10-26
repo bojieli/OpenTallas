@@ -1089,6 +1089,12 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
                     if not e.get("capture") or str(e["capture"]).startswith("face bus ")}
         ist_capture = {(e["conn"][4:], str(e["capture"])): tuple(e["regs_um"][-1])
                        for e in ist_bus if e.get("capture") and not str(e["capture"]).startswith("face bus ")}
+        # OUT chains also have a core-side neighbour. Existing bus geometry is
+        # face->core, so the final listed site is next to the launching core.
+        out_buses = {b['name'] for b in t.get('buses', []) if b.get('dir') == 'out'}
+        ist_launch = {(e['conn'][4:], str(e['launch'])): tuple(e['regs_um'][-1])
+                      for e in ist_bus if e['conn'][4:] in out_buses
+                      and e.get('capture') == 'face flop' and e.get('launch')}
         conns = {}          # (leaf inst, leaf port) -> [(kind, name)]
         for b in t.get("buses", []):
             if b.get("leaf") and "." in b["leaf"]:
@@ -1142,6 +1148,8 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
                             pts.append((f"station {nm} -> {ci}.{lp}", ist_capture[(nm, ci + "." + lp)]))
                         elif (nm, ci) in ist_capture:
                             pts.append((f"station {nm} -> {ci}", ist_capture[(nm, ci)]))
+                        elif (nm, ci + "." + lp) in ist_launch:
+                            pts.append((f"{ci}.{lp} -> station {nm}", ist_launch[(nm, ci + "." + lp)]))
                         elif nm in ist_last:
                             # R3-INTERNAL: a bus with FIRM internal stations reaches the core from its last station
                             # (regs_um[-1], the register next to the core pin), not from the face window

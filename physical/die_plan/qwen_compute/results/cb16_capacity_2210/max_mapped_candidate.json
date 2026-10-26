@@ -1,0 +1,632 @@
+{
+ "scope": "CANDIDATE_SITES_FOR_ACTUAL_TECHMAPPED_SOFT_FF; native macro clocks excluded",
+ "actual_soft_ff": 48011,
+ "located_soft_ff": 48011,
+ "missing_soft_ff": 0,
+ "categories": {
+  "delay": 34464,
+  "fabric": 4128,
+  "boundary": 4128,
+  "other": 5150,
+  "reset_start": 141
+ },
+ "source_declared_delay_ff": 34494,
+ "mapped_delay_ff": 34464,
+ "optimized_delay_bits": 30,
+ "clock_ports": [
+  {
+   "name": "clk",
+   "x": 689.148,
+   "y": 1320.57,
+   "sinks": 658,
+   "max_radius_um": 83.6
+  },
+  {
+   "name": "clk_t1",
+   "x": 62.64,
+   "y": 17.28,
+   "sinks": 515,
+   "max_radius_um": 50.2
+  },
+  {
+   "name": "clk_t2",
+   "x": 486.756,
+   "y": 17.28,
+   "sinks": 521,
+   "max_radius_um": 116.9
+  },
+  {
+   "name": "clk_t3",
+   "x": 696.114,
+   "y": 17.28,
+   "sinks": 517,
+   "max_radius_um": 50.2
+  },
+  {
+   "name": "clk_t4",
+   "x": 76.68,
+   "y": 73.17,
+   "sinks": 18,
+   "max_radius_um": 122.3
+  },
+  {
+   "name": "clk_t5",
+   "x": 617.058,
+   "y": 263.25,
+   "sinks": 1045,
+   "max_radius_um": 148.3
+  },
+  {
+   "name": "clk_t6",
+   "x": 17.28,
+   "y": 297.27,
+   "sinks": 18,
+   "max_radius_um": 101.0
+  },
+  {
+   "name": "clk_t7",
+   "x": 553.986,
+   "y": 358.29,
+   "sinks": 4,
+   "max_radius_um": 101.5
+  },
+  {
+   "name": "clk_t8",
+   "x": 77.004,
+   "y": 544.32,
+   "sinks": 5,
+   "max_radius_um": 95.7
+  },
+  {
+   "name": "clk_t9",
+   "x": 606.258,
+   "y": 576.99,
+   "sinks": 261,
+   "max_radius_um": 100.3
+  },
+  {
+   "name": "clk_t10",
+   "x": 567.378,
+   "y": 577.26,
+   "sinks": 258,
+   "max_radius_um": 48.8
+  },
+  {
+   "name": "clk_t11",
+   "x": 17.28,
+   "y": 665.28,
+   "sinks": 3,
+   "max_radius_um": 97.3
+  },
+  {
+   "name": "clk_t12",
+   "x": 572.064,
+   "y": 688.5007,
+   "sinks": 1041,
+   "max_radius_um": 87.7
+  },
+  {
+   "name": "clk_t13",
+   "x": 650.496,
+   "y": 688.5007,
+   "sinks": 519,
+   "max_radius_um": 16.5
+  },
+  {
+   "name": "clk_t14",
+   "x": 669.936,
+   "y": 688.5007,
+   "sinks": 514,
+   "max_radius_um": 75.0
+  },
+  {
+   "name": "clk_t15",
+   "x": 77.004,
+   "y": 738.18,
+   "sinks": 4,
+   "max_radius_um": 99.0
+  },
+  {
+   "name": "clk_t16",
+   "x": 600.048,
+   "y": 837.54,
+   "sinks": 374,
+   "max_radius_um": 27.3
+  },
+  {
+   "name": "clk_t17",
+   "x": 661.284,
+   "y": 873.72,
+   "sinks": 558,
+   "max_radius_um": 65.1
+  },
+  {
+   "name": "clk_t18",
+   "x": 602.208,
+   "y": 888.03,
+   "sinks": 687,
+   "max_radius_um": 34.0
+  },
+  {
+   "name": "clk_t19",
+   "x": 566.622,
+   "y": 895.32,
+   "sinks": 484,
+   "max_radius_um": 27.0
+  },
+  {
+   "name": "clk_t20",
+   "x": 681.156,
+   "y": 913.41,
+   "sinks": 572,
+   "max_radius_um": 35.2
+  },
+  {
+   "name": "clk_t21",
+   "x": 17.28,
+   "y": 958.23,
+   "sinks": 4,
+   "max_radius_um": 105.1
+  },
+  {
+   "name": "clk_t22",
+   "x": 667.278,
+   "y": 966.06,
+   "sinks": 1056,
+   "max_radius_um": 35.4
+  },
+  {
+   "name": "clk_t23",
+   "x": 581.742,
+   "y": 991.71,
+   "sinks": 468,
+   "max_radius_um": 38.6
+  },
+  {
+   "name": "clk_t24",
+   "x": 675.27,
+   "y": 1001.97,
+   "sinks": 880,
+   "max_radius_um": 34.2
+  },
+  {
+   "name": "clk_t25",
+   "x": 629.154,
+   "y": 1019.25,
+   "sinks": 509,
+   "max_radius_um": 38.0
+  },
+  {
+   "name": "clk_t26",
+   "x": 576.072,
+   "y": 1046.52,
+   "sinks": 358,
+   "max_radius_um": 26.2
+  },
+  {
+   "name": "clk_t27",
+   "x": 659.124,
+   "y": 1060.02,
+   "sinks": 589,
+   "max_radius_um": 38.3
+  },
+  {
+   "name": "clk_t28",
+   "x": 576.072,
+   "y": 1094.85,
+   "sinks": 516,
+   "max_radius_um": 29.7
+  },
+  {
+   "name": "clk_t29",
+   "x": 609.822,
+   "y": 1114.83,
+   "sinks": 396,
+   "max_radius_um": 35.9
+  },
+  {
+   "name": "clk_t30",
+   "x": 568.782,
+   "y": 1116.18,
+   "sinks": 276,
+   "max_radius_um": 21.3
+  },
+  {
+   "name": "clk_t31",
+   "x": 77.004,
+   "y": 1118.34,
+   "sinks": 4,
+   "max_radius_um": 99.0
+  },
+  {
+   "name": "clk_t32",
+   "x": 681.156,
+   "y": 1229.85,
+   "sinks": 1006,
+   "max_radius_um": 71.2
+  },
+  {
+   "name": "clk_t33",
+   "x": 588.06,
+   "y": 1243.08,
+   "sinks": 805,
+   "max_radius_um": 48.1
+  },
+  {
+   "name": "clk_t34",
+   "x": 176.04,
+   "y": 1245.78,
+   "sinks": 8,
+   "max_radius_um": 132.3
+  },
+  {
+   "name": "clk_t35",
+   "x": 970.812,
+   "y": 1246.05,
+   "sinks": 2,
+   "max_radius_um": 6.5
+  },
+  {
+   "name": "clk_t36",
+   "x": 531.252,
+   "y": 1259.01,
+   "sinks": 741,
+   "max_radius_um": 114.4
+  },
+  {
+   "name": "clk_t37",
+   "x": 1218.24,
+   "y": 1300.59,
+   "sinks": 2,
+   "max_radius_um": 12.2
+  },
+  {
+   "name": "clk_t38",
+   "x": 17.28,
+   "y": 1330.29,
+   "sinks": 2,
+   "max_radius_um": 17.9
+  },
+  {
+   "name": "clk_t39",
+   "x": 538.65,
+   "y": 1348.92,
+   "sinks": 728,
+   "max_radius_um": 46.7
+  },
+  {
+   "name": "clk_t40",
+   "x": 562.41,
+   "y": 1406.43,
+   "sinks": 339,
+   "max_radius_um": 44.8
+  },
+  {
+   "name": "clk_t41",
+   "x": 586.224,
+   "y": 1409.4,
+   "sinks": 849,
+   "max_radius_um": 52.9
+  },
+  {
+   "name": "clk_t42",
+   "x": 661.284,
+   "y": 1417.23,
+   "sinks": 846,
+   "max_radius_um": 62.0
+  },
+  {
+   "name": "clk_t43",
+   "x": 681.156,
+   "y": 1482.3,
+   "sinks": 582,
+   "max_radius_um": 44.4
+  },
+  {
+   "name": "clk_t44",
+   "x": 584.064,
+   "y": 1513.35,
+   "sinks": 1049,
+   "max_radius_um": 58.5
+  },
+  {
+   "name": "clk_t45",
+   "x": 17.28,
+   "y": 1567.89,
+   "sinks": 2,
+   "max_radius_um": 63.8
+  },
+  {
+   "name": "clk_t46",
+   "x": 611.982,
+   "y": 1579.77,
+   "sinks": 365,
+   "max_radius_um": 59.1
+  },
+  {
+   "name": "clk_t47",
+   "x": 564.462,
+   "y": 1582.2,
+   "sinks": 483,
+   "max_radius_um": 58.4
+  },
+  {
+   "name": "clk_t48",
+   "x": 681.156,
+   "y": 1590.57,
+   "sinks": 784,
+   "max_radius_um": 53.4
+  },
+  {
+   "name": "clk_t49",
+   "x": 608.04,
+   "y": 1635.66,
+   "sinks": 744,
+   "max_radius_um": 48.4
+  },
+  {
+   "name": "clk_t50",
+   "x": 681.156,
+   "y": 1653.48,
+   "sinks": 760,
+   "max_radius_um": 53.4
+  },
+  {
+   "name": "clk_t51",
+   "x": 17.28,
+   "y": 1718.28,
+   "sinks": 2,
+   "max_radius_um": 18.1
+  },
+  {
+   "name": "clk_t52",
+   "x": 604.044,
+   "y": 1722.06,
+   "sinks": 868,
+   "max_radius_um": 92.4
+  },
+  {
+   "name": "clk_t53",
+   "x": 681.156,
+   "y": 1755.27,
+   "sinks": 454,
+   "max_radius_um": 32.9
+  },
+  {
+   "name": "clk_t54",
+   "x": 661.284,
+   "y": 1797.39,
+   "sinks": 498,
+   "max_radius_um": 35.9
+  },
+  {
+   "name": "clk_t55",
+   "x": 586.062,
+   "y": 1814.13,
+   "sinks": 1274,
+   "max_radius_um": 57.1
+  },
+  {
+   "name": "clk_t56",
+   "x": 681.156,
+   "y": 1845.18,
+   "sinks": 592,
+   "max_radius_um": 42.4
+  },
+  {
+   "name": "clk_t57",
+   "x": 596.862,
+   "y": 1855.44,
+   "sinks": 537,
+   "max_radius_um": 75.1
+  },
+  {
+   "name": "clk_t58",
+   "x": 673.11,
+   "y": 1929.42,
+   "sinks": 680,
+   "max_radius_um": 75.2
+  },
+  {
+   "name": "clk_t59",
+   "x": 17.28,
+   "y": 1948.05,
+   "sinks": 4,
+   "max_radius_um": 112.2
+  },
+  {
+   "name": "clk_t60",
+   "x": 563.424,
+   "y": 1990.4407,
+   "sinks": 697,
+   "max_radius_um": 77.5
+  },
+  {
+   "name": "clk_t61",
+   "x": 582.864,
+   "y": 1990.9807,
+   "sinks": 651,
+   "max_radius_um": 74.7
+  },
+  {
+   "name": "clk_t62",
+   "x": 661.296,
+   "y": 1993.1407,
+   "sinks": 1042,
+   "max_radius_um": 39.9
+  },
+  {
+   "name": "clk_t63",
+   "x": 586.062,
+   "y": 2043.9,
+   "sinks": 1031,
+   "max_radius_um": 51.6
+  },
+  {
+   "name": "clk_t64",
+   "x": 679.32,
+   "y": 2053.08,
+   "sinks": 515,
+   "max_radius_um": 36.7
+  },
+  {
+   "name": "clk_t65",
+   "x": 586.062,
+   "y": 2137.32,
+   "sinks": 530,
+   "max_radius_um": 41.7
+  },
+  {
+   "name": "clk_t66",
+   "x": 554.364,
+   "y": 2189.16,
+   "sinks": 808,
+   "max_radius_um": 41.6
+  },
+  {
+   "name": "clk_t67",
+   "x": 630.072,
+   "y": 2196.45,
+   "sinks": 776,
+   "max_radius_um": 35.8
+  },
+  {
+   "name": "clk_t68",
+   "x": 617.058,
+   "y": 2242.62,
+   "sinks": 840,
+   "max_radius_um": 55.0
+  },
+  {
+   "name": "clk_t69",
+   "x": 574.074,
+   "y": 2246.67,
+   "sinks": 1159,
+   "max_radius_um": 57.9
+  },
+  {
+   "name": "clk_t70",
+   "x": 633.258,
+   "y": 2317.14,
+   "sinks": 912,
+   "max_radius_um": 90.0
+  },
+  {
+   "name": "clk_t71",
+   "x": 77.004,
+   "y": 2323.89,
+   "sinks": 2,
+   "max_radius_um": 8.0
+  },
+  {
+   "name": "clk_t72",
+   "x": 590.382,
+   "y": 2345.76,
+   "sinks": 586,
+   "max_radius_um": 43.2
+  },
+  {
+   "name": "clk_t73",
+   "x": 681.156,
+   "y": 2391.12,
+   "sinks": 634,
+   "max_radius_um": 62.9
+  },
+  {
+   "name": "clk_t74",
+   "x": 619.218,
+   "y": 2402.73,
+   "sinks": 676,
+   "max_radius_um": 42.7
+  },
+  {
+   "name": "clk_t75",
+   "x": 607.662,
+   "y": 2449.71,
+   "sinks": 790,
+   "max_radius_um": 60.2
+  },
+  {
+   "name": "clk_t76",
+   "x": 566.46,
+   "y": 2548.53,
+   "sinks": 779,
+   "max_radius_um": 46.2
+  },
+  {
+   "name": "clk_t77",
+   "x": 507.492,
+   "y": 2549.07,
+   "sinks": 764,
+   "max_radius_um": 58.9
+  },
+  {
+   "name": "clk_t78",
+   "x": 386.046,
+   "y": 2550.42,
+   "sinks": 514,
+   "max_radius_um": 45.1
+  },
+  {
+   "name": "clk_t79",
+   "x": 190.728,
+   "y": 2555.28,
+   "sinks": 993,
+   "max_radius_um": 84.7
+  },
+  {
+   "name": "clk_t80",
+   "x": 266.814,
+   "y": 2555.82,
+   "sinks": 1262,
+   "max_radius_um": 83.8
+  },
+  {
+   "name": "clk_t81",
+   "x": 1215.486,
+   "y": 2586.87,
+   "sinks": 1030,
+   "max_radius_um": 91.8
+  },
+  {
+   "name": "clk_t82",
+   "x": 80.676,
+   "y": 2592.0,
+   "sinks": 837,
+   "max_radius_um": 83.5
+  },
+  {
+   "name": "clk_t83",
+   "x": 706.428,
+   "y": 2592.0,
+   "sinks": 1031,
+   "max_radius_um": 71.1
+  },
+  {
+   "name": "clk_t84",
+   "x": 932.148,
+   "y": 2592.0,
+   "sinks": 150,
+   "max_radius_um": 21.9
+  },
+  {
+   "name": "clk_t85",
+   "x": 958.068,
+   "y": 2592.0,
+   "sinks": 182,
+   "max_radius_um": 23.8
+  },
+  {
+   "name": "clk_t86",
+   "x": 986.148,
+   "y": 2592.0,
+   "sinks": 182,
+   "max_radius_um": 23.8
+  }
+ ],
+ "clock_port_count": 87,
+ "max_clock_sinks": 1274,
+ "max_clock_radius_um": 148.3,
+ "placement_status": "CANDIDATE_NOT_DPL",
+ "g2": "BLOCKED actual hard views and physical clock interface adoption"
+}

@@ -2607,7 +2607,8 @@ class Binder:
             for target in rtree.get("core_resets", []):
                 pin = target["pin"]
                 candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
-                              target["inst"] in {self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
+                              target["inst"] in {self.rel_of(ci), short_id(self.rel_of(ci), 90),
+                                                short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
                 if not candidates:
                     modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
                     candidates = core_reset_hierarchy_candidates(F.cells, self.members[p], target, modules)
