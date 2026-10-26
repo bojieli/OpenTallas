@@ -51,7 +51,7 @@ def source_contract(tree, fallback, instances=None):
             selected[name] = dict(master=r['xr'], family=family, source_path=path, source_sha256=sha,
                                   wrapper_chain=r['wrapper_chain'],
                                   selected_asbuilt_manifest=r.get('selected_asbuilt_manifest'),
-                                  source_sha256=r['source_sha256'],
+                                  selected_source_sha256=r['source_sha256'],
                                   resolved_module_sources=r.get('resolved_module_sources', {}))
         if not selected:
             raise ValueError('actual die has no selected slice transport')

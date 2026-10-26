@@ -80,6 +80,11 @@ def manifest_selection(source_root, name):
     files = tuple(dict.fromkeys(checked(f) for f in ab.get('files', [])))
     if not files:
         raise ValueError('selected source manifest has no explicit files')
+    # Blackboxed hard leaves need their implementation children for compiler
+    # timing. The caller must name those files explicitly; never search a
+    # default RTL tree or let an extension replace a manifest-selected module.
+    extra_names = [f for f in os.environ.get('OT_S81_SELECTED_CHILD_FILES', '').split(',') if f]
+    extras = tuple(checked(f) for f in extra_names)
     prefer = tuple(checked(f) for f in ab.get('prefer', []))
     if ab.get('rtl_roots'):
         raise ValueError('selected source manifest requires explicit files, not search roots')
@@ -88,6 +93,13 @@ def manifest_selection(source_root, name):
         raise ValueError('selected source defines differ from as-built manifest')
     signature = tuple((f, Path(f).stat().st_size, Path(f).stat().st_mtime_ns) for f in files)
     idx = _manifest_index(str(source_root), signature, prefer, files)
+    if extras:
+        extra_signature = tuple((f, Path(f).stat().st_size, Path(f).stat().st_mtime_ns) for f in extras)
+        extra_index = _manifest_index(str(source_root), extra_signature, (), extras)
+        overlap = {m for m, paths in extra_index.items() if m in idx and set(paths) - set(idx[m])}
+        if overlap:
+            raise ValueError('selected child files override manifest modules: ' + ', '.join(sorted(overlap)))
+        idx = {**extra_index, **idx}
     return path, ab, idx, prefer
 
 

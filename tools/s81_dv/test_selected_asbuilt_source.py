@@ -46,6 +46,15 @@ class SelectedAsbuiltTest(unittest.TestCase):
             with patch.dict(os.environ,env):
                 with self.assertRaisesRegex(ValueError,'missing/ambiguous'):resolve(die,'s',root)
 
+    def test_explicit_children_cannot_replace_manifest_module(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);path,_=self.fixture(root)
+            (root/'extra.sv').write_text('module ot_cap; endmodule\n')
+            with patch.dict(os.environ,{'OT_S81_SELECTED_ASBUILT_MANIFEST':str(path),
+                    'OT_S81_SELECTED_DEFINES':'ACTUAL','OT_S81_SELECTED_CHILD_FILES':'extra.sv'}):
+                with self.assertRaisesRegex(ValueError,'override manifest modules'):
+                    resolve(SimpleNamespace(inst={}), 's', root)
+
     def test_absent_current_source_cannot_fall_back(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d);path,spec=self.fixture(root);(root/'physical/preferred.sv').unlink()
