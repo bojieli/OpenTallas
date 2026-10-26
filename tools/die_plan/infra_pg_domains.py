@@ -97,16 +97,25 @@ foreach ot_mesh_name {VDD VSS} {
 puts "OT_PG_CORE_SEAM_STITCHES $ot_mesh_count"
 '''
 
-def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None):
+def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None, phy_grid_override=None):
     core_grid={g['layer']:g for g in pg['grid']}
-    division=round(core_grid['M8']['pitch_um']/pitch)
-    if division < 1 or division%2 != 1 or abs(core_grid['M8']['pitch_um']/division-pitch)>1e-6:
-        raise ValueError('PHY grid must use an odd core-pitch subdivision so shared ground rails land')
-    phy_grid=[]
-    for layer in ['M8','M9']:
-        pp=core_grid[layer]['pitch_um']/division;ww=min(I.STRIPE_W,pp/2-.048)
-        if ww < .04 or pp/2-ww < I.spacing(ww)-1e-8:raise ValueError('PHY pitch violates width/spacing rule')
-        phy_grid.append(I.grid_entry(layer,pp,ww))
+    if phy_grid_override is not None:
+        supplied={g['layer']:g for g in phy_grid_override}
+        if set(supplied)!={'M8','M9'}:raise ValueError('explicit PHY grid requires M8 and M9')
+        for layer,g in supplied.items():
+            c=core_grid[layer]
+            if abs(g['pitch_um']-c['pitch_um'])>1e-6 or abs(g['offset_um']-c['offset_um'])>1e-6:raise ValueError('explicit PHY grid must align shared ground with core grid')
+            if g['width_um']<=0 or g['pitch_um']/2-g['width_um']<I.spacing(g['width_um'])-1e-8:raise ValueError('explicit PHY grid violates width/spacing rule')
+        phy_grid=list(phy_grid_override);division=1
+    else:
+        division=round(core_grid['M8']['pitch_um']/pitch)
+        if division < 1 or division%2 != 1 or abs(core_grid['M8']['pitch_um']/division-pitch)>1e-6:
+            raise ValueError('PHY grid must use an odd core-pitch subdivision so shared ground rails land')
+        phy_grid=[]
+        for layer in ['M8','M9']:
+            pp=core_grid[layer]['pitch_um']/division;ww=min(I.STRIPE_W,pp/2-.048)
+            if ww < .04 or pp/2-ww < I.spacing(ww)-1e-8:raise ValueError('PHY pitch violates width/spacing rule')
+            phy_grid.append(I.grid_entry(layer,pp,ww))
     x0,y0,x1,y1=window['window_um']; W,H=x1-x0,y1-y0
     model=I.load_model(P,plan_dir,phy_w_per_macro=pg['phy_w_per_macro'],core_w_mm2=pg['core_w_mm2'])
     phy=[]
@@ -177,7 +186,7 @@ def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None):
     (out/'psm/psm.tcl').write_text('\n'.join(t)+'\n');(out/'psm/tracks.tcl').write_text(D.coarse_tracks(P,.72))
     (out/'run_psm.sh').write_text(D.run_sh('psm',32,8,'/usr/bin/time -v openroad -no_init -threads 8 -exit /work/psm/psm.tcl > /work/psm/psm.log 2>&1'))
     os.chmod(out/'run_psm.sh',0o755)
-    meta=dict(window=window['window'],window_um=window['window_um'],die=die,bumps=bumps,load_blocks=len(blocks),power_w=round(sum(b[4]for b in blocks),6),phy_grid=phy_grid,subdivision=division,contacts='native per-domain macro PG grid',explicit_phy_sources=phy_bumps is not None,scope=('separate PHY-local grid; explicit published-template PHY sources; core sources and load densities unchanged; open window boundaries; no plan adoption' if phy_bumps is not None else 'separate PHY-local grid; original bump positions and load densities unchanged; open window boundaries; no plan adoption'))
+    meta=dict(window=window['window'],window_um=window['window_um'],die=die,bumps=bumps,load_blocks=len(blocks),power_w=round(sum(b[4]for b in blocks),6),phy_grid=phy_grid,subdivision=division,contacts='native per-domain macro PG grid',explicit_phy_sources=phy_bumps is not None,explicit_phy_grid=phy_grid_override is not None,scope=('separate PHY-local grid; explicit candidate PHY sources; core sources and load densities unchanged; open window boundaries; no plan adoption' if phy_bumps is not None else 'separate PHY-local grid; original bump positions and load densities unchanged; open window boundaries; no plan adoption'))
     (out/'domains.json').write_text(json.dumps(meta,indent=1)+'\n');return meta
 
 def main():
