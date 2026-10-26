@@ -261,6 +261,15 @@ def head_lane_ltcopy(text, mod, kd):
     text, n = rx.subn(r"\1.LT_COPY(1), ", text)
     if n < 1:
         raise SystemExit(f"{mod}: --head-lane-ltcopy found no parameterised ot_qkh_lane8 instance")
+    instances = re.findall(r"ot_qkh_lane8\s*#\([^;]*?\)\s+(\w+)\s*\(", text, re.S)
+    if len(instances) != n:
+        raise SystemExit(f"{mod}: LT-copy instance census {len(instances)} != {n}")
+    shutil.copyfile(HERE / "replica_check.py", kd / "replica_check.py")
+    spec = dict(schema="opentallas.replica_expect.v1", core=mod, rules=[dict(
+        name="lane decision-word last-stage copies", module="ot_qkh_lt_rep9",
+        inst_re="(" + "|".join(re.escape(i) for i in instances) + r")[./]g_d\\?\[(\d+)\\?\][./]g_ltc[./]u_ltl$",
+        groups=[f"{i},{lane}" for i in instances for lane in range(8)], ff_per_inst=9)])
+    (kd / "replica_expect.json").write_text(json.dumps(spec, indent=1) + "\n")
     (kd / "head_lane_ltcopy_delta.json").write_text(json.dumps(dict(
         lane8_lt_copy=n, extra_flops_estimate=63 * n, added_cycles=0,
         source="COORD ruling 5 (KV-CORES RULINGS 2026-10-25 05:28): structural fix of the e6 216 TT -12 ps "
@@ -434,8 +443,8 @@ def main():
                     help="even head_eighth cores (e0/e2/e4/e6): frontq PORT_REGS=1 + fault-pin flop (+124FF, 0 cycles), e0 also "
                          "ktree_lk PORT_REGS=1 (+31FF, +1 parent fault edge, COORD ruling 2); leaves from this repo")
     ap.add_argument("--head-lane-ltcopy", action="store_true",
-                    help="even head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
-                         "0 cycles, COORD ruling 5); needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
+                    help="head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
+                         "0 cycles, COORD ruling 5); odd heads refresh only the LT-copy leaf; even heads need --head-port-regs")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--astk-rep-split", action="store_true",
@@ -514,9 +523,9 @@ def main():
     mod = cj["module"]
     if a.astk_face_ports and not mod.startswith("kv3_astk_"):
         raise SystemExit("--astk-face-ports only applies to kv3_astk_* cores")
-    if a.head_lane_ltcopy and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
-        raise SystemExit("--head-lane-ltcopy only applies to the even head_eighth cores (e0/e2/e4/e6)")
-    if a.head_lane_ltcopy and not a.head_port_regs:
+    if a.head_lane_ltcopy and not re.fullmatch(r"kv3_head_eighth_e[0-7]", mod):
+        raise SystemExit("--head-lane-ltcopy only applies to head_eighth cores e0..e7")
+    if a.head_lane_ltcopy and mod[-1] in "0246" and not a.head_port_regs:
         raise SystemExit("--head-lane-ltcopy needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
     if a.head_port_regs and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
         raise SystemExit("--head-port-regs only applies to the even head_eighth cores (e0/e2/e4/e6)")
@@ -550,6 +559,8 @@ def main():
             f = str(REPO / "rtl/qwen_sys/kv_plan_leaves_1023/qkd_astk_ctl_s_p.sv")
         if a.head_port_regs and Path(f).name in HEAD_PORT_REGS_LEAVES:
             f = str(REPO / HEAD_PORT_REGS_LEAVES[Path(f).name])
+        if a.head_lane_ltcopy and Path(f).name == "ot_qkh_subtiles.sv":
+            f = str(REPO / "rtl/hdc/nearhbm/ot_qkh_subtiles.sv")
         dst = kd / "rtl" / Path(f).name
         if dst.exists():
             if dst.read_bytes() != Path(f).read_bytes():
