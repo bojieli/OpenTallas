@@ -58,13 +58,15 @@ def equalize(plan,source,out,max_legs=3):
     for name in drivers:
         c=T.cells[name];c['physical_prior_kind']=c['kind'];c['physical_prior_level']=c.get('level')
         c['kind']='rep';c['level']=0 if depth(name)<=wide_through else 99
+    native_offsets=sorted([(dx,dy) for dx in range(-5,6) for dy in [-1,0,1]],key=lambda d:abs(d[0])*sx+abs(d[1])*sy)
     def site(raw,controls):
+        deep=K.hit(*raw,m=-.6)
+        if deep and deep[4]!='outside die':return None
         bx,by=round(raw[0]/sx),round(raw[1]/sy)
         # Native row quantization is the only permitted contour error. A
         # nearby occupied exact intersection may use its adjacent row only
         # while BOTH individual legs remain within0.3um of the common radius.
-        offsets=sorted([(dx,dy) for dx in range(-5,6) for dy in [-1,0,1]],key=lambda d:abs(d[0])*sx+abs(d[1])*sy)
-        for dx,dy in offsets:
+        for dx,dy in native_offsets:
             ix,iy=bx+dx,by+dy;x,y=ix*sx,iy*sy
             if x<1 or y<1 or x+width>P.W-1 or y+.27>P.H-1:continue
             err=max(abs(abs(x-q[0])+abs(y-q[1])-r) for q,r in controls)
@@ -73,7 +75,16 @@ def equalize(plan,source,out,max_legs=3):
             if any(K.hit(u,v) for u,v in [(x,y),(x+width,y),(x,y+.27),(x+width,y+.27),(x+width/2,y+.135)]):continue
             return (round(x,6),round(y,6),iy,err),{(iy,j) for j in range(ix,ix+ns)}
         return None
+    circle_cache={}
     def circle(a,r,b):
+        cached=circle_cache.get((a,r))
+        if cached is not None:
+            extra=set()
+            for u in [abs(a[0]-b[0]),r-abs(a[1]-b[1])]:
+                if 0<=u<=r:
+                    for sx_ in [-1,1]:
+                        for sy_ in [-1,1]:extra.add((a[0]+sx_*u,a[1]+sy_*(r-u)))
+            return sorted(set(cached)|extra,key=lambda p:abs(p[0]-b[0])+abs(p[1]-b[1]))
         us={i*8.64 for i in range(math.floor(r/8.64)+1)}|{r,abs(a[0]-b[0]),r-abs(a[1]-b[1])}
         for d in [.27,.54,.81,1.08,1.62,2.16,3.24]:us.update([d,r-d])
         # Clock corridors may be only a few microns wide. A macro-grid-only
@@ -90,6 +101,7 @@ def equalize(plan,source,out,max_legs=3):
             v=r-u
             for sx_ in [-1,1]:
                 for sy_ in [-1,1]:candidates.add((a[0]+sx_*u,a[1]+sy_*v))
+        circle_cache[(a,r)]=tuple(candidates)
         return sorted(candidates,key=lambda p:abs(p[0]-b[0])+abs(p[1]-b[1]))
     def route(a,b,r,legs):
         if legs==2:
@@ -141,6 +153,7 @@ def equalize(plan,source,out,max_legs=3):
                         r=round(event+offset,6)
                         if largest/legs<=r<=449.28:radii_to_try.add(r)
             for r in sorted(radii_to_try):
+                circle_cache.clear()
                 placed=set();chosen=[];blocked=None
                 for ni,bi,src,dst,layer in edges:
                     found=route(xy(src),xy(dst),r,legs)
