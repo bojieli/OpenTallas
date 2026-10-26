@@ -74,6 +74,12 @@ proc ot_ci_cell {name master x y rect} {
   ot_ci_place $i $x $y $rect
   lappend ::ot_ci_cells $i
 }
+proc ot_ci_origin_assert {name x y orient} {
+  set i [$::ot_ci_b findInst $name];lassign [$i getLocation] xx yy
+  if {$xx != round($x*$::ot_ci_u) || $yy != round($y*$::ot_ci_u) || [$i getOrient] ne $orient} {
+    error "OT_CORE_INFRA_FROZEN_ORIGIN_MISMATCH $name"
+  }
+}
 proc ot_ci_connect {term net} {
   set old [$term getNet]
   if {$old ne "NULL" && $old ne $net} {error "OT_CORE_INFRA_STALE_CONNECTION [$term getInst]/[$term getMTerm]"}
@@ -118,7 +124,17 @@ proc ot_ci_tree_sink {node path} {
   set target [dict get $::ot_ci_tree_out $node]
   if {[$it getNet] ne $target} {
     if {[lsearch -exact $::ot_ci_tree_expected $it] < 0} {error "OT_CORE_INFRA_UNPLANNED_CLOCK_SINK $path"}
-    $it disconnect; $it connect $target
+    # Boundary flops retain dont_touch identity through placement. Standard CTS
+    # must still attach their CLOCK terminal. Only this explicitly enumerated
+    # source-clock sink may reconnect, and cell protection is restored even on
+    # an OpenDB error. No data terminal or PG binding uses this path.
+    set inst [$it getInst];set protected [$inst isDoNotTouch]
+    if {$protected} {$inst setDoNotTouch 0}
+    try {
+      $it disconnect; $it connect $target
+    } finally {
+      if {$protected} {$inst setDoNotTouch 1}
+    }
   }
   lappend ::ot_ci_tree_seen $it
 }
