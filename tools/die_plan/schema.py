@@ -316,6 +316,8 @@ SCHEMA = {
                         # output changes earlier = contract guarantee + worst output-hold slack; absent = contract
                         "out_hold_guarantee_ps": {"type": "number"},
                         "keepouts_um": {"type": "array", "items": _rect},
+                        # Main 2225008bb: physical die clock reservations, no tile IO.
+                        "die_islands_um": {"type": "array", "items": _rect},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
