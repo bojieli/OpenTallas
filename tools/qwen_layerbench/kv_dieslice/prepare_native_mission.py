@@ -10,11 +10,20 @@ from pathlib import Path
 from native_host_start_gate import patch
 from native_astk_source import close as close_astk
 from native_boot_ages import dispatch as ages_dispatch, control as ages_control
+import native_host_boot_abi as boot_abi_host
 
 def prepare(tree):
     tree=Path(tree).resolve();base=tree/'physical/die_plan/qwen_kvsys';d=base/'bind/kv45'
+    # KV-TOK 10-26 boot ABI: the native dispatcher's AGES first; the HOST loader table takes it (one source, checked)
+    ctl=tree/'rtl/qwen_sys/static_kv_die_20261017'
+    for name,fn in [('qkd_kv_ctl_nc32_face.sv',ages_dispatch),('qkd_kvs_ctl_nc32.sv',ages_control)]:
+        path=ctl/name
+        if path.exists():path.write_text(fn(path.read_text()))
+    boot_ages=boot_abi_host.dispatcher_ages((ctl/'qkd_kvs_ctl_nc32.sv').read_text())
     host=d/'qkd_host_root_admission_obsx_bo1_c45.sv'
-    host.write_text(patch(host.read_text()))
+    host.write_text(boot_abi_host.c45(patch(host.read_text())))
+    obsx=tree/'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv'
+    obsx.write_text(boot_abi_host.obsx(obsx.read_text()))
     src=d/'die_bound_native.v.gz';text=gzip.open(src,'rt').read()
     old='module qfd_die (pad_die_id, pad_por_n, pad_refclk);'
     new='module qfd_die (pad_die_id, pad_por_n, pad_refclk, mission_start_global);\n  input wire mission_start_global;'
@@ -23,7 +32,12 @@ def prepare(tree):
     rx=r'qkd_host_root_admission_obsx_bo1_c45\s*#\((.*?)\)\s+host\s*\('
     m=re.search(rx,text,re.S)
     if not m:raise ValueError('expected native HOST instance')
-    replacement='qkd_host_root_admission_obsx_bo1_c45 #('+m.group(1)+', .REQUIRE_MISSION_START(1)) host (.mission_start(mission_start_global), '
+    hp=boot_abi_host.host_instance_params(m.group(1)+', .REQUIRE_MISSION_START(1)',boot_ages)
+    replacement='qkd_host_root_admission_obsx_bo1_c45 #('+hp+') host (.mission_start(mission_start_global), '
+    lp=boot_abi_host.loader_params(obsx.read_text(),host.read_text(),{'BOOT_AGES':boot_ages})
+    *_,errs=boot_abi_host.check_texts((ctl/'qkd_kvs_ctl_nc32.sv').read_text(),(ctl/'qkd_kv_ctl_nc32_face.sv').read_text(),
+        (tree/'rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv').read_text(),lp)
+    if errs:raise ValueError('boot ABI mismatch (dispatcher / HOST loader / image): '+'; '.join(errs))
     text=text[:m.start()]+replacement+text[m.end():]
     out=d/'die_bound_native_mission.v.gz'
     with gzip.open(out,'wt') as f:f.write(text)
@@ -41,10 +55,6 @@ def prepare(tree):
     planpath.write_text(json.dumps(p,separators=(',',':'))+'\n')
     astk=d/'qkd_astk_ctl_s_g0.sv'
     if astk.exists():astk.write_text(close_astk(astk.read_text(),base/'cores/harden/astk_timing_regs.py'))
-    ctl=tree/'rtl/qwen_sys/static_kv_die_20261017'
-    for name,fn in [('qkd_kv_ctl_nc32_face.sv',ages_dispatch),('qkd_kvs_ctl_nc32.sv',ages_control)]:
-        path=ctl/name
-        if path.exists():path.write_text(fn(path.read_text()))
     return str(out)
 
 if __name__=='__main__':
