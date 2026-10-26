@@ -1,0 +1,31 @@
+tools/die_plan/test_core_clock_groups.py::test_endpoint_contract_consumers_agree_and_ordinary_stable
+tools/die_plan/test_core_clock_groups.py::test_fail_closed_membership_and_physical_network[<lambda>-duplicate]
+tools/die_plan/test_core_clock_groups.py::test_fail_closed_membership_and_physical_network[<lambda>-exact existing]
+tools/die_plan/test_core_clock_groups.py::test_fail_closed_membership_and_physical_network[<lambda>-does not match]
+tools/die_plan/test_core_clock_groups.py::test_fail_closed_membership_and_physical_network[<lambda>-positive TT/FF]
+tools/die_plan/test_core_clock_groups.py::test_fail_closed_membership_and_physical_network[<lambda>-requires explicit parent_budget]
+tools/die_plan/test_core_clock_groups.py::test_fail_closed_membership_and_physical_network[<lambda>-reserved]
+tools/die_plan/test_core_clock_groups.py::test_fail_closed_membership_and_physical_network[<lambda>-membership differs]
+tools/die_plan/test_core_clock_groups.py::test_fail_closed_membership_and_physical_network[<lambda>-out-of-order]
+tools/die_plan/test_core_clock_groups.py::test_fail_closed_membership_and_physical_network[<lambda>-complete physical network]
+tools/die_plan/test_core_clock_groups.py::test_no_optin_is_identical
+tools/die_plan/test_core_clock_groups.py::test_generated_kit_contains_manifest_and_runtime_after_cp2_rewire
+tools/die_plan/test_core_clock_groups.py::test_runtime_is_optin_and_cts_excludes_group_inputs
+tools/die_plan/test_core_clock_groups.py::test_hbm_first_buffer_guard_rejects_long_unbuffered_entry
+tools/die_plan/test_core_clock_groups.py::test_group_ff_overlay_restores_group_tt_source
+tools/die_plan/test_cp2.py::test_lef_and_lib_parse
+tools/die_plan/test_cp2.py::test_find_and_fill_views
+tools/die_plan/test_cp2.py::test_pair_cores_leaf_and_core_taps
+tools/die_plan/test_cp2.py::test_pair_cores_needs_views
+tools/die_plan/test_cp2.py::test_gen_phys_core_files_and_default_unchanged
+tools/die_plan/test_cp2.py::test_htree_path
+tools/die_plan/test_cp2.py::test_branch_table_and_sta_die
+tools/die_plan/test_cp2.py::test_tcl_hooks_complete
+tools/die_plan/test_cp2.py::test_reach_leaf_out_bits_distinct
+tools/die_plan/test_cp2.py::test_reach_leaf_no_cross_face_paths
+tools/die_plan/test_cp2.py::test_reach_leaf_default_and_leaves_only
+tools/die_plan/test_core_tap_corner.py::test_generated_core_overlay_tracks_corner_and_fallback
+tools/die_plan/test_core_tap_corner.py::test_runtime_ff_binding_and_missing_overlay_fail_closed
+tools/die_plan/test_core_tap_corner.py::test_unmarked_kit_ignores_stale_overlay
+
+29 tests collected in 0.30s
