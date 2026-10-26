@@ -1,0 +1,12 @@
+{
+  "status": "PASS actual-controller component miter",
+  "reference": "hsf0_reference/rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv",
+  "positions": 2,
+  "tokens": 2,
+  "source_stream_slices_per_position": 8248,
+  "reference_sk": 8,
+  "added_cycles": 0,
+  "checks": "live valid/row/bits/identity/tag/copy/NaN/overwrite",
+  "mutant": "CAUGHT helper-only wrong row at first result",
+  "current_physical_mesh64_framing": "UNRESOLVED; no whole-head G5 claim"
+}

@@ -1,0 +1,13 @@
+# Real head RESULT and fault-state components
+
+These two components are exact extractions from the real HSF0 controller at `04718b43a55f742397eebf564a20adaa3e0bacd6`, preserved in the adjacent `hsf0_reference` source. They advance the current controller composition without assigning a whole `hd_ctl` provider.
+
+`ot_s81hd_result_landing_hsf0` consumes the actual merged 31-bit position/user identity, 49-bit logit/row, and a live 16-bit destination/source CSR. Its 96-bit landed hold, pending/grant state, full 512-bit RESULT ABI and overwrite event match the original controller. It retains all 10 user bits, including USER_HI at bits152:151. The existing sequencer grant remains explicit; it is not an invented head-issue date or a new die scheduler. The measured merge-valid-to-flit-visible delay is3edges, with zero added cycles relative to the actual reference.
+
+`ot_s81hd_fault_state_hsf0` consumes the live `lep_fault_i`, preserves its original input register and sticky vector bit10, and produces the real fault summary. The other16 event producers remain explicit inputs. The original reset-vector and reset-summary leaves remain explicit. This does not tie missing status/context or pretend those event producers already exist. The proposed physical LEP-to-controller lane adds2face cycles separately in the head plan; this extraction adds0cycles to the original local mechanism.
+
+The admitted8GiB/2-thread source-pinned Verilator job compared the extracted components every edge with the live historical controller over2real CSR/XB/mesh/token positions, using user777 so both high user bits are exercised. Both512-bit results and all pending/grant/overwrite/fault state matched. A high-user-bit result mutant was caught at the first RESULT. A separate dropped-LEP-fault mutant was caught when the real controller set sticky bit10. The reference controller was unchanged.
+
+The reference has historical SK8, two spines and five draft lanes. Those are reference-only test inputs; neither new component contains or substitutes that topology into the current head. Their mechanisms are independent of SK and START dates. Current single-spine scheduling, live HBC context/admission, the other16 fault producers, source-bound host STATUS framing, and the actual MTP producer mapping still require composition. No whole-head, G5, placement, timing, SRAM or routed-view claim is made.
+
+The pre-build analytical component specification is `tools/s81_head/ar_result_model.json`. Reproduce with `bash tools/s81_head/result_landing_bench.sh NEW_OUT` in an admitted repository job; a staged archive may provide `OT_SOURCE_ROOT` and `SOURCE_COMMIT`.

@@ -1,0 +1,32 @@
+{
+  "component": "ot_s81hd_ctl",
+  "historical_source_commit": "04718b43a55f742397eebf564a20adaa3e0bacd6",
+  "files": [
+    "results/arch/s81_head_source_1025/hsf0_reference/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+    "results/arch/s81_head_source_1025/hsf0_reference/rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+    "results/arch/s81_head_source_1025/hsf0_reference/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+    "results/arch/s81_head_source_1025/hsf0_reference/rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+    "results/arch/s81_head_source_1025/hsf0_reference/rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv",
+    "results/arch/s81_head_source_1025/hsf0_reference/rtl/dsrom_sys/s81_head/ot_s81hd_util.sv",
+    "results/arch/s81_head_source_1025/hsf0_reference/rtl/lib/ot_rst_relay_tree3.sv"
+  ],
+  "role": "Recover actual controller mechanisms/contracts only; not current head asbuilt",
+  "current_plan_compatible": false,
+  "historical_contract": {
+    "xb_ring": "80 x1024 payloadbits,kind2,gidx[20:13],payload[1044:21]",
+    "xstore": "four64x512 SRAM macros",
+    "stream": "G+5+m;SK8 historical",
+    "spine": "two565-bit roots",
+    "mesh": "six553-bit HSF0 frames;81-bit live BEST payload includes user10+position21",
+    "host": "two553-bit HSF0 frames",
+    "draft": "five553-bit frame lanes",
+    "sequencer": "real dsfd_mtp_seq with live grants"
+  },
+  "required_current_adaptations": [
+    "one-root565 spine tree, preserve native START+GO roles",
+    "current64-bit mesh must preserve81-bit identity-bearing payload with explicit framing",
+    "current276-bit host lanes require actual553-bit multi-beat framing contract",
+    "removed5draftlane functions need real current MTP producer mapping",
+    "historicalHSF0 host CSR source does not replace currentHBC context/admission source"
+  ]
+}

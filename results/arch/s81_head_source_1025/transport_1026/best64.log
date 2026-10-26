@@ -1,0 +1,6 @@
+BEST64 PASS records=1024 mutant_caught=1024 sampled_edge_delta=2
+BEST64 format_guard PASS
+- tb_s81hd_best64.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 22us; walltime 0.004 s; speed 5.932 ms/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB

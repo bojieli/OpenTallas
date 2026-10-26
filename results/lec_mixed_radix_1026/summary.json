@@ -1,0 +1,21 @@
+{
+  "helper_sha256": "2621d5768982a945bcac1ccf2f3b5125825184742c6ddb4908afc138d0dfd8c5",
+  "unit_tests": "7 PASS (mixed-radix guards plus existing slang element tests)",
+  "positive": {
+    "compare_points": 20,
+    "proved": 20,
+    "differs": 0,
+    "undecided": 0
+  },
+  "mutant": {
+    "compare_points": 20,
+    "proved": 19,
+    "differs": 1,
+    "undecided": 0
+  },
+  "mechanism": "Actual 2x2 unpacked array of4-bit words with separate low/high partial writes, like HC2x16x18. Slang explicit-driver logicalindices determine row-major flatword pairing; no reversal is guessed. Normal next-state comparisons andKEEP checks remain.",
+  "constraints": "Complete zero-based source driver grid and unique gatefamily with product wordextent and matching packed width; mergedindividualgatebits may be absent. Incomplete/ragged/shifted/ambiguous grids rejected.",
+  "initial_dynamic_mutant": "UNPROVEN (not accepted): actualwrongD detected1diff, but dynamic target writes introducedgoldXsources inunsweptcone. Static-unrolled partialwrite successor mirrors actualHC and hardrejects mutant NOT EQUIVALENT. Initialfailedrecord retained.",
+  "production_HC": "NOT PROVED by this fixture; existing live originalHCjobs unchanged. Full helper proof still required before any hardware qualification.",
+  "cycles_added": 0
+}

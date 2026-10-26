@@ -179,3 +179,35 @@ def test_reset_relay_cell_synth_has_no_dangling_load(tmp_path):
     assert r.returncode == 0, r.stderr
     n = out.read_text()
     assert "$_BUF_" not in n.split("module ot_dp_rrelay")[1].split("endmodule")[0], n
+
+
+def _long_boundary_chains():
+    lines = ["module top(clk,a,o); input clk; input a; output o; wire q; wire oq;",
+             "wire [11:0] i; wire [7:0] b;"]
+    for k in range(12):
+        src = "a" if k == 0 else f"i[{k-1}]"
+        lines.append(f"BUFx1_ASAP7_75t_R ib{k} (.A({src}), .Y(i[{k}]));")
+    lines += ["DFFHQNx1_ASAP7_75t_R in_ff (.CLK(clk), .D(i[11]), .QN(q));",
+              "DFFHQNx1_ASAP7_75t_R out_ff (.CLK(clk), .D(q), .QN(oq));"]
+    for k in range(9):
+        src = "oq" if k == 0 else f"b[{k-1}]"
+        dst = "o" if k == 8 else f"b[{k}]"
+        lines.append(f"INVx1_ASAP7_75t_R ob{k} (.A({src}), .Y({dst}));")
+    return "\n".join(lines + ["endmodule"])
+
+
+def test_recursive_physical_buffer_chains_and_negative_controls():
+    """Normal hold repair can exceed three buffers; topology, own FFs and no logic still apply."""
+    net = _long_boundary_chains()
+    r = face_guard.guard(net)
+    assert r["verdict"] == "PASS" and r["ok"] == 2, r
+    logic = net.replace("BUFx1_ASAP7_75t_R ib6", "NAND2x1_ASAP7_75t_R ib6")
+    assert face_guard.guard(logic)["verdict"] == "FAIL"
+    shared = net.replace("endmodule", "BUFx1_ASAP7_75t_R extra (.A(i[7]), .Y(extra_wire)); endmodule")
+    assert "shared" in face_guard.guard(shared)["fail_counts"]
+    # A directed buffer cycle returns to the input net, with no terminating FF.
+    cycle = net.replace(".Y(i[11])", ".Y(a)").replace(".D(i[11])", ".D(unused)")
+    r = face_guard.guard(cycle)
+    assert r["verdict"] == "FAIL" and any("cycle" in x for x in r["fails"]["unregistered"]), r
+    merged = net.replace(".QN(oq)", ".QN(q)")
+    assert face_guard.guard(merged)["verdict"] == "FAIL"
