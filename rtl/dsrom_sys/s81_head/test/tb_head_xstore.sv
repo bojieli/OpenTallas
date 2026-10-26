@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 module tb_head_xstore;
+ wire [7:0] load_index=8'd0;
  parameter integer MUT=0;
  reg ck=0;always #5 ck=~ck;
  reg rst_n=0,load_begin=0,load_v=0,issue=0;
