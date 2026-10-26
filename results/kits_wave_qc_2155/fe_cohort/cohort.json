@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.g3.source_cohort.v1",
+  "plan_type": "sle_fe_v1",
+  "canonical_generator_commit": "69d23a6a563414eda89c51a34bcecbfe3fbff47f",
+  "plan": "physical/die_plan/qwen_compute/die_plan.json",
+  "source_files": [
+    "results/kits_wave_qc_2155/fe_cohort/rtl/qfd_qc_sle_fe.sv",
+    "results/kits_wave_qc_2155/fe_cohort/rtl/qfd_qc_sle_fe__sle_fe_v1.sv",
+    "results/kits_wave_qc_2155/fe_cohort/rtl/bind_cells.sv",
+    "results/kits_wave_qc_2155/fe_cohort/rtl/ot_reset_sync.sv",
+    "results/kits_wave_qc_2155/fe_cohort/rtl/qfd_dv_s6_leaves.sv"
+  ],
+  "expected_kit_sha256": {
+    "rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+    "rtl/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+    "rtl/qfd_dv_s6_leaves.sv": "4e9867c8bf91bf1eef70ca61df2dc2ae2d9830eb15798335ec9bd3071c5d1d4c",
+    "rtl/qfd_qc_sle_fe.sv": "dddba98b36fa147e2eadb717a317785cc7dca105b642d065195482dcae4e13ba",
+    "rtl/qfd_qc_sle_fe__sle_fe_v1.sv": "61ca63ce325d86c93a3a0ba0b7b5bdf8c8aa535d2db815cf51131b8033b8cb6d",
+    "pins.json": "1a21cb1ed302a3b46f7d0d5e3ae7d6eed3c80ef4bb823bf05f79560957d9eb68",
+    "io.tcl": "300e7fe6dc053783dd4e434f4b8bc94a9028bd6247a965a6fbef28e54753f49b",
+    "constraint.sdc": "fe0c2bd471c5c7c8657239cd1963df8e4b87ec71f1f7035e0502b4cedfe329ed",
+    "clock_binding.json": "d5571ebf991bddb9ddaece2f3214f61849375a35d1c41dda1d1b0843580f5338",
+    "clock_taps.tcl": "16fd1a47d82430d8c44d93f73b5e3e12c93c6238d3a142760dd4ed2bbf5665ea",
+    "clock_family.tcl": "4d035237e7a3b21187387463d91034f019e312e82c4cfaf135ec6830dd2d7c71",
+    "tap_balance.tcl": "3452170533f0928472b79c33e2aa33ceb28ab1559d1b9876a96ef45b77a62644",
+    "reset_tree.tcl": "5b4b924af496907f4592d431f55c65538f1fbb7ba36a24f65cd94253ac440744",
+    "face_flops.tcl": "a17bf98abb2b352f1bc2b2acc4538640d059bfe013a7870f7e5d23ef1477e9da",
+    "face_keep.tcl": "75d6fb170735cb839a0e6d8f8c0ab08460e2ee3f76c03114cd17e058e80fc5fd",
+    "face_keep_release.tcl": "2500925250e300f7efce5961be965531663138623172b2bae2a9efc2a31aa2c0",
+    "budget.json": "efe940356441a10e72a0687828f7fc37250b1d82184d993a4ba69c6b8684186c",
+    "config.mk": "20809d3380451ae07846c9b77f79894512589433fa8e11bb0b721bc970b580d1"
+  },
+  "reproduced_against_main69": {
+    "pins.json": true,
+    "io.tcl": true,
+    "clock_taps.tcl": true,
+    "clock_binding.json": true,
+    "clock_family.tcl": true,
+    "constraint.sdc": true,
+    "face_flops.tcl": true
+  },
+  "gates": {
+    "LEC": "EQUIVALENT28509/28509",
+    "place": "PASS",
+    "reset_start": "56/56,0missing,max375.8um",
+    "FT": "6380actualbit-hops<=405um,max382.698um"
+  },
+  "next": "One CTS-only prototype after independent GEOM460f8041f8 and normal queue/canary gates; no route/signoff claim",
+  "latency_delta_cycles": 0,
+  "reviewed_checkpoint_sha256": {
+    "run/results/asap7/dp_sle_fe_v1/base/3_place.odb": "65a61c766093159308aa8e330a8496365c7d7ddf94aaf12cb983c1483d055095",
+    "run/results/asap7/dp_sle_fe_v1/base/3_place.sdc": "7bdb95f47152af6e49a8bc167b5b2a419a9cfe53aa2e1d3786cf85476f6b82b8"
+  }
+}

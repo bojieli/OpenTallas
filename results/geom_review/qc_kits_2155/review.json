@@ -1,0 +1,57 @@
+[
+  {
+    "picture": "results/kits_wave_qc_2155/fe_reset_source_review.png",
+    "stage": "before fresh FE synthesis/place",
+    "sources": [
+      "5ee12cd0f",
+      "186e8631d",
+      "8d1605822"
+    ],
+    "findings": "56 planned reset/START cells in16 open-core clusters, max9 per site; no hard macros; unchanged outline/boundary/FT and planned375.7um hops. Actual placement census and density review required before CTS.",
+    "verdict": "PASS-COND synthesis/place only"
+  },
+  {
+    "pictures": [
+      "results/kits_wave_qc_2155/sram_proposal/all_types.png",
+      "results/kits_wave_qc_2155/sram_proposal/sle_st_a_v1.png",
+      "results/kits_wave_qc_2155/sram_proposal/sle_st_b_v1.png",
+      "results/kits_wave_qc_2155/sram_proposal/coll_n.png"
+    ],
+    "stage": "internal-macro plan proposal only",
+    "findings": "See results/kits_wave_qc_2155/sram_proposal/REVIEW.txt;182/182 macros with real views and5.4um halos; no overlaps or moved clock/reset contracts. Existing FT station bands remain; actual cell packing/interface reach/PDN and batch G2/GRT0 are conditions.",
+    "verdict": "PASS-COND for independent plan/G2 review; no route"
+  },
+  {
+    "pictures": [
+      "results/kits_wave_qc_2155/sram_proposal/all_types.png"
+    ],
+    "stage": "aligned-v2 exact asset correction before G2 rerun",
+    "findings": "Actual bound BBs select aligned-v2 for all4 masters. Corrected3 paths and roundedBTAB/codec heights by0.024um; all182origins identical,5.4um halos/FT/taps/reset sites stilllegal, all9clock/reset trees identical. Viewed revised all_types image: open channels, no walls, BTAB adjacent Ewidebus, local reducer clusters. No actualcellplacement orSTA claimed.",
+    "verdict": "PASS-COND construction/G2 only; fresh actual placement review required before route"
+  },
+  {
+    "picture": "results/kits_wave_qc_2155/dead_fault/port_delta.png",
+    "stage": "separate approved phantom fault interface batch",
+    "findings": "Viewed exact before/after STA-S andFW-N window closeups. Removes only two colocated M5/M7 constant-only endpoints per master. All10remaining data pin tables and clock/reset pins+trees identical by exact generation; outline/FT/macros/PG unaffected. Real STM->FW fault retained.12pairs/48endpointpins/24phantomwirebits,+0actualcycles. ROOT explicitly approved separate interface correction; actual full placement review remains before route.",
+    "verdict": "PASS-COND batch construction; independent current kit placement review remains"
+  },
+  {
+    "picture": "results/kits_wave_qc_2155/hc0_source_review.png",
+    "stage": "fresh HC0 fixed-source place-only prototype",
+    "source": "main69d23a6a includes xhead3 loop fix5ee, bind control keep186/8d",
+    "findings": "Viewed unchanged622.08x1339.2 footprint,5714boundary pins,5669FTstation points,8clocktaps and0macros. Open core and continuousboundary bands; no macro walls/choke. Local diagonal station bands correspond same-face legs; actualperbitreach/clockloads/cell density/reset census required atplacement. Prior sourcefixed8x5000 lockstep+mutantPASS,+0cycles. No CTS/route permitted until fresh fullplaced review.",
+    "verdict": "PASS-COND synth/place-only prototype"
+  },
+  {
+    "picture": "results/kits_wave_qc_2155/hc_source_review.png",
+    "stage": "four fresh source-fixed nonpath HC place prototypes",
+    "types": [
+      "sle_hc0",
+      "sle_hc1",
+      "sle_hc2",
+      "slw_hc1"
+    ],
+    "findings": "Viewed unchanged main69 geometry: no macros,8 clocktaps per footprint, opencore, HC0 multistation bands, other HC types small local FT islands. Existing outline/pins/clock/reset/FT unchanged. Synthesis/place-only prototype, actualclockload/reset/FT/density review before CTS, no route. Currentxhead3 source5ee looplocals has lockstep+mutantPASS,+0cycles.",
+    "verdict": "PASS-COND synthesis/place only"
+  }
+]
