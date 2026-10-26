@@ -191,6 +191,64 @@ class T(unittest.TestCase):
         M["unplaced"] = [[0, 0]]
         self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "BLOCKED")
 
+    def test_early_node_choice_nearest_early_enough_in_region(self):
+        nodes = [("ckm_n9_h0a", 100., 0., 9, "h00"), ("ckm_n9_h0b", 1000., 0., 9, "h00"),
+                 ("ckm_n10_h0c", 50., 0., 10, "h00"), ("ckm_n9_h1a", 10., 0., 9, "h10")]
+        late = {"ckm_n9_h0a": 900., "ckm_n9_h0b": 600., "ckm_n10_h0c": 990., "ckm_n9_h1a": 100.}
+        # target 1000: n10 (50 um, 990) is too late; n9_h0a 900 + 45 + 40 = 985 fits; foreign region never used
+        pick = CM.choose_early_node(nodes, (0., 0.), 1000., late, 450., 45., 40., region_tag="h0", min_level=3)
+        self.assertEqual(pick[0], "ckm_n9_h0a")
+        self.assertEqual(pick[2], 1)
+        # a tighter target forces the farther, earlier node (3 hops: 600 + 135 + 40 <= 800)
+        pick = CM.choose_early_node(nodes, (0., 0.), 800., late, 450., 45., 40., region_tag="h0", min_level=3)
+        self.assertEqual((pick[0], pick[2]), ("ckm_n9_h0b", 3))
+        self.assertIsNone(CM.choose_early_node(nodes, (0., 0.), 500., late, 450., 45., 40., region_tag="h0"))
+
+    def test_l_path_points_follow_x_then_y(self):
+        self.assertEqual(CM.l_path_point((0., 0.), (300., -200.), 100.), (100., 0.))
+        self.assertEqual(CM.l_path_point((0., 0.), (300., -200.), 400.), (300., -100.))
+        self.assertEqual(CM.node_tag("ckm_n9_h0110"), (9, "h0110"))
+        self.assertEqual(CM.node_tag("ckm_r9_h0110_1"), (None, None))
+
+    def test_early_trim_counts_target_same_partition_mesh_taps(self):
+        M = dict(meta={}, taps=[dict(part="p", tap="t1", port="a", early_ps=0.),
+                                dict(part="p", tap="t2", port="b", early_ps=0.),
+                                dict(part="p", tap="c4", port="c", early_ps=231., early_corner_ps={"TT": 231.},
+                                     early_branch=dict(pads=["x"] * 4)),
+                                dict(part="q", tap="t1", port="d", early_ps=0.)])
+        arr = {"a": 1000., "b": 1010., "c": 700., "d": 0.}
+        w = CM.trim_counts(M, arr, "TT", 37.26)
+        now, new, res, pred = w["c"]
+        self.assertEqual(now, 4)
+        self.assertAlmostEqual(res, 700. + 231. - 1005.)          # 74 ps early -> 2 pads more
+        self.assertEqual(new, 6)
+        self.assertLessEqual(abs(pred), 37.26 / 2)
+        arr["c"] = 900.                                           # 126 ps late -> pads removed, never below 0
+        self.assertEqual(CM.trim_counts(M, arr, "TT", 37.26)["c"][1], 1)
+        arr["c"] = 1200.
+        self.assertEqual(CM.trim_counts(M, arr, "TT", 37.26)["c"][1], 0)
+
+    def test_tree_file_early_rows_stay_out_of_driver_and_node_tables(self):
+        with tempfile.TemporaryDirectory() as td:
+            f = Path(td) / "tree_TT.txt"
+            f.write_text("D ckm_d_0_0_0 10 9 5\nN ckm_n1_h0 4 3 6\nE ckm_s_e0 7 6.5 8 7.5\n")
+            E = {}
+            D, N = CM.read_tree(f, early=E)
+            self.assertEqual(set(D), {"ckm_d_0_0_0"})
+            self.assertEqual(set(N), {"ckm_n1_h0"})
+            self.assertEqual(E["ckm_s_e0"], (7., 6.5, 8., 7.5))
+            self.assertEqual(CM.read_tree(f)[1].keys(), {"ckm_n1_h0"})
+
+    def test_early_branch_pads_are_legal_and_disjoint(self):
+        K = CM.DC.KeepIndex([(0., 0., 5., 100., "macro")], die=(100., 100.))
+        pts = CM.pad_sites(K, 20., 20., 20)
+        cells = {f"p{i}": dict(x=CM.snap(q[0] - CM.BUF_W / 2, CM.SITE_X), y=CM.snap(q[1] - CM.ROW_Y / 2, CM.ROW_Y))
+                 for i, q in enumerate(pts)}
+        cells["head"] = dict(x=CM.snap(20. - CM.BUF_W / 2, CM.SITE_X), y=CM.snap(20. - CM.ROW_Y / 2, CM.ROW_Y))
+        self.assertEqual(len(pts), 20)
+        self.assertEqual(CM.placement_overlaps(cells), [])
+        self.assertTrue(all(c["x"] >= 5. for c in cells.values()))
+
 
 if __name__ == "__main__":
     unittest.main()

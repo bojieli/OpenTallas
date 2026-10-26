@@ -457,6 +457,86 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None):
     return added
 
 
+def pad_sites(K, cx, cy, k, reserve=True):
+    """k abutted BUFx24 pad sites beside the cell centred at (cx, cy) (the balance pad pattern: columns of 16 in the
+    rows above, mirrored left/right, else the nearest free site); each site is reserved before the next is chosen."""
+    out, res = [], []
+    for i in range(k):
+        col, row = i % 16, i // 16
+        for sgn in (-1, 1):
+            q = (cx + sgn * (col + 1) * (BUF_W + SITE_X * 2), cy + 2 * ROW_Y * (row + 1))
+            if not hitf(K, q):
+                break
+        else:
+            q, _ = free_near(K, q)
+        if q is None:
+            raise SystemExit("die_clock_mesh: no legal site for an early-branch clock pad")
+        c = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y))
+        if reserve:
+            res.append(reserve_cell(K, f"pad_probe_{i}", c))
+        out.append(q)
+    for r in res:
+        release_cell_reservation(K, r)
+    return out
+
+
+def l_path_point(a, b, t):
+    """the point at distance t along the Manhattan L path a -> b (x first, then y)."""
+    dx = abs(b[0] - a[0])
+    if t <= dx:
+        return (a[0] + math.copysign(t, b[0] - a[0]), a[1])
+    return (b[0], a[1] + math.copysign(t - dx, b[1] - a[1]))
+
+
+def node_tag(name):
+    m_ = re.match(r"ckm_n(\d+)_(h[01]*)$", name)
+    return (int(m_.group(1)), m_.group(2)) if m_ else (None, None)
+
+
+def read_early_ref(ref, corner="TT"):
+    """measured arrivals of a previous combo+post of the same tree (node Y late per H-tree node; tap late per port)."""
+    ref = Path(ref)
+    _, N = read_tree(ref / f"tree_{corner}.txt")
+    taps = {}
+    for line in open(ref / f"taps_{corner}.txt"):
+        f = line.split()
+        if len(f) >= 3:
+            taps[f[1]] = float(f[2])
+    return dict(node_late={k: v[0] for k, v in N.items()}, tap_late=taps, corner=corner)
+
+
+def early_target(t, taps, ref_late, region_of=None):
+    """an early tap's arrival target: the mean measured arrival of the same partition's mesh (no-offset) taps, minus
+    its core offset (falls back to the region's mesh taps when the partition has no plain tap)."""
+    same = [ref_late[u["port"]] for u in taps if u["part"] == t["part"] and not u["early_ps"] and u["port"] in ref_late]
+    if not same and region_of is not None:
+        same = [ref_late[u["port"]] for u in taps if not u["early_ps"] and u["port"] in ref_late
+                and region_of(u) == region_of(t)]
+    if not same:
+        return None
+    return sum(same) / len(same)
+
+
+def choose_early_node(nodes, xy, target, node_late, rep_um, stage_ps, margin_ps, region_tag=None, min_level=1):
+    """nearest H-tree node (inside the tap's region subtree) whose measured arrival + the branch's stage delay + margin
+    still reaches the tap before `target`.  nodes = [(name, x, y, level, tag)].  Returns (name, L, n_hops, est) or None."""
+    best = None
+    for name, x, y, level, tag in nodes:
+        if level < min_level or name not in node_late:
+            continue
+        if region_tag is not None and not tag.startswith(region_tag):
+            continue
+        L = abs(x - xy[0]) + abs(y - xy[1])
+        n = max(1, math.ceil(L / rep_um - 1e-9))
+        est = node_late[name] + n * stage_ps
+        if est + margin_ps > target:
+            continue
+        key = (L, -node_late[name])
+        if best is None or key < best[0]:
+            best = (key, (name, L, n, est))
+    return best[1] if best else None
+
+
 def part_regions(P, R):
     """every partition -> the clock region whose geometric box holds its centre (whole partition, never split)."""
     out = {}
@@ -469,7 +549,8 @@ def part_regions(P, R):
 
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
           regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None,
-          region_spec=None):
+          region_spec=None, early_taps="mesh", early_ref=None, early_margin_ps=40.0, early_stage_ps=45.0,
+          pad_ps=37.26, early_min_level=None):
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
@@ -657,11 +738,74 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     tap_rows = []
     import numpy as np
     xa, ya = np.array(xs), np.array(ys)
+    # --- EARLY-TAP branches (opt-in --early-taps tree): a core-offset tap must arrive early_ps before the mesh taps;
+    # a mesh is one common node, so it is fed from an upstream H-tree node by its own buffered branch instead
+    # (industry practice for large-insertion macros on a mesh), delay-tuned by an abutted pad chain at its start.
+    if early_taps == "tree":
+        if early_ref is None:
+            raise ValueError("--early-taps tree needs --early-ref (a measured combo+post dir of the same tree)")
+        node_net = {n["drv"]: n for n in nets}
+        tree_nodes = []
+        for nm, c in cells.items():
+            if c["kind"] == "node":
+                lv, tg = node_tag(nm)
+                if tg is not None:
+                    tree_nodes.append((nm, c["x"] + BUF_W / 2, c["y"] + ROW_Y / 2, lv, tg))
+        plain = [dict(part=pa, port=f"t_{DC.sv(pa)}__{po}", early_ps=e) for pa, po, _, _, e in taps]
+        reg_of = (lambda u: out["part_region"][u["part"]]) if regions else None
+        out["meta"]["early_taps"] = dict(mode="tree", ref=str(early_ref.get("src", "")), margin_ps=early_margin_ps,
+                                         stage_ps=early_stage_ps, pad_ps=pad_ps)
     for part, port, x, y, early in taps:
         tp = f"t_{DC.sv(part)}__{port}"
         ports.append(("output", tp))
         g = R[out["part_region"][part]] if regions else R[0]
         rk = dict(region=g["k"]) if regions else {}
+        if early_taps == "tree" and early > 0:
+            mean = early_target(dict(part=part, port=tp, early_ps=early), plain, early_ref["tap_late"], reg_of)
+            e_tt = float((early_c.get((part, port)) or {}).get("TT", early))
+            pick = None if mean is None else choose_early_node(
+                tree_nodes, (x, y), mean - e_tt, early_ref["node_late"], rep_um, early_stage_ps, early_margin_ps,
+                g["tag"] if regions else None, early_min_level if early_min_level is not None else regions + 1)
+            if pick is None:
+                out["unplaced"].append([tp, "STRUCTURAL early tap: no H-tree node early enough in its region"])
+                continue
+            nname, L, nh, est = pick
+            nc = cells[nname]
+            n0 = (nc["x"] + BUF_W / 2, nc["y"] + ROW_Y / 2)
+            hq, _ = free_near(K, n0, limit=rep_um / 4)
+            if hq is None:
+                out["unplaced"].append([tp, "early head"])
+                continue
+            k_eb = sum(1 for t_ in tap_rows if t_.get("early_branch"))
+            head = cell(f"ckm_s_e{k_eb}", hq[0], hq[1], "ebr", early=True, **rk)
+            npad = max(0, int(round((mean - e_tt - est) / pad_ps)))
+            pads = [cell(f"ckm_q_e{k_eb}_{i}", q[0], q[1], "pad", early=True, **rk)
+                    for i, q in enumerate(pad_sites(K, hq[0], hq[1], npad))]
+            reps = []
+            for s in range(1, nh):
+                p = l_path_point(hq, (x, y), s * L / nh)
+                q, _ = free_near(K, p, limit=rep_um / 2)
+                if q is None:
+                    out["unplaced"].append([tp, "early rep", s])
+                    break
+                reps.append(cell(f"ckm_e{k_eb}_{s}", q[0], q[1], "rep", early=True, **rk))
+            node_net[nname]["loads"].append(head)
+            chain = [head] + pads + reps
+            for u, w in zip(chain, chain[1:]):
+                nets.append(dict(name=f"ckm_w_{u}", drv=u, loads=[w], level=98))
+            nets.append(dict(name=f"ckm_w_{chain[-1]}", drv=chain[-1], loads=["port:" + tp], level=98))
+            pts = [n0, hq] + [(cells[r]["x"] + BUF_W / 2, cells[r]["y"] + ROW_Y / 2) for r in reps] + [(x, y)]
+            wire = sum(abs(b[0] - a[0]) + abs(b[1] - a[1]) for a, b in zip(pts, pts[1:]))
+            tap_rows.append(dict(part=part, tap=port, port=tp, xy=[x, y], early_ps=early,
+                                 early_corner_ps=early_c.get((part, port)), stub=head, **rk,
+                                 foot=[round(n0[0], 3), round(n0[1], 3)], strap=None, slide_um=0.0, stub_um=0.0,
+                                 early_branch=dict(node=nname, node_tag=node_tag(nname)[1], level=node_tag(nname)[0],
+                                                   head=head, pads=pads, reps=reps, len_um=round(L, 2),
+                                                   wire_um=round(wire, 2), hops=nh,
+                                                   node_ref_ps=round(early_ref["node_late"][nname], 2),
+                                                   target_ref_ps=round(mean - e_tt, 2), est_ps=round(est, 2),
+                                                   pads_initial=npad, path=[[round(a, 3), round(b, 3)] for a, b in pts])))
+            continue
         fq, fd, axis, i, j = stub_foot(K, xs, ys, x, y, 4 * max_move,
                                        box=(g["i0"], g["i1"], g["j0"], g["j1"]) if regions else None,
                                        extent=g.get("strap_box_um"))
@@ -698,6 +842,16 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                        mesh_wire_mm=round(sum((g["j1"] - g["j0"]) * (strap_bounds(g, xs, ys, 0)[1] - strap_bounds(g, xs, ys, 0)[0]) +
                                               (g["i1"] - g["i0"]) * (strap_bounds(g, xs, ys, 1)[1] - strap_bounds(g, xs, ys, 1)[0]) for g in R) / 1e3, 2),
                        stub_wire_mm=round(sum(t["stub_um"] for t in tap_rows) / 1e3, 2))
+    eb = [t["early_branch"] for t in tap_rows if t.get("early_branch")]
+    if early_taps == "tree":
+        out["meta"]["early_taps"].update(branches=len(eb), cells=sum(1 + len(b["pads"]) + len(b["reps"]) for b in eb),
+                                         pads=sum(len(b["pads"]) for b in eb), reps=sum(len(b["reps"]) for b in eb))
+        lv = defaultdict(int)
+        for b in eb:
+            lv[b["level"]] += 1
+        out["meta"]["early_taps"]["levels"] = dict(sorted(lv.items()))
+        out["meta"]["early_wire_mm"] = round(sum(b["wire_um"] for b in eb) / 1e3, 2)
+        out["meta"]["early_len_max_um"] = max([b["len_um"] for b in eb] or [0])
     return cells, nets, ports, out
 
 
@@ -751,8 +905,17 @@ def cmd_build(a):
         pg_shapes = DI.pg_rects(P, pg["grid"])
         tracks = mesh_tracks(a.track_file, P)
     region_spec = json.loads(Path(a.region_spec).read_text()) if a.region_spec else None
+    early_ref = None
+    if a.early_taps == "tree":
+        if not a.early_ref:
+            raise SystemExit("--early-taps tree needs --early-ref DIR (measured tree_TT.txt + taps_TT.txt of this tree)")
+        early_ref = read_early_ref(a.early_ref, "TT")
+        early_ref["src"] = str(a.early_ref)
     cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
-                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks, region_spec)
+                                  a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks, region_spec,
+                                  early_taps=a.early_taps, early_ref=early_ref, early_margin_ps=a.early_margin_ps,
+                                  early_stage_ps=a.early_stage_ps,
+                                  pad_ps=pad_delay("TT", a.libdir) if a.early_taps == "tree" else 37.26)
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
@@ -881,6 +1044,116 @@ def cmd_balance(a):
     return 0
 
 
+def trim_counts(M, arr, corner, pad_ps, early_by_plan=None):
+    """{port: (pads now, pads after, measured residual ps, predicted residual ps)} for every EARLY-TAP branch:
+    residual = measured arrival + core offset - the same partition's mean mesh-tap arrival (0 = on target)."""
+    late = {p: v for p, v in arr.items()}
+    off = {t["port"]: float((early_by_plan or {}).get((t["part"], t["tap"]), {}).get(
+        corner, (t.get("early_corner_ps") or {}).get(corner, t.get("early_ps", 0.0)))) for t in M["taps"]}
+    reg = (lambda u: u.get("region")) if M["meta"].get("regions_depth") else None
+    out = {}
+    for t in M["taps"]:
+        b = t.get("early_branch")
+        if not b or t["port"] not in late:
+            continue
+        ref = early_target(t, M["taps"], late, reg)
+        if ref is None:
+            continue
+        res = late[t["port"]] + off[t["port"]] - ref
+        now = len(b["pads"])
+        new = max(0, now - int(round(res / pad_ps)))
+        out[t["port"]] = (now, new, round(res, 2), round(res - (now - new) * pad_ps, 2))
+    return out
+
+
+def cmd_trim(a):
+    """measured TRIM of the EARLY-TAP branches (after balance): from routed taps_<corner>.txt, every branch's pad
+    chain gets the BUFx24 count that puts its arrival at (same partition's mesh taps) - early_ps.  Only branch pads
+    change; the H-tree, mesh and stubs are untouched.  Writes a new build dir."""
+    src, out = Path(a.dir), Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    P = S.Plan(S.load(a.plan))
+    M = json.loads((src / "mesh.json").read_text())
+    cells = json.loads((src / "place.json").read_text())
+    data = json.loads((src / "nets.json").read_text())
+    nets, ports = data["nets"], [tuple(p) for p in data["ports"]]
+    ko = list(DC.keepouts(P)) + ([P.rect(n) for n in P.parts] if M["meta"].get("sites") == "channel" else [])
+    K = DC.KeepIndex(ko, die=(float(P.W), float(P.H)))
+    res_of = {}
+    for name, c in cells.items():
+        res_of[name] = reserve_cell(K, name, c)
+    arr = {}
+    for line in open(src / f"taps_{a.corner}.txt"):
+        f = line.split()
+        arr[f[1]] = float(f[2])
+    dl = pad_delay(a.corner, a.libdir)
+    plan_early = DC.plan_tap_early(P)
+    want = trim_counts(M, arr, a.corner, dl, plan_early)
+    by_drv = {n["drv"]: n for n in nets}
+    added = removed = 0
+    rows = {}
+    for t in M["taps"]:
+        b = t.get("early_branch")
+        if not b or t["port"] not in want:
+            continue
+        now, new, res, pred = want[t["port"]]
+        rows[t["port"]] = dict(pads=[now, new], residual_ps=res, predicted_ps=pred)
+        if new == now:
+            continue
+        head = b["head"]
+        tail = by_drv[b["pads"][-1]]["loads"][0] if b["pads"] else by_drv[head]["loads"][0]
+        for c in b["pads"]:                       # old pad chain out (cells, reservations, nets)
+            release_cell_reservation(K, res_of.pop(c))
+            del cells[c]
+            removed += 1
+        drop = set(b["pads"])
+        nets = [n for n in nets if n["drv"] not in drop]
+        by_drv = {n["drv"]: n for n in nets}
+        hc = cells[head]
+        tag = M["meta"].get("trim_passes", 0)
+        pads = []
+        for i, q in enumerate(pad_sites(K, hc["x"] + BUF_W / 2, hc["y"] + ROW_Y / 2, new)):
+            nm = f"ckm_q_e{head[7:]}_t{tag}_{i}"
+            cells[nm] = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y), kind="pad", early=True,
+                             **({"region": hc["region"]} if "region" in hc else {}))
+            res_of[nm] = reserve_cell(K, nm, cells[nm])
+            pads.append(nm)
+            added += 1
+        chain = [head] + pads
+        hn = by_drv[head]
+        hn["name"], hn["loads"] = f"ckm_w_{head}", [chain[1] if pads else tail]
+        for u, w in zip(pads, pads[1:] + [tail]):
+            nets.append(dict(name=f"ckm_w_{u}", drv=u, loads=[w], level=98))
+        b["pads"] = pads
+        by_drv = {n["drv"]: n for n in nets}
+    # a net that drives a tap port is named for the port; renamed head nets get that name back here
+    for n in nets:
+        if any(ld.startswith("port:") for ld in n["loads"]) and not n["name"].startswith("ckm_w_"):
+            n["name"] = f"ckm_w_{n['drv']}"
+    ren = write_verilog(cells, nets, ports, out / "ctree.v")
+    for n in nets:
+        n["name"] = ren.get(n["name"], n["name"])
+    M["meta"]["cells"] = len(cells)
+    M["clock_cell_overlaps"] = placement_overlaps(cells)
+    M["meta"]["clock_cell_overlap_pairs"] = len(M["clock_cell_overlaps"])
+    M["clock_hard_keepout_violations"] = hard_keepout_violations(P, cells)
+    M["meta"]["clock_hard_keepout_violations"] = len(M["clock_hard_keepout_violations"])
+    M["meta"]["trim_passes"] = M["meta"].get("trim_passes", 0) + 1
+    eb = [t["early_branch"] for t in M["taps"] if t.get("early_branch")]
+    M["meta"]["early_taps"].update(cells=sum(1 + len(b["pads"]) + len(b["reps"]) for b in eb),
+                                   pads=sum(len(b["pads"]) for b in eb))
+    pr = [abs(r["predicted_ps"]) for r in rows.values()]
+    M["meta"]["trim"] = dict(src=str(src), corner=a.corner, pad_ps=round(dl, 2), added=added, removed=removed,
+                             measured_residual_max_abs_ps=round(max([abs(r["residual_ps"]) for r in rows.values()] or [0]), 2),
+                             predicted_residual_max_abs_ps=round(max(pr or [0]), 2))
+    (out / "mesh.json").write_text(json.dumps(M) + "\n")
+    (out / "place.json").write_text(json.dumps(cells) + "\n")
+    (out / "nets.json").write_text(json.dumps(dict(ports=ports, nets=nets)) + "\n")
+    (out / "trim.json").write_text(json.dumps(rows, indent=1) + "\n")
+    print(json.dumps(M["meta"]["trim"]))
+    return 0
+
+
 # ------------------------------------------------------------------------------------------------------------ combo
 def cmd_combo(a):
     """combo.v + combo.tcl: kit signals (abstracts, M4-M7) + the mesh clock (M8-M9) in ONE global_route, then the
@@ -994,6 +1267,10 @@ def cmd_combo(a):
           "foreach c [get_cells {ckm_n* ckm_r*}] { set p [get_pins [get_full_name $c]/Y]; puts $fh \"N "
           "[get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] "
           "[get_property $p slew_max_rise]\" }",
+          ] + (["foreach c [get_cells ckm_s_e*] { set p [get_pins [get_full_name $c]/A]; puts $fh \"E "
+                "[get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] "
+                "[get_property $p slew_max_rise] [get_property $p slew_min_rise]\" }"]
+               if any(t_.get("early_branch") for t_ in M["taps"]) else []) + [
           "close $fh",
           "report_check_types -max_slew -max_capacitance -violators",
           "write_db /out/combo_$::env(CORNER).odb", "puts OT_DONE"]
@@ -1047,11 +1324,17 @@ def interp(xv, yv, x):
     return yv[-1]
 
 
-def read_tree(path):
+def read_tree(path, early=None):
+    """D rows = driver A pins, N = tree node/rep Y pins; E rows (early-branch head A pins: late early slew_max
+    slew_min) go to `early` when given, else nowhere (they are neither drivers nor tree nodes)."""
     D, N = {}, {}
     for line in open(path):
         f = line.split()
         if len(f) < 5:
+            continue
+        if f[0] == "E":
+            if early is not None:
+                early[f[1]] = (float(f[2]), float(f[3]), float(f[4]), float(f[5]) if len(f) > 5 else float(f[4]))
             continue
         rec = (float(f[2]), float(f[3]), float(f[4]))
         (D if f[0] == "D" else N)[f[1]] = rec
@@ -1107,6 +1390,8 @@ def cmd_mesh(a):
         drv_at.append((key, dv))
     stub_at = []
     for t in M["taps"]:
+        if t.get("early_branch"):
+            continue      # EARLY-TAP branch: fed from the H-tree, not a mesh load
         L_, idx = t["strap"]
         X, Y = round(t["foot"][0], 3), round(t["foot"][1], 3)
         rk = t.get("region")
@@ -1230,6 +1515,17 @@ def cmd_mesh(a):
     lat = [s["late"] for s in out["stubs"].values()]
     out["stub_in_late_ps"] = [round(min(lat), 2), round(max(lat), 2)]
     out["stub_in_slew_max_ps"] = round(max(max(s["slew_late"], s["slew_early"]) for s in out["stubs"].values()), 2)
+    E = {}
+    read_tree(d / f"tree_{a.corner}.txt", early=E)
+    eb = [t for t in M["taps"] if t.get("early_branch")]
+    for t in eb:   # the branch head A pin arrival comes from the routed tree STA (combo), like the drivers'
+        if t["stub"] not in E:
+            raise SystemExit(f"die_clock_mesh mesh: no tree arrival for early-branch head {t['stub']} (re-run combo)")
+        e = E[t["stub"]]
+        out["stubs"][t["stub"]] = dict(port=t["port"], late=round(e[0], 3), early=round(e[1], 3),
+                                       slew_late=round(e[2], 3), slew_early=round(e[3], 3), early_branch=True)
+    if eb:
+        out["early_head_slew_max_ps"] = round(max(E[t["stub"]][2] for t in eb), 2)
     (d / f"mesh_{a.corner}.json").write_text(json.dumps(out) + "\n")
     print(json.dumps({k: v for k, v in out.items() if k != "stubs"}))
     return 0
@@ -1374,8 +1670,12 @@ def cmd_report(a):
     intra = DC.intra_pairs(tb, float(P.budgets.get("tap_pitch_um", 400.0)))
     tagof = {}
     for t in M["taps"]:
+        if t.get("early_branch"):     # EARLY-TAP branch: its own H-tree node is its tag (and its region proof)
+            tagof[t["port"]] = t["early_branch"]["node_tag"]
+            continue
         fx, fy = t["foot"]
         tagof[t["port"]] = path_of(int(np.argmin(abs(xa - fx))), int(np.argmin(abs(ya - fy))))
+    ebr = {t["port"]: t for t in M["taps"] if t.get("early_branch")}
     regd = M["meta"].get("regions_depth", 0)
     reg = {t["port"]: t.get("region") for t in M["taps"]}
     if regd:   # the region also follows from the tag (H-tree prefix): a stub on a foreign strap is a build bug
@@ -1407,10 +1707,17 @@ def cmd_report(a):
         late, early, core_offsets = sink_arrivals(M, arr, corner, DC.plan_tap_early(P))
         slew = {p: v[2] for p, v in arr.items()}
 
-        def dmg(pa, pb):
+        def common(p):
             # A region mesh mixes every driver in its subtree. A nearby driver is not a common clock path:
             # only the region root is shared by ALL contributors (D-INFRA-FIRST regional-clock contract).
-            c = M["meta"]["regions"][reg[pa]]["tag"] if regd else "h"
+            # An EARLY-TAP branch's own path is its H-tree node: its common node with a mesh tap is the region root
+            # (an LCA), with another branch the LCA of the two branch nodes.
+            if p in ebr:
+                return ebr[p]["early_branch"]["node_tag"]
+            return M["meta"]["regions"][reg[p]]["tag"] if regd else "h"
+
+        def dmg(pa, pb):
+            c = lca(common(pa), common(pb)) or "h"
             while c not in rng and len(c) > 1:
                 c = c[:-1]
             return DC.pair_clock_damage(late[pa], early[pa], late[pb], early[pb], rng.get(c, 0.0))["max_damage_ps"]
@@ -1424,6 +1731,14 @@ def cmd_report(a):
                abs(late[x[0]] - late[x[1]]), x) for x in landed]
         Mz = json.loads((d / f"mesh_{corner}.json").read_text())
         _, Nn = read_tree(d / f"tree_{corner}.txt")
+        eres = {}
+        for p, t in ebr.items():   # compensated early-tap arrival - the same partition's mesh taps (0 = on target)
+            ref = early_target(t, M["taps"], late, (lambda u: reg[u["port"]]) if regd else None)
+            if ref is not None:
+                eres[p] = round(late[p] - ref, 2)
+        ex = dict(early_branches=len(ebr), early_residual_max_abs_ps=round(max([abs(v) for v in eres.values()] or [0]), 2),
+                  early_residual_ps=[round(min(eres.values()), 2), round(max(eres.values()), 2)] if eres else None,
+                  early_residual_worst=sorted(eres.items(), key=lambda z: -abs(z[1]))[:8]) if ebr else {}
         rep["corners"][corner] = dict(
             insertion_ps=[round(min(raw_late.values()), 2), round(max(raw_late.values()), 2)],
             tap_skew_ps=round(max(raw_late.values()) - min(raw_late.values()), 2),
@@ -1442,13 +1757,14 @@ def cmd_report(a):
             verdict="PASS" if max(sk + ik) <= DC.GATE_PS else "FAIL",
             tap_slew_max_ps=round(max(slew.values()), 2), mesh_stub_in_slew_max_ps=Mz["stub_in_slew_max_ps"],
             tree_slew_max_ps=round(max(v[2] for v in Nn.values()), 2), mesh_cap_pF=Mz["mesh_cap_pF"],
-            worst=[[round(w, 2), x, y] for w, x, y in worst])
+            worst=[[round(w, 2), x, y] for w, x, y in worst], **ex)
     # clock power: C V^2 f over every die clock wire + pin (mesh from the transient, tree/stub wire from length)
     nd = NDR[M["meta"]["ndr"]]
     cw = (DC.LAYER_RC["M8"][1] + DC.LAYER_RC["M9"][1]) / 2 * nd["cf"]
     ncell = M["meta"]["cells"]
     for corner, r in rep["corners"].items():
-        c_tot = r["mesh_cap_pF"] + (M["meta"]["htree_wire_mm"] + M["meta"]["stub_wire_mm"]) * 1e3 * cw / 1e3 \
+        c_tot = r["mesh_cap_pF"] + (M["meta"]["htree_wire_mm"] + M["meta"]["stub_wire_mm"] +
+                                    M["meta"].get("early_wire_mm", 0.0)) * 1e3 * cw / 1e3 \
             + ncell * DC.BUF_CIN_FF / 1e3 + len(M["taps"]) * DC.TAP_LOAD_FF / 1e3
         r["clock_switched_cap_pF"] = round(c_tot, 1)
         r["clock_wire_power_W"] = round(c_tot * 1e-12 * VDD[corner] ** 2 / (DC.PERIOD_PS * 1e-12), 3)
@@ -1495,6 +1811,15 @@ def cmd_render(a):
     ax.scatter([v["site"][0] for v in st], [v["site"][1] for v in st], s=1.2, c="k", marker="s", lw=0)
     ax.scatter([v["site"][0] for v in mv], [v["site"][1] for v in mv], s=2.0, c="tab:orange", marker="s", lw=0)
     for t in M["taps"]:
+        if t.get("early_branch"):
+            pth = t["early_branch"]["path"]
+            lx, ly = [pth[0][0]], [pth[0][1]]
+            for q0, q1 in zip(pth, pth[1:]):   # Manhattan legs as routed (x first, then y)
+                lx += [q1[0], q1[0]]
+                ly += [q0[1], q1[1]]
+            ax.plot(lx, ly, color="magenta", lw=0.7)
+            ax.scatter([pth[0][0]], [pth[0][1]], s=4, c="magenta", marker="^", lw=0)
+            continue
         ax.plot([t["foot"][0], t["xy"][0]], [t["foot"][1], t["xy"][1]], color="tab:green", lw=0.3)
     ax.scatter([t["xy"][0] for t in M["taps"]], [t["xy"][1] for t in M["taps"]], s=0.6, c="tab:green", lw=0)
     ax.set_xlim(0, W)
@@ -1503,7 +1828,9 @@ def cmd_render(a):
     m_ = M["meta"]
     ax.set_title(f"{Path(m_.get('plan', 'die')).parent.name} die clock mesh {m_['nx']}x{m_['ny']} ({m_['pitch_um'][0]:.0f}x{m_['pitch_um'][1]:.0f} um, "
                  f"{m_['ndr']}), {m_['drivers']} driver sites x{m_['m']} (orange = moved, max "
-                 f"{m_['driver_move_max_um']:.0f} um), H-tree red, {m_['stubs']} stubs green", fontsize=7)
+                 f"{m_['driver_move_max_um']:.0f} um), H-tree red, {m_['stubs']} stubs green"
+                 + (f", {m_['early_taps']['branches']} EARLY-TAP branches magenta (^ = H-tree node)" if m_.get("early_taps") else ""),
+                 fontsize=7)
     out = a.out or str(d / "mesh.png")
     fig.savefig(out, bbox_inches="tight")
     print(out)
@@ -1537,6 +1864,13 @@ def main(argv=None):
     b.add_argument("--track-file", help="actual die kit grt/tracks.tcl, required with --pg-json")
     b.add_argument("--region-spec", help="opt-in dataflow clock cohorts: split_axes plus actual x_cuts_um/y_cuts_um")
     b.add_argument("--delta-id", help="plan delta tag recorded in mesh.json meta (e.g. D-QC-CLKMESH)")
+    b.add_argument("--early-taps", choices=["mesh", "tree"], default="mesh",
+                   help="tree: core-offset taps (early_ps > 0) get an EARLY-TAP branch from an upstream H-tree node "
+                        "of their own region instead of a mesh stub (default mesh: unchanged)")
+    b.add_argument("--early-ref", help="measured combo+post dir of the same tree (tree_TT.txt, taps_TT.txt) for node choice")
+    b.add_argument("--early-margin-ps", type=float, default=40.0, help="node choice margin before the target arrival")
+    b.add_argument("--early-stage-ps", type=float, default=45.0, help="estimated delay per early-branch hop (TT)")
+    b.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
     bl = sub.add_parser("balance")
     bl.add_argument("dir")
     bl.add_argument("--out", required=True)
@@ -1545,6 +1879,12 @@ def main(argv=None):
     bl.add_argument("--tree", help="measured tree_<corner>.txt of the same tree (default: DIR's)")
     bl.add_argument("--tag", default="", help="pad name tag (one per balancing pass)")
     bl.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
+    tr = sub.add_parser("trim", help="measured EARLY-TAP branch pad trim (after balance)")
+    tr.add_argument("dir")
+    tr.add_argument("--out", required=True)
+    tr.add_argument("--plan", required=True)
+    tr.add_argument("--corner", default="TT")
+    tr.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
     c = sub.add_parser("combo")
     c.add_argument("dir")
     c.add_argument("--kit", required=True)
@@ -1577,7 +1917,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "report" and not a.corner:
         a.corner = ["TT", "FF"]
-    return dict(build=cmd_build, balance=cmd_balance, combo=cmd_combo, mesh=cmd_mesh, stubsta=cmd_stubsta, report=cmd_report,
+    return dict(build=cmd_build, balance=cmd_balance, trim=cmd_trim, combo=cmd_combo, mesh=cmd_mesh, stubsta=cmd_stubsta, report=cmd_report,
                 render=cmd_render)[a.cmd](a)
 
 
