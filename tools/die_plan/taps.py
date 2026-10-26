@@ -512,7 +512,7 @@ def report(P, tn):
     """kit / G0 summary of the sink-anchored taps."""
     taps = sink_taps(P, tn)
     ck = P.types[tn].get("clock", {})
-    dens = ck.get("tap_mode") == "density"
+    dens = ck.get("tap_mode") in ("density", "explicit")
     return dict(mode=ck.get("tap_mode", "sinks"), radius_um=float(ck.get("tap_radius_um", 200.0 if dens else 250.0)),
                 max_sinks=int(ck.get("tap_max_sinks", 1500)), n=len(taps), empty=sum(1 for t in taps if t[3] == 0),
                 taps=[dict(name=n, xy=[x, y], planned_sinks=s, radius_um=r) for n, x, y, s, r in taps])
