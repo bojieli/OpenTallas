@@ -3771,3 +3771,5 @@ OWNER?
 No new owner decision needed at takeover; existing rulings being executed.
 
 2026-10-25 21:50 PDT shared: READY codex/shared-flow-2144@1bca870e8 (per-die gate+trigger and reference semantic watch).29 focused PASS. Historical canary failures collected coord/codex-shared-results-2144.md. Four KVfan trials inherited/live, child9bca574fd candidate not adopted until routed result. HBM pending522ps canary preserved; reviewed shallow CTS corrections queued explicitly against it. No new OWNER?.
+
+CODEX: 2026-10-25 21:50 PDT MERGED main46b872d92b approved batch12 LEC cycle + S81 native hcore/reset + QC/HBM relative binds + per-die canary scope. Focused gates PASS,3manifestPASS, HEAD==origin/main. Physical/token failures retained.
