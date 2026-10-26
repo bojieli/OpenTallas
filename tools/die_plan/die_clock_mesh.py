@@ -981,7 +981,8 @@ def stubtrim_pairs(P, M):
 
 def region_credit(M, tree_path):
     """CPPR credit per region = late - early arrival at the region's own H-tree node (the mesh is NOT common)."""
-    D, _ = read_tree(tree_path)
+    Dd, Nn = read_tree(tree_path)
+    D = {**Dd, **Nn}
     out = {}
     for g in M["meta"]["regions"]:
         nm = [n for n in D if re.match(rf"ckm_n\d+_{g['tag']}$", n)]
