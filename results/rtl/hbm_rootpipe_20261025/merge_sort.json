@@ -1,0 +1,7 @@
+{
+ "change":"stable pair-sort+KEYFORM before entry, then two-pair merge into existing entry_q; original-index tags preserve ties",
+ "data_cycle_delta":0,"boot_cycle_delta":0,
+ "root_cut_gate":{"verdict":"PASS","checks_per_reset_mode":7115,"configurations":5,"reset_modes":[0,1],"directed_signed_zero_key_ties":true,"MUTP1":"CAUGHT entries676","wrong_stable_tag_mutant":"CAUGHT entries676","unit":"localhost oth-ubuntu-1263877-1792993346"},
+ "predecessor_failure":{"source":"711dfd811","preplacement_resized_TT_WNS_ps":-111.405,"raw_ideal_TT_WNS_ps":-184.95,"measured_path":"entry[257] -> entry_q[161],937.83ps data arrival vs752.88ps required","source_of_failure":"parallel rank comparisons + arithmetic rank + indexed result mux","other_limits":"I/O endpoints in ideal-preCTS view lack planned local clock insertion; not final physical timing"},
+ "physical":"NOT_RUN on pair/merge successor; no CTS/GRT approval"
+}
