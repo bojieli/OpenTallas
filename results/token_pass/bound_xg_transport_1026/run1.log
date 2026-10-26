@@ -1,0 +1,29 @@
+ot-run: intel1         admits   827 GB (avail 905, reserve 0, fresh 0, peak 13.3, headroom 0, waiters 0/0 GB) load 10/112 running 6 disk 1968 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-2728974-1793015563 after 0 s
+d101abeda
+{"entry": "PASS_BOUND_TRANSPORT", "ret": "PASS_BOUND_RETURN", "xf": "PASS_BOUND_XG_FORWARD", "nx": "PASS_BOUND_NX_BOUNDARY", "xfin": "PASS_BOUND_XFIN_ENDPOINTS", "xf_pass": 80, "nx_hops": 38, "nx_blocked": 0, "xfin_pass": 16}
+	Command being timed: "python3 -m layer_prog.bound_xg_transport --bound /srv/opentallas-scratch2/claude/tok-ds/s81_877/v2/out --inventory /srv/opentallas-scratch2/claude/codex-bound-inventory-1026/inventory.vp.json --buffer-inventory /srv/opentallas-scratch2/claude/codex-bound-inventory-1026/inventory.json --out /srv/opentallas-scratch2/claude/tok-ds-xg-1026/xg_transport1.json"
+	User time (seconds): 95.31
+	System time (seconds): 2.48
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:37.84
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1573740
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 593900
+	Voluntary context switches: 206
+	Involuntary context switches: 382
+	Swaps: 0
+	File system inputs: 447192
+	File system outputs: 280
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on intel1 (unit oth-ubuntu-2728974-1793015563): exit 0

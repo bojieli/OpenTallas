@@ -1,0 +1,5 @@
+ot-run: intel1         admits   578 GB (avail 835, reserve 0, fresh 9.8, peak 182.6, headroom 0, waiters 0/0 GB) load 20/112 running 9 disk 1969 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-2555765-1793013423 after 1 s
+{"verdict": "PASS_BOUND_TRANSPORT", "leaves": 80, "blocked": 0}
+ot-run: RAN on intel1 (unit oth-ubuntu-2555765-1793013423): exit 0
