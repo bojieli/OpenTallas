@@ -535,7 +535,8 @@ def profile(kind, ages=None):
                 rx=L['d2d_to_attention_rx']['edges'], writer=L['programme_to_writer']['edges'], kvn=L['d2d_to_writer']['edges'],
                 groups=L['programme_to_groups']['edges'] + hl['fan'], crossing=True,
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
-                v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=QKH32.calendar_d_qk(ages['qk']['QK_ISSUE_AGE'], AC.QK_CONSUME),
+                v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19,
+                pv_result_extra=int(ages['pv'].get('RESULT_TRUNK_EXTRA', 0)), d_qk=QKH32.calendar_d_qk(ages['qk']['QK_ISSUE_AGE'], AC.QK_CONSUME),
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
                 rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None,
                 # KV-BOOTAGE 10-19: the result face's boot F_DLY (kv_bootage image; 1 = the closed face law, unchanged)
@@ -604,6 +605,12 @@ def attention_calendar(T, pr, service_end=None):
         if po[1] > po[0]:
             raise ValueError(f'T={T}: pair END FLOOR needs P0 >= P1 (P0 {po[0]}, P1 {po[1]})')
         po[1] = po[0]
+    # Physical result-trunk transport moves the published pairs, independently
+    # of the input request/response age (d_rl). Both pairs are statically aligned.
+    result_extra = pr.get('pv_result_extra', 0)
+    if not isinstance(result_extra, int) or result_extra < 0:
+        raise ValueError('PV result-trunk extra age must be a nonnegative integer')
+    po = [p + result_extra for p in po]
     mg = rz_margin(pr)
     pv = max(c['EXP'] + AC.pv_after_exp_w16(T) + d_gap, c['HUB_PUB'] + mg - max(po))
     r = max(max(po), c['HUB_PUB'] + mg - pv)
