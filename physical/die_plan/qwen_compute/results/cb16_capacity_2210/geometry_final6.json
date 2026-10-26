@@ -1,0 +1,7408 @@
+[
+ {
+  "type": "cbf_q00",
+  "interface_routes": [
+   {
+    "bus": "bc_o01",
+    "direction": "out",
+    "leaf": "u_xstn01.a_d",
+    "centroid_route_um": 1133.1808890175148,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      2609.280000000022
+     ],
+     [
+      84.4,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2542.16
+     ],
+     [
+      566.2239999999939,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      2371.137671667256
+     ],
+     [
+      426.6393653269214,
+      2609.280000000022
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o11",
+    "direction": "out",
+    "leaf": "u_xstn11.a_d",
+    "centroid_route_um": 617.5656936596923,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2542.16
+     ],
+     [
+      669.2959999999944,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      2302.1935554912643
+     ]
+    ]
+   },
+   {
+    "bus": "na_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_a",
+    "centroid_route_um": 2187.0228207472487,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "path_um": [
+     [
+      138.92186407767002,
+      2609.280000000022
+     ],
+     [
+      138.92186407767002,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      827.5593151750971
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      436.3056675355226,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2285.5745290065965
+     ],
+     [
+      544.2239999999939,
+      1921.0707255487216
+     ],
+     [
+      544.2239999999939,
+      1556.566922090847
+     ],
+     [
+      544.2239999999939,
+      1192.063118632972
+     ]
+    ]
+   },
+   {
+    "bus": "y_o11",
+    "direction": "out",
+    "leaf": "u_t11.n_y",
+    "centroid_route_um": 670.0046612821666,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2560.4121009708674
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      918.7697703297931,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_b",
+    "centroid_route_um": 2323.984995746318,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 7,
+    "actual_input_pad_depth": 7,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      2609.280000000022
+     ],
+     [
+      1151.1200000000001,
+      2609.280000000022
+     ],
+     [
+      689.2,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      927.8471906614786
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      799.4453537833824,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2477.1705211590242
+     ],
+     [
+      544.2239999999939,
+      2089.839688534638
+     ],
+     [
+      544.2239999999939,
+      1702.5088559102514
+     ],
+     [
+      544.2239999999939,
+      1315.1780232858648
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i00",
+    "direction": "in",
+    "leaf": "u_xstn00.b_d",
+    "centroid_route_um": 1206.0823063403284,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      75.76
+     ],
+     [
+      546.32,
+      75.76
+     ],
+     [
+      546.32,
+      688.7707086614176
+     ],
+     [
+      566.2239999999939,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      375.1798377678592,
+      75.76
+     ],
+     [
+      546.32,
+      306.64727321463533
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i10",
+    "direction": "in",
+    "leaf": "u_xstn10.b_d",
+    "centroid_route_um": 690.467110982506,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      75.76
+     ],
+     [
+      669.2959999999944,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      343.53715317016463
+     ]
+    ]
+   },
+   {
+    "bus": "y_o00",
+    "direction": "out",
+    "leaf": "u_t00.n_y",
+    "centroid_route_um": 1535.29357561104,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.92186407767002,
+     0.0
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "path_um": [
+     [
+      138.92186407767002,
+      0.0
+     ],
+     [
+      138.92186407767002,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      1129.9914396887161
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      544.2239999999939,
+      746.1680457859561
+     ],
+     [
+      544.2239999999939,
+      362.3446518831961
+     ],
+     [
+      446.98525798043,
+      75.76
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_0",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "box_um": [
+     546.2239999999939,
+     668.7707086614176,
+     586.2239999999939,
+     708.7707086614176
+    ],
+    "tap_core": "u_t00",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_1",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t01",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_0",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "box_um": [
+     649.2959999999944,
+     668.7707086614176,
+     689.2959999999944,
+     708.7707086614176
+    ],
+    "tap_core": "u_t10",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_1",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t11",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbf_q01",
+  "interface_routes": [
+   {
+    "bus": "bc_i02",
+    "direction": "in",
+    "leaf": "u_xstn02.b_d",
+    "centroid_route_um": 1197.4423063403278,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      67.12
+     ],
+     [
+      546.32,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      380.9398377678591,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      280.98327321464114
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i12",
+    "direction": "in",
+    "leaf": "u_xstn12.b_d",
+    "centroid_route_um": 681.8271109825056,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      67.12
+     ],
+     [
+      669.2959999999944,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      339.2171531701644
+     ]
+    ]
+   },
+   {
+    "bus": "y_o12",
+    "direction": "out",
+    "leaf": "u_t12.n_y",
+    "centroid_route_um": 1616.8316260964907,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     0.0
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     1121.3514396887163
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      0.0
+     ],
+     [
+      1151.1200000000001,
+      0.0
+     ],
+     [
+      1151.1200000000001,
+      67.12
+     ],
+     [
+      691.2959999999941,
+      67.12
+     ],
+     [
+      691.2959999999941,
+      1121.3514396887163
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      691.2959999999941,
+      717.1435331645936
+     ],
+     [
+      691.2959999999941,
+      312.9356266404709
+     ],
+     [
+      849.6882798836457,
+      67.12
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i12",
+    "direction": "in",
+    "leaf": "u_t12.n_b",
+    "centroid_route_um": 2194.0689103094064,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2569.0521009708705
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     919.2071906614789
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2569.0521009708705
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      1380.4
+     ],
+     [
+      1151.1200000000001,
+      1228.88
+     ],
+     [
+      691.2959999999941,
+      1228.88
+     ],
+     [
+      691.2959999999941,
+      919.2071906614789
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      1151.1200000000001,
+      2287.773949252645
+     ],
+     [
+      1151.1200000000001,
+      1922.0957975344104
+     ],
+     [
+      1151.1200000000001,
+      1556.417645816176
+     ],
+     [
+      1112.9794940979416,
+      1228.88
+     ],
+     [
+      747.3013423797072,
+      1228.88
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_2",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     680.1307086614172
+    ],
+    "box_um": [
+     546.2239999999939,
+     660.1307086614172,
+     586.2239999999939,
+     700.1307086614172
+    ],
+    "tap_core": "u_t02",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_3",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t03",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_2",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     680.1307086614172
+    ],
+    "box_um": [
+     649.2959999999944,
+     660.1307086614172,
+     689.2959999999944,
+     700.1307086614172
+    ],
+    "tap_core": "u_t12",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_3",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t13",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbx_q10",
+  "interface_routes": [
+   {
+    "bus": "bc_o21",
+    "direction": "out",
+    "leaf": "u_xstn21.a_d",
+    "centroid_route_um": 1034.7007961741947,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.7524951644102,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      138.7524951644102,
+      2609.280000000022
+     ],
+     [
+      537.6800000000001,
+      2609.280000000022
+     ],
+     [
+      557.5840000000011,
+      2609.280000000022
+     ],
+     [
+      557.5840000000011,
+      2542.16
+     ],
+     [
+      557.5840000000011,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      557.5840000000011,
+      2338.310974052816
+     ],
+     [
+      483.65276055580864,
+      2609.280000000022
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o31",
+    "direction": "out",
+    "leaf": "u_xstn31.a_d",
+    "centroid_route_um": 631.4528890175134,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      2609.280000000022
+     ],
+     [
+      677.9359999999922,
+      2609.280000000022
+     ],
+     [
+      677.9359999999922,
+      2542.16
+     ],
+     [
+      677.9359999999922,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      2309.1371531701748
+     ]
+    ]
+   },
+   {
+    "bus": "y_o21",
+    "direction": "out",
+    "leaf": "u_t21.n_y",
+    "centroid_route_um": 481.7128088549962,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     228.519751456311,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      228.519751456311,
+      2609.280000000022
+     ],
+     [
+      228.519751456311,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      402.25615588378696,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i20",
+    "direction": "in",
+    "leaf": "u_xstn20.b_d",
+    "centroid_route_um": 1152.2164649476854,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     94.1382437137331,
+     0.0
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      94.1382437137331,
+      0.0
+     ],
+     [
+      94.1382437137331,
+      75.76
+     ],
+     [
+      537.6800000000001,
+      75.76
+     ],
+     [
+      537.6800000000001,
+      688.7707086614176
+     ],
+     [
+      557.5840000000011,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      402.4503986962949,
+      75.76
+     ],
+     [
+      537.6800000000001,
+      324.60255367885657
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i30",
+    "direction": "in",
+    "leaf": "u_xstn30.b_d",
+    "centroid_route_um": 704.3543063403271,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      75.76
+     ],
+     [
+      677.9359999999922,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      336.5935554912541
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_2_0",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     688.7707086614176
+    ],
+    "box_um": [
+     537.5840000000011,
+     668.7707086614176,
+     577.5840000000011,
+     708.7707086614176
+    ],
+    "tap_core": "u_t20",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_2_1",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "box_um": [
+     537.5840000000011,
+     1973.410708661418,
+     577.5840000000011,
+     2013.410708661418
+    ],
+    "tap_core": "u_t21",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_0",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     688.7707086614176
+    ],
+    "box_um": [
+     657.9359999999922,
+     668.7707086614176,
+     697.9359999999922,
+     708.7707086614176
+    ],
+    "tap_core": "u_t30",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_1",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "box_um": [
+     657.9359999999922,
+     1973.410708661418,
+     697.9359999999922,
+     2013.410708661418
+    ],
+    "tap_core": "u_t31",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbf_q11",
+  "interface_routes": [
+   {
+    "bus": "bc_i22",
+    "direction": "in",
+    "leaf": "u_xstn22.b_d",
+    "centroid_route_um": 1098.9622134970082,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.7524951644102,
+     0.0
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      138.7524951644102,
+      0.0
+     ],
+     [
+      537.6800000000001,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      67.12
+     ],
+     [
+      557.5840000000011,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      505.07323299674624,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      313.8099708290812
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i32",
+    "direction": "in",
+    "leaf": "u_xstn32.b_d",
+    "centroid_route_um": 695.7143063403266,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      67.12
+     ],
+     [
+      677.9359999999922,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      332.2735554912539
+     ]
+    ]
+   },
+   {
+    "bus": "y_o22",
+    "direction": "out",
+    "leaf": "u_t22.n_y",
+    "centroid_route_um": 661.3646612821572,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     0.0,
+     1247.1321009708727
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     1121.3514396887163
+    ],
+    "path_um": [
+     [
+      0.0,
+      1247.1321009708727
+     ],
+     [
+      0.0,
+      1228.88
+     ],
+     [
+      75.76,
+      1228.88
+     ],
+     [
+      535.5840000000007,
+      1228.88
+     ],
+     [
+      535.5840000000007,
+      1121.3514396887163
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      312.430229670206,
+      1228.88
+     ]
+    ]
+   },
+   {
+    "bus": "na_i22",
+    "direction": "in",
+    "leaf": "u_t22.n_a",
+    "centroid_route_um": 1305.759501582865,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 3,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.743813592232996,
+     0.0
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     818.9193151750972
+    ],
+    "path_um": [
+     [
+      48.743813592232996,
+      0.0
+     ],
+     [
+      75.76,
+      0.0
+     ],
+     [
+      75.76,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      818.9193151750972
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      308.0636889879492,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      166.0395643836647
+     ],
+     [
+      535.5840000000007,
+      492.479439779381
+     ]
+    ]
+   },
+   {
+    "bus": "y_o23",
+    "direction": "out",
+    "leaf": "u_t23.n_y",
+    "centroid_route_um": 670.0046612821557,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     0.0,
+     2569.0521009708705
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      0.0,
+      2569.0521009708705
+     ],
+     [
+      0.0,
+      2542.16
+     ],
+     [
+      75.76,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      308.1102296702072,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i22",
+    "direction": "in",
+    "leaf": "u_t22.n_b",
+    "centroid_route_um": 1226.2714392051685,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 3,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     228.519751456311,
+     0.0
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     919.2071906614789
+    ],
+    "path_um": [
+     [
+      228.519751456311,
+      0.0
+     ],
+     [
+      228.519751456311,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      919.2071906614789
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      467.96761125760315,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      306.07147105889453
+     ],
+     [
+      535.5840000000007,
+      612.6393308601866
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_2_2",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     680.1307086614172
+    ],
+    "box_um": [
+     537.5840000000011,
+     660.1307086614172,
+     577.5840000000011,
+     700.1307086614172
+    ],
+    "tap_core": "u_t22",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_2_3",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "box_um": [
+     537.5840000000011,
+     1973.410708661418,
+     577.5840000000011,
+     2013.410708661418
+    ],
+    "tap_core": "u_t23",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_2",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     680.1307086614172
+    ],
+    "box_um": [
+     657.9359999999922,
+     660.1307086614172,
+     697.9359999999922,
+     700.1307086614172
+    ],
+    "tap_core": "u_t32",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_3",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "box_um": [
+     657.9359999999922,
+     1973.410708661418,
+     697.9359999999922,
+     2013.410708661418
+    ],
+    "tap_core": "u_t33",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbn_q00",
+  "interface_routes": [
+   {
+    "bus": "bc_o01",
+    "direction": "out",
+    "leaf": "u_xstn01.a_d",
+    "centroid_route_um": 1133.1808890175148,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      2609.280000000022
+     ],
+     [
+      84.4,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2542.16
+     ],
+     [
+      566.2239999999939,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      2371.137671667256
+     ],
+     [
+      426.6393653269214,
+      2609.280000000022
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o11",
+    "direction": "out",
+    "leaf": "u_xstn11.a_d",
+    "centroid_route_um": 617.5656936596923,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2542.16
+     ],
+     [
+      669.2959999999944,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      2302.1935554912643
+     ]
+    ]
+   },
+   {
+    "bus": "na_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_a",
+    "centroid_route_um": 2187.0228207472487,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "path_um": [
+     [
+      138.92186407767002,
+      2609.280000000022
+     ],
+     [
+      138.92186407767002,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      827.5593151750971
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      436.3056675355226,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2285.5745290065965
+     ],
+     [
+      544.2239999999939,
+      1921.0707255487216
+     ],
+     [
+      544.2239999999939,
+      1556.566922090847
+     ],
+     [
+      544.2239999999939,
+      1192.063118632972
+     ]
+    ]
+   },
+   {
+    "bus": "y_o11",
+    "direction": "out",
+    "leaf": "u_t11.n_y",
+    "centroid_route_um": 670.0046612821666,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2560.4121009708674
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      918.7697703297931,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_b",
+    "centroid_route_um": 2323.984995746318,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 7,
+    "actual_input_pad_depth": 7,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      2609.280000000022
+     ],
+     [
+      1151.1200000000001,
+      2609.280000000022
+     ],
+     [
+      689.2,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      927.8471906614786
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      799.4453537833824,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2477.1705211590242
+     ],
+     [
+      544.2239999999939,
+      2089.839688534638
+     ],
+     [
+      544.2239999999939,
+      1702.5088559102514
+     ],
+     [
+      544.2239999999939,
+      1315.1780232858648
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i00",
+    "direction": "in",
+    "leaf": "u_xstn00.b_d",
+    "centroid_route_um": 774.0823063403283,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     480.9124023210833,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      480.9124023210833,
+      0.0
+     ],
+     [
+      546.32,
+      0.0
+     ],
+     [
+      566.2239999999939,
+      0.0
+     ],
+     [
+      566.2239999999939,
+      75.76
+     ],
+     [
+      566.2239999999939,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      301.7295554912535
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i10",
+    "direction": "in",
+    "leaf": "u_xstn10.b_d",
+    "centroid_route_um": 709.7729523751564,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     690.2982437137331,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      690.2982437137331,
+      0.0
+     ],
+     [
+      689.2,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      75.76
+     ],
+     [
+      669.2959999999944,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      333.88423247383946
+     ]
+    ]
+   },
+   {
+    "bus": "y_o00",
+    "direction": "out",
+    "leaf": "u_t00.n_y",
+    "centroid_route_um": 1617.4021426013314,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     56.81329708737866,
+     0.0
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "path_um": [
+     [
+      56.81329708737866,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      1129.9914396887161
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      544.2239999999939,
+      725.6409040383833
+     ],
+     [
+      544.2239999999939,
+      321.2903683880504
+     ],
+     [
+      385.40383273771147,
+      75.76
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_0",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "box_um": [
+     546.2239999999939,
+     668.7707086614176,
+     586.2239999999939,
+     708.7707086614176
+    ],
+    "tap_core": "u_t00",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_1",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t01",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_0",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "box_um": [
+     649.2959999999944,
+     668.7707086614176,
+     689.2959999999944,
+     708.7707086614176
+    ],
+    "tap_core": "u_t10",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_1",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t11",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbn_q01",
+  "interface_routes": [
+   {
+    "bus": "bc_i02",
+    "direction": "in",
+    "leaf": "u_xstn02.b_d",
+    "centroid_route_um": 1197.4423063403278,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      67.12
+     ],
+     [
+      546.32,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      380.9398377678591,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      280.98327321464114
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i12",
+    "direction": "in",
+    "leaf": "u_xstn12.b_d",
+    "centroid_route_um": 681.8271109825056,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      67.12
+     ],
+     [
+      669.2959999999944,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      339.2171531701644
+     ]
+    ]
+   },
+   {
+    "bus": "y_o12",
+    "direction": "out",
+    "leaf": "u_t12.n_y",
+    "centroid_route_um": 1616.8316260964907,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     0.0
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     1121.3514396887163
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      0.0
+     ],
+     [
+      1151.1200000000001,
+      0.0
+     ],
+     [
+      1151.1200000000001,
+      67.12
+     ],
+     [
+      691.2959999999941,
+      67.12
+     ],
+     [
+      691.2959999999941,
+      1121.3514396887163
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      691.2959999999941,
+      717.1435331645936
+     ],
+     [
+      691.2959999999941,
+      312.9356266404709
+     ],
+     [
+      849.6882798836457,
+      67.12
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i12",
+    "direction": "in",
+    "leaf": "u_t12.n_b",
+    "centroid_route_um": 2194.0689103094064,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2569.0521009708705
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     919.2071906614789
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2569.0521009708705
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      1380.4
+     ],
+     [
+      1151.1200000000001,
+      1228.88
+     ],
+     [
+      691.2959999999941,
+      1228.88
+     ],
+     [
+      691.2959999999941,
+      919.2071906614789
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      1151.1200000000001,
+      2287.773949252645
+     ],
+     [
+      1151.1200000000001,
+      1922.0957975344104
+     ],
+     [
+      1151.1200000000001,
+      1556.417645816176
+     ],
+     [
+      1112.9794940979416,
+      1228.88
+     ],
+     [
+      747.3013423797072,
+      1228.88
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o03",
+    "direction": "out",
+    "leaf": "u_xstn03.a_d",
+    "centroid_route_um": 1141.8208890174901,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     2617.9199999999973
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      2617.9199999999973
+     ],
+     [
+      84.4,
+      2617.9199999999973
+     ],
+     [
+      546.32,
+      2617.9199999999973
+     ],
+     [
+      566.2239999999939,
+      2617.9199999999973
+     ],
+     [
+      566.2239999999939,
+      2542.16
+     ],
+     [
+      566.2239999999939,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      2374.017671667248
+     ],
+     [
+      429.5193653269131,
+      2617.9199999999973
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o13",
+    "direction": "out",
+    "leaf": "u_xstn13.a_d",
+    "centroid_route_um": 626.2056936596676,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     2617.9199999999973
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      2617.9199999999973
+     ],
+     [
+      669.2959999999944,
+      2617.9199999999973
+     ],
+     [
+      669.2959999999944,
+      2542.16
+     ],
+     [
+      669.2959999999944,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      2306.5135554912517
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_2",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     680.1307086614172
+    ],
+    "box_um": [
+     546.2239999999939,
+     660.1307086614172,
+     586.2239999999939,
+     700.1307086614172
+    ],
+    "tap_core": "u_t02",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_3",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t03",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_2",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     680.1307086614172
+    ],
+    "box_um": [
+     649.2959999999944,
+     660.1307086614172,
+     689.2959999999944,
+     700.1307086614172
+    ],
+    "tap_core": "u_t12",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_3",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t13",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbn_q11",
+  "interface_routes": [
+   {
+    "bus": "bc_i22",
+    "direction": "in",
+    "leaf": "u_xstn22.b_d",
+    "centroid_route_um": 1098.9622134970082,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.7524951644102,
+     0.0
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      138.7524951644102,
+      0.0
+     ],
+     [
+      537.6800000000001,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      67.12
+     ],
+     [
+      557.5840000000011,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      505.07323299674624,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      313.8099708290812
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i32",
+    "direction": "in",
+    "leaf": "u_xstn32.b_d",
+    "centroid_route_um": 695.7143063403266,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      67.12
+     ],
+     [
+      677.9359999999922,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      332.2735554912539
+     ]
+    ]
+   },
+   {
+    "bus": "y_o22",
+    "direction": "out",
+    "leaf": "u_t22.n_y",
+    "centroid_route_um": 661.3646612821572,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     0.0,
+     1247.1321009708727
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     1121.3514396887163
+    ],
+    "path_um": [
+     [
+      0.0,
+      1247.1321009708727
+     ],
+     [
+      0.0,
+      1228.88
+     ],
+     [
+      75.76,
+      1228.88
+     ],
+     [
+      535.5840000000007,
+      1228.88
+     ],
+     [
+      535.5840000000007,
+      1121.3514396887163
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      312.430229670206,
+      1228.88
+     ]
+    ]
+   },
+   {
+    "bus": "na_i22",
+    "direction": "in",
+    "leaf": "u_t22.n_a",
+    "centroid_route_um": 1305.759501582865,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 3,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.743813592232996,
+     0.0
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     818.9193151750972
+    ],
+    "path_um": [
+     [
+      48.743813592232996,
+      0.0
+     ],
+     [
+      75.76,
+      0.0
+     ],
+     [
+      75.76,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      818.9193151750972
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      308.0636889879492,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      166.0395643836647
+     ],
+     [
+      535.5840000000007,
+      492.479439779381
+     ]
+    ]
+   },
+   {
+    "bus": "y_o23",
+    "direction": "out",
+    "leaf": "u_t23.n_y",
+    "centroid_route_um": 670.0046612821557,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     0.0,
+     2569.0521009708705
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      0.0,
+      2569.0521009708705
+     ],
+     [
+      0.0,
+      2542.16
+     ],
+     [
+      75.76,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      308.1102296702072,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i22",
+    "direction": "in",
+    "leaf": "u_t22.n_b",
+    "centroid_route_um": 1226.2714392051685,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 3,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     228.519751456311,
+     0.0
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     919.2071906614789
+    ],
+    "path_um": [
+     [
+      228.519751456311,
+      0.0
+     ],
+     [
+      228.519751456311,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      919.2071906614789
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      467.96761125760315,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      306.07147105889453
+     ],
+     [
+      535.5840000000007,
+      612.6393308601866
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o23",
+    "direction": "out",
+    "leaf": "u_xstn23.a_d",
+    "centroid_route_um": 1087.9550476248473,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     94.1382437137331,
+     2617.9199999999973
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      94.1382437137331,
+      2617.9199999999973
+     ],
+     [
+      537.6800000000001,
+      2617.9199999999973
+     ],
+     [
+      557.5840000000011,
+      2617.9199999999973
+     ],
+     [
+      557.5840000000011,
+      2542.16
+     ],
+     [
+      557.5840000000011,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      557.5840000000011,
+      2356.0623912030337
+     ],
+     [
+      456.78992625534886,
+      2617.9199999999973
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o33",
+    "direction": "out",
+    "leaf": "u_xstn33.a_d",
+    "centroid_route_um": 640.0928890174887,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     2617.9199999999973
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      2617.9199999999973
+     ],
+     [
+      677.9359999999922,
+      2617.9199999999973
+     ],
+     [
+      677.9359999999922,
+      2542.16
+     ],
+     [
+      677.9359999999922,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      2313.457153170162
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_2_2",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     680.1307086614172
+    ],
+    "box_um": [
+     537.5840000000011,
+     660.1307086614172,
+     577.5840000000011,
+     700.1307086614172
+    ],
+    "tap_core": "u_t22",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_2_3",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "box_um": [
+     537.5840000000011,
+     1973.410708661418,
+     577.5840000000011,
+     2013.410708661418
+    ],
+    "tap_core": "u_t23",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_2",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     680.1307086614172
+    ],
+    "box_um": [
+     657.9359999999922,
+     660.1307086614172,
+     697.9359999999922,
+     700.1307086614172
+    ],
+    "tap_core": "u_t32",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_3",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "box_um": [
+     657.9359999999922,
+     1973.410708661418,
+     697.9359999999922,
+     2013.410708661418
+    ],
+    "tap_core": "u_t33",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbf_q01_s2",
+  "interface_routes": [
+   {
+    "bus": "bc_i02",
+    "direction": "in",
+    "leaf": "u_xstn02.b_d",
+    "centroid_route_um": 1197.4423063403278,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      67.12
+     ],
+     [
+      546.32,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      380.9398377678591,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      280.98327321464114
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i12",
+    "direction": "in",
+    "leaf": "u_xstn12.b_d",
+    "centroid_route_um": 681.8271109825056,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      67.12
+     ],
+     [
+      669.2959999999944,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      339.2171531701644
+     ]
+    ]
+   },
+   {
+    "bus": "y_o12",
+    "direction": "out",
+    "leaf": "u_t12.n_y",
+    "centroid_route_um": 1616.8316260964907,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     0.0
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     1121.3514396887163
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      0.0
+     ],
+     [
+      1151.1200000000001,
+      0.0
+     ],
+     [
+      1151.1200000000001,
+      67.12
+     ],
+     [
+      691.2959999999941,
+      67.12
+     ],
+     [
+      691.2959999999941,
+      1121.3514396887163
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      691.2959999999941,
+      717.1435331645936
+     ],
+     [
+      691.2959999999941,
+      312.9356266404709
+     ],
+     [
+      849.6882798836457,
+      67.12
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i12",
+    "direction": "in",
+    "leaf": "u_t12.n_b",
+    "centroid_route_um": 2194.0689103094064,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2569.0521009708705
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     919.2071906614789
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2569.0521009708705
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      1380.4
+     ],
+     [
+      1151.1200000000001,
+      1228.88
+     ],
+     [
+      691.2959999999941,
+      1228.88
+     ],
+     [
+      691.2959999999941,
+      919.2071906614789
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      1151.1200000000001,
+      2287.773949252645
+     ],
+     [
+      1151.1200000000001,
+      1922.0957975344104
+     ],
+     [
+      1151.1200000000001,
+      1556.417645816176
+     ],
+     [
+      1112.9794940979416,
+      1228.88
+     ],
+     [
+      747.3013423797072,
+      1228.88
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_2",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     680.1307086614172
+    ],
+    "box_um": [
+     546.2239999999939,
+     660.1307086614172,
+     586.2239999999939,
+     700.1307086614172
+    ],
+    "tap_core": "u_t02",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_3",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t03",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_2",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     680.1307086614172
+    ],
+    "box_um": [
+     649.2959999999944,
+     660.1307086614172,
+     689.2959999999944,
+     700.1307086614172
+    ],
+    "tap_core": "u_t12",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_3",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t13",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbf_q00_s2",
+  "interface_routes": [
+   {
+    "bus": "bc_o01",
+    "direction": "out",
+    "leaf": "u_xstn01.a_d",
+    "centroid_route_um": 1133.1808890175148,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      2609.280000000022
+     ],
+     [
+      84.4,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2542.16
+     ],
+     [
+      566.2239999999939,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      2371.137671667256
+     ],
+     [
+      426.6393653269214,
+      2609.280000000022
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o11",
+    "direction": "out",
+    "leaf": "u_xstn11.a_d",
+    "centroid_route_um": 617.5656936596923,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2542.16
+     ],
+     [
+      669.2959999999944,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      2302.1935554912643
+     ]
+    ]
+   },
+   {
+    "bus": "na_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_a",
+    "centroid_route_um": 2187.0228207472487,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "path_um": [
+     [
+      138.92186407767002,
+      2609.280000000022
+     ],
+     [
+      138.92186407767002,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      827.5593151750971
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      436.3056675355226,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2285.5745290065965
+     ],
+     [
+      544.2239999999939,
+      1921.0707255487216
+     ],
+     [
+      544.2239999999939,
+      1556.566922090847
+     ],
+     [
+      544.2239999999939,
+      1192.063118632972
+     ]
+    ]
+   },
+   {
+    "bus": "y_o11",
+    "direction": "out",
+    "leaf": "u_t11.n_y",
+    "centroid_route_um": 670.0046612821666,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2560.4121009708674
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      918.7697703297931,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_b",
+    "centroid_route_um": 2323.984995746318,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 7,
+    "actual_input_pad_depth": 7,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      2609.280000000022
+     ],
+     [
+      1151.1200000000001,
+      2609.280000000022
+     ],
+     [
+      689.2,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      927.8471906614786
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      799.4453537833824,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2477.1705211590242
+     ],
+     [
+      544.2239999999939,
+      2089.839688534638
+     ],
+     [
+      544.2239999999939,
+      1702.5088559102514
+     ],
+     [
+      544.2239999999939,
+      1315.1780232858648
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i00",
+    "direction": "in",
+    "leaf": "u_xstn00.b_d",
+    "centroid_route_um": 1206.0823063403284,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      75.76
+     ],
+     [
+      546.32,
+      75.76
+     ],
+     [
+      546.32,
+      688.7707086614176
+     ],
+     [
+      566.2239999999939,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      375.1798377678592,
+      75.76
+     ],
+     [
+      546.32,
+      306.64727321463533
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i10",
+    "direction": "in",
+    "leaf": "u_xstn10.b_d",
+    "centroid_route_um": 690.467110982506,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      75.76
+     ],
+     [
+      669.2959999999944,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      343.53715317016463
+     ]
+    ]
+   },
+   {
+    "bus": "y_o00",
+    "direction": "out",
+    "leaf": "u_t00.n_y",
+    "centroid_route_um": 1535.29357561104,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.92186407767002,
+     0.0
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "path_um": [
+     [
+      138.92186407767002,
+      0.0
+     ],
+     [
+      138.92186407767002,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      1129.9914396887161
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      544.2239999999939,
+      746.1680457859561
+     ],
+     [
+      544.2239999999939,
+      362.3446518831961
+     ],
+     [
+      446.98525798043,
+      75.76
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_0",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "box_um": [
+     546.2239999999939,
+     668.7707086614176,
+     586.2239999999939,
+     708.7707086614176
+    ],
+    "tap_core": "u_t00",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_1",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t01",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_0",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "box_um": [
+     649.2959999999944,
+     668.7707086614176,
+     689.2959999999944,
+     708.7707086614176
+    ],
+    "tap_core": "u_t10",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_1",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t11",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbf_q00_na00d17",
+  "interface_routes": [
+   {
+    "bus": "bc_o01",
+    "direction": "out",
+    "leaf": "u_xstn01.a_d",
+    "centroid_route_um": 1133.1808890175148,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      2609.280000000022
+     ],
+     [
+      84.4,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2542.16
+     ],
+     [
+      566.2239999999939,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      2371.137671667256
+     ],
+     [
+      426.6393653269214,
+      2609.280000000022
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o11",
+    "direction": "out",
+    "leaf": "u_xstn11.a_d",
+    "centroid_route_um": 617.5656936596923,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2542.16
+     ],
+     [
+      669.2959999999944,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      2302.1935554912643
+     ]
+    ]
+   },
+   {
+    "bus": "na_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_a",
+    "centroid_route_um": 2187.0228207472487,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "path_um": [
+     [
+      138.92186407767002,
+      2609.280000000022
+     ],
+     [
+      138.92186407767002,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      827.5593151750971
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      436.3056675355226,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2285.5745290065965
+     ],
+     [
+      544.2239999999939,
+      1921.0707255487216
+     ],
+     [
+      544.2239999999939,
+      1556.566922090847
+     ],
+     [
+      544.2239999999939,
+      1192.063118632972
+     ]
+    ]
+   },
+   {
+    "bus": "y_o11",
+    "direction": "out",
+    "leaf": "u_t11.n_y",
+    "centroid_route_um": 670.0046612821666,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2560.4121009708674
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      918.7697703297931,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_b",
+    "centroid_route_um": 2323.984995746318,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 7,
+    "actual_input_pad_depth": 7,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      2609.280000000022
+     ],
+     [
+      1151.1200000000001,
+      2609.280000000022
+     ],
+     [
+      689.2,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      927.8471906614786
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      799.4453537833824,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2477.1705211590242
+     ],
+     [
+      544.2239999999939,
+      2089.839688534638
+     ],
+     [
+      544.2239999999939,
+      1702.5088559102514
+     ],
+     [
+      544.2239999999939,
+      1315.1780232858648
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i00",
+    "direction": "in",
+    "leaf": "u_xstn00.b_d",
+    "centroid_route_um": 1206.0823063403284,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      75.76
+     ],
+     [
+      546.32,
+      75.76
+     ],
+     [
+      546.32,
+      688.7707086614176
+     ],
+     [
+      566.2239999999939,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      375.1798377678592,
+      75.76
+     ],
+     [
+      546.32,
+      306.64727321463533
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i10",
+    "direction": "in",
+    "leaf": "u_xstn10.b_d",
+    "centroid_route_um": 690.467110982506,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      75.76
+     ],
+     [
+      669.2959999999944,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      343.53715317016463
+     ]
+    ]
+   },
+   {
+    "bus": "y_o00",
+    "direction": "out",
+    "leaf": "u_t00.n_y",
+    "centroid_route_um": 1535.29357561104,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.92186407767002,
+     0.0
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "path_um": [
+     [
+      138.92186407767002,
+      0.0
+     ],
+     [
+      138.92186407767002,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      1129.9914396887161
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      544.2239999999939,
+      746.1680457859561
+     ],
+     [
+      544.2239999999939,
+      362.3446518831961
+     ],
+     [
+      446.98525798043,
+      75.76
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_0",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "box_um": [
+     546.2239999999939,
+     668.7707086614176,
+     586.2239999999939,
+     708.7707086614176
+    ],
+    "tap_core": "u_t00",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_1",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t01",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_0",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "box_um": [
+     649.2959999999944,
+     668.7707086614176,
+     689.2959999999944,
+     708.7707086614176
+    ],
+    "tap_core": "u_t10",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_1",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t11",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbf_q01_nb12d8",
+  "interface_routes": [
+   {
+    "bus": "bc_i02",
+    "direction": "in",
+    "leaf": "u_xstn02.b_d",
+    "centroid_route_um": 1197.4423063403278,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      67.12
+     ],
+     [
+      546.32,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      380.9398377678591,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      280.98327321464114
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i12",
+    "direction": "in",
+    "leaf": "u_xstn12.b_d",
+    "centroid_route_um": 681.8271109825056,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      67.12
+     ],
+     [
+      669.2959999999944,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      339.2171531701644
+     ]
+    ]
+   },
+   {
+    "bus": "y_o12",
+    "direction": "out",
+    "leaf": "u_t12.n_y",
+    "centroid_route_um": 1616.8316260964907,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     0.0
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     1121.3514396887163
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      0.0
+     ],
+     [
+      1151.1200000000001,
+      0.0
+     ],
+     [
+      1151.1200000000001,
+      67.12
+     ],
+     [
+      691.2959999999941,
+      67.12
+     ],
+     [
+      691.2959999999941,
+      1121.3514396887163
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      691.2959999999941,
+      717.1435331645936
+     ],
+     [
+      691.2959999999941,
+      312.9356266404709
+     ],
+     [
+      849.6882798836457,
+      67.12
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i12",
+    "direction": "in",
+    "leaf": "u_t12.n_b",
+    "centroid_route_um": 2194.0689103094064,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2569.0521009708705
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     919.2071906614789
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2569.0521009708705
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      1380.4
+     ],
+     [
+      1151.1200000000001,
+      1228.88
+     ],
+     [
+      691.2959999999941,
+      1228.88
+     ],
+     [
+      691.2959999999941,
+      919.2071906614789
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      1151.1200000000001,
+      2287.773949252645
+     ],
+     [
+      1151.1200000000001,
+      1922.0957975344104
+     ],
+     [
+      1151.1200000000001,
+      1556.417645816176
+     ],
+     [
+      1112.9794940979416,
+      1228.88
+     ],
+     [
+      747.3013423797072,
+      1228.88
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_2",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     680.1307086614172
+    ],
+    "box_um": [
+     546.2239999999939,
+     660.1307086614172,
+     586.2239999999939,
+     700.1307086614172
+    ],
+    "tap_core": "u_t02",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_3",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t03",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_2",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     680.1307086614172
+    ],
+    "box_um": [
+     649.2959999999944,
+     660.1307086614172,
+     689.2959999999944,
+     700.1307086614172
+    ],
+    "tap_core": "u_t12",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_3",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t13",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbf_q11_na22d2",
+  "interface_routes": [
+   {
+    "bus": "bc_i22",
+    "direction": "in",
+    "leaf": "u_xstn22.b_d",
+    "centroid_route_um": 1098.9622134970082,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.7524951644102,
+     0.0
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      138.7524951644102,
+      0.0
+     ],
+     [
+      537.6800000000001,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      67.12
+     ],
+     [
+      557.5840000000011,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      505.07323299674624,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      313.8099708290812
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i32",
+    "direction": "in",
+    "leaf": "u_xstn32.b_d",
+    "centroid_route_um": 695.7143063403266,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      67.12
+     ],
+     [
+      677.9359999999922,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      332.2735554912539
+     ]
+    ]
+   },
+   {
+    "bus": "y_o22",
+    "direction": "out",
+    "leaf": "u_t22.n_y",
+    "centroid_route_um": 661.3646612821572,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     0.0,
+     1247.1321009708727
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     1121.3514396887163
+    ],
+    "path_um": [
+     [
+      0.0,
+      1247.1321009708727
+     ],
+     [
+      0.0,
+      1228.88
+     ],
+     [
+      75.76,
+      1228.88
+     ],
+     [
+      535.5840000000007,
+      1228.88
+     ],
+     [
+      535.5840000000007,
+      1121.3514396887163
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      312.430229670206,
+      1228.88
+     ]
+    ]
+   },
+   {
+    "bus": "na_i22",
+    "direction": "in",
+    "leaf": "u_t22.n_a",
+    "centroid_route_um": 1305.759501582865,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 3,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.743813592232996,
+     0.0
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     818.9193151750972
+    ],
+    "path_um": [
+     [
+      48.743813592232996,
+      0.0
+     ],
+     [
+      75.76,
+      0.0
+     ],
+     [
+      75.76,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      818.9193151750972
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      308.0636889879492,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      166.0395643836647
+     ],
+     [
+      535.5840000000007,
+      492.479439779381
+     ]
+    ]
+   },
+   {
+    "bus": "y_o23",
+    "direction": "out",
+    "leaf": "u_t23.n_y",
+    "centroid_route_um": 670.0046612821557,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     0.0,
+     2569.0521009708705
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      0.0,
+      2569.0521009708705
+     ],
+     [
+      0.0,
+      2542.16
+     ],
+     [
+      75.76,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      308.1102296702072,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i22",
+    "direction": "in",
+    "leaf": "u_t22.n_b",
+    "centroid_route_um": 1226.2714392051685,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 3,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     228.519751456311,
+     0.0
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     919.2071906614789
+    ],
+    "path_um": [
+     [
+      228.519751456311,
+      0.0
+     ],
+     [
+      228.519751456311,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      919.2071906614789
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      467.96761125760315,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      306.07147105889453
+     ],
+     [
+      535.5840000000007,
+      612.6393308601866
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_2_2",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     680.1307086614172
+    ],
+    "box_um": [
+     537.5840000000011,
+     660.1307086614172,
+     577.5840000000011,
+     700.1307086614172
+    ],
+    "tap_core": "u_t22",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_2_3",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "box_um": [
+     537.5840000000011,
+     1973.410708661418,
+     577.5840000000011,
+     2013.410708661418
+    ],
+    "tap_core": "u_t23",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_2",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     680.1307086614172
+    ],
+    "box_um": [
+     657.9359999999922,
+     660.1307086614172,
+     697.9359999999922,
+     700.1307086614172
+    ],
+    "tap_core": "u_t32",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_3",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "box_um": [
+     657.9359999999922,
+     1973.410708661418,
+     697.9359999999922,
+     2013.410708661418
+    ],
+    "tap_core": "u_t33",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbn_q00_xb10d1_na00d17",
+  "interface_routes": [
+   {
+    "bus": "bc_o01",
+    "direction": "out",
+    "leaf": "u_xstn01.a_d",
+    "centroid_route_um": 1133.1808890175148,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      2609.280000000022
+     ],
+     [
+      84.4,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2542.16
+     ],
+     [
+      566.2239999999939,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      2371.137671667256
+     ],
+     [
+      426.6393653269214,
+      2609.280000000022
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o11",
+    "direction": "out",
+    "leaf": "u_xstn11.a_d",
+    "centroid_route_um": 617.5656936596923,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2542.16
+     ],
+     [
+      669.2959999999944,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      2302.1935554912643
+     ]
+    ]
+   },
+   {
+    "bus": "na_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_a",
+    "centroid_route_um": 2187.0228207472487,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "path_um": [
+     [
+      138.92186407767002,
+      2609.280000000022
+     ],
+     [
+      138.92186407767002,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      827.5593151750971
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      436.3056675355226,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2285.5745290065965
+     ],
+     [
+      544.2239999999939,
+      1921.0707255487216
+     ],
+     [
+      544.2239999999939,
+      1556.566922090847
+     ],
+     [
+      544.2239999999939,
+      1192.063118632972
+     ]
+    ]
+   },
+   {
+    "bus": "y_o11",
+    "direction": "out",
+    "leaf": "u_t11.n_y",
+    "centroid_route_um": 670.0046612821666,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2560.4121009708674
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      918.7697703297931,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_b",
+    "centroid_route_um": 2323.984995746318,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 7,
+    "actual_input_pad_depth": 7,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      2609.280000000022
+     ],
+     [
+      1151.1200000000001,
+      2609.280000000022
+     ],
+     [
+      689.2,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      927.8471906614786
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      799.4453537833824,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2477.1705211590242
+     ],
+     [
+      544.2239999999939,
+      2089.839688534638
+     ],
+     [
+      544.2239999999939,
+      1702.5088559102514
+     ],
+     [
+      544.2239999999939,
+      1315.1780232858648
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i00",
+    "direction": "in",
+    "leaf": "u_xstn00.b_d",
+    "centroid_route_um": 774.0823063403283,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     480.9124023210833,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      480.9124023210833,
+      0.0
+     ],
+     [
+      546.32,
+      0.0
+     ],
+     [
+      566.2239999999939,
+      0.0
+     ],
+     [
+      566.2239999999939,
+      75.76
+     ],
+     [
+      566.2239999999939,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      301.7295554912535
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i10",
+    "direction": "in",
+    "leaf": "u_xstn10.b_d",
+    "centroid_route_um": 709.7729523751564,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     690.2982437137331,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      690.2982437137331,
+      0.0
+     ],
+     [
+      689.2,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      75.76
+     ],
+     [
+      669.2959999999944,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      333.88423247383946
+     ]
+    ]
+   },
+   {
+    "bus": "y_o00",
+    "direction": "out",
+    "leaf": "u_t00.n_y",
+    "centroid_route_um": 1617.4021426013314,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     56.81329708737866,
+     0.0
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "path_um": [
+     [
+      56.81329708737866,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      1129.9914396887161
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      544.2239999999939,
+      725.6409040383833
+     ],
+     [
+      544.2239999999939,
+      321.2903683880504
+     ],
+     [
+      385.40383273771147,
+      75.76
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_0",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "box_um": [
+     546.2239999999939,
+     668.7707086614176,
+     586.2239999999939,
+     708.7707086614176
+    ],
+    "tap_core": "u_t00",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_1",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t01",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_0",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "box_um": [
+     649.2959999999944,
+     668.7707086614176,
+     689.2959999999944,
+     708.7707086614176
+    ],
+    "tap_core": "u_t10",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_1",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t11",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbn_q00_xb00d1",
+  "interface_routes": [
+   {
+    "bus": "bc_o01",
+    "direction": "out",
+    "leaf": "u_xstn01.a_d",
+    "centroid_route_um": 1133.1808890175148,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      2609.280000000022
+     ],
+     [
+      84.4,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2609.280000000022
+     ],
+     [
+      566.2239999999939,
+      2542.16
+     ],
+     [
+      566.2239999999939,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      2371.137671667256
+     ],
+     [
+      426.6393653269214,
+      2609.280000000022
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o11",
+    "direction": "out",
+    "leaf": "u_xstn11.a_d",
+    "centroid_route_um": 617.5656936596923,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2609.280000000022
+     ],
+     [
+      669.2959999999944,
+      2542.16
+     ],
+     [
+      669.2959999999944,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      2302.1935554912643
+     ]
+    ]
+   },
+   {
+    "bus": "na_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_a",
+    "centroid_route_um": 2187.0228207472487,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.92186407767002,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     827.5593151750971
+    ],
+    "path_um": [
+     [
+      138.92186407767002,
+      2609.280000000022
+     ],
+     [
+      138.92186407767002,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      827.5593151750971
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      436.3056675355226,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      2285.5745290065965
+     ],
+     [
+      544.2239999999939,
+      1921.0707255487216
+     ],
+     [
+      544.2239999999939,
+      1556.566922090847
+     ],
+     [
+      544.2239999999939,
+      1192.063118632972
+     ]
+    ]
+   },
+   {
+    "bus": "y_o11",
+    "direction": "out",
+    "leaf": "u_t11.n_y",
+    "centroid_route_um": 670.0046612821666,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2560.4121009708674
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2560.4121009708674
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2542.16
+     ],
+     [
+      691.2959999999941,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      918.7697703297931,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i00",
+    "direction": "in",
+    "leaf": "u_t00.n_b",
+    "centroid_route_um": 2323.984995746318,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 7,
+    "actual_input_pad_depth": 7,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     927.8471906614786
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      2609.280000000022
+     ],
+     [
+      1151.1200000000001,
+      2609.280000000022
+     ],
+     [
+      689.2,
+      2609.280000000022
+     ],
+     [
+      546.32,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2542.16
+     ],
+     [
+      544.2239999999939,
+      1380.4
+     ],
+     [
+      544.2239999999939,
+      1237.52
+     ],
+     [
+      544.2239999999939,
+      927.8471906614786
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      799.4453537833824,
+      2609.280000000022
+     ],
+     [
+      544.2239999999939,
+      2477.1705211590242
+     ],
+     [
+      544.2239999999939,
+      2089.839688534638
+     ],
+     [
+      544.2239999999939,
+      1702.5088559102514
+     ],
+     [
+      544.2239999999939,
+      1315.1780232858648
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i00",
+    "direction": "in",
+    "leaf": "u_xstn00.b_d",
+    "centroid_route_um": 774.0823063403283,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     480.9124023210833,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      480.9124023210833,
+      0.0
+     ],
+     [
+      546.32,
+      0.0
+     ],
+     [
+      566.2239999999939,
+      0.0
+     ],
+     [
+      566.2239999999939,
+      75.76
+     ],
+     [
+      566.2239999999939,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      301.7295554912535
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i10",
+    "direction": "in",
+    "leaf": "u_xstn10.b_d",
+    "centroid_route_um": 709.7729523751564,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     690.2982437137331,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      690.2982437137331,
+      0.0
+     ],
+     [
+      689.2,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      75.76
+     ],
+     [
+      669.2959999999944,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      333.88423247383946
+     ]
+    ]
+   },
+   {
+    "bus": "y_o00",
+    "direction": "out",
+    "leaf": "u_t00.n_y",
+    "centroid_route_um": 1617.4021426013314,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     56.81329708737866,
+     0.0
+    ],
+    "leaf_um": [
+     544.2239999999939,
+     1129.9914396887161
+    ],
+    "path_um": [
+     [
+      56.81329708737866,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      75.76
+     ],
+     [
+      544.2239999999939,
+      1129.9914396887161
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      544.2239999999939,
+      725.6409040383833
+     ],
+     [
+      544.2239999999939,
+      321.2903683880504
+     ],
+     [
+      385.40383273771147,
+      75.76
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_0",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     688.7707086614176
+    ],
+    "box_um": [
+     546.2239999999939,
+     668.7707086614176,
+     586.2239999999939,
+     708.7707086614176
+    ],
+    "tap_core": "u_t00",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_1",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t01",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_0",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     688.7707086614176
+    ],
+    "box_um": [
+     649.2959999999944,
+     668.7707086614176,
+     689.2959999999944,
+     708.7707086614176
+    ],
+    "tap_core": "u_t10",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_1",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t11",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbn_q01_nb12d8",
+  "interface_routes": [
+   {
+    "bus": "bc_i02",
+    "direction": "in",
+    "leaf": "u_xstn02.b_d",
+    "centroid_route_um": 1197.4423063403278,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     0.0
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      0.0
+     ],
+     [
+      84.4,
+      0.0
+     ],
+     [
+      84.4,
+      67.12
+     ],
+     [
+      546.32,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      380.9398377678591,
+      67.12
+     ],
+     [
+      566.2239999999939,
+      280.98327321464114
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i12",
+    "direction": "in",
+    "leaf": "u_xstn12.b_d",
+    "centroid_route_um": 681.8271109825056,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     0.0
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      0.0
+     ],
+     [
+      669.2959999999944,
+      67.12
+     ],
+     [
+      669.2959999999944,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      339.2171531701644
+     ]
+    ]
+   },
+   {
+    "bus": "y_o12",
+    "direction": "out",
+    "leaf": "u_t12.n_y",
+    "centroid_route_um": 1616.8316260964907,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 3,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1186.7761864077686,
+     0.0
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     1121.3514396887163
+    ],
+    "path_um": [
+     [
+      1186.7761864077686,
+      0.0
+     ],
+     [
+      1151.1200000000001,
+      0.0
+     ],
+     [
+      1151.1200000000001,
+      67.12
+     ],
+     [
+      691.2959999999941,
+      67.12
+     ],
+     [
+      691.2959999999941,
+      1121.3514396887163
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      691.2959999999941,
+      717.1435331645936
+     ],
+     [
+      691.2959999999941,
+      312.9356266404709
+     ],
+     [
+      849.6882798836457,
+      67.12
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i12",
+    "direction": "in",
+    "leaf": "u_t12.n_b",
+    "centroid_route_um": 2194.0689103094064,
+    "minimum_stations_lower_bound": 5,
+    "declared_stations": 5,
+    "actual_input_pad_depth": 5,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     1235.5200000000088,
+     2569.0521009708705
+    ],
+    "leaf_um": [
+     691.2959999999941,
+     919.2071906614789
+    ],
+    "path_um": [
+     [
+      1235.5200000000088,
+      2569.0521009708705
+     ],
+     [
+      1235.5200000000088,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      2542.16
+     ],
+     [
+      1151.1200000000001,
+      1380.4
+     ],
+     [
+      1151.1200000000001,
+      1228.88
+     ],
+     [
+      691.2959999999941,
+      1228.88
+     ],
+     [
+      691.2959999999941,
+      919.2071906614789
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      1151.1200000000001,
+      2287.773949252645
+     ],
+     [
+      1151.1200000000001,
+      1922.0957975344104
+     ],
+     [
+      1151.1200000000001,
+      1556.417645816176
+     ],
+     [
+      1112.9794940979416,
+      1228.88
+     ],
+     [
+      747.3013423797072,
+      1228.88
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o03",
+    "direction": "out",
+    "leaf": "u_xstn03.a_d",
+    "centroid_route_um": 1141.8208890174901,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.91240232108314,
+     2617.9199999999973
+    ],
+    "leaf_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      48.91240232108314,
+      2617.9199999999973
+     ],
+     [
+      84.4,
+      2617.9199999999973
+     ],
+     [
+      546.32,
+      2617.9199999999973
+     ],
+     [
+      566.2239999999939,
+      2617.9199999999973
+     ],
+     [
+      566.2239999999939,
+      2542.16
+     ],
+     [
+      566.2239999999939,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      566.2239999999939,
+      2374.017671667248
+     ],
+     [
+      429.5193653269131,
+      2617.9199999999973
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o13",
+    "direction": "out",
+    "leaf": "u_xstn13.a_d",
+    "centroid_route_um": 626.2056936596676,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     670.9924023210827,
+     2617.9199999999973
+    ],
+    "leaf_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      670.9924023210827,
+      2617.9199999999973
+     ],
+     [
+      669.2959999999944,
+      2617.9199999999973
+     ],
+     [
+      669.2959999999944,
+      2542.16
+     ],
+     [
+      669.2959999999944,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      669.2959999999944,
+      2306.5135554912517
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_0_2",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     680.1307086614172
+    ],
+    "box_um": [
+     546.2239999999939,
+     660.1307086614172,
+     586.2239999999939,
+     700.1307086614172
+    ],
+    "tap_core": "u_t02",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_0_3",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     566.2239999999939,
+     1993.410708661418
+    ],
+    "box_um": [
+     546.2239999999939,
+     1973.410708661418,
+     586.2239999999939,
+     2013.410708661418
+    ],
+    "tap_core": "u_t03",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_2",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     680.1307086614172
+    ],
+    "box_um": [
+     649.2959999999944,
+     660.1307086614172,
+     689.2959999999944,
+     700.1307086614172
+    ],
+    "tap_core": "u_t12",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_1_3",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     669.2959999999944,
+     1993.410708661418
+    ],
+    "box_um": [
+     649.2959999999944,
+     1973.410708661418,
+     689.2959999999944,
+     2013.410708661418
+    ],
+    "tap_core": "u_t13",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbn_q11_na22d2",
+  "interface_routes": [
+   {
+    "bus": "bc_i22",
+    "direction": "in",
+    "leaf": "u_xstn22.b_d",
+    "centroid_route_um": 1098.9622134970082,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.7524951644102,
+     0.0
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      138.7524951644102,
+      0.0
+     ],
+     [
+      537.6800000000001,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      67.12
+     ],
+     [
+      557.5840000000011,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      505.07323299674624,
+      0.0
+     ],
+     [
+      557.5840000000011,
+      313.8099708290812
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i32",
+    "direction": "in",
+    "leaf": "u_xstn32.b_d",
+    "centroid_route_um": 695.7143063403266,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     680.1307086614172
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      67.12
+     ],
+     [
+      677.9359999999922,
+      680.1307086614172
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      332.2735554912539
+     ]
+    ]
+   },
+   {
+    "bus": "y_o22",
+    "direction": "out",
+    "leaf": "u_t22.n_y",
+    "centroid_route_um": 661.3646612821572,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     0.0,
+     1247.1321009708727
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     1121.3514396887163
+    ],
+    "path_um": [
+     [
+      0.0,
+      1247.1321009708727
+     ],
+     [
+      0.0,
+      1228.88
+     ],
+     [
+      75.76,
+      1228.88
+     ],
+     [
+      535.5840000000007,
+      1228.88
+     ],
+     [
+      535.5840000000007,
+      1121.3514396887163
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      312.430229670206,
+      1228.88
+     ]
+    ]
+   },
+   {
+    "bus": "na_i22",
+    "direction": "in",
+    "leaf": "u_t22.n_a",
+    "centroid_route_um": 1305.759501582865,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 3,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     48.743813592232996,
+     0.0
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     818.9193151750972
+    ],
+    "path_um": [
+     [
+      48.743813592232996,
+      0.0
+     ],
+     [
+      75.76,
+      0.0
+     ],
+     [
+      75.76,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      818.9193151750972
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      308.0636889879492,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      166.0395643836647
+     ],
+     [
+      535.5840000000007,
+      492.479439779381
+     ]
+    ]
+   },
+   {
+    "bus": "y_o23",
+    "direction": "out",
+    "leaf": "u_t23.n_y",
+    "centroid_route_um": 670.0046612821557,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     0.0,
+     2569.0521009708705
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      0.0,
+      2569.0521009708705
+     ],
+     [
+      0.0,
+      2542.16
+     ],
+     [
+      75.76,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      308.1102296702072,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "nb_i22",
+    "direction": "in",
+    "leaf": "u_t22.n_b",
+    "centroid_route_um": 1226.2714392051685,
+    "minimum_stations_lower_bound": 3,
+    "declared_stations": 3,
+    "actual_input_pad_depth": 3,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     228.519751456311,
+     0.0
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     919.2071906614789
+    ],
+    "path_um": [
+     [
+      228.519751456311,
+      0.0
+     ],
+     [
+      228.519751456311,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      919.2071906614789
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      467.96761125760315,
+      67.12
+     ],
+     [
+      535.5840000000007,
+      306.07147105889453
+     ],
+     [
+      535.5840000000007,
+      612.6393308601866
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o23",
+    "direction": "out",
+    "leaf": "u_xstn23.a_d",
+    "centroid_route_um": 1087.9550476248473,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     94.1382437137331,
+     2617.9199999999973
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      94.1382437137331,
+      2617.9199999999973
+     ],
+     [
+      537.6800000000001,
+      2617.9199999999973
+     ],
+     [
+      557.5840000000011,
+      2617.9199999999973
+     ],
+     [
+      557.5840000000011,
+      2542.16
+     ],
+     [
+      557.5840000000011,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      557.5840000000011,
+      2356.0623912030337
+     ],
+     [
+      456.78992625534886,
+      2617.9199999999973
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o33",
+    "direction": "out",
+    "leaf": "u_xstn33.a_d",
+    "centroid_route_um": 640.0928890174887,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     2617.9199999999973
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      2617.9199999999973
+     ],
+     [
+      677.9359999999922,
+      2617.9199999999973
+     ],
+     [
+      677.9359999999922,
+      2542.16
+     ],
+     [
+      677.9359999999922,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      2313.457153170162
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_2_2",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     680.1307086614172
+    ],
+    "box_um": [
+     537.5840000000011,
+     660.1307086614172,
+     577.5840000000011,
+     700.1307086614172
+    ],
+    "tap_core": "u_t22",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_2_3",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "box_um": [
+     537.5840000000011,
+     1973.410708661418,
+     577.5840000000011,
+     2013.410708661418
+    ],
+    "tap_core": "u_t23",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_2",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     680.1307086614172
+    ],
+    "box_um": [
+     657.9359999999922,
+     660.1307086614172,
+     697.9359999999922,
+     700.1307086614172
+    ],
+    "tap_core": "u_t32",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_3",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "box_um": [
+     657.9359999999922,
+     1973.410708661418,
+     697.9359999999922,
+     2013.410708661418
+    ],
+    "tap_core": "u_t33",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbx_q10_xb30d1",
+  "interface_routes": [
+   {
+    "bus": "bc_o21",
+    "direction": "out",
+    "leaf": "u_xstn21.a_d",
+    "centroid_route_um": 1034.7007961741947,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.7524951644102,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      138.7524951644102,
+      2609.280000000022
+     ],
+     [
+      537.6800000000001,
+      2609.280000000022
+     ],
+     [
+      557.5840000000011,
+      2609.280000000022
+     ],
+     [
+      557.5840000000011,
+      2542.16
+     ],
+     [
+      557.5840000000011,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      557.5840000000011,
+      2338.310974052816
+     ],
+     [
+      483.65276055580864,
+      2609.280000000022
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o31",
+    "direction": "out",
+    "leaf": "u_xstn31.a_d",
+    "centroid_route_um": 631.4528890175134,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      2609.280000000022
+     ],
+     [
+      677.9359999999922,
+      2609.280000000022
+     ],
+     [
+      677.9359999999922,
+      2542.16
+     ],
+     [
+      677.9359999999922,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      2309.1371531701748
+     ]
+    ]
+   },
+   {
+    "bus": "y_o21",
+    "direction": "out",
+    "leaf": "u_t21.n_y",
+    "centroid_route_um": 481.7128088549962,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     228.519751456311,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      228.519751456311,
+      2609.280000000022
+     ],
+     [
+      228.519751456311,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      402.25615588378696,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i20",
+    "direction": "in",
+    "leaf": "u_xstn20.b_d",
+    "centroid_route_um": 1152.2164649476854,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     94.1382437137331,
+     0.0
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      94.1382437137331,
+      0.0
+     ],
+     [
+      94.1382437137331,
+      75.76
+     ],
+     [
+      537.6800000000001,
+      75.76
+     ],
+     [
+      537.6800000000001,
+      688.7707086614176
+     ],
+     [
+      557.5840000000011,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      402.4503986962949,
+      75.76
+     ],
+     [
+      537.6800000000001,
+      324.60255367885657
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i30",
+    "direction": "in",
+    "leaf": "u_xstn30.b_d",
+    "centroid_route_um": 704.3543063403271,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      75.76
+     ],
+     [
+      677.9359999999922,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      336.5935554912541
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_2_0",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     688.7707086614176
+    ],
+    "box_um": [
+     537.5840000000011,
+     668.7707086614176,
+     577.5840000000011,
+     708.7707086614176
+    ],
+    "tap_core": "u_t20",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_2_1",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "box_um": [
+     537.5840000000011,
+     1973.410708661418,
+     577.5840000000011,
+     2013.410708661418
+    ],
+    "tap_core": "u_t21",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_0",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     688.7707086614176
+    ],
+    "box_um": [
+     657.9359999999922,
+     668.7707086614176,
+     697.9359999999922,
+     708.7707086614176
+    ],
+    "tap_core": "u_t30",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_1",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "box_um": [
+     657.9359999999922,
+     1973.410708661418,
+     697.9359999999922,
+     2013.410708661418
+    ],
+    "tap_core": "u_t31",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ },
+ {
+  "type": "cbx_q10_xb30d3",
+  "interface_routes": [
+   {
+    "bus": "bc_o21",
+    "direction": "out",
+    "leaf": "u_xstn21.a_d",
+    "centroid_route_um": 1034.7007961741947,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 2,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     138.7524951644102,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      138.7524951644102,
+      2609.280000000022
+     ],
+     [
+      537.6800000000001,
+      2609.280000000022
+     ],
+     [
+      557.5840000000011,
+      2609.280000000022
+     ],
+     [
+      557.5840000000011,
+      2542.16
+     ],
+     [
+      557.5840000000011,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      557.5840000000011,
+      2338.310974052816
+     ],
+     [
+      483.65276055580864,
+      2609.280000000022
+     ]
+    ]
+   },
+   {
+    "bus": "bc_o31",
+    "direction": "out",
+    "leaf": "u_xstn31.a_d",
+    "centroid_route_um": 631.4528890175134,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      2609.280000000022
+     ],
+     [
+      677.9359999999922,
+      2609.280000000022
+     ],
+     [
+      677.9359999999922,
+      2542.16
+     ],
+     [
+      677.9359999999922,
+      1993.410708661418
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      2309.1371531701748
+     ]
+    ]
+   },
+   {
+    "bus": "y_o21",
+    "direction": "out",
+    "leaf": "u_t21.n_y",
+    "centroid_route_um": 481.7128088549962,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 0,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 1,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     228.519751456311,
+     2609.280000000022
+    ],
+    "leaf_um": [
+     535.5840000000007,
+     2434.6314396887155
+    ],
+    "path_um": [
+     [
+      228.519751456311,
+      2609.280000000022
+     ],
+     [
+      228.519751456311,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2542.16
+     ],
+     [
+      535.5840000000007,
+      2434.6314396887155
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      402.25615588378696,
+      2542.16
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i20",
+    "direction": "in",
+    "leaf": "u_xstn20.b_d",
+    "centroid_route_um": 1152.2164649476854,
+    "minimum_stations_lower_bound": 2,
+    "declared_stations": 2,
+    "actual_input_pad_depth": 2,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     94.1382437137331,
+     0.0
+    ],
+    "leaf_um": [
+     557.5840000000011,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      94.1382437137331,
+      0.0
+     ],
+     [
+      94.1382437137331,
+      75.76
+     ],
+     [
+      537.6800000000001,
+      75.76
+     ],
+     [
+      537.6800000000001,
+      688.7707086614176
+     ],
+     [
+      557.5840000000011,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      402.4503986962949,
+      75.76
+     ],
+     [
+      537.6800000000001,
+      324.60255367885657
+     ]
+    ]
+   },
+   {
+    "bus": "bc_i30",
+    "direction": "in",
+    "leaf": "u_xstn30.b_d",
+    "centroid_route_um": 704.3543063403271,
+    "minimum_stations_lower_bound": 1,
+    "declared_stations": 1,
+    "actual_input_pad_depth": 1,
+    "additional_plan_cycles_lower_bound": 0,
+    "existing_pad_capacity_shortfall": 0,
+    "interpretation": "data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed",
+    "face_um": [
+     662.3524023210828,
+     0.0
+    ],
+    "leaf_um": [
+     677.9359999999922,
+     688.7707086614176
+    ],
+    "path_um": [
+     [
+      662.3524023210828,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      0.0
+     ],
+     [
+      677.9359999999922,
+      75.76
+     ],
+     [
+      677.9359999999922,
+      688.7707086614176
+     ]
+    ],
+    "minimum_station_targets_um": [
+     [
+      677.9359999999922,
+      336.5935554912541
+     ]
+    ]
+   }
+  ],
+  "fabric_homes": [
+   {
+    "inst": "u_u_fab_u_x_2_0",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     688.7707086614176
+    ],
+    "box_um": [
+     537.5840000000011,
+     668.7707086614176,
+     577.5840000000011,
+     708.7707086614176
+    ],
+    "tap_core": "u_t20",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_2_1",
+    "module": "qfd_c_xstn",
+    "center_um": [
+     557.5840000000011,
+     1993.410708661418
+    ],
+    "box_um": [
+     537.5840000000011,
+     1973.410708661418,
+     577.5840000000011,
+     2013.410708661418
+    ],
+    "tap_core": "u_t21",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_0",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     688.7707086614176
+    ],
+    "box_um": [
+     657.9359999999922,
+     668.7707086614176,
+     697.9359999999922,
+     708.7707086614176
+    ],
+    "tap_core": "u_t30",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   },
+   {
+    "inst": "u_u_fab_u_x_3_1",
+    "module": "qfd_c_xstnw",
+    "center_um": [
+     677.9359999999922,
+     1993.410708661418
+    ],
+    "box_um": [
+     657.9359999999922,
+     1973.410708661418,
+     697.9359999999922,
+     2013.410708661418
+    ],
+    "tap_core": "u_t31",
+    "reason": "actual source fabric beside its actual core tap; 40x40 soft region, not a macro/view"
+   }
+  ]
+ }
+]
