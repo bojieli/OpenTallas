@@ -82,11 +82,21 @@ def install(spec_path, T):
 
     moved = []
 
+    by_inst = {(h["part"], h["inst"]): h for h in holes}
+    # v2 spec (12.8a): clk pin = hole centre; v1: hole N edge
+    pin_centre = all("centre" in str(t.get("pins", {}).get("clk", {}).get("edge", "")) for t in spec["types"].values())
+    import schema as S
+
     def plan_taps(P):
         out = []
+        port_inst = {}
+        for n, p in P.parts.items():
+            for nm, _, _, tp in S.core_taps(P, p["type"]):
+                port_inst[(n, nm)] = (tp.get("name") if isinstance(tp, dict) else str(tp)).rsplit(".clk", 1)[0]
         for part, port, x, y, early in orig_taps(P):
-            if "_c" in port and port.startswith("clk_c"):
-                q = core_pin(part, x, y)
+            if (part, port) in port_inst:
+                h = by_inst.get((part, port_inst[(part, port)]))
+                q = None if h is None else (round(h["x"] + HOLE / 2, 4), round(h["y"] + (HOLE / 2 if pin_centre else HOLE), 4))
                 if q is None:
                     raise SystemExit(f"island: core tap {part}/{port} has no island")
                 moved.append(abs(q[0] - x) + abs(q[1] - y))
@@ -162,6 +172,13 @@ def install(spec_path, T):
             while x < hi:
                 cand.append(x); x += step
             cand = sorted(set(cand + hole_lines + extra))
+            # soft columns/rows inside the array with no hole line (e.g. the hd_spn spine): uniform soft lines
+            fill = []
+            for p, q in zip(cand, cand[1:]):
+                k = int((q - p) // step)
+                if q - p > 1.5 * step:
+                    fill += [p + (q - p) * t / (k + 1) for t in range(1, k + 1)]
+            cand = sorted(set(cand + fill))
             out, used = [], set()
             for i in range(n):
                 t = lo + (i + 0.5) * (hi - lo) / n
@@ -171,6 +188,11 @@ def install(spec_path, T):
         xs = axis(nx, W, hx, 104.0, W - 104.0, [])
         ys = axis(ny, H, hy, strip_s, strip_n, [strip_s, strip_n])
         ys[0], ys[-1] = strip_s, strip_n
+        if os.environ.get("ISLAND_UNIFORM"):
+            # equal-length H-tree by construction: uniform strap pitch (x over the die, y between the two serdes
+            # digital-strip straps); drivers then slide along their strap to the nearest island.
+            xs = [(i + 0.5) * W / nx for i in range(nx)]
+            ys = [strip_s + j * (strip_n - strip_s) / (ny - 1) for j in range(ny)]
         rx = [(i + 0.5) * W / nx for i in range(nx)]
         DCM._AXES.update(xs=xs, ys=ys)
         try:
@@ -194,8 +216,8 @@ def install(spec_path, T):
 def main():
     ap = argparse.ArgumentParser(add_help=False)
     ap.add_argument("--spec", required=True)
-    ap.add_argument("--T-tt", type=float, default=405.0)
-    ap.add_argument("--T-ff", type=float, default=325.0)
+    ap.add_argument("--T-tt", type=float, default=250.0)
+    ap.add_argument("--T-ff", type=float, default=202.5)
     a, rest = ap.parse_known_args()
     install(a.spec, {"TT": a.T_tt, "FF": a.T_ff})
     return DCM.main(rest)
