@@ -1,0 +1,6 @@
+{
+  "status": "INCOMPLETE_NOT_PASS",
+  "cause": "Explicit --core-conns typo silently read empty dict in old checker; apparent0errorPASS not evidence.",
+  "correct_check": "g0c_before_last_bank_shift.json:7errors",
+  "fix_commit": "75eb3e7e1"
+}

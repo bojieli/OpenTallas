@@ -27,10 +27,10 @@ old_window=bus['window_um'][:]
 bus['window_um']=[606.96,round(606.96+old_window[1]-old_window[0],6)]
 # FF envelope is the current FT implementation's conservative measured cell.
 cw,ch=1.404,.27
-stage1=[[round(831.6+(i%8)*2.16,6),round(513.54+(i//8)*.27,6)] for i in range(277)]
+stage1=[[round(834.84+(i%8)*2.16,6),round(513.54+(i//8)*.27,6)] for i in range(277)]
 stage2=[[round(644.004+(i%2)*1.62,6),round(326.7+(i//2)*.27,6)] for i in range(277)]
 pinregs=[[round(606.96+int(i*25/277)*1.62,6),round(4.32+(i%12)*.27,6)] for i in range(277)]
-bays=[[831.6,513.27,848.88,523.53],[643.842,324,648,367.2],[606.96,3.24,648,8.64]]
+bays=[[834.84,513.27,852.12,523.53],[643.842,324,648,367.2],[606.96,3.24,648,8.64]]
 centres=lambda bank:[[x+cw/2,y+ch/2] for x,y in bank]
 pins=json.load(open(repo/'physical/die_plan/s81/inputs/core_pins/dsdv_bk_g.json'))['pins']
 src=[[p['x']+1002.24+.108,p['y']+501.12+.012] for p in pins if p['name'].startswith('vo_s[')]
@@ -62,6 +62,8 @@ ledger={'state':'PREVIEW ONLY; neighbor FT allocation and gen latency owed',
         'window':{'from':old_window,'to':bus['window_um']},
         'cell_um':[cw,ch],'banks_ll_um':[stage1,stage2,pinregs],'bays_um':bays,
         'bank_fill':fills,'worst_any_bit_permutation_hops_um':hops,'source_pin_escape_extra_um':.5,
+        'worst_with_ff_pin_envelope_um':[hops[0]+.702+.5,hops[1]+1.404,hops[2]+1.404],
+        'epoch_first_source':'INCOMPLETE: generated source ea=rst_n; local delivered-reset leaf at bank1 must come from master-plan reset slice, not the vo_s data pins.',
         'core_halo_hits':hits,'core_overlaps':core_overlap,'q_control_box_reach_um':loop_reach,
         'added_source_cycles':2,'added_q_control_cycles':0,
         'verdict':'PASS_PREVIEW' if max([hops[0]+.5]+hops[1:])<=405 and max(fills)<=.6 and not hits and not core_overlap else 'FAIL_PREVIEW'}
@@ -75,7 +77,7 @@ for ax in (a,z):
     for (l,b,r,u),bank,color in zip(bays,(stage1,stage2,pinregs),('orange','green','purple')):
         ax.add_patch(Rectangle((l,b),r-l,u-b,fill=False,ec=color,lw=2))
         for x,y in bank:ax.add_patch(Rectangle((x,y),cw,ch,fc=color,ec=None))
-    ax.plot([sum(p[0] for p in src)/len(src),sum(p[0] for p in src)/len(src),838.8,838.8,645.8,645.8,645.8,637],
+    ax.plot([sum(p[0] for p in src)/len(src),sum(p[0] for p in src)/len(src),842.04,842.04,645.8,645.8,645.8,637],
             [501.15,501.0,501.0,518.4,518.4,345.6,5.4,5.4],'-r',lw=2)
 a.set(xlim=(0,2885.76),ylim=(0,1226.88),aspect='equal',title='bk_sel S-prime preview: actual FF banks + opened pin-reg strip')
 z.set(xlim=(620,865),ylim=(0,590),aspect='equal',title='TX/q0 channel and 276+epoch banks')
