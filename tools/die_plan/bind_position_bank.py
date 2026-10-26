@@ -7,10 +7,16 @@ phase selector is added. RTL proof/model lives in kv_pc_r8_position_bank_1025.
 import re
 
 ABI = 'kv_pc_r8_position_bank_v1'
+ABI_V2 = 'kv_pc_r8_position_bank_v2'
 WRAPPERS = {'kv3_pc': 'qkd_kvs_grp_h_r2c_r8pos', 'kv3_pc_v1': 'qkd_kvs_grp_r2c_r8pos'}
 
 
-def decode(stack, group, port):
+def decode(stack, group, port, abi=ABI):
+    if abi==ABI_V2:
+        if port=='x__tok':
+            return 1 if stack==1 and group in (2,3,4,6) else 3 if stack==0 and group in (2,4) else 0
+        if port=='x__tep':return 4 if stack==2 and group==1 else 3 if stack==0 and group==3 else 0
+        raise ValueError(f'not a position-bank port: {port}')
     if port == 'x__tok':
         return 2 if stack == 3 and group in (2, 3, 4, 6) else 0
     if port == 'x__tep':
@@ -19,7 +25,8 @@ def decode(stack, group, port):
 
 
 def spec(b, ci, port):
-    if getattr(b, 'ab', {}).get('position_banks') != ABI or port not in ('x__tok', 'x__tep'):
+    abi=getattr(b,'ab',{}).get('position_banks')
+    if abi not in (ABI,ABI_V2) or port not in ('x__tok','x__tep'):
         return None
     c = b.F.cells[ci]
     part = b.cpart.get(ci)
@@ -28,7 +35,7 @@ def spec(b, ci, port):
     tn = b.plan['partition_types'].get(tn, {}).get('landing_base_type', tn) if tn else tn
     if tn not in WRAPPERS:
         return None
-    if c.module != WRAPPERS[tn]:
+    if c.module != WRAPPERS[tn]+('_v2' if abi==ABI_V2 else ''):
         return None
     m = re.fullmatch(r'slg_(WS|WN|ES|EN)_([0-6])', c.path)
     if not m:
@@ -39,8 +46,8 @@ def spec(b, ci, port):
     width = 18 if port == 'x__tok' else 16
     if len(c.ports[port]) != width or len(c.ports.get('slg__cfg_stack', [])) != 2 or len(c.ports.get('slg__cfg_group', [])) != 3:
         raise ValueError(f'{c.path}: position bank ABI width mismatch')
-    return dict(abi=ABI, port=port, stack=stack, group=group, pad=decode(stack, group, port),
-                max_depth=2 if port == 'x__tok' else 1, width=width,
+    return dict(abi=abi, port=port, stack=stack, group=group, pad=decode(stack,group,port,abi),
+                max_depth=(3 if port=='x__tok' else 4) if abi==ABI_V2 else (2 if port=='x__tok' else 1), width=width,
                 selector='existing_slg_cfg_stack_and_cfg_group')
 
 
@@ -51,12 +58,12 @@ def extra(b, ci, port):
 
 def layout(b):
     mode = getattr(b, 'ab', {}).get('position_banks')
-    wrapped = [c for c in b.F.cells if c.module in WRAPPERS.values()]
+    wrapped=[c for c in b.F.cells if c.module in set(WRAPPERS.values())|{x+'_v2' for x in WRAPPERS.values()}]
     if mode is None:
         if wrapped:
             raise ValueError('position-bank wrapper is present without its timing declaration')
         return None
-    if mode != ABI:
+    if mode not in (ABI,ABI_V2):
         raise ValueError(f'unknown position-bank declaration {mode}')
     cells = []
     for ci, c in enumerate(b.F.cells):
@@ -64,23 +71,24 @@ def layout(b):
         if s:
             cells.append(dict(inst=c.path, partition=b.cpart[ci], module=c.module,
                               stack=s['stack'], group=s['group'],
-                              token_cycles=s['pad'], epoch_cycles=decode(s['stack'], s['group'], 'x__tep')))
+                              token_cycles=s['pad'], epoch_cycles=decode(s['stack'],s['group'],'x__tep',mode)))
     if len(cells) != 28:
         raise ValueError(f'position-bank cohort has {len(cells)} replicas, expected 28')
-    return dict(abi=ABI, instances=cells, kept_flops_per_instance=52, kept_flops_total=52*len(cells),
+    nff=118 if mode==ABI_V2 else 52
+    return dict(abi=mode, instances=cells, kept_flops_per_instance=nff, kept_flops_total=nff*len(cells),
                 new_partition_pins=0, arbitrary_delay_selectors=0)
 
 
 def physical_key(meta, landed_pad):
-    if meta.get('abi') != ABI or meta.get('selector') != 'existing_slg_cfg_stack_and_cfg_group':
+    if meta.get('abi') not in (ABI,ABI_V2) or meta.get('selector') != 'existing_slg_cfg_stack_and_cfg_group':
         raise ValueError('unknown position-bank implementation')
     port = meta['port']
-    maximum, width = (2, 18) if port == 'x__tok' else (1, 16) if port == 'x__tep' else (-1, -1)
+    maximum,width=((3,18) if port=='x__tok' else (4,16)) if meta['abi']==ABI_V2 else ((2,18) if port=='x__tok' else (1,16) if port=='x__tep' else (-1,-1))
     if meta.get('max_depth') != maximum or meta.get('width') != width:
         raise ValueError('position-bank physical shape mismatch')
     if type(meta.get('stack')) is not int or type(meta.get('group')) is not int or not 0 <= meta['stack'] < 4 or not 0 <= meta['group'] < 7:
         raise ValueError('position-bank ID outside declared physical positions')
-    expected = decode(meta['stack'], meta['group'], port)
+    expected=decode(meta['stack'],meta['group'],port,meta['abi'])
     if meta.get('pad') != expected or landed_pad != expected:
         raise ValueError('position-bank timing differs from its declared position-ID decode')
-    return (ABI, port, maximum, width)
+    return (meta['abi'],port,maximum,width)
