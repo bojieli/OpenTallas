@@ -88,6 +88,10 @@ def guard(text,top,kd,fz,skip):
                 for r in outs:bad[1][r].add(path+' unclassified source '+master)
             for a in ins:
                 for b in outs:edges[0][a].add(b);edges[1][b].add(a)
+    boundary=[set(),set()]
+    for p in T.ports:
+        if not re.match(skip,p):
+            for b in FG._bits_of(T,p):boundary[0 if T.dirs[p]=='output' else 1].add(roots[b])
     cache=[{},{}];visiting=[set(),set()]
     def walk(root,sense):
         if root in cache[sense]:return cache[sense][root]
@@ -95,9 +99,9 @@ def guard(text,top,kd,fz,skip):
         if root.startswith('CONST_'):return frozenset(),frozenset()
         visiting[sense].add(root);found=set(ends[sense][root]);fail=set(bad[sense][root])
         if len(drivers[root])>1:fail.add('MULTIPLE_DRIVERS '+root)
+        if root in boundary[sense]:fail.add('COMBINATIONAL_FEEDTHROUGH '+root)
         for nxt in edges[sense][root]:
             a,b=walk(nxt,sense);found.update(a);fail.update(b)
-        if not found and not edges[sense][root] and not fail:fail.add('UNTERMINATED '+root)
         visiting[sense].remove(root);ans=frozenset(found),frozenset(fail);cache[sense][root]=ans;return ans
     ports={};fails={}
     for port in T.ports:
