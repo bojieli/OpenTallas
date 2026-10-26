@@ -1,0 +1,17 @@
+{
+  "source": "0c87522f27fa",
+  "phase_sequence": [
+    "TT-only setup, native vclk250",
+    "fresh FF-only hold, native vclk202.5"
+  ],
+  "diagnostic_command_exit": 0,
+  "physical_verdict": "FAIL",
+  "tt_setup_ps": -31.28,
+  "ff_hold_ps": 4.82,
+  "hold_buffers": 1801,
+  "tt_insertion_ps": 216.86,
+  "ff_insertion_ps": 173.49,
+  "clock_insertion_verdict": "FAIL",
+  "unit": "intel2:oth-ubuntu-2802334-1792990665",
+  "next": "Head plan input-FT window and clock distribution structural correction; no generic MCMM default, no DRT"
+}

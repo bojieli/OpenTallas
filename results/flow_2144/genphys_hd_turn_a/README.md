@@ -15,3 +15,7 @@ The original reference remains physically failed. FF-only hold padding produces 
 The fresh sequential proof runs TT-only setup with vclk250, then FF-only hold in a new OpenROAD process with vclk202.5, and checks native TT/FF after each. TT-only setup required no change; the separate FF stage remains live on intel2, unit oth-ubuntu-2802334-1792990665, scratch2/claude/codex-genphys-ab-2144/seq_ff, at this commit. Its final receipt will be appended, without changing these A/B failures.
 
 No RTL or cycle change. No DRT, adoption, sign-off or die gate claim. Scripts are diagnostic replays against isolated copies; they do not install shared defaults. run.sh and run_seq.sh must be launched through ot-run with the staged self-contained scratch input copies. Existing sources and failed outputs are preserved.
+
+## Sequential final result,22:14 PDT
+
+The fresh TT-only setup then fresh FF-only hold sequence completed: TT setup-31.28ps, FF hold+4.82ps,1801holdbuffers. Pin-register insertion216.86/173.49ps still fails. This exactly reproduces the FF-only baseline after the no-change TT stage. Native FF repair is effective; sequential corner isolation does not resolve the physical input-FT/setup contract. Diagnostic unit intel2:oth-ubuntu-2802334-1792990665 exited0 and copied outputs back to the hub. Physical verdict remains FAIL, not SIGNED. No further hd_turn_a tuning or adoption is proposed. See sequential_final.json and seq_ff/.
