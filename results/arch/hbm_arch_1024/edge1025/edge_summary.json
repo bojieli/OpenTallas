@@ -1,0 +1,1115 @@
+{
+ "plan_dir": "epyc1:/srv/opentallas-scratch2/claude/path-hbm/edge_1025/plan",
+ "plan_sha256": "45d882ccb9b760dfdbcaeb0a9ef0b0a5ebe6f9826de4e21d8575c914582654f7",
+ "src": "/srv/opentallas-scratch2/claude/path-hbm/r1d_s6/plan_cond",
+ "src_plan_sha256": "74d38accb118e090be61606ed5884eb411a3fa7ad35e18b3c7058592cce88e39",
+ "growth": {
+  "cut_y_um": 8484.48,
+  "growth_um": 501.12,
+  "area_before_mm2": 457.37571041279995,
+  "area_after_mm2": 471.60735805440004,
+  "area_added_mm2": 14.2316476416,
+  "stretched_types": [
+   "NE_io",
+   "NW_io",
+   "q_b000",
+   "q_b001",
+   "q_b002",
+   "q_b003",
+   "q_b010",
+   "q_b011",
+   "q_b012",
+   "q_b013",
+   "q_hub_ne",
+   "q_hub_nw",
+   "root"
+  ],
+  "shifted_partitions": [
+   "NW_b112",
+   "NW_b113",
+   "NW_mca",
+   "NW_mcb",
+   "NW_sm0",
+   "NW_sm1",
+   "NW_spt0",
+   "NW_spt1",
+   "NW_spt2",
+   "NW_spu0",
+   "NW_su00",
+   "NW_su01",
+   "NW_su10",
+   "NW_su11",
+   "PHY_N",
+   "vsN4",
+   "vsN5",
+   "vsN6",
+   "NE_b112",
+   "NE_b113",
+   "NE_mca",
+   "NE_mcb",
+   "NE_sm0",
+   "NE_sm1",
+   "NE_spt0",
+   "NE_spt1",
+   "NE_spt2",
+   "NE_spu0",
+   "NE_su00",
+   "NE_su01",
+   "NE_su10",
+   "NE_su11"
+  ],
+  "inline_io_moved": [
+   "io_PHY_N_u_phy_Q"
+  ],
+  "inline_pg_domains_moved": []
+ },
+ "slot_changes": [
+  {
+   "type": "q_b010",
+   "slot": "L28x2",
+   "stations_before": 3,
+   "stations_after": 5,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new per-bit sites required",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "q_b010",
+   "slot": "L148x4",
+   "stations_before": 8,
+   "stations_after": 10,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    0.0
+   ],
+   "mode": "extra registered top-band hops; exact new per-bit sites required",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "q_b001",
+   "slot": "L36x3",
+   "stations_before": 2,
+   "stations_after": 4,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new per-bit sites required",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "root",
+   "slot": "L9x1",
+   "stations_before": 8,
+   "stations_after": 10,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new per-bit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  },
+  {
+   "type": "root",
+   "slot": "L9mx1",
+   "stations_before": 8,
+   "stations_after": 10,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new per-bit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  },
+  {
+   "type": "root",
+   "slot": "L150x2",
+   "stations_before": 7,
+   "stations_after": 7,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "rigid slot translation; depth unchanged",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "root",
+   "slot": "L150mx2",
+   "stations_before": 7,
+   "stations_after": 7,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "rigid slot translation; depth unchanged",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "root",
+   "slot": "L63x1",
+   "stations_before": 6,
+   "stations_after": 8,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new per-bit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  },
+  {
+   "type": "root",
+   "slot": "L63mx1",
+   "stations_before": 8,
+   "stations_after": 10,
+   "input_delta_um": [
+    0.0,
+    0.0
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "extra registered top-band hops; exact new per-bit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  },
+  {
+   "type": "root",
+   "slot": "L114x4",
+   "stations_before": 4,
+   "stations_after": 4,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "rigid slot translation; depth unchanged",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "root",
+   "slot": "L114mx4",
+   "stations_before": 5,
+   "stations_after": 5,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    501.12
+   ],
+   "mode": "rigid slot translation; depth unchanged",
+   "explicit_sites_need_refresh": []
+  },
+  {
+   "type": "root",
+   "slot": "L140x5",
+   "stations_before": 11,
+   "stations_after": 13,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    0.0
+   ],
+   "mode": "extra registered top-band hops; exact new per-bit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  },
+  {
+   "type": "root",
+   "slot": "L140mx5",
+   "stations_before": 11,
+   "stations_after": 13,
+   "input_delta_um": [
+    0.0,
+    501.12
+   ],
+   "output_delta_um": [
+    0.0,
+    0.0
+   ],
+   "mode": "extra registered top-band hops; exact new per-bit sites required",
+   "explicit_sites_need_refresh": [
+    "bit_sites_um",
+    "bit_site_cell_um"
+   ]
+  }
+ ],
+ "removed": {
+  "L156": {
+   "ports": [
+    "L156_0"
+   ],
+   "width": 1455,
+   "buses": [
+    "q_hub_nw.L156_o",
+    "root.L156_i"
+   ],
+   "slots": [],
+   "stations": 8,
+   "cc": 8
+  },
+  "L157": {
+   "ports": [
+    "L157_0",
+    "L157_1"
+   ],
+   "width": 1285,
+   "buses": [
+    "q_hub_nw.L157_o",
+    "root.L157_i"
+   ],
+   "slots": [
+    "q_b101_nw.L157x1"
+   ],
+   "stations": 6,
+   "cc": 6
+  }
+ },
+ "moved": {
+  "L74": {
+   "old": {
+    "L74_0": {
+     "face": "S",
+     "window": [
+      12938.224,
+      13356.936
+     ],
+     "dst": "NW_b101"
+    },
+    "L74_1": {
+     "face": "E",
+     "window": [
+      5330.568,
+      5749.28
+     ],
+     "src": "NW_b101"
+    }
+   },
+   "new": {
+    "L74_0": {
+     "face": "E",
+     "window": [
+      6065.776,
+      6275.384
+     ],
+     "dst": "root"
+    }
+   },
+   "free_gaps": [
+    [
+     6065.78,
+     6335.024
+    ],
+    [
+     6344.624,
+     6344.144
+    ],
+    [
+     6815.071999999999,
+     6814.592000000001
+    ],
+    [
+     6824.192,
+     6823.712
+    ],
+    [
+     7328.208,
+     7327.728
+    ],
+    [
+     7832.223999999999,
+     7836.392000000001
+    ],
+    [
+     7895.879999999999,
+     7900.048000000001
+    ],
+    [
+     7909.647999999999,
+     7909.168000000001
+    ],
+    [
+     7918.767999999999,
+     7983.088000000001
+    ],
+    [
+     8423.296,
+     8422.816
+    ],
+    [
+     8484.464,
+     8985.1
+    ]
+   ],
+   "need_um": 209.60714285714286
+  }
+ },
+ "L156": {
+  "window": [
+   8490.144,
+   8979.928
+  ],
+  "width": 2740,
+  "map": [
+   {
+    "bits": "[273:0]",
+    "root": "u_hb_idx__ctl.cr[273:0]",
+    "hub": "u_hb_vms_Q.cr[547:274]"
+   },
+   {
+    "bits": "[547:274]",
+    "root": "u_hb_argmax.cr[273:0]",
+    "hub": "u_hb_vms_Q.cr[273:0]"
+   },
+   {
+    "bits": "[683:548]",
+    "root": "u_hb_idx__ctl.index_rq[135:0]",
+    "hub": "u_hb_idx__op_Q.vm_rq[135:0]"
+   },
+   {
+    "bits": "[940:684]",
+    "root": "u_hb_idx__ctl.vm_rr[256:0]",
+    "hub": "u_vmb_Q0.rr4[256:0]"
+   },
+   {
+    "bits": "[1197:941]",
+    "root": "u_hb_idx__ctl.vm_rr[513:257]",
+    "hub": "u_vmb_Q1.rr4[256:0]"
+   },
+   {
+    "bits": "[1454:1198]",
+    "root": "u_hb_idx__ctl.vm_rr[770:514]",
+    "hub": "u_vmb_Q2.rr4[256:0]"
+   },
+   {
+    "bits": "[1711:1455]",
+    "root": "u_hb_idx__ctl.vm_rr[1027:771]",
+    "hub": "u_vmb_Q3.rr4[256:0]"
+   },
+   {
+    "bits": "[1968:1712]",
+    "root": "u_hb_idx__ctl.vm_rr[1284:1028]",
+    "hub": "u_vmb_Q4.rr4[256:0]"
+   },
+   {
+    "bits": "[2225:1969]",
+    "root": "u_hb_idx__ctl.vm_rr[1541:1285]",
+    "hub": "u_vmb_Q5.rr4[256:0]"
+   },
+   {
+    "bits": "[2482:2226]",
+    "root": "u_hb_idx__ctl.vm_rr[1798:1542]",
+    "hub": "u_vmb_Q6.rr4[256:0]"
+   },
+   {
+    "bits": "[2739:2483]",
+    "root": "u_hb_idx__ctl.vm_rr[2055:1799]",
+    "hub": "u_vmb_Q7.rr4[256:0]"
+   }
+  ],
+  "hub_open": [
+   "u_hb_vms_Q.cr[547:274]: no such port on the q_hub_nw core (['hfd_hgi_vms_glue_nw_t'])",
+   "u_hb_vms_Q.cr[273:0]: no such port on the q_hub_nw core (['hfd_hgi_vms_glue_nw_t'])"
+  ],
+  "root_chains": [
+   {
+    "capture": "u_hb_argmax.cr",
+    "bits": 274,
+    "stations": 12,
+    "worst_hop": 358.1
+   },
+   {
+    "capture": "u_hb_idx__ctl.cr",
+    "bits": 274,
+    "stations": 13,
+    "worst_hop": 358.1
+   },
+   {
+    "capture": "u_hb_idx__ctl.index_rq",
+    "bits": 136,
+    "stations": 13,
+    "worst_hop": 358.2
+   },
+   {
+    "capture": "u_hb_idx__ctl.vm_rr",
+    "bits": 2056,
+    "stations": 13,
+    "worst_hop": 358.1
+   }
+  ],
+  "hub_chains": [
+   {
+    "launch": "u_hb_idx__op_Q.vm_rq",
+    "bits": 136,
+    "stations": 12,
+    "worst_hop": 358.3
+   },
+   {
+    "launch": "u_vmb_Q0.rr4",
+    "bits": 257,
+    "stations": 12,
+    "worst_hop": 355.7
+   },
+   {
+    "launch": "u_vmb_Q1.rr4",
+    "bits": 257,
+    "stations": 13,
+    "worst_hop": 349.4
+   },
+   {
+    "launch": "u_vmb_Q2.rr4",
+    "bits": 257,
+    "stations": 11,
+    "worst_hop": 354.2
+   },
+   {
+    "launch": "u_vmb_Q3.rr4",
+    "bits": 257,
+    "stations": 32,
+    "worst_hop": 359.4
+   },
+   {
+    "launch": "u_vmb_Q4.rr4",
+    "bits": 257,
+    "stations": 14,
+    "worst_hop": 351.6
+   },
+   {
+    "launch": "u_vmb_Q5.rr4",
+    "bits": 257,
+    "stations": 10,
+    "worst_hop": 349.4
+   },
+   {
+    "launch": "u_vmb_Q6.rr4",
+    "bits": 257,
+    "stations": 9,
+    "worst_hop": 349.4
+   },
+   {
+    "launch": "u_vmb_Q7.rr4",
+    "bits": 257,
+    "stations": 14,
+    "worst_hop": 349.4
+   }
+  ]
+ },
+ "L74_i_chain": {
+  "dist_um": 589.1,
+  "stations": 1,
+  "worst_hop": 307.7
+ },
+ "lane_changes": {
+  "L140": {
+   "before": {
+    "cycles": 38,
+    "stations": 36,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 38,
+    "pad": 0,
+    "param": "LAT_L140"
+   },
+   "after": {
+    "cycles": 40,
+    "stations": 38,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 40,
+    "pad": 0
+   }
+  },
+  "L140m": {
+   "before": {
+    "cycles": 38,
+    "stations": 36,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 38,
+    "pad": 0,
+    "param": "LAT_L140M"
+   },
+   "after": {
+    "cycles": 40,
+    "stations": 38,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 40,
+    "pad": 0
+   }
+  },
+  "L148": {
+   "before": {
+    "cycles": 32,
+    "stations": 30,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 32,
+    "pad": 0,
+    "param": "LAT_L148"
+   },
+   "after": {
+    "cycles": 34,
+    "stations": 32,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 34,
+    "pad": 0
+   }
+  },
+  "L148m": {
+   "before": {
+    "cycles": 32,
+    "stations": 30,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 32,
+    "pad": 0,
+    "param": "LAT_L148M"
+   },
+   "after": {
+    "cycles": 34,
+    "stations": 32,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 34,
+    "pad": 0
+   }
+  },
+  "L157": {
+   "before": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0,
+    "param": "LAT_L157"
+   },
+   "after": null
+  },
+  "L28": {
+   "before": {
+    "cycles": 21,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 21,
+    "pad": 0,
+    "param": "LAT_L28"
+   },
+   "after": {
+    "cycles": 23,
+    "stations": 21,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 23,
+    "pad": 0
+   }
+  },
+  "L28m": {
+   "before": {
+    "cycles": 21,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 21,
+    "pad": 0,
+    "param": "LAT_L28M"
+   },
+   "after": {
+    "cycles": 23,
+    "stations": 21,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 23,
+    "pad": 0
+   }
+  },
+  "L36": {
+   "before": {
+    "cycles": 9,
+    "stations": 7,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 9,
+    "pad": 0,
+    "param": "LAT_L36"
+   },
+   "after": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   }
+  },
+  "L36m": {
+   "before": {
+    "cycles": 9,
+    "stations": 7,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 9,
+    "pad": 0,
+    "param": "LAT_L36M"
+   },
+   "after": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   }
+  },
+  "L63": {
+   "before": {
+    "cycles": 29,
+    "stations": 27,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 29,
+    "pad": 0,
+    "param": "LAT_L63"
+   },
+   "after": {
+    "cycles": 31,
+    "stations": 29,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 31,
+    "pad": 0
+   }
+  },
+  "L63m": {
+   "before": {
+    "cycles": 31,
+    "stations": 29,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 31,
+    "pad": 0,
+    "param": "LAT_L63M"
+   },
+   "after": {
+    "cycles": 33,
+    "stations": 31,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 33,
+    "pad": 0
+   }
+  },
+  "L74": {
+   "before": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "beats": 2,
+    "natural": 5,
+    "pad": 0,
+    "word_cycles": 6,
+    "param": "LAT_L74"
+   },
+   "after": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "beats": 2,
+    "natural": 2,
+    "pad": 0,
+    "word_cycles": 3
+   }
+  },
+  "L9": {
+   "before": {
+    "cycles": 36,
+    "stations": 34,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 36,
+    "pad": 0,
+    "param": "LAT_L9"
+   },
+   "after": {
+    "cycles": 38,
+    "stations": 36,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 38,
+    "pad": 0
+   }
+  },
+  "L9m": {
+   "before": {
+    "cycles": 28,
+    "stations": 26,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 28,
+    "pad": 0,
+    "param": "LAT_L9M"
+   },
+   "after": {
+    "cycles": 30,
+    "stations": 28,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 30,
+    "pad": 0
+   }
+  }
+ },
+ "chain_change_summary": {
+  "root": {
+   "bus:L106_o": {
+    "chains": 14,
+    "sum_station_delta": 28,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L125_i": {
+    "chains": 14,
+    "sum_station_delta": 28,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L156_i": {
+    "chains": 4,
+    "sum_station_delta": 28,
+    "max_delta": 7,
+    "min_delta": 0
+   },
+   "bus:L157_i": {
+    "chains": 1,
+    "sum_station_delta": -3,
+    "max_delta": 0,
+    "min_delta": -3
+   },
+   "bus:L74_i": {
+    "chains": 1,
+    "sum_station_delta": 1,
+    "max_delta": 1,
+    "min_delta": 0
+   }
+  },
+  "q_hub_nw": {
+   "bus:L0_o": {
+    "chains": 17,
+    "sum_station_delta": 27,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L102_o": {
+    "chains": 41,
+    "sum_station_delta": 72,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L103_o": {
+    "chains": 41,
+    "sum_station_delta": 79,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L110_o": {
+    "chains": 17,
+    "sum_station_delta": 25,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L111_o": {
+    "chains": 17,
+    "sum_station_delta": 31,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L114_i": {
+    "chains": 192,
+    "sum_station_delta": 372,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L120_i": {
+    "chains": 11,
+    "sum_station_delta": 12,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L121_i": {
+    "chains": 11,
+    "sum_station_delta": 20,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L134_i": {
+    "chains": 41,
+    "sum_station_delta": 67,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L135_i": {
+    "chains": 41,
+    "sum_station_delta": 82,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L156_o": {
+    "chains": 9,
+    "sum_station_delta": 92,
+    "max_delta": 32,
+    "min_delta": 0
+   },
+   "bus:L157_o": {
+    "chains": 5,
+    "sum_station_delta": -55,
+    "max_delta": 0,
+    "min_delta": -26
+   },
+   "bus:L1_o": {
+    "chains": 17,
+    "sum_station_delta": 32,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L21_i": {
+    "chains": 192,
+    "sum_station_delta": 302,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L22_i": {
+    "chains": 192,
+    "sum_station_delta": 267,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L24_i": {
+    "chains": 17,
+    "sum_station_delta": 23,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L25_i": {
+    "chains": 17,
+    "sum_station_delta": 31,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L29_o": {
+    "chains": 11,
+    "sum_station_delta": 11,
+    "max_delta": 1,
+    "min_delta": 0
+   },
+   "bus:L30_o": {
+    "chains": 11,
+    "sum_station_delta": 21,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L31_o": {
+    "chains": 11,
+    "sum_station_delta": 22,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L37_o": {
+    "chains": 41,
+    "sum_station_delta": 80,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L41_i": {
+    "chains": 26,
+    "sum_station_delta": 26,
+    "max_delta": 1,
+    "min_delta": 0
+   },
+   "bus:L50_o": {
+    "chains": 26,
+    "sum_station_delta": 26,
+    "max_delta": 1,
+    "min_delta": 0
+   },
+   "bus:L55_i": {
+    "chains": 41,
+    "sum_station_delta": 71,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L57_i": {
+    "chains": 41,
+    "sum_station_delta": 82,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L66_o": {
+    "chains": 80,
+    "sum_station_delta": 106,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L67_i": {
+    "chains": 11,
+    "sum_station_delta": 22,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L68_i": {
+    "chains": 11,
+    "sum_station_delta": 20,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L79_o": {
+    "chains": 80,
+    "sum_station_delta": 106,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L82_i": {
+    "chains": 80,
+    "sum_station_delta": 132,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L84_o": {
+    "chains": 26,
+    "sum_station_delta": 48,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L88_i": {
+    "chains": 26,
+    "sum_station_delta": 48,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L8_o": {
+    "chains": 192,
+    "sum_station_delta": 227,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L97_o": {
+    "chains": 11,
+    "sum_station_delta": 22,
+    "max_delta": 2,
+    "min_delta": 0
+   },
+   "bus:L98_o": {
+    "chains": 11,
+    "sum_station_delta": 22,
+    "max_delta": 2,
+    "min_delta": 0
+   }
+  }
+ },
+ "world_core_invariant": {
+  "cores": 822,
+  "unchanged": 578,
+  "translated_up": 244,
+  "errors": [],
+  "n_errors": 0
+ },
+ "open": [
+  "clock: die H-tree / spine root_um y 8052.48 is the pre-growth centre (die centre now 8303.04); CLOCK owns the re-publication; clock_htree.json sidecar stale",
+  "reset: root/parts reset pin repair must be re-applied after the final clock/geometry regeneration (codex reset_pin_sites.py), not copied",
+  "u_hb_vms_Q cr[547:0]: folded NW vms core hfd_hgi_vms_glue_nw_t has no cq/cr (native SW-client master needed, +55,140 cells measured) -> hub chains for 548 cr bits OPEN (no invented pin)",
+  "ft slots that got extra top-band hops lost bit_sites_um: exact RowAllocator per-bit refresh required",
+  "q_b101_nw keeps L12x1 2996 / L48x11 634 / L53x1 612 + 2-11 b slots: its G2 structural failure is no longer on the selected path but still owned by PLAN"
+ ],
+ "gates": {
+  "G0": "PASS 0 errors / 525 warnings",
+  "G0C": "24 errors = R1DELTA base set (inherited core_faces q_b110/q_b111/q_b112/root)"
+ }
+}
