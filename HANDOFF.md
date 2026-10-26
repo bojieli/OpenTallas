@@ -931,3 +931,7 @@ CODEX: 2026-10-25 22:06 PDT RESET q_hubNW optional electrical prototype d3474ce6
 2026-10-25 22:07 PDT CODEX: HBMsmall FF-vsMCMM GRT A/B terminalFAIL_BOTH99c276d75:TT+42.17/FF-31.13 vs+39.80/-24.61, nativeFFinternalcalendar172psclockbranch mismatch despite optimizer+5/TNS0; noDRT/adoption. KVcap64A/Bstilllive,9bca574fdheld.
 CODEX: 2026-10-25 22:08 PDT DSABI first4 diagnosticterminalFAIL(ties135158,-10404),ELAB/EMITclean/0graphfaults/0splits;14fixREADYb085d8f3e. QC CB16 nextbatchimpactpostedD-QC-CB16-PHASE(168lanes+1..16,root+0,712464FF,+9types),noadoption.
 2026-10-25 22:12 PDT CODEX: FLOW-CANARY actual hd_turn_a same4CTS GRT A/B rejects genericMCMM (FFhold+4.82->-44.57 whileTT-31.28->+25.74); evidence12ddd958f2, sequentialFFproofliveintel2, noDRT/defaultchange.
+
+CODEX: 2026-10-25 22:20 PDT tokenintegration: KVb15 MU833compile+MU471/AGES96/staticgatesPASS47a351071b86; actual6316FFrequestR8tabletoKVbind. S81single-result/headerdenABIs124173/73bfsourceexact0cycles. QCphaseapprovedexecutionlive; DSNR/T14+HBMactualprogrammeongoing. Coverage coord/codex-token-coverage-2144.md.
+
+CODEX: 2026-10-25 22:16 PDT TOK-HBM source cohort and generator/runner fixes ready; stageA A/B/C6/6 PASS, deliveries140..300 done301; connected TOPK r1+r2_833 admitted on intel2, no G5 claim. See TOK-HBM notes.

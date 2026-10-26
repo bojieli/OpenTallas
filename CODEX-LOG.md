@@ -3779,3 +3779,6 @@ CODEX: 2026-10-25 21:50 PDT MERGED main46b872d92b approved batch12 LEC cycle + S
 OWNER? 2026-10-25 21:55 PDT KV GRT share condition: the actual partition runner uses joint FT+glue routing with platform adjustment0.25 (75% total resource); only G2 explicitly uses0.5, and no per-net half-track reservation exists. May the21:16condition be satisfied by the common G2 half-share budget plus actual same-track joint partition GRT/route evidence, or must an explicit partition reservation hook be added? The strict0.5die run remains diagnostic; no freeze claim. Continuing hgi_v8 geometry and actual joint-kit GRT without waiting.
 
 CODEX: 2026-10-25 21:58 PDT MERGED/PUSHED main9650ec980e QCbatch1+KVoddstrapmasters+bootbounds0cycles+LECmem2reg+dieclockCPPR+semanticcanary. FocusedgatesPASS;QC68/68G0C0errors,KV40/40types+same4hgierrors. HEAD==origin/main.
+
+## Token integration milestone 2026-10-25 22:20 PDT
+NativeKVimage+bootABI47a351071b86PASS; sourcebounds453dda, S81trueABI124173/73bf+miter38def READY. Actual-hub lane notes and complete inventory coord/codex-token-coverage-2144.md. Children continueQCphase/DSNR+T14/HBMroot32. No newOWNER? items.
