@@ -10,7 +10,10 @@ import re
 from pathlib import Path
 import bind_elab as E
 
-SUPPORTED = {"$mem_v2", "$shiftx"}
+# $mem_v2 / $shiftx (Codex 861); TOK-SCHED 10-25 adds the remaining combinational word-level primitives that the
+# current S81 dissolved parents (ot_s81sl_vp, dsdv_svc_att, dsdv_svc_rs_c, ot_hdc_v41x_attn_s) carry and _glue does not
+# re-emit: Yosys write_verilog prints each one with its own documented semantics; nothing is mapped or optimised.
+SUPPORTED = {"$mem_v2", "$shiftx", "$shift", "$demux", "$bwmux", "$bmux", "$pmux", "$div", "$mod"}
 
 class NativeGlueError(RuntimeError):
     pass
@@ -18,7 +21,7 @@ class NativeGlueError(RuntimeError):
 class NativeGlue:
     def __init__(self, directory, enabled):
         if not isinstance(enabled, list) or any(t not in SUPPORTED for t in enabled):
-            raise NativeGlueError("native_glue_types must name only $mem_v2 or $shiftx")
+            raise NativeGlueError("native_glue_types must name only " + ", ".join(sorted(SUPPORTED)))
         self.enabled = set(enabled)
         self.directory = Path(directory).resolve()
         self.files = []
@@ -68,7 +71,10 @@ class NativeGlue:
             # that cannot be represented by Yosys's quoted filename syntax.
             if any('"' in str(p) or "\n" in str(p) for p in (inp, sv)):
                 raise NativeGlueError("invalid native glue output path")
-            ys.write_text(f'read_json "{inp}"\nwrite_verilog -noattr "{sv}"\n')
+            # write_verilog has no expression for $bwmux / $demux / $bmux: lower only that one cell with its own
+            # Yosys map pass (bit-exact by construction: and/or, shift/compare), nothing else
+            lower = {"$bwmux": "bwmuxmap\n", "$demux": "demuxmap\n", "$bmux": "bmuxmap\n"}.get(cell.ytype, "")
+            ys.write_text(f'read_json "{inp}"\n{lower}write_verilog -noattr "{sv}"\n')
             try:
                 E.run_yosys(ys, self.directory / (module + ".log"),
                             [self.directory], mem_gb=2)

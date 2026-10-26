@@ -1095,7 +1095,15 @@
  },
  "collect_memories": true,
  "native_glue_types": [
-  "$mem_v2"
+  "$mem_v2",
+  "$shiftx",
+  "$shift",
+  "$demux",
+  "$bwmux",
+  "$bmux",
+  "$pmux",
+  "$div",
+  "$mod"
  ],
- "native_glue_note": "TOK-SCHED 10-25: v3c strict bind EMIT u_s_3N.u_slice.lf[2].u_lf.u_vp.\\$1004 \\$memrd_v2 in a dissolved parent; Codex 861bf4f4f1/c4c5f11e99 opt-in native backend keeps the inferred array (memory_collect only, no memory_map/async2sync/opt)"
+ "native_glue_note": "TOK-SCHED 10-25: the current dissolved parents (ot_s81sl_vp, dsdv_svc_att, dsdv_svc_rs_c, ot_hdc_v41x_attn_s) carry word-level primitives that _glue does not re-emit (v3c EMIT \\$memrd_v2, v4 EMIT \\$demux); each is emitted by the native Yosys backend (bind_native_glue.py; memory_collect only, no memory_map/async2sync/opt), qualified by test_bind_native_glue{,_comb}.py"
 }
