@@ -669,7 +669,12 @@ class Flat:
 def flatten(yjs, top, parent_variants=(), retain_hierarchy_ports=False):
     """parent_variants: [{"inst": regex on the hierarchical path, "module": M}] -- a dissolved parent instance is
     elaborated as variant M (its ports a subset): connections to ports M lacks are dropped (recorded: literal or net),
-    ports M adds stay unconnected (recorded)."""
+    ports M adds stay unconnected (recorded).
+    retain_hierarchy_ports is default off. True retains all dissolved-parent
+    interfaces; an iterable retains only those exact instance paths in
+    F.instances, with effective literal parameters and canonical global nets.
+    This metadata does not allocate nets or change the default flattened graph.
+    """
     mods = yjs["modules"]
     F = Flat()
     if retain_hierarchy_ports:

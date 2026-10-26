@@ -10,6 +10,7 @@ import argparse
 from collections import defaultdict
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -49,7 +50,6 @@ def extract(yjs, manifest, units, *, asbuilt_sha256, top_sha256):
     nets = {b for r in selected.values() for p in r['ports'].values() for b in p['bits'] if isinstance(b, int)}
     drivers, inputs, interfaces = defaultdict(list), defaultdict(list), {}
     for c in F.cells:
-        owns = any(c.path == u or c.path.startswith(u + '.') for u in units)
         touched = False
         for pn, bits in c.ports.items():
             direction = c.dirs.get(pn)
@@ -64,7 +64,7 @@ def extract(yjs, manifest, units, *, asbuilt_sha256, top_sha256):
                     inputs[str(b)].append(endpoint)
                 if direction not in ('input', 'output', 'inout'):
                     raise ValueError(f'actual endpoint {endpoint} lacks a direction')
-        if owns or touched:
+        if touched:
             interfaces[c.path] = dict(module=c.module, kind=c.kind,
                 ports={pn: dict(dir=c.dirs.get(pn, 'unknown'), width=len(bits)) for pn, bits in c.ports.items()})
     for pn, (direction, bits) in F.top_ports.items():
@@ -103,9 +103,12 @@ def main(argv=None):
     manifest = json.loads(a.manifest.read_text())
     rec = extract(yjs, manifest, units, asbuilt_sha256=ab_hash, top_sha256=top_hash)
     a.out.parent.mkdir(parents=True, exist_ok=True)
-    with a.out.open('x') as f:
+    partial = a.out.with_name(a.out.name + f'.partial.{os.getpid()}')
+    with partial.open('x') as f:
         json.dump(rec, f, separators=(',', ':'))
         f.write('\n')
+    os.link(partial, a.out)  # publish a complete artifact atomically; never replace an older result
+    partial.unlink()
     print(json.dumps(dict(out=str(a.out), units=len(rec['units']), source_nets=len(set(rec['drivers'])|set(rec['input_pins'])),
                           leaf_interfaces=len(rec['leaf_interfaces']), source_top_sha256=top_hash)))
 

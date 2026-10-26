@@ -44,6 +44,23 @@ class InventoryTests(unittest.TestCase):
                          [(c.path, c.params, c.ports) for c in enabled.cells])
         self.assertEqual(old.parent, enabled.parent)
 
+    def test_parent_variant_metadata_names_actual_selected_abi(self):
+        y = design()
+        y['modules']['variant'] = {
+            'parameter_default_values': {'W': '00000001'},
+            'ports': {'x': {'direction': 'input', 'bits': [10]}, 'y': {'direction': 'output', 'bits': [11]}},
+            'netnames': {'data': {'bits': [10, 11]}},
+            'cells': {'u_q': {'type': 'reg', 'parameters': {}, 'connections': {'d': [10], 'q': [11]},
+                              'port_directions': {'d': 'input', 'q': 'output'}}}}
+        y['modules']['top']['cells']['u_s_0S']['parameters'] = {'W': '00000100'}
+        rec = I.extract(y, {'top': 'top', 'substitute_parent': [{'inst': 'u_s_0S', 'module': 'variant'}]},
+                        ['u_s_0S'], asbuilt_sha256='a'*64, top_sha256='b'*64)
+        u = rec['units']['u_s_0S']
+        self.assertEqual(u['master'], 'variant')
+        self.assertEqual(u['params']['W'], "8'b00000001")
+        self.assertNotEqual(u['ports']['x']['bits'], u['ports']['y']['bits'])
+        self.assertEqual(rec['source_variants']['parent_applied'][0]['master'], 'slice')
+
     def test_wrong_logical_unit_is_not_guessed(self):
         with self.assertRaisesRegex(ValueError, 'absent from actual source'):
             I.extract(design(), {'top': 'top'}, ['u_s_0N'], asbuilt_sha256='a'*64, top_sha256='b'*64)
