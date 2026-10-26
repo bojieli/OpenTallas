@@ -14,8 +14,8 @@
 //      register) into ready raw elements in an 8-slot shift register (slot 0 is issued; load at capture, shift after
 //      every other edge), so no tick-derived lane/half select, multiply or group-limit compare sits in the issue path;
 //      j[10:0] = {f[7:0],h,s} and f[7:0] = flit[519:512] - (rank*pf)[7:0] (only the low 8 product bits are used);
-//  (b) sort after the entry register: entry holds the 4 raw elements, the 4-way rank sort + tform run in the
-//      existing PIPE launch stage (entry -> entry_q), whose edge count is unchanged;
+//  (b) sort pairs before entry, then merge two pairs in the existing entry -> entry_q stage. KEY FORM and
+//      original-position tags remove repeated key muxes and preserve every tie, with unchanged edge count;
 //  (c) derived configure values use three of the eight idle start-up edges: product, ingress/offsets, final bounds;
 //      sentinels prevent comparisons before the bounds are ready. This removes multiply plus serial-add chains
 //      without changing any root port edge;
@@ -142,7 +142,7 @@ module ot_hgi_coll_tkm_static_pd #(parameter integer KMAX=2048, MUT=0, TP=96, RA
   .w_v(buf_wv),.w_addr(buf_wa),.w_data(buf_wdata),
   .r_v(read_v),.r_addr(read_addr),.rd_v(buf_valid),.rd_data(buf_data));
  reg[4*EW-1:0]entry;reg entry_v;
- reg[EW-1:0]raw[0:3],sorted[0:3];
+ reg[EW-1:0]raw[0:3];
  // (a) 8 issue slots x 4 raw elements, decoded at capture from del_flit
  reg[4*EW-1:0]slot[0:7];
  function automatic [EW-1:0] dec_el(input [31:0] vv,input [31:0] id,input [7:0] rk,input [7:0] f8,input h,input [1:0] s_,input ok);
@@ -162,23 +162,47 @@ module ot_hgi_coll_tkm_static_pd #(parameter integer KMAX=2048, MUT=0, TP=96, RA
   end else for(integer k_=0;k_<7;k_=k_+1)slot[k_]<=slot[k_+1];
  end
  always @*begin:decode
-  for(integer s=0;s<4;s=s+1)begin raw[s]=slot[0][EW*s+:EW];sorted[s]=0;end
-  if(buf_valid)for(integer s=0;s<4;s=s+1)raw[s]=buf_data[EW*s+:EW];
- end
- // (b) the 4-way rank sort of the registered entry (raw elements), into the PIPE launch register entry_q
- reg[EW-1:0]es[0:3],eso[0:3];
- always @*begin:rank_sort
-  for(integer s=0;s<4;s=s+1)begin es[s]=entry[EW*s+:EW];eso[s]=0;end
-  for(integer s=0;s<4;s=s+1)begin:rs
-   integer rank_s;rank_s=0;
-   for(integer j_=0;j_<4;j_=j_+1)if(key2(es[j_])>key2(es[s])||(key2(es[j_])==key2(es[s])&&j_<s))rank_s=rank_s+1;
-   eso[rank_s]=es[s];
+  for(integer s=0;s<4;s=s+1)begin
+   raw[s]=slot[0][EW*s+:EW];
+   if(buf_valid)raw[s]=buf_data[EW*s+:EW];
   end
+ end
+ // (b) Sort pairs into the existing entry register, then merge two pairs
+ // into entry_q. Entry stores KEY FORM, so the merge compares stored bits
+ // directly. Original-position tags preserve the rank sort's exact tie order.
+ reg[EW-1:0]in_t[0:3],pair_t[0:3],es[0:3],eso[0:3];
+ reg[1:0]pair_tag[0:3],et[0:3];reg[7:0]entry_tag;
+ function automatic [EW:0] stable_key(input[EW-1:0]e,input[1:0]tag);
+  stable_key={e[EW-1:1],~tag};
+ endfunction
+ always @*begin:pair_sort
+  for(integer s=0;s<4;s=s+1)in_t[s]=tform(raw[s]);
+  for(integer p=0;p<2;p=p+1)begin
+   if(in_t[2*p][EW-1:1]>=in_t[2*p+1][EW-1:1])begin
+    pair_t[2*p]=in_t[2*p];pair_t[2*p+1]=in_t[2*p+1];
+    pair_tag[2*p]=2'(2*p);pair_tag[2*p+1]=2'(2*p+1);
+   end else begin
+    pair_t[2*p]=in_t[2*p+1];pair_t[2*p+1]=in_t[2*p];
+    pair_tag[2*p]=2'(2*p+1);pair_tag[2*p+1]=2'(2*p);
+   end
+  end
+ end
+ always @*begin:merge_sort
+  reg[EW-1:0]m0,m1;reg[1:0]t0,t1;
+  for(integer s=0;s<4;s=s+1)begin es[s]=entry[EW*s+:EW];et[s]=entry_tag[2*s+:2];end
+  if(stable_key(es[0],et[0])>=stable_key(es[2],et[2]))begin
+   eso[0]=es[0];m0=es[2];t0=et[2];
+  end else begin eso[0]=es[2];m0=es[0];t0=et[0];end
+  if(stable_key(es[1],et[1])>=stable_key(es[3],et[3]))begin
+   eso[3]=es[3];m1=es[1];t1=et[1];
+  end else begin eso[3]=es[1];m1=es[3];t1=et[3];end
+  if(stable_key(m0,t0)>=stable_key(m1,t1))begin eso[1]=m0;eso[2]=m1;end
+  else begin eso[1]=m1;eso[2]=m0;end
  end
  wire[4*EW-1:0]down[0:NT],up[0:NT];wire[NT:0]dv;
  reg[4*EW-1:0]entry_q,up0_q;reg entry_vq;wire[4*EW-1:0]up0=(PIPE!=0)?up0_q:up[0];
  always @(posedge clk)begin clr_q<=clr;conv_q<=conv1||conv2;entry_vq<=entry_v;up0_q<=up[0];
-  for(integer s=0;s<4;s=s+1)entry_q[EW*s+:EW]<=tform((MUT==1&&s==3)?{EW{1'b0}}:eso[s]);end
+  for(integer s=0;s<4;s=s+1)entry_q[EW*s+:EW]<=(MUT==1&&s==3)?{EW{1'b0}}:eso[s];end
  assign down[0]=(PIPE!=0)?entry_q:entry;assign dv[0]=(PIPE!=0)?entry_vq:entry_v;assign up[NT]=0;
  for(genvar t=0;t<NT;t=t+1)begin:g_tiles
   // TP=192 (RANK_W 8, EW 86) PT64 tiles use their own hardened shape name (die view per shape, no parameter alias).
@@ -199,7 +223,7 @@ module ot_hgi_coll_tkm_static_pd #(parameter integer KMAX=2048, MUT=0, TP=96, RA
  reg pending_o,r_after_o;reg[511:0]oline_q;reg[39:0]oaddr_q;reg[15:0]omask_q;
  always @(posedge clk)begin
   entry_v<=busy&&(issue1||buf_valid);
-  for(integer s=0;s<4;s=s+1)entry[EW*s+:EW]<=raw[s];
+  for(integer s=0;s<4;s=s+1)begin entry[EW*s+:EW]<=pair_t[s];entry_tag[2*s+:2]<=pair_tag[s];end
  end
  // (c) Use three idle boot edges: product -> ingress/offsets -> final bounds.
  // Ingress cannot start before tick8, so these stages change no root port edge.
