@@ -667,6 +667,7 @@ class Lec:
             self.dlit[("gate", k)] = T(self.tc[k])
         nx = lambda k: lgx.get(self.gc[k] & ~1, 0) ^ 1          # gold next state of k is not X
         self.xpoints = sorted(k for k in self.gc if lgx.get(self.gc[k] & ~1, 0))
+        self.dlx = {k: lgx.get(self.gc[k] & ~1, 0) for k in self.gc}        # gold next state is X
         if with_compare:
             for k in sorted(set(self.gc) & set(self.tc)):
                 m.outs.append(m.AND(m.XOR(G(self.gc[k]), T(self.tc[k])), nx(k)))
@@ -954,6 +955,11 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                 for k in L.matched:
                     if k.startswith("ff:"):
                         msig.setdefault(sv("gold", k), []).append(k)
+                # gold-only flops already partnered with a gate flop are representatives too: synthesis kept one
+                # of several equal RTL copies (kept duplicates whose resets it merged), so the others join it
+                for k in sorted({h[2] for (sd, _), h in L.hyp.items() if sd == "gate" and h[0] == "eq"}):
+                    if k in L.gp and k not in L.tp and ("gold", k) not in L.hyp:
+                        msig.setdefault(sv("gold", k), []).append(k)
                 new = 0
                 free_g = [k for k in L.gonly if k.startswith("ff:") and ("gold", k) not in L.hyp and k not in bound]
                 # (a bit that simulates constant pairs here only once its constant hypothesis has failed: the
@@ -1064,7 +1070,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                     g.sort()
                     rep, rinv = g[0]
                     for k, inv in g[1:]:
-                        if tried[("both", k, rep, inv ^ rinv)] < 2:
+                        if tried[("both", k, rep, inv ^ rinv)] < 2 and tried[("both", k)] < 3:
                             L.hyp[("both", k)] = ("eq", "gold", rep, inv ^ rinv)
                             new += 1
                 if not new:
@@ -1097,6 +1103,9 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                     if h[0] != "const":
                         continue
                     s = lit_val(val, mask, L.dlit[("gold" if sd == "both" else sd, k)])
+                    if sd != "gate":                    # an RTL X takes whichever constant fits
+                        x = lit_val(val, mask, L.dlx[k])
+                        s = 0 if not s & ~x & mask else mask if (s | x) & mask == mask else s
                     if sd == "both" and s != lit_val(val, mask, L.dlit[("gate", k)]):
                         s = -1                              # sides disagree: not a constant
                     want = mask if h[1] else 0
@@ -1128,6 +1137,8 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
             if h is None:
                 continue
             tried[(side, k, "c") if h[0] == "const" else (side, k, h[2], h[3])] += 1
+            if side == "both" and h[0] == "eq":
+                tried[("both", k)] += 1           # a matched flop merged by synthesis has one partner, not many
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     log.append("correspondence: refinement did not converge; all unmatched flops free")
 
