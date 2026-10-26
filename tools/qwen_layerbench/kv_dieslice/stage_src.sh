@@ -22,6 +22,15 @@ while read -r d; do [ -z "$d" ] && continue; [ "$d" = $B/rtl ] && continue
 : > $O/files.f
 while read -r f; do [ -z "$f" ] && continue; case "$f" in *ot_qkvd_ucie_x64_phy_bb.v) continue;; esac
   d=$(dirname $f); stage_dir $d; echo "$O/src/$(tag $d)/$(basename $f)" >> $O/files.f; done < $B/bind.f
+# TOK-KVE 10-26: + the as-built FULL source files the binder elaborated (asbuilt_sources.json "full") that bind.f does not
+# list, e.g. kv45/serdes_c45.sv (ot_qfd_serdes_112g_x6_phy_c45 = the real FDI CDC around each SerDes PHY half); the PHY
+# port models (bind/models/*) and the elab substitution shims (shim_*) stay out (the bench compiles its own PHY models).
+if [ -f $B/asbuilt_sources.json ]; then
+  for f in $(python3 -c "import json,sys; print('\n'.join(json.load(open(sys.argv[1])).get('full', [])))" $B/asbuilt_sources.json); do
+    case "$f" in */bind/models/*|*/shim_*) continue;; esac
+    grep -qxF "$f" $B/bind.f && continue
+    d=$(dirname $f); stage_dir $d; echo "$O/src/$(tag $d)/$(basename $f)" >> $O/files.f; done
+fi
 : > $O/hostside.f
 # host board-side end of the SerDes link (real host link adapter + CDC RTL = the off-die host model's transport)
 A=/home/ubuntu/scratch/binder2-1023/kv_src_e33504a6f

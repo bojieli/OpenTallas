@@ -5,7 +5,7 @@
 //     die TX: tx_v/tx_flit are read by the bench (tb_kvslice.u_host joins the halves, rx_v = W.tx_v & E.tx_v);
 //     die RX: rx_v/rx_flit = the bench host's FDI flit (tb_kvslice.h2d_v / h2d_flit) after LAT edges of this PHY clock.
 //     tx_up rises UP edges after rst_n.
-//   ot_qkvd_ucie_x64_phy (UCIe d2d to the Qwen compute die, sys_c): rx = tb_kvslice.c2k_v / c2k_flit after LAT edges;
+//   ot_qkvd_ucie_x64_phy (UCIe d2d to the Qwen compute die, sys_c): rx = the far_* bump word after LAT edges;
 //     die TX visible to the bench on the ports (tb_kvslice samples tx_v/tx_flit).  tx_up rises UP edges after rst_n.
 // No other logic: the PHY passes flits unchanged at a fixed latency (static link; flow control lives in the RTL ends).
 module ot_qfd_serdes_112g_x6_phy #(parameter integer W = 522, parameter integer LAT = 4, parameter integer UP = 16) (
@@ -38,8 +38,9 @@ module ot_qkvd_ucie_x64_phy #(parameter integer LAT = 5, parameter integer UP = 
     input  wire [582:0] tx_flit,
     output wire         rx_v,
     output wire [582:0] rx_flit,
-    // line-side bump ports (e1bb295d96: the physical blackbox and qfd_link_slots expose them); in this bench the far end
-    // is the compute-die driver (tb_kvslice.c2k_*), so far_* is unused and link_* mirrors the KV transmit word.
+    // line-side bump ports (e1bb295d96: the physical blackbox and qfd_link_slots expose them): link_* = the KV transmit
+    // word at the bump (the bound top's sys_c_link_* pads); far_* = the compute die's transmit word arriving at the bump
+    // (the bound top's sys_c_far_* pads, driven by tb_kvslice with the compute-end c2k_*).
     output wire         link_v,
     output wire [582:0] link_flit,
     input  wire         far_v,
@@ -52,7 +53,7 @@ module ot_qkvd_ucie_x64_phy #(parameter integer LAT = 5, parameter integer UP = 
         if (!rst_n) begin n <= 0; tx_up <= 1'b0; for (int i = 0; i < LAT; i++) pipe[i] <= '0; end
         else begin
             n <= n + 1; if (n >= UP) tx_up <= 1'b1;
-            pipe[0] <= {tb_kvslice.c2k_v, tb_kvslice.c2k_flit}; for (int i = 1; i < LAT; i++) pipe[i] <= pipe[i-1];
+            pipe[0] <= {far_v, far_flit}; for (int i = 1; i < LAT; i++) pipe[i] <= pipe[i-1];
         end
     assign {rx_v, rx_flit} = pipe[LAT-1];
 endmodule
