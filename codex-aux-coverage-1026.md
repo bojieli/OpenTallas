@@ -9,8 +9,8 @@ Owner /root/remaining; physical/token/flow successors stay with their assigned l
 | DIE-CI | Old commit lock is LIVE after37.6h | intel2:g2part-162124/OpenROAD162242 q_sfuc retired d4g | Do not duplicate/cancel; current die gates owned PATH leads |
 | PART-CAP | N27 terminated; N44 lost with epyc3; capacity report5e9020b422 | None | Historical old reset/mixed-boundary failure; no threshold established; no rerun ahead of die gates |
 | TYPE-DEDUP | Tool DONE main4a5c3620d8 | None | Use exact current template batches; no R7 supersets |
-| TYPE-REDUCE | KV6LEC EQ+4mitersPASS/mutant; HBM4terminalEQ collected | SFU lane0 59246/59246, lane15 57326/57326; lanes4 73368/73368+71928/71928 | Fix lane_exp1/_l 7-point tool correspondence gap; physical plan adoption belongs die leads |
-| LEC | Current alias-layout fix merged070a15290 | No duplicate current proofs launched yet | Own lane_exp structural correspondence fix; core owners own current QC/KV/S81 proofs |
+| TYPE-REDUCE | KV6LEC EQ+4mitersPASS/mutant; HBM4terminalEQ collected | SFU lane0 59246/59246, lane15 57326/57326; lanes4 73368/73368+71928/71928 | Scalar-array source6483d030d resolves original7diff in both targets; one migrated coll alias point remains under recovery, no fullEQ claim; physical adoption belongs die leads |
+| LEC | Current alias-layout fix merged070a15290 | No duplicate current proofs launched yet | Retry fix9d5d726d1 READY actualhub; idx4 fix687ef703ff ALL33871 obligations proved; scalar-array6483d030d44testsPASS targetpending; core owners own current proofs |
 | RTL-SELRANGE | Checker/waivers/real csa31 fix DONE | Old redo paths absent/PIDs gone | New source failures handled per-kit; no old sweep rerun |
 | FP32 | LAT4 fit/equivalence DONE; decision16a met | None | HBM/KV in-context operand mux and one-domain integration owned PATH leads |
 | RESET | q_hub old skeleton FAIL22slew,max442.45 despite TT+271.24/FF+11.99 | Terminal epyc2:codex-reset-relay-2144/g2/part_q_hub_nw | Final receiver406um permitted by maxwire450; HBM notified; paired helper50c2d9a89 remains opt-in pending new B1 trial |
