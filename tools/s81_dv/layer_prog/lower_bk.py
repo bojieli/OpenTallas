@@ -886,12 +886,16 @@ GAPS = {
                      missing='nothing on the die produces BK-format ingress beats: the slice V send emits xr RD beats '
                              '([8:4] hops, [12:9] src, [21 +: 16] mask, payload at [52]), whose header bits collide with '
                              'the BK lane / part / single / type fields; the scores themselves (attn.idx.score) have no '
-                             'DV unit.  The bk_sel job is proven in RTL with the stimulus at its pin (bench_bk)'),
+                             'DV unit.  The bk_sel job is proven in RTL with the stimulus at its pin (bench_bk).  877 bound die (TOK-DS-CMP2 '
+                             '10-26): the producer EXISTS there (u_iqf -> u_irg_00..07 dsdv_idx_rg3 score chain -> is_tail -> '
+                             'u_bk_sel vi_idx); the IDX_S job is not emitted and this compile targets the legacy die tree'),
     'consumer': dict(module='u_s_4S (ot_s81sl_rstop V receive) -> TP4 collective (topk_merge, cross-die)',
                      port='u_bk_sel.vo_s (tvS_bk_sel) egress kind 5 beats (IDX / DONE words, 2 beats each)',
                      missing='the rstop delivers V kind 5 (SC) to the control plane only as router scores (SC relay); no '
                              'path forwards the IDX words to an end-slice lep for the TP4 merge or to the svc for the '
-                             'gather -- checked at the bk_sel pin only'),
+                             'gather -- checked at the bk_sel pin only.  877 bound die (TOK-DS-CMP2 10-26): both consumers EXIST there '
+                             '(SEL path dsdv_bk_selids -> seqhost dsdv_sh_selr -> dsdv_svc_selq; TP4 IDXNET bk_sel tp_i/tp_o '
+                             '-> u_s_7S/7N/0S/0N leps); their programmes are not lowered'),
 }
 
 

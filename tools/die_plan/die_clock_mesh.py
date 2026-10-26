@@ -706,12 +706,34 @@ def part_regions(P, R):
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
           regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None,
           region_spec=None, trunk_repeaters=False, driver_pair_span_um=0.0, split_yfirst=False, floorplan=None,
-          rule128=None):
+          rule128=None, plan_sites=None):
     """opt-in PATH-KV 10-26 site fixes (defaults keep the prior QC/S81 builds unchanged): trunk_repeaters = equal-cut
     BUFx24 repeaters on a root->ckm_n0 trunk > 750 um; driver_pair_span_um > 0 = a leaf driver pair whose nearest sites
     span more than this takes the shortest-span candidate combination; split_yfirst = split_long also tries the y-first L.
-    floorplan (--clock-floorplan, CLOCK-2) / rule128 (--rule-12-8, CLOCK-128 METHODOLOGY 12.8): opt-in."""
+    floorplan (--clock-floorplan, CLOCK-2) / rule128 (--rule-12-8, CLOCK-128 METHODOLOGY 12.8): opt-in.
+    plan_sites (--plan-sites, CLOCK-128-R2, 12.8 only): ot_clock_sites/1 reserved lattice island sites (12.2a1 pushdown
+    cells from the master-plan slices).  Every mesh driver, tree node, leg / trunk repeater and the tree root then sits
+    on its plan site; the only allowed move is the PG-track snap (C128.SITE_SNAP_UM); anything farther is a plan
+    error (no slide, no free-site search).  Under 12.8 dead branches are pruned by construction and every unplaced /
+    off-site cell or loadless net is a plan error: the build raises C128.PlanError unless rule128["allow_plan_errors"]
+    (diagnostic only; the report then never qualifies)."""
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
+    SI, perr = None, []
+    if plan_sites is not None:
+        if rule128 is None:
+            raise ValueError("--plan-sites needs the METHODOLOGY 12.8 build")
+        if leg_mode != "slide":
+            raise ValueError("--plan-sites places leg repeaters at plan sites: use --leg slide")
+        SI = C128.SiteIndex(plan_sites["sites"], plan_sites.get("snap_um", C128.SITE_SNAP_UM))
+    pg_mm = SI.snap if SI is not None else max_move
+
+    def on_site(p, name, role):
+        """plan site of the lattice point p (SI mode): (xy, move_um, site) or (p, -1, None) + a plan error."""
+        st, d, err = SI.take(p, name)
+        if st is None:
+            perr.append(dict(err, name=name, role=role))
+            return tuple(p), -1.0, None
+        return tuple(st["xy_um"]), d, st
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
     if sites == "channel":   # every die clock cell outside all partitions (channels only; no tile outline change)
@@ -740,8 +762,13 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         if track_profile is None:
             raise ValueError("PG-aware mesh requires the actual die-kit routing tracks")
         old_xs, old_ys = xs, ys
-        xs = pg_free_axis(xs, pg_shapes, "M9", 0, W, track_profile["M9"], NDR[ndr]["width"] / 2, NDR[ndr]["space"], max_move)
-        ys = pg_free_axis(ys, pg_shapes, "M8", 1, H, track_profile["M8"], NDR[ndr]["width"] / 2, NDR[ndr]["space"], max_move)
+        try:
+            xs = pg_free_axis(xs, pg_shapes, "M9", 0, W, track_profile["M9"], NDR[ndr]["width"] / 2, NDR[ndr]["space"], pg_mm)
+            ys = pg_free_axis(ys, pg_shapes, "M8", 1, H, track_profile["M8"], NDR[ndr]["width"] / 2, NDR[ndr]["space"], pg_mm)
+        except ValueError as e:
+            if SI is None:
+                raise
+            raise C128.PlanError([dict(kind="pg_snap", name="mesh axis", detail=str(e))])
         axis_snap = dict(M9=round(max(abs(x-y) for x, y in zip(xs, old_xs)), 6),
                          M8=round(max(abs(x-y) for x, y in zip(ys, old_ys)), 6))
     cells, nets, ports = {}, [], [("input", "root")]
@@ -804,80 +831,102 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     # PATH-KV 10-26: candidates on both straps first; a leaf pair (i, 2k)/(i, 2k+1) whose nearest sites land on
     # opposite sides of a PHY/hard macro (pair span > 700 um, i.e. past the 750-um clock reach) takes the candidate combination with the shortest pair
     # span instead, so the leaf node can reach both drivers around the macro.
-    cand = {}
-    for i, x in enumerate(xs):
-        for j, y in enumerate(ys):
-            g = R[reg_ij[(i, j)]]
-            cs = []
-            if fp is not None:
-                mh = next((h["name"] for h in holes if in_rect(h["rect_um"], x, y)), None)
-                if mh is not None:
-                    out["hole_drivers"].append([i, j, "macro_hole", mh])
-                    cand[(i, j)] = None
-                    continue
-            for axis in (0, 1):
-                bnd = strap_bounds(g, xs, ys, axis) if fp is None else span(axis, j if axis == 0 else i, g)
-                if bnd is None:
-                    continue
-                q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
-                if q is not None:
-                    cs.append((q, d, axis))
-            cand[(i, j)] = sorted(cs, key=lambda c: c[1])
-    pick = {k: (v[0] if v else None) for k, v in cand.items()}
-    pair_fix = []
-    for (i, j), v in cand.items():
-        if j % 2 or not v or not cand.get((i, j + 1)):
-            continue
-        a, b = pick[(i, j)], pick[(i, j + 1)]
-        pspan = lambda p, q: abs(p[0][0] - q[0][0]) + abs(p[0][1] - q[0][1])
-        if driver_pair_span_um > 0 and pspan(a, b) > driver_pair_span_um:
-            combo = min(((p, q) for p in v for q in cand[(i, j + 1)]), key=lambda pq: (pspan(*pq), pq[0][1] + pq[1][1]))
-            pick[(i, j)], pick[(i, j + 1)] = combo
-            pair_fix.append([i, j, round(pspan(a, b), 1), round(pspan(*combo), 1)])
-    out["meta"]["driver_pair_fixes"] = pair_fix
-    for i, x in enumerate(xs):
-        for j, y in enumerate(ys):
-            g = R[reg_ij[(i, j)]]
-            rk = dict(region=g["k"]) if regions else {}
-            if cand[(i, j)] is None:      # --clock-floorplan macro hole: driverless, recorded in pass 1
-                continue
-            best = pick[(i, j)]
-            if best is not None and hitf(K, best[0]):   # an earlier driver reserved this site: fall back to a fresh search
-                best = None
+    if SI is None:
+        cand = {}
+        for i, x in enumerate(xs):
+            for j, y in enumerate(ys):
+                g = R[reg_ij[(i, j)]]
+                cs = []
+                if fp is not None:
+                    mh = next((h["name"] for h in holes if in_rect(h["rect_um"], x, y)), None)
+                    if mh is not None:
+                        out["hole_drivers"].append([i, j, "macro_hole", mh])
+                        cand[(i, j)] = None
+                        continue
                 for axis in (0, 1):
                     bnd = strap_bounds(g, xs, ys, axis) if fp is None else span(axis, j if axis == 0 else i, g)
                     if bnd is None:
                         continue
                     q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
-                    if q is not None and (best is None or d < best[1]):
-                        best = (q, d, axis)
-            if best is None and fp is not None and islands:
-                core = next((c[4] for c in cores if in_rect(c, x, y)), None)
-                isl = island_site(islands, core, x, y, max_move, float(fp.get("island_jog_max_um", 60.0)),
-                                  lambda ax_: span(ax_, j if ax_ == 0 else i, g)) if core else None
-                if isl is not None:
-                    (cx, cy), foot, axis, sl, jg = isl
-                    names = [cell(f"ckm_d_{i}_{j}_{k}", cx + (k - (m - 1) / 2) * BUF_W, cy, "drv", i=i, j=j, **rk)
-                             for k in range(m)]
-                    out["drivers"][f"{i}_{j}"] = dict(i=i, j=j, ideal=[x, y], site=[round(foot[0], 3), round(foot[1], 3)],
-                                                      cell_site=[round(cx, 3), round(cy, 3)], island=core,
-                                                      move_um=round(sl, 2), jog_um=round(jg, 2),
-                                                      strap="M8" if axis == 0 else "M9", cells=names, **rk)
-                    continue
-            if best is None:
-                hc = next((c[4] for c in cores if in_rect(c, x, y)), None) if fp is not None else None
-                if hc is None and fp is not None and fp.get("io_macro_drivers") == "drop":
-                    hc = next((r[4] for r in ko if str(r[4]).startswith("io/") and in_rect(r, x, y)), None)
-                if hc is not None:
-                    out["hole_drivers"].append([i, j, "io_macro" if hc.startswith("io/") else "hard_core", hc])
-                    continue
-                out["unplaced"].append([i, j])
+                    if q is not None:
+                        cs.append((q, d, axis))
+                cand[(i, j)] = sorted(cs, key=lambda c: c[1])
+        pick = {k: (v[0] if v else None) for k, v in cand.items()}
+        pair_fix = []
+        for (i, j), v in cand.items():
+            if j % 2 or not v or not cand.get((i, j + 1)):
                 continue
-            q, d, axis = best
-            names = [cell(f"ckm_d_{i}_{j}_{k}", q[0] + (k - (m - 1) / 2) * BUF_W, q[1], "drv", i=i, j=j, **rk)
-                     for k in range(m)]
-            out["drivers"][f"{i}_{j}"] = dict(i=i, j=j, ideal=[x, y], site=[round(q[0], 3), round(q[1], 3)],
-                                              move_um=round(d, 2), strap="M8" if axis == 0 else "M9", cells=names, **rk)
+            a, b = pick[(i, j)], pick[(i, j + 1)]
+            pspan = lambda p, q: abs(p[0][0] - q[0][0]) + abs(p[0][1] - q[0][1])
+            if driver_pair_span_um > 0 and pspan(a, b) > driver_pair_span_um:
+                combo = min(((p, q) for p in v for q in cand[(i, j + 1)]), key=lambda pq: (pspan(*pq), pq[0][1] + pq[1][1]))
+                pick[(i, j)], pick[(i, j + 1)] = combo
+                pair_fix.append([i, j, round(pspan(a, b), 1), round(pspan(*combo), 1)])
+        out["meta"]["driver_pair_fixes"] = pair_fix
+        for i, x in enumerate(xs):
+            for j, y in enumerate(ys):
+                g = R[reg_ij[(i, j)]]
+                rk = dict(region=g["k"]) if regions else {}
+                if cand[(i, j)] is None:      # --clock-floorplan macro hole: driverless, recorded in pass 1
+                    continue
+                best = pick[(i, j)]
+                if best is not None and hitf(K, best[0]):   # an earlier driver reserved this site: fall back to a fresh search
+                    best = None
+                    for axis in (0, 1):
+                        bnd = strap_bounds(g, xs, ys, axis) if fp is None else span(axis, j if axis == 0 else i, g)
+                        if bnd is None:
+                            continue
+                        q, d = free_along(K, (x, y), axis, max_move, bounds=bnd if regions else None)
+                        if q is not None and (best is None or d < best[1]):
+                            best = (q, d, axis)
+                if best is None and fp is not None and islands:
+                    core = next((c[4] for c in cores if in_rect(c, x, y)), None)
+                    isl = island_site(islands, core, x, y, max_move, float(fp.get("island_jog_max_um", 60.0)),
+                                      lambda ax_: span(ax_, j if ax_ == 0 else i, g)) if core else None
+                    if isl is not None:
+                        (cx, cy), foot, axis, sl, jg = isl
+                        names = [cell(f"ckm_d_{i}_{j}_{k}", cx + (k - (m - 1) / 2) * BUF_W, cy, "drv", i=i, j=j, **rk)
+                                 for k in range(m)]
+                        out["drivers"][f"{i}_{j}"] = dict(i=i, j=j, ideal=[x, y], site=[round(foot[0], 3), round(foot[1], 3)],
+                                                          cell_site=[round(cx, 3), round(cy, 3)], island=core,
+                                                          move_um=round(sl, 2), jog_um=round(jg, 2),
+                                                          strap="M8" if axis == 0 else "M9", cells=names, **rk)
+                        continue
+                if best is None:
+                    hc = next((c[4] for c in cores if in_rect(c, x, y)), None) if fp is not None else None
+                    if hc is None and fp is not None and fp.get("io_macro_drivers") == "drop":
+                        hc = next((r[4] for r in ko if str(r[4]).startswith("io/") and in_rect(r, x, y)), None)
+                    if hc is not None:
+                        out["hole_drivers"].append([i, j, "io_macro" if hc.startswith("io/") else "hard_core", hc])
+                        continue
+                    out["unplaced"].append([i, j])
+                    continue
+                q, d, axis = best
+                names = [cell(f"ckm_d_{i}_{j}_{k}", q[0] + (k - (m - 1) / 2) * BUF_W, q[1], "drv", i=i, j=j, **rk)
+                         for k in range(m)]
+                out["drivers"][f"{i}_{j}"] = dict(i=i, j=j, ideal=[x, y], site=[round(q[0], 3), round(q[1], 3)],
+                                                  move_um=round(d, 2), strap="M8" if axis == 0 else "M9", cells=names, **rk)
+    else:   # CLOCK-128-R2: every mesh driver on its reserved plan site (pushdown island), move <= PG snap only
+        out["meta"]["driver_pair_fixes"] = []
+        for i, x in enumerate(xs):
+            for j, y in enumerate(ys):
+                g = R[reg_ij[(i, j)]]
+                rk = dict(region=g["k"]) if regions else {}
+                if fp is not None:
+                    mh = next((h["name"] for h in holes if in_rect(h["rect_um"], x, y)), None)
+                    if mh is not None:
+                        out["hole_drivers"].append([i, j, "macro_hole", mh])
+                        continue
+                (cx, cy), d, st = on_site((x, y), f"ckm_d_{i}_{j}", "mesh_driver")
+                if st is None:
+                    continue
+                names = [cell(f"ckm_d_{i}_{j}_{k}", cx + (k - (m - 1) / 2) * BUF_W, cy, "drv", i=i, j=j, **rk)
+                         for k in range(m)]
+                out["drivers"][f"{i}_{j}"] = dict(i=i, j=j, ideal=[x, y], site=[round(cx, 4), round(y, 4)],
+                                                  cell_site=[round(cx, 4), round(cy, 4)], move_um=round(d, 4),
+                                                  jog_um=round(abs(cy - y), 4), strap="M8", plan_site=st["name"],
+                                                  pushdown={k: st.get(k) for k in ("inst", "island", "role")},
+                                                  cells=names, **rk)
     # --- H-tree over index ranges
     nid = [0]
 
@@ -908,7 +957,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         here = here or node_xy(i0, i1, j0, j1)
         loads = []
         for c, kr in enumerate(kids):
-            if fp is not None and not live(*kr):    # dead branch: every driver below sits in a hole
+            if (fp is not None or rule128 is not None) and not live(*kr):
+                # dead branch (every driver below sits in a declared hole, or is a plan error): pruned by
+                # construction, so no loadless tree net exists (CLOCK-128-R2)
                 out.setdefault("pruned_branches", []).append(f"{path}{c}")
                 continue
             kp = node_xy(*kr)
@@ -924,12 +975,16 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                                          n_seg=1, reps=[], leaf=True))
                 continue
             # internal child: node buffer on the incoming leg, upstream of the branch point when on a keep-out
-            q, d = free_along(K, kp, ax, L / n_seg)
-            if q is None:
-                q, d = free_near(K, kp)
-            if q is None:
-                q, d = kp, -1.0
-                out["unplaced"].append([tag, "node"])
+            node_site = None
+            if SI is not None:
+                q, d, node_site = on_site(kp, f"ckm_n{level + 1}_{tag}", "tree_node")
+            else:
+                q, d = free_along(K, kp, ax, L / n_seg)
+                if q is None:
+                    q, d = free_near(K, kp)
+                if q is None:
+                    q, d = kp, -1.0
+                    out["unplaced"].append([tag, "node"])
             nb = cell(f"ckm_n{level + 1}_{tag}", q[0], q[1], "node", level=level + 1)
             first = None
             prev = None
@@ -944,6 +999,10 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 for k in range(1, n_seg):
                     t = k / n_seg
                     p = (here[0] + (kp[0] - here[0]) * t, here[1] + (kp[1] - here[1]) * t)
+                    if SI is not None:
+                        rq, rd, _ = on_site(p, f"ckm_r{level + 1}_{tag}_{k}", "leg_rep")
+                        pts.append((rq, rd))
+                        continue
                     rq, rd = free_along(K, p, ax, L / n_seg)
                     if rq is None:
                         rq, rd = free_near(K, p)
@@ -967,7 +1026,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             else:
                 loads.append(nb)
             out["htree"].append(dict(level=level + 1, tag=tag, a=list(here), b=list(kp), len_um=round(L, 2),
-                                     n_seg=n_seg, reps=reps, node=nb, node_move_um=round(d, 2), leaf=False))
+                                     n_seg=n_seg, reps=reps, node=nb, node_move_um=round(d, 2), leaf=False,
+                                     **(dict(plan_site=node_site["name"]) if node_site else {})))
             rec(*kr, level + 1, nb, tag)
         nets.append(dict(name=f"ckm_w_{drv_cell}" if not drv_cell.startswith("port:") else "root",
                          drv=drv_cell, loads=loads, level=level))
@@ -983,12 +1043,15 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         out["meta"].update(root_plan_um=list(planned_root), root_pg_shift_um=round(abs(root[0]-planned_root[0]), 6))
     if fp is not None:
         c0 = root      # the die root drives one tree per explicit region: no trunk
-    q, d = free_along(K, c0, 0, 2 * rep_um)
-    if q is None:
-        q, d = free_near(K, c0, limit=max(W, H))
-    if q is None:
-        q = c0
-        out["unplaced"].append(["root", "node"])
+    if SI is not None:
+        q, d, _ = on_site(c0, "ckm_n0", "tree_root")
+    else:
+        q, d = free_along(K, c0, 0, 2 * rep_um)
+        if q is None:
+            q, d = free_near(K, c0, limit=max(W, H))
+        if q is None:
+            q = c0
+            out["unplaced"].append(["root", "node"])
     n0 = cell("ckm_n0", q[0], q[1], "node", level=0)
     trunk = abs(root[0] - q[0]) + abs(root[1] - q[1])
     # Trunk repeaters (PATH-KV 10-26): a cohort tree centre that is not the die input point gets equal-cut BUFx24
@@ -1004,7 +1067,10 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 p = (root[0] + math.copysign(s_, q[0] - root[0]), root[1])
             else:
                 p = (q[0], root[1] + math.copysign(s_ - ax_len, q[1] - root[1]))
-            rq, rd = free_near(K, p, limit=rep_um / 2)
+            if SI is not None:
+                rq, rd, _ = on_site(p, f"ckm_t_{k}", "trunk_rep")
+            else:
+                rq, rd = free_near(K, p, limit=rep_um / 2)
             if rq is None:
                 out["unplaced"].append(["root", f"trunk repeater {k} has no free site", round(s_, 1)])
                 rq = p
@@ -1111,6 +1177,26 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                                  "no PG shield; shielding is complete only for mesh straps + island jogs")
         out["meta"]["pruned_branches"] = len(out.get("pruned_branches", []))
         out["meta"]["strap_spans_removed"] = sum(1 for v in out["strap_spans"].values() if not v)
+    if fp is None and out.get("pruned_branches"):
+        out["meta"]["pruned_branches"] = len(out["pruned_branches"])
+    if SI is not None:
+        out["meta"]["plan_sites"] = dict(snap_um=SI.snap, sites=len(SI.sites), used=len(SI.used),
+                                         source=plan_sites.get("source"), sha256=plan_sites.get("sha256"))
+    if rule128 is not None:   # CLOCK-128-R2: fail closed -- unplaced / off-site cells and loadless nets are plan errors
+        def uname(u):
+            if len(u) == 2 and all(isinstance(v, int) for v in u):
+                return f"ckm_d_{u[0]}_{u[1]}", "mesh_driver"
+            return ":".join(str(v) for v in u[:2]), "tree"
+        rows = [dict(kind="unplaced", name=uname(u)[0], role=uname(u)[1], detail=u) for u in out["unplaced"]] + perr
+        rows += [dict(kind="empty_tree_net", name=n["name"], detail="tree net without loads") for n in nets
+                 if not n["loads"]]
+        if rows:
+            out["plan_errors"] = rows
+            out["meta"]["plan_errors"] = len(rows)
+            out["unplaced"] += [[r["name"], r["kind"]] for r in perr]
+            out["meta"]["unplaced"] = len(out["unplaced"])
+            if not rule128.get("allow_plan_errors") or any(r["kind"] == "empty_tree_net" for r in rows):
+                raise C128.PlanError(rows)
     if rule128 is not None:
         sh = (fp or {}).get("shield_net") or "VSS"
         wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y)
@@ -1178,16 +1264,34 @@ def cmd_build(a):
     if a.pg_json:
         import die_infra as DI
         pg = json.loads(Path(a.pg_json).read_text())
-        pg_shapes = DI.pg_rects(P, pg["grid"])
+        pg_shapes = DI.pg_rects(P, DI.pg_grid(P, a.pg_json))      # + die.pg.domains (HBM-PG 10-26)
         tracks = mesh_tracks(a.track_file, P)
     region_spec = json.loads(Path(a.region_spec).read_text()) if a.region_spec else None
     fp = json.loads(Path(a.clock_floorplan).read_text()) if a.clock_floorplan else None
-    cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
+    plan_sites = None
+    if getattr(a, "plan_sites", None):
+        import hashlib
+        try:
+            plan_sites = C128.load_plan_sites(a.plan_sites, hashlib.sha256(Path(a.plan).read_bytes()).hexdigest())
+        except ValueError as e:
+            raise SystemExit(f"die_clock_mesh: --plan-sites: {e}")
+        plan_sites["source"] = str(a.plan_sites)
+        plan_sites["sha256"] = hashlib.sha256(Path(a.plan_sites).read_bytes()).hexdigest()
+    try:
+        cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
                                   a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks, region_spec,
                                   trunk_repeaters=a.trunk_repeaters, driver_pair_span_um=a.driver_pair_span,
                                   split_yfirst=a.split_yfirst, floorplan=fp,
-                                  rule128=(dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps)
-                                           if getattr(a, "rule_12_8", False) else None))
+                                  rule128=(dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps,
+                                                allow_plan_errors=getattr(a, "allow_plan_errors", False))
+                                           if getattr(a, "rule_12_8", False) else None), plan_sites=plan_sites)
+    except C128.PlanError as e:
+        (out / "plan_errors.json").write_text(json.dumps(dict(plan=str(a.plan), error=str(e), rows=e.rows), indent=1)
+                                              + "\n")
+        print(f"die_clock_mesh build: PLAN ERROR {e} -> {out / 'plan_errors.json'}", file=sys.stderr)
+        for r in e.rows[:20]:
+            print("  " + json.dumps(r), file=sys.stderr)
+        return 2
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
@@ -1582,6 +1686,7 @@ def cmd_combo(a):
     hs = hw + nd["space"]
     regs = M["meta"].get("regions") or [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))]
     vias_meta, cross_meta = {}, {}
+    shield_segs_all = []      # every shielded clock segment (straps, jogs, fixed tree wires): VSS ties below
     for g in regs:      # one special net per clock region (the whole strap grid without --regions)
         rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
         xlo, xhi = strap_bounds(g, xs, ys, 0)
@@ -1648,6 +1753,7 @@ def cmd_combo(a):
                 segs.append(("M8", min(fx, cx), cy, max(fx, cx), cy) if dv["strap"] == "M9" else
                             ("M9", cx, min(fy, cy), cx, max(fy, cy)))
             sw2 = nd["width"] / 2
+            shield_segs_all += segs
             for lay, a0, b0, a1, b1 in segs:
                 for sgn in (-1, 1):
                     if lay == "M8":
@@ -1668,6 +1774,38 @@ def cmd_combo(a):
         sp = C128.spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
         for c_ in ("TT", "FF"):
             (d / f"native_{c_}.spef").write_text(sp)
+        shield_segs_all += [s_ for w_ in wires for s_ in w_["segs"]]
+    shield_net = (M["meta"].get("clock_floorplan") or {}).get("shield_net") or \
+        (M["meta"]["rule_12_8"]["shield_net"] if C128.enabled(M) else None)
+    if shield_net and shield_segs_all:
+        # 12.7a / COORD 07:04: every shield stripe via-tied to the die VSS grid (plan die.pg.grid + PHY domain grids):
+        # VIA89 at each shield x perpendicular VSS stripe and each M8 x M9 shield crossing; the VSS stripes the ties land
+        # on are written as special wires of the shield net (the kit models the die grid only as obstructions).
+        import die_infra as DI
+        Pp = S.Plan(S.load(getattr(a, "plan", None) or M["meta"]["plan"]))
+        # the build's actual IR-sized PG file (--pg-json, the same rects the mesh axes avoided) when it had one, else
+        # the plan's die.pg grid (CLOCK-128-R2: the ties must land on the grid the die is really built with)
+        pg_src = M["meta"].get("pg_source")
+        grid_ = C128.pg_grid(Pp, pg_src)         # core grid (IR-sized pg.json or plan) + die.pg.domains, one model
+        pgr = DI.pg_rects(Pp, grid_)
+        stripes = C128.shield_stripes(shield_segs_all, nd)
+        ties = C128.shield_ties(stripes, pgr, nd["width"], net=shield_net)
+        L += [f"set tn [$blk findNet {shield_net}]",
+              f"if {{$tn eq \"NULL\"}} {{ set tn [odb::dbNet_create $blk {shield_net}] }}",
+              "$tn setSpecial", "$tn setSigType GROUND", "set tsw [odb::dbSWire_create $tn ROUTED]"]
+        L += C128.grid_tcl(pgr, "$tsw", shield_net, used=ties["used_grid"])
+        L += C128.tie_tcl(ties, "$tsw")
+        cs = M["meta"].get("clock_shield") or {}
+        cs.update(C128.tie_record(ties))
+        cs["freeze_evidence_ok"] = bool(cs["vss_tied"] and cs.get("complete"))
+        cs["tie_grid_stripes"] = len(ties["used_grid"])
+        cs["tie_pg_source"] = pg_src or "plan die.pg.grid"
+        M["meta"]["clock_shield"] = cs
+        (d / "shield_ties.json").write_text(json.dumps(dict(
+            record=C128.tie_record(ties), untied=[stripes[k] for k in ties["untied"][:200]],
+            shorts=[[stripes[k], n_] for k, n_ in ties["shorts"][:200]])) + "\n")
+        (d / "mesh.json").write_text(json.dumps(M) + "\n")
+        print("shield ties", json.dumps(C128.tie_record(ties)))
     L += [f"puts \"OT_MESH regions {len(regs)} straps {sum((g['i1'] - g['i0']) + (g['j1'] - g['j0']) for g in regs)}\"",
           "create_clock -name dck -period 833.000 [get_ports root]",
           "set_routing_layers -signal M4-M9 -clock M8-M9"]
@@ -2091,6 +2229,8 @@ def banned_means_12_8d(M):
         why.append("early-tap branch / core offset")
     if meta.get("early_branches") or meta.get("core_offsets"):
         why.append("early-tap branch / core offset")
+    if meta.get("plan_errors"):
+        why.append("plan errors (diagnostic --allow-plan-errors build)")
     return sorted(set(why))
 
 
@@ -2157,7 +2297,13 @@ def cmd_report(a):
     reg = {t["port"]: t.get("region") for t in M["taps"]}
     if regd:   # the region also follows from the tag (H-tree prefix): a stub on a foreign strap is a build bug
         tags = {g["tag"]: g["k"] for g in M["meta"]["regions"]}
-        bad = [p for p, tg in tagof.items() if tags.get(tg[:1 + regd]) != reg[p]]
+        sbox = {g["k"]: g.get("strap_box_um") for g in M["meta"]["regions"]}
+        foot = {t["port"]: t["foot"] for t in M["taps"]}
+
+        def on_own_edge(p):   # --region-edge-straps: a foot ON its own region edge strap is nearest a foreign index
+            b = sbox.get(reg[p])
+            return bool(b) and b[0] - 1e-3 <= foot[p][0] <= b[2] + 1e-3 and b[1] - 1e-3 <= foot[p][1] <= b[3] + 1e-3
+        bad = [p for p, tg in tagof.items() if tags.get(tg[:1 + regd]) != reg[p] and not on_own_edge(p)]
         if bad:
             raise SystemExit(f"die_clock_mesh report: {len(bad)} taps fed from another region's strap, e.g. {bad[:3]}")
     landed = [x for x in seam if reg[x[0]] != reg[x[1]]]
@@ -2245,7 +2391,7 @@ def cmd_report(a):
             worst=[[round(w, 2), x, y] for w, x, y in worst], **mesh_info)
         if C128.enabled(M):
             Dt, _ = read_tree(d / f"tree_{corner}.txt")
-            g12 = C128.gate(M, P, list(seam_in) + [(i[0], i[1]) for i in intra], late, early, rng, regd, Mz["stubs"], Dt,
+            g12 = C128.gate(M, P, [(x[0], x[1]) for x in seam_in] + [(i[0], i[1]) for i in intra], late, early, rng, regd, Mz["stubs"], Dt,
                             M.get("rule_12_8", {}).get("early_offset_taps", []))
             r_ = rep["corners"][corner]
             # METHODOLOGY v4.3 12.4a (OWNER 06:33): the freeze gate is die STA (TT setup / FF hold >= 0, propagated routed
@@ -2385,6 +2531,10 @@ def main(argv=None):
     b.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()),
                    help="liberty dir for the 12.8 plan sizing model")
     b.add_argument("--tap-slew-max-ps", type=float, default=C128.TAP_SLEW_MAX_PS)
+    b.add_argument("--plan-sites", help="12.8: ot_clock_sites/1 reserved lattice island sites (clock_plan_sites.py from "
+                                        "the master-plan slices); drivers/nodes/repeaters on plan sites, move <= PG snap")
+    b.add_argument("--allow-plan-errors", action="store_true",
+                   help="DIAGNOSTIC: write the build despite plan errors (never qualifies; combo refuses it)")
     b.add_argument("--clock-floorplan", help="opt-in JSON: x_cuts_um (region seams on partition edges) + region_nx "
                    "(power-of-two columns per region), macro_holes (part names / {name, rect_um}: straps stop at the "
                    "macro edge, no cells inside, dead branches pruned), hard_core_drivers='drop' (cores <= M7 under the "

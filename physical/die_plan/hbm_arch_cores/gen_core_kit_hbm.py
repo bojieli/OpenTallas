@@ -847,7 +847,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     (kd / "face_flops.tcl").write_text(ff)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py", "hold_cap.tcl",
-              "hold_gate.tcl", "port_bind_core.py"):
+              "hold_gate.tcl", "port_bind_core.py", "internal_core_guard.py"):
         shutil.copyfile(HERE / f, kd / f)
     # HBM-CORES3 10-25 (COORD KIT-CENSUS): SELRANGE preflight (RTL-SELRANGE gate) ships in every kit
     shutil.copyfile(TOOL / "selrange_gate.py", kd / "selrange_gate.py")

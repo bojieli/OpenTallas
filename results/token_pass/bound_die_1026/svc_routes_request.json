@@ -1,0 +1,8 @@
+[{"source":"u_seqhost","source_port":"s_j","target":"u_rsv_05","target_port":"j"},
+ {"source":"u_seqhost","source_port":"s_j","target":"u_rsv_11","target_port":"j"},
+ {"source":"u_rsv_05","source_port":"jd","target":"u_seqhost","target_port":"s_jd_w"},
+ {"source":"u_rsv_11","source_port":"jd","target":"u_seqhost","target_port":"s_jd_e"},
+ {"source":"u_s_3S","source_port":"bo","target":"u_rsv_05","target_port":"q"},
+ {"source":"u_s_4S","source_port":"bo","target":"u_rsv_11","target_port":"q"},
+ {"source":"u_s_3S","source_port":"bo","target":"u_rsv_11","target_port":"q"},
+ {"source":"u_s_4S","source_port":"bo","target":"u_rsv_05","target_port":"q"}]

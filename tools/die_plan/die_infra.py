@@ -64,16 +64,70 @@ def load_plan(path):
 
 
 # ------------------------------------------------------------------------------------------------------------- PG
+# ASAP7 M8/M9 SPACINGTABLE (asap7_tech_1x_201209.lef, identical for M8 and M9): rows = width thresholds, columns =
+# parallel run length thresholds 0 / 0.39975 / 1.19975 / 1.79975 um.  Die PG stripes are long, so a stripe beside
+# another uses the last column: 0.04 below 0.49975 um width, 0.5 to 0.99975, 1.0 above (the 1.92-um VDDPHY stripes).
+PG_SPACING_PRL = (0.0, 0.39975, 1.19975, 1.79975)
+PG_SPACING_TABLE = ((0.0, (0.04, 0.04, 0.04, 0.04)), (0.49975, (0.04, 0.04, 0.04, 0.5)),
+                    (0.99975, (0.04, 0.04, 0.04, 1.0)))
+
+
+def pg_spacing(w, prl=float("inf")):
+    """required same-layer M8/M9 spacing (um) for the wider shape width w at parallel run length prl."""
+    row = [v for t, v in PG_SPACING_TABLE if w >= t][-1]
+    return [s for t, s in zip(PG_SPACING_PRL, row) if prl >= t][-1] if prl > 0 else row[0]
+
+
 def pg_grid(P, pg=None):
-    """the die PG grid spec (list of die.pg.grid rows): pg.json["grid"] when given, else the plan's."""
-    if pg:
-        return json.loads(Path(pg).read_text())["grid"]
-    return P.die.get("pg", {}).get("grid", [])
+    """the die PG stripe rows in pg_rects form: the core grid (pg.json["grid"] when given, else the plan's die.pg.grid)
+    PLUS every die.pg.domains (OWNER decision 7 PHY supply) grid, with the same disjoint-region rule as the real PDN
+    (pg_regions.pdn_tcl: pdngen cuts the core domain at the PHY regions, every region on the die's global phase).
+
+    HBM-PG 10-26 root cause: the domain rows were overlaid on full-die core rows, and on a region-local phase, so the
+    1.92-um VDDPHY/VSS stripes lay on top of / beside the 0.48-um core VDD/VSS stripes (1,288 PG-PG overlaps in the HBM
+    PHY windows).  Now: core rows carry the domain rects as holes (bloated by the core stripe's own spacing), domain
+    rows stay inside their rect (by their own wide-metal spacing on edges that face the core, i.e. not the die edge),
+    and both use the die phase (net parity included), so no same-layer stripes of different nets touch or sit within
+    the LEF spacing.  A plan without domains returns the core rows unchanged (byte-identical PG)."""
+    core = json.loads(Path(pg).read_text())["grid"] if pg else P.die.get("pg", {}).get("grid", [])
+    doms = P.die.get("pg", {}).get("domains") or []
+    if not doms:
+        return core
+    import pg_regions
+    pg_regions.regions(dict(P.die, outline_um=[P.W, P.H], pg=dict(P.die.get("pg", {}), grid=core)))  # raises on
+    # overlapping domains with different supplies or mesh contracts (the same validity rule as the real PDN)
+    rows = []
+    for g in core:
+        rows.append(dict(g, phase="die", holes_um=[list(map(float, d["rect_um"])) for d in doms],
+                         clear_um=pg_spacing(g["width_um"])))
+    for d in doms:
+        for g in d.get("grid") or []:
+            rows.append(dict(g, nets=list(g.get("nets") or d["nets"]), rect_um=list(map(float, d["rect_um"])),
+                             phase="die", clear_um=pg_spacing(g["width_um"])))
+    return rows
+
+
+def _cut(lo, hi, holes):
+    """[lo, hi] minus the sorted (h0, h1) intervals -> list of kept (a, b)."""
+    out, a = [], lo
+    for h0, h1 in sorted(holes):
+        if h1 <= a or h0 >= hi:
+            continue
+        if h0 > a:
+            out.append((a, h0))
+        a = max(a, h1)
+    if a < hi:
+        out.append((a, hi))
+    return out
 
 
 def pg_rects(P, grid):
     """[(net, layer, x0, y0, x1, y1)] of every die PG stripe; the same stripe rule as die_trial.pg_stripes, with the
-    net of every stripe (VDD/VSS alternate within one pitch) and optional region-limited rows (row["rect_um"])."""
+    net of every stripe (VDD/VSS alternate within one pitch) and optional region-limited rows (row["rect_um"]).
+
+    Rows from pg_grid() with die.pg.domains also carry phase="die" (offset measured from the die origin, as
+    pg_regions.pdn_tcl), clear_um (the stripe's own spacing kept from every region edge that is not the die edge) and
+    holes_um (rects the stripe is cut out of, bloated by clear_um: the core grid around the PHY regions)."""
     out = []
     for g in grid:
         L = P.layers.get(g["layer"])
@@ -82,17 +136,75 @@ def pg_rects(P, grid):
         nets = g.get("nets", ["VDD", "VSS"]) or ["VDD"]
         k = len(nets)
         x0, y0, x1, y1 = g.get("rect_um") or (0.0, 0.0, P.W, P.H)
-        lo, hi = (x0, x1) if L["dir"] == "V" else (y0, y1)
-        pos = lo + g["offset_um"]
+        V = L["dir"] == "V"
+        lo, hi = (x0, x1) if V else (y0, y1)
+        alo, ahi = (y0, y1) if V else (x0, x1)
+        m = g.get("clear_um")
+        if g.get("phase") == "die":
+            pos = lo + (g["offset_um"] - lo) % g["pitch_um"]
+        else:
+            pos = lo + g["offset_um"]
+        die_lo, die_hi = 0.0, (P.W if V else P.H)
+        die_alo, die_ahi = 0.0, (P.H if V else P.W)
+        plo = lo + m if m is not None and lo > die_lo + 1e-9 else None       # keep-in from an inner region edge
+        phi = hi - m if m is not None and hi < die_hi - 1e-9 else hi
+        a0 = alo + m if m is not None and alo > die_alo + 1e-9 else alo
+        a1 = ahi - m if m is not None and ahi < die_ahi - 1e-9 else ahi
+        holes = g.get("holes_um") or ()
+        mh = m or 0.0
         while pos < hi:
             for j in range(k):
                 c = pos + j * g["pitch_um"] / k
-                if c + g["width_um"] / 2 > hi:
-                    continue
                 a, b = c - g["width_um"] / 2, c + g["width_um"] / 2
-                out.append((nets[j], g["layer"]) + ((a, y0, b, y1) if L["dir"] == "V" else (x0, a, x1, b)))
+                if b > phi or (plo is not None and a < plo):
+                    continue
+                # holes that the stripe's perpendicular band meets (bloated by the stripe's own spacing)
+                cut = [((h[1], h[3]) if V else (h[0], h[2])) for h in holes
+                       if ((h[0], h[2]) if V else (h[1], h[3]))[0] - mh < b and a < ((h[0], h[2]) if V else (h[1], h[3]))[1] + mh]
+                for s0, s1 in (_cut(a0, a1, [(h0 - mh, h1 + mh) for h0, h1 in cut]) if cut else [(a0, a1)]):
+                    out.append((nets[j], g["layer"]) + ((a, s0, b, s1) if V else (s0, a, s1, b)))
             pos += g["pitch_um"]
     return out
+
+
+def pg_conflicts(rects, limit=10):
+    """same-layer PG stripes of DIFFERENT nets (VDD vs VDDPHY counts) that overlap or sit closer than the ASAP7 LEF
+    spacing for their width / parallel run length.  -> dict(shorts, spacing, examples).  The HBM-PG 10-26 gate."""
+    B = 4.0
+    bins = defaultdict(list)
+    shorts = spacing = 0
+    ex = []
+    for k, r in enumerate(rects):
+        n, L, x0, y0, x1, y1 = r
+        V = (x1 - x0) < (y1 - y0)
+        p0, p1 = (x0, x1) if V else (y0, y1)
+        seen = set()
+        for i in range(int((p0 - 1.0) // B), int((p1 + 1.0) // B) + 1):
+            for j in bins.get((L, i), ()):
+                t = rects[j]
+                if j in seen or t[0] == n:
+                    continue
+                seen.add(j)
+                gx = max(t[2] - x1, x0 - t[4])
+                gy = max(t[3] - y1, y0 - t[5])
+                if gx < 0 and gy < 0:
+                    hit, kind = True, "short"
+                else:
+                    w = max(min(x1 - x0, y1 - y0), min(t[4] - t[2], t[5] - t[3]))
+                    prl = max(-gx, -gy, 0.0)
+                    d = math.hypot(max(gx, 0.0), max(gy, 0.0))
+                    hit, kind = d < pg_spacing(w, prl) - 1e-6, "spacing"
+                if hit:
+                    if kind == "short":
+                        shorts += 1
+                    else:
+                        spacing += 1
+                    if len(ex) < limit:
+                        ex.append(dict(kind=kind, a=list(r), b=list(t)))
+        for i in range(int(p0 // B), int(p1 // B) + 1):
+            if k not in bins[(L, i)][-1:]:
+                bins[(L, i)].append(k)
+    return dict(stripes=len(rects), shorts=shorts, spacing=spacing, examples=ex)
 
 
 def cmd_pg(a):
@@ -442,6 +554,67 @@ def pg_clock_conflicts(P, pg_shapes, clock_shapes, clearance_um=0.08):
                 clearance_um=clearance_um, examples=examples)
 
 
+def snap_off_pg(P, pg_shapes, rects, clearance_um, max_shift_um=None):
+    """Move fixed special wires off the PG stripes of their own layer (KV-INFRA-R2 2026-10-26).
+
+    rects = [(net, layer, x0, y0, x1, y1, width)].  A wire whose metal plus `clearance_um` (its NDR spacing) touches a
+    same-layer PG stripe it runs along/over is shifted ACROSS its own axis to the nearest track centre (P.layers track
+    lattice) where it clears every such stripe; its length and width are unchanged.  Wires on layers without PG, or
+    already clear, are returned unchanged.  -> (rects', ledger{moved, max_shift_um, unsnappable, examples})."""
+    idx = {}
+    for _net, layer, *box in pg_shapes:
+        idx.setdefault(layer, []).append(tuple(box))
+    for layer in idx:
+        idx[layer].sort(key=lambda b: (b[1], b[0]) if P.layers[layer]["dir"] == "H" else (b[0], b[1]))
+    starts = {L: [(b[1] if P.layers[L]["dir"] == "H" else b[0]) for b in bs] for L, bs in idx.items()}
+    widest = {L: max(((b[3] - b[1]) if P.layers[L]["dir"] == "H" else (b[2] - b[0])) for b in bs) for L, bs in idx.items()}
+    out, moved, worst, bad, ex = [], 0, 0.0, [], []
+
+    def blockers(L, horiz, a0, a1, lo, hi):
+        """PG intervals (across-axis) of stripes that overlap the wire's along-span [a0, a1] near [lo, hi]."""
+        bs, st = idx[L], starts[L]
+        i0 = bisect.bisect_left(st, lo - clearance_um - widest[L] - 2.0)
+        i1 = bisect.bisect_right(st, hi + clearance_um + 2.0)
+        res = []
+        for b in bs[i0:i1]:
+            b0, b1, c0, c1 = (b[0], b[2], b[1], b[3]) if horiz else (b[1], b[3], b[0], b[2])
+            if min(a1, b1) - max(a0, b0) > -clearance_um:
+                res.append((c0, c1))
+        return res
+    for r in rects:
+        net, L, x0, y0, x1, y1, w = r
+        if L not in idx:
+            out.append(r)
+            continue
+        horiz = P.layers[L]["dir"] == "H"
+        a0, a1, lo, hi = (x0, x1, y0, y1) if horiz else (y0, y1, x0, x1)
+        h, c = (hi - lo) / 2, (lo + hi) / 2
+
+        def free(cc, a0=a0, a1=a1, h=h, L=L, horiz=horiz):
+            return all(cc + h <= c0 - clearance_um + 1e-9 or cc - h >= c1 + clearance_um - 1e-9
+                       for c0, c1 in blockers(L, horiz, a0, a1, cc - h, cc + h))
+        if free(c):
+            out.append(r)
+            continue
+        pitch, off = P.layers[L]["pitch_um"], P.layers[L].get("offset_um", 0.0)
+        k0 = round((c - off) / pitch)
+        cands = sorted((off + (k0 + j) * pitch for j in range(-int(8.0 / pitch), int(8.0 / pitch) + 1)),
+                       key=lambda cc: (abs(cc - c), cc))          # track centres within +-8 um, nearest first
+        best = next((cc for cc in cands if free(cc)), None)
+        if best is None or (max_shift_um is not None and abs(best - c) > max_shift_um + 1e-9):
+            bad.append(dict(net=net, layer=L, rect_um=[x0, y0, x1, y1], best_um=best))
+            out.append(r)
+            continue
+        d = best - c
+        moved += 1
+        worst = max(worst, abs(d))
+        if len(ex) < 16:
+            ex.append(dict(net=net, layer=L, shift_um=round(d, 4), rect_um=[x0, y0, x1, y1]))
+        out.append((net, L, x0, y0 + d, x1, y1 + d, w) if horiz else (net, L, x0 + d, y0, x1 + d, y1, w))
+    return out, dict(moved=moved, max_shift_um=round(worst, 4), unsnappable=len(bad), unsnappable_examples=bad[:16],
+                     examples=ex, clearance_um=clearance_um)
+
+
 def track_use(P, rects, layers=("M8", "M9"), g=10.8):
     """fraction of each layer's track capacity taken by rects [(cls, layer, x0, y0, x1, y1)], counted the way GRT
     counts it (blocked tracks per gcell, capped at the gcell's tracks) -> {layer: {cls: frac, "all": frac}}."""
@@ -521,16 +694,25 @@ def cmd_freeze(a):
     meta = {}
     if a.clock:
         M, crs = clock_rects(a.clock, a.guide)
+        _w, s = NDR[M["meta"].get("ndr", "4w")]
+        snap = {}
+        if a.snap:
+            # KV-INFRA-R2: a clock built against an older PG grid is moved (across its axis only, <= --snap-max-um)
+            # to PG-free tracks of THIS grid; the ledger records every move (the clock lane re-measures if any).
+            crs, snap["clock"] = snap_off_pg(P, power_shapes, crs, s, a.snap_max_um)
         # Only physical mesh straps are exact here. Clock-tree guide boxes are
         # still a capacity prototype and must be replaced by actual routed DB
         # wires/vias before connected infrastructure can be frozen.
         mesh_straps = [r for r in crs if r[0].startswith("ck_mesh")]
         clash = pg_clock_conflicts(P, power_shapes, mesh_straps)
+        clash["routed_clock_wires"] = {k: v for k, v in pg_clock_conflicts(
+            P, power_shapes, [r for r in crs if not r[0].startswith("ck_mesh")]).items() if k != "examples"}
+        clash["snap"] = snap.get("clock")
         (out / "pg_clock_conflicts.json").write_text(json.dumps(clash, indent=1) + "\n")
-        if clash["conflicts"]:
-            raise ValueError(f"PG/clock fixed geometry conflicts: {clash['conflicts']} "
-                             f"({clash['metal_shorts']} metal shorts); snap straps to actual PG-free tracks")
-        _w, s = NDR[M["meta"].get("ndr", "4w")]
+        if clash["conflicts"] or clash["routed_clock_wires"]["conflicts"]:
+            raise ValueError(f"PG/clock fixed geometry conflicts: straps {clash['conflicts']} "
+                             f"({clash['metal_shorts']} metal shorts), routed clock wires "
+                             f"{clash['routed_clock_wires']['conflicts']}; snap straps to actual PG-free tracks (--snap)")
         meta["clock"] = dict(dir=str(a.clock), guide=str(a.guide), ndr=M["meta"].get("ndr"), rects=len(crs),
                              nets=len({r[0] for r in crs}))
         for net, L, x0, y0, x1, y1, w in crs:
@@ -553,12 +735,31 @@ def cmd_freeze(a):
     if a.reset:
         R = json.loads(Path(a.reset).read_text())
         meta["reset"] = dict(file=str(a.reset), nets=R["nets"], wire_mm=R["wire_mm"])
+        rr, kind = [], {}
         for row in R["wires"]:
+            kind[row["net"]] = row["kind"]
             for L, x0, y0, x1, y1 in l_rects(tuple(row["a"]), tuple(row["b"]), SIG_W):
-                shapes.append((row["net"], row["kind"], L, x0, y0, x1, y1, "IOWIRE"))
-                fp = footprint(L, (x0, y0, x1, y1), SIG_W, SIG_S)
-                obs.append((L,) + fp)
-                cls_rects.append(("reset", L) + fp)
+                rr.append((row["net"], L, x0, y0, x1, y1, SIG_W))
+        if a.snap:
+            # blockers = PG + the (already snapped) clock wires; clearance = the clock NDR spacing (>= SIG_S)
+            ck_block = [(n, L, x0, y0, x1, y1) for n, c_, L, x0, y0, x1, y1, _s in shapes if c_ == "clock"]
+            rr, meta["reset"]["snap"] = snap_off_pg(P, power_shapes + ck_block, rr, NDR["4w"][1], a.snap_max_um)
+        # KV-INFRA-R2: the reset L-routes are fixed special wires too; they were never checked against PG
+        # (260 of 574 M8/M9 segments shorted to a PG stripe on the KV plan grid).
+        rclash = {k: v for k, v in pg_clock_conflicts(P, power_shapes, rr, clearance_um=SIG_S).items()}
+        crs_all = [r for r in shapes if r[1] == "clock"]
+        rclash["vs_clock"] = {k: v for k, v in pg_clock_conflicts(
+            P, [(n, L, x0, y0, x1, y1) for n, _c, L, x0, y0, x1, y1, _s in crs_all], rr,
+            clearance_um=NDR["4w"][1]).items() if k != "examples"}
+        (out / "pg_reset_conflicts.json").write_text(json.dumps(rclash, indent=1) + "\n")
+        if rclash["conflicts"] or rclash["vs_clock"]["conflicts"]:
+            raise ValueError(f"PG/reset fixed geometry conflicts: {rclash['conflicts']} ({rclash['metal_shorts']} "
+                             f"metal shorts), reset/clock {rclash['vs_clock']['conflicts']}; use --snap")
+        for net, L, x0, y0, x1, y1, _w in rr:
+            shapes.append((net, kind[net], L, x0, y0, x1, y1, "IOWIRE"))
+            fp = footprint(L, (x0, y0, x1, y1), SIG_W, SIG_S)
+            obs.append((L,) + fp)
+            cls_rects.append(("reset", L) + fp)
     write_def(P, out / "preroute.def", shapes)
     with open(out / "preroute_obs.tcl", "w") as f:
         f.write(f"# GENERATED by tools/die_plan/die_infra.py freeze: fixed pre-route footprints ({len(obs)} rects)\n")
@@ -796,7 +997,7 @@ def cmd_render(a):
         if inwin(r):
             ax.add_patch(Rectangle((r[0], r[1]), r[2] - r[0], r[3] - r[1], fill=False, lw=0.25, ec="0.55"))
             if a.window:
-                ax.text((r[0] + r[2]) / 2, (r[1] + r[3]) / 2, n, fontsize=4, color="0.4", ha="center")
+                ax.text((r[0] + r[2]) / 2, (r[1] + r[3]) / 2, n, fontsize=4, color="0.4", ha="center", clip_on=True)
     for r in DC.keepouts(P):
         if inwin(r):
             ax.add_patch(Rectangle((r[0], r[1]), r[2] - r[0], r[3] - r[1], fc="0.88", ec="none"))
@@ -884,6 +1085,9 @@ def main(argv=None):
     f.add_argument("--reset")
     f.add_argument("--clock-shield", action="store_true", help="PG shields both sides of every clock wire (12.7a)")
     f.add_argument("--shield-w", type=float, default=0.08, help="emitted VSS shield width um")
+    f.add_argument("--snap", action="store_true", help="move clock/reset special wires off same-layer PG stripes "
+                                                       "(across their axis, onto PG-free tracks) before the gate")
+    f.add_argument("--snap-max-um", type=float, default=2.0, help="largest allowed snap move (um)")
     g = sub.add_parser("grt")
     g.add_argument("plan")
     g.add_argument("--kit", required=True)

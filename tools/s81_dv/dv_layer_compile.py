@@ -447,21 +447,29 @@ OPMAP = [
      GAP_KV_UNIT),
     # TOK-S81-GAPS/IDX 10-18: topk_local / topk_final / cand.* are lowered by layer_prog/lower_bk.py (bk_sel job);
     # what stays here has NO unit on the p4l3 die (bind_p4l3_g8 masters: no index scan, no mix4)
-    (r'attn\.idx\.score$', 'DV index scan (none on the die)', 'GAP',
-     ('bind_p4l3_g8 (no index-score unit)', 'HBM index-key scan q.k -> BF16 scores -> u_bk_sel vi_s',
-      'no DV unit computes the indexer scores: dsdv_svc_rs (x16) has attention (svc_att / svc_sx / su_sms) only, the '
-      'hub-era scan dsfd_svc_idx (rtl/dsrom_sys/s81_ph/svc) is not instantiated; the scan must also emit BK-format beats '
-      '(lower_bk GAPS producer).  Rate: 131,072 scores / die at the 276-b rung = 8 scores / edge -> >= 16,388 edges')),
-    (r'attn\.idx\.newkey$', 'svc_rs HBM index-key append (none on the die)', 'GAP',
-     ('dsdv_svc_rs', 's_j job (index-key row write)', 'no svc job writes the new index key row into the HBM index '
-      'cache (dsdv_svc_rs job table: attention window / own row only); the key itself (idx.q . wk path) is a slice op')),
-    (r'attn\.(idx\.topk_merge)$', 'TP4 collective of the local selections (end-slice lep)', 'GAP',
-     ('u_s_4S rstop V receive -> end-slice lep', 'bk_sel egress kind 5 words', 'no path carries the bk_sel IDX words to '
-      'an end slice for the cross-die merge (lower_bk GAPS consumer); collective owned by TOKEN-XDIE-S81')),
-    (r'attn\.gather$', 'selected-row gather (svc HBM read by index; bk_col frame merge)', 'GAP',
-     ('dsdv_svc_rs / dsdv_bk_col', 'svc row-read job by index list + bk_col frames', 'no svc job reads HBM rows by a '
-      'runtime index list, and nothing produces bk_col frames on the column-1 rung; the 512 selected rows (fixture '
-      'attn.gather 512 x 512) would also cost >= 2 V beats per 512-b word at the rung (bk_col ingress + egress)')),
+    # TOK-DS-CMP (10-26): the texts below are the 877 strict-bound die (die_b178.v, asbuilt_b178_coll) source audit; the
+    # legacy bind_p4l3_g8 "no index-score unit" texts were stale for 877.  Units exist; their job programmes are not lowered.
+    (r'attn\.idx\.score$', 'idx chain u_iqf (dsdv_idx_qfs) -> u_irg_00..06 dsdv_idx_rg3 + u_irg_07 rg3_nq -> u_bk_sel vi_idx', 'GAP',
+     ('dsdv_idx_rg3 IDX_S job (877: die_b178.v:3709-3717)', 'iq frames s_3S_C -> iqf -> qr type-4 IDX_S header + 64 q/weight '
+      'words; so score chain (276 b BK beats, 16 BF16 scores) svc_0 -> .. -> svc_14 -> bk_sel',
+      'UNIT PRESENT on 877 (rg3 key read kb + 34 n, 4 x rg2_chunk of 8 idx_hslice: FP4 q.k, bf16(relu . w), head sum, FP32 '
+      'tree -> BF16).  Missing: the compiler emits no IDX_S job (spec B/N/k/KB/T0/P/ik/om, rtl/dsrom_sys/s81_dv/idx/'
+      'dsdv_idx_rg.sv:27-45) nor the slice iq send programme; no L14 bench of the 131,072-key quarter scan')),
+    (r'attn\.idx\.newkey$', 'dsdv_svc_att IK_ROW (q frame type 15) on the owning svc slice', 'GAP',
+     ('dsdv_svc_att IK_ROW (dsdv_svc_att.sv:43-56, 242-275)', 'q frame type 15: [29:0] KB, [63:32] 4 UE8M0 scales, pos, '
+      '128 E2M1 codes', 'UNIT PRESENT on 877 (one slice sid == key region hash writes code lo / hi + scales, rg3 layout).  '
+      'Missing: lower_svc does not emit the IK_ROW frame (the new key comes from attn.cmp.k_rope_qdq, itself GAP) and '
+      'no bench writes then scans the key')),
+    (r'attn\.(idx\.topk_merge)$', 'TP4 peer merge of the 4 local selections: u_bk_sel dsdv_bk_sel_vmtx -> u_s_7S / u_s_7N '
+     'lep TP TX (tp_i) -> lk_EN2/3 / lk_WS2/3 -> u_s_0S tp_o -> u_s_0N lep_mu_ab_idxq tm -> ca -> bk_sel', 'GAP',
+     ('877 IDXNET (S81/IDXNET 10-25, die_b178.v:3555/3559/3627/3631/3699)', 'bk_sel 276-b IDX beats on tp_i / tp_o / tm / ca '
+      '(lep IDX_TP / IDX_MRG, every TP beat on pair A lane 2)', 'UNIT + NETS PRESENT on 877 (TOK-DS-CMP2 10-26 netlist audit; '
+      'the old "no path carries the bk_sel IDX words to an end slice" text was the legacy die).  Missing: lower_bk emits no '
+      'TP4 peer-merge programme for the IDXNET lep (compiled TP beat slots, RL relay count, tm / ca collision-free windows) '
+      'and no bench runs the 4-rank merge through the bound leps; price LEG 729 is the legacy S81-SCAND leg')),
+    (r'attn\.gather$', 'svc SEL_IDS row fetch by index (dsdv_svc_att) + ROWS frames', 'GAP',
+     ('dsdv_svc_att SEL_IDS / ROWS (lower_svc compressed job)', 'q frame type 7 ids + type 6 rows',
+      'lowered by lower_svc for compressed layers (this row applies only without fixtures)')),
     (r'^eng\.(lead_flit|hash|hbm_read)$', 'svc_rs HBM service (Engram rows) + lep stage hop', 'GAP',
      ('dsdv_svc_rs', 's_j job (Engram row read)', 'svc job ABI for the Engram HBM row read is not documented as a compiler '
       'ABI; Engram table image belongs to the fixtures')),

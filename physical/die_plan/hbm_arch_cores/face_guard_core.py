@@ -16,7 +16,12 @@ net, kd = sys.argv[1], Path(sys.argv[2])
 fz = json.loads((kd / "freeze.json").read_text())
 skip = "^(" + "|".join(re.escape(re.sub(r"\[\d+\]$", "", n)) for n in fz["clocks"] + fz["resets"]) + ")$"
 pins = [p for p in json.loads((kd / "pins.json").read_text()) if p["bit"] is not None and not re.match(skip, p["bus"])]
-r = FG.guard(Path(net).read_text(), fz["design"], skip_re=skip, pins=pins)
+contract = (fz.get("source_profile") or {}).get("endpoint_contract")
+if contract:
+    import internal_core_guard as ICG
+    r = ICG.guard(Path(net).read_text(), fz["design"], kd, fz, skip)
+else:
+    r = FG.guard(Path(net).read_text(), fz["design"], skip_re=skip, pins=pins)
 r["skip_re"] = skip
 (kd / "face_guard.json").write_text(json.dumps(r, indent=1) + "\n")
 print(f"FACE_GUARD {r['verdict']} top {fz['design']} checked {r.get('checked')} ok {r.get('ok')} fails "

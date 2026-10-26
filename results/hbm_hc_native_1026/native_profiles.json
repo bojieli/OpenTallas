@@ -1,0 +1,116 @@
+{
+  "plain": {
+    "parameters": {
+      "W": 128,
+      "CPI": 1,
+      "CPO": 1
+    },
+    "result": "plain_result.json",
+    "source_artifacts": "/srv/opentallas-scratch2/claude/codex-hbm-hc-native-1026/native_plain",
+    "gate": {
+      "verdict": "PASS",
+      "rc": 0,
+      "proven": 18114,
+      "unproven": 0,
+      "mutation": null
+    },
+    "mutant": {
+      "verdict": "CAUGHT",
+      "rc": 1,
+      "proven": 18114,
+      "unproven": 1,
+      "mutation": "first weight SRAM write-enable tied0"
+    }
+  },
+  "first": {
+    "parameters": {
+      "W": 128,
+      "DRLY": 2,
+      "CPO": 1
+    },
+    "result": "first_result.json",
+    "source_artifacts": "/srv/opentallas-scratch2/claude/codex-hbm-hc-native-1026/native_first",
+    "gate": {
+      "verdict": "PASS",
+      "rc": 0,
+      "proven": 22180,
+      "unproven": 0,
+      "mutation": null
+    },
+    "mutant": {
+      "verdict": "CAUGHT",
+      "rc": 1,
+      "proven": 22180,
+      "unproven": 1,
+      "mutation": "first weight SRAM write-enable tied0"
+    }
+  },
+  "term": {
+    "parameters": {
+      "W": 128,
+      "CPI": 1,
+      "CPO": 1
+    },
+    "result": "term_result.json",
+    "source_artifacts": "/srv/opentallas-scratch2/claude/codex-hbm-hc-native-1026/native_term",
+    "gate": {
+      "verdict": "PASS",
+      "rc": 0,
+      "proven": 18084,
+      "unproven": 0,
+      "mutation": null
+    },
+    "mutant": {
+      "verdict": "CAUGHT",
+      "rc": 1,
+      "proven": 18084,
+      "unproven": 1,
+      "mutation": "first weight SRAM write-enable tied0"
+    }
+  },
+  "feed": {
+    "parameters": {
+      "W": 128
+    },
+    "result": "feed_result.json",
+    "source_artifacts": "/srv/opentallas-scratch2/claude/codex-hbm-hc-native-1026/parent_feed",
+    "gate": {
+      "verdict": "PASS",
+      "rc": 0,
+      "proven": 18606,
+      "unproven": 0,
+      "mutation": null
+    },
+    "mutant": {
+      "verdict": "CAUGHT",
+      "rc": 1,
+      "proven": 18606,
+      "unproven": 1,
+      "mutation": "first weight SRAM write-enable tied0"
+    }
+  },
+  "qhub": {
+    "parameters": {
+      "W": 128,
+      "DRLY": 2,
+      "CHX": 11,
+      "RD_CAPTURE": 51,
+      "GATHER_PHASE": 51,
+      "DONE_LAT": 47
+    },
+    "result": "qhub_result.json",
+    "source_artifacts": "/srv/opentallas-scratch2/claude/codex-hbm-hc-native-1026/native_qhub",
+    "gate": {
+      "verdict": "PASS",
+      "proven": 16289,
+      "unproven": 0,
+      "rc": 0
+    },
+    "mutant": {
+      "verdict": "CAUGHT",
+      "proven": 16257,
+      "unproven": 32,
+      "rc": 1
+    }
+  }
+}

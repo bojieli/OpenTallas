@@ -1,0 +1,11 @@
+--- /srv/opentallas-scratch2/claude/cores-kits/s81/kits/dsdv_gunit_l1_k26b/rtl/dsdv_gunit_pass.sv	2026-10-26 01:31:30.238740617 -0700
++++ /srv/opentallas-scratch2/claude/cores-kits/s81/lintA/eq/dsdv_gunit_l1/mut/dsdv_gunit_pass.sv	2026-10-26 01:32:37.963859650 -0700
+@@ -22,7 +22,7 @@
+         else begin v[0] <= d[0]; for (integer k = 1; k < N; k = k + 1) v[k] <= v[k - 1]; end
+     always @(posedge clk) begin
+         s[0] <= d[W-1:1];
+-        for (integer k = 1; k < N; k = k + 1) s[k] <= s[k - 1];
++        for (integer k = 1; k < N; k = k + 1) s[k] <= ~s[k - 1];
+     end
+     assign q = {s[N - 1], v[N - 1]};
+ endmodule

@@ -71,11 +71,12 @@ for p in (ROOT / 'tools', ROOT / 'tools/s81_dv', ROOT):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-OPS = [r'^attn\.(own_row_write|window_load|scores|max|exp|den|sink|pv|normalize)$']
+OPS = [r'^attn\.(own_row_write|window_load|gather|scores|max|exp|den|sink|pv|normalize)$']
 BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc'
 BENCH_P = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc_p'   # TOK-S81-GAPS/SVCP: on-die P path (PPATH)
 BENCH_ALLQ = 'results/rtl/s81_rtlgap_so_1021/bench_allq'           # RTLGAP-SO: all-quarter P.V on one die (-DOT_SVC_ALLQ)
 BENCH_SO = 'results/rtl/s81_rtlgap_so_1021/bench_so'               # RTLGAP-SO: SO programme on the 16 real SM shares
+BENCH_CMP = 'results/rtl/s81_l14_cmp_1026/bench_cmp'               # TOK-DS-CMP: L14 T640 (128 window + 512 selected rows)
 UNIT = 'svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4'
 INSTS = [f'u_rsv_{i:02d}' for i in range(16)] + ['u_seqhost']
 
@@ -120,6 +121,35 @@ SERVICE_TIMING = {
     'legacy_fg3': dict(pio=285, kpv=55, engine_profile='legacy_fg3'),
     'closing_allq': dict(pio=297, kpv=78, engine_profile='closing'),
 }
+
+# TOK-DS-CMP (10-26): compressed-row (DSA) layers -- 128 window rows + the indexer's nsel selected compressed rows,
+# T = 128 + nsel <= 640 (dsdv_svc_att TR 640 landing rows, WIN_LOAD fault 7 above wcount 128 / nsel 512, pbuf 40 e rows,
+# PFIFO 512 p words).  Selected-row ids are the golden's compressed-cache positions g (tools/v41_selection_global_ids.py:
+# die g[5:4], stack g[7:6]); dsdv_svc_att's SEL_IDS id word is g itself ([3:0] row in block, [5:4] die, [7:6] stack,
+# [8] PC, [20:9] 16-row block).  Rows of this die / stack are HELD: each slice reads its tile from its own 2 PCs at
+# SB + 9 (g >> 9) (dsdv_svc_att.sv:325-331).  Every other row arrives as ROWS (type 6) words on q, one 512-b word per
+# (row, tile pair) because ALLQ needs every row in every tile (dsdv_svc_att.sv:381-382, 466-476).
+DIE_ID = 0                   # bench die position (run_svc_bench.sh -GDIE_ID=0)
+NSEL_MAX, TR = 512, 640
+ROWS_SLACK = 64              # last ROWS / SEL word on q -> GO (dn-tree hops <= 4 x 5 edges + landing)
+SEL_SCAN = 512 + 200         # SEL_IDS start -> GO: the scanner walks one id an edge (512 ids) + held-row HBM fetch
+ROWS_PRODUCER_GAP = ('ROWS words (selected rows another die / stack holds) reach the entry q pins as the rank\'s '
+                     'attn.rows_allgather result; that cross-die transport (xs fork / end-slice lep) is not lowered, so '
+                     'the bench drives them at the compiled q cycles (producer gap, the attention arithmetic is on-die)')
+SEL_PRODUCER_GAP = ('SEL_IDS words: on the 877 die dsdv_bk_sel_vmtx -> dsdv_bk_selids -> seq_host dsdv_sh_selr -> '
+                    'dsdv_svc_selq build them from the bk_sel egress; attn.idx.topk_* lowering does not yet emit that '
+                    'path, so the bench drives the fixture attn.idx.topk_final ids at the compiled q cycles')
+
+
+def pio_for(base, T):
+    """P injection start for a T-row job: the T128 closing value + the extra score beats (T / 4 one an edge) + 4 edges
+    per extra SE e row (nv = ceil(T / 16)) + a 32-edge margin (T > 128).  UNCALIBRATED beyond T128 until a bench run
+    measures the SM e-row edges (results in the TOK-DS-CMP bench receipt)."""
+    if T == 128:
+        return base
+    nv = -(-T // 16)
+    return base + -(-(T - 128) // 4) + 4 * (nv - 8) + 32
+
 
 W_SLACK = 560                # WIN_LOAD -> GO: 64 code + 2 scale reads a PC at DQ 8 credits x <= 56-edge latency + margin
 Q_ARM = 4                    # j pin -> first q header (job pin flop + table push, ot_s81_svc_job.sv:31-32, 91-92)
@@ -220,7 +250,8 @@ def f32bits(x):
 class Job:
     """the layer's svc attention job, built once per (layer, fixtures, tag, mutant)"""
 
-    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None, allq=None, timing_profile="legacy_fg3"):
+    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None, allq=None, timing_profile="legacy_fg3", pio_extra=0):
+        self.pio_extra = int(pio_extra)
         if timing_profile not in SERVICE_TIMING:
             raise ValueError(f'unknown service timing profile {timing_profile!r}')
         self.timing_profile = timing_profile
@@ -239,7 +270,11 @@ class Job:
 
         def op(n):
             return ld(f'ops/{n}.bin', ops[n])
-        assert self.meta['kind'] == 'sliding', 'window-only layers (compressed-row selection not lowered here)'
+        kind = self.meta['kind']
+        self.compressed = kind != 'sliding'
+        if self.compressed:
+            assert 'indexer' in kind and 'attn.idx.topk_final' in ops and 'attn.rows_allgather' in ops, \
+                'compressed layer without an indexer selection (attend-all compressed layers not lowered here)'
         h0, h1 = self.meta['tp_split']['heads'][self.meta['rank']]
         assert h1 - h0 == H
         self.h0 = h0
@@ -253,11 +288,30 @@ class Job:
         self.e8 = np.vstack([e8, os16[0::2][None]])                                                   # [128, 16]
         q = op('attn.q_rope')[h0:h1]
         e = op('attn.exp')[h0:h1]
-        T = WIN
-        job = C.Job(q, np.zeros(T, np.int64), self.codes, np.repeat(self.e8, 2, axis=1), V.to_bf16(e), 'L0 svc')
+        fmt, codes_all, sc_all = np.zeros(WIN, np.int64), self.codes, np.repeat(self.e8, 2, axis=1)
+        self.sel, self.held = np.zeros(0, np.int64), np.zeros(0, bool)
+        if self.compressed:
+            sel = op('attn.idx.topk_final').astype(np.int64)
+            assert 0 < len(sel) <= NSEL_MAX and np.all(np.diff(sel) > 0) and sel.min() >= 0 and sel.max() < 1 << 21, \
+                'selection ids outside the SEL_IDS ABI'
+            li = self.meta['layer_index']
+            ck = ld(f'state/kv.ckv{li}.codes.bin', files[f'state/kv.ckv{li}.codes.bin'])[sel].astype(np.int64)
+            cs = ld(f'state/kv.ckv{li}.scale.bin', files[f'state/kv.ckv{li}.scale.bin'])[sel].astype(np.int64)
+            nib = np.stack([ck & 15, ck >> 4], axis=2).reshape(len(sel), D)      # E2M1 packed low nibble first
+            fmt = np.concatenate([fmt, np.ones(len(sel), np.int64)])
+            codes_all, sc_all = np.vstack([codes_all, nib]), np.vstack([sc_all, cs])
+            self.sel = sel
+            self.held = (((sel >> 4) & 3) == DIE_ID) & (((sel >> 6) & 3) == ST)
+        T = len(fmt)
+        assert T <= TR
+        self.fmt, self.codes_all, self.sc_all = fmt, codes_all, sc_all
+        job = C.Job(q, fmt, codes_all, sc_all, V.to_bf16(e), f'{self.meta["layer"]} svc')
         kvm = job.kvm()
-        # anchors: the job's stored rows are the fixture's window rows; the engine products scaled = the fixture ops
-        assert np.array_equal(V.bits(kvm), V.bits(op('attn.window_load'))), 'window rows'
+        # anchors: the job's stored rows are the fixture's window (+ gathered) rows; the engine products scaled = the ops
+        assert np.array_equal(V.bits(kvm[:WIN]), V.bits(op('attn.window_load'))), 'window rows'
+        if self.compressed:
+            assert np.array_equal(V.bits(kvm[WIN:]), V.bits(op('attn.gather'))), 'gathered compressed rows'
+            assert np.array_equal(V.bits(kvm), V.bits(op('attn.rows_allgather'))), 'attended rows'
         sc, pv = job.expected()
         scale = np.float32(self.meta.get('attn_scale', D ** -0.5))
         self.anchor = dict(
@@ -290,13 +344,16 @@ class Job:
         pos = self.pos - 1 if mut == 'slot' else self.pos             # MUTANT 'slot': wrong OWN_ROW pos field
         ow.append(hdr(3, 16, tag, pos=pos))
         for b in range(16):
-            cw = sum(int(self.codes[T - 1, 32 * b + x]) << (8 * x) for x in range(32))
-            ow.append(cw | int(self.e8[T - 1, b]) << 256)
+            cw = sum(int(self.codes[WIN - 1, 32 * b + x]) << (8 * x) for x in range(32))
+            ow.append(cw | int(self.e8[WIN - 1, b]) << 256)
         fr.append(('OWN_ROW', ow))
-        fr.append(('WIN_LOAD', [hdr(2, 0, tag, spec=SB | (T << 81) | (0 << 89) | (self.wfirst << 99),
+        nsel = len(self.sel)
+        fr.append(('WIN_LOAD', [hdr(2, 0, tag, spec=SB | (WIN << 81) | (nsel << 89) | (self.wfirst << 99),
                                       pos=self.pos if self.owner is not None else 777)]))
         if self.so and mut != 'no_sot':              # MUTANT 'no_sot': the predecessor programme (no SOT, SMT = 1 die)
             fr.append(('SOT', [0, 0, 0]))            # booked by build() from this job's schedule (same 3 words)
+        if nsel:
+            fr += self._sel_frames()
         qb = C.bf16_bits(self.q)                                                                       # [16, 512]
         for b in range(2):
             ws = [hdr(1, 128, tag, spec=b << 448)]
@@ -321,7 +378,7 @@ class Job:
                     for h in range(H):
                         word |= int(pb[h, t]) << (16 * (jj * H + h))
             pw.append(word)
-        assert n <= 250
+        assert n <= TR // 2
         self.p_words = [hdr(5, n, tag, pos=0, user=0)] + pw    # the PV frame as the fold root packs it (on-die)
         if not PPATH:
             fr.append(('PV', [hdr(5, n, tag, end=True)] + pw))
@@ -338,13 +395,49 @@ class Job:
                             order=SO_ORDER)
         return fr
 
+    # ------------------------------------------------------------------ compressed rows: SEL_IDS + ROWS frames
+    def tile_row(self, r, t):
+        """144-b tile row {E4M3 scale hi 8, lo 8, E2M1 nibbles 128} of attended row r (= rowword FP4 l[143:0],
+        rtl_hdc_v41x_attn_campaign.row_word group word without the fmt bit)"""
+        c, s = self.codes_all[r], self.sc_all[r]
+        return sum((int(c[32 * t + x]) & 15) << (4 * x) for x in range(32)) | int(s[2 * t]) << 128 | int(s[2 * t + 1]) << 136
+
+    def _sel_frames(self):
+        """SEL_IDS (type 7: header [9:0] first rank, [19:10] count; 16 x 32-b ids a word) and one ROWS frame (type 6:
+        word = {scales 2 x 16 at [290 +: 32], nibbles 2 x 128 at [34 +: 256], pair [33:31], rank [9:0]}) for every
+        (non-held row, tile pair).  MUTANT 'sel_id': the first held id -> its block neighbour g ^ 1 (wrong HBM row
+        gathered); 'rows_pair': every ROWS word's pair field p -> p ^ 1 (rows land in the wrong tiles)."""
+        tag, mut, n = self.tag, self.mutant, len(self.sel)
+        ids = [int(g) for g in self.sel]
+        if mut == 'sel_id':
+            k = int(np.flatnonzero(self.held)[0])
+            ids[k] ^= 1
+        nw = -(-n // 16)
+        sw = [hdr(7, nw, tag, spec=0 | (n << 10))]
+        for w in range(nw):
+            sw.append(sum(ids[16 * w + i] << (32 * i) for i in range(min(16, n - 16 * w))))
+        fr = [('SEL_IDS', sw)]
+        rw = []
+        for k in np.flatnonzero(~self.held):
+            r = WIN + int(k)
+            for p in range(8):
+                lo, hi = self.tile_row(r, 2 * p), self.tile_row(r, 2 * p + 1)
+                pf = p ^ 1 if mut == 'rows_pair' else p
+                rw.append(int(k) | pf << 31 | (lo & ((1 << 128) - 1)) << 34 | (hi & ((1 << 128) - 1)) << 162 |
+                          (lo >> 128) << 290 | (hi >> 128) << 306)
+        if rw:
+            assert len(rw) < 4096
+            fr.append(('ROWS', [hdr(6, len(rw), tag)] + rw))
+        return fr
+
     # ------------------------------------------------------------------ static schedule (cycles at the entry q pins)
     def schedule(self, t_q0, t_q, t_exp, j_age_w, j_age_e):
         """t_q0: the CFG word's cycle (own row ready), t_q: q_rope done, t_exp: P (exp) ready -- all at the q pins.
         Returns {frame: first word cycle} and the job's derived cycles."""
         T = self.T
-        if self.timing_profile == 'closing_allq' and not (T == 128 and self.allq and self.so and PPATH):
-            raise ValueError('closing_allq timing requires the H16/D512/T128 ALLQ+SMT on-die-P programme')
+        if self.timing_profile == 'closing_allq' and not ((T == 128 or self.compressed) and self.allq and self.so and PPATH):
+            raise ValueError('closing_allq timing requires the H16/D512 ALLQ+SMT on-die-P programme (T128, or T128+nsel '
+                             'compressed with the T-scaled PIO)')
         n = -(-T // 2)
         t = t_q0
         at, words, fw = {}, [], {}
@@ -359,7 +452,7 @@ class Job:
                     # on-die P: PIO after the SM's last e row (measured), the PV frame reaches the owners P_ARR after
                     # PIO, one word a cycle.  MUTANT 'pio_early': the GO frame's PIO PIO_EARLY cycles early, PO / PVO
                     # unchanged (the first P beats find no e row in pbuf: sticky slice fault)
-                    pio = self.timing["pio"]
+                    pio = pio_for(self.timing["pio"], T) + self.pio_extra
                     pvs = pio
                     po = pio + P_ARR + -(-n // 2) + P_PO_M
                     if self.mutant == 'pio_early':
@@ -384,6 +477,10 @@ class Job:
                 words.append((t + k, w))
             if name == 'WIN_LOAD':
                 go_min = t + W_SLACK
+            if name == 'SEL_IDS':
+                go_min = max(go_min, t + SEL_SCAN)
+            if name in ('SEL_IDS', 'ROWS'):
+                go_min = max(go_min, t + len(ws) + ROWS_SLACK)
             t += len(ws)
         j_pin = t_q0 - Q_ARM
         s_j = j_pin - max(j_age_w, j_age_e)
@@ -397,7 +494,7 @@ class Job:
     def hbm_image(self):
         img = {}
         ring = WB + 68 * USER
-        for r in range(self.T - 1):
+        for r in range(WIN - 1):                      # the 127 window rows before pos
             slot = (self.wfirst + r) & 127
             for sd in range(16):
                 t = tile_of(sd)
@@ -405,6 +502,17 @@ class Job:
                 img[((2 * sd + (slot & 1)) << 32) | (ring + (slot >> 1))] = cw
                 k = ((2 * sd + ((slot >> 5) & 1)) << 32) | (ring + 64 + (slot >> 6))
                 img[k] = img.get(k, 0) | int(self.e8[r, t]) << (8 * (slot & 31))
+        # held compressed rows: 16-row block g >> 4 = 9 sectors (2304 b) at SB + 9 (g >> 9) on PC g[8]; row g[3:0] at
+        # bits 144 g[3:0] (dsdv_svc_att.sv:325-331 fetch, :466-472 landing)
+        for k in np.flatnonzero(self.held):
+            g, r = int(self.sel[k]), WIN + int(k)
+            for sd in range(16):
+                bits = self.tile_row(r, tile_of(sd)) << (144 * (g & 15))
+                for sec in range(9):
+                    v = (bits >> (256 * sec)) & ((1 << 256) - 1)
+                    if v:
+                        key = ((2 * sd + ((g >> 8) & 1)) << 32) | (SB + 9 * (g >> 9) + sec)
+                        img[key] = img.get(key, 0) | v
         return img
 
     def expected_hex(self):
@@ -515,11 +623,36 @@ def so_schedule(t_se_last_row, nv, nframes_words=534):
                 edges_after_den=last_op + SO_LAT - den)
 
 
-def _ages(die):
+BOUND_SVC_ROUTES = {('u_seqhost', 's_j', 'u_rsv_05', 'j'): 'j_w', ('u_seqhost', 's_j', 'u_rsv_11', 'j'): 'j_e',
+                    ('u_rsv_05', 'jd', 'u_seqhost', 's_jd_w'): 'jd_w', ('u_rsv_11', 'jd', 'u_seqhost', 's_jd_e'): 'jd_e',
+                    ('u_s_3S', 'bo', 'u_rsv_05', 'q'): 'q_w', ('u_s_4S', 'bo', 'u_rsv_11', 'q'): 'q_e'}
+
+
+def bound_ages(path):
+    """TOK-DS-CMP: the svc job / done / q transport ages of the strict-bound die (bound_die.py --routes receipt, every
+    bit's exact source identity and stage count).  Every key must be PASS; pv ages are not in the receipt (the pv
+    return lands on the slice bi subword) and stay out of the returned dict."""
+    rec = json.loads(Path(path).read_text())
+    out = dict(die_sha256=rec['die_sha256'], source=str(path))
+    for r in rec['routes']:
+        k = BOUND_SVC_ROUTES.get((r.get('source'), r.get('source_port'), r.get('target'), r.get('target_port')))
+        if k and r['status'] == 'PASS':
+            out[k] = int(r['age_edges'])
+    miss = [k for k in BOUND_SVC_ROUTES.values() if k not in out]
+    if miss:
+        raise ValueError(f'bound svc route receipt lacks PASS ages {miss}')
+    return out
+
+
+def _ages(die, bound=None):
     lk = getattr(die, 'links', {}) if die is not None else {}
     g = lambda k, d: (lk.get(k) or {}).get('age_edges', d)
-    return dict(j_w=g('jw_W_l0', 34), j_e=g('jw_E_l0', 24), jd_w=g('jd_W', 32), jd_e=g('jd_E', 25),
-                q_w=g('q_W_l0', 4), q_e=g('q_E_l0', 4), pv_w=g('pv_W', 4), pv_e=g('pv_E', 4))
+    ag = dict(j_w=g('jw_W_l0', 34), j_e=g('jw_E_l0', 24), jd_w=g('jd_W', 32), jd_e=g('jd_E', 25),
+              q_w=g('q_W_l0', 4), q_e=g('q_E_l0', 4), pv_w=g('pv_W', 4), pv_e=g('pv_E', 4), basis='legacy die tree')
+    if bound:                                      # the bound 877 die's exact ages replace every legacy one it has
+        b = bound_ages(bound)
+        ag.update({k: b[k] for k in BOUND_SVC_ROUTES.values()}, basis=f'bound die {b["die_sha256"][:12]} (pv legacy)')
+    return ag
 
 
 def _op_t(sched, name, key):
@@ -579,13 +712,15 @@ def sot_booking_for(job, s):
     return rec
 
 
-def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None, allq=None, timing_profile="legacy_fg3"):
+def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None, allq=None, timing_profile="legacy_fg3",
+          pio_extra=0, bound_routes=None):
     """the job + its static schedule at the layer's cycles (layer entry = 0)"""
-    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq, timing_profile=timing_profile)
+    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq, timing_profile=timing_profile,
+              pio_extra=pio_extra)
     if sot_booking is not None:
         from sot_program import attach_to_job
         attach_to_job(job, sot_booking)
-    ag = _ages(die)
+    ag = _ages(die, bound_routes or os.environ.get('OT_SVC_BOUND_ROUTES') or None)
     t_own = int(np.ceil(_op_t(sched, 'attn.own_row_write', 'start') or 1805))
     t_q = int(np.ceil(_op_t(sched, 'attn.q_rope', 'end') or 3001))
     t_exp = int(np.ceil(_op_t(sched, 'attn.exp', 'end') or 3763))
@@ -689,6 +824,9 @@ def lower(die, op, ctx):
     if job is None:
         return dict(base, status='GAP', gap=dict(module='lower_svc', port='fixtures', missing=s))
     r = dict(base)
+    if job.compressed:
+        # TOK-DS-CMP: every compressed-layer claim rests on the T = 128 + nsel bench of the same 16 real slices
+        r['bench'] = BENCH_CMP
     if name == 'attn.own_row_write':        # the job is issued with the first svc op of the layer
         from dv_layer_compile import ENG, SEQ
         arg, jw = job_word(s['nframes'], job.tag)
@@ -697,7 +835,7 @@ def lower(die, op, ctx):
         r['svc_jobs'] = [dict(layer=ctx.get('layer'), tag=job.tag, timing_profile=job.timing_profile,
                               engine_profile=job.timing['engine_profile'], arg=arg, j_word=f'{jw:09x}', s_j=s['s_j'],
                               j_pin=dict(u_rsv_05=s['j_w'], u_rsv_11=s['j_e']),
-                              source_owner=job.owner, source_owner_field='CFG[52:33], valid[53]; latch before GO',
+                              ages=s['ages'], source_owner=job.owner, source_owner_field='CFG[52:33], valid[53]; latch before GO',
                               source_owner_qualification='SOURCE ABI ONLY; stamp/transpose consumer binding pending', frames=s['at'], go=s['go'],
                               pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pv_first=s['pv_first'], pv_last=s['pv_last'],
                               done_pin=dict(u_rsv_05=s['done_w'], u_rsv_11=s['done_e']), ls=s['ls'], hbm_sectors=len(job.hbm_image()),
@@ -712,10 +850,11 @@ def lower(die, op, ctx):
         # output register takes it (tb_svc_lower samples pv_v / jd at cycle c = the register set at edge c - 1).
         for fname, t in s['at'].items():
             ws = [[c, f'{(w << 1) | 1:x}', f'{(1 << 515) - 1:x}'] for c, w in s['frame_words'][fname]]
+            pg = dict(ROWS=ROWS_PRODUCER_GAP, SEL_IDS=SEL_PRODUCER_GAP).get(fname, QF_PRODUCER_GAP)
             for inst in ('u_rsv_05', 'u_rsv_11'):
                 ev.append(dict(cycle=t, inst=inst, port='q', ports=['q'], dir='in', kind='QF', tag=f'attn.{fname}',
                                payload=f'frame {fname}: {len(ws)} q words {{2\'d0, d 512, v}} (producer u_s_3S / u_s_4S '
-                                       f'xr band bo)', words=ws, valid_bit=0, producer_gap=QF_PRODUCER_GAP))
+                                       f'xr band bo)', words=ws, valid_bit=0, producer_gap=pg))
         pvhs = ['u_rsv_11', 'u_rsv_05'] if s.get('allq') else ['u_rsv_11' if ST < 2 else 'u_rsv_05']
         for pvh in pvhs:
             what = (f'{s["npv"]} words (ALLQ: tiles {"0..7" if pvh == "u_rsv_11" else "8..15"}, 8 x 40-cycle windows)'
@@ -740,20 +879,27 @@ def lower(die, op, ctx):
         st = 'LOWERED'
     elif name in ('attn.window_load', 'attn.scores'):
         st = 'LOWERED'
+    elif name == 'attn.gather' and job.compressed:
+        # held rows: SEL_IDS -> per-slice HBM row fetch by index (dsdv_svc_att); other rows: ROWS words on q
+        st = 'LOWERED'
+        r['held_rows'], r['rows_words'] = int(job.held.sum()), int((~job.held).sum()) * 8
+    elif name == 'attn.gather':
+        st = 'GAP'
+        r['gap'] = dict(module='lower_svc', port='fixtures', missing='window-only layer: no selected rows')
     elif name in ('attn.max', 'attn.exp') and PPATH:
         st = 'LOWERED'
-        r['bench'] = BENCH_P
+        r['bench'] = BENCH_CMP if job.compressed else BENCH_P
     elif name in ('attn.den', 'attn.sink') and PPATH:
         st = 'PARTIAL'
         r['gap'] = dict(SO_ALLQ_GAP if job.allq else SO_INPUT_GAP)
     elif name == 'attn.normalize' and job.allq:
         st = 'PARTIAL'                       # programme LOWERED + bench_so; input HW = SO_ALLQ_GAP (no cross-die part)
-        r['bench'] = BENCH_SO
+        r['bench'] = BENCH_CMP if job.compressed else BENCH_SO
         r['gap'] = dict(SO_ALLQ_GAP)
     elif name == 'attn.pv' and job.allq:
         # RTLGAP-SO (10-21): all 512 dims of the rank leave this die (E tiles 0..7, W tiles 8..15); bench_allq
         st = 'LOWERED'
-        r['bench'] = BENCH_ALLQ
+        r['bench'] = BENCH_CMP if job.compressed else BENCH_ALLQ
     elif name == 'attn.pv':
         st = 'PARTIAL'
         r['gap'] = dict(module='dsdv_svc_att quarter ST (pvown) -- die gap G10 (cross-die part)',
@@ -778,6 +924,8 @@ def main(argv=None):
     ap.add_argument('--sched', default=None, help='schedule.json of dv_layer_compile (else the L0 priced defaults)')
     ap.add_argument('--tag', type=lambda x: int(x, 0), default=0)
     ap.add_argument('--timing-profile', choices=tuple(SERVICE_TIMING), default='legacy_fg3')
+    ap.add_argument('--compressed-only', action='store_true', help='compressed layer: base + selection mutants only')
+    ap.add_argument('--pio-safe', type=int, default=0, help='also emit base_safe with PIO this many edges later')
     a = ap.parse_args(argv)
     sched = json.loads(Path(a.sched).read_text()) if a.sched else None
     die = None
@@ -789,10 +937,16 @@ def main(argv=None):
     muts = (None, 'slot', 'pio_early' if PPATH else 'late') + (('allq_off',) if ALLQ else ())
     if ALLQ and SMT:          # RTLGAP-SUKV: SOT programme negatives (each must FAIL with a target / gather fault)
         muts += ('no_sot', 'so_win_short', 'so_hm_shift')
+    if a.compressed_only:     # TOK-DS-CMP: selection negatives (the compressed-row gather must catch them)
+        muts = (None, 'sel_id', 'rows_pair', 'pio_early')
     for mut in muts:
         job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut, timing_profile=a.timing_profile)
         rec = bench_image(job, s, Path(a.out) / (mut or 'base'))
         print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done_w', 'done_e', 'frames')}))
+    if a.pio_safe:            # a parallel calibration image: PIO a.pio_safe edges later (same programme otherwise)
+        job, s = build(a.fixtures, sched, die, tag=a.tag, timing_profile=a.timing_profile, pio_extra=a.pio_safe)
+        rec = bench_image(job, s, Path(a.out) / 'base_safe')
+        print('base_safe', json.dumps({k: rec[k] for k in ('go', 'pio', 'pv_first', 'done_w', 'done_e')}))
 
 
 if __name__ == '__main__':

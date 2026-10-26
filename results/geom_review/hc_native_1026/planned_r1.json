@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Synthesis and placement trial only; no CTS or route approval",
+  "picture": "planned_r1.png",
+  "findings": [
+    "X y=125.28 clears W0 halo by 4.296 um and preserves M5 PG stripe phase (shift exactly one 4.32 um pitch)",
+    "Weight SRAMs keep open east and west channels; the middle X macro is narrower and the broad lower gap remains open",
+    "Common sum input/output bits stay ordered on opposite W/E faces; first pair omits the seed input face",
+    "N-mid clock pin and an open strip above W0 allow a local clock entry; actual tap load and tree latency remain unmeasured",
+    "Subtree is macro-free, with ordered N input data and S sum pins"
+  ],
+  "conditions": [
+    "Actual placement must pass full r2r reach census, macro pin-register locality, channel/pin density, clock and PDN review before CTS",
+    "Every physical run must retain M5 ceiling and TT setup/FF hold at 833 ps with 60/25 ps uncertainty",
+    "Resume identical synthesis only after exact RTL/config/checkpoint checks; never mutate a running kit"
+  ],
+  "data_cycle_delta": 0,
+  "outline_delta": 0,
+  "pins_delta": 0
+}
