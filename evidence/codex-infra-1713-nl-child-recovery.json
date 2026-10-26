@@ -1,0 +1,80 @@
+{
+  "archive_host": "155.103.253.53",
+  "archive_root": "/archive/opentallas-localhost-backup/home__ubuntu__closed_archive",
+  "current_signed": false,
+  "qualification": "historical CLOSED only; current-policy qualification NOT RUN",
+  "views": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf-a0-4fe0c00bd",
+      "source_commit": "4fe0c00bdac38425b00cd71dbe6411678889c1cb",
+      "historical_metrics": {
+        "setup_ps": 164.49,
+        "setup_corner": "tt",
+        "ff_hold_ps": 7.36,
+        "ss_sensitivity_ps": -17.95,
+        "drc": 0,
+        "reason": "CLOSED TT +164.49 / FF +7.36 ps DRC 0; SS sensitivity -17.95 ps | record codex/qwen-romleaf-1552 0f40b2dcb (22 files) | AUTO-MERGED into main 02c394f1e",
+        "tt_ps": 164.49,
+        "ff_ps": 7.36
+      },
+      "files": [
+        {
+          "path": "/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf-a0-4fe0c00bd/final/6_final.odb",
+          "sha256": "3c5fa2cae4d51b19ac17bee260b7ecd75c21a1d1312457ab9b67beb0dc3602f4",
+          "bytes": 28283523
+        },
+        {
+          "path": "/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf-a0-4fe0c00bd/final/6_final.spef",
+          "sha256": "0dd96e8398110d282dd899cb12d02e78cd61a89b71d8da3f97b31cad00425c53",
+          "bytes": 14349158
+        },
+        {
+          "path": "/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf-a0-4fe0c00bd/final/6_final.v",
+          "sha256": "0c9a0e934f34f5a801fa4180564fa90227abe14c0383cfc1416a897e82e199ef",
+          "bytes": 1506205
+        },
+        {
+          "path": "/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf-a0-4fe0c00bd/final/6_final.sdc",
+          "sha256": "03aaccd38a3e2fdfe6b57eeb385ffc645b726ce7c451c15f8998cecb97fd6897",
+          "bytes": 50381
+        }
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery/ot_qwen_tile_lsl_fp1/qfd_tile_lsl_fp1r-r1-953045312",
+      "source_commit": "95304531231d21eec0908bc4429571e7556b9cb7",
+      "historical_metrics": {
+        "setup_ps": 211.05,
+        "setup_corner": "tt",
+        "ff_hold_ps": 22.56,
+        "ss_sensitivity_ps": -74.74,
+        "drc": 0,
+        "reason": "CLOSED TT +211.05 / FF +22.56 ps DRC 0; SS sensitivity -74.74 ps | record claude/q14-r11-x3rst 06e88e859 (19 files) | AUTO-MERGED into main 2efa9f805",
+        "tt_ps": 211.05,
+        "ff_ps": 22.56
+      },
+      "files": [
+        {
+          "path": "/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery/ot_qwen_tile_lsl_fp1/qfd_tile_lsl_fp1r-r1-953045312/final/6_final.odb",
+          "sha256": "9626e077fa133e545c58f5cddc69860c10d3d2a5af3b9f41cf8f699d491405a1",
+          "bytes": 106449865
+        },
+        {
+          "path": "/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery/ot_qwen_tile_lsl_fp1/qfd_tile_lsl_fp1r-r1-953045312/final/6_final.spef",
+          "sha256": "3ec856c8241fdbc8bc6fabd8929c3a2bed3ff6bbef931c6532451ea5eac4d65e",
+          "bytes": 79654563
+        },
+        {
+          "path": "/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery/ot_qwen_tile_lsl_fp1/qfd_tile_lsl_fp1r-r1-953045312/final/6_final.v",
+          "sha256": "6572bdff9f8edaaf67c49aef81465e189dc29ab82102f1a93c26f9d9a0a1df33",
+          "bytes": 11551606
+        },
+        {
+          "path": "/srv/opentallas-scratch2/claude/codex-infra-1713/nl-child-recovery/ot_qwen_tile_lsl_fp1/qfd_tile_lsl_fp1r-r1-953045312/final/6_final.sdc",
+          "sha256": "d572a9059de3af5544fc7cf0527d2fe618919d66227717e74c3c970eec69fb9c",
+          "bytes": 234378
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "run": "qwen_kvsys_c51d6d930_1025_170200_209273",
+  "source": "c51d6d93039d",
+  "time_pdt": "2026-10-25 18:15:53 PDT",
+  "primary_evidence": {
+    "kernel_constraint": "CONSTRAINT_MEMCG",
+    "kernel_task": "openroad",
+    "kernel_pid": 445107,
+    "kernel_anon_rss_kb": 41828020,
+    "docker_container_id": "9c81e53e2b5d4f28d0d8b6c68ca32d78b24b366fa3a5e96f372f6203731953a0",
+    "docker_name": "dpkit-kv3_io_ft-1671774",
+    "docker_event": "oom",
+    "docker_exit_code": 2
+  },
+  "phase": "after RCX, do-6_report Error247; native6_final checkpoint retained",
+  "inference": "report-stage cgroup OOM is proven; same sparse-PG IR phase as prior diagnosed run, no current live-stack sample",
+  "checkpoint_base": "epyc1:/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_c51d6d930_1025_170200_209273/gen/kv3_io_ft/run/results/asap7/dp_kv3_io_ft/base",
+  "recovery": "NOT STARTED on RESET; original verdict and raw files unchanged"
+}
