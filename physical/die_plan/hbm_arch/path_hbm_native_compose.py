@@ -24,7 +24,12 @@ def main():
  p=json.loads((a.out/'die_plan.json').read_text());delta=json.loads((templates/'core_conns_delta.json').read_text());conns=json.loads((a.base/'core_conns.json').read_text());old_other={k:v for k,v in conns.items() if k not in delta}
  for tn,entries in delta.items():
   known={c['inst'] for c in p['partition_types'][tn]['hard_cores']}
-  if set(entries)-known:raise ValueError(tn+': connectivity names missing from new cores')
+  old_physical={c['inst'] for c in raw['partition_types'][tn]['hard_cores']}
+  old_soft=set(conns.get(tn,{}))-old_physical
+  preserved_soft={n for n in old_soft if entries.get(n)==conns[tn][n]}
+  if set(entries)-known-preserved_soft:raise ValueError(tn+': newly missing physical connectivity names')
+  new_hc={c['inst'] for c in p['partition_types'][tn]['hard_cores'] if c.get('parent_instance')}
+  if new_hc-set(entries):raise ValueError(tn+': new HC cores lack connectivity')
   conns[tn]=entries
  assert old_other=={k:v for k,v in conns.items() if k not in delta}
  (a.out/'core_conns.json').write_text(json.dumps(conns,indent=1)+'\n')
