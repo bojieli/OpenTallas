@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "VS pre-placement floorplan only; no job launched while existing alias-layout LEC live",
+  "source": "877cfdeb2815",
+  "kit": "432fb624347310c6",
+  "picture": "/srv/opentallas-scratch/claude/wt/codex-vqvs-1026/results/geom_review/codex_vqvs_1026/vs_preplan.png",
+  "findings": [
+    "Macro-free 172.8um square; no macro walls, narrow channels or obstructed PDN",
+    "North carries1267pins/max8perum against24.3 track cap; west814/max5perum against10.42cap; south/east lighter",
+    "Wide input/output groups occupy contiguous faces; original template phase/order preserved",
+    "Single south-center clock/reset entry requires actual local-tree balancing review; no physical timing claim",
+    "All Manhattan hops bounded by345.6um outline; actual placement full r2r census remains required"
+  ],
+  "added_cycles": 0
+}
