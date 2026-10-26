@@ -1,0 +1,4 @@
+38607bd9f4ab5722251cd98e266c5a53ce3b3847f7a5011212bc3ee677765976  src/physical/die_plan/s81/die_plan_phyfit_allocated.json
+48a8fb939f89e3e537ed634ea4eef90953f497440c14137c2546f7ddc0710797  src/physical/die_plan/s81/die_plan_phyfit_taps.json
+c6b5e29ab60461afaf6bda120f3d77235c30004db5236234a754d92a2943d924  src/physical/die_plan/s81/die_plan_phyfit_g0fix.json
+{"die": "s81", "partitions": 398, "types": {"types": 210, "partitions": 398, "singleton_types": 198, "max_instances": 60, "near_duplicate_groups": 11, "near_duplicate_types": 35, "mergeable_saving": 24}, "ports": 2368, "lanes": 873, "bits": 1122900, "taps_cores": {"taps": 1716, "hard_cores": 5319, "core_pins": 3729212, "core_pins_off_track": 0, "types_no_cells": 0, "over_cap_no_cores": 0, "cell_sources": ["/srv/opentallas-scratch2/claude/path-s81-taps-1026/src/physical/die_plan/s81/cells_est.json"], "no_cells": []}, "core_faces": {"groups": 14896, "groups_away": 0, "pins": 986528, "pins_away":

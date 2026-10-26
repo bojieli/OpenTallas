@@ -1,0 +1,84 @@
+{
+ "changes": [
+  {
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "inst": "u_bk_sel.u_sel.u_c",
+   "origin_from": [
+    652.32,
+    665.28
+   ],
+   "origin_to": [
+    656.64,
+    665.28
+   ]
+  },
+  {
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "inst": "u_bk_sel.u_sel.u_g",
+   "origin_from": [
+    1058.4,
+    665.28
+   ],
+   "origin_to": [
+    1062.72,
+    665.28
+   ]
+  },
+  {
+   "type": "bk_sel__t2_phy1026_bk_sel",
+   "core_tap": "u_bk_sel.u_sel.u_c",
+   "xy_from": [
+    3736.866,
+    167.064
+   ],
+   "xy_to": [
+    1049.826,
+    797.784
+   ],
+   "pin_offset": [
+    393.18600000000015,
+    132.504
+   ]
+  },
+  {
+   "type": "gunit__t1_phy1026_gunit",
+   "core_tap": "u_gunit.u_l5",
+   "xy_from": [
+    1531.59,
+    135.912
+   ],
+   "xy_to": [
+    831.75,
+    135.912
+   ],
+   "pin_offset": [
+    -6.330000000000155,
+    118.632
+   ]
+  },
+  {
+   "io": "io_lk_WN2_u_phy",
+   "sites_from": 1606,
+   "sites_to": 1496,
+   "signals": 26
+  },
+  {
+   "io": "io_lk_WS2_u_phy",
+   "sites_from": 1606,
+   "sites_to": 1496,
+   "signals": 26
+  },
+  {
+   "io": "io_lk_EN3_u_phy",
+   "dropped_corner_exclusion": [
+    [
+     31350.72,
+     24144.96,
+     31783.4,
+     24641.28
+    ]
+   ],
+   "reason": "window no longer reaches the die corner"
+  }
+ ]
+}
