@@ -118,6 +118,8 @@ def main():
     source.add_argument('--tree', type=Path, help='compiler tree with bind9/plan/land model')
     source.add_argument('--die-v', type=Path, help='actual materialized die.v; read only SIDs/source/clock pins')
     p.add_argument('--fixtures', type=Path, required=True)
+    p.add_argument('--entry-engram-inputs', type=Path,
+                   help='Checkpoint-derived Engram inputs for native attention-entry H residency')
     p.add_argument('--inference-config', type=Path, required=True,
                    help='exact fixture-pinned model config; use norm_eps, not hc_eps')
     p.add_argument('--first-issue', type=int, default=20)
@@ -126,7 +128,7 @@ def main():
     if a.out.exists():
         raise ValueError('preserve previous immutable programme; use fresh output')
     die = PinDie(a.die_v) if a.die_v else D.Die(a.tree)
-    entry = compile_inputs(die, a.fixtures)
+    entry = compile_inputs(die, a.fixtures, a.entry_engram_inputs)
     config_sha = hashlib.sha256(a.inference_config.read_bytes()).hexdigest()
     meta = json.loads((a.fixtures/'meta.json').read_text())
     config_key = 'compiler/models/deepseek-v4.1-flash/inference_config.json'
