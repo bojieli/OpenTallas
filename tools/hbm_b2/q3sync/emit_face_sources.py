@@ -24,6 +24,30 @@ def load(name, path):
     return obj
 
 
+def clock_slices(core, root, ports):
+    """Verify the old q2 plan's packed clock layout against native assembly."""
+    layouts = {
+        'reduce': ('clk_reduce', {'reduce_clk_control': (0, 0),
+                                 'reduce_clk_state': (16, 1), 'reduce_clk_add': (32, 17)}),
+        'ring_ag': ('clk_ring', {'ring_clk': (0, 0),
+                              'ring_clk_state': (8, 1), 'ring_clk_add': (16, 9)}),
+    }
+    if core not in layouts:
+        raise SystemExit('unsupported packed clock map')
+    bus, layout = layouts[core]
+    source = root / 'rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hbm_q3_producer_native.sv'
+    text = source.read_text()
+    widths = {n: w for n, d, w in ports}
+    for name, (hi, lo) in layout.items():
+        exprs = re.findall(r'(?m)^\s*\.' + name + r'\(([^\n]+)\),?\s*$', text)
+        expected = list(range(hi, lo - 1, -1))
+        if (len(exprs) != 1 or widths.get(name) != len(expected) or
+                re.findall(r'([A-Za-z_]\w*)\[\d+\]', exprs[0]) != [bus] * len(expected) or
+                [int(i) for i in re.findall(r'\[(\d+)\]', exprs[0])] != expected):
+            raise SystemExit(f'packed clock layout differs from native source: {name}')
+    return bus, layout, dict(source=str(source), sha256=sha(source), slices=layout)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--api-root', type=Path, required=True)
@@ -74,8 +98,35 @@ def main():
             ti = ct['type_ids'][tids[0]]
             cmap, straps = ti['cut_pins'], ti.get('straps') or {}
             ties = dict(k.split('=', 1) for k in (ti.get('tied_at_parent') or {}))
-        wrapper, mapping = gen.build_wrapper(module + '__fcore', pb, recipe['profile_top'], {},
-                                             ports, cmap=cmap, straps=straps, ties=ties)
+        wrapper_pb, wrapper_cmap, packed = pb, cmap, None
+        clock_proof = None
+        if cmap and any(len(mp) != 1 for mp in cmap.values()):
+            bus, layout, clock_proof = clock_slices(core, root, ports)
+            if (set(cmap[bus]) != set(layout) or
+                    any(len(mp) != 1 for n, mp in cmap.items() if n != bus)):
+                raise SystemExit(f'{core}: ambiguous mapping outside qualified packed clock')
+            wrapper_pb, wrapper_cmap = dict(pb), dict(cmap)
+            del wrapper_pb[bus]
+            del wrapper_cmap[bus]
+            for n, (hi, lo) in layout.items():
+                wrapper_pb[n] = (hi - lo + 1, hi == lo)
+                wrapper_cmap[n] = {n: hi - lo + 1}
+            packed = (bus, layout)
+        wrapper, mapping = gen.build_wrapper(module + '__fcore', wrapper_pb, recipe['profile_top'], {},
+                                             ports, cmap=wrapper_cmap, straps=straps, ties=ties)
+        if packed:
+            bus, layout = packed
+            declarations = []
+            for line in wrapper.splitlines():
+                if any(re.fullmatch(r'\s*input wire (?:\[\d+:0\] )?' + n + ',?', line) for n in layout):
+                    continue
+                declarations.append(line)
+            wrapper = '\n'.join(declarations) + '\n'
+            wrapper = wrapper.replace('module ' + module + '__fcore (\n',
+                'module ' + module + '__fcore (\n    input wire [' + str(pb[bus][0]-1) + ':0] ' + bus + ',\n')
+            for n, (hi, lo) in layout.items():
+                expr = f'{bus}[{hi}]' if hi == lo else f'{bus}[{hi}:{lo}]'
+                wrapper = wrapper.replace(f'.{n}({n})', f'.{n}({expr})')
         if mapping['open_outputs']:
             raise SystemExit(f'{core}: unmatched outputs {mapping["open_outputs"]}')
         top_dirs = {n: d for n, d, w in ports}
@@ -83,6 +134,11 @@ def main():
         native_bypass = set(profile['clock_ports'] + profile['reset_ports'])
         clocks = []
         for n in widths:
+            if packed and n == packed[0]:
+                dirs[n] = 'input'
+                passthru.add(n)
+                clocks.append(n)
+                continue
             native = next(iter(cmap[n])) if cmap else n
             dirs[n] = top_dirs[native]
             if native in native_bypass:
@@ -100,6 +156,7 @@ def main():
                               widths=widths, dirs=dirs, scalars=sorted(scalars),
                               passthrough=sorted(passthru), clock=clock,
                               latency=dict(in_cycles=1, out_cycles=1),
+                              packed_clock_proof=clock_proof,
                               source_status='EMITTED_UNQUALIFIED_NO_TIMING_CREDIT')
     receipt = dict(status='EMITTED_UNQUALIFIED', cores=receipts,
                    api_hashes={n: sha(api / n) for n in ['gen_core_kit_hbm.py', 'face_shell.py']},
