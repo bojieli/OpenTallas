@@ -476,7 +476,10 @@ SCHEMA = {
                                        "bits": {"type": "integer", "minimum": 1}, "launch": {"type": "string"},
                                        "capture": {"type": "string"}, "note": {"type": "string"},
                                        # per-bit station sites (kit_istations): bit b on its own L leaf_um <-> pin b
-                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit"]}}}},
+                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit", "chain"]},
+                                       # D-QC-FE-REACH 10-26: bit_route chain = per bit on its in pin -> landing register
+                                       # route; the leaf interface register matching core_glob sits FIRM at its hop point
+                                       "core_glob": {"type": "string"}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},

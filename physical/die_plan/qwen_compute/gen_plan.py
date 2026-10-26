@@ -2826,6 +2826,125 @@ def declare_internal_stations(P, ports, lanes, outdir):
             "stations": sum(added.values())}
 
 
+# D-QC-FE-REACH (PATH-QC 10-26, PLAN-DELTA): the FE slice tiles (sl[we]_fe_*, 622 x 1339 um) carry the u_fup leaf:
+# zero-logic forwarders W in bus -> E out bus (x_stm_i -> st_eo, x_fw_* -> cmd/dr/hr/rd/treq_eo, x_sc_i -> sc_eo,
+# x_st_* -> l9_eo) and the interface registers E in bus -> chu_q / se_q / scd_q / agu_q -> W out bus (cmd_o: W -> E).
+# Plan 54a1aeb5 had no stations there: every W <-> E crossing (>= 611 um, the tile width) was one cycle, > 5k r2r arcs
+# over REACH per tile (KITS-WAVE-2 census).  Rule (owner: every die hop / ft station <= 405 um): bit b of an FE in bus
+# follows its L route (normal to the in face first, then along the out face) from its in pin to the out pin it lands
+# on (inputs/fe_fwd_map.json: the bound module's bit map); the route is cut into equal hops by n FIRM stations on the
+# IN bus plus, for a registered bit, the u_fup interface register itself (FIRM at its hop point too, kit_istations
+# bit_route "chain"): n = ceil(L / (ST_LEN - FE_REACH_MARGIN)) - 1 - core, the max over the bus's bits, then one value
+# per port role over every FE type (mirror pair slw / sle, *_ei == *_wi: one schedule).  Lanes landing on the bus get
+# fixed_cycles += n (latency table / R8 pads).  Outline, pin windows and ft slots unchanged.
+FE_REACH_TYPE = re.compile(r"^sl[we]_fe_v\d+$")
+FE_REACH_MARGIN = 12.0          # face-band depth + station-grid legalisation (ff_put_near: 2.16 x 0.27 um cells)
+FE_REACH_TAG = "D-QC-FE-REACH"
+
+
+def _fe_pin(t, b, bit):
+    w, h = t["outline_um"]
+    lo, hi = b["window_um"]
+    s = lo + (hi - lo) * (bit + 0.5) / (b["width"] + 1)
+    if b.get("order", "lsb_low") != "lsb_low":
+        s = lo + hi - s
+    return {"W": (0.0, s), "E": (w, s), "S": (s, 0.0), "N": (s, h)}[b["face"]]
+
+
+def _fe_route_pt(a, z, face, d):
+    knee = (z[0], a[1]) if face in "EW" else (a[0], z[1])
+    l1 = abs(knee[0] - a[0]) + abs(knee[1] - a[1])
+    if d <= l1:
+        f = d / l1 if l1 else 0.0
+        return (a[0] + f * (knee[0] - a[0]), a[1] + f * (knee[1] - a[1]))
+    l2 = abs(z[0] - knee[0]) + abs(z[1] - knee[1])
+    f = (d - l1) / l2 if l2 else 0.0
+    return (knee[0] + f * (z[0] - knee[0]), knee[1] + f * (z[1] - knee[1]))
+
+
+def _fe_role(bus):
+    return re.sub(r"_[ew](i|o)$", r"_X\1", bus)
+
+
+def declare_fe_reach_stations(raw, fmap, reach=None, margin=FE_REACH_MARGIN):
+    """raw = die_plan JSON (partition_types / partitions / ports / lanes); fmap = inputs/fe_fwd_map.json."""
+    reach = ST_LEN if reach is None else reach
+    reff = reach - margin
+    types = raw["partition_types"]
+    for tn, t in types.items():
+        if any(FE_REACH_TAG in str(e.get("note", "")) for e in t.get("internal_stations", [])):
+            raise SystemExit(f"{FE_REACH_TAG}: {tn} already carries FE-REACH stations (apply on the frozen plan once)")
+    need, rows = {}, {}
+    for tn, m in sorted(fmap["types"].items()):
+        t = types.get(tn)
+        if t is None or not FE_REACH_TYPE.match(tn):
+            continue
+        bz = {b["name"]: b for b in t["buses"]}
+        for ib, ilo, ihi, ob, olo, core in m["chains"]:
+            if ib not in bz or ob not in bz:
+                raise SystemExit(f"{FE_REACH_TAG}: {tn}: map bus {ib} / {ob} not in the plan type (stale map)")
+            for k in range(ihi - ilo + 1):
+                a = _fe_pin(t, bz[ib], ilo + k)
+                z = _fe_pin(t, bz[ob], olo + k)
+                L = abs(a[0] - z[0]) + abs(a[1] - z[1])
+                n = max(0, math.ceil(L / reff) - 1 - core)
+                need[(tn, ib)] = max(need.get((tn, ib), 0), n)
+                rows.setdefault((tn, ib), []).append((a, z, core, L, ob))
+    role_n = {}
+    for (tn, ib), n in need.items():
+        role_n[_fe_role(ib)] = max(role_n.get(_fe_role(ib), 0), n)
+    added, worst, rep = {}, 0.0, {}
+    for (tn, ib), rs in sorted(rows.items()):
+        t = types[tn]
+        b = next(x for x in t["buses"] if x["name"] == ib)
+        n = role_n[_fe_role(ib)]
+        r = rep.setdefault(tn, dict(in_bus_stations={}, out_bus_added={}, families=[]))
+        r["in_bus_stations"][ib] = n
+        fam = {}
+        for a, z, core, L, ob in rs:
+            e = n + 1 + core
+            worst = max(worst, L / e)
+            f = fam.setdefault(ob, dict(in_bus=ib, out_bus=ob, core=core, max_um=0.0, bits=0))
+            f["max_um"] = round(max(f["max_um"], L), 1)
+            f["bits"] += 1
+            f["max_hop_um"] = round(max(f.get("max_hop_um", 0.0), L / e), 1)
+            r["out_bus_added"][ob] = max(r["out_bus_added"].get(ob, 0), n)
+        r["families"] += list(fam.values())
+        if not n:
+            continue
+        regs = []
+        for j in range(n):
+            pts = [_fe_route_pt(a, z, b["face"], L * (j + 1) / (n + 1 + core)) for a, z, core, L, _ in rs]
+            regs.append([snap(sum(p[0] for p in pts) / len(pts)), snap(sum(p[1] for p in pts) / len(pts))])
+        a0 = _fe_pin(t, b, b["width"] // 2)
+        zs = [z for _, z, _, _, _ in rs]
+        z0 = (round(sum(p[0] for p in zs) / len(zs), 3), round(sum(p[1] for p in zs) / len(zs), 3))
+        outs = sorted({ob for *_, ob in rs})
+        t.setdefault("internal_stations", []).append(dict(
+            conn=f"bus:{ib}", from_um=[round(a0[0], 3), round(a0[1], 3)], to_um=list(z0), regs_um=regs,
+            bits=b["width"] + 1, launch="face flop", capture=f"face bus {'/'.join(outs)}", bit_route="chain",
+            core_glob="u_core",
+            note=f"{FE_REACH_TAG}: u_fup {'register' if any(c for _, _, c, _, _ in rs) else 'forwarder'} chain "
+                 f"{ib} -> {'/'.join(outs)}, max L {max(L for *_, L, _ in rs):.0f} um; {n} FIRM station(s) per bit on "
+                 f"its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"))
+        added[(tn, ib)] = n
+    pmap = {pr["id"]: pr for pr in raw["ports"]}
+    ptype = {p["name"]: p["type"] for p in raw["partitions"]}
+    nl = 0
+    lanes_rep = []
+    for ln in raw["lanes"]:
+        z = pmap[ln["ports"][-1]]["dst"]
+        k = added.get((ptype.get(z["part"]), z["bus"]), 0)
+        if k:
+            ln["fixed_cycles"] = ln.get("fixed_cycles", 0) + k
+            nl += 1
+            lanes_rep.append(dict(lane=ln["id"], part=z["part"], bus=z["bus"], added=k))
+    return dict(schema="opentallas.die_plan.qc_fe_reach.v1", reach_um=reach, margin_um=margin,
+                role_stations=dict(sorted(role_n.items())), types=rep, stations=sum(added.values()), lanes=nl,
+                lane_rows=lanes_rep, worst_hop_um=round(worst, 1))
+
+
+
 def neighbours(P):
     """abutting partitions per partition (G1 star flag > 6) and the linked subset."""
     names = list(P.parts)

@@ -126,3 +126,26 @@ def test_core_unmapped_and_cs_fail(tmp_path):
               capture="u_lf.u_vn.u_b.c_s", bits=31, regs_um=[[1.0, 1.0]])
     r, _ = _run_core(tmp_path / "x" if (tmp_path / "x").mkdir() is None else tmp_path, _core_plan(extra=[cs]), "--apply")
     assert r.returncode != 0 and "c_s" in r.stderr
+
+
+# ---- D-QC-FE-REACH (10-26): bit_route "chain" -> per-bit is_chain sites on each bit's in-pin -> landing route
+def test_chain_route_emits_is_chain(tmp_path):
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    (kd / "t_part_bound.sv").write_text(BOUND)
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_part_bound", files=[str(kd / "t_part_bound.sv")])))
+    plan = dict(partition_types=dict(t=dict(
+        buses=[dict(name="i_a", dir="in", width=1, kind="data", face="W", window_um=[0.0, 2.0])], contents=[],
+        internal_stations=[dict(conn="bus:i_a", from_um=[0, 1], to_um=[600, 300], regs_um=[[200, 100], [400, 200]],
+                                bit_route="chain", core_glob="u_c0")])))
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd)],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    sv = (kd / "t_part_bound.sv").read_text()
+    assert ".a(i_a_is1_q[0])" in sv
+    tcl = (kd / "istations.tcl").read_text()
+    assert "proc is_chain {bus W names face core_glob tag}" in tcl
+    assert "is_chain i_a 1 {u_ist_i_a_0 u_ist_i_a_1} W {u_c0.} ist:i_a" in tcl
+    assert "is_place {*u_ist_i_a_0" not in tcl          # per-bit sites only, no shared centroid site
