@@ -1,0 +1,6 @@
+ENABLE we_ff 256 rows 64 dist_to_row_centroid median 12.4 p90 20.4 max 36.1 um
+CHAINS cells 1350 median 0.86 max 7.05 um, >10um 0
+NET start pins 8 bbox x 25-159 y 4-7
+ENABLE inside own sd-row bbox(+2um) 256/256; sd row bbox span median 74.2 um
+--- ASTK5 baseline
+CHAINS cells 1350 median 136.89 max 142.03 um, >10um 1262
