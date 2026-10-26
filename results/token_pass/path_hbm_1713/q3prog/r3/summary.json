@@ -1,0 +1,13 @@
+{
+ "stage": "TOK-HBM step 4 stage A: actual COLL.ARGMAX_MERGE static programme on the actual five-core q3 producer assembly, trace form",
+ "source_commit": "87e84f51fe7411f52f02a2a7cb6e80cde2cc8112",
+ "run_dir": "intel1:/srv/opentallas-scratch2/claude/tok-hbm-q3prog/r3",
+ "profile": "NLINK3 TP192 AR_ITER1 ROWS256 VM_RT81 P6 NR228 (argmax_rows.py --start-reg --arg-pr-source), one 833-ps clk, one rst_n",
+ "assembly_fix": "q3_asm_alias_loops.py drops 30 split_asm alias loops (parent assign master-port = internal reversing an alias drive) before build; same transform on legacy and sync",
+ "sequence": "cold reset 64 -> A programme+launch -> B relaunch loaded programme -> W relaunch, warm reset at launch+151 held 64 -> C programme+launch",
+ "verdict": {"legacy": "PASS runs A,B,C", "sync": "PASS runs A,B,C", "trace_compare": "PASS 30802 compared cycles, 0 diffs, 0 dont-care diffs; 10 byte-differing trace lines all rst_n=0 (warm reset window)"},
+ "per_run_identical_A_B_C": {"host_programme_edges": 14859, "relaunch_programme_edges_B": 1, "drain": "55+1", "launch_to_first_vm_rq": 12, "launch_to_first_tkx_lane": 105, "tkx_lane_edges": 144, "launch_to_first_delivery": 140, "launch_to_last_delivery": 300, "done": 301, "positions": "6/6", "data_err": 0, "addr_err": 0, "stray": 0, "fault": "none"},
+ "tkx_del": {"pattern": "tkx_del_valid=0xF for 24 consecutive edges then 8 idle, 6 groups per run (144 = 6x24)", "II": 32, "tkx_del_slot": "0 on every valid edge (ARGMAX mode)", "tkx_start": "never asserted (ARGMAX programme; TKM start is stage B)"},
+ "build": {"verilator": "5.050 --binary --timing -O1 -j8", "max_rss_gb": 31.2, "wall_min_build_plus_sim": 15},
+ "earlier_runs": {"r1": "build FAIL: 23 wire x=x + 6 BLKANDNBLK (split_asm alias loops) -> fixed 6c4014895a", "r2": "A PASS both; B FAIL program_fault both = bench re-sent frames without reset (target contract), traces identical; fixed 87e84f51fe"}
+}
