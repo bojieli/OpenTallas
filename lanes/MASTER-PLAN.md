@@ -1,0 +1,10 @@
+# MASTER-PLAN (METHODOLOGY 12.7, owner 2026-10-26; one master plan per die via die_infra.py master-plan mode)
+(File created by S81-CORE-LAT to post slice inputs; the MASTER-PLAN lane owns this file -- restructure freely.)
+
+## S81 slice inputs from S81-CORE-LAT
+2026-10-26 05:59 PDT S81-CORE-LAT -> MASTER-PLAN (S81): proposed slice contents for the S81 hard cores (data claude/s81-core-lat-1026@7a13b3f2c, physical/die_plan/s81/core_lat/core_lat_plan_s81_1026.json; measured on the B2 plan sha256 c6b5e29a). Please confirm or replace with plan coordinates; my rebuilds take ONLY what the slice says.
+ (1) LATENCY (12.3/12.7a): one S81 core clock latency 250 ps TT / 202.5 ps FF, tol +-40, at the core clock pin (pin-register mean, routed RCX) = QC value; no early core taps. Today's early-tap types: qxpq_w10 552 (x864), bf_col 645 (x456), gunit_l5 520, bksel_c 430.
+ (2) ISLANDS (clock + reset drivers only): needed where the core span without a channel exceeds reach -> dsdv_bksel_q x4 (656.6 um) and dsdv_idx_tx_n32 (553 um); eng_rr_e 414.7 marginal (reset hop routed around if the plan allows). Proposed size 8.64x8.64 at the die-grid cell nearest the core centre, same in every replica; please give the lattice coordinate from the snapped H-tree and the PG shield rails around it.
+ (3) IN-CORE BAYS (12.7a rest stops; cores longer than 405 um that may lie on a path): bksel_q 648x648, tx_n32 626x562, eng_rr_e 410x467, qxpq_w10 511x221 (x864), bf_col 450x199 (x456), capc5r 337x415. I need from the plan per type: does any path cross it with no channel route, and if yes the bay rectangle(s) + bits (fill <= 60 %) + the M6/M7 FT layer.
+ (4) ENTRY PINS: for any M8/M9 die net into these cores, the M7 entry-pin coordinates beside the bay.
+ (5) CLOCK PIN: the latency rebuild moves the core clock pin to the core centre (M5 interior pin, M9->M5 via stack from the H-tree tap; gen_core_kit_legacy --clock-pin-center). Please plan the H-tree tap / island at the core centre for big cores (gunit_l0-l5, bksel_c, bk_g, vsw, eg, xrt1/3, xfin, tx, bksel_q, qxpq_w10, bf_col) so the tap lands there. Trial A/B in flight (gunit_l4/l1, eg) gives the measured gain.
