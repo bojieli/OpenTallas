@@ -3,7 +3,7 @@
 set -euo pipefail
 OUT=$(realpath -m "${1:?out}");BUNDLE=$(realpath "${2:?source bundle}")
 PL=$(realpath "${3:?extracted plan lanes}");CM=$(realpath "${4:?census map}")
-BASE=${5:-d13ff7c78};ROOT=$(git rev-parse --show-toplevel);cd "$ROOT";mkdir -p "$OUT/ovl"
+BASE=${5:?explicit source comparison revision required};ROOT=$(git rev-parse --show-toplevel);cd "$ROOT";mkdir -p "$OUT/ovl"
 export PATH=$HOME/.local/opentallas-tools/bin:$PATH
 bash tools/hbm_b2/regen_b2.sh "$OUT/raw" "$PL" "$CM" > "$OUT/regen.log" 2>&1
 python3 tools/hbm_b2/native_clock_items.py "$OUT/raw/wiring.json" --out "$OUT/clock_wiring.json"
