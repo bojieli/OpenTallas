@@ -903,7 +903,7 @@ def main():
     own = {k: v for k, v in (l.split(" = ", 1) for l in cfg if l.startswith(("export PRE_GLOBAL_ROUTE_TCL = ",
                                                                              "export POST_GLOBAL_ROUTE_TCL = ")))}
     cfg = [l for l in cfg if not l.startswith(("export PRE_GLOBAL_ROUTE_TCL = ", "export POST_GLOBAL_ROUTE_TCL = "))]
-    cfg += core_flow.apply(kd, ibind, mod, time_unit_ps=1.0, rc_cal=not a.stock_rc, hold_ff_margin=a.hold_ff_margin,
+    cfg += core_flow.apply(kd, ibind, mod, ir_owner="PATH-KV physical kit lane", time_unit_ps=1.0, rc_cal=not a.stock_rc, hold_ff_margin=a.hold_ff_margin,
                            grt_pre_extra=[v for k, v in own.items() if "PRE_" in k],
                            grt_post_extra=[v for k, v in own.items() if "POST_" in k])
     if a.astk_zone_fences:

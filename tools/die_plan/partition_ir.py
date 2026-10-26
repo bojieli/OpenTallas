@@ -17,6 +17,7 @@ import json
 import os
 from pathlib import Path
 import shlex
+import shutil
 import subprocess
 import uuid
 
@@ -180,6 +181,20 @@ def sidecar(kit, mem_gb, threads, image):
     return run.returncode or (0 if status.read_text().startswith('COMPLETED ') else 1)
 
 
+def stage(kit, owner="physical kit lane"):
+    """Bundle the approved helper and declare ownership; never launch analysis."""
+    kit = Path(kit)
+    kit.mkdir(parents=True, exist_ok=True)
+    target = kit / "partition_ir.py"
+    if target.resolve() != Path(__file__).resolve():
+        shutil.copyfile(Path(__file__), target)
+    policy = dict(schema="opentallas.partition_ir_policy.v1", partition_ir="EXPLICIT_SIDECAR",
+                  initial_status="NOT_RUN", sidecar_owner=owner, automatic_sidecar=False,
+                  die_ir_required=True, completed_is_analysis_only=True)
+    (kit / "partition_ir_policy.json").write_text(json.dumps(policy, indent=1) + "\n")
+    return policy
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='cmd', required=True)
@@ -188,7 +203,12 @@ def main():
     p.add_argument('--mem-gb', type=int, required=True)
     p.add_argument('--threads', type=int, required=True)
     p.add_argument('--image', default='openroad/orfs:asap7lock')
+    p = sub.add_parser('stage'); p.add_argument('kit', type=Path)
+    p.add_argument('--owner', default='physical kit lane')
     args = parser.parse_args()
+    if args.cmd == 'stage':
+        print('PARTITION_IR_STAGED', json.dumps(stage(args.kit, args.owner), sort_keys=True))
+        return 0
     if args.cmd == 'patch':
         print('PARTITION_IR_PATCH', 'installed' if patch(args.scripts) else 'already installed')
         return 0

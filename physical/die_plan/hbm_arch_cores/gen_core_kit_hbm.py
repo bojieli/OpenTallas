@@ -713,6 +713,8 @@ def main():
     (kd / "core_grt_post.tcl").write_text("if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq \"ff\"} { ot_vclk_bind tt }\n")
     # Keep the standalone runtime complete, including sender-min qualification and clock helpers.
     subprocess.run([sys.executable, "-I", str(TOOL / "signoff.py"), "bundle", str(kd)], check=True)
+    subprocess.run([sys.executable, "-I", str(TOOL / "partition_ir.py"), "stage", str(kd),
+                    "--owner", "PATH-HBM physical kit lane"], check=True)
     # HBM-KITS-B2 10-25: replicated (* keep *) registers (ot_rst_relay region copies, ...) need the ORFS
     # SYNTH_CANONICALIZE_TCL hook physical/common_flow/ot_keep_regs.tcl: keep on the WIRE alone does not stop opt_merge
     # folding the copies into one flop (sfustore_hw B2n: relay_q[1..3] merged -> one reset flop for 4 SRAM regions,

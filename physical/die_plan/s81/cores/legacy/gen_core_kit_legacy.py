@@ -271,7 +271,7 @@ def run_kit(modern):
     """run_kit.sh text: modern = rtl_lint first, reg_fanout after face_guard, FF-only GRT hold step before the goal
     (core_flow); legacy = the pre-10-25 script bit for bit."""
     t = RUN_KIT
-    for k, v in (("@LINT_STEP@", core_flow.LINT_STEP), ("@REG_FANOUT_STEP@", REG_FANOUT_STEP),
+    for k, v in (("@LINT_STEP@", core_flow.IR_DEFER_STEP + core_flow.LINT_STEP), ("@REG_FANOUT_STEP@", REG_FANOUT_STEP),
                  ("@FF_GRT_STEP@", core_flow.FF_GRT_STEP),
                  ("@LEC_STEP@", "if [ \\$rc = 0 ]; then python3 -I /work/legacy_gate.py /work lec --netlist \\$RAW; rc=\\$?; fi; "),
                  ("@GRT_GATE_STEP@", "if [ \\$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then python3 -I /work/legacy_gate.py /work grt; rc=\\$?; fi; ")):
@@ -825,7 +825,7 @@ def main():
         # core_flow: rtl_lint.py, vclk_corner.tcl, grt_pre/post.tcl, setRC_rcx.tcl, clock_binding.json; the kit's own GRT
         # hooks (drv.tcl fanout cap / post_grt_drv.tcl DRV + hold pass) chained into grt_*_core.tcl
         hm = a.hold_ff_margin if a.hold_ff_margin is not None else float(rec.get("hold_ff_margin", 5.0))
-        flow_cfg = core_flow.apply(kd, ib, mod, time_unit_ps=TIME_UNIT_PS, rc_cal=True, hold_ff_margin=hm,
+        flow_cfg = core_flow.apply(kd, ib, mod, ir_owner="PATH-S81 physical kit lane", time_unit_ps=TIME_UNIT_PS, rc_cal=True, hold_ff_margin=hm,
                                    grt_pre_extra=["/work/drv.tcl"], grt_post_extra=["/work/post_grt_drv.tcl"])
     if mplace:
         (kd / "macro_place.tcl").write_text(MACRO_TCL % " ".join(
