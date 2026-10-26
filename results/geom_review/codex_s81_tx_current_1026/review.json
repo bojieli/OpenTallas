@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS-COND PREFLIGHT / TRIAL PLACE ONLY",
+  "outline_um": [
+    626.4,
+    544.32
+  ],
+  "ports": {
+    "vi": 276,
+    "vo": 276,
+    "lo": 276,
+    "st": 16,
+    "ck": 1,
+    "rst": 1
+  },
+  "pins": 846,
+  "N_pins_relocated": 552,
+  "source": "current dsdv_idx_l20s.sv parent defaults RDL/WDL/WDC/SCS/RIL/RHP/SPLIT0, SRAM_MACRO1 (no RIC); original spec s81dv_idxtxn32 used as source/macro inventory only, not old closure",
+  "findings": "Viewed2columns x5SRAM floorplan. Macros174.744x70.470 with20.25umvertical gaps (11.61aftertwohalos),116.856umcentralcolumn corridor,64.8umW/95.256umE strips; Nclear67.77um,552inputpins1.5/um; S292outputs1.0/um. No macro wall/overlap, continuousM5PDN and10macroconnections. Inputtofarbank reach requires actual placed census and may need source pipeline; generic rawface will stop early decode sharing if present.",
+  "constraints": "833psTTsetupFFhold60/25, M5internalroutingceiling",
+  "kit_hash": "a84c6b5185d6e75b",
+  "status": "NOTADOPTED; rawface/LEC/currentactualplacement required. Old closed TXview NOTREUSED for timing. No clock/facewaivers."
+}

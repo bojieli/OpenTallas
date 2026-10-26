@@ -1,0 +1,19 @@
+{
+  "verdict": "REQ; AUTO-GEOM FAIL retained",
+  "outline_um": [
+    77.76,
+    82.08
+  ],
+  "kit_hash": "f2d991045effaecd",
+  "r2r_max_um": 131.11,
+  "r2r_gt405": 0,
+  "pin_reg_p90_um": 15.97,
+  "pin_reg_max_um": 21.56,
+  "unregistered": 0,
+  "fill": 0.2446,
+  "empty": 0.5929,
+  "pin_density_NS": 20.5,
+  "physical_NS_capacity": 24.3,
+  "cause": "Remaining empty bins sit between peripheral stage banks in a mostly forwarding core. Width sized from actual cellarea and pin count; E735pins need82.08height, NS1403pins need dual M3+M5 faces. Independent geometry judgment required; no automatic fail override, no third variant.",
+  "status": "NOT ADOPTED. B2 G0/G0C/parent clock/PG/reach gates remain; no route."
+}
