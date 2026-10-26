@@ -270,7 +270,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
          hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
-         ft_require_characterised=False):
+         ft_require_characterised=False, tap_window_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -280,7 +280,11 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     the contract limit on exactly those ports.  ft_ports: the kit's 12.2a1 ft declaration (ft_ports.json: ports + arcs +
     sha256): exactly those ports are die-timed -- no IO delay / load / driving cell on them, never a clock source; any
     other port is core IO as before.  ft_interface: the kit interface model (ft_interface.json), which must carry
-    every declared arc (characterised when ft_require_characterised).  -> [errors]"""
+    every declared arc (characterised when ft_require_characterised).
+    tap_window_ps: the plan's per-tap latency window W (gen_phys
+    .tap_window_ps, COORD 11:24): every non-core clock port then carries source -early -W / -late 0, input max delays
+    may sit W below their IO budget and output min delays W above the contract limit (the exact IO shift of the
+    early tap); without it no -early / -late source latency is allowed.  -> [errors]"""
     err = []
     u = time_unit_ps
     in_lim = -float(insertion_tol_ps) if hold_in_min_ps is None else float(hold_in_min_ps)
@@ -315,6 +319,8 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     clk_src = {}                      # port -> clock
     latency = {}                      # clock -> source latency (ps)
     port_lat = {}                     # clock port -> source latency (ps) (CP2 early core taps)
+    port_win = {}                     # clock port -> {"early"|"late": ps} (plan clock.tap_window)
+    tw = float(tap_window_ps or 0.0)
     unc = {}                          # (kind, from, to) -> ps ; from/to None = global
     idly = {p: {} for p in ctx.allp}  # port -> {"max": (clk, ps), "min": ...}
     odly = {p: {} for p in ctx.allp}
@@ -424,6 +430,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 k, cl = _eval_obj(ctx, w[-1])
                 if len(v) != 1:
                     raise SdcLintError(f"set_clock_latency: {cmd}")
+                if k == "ports" and ("-early" in w or "-late" in w):     # plan clock.tap_window
+                    el = "early" if "-early" in w else "late"
+                    if "-early" in w and "-late" in w:
+                        raise SdcLintError(f"set_clock_latency: both -early and -late: {cmd}")
+                    for x in cl:
+                        port_win.setdefault(x, {})[el] = _num(v[0], "latency") * u
+                    continue
                 if k == "ports":         # CP2 early core tap: -source -clock clk <-early> [get_ports tap]
                     for x in cl:
                         port_lat[x] = _num(v[0], "latency") * u
@@ -531,6 +544,18 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     for p_ in want:
         if p_ not in port_lat:
             err.append(f"clocks: plan early core tap {p_} has no source latency")
+    wports = [p_ for p_ in ctx.clock_ports if p_ not in want]
+    for p_, d in port_win.items():
+        if not tw:
+            err.append(f"clocks: source -early/-late window on port {p_} without a plan clock.tap_window")
+        elif p_ not in wports:
+            err.append(f"clocks: tap window on {p_}, which is not a window clock port")
+    if tw:
+        for p_ in wports:
+            d = port_win.get(p_, {})
+            if abs(d.get("early", 1e9) + tw) > EPS or abs(d.get("late", 1e9)) > EPS:
+                err.append(f"clocks: clock port {p_} window early {d.get('early')} / late {d.get('late')} ps, plan "
+                           f"clock.tap_window -{tw:g} / 0")
     for n in latency:
         if n not in virt:
             err.append(f"clocks: source latency on real clock {n} (only the virtual IO clock carries the budget)")
@@ -549,12 +574,12 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         for m in ("max", "min"):
             if m not in odly[p]:
                 err.append(f"ports: output {p} has no {m} output delay")
-        if "min" in odly[p] and odly[p]["min"][1] > out_lim + EPS:
-            err.append(f"hold: output {p} min output delay {odly[p]['min'][1]:g} ps > {out_lim:g} ps "
+        if "min" in odly[p] and odly[p]["min"][1] > out_lim + tw + EPS:
+            err.append(f"hold: output {p} min output delay {odly[p]['min'][1]:g} ps > {out_lim + tw:g} ps "
                        "(sender hold check waived)")
     for p, fl in (io_floor_ps or {}).items():
         tab = idly if p in ctx.inputs else odly
-        if "max" in tab.get(p, {}) and tab[p]["max"][1] < fl - EPS:
+        if "max" in tab.get(p, {}) and tab[p]["max"][1] < fl - (tw if p in ctx.inputs else 0.0) - EPS:
             err.append(f"relaxation: {p} max delay {tab[p]['max'][1]:g} ps below its IO budget {fl:g} ps")
     full = {"setup": unc_setup_ps, "hold": unc_hold_ps}
     for kk, fv in full.items():
@@ -620,6 +645,7 @@ def kit_context(P, tn):
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
                 port_period_mult=edge, **_seam_ctx(P), **_io_hold_ctx(P, tn),
+                **({"tap_window_ps": gen_phys.tap_window_ps(P)} if gen_phys.tap_window_ps(P) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}))
 
 

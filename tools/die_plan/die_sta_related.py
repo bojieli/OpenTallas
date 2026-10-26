@@ -37,9 +37,10 @@ already guarantees, so the die only has to deliver its tap arrivals inside the d
   seam   receiver input min delay in_min (legacy -insertion_tol, or clock.seam_hold) + sender output min out_min
          (gen_phys.sdc / seam_hold): the two kit checks sum to   die seam hold slack >= W_seam - damage_hold,
          W_seam = seam_hold.seam_ps if declared, else insertion_tol_ps - HOLD_OUT_MIN (0)  (gen_phys.seam_hold).
-  intra  gen_phys.sdc puts every tap port of a partition on ONE ideal clock (create_clock clk [all taps]), so a kit
-         guarantees nothing for die tap-to-tap arrival differences:  die intra hold slack >= W_intra - damage_hold,
-         W_intra = --intra-window-ps (default 0 = today's kit SDC; a declared per-tap latency window would raise it).
+  intra  die intra hold slack >= W_intra - damage_hold, W_intra = the plan's clock.tap_window.window_ps (gen_phys
+         emits set_clock_latency -source -early -W / -late 0 on every tap port: the kit times cross-tap pairs with the
+         full W, same-tap pairs keep CRPR), else 0 (every tap on ONE ideal clock guarantees nothing).
+         --intra-window-ps = labelled WHAT-IF override.
   The bound is exact for a kit pair signed with zero slack and conservative otherwise; it never uses kit numbers.
 Landed hops are timed as the plan defines them (die_clock_mesh report): the region-to-region clock damage against the
 landing window (--landing-window-ps, default T/2) -> margin = window - damage; their single-cycle slacks are INFO.
@@ -247,6 +248,27 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     return out
 
 
+def kit_windows(pc, intra_override=None):
+    """{intra, seam, seam_nearest_INFO: {ps, basis}}: the kit hold windows the plan clock block declares."""
+    if pc.get("seam_hold"):
+        wseam = dict(ps=float(pc["seam_hold"]["seam_ps"]), basis="plan clock.seam_hold.seam_ps (gen_phys.seam_hold)")
+    else:
+        wseam = dict(ps=float(pc.get("insertion_tol_ps", 40.0)) - 0.0,
+                     basis="legacy: receiver in_min -insertion_tol, sender out_min 0 (gen_phys.seam_hold)")
+    if pc.get("io_hold"):
+        wseam["basis"] += "; plan has clock.io_hold (sender_min) -> per-port, not modelled: bound is conservative"
+    if intra_override is not None:
+        wintra = dict(ps=intra_override, basis=f"WHAT-IF --intra-window-ps {intra_override:g} (not the plan)")
+    elif pc.get("tap_window"):
+        wintra = dict(ps=float(pc["tap_window"]["window_ps"]), basis="plan clock.tap_window.window_ps (gen_phys."
+                      "tap_window_ps: kit SDC source -early -W / -late 0 on every tap port, CRPR credits same-tap)")
+    else:
+        wintra = dict(ps=0.0, basis="kit SDC: all taps of a partition on one ideal clock (no plan clock.tap_window)")
+    hwin = dict(intra=wintra,
+                seam=wseam, seam_nearest_INFO=wseam)
+    return hwin
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("proof")
@@ -260,8 +282,9 @@ def main(argv=None):
     ap.add_argument("--seam-wire-um", type=float, default=40.0)
     ap.add_argument("--wire-ff-per-um", type=float, default=0.15)
     ap.add_argument("--landing-window-ps", type=float)
-    ap.add_argument("--intra-window-ps", type=float, default=0.0,
-                    help="declared kit per-tap latency window for intra-partition pairs (0 = today's one-ideal-clock SDC)")
+    ap.add_argument("--intra-window-ps", type=float,
+                    help="WHAT-IF override of the intra-partition kit window (default: the plan's clock.tap_window."
+                         "window_ps, else 0 = the one-ideal-clock kit SDC)")
     ap.add_argument("--kit", action="append", default=[], help="part_or_type=kit.json (interface model); none yet for QC")
     a = ap.parse_args(argv)
     corners = a.corner or ["TT", "FF"]
@@ -288,16 +311,7 @@ def main(argv=None):
     window = a.landing_window_ps if a.landing_window_ps else period / 2
     lat_tt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
     pc = plan.get("clock", {})
-    if pc.get("seam_hold"):
-        wseam = dict(ps=float(pc["seam_hold"]["seam_ps"]), basis="plan clock.seam_hold.seam_ps (gen_phys.seam_hold)")
-    else:
-        wseam = dict(ps=float(pc.get("insertion_tol_ps", 40.0)) - 0.0,
-                     basis="legacy: receiver in_min -insertion_tol, sender out_min 0 (gen_phys.seam_hold)")
-    if pc.get("io_hold"):
-        wseam["basis"] += "; plan has clock.io_hold (sender_min) -> per-port, not modelled: bound is conservative"
-    hwin = dict(intra=dict(ps=a.intra_window_ps, basis="kit SDC: all taps of a partition on one ideal clock"
-                           + ("" if a.intra_window_ps == 0 else f" + declared window {a.intra_window_ps:g} ps")),
-                seam=wseam, seam_nearest_INFO=wseam)
+    hwin = kit_windows(pc, a.intra_window_ps)
     lat = dict(TT=lat_tt, FF=a.core_latency_ff if a.core_latency_ff is not None else lat_tt)
     res = dict(proof=str(Path(a.proof).resolve()), timed_dir=str(d.resolve()), plan=str(Path(a.plan).resolve()),
                period_ps=period, unc_setup_ps=UNC_SETUP_PS, unc_hold_ps=UNC_HOLD_PS, gate="METHODOLOGY 12.4a v4.3: TT setup "

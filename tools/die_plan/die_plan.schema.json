@@ -2683,6 +2683,22 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "tap_window": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "window_ps"
+     ],
+     "properties": {
+      "window_ps": {
+       "type": "number",
+       "minimum": 0
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
     "seam_hold": {
      "type": "object",
      "additionalProperties": false,
