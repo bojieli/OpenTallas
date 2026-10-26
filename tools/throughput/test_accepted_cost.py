@@ -292,3 +292,19 @@ def test_committed_s81_total_is_the_dv_die_only():
     ar = sum((r["per_workload"].get("ar") or {}).get("e2e_loss_pct", 0.0) for r in live)
     landing = sum(r["per_workload"]["ar"]["e2e_loss_pct"] for r in live if r["group"].startswith("S81.DV_LANDING"))
     assert abs(ar - landing - 0.871) < 1e-6 and abs(ar - 2.775) < 1e-6
+
+
+def test_op_alternation_and_scoped_fmt():
+    """TOK-SCHED 10-25: 'A|B' op alternation and the --op-fmt [OP:]OPERAND=FMT[/FMT] filter scoped to one op"""
+    import types
+    D = lambda f: types.SimpleNamespace(fmt=f)
+    sm_bf = types.SimpleNamespace(unit="SM", op="MATVEC", desc={"B": D("BF16")})
+    sm_i8 = types.SimpleNamespace(unit="SM", op="MATVEC", desc={"B": D("INT8")})
+    sm_f8 = types.SimpleNamespace(unit="SM", op="MATVEC", desc={"B": D("FP8E4M3")})
+    att = types.SimpleNamespace(unit="ATT", op="QK", desc={"B": D("FP8E4M3")})
+    assert AC.op_match("ATT.QK", "SM.MATVEC|ATT.QK|ATT.PV") and not AC.op_match("ATT.SPAN", "SM.MATVEC|ATT.QK")
+    f = AC.parse_fmt(["SM.MATVEC:B=BF16/INT8"])
+    assert [AC.fmt_match(r, f) for r in (sm_bf, sm_i8, sm_f8, att)] == [True, True, False, True]
+    g = AC.parse_fmt(["B=BF16"])
+    assert [AC.fmt_match(r, g) for r in (sm_bf, sm_i8, att)] == [True, False, False]
+    assert AC.parse_fmt([]) is None and AC.fmt_match(att, None)
