@@ -439,7 +439,96 @@
    }
   },
   "pick": "c_ls_k5_S13: only plan with G1-G5 (chain) + P_phys PASS",
-  "ref_r3_sized": "r3 plan (not --chain) sized: 252.52 w13.34 / 190.29 w12.74 (reference only)"
+  "ref_r3_sized": "r3 plan (not --chain) sized: 252.52 w13.34 / 190.29 w12.74 (reference only)",
+  "build": {
+   "plan": "c_ls_k5_S13 (sized spec sha in kit config)",
+   "kit": "intel1:/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/kit_l1",
+   "unit": "oth-ubuntu-1143158-1793056677 exit 0",
+   "grt_overflow": 0,
+   "meas": {
+    "TT_rise": {
+     "meas_mean": 263.77,
+     "meas_window": 20.5,
+     "meas_window_incl_macros": 21.52,
+     "pred_mean": 255.88,
+     "pred_window": 17.19,
+     "resid_mean": 7.27,
+     "resid_sd": 2.56,
+     "resid_maxabs": 11.62,
+     "n_leaves": 64,
+     "macros": [
+      250.4,
+      254.2,
+      255.8,
+      255.8
+     ]
+    },
+    "FF_early": {
+     "meas_mean": 198.21,
+     "meas_window": 13.21,
+     "meas_window_incl_macros": 14.24,
+     "pred_mean": 193.58,
+     "pred_window": 14.33,
+     "resid_mean": 4.15,
+     "resid_sd": 1.55,
+     "resid_maxabs": 6.56,
+     "n_leaves": 64,
+     "macros": [
+      189.2,
+      192.0,
+      192.9,
+      191.9
+     ]
+    },
+    "TT_late": {
+     "meas_mean": 277.12,
+     "meas_window": 23.79,
+     "meas_window_incl_macros": 23.79,
+     "pred_mean": 270.6,
+     "pred_window": 17.9,
+     "resid_mean": 5.95,
+     "resid_sd": 3.25,
+     "resid_maxabs": 11.3,
+     "n_leaves": 64,
+     "macros": [
+      263.8,
+      267.3,
+      271.3,
+      270.8
+     ]
+    }
+   },
+   "verdict_12_3": "TT rise mean 263.8 in 250+-20 but tap window 20.5 > 20 -> FAIL (FF early 198.2 w13.2 PASS); DRT/RCX not run",
+   "finding": "uf_phys under-predicts the SIZED tree by +7.3 TT mean (max leaf 11.6 > LOO 7.1); islands with BUFx4/BUFx6f cells (Q1,Q4: +10) worse than those without (Q0,Q3: +5): sizes below BUFx8 are outside the 3-build calibration (all BUFx8..x24) -> sizing extrapolated the model",
+   "geom": "L1 legs of this plan run at x~280 (< 283): violates the COORD 16:xx GEOM-REVIEW-6 rule -> not a route candidate anyway"
+  }
  },
- "render": "sweep_c/c_ls_k5_S13.png (viewed)"
+ "render": "sweep_c/c_ls_k5_S13.png (viewed)",
+ "option_a_prime": {
+  "rule": "COORD 16:xx: geometry H-tree L1 in the free SRAM gap rows, trunks >= 4 um off the E pin column",
+  "tools": [
+   "su_tree_uf_ht.py (islands fixed by ht_points from geometry)",
+   "ht_l1.py (H-tree L1 replacing the gate's L1 chains + L1 checks + sizing + uf_phys gate)",
+   "render_ht.py"
+  ],
+  "H4": {
+   "struct": "PASS",
+   "trunks": 112.31,
+   "legs": "55.1-57.3",
+   "TT_rise": "275.47 w32.47",
+   "FF_early": "205.06 w24.32",
+   "gate": "FAIL"
+  },
+  "H5": {
+   "struct": "PASS",
+   "trunks": 112.31,
+   "legs": "55.1-57.3 (+E face 57.24)",
+   "xE": 289.44,
+   "TT_rise": "272.73 w24.56",
+   "FF_early": "202.75 w18.56",
+   "gate": "FAIL (TT mean > 262, TT window > 20)",
+   "render": "sweep_h/htl1_H5.png (viewed)"
+  },
+  "why": "equal L1 by construction, but islands at the gap mouths are off the sink mass: L2 level length T2 = 146.9 um (S strip + SRAM-CK column fed from the corner islands) -> mean +20 and window from L2"
+ }
 }
