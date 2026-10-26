@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.lec.v1",
+  "verdict": "EQUIVALENT",
+  "top": "ot_s81sl_vs",
+  "counts": {
+    "compare_points": 20372,
+    "proved": 20372,
+    "differs": 0,
+    "undecided": 0
+  },
+  "t_total_s": 5563.5,
+  "scope": "Existing VS synthesized-netlist diagnostic; not current-flow physical closure",
+  "actual": "intel1:/srv/opentallas-scratch2/claude/kits-wave3/vs_lec070",
+  "source_branch": "codex/s81-legacy2144@ee98f8d203, patched lec.py 070a15290",
+  "next": "WAIT-FLOW: released S81 877cfdeb2815 lacks070; do not launch blind obsolete proof. All12RTL files and synthesis flags match fresh877 VS kit."
+}

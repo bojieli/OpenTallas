@@ -1,0 +1,27 @@
+{
+  "scope": "diagnostic equivalence reuse classification only, no canonicalroute claim",
+  "old_actual": "intel1:/srv/opentallas-scratch2/claude/kits-wave3/vs_lec070",
+  "new_source": "877cfdeb2815 freshVSkit432fb624347310c6",
+  "rtl_files_old": 12,
+  "rtl_files_new": 12,
+  "only_old": [],
+  "only_new": [],
+  "changed": [],
+  "flags_old": {
+    "VERILOG_FILES": "/work/rtl/ot_rst_relay.sv /work/rtl/ot_hdc_delay.sv /work/rtl/ot_hdc_sfu.sv /work/rtl/ot_hdc_fastfp.sv /work/rtl/ot_hdc_fastfp_lat_f12.sv /work/rtl/ot_hdc_fp32_f12.sv /work/rtl/ot_hdc_fp32_mul_lat.sv /work/rtl/ot_hdc_fp32_add_lat.sv /work/rtl/ot_hdc_prefix.sv /work/rtl/ot_dsrom_fp32_add_l6.sv /work/rtl/ot_dsrom_su_norm.sv /work/rtl/ot_s81sl_vs.sv",
+    "VERILOG_DEFINES": "-DSYNTHESIS",
+    "VERILOG_INCLUDE_DIRS": "/work/rtl",
+    "VERILOG_TOP_PARAMS": null,
+    "SYNTH_HDL_FRONTEND": null
+  },
+  "flags_new": {
+    "VERILOG_FILES": "/work/rtl/ot_rst_relay.sv /work/rtl/ot_hdc_delay.sv /work/rtl/ot_hdc_sfu.sv /work/rtl/ot_hdc_fastfp.sv /work/rtl/ot_hdc_fastfp_lat_f12.sv /work/rtl/ot_hdc_fp32_f12.sv /work/rtl/ot_hdc_fp32_mul_lat.sv /work/rtl/ot_hdc_fp32_add_lat.sv /work/rtl/ot_hdc_prefix.sv /work/rtl/ot_dsrom_fp32_add_l6.sv /work/rtl/ot_dsrom_su_norm.sv /work/rtl/ot_s81sl_vs.sv",
+    "VERILOG_DEFINES": "-DSYNTHESIS",
+    "VERILOG_INCLUDE_DIRS": "/work/rtl",
+    "VERILOG_TOP_PARAMS": null,
+    "SYNTH_HDL_FRONTEND": null
+  },
+  "lec_old_tool_sha256": "94ac7649369aa4e259548e3d86d226b1f8ce11f6b13e332334d3f1e31d98cc0a",
+  "lec_new_tool_sha256": "ded34c8c5a98734ecdacc88053547913aafe49c529705ea1ae9d5942f69276b1",
+  "rtl_and_flags_identical": true
+}
