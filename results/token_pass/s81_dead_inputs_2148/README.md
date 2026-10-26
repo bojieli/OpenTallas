@@ -5,3 +5,5 @@ Yosys read_slang, proc and opt prove 126082 current tied bits have no fanout aft
 Reproduce: `PATH=$HOME/.local/opentallas-tools/bin:$PATH python3 tools/die_plan/s81_dead_prove.py --root . --instances results/token_pass/s81_dead_inputs_2148/instances.json --stubs results/token_pass/s81_dead_inputs_2148/blackbox_interfaces.sv --out /fresh/output/path`
 
 This is source binding evidence; no physical or full token signoff. Original v10 strict failures remain preserved. The current whole bind must be regenerated with all source fixes.
+
+Closing-cohort rerun: proof_closing.json at committed0e770eb9c8 re-runs all21specializations with every actual current manifest define (FG3 absent), and conservative empty child declarations derived directly from current preferred repository module headers. No old generated-stub semantics are assumed. Full define list plus complete source-module hashes for all4dependency headers are pinned; admission fails on changed defines/dependencies, as well as source/params/type/bit. Old proof.json remains historical and is no longer selected.
