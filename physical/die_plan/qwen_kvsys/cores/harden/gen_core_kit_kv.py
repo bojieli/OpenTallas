@@ -1004,7 +1004,8 @@ def main():
         text = (tool / name).read_text()
         text = text.replace("u_(bin|bout|ft)_[^/]*[/.]", "(u_(bin|bout|ft)_[^/]*[/.]|u_ric[/.])")
         (kd / name).write_text(text)
-    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
+    # OpenDB presents vector clock/reset pins as ck[0], while clks/rsts intentionally name buses.
+    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + r")(\[[0-9]+\])?$"
     ff = (tool / "face_flops.tcl").read_text()
     ff, replacements = re.subn(r"^set ff_skip_re \{[^}\n]*\}",
                                lambda _: "set ff_skip_re {" + skip + "}", ff, flags=re.M)
