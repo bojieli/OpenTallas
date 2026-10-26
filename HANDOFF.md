@@ -918,3 +918,7 @@ CODEX: 2026-10-25 21:55 PDT QC spare wave46attempts triaged; READY5ee12cd0f xhea
 2026-10-25 21:56 PDT CODEX: QC CLKSEAM actual NDR GRT0TT/FF but raw placement/model-only padding blocks timing acceptance (actualTTspread662ps); legal-site successor and physical-fold fallback executing.
 
 CODEX: 2026-10-25 21:58 PDT MERGED/PUSHED main9650ec980e QCbatch1+KVoddstrapmasters+bootbounds0cycles+LECmem2reg+dieclockCPPR+semanticcanary. FocusedgatesPASS;QC68/68G0C0errors,KV40/40types+same4hgierrors. HEAD==origin/main.
+CODEX: 2026-10-25 21:58 PDT CP1 root-reset missing CDC exception fixed6e670692d,31testsPASS+actualODBexact2asyncRESETNpinsPASS; all synchronous reset paths remain timed, zeroRTLcycles. Current reviewed r0/r1CTS diagnostics liveintel1; narrow sourceREADYtoROOT.
+CODEX: 2026-10-25 22:0x PDT QC: ROW_WRITE_RELAY2f2aed71b exact+mutant PASS and place35%util; halfcyclec52b21f5e exact consumed-writePASS+wrongedgecaught,+0cycles,+1056/950fallFF, nativeDFFL exists, placement-onlyactive; N59/FE/A0structural successorsowned.
+CODEX: 2026-10-25 22:01 PDT QC-A0 selected MODE3 missing noFP1 child/native-fault blocker diagnosed; unreferenced synchronous LSL successor821ddef85 +1boot/+1fault0data exact19979checks+mutant PASS; OWNER? plain logged, no P&R/adoption.
+CODEX: 2026-10-25 22:02 PDT lint exacttop-parameterfixREADY66b5af5ed (5tests+4realYosyscontrolsPASS); broadMCMM20b6heldafteractualtwo-sceneholdfailure; smallsequentialcornerprooflive. HCPLstructuralstallsrecorded5b66, onlyowncontainersstopped.
