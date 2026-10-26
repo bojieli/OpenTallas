@@ -1,0 +1,11 @@
+{
+  "scope": "production root cut only; external 32-tile transport is not modeled",
+  "source": "ot_hgi_coll_tkm_static_pd vs ot_hgi_coll_tkm_static_p",
+  "parameters": {"KMAX":2048,"TP":192,"PIPE":1,"HOP":2,"FRT":4,"CB":21,"CLRB":0},
+  "data_cycle_delta": 0,
+  "root_lockstep": {"verdict":"PASS","configurations":5,"checks_per_reset_mode":7115,"private_buffer_delivered_reset_modes":[0,1]},
+  "negative_control": {"MUTP":1,"verdict":"CAUGHT","first_difference":"entries edge 676"},
+  "run": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-rootpipe-2148/rootcut_delivered",
+  "admission": "oth-ubuntu-3001464-1792990333",
+  "limits": ["Not a token-pass or physical sign-off", "Whole-array cb21 benchmark has missing parent transport and fails its golden in both reference and candidate", "Inherited standard full-array syn_sel/syn_cand simulations remain active"]
+}
