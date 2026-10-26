@@ -588,6 +588,12 @@ SCHEMA = {
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
+            # INFRA-FIRST-R4 kit hold window (COORD 10-26 11:24 ruling, opt-in, gen_phys.tap_window_ps): the die
+            # delivers every grid tap of one partition within window_ps of each other ([-W, 0] source latency on each
+            # real clock port in the kit SDC, CRPR credits same-tap); absent = all taps on one ideal clock (feature off).
+            # Requires clock.seam_hold; window_ps <= T/4 is checked in gen_phys.
+            "tap_window": {"type": "object", "additionalProperties": False, "required": ["window_ps"],
+                           "properties": {"window_ps": _nonneg, "note": {"type": "string"}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)

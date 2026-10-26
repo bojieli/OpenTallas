@@ -234,6 +234,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
                                         //     register is 1), so no clock gate drives a macro (Z27a post-CTS at 770: the
                                         //     macro-gating clones sat at the clock root, ENA -208.8 / -119.3, ce_in -96.7,
                                         //     launch latency 742 ps under the outputs; flop-only clones closed > +80)
+    parameter integer CGR = 0,          // 0 = one clock gate g_cg.u_cg (unchanged circuit); 8 = one clock-gate copy per in-core
+                                        //    region (S81-CORE-LAT 2026-10-26, see "CGR" at the gate); NB = 2, QZ, QM <= 5, QS 5
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -635,9 +637,54 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         assign cg_en_g = cg_en_q;
         assign qz_zd = 1'b0;
     end
-    if (CG != 0) begin : g_cg
+    // CGR = 8 (S81-CORE-LAT/QX 2026-10-26, COORD ruling 06:38; METHODOLOGY 12.8b): the single gate g_cg.u_cg drove
+    // 34.3k flops + the 4 ROM macros (~70 % of the core's sinks), so CTS stacked two trees (root -> ICG -> deep gated
+    // tree) and the ungated flops were balanced to that depth (456-552 ps TT vs the 250 ps die core latency).  Instead:
+    // one ot_hdc_cg copy per in-core region, each with its own kept copy u_ze_r<k> of the registered enable u_z (same
+    // next state qz_zd, same asynchronous reset rst_n_pin, reset value 1), so gclk_r[k] has an edge exactly when gclk had
+    // one (cycle-identical; every flop keeps its next-state function, only its clock net moves to its region's copy).
+    // Region k = 2 * col + row: col 0..3 W -> E (the die's 4 in-core leaf islands, one per column), row 0 = S, 1 = N.
+    //   mac m outer col (0 for g_mac[0], 3 for g_mac[1]): row 0 = u_rom0 + cap0 + u_x + issue control + lane input
+    //   registers (gclk_ma); row 1 = u_rom1 + cap1 + chains, pair adder, segment-tree adder pipe, outputs (gclk_mb);
+    //   inner col (1 / 2): row 0 = lane u_l0, row 1 = lane u_l1.  The x boundary registers (g_bx) = region 4.
+    // physical/die_plan/s81/core_lat/qxpq_w10_regions.json lists the instances, sink counts and region rectangles.
+    wire [7:0] gclk_r;
+    if (CGR != 0) begin : g_cgr
+        wire [7:0] zr;
+        (* keep *) ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze_r0 (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zr[0]));
+        (* keep *) ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze_r1 (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zr[1]));
+        (* keep *) ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze_r2 (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zr[2]));
+        (* keep *) ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze_r3 (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zr[3]));
+        (* keep *) ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze_r4 (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zr[4]));
+        (* keep *) ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze_r5 (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zr[5]));
+        (* keep *) ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze_r6 (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zr[6]));
+        (* keep *) ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze_r7 (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zr[7]));
+        (* keep *) ot_hdc_cg u_cg_r0 (.clk(clk), .en(zr[0]), .gclk(gclk_r[0]));
+        (* keep *) ot_hdc_cg u_cg_r1 (.clk(clk), .en(zr[1]), .gclk(gclk_r[1]));
+        (* keep *) ot_hdc_cg u_cg_r2 (.clk(clk), .en(zr[2]), .gclk(gclk_r[2]));
+`ifdef OT_CGR_MUTANT_R3
+        (* keep *) ot_hdc_cg u_cg_r3 (.clk(clk), .en(1'b1), .gclk(gclk_r[3]));   // negative control: g_mac[0] lane 1 ungated
+`else
+        (* keep *) ot_hdc_cg u_cg_r3 (.clk(clk), .en(zr[3]), .gclk(gclk_r[3]));
+`endif
+        (* keep *) ot_hdc_cg u_cg_r4 (.clk(clk), .en(zr[4]), .gclk(gclk_r[4]));
+        (* keep *) ot_hdc_cg u_cg_r5 (.clk(clk), .en(zr[5]), .gclk(gclk_r[5]));
+        (* keep *) ot_hdc_cg u_cg_r6 (.clk(clk), .en(zr[6]), .gclk(gclk_r[6]));
+        (* keep *) ot_hdc_cg u_cg_r7 (.clk(clk), .en(zr[7]), .gclk(gclk_r[7]));
+        assign gclk = gclk_r[4];
+`ifdef QP_CHECK
+        always @(negedge clk) if (rst_n_pin && zr !== {8{cg_en_g}}) begin
+            $display("CGR_CHECK FAIL: region gate enables %b != gate enable %b at %t", zr, cg_en_g, $time); $fatal(1);
+        end
+`endif
+        if (CGR != 8 || NB != 2 || QZ == 0 || CG == 0 || QM >= 6 || QS < 5) begin : g_cgr_bad
+            initial begin $display("ot_v41_rom_elem_qx_pq_w10: CGR = 8 requires NB = 2, QZ != 0, CG != 0, QM <= 5, QS >= 5"); $finish; end
+        end
+    end else if (CG != 0) begin : g_cg
+        assign gclk_r = {8{gclk}};
         ot_hdc_cg u_cg (.clk(clk), .en(cg_en_g), .gclk(gclk));
     end else begin : g_nocg
+        assign gclk_r = {8{gclk}};
         assign gclk = clk;
     end
     // QS >= 5 (2026-10-07, aggressive variant; Z29c: walker / tree loops lose 35-80 ps to gated / ungated clock skew): every
@@ -1887,6 +1934,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     genvar mb;
     generate for (mb = 0; mb < NB; mb = mb + 1) begin : g_mac
     wire gclk_ma, gclk_mb;               // QM >= 6: this half's clock-gate clones (issue / capture / lanes; chains / tree)
+    wire gclk_c1, gclk_l0, gclk_l1;      // CGR: ROM 1 + capture 1 (= gclk_mb's region), lane 0, lane 1 (else gclk_ma)
     // QM >= 6 (Z26a post-CTS at 770: u_z -> root ICG ENA -48.6 ps, the gated subtree's ~600 ps latency in front of the
     // enable's launch): a clone of the clock gate for this load group, with its own kept copy of the registered enable
     // (same next state z_d, same reset), so each ICG drives a smaller subtree and sits nearer its enable register.  The
@@ -1904,8 +1952,17 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             $display("QM6_CHECK FAIL: clock-gate clone enable %b != %b at %t", zc, cg_en_g, $time); $fatal(1);
         end
 `endif
+    end else if (CGR != 0) begin : g_cgma_r
+        localparam integer OC = (mb == 0) ? 0 : 3, IC = (mb == 0) ? 1 : 2;   // outer (ROM) / inner (lane) column
+        assign gclk_ma = gclk_r[2 * OC];
+        assign gclk_c1 = gclk_r[2 * OC + 1];
+        assign gclk_l0 = gclk_r[2 * IC];
+        assign gclk_l1 = gclk_r[2 * IC + 1];
     end else begin : g_cgma_n
         assign gclk_ma = gclk;
+    end
+    if (CGR == 0) begin : g_ncgr
+        assign gclk_c1 = gclk_ma; assign gclk_l0 = gclk_ma; assign gclk_l1 = gclk_ma;
     end
     // QM >= 6 (Z26a post-CTS at 770: u_z -> root ICG ENA -48.6 ps, the gated subtree's ~600 ps latency in front of the
     // enable's launch): a clone of the clock gate for this load group, with its own kept copy of the registered enable
@@ -1924,6 +1981,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             $display("QM6_CHECK FAIL: clock-gate clone enable %b != %b at %t", zc, cg_en_g, $time); $fatal(1);
         end
 `endif
+    end else if (CGR != 0) begin : g_cgmb_r
+        assign gclk_mb = gclk_r[(mb == 0) ? 1 : 7];
     end else begin : g_cgmb_n
         assign gclk_mb = gclk;
     end
@@ -2013,7 +2072,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         // enable (u_z's next state, same reset).  The clock gate's latch passes that register's value to the next
         // edge, so the gated macro saw an edge exactly when the copy is 1: the free-clock macro with the ANDed enable
         // reads in the same cycles (and holds rd_out otherwise, as a gated one does).
-        wire rom_clk, rz0, rz1;
+        wire rom_clk, rom_clk1, rz0, rz1;   // rom_clk1: u_rom1's clock (CGR: its own region gate; else rom_clk)
         if (QM >= 7 && QZ != 0 && CG != 0) begin : g_rz
 `ifdef QM7_MUTANT_RZ
             wire rz_d = !qz_zd;             // negative control: the macro enable copies inverted (a one-cycle-late
@@ -2023,7 +2082,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
 `endif
             ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_rz0 (.clk(clk), .arst_n(rst_n_pin), .d(rz_d), .q(rz0));
             ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_rz1 (.clk(clk), .arst_n(rst_n_pin), .d(rz_d), .q(rz1));
-            assign rom_clk = clk;
+            assign rom_clk = clk; assign rom_clk1 = clk;
 `ifdef QP_CHECK
             always @(negedge clk) if (rst_n_pin && (rz0 !== cg_en_g || rz1 !== cg_en_g)) begin
                 $display("QM7_CHECK FAIL: macro enable copy %b/%b != %b at %t", rz0, rz1, cg_en_g, $time); $fatal(1);
@@ -2033,7 +2092,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             end
 `endif
         end else begin : g_rz_n
-            assign rom_clk = gclk_ma; assign rz0 = 1'b1; assign rz1 = 1'b1;
+            assign rom_clk = gclk_ma; assign rom_clk1 = gclk_c1; assign rz0 = 1'b1; assign rz1 = 1'b1;
         end
         wire rze0 = rz0, rze1 = rz1;
         ot_rom_4096x274_m8
@@ -2045,25 +2104,21 @@ module ot_v41_rom_elem_qx_pq_w10 #(
 `ifndef SYNTHESIS
             #(.INSTANCE(mb == 0 ? $sformatf("%s_1", INSTANCE) : $sformatf("%sb_1", INSTANCE)))
 `endif
-            u_rom1 (.clk(rom_clk), .ce_in(issue && a_ctr[0] && rze1), .addr_in(a_ctr[12:1]), .rd_out(rd1));
+            u_rom1 (.clk(rom_clk1), .ce_in(issue && a_ctr[0] && rze1), .addr_in(a_ctr[12:1]), .rd_out(rd1));
         if (QZ != 0) begin : g_cz
             genvar ck;
             for (ck = 0; ck < QZ_NE; ck = ck + 1) begin : g_e
                 localparam integer LO = (274 * ck) / QZ_NE, HI = (274 * (ck + 1)) / QZ_NE;
-                always @(posedge gclk_ma) begin
-                    if (mz_c0[ck]) cap0[HI-1:LO] <= rd0[HI-1:LO];
-                    if (mz_c1[ck]) cap1[HI-1:LO] <= rd1[HI-1:LO];
-                end
+                always @(posedge gclk_ma) if (mz_c0[ck]) cap0[HI-1:LO] <= rd0[HI-1:LO];
+                always @(posedge gclk_c1) if (mz_c1[ck]) cap1[HI-1:LO] <= rd1[HI-1:LO];
             end
             for (ck = 0; ck < QZ_NS; ck = ck + 1) begin : g_s
                 localparam integer LO = (274 * ck) / QZ_NS, HI = (274 * (ck + 1)) / QZ_NS;
                 assign cap[HI-1:LO] = mz_bk[ck] ? cap1[HI-1:LO] : cap0[HI-1:LO];
             end
         end else begin : g_ncz
-            always @(posedge gclk_ma) begin
-                if (mi2x_v && !mi2x_bk) cap0 <= rd0;
-                if (mi2x_v && mi2x_bk) cap1 <= rd1;
-            end
+            always @(posedge gclk_ma) if (mi2x_v && !mi2x_bk) cap0 <= rd0;
+            always @(posedge gclk_c1) if (mi2x_v && mi2x_bk) cap1 <= rd1;
             assign cap = mi2_bk ? cap1 : cap0;
         end
         reg bk_h;
@@ -2199,24 +2254,24 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             assign p_xe0 = l_xe0; assign p_xe1 = l_xe1; assign p_w0q = w0q; assign p_w1q = w1q;
             assign p_we0 = we0; assign p_we1 = we1;
         end
-        ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4), .P0B(QS >= 3 ? 3 : QS)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
+        ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4), .P0B(QS >= 3 ? 3 : QS)) u_l0 (.clk(gclk_l0), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
             .xq(p_xq0), .xe(p_xe0), .wq(p_w0q), .we(p_we0), .tag(p_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm5_w10 #(.TW(TW), .P0B(QS >= 3 ? 3 : QS)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
+        ot_v41_bterm5_w10 #(.TW(TW), .P0B(QS >= 3 ? 3 : QS)) u_l1 (.clk(gclk_l1), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
             .xq(p_xq1), .xe(p_xe1), .wq(p_w1q), .we(p_we1), .tag(p_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0 && QPIPE != 0) begin : g_l3
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l0 (.clk(gclk_l0), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
             .xq(l_xq0), .xe(l_xe0), .wq(w0q), .we(we0), .tag(l_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l1 (.clk(gclk_l1), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
             .xq(l_xq1), .xe(l_xe1), .wq(w1q), .we(we1), .tag(l_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0) begin : g_l2
-        ot_v41_bterm2_w10 #(.TW(TW)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
+        ot_v41_bterm2_w10 #(.TW(TW)) u_l0 (.clk(gclk_l0), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
             .xq(i2_q0), .xe(i2_e0), .wq(w0q), .we(we0), .tag(mi2_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm2_w10 #(.TW(TW)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(mi2_v && mi2_t[1]), .fp4(1'b1),
+        ot_v41_bterm2_w10 #(.TW(TW)) u_l1 (.clk(gclk_l1), .rst_n(rst_m), .v(mi2_v && mi2_t[1]), .fp4(1'b1),
             .xq(i2_q1), .xe(i2_e1), .wq(w1q), .we(we1), .tag(mi2_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else begin : g_l1
-        ot_v41_bterm #(.TW(TW)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
+        ot_v41_bterm #(.TW(TW)) u_l0 (.clk(gclk_l0), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
             .xq(i2_q0), .xe(i2_e0), .wq(w0q), .we(we0), .tag(mi2_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm #(.TW(TW)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(mi2_v && mi2_t[1]), .fp4(1'b1),
+        ot_v41_bterm #(.TW(TW)) u_l1 (.clk(gclk_l1), .rst_n(rst_m), .v(mi2_v && mi2_t[1]), .fp4(1'b1),
             .xq(i2_q1), .xe(i2_e1), .wq(w1q), .we(we1), .tag(mi2_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end
     wire c0_v, c1_v, c0_f, c1_f, c0_fault, c1_fault, t_fault, b_fault;

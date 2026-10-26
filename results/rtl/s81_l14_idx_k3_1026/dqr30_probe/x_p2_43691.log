@@ -1,0 +1,5 @@
+TB_IDXRD reader 6 st 1000010001 (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})
+TB_IDXRD reader 7 st 1000010001 (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})
+TB_IDXRD_STATS3 sdx 0 xd 21 dqr 30 cmut 0 slothit 0
+TB_IDXRD_STATS gather 0 N 43691 keys 43691 words 2732 T0 400 P 2 mut 0 sram 1 ckh 900 hdr_to_last 5992 end_to_last 5927 nerr 2508 nopen 0 qerr 0 slice_err 0
+TB_IDXRD FAIL

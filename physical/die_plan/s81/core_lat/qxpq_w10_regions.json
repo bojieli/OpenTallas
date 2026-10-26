@@ -1,0 +1,314 @@
+{
+ "schema": "opentallas.core_regions.v1",
+ "core": "ot_v41_rom_elem_q_qxpq_w10",
+ "replicas": 864,
+ "outline_um": [
+  510.84,
+  221.4
+ ],
+ "lattice_um": 4.32,
+ "rtl_param": "CGR = 8 (rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv, threaded through ot_v41_rom_elem_q_qxpq_w10); default 0 = single gate u_e.g_cg.u_cg",
+ "why": "S81-CORE-LAT root cause: one gate u_e.g_cg.u_cg drove 34.3k flops + 4 ROMs (~70 % of sinks) -> stacked trees, 456-552 ps TT vs 250. COORD 06:38: one gate copy per in-core region on the same registered enable (kept copies u_ze_r<k> of u_z: d = qz_zd, arst rst_n_pin, RV 1), in-core H-tree from the centre entry.",
+ "index": "k = 2*col + row; col 0..3 W->E, row 0 = S, 1 = N; each of the 4 in-core leaf islands (one per column, COORD/S81-CORE-LAT-R2 DIE_TREE_IN 4x1) feeds the 2 gates of its column",
+ "leaf_islands_um": [
+  {
+   "col": 0,
+   "x": 64.8,
+   "y": 112.32
+  },
+  {
+   "col": 1,
+   "x": 190.08,
+   "y": 112.32
+  },
+  {
+   "col": 2,
+   "x": 319.68,
+   "y": 112.32
+  },
+  {
+   "col": 3,
+   "x": 444.96,
+   "y": 112.32
+  }
+ ],
+ "leaf_islands_plan_msg_um": {
+  "x": [
+   63.72,
+   190.08,
+   319.68,
+   446.04
+  ],
+  "y": 110.16,
+  "note": "values from the S81-CORE-LAT-R2 brief; 63.72/446.04/110.16 are not multiples of 4.32 from the core origin (snapped from 0: 64.80/444.96/112.32) -- master plan to confirm the lattice phase"
+ },
+ "sink_method": "Yosys 0.68 elaboration of the die parameters + CGR 8 (read_verilog -sv -DSYNTHESIS, proc, flatten, opt, opt_dff), flop bits per gated clock net; pre-synthesis estimate (kit synthesis may merge / remove a few %). Ungated clk flops: 12,258 (walker / tags / reset / enable copies) on the core clock directly.",
+ "ungated_clk_flops": 12258,
+ "gated_flops_total": 36999,
+ "macros": 4,
+ "column_load": [
+  {
+   "col": 0,
+   "flops": 5815,
+   "macros": 2
+  },
+  {
+   "col": 1,
+   "flops": 12411,
+   "macros": 0
+  },
+  {
+   "col": 2,
+   "flops": 12958,
+   "macros": 0
+  },
+  {
+   "col": 3,
+   "flops": 5815,
+   "macros": 2
+  }
+ ],
+ "notes": [
+  "ROM clk pins sit at the core centre y (105.56 S / 115.79 N) on the ROM inner edge x 151.22 (g_mac[0]) / 359.42 (g_mac[1]), i.e. 22-26 um inside the inner column rectangles: the outer-column gates (r0/r1/r6/r7) keep ROM + its capture registers on ONE gate (ROM -> capture is the 600-of-833 ps single-cycle path); reach from leaf island col 0/3 to the ROM pin ~87-95 um < leaf reach 174.6.",
+  "Column loads are unequal (outer ~5.8k + 2 ROMs, inner ~12.4-13.0k): the leaf trees differ by about one buffer stage; per-island sizing must be plan-computed (METHODOLOGY 12.8 d1) or the partition re-balanced by moving the lane input registers (g_pl, ~1.1k per mac) -- not done here.",
+  "ROM -> site mapping from gen_core_kit_legacy MACRO_TCL (instance-name order): g_mac[0].u_rom0 (25.92,43.392 R180), u_rom1 (25.92,115.008 MY), g_mac[1].u_rom0 (359.424,43.392 MX), u_rom1 (359.424,115.008 R0)."
+ ],
+ "regions": [
+  {
+   "region": 0,
+   "col": 0,
+   "row": "S",
+   "gate": "u_e.g_cgr.u_cg_r0",
+   "gate_cell": "u_e.g_cgr.u_cg_r0.u_icg (ICGx1_ASAP7_75t_R)",
+   "enable_reg": "u_e.g_cgr.u_ze_r0",
+   "leaf_island_col": 0,
+   "drives": "g_mac[0] outer S: u_rom0 + cap0 + u_x x slices + issue control copies (g_mi, mz_bk/fp4/c0/c1) + bk_h + lane input registers g_l3.g_pl (gclk_ma)",
+   "roms": [
+    "u_e.g_mac[0].g_pp.u_rom0"
+   ],
+   "rom_clk_pins_um": {
+    "u_e.g_mac[0].g_pp.u_rom0": [
+     151.22,
+     105.56
+    ]
+   },
+   "sink_estimate": {
+    "flops": 1806,
+    "macros": 1
+   },
+   "rect_um": [
+    0.0,
+    0.0,
+    129.6,
+    112.32
+   ],
+   "region_centre_um": [
+    64.8,
+    56.16
+   ]
+  },
+  {
+   "region": 1,
+   "col": 0,
+   "row": "N",
+   "gate": "u_e.g_cgr.u_cg_r1",
+   "gate_cell": "u_e.g_cgr.u_cg_r1.u_icg (ICGx1_ASAP7_75t_R)",
+   "enable_reg": "u_e.g_cgr.u_ze_r1",
+   "leaf_island_col": 0,
+   "drives": "g_mac[0] outer N: u_rom1 + cap1 (gclk_c1) + chains u_c0/u_c1, pair adder u_pair, u_pp/u_pt delays, segment-tree adder/tag pipe (pclk), output registers (gclk_mb)",
+   "roms": [
+    "u_e.g_mac[0].g_pp.u_rom1"
+   ],
+   "rom_clk_pins_um": {
+    "u_e.g_mac[0].g_pp.u_rom1": [
+     151.22,
+     115.79
+    ]
+   },
+   "sink_estimate": {
+    "flops": 4009,
+    "macros": 1
+   },
+   "rect_um": [
+    0.0,
+    112.32,
+    129.6,
+    221.4
+   ],
+   "region_centre_um": [
+    64.8,
+    168.48
+   ]
+  },
+  {
+   "region": 2,
+   "col": 1,
+   "row": "S",
+   "gate": "u_e.g_cgr.u_cg_r2",
+   "gate_cell": "u_e.g_cgr.u_cg_r2.u_icg (ICGx1_ASAP7_75t_R)",
+   "enable_reg": "u_e.g_cgr.u_ze_r2",
+   "leaf_island_col": 1,
+   "drives": "g_mac[0] inner S: lane u_l0 (ot_v41_bterm5_w10)",
+   "roms": [],
+   "rom_clk_pins_um": {},
+   "sink_estimate": {
+    "flops": 6270,
+    "macros": 0
+   },
+   "rect_um": [
+    129.6,
+    0.0,
+    254.88,
+    112.32
+   ],
+   "region_centre_um": [
+    190.08,
+    56.16
+   ]
+  },
+  {
+   "region": 3,
+   "col": 1,
+   "row": "N",
+   "gate": "u_e.g_cgr.u_cg_r3",
+   "gate_cell": "u_e.g_cgr.u_cg_r3.u_icg (ICGx1_ASAP7_75t_R)",
+   "enable_reg": "u_e.g_cgr.u_ze_r3",
+   "leaf_island_col": 1,
+   "drives": "g_mac[0] inner N: lane u_l1 (ot_v41_bterm5_w10)",
+   "roms": [],
+   "rom_clk_pins_um": {},
+   "sink_estimate": {
+    "flops": 6141,
+    "macros": 0
+   },
+   "rect_um": [
+    129.6,
+    112.32,
+    254.88,
+    221.4
+   ],
+   "region_centre_um": [
+    190.08,
+    168.48
+   ]
+  },
+  {
+   "region": 4,
+   "col": 2,
+   "row": "S",
+   "gate": "u_e.g_cgr.u_cg_r4",
+   "gate_cell": "u_e.g_cgr.u_cg_r4.u_icg (ICGx1_ASAP7_75t_R)",
+   "enable_reg": "u_e.g_cgr.u_ze_r4",
+   "leaf_island_col": 2,
+   "drives": "g_mac[1] inner S: lane u_l0 + the x boundary registers g_qb.g_bx (gclk_bx = gclk = gclk_r[4])",
+   "roms": [],
+   "rom_clk_pins_um": {},
+   "sink_estimate": {
+    "flops": 6817,
+    "macros": 0
+   },
+   "rect_um": [
+    254.88,
+    0.0,
+    384.48,
+    112.32
+   ],
+   "region_centre_um": [
+    319.68,
+    56.16
+   ]
+  },
+  {
+   "region": 5,
+   "col": 2,
+   "row": "N",
+   "gate": "u_e.g_cgr.u_cg_r5",
+   "gate_cell": "u_e.g_cgr.u_cg_r5.u_icg (ICGx1_ASAP7_75t_R)",
+   "enable_reg": "u_e.g_cgr.u_ze_r5",
+   "leaf_island_col": 2,
+   "drives": "g_mac[1] inner N: lane u_l1",
+   "roms": [],
+   "rom_clk_pins_um": {},
+   "sink_estimate": {
+    "flops": 6141,
+    "macros": 0
+   },
+   "rect_um": [
+    254.88,
+    112.32,
+    384.48,
+    221.4
+   ],
+   "region_centre_um": [
+    319.68,
+    168.48
+   ]
+  },
+  {
+   "region": 6,
+   "col": 3,
+   "row": "S",
+   "gate": "u_e.g_cgr.u_cg_r6",
+   "gate_cell": "u_e.g_cgr.u_cg_r6.u_icg (ICGx1_ASAP7_75t_R)",
+   "enable_reg": "u_e.g_cgr.u_ze_r6",
+   "leaf_island_col": 3,
+   "drives": "g_mac[1] outer S: u_rom0 + cap0 + u_x + issue control copies + lane input registers (gclk_ma)",
+   "roms": [
+    "u_e.g_mac[1].g_pp.u_rom0"
+   ],
+   "rom_clk_pins_um": {
+    "u_e.g_mac[1].g_pp.u_rom0": [
+     359.42,
+     105.56
+    ]
+   },
+   "sink_estimate": {
+    "flops": 1806,
+    "macros": 1
+   },
+   "rect_um": [
+    384.48,
+    0.0,
+    510.84,
+    112.32
+   ],
+   "region_centre_um": [
+    449.28,
+    56.16
+   ]
+  },
+  {
+   "region": 7,
+   "col": 3,
+   "row": "N",
+   "gate": "u_e.g_cgr.u_cg_r7",
+   "gate_cell": "u_e.g_cgr.u_cg_r7.u_icg (ICGx1_ASAP7_75t_R)",
+   "enable_reg": "u_e.g_cgr.u_ze_r7",
+   "leaf_island_col": 3,
+   "drives": "g_mac[1] outer N: u_rom1 + cap1 + chains, pair adder, delays, tree adder pipe, outputs (gclk_mb)",
+   "roms": [
+    "u_e.g_mac[1].g_pp.u_rom1"
+   ],
+   "rom_clk_pins_um": {
+    "u_e.g_mac[1].g_pp.u_rom1": [
+     359.42,
+     115.79
+    ]
+   },
+   "sink_estimate": {
+    "flops": 4009,
+    "macros": 1
+   },
+   "rect_um": [
+    384.48,
+    112.32,
+    510.84,
+    221.4
+   ],
+   "region_centre_um": [
+    449.28,
+    168.48
+   ]
+  }
+ ]
+}

@@ -87,9 +87,7 @@ class T(unittest.TestCase):
                 self.assertTrue(inside)
             if n == "VDD":                                                   # core VDD never enters the window
                 self.assertFalse(a < x1 and x0 < cc and b < y1 and y0 < d)
-        # the core grid outside the window is complete: every core M9 track right of the window spans the die
-        full = [r for r in R if r[1] == "M9" and r[2] > x1 + 1 and r[3] == 0 and r[5] == 200.0]
-        self.assertEqual(len(full), len([r for r in DI.pg_rects(P, CORE) if r[1] == "M9" and r[2] > x1 + 1]))
+        # the stripe extents themselves are pdngen's (region cut + halo + trim): test_pdn_model_match.py
 
     def test_plan_without_domains_unchanged(self):
         P = S.Plan(S.load(ROOT / DIES["QC"]))

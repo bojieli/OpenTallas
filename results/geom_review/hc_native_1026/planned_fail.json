@@ -1,0 +1,11 @@
+{
+  "verdict": "FAIL",
+  "scope": "Original pair/first planned SRAM halos; no placement or route was launched",
+  "picture": "planned.png",
+  "findings": [
+    "The X macro upper halo ends at 174.984 um, while W0 lower halo begins at 174.960 um: overlap 0.024 um",
+    "All input/output pins, the one-clock contract, and outlines are otherwise unchanged; common W/E sum faces are ordered",
+    "Revise X y before any P&R; preserve the running synthesis jobs because RTL and pins are unchanged"
+  ],
+  "correction": "Move X down one M5 PG pitch (4.32 um) to y=125.28, yielding 4.296 um halo clearance"
+}

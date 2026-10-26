@@ -11,6 +11,10 @@
 // PASS = for every sid the multiset of issued write requests {PC, addr, strobe, data} equals the golden exactly, every
 // IK key is written by exactly one sid (3 writes), no fault in the clean phase, and a final IK_ROW frame of len 2
 // raises fault bit 16 (frame check).  +nik= +now= +seed=.
+// TOK-DS-4 (10-26) +img=<dir>: COMPILED mode (tools/s81_dv/layer_prog/lower_idx.py): the q stream is <dir>/ikq.hex
+// ({v, 512-b word} a cycle: the compiler's IK_ROW frame of the layer, exact words) and the golden is <dir>/ikw.hex
+// ({sid, PC, sector, strobe, data} = the fixture's new key at the rg3 layout, computed by the compiler from the layer
+// fixture, not from the frame).  +dump=<file> writes every observed write (the rg3 bench's HBM delta).
 module tb_dsdv_svc_att_ik;
     localparam integer TILE = 3;
     reg clk = 0; always #0.5 clk = ~clk;
@@ -28,6 +32,7 @@ module tb_dsdv_svc_att_ik;
         .pio_o(), .pvo_o(), .jc_o(), .st_o());
 
     integer NIK = 96, NOW = 24, SEED = 1;
+    string IMG = "", DUMP = "";
     // stimulus
     reg [511:0] fw [0:4095]; reg fv [0:4095]; integer nw = 0;
     // golden write list: {sid 4, pc 1, addr 30, strb 32, data 256}
@@ -100,6 +105,19 @@ module tb_dsdv_svc_att_ik;
     initial begin
         void'($value$plusargs("nik=%d", NIK)); void'($value$plusargs("now=%d", NOW)); void'($value$plusargs("seed=%d", SEED));
         void'($urandom(SEED));
+        void'($value$plusargs("img=%s", IMG)); void'($value$plusargs("dump=%s", DUMP));
+        if (IMG != "") begin : g_img
+            integer fd; reg [3:0] v_; reg [511:0] w_; reg [3:0] s_; reg [3:0] pc_; reg [29:0] a_; reg [31:0] st_; reg [255:0] d_;
+            fd = $fopen({IMG, "/ikq.hex"}, "r");
+            if (fd == 0) begin $display("SVCIK verdict=FAIL no %s/ikq.hex", IMG); $finish; end
+            while ($fscanf(fd, "%h %h\n", v_, w_) == 2) begin fw[nw] = w_; fv[nw] = v_[0]; nw++; end
+            $fclose(fd);
+            fd = $fopen({IMG, "/ikw.hex"}, "r");
+            if (fd == 0) begin $display("SVCIK verdict=FAIL no %s/ikw.hex", IMG); $finish; end
+            while ($fscanf(fd, "%h %h %h %h %h\n", s_, pc_, a_, st_, d_) == 5) gold.push_back('{s: s_, pc: pc_[0], a: a_, st: st_, d: d_});
+            $fclose(fd);
+            NIK = gold.size() / 3; NOW = 0;
+        end else
         build();
         for (int s = 0; s < 16; s++) begin
             sid = 4'(s); rst_n = 0; q_v = 0; q_d = '0;
@@ -123,6 +141,11 @@ module tb_dsdv_svc_att_ik;
         end
         // ownership: IK writes = 3 a key in total (OW writes: 2 a frame a slice)
         if (seen.size() != 3 * NIK + 32 * NOW) own_err = 1;
+        if (DUMP != "") begin : g_dump
+            integer fd; fd = $fopen(DUMP, "w");
+            foreach (seen[k]) $fwrite(fd, "%x %x %x %x %x\n", seen[k].s, seen[k].pc, seen[k].a, seen[k].st, seen[k].d);
+            $fclose(fd);
+        end
         // negative directed check: IK_ROW with len 2 must raise fault bit 16
         sid = 4'd0; rst_n = 0; repeat (4) @(posedge clk); #0.2 rst_n = 1; repeat (2) @(posedge clk);
         #0.2 q_v = 1; q_d = hdr(4'd15, 12'd2); @(posedge clk); #0.2 q_d = '0; @(posedge clk); @(posedge clk);

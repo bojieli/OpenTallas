@@ -1,0 +1,1490 @@
+{
+ "target": {
+  "tt": 250.0,
+  "ff": 202.5,
+  "tol": 20.0
+ },
+ "sources": [
+  "origin/claude/s81-core-lat-r2-1026:physical/die_plan/s81/core_lat/island_plan_s81_1026.json",
+  "origin/main:physical/die_plan/s81_head/die_plan.json"
+ ],
+ "rows": [
+  {
+   "die": "S81",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "replicas": 1200,
+   "outline_um": [
+    114.48,
+    114.48
+   ],
+   "c2c_um": 116.64,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    232.86406,
+    264.07495
+   ],
+   "view_ff": [
+    177.88925,
+    204.23428
+   ],
+   "view_verdict": "IN",
+   "pred": [
+    265.55,
+    202.35
+   ],
+   "trunk_chain": 7,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81c_attn_hcore",
+   "replicas": 1024,
+   "outline_um": [
+    157.68,
+    259.2
+   ],
+   "c2c_um": 209.52,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    null,
+    null
+   ],
+   "view_ff": [
+    null,
+    null
+   ],
+   "view_verdict": "NO NUMBER",
+   "pred": [
+    248.65,
+    194.55
+   ],
+   "trunk_chain": 3,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_qbank_N",
+   "replicas": 864,
+   "outline_um": [
+    60.48,
+    8.64
+   ],
+   "c2c_um": 34.56,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    70.7233,
+    78.14114
+   ],
+   "view_ff": [
+    55.97308,
+    62.57573
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    265.232,
+    200.474
+   ],
+   "trunk_chain": 8,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_qbank_S",
+   "replicas": 864,
+   "outline_um": [
+    60.48,
+    25.92
+   ],
+   "c2c_um": 43.2,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    79.35539,
+    98.23283
+   ],
+   "view_ff": [
+    62.4773,
+    79.9539
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    255.744,
+    194.766
+   ],
+   "trunk_chain": 7,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_v41_rom_elem_q_qxpq_w10",
+   "replicas": 864,
+   "outline_um": [
+    510.84,
+    221.4
+   ],
+   "c2c_um": 368.28,
+   "cls": "DIE_TREE_IN",
+   "view_tt": [
+    437.5235,
+    552.30737
+   ],
+   "view_ff": [
+    344.91623,
+    434.3559
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    266.75,
+    206.25
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81_cfg7_seq",
+   "replicas": 864,
+   "outline_um": [
+    17.28,
+    51.84
+   ],
+   "c2c_um": 34.56,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    75.39694,
+    93.77752
+   ],
+   "view_ff": [
+    59.19283,
+    74.97504
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    251.537,
+    190.634
+   ],
+   "trunk_chain": 7,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81_sstn_base566",
+   "replicas": 660,
+   "outline_um": [
+    84.24,
+    30.24
+   ],
+   "c2c_um": 60.48,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    78.17512,
+    98.53783
+   ],
+   "view_ff": [
+    61.9237,
+    80.86909
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    255.306,
+    194.946
+   ],
+   "trunk_chain": 7,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81_sstn_payload536",
+   "replicas": 660,
+   "outline_um": [
+    86.4,
+    25.92
+   ],
+   "c2c_um": 56.16,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    77.24667,
+    91.42699
+   ],
+   "view_ff": [
+    61.14544,
+    74.26108
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    251.287,
+    191.253
+   ],
+   "trunk_chain": 7,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_node_LLfu",
+   "replicas": 516,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "c2c_um": 60.48,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    88.73264,
+    117.1375
+   ],
+   "view_ff": [
+    70.67866,
+    97.3701
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    246.035,
+    189.924
+   ],
+   "trunk_chain": 6,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_node_NNfd",
+   "replicas": 516,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "c2c_um": 60.48,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    86.74113,
+    117.21299
+   ],
+   "view_ff": [
+    68.48822,
+    97.30123
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    245.077,
+    188.795
+   ],
+   "trunk_chain": 6,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_node_NNfu",
+   "replicas": 504,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "c2c_um": 60.48,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    86.80167,
+    122.11168
+   ],
+   "view_ff": [
+    68.94405,
+    101.65302
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    247.557,
+    191.199
+   ],
+   "trunk_chain": 6,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_node_LLfd",
+   "replicas": 504,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "c2c_um": 60.48,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    89.55394,
+    113.9127
+   ],
+   "view_ff": [
+    70.68227,
+    93.48103
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    244.833,
+    187.982
+   ],
+   "trunk_chain": 6,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_v41_bf_col",
+   "replicas": 456,
+   "outline_um": [
+    450.168,
+    198.72
+   ],
+   "c2c_um": 324.888,
+   "cls": "DIE_TREE_IN",
+   "view_tt": [
+    473.28232,
+    644.89056
+   ],
+   "view_ff": [
+    375.18033,
+    519.71045
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    250.75,
+    193.45
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_bf_front_roots",
+   "replicas": 228,
+   "outline_um": [
+    116.64,
+    198.72
+   ],
+   "c2c_um": 159.84,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    195.21701,
+    231.19284
+   ],
+   "view_ff": [
+    158.08061,
+    190.72153
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    254.35,
+    196.25
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81_cfg7_seq_bfp",
+   "replicas": 228,
+   "outline_um": [
+    30.24,
+    60.48
+   ],
+   "c2c_um": 47.52,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    77.01402,
+    98.21368
+   ],
+   "view_ff": [
+    60.64494,
+    79.28922
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    254.564,
+    193.517
+   ],
+   "trunk_chain": 7,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_rstg",
+   "replicas": 216,
+   "outline_um": [
+    38.88,
+    34.56
+   ],
+   "c2c_um": 38.88,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    50.42186,
+    54.8358
+   ],
+   "view_ff": [
+    38.6632,
+    42.17035
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    267.279,
+    199.267
+   ],
+   "trunk_chain": 9,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_sram_1r1w_512x128_m4_r0c0",
+   "replicas": 150,
+   "outline_um": [
+    169.368,
+    29.16
+   ],
+   "c2c_um": 102.6,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    null,
+    null
+   ],
+   "view_ff": [
+    null,
+    null
+   ],
+   "view_verdict": "NO NUMBER",
+   "pred": [
+    253.65,
+    192.95
+   ],
+   "trunk_chain": 7,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_svc_sx_hrow",
+   "replicas": 128,
+   "outline_um": [
+    138.24,
+    164.16
+   ],
+   "c2c_um": 151.2,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    229.32762,
+    296.62994
+   ],
+   "view_ff": [
+    179.41072,
+    241.60785
+   ],
+   "view_verdict": "IN",
+   "pred": [
+    247.05,
+    190.45
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_ve_m",
+   "replicas": 75,
+   "outline_um": [
+    172.8,
+    345.6
+   ],
+   "c2c_um": 259.2,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    null,
+    null
+   ],
+   "view_ff": [
+    null,
+    null
+   ],
+   "view_verdict": "NO NUMBER",
+   "pred": [
+    242.95,
+    192.85
+   ],
+   "trunk_chain": 1,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_ve_s",
+   "replicas": 75,
+   "outline_um": [
+    164.16,
+    345.6
+   ],
+   "c2c_um": 254.88,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    null,
+    null
+   ],
+   "view_ff": [
+    null,
+    null
+   ],
+   "view_verdict": "NO NUMBER",
+   "pred": [
+    263.1,
+    207.6
+   ],
+   "trunk_chain": 2,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_vsw",
+   "replicas": 75,
+   "outline_um": [
+    224.64,
+    224.64
+   ],
+   "c2c_um": 224.64,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    267.72681,
+    323.47568
+   ],
+   "view_ff": [
+    216.13266,
+    268.31491
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    261.35,
+    204.75
+   ],
+   "trunk_chain": 3,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_vn_b",
+   "replicas": 75,
+   "outline_um": [
+    356.4,
+    172.8
+   ],
+   "c2c_um": 265.68,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    null,
+    null
+   ],
+   "view_ff": [
+    null,
+    null
+   ],
+   "view_verdict": "NO NUMBER",
+   "pred": [
+    248.35,
+    197.25
+   ],
+   "trunk_chain": 1,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_vs",
+   "replicas": 75,
+   "outline_um": [
+    172.8,
+    172.8
+   ],
+   "c2c_um": 172.8,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    213.91415,
+    262.39078
+   ],
+   "view_ff": [
+    173.65564,
+    218.59801
+   ],
+   "view_verdict": "IN",
+   "pred": [
+    265.25,
+    205.05
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_vn_a",
+   "replicas": 75,
+   "outline_um": [
+    356.4,
+    164.16
+   ],
+   "c2c_um": 261.36,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    null,
+    null
+   ],
+   "view_ff": [
+    null,
+    null
+   ],
+   "view_verdict": "NO NUMBER",
+   "pred": [
+    244.75,
+    194.35
+   ],
+   "trunk_chain": 1,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_su_t_rxsb",
+   "replicas": 75,
+   "outline_um": [
+    140.4,
+    140.4
+   ],
+   "c2c_um": 142.56,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    234.92281,
+    268.55948
+   ],
+   "view_ff": [
+    181.22372,
+    210.84151
+   ],
+   "view_verdict": "IN",
+   "pred": [
+    263.6,
+    202.3
+   ],
+   "trunk_chain": 6,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_su_t_rxsf",
+   "replicas": 75,
+   "outline_um": [
+    140.4,
+    140.4
+   ],
+   "c2c_um": 142.56,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    163.55742,
+    210.46109
+   ],
+   "view_ff": [
+    133.3118,
+    176.76752
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    263.6,
+    202.3
+   ],
+   "trunk_chain": 6,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_vq",
+   "replicas": 75,
+   "outline_um": [
+    172.8,
+    129.6
+   ],
+   "c2c_um": 151.2,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    203.37563,
+    279.40579
+   ],
+   "view_ff": [
+    161.65503,
+    232.14925
+   ],
+   "view_verdict": "IN",
+   "pred": [
+    247.05,
+    190.45
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_cfifo_crs4",
+   "replicas": 72,
+   "outline_um": [
+    280.8,
+    69.12
+   ],
+   "c2c_um": 177.12,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    144.32361,
+    214.1178
+   ],
+   "view_ff": [
+    114.34958,
+    181.17931
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    245.1,
+    190.3
+   ],
+   "trunk_chain": 4,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsfd_node_LLd",
+   "replicas": 72,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "c2c_um": 60.48,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    88.84732,
+    110.32134
+   ],
+   "view_ff": [
+    70.26496,
+    89.88971
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    266.534,
+    203.627
+   ],
+   "trunk_chain": 7,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_capc5r",
+   "replicas": 16,
+   "outline_um": [
+    336.96,
+    414.72
+   ],
+   "c2c_um": 375.84,
+   "cls": "DIE_TREE_IN",
+   "view_tt": [
+    154.96245,
+    85.25973
+   ],
+   "view_ff": [
+    125.78483,
+    72.69569
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    254.2,
+    197.6
+   ],
+   "trunk_chain": 4,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_eg",
+   "replicas": 16,
+   "outline_um": [
+    259.2,
+    259.2
+   ],
+   "c2c_um": 259.2,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    320.53131,
+    364.44653
+   ],
+   "view_ff": [
+    263.05939,
+    303.02069
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    242.95,
+    192.85
+   ],
+   "trunk_chain": 1,
+   "meas": {
+    "tt": null,
+    "ff": null,
+    "rc": "-",
+    "label": "NO NUMBER",
+    "what": "cl26rt stopped after synth at the 06:4x park (no CTS)"
+   },
+   "meas_verdict": "NO NUMBER"
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81dv_xfin",
+   "replicas": 16,
+   "outline_um": [
+    362.88,
+    362.88
+   ],
+   "c2c_um": 362.88,
+   "cls": "DIE_TREE_IN",
+   "view_tt": [
+    222.01741,
+    308.26154
+   ],
+   "view_ff": [
+    179.27629,
+    261.46188
+   ],
+   "view_verdict": "IN",
+   "pred": [
+    248.7,
+    193.2
+   ],
+   "trunk_chain": 4,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_xrt1",
+   "replicas": 14,
+   "outline_um": [
+    311.04,
+    395.28
+   ],
+   "c2c_um": 354.24,
+   "cls": "DIE_TREE_IN",
+   "view_tt": [
+    380.94388,
+    473.05081
+   ],
+   "view_ff": [
+    310.97879,
+    394.02768
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    244.6,
+    190.0
+   ],
+   "trunk_chain": 4,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_bksel_q",
+   "replicas": 4,
+   "outline_um": [
+    648.0,
+    648.0
+   ],
+   "c2c_um": 648.0,
+   "cls": "DIE_TREE_IN",
+   "view_tt": [
+    559.40479,
+    603.67224
+   ],
+   "view_ff": [
+    453.4201,
+    489.51486
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    256.15,
+    197.75
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "ot_s81sl_xrt3",
+   "replicas": 2,
+   "outline_um": [
+    207.36,
+    164.16
+   ],
+   "c2c_um": 185.76,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    555.82404,
+    651.02209
+   ],
+   "view_ff": [
+    457.81662,
+    534.87317
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    252.4,
+    196.2
+   ],
+   "trunk_chain": 4,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_gunit_l5",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    302.4
+   ],
+   "c2c_um": 324.0,
+   "cls": "DIE_TREE_IN",
+   "view_tt": [
+    370.54269,
+    512.25568
+   ],
+   "view_ff": [
+    304.50452,
+    430.37888
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    256.15,
+    197.75
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_gunit_l1",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    216.0
+   ],
+   "c2c_um": 280.8,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    261.67303,
+    350.00586
+   ],
+   "view_ff": [
+    212.48373,
+    296.35745
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    237.3,
+    189.8
+   ],
+   "trunk_chain": 0,
+   "meas": {
+    "tt": null,
+    "ff": null,
+    "rc": "-",
+    "label": "NO NUMBER",
+    "what": "cl26rt died FAIL_PREFLOOR kit LEC (old kit lec.py) 06:49"
+   },
+   "meas_verdict": "NO NUMBER"
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_gunit_l1c",
+   "replicas": 1,
+   "outline_um": [
+    86.4,
+    216.0
+   ],
+   "c2c_um": 151.2,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    177.23906,
+    237.80722
+   ],
+   "view_ff": [
+    145.25734,
+    201.53757
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    247.05,
+    190.45
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_gunit_l0",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "c2c_um": 259.2,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    250.74129,
+    320.12833
+   ],
+   "view_ff": [
+    203.0208,
+    267.96899
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    242.95,
+    192.85
+   ],
+   "trunk_chain": 1,
+   "meas": {
+    "tt": 294.74,
+    "ff": 240.52,
+    "rc": "GRT",
+    "label": "UNCHECKED",
+    "what": "r3rt42 centre M5 pin + 4x2 count H-tree, OT_RT_WIN 1e6 (measure-only) -> 0 pads, flow-20261025-b-s81 + loop-index fix 2b9f7617e; placement RC taps 242-262; GRT (own global_route M2-M5) all-reg 263.7-319.0; 4x1 variant 299.90/247.81. HIGH: GRT adds ~+45 over placement RC (l4 +26) -> trunk RC root cause"
+   },
+   "meas_verdict": "HIGH"
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_gunit_l2",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "c2c_um": 259.2,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    244.80742,
+    304.56857
+   ],
+   "view_ff": [
+    197.21242,
+    253.64865
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    242.95,
+    192.85
+   ],
+   "trunk_chain": 1,
+   "meas": {
+    "tt": 297.51,
+    "ff": 243.92,
+    "rc": "GRT",
+    "label": "UNCHECKED",
+    "what": "r3rt42 same recipe, 0 pads; placement taps 250-263; GRT all-reg 252.1-319.1. HIGH"
+   },
+   "meas_verdict": "HIGH"
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_gunit_l3",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "c2c_um": 259.2,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    217.88559,
+    293.32172
+   ],
+   "view_ff": [
+    176.75401,
+    247.70711
+   ],
+   "view_verdict": "IN",
+   "pred": [
+    242.95,
+    192.85
+   ],
+   "trunk_chain": 1,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_gunit_l0r",
+   "replicas": 1,
+   "outline_um": [
+    267.84,
+    267.84
+   ],
+   "c2c_um": 267.84,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    213.78786,
+    244.41205
+   ],
+   "view_ff": [
+    172.60754,
+    200.96223
+   ],
+   "view_verdict": "LOW",
+   "pred": [
+    250.25,
+    198.65
+   ],
+   "trunk_chain": 1,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_gunit_l5f",
+   "replicas": 1,
+   "outline_um": [
+    151.2,
+    151.2
+   ],
+   "c2c_um": 155.52,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    221.77484,
+    253.63315
+   ],
+   "view_ff": [
+    174.27914,
+    203.60571
+   ],
+   "view_verdict": "IN",
+   "pred": [
+    250.65,
+    193.35
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_gunit_l4r",
+   "replicas": 1,
+   "outline_um": [
+    129.6,
+    129.6
+   ],
+   "c2c_um": 129.6,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    228.49925,
+    269.90607
+   ],
+   "view_ff": [
+    175.54651,
+    212.21124
+   ],
+   "view_verdict": "IN",
+   "pred": [
+    252.6,
+    193.5
+   ],
+   "trunk_chain": 6,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_gunit_l4",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    64.8
+   ],
+   "c2c_um": 207.36,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    253.06265,
+    329.06592
+   ],
+   "view_ff": [
+    206.56465,
+    278.37833
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    246.75,
+    193.15
+   ],
+   "trunk_chain": 3,
+   "meas": {
+    "tt": 259.69,
+    "ff": 208.55,
+    "rc": "GRT",
+    "label": "CHECKED (NUMBER-CHECK 06:59)",
+    "what": "cl26rt centre M5 pin + 4x1 count-split H-tree, 0 pads; all-reg mean (pinreg 261.39/210.27)"
+   },
+   "meas_verdict": "IN"
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_idx_tx_n32",
+   "replicas": 1,
+   "outline_um": [
+    626.4,
+    561.6
+   ],
+   "c2c_um": 596.16,
+   "cls": "DIE_TREE_IN",
+   "view_tt": [
+    727.58923,
+    857.66388
+   ],
+   "view_ff": [
+    582.1734,
+    703.86664
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    244.75,
+    188.65
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_bksel_c",
+   "replicas": 1,
+   "outline_um": [
+    388.8,
+    172.8
+   ],
+   "c2c_um": 280.8,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    329.54874,
+    399.26196
+   ],
+   "view_ff": [
+    269.07681,
+    332.73706
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    237.3,
+    189.8
+   ],
+   "trunk_chain": 0,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_bk_g",
+   "replicas": 1,
+   "outline_um": [
+    216.0,
+    172.8
+   ],
+   "c2c_um": 194.4,
+   "cls": "CENTRE_TREE",
+   "view_tt": [
+    287.58185,
+    366.897
+   ],
+   "view_ff": [
+    233.01927,
+    302.48663
+   ],
+   "view_verdict": "HIGH",
+   "pred": [
+    259.7,
+    202.0
+   ],
+   "trunk_chain": 4,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_eng_rr_e",
+   "replicas": 1,
+   "outline_um": [
+    410.4,
+    466.56
+   ],
+   "c2c_um": 440.64,
+   "cls": "DIE_TREE_IN",
+   "view_tt": [
+    null,
+    null
+   ],
+   "view_ff": [
+    null,
+    null
+   ],
+   "view_verdict": "NO NUMBER",
+   "pred": [
+    255.25,
+    197.05
+   ],
+   "trunk_chain": 5,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_eng_rr_h0",
+   "replicas": 1,
+   "outline_um": [
+    164.16,
+    267.84
+   ],
+   "c2c_um": 216.0,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    null,
+    null
+   ],
+   "view_ff": [
+    null,
+    null
+   ],
+   "view_verdict": "NO NUMBER",
+   "pred": [
+    254.05,
+    198.95
+   ],
+   "trunk_chain": 3,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81",
+   "module": "dsdv_eng_rr_h1",
+   "replicas": 1,
+   "outline_um": [
+    164.16,
+    267.84
+   ],
+   "c2c_um": 216.0,
+   "cls": "CENTRE_HTREE",
+   "view_tt": [
+    211.7775,
+    265.49384
+   ],
+   "view_ff": [
+    167.31731,
+    214.2892
+   ],
+   "view_verdict": "IN",
+   "pred": [
+    254.05,
+    198.95
+   ],
+   "trunk_chain": 3,
+   "meas": null,
+   "meas_verdict": null
+  },
+  {
+   "die": "S81-HEAD",
+   "module": "ot_s81hd_elemA_cv",
+   "replicas": 1056,
+   "outline_um": [
+    317.672,
+    317.672
+   ],
+   "c2c_um": 317.67,
+   "cls": "CENTRE_HTREE (in-core islands)",
+   "view_tt": [
+    415.62717,
+    415.62717
+   ],
+   "view_ff": [
+    null,
+    null
+   ],
+   "view_verdict": "HIGH",
+   "pred": null,
+   "trunk_chain": null,
+   "meas": {
+    "tt": 344.05,
+    "ff": 280.95,
+    "rc": "GRT",
+    "label": "UNCHECKED",
+    "what": "Codex v4q r2 quadrant H-tree (4 TritonCTS quadrants), quadrant means TT 336.7-355.2 / FF 274.0-290.2; root cause non-NDR trunk + 70-sink leaves (lanes/HEAD-CORE-LAT 08:16); GEOM-REVIEW: V4Q FAIL STRUCTURAL for adoption -- NW quadrant 2,953 sinks vs ~8,500 others, ~25% outline empty -> fix in the PLAN (rebalance quadrant sink loads / outline from logic), not per-quadrant CTS settings"
+   },
+   "meas_verdict": "HIGH"
+  },
+  {
+   "die": "S81-HEAD",
+   "module": "ot_s81hd_elemB_cv",
+   "replicas": 264,
+   "outline_um": [
+    277.652,
+    277.652
+   ],
+   "c2c_um": 277.65,
+   "cls": "CENTRE_HTREE (in-core islands)",
+   "view_tt": [
+    378.75565,
+    378.75565
+   ],
+   "view_ff": [
+    null,
+    null
+   ],
+   "view_verdict": "HIGH",
+   "pred": null,
+   "trunk_chain": null,
+   "meas": {
+    "tt": 295.0,
+    "ff": 236.6,
+    "rc": "GRT",
+    "label": "UNCHECKED",
+    "what": "c2 centred island single CTS tree, 10 BUFx24 stages from 836 leaves (06:34)"
+   },
+   "meas_verdict": "HIGH"
+  }
+ ],
+ "summary": {
+  "S81|HIGH": 2,
+  "S81|IN": 1,
+  "S81|NO NUMBER": 2,
+  "S81|view HIGH": 10,
+  "S81|view IN": 10,
+  "S81|view LOW": 18,
+  "S81|view NO NUMBER": 8,
+  "S81-HEAD|HIGH": 2
+ }
+}

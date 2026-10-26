@@ -1,7 +1,7 @@
 {
- "top": "ot_v41_rom_elem_q_qxpq_w10",
+ "top": "ot_v41_rom_elem_q_qxpq_w10_gb",
  "sources": [
-  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv",
   "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
   "rtl/v41rom/ot_v41_elem_pq_tags.sv",
   "rtl/v41rom/ot_v41_kreg.sv",
@@ -54,7 +54,8 @@
   "QW": 0,
   "QM": 5,
   "QS": 5,
-  "RSTP": 1
+  "RSTP": 1,
+  "CGR": 8
  },
  "defines": [],
  "clock_port": "clk",
@@ -76,6 +77,6 @@
   "pd": 0.6
  },
  "children": [],
- "notes": "S81-CORES2/NC-H 10-25: canonical spec for gen_core_kit_legacy.py, sources from MAIN, params = the S81 die instantiation (rtl/dsrom_sys/s81_dv/frame/col_h10.sv u_e0/u_e2 (QX 10, QM 5, QS 5, RSTP 1; CPR off)). ROM macro view = physical/asap7_memory_macros_v2 (track-aligned in every orientation; same master/content as v1). Uniform contract: no SDC exception, so the ROM->capture read that the closure-loop routes timed as a 2-cycle multicycle (set_multicycle_path -setup 2 -from *u_rom?) is timed single-cycle here (TT clk->Q ~600 ps of 833): macro sites (recipe macro_sites) put each ROM's pin band at the core centre facing the logic so capture regs sit at the pins (F3/F6).",
+ "notes": "S81-CORES2/NC-H 10-25: canonical spec for gen_core_kit_legacy.py, sources from MAIN, params = the S81 die instantiation (rtl/dsrom_sys/s81_dv/frame/col_h10.sv u_e0/u_e2 (QX 10, QM 5, QS 5, RSTP 1; CPR off)). ROM macro view = physical/asap7_memory_macros_v2 (track-aligned in every orientation; same master/content as v1). Uniform contract: no SDC exception, so the ROM->capture read that the closure-loop routes timed as a 2-cycle multicycle (set_multicycle_path -setup 2 -from *u_rom?) is timed single-cycle here (TT clk->Q ~600 ps of 833): macro sites (recipe macro_sites) put each ROM's pin band at the core centre facing the logic so capture regs sit at the pins (F3/F6). S81-QX-GB 10-26: top = the _gb master (COORD 06:38 (a)), GO_BOUNDARY default 1, CGR 8 (claude/core-lat-r4-1026 spec CGR 8).",
  "provenance": "closed_archive ot_v41_rom_elem_q_qxpq_w10/dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb (tools/dsrom_qelem_cl/cl_route_qs.sh QX=10 QM=5 QS=5 RSTP=1)"
 }

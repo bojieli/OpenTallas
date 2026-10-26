@@ -1371,7 +1371,9 @@ def cmd_build(a):
         # (the grid the combo ties land on when the build had no --pg-json)
         import die_infra as DI
         pg = json.loads(Path(a.pg_json).read_text()) if a.pg_json else None
-        pg_shapes = DI.pg_rects(P, DI.pg_grid(P, a.pg_json) if a.pg_json else C128.pg_grid(P))   # + die.pg.domains (HBM-PG 10-26)
+        # main pg_grid (HBM-PG 10-26: core grid + die.pg.domains with holes, die phase) for both --pg-json and the
+        # CLOCK-128 shield plan-grid build (pg_grid(P, None) = plan die.pg.grid + domains)
+        pg_shapes = DI.pg_rects(P, DI.pg_grid(P, a.pg_json))      # + die.pg.domains (HBM-PG 10-26)
         tracks = mesh_tracks(a.track_file, P)
     region_spec = json.loads(Path(a.region_spec).read_text()) if a.region_spec else None
     fp = json.loads(Path(a.clock_floorplan).read_text()) if a.clock_floorplan else None
