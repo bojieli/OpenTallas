@@ -21,7 +21,7 @@ module tb_q3stageb;
  reg [11:0] cfg_addr=0;reg [255:0] cfg_data=0;reg [12:0] limit=0;
  wire configured,init_busy,program_fault,busy,done,hf,fault;wire [15:0] fault_cause;
  reg [1535:0] rows[0:255];reg [63:0] meta[0:255];
- integer NR=0,P=1,MAXC=100000,drain_extra=0,WARMAT=150,HOLD=64,MISSION_AT=4096;
+ integer NR=0,P=1,MAXC=100000,drain_extra=0,WARMAT=150,HOLD=64,MISSION_AT=2048;
  string dir,tracef;integer tfd;
  function automatic [31:0] mix(input [31:0] x);
   reg [31:0] h;h=x*32'h9e3779b1;h=h^(h>>15);h=h*32'h85ebca6b;h=h^(h>>13);return h;
@@ -116,17 +116,18 @@ module tb_q3stageb;
   if(last_clock_fs>=0 && now_fs-last_clock_fs!=833000)$fatal(1,"CLOCK_PERIOD_FS got%0d expected833000",now_fs-last_clock_fs);
   last_clock_fs=now_fs;clock_edges++;
  end
- integer cyc=0,lc=-1,errors=0,words=0,root_done=0,qdone=0,producer_start=0,producer_flits=0;reg firstfault=0;
+ integer cyc=0,lc=-1,errors=0,words=0,root_done=0,qdone=0,producer_start=0,producer_flits=0,first_write=-1,last_write=-1,done_age=-1,failed_runs=0;reg firstfault=0;
  always@(posedge clk)begin
   cyc<=cyc+1;if(launch)lc<=cyc;
   if(rst_n&&lc>=0)begin
    if(tkx_start)begin producer_start++;$display("EV START +%0d slot0%0d",cyc-lc,slot0);end
    if(|tkx_del_slot|| |tkx_del_valid)begin producer_flits++;$display("EV FLIT +%0d slot%h valid%h slot0%0d",cyc-lc,tkx_del_slot,tkx_del_valid,slot0);end
    if(twv)begin
+    if(first_write<0)first_write=cyc-lc;last_write=cyc-lc;
     $display("EV WRITE +%0d addr%0d mask%h data%h",cyc-lc,twa,twm,twd);
     for(integer j=0;j<16;j++)if(twm[j])begin words++;if(twa+j!=64 || twd[32*j+:32]!==32'd20)errors++;end
    end
-   if(tdone)begin root_done++;$display("EV ROOT_DONE +%0d cycles%0d",cyc-lc,tcycles);end
+   if(tdone)begin root_done++;done_age=cyc-lc;$display("EV ROOT_DONE +%0d cycles%0d",cyc-lc,tcycles);end
    if(done)begin qdone++;$display("EV Q_DONE +%0d",cyc-lc);end
    if((fault||program_fault||hf||tfault||txfault||rxfault)&&!firstfault)begin firstfault<=1;$display("FIRST_FAULT +%0d q%0d pf%0d hf%0d root%0d tx%0d rx%0d cause%h",cyc-lc,fault,program_fault,hf,tfault,txfault,rxfault,fault_cause);end
   end
@@ -145,14 +146,19 @@ module tb_q3stageb;
   @(negedge clk);dvc=1;@(negedge clk);dvc=0;repeat(ROWS+8)@(negedge clk);
   if(!configured||program_fault)$fatal(1,"descriptor fail");
   void'($value$plusargs("MISSION_AT=%d",MISSION_AT));
-  if(cyc>=MISSION_AT)$fatal(1,"host programme not ready before static mission start");
-  while(cyc<MISSION_AT)@(negedge clk);
-  $display("MISSION_ABS cycle%0d slot0%0d clock833ps",cyc,slot0);
-  launch=1;@(negedge clk);launch=0;
-  repeat(800)@(negedge clk);
-  $display("STAGEB_SUMMARY producer_start%0d producer_flits%0d words%0d root_done%0d qdone%0d errors%0d fault%0d",producer_start,producer_flits,words,root_done,qdone,errors,firstfault);
-  if(producer_start!=1||words!=1||root_done!=1||qdone!=1||errors||firstfault)$fatal(1,"Q3STAGEB FAIL");
-  $display("CLOCK_GATE PASS period_fs833000 edges%0d",clock_edges);$display("Q3STAGEB PASS");$finish;
+  for(integer job=0;job<2;job++)begin
+   integer target;target=MISSION_AT+job*2048;
+   if(cyc>=target)$fatal(1,"host programme not ready before static mission start");
+   while(cyc<target)@(negedge clk);
+   lc=-1;errors=0;words=0;root_done=0;qdone=0;producer_start=0;producer_flits=0;firstfault=0;first_write=-1;last_write=-1;done_age=-1;
+   $display("MISSION_ABS job%0d cycle%0d slot0%0d clock833ps loaded_programme%0d",job,cyc,slot0,job!=0);
+   launch=1;@(negedge clk);launch=0;
+   repeat(800)@(negedge clk);
+   $display("STAGEB_SUMMARY job%0d producer_start%0d producer_flits%0d words%0d root_done%0d qdone%0d errors%0d fault%0d first_write%0d last_write%0d done%0d",job,producer_start,producer_flits,words,root_done,qdone,errors,firstfault,first_write,last_write,done_age);
+   if(producer_start!=1||words!=1||root_done!=1||qdone!=1||errors||firstfault)failed_runs++;
+  end
+  if(failed_runs)$fatal(1,"Q3STAGEB FAIL runs%0d",failed_runs);
+  $display("CLOCK_GATE PASS period_fs833000 edges%0d",clock_edges);$display("Q3STAGEB PASS cold_and_loaded_relaunch");$display("Q3STAGEB PASS");$finish;
  end
 endmodule
 `default_nettype wire
