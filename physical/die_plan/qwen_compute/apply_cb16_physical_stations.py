@@ -47,7 +47,7 @@ def apply(raw,reports,minimum_overrides=None):
   delta=sum(deltas.get((parts.get(part),bus),0) for part,bus in endpoints)
   if delta:
    old=lane.get('fixed_cycles',0);lane['fixed_cycles']=old+delta;lanes.append(dict(lane=lane['id'],old_fixed_cycles=old,new_fixed_cycles=old+delta,delta=delta))
- report=dict(scope='UNADOPTED physical station plan delta; fresh R8/DAG/token and actual P&R gates required',types=len(set(x['type'] for x in changes)),changed_bus_counts=sum(x['delta']>0 for x in changes),repositioned_bus_banks=len(changes),additional_stations_per_type=sum(x['delta'] for x in changes),changed_lanes=len(lanes),lane_delta_histogram=dict(collections.Counter(x['delta'] for x in lanes)),lanes=lanes,buses=changes,preserved_old_stage_counts=True,soft_clock_interface='87 soft drops is mapped max-profile candidate; native hard clocks additional; not adopted',outline_change=False)
+ report=dict(scope='UNADOPTED physical station plan delta; fresh R8/DAG/token and actual P&R gates required',types=len(set(x['type'] for x in changes)),changed_bus_counts=sum(x['delta']>0 for x in changes),repositioned_bus_banks=len(changes),additional_stations_per_type=sum(x['delta'] for x in changes),changed_lanes=len(lanes),lane_delta_histogram=dict(collections.Counter(x['delta'] for x in lanes)),lanes=lanes,buses=changes,preserved_old_stage_counts=True,soft_clock_interface='fresh actual mapped per-class clock census required; old87 candidate superseded; native hard clocks additional; not adopted',outline_change=False)
  return out,report
 
 def main():
