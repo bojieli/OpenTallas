@@ -262,10 +262,18 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
 
 
+# Formal preparation must retain every FF already present in the physical netlist.
+# Flatten discards wrapper keep attributes; opt_clean otherwise deletes unloaded
+# but physically required copies and produces a false KEEP failure. This does not
+# create a register or forgive a synthesis merge: a missing physical FF stays absent.
+GATE_PHYSICAL_FF_KEEP = "setattr -set keep 1 t:$*ff* t:$_*FF*_"
+
+
 def gate_script(env, netlist, stubs, wrap, lecff, out):
     s = [f"read_liberty -ignore_miss_func {NLDM}/{l}" for l in STD_LIBS]
     s += [f"read_verilog {stubs}", f"read_verilog {netlist}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
-          "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc", "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
+          "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc",
+          GATE_PHYSICAL_FF_KEEP, "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
 
 
@@ -1816,7 +1824,39 @@ def structural_twin_closure(L, log):
 
 
 
-def alias_arrays(L, log, words=4):
+def slang_elements(aliases_file):
+    """slang lays an unpacked array out as one flat vector (`reg [3:0] x [0:N-1]`: element 0 at the MSB) and drives
+    each element from its own cell `$driver$x[i]` (the aldff / dff of that element).  -> {gold key 'ff:<scope>x[f]':
+    '[i]...[b]'}: the element index tuple and the bit within the element of every flat bit such a cell drives, read
+    from the gold design written before techmap (gold.aliases.json).  Empty when the file or the cells are absent."""
+    try:
+        d = json.loads(Path(aliases_file).read_text())
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for mod in d.get("modules", {}).values():
+        drv = {}                                    # (array name, bit id) -> '[i]..[b]'
+        for cn, c in mod.get("cells", {}).items():
+            mm = re.search(r"\$driver\$([^$\[\]]+)((?:\[\d+\])+)$", cn)
+            if not mm:
+                continue
+            for b, bit in enumerate(c.get("connections", {}).get("Q", ())):
+                if isinstance(bit, int):
+                    drv[(mm[1], bit)] = f"{mm[2]}[{b}]"
+        if not drv:
+            continue
+        for nn, w in mod.get("netnames", {}).items():
+            if w.get("hide_name"):
+                continue
+            last = re.split(r"[.\\]", nn)[-1]
+            for f, bit in enumerate(w.get("bits", ())):
+                e = drv.get((last, bit)) if isinstance(bit, int) else None
+                if e:
+                    out[f"ff:{nn}[{f}]"] = e
+    return out
+
+
+def alias_arrays(L, log, words=4, work=None):
     """an RTL array whose gate flops synthesis named after an ALIAS array (`assign SX[i] = X[i]`: rename -wire picked
     the alias wire, so the gate holds SX[i][b] while the gold, read with the other frontend, holds X[h][flat]): the
     gold flops' own Q-net alias names carry the gate base, which is the evidence that pairs the two bases.  The index
@@ -1824,7 +1864,11 @@ def alias_arrays(L, log, words=4):
     names when the flattened gate set is a subset of the gold set (synthesis may have merged some elements into other
     registers: those gold flops stay gold-only and are paired by function in correspond); among the variants the one
     with the fewest disagreeing matched compare points in simulation is kept.  Sound: the re-key is a bijection of
-    key points and every next-state function is still proved (a wrong layout can only produce a difference)."""
+    key points and every next-state function is still proved (a wrong layout can only produce a difference).
+    The layout is read from slang's per-element driver cells when the gold has them (slang_elements); simulation
+    alone cannot tell (PATH-KV-LEC 10-25: calendar wait_q / left_q / burst_q [0:N-1], slang element 0 at the MSB vs
+    read_verilog x[0]: random patterns never reach wait_q == 0, both layouts mismatched equally, the first, element-
+    reversed one was kept -> 528 false differences on kvs_pc and its head kit)."""
     def split(keys):
         d = {}
         for k in keys:
@@ -1873,6 +1917,7 @@ def alias_arrays(L, log, words=4):
             elif isinstance(x, (list, tuple)):
                 held.update(y for y in x if isinstance(y, str))
     galias = getattr(L, "galias", {})
+    elem = slang_elements(Path(work) / "gold.aliases.json") if work is not None else {}
     G, T = split(k for k in L.gonly if k not in held), split(k for k in L.tonly if k not in held)
     for gb, g in sorted(G.items(), key=lambda x: -len(x[1])):
         votes = collections.Counter()
@@ -1898,13 +1943,22 @@ def alias_arrays(L, log, words=4):
             if not cands:
                 continue
             base = mismatches()
-            best = None
+            scored = []
             for mp in cands:
                 apply(mp)
-                n_ = mismatches()
+                scored.append((mismatches(), mp))
                 apply({v: k for k, v in mp.items()})
-                if best is None or n_ < best[0]:
-                    best = (n_, mp)
+            best = min(scored, key=lambda x: x[0])
+            # slang's per-element driver cells name the element each flat gold bit belongs to: when they exist they
+            # decide the layout (structural evidence); simulation only orders variants without such evidence
+            agree = [sum(1 for tk, gk in mp.items() if elem.get(gk) == tk[len(tb):]) for _, mp in scored]
+            if max(agree, default=0) > 0:
+                j = max(range(len(scored)), key=lambda i: agree[i])
+                if scored[j] is not best:
+                    log.append(f"alias array: {gb.split('.')[-1]} layout from slang element drivers "
+                               f"({agree[j]} of {len(scored[j][1])} bits agree; simulation preferred another, "
+                               f"{best[0]} vs {scored[j][0]} mismatches)")
+                best = scored[j]
             # the alias evidence decides the pairing; simulation only orders the layout variants (a gold array
             # whose next state reads X sources or merged elements disagrees in raw simulation either way)
             if True:
@@ -1985,7 +2039,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     (u_tv.line[4] == u_k5.g_r.v == valid_out) is dropped while its upstream index-line constants are still being
     refined and needs adding rounds after them; 10 left it free -> false NOT EQUIVALENT (gunit_l4 895 points,
     EQUIVALENT at 24 rounds, 738 s)."""
-    alias_arrays(L, log)
+    alias_arrays(L, log, work=work)
     relayout(L, log)
     renamed(L, log)
     replica_proposals(L, log)

@@ -61,7 +61,8 @@
    "gen": "python3 -I physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py --core-json {inputs}/core/kv3_head_eighth_e1_core.json --plan {inputs}/plan/die_plan.json --kit-rtl {inputs}/kit_rtl --out {gen}",
    "vars": {"inputs": "/srv/opentallas-scratch2/claude/flow-canary/inputs/kv/20261025_head_e1"},
    "prep": ["if [ ! -f {inputs}/MANIFEST.json ]; then echo 'CANARY_INPUTS missing {inputs}'; python3 -I {run}/canary.py check --run {run}; exit 3; fi"],
-   "kit": "{gen}/kv3_head_eighth_e1__216x216", "run": "bash {kit}/run_kit_kv.sh {kit} finish {mem} {cpus}",
+   "kit": "{gen}/kv3_head_eighth_e1__216x216", "run": "bash {kit}/run_kit_kv.sh {kit} finish {mem} {cpus} && bash {src}/physical/die_plan/qwen_kvsys/cores/harden/eco/hold_step.sh {kit} {src} {cpus} {mem}",
+   "baseline_note": "FLOW-TAG 2026-10-26 (COORD FLOW-FANOUT ruling 00:41): RE-BASELINED on the ruled flow (fanout cap 64 9bca574fd, MCMM tc+bc GRT, FF vclk, rcx RC, leaf_affinity, hold margin 5) + the standard KV post-route FF hold step (eco/hold_step.sh, sign-off in signoff_hold/). The golden below (36.61 TT, TC-only 10-24 flow) stays a recorded REFERENCE only; the gating baseline is <runs>/baselines/qwen_kvsys_core__kv3_head_eighth_e1.json. Watch list unchanged.",
    "grt_gate": false,
    "golden": {"verdict": "NOT SIGNED", "setup_tt_wns": 36.61, "hold_ff_wns": -5.92,
               "source": "intel2:/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e1__216x216/signoff/signoff.json (2026-10-24 14:21, hold_ff 378 ep + DRV slew; copy in the inputs dir golden_signoff.json)"}}
