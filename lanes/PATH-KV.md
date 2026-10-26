@@ -347,3 +347,24 @@ COORD? (PATH-KV-GRT1 -> lead): pick one: (a) die_trial model = strict planned-co
 - live jobs: none (all kvgrt2-* docker probes finished). Scratch epyc1 /srv/opentallas-scratch2/claude/path-kv-grt2 (what-if kits + v39w draft plan).
 - results (25% / strict 25%, overflow, gcells): base 816,190/152 / 1,064,804; N-S water-fill 773,560/121 / 912,590; +L2045 off 765,552/122; +E-W r1-7 556,384/46 / 732,359/48; xcol+E-W+hub 425,264/9 / 439,020/19 (residual only row-0 hg|hgi seam at io_W3, strict + E3 mirror). Not 0 in either model.
 - next: (1) COORD rules model consistency vs plan change; (2) if plan change: generator emits subwindows for N-S buses, E-W 1056-b hops (rows 1-7), hub L1449/L1450 mouths; re-path L2045 via hub_C; row-0 seam needs its own type (kv3_hg shared by 4 row-0 corners) or io-corner channel; fix io_cor ft19 station (430 um); then G0/G0C, kit, both GRTs, render, GEOM REQ.
+
+## PARKED 2026-10-25 21:15 PDT PATH-KV (lead, fresh 20:16)
+- Signed off: nothing new. The KV gate GRT0 is FAIL, so path parts run as trials only.
+- Loop gaps closed:
+  - m6 and m6e0 GEOM-PASS-NOT-ROUTED: both now have resolved.tsv TRIAL-QUEUED rows (coord 2e2da833c). The trial rows a45bd2e4e0b7, f548e2d18cfc and c7b39186ad7b exist and are WAIT-CANARY.
+  - e1lt regen (--head-lane-taps --head-lane-ltcopy, e1fence@aa073c9f47, now MERGED on main 0c87522f27): LEC EQ 29,982, lanes fenced 4x4. GEOM-REVIEW-8 PASS-COND, trial row 42dd6f51eae5 (no --canary-fix; see the GEOM-REVIEW note at 180b4f23c).
+- Canary c51d6d93039d: this is a FLOW cause, not an e1 layout cause (I withdrew the 20:09 claim).
+  - FLOW-CANARY posted READY URGENT-FLOW claude/flowcan-mem-1025@83b1839aa (MCMM GRT step: TT -57.66 -> -5.91).
+  - The residual is the fanout-cap-24 BUFx2 chains (KV-CORES + FLOW), so the canary stays REGRESSION until that is fixed or COORD rules on the golden.
+  - The KV trial rows release automatically after that. If the gate then reports 'queued kit flow differs', regenerate the m6/e1f kits.
+- GRT0: PATH-KV-GRT2 @81b948f640 shows no plan fix reaches 0 at the 25 % share. Best what-if is 425,264 overflow / 9 gcells (current model) and 439,020 / 19 (strict); the residue is the row-0 hg|hgi seam at io_W3. See the GRT2 PARKED section.
+  - COORD? posted in COORD-REVIEW-QUEUE (2026-10-25 21:15 PDT): (a) model consistency, recommended, or (b) a 4-part plan change + L2045 re-route + io-corner seam redesign.
+  - PATH-FREEZE KV GRT0 line updated.
+- PC833: both kits placed and GEOM-REVIEW-9 PASS-COND. LEC ERROR is a tool abort ('cyclic flop hypotheses (rebuild)', main lec.py a17645cf53), handed to lanes/LEC.md. No rows enqueued until LEC is EQUIVALENT.
+- ASTK5 trial e9752d867afa RUNNING (epyc2). LEC EQ 29,370, 3_place sha fb3965be matches the reviewed one; it was at CTS at 21:09. The RCX checks for conditions (1)-(4) of 18:56 are still pending.
+- BIND (live, not mine): /srv/opentallas-scratch2/claude/path-kv-bind iterating b3..b12 (b3 failed at kit_istations kv3_hg_v1, missing the hroot_Q_o face-reg line).
+  - ROOT 21:10 evidence gate: the KV manifests kvtok1025/recipe_b2.json and asbuilt_v36p/v36e/binder2.json carry absolute paths. The strict bind of record must be repo-relative (tools/die_plan/manifest_paths.py --kind bind).
+  - The KV MU image (F=2, tok-qk-kvimg flow, merged) is compiled from BIND's strict bind sha once it posts. The TOK-QK dry runs also need one landed depth per seam bus plus fixes for the boot-age (130>127) and vport RT (>31) bounds.
+- Live jobs (all autopilot-owned or other lanes'): trial rows above; ASTK5 route; BIND b12. My worktrees: none.
+- NEXT: on the COORD ruling, (a) DIE-FT re-runs KV it5 -> PATH-FREEZE, then CLOCK-ROUTE, or (b) a plan lane from GRT2. Then: ASTK5 RCX conditions; re-launch PC833 LEC once LEC.md fixes the abort -> trial rows; MU image from the strict bind.
+- OWNER?: none.
