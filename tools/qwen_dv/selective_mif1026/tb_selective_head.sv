@@ -233,6 +233,8 @@ qfd_dv_lane_h_safe2 #(.MEMORY_ALIGNMENT(3),.MEMORY_READ_EXTRA(0), .BTAB_READ_EXT
 reg [87:0] op_history[0:3];
 wire [87:0] ref_op={ref_vm_we,ref_kv_we,ref_l_ov,ref_retire,ref_l_last,ref_vm_waddr,ref_vm_wdata,ref_l_red,ref_l_redsq,ref_l_raddr};
 wire [87:0] new_op={new_vm_we,new_kv_we,new_l_ov,new_retire,new_l_last,new_vm_waddr,new_vm_wdata,new_l_red,new_l_redsq,new_l_raddr};
+wire [$bits({ref_va_re,ref_va_addr,ref_vb_re,ref_vb_addr,ref_vc_re,ref_vc_addr,ref_wrom_re,ref_wrom_addr,ref_crom_re,ref_crom_addr,ref_vm_we,ref_vm_waddr,ref_vm_wdata,ref_kv_we,ref_kv_waddr,ref_kv_wdata,ref_l_ov,ref_l_out,ref_l_red,ref_l_redsq,ref_l_raddr,ref_l_last,ref_retire,ref_l_fault,ref_sx_exp_v,ref_sx_exp_x,ref_sx_rcp_v,ref_sx_rcp_x,ref_sx_rsq_v,ref_sx_rsq_x})-1:0] ref_all={ref_va_re,ref_va_addr,ref_vb_re,ref_vb_addr,ref_vc_re,ref_vc_addr,ref_wrom_re,ref_wrom_addr,ref_crom_re,ref_crom_addr,ref_vm_we,ref_vm_waddr,ref_vm_wdata,ref_kv_we,ref_kv_waddr,ref_kv_wdata,ref_l_ov,ref_l_out,ref_l_red,ref_l_redsq,ref_l_raddr,ref_l_last,ref_retire,ref_l_fault,ref_sx_exp_v,ref_sx_exp_x,ref_sx_rcp_v,ref_sx_rcp_x,ref_sx_rsq_v,ref_sx_rsq_x};
+wire [$bits({new_va_re,new_va_addr,new_vb_re,new_vb_addr,new_vc_re,new_vc_addr,new_wrom_re,new_wrom_addr,new_crom_re,new_crom_addr,new_vm_we,new_vm_waddr,new_vm_wdata,new_kv_we,new_kv_waddr,new_kv_wdata,new_l_ov,new_l_out,new_l_red,new_l_redsq,new_l_raddr,new_l_last,new_retire,new_l_fault,new_sx_exp_v,new_sx_exp_x,new_sx_rcp_v,new_sx_rcp_x,new_sx_rsq_v,new_sx_rsq_x})-1:0] new_all={new_va_re,new_va_addr,new_vb_re,new_vb_addr,new_vc_re,new_vc_addr,new_wrom_re,new_wrom_addr,new_crom_re,new_crom_addr,new_vm_we,new_vm_waddr,new_vm_wdata,new_kv_we,new_kv_waddr,new_kv_wdata,new_l_ov,new_l_out,new_l_red,new_l_redsq,new_l_raddr,new_l_last,new_retire,new_l_fault,new_sx_exp_v,new_sx_exp_x,new_sx_rcp_v,new_sx_rcp_x,new_sx_rsq_v,new_sx_rsq_x};
 integer cycle=0,checked=0,mismatch=0,valid_outputs=0;
 always @(posedge clk) begin
   crd[0]<=crom_q;crd[1]<=crd[0];crd[2]<=crd[1];crd[3]<=crd[2];wrd[0]<=wrom_q;wrd[1]<=wrd[0];wrd[2]<=wrd[1];va1<=va_q;vb1<=vb_q;vc1<=vc_q;
@@ -252,6 +254,7 @@ always @(negedge clk) begin
  wrom_q={16{16'h3f80 | (16'(cycle)&16'h003f)}};
  if(cycle>128)begin
   checked=checked+1;
+  if(new_all!==ref_all)begin mismatch=mismatch+1;if(mismatch<6)$display("SELECTIVE all-output mismatch cycle%0d",cycle);end
   // Valid/retire signals always compare; payload compares only on a real output.
   if(new_vm_we!==ref_op[87] || new_kv_we!==ref_op[86] || new_l_ov!==ref_op[85] || new_retire!==ref_op[84])begin
    mismatch=mismatch+1;if(mismatch<6)$display("ALIGN valid mismatch cycle%0d ref%h got%h",cycle,ref_op,new_op);
