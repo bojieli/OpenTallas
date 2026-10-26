@@ -42,8 +42,8 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
 - [ ] KV.GRT Die GRT0 it5, strict core OBS + die clock (ruling a) · DIE-PROTO · RUNNING · 816,190 at 25% share; it5 on canonical plan not run yet → KV.SHARE
   - [ ] KV.SHARE Kits hg/hgi/io_W* reserve 0.5 M2-M7 FT in die-model tracks · DIE-PROTO · TODO · if it5 != 0, fallback (b) io_W3 row-0 seam (owner question in WAITS)
 - [ ] KV.CLK Die clock route + related-pair CPPR <=80 · CLOCK-MESH · FAIL · it5b routes ovf 0, pair 446/391 ps TT/FF (seams 418/364); tap-driver tree same 446/391 → KV.GRT
-- [ ] KV.BIND Strict repo-relative bind of record · PATH-KV · RUNNING · b15 intel1; b21 pad_por_n ERROR; seam bus skew
-  - [ ] KV.PC833 PC833 LEC · PATH-KV · FAIL · NOT EQUIVALENT 528 pts each; calendar lowering being isolated
+- [ ] KV.BIND Strict repo-relative bind of record · PATH-KV · RUNNING · batch claude/path-kv-batch-0115@6f8f4cce4d: L747 5->8 (SYS3 detour) + odd strap compose; b29 queued epyc1
+  - [ ] KV.PC833 PC833 LEC · PATH-KV · RUNNING · kvs_pc + h_head_p EQUIVALENT (lec 070a15290, READY ROOT-MERGE-16); e1 rerun w/ 9952cf35d
 - [ ] KV.STA Die STA on real views · DIE-PROTO · WAITS · → KV.CLK, → KV.TILES
   - [ ] KV.TILES Tile sign-offs · PATH-KV · RUNNING · ASTK native TT -85.91 / FF -13.22, AS6 cea44fd4c4 next; SYS_C ff3c8ad8fe not ready → FLOW.TAG
 
