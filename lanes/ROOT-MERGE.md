@@ -76,3 +76,11 @@ gate = tools/die_plan pytest + plain G0 on s81, s81_head, qwen_compute, qwen_kvs
 - HOLD: die-ft-standin 5746fd241e (conflicts with merged path-qc-rst; one design needed), evidence-gate ea06e774da (with s81-srcgraph).
 - INFRA2: epyc1 ~/.local/bin/ot-run is the installed copy; resync from main tools/fleet/ot-run (epyc3 removed).
 - Lesson: never 'git checkout origin/main' in the merge worktree before pushing (did once 20:13, recovered from reflog).
+
+## PARKED ROOT-MERGE-11 2026-10-25 21:19 PDT
+- main = 0f076c3f75 (hub ~/OpenTallas ff'd). Chain: db96e1a590 -> ce7e00db25 (autopilot-frozen-die-gate e584d366ec, URGENT) -> 0c87522f27 (batch 1: s81-srcgraph c861709a2a + evidence-gate ea06e774da, rom-macro f2b828e9a, type-reduce2 1d25b30e3 incl. S81 delta 0ccde7a09, path-kv-e1fence aa073c9f47, path-hbm-tkmlec2 c5ba1df3a0, toksched-headb4 5f4e254785, ROOT fix 6fa4014835 bind.py getattr root) -> 18073803c3 (batch 2: rom-macro 211186de1, die-ft-capmodel beb476a62, path-hbm-tkmkit 2dfb44654c, tok-qk-kvimg e685790535) -> 0f076c3f75 (flowcan-mem 83b1839aa, URGENT flow).
+- Every push under epyc1 ~/coord/merge.lock, --no-ff, 0 deletions; gates on a FULL tools/physical/rtl checkout (a sparse physical/die_plan checkout makes die_plan pytest refuse and QC G0 read 3 err instead of 0). Baseline G0: QC 0, s81_head 0, B2n 0, KV 4, S81 1.
+- Not merged: KV ffc63645f / HBM 623e81076 type-reduce deltas (wait TYPE-REDUCE-3 kit LEC); rom-gate-flow 0b6be8e6d (rides next flow tag). die-ft-standin 5746fd241e CLOSED (withdrawn).
+- FLOW TAG flow-20261025-b NOT CUT: KV core canary REGRESSION (-5.91 vs golden +36.61) until FLOW-FANOUT fanout-cap fix; then tag newest sha whose full canary set passes.
+- Evidence gate on main now refuses 7 in-repo bind manifests with absolute paths (HBM asbuilt.json, KV recipe_b2 + v36p/v36e/binder2, QC cb16 x2): notice in COORD-REVIEW-QUEUE.
+- No ot-run / ot-sizes-sync changes -> no INFRA resync. No live jobs; both epyc1 worktrees removed. Gate scripts/logs epyc1:/srv/opentallas-scratch2/claude/root-merge11-out (gates.sh, extra.sh, m1-m4).
