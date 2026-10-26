@@ -1,0 +1,41 @@
+{
+ "gold_revision": "3d26ba16c4",
+ "scope": "loop indices become lexical integer declarations; arithmetic, protocol and cycle count unchanged",
+ "cycle_delta": 0,
+ "results": {
+  "ot_s81sl_vs": {
+   "checks": 9989,
+   "base": "PASS",
+   "mutant": "CAUGHT",
+   "mutant_kind": "candidate-only x_qd bit0 corruption"
+  },
+  "ot_s81sl_vq": {
+   "checks": 9989,
+   "base": "PASS",
+   "mutant": "CAUGHT",
+   "mutant_kind": "candidate-only u_i bit0 corruption"
+  },
+  "ot_dsrom_aq12": {
+   "checks": 11969,
+   "base": "PASS",
+   "mutant": "CAUGHT",
+   "mutant_kind": "candidate-only x first-element sign inversion"
+  },
+  "ot_s81sl_aq12x": {
+   "checks": 11969,
+   "base": "PASS",
+   "mutant": "CAUGHT",
+   "mutant_kind": "candidate-only xd first-element sign inversion"
+  }
+ },
+ "limitations": [
+  "These are component cycle-lockstep tests, not token throughput or physical closure.",
+  "Early AQ12X controls inverted x sign only (magnitude unchanged) or accidentally inverted both xd inputs: BLIND controls rejected; corrected candidate-only xd control caught. Original launcher failure logs retained in run inventory."
+ ],
+ "source_paths": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv"
+ ]
+}
