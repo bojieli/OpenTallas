@@ -36,3 +36,13 @@ def test_lint_records_file_prefixed_yosys_errors(tmp_path):
     import json
     rec = json.loads((tmp_path / 'rtl_lint.json').read_text())
     assert rec['verdict'] == 'FAIL' and len(rec['errors']) == 1 and 'demo.sv:16: ERROR' in rec['errors'][0], rec
+
+
+def test_lint_uses_production_top_parameter_specialization(tmp_path):
+    (tmp_path / 'config.mk').write_text('export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\nexport VERILOG_TOP_PARAMS = AQ_XMEM 2 WIDTH 16\n')
+    assert 'hierarchy -check -top demo -chparam AQ_XMEM 2 -chparam WIDTH 16' in rtl_lint.script(tmp_path)
+
+def test_lint_fails_closed_on_malformed_top_parameters(tmp_path):
+    (tmp_path / 'config.mk').write_text('export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\nexport VERILOG_TOP_PARAMS = AQ_XMEM\n')
+    assert rtl_lint.run(tmp_path) == 1
+    assert 'name/value pairs' in (tmp_path / 'rtl_lint.json').read_text()

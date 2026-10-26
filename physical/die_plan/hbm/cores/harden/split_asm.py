@@ -17,6 +17,7 @@ ALIASES (10-25): the rest_extract parent can connect a remainder OUTPUT port nam
 port net that is read but not driven in the parent gets 'assign <net> = <connection>' (listed as 'alias drives').
 """
 import argparse, re, sys, collections
+import os, pathlib, subprocess, tempfile
 
 RX_ID = r'(?:\\\S+\s|[A-Za-z_][\w$]*)'
 
@@ -117,6 +118,27 @@ def rng(s, w=None):
         return nm, (list(range(w)) if w else [0])
     hi = int(m.group(2)); lo = int(m.group(3)) if m.group(3) is not None else hi
     return nm, list(range(lo, hi + 1))
+
+
+def write_assembly(path, text, top):
+    """Publish the native q3 assembly after removing reverse alias drivers.
+
+    The q3 remainder output already drives each master port. The inherited
+    parent reverse assign would close a combinational loop through our alias.
+    Reuse the exact transform qualified by the production programme gate.
+    """
+    output = pathlib.Path(path)
+    if top != 'ot_hbm_q3_producer_native':
+        output.write_text(text)
+        return
+    helper = pathlib.Path(__file__).resolve().parents[5] / 'tools/hbm_b2/q3prog/q3_asm_alias_loops.py'
+    with tempfile.TemporaryDirectory(prefix='q3-alias-', dir=output.parent) as scratch:
+        source = pathlib.Path(scratch) / 'assembly.sv'
+        fixed = pathlib.Path(scratch) / 'fixed.sv'
+        report = pathlib.Path(scratch) / 'report.json'
+        source.write_text(text)
+        subprocess.run([sys.executable, str(helper), str(source), str(fixed), str(report)], check=True)
+        os.replace(fixed, output)
 
 
 def main():
@@ -248,7 +270,7 @@ def main():
     out = re.sub(r'^module elab_top\(', f'module {a.top}(lockstep_mut, ' if a.mut else f'module {a.top}(', out, count=1, flags=re.M)
     if a.mut:
         out = out.replace(';\n', ';\n  input [3:0] lockstep_mut;\n', 1)
-    open(a.out, 'w').write('// GENERATED bench-only split assembly (split_asm.py, PATH-HBM/Q3 2026-10-25)\n' + out)
+    write_assembly(a.out, '// GENERATED bench-only split assembly (split_asm.py, PATH-HBM/Q3 2026-10-25)\n' + out, a.top)
     print('unmapped wrapper inputs:', len(unmapped_in), unmapped_in[:20])
 
 

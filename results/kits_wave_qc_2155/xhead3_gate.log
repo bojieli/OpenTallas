@@ -1,0 +1,20 @@
+S5_XH3_COVER ops 30 lw_v 268 en 862 lr_v 2486 go 30 xvalid 2482 xnz 2482 fault 3436 resets 0
+S5_XH3_EQ PASS 4960 compares seed 1 cid 0
+S5_XH3_COVER ops 25 lw_v 212 en 565 lr_v 2475 go 25 xvalid 2471 xnz 2471 fault 4892 resets 0
+S5_XH3_EQ PASS 4960 compares seed 2 cid 0
+S5_XH3_COVER ops 30 lw_v 268 en 856 lr_v 2486 go 30 xvalid 2482 xnz 2482 fault 3436 resets 0
+S5_XH3_EQ PASS 4960 compares seed 1 cid 22
+S5_XH3_COVER ops 25 lw_v 212 en 572 lr_v 2475 go 25 xvalid 2471 xnz 2471 fault 4892 resets 0
+S5_XH3_EQ PASS 4960 compares seed 2 cid 22
+S5_XH3_COVER ops 30 lw_v 268 en 866 lr_v 2486 go 30 xvalid 2482 xnz 2482 fault 3436 resets 0
+S5_XH3_EQ PASS 4960 compares seed 1 cid 5
+S5_XH3_COVER ops 25 lw_v 212 en 573 lr_v 2475 go 25 xvalid 2471 xnz 2471 fault 4892 resets 0
+S5_XH3_EQ PASS 4960 compares seed 2 cid 5
+S5_XH3_COVER ops 30 lw_v 268 en 854 lr_v 2486 go 30 xvalid 2482 xnz 2482 fault 3436 resets 0
+S5_XH3_EQ PASS 4960 compares seed 1 cid 63
+S5_XH3_COVER ops 25 lw_v 212 en 570 lr_v 2475 go 25 xvalid 2471 xnz 2471 fault 4892 resets 0
+S5_XH3_EQ PASS 4960 compares seed 2 cid 63
+7. Executing CHECK pass (checking for obvious problems).
+Checking module qfd_dv_s5_xhead3...
+Checking module $paramod$0997ab2af8b138d4dde5f5abc8ecb3633ecc78f8\ot_rst_relay...
+Found and reported 0 problems.

@@ -366,7 +366,17 @@ SCHEMA = {
                                            "cell": {"type": "string"}, "legs_um": {"type": "array", "items": _nonneg},
                                            "insertion_ps": _nonneg, "budget_owner": {"type": "string"},
                                            "site": {"type": "string"}, "note": {"type": "string"},
-                                           "cell_ll_um": _xy, "orient": {"type": "string"}}}},
+                                           "cell_ll_um": _xy, "orient": {"type": "string"},
+                                           # PATH-HBM TKMCOND 10-25 (GEOM 15:24 cond 2): symmetric leg repeaters
+                                           # (same count on every driven leg; check.py verifies) + the probe record
+                                           "leg_repeaters": {"type": "array", "items": {
+                                               "type": "object", "required": ["name", "tap", "k", "xy"],
+                                               "additionalProperties": False,
+                                               "properties": {"name": _name, "tap": _name,
+                                                              "k": {"type": "integer", "minimum": 1}, "xy": _xy,
+                                                              "cell": {"type": "string"}, "cell_ll_um": _xy,
+                                                              "cell_wh_um": _xy, "orient": {"type": "string"}}}},
+                                           "leg_slew_probe": {"type": "object"}}}},
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {

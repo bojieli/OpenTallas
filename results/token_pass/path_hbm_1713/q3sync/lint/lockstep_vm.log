@@ -1,0 +1,13 @@
+# paths: repo-relative at the recorded commit; GEN/ = q3_sync_profile.py output (regenerable from that commit), SCRATCH/ = uncommitted scratch, TOOLS/ = fleet tool install
+# Sun Oct 25 18:52:54 PDT 2026 host=tender-ray commit=265fd232aa606c4632eb062af81a8e023b7ad7e5 dirty_tracked=0 core=vm
+# build rc=0
+LOCKSTEP compared_cycles=3873 mismatches=0 output_change_cycles=3873 in_reset_window_diff_cycles=2 hold=64 warm=2000
+LOCKSTEP PASS
+- SCRATCH/lockstep_vm/tb.sv:156: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.093 s; speed 85.645 us/s
+- Verilator: cpu 0.093 s on 1 threads; allocated 8 MB
+# sim rc=0 Sun Oct 25 18:52:58 PDT 2026
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.396 MB sources in 14 modules, into 9.009 MB in 23 C++ files needing 0.035 MB
+- Verilator: Walltime 4.057 s (elab=0.010, cvt=1.095, bld=2.774); cpu 1.474 s on 2 threads; allocated 149.648 MB
