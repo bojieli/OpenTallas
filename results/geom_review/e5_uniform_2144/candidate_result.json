@@ -1,0 +1,30 @@
+{
+  "verdict": "REJECTED_FOR_ADOPTION",
+  "scope": "CTS-only + read-only TT GRT-RC clock diagnostic; no SIGNED gate",
+  "run": "epyc2:/srv/opentallas-scratch2/claude/codex-e5-local-2144/probe/uniform128",
+  "exit": 0,
+  "grt_overflow": 0,
+  "nets": 92400,
+  "wire_um": 1394793,
+  "trunk_buffers": 986,
+  "taps": 204,
+  "clock_sink_n": 18058,
+  "reg_arrival_tt_ps": [
+    445.4,
+    515.8,
+    611.2
+  ],
+  "reg_slew_above80": 0,
+  "trunk_slew_above80": 17,
+  "trunk_max_slew_ps": 131.7,
+  "local_buffer_slew_above80": 5,
+  "local_buffer_max_slew_ps": 88.7,
+  "local_tap_mean_tt_ps": [
+    21.709137,
+    122.94661943478265
+  ],
+  "local_tap_mean_spread_ps": 101.23748243478265,
+  "baseline_local_spread_ps": 117.61554631640627,
+  "added_data_cycles": 0,
+  "reason": "Uniform group sizing reduces maximum local insertion but leaves an isolated zero-depth tap; whole12-stage clock budget and trunk slew remain structurally unacceptable. New macro-channel floorplan owned by parent CLOCK, no reroute of this layout."
+}

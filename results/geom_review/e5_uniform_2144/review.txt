@@ -49,3 +49,11 @@ This reconstructed-checkpoint audit has0 frozen planned nodes: no claim of
 original per-trunk-edge audit replay is made. New clock cells PG-bound/FIRM/DNT;
 new private clock nets DNT; original local CTS net reused. Actual RC/skew/slew
 benefit remains NOT RUN. Parent owns integrated wrapper and next RC trial.
+ACTUAL RESULT 22:30 PDT: EXIT0/GRT0, but REJECTED FOR ADOPTION. 92400 nets,
+1.394793Mum wire. Registers445.4..611.2TT (165.8ps span),0reg-slew violations;
+trunk17 inputs>80ps(max131.7),localclockbuf5>80(max88.7). Exact local tap means
+21.709..122.947ps/spread101.237 (baseline117.616): reduces maximum24.2ps but
+leaves isolated zero-depth tap159. The12-stage whole tree budget remains too
+large. No further routing on this geometry. Parent's true source fix opens
+macro channels and re-places; this failed candidate is retained. No SIGNED,
+related-pair, FF-hold or final die qualification is claimed.
