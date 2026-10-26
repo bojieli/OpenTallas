@@ -9,7 +9,7 @@ def main():
  for t,r in reports.items():
   for b in r['interface_routes']:
    if 'error' in b:continue
-   types.append(dict(type=t,bus=b['bus'],direction=b['direction'],minimum=b['minimum_stations_lower_bound'],old_planned=b['declared_stations'],new_minus_old=b['minimum_stations_lower_bound']-b['declared_stations'],actual_destination_depth=b['actual_input_pad_depth'],route_um=round(b['centroid_route_um'],3),station_targets_um=b.get('minimum_station_targets_um',[]))))
+   types.append(dict(type=t,bus=b['bus'],direction=b['direction'],minimum=b['minimum_stations_lower_bound'],old_planned=b['declared_stations'],new_minus_old=b['minimum_stations_lower_bound']-b['declared_stations'],actual_destination_depth=b['actual_input_pad_depth'],route_um=round(b['centroid_route_um'],3),station_targets_um=b.get('minimum_station_targets_um',[])))
  lanes=[]
  for b in json.loads(q.latency.read_text())['buses']:
   st,dt=parts.get(b['src']),parts.get(b['dst']);sr=routes.get(st,{}).get(b['bus_out']);dr=routes.get(dt,{}).get(b['bus_in'])
