@@ -57,7 +57,9 @@ module ot_hgi_coll_tkm_static_pd #(parameter integer KMAX=2048, MUT=0, TP=96, RA
  //         down the chain with the data (in-tile FT flop, <= the data's 3+HOP edges per hop: provably safe, since every
  //         later tile sees clr no later relative to its entries / earlier relative to its finished conv than tile 0):
  //         then the tick-1 clear, read2 and done are as in the PIPE module; only conv carries CB.
- parameter integer HOP=0, FRT=0, CB=0, CLRB=CB)(
+ // Opt in when rst_n is already synchronized/timed at the root boundary.
+ // Private-buffer reset retains the same three-edge release depth.
+ parameter integer HOP=0, FRT=0, CB=0, CLRB=CB, DELIVERED_RESET=0)(
  input wire clk,rst_n,start,
  input wire[31:0]tile_clk,input wire buffer_clk,
  input wire[11:0]cfg_n,input wire[12:0]cfg_k,cfg_nout,
@@ -136,7 +138,7 @@ module ot_hgi_coll_tkm_static_pd #(parameter integer KMAX=2048, MUT=0, TP=96, RA
  reg[CPW-1:0]conv_pipe;wire cp=conv_pipe[1+2*PIPE+XL-((PIPE!=0&&MUTP!=0)?1:0)];
  reg[31:0]cap1,cap2;
  reg[4*EW-1:0]buf_wdata;reg buf_wv;reg[9:0]buf_wa;
- ot_hgi_coll_tkm_buffer #(.DW(4*EW)) u_buffer(.clk(buffer_clk),.rst_n(rst_n),
+ ot_hgi_coll_tkm_buffer #(.DW(4*EW),.DELIVERED_RESET(DELIVERED_RESET)) u_buffer(.clk(buffer_clk),.rst_n(rst_n),
   .w_v(buf_wv),.w_addr(buf_wa),.w_data(buf_wdata),
   .r_v(read_v),.r_addr(read_addr),.rd_v(buf_valid),.rd_data(buf_data));
  reg[4*EW-1:0]entry;reg entry_v;

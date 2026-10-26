@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Same root boundary stimuli, qualified data comparisons; tile chain intentionally external.
 module tb;
-parameter MUT=0;
+parameter MUT=0,BDR=0;
 reg clk=0,rst_n=0,start=0;always #1 clk=~clk;
 reg[11:0] n=8;reg[12:0]k=64,nout=64;reg[7:0]g=192,gb=0;reg[15:0]pf=1;reg hr=1;
 reg[3:0]slots=0;reg[2179:0]flit=0;reg[343:0]up=0;
@@ -10,7 +10,7 @@ integer checks=0,edges=0,round=0;reg active=0;
 `define P .KMAX(2048),.TP(192),.PIPE(1),.HOP(2),.FRT(4),.CB(21),.CLRB(0)
 `define C(i) .clk(clk),.tile_clk({32{clk}}),.buffer_clk(clk),.rst_n(rst_n),.start(start),.cfg_n(n),.cfg_k(k),.cfg_nout(nout),.cfg_g(g),.cfg_gbase(gb),.cfg_pf(pf),.cfg_obase(40'd0),.cfg_rbase(40'd4096),.cfg_has_r(hr),.del_slot(slots),.del_valid(slots),.del_flit(flit),.w_v(wv[i]),.w_addr(wa[i]),.w_mask(wm[i]),.w_data(wd[i]),.busy(busy[i]),.done(done[i]),.fault(fault[i]),.stat_cycles(cycles[i]),.probe_up(up),.probe_down(down[i]),.probe_dv(dv[i]),.probe_clr(clr[i]),.probe_conv(conv[i])
 ot_hgi_coll_tkm_static_p #(`P) refp(`C(0));
-ot_hgi_coll_tkm_static_pd #(`P,.MUTP(MUT)) cand(`C(1));
+ot_hgi_coll_tkm_static_pd #(`P,.MUTP(MUT),.DELIVERED_RESET(BDR)) cand(`C(1));
 always @(negedge clk)begin
  if(rst_n&&active)begin
   checks=checks+1;
@@ -34,6 +34,6 @@ initial begin
   start=1;active=0;@(negedge clk);start=0;active=1;
   wait(done[0]);repeat(5)@(negedge clk);
  end
- $display("ROOTPIPE_LOCKSTEP PASS checks=%0d rounds=%0d MUT=%0d",checks,round,MUT);$finish;
+ $display("ROOTPIPE_LOCKSTEP PASS checks=%0d rounds=%0d MUT=%0d BDR=%0d",checks,round,MUT,BDR);$finish;
 end
 endmodule
