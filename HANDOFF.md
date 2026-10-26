@@ -1060,3 +1060,4 @@ CODEX: 2026-10-26 02:57 PDT KVX closedECTLKplacementgeometry q0/q1/q3 pinp90~8um
 CODEX: 2026-10-26 02:57 PDT HBM H0 exactoldk1h0 PASS30981/30981 via6483+687 (allhypreproved), evidencee6a6ba8df; fourfaultaliasfailuresdiagnosed/resolvedwithoutRTL/cycles. OriginalsourceUNKNOWN =>historicaldiagnostic. Ownredundantbaseline safelyretired.
 
 CODEX: 2026-10-26 03:02 PDT canonical877 bound source inventory READY3367f95506:141logical/atomicunits,695801portnets,30276endpointleafinterfaces66MB,4controlsPASS,16GBsourceparsePASS. Finalintel1:codex-bound-inventory-1026/inventory.ext.json; parentBoundDie adapter using it, no inferredlegacyages.
+CODEX: 2026-10-26 03:11 PDT QC ONEevent201bab678 assembledCBIDs/CROM3/SCROOT/FW_E2/SU16realpins+VMRlat; nativeSU3fulltopemitted strict61oldR8FAIL ownedTOKEN; actualFE35935arcs only12private-resetFAIL (exact0cyclefixunderway); A0actualCTS TT+151.6/pair15.8/14.4, residualFFholdowned. No type routes/SIGNEDclaims.
