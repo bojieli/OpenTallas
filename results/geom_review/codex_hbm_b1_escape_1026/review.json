@@ -1,0 +1,19 @@
+{
+ "plan_sha256_prefix": "60d583306985",
+ "scope": "q_b100/q_b101/_nw actual B1 partition pin-access diagnostic; not block build or sign-off",
+ "images": [
+  "q_b100_current.png",
+  "q_b101_b1n5_vs_b1n6.png"
+ ],
+ "verdict": "PASS-COND diagnostic coupons only",
+ "findings": [
+  "Viewed q_b100: M5 hard cores form3 columns; retained E14.688um escape connects long L5x2 face window; explicit FT banks remain in channels; north spare area carries turn stations. Actual M4/M6 face pins must reach via M6/M7 over M5 cores; no M8/M9 toy escape.",
+  "Viewed q_b101: enlarged internal23.328um channels admit2 FF columns per stage; E14.688um, W8.64um need actual pin access; no macro overlaps apparent in render.",
+  "L12x1 physical FF-only tight-bbox fill59.1798/58.8259 percent, not the75percent site occupancy estimate. Master-plan bay fill including clock/repeater demand remains owed; no static gate waived.",
+  "Clock/reset/PG constraints are not proven by this coupon. Full master plan and root-to-flop timing remain held."
+ ],
+ "route_layers": "M2-M7",
+ "hard_core_obstructions_ceiling": "M5",
+ "max_cells": 400000,
+ "coordinator_authorization": "root2026-10-26: diagnostic coupons before master closure permitted with actual geometry/pins/OBS and reviewed image"
+}
