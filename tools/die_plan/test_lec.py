@@ -903,3 +903,25 @@ def test_cyclic_hypotheses_drop_one_and_reprove(tmp_path, monkeypatch):
     m, _ = L.build(with_compare=True, with_hyp=True)
     assert [d for d, _ in L.cycle_dropped] == [("both", "ff:u_dut.q")] and ("both", "ff:u_dut.p") in L.hyp
     assert set(_exact_prove(m).values()) == {"proved"}
+
+
+def test_rejected_register_pair_has_a_bounded_retry_count(tmp_path, monkeypatch):
+    """A rejected mapping must stop being proposed after aliases have settled.
+
+    The prover deliberately rejects the otherwise plausible tiny mapping, as a
+    real mismatched or non-inductive state relation would be rejected. Distinct
+    proposal mechanisms may each try it twice; the ordinary next-state proposer
+    must not keep retrying it in all 24 adding rounds.
+    """
+    L = _design(tmp_path, merged=True)
+    attempts = []
+
+    def reject_relation(m, *args, **kwargs):
+        names = [n for n in m.onames if n.startswith('hyp:')]
+        attempts.extend(names)
+        return {n: 'differs' for n in m.onames}
+
+    monkeypatch.setattr(lec, 'prove', reject_relation)
+    lec.correspond(L, tmp_path, 100, [], rounds=24, sim_iters=1)
+    assert len(attempts) <= 6, attempts
+    assert not L.hyp  # rejecting a relation never turns it into an assumption
