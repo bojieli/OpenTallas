@@ -8,7 +8,7 @@ ONE flow, run twice: on the AS-BUILT depths (rtl6 GEN die e33504a6f: relay_stage
 BOUND depths (BINDER2 kv35 bus_groups landing members: sink leaf.port <- source leaf.port, asbuilt_stages, landed_stages).
 Every bound value = as-built value + lane-depth delta of the mapped crossing (D_bound - D_asbuilt of the SAME bus_groups
 members); where the as-built table value equals the bus_groups as-built full-path count the bound value is the landed depth
-itself.  A path with no crossing member is intra-partition -> unchanged.  Every mapping is listed in depth_map.json.
+itself.  A path with no crossing or explicit changed INNER member is unchanged.  Every mapping is listed in depth_map.json.
 
 Generators (unchanged, imported): kv_static_params.schedule (vport RT/DQ/W, pv RL/FIRST_INPUT_AGE, attn PV_LEAD/F_DLY,
 ECTL RESPONSE_LAT), kv_bootage.image_ages (19 boot age words), kv_static_ages.derive (k_issuer / ectla / qk ages: K_RT
@@ -33,7 +33,7 @@ KVS13L4 = ROOT / 'results/arch/qwen_kv_static_programme_1017/kvs13l4_plan_ages_s
 
 # ---------------------------------------------------------------------------------------------------------------- depths
 class Groups:
-    """bus_groups landing members indexed by sink leaf"""
+    """Crossing and explicit changed INNER timing members indexed by sink leaf"""
     def __init__(self, path):
         g = json.load(gzip.open(path)) if str(path).endswith('.gz') else json.load(open(path))
         self.by_sink = {}
@@ -43,13 +43,32 @@ class Groups:
                 self.by_sink.setdefault(x['sink'], []).append(dict(sink=x['sink'], sink_port=m['sink_port'], src=sl, src_port=sp,
                                                                    asb=m['asbuilt_stages'], bnd=m['landed_stages'], lane=m['lane']))
 
+        self.inner = {}
+        self.inner_consumed = set()
+        for m in g.get('internal', []):
+            if m.get('kind') != 'intra':
+                raise ValueError('internal timing member must be an intra edge')
+            sl, sp = m['source'].rsplit('.', 1)
+            row = dict(sink=m['sink'], sink_port=m['sink_port'], src=sl, src_port=sp,
+                       asb=m['asbuilt_stages'], bnd=m['landed_stages'], lane=m['lane'], inner_id=m['id'])
+            if row['inner_id'] in self.inner:
+                raise ValueError('duplicate internal timing edge')
+            self.inner[row['inner_id']] = row
+            self.by_sink.setdefault(row['sink'], []).append(row)
+
     def find(self, sink_re, port_re, src_re, src_port_re='.*'):
         out = []
         for s, ms in self.by_sink.items():
             if re.fullmatch(sink_re, s):
                 out += [m for m in ms if re.fullmatch(port_re, m['sink_port']) and re.fullmatch(src_re, m['src'])
                         and re.fullmatch(src_port_re, m['src_port'])]
+        self.inner_consumed.update(m['inner_id'] for m in out if 'inner_id' in m)
         return out
+
+    def require_inner_priced(self):
+        missing = sorted(k for k, m in self.inner.items() if m['asb'] != m['bnd'] and k not in self.inner_consumed)
+        if missing:
+            raise ValueError(f'Unpriced changed INNER edges: {missing[:12]}')
 
 
 def bound_value(asb_value, members, key):
@@ -187,6 +206,7 @@ def prep(a):
         P_bnd[k], r = bound_value(v, path_members(G, k), k)
         prow.append(r)
     rs_bnd, rrow = overlay_relay_stages(rs, G)
+    G.require_inner_priced()
     (out / 'relay_stages_asbuilt.json').write_text(json.dumps(rs) + '\n')
     (out / 'relay_stages_bound.json').write_text(json.dumps(rs_bnd) + '\n')
     rec = dict(schema='opentallas.kv_p6_boot.depth_map.v1', inputs=dict(relay_stages=str(a.rs), static_model=str(a.model),
@@ -195,6 +215,7 @@ def prep(a):
                             paths_delta=[r['key'] for r in prow if r['cls'].startswith('DELTA')],
                             relay_buses_total=len(rs['buses']), relay_buses_mapped=len(rrow),
                             relay_buses_delta=[r['key'] for r in rrow if r['cls'].startswith('DELTA')]))
+    if G.inner:rec['internal_timing']=dict(changed_edges=len(G.inner), priced=sorted(G.inner_consumed))
     (out / 'depth_map.json').write_text(json.dumps(rec, indent=1) + '\n')
     # V port DQ bound 15 (qkd_pv16_vport_b): a port whose DQ = RL - (4 + W + RT) exceeds it gets (DQ - 15) pad stages on its
     # W request lane (pvw ctl req_t/req_valid -> vport pr_t/pr_valid, 15 b); RL (= the longest port) is unchanged

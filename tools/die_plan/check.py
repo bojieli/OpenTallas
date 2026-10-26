@@ -674,7 +674,7 @@ def check_latency(P, R):
             # DEC12 multi-beat lane: both keys, and the port carries ceil(word / beats) + beat-index bits
             bt, wb = int(ln_.get("beats", 0)), int(ln_.get("word_bits", 0))
             w0 = int(P.ports[ln_["ports"][0]]["width"])
-            need = -(-wb // bt) + max(1, (bt - 1).bit_length()) if bt and wb else None
+            need = -(-wb // bt) + int(ln_.get("beat_index_bits", max(1, (bt - 1).bit_length()))) if bt and wb else None
             if need is None or w0 != need:
                 R.err("latency", f"lane {lid}: beats {bt} / word_bits {wb} need port width {need}, got {w0}", lane=lid)
         want = P.lane_latency(lid)
@@ -728,6 +728,92 @@ def check_clock_reset(P, R):
             if s.get("layer") and lnum(s["layer"]) > smax:
                 R.err("layers", f"type {tn} slot {s['name']}: ft layer {s['layer']} above partition_signal_max",
                       type=tn)
+
+
+CLOCK_LEG_MAX_UM = 405.0   # OWNER 10-17 planned reach; GEOM-REVIEW-2 11:35 R1 (3) chain-hop taps <= ~400 um
+CLOCK_BUF_HALO_UM = 2.0   # GEOM-REVIEW 15:24 [PATH-HBM-TKMCLKBUF] (1): halo to any FT bit site / station register
+
+
+def _buf_near_station(t, q, cell=(1.404, 0.27)):
+    """First FT bit site / ft station / internal station register whose cell box (bit_site_cell_um, LL at the point)
+    comes within CLOCK_BUF_HALO_UM of the buffer point q, else None."""
+    h = CLOCK_BUF_HALO_UM
+
+    def hit(p, wh):
+        return (p[0] - h - EPS < q[0] < p[0] + wh[0] + h + EPS) and (p[1] - h - EPS < q[1] < p[1] + wh[1] + h + EPS)
+
+    for f in t.get("ft_slots", []) or []:
+        wh = f.get("bit_site_cell_um") or cell
+        for p in f.get("regs_um", []) or []:
+            if hit(p, wh):
+                return f"ft {f['name']} station {p}"
+        for grp in f.get("bit_sites_um", []) or []:
+            for p in grp:
+                if hit(p, wh):
+                    return f"ft {f['name']} bit site {p}"
+    for s in t.get("internal_stations", []) or []:
+        for p in s.get("regs_um", []) or []:
+            if hit(p, cell):
+                return f"internal station {s.get('conn')} {p}"
+    return None
+
+def check_clock_branch_buffers(P, R):
+    """PATH-HBM 10-25 (COORD ruling (1) 14:44): clock.branch_buffers are real std-cell clock buffers: none inside a
+    hard core, every driven tap exists and names the buffer as its parent (and every taps[].parent is a buffer),
+    and every leg (buffer -> driven tap, Manhattan) is <= CLOCK_LEG_MAX_UM."""
+    out = dict(buffers=0, worst_leg_um=0.0, types=[])
+    reach = CLOCK_LEG_MAX_UM
+    for tn, t in P.types.items():
+        ck = t.get("clock") or {}
+        bufs = ck.get("branch_buffers") or []
+        taps = {tp["name"]: tp for tp in ck.get("taps", []) or []}
+        names = [b["name"] for b in bufs]
+        bad = False
+        if len(set(names)) != len(names):
+            R.err("clock", f"type {tn}: duplicate branch buffer names", type=tn)
+            bad = True
+        for nm, tp in taps.items():
+            if tp.get("parent") and tp["parent"] not in names:
+                R.err("clock", f"type {tn}: tap {nm} parent {tp['parent']} is not a branch buffer", type=tn)
+                bad = True
+        boxes = []
+        for c in t.get("hard_cores", []) or []:
+            x, y = c["origin_um"]
+            dx, dy = c.get("track_offset_um", [0, 0])
+            w, h = c["outline_um"]
+            boxes.append((c["inst"], x + dx, y + dy, x + dx + w, y + dy + h))
+        for b in bufs:
+            out["buffers"] += 1
+            q = b["xy"]
+            hit = next((n for n, x0, y0, x1, y1 in boxes
+                        if x0 + EPS < q[0] < x1 - EPS and y0 + EPS < q[1] < y1 - EPS), None)
+            if hit:
+                R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} is inside hard core {hit}", type=tn)
+                bad = True
+            near = _buf_near_station(t, q)
+            if near:
+                R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} within {CLOCK_BUF_HALO_UM} um halo of "
+                               f"{near}", type=tn)
+                bad = True
+            for d in b["drives"]:
+                tp = taps.get(d)
+                if tp is None:
+                    R.err("clock", f"type {tn}: branch buffer {b['name']} drives unknown tap {d}", type=tn)
+                    bad = True
+                    continue
+                if tp.get("parent") != b["name"]:
+                    R.err("clock", f"type {tn}: tap {d} driven by {b['name']} but its parent is {tp.get('parent')}",
+                          type=tn)
+                    bad = True
+                leg = abs(tp["xy"][0] - q[0]) + abs(tp["xy"][1] - q[1])
+                out["worst_leg_um"] = max(out["worst_leg_um"], round(leg, 2))
+                if leg > reach + EPS:
+                    R.err("clock", f"type {tn}: branch buffer {b['name']} leg to {d} {leg:.1f} um > reach {reach:g}",
+                          type=tn)
+                    bad = True
+        if bad:
+            out["types"].append(tn)
+    return out
 
 
 def check_reset(P, R):
@@ -1441,6 +1527,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     if rp:
         summ["registered_pins"] = rp
     check_clock_reset(P, R)
+    summ["clock_branch_buffers"] = check_clock_branch_buffers(P, R)
     summ["reset"] = check_reset(P, R)
     summ["seams"] = check_seams(P, R)
     summ["die_io"] = check_die_io(P, R)

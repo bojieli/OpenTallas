@@ -32,13 +32,20 @@ def touched(paths, watch):
 
 
 def live_dies(root, now=None):
-    """dies with a run dir younger than LIVE_S that has no canary.json yet"""
+    """Uncollected transient clients never expire into permission for a duplicate.
+
+    A missing verdict also covers an interrupted client whose remote worker survived;
+    its result must be collected before another reference is submitted. Legacy run
+    metadata without a client unit retains the old age fallback.
+    """
     now = now or time.time()
     out = set()
     for d in glob.glob(f"{root}/*/canary_meta.json"):
         run = Path(d).parent
-        if not (run / "canary.json").exists() and now - run.stat().st_mtime < LIVE_S:
-            m = json.loads(Path(d).read_text())
+        if (run / "canary.json").exists():
+            continue
+        m = json.loads(Path(d).read_text())
+        if m.get("client_unit") or now - run.stat().st_mtime < LIVE_S:
             out.add(m["spec"]["die"])
     return out
 
