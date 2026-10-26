@@ -1,0 +1,169 @@
+{
+ "gate": "KV die freeze gate (owner 10-26): die GRT overflow 0 incl. clock + related-pair skew <=80 ps TT/FF (CPPR, routed RC)",
+ "batch": "claude/path-kv-batch-0115@650841e1ef80fd9c224e84e2042d694ed9c29836",
+ "plan": "physical/die_plan/qwen_kvsys/die_plan.json",
+ "plan_sha256": "d34cbb519c9b627111eb46f2c5ecf00ef29273b4bebb520169e4a834e68f4509",
+ "sites": "physical/die_plan/qwen_kvsys/clock_mesh_sites.json",
+ "sites_sha256": "e41d1872230245b5bc18a5e1555f6c3fff7f19bcde27df4961f5ba95e8fd74f2",
+ "sites_equal_tree": "clock tree cells = the plan reserved sites exactly (9503/9503 name+xy; = clock-mesh-2355/kv/m3264b2 place.json; apply_clkmesh_sites --delta-id D-KV-CLKMESH re-apply reproduces plan + sites byte-identically)",
+ "grt_plan": "tools/die_plan/it5_plan.py PLAN cores/harden/recipes_kv.json OUT 0.5 (one FT share 0.5 + strict core OBS)",
+ "it5_sha256": "d0a571b49e5913adbb86360b6601c0fc9e159692830f5633f333a8d59402aed9",
+ "kit": "die_trial.py kit on it5 + ft_reserve.py die stripes appended to obs.tcl (built by CLOCK-MESH-B from 5665cd3386 + ftres overlay; it5_plan/ft_reserve/die_trial/ft_grt byte-identical to 650841e1ef; it5 input differs only in L747 fixed_cycles/latency fields)",
+ "tool": "claude/path-kv-grtmesh-0125@28cc66621c (= claude/clock-mesh-2355@87c291a185 + --delta-id) die_clock_mesh.py combo + die_clock_mesh_post.sh",
+ "run": "epyc2 ot-run die (combo) + epyc1 post: /srv/opentallas-scratch2/claude/path-kv-grtmesh-0125/r1",
+ "grt": {
+  "TT": "overflow 0 on M4-M9, 0 GRT-0113/0114",
+  "FF": "overflow 0 on M4-M9, 0 GRT-0113/0114"
+ },
+ "note_cap": "max_capacitance flags only on the 4096 mesh driver Y pins of the lumped special net ck_mesh (mesh analysed by the RC transient; same as m3264b2); 0 other slew/cap violators; stub STA 0 violators",
+ "report": {
+  "TT": {
+   "insertion_ps": [
+    4487.22,
+    4582.14
+   ],
+   "tap_skew_ps": 94.92,
+   "seam_pairs": 4101,
+   "seam_max_ps": 66.55,
+   "seam_p99_ps": 39.28,
+   "intra_pairs": 3182,
+   "intra_max_ps": 73.16,
+   "pairs_over_80": 0,
+   "related_pair_max_ps": 73.16,
+   "gate_ps": 80.0,
+   "verdict": "PASS",
+   "tap_slew_max_ps": 56.34,
+   "mesh_stub_in_slew_max_ps": 141.54,
+   "tree_slew_max_ps": 70.51,
+   "mesh_cap_pF": 200.55,
+   "clock_switched_cap_pF": 399.3,
+   "clock_wire_power_W": 0.235,
+   "worst": [
+    [
+     73.16,
+     "t_hub_Wi__clk_t12",
+     "t_hub_Wi__clk_t16"
+    ],
+    [
+     71.31,
+     "t_pc_ES_4__clk_t5",
+     "t_pc_ES_4__clk_t8"
+    ],
+    [
+     69.2,
+     "t_hroot_WN__clk",
+     "t_hroot_WN__clk_t10"
+    ],
+    [
+     69.14,
+     "t_hub_Eo__clk_t13",
+     "t_hub_Eo__clk_t17"
+    ],
+    [
+     68.85,
+     "t_hroot_WN__clk_t1",
+     "t_hroot_WN__clk_t11"
+    ],
+    [
+     68.43,
+     "t_hub_C__clk_t19",
+     "t_hub_C__clk_t25"
+    ],
+    [
+     68.27,
+     "t_hub_Eo__clk_t15",
+     "t_hub_Eo__clk_t19"
+    ],
+    [
+     68.02,
+     "t_hub_Eo__clk_t14",
+     "t_hub_Eo__clk_t18"
+    ],
+    [
+     67.4,
+     "t_hroot_EN__clk_t3",
+     "t_hroot_EN__clk_t8"
+    ],
+    [
+     67.38,
+     "t_hroot_EN__clk_t4",
+     "t_hroot_EN__clk_t9"
+    ]
+   ]
+  },
+  "FF": {
+   "insertion_ps": [
+    3713.05,
+    3814.48
+   ],
+   "tap_skew_ps": 101.43,
+   "seam_pairs": 4101,
+   "seam_max_ps": 59.67,
+   "seam_p99_ps": 38.16,
+   "intra_pairs": 3182,
+   "intra_max_ps": 73.5,
+   "pairs_over_80": 0,
+   "related_pair_max_ps": 73.5,
+   "gate_ps": 80.0,
+   "verdict": "PASS",
+   "tap_slew_max_ps": 52.55,
+   "mesh_stub_in_slew_max_ps": 128.65,
+   "tree_slew_max_ps": 50.79,
+   "mesh_cap_pF": 201.09,
+   "clock_switched_cap_pF": 399.8,
+   "clock_wire_power_W": 0.285,
+   "worst": [
+    [
+     73.5,
+     "t_hub_Wi__clk_t12",
+     "t_hub_Wi__clk_t16"
+    ],
+    [
+     67.75,
+     "t_hroot_WN__clk",
+     "t_hroot_WN__clk_t10"
+    ],
+    [
+     67.73,
+     "t_pc_ES_4__clk_t5",
+     "t_pc_ES_4__clk_t8"
+    ],
+    [
+     67.43,
+     "t_hub_Wi__clk_t13",
+     "t_hub_Wi__clk_t17"
+    ],
+    [
+     66.66,
+     "t_hroot_WN__clk_t1",
+     "t_hroot_WN__clk_t11"
+    ],
+    [
+     65.05,
+     "t_pv_N_6__clk_t2",
+     "t_pv_N_6__clk_t3"
+    ],
+    [
+     64.8,
+     "t_pv_S_6__clk_t20",
+     "t_pv_S_6__clk_t21"
+    ],
+    [
+     64.68,
+     "t_pv_S_7__clk_t14",
+     "t_pv_S_7__clk_t15"
+    ],
+    [
+     64.57,
+     "t_pv_N_6__clk_t8",
+     "t_pv_N_6__clk_t9"
+    ],
+    [
+     64.18,
+     "t_pv_N_7__clk_t2",
+     "t_pv_N_7__clk_t3"
+    ]
+   ]
+  }
+ }
+}
