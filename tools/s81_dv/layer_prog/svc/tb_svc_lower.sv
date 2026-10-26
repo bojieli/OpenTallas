@@ -189,6 +189,17 @@ module tb_svc_lower;
     end
 
     // ---------------- run + checks ----------------
+    reg [31:0] last_afc [0:15];
+    initial for (int k=0;k<16;k++) last_afc[k]=0;
+    always @(posedge ck) begin
+        for (int k=0;k<16;k++) begin
+            if (w_v[k] && w_st[k][11:4]==8'h21) $display("SVCEDGE EXP slice=%0d cyc=%0d a=%0d",k,cyc,w_a[k]);
+            if (afc[k] != last_afc[k]) begin
+                $display("SVCEDGE FAULT slice=%0d cyc=%0d old=%08x new=%08x",k,cyc,last_afc[k],afc[k]);
+                last_afc[k] <= afc[k];
+            end
+        end
+    end
     integer qi = 0, late_q = 0, rt_beats = 0, sc_err = 0, sc_chk = 0, ord_err = 0;
     integer se_rows [0:15], se_err = 0, se_chk = 0, wrows [0:15];
     integer pv_err = 0, pv_chk = 0, pv_first = -1, pv_last = -1, pv_gap = 0, pv_other = 0, pv_n = 0;

@@ -1,0 +1,75 @@
+[
+  {
+    "type": "phy__t1",
+    "macro_origin_um": [
+      8.64,
+      8.64
+    ],
+    "lef": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef",
+    "clock_um": [
+      4379.34,
+      1185.744
+    ],
+    "reset_um": [
+      4379.532,
+      1185.744
+    ],
+    "native": {
+      "size_um": [
+        8500.056,
+        1177.2
+      ],
+      "pins": {
+        "clk": {
+          "layer": "M5",
+          "rect_um": [
+            4370.688,
+            1177.008,
+            4370.712,
+            1177.2
+          ],
+          "center_um": [
+            4370.700000000001,
+            1177.104
+          ]
+        },
+        "rst_n": {
+          "layer": "M5",
+          "rect_um": [
+            4370.88,
+            1177.008,
+            4370.904,
+            1177.2
+          ],
+          "center_um": [
+            4370.892,
+            1177.104
+          ]
+        }
+      }
+    },
+    "before": {
+      "clock": {
+        "tap_um": [
+          4328.64,
+          613.44
+        ],
+        "layer": "M9"
+      },
+      "reset": {
+        "sync_stages": 2
+      },
+      "contents": [
+        {
+          "inst": "u_phy_hbm",
+          "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+          "status": "reuse",
+          "note": "hard HBM3E PHY 8500 x 1177 in a 6-cell S-edge slot (bump field at the die edge)"
+        }
+      ]
+    },
+    "added_registers": 0,
+    "added_boot_stages": 0,
+    "added_data_cycles": 0
+  }
+]

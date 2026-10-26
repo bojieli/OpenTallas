@@ -26,6 +26,8 @@ always @(negedge clk)begin
   for(integer j=0;j<8;j=j+1)begin flit[545*l+32*j+:32]=$random;flit[545*l+256+32*j+:32]=$random;end
  end
  for(integer j=0;j<10;j=j+1)up[32*j+:32]=$random;up[343:320]=24'($random);
+ // Equal insertion keys with different signed-zero payloads require stable ties.
+ if(edges%3==0)for(integer j=0;j<4;j=j+1)up[86*j+:86]=86'h380000000fffffffaffffe|86'(j>=2);
 end
 initial begin
  repeat(12)@(negedge clk);rst_n=1;repeat(8)@(negedge clk);

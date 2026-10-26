@@ -987,11 +987,24 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, entry_engram_inputs=None, svc_timing_profile=None):
     if entry_norm and not fixtures:
         raise ValueError('--entry-norm-check needs --fixtures (the layer-entry inputs and the reference model checks)')
+    if entry_engram_inputs is not None and not entry_norm:
+        raise ValueError('--entry-engram-inputs requires --entry-norm-check so native entry rows actually consume H')
     if dense_stage is not None and mu_ctx:
         raise ValueError('DENSE2 MU requires the corrected per-position static stage graph binding')
+    if fixtures is not None and layer in LAYERS:
+        if svc_timing_profile is None:
+            raise ValueError('fixture programmes require explicit --svc-timing-profile matching the selected service engine')
+        defines = {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}
+        expected = 'legacy_fg3' if 'SVCQ_ENG_FG3' in defines else 'closing_allq'
+        if svc_timing_profile != expected:
+            raise ValueError(f'service timing profile {svc_timing_profile} disagrees with selected source {expected}')
+        if svc_timing_profile == 'closing_allq':
+            required = {'OT_ATTN_HCORE', 'OT_S81C_HCORE_CTLA', 'OT_S81C_HCORE_RST_TIMED', 'OT_SVC_ALLQ'}
+            if not required <= defines:
+                raise ValueError('closing_allq timing requires selected source defines ' + ','.join(sorted(required)))
     if svc_owner_epoch is not None and mu_ctx:
         raise ValueError('SO source-owner fields require per-user MU remapping before admission')
     out = Path(out)
@@ -1012,7 +1025,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     low = []
     fams = family_lowerings()
     ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag,
-               svc_owner_epoch=svc_owner_epoch, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
+               svc_owner_epoch=svc_owner_epoch, svc_timing_profile=svc_timing_profile,
+               svc_allq=('OT_SVC_ALLQ' in {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}) if svc_timing_profile is not None else None, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -1066,7 +1080,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             raise ValueError(f'line slot reservation does not converge: {clash[:4]}')
         return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
                              mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid,
-                             entry_norm=entry_norm)
+                             entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile)
     prog.line_avoid = {k: sorted(v) for k, v in (line_avoid or {}).items()}
     if entry_norm:
         # TOK-DS-GAPS 10-24 (opt-in; default byte-identical): layer-entry residency of the smoke slice as pre-layer CTL
@@ -1078,13 +1092,13 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         import norm_nx
         if entry_norm == 'all':
             # the 16-slice composition: every slice's norm + entry state + the snake flit words (own + forwards)
-            sub['entry_norm'] = norm_nx.emit_all(die, prog, sub, fixtures, sys.modules[__name__])
+            sub['entry_norm'] = norm_nx.emit_all(die, prog, sub, fixtures, sys.modules[__name__], entry_engram_inputs)
             clash = line_slot_conflicts(die, prog)
             if clash:
                 raise ValueError(f'--entry-norm-check all: line slot collision of the 16-slice norm rows: {clash[:4]}')
         else:
             sub['entry_norm'] = norm_nx.emit(die, prog, sub, fixtures,
-                                             [e['cycle'] for e in prog.events if e['kind'] == 'CTL'])
+                                             [e['cycle'] for e in prog.events if e['kind'] == 'CTL'], entry_engram_inputs)
     files = {}
     for rel, text in prog.files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -1122,7 +1136,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
                                  svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid,
-                                 entry_norm=entry_norm)
+                                 entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1238,8 +1252,27 @@ def main(argv=None):
     ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
     ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
+    ap.add_argument('--bound-control-only', action='store_true',
+                    help='Compile actual current bound control routes; never read a legacy die tree')
+    ap.add_argument('--bound', type=Path, help='Current strict bind out/ for native control mode')
+    ap.add_argument('--bound-inventory', type=Path, help='Current logical and atomic source inventory')
+    ap.add_argument('--bound-local-timing', type=Path, help='Source-qualified atomic control-stage receipts')
+    ap.add_argument('--bound-source-root', type=Path, help='Exact current implementation source root')
+    ap.add_argument('--bound-asbuilt-manifest', help='Repo-relative exact as-built source selection manifest')
+    ap.add_argument('--native-entry-program', type=Path, help='Optional actual bound entry command/template record')
+    ap.add_argument('--retime-native-entry', action='store_true',help='Propose consecutive per-slice NORMR commands; keep GO dates and all readiness holds')
+    ap.add_argument('--compose-native-boot', action='store_true', help='Emit concrete unsealed HOST words from measured native control')
+    ap.add_argument('--native-boot-cadence', type=Path, help='Actual direct-native CSR cadence receipt')
+    ap.add_argument('--native-boot-seqhost-timing', type=Path, help='Original source-qualified seqhost reset/KS phase receipt')
+    ap.add_argument('--native-entry-rows', type=Path, help='Optional actual entry writes, encoded in template-table batches')
+    ap.add_argument('--native-mux-config', type=Path, help='Explicit programme-specific MU tracker/window values')
+    ap.add_argument('--native-host-booking', type=Path, help='Explicit candidate host pin-event dates')
+    ap.add_argument('--entry-engram-inputs', default=None,
+                    help='Checkpoint-derived Engram sidecars for actual attention-entry native rows and NX partials')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
+    ap.add_argument('--svc-timing-profile', choices=('legacy_fg3', 'closing_allq'), default=None,
+                    help='Service engine timing calendar; closing_allq requires actual ALLQ+SMT source')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
                     help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
     ap.add_argument('--entry-norm-check', nargs='?', const='smoke', choices=('smoke', 'all'), default=None,
@@ -1247,6 +1280,27 @@ def main(argv=None):
                          'xfin NX flit as checked output words (needs --fixtures; layer_prog/norm_nx.py); "all" = every '
                          'slice\'s norm + entry state + the 16-flit snake words')
     a = ap.parse_args(argv)
+    if a.retime_native_entry and not a.native_entry_program:
+        ap.error('--retime-native-entry requires the actual native entry command record')
+    boot_inputs=(a.native_boot_cadence,a.native_boot_seqhost_timing,a.native_entry_rows,a.native_mux_config,a.native_host_booking)
+    if a.compose_native_boot and not (a.bound_control_only and a.native_entry_program and a.native_boot_cadence and a.native_boot_seqhost_timing):
+        ap.error('--compose-native-boot requires native control, entry programme, cadence and original seqhost timing')
+    if any(boot_inputs) and not a.compose_native_boot:
+        ap.error('native boot inputs require --compose-native-boot')
+    if a.bound_control_only:
+        if not all((a.bound,a.bound_inventory,a.bound_local_timing,a.bound_source_root,a.bound_asbuilt_manifest)):
+            ap.error('--bound-control-only requires bound, inventory, local timing, source root and source manifest')
+        if a.die_src or a.mu_cal or a.mu_ctx or a.dense_stage:
+            ap.error('native bound control cannot consume legacy geometry or MU/dense schedule tables')
+        from layer_prog.bound_control import compile_control
+        raise SystemExit(compile_control(layer=a.layer,out=a.out,bound=a.bound,inventory=a.bound_inventory,
+            timing=a.bound_local_timing,source_root=a.bound_source_root,asbuilt_manifest=a.bound_asbuilt_manifest,
+            entry_program=a.native_entry_program,retime_entry=a.retime_native_entry,
+            boot=dict(cadence=a.native_boot_cadence,seqhost_receipt=a.native_boot_seqhost_timing,
+                      entry_rows=a.native_entry_rows,mux_config=a.native_mux_config,
+                      host_booking=a.native_host_booking) if a.compose_native_boot else None))
+    if any((a.bound,a.bound_inventory,a.bound_local_timing,a.bound_source_root,a.bound_asbuilt_manifest,a.native_entry_program,a.retime_native_entry)):
+        ap.error('native bound inputs require --bound-control-only; do not mix current and legacy ages')
     if a.dense_stage is not None and (a.mu_cal or a.mu_ctx):
         ap.error('--dense-stage MU requires corrected per-position static stage graph binding')
     if a.svc_owner_epoch is not None and a.mu_cal:
@@ -1261,7 +1315,8 @@ def main(argv=None):
             return
     tree = die_tree(a.die_ref, a.die_src)
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
-                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check)
+                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check,
+                      entry_engram_inputs=a.entry_engram_inputs, svc_timing_profile=a.svc_timing_profile)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']

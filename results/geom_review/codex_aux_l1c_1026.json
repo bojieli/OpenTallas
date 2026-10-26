@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "reviewer": "CODEX auxiliary independent review",
+ "kit": "dsdv_gunit_l1c_k26b",
+ "kit_hash": "ed48de52ff517c0f",
+ "autopilot": "6a3ab1a7d74e",
+ "image": "/srv/opentallas-scratch/claude/codex-s81-legacy-1026/l1c_review/place.png",
+ "verdict": "PASS-COND",
+ "scope": "placement accepted for normal canary-gated CTS/route flow",
+ "findings": [
+  "Viewed macro-free86.4x216um placement: data-side W/N pin groups and interior cells have open channels, maxbin0.56 and fill29.04%; no macro wall or sliver trap.",
+  "Aspect2.5 matches actual main gunit__t1 u_gunit.u_l1c hard-core slot86.4x216.0; auto-aspect diagnostic alone is not a structural failure.",
+  "Full supplied r2r census max255.1um,0>405; pin-registerp90 8.14um/max67.36; W1055/N249pins max5.5pins/um below displayed face capacities.",
+  "Clock/reset E top entry is local to upper sinks; all cell-span distances below405um. Actual propagated-clock balance/PDN remain ordinary post-CTS/route gates."
+ ],
+ "conditions": [
+  "Current released canary and plan-delta holds remain enforced.",
+  "Post-CTS actual TT/FF related-pair<=80ps, pin-clock insertion/per-corner vclk and reset reach pass before detailed route; normal signoff.py alone decides SIGNED."
+ ],
+ "source_note": "RTLfix claude/cores-kits-s81-1026@2b9f7617e; freeze.repo_rev predates fix and must remain explicitly labeled rather than claiming old source closure."
+}

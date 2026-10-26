@@ -1,0 +1,15 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/seqhost-timing-1026/cadence1
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/seqhost-timing-1026/cadence1
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/seqhost-timing-1026/cadence1
+ot-run: localhost      admits   142 GB (avail 319, reserve 0, fresh 108, peak 4.8, headroom 0, waiters 0/0 GB) load 57/256 running 40 disk 608 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-2540484-1793010575 after 0 s
+host period 2: SEQ_TIMING jobs=2 north=4 south=2 gunit=2 kits=2 errors=0
+host period 3: SEQ_TIMING jobs=2 north=4 south=2 gunit=2 kits=2 errors=0
+host period 4: SEQ_TIMING jobs=2 north=4 south=2 gunit=2 kits=2 errors=0
+host period 5: SEQ_TIMING jobs=2 north=4 south=2 gunit=2 kits=2 errors=0
+host period 6: SEQ_TIMING jobs=2 north=4 south=2 gunit=2 kits=2 errors=0
+host period 7: SEQ_TIMING jobs=2 north=4 south=2 gunit=2 kits=2 errors=0
+host period 8: SEQ_TIMING jobs=2 north=4 south=2 gunit=2 kits=2 errors=0
+host period 9: SEQ_TIMING jobs=2 north=4 south=2 gunit=2 kits=2 errors=0
+ot-run: RAN on localhost (unit oth-ubuntu-2540484-1793010575): exit 0
