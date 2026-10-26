@@ -266,7 +266,7 @@ class TestProvenanceGit(unittest.TestCase):
         self.assertTrue(self.ap.tag_covers("flow-20261025-a", "hbm"))
         self.assertTrue(self.ap.tag_covers("flow-20261026-b-s81", "cp1"))
         self.assertFalse(self.ap.tag_covers("flow-20261026-b-xx", None))
-        self.assertEqual(self.ap.flow_tags("qwen_compute")[0], "flow-20261026-b-qc")
+        self.assertEqual(set(self.ap.flow_tags("qwen_compute")), {"flow-20261026-b-qc", "flow-20261025-a"})
         self.assertEqual(self.ap.flow_tags("qwen_kvsys"), ["flow-20261025-a"])
         p = self.ap.resolve_provenance(f"claude/x@{self.flow2[:10]}", "", "qwen_compute")
         self.assertEqual((p["flow_tag"], p.get("error")), ("flow-20261026-b-qc", None))
