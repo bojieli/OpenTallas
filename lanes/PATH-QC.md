@@ -461,3 +461,17 @@ FocusedD3SOURCE READY7365c870a3 (4tools,c51base,6testsPASS), rootmergependingper
 - Provenance: PROVENANCE.txt in path-qc-n59p/{p3probe,p4probe,miter_rvb} (source sha + flow tag orfs 26Q3-1510-g6cb3f2b704).
 - Next (trial builds only, QC die gate not passed): (1) structural fixes for the R2R classes 1-4 (dr_o select replicas + midpoint, f_dd relay anchor, pd-chain relay placement, layer_context replica) -> GEOM design REQ; (2) P3b kit (u_rvb + fixes), re-measure F6/R2R; (3) add sub-tap padding (reg 250/202.5, macro 232.5/185) to the multi flow, probe TT+FF + exhaustive CPPR pairs; (4) then GEOM REQ [PATH-QC-N59-P5] for the ONE CTS and autopilot enqueue --geom REQ.
 - OWNER? none.
+
+## PARKED 2026-10-25 19:21 PDT PATH-QC (lead, session 18:25-19:21)
+Path count: 3 of 29 signed off (unchanged; RP1 f62, prog_s8b, C4). Closure order (owner 18:45) applies: QC die gate NOT passed -> path parts get GEOM review + trial builds only.
+Die gate (lanes/PATH-FREEZE.md): GRT0 PASS on stand-ins (441d = current main plan); CLOCK-ROUTE tree probe clean on M8/M9 (0 ovf / 0 slew-cap viol; insertion 10.0/8.68 ns vs model 7.21/6.07; default layers -> slew 1319 ps) but seam pair CPPR 114.80/99.86 FAIL (CLOCK); PATH-STA FAIL / not real-view (stand-ins TT +557.5 / FF -73.0, 373 missing reset/START ports).
+Done: SRAMIF crash rows were already cleared 16:34 (no action); stale ffgrt audit already clean 15:19; READY claude/path-qc-pgstate-1025@625a908bef (postcts_gate private corner state; cause of VMR lost TT per-pin JSON = kit cf/rc_cal.tcl 'foreach {l r c}'); SRAMIF2 + N59-PROTO2 sub-lanes (their PARKED sections above).
+LIVE jobs: none of mine (clkroute probe done; Codex n59 LEC unit oth-ubuntu-2354247 still running, its own); SRAMIF2 btab_a1p diagnostic place on intel1 (delete once F is chosen).
+NEXT (in order):
+1. DIE-FT/CLOCK: co-route the die clock (clock layer range M8-M9) inside the die_trial GRT kit; die_clock RC basis to M8/M9 setRC; seam-common-branch fix for pair CPPR. Then QC CLOCK-ROUTE can be PASS.
+2. die_trial stand-ins: add start_i / rst_o_* / start_o_* ports (L4) so die STA times reset/START; real views replace stand-ins as parts sign off.
+3. GEOM verdicts: [PATH-QC-PROG-A1]/[PATH-QC-BTAB-A1] (variant F, mirrored SRAMs) -> one CTS+GRT trial per cell via stageA.sh (kits /srv/opentallas-scratch2/claude/path-qc-sramif2/, worktree epyc1 wt/path-qc-sramif2-1025 kept). Parent plan candidate must consume CK 177.132 (2bc3495e27).
+4. N59: GEOM design review of the 4 reach fixes (dr_o mid placement/select copies, f_dd anchor, u_pd* relay placement, layer_context per-writer copy) -> P3 rebuild with u_rvb (91018022e6) + fresh LEC -> sub-tap padding step + TT/FF + CPPR census -> CTS REQ.
+5. VMR 6f61 stays WAIT-CANARY; LC1 contract = ROOT decision; TT per-pin re-measure needs 625a908bef merged.
+6. NK/NL A0: MODE3/G4_ROOTS1/noFP1 baseline (ROOT) -> rebuild planning owed; R6/R3 diagnostics only.
+OWNER? none.
