@@ -77,3 +77,6 @@ CODEX took over E5localclock on codex/e5-clock-1026 (actualhub own sparseworktre
 
 ## CODEX E5 geometry milestone 2026-10-26 03:24 PDT
 Prototype f5e702e18b actualhubcodex/e5-clock-1026. Localtap1119/18058sinks preserves96815placements. Failedhalf-rootfan21 rejectedunrouted; newbank6root5/backbone<=6,2097BUF24/17stages/maxsingleload116.532um/no wirepadding. Master1.62x.27actualDB.2focusedfanout/depthtestsPASS. Ownr5_cts_bank6 fullyprepared, GEOMREQ[CODEX-E5-R5-BANK6-CTS]; CTS/STA/GRT NOTRUNpendingindependentreview. DensitytapPGexplicitconnect added; noholdpadding andIO250/202.5 unchanged.
+
+## CODEX E5 CTS milestone 2026-10-26 03:41 PDT
+First ownr5_cts_bank6 stopped13sPRECTSscopeerror(noSTA); diagnosedORFSprocvsdensityhelperglobaldt_* variables,fixed3d74397ac8 innewr5_cts_bank6_v2 preservingoriginalfailure. V2CTS EXIT0/136s/1.84GB,4CTSsha1prefix3c911e2d37be83e63f94,2097trunk+1119taps/97934placements+FFdata/controlunchanged,6432newPGterminalsPASS. Placementtapspread122.35/102.59FAILdiagnosticonly. COORDindependentCTSreviewPASS-COND; nativeTT/FFGRT-RC/relatedpairprobesrunningepyc1:codex-e5-clock-1026/probe/out_{TT,FF}, norepair/DRT. ActualIO250/202.5/833/60,25unchanged.
