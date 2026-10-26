@@ -1,0 +1,20 @@
+{
+ "verdict": "FAIL",
+ "scope": "actual3_place only; no CTS/GRT/DRT",
+ "type": "slw_fe_v1",
+ "picture": "results/geom_review/qc_fe_reach_lowfill_1026/actual.png",
+ "job": "epyc1:/srv/opentallas-scratch2/claude/codex-qc-1026/fe_lowfill/slw_fe_v1",
+ "r2r": {
+  "arcs": 35935,
+  "over405": 12,
+  "max_um": 692.5,
+  "cone_truncations": 0
+ },
+ "findings": [
+  "Registered ladders are regular and the added FE data stations resolve all original long data crossings. No macros in the tile.",
+  "Pre-GPL reset/epoch rays were stale: actual hook rewires60 sinks to8equal-depth taps. Actual placement leaves only12 long private u_core.u_rl.u_k0 reset paths:10AGU,1CMD,1CHU.",
+  "Remaining private reset needs local two-stage copies at those control groups, not data ECO or clock relaxation. Source fix owned codex/qc-n59 agent in separate FE branch.",
+  "Measured movable utilization0.303% with prior50%target inflated2M bins/filler; own1.212%+no routability feedback finishes GPL~300iterations and DPL0violations vs inherited>=7000. This is a placement diagnostic, not shared default.",
+  "Clock islands/CTS and PDN continuity signoff remain unqualified under the infra-first event; no route permission."
+ ]
+}
