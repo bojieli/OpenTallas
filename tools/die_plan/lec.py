@@ -657,6 +657,13 @@ class Lec:
         self.aliased = []
         for k in sorted(set(self.gp) - set(self.tp)):
             hit = sorted(galias.get(k, set()) & tfree)
+            # A scalar register can drive an unpacked array element. Slang flattens that
+            # Q-wire array in reverse element order, while read_verilog names the gate
+            # flop with the actual element index (cf_o -> cf[1] in the HBM indexer).
+            # Its flat alias bit is not an element identity. Leave scalar-to-indexed
+            # aliases for function-based correspondence and its inductive proof.
+            if not IDX.match(k):
+                hit = [a for a in hit if not IDX.match(a)]
             if len(hit) == 1 and hit[0] not in self.gp:
                 self.gp[hit[0]] = self.gp.pop(k)
                 self.gc[hit[0]] = self.gc.pop(k)
@@ -1942,6 +1949,22 @@ def alias_arrays(L, log, words=4, work=None):
                             cands.append(mp)
             if not cands:
                 continue
+            # A unique element-driver winner selects exactly the mapping the
+            # scored path below would select, independently of every simulation
+            # score. Avoid rebuilding/simulating the whole design for each
+            # small alias array (N59: thousands of arrays before the first SAT
+            # round). This changes candidate discovery only: simultaneous
+            # inductive proof/refinement still checks every selected relation.
+            structural = [sum(1 for tk, gk in mp.items() if elem.get(gk) == tk[len(tb):]) for mp in cands]
+            top = max(structural, default=0)
+            if top > 0 and structural.count(top) == 1:
+                mp = cands[structural.index(top)]
+                apply(mp)
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); unique slang element-driver layout "
+                           f"{top}/{len(mp)} bits (simulation scoring unnecessary; proof pending)")
+                continue
             base = mismatches()
             scored = []
             for mp in cands:
@@ -2377,7 +2400,12 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
-            tried[(side, k, "c") if h[0] == "const" else (side, k, str(h[2]), str(h[3]))] += 1
+            # Equality candidates are looked up with an integer polarity. Keep
+            # that key unchanged when recording rejection, or they are retried
+            # in every adding round. FSM cube tuples keep their textual key.
+            tried[(side, k, "c") if h[0] == "const" else
+                  (side, k, h[2], h[3]) if h[0] == "eq" else
+                  (side, k, str(h[2]), str(h[3]))] += 1
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")

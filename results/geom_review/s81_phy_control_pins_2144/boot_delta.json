@@ -1,0 +1,91 @@
+{
+  "before_valid": false,
+  "after_valid": true,
+  "before_max_release": 101,
+  "after_max_release": 101,
+  "added_register_stages": 0,
+  "added_production_cycles": 0,
+  "changed_parts": {
+    "eng": {
+      "before": 74,
+      "after": 75,
+      "delta": 1,
+      "source_before": "svc_14.rst_o_0",
+      "source_after": "svc_14.rst_o_0"
+    },
+    "s_7S_x10": {
+      "before": 75,
+      "after": 76,
+      "delta": 1,
+      "source_before": "svc_14.rst_o_0",
+      "source_after": "svc_14.rst_o_0"
+    },
+    "svc_0": {
+      "before": 68,
+      "after": 68,
+      "delta": 0,
+      "source_before": "svc_1.rst_o_1",
+      "source_after": "svc_3.rst_o_0"
+    },
+    "svc_10": {
+      "before": 64,
+      "after": 64,
+      "delta": 0,
+      "source_before": "svc_11.rst_o_0",
+      "source_after": "svc_11.rst_o_1"
+    },
+    "svc_12": {
+      "before": 66,
+      "after": 66,
+      "delta": 0,
+      "source_before": "svc_13.rst_o_0",
+      "source_after": "svc_11.rst_o_0"
+    },
+    "svc_14": {
+      "before": 67,
+      "after": 68,
+      "delta": 1,
+      "source_before": "svc_15.rst_o_1",
+      "source_after": "svc_13.rst_o_0"
+    },
+    "svc_2": {
+      "before": 66,
+      "after": 68,
+      "delta": 2,
+      "source_before": "svc_3.rst_o_0",
+      "source_after": "svc_5.rst_o_0"
+    },
+    "svc_4": {
+      "before": 66,
+      "after": 66,
+      "delta": 0,
+      "source_before": "svc_5.rst_o_0",
+      "source_after": "svc_7.rst_o_0"
+    },
+    "svc_6": {
+      "before": 64,
+      "after": 64,
+      "delta": 0,
+      "source_before": "svc_7.rst_o_0",
+      "source_after": "svc_7.rst_o_1"
+    }
+  },
+  "phy_before": {
+    "type": "phy__t1",
+    "parent": "svc_6",
+    "entry_stages": 1,
+    "depth_K": 0,
+    "release": 65,
+    "source": "svc_6.rst_o_0",
+    "hop_um": 788.4
+  },
+  "phy_after": {
+    "type": "phy__t1",
+    "parent": "svc_6",
+    "entry_stages": 1,
+    "depth_K": 0,
+    "release": 65,
+    "source": "svc_6.rst_o_0",
+    "hop_um": 281.0
+  }
+}
