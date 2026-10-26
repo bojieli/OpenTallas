@@ -115,21 +115,24 @@ P(r"""
   reg pending_reset = 0;
   integer seed_dummy;
   integer mism = 0, dontcare = 0, dontcare_v0f1 = 0, cmpc = 0, gold_ok = 0, gold_bad = 0, fault_seen = 0, rmism = 0;
-  integer illegal_done = 0; integer relc = 0;
+  integer illegal_done = 0; integer relc = 0; integer since_pub = 1000, pend_age = 0; integer phase_hits [0:8];
+  initial for (int q = 0; q < 9; q++) phase_hits[q] = 0;
   reg [31:0] vv, ii;
   initial seed_dummy = $urandom(%SEED%);
   function automatic [4095:0] rnd(input integer w); integer q; begin rnd = 0; for (q = 0; q < 4096; q = q + 32) rnd[q +: 32] = $urandom; end endfunction
 
   task automatic do_reset(input integer hold);
-    begin rst_left = hold; nreset = nreset + 1; aborted = aborted + ((st == S_GAP) ? 0 : 1);
+    begin rst_left = hold; nreset = nreset + 1; phase_hits[phase_target] = phase_hits[phase_target] + 1; aborted = aborted + ((st == S_GAP) ? 0 : 1);
       // the run in flight is abandoned; nothing of it may be published
-      exp_wr = exp_rd; st = S_GAP; gap = 0; pending_reset = 0;
+      aborted = aborted + (exp_wr - exp_rd); runs_done = runs_done - (exp_wr - exp_rd); exp_wr = exp_rd; st = S_GAP; gap = 0; pending_reset = 0;
       $display("WARM_RESET n=%0d cyc=%0d phase_target=%0d hold=%0d", nreset, cyc, phase_target, hold); end
   endtask
 
   wire in_rst = !rst_n;
   always @(negedge clk) begin
     cyc <= cyc + 1;
+    since_pub = since_pub + 1;
+    if (pending_reset) begin pend_age = pend_age + 1; if (pend_age > 3000) begin $display("EDGE_SCHED FAIL phase %0d never reached", phase_target); $finish; end end
     // ---- link pins: identical random traffic to both cores (link lockstep already PASS) ----
 """.replace("%SEED%", str(a.seed)))
 for d, w, n in ports:
@@ -152,8 +155,10 @@ P(r"""
       else if (pending_reset && (
             (phase_target == 0 && st == S_DLV && remaining > 1) ||
             (phase_target == 1 && st == S_PUB && gap >= 2) ||
-            (phase_target == 2 && st == S_PUB && gap == 0) ||
-            (phase_target == 3 && st == S_GAP && gap == 1) ||
+            (phase_target == 2 && st == S_PUB && gap == 1) ||   // reset replaces the publish-pin cycle
+            (phase_target == 3 && since_pub == 1) ||              // publish in the pin register
+            (phase_target == 8 && since_pub == 2) ||              // publish in the fold / out_v register
+
             (phase_target == 4 && st == S_GAP && gap >= 3) ||
             (phase_target == 5 && st == S_START) ||
             (phase_target == 6 && st == S_GAP))) begin
@@ -182,7 +187,7 @@ P(r"""
             for (k = g - 1; k > 0; k = k - 1) begin idx = $urandom % (k + 1); {perm[k], perm[idx]} = {perm[idx], perm[k]}; end
             i_arg_start <= 1; i_arg_cfg_g <= 8'(g); i_arg_cfg_gbase <= 8'(gbase); i_arg_cfg_rank <= 8'(rank_r);
             best_ok = 0; remaining = g; st = S_WAIT; runs_started = runs_started + 1;
-            if (runs_started == next_reset_run) begin pending_reset = 1; phase_target = (nreset %% 7); next_reset_run = runs_started + 2 + ($urandom % 6); end
+            if (runs_started == next_reset_run) begin pending_reset = 1; phase_target = (nreset %% 8 == 7) ? 8 : (nreset %% 8); pend_age = 0; next_reset_run = runs_started + 2 + ($urandom % 6); end
             end
           end
           S_WAIT: st = S_DLV;     // lanes no earlier than start + 2 (start pin -> start_qq is 2 edges, lanes 1 edge)
@@ -210,7 +215,7 @@ P(r"""
           S_PUB: begin
             if (gap > 0) gap = gap - 1;
             if (gap == 0) begin
-              i_arg_publish_slot <= 1;
+              i_arg_publish_slot <= 1; since_pub = 0;
               if (remaining == 0) begin exp_id[exp_wr %% 4096] = best_i; exp_rank[exp_wr %% 4096] = 8'(rank_r); exp_wr = exp_wr + 1; runs_done = runs_done + 1; end
               st = S_GAP; gap = 1 + ($urandom % 5);
             end
@@ -245,6 +250,8 @@ P(r"""
       if (pend == 0 || cyc > 2000000) begin
         $display("EDGE_SCHED runs_started=%0d runs_published=%0d aborted_by_reset=%0d warm_resets=%0d compared=%0d mismatches=%0d dontcare_flit_v0=%0d (of which fault=1: %0d) golden_ok=%0d golden_bad=%0d fault_cycles=%0d in_reset_diff=%0d pending=%0d",
                  runs_started, runs_done, aborted, nreset, cmpc, mism, dontcare, dontcare_v0f1, gold_ok, gold_bad, fault_seen, rmism, pend);
+        $display("EDGE_SCHED warm_reset_phase_hits dlv=%0d flush_pub=%0d on_pub=%0d pub+1=%0d idle=%0d on_start=%0d b2b_first=%0d b2b_second=%0d pub+2=%0d",
+                 phase_hits[0], phase_hits[1], phase_hits[2], phase_hits[3], phase_hits[4], phase_hits[5], phase_hits[6], phase_hits[7], phase_hits[8]);
         if (mism == 0 && gold_bad == 0 && fault_seen == 0 && gold_ok == runs_done && pend == 0) $display("EDGE_SCHED PASS");
         else $display("EDGE_SCHED FAIL");
         $finish;
