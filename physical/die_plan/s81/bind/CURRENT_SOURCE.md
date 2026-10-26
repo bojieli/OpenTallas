@@ -7,3 +7,5 @@ Run python3 tools/s81_dv/current_source_assembly.py --check, or --stage DIR for 
 The selected hcore is the qualified CTLA+TIMED_RESET cohort: stationary load transport +1, private reset assertion/release +2 with at least2 asserted edges. Its exact source hashes and component qualification are checked before staging. This is source adoption; existing physical views are not transferred. The actual compiler must charge the load/readiness guards and boot clocks.
 
 The versioned logical topology input is not a current emitted bound top. Fresh source elaboration, strict tie/connectivity/type gates, physical qualification and current bound RTL token remain required. No gate is waived by source preparation.
+
+The explicit evaluated-interface list also includes ot_pl_seam_r_plq, ot_pl_seam_w_plr and ot_pl_seam_w_pl after the actual instance-width census (unit3601840). Absent r_pl/cq names are not selected. This preserves W/CHUNKS-dependent native interfaces without flattening bodies or changing cycles.
