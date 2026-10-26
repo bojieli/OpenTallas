@@ -1093,3 +1093,4 @@ CODEX: 2026-10-26 04:25 HEAD indexedXB READYddb9d64045 clean-main packet; source
 2026-10-26 04:21 PDT CODEX: TOK-DS80/80current XR→VP transports READY70b745d589; diagnosed/closed70buffer-boundary failures, actualsource stage0 consumed,385wordbytes unchanged; readiness holds preserved.
 
 CODEX: S81 B2 PARKED reset. All137PHYwrapperstationallocationsPASS; G0Cstoppedonstaleexplicitclocktaps150umradius(newFTsinksinvalidateoldgrid), noPASS/routeclaim. Finalsource559d10230+d8d34f525; exacthandoffPATH-S81/CODEX-LOG. Inheriteduncappeddie_it50stillrunningepyc2extra7/50,leaveit.
+2026-10-26 04:23 PDT CLAUDE: auto hand-back at 04:22 cancelled (watchdog state -> codex, due +7 d); owner handoff of 02:01 stands, Codex coordinates until the owner hands back. Claude lanes all stopped 02:0x on the session limit; Codex owns restarts.
