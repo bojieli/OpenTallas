@@ -126,7 +126,9 @@ proc ::ot_ec::export {path corner {port_classes {}} {metadata {}}} {
     if {[llength $unknown]} {lappend flags UNMAPPED_ENDPOINTS;incr unmapped}
     if {[llength $async_terms]} {lappend flags ASYNC_ENDPOINTS}
     if {$class eq "DATA" && [llength $clock_terms]} {lappend flags CLOCK_ENDPOINT_ON_DATA_PORT}
-    puts $fh "{\"kind\":\"port\",\"name\":[q $name],\"direction\":[q $direction],\"class\":[q $class],\"ff_members\":[strings $members],\"terminals\":[strings $terms],\"async_terminals\":[strings $async_terms],\"clock_terminals\":[strings $clock_terms],\"bypass_ports\":[strings $bypass],\"unmapped_endpoints\":[strings $unknown],\"flags\":[strings [lsort -unique $flags]]}"
+    set launch_members [expr {$direction eq "output" ? $members : {}}]
+    set capture_members [expr {$direction eq "input" ? $members : {}}]
+    puts $fh "{\"kind\":\"port\",\"name\":[q $name],\"direction\":[q $direction],\"class\":[q $class],\"ff_members\":[strings $members],\"launch_ff_members\":[strings $launch_members],\"capture_ff_members\":[strings $capture_members],\"terminals\":[strings $terms],\"async_terminals\":[strings $async_terms],\"clock_terminals\":[strings $clock_terms],\"bypass_ports\":[strings $bypass],\"unmapped_endpoints\":[strings $unknown],\"flags\":[strings [lsort -unique $flags]]}"
     incr ports
   }
   puts $fh "{\"kind\":\"summary\",\"registers\":[dict size $registers],\"clock_pins_measured\":$measured,\"clock_records_with_flags\":$clock_flags,\"ports\":$ports,\"ports_with_unmapped_endpoints\":$unmapped,\"ports_with_bypass\":$bypassed,\"qualification\":\"NOT_EVALUATED\"}"

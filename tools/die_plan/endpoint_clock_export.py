@@ -78,7 +78,7 @@ def pack(manifest_path, tt, ff):
                     flags.add('CLOCK_ARRIVAL_UNAVAILABLE')
         if flags:issues.append(dict(kind='register',identity=key,flags=sorted(flags)))
         registers[key]=dict(corners=rows,flags=sorted(flags))
-    fields=('ff_members','terminals','async_terminals','clock_terminals','bypass_ports','unmapped_endpoints')
+    fields=('ff_members','launch_ff_members','capture_ff_members','terminals','async_terminals','clock_terminals','bypass_ports','unmapped_endpoints')
     for key in sorted(data['TT']['ports'].keys()|data['FF']['ports'].keys()):
         rows={c:data[c]['ports'].get(key) for c in ('TT','FF')};flags=set()
         for c,row in rows.items():
