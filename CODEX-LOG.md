@@ -4138,3 +4138,6 @@ S81 PHY: published N7 assumptions need44.9–48.2mm shore for14links versus43.3m
 
 ## OWNER? 2026-10-26 02:12 PDT
 OWNER? S81 published-size PHY fit needs a die-level choice: existing north/south SerDes rows provide43.3mm shoreline versus44.9–48.2mm required for14 macros; same-row re-lay cannot fit them. May B2 move gunit/bk_sel off north row or reserve W/E shoreline by shifting adjacent fabric? Existing14-link count and die size remain fixed pending a decision. Geometry alternatives continue without adopting a contract change.
+
+## S81 milestone 2026-10-26 02:17 PDT
+Head source component READY 9412fd850b on codex/head-source-1026 (epyc1 scratch2 worktree). BEST64 and HOST276 component tests passed; no own live jobs left from those benches. B2, legacy core and HEAD/eng workers continue actual structural fixes. Whole-head controller/HBC/LEP composition remains open.
