@@ -180,3 +180,18 @@ def test_macro_corridors_keep_clock_wires_off_blocked_rectangles():
     assert {t['name'] for t in p['taps']}=={t['name']for t in g['taps']}
     assert all(L['xmax']==0 for L in p['legs'])
     assert p['summary']['added_cycles']==0
+
+
+def test_even_sampling_edge_adds_only_common_input_stage():
+    g=geometry(20);g['master']='INVx13_ASAP7_75t_R'
+    p=S.plan_legs(g,even_stages=True)
+    pars={b:a for a,b in p['edges']};counts=[]
+    for t in p['taps']:
+        count=0;name=t['name']
+        while name in pars:
+            name=pars[name];count+=1
+        counts.append(count)
+    assert len(set(counts))==1
+    assert counts[0]%2==0
+    assert p['summary']['trunk_levels']%2==0
+    assert p['summary']['added_cycles']==0

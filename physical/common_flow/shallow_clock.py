@@ -206,7 +206,7 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
 def _man(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0, leg_extra_um=None, spatial_2d=False, avoid_macros=False, corridor_helper=None):
+def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0, leg_extra_um=None, spatial_2d=False, avoid_macros=False, corridor_helper=None, even_stages=False):
     """topology 'htree' (default): symmetric 2x2 H-tree over the tap region,
     pruned where a quadrant has no tap; every tap gets a private leg from its
     H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
@@ -314,6 +314,10 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
         if lv==0: reps[lv]=max(0,math.ceil(dm/rmax_um)-1)
         elif lv==tl: reps[lv]=max(min_rep,math.ceil(dm*slack/rmax_um)-1)   # tap legs: always detour-capable
         else: reps[lv]=max(0,math.ceil(dm*slack/rmax_um)-1)
+    # A standard inverter clock spine must retain the sampling edge. An extra
+    # COMMON input stage changes no branch relationship or data/schedule cycle.
+    if even_stages and sum(n+1 for n in reps.values())%2:
+        reps[0]+=1
     k=0
     for L in sorted(legs,key=lambda L:(L['level'],L['id'])):
         L['n']=reps[L['level']]
@@ -644,7 +648,7 @@ def main():
                     island_um=float(env.get('OT_DTSH_ISLAND_UM','0')),island_reach_um=float(env.get('OT_DTSH_ISLAND_REACH_UM','40')),
                     leg_extra_um=float(env['OT_DTSH_LEG_EXTRA_UM']) if 'OT_DTSH_LEG_EXTRA_UM' in env else None,
                     spatial_2d=env.get('OT_DTSH_SPATIAL_2D','')=='1',avoid_macros=env.get('OT_DTSH_AVOID_MACROS','')=='1',
-                    corridor_helper=env.get('OT_DTSH_CORRIDOR_HELPER'))
+                    corridor_helper=env.get('OT_DTSH_CORRIDOR_HELPER'),even_stages=env.get('OT_DTSH_EVEN_STAGES','')=='1')
     else:
         p=plan(g)
     Path(a.out).write_text(json.dumps(p,indent=1)+'\n')
