@@ -21,7 +21,7 @@ Items (see `items` in the output for status / owner):
            ep_S3 to hb_coll_NE (ot_hfd_coll_q2_hard_v8g NLINK 2: lanes N2, S3); link calendars epcal_NW W 57 /
            epcal_NE W 38 (param only, same per-endpoint 19-bit field).  PLAN CHANGE: the two hub COLL masters differ.
   W-RID    hb_router_ids run_v / run_layer from cp_svg_NW0 (was cp_svg_SW0; same ot_static_run_target master).
-  P-VMST   vm_status4 NQ 2 (exists, bench run_vms_status_nq.sh).
+  P-VMST   vm_status4 NQ 2 (exists, bench run_vms_status_nq.sh); P-VMST-OBS its vmstat word -> obs_C (host readback).
   RTL items (VM ring stop NSTOP 2, IDX / argmax 2-quadrant, SU tree / programme root, HC root) come from --rtl-items
   (the sub-agents' binding tables) and are merged in as `remaster` / `port_map` / `rebuild` entries.
 """
@@ -387,6 +387,22 @@ def main():
     items.append(dict(id='W-FLT', kind='param+wiring', status='done',
                       what=f'fr_NW N {nfw} / fr_NE N {nfe} take every hb_coll retry lane (SYNC_MASK bits re-positioned); '
                            f'tkm_SW.stat_cycles observed by obs_C (N {nobw}; as built by obs_SW)'))
+    # P-VMST-OBS: the combined VM status word vm_status4.vmstat = {proto_fault, mask_fault, ue, ce[15:0]} (flags = OR of
+    # the quadrants, ce = saturating sum of the quadrant correctable-error counts; ot_vms_status4_static) was the
+    # cmdproc's vmstat input. The as-built die has no cmdproc (host_cp_ingress / host_status replace it), so the word
+    # was unread in r18h5 too. The cmdproc's only use of vmstat (halt on [18:16]) is carried per quadrant on the die:
+    # hb_vms_<Q>.vmstat[18:16] -> fault leaf fr_<Q> -> host_status.a_fault (sticky, host-visible). The ce count had no
+    # consumer at all: the word lands in obs_C (host readback; ot_hbm_obs_leaf pin flop, live + read-to-clear sticky
+    # page), appended at the top of the vector so every existing obs_C bit position is unchanged.
+    # vm_status4 and obs_C are both root-partition contents on one clock (pll_stream): no die lane; vmstat is a
+    # registered output and obs_C pin-flops every obs bit.
+    ob = rebuild['obs_C']['obs'] + [['vm_status4', 'vmstat', 0, 18]]
+    rebuild['obs_C']['obs'] = ob
+    nobw = sum(e[3] - e[2] + 1 if e[0] != 'const' else e[1] for e in ob)
+    remaster['obs_C']['params'] = re.sub(r'\.N\(\d+\)', f'.N({nobw})', remaster['obs_C']['params'])
+    items.append(dict(id='P-VMST-OBS', kind='wiring', status='done',
+                      what=f'vm_status4.vmstat[18:0] observed by obs_C bits [{nobw - 1}:{nobw - 19}] (N {nobw}); fault '
+                           'bits also reach host_status via fr_NW / fr_NE (unchanged)'))
 
     # ---- W-HOST: in-band host on the N0 link (OWNER 10-24): host_N (UCIe) dropped, ep_N0 carries VC 1
     drop_inst = ['host_N']
