@@ -1,0 +1,44 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "PIN_SEPARATION_ONLY",
+  "image": "reset_entry_review.png",
+  "viewed": true,
+  "independent": "FLOW GEOM1713 geom_queue independently viewed and concurred",
+  "findings": [
+    "M7 entry and output rectangles .032x.768 have .896um edge gap; prior exact overlap caused GRT0080.",
+    "Entry remains in clear E-side channel outside all root hard cores.",
+    "Explicit reset.in_sites changes model and generated geometry together; no silent io.tcl-only movement."
+  ],
+  "g0": {
+    "errors": 0,
+    "warnings": 523,
+    "verdict": "PASS"
+  },
+  "wavefront": {
+    "release": "wavefront",
+    "sync_stages": 2,
+    "root": "root",
+    "hop_um": 405.0,
+    "relay_um": 405.0,
+    "max_release": 91,
+    "max_die_hop_um": 378.5,
+    "unreachable": []
+  },
+  "limitations": [
+    "No GRT/STA/native bind/token/SIGNED credit.",
+    "Full G0C not rerun here; four inherited core-face failing types remain.",
+    "No per-partition baseline offset comparison or zero boot delta claim.",
+    "Stack5 lacks explicit START adoption; private buffer depth3 must be separately declared instead of default1.",
+    "New +501 or larger edge-growth plan requires fresh pin repair, reset publication and review."
+  ],
+  "source": {
+    "main": "2aa9da43c4",
+    "geometry_job": "54152198cd",
+    "runtime_note": "inactive duplicate legacy build shadowed by unchanged current wall-aware build; duplicate omitted in current source/frozen tools",
+    "frozen_reset_sha256": "608ad10f86206593bcab6eb7db840ecd01aa6f1f75d465fe695696a0e223a67d"
+  },
+  "jobs": {
+    "g0_offsets": "localhost oth-ubuntu-3500814-1792975802 EXIT0",
+    "render": "render.otrun.log EXIT0"
+  }
+}

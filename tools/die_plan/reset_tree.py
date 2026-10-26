@@ -344,16 +344,6 @@ def push_off(p, boxes, box_out, step=2.16):
 
 
 # ----------------------------------------------------------------------------------------------- the tree
-def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, prefix=""):
-    """taps [(name, x, y)] (tap index = list index); root_xy = the entry stage (reset pin).
-    Topology: a shortest-hop tree over the taps (ties: fewer intermediate relays, then shorter wire) with intermediate
-    relays on the x-then-y L path, pushed off `boxes`; when a push-off breaks the reach, a shortest-hop tree over a
-    grid of free relay sites (wires may cross blockages, relays may not).  Equal depth: every tap is padded to D =
-    max(own depth, `depth`); pads go as HIGH in the tree as possible (on the edge into the subtree that has slack), so
-    one pad serves every tap below it.
-    Returns {root, depth, own_depth, relays[{name, xy, d, q, depth, tap, kind}], reach_um, max_hop_um, ...}."""
-    topo = topology(taps, root_xy, reach, margin, boxes, box_out)
-    return assign(topo, depth, prefix)
 
 
 def _seg_hits(p, q, walls):
