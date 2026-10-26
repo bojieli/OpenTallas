@@ -16,8 +16,9 @@ PREBOOT=(10,)            # pass 1 (POR, unaligned release): loaded alone, then t
 OPTIONAL=(10,11,12,13)
 MASK64=(1<<64)-1
 
-def encode_image(target:int,epoch:int,program:list[int],descriptors:list[int],mu:bool=False)->dict:
+def encode_image(target:int,epoch:int,program:list[int],descriptors:list[int],mu:bool=False,die_cfg_ages:bool=False)->dict:
  words=TARGET_WORDS_MU if mu else TARGET_WORDS
+ if die_cfg_ages:words={**words,10:96}  # NRST43 + CAP1 + 19 ages + seal
  for label,value,limit in [('target',target,MAX_TARGET),('epoch',epoch,65535)]:
   if type(value) is not int or not 0<=value<=limit:raise ValueError(f'{label} out of range')
  if not 1<=len(program)<=1024:raise ValueError('program word count must be 1..1024')
@@ -36,7 +37,7 @@ def encode_image(target:int,epoch:int,program:list[int],descriptors:list[int],mu
  return {'target':target,'epoch':epoch,'program_words':len(program),'descriptor_words':len(descriptors),'digest':f'{digest:016x}','frames528':[f'{f:0132x}' for f in frames]}
 
 
-def encode_boot_bundle(epoch:int,images:list[dict],mu:bool=False)->dict:
+def encode_boot_bundle(epoch:int,images:list[dict],mu:bool=False,die_cfg_ages:bool=False)->dict:
  indexed={}
  for image in images:
   target=image['target']
@@ -48,7 +49,7 @@ def encode_boot_bundle(epoch:int,images:list[dict],mu:bool=False)->dict:
  # 1..9, 11, 12, 13, 0 (the ISA target 0 last); targets 10..13 are optional (a die without DIECFG/LINKCFG/ESCFG)
  pre=[t for t in PREBOOT if t in indexed]
  order=list(range(1,10))+[t for t in (11,12,13) if t in indexed]+[0]
- encoded=[encode_image(t,epoch,indexed[t]['program'],indexed[t]['descriptors'],mu) for t in pre+order]
+ encoded=[encode_image(t,epoch,indexed[t]['program'],indexed[t]['descriptors'],mu,die_cfg_ages) for t in pre+order]
  out={'epoch':epoch,**({'layer_form':'MU'} if mu else {}),'target_order':pre+order,'images':encoded,'frames528':[f for image in encoded for f in image['frames528']]}
  if pre:
   n=sum(len(image['frames528']) for image in encoded[:len(pre)])
