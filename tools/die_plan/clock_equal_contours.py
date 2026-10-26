@@ -11,6 +11,7 @@ from collections import defaultdict
 from functools import lru_cache
 import json
 import math
+import hashlib
 from pathlib import Path
 import die_clock as DC
 import schema as S
@@ -31,7 +32,7 @@ def points(a,b,r):
     return result
 
 
-def equalize(plan,source,out,max_legs=3):
+def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False):
     P=S.Plan(S.load(plan));T=DC.load_tree(source);tree=json.loads((source/'tree.json').read_text())
     T.cells,legal=legalize_cells(T.cells,plan)
     K=DC.KeepIndex(DC.keepouts(P),die=(P.W,P.H));sx,sy=.054,.27;ns=30;width=1.62
@@ -135,8 +136,25 @@ def equalize(plan,source,out,max_legs=3):
                     occupied.difference_update(sites3)
                 occupied.difference_update(sites)
         return None
+    out.mkdir(parents=True,exist_ok=True)
+    identity=hashlib.sha256(plan.read_bytes()+(source/'nets.json').read_bytes()+(source/'place.json').read_bytes()).hexdigest()
     selected={};radii={};leg_counts={};maxerror=0.;failures=[]
+    checkpoint=out/'checkpoint.json'
+    if resume and checkpoint.exists():
+        cp=json.loads(checkpoint.read_text())
+        if cp['identity']!=identity:raise ValueError('checkpoint input geometry changed')
+        selected={tuple(map(int,k.split(':'))):ps for k,ps in cp['selected'].items()}
+        radii={int(k):v for k,v in cp['radii'].items()};leg_counts={int(k):v for k,v in cp['legs'].items()}
+        if any(n>max_legs for n in leg_counts.values()):raise ValueError('checkpoint exceeds requested leg profile')
+        maxerror=cp['maxerror']
+        for ps in selected.values():
+            for x,y,iy,error in ps:
+                ix=round(x/sx);sites={(iy,j) for j in range(ix,ix+ns)}
+                if sites&occupied:raise ValueError('checkpoint clock site now overlaps base')
+                occupied.update(sites)
+        print(json.dumps(dict(resumed_stages=len(radii),resumed_edges=len(selected))),flush=True)
     for stage,edges in sorted(groups.items()):
+        if stage in radii:continue
         largest=max(abs(xy(a)[0]-xy(b)[0])+abs(xy(a)[1]-xy(b)[1]) for _,_,a,b,_ in edges)
         success=False;blocked=None
         for legs in range(2,max_legs+1):
@@ -152,7 +170,10 @@ def equalize(plan,source,out,max_legs=3):
                     for offset in [-1.08,-.54,-.27,0,.27,.54,1.08]:
                         r=round(event+offset,6)
                         if largest/legs<=r<=449.28:radii_to_try.add(r)
-            for r in sorted(radii_to_try):
+            order=sorted(radii_to_try)
+            if closure_first and legs==4 and order:
+                order=[order[-1]]+order[:-1]
+            for r in order:
                 circle_cache.clear()
                 placed=set();chosen=[];blocked=None
                 for ni,bi,src,dst,layer in edges:
@@ -170,6 +191,8 @@ def equalize(plan,source,out,max_legs=3):
             maxerror=max(maxerror,max(p[3] for p in ps))
         radii[stage]=round(r,3);leg_counts[stage]=legs
         print(json.dumps(dict(stage=stage,edges=len(edges),legs=legs,radius_um=round(r,3))),flush=True)
+        cp=dict(identity=identity,radii=radii,legs=leg_counts,maxerror=maxerror,selected={f'{ni}:{bi}':ps for (ni,bi),ps in selected.items()})
+        temporary=out/'checkpoint.tmp';temporary.write_text(json.dumps(cp));temporary.replace(checkpoint)
     out.mkdir(parents=True,exist_ok=True)
     if failures:
         report=dict(verdict='FAIL',cause='no free equal-leg native site within450um radius',failures=failures,completed_stages=radii)
@@ -211,12 +234,13 @@ def equalize(plan,source,out,max_legs=3):
     if min(ds)!=max(ds):raise ValueError('physical contour transform changed relative clock depth')
     meta=dict(added_clock_cells=count,clock_stages_per_tap=ds[0],radius_by_stage_um=radii,legs_by_stage=leg_counts,wide_through_original_stage=wide_through,
         max_native_grid_leg_error_um=round(maxerror,6),max_physical_hop_um=round(maxhop,6),
-        added_cell_area_um2=round(count*1.62*.27,4),data_cycles_added=0,hidden_wire_pad_um=0,base_legalization=legal)
+        added_cell_area_um2=round(count*1.62*.27,4),data_cycles_added=0,hidden_wire_pad_um=0,base_legalization=legal,closure_first=closure_first)
     tree['meta'].update(ndr=f'4W;8W through normalized clock stage{wide_through}',cells=len(T.cells),wire_um=round(sum(L for n in T.nets for L,*_ in n['branches']),3),padding_um=0.,pad_um=0.,pads=0,physical_equal_contours=meta)
     DC.NDR_MODE='4w';DC.WIDE_LEVELS=6;DC.write_verilog(T,out/'ctree.v');DC.write_spef(T,out/'ctree.spef')
     for file,obj in [('tree.json',tree),('place.json',T.cells),('nets.json',dict(ports=T.ports,nets=T.nets))]:(out/file).write_text(json.dumps(obj))
+    (out/'ndr_width_by_net.json').write_text(json.dumps({n['name']:8 if DC.net_leg_level(T,n)<=6 else 4 for n in T.nets}))
     print(json.dumps(meta,indent=2))
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('plan',type=Path);p.add_argument('source',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--max-legs',type=int,choices=[2,3,4],default=4)
-    a=p.parse_args();equalize(a.plan,a.source,a.out,a.max_legs)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('plan',type=Path);p.add_argument('source',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--max-legs',type=int,choices=[2,3,4],default=4);p.add_argument('--closure-first',action='store_true');p.add_argument('--resume',action='store_true')
+    a=p.parse_args();equalize(a.plan,a.source,a.out,a.max_legs,a.closure_first,a.resume)
