@@ -57,6 +57,7 @@ def main():
     args.out.mkdir(parents=True,exist_ok=True)
     baseline=S.Plan(original,path=args.plan_context)
     print('BASELINE whole-die reset contract',flush=True);before=RT.wf_plan(baseline)
+    (args.out/'baseline_wavefront.json').write_text(json.dumps(before,indent=1)+'\n')
     seed=copy.deepcopy(geometry);seed.setdefault('reset',{})['start']='broadcast'
     pseed=S.Plan(seed,path=args.plan_context)
     report['shared_baseline_grids']=share_unchanged_grids(baseline,pseed,names,RT)
@@ -82,6 +83,8 @@ def main():
         trees={n:RT.for_type(p,n) for n in names}
         actual={n:D.census(t) for n,t in trees.items()}
         for n,(sites,_) in actual.items():raw['partition_types'][n]['clock']['sink_sites_um']=sites
+        (args.out/(mode+'_actual_unchecked.json')).write_text(json.dumps(raw,indent=1)+'\n')
+        (args.out/(mode+'_control_sites.json')).write_text(json.dumps(actual,indent=1)+'\n')
         # The tables are immutable; verify every actual weighted control/FT sink
         # before reusing topology caches, which depend on endpoint geometry only.
         coverage={n:taps.explicit_taps(p,n) for n in names}
