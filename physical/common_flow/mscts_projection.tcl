@@ -65,3 +65,69 @@ proc ::ot_ms_projection::from_stats {stats measured_steps fallback_step window} 
   }
   return [select $arrivals $steps $window]
 }
+
+# Shared physical pad counts must fit BOTH sign-off corner windows.  TT fitting
+# already is not a reason to skip a failing FF window (mixed-edge SRAMIF case).
+proc ::ot_ms_projection::select_joint {arrivals corner_steps window {max_rise ""}} {
+  if {[lsort [dict keys $arrivals]] ne {FF TT} || [lsort [dict keys $corner_steps]] ne {FF TT}} {
+    error "OT_MSCTS_PROJECT_JOINT requires explicit TT and FF measurements"
+  }
+  if {$max_rise eq ""} {set max_rise $window}
+  set names [lsort [dict keys [dict get $arrivals TT]]]
+  if {$names ne [lsort [dict keys [dict get $arrivals FF]]]} {error "OT_MSCTS_PROJECT_JOINT corner membership differs"}
+  set old_hi {};set bounds {};set spans {}
+  foreach c {TT FF} {
+    set A [dict get $arrivals $c];set S [dict get $corner_steps $c]
+    # Reuse the single-frame validation, including measured-cell step bounds.
+    select $A $S $window $max_rise
+    set hi [tcl::mathfunc::max {*}[dict values $A]]
+    set lo [tcl::mathfunc::min {*}[dict values $A]]
+    dict set old_hi $c $hi;dict set spans $c [expr {$hi-$lo}]
+    if {$hi-$lo > 2*$window} {return [dict create feasible 0 reason coarse_balance_required corner $c]}
+    set B {}
+    dict for {who a} $A {
+      set step [dict get $S $who]
+      set nmax [expr {int(ceil(($hi+$max_rise-$a)/$step))}]
+      for {set n 0} {$n <= $nmax} {incr n} {
+        set v [expr {$a+$n*$step}]
+        if {$v <= $hi+$max_rise+1e-9} {lappend B $v}
+      }
+    }
+    dict set bounds $c [lsort -real -unique $B]
+  }
+  if {[dict get $spans TT] <= $window && [dict get $spans FF] <= $window} {
+    return [dict create feasible 1 counts {} predicted $arrivals spans $spans added_latency_ps {TT 0.0 FF 0.0}]
+  }
+  set best {};set best_count 1e99;set best_rise 1e99
+  foreach ltt [dict get $bounds TT] {
+    foreach lff [dict get $bounds FF] {
+      set lower [dict create TT $ltt FF $lff]
+      set counts {};set total 0;set pred [dict create TT {} FF {}]
+      foreach who $names {
+        set n 0
+        foreach c {TT FF} {
+          set a [dict get $arrivals $c $who];set s [dict get $corner_steps $c $who]
+          set n [expr {max($n,0,int(ceil(([dict get $lower $c]-$a-1e-9)/$s)))}]
+        }
+        if {$n} {dict set counts $who $n;incr total $n}
+        foreach c {TT FF} {dict set pred $c $who [expr {[dict get $arrivals $c $who]+$n*[dict get $corner_steps $c $who]}]}
+      }
+      if {$total > $best_count} continue
+      set ok 1;set new_spans {};set rises {};set rise 0.0
+      foreach c {TT FF} {
+        set hi [tcl::mathfunc::max {*}[dict values [dict get $pred $c]]]
+        set lo [tcl::mathfunc::min {*}[dict values [dict get $pred $c]]]
+        set delta [expr {max(0.0,$hi-[dict get $old_hi $c])}]
+        if {$hi-$lo > $window+1e-9 || $delta > $max_rise+1e-9} {set ok 0;break}
+        dict set new_spans $c [expr {$hi-$lo}];dict set rises $c $delta
+        set rise [expr {max($rise,$delta)}]
+      }
+      if {$ok && ($total < $best_count || ($total == $best_count && $rise < $best_rise))} {
+        set best_count $total;set best_rise $rise
+        set best [dict create feasible 1 counts $counts predicted $pred spans $new_spans added_latency_ps $rises]
+      }
+    }
+  }
+  if {$best eq ""} {return [dict create feasible 0 reason no_joint_discrete_solution_within_rise_bound]}
+  return $best
+}
