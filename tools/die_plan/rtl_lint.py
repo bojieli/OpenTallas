@@ -45,7 +45,11 @@ def script(kit, mount='/work'):
                      # with (FLOW-CANARY 10-25: without it 'initial if(P<1) $fatal' guards fired on the default
                      # parameters -- qkd_static_k_issuer RESPONSE_LAT=0 -- and failed every KV head kit's lint);
                      # -noautowire still rejects implicit nets under -defer (checked on the orfs:asap7lock yosys).
-                     ['read_verilog -defer -sv -noautowire ' + ' '.join(includes + [s]) for s in sources] +
+                     # Native headers preserve content-only ROM parameters omitted by Liberty.
+                     [('read_verilog -lib -overwrite -sv -noautowire '
+                       if re.search(r'_bb\.(?:v|sv)$', s) else
+                       'read_verilog -defer -sv -noautowire ') +
+                      ' '.join(includes + [s]) for s in sources] +
                      parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc', 'check -assert']) + '\n'
 
 
