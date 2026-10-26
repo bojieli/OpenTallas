@@ -436,6 +436,10 @@ def main():
     ap.add_argument("--head-lane-ltcopy", action="store_true",
                     help="even head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
                          "0 cycles, COORD ruling 5); needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
+    ap.add_argument("--head-strap-odd", action="store_true",
+                    help="odd head_eighth master e1 / e5 (TYPE-REDUCE-2 10-25, OWNER option B): both ot_qkh_lane8 .bsel(2'bXX) "
+                         "constants -> input strap_bsel[1:0] (head_strap_odd.py; plan g3/head_master_odd_tr2.py ties e1 00 / "
+                         "e3 01 / e5 10 / e7 11); false path from strap_bsel, 0 cycles")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--astk-rep-split", action="store_true",
@@ -514,6 +518,14 @@ def main():
     mod = cj["module"]
     if a.astk_face_ports and not mod.startswith("kv3_astk_"):
         raise SystemExit("--astk-face-ports only applies to kv3_astk_* cores")
+    if a.head_strap_odd:
+        if not re.fullmatch(r"kv3_head_eighth_e[15]", mod):
+            raise SystemExit("--head-strap-odd applies to the odd masters kv3_head_eighth_e1 / e5 only")
+        cj["port_decl"]["strap_bsel"] = ["input", 1, 0]
+        for b in (0, 1):
+            cj["pin_class"][f"strap_bsel[{b}]"] = "in"   # as astk_strap_master.py: an input; straps are named in report.straps (id_strap)
+        cj["report"]["straps"] = [s for s in cj["report"].get("straps", []) if s.get("port") != "strap_bsel"] + [
+            dict(port="strap_bsel", width=2, kind="id_strap", was=".bsel(2'bXX) constant of both ot_qkh_lane8 lanes")]
     if a.head_lane_ltcopy and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
         raise SystemExit("--head-lane-ltcopy only applies to the even head_eighth cores (e0/e2/e4/e6)")
     if a.head_lane_ltcopy and not a.head_port_regs:
@@ -561,6 +573,9 @@ def main():
             dst.write_text(transform(dst.read_text()))
         if a.head_port_regs and dst.stem == mod:
             dst.write_text(head_port_regs(dst.read_text(), mod, kd))
+        if a.head_strap_odd and dst.stem == mod:
+            import head_strap_odd
+            dst.write_text(head_strap_odd.master(dst.read_text()))
         if a.head_lane_ltcopy and dst.stem == mod:
             dst.write_text(head_lane_ltcopy(dst.read_text(), mod, kd))
         if a.am_g_drop and dst.stem == mod:
