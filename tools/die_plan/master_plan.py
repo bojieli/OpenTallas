@@ -1641,7 +1641,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         reach=None, detour=405.0, core_obs_top="M5", lower_pg_frac=0.25, fill_max=0.6, bay_fill=0.5,
         track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, skew_gate_ps=80.0, render=True, log=print,
         core_islands=None, tree_lattice=None, tree_comm_form="die", onramp_bays=False, drop_mesh_early=False,
-        tree_roads=False):
+        tree_roads=False, region_dist=False):
     reach = float(reach or P.reach)
     out = Path(out)
     (out / "slices").mkdir(parents=True, exist_ok=True)
@@ -2124,6 +2124,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                 isl_inst.append(dict(kind="core", part=part, inst=f"{part}/{h['inst']}", role="tree_leaf",
                                      rect_um=IS.rect_pts(P, part, core_to_type(h, q["rect_um"]))))
     # MASTER-PLAN-R3 task 2: the die tree planned on the per-type island lattice (sites = declared islands)
+    region_gates = {}
     t_sites, t_leaves = [], []
     for k, q in enumerate(isl_inst):
         r = q["rect_um"]
@@ -2193,6 +2194,28 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         dtp["lattice"] = dict(gate=lat_gate, nodes=lat_nodes)
         dtp["consume"] = ("CLOCK-128: build the die H-tree from lattice.nodes (xy_um, binding); island_tree 'nodes' "
                           "kept as the R3 diagnostic")
+        if comm_mode and region_dist:
+            # QC-MP-REGION (opt-in --region-dist, needs --tree-lattice cNXxNY): declare the distribution below the
+            # lattice leaves (regional tree per leaf to every partition centre entry, nodes on 8.64 pushdown islands,
+            # partition-bay leg repeaters, plan-computed stage count + detour balance) + the root trunk repeater sites,
+            # with the 12.9d prediction (leaf -> entry, die input -> entry + 12.3 core latency) and a related-pair
+            # non-common estimate.  Plan geometry only.
+            import region_clock as RC
+            rc = RC.analyse(P, dtp, parts_die, cores_die, plan_sha, out / "region",
+                            dict(plan=str(P.path), plan_sha256=plan_sha, die_tree_plan="this master-plan run (lattice)"),
+                            render=render, argv=list(sys.argv))
+            RD = rc["region_distribution"]
+            dtp["regions"] = dict(gate=rc["gate"], stage_model=RD["stage_model"], die_target_tt_ps=RD["die_target_tt_ps"],
+                                  basis=RD["basis"], topology=RD["topology"], regions=RD["regions"], nodes=RD["nodes"],
+                                  legs=RD["legs"], repeater_sites=RD["repeater_sites"], entries=RD["entries"],
+                                  prediction=rc["die_path"], pairs=rc["pairs"]["summary"])
+            dtp["lattice"]["trunk"] = rc["trunk"]
+            dtp["consume"] += ("; regions (QC-MP-REGION): build each region tree from regions.nodes/legs (polyline, n_seg, "
+                               "repeater_sites = partition_bay cuts, detour = plan U) to regions.entries (partition "
+                               "clock.tap_um, M9); trunk cuts = lattice.trunk.sites (ckm_t_k)")
+            region_gates["region_distribution"] = rc["gate"]
+            region_gates["trunk_sites"] = dict(verdict=rc["trunk"]["verdict"], sites=rc["trunk"]["sites"],
+                                               len_um=rc["trunk"]["len_um"], n_seg=rc["trunk"]["n_seg"])
         (out / "die_tree_plan.json").write_text(json.dumps(dtp, indent=None) + "\n")
     if not t_leaves:
         tree_plan = dict(verdict="NOT RUN", note="no declared islands")
@@ -2280,6 +2303,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         **(dict(tree_lattice=lat_gate) if lat_gate is not None else {}),
         infra_sites=sites_gate,
         **rulings,
+        **region_gates,
     )
     verdict = "PASS" if all(g["verdict"] == "PASS" for g in gates.values() if not g.get("diagnostic_only")) else "FAIL"
 
@@ -2566,6 +2590,9 @@ def add_args(p):
     p.add_argument("--core-reach-um", type=float, default=200.0)
     p.add_argument("--no-render", action="store_true")
     p.add_argument("--core-islands", help="core_islands.py JSON {core module: SRAM-aware sited in-core islands}")
+    p.add_argument("--region-dist", action="store_true",
+                   help="QC-MP-REGION (with --tree-lattice cNXxNY): declare + gate the regional distribution below the "
+                        "lattice leaves and the root trunk repeater sites (die_tree_plan.json regions / lattice.trunk)")
     p.add_argument("--tree-lattice", default=None, help="opt-in die H-tree lattice (die_tree_plan.json lattice + gate "
                                                          "tree_lattice): NXxNY regular bbox lattice (R4) or cNXxNY = "
                                                          "channel-cross lattice, pitch = core-array multiple (R5)")
@@ -2601,7 +2628,7 @@ def cmd(a):
                     core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None,
                     tree_lattice=parse_tree_lattice(a.tree_lattice) if a.tree_lattice else None,
                     tree_comm_form=a.tree_commensurate, onramp_bays=a.onramp_bays, drop_mesh_early=a.drop_mesh_early,
-                    tree_roads=a.tree_roads)
+                    tree_roads=a.tree_roads, region_dist=a.region_dist)
     print(json.dumps(dict(die=mp["die"], verdict=mp["verdict"], gates=mp["gates"], census=mp["census"]), indent=1))
     return 0 if mp["verdict"] == "PASS" else 1
 
