@@ -87,6 +87,7 @@ def apply(plan, plan_dir, bound_dir, outdir, alignment=3):
             rd=outdir/'rtl';rd.mkdir(parents=True,exist_ok=True)
             (rd/(mod+'.sv')).write_text(rtl)
             (rd/(mod+'.cut.json')).write_text(json.dumps(report,indent=1)+'\n')
+            hc['bound_group']=dict(kind='exact_post_bind_group',reset_pin='rst_n',memory_alignment=alignment,members=[dict(inst=x['instance'].replace('u_u_','u_',1),module=x['module'],reset_pin='rst_n') for x in report['leaves']])
             hc.update(module=mod,pins_file=str(rel),note='Exact five-leaf source group;0 added cycles; dedicated face gates required')
             ledger.append(dict(type=tn,instance=hc['inst'],module=mod,inputs=report['input_bits'],
                                outputs=report['output_bits'],output_slot_families=roles,added_cycles=0,
