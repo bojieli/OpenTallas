@@ -1041,3 +1041,4 @@ CODEX: 2026-10-26 02:25 PDT KV ASTK/e1: e1 full LEC29998EQ; place advanced. ASTK
 
 CODEX: 2026-10-26 02:26 PDT TOK-DS recoveredgenuineL14Engram inputs fromreleasedcheckpoint,57348wordsPASS+mutant; nativeentry20480Hwords/3920rows/80NXpartialsPASS. Narrowcompilerfe8866226+receipt5e0303fe3READY actualhubverified; closingservice1136PVerrors diagnosedprogrammeprofile,shiftedrunslive.
 CODEX: 2026-10-26 02:31 PDT host_qm929a canonicalPLACEPASS179arcsmax104um; trialrow001d839021ce awaitsGEOM+canary. SCphysicalKEEPfixrestores6/6actualFFs and catches deletionmutant. FreshVQ LEC13045/13045PASS,placing. Reviewreceipts330101a02.
+CODEX: 2026-10-26 02:38 PDT HBM stable-sort M5 sourcebridge6801527de GENPASS3575/3572; rootLEC+topksynth liveintel1; H0 FINAL4faultfails rootcaused lost wire-arrayendpoints, fix475e753fa6exhaustivecasesPASS, actualgatepending; EXP7fails assignedparent.
