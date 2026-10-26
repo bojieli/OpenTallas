@@ -1104,6 +1104,29 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
             hook.write_text(f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n" + hook.read_text())
+    stages = t.get("reset", {}).get("physical_stages", [])
+    if stages:
+        import fup_reset_groups as FGR
+        for stage in stages:
+            re.compile(stage["selector"])
+            x, y = stage["xy_um"]
+            if not (0 <= x <= w and 0 <= y <= h):
+                raise ValueError(f"{tn}: private reset stage outside outline")
+        # Preserve independent first stages through synthesis. The source module
+        # itself carries keep_hierarchy; missing source attributes fail closed.
+        text = "\n".join((kd / "rtl" / Path(f).name).read_text() for f in rtl_files)
+        for module in t.get("reset", {}).get("keep_modules", []):
+            pattern = r"\(\*[^*]*\bkeep_hierarchy\b[^*]*\*\)\s*module\s+" + re.escape(module) + r"\b"
+            if not re.search(pattern, text):
+                raise ValueError(f"{tn}: private reset module {module} lacks keep_hierarchy source")
+        manifest = dict(type=tn, anchors=[[s["selector"], *s["xy_um"]] for s in stages])
+        (kd / "reset_physical_stages.json").write_text(json.dumps(manifest, indent=1) + "\n")
+        (kd / "reset_physical_stages.tcl").write_text(FGR.tcl(manifest))
+        (kd / "reset_physical_stages_release.tcl").write_text(FGR.tcl(manifest, True))
+        with (kd / "face_flops.tcl").open("a") as f:
+            f.write("\nsource /work/reset_physical_stages.tcl\n")
+        with (kd / "face_flops_release.tcl").open("a") as f:
+            f.write("\nsource /work/reset_physical_stages_release.tcl\n")
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),

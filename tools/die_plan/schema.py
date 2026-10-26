@@ -448,6 +448,11 @@ SCHEMA = {
                                        "obs_max": _layer,
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
+                        # Opt-in actual-site private reset FFs; no additional register or cycle is inferred.
+                        "physical_stages": {"type": "array", "items": {"type": "object",
+                            "required": ["selector", "xy_um"], "additionalProperties": False,
+                            "properties": {"selector": {"type": "string", "minLength": 1}, "xy_um": _xy}}},
+                        "keep_modules": {"type": "array", "items": _name},
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
