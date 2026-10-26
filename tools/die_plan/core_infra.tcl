@@ -1,0 +1,214 @@
+# Shared core-netlist infrastructure. Never place parent cells or carve LEF holes.
+# Every location/sink identity is emitted from the plan before the build.
+proc ot_ci_begin {} {
+  set ::ot_ci_b [ord::get_db_block]
+  set ::ot_ci_u [[ord::get_db_tech] getDbUnitsPerMicron]
+  set ::ot_ci_cells {}; set ::ot_ci_ports {}; set ::ot_ci_arcs {}
+  set ::ot_ci_fixed {}; set ::ot_ci_tree_expected {}; set ::ot_ci_tree_seen {}
+  set ::ot_ci_tree_out [dict create]
+}
+proc ot_ci_net {name} {
+  set n [$::ot_ci_b findNet $name]
+  if {$n eq "NULL"} {set n [odb::dbNet_create $::ot_ci_b $name]}
+  return $n
+}
+proc ot_ci_clock_entry {name x y} {
+  set bt [$::ot_ci_b findBTerm $name]
+  if {$bt eq "NULL" || [$bt getIoType] ne "INPUT"} {error "OT_CORE_INFRA_CLOCK_ENTRY_PORT $name"}
+  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.032 0.192}
+}
+proc ot_ci_port {name direction x y} {
+  set bt [$::ot_ci_b findBTerm $name]
+  if {$bt eq "NULL"} {
+    set bt [odb::dbBTerm_create [ot_ci_net $name] $name]
+    $bt setIoType $direction
+  } elseif {[$bt getIoType] ne $direction} {error "OT_CORE_INFRA_PORT_DIRECTION $name"}
+  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.032 0.192}
+  lappend ::ot_ci_ports $name
+}
+# Coordinates are core-local centres; only deterministic technology row/site
+# quantisation is allowed. No search, sliding, or post-measurement relocation.
+proc ot_ci_place {i x y rect} {
+  set m [$i getMaster]; set w [$m getWidth]; set h [$m getHeight]
+  set row ""; set best 1e99
+  foreach r [$::ot_ci_b getRows] {
+    lassign [$r getOrigin] rx ry
+    set d [expr {abs($ry + $h / 2.0 - $y * $::ot_ci_u)}]
+    if {$d < $best} {set best $d; set row $r}
+  }
+  if {$row eq ""} {error "OT_CORE_INFRA_NO_ROWS [$i getName]"}
+  lassign [$row getOrigin] rx ry
+  set sw [[$row getSite] getWidth]
+  set xx [expr {$rx + int(round(($x * $::ot_ci_u - $w / 2.0 - $rx) / $sw)) * $sw}]
+  set yy $ry
+  lassign $rect x0 y0 x1 y1
+  if {$xx < $x0*$::ot_ci_u || $yy < $y0*$::ot_ci_u || $xx+$w > $x1*$::ot_ci_u || $yy+$h > $y1*$::ot_ci_u} {
+    error "OT_CORE_INFRA_ISLAND_FIT [$i getName] at $xx $yy size $w $h outside $rect"
+  }
+  if {[$i isDoNotTouch]} {
+    lassign [$i getLocation] ox oy
+    if {$ox != $xx || $oy != $yy || [$i getOrient] ne [$row getOrient]} {
+      error "OT_CORE_INFRA_STALE_FIXED_LOCATION [$i getName]"
+    }
+  } else {
+    $i setOrient [$row getOrient]; $i setLocation $xx $yy
+    $i setPlacementStatus FIRM
+  }
+  foreach j [$::ot_ci_b getInsts] {
+    if {$i eq $j} continue
+    if {![[ $j getMaster] isBlock] && [$j getPlacementStatus] ni {FIRM LOCKED COVER}} continue
+    set r [$j getBBox]
+    if {$xx < [$r xMax] && $xx+$w > [$r xMin] && $yy < [$r yMax] && $yy+$h > [$r yMin]} {
+      error "OT_CORE_INFRA_PLANNED_OVERLAP [$i getName] [$j getName]"
+    }
+  }
+}
+proc ot_ci_cell {name master x y rect} {
+  set m [[ord::get_db] findMaster $master]
+  if {$m eq "NULL"} {error "OT_CORE_INFRA_MISSING_MASTER $master"}
+  set i [$::ot_ci_b findInst $name]
+  if {$i eq "NULL"} {set i [odb::dbInst_create $::ot_ci_b $m $name]} elseif {[$i getMaster] ne $m} {
+    error "OT_CORE_INFRA_STALE_MASTER $name"
+  }
+  foreach pin {A Y} {if {[$i findITerm $pin] eq "NULL"} {error "OT_CORE_INFRA_BUFFER_PIN $name/$pin"}}
+  ot_ci_place $i $x $y $rect
+  lappend ::ot_ci_cells $i
+}
+proc ot_ci_origin_assert {name x y orient} {
+  set i [$::ot_ci_b findInst $name];lassign [$i getLocation] xx yy
+  if {$xx != round($x*$::ot_ci_u) || $yy != round($y*$::ot_ci_u) || [$i getOrient] ne $orient} {
+    error "OT_CORE_INFRA_FROZEN_ORIGIN_MISMATCH $name"
+  }
+}
+proc ot_ci_connect {term net} {
+  set old [$term getNet]
+  if {$old ne "NULL" && $old ne $net} {error "OT_CORE_INFRA_STALE_CONNECTION [$term getInst]/[$term getMTerm]"}
+  if {$old eq "NULL"} {$term connect $net}
+}
+proc ot_ci_arc {cell source sink} {
+  set i [$::ot_ci_b findInst $cell]
+  set bi [$::ot_ci_b findBTerm $source]; set bo [$::ot_ci_b findBTerm $sink]
+  set ni [$bi getNet]; set no [$bo getNet]
+  ot_ci_connect [$i findITerm A] $ni; ot_ci_connect [$i findITerm Y] $no
+  if {[string match *_ck_i $source]} {$ni setSigType CLOCK; $no setSigType CLOCK}
+  dict lappend ::ot_ci_arcs $source [$i findITerm A]
+  dict lappend ::ot_ci_arcs $sink [$i findITerm Y]
+}
+proc ot_ci_tree_begin {clock_port} {
+  set bt [$::ot_ci_b findBTerm $clock_port]
+  if {$bt eq "NULL" || [$bt getIoType] ne "INPUT"} {error "OT_CORE_INFRA_CLOCK_PORT $clock_port"}
+  set n [$bt getNet]
+  dict set ::ot_ci_tree_out port:$clock_port $n
+  # Preserve this census before adding tree drivers. The planned leaf list must
+  # contain every original clock sink; no silent dropped macro/gate clocks.
+  foreach it [$n getITerms] {
+    if {[$it isInputSignal] || [[$it getMTerm] getSigType] eq "CLOCK"} {
+      lappend ::ot_ci_tree_expected $it
+    }
+  }
+}
+proc ot_ci_tree_node {cell parent} {
+  set i [$::ot_ci_b findInst $cell]
+  set n [ot_ci_net ${cell}_out]; $n setSigType CLOCK
+  ot_ci_connect [$i findITerm A] [dict get $::ot_ci_tree_out $parent]
+  ot_ci_connect [$i findITerm Y] $n
+  dict set ::ot_ci_tree_out $cell $n
+}
+proc ot_ci_tree_sink {node path} {
+  set cut [string last / $path]
+  if {$cut < 1} {error "OT_CORE_INFRA_SINK_NAME $path"}
+  set i [$::ot_ci_b findInst [string range $path 0 [expr {$cut-1}]]]
+  if {$i eq "NULL"} {error "OT_CORE_INFRA_SINK_INSTANCE $path"}
+  set it [$i findITerm [string range $path [expr {$cut+1}] end]]
+  if {$it eq "NULL"} {error "OT_CORE_INFRA_SINK_PIN $path"}
+  set target [dict get $::ot_ci_tree_out $node]
+  if {[$it getNet] ne $target} {
+    if {[lsearch -exact $::ot_ci_tree_expected $it] < 0} {error "OT_CORE_INFRA_UNPLANNED_CLOCK_SINK $path"}
+    # Boundary flops retain dont_touch identity through placement. Standard CTS
+    # must still attach their CLOCK terminal. Only this explicitly enumerated
+    # source-clock sink may reconnect, and cell protection is restored even on
+    # an OpenDB error. No data terminal or PG binding uses this path.
+    set inst [$it getInst];set protected [$inst isDoNotTouch]
+    if {$protected} {$inst setDoNotTouch 0}
+    try {
+      $it disconnect; $it connect $target
+    } finally {
+      if {$protected} {$inst setDoNotTouch 1}
+    }
+  }
+  lappend ::ot_ci_tree_seen $it
+}
+proc ot_ci_tree_finish {} {
+  # On a repeated hook the original clock root now drives only planned nodes;
+  # these are excluded from the source census, while leaves stay checked by name.
+  foreach it $::ot_ci_tree_expected {
+    if {[lsearch -exact $::ot_ci_cells [$it getInst]] >= 0} continue
+    if {[lsearch -exact $::ot_ci_tree_seen $it] < 0} {
+      error "OT_CORE_INFRA_UNASSIGNED_CLOCK_SINK [[$it getInst] getName]/[[$it getMTerm] getName]"
+    }
+  }
+}
+proc ot_ci_union_contains {rect regions} {
+  lassign $rect x0 y0 x1 y1
+  foreach r $regions {lassign $r a b c d;if {$a <= $x0 && $b <= $y0 && $c >= $x1 && $d >= $y1} {return 1}}
+  set cuts [list $x0 $x1]
+  foreach r $regions {foreach x [list [lindex $r 0] [lindex $r 2]] {if {$x>$x0 && $x<$x1} {lappend cuts $x}}}
+  set cuts [lsort -real -unique $cuts]
+  for {set k 1} {$k<[llength $cuts]} {incr k} {
+    set x [expr {([lindex $cuts $k]+[lindex $cuts [expr {$k-1}]])/2.0}];set intervals {}
+    foreach r $regions {lassign $r a b c d;if {$a <= $x && $c >= $x} {lappend intervals [list $b $d]}}
+    set end $y0
+    foreach iv [lsort -real -index 0 $intervals] {lassign $iv a b;if {$a>$end} break;if {$b>$end} {set end $b}}
+    if {$end<$y1} {return 0}
+  }
+  return 1
+}
+proc ot_ci_bay_cell {name x y rect {regions {}}} {
+  set i [$::ot_ci_b findInst $name]
+  if {$i eq "NULL"} {error "OT_CORE_INFRA_BAY_CELL $name"}
+  ot_ci_place $i $x $y $rect
+  if {[llength $regions]} {
+    set r [$i getBBox];set shape {}
+    foreach v [list [$r xMin] [$r yMin] [$r xMax] [$r yMax]] {lappend shape [expr {$v/double($::ot_ci_u)}]}
+    if {![ot_ci_union_contains $shape $regions]} {error "OT_CORE_INFRA_BAY_UNION_FIT $name"}
+  }
+  lappend ::ot_ci_fixed $i
+}
+proc ot_ci_clock_ndr {name width_mult space_mult} {
+  set nd [$::ot_ci_b findNonDefaultRule $name]
+  set widths {};set spaces {}
+  foreach ln {M4 M5} {
+    set l [[ord::get_db_tech] findLayer $ln]
+    lappend widths $ln [expr {$width_mult*[$l getWidth]/double($::ot_ci_u)}]
+    lappend spaces $ln [expr {$space_mult*[$l getSpacing]/double($::ot_ci_u)}]
+  }
+  if {$nd eq "NULL"} {create_ndr -name $name -width $widths -spacing $spaces;set nd [$::ot_ci_b findNonDefaultRule $name]}
+  if {$nd eq "NULL"} {error "OT_CORE_INFRA_CLOCK_NDR_MISSING $name"}
+  set count 0
+  dict for {node net} $::ot_ci_tree_out {
+    if {[$net getNonDefaultRule] ne $nd} {$net setNonDefaultRule $nd}
+    $net setSigType CLOCK;incr count
+  }
+  puts "OT_CORE_CLOCK_NDR $name widths=$widths spaces=$spaces nets=$count"
+}
+proc ot_ci_entry {name x y} {
+  if {[$::ot_ci_b findBTerm $name] eq "NULL"} {error "OT_CORE_INFRA_ENTRY_PIN $name"}
+  place_pin -pin_name $name -layer M7 -location [list $x $y] -pin_size {0.032 0.192}
+}
+proc ot_ci_finish {} {
+  # Dedicated FT pins have ONLY their declared buffer terminals. Parent links
+  # connect the FT output to the independent core clk/rst input outside the core.
+  foreach p $::ot_ci_ports {
+    set n [[$::ot_ci_b findBTerm $p] getNet]
+    if {[lsort [$n getITerms]] ne [lsort [dict get $::ot_ci_arcs $p]] || [llength [$n getBTerms]] != 1} {
+      error "OT_CORE_INFRA_FT_NOT_ISOLATED $p"
+    }
+  }
+  # Bind power BEFORE dont_touch. Native PG rules decide the domain; no guessed
+  # VDD/VSS regex or temporary clearing of protection is used.
+  ot_pg_bind_batch_before_protect $::ot_ci_b $::ot_ci_cells
+  foreach i [concat $::ot_ci_cells $::ot_ci_fixed] {$i setDoNotTouch 1}
+  foreach p $::ot_ci_ports {[[ $::ot_ci_b findBTerm $p] getNet] setDoNotTouch 1}
+  dict for {node net} $::ot_ci_tree_out {$net setDoNotTouch 1}
+  puts "OT_CORE_INFRA cells=[llength $::ot_ci_cells] ports=[llength $::ot_ci_ports] bay_cells=[llength $::ot_ci_fixed] added_data_cycles=0 added_reset_cycles=0"
+}

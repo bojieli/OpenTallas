@@ -132,6 +132,15 @@ def kit_hash(kd):
     return h.hexdigest()[:16]
 
 
+def _ms():
+    """METHODOLOGY 12.7c master-plan slice helper (this repo's tools/die_plan/master_slice.py, loaded by path)."""
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("master_slice", Path(__file__).resolve().parents[5] / "tools/die_plan/master_slice.py")
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
 def main():
     global TOOL
     ap = argparse.ArgumentParser()
@@ -144,6 +153,8 @@ def main():
     ap.add_argument("--plan-commit", default="2a90fc8c")
     ap.add_argument("--util", type=float, default=0.5)
     ap.add_argument("--sigmax", default="M5")
+    MS = _ms()
+    MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
     TOOL = Path(a.tool)
     repo = Path(a.repo)
@@ -161,6 +172,7 @@ def main():
     plandir = Path(a.plan).resolve().parent
     pins = json.load(open(plandir / c["pins_file"]))["pins"]
     kd = Path(a.out) / a.type
+    MS.precheck(a.master_slice, a.trial, plan, c["module"])
     if kd.exists():
         shutil.rmtree(kd)
     (kd / "rtl").mkdir(parents=True)
@@ -280,6 +292,10 @@ def main():
             "".join(f"place_macro -macro_name {{{i}}} -location {{{v[0]:.4f} {v[1]:.4f}}} -orientation {v[2] if len(v) > 2 else 'R0'}"
                     " -exact\n" for i, v in sorted(mp.items())))
         cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_place.tcl")
+    # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
+    # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
+    ms = MS.kit_apply(kd, c["module"], [w, h], a.master_slice, plan, a.trial, kind="core",
+                      gpl_hook=kd / "face_flops.tcl")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rec_sha = hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest()
     try:
@@ -293,6 +309,8 @@ def main():
               clocks=clks, resets=rsts, recipe_sha256=rec_sha, tool=f"{TOOL}@{tool_rev}",
               period_ps=per, insertion_budget_ps=ins, signal_max=a.sigmax, macros=rec.get("macros", []),
               pins_pending=pins_pending, kit_hash=kit_hash(kd))
+    if ms is not None:
+        fz["master_plan"] = ms
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, kit_hash=fz["kit_hash"])))
 

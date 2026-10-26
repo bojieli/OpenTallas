@@ -118,6 +118,15 @@ def macro_dir(repo, master):
     raise SystemExit(f"no view for {master}")
 
 
+def _ms():
+    """METHODOLOGY 12.7c master-plan slice helper (this repo's tools/die_plan/master_slice.py, loaded by path)."""
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("master_slice", Path(__file__).resolve().parents[5] / "tools/die_plan/master_slice.py")
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cores", default=str(HERE / "cores_eng.json"))
@@ -125,6 +134,8 @@ def main():
     ap.add_argument("--out", default=str(HERE / "kits"))
     ap.add_argument("--repo", default=str(HERE.parents[4]))
     ap.add_argument("--tool", default="/home/ubuntu/scratch/core-s81-1023/pt4/tools/die_plan")
+    MS = _ms()
+    MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
     repo, tool = Path(a.repo), Path(a.tool)
     cj = json.load(open(a.cores))
@@ -133,6 +144,7 @@ def main():
     rec = c["recipe"]
     pins = json.load(open(repo / "physical/die_plan/s81" / c["pins_file"]))["pins"]
     kd = Path(a.out) / f"{c['module']}__{w:g}x{h:g}"
+    MS.precheck(a.master_slice, a.trial, None, c["module"])
     if kd.exists():
         shutil.rmtree(kd)
     (kd / "rtl").mkdir(parents=True)
@@ -228,6 +240,10 @@ def main():
               "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5"] if mp else
              ["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets"]),
            *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()]]
+    # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
+    # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
+    ms = MS.kit_apply(kd, c["module"], [w, h], a.master_slice, None, a.trial, kind="core",
+                      gpl_hook=kd / "face_flops.tcl")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rec_sha = hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest()
     fz = dict(schema="opentallas.s81.core_freeze.v1", type=f"{c['module']}__{w:g}x{h:g}", module=c["module"],
@@ -235,6 +251,8 @@ def main():
               pins_sha256=sha(repo / "physical/die_plan/s81" / c["pins_file"]), pins=len(pins), clocks=clks,
               resets=rsts, recipe_sha256=rec_sha, period_ps=PERIOD_PS, common_latency_ps=COMMON_LATENCY_PS,
               signal_max="M5", macros=masters, kit_hash=kit_hash(kd))
+    if ms is not None:
+        fz["master_plan"] = ms
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, kit_hash=fz["kit_hash"])))
 

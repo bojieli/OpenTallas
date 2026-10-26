@@ -172,6 +172,11 @@ def main(argv=None):
     a3.add_argument("--max-wire-um", type=float, default=None, metavar="UM",
                     help="post-GRT repair_design -max_wire_length UM (kit grt_maxwire.tcl as PRE_GLOBAL_ROUTE_TCL; "
                          "repeater pitch so routed M2/M3 segments keep max slew; default off)")
+    a3.add_argument("--master-slice", metavar="DIR",
+                    help="METHODOLOGY 12.7c: master-plan slices DIR/<type>.json (opt-in; required once the plan sets "
+                         "master_plan.required or OT_MASTER_PLAN_REQUIRED=1)")
+    a3.add_argument("--trial", action="store_true",
+                    help="trial kit (not sign-off): allowed without a master-plan slice when one is required")
     a3.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
                     help="G3: the type's kit RTL = this filelist (bind.py kit-rtl: bound partition inside the plan "
                          "wrapper) instead of the generated plan wrapper + type sources; repeatable")
@@ -202,6 +207,7 @@ def main(argv=None):
     if a.cmd in ("phys", "assembly"):
         import gen_phys
         import gen_rtl
+        import master_slice
         try:
             if a.cmd == "phys":
                 kits = gen_phys.write_phys(S.load(a.plan), a.out, a.rtl_root,
@@ -209,11 +215,15 @@ def main(argv=None):
                                            dict(x.split("=", 1) for x in a.kit_rtl),
                                            None if a.hold_mcmm else a.hold_ff_margin,
                                            (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um,
-                                           plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc)
+                                           plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc,
+                                           master_slice=a.master_slice, trial=a.trial)
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve(),
                                                 pg_map=json.loads(Path(a.pg_map).read_text()) if a.pg_map else None)]
         except gen_rtl.GenError as e:
+            print(f"gen {a.cmd}: ERROR {e}")
+            return 1
+        except master_slice.SliceError as e:
             print(f"gen {a.cmd}: ERROR {e}")
             return 1
         print("\n".join(str(k) for k in kits))
