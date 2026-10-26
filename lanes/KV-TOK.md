@@ -320,3 +320,15 @@ Independent B33 build9 completed exit0, native boot now LIVE epyc1:codex-kv-boot
 - NEEDS (PATH-KV / bind owner): thread BOOT_AGES (= the die dispatcher AGES) and MU into u_program via gen_host_root_obs.py and gen_host_boot_event.py, and set .BOOT_AGES(1) at the hub_Wi u_host instance. Add a checker: host loader table == dispatcher word_count. The bench pacing change goes onto the vehicle tb (codex/kv-boot-0733 tb) after review.
 - (3) B48 build2 still building at 12:30 (no BUILD rc). Watcher epyc1:kvtok-b48gate-1026/launch.sh (PID 559735) waits for BUILD rc, then ot-runs gate.sh: (a) as built and (b) private hub_Wi ABI fix + paced join2 tb, on B48 frames from image_b48_32 boot_bundle. Collect: kvtok-b48gate-1026/summary.txt. Prediction: (a) BOOT_FAULT target 0 (B48 has the same legacy loader 327/77).
 - Side effect: my first private top verilate rewrote build9/obj/Vtb_kvslice__hier.dir/Vtb_kvslice__verFiles.dat (11:41) through a symlink. That is Verilator incremental metadata only; build9's binaries are untouched. Fixed since: private copy.
+
+## CLAUDE KV-TOK-3 2026-10-26 12:43 PDT: boot ABI single-source + pacing spec READY; run5 / B48 gate still LIVE
+- run5 (epyc1:kvtok-bootabi-1026/run5, paced private B33 vehicle, PID 4171293, started 12:22): sim.log as flushed at 12:29 shows targets 10, 1, 2 ready at cyc 1020/2927/3653 with digests 5cc969ac/575f4135/abe7ba21, all matching AUTH (CHECKED). t3 BEGIN + SEAL seen. stdout is buffered, so the 14/14 verdict is UNCHECKED. Collect: grep KVSLICE_BOOT/BOOT_IMAGE run5/sim.log after the PID exits.
+- B48 gate: build2 has no 'BUILD rc' yet at 12:43; watcher PID 559735 is alive; kvtok-b48gate-1026/summary.txt not written (UNCHECKED).
+- READY claude/kv-tok-bootabi2-1026@1b4bd820a (main fec963a5e + f7a85ddb loader params):
+  - tools/qwen_static_kv/boot_abi.py: ONE ABI table = image builder program_target_frames. A small SV evaluator computes the dispatcher word_count (+ MU seal 470 -> 471) and the loader target_words from the staged text.
+  - kv_dieslice/native_host_boot_abi.py: threads BOOT_AGES (default 0) through the OBSX rank services/root and C45; loader #(.MU(MU),.AGES(BOOT_AGES)). The output is identical to the proven private vehicle edits.
+  - prepare_native_mission.py (main): sets .BOOT_AGES at the HOST instance from the native u_boot dispatcher AGES, never hand-set, and fails closed on any dispatcher/loader/image mismatch.
+  - Check on B48 staged sources: as built FAIL t1 471/327/471 and t10 96/77/96; threaded + BOOT_AGES(1) PASS 13/13; threaded without BOOT_AGES FAIL t10 (CHECKED). 8 unit tests PASS.
+  - Spec docs/QWEN_KV_HOST_BOOT_ABI.md: send(BEGIN n+1) >= send(AUTH n) + HOST_LINK_LAT_MAX 160 (DECLARED bound; measured 122 CHECKED) + pw + dw + 16.
+- READY claude/kv-tok-join2-1026@d07fa0d88: join2 + the same static pacing in the main kv_dieslice tb.
+- ASK PATH-KV: the bind of record must re-stage with the new prepare_native_mission, or apply native_host_boot_abi obsx()/c45() + .BOOT_AGES(1) to the staged tree, so that hub_Wi u_host carries BOOT_AGES(1). Also run the check in the vehicle build.
