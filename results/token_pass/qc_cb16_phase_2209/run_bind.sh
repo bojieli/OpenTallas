@@ -56,7 +56,8 @@ for member in json.load(open('results/rtl/qc_cb16_flow_1713/dag_candidate.json')
 raw=json.load(open(p/'die_plan_phase_fresh_2209.json'));profiles=json.load(open(b/'phase2209/phase_types.json'));notes=json.load(open(p/'plan_notes.json'))
 for c in profiles['classes']:
  old=next(x for x in json.load(open(p/'inputs/cb16_phase_profiles_1713.json'))['classes'] if x['type']==c['family'])
- base=notes['cells_per_type'][c['family']]['cells']-max(old['per_part_added_ff'][q]+old_epoch[q] for q in old['parts'])
+ family=notes['cells_per_type'][c['family']]
+ base=family.get('base_family_flat_cells',family['cells']-max(old['per_part_added_ff'][q]+old_epoch[q] for q in old['parts']))
  raw['partition_types'][c['type']]['cells']=base+max(c['per_part_added_ff'].values())
 (p/'die_plan_phase_fresh_2209.json').write_text(json.dumps(raw,indent=1)+'\n')
 print('FRESH_PHASE_SUMMARY',profiles['new_type_count'],profiles['logical_added_ff'],profiles['root_added_cycles_max'])
