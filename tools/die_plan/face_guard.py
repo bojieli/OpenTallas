@@ -4,7 +4,7 @@
 
 Every planned face register (R2 face flops, one per pin bit of the R5 bit-level census) must survive synthesis as its
 OWN flop:
-  - an output port bit is driven by a flop (Q/QN, through at most MAX_CHAIN single-fanout buffers / inverters) whose
+  - an output port bit is driven by a flop (Q/QN, through single-fanout buffers / inverters) whose
     output net reaches nothing but that port;
   - an input port bit loads exactly one cell pin, which leads (through single-fanout buffers / inverters) to the D pin
     of a flop.
@@ -23,7 +23,6 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-MAX_CHAIN = 3
 OUT_PINS = {"Y", "Q", "QN", "H", "L", "CON", "SN", "Z", "ZN", "O"}
 # Clocks and the reset/START *inputs* (arst_n / rst_n / start_i: root synchroniser or typed control) are not face
 # registers.  The registered wavefront OUTS rst_o_<k> / start_o_<k> ARE partition pins and are checked like data: one
@@ -390,7 +389,13 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=()):
             if d == "output":
                 cur, chain, ff = r, [], None
                 ok = True
-                for _ in range(MAX_CHAIN + 1):
+                seen = set()
+                while True:
+                    if cur in seen:
+                        fail("unregistered", b, "buffer/inverter cycle before boundary flop")
+                        ok = False
+                        break
+                    seen.add(cur)
                     if len(drv[cur]) != 1:
                         fail("unregistered", b, f"{len(drv[cur])} drivers")
                         ok = False
@@ -422,12 +427,23 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=()):
                         break
                 if not ok:
                     continue
-                if ff is None:
-                    fail("unregistered", b, f"no flop within {MAX_CHAIN} buffers")
-                    continue
             else:
                 cur, ff, ok = r, None, True
-                for _ in range(MAX_CHAIN + 1):
+                seen = set()
+                while True:
+                    if cur in seen:
+                        fail("unregistered", b, "buffer/inverter cycle before boundary flop")
+                        ok = False
+                        break
+                    seen.add(cur)
+                    if cur != r and cur in roots_ports:
+                        fail("feedthrough", b, f"chain reaches port {roots_ports[cur][0]}")
+                        ok = False
+                        break
+                    if cur != r and len(drv[cur]) != 1:
+                        fail("unregistered", b, f"{len(drv[cur])} drivers on input chain")
+                        ok = False
+                        break
                     ld = loads[cur]
                     if not ld:
                         fail("dropped", b, f"no load on {cur} (register removed)")
@@ -453,9 +469,6 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=()):
                     outs = [v for k, (dd, v) in pp.items() if dd == "out"]
                     cur = F.find(outs[0][0])
                 if not ok:
-                    continue
-                if ff is None:
-                    fail("unregistered", b, f"no flop within {MAX_CHAIN} buffers")
                     continue
             claimed[ff[0]].append(b)
             res["flops"][b] = ff[1]
