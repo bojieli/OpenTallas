@@ -138,6 +138,48 @@ def check_database(path,names):
                 freeze_qualified=False,note='Actual routing-layer metal/via and transformed terminal geometry only; no DRC/timing/IR qualification')
 
 
+def check_basic_clearance(path,names,clock_mesh_names=(),mesh_spacing_um=.08):
+    """Check actual fixed metal against nominal tech/NDR spacing, including
+    native via enclosures. This supplements DRT, which can skip fixed-vs-fixed
+    checks. It is conservative rectangle spacing, not a full foundry DRC deck.
+    """
+    db=odb.dbDatabase.create();odb.read_db(db,str(path));block=db.getChip().getBlock();dbu=block.getDbUnitsPerMicron()
+    shapes=[];rows=[];mesh=set(clock_mesh_names)
+    for name in names:
+        net=block.findNet(name)
+        if not net:raise ValueError('clearance net missing: '+name)
+        rule=net.getNonDefaultRule()
+        nodes,_=net_nodes(net)
+        for _label,parts in nodes:
+            for layer_name,rect in parts:
+                layer=db.getTech().findLayer(layer_name);spacing=layer.getSpacing()
+                lr=rule.getLayerRule(layer) if rule else None
+                if lr:spacing=max(spacing,lr.getSpacing())
+                if name in mesh and layer_name in ('M8','M9'):spacing=max(spacing,round(mesh_spacing_um*dbu))
+                index=len(shapes);shapes.append((name,layer_name,rect,spacing))
+                rows.append((layer_name,rect,2*index))
+                # Coordinates are integer DBU. Exactly-at-minimum spacing is
+                # legal; expanding by spacing-1 detects strictly smaller gaps.
+                d=max(0,spacing-1);a,b,c,e=rect
+                rows.append((layer_name,(a-d,b-d,c+d,e+d),2*index+1))
+    violations=[];seen=set()
+    for layer,i,j in overlaps(rows):
+        if (i%2)==(j%2):continue
+        a,b=shapes[i//2],shapes[j//2]
+        if a[0]==b[0]:continue
+        key=tuple(sorted((i//2,j//2)))
+        if key in seen:continue
+        seen.add(key)
+        required=max(a[3],b[3]);r,t=a[2],b[2]
+        dx=max(r[0]-t[2],t[0]-r[2],0);dy=max(r[1]-t[3],t[1]-r[3],0)
+        if dx<required and dy<required:
+            violations.append(dict(nets=[a[0],b[0]],layer=layer,rectangles_dbu=[r,t],
+                                   required_spacing_dbu=required,actual_gap_dbu=[dx,dy]))
+    return dict(schema='opentallas.infra_basic_clearance.v1',verdict='FAIL' if violations else 'PASS',
+                violations=violations,actual_rectangles=len(shapes),mesh_spacing_um=mesh_spacing_um,
+                note='Actual metal/via nominal technology/NDR rectangular clearance; full DRC/timing/IR remain separate')
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--db',required=True);p.add_argument('--nets',nargs='+',required=True);p.add_argument('--out',required=True)
