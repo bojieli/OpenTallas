@@ -1,0 +1,18 @@
+{
+  "verdict": "FAIL (no route/adoption)",
+  "actual_kit": "dsdv_gunit_l0_compact26",
+  "outline_um": [
+    108,
+    82.08
+  ],
+  "r2r_max_um": 161.08,
+  "r2r_gt405": 0,
+  "pin_reg_p90_um": 13.74,
+  "pin_reg_max_um": 20.66,
+  "unregistered": 0,
+  "fill_full_outline": 0.1761,
+  "empty_area": 0.6671,
+  "pin_density_total_peak": 20.2,
+  "cause": "Reach structurally fixed, but sparse face-register station core still wider than its measured cell count needs. Auto density limit6 ignores two-layerNS capacity24.3. First trial remains failed; no route.",
+  "next": "Second and final candidate77.76x82.08 from actual1589um\u00b2 design area, uniformNS bus spreading, Eheight at735pin M4capacity; same RTL0cycles. Added measured post-PDN PGstripes clippedto newwidth; no fabricated signed view."
+}

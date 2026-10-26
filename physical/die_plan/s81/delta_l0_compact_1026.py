@@ -13,7 +13,7 @@ import math
 from pathlib import Path
 
 MODULE = 'dsdv_gunit_l0'
-SIZE = (108.0, 82.08)
+SIZE = (77.76, 82.08)
 GRID = {'M3': ('x', .009, .036, .072), 'M4': ('y', .012, .048, .096),
         'M5': ('x', .012, .048, .096)}
 RECT = {'M3': (.018, .038), 'M4': (.084, .024), 'M5': (.024, .084)}
@@ -64,7 +64,8 @@ def compact(plan, s81, out):
         # Monotonic assignment preserves bus ordering and reserves a unique physical site per bit.
         previous = -1
         for i,p in enumerate(ps):
-            target = max(lo,min(hi,p[axis]/oldlength*length))
+            target = (max(lo,min(hi,p[axis]/oldlength*length)) if face == 'W'
+                      else lo + i * (hi-lo) / max(1,len(ps)-1))
             want = round((target-sites[0])/spacing)
             idx = max(previous+1,min(want,len(sites)-(len(ps)-i)))
             p[axis] = round(sites[idx],6)
@@ -79,7 +80,7 @@ def compact(plan, s81, out):
     dirs=legacy.lef_dirs(repo/first['lef'])
     unknown=[p['name'] for p in pins if p['name'] not in dirs]
     if unknown:raise ValueError(f'missing directions {unknown[:4]}')
-    rel=Path('cores/compact_l0_1026');dest=out/rel;dest.mkdir(parents=True,exist_ok=True)
+    rel=Path('cores/compact_l0_1026_v2');dest=out/rel;dest.mkdir(parents=True,exist_ok=True)
     pinrel=rel/f'{MODULE}.json';lefrel=rel/f'{MODULE}.lef'
     pj['pins']=pins;pj['lef']=str((s81/lefrel).relative_to(repo));pj['source']='compact L0 candidate; preserves all port names, face ordering and RTL latency; N/S interleaved M3/M5; not adopted'
     pj['pinhash']=hashlib.sha256(json.dumps(pins,sort_keys=True).encode()).hexdigest()[:12]
@@ -88,6 +89,17 @@ def compact(plan, s81, out):
     for p in pins:
         pw,ph=RECT[p['layer']];x,y=p['x'],p['y']
         lines += [f" PIN {p['name']}",f"  DIRECTION {dirs[p['name']]} ;",'  USE SIGNAL ;','  PORT',f"   LAYER {p['layer']} ;",f'   RECT {x-pw/2:.6f} {y-ph/2:.6f} {x+pw/2:.6f} {y+ph/2:.6f} ;','  END',f" END {p['name']}"]
+    # PG shapes come from the actual first compact trial's post-PDN 3_place ODB.
+    # Same grid, height and core margin; keep only stripes inside the new core width.
+    pg = json.loads((s81/'cores/compact_l0_1026/placed_pg_reference.json').read_text())
+    if abs(pg['outline_um'][1]-h)>1e-8 or w>pg['outline_um'][0]:
+        raise ValueError('measured PG reference does not cover candidate height/width')
+    for supply,use in [('VDD','POWER'),('VSS','GROUND')]:
+        rects=[v for v in pg['pins'][supply] if v[0]>=4.32 and v[2]<=w-4.32]
+        if not rects:raise ValueError(f'no measured {supply} stripes inside candidate')
+        lines += [f' PIN {supply}','  DIRECTION INOUT ;',f'  USE {use} ;','  PORT','   LAYER M5 ;']
+        for rect in rects:lines += ['   RECT '+' '.join(f'{x:.6f}' for x in rect)+' ;']
+        lines += ['  END',f' END {supply}']
     lines += [' OBS']
     for L in ['M1','M2','M3','M4','M5']:lines += [f'  LAYER {L} ;',f'  RECT 0.5 0.5 {w-.5} {h-.5} ;']
     lines += [' END',f'END {MODULE}','END LIBRARY']
