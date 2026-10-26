@@ -32,7 +32,8 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
 - [ ] QC.GRT Die GRT0 signals + clock · DIE-PROTO · FROZEN · 54a1aeb5 ovf 0; batch 1+2 re-freeze pending → QC.B2
   - [ ] QC.B2 Batch 2: STM ROMs (24) + SRAM d4ae52687 + DEAD-FAULT 773a8e2ad · ROOT-MERGE · COORD · approved 23:26; merge, then combined GRT0+clock → INFRA.MERGE
 - [ ] QC.CLK Die clock related-pair <=80 · CLOCK / DIE-PROTO · FAIL · native mixed-NDR 574/506 ps TT/FF (seams 260/235); 57/50 estimate withdrawn
-  - [ ] QC.CLKFIX Structural clock geometry (contour search, no hidden pads) · DIE-PROTO · RUNNING · contour8 epyc1; render+review before STA
+  - [ ] QC.CLKFIX D-QC-CLKMESH M8/M9 500 um mesh (contour8 found no legal pad sites) · CLOCK-MESH · RUNNING · model 26-41 ps; routed RC pending
+  - [ ] QC.FEREACH D-QC-FE-REACH landed relays on FE face crossings (>5k arcs >405 um/tile) · PATH-QC + KITS · TODO → QC.TILES
 - [ ] QC.BIND Bound wavefront reset/START + CB16 phase classes · PATH-QC · RUNNING · CB16 13f33606a 79/79 G0C; capacity/clock/G2 open
 - [ ] QC.STA Die STA on real views · DIE-PROTO · FAIL · stand-in 441d TT +555 / FF -73, pair 119/110; 0 real views → QC.CLK, → QC.TILES
   - [ ] QC.TILES Path tile sign-offs · PATH-QC · RUNNING · A0 requalify (PASS-COND withdrawn); N59 LEC KEEP fix; SRAMIF PROG/BTAB input hold 935/1061 → FLOW.TAG
