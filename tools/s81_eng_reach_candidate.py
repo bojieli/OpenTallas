@@ -26,7 +26,8 @@ set er_b [ord::get_db_block]
 set er_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set er_n 0
 foreach er_i [$er_b getInsts] {
- if {[regexp {u_r[.]g_tleaf\[0\][.]q} [$er_i getName]]} {
+ set er_name [string map {\\ {}} [$er_i getName]]
+ if {[regexp {^u_r[.]g_tleaf\[0\][.]q} $er_name]} {
   $er_i setLocation [expr {round(180.0*$er_dbu)}] [expr {round(240.0*$er_dbu)}]
   $er_i setPlacementStatus FIRM
   incr er_n
