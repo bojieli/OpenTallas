@@ -567,7 +567,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     top = rec.get("top", module)
     params = dict(rec.get("params", {}))
     if canon:
-        if canon[0].get("file") and canon[0]["file"] not in files:
+        if not source_profile and canon[0].get("file") and canon[0]["file"] not in files:
             files = files + [canon[0]["file"]]
         top = canon[0]["top"]
         # HBM-FACE 10-25: keep the split recipe's parameters of the canonical top (build_split_tops.py writes them, e.g.
@@ -646,7 +646,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             for k, n in (ti.get("tied_at_parent") or {}).items():
                 pn, val = k.split("=")
                 ties[pn] = val
-            txt, wrap_rep = build_wrapper(module, pb, top, params, tports, cmap=ti["cut_pins"],
+            txt, wrap_rep = build_wrapper(module, pb, top, params, tports, cmap=rec.get("canonical_pin_map", ti["cut_pins"]),
                                           straps=ti.get("straps") or {}, ties=ties)
         else:
             txt, wrap_rep = build_wrapper(module, pb, top, params, tports)
