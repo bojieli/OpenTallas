@@ -55,3 +55,10 @@ def test_stream_across_string_number_and_container_boundaries(tmp_path):
     assert dict(object_items(p, chunk_size=3)) == obj
     p.write_text(p.read_text()[:-1])
     with pytest.raises(ValueError): list(object_items(p, chunk_size=3))
+
+
+def test_unprojected_source_variant_rejected(tmp_path):
+    inv, sinks=example(tmp_path)
+    inv['source_variants']={'leaf_rules':[{'inst':'slice','module':'new_abi'}], 'leaf_rules_applied':False}
+    with pytest.raises(ValueError, match='explicit projection'):
+        BoundDie(tmp_path,inv,sinks=sinks).route('host','o','slice','i')

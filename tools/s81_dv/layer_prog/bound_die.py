@@ -7,6 +7,7 @@ seq_host, ring-stop or XRT latency for a missing receipt.
 from __future__ import annotations
 import hashlib
 import json
+import re
 from pathlib import Path
 
 
@@ -143,6 +144,12 @@ class BoundDie:
             if not targets:
                 raise ValueError(f'transport bit{bit}: no exact target leaf input')
             for target_pin in targets:
+                variants = self.inventory.get('source_variants', {})
+                if not variants.get('leaf_rules_applied', False):
+                    for rule in variants.get('leaf_rules', []):
+                        for pin in (source_pin, target_pin):
+                            if re.fullmatch(rule['inst'], pin.rsplit('.', 1)[0]):
+                                raise ValueError(f'{pin}: source variant ABI needs explicit projection')
                 desc = self.sinks.get(target_pin)
                 if not isinstance(desc, list) or len(desc) != 4 or desc[0] != 'pin' or desc[1] != source_pin:
                     raise ValueError(f'transport bit{bit}: {target_pin} does not receive {source_pin}')
