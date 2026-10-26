@@ -36,6 +36,16 @@ def test_endpoint_contract_consumers_agree_and_ordinary_stable(tmp_path):
     ff=GP.core_tap_ff_sdc(P,'src')
     assert '-227.5000 [get_ports clk_selected]' in ff
     assert '-300.0000 [get_ports clk_selected]' not in ff
+    # Two actual clock pins on one core share the input: each corner emits one
+    # physical-input source latency, never one command per child endpoint.
+    multiple=copy.deepcopy(p)
+    group=multiple['partition_types']['src']['clock']['core_groups'][0]
+    group['members'].append(dict(inst='u_leaf.u_core',pin='ck2',tap='u_leaf.u_core.ck2'))
+    group['network']['endpoints'].append(dict(inst='u_leaf.u_core',pin='ck2',parent='u_ccg0'))
+    Q=S.Plan(multiple)
+    assert len(GP.core_tap_rows(Q,'src'))==2
+    assert GP.sdc(Q,'src',[]).count('[get_ports clk_selected]')==1
+    assert GP.core_tap_ff_sdc(Q,'src').count('[get_ports clk_selected]')==1
 
 
 @pytest.mark.parametrize('mutation,match',[
