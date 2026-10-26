@@ -58,7 +58,7 @@ for k in ['nk','nl']:
  assert needle in body
  body=body.replace(needle,'`ifdef OT_QWEN_LSL_SYNC_FAULT\n                ot_qwen_tile_lsl_sync_fault\n`elsif OT_QWEN_LSL_FP1\n                ot_qwen_tile_lsl_fp1',1)
  (private/'ot_qwen_w12_matvec_land32.sv').write_text(body)
- bb=(ROOT/'rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v').read_text().replace('ot_qwen_tile_lsl_fp1','ot_qwen_tile_lsl_sync_fault')
+ bb=(ROOT/'rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v').read_text().replace('ot_qwen_tile_lsl_fp1','ot_qwen_tile_lsl_sync_fault').replace('// Routed hard-child declaration;','// Planned new hard-child declaration;')
  (private/'ot_qwen_tile_lsl_sync_fault_bb.v').write_text('// UNSELECTED blackbox declaration for a NEW ABSENT master; not a renamed physical view.\n'+bb)
  rel=a.out.relative_to(ROOT).as_posix()
  outsrc=[]
