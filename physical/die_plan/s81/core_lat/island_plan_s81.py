@@ -47,6 +47,13 @@ FF_RATIO = sum(f / t for _, _, t, f in CAL_POINTS) / len(CAL_POINTS)
 RCX_FACTOR = 386.5 / 409.9
 STAGE_TT, STAGE_FF, STAGE_CELL = 23.85, 17.65, "BUFx4_ASAP7_75t_R"
 REACH = 200.0
+# measured structure checks (DIAGNOSTIC, UNCHECKED until NUMBER-CHECK confirms); a model miss goes to the model owner
+# (MASTER-PLAN, 12.8e/12.9d), never into a per-type trim here
+MEASURED = {"dsdv_gunit_l4": dict(run="cl26rt", shape="centre M5 pin + 2-level count-split H-tree, 4 leaves, 0 pads",
+                                  tt_pinreg_grt=261.39, ff_pinreg_grt=210.27, tt_all_grt=[249.10, 272.06],
+                                  ff_all_grt=[199.05, 219.77], tt_pinreg_place=235.36, ff_pinreg_place=186.89,
+                                  evidence="intel2:/srv/opentallas-scratch2/claude/s81-core-lat-1026/evidence/dsdv_gunit_l4_cl26rt",
+                                  check="NUMBER-CHECK CHECK-REQ s81-l4-cl26rt")}
 SMALL_UM = 100.0
 
 
@@ -202,6 +209,9 @@ def main():
         row["pred_total_tt_ff"] = [tot_tt, tot_ff]
         row["pred_in_window"] = dict(TT=abs(tot_tt - TARGET_TT) <= TOL, FF=abs(tot_ff - TARGET_FF) <= TOL)
         row["mode"] = mode
+        row["chain_status"] = "PROVISIONAL (12.9d model; l4 measured +86 TT GRT over model -> model owner to refit before kits)"
+        if mod in MEASURED:
+            row["measured"] = MEASURED[mod]
         row["htree_nodes"] = nodes
         row["htree_edges"] = edges
         row["islands"] = [dict(role=nd["role"], level=nd["level"], centre_um=nd["xy"], rect_um=entry_island(nd["xy"]),
