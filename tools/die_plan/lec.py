@@ -2620,7 +2620,7 @@ def via_docker(args, image, mem):
     Path(out).mkdir(parents=True, exist_ok=True)
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
-           "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}"]
+           "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}"]
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     sol = os.environ.get("OT_LEC_SOLVER", "")
     if sol and os.path.isdir(sol):
