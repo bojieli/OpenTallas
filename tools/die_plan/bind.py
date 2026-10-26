@@ -2506,7 +2506,7 @@ class Binder:
             self.parent_id_ports, self.parent_id_values = {}, {}
         id_decls = {}
         if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", [])):
-            from parent_id_straps import type_parent_id_straps, validate_parent_id_straps
+            from parent_id_straps import type_parent_id_straps, validate_parent_id_straps, validate_bound_id_bits
             try:
                 id_decls = type_parent_id_straps(t)
             except ValueError as e:
@@ -2534,11 +2534,11 @@ class Binder:
                     validate_parent_id_straps({"parent_id_straps": id_decls[r]}, actual_inputs)
                 except ValueError as e:
                     raise BindError(f"parent ID {tn}.{r}: {e}") from e
-                if set(bitsv) != set(range(w)) or any(vals[0] not in "01" for vals in bitsv.values()):
-                    raise BindError(f"parent ID {tn}.{r}.{pn}: every bit must be a declared known strap")
                 expected = id_decls[r][pn]["value"]
-                if int(''.join(reversed(v0)), 2) != expected:
-                    raise BindError(f"parent ID {tn}.{r}.{pn}: representative as-built value disagrees with {expected}")
+                try:
+                    validate_bound_id_bits(bitsv, w, expected)
+                except ValueError as e:
+                    raise BindError(f"parent ID {tn}.{r}.{pn}: {e}") from e
                 id_ports[nm] = dict(leaf=r, port=pn, width=w)
             else:
                 pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")

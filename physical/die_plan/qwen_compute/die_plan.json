@@ -267,14 +267,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_0",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn00",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_0",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 7
+      }
+     }
     },
     {
      "inst": "u_t10",
@@ -290,14 +304,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_0",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn10",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_0",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 7
+      }
+     }
     },
     {
      "inst": "u_t01",
@@ -313,14 +341,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_1",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn01",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_1",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 6
+      }
+     }
     },
     {
      "inst": "u_t11",
@@ -336,14 +378,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_1",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn11",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_1",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 6
+      }
+     }
     },
     {
      "inst": "u_pstn",
@@ -17549,14 +17605,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_2",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn02",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_2",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 5
+      }
+     }
     },
     {
      "inst": "u_t12",
@@ -17572,14 +17642,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_2",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn12",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_2",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 5
+      }
+     }
     },
     {
      "inst": "u_t03",
@@ -17595,14 +17679,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_3",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn03",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_3",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 4
+      }
+     }
     },
     {
      "inst": "u_t13",
@@ -17618,14 +17716,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_3",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn13",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_3",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 4
+      }
+     }
     },
     {
      "inst": "u_pstn",
@@ -20324,14 +20436,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_2_0",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn20",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_2_0",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 7
+      }
+     }
     },
     {
      "inst": "u_t30",
@@ -20347,14 +20473,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nl_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nl_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_3_0",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn30",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_3_0",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 7
+      }
+     }
     },
     {
      "inst": "u_t21",
@@ -20370,14 +20510,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_2_1",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn21",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_2_1",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 6
+      }
+     }
     },
     {
      "inst": "u_t31",
@@ -20393,14 +20547,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_3_1",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn31",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_3_1",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 6
+      }
+     }
     },
     {
      "inst": "u_pstn",
@@ -23050,14 +23218,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_2_2",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn22",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_2_2",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 5
+      }
+     }
     },
     {
      "inst": "u_t32",
@@ -23073,14 +23255,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_3_2",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn32",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_3_2",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 5
+      }
+     }
     },
     {
      "inst": "u_t23",
@@ -23096,14 +23292,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_2_3",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn23",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_2_3",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 4
+      }
+     }
     },
     {
      "inst": "u_t33",
@@ -23119,14 +23329,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_3_3",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 384
+      }
+     }
     },
     {
      "inst": "u_xstn33",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_3_3",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 4
+      }
+     }
     },
     {
      "inst": "u_pstn",
@@ -44473,14 +44697,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_0",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn00",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_0",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 0
+      }
+     }
     },
     {
      "inst": "u_t10",
@@ -44496,14 +44734,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_0",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn10",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_0",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 0
+      }
+     }
     },
     {
      "inst": "u_t01",
@@ -44519,14 +44771,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_1",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn01",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_1",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 1
+      }
+     }
     },
     {
      "inst": "u_t11",
@@ -44542,14 +44808,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_1",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn11",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_1",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 1
+      }
+     }
     },
     {
      "inst": "u_pstn",
@@ -78340,14 +78620,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_2",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn02",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_2",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 2
+      }
+     }
     },
     {
      "inst": "u_t12",
@@ -78363,14 +78657,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_2",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn12",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_2",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 2
+      }
+     }
     },
     {
      "inst": "u_t03",
@@ -78386,14 +78694,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_3",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn03",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_3",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 3
+      }
+     }
     },
     {
      "inst": "u_t13",
@@ -78409,14 +78731,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_3",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn13",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_3",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 3
+      }
+     }
     },
     {
      "inst": "u_pstn",
@@ -81150,14 +81486,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_2_2",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn22",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_2_2",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 2
+      }
+     }
     },
     {
      "inst": "u_t32",
@@ -81173,14 +81523,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_3_2",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn32",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_3_2",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 2
+      }
+     }
     },
     {
      "inst": "u_t23",
@@ -81196,14 +81560,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_2_3",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn23",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_2_3",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 3
+      }
+     }
     },
     {
      "inst": "u_t33",
@@ -81219,14 +81597,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_3_3",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 400
+      }
+     }
     },
     {
      "inst": "u_xstn33",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_3_3",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 3
+      }
+     }
     },
     {
      "inst": "u_pstn",
@@ -287448,14 +287840,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_2",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 0
+      }
+     }
     },
     {
      "inst": "u_xstn02",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_2",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 5
+      }
+     }
     },
     {
      "inst": "u_t12",
@@ -287471,14 +287877,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_2",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 0
+      }
+     }
     },
     {
      "inst": "u_xstn12",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_2",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 5
+      }
+     }
     },
     {
      "inst": "u_t03",
@@ -287494,14 +287914,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_3",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 0
+      }
+     }
     },
     {
      "inst": "u_xstn03",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_3",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 4
+      }
+     }
     },
     {
      "inst": "u_t13",
@@ -287517,14 +287951,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_3",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 0
+      }
+     }
     },
     {
      "inst": "u_xstn13",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_3",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 4
+      }
+     }
     },
     {
      "inst": "u_pstn",
@@ -329113,14 +329561,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_0",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 0
+      }
+     }
     },
     {
      "inst": "u_xstn00",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_0",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 7
+      }
+     }
     },
     {
      "inst": "u_t10",
@@ -329136,14 +329598,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_0",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 0
+      }
+     }
     },
     {
      "inst": "u_xstn10",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_0",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 7
+      }
+     }
     },
     {
      "inst": "u_t01",
@@ -329159,14 +329635,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient R0 in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_0_1",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 0
+      }
+     }
     },
     {
      "inst": "u_xstn01",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_0_1",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 6
+      }
+     }
     },
     {
      "inst": "u_t11",
@@ -329182,14 +329672,28 @@
       457.92,
       1157.76
      ],
-     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)"
+     "note": "A0 core, orient MY in the partition frame (TOPDOWN L1 amend: planned hard core qfd_tile_nk_a0c, spec cores/a0_core.json)",
+     "parent_id_leaf": "u_t_1_1",
+     "parent_id_straps": {
+      "tile_id": {
+       "width": 16,
+       "value": 0
+      }
+     }
     },
     {
      "inst": "u_xstn11",
      "module": "qfd_c_xstn_safe",
      "status": "rework",
      "kit": "rtl/physical/qcluster/qfd_c_xstn_safe.sv (claude/plan-qcv2-1023 5da2a2abe: fanout tree, tap_p 444 b)",
-     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened"
+     "note": "bc column station + tap (registered fanout tree, no constant pins); flattened",
+     "parent_id_leaf": "u_fab.u_x_1_1",
+     "parent_id_straps": {
+      "sidx": {
+       "width": 3,
+       "value": 6
+      }
+     }
     },
     {
      "inst": "u_pstn",

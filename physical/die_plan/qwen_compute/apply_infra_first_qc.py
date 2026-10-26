@@ -14,7 +14,7 @@ d4ae52687 + DEAD-FAULT 773a8e2ad + D-QC-STM-ROM-INVENTORY). This script adds, in
 NOT in this script (recorded in the report as pending):
   D-QC-CLKMESH    driver islands: CLOCK-MESH / INFRA-FIRST apply them with tools/die_plan/apply_clkmesh_sites.py once the
                   QC regional mesh exists (plan.clock.mesh + clock_mesh_sites.json); run it AFTER this script.
-  CB ID straps    cbf_q00/cbf_q11/cbn_q11 (COORD 00:59 (2), owner straps option B): no PATH-QC branch yet.
+  CB ID straps    all nine CB types: existing tile_id/sidx parameter bits become parent-tied ID inputs (zero cycles).
 Usage: apply_infra_first_qc.py die_plan.json [--report infra_first_qc_report.json]   (in place)
 Then: tools/die_plan/gen.py latency --inplace; die_io.py plan; check.py --completeness (G0C).
 """
@@ -28,6 +28,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT / "tools" / "die_plan"))
+import cb_id_straps as CBIDS
 import gen_plan as G          # noqa: E402
 import schema as S            # noqa: E402
 import reset_tree as RT       # noqa: E402
@@ -133,11 +134,10 @@ def main(argv=None):
 
     rep["deltas"]["D-QC-CLKMESH"] = dict(status="PENDING: apply tools/die_plan/apply_clkmesh_sites.py after the QC "
                                                 "regional mesh exists (CLOCK-MESH / INFRA-FIRST step 2)")
-    rep["deltas"]["D-QC-CB-STRAPS"] = dict(status="MISSING: no PATH-QC branch (cbf_q00/cbf_q11/cbn_q11, option B; "
-                                                  "sidx not yet in parent_id_straps.ID_PORTS)")
+    rep["deltas"]["D-QC-CB-STRAPS"] = CBIDS.apply(raw)
 
     # every type no delta names keeps its interface byte-identical
-    touched = set(fe["types"]) | {"coll_ftm", *IOHOLD_SENDERS, SC_ROOT}
+    touched = set(fe["types"]) | set(rep["deltas"]["D-QC-CB-STRAPS"]["types"]) | {"coll_ftm", *IOHOLD_SENDERS, SC_ROOT}
     for tn, bt in base["partition_types"].items():
         if tn not in touched:
             assert iface(types[tn]) == iface(bt), tn

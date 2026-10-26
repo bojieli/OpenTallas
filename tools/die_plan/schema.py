@@ -135,7 +135,7 @@ _parent_id_straps = {"type": "object", "additionalProperties": False, "propertie
                                    else {"type": "integer", "minimum": 1}),
                           "value": {"type": "integer", "minimum": 0,
                                     **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
-    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", *_physical_id_widths)}}
+    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "sidx", *_physical_id_widths)}}
 
 # Exact identity ports only. G0's semantic validator enforces each port's width;
 # allOf gives full JSON-Schema consumers the same cross-field restriction.

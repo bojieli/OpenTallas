@@ -97,7 +97,533 @@
    "status": "PENDING: apply tools/die_plan/apply_clkmesh_sites.py after the QC regional mesh exists (CLOCK-MESH / INFRA-FIRST step 2)"
   },
   "D-QC-CB-STRAPS": {
-   "status": "MISSING: no PATH-QC branch (cbf_q00/cbf_q11/cbn_q11, option B; sidx not yet in parent_id_straps.ID_PORTS)"
+   "types": {
+    "cbf_q00": [
+     {
+      "inst": "u_t00",
+      "leaf": "u_t_0_0",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn00",
+      "leaf": "u_fab.u_x_0_0",
+      "port": "sidx",
+      "width": 3,
+      "value": 7
+     },
+     {
+      "inst": "u_t10",
+      "leaf": "u_t_1_0",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn10",
+      "leaf": "u_fab.u_x_1_0",
+      "port": "sidx",
+      "width": 3,
+      "value": 7
+     },
+     {
+      "inst": "u_t01",
+      "leaf": "u_t_0_1",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn01",
+      "leaf": "u_fab.u_x_0_1",
+      "port": "sidx",
+      "width": 3,
+      "value": 6
+     },
+     {
+      "inst": "u_t11",
+      "leaf": "u_t_1_1",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn11",
+      "leaf": "u_fab.u_x_1_1",
+      "port": "sidx",
+      "width": 3,
+      "value": 6
+     }
+    ],
+    "cbf_q01": [
+     {
+      "inst": "u_t02",
+      "leaf": "u_t_0_2",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn02",
+      "leaf": "u_fab.u_x_0_2",
+      "port": "sidx",
+      "width": 3,
+      "value": 5
+     },
+     {
+      "inst": "u_t12",
+      "leaf": "u_t_1_2",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn12",
+      "leaf": "u_fab.u_x_1_2",
+      "port": "sidx",
+      "width": 3,
+      "value": 5
+     },
+     {
+      "inst": "u_t03",
+      "leaf": "u_t_0_3",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn03",
+      "leaf": "u_fab.u_x_0_3",
+      "port": "sidx",
+      "width": 3,
+      "value": 4
+     },
+     {
+      "inst": "u_t13",
+      "leaf": "u_t_1_3",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn13",
+      "leaf": "u_fab.u_x_1_3",
+      "port": "sidx",
+      "width": 3,
+      "value": 4
+     }
+    ],
+    "cbx_q10": [
+     {
+      "inst": "u_t20",
+      "leaf": "u_t_2_0",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn20",
+      "leaf": "u_fab.u_x_2_0",
+      "port": "sidx",
+      "width": 3,
+      "value": 7
+     },
+     {
+      "inst": "u_t30",
+      "leaf": "u_t_3_0",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn30",
+      "leaf": "u_fab.u_x_3_0",
+      "port": "sidx",
+      "width": 3,
+      "value": 7
+     },
+     {
+      "inst": "u_t21",
+      "leaf": "u_t_2_1",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn21",
+      "leaf": "u_fab.u_x_2_1",
+      "port": "sidx",
+      "width": 3,
+      "value": 6
+     },
+     {
+      "inst": "u_t31",
+      "leaf": "u_t_3_1",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn31",
+      "leaf": "u_fab.u_x_3_1",
+      "port": "sidx",
+      "width": 3,
+      "value": 6
+     }
+    ],
+    "cbf_q11": [
+     {
+      "inst": "u_t22",
+      "leaf": "u_t_2_2",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn22",
+      "leaf": "u_fab.u_x_2_2",
+      "port": "sidx",
+      "width": 3,
+      "value": 5
+     },
+     {
+      "inst": "u_t32",
+      "leaf": "u_t_3_2",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn32",
+      "leaf": "u_fab.u_x_3_2",
+      "port": "sidx",
+      "width": 3,
+      "value": 5
+     },
+     {
+      "inst": "u_t23",
+      "leaf": "u_t_2_3",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn23",
+      "leaf": "u_fab.u_x_2_3",
+      "port": "sidx",
+      "width": 3,
+      "value": 4
+     },
+     {
+      "inst": "u_t33",
+      "leaf": "u_t_3_3",
+      "port": "tile_id",
+      "width": 16,
+      "value": 384
+     },
+     {
+      "inst": "u_xstn33",
+      "leaf": "u_fab.u_x_3_3",
+      "port": "sidx",
+      "width": 3,
+      "value": 4
+     }
+    ],
+    "cbn_q00": [
+     {
+      "inst": "u_t00",
+      "leaf": "u_t_0_0",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn00",
+      "leaf": "u_fab.u_x_0_0",
+      "port": "sidx",
+      "width": 3,
+      "value": 0
+     },
+     {
+      "inst": "u_t10",
+      "leaf": "u_t_1_0",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn10",
+      "leaf": "u_fab.u_x_1_0",
+      "port": "sidx",
+      "width": 3,
+      "value": 0
+     },
+     {
+      "inst": "u_t01",
+      "leaf": "u_t_0_1",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn01",
+      "leaf": "u_fab.u_x_0_1",
+      "port": "sidx",
+      "width": 3,
+      "value": 1
+     },
+     {
+      "inst": "u_t11",
+      "leaf": "u_t_1_1",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn11",
+      "leaf": "u_fab.u_x_1_1",
+      "port": "sidx",
+      "width": 3,
+      "value": 1
+     }
+    ],
+    "cbn_q01": [
+     {
+      "inst": "u_t02",
+      "leaf": "u_t_0_2",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn02",
+      "leaf": "u_fab.u_x_0_2",
+      "port": "sidx",
+      "width": 3,
+      "value": 2
+     },
+     {
+      "inst": "u_t12",
+      "leaf": "u_t_1_2",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn12",
+      "leaf": "u_fab.u_x_1_2",
+      "port": "sidx",
+      "width": 3,
+      "value": 2
+     },
+     {
+      "inst": "u_t03",
+      "leaf": "u_t_0_3",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn03",
+      "leaf": "u_fab.u_x_0_3",
+      "port": "sidx",
+      "width": 3,
+      "value": 3
+     },
+     {
+      "inst": "u_t13",
+      "leaf": "u_t_1_3",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn13",
+      "leaf": "u_fab.u_x_1_3",
+      "port": "sidx",
+      "width": 3,
+      "value": 3
+     }
+    ],
+    "cbn_q11": [
+     {
+      "inst": "u_t22",
+      "leaf": "u_t_2_2",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn22",
+      "leaf": "u_fab.u_x_2_2",
+      "port": "sidx",
+      "width": 3,
+      "value": 2
+     },
+     {
+      "inst": "u_t32",
+      "leaf": "u_t_3_2",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn32",
+      "leaf": "u_fab.u_x_3_2",
+      "port": "sidx",
+      "width": 3,
+      "value": 2
+     },
+     {
+      "inst": "u_t23",
+      "leaf": "u_t_2_3",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn23",
+      "leaf": "u_fab.u_x_2_3",
+      "port": "sidx",
+      "width": 3,
+      "value": 3
+     },
+     {
+      "inst": "u_t33",
+      "leaf": "u_t_3_3",
+      "port": "tile_id",
+      "width": 16,
+      "value": 400
+     },
+     {
+      "inst": "u_xstn33",
+      "leaf": "u_fab.u_x_3_3",
+      "port": "sidx",
+      "width": 3,
+      "value": 3
+     }
+    ],
+    "cbf_q01_s2": [
+     {
+      "inst": "u_t02",
+      "leaf": "u_t_0_2",
+      "port": "tile_id",
+      "width": 16,
+      "value": 0
+     },
+     {
+      "inst": "u_xstn02",
+      "leaf": "u_fab.u_x_0_2",
+      "port": "sidx",
+      "width": 3,
+      "value": 5
+     },
+     {
+      "inst": "u_t12",
+      "leaf": "u_t_1_2",
+      "port": "tile_id",
+      "width": 16,
+      "value": 0
+     },
+     {
+      "inst": "u_xstn12",
+      "leaf": "u_fab.u_x_1_2",
+      "port": "sidx",
+      "width": 3,
+      "value": 5
+     },
+     {
+      "inst": "u_t03",
+      "leaf": "u_t_0_3",
+      "port": "tile_id",
+      "width": 16,
+      "value": 0
+     },
+     {
+      "inst": "u_xstn03",
+      "leaf": "u_fab.u_x_0_3",
+      "port": "sidx",
+      "width": 3,
+      "value": 4
+     },
+     {
+      "inst": "u_t13",
+      "leaf": "u_t_1_3",
+      "port": "tile_id",
+      "width": 16,
+      "value": 0
+     },
+     {
+      "inst": "u_xstn13",
+      "leaf": "u_fab.u_x_1_3",
+      "port": "sidx",
+      "width": 3,
+      "value": 4
+     }
+    ],
+    "cbf_q00_s2": [
+     {
+      "inst": "u_t00",
+      "leaf": "u_t_0_0",
+      "port": "tile_id",
+      "width": 16,
+      "value": 0
+     },
+     {
+      "inst": "u_xstn00",
+      "leaf": "u_fab.u_x_0_0",
+      "port": "sidx",
+      "width": 3,
+      "value": 7
+     },
+     {
+      "inst": "u_t10",
+      "leaf": "u_t_1_0",
+      "port": "tile_id",
+      "width": 16,
+      "value": 0
+     },
+     {
+      "inst": "u_xstn10",
+      "leaf": "u_fab.u_x_1_0",
+      "port": "sidx",
+      "width": 3,
+      "value": 7
+     },
+     {
+      "inst": "u_t01",
+      "leaf": "u_t_0_1",
+      "port": "tile_id",
+      "width": 16,
+      "value": 0
+     },
+     {
+      "inst": "u_xstn01",
+      "leaf": "u_fab.u_x_0_1",
+      "port": "sidx",
+      "width": 3,
+      "value": 6
+     },
+     {
+      "inst": "u_t11",
+      "leaf": "u_t_1_1",
+      "port": "tile_id",
+      "width": 16,
+      "value": 0
+     },
+     {
+      "inst": "u_xstn11",
+      "leaf": "u_fab.u_x_1_1",
+      "port": "sidx",
+      "width": 3,
+      "value": 6
+     }
+    ]
+   },
+   "declarations": 72,
+   "cycles": 0,
+   "fixed_primitive": "cbf_q00 S_u_fab_not_*_A remains the same literal 1 in every replica; not an ID exemption"
   }
  }
 }
