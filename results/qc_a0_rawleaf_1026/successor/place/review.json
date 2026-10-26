@@ -1,0 +1,5 @@
+{
+  "image": "results/qc_a0_rawleaf_1026/successor/place/place.png",
+  "verdict": "PASS-COND CTS TRIAL ONLY",
+  "findings": "Viewed actual DPL scatter and intersection-density image. Uniform logic/FF fill with max bin0.620, clear outline and no macro walls. E-face data/control landing cohort and N private-fault launch cohort stay at their ports:504/504 max8.949um. All12030FF retain PG (0bad); FACE_GUARD504/504,0missing/extra. Full native STA fanin census14034 data endpoints,0>405um,max172.989um. ActualPDN from reviewed unchanged dense M5 stripe template; no macro discontinuity. Single E clock entry remains, so CTS must remeasure TT/FF core latency and related pair skew; no root padding. New netlist and generated per-corner IO context address old failure cause. No route authorization until postCTS review and flow release."
+}

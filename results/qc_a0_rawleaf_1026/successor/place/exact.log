@@ -1,0 +1,247 @@
+
+-- Running command `read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz; read_verilog /work/exact.v; hierarchy -top miter; flatten; proc; opt; sat -seq 4 -set-init-zero -prove bad 0 -verify' --
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+Imported 56 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /work/exact.v
+Parsing Verilog input from `/work/exact.v' to AST representation.
+Generating RTLIL representation for module `\cells'.
+Generating RTLIL representation for module `\expanded'.
+Generating RTLIL representation for module `\miter'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \expanded
+Used module:     \cells
+Used module:         \FAx1_ASAP7_75t_R
+Used module:         \HAxp5_ASAP7_75t_R
+
+3.2. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \expanded
+Used module:     \cells
+Used module:         \FAx1_ASAP7_75t_R
+Used module:         \HAxp5_ASAP7_75t_R
+Removing unused module `\XOR2xp5_ASAP7_75t_R'.
+Removing unused module `\XOR2x2_ASAP7_75t_R'.
+Removing unused module `\XOR2x1_ASAP7_75t_R'.
+Removing unused module `\XNOR2xp5_ASAP7_75t_R'.
+Removing unused module `\XNOR2x2_ASAP7_75t_R'.
+Removing unused module `\XNOR2x1_ASAP7_75t_R'.
+Removing unused module `\TIELOx1_ASAP7_75t_R'.
+Removing unused module `\TIEHIx1_ASAP7_75t_R'.
+Removing unused module `\OR5x2_ASAP7_75t_R'.
+Removing unused module `\OR5x1_ASAP7_75t_R'.
+Removing unused module `\OR4x2_ASAP7_75t_R'.
+Removing unused module `\OR4x1_ASAP7_75t_R'.
+Removing unused module `\OR3x4_ASAP7_75t_R'.
+Removing unused module `\OR3x2_ASAP7_75t_R'.
+Removing unused module `\OR3x1_ASAP7_75t_R'.
+Removing unused module `\OR2x6_ASAP7_75t_R'.
+Removing unused module `\OR2x4_ASAP7_75t_R'.
+Removing unused module `\OR2x2_ASAP7_75t_R'.
+Removing unused module `\NOR5xp2_ASAP7_75t_R'.
+Removing unused module `\NOR4xp75_ASAP7_75t_R'.
+Removing unused module `\NOR4xp25_ASAP7_75t_R'.
+Removing unused module `\NOR3xp33_ASAP7_75t_R'.
+Removing unused module `\NOR3x2_ASAP7_75t_R'.
+Removing unused module `\NOR3x1_ASAP7_75t_R'.
+Removing unused module `\NOR2xp67_ASAP7_75t_R'.
+Removing unused module `\NOR2xp33_ASAP7_75t_R'.
+Removing unused module `\NOR2x2_ASAP7_75t_R'.
+Removing unused module `\NOR2x1p5_ASAP7_75t_R'.
+Removing unused module `\NOR2x1_ASAP7_75t_R'.
+Removing unused module `\NAND5xp2_ASAP7_75t_R'.
+Removing unused module `\NAND4xp75_ASAP7_75t_R'.
+Removing unused module `\NAND4xp25_ASAP7_75t_R'.
+Removing unused module `\NAND3xp33_ASAP7_75t_R'.
+Removing unused module `\NAND3x2_ASAP7_75t_R'.
+Removing unused module `\NAND3x1_ASAP7_75t_R'.
+Removing unused module `\NAND2xp67_ASAP7_75t_R'.
+Removing unused module `\NAND2xp5_ASAP7_75t_R'.
+Removing unused module `\NAND2xp33_ASAP7_75t_R'.
+Removing unused module `\NAND2x2_ASAP7_75t_R'.
+Removing unused module `\NAND2x1p5_ASAP7_75t_R'.
+Removing unused module `\NAND2x1_ASAP7_75t_R'.
+Removing unused module `\MAJx3_ASAP7_75t_R'.
+Removing unused module `\MAJx2_ASAP7_75t_R'.
+Removing unused module `\MAJIxp5_ASAP7_75t_R'.
+Removing unused module `\AND5x2_ASAP7_75t_R'.
+Removing unused module `\AND5x1_ASAP7_75t_R'.
+Removing unused module `\AND4x2_ASAP7_75t_R'.
+Removing unused module `\AND4x1_ASAP7_75t_R'.
+Removing unused module `\AND3x4_ASAP7_75t_R'.
+Removing unused module `\AND3x2_ASAP7_75t_R'.
+Removing unused module `\AND3x1_ASAP7_75t_R'.
+Removing unused module `\AND2x6_ASAP7_75t_R'.
+Removing unused module `\AND2x4_ASAP7_75t_R'.
+Removing unused module `\AND2x2_ASAP7_75t_R'.
+Removed 54 unused modules.
+Mapping positional arguments of cell miter.t (expanded).
+Mapping positional arguments of cell miter.r (cells).
+
+4. Executing FLATTEN pass (flatten design).
+Deleting now unused module cells.
+Deleting now unused module expanded.
+Deleting now unused module HAxp5_ASAP7_75t_R.
+Deleting now unused module FAx1_ASAP7_75t_R.
+<suppressed ~4 debug messages>
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 2 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\miter.$proc$/work/exact.v:16$498'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\miter.\rx' using process `\miter.$proc$/work/exact.v:16$498'.
+  created $dff cell `$procdff$505' with positive edge clock.
+Creating register for signal `\miter.\ry' using process `\miter.$proc$/work/exact.v:16$498'.
+  created $dff cell `$procdff$506' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `miter.$proc$/work/exact.v:16$498'.
+Cleaned up 0 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 57 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 41 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 39 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~54 debug messages>
+Removed a total of 18 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 39 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 29 unused wires.
+<suppressed ~1 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 39 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 39 cells to SAT database.
+Final init constraint equation: { \ry \rx } = 8'00000000
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 39 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 39 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 39 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Solving problem with 879 variables and 2260 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 26eb6a4bd5, time: 0.05s, user: 0.05s, system: 0.01s, MEM: 29.97 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 77% 2x read_liberty (0 sec), 10% 1x sat (0 sec), ...

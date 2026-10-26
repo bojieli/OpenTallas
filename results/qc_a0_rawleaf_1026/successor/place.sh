@@ -20,6 +20,7 @@ python3 -I /work/sdc_lint.py /work
 python3 -I /work/adder_map_dontuse.py gen --platform-dir "$P" --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json
 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run NUM_CORES=8 /work/run/results/asap7/lsl_rawfault_m3/base/1_2_yosys.v
 python3 -I /work/adder_map_dontuse.py check --platform-dir "$P" --netlist /work/run/results/asap7/lsl_rawfault_m3/base/1_2_yosys.v --report /work/dont_use_check.json
+python3 -I /work/face_guard_core.py /work/run/results/asap7/lsl_rawfault_m3/base/1_2_yosys.v ot_qwen_tile_lsl_rawfault_m3 "^(clk|rst_n)$" /work/pins.json /work/face_guard_core.json
 python3 - <<"PY"
 import re,json
 from pathlib import Path

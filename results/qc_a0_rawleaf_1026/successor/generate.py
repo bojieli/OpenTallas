@@ -75,6 +75,13 @@ def main():
     (kd / 'rawleaf_keep.v').write_text(new)
     for f in ('io.tcl', 'pdn.tcl', 'pins.json'):
         shutil.copyfile(old / f, kd / f)
+    rows = []
+    for pin in json.loads((old/'pins.json').read_text())['pins']:
+        m = re.fullmatch(r'(.*)\[(\d+)\]', pin['name'])
+        row = {k:v for k,v in pin.items() if k != 'name'}
+        row.update(bus=m[1] if m else pin['name'], bit=int(m[2]) if m else None)
+        rows.append(row)
+    (kd/'pins.json').write_text(json.dumps(rows,indent=2)+'\n')
     for f in HERE.joinpath('template').iterdir():
         shutil.copyfile(f, kd / f.name)
     for f in ('anchor_row_packing.tcl',):
@@ -92,6 +99,12 @@ def main():
     (kd / 'config.mk').write_text(cfg)
     spec = importlib.util.spec_from_file_location('qcgen', REPO / 'physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py')
     qc = importlib.util.module_from_spec(spec); spec.loader.exec_module(qc)
+    (kd/'face_guard_core.py').write_text(qc.FACE_GUARD_CORE)
+    (kd/'core.json').write_text(json.dumps(dict(module='ot_qwen_tile_lsl_rawfault_m3',
+             boundary_role=dict(clk='clk',rst_n='reset')),indent=2)+'\n')
+    (kd/'boundary_guard_context.json').write_text(json.dumps(dict(
+             schema='opentallas.core_boundary_guard_context.v1',source_core_json='core.json',
+             clock_ports=['clk'],unused_clock_ports=[],reset_ports=['rst_n'],data_pin_exemptions=[]),indent=2)+'\n')
     sdc = qc.sdc(833,177.5,40,['clk'],['rst_n'],'lsl_rawfault_m3')
     sdc += '\n# Two-sided 40 ps IO contract (COORD 2026-10-26 00:19); parent receipt required.\n'
     sdc += 'set_input_delay -min 40 -clock vclk [get_ports {split_d[*] w_d[*] x_d[*]}]\n'

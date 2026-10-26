@@ -1,0 +1,21 @@
+{
+  "placed_cells": 59358,
+  "FF": 12030,
+  "pin_flops": 504,
+  "missing_pin_flops": [],
+  "pin_reg_max_um": 8.949,
+  "pin_regs_gt20": 0,
+  "longest_pin_reg": [
+    8.949,
+    "w_d[95]",
+    "u_ls.s3_w\\[95\\]$_DFF_P_"
+  ],
+  "r2r_endpoints": 14034,
+  "r2r_max_um": 172.98900000000003,
+  "r2r_gt405": 0,
+  "density_peak_bin": 0.6203543647363875,
+  "pg_bad": 0,
+  "source_commit": "e879b037203170fbfb29c829d5523166c37fc9d9",
+  "kit": "intel2:/srv/opentallas-scratch2/claude/codex-qc-a0-1026/kitC",
+  "verdict": "PASS-COND CTS TRIAL ONLY"
+}
