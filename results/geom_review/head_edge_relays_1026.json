@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS-COND TRIAL ONLY",
+  "image": "/srv/opentallas-scratch/claude/codex-head-clock-1026/edge2/edge_relays.png",
+  "findings": [
+    "All152 formerlyunplaceable long branches now run through physical relay islands outside the PHY keepouts; no in-macro fallback cells.",
+    "3434 added BUF24 cells, zero clock-body overlaps, zero hard-body intersections, complete clock-hop census max523.105um (limit750).",
+    "Clock branches detour along the legal outer strips; dense shared corridors need actual global-route confirmation. Additional clock wire1369.374mm; zero data cycles.",
+    "PG source remains the prior head prototype kit; actual qualifiedPG and connected pre-route replay are separate open gates. No freeze claim."
+  ],
+  "next": "50-iteration combined clock/signalGRT and TT/FF clock reconstruction"
+}
