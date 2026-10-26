@@ -1,0 +1,53 @@
+[
+  {
+    "check": {
+      "content_signature": "b5b33755",
+      "errors": [],
+      "instances": 1,
+      "macro": "ot_rom_64x64_m2",
+      "verdict": "PASS",
+      "words_checked": 64
+    },
+    "image_entries": 32,
+    "one_via_mutant": "FAIL",
+    "profile": "cal_mu",
+    "schema": "opentallas.qc-dcal-profile-check.v1",
+    "source_file": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh",
+    "source_prefix": "D2D_CAL_C",
+    "source_sha256": "e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae"
+  },
+  {
+    "check": {
+      "content_signature": "d561f0f6",
+      "errors": [],
+      "instances": 1,
+      "macro": "ot_rom_64x64_m2",
+      "verdict": "PASS",
+      "words_checked": 64
+    },
+    "image_entries": 32,
+    "one_via_mutant": "FAIL",
+    "profile": "cal_mu_ew1627_r16_rope",
+    "schema": "opentallas.qc-dcal-profile-check.v1",
+    "source_file": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu_ew1627_r16_rope.svh",
+    "source_prefix": "D2D_CAL_C",
+    "source_sha256": "72bd0e4f1641325de69b108564477b5e92bbec9587b8b938a51230c5eb01144b"
+  },
+  {
+    "check": {
+      "content_signature": "b863b2f7",
+      "errors": [],
+      "instances": 1,
+      "macro": "ot_rom_64x64_m2",
+      "verdict": "PASS",
+      "words_checked": 64
+    },
+    "image_entries": 32,
+    "one_via_mutant": "FAIL",
+    "profile": "ovl_release_rope",
+    "schema": "opentallas.qc-dcal-profile-check.v1",
+    "source_file": "rtl/qwen_sys/d2d_static_20261015/ovl_release_rope/ovl_release_img.svh",
+    "source_prefix": "OVL_C",
+    "source_sha256": "727a476053f3965616e90efe6b4396ec3a28b07bf6c10e4bef71af70ca4c6d86"
+  }
+]

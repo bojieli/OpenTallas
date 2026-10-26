@@ -1,0 +1,4 @@
+VP_NOREPAIR checks=8192 mismatches=8192 read_write_same=1017 partial=4051 mutant=1
+[7259000] %Fatal: tb.sv:14: Assertion failed in tb_s81_vp_norepair: VP_NOREPAIR mismatch
+%Error: /srv/opentallas-scratch2/claude/wt/codex-s81-deadinputs-2148/results/token_pass/s81_vp_norepair_2148/tb.sv:14: Verilog $stop
+Aborting...

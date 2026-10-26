@@ -1,0 +1,4 @@
+ENTRY39 checks=60000 requests=7029 mismatches=60000 mutant=1
+[50040000] %Fatal: tb.sv:27: Assertion failed in tb_entry39: ENTRY39 mismatch
+%Error: /srv/opentallas-scratch2/claude/wt/codex-s81-deadinputs-2148/results/token_pass/s81_entry39_2148/tb.sv:27: Verilog $stop
+Aborting...

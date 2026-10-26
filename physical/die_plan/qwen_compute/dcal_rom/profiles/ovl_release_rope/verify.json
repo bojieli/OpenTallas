@@ -1,0 +1,17 @@
+{
+  "check": {
+    "content_signature": "b863b2f7",
+    "errors": [],
+    "instances": 1,
+    "macro": "ot_rom_64x64_m2",
+    "verdict": "PASS",
+    "words_checked": 64
+  },
+  "image_entries": 32,
+  "one_via_mutant": "FAIL",
+  "profile": "ovl_release_rope",
+  "schema": "opentallas.qc-dcal-profile-check.v1",
+  "source_file": "rtl/qwen_sys/d2d_static_20261015/ovl_release_rope/ovl_release_img.svh",
+  "source_prefix": "OVL_C",
+  "source_sha256": "727a476053f3965616e90efe6b4396ec3a28b07bf6c10e4bef71af70ca4c6d86"
+}
