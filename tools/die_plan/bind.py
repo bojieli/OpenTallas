@@ -2387,6 +2387,13 @@ class Binder:
             (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
         (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
+        self._native_glue = None
+        if self.ab.get("native_glue_types"):
+            import bind_native_glue
+            try:
+                self._native_glue = bind_native_glue.NativeGlue(out / "native_glue", self.ab["native_glue_types"])
+            except bind_native_glue.NativeGlueError as exc:
+                raise BindError(str(exc)) from exc
         self.pnames = {}
         self.io_used = {}
         self.parent_id_ports = {}
@@ -2400,6 +2407,8 @@ class Binder:
             import native_istations
             native_istations.materialize(self, tn, f)
             files.append(f)
+        if self._native_glue is not None:
+            files.extend(self._native_glue.files)
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
         f.write_text(self.emit_top())
         files.append(f)
@@ -2791,7 +2800,15 @@ class Binder:
                     conns.append((pn, _concat(e)))
             conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":
-                insts.append(_glue(c, dict(conns), r))
+                native = getattr(self, "_native_glue", None)
+                if native is not None and c.ytype in native.enabled:
+                    import bind_native_glue
+                    try:
+                        insts.append(native.emit(c, dict(conns), short_id("g_" + r, 90)))
+                    except bind_native_glue.NativeGlueError as exc:
+                        raise BindError(str(exc)) from exc
+                else:
+                    insts.append(_glue(c, dict(conns), r))
                 continue
             ps = []
             for k, v in sorted(c.params.items()):
