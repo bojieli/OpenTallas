@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS",
+  "base_main": "d75b94c4c5ce426257ac37c9a30e825041175258",
+  "cause": "Yosys hierarchy -chparam on deferred TXtop re-adds existing module name, aborting rtlil.cc:1231 before RTLcheck. Default omission did not fix nondefaultSRAM_MACRO1.",
+  "fix": "Standalone chparam -set allparams top once, then hierarchy -check -top. Keep -defer/-noautowire, proc andcheck-assert. No RTLchange, no gatewaiver.",
+  "actual_positive": "Current dsdivTXsource (dsdv_idx_tx_n32,846ports, SRAM_MACRO1, defaultsallunchanged) rawRTLlintPASS0errors, originalfailedsameeightparameterlist preserved.",
+  "controls": "5/5actualYosyscontrols: parameterN2positivePASS, wrongN1missingmoduleREJECTED, implicitnetREJECTED, undrivenREJECTED, missingmoduleREJECTED.",
+  "jobs": "epyc1ot-rununits126411-1793007885(actualTX),193940-1793007974(controls), both0",
+  "code": "tools/die_plan/rtl_lint.py",
+  "source_changes": "only commandplacement; no BB/flow/clock changes"
+}

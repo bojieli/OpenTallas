@@ -1,0 +1,20 @@
+{
+ "kit": "KV e1 LT-copy",
+ "kit_hash": "ebf8d41eb4fc6180",
+ "request": "CODEX-KV-E1-1026",
+ "scope": "CTS-only trial",
+ "image": "/srv/opentallas-scratch/claude/codex-aux-geom-1026/kv_e1_review.png",
+ "verdict": "PASS-COND",
+ "findings": [
+  "Viewed regular4x4 lane placement with open orthogonal channels,macrofree36.4%fill,no macro wall/sliver trap.",
+  "W534/N12pins and supplied31292-pair census max267.786um,0>405 support current reach.",
+  "Pin-register distance unavailable in renderer; inherited raw/ODB face guard and replica checks reported PASS."
+ ],
+ "conditions": [
+  "Regenerate on current qualifying flow before CTS advance; oldcap64kit is a legacy candidate, not release evidence.",
+  "Run postCTS TT/FF pair80/insertion/r2r/pin-register checks; no full route permission from this placement verdict."
+ ],
+ "schema": "opentallas.geom_review.v1",
+ "reviewer": "CODEX auxiliary independent review",
+ "reviewed": "2026-10-26 02:39 PDT"
+}

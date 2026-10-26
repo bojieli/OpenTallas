@@ -145,6 +145,13 @@ def tap_points(P, tn):
     cks = [(x, y) for _, x, y in S.tap_grid(P, tn)] + [(x, y) for _, x, y, _ in S.core_taps(P, tn)]
     ck = list(cks[0])
     rs = list(t.get("reset", {}).get("tap_um", ck))
+    if (t.get("hard") and t.get("reset", {}).get("tap_um") is not None
+            and t.get("clock", {}).get("tap_um") is not None
+            and any(c.get("lef") and c.get("origin_um") is not None for c in t.get("contents", []))):
+        # These are native hard-macro terminal coordinates, not movable buffer
+        # sites. Distinct legal LEF pins can be192nm apart; the soft1um collision
+        # heuristic and partition-layer snapping must not move either terminal.
+        return [tuple(map(float, ck)), tuple(map(float, rs))]
     if any(abs(rs[0] - a) < 1.0 and abs(rs[1] - b) < 1.0 for a, b in cks):
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
         if t.get("hard_cores"):     # S81-P8 10-23: the reset tap also sits in a channel, off the clock taps
@@ -745,7 +752,63 @@ def _tcl_re(s):
     return re.sub(r"([.\[\]()*+?^$|\\])", r"\\\1", s)
 
 
-def phy_pg_pdn(P, tn, doms, macros):
+def die_islands_tcl(P, tn):
+    """Reserve the accepted die clock driver islands in the actual tile placement.
+
+    This does not move the tile clock ports, change tap assignment or rebuild the
+    die mesh. The same union of island rectangles is hardened for each type.
+    """
+    t = P.types[tn]
+    rects = t.get("clock", {}).get("die_islands_um", [])
+    if not rects:
+        return ""
+    w, h = t["outline_um"]
+    for x0, y0, x1, y1 in rects:
+        if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
+            raise ValueError(f"{tn}: die clock island outside outline or empty: {[x0, y0, x1, y1]}")
+    lines = ["# Generated physical reservation for accepted die clock driver islands.", "uplevel #0 {",
+             "set di_b [ord::get_db_block]", "set di_u [[ord::get_db_tech] getDbUnitsPerMicron]",
+             "source /work/keepout_phys.tcl", "set di_rects {}",
+             "set di_count 0; set di_area 0.0; set di_rows 0"]
+    for x0, y0, x1, y1 in rects:
+        lines += [f"set di_x0 [expr {{round({x0:g}*$di_u)}}]; set di_y0 [expr {{round({y0:g}*$di_u)}}]",
+                  f"set di_x1 [expr {{round({x1:g}*$di_u)}}]; set di_y1 [expr {{round({y1:g}*$di_u)}}]",
+                  "odb::dbBlockage_create $di_b $di_x0 $di_y0 $di_x1 $di_y1",
+                  "lappend di_rects [list $di_x0 $di_y0 $di_x1 $di_y1]", "incr di_count",
+                  "set di_area [expr {$di_area + ($di_x1-$di_x0)*($di_y1-$di_y0)/double($di_u*$di_u)}]",
+                  "foreach di_r [$di_b getRows] {",
+                  "  set di_box [$di_r getBBox]",
+                  "  if {[$di_box xMin]<$di_x1 && [$di_box xMax]>$di_x0 && [$di_box yMin]<$di_y1 && [$di_box yMax]>$di_y0} { incr di_rows }",
+                  "}"]
+    lines += ['ot_clear_keepout_physical $di_b $di_rects die_clock_islands', 'puts "OT_DIE_ISLANDS blockages=$di_count rectangle_area_sum_um2=$di_area row_intersections=$di_rows"', "}"]
+    return "\n".join(lines) + "\n"
+
+
+def _pdn_inst_patterns(instances):
+    # PDN -instances is a Tcl list of regular expressions, not literal names.
+    # ODB stores escaped Verilog brackets as literal backslash-bracket pairs.
+    # Brace each list item so Tcl's list parser preserves the regex escapes.
+    return " ".join("{^" + _tcl_re(re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)) + "$}"
+                    for inst in instances)
+
+
+def _macro_pg_layers(lef):
+    text = Path(lef).read_text()
+    levels = []
+    for pin in ("VDD", "VSS"):
+        block = re.search(r"\bPIN\s+" + pin + r"\b(.*?)\bEND\s+" + pin + r"\b", text, re.S)
+        if block is None:
+            raise ValueError(f"{lef}: missing {pin} geometry")
+        got = set(re.findall(r"\bLAYER\s+(M[0-9]+)\s*;", block[1]))
+        if len(got) != 1:
+            raise ValueError(f"{lef}: ambiguous {pin} PG layers {got}")
+        levels.extend(got)
+    if levels[0] != levels[1] or levels[0] not in ("M5", "M6"):
+        raise ValueError(f"{lef}: unsupported PHY PG interface {levels}")
+    return levels[0] + " M" + str(int(levels[0][1:]) + 1)
+
+
+def phy_pg_pdn(P, tn, doms, macros, root=None):
     """Partition PDN with separate PHY supply regions (OWNER decision 7; OpenROAD voltage regions, the die-level form is
     pg_regions.pdn_tcl).  CORE keeps the abutment-continuous grid of PDN everywhere outside the regions (pdngen cuts the
     core domain at other domains' regions); each region gets its own net (VDDPHY) + VSS: M6/M7 straps at the same
@@ -753,11 +816,13 @@ def phy_pg_pdn(P, tn, doms, macros):
     die M8/M9 VDDPHY mesh of die.pg.domains lands on it), a macro grid landing M6 on the macro's top-layer PG pins, and
     a hard placement blockage (no std cell in the region: it has no core followpins).  Content macros outside regions
     get a CORE macro grid (their M4 PG pins -> core M5 straps)."""
+    root = Path(root) if root is not None else Path(__file__).resolve().parents[2]
     phy_insts = sorted({i for d in doms for i in d[4]})
+    phy_layers = {m[0]: _macro_pg_layers(root / m[2]) for m in macros if m[0] in phy_insts}
     core_macros = [m[0] for m in macros if m[0] not in phy_insts]
     excl = "|".join(_tcl_re(i) for i in phy_insts)
     t = ["# GENERATED by tools/die_plan/gen.py phys: partition PDN with separate PHY supply regions (gen_phys.phy_pg_pdn).",
-         "set b [ord::get_db_block]", "set dbu [[ord::get_db_tech] getDbUnitsPerMicron]"]
+         "source /work/keepout_phys.tcl", "set b [ord::get_db_block]", "set dbu [[ord::get_db_tech] getDbUnitsPerMicron]"]
     for net in sorted({d[1] for d in doms} - {"VDD"}):
         t += [f"set n [$b findNet {net}]", f'if {{$n eq "NULL"}} {{ set n [odb::dbNet_create $b {net}] }}',
               "$n setSigType POWER; $n setSpecial"]
@@ -775,17 +840,20 @@ def phy_pg_pdn(P, tn, doms, macros):
     t += [ln for ln in PDN.splitlines()[5:] if ln.strip()]       # the CORE grid of PDN (after its global connects)
     for k, (name, pw, gd, r, mac) in enumerate(doms):
         rn = f"ot_phy_pg_{k}"
+        if len({phy_layers[i] for i in mac}) != 1:
+            raise ValueError(f"PG domain {name}: mixed PHY PG interfaces require separate grids")
         t += [f"# PHY supply region {name}: {pw}/{gd} over {' '.join(mac)} (die.pg.domains, OWNER decision 7)",
               f"define_pdn_grid -name {{{rn}}} -voltage_domains {{{rn}}} -pins {{M7}}",
               f"add_pdn_stripe -grid {{{rn}}} -layer {{M6}} -width {{0.288}} -spacing {{0.096}} -pitch {{4.32}} -offset {{1.968}}",
               f"add_pdn_stripe -grid {{{rn}}} -layer {{M7}} -width {{0.288}} -spacing {{0.096}} -pitch {{8.64}} -offset {{4.128}}",
               f"add_pdn_connect -grid {{{rn}}} -layers {{M6 M7}}",
-              f"define_pdn_grid -macro -name {{{rn}_macro}} -instances {{{' '.join(mac)}}} -voltage_domains {{{rn}}} -halo {{0}}",
-              f"add_pdn_connect -grid {{{rn}_macro}} -layers {{M5 M6}}",
-              f"odb::dbBlockage_create $b " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r)]
+              f"define_pdn_grid -macro -name {{{rn}_macro}} -instances {{{_pdn_inst_patterns(mac)}}} -voltage_domains {{{rn}}} -halo {{0}}",
+              f"add_pdn_connect -grid {{{rn}_macro}} -layers {{{phy_layers[mac[0]]}}}",
+              f"odb::dbBlockage_create $b " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r),
+              "ot_clear_keepout_physical $b [list [list " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r) + "]] phy_supply_region"]
     if core_macros:
         t += ["# CORE content macros: M4 PG pins onto the core M5 straps",
-              f"define_pdn_grid -macro -name {{core_macros}} -instances {{{' '.join(core_macros)}}} -voltage_domains {{CORE}} -halo {{0}}",
+              f"define_pdn_grid -macro -name {{core_macros}} -instances {{{_pdn_inst_patterns(core_macros)}}} -voltage_domains {{CORE}} -halo {{0}}",
               "add_pdn_connect -grid {core_macros} -layers {M4 M5}"]
     return "\n".join(t) + "\n"
 
@@ -943,7 +1011,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     phy_doms = phy_pg_domains(P, tn)
     if phy_doms:
         # PATH-KV-SYSC 10-25 PHY PG hook: separate VDDPHY region(s) of die.pg.domains inside this type
-        pdn = phy_pg_pdn(P, tn, phy_doms, macros) + pdn[len(PDN):]
+        pdn = phy_pg_pdn(P, tn, phy_doms, macros, root=root) + pdn[len(PDN):]
         (kd / "phy_pg.json").write_text(json.dumps([dict(name=d[0], power=d[1], ground=d[2], rect_type_um=d[3],
                                                           macros=d[4]) for d in phy_doms], indent=1) + "\n")
     (kd / "pdn.tcl").write_text(pdn)
@@ -1106,7 +1174,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
@@ -1160,6 +1228,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             f.write("\nsource /work/reset_physical_stages.tcl\n")
         with (kd / "face_flops_release.tcl").open("a") as f:
             f.write("\nsource /work/reset_physical_stages_release.tcl\n")
+    islands = die_islands_tcl(P, tn)
+    if islands:
+        (kd / "die_islands.tcl").write_text(islands)
+        hook = kd / "face_flops.tcl"
+        hook.write_text("source /work/die_islands.tcl\n" + hook.read_text())
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),

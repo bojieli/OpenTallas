@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "source/port fault-return geometry only; no placement or route approval",
+  "image": "results/geom_review/head_lep_source_1026/fault_return.png",
+  "findings": [
+    "new1-bit return is on aligned abutting LP E / ctl W faces",
+    "10um clearance from existing H4 cb band; low added pin demand",
+    "existing data pins/outlines unchanged",
+    "macro body/halos/PDN and native clock/reset/START remain to be physically reviewed on actual trial"
+  ],
+  "conditions": [
+    "single HEAD infra-first event only",
+    "actual per-type macro placement/clock/reset/START review before route",
+    "full head source/latency composition before bind claim"
+  ]
+}

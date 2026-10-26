@@ -530,9 +530,7 @@ echo "CANARY_GEN rc=$G"
 if [ $G != 0 ] || [ ! -d $K ]; then echo "CANARY_GEN FAIL (see $R/gen.log)"; tail -n 20 $R/gen.log
   python3 -I $R/canary.py check --run $R; exit 3; fi
 python3 -I $R/canary.py lint --kit $K --top {top} --image {image} --out $R/lint.json
-{runcmd}
-echo "CANARY_FLOW_RC $?"
-python3 -I $R/canary.py check --run $R
+touch $R/GENERATED
 """
 
 
@@ -569,10 +567,31 @@ def cmd_submit(a):
         genenv = "".join(f"{k}={shlex.quote(fmt(v, **kv))} " for k, v in c.get("gen_env", {}).items())
         job = JOB.format(die=die, item=c["item"], src=sha, run=run, kit=kit, top=c["top"], image=a.image,
                          prep="\n".join(fmt(c.get("prep", []), **kv)), gen_cwd=fmt(c.get("gen_cwd", "{src}"), **kv),
-                         genenv=genenv, gen=fmt(c["gen"], **kv), runcmd=fmt(c["run"], **kv))
+                         genenv=genenv, gen=fmt(c["gen"], **kv))
         (run / "job.sh").write_text(job)
-        cmd = (f"{OT_RUN} --mem {c['mem_gb']} --threads {kv['cpus']} --dir {run} -- bash {run}/job.sh "
-               f"> {run}/otrun.log 2>&1")
+        # Generation may read git-pinned recipe files and input snapshots on the hub.
+        # Once generated, the expensive physical run needs only its self-contained gen/
+        # tree.  Stage that tree so admission can use the rest of the fleet instead of
+        # queueing every canary beside the coordinator's source worktree.
+        runtime_src = run / "gen" / "runtime_source"
+        runtime_kv = dict(kv, src=str(runtime_src))
+        route = fmt(c["run"], **runtime_kv)
+        prepare_runtime = ""
+        if "{src}" in c["run"]:
+            prepare_runtime = (f"mkdir -p {runtime_src}/tools {runtime_src}/physical/die_plan/qwen_kvsys/cores/harden; "
+                               f"cp -a {src}/tools/die_plan {runtime_src}/tools/; "
+                               f"cp -a {src}/physical/common_flow {runtime_src}/physical/; "
+                               f"cp -a {src}/physical/die_plan/qwen_kvsys/cores/harden/eco "
+                               f"{runtime_src}/physical/die_plan/qwen_kvsys/cores/harden/; ")
+        (run / "route.sh").write_text("#!/bin/bash\nset -u\n" + route +
+                                      '\necho "CANARY_FLOW_RC $?"\n')
+        launch = (f"{OT_RUN} --mem {c['mem_gb']} --threads {kv['cpus']} --dir {run} -- bash {run}/job.sh; "
+                  f"if [ -f {run}/GENERATED ]; then {prepare_runtime}"
+                  f"cp {run}/route.sh {run}/gen/route_canary.sh; "
+                  f"{OT_RUN} --mem {c['mem_gb']} --threads {kv['cpus']} "
+                  f"--dir {run}/gen --stage {run}/gen -- bash {run}/gen/route_canary.sh; "
+                  f"python3 -I {run}/canary.py check --run {run}; fi")
+        cmd = f"( {launch} ) > {run}/otrun.log 2>&1"
         print(f"CANARY {die} {c['item']} src {sha}: {run}")
         if a.dry:
             print("  DRY", cmd)

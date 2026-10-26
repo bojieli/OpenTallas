@@ -1,0 +1,13 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-legacy-1026/checks
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-legacy-1026/checks
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-s81-legacy-1026/checks
+ot-run: localhost      admits    78 GB (avail 321, reserve 0, fresh 173.9, peak 4.4, headroom 0, waiters 0/0 GB) load 69/256 running 43 disk 631 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-193940-1793007974 after 1 s
+RTL_LINT PASS errors 0
+RTL_LINT FAIL errors 1
+RTL_LINT FAIL errors 1
+RTL_LINT FAIL errors 1
+RTL_LINT FAIL errors 1
+RTL_LINT_CONTROLS 5/5 PASS
+ot-run: RAN on localhost (unit oth-ubuntu-193940-1793007974): exit 0
