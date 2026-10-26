@@ -1842,18 +1842,60 @@ def slang_elements(aliases_file):
                 continue
             for b, bit in enumerate(c.get("connections", {}).get("Q", ())):
                 if isinstance(bit, int):
-                    drv[(mm[1], bit)] = f"{mm[2]}[{b}]"
+                    scope = cn[:mm.start()].removeprefix("$flatten\\").replace("\\", "")
+                    name = scope + mm[1]
+                    qwidth = len(c.get("connections", {}).get("Q", ()))
+                    drv[(name, bit)] = mm[2] + (f"[{b}]" if qwidth > 1 else "")
         if not drv:
             continue
+        by_bit = collections.defaultdict(list)
+        for (name, bit), suffix in drv.items():
+            by_bit[bit].append((name, suffix))
         for nn, w in mod.get("netnames", {}).items():
             if w.get("hide_name"):
                 continue
-            last = re.split(r"[.\\]", nn)[-1]
             for f, bit in enumerate(w.get("bits", ())):
-                e = drv.get((last, bit)) if isinstance(bit, int) else None
+                e = drv.get((nn.replace("\\", ""), bit)) if isinstance(bit, int) else None
+                if e is None and isinstance(bit, int):
+                    matches = {v for name, v in by_bit.get(bit, ())
+                               if nn == name or nn.endswith("." + name)}
+                    if len(matches) == 1:
+                        e = matches.pop()
                 if e:
                     out[f"ff:{nn}[{f}]"] = e
     return out
+
+
+def normalize_gold_elements(L, elements, log):
+    """Restore scalar unpacked element names before matching state.
+
+    A partial synthesized array may keep indices that happen to be flat gold
+    indices too (gold rv[0..18] versus real rv[1..19], with gate rv[2..4]).
+    Such accidental matches cannot be corrected by unmatched-only pairing.
+    Driver Q-net metadata supplies the names; all next-state checks still run.
+    """
+    ren = {}
+    for k, suffix in elements.items():
+        ix = IDX.match(k)
+        if k in L.gp and ix and suffix.count("[") == 1:
+            ren[k] = ix[1] + suffix
+    # Reject ambiguous metadata instead of silently collapsing registers.
+    names = [ren.get(k, k) for k in L.gp]
+    if len(names) != len(set(names)):
+        raise LecError("slang element names collide with another gold key point")
+    changed = sum(k != v for k, v in ren.items())
+    L.element_names = {v: v[len(IDX.match(v)[1]):] for v in ren.values()}
+    if not changed:
+        return 0
+    L.gp = {ren.get(k, k): v for k, v in L.gp.items()}
+    L.gc = {ren.get(k, k): v for k, v in L.gc.items()}
+    L.galias = {ren.get(k, k): {ren.get(a, a) for a in aliases}
+                for k, aliases in L.galias.items()}
+    L.matched = sorted(set(L.gp) & set(L.tp))
+    L.gonly = sorted(set(L.gp) - set(L.tp))
+    L.tonly = sorted(set(L.tp) - set(L.gp))
+    log.append(f"slang element names: {changed} gold register keys normalized from driver Q nets")
+    return changed
 
 
 def alias_arrays(L, log, words=4, work=None):
@@ -1918,6 +1960,7 @@ def alias_arrays(L, log, words=4, work=None):
                 held.update(y for y in x if isinstance(y, str))
     galias = getattr(L, "galias", {})
     elem = slang_elements(Path(work) / "gold.aliases.json") if work is not None else {}
+    elem.update(getattr(L, "element_names", {}))
     G, T = split(k for k in L.gonly if k not in held), split(k for k in L.tonly if k not in held)
     for gb, g in sorted(G.items(), key=lambda x: -len(x[1])):
         votes = collections.Counter()
@@ -2039,6 +2082,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     (u_tv.line[4] == u_k5.g_r.v == valid_out) is dropped while its upstream index-line constants are still being
     refined and needs adding rounds after them; 10 left it free -> false NOT EQUIVALENT (gunit_l4 895 points,
     EQUIVALENT at 24 rounds, 738 s)."""
+    normalize_gold_elements(L, slang_elements(Path(work) / "gold.aliases.json"), log)
     alias_arrays(L, log, work=work)
     relayout(L, log)
     renamed(L, log)
