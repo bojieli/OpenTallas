@@ -550,3 +550,27 @@ def test_report_12_8d_banned_means_never_pass():
         assert rep["corners"]["TT"]["verdict_measured"] == "PASS"
         q = DM.regional_qualification(dict(meta={}), rep["corners"], 0)
         assert q["release_verdict"] == "BLOCKED"
+
+
+def test_rule128_requires_explicit_budget_and_liberty(tmp_path):
+    import json
+    import subprocess
+    import sys
+    from pathlib import Path
+    import die_clock_mesh as DM
+    fixture = Path(DM.__file__).parent / "examples/tiny_plan.json"
+    raw = json.loads(fixture.read_text())
+    raw["die"].pop("layer_budget", None)
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps(raw))
+    out = tmp_path / "out"
+    cmd = [sys.executable, DM.__file__, "build", str(plan), "--out", str(out),
+           "--rule-12-8", "--libdir", str(tmp_path / "missing_libs")]
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    assert r.returncode and "explicit die.layer_budget" in r.stderr
+    assert "Traceback" not in r.stderr and not out.exists()
+    raw["die"]["layer_budget"] = {"partition_signal_max": "M7", "die_layers": ["M8", "M9"]}
+    plan.write_text(json.dumps(raw))
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    assert r.returncode and "missing ASAP7 TT liberty" in r.stderr
+    assert "Traceback" not in r.stderr and not out.exists()

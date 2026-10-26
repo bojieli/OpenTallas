@@ -1162,6 +1162,13 @@ def write_verilog(cells, nets, ports, path):
 
 def cmd_build(a):
     P = S.Plan(S.load(a.plan))
+    if getattr(a, "rule_12_8", False):
+        if "layer_budget" not in P.die:
+            raise SystemExit(f"die_clock_mesh: {a.plan}: METHODOLOGY 12.8 requires an explicit die.layer_budget; "
+                             "schema defaults do not declare the die routing contract")
+        lib = Path(a.libdir) / "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz"
+        if not lib.is_file():
+            raise SystemExit(f"die_clock_mesh: missing ASAP7 TT liberty {lib}; supply --libdir")
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
