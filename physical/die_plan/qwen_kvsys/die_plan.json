@@ -841519,6 +841519,12 @@
       47.466,
       1481.814,
       851.094
+     ],
+     [
+      298.08,
+      246.24,
+      315.576,
+      264.072
      ]
     ],
     "tap_recentre": "sinks",
@@ -841541,6 +841547,11 @@
      [
       596.172,
       277.26,
+      1
+     ],
+     [
+      302.412,
+      251.34,
       1
      ]
     ]
@@ -841665,6 +841676,24 @@
        "width": 583
       }
      ]
+    },
+    {
+     "inst": "u_bound.u_dcal.u_profile",
+     "module": "ot_rom_64x32_m2",
+     "status": "new",
+     "origin_um": [
+      302.4,
+      250.56
+     ],
+     "outline_um": [
+      8.856,
+      9.192
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_rom_64x32_m2/ot_rom_64x32_m2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_rom_64x32_m2/ot_rom_64x32_m2_tt.lib",
+     "obs_max": "M4",
+     "note": "D-ROM-3b generated contents macro; noECC. Profile via map changes content only. Candidate placement; actual b19 scalar/cache logic cluster must stay nearby before route."
     }
    ],
    "internal_stations": [

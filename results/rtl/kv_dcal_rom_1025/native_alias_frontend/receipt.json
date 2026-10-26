@@ -1,0 +1,15 @@
+{
+  "gate": "PASS",
+  "frontend": "actual classic Yosys0.68 read_verilog -sv -defer; hierarchy -check",
+  "positive": "full generated functional alias and real child macro stubs elaborate with named metadata overrides",
+  "negative": "unknown metadata rejected with defparam error",
+  "input_hashes": {
+    "alias.sv": "53d35d28b7c0f48de8ed282e5f321c55a87a7f133a9b232cd4351f208931e5e2",
+    "image_bb.v": "bc04bd8bf385f146ec39bc201fc4dbfc597a842ec65f8c4106be196c1f6383e0",
+    "core.sv": "fd70f25cab5e3821bdc0e1daff17fac856c9ddb175a06a46d7a2c2f16a092db5",
+    "good.v": "7d511a5276f82530c1ad470e9cbd88708c899d0d4375ab85ba7a80944dafedc0",
+    "bad.v": "1aee641b64d6ee94f6ddc85cdb576e94f5fd7f486ad307ffe044661cf4cdc998"
+  },
+  "logic_cycles_views": "unchanged; only parameter metadata type declarations and fail-closed emitter match updated",
+  "prior_r1_checker": "TOOL-CHECK FAIL: grep expected parameter wording but actual rejection used defparam wording; original logs kept; positive frontend itself passed"
+}
