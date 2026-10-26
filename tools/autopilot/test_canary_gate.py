@@ -67,7 +67,28 @@ class Gate(unittest.TestCase):
     def test_newer_completed_canary_holds_kits_from_older_flow(self):
         self.runref('old','PASS');self.runref('new','PASS',src='new123456789')
         self.git=lambda args,**kw:(0,'tools/die_plan/gen_phys.py\n' if args[-2]=='new123456789' and args[-1]=='kit123456789' else '','')
-        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('differs from released canary new123456789',why)
+        # COORD 10-26 05:10: the older released canary (<= 24 h) of the kit's own flow now binds ...
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertTrue(ok,why);self.assertIn('not the newest',why)
+        # ... and the pre-ruling newest-only binding holds it
+        os.environ['AUTOPILOT_CANARY_NEWEST_ONLY']='1'
+        try:
+            ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('differs from released canary new123456789',why)
+        finally:
+            del os.environ['AUTOPILOT_CANARY_NEWEST_ONLY']
+    def test_any_canary_older_than_24h_does_not_bind(self):
+        old=self.runref('old','PASS');self.runref('new','PASS',src='new123456789')
+        t=os.path.getmtime(old/'canary.json')-25*3600;os.utime(old/'canary.json',(t,t))
+        self.git=lambda args,**kw:(0,'tools/die_plan/gen_phys.py\n' if args[-2]=='new123456789' and args[-1]=='kit123456789' else '','')
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('every completed canary <= 24 h old',why)
+    def test_same_flow_newer_failure_holds_even_with_older_pass(self):
+        import canary_gate
+        self.runref('old','PASS');self.runref('bad','FAIL',src='bad123456789')
+        orig=canary_gate.regression
+        canary_gate.regression=lambda r,*a,**k:('REGRESSION','x') if r['src']=='bad123456789' else ('NO-REGRESSION','ok')
+        try:
+            ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn("kit's flow REGRESSION",why)
+        finally:
+            canary_gate.regression=orig
     def test_fail_holds_and_correction_requires_known_path(self):
         p=self.runref('bad','FAIL');self.assertFalse(self.gate())
         self.row['canary_fix']='wrong@'+str(p.parent/'other/canary.json');self.assertFalse(self.gate())
