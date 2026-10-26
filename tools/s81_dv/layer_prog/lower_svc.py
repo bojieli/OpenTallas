@@ -331,6 +331,12 @@ class Job:
         if owner_epoch is not None and owner_epoch not in range(4):
             raise ValueError('Static allocation epoch outside two bits')
         self.owner = None if owner_epoch is None else (owner_epoch << 18) | (USER << 8) | tag
+        # TOK-DS-4 (10-26): attn.idx.newkey -- the IK_ROW frame (type 15) of this position's index key, ONLY on the
+        # rank whose key quarter holds it (lower_idx.quarter; L14: rank 3); a frame of THIS job (ot_s81_svc_job gate)
+        self.ik, self.t_ik = None, 0
+        if self.compressed and 'attn.idx.newkey' in ops and os.environ.get('OT_IDX_IK', '1') == '1':
+            import lower_idx
+            self.ik = lower_idx.ik_frame(fx, tag, mutant='ik_kb' if mutant == 'ik_kb' else None)
         self.frames = self._frames()
 
     # ------------------------------------------------------------------ q frames
@@ -393,6 +399,8 @@ class Job:
             # before the job's q frames passed is a fault -- measured bench_sot cal run, E done 2962 < last q 3001)
             fr += so_frames(tag, cos, sin, pvu, mutant='hm_shift' if mut == 'so_hm_shift' else None,
                             order=SO_ORDER)
+        if self.ik is not None:                       # TOK-DS-4: last frame, placed at >= attn.idx.newkey start
+            fr.append(('IK_ROW', list(self.ik)))
         return fr
 
     # ------------------------------------------------------------------ compressed rows: SEL_IDS + ROWS frames
@@ -471,6 +479,8 @@ class Job:
                 t = max(t, self.go + self.pvo + PV_LAT + (2 * NPVQ if self.allq else NPVQ) - 1 + SO_GAP)
             if name.startswith('SMJ_OP') and not any(k.startswith('SMJ_OP') for k in at):   # first operand frame:
                 t = max(t, at['SMJ_SO'] + 6 + SO_CS_LEAD - 1)
+            if name == 'IK_ROW':
+                t = max(t, self.t_ik)
             at[name] = t
             fw[name] = [(t + k, w) for k, w in enumerate(ws)]
             for k, w in enumerate(ws):
@@ -722,6 +732,7 @@ def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_bo
         attach_to_job(job, sot_booking)
     ag = _ages(die, bound_routes or os.environ.get('OT_SVC_BOUND_ROUTES') or None)
     t_own = int(np.ceil(_op_t(sched, 'attn.own_row_write', 'start') or 1805))
+    job.t_ik = int(np.ceil(_op_t(sched, 'attn.idx.newkey', 'start') or 0))
     t_q = int(np.ceil(_op_t(sched, 'attn.q_rope', 'end') or 3001))
     t_exp = int(np.ceil(_op_t(sched, 'attn.exp', 'end') or 3763))
     s = job.schedule(t_own, t_q, t_exp, ag['j_w'], ag['j_e'])
