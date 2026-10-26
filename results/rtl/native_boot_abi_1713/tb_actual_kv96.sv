@@ -8,8 +8,12 @@ module tb;
  genvar g; generate for(g=0;g<3;g=g+1) begin:G
  qkd_static_kv_boot_dispatch_mu_nc32 #(.MUT(0),.DIECFG(1),.NRST(43),.LINKCFG(1),.ESCFG(1),.DIECAP(1),.AGES(g==1),.MU(1),.WMUT(0),.SRQ(2),.DSTG(1)) dut(
  .ck(ck),.rst_n(rst_n),.boot_pr(pr[g]),.boot_image_target(4'd10),.boot_image_ready(ready),.boot_image_fault(1'b0),.boot_image_epoch(16'h0b0b),.boot_image_digest(64'h0),.execution_active(1'b0),.sink_applied({160{1'b1}}),.local_configured(3'b111),.sink_fault(1'b0),.diecfg_sealed(sealed[g]),.diecfg_fault(cfgfault[g]),.diecfg_we(cfgwe[g]),.diecfg_addr(addr[g]),.diecfg_data(data[g]),.fault(fault[g]),.fault_code(code[g]));
- qkd_kv_die_cfg_a_c32 #(.NRST(43),.CAP(1),.AGES(g!=2),.MUT(0)) cfg(
+ if(g==2)begin:old_receiver
+ qkd_kv_die_cfg_c32 #(.NRST(43),.CAP(1),.MUT(0)) cfg(.ck(ck),.por_n(rst_n),.cfg_we(cfgwe[g]),.cfg_addr(addr[g]),.cfg_data(data[g]),.sealed(sealed[g]),.fault(cfgfault[g]));
+ end else begin:native_receiver
+ qkd_kv_die_cfg_a_c32 #(.NRST(43),.CAP(1),.AGES(1),.MUT(0)) cfg(
  .ck(ck),.por_n(rst_n),.cfg_we(cfgwe[g]),.cfg_addr(addr[g]),.cfg_data(data[g]),.sealed(sealed[g]),.fault(cfgfault[g]),.age_attn(att[g]),.age_pv(pv[g]),.age_vport(vp[g]));
+ end
  end endgenerate
  wire lf,lw; wire[7:0] lc,la; wire[63:0] ld;
  qkd_static_kv_boot_dispatch_mu_nc32_legacy #(.MUT(0),.DIECFG(1),.NRST(43),.LINKCFG(1),.ESCFG(1),.DIECAP(1),.MU(1),.WMUT(0),.SRQ(2),.DSTG(1)) legacy(
