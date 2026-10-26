@@ -1,0 +1,13 @@
+DIFF c=12 y=00000000/00000001 e=0/0 v=0/0
+DIFF c=13 y=00000000/80000001 e=0/0 v=0/0
+DIFF c=14 y=00000000/007fffff e=0/0 v=0/0
+DIFF c=15 y=00000000/807fffff e=0/0 v=1/1
+DIFF c=16 y=00000000/00800000 e=0/0 v=1/1
+DIFF c=17 y=00000000/80800000 e=0/0 v=1/1
+DIFF c=18 y=00000000/3f800000 e=0/0 v=1/1
+DIFF c=19 y=00000000/bf800000 e=0/0 v=1/1
+ZERO_ARITH FAIL seed=3 cycles=100000 mis=24698 zero=50386 nonfinite=3133
+- tb.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.148 s; speed 1.350 ms/s
+- Verilator: cpu 0.148 s on 1 threads; allocated 7 MB
