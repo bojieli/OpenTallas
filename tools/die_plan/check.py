@@ -411,16 +411,17 @@ def check_faces(P, R, face_pins):
                     P.type_face(pt, df), [])) for pt, df in ends):
                 R.err("faces", f"port {pid}: {len(pr['layers'])} pin layers > {B['face_pin_layers']} "
                       "(more only on a face_layers face listed by both ends)", port=pid)
-        lo, hi = sorted(pr["window_um"])
         nl = len(pr["layers"])
-        for li, ln in enumerate(pr["layers"]):
-            if ln not in P.layers:
-                continue
-            nb = len(range(li, S.port_pins_count(pr), nl))
-            tr = max(1, S.usable_tracks(P.layers[ln], ln, lo, hi))     # tracks off the PG stripes (M5-M8)
-            if nb / tr > B["pin_track_max"] + EPS:
-                R.err("faces", f"port {pid}: {nb} pins on {tr} {ln} tracks = {nb / tr:.2f} > {B['pin_track_max']}",
-                      port=pid)
+        # PATH-KV-GRT2: a split port is checked per sub-window (each one is a plain window of its bits)
+        for lo, hi, nbits in (pr.get("subwindows_um") or [(*sorted(pr["window_um"]), S.port_pins_count(pr))]):
+            for li, ln in enumerate(pr["layers"]):
+                if ln not in P.layers:
+                    continue
+                nb = len(range(li, int(nbits), nl))
+                tr = max(1, S.usable_tracks(P.layers[ln], ln, lo, hi))     # tracks off the PG stripes (M5-M8)
+                if nb / tr > B["pin_track_max"] + EPS:
+                    R.err("faces", f"port {pid}: {nb} pins on {tr} {ln} tracks = {nb / tr:.2f} > "
+                          f"{B['pin_track_max']}", port=pid)
     worst.sort(reverse=True)
     return [dict(part=p, face=f, pins_per_um=round(v, 3)) for v, p, f in worst[:10]]
 

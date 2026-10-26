@@ -1,0 +1,6 @@
+ERROR [faces] hgi_WN_7.W: 132 pins in the 10-um window at 14751.14 (13.20/um > 6)
+ERROR [faces] hgi_WN_7.E: 69 pins in the 10-um window at 14001.43 (6.90/um > 6)
+ERROR [faces] hgi_WN_7.N: 123 pins in the 10-um window at 3441.18 (12.30/um > 6)
+ERROR [faces] hgi_WN_7.S: 122 pins in the 10-um window at 3426.27 (12.20/um > 6)
+G0C per type: 40/40 types clean (G3-eligible: 40); die-level {}; reported as WARN (run --completeness)
+G0 FAIL: 4 errors, 1367 warnings; 40 types / 160 partitions (0 in near-duplicate groups); worst cut {'ratio': 0.1302, 'at': 'vertical@6750'}, worst partition segment {'ratio': 0.5554, 'at': 'horizontal@25250:hgi_WN_0'}; report /srv/opentallas-scratch2/claude/path-kv-grt2/g0base/g0/g0_report.json

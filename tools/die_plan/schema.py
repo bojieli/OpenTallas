@@ -503,6 +503,12 @@ SCHEMA = {
                            "kind": {"enum": list(KINDS)}, "face": {"enum": list(FACES)},
                            "layers": {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3},
                            "window_um": {"type": "array", "items": _num, "minItems": 2, "maxItems": 2},
+                           # PATH-KV-GRT2 10-25 (bit-level channel split): the bus pins sit in several sub-windows
+                           # [lo, hi, nbits] (die frame, ascending bits in list order; window_um = their envelope),
+                           # e.g. one wide N-S ft bus spread over several core-free channel mouths of a cored column.
+                           # Same bus, lane, stations and RTL; only the pin geometry differs.
+                           "subwindows_um": {"type": "array", "minItems": 2, "items": {
+                               "type": "array", "items": _num, "minItems": 3, "maxItems": 3}},
                            "order": {"enum": ["lsb_low", "lsb_high"]}, "epoch": {"type": "boolean"},
                            "note": {"type": "string"}}}},
         "lanes": {"type": "array", "items": {
@@ -1352,6 +1358,23 @@ def pin_positions(port, layers):
     [lo, hi] at an integer multiple of that layer's track pitch, snapped to offset + k * pitch.  Both partitions of a
     face use this same function, so their pins coincide by construction.  Raises ValueError if the window cannot hold
     the bits on whole tracks."""
+    subs = port.get("subwindows_um")
+    if subs:
+        # bit-level channel split: bits in list order over the sub-windows, each spread as a plain window
+        w = port_pins_count(port)
+        if sum(int(n) for _, _, n in subs) != w:
+            raise ValueError(f"port {port['id']}: subwindows_um carry {sum(int(n) for _, _, n in subs)} bits, "
+                             f"port has {w}")
+        rev = port.get("order", "lsb_low") == "lsb_high"
+        seq = list(reversed(subs)) if rev else list(subs)
+        out, b0 = [], 0
+        for lo_, hi_, n in seq:
+            sub = {k: v for k, v in port.items() if k != "subwindows_um"}; sub["epoch"] = False
+            sub.update(window_um=[lo_, hi_], width=int(n))
+            out += [(b0 + b, ln, c) for b, ln, c in pin_positions(sub, layers)]
+            b0 += int(n)
+        out.sort()
+        return out
     lo, hi = sorted(port["window_um"])
     names = port["layers"]
     w = port_pins_count(port)

@@ -1,0 +1,13 @@
+ERROR [abutment] hgi_WN_7.S M5: ports L2045_12 and L663_0 share track 3785.352
+ERROR [abutment] hgi_WN_7.S M7: ports L2045_12 and L663_0 share track 3786.464
+ERROR [abutment] hub_Wi.N M5: ports L2045_12 and L663_0 share track 3785.352
+ERROR [abutment] hub_Wi.N M7: ports L2045_12 and L663_0 share track 3786.464
+ERROR [faces] hgi_WN_7.W: 132 pins in the 10-um window at 14751.14 (13.20/um > 6)
+ERROR [faces] hgi_WN_7.E: 69 pins in the 10-um window at 14001.43 (6.90/um > 6)
+ERROR [faces] hgi_WN_7.N: 101 pins in the 10-um window at 3493.02 (10.10/um > 6)
+ERROR [faces] hgi_WN_7.S: 210 pins in the 10-um window at 3804.00 (21.00/um > 6)
+ERROR [faces] hub_Wi.N: 210 pins in the 10-um window at 3804.00 (21.00/um > 12.2)
+ERROR [hops] lane L2048: hop 9 is 430 um > reach 405 (add stations to the crossed partition's slot or shorten it)
+ERROR [stations] type kv3_io_cor slot ft19: 1720 um route / 4 station(s) = 430 um > ft_station_max_um 405 (R3: add stations)
+G0C per type: 37/40 types clean (G3-eligible: 37); die-level {}; ERRORs
+G0C FAIL: 14 errors, 1367 warnings; 40 types / 160 partitions (0 in near-duplicate groups); worst cut {'ratio': 0.1302, 'at': 'vertical@6750'}, worst partition segment {'ratio': 0.5554, 'at': 'horizontal@25250:hgi_WN_0'}; report /srv/opentallas-scratch2/claude/path-kv-grt2/v39w/g0c/g0_report.json
