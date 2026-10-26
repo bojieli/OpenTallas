@@ -32,7 +32,7 @@
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbf_q00_s2": {
    "cells": 790489,
@@ -42,7 +42,7 @@
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbf_q01": {
    "cells": 787914,
@@ -52,7 +52,7 @@
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbf_q01_s2": {
    "cells": 787914,
@@ -62,7 +62,7 @@
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbf_q11": {
    "cells": 784309,
@@ -72,7 +72,7 @@
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbn_q00": {
    "cells": 790489,
@@ -82,7 +82,7 @@
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbn_q01": {
    "cells": 787914,
@@ -92,7 +92,7 @@
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbn_q11": {
    "cells": 784309,
@@ -102,7 +102,7 @@
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbx_q10": {
    "cells": 782764,
@@ -112,7 +112,7 @@
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "coll_core": {
    "cells": 120000,
@@ -662,7 +662,7 @@
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbf_q01_nb12d11": {
    "cells": 788429,
@@ -672,7 +672,7 @@
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbf_q11_na22d2": {
    "cells": 783794,
@@ -682,7 +682,7 @@
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbn_q00_xb10d1_na00d16": {
    "cells": 791521,
@@ -692,7 +692,7 @@
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbn_q00_xb00d1": {
    "cells": 791006,
@@ -702,7 +702,7 @@
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbn_q01_nb12d11": {
    "cells": 788429,
@@ -712,7 +712,7 @@
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbn_q11_na22d2": {
    "cells": 783794,
@@ -722,7 +722,7 @@
     2617.92
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbx_q10_xb30d1": {
    "cells": 783281,
@@ -732,7 +732,7 @@
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   },
   "cbx_q10_xb30d2": {
    "cells": 783798,
@@ -742,7 +742,7 @@
     2609.28
    ],
    "macros": 4,
-   "basis": "MODEL base-family flat cells plus actual phase payload+epoch FFs; clock/buffer overhead and soft synthesis still required"
+   "basis": "CONSERVATIVE MODEL: base-family flat cells plus derived whole-port payload+epoch FF budget; actual bound DAG uses payload-only u_pd, fresh mapped census required"
   }
  },
  "su_core_cells": {
