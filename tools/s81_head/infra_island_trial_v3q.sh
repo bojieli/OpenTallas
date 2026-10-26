@@ -8,7 +8,7 @@ docker run --rm --name $N --cpus=16 --memory=${MEM}g --memory-swap=${MEM}g -v "$
 source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; cd /OpenROAD-flow-scripts/flow
 M="make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=16"
 R=/work/run/results/asap7/'$NICK'/base
-$M synth && ODB_IN=$R/1_synth.odb openroad -exit /work/patch_synth.tcl && cp /work/constraint_pd.sdc $R/1_synth.sdc && touch $R/1_synth.odb $R/1_synth.sdc && $M cts' > $K/trial.log 2>&1
+if [ -f $R/2_1_floorplan.odb ]; then true; else $M synth && ODB_IN=$R/1_synth.odb openroad -exit /work/patch_synth.tcl && cp /work/constraint_pd.sdc $R/1_synth.sdc && touch $R/1_synth.odb $R/1_synth.sdc; fi && $M cts' > $K/trial.log 2>&1
 rc=$?; echo "FLOW rc=$rc" >> $K/trial.log
 ODB=$K/run/results/asap7/$NICK/base/4_cts.odb
 [ -f "$ODB" ] || { echo "NO 4_cts"; exit $rc; }
