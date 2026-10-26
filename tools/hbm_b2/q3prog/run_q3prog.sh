@@ -17,6 +17,10 @@ sha256sum -c tools/hbm_b2/q3sync/q3_producer_native.sha256 > "$D/asm_sha.log" 2>
 # programme: actual argmax_rows compiler, q3 profile VM_RT81 ROWS256 NPT3, argmax_m_tp192_pr contract
 python3 -I tools/hbm_coll_static/argmax_rows.py "$D/prog" --P $P --vm-rt 81 --rows 256 --npt 3 --start-reg --arg-pr-source \
   > "$D/compile.log" 2>&1 || { cat "$D/compile.log"; echo "Q3PROG compile FAIL"; exit 2; }
+# structural assembly fix: drop the split_asm alias loops (parent assign port = internal that reverses an alias drive)
+python3 -I tools/hbm_b2/q3prog/q3_asm_alias_loops.py $ASM "$D/ot_hbm_q3_producer_native.sv" "$D/alias_loops.json" > "$D/alias_loops.log" 2>&1 \
+  || { cat "$D/alias_loops.log"; echo "ALIAS LOOP FIX FAIL"; exit 2; }
+ASMF=$D/ot_hbm_q3_producer_native.sv
 NR=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['parents']['d0q0']['rows'])" "$D/prog/manifest.json")
 mac=$(python3 -c "
 import json;c=json.load(open('$CEN'));s=[]
@@ -25,7 +29,7 @@ print(' '.join(s))")
 if [ $MODE = sync ]; then
   python3 -I tools/hbm_b2/q3sync/q3_sync_profile.py --root . --files tools/hbm_b2/q3sync/q3b.files --out "$D/gen" \
      --census "$D/census_regen.json" > "$D/gen.log" 2>&1 || { echo "GEN FAIL"; exit 2; }
-  python3 -I tools/hbm_b2/q3sync/q3_assembly_sync.py --asm $ASM --census $CEN --gen "$D/gen" \
+  python3 -I tools/hbm_b2/q3sync/q3_assembly_sync.py --asm $ASMF --census $CEN --gen "$D/gen" \
      --out "$D/ot_hbm_q3_producer_native__q3sync.sv" --report "$D/asm_sync.json" > "$D/asm_sync.log" 2>&1 \
      || { cat "$D/asm_sync.log"; exit 2; }
   files=$(python3 -c "
@@ -39,7 +43,7 @@ import json;c=json.load(open('$CEN'));fl=set(f for k in c['core_filelists'] for 
 s=[]
 [s.append(e['source']) for e in c['emitted'] if e['emitted'] in fl and e['source'] not in s]
 print(' '.join(s))")
-  files="$ASM $files"; DEF=+define+DUT=ot_hbm_q3_producer_native
+  files="$ASMF $files"; DEF=+define+DUT=ot_hbm_q3_producer_native
 fi
 log=$D/sim.log
 echo "# $(date) host=$(hostname) commit=$(git rev-parse HEAD) mode=$MODE P=$P NR=$NR WARMAT=$WARMAT HOLD=$HOLD" > $log
