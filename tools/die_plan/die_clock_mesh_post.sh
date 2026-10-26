@@ -5,6 +5,7 @@
 # mesh linear-RC transient driven by the routed tree arrivals, OpenSTA stub->tap, then the related-pair report.
 set -e
 O=$(readlink -f $1); PLAN=$2; T=$(cd $(dirname $0) && pwd)
+NDRW=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['meta']['ndr'].rstrip('w'))" $O/mesh.json)
 # needs numpy + scipy on PYTHONPATH
 for c in ${CORNERS:-TT FF}; do
   python3 $T/die_clock_mesh.py mesh $O --corner $c
@@ -19,7 +20,7 @@ with open(src) as f, open(dst, "w") as g:
         if name in keep: g.writelines(lines); n += 1
 print("stub nets", n)
 PY
-  python3 $T/restore_clock_spef_caps.py $O/stubnative_$c.spef --out $O/stubs_$c.spef --width 4
+  python3 $T/restore_clock_spef_caps.py $O/stubnative_$c.spef --out $O/stubs_$c.spef --width $NDRW
   docker run --rm --name ckmesh-sta-$(basename $O)-$c-$$ --cpus=4 --memory=16g --memory-swap=16g -v $O:/out openroad/orfs:latest \
     bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; sta -no_init -exit /out/stubs_$c.tcl > /out/stubs_$c.log 2>&1; chown -R $(id -u):$(id -g) /out"
   tail -3 $O/stubs_$c.log
