@@ -8,9 +8,11 @@ hcx_resident_image.py (codex/s81-hc-home-1014) generalised from one row to 24 an
 via column bit*8+addr%8 of mask row (addr&4095)//8 of page addr>>12. No coefficient is altered or compressed.
 --check-row0 DIR compares row 0 against an existing single-row image (hcx_r0_b*_l*_p*.viamap.hex).
 """
-import argparse, hashlib, json
+import argparse, hashlib, json, sys
 from pathlib import Path
 import numpy as np
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from mem_compiler.rom_content import write_viamap
 
 
 def load(src):
@@ -28,8 +30,8 @@ def sets(root):
 
 
 def build(root, out, rows):
-    # masks[row][bank][m][page] : bool [512, 2128]
-    masks = {(r, b, m, p): np.zeros((512, 2128), np.uint8) for r in rows for b in range(8) for m in range(4) for p in range(2)}
+    # Logical256-bitpayload words; the existing266-bitmacro keeps its10unusedbitszero.
+    masks = {(r, b, m, p): np.zeros((4096, 32), np.uint8) for r in rows for b in range(8) for m in range(4) for p in range(2)}
     src_rec = []
     for layer, src in sets(root):
         rom, cases = load(src)
@@ -43,20 +45,16 @@ def build(root, out, rows):
                     for m in range(4):
                         pay = [rom[bs + 4 + (8 * r + bank) * 320 + run * 4 + m] for run in range(80)]
                         by = np.frombuffer(b''.join(p.to_bytes(32, 'little') for p in pay), np.uint8).reshape(80, 32)
-                        bits = np.unpackbits(by, axis=1, bitorder='little')          # [80, 256]
                         for run in range(80):
-                            nz = np.nonzero(bits[run])[0]
-                            if nz.size:
-                                masks[(r, bank, m, int(pg[run]))][low[run] // 8, nz * 8 + low[run] % 8] = 1
+                            masks[(r,bank,m,int(pg[run]))][int(low[run])] = by[run]
         print(f'HCX_RANK_IMAGES set {layer} {src.name} done', flush=True)
     out.mkdir(parents=True, exist_ok=True)
     digests = {}
     for (r, bank, m, p), arr in masks.items():
         name = f'hcx_r{r // 6}_p{r % 6}_b{bank}_l{m}_p{p}.viamap.hex'
-        packed = np.packbits(arr, axis=1, bitorder='little')                       # [512, 266] bytes
-        text = ''.join(f'{int.from_bytes(row.tobytes(), "little"):0532x}\n' for row in packed)
-        (out / name).write_text(text)
-        digests[name] = hashlib.sha256(text.encode()).hexdigest()
+        words=[int.from_bytes(row.tobytes(),"little") for row in arr]
+        rec=write_viamap(out/name,words,'ot_rom_4096x266_m8')
+        digests[name] = rec['viamap_sha256']
     (out / 'rank_image_manifest.json').write_text(json.dumps(dict(
         rows=list(rows), row_of_leaf='6*rank+leaf', sets=43, macro='ot_rom_4096x266_m8', macros=64 * len(rows),
         native_addresses=[0, 80 * 86 - 1], sources=src_rec, sha256=digests), indent=2) + '\n')
