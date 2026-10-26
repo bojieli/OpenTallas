@@ -1,0 +1,5 @@
+2026-10-25 21:50 PDT CODEX E5 macro clock co-leaf topology
+Image: results/geom_review/e5_macro_coleaf_2144/plan.png (viewed)
+Input: immutable CTS04b actual4_cts.odb; 15 macro CK pins and existing own-interface clock leaf drivers from OpenDB; existing placed data/PG unchanged.
+Findings: each macro remains on the SAME density tap as before and shares a driver with6..20 of its own interface registers. All additional final clock branches are compact5.5..45.0um (13/15 below10um); no new buffer rows, placement, stage transport or PDN cuts. The SRAM b0/b1 CK pins need41/45um vertical final segments, which require real routed RC/slew check. The pictured elbows illustrate length, not a prescribed layer route. Existing whole-core trunk snaking and seven slew violations remain outside this isolated correction.
+Verdict PASS-COND for isolated read-only GRT/STA diagnostic only. No production route/signoff authorized by this record. Conditions: actual GRT0, macro CK versus own interface<=20ps TT/FF, no new slew/hold regression. Missing same-tap candidate fails closed. Added data cycles0; no logic/source RTL change.

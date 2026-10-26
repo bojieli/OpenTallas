@@ -1,0 +1,16 @@
+macro	old_net	new_net	driver	wire_um	interface_regs	macro_x_dbu	macro_y_dbu	driver_x_dbu	driver_y_dbu
+u_lkp.u_e.u_row_a	clknet_1_0__leaf_ot_dtap_net_115	clknet_4_5__leaf_ot_dtap_net_115_regs	clkbuf_4_5__f_ot_dtap_net_115_regs	6.727	15	194412.0	87180.0	188930.0	88425.0
+u_lkp.u_e.u_row_e	clknet_1_0__leaf_ot_dtap_net_112	clknet_leaf_7_ot_dtap_net_112_regs	clkbuf_leaf_7_ot_dtap_net_112_regs	9.643	20	34572.0	26700.0	28604.0	30375.0
+u_lkp.u_e.u_row_o	clknet_1_0__leaf_ot_dtap_net_109	clknet_leaf_7_ot_dtap_net_109_regs	clkbuf_leaf_7_ot_dtap_net_109_regs	9.049	20	216012.0	26700.0	210908.0	30645.0
+u_win.u_h	clknet_1_0__leaf_ot_dtap_net_107	clknet_4_1__leaf_ot_dtap_net_107_regs	clkbuf_4_1__f_ot_dtap_net_107_regs	7.093	8	194412.0	136908.0	187472.0	136755.0
+u_win.u_map.m\[0\].rom	clknet_1_0__leaf_ot_dtap_net_106	clknet_1_1__leaf_ot_dtap_net_106_regs	clkbuf_1_1__f_ot_dtap_net_106_regs	7.483	7	30252.0	87180.0	24014.0	88425.0
+u_win.u_map.m\[1\].rom	clknet_1_0__leaf_ot_dtap_net_105	clknet_1_1__leaf_ot_dtap_net_105_regs	clkbuf_1_1__f_ot_dtap_net_105_regs	5.521	7	30252.0	150108.0	25148.0	150525.0
+u_win.u_map.m\[2\].rom	clknet_1_0__leaf_ot_dtap_net_104	clknet_1_1__leaf_ot_dtap_net_104_regs	clkbuf_1_1__f_ot_dtap_net_104_regs	7.771	7	30252.0	221676.0	23960.0	223155.0
+u_win.u_map.m\[3\].rom	clknet_1_0__leaf_ot_dtap_net_103	clknet_1_0__leaf_ot_dtap_net_103_regs	clkbuf_1_0__f_ot_dtap_net_103_regs	7.045	6	30252.0	284604.0	24716.0	283095.0
+u_win.u_map.m\[4\].rom	clknet_1_0__leaf_ot_dtap_net_102	clknet_1_1__leaf_ot_dtap_net_102_regs	clkbuf_1_1__f_ot_dtap_net_102_regs	7.321	7	99372.0	87180.0	93836.0	88965.0
+u_win.u_map.m\[5\].rom	clknet_1_0__leaf_ot_dtap_net_101	clknet_1_1__leaf_ot_dtap_net_101_regs	clkbuf_1_1__f_ot_dtap_net_101_regs	7.117	7	99372.0	150108.0	94268.0	148095.0
+u_win.u_map.m\[6\].rom	clknet_1_0__leaf_ot_dtap_net_100	clknet_1_1__leaf_ot_dtap_net_100_regs	clkbuf_1_1__f_ot_dtap_net_100_regs	6.745	6	99372.0	221676.0	94106.0	223155.0
+u_win.u_map.m\[7\].rom	clknet_1_0__leaf_ot_dtap_net_99	clknet_1_1__leaf_ot_dtap_net_99_regs	clkbuf_1_1__f_ot_dtap_net_99_regs	6.889	7	99372.0	284604.0	93944.0	286065.0
+u_xq.u_b0	clknet_1_0__leaf_ot_dtap_net_95	clknet_3_0__leaf_ot_dtap_net_95_regs	clkbuf_3_0__f_ot_dtap_net_95_regs	41.335	6	194412.0	261660.0	188282.0	296865.0
+u_xq.u_b1	clknet_1_0__leaf_ot_dtap_net_94	clknet_2_0__leaf_ot_dtap_net_94_regs	clkbuf_2_0__f_ot_dtap_net_94_regs	45.007	7	194412.0	348060.0	187040.0	385695.0
+u_xq.u_wl	clknet_1_0__leaf_ot_dtap_net_91	clknet_leaf_22_ot_dtap_net_91_regs	clkbuf_leaf_22_ot_dtap_net_91_regs	7.801	19	194412.0	175260.0	189146.0	177795.0

@@ -296,6 +296,10 @@ proc ::ot_dtsh::cts {args} {
     rsz::repair_net_cmd [sta::db_net_to_sta $net] $max_wire 0 0
   }
   bind_new_pg
+  if {[info exists ::env(OT_DTSH_MACRO_COLEAF)] && $::env(OT_DTSH_MACRO_COLEAF) eq "1"} {
+    source /work/macro_clock_coleaf.tcl
+    ::ot_macro_coleaf::apply /work/macro_clock_coleaf.tsv
+  }
   set skip_orig 0
   if {[info exists ::env(OT_DTSH_CL_SINK)] && $::env(OT_DTSH_CL_SINK) eq "1"} {
     variable cl_args
