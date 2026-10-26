@@ -1,0 +1,7 @@
+2026-10-26 00:10 PDT CLOCK-RESET e5-spine: geometry model only (no CTS/GRT run). Input: e5_eq kit shallow/ot_dtsh_geometry.tsv (corridors placement 3_place 40988e77, 1123 equal-depth taps).
+Macros obstruct M1-M4 only -> M4 horizontals restricted to channel rows (y 15/76/132/170/216/261/300/356/400/452), M5 verticals may cross macros.
+Spine x=166 (column 137.4-194.4), driven from midpoint M=(166,233.5); private equal-stage legs per level; hubs <=8 taps (210).
+R100: reps lead/spine/rib/tap 2/2/2/0, 10 stages for every tap, 1786 BUFx24; wire 262-647 um (spread 385); Elmore est (assumed cell params) spread 52 ps.
+R60 : 4/3/4/0, 15 stages, 2218 BUFx24; wire spread 385; Elmore spread 43 ps.
+Finding: any snake-free tree from one drive point has wire spread >= max-min Manhattan(M,tap) ~= 380 um here; <=40 um is reachable only with balancing wire (banned) or H-tree geometry (failed, trial A). Equal stage count + short segments bound the delay spread instead.
+Open: spine points 216 (54 rib legs) and 76 (34) need rib sub-points (<=12 legs per island) before CTS.
