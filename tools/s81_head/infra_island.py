@@ -155,12 +155,12 @@ set ii_t [ord::get_db_tech]
 set ii_u [$ii_t getDbUnitsPerMicron]
 proc ii_d {{v}} {{ return [expr {{round($v * $::ii_u)}}] }}
 set ii_pb [odb::dbBlockage_create $ii_b [ii_d {k[0]}] [ii_d {k[1]}] [ii_d {k[2]}] [ii_d {k[3]}]]
-puts "INFRA_ISLAND placement keep-out {k}"
+puts "INFRA_ISLAND placement keep-out {' '.join(str(v) for v in k)}"
 foreach ln {{M2 M3 M4 M5}} {{
   set l [$ii_t findLayer $ln]
   odb::dbObstruction_create $ii_b $l [ii_d {h[0]}] [ii_d {h[1]}] [ii_d {h[2]}] [ii_d {h[3]}]
 }}
-puts "INFRA_ISLAND route obstruction M2-M5 {h}"
+puts "INFRA_ISLAND route obstruction M2-M5 {' '.join(str(v) for v in h)}"
 """
 
 
