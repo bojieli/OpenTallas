@@ -565,6 +565,11 @@ class Binder:
         self.G = Graph(self.F, self.R, self.errors)
         self.parts = {p["name"]: dict(p) for p in plan["partitions"]}
         self.types = {k: dict(v) for k, v in plan["partition_types"].items()}
+        import dead_inputs
+        try:
+            self.proven_dead = dead_inputs.ProvenDead(self.ab, E.REPO)
+        except ValueError as exc:
+            raise BindError(str(exc)) from exc
         self.findings, self.type_splits = [], []
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
@@ -1000,6 +1005,10 @@ class Binder:
                 cnt["internal_primitive_literals"] += 1
                 return ("literal", s[1])
             pin = f"{self.F.cells[ci].path}.{pn}"
+            if self.proven_dead.allows(self.parts[p]["type"], cell, pn, i,
+                    self.param_defaults.get((cell.ytype, cell.module), {})):
+                cnt["proven_dead"] += 1
+                return ("literal", s[1])
             if self.R.is_strap(pin):
                 cnt["strap"] += 1
                 return ("strap", s[1])
