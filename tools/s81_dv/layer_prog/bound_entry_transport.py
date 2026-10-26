@@ -3,11 +3,63 @@
 from __future__ import annotations
 import argparse
 import json
+import re
 from pathlib import Path
 
 # Explicit production XR output fields. Local XR decode and VP execution are
 # separate measured stages; these records price only actual bound transport.
 FIELDS=(('c_v',1),('c_d',160),('sw_v',1),('sw_a',10),('sw_m',8),('sw_d',256))
+
+
+class BufferSinks:
+    """Exact combinational $buf A[i]→Y[i], preserving each bound segment."""
+    def __init__(self, raw, interfaces):
+        self.raw=raw;self.interfaces=interfaces;self.cache={};self.proofs={};self.active=set()
+
+    @staticmethod
+    def width(meta):
+        if meta.get('module')!='$buf' or meta.get('kind')!='glue':return None
+        ports=meta.get('ports',{})
+        if set(ports)!= {'A','Y'} or ports['A']['dir']!='input' or ports['Y']['dir']!='output':
+            raise ValueError('selected $buf interface changed')
+        width=ports['A']['width']
+        if type(width) is not int or width<=0 or width!=ports['Y']['width']:
+            raise ValueError('selected $buf width differs')
+        return width
+
+    def get(self,key,default=None):
+        if key in self.cache:return self.cache[key]
+        value=self.raw.get(key,default)
+        if key in self.active:raise ValueError('cycle through source $buf boundaries: '+key)
+        if isinstance(value,list) and len(value)==4 and value[0]=='pin':
+            m=re.fullmatch(r'(.+)\.Y\[(\d+)\]',value[1])
+            if m:
+                width=self.width(self.interfaces.get(m[1],{}))
+                if width is not None:
+                    bit=int(m[2])
+                    if bit>=width:raise ValueError('$buf bit exceeds selected interface')
+                    self.active.add(key)
+                    try:up=self.get(m[1]+'.A['+str(bit)+']')
+                    finally:self.active.remove(key)
+                    if not isinstance(up,list) or len(up)!=4 or up[0]!='pin':
+                        raise ValueError('source $buf input has no exact bound pin: '+m[1])
+                    if any(type(v) is not int or v<0 for v in (value[2],up[2])):
+                        raise ValueError('source $buf chain has no exact stage count')
+                    self.proofs[key]=dict(buffer=m[1],bit=bit,width=width,downstream=value,upstream=up)
+                    value=['pin',up[1],value[2]+up[2],bool(value[3] or up[3])]
+        self.cache[key]=value
+        return value
+
+
+def enable_buffer_stitching(die):
+    from layer_prog.bound_die import object_items
+    wanted={p for ps in die.inventory['input_pins'].values() for p in ps}
+    interfaces=die.inventory['leaf_interfaces']
+    for name,meta in interfaces.items():
+        width=BufferSinks.width(meta)
+        if width is not None:wanted.update(f'{name}.A[{i}]' for i in range(width))
+    raw={k:v for k,v in object_items(die.bound/'bind_sinks.json') if k in wanted}
+    die.sinks=BufferSinks(raw,interfaces)
 
 
 def collect(die):
@@ -45,6 +97,7 @@ def collect(die):
         die_sha256=die.die_sha,source_asbuilt_sha256=die.inventory['source_asbuilt_sha256'],
         leaves=rows,legacy_geometry_used=False,legacy_dl_depth_used=False,
         scope='XR output pin event to actual VP input pin event; local decode/commit/execution and reset/clock phase remain separate',
+        transparent_buffer_proofs=getattr(die.sinks,'proofs',{}),
         readiness_qualified=False,native_job_sealed=False,full_token=False,added_rtl_cycles=0)
 
 
@@ -54,7 +107,9 @@ def main():
     for name in ('bound','inventory','out'):ap.add_argument('--'+name,type=Path,required=True)
     a=ap.parse_args()
     if a.out.exists():raise ValueError('preserve prior verdict; use a fresh output')
-    rec=collect(BoundDie(a.bound,a.inventory))
+    die=BoundDie(a.bound,a.inventory)
+    enable_buffer_stitching(die)
+    rec=collect(die)
     a.out.write_text(json.dumps(rec,indent=1)+'\n')
     print(json.dumps(dict(verdict=rec['verdict'],leaves=len(rec['leaves']),blocked=sum(r['status']!='PASS' for r in rec['leaves']))))
     return 0 if rec['verdict']=='PASS_BOUND_TRANSPORT' else 2
