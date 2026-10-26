@@ -96,7 +96,8 @@ for line in open(geo):
     if f and f[0] == "MACRO":
         rr = tuple(map(float, f[3:7]))
         px, py = float(f[8]), float(f[9])
-        face = "N" if abs(py - rr[3]) < 1e-3 else ("S" if abs(py - rr[1]) < 1e-3 else "EW")
+        # 0.03 um: a PLACED-geometry dump gives the clk pin RECT centre (LEF rect 0.024 tall at the edge -> 0.012 inside)
+        face = "N" if abs(py - rr[3]) < 0.03 else ("S" if abs(py - rr[1]) < 0.03 else "EW")
         ckpins.append(dict(inst=f[1], master=f[2], xy=(px, py), face=face, rect=rr))
 keepout = []
 for p in ckpins:
@@ -574,6 +575,18 @@ try:
     _g1v = "PASS" if _g1 and all(m["off_track"] == 0 for m in _g1) else "FAIL"
 except (OSError, KeyError, ValueError, StopIteration) as _e:
     _g1v, _g1 = "FAIL", [dict(error=repr(_e))]
+# ---- G5 SRAM structure (GEOM-REVIEW-4 addendum, column-view form): no tree node (island centre, driver, repeater) in an
+# SRAM clock-pin column (the N/S-face keep-out above), none inside a macro; legs are maze paths with macros + 2.2 um halo
+# blocked, so no leg crosses an SRAM.  (The r3 su_kit_gate G5 puts the pin column BESIDE the E/W macro edge -- the m2
+# view pin face -- which is not the column-view pin face.)
+_g5n = [(n_, xy(v_[1])) for n_, v_ in nodes.items()] + [(i_["island"], ((i_["rect_um"][0] + i_["rect_um"][2]) / 2,
+        (i_["rect_um"][1] + i_["rect_um"][3]) / 2)) for i_ in g2 if "rect_um" in i_]
+_g5c = [dict(node=n_, xy=[round(q_[0], 3), round(q_[1], 3)]) for n_, q_ in _g5n if in_keepout(*q_)]
+_g5m = [dict(node=n_, xy=[round(q_[0], 3), round(q_[1], 3)]) for n_, q_ in _g5n
+        if any(r_[0] < q_[0] < r_[2] and r_[1] < q_[1] < r_[3] for _, r_ in macros)]
+rep["gates"]["G5_sram_structure"] = dict(verdict="PASS" if keepout and not _g5c and not _g5m else "FAIL",
+    pin_columns_um=[[round(v_, 3) for v_ in q_] for q_ in keepout], nodes_checked=len(_g5n), nodes_in_pin_column=_g5c,
+    nodes_in_macro=_g5m, legs_across_sram="0 by construction (maze legs, macros + halo blocked)")
 rep["gates"] = dict(G1_macro_pin_track=dict(verdict=_g1v, macros=_g1), **rep["gates"])
 rep["verdict"] = "PASS" if all(v["verdict"] == "PASS" for v in rep["gates"].values()) else "FAIL"
 Path(outp + ".json").write_text(json.dumps(rep, indent=1))
