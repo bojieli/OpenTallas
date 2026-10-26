@@ -84,3 +84,6 @@ NEXT: (1) COORD merge allowlist READY; FLOW-CANARY carries the gate hook in the 
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: Allowlist211186de1 merged; D-ROM-3 deadKV images proof DONE. Jobs: No inherited jobs. Next: shared_flow owns gate hook at next tag; token/physical own approved KV/QC calendar ROM batch. Failure disposition: QC images LIVE and need real generated ROM; declarations hash compiled content.
+
+## CODEX notes 2026-10-25 22:05 PDT
+D-ROM-3b IMPLEMENTED on codex/kv-dcal-rom-1025@b864829e91 (pushed, new files only). One generated64x32m2 shape and uniform BC4 controller, all schedule content via maps; dead TX/RX images absent. Actual pair1024 and MU component lockstep each1.5M edges0diff/all36layers; content mutants caught8/12diff. Existing cal_ready74 preserved; added boot/production cycles0. Macro81.404um2 plus256 cached scalar bits; physical timing/standard-cell area pending new sys_c kit. Immutable recipe install hook checked; root merging, PATH-KV bind child adopts next fresh cohort.

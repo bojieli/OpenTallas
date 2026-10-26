@@ -922,3 +922,5 @@ CODEX: 2026-10-25 21:58 PDT CP1 root-reset missing CDC exception fixed6e670692d,
 CODEX: 2026-10-25 22:0x PDT QC: ROW_WRITE_RELAY2f2aed71b exact+mutant PASS and place35%util; halfcyclec52b21f5e exact consumed-writePASS+wrongedgecaught,+0cycles,+1056/950fallFF, nativeDFFL exists, placement-onlyactive; N59/FE/A0structural successorsowned.
 CODEX: 2026-10-25 22:01 PDT QC-A0 selected MODE3 missing noFP1 child/native-fault blocker diagnosed; unreferenced synchronous LSL successor821ddef85 +1boot/+1fault0data exact19979checks+mutant PASS; OWNER? plain logged, no P&R/adoption.
 CODEX: 2026-10-25 22:02 PDT lint exacttop-parameterfixREADY66b5af5ed (5tests+4realYosyscontrolsPASS); broadMCMM20b6heldafteractualtwo-sceneholdfailure; smallsequentialcornerprooflive. HCPLstructuralstallsrecorded5b66, onlyowncontainersstopped.
+
+CODEX: 2026-10-25 22:05 PDT D-ROM-3b actual uniform KV ROM controller READY b864829e91; pair1024+MU each1.5M-edge exact+mutant PASS, all36layers, boot/production+0, macro81.404um2. Next fresh PATH-KV bind+macro placement/re-kit.

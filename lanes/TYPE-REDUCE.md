@@ -44,3 +44,6 @@ CODEX remaining-lanes takeover: TR3-KV6LECs EQ,4miters PASS+mutant CAUGHT; TR3-H
 
 ## CODEX notes 2026-10-25 21:51 PDT
 Collected TR3-KV all6LEC EQUIVALENT,4mitersPASS+wrongstrapCAUGHT; branch codex/tr3-kv-1025@accb239affdc ready. TR3-HBM6twoID benchesPASS+mutants;4inherited proofs live; missing lanes4 first/last kit proofs being launched in own epyc1:/srv/opentallas-scratch2/claude/codex-tr3-hbm,80GB ot-run. Generic gold mem2reg fallback isolated codex/lec-mem2reg-1025@71c759f40b,5testsPASS; unsupported$mem_v2 failure retained.
+
+## CODEX notes 2026-10-25 22:05 PDT
+D-ROM-3b IMPLEMENTED on codex/kv-dcal-rom-1025@b864829e91 (pushed, new files only). One generated64x32m2 shape and uniform BC4 controller, all schedule content via maps; dead TX/RX images absent. Actual pair1024 and MU component lockstep each1.5M edges0diff/all36layers; content mutants caught8/12diff. Existing cal_ready74 preserved; added boot/production cycles0. Macro81.404um2 plus256 cached scalar bits; physical timing/standard-cell area pending new sys_c kit. Immutable recipe install hook checked; root merging, PATH-KV bind child adopts next fresh cohort.
