@@ -365,6 +365,7 @@ def load_ages(path=AGES_VEC):
     for k in ('add_psum_out', 'xs_out', 'silu_out', 'd2d', 'red_vm', 'root_cfg_lead'):
         if k not in a:
             raise LowerError(f'{path}: no {k}')
+    D.check_memory_profile(a, path)
     return a
 
 
