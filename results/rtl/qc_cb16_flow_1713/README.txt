@@ -12,3 +12,5 @@ Scope: delay-class RTL replay only. Not a bind, not a QC token pass, no physical
 (apply_cb16_phase_types.py) and CB16 alignment re-check remain the QC plan owner's gates.
 
 QC phase2209 followup source: gen.py now includes the actual forwarded epoch bit (W515/W517 instead of payload-only514/516). The new run compares all payload/valid/fault/epoch bits and adds an independently early-epoch mutant. The historical counts above describe the prior payload-only gate; new logs live in the phase2209 run root.
+
+2026-10-25 scope correction: final binder emits DAG leaf aligners as payload-only W1 u_pd banks. Exact gate therefore uses actual 514/516-bit payload classes with bypass, early-valid and early-fault controls. Transport epoch belongs to whole-lane u_lpad W+1 and is not a separately emitted per-leaf DAG bit. The 713850 epoch-inclusive old profile estimate and derived whole-lane physical vehicles are conservative candidates, not actual final-bound FF counts. Fresh final RTL and mapped inventory supersede them.
