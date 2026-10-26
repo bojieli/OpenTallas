@@ -1170,6 +1170,9 @@ class Binder:
             sb = buses[ptype[a["src"]["part"]]].get(a["src"]["bus"], {})
             db = buses[ptype[b["dst"]["part"]]].get(b["dst"]["bus"], {})
             L = lat.get(ln["id"], {})
+            landing=sum(3 for r in self.clock_landings.rows if r["lane"]==ln["id"]) if getattr(self,"clock_landings",None) else 0
+            if landing and int(L.get("clock_landing",0))!=landing:
+                self.errors.append(f"LANE_LANDING_LATENCY {ln['id']}: regenerate latency with actual nominal landing cycles {landing}")
             st = sum(f["stations"] for f in ft)
             if L and int(L.get("stations", st)) != st:
                 self.errors.append(f"LANE_LATENCY {ln['id']}: ft slot stations {st} != latency table {L.get('stations')}")
@@ -1177,7 +1180,8 @@ class Binder:
                 id=ln["id"], src=a["src"]["part"], dst=b["dst"]["part"], oname=a["src"]["bus"], iname=b["dst"]["bus"],
                 cap=min(int(x["width"]) for x in hp), sleaf=sb.get("leaf", ""), dleaf=db.get("leaf", ""), ft=ft,
                 hops=[(x["src"]["part"], x["src"]["bus"], x["dst"]["part"], x["dst"]["bus"]) for x in hp],
-                cycles=int(L.get("cycles", 2 + st)), param=L.get("param"), kind=a.get("kind", "data")))
+                cycles=int(L.get("cycles", 2 + st)), clock_landing_cycles=landing,
+                param=L.get("param"), kind=a.get("kind", "data")))
         return by_pair
 
     @staticmethod
@@ -3365,25 +3369,15 @@ def cmd_bind(a):
             landing_path.relative_to(landing_base)
             B._clock_landing_table = json.loads(landing_path.read_text())
             CL.expand_station_types(B, B._clock_landing_table)
+            B.clock_landings = CL.Landings(raw, B._clock_landing_table)
+            B.extra_lib.extend(str(landing_base / f) for f in
+                               ("rtl/common/ot_meso_fifo.sv", "rtl/common/ot_dp_clk_landing.sv"))
         except (ValueError, OSError) as exc:
             raise BindError(f"clock landing: {exc}") from exc
     B.map_cells()
     B.analyse()
+    if getattr(B,"clock_landings",None):B.clock_landings.validate_observer(B)
     B.build_buses()
-    if B.ab.get("clock_landing_table"):
-        import clock_landings as CL
-        landing_base = Path(B.base).resolve()
-        landing_path = (landing_base / B.ab["clock_landing_table"]).resolve()
-        try:
-            landing_path.relative_to(landing_base)
-            B.clock_landings = CL.Landings(raw, B._clock_landing_table)
-            B.clock_landings.validate_observer(B)
-        except (ValueError, OSError) as exc:
-            raise BindError(f"clock landing: {exc}") from exc
-        for L in B.links:
-            L["clock_landing_cycles"] = sum(3 for r in B.clock_landings.rows if r["lane"] == L.get("lane"))
-        B.extra_lib.extend(str(landing_base / f) for f in
-                           ("rtl/common/ot_meso_fifo.sv", "rtl/common/ot_dp_clk_landing.sv"))
     B.align_landings()
     B.regen_params()
     B.check_types()

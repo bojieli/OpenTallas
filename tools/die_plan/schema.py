@@ -1103,6 +1103,13 @@ class Plan:
         a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
         bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
         d = dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
+        if not hasattr(self,"_lane_clock_landing_cycles"):
+            import clock_landings
+            self._lane_clock_landing_cycles=clock_landings.network_lane_cycles(self.raw)
+        landing=self._lane_clock_landing_cycles.get(lid,0)
+        if landing:
+            d["clock_landing"]=landing
+            d["cycles"]+=landing
         if ln.get("beats"):
             d["beats"] = int(ln["beats"])     # word_cycles (cycles + beats - 1) is added by lane_latency()
         return d
