@@ -141,10 +141,12 @@ def design_entry(sl,libraries,points,caps,r,c,slew_limit=80.,max_stages=6,input_
     """One identical designed common trunk, selected only from plan/NLDM."""
     best=None;trials=[]
     for count in range(max_stages+1):
+        prototype=add_entry_chain(sl,count,next(iter(libraries['TT'])))
+        model=Model(prototype,libraries,points,caps,r,c,input_slew_ps,routing_model)
         for cell in libraries['TT']:
             if count==0 and cell!=next(iter(libraries['TT'])):continue
-            candidate=add_entry_chain(sl,count,cell)
-            model=Model(candidate,libraries,points,caps,r,c,input_slew_ps,routing_model)
+            candidate=copy.deepcopy(prototype)
+            for node in candidate['core_tree']['nodes'][:count]:node['master']=cell
             res=model.evaluate([n['master'] for n in candidate['core_tree']['nodes']])
             violation=0.;margin=1e9
             for corner,x in res.items():

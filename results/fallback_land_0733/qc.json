@@ -1,0 +1,7031 @@
+{
+ "schema": "opentallas.fallback_land_analysis.v1",
+ "die": "qwen_compute",
+ "source_plan": "/home/ubuntu/wt/codex-qc-oneevent-0733/physical/die_plan/qwen_compute/candidate_oneqc0733.json",
+ "status": "QC current owned candidate40493490d,88types; UNFROZEN/not adopted all-seam landing",
+ "parts": 377,
+ "types": 88,
+ "lanes": 1921,
+ "all_plan_ports": 2993,
+ "internal_same_partition_ports": [],
+ "unresolved_or_external_ports": [],
+ "kind_census": {
+  "data": {
+   "ports": 2699,
+   "bit_crossings": 1276839
+  },
+  "ctl": {
+   "ports": 294,
+   "bit_crossings": 647
+  }
+ },
+ "eligible_data_control_bit_crossings": 1277486,
+ "crossing_port_ids": [
+  "c_W5_bf_00__bc01__0",
+  "c_W5_bf_00__bc11__0",
+  "c_W5_bf_10__bc21__0",
+  "c_W5_bf_10__bc31__0",
+  "c_W5_bf_11__a00__0",
+  "c_W5_bf_11__a00__1",
+  "c_W5_bf_00__a22__0",
+  "c_W5_bf_00__a22__1",
+  "c_W5_bf_01__b00__0",
+  "c_W5_bf_11__b12__0",
+  "c_W5_bf_10__b22__0",
+  "c_W5_bn_00__bc01__0",
+  "c_W5_bn_00__bc11__0",
+  "c_W5_bn_10__bc21__0",
+  "c_W5_bn_10__bc31__0",
+  "c_W5_bn_11__a00__0",
+  "c_W5_bn_11__a00__1",
+  "c_W5_bn_00__a22__0",
+  "c_W5_bn_00__a22__1",
+  "c_W5_bn_01__b00__0",
+  "c_W5_bn_11__b12__0",
+  "c_W5_bn_10__b22__0",
+  "c_W5_tn_00__bc01__0",
+  "c_W5_tn_00__bc11__0",
+  "c_W5_tn_10__bc21__0",
+  "c_W5_tn_10__bc31__0",
+  "c_W5_tn_11__a00__0",
+  "c_W5_tn_11__a00__1",
+  "c_W5_tn_00__a22__0",
+  "c_W5_tn_00__a22__1",
+  "c_W5_tn_01__b00__0",
+  "c_W5_tn_11__b12__0",
+  "c_W5_tn_10__b22__0",
+  "c_W5_tf_00__bc01__0",
+  "c_W5_tf_00__bc11__0",
+  "c_W5_tf_10__bc21__0",
+  "c_W5_tf_10__bc31__0",
+  "c_W5_tf_11__a00__0",
+  "c_W5_tf_11__a00__1",
+  "c_W5_tf_00__a22__0",
+  "c_W5_tf_00__a22__1",
+  "c_W5_tf_01__b00__0",
+  "c_W5_tf_11__b12__0",
+  "c_W5_tf_10__b22__0",
+  "c_W4_bf_00__bc01__0",
+  "c_W4_bf_00__bc11__0",
+  "c_W4_bf_10__bc21__0",
+  "c_W4_bf_10__bc31__0",
+  "c_W4_bf_11__a00__0",
+  "c_W4_bf_11__a00__1",
+  "c_W4_bf_00__a22__0",
+  "c_W4_bf_00__a22__1",
+  "c_W4_bf_01__b00__0",
+  "c_W4_bf_11__b12__0",
+  "c_W4_bf_10__b22__0",
+  "c_W4_bn_00__bc01__0",
+  "c_W4_bn_00__bc11__0",
+  "c_W4_bn_10__bc21__0",
+  "c_W4_bn_10__bc31__0",
+  "c_W4_bn_11__a00__0",
+  "c_W4_bn_11__a00__1",
+  "c_W4_bn_00__a22__0",
+  "c_W4_bn_00__a22__1",
+  "c_W4_bn_01__b00__0",
+  "c_W4_bn_11__b12__0",
+  "c_W4_bn_10__b22__0",
+  "c_W4_tn_00__bc01__0",
+  "c_W4_tn_00__bc11__0",
+  "c_W4_tn_10__bc21__0",
+  "c_W4_tn_10__bc31__0",
+  "c_W4_tn_11__a00__0",
+  "c_W4_tn_11__a00__1",
+  "c_W4_tn_00__a22__0",
+  "c_W4_tn_00__a22__1",
+  "c_W4_tn_01__b00__0",
+  "c_W4_tn_11__b12__0",
+  "c_W4_tn_10__b22__0",
+  "c_W4_tf_00__bc01__0",
+  "c_W4_tf_00__bc11__0",
+  "c_W4_tf_10__bc21__0",
+  "c_W4_tf_10__bc31__0",
+  "c_W4_tf_11__a00__0",
+  "c_W4_tf_11__a00__1",
+  "c_W4_tf_00__a22__0",
+  "c_W4_tf_00__a22__1",
+  "c_W4_tf_01__b00__0",
+  "c_W4_tf_11__b12__0",
+  "c_W4_tf_10__b22__0",
+  "c_W3_bf_00__bc01__0",
+  "c_W3_bf_00__bc11__0",
+  "c_W3_bf_10__bc21__0",
+  "c_W3_bf_10__bc31__0",
+  "c_W3_bf_11__a00__0",
+  "c_W3_bf_11__a00__1",
+  "c_W3_bf_00__a22__0",
+  "c_W3_bf_00__a22__1",
+  "c_W3_bf_01__b00__0",
+  "c_W3_bf_11__b12__0",
+  "c_W3_bf_10__b22__0",
+  "c_W3_bn_00__bc01__0",
+  "c_W3_bn_00__bc11__0",
+  "c_W3_bn_10__bc21__0",
+  "c_W3_bn_10__bc31__0",
+  "c_W3_bn_11__a00__0",
+  "c_W3_bn_11__a00__1",
+  "c_W3_bn_00__a22__0",
+  "c_W3_bn_00__a22__1",
+  "c_W3_bn_01__b00__0",
+  "c_W3_bn_11__b12__0",
+  "c_W3_bn_10__b22__0",
+  "c_W3_tn_00__bc01__0",
+  "c_W3_tn_00__bc11__0",
+  "c_W3_tn_10__bc21__0",
+  "c_W3_tn_10__bc31__0",
+  "c_W3_tn_11__a00__0",
+  "c_W3_tn_11__a00__1",
+  "c_W3_tn_00__a22__0",
+  "c_W3_tn_00__a22__1",
+  "c_W3_tn_01__b00__0",
+  "c_W3_tn_11__b12__0",
+  "c_W3_tn_10__b22__0",
+  "c_W3_tf_00__bc01__0",
+  "c_W3_tf_00__bc11__0",
+  "c_W3_tf_10__bc21__0",
+  "c_W3_tf_10__bc31__0",
+  "c_W3_tf_11__a00__0",
+  "c_W3_tf_11__a00__1",
+  "c_W3_tf_00__a22__0",
+  "c_W3_tf_00__a22__1",
+  "c_W3_tf_01__b00__0",
+  "c_W3_tf_11__b12__0",
+  "c_W3_tf_10__b22__0",
+  "c_W2_bf_00__bc01__0",
+  "c_W2_bf_00__bc11__0",
+  "c_W2_bf_10__bc21__0",
+  "c_W2_bf_10__bc31__0",
+  "c_W2_bf_11__a00__0",
+  "c_W2_bf_11__a00__1",
+  "c_W2_bf_00__a22__0",
+  "c_W2_bf_00__a22__1",
+  "c_W2_bf_01__b00__0",
+  "c_W2_bf_11__b12__0",
+  "c_W2_bf_10__b22__0",
+  "c_W2_bn_00__bc01__0",
+  "c_W2_bn_00__bc11__0",
+  "c_W2_bn_10__bc21__0",
+  "c_W2_bn_10__bc31__0",
+  "c_W2_bn_11__a00__0",
+  "c_W2_bn_11__a00__1",
+  "c_W2_bn_00__a22__0",
+  "c_W2_bn_00__a22__1",
+  "c_W2_bn_01__b00__0",
+  "c_W2_bn_11__b12__0",
+  "c_W2_bn_10__b22__0",
+  "c_W2_tn_00__bc01__0",
+  "c_W2_tn_00__bc11__0",
+  "c_W2_tn_10__bc21__0",
+  "c_W2_tn_10__bc31__0",
+  "c_W2_tn_11__a00__0",
+  "c_W2_tn_11__a00__1",
+  "c_W2_tn_00__a22__0",
+  "c_W2_tn_00__a22__1",
+  "c_W2_tn_01__b00__0",
+  "c_W2_tn_11__b12__0",
+  "c_W2_tn_10__b22__0",
+  "c_W2_tf_00__bc01__0",
+  "c_W2_tf_00__bc11__0",
+  "c_W2_tf_10__bc21__0",
+  "c_W2_tf_10__bc31__0",
+  "c_W2_tf_11__a00__0",
+  "c_W2_tf_11__a00__1",
+  "c_W2_tf_00__a22__0",
+  "c_W2_tf_00__a22__1",
+  "c_W2_tf_01__b00__0",
+  "c_W2_tf_11__b12__0",
+  "c_W2_tf_10__b22__0",
+  "c_W1_bf_00__bc01__0",
+  "c_W1_bf_00__bc11__0",
+  "c_W1_bf_10__bc21__0",
+  "c_W1_bf_10__bc31__0",
+  "c_W1_bf_11__a00__0",
+  "c_W1_bf_11__a00__1",
+  "c_W1_bf_00__a22__0",
+  "c_W1_bf_00__a22__1",
+  "c_W1_bf_01__b00__0",
+  "c_W1_bf_11__b12__0",
+  "c_W1_bf_10__b22__0",
+  "c_W1_bn_00__bc01__0",
+  "c_W1_bn_00__bc11__0",
+  "c_W1_bn_10__bc21__0",
+  "c_W1_bn_10__bc31__0",
+  "c_W1_bn_11__a00__0",
+  "c_W1_bn_11__a00__1",
+  "c_W1_bn_00__a22__0",
+  "c_W1_bn_00__a22__1",
+  "c_W1_bn_01__b00__0",
+  "c_W1_bn_11__b12__0",
+  "c_W1_bn_10__b22__0",
+  "c_W1_tn_00__bc01__0",
+  "c_W1_tn_00__bc11__0",
+  "c_W1_tn_10__bc21__0",
+  "c_W1_tn_10__bc31__0",
+  "c_W1_tn_11__a00__0",
+  "c_W1_tn_11__a00__1",
+  "c_W1_tn_00__a22__0",
+  "c_W1_tn_00__a22__1",
+  "c_W1_tn_01__b00__0",
+  "c_W1_tn_11__b12__0",
+  "c_W1_tn_10__b22__0",
+  "c_W1_tf_00__bc01__0",
+  "c_W1_tf_00__bc11__0",
+  "c_W1_tf_10__bc21__0",
+  "c_W1_tf_10__bc31__0",
+  "c_W1_tf_11__a00__0",
+  "c_W1_tf_11__a00__1",
+  "c_W1_tf_00__a22__0",
+  "c_W1_tf_00__a22__1",
+  "c_W1_tf_01__b00__0",
+  "c_W1_tf_11__b12__0",
+  "c_W1_tf_10__b22__0",
+  "c_W0_bf_00__bc01__0",
+  "c_W0_bf_00__bc11__0",
+  "c_W0_bf_10__bc21__0",
+  "c_W0_bf_10__bc31__0",
+  "c_W0_bf_11__a00__0",
+  "c_W0_bf_11__a00__1",
+  "c_W0_bf_00__a22__0",
+  "c_W0_bf_00__a22__1",
+  "c_W0_bf_01__b00__0",
+  "c_W0_bf_11__b12__0",
+  "c_W0_bf_10__b22__0",
+  "c_W0_bn_00__bc01__0",
+  "c_W0_bn_00__bc11__0",
+  "c_W0_bn_10__bc21__0",
+  "c_W0_bn_10__bc31__0",
+  "c_W0_bn_11__a00__0",
+  "c_W0_bn_11__a00__1",
+  "c_W0_bn_00__a22__0",
+  "c_W0_bn_00__a22__1",
+  "c_W0_bn_01__b00__0",
+  "c_W0_bn_11__b12__0",
+  "c_W0_bn_10__b22__0",
+  "c_W0_tn_00__bc01__0",
+  "c_W0_tn_00__bc11__0",
+  "c_W0_tn_10__bc21__0",
+  "c_W0_tn_10__bc31__0",
+  "c_W0_tn_11__a00__0",
+  "c_W0_tn_11__a00__1",
+  "c_W0_tn_00__a22__0",
+  "c_W0_tn_00__a22__1",
+  "c_W0_tn_01__b00__0",
+  "c_W0_tn_11__b12__0",
+  "c_W0_tn_10__b22__0",
+  "c_W0_tf_00__bc01__0",
+  "c_W0_tf_00__bc11__0",
+  "c_W0_tf_10__bc21__0",
+  "c_W0_tf_10__bc31__0",
+  "c_W0_tf_11__a00__0",
+  "c_W0_tf_11__a00__1",
+  "c_W0_tf_00__a22__0",
+  "c_W0_tf_00__a22__1",
+  "c_W0_tf_01__b00__0",
+  "c_W0_tf_11__b12__0",
+  "c_W0_tf_10__b22__0",
+  "c_E0_bf_00__bc01__0",
+  "c_E0_bf_00__bc11__0",
+  "c_E0_bf_10__bc21__0",
+  "c_E0_bf_10__bc31__0",
+  "c_E0_bf_11__a00__0",
+  "c_E0_bf_11__a00__1",
+  "c_E0_bf_00__a22__0",
+  "c_E0_bf_00__a22__1",
+  "c_E0_bf_01__b00__0",
+  "c_E0_bf_11__b12__0",
+  "c_E0_bf_10__b22__0",
+  "c_E0_bn_00__bc01__0",
+  "c_E0_bn_00__bc11__0",
+  "c_E0_bn_10__bc21__0",
+  "c_E0_bn_10__bc31__0",
+  "c_E0_bn_11__a00__0",
+  "c_E0_bn_11__a00__1",
+  "c_E0_bn_00__a22__0",
+  "c_E0_bn_00__a22__1",
+  "c_E0_bn_01__b00__0",
+  "c_E0_bn_11__b12__0",
+  "c_E0_bn_10__b22__0",
+  "c_E0_tn_00__bc01__0",
+  "c_E0_tn_00__bc11__0",
+  "c_E0_tn_10__bc21__0",
+  "c_E0_tn_10__bc31__0",
+  "c_E0_tn_11__a00__0",
+  "c_E0_tn_11__a00__1",
+  "c_E0_tn_00__a22__0",
+  "c_E0_tn_00__a22__1",
+  "c_E0_tn_01__b00__0",
+  "c_E0_tn_11__b12__0",
+  "c_E0_tn_10__b22__0",
+  "c_E0_tf_00__bc01__0",
+  "c_E0_tf_00__bc11__0",
+  "c_E0_tf_10__bc21__0",
+  "c_E0_tf_10__bc31__0",
+  "c_E0_tf_11__a00__0",
+  "c_E0_tf_11__a00__1",
+  "c_E0_tf_00__a22__0",
+  "c_E0_tf_00__a22__1",
+  "c_E0_tf_01__b00__0",
+  "c_E0_tf_11__b12__0",
+  "c_E0_tf_10__b22__0",
+  "c_E1_bf_00__bc01__0",
+  "c_E1_bf_00__bc11__0",
+  "c_E1_bf_10__bc21__0",
+  "c_E1_bf_10__bc31__0",
+  "c_E1_bf_11__a00__0",
+  "c_E1_bf_11__a00__1",
+  "c_E1_bf_00__a22__0",
+  "c_E1_bf_00__a22__1",
+  "c_E1_bf_01__b00__0",
+  "c_E1_bf_11__b12__0",
+  "c_E1_bf_10__b22__0",
+  "c_E1_bn_00__bc01__0",
+  "c_E1_bn_00__bc11__0",
+  "c_E1_bn_10__bc21__0",
+  "c_E1_bn_10__bc31__0",
+  "c_E1_bn_11__a00__0",
+  "c_E1_bn_11__a00__1",
+  "c_E1_bn_00__a22__0",
+  "c_E1_bn_00__a22__1",
+  "c_E1_bn_01__b00__0",
+  "c_E1_bn_11__b12__0",
+  "c_E1_bn_10__b22__0",
+  "c_E1_tn_00__bc01__0",
+  "c_E1_tn_00__bc11__0",
+  "c_E1_tn_10__bc21__0",
+  "c_E1_tn_10__bc31__0",
+  "c_E1_tn_11__a00__0",
+  "c_E1_tn_11__a00__1",
+  "c_E1_tn_00__a22__0",
+  "c_E1_tn_00__a22__1",
+  "c_E1_tn_01__b00__0",
+  "c_E1_tn_11__b12__0",
+  "c_E1_tn_10__b22__0",
+  "c_E1_tf_00__bc01__0",
+  "c_E1_tf_00__bc11__0",
+  "c_E1_tf_10__bc21__0",
+  "c_E1_tf_10__bc31__0",
+  "c_E1_tf_11__a00__0",
+  "c_E1_tf_11__a00__1",
+  "c_E1_tf_00__a22__0",
+  "c_E1_tf_00__a22__1",
+  "c_E1_tf_01__b00__0",
+  "c_E1_tf_11__b12__0",
+  "c_E1_tf_10__b22__0",
+  "c_E2_bf_00__bc01__0",
+  "c_E2_bf_00__bc11__0",
+  "c_E2_bf_10__bc21__0",
+  "c_E2_bf_10__bc31__0",
+  "c_E2_bf_11__a00__0",
+  "c_E2_bf_11__a00__1",
+  "c_E2_bf_00__a22__0",
+  "c_E2_bf_00__a22__1",
+  "c_E2_bf_01__b00__0",
+  "c_E2_bf_11__b12__0",
+  "c_E2_bf_10__b22__0",
+  "c_E2_bn_00__bc01__0",
+  "c_E2_bn_00__bc11__0",
+  "c_E2_bn_10__bc21__0",
+  "c_E2_bn_10__bc31__0",
+  "c_E2_bn_11__a00__0",
+  "c_E2_bn_11__a00__1",
+  "c_E2_bn_00__a22__0",
+  "c_E2_bn_00__a22__1",
+  "c_E2_bn_01__b00__0",
+  "c_E2_bn_11__b12__0",
+  "c_E2_bn_10__b22__0",
+  "c_E2_tn_00__bc01__0",
+  "c_E2_tn_00__bc11__0",
+  "c_E2_tn_10__bc21__0",
+  "c_E2_tn_10__bc31__0",
+  "c_E2_tn_11__a00__0",
+  "c_E2_tn_11__a00__1",
+  "c_E2_tn_00__a22__0",
+  "c_E2_tn_00__a22__1",
+  "c_E2_tn_01__b00__0",
+  "c_E2_tn_11__b12__0",
+  "c_E2_tn_10__b22__0",
+  "c_E2_tf_00__bc01__0",
+  "c_E2_tf_00__bc11__0",
+  "c_E2_tf_10__bc21__0",
+  "c_E2_tf_10__bc31__0",
+  "c_E2_tf_11__a00__0",
+  "c_E2_tf_11__a00__1",
+  "c_E2_tf_00__a22__0",
+  "c_E2_tf_00__a22__1",
+  "c_E2_tf_01__b00__0",
+  "c_E2_tf_11__b12__0",
+  "c_E2_tf_10__b22__0",
+  "c_E3_bf_00__bc01__0",
+  "c_E3_bf_00__bc11__0",
+  "c_E3_bf_10__bc21__0",
+  "c_E3_bf_10__bc31__0",
+  "c_E3_bf_11__a00__0",
+  "c_E3_bf_11__a00__1",
+  "c_E3_bf_00__a22__0",
+  "c_E3_bf_00__a22__1",
+  "c_E3_bf_01__b00__0",
+  "c_E3_bf_11__b12__0",
+  "c_E3_bf_10__b22__0",
+  "c_E3_bn_00__bc01__0",
+  "c_E3_bn_00__bc11__0",
+  "c_E3_bn_10__bc21__0",
+  "c_E3_bn_10__bc31__0",
+  "c_E3_bn_11__a00__0",
+  "c_E3_bn_11__a00__1",
+  "c_E3_bn_00__a22__0",
+  "c_E3_bn_00__a22__1",
+  "c_E3_bn_01__b00__0",
+  "c_E3_bn_11__b12__0",
+  "c_E3_bn_10__b22__0",
+  "c_E3_tn_00__bc01__0",
+  "c_E3_tn_00__bc11__0",
+  "c_E3_tn_10__bc21__0",
+  "c_E3_tn_10__bc31__0",
+  "c_E3_tn_11__a00__0",
+  "c_E3_tn_11__a00__1",
+  "c_E3_tn_00__a22__0",
+  "c_E3_tn_00__a22__1",
+  "c_E3_tn_01__b00__0",
+  "c_E3_tn_11__b12__0",
+  "c_E3_tn_10__b22__0",
+  "c_E3_tf_00__bc01__0",
+  "c_E3_tf_00__bc11__0",
+  "c_E3_tf_10__bc21__0",
+  "c_E3_tf_10__bc31__0",
+  "c_E3_tf_11__a00__0",
+  "c_E3_tf_11__a00__1",
+  "c_E3_tf_00__a22__0",
+  "c_E3_tf_00__a22__1",
+  "c_E3_tf_01__b00__0",
+  "c_E3_tf_11__b12__0",
+  "c_E3_tf_10__b22__0",
+  "c_E4_bf_00__bc01__0",
+  "c_E4_bf_00__bc11__0",
+  "c_E4_bf_10__bc21__0",
+  "c_E4_bf_10__bc31__0",
+  "c_E4_bf_11__a00__0",
+  "c_E4_bf_11__a00__1",
+  "c_E4_bf_00__a22__0",
+  "c_E4_bf_00__a22__1",
+  "c_E4_bf_01__b00__0",
+  "c_E4_bf_11__b12__0",
+  "c_E4_bf_10__b22__0",
+  "c_E4_bn_00__bc01__0",
+  "c_E4_bn_00__bc11__0",
+  "c_E4_bn_10__bc21__0",
+  "c_E4_bn_10__bc31__0",
+  "c_E4_bn_11__a00__0",
+  "c_E4_bn_11__a00__1",
+  "c_E4_bn_00__a22__0",
+  "c_E4_bn_00__a22__1",
+  "c_E4_bn_01__b00__0",
+  "c_E4_bn_11__b12__0",
+  "c_E4_bn_10__b22__0",
+  "c_E4_tn_00__bc01__0",
+  "c_E4_tn_00__bc11__0",
+  "c_E4_tn_10__bc21__0",
+  "c_E4_tn_10__bc31__0",
+  "c_E4_tn_11__a00__0",
+  "c_E4_tn_11__a00__1",
+  "c_E4_tn_00__a22__0",
+  "c_E4_tn_00__a22__1",
+  "c_E4_tn_01__b00__0",
+  "c_E4_tn_11__b12__0",
+  "c_E4_tn_10__b22__0",
+  "c_E4_tf_00__bc01__0",
+  "c_E4_tf_00__bc11__0",
+  "c_E4_tf_10__bc21__0",
+  "c_E4_tf_10__bc31__0",
+  "c_E4_tf_11__a00__0",
+  "c_E4_tf_11__a00__1",
+  "c_E4_tf_00__a22__0",
+  "c_E4_tf_00__a22__1",
+  "c_E4_tf_01__b00__0",
+  "c_E4_tf_11__b12__0",
+  "c_E4_tf_10__b22__0",
+  "c_E5_bf_00__bc01__0",
+  "c_E5_bf_00__bc11__0",
+  "c_E5_bf_10__bc21__0",
+  "c_E5_bf_10__bc31__0",
+  "c_E5_bf_11__a00__0",
+  "c_E5_bf_11__a00__1",
+  "c_E5_bf_00__a22__0",
+  "c_E5_bf_00__a22__1",
+  "c_E5_bf_01__b00__0",
+  "c_E5_bf_11__b12__0",
+  "c_E5_bf_10__b22__0",
+  "c_E5_bn_00__bc01__0",
+  "c_E5_bn_00__bc11__0",
+  "c_E5_bn_10__bc21__0",
+  "c_E5_bn_10__bc31__0",
+  "c_E5_bn_11__a00__0",
+  "c_E5_bn_11__a00__1",
+  "c_E5_bn_00__a22__0",
+  "c_E5_bn_00__a22__1",
+  "c_E5_bn_01__b00__0",
+  "c_E5_bn_11__b12__0",
+  "c_E5_bn_10__b22__0",
+  "c_E5_tn_00__bc01__0",
+  "c_E5_tn_00__bc11__0",
+  "c_E5_tn_10__bc21__0",
+  "c_E5_tn_10__bc31__0",
+  "c_E5_tn_11__a00__0",
+  "c_E5_tn_11__a00__1",
+  "c_E5_tn_00__a22__0",
+  "c_E5_tn_00__a22__1",
+  "c_E5_tn_01__b00__0",
+  "c_E5_tn_11__b12__0",
+  "c_E5_tn_10__b22__0",
+  "c_E5_tf_00__bc01__0",
+  "c_E5_tf_00__bc11__0",
+  "c_E5_tf_10__bc21__0",
+  "c_E5_tf_10__bc31__0",
+  "c_E5_tf_11__a00__0",
+  "c_E5_tf_11__a00__1",
+  "c_E5_tf_00__a22__0",
+  "c_E5_tf_00__a22__1",
+  "c_E5_tf_01__b00__0",
+  "c_E5_tf_11__b12__0",
+  "c_E5_tf_10__b22__0",
+  "sl_W5_hc0__cwn0__0",
+  "c_W5_tn_01__bcf0__0",
+  "sl_W5_hc1__cwn1__0",
+  "c_W5_tn_01__bcf1__0",
+  "sl_W5_hc2__cwn2__0",
+  "c_W5_tn_11__bcf2__0",
+  "sl_W5_hc3__cwn3__0",
+  "c_W5_tn_11__bcf3__0",
+  "c_W5_tn_00__rsn__0",
+  "c_W5_tn_00__rsn__1",
+  "c_W5_tf_00__rsf__0",
+  "c_W5_tf_00__rsf__1",
+  "c_W5_tf_00__rsf__2",
+  "c_W5_tf_00__rsf__3",
+  "sl_W5_hc0__cws0__0",
+  "sl_W5_hc0__cws0__1",
+  "sl_W5_hc0__cws0__2",
+  "sl_W5_hc0__cws0__3",
+  "c_W5_bn_01__bcf0__0",
+  "sl_W5_hc1__cws1__0",
+  "sl_W5_hc1__cws1__1",
+  "sl_W5_hc1__cws1__2",
+  "sl_W5_hc1__cws1__3",
+  "c_W5_bn_01__bcf1__0",
+  "sl_W5_hc2__cws2__0",
+  "sl_W5_hc2__cws2__1",
+  "sl_W5_hc2__cws2__2",
+  "sl_W5_hc2__cws2__3",
+  "c_W5_bn_11__bcf2__0",
+  "sl_W5_hc3__cws3__0",
+  "sl_W5_hc3__cws3__1",
+  "sl_W5_hc3__cws3__2",
+  "sl_W5_hc3__cws3__3",
+  "c_W5_bn_11__bcf3__0",
+  "c_W5_bn_00__rsn__0",
+  "c_W5_bn_00__rsn__1",
+  "c_W5_bn_00__rsn__2",
+  "c_W5_bf_00__rsf__0",
+  "c_W5_bf_00__rsf__1",
+  "c_W5_bf_00__rsf__2",
+  "c_W5_bf_00__rsf__3",
+  "c_W5_bf_00__rsf__4",
+  "sl_W4_hc0__cwn0__0",
+  "c_W4_tn_01__bcf0__0",
+  "sl_W4_hc1__cwn1__0",
+  "c_W4_tn_01__bcf1__0",
+  "sl_W4_hc2__cwn2__0",
+  "c_W4_tn_11__bcf2__0",
+  "sl_W4_hc3__cwn3__0",
+  "c_W4_tn_11__bcf3__0",
+  "c_W4_tn_00__rsn__0",
+  "c_W4_tn_00__rsn__1",
+  "c_W4_tf_00__rsf__0",
+  "c_W4_tf_00__rsf__1",
+  "c_W4_tf_00__rsf__2",
+  "c_W4_tf_00__rsf__3",
+  "sl_W4_hc0__cws0__0",
+  "sl_W4_hc0__cws0__1",
+  "sl_W4_hc0__cws0__2",
+  "sl_W4_hc0__cws0__3",
+  "c_W4_bn_01__bcf0__0",
+  "sl_W4_hc1__cws1__0",
+  "sl_W4_hc1__cws1__1",
+  "sl_W4_hc1__cws1__2",
+  "sl_W4_hc1__cws1__3",
+  "c_W4_bn_01__bcf1__0",
+  "sl_W4_hc2__cws2__0",
+  "sl_W4_hc2__cws2__1",
+  "sl_W4_hc2__cws2__2",
+  "sl_W4_hc2__cws2__3",
+  "c_W4_bn_11__bcf2__0",
+  "sl_W4_hc3__cws3__0",
+  "sl_W4_hc3__cws3__1",
+  "sl_W4_hc3__cws3__2",
+  "sl_W4_hc3__cws3__3",
+  "c_W4_bn_11__bcf3__0",
+  "c_W4_bn_00__rsn__0",
+  "c_W4_bn_00__rsn__1",
+  "c_W4_bn_00__rsn__2",
+  "c_W4_bf_00__rsf__0",
+  "c_W4_bf_00__rsf__1",
+  "c_W4_bf_00__rsf__2",
+  "c_W4_bf_00__rsf__3",
+  "c_W4_bf_00__rsf__4",
+  "sl_W3_hc0__cwn0__0",
+  "c_W3_tn_01__bcf0__0",
+  "sl_W3_hc1__cwn1__0",
+  "c_W3_tn_01__bcf1__0",
+  "sl_W3_hc2__cwn2__0",
+  "c_W3_tn_11__bcf2__0",
+  "sl_W3_hc3__cwn3__0",
+  "c_W3_tn_11__bcf3__0",
+  "c_W3_tn_00__rsn__0",
+  "c_W3_tn_00__rsn__1",
+  "c_W3_tf_00__rsf__0",
+  "c_W3_tf_00__rsf__1",
+  "c_W3_tf_00__rsf__2",
+  "c_W3_tf_00__rsf__3",
+  "sl_W3_hc0__cws0__0",
+  "sl_W3_hc0__cws0__1",
+  "sl_W3_hc0__cws0__2",
+  "sl_W3_hc0__cws0__3",
+  "c_W3_bn_01__bcf0__0",
+  "sl_W3_hc1__cws1__0",
+  "sl_W3_hc1__cws1__1",
+  "sl_W3_hc1__cws1__2",
+  "sl_W3_hc1__cws1__3",
+  "c_W3_bn_01__bcf1__0",
+  "sl_W3_hc2__cws2__0",
+  "sl_W3_hc2__cws2__1",
+  "sl_W3_hc2__cws2__2",
+  "sl_W3_hc2__cws2__3",
+  "c_W3_bn_11__bcf2__0",
+  "sl_W3_hc3__cws3__0",
+  "sl_W3_hc3__cws3__1",
+  "sl_W3_hc3__cws3__2",
+  "sl_W3_hc3__cws3__3",
+  "c_W3_bn_11__bcf3__0",
+  "c_W3_bn_00__rsn__0",
+  "c_W3_bn_00__rsn__1",
+  "c_W3_bn_00__rsn__2",
+  "c_W3_bf_00__rsf__0",
+  "c_W3_bf_00__rsf__1",
+  "c_W3_bf_00__rsf__2",
+  "c_W3_bf_00__rsf__3",
+  "c_W3_bf_00__rsf__4",
+  "sl_W2_hc0__cwn0__0",
+  "c_W2_tn_01__bcf0__0",
+  "sl_W2_hc1__cwn1__0",
+  "c_W2_tn_01__bcf1__0",
+  "sl_W2_hc2__cwn2__0",
+  "c_W2_tn_11__bcf2__0",
+  "sl_W2_hc3__cwn3__0",
+  "c_W2_tn_11__bcf3__0",
+  "c_W2_tn_00__rsn__0",
+  "c_W2_tn_00__rsn__1",
+  "c_W2_tf_00__rsf__0",
+  "c_W2_tf_00__rsf__1",
+  "c_W2_tf_00__rsf__2",
+  "c_W2_tf_00__rsf__3",
+  "sl_W2_hc0__cws0__0",
+  "sl_W2_hc0__cws0__1",
+  "sl_W2_hc0__cws0__2",
+  "sl_W2_hc0__cws0__3",
+  "c_W2_bn_01__bcf0__0",
+  "sl_W2_hc1__cws1__0",
+  "sl_W2_hc1__cws1__1",
+  "sl_W2_hc1__cws1__2",
+  "sl_W2_hc1__cws1__3",
+  "c_W2_bn_01__bcf1__0",
+  "sl_W2_hc2__cws2__0",
+  "sl_W2_hc2__cws2__1",
+  "sl_W2_hc2__cws2__2",
+  "sl_W2_hc2__cws2__3",
+  "c_W2_bn_11__bcf2__0",
+  "sl_W2_hc3__cws3__0",
+  "sl_W2_hc3__cws3__1",
+  "sl_W2_hc3__cws3__2",
+  "sl_W2_hc3__cws3__3",
+  "c_W2_bn_11__bcf3__0",
+  "c_W2_bn_00__rsn__0",
+  "c_W2_bn_00__rsn__1",
+  "c_W2_bn_00__rsn__2",
+  "c_W2_bf_00__rsf__0",
+  "c_W2_bf_00__rsf__1",
+  "c_W2_bf_00__rsf__2",
+  "c_W2_bf_00__rsf__3",
+  "c_W2_bf_00__rsf__4",
+  "sl_W1_hc0__cwn0__0",
+  "c_W1_tn_01__bcf0__0",
+  "sl_W1_hc1__cwn1__0",
+  "c_W1_tn_01__bcf1__0",
+  "sl_W1_hc2__cwn2__0",
+  "c_W1_tn_11__bcf2__0",
+  "sl_W1_hc3__cwn3__0",
+  "c_W1_tn_11__bcf3__0",
+  "c_W1_tn_00__rsn__0",
+  "c_W1_tn_00__rsn__1",
+  "c_W1_tf_00__rsf__0",
+  "c_W1_tf_00__rsf__1",
+  "c_W1_tf_00__rsf__2",
+  "c_W1_tf_00__rsf__3",
+  "sl_W1_hc0__cws0__0",
+  "sl_W1_hc0__cws0__1",
+  "sl_W1_hc0__cws0__2",
+  "sl_W1_hc0__cws0__3",
+  "c_W1_bn_01__bcf0__0",
+  "sl_W1_hc1__cws1__0",
+  "sl_W1_hc1__cws1__1",
+  "sl_W1_hc1__cws1__2",
+  "sl_W1_hc1__cws1__3",
+  "c_W1_bn_01__bcf1__0",
+  "sl_W1_hc2__cws2__0",
+  "sl_W1_hc2__cws2__1",
+  "sl_W1_hc2__cws2__2",
+  "sl_W1_hc2__cws2__3",
+  "c_W1_bn_11__bcf2__0",
+  "sl_W1_hc3__cws3__0",
+  "sl_W1_hc3__cws3__1",
+  "sl_W1_hc3__cws3__2",
+  "sl_W1_hc3__cws3__3",
+  "c_W1_bn_11__bcf3__0",
+  "c_W1_bn_00__rsn__0",
+  "c_W1_bn_00__rsn__1",
+  "c_W1_bn_00__rsn__2",
+  "c_W1_bf_00__rsf__0",
+  "c_W1_bf_00__rsf__1",
+  "c_W1_bf_00__rsf__2",
+  "c_W1_bf_00__rsf__3",
+  "c_W1_bf_00__rsf__4",
+  "sl_W0_hc0__cwn0__0",
+  "c_W0_tn_01__bcf0__0",
+  "sl_W0_hc1__cwn1__0",
+  "c_W0_tn_01__bcf1__0",
+  "sl_W0_hc2__cwn2__0",
+  "c_W0_tn_11__bcf2__0",
+  "sl_W0_hc3__cwn3__0",
+  "c_W0_tn_11__bcf3__0",
+  "c_W0_tn_00__rsn__0",
+  "c_W0_tn_00__rsn__1",
+  "c_W0_tf_00__rsf__0",
+  "c_W0_tf_00__rsf__1",
+  "c_W0_tf_00__rsf__2",
+  "c_W0_tf_00__rsf__3",
+  "sl_W0_hc0__cws0__0",
+  "sl_W0_hc0__cws0__1",
+  "sl_W0_hc0__cws0__2",
+  "sl_W0_hc0__cws0__3",
+  "c_W0_bn_01__bcf0__0",
+  "sl_W0_hc1__cws1__0",
+  "sl_W0_hc1__cws1__1",
+  "sl_W0_hc1__cws1__2",
+  "sl_W0_hc1__cws1__3",
+  "c_W0_bn_01__bcf1__0",
+  "sl_W0_hc2__cws2__0",
+  "sl_W0_hc2__cws2__1",
+  "sl_W0_hc2__cws2__2",
+  "sl_W0_hc2__cws2__3",
+  "c_W0_bn_11__bcf2__0",
+  "sl_W0_hc3__cws3__0",
+  "sl_W0_hc3__cws3__1",
+  "sl_W0_hc3__cws3__2",
+  "sl_W0_hc3__cws3__3",
+  "c_W0_bn_11__bcf3__0",
+  "c_W0_bn_00__rsn__0",
+  "c_W0_bn_00__rsn__1",
+  "c_W0_bn_00__rsn__2",
+  "c_W0_bf_00__rsf__0",
+  "c_W0_bf_00__rsf__1",
+  "c_W0_bf_00__rsf__2",
+  "c_W0_bf_00__rsf__3",
+  "c_W0_bf_00__rsf__4",
+  "sl_E0_hc0__cwn0__0",
+  "c_E0_tn_01__bcf0__0",
+  "sl_E0_hc1__cwn1__0",
+  "c_E0_tn_01__bcf1__0",
+  "sl_E0_hc2__cwn2__0",
+  "c_E0_tn_11__bcf2__0",
+  "sl_E0_hc3__cwn3__0",
+  "c_E0_tn_11__bcf3__0",
+  "c_E0_tn_00__rsn__0",
+  "c_E0_tn_00__rsn__1",
+  "c_E0_tf_00__rsf__0",
+  "c_E0_tf_00__rsf__1",
+  "c_E0_tf_00__rsf__2",
+  "c_E0_tf_00__rsf__3",
+  "sl_E0_hc0__cws0__0",
+  "sl_E0_hc0__cws0__1",
+  "sl_E0_hc0__cws0__2",
+  "sl_E0_hc0__cws0__3",
+  "c_E0_bn_01__bcf0__0",
+  "sl_E0_hc1__cws1__0",
+  "sl_E0_hc1__cws1__1",
+  "sl_E0_hc1__cws1__2",
+  "sl_E0_hc1__cws1__3",
+  "c_E0_bn_01__bcf1__0",
+  "sl_E0_hc2__cws2__0",
+  "sl_E0_hc2__cws2__1",
+  "sl_E0_hc2__cws2__2",
+  "sl_E0_hc2__cws2__3",
+  "c_E0_bn_11__bcf2__0",
+  "sl_E0_hc3__cws3__0",
+  "sl_E0_hc3__cws3__1",
+  "sl_E0_hc3__cws3__2",
+  "sl_E0_hc3__cws3__3",
+  "c_E0_bn_11__bcf3__0",
+  "c_E0_bn_00__rsn__0",
+  "c_E0_bn_00__rsn__1",
+  "c_E0_bn_00__rsn__2",
+  "c_E0_bf_00__rsf__0",
+  "c_E0_bf_00__rsf__1",
+  "c_E0_bf_00__rsf__2",
+  "c_E0_bf_00__rsf__3",
+  "c_E0_bf_00__rsf__4",
+  "sl_E1_hc0__cwn0__0",
+  "c_E1_tn_01__bcf0__0",
+  "sl_E1_hc1__cwn1__0",
+  "c_E1_tn_01__bcf1__0",
+  "sl_E1_hc2__cwn2__0",
+  "c_E1_tn_11__bcf2__0",
+  "sl_E1_hc3__cwn3__0",
+  "c_E1_tn_11__bcf3__0",
+  "c_E1_tn_00__rsn__0",
+  "c_E1_tn_00__rsn__1",
+  "c_E1_tf_00__rsf__0",
+  "c_E1_tf_00__rsf__1",
+  "c_E1_tf_00__rsf__2",
+  "c_E1_tf_00__rsf__3",
+  "sl_E1_hc0__cws0__0",
+  "sl_E1_hc0__cws0__1",
+  "sl_E1_hc0__cws0__2",
+  "sl_E1_hc0__cws0__3",
+  "c_E1_bn_01__bcf0__0",
+  "sl_E1_hc1__cws1__0",
+  "sl_E1_hc1__cws1__1",
+  "sl_E1_hc1__cws1__2",
+  "sl_E1_hc1__cws1__3",
+  "c_E1_bn_01__bcf1__0",
+  "sl_E1_hc2__cws2__0",
+  "sl_E1_hc2__cws2__1",
+  "sl_E1_hc2__cws2__2",
+  "sl_E1_hc2__cws2__3",
+  "c_E1_bn_11__bcf2__0",
+  "sl_E1_hc3__cws3__0",
+  "sl_E1_hc3__cws3__1",
+  "sl_E1_hc3__cws3__2",
+  "sl_E1_hc3__cws3__3",
+  "c_E1_bn_11__bcf3__0",
+  "c_E1_bn_00__rsn__0",
+  "c_E1_bn_00__rsn__1",
+  "c_E1_bn_00__rsn__2",
+  "c_E1_bf_00__rsf__0",
+  "c_E1_bf_00__rsf__1",
+  "c_E1_bf_00__rsf__2",
+  "c_E1_bf_00__rsf__3",
+  "c_E1_bf_00__rsf__4",
+  "sl_E2_hc0__cwn0__0",
+  "c_E2_tn_01__bcf0__0",
+  "sl_E2_hc1__cwn1__0",
+  "c_E2_tn_01__bcf1__0",
+  "sl_E2_hc2__cwn2__0",
+  "c_E2_tn_11__bcf2__0",
+  "sl_E2_hc3__cwn3__0",
+  "c_E2_tn_11__bcf3__0",
+  "c_E2_tn_00__rsn__0",
+  "c_E2_tn_00__rsn__1",
+  "c_E2_tf_00__rsf__0",
+  "c_E2_tf_00__rsf__1",
+  "c_E2_tf_00__rsf__2",
+  "c_E2_tf_00__rsf__3",
+  "sl_E2_hc0__cws0__0",
+  "sl_E2_hc0__cws0__1",
+  "sl_E2_hc0__cws0__2",
+  "sl_E2_hc0__cws0__3",
+  "c_E2_bn_01__bcf0__0",
+  "sl_E2_hc1__cws1__0",
+  "sl_E2_hc1__cws1__1",
+  "sl_E2_hc1__cws1__2",
+  "sl_E2_hc1__cws1__3",
+  "c_E2_bn_01__bcf1__0",
+  "sl_E2_hc2__cws2__0",
+  "sl_E2_hc2__cws2__1",
+  "sl_E2_hc2__cws2__2",
+  "sl_E2_hc2__cws2__3",
+  "c_E2_bn_11__bcf2__0",
+  "sl_E2_hc3__cws3__0",
+  "sl_E2_hc3__cws3__1",
+  "sl_E2_hc3__cws3__2",
+  "sl_E2_hc3__cws3__3",
+  "c_E2_bn_11__bcf3__0",
+  "c_E2_bn_00__rsn__0",
+  "c_E2_bn_00__rsn__1",
+  "c_E2_bn_00__rsn__2",
+  "c_E2_bf_00__rsf__0",
+  "c_E2_bf_00__rsf__1",
+  "c_E2_bf_00__rsf__2",
+  "c_E2_bf_00__rsf__3",
+  "c_E2_bf_00__rsf__4",
+  "sl_E3_hc0__cwn0__0",
+  "c_E3_tn_01__bcf0__0",
+  "sl_E3_hc1__cwn1__0",
+  "c_E3_tn_01__bcf1__0",
+  "sl_E3_hc2__cwn2__0",
+  "c_E3_tn_11__bcf2__0",
+  "sl_E3_hc3__cwn3__0",
+  "c_E3_tn_11__bcf3__0",
+  "c_E3_tn_00__rsn__0",
+  "c_E3_tn_00__rsn__1",
+  "c_E3_tf_00__rsf__0",
+  "c_E3_tf_00__rsf__1",
+  "c_E3_tf_00__rsf__2",
+  "c_E3_tf_00__rsf__3",
+  "sl_E3_hc0__cws0__0",
+  "sl_E3_hc0__cws0__1",
+  "sl_E3_hc0__cws0__2",
+  "sl_E3_hc0__cws0__3",
+  "c_E3_bn_01__bcf0__0",
+  "sl_E3_hc1__cws1__0",
+  "sl_E3_hc1__cws1__1",
+  "sl_E3_hc1__cws1__2",
+  "sl_E3_hc1__cws1__3",
+  "c_E3_bn_01__bcf1__0",
+  "sl_E3_hc2__cws2__0",
+  "sl_E3_hc2__cws2__1",
+  "sl_E3_hc2__cws2__2",
+  "sl_E3_hc2__cws2__3",
+  "c_E3_bn_11__bcf2__0",
+  "sl_E3_hc3__cws3__0",
+  "sl_E3_hc3__cws3__1",
+  "sl_E3_hc3__cws3__2",
+  "sl_E3_hc3__cws3__3",
+  "c_E3_bn_11__bcf3__0",
+  "c_E3_bn_00__rsn__0",
+  "c_E3_bn_00__rsn__1",
+  "c_E3_bn_00__rsn__2",
+  "c_E3_bf_00__rsf__0",
+  "c_E3_bf_00__rsf__1",
+  "c_E3_bf_00__rsf__2",
+  "c_E3_bf_00__rsf__3",
+  "c_E3_bf_00__rsf__4",
+  "sl_E4_hc0__cwn0__0",
+  "c_E4_tn_01__bcf0__0",
+  "sl_E4_hc1__cwn1__0",
+  "c_E4_tn_01__bcf1__0",
+  "sl_E4_hc2__cwn2__0",
+  "c_E4_tn_11__bcf2__0",
+  "sl_E4_hc3__cwn3__0",
+  "c_E4_tn_11__bcf3__0",
+  "c_E4_tn_00__rsn__0",
+  "c_E4_tn_00__rsn__1",
+  "c_E4_tf_00__rsf__0",
+  "c_E4_tf_00__rsf__1",
+  "c_E4_tf_00__rsf__2",
+  "c_E4_tf_00__rsf__3",
+  "sl_E4_hc0__cws0__0",
+  "sl_E4_hc0__cws0__1",
+  "sl_E4_hc0__cws0__2",
+  "sl_E4_hc0__cws0__3",
+  "c_E4_bn_01__bcf0__0",
+  "sl_E4_hc1__cws1__0",
+  "sl_E4_hc1__cws1__1",
+  "sl_E4_hc1__cws1__2",
+  "sl_E4_hc1__cws1__3",
+  "c_E4_bn_01__bcf1__0",
+  "sl_E4_hc2__cws2__0",
+  "sl_E4_hc2__cws2__1",
+  "sl_E4_hc2__cws2__2",
+  "sl_E4_hc2__cws2__3",
+  "c_E4_bn_11__bcf2__0",
+  "sl_E4_hc3__cws3__0",
+  "sl_E4_hc3__cws3__1",
+  "sl_E4_hc3__cws3__2",
+  "sl_E4_hc3__cws3__3",
+  "c_E4_bn_11__bcf3__0",
+  "c_E4_bn_00__rsn__0",
+  "c_E4_bn_00__rsn__1",
+  "c_E4_bn_00__rsn__2",
+  "c_E4_bf_00__rsf__0",
+  "c_E4_bf_00__rsf__1",
+  "c_E4_bf_00__rsf__2",
+  "c_E4_bf_00__rsf__3",
+  "c_E4_bf_00__rsf__4",
+  "sl_E5_hc0__cwn0__0",
+  "c_E5_tn_01__bcf0__0",
+  "sl_E5_hc1__cwn1__0",
+  "c_E5_tn_01__bcf1__0",
+  "sl_E5_hc2__cwn2__0",
+  "c_E5_tn_11__bcf2__0",
+  "sl_E5_hc3__cwn3__0",
+  "c_E5_tn_11__bcf3__0",
+  "c_E5_tn_00__rsn__0",
+  "c_E5_tn_00__rsn__1",
+  "c_E5_tf_00__rsf__0",
+  "c_E5_tf_00__rsf__1",
+  "c_E5_tf_00__rsf__2",
+  "c_E5_tf_00__rsf__3",
+  "sl_E5_hc0__cws0__0",
+  "sl_E5_hc0__cws0__1",
+  "sl_E5_hc0__cws0__2",
+  "sl_E5_hc0__cws0__3",
+  "c_E5_bn_01__bcf0__0",
+  "sl_E5_hc1__cws1__0",
+  "sl_E5_hc1__cws1__1",
+  "sl_E5_hc1__cws1__2",
+  "sl_E5_hc1__cws1__3",
+  "c_E5_bn_01__bcf1__0",
+  "sl_E5_hc2__cws2__0",
+  "sl_E5_hc2__cws2__1",
+  "sl_E5_hc2__cws2__2",
+  "sl_E5_hc2__cws2__3",
+  "c_E5_bn_11__bcf2__0",
+  "sl_E5_hc3__cws3__0",
+  "sl_E5_hc3__cws3__1",
+  "sl_E5_hc3__cws3__2",
+  "sl_E5_hc3__cws3__3",
+  "c_E5_bn_11__bcf3__0",
+  "c_E5_bn_00__rsn__0",
+  "c_E5_bn_00__rsn__1",
+  "c_E5_bn_00__rsn__2",
+  "c_E5_bf_00__rsf__0",
+  "c_E5_bf_00__rsf__1",
+  "c_E5_bf_00__rsf__2",
+  "c_E5_bf_00__rsf__3",
+  "c_E5_bf_00__rsf__4",
+  "sl_W5_stm__b_tw_data_stm_ctl__0",
+  "sl_W5_ctl__b_tw_data_ctl_st_a__0",
+  "sl_W5_ctl__b_hw_ctl_hc0__0",
+  "sl_W5_ctl__b_hw_ctl_hc0__1",
+  "sl_W5_ctl__b_hw_ctl_hc1__0",
+  "sl_W5_ctl__b_hw_ctl_hc2__0",
+  "sl_W5_ctl__b_hw_ctl_hc3__0",
+  "sl_W5_ctl__b_hw_ctl_hc3__1",
+  "sl_W5_fe__x_fe_fw__0",
+  "sl_W5_fe__x_fe_fw__1",
+  "sl_W5_fe__x_fe_fw__2",
+  "sl_W5_fe__x_fe_fw_p1__0",
+  "sl_W5_fe__x_fe_fw_p1__1",
+  "sl_W5_fe__x_fe_fw_p1__2",
+  "sl_W5_ctl__x_ctl_fw__0",
+  "sl_W5_ctl__x_ctl_fw__1",
+  "sl_W5_ctl__x_ctl_fw_p1__0",
+  "sl_W5_ctl__x_ctl_fw_p1__1",
+  "sl_W5_stm__x_stm_fw__0",
+  "sl_W5_stm__x_stm_fw_p1__0",
+  "sl_W5_sc__x_sc_fw__0",
+  "sl_W5_sc__x_sc_fw__1",
+  "sl_W5_fw__x_fw_fe__0",
+  "sl_W5_fw__x_fw_fe__1",
+  "sl_W5_fw__x_fw_fe__2",
+  "sl_W5_fw__x_fw_fe_p1__0",
+  "sl_W5_fw__x_fw_fe_p1__1",
+  "sl_W5_fw__x_fw_fe_p1__2",
+  "sl_W5_fw__x_fw_fe_p2__0",
+  "sl_W5_fw__x_fw_fe_p2__1",
+  "sl_W5_fw__x_fw_fe_p2__2",
+  "sl_W5_stm__x_stm_fe__0",
+  "sl_W5_stm__x_stm_fe__1",
+  "sl_W5_stm__x_stm_fe_p1__0",
+  "sl_W5_stm__x_stm_fe_p1__1",
+  "sl_W5_sc__x_sc_fe__0",
+  "sl_W5_st_a__x_st_a_fe__0",
+  "sl_W5_st_a__x_st_a_fe__1",
+  "sl_W5_st_a__x_st_a_fe__2",
+  "sl_W5_st_a__x_st_a_fe__3",
+  "sl_W5_st_b__x_st_b_fe__0",
+  "sl_W5_fw__x_fw_ctl__0",
+  "sl_W5_fw__x_fw_ctl__1",
+  "sl_W5_fw__x_fw_ctl_p1__0",
+  "sl_W5_fw__x_fw_ctl_p1__1",
+  "sl_W5_fw__x_fw_ctl_p1__2",
+  "sl_W5_fw__x_fw_ctl_p2__0",
+  "sl_W5_fw__x_fw_ctl_p2__1",
+  "sl_W5_fw__x_fw_ctl_p2__2",
+  "sl_W5_fw__x_fw_ctl_p2__3",
+  "sl_W5_fw__x_fw_ctl_p2__4",
+  "sl_W5_st_a__x_st_a_ctl__0",
+  "sl_W5_st_b__x_st_b_ctl__0",
+  "sl_W5_sc__x_sc_ctl__0",
+  "sl_W5_hc0__x_hc0_ctl__0",
+  "sl_W5_hc0__x_hc0_ctl__1",
+  "sl_W5_ctl__x_ctl_sc__0",
+  "sl_W5_fe__x_fe_sc__0",
+  "sl_W5_ctl__x_ctl_stm__0",
+  "sl_W5_fw__x_fw_stm__0",
+  "sl_W5_fw__x_fw_stm_p1__0",
+  "sl_W5_fe__x_fe_stm__0",
+  "sl_W5_fe__x_fe_stm__1",
+  "sl_W5_fe__x_fe_stm_p1__0",
+  "sl_W5_fe__x_fe_stm_p1__1",
+  "sl_W5_hc1__x_hc1_st_a__0",
+  "sl_W5_hc1__x_hc1_st_a__1",
+  "sl_W5_st_b__x_st_b_st_a__0",
+  "sl_W5_st_b__x_st_b_st_a__1",
+  "sl_W5_ctl__x_ctl_st_b__0",
+  "sl_W5_st_a__x_st_a_st_b__0",
+  "sl_W5_st_a__x_st_a_st_b__1",
+  "sl_W5_hc1__x_hc1_st_b__0",
+  "sl_W5_hc1__x_hc1_st_b__1",
+  "sl_W5_hc1__x_hc1_ctl__0",
+  "sl_W5_hc2__x_hc2_ctl__0",
+  "sl_W5_hc3__x_hc3_ctl__0",
+  "sl_W5_hc3__x_hc3_ctl__1",
+  "sl_W5_hc1__x_hc1_hc0__0",
+  "sl_W5_hc2__x_hc2_hc1__0",
+  "sl_W5_hc3__x_hc3_hc2__0",
+  "sl_W5_su_l0__x_su_l0_ctl__0",
+  "sl_W5_su_l0__x_su_l0_ctl__1",
+  "sl_W5_su_l0__x_su_l0_ctl__2",
+  "sl_W5_su_l1__x_su_l1_ctl__0",
+  "sl_W5_su_l1__x_su_l1_ctl__1",
+  "sl_W5_su_l1__x_su_l1_ctl__2",
+  "sl_W5_su_c__x_su_c_ctl__0",
+  "sl_W5_su_c__x_su_c_ctl__1",
+  "sl_W5_ctl__x_ctl_su_c__0",
+  "sl_W5_ctl__x_ctl_su_c__1",
+  "sl_W5_ctl__x_ctl_su_c_p1__0",
+  "sl_W5_ctl__x_ctl_su_c_p1__1",
+  "sl_W5_ctl__x_ctl_su_c_p2__0",
+  "sl_W5_ctl__x_ctl_su_c_p2__1",
+  "sl_W5_su_c__x_su_c_sc__0",
+  "sl_W5_su_l0__x_su_l0_sc__0",
+  "sl_W5_su_l0__x_su_l0_sc__1",
+  "sl_W5_su_l1__x_su_l1_sc__0",
+  "sl_W5_su_l1__x_su_l1_sc__1",
+  "sl_W5_su_l0__x_su_l0_stm__0",
+  "sl_W5_su_l0__x_su_l0_stm__1",
+  "sl_W5_su_l1__x_su_l1_stm__0",
+  "sl_W5_su_l1__x_su_l1_stm__1",
+  "sl_W5_su_c__x_su_c_su_l0__0",
+  "sl_W5_su_c__x_su_c_su_l0_p1__0",
+  "sl_W5_su_c__x_su_c_su_l1__0",
+  "sl_W5_su_c__x_su_c_su_l1_p1__0",
+  "sl_W5_su_l0__x_su_l0_su_c__0",
+  "sl_W5_su_l0__x_su_l0_su_c_p1__0",
+  "sl_W5_su_l1__x_su_l1_su_c__0",
+  "sl_W5_su_l1__x_su_l1_su_c_p1__0",
+  "sl_W4_stm__b_tw_data_stm_ctl__0",
+  "sl_W4_ctl__b_tw_data_ctl_st_a__0",
+  "sl_W4_ctl__b_hw_ctl_hc0__0",
+  "sl_W4_ctl__b_hw_ctl_hc0__1",
+  "sl_W4_ctl__b_hw_ctl_hc1__0",
+  "sl_W4_ctl__b_hw_ctl_hc2__0",
+  "sl_W4_ctl__b_hw_ctl_hc3__0",
+  "sl_W4_ctl__b_hw_ctl_hc3__1",
+  "sl_W4_fe__x_fe_fw__0",
+  "sl_W4_fe__x_fe_fw__1",
+  "sl_W4_fe__x_fe_fw__2",
+  "sl_W4_fe__x_fe_fw_p1__0",
+  "sl_W4_fe__x_fe_fw_p1__1",
+  "sl_W4_fe__x_fe_fw_p1__2",
+  "sl_W4_ctl__x_ctl_fw__0",
+  "sl_W4_ctl__x_ctl_fw__1",
+  "sl_W4_ctl__x_ctl_fw_p1__0",
+  "sl_W4_ctl__x_ctl_fw_p1__1",
+  "sl_W4_stm__x_stm_fw__0",
+  "sl_W4_stm__x_stm_fw_p1__0",
+  "sl_W4_sc__x_sc_fw__0",
+  "sl_W4_sc__x_sc_fw__1",
+  "sl_W4_fw__x_fw_fe__0",
+  "sl_W4_fw__x_fw_fe__1",
+  "sl_W4_fw__x_fw_fe__2",
+  "sl_W4_fw__x_fw_fe_p1__0",
+  "sl_W4_fw__x_fw_fe_p1__1",
+  "sl_W4_fw__x_fw_fe_p1__2",
+  "sl_W4_fw__x_fw_fe_p2__0",
+  "sl_W4_fw__x_fw_fe_p2__1",
+  "sl_W4_fw__x_fw_fe_p2__2",
+  "sl_W4_stm__x_stm_fe__0",
+  "sl_W4_stm__x_stm_fe__1",
+  "sl_W4_stm__x_stm_fe_p1__0",
+  "sl_W4_stm__x_stm_fe_p1__1",
+  "sl_W4_sc__x_sc_fe__0",
+  "sl_W4_st_a__x_st_a_fe__0",
+  "sl_W4_st_a__x_st_a_fe__1",
+  "sl_W4_st_a__x_st_a_fe__2",
+  "sl_W4_st_a__x_st_a_fe__3",
+  "sl_W4_st_b__x_st_b_fe__0",
+  "sl_W4_fw__x_fw_ctl__0",
+  "sl_W4_fw__x_fw_ctl__1",
+  "sl_W4_fw__x_fw_ctl_p1__0",
+  "sl_W4_fw__x_fw_ctl_p1__1",
+  "sl_W4_fw__x_fw_ctl_p1__2",
+  "sl_W4_fw__x_fw_ctl_p2__0",
+  "sl_W4_fw__x_fw_ctl_p2__1",
+  "sl_W4_fw__x_fw_ctl_p2__2",
+  "sl_W4_fw__x_fw_ctl_p2__3",
+  "sl_W4_fw__x_fw_ctl_p2__4",
+  "sl_W4_st_a__x_st_a_ctl__0",
+  "sl_W4_st_b__x_st_b_ctl__0",
+  "sl_W4_sc__x_sc_ctl__0",
+  "sl_W4_hc0__x_hc0_ctl__0",
+  "sl_W4_hc0__x_hc0_ctl__1",
+  "sl_W4_ctl__x_ctl_sc__0",
+  "sl_W4_fe__x_fe_sc__0",
+  "sl_W4_fw__x_fw_sc__0",
+  "sl_W4_fw__x_fw_sc__1",
+  "sl_W4_ctl__x_ctl_stm__0",
+  "sl_W4_fw__x_fw_stm__0",
+  "sl_W4_fw__x_fw_stm_p1__0",
+  "sl_W4_fe__x_fe_stm__0",
+  "sl_W4_fe__x_fe_stm__1",
+  "sl_W4_fe__x_fe_stm_p1__0",
+  "sl_W4_fe__x_fe_stm_p1__1",
+  "sl_W4_hc1__x_hc1_st_a__0",
+  "sl_W4_hc1__x_hc1_st_a__1",
+  "sl_W4_fw__x_fw_st_a__0",
+  "sl_W4_st_b__x_st_b_st_a__0",
+  "sl_W4_st_b__x_st_b_st_a__1",
+  "sl_W4_ctl__x_ctl_st_b__0",
+  "sl_W4_st_a__x_st_a_st_b__0",
+  "sl_W4_st_a__x_st_a_st_b__1",
+  "sl_W4_hc1__x_hc1_st_b__0",
+  "sl_W4_hc1__x_hc1_st_b__1",
+  "sl_W4_fw__x_fw_st_b__0",
+  "sl_W4_fw__x_fw_st_b__1",
+  "sl_W4_fw__x_fw_st_b__2",
+  "sl_W4_fw__x_fw_st_b__3",
+  "sl_W4_hc1__x_hc1_ctl__0",
+  "sl_W4_hc2__x_hc2_ctl__0",
+  "sl_W4_hc3__x_hc3_ctl__0",
+  "sl_W4_hc3__x_hc3_ctl__1",
+  "sl_W4_hc1__x_hc1_hc0__0",
+  "sl_W4_hc2__x_hc2_hc1__0",
+  "sl_W4_hc3__x_hc3_hc2__0",
+  "sl_W4_su_l0__x_su_l0_ctl__0",
+  "sl_W4_su_l0__x_su_l0_ctl__1",
+  "sl_W4_su_l0__x_su_l0_ctl__2",
+  "sl_W4_su_l1__x_su_l1_ctl__0",
+  "sl_W4_su_l1__x_su_l1_ctl__1",
+  "sl_W4_su_l1__x_su_l1_ctl__2",
+  "sl_W4_su_c__x_su_c_ctl__0",
+  "sl_W4_su_c__x_su_c_ctl__1",
+  "sl_W4_ctl__x_ctl_su_c__0",
+  "sl_W4_ctl__x_ctl_su_c__1",
+  "sl_W4_ctl__x_ctl_su_c_p1__0",
+  "sl_W4_ctl__x_ctl_su_c_p1__1",
+  "sl_W4_ctl__x_ctl_su_c_p2__0",
+  "sl_W4_ctl__x_ctl_su_c_p2__1",
+  "sl_W4_su_c__x_su_c_sc__0",
+  "sl_W4_su_l0__x_su_l0_sc__0",
+  "sl_W4_su_l0__x_su_l0_sc__1",
+  "sl_W4_su_l1__x_su_l1_sc__0",
+  "sl_W4_su_l1__x_su_l1_sc__1",
+  "sl_W4_su_l0__x_su_l0_stm__0",
+  "sl_W4_su_l0__x_su_l0_stm__1",
+  "sl_W4_su_l1__x_su_l1_stm__0",
+  "sl_W4_su_l1__x_su_l1_stm__1",
+  "sl_W4_su_c__x_su_c_su_l0__0",
+  "sl_W4_su_c__x_su_c_su_l0_p1__0",
+  "sl_W4_su_c__x_su_c_su_l1__0",
+  "sl_W4_su_c__x_su_c_su_l1_p1__0",
+  "sl_W4_su_l0__x_su_l0_su_c__0",
+  "sl_W4_su_l0__x_su_l0_su_c_p1__0",
+  "sl_W4_su_l1__x_su_l1_su_c__0",
+  "sl_W4_su_l1__x_su_l1_su_c_p1__0",
+  "sl_W3_stm__b_tw_data_stm_ctl__0",
+  "sl_W3_ctl__b_tw_data_ctl_st_a__0",
+  "sl_W3_ctl__b_hw_ctl_hc0__0",
+  "sl_W3_ctl__b_hw_ctl_hc0__1",
+  "sl_W3_ctl__b_hw_ctl_hc1__0",
+  "sl_W3_ctl__b_hw_ctl_hc2__0",
+  "sl_W3_ctl__b_hw_ctl_hc3__0",
+  "sl_W3_ctl__b_hw_ctl_hc3__1",
+  "sl_W3_fe__x_fe_fw__0",
+  "sl_W3_fe__x_fe_fw__1",
+  "sl_W3_fe__x_fe_fw__2",
+  "sl_W3_fe__x_fe_fw_p1__0",
+  "sl_W3_fe__x_fe_fw_p1__1",
+  "sl_W3_fe__x_fe_fw_p1__2",
+  "sl_W3_ctl__x_ctl_fw__0",
+  "sl_W3_ctl__x_ctl_fw__1",
+  "sl_W3_ctl__x_ctl_fw_p1__0",
+  "sl_W3_ctl__x_ctl_fw_p1__1",
+  "sl_W3_stm__x_stm_fw__0",
+  "sl_W3_stm__x_stm_fw_p1__0",
+  "sl_W3_sc__x_sc_fw__0",
+  "sl_W3_sc__x_sc_fw__1",
+  "sl_W3_fw__x_fw_fe__0",
+  "sl_W3_fw__x_fw_fe__1",
+  "sl_W3_fw__x_fw_fe__2",
+  "sl_W3_fw__x_fw_fe_p1__0",
+  "sl_W3_fw__x_fw_fe_p1__1",
+  "sl_W3_fw__x_fw_fe_p1__2",
+  "sl_W3_fw__x_fw_fe_p2__0",
+  "sl_W3_fw__x_fw_fe_p2__1",
+  "sl_W3_fw__x_fw_fe_p2__2",
+  "sl_W3_stm__x_stm_fe__0",
+  "sl_W3_stm__x_stm_fe__1",
+  "sl_W3_stm__x_stm_fe_p1__0",
+  "sl_W3_stm__x_stm_fe_p1__1",
+  "sl_W3_sc__x_sc_fe__0",
+  "sl_W3_st_a__x_st_a_fe__0",
+  "sl_W3_st_a__x_st_a_fe__1",
+  "sl_W3_st_a__x_st_a_fe__2",
+  "sl_W3_st_a__x_st_a_fe__3",
+  "sl_W3_st_b__x_st_b_fe__0",
+  "sl_W3_fw__x_fw_ctl__0",
+  "sl_W3_fw__x_fw_ctl__1",
+  "sl_W3_fw__x_fw_ctl_p1__0",
+  "sl_W3_fw__x_fw_ctl_p1__1",
+  "sl_W3_fw__x_fw_ctl_p1__2",
+  "sl_W3_fw__x_fw_ctl_p2__0",
+  "sl_W3_fw__x_fw_ctl_p2__1",
+  "sl_W3_fw__x_fw_ctl_p2__2",
+  "sl_W3_fw__x_fw_ctl_p2__3",
+  "sl_W3_fw__x_fw_ctl_p2__4",
+  "sl_W3_st_a__x_st_a_ctl__0",
+  "sl_W3_st_b__x_st_b_ctl__0",
+  "sl_W3_sc__x_sc_ctl__0",
+  "sl_W3_hc0__x_hc0_ctl__0",
+  "sl_W3_hc0__x_hc0_ctl__1",
+  "sl_W3_ctl__x_ctl_sc__0",
+  "sl_W3_fe__x_fe_sc__0",
+  "sl_W3_fw__x_fw_sc__0",
+  "sl_W3_fw__x_fw_sc__1",
+  "sl_W3_ctl__x_ctl_stm__0",
+  "sl_W3_fw__x_fw_stm__0",
+  "sl_W3_fw__x_fw_stm_p1__0",
+  "sl_W3_fe__x_fe_stm__0",
+  "sl_W3_fe__x_fe_stm__1",
+  "sl_W3_fe__x_fe_stm_p1__0",
+  "sl_W3_fe__x_fe_stm_p1__1",
+  "sl_W3_hc1__x_hc1_st_a__0",
+  "sl_W3_hc1__x_hc1_st_a__1",
+  "sl_W3_st_b__x_st_b_st_a__0",
+  "sl_W3_st_b__x_st_b_st_a__1",
+  "sl_W3_ctl__x_ctl_st_b__0",
+  "sl_W3_st_a__x_st_a_st_b__0",
+  "sl_W3_st_a__x_st_a_st_b__1",
+  "sl_W3_hc1__x_hc1_st_b__0",
+  "sl_W3_hc1__x_hc1_st_b__1",
+  "sl_W3_hc1__x_hc1_ctl__0",
+  "sl_W3_hc2__x_hc2_ctl__0",
+  "sl_W3_hc3__x_hc3_ctl__0",
+  "sl_W3_hc3__x_hc3_ctl__1",
+  "sl_W3_hc1__x_hc1_hc0__0",
+  "sl_W3_hc2__x_hc2_hc1__0",
+  "sl_W3_hc3__x_hc3_hc2__0",
+  "sl_W3_su_l0__x_su_l0_ctl__0",
+  "sl_W3_su_l0__x_su_l0_ctl__1",
+  "sl_W3_su_l0__x_su_l0_ctl__2",
+  "sl_W3_su_l1__x_su_l1_ctl__0",
+  "sl_W3_su_l1__x_su_l1_ctl__1",
+  "sl_W3_su_l1__x_su_l1_ctl__2",
+  "sl_W3_su_c__x_su_c_ctl__0",
+  "sl_W3_su_c__x_su_c_ctl__1",
+  "sl_W3_ctl__x_ctl_su_c__0",
+  "sl_W3_ctl__x_ctl_su_c__1",
+  "sl_W3_ctl__x_ctl_su_c_p1__0",
+  "sl_W3_ctl__x_ctl_su_c_p1__1",
+  "sl_W3_ctl__x_ctl_su_c_p2__0",
+  "sl_W3_ctl__x_ctl_su_c_p2__1",
+  "sl_W3_su_c__x_su_c_sc__0",
+  "sl_W3_su_l0__x_su_l0_sc__0",
+  "sl_W3_su_l0__x_su_l0_sc__1",
+  "sl_W3_su_l1__x_su_l1_sc__0",
+  "sl_W3_su_l1__x_su_l1_sc__1",
+  "sl_W3_su_l0__x_su_l0_stm__0",
+  "sl_W3_su_l0__x_su_l0_stm__1",
+  "sl_W3_su_l1__x_su_l1_stm__0",
+  "sl_W3_su_l1__x_su_l1_stm__1",
+  "sl_W3_su_c__x_su_c_su_l0__0",
+  "sl_W3_su_c__x_su_c_su_l0_p1__0",
+  "sl_W3_su_c__x_su_c_su_l1__0",
+  "sl_W3_su_c__x_su_c_su_l1_p1__0",
+  "sl_W3_su_l0__x_su_l0_su_c__0",
+  "sl_W3_su_l0__x_su_l0_su_c_p1__0",
+  "sl_W3_su_l1__x_su_l1_su_c__0",
+  "sl_W3_su_l1__x_su_l1_su_c_p1__0",
+  "sl_W2_stm__b_tw_data_stm_ctl__0",
+  "sl_W2_ctl__b_tw_data_ctl_st_a__0",
+  "sl_W2_ctl__b_hw_ctl_hc0__0",
+  "sl_W2_ctl__b_hw_ctl_hc0__1",
+  "sl_W2_ctl__b_hw_ctl_hc1__0",
+  "sl_W2_ctl__b_hw_ctl_hc2__0",
+  "sl_W2_ctl__b_hw_ctl_hc3__0",
+  "sl_W2_ctl__b_hw_ctl_hc3__1",
+  "sl_W2_fe__x_fe_fw__0",
+  "sl_W2_fe__x_fe_fw__1",
+  "sl_W2_fe__x_fe_fw__2",
+  "sl_W2_fe__x_fe_fw_p1__0",
+  "sl_W2_fe__x_fe_fw_p1__1",
+  "sl_W2_fe__x_fe_fw_p1__2",
+  "sl_W2_ctl__x_ctl_fw__0",
+  "sl_W2_ctl__x_ctl_fw__1",
+  "sl_W2_ctl__x_ctl_fw_p1__0",
+  "sl_W2_ctl__x_ctl_fw_p1__1",
+  "sl_W2_stm__x_stm_fw__0",
+  "sl_W2_stm__x_stm_fw_p1__0",
+  "sl_W2_sc__x_sc_fw__0",
+  "sl_W2_sc__x_sc_fw__1",
+  "sl_W2_fw__x_fw_fe__0",
+  "sl_W2_fw__x_fw_fe__1",
+  "sl_W2_fw__x_fw_fe__2",
+  "sl_W2_fw__x_fw_fe_p1__0",
+  "sl_W2_fw__x_fw_fe_p1__1",
+  "sl_W2_fw__x_fw_fe_p1__2",
+  "sl_W2_fw__x_fw_fe_p2__0",
+  "sl_W2_fw__x_fw_fe_p2__1",
+  "sl_W2_fw__x_fw_fe_p2__2",
+  "sl_W2_stm__x_stm_fe__0",
+  "sl_W2_stm__x_stm_fe__1",
+  "sl_W2_stm__x_stm_fe_p1__0",
+  "sl_W2_stm__x_stm_fe_p1__1",
+  "sl_W2_sc__x_sc_fe__0",
+  "sl_W2_st_a__x_st_a_fe__0",
+  "sl_W2_st_a__x_st_a_fe__1",
+  "sl_W2_st_a__x_st_a_fe__2",
+  "sl_W2_st_a__x_st_a_fe__3",
+  "sl_W2_st_b__x_st_b_fe__0",
+  "sl_W2_fw__x_fw_ctl__0",
+  "sl_W2_fw__x_fw_ctl__1",
+  "sl_W2_fw__x_fw_ctl_p1__0",
+  "sl_W2_fw__x_fw_ctl_p1__1",
+  "sl_W2_fw__x_fw_ctl_p1__2",
+  "sl_W2_fw__x_fw_ctl_p2__0",
+  "sl_W2_fw__x_fw_ctl_p2__1",
+  "sl_W2_fw__x_fw_ctl_p2__2",
+  "sl_W2_fw__x_fw_ctl_p2__3",
+  "sl_W2_fw__x_fw_ctl_p2__4",
+  "sl_W2_st_a__x_st_a_ctl__0",
+  "sl_W2_st_b__x_st_b_ctl__0",
+  "sl_W2_sc__x_sc_ctl__0",
+  "sl_W2_hc0__x_hc0_ctl__0",
+  "sl_W2_hc0__x_hc0_ctl__1",
+  "sl_W2_ctl__x_ctl_sc__0",
+  "sl_W2_fe__x_fe_sc__0",
+  "sl_W2_fw__x_fw_sc__0",
+  "sl_W2_fw__x_fw_sc__1",
+  "sl_W2_ctl__x_ctl_stm__0",
+  "sl_W2_fw__x_fw_stm__0",
+  "sl_W2_fw__x_fw_stm_p1__0",
+  "sl_W2_fe__x_fe_stm__0",
+  "sl_W2_fe__x_fe_stm__1",
+  "sl_W2_fe__x_fe_stm_p1__0",
+  "sl_W2_fe__x_fe_stm_p1__1",
+  "sl_W2_hc1__x_hc1_st_a__0",
+  "sl_W2_hc1__x_hc1_st_a__1",
+  "sl_W2_fw__x_fw_st_a__0",
+  "sl_W2_st_b__x_st_b_st_a__0",
+  "sl_W2_st_b__x_st_b_st_a__1",
+  "sl_W2_ctl__x_ctl_st_b__0",
+  "sl_W2_st_a__x_st_a_st_b__0",
+  "sl_W2_st_a__x_st_a_st_b__1",
+  "sl_W2_hc1__x_hc1_st_b__0",
+  "sl_W2_hc1__x_hc1_st_b__1",
+  "sl_W2_fw__x_fw_st_b__0",
+  "sl_W2_fw__x_fw_st_b__1",
+  "sl_W2_fw__x_fw_st_b__2",
+  "sl_W2_fw__x_fw_st_b__3",
+  "sl_W2_hc1__x_hc1_ctl__0",
+  "sl_W2_hc2__x_hc2_ctl__0",
+  "sl_W2_hc3__x_hc3_ctl__0",
+  "sl_W2_hc3__x_hc3_ctl__1",
+  "sl_W2_hc1__x_hc1_hc0__0",
+  "sl_W2_hc2__x_hc2_hc1__0",
+  "sl_W2_hc3__x_hc3_hc2__0",
+  "sl_W2_su_l0__x_su_l0_ctl__0",
+  "sl_W2_su_l0__x_su_l0_ctl__1",
+  "sl_W2_su_l0__x_su_l0_ctl__2",
+  "sl_W2_su_l1__x_su_l1_ctl__0",
+  "sl_W2_su_l1__x_su_l1_ctl__1",
+  "sl_W2_su_l1__x_su_l1_ctl__2",
+  "sl_W2_su_c__x_su_c_ctl__0",
+  "sl_W2_su_c__x_su_c_ctl__1",
+  "sl_W2_ctl__x_ctl_su_c__0",
+  "sl_W2_ctl__x_ctl_su_c__1",
+  "sl_W2_ctl__x_ctl_su_c_p1__0",
+  "sl_W2_ctl__x_ctl_su_c_p1__1",
+  "sl_W2_ctl__x_ctl_su_c_p2__0",
+  "sl_W2_ctl__x_ctl_su_c_p2__1",
+  "sl_W2_su_c__x_su_c_sc__0",
+  "sl_W2_su_l0__x_su_l0_sc__0",
+  "sl_W2_su_l0__x_su_l0_sc__1",
+  "sl_W2_su_l1__x_su_l1_sc__0",
+  "sl_W2_su_l1__x_su_l1_sc__1",
+  "sl_W2_su_l0__x_su_l0_stm__0",
+  "sl_W2_su_l0__x_su_l0_stm__1",
+  "sl_W2_su_l1__x_su_l1_stm__0",
+  "sl_W2_su_l1__x_su_l1_stm__1",
+  "sl_W2_su_c__x_su_c_su_l0__0",
+  "sl_W2_su_c__x_su_c_su_l0_p1__0",
+  "sl_W2_su_c__x_su_c_su_l1__0",
+  "sl_W2_su_c__x_su_c_su_l1_p1__0",
+  "sl_W2_su_l0__x_su_l0_su_c__0",
+  "sl_W2_su_l0__x_su_l0_su_c_p1__0",
+  "sl_W2_su_l1__x_su_l1_su_c__0",
+  "sl_W2_su_l1__x_su_l1_su_c_p1__0",
+  "sl_W1_stm__b_tw_data_stm_ctl__0",
+  "sl_W1_ctl__b_tw_data_ctl_st_a__0",
+  "sl_W1_ctl__b_hw_ctl_hc0__0",
+  "sl_W1_ctl__b_hw_ctl_hc0__1",
+  "sl_W1_ctl__b_hw_ctl_hc1__0",
+  "sl_W1_ctl__b_hw_ctl_hc2__0",
+  "sl_W1_ctl__b_hw_ctl_hc3__0",
+  "sl_W1_ctl__b_hw_ctl_hc3__1",
+  "sl_W1_fe__x_fe_fw__0",
+  "sl_W1_fe__x_fe_fw__1",
+  "sl_W1_fe__x_fe_fw__2",
+  "sl_W1_fe__x_fe_fw_p1__0",
+  "sl_W1_fe__x_fe_fw_p1__1",
+  "sl_W1_fe__x_fe_fw_p1__2",
+  "sl_W1_ctl__x_ctl_fw__0",
+  "sl_W1_ctl__x_ctl_fw__1",
+  "sl_W1_ctl__x_ctl_fw_p1__0",
+  "sl_W1_ctl__x_ctl_fw_p1__1",
+  "sl_W1_stm__x_stm_fw__0",
+  "sl_W1_stm__x_stm_fw_p1__0",
+  "sl_W1_sc__x_sc_fw__0",
+  "sl_W1_sc__x_sc_fw__1",
+  "sl_W1_fw__x_fw_fe__0",
+  "sl_W1_fw__x_fw_fe__1",
+  "sl_W1_fw__x_fw_fe__2",
+  "sl_W1_fw__x_fw_fe_p1__0",
+  "sl_W1_fw__x_fw_fe_p1__1",
+  "sl_W1_fw__x_fw_fe_p1__2",
+  "sl_W1_fw__x_fw_fe_p2__0",
+  "sl_W1_fw__x_fw_fe_p2__1",
+  "sl_W1_fw__x_fw_fe_p2__2",
+  "sl_W1_stm__x_stm_fe__0",
+  "sl_W1_stm__x_stm_fe__1",
+  "sl_W1_stm__x_stm_fe_p1__0",
+  "sl_W1_stm__x_stm_fe_p1__1",
+  "sl_W1_sc__x_sc_fe__0",
+  "sl_W1_st_a__x_st_a_fe__0",
+  "sl_W1_st_a__x_st_a_fe__1",
+  "sl_W1_st_a__x_st_a_fe__2",
+  "sl_W1_st_a__x_st_a_fe__3",
+  "sl_W1_st_b__x_st_b_fe__0",
+  "sl_W1_fw__x_fw_ctl__0",
+  "sl_W1_fw__x_fw_ctl__1",
+  "sl_W1_fw__x_fw_ctl_p1__0",
+  "sl_W1_fw__x_fw_ctl_p1__1",
+  "sl_W1_fw__x_fw_ctl_p1__2",
+  "sl_W1_fw__x_fw_ctl_p2__0",
+  "sl_W1_fw__x_fw_ctl_p2__1",
+  "sl_W1_fw__x_fw_ctl_p2__2",
+  "sl_W1_fw__x_fw_ctl_p2__3",
+  "sl_W1_fw__x_fw_ctl_p2__4",
+  "sl_W1_st_a__x_st_a_ctl__0",
+  "sl_W1_st_b__x_st_b_ctl__0",
+  "sl_W1_sc__x_sc_ctl__0",
+  "sl_W1_hc0__x_hc0_ctl__0",
+  "sl_W1_hc0__x_hc0_ctl__1",
+  "sl_W1_ctl__x_ctl_sc__0",
+  "sl_W1_fe__x_fe_sc__0",
+  "sl_W1_fw__x_fw_sc__0",
+  "sl_W1_fw__x_fw_sc__1",
+  "sl_W1_ctl__x_ctl_stm__0",
+  "sl_W1_fw__x_fw_stm__0",
+  "sl_W1_fw__x_fw_stm_p1__0",
+  "sl_W1_fe__x_fe_stm__0",
+  "sl_W1_fe__x_fe_stm__1",
+  "sl_W1_fe__x_fe_stm_p1__0",
+  "sl_W1_fe__x_fe_stm_p1__1",
+  "sl_W1_hc1__x_hc1_st_a__0",
+  "sl_W1_hc1__x_hc1_st_a__1",
+  "sl_W1_st_b__x_st_b_st_a__0",
+  "sl_W1_st_b__x_st_b_st_a__1",
+  "sl_W1_ctl__x_ctl_st_b__0",
+  "sl_W1_st_a__x_st_a_st_b__0",
+  "sl_W1_st_a__x_st_a_st_b__1",
+  "sl_W1_hc1__x_hc1_st_b__0",
+  "sl_W1_hc1__x_hc1_st_b__1",
+  "sl_W1_hc1__x_hc1_ctl__0",
+  "sl_W1_hc2__x_hc2_ctl__0",
+  "sl_W1_hc3__x_hc3_ctl__0",
+  "sl_W1_hc3__x_hc3_ctl__1",
+  "sl_W1_hc1__x_hc1_hc0__0",
+  "sl_W1_hc2__x_hc2_hc1__0",
+  "sl_W1_hc3__x_hc3_hc2__0",
+  "sl_W1_su_l0__x_su_l0_ctl__0",
+  "sl_W1_su_l0__x_su_l0_ctl__1",
+  "sl_W1_su_l0__x_su_l0_ctl__2",
+  "sl_W1_su_l1__x_su_l1_ctl__0",
+  "sl_W1_su_l1__x_su_l1_ctl__1",
+  "sl_W1_su_l1__x_su_l1_ctl__2",
+  "sl_W1_su_c__x_su_c_ctl__0",
+  "sl_W1_su_c__x_su_c_ctl__1",
+  "sl_W1_ctl__x_ctl_su_c__0",
+  "sl_W1_ctl__x_ctl_su_c__1",
+  "sl_W1_ctl__x_ctl_su_c_p1__0",
+  "sl_W1_ctl__x_ctl_su_c_p1__1",
+  "sl_W1_ctl__x_ctl_su_c_p2__0",
+  "sl_W1_ctl__x_ctl_su_c_p2__1",
+  "sl_W1_su_c__x_su_c_sc__0",
+  "sl_W1_su_l0__x_su_l0_sc__0",
+  "sl_W1_su_l0__x_su_l0_sc__1",
+  "sl_W1_su_l1__x_su_l1_sc__0",
+  "sl_W1_su_l1__x_su_l1_sc__1",
+  "sl_W1_su_l0__x_su_l0_stm__0",
+  "sl_W1_su_l0__x_su_l0_stm__1",
+  "sl_W1_su_l1__x_su_l1_stm__0",
+  "sl_W1_su_l1__x_su_l1_stm__1",
+  "sl_W1_su_c__x_su_c_su_l0__0",
+  "sl_W1_su_c__x_su_c_su_l0_p1__0",
+  "sl_W1_su_c__x_su_c_su_l1__0",
+  "sl_W1_su_c__x_su_c_su_l1_p1__0",
+  "sl_W1_su_l0__x_su_l0_su_c__0",
+  "sl_W1_su_l0__x_su_l0_su_c_p1__0",
+  "sl_W1_su_l1__x_su_l1_su_c__0",
+  "sl_W1_su_l1__x_su_l1_su_c_p1__0",
+  "sl_W0_stm__b_tw_data_stm_ctl__0",
+  "sl_W0_ctl__b_tw_data_ctl_st_a__0",
+  "sl_W0_ctl__b_hw_ctl_hc0__0",
+  "sl_W0_ctl__b_hw_ctl_hc0__1",
+  "sl_W0_ctl__b_hw_ctl_hc1__0",
+  "sl_W0_ctl__b_hw_ctl_hc2__0",
+  "sl_W0_ctl__b_hw_ctl_hc3__0",
+  "sl_W0_ctl__b_hw_ctl_hc3__1",
+  "sl_W0_fe__x_fe_fw__0",
+  "sl_W0_fe__x_fe_fw__1",
+  "sl_W0_fe__x_fe_fw__2",
+  "sl_W0_fe__x_fe_fw_p1__0",
+  "sl_W0_fe__x_fe_fw_p1__1",
+  "sl_W0_fe__x_fe_fw_p1__2",
+  "sl_W0_ctl__x_ctl_fw__0",
+  "sl_W0_ctl__x_ctl_fw__1",
+  "sl_W0_ctl__x_ctl_fw_p1__0",
+  "sl_W0_ctl__x_ctl_fw_p1__1",
+  "sl_W0_stm__x_stm_fw__0",
+  "sl_W0_stm__x_stm_fw_p1__0",
+  "sl_W0_sc__x_sc_fw__0",
+  "sl_W0_sc__x_sc_fw__1",
+  "sl_W0_fw__x_fw_fe__0",
+  "sl_W0_fw__x_fw_fe__1",
+  "sl_W0_fw__x_fw_fe__2",
+  "sl_W0_fw__x_fw_fe_p1__0",
+  "sl_W0_fw__x_fw_fe_p1__1",
+  "sl_W0_fw__x_fw_fe_p1__2",
+  "sl_W0_fw__x_fw_fe_p2__0",
+  "sl_W0_fw__x_fw_fe_p2__1",
+  "sl_W0_fw__x_fw_fe_p2__2",
+  "sl_W0_stm__x_stm_fe__0",
+  "sl_W0_stm__x_stm_fe__1",
+  "sl_W0_stm__x_stm_fe_p1__0",
+  "sl_W0_stm__x_stm_fe_p1__1",
+  "sl_W0_sc__x_sc_fe__0",
+  "sl_W0_st_a__x_st_a_fe__0",
+  "sl_W0_st_a__x_st_a_fe__1",
+  "sl_W0_st_a__x_st_a_fe__2",
+  "sl_W0_st_a__x_st_a_fe__3",
+  "sl_W0_st_b__x_st_b_fe__0",
+  "sl_W0_fw__x_fw_ctl__0",
+  "sl_W0_fw__x_fw_ctl__1",
+  "sl_W0_fw__x_fw_ctl_p1__0",
+  "sl_W0_fw__x_fw_ctl_p1__1",
+  "sl_W0_fw__x_fw_ctl_p1__2",
+  "sl_W0_fw__x_fw_ctl_p2__0",
+  "sl_W0_fw__x_fw_ctl_p2__1",
+  "sl_W0_fw__x_fw_ctl_p2__2",
+  "sl_W0_fw__x_fw_ctl_p2__3",
+  "sl_W0_fw__x_fw_ctl_p2__4",
+  "sl_W0_st_a__x_st_a_ctl__0",
+  "sl_W0_st_b__x_st_b_ctl__0",
+  "sl_W0_sc__x_sc_ctl__0",
+  "sl_W0_hc0__x_hc0_ctl__0",
+  "sl_W0_hc0__x_hc0_ctl__1",
+  "sl_W0_ctl__x_ctl_sc__0",
+  "sl_W0_fe__x_fe_sc__0",
+  "sl_W0_fw__x_fw_sc__0",
+  "sl_W0_fw__x_fw_sc__1",
+  "sl_W0_ctl__x_ctl_stm__0",
+  "sl_W0_fw__x_fw_stm__0",
+  "sl_W0_fw__x_fw_stm_p1__0",
+  "sl_W0_fe__x_fe_stm__0",
+  "sl_W0_fe__x_fe_stm__1",
+  "sl_W0_fe__x_fe_stm_p1__0",
+  "sl_W0_fe__x_fe_stm_p1__1",
+  "sl_W0_hc1__x_hc1_st_a__0",
+  "sl_W0_hc1__x_hc1_st_a__1",
+  "sl_W0_fw__x_fw_st_a__0",
+  "sl_W0_st_b__x_st_b_st_a__0",
+  "sl_W0_st_b__x_st_b_st_a__1",
+  "sl_W0_ctl__x_ctl_st_b__0",
+  "sl_W0_st_a__x_st_a_st_b__0",
+  "sl_W0_st_a__x_st_a_st_b__1",
+  "sl_W0_hc1__x_hc1_st_b__0",
+  "sl_W0_hc1__x_hc1_st_b__1",
+  "sl_W0_fw__x_fw_st_b__0",
+  "sl_W0_fw__x_fw_st_b__1",
+  "sl_W0_fw__x_fw_st_b__2",
+  "sl_W0_fw__x_fw_st_b__3",
+  "sl_W0_hc1__x_hc1_ctl__0",
+  "sl_W0_hc2__x_hc2_ctl__0",
+  "sl_W0_hc3__x_hc3_ctl__0",
+  "sl_W0_hc3__x_hc3_ctl__1",
+  "sl_W0_hc1__x_hc1_hc0__0",
+  "sl_W0_hc2__x_hc2_hc1__0",
+  "sl_W0_hc3__x_hc3_hc2__0",
+  "sl_W0_su_l0__x_su_l0_ctl__0",
+  "sl_W0_su_l0__x_su_l0_ctl__1",
+  "sl_W0_su_l0__x_su_l0_ctl__2",
+  "sl_W0_su_l1__x_su_l1_ctl__0",
+  "sl_W0_su_l1__x_su_l1_ctl__1",
+  "sl_W0_su_l1__x_su_l1_ctl__2",
+  "sl_W0_su_c__x_su_c_ctl__0",
+  "sl_W0_su_c__x_su_c_ctl__1",
+  "sl_W0_ctl__x_ctl_su_c__0",
+  "sl_W0_ctl__x_ctl_su_c__1",
+  "sl_W0_ctl__x_ctl_su_c_p1__0",
+  "sl_W0_ctl__x_ctl_su_c_p1__1",
+  "sl_W0_ctl__x_ctl_su_c_p2__0",
+  "sl_W0_ctl__x_ctl_su_c_p2__1",
+  "sl_W0_su_c__x_su_c_sc__0",
+  "sl_W0_su_l0__x_su_l0_sc__0",
+  "sl_W0_su_l0__x_su_l0_sc__1",
+  "sl_W0_su_l1__x_su_l1_sc__0",
+  "sl_W0_su_l1__x_su_l1_sc__1",
+  "sl_W0_su_l0__x_su_l0_stm__0",
+  "sl_W0_su_l0__x_su_l0_stm__1",
+  "sl_W0_su_l1__x_su_l1_stm__0",
+  "sl_W0_su_l1__x_su_l1_stm__1",
+  "sl_W0_su_c__x_su_c_su_l0__0",
+  "sl_W0_su_c__x_su_c_su_l0_p1__0",
+  "sl_W0_su_c__x_su_c_su_l1__0",
+  "sl_W0_su_c__x_su_c_su_l1_p1__0",
+  "sl_W0_su_l0__x_su_l0_su_c__0",
+  "sl_W0_su_l0__x_su_l0_su_c_p1__0",
+  "sl_W0_su_l1__x_su_l1_su_c__0",
+  "sl_W0_su_l1__x_su_l1_su_c_p1__0",
+  "sl_E0_stm__b_tw_data_stm_ctl__0",
+  "sl_E0_ctl__b_tw_data_ctl_st_a__0",
+  "sl_E0_ctl__b_hw_ctl_hc0__0",
+  "sl_E0_ctl__b_hw_ctl_hc0__1",
+  "sl_E0_ctl__b_hw_ctl_hc1__0",
+  "sl_E0_ctl__b_hw_ctl_hc2__0",
+  "sl_E0_ctl__b_hw_ctl_hc3__0",
+  "sl_E0_ctl__b_hw_ctl_hc3__1",
+  "sl_E0_fe__x_fe_fw__0",
+  "sl_E0_fe__x_fe_fw__1",
+  "sl_E0_fe__x_fe_fw__2",
+  "sl_E0_fe__x_fe_fw_p1__0",
+  "sl_E0_fe__x_fe_fw_p1__1",
+  "sl_E0_fe__x_fe_fw_p1__2",
+  "sl_E0_ctl__x_ctl_fw__0",
+  "sl_E0_ctl__x_ctl_fw__1",
+  "sl_E0_ctl__x_ctl_fw_p1__0",
+  "sl_E0_ctl__x_ctl_fw_p1__1",
+  "sl_E0_stm__x_stm_fw__0",
+  "sl_E0_stm__x_stm_fw_p1__0",
+  "sl_E0_sc__x_sc_fw__0",
+  "sl_E0_sc__x_sc_fw__1",
+  "sl_E0_fw__x_fw_fe__0",
+  "sl_E0_fw__x_fw_fe__1",
+  "sl_E0_fw__x_fw_fe__2",
+  "sl_E0_fw__x_fw_fe_p1__0",
+  "sl_E0_fw__x_fw_fe_p1__1",
+  "sl_E0_fw__x_fw_fe_p1__2",
+  "sl_E0_fw__x_fw_fe_p2__0",
+  "sl_E0_fw__x_fw_fe_p2__1",
+  "sl_E0_fw__x_fw_fe_p2__2",
+  "sl_E0_stm__x_stm_fe__0",
+  "sl_E0_stm__x_stm_fe__1",
+  "sl_E0_stm__x_stm_fe_p1__0",
+  "sl_E0_stm__x_stm_fe_p1__1",
+  "sl_E0_sc__x_sc_fe__0",
+  "sl_E0_st_a__x_st_a_fe__0",
+  "sl_E0_st_a__x_st_a_fe__1",
+  "sl_E0_st_a__x_st_a_fe__2",
+  "sl_E0_st_a__x_st_a_fe__3",
+  "sl_E0_st_a__x_st_a_fe__4",
+  "sl_E0_st_b__x_st_b_fe__0",
+  "sl_E0_fw__x_fw_ctl__0",
+  "sl_E0_fw__x_fw_ctl__1",
+  "sl_E0_fw__x_fw_ctl_p1__0",
+  "sl_E0_fw__x_fw_ctl_p1__1",
+  "sl_E0_fw__x_fw_ctl_p1__2",
+  "sl_E0_fw__x_fw_ctl_p2__0",
+  "sl_E0_fw__x_fw_ctl_p2__1",
+  "sl_E0_fw__x_fw_ctl_p2__2",
+  "sl_E0_fw__x_fw_ctl_p2__3",
+  "sl_E0_fw__x_fw_ctl_p2__4",
+  "sl_E0_st_a__x_st_a_ctl__0",
+  "sl_E0_st_b__x_st_b_ctl__0",
+  "sl_E0_sc__x_sc_ctl__0",
+  "sl_E0_hc0__x_hc0_ctl__0",
+  "sl_E0_hc0__x_hc0_ctl__1",
+  "sl_E0_ctl__x_ctl_sc__0",
+  "sl_E0_fe__x_fe_sc__0",
+  "sl_E0_fw__x_fw_sc__0",
+  "sl_E0_fw__x_fw_sc__1",
+  "sl_E0_ctl__x_ctl_stm__0",
+  "sl_E0_fw__x_fw_stm__0",
+  "sl_E0_fw__x_fw_stm_p1__0",
+  "sl_E0_fe__x_fe_stm__0",
+  "sl_E0_fe__x_fe_stm__1",
+  "sl_E0_fe__x_fe_stm_p1__0",
+  "sl_E0_fe__x_fe_stm_p1__1",
+  "sl_E0_hc1__x_hc1_st_a__0",
+  "sl_E0_hc1__x_hc1_st_a__1",
+  "sl_E0_fw__x_fw_st_a__0",
+  "sl_E0_st_b__x_st_b_st_a__0",
+  "sl_E0_st_b__x_st_b_st_a__1",
+  "sl_E0_ctl__x_ctl_st_b__0",
+  "sl_E0_st_a__x_st_a_st_b__0",
+  "sl_E0_st_a__x_st_a_st_b__1",
+  "sl_E0_hc1__x_hc1_st_b__0",
+  "sl_E0_hc1__x_hc1_st_b__1",
+  "sl_E0_fw__x_fw_st_b__0",
+  "sl_E0_fw__x_fw_st_b__1",
+  "sl_E0_fw__x_fw_st_b__2",
+  "sl_E0_fw__x_fw_st_b__3",
+  "sl_E0_hc1__x_hc1_ctl__0",
+  "sl_E0_hc2__x_hc2_ctl__0",
+  "sl_E0_hc3__x_hc3_ctl__0",
+  "sl_E0_hc3__x_hc3_ctl__1",
+  "sl_E0_hc1__x_hc1_hc0__0",
+  "sl_E0_hc2__x_hc2_hc1__0",
+  "sl_E0_hc3__x_hc3_hc2__0",
+  "sl_E0_su_l0__x_su_l0_ctl__0",
+  "sl_E0_su_l0__x_su_l0_ctl__1",
+  "sl_E0_su_l0__x_su_l0_ctl__2",
+  "sl_E0_su_l1__x_su_l1_ctl__0",
+  "sl_E0_su_l1__x_su_l1_ctl__1",
+  "sl_E0_su_l1__x_su_l1_ctl__2",
+  "sl_E0_su_c__x_su_c_ctl__0",
+  "sl_E0_su_c__x_su_c_ctl__1",
+  "sl_E0_ctl__x_ctl_su_c__0",
+  "sl_E0_ctl__x_ctl_su_c__1",
+  "sl_E0_ctl__x_ctl_su_c_p1__0",
+  "sl_E0_ctl__x_ctl_su_c_p1__1",
+  "sl_E0_ctl__x_ctl_su_c_p2__0",
+  "sl_E0_ctl__x_ctl_su_c_p2__1",
+  "sl_E0_su_c__x_su_c_sc__0",
+  "sl_E0_su_l0__x_su_l0_sc__0",
+  "sl_E0_su_l0__x_su_l0_sc__1",
+  "sl_E0_su_l1__x_su_l1_sc__0",
+  "sl_E0_su_l1__x_su_l1_sc__1",
+  "sl_E0_su_l0__x_su_l0_stm__0",
+  "sl_E0_su_l0__x_su_l0_stm__1",
+  "sl_E0_su_l1__x_su_l1_stm__0",
+  "sl_E0_su_l1__x_su_l1_stm__1",
+  "sl_E0_su_c__x_su_c_su_l0__0",
+  "sl_E0_su_c__x_su_c_su_l0_p1__0",
+  "sl_E0_su_c__x_su_c_su_l1__0",
+  "sl_E0_su_c__x_su_c_su_l1_p1__0",
+  "sl_E0_su_l0__x_su_l0_su_c__0",
+  "sl_E0_su_l0__x_su_l0_su_c_p1__0",
+  "sl_E0_su_l1__x_su_l1_su_c__0",
+  "sl_E0_su_l1__x_su_l1_su_c_p1__0",
+  "sl_E1_stm__b_tw_data_stm_ctl__0",
+  "sl_E1_ctl__b_tw_data_ctl_st_a__0",
+  "sl_E1_ctl__b_hw_ctl_hc0__0",
+  "sl_E1_ctl__b_hw_ctl_hc0__1",
+  "sl_E1_ctl__b_hw_ctl_hc1__0",
+  "sl_E1_ctl__b_hw_ctl_hc2__0",
+  "sl_E1_ctl__b_hw_ctl_hc3__0",
+  "sl_E1_ctl__b_hw_ctl_hc3__1",
+  "sl_E1_fe__x_fe_fw__0",
+  "sl_E1_fe__x_fe_fw__1",
+  "sl_E1_fe__x_fe_fw__2",
+  "sl_E1_fe__x_fe_fw_p1__0",
+  "sl_E1_fe__x_fe_fw_p1__1",
+  "sl_E1_fe__x_fe_fw_p1__2",
+  "sl_E1_ctl__x_ctl_fw__0",
+  "sl_E1_ctl__x_ctl_fw__1",
+  "sl_E1_ctl__x_ctl_fw_p1__0",
+  "sl_E1_ctl__x_ctl_fw_p1__1",
+  "sl_E1_stm__x_stm_fw__0",
+  "sl_E1_stm__x_stm_fw_p1__0",
+  "sl_E1_sc__x_sc_fw__0",
+  "sl_E1_sc__x_sc_fw__1",
+  "sl_E1_fw__x_fw_fe__0",
+  "sl_E1_fw__x_fw_fe__1",
+  "sl_E1_fw__x_fw_fe__2",
+  "sl_E1_fw__x_fw_fe_p1__0",
+  "sl_E1_fw__x_fw_fe_p1__1",
+  "sl_E1_fw__x_fw_fe_p1__2",
+  "sl_E1_fw__x_fw_fe_p2__0",
+  "sl_E1_fw__x_fw_fe_p2__1",
+  "sl_E1_fw__x_fw_fe_p2__2",
+  "sl_E1_stm__x_stm_fe__0",
+  "sl_E1_stm__x_stm_fe__1",
+  "sl_E1_stm__x_stm_fe_p1__0",
+  "sl_E1_stm__x_stm_fe_p1__1",
+  "sl_E1_sc__x_sc_fe__0",
+  "sl_E1_st_a__x_st_a_fe__0",
+  "sl_E1_st_a__x_st_a_fe__1",
+  "sl_E1_st_a__x_st_a_fe__2",
+  "sl_E1_st_a__x_st_a_fe__3",
+  "sl_E1_st_a__x_st_a_fe__4",
+  "sl_E1_st_b__x_st_b_fe__0",
+  "sl_E1_fw__x_fw_ctl__0",
+  "sl_E1_fw__x_fw_ctl__1",
+  "sl_E1_fw__x_fw_ctl_p1__0",
+  "sl_E1_fw__x_fw_ctl_p1__1",
+  "sl_E1_fw__x_fw_ctl_p1__2",
+  "sl_E1_fw__x_fw_ctl_p2__0",
+  "sl_E1_fw__x_fw_ctl_p2__1",
+  "sl_E1_fw__x_fw_ctl_p2__2",
+  "sl_E1_fw__x_fw_ctl_p2__3",
+  "sl_E1_fw__x_fw_ctl_p2__4",
+  "sl_E1_st_a__x_st_a_ctl__0",
+  "sl_E1_st_b__x_st_b_ctl__0",
+  "sl_E1_sc__x_sc_ctl__0",
+  "sl_E1_hc0__x_hc0_ctl__0",
+  "sl_E1_hc0__x_hc0_ctl__1",
+  "sl_E1_ctl__x_ctl_sc__0",
+  "sl_E1_fe__x_fe_sc__0",
+  "sl_E1_fw__x_fw_sc__0",
+  "sl_E1_fw__x_fw_sc__1",
+  "sl_E1_ctl__x_ctl_stm__0",
+  "sl_E1_fw__x_fw_stm__0",
+  "sl_E1_fw__x_fw_stm_p1__0",
+  "sl_E1_fe__x_fe_stm__0",
+  "sl_E1_fe__x_fe_stm__1",
+  "sl_E1_fe__x_fe_stm_p1__0",
+  "sl_E1_fe__x_fe_stm_p1__1",
+  "sl_E1_hc1__x_hc1_st_a__0",
+  "sl_E1_hc1__x_hc1_st_a__1",
+  "sl_E1_st_b__x_st_b_st_a__0",
+  "sl_E1_st_b__x_st_b_st_a__1",
+  "sl_E1_ctl__x_ctl_st_b__0",
+  "sl_E1_st_a__x_st_a_st_b__0",
+  "sl_E1_st_a__x_st_a_st_b__1",
+  "sl_E1_hc1__x_hc1_st_b__0",
+  "sl_E1_hc1__x_hc1_st_b__1",
+  "sl_E1_hc1__x_hc1_ctl__0",
+  "sl_E1_hc2__x_hc2_ctl__0",
+  "sl_E1_hc3__x_hc3_ctl__0",
+  "sl_E1_hc3__x_hc3_ctl__1",
+  "sl_E1_hc1__x_hc1_hc0__0",
+  "sl_E1_hc2__x_hc2_hc1__0",
+  "sl_E1_hc3__x_hc3_hc2__0",
+  "sl_E1_su_l0__x_su_l0_ctl__0",
+  "sl_E1_su_l0__x_su_l0_ctl__1",
+  "sl_E1_su_l0__x_su_l0_ctl__2",
+  "sl_E1_su_l1__x_su_l1_ctl__0",
+  "sl_E1_su_l1__x_su_l1_ctl__1",
+  "sl_E1_su_l1__x_su_l1_ctl__2",
+  "sl_E1_su_c__x_su_c_ctl__0",
+  "sl_E1_su_c__x_su_c_ctl__1",
+  "sl_E1_ctl__x_ctl_su_c__0",
+  "sl_E1_ctl__x_ctl_su_c__1",
+  "sl_E1_ctl__x_ctl_su_c_p1__0",
+  "sl_E1_ctl__x_ctl_su_c_p1__1",
+  "sl_E1_ctl__x_ctl_su_c_p2__0",
+  "sl_E1_ctl__x_ctl_su_c_p2__1",
+  "sl_E1_su_c__x_su_c_sc__0",
+  "sl_E1_su_l0__x_su_l0_sc__0",
+  "sl_E1_su_l0__x_su_l0_sc__1",
+  "sl_E1_su_l1__x_su_l1_sc__0",
+  "sl_E1_su_l1__x_su_l1_sc__1",
+  "sl_E1_su_l0__x_su_l0_stm__0",
+  "sl_E1_su_l0__x_su_l0_stm__1",
+  "sl_E1_su_l1__x_su_l1_stm__0",
+  "sl_E1_su_l1__x_su_l1_stm__1",
+  "sl_E1_su_c__x_su_c_su_l0__0",
+  "sl_E1_su_c__x_su_c_su_l0_p1__0",
+  "sl_E1_su_c__x_su_c_su_l1__0",
+  "sl_E1_su_c__x_su_c_su_l1_p1__0",
+  "sl_E1_su_l0__x_su_l0_su_c__0",
+  "sl_E1_su_l0__x_su_l0_su_c_p1__0",
+  "sl_E1_su_l1__x_su_l1_su_c__0",
+  "sl_E1_su_l1__x_su_l1_su_c_p1__0",
+  "sl_E2_stm__b_tw_data_stm_ctl__0",
+  "sl_E2_ctl__b_tw_data_ctl_st_a__0",
+  "sl_E2_ctl__b_hw_ctl_hc0__0",
+  "sl_E2_ctl__b_hw_ctl_hc0__1",
+  "sl_E2_ctl__b_hw_ctl_hc1__0",
+  "sl_E2_ctl__b_hw_ctl_hc2__0",
+  "sl_E2_ctl__b_hw_ctl_hc3__0",
+  "sl_E2_ctl__b_hw_ctl_hc3__1",
+  "sl_E2_fe__x_fe_fw__0",
+  "sl_E2_fe__x_fe_fw__1",
+  "sl_E2_fe__x_fe_fw__2",
+  "sl_E2_fe__x_fe_fw_p1__0",
+  "sl_E2_fe__x_fe_fw_p1__1",
+  "sl_E2_fe__x_fe_fw_p1__2",
+  "sl_E2_ctl__x_ctl_fw__0",
+  "sl_E2_ctl__x_ctl_fw__1",
+  "sl_E2_ctl__x_ctl_fw_p1__0",
+  "sl_E2_ctl__x_ctl_fw_p1__1",
+  "sl_E2_stm__x_stm_fw__0",
+  "sl_E2_stm__x_stm_fw_p1__0",
+  "sl_E2_sc__x_sc_fw__0",
+  "sl_E2_sc__x_sc_fw__1",
+  "sl_E2_fw__x_fw_fe__0",
+  "sl_E2_fw__x_fw_fe__1",
+  "sl_E2_fw__x_fw_fe__2",
+  "sl_E2_fw__x_fw_fe_p1__0",
+  "sl_E2_fw__x_fw_fe_p1__1",
+  "sl_E2_fw__x_fw_fe_p1__2",
+  "sl_E2_fw__x_fw_fe_p2__0",
+  "sl_E2_fw__x_fw_fe_p2__1",
+  "sl_E2_fw__x_fw_fe_p2__2",
+  "sl_E2_stm__x_stm_fe__0",
+  "sl_E2_stm__x_stm_fe__1",
+  "sl_E2_stm__x_stm_fe_p1__0",
+  "sl_E2_stm__x_stm_fe_p1__1",
+  "sl_E2_sc__x_sc_fe__0",
+  "sl_E2_st_a__x_st_a_fe__0",
+  "sl_E2_st_a__x_st_a_fe__1",
+  "sl_E2_st_a__x_st_a_fe__2",
+  "sl_E2_st_a__x_st_a_fe__3",
+  "sl_E2_st_a__x_st_a_fe__4",
+  "sl_E2_st_b__x_st_b_fe__0",
+  "sl_E2_fw__x_fw_ctl__0",
+  "sl_E2_fw__x_fw_ctl__1",
+  "sl_E2_fw__x_fw_ctl_p1__0",
+  "sl_E2_fw__x_fw_ctl_p1__1",
+  "sl_E2_fw__x_fw_ctl_p1__2",
+  "sl_E2_fw__x_fw_ctl_p2__0",
+  "sl_E2_fw__x_fw_ctl_p2__1",
+  "sl_E2_fw__x_fw_ctl_p2__2",
+  "sl_E2_fw__x_fw_ctl_p2__3",
+  "sl_E2_fw__x_fw_ctl_p2__4",
+  "sl_E2_st_a__x_st_a_ctl__0",
+  "sl_E2_st_b__x_st_b_ctl__0",
+  "sl_E2_sc__x_sc_ctl__0",
+  "sl_E2_hc0__x_hc0_ctl__0",
+  "sl_E2_hc0__x_hc0_ctl__1",
+  "sl_E2_ctl__x_ctl_sc__0",
+  "sl_E2_fe__x_fe_sc__0",
+  "sl_E2_fw__x_fw_sc__0",
+  "sl_E2_fw__x_fw_sc__1",
+  "sl_E2_ctl__x_ctl_stm__0",
+  "sl_E2_fw__x_fw_stm__0",
+  "sl_E2_fw__x_fw_stm_p1__0",
+  "sl_E2_fe__x_fe_stm__0",
+  "sl_E2_fe__x_fe_stm__1",
+  "sl_E2_fe__x_fe_stm_p1__0",
+  "sl_E2_fe__x_fe_stm_p1__1",
+  "sl_E2_hc1__x_hc1_st_a__0",
+  "sl_E2_hc1__x_hc1_st_a__1",
+  "sl_E2_fw__x_fw_st_a__0",
+  "sl_E2_st_b__x_st_b_st_a__0",
+  "sl_E2_st_b__x_st_b_st_a__1",
+  "sl_E2_ctl__x_ctl_st_b__0",
+  "sl_E2_st_a__x_st_a_st_b__0",
+  "sl_E2_st_a__x_st_a_st_b__1",
+  "sl_E2_hc1__x_hc1_st_b__0",
+  "sl_E2_hc1__x_hc1_st_b__1",
+  "sl_E2_fw__x_fw_st_b__0",
+  "sl_E2_fw__x_fw_st_b__1",
+  "sl_E2_fw__x_fw_st_b__2",
+  "sl_E2_fw__x_fw_st_b__3",
+  "sl_E2_hc1__x_hc1_ctl__0",
+  "sl_E2_hc2__x_hc2_ctl__0",
+  "sl_E2_hc3__x_hc3_ctl__0",
+  "sl_E2_hc3__x_hc3_ctl__1",
+  "sl_E2_hc1__x_hc1_hc0__0",
+  "sl_E2_hc2__x_hc2_hc1__0",
+  "sl_E2_hc3__x_hc3_hc2__0",
+  "sl_E2_su_l0__x_su_l0_ctl__0",
+  "sl_E2_su_l0__x_su_l0_ctl__1",
+  "sl_E2_su_l0__x_su_l0_ctl__2",
+  "sl_E2_su_l1__x_su_l1_ctl__0",
+  "sl_E2_su_l1__x_su_l1_ctl__1",
+  "sl_E2_su_l1__x_su_l1_ctl__2",
+  "sl_E2_su_c__x_su_c_ctl__0",
+  "sl_E2_su_c__x_su_c_ctl__1",
+  "sl_E2_ctl__x_ctl_su_c__0",
+  "sl_E2_ctl__x_ctl_su_c__1",
+  "sl_E2_ctl__x_ctl_su_c_p1__0",
+  "sl_E2_ctl__x_ctl_su_c_p1__1",
+  "sl_E2_ctl__x_ctl_su_c_p2__0",
+  "sl_E2_ctl__x_ctl_su_c_p2__1",
+  "sl_E2_su_c__x_su_c_sc__0",
+  "sl_E2_su_l0__x_su_l0_sc__0",
+  "sl_E2_su_l0__x_su_l0_sc__1",
+  "sl_E2_su_l1__x_su_l1_sc__0",
+  "sl_E2_su_l1__x_su_l1_sc__1",
+  "sl_E2_su_l0__x_su_l0_stm__0",
+  "sl_E2_su_l0__x_su_l0_stm__1",
+  "sl_E2_su_l1__x_su_l1_stm__0",
+  "sl_E2_su_l1__x_su_l1_stm__1",
+  "sl_E2_su_c__x_su_c_su_l0__0",
+  "sl_E2_su_c__x_su_c_su_l0_p1__0",
+  "sl_E2_su_c__x_su_c_su_l1__0",
+  "sl_E2_su_c__x_su_c_su_l1_p1__0",
+  "sl_E2_su_l0__x_su_l0_su_c__0",
+  "sl_E2_su_l0__x_su_l0_su_c_p1__0",
+  "sl_E2_su_l1__x_su_l1_su_c__0",
+  "sl_E2_su_l1__x_su_l1_su_c_p1__0",
+  "sl_E3_stm__b_tw_data_stm_ctl__0",
+  "sl_E3_ctl__b_tw_data_ctl_st_a__0",
+  "sl_E3_ctl__b_hw_ctl_hc0__0",
+  "sl_E3_ctl__b_hw_ctl_hc0__1",
+  "sl_E3_ctl__b_hw_ctl_hc1__0",
+  "sl_E3_ctl__b_hw_ctl_hc2__0",
+  "sl_E3_ctl__b_hw_ctl_hc3__0",
+  "sl_E3_ctl__b_hw_ctl_hc3__1",
+  "sl_E3_fe__x_fe_fw__0",
+  "sl_E3_fe__x_fe_fw__1",
+  "sl_E3_fe__x_fe_fw__2",
+  "sl_E3_fe__x_fe_fw_p1__0",
+  "sl_E3_fe__x_fe_fw_p1__1",
+  "sl_E3_fe__x_fe_fw_p1__2",
+  "sl_E3_ctl__x_ctl_fw__0",
+  "sl_E3_ctl__x_ctl_fw__1",
+  "sl_E3_ctl__x_ctl_fw_p1__0",
+  "sl_E3_ctl__x_ctl_fw_p1__1",
+  "sl_E3_stm__x_stm_fw__0",
+  "sl_E3_stm__x_stm_fw_p1__0",
+  "sl_E3_sc__x_sc_fw__0",
+  "sl_E3_sc__x_sc_fw__1",
+  "sl_E3_fw__x_fw_fe__0",
+  "sl_E3_fw__x_fw_fe__1",
+  "sl_E3_fw__x_fw_fe__2",
+  "sl_E3_fw__x_fw_fe_p1__0",
+  "sl_E3_fw__x_fw_fe_p1__1",
+  "sl_E3_fw__x_fw_fe_p1__2",
+  "sl_E3_fw__x_fw_fe_p2__0",
+  "sl_E3_fw__x_fw_fe_p2__1",
+  "sl_E3_fw__x_fw_fe_p2__2",
+  "sl_E3_stm__x_stm_fe__0",
+  "sl_E3_stm__x_stm_fe__1",
+  "sl_E3_stm__x_stm_fe_p1__0",
+  "sl_E3_stm__x_stm_fe_p1__1",
+  "sl_E3_sc__x_sc_fe__0",
+  "sl_E3_st_a__x_st_a_fe__0",
+  "sl_E3_st_a__x_st_a_fe__1",
+  "sl_E3_st_a__x_st_a_fe__2",
+  "sl_E3_st_a__x_st_a_fe__3",
+  "sl_E3_st_a__x_st_a_fe__4",
+  "sl_E3_st_b__x_st_b_fe__0",
+  "sl_E3_fw__x_fw_ctl__0",
+  "sl_E3_fw__x_fw_ctl__1",
+  "sl_E3_fw__x_fw_ctl_p1__0",
+  "sl_E3_fw__x_fw_ctl_p1__1",
+  "sl_E3_fw__x_fw_ctl_p1__2",
+  "sl_E3_fw__x_fw_ctl_p2__0",
+  "sl_E3_fw__x_fw_ctl_p2__1",
+  "sl_E3_fw__x_fw_ctl_p2__2",
+  "sl_E3_fw__x_fw_ctl_p2__3",
+  "sl_E3_fw__x_fw_ctl_p2__4",
+  "sl_E3_st_a__x_st_a_ctl__0",
+  "sl_E3_st_b__x_st_b_ctl__0",
+  "sl_E3_sc__x_sc_ctl__0",
+  "sl_E3_hc0__x_hc0_ctl__0",
+  "sl_E3_hc0__x_hc0_ctl__1",
+  "sl_E3_ctl__x_ctl_sc__0",
+  "sl_E3_fe__x_fe_sc__0",
+  "sl_E3_fw__x_fw_sc__0",
+  "sl_E3_fw__x_fw_sc__1",
+  "sl_E3_ctl__x_ctl_stm__0",
+  "sl_E3_fw__x_fw_stm__0",
+  "sl_E3_fw__x_fw_stm_p1__0",
+  "sl_E3_fe__x_fe_stm__0",
+  "sl_E3_fe__x_fe_stm__1",
+  "sl_E3_fe__x_fe_stm_p1__0",
+  "sl_E3_fe__x_fe_stm_p1__1",
+  "sl_E3_hc1__x_hc1_st_a__0",
+  "sl_E3_hc1__x_hc1_st_a__1",
+  "sl_E3_st_b__x_st_b_st_a__0",
+  "sl_E3_st_b__x_st_b_st_a__1",
+  "sl_E3_ctl__x_ctl_st_b__0",
+  "sl_E3_st_a__x_st_a_st_b__0",
+  "sl_E3_st_a__x_st_a_st_b__1",
+  "sl_E3_hc1__x_hc1_st_b__0",
+  "sl_E3_hc1__x_hc1_st_b__1",
+  "sl_E3_hc1__x_hc1_ctl__0",
+  "sl_E3_hc2__x_hc2_ctl__0",
+  "sl_E3_hc3__x_hc3_ctl__0",
+  "sl_E3_hc3__x_hc3_ctl__1",
+  "sl_E3_hc1__x_hc1_hc0__0",
+  "sl_E3_hc2__x_hc2_hc1__0",
+  "sl_E3_hc3__x_hc3_hc2__0",
+  "sl_E3_su_l0__x_su_l0_ctl__0",
+  "sl_E3_su_l0__x_su_l0_ctl__1",
+  "sl_E3_su_l0__x_su_l0_ctl__2",
+  "sl_E3_su_l1__x_su_l1_ctl__0",
+  "sl_E3_su_l1__x_su_l1_ctl__1",
+  "sl_E3_su_l1__x_su_l1_ctl__2",
+  "sl_E3_su_c__x_su_c_ctl__0",
+  "sl_E3_su_c__x_su_c_ctl__1",
+  "sl_E3_ctl__x_ctl_su_c__0",
+  "sl_E3_ctl__x_ctl_su_c__1",
+  "sl_E3_ctl__x_ctl_su_c_p1__0",
+  "sl_E3_ctl__x_ctl_su_c_p1__1",
+  "sl_E3_ctl__x_ctl_su_c_p2__0",
+  "sl_E3_ctl__x_ctl_su_c_p2__1",
+  "sl_E3_su_c__x_su_c_sc__0",
+  "sl_E3_su_l0__x_su_l0_sc__0",
+  "sl_E3_su_l0__x_su_l0_sc__1",
+  "sl_E3_su_l1__x_su_l1_sc__0",
+  "sl_E3_su_l1__x_su_l1_sc__1",
+  "sl_E3_su_l0__x_su_l0_stm__0",
+  "sl_E3_su_l0__x_su_l0_stm__1",
+  "sl_E3_su_l1__x_su_l1_stm__0",
+  "sl_E3_su_l1__x_su_l1_stm__1",
+  "sl_E3_su_c__x_su_c_su_l0__0",
+  "sl_E3_su_c__x_su_c_su_l0_p1__0",
+  "sl_E3_su_c__x_su_c_su_l1__0",
+  "sl_E3_su_c__x_su_c_su_l1_p1__0",
+  "sl_E3_su_l0__x_su_l0_su_c__0",
+  "sl_E3_su_l0__x_su_l0_su_c_p1__0",
+  "sl_E3_su_l1__x_su_l1_su_c__0",
+  "sl_E3_su_l1__x_su_l1_su_c_p1__0",
+  "sl_E4_stm__b_tw_data_stm_ctl__0",
+  "sl_E4_ctl__b_tw_data_ctl_st_a__0",
+  "sl_E4_ctl__b_hw_ctl_hc0__0",
+  "sl_E4_ctl__b_hw_ctl_hc0__1",
+  "sl_E4_ctl__b_hw_ctl_hc1__0",
+  "sl_E4_ctl__b_hw_ctl_hc2__0",
+  "sl_E4_ctl__b_hw_ctl_hc3__0",
+  "sl_E4_ctl__b_hw_ctl_hc3__1",
+  "sl_E4_fe__x_fe_fw__0",
+  "sl_E4_fe__x_fe_fw__1",
+  "sl_E4_fe__x_fe_fw__2",
+  "sl_E4_fe__x_fe_fw_p1__0",
+  "sl_E4_fe__x_fe_fw_p1__1",
+  "sl_E4_fe__x_fe_fw_p1__2",
+  "sl_E4_ctl__x_ctl_fw__0",
+  "sl_E4_ctl__x_ctl_fw__1",
+  "sl_E4_ctl__x_ctl_fw_p1__0",
+  "sl_E4_ctl__x_ctl_fw_p1__1",
+  "sl_E4_stm__x_stm_fw__0",
+  "sl_E4_stm__x_stm_fw_p1__0",
+  "sl_E4_sc__x_sc_fw__0",
+  "sl_E4_sc__x_sc_fw__1",
+  "sl_E4_fw__x_fw_fe__0",
+  "sl_E4_fw__x_fw_fe__1",
+  "sl_E4_fw__x_fw_fe__2",
+  "sl_E4_fw__x_fw_fe_p1__0",
+  "sl_E4_fw__x_fw_fe_p1__1",
+  "sl_E4_fw__x_fw_fe_p1__2",
+  "sl_E4_fw__x_fw_fe_p2__0",
+  "sl_E4_fw__x_fw_fe_p2__1",
+  "sl_E4_fw__x_fw_fe_p2__2",
+  "sl_E4_stm__x_stm_fe__0",
+  "sl_E4_stm__x_stm_fe__1",
+  "sl_E4_stm__x_stm_fe_p1__0",
+  "sl_E4_stm__x_stm_fe_p1__1",
+  "sl_E4_sc__x_sc_fe__0",
+  "sl_E4_st_a__x_st_a_fe__0",
+  "sl_E4_st_a__x_st_a_fe__1",
+  "sl_E4_st_a__x_st_a_fe__2",
+  "sl_E4_st_a__x_st_a_fe__3",
+  "sl_E4_st_a__x_st_a_fe__4",
+  "sl_E4_st_b__x_st_b_fe__0",
+  "sl_E4_fw__x_fw_ctl__0",
+  "sl_E4_fw__x_fw_ctl__1",
+  "sl_E4_fw__x_fw_ctl_p1__0",
+  "sl_E4_fw__x_fw_ctl_p1__1",
+  "sl_E4_fw__x_fw_ctl_p1__2",
+  "sl_E4_fw__x_fw_ctl_p2__0",
+  "sl_E4_fw__x_fw_ctl_p2__1",
+  "sl_E4_fw__x_fw_ctl_p2__2",
+  "sl_E4_fw__x_fw_ctl_p2__3",
+  "sl_E4_fw__x_fw_ctl_p2__4",
+  "sl_E4_st_a__x_st_a_ctl__0",
+  "sl_E4_st_b__x_st_b_ctl__0",
+  "sl_E4_sc__x_sc_ctl__0",
+  "sl_E4_hc0__x_hc0_ctl__0",
+  "sl_E4_hc0__x_hc0_ctl__1",
+  "sl_E4_ctl__x_ctl_sc__0",
+  "sl_E4_fe__x_fe_sc__0",
+  "sl_E4_fw__x_fw_sc__0",
+  "sl_E4_fw__x_fw_sc__1",
+  "sl_E4_ctl__x_ctl_stm__0",
+  "sl_E4_fw__x_fw_stm__0",
+  "sl_E4_fw__x_fw_stm_p1__0",
+  "sl_E4_fe__x_fe_stm__0",
+  "sl_E4_fe__x_fe_stm__1",
+  "sl_E4_fe__x_fe_stm_p1__0",
+  "sl_E4_fe__x_fe_stm_p1__1",
+  "sl_E4_hc1__x_hc1_st_a__0",
+  "sl_E4_hc1__x_hc1_st_a__1",
+  "sl_E4_fw__x_fw_st_a__0",
+  "sl_E4_st_b__x_st_b_st_a__0",
+  "sl_E4_st_b__x_st_b_st_a__1",
+  "sl_E4_ctl__x_ctl_st_b__0",
+  "sl_E4_st_a__x_st_a_st_b__0",
+  "sl_E4_st_a__x_st_a_st_b__1",
+  "sl_E4_hc1__x_hc1_st_b__0",
+  "sl_E4_hc1__x_hc1_st_b__1",
+  "sl_E4_fw__x_fw_st_b__0",
+  "sl_E4_fw__x_fw_st_b__1",
+  "sl_E4_fw__x_fw_st_b__2",
+  "sl_E4_fw__x_fw_st_b__3",
+  "sl_E4_hc1__x_hc1_ctl__0",
+  "sl_E4_hc2__x_hc2_ctl__0",
+  "sl_E4_hc3__x_hc3_ctl__0",
+  "sl_E4_hc3__x_hc3_ctl__1",
+  "sl_E4_hc1__x_hc1_hc0__0",
+  "sl_E4_hc2__x_hc2_hc1__0",
+  "sl_E4_hc3__x_hc3_hc2__0",
+  "sl_E4_su_l0__x_su_l0_ctl__0",
+  "sl_E4_su_l0__x_su_l0_ctl__1",
+  "sl_E4_su_l0__x_su_l0_ctl__2",
+  "sl_E4_su_l1__x_su_l1_ctl__0",
+  "sl_E4_su_l1__x_su_l1_ctl__1",
+  "sl_E4_su_l1__x_su_l1_ctl__2",
+  "sl_E4_su_c__x_su_c_ctl__0",
+  "sl_E4_su_c__x_su_c_ctl__1",
+  "sl_E4_ctl__x_ctl_su_c__0",
+  "sl_E4_ctl__x_ctl_su_c__1",
+  "sl_E4_ctl__x_ctl_su_c_p1__0",
+  "sl_E4_ctl__x_ctl_su_c_p1__1",
+  "sl_E4_ctl__x_ctl_su_c_p2__0",
+  "sl_E4_ctl__x_ctl_su_c_p2__1",
+  "sl_E4_su_c__x_su_c_sc__0",
+  "sl_E4_su_l0__x_su_l0_sc__0",
+  "sl_E4_su_l0__x_su_l0_sc__1",
+  "sl_E4_su_l1__x_su_l1_sc__0",
+  "sl_E4_su_l1__x_su_l1_sc__1",
+  "sl_E4_su_l0__x_su_l0_stm__0",
+  "sl_E4_su_l0__x_su_l0_stm__1",
+  "sl_E4_su_l1__x_su_l1_stm__0",
+  "sl_E4_su_l1__x_su_l1_stm__1",
+  "sl_E4_su_c__x_su_c_su_l0__0",
+  "sl_E4_su_c__x_su_c_su_l0_p1__0",
+  "sl_E4_su_c__x_su_c_su_l1__0",
+  "sl_E4_su_c__x_su_c_su_l1_p1__0",
+  "sl_E4_su_l0__x_su_l0_su_c__0",
+  "sl_E4_su_l0__x_su_l0_su_c_p1__0",
+  "sl_E4_su_l1__x_su_l1_su_c__0",
+  "sl_E4_su_l1__x_su_l1_su_c_p1__0",
+  "sl_E5_stm__b_tw_data_stm_ctl__0",
+  "sl_E5_ctl__b_tw_data_ctl_st_a__0",
+  "sl_E5_ctl__b_hw_ctl_hc0__0",
+  "sl_E5_ctl__b_hw_ctl_hc0__1",
+  "sl_E5_ctl__b_hw_ctl_hc1__0",
+  "sl_E5_ctl__b_hw_ctl_hc2__0",
+  "sl_E5_ctl__b_hw_ctl_hc3__0",
+  "sl_E5_ctl__b_hw_ctl_hc3__1",
+  "sl_E5_ctl__x_ctl_fw__0",
+  "sl_E5_ctl__x_ctl_fw__1",
+  "sl_E5_ctl__x_ctl_fw_p1__0",
+  "sl_E5_ctl__x_ctl_fw_p1__1",
+  "sl_E5_stm__x_stm_fw__0",
+  "sl_E5_stm__x_stm_fw_p1__0",
+  "sl_E5_sc__x_sc_fw__0",
+  "sl_E5_sc__x_sc_fw__1",
+  "sl_E5_fw__x_fw_fe__0",
+  "sl_E5_fw__x_fw_fe__1",
+  "sl_E5_fw__x_fw_fe__2",
+  "sl_E5_fw__x_fw_fe_p1__0",
+  "sl_E5_fw__x_fw_fe_p1__1",
+  "sl_E5_fw__x_fw_fe_p1__2",
+  "sl_E5_fw__x_fw_fe_p2__0",
+  "sl_E5_fw__x_fw_fe_p2__1",
+  "sl_E5_fw__x_fw_fe_p2__2",
+  "sl_E5_stm__x_stm_fe__0",
+  "sl_E5_stm__x_stm_fe__1",
+  "sl_E5_stm__x_stm_fe_p1__0",
+  "sl_E5_stm__x_stm_fe_p1__1",
+  "sl_E5_sc__x_sc_fe__0",
+  "sl_E5_st_a__x_st_a_fe__0",
+  "sl_E5_st_a__x_st_a_fe__1",
+  "sl_E5_st_a__x_st_a_fe__2",
+  "sl_E5_st_a__x_st_a_fe__3",
+  "sl_E5_st_a__x_st_a_fe__4",
+  "sl_E5_st_b__x_st_b_fe__0",
+  "sl_E5_fw__x_fw_ctl__0",
+  "sl_E5_fw__x_fw_ctl__1",
+  "sl_E5_fw__x_fw_ctl_p1__0",
+  "sl_E5_fw__x_fw_ctl_p1__1",
+  "sl_E5_fw__x_fw_ctl_p1__2",
+  "sl_E5_fw__x_fw_ctl_p2__0",
+  "sl_E5_fw__x_fw_ctl_p2__1",
+  "sl_E5_fw__x_fw_ctl_p2__2",
+  "sl_E5_fw__x_fw_ctl_p2__3",
+  "sl_E5_fw__x_fw_ctl_p2__4",
+  "sl_E5_st_a__x_st_a_ctl__0",
+  "sl_E5_st_b__x_st_b_ctl__0",
+  "sl_E5_sc__x_sc_ctl__0",
+  "sl_E5_hc0__x_hc0_ctl__0",
+  "sl_E5_hc0__x_hc0_ctl__1",
+  "sl_E5_ctl__x_ctl_sc__0",
+  "sl_E5_fw__x_fw_sc__0",
+  "sl_E5_fw__x_fw_sc__1",
+  "sl_E5_ctl__x_ctl_stm__0",
+  "sl_E5_fw__x_fw_stm__0",
+  "sl_E5_fw__x_fw_stm_p1__0",
+  "sl_E5_hc1__x_hc1_st_a__0",
+  "sl_E5_hc1__x_hc1_st_a__1",
+  "sl_E5_st_b__x_st_b_st_a__0",
+  "sl_E5_st_b__x_st_b_st_a__1",
+  "sl_E5_ctl__x_ctl_st_b__0",
+  "sl_E5_st_a__x_st_a_st_b__0",
+  "sl_E5_st_a__x_st_a_st_b__1",
+  "sl_E5_hc1__x_hc1_st_b__0",
+  "sl_E5_hc1__x_hc1_st_b__1",
+  "sl_E5_hc1__x_hc1_ctl__0",
+  "sl_E5_hc2__x_hc2_ctl__0",
+  "sl_E5_hc3__x_hc3_ctl__0",
+  "sl_E5_hc3__x_hc3_ctl__1",
+  "sl_E5_hc1__x_hc1_hc0__0",
+  "sl_E5_hc2__x_hc2_hc1__0",
+  "sl_E5_hc3__x_hc3_hc2__0",
+  "sl_E5_su_l0__x_su_l0_ctl__0",
+  "sl_E5_su_l0__x_su_l0_ctl__1",
+  "sl_E5_su_l0__x_su_l0_ctl__2",
+  "sl_E5_su_l1__x_su_l1_ctl__0",
+  "sl_E5_su_l1__x_su_l1_ctl__1",
+  "sl_E5_su_l1__x_su_l1_ctl__2",
+  "sl_E5_su_c__x_su_c_ctl__0",
+  "sl_E5_su_c__x_su_c_ctl__1",
+  "sl_E5_ctl__x_ctl_su_c__0",
+  "sl_E5_ctl__x_ctl_su_c__1",
+  "sl_E5_ctl__x_ctl_su_c_p1__0",
+  "sl_E5_ctl__x_ctl_su_c_p1__1",
+  "sl_E5_ctl__x_ctl_su_c_p2__0",
+  "sl_E5_ctl__x_ctl_su_c_p2__1",
+  "sl_E5_su_c__x_su_c_sc__0",
+  "sl_E5_su_l0__x_su_l0_sc__0",
+  "sl_E5_su_l0__x_su_l0_sc__1",
+  "sl_E5_su_l1__x_su_l1_sc__0",
+  "sl_E5_su_l1__x_su_l1_sc__1",
+  "sl_E5_su_l0__x_su_l0_stm__0",
+  "sl_E5_su_l0__x_su_l0_stm__1",
+  "sl_E5_su_l1__x_su_l1_stm__0",
+  "sl_E5_su_l1__x_su_l1_stm__1",
+  "sl_E5_su_c__x_su_c_su_l0__0",
+  "sl_E5_su_c__x_su_c_su_l0_p1__0",
+  "sl_E5_su_c__x_su_c_su_l1__0",
+  "sl_E5_su_c__x_su_c_su_l1_p1__0",
+  "sl_E5_su_l0__x_su_l0_su_c__0",
+  "sl_E5_su_l0__x_su_l0_su_c_p1__0",
+  "sl_E5_su_l1__x_su_l1_su_c__0",
+  "sl_E5_su_l1__x_su_l1_su_c_p1__0",
+  "glue__fdi_tx_flit_tx_flit__0",
+  "glue__fdi_tx_v_tx_v__0",
+  "glue__kv_x3_slot_kv_x3_slot__0",
+  "glue__native_rx_slot_rx_slot__0",
+  "glue__native_rx_slot_beat_rx_slot_beat__0",
+  "glue__native_rx_slot_kind_rx_slot_kind__0",
+  "glue__native_rx_v_native_rx_v__0",
+  "glue__native_tx_slot_tx_slot__0",
+  "glue__native_tx_slot_beat_tx_slot_beat__0",
+  "glue__native_tx_slot_kind_tx_slot_kind__0",
+  "glue__rx_payload_native_rx_payload__0",
+  "glue__rx_user_rx_user__0",
+  "glue__tx_user_tx_user__0",
+  "sl_E0_fw__ag_eo_ag_ei__0",
+  "sl_E0_fw__ard_eo_ard_ei__0",
+  "sl_E0_fw__arl_eo_arl_ei__0",
+  "sl_E0_fw__arm_eo_arm_ei__0",
+  "sl_E0_fw__art_eo_art_ei__0",
+  "sl_E0_fw__arv_eo_arv_ei__0",
+  "sl_E0_fe__cmd_wo_cmd_ei__0",
+  "sl_E0_fw__dd_eo_dd_ei__0",
+  "sl_E0_fe__dr_wo_dr_ei__0",
+  "sl_E0_fe__hr_wo_hr_ei__0",
+  "sl_E0_fe__rd_wo_rd_ei__0",
+  "sl_E0_fe__re_wo_re_ei__0",
+  "sl_E0_fe__rl_wo_rl_ei__0",
+  "sl_E0_fe__rr_wo_rr_ei__0",
+  "sl_E0_fe__rv_wo_rv_ei__0",
+  "sl_E0_fw__sc_eo_sc_ei__0",
+  "sl_E0_fe__sc_wo_sc_ei__0",
+  "sl_E0_fw__st_eo_st_ei__0",
+  "sl_E0_fe__st_wo_st_ei__0",
+  "sl_E1_fw__ag_eo_ag_wi__0",
+  "sl_E1_fw__ard_eo_ard_wi__0",
+  "sl_E1_fw__arl_eo_arl_wi__0",
+  "sl_E1_fw__arm_eo_arm_wi__0",
+  "sl_E1_fw__art_eo_art_wi__0",
+  "sl_E1_fw__arv_eo_arv_wi__0",
+  "sl_E1_fe__cmd_wo_cmd_ei__0",
+  "sl_E1_fw__dd_eo_dd_wi__0",
+  "sl_E1_fe__dr_wo_dr_ei__0",
+  "sl_E1_fe__hr_wo_hr_ei__0",
+  "sl_E1_fe__l9_eo_l9_wi__0",
+  "sl_E1_fe__l9_eo_l9_wi__1",
+  "sl_E1_fe__l9_eo_l9_wi__2",
+  "sl_E1_fe__l9_eo_l9_wi__3",
+  "sl_E1_fe__l9_eo_l9_wi__4",
+  "sl_E1_fe__l9_eo_l9_wi__5",
+  "sl_E1_fe__l9_eo_l9_wi__6",
+  "sl_E1_fe__rd_wo_rd_ei__0",
+  "sl_E1_fe__re_wo_re_ei__0",
+  "sl_E1_fe__rl_wo_rl_ei__0",
+  "sl_E1_fe__rr_wo_rr_ei__0",
+  "sl_E1_fe__rv_wo_rv_ei__0",
+  "sl_E1_fw__sc_eo_sc_wi__0",
+  "sl_E1_fe__sc_wo_sc_ei__0",
+  "sl_E1_fw__st_eo_st_wi__0",
+  "sl_E1_fe__st_wo_st_ei__0",
+  "sl_E2_fw__ag_eo_ag_wi__0",
+  "sl_E2_fw__ard_eo_ard_wi__0",
+  "sl_E2_fw__arl_eo_arl_wi__0",
+  "sl_E2_fw__arm_eo_arm_wi__0",
+  "sl_E2_fw__art_eo_art_wi__0",
+  "sl_E2_fw__arv_eo_arv_wi__0",
+  "sl_E2_fe__cmd_wo_cmd_ei__0",
+  "sl_E2_fw__dd_eo_dd_wi__0",
+  "sl_E2_fe__dr_wo_dr_ei__0",
+  "sl_E2_fe__hr_wo_hr_ei__0",
+  "sl_E2_fe__rd_wo_rd_ei__0",
+  "sl_E2_fe__re_wo_re_ei__0",
+  "sl_E2_fe__rl_wo_rl_ei__0",
+  "sl_E2_fe__rr_wo_rr_ei__0",
+  "sl_E2_fe__rv_wo_rv_ei__0",
+  "sl_E2_fw__sc_eo_sc_wi__0",
+  "sl_E2_fe__sc_wo_sc_ei__0",
+  "sl_E2_fw__st_eo_st_wi__0",
+  "sl_E2_fe__st_wo_st_ei__0",
+  "sl_E3_fw__ag_eo_ag_wi__0",
+  "sl_E3_fw__ard_eo_ard_wi__0",
+  "sl_E3_fw__arl_eo_arl_wi__0",
+  "sl_E3_fw__arm_eo_arm_wi__0",
+  "sl_E3_fw__art_eo_art_wi__0",
+  "sl_E3_fw__arv_eo_arv_wi__0",
+  "sl_E3_fe__cmd_wo_cmd_ei__0",
+  "sl_E3_fw__dd_eo_dd_wi__0",
+  "sl_E3_fe__dr_wo_dr_ei__0",
+  "sl_E3_fe__hr_wo_hr_ei__0",
+  "sl_E3_fe__l9_eo_l9_wi__0",
+  "sl_E3_fe__l9_eo_l9_wi__1",
+  "sl_E3_fe__l9_eo_l9_wi__2",
+  "sl_E3_fe__l9_eo_l9_wi__3",
+  "sl_E3_fe__l9_eo_l9_wi__4",
+  "sl_E3_fe__l9_eo_l9_wi__5",
+  "sl_E3_fe__l9_eo_l9_wi__6",
+  "sl_E3_fe__rd_wo_rd_ei__0",
+  "sl_E3_fe__re_wo_re_ei__0",
+  "sl_E3_fe__rl_wo_rl_ei__0",
+  "sl_E3_fe__rr_wo_rr_ei__0",
+  "sl_E3_fe__rv_wo_rv_ei__0",
+  "sl_E3_fw__sc_eo_sc_wi__0",
+  "sl_E3_fe__sc_wo_sc_ei__0",
+  "sl_E3_fw__st_eo_st_wi__0",
+  "sl_E3_fe__st_wo_st_ei__0",
+  "sl_E4_fw__ag_eo_ag_wi__0",
+  "sl_E4_fw__ard_eo_ard_wi__0",
+  "sl_E4_fw__arl_eo_arl_wi__0",
+  "sl_E4_fw__arm_eo_arm_wi__0",
+  "sl_E4_fw__art_eo_art_wi__0",
+  "sl_E4_fw__arv_eo_arv_wi__0",
+  "sl_E4_fe__cmd_wo_cmd_ei__0",
+  "sl_E4_fw__dd_eo_dd_wi__0",
+  "sl_E4_fe__dr_wo_dr_ei__0",
+  "sl_E4_fe__hr_wo_hr_ei__0",
+  "sl_E4_fe__rd_wo_rd_ei__0",
+  "sl_E4_fe__re_wo_re_ei__0",
+  "sl_E4_fe__rl_wo_rl_ei__0",
+  "sl_E4_fe__rr_wo_rr_ei__0",
+  "sl_E4_fe__rv_wo_rv_ei__0",
+  "sl_E4_fw__sc_eo_sc_wi__0",
+  "sl_E4_fe__sc_wo_sc_ei__0",
+  "sl_E4_fw__st_eo_st_wi__0",
+  "sl_E4_fe__st_wo_st_ei__0",
+  "sl_E5_fw__ag_eo_ag_wi__0",
+  "sl_E5_fw__ard_eo_ard_wi__0",
+  "sl_E5_fw__arl_eo_arl_wi__0",
+  "sl_E5_fw__arm_eo_arm_wi__0",
+  "sl_E5_fw__art_eo_art_wi__0",
+  "sl_E5_fw__arv_eo_arv_wi__0",
+  "sl_E5_fw__dd_eo_dd_wi__0",
+  "sl_E5_fe__l9_eo_l9_wi__0",
+  "sl_E5_fe__l9_eo_l9_wi__1",
+  "sl_E5_fe__l9_eo_l9_wi__2",
+  "sl_E5_fe__l9_eo_l9_wi__3",
+  "sl_E5_fe__l9_eo_l9_wi__4",
+  "sl_E5_fe__l9_eo_l9_wi__5",
+  "sl_E5_fe__l9_eo_l9_wi__6",
+  "sl_E5_fw__sc_eo_sc_wi__0",
+  "sl_E5_fw__st_eo_st_wi__0",
+  "sl_W0_fw__ag_wo_ag_ei__0",
+  "sl_W0_fw__ard_wo_ard_ei__0",
+  "sl_W0_fw__arl_wo_arl_ei__0",
+  "sl_W0_fw__arm_wo_arm_ei__0",
+  "sl_W0_fw__art_wo_art_ei__0",
+  "sl_W0_fw__arv_wo_arv_ei__0",
+  "sl_W0_fe__cmd_eo_cmd_ei__0",
+  "sl_W0_fw__dd_wo_dd_ei__0",
+  "sl_W0_fe__dr_eo_dr_ei__0",
+  "sl_W0_fe__hr_eo_hr_ei__0",
+  "sl_W0_fe__rd_eo_rd_ei__0",
+  "sl_W0_fe__re_eo_re_ei__0",
+  "sl_W0_fe__rl_eo_rl_ei__0",
+  "sl_W0_fe__rr_eo_rr_ei__0",
+  "sl_W0_fe__rv_eo_rv_ei__0",
+  "sl_W0_fe__sc_eo_sc_ei__0",
+  "sl_W0_fw__sc_wo_sc_ei__0",
+  "sl_W0_fe__st_eo_st_ei__0",
+  "sl_W0_fw__st_wo_st_ei__0",
+  "sl_W1_fw__ag_wo_ag_ei__0",
+  "sl_W1_fw__ard_wo_ard_ei__0",
+  "sl_W1_fw__arl_wo_arl_ei__0",
+  "sl_W1_fw__arm_wo_arm_ei__0",
+  "sl_W1_fw__art_wo_art_ei__0",
+  "sl_W1_fw__arv_wo_arv_ei__0",
+  "sl_W1_fe__cmd_eo_cmd_wi__0",
+  "sl_W1_fw__dd_wo_dd_ei__0",
+  "sl_W1_fe__dr_eo_dr_wi__0",
+  "sl_W1_fe__hr_eo_hr_wi__0",
+  "sl_W1_fe__l9_eo_l9_wi__0",
+  "sl_W1_fe__rd_eo_rd_wi__0",
+  "sl_W1_fe__re_eo_re_wi__0",
+  "sl_W1_fe__rl_eo_rl_wi__0",
+  "sl_W1_fe__rr_eo_rr_wi__0",
+  "sl_W1_fe__rv_eo_rv_wi__0",
+  "sl_W1_fe__sc_eo_sc_wi__0",
+  "sl_W1_fw__sc_wo_sc_ei__0",
+  "sl_W1_fe__st_eo_st_wi__0",
+  "sl_W1_fw__st_wo_st_ei__0",
+  "sl_W2_fw__ag_wo_ag_ei__0",
+  "sl_W2_fw__ard_wo_ard_ei__0",
+  "sl_W2_fw__arl_wo_arl_ei__0",
+  "sl_W2_fw__arm_wo_arm_ei__0",
+  "sl_W2_fw__art_wo_art_ei__0",
+  "sl_W2_fw__arv_wo_arv_ei__0",
+  "sl_W2_fe__cmd_eo_cmd_wi__0",
+  "sl_W2_fw__dd_wo_dd_ei__0",
+  "sl_W2_fe__dr_eo_dr_wi__0",
+  "sl_W2_fe__hr_eo_hr_wi__0",
+  "sl_W2_fe__rd_eo_rd_wi__0",
+  "sl_W2_fe__re_eo_re_wi__0",
+  "sl_W2_fe__rl_eo_rl_wi__0",
+  "sl_W2_fe__rr_eo_rr_wi__0",
+  "sl_W2_fe__rv_eo_rv_wi__0",
+  "sl_W2_fe__sc_eo_sc_wi__0",
+  "sl_W2_fw__sc_wo_sc_ei__0",
+  "sl_W2_fe__st_eo_st_wi__0",
+  "sl_W2_fw__st_wo_st_ei__0",
+  "sl_W3_fw__ag_wo_ag_ei__0",
+  "sl_W3_fw__ard_wo_ard_ei__0",
+  "sl_W3_fw__arl_wo_arl_ei__0",
+  "sl_W3_fw__arm_wo_arm_ei__0",
+  "sl_W3_fw__art_wo_art_ei__0",
+  "sl_W3_fw__arv_wo_arv_ei__0",
+  "sl_W3_fe__cmd_eo_cmd_wi__0",
+  "sl_W3_fw__dd_wo_dd_ei__0",
+  "sl_W3_fe__dr_eo_dr_wi__0",
+  "sl_W3_fe__hr_eo_hr_wi__0",
+  "sl_W3_fe__l9_eo_l9_wi__0",
+  "sl_W3_fe__rd_eo_rd_wi__0",
+  "sl_W3_fe__re_eo_re_wi__0",
+  "sl_W3_fe__rl_eo_rl_wi__0",
+  "sl_W3_fe__rr_eo_rr_wi__0",
+  "sl_W3_fe__rv_eo_rv_wi__0",
+  "sl_W3_fe__sc_eo_sc_wi__0",
+  "sl_W3_fw__sc_wo_sc_ei__0",
+  "sl_W3_fe__st_eo_st_wi__0",
+  "sl_W3_fw__st_wo_st_ei__0",
+  "sl_W4_fw__ag_wo_ag_ei__0",
+  "sl_W4_fw__ard_wo_ard_ei__0",
+  "sl_W4_fw__arl_wo_arl_ei__0",
+  "sl_W4_fw__arm_wo_arm_ei__0",
+  "sl_W4_fw__art_wo_art_ei__0",
+  "sl_W4_fw__arv_wo_arv_ei__0",
+  "sl_W4_fe__cmd_eo_cmd_wi__0",
+  "sl_W4_fw__dd_wo_dd_ei__0",
+  "sl_W4_fe__dr_eo_dr_wi__0",
+  "sl_W4_fe__hr_eo_hr_wi__0",
+  "sl_W4_fe__rd_eo_rd_wi__0",
+  "sl_W4_fe__re_eo_re_wi__0",
+  "sl_W4_fe__rl_eo_rl_wi__0",
+  "sl_W4_fe__rr_eo_rr_wi__0",
+  "sl_W4_fe__rv_eo_rv_wi__0",
+  "sl_W4_fe__sc_eo_sc_wi__0",
+  "sl_W4_fw__sc_wo_sc_ei__0",
+  "sl_W4_fe__st_eo_st_wi__0",
+  "sl_W4_fw__st_wo_st_ei__0",
+  "sl_W5_fw__ag_wo_ag5__0",
+  "sl_W5_fw__ag_wo_ag5__1",
+  "sl_W5_fw__ard_wo_in_data__0",
+  "sl_W5_fw__ard_wo_in_data__1",
+  "sl_W5_fw__ard_wo_in_data__2",
+  "sl_W5_fw__arl_wo_in_last__0",
+  "sl_W5_fw__arl_wo_in_last__1",
+  "sl_W5_fw__arl_wo_in_last__2",
+  "sl_W5_fw__arm_wo_in_mode__0",
+  "sl_W5_fw__arm_wo_in_mode__1",
+  "sl_W5_fw__arm_wo_in_mode__2",
+  "sl_W5_fw__art_wo_in_tag__0",
+  "sl_W5_fw__art_wo_in_tag__1",
+  "sl_W5_fw__art_wo_in_tag__2",
+  "sl_W5_fw__arv_wo_in_valid__0",
+  "sl_W5_fw__arv_wo_in_valid__1",
+  "sl_W5_fw__arv_wo_in_valid__2",
+  "sl_W5_fw__ccm_wo_cmd_mode__0",
+  "sl_W5_fw__ccm_wo_cmd_mode__1",
+  "sl_W5_fw__ccm_wo_cmd_mode__2",
+  "sl_W5_fw__cct_wo_cmd_tag__0",
+  "sl_W5_fw__cct_wo_cmd_tag__1",
+  "sl_W5_fw__cct_wo_cmd_tag__2",
+  "sl_W5_fw__ccv_wo_cmd_v__0",
+  "sl_W5_fw__ccv_wo_cmd_v__1",
+  "sl_W5_fw__ccv_wo_cmd_v__2",
+  "sl_W5_fw__ccw_wo_cmd_words__0",
+  "sl_W5_fw__ccw_wo_cmd_words__1",
+  "sl_W5_fw__ccw_wo_cmd_words__2",
+  "sl_W5_fe__cmd_eo_cmd_wi__0",
+  "sl_W5_fw__dd_wo_dd_i__0",
+  "sl_W5_fw__dd_wo_dd_i__1",
+  "sl_W5_fe__dr_eo_dr_wi__0",
+  "sl_W5_fe__hr_eo_hr_wi__0",
+  "sl_W5_fe__l9_eo_l9_wi__0",
+  "sl_W5_fe__rd_eo_rd_wi__0",
+  "sl_W5_fe__re_eo_re_wi__0",
+  "sl_W5_fe__rl_eo_rl_wi__0",
+  "sl_W5_fe__rr_eo_rr_wi__0",
+  "sl_W5_fe__rv_eo_rv_wi__0",
+  "sl_W5_fe__sc_eo_sc_wi__0",
+  "sl_W5_fw__ss_wo_ss5__0",
+  "sl_W5_fw__ss_wo_ss5__1",
+  "sl_W5_fe__st_eo_st_wi__0",
+  "glue__embed_code_q_emb_code_q__0",
+  "glue__embed_scale_q_emb_scale_q__0",
+  "coll_core__cmd_free_io_cmd_free__0",
+  "coll_core__cmd_free_io_cmd_free__1",
+  "coll_core__fault_io_fault__0",
+  "coll_core__fault_io_fault__1",
+  "coll_core__out_data_rd_wi__0",
+  "coll_core__out_data_rd_wi__1",
+  "coll_core__out_data_rd_wi__2",
+  "coll_core__out_err_re_wi__0",
+  "coll_core__out_err_re_wi__1",
+  "coll_core__out_err_re_wi__2",
+  "coll_core__out_last_rl_wi__0",
+  "coll_core__out_last_rl_wi__1",
+  "coll_core__out_last_rl_wi__2",
+  "coll_core__out_rank_rr_wi__0",
+  "coll_core__out_rank_rr_wi__1",
+  "coll_core__out_rank_rr_wi__2",
+  "coll_core__out_valid_rv_wi__0",
+  "coll_core__out_valid_rv_wi__1",
+  "coll_core__out_valid_rv_wi__2",
+  "coll_n__serdes_tx_tx_flit__0",
+  "coll_s__serdes_tx_tx_flit__0",
+  "coll_s__serdes_tx_tx_flit_2__0",
+  "coll_s__serdes_tx_tx_flit_2__1",
+  "coll_s__serdes_tx_tx_flit_2__2",
+  "coll_n__serdes_tx_valid_tx_v__0",
+  "coll_s__serdes_tx_valid_tx_v__0",
+  "coll_s__serdes_tx_valid_tx_v_2__0",
+  "coll_s__serdes_tx_valid_tx_v_2__1",
+  "coll_s__serdes_tx_valid_tx_v_2__2",
+  "io_serdes__rx_flit_serdes_rx__0",
+  "io_serdes__rx_v_serdes_rx_valid__0",
+  "io_serdes__tx_up_serdes_up__0",
+  "io_serdes_1__rx_flit_serdes_rx__0",
+  "io_serdes_1__rx_v_serdes_rx_valid__0",
+  "io_serdes_1__tx_up_serdes_up__0",
+  "io_serdes_2__rx_flit_serdes_rx__0",
+  "io_serdes_2__rx_flit_serdes_rx__1",
+  "io_serdes_2__rx_flit_serdes_rx__2",
+  "io_serdes_2__rx_v_serdes_rx_valid__0",
+  "io_serdes_2__rx_v_serdes_rx_valid__1",
+  "io_serdes_2__rx_v_serdes_rx_valid__2",
+  "io_serdes_2__tx_up_serdes_up__0",
+  "io_serdes_2__tx_up_serdes_up__1",
+  "io_serdes_2__tx_up_serdes_up__2",
+  "glue__ctx_x_ctx_x__0",
+  "glue__ctx_x_ctx_x__1",
+  "glue__dh_user_dh_user__0",
+  "glue__dh_user_dh_user__1",
+  "native59__dr_o_dr_wi__0",
+  "native59__dr_o_dr_wi__1",
+  "native59__emb_code_addr_embed_code_addr__0",
+  "native59__emb_code_re_embed_code_re__0",
+  "native59__emb_scale_addr_embed_scale_addr__0",
+  "native59__emb_scale_re_embed_scale_re__0",
+  "native59__fault_native_fault__0",
+  "native59__head_descriptor_generation_head_descriptor_generation__0",
+  "native59__head_descriptor_tag_head_descriptor_tag__0",
+  "native59__head_descriptor_v_head_descriptor_v__0",
+  "native59__native_ret_native_ret__0",
+  "native59__native_tx_payload_native_tx_payload__0",
+  "native59__native_tx_v_native_tx_v__0",
+  "native59__obs_native_obs_native__0",
+  "native59__x3_x3__0",
+  "native59__x3_generation_x3_generation__0",
+  "native59__x3_identity_x3_identity__0",
+  "glue__complete_slot_complete_slot__0",
+  "glue__host_epoch_host_epoch__0",
+  "glue__host_epoch_valid_host_epoch_valid__0",
+  "glue__host_fused_capability_host_fused_capability__0",
+  "glue__host_generation_host_generation__0",
+  "glue__host_tag_host_tag__0",
+  "glue__kv_word_index_kv_word_index__0",
+  "glue__kv_word_slot_kv_word_slot__0",
+  "glue__q_slot_q_slot__0",
+  "glue__q_slot_beat_q_slot_beat__0",
+  "glue__seq_dh_dh__0",
+  "glue__seq_dh_dh__1",
+  "glue__tt_fab_fab__0",
+  "glue__tt_fab_fab__1",
+  "glue__tt_kok_kok__0",
+  "glue__tt_kok_kok__1",
+  "glue__tt_kwd_kwd__0",
+  "glue__tt_kwd_kwd__1",
+  "glue__tt_pw_pw__0",
+  "glue__tt_pw_pw__1",
+  "glue__visibility_slot_visibility_slot__0",
+  "tt_ctlm__cal_descriptor_obs_seq_descriptor_obs__0",
+  "tt_ctlm__cal_descriptor_obs_seq_descriptor_obs__1",
+  "tt_ctlm__cal_image_ready_seq_cfg_image_ready__0",
+  "tt_ctlm__cal_image_ready_seq_cfg_image_ready__1",
+  "tt_ctlm__cal_program_obs_seq_program_obs__0",
+  "tt_ctlm__cal_program_obs_seq_program_obs__1",
+  "tt_ctlm__cmd_cmd_wi__0",
+  "tt_ctlm__cmd_cmd_wi__1",
+  "tt_ctlm__command_stage_tt_command_stage__0",
+  "tt_ctlm__command_stage_tt_command_stage__1",
+  "tt_ctlm__command_stage_command_stage__0",
+  "tt_ctlm__control_stores_ready_tt_control_stores_ready__0",
+  "tt_ctlm__control_stores_ready_tt_control_stores_ready__1",
+  "tt_ctlm__dc_seq_dc__0",
+  "tt_ctlm__dc_seq_dc__1",
+  "tt_ctlm__emb_position_head_prepare_position__0",
+  "tt_ctlm__emb_start_head_prepare_v__0",
+  "tt_ctlm__emb_start_core_start__0",
+  "tt_ctlm__emb_start_core_start__1",
+  "tt_ctlm__emb_token_head_prepare_token__0",
+  "tt_ctlm__emb_token_core_token__0",
+  "tt_ctlm__emb_token_core_token__1",
+  "tt_ctlm__emb_user_head_prepare_user__0",
+  "tt_ctlm__hr_hr_wi__0",
+  "tt_ctlm__hr_hr_wi__1",
+  "tt_ctlm__layer_context_v_tt_layer_context_v__0",
+  "tt_ctlm__layer_context_v_tt_layer_context_v__1",
+  "tt_ctlm__layer_context_v_layer_context_v__0",
+  "tt_ctlm__native_cmd_native_cmd__0",
+  "tt_ctlm__native_pos_tt_native_pos__0",
+  "tt_ctlm__native_pos_tt_native_pos__1",
+  "tt_ctlm__native_pos_native_position__0",
+  "tt_ctlm__native_tok_tt_native_tok__0",
+  "tt_ctlm__native_tok_tt_native_tok__1",
+  "tt_ctlm__native_tok_native_token__0",
+  "tt_ctlm__program_obs_tt_program_obs__0",
+  "tt_ctlm__program_obs_tt_program_obs__1",
+  "tt_ctlm__tl_st_wi__0",
+  "tt_ctlm__tl_st_wi__1",
+  "ucie_kv__rx_flit_fdi_rx_flit__0",
+  "ucie_kv__rx_v_fdi_rx_v__0",
+  "ucie_kv__tx_up_fdi_tx_up__0",
+  "sl_E0_fe__treq_wo_treq_ei__0",
+  "sl_E1_fe__treq_wo_treq_ei__0",
+  "sl_E2_fe__treq_wo_treq_ei__0",
+  "sl_E3_fe__treq_wo_treq_ei__0",
+  "sl_E4_fe__treq_wo_treq_ei__0",
+  "sl_W0_fe__treq_eo_treq_ei__0",
+  "sl_W1_fe__treq_eo_treq_wi__0",
+  "sl_W2_fe__treq_eo_treq_wi__0",
+  "sl_W3_fe__treq_eo_treq_wi__0",
+  "sl_W4_fe__treq_eo_treq_wi__0",
+  "sl_W5_fe__treq_eo_treq_wi__0",
+  "tt_ctlm__table_req_treq_wi__0",
+  "tt_ctlm__table_req_treq_wi__1",
+  "coll_core__crec_tx_s1__0",
+  "coll_core__crec_tx_s1__1",
+  "coll_core__crec_tx_s1__2",
+  "coll_core__crec_tx_s1__3",
+  "coll_s__crec_rx_s1__0",
+  "coll_s__crec_rx_s1__1",
+  "coll_s__crec_rx_s1__2",
+  "coll_s__crec_rx_s1__3",
+  "coll_core__crec_tx_s2__0",
+  "coll_core__crec_tx_s2__1",
+  "coll_core__crec_tx_s2__2",
+  "coll_core__crec_tx_s2__3",
+  "coll_s__crec_rx_s2__0",
+  "coll_s__crec_rx_s2__1",
+  "coll_s__crec_rx_s2__2",
+  "coll_s__crec_rx_s2__3",
+  "coll_core__crec_tx_s0__0",
+  "coll_core__crec_tx_s0__1",
+  "coll_core__crec_tx_s0__2",
+  "coll_core__crec_tx_s0__3",
+  "coll_n__crec_rx_s0__0",
+  "coll_n__crec_rx_s0__1",
+  "coll_n__crec_rx_s0__2",
+  "coll_n__crec_rx_s0__3",
+  "coll_core__cshr_rtx__0",
+  "coll_ucie__cshr_rrx__0",
+  "coll_core__cshr_ptx__0",
+  "coll_ucie__cshr_prx__0",
+  "sl_W5_stm__flt__0",
+  "sl_W5_su_c__flt__0",
+  "sl_W5_ctl__flt__0",
+  "sl_W5_su_l0__flt__0",
+  "sl_W5_fe__flt__0",
+  "sl_W5_hc1__flt__0",
+  "sl_W5_hc2__flt__0",
+  "sl_W4_stm__flt__0",
+  "sl_W4_su_c__flt__0",
+  "sl_W4_ctl__flt__0",
+  "sl_W4_su_l0__flt__0",
+  "sl_W4_fe__flt__0",
+  "sl_W4_hc1__flt__0",
+  "sl_W4_hc2__flt__0",
+  "sl_W4_fw__flte__0",
+  "sl_W3_stm__flt__0",
+  "sl_W3_su_c__flt__0",
+  "sl_W3_ctl__flt__0",
+  "sl_W3_su_l0__flt__0",
+  "sl_W3_fe__flt__0",
+  "sl_W3_hc1__flt__0",
+  "sl_W3_hc2__flt__0",
+  "sl_W3_fw__flte__0",
+  "sl_W2_stm__flt__0",
+  "sl_W2_su_c__flt__0",
+  "sl_W2_ctl__flt__0",
+  "sl_W2_su_l0__flt__0",
+  "sl_W2_fe__flt__0",
+  "sl_W2_hc1__flt__0",
+  "sl_W2_hc2__flt__0",
+  "sl_W2_fw__flte__0",
+  "sl_W1_stm__flt__0",
+  "sl_W1_su_c__flt__0",
+  "sl_W1_ctl__flt__0",
+  "sl_W1_su_l0__flt__0",
+  "sl_W1_fe__flt__0",
+  "sl_W1_hc1__flt__0",
+  "sl_W1_hc2__flt__0",
+  "sl_W1_fw__flte__0",
+  "sl_W0_stm__flt__0",
+  "sl_W0_su_c__flt__0",
+  "sl_W0_ctl__flt__0",
+  "sl_W0_su_l0__flt__0",
+  "sl_W0_fe__flt__0",
+  "sl_W0_hc1__flt__0",
+  "sl_W0_hc2__flt__0",
+  "sl_W0_fw__flte__0",
+  "sl_E0_stm__flt__0",
+  "sl_E0_su_c__flt__0",
+  "sl_E0_ctl__flt__0",
+  "sl_E0_su_l0__flt__0",
+  "sl_E0_fe__flt__0",
+  "sl_E0_hc1__flt__0",
+  "sl_E0_hc2__flt__0",
+  "sl_E0_fw__flte__0",
+  "sl_E1_stm__flt__0",
+  "sl_E1_su_c__flt__0",
+  "sl_E1_ctl__flt__0",
+  "sl_E1_su_l0__flt__0",
+  "sl_E1_fe__flt__0",
+  "sl_E1_hc1__flt__0",
+  "sl_E1_hc2__flt__0",
+  "sl_E1_fw__flte__0",
+  "sl_E2_stm__flt__0",
+  "sl_E2_su_c__flt__0",
+  "sl_E2_ctl__flt__0",
+  "sl_E2_su_l0__flt__0",
+  "sl_E2_fe__flt__0",
+  "sl_E2_hc1__flt__0",
+  "sl_E2_hc2__flt__0",
+  "sl_E2_fw__flte__0",
+  "sl_E3_stm__flt__0",
+  "sl_E3_su_c__flt__0",
+  "sl_E3_ctl__flt__0",
+  "sl_E3_su_l0__flt__0",
+  "sl_E3_fe__flt__0",
+  "sl_E3_hc1__flt__0",
+  "sl_E3_hc2__flt__0",
+  "sl_E3_fw__flte__0",
+  "sl_E4_stm__flt__0",
+  "sl_E4_su_c__flt__0",
+  "sl_E4_ctl__flt__0",
+  "sl_E4_su_l0__flt__0",
+  "sl_E4_fe__flt__0",
+  "sl_E4_hc1__flt__0",
+  "sl_E4_hc2__flt__0",
+  "sl_E4_fw__flte__0",
+  "sl_E5_stm__flt__0",
+  "sl_E5_su_c__flt__0",
+  "sl_E5_ctl__flt__0",
+  "sl_E5_su_l0__flt__0",
+  "sl_E5_hc1__flt__0",
+  "sl_E5_hc2__flt__0",
+  "sl_E5_fw__flte__0",
+  "coll_s__fltk__0",
+  "coll_s__fltk__1",
+  "coll_s__fltk__2",
+  "coll_s__fltk__3",
+  "coll_n__fltk__0",
+  "coll_n__fltk__1",
+  "coll_n__fltk__2",
+  "coll_n__fltk__3",
+  "coll_ucie__fltu__0",
+  "coll_core__fltc__0",
+  "coll_core__fltc__1",
+  "tt_ctlm__fltt__0",
+  "tt_ctlm__fltt__1",
+  "coll_s__fltv__0",
+  "coll_s__fltv__1",
+  "coll_s__fltv__2",
+  "coll_s__fltv__3",
+  "coll_n__fltv__0",
+  "coll_n__fltv__1",
+  "coll_n__fltv__2",
+  "coll_n__fltv__3",
+  "coll_core__fltvc__0",
+  "coll_core__fltvc__1",
+  "glue__mufl__0",
+  "glue__mufl__1",
+  "glue__kvrst__0"
+ ],
+ "partition_pair_census": {
+  "c_W5_bf_00 -> c_W5_bf_01": {
+   "ports": 4,
+   "bit_crossings": 1630
+  },
+  "c_W5_bf_10 -> c_W5_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W5_bf_11 -> c_W5_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W5_bf_01 -> c_W5_bf_00": {
+   "ports": 5,
+   "bit_crossings": 1627
+  },
+  "c_W5_bf_00 -> c_W5_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W5_bn_00 -> c_W5_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W5_bn_10 -> c_W5_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W5_bn_11 -> c_W5_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W5_bn_01 -> c_W5_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W5_bn_00 -> c_W5_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W5_tn_00 -> c_W5_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W5_tn_10 -> c_W5_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W5_tn_11 -> c_W5_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W5_tn_01 -> c_W5_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W5_tn_00 -> c_W5_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W5_tf_00 -> c_W5_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W5_tf_10 -> c_W5_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W5_tf_11 -> c_W5_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W5_tf_01 -> c_W5_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W5_tf_00 -> c_W5_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W4_bf_00 -> c_W4_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W4_bf_10 -> c_W4_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W4_bf_11 -> c_W4_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W4_bf_01 -> c_W4_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W4_bf_00 -> c_W4_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W4_bn_00 -> c_W4_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W4_bn_10 -> c_W4_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W4_bn_11 -> c_W4_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W4_bn_01 -> c_W4_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W4_bn_00 -> c_W4_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W4_tn_00 -> c_W4_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W4_tn_10 -> c_W4_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W4_tn_11 -> c_W4_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W4_tn_01 -> c_W4_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W4_tn_00 -> c_W4_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W4_tf_00 -> c_W4_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W4_tf_10 -> c_W4_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W4_tf_11 -> c_W4_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W4_tf_01 -> c_W4_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W4_tf_00 -> c_W4_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W3_bf_00 -> c_W3_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W3_bf_10 -> c_W3_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W3_bf_11 -> c_W3_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W3_bf_01 -> c_W3_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W3_bf_00 -> c_W3_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W3_bn_00 -> c_W3_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W3_bn_10 -> c_W3_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W3_bn_11 -> c_W3_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W3_bn_01 -> c_W3_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W3_bn_00 -> c_W3_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W3_tn_00 -> c_W3_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W3_tn_10 -> c_W3_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W3_tn_11 -> c_W3_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W3_tn_01 -> c_W3_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W3_tn_00 -> c_W3_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W3_tf_00 -> c_W3_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W3_tf_10 -> c_W3_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W3_tf_11 -> c_W3_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W3_tf_01 -> c_W3_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W3_tf_00 -> c_W3_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W2_bf_00 -> c_W2_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W2_bf_10 -> c_W2_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W2_bf_11 -> c_W2_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W2_bf_01 -> c_W2_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W2_bf_00 -> c_W2_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W2_bn_00 -> c_W2_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W2_bn_10 -> c_W2_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W2_bn_11 -> c_W2_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W2_bn_01 -> c_W2_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W2_bn_00 -> c_W2_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W2_tn_00 -> c_W2_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W2_tn_10 -> c_W2_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W2_tn_11 -> c_W2_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W2_tn_01 -> c_W2_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W2_tn_00 -> c_W2_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W2_tf_00 -> c_W2_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W2_tf_10 -> c_W2_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W2_tf_11 -> c_W2_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W2_tf_01 -> c_W2_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W2_tf_00 -> c_W2_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W1_bf_00 -> c_W1_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W1_bf_10 -> c_W1_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W1_bf_11 -> c_W1_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W1_bf_01 -> c_W1_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W1_bf_00 -> c_W1_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W1_bn_00 -> c_W1_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W1_bn_10 -> c_W1_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W1_bn_11 -> c_W1_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W1_bn_01 -> c_W1_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W1_bn_00 -> c_W1_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W1_tn_00 -> c_W1_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W1_tn_10 -> c_W1_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W1_tn_11 -> c_W1_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W1_tn_01 -> c_W1_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W1_tn_00 -> c_W1_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W1_tf_00 -> c_W1_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W1_tf_10 -> c_W1_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W1_tf_11 -> c_W1_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W1_tf_01 -> c_W1_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W1_tf_00 -> c_W1_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W0_bf_00 -> c_W0_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W0_bf_10 -> c_W0_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W0_bf_11 -> c_W0_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W0_bf_01 -> c_W0_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W0_bf_00 -> c_W0_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W0_bn_00 -> c_W0_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W0_bn_10 -> c_W0_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W0_bn_11 -> c_W0_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W0_bn_01 -> c_W0_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W0_bn_00 -> c_W0_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W0_tn_00 -> c_W0_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W0_tn_10 -> c_W0_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W0_tn_11 -> c_W0_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W0_tn_01 -> c_W0_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_W0_tn_00 -> c_W0_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_W0_tf_00 -> c_W0_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_W0_tf_10 -> c_W0_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_W0_tf_11 -> c_W0_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W0_tf_01 -> c_W0_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_W0_tf_00 -> c_W0_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E0_bf_00 -> c_E0_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E0_bf_10 -> c_E0_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E0_bf_11 -> c_E0_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E0_bf_01 -> c_E0_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E0_bf_00 -> c_E0_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E0_bn_00 -> c_E0_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E0_bn_10 -> c_E0_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E0_bn_11 -> c_E0_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E0_bn_01 -> c_E0_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E0_bn_00 -> c_E0_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E0_tn_00 -> c_E0_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E0_tn_10 -> c_E0_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E0_tn_11 -> c_E0_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E0_tn_01 -> c_E0_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E0_tn_00 -> c_E0_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E0_tf_00 -> c_E0_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E0_tf_10 -> c_E0_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E0_tf_11 -> c_E0_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E0_tf_01 -> c_E0_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E0_tf_00 -> c_E0_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E1_bf_00 -> c_E1_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E1_bf_10 -> c_E1_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E1_bf_11 -> c_E1_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E1_bf_01 -> c_E1_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E1_bf_00 -> c_E1_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E1_bn_00 -> c_E1_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E1_bn_10 -> c_E1_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E1_bn_11 -> c_E1_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E1_bn_01 -> c_E1_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E1_bn_00 -> c_E1_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E1_tn_00 -> c_E1_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E1_tn_10 -> c_E1_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E1_tn_11 -> c_E1_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E1_tn_01 -> c_E1_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E1_tn_00 -> c_E1_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E1_tf_00 -> c_E1_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E1_tf_10 -> c_E1_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E1_tf_11 -> c_E1_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E1_tf_01 -> c_E1_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E1_tf_00 -> c_E1_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E2_bf_00 -> c_E2_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E2_bf_10 -> c_E2_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E2_bf_11 -> c_E2_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E2_bf_01 -> c_E2_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E2_bf_00 -> c_E2_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E2_bn_00 -> c_E2_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E2_bn_10 -> c_E2_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E2_bn_11 -> c_E2_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E2_bn_01 -> c_E2_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E2_bn_00 -> c_E2_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E2_tn_00 -> c_E2_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E2_tn_10 -> c_E2_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E2_tn_11 -> c_E2_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E2_tn_01 -> c_E2_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E2_tn_00 -> c_E2_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E2_tf_00 -> c_E2_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E2_tf_10 -> c_E2_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E2_tf_11 -> c_E2_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E2_tf_01 -> c_E2_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E2_tf_00 -> c_E2_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E3_bf_00 -> c_E3_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E3_bf_10 -> c_E3_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E3_bf_11 -> c_E3_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E3_bf_01 -> c_E3_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E3_bf_00 -> c_E3_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E3_bn_00 -> c_E3_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E3_bn_10 -> c_E3_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E3_bn_11 -> c_E3_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E3_bn_01 -> c_E3_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E3_bn_00 -> c_E3_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E3_tn_00 -> c_E3_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E3_tn_10 -> c_E3_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E3_tn_11 -> c_E3_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E3_tn_01 -> c_E3_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E3_tn_00 -> c_E3_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E3_tf_00 -> c_E3_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E3_tf_10 -> c_E3_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E3_tf_11 -> c_E3_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E3_tf_01 -> c_E3_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E3_tf_00 -> c_E3_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E4_bf_00 -> c_E4_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E4_bf_10 -> c_E4_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E4_bf_11 -> c_E4_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E4_bf_01 -> c_E4_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E4_bf_00 -> c_E4_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E4_bn_00 -> c_E4_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E4_bn_10 -> c_E4_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E4_bn_11 -> c_E4_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E4_bn_01 -> c_E4_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E4_bn_00 -> c_E4_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E4_tn_00 -> c_E4_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E4_tn_10 -> c_E4_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E4_tn_11 -> c_E4_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E4_tn_01 -> c_E4_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E4_tn_00 -> c_E4_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E4_tf_00 -> c_E4_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E4_tf_10 -> c_E4_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E4_tf_11 -> c_E4_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E4_tf_01 -> c_E4_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E4_tf_00 -> c_E4_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E5_bf_00 -> c_E5_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E5_bf_10 -> c_E5_bf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E5_bf_11 -> c_E5_bf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E5_bf_01 -> c_E5_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E5_bf_00 -> c_E5_bf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E5_bn_00 -> c_E5_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E5_bn_10 -> c_E5_bn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E5_bn_11 -> c_E5_bn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E5_bn_01 -> c_E5_bn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E5_bn_00 -> c_E5_bn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E5_tn_00 -> c_E5_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E5_tn_10 -> c_E5_tn_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E5_tn_11 -> c_E5_tn_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E5_tn_01 -> c_E5_tn_00": {
+   "ports": 3,
+   "bit_crossings": 1542
+  },
+  "c_E5_tn_00 -> c_E5_tn_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "c_E5_tf_00 -> c_E5_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "c_E5_tf_10 -> c_E5_tf_11": {
+   "ports": 4,
+   "bit_crossings": 2060
+  },
+  "c_E5_tf_11 -> c_E5_tf_01": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E5_tf_01 -> c_E5_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "c_E5_tf_00 -> c_E5_tf_10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W5_hc0 -> c_W5_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W5_tn_01 -> c_W5_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W5_hc1 -> c_W5_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W5_hc2 -> c_W5_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W5_tn_11 -> c_W5_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W5_hc3 -> c_W5_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W5_tn_00 -> sl_W5_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W5_hc0 -> sl_W5_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_W5_tf_00 -> c_W5_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W5_hc0 -> sl_W5_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W5_st_a -> sl_W5_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_W5_fw -> sl_W5_su_l1": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W5_su_l1 -> c_W5_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W5_bn_01 -> c_W5_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W5_hc1 -> sl_W5_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_W5_ctl -> sl_W5_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_W5_stm -> sl_W5_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W5_su_c -> c_W5_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W5_hc2 -> sl_W5_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_W5_ctl -> sl_W5_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_W5_sc -> sl_W5_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_W5_su_c -> c_W5_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W5_bn_11 -> c_W5_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W5_hc3 -> sl_W5_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W5_st_b -> sl_W5_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_W5_fe -> sl_W5_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W5_su_l0 -> c_W5_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W5_bn_00 -> sl_W5_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W5_su_l1 -> sl_W5_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W5_fw -> sl_W5_st_a": {
+   "ports": 3,
+   "bit_crossings": 1564
+  },
+  "c_W5_bf_00 -> c_W5_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W4_hc0 -> c_W4_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W4_tn_01 -> c_W4_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W4_hc1 -> c_W4_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W4_hc2 -> c_W4_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W4_tn_11 -> c_W4_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W4_hc3 -> c_W4_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W4_tn_00 -> sl_W4_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W4_hc0 -> sl_W4_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_W4_tf_00 -> c_W4_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W4_hc0 -> sl_W4_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W4_st_a -> sl_W4_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_W4_fw -> sl_W4_su_l1": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W4_su_l1 -> c_W4_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W4_bn_01 -> c_W4_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W4_hc1 -> sl_W4_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_W4_ctl -> sl_W4_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_W4_stm -> sl_W4_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W4_su_c -> c_W4_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W4_hc2 -> sl_W4_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_W4_ctl -> sl_W4_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_W4_sc -> sl_W4_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_W4_su_c -> c_W4_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W4_bn_11 -> c_W4_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W4_hc3 -> sl_W4_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W4_st_b -> sl_W4_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_W4_fe -> sl_W4_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W4_su_l0 -> c_W4_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W4_bn_00 -> sl_W4_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W4_su_l1 -> sl_W4_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W4_fw -> sl_W4_st_a": {
+   "ports": 4,
+   "bit_crossings": 1822
+  },
+  "c_W4_bf_00 -> c_W4_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W3_hc0 -> c_W3_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W3_tn_01 -> c_W3_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W3_hc1 -> c_W3_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W3_hc2 -> c_W3_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W3_tn_11 -> c_W3_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W3_hc3 -> c_W3_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W3_tn_00 -> sl_W3_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W3_hc0 -> sl_W3_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_W3_tf_00 -> c_W3_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W3_hc0 -> sl_W3_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W3_st_a -> sl_W3_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_W3_fw -> sl_W3_su_l1": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W3_su_l1 -> c_W3_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W3_bn_01 -> c_W3_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W3_hc1 -> sl_W3_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_W3_ctl -> sl_W3_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_W3_stm -> sl_W3_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W3_su_c -> c_W3_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W3_hc2 -> sl_W3_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_W3_ctl -> sl_W3_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_W3_sc -> sl_W3_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_W3_su_c -> c_W3_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W3_bn_11 -> c_W3_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W3_hc3 -> sl_W3_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W3_st_b -> sl_W3_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_W3_fe -> sl_W3_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W3_su_l0 -> c_W3_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W3_bn_00 -> sl_W3_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W3_su_l1 -> sl_W3_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W3_fw -> sl_W3_st_a": {
+   "ports": 3,
+   "bit_crossings": 1564
+  },
+  "c_W3_bf_00 -> c_W3_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W2_hc0 -> c_W2_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W2_tn_01 -> c_W2_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W2_hc1 -> c_W2_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W2_hc2 -> c_W2_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W2_tn_11 -> c_W2_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W2_hc3 -> c_W2_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W2_tn_00 -> sl_W2_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W2_hc0 -> sl_W2_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_W2_tf_00 -> c_W2_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W2_hc0 -> sl_W2_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W2_st_a -> sl_W2_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_W2_fw -> sl_W2_su_l1": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W2_su_l1 -> c_W2_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W2_bn_01 -> c_W2_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W2_hc1 -> sl_W2_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_W2_ctl -> sl_W2_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_W2_stm -> sl_W2_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W2_su_c -> c_W2_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W2_hc2 -> sl_W2_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_W2_ctl -> sl_W2_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_W2_sc -> sl_W2_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_W2_su_c -> c_W2_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W2_bn_11 -> c_W2_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W2_hc3 -> sl_W2_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W2_st_b -> sl_W2_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_W2_fe -> sl_W2_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W2_su_l0 -> c_W2_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W2_bn_00 -> sl_W2_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W2_su_l1 -> sl_W2_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W2_fw -> sl_W2_st_a": {
+   "ports": 4,
+   "bit_crossings": 1822
+  },
+  "c_W2_bf_00 -> c_W2_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W1_hc0 -> c_W1_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W1_tn_01 -> c_W1_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W1_hc1 -> c_W1_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W1_hc2 -> c_W1_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W1_tn_11 -> c_W1_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W1_hc3 -> c_W1_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W1_tn_00 -> sl_W1_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W1_hc0 -> sl_W1_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_W1_tf_00 -> c_W1_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W1_hc0 -> sl_W1_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W1_st_a -> sl_W1_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_W1_fw -> sl_W1_su_l1": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W1_su_l1 -> c_W1_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W1_bn_01 -> c_W1_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W1_hc1 -> sl_W1_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_W1_ctl -> sl_W1_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_W1_stm -> sl_W1_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W1_su_c -> c_W1_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W1_hc2 -> sl_W1_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_W1_ctl -> sl_W1_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_W1_sc -> sl_W1_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_W1_su_c -> c_W1_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W1_bn_11 -> c_W1_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W1_hc3 -> sl_W1_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W1_st_b -> sl_W1_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_W1_fe -> sl_W1_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W1_su_l0 -> c_W1_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W1_bn_00 -> sl_W1_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W1_su_l1 -> sl_W1_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W1_fw -> sl_W1_st_a": {
+   "ports": 3,
+   "bit_crossings": 1564
+  },
+  "c_W1_bf_00 -> c_W1_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W0_hc0 -> c_W0_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W0_tn_01 -> c_W0_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W0_hc1 -> c_W0_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W0_hc2 -> c_W0_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W0_tn_11 -> c_W0_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W0_hc3 -> c_W0_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W0_tn_00 -> sl_W0_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W0_hc0 -> sl_W0_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_W0_tf_00 -> c_W0_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W0_hc0 -> sl_W0_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W0_st_a -> sl_W0_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_W0_fw -> sl_W0_su_l1": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W0_su_l1 -> c_W0_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W0_bn_01 -> c_W0_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W0_hc1 -> sl_W0_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_W0_ctl -> sl_W0_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_W0_stm -> sl_W0_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W0_su_c -> c_W0_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W0_hc2 -> sl_W0_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_W0_ctl -> sl_W0_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_W0_sc -> sl_W0_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_W0_su_c -> c_W0_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W0_bn_11 -> c_W0_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_W0_hc3 -> sl_W0_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W0_st_b -> sl_W0_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_W0_fe -> sl_W0_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_W0_su_l0 -> c_W0_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_W0_bn_00 -> sl_W0_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W0_su_l1 -> sl_W0_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_W0_fw -> sl_W0_st_a": {
+   "ports": 4,
+   "bit_crossings": 1822
+  },
+  "c_W0_bf_00 -> c_W0_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E0_hc0 -> c_E0_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E0_tn_01 -> c_E0_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E0_hc1 -> c_E0_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E0_hc2 -> c_E0_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E0_tn_11 -> c_E0_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E0_hc3 -> c_E0_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E0_tn_00 -> sl_E0_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E0_hc0 -> sl_E0_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_E0_tf_00 -> c_E0_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E0_hc0 -> sl_E0_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E0_st_a -> sl_E0_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_E0_fw -> sl_E0_su_l1": {
+   "ports": 2,
+   "bit_crossings": 774
+  },
+  "sl_E0_su_l1 -> c_E0_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E0_bn_01 -> c_E0_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E0_hc1 -> sl_E0_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_E0_ctl -> sl_E0_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_E0_stm -> sl_E0_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E0_su_c -> c_E0_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E0_hc2 -> sl_E0_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_E0_ctl -> sl_E0_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_E0_sc -> sl_E0_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_E0_su_c -> c_E0_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E0_bn_11 -> c_E0_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E0_hc3 -> sl_E0_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E0_st_b -> sl_E0_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_E0_fe -> sl_E0_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E0_su_l0 -> c_E0_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E0_bn_00 -> sl_E0_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E0_su_l1 -> sl_E0_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E0_fw -> sl_E0_st_a": {
+   "ports": 4,
+   "bit_crossings": 1822
+  },
+  "c_E0_bf_00 -> c_E0_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E1_hc0 -> c_E1_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E1_tn_01 -> c_E1_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E1_hc1 -> c_E1_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E1_hc2 -> c_E1_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E1_tn_11 -> c_E1_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E1_hc3 -> c_E1_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E1_tn_00 -> sl_E1_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E1_hc0 -> sl_E1_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_E1_tf_00 -> c_E1_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E1_hc0 -> sl_E1_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E1_st_a -> sl_E1_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_E1_fw -> sl_E1_su_l1": {
+   "ports": 2,
+   "bit_crossings": 774
+  },
+  "sl_E1_su_l1 -> c_E1_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E1_bn_01 -> c_E1_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E1_hc1 -> sl_E1_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_E1_ctl -> sl_E1_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_E1_stm -> sl_E1_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E1_su_c -> c_E1_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E1_hc2 -> sl_E1_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_E1_ctl -> sl_E1_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_E1_sc -> sl_E1_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_E1_su_c -> c_E1_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E1_bn_11 -> c_E1_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E1_hc3 -> sl_E1_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E1_st_b -> sl_E1_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_E1_fe -> sl_E1_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E1_su_l0 -> c_E1_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E1_bn_00 -> sl_E1_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E1_su_l1 -> sl_E1_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E1_fw -> sl_E1_st_a": {
+   "ports": 3,
+   "bit_crossings": 1564
+  },
+  "c_E1_bf_00 -> c_E1_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E2_hc0 -> c_E2_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E2_tn_01 -> c_E2_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E2_hc1 -> c_E2_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E2_hc2 -> c_E2_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E2_tn_11 -> c_E2_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E2_hc3 -> c_E2_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E2_tn_00 -> sl_E2_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E2_hc0 -> sl_E2_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_E2_tf_00 -> c_E2_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E2_hc0 -> sl_E2_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E2_st_a -> sl_E2_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_E2_fw -> sl_E2_su_l1": {
+   "ports": 2,
+   "bit_crossings": 774
+  },
+  "sl_E2_su_l1 -> c_E2_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E2_bn_01 -> c_E2_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E2_hc1 -> sl_E2_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_E2_ctl -> sl_E2_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_E2_stm -> sl_E2_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E2_su_c -> c_E2_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E2_hc2 -> sl_E2_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_E2_ctl -> sl_E2_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_E2_sc -> sl_E2_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_E2_su_c -> c_E2_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E2_bn_11 -> c_E2_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E2_hc3 -> sl_E2_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E2_st_b -> sl_E2_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_E2_fe -> sl_E2_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E2_su_l0 -> c_E2_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E2_bn_00 -> sl_E2_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E2_su_l1 -> sl_E2_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E2_fw -> sl_E2_st_a": {
+   "ports": 4,
+   "bit_crossings": 1822
+  },
+  "c_E2_bf_00 -> c_E2_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E3_hc0 -> c_E3_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E3_tn_01 -> c_E3_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E3_hc1 -> c_E3_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E3_hc2 -> c_E3_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E3_tn_11 -> c_E3_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E3_hc3 -> c_E3_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E3_tn_00 -> sl_E3_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E3_hc0 -> sl_E3_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_E3_tf_00 -> c_E3_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E3_hc0 -> sl_E3_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E3_st_a -> sl_E3_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_E3_fw -> sl_E3_su_l1": {
+   "ports": 2,
+   "bit_crossings": 774
+  },
+  "sl_E3_su_l1 -> c_E3_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E3_bn_01 -> c_E3_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E3_hc1 -> sl_E3_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_E3_ctl -> sl_E3_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_E3_stm -> sl_E3_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E3_su_c -> c_E3_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E3_hc2 -> sl_E3_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_E3_ctl -> sl_E3_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_E3_sc -> sl_E3_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_E3_su_c -> c_E3_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E3_bn_11 -> c_E3_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E3_hc3 -> sl_E3_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E3_st_b -> sl_E3_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_E3_fe -> sl_E3_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E3_su_l0 -> c_E3_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E3_bn_00 -> sl_E3_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E3_su_l1 -> sl_E3_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E3_fw -> sl_E3_st_a": {
+   "ports": 3,
+   "bit_crossings": 1564
+  },
+  "c_E3_bf_00 -> c_E3_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E4_hc0 -> c_E4_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E4_tn_01 -> c_E4_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E4_hc1 -> c_E4_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E4_hc2 -> c_E4_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E4_tn_11 -> c_E4_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E4_hc3 -> c_E4_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E4_tn_00 -> sl_E4_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E4_hc0 -> sl_E4_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_E4_tf_00 -> c_E4_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E4_hc0 -> sl_E4_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E4_st_a -> sl_E4_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_E4_fw -> sl_E4_su_l1": {
+   "ports": 2,
+   "bit_crossings": 774
+  },
+  "sl_E4_su_l1 -> c_E4_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E4_bn_01 -> c_E4_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E4_hc1 -> sl_E4_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_E4_ctl -> sl_E4_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_E4_stm -> sl_E4_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E4_su_c -> c_E4_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E4_hc2 -> sl_E4_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_E4_ctl -> sl_E4_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_E4_sc -> sl_E4_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_E4_su_c -> c_E4_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E4_bn_11 -> c_E4_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E4_hc3 -> sl_E4_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E4_st_b -> sl_E4_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_E4_fe -> sl_E4_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E4_su_l0 -> c_E4_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E4_bn_00 -> sl_E4_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E4_su_l1 -> sl_E4_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E4_fw -> sl_E4_st_a": {
+   "ports": 4,
+   "bit_crossings": 1822
+  },
+  "c_E4_bf_00 -> c_E4_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E5_hc0 -> c_E5_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E5_tn_01 -> c_E5_tf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E5_hc1 -> c_E5_tn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E5_hc2 -> c_E5_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E5_tn_11 -> c_E5_tf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E5_hc3 -> c_E5_tn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E5_tn_00 -> sl_E5_hc0": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E5_hc0 -> sl_E5_hc1": {
+   "ports": 3,
+   "bit_crossings": 1037
+  },
+  "c_E5_tf_00 -> c_E5_tn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_E5_hc0 -> sl_E5_st_a": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E5_st_a -> sl_E5_fw": {
+   "ports": 3,
+   "bit_crossings": 1405
+  },
+  "sl_E5_fw -> sl_E5_su_l1": {
+   "ports": 2,
+   "bit_crossings": 774
+  },
+  "sl_E5_su_l1 -> c_E5_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E5_bn_01 -> c_E5_bf_00": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E5_hc1 -> sl_E5_ctl": {
+   "ports": 5,
+   "bit_crossings": 1049
+  },
+  "sl_E5_ctl -> sl_E5_stm": {
+   "ports": 4,
+   "bit_crossings": 1182
+  },
+  "sl_E5_stm -> sl_E5_su_c": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E5_su_c -> c_E5_bn_00": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E5_hc2 -> sl_E5_ctl": {
+   "ports": 4,
+   "bit_crossings": 532
+  },
+  "sl_E5_ctl -> sl_E5_sc": {
+   "ports": 5,
+   "bit_crossings": 2331
+  },
+  "sl_E5_sc -> sl_E5_su_c": {
+   "ports": 4,
+   "bit_crossings": 2171
+  },
+  "sl_E5_su_c -> c_E5_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E5_bn_11 -> c_E5_bf_10": {
+   "ports": 2,
+   "bit_crossings": 1032
+  },
+  "sl_E5_hc3 -> sl_E5_st_b": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E5_st_b -> sl_E5_fe": {
+   "ports": 2,
+   "bit_crossings": 772
+  },
+  "sl_E5_fe -> sl_E5_su_l0": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "sl_E5_su_l0 -> c_E5_bn_10": {
+   "ports": 1,
+   "bit_crossings": 516
+  },
+  "c_E5_bn_00 -> sl_E5_su_l1": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E5_su_l1 -> sl_E5_fw": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "sl_E5_fw -> sl_E5_st_a": {
+   "ports": 3,
+   "bit_crossings": 1564
+  },
+  "c_E5_bf_00 -> c_E5_bn_01": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sl_W5_stm -> sl_W5_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_W5_ctl -> sl_W5_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_W5_st_a -> sl_W5_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W5_ctl -> sl_W5_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W5_ctl -> sl_W5_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W5_ctl -> sl_W5_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_W5_st_b -> sl_W5_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_W5_fe -> sl_W5_sc": {
+   "ports": 7,
+   "bit_crossings": 2279
+  },
+  "sl_W5_sc -> sl_W5_stm": {
+   "ports": 5,
+   "bit_crossings": 2241
+  },
+  "sl_W5_stm -> sl_W5_fw": {
+   "ports": 7,
+   "bit_crossings": 2872
+  },
+  "sl_W5_fw -> sl_W5_stm": {
+   "ports": 8,
+   "bit_crossings": 4043
+  },
+  "sl_W5_stm -> sl_W5_sc": {
+   "ports": 8,
+   "bit_crossings": 4034
+  },
+  "sl_W5_sc -> sl_W5_fe": {
+   "ports": 8,
+   "bit_crossings": 3546
+  },
+  "sl_W5_st_a -> sl_W5_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_W5_sc -> sl_W5_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_W5_fe -> sl_W5_st_b": {
+   "ports": 2,
+   "bit_crossings": 992
+  },
+  "sl_W5_st_b -> sl_W5_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_W5_hc1 -> sl_W5_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_W5_hc3 -> sl_W5_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_W5_hc2 -> sl_W5_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_W5_su_l0 -> sl_W5_fe": {
+   "ports": 2,
+   "bit_crossings": 494
+  },
+  "sl_W5_su_l1 -> sl_W5_su_c": {
+   "ports": 5,
+   "bit_crossings": 1564
+  },
+  "sl_W5_su_c -> sl_W5_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_W5_su_c -> sl_W5_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_W5_su_l0 -> sl_W5_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_W5_su_c -> sl_W5_su_l0": {
+   "ports": 2,
+   "bit_crossings": 1531
+  },
+  "sl_W5_su_c -> sl_W5_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_W4_stm -> sl_W4_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_W4_ctl -> sl_W4_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_W4_st_a -> sl_W4_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W4_ctl -> sl_W4_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W4_ctl -> sl_W4_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W4_ctl -> sl_W4_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_W4_st_b -> sl_W4_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_W4_fe -> sl_W4_sc": {
+   "ports": 7,
+   "bit_crossings": 2279
+  },
+  "sl_W4_sc -> sl_W4_stm": {
+   "ports": 5,
+   "bit_crossings": 2241
+  },
+  "sl_W4_stm -> sl_W4_fw": {
+   "ports": 7,
+   "bit_crossings": 2872
+  },
+  "sl_W4_fw -> sl_W4_stm": {
+   "ports": 10,
+   "bit_crossings": 4349
+  },
+  "sl_W4_stm -> sl_W4_sc": {
+   "ports": 10,
+   "bit_crossings": 4340
+  },
+  "sl_W4_sc -> sl_W4_fe": {
+   "ports": 9,
+   "bit_crossings": 3804
+  },
+  "sl_W4_st_a -> sl_W4_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_W4_sc -> sl_W4_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_W4_fe -> sl_W4_st_b": {
+   "ports": 3,
+   "bit_crossings": 1250
+  },
+  "sl_W4_st_b -> sl_W4_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_W4_hc1 -> sl_W4_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_W4_hc3 -> sl_W4_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_W4_hc2 -> sl_W4_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_W4_su_l0 -> sl_W4_fe": {
+   "ports": 2,
+   "bit_crossings": 494
+  },
+  "sl_W4_su_l1 -> sl_W4_su_c": {
+   "ports": 5,
+   "bit_crossings": 1564
+  },
+  "sl_W4_su_c -> sl_W4_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_W4_su_c -> sl_W4_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_W4_su_l0 -> sl_W4_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_W4_su_c -> sl_W4_su_l0": {
+   "ports": 2,
+   "bit_crossings": 1531
+  },
+  "sl_W4_su_c -> sl_W4_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_W3_stm -> sl_W3_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_W3_ctl -> sl_W3_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_W3_st_a -> sl_W3_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W3_ctl -> sl_W3_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W3_ctl -> sl_W3_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W3_ctl -> sl_W3_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_W3_st_b -> sl_W3_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_W3_fe -> sl_W3_sc": {
+   "ports": 7,
+   "bit_crossings": 2279
+  },
+  "sl_W3_sc -> sl_W3_stm": {
+   "ports": 5,
+   "bit_crossings": 2241
+  },
+  "sl_W3_stm -> sl_W3_fw": {
+   "ports": 7,
+   "bit_crossings": 2872
+  },
+  "sl_W3_fw -> sl_W3_stm": {
+   "ports": 9,
+   "bit_crossings": 4091
+  },
+  "sl_W3_stm -> sl_W3_sc": {
+   "ports": 9,
+   "bit_crossings": 4082
+  },
+  "sl_W3_sc -> sl_W3_fe": {
+   "ports": 8,
+   "bit_crossings": 3546
+  },
+  "sl_W3_st_a -> sl_W3_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_W3_sc -> sl_W3_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_W3_fe -> sl_W3_st_b": {
+   "ports": 2,
+   "bit_crossings": 992
+  },
+  "sl_W3_st_b -> sl_W3_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_W3_hc1 -> sl_W3_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_W3_hc3 -> sl_W3_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_W3_hc2 -> sl_W3_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_W3_su_l0 -> sl_W3_fe": {
+   "ports": 2,
+   "bit_crossings": 494
+  },
+  "sl_W3_su_l1 -> sl_W3_su_c": {
+   "ports": 5,
+   "bit_crossings": 1564
+  },
+  "sl_W3_su_c -> sl_W3_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_W3_su_c -> sl_W3_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_W3_su_l0 -> sl_W3_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_W3_su_c -> sl_W3_su_l0": {
+   "ports": 2,
+   "bit_crossings": 1531
+  },
+  "sl_W3_su_c -> sl_W3_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_W2_stm -> sl_W2_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_W2_ctl -> sl_W2_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_W2_st_a -> sl_W2_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W2_ctl -> sl_W2_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W2_ctl -> sl_W2_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W2_ctl -> sl_W2_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_W2_st_b -> sl_W2_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_W2_fe -> sl_W2_sc": {
+   "ports": 7,
+   "bit_crossings": 2279
+  },
+  "sl_W2_sc -> sl_W2_stm": {
+   "ports": 5,
+   "bit_crossings": 2241
+  },
+  "sl_W2_stm -> sl_W2_fw": {
+   "ports": 7,
+   "bit_crossings": 2872
+  },
+  "sl_W2_fw -> sl_W2_stm": {
+   "ports": 10,
+   "bit_crossings": 4349
+  },
+  "sl_W2_stm -> sl_W2_sc": {
+   "ports": 10,
+   "bit_crossings": 4340
+  },
+  "sl_W2_sc -> sl_W2_fe": {
+   "ports": 9,
+   "bit_crossings": 3804
+  },
+  "sl_W2_st_a -> sl_W2_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_W2_sc -> sl_W2_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_W2_fe -> sl_W2_st_b": {
+   "ports": 3,
+   "bit_crossings": 1250
+  },
+  "sl_W2_st_b -> sl_W2_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_W2_hc1 -> sl_W2_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_W2_hc3 -> sl_W2_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_W2_hc2 -> sl_W2_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_W2_su_l0 -> sl_W2_fe": {
+   "ports": 2,
+   "bit_crossings": 494
+  },
+  "sl_W2_su_l1 -> sl_W2_su_c": {
+   "ports": 5,
+   "bit_crossings": 1564
+  },
+  "sl_W2_su_c -> sl_W2_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_W2_su_c -> sl_W2_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_W2_su_l0 -> sl_W2_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_W2_su_c -> sl_W2_su_l0": {
+   "ports": 2,
+   "bit_crossings": 1531
+  },
+  "sl_W2_su_c -> sl_W2_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_W1_stm -> sl_W1_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_W1_ctl -> sl_W1_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_W1_st_a -> sl_W1_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W1_ctl -> sl_W1_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W1_ctl -> sl_W1_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W1_ctl -> sl_W1_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_W1_st_b -> sl_W1_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_W1_fe -> sl_W1_sc": {
+   "ports": 7,
+   "bit_crossings": 2279
+  },
+  "sl_W1_sc -> sl_W1_stm": {
+   "ports": 5,
+   "bit_crossings": 2241
+  },
+  "sl_W1_stm -> sl_W1_fw": {
+   "ports": 7,
+   "bit_crossings": 2872
+  },
+  "sl_W1_fw -> sl_W1_stm": {
+   "ports": 9,
+   "bit_crossings": 4091
+  },
+  "sl_W1_stm -> sl_W1_sc": {
+   "ports": 9,
+   "bit_crossings": 4082
+  },
+  "sl_W1_sc -> sl_W1_fe": {
+   "ports": 8,
+   "bit_crossings": 3546
+  },
+  "sl_W1_st_a -> sl_W1_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_W1_sc -> sl_W1_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_W1_fe -> sl_W1_st_b": {
+   "ports": 2,
+   "bit_crossings": 992
+  },
+  "sl_W1_st_b -> sl_W1_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_W1_hc1 -> sl_W1_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_W1_hc3 -> sl_W1_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_W1_hc2 -> sl_W1_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_W1_su_l0 -> sl_W1_fe": {
+   "ports": 2,
+   "bit_crossings": 494
+  },
+  "sl_W1_su_l1 -> sl_W1_su_c": {
+   "ports": 5,
+   "bit_crossings": 1564
+  },
+  "sl_W1_su_c -> sl_W1_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_W1_su_c -> sl_W1_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_W1_su_l0 -> sl_W1_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_W1_su_c -> sl_W1_su_l0": {
+   "ports": 2,
+   "bit_crossings": 1531
+  },
+  "sl_W1_su_c -> sl_W1_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_W0_stm -> sl_W0_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_W0_ctl -> sl_W0_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_W0_st_a -> sl_W0_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W0_ctl -> sl_W0_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W0_ctl -> sl_W0_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_W0_ctl -> sl_W0_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_W0_st_b -> sl_W0_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_W0_fe -> sl_W0_sc": {
+   "ports": 7,
+   "bit_crossings": 2279
+  },
+  "sl_W0_sc -> sl_W0_stm": {
+   "ports": 5,
+   "bit_crossings": 2241
+  },
+  "sl_W0_stm -> sl_W0_fw": {
+   "ports": 7,
+   "bit_crossings": 2872
+  },
+  "sl_W0_fw -> sl_W0_stm": {
+   "ports": 10,
+   "bit_crossings": 4349
+  },
+  "sl_W0_stm -> sl_W0_sc": {
+   "ports": 10,
+   "bit_crossings": 4340
+  },
+  "sl_W0_sc -> sl_W0_fe": {
+   "ports": 9,
+   "bit_crossings": 3804
+  },
+  "sl_W0_st_a -> sl_W0_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_W0_sc -> sl_W0_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_W0_fe -> sl_W0_st_b": {
+   "ports": 3,
+   "bit_crossings": 1250
+  },
+  "sl_W0_st_b -> sl_W0_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_W0_hc1 -> sl_W0_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_W0_hc3 -> sl_W0_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_W0_hc2 -> sl_W0_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_W0_su_l0 -> sl_W0_fe": {
+   "ports": 2,
+   "bit_crossings": 494
+  },
+  "sl_W0_su_l1 -> sl_W0_su_c": {
+   "ports": 5,
+   "bit_crossings": 1564
+  },
+  "sl_W0_su_c -> sl_W0_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_W0_su_c -> sl_W0_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_W0_su_l0 -> sl_W0_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_W0_su_c -> sl_W0_su_l0": {
+   "ports": 2,
+   "bit_crossings": 1531
+  },
+  "sl_W0_su_c -> sl_W0_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_E0_stm -> sl_E0_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_E0_ctl -> sl_E0_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_E0_st_a -> sl_E0_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E0_ctl -> sl_E0_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E0_ctl -> sl_E0_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E0_ctl -> sl_E0_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_E0_st_b -> sl_E0_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_E0_fe -> sl_E0_sc": {
+   "ports": 8,
+   "bit_crossings": 2793
+  },
+  "sl_E0_sc -> sl_E0_stm": {
+   "ports": 6,
+   "bit_crossings": 2755
+  },
+  "sl_E0_stm -> sl_E0_fw": {
+   "ports": 8,
+   "bit_crossings": 3386
+  },
+  "sl_E0_fw -> sl_E0_stm": {
+   "ports": 9,
+   "bit_crossings": 4091
+  },
+  "sl_E0_stm -> sl_E0_sc": {
+   "ports": 9,
+   "bit_crossings": 4082
+  },
+  "sl_E0_sc -> sl_E0_fe": {
+   "ports": 8,
+   "bit_crossings": 3546
+  },
+  "sl_E0_su_l1 -> sl_E0_su_c": {
+   "ports": 6,
+   "bit_crossings": 1822
+  },
+  "sl_E0_su_c -> sl_E0_su_l0": {
+   "ports": 3,
+   "bit_crossings": 1789
+  },
+  "sl_E0_su_l0 -> sl_E0_fe": {
+   "ports": 3,
+   "bit_crossings": 752
+  },
+  "sl_E0_st_a -> sl_E0_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_E0_sc -> sl_E0_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_E0_fe -> sl_E0_st_b": {
+   "ports": 3,
+   "bit_crossings": 1250
+  },
+  "sl_E0_st_b -> sl_E0_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_E0_hc1 -> sl_E0_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_E0_hc3 -> sl_E0_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_E0_hc2 -> sl_E0_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_E0_su_c -> sl_E0_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_E0_su_c -> sl_E0_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_E0_su_l0 -> sl_E0_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_E0_su_c -> sl_E0_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_E1_stm -> sl_E1_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_E1_ctl -> sl_E1_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_E1_st_a -> sl_E1_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E1_ctl -> sl_E1_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E1_ctl -> sl_E1_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E1_ctl -> sl_E1_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_E1_st_b -> sl_E1_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_E1_fe -> sl_E1_sc": {
+   "ports": 8,
+   "bit_crossings": 2793
+  },
+  "sl_E1_sc -> sl_E1_stm": {
+   "ports": 6,
+   "bit_crossings": 2755
+  },
+  "sl_E1_stm -> sl_E1_fw": {
+   "ports": 8,
+   "bit_crossings": 3386
+  },
+  "sl_E1_fw -> sl_E1_stm": {
+   "ports": 8,
+   "bit_crossings": 3833
+  },
+  "sl_E1_stm -> sl_E1_sc": {
+   "ports": 8,
+   "bit_crossings": 3824
+  },
+  "sl_E1_sc -> sl_E1_fe": {
+   "ports": 7,
+   "bit_crossings": 3288
+  },
+  "sl_E1_su_l1 -> sl_E1_su_c": {
+   "ports": 6,
+   "bit_crossings": 1822
+  },
+  "sl_E1_su_c -> sl_E1_su_l0": {
+   "ports": 3,
+   "bit_crossings": 1789
+  },
+  "sl_E1_su_l0 -> sl_E1_fe": {
+   "ports": 3,
+   "bit_crossings": 752
+  },
+  "sl_E1_st_a -> sl_E1_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_E1_sc -> sl_E1_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_E1_fe -> sl_E1_st_b": {
+   "ports": 2,
+   "bit_crossings": 992
+  },
+  "sl_E1_st_b -> sl_E1_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_E1_hc1 -> sl_E1_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_E1_hc3 -> sl_E1_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_E1_hc2 -> sl_E1_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_E1_su_c -> sl_E1_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_E1_su_c -> sl_E1_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_E1_su_l0 -> sl_E1_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_E1_su_c -> sl_E1_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_E2_stm -> sl_E2_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_E2_ctl -> sl_E2_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_E2_st_a -> sl_E2_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E2_ctl -> sl_E2_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E2_ctl -> sl_E2_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E2_ctl -> sl_E2_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_E2_st_b -> sl_E2_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_E2_fe -> sl_E2_sc": {
+   "ports": 8,
+   "bit_crossings": 2793
+  },
+  "sl_E2_sc -> sl_E2_stm": {
+   "ports": 6,
+   "bit_crossings": 2755
+  },
+  "sl_E2_stm -> sl_E2_fw": {
+   "ports": 8,
+   "bit_crossings": 3386
+  },
+  "sl_E2_fw -> sl_E2_stm": {
+   "ports": 9,
+   "bit_crossings": 4091
+  },
+  "sl_E2_stm -> sl_E2_sc": {
+   "ports": 9,
+   "bit_crossings": 4082
+  },
+  "sl_E2_sc -> sl_E2_fe": {
+   "ports": 8,
+   "bit_crossings": 3546
+  },
+  "sl_E2_su_l1 -> sl_E2_su_c": {
+   "ports": 6,
+   "bit_crossings": 1822
+  },
+  "sl_E2_su_c -> sl_E2_su_l0": {
+   "ports": 3,
+   "bit_crossings": 1789
+  },
+  "sl_E2_su_l0 -> sl_E2_fe": {
+   "ports": 3,
+   "bit_crossings": 752
+  },
+  "sl_E2_st_a -> sl_E2_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_E2_sc -> sl_E2_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_E2_fe -> sl_E2_st_b": {
+   "ports": 3,
+   "bit_crossings": 1250
+  },
+  "sl_E2_st_b -> sl_E2_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_E2_hc1 -> sl_E2_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_E2_hc3 -> sl_E2_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_E2_hc2 -> sl_E2_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_E2_su_c -> sl_E2_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_E2_su_c -> sl_E2_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_E2_su_l0 -> sl_E2_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_E2_su_c -> sl_E2_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_E3_stm -> sl_E3_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_E3_ctl -> sl_E3_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_E3_st_a -> sl_E3_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E3_ctl -> sl_E3_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E3_ctl -> sl_E3_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E3_ctl -> sl_E3_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_E3_st_b -> sl_E3_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_E3_fe -> sl_E3_sc": {
+   "ports": 8,
+   "bit_crossings": 2793
+  },
+  "sl_E3_sc -> sl_E3_stm": {
+   "ports": 6,
+   "bit_crossings": 2755
+  },
+  "sl_E3_stm -> sl_E3_fw": {
+   "ports": 8,
+   "bit_crossings": 3386
+  },
+  "sl_E3_fw -> sl_E3_stm": {
+   "ports": 8,
+   "bit_crossings": 3833
+  },
+  "sl_E3_stm -> sl_E3_sc": {
+   "ports": 8,
+   "bit_crossings": 3824
+  },
+  "sl_E3_sc -> sl_E3_fe": {
+   "ports": 7,
+   "bit_crossings": 3288
+  },
+  "sl_E3_su_l1 -> sl_E3_su_c": {
+   "ports": 6,
+   "bit_crossings": 1822
+  },
+  "sl_E3_su_c -> sl_E3_su_l0": {
+   "ports": 3,
+   "bit_crossings": 1789
+  },
+  "sl_E3_su_l0 -> sl_E3_fe": {
+   "ports": 3,
+   "bit_crossings": 752
+  },
+  "sl_E3_st_a -> sl_E3_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_E3_sc -> sl_E3_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_E3_fe -> sl_E3_st_b": {
+   "ports": 2,
+   "bit_crossings": 992
+  },
+  "sl_E3_st_b -> sl_E3_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_E3_hc1 -> sl_E3_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_E3_hc3 -> sl_E3_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_E3_hc2 -> sl_E3_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_E3_su_c -> sl_E3_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_E3_su_c -> sl_E3_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_E3_su_l0 -> sl_E3_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_E3_su_c -> sl_E3_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_E4_stm -> sl_E4_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_E4_ctl -> sl_E4_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_E4_st_a -> sl_E4_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E4_ctl -> sl_E4_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E4_ctl -> sl_E4_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E4_ctl -> sl_E4_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_E4_st_b -> sl_E4_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_E4_fe -> sl_E4_sc": {
+   "ports": 8,
+   "bit_crossings": 2793
+  },
+  "sl_E4_sc -> sl_E4_stm": {
+   "ports": 6,
+   "bit_crossings": 2755
+  },
+  "sl_E4_stm -> sl_E4_fw": {
+   "ports": 8,
+   "bit_crossings": 3386
+  },
+  "sl_E4_fw -> sl_E4_stm": {
+   "ports": 9,
+   "bit_crossings": 4091
+  },
+  "sl_E4_stm -> sl_E4_sc": {
+   "ports": 9,
+   "bit_crossings": 4082
+  },
+  "sl_E4_sc -> sl_E4_fe": {
+   "ports": 8,
+   "bit_crossings": 3546
+  },
+  "sl_E4_su_l1 -> sl_E4_su_c": {
+   "ports": 6,
+   "bit_crossings": 1822
+  },
+  "sl_E4_su_c -> sl_E4_su_l0": {
+   "ports": 3,
+   "bit_crossings": 1789
+  },
+  "sl_E4_su_l0 -> sl_E4_fe": {
+   "ports": 3,
+   "bit_crossings": 752
+  },
+  "sl_E4_st_a -> sl_E4_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_E4_sc -> sl_E4_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_E4_fe -> sl_E4_st_b": {
+   "ports": 3,
+   "bit_crossings": 1250
+  },
+  "sl_E4_st_b -> sl_E4_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_E4_hc1 -> sl_E4_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_E4_hc3 -> sl_E4_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_E4_hc2 -> sl_E4_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_E4_su_c -> sl_E4_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_E4_su_c -> sl_E4_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_E4_su_l0 -> sl_E4_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_E4_su_c -> sl_E4_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "sl_E5_stm -> sl_E5_ctl": {
+   "ports": 2,
+   "bit_crossings": 2196
+  },
+  "sl_E5_ctl -> sl_E5_st_a": {
+   "ports": 4,
+   "bit_crossings": 3292
+  },
+  "sl_E5_st_a -> sl_E5_hc0": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E5_ctl -> sl_E5_hc1": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E5_ctl -> sl_E5_hc2": {
+   "ports": 1,
+   "bit_crossings": 1573
+  },
+  "sl_E5_ctl -> sl_E5_st_b": {
+   "ports": 4,
+   "bit_crossings": 2771
+  },
+  "sl_E5_st_b -> sl_E5_hc3": {
+   "ports": 1,
+   "bit_crossings": 1574
+  },
+  "sl_E5_stm -> sl_E5_fw": {
+   "ports": 6,
+   "bit_crossings": 2281
+  },
+  "sl_E5_sc -> sl_E5_stm": {
+   "ports": 2,
+   "bit_crossings": 562
+  },
+  "sl_E5_fw -> sl_E5_stm": {
+   "ports": 8,
+   "bit_crossings": 3833
+  },
+  "sl_E5_stm -> sl_E5_sc": {
+   "ports": 8,
+   "bit_crossings": 3824
+  },
+  "sl_E5_sc -> sl_E5_fe": {
+   "ports": 7,
+   "bit_crossings": 3288
+  },
+  "sl_E5_su_l1 -> sl_E5_su_c": {
+   "ports": 6,
+   "bit_crossings": 1822
+  },
+  "sl_E5_su_c -> sl_E5_su_l0": {
+   "ports": 3,
+   "bit_crossings": 1789
+  },
+  "sl_E5_su_l0 -> sl_E5_fe": {
+   "ports": 3,
+   "bit_crossings": 752
+  },
+  "sl_E5_st_a -> sl_E5_ctl": {
+   "ports": 3,
+   "bit_crossings": 1456
+  },
+  "sl_E5_sc -> sl_E5_ctl": {
+   "ports": 3,
+   "bit_crossings": 1111
+  },
+  "sl_E5_fe -> sl_E5_st_b": {
+   "ports": 2,
+   "bit_crossings": 992
+  },
+  "sl_E5_st_b -> sl_E5_ctl": {
+   "ports": 4,
+   "bit_crossings": 1256
+  },
+  "sl_E5_hc1 -> sl_E5_hc0": {
+   "ports": 2,
+   "bit_crossings": 517
+  },
+  "sl_E5_hc3 -> sl_E5_hc2": {
+   "ports": 2,
+   "bit_crossings": 9
+  },
+  "sl_E5_hc2 -> sl_E5_hc1": {
+   "ports": 1,
+   "bit_crossings": 1
+  },
+  "sl_E5_su_c -> sl_E5_sc": {
+   "ports": 3,
+   "bit_crossings": 517
+  },
+  "sl_E5_su_c -> sl_E5_stm": {
+   "ports": 3,
+   "bit_crossings": 549
+  },
+  "sl_E5_fe -> sl_E5_sc": {
+   "ports": 2,
+   "bit_crossings": 552
+  },
+  "sl_E5_su_l0 -> sl_E5_su_c": {
+   "ports": 4,
+   "bit_crossings": 1131
+  },
+  "sl_E5_su_c -> sl_E5_su_l1": {
+   "ports": 3,
+   "bit_crossings": 1531
+  },
+  "glue -> ucie_kv": {
+   "ports": 3,
+   "bit_crossings": 585
+  },
+  "glue -> native59": {
+   "ports": 32,
+   "bit_crossings": 1590
+  },
+  "sl_E0_fw -> sl_W0_fe": {
+   "ports": 10,
+   "bit_crossings": 2241
+  },
+  "sl_E0_fe -> sl_E1_fw": {
+   "ports": 11,
+   "bit_crossings": 2752
+  },
+  "sl_E1_fw -> sl_E0_fe": {
+   "ports": 11,
+   "bit_crossings": 2755
+  },
+  "sl_E1_fe -> sl_E2_fw": {
+   "ports": 11,
+   "bit_crossings": 2752
+  },
+  "sl_E2_fw -> sl_E1_fe": {
+   "ports": 10,
+   "bit_crossings": 2241
+  },
+  "sl_E2_fe -> sl_E3_fw": {
+   "ports": 11,
+   "bit_crossings": 2752
+  },
+  "sl_E3_fw -> sl_E2_fe": {
+   "ports": 11,
+   "bit_crossings": 2755
+  },
+  "sl_E3_fe -> sl_E4_fw": {
+   "ports": 11,
+   "bit_crossings": 2752
+  },
+  "sl_E4_fw -> sl_E3_fe": {
+   "ports": 10,
+   "bit_crossings": 2241
+  },
+  "sl_E4_fe -> sl_E5_fw": {
+   "ports": 11,
+   "bit_crossings": 2752
+  },
+  "sl_E5_fw -> sl_E4_fe": {
+   "ports": 11,
+   "bit_crossings": 2755
+  },
+  "sl_W0_fw -> sl_W1_fe": {
+   "ports": 10,
+   "bit_crossings": 2241
+  },
+  "sl_W0_fe -> sl_E0_fw": {
+   "ports": 11,
+   "bit_crossings": 2752
+  },
+  "sl_W1_fw -> sl_W2_fe": {
+   "ports": 10,
+   "bit_crossings": 2241
+  },
+  "sl_W1_fe -> sl_W0_fw": {
+   "ports": 12,
+   "bit_crossings": 3266
+  },
+  "sl_W2_fw -> sl_W3_fe": {
+   "ports": 10,
+   "bit_crossings": 2241
+  },
+  "sl_W2_fe -> sl_W1_fw": {
+   "ports": 11,
+   "bit_crossings": 2752
+  },
+  "sl_W3_fw -> sl_W4_fe": {
+   "ports": 10,
+   "bit_crossings": 2241
+  },
+  "sl_W3_fe -> sl_W2_fw": {
+   "ports": 12,
+   "bit_crossings": 3266
+  },
+  "sl_W4_fw -> sl_W5_fe": {
+   "ports": 10,
+   "bit_crossings": 2241
+  },
+  "sl_W4_fe -> sl_W3_fw": {
+   "ports": 11,
+   "bit_crossings": 2752
+  },
+  "sl_W5_fw -> coll_f4": {
+   "ports": 12,
+   "bit_crossings": 1262
+  },
+  "coll_f4 -> tt_ctlm": {
+   "ports": 2,
+   "bit_crossings": 117
+  },
+  "coll_f4 -> coll_f3": {
+   "ports": 12,
+   "bit_crossings": 1157
+  },
+  "coll_f3 -> coll_core": {
+   "ports": 12,
+   "bit_crossings": 1157
+  },
+  "sl_W5_fe -> sl_W4_fw": {
+   "ports": 12,
+   "bit_crossings": 3266
+  },
+  "coll_f4 -> native59": {
+   "ports": 1,
+   "bit_crossings": 548
+  },
+  "coll_core -> coll_f3": {
+   "ports": 10,
+   "bit_crossings": 1139
+  },
+  "coll_f3 -> glue": {
+   "ports": 4,
+   "bit_crossings": 73
+  },
+  "coll_f3 -> coll_f4": {
+   "ports": 6,
+   "bit_crossings": 1066
+  },
+  "coll_f4 -> sl_W5_fw": {
+   "ports": 10,
+   "bit_crossings": 2704
+  },
+  "coll_n -> io_serdes": {
+   "ports": 2,
+   "bit_crossings": 598
+  },
+  "coll_s -> io_serdes_1": {
+   "ports": 2,
+   "bit_crossings": 598
+  },
+  "coll_s -> c_W5_bf_00": {
+   "ports": 2,
+   "bit_crossings": 598
+  },
+  "c_W5_bf_01 -> io_serdes_2": {
+   "ports": 2,
+   "bit_crossings": 598
+  },
+  "io_serdes -> coll_n": {
+   "ports": 3,
+   "bit_crossings": 599
+  },
+  "io_serdes_1 -> coll_s": {
+   "ports": 3,
+   "bit_crossings": 599
+  },
+  "io_serdes_2 -> c_W5_bf_01": {
+   "ports": 3,
+   "bit_crossings": 599
+  },
+  "c_W5_bf_00 -> coll_s": {
+   "ports": 3,
+   "bit_crossings": 599
+  },
+  "native59 -> tt_ctlm": {
+   "ports": 9,
+   "bit_crossings": 493
+  },
+  "native59 -> coll_f4": {
+   "ports": 1,
+   "bit_crossings": 520
+  },
+  "native59 -> glue": {
+   "ports": 27,
+   "bit_crossings": 1643
+  },
+  "tt_ctlm -> native59": {
+   "ports": 22,
+   "bit_crossings": 804
+  },
+  "tt_ctlm -> coll_f4": {
+   "ports": 4,
+   "bit_crossings": 1666
+  },
+  "ucie_kv -> glue": {
+   "ports": 3,
+   "bit_crossings": 585
+  },
+  "coll_core -> coll_f2": {
+   "ports": 2,
+   "bit_crossings": 1097
+  },
+  "coll_f2 -> coll_f1": {
+   "ports": 2,
+   "bit_crossings": 1097
+  },
+  "coll_f1 -> coll_f0": {
+   "ports": 2,
+   "bit_crossings": 1097
+  },
+  "coll_f0 -> coll_s": {
+   "ports": 2,
+   "bit_crossings": 1097
+  },
+  "coll_s -> coll_f0": {
+   "ports": 4,
+   "bit_crossings": 1120
+  },
+  "coll_f0 -> coll_f1": {
+   "ports": 4,
+   "bit_crossings": 1120
+  },
+  "coll_f1 -> coll_f2": {
+   "ports": 4,
+   "bit_crossings": 1120
+  },
+  "coll_f2 -> coll_core": {
+   "ports": 4,
+   "bit_crossings": 1120
+  },
+  "coll_f4 -> coll_f5": {
+   "ports": 1,
+   "bit_crossings": 548
+  },
+  "coll_f5 -> coll_n": {
+   "ports": 1,
+   "bit_crossings": 548
+  },
+  "coll_n -> coll_f5": {
+   "ports": 3,
+   "bit_crossings": 560
+  },
+  "coll_f5 -> coll_f4": {
+   "ports": 3,
+   "bit_crossings": 560
+  },
+  "coll_core -> coll_ucie": {
+   "ports": 2,
+   "bit_crossings": 1168
+  },
+  "coll_ucie -> coll_core": {
+   "ports": 3,
+   "bit_crossings": 1168
+  }
+ },
+ "scenarios": {
+  "2": {
+   "extra_cycles_per_crossed_partition_seam": 2,
+   "gross_new_ff_bit_sites": 2554972,
+   "gross_legal_ff_envelope_um2": 968538.7857600001,
+   "token_throughput": "UNPRICED",
+   "critical_path_added_cycles": "UNPRICED: current programme-operation to traversed seam map required"
+  },
+  "3": {
+   "extra_cycles_per_crossed_partition_seam": 3,
+   "gross_new_ff_bit_sites": 3832458,
+   "gross_legal_ff_envelope_um2": 1452808.17864,
+   "token_throughput": "UNPRICED",
+   "critical_path_added_cycles": "UNPRICED: current programme-operation to traversed seam map required"
+  }
+ },
+ "area_basis": "Gross stage-bit sites times canonical1.404x0.27um legal FF envelope; not synthesizedcellarea, notnetincrementalarea. Existingbanks/sourcefanoutsharing/notlandableprotocolsnotdeducted.",
+ "limitations": [
+  "Only explicit plan partition seams, not unenumerated hard-core/datapath cuts within partition types.",
+  "Clock/reset/PG not landed; their networks are separate plan contracts.",
+  "Adding latency changes handshakes/reset/epoch/calendar; no scalar totalstationcount pricing.",
+  "No rule, plan, programme, RTL or physical build changed."
+ ]
+}

@@ -1,0 +1,15 @@
+[
+ {
+  "sink": "dvs_E2.u_core.u_sub.u_fdn",
+  "sink_port": "l9_i",
+  "source": "dvs_E3.u_core.u_sub.u_fup.l9_o",
+  "sink_bits": [
+   [
+    0,
+    513
+   ]
+  ],
+  "before": 16,
+  "after": 18
+ }
+]

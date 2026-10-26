@@ -1,0 +1,1970 @@
+{
+ "schema": "opentallas.fallback_land_analysis.v1",
+ "die": "s81_head",
+ "source_plan": "/home/ubuntu/OpenTallas/physical/die_plan/s81_head/die_plan.json",
+ "status": "HEAD tracked held baseline mainb7232fde4,lastplan c9238048c; routing held, pendingdelta not adopted",
+ "parts": 326,
+ "types": 16,
+ "lanes": 328,
+ "all_plan_ports": 428,
+ "internal_same_partition_ports": [],
+ "unresolved_or_external_ports": [],
+ "kind_census": {
+  "data": {
+   "ports": 428,
+   "bit_crossings": 212622
+  }
+ },
+ "eligible_data_control_bit_crossings": 212622,
+ "crossing_port_ids": [
+  "chE0_h__0",
+  "chE0_o0__0",
+  "chE0_o1__0",
+  "chE0_o2__0",
+  "chE0_o3__0",
+  "chE0_o4__0",
+  "chE0_o5__0",
+  "chE0_o6__0",
+  "chE0_o7__0",
+  "chE0_o8__0",
+  "chE0_o9__0",
+  "chE0_t__0",
+  "chE0_t__1",
+  "chE0_t__2",
+  "chE0_b0__0",
+  "chE0_b1__0",
+  "chE0_b2__0",
+  "chE0_b3__0",
+  "chE0_b4__0",
+  "chE0_b5__0",
+  "chE0_b6__0",
+  "chE0_b7__0",
+  "chE0_b8__0",
+  "chE0_b9__0",
+  "chE0_r__0",
+  "chW0_h__0",
+  "chW0_o0__0",
+  "chW0_o1__0",
+  "chW0_o2__0",
+  "chW0_o3__0",
+  "chW0_o4__0",
+  "chW0_o5__0",
+  "chW0_o6__0",
+  "chW0_o7__0",
+  "chW0_o8__0",
+  "chW0_o9__0",
+  "chW0_t__0",
+  "chW0_t__1",
+  "chW0_t__2",
+  "chW0_b0__0",
+  "chW0_b1__0",
+  "chW0_b2__0",
+  "chW0_b3__0",
+  "chW0_b4__0",
+  "chW0_b5__0",
+  "chW0_b6__0",
+  "chW0_b7__0",
+  "chW0_b8__0",
+  "chW0_b9__0",
+  "chW0_r__0",
+  "chE1_h__0",
+  "chE1_o0__0",
+  "chE1_o1__0",
+  "chE1_o2__0",
+  "chE1_o3__0",
+  "chE1_o4__0",
+  "chE1_o5__0",
+  "chE1_o6__0",
+  "chE1_o7__0",
+  "chE1_o8__0",
+  "chE1_o9__0",
+  "chE1_t__0",
+  "chE1_t__1",
+  "chE1_t__2",
+  "chE1_b0__0",
+  "chE1_b1__0",
+  "chE1_b2__0",
+  "chE1_b3__0",
+  "chE1_b4__0",
+  "chE1_b5__0",
+  "chE1_b6__0",
+  "chE1_b7__0",
+  "chE1_b8__0",
+  "chE1_b9__0",
+  "chE1_r__0",
+  "chW1_h__0",
+  "chW1_o0__0",
+  "chW1_o1__0",
+  "chW1_o2__0",
+  "chW1_o3__0",
+  "chW1_o4__0",
+  "chW1_o5__0",
+  "chW1_o6__0",
+  "chW1_o7__0",
+  "chW1_o8__0",
+  "chW1_o9__0",
+  "chW1_t__0",
+  "chW1_t__1",
+  "chW1_t__2",
+  "chW1_b0__0",
+  "chW1_b1__0",
+  "chW1_b2__0",
+  "chW1_b3__0",
+  "chW1_b4__0",
+  "chW1_b5__0",
+  "chW1_b6__0",
+  "chW1_b7__0",
+  "chW1_b8__0",
+  "chW1_b9__0",
+  "chW1_r__0",
+  "chE2_h__0",
+  "chE2_o0__0",
+  "chE2_o1__0",
+  "chE2_o2__0",
+  "chE2_o3__0",
+  "chE2_o4__0",
+  "chE2_o5__0",
+  "chE2_o6__0",
+  "chE2_o7__0",
+  "chE2_o8__0",
+  "chE2_o9__0",
+  "chE2_t__0",
+  "chE2_t__1",
+  "chE2_t__2",
+  "chE2_b0__0",
+  "chE2_b1__0",
+  "chE2_b2__0",
+  "chE2_b3__0",
+  "chE2_b4__0",
+  "chE2_b5__0",
+  "chE2_b6__0",
+  "chE2_b7__0",
+  "chE2_b8__0",
+  "chE2_b9__0",
+  "chE2_r__0",
+  "chW2_h__0",
+  "chW2_o0__0",
+  "chW2_o1__0",
+  "chW2_o2__0",
+  "chW2_o3__0",
+  "chW2_o4__0",
+  "chW2_o5__0",
+  "chW2_o6__0",
+  "chW2_o7__0",
+  "chW2_o8__0",
+  "chW2_o9__0",
+  "chW2_t__0",
+  "chW2_t__1",
+  "chW2_t__2",
+  "chW2_b0__0",
+  "chW2_b1__0",
+  "chW2_b2__0",
+  "chW2_b3__0",
+  "chW2_b4__0",
+  "chW2_b5__0",
+  "chW2_b6__0",
+  "chW2_b7__0",
+  "chW2_b8__0",
+  "chW2_b9__0",
+  "chW2_r__0",
+  "chE3_h__0",
+  "chE3_o0__0",
+  "chE3_o1__0",
+  "chE3_o2__0",
+  "chE3_o3__0",
+  "chE3_o4__0",
+  "chE3_o5__0",
+  "chE3_o6__0",
+  "chE3_o7__0",
+  "chE3_o8__0",
+  "chE3_o9__0",
+  "chE3_t__0",
+  "chE3_t__1",
+  "chE3_t__2",
+  "chE3_b0__0",
+  "chE3_b1__0",
+  "chE3_b2__0",
+  "chE3_b3__0",
+  "chE3_b4__0",
+  "chE3_b5__0",
+  "chE3_b6__0",
+  "chE3_b7__0",
+  "chE3_b8__0",
+  "chE3_b9__0",
+  "chE3_r__0",
+  "chW3_h__0",
+  "chW3_o0__0",
+  "chW3_o1__0",
+  "chW3_o2__0",
+  "chW3_o3__0",
+  "chW3_o4__0",
+  "chW3_o5__0",
+  "chW3_o6__0",
+  "chW3_o7__0",
+  "chW3_o8__0",
+  "chW3_o9__0",
+  "chW3_t__0",
+  "chW3_t__1",
+  "chW3_t__2",
+  "chW3_b0__0",
+  "chW3_b1__0",
+  "chW3_b2__0",
+  "chW3_b3__0",
+  "chW3_b4__0",
+  "chW3_b5__0",
+  "chW3_b6__0",
+  "chW3_b7__0",
+  "chW3_b8__0",
+  "chW3_b9__0",
+  "chW3_r__0",
+  "chE4_h__0",
+  "chE4_o0__0",
+  "chE4_o1__0",
+  "chE4_o2__0",
+  "chE4_o3__0",
+  "chE4_o4__0",
+  "chE4_o5__0",
+  "chE4_o6__0",
+  "chE4_o7__0",
+  "chE4_o8__0",
+  "chE4_o9__0",
+  "chE4_t__0",
+  "chE4_t__1",
+  "chE4_t__2",
+  "chE4_b0__0",
+  "chE4_b1__0",
+  "chE4_b2__0",
+  "chE4_b3__0",
+  "chE4_b4__0",
+  "chE4_b5__0",
+  "chE4_b6__0",
+  "chE4_b7__0",
+  "chE4_b8__0",
+  "chE4_b9__0",
+  "chE4_r__0",
+  "chW4_h__0",
+  "chW4_o0__0",
+  "chW4_o1__0",
+  "chW4_o2__0",
+  "chW4_o3__0",
+  "chW4_o4__0",
+  "chW4_o5__0",
+  "chW4_o6__0",
+  "chW4_o7__0",
+  "chW4_o8__0",
+  "chW4_o9__0",
+  "chW4_t__0",
+  "chW4_t__1",
+  "chW4_t__2",
+  "chW4_b0__0",
+  "chW4_b1__0",
+  "chW4_b2__0",
+  "chW4_b3__0",
+  "chW4_b4__0",
+  "chW4_b5__0",
+  "chW4_b6__0",
+  "chW4_b7__0",
+  "chW4_b8__0",
+  "chW4_b9__0",
+  "chW4_r__0",
+  "chE5_h__0",
+  "chE5_o0__0",
+  "chE5_o1__0",
+  "chE5_o2__0",
+  "chE5_o3__0",
+  "chE5_o4__0",
+  "chE5_o5__0",
+  "chE5_o6__0",
+  "chE5_o7__0",
+  "chE5_o8__0",
+  "chE5_o9__0",
+  "chE5_t__0",
+  "chE5_t__1",
+  "chE5_t__2",
+  "chE5_b0__0",
+  "chE5_b1__0",
+  "chE5_b2__0",
+  "chE5_b3__0",
+  "chE5_b4__0",
+  "chE5_b5__0",
+  "chE5_b6__0",
+  "chE5_b7__0",
+  "chE5_b8__0",
+  "chE5_b9__0",
+  "chE5_r__0",
+  "chW5_h__0",
+  "chW5_o0__0",
+  "chW5_o1__0",
+  "chW5_o2__0",
+  "chW5_o3__0",
+  "chW5_o4__0",
+  "chW5_o5__0",
+  "chW5_o6__0",
+  "chW5_o7__0",
+  "chW5_o8__0",
+  "chW5_o9__0",
+  "chW5_t__0",
+  "chW5_t__1",
+  "chW5_t__2",
+  "chW5_b0__0",
+  "chW5_b1__0",
+  "chW5_b2__0",
+  "chW5_b3__0",
+  "chW5_b4__0",
+  "chW5_b5__0",
+  "chW5_b6__0",
+  "chW5_b7__0",
+  "chW5_b8__0",
+  "chW5_b9__0",
+  "chW5_r__0",
+  "sp_x0__0",
+  "sp_b0__0",
+  "sp_x1__0",
+  "sp_b1__0",
+  "sp_x2__0",
+  "sp_b2__0",
+  "sp_x3__0",
+  "sp_b3__0",
+  "sp_x4__0",
+  "sp_b4__0",
+  "sp_x5__0",
+  "sp_b5__0",
+  "host_tx__0",
+  "host_tx__1",
+  "host_tx__2",
+  "host_tx__3",
+  "host_tx__4",
+  "host_tx__5",
+  "host_tx__6",
+  "host_rx__0",
+  "host_rx__1",
+  "host_rx__2",
+  "host_rx__3",
+  "host_rx__4",
+  "host_rx__5",
+  "host_rx__6",
+  "m0S_tx__0",
+  "m0S_tx__1",
+  "m0S_tx__2",
+  "m0S_tx__3",
+  "m0S_tx__4",
+  "m0S_tx__5",
+  "m0S_tx__6",
+  "m0S_tx__7",
+  "m0S_tx__8",
+  "m0S_tx__9",
+  "m0S_rx__0",
+  "m0S_rx__1",
+  "m0S_rx__2",
+  "m0S_rx__3",
+  "m0S_rx__4",
+  "m0S_rx__5",
+  "m0S_rx__6",
+  "m0S_rx__7",
+  "m0S_rx__8",
+  "m0S_rx__9",
+  "m7S_tx__0",
+  "m7S_tx__1",
+  "m7S_tx__2",
+  "m7S_tx__3",
+  "m7S_tx__4",
+  "m7S_tx__5",
+  "m7S_tx__6",
+  "m7S_tx__7",
+  "m7S_tx__8",
+  "m7S_rx__0",
+  "m7S_rx__1",
+  "m7S_rx__2",
+  "m7S_rx__3",
+  "m7S_rx__4",
+  "m7S_rx__5",
+  "m7S_rx__6",
+  "m7S_rx__7",
+  "m7S_rx__8",
+  "m7N_tx__0",
+  "m7N_tx__1",
+  "m7N_rx__0",
+  "m7N_rx__1",
+  "kd__0",
+  "ku__0",
+  "lepf__0",
+  "unit_lep__0",
+  "ctrl_lep__0",
+  "h4_tl__0",
+  "h4_ca__0",
+  "h4_cb__0",
+  "coll_WN0_u__0",
+  "coll_WN0_d__0",
+  "coll_WN1_u__0",
+  "coll_WN1_u__1",
+  "coll_WN1_u__2",
+  "coll_WN1_d__0",
+  "coll_WN1_d__1",
+  "coll_WN1_d__2",
+  "coll_WN2_u__0",
+  "coll_WN2_u__1",
+  "coll_WN2_u__2",
+  "coll_WN2_u__3",
+  "coll_WN2_u__4",
+  "coll_WN2_d__0",
+  "coll_WN2_d__1",
+  "coll_WN2_d__2",
+  "coll_WN2_d__3",
+  "coll_WN2_d__4",
+  "coll_WN3_u__0",
+  "coll_WN3_u__1",
+  "coll_WN3_d__0",
+  "coll_WN3_d__1",
+  "coll_EN0_u__0",
+  "coll_EN0_d__0",
+  "coll_EN1_u__0",
+  "coll_EN1_u__1",
+  "coll_EN1_u__2",
+  "coll_EN1_d__0",
+  "coll_EN1_d__1",
+  "coll_EN1_d__2",
+  "coll_WS0_u__0",
+  "coll_WS0_d__0",
+  "coll_WS1_u__0",
+  "coll_WS1_u__1",
+  "coll_WS1_u__2",
+  "coll_WS1_d__0",
+  "coll_WS1_d__1",
+  "coll_WS1_d__2",
+  "coll_ES0_u__0",
+  "coll_ES0_d__0",
+  "coll_ES1_u__0",
+  "coll_ES1_u__1",
+  "coll_ES1_u__2",
+  "coll_ES1_d__0",
+  "coll_ES1_d__1",
+  "coll_ES1_d__2",
+  "coll_HOST1_u__0",
+  "coll_HOST1_d__0",
+  "coll_HOST0_u__0",
+  "coll_HOST0_u__1",
+  "coll_HOST0_d__0",
+  "coll_HOST0_d__1"
+ ],
+ "partition_pair_census": {
+  "sp0 -> tE0o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o0 -> tE0o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o1 -> tE0o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o2 -> tE0o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o3 -> tE0o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o4 -> tE0o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o5 -> tE0o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o6 -> tE0o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o7 -> tE0o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o8 -> tE0o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o9 -> tE0o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0o10 -> turnE0a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE0a -> turnE0b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE0b -> tE0b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b10 -> tE0b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b9 -> tE0b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b8 -> tE0b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b7 -> tE0b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b6 -> tE0b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b5 -> tE0b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b4 -> tE0b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b3 -> tE0b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b2 -> tE0b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b1 -> tE0b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE0b0 -> sp0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp0 -> tW0o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o0 -> tW0o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o1 -> tW0o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o2 -> tW0o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o3 -> tW0o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o4 -> tW0o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o5 -> tW0o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o6 -> tW0o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o7 -> tW0o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o8 -> tW0o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o9 -> tW0o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0o10 -> turnW0a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW0a -> turnW0b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW0b -> tW0b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b10 -> tW0b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b9 -> tW0b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b8 -> tW0b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b7 -> tW0b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b6 -> tW0b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b5 -> tW0b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b4 -> tW0b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b3 -> tW0b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b2 -> tW0b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b1 -> tW0b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW0b0 -> sp0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp1 -> tE1o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o0 -> tE1o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o1 -> tE1o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o2 -> tE1o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o3 -> tE1o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o4 -> tE1o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o5 -> tE1o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o6 -> tE1o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o7 -> tE1o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o8 -> tE1o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o9 -> tE1o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1o10 -> turnE1a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE1a -> turnE1b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE1b -> tE1b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b10 -> tE1b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b9 -> tE1b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b8 -> tE1b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b7 -> tE1b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b6 -> tE1b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b5 -> tE1b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b4 -> tE1b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b3 -> tE1b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b2 -> tE1b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b1 -> tE1b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE1b0 -> sp1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp1 -> tW1o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o0 -> tW1o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o1 -> tW1o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o2 -> tW1o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o3 -> tW1o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o4 -> tW1o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o5 -> tW1o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o6 -> tW1o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o7 -> tW1o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o8 -> tW1o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o9 -> tW1o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1o10 -> turnW1a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW1a -> turnW1b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW1b -> tW1b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b10 -> tW1b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b9 -> tW1b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b8 -> tW1b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b7 -> tW1b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b6 -> tW1b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b5 -> tW1b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b4 -> tW1b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b3 -> tW1b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b2 -> tW1b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b1 -> tW1b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW1b0 -> sp1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp2 -> tE2o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o0 -> tE2o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o1 -> tE2o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o2 -> tE2o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o3 -> tE2o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o4 -> tE2o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o5 -> tE2o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o6 -> tE2o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o7 -> tE2o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o8 -> tE2o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o9 -> tE2o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2o10 -> turnE2a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE2a -> turnE2b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE2b -> tE2b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b10 -> tE2b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b9 -> tE2b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b8 -> tE2b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b7 -> tE2b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b6 -> tE2b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b5 -> tE2b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b4 -> tE2b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b3 -> tE2b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b2 -> tE2b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b1 -> tE2b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE2b0 -> sp2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp2 -> tW2o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o0 -> tW2o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o1 -> tW2o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o2 -> tW2o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o3 -> tW2o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o4 -> tW2o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o5 -> tW2o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o6 -> tW2o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o7 -> tW2o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o8 -> tW2o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o9 -> tW2o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2o10 -> turnW2a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW2a -> turnW2b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW2b -> tW2b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b10 -> tW2b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b9 -> tW2b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b8 -> tW2b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b7 -> tW2b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b6 -> tW2b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b5 -> tW2b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b4 -> tW2b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b3 -> tW2b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b2 -> tW2b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b1 -> tW2b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW2b0 -> sp2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp3 -> tE3o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o0 -> tE3o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o1 -> tE3o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o2 -> tE3o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o3 -> tE3o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o4 -> tE3o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o5 -> tE3o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o6 -> tE3o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o7 -> tE3o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o8 -> tE3o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o9 -> tE3o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3o10 -> turnE3a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE3a -> turnE3b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE3b -> tE3b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b10 -> tE3b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b9 -> tE3b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b8 -> tE3b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b7 -> tE3b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b6 -> tE3b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b5 -> tE3b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b4 -> tE3b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b3 -> tE3b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b2 -> tE3b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b1 -> tE3b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE3b0 -> sp3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp3 -> tW3o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o0 -> tW3o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o1 -> tW3o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o2 -> tW3o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o3 -> tW3o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o4 -> tW3o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o5 -> tW3o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o6 -> tW3o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o7 -> tW3o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o8 -> tW3o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o9 -> tW3o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3o10 -> turnW3a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW3a -> turnW3b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW3b -> tW3b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b10 -> tW3b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b9 -> tW3b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b8 -> tW3b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b7 -> tW3b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b6 -> tW3b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b5 -> tW3b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b4 -> tW3b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b3 -> tW3b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b2 -> tW3b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b1 -> tW3b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW3b0 -> sp3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp4 -> tE4o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o0 -> tE4o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o1 -> tE4o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o2 -> tE4o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o3 -> tE4o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o4 -> tE4o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o5 -> tE4o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o6 -> tE4o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o7 -> tE4o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o8 -> tE4o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o9 -> tE4o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4o10 -> turnE4a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE4a -> turnE4b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE4b -> tE4b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b10 -> tE4b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b9 -> tE4b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b8 -> tE4b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b7 -> tE4b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b6 -> tE4b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b5 -> tE4b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b4 -> tE4b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b3 -> tE4b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b2 -> tE4b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b1 -> tE4b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE4b0 -> sp4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp4 -> tW4o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o0 -> tW4o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o1 -> tW4o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o2 -> tW4o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o3 -> tW4o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o4 -> tW4o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o5 -> tW4o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o6 -> tW4o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o7 -> tW4o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o8 -> tW4o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o9 -> tW4o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4o10 -> turnW4a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW4a -> turnW4b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW4b -> tW4b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b10 -> tW4b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b9 -> tW4b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b8 -> tW4b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b7 -> tW4b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b6 -> tW4b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b5 -> tW4b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b4 -> tW4b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b3 -> tW4b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b2 -> tW4b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b1 -> tW4b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW4b0 -> sp4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp5 -> tE5o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o0 -> tE5o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o1 -> tE5o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o2 -> tE5o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o3 -> tE5o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o4 -> tE5o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o5 -> tE5o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o6 -> tE5o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o7 -> tE5o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o8 -> tE5o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o9 -> tE5o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5o10 -> turnE5a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE5a -> turnE5b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnE5b -> tE5b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b10 -> tE5b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b9 -> tE5b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b8 -> tE5b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b7 -> tE5b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b6 -> tE5b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b5 -> tE5b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b4 -> tE5b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b3 -> tE5b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b2 -> tE5b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b1 -> tE5b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tE5b0 -> sp5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "sp5 -> tW5o0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o0 -> tW5o1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o1 -> tW5o2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o2 -> tW5o3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o3 -> tW5o4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o4 -> tW5o5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o5 -> tW5o6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o6 -> tW5o7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o7 -> tW5o8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o8 -> tW5o9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o9 -> tW5o10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5o10 -> turnW5a": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW5a -> turnW5b": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "turnW5b -> tW5b10": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b10 -> tW5b9": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b9 -> tW5b8": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b8 -> tW5b7": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b7 -> tW5b6": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b6 -> tW5b5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b5 -> tW5b4": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b4 -> tW5b3": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b3 -> tW5b2": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b2 -> tW5b1": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b1 -> tW5b0": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "tW5b0 -> sp5": {
+   "ports": 1,
+   "bit_crossings": 565
+  },
+  "ctl -> sp0": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp0 -> ctl": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp0 -> sp1": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp1 -> sp0": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp1 -> sp2": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp2 -> sp1": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp2 -> sp3": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp3 -> sp2": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp3 -> sp4": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp4 -> sp3": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp4 -> sp5": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp5 -> sp4": {
+   "ports": 4,
+   "bit_crossings": 969
+  },
+  "sp5 -> host": {
+   "ports": 3,
+   "bit_crossings": 404
+  },
+  "host -> sp5": {
+   "ports": 3,
+   "bit_crossings": 404
+  },
+  "host -> sst5": {
+   "ports": 2,
+   "bit_crossings": 576
+  },
+  "sst5 -> sst4": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "sst4 -> mesh0S": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "mesh0S -> sst4": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "sst4 -> sst5": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "sst5 -> host": {
+   "ports": 2,
+   "bit_crossings": 578
+  },
+  "host -> sst7": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "sst7 -> mesh7S": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "mesh7S -> sst7": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "sst7 -> host": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "ctl -> nst7": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "nst7 -> mesh7N": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "mesh7N -> nst7": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "nst7 -> ctl": {
+   "ports": 1,
+   "bit_crossings": 64
+  },
+  "ctl -> lep0N": {
+   "ports": 5,
+   "bit_crossings": 1940
+  },
+  "lep0N -> ctl": {
+   "ports": 5,
+   "bit_crossings": 2200
+  },
+  "lk_WN0 -> lep0N": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "lep0N -> lk_WN0": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_WN1 -> nst3": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "nst3 -> nst4": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "nst4 -> lep0N": {
+   "ports": 2,
+   "bit_crossings": 1028
+  },
+  "lep0N -> nst4": {
+   "ports": 2,
+   "bit_crossings": 1024
+  },
+  "nst4 -> nst3": {
+   "ports": 2,
+   "bit_crossings": 1024
+  },
+  "nst3 -> lk_WN1": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_WN2 -> nst1": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "nst1 -> nst2": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "nst2 -> nst3": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "nst3 -> nst2": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "nst2 -> nst1": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "nst1 -> lk_WN2": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_WN3 -> ctl": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "ctl -> lk_WN3": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_EN0 -> mesh7N": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "mesh7N -> lk_EN0": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_EN1 -> nst10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "nst10 -> nst9": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "nst9 -> mesh7N": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "mesh7N -> nst9": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "nst9 -> nst10": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "nst10 -> lk_EN1": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_WS0 -> mesh0S": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "mesh0S -> lk_WS0": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_WS1 -> sst1": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sst1 -> sst2": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sst2 -> mesh0S": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "mesh0S -> sst2": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "sst2 -> sst1": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "sst1 -> lk_WS1": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_ES0 -> mesh7S": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "mesh7S -> lk_ES0": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_ES1 -> sst10": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sst10 -> sst9": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sst9 -> mesh7S": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "mesh7S -> sst9": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "sst9 -> sst10": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "sst10 -> lk_ES1": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_HOST1 -> host": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "host -> lk_HOST1": {
+   "ports": 1,
+   "bit_crossings": 512
+  },
+  "lk_HOST0 -> sst5": {
+   "ports": 1,
+   "bit_crossings": 514
+  },
+  "sst5 -> lk_HOST0": {
+   "ports": 1,
+   "bit_crossings": 512
+  }
+ },
+ "scenarios": {
+  "2": {
+   "extra_cycles_per_crossed_partition_seam": 2,
+   "gross_new_ff_bit_sites": 425244,
+   "gross_legal_ff_envelope_um2": 161201.49552000003,
+   "token_throughput": "UNPRICED",
+   "critical_path_added_cycles": "UNPRICED: current programme-operation to traversed seam map required"
+  },
+  "3": {
+   "extra_cycles_per_crossed_partition_seam": 3,
+   "gross_new_ff_bit_sites": 637866,
+   "gross_legal_ff_envelope_um2": 241802.24328000002,
+   "token_throughput": "UNPRICED",
+   "critical_path_added_cycles": "UNPRICED: current programme-operation to traversed seam map required"
+  }
+ },
+ "area_basis": "Gross stage-bit sites times canonical1.404x0.27um legal FF envelope; not synthesizedcellarea, notnetincrementalarea. Existingbanks/sourcefanoutsharing/notlandableprotocolsnotdeducted.",
+ "limitations": [
+  "Only explicit plan partition seams, not unenumerated hard-core/datapath cuts within partition types.",
+  "Clock/reset/PG not landed; their networks are separate plan contracts.",
+  "Adding latency changes handshakes/reset/epoch/calendar; no scalar totalstationcount pricing.",
+  "No rule, plan, programme, RTL or physical build changed."
+ ]
+}

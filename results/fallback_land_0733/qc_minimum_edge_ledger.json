@@ -1,0 +1,5839 @@
+{
+ "status": "CONDITIONAL MINIMUM ACTUAL EDGE JOIN; nativev7 actualconsumer/R8membership +current88plan/collectoridentity. All-seamprogrammeprice remainsunmapped.",
+ "candidate": "codex/qc-oneevent-0733@40493490d",
+ "baseline_pricer": "63f4e17f63 nativev7 accepted rederived296341cycles",
+ "crossings": 65,
+ "native_mapped_lanes": 65,
+ "collector_mapped_cuts": 65,
+ "selected_edge": {
+  "physical_cut": {
+   "port": "sl_E3_fe__l9_eo_l9_wi__3",
+   "lane": "sl_E3_fe__l9_eo_l9_wi",
+   "src": "sl_E3_fw",
+   "dst": "sl_E2_fe",
+   "src_region": "h11",
+   "dst_region": "h10",
+   "width": 514,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  "plan_port": {
+   "id": "sl_E3_fe__l9_eo_l9_wi__3",
+   "src": {
+    "part": "sl_E3_fw",
+    "bus": "l9_eo_l9_wi_o"
+   },
+   "dst": {
+    "part": "sl_E2_fe",
+    "bus": "l9_eo_l9_wi_i"
+   },
+   "width": 514,
+   "kind": "data"
+  },
+  "destination_type": "sle_fe_v1__clad8c146b",
+  "collector_local_source": [
+   {
+    "name": "l9_eo_l9_wi_i",
+    "ready": "landing_ready_l9_eo_l9_wi_i",
+    "fault": "landing_fault_l9_eo_l9_wi_i",
+    "tap": 3,
+    "xy_um": [
+     622.08,
+     441.264
+    ],
+    "band": {
+     "rect_um": [
+      574.56,
+      396.72,
+      604.8,
+      485.808
+     ],
+     "width": 514,
+     "ring_width": 576,
+     "live_data_storage_flops": 2575,
+     "padded_data_storage_flops": 2880,
+     "clock_roles": {
+      "forwarded_write_flops": 2304,
+      "local_read_flops": 576
+     },
+     "max_pin_to_band_hop_um": 92.064,
+     "area_reserve_um2": 2636.064,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+     "instance": "u_cland_l9_eo_l9_wi_i"
+    }
+   }
+  ],
+  "native_consumer_members": [
+   {
+    "native_source_part": "sl_E3_fe",
+    "native_sink_part": "sl_E2_fw",
+    "native_sink": "dvs_E2.u_core.u_sub.u_fdn",
+    "sink_port": "l9_i",
+    "sink_bits": [
+     [
+      0,
+      513
+     ]
+    ],
+    "source": "dvs_E3.u_core.u_sub.u_fup.l9_o",
+    "source_bits": [
+     [
+      0,
+      513
+     ]
+    ],
+    "asbuilt_stages": 2,
+    "bound_stages": 16,
+    "landed_stages": 16,
+    "lane": "sl_E3_fe__l9_eo_l9_wi"
+   }
+  ]
+ },
+ "price_scenarios": {
+  "2": {
+   "extra_cycles_on_one_physical_cut": 2,
+   "changed_native_member": "dvs_E2.u_core.u_sub.u_fdn.l9_i[0:513] <- dvs_E3.u_core.u_sub.u_fup.l9_o[0:513]",
+   "asbuilt_stages": 2,
+   "baseline_landed_stages": 16,
+   "scenario_landed_stages": 18,
+   "token_price": "CONDITIONAL exact nativev7 prepared composer",
+   "cycles_per_token": 296413,
+   "baseline_cycles_per_token": 296341,
+   "delta_cycles_per_token": 72,
+   "tokens_per_second": 4050.0,
+   "chained_per_layer": 8131,
+   "cold_l0": 8643,
+   "scope": "Only this one physicalcut/nativeconsumer edge; NOT wholeall-seamfallbackcost orapprovedRTLphaseplan"
+  },
+  "3": {
+   "extra_cycles_on_one_physical_cut": 3,
+   "changed_native_member": "dvs_E2.u_core.u_sub.u_fdn.l9_i[0:513] <- dvs_E3.u_core.u_sub.u_fup.l9_o[0:513]",
+   "asbuilt_stages": 2,
+   "baseline_landed_stages": 16,
+   "scenario_landed_stages": 19,
+   "token_price": "CONDITIONAL exact nativev7 prepared composer",
+   "cycles_per_token": 296449,
+   "baseline_cycles_per_token": 296341,
+   "delta_cycles_per_token": 108,
+   "tokens_per_second": 4049.5,
+   "chained_per_layer": 8132,
+   "cold_l0": 8644,
+   "scope": "Only this one physicalcut/nativeconsumer edge; NOT wholeall-seamfallbackcost orapprovedRTLphaseplan"
+  }
+ },
+ "all_mapped_rows": [
+  {
+   "physical_cut": {
+    "port": "sl_E0_fw__ag_eo_ag_ei__0",
+    "lane": "sl_E0_fw__ag_eo_ag_ei",
+    "src": "sl_E0_fw",
+    "dst": "sl_W0_fe",
+    "src_region": "h10",
+    "dst_region": "h01",
+    "width": 10,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E0_fw__ag_eo_ag_ei__0",
+    "src": {
+     "part": "sl_E0_fw",
+     "bus": "ag_eo"
+    },
+    "dst": {
+     "part": "sl_W0_fe",
+     "bus": "ag_ei"
+    },
+    "width": 10,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v1__cl8ba3358f",
+   "collector_local_source": [
+    {
+     "name": "ag_ei",
+     "ready": "landing_ready_ag_ei",
+     "fault": "landing_fault_ag_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      5.24
+     ],
+     "band": {
+      "rect_um": [
+       557.28,
+       17.28,
+       604.8,
+       25.92
+      ],
+      "width": 10,
+      "ring_width": 64,
+      "live_data_storage_flops": 55,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 85.48,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_ag_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "ag_up_i",
+     "sink_bits": [
+      [
+       0,
+       9
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.ag_dn_o",
+     "source_bits": [
+      [
+       0,
+       9
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__ag_eo_ag_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E0_fw__ard_eo_ard_ei__0",
+    "lane": "sl_E0_fw__ard_eo_ard_ei",
+    "src": "sl_E0_fw",
+    "dst": "sl_W0_fe",
+    "src_region": "h10",
+    "dst_region": "h01",
+    "width": 512,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E0_fw__ard_eo_ard_ei__0",
+    "src": {
+     "part": "sl_E0_fw",
+     "bus": "ard_eo"
+    },
+    "dst": {
+     "part": "sl_W0_fe",
+     "bus": "ard_ei"
+    },
+    "width": 512,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v1__cl8ba3358f",
+   "collector_local_source": [
+    {
+     "name": "ard_ei",
+     "ready": "landing_ready_ard_ei",
+     "fault": "landing_fault_ard_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      51.472
+     ],
+     "band": {
+      "rect_um": [
+       574.56,
+       28.08,
+       604.8,
+       116.784
+      ],
+      "width": 512,
+      "ring_width": 576,
+      "live_data_storage_flops": 2565,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 112.832,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_ard_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       0,
+       511
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       0,
+       511
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__ard_eo_ard_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E0_fw__arl_eo_arl_ei__0",
+    "lane": "sl_E0_fw__arl_eo_arl_ei",
+    "src": "sl_E0_fw",
+    "dst": "sl_W0_fe",
+    "src_region": "h10",
+    "dst_region": "h01",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E0_fw__arl_eo_arl_ei__0",
+    "src": {
+     "part": "sl_E0_fw",
+     "bus": "arl_eo"
+    },
+    "dst": {
+     "part": "sl_W0_fe",
+     "bus": "arl_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fe_v1__cl8ba3358f",
+   "collector_local_source": [
+    {
+     "name": "arl_ei",
+     "ready": "landing_ready_arl_ei",
+     "fault": "landing_fault_arl_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      97.272
+     ],
+     "band": {
+      "rect_um": [
+       527.04,
+       92.952,
+       574.56,
+       101.592
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 99.36,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_arl_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       512,
+       512
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       512,
+       512
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__arl_eo_arl_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E0_fw__arm_eo_arm_ei__0",
+    "lane": "sl_E0_fw__arm_eo_arm_ei",
+    "src": "sl_E0_fw",
+    "dst": "sl_W0_fe",
+    "src_region": "h10",
+    "dst_region": "h01",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E0_fw__arm_eo_arm_ei__0",
+    "src": {
+     "part": "sl_E0_fw",
+     "bus": "arm_eo"
+    },
+    "dst": {
+     "part": "sl_W0_fe",
+     "bus": "arm_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fe_v1__cl8ba3358f",
+   "collector_local_source": [
+    {
+     "name": "arm_ei",
+     "ready": "landing_ready_arm_ei",
+     "fault": "landing_fault_arm_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      98.912
+     ],
+     "band": {
+      "rect_um": [
+       479.52,
+       94.592,
+       527.04,
+       103.232
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 146.88,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_arm_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       513,
+       513
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       513,
+       513
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__arm_eo_arm_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E0_fw__art_eo_art_ei__0",
+    "lane": "sl_E0_fw__art_eo_art_ei",
+    "src": "sl_E0_fw",
+    "dst": "sl_W0_fe",
+    "src_region": "h10",
+    "dst_region": "h01",
+    "width": 32,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E0_fw__art_eo_art_ei__0",
+    "src": {
+     "part": "sl_E0_fw",
+     "bus": "art_eo"
+    },
+    "dst": {
+     "part": "sl_W0_fe",
+     "bus": "art_ei"
+    },
+    "width": 32,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v1__cl8ba3358f",
+   "collector_local_source": [
+    {
+     "name": "art_ei",
+     "ready": "landing_ready_art_ei",
+     "fault": "landing_fault_art_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      102.816
+     ],
+     "band": {
+      "rect_um": [
+       432.0,
+       98.496,
+       479.52,
+       107.136
+      ],
+      "width": 32,
+      "ring_width": 64,
+      "live_data_storage_flops": 165,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 194.4,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_art_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       514,
+       545
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       514,
+       545
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__art_eo_art_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E0_fw__arv_eo_arv_ei__0",
+    "lane": "sl_E0_fw__arv_eo_arv_ei",
+    "src": "sl_E0_fw",
+    "dst": "sl_W0_fe",
+    "src_region": "h10",
+    "dst_region": "h01",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E0_fw__arv_eo_arv_ei__0",
+    "src": {
+     "part": "sl_E0_fw",
+     "bus": "arv_eo"
+    },
+    "dst": {
+     "part": "sl_W0_fe",
+     "bus": "arv_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fe_v1__cl8ba3358f",
+   "collector_local_source": [
+    {
+     "name": "arv_ei",
+     "ready": "landing_ready_arv_ei",
+     "fault": "landing_fault_arv_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      106.72
+     ],
+     "band": {
+      "rect_um": [
+       527.04,
+       102.4,
+       574.56,
+       111.04
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 99.36,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_arv_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       546,
+       546
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       546,
+       546
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__arv_eo_arv_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E0_fw__dd_eo_dd_ei__0",
+    "lane": "sl_E0_fw__dd_eo_dd_ei",
+    "src": "sl_E0_fw",
+    "dst": "sl_W0_fe",
+    "src_region": "h10",
+    "dst_region": "h01",
+    "width": 548,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E0_fw__dd_eo_dd_ei__0",
+    "src": {
+     "part": "sl_E0_fw",
+     "bus": "dd_eo"
+    },
+    "dst": {
+     "part": "sl_W0_fe",
+     "bus": "dd_ei"
+    },
+    "width": 548,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v1__cl8ba3358f",
+   "collector_local_source": [
+    {
+     "name": "dd_ei",
+     "ready": "landing_ready_dd_ei",
+     "fault": "landing_fault_dd_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      176.59199999999998
+     ],
+     "band": {
+      "rect_um": [
+       576.72,
+       129.136,
+       604.8,
+       224.048
+      ],
+      "width": 548,
+      "ring_width": 576,
+      "live_data_storage_flops": 2745,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 92.816,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_dd_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       547,
+       1094
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       547,
+       1094
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__dd_eo_dd_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E0_fw__flte__0",
+    "lane": "sl_E0_fw__flte",
+    "src": "sl_E0_fw",
+    "dst": "sl_W0_fe",
+    "src_region": "h10",
+    "dst_region": "h01",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E0_fw__flte__0",
+    "src": {
+     "part": "sl_E0_fw",
+     "bus": "flt_wo"
+    },
+    "dst": {
+     "part": "sl_W0_fe",
+     "bus": "flt_e_i"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fe_v1__cl8ba3358f",
+   "collector_local_source": [
+    {
+     "name": "flt_e_i",
+     "ready": "landing_ready_flt_e_i",
+     "fault": "landing_fault_flt_e_i",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      316.08
+     ],
+     "band": {
+      "rect_um": [
+       557.28,
+       311.76,
+       604.8,
+       320.4
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 69.12,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_flt_e_i"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "sc_dn_i",
+     "sink_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.sc_dn_o",
+     "source_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__flte"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E0_fw__sc_eo_sc_ei__0",
+    "lane": "sl_E0_fw__sc_eo_sc_ei",
+    "src": "sl_E0_fw",
+    "dst": "sl_W0_fe",
+    "src_region": "h10",
+    "dst_region": "h01",
+    "width": 48,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E0_fw__sc_eo_sc_ei__0",
+    "src": {
+     "part": "sl_E0_fw",
+     "bus": "sc_eo"
+    },
+    "dst": {
+     "part": "sl_W0_fe",
+     "bus": "sc_ei"
+    },
+    "width": 48,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v1__cl8ba3358f",
+   "collector_local_source": [
+    {
+     "name": "sc_ei",
+     "ready": "landing_ready_sc_ei",
+     "fault": "landing_fault_sc_ei",
+     "tap": 3,
+     "xy_um": [
+      622.08,
+      496.168
+     ],
+     "band": {
+      "rect_um": [
+       557.28,
+       491.848,
+       604.8,
+       500.488
+      ],
+      "width": 48,
+      "ring_width": 64,
+      "live_data_storage_flops": 245,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 69.12,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_sc_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "sc_dn_i",
+     "sink_bits": [
+      [
+       1,
+       47
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.sc_dn_o",
+     "source_bits": [
+      [
+       1,
+       47
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__sc_eo_sc_ei"
+    },
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "st_dn_i",
+     "sink_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.st_dn_o",
+     "source_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__sc_eo_sc_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E0_fw__st_eo_st_ei__0",
+    "lane": "sl_E0_fw__st_eo_st_ei",
+    "src": "sl_E0_fw",
+    "dst": "sl_W0_fe",
+    "src_region": "h10",
+    "dst_region": "h01",
+    "width": 1087,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E0_fw__st_eo_st_ei__0",
+    "src": {
+     "part": "sl_E0_fw",
+     "bus": "st_eo"
+    },
+    "dst": {
+     "part": "sl_W0_fe",
+     "bus": "st_ei"
+    },
+    "width": 1087,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v1__cl8ba3358f",
+   "collector_local_source": [
+    {
+     "name": "st_ei",
+     "ready": "landing_ready_st_ei",
+     "fault": "landing_fault_st_ei",
+     "tap": 3,
+     "xy_um": [
+      622.08,
+      604.344
+     ],
+     "band": {
+      "rect_um": [
+       576.72,
+       510.352,
+       604.8,
+       698.336
+      ],
+      "width": 1087,
+      "ring_width": 1088,
+      "live_data_storage_flops": 5440,
+      "padded_data_storage_flops": 5440,
+      "clock_roles": {
+       "forwarded_write_flops": 4352,
+       "local_read_flops": 1088
+      },
+      "max_pin_to_band_hop_um": 139.352,
+      "area_reserve_um2": 4875.552,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_st_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E0_fw",
+     "native_sink_part": "sl_W0_fe",
+     "native_sink": "dvs_W0.u_core.u_sub.u_fup",
+     "sink_port": "st_dn_i",
+     "sink_bits": [
+      [
+       1,
+       1087
+      ]
+     ],
+     "source": "dvs_E0.u_core.u_sub.u_fdn.st_dn_o",
+     "source_bits": [
+      [
+       1,
+       1087
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E0_fw__st_eo_st_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__cmd_wo_cmd_ei__0",
+    "lane": "sl_E2_fe__cmd_wo_cmd_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 116,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__cmd_wo_cmd_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "cmd_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "cmd_ei"
+    },
+    "width": 116,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "cmd_ei",
+     "ready": "landing_ready_cmd_ei",
+     "fault": "landing_fault_cmd_ei",
+     "tap": 0,
+     "xy_um": [
+      0,
+      118.024
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       107.872,
+       51.84,
+       128.176
+      ],
+      "width": 116,
+      "ring_width": 128,
+      "live_data_storage_flops": 585,
+      "padded_data_storage_flops": 640,
+      "clock_roles": {
+       "forwarded_write_flops": 512,
+       "local_read_flops": 128
+      },
+      "max_pin_to_band_hop_um": 61.992,
+      "area_reserve_um2": 676.512,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_cmd_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "ch_dn_i",
+     "sink_bits": [
+      [
+       0,
+       115
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.ch_up_o",
+     "source_bits": [
+      [
+       0,
+       115
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__cmd_wo_cmd_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__dr_wo_dr_ei__0",
+    "lane": "sl_E2_fe__dr_wo_dr_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 520,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__dr_wo_dr_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "dr_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "dr_ei"
+    },
+    "width": 520,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "dr_ei",
+     "ready": "landing_ready_dr_ei",
+     "fault": "landing_fault_dr_ei",
+     "tap": 0,
+     "xy_um": [
+      0,
+      269.968
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       225.008,
+       47.52,
+       314.928
+      ],
+      "width": 520,
+      "ring_width": 576,
+      "live_data_storage_flops": 2605,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 92.48,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_dr_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "ch_dn_i",
+     "sink_bits": [
+      [
+       116,
+       635
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.ch_up_o",
+     "source_bits": [
+      [
+       116,
+       635
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__dr_wo_dr_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__hr_wo_hr_ei__0",
+    "lane": "sl_E2_fe__hr_wo_hr_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 453,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__hr_wo_hr_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "hr_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "hr_ei"
+    },
+    "width": 453,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "hr_ei",
+     "ready": "landing_ready_hr_ei",
+     "fault": "landing_fault_hr_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      356.496
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       317.232,
+       47.52,
+       395.76
+      ],
+      "width": 453,
+      "ring_width": 512,
+      "live_data_storage_flops": 2270,
+      "padded_data_storage_flops": 2560,
+      "clock_roles": {
+       "forwarded_write_flops": 2048,
+       "local_read_flops": 512
+      },
+      "max_pin_to_band_hop_um": 86.784,
+      "area_reserve_um2": 2356.128,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_hr_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "ch_dn_i",
+     "sink_bits": [
+      [
+       636,
+       1037
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.ch_up_o",
+     "source_bits": [
+      [
+       636,
+       1037
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__hr_wo_hr_ei"
+    },
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "cmd_i",
+     "sink_bits": [
+      [
+       0,
+       50
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.cmd_o",
+     "source_bits": [
+      [
+       0,
+       50
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__hr_wo_hr_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__rd_wo_rd_ei__0",
+    "lane": "sl_E2_fe__rd_wo_rd_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 512,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__rd_wo_rd_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "rd_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "rd_ei"
+    },
+    "width": 512,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "rd_ei",
+     "ready": "landing_ready_rd_ei",
+     "fault": "landing_fault_rd_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      531.144
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       486.768,
+       47.52,
+       575.52
+      ],
+      "width": 512,
+      "ring_width": 576,
+      "live_data_storage_flops": 2565,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 91.896,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rd_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "cmd_i",
+     "sink_bits": [
+      [
+       51,
+       115
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.cmd_o",
+     "source_bits": [
+      [
+       51,
+       115
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__rd_wo_rd_ei"
+    },
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       0,
+       446
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       0,
+       446
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__rd_wo_rd_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__re_wo_re_ei__0",
+    "lane": "sl_E2_fe__re_wo_re_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__re_wo_re_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "re_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "re_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "re_ei",
+     "ready": "landing_ready_re_ei",
+     "fault": "landing_fault_re_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      576.896
+     ],
+     "band": {
+      "rect_um": [
+       47.52,
+       572.576,
+       95.04,
+       581.216
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 99.36,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_re_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       447,
+       447
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       447,
+       447
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__re_wo_re_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__rl_wo_rl_ei__0",
+    "lane": "sl_E2_fe__rl_wo_rl_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__rl_wo_rl_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "rl_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "rl_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "rl_ei",
+     "ready": "landing_ready_rl_ei",
+     "fault": "landing_fault_rl_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      578.4639999999999
+     ],
+     "band": {
+      "rect_um": [
+       95.04,
+       574.144,
+       142.56,
+       582.784
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 146.88,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rl_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       448,
+       448
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       448,
+       448
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__rl_wo_rl_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__rr_wo_rr_ei__0",
+    "lane": "sl_E2_fe__rr_wo_rr_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 3,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__rr_wo_rr_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "rr_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "rr_ei"
+    },
+    "width": 3,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "rr_ei",
+     "ready": "landing_ready_rr_ei",
+     "fault": "landing_fault_rr_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      579.952
+     ],
+     "band": {
+      "rect_um": [
+       142.56,
+       575.632,
+       190.08,
+       584.272
+      ],
+      "width": 3,
+      "ring_width": 64,
+      "live_data_storage_flops": 20,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 194.4,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rr_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       449,
+       451
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       449,
+       451
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__rr_wo_rr_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__rv_wo_rv_ei__0",
+    "lane": "sl_E2_fe__rv_wo_rv_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__rv_wo_rv_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "rv_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "rv_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "rv_ei",
+     "ready": "landing_ready_rv_ei",
+     "fault": "landing_fault_rv_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      581.44
+     ],
+     "band": {
+      "rect_um": [
+       190.08,
+       577.12,
+       237.6,
+       585.76
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 241.92,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rv_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       452,
+       452
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       452,
+       452
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__rv_wo_rv_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__sc_wo_sc_ei__0",
+    "lane": "sl_E2_fe__sc_wo_sc_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 48,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__sc_wo_sc_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "sc_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "sc_ei"
+    },
+    "width": 48,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "sc_ei",
+     "ready": "landing_ready_sc_ei",
+     "fault": "landing_fault_sc_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      595.816
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       591.496,
+       64.8,
+       600.136
+      ],
+      "width": 48,
+      "ring_width": 64,
+      "live_data_storage_flops": 245,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 69.12,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_sc_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "sc_up_i",
+     "sink_bits": [
+      [
+       0,
+       47
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.sc_up_o",
+     "source_bits": [
+      [
+       0,
+       47
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__sc_wo_sc_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__st_wo_st_ei__0",
+    "lane": "sl_E2_fe__st_wo_st_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 1088,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__st_wo_st_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "st_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "st_ei"
+    },
+    "width": 1088,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "st_ei",
+     "ready": "landing_ready_st_ei",
+     "fault": "landing_fault_st_ei",
+     "tap": 4,
+     "xy_um": [
+      0,
+      883.856
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       789.856,
+       45.36,
+       977.856
+      ],
+      "width": 1088,
+      "ring_width": 1152,
+      "live_data_storage_flops": 5445,
+      "padded_data_storage_flops": 5760,
+      "clock_roles": {
+       "forwarded_write_flops": 4608,
+       "local_read_flops": 1152
+      },
+      "max_pin_to_band_hop_um": 139.36,
+      "area_reserve_um2": 5155.488,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_st_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "st_up_i",
+     "sink_bits": [
+      [
+       0,
+       1087
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.st_up_o",
+     "source_bits": [
+      [
+       0,
+       1087
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__st_wo_st_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E2_fe__treq_wo_treq_ei__0",
+    "lane": "sl_E2_fe__treq_wo_treq_ei",
+    "src": "sl_E2_fe",
+    "dst": "sl_E3_fw",
+    "src_region": "h10",
+    "dst_region": "h11",
+    "width": 9,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E2_fe__treq_wo_treq_ei__0",
+    "src": {
+     "part": "sl_E2_fe",
+     "bus": "treq_wo"
+    },
+    "dst": {
+     "part": "sl_E3_fw",
+     "bus": "treq_ei"
+    },
+    "width": 9,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v2__clf90441df",
+   "collector_local_source": [
+    {
+     "name": "treq_ei",
+     "ready": "landing_ready_treq_ei",
+     "fault": "landing_fault_treq_ei",
+     "tap": 4,
+     "xy_um": [
+      0,
+      979.656
+     ],
+     "band": {
+      "rect_um": [
+       45.36,
+       975.336,
+       92.88,
+       983.976
+      ],
+      "width": 9,
+      "ring_width": 64,
+      "live_data_storage_flops": 50,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 97.2,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_treq_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E2_fe",
+     "native_sink_part": "sl_E3_fw",
+     "native_sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "sink_port": "treq_i",
+     "sink_bits": [
+      [
+       0,
+       8
+      ]
+     ],
+     "source": "dvs_E2.u_core.u_sub.u_fup.treq_o",
+     "source_bits": [
+      [
+       0,
+       8
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E2_fe__treq_wo_treq_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fe__l9_eo_l9_wi__3",
+    "lane": "sl_E3_fe__l9_eo_l9_wi",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 514,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fe__l9_eo_l9_wi__3",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "l9_eo_l9_wi_o"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "l9_eo_l9_wi_i"
+    },
+    "width": 514,
+    "kind": "data"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "l9_eo_l9_wi_i",
+     "ready": "landing_ready_l9_eo_l9_wi_i",
+     "fault": "landing_fault_l9_eo_l9_wi_i",
+     "tap": 3,
+     "xy_um": [
+      622.08,
+      441.264
+     ],
+     "band": {
+      "rect_um": [
+       574.56,
+       396.72,
+       604.8,
+       485.808
+      ],
+      "width": 514,
+      "ring_width": 576,
+      "live_data_storage_flops": 2575,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 92.064,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_l9_eo_l9_wi_i"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fe",
+     "native_sink_part": "sl_E2_fw",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fdn",
+     "sink_port": "l9_i",
+     "sink_bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fup.l9_o",
+     "source_bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 16,
+     "landed_stages": 16,
+     "lane": "sl_E3_fe__l9_eo_l9_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fw__ag_eo_ag_wi__0",
+    "lane": "sl_E3_fw__ag_eo_ag_wi",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 10,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fw__ag_eo_ag_wi__0",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "ag_eo"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "ag_wi"
+    },
+    "width": 10,
+    "kind": "data"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "ag_wi",
+     "ready": "landing_ready_ag_wi",
+     "fault": "landing_fault_ag_wi",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      5.24
+     ],
+     "band": {
+      "rect_um": [
+       557.28,
+       17.28,
+       604.8,
+       25.92
+      ],
+      "width": 10,
+      "ring_width": 64,
+      "live_data_storage_flops": 55,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 85.48,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_ag_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "ag_up_i",
+     "sink_bits": [
+      [
+       0,
+       9
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.ag_dn_o",
+     "source_bits": [
+      [
+       0,
+       9
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__ag_eo_ag_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fw__ard_eo_ard_wi__0",
+    "lane": "sl_E3_fw__ard_eo_ard_wi",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 512,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fw__ard_eo_ard_wi__0",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "ard_eo"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "ard_wi"
+    },
+    "width": 512,
+    "kind": "data"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "ard_wi",
+     "ready": "landing_ready_ard_wi",
+     "fault": "landing_fault_ard_wi",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      51.472
+     ],
+     "band": {
+      "rect_um": [
+       574.56,
+       28.08,
+       604.8,
+       116.784
+      ],
+      "width": 512,
+      "ring_width": 576,
+      "live_data_storage_flops": 2565,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 112.832,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_ard_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       0,
+       511
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       0,
+       511
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__ard_eo_ard_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fw__arl_eo_arl_wi__0",
+    "lane": "sl_E3_fw__arl_eo_arl_wi",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fw__arl_eo_arl_wi__0",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "arl_eo"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "arl_wi"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "arl_wi",
+     "ready": "landing_ready_arl_wi",
+     "fault": "landing_fault_arl_wi",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      97.272
+     ],
+     "band": {
+      "rect_um": [
+       527.04,
+       92.952,
+       574.56,
+       101.592
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 99.36,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_arl_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       512,
+       512
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       512,
+       512
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__arl_eo_arl_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fw__arm_eo_arm_wi__0",
+    "lane": "sl_E3_fw__arm_eo_arm_wi",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fw__arm_eo_arm_wi__0",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "arm_eo"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "arm_wi"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "arm_wi",
+     "ready": "landing_ready_arm_wi",
+     "fault": "landing_fault_arm_wi",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      98.912
+     ],
+     "band": {
+      "rect_um": [
+       479.52,
+       94.592,
+       527.04,
+       103.232
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 146.88,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_arm_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       513,
+       513
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       513,
+       513
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__arm_eo_arm_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fw__art_eo_art_wi__0",
+    "lane": "sl_E3_fw__art_eo_art_wi",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 32,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fw__art_eo_art_wi__0",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "art_eo"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "art_wi"
+    },
+    "width": 32,
+    "kind": "data"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "art_wi",
+     "ready": "landing_ready_art_wi",
+     "fault": "landing_fault_art_wi",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      102.816
+     ],
+     "band": {
+      "rect_um": [
+       432.0,
+       98.496,
+       479.52,
+       107.136
+      ],
+      "width": 32,
+      "ring_width": 64,
+      "live_data_storage_flops": 165,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 194.4,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_art_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       514,
+       545
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       514,
+       545
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__art_eo_art_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fw__arv_eo_arv_wi__0",
+    "lane": "sl_E3_fw__arv_eo_arv_wi",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fw__arv_eo_arv_wi__0",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "arv_eo"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "arv_wi"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "arv_wi",
+     "ready": "landing_ready_arv_wi",
+     "fault": "landing_fault_arv_wi",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      106.72
+     ],
+     "band": {
+      "rect_um": [
+       527.04,
+       102.4,
+       574.56,
+       111.04
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 99.36,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_arv_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       546,
+       546
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       546,
+       546
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__arv_eo_arv_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fw__dd_eo_dd_wi__0",
+    "lane": "sl_E3_fw__dd_eo_dd_wi",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 548,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fw__dd_eo_dd_wi__0",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "dd_eo"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "dd_wi"
+    },
+    "width": 548,
+    "kind": "data"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "dd_wi",
+     "ready": "landing_ready_dd_wi",
+     "fault": "landing_fault_dd_wi",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      176.59199999999998
+     ],
+     "band": {
+      "rect_um": [
+       576.72,
+       129.136,
+       604.8,
+       224.048
+      ],
+      "width": 548,
+      "ring_width": 576,
+      "live_data_storage_flops": 2745,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 92.816,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_dd_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       547,
+       1094
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       547,
+       1094
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__dd_eo_dd_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fw__flte__0",
+    "lane": "sl_E3_fw__flte",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fw__flte__0",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "flt_wo"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "flt_e_i"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "flt_e_i",
+     "ready": "landing_ready_flt_e_i",
+     "fault": "landing_fault_flt_e_i",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      316.08
+     ],
+     "band": {
+      "rect_um": [
+       557.28,
+       311.76,
+       604.8,
+       320.4
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 69.12,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_flt_e_i"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "sc_dn_i",
+     "sink_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.sc_dn_o",
+     "source_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__flte"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fw__sc_eo_sc_wi__0",
+    "lane": "sl_E3_fw__sc_eo_sc_wi",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 48,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fw__sc_eo_sc_wi__0",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "sc_eo"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "sc_wi"
+    },
+    "width": 48,
+    "kind": "data"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "sc_wi",
+     "ready": "landing_ready_sc_wi",
+     "fault": "landing_fault_sc_wi",
+     "tap": 3,
+     "xy_um": [
+      622.08,
+      586.6800000000001
+     ],
+     "band": {
+      "rect_um": [
+       557.28,
+       582.36,
+       604.8,
+       591.0
+      ],
+      "width": 48,
+      "ring_width": 64,
+      "live_data_storage_flops": 245,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 69.12,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_sc_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "sc_dn_i",
+     "sink_bits": [
+      [
+       1,
+       47
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.sc_dn_o",
+     "source_bits": [
+      [
+       1,
+       47
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__sc_eo_sc_wi"
+    },
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "st_dn_i",
+     "sink_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.st_dn_o",
+     "source_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__sc_eo_sc_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_E3_fw__st_eo_st_wi__0",
+    "lane": "sl_E3_fw__st_eo_st_wi",
+    "src": "sl_E3_fw",
+    "dst": "sl_E2_fe",
+    "src_region": "h11",
+    "dst_region": "h10",
+    "width": 1087,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_E3_fw__st_eo_st_wi__0",
+    "src": {
+     "part": "sl_E3_fw",
+     "bus": "st_eo"
+    },
+    "dst": {
+     "part": "sl_E2_fe",
+     "bus": "st_wi"
+    },
+    "width": 1087,
+    "kind": "data"
+   },
+   "destination_type": "sle_fe_v1__clad8c146b",
+   "collector_local_source": [
+    {
+     "name": "st_wi",
+     "ready": "landing_ready_st_wi",
+     "fault": "landing_fault_st_wi",
+     "tap": 5,
+     "xy_um": [
+      622.08,
+      694.88
+     ],
+     "band": {
+      "rect_um": [
+       576.72,
+       600.864,
+       604.8,
+       788.896
+      ],
+      "width": 1087,
+      "ring_width": 1088,
+      "live_data_storage_flops": 5440,
+      "padded_data_storage_flops": 5440,
+      "clock_roles": {
+       "forwarded_write_flops": 4352,
+       "local_read_flops": 1088
+      },
+      "max_pin_to_band_hop_um": 139.376,
+      "area_reserve_um2": 4875.552,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_st_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_E3_fw",
+     "native_sink_part": "sl_E2_fe",
+     "native_sink": "dvs_E2.u_core.u_sub.u_fup",
+     "sink_port": "st_dn_i",
+     "sink_bits": [
+      [
+       1,
+       1087
+      ]
+     ],
+     "source": "dvs_E3.u_core.u_sub.u_fdn.st_dn_o",
+     "source_bits": [
+      [
+       1,
+       1087
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_E3_fw__st_eo_st_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__cmd_eo_cmd_ei__0",
+    "lane": "sl_W0_fe__cmd_eo_cmd_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 116,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__cmd_eo_cmd_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "cmd_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "cmd_ei"
+    },
+    "width": 116,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "cmd_ei",
+     "ready": "landing_ready_cmd_ei",
+     "fault": "landing_fault_cmd_ei",
+     "tap": 0,
+     "xy_um": [
+      0,
+      118.024
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       107.872,
+       51.84,
+       128.176
+      ],
+      "width": 116,
+      "ring_width": 128,
+      "live_data_storage_flops": 585,
+      "padded_data_storage_flops": 640,
+      "clock_roles": {
+       "forwarded_write_flops": 512,
+       "local_read_flops": 128
+      },
+      "max_pin_to_band_hop_um": 61.992,
+      "area_reserve_um2": 676.512,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_cmd_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "ch_dn_i",
+     "sink_bits": [
+      [
+       0,
+       115
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.ch_up_o",
+     "source_bits": [
+      [
+       0,
+       115
+      ]
+     ],
+     "asbuilt_stages": 3,
+     "bound_stages": 2,
+     "landed_stages": 3,
+     "lane": "sl_W0_fe__cmd_eo_cmd_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__dr_eo_dr_ei__0",
+    "lane": "sl_W0_fe__dr_eo_dr_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 520,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__dr_eo_dr_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "dr_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "dr_ei"
+    },
+    "width": 520,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "dr_ei",
+     "ready": "landing_ready_dr_ei",
+     "fault": "landing_fault_dr_ei",
+     "tap": 0,
+     "xy_um": [
+      0,
+      269.968
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       225.008,
+       47.52,
+       314.928
+      ],
+      "width": 520,
+      "ring_width": 576,
+      "live_data_storage_flops": 2605,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 92.48,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_dr_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "ch_dn_i",
+     "sink_bits": [
+      [
+       116,
+       635
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.ch_up_o",
+     "source_bits": [
+      [
+       116,
+       635
+      ]
+     ],
+     "asbuilt_stages": 3,
+     "bound_stages": 2,
+     "landed_stages": 3,
+     "lane": "sl_W0_fe__dr_eo_dr_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__hr_eo_hr_ei__0",
+    "lane": "sl_W0_fe__hr_eo_hr_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 453,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__hr_eo_hr_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "hr_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "hr_ei"
+    },
+    "width": 453,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "hr_ei",
+     "ready": "landing_ready_hr_ei",
+     "fault": "landing_fault_hr_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      356.496
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       317.232,
+       47.52,
+       395.76
+      ],
+      "width": 453,
+      "ring_width": 512,
+      "live_data_storage_flops": 2270,
+      "padded_data_storage_flops": 2560,
+      "clock_roles": {
+       "forwarded_write_flops": 2048,
+       "local_read_flops": 512
+      },
+      "max_pin_to_band_hop_um": 86.784,
+      "area_reserve_um2": 2356.128,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_hr_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "ch_dn_i",
+     "sink_bits": [
+      [
+       1032,
+       1037
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.ch_up_o",
+     "source_bits": [
+      [
+       1032,
+       1037
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__hr_eo_hr_ei"
+    },
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "ch_dn_i",
+     "sink_bits": [
+      [
+       636,
+       1031
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.ch_up_o",
+     "source_bits": [
+      [
+       636,
+       1031
+      ]
+     ],
+     "asbuilt_stages": 3,
+     "bound_stages": 2,
+     "landed_stages": 3,
+     "lane": "sl_W0_fe__hr_eo_hr_ei"
+    },
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "cmd_i",
+     "sink_bits": [
+      [
+       0,
+       50
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.cmd_o",
+     "source_bits": [
+      [
+       0,
+       50
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__hr_eo_hr_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__rd_eo_rd_ei__0",
+    "lane": "sl_W0_fe__rd_eo_rd_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 512,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__rd_eo_rd_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "rd_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "rd_ei"
+    },
+    "width": 512,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "rd_ei",
+     "ready": "landing_ready_rd_ei",
+     "fault": "landing_fault_rd_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      441.088
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       396.72,
+       47.52,
+       485.456
+      ],
+      "width": 512,
+      "ring_width": 576,
+      "live_data_storage_flops": 2565,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 91.888,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rd_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "cmd_i",
+     "sink_bits": [
+      [
+       51,
+       115
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.cmd_o",
+     "source_bits": [
+      [
+       51,
+       115
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__rd_eo_rd_ei"
+    },
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       0,
+       446
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       0,
+       446
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__rd_eo_rd_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__re_eo_re_ei__0",
+    "lane": "sl_W0_fe__re_eo_re_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__re_eo_re_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "re_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "re_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "re_ei",
+     "ready": "landing_ready_re_ei",
+     "fault": "landing_fault_re_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      486.608
+     ],
+     "band": {
+      "rect_um": [
+       47.52,
+       482.288,
+       95.04,
+       490.928
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 99.36,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_re_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       447,
+       447
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       447,
+       447
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__re_eo_re_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__rl_eo_rl_ei__0",
+    "lane": "sl_W0_fe__rl_eo_rl_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__rl_eo_rl_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "rl_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "rl_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "rl_ei",
+     "ready": "landing_ready_rl_ei",
+     "fault": "landing_fault_rl_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      487.952
+     ],
+     "band": {
+      "rect_um": [
+       95.04,
+       483.632,
+       142.56,
+       492.272
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 146.88,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rl_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       448,
+       448
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       448,
+       448
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__rl_eo_rl_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__rr_eo_rr_ei__0",
+    "lane": "sl_W0_fe__rr_eo_rr_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 3,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__rr_eo_rr_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "rr_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "rr_ei"
+    },
+    "width": 3,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "rr_ei",
+     "ready": "landing_ready_rr_ei",
+     "fault": "landing_fault_rr_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      489.44
+     ],
+     "band": {
+      "rect_um": [
+       142.56,
+       485.12,
+       190.08,
+       493.76
+      ],
+      "width": 3,
+      "ring_width": 64,
+      "live_data_storage_flops": 20,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 194.4,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rr_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       449,
+       451
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       449,
+       451
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__rr_eo_rr_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__rv_eo_rv_ei__0",
+    "lane": "sl_W0_fe__rv_eo_rv_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__rv_eo_rv_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "rv_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "rv_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "rv_ei",
+     "ready": "landing_ready_rv_ei",
+     "fault": "landing_fault_rv_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      490.928
+     ],
+     "band": {
+      "rect_um": [
+       190.08,
+       486.608,
+       237.6,
+       495.248
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 241.92,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rv_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       452,
+       452
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       452,
+       452
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__rv_eo_rv_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__sc_eo_sc_ei__0",
+    "lane": "sl_W0_fe__sc_eo_sc_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 48,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__sc_eo_sc_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "sc_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "sc_ei"
+    },
+    "width": 48,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "sc_ei",
+     "ready": "landing_ready_sc_ei",
+     "fault": "landing_fault_sc_ei",
+     "tap": 2,
+     "xy_um": [
+      0,
+      505.304
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       500.984,
+       64.8,
+       509.624
+      ],
+      "width": 48,
+      "ring_width": 64,
+      "live_data_storage_flops": 245,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 69.12,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_sc_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "sc_up_i",
+     "sink_bits": [
+      [
+       0,
+       47
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.sc_up_o",
+     "source_bits": [
+      [
+       0,
+       47
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__sc_eo_sc_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__st_eo_st_ei__0",
+    "lane": "sl_W0_fe__st_eo_st_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 1088,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__st_eo_st_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "st_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "st_ei"
+    },
+    "width": 1088,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "st_ei",
+     "ready": "landing_ready_st_ei",
+     "fault": "landing_fault_st_ei",
+     "tap": 4,
+     "xy_um": [
+      0,
+      793.3040000000001
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       699.296,
+       45.36,
+       887.312
+      ],
+      "width": 1088,
+      "ring_width": 1152,
+      "live_data_storage_flops": 5445,
+      "padded_data_storage_flops": 5760,
+      "clock_roles": {
+       "forwarded_write_flops": 4608,
+       "local_read_flops": 1152
+      },
+      "max_pin_to_band_hop_um": 139.368,
+      "area_reserve_um2": 5155.488,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_st_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "st_up_i",
+     "sink_bits": [
+      [
+       0,
+       1087
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.st_up_o",
+     "source_bits": [
+      [
+       0,
+       1087
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__st_eo_st_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W0_fe__treq_eo_treq_ei__0",
+    "lane": "sl_W0_fe__treq_eo_treq_ei",
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "src_region": "h01",
+    "dst_region": "h10",
+    "width": 9,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W0_fe__treq_eo_treq_ei__0",
+    "src": {
+     "part": "sl_W0_fe",
+     "bus": "treq_eo"
+    },
+    "dst": {
+     "part": "sl_E0_fw",
+     "bus": "treq_ei"
+    },
+    "width": 9,
+    "kind": "data"
+   },
+   "destination_type": "sle_fw_v1__cl3b7cacba",
+   "collector_local_source": [
+    {
+     "name": "treq_ei",
+     "ready": "landing_ready_treq_ei",
+     "fault": "landing_fault_treq_ei",
+     "tap": 4,
+     "xy_um": [
+      0,
+      889.1120000000001
+     ],
+     "band": {
+      "rect_um": [
+       45.36,
+       884.792,
+       92.88,
+       893.432
+      ],
+      "width": 9,
+      "ring_width": 64,
+      "live_data_storage_flops": 50,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 97.2,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_treq_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W0_fe",
+     "native_sink_part": "sl_E0_fw",
+     "native_sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "sink_port": "treq_i",
+     "sink_bits": [
+      [
+       0,
+       8
+      ]
+     ],
+     "source": "dvs_W0.u_core.u_sub.u_fup.treq_o",
+     "source_bits": [
+      [
+       0,
+       8
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W0_fe__treq_eo_treq_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W2_fw__ag_wo_ag_ei__0",
+    "lane": "sl_W2_fw__ag_wo_ag_ei",
+    "src": "sl_W2_fw",
+    "dst": "sl_W3_fe",
+    "src_region": "h01",
+    "dst_region": "h00",
+    "width": 10,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W2_fw__ag_wo_ag_ei__0",
+    "src": {
+     "part": "sl_W2_fw",
+     "bus": "ag_wo"
+    },
+    "dst": {
+     "part": "sl_W3_fe",
+     "bus": "ag_ei"
+    },
+    "width": 10,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v2__cle5354d4d",
+   "collector_local_source": [
+    {
+     "name": "ag_ei",
+     "ready": "landing_ready_ag_ei",
+     "fault": "landing_fault_ag_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      5.24
+     ],
+     "band": {
+      "rect_um": [
+       557.28,
+       17.28,
+       604.8,
+       25.92
+      ],
+      "width": 10,
+      "ring_width": 64,
+      "live_data_storage_flops": 55,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 85.48,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_ag_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "ag_up_i",
+     "sink_bits": [
+      [
+       0,
+       9
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.ag_dn_o",
+     "source_bits": [
+      [
+       0,
+       9
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__ag_wo_ag_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W2_fw__ard_wo_ard_ei__0",
+    "lane": "sl_W2_fw__ard_wo_ard_ei",
+    "src": "sl_W2_fw",
+    "dst": "sl_W3_fe",
+    "src_region": "h01",
+    "dst_region": "h00",
+    "width": 512,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W2_fw__ard_wo_ard_ei__0",
+    "src": {
+     "part": "sl_W2_fw",
+     "bus": "ard_wo"
+    },
+    "dst": {
+     "part": "sl_W3_fe",
+     "bus": "ard_ei"
+    },
+    "width": 512,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v2__cle5354d4d",
+   "collector_local_source": [
+    {
+     "name": "ard_ei",
+     "ready": "landing_ready_ard_ei",
+     "fault": "landing_fault_ard_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      51.472
+     ],
+     "band": {
+      "rect_um": [
+       574.56,
+       28.08,
+       604.8,
+       116.784
+      ],
+      "width": 512,
+      "ring_width": 576,
+      "live_data_storage_flops": 2565,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 112.832,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_ard_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       0,
+       511
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       0,
+       511
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__ard_wo_ard_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W2_fw__arl_wo_arl_ei__0",
+    "lane": "sl_W2_fw__arl_wo_arl_ei",
+    "src": "sl_W2_fw",
+    "dst": "sl_W3_fe",
+    "src_region": "h01",
+    "dst_region": "h00",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W2_fw__arl_wo_arl_ei__0",
+    "src": {
+     "part": "sl_W2_fw",
+     "bus": "arl_wo"
+    },
+    "dst": {
+     "part": "sl_W3_fe",
+     "bus": "arl_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fe_v2__cle5354d4d",
+   "collector_local_source": [
+    {
+     "name": "arl_ei",
+     "ready": "landing_ready_arl_ei",
+     "fault": "landing_fault_arl_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      97.272
+     ],
+     "band": {
+      "rect_um": [
+       527.04,
+       92.952,
+       574.56,
+       101.592
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 99.36,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_arl_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       512,
+       512
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       512,
+       512
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__arl_wo_arl_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W2_fw__arm_wo_arm_ei__0",
+    "lane": "sl_W2_fw__arm_wo_arm_ei",
+    "src": "sl_W2_fw",
+    "dst": "sl_W3_fe",
+    "src_region": "h01",
+    "dst_region": "h00",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W2_fw__arm_wo_arm_ei__0",
+    "src": {
+     "part": "sl_W2_fw",
+     "bus": "arm_wo"
+    },
+    "dst": {
+     "part": "sl_W3_fe",
+     "bus": "arm_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fe_v2__cle5354d4d",
+   "collector_local_source": [
+    {
+     "name": "arm_ei",
+     "ready": "landing_ready_arm_ei",
+     "fault": "landing_fault_arm_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      98.912
+     ],
+     "band": {
+      "rect_um": [
+       479.52,
+       94.592,
+       527.04,
+       103.232
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 146.88,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_arm_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       513,
+       513
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       513,
+       513
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__arm_wo_arm_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W2_fw__art_wo_art_ei__0",
+    "lane": "sl_W2_fw__art_wo_art_ei",
+    "src": "sl_W2_fw",
+    "dst": "sl_W3_fe",
+    "src_region": "h01",
+    "dst_region": "h00",
+    "width": 32,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W2_fw__art_wo_art_ei__0",
+    "src": {
+     "part": "sl_W2_fw",
+     "bus": "art_wo"
+    },
+    "dst": {
+     "part": "sl_W3_fe",
+     "bus": "art_ei"
+    },
+    "width": 32,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v2__cle5354d4d",
+   "collector_local_source": [
+    {
+     "name": "art_ei",
+     "ready": "landing_ready_art_ei",
+     "fault": "landing_fault_art_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      102.816
+     ],
+     "band": {
+      "rect_um": [
+       432.0,
+       98.496,
+       479.52,
+       107.136
+      ],
+      "width": 32,
+      "ring_width": 64,
+      "live_data_storage_flops": 165,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 194.4,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_art_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       514,
+       545
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       514,
+       545
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__art_wo_art_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W2_fw__arv_wo_arv_ei__0",
+    "lane": "sl_W2_fw__arv_wo_arv_ei",
+    "src": "sl_W2_fw",
+    "dst": "sl_W3_fe",
+    "src_region": "h01",
+    "dst_region": "h00",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W2_fw__arv_wo_arv_ei__0",
+    "src": {
+     "part": "sl_W2_fw",
+     "bus": "arv_wo"
+    },
+    "dst": {
+     "part": "sl_W3_fe",
+     "bus": "arv_ei"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fe_v2__cle5354d4d",
+   "collector_local_source": [
+    {
+     "name": "arv_ei",
+     "ready": "landing_ready_arv_ei",
+     "fault": "landing_fault_arv_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      106.72
+     ],
+     "band": {
+      "rect_um": [
+       527.04,
+       102.4,
+       574.56,
+       111.04
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 99.36,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_arv_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       546,
+       546
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       546,
+       546
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__arv_wo_arv_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W2_fw__dd_wo_dd_ei__0",
+    "lane": "sl_W2_fw__dd_wo_dd_ei",
+    "src": "sl_W2_fw",
+    "dst": "sl_W3_fe",
+    "src_region": "h01",
+    "dst_region": "h00",
+    "width": 548,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W2_fw__dd_wo_dd_ei__0",
+    "src": {
+     "part": "sl_W2_fw",
+     "bus": "dd_wo"
+    },
+    "dst": {
+     "part": "sl_W3_fe",
+     "bus": "dd_ei"
+    },
+    "width": 548,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v2__cle5354d4d",
+   "collector_local_source": [
+    {
+     "name": "dd_ei",
+     "ready": "landing_ready_dd_ei",
+     "fault": "landing_fault_dd_ei",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      176.59199999999998
+     ],
+     "band": {
+      "rect_um": [
+       576.72,
+       129.136,
+       604.8,
+       224.048
+      ],
+      "width": 548,
+      "ring_width": 576,
+      "live_data_storage_flops": 2745,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 92.816,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_dd_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "ch_up_i",
+     "sink_bits": [
+      [
+       547,
+       1094
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.ch_dn_o",
+     "source_bits": [
+      [
+       547,
+       1094
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__dd_wo_dd_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W2_fw__flte__0",
+    "lane": "sl_W2_fw__flte",
+    "src": "sl_W2_fw",
+    "dst": "sl_W3_fe",
+    "src_region": "h01",
+    "dst_region": "h00",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W2_fw__flte__0",
+    "src": {
+     "part": "sl_W2_fw",
+     "bus": "flt_wo"
+    },
+    "dst": {
+     "part": "sl_W3_fe",
+     "bus": "flt_e_i"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fe_v2__cle5354d4d",
+   "collector_local_source": [
+    {
+     "name": "flt_e_i",
+     "ready": "landing_ready_flt_e_i",
+     "fault": "landing_fault_flt_e_i",
+     "tap": 1,
+     "xy_um": [
+      622.08,
+      316.08
+     ],
+     "band": {
+      "rect_um": [
+       557.28,
+       311.76,
+       604.8,
+       320.4
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 69.12,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_flt_e_i"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "sc_dn_i",
+     "sink_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.sc_dn_o",
+     "source_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__flte"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W2_fw__sc_wo_sc_ei__0",
+    "lane": "sl_W2_fw__sc_wo_sc_ei",
+    "src": "sl_W2_fw",
+    "dst": "sl_W3_fe",
+    "src_region": "h01",
+    "dst_region": "h00",
+    "width": 48,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W2_fw__sc_wo_sc_ei__0",
+    "src": {
+     "part": "sl_W2_fw",
+     "bus": "sc_wo"
+    },
+    "dst": {
+     "part": "sl_W3_fe",
+     "bus": "sc_ei"
+    },
+    "width": 48,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v2__cle5354d4d",
+   "collector_local_source": [
+    {
+     "name": "sc_ei",
+     "ready": "landing_ready_sc_ei",
+     "fault": "landing_fault_sc_ei",
+     "tap": 3,
+     "xy_um": [
+      622.08,
+      586.6800000000001
+     ],
+     "band": {
+      "rect_um": [
+       557.28,
+       582.36,
+       604.8,
+       591.0
+      ],
+      "width": 48,
+      "ring_width": 64,
+      "live_data_storage_flops": 245,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 69.12,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_sc_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "sc_dn_i",
+     "sink_bits": [
+      [
+       1,
+       47
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.sc_dn_o",
+     "source_bits": [
+      [
+       1,
+       47
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__sc_wo_sc_ei"
+    },
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "st_dn_i",
+     "sink_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.st_dn_o",
+     "source_bits": [
+      [
+       0,
+       0
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__sc_wo_sc_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W2_fw__st_wo_st_ei__0",
+    "lane": "sl_W2_fw__st_wo_st_ei",
+    "src": "sl_W2_fw",
+    "dst": "sl_W3_fe",
+    "src_region": "h01",
+    "dst_region": "h00",
+    "width": 1087,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W2_fw__st_wo_st_ei__0",
+    "src": {
+     "part": "sl_W2_fw",
+     "bus": "st_wo"
+    },
+    "dst": {
+     "part": "sl_W3_fe",
+     "bus": "st_ei"
+    },
+    "width": 1087,
+    "kind": "data"
+   },
+   "destination_type": "slw_fe_v2__cle5354d4d",
+   "collector_local_source": [
+    {
+     "name": "st_ei",
+     "ready": "landing_ready_st_ei",
+     "fault": "landing_fault_st_ei",
+     "tap": 5,
+     "xy_um": [
+      622.08,
+      694.88
+     ],
+     "band": {
+      "rect_um": [
+       576.72,
+       600.864,
+       604.8,
+       788.896
+      ],
+      "width": 1087,
+      "ring_width": 1088,
+      "live_data_storage_flops": 5440,
+      "padded_data_storage_flops": 5440,
+      "clock_roles": {
+       "forwarded_write_flops": 4352,
+       "local_read_flops": 1088
+      },
+      "max_pin_to_band_hop_um": 139.376,
+      "area_reserve_um2": 4875.552,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_st_ei"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W2_fw",
+     "native_sink_part": "sl_W3_fe",
+     "native_sink": "dvs_W3.u_core.u_sub.u_fup",
+     "sink_port": "st_dn_i",
+     "sink_bits": [
+      [
+       1,
+       1087
+      ]
+     ],
+     "source": "dvs_W2.u_core.u_sub.u_fdn.st_dn_o",
+     "source_bits": [
+      [
+       1,
+       1087
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W2_fw__st_wo_st_ei"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__cmd_eo_cmd_wi__0",
+    "lane": "sl_W3_fe__cmd_eo_cmd_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 116,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__cmd_eo_cmd_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "cmd_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "cmd_wi"
+    },
+    "width": 116,
+    "kind": "data"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "cmd_wi",
+     "ready": "landing_ready_cmd_wi",
+     "fault": "landing_fault_cmd_wi",
+     "tap": 0,
+     "xy_um": [
+      0,
+      118.024
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       107.872,
+       51.84,
+       128.176
+      ],
+      "width": 116,
+      "ring_width": 128,
+      "live_data_storage_flops": 585,
+      "padded_data_storage_flops": 640,
+      "clock_roles": {
+       "forwarded_write_flops": 512,
+       "local_read_flops": 128
+      },
+      "max_pin_to_band_hop_um": 61.992,
+      "area_reserve_um2": 676.512,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_cmd_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "ch_dn_i",
+     "sink_bits": [
+      [
+       0,
+       115
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.ch_up_o",
+     "source_bits": [
+      [
+       0,
+       115
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__cmd_eo_cmd_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__dr_eo_dr_wi__0",
+    "lane": "sl_W3_fe__dr_eo_dr_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 520,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__dr_eo_dr_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "dr_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "dr_wi"
+    },
+    "width": 520,
+    "kind": "data"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "dr_wi",
+     "ready": "landing_ready_dr_wi",
+     "fault": "landing_fault_dr_wi",
+     "tap": 0,
+     "xy_um": [
+      0,
+      269.968
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       225.008,
+       47.52,
+       314.928
+      ],
+      "width": 520,
+      "ring_width": 576,
+      "live_data_storage_flops": 2605,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 92.48,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_dr_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "ch_dn_i",
+     "sink_bits": [
+      [
+       116,
+       635
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.ch_up_o",
+     "source_bits": [
+      [
+       116,
+       635
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__dr_eo_dr_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__hr_eo_hr_wi__0",
+    "lane": "sl_W3_fe__hr_eo_hr_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 453,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__hr_eo_hr_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "hr_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "hr_wi"
+    },
+    "width": 453,
+    "kind": "data"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "hr_wi",
+     "ready": "landing_ready_hr_wi",
+     "fault": "landing_fault_hr_wi",
+     "tap": 2,
+     "xy_um": [
+      0,
+      356.496
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       317.232,
+       47.52,
+       395.76
+      ],
+      "width": 453,
+      "ring_width": 512,
+      "live_data_storage_flops": 2270,
+      "padded_data_storage_flops": 2560,
+      "clock_roles": {
+       "forwarded_write_flops": 2048,
+       "local_read_flops": 512
+      },
+      "max_pin_to_band_hop_um": 86.784,
+      "area_reserve_um2": 2356.128,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_hr_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "ch_dn_i",
+     "sink_bits": [
+      [
+       636,
+       1037
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.ch_up_o",
+     "source_bits": [
+      [
+       636,
+       1037
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__hr_eo_hr_wi"
+    },
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "cmd_i",
+     "sink_bits": [
+      [
+       0,
+       50
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.cmd_o",
+     "source_bits": [
+      [
+       0,
+       50
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__hr_eo_hr_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__l9_eo_l9_wi__0",
+    "lane": "sl_W3_fe__l9_eo_l9_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 514,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__l9_eo_l9_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "l9_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "l9_wi"
+    },
+    "width": 514,
+    "kind": "data"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "l9_wi",
+     "ready": "landing_ready_l9_wi",
+     "fault": "landing_fault_l9_wi",
+     "tap": 2,
+     "xy_um": [
+      0,
+      441.264
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       396.72,
+       47.52,
+       485.808
+      ],
+      "width": 514,
+      "ring_width": 576,
+      "live_data_storage_flops": 2575,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 92.064,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_l9_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "cmd_i",
+     "sink_bits": [
+      [
+       51,
+       115
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.cmd_o",
+     "source_bits": [
+      [
+       51,
+       115
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__l9_eo_l9_wi"
+    },
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       0,
+       448
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       0,
+       448
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__l9_eo_l9_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__rd_eo_rd_wi__0",
+    "lane": "sl_W3_fe__rd_eo_rd_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 512,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__rd_eo_rd_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "rd_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "rd_wi"
+    },
+    "width": 512,
+    "kind": "data"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "rd_wi",
+     "ready": "landing_ready_rd_wi",
+     "fault": "landing_fault_rd_wi",
+     "tap": 2,
+     "xy_um": [
+      0,
+      531.144
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       486.768,
+       47.52,
+       575.52
+      ],
+      "width": 512,
+      "ring_width": 576,
+      "live_data_storage_flops": 2565,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 91.896,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rd_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "hr_i",
+     "sink_bits": [
+      [
+       449,
+       452
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.hr_o",
+     "source_bits": [
+      [
+       449,
+       452
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__rd_eo_rd_wi"
+    },
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "l9_i",
+     "sink_bits": [
+      [
+       0,
+       507
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.l9_o",
+     "source_bits": [
+      [
+       0,
+       507
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__rd_eo_rd_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__re_eo_re_wi__0",
+    "lane": "sl_W3_fe__re_eo_re_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__re_eo_re_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "re_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "re_wi"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "re_wi",
+     "ready": "landing_ready_re_wi",
+     "fault": "landing_fault_re_wi",
+     "tap": 2,
+     "xy_um": [
+      0,
+      576.896
+     ],
+     "band": {
+      "rect_um": [
+       47.52,
+       572.576,
+       95.04,
+       581.216
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 99.36,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_re_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "l9_i",
+     "sink_bits": [
+      [
+       508,
+       508
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.l9_o",
+     "source_bits": [
+      [
+       508,
+       508
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__re_eo_re_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__rl_eo_rl_wi__0",
+    "lane": "sl_W3_fe__rl_eo_rl_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__rl_eo_rl_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "rl_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "rl_wi"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "rl_wi",
+     "ready": "landing_ready_rl_wi",
+     "fault": "landing_fault_rl_wi",
+     "tap": 2,
+     "xy_um": [
+      0,
+      578.4639999999999
+     ],
+     "band": {
+      "rect_um": [
+       95.04,
+       574.144,
+       142.56,
+       582.784
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 146.88,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rl_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "l9_i",
+     "sink_bits": [
+      [
+       509,
+       509
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.l9_o",
+     "source_bits": [
+      [
+       509,
+       509
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__rl_eo_rl_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__rr_eo_rr_wi__0",
+    "lane": "sl_W3_fe__rr_eo_rr_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 3,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__rr_eo_rr_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "rr_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "rr_wi"
+    },
+    "width": 3,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "rr_wi",
+     "ready": "landing_ready_rr_wi",
+     "fault": "landing_fault_rr_wi",
+     "tap": 2,
+     "xy_um": [
+      0,
+      579.952
+     ],
+     "band": {
+      "rect_um": [
+       142.56,
+       575.632,
+       190.08,
+       584.272
+      ],
+      "width": 3,
+      "ring_width": 64,
+      "live_data_storage_flops": 20,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 194.4,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rr_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "l9_i",
+     "sink_bits": [
+      [
+       510,
+       512
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.l9_o",
+     "source_bits": [
+      [
+       510,
+       512
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__rr_eo_rr_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__rv_eo_rv_wi__0",
+    "lane": "sl_W3_fe__rv_eo_rv_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 1,
+    "kind": "ctl",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__rv_eo_rv_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "rv_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "rv_wi"
+    },
+    "width": 1,
+    "kind": "ctl"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "rv_wi",
+     "ready": "landing_ready_rv_wi",
+     "fault": "landing_fault_rv_wi",
+     "tap": 2,
+     "xy_um": [
+      0,
+      581.44
+     ],
+     "band": {
+      "rect_um": [
+       190.08,
+       577.12,
+       237.6,
+       585.76
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 241.92,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_rv_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "l9_i",
+     "sink_bits": [
+      [
+       513,
+       513
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.l9_o",
+     "source_bits": [
+      [
+       513,
+       513
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__rv_eo_rv_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__sc_eo_sc_wi__0",
+    "lane": "sl_W3_fe__sc_eo_sc_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 48,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__sc_eo_sc_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "sc_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "sc_wi"
+    },
+    "width": 48,
+    "kind": "data"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "sc_wi",
+     "ready": "landing_ready_sc_wi",
+     "fault": "landing_fault_sc_wi",
+     "tap": 2,
+     "xy_um": [
+      0,
+      595.816
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       591.496,
+       64.8,
+       600.136
+      ],
+      "width": 48,
+      "ring_width": 64,
+      "live_data_storage_flops": 245,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 69.12,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_sc_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "sc_up_i",
+     "sink_bits": [
+      [
+       0,
+       47
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.sc_up_o",
+     "source_bits": [
+      [
+       0,
+       47
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__sc_eo_sc_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__st_eo_st_wi__0",
+    "lane": "sl_W3_fe__st_eo_st_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 1088,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__st_eo_st_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "st_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "st_wi"
+    },
+    "width": 1088,
+    "kind": "data"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "st_wi",
+     "ready": "landing_ready_st_wi",
+     "fault": "landing_fault_st_wi",
+     "tap": 4,
+     "xy_um": [
+      0,
+      883.856
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       789.856,
+       45.36,
+       977.856
+      ],
+      "width": 1088,
+      "ring_width": 1152,
+      "live_data_storage_flops": 5445,
+      "padded_data_storage_flops": 5760,
+      "clock_roles": {
+       "forwarded_write_flops": 4608,
+       "local_read_flops": 1152
+      },
+      "max_pin_to_band_hop_um": 139.36,
+      "area_reserve_um2": 5155.488,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_st_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "st_up_i",
+     "sink_bits": [
+      [
+       0,
+       1087
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.st_up_o",
+     "source_bits": [
+      [
+       0,
+       1087
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__st_eo_st_wi"
+    }
+   ]
+  },
+  {
+   "physical_cut": {
+    "port": "sl_W3_fe__treq_eo_treq_wi__0",
+    "lane": "sl_W3_fe__treq_eo_treq_wi",
+    "src": "sl_W3_fe",
+    "dst": "sl_W2_fw",
+    "src_region": "h00",
+    "dst_region": "h01",
+    "width": 9,
+    "kind": "data",
+    "added_cycles": 3
+   },
+   "plan_port": {
+    "id": "sl_W3_fe__treq_eo_treq_wi__0",
+    "src": {
+     "part": "sl_W3_fe",
+     "bus": "treq_eo"
+    },
+    "dst": {
+     "part": "sl_W2_fw",
+     "bus": "treq_wi"
+    },
+    "width": 9,
+    "kind": "data"
+   },
+   "destination_type": "slw_fw_v1__cl82aac3aa",
+   "collector_local_source": [
+    {
+     "name": "treq_wi",
+     "ready": "landing_ready_treq_wi",
+     "fault": "landing_fault_treq_wi",
+     "tap": 4,
+     "xy_um": [
+      0,
+      979.656
+     ],
+     "band": {
+      "rect_um": [
+       45.36,
+       975.336,
+       92.88,
+       983.976
+      ],
+      "width": 9,
+      "ring_width": 64,
+      "live_data_storage_flops": 50,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 97.2,
+      "area_reserve_um2": 396.576,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_treq_wi"
+     }
+    }
+   ],
+   "native_consumer_members": [
+    {
+     "native_source_part": "sl_W3_fe",
+     "native_sink_part": "sl_W2_fw",
+     "native_sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "sink_port": "treq_i",
+     "sink_bits": [
+      [
+       0,
+       8
+      ]
+     ],
+     "source": "dvs_W3.u_core.u_sub.u_fup.treq_o",
+     "source_bits": [
+      [
+       0,
+       8
+      ]
+     ],
+     "asbuilt_stages": 2,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "sl_W3_fe__treq_eo_treq_wi"
+    }
+   ]
+  }
+ ]
+}
