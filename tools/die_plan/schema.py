@@ -315,7 +315,11 @@ SCHEMA = {
                                        "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
-                                       "layers": _lays, "order": _order, "note": {"type": "string"}}}},
+                                       "layers": _lays, "order": _order,
+                                       # per-end turn-slot layers/orders (fallback: layers/order)
+                                       "in_layers": _lays, "out_layers": _lays,
+                                       "in_order": _order, "out_order": _order,
+                                       "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
@@ -423,6 +427,17 @@ SCHEMA = {
                                        "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
+                                       # G0C ruling 2b (COORD 10-26 06:01): superset-face master. pin_select = the
+                                       # pin group (port copy on another face) this instance binds per port;
+                                       # unused_pins = superset groups it leaves unbound (registered, declared)
+                                       "pin_select": {"type": "object", "additionalProperties": {"type": "string"}},
+                                       "unused_pins": {"type": "array", "items": {"type": "string"}},
+                                       "unused_pins_policy": {"type": "string"},
+                                       # Optional cut-parent mapping and placement halo. The halo is
+                                       # a cell-placement keepout, not a routing-layer OBS extension.
+                                       "halo_um": _nonneg,
+                                       "parent_instance": {"type": "string"},
+                                       "cut_instance": {"type": "string"},
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
                                            "type": "object", "required": ["name", "layer", "xy"],
                                            "additionalProperties": False,
@@ -784,8 +799,11 @@ class Plan:
                 return b["face"], b["window_um"], b["layers"], b.get("order", "lsb_low")
         for s_ in t.get("ft_slots", []):
             for sfx, fk, wk in (("_i", "in_face", "in_window_um"), ("_o", "out_face", "out_window_um")):
-                if bus == s_["name"] + sfx and wk in s_ and "layers" in s_:
-                    return s_[fk], s_[wk], s_["layers"], s_.get("order", "lsb_low")
+                if bus == s_["name"] + sfx and wk in s_:
+                    stem = "in" if sfx == "_i" else "out"
+                    lays = s_.get(stem + "_layers", s_.get("layers"))
+                    if lays:
+                        return s_[fk], s_[wk], lays, s_.get(stem + "_order", s_.get("order", "lsb_low"))
         return None
 
     def geom_to_die(self, part, g):

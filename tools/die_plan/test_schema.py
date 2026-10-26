@@ -182,3 +182,42 @@ def test_exact_per_type_dead_input_contract_schema():
     assert schema.validate(plan)==[]
     decl['ports']['gi_d']=[[-1,31]]
     assert schema.validate(plan)
+    decl['ports']['gi_d']=[[-1,31]]
+    assert schema.validate(plan)
+
+
+def test_turn_slot_declares_different_end_layers_and_orders():
+    p = copy.deepcopy(EX)
+    slot = p['partition_types']['mid']['ft_slots'][0]
+    slot.update(in_face='S', out_face='E', in_window_um=[10, 30], out_window_um=[40, 60],
+                in_layers=['M5', 'M7'], out_layers=['M4', 'M6'],
+                in_order='lsb_high', out_order='lsb_low')
+    model = schema.Plan(p)
+    assert model._type_geom('pm1', 'fx_i') == ('S', [10, 30], ['M5', 'M7'], 'lsb_high')
+    assert model._type_geom('pm1', 'fx_o') == ('E', [40, 60], ['M4', 'M6'], 'lsb_low')
+
+
+def test_turn_slot_legacy_layer_fallback_is_preserved():
+    p = copy.deepcopy(EX)
+    slot = p['partition_types']['mid']['ft_slots'][0]
+    slot.update(in_window_um=[10, 30], out_window_um=[40, 60], layers=['M4', 'M6'], order='lsb_high')
+    model = schema.Plan(p)
+    assert model._type_geom('pm1', 'fx_i')[2:] == (['M4', 'M6'], 'lsb_high')
+    assert model._type_geom('pm1', 'fx_o')[2:] == (['M4', 'M6'], 'lsb_high')
+    slot['in_layers'] = ['M5', 'M7']
+    assert model._type_geom('pm1', 'fx_o')[2:] == (['M4', 'M6'], 'lsb_high')
+
+
+def test_hard_core_superset_face_keys():
+    item = schema.SCHEMA['properties']['partition_types']['additionalProperties']['properties']['hard_cores']['items']
+    core = {'inst': 'u_core', 'origin_um': [0, 0], 'outline_um': [10, 10],
+            'pin_select': {'a_i': 'W', 'b_o': 'E'}, 'unused_pins': ['N', 'S'],
+            'unused_pins_policy': 'registered_declared', 'halo_um': 1.0,
+            'parent_instance': 'u_parent', 'cut_instance': 'u_cut'}
+    errs = []
+    schema._check(core, item, 'core', errs)
+    assert errs == []
+    for bad in ({'pin_select': {'a_i': 1}}, {'unused_pins': 'N'}, {'halo_um': -1}, {'cut_instance': 3}):
+        errs = []
+        schema._check({**core, **bad}, item, 'core', errs)
+        assert errs, bad

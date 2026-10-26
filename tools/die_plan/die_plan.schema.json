@@ -819,6 +819,36 @@
           "lsb_high"
          ]
         },
+        "in_layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1,
+         "maxItems": 3
+        },
+        "out_layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1,
+         "maxItems": 3
+        },
+        "in_order": {
+         "enum": [
+          "lsb_low",
+          "lsb_high"
+         ]
+        },
+        "out_order": {
+         "enum": [
+          "lsb_low",
+          "lsb_high"
+         ]
+        },
         "note": {
          "type": "string"
         }
@@ -1577,6 +1607,31 @@
          },
          "minItems": 2,
          "maxItems": 2
+        },
+        "pin_select": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "string"
+         }
+        },
+        "unused_pins": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "unused_pins_policy": {
+         "type": "string"
+        },
+        "halo_um": {
+         "type": "number",
+         "minimum": 0
+        },
+        "parent_instance": {
+         "type": "string"
+        },
+        "cut_instance": {
+         "type": "string"
         },
         "pins": {
          "type": "array",
