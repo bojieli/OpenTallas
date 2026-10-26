@@ -509,7 +509,7 @@ module ot_s81hd_lep_core_nr #(
             localparam integer GA=4, NA=(TX_NS+GA-1)/GA;
             wire [NA*AT-1:0] wa_copy,ra_copy;
             wire [NA-1:0] wr_group,rd_group;
-            for(c=0;c<NA;c=c+1) begin:g_address
+            for(genvar c=0;c<NA;c=c+1) begin:g_address
                 (* keep="true" *) reg [AT-1:0] wp_r,rp_r;
                 (* keep="true" *) reg [AT:0] count_r;
                 (* keep="true" *) reg [CW-1:0] credit_r;

@@ -18,6 +18,8 @@ def module(text,name):
 def derive(root):
  src=[(root/p).read_text() for p in SOURCES]
  core=module(src[0],'ot_s81sl_lep_core').replace('module ot_s81sl_lep_core','module ot_s81hd_lep_core_nr',1)
+ # Slang requires a declared generate index even in the inactive SAFE_FIFO branch.
+ core=core.replace('for(c=0;c<NA;c=c+1)', 'for(genvar c=0;c<NA;c=c+1)')
  core=core.replace('ot_sram_oldread_wreg #(', 'ot_sram_oldread_wreg_nr #(')
  core=core.replace('ot_sram_showahead_1r1w #(', 'ot_sram_showahead_1r1w_head_nr #(')
  idx=module(src[0],'ot_s81sl_lep_mu_ab_idx').replace('module ot_s81sl_lep_mu_ab_idx','module ot_s81hd_lep_idx_nr',1).replace('ot_s81sl_lep_core #(', 'ot_s81hd_lep_core_nr #(')
