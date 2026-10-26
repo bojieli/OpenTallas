@@ -1170,9 +1170,15 @@ class Binder:
             sb = buses[ptype[a["src"]["part"]]].get(a["src"]["bus"], {})
             db = buses[ptype[b["dst"]["part"]]].get(b["dst"]["bus"], {})
             L = lat.get(ln["id"], {})
-            landing=sum(3 for r in self.clock_landings.rows if r["lane"]==ln["id"]) if getattr(self,"clock_landings",None) else 0
-            if landing and int(L.get("clock_landing",0))!=landing:
-                self.errors.append(f"LANE_LANDING_LATENCY {ln['id']}: regenerate latency with actual nominal landing cycles {landing}")
+            # hardware landing cycles of this lane: one ring per physical crossing row, repeated crossings SUM.
+            # They must already be in the latency table (schema.lane_natural clock_landing) so bitcyc / bus_groups /
+            # R8 see the real delay; lane_pad() subtracts them so the receiver delay is never added twice.
+            cl = getattr(self, "clock_landings", None)
+            landing = sum(int(r["added_cycles"]) for r in cl.rows if r["lane"] == ln["id"]) if cl else 0
+            if int(L.get("clock_landing", 0)) != landing:
+                self.errors.append(f"LANE_LANDING_LATENCY {ln['id']}: latency table clock_landing "
+                                   f"{L.get('clock_landing', 0)} != bound landing hardware cycles {landing}"
+                                   + ("" if cl else " (no clock_landing_table bound)"))
             st = sum(f["stations"] for f in ft)
             if L and int(L.get("stations", st)) != st:
                 self.errors.append(f"LANE_LATENCY {ln['id']}: ft slot stations {st} != latency table {L.get('stations')}")
@@ -3376,7 +3382,12 @@ def cmd_bind(a):
             raise BindError(f"clock landing: {exc}") from exc
     B.map_cells()
     B.analyse()
-    if getattr(B,"clock_landings",None):B.clock_landings.validate_observer(B)
+    if getattr(B, "clock_landings", None):
+        import clock_landings as CL
+        try:
+            B.clock_landings.validate_observer(B)
+        except (CL.LandingError, ValueError) as exc:
+            raise BindError(f"clock landing: {exc}") from exc
     B.build_buses()
     B.align_landings()
     B.regen_params()
