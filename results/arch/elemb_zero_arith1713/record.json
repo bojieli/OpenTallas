@@ -1,0 +1,23 @@
+{
+  "scope": "SOURCE ONLY defaultOFF; arithmetic qualification; nativeSYNTH footprint. NOT physical signoff or fullholdfix.",
+  "source": "rtl/v41rom/ot_v41_fadd.sv",
+  "source_sha256": "e35b5265ce621c8b8511af30e6227cbcf227f6c8b6f9e0217b411a1115c6e544",
+  "flag": "OT_S81HD_FADD_ZERO_ARITH",
+  "added_cycles": 0,
+  "gate": "CUT1ff/SPLIT9;1024specialcrosspairs+100000mixedcyclesx3seeds,all y/err/valid0mis inclinvalid/warmreset;wrongzero-bypassmutantCAUGHTall3",
+  "synth": {
+    "unit": "2738916-1792974309",
+    "host": "epyc2",
+    "kit": "/srv/opentallas-scratch2/claude/codex-s81-elemb-1713/elemB_zero_g2",
+    "native_outputs_from": "elemB_zero_g1; effective source/define lists identically canonicalized for strictlint",
+    "rtl_lint": "PASS0 aftercanonicalization; originalmissingaddrhelperFAIL retainedg1",
+    "face": "456/456PASS",
+    "ff_old": 26170,
+    "ff_new": 19883,
+    "zero_pairs_old": 13990,
+    "zero_pairs_new": 7191,
+    "onegate_pairs_old": 11390,
+    "onegate_pairs_new": 11357
+  },
+  "remaining": "7191zero pairs persist; newnativeLEC+headcomposition+actualgeometry/clock/gates required beforeadoption. PADb0maystillfold; noholdrelaxation."
+}
