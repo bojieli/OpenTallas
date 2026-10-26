@@ -456,6 +456,41 @@ def test_land_r8(tmp_path):
     assert any(e.startswith("R8_STALE") for e in report(out2)["errors"])
 
 
+def test_r8_type_split_declared_pad_only(tmp_path):
+    """asbuilt.r8_type_splits (QC-BINDPRICE 10-26): the two ta replicas get different R8 pads on x_i, so ta binds as
+    two variants.  Undeclared, --strict fails TYPE_SPLIT; declared, the binder proves the replicas identical WITHOUT
+    the pads and records TYPE_SPLIT_R8 (finding, 0 errors, r8_pad_only)"""
+    import r8 as R8
+    out0 = tmp_path / "o0"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", lambda p: None), out0, "elab", "bind") == 0
+    bg = json.loads((out0 / "bus_groups.json").read_text())
+
+    def edit(p, declare):
+        p["asbuilt"]["land_align"] = "r8"
+        if declare:
+            p["asbuilt"]["r8_type_splits"] = {"ta": "test: A0/A1 land x_i at different depths"}
+    res = {}
+    for declare in (False, True):
+        plan = plan_copy(tmp_path, "die_plan_lanes.json", lambda p: edit(p, declare))
+        tab, _ = R8.write_pads(json.loads(plan.read_text()), bg, tmp_path / "r8")
+        js = json.loads(tab.read_text())
+        hit = [m for m in js["members"] if m["sink"] == "p0.u_a"]
+        assert hit, [m["sink"] for m in js["members"]]
+        for m in hit:
+            m["pad"] += 1                   # A0 lands x_i one cycle deeper than A1
+        tab.write_text(json.dumps(js))
+        out = tmp_path / f"o_{int(declare)}"
+        rc = bind.main(["elab", str(plan), "--out", str(out), "--mem", "4"]) or \
+            bind.main(["bind", str(plan), "--out", str(out), "--mem", "4", "--strict"])
+        res[declare] = (rc, report(out))
+    rc, r = res[False]
+    assert rc and any(e.startswith("TYPE_SPLIT ta") for e in r["errors"])
+    rc, r = res[True]
+    assert rc == 0 and r["n_errors"] == 0, r["errors"][:5]
+    assert any(f.startswith("TYPE_SPLIT_R8 ta") for f in r["findings"])
+    assert [s["r8_pad_only"] for s in r["type_splits"] if s["type"] == "ta"] == [True]
+
+
 def test_land_r8_pad_tree(tmp_path):
     """asbuilt.land_pad_tree (QC-TOK 10-24, opt-in): the same r8 table realised as delay trees (pads hoisted into the
     source / forwarding partition's tapped line): every sink lands at the same depth as with per-sink chains, the

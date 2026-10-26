@@ -609,6 +609,7 @@ class Binder:
             raise BindError(str(exc)) from exc
         self.findings, self.type_splits = [], []
         self.strict_types = False
+        self._strip_pads = False        # type_signature without R8 landing pads (asbuilt.r8_type_splits proof)
         self.tied_by_port = defaultdict(int)
         self.tied_pins = defaultdict(list)   # (path, port) -> [(bit, value, source)]; every tied bit, uncapped
         self.rewire, self.rewire_stats = {}, {}
@@ -2003,7 +2004,7 @@ class Binder:
             return ("int", (nm or self.rel_of)(d[1]), d[2], d[3], d[4])
         if k == "x":
             L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
-            return ("bus", L["iname"], j) + ((d[7],) if len(d) > 7 else ())
+            return ("bus", L["iname"], j) + ((d[7],) if len(d) > 7 and not self._strip_pads else ())
         if k == "strap":
             inst_vals[("strap",) + where] = d[1]
             return ("strap",)
@@ -2236,11 +2237,32 @@ class Binder:
         for p in self.members:
             by_type[self.parts[p]["type"]].append(p)
         self.by_type = by_type
+        # asbuilt.r8_type_splits {plan type: reason}: types whose instances are DECLARED to split by R8 landing-pad
+        # depth only (land_align = r8; e.g. QC sle_ctl, whose E/W x odd/even replicas sit at different landed depths;
+        # compose_cb16_phase turns the variants into plan types sle_ctl_r8pNN).  Proof, not a waiver: the instances are
+        # canonicalised and compared WITHOUT their pad stages and must then be identical; only then is the split a
+        # finding (TYPE_SPLIT_R8) instead of a strict error.  Any other content difference stays TYPE_SPLIT.
+        r8_declared = self.ab.get("r8_type_splits") or {}
+        if r8_declared and self.ab.get("land_align") != "r8":
+            self.errors.append("R8_TYPE_SPLITS declared but asbuilt.land_align is not r8")
+            r8_declared = {}
+        for tn in sorted(set(r8_declared) - set(by_type)):
+            self.errors.append(f"R8_TYPE_SPLITS {tn}: declared type is not a plan type of this bind")
         for tn, ps in sorted(by_type.items()):
+            pad_free_equal = None
+            if tn in r8_declared:
+                self._strip_pads = True
+                try:
+                    psigs = {p: self.type_signature(p) for p in ps}
+                    if self.ab.get("type_canon") and any(psigs[q][0] != psigs[ps[0]][0] for q in ps[1:]):
+                        self._canon_merge(tn, ps, psigs)
+                    pad_free_equal = all(psigs[q][0] == psigs[ps[0]][0] for q in ps[1:])
+                finally:
+                    self._strip_pads = False
             sigs = {}
             for p in ps:
                 sigs[p] = self.type_signature(p)
-            if self.ab.get("type_canon") and any(sigs[q][0] != sigs[ps[0]][0] for q in ps[1:]):
+            if pad_free_equal is None and self.ab.get("type_canon") and any(sigs[q][0] != sigs[ps[0]][0] for q in ps[1:]):
                 self._canon_merge(tn, ps, sigs)
             groups = []                 # instances with identical contents share one module
             for p in ps:
@@ -2272,8 +2294,14 @@ class Binder:
                     bad.append(f"{p} ({', '.join(diff)}{detail})")
                 msg = (f"TYPE_SPLIT {tn}: {len(ps)} instances bind as {len(groups)} variants (as-built contents differ "
                        f"from {ref}): " + "; ".join(bad[:3]) + (f" ... {len(bad) - 3} more" if len(bad) > 3 else ""))
-                self.type_splits.append(dict(type=tn, variants=[list(g) for g in groups], detail=bad))
-                (self.errors if self.strict_types else self.findings).append(msg)
+                r8_only = bool(pad_free_equal)
+                if r8_only:
+                    msg = (f"TYPE_SPLIT_R8 {tn}: declared R8 pad-depth split ({r8_declared[tn]}): {len(ps)} instances, "
+                           f"{len(groups)} pad classes, identical without pads: " + "; ".join(g[0] for g in groups))
+                elif tn in r8_declared:
+                    msg += " [declared asbuilt.r8_type_splits, but contents differ beyond the R8 pads]"
+                self.type_splits.append(dict(type=tn, variants=[list(g) for g in groups], detail=bad, r8_pad_only=r8_only))
+                (self.errors if self.strict_types and not r8_only else self.findings).append(msg)
                 for k, g in enumerate(groups[1:], 1):
                     vt = f"{tn}__v{k}"
                     self.types[vt] = dict(self.types[tn], module=f"{self.types[tn]['module']}_v{k}", split_of=tn)
@@ -2282,6 +2310,8 @@ class Binder:
                     split_more.append((vt, g, sigs))
                 ps = groups[0]
                 by_type[tn] = ps
+            elif tn in r8_declared:
+                self.findings.append(f"TYPE_SPLIT_R8 {tn}: declared but all {len(ps)} instances bind as one module")
             self._type_vals(tn, ps, sigs)
         for vt, g, sigs in split_more:
             by_type[vt] = g
@@ -2488,7 +2518,8 @@ class Binder:
         top_text = self.emit_top()
         if getattr(self, "clock_landings", None):
             try:
-                top_text = self.clock_landings.top_rtl(top_text, {tn:t["module"] for tn,t in self.types.items()})
+                top_text = self.clock_landings.top_rtl(top_text, {tn:t["module"] for tn,t in self.types.items()},
+                                                       {pn: self.parts[pn]["type"] for pn in self.clock_landings.parts})
             except ValueError as exc:
                 raise BindError(str(exc)) from exc
             (out.parent / "bind_clock_landings.json").write_text(

@@ -160,6 +160,7 @@ class Landings:
         self.rows = []
         self.region = {}
         self.emitted_types = set()
+        self.split_of = {}      # binder type-split variant (T__vN) -> its plan type T (registered by type_rtl)
         self.emitted_top = False
         self.reset_placements = {}
         for pn, p in self.parts.items():
@@ -270,6 +271,12 @@ class Landings:
         # A binder type split (T__vN, split_of=T) copies plan type T with different R8 pad depths only; the landing
         # hardware is per plan type (mask uniformity over all T instances is checked in __init__).
         key = base or tn
+        if key != tn:
+            # a split variant is legal only as a copy of a known plan type, never as a renamed plan type itself
+            if key not in self.types or tn in self.types:
+                raise LandingError(f"clock landing: split variant {tn} of {key} is not a binder copy of a plan type")
+            if self.split_of.setdefault(tn, key) != key:
+                raise LandingError(f"clock landing: split variant {tn} emitted from two plan types")
         mask = self.by_type[key]
         collector_info=self.collector["types"][key] if self.collector else None
         active_collector=collector_info and collector_info["mask"]["active"]
@@ -381,14 +388,32 @@ class Landings:
         self.emitted_types.add(tn)
         return head + marker + "\n".join(logic) + "\n" + body
 
-    def top_rtl(self, text, emitted_modules=None):
+    def plan_type(self, tn):
+        return self.split_of.get(tn, tn)
+
+    def top_rtl(self, text, emitted_modules=None, part_types=None):
         """Connect the new forwarded-clock pins and observed status at die top.
 
         Region clocks are explicit inputs. No die-top data register or clock
         synthesizer is invented; physical die-clock emission supplies them.
+
+        emitted_modules: {emitted type: module}; a binder type-split variant
+        (T__vN) counts as its plan type T only when type_rtl emitted it from T
+        (same landing mask, checked uniform over all T instances).
+        part_types: {partition: emitted type} (default: the plan types); each
+        partition's emitted type must be its plan type or a variant of it.
         """
         modules=emitted_modules or {tn:t["module"] for tn,t in self.types.items()}
-        if set(modules)!=set(self.types):raise LandingError("clock landing: emitted module/type inventory changed after cohort composition")
+        unknown=sorted(tn for tn in modules if self.plan_type(tn) not in self.types)
+        missing=sorted(set(self.types)-{self.plan_type(tn) for tn in modules})
+        if unknown or missing:
+            raise LandingError("clock landing: emitted module/type inventory changed after cohort composition"
+                               f" (unregistered {unknown[:5]}, missing {missing[:5]})")
+        part_types=dict(part_types or {pn:p["type"] for pn,p in self.parts.items()})
+        for pn,p in self.parts.items():
+            et=part_types.get(pn)
+            if et not in modules or self.plan_type(et)!=p["type"]:
+                raise LandingError(f"clock landing: {pn} binds as {et}, not plan type {p['type']} or a registered split of it")
         self.emitted_modules=dict(modules)
         clocks = sorted(set(self.region.values()))
         n = len(self.rows)
@@ -422,7 +447,7 @@ class Landings:
         for pn, p in self.parts.items():
             # Anchor on the instance, then the binder's own closing line; leaf
             # parameter parentheses can never terminate this module instance.
-            pat = re.compile(r"(?m)^(    " + re.escape(modules[p["type"]]) +
+            pat = re.compile(r"(?m)^(    " + re.escape(modules[part_types[pn]]) +
                              r"(?: #\([^\n]*\))? " + re.escape(ident(pn)) + r" \(\n)(.*?)(\n    \);)", re.S)
             matches = list(pat.finditer(text))
             if len(matches) != 1:
@@ -460,7 +485,7 @@ class Landings:
         for r in self.rows:
             by_lane[r["lane"]] += 3
         return dict(schema="opentallas.clock_landing_rtl.v1",
-                    implemented=self.emitted_top and self.emitted_types == set(self.types),
+                    implemented=self.emitted_top and {self.plan_type(t) for t in self.emitted_types} == set(self.types),
                     physical_qualified=False, added_cycles_per_crossing=3,
                     crossings=len(self.rows), ports=self.rows,
                     lane_added_cycles=dict(sorted(by_lane.items())),
@@ -468,6 +493,7 @@ class Landings:
                     collector=self.collector,
                     observer_source=getattr(self,"observer_source",None),
                     emitted_modules=getattr(self,"emitted_modules",None),
+                    split_variants=dict(sorted(self.split_of.items())),
                     remaining_gates=["placed clock/status pins", "landing ring window STA",
                                      "trained region calendar offsets", "token pass"])
 

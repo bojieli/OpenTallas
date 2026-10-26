@@ -378,5 +378,8 @@
  ],
  "clock_landing_table": "physical/die_plan/qwen_compute/bind/clock_landing_vertical4.json",
  "land_r8": "physical/die_plan/qwen_compute/bind/land_r8_1026/base_r8.json",
- "land_align": "r8"
+ "land_align": "r8",
+ "r8_type_splits": {
+  "sle_ctl": "QC-R8 10-26: the 12 sle_ctl replicas land u_ctl inputs at R8 pad depths 10/12/6/... by E/W x even/odd slot (base_r8.json); compose_cb16_phase declares the pad classes as plan types sle_ctl_r8p01..03 (support_classes.json). Binder proves the replicas identical without the pads."
+ }
 }

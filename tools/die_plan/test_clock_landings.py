@@ -110,3 +110,50 @@ def test_actual_observer_port_transform():
     assert ".obs_fault((((a | b)) | cland_up_fault))" in out
     assert ".seq_cfg_image_ready(((c[0]) & cland_up_ready))" in out
     with pytest.raises(LandingError):gate_observer(text.replace(".obs_fault", ".wrong"),spec)
+
+
+def split_vehicle():
+    """plan type B with two replicas b, b2 that both land a's x (same landing mask); the binder splits b2 into the
+    variant B__v1 (e.g. different R8 pad depths) with its own module b_mod_v1"""
+    p, t = vehicle()
+    p["partitions"].append(dict(name="b2", type="B", origin_um=[10, 0]))
+    p["ports"].append(dict(id="P2", width=4, kind="data", src=dict(part="a", bus="x"), dst=dict(part="b2", bus="y")))
+    t["ports"].append(dict(port="P2", width=4, src="a", dst="b2", src_region="r0", dst_region="r1", lane="L2"))
+    b = ("module {m} (\n input wire clk,\n input wire [4:0] y\n);\n wire rst_n, rst_n_t0, rr_parent, run;\n"
+         " ot_dp_rgate u_rrl_0 (.clk(clk), .d(rr_parent), .run(run), .q(rst_n_t0));\n wire [4:0] y_q;\n"
+         " assign y_q = y;\nendmodule\n")
+    top = ("module die_bound_top (rst_n, clk_core);\n input wire rst_n;\n input wire clk_core;\n"
+           "    a_mod a (\n        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\n"
+           "    b_mod_v1 b2 (\n        .clk(clk_core)\n    );\nendmodule\n")
+    return p, t, b, top
+
+
+def test_split_variant_inherits_plan_type_landing_and_emits_top():
+    p, t, b, top = split_vehicle(); c = Landings(p, t)
+    c.type_rtl("A", "module a_mod (\n input wire clk,\n output wire [4:0] x\n);\nendmodule\n")
+    bb = c.type_rtl("B", b.format(m="b_mod"))
+    vv = c.type_rtl("B__v1", b.format(m="b_mod_v1"), base="B")
+    # the variant carries exactly its plan type's landing hardware
+    assert vv.replace("b_mod_v1", "b_mod") == bb and "ot_dp_clk_landing #(.W(5)) u_cland_y" in vv
+    mods = {"A": "a_mod", "B": "b_mod", "B__v1": "b_mod_v1"}
+    tt = c.top_rtl(top, mods, {"a": "A", "b": "B", "b2": "B__v1"})
+    assert tt.count(".fclk_in_y(clock_landing_fwd_a__x)") == 2
+    assert "b_mod_v1 b2 (\n        .fclk_in_y(clock_landing_fwd_a__x)" in tt
+    m = c.manifest()
+    assert m["implemented"] is True and m["split_variants"] == {"B__v1": "B"}
+
+
+def test_split_variant_inventory_fails_closed():
+    p, t, b, top = split_vehicle()
+    mods = {"A": "a_mod", "B": "b_mod", "B__v1": "b_mod_v1"}
+    c = Landings(p, t)                       # variant never emitted from its plan type: unregistered inventory
+    with pytest.raises(LandingError, match="inventory changed"):
+        c.top_rtl(top, mods, {"a": "A", "b": "B", "b2": "B__v1"})
+    c = Landings(p, t)
+    c.type_rtl("B__v1", b.format(m="b_mod_v1"), base="B")
+    with pytest.raises(LandingError, match="b2 binds as A"):  # a partition bound as another plan type's module
+        c.top_rtl(top, mods, {"a": "A", "b": "B", "b2": "A"})
+    with pytest.raises(LandingError, match="not a binder copy"):  # a plan type cannot pose as a variant
+        c.type_rtl("A", "module a_mod (\n input wire clk\n);\nendmodule\n", base="B")
+    with pytest.raises(LandingError, match="expected exactly one bound instance b2"):
+        c.top_rtl(top, mods)                 # old call (plan-type modules only) cannot find the variant instance
