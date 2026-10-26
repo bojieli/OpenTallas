@@ -12,7 +12,8 @@
 // Prints "KVBA_PVCTL PASS A=.. mut=.. checks=N" or "KVBA_PVCTL FAIL ...".
 module tb_kvba_pvctl;
     parameter integer A = 95, MUT = 0, SEED = 1;
-    localparam integer AB = 127, TD = 54, FD = 58, LMAX = 160;
+    parameter integer AB = 255;
+    localparam integer TD = 54, FD = 58, LMAX = 300;
     localparam integer COL_CHK = (2 + 3 + 3 * 7 + 3 + 1) + TD + FD;
     reg clk = 0, rst_n = 0;
     always #1 clk = ~clk;
@@ -72,6 +73,7 @@ module tb_kvba_pvctl;
         end
         flip = 0; corrupt = 0; repeat (4) begin @(posedge clk); #0.1 if (chk) cmp; @(negedge clk); end
     end endtask
+    localparam integer INVALID_CASES = AB < 255 ? 2 : 1;
     integer found, k, ok_c; reg [13:0] cl [0:5];
     initial begin
         seed = SEED; cfg = 8'(A);
@@ -102,16 +104,16 @@ module tb_kvba_pvctl;
         end
         // ---- phase C: invalid boot ages
         ok_c = 0;
-        for (k = 0; k < 2; k = k + 1) begin
+        for (k = 0; k < INVALID_CASES; k = k + 1) begin
             cfg = (k == 0) ? 8'd0 : 8'(AB + 1); do_reset;
             start = 1; ctx = 300; @(negedge clk); start = 0; repeat (6) @(negedge clk);
             if (b_f) ok_c = ok_c + 1; else $display("PHASE_C cfg=%0d: start accepted with an invalid boot age", cfg);
         end
-        if (errs == 0 && refault == 0 && cmds == 12 && ok_c == 2)
+        if (errs == 0 && refault == 0 && cmds == 12 && ok_c == INVALID_CASES)
             $display("KVBA_PVCTL PASS A=%0d mut=%0d L=%0d checks=%0d cmds=%0d", A, MUT, L, checks, cmds);
         else
-            $display("KVBA_PVCTL FAIL A=%0d mut=%0d L=%0d checks=%0d errors=%0d ref_faults=%0d cmds=%0d invalid_caught=%0d/2",
-                     A, MUT, L, checks, errs, refault, cmds, ok_c);
+            $display("KVBA_PVCTL FAIL A=%0d mut=%0d L=%0d checks=%0d errors=%0d ref_faults=%0d cmds=%0d invalid_caught=%0d/%0d",
+                     A, MUT, L, checks, errs, refault, cmds, ok_c, INVALID_CASES);
         $finish;
     end
 endmodule
