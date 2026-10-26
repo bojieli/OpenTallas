@@ -1,0 +1,41 @@
+E5 new macro-channel even-INV clock trial2256, parent source3081a7b79.
+Actual source3_place sha40988e77c4746f54a2a40921d18b55171869be912af68c2c331486ee75414d1b.
+Preplan image preplan.png rendered and personally viewed BEFORE CTS.
+Verdict PASS-COND for ONE CTS-only diagnostic; no GRT/DRT/signoff approval.
+The new17.28um SRAM channels carry legal clock buffer islands rather than a
+macro wall.116BUF24 density taps serve unchanged18058register/15macro sinks;
+519INV13 trunk cells have12equal EVEN stages, maximum routed-corridor hop117.342um
+(<120), island span5.238um(<10), added trunk area113.5053um2. Clock paths follow
+whitespace corridors around macro rectangles. No long compensation loops; the
+15um configured allowance is forced to0 by macro-aware routing. Data bus/pin
+interfaces/PDN stay as in the parent placed design. Both branch phase and actual
+placement/FFdata audits must pass in the real runtime before considering timing.
+Four reserved islands remain through density-tap DPL, then release for planner.
+Full actual3place F6 check: all4559dynamic anchors present;2145launch max11.83um;
+2414capture max12.763um, including30resizer-reconvergent cones proven to terminate
+ONLYat the original expected captureFF(D), max8.537um. Existing face_guard_core
+policy^(ck|rst_n)$ PASS2688/2688,missing0,extra0; generic unconfigured invocation
+failed only clock/reset treatment and was retained. No waived data boundary.
+Budget330TT/264FF is a DIAGNOSTIC ceiling, not main's merged contract; matching
+parent core-early and S81 plan batch are required before any SIGNED adoption.
+Clock833ps/uncertainty60/25 unchanged. No540rebudget. No RTL/data-cycle change.
+Macro-aware cap0 makes repeated placement-RC retarget loops inert; one phase1
+measurement iteration is used, CL_SINK=0/CL_GRT=0, no GRT during this CTS trial.
+Sparse-depth helper is not enabled: old isolated1sink group is absent from this
+fresh density assignment. Actual local insertion and nativeTT/FF timing remain
+unmeasured and can still FAIL; source constraints were not relaxed to fit them.
+ACTUAL CTS RESULT: EXIT0/177.22s/2329MB; source3placefile unchanged. Actualclock
+geometry was rendered and personally viewed in actual_cts.png BEFORE further
+STA. The blue chords depict connectivity, not physical routed wires; noGRT ran.
+Actual519node/116tap clock/placement/FFdata audits and12even-stage phase audit
+PASS. However root-rising TAGGED nativeTT tap inputs242.926..537.344ps/spread
+294.418 agree with generic arrivals to0.000028ps: failure is real, not an edge
+origin mix. Fastpath cell154.420/wire88.506;slowpath cell236.348/wire300.996ps.
+INV13inputcap7.46672fF vsBUF24inputcap2.34978fF(3.18x),FO4pinload29.87fF. All
+trunkoutputslew≤54.24ps, so load/path RC/insertion is the problem, not a slew
+violation. REJECTED FOR GRT; no clock/budget relaxation, no540rebudget. Next:
+model shorter regional paths and load-balanced hybrid stages with small-Cin
+receivers before another physical candidate. Worst tap-input path alone must
+lose≥207ps before330TT ceiling; adding delays to fast branches cannot fix it.
+Initialtagquery lacked initialized nativeclock path tags; rerun explicitly
+performed a native timing search before path_iterator. Oldfailedlog retained.

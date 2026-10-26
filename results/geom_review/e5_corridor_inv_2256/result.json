@@ -1,0 +1,54 @@
+{
+  "verdict": "REJECTED_NO_GRT",
+  "source": "3081a7b79",
+  "run": "epyc2:/srv/opentallas-scratch2/claude/codex-e5-corr-2256/trial",
+  "cts_exit": 0,
+  "cts_seconds": 177.22,
+  "cts_peak_MB": 2329,
+  "source_3place_sha256": "40988e77c4746f54a2a40921d18b55171869be912af68c2c331486ee75414d1b",
+  "source_3place_unchanged": true,
+  "trunk_cells": 519,
+  "trunk_master": "INVx13_ASAP7_75t_R",
+  "tap_cells": 116,
+  "tap_master": "BUFx24_ASAP7_75t_R",
+  "stages_every_tap": 12,
+  "phase_audit": "PASS actual root sampling edge retained all116taps",
+  "diagnostic_latency_ceiling_ps": {
+    "TT": 330,
+    "FF": 264
+  },
+  "tagged_tt_tap_input_ps": {
+    "fast": 242.92612463207598,
+    "slow": 537.3444488631707,
+    "spread": 294.4183242310947
+  },
+  "tagged_vs_generic_max_difference_ps": 2.8e-05,
+  "fast_path_delay_ps": {
+    "cell": 154.41964809616266,
+    "wire": 88.50647653591332
+  },
+  "slow_path_delay_ps": {
+    "cell": 236.348244275521,
+    "wire": 300.9962045876497
+  },
+  "clock_input_cap_fF": {
+    "INV13": 7.46672,
+    "BUF24": 2.34978
+  },
+  "trunk_output_slew_max_ps": 54.237797,
+  "trunk_output_slew_gt80": 0,
+  "F6_dynamic_anchors": {
+    "present": 4559,
+    "missing": 0,
+    "launch": 2145,
+    "capture": 2414,
+    "max_pin_ff_um": 12.763,
+    "reconvergent_cones_checked": 30,
+    "reconvergent_cones_failed": 0
+  },
+  "face_guard": {
+    "ok": 2688,
+    "failed": 0
+  },
+  "next": "Model shorter and load-balanced regional clock paths with small-input/strong-output hybrid stages; worst path needs207ps reduction before330ceiling. No GRT, no540rebudget, no main contract or SIGNED adoption."
+}
