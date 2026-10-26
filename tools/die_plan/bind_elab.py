@@ -661,14 +661,20 @@ class Flat:
         for k, (d, bits) in list(self.top_ports.items()):
             self.top_ports[k] = (d, [b if isinstance(b, str) else self.find(b) for b in bits])
         self.const_drivers = {self.find(k): v for k, v in self.const_drivers.items()}
+        for rec in getattr(self, 'instances', {}).values():
+            for port in rec['ports'].values():
+                port['bits'] = [b if isinstance(b, str) else self.find(b) for b in port['bits']]
 
 
-def flatten(yjs, top, parent_variants=()):
+def flatten(yjs, top, parent_variants=(), retain_hierarchy_ports=False):
     """parent_variants: [{"inst": regex on the hierarchical path, "module": M}] -- a dissolved parent instance is
     elaborated as variant M (its ports a subset): connections to ports M lacks are dropped (recorded: literal or net),
     ports M adds stay unconnected (recorded)."""
     mods = yjs["modules"]
     F = Flat()
+    if retain_hierarchy_ports:
+        F.instances = {}
+    requested_instances = None if retain_hierarchy_ports is True else set(retain_hierarchy_ports or ())
     F.parent_variants = []
     pv = [(re.compile(r["inst"]), r["module"]) for r in parent_variants]
     byname = {}
@@ -683,7 +689,7 @@ def flatten(yjs, top, parent_variants=()):
             return mname
         return m.get("attributes", {}).get("hdlname", mname)
 
-    def walk(mname, path, portmap):
+    def walk(mname, path, portmap, instance_params=None):
         """portmap: {local bit: global net or const} for the module's port bits"""
         m = mods[mname]
         local = {}
@@ -700,6 +706,12 @@ def flatten(yjs, top, parent_variants=()):
             if b in portmap:
                 return portmap[b]
             return base + b
+        if retain_hierarchy_ports and (requested_instances is None or path in requested_instances):
+            params = {k: _pval(v)[0] for k, v in m.get('parameter_default_values', {}).items()}
+            params.update({k: _pval(v)[0] for k, v in (instance_params or {}).items()})
+            F.instances[path] = dict(master=orig(mname), params=params,
+                ports={pn: dict(dir=p['direction'], bits=[g(b) for b in p['bits']])
+                       for pn, p in m.get('ports', {}).items()})
         for c_name, c in m.get("cells", {}).items():
             # Yosys names glue cells $type$<absolute src path>:<line>$<n>: keep the file name only (stable names)
             c_name = re.sub(r"\$(/[^$:]*/)([^/$:]+:)", r"$\2", c_name)
@@ -751,7 +763,7 @@ def flatten(yjs, top, parent_variants=()):
                         else:
                             pm[b] = x
                 F.dissolved[cpath] = orig(ct)
-                walk(ct, cpath, pm)
+                walk(ct, cpath, pm, {} if vm is not None else c.get("parameters", {}))
                 continue
             if ct.startswith("$") and ct not in mods:
                 F.cells.append(Cell(cpath, ct, {}, conns, dict(c.get("port_directions", {})), "glue", ct,

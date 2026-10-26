@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""Extract exact logical source interfaces for the bound-die compiler adapter.
+
+Run on the canonical bind's Yosys JSON, with its actual manifest and emitted
+bound top. Only requested logical units' port nets and their real endpoints are
+exported. This file does not infer legacy aliases, route ages, or unit latency.
+"""
+from __future__ import annotations
+import argparse
+from collections import defaultdict
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / 'tools/die_plan'))
+import bind_elab as E
+
+
+def digest(path):
+    h = hashlib.sha256()
+    with Path(path).open('rb') as f:
+        for b in iter(lambda: f.read(4 << 20), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+def extract(yjs, manifest, units, *, asbuilt_sha256, top_sha256):
+    ab = manifest.get('asbuilt', manifest)
+    if not units or len(set(units)) != len(units):
+        raise ValueError('request a nonempty, unique list of exact logical instance paths')
+    top = ab['top']
+    F = E.flatten(yjs, top, ab.get('substitute_parent', ()), retain_hierarchy_ports=units)
+    selected = dict(F.instances)
+    wanted = set(units)
+    # A logical unit can itself be a leaf, rather than a dissolved parent.
+    for c in F.cells:
+        if c.path in wanted and c.path not in selected:
+            defaults = yjs['modules'].get(c.ytype, {}).get('parameter_default_values', {})
+            params = {k: E._pval(v)[0] for k, v in defaults.items()}
+            params.update(c.params)
+            selected[c.path] = dict(master=c.module, params=params,
+                ports={pn: dict(dir=c.dirs.get(pn, 'unknown'), bits=bits)
+                       for pn, bits in c.ports.items()})
+    missing = wanted - selected.keys()
+    if missing:
+        raise ValueError('logical instances absent from actual source: ' + ','.join(sorted(missing)))
+    nets = {b for r in selected.values() for p in r['ports'].values() for b in p['bits'] if isinstance(b, int)}
+    drivers, inputs, interfaces = defaultdict(list), defaultdict(list), {}
+    for c in F.cells:
+        owns = any(c.path == u or c.path.startswith(u + '.') for u in units)
+        touched = False
+        for pn, bits in c.ports.items():
+            direction = c.dirs.get(pn)
+            for i, b in enumerate(bits):
+                if b not in nets:
+                    continue
+                touched = True
+                endpoint = f'{c.path}.{pn}[{i}]'
+                if direction in ('output', 'inout'):
+                    drivers[str(b)].append(endpoint)
+                if direction in ('input', 'inout'):
+                    inputs[str(b)].append(endpoint)
+                if direction not in ('input', 'output', 'inout'):
+                    raise ValueError(f'actual endpoint {endpoint} lacks a direction')
+        if owns or touched:
+            interfaces[c.path] = dict(module=c.module, kind=c.kind,
+                ports={pn: dict(dir=c.dirs.get(pn, 'unknown'), width=len(bits)) for pn, bits in c.ports.items()})
+    for pn, (direction, bits) in F.top_ports.items():
+        for i, b in enumerate(bits):
+            if b not in nets:
+                continue
+            endpoint = f'$top.{pn}[{i}]'
+            if direction in ('input', 'inout'):
+                drivers[str(b)].append(endpoint)
+            if direction in ('output', 'inout'):
+                inputs[str(b)].append(endpoint)
+    return dict(schema='opentallas.s81.bound_inventory.v1', source_top=top,
+        source_asbuilt_sha256=asbuilt_sha256, source_top_sha256=top_sha256,
+        units={u: selected[u] for u in units},
+        drivers={k: sorted(v) for k, v in drivers.items()},
+        input_pins={k: sorted(v) for k, v in inputs.items()}, leaf_interfaces=interfaces,
+        constant_drivers={str(k): dict(value=v[0], source=v[1]) for k, v in F.const_drivers.items() if k in nets},
+        source_variants=dict(parent_applied=F.parent_variants,
+            leaf_rules=ab.get('substitute_inst', []), leaf_rules_applied=False,
+            note='Leaf source variants must be projected explicitly by the adapter; no alias or ABI narrowing is inferred'),
+        qualification='Exact source inventory only; transport and internal latency require their own current views')
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--asbuilt', type=Path, required=True)
+    ap.add_argument('--manifest', type=Path, required=True)
+    ap.add_argument('--bound-top', type=Path, required=True)
+    ap.add_argument('--unit', action='append', default=[], help='exact logical source instance; repeat as needed')
+    ap.add_argument('--units-json', type=Path, help='JSON list of additional exact source instances')
+    ap.add_argument('--out', type=Path, required=True)
+    a = ap.parse_args(argv)
+    units = a.unit + (json.loads(a.units_json.read_text()) if a.units_json else [])
+    ab_hash, top_hash = digest(a.asbuilt), digest(a.bound_top)
+    yjs = json.loads(a.asbuilt.read_text())
+    manifest = json.loads(a.manifest.read_text())
+    rec = extract(yjs, manifest, units, asbuilt_sha256=ab_hash, top_sha256=top_hash)
+    a.out.parent.mkdir(parents=True, exist_ok=True)
+    with a.out.open('x') as f:
+        json.dump(rec, f, separators=(',', ':'))
+        f.write('\n')
+    print(json.dumps(dict(out=str(a.out), units=len(rec['units']), source_nets=len(set(rec['drivers'])|set(rec['input_pins'])),
+                          leaf_interfaces=len(rec['leaf_interfaces']), source_top_sha256=top_hash)))
+
+
+if __name__ == '__main__':
+    main()
