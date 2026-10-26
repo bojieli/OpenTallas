@@ -579,7 +579,8 @@ def test_part_probe_uses_explicit_internal_bit_sites():
     with tempfile.TemporaryDirectory() as d:
         out=g2.part_probe(schema.Plan(raw),'fa',d)
         text=(out/'probe.tcl').read_text()
-        assert 'st_fz_7_1 -location {100.140 20.000}' in text
+        assert 'st_fz_7_1 -location {100.140 20.000} -status FIRM' in text
+        assert any('st_fz_7_0 ' in line and '-status PLACED' in line for line in text.splitlines())
         assert 'st_fz_7_2 -location {200.140 21.000}' in text
         assert '777.000 777.000' not in text
         # Payload and epoch bit both use their own allocated cell envelope.
@@ -639,7 +640,8 @@ def test_part_probe_uses_explicit_internal_bit_sites():
     with tempfile.TemporaryDirectory() as d:
         out=g2.part_probe(schema.Plan(raw),'fa',d)
         text=(out/'probe.tcl').read_text()
-        assert 'st_fz_7_1 -location {100.140 20.000}' in text
+        assert 'st_fz_7_1 -location {100.140 20.000} -status FIRM' in text
+        assert any('st_fz_7_0 ' in line and '-status PLACED' in line for line in text.splitlines())
         assert 'st_fz_7_2 -location {200.140 21.000}' in text
         assert '777.000 777.000' not in text
         # Payload and epoch bit both use their own allocated cell envelope.
