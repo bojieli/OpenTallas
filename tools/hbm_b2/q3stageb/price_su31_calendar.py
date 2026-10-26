@@ -27,7 +27,12 @@ def main():
     stages = root / 'results/arch/hbm_plan_study_1017/stages.json'
     st = json.loads(stages.read_text())
     st['plan_b_bd'] = Q.bd_stages(st)
+    # load_ledger otherwise silently falls back to {}, dropping measured adders.
+    if not Q.LEDGER.is_file():
+        raise FileNotFoundError(2, 'No such file or directory', str(Q.LEDGER))
     led = Q.load_ledger()
+    if not led.get('entries'):
+        raise ValueError('measured latency ledger must be present')
     kn = dict(Q.knob(Q.ADDERS, st, ledger=led), rings=2, ag_qbg=True)
     Q._D4G.clear()
     Q._D4G.update(kn)
@@ -79,6 +84,7 @@ def main():
         historical_clock='serial3:4 of 1.2GHz; +52 serial edges = +69.333333 stream cycles',
         current_b1='NOT QUALIFIED: common833 row is a sensitivity only; no B1 rate adoption',
         stages_sha256=hashlib.sha256(stages.read_bytes()).hexdigest(), cases=cases)
+    report['latency_ledger_sha256'] = hashlib.sha256(Q.LEDGER.read_bytes()).hexdigest()
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(dict(target=report['target'], cases={k: {n: v[n] for n in
