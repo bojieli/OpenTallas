@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 def publish(coord, line, message, attempts=8, path="autopilot/queue.tsv"):
-    if path not in {"autopilot/queue.tsv", "autopilot/resolved.tsv", "lanes/GEOM-REVIEW.md"}:
+    if path not in {"autopilot/queue.tsv", "autopilot/resolved.tsv", "lanes/GEOM-REVIEW.md", "autopilot/geom_templates.tsv"}:
         raise RuntimeError("not an authorized append-only coordination path")
     coord=Path(coord)
     def git(*args, input=None, env=None, check=True):
