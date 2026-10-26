@@ -297,5 +297,163 @@ class T(unittest.TestCase):
         self.assertEqual(CM.regional_qualification(M, corners, 0)["release_verdict"], "BLOCKED")
 
 
+LIBDIR = Path("~/.cache/opentallas/asap7_nldm").expanduser()
+
+
+def _fp_plan(early=None):
+    """3-partition floorplan fixture (same as test_floorplan_build_holes_prune_and_explicit_regions)."""
+    types = dict(ta=dict(hard_cores=[dict(inst="core", origin_um=[400., 100.], outline_um=[250., 500.],
+                                          obs_max="M5")]), tb={}, tc={})
+    rects = dict(A=(0., 0., 700., 800.), B=(700., 0., 900., 600.), C=(900., 0., 1600., 800.),
+                 PHY=(600., 600., 1000., 800.))
+    P = SimpleNamespace(W=1600., H=800., clock={}, types=types,
+                        parts=dict(A=dict(type="ta"), B=dict(type="tb"), C=dict(type="tc")),
+                        rect=lambda n: rects[n], to_die=lambda n, xy: xy)
+    ko = [(400., 100., 650., 600., "A/core"), (600., 600., 1000., 800., "io/PHY")]
+    fp = dict(x_cuts_um=[700., 900.], region_nx=[2, 1, 2], macro_holes=[dict(name="PHY", rect_um=list(rects["PHY"]))],
+              hard_core_drivers="drop", shield_net="VSS")
+    taps = [("A", "clk", 300., 300., 0.), ("A", "clk_c0", 120., 700., (early or {}).get("TT", 0.)),
+            ("B", "clk", 790., 300., 0.), ("C", "clk", 1200., 300., 0.), ("C", "clk1", 1500., 50., 0.)]
+    pte = {("A", "clk_c0"): early} if early else {}
+    return P, ko, fp, taps, pte
+
+
+def _build128(early=None, rule=True):
+    P, ko, fp, taps, pte = _fp_plan(early)
+    with patch.object(CM.DC, "keepouts", return_value=ko), patch.object(CM.DC, "plan_taps", return_value=taps), \
+            patch.object(CM.DC, "plan_tap_early", return_value=pte), \
+            patch("schema.core_taps", return_value=[("clk_c0", 0, 0, dict(budget_owner="core_lib_x"))]):
+        return CM.build(P, 4, 4, m=1, max_move=50., region_edge_straps=True, floorplan=fp,
+                        rule128=dict(libdir=str(LIBDIR)) if rule else None)
+
+
+@unittest.skipUnless((LIBDIR / "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz").exists(), "ASAP7 NLDM liberty")
+class Rule128(unittest.TestCase):
+    """METHODOLOGY v4.1 12.8 items (1)-(4)."""
+
+    def test_default_build_has_no_12_8_keys(self):
+        cells, nets, ports, M = _build128(rule=False)
+        self.assertNotIn("rule_12_8", M)
+        self.assertNotIn("rule_12_8", M["meta"])
+        self.assertFalse(M["meta"]["clock_shield"]["complete"])
+        self.assertFalse(any("lib" in c for c in cells.values()))
+        self.assertFalse(CM.C128.enabled(M))
+
+    # (1) CPPR at the last common tree node only; mesh-node credit INFO only
+    def test_gate_credits_region_root_not_mesh_node(self):
+        M = dict(meta=dict(regions=[dict(k=0, tag="h0")]), drivers={},
+                 taps=[dict(port="a", stub="sa", region=0), dict(port="b", stub="sb", region=0)])
+        late, early = dict(a=1000., b=1060.), dict(a=940., b=1000.)
+        rng = {"h": 5., "h0": 10.}                                   # region root range 10 ps
+        mesh = dict(sa=dict(late=900., early=850.), sb=dict(late=950., early=900.))   # mesh-node range 50 ps
+        g = CM.C128.gate(M, None, [("a", "b")], late, early, rng, 1, mesh, {}, [])
+        # setup a late 1000 - b early 1000 = 0; hold b late 1060 - a early 940 = 120, minus credit 10 = 110
+        self.assertAlmostEqual(g["related_pair_max_ps"], 110.0)
+        self.assertAlmostEqual(g["info_mesh_node_cppr_max_ps"], 70.0)  # 120 - 50: INFO only, never the gate
+        self.assertEqual(g["verdict"], "FAIL")
+        # two regions: only the die root is common
+        M["taps"][1]["region"] = 1
+        M["meta"]["regions"].append(dict(k=1, tag="h1"))
+        g = CM.C128.gate(M, None, [("a", "b")], late, early, rng, 1, mesh, {}, [])
+        self.assertAlmostEqual(g["related_pair_max_ps"], 115.0)
+
+    # (2) early-offset taps: no add-back, gate FAIL naming the core type
+    def test_early_offset_tap_fails_and_names_core(self):
+        cells, nets, ports, M = _build128(early={"TT": 120., "FF": 95.})
+        rows = M["rule_12_8"]["early_offset_taps"]
+        self.assertEqual([(r["part"], r["tap"], r["core"]) for r in rows], [("A", "clk_c0", "core_lib_x")])
+        self.assertIn("core_lib_x", M["rule_12_8"]["early_offset_cores"])
+        self.assertEqual(M["meta"]["rule_12_8"]["early_offset_taps"], 1)
+        tap = rows[0]["port"]
+        other = next(t["port"] for t in M["taps"] if t["port"] != tap and t["region"] == 0)
+        late = {tap: 500., other: 500.}
+        early = {tap: 495., other: 495.}
+        g = CM.C128.gate(M, None, [(tap, other)], late, early, {"h": 0.}, 1, {}, {}, rows)
+        self.assertLessEqual(g["related_pair_max_ps"], 80.)        # skew itself fine (core already meets the target)...
+        self.assertEqual(g["verdict"], "FAIL")                       # ...but a declared early offset is a FAIL
+        self.assertIn("restructure", g["fails"][0])
+        self.assertEqual(g["residual"]["core_latency"]["early_offset_taps"], 1)
+        # no compensating branch: the core tap gets an ordinary stub like every tap
+        stub = next(t["stub"] for t in M["taps"] if t["port"] == tap)
+        self.assertEqual(cells[stub]["kind"], "stub")
+
+    # (3) plan-model sizing, deterministic, no measured input; balance adds no cell and refuses measurements
+    def test_stub_sizing_is_deterministic_plan_model(self):
+        a = _build128()
+        b = _build128()
+        self.assertEqual(json.dumps(a[3]["rule_12_8"]["stub_sizing"], sort_keys=True),
+                         json.dumps(b[3]["rule_12_8"]["stub_sizing"], sort_keys=True))
+        cells, nets, ports, M = a
+        for rk, r in M["rule_12_8"]["stub_sizing"]["regions"].items():
+            self.assertLessEqual(r["model_spread_sized_ps"], r["model_spread_full_ps"] + 1e-9)
+        libs = {t["stub_lib"] for t in M["taps"]}
+        self.assertTrue(libs <= set(CM.C128.STUB_SIZES))
+        for t in M["taps"]:
+            self.assertEqual(cells[t["stub"]].get("lib", CM.BUF), t["stub_lib"])
+
+    def test_balance_128_is_audit_only(self):
+        cells, nets, ports, M = _build128()
+        P, ko, fp, taps, pte = _fp_plan()
+        with tempfile.TemporaryDirectory() as td:
+            src, out = Path(td) / "b", Path(td) / "o"
+            src.mkdir()
+            ren = CM.write_verilog(cells, nets, ports, src / "ctree.v")
+            M["meta"]["root_um"] = M["meta"].get("root_um", [800., 400.])
+            (src / "mesh.json").write_text(json.dumps(M))
+            (src / "place.json").write_text(json.dumps(cells))
+            (src / "nets.json").write_text(json.dumps(dict(ports=ports, nets=nets)))
+            a = SimpleNamespace(dir=str(src), out=str(out), plan="unused", corner="TT", tree=None, tag="0",
+                                libdir=str(LIBDIR))
+            with patch.object(CM.S, "load", return_value={}), patch.object(CM.S, "Plan", return_value=P):
+                self.assertEqual(CM.cmd_balance(a), 0)
+                self.assertEqual(json.loads((out / "place.json").read_text()), cells)     # no pad, no swap
+                au = json.loads((out / "balance_audit.json").read_text())
+                self.assertIn("no measurement", au["method"])
+                self.assertFalse((src / "tree_TT.txt").exists())
+                a.tree = str(src / "tree_TT.txt")
+                with self.assertRaises(SystemExit):
+                    CM.cmd_balance(a)
+
+    # (4) every tree net is a fixed, VSS-shielded pre-route with its own SPEF; shield record complete
+    def test_tree_nets_fixed_shielded_and_spef(self):
+        cells, nets, ports, M = _build128()
+        sh = M["meta"]["clock_shield"]
+        self.assertTrue(sh["complete"])
+        self.assertEqual(sh["grt_routed_tree_nets"], 0)
+        self.assertEqual(sh["fixed_tree_nets"], len(nets))
+        wires = CM.C128.fixed_wires(M, cells, nets, CM.BUF_W, CM.ROW_Y)
+        self.assertEqual({w["name"] for w in wires}, {n["name"] for n in nets})
+        # never collinear with a mesh strap (the tree runs TREE_OFF_UM off every pin line)
+        for w in wires:
+            for lay, x0, y0, x1, y1 in w["segs"]:
+                if lay == "M8":
+                    self.assertTrue(all(abs(y0 - y) > 0.5 for y in M["ys"]) or x0 == x1)
+                else:
+                    self.assertTrue(all(abs(x0 - x) > 0.5 for x in M["xs"]) or y0 == y1)
+        nd = CM.NDR["4w"]
+        tcl = "\n".join(CM.C128.combo_tcl(wires, nd, "VSS"))
+        self.assertEqual(tcl.count("[fwnet "), len(nets))
+        self.assertIn("dbObstruction_create", tcl)
+        self.assertEqual(tcl.count("\nfw $sw "), sh["fixed_tree_segs"])
+        sp = CM.C128.spef(wires, cells, CM.BUF, nd, CM.DC.LAYER_RC, CM.DC.VIA_KOHM)
+        import restore_clock_spef_caps as R
+        from mix_clock_spef import header, sections
+        import io
+        f = io.StringIO(sp)
+        h, names, first = header(f)
+        n = 0
+        for name, lines in sections(f, first, names):
+            out, info = R.restore(lines, 4)
+            self.assertEqual(info["added_caps"], 0)               # consistent caps: restore is a no-op
+            n += 1
+        self.assertEqual(n, len(nets))
+        # Elmore length check on one stub: total C = wire length x C/um (NDR)
+        w = next(w for w in wires if w["drv"].startswith("ckm_s_"))
+        c_um = (CM.DC.LAYER_RC["M8"][1] if w["horiz"] else CM.DC.LAYER_RC["M9"][1]) * nd["cf"]
+        tot = float(next(l for l in sp.split("\n") if l.startswith(f"*D_NET {w['name']} ")).split()[2])
+        self.assertGreater(tot, 0.0)
+        self.assertLessEqual(tot, w["wire_um"] * max(CM.DC.LAYER_RC["M8"][1], CM.DC.LAYER_RC["M9"][1]) * nd["cf"] + 1e-6)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -59,6 +59,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import schema as S  # noqa: E402
 import die_clock as DC  # noqa: E402
+import die_clock_128 as C128  # noqa: E402
 
 BUF = DC.BUF
 STEP_UM = 2.16
@@ -683,7 +684,7 @@ def part_regions(P, R):
 
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
           regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None,
-          floorplan=None):
+          floorplan=None, rule128=None):
     assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
@@ -949,6 +950,13 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     if hop_max:
         out["meta"]["split_reps"] = split_long(cells, nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows}, hop_max,
                                                cell, out, both_l=fp is not None)
+    if rule128 is not None:   # METHODOLOGY 12.8: plan-model stub sizing (d1), early-tap FAIL list, fixed shielded tree
+        libs = C128.lib_cells("TT", rule128["libdir"])
+        sizing = C128.size_stubs(cells, nets, tap_rows, libs, NDR[ndr], DC.LAYER_RC, DC.TAP_LOAD_FF, BUF, BUF_W, ROW_Y,
+                                 slew_max=rule128.get("tap_slew_max_ps", C128.TAP_SLEW_MAX_PS))
+        erows = C128.early_offset_taps(P, tap_rows, early_c)
+        out["rule_12_8"] = dict(early_offset_taps=erows, early_offset_cores=C128.summarize_early(erows),
+                                stub_sizing=sizing)
     overlaps = placement_overlaps(cells)
     out["clock_cell_overlaps"] = overlaps
     out["clock_hard_keepout_violations"] = hard_keepout_violations(P, cells, islands if fp is not None else None)
@@ -993,6 +1001,16 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                                  "no PG shield; shielding is complete only for mesh straps + island jogs")
         out["meta"]["pruned_branches"] = len(out.get("pruned_branches", []))
         out["meta"]["strap_spans_removed"] = sum(1 for v in out["strap_spans"].values() if not v)
+    if rule128 is not None:
+        sh = (fp or {}).get("shield_net") or "VSS"
+        wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y)
+        straps = (sum(1 for v in out["strap_spans"].values() if v) if fp is not None else
+                  sum((g["i1"] - g["i0"]) + (g["j1"] - g["j0"]) for g in R))
+        out["meta"]["clock_shield"] = C128.shield_record(wires, sh, straps,
+                                                         sum(1 for d in out["drivers"].values() if d.get("jog_um")))
+        out["meta"]["rule_12_8"] = dict(methodology="v4.1 12.8 + 12.4b", shield_net=sh, sizing="plan model (d1)",
+                                        early_offset_taps=len(out["rule_12_8"]["early_offset_taps"]),
+                                        tap_slew_max_ps=rule128.get("tap_slew_max_ps", C128.TAP_SLEW_MAX_PS))
     return cells, nets, ports, out
 
 
@@ -1048,7 +1066,8 @@ def cmd_build(a):
     fp = json.loads(Path(a.clock_floorplan).read_text()) if a.clock_floorplan else None
     cells, nets, ports, M = build(P, a.nx, a.ny, a.m, a.rep_um, a.ndr, a.max_move, a.hop_max, a.leg, a.sites,
                                   a.regions, a.delta_id, a.region_edge_straps, a.reserve_cell_sites, pg_shapes, tracks,
-                                  floorplan=fp)
+                                  floorplan=fp, rule128=(dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps)
+                                                         if getattr(a, "rule_12_8", False) else None))
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
@@ -1088,6 +1107,8 @@ def cmd_balance(a):
     out.mkdir(parents=True, exist_ok=True)
     P = S.Plan(S.load(a.plan))
     M = json.loads((src / "mesh.json").read_text())
+    if C128.enabled(M):
+        return balance_audit_128(a, src, out, M)
     ko = list(DC.keepouts(P)) + ([P.rect(n) for n in P.parts] if M["meta"].get("sites") == "channel" else [])
     K = DC.KeepIndex(ko, die=(float(P.W), float(P.H)))
     cells = json.loads((src / "place.json").read_text())
@@ -1177,6 +1198,25 @@ def cmd_balance(a):
     return 0
 
 
+def balance_audit_128(a, src, out, M):
+    """12.8d: no measured pads.  Copies the build unchanged and writes the plan-model structural audit."""
+    if a.tree:
+        raise SystemExit("die_clock_mesh balance: 12.8 build -- measured balancing (--tree) is banned (12.8d)")
+    cells = json.loads((src / "place.json").read_text())
+    data = json.loads((src / "nets.json").read_text())
+    libs = C128.lib_cells(a.corner, a.libdir)
+    au = C128.structural_audit(M, cells, data["nets"], libs, NDR[M["meta"]["ndr"]], DC.LAYER_RC, BUF, BUF_W, ROW_Y)
+    M["meta"]["balance"] = dict(src=str(src), corner=a.corner, pads=0, mode="12.8 structural audit (no pads)")
+    if src.resolve() != out.resolve():
+        (out / "ctree.v").write_text((src / "ctree.v").read_text())
+        (out / "place.json").write_text(json.dumps(cells) + "\n")
+        (out / "nets.json").write_text(json.dumps(data) + "\n")
+    (out / "mesh.json").write_text(json.dumps(M) + "\n")
+    (out / "balance_audit.json").write_text(json.dumps(au, indent=1) + "\n")
+    print(json.dumps(au))
+    return 0
+
+
 # ------------------------------------------------------------------------------------------------------------ combo
 def cmd_combo(a):
     """combo.v + combo.tcl: kit signals (abstracts, M4-M7) + the mesh clock (M8-M9) in ONE global_route, then the
@@ -1251,7 +1291,8 @@ def cmd_combo(a):
             hsp, vsp = [v for v in hsp if v[1]], [v for v in vsp if v[1]]
         else:
             hsp, vsp = [(y, (xlo, xhi)) for y in ry], [(x, (ylo, yhi)) for x in rx]
-        shield = (M["meta"].get("clock_floorplan") or {}).get("shield_net")
+        shield = (M["meta"].get("clock_floorplan") or {}).get("shield_net") or \
+            (M["meta"]["rule_12_8"]["shield_net"] if C128.enabled(M) else None)
         ob = hw + 2 * nd["space"] + nd["width"] if shield else hs    # shields: no signal within the shield spacing
         for y, (xlo, xhi) in hsp:
             L.append(f"odb::dbObstruction_create $blk $l8 [um {xlo - ob:.4f}] [um {y - ob:.4f}] [um {xhi + ob:.4f}] "
@@ -1267,7 +1308,7 @@ def cmd_combo(a):
                      f"[um {yhi + hw:.4f}] STRIPE")
         # island drivers (12.2a): perpendicular jog from the window to the strap, on this region's mesh net
         jogs = [dv for dv in M.get("drivers", {}).values() if dv.get("jog_um") and dv.get("region") == g["k"]]
-        jo = hw + 2 * nd["space"] + nd["width"] if (M["meta"].get("clock_floorplan") or {}).get("shield_net") else hs
+        jo = hw + 2 * nd["space"] + nd["width"] if shield else hs
         for dv in jogs:
             (fx, fy), (cx, cy) = dv["site"], dv["cell_site"]
             lay, a0, b0, a1, b1 = (("$l8", min(fx, cx), cy, max(fx, cx), cy) if dv["strap"] == "M9" else
@@ -1302,6 +1343,12 @@ def cmd_combo(a):
                         L.append(f"odb::dbSBox_create $psw $l9 [um {xx - sw2:.4f}] [um {b0 - hw:.4f}] [um {xx + sw2:.4f}] "
                                  f"[um {b1 + hw:.4f}] STRIPE")
     clock_nets = [n["name"] for n in data["nets"]]
+    if C128.enabled(M):   # 12.7a/12.8: every tree net is a fixed, shielded pre-route; its RC is that geometry
+        wires = C128.fixed_wires(M, cells, data["nets"], BUF_W, ROW_Y)
+        L += C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"])
+        sp = C128.spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
+        for c_ in ("TT", "FF"):
+            (d / f"native_{c_}.spef").write_text(sp)
     L += [f"puts \"OT_MESH regions {len(regs)} straps {sum((g['i1'] - g['i0']) + (g['j1'] - g['j0']) for g in regs)}\"",
           "create_clock -name dck -period 833.000 [get_ports root]",
           "set_routing_layers -signal M4-M7 -clock M8-M9"]
@@ -1322,7 +1369,8 @@ def cmd_combo(a):
           f"set_layer_rc -layer M8 -resistance 8.44765e-3 -capacitance [expr {{.103962*{nd['cf']}}}]",
           f"set_layer_rc -layer M9 -resistance 8.89556e-3 -capacitance [expr {{.0928446*{nd['cf']}}}]",
           "delete_clock [get_clocks dck]",
-          "estimate_parasitics -global_routing -spef_file /out/native_$::env(CORNER).spef",
+          ("read_spef /out/native_$::env(CORNER).spef" if C128.enabled(M) else
+           "estimate_parasitics -global_routing -spef_file /out/native_$::env(CORNER).spef"),
           "foreach c [get_cells ckm_d_*] { set_disable_timing $c }",
           "create_clock -name vclk -period 833.000",
           "set_driving_cell -lib_cell BUFx24_ASAP7_75t_R -pin Y [get_ports root]",
@@ -1520,10 +1568,14 @@ def cmd_mesh(a):
         off_e = min(early) + interp(sl, d0, min(slw))
         drv.append((kk, Rd / m, off_l, off_e, dv))
     stubn = []
+    scap = {}
+    if C128.enabled(M):   # 12.8 d1 plan-sized stub buffers: each stub input pin cap from its own liberty cell
+        libs = C128.lib_cells(a.corner, a.libdir, sorted({t.get("stub_lib") or BUF for t in M["taps"]}))
+        scap = {t["stub"]: libs[t.get("stub_lib") or BUF]["cap"] for t in M["taps"]}
     for key, t in stub_at:
         k = node(key)
         kk = len(caps)
-        caps.append(cin)
+        caps.append(scap.get(t["stub"], cin))
         edges.append((k, kk, via))
         stubn.append((kk, t))
     N = len(caps)
@@ -1754,7 +1806,11 @@ def cmd_report(a):
             f = line.split()
             arr[f[1]] = (float(f[2]), float(f[3]), float(f[4]))   # T port late early slew
         raw_late = {p: v[0] for p, v in arr.items()}
-        late, early, core_offsets = sink_arrivals(M, arr, corner, DC.plan_tap_early(P))
+        if C128.enabled(M):   # 12.8d: raw arrivals, no early-offset add-back; offset taps FAIL in the gate below
+            late, early, core_offsets = ({p: v[0] for p, v in arr.items()}, {p: v[1] for p, v in arr.items()},
+                                         {t["port"]: 0.0 for t in M["taps"]})
+        else:
+            late, early, core_offsets = sink_arrivals(M, arr, corner, DC.plan_tap_early(P))
         slew = {p: v[2] for p, v in arr.items()}
 
         def dmg(pa, pb):
@@ -1793,6 +1849,14 @@ def cmd_report(a):
             tap_slew_max_ps=round(max(slew.values()), 2), mesh_stub_in_slew_max_ps=Mz["stub_in_slew_max_ps"],
             tree_slew_max_ps=round(max(v[2] for v in Nn.values()), 2), mesh_cap_pF=Mz["mesh_cap_pF"],
             worst=[[round(w, 2), x, y] for w, x, y in worst])
+        if C128.enabled(M):
+            Dt, _ = read_tree(d / f"tree_{corner}.txt")
+            g12 = C128.gate(M, P, list(seam_in) + [(i[0], i[1]) for i in intra], late, early, rng, regd, Mz["stubs"], Dt,
+                            M.get("rule_12_8", {}).get("early_offset_taps", []))
+            r_ = rep["corners"][corner]
+            r_.update(related_pair_max_ps=g12["related_pair_max_ps"], pairs_over_80=g12["pairs_over_80"],
+                      verdict=g12["verdict"], rule_12_8=g12)
+            r_.pop("compensated_sink_insertion_ps", None)
     # clock power: C V^2 f over every die clock wire + pin (mesh from the transient, tree/stub wire from length)
     nd = NDR[M["meta"]["ndr"]]
     cw = (DC.LAYER_RC["M8"][1] + DC.LAYER_RC["M9"][1]) / 2 * nd["cf"]
@@ -1896,6 +1960,12 @@ def main(argv=None):
     b.add_argument("--pg-json", help="actual IR-sized PG file; consumes die_infra.pg_rects geometry (trial-only if infeasible)")
     b.add_argument("--track-file", help="actual die kit grt/tracks.tcl, required with --pg-json")
     b.add_argument("--delta-id", help="plan delta tag recorded in mesh.json meta (e.g. D-QC-CLKMESH)")
+    b.add_argument("--rule-12-8", action="store_true",
+                   help="METHODOLOGY v4.1 12.8: plan-model stub sizing (d1), early-offset taps FAIL, no measured "
+                        "balance, fixed VSS-shielded tree pre-routes, CPPR at the last common tree node")
+    b.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()),
+                   help="liberty dir for the 12.8 plan sizing model")
+    b.add_argument("--tap-slew-max-ps", type=float, default=C128.TAP_SLEW_MAX_PS)
     b.add_argument("--clock-floorplan", help="opt-in JSON: x_cuts_um (region seams on partition edges) + region_nx "
                    "(power-of-two columns per region), macro_holes (part names / {name, rect_um}: straps stop at the "
                    "macro edge, no cells inside, dead branches pruned), hard_core_drivers='drop' (cores <= M7 under the "
