@@ -124,7 +124,7 @@ module ot_v41_segtree6 #(
     wire [31:0] e_d = sv ? sum : h_v;
     localparam integer NH = NT * LV;
     reg [NH-1:0] e_oh, e_above;
-    integer li, ti, hi;
+    integer li, hi;   // ti: loop-scoped below (S81-CORE-LAT/QB 10-26 rtl_lint: module-scope loop integer shared by 2 always blocks)
     always @* begin
         e_oh = '0; e_above = '0;
         for (hi = 0; hi < NH; hi = hi + 1) begin
@@ -143,7 +143,7 @@ module ot_v41_segtree6 #(
     always @(posedge clk) if (ce) begin
         x_t <= e_t; x_l <= e_l; x_f <= e_f; x_e <= e_e; x_d <= e_d; x_add <= sv;
         x_oh <= e_oh; x_above <= e_above;
-        for (ti = 0; ti < NT; ti = ti + 1) x_toh[ti] <= e_t == ti;
+        for (int ti = 0; ti < NT; ti = ti + 1) x_toh[ti] <= e_t == ti;
         x_pos <= use_q ? h_p : tpos[e_t];
     end
     // STAGE 2a (x1) -- read into group partials (see the header)
@@ -290,14 +290,14 @@ module ot_v41_segtree6 #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             qr <= 0; qr1 <= 1; qw <= 0; qc <= 0; have <= '0; herr <= '0; ov <= 1'b0; oerr <= 1'b0; fault <= 1'b0;
-            for (ti = 0; ti < NT; ti = ti + 1) infl[ti] <= '0;
+            for (int ti = 0; ti < NT; ti = ti + 1) infl[ti] <= '0;
         end else if (ce) begin
             if (in_v) qw <= qw + 1'b1;
             if (use_q) begin qr <= qr + 1'b1; qr1 <= qr1 + 1'b1; end
             qc <= qc + (in_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);
             if (in_v && qc == QD && !use_q) fault <= 1'b1;
             if (y_v && y_l == LV[LW-1:0] && !y_f) fault <= 1'b1;    // more base nodes than 2^LV: not the root
-            for (ti = 0; ti < NT; ti = ti + 1)
+            for (int ti = 0; ti < NT; ti = ti + 1)
                 infl[ti] <= infl[ti] + (t_inc[ti] ? 1'b1 : 1'b0) - (t_dec[ti] ? 1'b1 : 1'b0);
             have <= have_nx;
             herr <= (herr & ~s_hold) | (y_e ? s_hold : '0);
