@@ -20,7 +20,11 @@ XRT_PATH = 'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv'
 XRT_MODEL = {'cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64': 7,
              # TOK-DS NORM-DESKEW 10-25: cfc3feb9 + the static per-leaf partial deskew (PDSK, claude/s81-norm-deskew-1025);
              # the change is on the leaf-partial path only, V-CTL injection is unchanged (7 edges)
-             'ec43bbd4be16faa8428c107e7db613f21f0b760ed79711da31f068879c7d6282': 7}
+             'ec43bbd4be16faa8428c107e7db613f21f0b760ed79711da31f068879c7d6282': 7,
+             # TOK-DS dskr 10-25: committed NORM-DESKEW XRT (main c2ef1998e). With its defaults (FACE_LAND 0, OT_S81SL_XR_PDC
+             # undefined) it is cfc3feb9 + the same PDSK leaf-partial deskew as ec43 (ec43 itself was never committed and was
+             # lost with epyc3); the V-CTL injection path is unchanged (7 edges). Source model only, as ec43.
+             '18850f53ef8b664223ecd247083d62939ddfcad5372db0d2844020b4dabfd31c': 7}
 
 
 def source_contract(tree, fallback, instances=None):
