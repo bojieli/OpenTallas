@@ -2,7 +2,8 @@
 """Reserve real M5/M7 tracks for measured native-W128 HBM cut demand.
 
 The repaired W64 model was not a W128 capacity receipt. Native measurements need
-5089bits through b003 and4128 through b011. Cores stay cappedM5; M7 is available
+5089bits through b003, 4128 through b011 and 3191 through b000 (b000 was masked by
+G0 reporting only the worst partition per cut line). Cores stay cappedM5; M7 is available
 above them. Band reservations consume existing tracks, never raise a budget.
 """
 import argparse,copy,json,shutil
@@ -10,10 +11,11 @@ from pathlib import Path
 
 
 def main():
- ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);a=ap.parse_args()
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--types',default='q_b003,q_b011',help='bank types that get the full free-M7 NS band (q_b011 also gets its core-free M5 strip)');a=ap.parse_args()
  if a.out.exists():raise FileExistsError(a.out)
  p=json.loads((a.src/'die_plan.json').read_text());receipt=[]
- for tn in ('q_b003','q_b011'):
+ for tn in a.types.split(','):
+  if any('D-HBM-B1 nativeW128' in b.get('note','') for b in p['partition_types'][tn].get('die_ft_bands',[])):raise ValueError(tn+' already has native W128 bands')
   t=p['partition_types'][tn];w,h=t['outline_um'];before=copy.deepcopy(t.get('die_ft_bands',[]));bands=[]
   for b in before:
    b=copy.deepcopy(b)
