@@ -9,3 +9,5 @@ The selected hcore is the qualified CTLA+TIMED_RESET cohort: stationary load tra
 The versioned logical topology input is not a current emitted bound top. Fresh source elaboration, strict tie/connectivity/type gates, physical qualification and current bound RTL token remain required. No gate is waived by source preparation.
 
 The explicit evaluated-interface list also includes ot_pl_seam_r_plq, ot_pl_seam_w_plr and ot_pl_seam_w_pl after the actual instance-width census (unit3601840). Absent r_pl/cq names are not selected. This preserves W/CHUNKS-dependent native interfaces without flattening bodies or changing cycles.
+
+The explicit provider set also includes the13 current gunit/SVC library files formerly supplied implicitly by the frozen search root. The actual11 gunit base-master identities are preserved (no _C substitution); interfaces match the previous F2 cohort. Three absent MU72 ABI module bodies are retained exactly from650532346d in mu72_abi_extensions.sv without replacing existing current modules. All20 prior unknown-module occurrences plus l3 pass a bounded current-interface hierarchy check before the successor elaboration.
