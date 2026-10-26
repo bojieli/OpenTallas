@@ -20,13 +20,13 @@ module tb_static_kv_timing;
   wire unused0,unused1,unused2,unused3,unused4;
   ot_qkd_static_kv_timing #(.ENABLE(1),.PC(p%32),.REF_PHASE(((p%32)*118)/32),.PROFILE(2))profile(
    .clk(ck),.rst_n(rst),.desc_v(dv),.desc_r(),.desc_row(19'd67),.desc_n(last),.desc_first(first),.go(go),.next_posted(1'b0),
-   .reserved_rd(desired),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.schedule_fault(psf[p]),.row_v(prv[p]),.row_prio(),.row_gnt(1'b1),.row_op(pro[p]),.row_bank(prb[p]),.row_row(prr[p]),
+   .reserved_rd(desired),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.boot_static_col(1'b0),.schedule_fault(psf[p]),.row_v(prv[p]),.row_prio(),.row_gnt(1'b1),.row_op(pro[p]),.row_bank(prb[p]),.row_row(prr[p]),
    .col_v(pcv[p]),.col_bank(pcb[p]),.col_col(pcc[p]),.busy(),.ref_fault(pf[p]),
    .wr_v(1'b0),.wr_bank(5'b0),.wr_col(5'b0),.wr_r(),.col_we(),.wr_rd(1'b0),.col_aq(),
    .s_context(347'b0),.col_context(),.s_v(1'b0),.s_we(1'b0),.s_bank(5'b0),.s_col(5'b0),.s_row(19'b0),.s_r(),.col_sr(),.s_pop());
   ot_qkd_static_kv_timing #(.ENABLE(1),.PC(p%32),.REF_PHASE(((p%32)*118)/32),.PROFILE(0))production(
    .clk(ck),.rst_n(rst),.desc_v(dv),.desc_r(),.desc_row(19'd67),.desc_n(last),.desc_first(first),.go(go),.next_posted(1'b0),
-   .reserved_rd(reserved[p]),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.schedule_fault(sf[p]),.row_v(rv[p]),.row_prio(),.row_gnt(1'b1),.row_op(ro[p]),.row_bank(rb[p]),.row_row(rr[p]),
+   .reserved_rd(reserved[p]),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.boot_static_col(1'b0),.schedule_fault(sf[p]),.row_v(rv[p]),.row_prio(),.row_gnt(1'b1),.row_op(ro[p]),.row_bank(rb[p]),.row_row(rr[p]),
    .col_v(cv[p]),.col_bank(cb[p]),.col_col(cc[p]),.busy(),.ref_fault(ff[p]),
    .wr_v(1'b0),.wr_bank(5'b0),.wr_col(5'b0),.wr_r(),.col_we(),.wr_rd(1'b0),.col_aq(),
    .s_context(347'b0),.col_context(),.s_v(1'b0),.s_we(1'b0),.s_bank(5'b0),.s_col(5'b0),.s_row(19'b0),.s_r(),.col_sr(),.s_pop());

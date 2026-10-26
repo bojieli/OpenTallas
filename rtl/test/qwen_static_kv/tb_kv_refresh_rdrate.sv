@@ -29,7 +29,7 @@ module tb_kv_refresh_rdrate;
   ot_qkd_static_kv_timing #(.ENABLE(1),.PC(PCI),.REF_PHASE(0),.PROFILE(PROFILE),
    .SROW(1),.READY_CUT(1),.WR_EN(1),.AQ_RD(0),.PULLIN(0)) u(
    .clk(ck),.rst_n(rst),.desc_v(dv),.desc_r(),.desc_row(19'd67),.desc_n(11'd256),.desc_first(10'd0),.go(go),.next_posted(1'b0),
-   .reserved_rd(PROFILE==0 ? compiled_slots[t][g] : 1'b0),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.schedule_fault(sf[g]),.phase_idle(),
+   .reserved_rd(PROFILE==0 ? compiled_slots[t][g] : 1'b0),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.boot_static_col(1'b0),.schedule_fault(sf[g]),.phase_idle(),
    .row_v(),.row_prio(),.row_gnt(1'b1),.row_op(),.row_bank(),.row_row(),
    .col_v(cv[g]),.col_bank(cb),.col_col(cc),.busy(),.ref_fault(rf[g]),
    .wr_v(1'b0),.wr_bank(5'b0),.wr_col(5'b0),.wr_r(),.col_we(),.wr_rd(1'b0),.col_aq(),
