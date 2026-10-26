@@ -462,7 +462,8 @@ def gate(M, P, pairs, late, early, rng, regd, mesh_stubs, tree_D, early_rows):
         return max(0.0, s["late"] - s["early"]) if s else 0.0
     off_ports = {r["port"] for r in early_rows}
     g_all, g_plain, g_core, info = [], [], [], []
-    for pa, pb in pairs:
+    for x_ in pairs:
+        pa, pb = x_[0], x_[1]
         v = DC.pair_clock_damage(late[pa], early[pa], late[pb], early[pb], common(pa, pb))["max_damage_ps"]
         g_all.append((v, pa, pb))
         (g_core if (pa in off_ports or pb in off_ports) else g_plain).append(v)
