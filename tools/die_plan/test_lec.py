@@ -971,3 +971,15 @@ def test_json_q_alias_rejects_ambiguous_and_constant_candidates(tmp_path):
         'u.a': {'bits': [10]}, 'u.b': {'bits': [10]}, 'u.y': {'bits': [10]},
         'u.const': {'bits': ['0']}, 'u.z': {'bits': ['0']}}}}}))
     assert lec.json_alias_keys(L, [], work=tmp_path) == 0
+
+
+@pytest.mark.parametrize("enabled", [False,True])
+def test_gold_register_array_lowering_is_opt_in(monkeypatch,tmp_path,enabled):
+    scripts=[]
+    monkeypatch.setattr(lec,"run_yosys",lambda script,path,log:scripts.append(script))
+    env={"VERILOG_FILES":"a.v","DESIGN_NAME":"t"}
+    if enabled:env["OT_LEC_GOLD_NO_IMPLICIT_MEMORIES"]="1"
+    rec={};lec.run_gold(env,"/k","slang",[],tmp_path,[],rec)
+    assert ("--no-implicit-memories" in scripts[0]) == enabled
+    assert rec.get("gold_no_implicit_memories",False) == enabled
+    assert "read_slang" in scripts[0] and "memory_map" in scripts[0]
