@@ -120,3 +120,18 @@ def test_committed_vg_sidecar_matches_source(master):
     kit = (LPDIR / 'kit' / f'{master}_l4_lp_kit_vg.sv').read_text()
     for m in rec['masters']:
         assert not re.search(rf'^\s*{m}\s*#\(', kit, re.M), m
+
+
+def test_relative_sidecar_uses_source_base_from_other_cwd(tmp_path, monkeypatch):
+    src = tmp_path / "source"
+    src.mkdir()
+    elsewhere = tmp_path / "caller"
+    elsewhere.mkdir()
+    sidecar = src / "frame.hard_params.json"
+    HP.write_sidecar(sidecar, {"elem": {"NB": "2"}}, {"elem": 1}, "frame.sv", "")
+    monkeypatch.chdir(elsewhere)
+    assert E.load_hard_params([sidecar.name], base=src) == {"elem": {"NB": "2"}}
+    assert E.load_hard_params([str(sidecar)], base=elsewhere) == {"elem": {"NB": "2"}}
+    # The old cwd-relative lookup must fail here; this is the portability defect.
+    with pytest.raises(FileNotFoundError):
+        E.load_hard_params([sidecar.name])

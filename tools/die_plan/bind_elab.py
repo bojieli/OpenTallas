@@ -233,12 +233,16 @@ def plan_sources(ab, base, idx=None, shim_dir=None):
     return tops, full, lib, rec
 
 
-def load_hard_params(files):
+def load_hard_params(files, base=None):
     """merge the frame-kit hard_params sidecars (tools/s81_dv/hard_params.py): {master: {param: value}}.  Fail closed on
-    a master recorded with two different hardened sets (one hard view cannot hold both)."""
+    a master recorded with two different hardened sets (one hard view cannot hold both).
+    Relative sidecars use the supplied source base, just like netlist/files; absolute paths stay absolute."""
     merged, src = {}, {}
     for f in files or []:
-        rec = json.loads(Path(f).read_text())
+        path = Path(f)
+        if base is not None and not path.is_absolute():
+            path = Path(base) / path
+        rec = json.loads(path.read_text())
         if rec.get("schema") != "opentallas.frame_kit.hard_params.v1":
             raise ElabError(f"hard_params: {f}: unknown schema {rec.get('schema')!r}")
         for m, ps in rec["masters"].items():
@@ -541,7 +545,7 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
     sc = out / "asbuilt.ys"
     ylib = lib
     if ab.get("lib_stubs", True):
-        hp = load_hard_params(ab.get("hard_params", []))
+        hp = load_hard_params(ab.get("hard_params", []), base=base)
         ylib = [lib_stubs(lib, out / "asbuilt_lib_stubs.sv", hp)] if lib else []
         rec["hard_params"] = dict(files=list(ab.get("hard_params", [])), masters=hp)
     elif ab.get("hard_params"):
