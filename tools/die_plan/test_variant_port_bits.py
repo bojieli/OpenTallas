@@ -34,3 +34,19 @@ def test_noncontiguous_output_pins_keep_their_actual_nets():
 def test_bad_mapping_fails_closed(mapping):
     with pytest.raises(bind.BindError):
         bind.variant_port_bits({'am':list(range(36)),'clk':[42]},variant(),{},mapping)
+
+
+def test_entry39_keeps_every_actual_tag_address_pc_valid_bit():
+    v=D.parse_modules('module v(input wire[38:0]rci);endmodule','fixture.sv')[0]
+    source=list(range(100,143));indices=list(range(32))+list(range(36,43))
+    assert bind.variant_port_bits({'rci':source},v,{}, {'rci':indices})['rci']==source[:32]+source[36:]
+
+
+def test_narrowed_address_requires_actual_zero_sources():
+    from types import SimpleNamespace
+    g=SimpleNamespace(source=lambda n: ('const','0','literal') if n=='0' else ('pin',8,'real_address',n,0))
+    requirements=[('u_etap_15','rci',i,'0','0') for i in range(32,36)]
+    assert bind.variant_constant_errors(g,requirements)==[]
+    # A changed PCBASE / live high address bit cannot silently disappear.
+    mutant=list(requirements);mutant[0]=('u_etap_15','rci',32,123,'0')
+    assert len(bind.variant_constant_errors(g,mutant))==1

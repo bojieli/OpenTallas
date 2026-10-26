@@ -1,0 +1,5 @@
+S81 header-denominator ingress ABI
+
+The entry source sets HEADER_DEN1: denominator validity comes from PV headers. Its four external denominator inputs are absent.88bits of that unused mode have no optimized fanout, but den_v still participates in config/launch conflict checking, so it cannot be waived as dead. The new dsdv_pv_so_ingress_hden removes the absent denominator interface and implements the exact fixed mode internally; the original dual-mode module is unchanged.
+
+The existing full production transpose/serializer vehicle now compares every control/status edge and all valid output words against the original HEADER_DEN1 with the exact actual-parent den pins held0. Both jobs emit534words each, including8192golden-exact FP32 values/job; span533edges/job.2397miter edges compare exactly. Wrong header-denominator identity is caught by both endpoints with fault code040. No cycles/stages/array changes;90constant crossing bits removed over2entries. The inherited bench pulses its irrelevant dv stimulus once before fill; the reference is correctly tied0as the actual parent is.

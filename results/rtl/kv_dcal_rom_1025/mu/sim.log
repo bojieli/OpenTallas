@@ -1,0 +1,5 @@
+RESULT cycles=1500000 mismatches=0 mutant_mismatches=12 cal_starts=118 tokens=8 layers=fffffffff ready_gold=74 ready_dut=74
+- tb.sv:59: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 3.023 s; speed 992.485 us/s
+- Verilator: cpu 3.023 s on 1 threads; allocated 7 MB

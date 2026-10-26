@@ -1,0 +1,8 @@
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-2904047-1792990932 after 0 s
+RESULT cycles=1500000 mismatches=0 mutant_mismatches=8 cal_starts=100 tokens=8 layers=fffffffff ready_gold=74 ready_dut=74
+- tb.sv:59: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 3.078 s; speed 974.534 us/s
+- Verilator: cpu 3.078 s on 1 threads; allocated 7 MB
+ot-run: RAN on localhost (unit oth-ubuntu-2904047-1792990932): exit 0

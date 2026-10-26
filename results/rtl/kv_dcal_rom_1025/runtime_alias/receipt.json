@@ -1,0 +1,16 @@
+{
+  "gate": "PASS",
+  "mechanism": "+OT_ROM_DIR overrides VIAMAP using INSTANCE basename; emit identical-byte runtime alias matching actual default INSTANCE",
+  "words_compared": 64,
+  "positive_mismatches": 0,
+  "wrong_mask_mismatches": 1,
+  "functional_model": "real generated32-bit or64-bit macro model, deliberately missing fallback VIAMAP",
+  "logic_cycles_payload": "unchanged",
+  "source_hashes": {
+    "ot_rom_64x32_m2.v": "70590eb25bb6657bdbd681589597b721109d986606365e4cadf4118d1e75f431",
+    "tb.sv": "f17a36a6e2b7a22b0d5b5fdd6406910593490c0f638adc51527319456234ca12",
+    "kv_dcal.viamap.hex": "ba4c9519a6c7cf901a86cf0dc41d19bcf27ee26d72d69b90e7686285e88f9840",
+    "mutant_control.viamap.hex": "1938cce82fc7fb305898dd2f2e8c464bdad6b9fb3609b5bce366638748c46efd",
+    "words.hex": "a90ff8b02f44bd1bd5904c26faaefa9ec5bdd8551a256f744581361bf87c9fff"
+  }
+}

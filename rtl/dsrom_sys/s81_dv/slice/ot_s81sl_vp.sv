@@ -196,12 +196,10 @@ module ot_s81sl_vp #(
         wcol = (nw[0] > 3'd1) || (nw[1] > 3'd1);
     end
     wire [127:0] rq0, rq1;
-    ot_sram_1r1w_512x128_m4_r2c2 u_b0 (.clk(clk), .r_ce_in(re_e), .r_addr_in(ra_e[9:1]), .rd_out(rq0),
-        .w_ce_in(wv[0]), .w_addr_in(wa[0]), .wd_in(wd[0]), .w_mask_in(wm[0]),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
-    ot_sram_1r1w_512x128_m4_r2c2 u_b1 (.clk(clk), .r_ce_in(re_o), .r_addr_in(ra_o[9:1]), .rd_out(rq1),
-        .w_ce_in(wv[1]), .w_addr_in(wa[1]), .wd_in(wd[1]), .w_mask_in(wm[1]),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
+    ot_sram_1r1w_512x128_m4_r0c0 u_b0 (.clk(clk), .r_ce_in(re_e), .r_addr_in(ra_e[9:1]), .rd_out(rq0),
+        .w_ce_in(wv[0]), .w_addr_in(wa[0]), .wd_in(wd[0]), .w_mask_in(wm[0]));
+    ot_sram_1r1w_512x128_m4_r0c0 u_b1 (.clk(clk), .r_ce_in(re_o), .r_addr_in(ra_o[9:1]), .rd_out(rq1),
+        .w_ce_in(wv[1]), .w_addr_in(wa[1]), .wd_in(wd[1]), .w_mask_in(wm[1]));
     // macro output registers + the step that launched the read (2 edges: address edge, output register)
     reg [127:0] q0, q1; reg [3:0] dop; reg [7:0] dsi; reg dv, dodd, dswp;
     reg [3:0] dop1; reg [7:0] dsi1; reg dv1, dodd1, dswp1;

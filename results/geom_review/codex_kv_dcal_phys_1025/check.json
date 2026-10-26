@@ -1,0 +1,336 @@
+{
+  "P_and_R": "NOT RUN",
+  "STA": "NOT RUN",
+  "baseline": {
+    "errors": [
+      {
+        "check": "faces",
+        "level": "ERROR",
+        "msg": "hgi_WN_7.W: 132 pins in the 10-um window at 14751.14 (13.20/um > 6)",
+        "part": "hgi_WN_7"
+      },
+      {
+        "check": "faces",
+        "level": "ERROR",
+        "msg": "hgi_WN_7.E: 69 pins in the 10-um window at 14001.43 (6.90/um > 6)",
+        "part": "hgi_WN_7"
+      },
+      {
+        "check": "faces",
+        "level": "ERROR",
+        "msg": "hgi_WN_7.N: 123 pins in the 10-um window at 3441.18 (12.30/um > 6)",
+        "part": "hgi_WN_7"
+      },
+      {
+        "check": "faces",
+        "level": "ERROR",
+        "msg": "hgi_WN_7.S: 122 pins in the 10-um window at 3426.27 (12.20/um > 6)",
+        "part": "hgi_WN_7"
+      }
+    ],
+    "g0c": {
+      "by_type": {},
+      "clean": 40,
+      "die_level": {},
+      "g3_eligible": [
+        "kv3_hg",
+        "kv3_hg_v1",
+        "kv3_hg_v3",
+        "kv3_hgi",
+        "kv3_hgi_v1",
+        "kv3_hgi_v2",
+        "kv3_hgi_v3",
+        "kv3_hgi_v4",
+        "kv3_hgi_v5",
+        "kv3_hgi_v6",
+        "kv3_hgi_v7",
+        "kv3_hgi_v8",
+        "kv3_hroot",
+        "kv3_hub_C",
+        "kv3_hub_Ei",
+        "kv3_hub_Eo",
+        "kv3_hub_Wi",
+        "kv3_hub_Wo",
+        "kv3_io_cor",
+        "kv3_io_cor_v1",
+        "kv3_io_ft",
+        "kv3_io_ft_v1",
+        "kv3_pc",
+        "kv3_pc_v1",
+        "kv3_pc_v3",
+        "kv3_phy",
+        "kv3_phy_v1",
+        "kv3_pv",
+        "kv3_pv_v1",
+        "kv3_pv_v12",
+        "kv3_pv_v2",
+        "kv3_pv_v3",
+        "kv3_pv_v4",
+        "kv3_pv_v5",
+        "kv3_pv_v6",
+        "kv3_pv_v7",
+        "kv3_pv_v8",
+        "kv3_sys_SD",
+        "kv3_sys_SD_v1",
+        "kv3_sys_c"
+      ],
+      "types": 40
+    },
+    "warnings": 1368
+  },
+  "candidate": {
+    "errors": [
+      {
+        "check": "faces",
+        "level": "ERROR",
+        "msg": "hgi_WN_7.W: 132 pins in the 10-um window at 14751.14 (13.20/um > 6)",
+        "part": "hgi_WN_7"
+      },
+      {
+        "check": "faces",
+        "level": "ERROR",
+        "msg": "hgi_WN_7.E: 69 pins in the 10-um window at 14001.43 (6.90/um > 6)",
+        "part": "hgi_WN_7"
+      },
+      {
+        "check": "faces",
+        "level": "ERROR",
+        "msg": "hgi_WN_7.N: 123 pins in the 10-um window at 3441.18 (12.30/um > 6)",
+        "part": "hgi_WN_7"
+      },
+      {
+        "check": "faces",
+        "level": "ERROR",
+        "msg": "hgi_WN_7.S: 122 pins in the 10-um window at 3426.27 (12.20/um > 6)",
+        "part": "hgi_WN_7"
+      }
+    ],
+    "g0c": {
+      "by_type": {},
+      "clean": 40,
+      "die_level": {},
+      "g3_eligible": [
+        "kv3_hg",
+        "kv3_hg_v1",
+        "kv3_hg_v3",
+        "kv3_hgi",
+        "kv3_hgi_v1",
+        "kv3_hgi_v2",
+        "kv3_hgi_v3",
+        "kv3_hgi_v4",
+        "kv3_hgi_v5",
+        "kv3_hgi_v6",
+        "kv3_hgi_v7",
+        "kv3_hgi_v8",
+        "kv3_hroot",
+        "kv3_hub_C",
+        "kv3_hub_Ei",
+        "kv3_hub_Eo",
+        "kv3_hub_Wi",
+        "kv3_hub_Wo",
+        "kv3_io_cor",
+        "kv3_io_cor_v1",
+        "kv3_io_ft",
+        "kv3_io_ft_v1",
+        "kv3_pc",
+        "kv3_pc_v1",
+        "kv3_pc_v3",
+        "kv3_phy",
+        "kv3_phy_v1",
+        "kv3_pv",
+        "kv3_pv_v1",
+        "kv3_pv_v12",
+        "kv3_pv_v2",
+        "kv3_pv_v3",
+        "kv3_pv_v4",
+        "kv3_pv_v5",
+        "kv3_pv_v6",
+        "kv3_pv_v7",
+        "kv3_pv_v8",
+        "kv3_sys_SD",
+        "kv3_sys_SD_v1",
+        "kv3_sys_c"
+      ],
+      "types": 40
+    },
+    "warnings": 1368
+  },
+  "clock_pins": [
+    [
+      "clk",
+      180.0,
+      172.768
+    ],
+    [
+      "clk_t1",
+      539.488,
+      172.768
+    ],
+    [
+      "clk_t2",
+      900.0,
+      37.216
+    ],
+    [
+      "clk_t3",
+      1260.0,
+      37.216
+    ],
+    [
+      "clk_t4",
+      1619.488,
+      172.768
+    ],
+    [
+      "clk_t5",
+      1980.0,
+      172.768
+    ],
+    [
+      "clk_t6",
+      180.0,
+      518.368
+    ],
+    [
+      "clk_t7",
+      539.488,
+      518.368
+    ],
+    [
+      "clk_t8",
+      615.84,
+      492.896
+    ],
+    [
+      "clk_t9",
+      1577.504,
+      690.016
+    ],
+    [
+      "clk_t10",
+      1619.488,
+      518.368
+    ],
+    [
+      "clk_t11",
+      1980.0,
+      518.368
+    ],
+    [
+      "clk_t12",
+      180.0,
+      864.032
+    ],
+    [
+      "clk_t13",
+      539.488,
+      864.032
+    ],
+    [
+      "clk_t14",
+      900.0,
+      864.032
+    ],
+    [
+      "clk_t15",
+      1260.0,
+      864.032
+    ],
+    [
+      "clk_t16",
+      1619.488,
+      864.032
+    ],
+    [
+      "clk_t17",
+      1980.0,
+      864.032
+    ]
+  ],
+  "clock_pins_unchanged": true,
+  "idempotent": true,
+  "new_errors": [],
+  "new_taps_on_ROM_keepout": 0,
+  "removed_errors": [],
+  "schema": "opentallas.kv-dcal-physical-check.v1",
+  "type_macros": [
+    {
+      "ff_lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_ff.lib",
+      "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[0].u_store.g_p288.u_sram",
+      "lef": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+      "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+      "orient": "R0",
+      "origin_um": [
+        596.16,
+        17.28
+      ],
+      "tt_lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+      "views_exist": true
+    },
+    {
+      "ff_lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_ff.lib",
+      "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[1].u_store.g_p288.u_sram",
+      "lef": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+      "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+      "orient": "R0",
+      "origin_um": [
+        596.16,
+        103.68
+      ],
+      "tt_lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+      "views_exist": true
+    },
+    {
+      "ff_lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_ff.lib",
+      "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[2].u_store.g_p288.u_sram",
+      "lef": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+      "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+      "orient": "R0",
+      "origin_um": [
+        596.16,
+        190.08
+      ],
+      "tt_lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+      "views_exist": true
+    },
+    {
+      "ff_lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_ff.lib",
+      "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[3].u_store.g_p288.u_sram",
+      "lef": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+      "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+      "orient": "R0",
+      "origin_um": [
+        596.16,
+        276.48
+      ],
+      "tt_lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+      "views_exist": true
+    },
+    {
+      "ff_lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views_m6/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_ff.lib",
+      "inst": "u_bound.u_ucie_rom",
+      "lef": "physical/die_plan/qwen_kvsys/cores/sys_c_views_m6/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.lef",
+      "module": "ot_qkvd_ucie_x64_phy",
+      "orient": "R0",
+      "origin_um": [
+        691.2,
+        60.48
+      ],
+      "tt_lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views_m6/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+      "views_exist": true
+    },
+    {
+      "ff_lib": "physical/asap7_memory_macros_v2/ot_rom_64x32_m2/ot_rom_64x32_m2_ff.lib",
+      "inst": "u_bound.u_dcal.u_profile",
+      "lef": "physical/asap7_memory_macros_v2/ot_rom_64x32_m2/ot_rom_64x32_m2.lef",
+      "module": "ot_rom_64x32_m2",
+      "orient": "R0",
+      "origin_um": [
+        302.4,
+        250.56
+      ],
+      "tt_lib": "physical/asap7_memory_macros_v2/ot_rom_64x32_m2/ot_rom_64x32_m2_tt.lib",
+      "views_exist": true
+    }
+  ]
+}

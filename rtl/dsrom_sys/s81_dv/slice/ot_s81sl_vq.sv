@@ -78,7 +78,7 @@ module ot_s81sl_vq #(
     wire sv_ = yv_c | uv_c; wire [2:0] si_ = yv_c ? yi_c : ui_c; wire [255:0] sd_ = yv_c ? y_c : u_c;
     // block assembly: 4 sub-beats of 8 FP32 words -> 32 words; BF16 copy of all 64
     reg [1023:0] blk; reg bv, bbk; reg [2:0] nexp; reg ord_f;
-    integer l, j;
+
     reg [1023:0] bf;
     // S81-CORES2/RV (2026-10-25, GEOM PASS-COND 04:45; f5b TT -58.8/298 = yv_c -> bf load-enable broadcast over the
     // whole 1024-flop bf array): the bf load is registered once more, from the pin flops: 8 per-group load enables
@@ -87,18 +87,18 @@ module ot_s81sl_vq #(
     // later than in the closed RTL; it is read only while the vector's XB beat is sent (>= 18 + 20 edges after the last
     // sub-beat, the next vector's sub-beats come after that send), so xf / fault are cycle-identical
     // (tools/s81_slice/vq_pinreg_eq.sh vs b6d9d4515; mutant OT_VQ_MUT_BFQ must FAIL).  Pin flops keep one load per pin.
-    reg [7:0] bf_en; reg [127:0] bf_d; integer jb, lb, jw;
+    reg [7:0] bf_en; reg [127:0] bf_d;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) bf_en <= 8'd0;
-        else for (jb = 0; jb < 8; jb = jb + 1)
+        else for (integer jb = 0; jb < 8; jb = jb + 1)
 `ifdef OT_VQ_MUT_BFQ
             bf_en[jb] <= sv_ && si_ == (jb ^ 1);      // mutant: groups steered to the wrong slot (must FAIL)
 `else
             bf_en[jb] <= sv_ && si_ == jb;
 `endif
-    always @(posedge clk) for (lb = 0; lb < 8; lb = lb + 1) bf_d[lb * 16 +: 16] <= sd_[lb * 32 + 16 +: 16];
+    always @(posedge clk) for (integer lb = 0; lb < 8; lb = lb + 1) bf_d[lb * 16 +: 16] <= sd_[lb * 32 + 16 +: 16];
     always @(posedge clk)
-        for (jw = 0; jw < 8; jw = jw + 1) if (bf_en[jw]) bf[128 * jw +: 128] <= bf_d;
+        for (integer jw = 0; jw < 8; jw = jw + 1) if (bf_en[jw]) bf[128 * jw +: 128] <= bf_d;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin bv <= 1'b0; nexp <= 3'd0; ord_f <= 1'b0; end
         else begin
@@ -112,13 +112,13 @@ module ot_s81sl_vq #(
     // Every reader sees blk_x = blk with the staged write forwarded (blk_en[j] ? blk_d : blk quarter j), which equals the
     // closed RTL's blk on every cycle: 0 cycles (tools/s81_slice/vq_pinreg_eq.sh; mutant OT_VQ_MUT_BLKF drops the forward
     // and must FAIL).  The pin flops now load 4 + 256 flops instead of 1024 enables.
-    reg [3:0] blk_en; (* keep *) reg [255:0] blk_d; integer jq;
+    reg [3:0] blk_en; (* keep *) reg [255:0] blk_d;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) blk_en <= 4'd0;
-        else for (jq = 0; jq < 4; jq = jq + 1) blk_en[jq] <= sv_ && si_[1:0] == jq;
+        else for (integer jq = 0; jq < 4; jq = jq + 1) blk_en[jq] <= sv_ && si_[1:0] == jq;
     always @(posedge clk) blk_d <= sd_;
     always @(posedge clk)
-        for (j = 0; j < 4; j = j + 1) if (blk_en[j]) blk[256 * j +: 256] <= blk_d;
+        for (integer j = 0; j < 4; j = j + 1) if (blk_en[j]) blk[256 * j +: 256] <= blk_d;
     wire [1023:0] blk_x;
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_blkx

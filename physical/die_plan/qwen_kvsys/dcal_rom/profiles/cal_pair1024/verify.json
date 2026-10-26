@@ -1,0 +1,15 @@
+{
+  "check": {
+    "content_signature": "9d2816a8",
+    "errors": [],
+    "instances": 1,
+    "macro": "ot_rom_64x32_m2",
+    "verdict": "PASS",
+    "words_checked": 64
+  },
+  "profile": "cal_pair1024",
+  "schema": "opentallas.kv-dcal-profile-check.v1",
+  "source_file": "qkd_d2d_cal_seq_bc4_pair1024.sv",
+  "source_kind": "staged-bind diagnostic",
+  "source_sha256": "99d8ae789e484a6fb765780c405a21cf3614757afd3c5192f761b518c7a483c5"
+}

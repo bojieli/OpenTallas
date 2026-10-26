@@ -1,0 +1,309 @@
+{
+ "verdict": "PASS",
+ "instances": 20,
+ "masters": 10,
+ "checks": {
+  "u_ot_pl_pad_0": {
+   "module": "ot_pl_pad",
+   "parameters": {
+    "W": 1,
+    "N": 0
+   },
+   "ports": {
+    "ck": 1,
+    "d": 1,
+    "q": 1
+   }
+  },
+  "u_ot_pl_pad_1": {
+   "module": "ot_pl_pad",
+   "parameters": {
+    "W": 1,
+    "N": 7
+   },
+   "ports": {
+    "ck": 1,
+    "d": 1,
+    "q": 1
+   }
+  },
+  "u_ot_pl_land_n32_chunk_w_0": {
+   "module": "ot_pl_land_n32_chunk_w",
+   "parameters": {
+    "W": 1,
+    "D": 4,
+    "CHUNK_BITS": 24
+   },
+   "ports": {
+    "ck": 1,
+    "rsi": 1,
+    "i": 1,
+    "bank": 4,
+    "epo": 12,
+    "vld": 4
+   }
+  },
+  "u_ot_pl_land_n32_chunk_w_1": {
+   "module": "ot_pl_land_n32_chunk_w",
+   "parameters": {
+    "W": 280,
+    "D": 4,
+    "CHUNK_BITS": 24
+   },
+   "ports": {
+    "ck": 1,
+    "rsi": 1,
+    "i": 280,
+    "bank": 1120,
+    "epo": 12,
+    "vld": 48
+   }
+  },
+  "u_ot_pl_land_chunk_r_0": {
+   "module": "ot_pl_land_chunk_r",
+   "parameters": {
+    "W": 1,
+    "D": 4,
+    "K": 2,
+    "CHUNK_BITS": 24
+   },
+   "ports": {
+    "ck": 1,
+    "rsi": 1,
+    "bank": 4,
+    "epo": 12,
+    "vld": 4,
+    "o": 1
+   }
+  },
+  "u_ot_pl_land_chunk_r_1": {
+   "module": "ot_pl_land_chunk_r",
+   "parameters": {
+    "W": 280,
+    "D": 4,
+    "K": 2,
+    "CHUNK_BITS": 24
+   },
+   "ports": {
+    "ck": 1,
+    "rsi": 1,
+    "bank": 1120,
+    "epo": 12,
+    "vld": 48,
+    "o": 280
+   }
+  },
+  "u_ot_pl_land_vector_reset_kw_w_0": {
+   "module": "ot_pl_land_vector_reset_kw_w",
+   "parameters": {
+    "W": 1,
+    "D": 4,
+    "CHUNK_BITS": 8
+   },
+   "ports": {
+    "ck": 1,
+    "rsi": 1,
+    "i": 1,
+    "bank": 4,
+    "epo": 12,
+    "vld": 4
+   }
+  },
+  "u_ot_pl_land_vector_reset_kw_w_1": {
+   "module": "ot_pl_land_vector_reset_kw_w",
+   "parameters": {
+    "W": 667,
+    "D": 4,
+    "CHUNK_BITS": 8
+   },
+   "ports": {
+    "ck": 1,
+    "rsi": 84,
+    "i": 667,
+    "bank": 2668,
+    "epo": 12,
+    "vld": 336
+   }
+  },
+  "u_ot_pl_land_vector_reset_r_0": {
+   "module": "ot_pl_land_vector_reset_r",
+   "parameters": {
+    "W": 1,
+    "D": 4,
+    "K": 2,
+    "CHUNK_BITS": 8
+   },
+   "ports": {
+    "ck": 1,
+    "rsi": 1,
+    "bank": 4,
+    "epo": 12,
+    "vld": 4,
+    "o": 1
+   }
+  },
+  "u_ot_pl_land_vector_reset_r_1": {
+   "module": "ot_pl_land_vector_reset_r",
+   "parameters": {
+    "W": 667,
+    "D": 4,
+    "K": 2,
+    "CHUNK_BITS": 8
+   },
+   "ports": {
+    "ck": 1,
+    "rsi": 84,
+    "bank": 2668,
+    "epo": 12,
+    "vld": 336,
+    "o": 667
+   }
+  },
+  "u_ot_s81_mu72_land_0": {
+   "module": "ot_s81_mu72_land",
+   "parameters": {
+    "W": 11
+   },
+   "ports": {
+    "ck_w": 1,
+    "ck_r": 1,
+    "rs_w": 1,
+    "rs_r": 1,
+    "i": 11,
+    "o": 11
+   }
+  },
+  "u_ot_s81_mu72_land_1": {
+   "module": "ot_s81_mu72_land",
+   "parameters": {
+    "W": 1106
+   },
+   "ports": {
+    "ck_w": 1,
+    "ck_r": 1,
+    "rs_w": 1,
+    "rs_r": 1,
+    "i": 1106,
+    "o": 1106
+   }
+  },
+  "u_ot_hdc_v41x_vdly_0": {
+   "module": "ot_hdc_v41x_vdly",
+   "parameters": {
+    "D": 1
+   },
+   "ports": {
+    "clk": 1,
+    "rst_n": 1,
+    "d": 1,
+    "q": 1
+   }
+  },
+  "u_ot_hdc_v41x_vdly_1": {
+   "module": "ot_hdc_v41x_vdly",
+   "parameters": {
+    "D": 14
+   },
+   "ports": {
+    "clk": 1,
+    "rst_n": 1,
+    "d": 1,
+    "q": 1
+   }
+  },
+  "u_ot_hdc_v41x_kreg_0": {
+   "module": "ot_hdc_v41x_kreg",
+   "parameters": {
+    "W": 1,
+    "R": 1
+   },
+   "ports": {
+    "clk": 1,
+    "rst_n": 1,
+    "d": 1,
+    "q": 1
+   }
+  },
+  "u_ot_hdc_v41x_kreg_1": {
+   "module": "ot_hdc_v41x_kreg",
+   "parameters": {
+    "W": 2,
+    "R": 0
+   },
+   "ports": {
+    "clk": 1,
+    "rst_n": 1,
+    "d": 2,
+    "q": 2
+   }
+  },
+  "u_ot_rst_relay_0": {
+   "module": "ot_rst_relay",
+   "parameters": {
+    "REGIONS": 1,
+    "SYNC_STAGES": 2,
+    "TREE_STAGES": 1
+   },
+   "ports": {
+    "clk": 1,
+    "rst_n_in": 1,
+    "rst_n": 1
+   }
+  },
+  "u_ot_rst_relay_1": {
+   "module": "ot_rst_relay",
+   "parameters": {
+    "REGIONS": 4,
+    "SYNC_STAGES": 2,
+    "TREE_STAGES": 1
+   },
+   "ports": {
+    "clk": 1,
+    "rst_n_in": 1,
+    "rst_n": 4
+   }
+  },
+  "u_ot_s81_frs_0": {
+   "module": "ot_s81_frs",
+   "parameters": {
+    "NL": 1
+   },
+   "ports": {
+    "ck": 1,
+    "rst_n": 1,
+    "f": 1,
+    "fi": 1,
+    "fo": 1
+   }
+  },
+  "u_ot_s81_frs_1": {
+   "module": "ot_s81_frs",
+   "parameters": {
+    "NL": 4
+   },
+   "ports": {
+    "ck": 1,
+    "rst_n": 1,
+    "f": 4,
+    "fi": 1,
+    "fo": 1
+   }
+  }
+ },
+ "specializations": {
+  "masters": [
+   "ot_hdc_v41x_kreg",
+   "ot_hdc_v41x_vdly",
+   "ot_pl_land_chunk_r",
+   "ot_pl_land_n32_chunk_w",
+   "ot_pl_land_vector_reset_kw_w",
+   "ot_pl_land_vector_reset_r",
+   "ot_pl_pad",
+   "ot_rst_relay",
+   "ot_s81_frs",
+   "ot_s81_mu72_land"
+  ],
+  "specialized_modules": 20,
+  "instances": 20
+ }
+}
