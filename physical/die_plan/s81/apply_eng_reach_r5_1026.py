@@ -7,6 +7,7 @@ The generated abstract is a PLANNING candidate, not a SIGNED core view.
 """
 import argparse
 import copy
+import csv
 import json
 import re
 import sys
@@ -20,7 +21,37 @@ def main():
     ap.add_argument('--receipt',type=Path,required=True);a=ap.parse_args()
     d=a.root/'physical/die_plan/s81';sys.path.insert(0,str(d));import gen_plan_v4 as g
     from tools.die_plan import schema as S
-    raw=json.loads((a.root/a.plan).read_text());t=raw['partition_types']['eng__t1']
+    raw=json.loads((a.root/a.plan).read_text())
+    partmap={p['name']:p for p in raw['partitions']};portmap={p['id']:p for p in raw['ports']};abi=[]
+    # Exact877 generated parent payloads: PCI264 identity; RCO39 packs38
+    # core data bits plus cfgfault, while RCO valid is the separate flt bus.
+    for lid,oldwidth,newwidth in (('unit__svc_14__eng',268,264),('unit__eng__svc_14',43,39)):
+        lane=next(l for l in raw['lanes'] if l['id']==lid)
+        for pid in lane['ports']:
+            port=portmap[pid];assert port['width'] in (oldwidth,newwidth);port['width']=newwidth
+            for side in ('src','dst'):
+                ep=port[side];typ=partmap[ep['part']]['type'];assert sum(p['type']==typ for p in raw['partitions'])==1,(typ,'shared ABI type')
+                bus=next(b for b in raw['partition_types'][typ]['buses'] if b['name']==ep['bus']);assert bus['width'] in (oldwidth,newwidth);bus['width']=newwidth
+        abi.append(dict(lane=lid,before=oldwidth,after=newwidth,epoch_bit=newwidth))
+    # Preserve the historical raw census. Project only the two exact live-field
+    # contracts, and add the real cfgfault wrapper bit as its own source row.
+    census=raw['census'][0];oldcensus=d/census['rows'];rows=list(csv.DictReader(oldcensus.open(),delimiter='\t'));fields=list(rows[0]);changes=[]
+    for row in rows:
+        if (row['src'],row['src_bus'],row['dst'],row['dst_bus'])==('u_etap_15','pco','u_eng','pci'):
+            assert int(row['bits']) in (268,264);changes.append(dict(source='PCI consumed field projection',before=int(row['bits']),after=264));row['bits']='264'
+            row['src_bus']='pco[267:5]|pco[0]';row['dst_bus']='pci_live[263:0]'
+        elif (row['src'],row['src_bus'],row['dst'],row['dst_bus'])==('u_eng','rco','u_etap_15','rci'):
+            assert int(row['bits']) in (43,39);changes.append(dict(source='RCO live fields, includes valid',before=int(row['bits']),after=39));row['bits']='39'
+            row['src_bus']='rco[42:36]|rco[31:0]';row['dst_bus']='rci_live[38:0]'
+    assert len(changes)==2,'source census projection must match exactly two historical rows'
+    extra={k:'' for k in fields};extra.update(src='@generated_eng_parent',src_bus='unit_o0.d[38]=cfg_fault',dst='@generated_svc14_parent',dst_bus='unit_i1.q[38]',kind='data',bits='1');rows.append(extra)
+    cpath=d/'census/s81_lanes_eng_live_1026.tsv';cpath.parent.mkdir(parents=True,exist_ok=True)
+    with cpath.open('w') as f:
+        writer=csv.DictWriter(f,fieldnames=fields,delimiter='\t');writer.writeheader();writer.writerows(rows)
+    mp=json.loads((d/census['map']).read_text());mp['parts'].update({'@generated_eng_parent':'eng','@generated_svc14_parent':'svc_14'})
+    cmap=d/'census_map_eng_live_1026.json';cmap.write_text(json.dumps(mp,indent=1)+'\n')
+    census.update(rows='census/s81_lanes_eng_live_1026.tsv',map='census_map_eng_live_1026.json',note='Historical rows preserved separately; exact877 generated parent live PCI264/RCO39 projection plus explicit real cfg_fault wrapper metadata bit; source mapping in eng_r5_parent_census_1026_v4.json. No padding exemption.')
+    t=raw['partition_types']['eng__t1']
     c=next(c for c in t['hard_cores'] if c['module']=='dsdv_eng_rr_e')
     oldpins=json.loads((d/c['pins_file']).read_text())['pins'];new=[]
     provided=json.loads(a.pins.read_text())
@@ -53,6 +84,9 @@ def main():
     reg=[round((fr[0]+to[0])/2,3),round((fr[1]+to[1])/2,3)]
     entries.append(dict(conn='bus:xtier_i0',from_um=list(fr),to_um=list(to),regs_um=[reg],bits=276,
         launch='face bus xtier_i0',capture='u_eng.u_e.vi_s',note='Exact parent face/core bit census found24 paths >405um (max415.806); one coherent input station, +1 data cycle.'))
+    valid=next(p for p in new if p['name']=='rco[0]');valid_to=[c['origin_um'][0]+c['track_offset_um'][0]+valid['x'],c['origin_um'][1]+c['track_offset_um'][1]+valid['y']]
+    valid_fr=g._bus_pts(t['buses'],*t['outline_um'])['flt_o0'];valid_reg=[round((valid_fr[i]+valid_to[i])/2,3) for i in (0,1)]
+    entries.append(dict(conn='bus:flt_o0',from_um=list(valid_fr),to_um=valid_to,regs_um=[valid_reg],bits=1,launch='face bus flt_o0',capture='u_eng.u_e.rco',note='Exact source RCOvalid core_rco[0]; match the RCOdata parent output stage age, +1 parallel valid cycle.'))
     t['internal_stations']=entries
     stations={e['conn']:e['regs_um'] for e in entries};pmap={p['name']:p for p in new};layers={v['name']:v for v in S.ASAP7_LAYERS};rows=[]
     for pa,bn in [('pci','unit_i0'),('rco','unit_o0'),('f_ks','unit_i1'),('vi_s','xtier_i0'),('vo_s','xtier_o0'),('vo_n','xtier_o1'),('vi_n','xtier_i1')]:
@@ -61,12 +95,23 @@ def main():
         for key,p in pmap.items():
             match=re.fullmatch(re.escape(pa)+r'\[(\d+)\]',key)
             if not match:continue
-            i=int(match[1]);bi=i+4 if (pa=='pci' and i>0) or (pa=='rco' and i>=32) else i
+            i=int(match[1])
+            if pa=='rco' and i==0:continue
+            bi=i-1 if pa=='rco' else i;actual_bn=bn;actual_bp=bp
+            if pa=='rco' and i==0:
+                actual_bn='flt_o0';vb=next(v for v in t['buses'] if v['name']==actual_bn);vp=dict(vb,id=actual_bn,src={'part':'eng'},dst={'part':'svc_14'})
+                actual_bp={j:(coord,t['outline_um'][1]) for j,ln,coord in S.pin_positions(vp,layers)};bi=0
             dst=[c['origin_um'][0]+c['track_offset_um'][0]+p['x'],c['origin_um'][1]+c['track_offset_um'][1]+p['y']]
-            pts=[bp[bi]]+stations.get('bus:'+bn,[])+[dst]
+            pts=[actual_bp[bi]]+stations.get('bus:'+actual_bn,[])+[dst]
             mh=max(abs(p[0]-q[0])+abs(p[1]-q[1]) for p,q in zip(pts,pts[1:]));maxhop=max(maxhop,mh);bad+=mh>405+1e-6;n+=1
         rows.append(dict(core_port=pa,bus=bn,bits=n,max_hop_um=round(maxhop,3),over405=bad))
     assert all(r['over405']==0 for r in rows),rows
+    vb=next(v for v in t['buses'] if v['name']=='flt_o0');vp=dict(vb,id='flt_o0',src={'part':'eng'},dst={'part':'svc_14'})
+    vpin=next(coord for i,ln,coord in S.pin_positions(vp,layers) if i==0)
+    vpts=[[vpin,t['outline_um'][1]]]+stations['bus:flt_o0']+[valid_to]
+    vh=max(abs(p[0]-q[0])+abs(p[1]-q[1]) for p,q in zip(vpts,vpts[1:]))
+    assert vh<=405+1e-6
+    rows.append(dict(core_port='rco[0] VALID',bus='flt_o0',bits=1,max_hop_um=round(vh,3),over405=0))
     # The historical plan declared PCI2/RCO1 physical stages but did not put
     # them into fixed_cycles. Make the trial latency table authoritative too.
     pmap_plan={p['id']:p for p in raw['ports']};priced=[]
@@ -81,12 +126,12 @@ def main():
     fresh=latency_table(S.Plan(raw,a.root/a.plan))
     latency_changes={lid:dict(old_cycles=old_latency.get(lid,{}).get('cycles'),new_cycles=row['cycles']) for lid,row in fresh.items() if old_latency.get(lid,{}).get('cycles')!=row['cycles']}
     raw['latency']={'lanes':fresh}
-    report=dict(latency_changes=latency_changes,status='PLANNING candidate; no bind/STA/signoff adoption',pins=len(new),moved=moved,
+    report=dict(census_projection=changes,cfgfault_source_row=extra,public_ABI_corrections=abi,latency_changes=latency_changes,status='PLANNING candidate; no bind/STA/signoff adoption',pins=len(new),moved=moved,
         parent_data_census=rows,old_station_counts={v['conn']:len(v['regs_um']) for v in before},
         new_station_counts={v['conn']:len(v['regs_um']) for v in entries},
-        cycle_delta=dict(core_RTL=0,parent_xtier_i0=1,parent_unit_i1=1,geometry_added_cycles=2,geometry_added_bit_cycles=329,historical_unpriced_PCI_cycles=2,historical_unpriced_RCO_cycles=1,total_fixed_cycles_vs_raw_plan=5),priced_lanes=priced,
-        wrapper_mapping='dsdv_eng_rr_split: pci={pci[267:5],pci[0]}; rco={rco_e[38:32],PCBASE[29:26],rco_e[31:0]}; other buses bit-identical',
-        remaining=['Materialize all five parent stages in bound RTL (PCI2/RCO1 historical physical, FKS1/VI_S1 new), lockstep/mutant, and price against the previously unpriced raw calendar.',
+        cycle_delta=dict(core_RTL=0,parent_xtier_i0=1,parent_unit_i1=1,geometry_added_cycles=2,geometry_added_bit_cycles=329,historical_unpriced_PCI_cycles=2,historical_unpriced_RCO_cycles=1,word_stage_cycles_vs_raw_plan=5,parallel_RCO_valid_stage=1,sum_per_lane_fixed_cycles=6),priced_lanes=priced,
+        wrapper_mapping='Exact877 generated parent: PCI264 identity; core RCO[1..38]→unit_o0[0..37], cfgfault→unit_o0[38], core RCO[0]→flt_o0[0]; FKS53 and VI_S276 identity. cfgfault soft-source placement requires actual parent trial.',
+        remaining=['Materialize PCI2/RCOdata1/FKS1/VI_S1 plus parallel matching RCOvalid1 in bound RTL; lockstep/mutant and price actual causal graph. cfgfault must follow the same RCO word stage.',
                    'R5 engine core placement/route/signoff remains owned PATH-S81/head_eng; candidate LEF is not a signed view.'])
     a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(raw,separators=(',',':'))+'\n')
     a.receipt.parent.mkdir(parents=True,exist_ok=True);a.receipt.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
