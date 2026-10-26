@@ -26,6 +26,12 @@
 //   S81-L20RD3: nopen counts mismatching lane words whose in-band fault flag is 0 (a fail-OPEN word); closed_* campaign
 //   cases (an over-rate window) must FAIL with nopen 0.
 // Plusargs: none (parameters by -G).  Prints TB_IDXRD PASS / FAIL and a TB_IDXRD_STATS line.
+// TOK-DS-4 (10-26) +IMG=<dir>: COMPILED-JOB mode (tools/s81_dv/layer_prog/lower_idx.py bench images).  The job frame is
+//   <dir>/job.hex (IDX_S header + 64 query words, sent unchanged; B / N / k / KB / T0 / P / ik / om / tag decoded from
+//   the header), the HBM holds <dir>/hbm.hex ({PC 2 r + q, PC-local sector, 256 b} = the rank's key quarter at the
+//   compiler layout + the IK_ROW writes the svc bench observed from dsdv_svc_att), and every lane-0 BEAT word is checked
+//   against <dir>/exp.hex ({lane valid 16, 16 BF16 scores} a word = the layer fixture's golden attn.idx.score), NOT
+//   against the bench's reference engine (not fed in this mode).
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_dsdv_idx_rg3;
     // runtime knobs (plusargs, one build serves every size / window): +N= +GATHER= +B= +PMAX= +KB= +T0= +P= +K= +SEED=
@@ -43,7 +49,9 @@ module tb_dsdv_idx_rg3;
     integer TRW = 0, TRN = 0;
     integer OPEN = 0;                      // S81-L20DIE: spec om (open lanes 1..3 -> no HDR / empty BEAT expected)
     integer SLOTHIT = 0, SLICE2 = 1;
+    string  IMG = "";                      // TOK-DS-4: compiled-job image dir (empty = the synthetic record mode)
     initial begin
+        void'($value$plusargs("IMG=%s", IMG));
         void'($value$plusargs("TRW=%d", TRW)); void'($value$plusargs("TRN=%d", TRN));
         void'($value$plusargs("N=%d", N)); void'($value$plusargs("GATHER=%d", GATHER)); void'($value$plusargs("B=%d", B));
         void'($value$plusargs("PMAX=%d", PMAX)); void'($value$plusargs("KB=%d", KB)); void'($value$plusargs("T0=%d", T0));
@@ -69,7 +77,7 @@ module tb_dsdv_idx_rg3;
     parameter integer IH = 0;              // STW-S81c-COLLA 10-22: reader input relay hops (q / s chain +IH a reader)
     parameter integer KR = 0;              // reader engine-input relay hops (engine latency +KR, absorbed by T0)              // reader response relay hops (lane latency +RH, absorbed by T0)
     localparam integer NRD = 8;
-    localparam integer R = 16, MW = 1 << 20, NWMAX = 16384, IK = 5, TAG = 8'h5A, SL0 = 20000, NS = 6;
+    localparam integer R = 16, MW = 1 << 21, NWMAX = 16384, IK = 5, TAG = 8'h5A, SL0 = 20000, NS = 6;
 
     // ------------------------------------------------------------------ clocks / reset
     reg ck = 0, ckh = 0, rst = 0;
@@ -98,7 +106,7 @@ module tb_dsdv_idx_rg3;
     // ------------------------------------------------------------------ query
     reg [511:0] qc [0:31]; reg [31:0] qs [0:31]; reg [15:0] qw [0:31];
     integer h_;
-    initial begin #0; for (h_ = 0; h_ < 32; h_ = h_ + 1) begin : g_q
+    initial begin #0; if (IMG == "") for (h_ = 0; h_ < 32; h_ = h_ + 1) begin : g_q
         integer w; reg [15:0] wl [0:5];
         wl[0] = 16'h3F80; wl[1] = 16'hBF00; wl[2] = 16'h3E80; wl[3] = 16'h4000; wl[4] = 16'h3F00; wl[5] = 16'hBE40;
         for (w = 0; w < 16; w = w + 1) qc[h_][32 * w +: 32] = mix(64'h7000_0000 + h_ * 64 + w);
@@ -110,8 +118,26 @@ module tb_dsdv_idx_rg3;
     integer j0, j1, nw, nlw;
     reg [16:0] blk [0:8191];
     integer o_, b_;
+    // TOK-DS-4 compiled job (IMG): the frame words, decoded spec, ik strap / tag of the decoder + checker
+    reg [511:0] jimg [0:64];
+    reg [255:0] exp_s [0:NWMAX-1]; reg [15:0] exp_v [0:NWMAX-1];
+    integer TAGV = TAG;
+    reg [2:0] ikv = 3'(IK);
+    task automatic load_job();
+        integer fd, k; reg [511:0] w;
+        fd = $fopen({IMG, "/job.hex"}, "r");
+        if (fd == 0) begin $display("TB_IDXRD FAIL no %s/job.hex", IMG); $finish; end
+        for (k = 0; k < 65; k++) begin if ($fscanf(fd, "%h\n", w) != 1) begin $display("TB_IDXRD FAIL job.hex short"); $finish; end jimg[k] = w; end
+        $fclose(fd);
+        w = jimg[0];
+        if (w[511:508] != 4'd4 || w[491:480] != 12'd64) begin $display("TB_IDXRD FAIL job.hex: not an IDX_S len 64 header"); $finish; end
+        GATHER = 0; B = int'(w[19:0]); N = int'(w[40:20]); K = int'(w[50:41]); KB = int'(w[80:51]); T0 = int'(w[96:81]);
+        P = int'(w[100:97]); ikv = w[103:101]; OPEN = int'(w[106:104]); TAGV = int'(w[502:495]);
+        for (k = 0; k < 32; k++) begin qc[k] = jimg[1 + 2 * k]; qs[k] = jimg[2 + 2 * k][31:0]; qw[k] = jimg[2 + 2 * k][47:32]; end
+    endtask
     initial begin
         #0;
+        if (IMG != "") load_job();
         if (GATHER != 0) begin
             b_ = mix(64'h7300_0000) % 64;
             for (o_ = 0; o_ < N; o_ = o_ + 1) begin                 // strictly ascending, gaps 1..(2 PMAX / 8 N)
@@ -223,6 +249,20 @@ module tb_dsdv_idx_rg3;
     initial begin : g_pre
         integer w, i, l, p_; bit v; longint p;
         #1;
+        if (IMG != "") begin : g_img
+            integer fd, n_; reg [7:0] pc_; reg [29:0] l_; reg [255:0] d_; reg [15:0] kv_; reg [255:0] s_;
+            fd = $fopen({IMG, "/hbm.hex"}, "r"); n_ = 0;
+            if (fd == 0) begin $display("TB_IDXRD FAIL no hbm.hex"); $finish; end
+            while ($fscanf(fd, "%h %h %h\n", pc_, l_, d_) == 3) begin u_hbm.mem[xl(l_, 5'(pc_)) % MW] = d_; n_++; end
+            $fclose(fd);
+            fd = $fopen({IMG, "/exp.hex"}, "r"); w = 0;
+            if (fd == 0) begin $display("TB_IDXRD FAIL no exp.hex"); $finish; end
+            while ($fscanf(fd, "%h %h\n", kv_, s_) == 2) begin exp_v[w] = kv_; exp_s[w] = s_; w++; end
+            $fclose(fd);
+            if (w != nw) begin $display("TB_IDXRD FAIL exp.hex words %0d != job words %0d", w, nw); fail = 1; end
+            $display("TB_IDXRD_IMG %s sectors %0d exp_words %0d B %0d N %0d K %0d KB %0d T0 %0d P %0d ik %0d om %0d tag %02x",
+                     IMG, n_, w, B, N, K, KB, T0, P, ikv, OPEN, TAGV);
+        end else
         for (w = 0; w < nw; w = w + 1) for (i = 0; i < 16; i = i + 1) begin p = pos_of(w, i, v); if (v) place(p); end
         for (p_ = 0; p_ < 32; p_ = p_ + 1) for (l = SL0; l < SL0 + 64; l = l + 1) u_hbm.mem[xl(30'(l), 5'(p_)) % MW] = spat(l, p_);
     end
@@ -236,7 +276,6 @@ module tb_dsdv_idx_rg3;
         .k_valid(rk_v), .k_ready(rk_rdy), .k_kv(rk_kv), .k_keep(16'hFFFF), .k_key(rk_key),
         .o_valid(ro_v), .o_ready(1'b1), .o_kv(ro_kv), .o_score(ro_s), .o_fault(ro_f),
         .cnt_keys_scored(), .cnt_headsums_fused(), .cnt_faults());
-    reg [255:0] exp_s [0:NWMAX-1]; reg [15:0] exp_v [0:NWMAX-1];
     integer ro_n = 0;
     always @(posedge ck) if (ro_v) begin
         exp_s[ro_n] <= ro_s; exp_v[ro_n] <= ro_kv; ro_n <= ro_n + 1;
@@ -245,23 +284,23 @@ module tb_dsdv_idx_rg3;
 
     // ------------------------------------------------------------------ output decode (selector's V ingress) + checks
     wire [4*515-1:0] ln; wire dr_v_u, vin_f; wire [7:0] dr_n_u, dr_d_u;
-    dsdv_bk_vin #(.V(276), .MUT(0)) u_vin (.clk(ck), .rst_n(rst), .ik(3'(IK)), .uid(8'hFF), .dl_nv(sch[NRD][0]),
+    dsdv_bk_vin #(.V(276), .MUT(0)) u_vin (.clk(ck), .rst_n(rst), .ik(ikv), .uid(8'hFF), .dl_nv(sch[NRD][0]),
         .dl_n(sch[NRD]), .dl_sv(1'b0), .dl_s(276'd0), .lanes(ln), .dr_v(dr_v_u), .dr_n(dr_n_u), .dr_d(dr_d_u), .fault(vin_f));
     integer lw_n [0:3];
     longint t_hdr0 = -1, t_end = -1, t_last = -1;
     initial for (int l = 0; l < 4; l++) lw_n[l] = 0;
     function automatic [511:0] hdr_w(input integer base, input integer q);
-        hdr_w = {4'd1, 8'(TAG), 244'd0, 224'd0, 2'(q), 10'(K), 20'(base)};
+        hdr_w = {4'd1, 8'(TAGV), 244'd0, 224'd0, 2'(q), 10'(K), 20'(base)};
     endfunction
     always @(posedge ck) if (rst) begin : g_chk
         integer l, i; reg [511:0] d, e; reg [255:0] m;
         for (l = 0; l < 4; l = l + 1) if (ln[515 * l]) begin
             d = ln[515 * l + 1 +: 512];
             if (lw_n[l] == 0) e = hdr_w(l == 0 ? 16 * j0 : 16 * (j1 + 1), l);
-            else if (l != 0) e = {4'd2, 8'(TAG), 227'd0, 1'b1, 16'd0, 256'd0};
+            else if (l != 0) e = {4'd2, 8'(TAGV), 227'd0, 1'b1, 16'd0, 256'd0};
             else begin
                 for (i = 0; i < 16; i = i + 1) m[16 * i +: 16] = {16{exp_v[lw_n[0] - 1][i]}};
-                e = {4'd2, 8'(TAG), 227'd0, 1'(lw_n[0] == nw), exp_v[lw_n[0] - 1], exp_s[lw_n[0] - 1] & m};
+                e = {4'd2, 8'(TAGV), 227'd0, 1'(lw_n[0] == nw), exp_v[lw_n[0] - 1], exp_s[lw_n[0] - 1] & m};
             end
             if (d !== e || ln[515 * l + 514] || (l != 0 && lw_n[l] > 1) || (l == 0 && lw_n[0] > nw) ||
                 (l != 0 && OPEN[l - 1])) begin
@@ -345,7 +384,8 @@ module tb_dsdv_idx_rg3;
         repeat (20) @(posedge ck);
         rst = 1;
         repeat (40) @(posedge ck);
-        // reference: q load, then every expected word
+        // reference: q load, then every expected word (IMG: expected = the fixture golden, the reference is not fed)
+        if (IMG == "") begin
         for (i = 0; i < 32; i = i + 1) begin
             @(negedge ck); rq_v = 1; rq_h = 8'(i); rq_c_ = qc[i]; rq_s_ = qs[i]; rq_w_ = qw[i];
         end
@@ -359,6 +399,7 @@ module tb_dsdv_idx_rg3;
         end
         rk_v = 0;
         while (ro_n < nw) @(posedge ck);
+        end
         // slice phase: NS reads per PC, tags [16:15] = 0
         if (SLICE != 0) slice_phase();
         job_on = 1;
@@ -368,10 +409,10 @@ module tb_dsdv_idx_rg3;
         @(negedge ck); qin = 0;
         repeat (5) @(negedge ck);
         // the index job
-        qin = {job_hdr(), 1'b1}; t_hdr0 = cyc;
+        qin = {(IMG != "") ? jimg[0] : job_hdr(), 1'b1}; t_hdr0 = cyc;
         for (i = 0; i < 32; i = i + 1) begin
-            @(negedge ck); qin = {qc[i], 1'b1};
-            @(negedge ck); qin = {464'd0, qw[i], qs[i], 1'b1};
+            @(negedge ck); qin = {(IMG != "") ? jimg[1 + 2 * i] : qc[i], 1'b1};
+            @(negedge ck); qin = {(IMG != "") ? jimg[2 + 2 * i] : {464'd0, qw[i], qs[i]}, 1'b1};
         end
         for (w = 0; w < nlw; w = w + 1) begin
             @(negedge ck); qin = 0; qin[0] = 1'b1;

@@ -1,0 +1,85 @@
+{
+ "top": "ot_v41_bf_col",
+ "sources": [
+  "rtl/common/ot_prefix.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/v41rom/ot_v41_bmul2.sv",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_chain2u2.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/v41rom/ot_v41_chain2.sv",
+  "rtl/v41rom/ot_v41_chain3.sv",
+  "rtl/v41rom/ot_v41_chain4.sv",
+  "rtl/v41rom/ot_v41_fadd2.sv",
+  "rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+  "rtl/v41rom/ot_v41_tile_clk.sv",
+  "rtl/v41rom/ot_bf_hdly.sv",
+  "rtl/v41rom/ot_v41_bf_col.sv",
+  "rtl/v41rom/ot_v41_segtree5.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+  "rtl/v41rom/ot_v41_bterm.sv"
+ ],
+ "params": {
+  "NSEG": 8,
+  "NCH": 16,
+  "XF": 8,
+  "LV": 5,
+  "BF16": 1,
+  "NCHB": 8,
+  "NB": 2,
+  "MTP": 1,
+  "EARLY": 1,
+  "CG": 1,
+  "DRAIN": 200,
+  "FAST": 1,
+  "PP": 1,
+  "BP": 0,
+  "QTIMING_FIX": 1,
+  "QPIPE": 1,
+  "QP_XS": 1,
+  "QP_CAP": 0,
+  "QP_P1": 1,
+  "QP_CSAM": 10,
+  "QZ": 1,
+  "QZ_NS": 8,
+  "QZ_NE": 4,
+  "QY": 1,
+  "QX": 10,
+  "QBF": 2,
+  "QZE": 1,
+  "TCG": 1,
+  "GRADUAL_RNE": 1,
+  "BXST": 2,
+  "FXST": 2,
+  "RCG": 1
+ },
+ "defines": [],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n_pin"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "count": 2,
+   "at": [
+    42.12,
+    32.064
+   ],
+   "orient": "R180"
+  }
+ ],
+ "route": {
+  "pd": 0.6
+ },
+ "children": [],
+ "notes": "S81-CORE-LAT r4 2026-10-26: canonical gen_core_kit_legacy spec for ot_v41_bf_col (COORD 11:47 ruling (1) + ROOT-MERGE-19 HOLD ask). Sources = physical/die_plan/s81/core_lat/bf_col_rcg/files.txt (the bench/LEC elaboration set of the RCG=1 one-level gate network, main 63e392e6ca); params = bf_col_rcg/params.txt = tools/s81/run_bf_hier_physical.py QP + BXST/FXST 2 + RCG 1 (the S81 die instantiation). ROM view = asap7_memory_macros_v2 (track-aligned in every orientation). Sites in recipe macro_sites.",
+ "provenance": "closed view physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col (tools/s81/run_bf_hier_physical.py --block col, place_col.tcl ROM pair 40 um in from the W edge); RCG network from codex/bf-ready-0733@7bd7b9b3b (main 63e392e6ca)"
+}

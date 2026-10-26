@@ -46,7 +46,9 @@ module ot_v41_bterm4_w10 #(
     output wire [TW-1:0]     otag
 );
     localparam integer W = 42;
-    wire first = 1'b0, last = 1'b0;
+    // S81-BFCOL-RTL 10-26: the first / last tag chain of ot_v41_bterm (P0..P8) is removed, declared proven-dead: since
+    // bterm2 its source was the constant 'wire first = 0, last = 0' and no output read p8_first / p8_last (the P5a/P5b
+    // split also left p4 / p5 undriven, the yosys check failure).  Arithmetic, valid, tag and latency unchanged.
     function automatic [7:0] e2m1(input [3:0] c);
         if (c[2:1] == 2'd0) e2m1 = {c[3], c[0] ? 4'd6 : 4'd0, 3'd0};
         else                e2m1 = {c[3], {2'b00, c[2:1]} + 4'd6, c[0], 2'b00};
@@ -56,10 +58,11 @@ module ot_v41_bterm4_w10 #(
     endfunction
 
 
-    integer i;
+    // loop index i is declared per loop (S81-BFCOL-RTL 10-26): one module-scope integer written by the P1a / P1b clocked
+    // blocks and the P2 combinational block was a multiple / constant-driver net to yosys check (class of 2b9f7617e)
 
     // -- P0: input register -----------------------------------------------------------
-    reg              p0_v, p0_first, p0_last;
+    reg              p0_v;
     (* keep *) reg   p0_fp4;              // never merged with another lane's (W13: a merged fp4 flop drove 2 lanes' decoders)
     reg [255:0]      p0_xq, p0_wq;
     reg signed [9:0] p0_xe, p0_we;
@@ -68,12 +71,12 @@ module ot_v41_bterm4_w10 #(
         else p0_v <= v;
     end
     always @(posedge clk) begin
-        p0_first <= first; p0_last <= last; p0_fp4 <= fp4;
+        p0_fp4 <= fp4;
         p0_xq <= xq; p0_wq <= (WD != 0) ? wdec(wq, fp4) : wq; p0_xe <= xe; p0_we <= we;
     end
 
     // -- P1: decode, signed 4x4 products, shift amounts (P1S: P1a decode | P1b product) ------------------
-    reg               p1_v, p1_first, p1_last, p1_nan;
+    reg               p1_v, p1_nan;
     reg signed [10:0] p1_es;
     reg signed [8:0]  p1_p [0:31];
     reg [4:0]         p1_sh [0:31];
@@ -89,10 +92,9 @@ module ot_v41_bterm4_w10 #(
             else p1_v <= p0_v;
         end
         always @(posedge clk) begin
-            p1_first <= p0_first; p1_last <= p0_last;
             p1_es <= p0_xe + p0_we;
             nan = 1'b0;
-            for (i = 0; i < 32; i = i + 1) begin
+            for (integer i = 0; i < 32; i = i + 1) begin
                 xc = p0_xq[8*i +: 8];
                 wc = (WD != 0) ? p0_wq[8*i +: 8] : (p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
                 nan = nan | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
@@ -108,7 +110,7 @@ module ot_v41_bterm4_w10 #(
         end
     end else begin : g_p1s
         // P1a: the same decode, registered as {sign, x significand, w significand, shift amount}
-        reg               pa_v, pa_first, pa_last, pa_nan;
+        reg               pa_v, pa_nan;
         reg [3:0]         pa_nang;      // NS: per 8 lanes
         reg [3:0]         nang;
         reg signed [10:0] pa_es;
@@ -121,10 +123,9 @@ module ot_v41_bterm4_w10 #(
             else begin pa_v <= p0_v; p1_v <= pa_v; end
         end
         always @(posedge clk) begin
-            pa_first <= p0_first; pa_last <= p0_last;
             pa_es <= p0_xe + p0_we;
             nan = 1'b0; nang = 4'd0;
-            for (i = 0; i < 32; i = i + 1) begin
+            for (integer i = 0; i < 32; i = i + 1) begin
                 xc = p0_xq[8*i +: 8];
                 wc = (WD != 0) ? p0_wq[8*i +: 8] : (p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
                 nan = nan | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
@@ -140,13 +141,13 @@ module ot_v41_bterm4_w10 #(
         end
         // P1b: the signed 4x4 product
         always @(posedge clk) begin
-            p1_first <= pa_first; p1_last <= pa_last; p1_es <= pa_es;
+            p1_es <= pa_es;
 `ifdef BT_MUTANT_NS
             p1_nan <= (NS != 0) ? |pa_nang[2:0] : pa_nan;          // negative control: one partial dropped
 `else
             p1_nan <= (NS != 0) ? |pa_nang : pa_nan;
 `endif
-            for (i = 0; i < 32; i = i + 1) begin
+            for (integer i = 0; i < 32; i = i + 1) begin
                 pm = pa_xs[i] * pa_ws[i];
                 p1_p[i] <= pa_sg[i] ? -$signed({1'b0, pm}) : $signed({1'b0, pm});
                 p1_sh[i] <= pa_sh[i];
@@ -163,13 +164,13 @@ module ot_v41_bterm4_w10 #(
     // -- P2: terms (units of 2^-18) and CSA 32 -> CSAM ---------------------------------------
     reg [32*W-1:0] terms;
     always @(*) begin
-        for (i = 0; i < 32; i = i + 1)
+        for (integer i = 0; i < 32; i = i + 1)
             if (P2S != 0 && P1S != 0) terms[W*i +: W] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
             else terms[W*i +: W] = {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
     end
     wire [CSAM*W-1:0] c7;
     ot_v41_csa #(.N(32), .M(CSAM), .W(W)) u_csa1 (.d(terms), .q(c7));
-    reg               p2_v, p2_first, p2_last, p2_nan;
+    reg               p2_v, p2_nan;
     reg signed [10:0] p2_es;
     reg [CSAM*W-1:0]  p2_c;
     always @(posedge clk or negedge rst_n) begin
@@ -177,14 +178,14 @@ module ot_v41_bterm4_w10 #(
         else p2_v <= p1_v;
     end
     always @(posedge clk) begin
-        p2_first <= p1_first; p2_last <= p1_last; p2_nan <= p1_nan; p2_es <= p1_es;
+        p2_nan <= p1_nan; p2_es <= p1_es;
         p2_c <= c7;
     end
 
     // -- P3: CSA CSAM -> 2 ------------------------------------------------------------------------
     wire [2*W-1:0] c2;
     ot_v41_csa #(.N(CSAM), .M(2), .W(W)) u_csa2 (.d(p2_c), .q(c2));
-    reg               p3_v, p3_first, p3_last, p3_nan;
+    reg               p3_v, p3_nan;
     reg signed [10:0] p3_es;
     reg [W-1:0]       p3_a, p3_b;
     always @(posedge clk or negedge rst_n) begin
@@ -192,7 +193,7 @@ module ot_v41_bterm4_w10 #(
         else p3_v <= p2_v;
     end
     always @(posedge clk) begin
-        p3_first <= p2_first; p3_last <= p2_last; p3_nan <= p2_nan; p3_es <= p2_es;
+        p3_nan <= p2_nan; p3_es <= p2_es;
         p3_a <= c2[W-1:0]; p3_b <= c2[2*W-1:W];
     end
 
@@ -215,7 +216,7 @@ module ot_v41_bterm4_w10 #(
     wire [W-1:0] ng;                          // -(a + b) = ~s + 1
     wire         cng;
     ot_v41_inc #(.W(W)) u_ng (.a(~p4a_s), .inc(1'b1), .y(ng), .co(cng));
-    reg               p4_v, p4_first, p4_last, p4_nan, p4_s;
+    reg               p4_v, p4_nan, p4_s;
     reg signed [11:0] p4_eb;
     reg [W-2:0]       p4_m;
     always @(posedge clk or negedge rst_n) begin
@@ -260,7 +261,7 @@ module ot_v41_bterm4_w10 #(
         if (nm[40:39] == 2'd0)  begin nm = nm << 2;  lz = lz + 6'd2;  end
         if (nm[40] == 1'b0)     begin nm = nm << 1;  lz = lz + 6'd1;  end
     end
-    reg               p5_v, p5_first, p5_last, p5_nan, p5_s, p5_z;
+    reg               p5_v, p5_nan, p5_s, p5_z;
     reg signed [11:0] p5_ebl;           // exponent of the normalised leading bit (eb - lz), formed here
     reg [40:0]        p5_nm;
     always @(posedge clk or negedge rst_n) begin
@@ -279,7 +280,7 @@ module ot_v41_bterm4_w10 #(
     wire [24:0] mr;                                              // m24 + inc, explicit prefix
     wire        cmr;
     ot_v41_inc #(.W(25)) u_mr (.a({1'b0, m24}), .inc(inc), .y(mr), .co(cmr));
-    reg               p6_v, p6_first, p6_last, p6_nan, p6_s, p6_z;
+    reg               p6_v, p6_nan, p6_s, p6_z;
     reg signed [11:0] p6_b;
     reg [22:0]        p6_f;
     always @(posedge clk or negedge rst_n) begin
@@ -287,7 +288,7 @@ module ot_v41_bterm4_w10 #(
         else p6_v <= p5_v;
     end
     always @(posedge clk) begin
-        p6_first <= p5_first; p6_last <= p5_last; p6_nan <= p5_nan; p6_s <= p5_s; p6_z <= p5_z;
+        p6_nan <= p5_nan; p6_s <= p5_s; p6_z <= p5_z;
         p6_b <= p5_ebl + $signed({11'd0, mr[24]});
         p6_f <= mr[24] ? 23'd0 : mr[22:0];
     end
@@ -296,7 +297,7 @@ module ot_v41_bterm4_w10 #(
     wire [11:0] rsh = 12'd1 - p6_b;                         // used when p6_b <= 0
     wire [4:0]  rs5 = (p6_b < -12'sd24) ? 5'd26 : rsh[4:0];
     wire [49:0] sw = {1'b1, p6_f, 26'd0} >> rs5;
-    reg               p7_v, p7_first, p7_last, p7_nan, p7_sub, p7_ovf, p7_s;
+    reg               p7_v, p7_nan, p7_sub, p7_ovf, p7_s;
     reg [31:0]        p7_n;                                 // normal / zero / inf result
     reg [23:0]        p7_t;
     reg               p7_g, p7_st;
@@ -305,7 +306,7 @@ module ot_v41_bterm4_w10 #(
         else p7_v <= p6_v;
     end
     always @(posedge clk) begin
-        p7_first <= p6_first; p7_last <= p6_last; p7_nan <= p6_nan; p7_s <= p6_s;
+        p7_nan <= p6_nan; p7_s <= p6_s;
         p7_sub <= !p6_z && (p6_b < 12'sd1);
         p7_ovf <= !p6_z && (p6_b > 12'sd254);
         if (p6_z)                  p7_n <= 32'd0;
@@ -321,14 +322,13 @@ module ot_v41_bterm4_w10 #(
     wire [23:0] tr;                                                // p7_t + inc, explicit prefix
     wire        ctr;
     ot_v41_inc #(.W(24)) u_tr (.a(p7_t), .inc(inc8), .y(tr), .co(ctr));
-    reg         p8_v, p8_first, p8_last, p8_f;
+    reg         p8_v, p8_f;
     reg [31:0]  p8_y;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p8_v <= 1'b0;
         else p8_v <= p7_v;
     end
     always @(posedge clk) begin
-        p8_first <= p7_first; p8_last <= p7_last;
         p8_f <= p7_nan | p7_ovf;
         //: a subnormal that rounds up to 2^-126 carries into the exponent field
         p8_y <= p7_sub ? {p7_s, 7'd0, tr} : p7_n;

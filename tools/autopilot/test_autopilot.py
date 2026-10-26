@@ -18,9 +18,10 @@ ROW = ["s81", "slice_station__t5", KIT, "claude/s81-kits@0123456789ab", "PASS", 
        "S81"]
 
 
-def so(verdict="NOT SIGNED", tt=5.0, ff=-3.0, fails=("hold_ff",), drc=0):
+def so(verdict="NOT SIGNED", tt=5.0, ff=-3.0, fails=("hold_ff",), drc=0, pg="PASS"):
     return {"signoff": {"path": "/k/signoff/signoff.json", "verdict": verdict, "reasons": ["r"], "fails": list(fails),
-                        "tt_wns": tt, "ff_wns": ff, "drc": drc, "odb": "/k/run/x/6_final.odb", "base": "/k/run/x"},
+                        "tt_wns": tt, "ff_wns": ff, "drc": drc, "odb": "/k/run/x/6_final.odb", "base": "/k/run/x",
+                        "pg": pg},
             "grt_overflow": 0}
 
 
@@ -151,6 +152,12 @@ class TestAppendWithdrawal(Base):
 class TestClassify(Base):
     def test_signed(self):
         self.assertEqual(self.ap.classify(so("SIGNED", 1, 1, ()), {"exit": 0})[0], "SIGNED")
+
+    def test_signed_needs_pg_census(self):
+        # FLOW 10-26: a kit signoff.py without the PG census (or with open supply terminals) is not a sign-off
+        for pg in (None, "NOT RUN", "FAIL"):
+            self.assertEqual(self.ap.classify(so("SIGNED", 1, 1, (), pg=pg), {"exit": 0})[:2], ("STRUCTURAL", "pg-unbound"), pg)
+        self.assertEqual(self.ap.classify(so("NOT SIGNED", 1, 1, ("pg",), pg="FAIL"), {})[0], "STRUCTURAL")
 
     def test_near_miss_hold(self):
         self.assertEqual(self.ap.classify(so(ff=-29.9), {"exit": 0})[0], "NEAR-MISS")

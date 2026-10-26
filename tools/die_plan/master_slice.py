@@ -406,6 +406,10 @@ def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, 
                 raise SliceError(f"slice clock port {declared!r} differs from generator manifest {explicit[0]!r}")
             effective = dict(sl, core_clock_port=explicit[0])
         core_infra.install(kd, effective)
+        # COORD 10-26 12:55 (12.2a1): the declared ft ports are die-timed -- ft-safe kit SDC + interface model
+        if (kd / "constraint.sdc").is_file() and (kd / "sdc_lint.json").is_file():
+            import ft_ports
+            ft_ports.install(kd)
     shutil.copyfile(p, kd / "master_slice.json")
     (kd / "master_slice.tcl").write_text(emit_tcl(sl))
     _consume_io(kd, sl, _clock_port(kd, sl))
@@ -523,6 +527,12 @@ def check_kit(kd, slice_path=None, tol=1e-3):
             got = json.loads((kd / "core_infra_plan.json").read_text())
             if got != json.loads(json.dumps(plan)):
                 issues.append("core_infra_plan.json differs from compile_slice(slice)")
+            if plan.get("arcs") and (kd / "constraint.sdc").is_file():
+                import ft_ports
+                fp = kd / "ft_ports.json"
+                want = ft_ports.from_core_infra_plan(json.loads(json.dumps(plan)))
+                if not fp.is_file() or json.loads(fp.read_text()).get("sha256") != want["sha256"]:
+                    issues.append("ft_ports.json missing or not the slice ft declaration (12.2a1 die-timed ports)")
             if (kd / "master_core_infra.tcl").read_text() != CI.emit_tcl(eff):
                 issues.append("master_core_infra.tcl not generated from this slice")
             impl = (kd / "core_infra_impl.tcl").read_text()
