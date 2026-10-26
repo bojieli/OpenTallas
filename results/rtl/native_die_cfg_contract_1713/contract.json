@@ -177,15 +177,10 @@
    "architectural_reset_value": 0
   }
  },
+ "hroot_to_ectl_cfg_bits_checked": 160,
  "capability": "required compiler input; not inferred here",
  "age_words": "19 required current compiler words; not inferred here",
  "qualification": "source ABI/default census only, not boot or token qualification",
- "sources": {
-  "/srv/opentallas-scratch2/claude/codex-kv-bind-1713/p1/tree/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv": "2edc45dffcad72bb9ed5f38185f9a92b08780a3643de8d35f87bf0d7cc255556",
-  "/srv/opentallas-scratch2/claude/codex-kv-bind-1713/p1/tree/rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv": "de8a97019f05a978bd5f3eb455a9e69419bebaa8f11f356612899e0a0665fcc9",
-  "/srv/opentallas-scratch2/claude/codex-kv-bind-1713/p1/tree/rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv": "300e078bb79f3cc129598f4f7801127f6e7f732354e9328541f2261a7dca5f1b",
-  "/srv/opentallas-scratch2/claude/codex-kv-bind-1713/p1/tree/rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a"
- },
  "controls": {
   "actual_native_contract": "PASS",
   "live_reset_reader": "CAUGHT: w_dcfg__rst_dly: expected no readers, found 1 additional references",
@@ -193,6 +188,23 @@
   "wrong_identity_encoding": "CAUGHT: qkd_ectl_a_tp8_direct: ECTL element/stack identity encoding changed",
   "wrong_native_abi": "CAUGHT: unexpected native DCFG ABI {'NRST': 42, 'CAP': 1, 'AGES': 1}",
   "omitted_age_word": "CAUGHT: native age-word count/seal location contract changed",
-  "changed_group_order": "CAUGHT: WS ECTL group bit order changed"
+  "changed_group_order": "CAUGHT: WS ECTL group bit order changed",
+  "actual_native_full_config_path": "PASS160bits",
+  "within_stack_concat_permutation": "CAUGHT: WS ECTL group bit order changed",
+  "hroot_output_group_permutation": "CAUGHT: WS hroot o_c0 selects another config group",
+  "actual_ectl_binding_permutation": "CAUGHT: ectl_WS_0.cfg[0]: actual native binding does not select kvs_hroot_WS.o_c0[0]"
+ },
+ "sources": {
+  "/srv/opentallas-scratch2/claude/codex-kv-bind-1713/p1/tree/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv": "2edc45dffcad72bb9ed5f38185f9a92b08780a3643de8d35f87bf0d7cc255556",
+  "/srv/opentallas-scratch2/claude/codex-kv-bind-1713/p1/tree/rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv": "de8a97019f05a978bd5f3eb455a9e69419bebaa8f11f356612899e0a0665fcc9",
+  "/srv/opentallas-scratch2/claude/codex-kv-bind-1713/p1/tree/rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv": "300e078bb79f3cc129598f4f7801127f6e7f732354e9328541f2261a7dca5f1b",
+  "/srv/opentallas-scratch2/claude/codex-kv-bind-1713/p1/tree/rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+  "/srv/opentallas-scratch2/claude/codex-kv-bind-1713/p1/tree/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv": "e38a80024ea26b60f8bdbc2619a202dc689bfd8881f028ca711021d0275c8497",
+  "/srv/opentallas-scratch2/claude/codex-kv-bind-1713/p1/tree/rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_land.sv": "7fded0aa5be4bdf94f73d83ef307c0480e65c5c740cb97de5ba097c547c3a0bd"
+ },
+ "binding_source": {
+  "path": "/srv/opentallas-scratch2/claude/wt/codex-kv-plan-1713/results/rtl/native_die_cfg_contract_1713/cfg_sinks.json",
+  "sha256": "cac3044f092a4eb052579cf7f202f475d0fe78c35732aedf8d133404b5c66058",
+  "origin": "actual b2 bind_sinks.json filtered to all160ECTLcfg input bits"
  }
 }
