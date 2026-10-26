@@ -3,6 +3,45 @@
 Last full update: 2026-10-24 08:30 PDT. A live per-lane snapshot is appended below whenever the handoff document is
 generated. Lane files (~/coord/lanes/<LANE>.md) are the source of truth for each lane.
 
+## CURRENT STATE 2026-10-26 01:55 PDT (read this first; it overrides the older sections below)
+
+**Owner decisions 10-26 (binding):**
+1. **Freeze gate:** die GRT0 incl. clock AND die-clock related-pair skew <=80 ps at TT and FF (CPPR, routed RC). Routability alone never freezes a die.
+2. **INFRA-FIRST die method (01:37, "go ahead immediately"):** PG grid sized from IR → clock (equal-length H-tree feeding one mesh per clock region, landed seams, driver islands in tiles) → reset tree → freeze 1-3 as pre-routes with a skew gate → signal GRT (>=50 iterations) on the leftover → freeze on rule 1. The die absorbs residuals (mesh stub trim / core-latency offset); tiles are rebuilt only for their own failures; every tile type gets a trial placement before freeze.
+3. **QC (54a1aeb5) and S81-HEAD (d7b8d1eb) are UNFROZEN.** PENDING-DELTA D-INFRA-FIRST-QC / -HEAD in lanes/PLAN-DELTA.md hold all their type routes. Hard cores continue.
+4. **S81 PHY:** use published figures, recorded as assumptions (docs/ASSUMPTIONS.md 7a, branch claude/s81-phy-assume-1026).
+
+**COORD calls in force (owner may veto):**
+- HBM hard cores get an M5 route ceiling (owner 10-12 M5 rule). Measured: die GRT 1.73M → 0 at 50 iterations.
+- Die GRT plan judgments need >=50 iterations; 5-iteration numbers are diagnostic only.
+- QC seams across the root/L1/L2 clock split lines use landed crossings; TOK prices the cycles.
+- KV clock islands in all 40 types are accepted.
+- QC 40 ps two-sided IO-hold budget.
+- D-QC-FE-REACH stations (all FE variants) and the CB ID straps are approved.
+- ASTK face clock gets a structural sub-root (no relaxation).
+- A one-cycle hop beyond 600-750 um is GEOM FAIL STRUCTURAL even with positive slack; every placement review runs a full r2r reach census.
+- Feedthroughs stay <=M7 (owner 10-24) until FT-M89-PROBE measures otherwise. Then bring the owner numbers, not a rule change.
+
+**Per die now** (details: ~/coord/RELEASE_TREE.md):
+- **QC:** prototype of infra-first (lane INFRA-FIRST). Skew FAIL 146/132 with a single mesh. CLOCK-MESH-2 is building the regional mesh + landed seams. All queued QC deltas fold into ONE QC plan event.
+- **S81-HEAD:** next after QC. Old tree skew 268/254. Channel-only mesh is impossible, so it uses in-tile islands.
+- **KV:** batch claude/path-kv-batch-0115@650841e1ef. Open items:
+  - sys_c 8 vs 5 stations: finish the SYS3 RTL;
+  - mesh skew re-run on the reserved sites (main it5 mesh PASS 73 ps);
+  - then PG from IR.
+- **S81:** die GRT 1.80M; hot spots sit on L1/L3 hard cores walled to M7. D-S81-B2 is one plan event. SerDes shoreline is short: 43.3 mm available vs 44.9-48.2 mm needed. This may need the owner.
+- **HBM:** D-HBM-B1 + M5 ceilings + 4 cut fixes + infra-first.
+- **Sign-off:** flat since 10-25 16:23 because routes are held on the flow canary. FLOW-TAG submitted the full canary set at 01:19 on e0d486853 (cap64 merged). The holds lift when it passes.
+
+**Live Claude lanes at handoff:** each lane file has its PARKED/last lines.
+- Die paths: INFRA-FIRST, CLOCK-MESH-2, CLOCK-MESH-B, PATH-QC, PATH-QC-FEREACH, PATH-KV, PATH-S81 (+ B2 compose, eng SRAM), PATH-HBM.
+- Kits and probes: KITS-WAVE-3, CORES-KITS, FT-M89-PROBE.
+- Token, flow and merge: TOK-DS, TOK, FLOW-TAG, ROOT-MERGE-16.
+- Review: GEOM-REVIEW-12, GEOM-REVIEW-13.
+If they stop on the limit, restart them as fresh short agents from lanes/_FRESH_LANE_BRIEF.md + the lane file. Critical path first: INFRA-FIRST/QC, FLOW-TAG, PATH-KV, PATH-S81, PATH-HBM.
+
+**Waiting on the owner:** none.
+
 ## What the project is
 OpenTallas is mask-ROM LLM inference silicon research on ASAP7 at an 833 ps clock (1.2 GHz).
 
