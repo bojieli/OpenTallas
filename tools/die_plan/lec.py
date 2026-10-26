@@ -2110,6 +2110,70 @@ def slang_element_keys(L, log, work=None):
     return len(mp)
 
 
+def memory_geometry(aliases_file):
+    """{gold array base 'ff:<scope>.<name>': (element width, size, start offset)} of every RTL memory of the gold
+    design written before techmap (gold.aliases.json 'memories'): the source's own element geometry.  Empty when
+    the file is absent or unreadable."""
+    try:
+        d = json.loads(Path(aliases_file).read_text())
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for mod in d.get("modules", {}).values():
+        for name, mem in mod.get("memories", {}).items():
+            try:
+                g = (int(mem["width"]), int(mem["size"]), int(mem.get("start_offset", 0)))
+            except (KeyError, TypeError, ValueError):
+                continue
+            base = "ff:" + GENBLK.sub("", name.replace("\\", "").replace(" ", "").replace("/", "."))
+            out[base] = None if base in out and out[base] != g else g      # ambiguous name: no geometry
+    return {k: v for k, v in out.items() if v}
+
+
+def memory_layout(g, t, geom):
+    """exact gate -> gold re-key of one RTL memory from its source geometry (word width W, size S, offset O of the
+    pre-techmap gold memory).  Gold (memory_map after an optional opt_mem_widen by F = S / words): key [w][j] =
+    address w*F + j//W, bit j%W (wide sub-word k holds address w*F + k at bits k*W: yosys' wide-port convention).
+    Gate (synthesised netlist, one flop vector per element): [a][b] = address a, bit b.  When the gate has K = W/w
+    times more elements than the gold memory has words (slang folds the inner unpacked dimension of
+    `reg [w-1:0] x [0:N-1][0:K-1]` into one W-bit word, element 0 at the MSB, like its flat vectors), gate element
+    a is word a//K, sub-element K-1-a%K.  -> {gate key: gold key} when every gate bit lands on a distinct gold bit,
+    else None (never a guess)."""
+    if not geom or not g or not t:
+        return None
+    W, S, O = geom
+    if W <= 0 or S <= 0 or any(len(v) != 2 for v in g.values()) or any(len(v) != 2 for v in t.values()):
+        return None
+    words = {v[0] for v in g.values()}
+    if S % len(words):
+        return None
+    F = S // len(words)
+    gold = {}
+    for k, (w, j) in g.items():
+        if j >= F * W:
+            return None
+        gold[(w * F + j // W, j % W)] = k
+    if len(gold) != len(g):
+        return None
+    amax = max(a for a, _ in t.values())
+    if all(O <= a < O + S and 0 <= b < W for a, b in t.values()):
+        elem = dict(t)
+    elif F == 1 and O == 0 and (amax + 1) % S == 0 and W % ((amax + 1) // S) == 0:
+        K = (amax + 1) // S                          # inner elements per gold word; every word's last one present
+        w = W // K
+        if K < 2 or any(a < 0 or not 0 <= b < w for a, b in t.values()):
+            return None
+        elem = {k: (a // K, (K - 1 - a % K) * w + b) for k, (a, b) in t.items()}
+    else:
+        return None
+    mp = {}
+    for k, e in elem.items():
+        if e not in gold:
+            return None
+        mp[k] = gold[e]
+    return mp if len(set(mp.values())) == len(mp) else None
+
+
 def alias_arrays(L, log, words=4, work=None):
     """an RTL array whose gate flops synthesis named after an ALIAS array (`assign SX[i] = X[i]`: rename -wire picked
     the alias wire, so the gate holds SX[i][b] while the gold, read with the other frontend, holds X[h][flat]): the
@@ -2173,6 +2237,7 @@ def alias_arrays(L, log, words=4, work=None):
     galias = getattr(L, "galias", {})
     elem = slang_elements(Path(work) / "gold.aliases.json") if work is not None else {}
     elem.update(getattr(L, "element_names", {}))
+    geom = memory_geometry(Path(work) / "gold.aliases.json") if work is not None else {}
     G, T = split(k for k in L.gonly if k not in held), split(k for k in L.tonly if k not in held)
     for gb, g in sorted(G.items(), key=lambda x: -len(x[1])):
         votes = collections.Counter()
@@ -2195,7 +2260,28 @@ def alias_arrays(L, log, words=4, work=None):
                         mp = {ft[f]: fg[f] for f in ft}
                         if mp not in cands:
                             cands.append(mp)
+            # The source memory's own geometry (pre-techmap gold: element width / size / offset) fixes the layout
+            # exactly: yosys may widen a memory before mapping it (opt_mem_widen: a_pr [0:15] x 24 b -> 2 words x
+            # 192 b, gold a_pr[w][j] = element 8w + j/24, bit j%24), and the gate may have dropped constant high
+            # bits (a_pr#t[r][3..16]), so radices read off either side's maximal indices give none of the four
+            # flat variants above the right stride (QC slw_hc0 10-26: 223 a_pr + 268 b_emin false differences).
+            gmp = memory_layout(g, t, geom.get(gb))
+            if gmp:
+                apply(gmp)
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
+                           f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
+                continue
             if not cands:
+                continue
+            if len(cands) == 1:
+                # one candidate: no score can change the choice (N59: 512 one-bit u_pd2_emb_code_q_<i>.r arrays,
+                # two whole-design simulations each, ~100 min before the first SAT round)
+                apply(cands[0])
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); single layout (proof pending)")
                 continue
             # A unique element-driver winner selects exactly the mapping the
             # scored path below would select, independently of every simulation
@@ -2223,6 +2309,7 @@ def alias_arrays(L, log, words=4, work=None):
             # slang's per-element driver cells name the element each flat gold bit belongs to: when they exist they
             # decide the layout (structural evidence); simulation only orders variants without such evidence
             agree = [sum(1 for tk, gk in mp.items() if elem.get(gk) == tk[len(tb):]) for _, mp in scored]
+            structural = False
             if max(agree, default=0) > 0:
                 j = max(range(len(scored)), key=lambda i: agree[i])
                 if scored[j] is not best:
@@ -2230,13 +2317,20 @@ def alias_arrays(L, log, words=4, work=None):
                                f"({agree[j]} of {len(scored[j][1])} bits agree; simulation preferred another, "
                                f"{best[0]} vs {scored[j][0]} mismatches)")
                 best = scored[j]
-            # the alias evidence decides the pairing; simulation only orders the layout variants (a gold array
-            # whose next state reads X sources or merged elements disagrees in raw simulation either way)
-            if True:
-                apply(best[1])
-                del T[tb]
+                structural = True
+            # Without structural layout evidence a re-key that RAISES the disagreeing compare points is no
+            # evidence for any of the guessed layouts (QC slw_hc0 10-26: a_pr 2535 -> 2762, b_emin 2762 -> 3098,
+            # every variant a wrong stride): leave the array unpaired for function-based correspondence, which
+            # still proves whatever it pairs.  A refused re-key never hides a difference (nothing is assumed).
+            if best[0] > base and not structural:
                 log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
-                           f"({len(g)} b, Q-net alias evidence {n}); mismatching compare points {base} -> {best[0]}")
+                           f"REFUSED: best of {len(scored)} layouts raises mismatching compare points "
+                           f"{base} -> {best[0]} (left to correspondence)")
+                continue
+            apply(best[1])
+            del T[tb]
+            log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                       f"({len(g)} b, Q-net alias evidence {n}); mismatching compare points {base} -> {best[0]}")
 
 
 def merged_proposals(L, log, cap=4096):
@@ -2282,6 +2376,7 @@ def merged_proposals(L, log, cap=4096):
         s_ = support(L.gc[k])
         fp.setdefault(frozenset("SELF" if x == k else x for x in s_), []).append(k)
     n = 0
+    cands = collections.defaultdict(list)            # gold-only k -> matched registers with its support (in order)
     for c in L.matched:
         if not c.startswith("ff:") or c not in L.gc:
             continue
@@ -2290,9 +2385,41 @@ def merged_proposals(L, log, cap=4096):
         if ks:
             for k in ks:
                 if ("gold", k) not in L.hyp:
-                    L.hyp[("gold", k)] = ("eq", "gold", c, 0)
-                    n += 1
-    log.append(f"merged proposal: {n} of {len(gonly)} gold-only registers share a matched register's next-state support")
+                    cands[k].append(c)
+    # Several matched registers may share one support set: the per-epoch copies e_poolc0 / e_poolc1 both read
+    # (b_vk[0], b_epk[0], b_poolm, SELF), and the gold-only e_pool[1] synthesis merged into e_poolc1 was proposed
+    # against the first, e_poolc0[0] (QC slw_hc0 10-26: refuted every round, e_pool[1] left free -> 9 POOLc points
+    # differ).  Pick, per gold-only register, the first candidate whose next state simulates equal to it with the
+    # pair's state bound together (a hold path then reads one value, so only the load condition / data decide);
+    # the chosen relation is still proved inductively with all the others, a wrong one is dropped, never assumed.
+    choice = {k: cs[0] for k, cs in cands.items()}
+    pending = {k: list(cs) for k, cs in cands.items() if len(cs) > 1}
+    rounds = 0
+    while pending and rounds < 8:
+        rounds += 1
+        for k, cs in pending.items():
+            L.hyp[("gold", k)] = ("eq", "gold", cs[0], 0)
+        try:
+            m, _ = L.build(with_compare=False, with_hyp=True)
+            val, mask = m.simulate(4, seed=4545 + rounds)
+            ok = {k for k, cs in pending.items()
+                  if lit_val(val, mask, L.dlit[("gold", k)]) == lit_val(val, mask, L.dlit[("gold", cs[0])])}
+        finally:
+            for k in pending:
+                L.hyp.pop(("gold", k), None)
+        for k in list(pending):
+            if k in ok:
+                choice[k] = pending.pop(k)[0]
+            else:
+                pending[k].pop(0)
+                if not pending[k]:
+                    del pending[k]                   # none agrees: keep the first (refinement drops it)
+    n_dis = sum(1 for k, c in choice.items() if len(cands[k]) > 1 and c != cands[k][0])
+    for k, c in choice.items():
+        L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+        n += 1
+    log.append(f"merged proposal: {n} of {len(gonly)} gold-only registers share a matched register's next-state support"
+               + (f" ({n_dis} re-chosen among same-support candidates by bound-state simulation)" if n_dis else ""))
 
 def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
