@@ -102,3 +102,11 @@ gate = tools/die_plan pytest + plain G0 on s81, s81_head, qwen_compute, qwen_kvs
 - Watch: path-hbm-reset-2335 carries an old canaries.json watch list; keep main's lists when it merges.
 - No live jobs. Worktree epyc1:/srv/opentallas-scratch2/claude/wt/root-merge14 removed at park.
 [ROOT-MERGE-15 2026-10-26 01:07 PDT] MERGED tok-ds-2330 b58f1bafdf + kits-wave2 be0e65d075 -> main 26576bc7b0 (gates = baseline). cp1-driverview -> FLOW-TAG; path-qc-2325 + path-qc-iohold READY-AT-FLOW-TAG; path-kv-lec HOLD (full-kit LEC reruns ~02:00).
+
+## PARKED ROOT-MERGE-15 2026-10-26 01:08 PDT
+- main = 26576bc7b0 (hub ~/OpenTallas fast-forwarded). Chain on 15e404c45e: 253db6dc20 tok-ds-2330 b58f1bafdf -> 26576bc7b0 kits-wave2 be0e65d075. 0 deletions, one push under merge.lock.
+- Gates on 26576bc7b0 = baseline: die_plan + autopilot/flow_canary + rom pytest PASS, csa --check rc 0 (sparse set must include results/arch + results/token_pass), G0 QC 0 / s81_head 0 / B2n 0 / KV 0 / S81 1. Script epyc1:/srv/opentallas-scratch2/claude/root-merge15-out/gates.sh (arg1 wt, arg2 out).
+- Routed to FLOW-TAG: cp1-driverview 299539e750 (FLOW-TAG merges it); READY-AT-FLOW-TAG path-qc-2325 80689357d7 + path-qc-iohold 47eff3e9cd (+ earlier rom-gate-flow 0b6be8e6d, hbm-prects-estimate).
+- Next event: path-kv-lec-2330 070a15290 HOLD until full-kit LEC reruns (~02:00, epyc1 .../pathkv-lec-2330/full) post EQUIVALENT + mutant -> merge as URGENT-FLOW.
+- HOLDs unchanged: QC batch 2 (CLOCK-MESH related-pair PASS), KV delta a795ac1cb6, TR3-HBM 623e81076 + tok-hbm-strap 22f37073b2. Owner 10-26 die freeze gate = GRT0 incl clock AND related-pair skew <=80 TT/FF.
+- No live jobs; worktree epyc1:/srv/opentallas-scratch2/claude/wt/root-merge15 removed.
