@@ -966,6 +966,25 @@ class TestDistinctDesigns(unittest.TestCase):
         self.assertEqual([st[k]["state"] for k in other], ["NEEDS-KIT"])   # module-level record: table unknown
         self.assertTrue(any("types 2 cores 3" in h for h in head))
 
+    def test_generated_memory_macro_is_never_a_design_to_kit(self):
+        import ownership as O
+        rom = {"module": "ot_rom_4096x72_m8", "outline_um": [38.04, 62.952], "pins_file": "cores/rom.json",
+               "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef"}
+        core = {"module": "q_elem", "outline_um": [10, 10], "lef": "physical/s81_die_views/q/q_elem.lef"}
+        plan = {"partition_types": {"col": {"module": "col_m", "hard_cores": [rom, dict(rom), core]}},
+                "partitions": [{"type": "col"}, {"type": "col"}]}
+        items = {it["item"]: it for it in O.plan_items("s81", plan, {"cores/rom.json": self.pins((0, 1), (2, 3))})}
+        self.assertEqual(items["ot_rom_4096x72_m8"]["kind"], "macro")
+        self.assertEqual(items["ot_rom_4096x72_m8"]["replicas"], 4)
+        self.assertEqual(items["q_elem"]["kind"], "core")
+        rows, gaps, head = O.build(dict(plans={"s81": plan}), now=time.time())
+        st = {r["item"]: r for r in rows}
+        self.assertEqual(st["ot_rom_4096x72_m8"]["state"], "GENERATED")
+        self.assertEqual(st["ot_rom_4096x72_m8"]["default_owner"], "ROM-MACRO")
+        self.assertEqual(st["q_elem"]["state"], "NEEDS-KIT")
+        self.assertFalse(any("ot_rom_4096x72_m8" in str(g) for g in gaps))     # never an UNOWNED-ITEM gap
+        self.assertTrue(any("generated macros 1 (placed 4)" in h for h in head))
+
     def test_job_of_one_table_routes_only_that_design(self):
         import ownership as O
         plan, pins, canonical = self.hbm()
