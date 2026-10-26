@@ -410,9 +410,35 @@ def route_domain_tree(T, tree, P, clear_um=8.64, rep_um=450.0):
         max_physical_hop_um=round(max(g for n in T.nets for *_,g in n['branches']),3))
 
 
+def folded_leg(a, b, axis, total_um, half_stages, keep=None, die=None):
+    """Equal-total physical out-and-back leg, with a fixed number of buffers.
+
+    Positive and negative folds have the same total Manhattan length; choose
+    the one whose stage sites avoid the most hard-core/PHY keepouts.  Every
+    point is a real buffer waypoint, so a router cannot omit the fold.
+    """
+    delta=b[axis]-a[axis]
+    if total_um+1e-6<abs(delta) or half_stages<1:
+        raise ValueError('fold length/stages cannot cover its endpoints')
+    candidates=[]
+    for sign in (1,-1):
+        extreme=(a[axis]+b[axis]+sign*total_um)/2
+        corner=list(a);corner[axis]=extreme
+        end=list(a);end[axis]=b[axis]
+        points=_leg_points(a,tuple(corner),half_stages)+_leg_points(tuple(corner),tuple(end),half_stages)
+        outside=sum(not (1<=x<=die[0]-1 and 1<=y<=die[1]-1) for x,y in points) if die else 0
+        blocked=sum(bool(keep.hit(x,y)) for x,y in points[:-1]) if keep else 0
+        candidates.append((outside,blocked,points))
+    outside,blocked,points=min(candidates,key=lambda c:(c[0],c[1]))
+    if outside:raise ValueError('no physical fold fits inside die')
+    return points
+
+
 def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=None, window=None, aware_levels=None,
-          pad="sta", domain_corridors=False, domain_clear_um=8.64):
+          pad="sta", domain_corridors=False, domain_clear_um=8.64, physical_folds=False):
     W, H = float(P.W), float(P.H)
+    if physical_folds and core_early != "off":
+        raise ValueError("physical folds do not support electrical core-early pads")
     window = SPLIT_WINDOW if window is None else window
     aware_levels = AWARE_LEVELS if aware_levels is None else aware_levels
     taps = plan_taps(P) if taps is None else taps
@@ -617,6 +643,10 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     Ly = max(abs(t[3] - pos[k][1]) for k in leaf_keys for t in by_leaf[k])
     kx = max(1, math.ceil(Lx / rep_um - 1e-9)) if Lx > 1e-6 else 0
     ky = max(1, math.ceil(Ly / rep_um - 1e-9)) if Ly > 1e-6 else 0
+    if physical_folds:
+        # Two equally staged legs, outward then back, on each axis.
+        kx *= 2
+        ky *= 2
     chain_std = [Lx / kx] * kx + [Ly / ky] * ky if (kx or ky) else [0.0]
     chain_layer = ["M8"] * kx + ["M9"] * ky if (kx or ky) else ["M8"]
     # ------------------------------------------------------------------ netlist
@@ -679,6 +709,10 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
             corner = (X, ly)
             cuts = [(lx + (X - lx) * (k + 1) / kx, ly, "M8") for k in range(kx)]
             cuts += [(X, ly + (Y - ly) * (k + 1) / ky, "M9") for k in range(ky)]
+            if physical_folds:
+                xpoints=folded_leg((lx,ly),(X,ly),0,Lx,kx//2,K,(W,H)) if kx else []
+                ypoints=folded_leg((X,ly),(X,Y),1,Ly,ky//2,K,(W,H)) if ky else []
+                cuts=[(x,y,"M8") for x,y in xpoints]+[(x,y,"M9") for x,y in ypoints]
             std = list(chain_std)
             if core_early == "pad" and early > 0:
                 std = early_chain(std, chain_layer, early)
@@ -753,6 +787,22 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
         for kl in children.values():
             for _, targets in kl:
                 targets += [[e, 0] for nn, _ in list(targets) for e in extra.get(nn, [])]
+    if physical_folds:
+        # The model may use only the wire between physical buffer waypoints.
+        # No standard-length or STA-only padding survives into the SPEF.
+        tap_xy={"port:"+t["port"]:tuple(t["xy"]) for t in tap_rows}
+        tap_xy["port:root"]=tuple(root)
+        def cell_xy(name):
+            return tap_xy[name] if name.startswith("port:") else (T.cells[name]["x"],T.cells[name]["y"])
+        for net in nets:
+            a=cell_xy(net['drv']);branches=[];routes=[]
+            for _,layer,load,_ in net['branches']:
+                b=cell_xy(load)
+                g=abs(a[0]-b[0])+abs(a[1]-b[1])
+                branches.append((max(g,1e-3),layer,load,g))
+                bend=(b[0],a[1]) if layer=="M8" else (a[0],b[1])
+                routes.append([a,bend,b])
+            net['branches']=branches;net['routes']=routes
     over = max(geo - L for n in nets for L, _, _, geo in n["branches"])
     tot_w = sum(w for _, _, w in pairs)
     meta = dict(leaf_um=leaf_um, rep_um=rep_um, pad=pad, levels=D, split_axes="".join("xy"[a] for a in levels),
@@ -767,6 +817,10 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 pair_weight=tot_w, cut_weight_per_level={lev: round(v) for lev, v in sorted(cut_w.items())},
                 wire_um=round(sum(L for n in nets for L, *_ in n["branches"]), 1),
                 padding_um=round(sum(L - g for n in nets for L, _, _, g in n["branches"]), 1))
+    if physical_folds:
+        meta['physical_folds']=dict(hidden_pad_um=0,axis_stages=[kx,ky],
+            max_geometric_hop_um=round(max(g for n in nets for *_,g in n['branches']),3),
+            data_cycles_added=0)
     tok = [f"{t[0]}/{t[1]}" for t in taps if K.hit(t[2], t[3])]
     meta["taps_on_keepout"] = len(tok)
     meta["taps_on_keepout_list"] = tok[:50]
@@ -970,7 +1024,7 @@ def cmd_build(a):
     t0 = time.time()
     T, tree = build(P, a.leaf_um, a.rep_um, a.core_early, window=a.window, aware_levels=a.aware_levels, pad=a.pad,
                     domain_corridors=getattr(a,"domain_corridors",False),
-                    domain_clear_um=getattr(a,"domain_clear_um",8.64))
+                    domain_clear_um=getattr(a,"domain_clear_um",8.64), physical_folds=getattr(a,"physical_folds",False))
     write_verilog(T, out / "ctree.v")
     write_spef(T, out / "ctree.spef")
     import hashlib
@@ -1146,6 +1200,10 @@ def cmd_run(a):
     T = load_tree(out)
     tree = json.loads((out / "tree.json").read_text())
     pads = {}
+    if getattr(a,"physical_folds",False):
+        # Adding invisible electrical wire would recreate the discrepancy that
+        # this profile diagnoses. Any residual must be fixed in geometry.
+        a.iters=0
     hist = []
     best = None
     def emit(pads):
@@ -1475,6 +1533,7 @@ def main(argv=None):
     b.add_argument("--domain-clear-um", type=float, default=8.64)
     b.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
     b.add_argument("--wide-levels", type=int, default=0, help="trunk + top N H-tree levels on the 8W NDR")
+    b.add_argument("--physical-folds", action="store_true", help="real buffer-waypoint folds; disable invisible STA pads")
     b.add_argument("--ndr", choices=("2w", "4w"), default="2w", help="die-tree wire NDR: 2w (default; 4W only > WIDE_UM) or 4w everywhere")
     u = sub.add_parser("run")
     u.add_argument("plan")
@@ -1488,6 +1547,7 @@ def main(argv=None):
     u.add_argument("--domain-clear-um", type=float, default=8.64)
     u.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
     u.add_argument("--wide-levels", type=int, default=0, help="trunk + top N H-tree levels on the 8W NDR")
+    u.add_argument("--physical-folds", action="store_true", help="real buffer-waypoint folds; disable invisible STA pads")
     u.add_argument("--ndr", choices=("2w", "4w"), default="2w", help="die-tree wire NDR: 2w (default; 4W only > WIDE_UM) or 4w everywhere")
     u.add_argument("--corner", action="append")
     u.add_argument("--libdir")
