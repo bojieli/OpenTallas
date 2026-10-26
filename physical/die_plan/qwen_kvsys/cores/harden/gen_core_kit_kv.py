@@ -37,7 +37,8 @@ OFFS = dict(M4=0.024, M5=0.024, M6=0.032, M7=0.032)
 KEEP = 2.16
 IO_BUDGET = 0.2
 UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 60.0, 25.0, 0.5, 2.0
-RST_RE = r"(^|__)(rst_n|arst_n|hrst_n|[a-z0-9_]*_rst_n)$"
+# KVHR2 10-26: + rrst_n / wrst_n (CDC read/write-domain reset pins of ot_qwen_die_cdc_ch, hr cdc cores)
+RST_RE = r"(^|__)(rst_n|arst_n|hrst_n|rrst_n|wrst_n|[a-z0-9_]*_rst_n)$"
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
 make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.045 -y_pitch 0.270
@@ -580,6 +581,9 @@ def main():
                     help="bound TT pin-register insertion (ps, measured); default: plan clock common latency")
     ap.add_argument("--io-ff-ps", type=float, default=None,
                     help="bound FF pin-register insertion (ps, measured); default: plan clock insertion_ff_ps, else 0.81 x TT")
+    ap.add_argument("--hr-face-ports", metavar="DIR", help="KVHR2 10-26: qkd_hr_* zero-cycle face recut: kit RTL = DIR/<core>.v "
+                    "from hr_face_ports.sh (private port flop copies of shared output flops, merged identical input "
+                    "capture flops; equiv proof + mutant in DIR/eq_rc.txt) + the macro black boxes of the core json")
     ap.add_argument("--hold-ff-margin", type=float, default=5.0, help="FF-only GRT hold repair margin (ps)")
     a = ap.parse_args()
     cj = json.load(open(a.core_json))
@@ -652,6 +656,14 @@ def main():
     (kd / "rtl").mkdir(parents=True)
     srcs = []
     files = list(cj["files"])
+    if a.hr_face_ports:
+        if not mod.startswith("qkd_hr_"):
+            raise SystemExit("--hr-face-ports only applies to qkd_hr_* cores")
+        fpd = Path(a.hr_face_ports)
+        rc = (fpd / "eq_rc.txt").read_text().split()
+        if rc != ["post", "rc=0", "mut", "rc=1", "emitted_v", "rc=0"]:
+            raise SystemExit(f"--hr-face-ports: proof not clean in {fpd}/eq_rc.txt: {rc}")
+        files = [str(fpd / f"{mod}.v")] + [f for f in files if f.endswith("_bb.v")]
     if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
         files.append(str(REPO / "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"))
     for f in files:
@@ -756,6 +768,13 @@ def main():
             strap_port=astk_strap_master.STRAP, values=astk_strap_master.CORNER_STRAP,
             bound=["ctl st", "zn_1..3 zc[1:0]"], landing="one kept 2-b register (strap_q)", sdc="set_false_path -from [get_ports strap_*]",
             added_cycles=0, settle="+1 edge after power-up (quasi-static)"), indent=1) + "\n")
+    if a.hr_face_ports:
+        fr = json.load(open(Path(a.hr_face_ports) / "hr_face_ports.json"))
+        (kd / "hr_face_delta.json").write_text(json.dumps(dict(
+            transform="physical/die_plan/qwen_kvsys/cores/harden/hr_face_ports.py (hr_face_ports.sh)",
+            added_cycles=0, private_port_flops=len(fr["private_out"]), merged_input_captures=len(fr["merged_in"]),
+            listed_not_changed={k: fr["n_" + k] for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out")},
+            proof="equiv_make/equiv_simple -seq 2/equiv_induct/equiv_status -assert: post PASS, emitted .v PASS, mutant FAIL (caught)"), indent=1) + "\n")
     if a.ectlk_face_ports:
         if mod != "qkd_ectlk":
             raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
