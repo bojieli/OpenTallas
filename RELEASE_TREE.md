@@ -18,7 +18,7 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
   - [ ] S81.TIES Svc dead-input proofs, relay pads, cfifo strap, no-repair SRAM view · TOK-DS · RUNNING · COORD 21:21 rulings; ABI fix 162f0033d
 - [ ] S81.STA Die STA TT/FF on real views · DIE-PROTO · WAITS · → S81.GRT, → S81.CLK, → S81.TILES
   - [ ] S81.TILES Tile sign-offs (path parts trial-only until die gate) · PATH-S81 · WAITS · HCPL 1 DRT trial WAIT-CANARY; HCORE cap24 FF -5.34 → S81.GRT, → FLOW.TAG
-- [ ] S81.XDIE PHY footprint, power and bump contract · OWNER · OWNER · research data still missing; diagnostics only
+- [ ] S81.XDIE PHY footprint, power and bump contract · PATH-S81 / COORD · PENDING-DELTA · published assumptions claude/s81-phy-assume-1026@bea83f9105 (6-lane macro 3.36 mm2, 3.3 mm shore, 4.37 W); 14/14 windows short → D-S81-PHY
 
 ## DIE s81_head · S81 head die · rev FROZEN d7b8d1eb · est. after HEAD8 batch
 - [ ] HEAD.GRT Die GRT0 · DIE-PROTO · FROZEN · ovf 0 on d7b8d1eb; re-run needed if the HEAD8 batch is adopted → HEAD.B8
