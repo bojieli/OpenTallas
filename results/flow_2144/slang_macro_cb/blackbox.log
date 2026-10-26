@@ -1,0 +1,47 @@
+
+-- Executing script file `blackbox.ys' --
+
+1. Executing Liberty frontend: /work/ot_sram_1r1w2c_32x64_m1_tt.lib
+Imported 1 cell types from liberty file.
+
+2. Executing SLANG frontend.
+Top level design units:
+    top
+
+
+Build succeeded: 0 errors, 0 warnings
+
+2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+<suppressed ~6 debug messages>
+
+2.2. Executing TRIBUF pass.
+
+2.3. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.4. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+2.5. Executing PROC_INIT pass (extract init attributes).
+
+2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+2.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \top
+
+3.2. Analyzing design hierarchy..
+Top module:  \top
+Removed 0 unused modules.

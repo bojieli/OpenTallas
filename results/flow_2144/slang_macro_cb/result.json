@@ -1,0 +1,7 @@
+{
+  "verdict": "MECHANISM_CONFIRMED",
+  "functional_source_rc": 1,
+  "actual_bb_source_rc": 0,
+  "cause": "Slang --blackboxed-module on functional macro attaches localparam CB to the instance; Liberty module has no parameters. Using the actual compiler-generated blackbox declaration preserves ports and avoids the spurious parameter.",
+  "scope": "Tiny diagnostic only. Old whole-leaf RQ0 kit obsolete; current bank/pool canonicalization already passed and live jobs are untouched."
+}
