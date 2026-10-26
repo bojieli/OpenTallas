@@ -1,0 +1,37 @@
+[OK      ] ectl       RESPONSE_LAT           12
+[OK      ] ectl       QK_ISSUE_AGE           34
+[OK      ] ectl       ROW_RETURN_LAT         19
+[OK      ] ectl       QK_ROW_LATENCY         14
+[OK      ] ectl       QK_D_QK                0
+[ERROR   ] ahub       ahub.__rule__          null  (as-built AP_OFS not in param_regen.json (bind without the KV hook))
+[ERROR   ] pv         pv.__rule__            null  (as-built TRUNK_D/FLAG_D not in param_regen.json)
+[PENDING ] vport      VPORT_RT               null  (no vport vq/rsp crossing on this bind)
+[OK      ] prog       KVN_A0                 28
+[OK      ] prog       D2D_AGES               {"programme_start": [50], "d2d_to_attention_rx": [56], "d2d_to_writer": [56], "d2d_to_seq_kvn": [55]
+[OK      ] prog       HROOT_DOWN_RET         {"WS": [11, 12], "WN": [14, 12], "ES": [12, 12], "EN": [14, 12]}
+[OK      ] xdie       XDIE_SEAM_K            "56,56,54,54,54,55,55"
+[OK      ] xdie       D2D_TXDP_K             "32'h03030471"
+[OK      ] xdie       D2D_KV_TX_LAT          113
+[PENDING ] pc833      PC_CORE_CLOCK          null  (bound RTL not in BIND_DIR (bus_groups-only copy): the PC masters' CORE_CLOCK cannot be read; run on the bind output dir )
+[OK      ] pc833      PC_HBM_RL              29
+[OK      ] pc833      PC_T_CCDL              4
+[OK      ] pc833      PC_T_FAW               19
+[OK      ] pc833      PC_T_RAS               35
+[OK      ] pc833      PC_T_RCD               24
+[OK      ] pc833      PC_T_RCDW              13
+[OK      ] pc833      PC_T_REFI              4680
+[OK      ] pc833      PC_T_REFIPB            144
+[OK      ] pc833      PC_T_RFC               421
+[OK      ] pc833      PC_T_RFCPB             241
+[OK      ] pc833      PC_T_RP                20
+[OK      ] pc833      PC_T_RRDL              5
+[OK      ] pc833      PC_T_RRDS              4
+[OK      ] pc833      PC_T_RREFD             10
+[OK      ] pc833      PC_T_RTP               8
+[OK      ] pc833      PC_T_RTW               13
+[OK      ] pc833      PC_T_WRR               35
+[OK      ] pc833      PC_T_WTR               18
+[OK      ] pc833      PC_WDONE               19
+[OK      ] pc833      PC_PHASE_TICKS         [625, 625]
+[PENDING ] pc833      PC_IMAGE_PROFILE       "common833"  (compiled boot image controller profile must equal the bound die's (an 833 image on a legacy PC master, or the reverse, l)
+REGEN_CONSTANTS qwen_kvsys FAIL {'OK': 31, 'ERROR': 2, 'PENDING': 3}
