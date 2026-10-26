@@ -93,7 +93,7 @@ def token_run():
 EMB_SEND = 20   # bench token run: provider row staged (one ready per buffer block at the HBM boundary) by cycle 19
 
 
-def layer_msgs(seg, base, w, txl, phy, st_ofs=38, status_delay=0, attn_tx_shift=0):
+def layer_msgs(seg, base, w, txl, phy, st_ofs=38, status_delay=0, attn_tx_shift=0, attn_service_pad=0):
     """one decode layer's link messages at layer offset base; w = op windows (rmsnorm1, qkv, qknorm_rope, attn_kv)
     KV-BIND4 10-19: attn_tx_shift = edges the KV attention tile adds before its RESULT burst (r16 registered RX
     validation, qkd_attn_cal_gen_r16 TX_SHIFT 1): the K RESULT beats and STATUS move +attn_tx_shift and attn_kv grows
@@ -102,6 +102,8 @@ def layer_msgs(seg, base, w, txl, phy, st_ofs=38, status_delay=0, attn_tx_shift=
         raise ValueError("status_delay must be a nonnegative static edge count")
     if type(attn_tx_shift) is not int or attn_tx_shift < 0:
         raise ValueError("attn_tx_shift must be a nonnegative static edge count")
+    if type(attn_service_pad) is not int or attn_service_pad < 0:
+        raise ValueError("attn_service_pad must be a nonnegative static edge count")
     q0 = base + int(sum(w[:3]))
     a_end = q0 + int(w[3])
     m = [dict(seg=seg, src="C", cyc=q0, tx_port=0, rx_port=0, kind=1, beat=0)]
@@ -109,12 +111,13 @@ def layer_msgs(seg, base, w, txl, phy, st_ofs=38, status_delay=0, attn_tx_shift=
     m += [dict(seg=seg, src="C", cyc=q0 + 33 + i, tx_port=3, rx_port=3, kind=5, beat=i) for i in range(4)]
     m.append(dict(seg=seg, src="C", cyc=q0 + st_ofs, tx_port=2, rx_port=2, kind=15, beat=0))
     # RESULT: the last beat (STATUS) out of the compute end (arrive + 2 + codec 1) at a_end
-    r_last = a_end - (txl + phy + 3) + attn_tx_shift
+    r_last = a_end - (txl + phy + 3) + attn_tx_shift + attn_service_pad
     r0 = r_last - 33
     m += [dict(seg=seg, src="K", cyc=r0 + b, tx_port=0, rx_port=0, kind=3, beat=b) for b in range(32)]
     m.append(dict(seg=seg, src="K", cyc=r_last + status_delay, tx_port=0, rx_port=0, kind=4, beat=0))
-    return m, dict(q_send=q0, attn_end=a_end + attn_tx_shift + status_delay, result_send=[r0, r_last + status_delay],
-                  retirement_status_delay=status_delay, attn_tx_shift=attn_tx_shift)
+    return m, dict(q_send=q0, attn_end=a_end + attn_tx_shift + attn_service_pad + status_delay, result_send=[r0, r_last + status_delay],
+                  retirement_status_delay=status_delay, attn_tx_shift=attn_tx_shift,
+                  **(dict(attn_service_pad=attn_service_pad) if attn_service_pad else {}))
 
 
 def handoff_windows(path):
@@ -151,7 +154,7 @@ def context_slot(txl, phy, host_stages, host_req):
 
 
 def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None, mu=False,
-                    host_req=None, emb_fill=None, status_delay=0, attn_tx_shift=0, rope=False, layer_period_min=0, head_prepare_edges=None):
+                    host_req=None, emb_fill=None, status_delay=0, attn_tx_shift=0, rope=False, layer_period_min=0, head_prepare_edges=None, attn_service_pad=0):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
     run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles).
@@ -173,8 +176,8 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
             win[L][1] = max(win[L][1], hw["qkv"][0])
     if not all(win[L] == win[lay[1]] for L in lay[2:]):
         raise SystemExit("L1..L35 op windows differ: one replayed segment-0 image cannot serve them")
-    tail = status_delay + attn_tx_shift     # per-layer edges added after attn_kv (KV-BIND4: tx shift + STATUS tail)
-    m0, l1 = layer_msgs(0, 0, win[lay[1]], txl, phy, st_ofs, status_delay, attn_tx_shift)
+    tail = status_delay + attn_tx_shift + attn_service_pad     # per-layer edges added after attn_kv (KV-BIND4: tx shift + STATUS tail)
+    m0, l1 = layer_msgs(0, 0, win[lay[1]], txl, phy, st_ofs, status_delay, attn_tx_shift, attn_service_pad)
     emb_priced = int(nodes["embed"]["cycles"])
     emb = emb_priced if emb_window is None else emb_window
     # KV-EMBWIN16 10-20 (DRIVE-KV decision, +323 cycles/token inside the owner-accepted cost): --emb-window grows the
@@ -246,7 +249,7 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     m2 = [dict(seg=2, src="K", cyc=PREC_K0 + i, tx_port=1, rx_port=1, kind=13, beat=1 + i) for i in range(2)]
     adm_w = PREC_K0 + 1 + txl + phy + 4 + ADM_REPLAY
     m2.append(dict(seg=2, src="C", cyc=adm_w, tx_port=1, rx_port=1, kind=14, beat=1))
-    ml0, l0 = layer_msgs(1, l0_start, win[lay[0]], txl, phy, st_ofs, status_delay, attn_tx_shift)
+    ml0, l0 = layer_msgs(1, l0_start, win[lay[0]], txl, phy, st_ofs, status_delay, attn_tx_shift, attn_service_pad)
     layout = dict(source=tp_path, layers=[dict(id=g["id"], start=(layer_starts[i] if rope else int(g["start"]) + i * tail + d_emb), cycles=((layer_starts[i+1] if i+1<len(groups) else cursor)-layer_starts[i] if rope else int(g["cycles"])+tail)) for i, g in enumerate(groups)],
                   embed=dict(start=0, cycles=emb, priced=emb_priced, grown_by=d_emb, rope=rope, records=65+rope_n, rope_fetch_restart_edges=1024 if rope else 0), windows=dict(L0=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[0]])])),
                   L1_35=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[1]])]))), layer=l1, token_run_L0=l0,
@@ -426,9 +429,12 @@ def main():
     ap.add_argument("--head-prepare-edges",type=int,help="actual composed earliest safe all-user C->K head O61 slot; includes source prepare/hold+measured local transport and user0 HOST-context match; never infer zero hops")
     ap.add_argument("--layer-period-min",type=int,default=0,help="RoPE shared2003-edge kernel frame; grow every layer to at least this many edges")
     ap.add_argument("--rope", action="store_true", help="actual RoPE HBM second sweep and73 row records; requires EW>=1627")
+    ap.add_argument("--attn-service-pad", type=int, default=0, help="static attention service extension before RESULT/STATUS; priced per layer; hardware TX_SHIFT unchanged")
     ap.add_argument("--attn-tx-shift", type=int, default=0, help="KV-BIND4: edges the KV attention tile adds before RESULT (r16 TX_SHIFT); K RESULT/STATUS and attn_kv +N per layer")
     ap.add_argument("--status-delay", type=int, default=0, help="opt-in static STATUS-only tail per layer; priced in every layer/token window; requires retirement proof")
     a = ap.parse_args()
+    if a.attn_service_pad < 0 or (a.attn_service_pad and a.profile != "program"):
+        ap.error("--attn-service-pad requires program profile and nonnegative edges")
     if a.attn_tx_shift < 0 or (a.attn_tx_shift and a.profile != "program"):
         ap.error("--attn-tx-shift requires program profile and nonnegative edges")
     if a.emb_window is not None and a.profile != "program":
@@ -457,7 +463,7 @@ def main():
                                         st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu,
                                         host_req=a.ctx_host_req, emb_fill=a.emb_fill_edges, emb_window=a.emb_window,
                                         status_delay=a.status_delay,
-                                        attn_tx_shift=a.attn_tx_shift, rope=a.rope, layer_period_min=a.layer_period_min,head_prepare_edges=a.head_prepare_edges)   # STATUS capture after the (+2) KVN captures
+                                        attn_tx_shift=a.attn_tx_shift, attn_service_pad=a.attn_service_pad, rope=a.rope, layer_period_min=a.layer_period_min,head_prepare_edges=a.head_prepare_edges)   # STATUS capture after the (+2) KVN captures
         if a.host_stages:
             txd["K"][1] += a.host_stages   # HOST record words reach the end's capture edge host_stages later
     elif a.profile == "dies_token":

@@ -254,6 +254,7 @@ def link_calendar(workdir, status_delay=0, attn_tx_shift=None):
     tp.write_bytes(gzip.decompress((ROOT / LINK_TOKEN_PATH).read_bytes()))
     p = subprocess.run([sys.executable, str(ROOT / 'tools/qwen_split/d2d_link_calendar.py'), '--out', str(out)] + LINK_ARGS
                        + ['--token-path', str(tp), '--status-delay', str(status_delay)]
+                       + (['--attn-service-pad', os.environ['OT_KV_ATTN_SERVICE_PAD']] if int(os.environ.get('OT_KV_ATTN_SERVICE_PAD', '0')) else [])
                        + (['--attn-tx-shift', str(attn_tx_shift)] if attn_tx_shift else []),
                        cwd=ROOT, capture_output=True, text=True)
     if p.returncode:
