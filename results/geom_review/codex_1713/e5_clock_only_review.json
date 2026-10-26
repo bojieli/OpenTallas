@@ -1,0 +1,10 @@
+{
+  "tag": "CLOCK/E5-CLOCKONLY-1713",
+  "source": "0a214e0ca5",
+  "kit": "epyc1:/srv/opentallas-scratch2/claude/codex-clock-1713/e5_clock_only_v1",
+  "checkpoint_sha256": "3a4d7b0bb5d3319e03c6504071dcbf87d5e02fc637f98e0f61db09d52bd6b3dc",
+  "image": "/home/ubuntu/scratch/codex-clock-1713/e5_cts03d.png",
+  "verdict": "PASS-COND ONE partial-clock-only routing diagnostic",
+  "scope": "Exactly 2002 root-traced clock nets, M6/M7 plus lower pin access. Same viewed actual placement/tree. TT/FF clock RC and slew only; omitted non-clock demand reported. No data-hold/G2/SIGNED/production adoption. Preserve all-net overflow161546; S1/S2/LC1 remain open.",
+  "reviewed_at": "2026-10-25 18:02 PDT"
+}
