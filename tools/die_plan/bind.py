@@ -2657,9 +2657,18 @@ class Binder:
                     # Plan-local matrix names commonly compact coordinate
                     # separators (u_t00 versus RTL u_t_0_0). Accept only a unique
                     # punctuation-only alias; never select a different replica.
-                    key = target["inst"].replace("_", "")
+                    modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
+                    # SU plan names flatten dots to underscores (u_suvm_u_vm8q_u_va).
+                    # Keep all original tokens/digits, then retain the older matrix
+                    # punctuation alias only if that exact flattening did not match.
+                    key = target["inst"].replace(".", "_")
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
-                                  self.rel_of(ci).replace("_", "") == key]
+                                  (not modules or F.cells[ci].module in modules) and
+                                  self.rel_of(ci).replace(".", "_") == key]
+                    if not candidates:
+                        key = target["inst"].replace("_", "")
+                        candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
+                                      self.rel_of(ci).replace("_", "") == key]
                 if not candidates:
                     modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and F.cells[ci].module in modules]
