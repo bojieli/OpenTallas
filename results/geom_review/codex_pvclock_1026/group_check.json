@@ -1,0 +1,19 @@
+{
+  "scope": "read-only actual T2 routed clock connectivity lookup on 4_cts; not a new closure result",
+  "vehicle": "intel1:codex-kvx-1026/pv2",
+  "group_counts": {
+    "u_s0_ctl": 895,
+    "u_s0_m0": 3486,
+    "u_s0_m1": 3493,
+    "u_s0_m2": 3488,
+    "u_s0_m3": 3500,
+    "u_s1_ctl": 894,
+    "u_s1_m0": 3488,
+    "u_s1_m1": 3492,
+    "u_s1_m2": 3499,
+    "u_s1_m3": 3489
+  },
+  "total_clocked_flops_plus_macros": 29724,
+  "unrooted": 0,
+  "method": "Follow native CLK ITerm upstream through buffer/inverter nets to a real ot_pv_tap whose group is recorded in native CTS metadata. Fail on missing instance, loops, unexpected driver or no tap. Avoid relabelling spatial groups from moved post-CTS coordinates."
+}
