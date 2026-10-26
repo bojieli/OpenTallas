@@ -27,3 +27,11 @@ crossing wire segments use M4/M5 clock layers, above the macro internal metal.
 PASS-COND for CTS-only measurement with phase2 CL_SINK=0; no routing approval.
 Phase1 damping0.3, same120um planner rmax. Actual legalisation can make max edge
 larger than120, so actual186.678 is retained rather than claimed to meet120.
+Baseline local insertion diagnosis: exact CTS04b ODB connectivity was joined to
+its existing routed-RC clock_meas.tsv; no reroute. All118 groups/18058 registers
+matched. Tap-input-to-register group means29.560..147.176ps (117.616ps spread).
+Earliest dtap88 is1 register,0 local buffer levels; dtap56/57 have19/27 regs and
+2 local levels (~72.6ps); latest dtap91 has512 regs,4 levels,147.176ps. This is
+source-local depth/load variation, not a trunk-wire length problem. Full census
+is baseline_local.json. Candidate must be compared in the same actual GRT RC
+frame; its current CTS-only run deliberately disables sink-phase trunk tuning.
