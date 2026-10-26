@@ -956,3 +956,38 @@ def test_scalar_unpacked_array_alias_needs_function_correspondence(tmp_path, mon
         assert ("differs" in verdicts) == mut
         if not mut:
             assert verdicts == {"proved"}
+
+
+@pytest.mark.parametrize("reverse", [False, True])
+def test_alias_array_unique_driver_layout_avoids_whole_design_simulation(monkeypatch, tmp_path, reverse):
+    # Flat gold q[0:3] vs gate SX[0:1][0:1]. Element-driver metadata names
+    # one unique layout; arbitrary simulation scores cannot change that choice.
+    from types import SimpleNamespace
+    gold = [f"ff:u.q[{i}]" for i in range(4)]
+    gate = [f"ff:u.SX[{i}][{j}]" for i in range(2) for j in range(2)]
+    def no_build(**kwargs):
+        raise AssertionError("unique structural layout must not build a simulation miter")
+    L = SimpleNamespace(gp=dict.fromkeys(gold, 0), tp=dict(zip(gate, range(10,14))),
+                        gc={}, tc={}, matched=[], gonly=gold, tonly=gate, hyp={},
+                        galias={k:[gate[0]] for k in gold}, build=no_build)
+    expected = {gold[i]:gate[(3-i)//2*2+i%2] if reverse else gate[i] for i in range(4)}
+    metadata = {k:t[len("ff:u.SX"):] for k,t in expected.items()}
+    monkeypatch.setattr(lec, "slang_elements", lambda path:metadata)
+    log=[];lec.alias_arrays(L,log,work=tmp_path)
+    assert L.tp == {k:10+gate.index(t) for k,t in expected.items()}
+    assert L.matched == sorted(gold) and not L.gonly and not L.tonly
+    assert L.hyp == {}  # no unproved correspondence hypothesis was accepted
+    assert "proof pending" in log[-1]
+
+
+@pytest.mark.parametrize("metadata", [{}, {"ff:u.q[0]":"[9][0]"},
+    {"ff:u.q[0]":"[0][0]", "ff:u.q[3]":"[0][1]"}])
+def test_alias_array_missing_or_unusable_driver_evidence_keeps_simulation_fallback(monkeypatch,tmp_path,metadata):
+    from types import SimpleNamespace
+    gold=[f"ff:u.q[{i}]" for i in range(4)]
+    gate=[f"ff:u.SX[{i}][{j}]" for i in range(2) for j in range(2)]
+    def need_scoring(**kwargs):raise RuntimeError("fallback simulation reached")
+    L=SimpleNamespace(gp=dict.fromkeys(gold,0),tp=dict(zip(gate,range(10,14))),gc={},tc={},
+                      matched=[],gonly=gold,tonly=gate,hyp={},galias={k:[gate[0]] for k in gold},build=need_scoring)
+    monkeypatch.setattr(lec,"slang_elements",lambda path:metadata)
+    with pytest.raises(RuntimeError,match="fallback simulation reached"):lec.alias_arrays(L,[],work=tmp_path)
