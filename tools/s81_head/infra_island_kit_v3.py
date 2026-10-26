@@ -10,6 +10,9 @@ Contract fix (12.3, no early taps): the die delivers clk at the common latency T
 source latency is 0 (was the CP2 early-tap -120) and the gate bound is T (250 TT / 202.5 FF).  postcts_gate.tcl parses
 only '^export OT_VCLK_*', so the v2 'override export' lines were ignored and the stale 401.36/299.29 bound was used;
 v3 rewrites the plain export lines.
+F4 (post-CTS move of chain captures onto the head's leaf) is DROPPED: it re-assigns sinks after CTS (a clock change
+after measurement, 12.8d) and broke equal leaf load (elemA_c2 clkbuf_leaf_1250 115 ps vs ~22 ps, CTS gate FF hold -123 /
+2656 ends).  Geometry-sized clusters put adjacent zero-logic chain pairs on one leaf by construction.
 usage: infra_island_kit_v3.py SRC_V2_KIT DST SIZE DIAM
 """
 import os, re, shutil, sys
@@ -25,11 +28,12 @@ for f in os.listdir(src):
 c = open(dst + '/config.mk').read()
 c = re.sub(r'^(override )?export OT_VCLK_TT\s*\??=.*$', 'export OT_VCLK_TT = 250', c, flags=re.M)
 c = re.sub(r'^(override )?export OT_VCLK_FF\s*\??=.*$', 'export OT_VCLK_FF = 202.5', c, flags=re.M)
-c = re.sub(r'^override export CTS_ARGS\s*=.*$', '', c, flags=re.M)
+c = re.sub(r'^override export (CTS_ARGS|POST_CTS_TCL|OT_F4_NEXT_TCL)\s*=.*$', '', c, flags=re.M)
 c += f'''
 # HEAD-CORE-LAT-R2 v3 (12.8b): leaf clusters sized from geometry ({size} sinks / {diam:g} um) -> tree depth set by
 # geometry, not by the 16/20 cluster count; same structure every instance; no padding / trim / clock ECO.
 override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5 -sink_clustering_max_diameter {diam:g} -sink_clustering_size {size} -balance_levels -dont_use_dummy_load
+override export POST_CTS_TCL = /work/noop.tcl
 '''
 open(dst + '/config.mk', 'w').write(c)
 
