@@ -928,15 +928,17 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if not a.no_f4:
         nxt = "/work/core_tap_align.tcl" if a.clock_taps == "density" else "/work/tap_balance.tcl"
         cfg += ["override export POST_CTS_TCL = /work/f4_chain_leaf.tcl", f"export OT_F4_NEXT_TCL = {nxt}"]
-    if source_profile and len(clks) > 1:
+    multiport_hold = len(clks) > 1 and (source_profile is not None or a.clock_taps == "density")
+    if multiport_hold:
         # Every q3 cut has multiple named taps of one core domain.  The ordinary
         # density helper selects one port (or falls back to clk), so it cannot
         # qualify their common tree.  A reviewed multi-port stage must replace
         # this explicit hold before CTS; never drop or short the native pins.
-        (kd / "q3_clock_stage_hold.tcl").write_text(
-            'error "Q3_CTS_HOLD: reviewed common-domain multi-port clock stage required"\n')
-        cfg += ["override export PRE_CTS_TCL = /work/q3_clock_stage_hold.tcl"]
-        source_profile["clock_stage"] = "HOLD_CTS: common-domain multi-port stage required"
+        (kd / "multiport_clock_stage_hold.tcl").write_text(
+            'error "MULTIPORT_CTS_HOLD: reviewed common-domain multi-port clock stage required"\n')
+        cfg += ["override export PRE_CTS_TCL = /work/multiport_clock_stage_hold.tcl"]
+        if source_profile:
+            source_profile["clock_stage"] = "HOLD_CTS: common-domain multi-port stage required"
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
@@ -960,6 +962,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             fz["pins_file"] = str((pdir / v["pins_file"]).resolve().relative_to(REPO))
         elif not source_profile.get("diagnostic_inputs"):
             raise SystemExit("external source-profile plan is diagnostic only")
+    if multiport_hold:
+        fz["clock_stage_hold"] = dict(ports=clks, reason="reviewed common-domain multi-port stage required")
     fz["flow_defaults"] = dict(flow, rule="FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)")
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
