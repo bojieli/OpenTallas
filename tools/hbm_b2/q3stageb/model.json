@@ -10,6 +10,6 @@
     "tkm_return": {"data_bits": 512, "address_bits": 40, "mask_bits": 16, "control_stages": 2, "data_stages": 2}
   },
   "selected_path_age_cycles": {"forward": 9, "split": 2, "face": 258, "return": 2, "total": 271},
-  "reset": "One externally delivered synchronous reset input to the q3 profile; actual root delivered-chain3 and existing per-operation tile clear transport. One explicit launch after native host programming; no forced internal controls.",
+  "reset": "One externally delivered synchronous reset input to the q3 profile; actual root delivered-chain3 and existing per-operation tile clear transport. One explicit component launch_v after native host programming; no forced internal controls. This does not exercise the final die wavefront START broadcast or its per-partition release offsets.",
   "physical_status": "Inherited selected core geometry and physical qualification remain separate; this bench does not establish SIGNED or a whole-die token gate."
 }

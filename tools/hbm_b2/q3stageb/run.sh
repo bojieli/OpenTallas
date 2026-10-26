@@ -34,4 +34,8 @@ NR=$(python3 -c "import json;print(json.load(open('$D/prog/manifest.json'))['row
 set +e
 "$D/obj/Vtb_q3stageb" +DIR="$D/prog" +NR="$NR" > "$D/sim.log" 2>&1
 RC=$?;set -e
-echo "$RC" > "$D/exit.txt";cat "$D/sim.log";exit "$RC"
+echo "$RC" > "$D/exit.txt";cat "$D/sim.log"
+[ "$RC" -eq 0 ] || exit "$RC"
+grep -qx 'Q3STAGEB PASS' "$D/sim.log" || { echo 'STAGEB TERMINAL PASS MARKER MISSING';exit 1; }
+! grep -qE 'FIRST_FAULT|Q3STAGEB FAIL' "$D/sim.log" || { echo 'STAGEB FAILURE IN LOG';exit 1; }
+echo Q3STAGEB_RUN_PASS
