@@ -54,22 +54,34 @@ libs={c:ck.lib_cells(c,a.libdir) for c in ('TT','FF')}
 caps={};cap_evidence={}
 for c in libs:caps[c],cap_evidence[c]=clock_caps(c)
 cases=[]
-for limit in (16,24,32,40,48,64):
+for topology,limit in ((top,n) for top in ('two_level_sides','direct_four_quadrants') for n in (16,24,32,40,48,64)):
     leaves=max(math.ceil(n/limit) for n in quad_counts.values())
     levels=math.ceil(math.log(leaves,4))
-    result={'max_sinks_per_leaf':limit,'max_leaves':leaves,'fixed_local_levels':levels,'corners':{}}
+    result={'topology':topology,'max_sinks_per_leaf':limit,'max_leaves':leaves,'fixed_local_levels':levels,'corners':{}}
     for c in libs:
         lb=libs[c]['BUFx24_ASAP7_75t_R'];ffcap=max(caps[c].values());slew=20.;delay=0.;stages=[]
         # root stub; symmetric 82.08um W/E trunk; symmetric 82.08um N/S
         # trunk; quadrant root; fixed 4-ary local levels; final bounded leaf.
         specs=[('entry',2.,2*lb['cap']),('centre',164.16,2*lb['cap']),
                ('side',164.16,2*lb['cap']),('quadrant',4.32,lb['cap'])]
+        if topology=='direct_four_quadrants':
+            specs=[('entry',2.,2*lb['cap']),('four_way_fork',492.48,4*lb['cap']),('quadrant',4.32,lb['cap'])]
         specs += [(f'local{k}',max(8.,40./(2**k)),4*lb['cap']) for k in range(levels)]
         specs += [('leaf',40.,limit*ffcap)]
         for name,length,load in specs:
             ru=max(x['r_kohm_um'] for x in rc.values())/ndr['width_scale']
             cu=max(x['c_ff_um'] for x in rc.values())*ndr['cap_factor_assumption']
-            d,slew=ck.stage(lb,slew,ru*length,cu*length,load)
+            if name=='four_way_fork':
+                # Exact H-fork: two 82.08um shared W/E legs, each splitting
+                # into 82.08um N/S legs. Driver sees all 6 wires/4 loads;
+                # Elmore along ONE path sees only its downstream subtree.
+                # CT_w/e buffers are absent in this proposed architecture.
+                leg=82.08
+                d,slew=ck.stage(lb,slew,0,cu*length,load)
+                el=ru*leg*(cu*leg/2+2*lb['cap']+2*cu*leg)+ru*leg*(cu*leg/2+lb['cap'])
+                d+=el;slew=math.sqrt(slew*slew+(2.2*el)**2)
+            else:
+                d,slew=ck.stage(lb,slew,ru*length,cu*length,load)
             delay+=d;stages.append({'name':name,'wire_um':length,'load_ff':load,'delay_ps':d,'slew_ps':slew})
         target=250. if c=='TT' else 202.5
         result['corners'][c]={'insertion_ps':delay,'target_ps':target,'within_20':abs(delay-target)<=20,
