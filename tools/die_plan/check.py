@@ -1163,8 +1163,9 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
             ports = {}
             for lp, tg in mine:
                 ports.setdefault(lp, []).extend(tg)
+            sel = hc.get("pin_select", {})     # superset-face master: the pin group this instance binds (G0C ruling 2b)
             for lp, tg in ports.items():
-                faces = by_base.get(lp)
+                faces = by_base.get(sel.get(lp, lp))
                 if not faces:
                     continue
                 pts = []

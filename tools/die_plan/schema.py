@@ -414,6 +414,12 @@ SCHEMA = {
                                        "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
+                                       # G0C ruling 2b (COORD 10-26 06:01): superset-face master. pin_select = the
+                                       # pin group (port copy on another face) this instance binds per port;
+                                       # unused_pins = superset groups it leaves unbound (registered, declared)
+                                       "pin_select": {"type": "object", "additionalProperties": {"type": "string"}},
+                                       "unused_pins": {"type": "array", "items": {"type": "string"}},
+                                       "unused_pins_policy": {"type": "string"},
                                        # Optional cut-parent mapping and placement halo. The halo is
                                        # a cell-placement keepout, not a routing-layer OBS extension.
                                        "halo_um": _nonneg,
