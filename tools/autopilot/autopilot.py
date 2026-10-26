@@ -663,10 +663,17 @@ def poll_adopted(st, j):
     if hub_procs(j["path"]):
         return
     c = probe_job(j)
-    if c is None:
-        return
     p = rpy(j.get("probe") or j["host"], PROBE_KIT,
             {"kit": j["path"], "runner": j.get("runner", "")}, timeout=120)
+    if p.get("exists") is False:
+        if j.get("status") != "ORPHAN" or j.get("orphan_kind") != "kit-missing":
+            why = f"adopted kit missing on {j['host']}:{j['path']}; no physical verdict or restart inferred"
+            log(f"ORPHAN {j['id']}: {why}")
+            j["orphan_kind"] = "kit-missing"
+            set_status(st, j, "ORPHAN", why)
+        return
+    if c is None:
+        return
     la = p.get("log_age_s")
     if p.get("error") or p.get("busy") is not False or (la is not None and la < 900):
         return

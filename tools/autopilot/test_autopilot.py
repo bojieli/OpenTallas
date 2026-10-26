@@ -84,6 +84,33 @@ class TestQueue(Base):
         self.assertEqual(list(rows.values())[0]["geom"], "PASS")
 
 
+class TestMissingAdopted(Base):
+    def test_missing_kit_is_orphan_not_running_or_physical_failure(self):
+        (j,)=self.ap.parse_queue("\t".join(ROW)).values()
+        j.update(status="RUNNING",adopted=True,history=[])
+        st={"jobs":{j["id"]:j}}
+        self.ap.hub_procs=lambda path:[]
+        self.ap.probe_job=lambda job:None
+        self.ap.rpy=lambda *a,**kw:{"exists":False}
+        self.ap.finish=lambda *a:self.fail("missing inputs are not a physical verdict")
+        self.ap.poll_adopted(st,j)
+        self.assertEqual(j["status"],"ORPHAN")
+        self.assertEqual(j["orphan_kind"],"kit-missing")
+        count=len(j["history"])
+        self.ap.poll_adopted(st,j)
+        self.assertEqual(len(j["history"]),count)
+        self.assertNotIn("cls",j)
+
+    def test_live_client_is_preserved_without_missing_probe(self):
+        (j,)=self.ap.parse_queue("\t".join(ROW)).values()
+        j.update(status="RUNNING",adopted=True,history=[])
+        self.ap.hub_procs=lambda path:[(123,99)]
+        self.ap.probe_job=lambda job:self.fail("live adopted client must be left alone")
+        self.ap.poll_adopted({"jobs":{j["id"]:j}},j)
+        self.assertEqual(j["status"],"RUNNING")
+        self.assertEqual(j["history"],[])
+
+
 class TestAppendWithdrawal(Base):
     def row(self):
         (r,) = self.ap.parse_queue("\t".join(ROW + ["route", "/srv/opentallas-scratch2/claude/run.sh", "8", "withdraw"])).values()
