@@ -1593,6 +1593,12 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     rp = check_registered_pins(P, R, plan_dir)
     if rp:
         summ["registered_pins"] = rp
+    import landing_contract as LC
+    cland = LC.check(P)
+    if P.clock.get("landing_network"):
+        summ["clock_landings"] = {k: v for k, v in cland.items() if k != "errors"}
+        for err in cland["errors"]:
+            R.err("clock_landings", err)
     check_clock_reset(P, R)
     summ["clock_branch_buffers"] = check_clock_branch_buffers(P, R)
     summ["reset"] = check_reset(P, R)

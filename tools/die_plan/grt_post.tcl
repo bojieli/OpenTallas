@@ -4,3 +4,11 @@
 set gq_dir [file dirname [file normalize [info script]]]
 if {[info exists ::env(OT_TAP_GRT_MODE)] && $::env(OT_TAP_GRT_MODE) ne ""} { source [file join $gq_dir tap_balance_grt.tcl] }
 if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq "ff"} { ot_vclk_bind tt }
+# Repair buffers do not replace registered reset stations or waive their reach.
+if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "1"} {
+  uplevel #0 [list source [file join $gq_dir reset_pair_place.tcl]]
+  ot_reset_pair_verify_hops [ord::get_db_block] 405
+}
+# CTS/GRT timing repair creates cells after floorplan PG assignment. Apply the
+# persisted global-connect rules to those cells before writing this checkpoint.
+global_connect

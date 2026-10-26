@@ -2,10 +2,20 @@
 # so DPL legalises them next to where GPL kept them.
 set ff_blk [ord::get_db_block]
 set ff_n 0
+# Kept reset FF/driver pairs have a checked joint footprint; DPL must not split them.
+set ff_reset_fixed {}
+set ff_reset_file $::env(RESULTS_DIR)/ot_reset_pair_fixed.txt
+if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "1" && [file exists $ff_reset_file]} {
+  set ff_rf [open $ff_reset_file r]
+  foreach n [split [read $ff_rf] "\n"] { if {$n ne ""} { dict set ff_reset_fixed $n 1 } }
+  close $ff_rf
+}
 set fh [open $::env(RESULTS_DIR)/ot_face_flops.txt r]
 foreach ln [split [read $fh] "\n"] {
   if {$ln eq ""} continue
-  set i [$ff_blk findInst [lindex [split $ln "\t"] 0]]
+  set ff_name [lindex [split $ln "\t"] 0]
+  if {[dict exists $ff_reset_fixed $ff_name]} continue
+  set i [$ff_blk findInst $ff_name]
   if {$i ne "NULL" && $i ne "" && [$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED; incr ff_n }
 }
 close $fh

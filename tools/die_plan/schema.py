@@ -315,7 +315,10 @@ SCHEMA = {
                                        "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
-                                       "layers": _lays, "order": _order, "note": {"type": "string"}}}},
+                                       "layers": _lays, "order": _order,
+                                       "in_layers": _lays, "out_layers": _lays,
+                                       "in_order": _order, "out_order": _order,
+                                       "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
@@ -356,6 +359,9 @@ SCHEMA = {
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},
+                        # rule LC1 (10-25): density taps also cover the registered control pins (arst_n, start_i,
+                        # rst_o_<k>, start_o_<k>), so a remote control pin gets its own light tap (taps.control_pin_sinks)
+                        "control_sinks": {"type": "boolean"},
                         "sink_sites_um": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
                                                                      "items": {"type": "number"}}},
                         "sink_bins_file": {"type": "string"},
@@ -660,6 +666,10 @@ SCHEMA = {
                                "param": {"type": "string"}}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
         "census": {"type": ["array", "object"]},
+        # METHODOLOGY 12.7c (OWNER 10-26): the die master plan the kits consume, set at the plan freeze through COORD;
+        # required=true -> gen.py phys / core kit generators refuse a sign-off kit without a slice (master_slice.py)
+        "master_plan": {"type": "object", "properties": {"required": {"type": "boolean"}, "sha256": {"type": "string"},
+                                                         "path": {"type": "string"}}},
         "budgets": {"type": "object", "additionalProperties": False, "properties": dict(
             {k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS},
             # S81 10-24 (coordinator ruling (a)): R3 reach inside hardened types with declared core connectivity
@@ -670,6 +680,13 @@ SCHEMA = {
 
 
 # ------------------------------------------------------------------------------- structural validator (subset)
+# Regional landing pins use the existing clock/reset infrastructure model,
+# not functional R8 bus ports. Exact scalar endpoints and <=405um registered
+# status hops are checked by landing_contract.py; default plans are unchanged.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
+SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+
+
 def _check(v, s, path, errs):
     """Minimal draft-2020-12 subset (type, const, enum, required, properties, additionalProperties, items, min/max*,
     pattern, minLength, minProperties).  No external dependency, so it runs on every fleet host."""
@@ -784,8 +801,11 @@ class Plan:
                 return b["face"], b["window_um"], b["layers"], b.get("order", "lsb_low")
         for s_ in t.get("ft_slots", []):
             for sfx, fk, wk in (("_i", "in_face", "in_window_um"), ("_o", "out_face", "out_window_um")):
-                if bus == s_["name"] + sfx and wk in s_ and "layers" in s_:
-                    return s_[fk], s_[wk], s_["layers"], s_.get("order", "lsb_low")
+                if bus == s_["name"] + sfx and wk in s_:
+                    stem = "in" if sfx == "_i" else "out"
+                    lays = s_.get(stem + "_layers", s_.get("layers"))
+                    if lays:
+                        return s_[fk], s_[wk], lays, s_.get(stem + "_order", s_.get("order", "lsb_low"))
         return None
 
     def geom_to_die(self, part, g):
@@ -1094,6 +1114,13 @@ class Plan:
         a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
         bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
         d = dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
+        if not hasattr(self,"_lane_clock_landing_cycles"):
+            import clock_landings
+            self._lane_clock_landing_cycles=clock_landings.network_lane_cycles(self.raw)
+        landing=self._lane_clock_landing_cycles.get(lid,0)
+        if landing:
+            d["clock_landing"]=landing
+            d["cycles"]+=landing
         if ln.get("beats"):
             d["beats"] = int(ln["beats"])     # word_cycles (cycles + beats - 1) is added by lane_latency()
         return d

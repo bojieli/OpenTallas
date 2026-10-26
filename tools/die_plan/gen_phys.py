@@ -89,6 +89,9 @@ def io_tcl(P, tn, pins):
     for name, x, y in reset_out_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: reset wavefront out")
+    if t.get("clock", {}).get("landing_contract"):
+        import landing_contract as LC
+        lines.append(LC.io_tcl(P, tn).rstrip())
     return "\n".join(lines) + "\n"
 
 
@@ -648,8 +651,12 @@ def sdc(P, tn, pins):
         # downstream (rst_por_n, the lock qualifier, the wavefront relays) is timed (recovery / removal, data).
         out += ("# die reset pad (reset_tree.pad_false_path_pins): raw pad -> u_rst_root async + PLL analog pin only\n"
                 f"set_false_path -from [get_ports arst_n] -to [get_pins {{{' '.join(fp)}}}]\n")
-    return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
-                  "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
+    out += (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
+            "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
+    if P.types[tn].get("clock", {}).get("landing_contract"):
+        import landing_contract as LC
+        out = LC.sdc(P, tn, out)
+    return out
 
 
 
@@ -906,7 +913,7 @@ def _corner_libs(mlib, kd, corner):
     return out
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
-                   skip_ir=False, max_wire_um=None, rc_cal=True):
+                   skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False):
     t = P.types[tn]
     import core_clock_groups as CG
     grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
@@ -1144,6 +1151,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
         cfg += ["export OT_TAP_GRT_PRE = 1", "export OT_PINREG_PAD = 1"]
+    if P.reset.get("relay_driver"):
+        cfg.append("export OT_RESET_PAIR_FIXED = 1")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
@@ -1158,6 +1167,36 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         (kd / "die_islands.tcl").write_text(islands)
         hook = kd / "face_flops.tcl"
         hook.write_text("source /work/die_islands.tcl\n" + hook.read_text())
+    if t.get("clock", {}).get("landing_contract"):
+        import landing_contract as LC
+        (kd / "landing_contract.json").write_text(json.dumps(t["clock"]["landing_contract"], indent=1) + "\n")
+        (kd / "landing_exports.tcl").write_text(LC.export_tcl(P, tn))
+        hook = kd / "clock_taps.tcl"
+        hook.write_text(hook.read_text() + "\nsource /work/landing_exports.tcl\n")
+        import landing_place as LP
+        (kd / "landing_placement.tcl").write_text(LP.tcl(P, tn))
+        hook = kd / "face_flops.tcl"
+        hook.write_text(hook.read_text() + "\nsource /work/landing_placement.tcl\n")
+        # The new cells are packed to actual nonoverlapping rows/sites. Keep
+        # them FIRM through DPL; their bands are a timing/reach contract.
+        hook = kd / "face_flops_release.tcl"
+        hook.write_text(hook.read_text() + """
+set cland_refirm 0
+set cland_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt r]
+foreach cland_line [split [read $cland_fh] "\n"] {
+ set cland_fields [split $cland_line "\t"]
+ if {![string match "cland:*" [lindex $cland_fields 1]]} continue
+ set cland_i [$ff_blk findInst [lindex $cland_fields 0]]
+ if {$cland_i eq "NULL"} { error "OT_CLAND placed instance disappeared before DPL" }
+ $cland_i setPlacementStatus FIRM; incr cland_refirm
+}
+close $cland_fh
+puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
+""")
+    # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
+    # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
+    import master_slice as MS
+    ms = MS.kit_apply(kd, tn, [w, h], master_slice, P.raw, trial, kind="partition", gpl_hook=kd / "face_flops.tcl")
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
@@ -1182,6 +1221,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
     elif RT.delivered(P):
         (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
+    if P.reset.get("relay_driver"):
+        shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
@@ -1220,6 +1261,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if ioh:
         from io_hold_qualification import plan_digest
         bud['io_hold'] = dict(mode='sender_min',plan_sha256=plan_digest(P.raw),requires_parent=True)
+    if ms is not None:
+        bud["master_plan"] = ms
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
@@ -1334,13 +1377,20 @@ exit $rc
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True):
+               rc_cal=True, master_slice=None, trial=False):
     """margins (slew_pct, cap_pct): opt-in repair_design SLEW_MARGIN / CAP_MARGIN (None: not exported)."""
     """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
     import gen_rtl
+    import master_slice as MS
+    if not master_slice and not trial and MS.required(raw):     # 12.7c: refuse before writing anything
+        raise SystemExit(MS.REFUSE)
     # plan-relative declarations (hard-core pins_file for the reset wavefront) resolve against the plan file
     P = S.Plan(raw, plan_path)
+    if master_slice:                                            # 12.7c: every slice checked before any kit is written
+        for tn, t in sorted(P.types.items()):
+            if not t.get("hard") and (not types or tn in types):
+                MS.resolve(master_slice, tn, t["outline_um"], raw, trial, kind="partition")
     out = Path(out)
     rtl_dir = out / "_rtl"
     gtypes = types
@@ -1369,7 +1419,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
-                                   skip_ir, max_wire_um, rc_cal))
+                                   skip_ir, max_wire_um, rc_cal, master_slice, trial))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

@@ -29,6 +29,16 @@ class AttnTxShift(unittest.TestCase):
         with self.assertRaises(ValueError):
             L.layer_msgs(0, 0, self.W, 8, 7, 40, 0, -1)
 
+    def test_service_pad_preserves_hardware_shift_and_compute_messages(self):
+        m0, l0 = L.layer_msgs(0, 0, self.W, 8, 7, 40, 213, 1)
+        m1, l1 = L.layer_msgs(0, 0, self.W, 8, 7, 40, 213, 1, 2)
+        self.assertEqual(l1['attn_tx_shift'], 1)
+        self.assertEqual(l1['attn_service_pad'], 2)
+        self.assertEqual(l1['attn_end'], l0['attn_end'] + 2)
+        self.assertEqual([x for x in m0 if x['src'] == 'C'], [x for x in m1 if x['src'] == 'C'])
+        for kind in (3, 4):
+            self.assertEqual([c + 2 for c in self.k(m0, kind)], self.k(m1, kind))
+
 
 if __name__ == '__main__':
     unittest.main()

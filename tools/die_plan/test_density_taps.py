@@ -193,3 +193,25 @@ def test_capacity_move_cannot_break_absolute_density_radius():
     load,far,_=taps.assign(tl,sinks,20,250,max_distance_um=175)
     assert load==[30,0]
     assert max(far)<1
+
+
+def test_control_sinks_opt_in_adds_only_control_sites(monkeypatch):
+    import taps, reset_tree as RT
+    class _P:
+        types = {"a": {"clock": {"sink_sites_um": [[10.0, 10.0, 50]]}}}
+    P = _P()
+    monkeypatch.setattr(RT, "wavefront", lambda P: True)
+    monkeypatch.setattr(RT, "start_broadcast", lambda P: True)
+    monkeypatch.setattr(RT, "in_pin", lambda P, tn: (500.0, 300.0))
+    monkeypatch.setattr(RT, "start_in_pin", lambda P, tn: (500.0, 302.16))
+    monkeypatch.setattr(RT, "out_pins", lambda P, tn: [("rst_o_0", 0.0, 300.0)])
+    monkeypatch.setattr(RT, "start_out_pins", lambda P, tn: [("start_o_0", 0.0, 302.16)])
+    monkeypatch.setattr(taps, "planned_sinks", lambda P, tn, bit_sites=False: [])
+    base = taps.sink_sites(P, "a")
+    assert base == [(10.0, 10.0, 50.0)]
+    P.types["a"]["clock"]["control_sinks"] = True
+    got = taps.sink_sites(P, "a")
+    assert got[:1] == base and sorted(got[1:]) == sorted([(500.0, 300.0, 1.0), (500.0, 302.16, 1.0),
+                                                          (0.0, 300.0, 1.0), (0.0, 302.16, 1.0)])
+    P.types["a"]["hard"] = True
+    assert taps.control_pin_sinks(P, "a") == []
