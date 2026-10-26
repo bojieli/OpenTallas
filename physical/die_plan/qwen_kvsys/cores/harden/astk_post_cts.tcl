@@ -1,7 +1,7 @@
 # PATH-KV-ASTK8 10-26: kv3_astk POST_CTS (with SKIP_CTS_REPAIR_TIMING = 1).  ORFS cts.tcl repairs hold BEFORE the
 # POST_CTS hook, i.e. on a tree that the hook then changes (ASTK7: 9172 hold buffers on the pre-affinity tree; HBM
-# ELEM 10-24 gq_land same lesson).  Order here: (1) astk_tap_target.tcl balances the tap trees to the 250 / 202.5
-# contract, (2) leaf_affinity.tcl re-hangs zero-logic pairs (face-tree anchors kept), (3) ONE setup / hold repair on
+# ELEM 10-24 gq_land same lesson).  Order here: (1) reconnect the dedicated face root directly to ck, (2) leaf_affinity.tcl re-hangs zero-logic pairs
+# with face-tree anchors kept, (3) astk_tap_target.tcl measures face-tree delay to the 250 / 202.5 contract, then ONE repair on
 # the final tree (repair_timing_helper, the ORFS cts.tcl call with the kit margins), detailed placement, check.
 # Keep the dedicated interface root directly at ck after CTS. TritonCTS builds
 # a root tree for zone taps and otherwise places this root behind that tree too,

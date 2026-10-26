@@ -1,4 +1,4 @@
-# PATH-KV-ASTK8 10-26 (COORD 01:13 ruling (1)): POST_CTS, before leaf_affinity.tcl.  Balance every ASTK tap tree whose
+# PATH-KV-ASTK8 10-26 (COORD 01:13 ruling (1)): POST_CTS, after leaf_affinity.tcl.  Balance every ASTK tap tree whose
 # group matches OT_TAP_TARGET_RE (default: the face chunks) TO the boundary contract OT_VCLK_TT (250 ps) -- the
 # tap_balance.tcl rule (short trees get a delay chain tap input -> cells -> tap up to the plan insertion T) applied to
 # the internal astk_face_taps.tcl tap buffers.  Measured: mean rise arrival over the tap's register clock pins, the
