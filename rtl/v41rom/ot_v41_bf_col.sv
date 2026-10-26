@@ -82,7 +82,7 @@ module ot_v41_bf_col #(
     // capture / x / control registers and the ROM macros; lanes3 gets one tile per tree adder node (TNODE).  Every copy
     // is the same register function of the same inputs, so every register keeps exactly its clock edges (clock-network
     // change only; bench + LEC: physical/die_plan/s81/core_lat/bf_col_gates.json).  RCG = 0: the original network.
-    parameter integer RCG = 1
+    parameter integer RCG = 0
 ) (
     input  wire          clk,
     input  wire          rst_n_pin,
