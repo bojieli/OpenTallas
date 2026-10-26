@@ -1939,6 +1939,24 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             lat_gate["commensurate"] = comm
             if axes is None:
                 lat_gate["verdict"] = "FAIL"
+        if comm_mode and mesh_dir:
+            # CLOCK-128-R4 (opt-in --tree-lattice cNXxNY only): the lattice nodes ARE plan-declared partition pushdown
+            # islands (binding new_partition_island / existing_island, 8.64 island at the node), so the clock-site gates
+            # judge the die clock against them too; tree_commensurate takes the per-axis core-array repeat
+            # (commensurate_axis) instead of core_lattice(), which finds no single leaf pitch on a mixed core set.
+            lat_isl = [entry_island(tuple(n_["xy_um"])) for n_ in lat_nodes
+                       if n_.get("binding") in ("new_partition_island", "existing_island")]
+            isl_all = isl_decl + [tuple(r_) for r_ in lat_isl]
+            sites = clock_sites(M, isl_all, glue_parts, macros_die)
+            isl_lat = island_lattice(M, [((r_[0] + r_[2]) / 2, (r_[1] + r_[3]) / 2) for r_ in isl_all],
+                                     macros_die[:n_core_macros])
+            sites["lattice_islands"] = isl_lat["lattice_islands"] = len(lat_isl)
+            ok_ax = {a_: bool(v_.get("leaves_um")) and v_.get("verdict") != "FAIL" for a_, v_ in (comm or {}).items()}
+            mm = M.get("xs") or M.get("ys")
+            tree_comm = dict(tree_comm, verdict="PASS" if ok_ax and all(ok_ax.values()) and lat_gate["verdict"] == "PASS"
+                             and not mm else "FAIL", basis="commensurate_axis (--tree-lattice c): core-array repeat per "
+                             "axis, node arms = multiples of repeat/2, root arm bridge declared", axes_ok=ok_ax,
+                             mesh_straps_present=bool(mm), core_lattice_verdict=tree_comm["verdict"])
         dtp = json.loads((out / "die_tree_plan.json").read_text())
         dtp["lattice"] = dict(gate=lat_gate, nodes=lat_nodes)
         dtp["consume"] = ("CLOCK-128: build the die H-tree from lattice.nodes (xy_um, binding); island_tree 'nodes' "
