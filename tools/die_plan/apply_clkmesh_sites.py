@@ -59,7 +59,8 @@ def main():
     per_kind = defaultdict(int)
     for name, c in sorted(cells.items()):
         x, y = c["x"], c["y"]
-        cell_w = CLK.cell_width(c)
+        fixed_bank = M.get("meta", {}).get("leaftrim", {}).get("fixed_slot_count") and c["kind"] == "stub_trim"
+        cell_w = max(CLK.cell_width(c), float(c.get("slot_width_um", CLK.BUF_W if fixed_bank else 0.0)))
         own = [n for n in grid[(int(x // B), int(y // B))]
                if rects[n][0] <= x and x + cell_w <= rects[n][2] and rects[n][1] <= y and y + CELL_H <= rects[n][3]]
         if len(own) > 1:
