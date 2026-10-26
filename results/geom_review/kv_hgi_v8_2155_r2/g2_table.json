@@ -1,0 +1,27 @@
+{
+ "types": {
+  "kv3_hgi_v8": {
+   "pass": true,
+   "overflow": 0,
+   "max_usage_pct": 30.96,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "ft_hops": {
+    "slots": 27,
+    "max_hop_um": 396.144,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 27561,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "source": "G2 actual probe source73c0e3044a, main-rebased probe inputs byte-identical"
+  }
+ }
+}

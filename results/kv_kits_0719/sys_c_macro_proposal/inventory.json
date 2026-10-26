@@ -1,0 +1,19 @@
+{
+ "sys_c_macros": 5,
+ "sys_c_types": {
+  "d2d_sram_1r1w_64x137_m1_r2c2_p288": 4,
+  "ot_qkvd_ucie_x64_phy": 1
+ },
+ "hroot_macros": 0,
+ "hroot_modules": 1,
+ "hroot_word_cells": 1246,
+ "hroot_inferred_memory_bits": 256,
+ "source": "kv-kits3 native_r8_a kit-rtl files snapshot in codex-kv-kits-0719/macro_inventory",
+ "method": "read_slang --top TYPE_part -f files.f; hierarchy; proc; flatten; recursive macro-instance census",
+ "frontend_findings": {
+  "qkd_kv_ctl_half_root_b.sv": "bw_p referenced before declaration",
+  "qkd_ctrl_pc_host_static_core.sv": "static_owner_q and tw/tr/trv referenced before declaration in two modules",
+  "ot_qwen_d2d_cal_seq_bc4.sv": "li_mux4 referenced before declaration"
+ },
+ "note": "Census required declaration-order-only hoists in own snapshot; no repository RTL edits or equivalence claim. Macro registry alone overcounts dead candidates."
+}

@@ -1,0 +1,101 @@
+{
+ "verdict": "PASS",
+ "instances": 9,
+ "checks": [
+  {
+   "instance": "r1",
+   "module": "ot_s81_rly",
+   "width": 1,
+   "parameters": {
+    "W": 1,
+    "RSREG": 0
+   }
+  },
+  {
+   "instance": "r66",
+   "module": "ot_s81_rly",
+   "width": 66,
+   "parameters": {
+    "W": 66,
+    "RSREG": 1
+   }
+  },
+  {
+   "instance": "r276",
+   "module": "ot_s81_rly",
+   "width": 276,
+   "parameters": {
+    "W": 276,
+    "RSREG": 0
+   }
+  },
+  {
+   "instance": "k266",
+   "module": "ot_s81_rly_k",
+   "width": 266,
+   "parameters": {
+    "W": 266,
+    "RSREG": 0,
+    "ID": 7
+   }
+  },
+  {
+   "instance": "k283",
+   "module": "ot_s81_rly_k",
+   "width": 283,
+   "parameters": {
+    "W": 283,
+    "RSREG": 1,
+    "ID": 8
+   }
+  },
+  {
+   "instance": "d1",
+   "module": "ot_hdc_delay",
+   "width": 1,
+   "parameters": {
+    "W": 1,
+    "D": 7,
+    "RESET": 1
+   }
+  },
+  {
+   "instance": "d4",
+   "module": "ot_hdc_delay",
+   "width": 4,
+   "parameters": {
+    "W": 4,
+    "D": 3,
+    "RESET": 0
+   }
+  },
+  {
+   "instance": "x8",
+   "module": "ot_hdc_v41x_dly",
+   "width": 8,
+   "parameters": {
+    "W": 8,
+    "D": 2
+   }
+  },
+  {
+   "instance": "x32",
+   "module": "ot_hdc_v41x_dly",
+   "width": 32,
+   "parameters": {
+    "W": 32,
+    "D": 6
+   }
+  }
+ ],
+ "specializations": {
+  "masters": [
+   "ot_hdc_delay",
+   "ot_hdc_v41x_dly",
+   "ot_s81_rly",
+   "ot_s81_rly_k"
+  ],
+  "specialized_modules": 9,
+  "instances": 9
+ }
+}

@@ -16,31 +16,8 @@ from head_native_profile import timed_profile
 from rom_addr_local import transform as local_addresses
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--seed", type=Path, required=True)
-    ap.add_argument("--out", type=Path, required=True)
-    args = ap.parse_args()
-    repo = Path(__file__).resolve().parents[2]
-    out = args.out.resolve()
-    out.mkdir(parents=True, exist_ok=False)
-    (out / "rtl").mkdir()
-    seed_files = ("constraint.sdc", "vclk_ff.sdc", "face_flops.tcl", "face_flops_release.tcl",
-                  "pdn.tcl", "make_tracks.tcl", "macro_place.tcl", "setRC_rcx.tcl",
-                  "prects_estimate.tcl", "prects_clear.tcl")
-    for name in seed_files:
-        shutil.copy2(args.seed / name, out / name)
-    shutil.copytree(args.seed / "macros", out / "macros")
-    shutil.copy2(args.seed / "rtl/ot_rom_4096x274_m8_bb.v", out / "rtl/ot_rom_4096x274_m8_bb.v")
-    for name in ("face_keep.tcl", "face_keep_release.tcl", "face_guard.py", "face_guard_core.py",
-                 "sdc_lint.py", "signoff.py", "pair_skew.tcl", "io_hold_qualification.py",
-                 "pin_audit.py"):
-        if name == "face_guard_core.py":
-            (out/name).write_bytes(subprocess.check_output(["git","-C",str(repo),"show","HEAD:physical/die_plan/hbm_arch_cores/face_guard_core.py"]))
-        else: shutil.copy2(repo / "tools/die_plan" / name, out / name)
-    shutil.copy2(repo / "physical/common_flow/ot_keep_regs.tcl", out / "ot_keep_regs.tcl")
-    shutil.copy2(repo / "physical/common_flow/clock_family.tcl", out / "clock_family.tcl")
-    shutil.copy2(repo / "tools/s81_head/head_rom_if.tcl", out / "head_rom_if.tcl")
+def stage_sources(repo, out):
+    """Stage the exact prepared native RTL for physical kits or source witnesses."""
     source_paths = ["rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_fadd.sv",
         "rtl/v41rom/ot_v41_bmul2.sv", "rtl/v41rom/ot_dsrom_bmul3.sv",
         "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv",
@@ -59,9 +36,38 @@ def main():
             text, record = timed_profile(text, path.name, tags)
             tags = record["next_tag"]
             reports.append(record)
-        target = out / "rtl" / path.name
+        target = out / path.name
         target.write_text(text)
         hashes[path.name] = hashlib.sha256(target.read_bytes()).hexdigest()
+    return tags, reports, hashes
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--seed", type=Path, required=True)
+    ap.add_argument("--out", type=Path, required=True)
+    args = ap.parse_args()
+    repo = Path(__file__).resolve().parents[2]
+    out = args.out.resolve()
+    out.mkdir(parents=True, exist_ok=False)
+    (out / "rtl").mkdir()
+    seed_files = ("constraint.sdc", "vclk_ff.sdc", "face_flops.tcl", "face_flops_release.tcl",
+                  "pdn.tcl", "make_tracks.tcl", "macro_place.tcl", "setRC_rcx.tcl",
+                  "prects_estimate.tcl", "prects_clear.tcl")
+    for name in seed_files:
+        shutil.copy2(args.seed / name, out / name)
+    shutil.copytree(args.seed / "macros", out / "macros")
+    shutil.copy2(args.seed / "rtl/ot_rom_4096x274_m8_bb.v", out / "rtl/ot_rom_4096x274_m8_bb.v")
+    for name in ("face_keep.tcl", "face_keep_release.tcl", "face_guard_core.py",
+                 "pin_audit.py"):
+        if name == "face_guard_core.py":
+            (out/name).write_bytes(subprocess.check_output(["git","-C",str(repo),"show","HEAD:physical/die_plan/hbm_arch_cores/face_guard_core.py"]))
+        else: shutil.copy2(repo / "tools/die_plan" / name, out / name)
+    shutil.copy2(repo / "physical/common_flow/ot_keep_regs.tcl", out / "ot_keep_regs.tcl")
+    subprocess.run(["python3", "-I", str(repo / "tools/die_plan/signoff.py"),
+                    "bundle", str(out), "--with", "postcts_gate.tcl"], check=True)
+    shutil.copy2(repo / "tools/s81_head/head_rom_if.tcl", out / "head_rom_if.tcl")
+    tags, reports, hashes = stage_sources(repo, out / "rtl")
     # Dedicated real port set. No replacement/tie/alias of removed pins.
     live = {"clk", "rst_n", "go", "x", "o_v", "o_d", "fault"}
     pins = [p for p in json.loads((args.seed / "pins.json").read_text()) if p["bus"] in live]
@@ -129,7 +135,10 @@ export OT_VCLK_FF = 170
     profile = dict(kind="S81_HEAD_B_L4_TIMED_NATIVE", physical_view_adoption=False,
         top="ot_s81hd_elemB_l4_native", reset_input_timed=True,
         reset_delivery_cycles=1, synchronous_reset_consumption=True,
-        earliest_go_capture_edge_after_input_release=3, start_bus="go",
+        earliest_go_capture_edge_after_input_release=3,
+        earliest_go_accept_edge_after_input_release=4,
+        activation_word_a_edge_after_go_pin="6+a",
+        go_pin_register_cycles=1, die_start_is_element_go=False, start_bus="go",
         invalid_start="ignored while local reset; sticky fault when GO arrives before ready",
         input_ports=dict(clk=1, rst_n=1, go=1, x=256), output_ports=dict(o_v=1, o_d=32, fault=1),
         live_pins=293, removed_unused_inputs=50, removed_unused_outputs=115,

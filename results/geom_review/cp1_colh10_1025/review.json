@@ -1,0 +1,12 @@
+{
+ "tag": "CLOCK-RESET/CP1-COLH10",
+ "rows_superseded": {"1c283eb44e4f": "col_h10_r1__t1 routed NOT SIGNED hold_ff -30.85/1626, TT slew 12", "92cd4ba072f2": "col_h10_r0_p1__t1 FAIL_POSTCTS FF -74.95/3125"},
+ "old_src": "codex/cp1-0719@a55d43c2a (plan cp1_reach405W, 200-um R4 grid, 55-56 taps, cap 3000)",
+ "cause": "Full S81 type's 200-um tap grid on a 0.3%-filled proof partition: ~51 taps with 0-7 sinks, face bands on 4 (r1: 1565/1768/2439/2023) or 6 (r0: 1327-2548) taps; natural trees 128-178 ps with ~50 ps internal spread; tap_balance pads each root to ~245 with series BUFx4 (514 / 427 delay cells); trees end 229-285, routed RCX pin-flop spread 74 ps (TT 229-304, FF 174-248, mean 195.5) -> late input pin-reg capture.",
+ "fix": "pair.py proof_clock: density taps from the proof leaf's own register inventory + face/ft sinks + generated reset relays (iterated); <=500 sinks/tap (target 400), sink->tap <=100 um; no grid, no sink-less tap; bound insertion 250 TT / 202.5 FF unchanged",
+ "plan": {"col_h10_r1__t1": {"taps": 40, "max_sinks": 394, "max_sink_tap_um": 75.6, "sinks": 7927, "reset_relays": 156, "relay_max_tap_um": 87.5},
+          "col_h10_r0_p1__t1": {"taps": 83, "max_sinks": 401, "max_sink_tap_um": 97.2, "sinks": 16096, "reset_relays": 216, "relay_max_tap_um": 97.2}},
+ "estimate_check": "planned sinks vs old CTS log actual: r1 7927 (7792 w/o relays) vs 7795; r0 16096 vs 15714",
+ "kits": "intel2:/srv/opentallas-scratch2/claude/clock-reset/cp1/colh10/kits/{col_h10_r0_p1__t1,col_h10_r1__t1} (gen.py phys --slew-margin 20 --max-wire-um 100 --skip-kit-ir, + codex grt_conditions.tcl, as the a55d43c2a kits)",
+ "open": "r0: 2826 ingress flops under the flat -40 @die/external-sender input-min contract need ~52 ps each even at perfect insertion -> post-CTS count gate (<=2000 EP) fails by construction unless IO-HOLD A sender_min is carried across the pair cut (external ports become @die in pair.py) or early face taps are planned."
+}

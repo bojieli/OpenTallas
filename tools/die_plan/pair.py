@@ -21,6 +21,14 @@
   --core-taps adds an EARLY clock tap (clock.taps kind core, insertion_ps = TT max_clock_tree_path) for every core
   clock pin whose internal latency > common latency - 40 ps, and sets clock.core_taps = 'early' (gen_phys: port
   clk_c<k>, source latency -(insertion - common) in the kit SDC and the die STA).
+- Proof-leaf clock (CLOCK-RESET/CP1-COLH10 10-25): a proof-leaf type gets a clock tap plan derived from ITS OWN
+  sinks (proof_clock): clock.tap_mode "density" over the face / ft registers plus the leaf's register inventory
+  (leaf_sink_sites), <= PROOF_TAP_MAX_SINKS per tap within PROOF_TAP_RADIUS_UM, no grid, no sink-less tap.  The full
+  type's 200-um tap grid was sized for the real contents; on a 0.3%-filled proof partition it left ~51 of 55 taps with
+  0-7 sinks and piled the face bands onto 4 taps of 1.5-2.4k sinks (128-178 ps natural trees, 50 ps internal spread),
+  which tap_balance could only pad at the roots (r1 post-route FF hold -30.85, r0 post-CTS FF -74.95).  The bound
+  pin-register insertion (common latency, R4) is unchanged: the parent spine has no late-tap contract, so the kit
+  still delivers it, now on uniform shallow trees.  --clock-only rewrites an existing coreless pair plan's clocks.
 - The pair keeps the full die's spine geometry (clock.spine.die_root_um, die_outline_um, part_die_origin_um) for the
   die STA branch model (spine.py); clock.spine.root_um is the pair's own (routing) root.
 """
@@ -308,6 +316,129 @@ def bus_centroids(P, tn):
     return {k: (v[0] / v[2], v[1] / v[2]) for k, v in acc.items()}
 
 
+# CLOCK-RESET/CP1-COLH10 10-25: proof-leaf clock plan.  Shallow face-band trees: <= 500 sinks within 100 um of the tap
+# (S81 type: ~1.5-2.4k sinks per 330-um band on 4 grid taps -> 128-178 ps trees, 50 ps internal spread).
+PROOF_TAP_MAX_SINKS = 500
+PROOF_TAP_RADIUS_UM = 100.0
+PROOF_SINK_BIN_UM = 10.8
+
+
+def leaf_sink_sites(P, tn, leaf="reach", hop_um=None, bin_um=PROOF_SINK_BIN_UM):
+    """[[x, y, n]] (type frame, binned at bin_um) of the proof leaf's OWN registers, as proof_leaf builds them: q (one
+    per in bit) at its in pin, the out register (one per out bit) at its out pin, and the reach leaf's fold / pipeline
+    stages f_s0..f_s<st> of out bus b from in bus i spread evenly on the line from i's pin centroid to b's pin (stage j
+    at (j + 1) / (st + 2)).  The face registers and ft stations are schema-planned sinks (taps.planned_sinks) and are
+    not repeated here."""
+    import collections
+    import gen_phys
+    t = P.types[tn]
+    ins = [(b["name"], b["width"]) for b in t.get("buses", []) if b["dir"] == "in"]
+    outs = [(b["name"], b["width"]) for b in t.get("buses", []) if b["dir"] == "out"]
+    at = {}
+    for bn, bit, _l, x, y, _f in gen_phys.type_pins(P, tn):
+        at.setdefault(bn, {})[bit] = (x, y)
+    c = collections.Counter()
+
+    def put(x, y, n=1):
+        c[(int(x // bin_um), int(y // bin_um))] += n
+    for b, _w in ins:
+        for x, y in at.get(b, {}).values():
+            put(x, y)
+    for b, _w in outs:
+        for x, y in at.get(b, {}).values():
+            put(x, y)
+    if leaf == "reach" and ins:
+        geo = bus_centroids(P, tn)
+        plan = reach_plan(ins, outs, geo, hop_um or leaf_hop_um())
+        for b, _w in outs:
+            for i, _d, st in plan[b]:
+                gx, gy = geo[i]
+                for x, y in at.get(b, {}).values():
+                    for j in range(st + 1):
+                        f = (j + 1) / (st + 2)
+                        put(gx + f * (x - gx), gy + f * (y - gy))
+    return [[round((i + 0.5) * bin_um, 3), round((j + 0.5) * bin_um, 3), n] for (i, j), n in sorted(c.items())]
+
+
+PROOF_RESET_ITERS = 6
+
+
+def reset_sink_sites(P, tn, bin_um=PROOF_SINK_BIN_UM):
+    """[[x, y, n]] binned sites of the type's generated reset relays (reset_tree.for_type: wire relays, per-tap
+    synchronisers and pads) -- clocked flops the kit places at those sites.  [] when the plan builds no tree."""
+    import collections
+    import reset_tree as RT
+    try:
+        T = RT.for_type(P, tn)
+    except Exception:       # noqa: BLE001 -- a plan without a generated reset tree: no reset sinks
+        return []
+    c = collections.Counter()
+    for r in T.get("relays", []):
+        x, y = r["xy"]
+        c[(int(x // bin_um), int(y // bin_um))] += 1
+    return [[round((i + 0.5) * bin_um, 3), round((j + 0.5) * bin_um, 3), n] for (i, j), n in sorted(c.items())]
+
+
+def _merge_bins(a, b):
+    acc = {}
+    for x, y, n in list(a) + list(b):
+        acc[(x, y)] = acc.get((x, y), 0) + n
+    return [[x, y, n] for (x, y), n in sorted(acc.items())]
+
+
+def is_proof_type(t):
+    c = t.get("contents", [])
+    return len(c) == 1 and c[0]["module"] == f"{t['module']}_proof_leaf" and not t.get("hard_cores")
+
+
+def proof_clock(raw, leaf="reach", max_sinks=PROOF_TAP_MAX_SINKS, radius_um=PROOF_TAP_RADIUS_UM, hop_um=None):
+    """In place on a pair plan: every coreless proof-leaf type gets a density clock plan from its own sinks (see the
+    module docstring).  Keeps tap_um / layer / bound insertion keys; drops the grid pitch and every non-core tap.
+    -> {type: taps.report summary (n taps, max planned sinks, max radius)}."""
+    import taps as TP
+    P = S.Plan(raw)
+    done = {}
+    for tn, t in raw["partition_types"].items():
+        if not is_proof_type(t):
+            continue
+        ck = t.setdefault("clock", {})
+        for k in ("tap_pitch_um", "sink_bins_file", "tap_target_sinks", "tap_min_sinks"):
+            ck.pop(k, None)
+        ck["taps"] = [tp for tp in ck.get("taps", []) if tp.get("kind") == "core"]
+        if not ck["taps"]:
+            ck.pop("taps")
+        base = leaf_sink_sites(P, tn, leaf, hop_um)
+        ck.update(tap_mode="density", tap_max_sinks=int(max_sinks), tap_radius_um=float(radius_um),
+                  sink_sites_um=base)
+        # the plan's reset relays / per-tap synchronisers are clock sinks too, and their tree is built over the taps:
+        # iterate taps <-> reset tree until the relay sites are stable, so a remote relay gets a tap within the radius
+        # instead of a long arm on a band tap (S81 t7 density CTS 10-25: sparse controls dragged band trees)
+        extra = []
+        for _ in range(PROOF_RESET_ITERS):
+            rel = reset_sink_sites(S.Plan(raw), tn)
+            if rel == extra:
+                break
+            extra = rel
+            ck["sink_sites_um"] = _merge_bins(base, extra)
+        note = " [pair.py proof_clock: density taps from the proof leaf's own sinks]"
+        if note not in t.get("note", ""):
+            t["note"] = (t.get("note", "") + note).strip()
+    Q = S.Plan(raw)
+    for tn, t in raw["partition_types"].items():
+        if not is_proof_type(t):
+            continue
+        rep = TP.report(Q, tn)
+        rel = reset_sink_sites(Q, tn)
+        tp = [(n, x, y) for n, x, y, _, _ in TP.density_taps(Q, tn)]
+        far = max((min(abs(r[0] - x) + abs(r[1] - y) for _, x, y in tp) for r in rel), default=0.0)
+        done[tn] = dict(n=rep["n"], empty=rep["empty"], max_sinks=max(x["planned_sinks"] for x in rep["taps"]),
+                        min_sinks=min(x["planned_sinks"] for x in rep["taps"]),
+                        sinks=sum(x["planned_sinks"] for x in rep["taps"]),
+                        max_radius_um=max(x["radius_um"] for x in rep["taps"]),
+                        reset_relays=sum(r[2] for r in rel), reset_relay_max_tap_um=round(far, 1))
+    return done
+
+
 def leaves_for(raw, leaf="reach", hop_um=None):
     """regenerate leaves.sv for an existing coreless pair plan (its types' buses and pins unchanged), e.g. after
     kit_ft_resize: -> verilog text.  Only proof-leaf types (contents == one u_leaf <module>_proof_leaf) are written."""
@@ -329,8 +460,32 @@ def leaves_for(raw, leaf="reach", hop_um=None):
     return "\n".join(out) + "\n"
 
 
+def upstream_driver_views(pair_raw, full_raw):
+    """CP1 proof harness (COORD 2026-10-25 23:26 ruling (3)): {pair port id: driver view} for every die-edge input
+    of a pair plan that the FULL plan drives from a registered partition (not the die edge, not a die channel).  Each
+    view carries the driver type's guaranteed output-min (gen_phys.sender_out_guarantee_ps: its signed view's
+    out_hold_guarantee_ps, else the plan contract (1 - UNC_SPLIT) x UNC_HOLD_PS - out_min = +12.5 ps).  Port ids are
+    preserved by extract, so the full plan's port record is found by id."""
+    import gen_phys
+    F = S.Plan(full_raw)
+    out = {}
+    for q in pair_raw["ports"]:
+        if q["src"]["part"] != DIE_PART or q["dst"]["part"] == DIE_PART:
+            continue
+        pr = F.ports.get(q["id"])
+        if pr is None or pr["src"]["part"] in (DIE_PART,) or pr["src"]["part"] not in F.parts:
+            continue
+        if F.channel_of(q["id"]) is not None:
+            continue
+        st = F.parts[pr["src"]["part"]]["type"]
+        g, basis = gen_phys.sender_out_guarantee_ps(F, st)
+        out[q["id"]] = dict(part=pr["src"]["part"], type=st, bus=pr["src"]["bus"], out_hold_guarantee_ps=round(g, 4),
+                            basis=basis, source_plan=F.name)
+    return out
+
+
 def extract(raw, parts, channel_um=0.0, name=None, cores=False, core_taps=False, plan_dir=None, root=None,
-            leaf="reach"):
+            leaf="reach", proof_taps=True, driver_views=False):
     """cores: instantiate every hard core of each type in its proof leaf (CP2); core_taps: early core taps
     (add_core_taps); plan_dir: the source plan's directory (relative hard_cores[].pins_file become absolute)."""
     P = S.Plan(raw)
@@ -476,6 +631,10 @@ def extract(raw, parts, channel_um=0.0, name=None, cores=False, core_taps=False,
            "census": {"none": f"CP1 proof pair cut from {P.name}: census coverage is checked on the full plan"}}
     if "budgets" in raw:
         out["budgets"] = copy.deepcopy(raw["budgets"])
+    if driver_views:
+        dv = upstream_driver_views(out, raw)
+        if dv:
+            out["clock"]["io_hold_driver_views"] = dv
     sp = out["clock"].setdefault("spine", {})
     # CP2 spine branch model (spine.py): keep the FULL die's spine geometry, so the pair die STA can model each
     # partition tap's branch from the real die root (the pair's own root below only routes the pair die)
@@ -484,6 +643,8 @@ def extract(raw, parts, channel_um=0.0, name=None, cores=False, core_taps=False,
     prev = sp.get("part_die_origin_um", {})
     sp["part_die_origin_um"] = {p: list(prev.get(p, P.parts[p]["origin_um"])) for p in (A, B)}
     sp["root_um"] = [round(math.floor(W / 2 / g) * g, 4), round(math.floor(H / 2 / g) * g, 4)]
+    if proof_taps and not cores:
+        out["proof_clock"] = proof_clock(out, leaf)
     if core_taps:
         Q = S.Plan(out)
         out["core_taps_added"] = {tn: add_core_taps(Q, tn, t, float(Q.clock["insertion_ps"]), root)
@@ -512,8 +673,42 @@ def main(argv=None):
                          "reach hop) or fold (legacy all-bus XOR fold: unpipelined cross-partition paths)")
     ap.add_argument("--leaves-only", action="store_true",
                     help="PLAN is an existing coreless pair plan: only rewrite OUT/leaves.sv with the --leaf dataflow")
+    ap.add_argument("--clock-only", action="store_true",
+                    help="PLAN is an existing coreless pair plan: rewrite OUT/pair_plan.json with the proof-leaf "
+                         "density clock plan (proof_clock) only")
+    ap.add_argument("--grid-taps", action="store_true",
+                    help="keep the full type's tap grid on proof-leaf types (legacy; no proof_clock)")
+    ap.add_argument("--driver-views", action="store_true",
+                    help="record an explicit registered upstream driver view (clock.io_hold_driver_views) for every "
+                         "die-edge input the full plan drives from a partition (COORD 23:26 ruling (3))")
+    ap.add_argument("--driver-views-from", metavar="FULL_PLAN",
+                    help="PLAN is an existing pair plan: add clock.io_hold_driver_views from FULL_PLAN and write "
+                         "OUT/pair_plan.json (nothing else changes)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
+    if a.clock_only:
+        rep = proof_clock(raw, a.leaf)
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        (Path(a.out) / "pair_plan.json").write_text(json.dumps(raw, indent=1) + "\n")
+        errs = S.validate(raw)
+        for tn, r in rep.items():
+            print(f"proof clock {tn}: {r}")
+        print(f"{Path(a.out) / 'pair_plan.json'}: schema " + ("PASS" if not errs else "FAIL\n  " + "\n  ".join(errs[:20])))
+        return 1 if errs else 0
+    if a.driver_views_from:
+        dv = upstream_driver_views(raw, S.load(a.driver_views_from))
+        raw["clock"]["io_hold_driver_views"] = dv
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        (Path(a.out) / "pair_plan.json").write_text(json.dumps(raw, indent=1) + "\n")
+        errs = S.validate(raw)
+        by = {}
+        for v in dv.values():
+            by.setdefault((v["type"], v["out_hold_guarantee_ps"], v["basis"]), []).append(v["bus"])
+        for (t, g, b), buses in sorted(by.items()):
+            print(f"driver view {t}: +{g:g} ps ({b}) on {len(buses)} ports")
+        print(f"{Path(a.out) / 'pair_plan.json'}: {len(dv)} driver views; schema "
+              + ("PASS" if not errs else "FAIL\n  " + "\n  ".join(errs[:20])))
+        return 1 if errs else 0
     if a.leaves_only:
         Path(a.out).mkdir(parents=True, exist_ok=True)
         (Path(a.out) / "leaves.sv").write_text(leaves_for(raw, a.leaf))
@@ -535,7 +730,10 @@ def main(argv=None):
         print("plan invalid:\n  " + "\n  ".join(errs[:20]))
         return 1
     plan, leaves = extract(raw, a.parts.split(","), a.channel, a.name, cores=a.cores, core_taps=a.core_taps,
-                           plan_dir=str(Path(a.plan).resolve().parent), leaf=a.leaf)
+                           plan_dir=str(Path(a.plan).resolve().parent), leaf=a.leaf, proof_taps=not a.grid_taps,
+                           driver_views=a.driver_views)
+    for tn, r in (plan.pop("proof_clock", None) or {}).items():
+        print(f"proof clock {tn}: {r}")
     added = plan.pop("core_taps_added", None)
     if added:
         for tn, lst in added.items():

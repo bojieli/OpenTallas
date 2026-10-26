@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "GRT-only FF-only vs MCMM diagnostic from identical existing 4_cts; no DRT or adoption",
+  "source_commit": "0c87522f27fa",
+  "odb": "epyc1:/srv/opentallas-scratch2/claude/codex-hbm-mcmm-2144/base/run/results/asap7/hbc_hfd_hgi_vm_calendar_f20/base/4_cts.odb",
+  "pictures": ["floorplan.png", "density.png"],
+  "findings": [
+    "One central/right SRAM macro with logic on three sides, all buses within the 242x117 um outline; no reach405 issue.",
+    "Lower macro channel is below20um (orange in render); no new floorplan approval. Density remains blue/green, no dense red islands, and pin bands remain at the outline.",
+    "PDN stripes span available channels. Clock taps and related-pair behavior require timing, not this density view.",
+    "Existing FF-only GRT fails insertion: TT304.90 vs250, FF266.39 vs202.5; hold-27.91ps. Retain failure. This run only compares GRT repair corner sets on the same geometry; never proceed to DRT from either failing result."
+  ]
+}

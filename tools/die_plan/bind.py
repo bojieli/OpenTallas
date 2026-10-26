@@ -475,6 +475,17 @@ def rel(path, root):
     return path[len(root) + 1:] if root and path.startswith(root + ".") else path
 
 
+def variant_constant_errors(graph, requirements):
+    """A narrowed encoding may remove only the promised actual constant source bits."""
+    errors = []
+    for path, port, bit, net, value in requirements:
+        source = graph.source(net)
+        if source[:2] != ("const", value):
+            errors.append(f"VARIANT_CONST_REQUIREMENT {path}.{port}[{bit}]: "
+                          f"expected {value}, found {source}")
+    return errors
+
+
 def variant_port_bits(ports, variant, params, mapping):
     """Validate an explicit LSB-first bit selection before changing any leaf.
 
@@ -542,6 +553,11 @@ class Binder:
         self.ab = plan["asbuilt"]
         self.base = base or str(E.REPO)
         self.errors, self.warns = [], []
+        import reset_boot_contract
+        try:
+            self.reset_boot_contract = reset_boot_contract.check_binding(plan, self.base)
+        except (ValueError, OSError) as exc:
+            raise BindError(f"RESET_BOOT_CONTRACT {exc}") from exc
         self.R = Rules(self.ab)
         self.F = E.flatten(yjs, self.ab["top"], self.ab.get("substitute_parent", []))
         # Yosys omits instance parameters when a leaf uses its declared defaults. Keep their
@@ -583,8 +599,14 @@ class Binder:
             import bind_compose
             bind_compose.apply(self, self.ab["compose"])
         self.G = Graph(self.F, self.R, self.errors)
+        self.errors.extend(variant_constant_errors(self.G, getattr(self, "variant_required_constants", [])))
         self.parts = {p["name"]: dict(p) for p in plan["partitions"]}
         self.types = {k: dict(v) for k, v in plan["partition_types"].items()}
+        import dead_inputs
+        try:
+            self.proven_dead = dead_inputs.ProvenDead(self.ab, E.REPO, self.types)
+        except ValueError as exc:
+            raise BindError(str(exc)) from exc
         self.findings, self.type_splits = [], []
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
@@ -750,6 +772,7 @@ class Binder:
         prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab.get("prefer", [])]
         iface = {}
         self.variant_removed = defaultdict(int)
+        self.variant_required_constants = []
         for r in ab["substitute_inst"]:
             rx = re.compile(r["inst"])
             m = r["module"]
@@ -780,6 +803,16 @@ class Binder:
                 # retained source indices explicitly. Never truncate the old
                 # vector to the variant width: that would drop real MSB data.
                 selected = {}
+                for port, expected in r.get("port_bit_constants", {}).items():
+                    if port not in c.ports or c.dirs.get(port) != "input":
+                        raise BindError(f"{c.path}.{port}: required constants need an existing input")
+                    for bit_text, value in expected.items():
+                        bit = int(bit_text)
+                        if str(bit) != bit_text or bit < 0 or bit >= len(c.ports[port]) or value not in ("0", "1"):
+                            raise BindError(f"{c.path}.{port}: invalid required constant bit/value")
+                        if bit in r.get("port_bits", {}).get(port, []):
+                            raise BindError(f"{c.path}.{port}[{bit}]: a retained input cannot be declared removed")
+                        self.variant_required_constants.append((c.path, port, bit, c.ports[port][bit], value))
                 if "port_bits" in r:
                     try:
                         selected = variant_port_bits(c.ports, vm, c.params, r["port_bits"])
@@ -1020,6 +1053,10 @@ class Binder:
                 cnt["internal_primitive_literals"] += 1
                 return ("literal", s[1])
             pin = f"{self.F.cells[ci].path}.{pn}"
+            if self.proven_dead.allows(self.parts[p]["type"], cell, pn, i,
+                    self.param_defaults.get((cell.ytype, cell.module), {})):
+                cnt["proven_dead"] += 1
+                return ("literal", s[1])
             if self.R.is_strap(pin):
                 cnt["strap"] += 1
                 return ("strap", s[1])

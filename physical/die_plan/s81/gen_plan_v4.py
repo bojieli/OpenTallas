@@ -338,10 +338,10 @@ NONFRAME_HC = {
     "leaf": dict(cores=[dict(inst="u_lf.u_vp.g_ln[%d].u_l" % i, module="ot_dsrom_su_hcpost_lane_pr", cells=50540,
                              plan_core="vp_hcpl",
                              lef=_rt("s81sl_hcpl", "ot_dsrom_su_hcpost_lane_pr")) for i in range(16)] +
-                       [dict(inst="u_lf.u_vp.u_b%d" % i, module="ot_sram_1r1w_512x128_m4_r2c2", cells=0,
+                       [dict(inst="u_lf.u_vp.u_b%d" % i, module="ot_sram_1r1w_512x128_m4_r0c0", cells=0,
                              plan_core="vp_store",
-                             lef="physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/"
-                                 "ot_sram_1r1w_512x128_m4_r2c2.lef") for i in range(2)] +
+                             lef="physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/"
+                                 "ot_sram_1r1w_512x128_m4_r0c0.lef") for i in range(2)] +
                        # S81/LEAFPLAN 10-24 (COORD C3: ve 468k > 400k cap, vn 385k at it): vn and ve split into two hard
                        # cores each (cores/leaf/split.py, plan pin tables + stub LEFs; RTL split = hand-off): vn = lanes
                        # 0..3 (u_a, h half 0) + lanes 4..7 (u_b, h half 1, chain tail, beat tree, p), stacked in vn's
@@ -2616,6 +2616,9 @@ def emit(parts, lanes, routes, chans, fmap, out):
                     # DEC12 (COORD 22:35): hops / stations <= 405 um exactly -- no extra 0.9 G0C reach margin
                     "reach_margin": 1.0, "ft_station_max_um": FT_STATION_MAX},
     }
+    # Bare HBM PHY controls are the native LEF terminals, not a synthetic grid point.
+    from physical.die_plan.s81.apply_phy_control_pins import apply as project_phy_controls
+    STATS_V4["phy_control_pins"] = project_phy_controls(plan, Path(__file__).resolve().parents[3])
     STATS_V4["macrofree_ft_reach"] = macrofree_ft_reach(plan)
     from tools.die_plan.ft_reach import resize
     STATS_V4["corefull_ft_reach"] = resize(plan, reach_um=min(FT_STATION_MAX, FT_KIT_REACH_UM), margin=.98,
@@ -2641,6 +2644,10 @@ def emit(parts, lanes, routes, chans, fmap, out):
         plan, RowAllocator, types=[n for n in ft_types if n not in reused], reach_um=FT_KIT_REACH_UM, margin=.98)
     STATS_V4["frame_ft_bit_sites"] = [x for x in STATS_V4["ft_bit_sites"] if x["type"].startswith("col_")]
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
+    # COORD21:21: dead pins are part of each type's plan contract, never a manifest-only waiver.
+    from tools.die_plan.dead_inputs import apply_plan_declarations
+    apply_plan_declarations(plan, "results/token_pass/s81_dead_inputs_2148/proof_closing.json",
+                            Path(__file__).resolve().parents[3])
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
     json.dump(TYPE_NAMES_OUT, open(out / "type_names.json", "w"), indent=0, sort_keys=True)

@@ -68,3 +68,28 @@ def test_postcts_actual_tcl_overlay_fragment(tmp_path,corner,marker,available,ex
     result=subprocess.run(['tclsh',str(script)],text=True,capture_output=True)
     if expected=='missing marked':assert result.returncode!=0 and expected in result.stderr
     else:assert result.returncode==0 and expected in result.stdout,result.stderr
+
+
+def test_gate_bundle_closes_dependencies_and_preserves_custom_hook(tmp_path):
+    target = tmp_path / "kit"
+    signoff.copy_signoff_bundle(target, extra=("postcts_gate.tcl",))
+    assert (target / "pinreg_measure.tcl").is_file()
+    assert (target / "clock_family.tcl").is_file()
+    (target / "postcts_gate.tcl").write_text("# KIT-SPECIFIC GATE\n")
+    (target / "pinreg_measure.tcl").unlink()
+    signoff.copy_signoff_bundle(target)
+    assert (target / "postcts_gate.tcl").read_text() == "# KIT-SPECIFIC GATE\n"
+    script = 'source {' + str(target / "pinreg_measure.tcl") + '}\n'
+    script += 'foreach p {ot_pinreg_set ot_pinreg_arr} {if {![llength [info commands $p]]} {error "missing $p"}}\n'
+    r = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
+    assert r.returncode == 0 and not r.stderr, r.stderr
+
+
+def test_requested_gate_dependency_missing_fails_before_copy(tmp_path):
+    source = tmp_path / "source"
+    signoff.copy_signoff_bundle(source)
+    (source / "postcts_gate.tcl").write_text("source /work/pinreg_measure.tcl\n")
+    target = tmp_path / "kit"
+    with pytest.raises(ValueError, match="pinreg_measure"):
+        signoff.copy_signoff_bundle(target, source, extra=("postcts_gate.tcl",))
+    assert not target.exists()

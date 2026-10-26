@@ -1,0 +1,31 @@
+{
+ "source": "16e13f803a583a035584b31f7f7a74e32c196fdc",
+ "scope": "MODEL DIAGNOSTIC ONLY; real kit budget and real-view STA open",
+ "canonical_plan_sha256": "155003806781b26b2965a1daf4551b4bf235250312e20226572a397ab3cf57c3",
+ "diagnostic": {
+  "ft_track_frac": 0.5,
+  "head_obs": "M7"
+ },
+ "corners": {
+  "TT": {
+   "total_overflow": 0,
+   "slew_violators": 0,
+   "cap_violators": 0,
+   "grt_underflow": 0,
+   "exit": 0,
+   "taps": 2090,
+   "insertion_min_ps": 6041.538078,
+   "insertion_max_ps": 6731.660637
+  },
+  "FF": {
+   "total_overflow": 0,
+   "slew_violators": 0,
+   "cap_violators": 0,
+   "grt_underflow": 0,
+   "exit": 0,
+   "taps": 2090,
+   "insertion_min_ps": 5234.817862999999,
+   "insertion_max_ps": 5844.9619059999995
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.kv-dcal-rom-lockstep.v1",
+  "gate": "PASS",
+  "source_commit": "4c0c51852f",
+  "cases": {
+    "pair1024": {
+      "receipt": "results/rtl/kv_dcal_rom_1025/pair1024/receipt.json",
+      "result": "RESULT cycles=1500000 mismatches=0 mutant_mismatches=8 cal_starts=100 tokens=8 layers=fffffffff ready_gold=74 ready_dut=74"
+    },
+    "mu": {
+      "receipt": "results/rtl/kv_dcal_rom_1025/mu/receipt.json",
+      "result": "RESULT cycles=1500000 mismatches=0 mutant_mismatches=12 cal_starts=118 tokens=8 layers=fffffffff ready_gold=74 ready_dut=74"
+    }
+  },
+  "model": {
+    "production_cycle_delta": 0,
+    "boot_cycle_delta": 0,
+    "scalar_cache_bits": 256,
+    "scalar_reads": 8,
+    "existing_init_edges": 66,
+    "macro": "ot_rom_64x32_m2",
+    "macro_area_um2": 81.404352,
+    "profile_const_data_bits": 2048,
+    "minimum_start_gap_contract_edges": 2,
+    "init_ready_edge_gold": 74,
+    "init_ready_edge_rom": 74
+  },
+  "scope": "Component lockstep on actual pair1024 and MU schedules, every output compared. Final KV bind, macro placement, TT/FF physical signoff and full token remain separate gates."
+}

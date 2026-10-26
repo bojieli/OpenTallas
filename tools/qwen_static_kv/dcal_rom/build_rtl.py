@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+"""Build the content-independent KV BC4 calendar from its frozen reset banks."""
+from pathlib import Path
+import re
+ROOT = Path(__file__).resolve().parents[3]
+D = ROOT / "rtl/qwen_sys/d2d_static_20261015"
+
+
+def build():
+    core = (D / "ot_qwen_d2d_cal_seq_bc4.sv").read_text()
+    core = core.replace("ot_qwen_d2d_cal_seq_bc4", "ot_qwen_d2d_cal_seq_rom64_core")
+    fields = ["TX_SEG1", "RX_SEG1", "TX_SEG2", "RX_SEG2", "ADM_OFS", "ADM_LEN", "FIRST_OFS", "PERIOD"]
+    remove = fields + ["START", "TX_IMG", "RX_IMG"]
+    core = "\n".join(l for l in core.splitlines() if not ("parameter " in l and any(re.search(r"\b" + n + r"\b", l.split("//")[0]) for n in remove))) + "\n"
+    core = core.replace("    input  wire [15:0] rst_bank_n,", "    input  wire [15:0] rst_bank_n,\n" + "\n".join("    input wire [31:0] rom_" + n.lower() + "," for n in fields) + "\n    input wire [19:0] rom_start,\n    output wire [5:0] profile_li,")
+    core = re.sub(r"    initial begin\n.*?    end\n", "", core, count=1, flags=re.S)
+    core = core.replace("    localparam integer E_ADM", "    wire [31:0] E_ADM").replace("    localparam [31:0] TXB0", "    wire [31:0] TXB0")
+    for n in fields:
+        core = re.sub(r"\b" + n + r"\b", "rom_" + n.lower(), core)
+    core = re.sub(r"    wire \[19:0\] nxt = .*?;", "    wire [19:0] nxt = rom_start;\n    assign profile_li = li;", core)
+    core = re.sub(r"(cfg_data_part\d+\[\d+ \+: 8\]\s*=)[^;]*;", r"\1 8'b0;", core)
+    assert not re.search(r"\b(?:START|TX_IMG|RX_IMG)\[", re.sub(r"//[^\n]*", "", core)), "unconverted profile table"
+    top = (D / "qkd_d2d_cal_seq_bc4.sv").read_text()
+    top = top.replace("module qkd_d2d_cal_seq_pin_bc4 #(", "module qkd_d2d_cal_seq_pin_rom64 #(parameter VIAMAP = \"\", parameter INSTANCE = \"kv_dcal\", ")
+    top = re.sub(r"    `include \"d2d_cal_image_mu.svh\"\n", "", top)
+    a = top.index("    ot_qwen_d2d_cal_seq_bc4 #(")
+    z = top.index("    // ---- merge", a)
+    inst = """    wire [5:0] profile_li;
+    wire [31:0] profile_data;
+    reg [3:0] profile_phase;
+    reg [5:0] profile_tag;
+    reg profile_tag_valid;
+    reg [31:0] profile_tx_seg2, profile_rx_seg2, profile_period;
+    reg [31:0] profile_tx_seg1, profile_rx_seg1;
+    reg [31:0] profile_adm_ofs, profile_adm_len, profile_first_ofs;
+    reg [5:0] profile_addr;
+    always @* begin
+        case (profile_phase)
+            0: profile_addr = 39;
+            1: profile_addr = 40;
+            2: profile_addr = 36;
+            3: profile_addr = 37;
+            4: profile_addr = 38;
+            5: profile_addr = 41;
+            6: profile_addr = 42;
+            7: profile_addr = 43;
+            default: profile_addr = profile_li;
+        endcase
+    end
+    // SEG2 is ready before the outer pin-stage reset releases. The other
+    // scalar reads finish inside the already suppressed 66-edge init stream.
+    always @(posedge ck) begin
+        if (!rst_n) begin profile_phase <= 0; profile_tag_valid <= 0; end
+        else begin
+            if (profile_phase < 8) profile_phase <= profile_phase + 1'b1;
+            profile_tag <= profile_addr;
+            profile_tag_valid <= 1;
+            if (profile_tag_valid) begin
+                case (profile_tag)
+                    36: profile_period <= profile_data;
+                    37: profile_tx_seg1 <= profile_data;
+                    38: profile_rx_seg1 <= profile_data;
+                    39: profile_tx_seg2 <= profile_data;
+                    40: profile_rx_seg2 <= profile_data;
+                    41: profile_adm_ofs <= profile_data;
+                    42: profile_adm_len <= profile_data;
+                    43: profile_first_ofs <= profile_data;
+                    default: ;
+                endcase
+            end
+        end
+    end
+    ot_rom_64x32_m2 #(.VIAMAP(VIAMAP), .INSTANCE(INSTANCE)) u_profile (
+        .clk(ck), .ce_in(1'b1), .addr_in(profile_addr), .rd_out(profile_data));
+    ot_qwen_d2d_cal_seq_rom64_core #(.ADM(1), .AUTO(1), .EP_SKEW(EP_SKEW - 2)) u_seq (
+        .ck(ck), .rst_bank_n({1'b0,rel1[14:0]}),
+        .rom_tx_seg1(profile_tx_seg1), .rom_rx_seg1(profile_rx_seg1),
+        .rom_tx_seg2(profile_tx_seg2), .rom_rx_seg2(profile_rx_seg2),
+        .rom_adm_ofs(profile_adm_ofs), .rom_adm_len(profile_adm_len),
+        .rom_first_ofs(profile_first_ofs), .rom_period(profile_period),
+        .rom_start(profile_data[19:0]), .profile_li(profile_li),
+        .reload(reload_q), .tok_go(1'b0), .epoch_go(epoch_go_q), .halt(halt_q),
+        .cfg_tx_we(s_tx), .cfg_rx_we(s_rx), .cfg_addr(s_addr), .cfg_data(s_data),
+        .cal_start(s_cs), .cal_seg(s_seg), .cal_ready(s_rdy), .running(s_run),
+        .layer(s_layer), .adm_done(s_adm), .tok_start(s_tok), .fault(s_fault));
+"""
+    top = top[:a] + inst + top[z:]
+    top = top.replace("D2D_CAL_K_TX_SEG2", "profile_tx_seg2").replace("D2D_CAL_K_RX_SEG2", "profile_rx_seg2")
+    assert "D2D_CAL_" not in top
+    header = "// Generated by tools/qwen_static_kv/dcal_rom/build_rtl.py; profile content only in ROM via maps.\n"
+    (D / "ot_qwen_d2d_cal_seq_rom64_core.sv").write_text(header + core)
+    (D / "qkd_d2d_cal_seq_rom64.sv").write_text(header + top)
+
+
+if __name__ == "__main__":
+    build()
