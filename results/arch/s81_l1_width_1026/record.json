@@ -1,0 +1,19 @@
+{
+  "cause": "read_verilog sized-cast comparison context leaks nine-bit division into seven-bit sum",
+  "actual_failed": "L1 k26b 12/5664 differs",
+  "actual_witness": {
+    "nseen": 127,
+    "av": 1,
+    "bv": 0,
+    "take": 0,
+    "nsc": 0,
+    "jne": 475
+  },
+  "original_read_verilog": 0,
+  "original_slang": 1,
+  "normalized_both": 1,
+  "formal": "all-input cross-frontend combinational lockstep original Slang vs explicit-width read_verilog PASS",
+  "mutant": "wrong eight-bit sum caught by SAT; nseen127,av1,bv0,take1",
+  "public_cycles_added": 0,
+  "default_and_port_changes": "none"
+}

@@ -100,7 +100,12 @@ module dsdv_gunit_l1 #(
     localparam [1:0] S_IN = 2'd0, S_SEL = 2'd1, S_IDS = 2'd2, S_GW = 2'd3;
     reg [1:0] st; reg [2:0] n; reg [3:0] nbs;
     wire take = st == S_IN && (av || bv) && nseen == 7'd0;      // the first SC beat of a window takes the armed job
-    wire last = st == S_IN && (av || bv) && nseen + av + bv == (take ? 7'((jne + 9'd6) / 9'd7) : nsc);
+    // Keep the comparison operands explicitly seven bits. read_verilog otherwise
+    // leaks the division's nine-bit context through the sized cast and widens
+    // the left sum (127 + 1), unlike the original SystemVerilog/Slang semantics.
+    wire [6:0] nseen_sum = nseen + av + bv;
+    wire [6:0] nsc_target = take ? 7'((jne + 9'd6) / 9'd7) : nsc;
+    wire last = st == S_IN && (av || bv) && nseen_sum == nsc_target;
     wire [8:0] ne_x = take ? jne : ne;
     wire [3:0] nbs_c = 4'((ne_x + 9'd63) >> 6);
     // set of the bias read: the armed job's until its window starts (a job written this cycle bypasses), then cset

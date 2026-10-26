@@ -1,0 +1,16 @@
+read_slang --keep-hierarchy --compat=vcs /work/l1_expr_miter.sv
+hierarchy -top expr
+proc
+flatten
+rename expr gold
+design -stash gold
+read_verilog -sv -DNORMALIZE -DMUT /work/l1_expr_miter.sv
+hierarchy -top expr
+proc
+flatten
+rename expr gate
+design -copy-from gold gold
+miter -equiv -flatten gold gate miter
+hierarchy -top miter
+opt_clean
+sat -prove trigger 0 -show-inputs
