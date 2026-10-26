@@ -96,5 +96,34 @@ class KvGap(unittest.TestCase):
         self.assertEqual(ev[0][:2], (0, 0))                                   # user 0 stage 1 start at cycle 0
 
 
+class PhaseTicks(unittest.TestCase):
+    """TOK-QK-MUFS 10-25: the frame compiler phases on the compile's ticks, and an unplaceable stage refuses at once"""
+    def setUp(self):
+        self.keep = dict(M.KV_PHASE)
+
+    def tearDown(self):
+        M.KV_PHASE.clear()
+        M.KV_PHASE.update(self.keep)
+
+    def test_legacy_ticks_default(self):
+        self.assertEqual(M.kv_phase_ticks(), (625, 768))
+        self.assertEqual(M.kv_beat_cycle(), 768)
+        self.assertTrue(all(M.kv_launch_legal(r, b) == ((b % 768) in M.kv_legal_residues(r))
+                            for r in ROWS[:2] for b in range(0, 3000, 7)))
+
+    def test_common_clock_every_begin_legal(self):
+        M.KV_PHASE.update(PH0=0, lo=625, hi=625, core_u=625, beat_u=625)     # kv_static_programme CONTROLLER_CORE
+        self.assertEqual(M.kv_beat_cycle(), 1)
+        self.assertTrue(all(M.kv_launch_legal(r, b) for r in ROWS for b in range(0, 2000, 13)))
+        fp = M.kv_frame_params(ROWS)
+        self.assertEqual((fp["kv_phase_quantum"], fp["token_pad"]), (1, 0))
+
+    def test_no_legal_residue_refuses_not_hangs(self):
+        M.KV_PHASE.update(PH0=0, lo=625, hi=625)                             # 833 window on the stale 768-u beat
+        self.assertTrue(any(not M.kv_legal_residues(r) for r in ROWS))
+        with self.assertRaisesRegex(ScheduleError, "no phase-legal stage begin"):
+            O.compile_frame(M.KV_FRAME_F, p=M.kv_frame_params(ROWS), starts=list(M.KV_FRAME_STARTS))
+
+
 if __name__ == "__main__":
     unittest.main()

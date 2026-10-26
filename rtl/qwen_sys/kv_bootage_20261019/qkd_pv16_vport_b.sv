@@ -14,7 +14,7 @@
 // The cfg word is registered at its pin (cfg_q) and the tap index one edge later (sl_q); both are static after the seal.
 // MUT (bench negative controls): 1-5 as qkd_pv16_vport; 6 = slot tap one edge late (DQ + RT + 2); 7 = DQ tap ignored
 // (the request wait reads tap 0); 8 = range check off.
-module qkd_pv16_vport_b #(parameter integer MUT = 0, DQ = 15, RT = 31) (
+module qkd_pv16_vport_b #(parameter integer MUT = 0, DQ = 15, RT = 63) (
     input wire ck, rst_n,
     input wire [15:0] cfg_age,                                    // {DQ, RT} boot-loaded static schedule ages
     input wire pr_valid, input wire [13:0] pr_t,

@@ -764,3 +764,126 @@ def test_gate_side_cohort_representative_not_constant_differs(tmp_path, monkeypa
     lec.correspond(L, tmp_path, 100, [])
     m, _ = L.build(with_compare=True, with_hyp=True)
     assert _sim_prove(m)["ff:u_dut.oA"] == "differs"
+def test_structural_cross_side_alias_and_wrong_enable(tmp_path):
+    for mutant in (False, True):
+        g, gm = _seq(tmp_path, 'alias_gold', ['d','wrong'], ['wce_n','out'],
+                     lambda m,x: {'wce_n':x['d'],'out':x['wce_n']})
+        t, tm = _seq(tmp_path, 'alias_gate', ['d','wrong'], ['wce3','out'],
+                     lambda m,x: {'wce3':x['wrong'] if mutant else x['d'],'out':x['wce3']})
+        L = lec.Lec(g,gm,t,tm)
+        n = lec.structural_twin_closure(L,[])
+        assert n == (0 if mutant else 1)
+        m,_ = L.build(with_compare=True,with_hyp=True)
+        assert ('differs' in _sim_prove(m).values()) == mutant
+
+
+def test_kept_wire_alias_copies_preserve_distinct_flops(tmp_path):
+    keep=tmp_path/'gold.keep'
+    keep.write_text("lec_top/u_dut.copy0"+chr(10)+"lec_top/u_dut.copy1"+chr(10))
+    alias=keep.with_suffix('.aliases.json')
+    for count in (1,2):
+        g,gm=_seq(tmp_path,'wiregold',['d'],['copy0','copy1'],
+                  lambda m,x:{'copy0':x['d'],'copy1':x['d']})
+        t,tm=_seq(tmp_path,'wiregate',['d'],['port'+str(i) for i in range(count)],
+                  lambda m,x:{'port'+str(i):x['d'] for i in range(count)})
+        L=lec.Lec(g,gm,t,tm)
+        # Each kept copy's Q also drives an output alias. Neither spelling is
+        # used as the gold AIG key; the mapped gate uses the output spelling.
+        alias.write_text(json.dumps({'modules':{lec.WRAP:{'netnames':{
+            'u_dut.copy0':{'bits':[10]},'u_dut.port0':{'bits':[10]},
+            'u_dut.copy1':{'bits':[11]},'u_dut.port1':{'bits':[11]}}}}}))
+        assert bool(lec.kept_registers(L,keep)[1]) == (count<2)
+        if count==2:
+            # Corrupt alias wiring must not re-use port0 for both copies.
+            d=json.loads(alias.read_text());d['modules'][lec.WRAP]['netnames']['u_dut.copy1']['bits']=[10]
+            alias.write_text(json.dumps(d))
+            assert lec.kept_registers(L,keep)[1]
+    alias.unlink()
+    assert lec.kept_registers(L,keep)[1]
+
+
+def test_gold_records_kept_wire_aliases():
+    s=lec.gold_script({'VERILOG_FILES':'a.v','DESIGN_NAME':'t'},'/k','verilog',[],'s.v','w.v','f.v','/o/gold')
+    assert 'write_json /o/gold.aliases.json' in s
+    assert s.index('write_json') < s.index('memory -nomap')
+
+
+def test_matched_rep_can_be_a_proved_constant(tmp_path,monkeypatch):
+    monkeypatch.setattr(lec,'prove',_exact_prove)
+    for bad in (False,True):
+        def zero(m,x):
+            return m.AND(m.AND(x['a'],x['b']),x['a']^1)
+        g,gm=_seq(tmp_path,'rep_gold',['a','b'],['rep','copy','u','out'],
+                  lambda m,x:{'rep':zero(m,x),'copy':zero(m,x),'u':zero(m,x),'out':x['u']})
+        t,tm=_seq(tmp_path,'rep_gate',['a','b'],['rep','copy','out'],
+                  lambda m,x:{'rep':zero(m,x),'copy':zero(m,x),'out':x['a'] if bad else 0})
+        L=lec.Lec(g,gm,t,tm)
+        L.hyp['both','ff:u_dut.copy']=('eq','gold','ff:u_dut.rep',0)
+        L.hyp['gold','ff:u_dut.u']=('eq','gold','ff:u_dut.rep',0)
+        o=tmp_path/('bad' if bad else 'good');o.mkdir()
+        lec.correspond(L,o,1000,[],rounds=2,sim_iters=1,words=1)
+        m,_=L.build(with_compare=True,with_hyp=True)
+        st=_exact_prove(m)
+        assert ('differs' in st.values()) == bad
+        assert L.hyp.get(('both','ff:u_dut.rep'))==('const',0)
+
+
+def test_constant_alias_chain_does_not_waive_a_live_or_cyclic_copy(tmp_path):
+    g,gm=_seq(tmp_path,'aliasconst_gold',['d'],['a','b','live'],
+              lambda m,x:{'a':1,'b':x['a'],'live':x['d']})
+    t,tm=_seq(tmp_path,'aliasconst_gate',['d'],['live'],lambda m,x:{'live':x['d']})
+    L=lec.Lec(g,gm,t,tm)
+    L.hyp['gold','ff:u_dut.a']=('const',1)
+    L.hyp['gold','ff:u_dut.b']=('eq','gold','ff:u_dut.a',0)
+    assert lec.proved_state_constant(L,'gold','ff:u_dut.b')==1
+    L.hyp['gold','ff:u_dut.a']=('eq','gold','ff:u_dut.live',0)
+    assert lec.proved_state_constant(L,'gold','ff:u_dut.b') is None
+    L.hyp['gold','ff:u_dut.a']=('eq','gold','ff:u_dut.b',0)
+    assert lec.proved_state_constant(L,'gold','ff:u_dut.b') is None
+
+def test_exact_twin_uses_an_already_paired_gold_root(tmp_path):
+    for bad in (False,True):
+        g,gm=_seq(tmp_path,'pairedgold',['d','wrong'],['root','copy','out'],
+                  lambda m,x:{'root':x['d'],'copy':x['d'],'out':x['copy']})
+        t,tm=_seq(tmp_path,'pairedgate',['d','wrong'],['alias','out'],
+                  lambda m,x:{'alias':x['d'],'out':x['wrong'] if bad else x['alias']})
+        L=lec.Lec(g,gm,t,tm)
+        L.hyp['gate','ff:u_dut.alias']=('eq','gold','ff:u_dut.root',0)
+        assert lec.structural_twin_closure(L,[])==1
+        assert ('gold','ff:u_dut.root') not in L.hyp
+        assert L.hyp['gold','ff:u_dut.copy']==('eq','gold','ff:u_dut.root',0)
+        m,_=L.build(with_compare=True,with_hyp=True)
+        assert ('differs' in _exact_prove(m).values())==bad
+
+
+def test_cyclic_hypotheses_drop_one_and_reprove(tmp_path, monkeypatch):
+    """PATH-KV-LEC 10-25 (KV PC833 kits qkd_kvs_pc / qkd_kvs_pc_h_head_p): a hint overrode one register of a
+    discovered twin pair in the reverse direction, so (gold,c2) -> (gold,c3) -> (gold,c2) and build() raised
+    'cyclic flop hypotheses (rebuild)' that no caller caught (verdict ERROR after ~6200 s).  build() now drops ONE
+    hypothesis on the cycle (that flop a free input) and the rest is proved by the same induction: the true twins
+    still prove o; an inverted twin (c3 = !x) is refuted and o differs -- a cycle is never a waiver."""
+    monkeypatch.setattr(lec, "prove", _exact_prove)
+    for bad in (False, True):
+        g, gm = _seq(tmp_path, f"cyc_gold{bad}", ["x", "a"], ["c1", "c2", "c3", "o"],
+                     lambda m, l: {"c1": l["a"], "c2": l["x"], "c3": l["x"] ^ int(bad),
+                                   "o": m.XOR(m.XOR(l["c1"], l["c2"]), l["c3"])})
+        t, tm = _seq(tmp_path, f"cyc_gate{bad}", ["x", "a"], ["c1", "o"], lambda m, l: {"c1": l["a"], "o": l["c1"]})
+        L = lec.Lec(g, gm, t, tm)
+        assert L.gonly == ["ff:u_dut.c2", "ff:u_dut.c3"]
+        hints = [["gold", "ff:u_dut.c2", ["eq", "gold", "ff:u_dut.c3", 0]],
+                 ["gold", "ff:u_dut.c3", ["eq", "gold", "ff:u_dut.c2", 0]]]
+        r = lec.apply_hints(L, hints, tmp_path, 100, [])
+        assert [d for d, _ in L.cycle_dropped] == [("gold", "ff:u_dut.c3")]
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        st = _exact_prove(m)
+        assert st["ff:u_dut.o"] == ("differs" if bad else "proved")
+        assert (("gold", "ff:u_dut.c2") in L.hyp) == (not bad) and r["kept"] == (0 if bad else 1)
+    # matched-register merges (both-side representative chains) form a cycle: one is dropped, no exception
+    g, gm = _seq(tmp_path, "cycb_gold", ["x"], ["p", "q", "o"], lambda m, l: {"p": l["x"], "q": l["x"], "o": l["p"]})
+    t, tm = _seq(tmp_path, "cycb_gate", ["x"], ["p", "q", "o"], lambda m, l: {"p": l["x"], "q": l["x"], "o": l["q"]})
+    L = lec.Lec(g, gm, t, tm)
+    L.hyp[("both", "ff:u_dut.p")] = ("eq", "gold", "ff:u_dut.q", 0)
+    L.hyp[("both", "ff:u_dut.q")] = ("eq", "gold", "ff:u_dut.p", 0)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert [d for d, _ in L.cycle_dropped] == [("both", "ff:u_dut.q")] and ("both", "ff:u_dut.p") in L.hyp
+    assert set(_exact_prove(m).values()) == {"proved"}

@@ -96,3 +96,20 @@ def test_cli_roundtrip(tmp_path):
     meas.write_text(''.join(f'T {k} {a} {b}\n' for k,(a,b) in tap.items())+''.join(f'B {k} {a} {b}\n' for k,(a,b) in buf.items()))
     r=subprocess.run([sys.executable,str(P),str(geo),'--out',str(out),'--apply',str(tmp_path/'mv.tcl'),'--cl-step',str(meas)],capture_output=True,text=True,check=True)
     j=json.loads(r.stdout);assert j['iter']==1 and 'tt_spread' in j
+
+
+def test_depth0_terminal_clusters_hold_leaf_fanout_taps():
+    """CLOCK-RESET S1: legacy start level 1 leaves fanout*leaf_fanout tap legs on a terminal
+    cluster (8 for 4/2 on 127 taps); depth0 caps every cluster net at max(fanout, leaf_fanout) legs."""
+    g=geometry()
+    def max_legs(p): return max(len(c['legs']) for c in p['clusters'])
+    legacy=S.plan_legs(g,fanout=4,leaf_fanout=2,rmax_um=120)
+    fixed=S.plan_legs(g,fanout=4,leaf_fanout=2,rmax_um=120,depth0=True)
+    assert max_legs(legacy)==8
+    assert max_legs(fixed)<=4
+    term=[c for c in fixed['clusters'] if any(fixed['legs'][i]['child'][0]=='tap' for i in c['legs'])]
+    assert term and all(len(c['legs'])<=2 for c in term)
+    assert sorted(t for c in term for t in c['taps'])==sorted(t['name'] for t in g['taps'])
+    # one more bisection level: equal stage count kept, honest insertion cost (+1 level of legs)
+    assert legacy['summary']['trunk_levels']<fixed['summary']['trunk_levels']<=legacy['summary']['trunk_levels']+2
+    assert S.plan_legs(g,fanout=4,leaf_fanout=2,rmax_um=120)['summary']==legacy['summary']   # default unchanged

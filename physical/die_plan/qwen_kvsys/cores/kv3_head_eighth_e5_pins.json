@@ -2,7 +2,7 @@
 "schema": "opentallas.die_plan.core_pins.v1",
 "core": "kv3_head_eighth_e5",
 "frame": "core R0, origin (0,0), outline 216 x 216",
-"source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | v3.8x KVG3-CORES: re-spread onto 216 x 216 (core_pins_resize_v38x.py: same faces / order / spreading rule; was 285.12 x 285.12)",
+"source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | v3.8x KVG3-CORES: re-spread onto 216 x 216 (core_pins_resize_v38x.py: same faces / order / spreading rule; was 285.12 x 285.12) | TYPE-REDUCE-2 odd head strap master (strap_bsel N face M5)",
 "faces": {
 "S": {
 "pins": 78,
@@ -14,6 +14,12 @@
 "pins": 466,
 "layers": [
 "M4"
+]
+},
+"N": {
+"pins": 2,
+"layers": [
+"M5"
 ]
 }
 },
@@ -3281,6 +3287,18 @@
 "layer": "M4",
 "x": 0.096,
 "y": 213.624
+},
+{
+"name": "strap_bsel[0]",
+"layer": "M5",
+"x": 107.976,
+"y": 216.0
+},
+{
+"name": "strap_bsel[1]",
+"layer": "M5",
+"x": 108.072,
+"y": 216.0
 }
 ]
 }

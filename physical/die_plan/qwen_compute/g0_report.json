@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/srv/opentallas-scratch2/claude/wt/path-qc-plan3d-1025/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "/srv/opentallas-scratch2/claude/wt/path-qc-plan-b1-1025/physical/die_plan/qwen_compute/die_plan.json",
  "verdict": "PASS",
- "mode": "G0",
+ "mode": "G0C",
  "errors": 0,
  "warnings": 111,
  "summary": {
@@ -19,17 +19,17 @@
   },
   "ports": 3005,
   "lanes": 1933,
-  "bits": 1277486,
+  "bits": 1277498,
   "taps_cores": {
-   "taps": 1702,
+   "taps": 1700,
    "hard_cores": 68,
-   "core_pins": 114118,
+   "core_pins": 118516,
    "core_pins_off_track": 0,
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/srv/opentallas-scratch2/claude/wt/path-qc-plan3d-1025/physical/die_plan/qwen_compute/plan_notes.json",
-    "/srv/opentallas-scratch2/claude/wt/path-qc-plan3d-1025/physical/die_plan/qwen_compute/plan_notes.json"
+    "/srv/opentallas-scratch2/claude/wt/path-qc-plan-b1-1025/physical/die_plan/qwen_compute/plan_notes.json",
+    "/srv/opentallas-scratch2/claude/wt/path-qc-plan-b1-1025/physical/die_plan/qwen_compute/plan_notes.json"
    ],
    "no_cells": []
   },
@@ -138,54 +138,54 @@
   },
   "worst_faces": [
    {
-    "part": "sl_W5_su_l1",
-    "face": "S",
-    "pins_per_um": 6.0
+    "part": "sl_W5_st_a",
+    "face": "E",
+    "pins_per_um": 6.1
    },
    {
-    "part": "sl_W5_su_l1",
-    "face": "N",
-    "pins_per_um": 6.0
-   },
-   {
-    "part": "sl_W5_su_l0",
-    "face": "S",
-    "pins_per_um": 6.0
-   },
-   {
-    "part": "sl_W5_su_l0",
-    "face": "N",
-    "pins_per_um": 6.0
-   },
-   {
-    "part": "sl_W5_su_c",
-    "face": "S",
-    "pins_per_um": 6.0
-   },
-   {
-    "part": "sl_W5_su_c",
-    "face": "N",
-    "pins_per_um": 6.0
-   },
-   {
-    "part": "sl_W5_stm",
+    "part": "sl_W5_ctl",
     "face": "W",
-    "pins_per_um": 6.0
+    "pins_per_um": 6.1
    },
    {
-    "part": "sl_W5_stm",
-    "face": "S",
-    "pins_per_um": 6.0
+    "part": "sl_W4_st_a",
+    "face": "E",
+    "pins_per_um": 6.1
    },
    {
-    "part": "sl_W5_stm",
-    "face": "N",
-    "pins_per_um": 6.0
+    "part": "sl_W4_ctl",
+    "face": "W",
+    "pins_per_um": 6.1
    },
    {
-    "part": "sl_W5_st_b",
-    "face": "S",
-    "pins_per_um": 6.0
+    "part": "sl_W3_st_a",
+    "face": "E",
+    "pins_per_um": 6.1
+   },
+   {
+    "part": "sl_W3_ctl",
+    "face": "W",
+    "pins_per_um": 6.1
+   },
+   {
+    "part": "sl_W2_st_a",
+    "face": "E",
+    "pins_per_um": 6.1
+   },
+   {
+    "part": "sl_W2_ctl",
+    "face": "W",
+    "pins_per_um": 6.1
+   },
+   {
+    "part": "sl_W1_st_a",
+    "face": "E",
+    "pins_per_um": 6.1
+   },
+   {
+    "part": "sl_W1_ctl",
+    "face": "W",
+    "pins_per_um": 6.1
    }
   ],
   "m89_signals": {
@@ -194,53 +194,53 @@
   },
   "worst_hops": [
    {
-    "lane": "sl_E2_hc3__cws3",
-    "hop_um": 403.4,
+    "lane": "coll_core__out_err_re_wi",
+    "hop_um": 401.9,
     "reach_um": 405.0
    },
    {
-    "lane": "sl_E0_hc3__cws3",
-    "hop_um": 403.4,
+    "lane": "native59__dr_o_dr_wi",
+    "hop_um": 392.5,
     "reach_um": 405.0
    },
    {
-    "lane": "sl_W4_hc3__cws3",
-    "hop_um": 403.4,
+    "lane": "tt_ctlm__cal_program_obs_seq_program_obs",
+    "hop_um": 390.3,
     "reach_um": 405.0
    },
    {
-    "lane": "sl_W2_hc3__cws3",
-    "hop_um": 403.4,
+    "lane": "tt_ctlm__command_stage_tt_command_stage",
+    "hop_um": 389.5,
     "reach_um": 405.0
    },
    {
-    "lane": "sl_W0_hc3__cws3",
-    "hop_um": 403.4,
+    "lane": "tt_ctlm__control_stores_ready_tt_control_stores_ready",
+    "hop_um": 389.5,
     "reach_um": 405.0
    },
    {
-    "lane": "sl_E4_hc3__cws3",
-    "hop_um": 403.4,
+    "lane": "c_W2_bn_00__rsn",
+    "hop_um": 378.1,
     "reach_um": 405.0
    },
    {
-    "lane": "sl_W2_hc0__cws0",
-    "hop_um": 403.0,
+    "lane": "c_W1_bn_00__rsn",
+    "hop_um": 378.1,
     "reach_um": 405.0
    },
    {
-    "lane": "sl_W0_hc2__cws2",
-    "hop_um": 403.0,
+    "lane": "c_W4_bn_00__rsn",
+    "hop_um": 378.1,
     "reach_um": 405.0
    },
    {
-    "lane": "sl_E5_hc2__cws2",
-    "hop_um": 403.0,
+    "lane": "c_W3_bn_00__rsn",
+    "hop_um": 378.1,
     "reach_um": 405.0
    },
    {
-    "lane": "sl_E5_hc0__cws0",
-    "hop_um": 403.0,
+    "lane": "c_W5_bn_00__rsn",
+    "hop_um": 378.1,
     "reach_um": 405.0
    }
   ],
@@ -305,23 +305,23 @@
     },
     {
      "at_um": 1750,
-     "bits": 9625,
+     "bits": 8593,
      "tracks": 380599,
-     "ratio": 0.0253,
-     "m89_only_ratio": 0.0293,
+     "ratio": 0.0226,
+     "m89_only_ratio": 0.0262,
      "worst_part": "sl_W5_st_a",
-     "worst_part_ratio": 0.107,
-     "worst_part_bits": 2089
+     "worst_part_ratio": 0.0805,
+     "worst_part_bits": 1573
     },
     {
      "at_um": 2000,
-     "bits": 7884,
+     "bits": 7348,
      "tracks": 380599,
-     "ratio": 0.0207,
-     "m89_only_ratio": 0.024,
+     "ratio": 0.0193,
+     "m89_only_ratio": 0.0224,
      "worst_part": "sl_W5_st_a",
-     "worst_part_ratio": 0.1403,
-     "worst_part_bits": 2740
+     "worst_part_ratio": 0.1129,
+     "worst_part_bits": 2204
     },
     {
      "at_um": 2250,
@@ -375,20 +375,23 @@
     },
     {
      "at_um": 3500,
-     "bits": 5144,
+     "bits": 4112,
      "tracks": 380599,
-     "ratio": 0.0135,
-     "m89_only_ratio": 0.0157,
+     "ratio": 0.0108,
+     "m89_only_ratio": 0.0125,
      "worst_part": "sl_W5_st_b",
-     "worst_part_ratio": 0.1578,
-     "worst_part_bits": 3082
+     "worst_part_ratio": 0.1314,
+     "worst_part_bits": 2566
     },
     {
      "at_um": 3750,
-     "bits": 0,
+     "bits": 912,
      "tracks": 380599,
-     "ratio": 0.0,
-     "m89_only_ratio": 0.0
+     "ratio": 0.0024,
+     "m89_only_ratio": 0.0028,
+     "worst_part": "sl_W5_st_b",
+     "worst_part_ratio": 0.0233,
+     "worst_part_bits": 456
     },
     {
      "at_um": 4000,
@@ -469,20 +472,23 @@
     },
     {
      "at_um": 6000,
-     "bits": 5364,
+     "bits": 4332,
      "tracks": 380599,
-     "ratio": 0.0141,
-     "m89_only_ratio": 0.0163,
+     "ratio": 0.0114,
+     "m89_only_ratio": 0.0132,
      "worst_part": "sl_W4_st_b",
-     "worst_part_ratio": 0.1578,
-     "worst_part_bits": 3082
+     "worst_part_ratio": 0.1314,
+     "worst_part_bits": 2566
     },
     {
      "at_um": 6250,
-     "bits": 0,
+     "bits": 912,
      "tracks": 380599,
-     "ratio": 0.0,
-     "m89_only_ratio": 0.0
+     "ratio": 0.0024,
+     "m89_only_ratio": 0.0028,
+     "worst_part": "sl_W4_st_b",
+     "worst_part_ratio": 0.0233,
+     "worst_part_bits": 456
     },
     {
      "at_um": 6500,
@@ -493,23 +499,23 @@
     },
     {
      "at_um": 6750,
-     "bits": 6717,
+     "bits": 5685,
      "tracks": 380599,
-     "ratio": 0.0176,
-     "m89_only_ratio": 0.0205,
+     "ratio": 0.0149,
+     "m89_only_ratio": 0.0173,
      "worst_part": "sl_W3_st_a",
-     "worst_part_ratio": 0.107,
-     "worst_part_bits": 2089
+     "worst_part_ratio": 0.0805,
+     "worst_part_bits": 1573
     },
     {
      "at_um": 7000,
-     "bits": 7368,
+     "bits": 6832,
      "tracks": 380599,
-     "ratio": 0.0194,
-     "m89_only_ratio": 0.0224,
+     "ratio": 0.018,
+     "m89_only_ratio": 0.0208,
      "worst_part": "sl_W3_st_a",
-     "worst_part_ratio": 0.1403,
-     "worst_part_bits": 2740
+     "worst_part_ratio": 0.1129,
+     "worst_part_bits": 2204
     },
     {
      "at_um": 7250,
@@ -567,16 +573,19 @@
      "tracks": 380599,
      "ratio": 0.0038,
      "m89_only_ratio": 0.0043,
-     "worst_part": "sl_W3_st_b",
-     "worst_part_ratio": 0.0498,
+     "worst_part": "sl_W3_fe",
+     "worst_part_ratio": 0.0398,
      "worst_part_bits": 972
     },
     {
      "at_um": 8750,
-     "bits": 0,
+     "bits": 912,
      "tracks": 380599,
-     "ratio": 0.0,
-     "m89_only_ratio": 0.0
+     "ratio": 0.0024,
+     "m89_only_ratio": 0.0028,
+     "worst_part": "sl_W3_st_b",
+     "worst_part_ratio": 0.0233,
+     "worst_part_bits": 456
     },
     {
      "at_um": 9000,
@@ -661,43 +670,43 @@
      "tracks": 380599,
      "ratio": 0.0044,
      "m89_only_ratio": 0.0051,
-     "worst_part": "sl_W2_st_b",
-     "worst_part_ratio": 0.0498,
-     "worst_part_bits": 972
+     "worst_part": "sl_W2_fe",
+     "worst_part_ratio": 0.0504,
+     "worst_part_bits": 1230
     },
     {
      "at_um": 11250,
+     "bits": 912,
+     "tracks": 380599,
+     "ratio": 0.0024,
+     "m89_only_ratio": 0.0028,
+     "worst_part": "sl_W2_st_b",
+     "worst_part_ratio": 0.0233,
+     "worst_part_bits": 456
+    },
+    {
+     "at_um": 11500,
      "bits": 0,
      "tracks": 380599,
      "ratio": 0.0,
      "m89_only_ratio": 0.0
     },
     {
-     "at_um": 11500,
-     "bits": 1032,
-     "tracks": 380599,
-     "ratio": 0.0027,
-     "m89_only_ratio": 0.0031,
-     "worst_part": "sl_W1_st_a",
-     "worst_part_ratio": 0.0264,
-     "worst_part_bits": 516
-    },
-    {
      "at_um": 11750,
-     "bits": 6717,
+     "bits": 5685,
      "tracks": 380599,
-     "ratio": 0.0176,
-     "m89_only_ratio": 0.0205,
+     "ratio": 0.0149,
+     "m89_only_ratio": 0.0173,
      "worst_part": "sl_W1_st_a",
-     "worst_part_ratio": 0.107,
-     "worst_part_bits": 2089
+     "worst_part_ratio": 0.0805,
+     "worst_part_bits": 1573
     },
     {
      "at_um": 12000,
-     "bits": 7626,
+     "bits": 7368,
      "tracks": 380599,
-     "ratio": 0.02,
-     "m89_only_ratio": 0.0232,
+     "ratio": 0.0194,
+     "m89_only_ratio": 0.0224,
      "worst_part": "sl_W1_st_a",
      "worst_part_ratio": 0.1403,
      "worst_part_bits": 2740
@@ -758,8 +767,8 @@
      "tracks": 380599,
      "ratio": 0.0038,
      "m89_only_ratio": 0.0043,
-     "worst_part": "sl_W1_st_b",
-     "worst_part_ratio": 0.0498,
+     "worst_part": "sl_W1_fe",
+     "worst_part_ratio": 0.0398,
      "worst_part_bits": 972
     },
     {
@@ -855,8 +864,8 @@
      "tracks": 380599,
      "ratio": 0.0038,
      "m89_only_ratio": 0.0043,
-     "worst_part": "sl_W0_st_b",
-     "worst_part_ratio": 0.0498,
+     "worst_part": "sl_W0_fe",
+     "worst_part_ratio": 0.0398,
      "worst_part_bits": 972
     },
     {
@@ -952,9 +961,9 @@
      "tracks": 380599,
      "ratio": 0.0051,
      "m89_only_ratio": 0.0059,
-     "worst_part": "sl_E0_st_b",
-     "worst_part_ratio": 0.0498,
-     "worst_part_bits": 972
+     "worst_part": "sl_E0_fe",
+     "worst_part_ratio": 0.0609,
+     "worst_part_bits": 1486
     },
     {
      "at_um": 18750,
@@ -968,10 +977,10 @@
     },
     {
      "at_um": 19000,
-     "bits": 3602,
+     "bits": 2570,
      "tracks": 385481,
-     "ratio": 0.0093,
-     "m89_only_ratio": 0.011,
+     "ratio": 0.0067,
+     "m89_only_ratio": 0.0078,
      "worst_part": "sl_E1_su_l1",
      "worst_part_ratio": 0.0842,
      "worst_part_bits": 1028
@@ -983,8 +992,8 @@
      "ratio": 0.0191,
      "m89_only_ratio": 0.0224,
      "worst_part": "sl_E1_st_a",
-     "worst_part_ratio": 0.1129,
-     "worst_part_bits": 2204
+     "worst_part_ratio": 0.1393,
+     "worst_part_bits": 2720
     },
     {
      "at_um": 19500,
@@ -1048,13 +1057,13 @@
     },
     {
      "at_um": 21000,
-     "bits": 516,
+     "bits": 1428,
      "tracks": 380599,
-     "ratio": 0.0014,
-     "m89_only_ratio": 0.0016,
-     "worst_part": "sl_E1_st_b",
-     "worst_part_ratio": 0.0264,
-     "worst_part_bits": 516
+     "ratio": 0.0038,
+     "m89_only_ratio": 0.0043,
+     "worst_part": "sl_E1_fe",
+     "worst_part_ratio": 0.0398,
+     "worst_part_bits": 972
     },
     {
      "at_um": 21250,
@@ -1135,23 +1144,23 @@
     },
     {
      "at_um": 23250,
-     "bits": 6174,
+     "bits": 5142,
      "tracks": 380599,
-     "ratio": 0.0162,
-     "m89_only_ratio": 0.0188,
+     "ratio": 0.0135,
+     "m89_only_ratio": 0.0157,
      "worst_part": "sl_E2_st_b",
-     "worst_part_ratio": 0.1578,
-     "worst_part_bits": 3082
+     "worst_part_ratio": 0.1314,
+     "worst_part_bits": 2566
     },
     {
      "at_um": 23500,
-     "bits": 1030,
+     "bits": 1942,
      "tracks": 380599,
-     "ratio": 0.0027,
-     "m89_only_ratio": 0.0031,
-     "worst_part": "sl_E2_st_b",
-     "worst_part_ratio": 0.0264,
-     "worst_part_bits": 516
+     "ratio": 0.0051,
+     "m89_only_ratio": 0.0059,
+     "worst_part": "sl_E2_fe",
+     "worst_part_ratio": 0.0609,
+     "worst_part_bits": 1486
     },
     {
      "at_um": 23750,
@@ -1165,23 +1174,23 @@
     },
     {
      "at_um": 24000,
-     "bits": 7745,
+     "bits": 6713,
      "tracks": 385481,
-     "ratio": 0.0201,
-     "m89_only_ratio": 0.0236,
+     "ratio": 0.0174,
+     "m89_only_ratio": 0.0204,
      "worst_part": "sl_E3_st_a",
-     "worst_part_ratio": 0.107,
-     "worst_part_bits": 2089
+     "worst_part_ratio": 0.0805,
+     "worst_part_bits": 1573
     },
     {
      "at_um": 24250,
-     "bits": 8398,
+     "bits": 7862,
      "tracks": 385481,
-     "ratio": 0.0218,
-     "m89_only_ratio": 0.0256,
+     "ratio": 0.0204,
+     "m89_only_ratio": 0.0239,
      "worst_part": "sl_E3_st_a",
-     "worst_part_ratio": 0.1403,
-     "worst_part_bits": 2740
+     "worst_part_ratio": 0.1129,
+     "worst_part_bits": 2204
     },
     {
      "at_um": 24500,
@@ -1235,20 +1244,23 @@
     },
     {
      "at_um": 25750,
-     "bits": 5364,
+     "bits": 4332,
      "tracks": 380599,
-     "ratio": 0.0141,
-     "m89_only_ratio": 0.0163,
+     "ratio": 0.0114,
+     "m89_only_ratio": 0.0132,
      "worst_part": "sl_E3_st_b",
-     "worst_part_ratio": 0.1578,
-     "worst_part_bits": 3082
+     "worst_part_ratio": 0.1314,
+     "worst_part_bits": 2566
     },
     {
      "at_um": 26000,
-     "bits": 0,
+     "bits": 1032,
      "tracks": 380599,
-     "ratio": 0.0,
-     "m89_only_ratio": 0.0
+     "ratio": 0.0027,
+     "m89_only_ratio": 0.0031,
+     "worst_part": "sl_E3_st_b",
+     "worst_part_ratio": 0.0264,
+     "worst_part_bits": 516
     },
     {
      "at_um": 26250,
@@ -1329,23 +1341,23 @@
     },
     {
      "at_um": 28250,
-     "bits": 5878,
+     "bits": 4846,
      "tracks": 380599,
-     "ratio": 0.0154,
-     "m89_only_ratio": 0.0179,
+     "ratio": 0.0127,
+     "m89_only_ratio": 0.0148,
      "worst_part": "sl_E4_st_b",
-     "worst_part_ratio": 0.1578,
-     "worst_part_bits": 3082
+     "worst_part_ratio": 0.1314,
+     "worst_part_bits": 2566
     },
     {
      "at_um": 28500,
-     "bits": 514,
+     "bits": 1426,
      "tracks": 380599,
-     "ratio": 0.0014,
-     "m89_only_ratio": 0.0016,
+     "ratio": 0.0037,
+     "m89_only_ratio": 0.0043,
      "worst_part": "sl_E4_fe",
-     "worst_part_ratio": 0.0211,
-     "worst_part_bits": 514
+     "worst_part_ratio": 0.0397,
+     "worst_part_bits": 970
     },
     {
      "at_um": 28750,
@@ -1359,23 +1371,23 @@
     },
     {
      "at_um": 29000,
-     "bits": 7231,
+     "bits": 6199,
      "tracks": 385481,
-     "ratio": 0.0188,
-     "m89_only_ratio": 0.022,
+     "ratio": 0.0161,
+     "m89_only_ratio": 0.0189,
      "worst_part": "sl_E5_st_a",
-     "worst_part_ratio": 0.107,
-     "worst_part_bits": 2089
+     "worst_part_ratio": 0.0805,
+     "worst_part_bits": 1573
     },
     {
      "at_um": 29250,
-     "bits": 9172,
+     "bits": 8894,
      "tracks": 385481,
-     "ratio": 0.0238,
-     "m89_only_ratio": 0.0279,
+     "ratio": 0.0231,
+     "m89_only_ratio": 0.0271,
      "worst_part": "sl_E5_st_a",
-     "worst_part_ratio": 0.1403,
-     "worst_part_bits": 2740
+     "worst_part_ratio": 0.1129,
+     "worst_part_bits": 2204
     },
     {
      "at_um": 29500,
@@ -1429,13 +1441,13 @@
     },
     {
      "at_um": 30750,
-     "bits": 2460,
+     "bits": 1428,
      "tracks": 380599,
-     "ratio": 0.0065,
-     "m89_only_ratio": 0.0075,
-     "worst_part": "sl_E5_st_b",
-     "worst_part_ratio": 0.0498,
-     "worst_part_bits": 972
+     "ratio": 0.0038,
+     "m89_only_ratio": 0.0043,
+     "worst_part": "sl_E5_su_l0",
+     "worst_part_ratio": 0.0423,
+     "worst_part_bits": 516
     },
     {
      "at_um": 31000,
@@ -1905,10 +1917,10 @@
     },
     {
      "at_um": 11750,
-     "bits": 51371,
+     "bits": 51891,
      "tracks": 295943,
-     "ratio": 0.1736,
-     "m89_only_ratio": 0.1317,
+     "ratio": 0.1753,
+     "m89_only_ratio": 0.133,
      "worst_part": "sl_E5_su_l1",
      "worst_part_ratio": 0.3178,
      "worst_part_bits": 1802
@@ -2920,15 +2932,15 @@
    "c_W5_tn_11__bcf3": 2,
    "c_W5_tn_00__rsn": 9,
    "c_W5_tf_00__rsf": 28,
-   "sl_W5_hc0__cws0": 16,
+   "sl_W5_hc0__cws0": 15,
    "c_W5_bn_01__bcf0": 2,
    "sl_W5_hc1__cws1": 16,
    "c_W5_bn_01__bcf1": 2,
-   "sl_W5_hc2__cws2": 15,
+   "sl_W5_hc2__cws2": 16,
    "c_W5_bn_11__bcf2": 2,
-   "sl_W5_hc3__cws3": 15,
+   "sl_W5_hc3__cws3": 14,
    "c_W5_bn_11__bcf3": 2,
-   "c_W5_bn_00__rsn": 13,
+   "c_W5_bn_00__rsn": 12,
    "c_W5_bf_00__rsf": 34,
    "sl_W4_hc0__cwn0": 2,
    "c_W4_tn_01__bcf0": 2,
@@ -2940,15 +2952,15 @@
    "c_W4_tn_11__bcf3": 2,
    "c_W4_tn_00__rsn": 9,
    "c_W4_tf_00__rsf": 28,
-   "sl_W4_hc0__cws0": 16,
+   "sl_W4_hc0__cws0": 17,
    "c_W4_bn_01__bcf0": 2,
    "sl_W4_hc1__cws1": 16,
    "c_W4_bn_01__bcf1": 2,
-   "sl_W4_hc2__cws2": 15,
+   "sl_W4_hc2__cws2": 16,
    "c_W4_bn_11__bcf2": 2,
    "sl_W4_hc3__cws3": 14,
    "c_W4_bn_11__bcf3": 2,
-   "c_W4_bn_00__rsn": 13,
+   "c_W4_bn_00__rsn": 12,
    "c_W4_bf_00__rsf": 34,
    "sl_W3_hc0__cwn0": 2,
    "c_W3_tn_01__bcf0": 2,
@@ -2960,15 +2972,15 @@
    "c_W3_tn_11__bcf3": 2,
    "c_W3_tn_00__rsn": 9,
    "c_W3_tf_00__rsf": 28,
-   "sl_W3_hc0__cws0": 16,
+   "sl_W3_hc0__cws0": 15,
    "c_W3_bn_01__bcf0": 2,
    "sl_W3_hc1__cws1": 16,
    "c_W3_bn_01__bcf1": 2,
-   "sl_W3_hc2__cws2": 15,
+   "sl_W3_hc2__cws2": 16,
    "c_W3_bn_11__bcf2": 2,
-   "sl_W3_hc3__cws3": 15,
+   "sl_W3_hc3__cws3": 14,
    "c_W3_bn_11__bcf3": 2,
-   "c_W3_bn_00__rsn": 13,
+   "c_W3_bn_00__rsn": 12,
    "c_W3_bf_00__rsf": 34,
    "sl_W2_hc0__cwn0": 2,
    "c_W2_tn_01__bcf0": 2,
@@ -2980,15 +2992,15 @@
    "c_W2_tn_11__bcf3": 2,
    "c_W2_tn_00__rsn": 9,
    "c_W2_tf_00__rsf": 28,
-   "sl_W2_hc0__cws0": 16,
+   "sl_W2_hc0__cws0": 17,
    "c_W2_bn_01__bcf0": 2,
    "sl_W2_hc1__cws1": 16,
    "c_W2_bn_01__bcf1": 2,
-   "sl_W2_hc2__cws2": 15,
+   "sl_W2_hc2__cws2": 16,
    "c_W2_bn_11__bcf2": 2,
    "sl_W2_hc3__cws3": 14,
    "c_W2_bn_11__bcf3": 2,
-   "c_W2_bn_00__rsn": 13,
+   "c_W2_bn_00__rsn": 12,
    "c_W2_bf_00__rsf": 34,
    "sl_W1_hc0__cwn0": 2,
    "c_W1_tn_01__bcf0": 2,
@@ -3000,15 +3012,15 @@
    "c_W1_tn_11__bcf3": 2,
    "c_W1_tn_00__rsn": 9,
    "c_W1_tf_00__rsf": 28,
-   "sl_W1_hc0__cws0": 16,
+   "sl_W1_hc0__cws0": 15,
    "c_W1_bn_01__bcf0": 2,
    "sl_W1_hc1__cws1": 16,
    "c_W1_bn_01__bcf1": 2,
-   "sl_W1_hc2__cws2": 15,
+   "sl_W1_hc2__cws2": 16,
    "c_W1_bn_11__bcf2": 2,
-   "sl_W1_hc3__cws3": 15,
+   "sl_W1_hc3__cws3": 14,
    "c_W1_bn_11__bcf3": 2,
-   "c_W1_bn_00__rsn": 13,
+   "c_W1_bn_00__rsn": 12,
    "c_W1_bf_00__rsf": 34,
    "sl_W0_hc0__cwn0": 2,
    "c_W0_tn_01__bcf0": 2,
@@ -3020,15 +3032,15 @@
    "c_W0_tn_11__bcf3": 2,
    "c_W0_tn_00__rsn": 9,
    "c_W0_tf_00__rsf": 28,
-   "sl_W0_hc0__cws0": 16,
+   "sl_W0_hc0__cws0": 17,
    "c_W0_bn_01__bcf0": 2,
    "sl_W0_hc1__cws1": 16,
    "c_W0_bn_01__bcf1": 2,
-   "sl_W0_hc2__cws2": 15,
+   "sl_W0_hc2__cws2": 16,
    "c_W0_bn_11__bcf2": 2,
    "sl_W0_hc3__cws3": 14,
    "c_W0_bn_11__bcf3": 2,
-   "c_W0_bn_00__rsn": 13,
+   "c_W0_bn_00__rsn": 12,
    "c_W0_bf_00__rsf": 34,
    "sl_E0_hc0__cwn0": 2,
    "c_E0_tn_01__bcf0": 2,
@@ -3040,11 +3052,11 @@
    "c_E0_tn_11__bcf3": 2,
    "c_E0_tn_00__rsn": 9,
    "c_E0_tf_00__rsf": 28,
-   "sl_E0_hc0__cws0": 16,
+   "sl_E0_hc0__cws0": 17,
    "c_E0_bn_01__bcf0": 2,
    "sl_E0_hc1__cws1": 16,
    "c_E0_bn_01__bcf1": 2,
-   "sl_E0_hc2__cws2": 15,
+   "sl_E0_hc2__cws2": 16,
    "c_E0_bn_11__bcf2": 2,
    "sl_E0_hc3__cws3": 15,
    "c_E0_bn_11__bcf3": 2,
@@ -3060,13 +3072,13 @@
    "c_E1_tn_11__bcf3": 2,
    "c_E1_tn_00__rsn": 9,
    "c_E1_tf_00__rsf": 28,
-   "sl_E1_hc0__cws0": 16,
+   "sl_E1_hc0__cws0": 15,
    "c_E1_bn_01__bcf0": 2,
    "sl_E1_hc1__cws1": 16,
    "c_E1_bn_01__bcf1": 2,
-   "sl_E1_hc2__cws2": 15,
+   "sl_E1_hc2__cws2": 16,
    "c_E1_bn_11__bcf2": 2,
-   "sl_E1_hc3__cws3": 16,
+   "sl_E1_hc3__cws3": 15,
    "c_E1_bn_11__bcf3": 2,
    "c_E1_bn_00__rsn": 13,
    "c_E1_bf_00__rsf": 34,
@@ -3080,11 +3092,11 @@
    "c_E2_tn_11__bcf3": 2,
    "c_E2_tn_00__rsn": 9,
    "c_E2_tf_00__rsf": 28,
-   "sl_E2_hc0__cws0": 16,
+   "sl_E2_hc0__cws0": 17,
    "c_E2_bn_01__bcf0": 2,
    "sl_E2_hc1__cws1": 16,
    "c_E2_bn_01__bcf1": 2,
-   "sl_E2_hc2__cws2": 15,
+   "sl_E2_hc2__cws2": 16,
    "c_E2_bn_11__bcf2": 2,
    "sl_E2_hc3__cws3": 15,
    "c_E2_bn_11__bcf3": 2,
@@ -3100,13 +3112,13 @@
    "c_E3_tn_11__bcf3": 2,
    "c_E3_tn_00__rsn": 9,
    "c_E3_tf_00__rsf": 28,
-   "sl_E3_hc0__cws0": 16,
+   "sl_E3_hc0__cws0": 15,
    "c_E3_bn_01__bcf0": 2,
    "sl_E3_hc1__cws1": 16,
    "c_E3_bn_01__bcf1": 2,
-   "sl_E3_hc2__cws2": 15,
+   "sl_E3_hc2__cws2": 16,
    "c_E3_bn_11__bcf2": 2,
-   "sl_E3_hc3__cws3": 16,
+   "sl_E3_hc3__cws3": 15,
    "c_E3_bn_11__bcf3": 2,
    "c_E3_bn_00__rsn": 13,
    "c_E3_bf_00__rsf": 34,
@@ -3120,11 +3132,11 @@
    "c_E4_tn_11__bcf3": 2,
    "c_E4_tn_00__rsn": 9,
    "c_E4_tf_00__rsf": 28,
-   "sl_E4_hc0__cws0": 16,
+   "sl_E4_hc0__cws0": 17,
    "c_E4_bn_01__bcf0": 2,
    "sl_E4_hc1__cws1": 16,
    "c_E4_bn_01__bcf1": 2,
-   "sl_E4_hc2__cws2": 15,
+   "sl_E4_hc2__cws2": 16,
    "c_E4_bn_11__bcf2": 2,
    "sl_E4_hc3__cws3": 15,
    "c_E4_bn_11__bcf3": 2,
@@ -3140,13 +3152,13 @@
    "c_E5_tn_11__bcf3": 2,
    "c_E5_tn_00__rsn": 9,
    "c_E5_tf_00__rsf": 28,
-   "sl_E5_hc0__cws0": 16,
+   "sl_E5_hc0__cws0": 15,
    "c_E5_bn_01__bcf0": 2,
    "sl_E5_hc1__cws1": 16,
    "c_E5_bn_01__bcf1": 2,
-   "sl_E5_hc2__cws2": 15,
+   "sl_E5_hc2__cws2": 16,
    "c_E5_bn_11__bcf2": 2,
-   "sl_E5_hc3__cws3": 16,
+   "sl_E5_hc3__cws3": 15,
    "c_E5_bn_11__bcf3": 2,
    "c_E5_bn_00__rsn": 13,
    "c_E5_bf_00__rsf": 34,
@@ -4426,8 +4438,105 @@
    "async_skipped": 1,
    "depth_source": "landing file",
    "checked": true,
-   "groups_file": "/srv/opentallas-scratch2/claude/wt/path-qc-plan3d-1025/physical/die_plan/qwen_compute/r8/bus_groups.json",
-   "landing_file": "/srv/opentallas-scratch2/claude/wt/path-qc-plan3d-1025/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
+   "groups_file": "/srv/opentallas-scratch2/claude/wt/path-qc-plan-b1-1025/physical/die_plan/qwen_compute/r8/bus_groups.json",
+   "landing_file": "/srv/opentallas-scratch2/claude/wt/path-qc-plan-b1-1025/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
+  },
+  "registered_pins": {
+   "phy_serdes": {
+    "core": "u_io_serdes_1",
+    "module": "ot_qfd_serdes_112g_x12_phy_s597",
+    "libs": [
+     {
+      "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+      "inputs": 3,
+      "outputs": 3,
+      "clocks": [
+       "clk"
+      ]
+     },
+     {
+      "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
+      "inputs": 3,
+      "outputs": 3,
+      "clocks": [
+       "clk"
+      ]
+     },
+     {
+      "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib",
+      "inputs": 3,
+      "outputs": 3,
+      "clocks": [
+       "clk"
+      ]
+     }
+    ]
+   },
+   "phy_serdes_b": {
+    "core": "u_io_serdes_2",
+    "module": "ot_qfd_serdes_112g_x12_phy_s597",
+    "libs": [
+     {
+      "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+      "inputs": 3,
+      "outputs": 3,
+      "clocks": [
+       "clk"
+      ]
+     },
+     {
+      "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
+      "inputs": 3,
+      "outputs": 3,
+      "clocks": [
+       "clk"
+      ]
+     },
+     {
+      "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib",
+      "inputs": 3,
+      "outputs": 3,
+      "clocks": [
+       "clk"
+      ]
+     }
+    ]
+   },
+   "phy_ucie_kv": {
+    "core": "u_ucie_kv",
+    "module": "ot_qkvd_ucie_x64_phy",
+    "libs": [
+     {
+      "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+      "inputs": 3,
+      "outputs": 3,
+      "clocks": [
+       "clk"
+      ]
+     },
+     {
+      "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_ff.lib",
+      "inputs": 3,
+      "outputs": 3,
+      "clocks": [
+       "clk"
+      ]
+     },
+     {
+      "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_ss.lib",
+      "inputs": 3,
+      "outputs": 3,
+      "clocks": [
+       "clk"
+      ]
+     }
+    ]
+   }
+  },
+  "clock_branch_buffers": {
+   "buffers": 0,
+   "worst_leg_um": 0.0,
+   "types": []
   },
   "reset": {
    "release": "wavefront",
@@ -4435,13 +4544,13 @@
    "root": "sl_W0_sc",
    "hop_um": 405.0,
    "relay_um": 405.0,
-   "max_release": 150,
+   "max_release": 145,
    "max_die_hop_um": 371.5,
    "unreachable": []
   },
   "seams": {
    "nets": {
-    "abutted": 1280491,
+    "abutted": 1280503,
     "channel": 0
    },
    "pairs": {
@@ -6414,7 +6523,7 @@
      "channel": 0
     },
     "sl_W5_ctl|sl_W5_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_W5_ctl|sl_W5_st_b": {
@@ -6450,7 +6559,7 @@
      "channel": 0
     },
     "sl_W4_ctl|sl_W4_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_W4_ctl|sl_W4_st_b": {
@@ -6486,7 +6595,7 @@
      "channel": 0
     },
     "sl_W3_ctl|sl_W3_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_W3_ctl|sl_W3_st_b": {
@@ -6522,7 +6631,7 @@
      "channel": 0
     },
     "sl_W2_ctl|sl_W2_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_W2_ctl|sl_W2_st_b": {
@@ -6558,7 +6667,7 @@
      "channel": 0
     },
     "sl_W1_ctl|sl_W1_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_W1_ctl|sl_W1_st_b": {
@@ -6594,7 +6703,7 @@
      "channel": 0
     },
     "sl_W0_ctl|sl_W0_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_W0_ctl|sl_W0_st_b": {
@@ -6630,7 +6739,7 @@
      "channel": 0
     },
     "sl_E0_ctl|sl_E0_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_E0_ctl|sl_E0_st_b": {
@@ -6666,7 +6775,7 @@
      "channel": 0
     },
     "sl_E1_ctl|sl_E1_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_E1_ctl|sl_E1_st_b": {
@@ -6702,7 +6811,7 @@
      "channel": 0
     },
     "sl_E2_ctl|sl_E2_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_E2_ctl|sl_E2_st_b": {
@@ -6738,7 +6847,7 @@
      "channel": 0
     },
     "sl_E3_ctl|sl_E3_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_E3_ctl|sl_E3_st_b": {
@@ -6774,7 +6883,7 @@
      "channel": 0
     },
     "sl_E4_ctl|sl_E4_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_E4_ctl|sl_E4_st_b": {
@@ -6810,7 +6919,7 @@
      "channel": 0
     },
     "sl_E5_ctl|sl_E5_st_a": {
-     "abutted": 4754,
+     "abutted": 4755,
      "channel": 0
     },
     "sl_E5_ctl|sl_E5_st_b": {
@@ -7002,7 +7111,7 @@
     "serdes_windows": 3,
     "covered": 0
    },
-   "source": "/srv/opentallas-scratch2/claude/wt/path-qc-plan3d-1025/physical/die_plan/qwen_compute/die_io.json"
+   "source": "/srv/opentallas-scratch2/claude/wt/path-qc-plan-b1-1025/physical/die_plan/qwen_compute/die_io.json"
   },
   "cut_lines": {
    "vertical": [
@@ -7024,8 +7133,8 @@
     },
     {
      "at_um": 2185.92,
-     "bits": 18402,
-     "abutted_bits": 16346,
+     "bits": 18403,
+     "abutted_bits": 16347,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.032
@@ -7056,8 +7165,8 @@
     },
     {
      "at_um": 4656.96,
-     "bits": 18710,
-     "abutted_bits": 16654,
+     "bits": 18711,
+     "abutted_bits": 16655,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0326
@@ -7088,8 +7197,8 @@
     },
     {
      "at_um": 7128.0,
-     "bits": 18451,
-     "abutted_bits": 16395,
+     "bits": 18452,
+     "abutted_bits": 16396,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0321
@@ -7120,8 +7229,8 @@
     },
     {
      "at_um": 9599.04,
-     "bits": 18710,
-     "abutted_bits": 16654,
+     "bits": 18711,
+     "abutted_bits": 16655,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0326
@@ -7152,8 +7261,8 @@
     },
     {
      "at_um": 12070.08,
-     "bits": 18451,
-     "abutted_bits": 16395,
+     "bits": 18452,
+     "abutted_bits": 16396,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0321
@@ -7184,8 +7293,8 @@
     },
     {
      "at_um": 14541.12,
-     "bits": 18710,
-     "abutted_bits": 16654,
+     "bits": 18711,
+     "abutted_bits": 16655,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0326
@@ -7216,8 +7325,8 @@
     },
     {
      "at_um": 17012.16,
-     "bits": 19225,
-     "abutted_bits": 17169,
+     "bits": 19226,
+     "abutted_bits": 17170,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0335
@@ -7248,8 +7357,8 @@
     },
     {
      "at_um": 19483.2,
-     "bits": 18966,
-     "abutted_bits": 16910,
+     "bits": 18967,
+     "abutted_bits": 16911,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.033
@@ -7280,8 +7389,8 @@
     },
     {
      "at_um": 21954.24,
-     "bits": 19225,
-     "abutted_bits": 17169,
+     "bits": 19226,
+     "abutted_bits": 17170,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0335
@@ -7312,8 +7421,8 @@
     },
     {
      "at_um": 24425.28,
-     "bits": 18966,
-     "abutted_bits": 16910,
+     "bits": 18967,
+     "abutted_bits": 16911,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.033
@@ -7344,8 +7453,8 @@
     },
     {
      "at_um": 26896.32,
-     "bits": 19225,
-     "abutted_bits": 17169,
+     "bits": 19226,
+     "abutted_bits": 17170,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0335
@@ -7376,8 +7485,8 @@
     },
     {
      "at_um": 29367.36,
-     "bits": 17859,
-     "abutted_bits": 15803,
+     "bits": 17860,
+     "abutted_bits": 15804,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0311
@@ -7514,11 +7623,11 @@
     },
     {
      "at_um": 11793.6,
-     "bits": 81959,
+     "bits": 82479,
      "abutted_bits": 78996,
-     "route_bits": 2963,
+     "route_bits": 3483,
      "tracks": 682857,
-     "ratio": 0.12
+     "ratio": 0.1208
     },
     {
      "at_um": 12009.6,
@@ -7612,40 +7721,40 @@
    "top_vertical": [
     {
      "at_um": 17012.16,
-     "bits": 19225,
-     "abutted_bits": 17169,
+     "bits": 19226,
+     "abutted_bits": 17170,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0335
     },
     {
      "at_um": 21954.24,
-     "bits": 19225,
-     "abutted_bits": 17169,
+     "bits": 19226,
+     "abutted_bits": 17170,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0335
     },
     {
      "at_um": 26896.32,
-     "bits": 19225,
-     "abutted_bits": 17169,
+     "bits": 19226,
+     "abutted_bits": 17170,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.0335
     },
     {
      "at_um": 19483.2,
-     "bits": 18966,
-     "abutted_bits": 16910,
+     "bits": 18967,
+     "abutted_bits": 16911,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.033
     },
     {
      "at_um": 24425.28,
-     "bits": 18966,
-     "abutted_bits": 16910,
+     "bits": 18967,
+     "abutted_bits": 16911,
      "route_bits": 2056,
      "tracks": 574560,
      "ratio": 0.033
@@ -7686,11 +7795,11 @@
     },
     {
      "at_um": 11793.6,
-     "bits": 81959,
+     "bits": 82479,
      "abutted_bits": 78996,
-     "route_bits": 2963,
+     "route_bits": 3483,
      "tracks": 682857,
-     "ratio": 0.12
+     "ratio": 0.1208
     }
    ],
    "worst": {
@@ -7726,64 +7835,64 @@
    },
    "worst": [
     {
-     "lane": "sl_E2_hc3__cws3",
-     "hop_um": 403.4,
+     "lane": "coll_core__out_err_re_wi",
+     "hop_um": 401.9,
      "reach_um": 405.0,
-     "frac": 0.996
+     "frac": 0.992
     },
     {
-     "lane": "sl_E0_hc3__cws3",
-     "hop_um": 403.4,
+     "lane": "native59__dr_o_dr_wi",
+     "hop_um": 392.5,
      "reach_um": 405.0,
-     "frac": 0.996
+     "frac": 0.969
     },
     {
-     "lane": "sl_W4_hc3__cws3",
-     "hop_um": 403.4,
+     "lane": "tt_ctlm__cal_program_obs_seq_program_obs",
+     "hop_um": 390.3,
      "reach_um": 405.0,
-     "frac": 0.996
+     "frac": 0.964
     },
     {
-     "lane": "sl_W2_hc3__cws3",
-     "hop_um": 403.4,
+     "lane": "tt_ctlm__command_stage_tt_command_stage",
+     "hop_um": 389.5,
      "reach_um": 405.0,
-     "frac": 0.996
+     "frac": 0.962
     },
     {
-     "lane": "sl_W0_hc3__cws3",
-     "hop_um": 403.4,
+     "lane": "tt_ctlm__control_stores_ready_tt_control_stores_ready",
+     "hop_um": 389.5,
      "reach_um": 405.0,
-     "frac": 0.996
+     "frac": 0.962
     },
     {
-     "lane": "sl_E4_hc3__cws3",
-     "hop_um": 403.4,
+     "lane": "c_W2_bn_00__rsn",
+     "hop_um": 378.1,
      "reach_um": 405.0,
-     "frac": 0.996
+     "frac": 0.934
     },
     {
-     "lane": "sl_W2_hc0__cws0",
-     "hop_um": 403.0,
+     "lane": "c_W1_bn_00__rsn",
+     "hop_um": 378.1,
      "reach_um": 405.0,
-     "frac": 0.995
+     "frac": 0.934
     },
     {
-     "lane": "sl_W0_hc2__cws2",
-     "hop_um": 403.0,
+     "lane": "c_W4_bn_00__rsn",
+     "hop_um": 378.1,
      "reach_um": 405.0,
-     "frac": 0.995
+     "frac": 0.934
     },
     {
-     "lane": "sl_E5_hc2__cws2",
-     "hop_um": 403.0,
+     "lane": "c_W3_bn_00__rsn",
+     "hop_um": 378.1,
      "reach_um": 405.0,
-     "frac": 0.995
+     "frac": 0.934
     },
     {
-     "lane": "sl_E5_hc0__cws0",
-     "hop_um": 403.0,
+     "lane": "c_W5_bn_00__rsn",
+     "hop_um": 378.1,
      "reach_um": 405.0,
-     "frac": 0.995
+     "frac": 0.934
     }
    ]
   },
@@ -8264,7 +8373,8 @@
     }
    ],
    "dropped_bits": 0
-  }
+  },
+  "png": "physical/die_plan/qwen_compute/die_plan.png"
  },
  "findings": [
   {

@@ -1,0 +1,12 @@
+{
+ "source": "49f4475672 optional same-edge addresscopies; existing s4 macro/floorplan/pins",
+ "image": "elemB_if_plan.png",
+ "verdict": "PASS-COND PLACE/CTS ONLY",
+ "findings": [
+  "Viewed plan before launch: 6.1um macro-side launch/capture strips, broad side channels, no new macro wall or sliver, no die pins moved.",
+  "Original actual F6 failed address/CE max71.1/42.4um; full capture audit17/30of256pairs>20, max27.813/25.347.",
+  "Actual placement must prove address/CE and all512captures<=20um; t_r/w_r median<=20/max100; no overlap/halo; clock and independentTT/FF still required.",
+  "Zero added cycles, +24DFF, 80000countermechanismchecksPASS and wrong-bankaddrmutantcaught. No route approval."
+ ],
+ "route_approval": false
+}

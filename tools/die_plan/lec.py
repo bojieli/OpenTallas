@@ -239,8 +239,8 @@ SEQ_TAIL = [
 ]
 
 
-def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out):
-    s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False)
+def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extra=()):
+    s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False, slang_extra=slang_extra)
     s += [f"read_verilog -overwrite {stubs}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
           # declared kept registers (the kept-register check): (* keep *) wires and every wire of a keep_hierarchy
           # module (pin / replica flop cells), marked before the hierarchy attributes are dropped
@@ -252,6 +252,7 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out):
           # strided selects expand to 31M cells (77 GB) in techmap; with them 263k cells, 1.2 GB
           "opt_expr -keepdc", "opt_clean", "wreduce -keepdc", "peepopt", "opt_clean", "wreduce -keepdc", "opt_clean",
           "flatten -noscopeinfo", "opt_clean", f"select -write {out}.keep w:* a:lec_keep %i",
+          "select -clear", f"write_json {out}.aliases.json",
           # -nordff: memory_dff would merge an address / data register into a synchronous read port, and memory_map
           # then re-creates it as an anonymous '$...$rdreg' flop that no key point names (kv3_astk zn sd[k]: the
           # zq[5:2] address register became 4 unnamed gold latches, so every oa bit was UNPROVEN); the reference keeps
@@ -640,6 +641,7 @@ class Lec:
     def __init__(self, gold, gmap, gate, tmap, port_map=None):
         self.gold, self.gate = gold, gate
         self.gp, self.gc, self.gx, self.ganon, galias = key_points(gold, gmap)
+        self.galias = galias
         self.tp, self.tc, self.tx, self.tanon, _ = key_points(gate, tmap)
         # a gold register whose Q net also carries the name the gate flop was given (synthesis named the flop after
         # an alias, e.g. the output port it drives): re-key it to that name
@@ -678,6 +680,22 @@ class Lec:
         # state-encoding constraints (FSM recoding): (side, keys, allowed value tuples) assumed on the current state
         # and proved on the next state together with the hypotheses (an inductive invariant like the others)
         self.cons = []
+        self.cycle_dropped = []                   # (node, hypothesis) dropped by build() to break a binding cycle
+
+    def _drop_cycle_hyp(self, pend):
+        """pend: unresolved hypothesis node -> the node it is bound to.  No pass made progress, so every walk along
+        the bindings either closes a cycle or ends at a node that is never bound in this pass (e.g. a 'cube' state
+        bit).  Drop exactly one hypothesis: on a cycle its largest key (the cycle's other equalities still relate all
+        its members; a wrong one is refuted by the induction like any other), on a dead end the node bound to it.
+        Dropping a hypothesis only removes an assumption: the flop becomes a free input, never a waiver.
+        -> [dropped node]"""
+        node, seen = min(pend), []
+        while node in pend and node not in seen:
+            seen.append(node)
+            node = pend[node]
+        drop = max(seen[seen.index(node):]) if node in seen else seen[-1]
+        self.cycle_dropped.append((drop, self.hyp.pop(drop)))
+        return [drop]
 
     def build(self, with_compare=True, with_hyp=True, extra=None, free_const=None, hold_matched=()):
         """one AIG with every matched key point a shared input; a hypothesised gold-only flop becomes its constant /
@@ -727,10 +745,15 @@ class Lec:
                 shared[k] = shared[rep] ^ inv
                 bind(lg, self.gp[k], shared[k])
                 bind(lt, self.tp[k], shared[k])
-            if len(nxt) == len(merged):
-                for k in nxt:
-                    self.hyp.pop(("both", k), None)
-                raise LecError("cyclic flop hypotheses (rebuild)")
+            if len(nxt) == len(merged):           # a cycle: drop ONE hypothesis on it (a free matched input)
+                pend = {("both", k): ("both", self.hyp[("both", k)][2]) for k in nxt}
+                (_, k), = self._drop_cycle_hyp(pend)
+                nxt.remove(k)
+                v = m.add_input(k)
+                kind[v >> 1] = ("matched", k)
+                shared[k] = v
+                bind(lg, self.gp[k], v)
+                bind(lt, self.tp[k], v)
             merged = nxt
         later = []
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
@@ -769,10 +792,14 @@ class Lec:
                     continue
                 lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
                 bind(lmap, p[k], v ^ inv)
-            if len(nxt) == len(later):
-                for side, k, h in nxt:          # cyclic partners: drop the hypothesis, free input
-                    self.hyp.pop((side, k), None)
-                raise LecError("cyclic flop hypotheses (rebuild)")
+            if len(nxt) == len(later):            # a cycle: drop ONE hypothesis on it (that flop a free input)
+                pend = {(side, k): (h[1], h[2]) for side, k, h in nxt}
+                (side, k), = self._drop_cycle_hyp(pend)
+                nxt = [e for e in nxt if (e[0], e[1]) != (side, k)]
+                lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
+                v = m.add_input(f"{side}:{k}")
+                kind[v >> 1] = (side + "_only", k)
+                bind(lmap, p[k], v)
             later = nxt
         for side, xs, anon, lmap in (("gold", self.gx, self.ganon, lg), ("gate", self.tx, self.tanon, lt)):
             for lit in xs:
@@ -1518,6 +1545,85 @@ def drop_failed(L, bad):
         L.hyp.pop(("both" if sd == "bothg" else sd, k), None)
 
 
+
+
+def proved_state_constant(L, side, key, seen=None):
+    """Resolve only accepted induction equalities ending in a constant."""
+    seen = set() if seen is None else seen
+    node = (side,key)
+    if node in seen:
+        return None
+    seen.add(node)
+    h=L.hyp.get(node)
+    both=h is None
+    if both:
+        h=L.hyp.get(("both",key))
+    if not h:
+        return None
+    if h[0]=="const":
+        return int(h[1])
+    if h[0]=="eq":
+        c=proved_state_constant(L,side if both else h[1],h[2],seen)
+        return None if c is None else c ^ int(h[3])
+    return None
+
+
+def kept_wire_alias_copies(L, declared, aliases_file):
+    """Recognize RTL Q-wire aliases while requiring one distinct gate FF per kept bit.
+
+    The JSON is captured before register mapping from the same golden assembly.
+    An alias is wiring identity, not merely an equal-value replica hypothesis.
+    """
+    p = Path(aliases_file)
+    if not p.is_file():
+        return set()
+    nets = json.loads(p.read_text())["modules"][WRAP]["netnames"]
+    bit_names, wire_bits = collections.defaultdict(set), {}
+    for name, net in nets.items():
+        name = GENBLK.sub("", name.replace("\\", "").replace(" ", ""))
+        bits, offset = net["bits"], int(net.get("offset", 0))
+        for i, bit in enumerate(bits):
+            if not isinstance(bit, int):
+                continue
+            ix = offset + (len(bits)-1-i if net.get("upto", 0) else i)
+            names = {"ff:" + name + "[" + str(ix) + "]"}
+            if len(bits) == 1 and offset == 0:
+                names.add("ff:" + name)
+            for n in names:
+                wire_bits[n] = bit
+            bit_names[bit].update(names)
+    old_names = {v:k for k,v in (a.split("->",1) for a in L.aliased)}
+    gate, renamed = set(L.tp), collections.defaultdict(set)
+    for (side,c),h in L.hyp.items():
+        if side == "gate" and h[0] == "eq" and h[1] == "gold":
+            renamed[h[2]].add(c)
+    candidates = {}
+    for k in declared:
+        if proved_state_constant(L,"gold",k) is not None:
+            continue
+        old = old_names.get(k,k)
+        choices = set(bit_names.get(wire_bits.get(old), ())) & gate
+        if k in gate:
+            choices.add(k)
+        choices.update(renamed[k])
+        candidates[k] = choices
+    assigned = {}
+    def assign(k, seen):
+        for c in sorted(candidates[k]):
+            if c in seen:
+                continue
+            seen.add(c)
+            if c not in assigned or assign(assigned[c], seen):
+                assigned[c] = k
+                return True
+        return False
+    # All kept demands participate, including the already name-matched ones.
+    # This prevents an alias from reusing a gate flop already counted elsewhere.
+    if all(assign(k,set()) for k in sorted(candidates, key=lambda k:len(candidates[k]))):
+        return set(candidates)
+    return set()
+
+
 def kept_registers(L, keep_file):
     """Kept-register check (fail-closed, PATH-KV-PC3 10-25): every RTL register bit the design declares kept --
     a (* keep *) register or a flop inside a keep_hierarchy cell (pin flops, placement replicas) -- must be a flop of
@@ -1551,6 +1657,7 @@ def kept_registers(L, keep_file):
         if m and m.group(1) in relaid:
             gold_rel[m.group(1)] += 1
     renamed = {h[2] for (sd, c), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[2] in L.gp}
+    alias_copies = kept_wire_alias_copies(L, declared, Path(keep_file).with_suffix(".aliases.json"))
     missing, const = [], []
     for k in sorted(declared):
         if k in gate or k in renamed:
@@ -1558,11 +1665,11 @@ def kept_registers(L, keep_file):
         m = IDX.match(k)
         if m and m.group(1) in relaid and relaid[m.group(1)] >= gold_rel[m.group(1)]:
             continue                 # an array the two frontends lay out differently: counted per array
-        h = L.hyp.get(("gold", k))
-        if h and h[0] == "const":
+        if proved_state_constant(L,"gold",k) is not None:
             const.append(k)
             continue
-        missing.append(k)
+        if k not in alias_copies:
+            missing.append(k)
     return sorted(declared), missing, const
 
 
@@ -1667,19 +1774,38 @@ def structural_twin_closure(L, log):
         L.build(with_compare=False, with_hyp=False)
         new = []
         for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
+            paired_roots = {h[2] for (sd,k),h in L.hyp.items()
+                            if h[0] == "eq" and h[1] == side and sd != side}
             twins = {}
-            for c in L.matched:
+            for c in sorted(set(L.matched) | paired_roots):
                 d = L.dlit.get((side, c), 0)
                 if c.startswith("ff:") and d > 1 and (side, c) not in L.hyp:
                     twins.setdefault(d >> 1, []).append((c, d))
             for k in keys:
                 d = L.dlit.get((side, k), 0)
-                if not k.startswith("ff:") or (side, k) in L.hyp or d <= 1:
+                if not k.startswith("ff:") or (side, k) in L.hyp or k in paired_roots or d <= 1:
                     continue
                 choices = twins.get(d >> 1, [])
                 if choices:
                     c, dc = min(choices)
                     new.append(((side, k), ("eq", side, c, (d ^ dc) & 1)))
+        # The frontends also expose different wire aliases for one flop.
+        # Compare exact functions across sides, including rare enable bits
+        # whose random signatures look constant (XS3 wce_n / wce3).
+        gold = {}
+        for k in L.gonly:
+            d = L.dlit.get(("gold", k), 0)
+            if k.startswith("ff:") and d > 1 and ("gold", k) not in L.hyp:
+                gold.setdefault(d >> 1, []).append((k, d))
+        for k in L.tonly:
+            d = L.dlit.get(("gate", k), 0)
+            if not k.startswith("ff:") or ("gate", k) in L.hyp or d <= 1:
+                continue
+            choices = gold.get(d >> 1, [])
+            if choices:
+                c = closest(k, [q for q, _ in choices])[0]
+                dc = dict(choices)[c]
+                new.append((("gate", k), ("eq", "gold", c, (d ^ dc) & 1)))
         if not new:
             break
         L.hyp.update(new)
@@ -1688,6 +1814,160 @@ def structural_twin_closure(L, log):
         log.append(f"structural twin closure: {total} relations proposed")
     return total
 
+
+
+def alias_arrays(L, log, words=4):
+    """an RTL array whose gate flops synthesis named after an ALIAS array (`assign SX[i] = X[i]`: rename -wire picked
+    the alias wire, so the gate holds SX[i][b] while the gold, read with the other frontend, holds X[h][flat]): the
+    gold flops' own Q-net alias names carry the gate base, which is the evidence that pairs the two bases.  The index
+    tuples are flattened mixed-radix (outer index reversed or not, either side) and the gate keys re-keyed to the gold
+    names when the flattened gate set is a subset of the gold set (synthesis may have merged some elements into other
+    registers: those gold flops stay gold-only and are paired by function in correspond); among the variants the one
+    with the fewest disagreeing matched compare points in simulation is kept.  Sound: the re-key is a bijection of
+    key points and every next-state function is still proved (a wrong layout can only produce a difference)."""
+    def split(keys):
+        d = {}
+        for k in keys:
+            m = IDX.match(k)
+            if k.startswith("ff:") and m:
+                d.setdefault(m.group(1), {})[k] = tuple(int(x) for x in re.findall(r"\d+", m.group(2)))
+        return d
+
+    def flats(d, rev):
+        n = len(next(iter(d.values())))
+        if len({len(v) for v in d.values()}) != 1:
+            return None
+        hi = [max(v[j] for v in d.values()) + 1 for j in range(n)]
+        r = {}
+        for k, v in d.items():
+            f = 0
+            for j in range(n):
+                x = (hi[j] - 1 - v[j]) if (rev and j == 0 and n > 1) else v[j]
+                f = f * hi[j] + x
+            r[f] = k
+        return r if len(r) == len(d) else None
+
+    def mismatches():
+        m, kind = L.build(with_compare=False, with_hyp=False)
+        val, mask = m.simulate(words, seed=4343)
+        return sum(1 for k in L.matched if k.startswith("ff:") and
+                   lit_val(val, mask, L.dlit[("gold", k)]) != lit_val(val, mask, L.dlit[("gate", k)]))
+
+    def apply(mp):                                   # gate key -> gold key
+        for tk, gk in mp.items():
+            L.tp[gk] = L.tp.pop(tk)
+            if tk in L.tc:
+                L.tc[gk] = L.tc.pop(tk)
+        L.matched = sorted(set(L.gp) & set(L.tp))
+        L.gonly = sorted(set(L.gp) - set(L.tp))
+        L.tonly = sorted(set(L.tp) - set(L.gp))
+
+    # never re-key a point an existing hypothesis names (e.g. trace/relaid-line proposals made before this pass):
+    # the re-key would orphan the hypothesis' key or representative
+    held = set()
+    for (_sd, k), h in L.hyp.items():
+        held.add(k)
+        for x in h[1:]:
+            if isinstance(x, str):
+                held.add(x)
+            elif isinstance(x, (list, tuple)):
+                held.update(y for y in x if isinstance(y, str))
+    galias = getattr(L, "galias", {})
+    G, T = split(k for k in L.gonly if k not in held), split(k for k in L.tonly if k not in held)
+    for gb, g in sorted(G.items(), key=lambda x: -len(x[1])):
+        votes = collections.Counter()
+        for k in g:
+            for a in galias.get(k, ()):
+                m = IDX.match(a)
+                if m and m.group(1) in T and m.group(1) != gb:
+                    votes[m.group(1)] += 1
+        if gb + "#t" in T:                          # the same array, re-keyed (relaid) because the frontends
+            votes[gb + "#t"] = len(g)                # index it differently (slang gt[row][4 words] vs gt[q][j])
+        for tb, n in votes.most_common(1):
+            t = T[tb]
+            if 2 * n < len(g) or 2 * len(t) < len(g) or len(t) > len(g):
+                continue
+            cands = []
+            for gr in (False, True):
+                for tr in (False, True):
+                    fg, ft = flats(g, gr), flats(t, tr)
+                    if fg and ft and set(ft) <= set(fg):
+                        mp = {ft[f]: fg[f] for f in ft}
+                        if mp not in cands:
+                            cands.append(mp)
+            if not cands:
+                continue
+            base = mismatches()
+            best = None
+            for mp in cands:
+                apply(mp)
+                n_ = mismatches()
+                apply({v: k for k, v in mp.items()})
+                if best is None or n_ < best[0]:
+                    best = (n_, mp)
+            # the alias evidence decides the pairing; simulation only orders the layout variants (a gold array
+            # whose next state reads X sources or merged elements disagrees in raw simulation either way)
+            if True:
+                apply(best[1])
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); mismatching compare points {base} -> {best[0]}")
+
+
+def merged_proposals(L, log, cap=4096):
+    """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
+    X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
+    simulation pair them (each one's hold path reads its own, still unbound, state).  Candidate = a matched gold flop
+    whose next-state support equals the gold-only flop's, with each flop's OWN state read as SELF; proposed as an
+    'eq' hypothesis and proved inductively with all the others (a wrong proposal is dropped, never assumed)."""
+    d, gp = L.gold, L.gp
+    I, Lc = d["I"], d["L"]
+    base = I + Lc + 1
+    ands = d["ands"]
+    sym = {}
+    for k, lit in gp.items():
+        sym[lit >> 1] = k
+    memo = {}
+
+    def support(lit):
+        v0 = lit >> 1
+        if v0 in memo:
+            return memo[v0]
+        out, seen, st = set(), set(), [v0]
+        while st:
+            v = st.pop()
+            if v in seen or v == 0:
+                continue
+            seen.add(v)
+            if v in sym:
+                out.add(sym[v])
+            elif v < base:
+                out.add(("x", v))
+            else:
+                i = v - base
+                st.append(ands[2 * i] >> 1)
+                st.append(ands[2 * i + 1] >> 1)
+        memo[v0] = frozenset(out)
+        return memo[v0]
+    gonly = [k for k in L.gonly if k.startswith("ff:") and ("gold", k) not in L.hyp and k in L.gc][:cap]
+    if not gonly:
+        return
+    fp = {}
+    for k in gonly:
+        s_ = support(L.gc[k])
+        fp.setdefault(frozenset("SELF" if x == k else x for x in s_), []).append(k)
+    n = 0
+    for c in L.matched:
+        if not c.startswith("ff:") or c not in L.gc:
+            continue
+        s_ = support(L.gc[c])
+        ks = fp.get(frozenset("SELF" if x == c else x for x in s_))
+        if ks:
+            for k in ks:
+                if ("gold", k) not in L.hyp:
+                    L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+                    n += 1
+    log.append(f"merged proposal: {n} of {len(gonly)} gold-only registers share a matched register's next-state support")
 
 def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
@@ -1705,9 +1985,11 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     (u_tv.line[4] == u_k5.g_r.v == valid_out) is dropped while its upstream index-line constants are still being
     refined and needs adding rounds after them; 10 left it free -> false NOT EQUIVALENT (gunit_l4 895 points,
     EQUIVALENT at 24 rounds, 738 s)."""
+    alias_arrays(L, log)
     relayout(L, log)
     renamed(L, log)
     replica_proposals(L, log)
+    merged_proposals(L, log)
     register_alias_proposals(L, log)
     fsm_proposals(L, log)
     traces = None                      # sequential traces (seq_traces), computed on first need
@@ -1968,7 +2250,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             val, mask = m.simulate(words, seed=999)
             reps = {h[2] for (sd, k), h in L.hyp.items() if sd == "both" and h[0] == "eq"}
             for k in L.matched:
-                if not k.startswith("ff:") or ("both", k) in L.hyp or k in reps or tried[("both", k, "c")] >= 2:
+                if not k.startswith("ff:") or ("both", k) in L.hyp or tried[("both", k, "c")] >= 2:
                     continue
                 a, b = lit_val(val, mask, L.dlit[("gold", k)]), lit_val(val, mask, L.dlit[("gate", k)])
                 if a == b and a in (0, mask):
@@ -1979,7 +2261,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # own Q is in its next-state cone.  Candidate only; induction decides.
             var_of = {kk: v for v, (t, kk) in kind.items() if t == "matched"}
             gdl = dict(L.dlit)
-            cands = {k for k in L.matched if k.startswith("ff:") and ("both", k) not in L.hyp and k not in reps
+            cands = {k for k in L.matched if k.startswith("ff:") and ("both", k) not in L.hyp
                      and tried[("both", k, "c")] < 2}
             selfc = []
             for c in (0, 1):
@@ -2122,6 +2404,22 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
 
 
 # ---------------------------------------------------------------------------------------------- driver
+def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
+    """gold AIG.  An unpacked array that memory_map cannot convert (write ports on several clocks, e.g. a
+    per-tap clocked delay line r[p] <= r[p+1] on clk[(p-1)/48], ot_hbm_su_static_ins) stays a $mem_v2 cell and the
+    AIGER backend rejects it; synthesis (read_verilog) turned the same array into named registers (mem2reg), so the
+    gold is re-read with read_slang --no-implicit-memories: every array becomes its registers, as written."""
+    args = (env, kit, gold_fe, lib_bbs, out / "stubs.v", out / "wrap_gold.v", out / "lecff.v", out / "gold")
+    try:
+        return run_yosys(gold_script(*args), out / "gold.ys", log)
+    except Unproven as e:
+        if gold_fe != "slang" or "Unsupported cell type: $mem_v2" not in str(e):
+            raise
+        log.append(f"gold: unmappable memory ({str(e)[-160:]}); re-reading with read_slang --no-implicit-memories")
+        rec["gold_no_implicit_memories"] = True
+        return run_yosys(gold_script(*args, slang_extra=["--no-implicit-memories"]), out / "gold.ys", log)
+
+
 def run_yosys(script, path, log):
     Path(path).write_text(script)
     y = ORFS + "/tools/install/yosys/bin/yosys"
@@ -2188,8 +2486,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         else:
             from concurrent.futures import ThreadPoolExecutor
             with ThreadPoolExecutor(2) as ex:
-                fg = ex.submit(run_yosys, gold_script(env, kit, gold_fe, lib_bbs, out / "stubs.v", out / "wrap_gold.v",
-                                                      out / "lecff.v", out / "gold"), out / "gold.ys", log)
+                fg = ex.submit(run_gold, env, kit, gold_fe, lib_bbs, out, log, rec)
                 ft = ex.submit(run_yosys, gate_script(env, netlist, out / "stubs.v", out / "wrap_gate.v",
                                                       out / "lecff.v", out / "gate"), out / "gate.ys", log)
                 fg.result()
@@ -2301,7 +2598,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         rec["verdict"], rec["reason"] = "ERROR", f"{type(e).__name__}: {e}"
         import traceback
         log.append(traceback.format_exc())
+    lc = locals().get("L")
+    if lc is not None and getattr(lc, "cycle_dropped", None):   # hypotheses dropped to break binding cycles
+        rec["cycle_dropped"] = dict(n=len(lc.cycle_dropped),
+                                    first=[f"{sd}:{k} {list(h)}" for (sd, k), h in lc.cycle_dropped[:40]])
     rec["t_total_s"] = round(time.time() - t0, 1)
+    rec["provenance"] = _provenance()
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
     (out / "lec.log").write_text("\n".join(log))
     return rec
@@ -2344,6 +2646,16 @@ def via_docker(args, image, mem):
     return subprocess.run(cmd + [sh]).returncode
 
 
+def _provenance():
+    """closure order rule 3 (OWNER 10-25): the LEC verdict names the tool commit (manifest_paths.provenance)."""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import manifest_paths
+        return manifest_paths.provenance()
+    except Exception as e:  # noqa: BLE001 -- a missing commit fails the evidence gate, never the proof
+        return dict(commit=None, dirty=None, source=f"error: {type(e).__name__}")
+
+
 def main(argv=None):
     global PROVE_JOBS
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -2367,6 +2679,9 @@ def main(argv=None):
         p = Path(a.out or Path(a.kit) / "lec") / "lec.json"
         if p.is_file():
             r = json.loads(p.read_text())
+            if not (r.get("provenance") or {}).get("commit"):   # the image may not see .git: stamp from the host
+                r["provenance"] = _provenance()
+                p.write_text(json.dumps(r, indent=1) + "\n")
             print(f"LEC {r['verdict']}: {r.get('top')} {r.get('reason', r.get('note', ''))} "
                   f"({r.get('t_total_s')} s)")
         return rc

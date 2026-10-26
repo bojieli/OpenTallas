@@ -1,0 +1,189 @@
+{
+ "schema": "opentallas.qc-su-aspect-candidate.v1",
+ "status": "UNQUALIFIED_NEW_CHILDREN_REQUIRED",
+ "changed": [
+  {
+   "type": "sle_su_c",
+   "core": "u_suvm_u_vm8q_u_pg",
+   "old_origin_um": [
+    25.92,
+    380.16
+   ],
+   "new_origin_um": [
+    17.28,
+    380.16
+   ],
+   "old_outline_um": [
+    259.2,
+    354.24
+   ],
+   "new_outline_um": [
+    354.24,
+    259.2
+   ]
+  },
+  {
+   "type": "sle_su_c",
+   "core": "u_suvm_u_vm8q_u_ch",
+   "old_origin_um": [
+    302.4,
+    380.16
+   ],
+   "new_origin_um": [
+    388.8,
+    380.16
+   ],
+   "old_outline_um": [
+    259.2,
+    276.48
+   ],
+   "new_outline_um": [
+    259.2,
+    276.48
+   ]
+  },
+  {
+   "type": "sle_su_c",
+   "core": "u_suvm_u_vm8q_u_bt",
+   "old_origin_um": [
+    665.28,
+    380.16
+   ],
+   "new_origin_um": [
+    665.28,
+    380.16
+   ],
+   "old_outline_um": [
+    259.2,
+    354.24
+   ],
+   "new_outline_um": [
+    354.24,
+    259.2
+   ]
+  },
+  {
+   "type": "sle_su_c",
+   "core": "u_suvm_u_su8",
+   "old_origin_um": [
+    941.76,
+    380.16
+   ],
+   "new_origin_um": [
+    1036.8,
+    380.16
+   ],
+   "old_outline_um": [
+    172.8,
+    129.6
+   ],
+   "new_outline_um": [
+    172.8,
+    129.6
+   ]
+  },
+  {
+   "type": "slw_su_c",
+   "core": "u_suvm_u_vm8q_u_pg",
+   "old_origin_um": [
+    25.92,
+    380.16
+   ],
+   "new_origin_um": [
+    17.28,
+    380.16
+   ],
+   "old_outline_um": [
+    259.2,
+    354.24
+   ],
+   "new_outline_um": [
+    354.24,
+    259.2
+   ]
+  },
+  {
+   "type": "slw_su_c",
+   "core": "u_suvm_u_vm8q_u_ch",
+   "old_origin_um": [
+    302.4,
+    380.16
+   ],
+   "new_origin_um": [
+    388.8,
+    380.16
+   ],
+   "old_outline_um": [
+    259.2,
+    276.48
+   ],
+   "new_outline_um": [
+    259.2,
+    276.48
+   ]
+  },
+  {
+   "type": "slw_su_c",
+   "core": "u_suvm_u_vm8q_u_bt",
+   "old_origin_um": [
+    665.28,
+    380.16
+   ],
+   "new_origin_um": [
+    665.28,
+    380.16
+   ],
+   "old_outline_um": [
+    259.2,
+    354.24
+   ],
+   "new_outline_um": [
+    354.24,
+    259.2
+   ]
+  },
+  {
+   "type": "slw_su_c",
+   "core": "u_suvm_u_su8",
+   "old_origin_um": [
+    941.76,
+    380.16
+   ],
+   "new_origin_um": [
+    1036.8,
+    380.16
+   ],
+   "old_outline_um": [
+    172.8,
+    129.6
+   ],
+   "new_outline_um": [
+    172.8,
+    129.6
+   ]
+  }
+ ],
+ "core_area_delta_um2": 0,
+ "FF_added": 0,
+ "data_cycles_added": 0,
+ "token_cycles_added": 0,
+ "partition_boundary_changed": false,
+ "parent_outline_changed": false,
+ "old_signed_prog_mutated": false,
+ "adoption_gate": "Both new prog/btab physical views SIGNED + actual pin/clock replacement + parent G0/G2/GEOM",
+ "channel_fallback": "UNADOPTED estimated cws1/cws2 +2 stages each",
+ "n59_1c": {
+  "type": "native59",
+  "bus": "dr_o",
+  "old_window_um": [
+   283.1613,
+   391.7373
+  ],
+  "new_window_um": [
+   115.0,
+   223.576
+  ],
+  "neighbour": "coll_f4 (coll_ftc) W in-window of ft dr_o_dr_wi (derived)",
+  "cycles_added": 0
+ }
+}

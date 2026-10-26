@@ -54,7 +54,7 @@ PENDING = BASE / 'pending_results.txt'
 JOBS = Path.home() / '.local/state/closure_loop/jobs'
 FLEET_URL = 'http://127.0.0.1:8765/api/fleetjobs'
 OT_RUN = Path.home() / '.local/bin/ot-run'
-DEFAULT_HOSTS = ['epyc2', 'epyc3', 'intel1', 'intel2']
+DEFAULT_HOSTS = ['epyc2', 'intel1', 'intel2']   # epyc3 retired 2026-10-25
 SCAN_ROOTS = ['/srv/opentallas-scratch/claude', '/srv/opentallas-scratch/codex', '/srv/opentallas-scratch2/claude',
               '/srv/opentallas-scratch2/codex', '/home/ubuntu/artifacts']
 NOT_RUN_RX = re.compile(r'^/home/ubuntu/(OpenTallas|\.ssh|\.claude|\.codex|\.config|bin)(/|$)')

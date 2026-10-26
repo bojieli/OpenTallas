@@ -27,7 +27,8 @@ module ot_s81hd_bundle #(
     parameter integer BST = 2,
     parameter [8:0] CUT = 9'b1_1111_1111,  // 10-24: the closed element views' CUT (was 0x17b)
     parameter integer SPLIT9 = 1,          // ot_v41_fadd SPLIT9 (+1 adder latency, the skew follows); 10-24: 1 (was 0)
-    parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+    parameter integer FADD_L4 = 0, // newnative4-stage profile; CV oldviews forbidden
+    parameter integer SK = (FADD_L4 != 0) ? 4 : 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
     parameter INSTANCE = "h",
     parameter integer IOREG = 0,           // ot_dsrom_head_elem IOREG (pin-registered elements)
     parameter integer SAFE = 1,            // ot_s81hd_elem SAFE (registered argmax compare; required)
@@ -81,7 +82,7 @@ module ot_s81hd_bundle #(
             .l_v(nc_lv), .l_d(nc_ld), .done(nc_done), .best_row(nc_row), .best_bits(nc_bits), .best_key(nc_key),
             .fault(b_fault));
     end else begin : g_rtlb
-        ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .INSTANCE($sformatf("%sb", INSTANCE)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_b (
+        ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .INSTANCE($sformatf("%sb", INSTANCE)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4)) u_b (
             .clk(clk), .rst_n(rst_n), .go(go_d), .row0(17'd0), .x(xsb), .b_v(1'b0), .b_d(32'd0), .o_v(bo_v), .o_d(bo_d),
             .l_v(nc_lv), .l_d(nc_ld), .done(nc_done), .best_row(nc_row), .best_bits(nc_bits), .best_key(nc_key),
             .fault(b_fault));
@@ -128,7 +129,7 @@ module ot_s81hd_bundle #(
                 .clk(clk), .rst_n(rst_n), .d(d1), .q({row_a[q], x_a[q], bd_a[q]}));
         end
         if (!CV) begin : g_rtl
-        ot_s81hd_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_e (
+        ot_s81hd_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4)) u_e (
             .clk(clk), .rst_n(rst_n), .go(a_go[q]), .row0(row_a[q]), .x(x_a[q]), .b_v(bv_a[q]), .b_d(bd_a[q]),
             .o_v(ov), .o_d(od), .l_v(lv), .l_d(ld),
             .head_v(head_v[q]), .head_d(head_d[32*q+:32]), .head_row(head_row[17*q+:17]), .done(a_done[q]), .best_row(a_row[q]), .best_bits(a_bits[q]),
@@ -138,7 +139,7 @@ module ot_s81hd_bundle #(
     generate if (CV) begin : g_cv
         // closed-view parameter point (ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1): refuse anything else
         // A_INPUT_STAGES is tile-side transport (all 307 A input bits + go/bv at equal depth): allowed with the views
-        if (CUT != 9'h1ff || SPLIT9 != 1 || IOREG != 1 || SAFE != 1) begin : g_bad
+        if (CUT != 9'h1ff || SPLIT9 != 1 || IOREG != 1 || SAFE != 1 || FADD_L4 != 0) begin : g_bad
             ot_s81hd_cv_params_differ_from_the_closed_views u_refuse ();   // elaboration error by design
         end
         wire [3:0] ov, lv;
