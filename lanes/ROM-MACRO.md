@@ -63,3 +63,11 @@ Other step-1 findings:
 - D-ROM-3: KV dcal. Swap the packed-localparam images for the ROM macro (the ovl template exists). This merges the variants that differ only by the include, which TYPE-REDUCE-2 wants anyway.
 - No plan delta is needed for the S81 or QC weight ROMs: they are already generated macros, one view per shape.
 2026-10-25 20:25 PDT ROM-MACRO: step 1 + step 2 core done, branch claude/rom-macro-1025@f2b828e9a pushed. Weight ROMs on S81 (7644 x ot_rom_4096x72_m8) and QC (360 x ot_rom_4096x266_m8) are already generated macros; designs only because of content = 0. Gate scan: 20/758 runs FAIL on synthesised function tables (8 distinct tables). OWNER? D-ROM-2 (a) vs (b).
+2026-10-25 20:25 PDT ROM-MACRO: rom_infer_gate --rtl on the real rtl/hdc/v41/ot_hdc_sk_recip_rom.sv (orfs:asap7lock yosys 0.67): FAIL 512x65 proc_rom table, as expected.
+## PARKED 2026-10-25 20:25 PDT
+Branch claude/rom-macro-1025@f2b828e9a pushed, READY in COORD-REVIEW-QUEUE. Worktree localhost /home/ubuntu/scratch/rom-macro-1025 (sparse; remove after merge). No live jobs. Scan artefacts: epyc1:/tmp/romgate_t/scan.json (758 mem.json verdicts), scan.txt.
+NEXT:
+(1) COORD: merge READY; D-ROM-0 takes effect at the next autopilot tick (OWNERS GENERATED rows).
+(2) OWNER: decide D-ROM-2 (a) declared function tables stay logic vs (b) macro, +1 cycle; then D-ROM-1 wires the gate (FAIL) into the kit flow at a flow tag.
+(3) KV lead: D-ROM-3 dcal images -> a small generated shape (32x32 m2, 64 um2; the ovl variants use 4096x72, which is oversized).
+(4) Content tools: the per-die viamap writers (tools/s81_ftok/hcx_rank_images.py, dsrom_markov_*, engram_*, ...) write via maps ad hoc with no personalisation manifest. Route them through rom_gen.py personalise so 'rom_gen.py verify' runs per content per die.
