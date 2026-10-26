@@ -1,0 +1,2 @@
+QC-SU-F4 MIF0 synth+place probe: kit copy of codex-qc-su-0733/kits/{vmr,rp1}, RTL from origin/main fec963a5e8, VERILOG_TOP_PARAMS MIF 0; 2026-10-26T13:32:58-07:00
+synth+place: run_sp.sh (vmr), run_kit.sh place (rp1), docker openroad/orfs:asap7lock 16g; data epyc1:/srv/opentallas-scratch2/claude/qc-su-f4-1026/{vmr,rp1}_mif0; flops vmr 3757 (MIF1 4308), rp1 2208 (MIF1 2790)

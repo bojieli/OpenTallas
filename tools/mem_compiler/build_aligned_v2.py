@@ -142,9 +142,10 @@ def patched(obj, **attrs):
             setattr(obj, k, v)
 
 
-def aligned_outline(core_w, core_h, pins):
-    """views.macro_outline, then grow H and W to 0.024 mod 0.048 (reported in the outline info)."""
-    w, h, info = views.macro_outline(core_w, core_h, pins)
+def aligned_outline(core_w, core_h, pins, **kw):
+    """views.macro_outline, then grow H and W to 0.024 mod 0.048 (reported in the outline info).
+    kw: views.macro_outline options (``ns`` for top/bottom M5 pin edges, QC-SU-F4)."""
+    w, h, info = views.macro_outline(core_w, core_h, pins, **kw)
     w2, h2 = align_up_um(w), align_up_um(h)
     info = dict(info)
     info["aligned_v2"] = {
@@ -157,8 +158,8 @@ def aligned_outline(core_w, core_h, pins):
     return w2, h2, info
 
 
-def aligned_write_lef(name, w, h, pins, props):
-    text = views.write_lef(name, w, h, pins, props)
+def aligned_write_lef(name, w, h, pins, props, **kw):
+    text = views.write_lef(name, w, h, pins, props, **kw)
     text = text.replace("# OpenTallas memory compiler (tools/mem_compiler), ASAP7 abstract view",
                         "# OpenTallas memory compiler (tools/mem_compiler), ASAP7 abstract view, "
                         "track-aligned v2 (build_aligned_v2.py)", 1)

@@ -59,7 +59,9 @@ class SramSpec:
     # write-mask granularity: one w_mask_in bit enables mask_gran adjacent data bits (1 = per-bit mask)
     mask_gran: int = 1
     # LEF pin faces: "split" = the flat pin list halved (first half left); "rw" (1r1w only) = clock + read port on
-    # the LEFT edge, write port on the RIGHT edge with each mask bit beside its data group
+    # the LEFT edge, write port on the RIGHT edge with each mask bit beside its data group; "ns" (QC-SU-F4 2026-10-26)
+    # = the "split" halves on the TOP (first half) and BOTTOM (second half) edges as M5 pins: a column-shaped macro
+    # (mux 1 + banks) placed R0/MX/MY/R180 with its pin ends north/south -- the legal, unrotated form of a column
     pin_faces: str = "split"
 
     def validate(self) -> None:
@@ -77,8 +79,8 @@ class SramSpec:
             raise ValueError(f"{self.name}: mask_gran must divide bits")
         if self.mask_gran > 1 and self.ports != "1r1w":
             raise ValueError(f"{self.name}: mask_gran > 1 is implemented for 1r1w only")
-        if self.pin_faces not in ("split", "rw") or (self.pin_faces == "rw" and self.ports != "1r1w"):
-            raise ValueError(f"{self.name}: pin_faces must be 'split', or 'rw' on a 1r1w macro")
+        if self.pin_faces not in ("split", "rw", "ns") or (self.pin_faces == "rw" and self.ports != "1r1w"):
+            raise ValueError(f"{self.name}: pin_faces must be 'split', 'ns', or 'rw' on a 1r1w macro")
 
     @property
     def rows(self) -> int:           # main physical rows (all banks)
@@ -150,7 +152,7 @@ def pins_for(spec: SramSpec) -> list[Pin]:
 
 def pin_faces(spec: SramSpec, pins: list[Pin]):
     """Explicit LEF edge plan, or None for the default half/half split of the flat pin list."""
-    if spec.pin_faces == "split":
+    if spec.pin_faces in ("split", "ns"):
         return None
     by = {p.name: p for p in pins}
     read = ["clk", "r_ce_in", "r_addr_in", "rd_out"]
@@ -367,7 +369,9 @@ def compile_macro(spec: SramSpec, out_dir: Path | None = None) -> dict[str, Any]
     pins = pins_for(spec)
     area = area_model(spec, cal)
     faces = pin_faces(spec, pins)
-    if faces is None:   # (other builders monkeypatch macro_outline / write_lef with the 3- / 5-argument forms)
+    if spec.pin_faces == "ns":
+        w, h, pin_info = macro_outline(area["core_width_um"], area["core_height_um"], pins, ns=True)
+    elif faces is None:   # (other builders monkeypatch macro_outline / write_lef with the 3- / 5-argument forms)
         w, h, pin_info = macro_outline(area["core_width_um"], area["core_height_um"], pins)
     else:
         w, h, pin_info = macro_outline(area["core_width_um"], area["core_height_um"], pins, faces=faces)
@@ -411,7 +415,8 @@ def compile_macro(spec: SramSpec, out_dir: Path | None = None) -> dict[str, Any]
         d = out_dir / spec.name
         d.mkdir(parents=True, exist_ok=True)
         props = {"width": spec.bits, "depth": spec.words, "banks": spec.banks}
-        lef = (write_lef(spec.name, w, h, pins, props) if faces is None
+        lef = (write_lef(spec.name, w, h, pins, props, ns=True) if spec.pin_faces == "ns"
+               else write_lef(spec.name, w, h, pins, props) if faces is None
                else write_lef(spec.name, w, h, pins, props, faces=faces))
         (d / f"{spec.name}.lef").write_text(lef)
         mem = {"type": "ram", "address_width": spec.addr_bits, "word_width": spec.bits}
@@ -441,7 +446,7 @@ def main() -> int:
     ap.add_argument("--spare-rows", type=int, default=0)
     ap.add_argument("--spare-cols", type=int, default=0)
     ap.add_argument("--mask-gran", type=int, default=1, help="data bits per write-mask bit (1r1w)")
-    ap.add_argument("--pin-faces", default="split", choices=("split", "rw"))
+    ap.add_argument("--pin-faces", default="split", choices=("split", "rw", "ns"))
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
     specs: list[SramSpec] = []
