@@ -1,0 +1,12 @@
+{
+  "image": "results/qc_sramif_2145/prog_row_plan.png",
+  "reviewer": "Codex",
+  "verdict": "PASS-COND placement-only trial",
+  "findings": [
+    "Four unchanged MY SRAM rows, native pin faces and halos retained; channels remain open.",
+    "New kept write address/enable replicas sit beside their own landing FFs in the row bands; no interface movement, no new bus crossings.",
+    "Shared write input to per-row relay <= existing core span354.24um; local row relay->landing targeted8..14um.",
+    "Existing B3 clock, PDN and clock taps held for diagnostic geometry; their residual macro skew26.5 and insertion508 FAIL remain.",
+    "No CTS or routing permission from this review; fresh placement census required and structural clock/RTL design review remains before any next route."
+  ]
+}
