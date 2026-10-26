@@ -121,16 +121,25 @@ class BoundDie:
             raise ValueError('current source needs exactly one slice per SID0..15')
         return out
 
-    def route(self, source, source_port, target, target_port):
+    def route(self, source, source_port, target, target_port, source_lsb=0, target_lsb=0, width=None):
         if self.sinks is None:
             wanted = {p for ps in self.inventory['input_pins'].values() for p in ps}
             self.sinks = {key: value for key, value in object_items(self.bound / 'bind_sinks.json') if key in wanted}
         src = self.units[source]['ports'][source_port]
         dst = self.units[target]['ports'][target_port]
-        if src['dir'] != 'output' or dst['dir'] != 'input' or len(src['bits']) != len(dst['bits']):
-            raise ValueError('transport endpoints need matching output/input word widths')
+        if src['dir'] != 'output' or dst['dir'] != 'input':
+            raise ValueError('transport endpoints need output/input directions')
+        if width is None:
+            if source_lsb != 0 or target_lsb != 0 or len(src['bits']) != len(dst['bits']):
+                raise ValueError('full transport endpoints need matching word widths')
+            width = len(src['bits'])
+        if any(type(x) is not int or x < 0 for x in (source_lsb, target_lsb, width)) or width == 0 or \
+                source_lsb + width > len(src['bits']) or target_lsb + width > len(dst['bits']):
+            raise ValueError('transport subword is outside its actual source interface')
+        source_bits = src['bits'][source_lsb:source_lsb+width]
+        target_bits = dst['bits'][target_lsb:target_lsb+width]
         ages, drivers, checked, constant = set(), [], 0, []
-        for bit, (sn, dn) in enumerate(zip(src['bits'], dst['bits'])):
+        for bit, (sn, dn) in enumerate(zip(source_bits, target_bits)):
             if isinstance(sn, str) or isinstance(dn, str):
                 if sn != dn or sn not in ('0', '1'):
                     raise ValueError(f'transport bit{bit}: conflicting or unknown constant')
@@ -162,7 +171,8 @@ class BoundDie:
         if len(ages) != 1:
             raise ValueError(f'transport word has mixed/unmeasured bit ages: {sorted(ages)}')
         return dict(source=source, source_port=source_port, target=target, target_port=target_port,
-                    width=len(src['bits']), age_edges=ages.pop(), checked_leaf_inputs=checked,
+                    width=width, source_lsb=source_lsb, target_lsb=target_lsb,
+                    age_edges=ages.pop(), checked_leaf_inputs=checked,
                     source_pins=drivers, constant_bits=constant, die_sha256=self.die_sha,
                     basis='current bound per-bit source identity and transport stages; no local unit latency')
 

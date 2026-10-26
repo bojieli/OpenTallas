@@ -62,3 +62,14 @@ def test_unprojected_source_variant_rejected(tmp_path):
     inv['source_variants']={'leaf_rules':[{'inst':'slice','module':'new_abi'}], 'leaf_rules_applied':False}
     with pytest.raises(ValueError, match='explicit projection'):
         BoundDie(tmp_path,inv,sinks=sinks).route('host','o','slice','i')
+
+
+def test_explicit_subword_keeps_its_own_coherence_gate(tmp_path):
+    inv,sinks=example(tmp_path)
+    sinks['slice.i[1]'][2]=8
+    die=BoundDie(tmp_path,inv,sinks=sinks)
+    with pytest.raises(ValueError,match='mixed'):
+        die.route('host','o','slice','i')
+    assert die.route('host','o','slice','i',1,1,1)['age_edges']==8
+    with pytest.raises(ValueError,match='outside'):
+        die.route('host','o','slice','i',1,1,2)
