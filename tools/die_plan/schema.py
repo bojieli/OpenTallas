@@ -137,6 +137,16 @@ _parent_id_straps = {"type": "object", "additionalProperties": False, "propertie
                                     **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
     for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "sidx", *_physical_id_widths)}}
 
+# Exact post-bind hard groups preserve existing source leaves and their reset epoch.
+_bound_group = {"type": "object", "required": ["kind", "reset_pin", "memory_alignment", "members"],
+                "additionalProperties": False, "properties": {
+                    "kind": {"const": "exact_post_bind_group"}, "reset_pin": {"const": "rst_n"},
+                    "memory_alignment": {"type": "integer", "minimum": 0},
+                    "members": {"type": "array", "minItems": 5, "maxItems": 5,
+                                "items": {"type": "object", "required": ["inst", "module", "reset_pin"],
+                                          "additionalProperties": False,
+                                          "properties": {"inst": _name, "module": _name, "reset_pin": {"const": "rst_n"}}}}}}
+
 # Exact identity ports only. G0's semantic validator enforces each port's width;
 # allOf gives full JSON-Schema consumers the same cross-field restriction.
 _core_id_straps = {"type": "array", "items": {
@@ -415,6 +425,7 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "origin_um", "outline_um"],
                         "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
+                                       "bound_group": _bound_group,
                                        "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
                                        "bump_ports": _bump_ports,

@@ -19,7 +19,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/slw_su_l1_u_lane4_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp4",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head4",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly4",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp4",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq4",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane5",
@@ -39,7 +71,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/slw_su_l1_u_lane5_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp5",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head5",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly5",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp5",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq5",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane6",
@@ -59,7 +123,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/slw_su_l1_u_lane6_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp6",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head6",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly6",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp6",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq6",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane7",
@@ -79,7 +175,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/slw_su_l1_u_lane7_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp7",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head7",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly7",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp7",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq7",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    }
   ]
  },
@@ -103,7 +231,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/slw_su_l0_u_lane0_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp0",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head0",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly0",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp0",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq0",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane1",
@@ -123,7 +283,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/slw_su_l0_u_lane1_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp1",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head1",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly1",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp1",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq1",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane2",
@@ -143,7 +335,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/slw_su_l0_u_lane2_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp2",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head2",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly2",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp2",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq2",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane3",
@@ -163,7 +387,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/slw_su_l0_u_lane3_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp3",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head3",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly3",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp3",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq3",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    }
   ]
  },
@@ -187,7 +443,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/sle_su_l1_u_lane4_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp4",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head4",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly4",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp4",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq4",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane5",
@@ -207,7 +495,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/sle_su_l1_u_lane5_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp5",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head5",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly5",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp5",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq5",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane6",
@@ -227,7 +547,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/sle_su_l1_u_lane6_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp6",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head6",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly6",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp6",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq6",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane7",
@@ -247,7 +599,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/sle_su_l1_u_lane7_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp7",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head7",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly7",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp7",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq7",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    }
   ]
  },
@@ -271,7 +655,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/sle_su_l0_u_lane0_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp0",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head0",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly0",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp0",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq0",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane1",
@@ -291,7 +707,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/sle_su_l0_u_lane1_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp1",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head1",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly1",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp1",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq1",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane2",
@@ -311,7 +759,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/sle_su_l0_u_lane2_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp2",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head2",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly2",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp2",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq2",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    },
    {
     "inst": "u_lane3",
@@ -331,7 +811,39 @@
     ],
     "obs_max": "M6",
     "pins_file": "cores/su_exact/sle_su_l0_u_lane3_pins.json",
-    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required",
+    "bound_group": {
+     "kind": "exact_post_bind_group",
+     "reset_pin": "rst_n",
+     "memory_alignment": 3,
+     "members": [
+      {
+       "inst": "u_exp3",
+       "module": "ot_hdc_sfu_exp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_head3",
+       "module": "qfd_dv_lane_h_safe2",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_lrly3",
+       "module": "qfd_dv_s5_lrly",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rcp3",
+       "module": "ot_hdc_sfu_rcp_t",
+       "reset_pin": "rst_n"
+      },
+      {
+       "inst": "u_rsq3",
+       "module": "ot_hdc_sfu_rsq_t",
+       "reset_pin": "rst_n"
+      }
+     ]
+    }
    }
   ]
  }

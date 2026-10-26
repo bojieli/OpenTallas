@@ -1303,6 +1303,55 @@
          "minItems": 2,
          "maxItems": 2
         },
+        "bound_group": {
+         "type": "object",
+         "required": [
+          "kind",
+          "reset_pin",
+          "memory_alignment",
+          "members"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "kind": {
+           "const": "exact_post_bind_group"
+          },
+          "reset_pin": {
+           "const": "rst_n"
+          },
+          "memory_alignment": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "members": {
+           "type": "array",
+           "minItems": 5,
+           "maxItems": 5,
+           "items": {
+            "type": "object",
+            "required": [
+             "inst",
+             "module",
+             "reset_pin"
+            ],
+            "additionalProperties": false,
+            "properties": {
+             "inst": {
+              "type": "string",
+              "minLength": 1
+             },
+             "module": {
+              "type": "string",
+              "minLength": 1
+             },
+             "reset_pin": {
+              "const": "rst_n"
+             }
+            }
+           }
+          }
+         }
+        },
         "straps": {
          "type": "array",
          "items": {
