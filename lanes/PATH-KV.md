@@ -518,3 +518,6 @@ Exact handback `/home/ubuntu/coord/handoff/codex_astk_to_claude_20261026_0423.md
 
 ## CODEX notes SYS_C PARKED 2026-10-26 04:24 PDT
 Claude reset; no new launches/merges/kills. Full handback `handoff/codex_sysc_to_claude_20261026_0424.md`. READY strict keepout187a4b2a4 actualhub, native same6602 physical/0logic removals and baseline check_placement PASS. B31 formal LIVE intel2 PID3711494/unit3695060-1793009121;31514reg source preflight PASS, no formalterminal yet. SYS_C still FAIL STRUCTURAL: current baseline4660dataD>405, total6829, max2819.826. Locality first failures fully diagnosed (setOrigin vs setLocation; then137missing-tap-body collisions). Full178822arc graph now retained, latest static10473cell expansion NOT reviewed/native run/adopted; parent owns W/E output pipeline, SYS_C internal return/control redistribution unfinished. No route, no cycles added. OWNER? none.
+
+## CODEX PARKED at Claude reset — 2026-10-26 04:27 PDT
+Safe handback: /home/ubuntu/coord/handoff/codex_kv_to_claude_20261026_0427.md. Both children parked. No new work/launches/merges/kills after reset. Existing AHUB fullproof unit1026847, ASTK strict unit862207 and SYS_C B31 formal unit3695060 remain live. Exact results, WIP source/physical cohorts, failures and next steps in that handback. OWNER? none.
