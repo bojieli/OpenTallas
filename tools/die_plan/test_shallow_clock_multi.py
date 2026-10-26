@@ -263,3 +263,14 @@ puts DONE
     assert 'DONE' in s
     geometry=path.read_text()
     assert 'data_ff' in geometry and 'ot_dtsh_7' in geometry and 'ot_dtsh_0' not in geometry
+
+def test_new_base_defaults_are_copied_per_root_without_cached_sink_leakage():
+    s=tcl('''
+set ::ot_dtsh::new_policy [dict create stage auto]
+set ::ot_dtsh::sink_pins stale_root_pins
+::ot_dtsh_multi::clone_context ::ot_dtsh_multi::r0
+::ot_dtsh_multi::clone_context ::ot_dtsh_multi::r1
+dict set ::ot_dtsh_multi::r0::new_policy stage explicit
+puts "POLICY [dict get $::ot_dtsh_multi::r0::new_policy stage] [dict get $::ot_dtsh_multi::r1::new_policy stage] BASE=[dict get $::ot_dtsh::new_policy stage] CACHE=[info exists ::ot_dtsh_multi::r1::sink_pins]"
+''')
+    assert 'POLICY explicit auto BASE=auto CACHE=0' in s

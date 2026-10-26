@@ -16,6 +16,17 @@ if {![llength [info commands ::ot_dtsh::node]]} {
 }
 proc ::ot_dtsh_multi::clone_context {ns} {
   namespace eval $ns {}
+  # Retain new planner/runtime defaults without sharing mutable Tcl state.
+  # Physical ownership and cached sink membership are initialized per root below.
+  foreach variable [info vars ::ot_dtsh::*] {
+    set name [namespace tail $variable]
+    if {[array exists $variable]} {
+      array set ${ns}::$name [array get $variable]
+    } elseif {[info exists $variable]} {
+      set ${ns}::$name [set $variable]
+    }
+  }
+  unset -nocomplain ${ns}::sink_pins
   foreach p [info procs ::ot_dtsh::*] {
     set name [namespace tail $p]
     if {$name in {setup cts cts_orig}} continue
@@ -282,6 +293,7 @@ proc ::ot_dtsh_multi::setup {blk roots cell} {
     set next_id $next
     ${ns}::source_apply $apply
     if {![dict size [set ${ns}::nodes]]} { error "OT_DTSH_MULTI empty physical trunk" }
+    set ${ns}::cl_args [list $dir $geom $plan]
     dict set contexts $port [dict create namespace $ns root_net [dict get $cfg root_net] cl_args [list $dir $geom $plan]]
     incr ordinal
   }
