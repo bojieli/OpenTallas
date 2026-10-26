@@ -1,0 +1,10 @@
+PATH-QC-N59-4 2026-10-25 23:40 PDT -- DIAGNOSTIC / TRIAL evidence, nothing signed off, no CTS/route.
+Source: codex/n59-2145@2df5f26ff (kept-driver source, plan b1 54a1aeb5 dr_o E [115.0,223.576]); flow image openroad/orfs:latest (Codex kits).
+Inputs (intel2): /srv/opentallas-scratch2/claude/codex-n59-2145-{current3,density20}/all_geometry.json (Codex geometry_cones.py --all on 3_place.odb).
+current3_/density20_all_geometry.summary.json: Codex summarize_geometry.py output (copied).
+classify.py / movefeas.py: >405 arc families + per-family L1-minimax feasibility. render.py -> n59_current3.png / n59_density20.png (visual review).
+anchor_joint.py -> anchors_joint.tcl/.summary.json (joint complete-cone anchor MODEL: 21831 -> 274 arcs >405); render_anchors.py -> n59_anchor_model.png.
+merge_anchors.py: Codex n59_reach405.tcl + joint anchors -> trial kit anchA (place_anchA.sh, intel2 path-qc-n59-4/anchA).
+n59_canon_rst.tcl + place_rstB.sh: trial rstB = anchA + physical/common_flow/ot_rst_copies (main cfea7b3a1) via SYNTH_CANONICALIZE (OT_RST_COPIES_MAX 200, RE (^|[.])rst_cp_[a-z0-9]+$).
+split.tcl -> split_{TT,FF}.tsv: P5 (epyc1 path-qc-n59p/p5pad/out/4_cts.odb, placement RC setRC_rcx) insertion = trunk (port->sub-tap out) + local (sub-tap->sinks).
+seed.py -> seed_current3.json: D-QC-N59-DENSITY port seed from current3 clock_bins (10 um) with tools/die_plan/taps.py _bisect/assign, macros.json = keep-clear.
