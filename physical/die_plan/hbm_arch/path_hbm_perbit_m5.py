@@ -84,6 +84,7 @@ def repair_type(raw,tn):
     report=[]
     for slot in sorted(t.get('ft_slots',[]),key=lambda s:-s['width']):
         name=slot['name'];n=slot['width']+1;old=slot['stations']
+        print(tn,name,'START',n,'bits',old,'stations',flush=True)
         a=np.array([pins[name+'_i',i] for i in range(n)]);b=np.array([pins[name+'_o',i] for i in range(n)])
         paths=[]
         for bit,(p,q) in enumerate(zip(a,b)):
@@ -112,7 +113,8 @@ def repair_type(raw,tn):
         sites=np.empty((count,n,2))
         for bit,path in enumerate(paths):
             for stage,index in enumerate(path):
-                pts,_=alloc.allocate(targets[index],1,max_radius_um=RADIUS)
+                try:pts,_=alloc.allocate(targets[index],1,max_radius_um=RADIUS)
+                except ValueError as error:raise ValueError(f'{tn}/{name}[{bit}] stage{stage+1} target{targets[index].tolist()}: {error}') from error
                 sites[stage,bit]=pts[0]
         chain=[a,*sites,b];worst=max(float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(chain,chain[1:]))
         if worst>403+1e-6:raise ValueError(f'{tn}/{name}: paired-bit hop{worst}>403')
@@ -149,12 +151,12 @@ def main():
                     x,y=c['origin_um']
                     if tn=='q_su21':c['origin_um'][0]=25.92 if x<400 else 812.16
                     else:c['origin_um'][0]=x+(17.28 if x>400 else 0)
-                    c['origin_um'][1]=51.84 if y<400 else 803.52
+                    c['origin_um'][1]=34.56 if y<400 else 803.52
             elif tn=='q_su30':
                 for c in raw['partition_types'][tn]['hard_cores']:
                     if c['outline_um'][0]<700:continue
                     x,y=c['origin_um'];c['origin_um'][0]=x+(8.64 if x in(803.52,1270.08) else 0)
-                    c['origin_um'][1]=51.84 if y<400 else 803.52
+                    c['origin_um'][1]=34.56 if y<400 else 803.52
     shutil.copytree(a.src,a.out)
     try:
         for tn in a.types.split(','):rep[tn]=repair_type(raw,tn)
