@@ -71,7 +71,8 @@ def physical_snapshot(net):
                            box.xMin(), box.yMin(), box.xMax(), box.yMax(), via.getName() if via else None))
         special.append((str(swire.getWireType()), shapes))
     return dict(regular=regular, special=special, terminals=terminals(net),
-                cell_geometry=sorted((t.getInst().getName(), inst_position(t.getInst())) for t in net.getITerms()),
+                cell_geometry=sorted((t.getInst().getName(), inst_position(t.getInst()), str(t.getInst().getPlacementStatus()),
+                                      t.getInst().isDoNotTouch()) for t in net.getITerms()),
                 pin_geometry=sorted((t.getName(), pin_shapes(t)) for t in net.getBTerms()))
 
 
@@ -158,7 +159,7 @@ def reserve_actual_routes(block, names, tcl_path, extra_clearance_um=0.0):
     return result
 
 
-def replay(source, target, names, output, report=None, extra_clearance_um=0.0):
+def replay(source, target, names, output, report=None, extra_clearance_um=0.0, provisional=()):
     import odb
     # The infrastructure database is the physical base. OpenROAD's incremental
     # DEF reader updates placement/pins but silently ignores routed NETS and
@@ -166,7 +167,7 @@ def replay(source, target, names, output, report=None, extra_clearance_um=0.0):
     # that trap and retains wire opcodes, via IDs, and BPin geometry unchanged.
     source_db, block = load_db(source)
     target_db, target_block = load_db(target)
-    names = set(names)
+    names, provisional = set(names), set(provisional)
     if not names:
         raise ValueError("explicit nonempty infrastructure net selection required")
     if block.getDbUnitsPerMicron() != target_block.getDbUnitsPerMicron():
@@ -179,7 +180,7 @@ def replay(source, target, names, output, report=None, extra_clearance_um=0.0):
                      and n.getName() not in names]
     if typed_missing:
         raise ValueError("unselected typed infrastructure nets: " + ", ".join(typed_missing))
-    selected, protected, fixed_status_changes = {}, set(), []
+    selected, protected, fixed_status_changes, locked_cells = {}, set(), [], set()
     with tempfile.TemporaryDirectory(prefix="infra-replay-") as temporary:
         path = Path(temporary) / "source.def"
         odb.write_def(block, str(path))
@@ -199,6 +200,11 @@ def replay(source, target, names, output, report=None, extra_clearance_um=0.0):
             if str(net.getSigType()) not in ("POWER", "GROUND") and len(ts) < 2:
                 raise ValueError(f"infrastructure {name} has fewer than two terminals")
             protected.update(ts)
+            for term in net.getITerms():
+                cell = term.getInst()
+                cell.setDoNotTouch(False)  # append legitimate signal pins on this physical cell first
+                cell.setPlacementStatus("LOCKED")
+                locked_cells.add(cell.getName())
             selected[name] = physical_snapshot(net)
         # A missed physical net must not be overwritten as a signal merely
         # because the caller supplied an incomplete protection inventory.
@@ -232,6 +238,9 @@ def replay(source, target, names, output, report=None, extra_clearance_um=0.0):
             for term in target_net.getITerms():
                 key = ("ITERM", term.getInst().getName(), term.getMTerm().getName())
                 if key in protected:
+                    if name not in provisional:
+                        raise ValueError(f"target data net {name} attaches protected infrastructure terminal {key}; "
+                                         "name an explicitly provisional infrastructure net to reconnect it")
                     continue
                 dest = block.findInst(key[1]).findITerm(key[2])
                 dest.connect(net)
@@ -239,6 +248,9 @@ def replay(source, target, names, output, report=None, extra_clearance_um=0.0):
             for term in target_net.getBTerms():
                 key = ("BTERM", term.getName())
                 if key in protected:
+                    if name not in provisional:
+                        raise ValueError(f"target data net {name} attaches protected infrastructure terminal {key}; "
+                                         "name an explicitly provisional infrastructure net to reconnect it")
                     continue
                 dest = block.findBTerm(term.getName())
                 if dest:
@@ -280,6 +292,9 @@ def replay(source, target, names, output, report=None, extra_clearance_um=0.0):
             if physical_snapshot(net) != expected:
                 raise ValueError(f"signal transfer altered infrastructure wire/via/terminal data: {name}")
             net.setDoNotTouch(True)
+        for cell in locked_cells:
+            block.findInst(cell).setDoNotTouch(True)
+        selected = {name: physical_snapshot(block.findNet(name)) for name in selected}
         output = Path(output)
         output.parent.mkdir(parents=True, exist_ok=True)
         reservations = reserve_actual_routes(block, names, output.with_suffix(".infra_obs.tcl"), extra_clearance_um)
@@ -288,6 +303,7 @@ def replay(source, target, names, output, report=None, extra_clearance_um=0.0):
     result = dict(schema="opentallas.infra_replay.v1", source=str(source), target=str(target), output=str(output),
                   verdict="IMPORTED", freeze_qualified=False, nets=selected, signals=signals,
                   fixed_status_changes=sorted(fixed_status_changes), reservations=reservations,
+                  locked_cells=sorted(locked_cells), provisional_infrastructure_nets=sorted(provisional),
                   wire_geometry_sha256=hashlib.sha256(json.dumps(selected, sort_keys=True).encode()).hexdigest(),
                   note="Infrastructure ODB retained; target signal connectivity appended; physical freeze gates remain separate")
     Path(report or output.with_suffix(".replay.json")).write_text(json.dumps(result, indent=2) + "\n")
@@ -316,6 +332,7 @@ def main(argv=None):
     p.add_argument("--nets", help="One exact infrastructure net name per line")
     p.add_argument("--out")
     p.add_argument("--report")
+    p.add_argument("--provisional-nets", help="File naming explicit target provisional infrastructure nets allowed to reconnect")
     p.add_argument("--extra-clearance-um", type=float, default=0.0,
                    help="Nonnegative extra metal clearance; maxed with technology/NDR spacing")
     p.add_argument("--verify", metavar="ROUTED_ODB", help="Verify preservation after signal routing")
@@ -332,7 +349,8 @@ def main(argv=None):
     names = [line.strip() for line in Path(a.nets).read_text().splitlines() if line.strip() and not line.startswith("#")]
     if a.extra_clearance_um < 0:
         p.error("--extra-clearance-um must be nonnegative")
-    result = replay(a.source, a.target, names, a.out, a.report, a.extra_clearance_um)
+    provisional = Path(a.provisional_nets).read_text().split() if a.provisional_nets else ()
+    result = replay(a.source, a.target, names, a.out, a.report, a.extra_clearance_um, provisional)
     print("INFRA_REPLAY IMPORTED", len(result["nets"]), "nets; actual fixed routes, no freeze qualification")
 
 
