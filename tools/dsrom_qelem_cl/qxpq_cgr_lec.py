@@ -20,7 +20,10 @@ gclk_r[k] (= ICG(clk, u_ze_r<k>)).  Method = the standard clock-gate abstraction
      next state qz_zd and reset by the sequential steps.  Compare points: every primary output, every matched flop,
      every ROM black-box input pin.
   --merge-enables (gate side, before step 2): the 8 copies u_ze_r<k> are proved STRUCTURALLY identical to u_z (same
-     cell type, clock, async reset, reset value, D bits) and merged into it; step 3 then runs without equiv_induct.
+     cell type, clock, async reset, reset value, D bits) and merged into it. Every FF bit is then retained as a
+     named state point and true primary/ROM ports are preserved; dead/combinational wire aliases are not proof cuts.
+     Forward RTL-cell structural merging plus induction proves the normalized design. Clock edge/reset parameters,
+     corresponding clock connections and defined initial values are checked before normalization.
 """
 import argparse, json, os, subprocess, sys, time
 PARAMS = dict(MTP=1, EARLY=1, NB=2, FAST=1, PP=1, QTIMING_FIX=1, QPIPE=1, QP_XS=1, QP_CAP=0, QP_P1=1, QP_CSAM=10, QZ=1,
@@ -172,6 +175,100 @@ def merge_enable_copies(m):
     return {"into": rep, "copies": done, "check": "type/CLK/ARST/D/params identical"}
 
 
+def normalize_state_points(gold_json, gate_json, out):
+    """Retain all state bits/true ports while removing combinational alias cuts.
+
+    Only netnames change: cells, clocks, edge/enable/reset parameters and port
+    connections remain intact. Require a complete one-to-one FF alias map and
+    matching defined initial values; the subsequent proof checks every FF bit.
+    """
+    data = [json.load(open(p)) for p in (gold_json,gate_json)]
+    models = [d["modules"][n] for d,n in zip(data,("gold","gate"))]
+    interface = lambda m: {n:(p["direction"],len(p["bits"])) for n,p in m["ports"].items()}
+    if interface(models[0]) != interface(models[1]):
+        raise ValueError("state points: primary/ROM interface differs")
+    sequential = {"$dff","$adff","$dffe","$adffe"}
+    states, initial, records = [], [], []
+    for m in models:
+        q, init, cells = set(), {}, {}
+        for cell in m["cells"].values():
+            typ = cell["type"]
+            if typ not in sequential and typ.startswith(("$dff","$adff","$sdff","$aldff","$dlatch","$ff","$sr","$mem","$fsm")):
+                raise ValueError("state points: unsupported state cell "+typ)
+            if typ in sequential:
+                bits = cell["connections"]["Q"]
+                if any(not isinstance(b,int) or b in q for b in bits):
+                    raise ValueError("state points: multiply driven/nonvariable FF output")
+                q.update(bits)
+                cells.update({b:(cell,i) for i,b in enumerate(bits)})
+        for name,net in m["netnames"].items():
+            value = net.get("attributes",{}).get("init")
+            if value is None:
+                continue
+            if not isinstance(value,str) or len(value) != len(net["bits"]):
+                raise ValueError("state points: malformed initial value "+name)
+            for i,bit in enumerate(net["bits"]):
+                v = value[-1-i]
+                if v in "01":
+                    if bit not in q or (bit in init and init[bit] != v):
+                        raise ValueError("state points: unsupported/conflicting initial value "+name)
+                    init[bit] = v
+        states.append(q);initial.append(init);records.append(cells)
+    links, reverse = {}, {}
+    for name in sorted(set(models[0]["netnames"]) & set(models[1]["netnames"])):
+        if "$" in name:
+            continue
+        a,b = [m["netnames"][name]["bits"] for m in models]
+        if len(a) != len(b):
+            continue
+        for g,t in zip(a,b):
+            if g in states[0] and t in states[1]:
+                links.setdefault(g,set()).add(t);reverse.setdefault(t,set()).add(g)
+    if any(len(v) != 1 for d in (links,reverse) for v in d.values()):
+        raise ValueError("state points: ambiguous FF aliases")
+    pairs = [(g,next(iter(ts))) for g,ts in links.items()]
+    if set(links) != states[0] or set(reverse) != states[1] or len(pairs) != len(states[1]):
+        raise ValueError("state points: unmatched FF bits")
+    for g,t in pairs:
+        if initial[0].get(g,"x") != initial[1].get(t,"x"):
+            raise ValueError("state points: defined initial values differ")
+    clock_pairs = dict(pairs)
+    for name,port in models[0]["ports"].items():
+        if port["direction"] == "input":
+            for g,t in zip(port["bits"],models[1]["ports"][name]["bits"]):
+                if g in clock_pairs and clock_pairs[g] != t:
+                    raise ValueError("state points: conflicting input/state mapping")
+                clock_pairs[g] = t
+    for g,t in pairs:
+        gc,gi = records[0][g];tc,ti = records[1][t]
+        param = lambda c,i: (c["type"],tuple(c["parameters"].get(k) for k in
+            ("CLK_POLARITY","EN_POLARITY","ARST_POLARITY")),
+            c["parameters"]["ARST_VALUE"][-1-i] if "ARST_VALUE" in c["parameters"] else None)
+        if param(gc,gi) != param(tc,ti):
+            raise ValueError("state points: clock/enable/reset cell semantics differ")
+        gclk,tclk = gc["connections"]["CLK"][0],tc["connections"]["CLK"][0]
+        if clock_pairs.get(gclk,gclk if isinstance(gclk,str) else None) != tclk:
+            raise ValueError("state points: unmatched or unproved derived clock")
+    outputs = []
+    for side,(d,m,name) in enumerate(zip(data,models,("gold","gate"))):
+        names = {n:{"hide_name":0,"bits":list(p["bits"]),"attributes":{}} for n,p in m["ports"].items()}
+        for i,pair in enumerate(pairs):
+            key = f"lec_state_{i}"
+            if key in names:
+                raise ValueError("state points: reserved port name "+key)
+            bit = pair[side];attrs = {"keep":"00000000000000000000000000000001"}
+            if bit in initial[side]:
+                attrs["init"] = initial[side][bit]
+            names[key] = {"hide_name":0,"bits":[bit],"attributes":attrs}
+        m["netnames"] = names
+        path = os.path.join(out,name+".state.json")
+        json.dump(d,open(path,"w"));outputs.append(path)
+    return *outputs, dict(state_bits=len(pairs),primary_and_rom_ports=len(interface(models[0])),
+                          interface_bits=sum(n for _,n in interface(models[0]).values()),
+                          cells_and_ports_changed=False,defined_initial_values_checked=True,
+                          clock_edges_and_reset_parameters_checked=True)
+
+
 def newnot(m, cn, a, newbit):
     y = newbit(cn + ".lec_nen")
     m["cells"][cn + ".lec_not"] = {"hide_name": 0, "type": "$not", "attributes": {},
@@ -186,15 +283,30 @@ def main():
     ap.add_argument("--yosys", default=os.path.expanduser("~/.local/opentallas-tools/yosys-0.68/bin/yosys"))
     ap.add_argument("--merge-enables", action="store_true",
                     help="prove the 8 kept enable copies equal to u_z structurally and merge them (no induction needed)")
+    ap.add_argument("--state-points",action="store_true",
+                    help="with --merge-enables: retain every state bit and true port, remove combinational alias cuts")
     a = ap.parse_args()
+    if a.state_points and not a.merge_enables:
+        ap.error("--state-points requires structural --merge-enables")
+    a.state_points = a.state_points or a.merge_enables
     os.makedirs(a.out, exist_ok=True)
+    json.dump(dict(schema="opentallas.lec_cgr.v1",verdict="RUNNING"),open(os.path.join(a.out,"lec_cgr.json"),"w"))
     open(os.path.join(a.out, "lec_bb.v"), "w").write(BB)
     t0 = time.time()
     gj, gst = cg_to_enable(elab(a.yosys, a.gold_root, a.out, "gold", {}), "gold", a.out)
     tj, tst = cg_to_enable(elab(a.yosys, a.gate_root, a.out, "gate", {"CGR": 8}), "gate", a.out, a.merge_enables)
-    scr = (f"read_json {gj}; read_json {tj}; async2sync; equiv_make gold gate equiv; hierarchy -top equiv; "
-           "equiv_struct; equiv_simple -seq 2; " + ("" if a.merge_enables else "equiv_induct -seq 2; ") +
-           "equiv_status; equiv_status -assert")
+    scope = None
+    if a.state_points:
+        try:
+            gj,tj,scope = normalize_state_points(gj,tj,a.out)
+        except ValueError as ex:
+            json.dump(dict(schema="opentallas.lec_cgr.v1",verdict="REFUSED",reason=str(ex)),
+                      open(os.path.join(a.out,"lec_cgr.json"),"w"),indent=1)
+            ap.exit(1,str(ex)+"\n")
+    steps = "equiv_struct -icells -fwd; equiv_induct -seq 2; " if a.state_points else (
+        "equiv_struct; equiv_simple -seq 2; "+("" if a.merge_enables else "equiv_induct -seq 2; "))
+    scr = (f"read_json {gj}; read_json {tj}; async2sync; equiv_make gold gate equiv; hierarchy -top equiv; "+
+           steps+"equiv_status; equiv_status -assert")
     log = os.path.join(a.out, "equiv.log")
     r = subprocess.run([a.yosys, "-l", log, "-p", scr], stdout=subprocess.DEVNULL)
     txt = open(log).read()
@@ -209,6 +321,7 @@ def main():
     summ += errs[-1:]
     res = {"schema": "opentallas.lec_cgr.v1", "verdict": verdict, "gold": a.gold_root, "gate": a.gate_root,
            "params": PARAMS, "gate_extra": {"CGR": 8}, "merge_enables": a.merge_enables, "gold_cg": gst, "gate_cg": tst, "equiv_summary": summ,
+           "state_point_scope":scope,"clock_abstraction":"unchanged registered-enable ICG-to-enable transform",
            "seconds": round(time.time() - t0)}
     json.dump(res, open(os.path.join(a.out, "lec_cgr.json"), "w"), indent=1)
     print(json.dumps(res, indent=1))
