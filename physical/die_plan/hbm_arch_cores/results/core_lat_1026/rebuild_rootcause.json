@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.hbm.core_rebuild_rootcause.v1",
  "lane": "HBM-CORE-LAT-R2",
- "rule": "METHODOLOGY 12.8 (owner 10-26 ~07:3x): centre entry from the master-plan slice; structured symmetric tree with equal-load leaves; centre->corner > 200 um -> internal H-tree with in-core islands (same threshold as S81-CORE-LAT clock_structure_class_s81.json), > 405 um -> split or internal H-tree; no padding/early taps/ECO",
+ "rule": "METHODOLOGY 12.8 (owner 10-26 ~07:3x): centre entry from the master-plan slice; structured symmetric tree with equal-load leaves; centre->corner > 200 um -> internal H-tree with in-core islands (same threshold as S81-CORE-LAT clock_structure_class_s81.json), > 405 um -> split or internal H-tree; no padding/early taps/ECO; v4.1 (owner): internal H-tree + in-core islands FIRST for every miss incl. >405 um; split only as a last resort, proposed with type + link cost before any build; per-tap sizing only if computed in the plan before the build",
  "basis": "natural TT insertion = core_insertion_b2l.json (ORFS CTS, placement RC); pins = views_b2n pins files; fit tt = a + b*Lmax_pin over 17 types (programme_store excluded) is INFO only",
  "types": [
   {
@@ -41,7 +41,7 @@
    ],
    "centre_to_corner_um": 656.6,
    "root_cause": "clock entry on the core edge/corner (L_max pin->sink 998 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
-   "cls_12_8": "SPLIT_OR_INTERNAL_HTREE (>405 um reach)"
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS (>405 um: in-core repeater stages on the trunk; split = last-resort proposal only)"
   },
   {
    "module": "hfd_ep_static",
@@ -129,7 +129,7 @@
    ],
    "centre_to_corner_um": 449.3,
    "root_cause": "clock entry on the core edge/corner (L_max pin->sink 896 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
-   "cls_12_8": "SPLIT_OR_INTERNAL_HTREE (>405 um reach)"
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS (>405 um: in-core repeater stages on the trunk; split = last-resort proposal only)"
   },
   {
    "module": "ot_hbm_su_static_sfustore_hw",
@@ -289,7 +289,7 @@
    ],
    "centre_to_corner_um": 449.3,
    "root_cause": "clock entry on the core edge/corner (L_max pin->sink 876 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
-   "cls_12_8": "SPLIT_OR_INTERNAL_HTREE (>405 um reach)"
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS (>405 um: in-core repeater stages on the trunk; split = last-resort proposal only)"
   },
   {
    "module": "ot_hgi_sm_xload_cl2_ctlx",
