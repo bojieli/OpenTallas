@@ -64,6 +64,8 @@ def derive(ctl_text, cfg_text, fields_text, ectl_text):
         if len(slices) != 8 or any(a-b != 4 or b % 5 for a, b in slices):
             raise ValueError(f'{st} ECTL identity slice map changed')
         indexes = sorted(b//5 for _, b in slices)
+        if [b//5 for _, b in slices] != list(reversed(indexes)):
+            raise ValueError(f'{st} ECTL group bit order changed')
         stack = indexes[0]//8
         if indexes != list(range(8*stack, 8*stack+8)):
             raise ValueError(f'{st} group indexes are not a complete stack')
