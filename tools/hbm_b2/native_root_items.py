@@ -34,8 +34,11 @@ def apply(d, router_params):
     return d
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('delta');p.add_argument('--out',required=True);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('delta');p.add_argument('--out',required=True)
+    p.add_argument('--die', default='physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz',
+                   help='source die netlist, also used for the wiring delta being adapted')
+    a=p.parse_args()
     from b2_top import Die
-    die=Die('physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz',[])
+    die=Die(a.die,[])
     d=apply(json.loads(Path(a.delta).read_text()),die.insts['hb_router_ids']['params']);Path(a.out).write_text(json.dumps(d,indent=1));print('NATIVE_ROOT_BIND',d['items'][-1])
 if __name__=='__main__':main()
