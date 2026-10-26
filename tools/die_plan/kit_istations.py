@@ -168,9 +168,10 @@ proc is_chain {bus W names face core_glob tag} {
   set st {}
   foreach i [$ff_blk getInsts] {
     set nm [string map {\\\\ {}} [$i getName]]
-    if {![regexp "(^|\\[./\\])($alt)\\[./\\](q\\\\\\[(\\[0-9\\]+)\\\\\\]|eq\\\\$)" $nm -> _ sn _ b]} continue
+    # data flop q[b] (q for W == 1, yosys "q$_DFF_P_"), epoch flop eq (absent when synthesis merged it)
+    if {![regexp "(^|\\[./\\])($alt)\\[./\\](q\\\\\\[(\\[0-9\\]+)\\\\\\]|q\\\\\\$|q\\$|eq\\\\\\$|eq\\$)" $nm -> _ sn f b]} continue
     if {![ff_is_ff $i]} continue
-    if {$b eq ""} { set b $W }
+    if {[string match eq* $f]} { set b $W } elseif {$b eq ""} { set b 0 }
     dict set st "[lsearch -exact $names $sn],$b" $i
   }
   set lastE ""; set placed 0
