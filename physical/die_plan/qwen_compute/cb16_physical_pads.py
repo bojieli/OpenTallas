@@ -172,7 +172,7 @@ def interface_routes(raw,tn,t,ls,homes,plan_dir,txt):
             budget=declared.get(b['name'],0);have=actual.get(b['name'],0) if b['dir']=='in' else 0
             result.append(dict(bus=b['name'],direction=b['dir'],leaf=b['leaf'],centroid_route_um=length,minimum_stations_lower_bound=minimum,declared_stations=budget,actual_input_pad_depth=have,
                 additional_plan_cycles_lower_bound=max(0,minimum-budget),existing_pad_capacity_shortfall=max(0,minimum-have),
-                interpretation='data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed',face_um=list(face),leaf_um=list(end),path_um=path))
+                interpretation='data/epoch relay distribution must be re-bound and re-priced; no source-stage insertion performed',face_um=list(face),leaf_um=list(end),path_um=path,minimum_station_targets_um=[list(at(path if b['dir']=='in' else list(reversed(path)),(i+1)/(minimum+1))) for i in range(minimum)]))
         except ValueError as e:result.append(dict(bus=b['name'],error=str(e)))
     return result
 
