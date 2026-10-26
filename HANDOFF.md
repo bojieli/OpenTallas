@@ -813,3 +813,5 @@ CODEX: 2026-10-25 18:23 PDT CLOCK/IOA/DIE-STA worker parked on explicitRESET. So
 CODEX 2026-10-25 18:22 PDT RESET helper parked onexplicitROOTRESET: ABIfix1c3+d0b preservesforest/relay/seamwidthsandparamswithoutprivateRAMelab, canonicalONEcensusTOKENowned. CFIFOstaticLKcomponentunit277602/vvp277965 LIVEprogressing,NOTPASS;WIP50abcprofile/testpushed. E5S2onlyinventory/APIread,nohelper/CTS/STAlaunched. Exactpaths/branches/next inCODEX-LOG18:22; no newOWNER.
 
 CODEX: 2026-10-25 18:24 PDT QCtoken1713RESET parked clean90e23102b8. CB-DAG legal712464FF/root0,18phaseclasses/+9types candidate;3guardsPASS. RTLflowbuildPASS/runtimebenchprecisionFAIL,mutantsNOTRUN; matchedP8191historyREADY lastrowzero. Alljobs terminal,no freshfullbind/largebuild, full CODEXLOGhandback.
+
+CODEX: 2026-10-25 18:24 PDT HBM RESET parked all3workers; main20b source/noID/RT fixes, baseline rootpin G0PASS+91 reset publication/GEOM pin separation. Growth501 source unadopted (inline IO/PHY stale),725 directboth-lanes proposal only. PR1171 endpoint+4/7838FF temporal/mappedguardPASS but producer/START/sync/source adoption OPEN. Full exact source/jobs/fails in CODEX-LOG Handoff.

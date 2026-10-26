@@ -15,3 +15,6 @@ Ownparentwt epyc1:/srv/opentallas-scratch2/claude/wt/codex-hbm-hub-1713 branchco
 
 ## 2026-10-25 18:08 PDT advances
 Rootpinrepairbaseline G0PASS/publication91 andindependentPINSEPARATIONGEOM, noGRT. Toolc6main, RT541combined10testsPASS(rootmergeromitsdeadduplicate). Growth501exact471.6073581mm2/worldall822cores2.851Mpinbitsunchangedor+501declared, packedG0/G2pending. PRendpointsage271/extra7838FF/phasefanout7/4 andmappedFACEbothPASS; source/bankexportpending. Noidrecipe984/4fmain, actualnewV2noidLECgenerictoolgapalias/SXownedTOKLEC; freshrootDLCHAIN3newcohortphysicalprepares. Wholeq3SYNCnamespacedsourceTOKENowned; actualproducerprogramme+nativeboundstillnotcomplete. AlloldFAILpreserved; no newSIGNED.
+
+## RESET 2026-10-25 18:24 PDT
+All workers notified PARK. Parent sources clean/pushed: hbm-hub1713@2e36b48a1a; hbm-reset1713@7b9b3213db (review+inactivebuildcleanup). Parent jobs DONE, no live parent jobs. Main20b has root-selected recipe and cleaned RT via675. Baseline rootG0/offsets/render complete, no START/native/route closure.501 source preserved/unadopted, inline IO/PHY/PG stale;725 both-direct proposal only. TOKEN PRrepair mapped/temporalPASS, source parking SHA pending; actual q3 reset/producer/START open. PHYSICAL noIDnewLECs and exact DLroot proof ownedTOKLEC, current clockcopy only/notstarted. Detailed CODEXLOG handoff above; no OWNER question.
