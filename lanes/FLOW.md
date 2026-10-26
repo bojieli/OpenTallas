@@ -87,5 +87,5 @@ Main20b4554a0f includes shared core-FF/native-library/bundle and G3/G4 consumed-
  Action: a short FLOW-FANOUT lane A/Bs the KV fanout cap 24 (4b679188f) from the c51 CTS checkpoint with the MCMM GRT fix: (a) cap 24 + minimum buffer drive x4, (b) the previous cap. Adopt the variant that fixes the DRV/slew without losing TT setup.
  The tag waits for this, as ruled. QC coll_ftm re-baseline ACCEPTED (design change b6322e374). The far-tap START pin register u_run_in -> clk_t18 goes to PATH-QC as a design item.
 
-## CODEX notes 2026-10-25 22:18 PDT — MCMM GRT root fix
+## CODEX notes 2026-10-25 21:52 PDT — MCMM GRT root fix
 CODEX continuation on codex/mcmm-grt-2144@20b6f4199 (pushed): gen_phys partitions, shared legacy core_flow and HBM core runner now preserve declared tc+bc at GRT, matching the merged KV runner correction. BC-only fallback retained for single-corner kits; FF vclk, margins and signoff unchanged. 30 focused flow/actual shell-selection tests + 4 actual generated QC-kit tests PASS; bash/Python syntax PASS. Physical A/B on these other flows NOT RUN; no QoR or release claim. Parent/root reviewing source before canonical canaries. No jobs launched; inherited KV fanout diagnostic routes remain live.
