@@ -12,7 +12,13 @@
 // descriptor writes contiguous after the last program write (same 1032-cycle replay,
 // +1 edge before the first write). Repair ports tied off (no BIST repair), as every
 // r2c2 macro instance in the tree.
-module qkd_host_program_loader_target # (parameter integer MUT=0)(
+// KV-TOK 10-26 (B33 BOOT_FAULT@655): the length table below is the SAME external boot ABI as the die dispatcher
+// (qkd_static_kv_boot_dispatch*: word_count), so it carries the dispatcher's ABI parameters: MU 1 = the native MU ISA
+// image (target 1 = 471 words: 326 SU words + 144-word GAP block + seal, qkd_static_kv_boot_dispatch_mu*), AGES 1 = the
+// native die-cfg image with the 19 boot ages (target 10 = 32+NRST+1+DIECAP+19 = 96).  The old fixed 327/77 table refused
+// the first native BEGIN (target 10, pw 96 -> target_bad -> sticky fault) and so every image.  Defaults = the old table.
+module qkd_host_program_loader_target # (parameter integer MUT=0,parameter integer MU=0,parameter integer AGES=0,
+ parameter integer NRST=43,parameter integer DIECAP=1)(
  input wire ck,rst_n,begin_image,input wire[15:0]image_epoch,
  input wire[3:0]image_target,auth_target,output reg[3:0]replay_target,
  input wire[10:0]pw_count,input wire[3:0]dw_count,
@@ -24,13 +30,13 @@ module qkd_host_program_loader_target # (parameter integer MUT=0)(
  output reg authorized_footer_valid,output reg[63:0]authorized_footer);
  // Non-ISA image lengths are part of the external boot ABI, never defaults.
  function automatic [10:0]target_words(input[3:0]t);
-  case(t)1:target_words=327;2:target_words=181;3:target_words=4;
+  case(t)1:target_words=(MU!=0)?11'd471:11'd327;2:target_words=181;3:target_words=4;
    4,5:target_words=192;6,7,8,9:target_words=1024;
    // KVJ-G2b 10-17: static KV die dispatcher targets 10 (die cfg 32 + NRST 43 + seal), 11 (link calendar 66),
    // 12 (PC chain players 1024), 13 (join4 beat calendar 8)
    // KV-HROOT 10-18 (LB2-QWEN-KV F-K1): the die dispatcher is built DIECAP=1 (word_count 32+NRST+1+1 = 77: die cfg
    // capability word), so target 10 is 77 words; 76 made the loader refuse every die-cfg image.
-   10:target_words=77;11:target_words=66;12:target_words=1024;13:target_words=8;default:target_words=0;endcase
+   10:target_words=11'(32+NRST+1+((DIECAP!=0)?1:0)+((AGES!=0)?19:0));11:target_words=66;12:target_words=1024;13:target_words=8;default:target_words=0;endcase
  endfunction
  wire target_bad=image_target>13||(image_target==0?(dw_count==0||dw_count>8):
   (dw_count!=0||pw_count!=target_words(image_target)));
