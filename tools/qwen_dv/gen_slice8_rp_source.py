@@ -8,6 +8,11 @@ D=R/'rtl/qwen_dv/s5/s8';D.mkdir(parents=True,exist_ok=True)
 def extract(path,module):
     s=(R/path).read_text();a=s.index('module '+module+' ');b=s.index('endmodule',a)+len('endmodule');return s[a:b]+'\n'
 
+def retain_selected(name):
+    p=D/name
+    if not p.is_file():
+        raise SystemExit(f"selected qualified SRAM parent/leaf absent: {p}; restore it from source control")
+
 def main():
     cr=extract('rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv','qfd_dv_s8x_crh').replace('module qfd_dv_s8x_crh ','module qfd_dv_s8_crh_rp1 ',1)
     cr=cr.replace('wire [511:0] cr_rd;', '''// Same capture age as twc_a/crw; bank mask is part of actual leaf logic.
@@ -16,12 +21,12 @@ def main():
     wire [511:0] cr_rd;''')
     cr=cr.replace('.w_ce_in(twc_crw)', '.w_ce_in(twc_crw && (!twc_half[1] || twc_half[0] == bk[0]))')
     cr=cr.replace('ptw_addr[23:10] != 0','(ptw_addr[23:12] != 0 || (!ptw_addr[11] && ptw_addr[10]))')
-    (D/'qfd_dv_s8_crh_rp1.sv').write_text('`timescale 1ns/1ps\n// Existing CRH1 half-write semantics recovered from c0f8097f3 qfd_dv_vm. UNCLOSED successor.\n'+cr)
+    retain_selected('qfd_dv_s8_crh_rp1.sv')
     q=(R/'rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv').read_text().replace('qfd_dv_s5_vm8q','qfd_dv_s8_vm8q_rp1').replace('qfd_dv_s8x_crh u_c','qfd_dv_s8_crh_rp1 u_c')
     assert q.count('qfd_dv_s8_crh_rp1 u_c')==2
-    (D/'qfd_dv_s8_vm8q_rp1.sv').write_text(q)
+    retain_selected('qfd_dv_s8_vm8q_rp1.sv')
     q=(R/'rtl/qwen_dv/s5/p3/qfd_dv_s5_suvm_su8p3.sv').read_text().replace('module qfd_dv_s5_suvm_su8p3 #','module qfd_dv_s8_suvm_rp1 #',1).replace('qfd_dv_s5_vm8q u_vm8q','qfd_dv_s8_vm8q_rp1 u_vm8q')
-    (D/'qfd_dv_s8_suvm_rp1.sv').write_text(q)
+    retain_selected('qfd_dv_s8_suvm_rp1.sv')
     # ARF stamps the existing outgoing publication: no extra sequential edge.
     f=extract('rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv','qfd_dv_s6_fdn').replace('module qfd_dv_s6_fdn ','module qfd_dv_s8_fdn_arf1 ',1)
     f=f.replace('module qfd_dv_s8_fdn_arf1 (', 'module qfd_dv_s8_fdn_arf1 #(parameter integer USE_SEL_COPIES=0) (', 1)

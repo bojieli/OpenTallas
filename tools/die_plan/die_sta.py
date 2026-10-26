@@ -1207,6 +1207,36 @@ def die_seams(top_nl, part_dirs_by_module):
     return seams
 
 
+def clock_endpoint_catalog_tcl():
+    """Actual linked sequential masters, using native OpenSTA APIs (no ODB dependency)."""
+    return r'''set ot_ec_masters {}; set ot_ec_errors 0
+foreach ot_ec_pin [all_registers -clock_pins] {
+  if {[catch {
+    set ot_ec_cells [get_cells -of_objects [list $ot_ec_pin]]
+    if {[llength $ot_ec_cells] != 1} {error "clock pin has no unique owner"}
+    set ot_ec_master [get_property [lindex $ot_ec_cells 0] ref_name]
+    if {$ot_ec_master eq ""} {error "clock endpoint has no Liberty master"}
+    dict set ot_ec_masters $ot_ec_master 1
+  }]} {incr ot_ec_errors}
+}
+dict for {ot_ec_master unused} $ot_ec_masters {
+  puts $fh "CLOCK_ENDPOINT_MASTER_HEX [binary encode hex [encoding convertto utf-8 $ot_ec_master]]"
+}
+puts $fh "CLOCK_ENDPOINT_CATALOG complete 1 errors $ot_ec_errors"
+flush $fh'''
+
+
+def evaluate_clock_endpoint_coverage(libs, corner_result, expected_sha256):
+    """Keep native pair metrics separate from evidence of expanded child endpoints."""
+    from signoff import clock_model_coverage
+    catalog = corner_result.get("clock_endpoint_catalog") or {}
+    if not catalog.get("complete") or catalog.get("errors", 1):
+        return dict(schema="opentallas.clock_endpoint_coverage.v1", status="UNAVAILABLE", verdict="NOT RUN",
+                    raw_pair_basis="visible_clock_pins", expanded_child_flop_pairs="NOT RUN",
+                    reason="actual linked clock endpoint master catalog is incomplete")
+    return clock_model_coverage(libs, catalog["masters"], expected_sha256)
+
+
 # --------------------------------------------------------------------------------------------------------------- STA tcl
 def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mode, period_ps, groups, spine=None,
             die_spef=None, etm_libs=None, seam_paths=100000, reduce=False, spine_model="ports", stitch=None,
@@ -1289,6 +1319,7 @@ def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mod
           "if {[regexp {(-?[0-9.]+)\\s+-?[0-9.]+\\s+clock reconvergence pessimism} $t -> c]} { return [expr {abs($c)}] }; return 0.0 }",
           "proc ot_p99 {v} { set n [llength $v]; if {!$n} { return 0.0 }; set s [lsort -real $v]; "
           "return [lindex $s [expr {max(0, int(ceil(0.99 * $n)) - 1)}]] }"]
+    L.append(clock_endpoint_catalog_tcl())
     # seams per BIT: worst slack through the seam = min slack_max / slack_min over the leaf load pins of the seam net
     # inside the destination (only paths through the seam reach them); one timing update, O(1) per pin.  Face-flop
     # spread: clock arrival (rise, T/2 folded) at the registers on both ends of every seam bit (registered boundary).
@@ -1376,7 +1407,22 @@ def parse_sta(txt):
         f = line.split()
         if not f:
             continue
-        if f[0] == "SEAM":
+        if f[0] == "CLOCK_ENDPOINT_MASTER_HEX":
+            catalog = res.setdefault("clock_endpoint_catalog", dict(masters=[], complete=False, errors=0))
+            try:
+                catalog["masters"].append(bytes.fromhex(f[1]).decode("utf-8"))
+            except (ValueError, UnicodeDecodeError, IndexError):
+                catalog["errors"] += 1
+        elif f[0] == "CLOCK_ENDPOINT_CATALOG":
+            catalog = res.setdefault("clock_endpoint_catalog", dict(masters=[], complete=False, errors=0))
+            try:
+                fields = dict(zip(f[1::2], f[2::2]))
+                catalog["complete"] = fields["complete"] == "1"
+                catalog["errors"] += int(fields["errors"])
+            except (KeyError, ValueError):
+                catalog["complete"] = False
+                catalog["errors"] += 1
+        elif f[0] == "SEAM":
             g, dly = f[1], f[2]
             if f[3] == "NO_PATH":
                 res["seams"].setdefault(g, {})[dly] = None
@@ -1669,6 +1715,12 @@ def cmd_run(a):
                 if rc or not lib.is_file():
                     raise SystemExit(f"die_sta etm: {m} {corner} failed (rc {rc}), see {tcl.with_suffix('.log')}")
                 etm_libs.append(str(lib))
+        # Pin the exact files that this corner session will consume. The shared
+        # evaluator rejects a changed/missing library after the run.
+        import hashlib
+        consumed_libs = libs + (etm_libs or [])
+        consumed_hashes = {str(Path(lib)): hashlib.sha256(Path(lib).read_bytes()).hexdigest()
+                           for lib in consumed_libs}
         txt = out / f"sta_{a.mode}_{corner}.txt"
         tcl = out / f"sta_{a.mode}_{corner}.tcl"
         tcl.write_text(sta_tcl(top_path, top.name, inst_mods, mod_files, corner, libs, txt, a.mode,
@@ -1686,6 +1738,7 @@ def cmd_run(a):
             corner, "info only (not a signoff corner)"))
         if a.mode == "etm" and corner in ("FF",):
             r["note"] = "ETM hold is optimistic (OpenSTA be771a0 clk->out arcs from max arrival); not a hold verdict"
+        r["clock_endpoint_coverage"] = evaluate_clock_endpoint_coverage(consumed_libs, r, consumed_hashes)
         res["corners"][corner] = r
     res["verdict"] = verdict(res)
     (out / "die_sta.json").write_text(json.dumps(res, indent=1) + "\n")
@@ -1698,6 +1751,7 @@ def cmd_run(a):
 def verdict(res):
     """PASS only if TT setup and FF hold ran, every seam slack there is >= 0 and the related launch/capture pair skew
     (seam + intra-partition pairs, CPPR credited) is <= SKEW_PS at TT and FF (BRIEFING decision 5, owner 10-24).
+    Marked composed-child ETMs require expanded endpoint coverage; visible clock pins alone cannot admit G4.
     The face-flop (pin-flop) max-min spread is reported as ffspread_<corner>_info and never gates.  SS is info only."""
     v = {}
     for corner, r in res["corners"].items():
@@ -1715,9 +1769,16 @@ def verdict(res):
         sp = r.get("ffspread") or {}
         if sp:
             v[f"ffspread_{corner}_info"] = round(max(x["spread"] for x in sp.values()), 2)
+    v["raw_pair_basis"] = "visible_clock_pins"
+    v["clock_endpoint_coverage"] = {c: res["corners"].get(c, {}).get("clock_endpoint_coverage", {}).get("status", "UNAVAILABLE")
+                                    for c in ("TT", "FF")}
     ran = {c for c, r in res["corners"].items() if r.get("exit") == 0}
     if res["mode"] == "etm":
         v["status"] = "INFO (etm: setup cross-check only)"
+    elif any(res["corners"].get(c, {}).get("clock_endpoint_coverage", {}).get("verdict") != "PASS"
+             for c in ("TT", "FF")):
+        v["status"] = "NOT RUN (expanded clock endpoint coverage incomplete)"
+        v["expanded_child_flop_pairs"] = "NOT RUN"
     elif not {"TT", "FF"} <= ran:
         v["status"] = "NOT RUN (signoff needs TT setup + FF hold)"
     else:
@@ -1725,7 +1786,7 @@ def verdict(res):
         ok = ok and all(v.get(f"pairskew_{c}", 0) <= SKEW_PS for c in ("TT", "FF"))
         v["status"] = "PASS" if ok else "FAIL"
     v["gate"] = (f"setup_TT >= 0, hold_FF >= 0, related pair skew (CPPR) <= {SKEW_PS:g} ps at TT and FF; "
-                 "ffspread_*_info is INFO")
+                 "expanded endpoint coverage for marked child ETMs; ffspread_*_info is INFO")
     return v
 
 

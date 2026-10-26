@@ -92,9 +92,9 @@ module qfd_dv_lane_h_safe1 #(parameter integer CONTROL_SAFE=1) (
         .sx_rsq_v(sx_rsq_v), .sx_rsq_x(sx_rsq_x), .sy_rsq_y(sy_rsq_y), .sy_rsq_f(sy_rsq_f));
 endmodule
 
-// safe2 = safe1 with every fixed-age ring (all < 2 kb) in flops: qfd_dv_s1_flop_ring (16-bit slices, own pointer,
+// safe2 = safe1 with fixed-age rings <=2048bits in flops; MIF1 adds a separate133-bit reply stage: qfd_dv_s1_flop_ring (16-bit slices, own pointer,
 // N = D - 1 slots, write and read the same slot each edge = age D), no 32x64 macros; TLS 128x64 natives kept.
-module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=0) (
+module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=0, MEMORY_READ_EXTRA=0) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              emit0,
@@ -154,6 +154,10 @@ module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=
     input  wire [31:0]       sy_rsq_y,
     input  wire              sy_rsq_f
 );
+    // All-memory MIF staging adds one reply edge without changing relative operand alignment.
+`ifndef SYNTHESIS
+    initial if (MEMORY_READ_EXTRA != 0 && MEMORY_READ_EXTRA != 1) $fatal(1,"memory read extra must be0 or1");
+`endif
     // S8 memory contract: CROM answers3 edges after VM and1 after BTAB. Match data and
     // metadata to the slowest reply; physical CROM relay stages remain intact. Opt-in until exact gate.
     wire [31:0] aligned_va, aligned_vb, aligned_vc; wire [255:0] aligned_wr;
@@ -175,7 +179,7 @@ module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=
 `ifndef SYNTHESIS
     initial if (MEMORY_ALIGNMENT != 0 && MEMORY_ALIGNMENT != 3) $fatal(1,"S8 memory alignment must be0 or3");
 `endif
-    qfd_dv_safe1_head #(.FLOP(1), .ML(5+MEMORY_ALIGNMENT)) u_h (
+    qfd_dv_safe1_head #(.FLOP(1), .ML(5+MEMORY_ALIGNMENT+MEMORY_READ_EXTRA)) u_h (
         .clk(clk), .rst_n(rst_n), .emit0(emit0), .live(live), .i(i), .fin_th(fin_th), .i_last_r(i_last_r),
         .cura0(cura0), .curb0(curb0), .curc0(curc0), .curd0(curd0), .rrow(rrow), .asi(asi), .bsi(bsi), .csi(csi),
         .dsi(dsi), .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq), .ma(ma), .mb(mb),
@@ -897,7 +901,13 @@ endmodule
 module qfd_dv_s1_delay #(parameter integer W = 32, D = 3, FLOP = 0) (
     input wire clk, rbr, rst_n, input wire [W-1:0] d, output wire [W-1:0] q
 );
-    generate if (FLOP != 0) begin : g_f
+    generate if (FLOP != 0 && W == 133 && D == 17) begin : g_mif_reply_edge
+        // Keep the existing1995-bit ring and add the common memory reply edge
+        // as a separate133-bit stage; no larger flop storage array is introduced.
+        reg [W-1:0] reply_q;
+        always @(posedge clk) reply_q <= d;
+        qfd_dv_s1_flop_ring #(.W(W), .D(D-1)) u (.clk(clk), .rbr(rbr), .d(reply_q), .q(q));
+    end else if (FLOP != 0) begin : g_f
         qfd_dv_s1_flop_ring #(.W(W), .D(D)) u (.clk(clk), .rbr(rbr), .d(d), .q(q));
     end else begin : g_s
         qfd_dv_s1_sram_delay #(.W(W), .D(D)) u (.clk(clk), .rst_n(rst_n), .d(d), .q(q));

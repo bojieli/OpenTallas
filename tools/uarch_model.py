@@ -17521,3 +17521,33 @@ def qwen_station_ctl_width_1309_model():
                 additional_cell_body_um2=24*.37908,
                 area_scope='ASAP7 unified-model FF body estimate; clock/reset/buffer overhead and final route remain measured gates',
                 receipt='physical/die_plan/qwen_compute/inputs/st_a_ctl_width_1309.json')
+
+
+def qwen_sram_if_mif_model(lanes=8, slices=12, su_commands=0):
+    """Incremental price of the opt-in MIF1 SRAM parent; no release-rate credit.
+
+    Existing SRAM ports, arithmetic/reduction order, and steady-state issue width
+    are unchanged. A fetched SU command launches one edge later; every memory
+    reply and its consuming head metadata land one additional edge later.
+    """
+    if lanes < 1 or slices < 1 or su_commands < 0:
+        raise ValueError("positive geometry and nonnegative command count required")
+    return dict(schema="opentallas.qwen.sram-if-mif.v1",
+                status="CANDIDATE_NOT_ADOPTED",clock_ps=833,
+                memory_read_extra_edges=1,memory_write_extra_edges=1,
+                program_fetch_start_extra_edges=1,head_reply_extra_edges=1,
+                predicted_serial_extra_edges_per_su_command=2,
+                predicted_serial_extra_edges=2*su_commands,
+                minimum_post_table_write_extra_boot_edges=1,
+                added_head_logic_state_bits_per_slice=lanes*(8+133),
+                added_su_parent_control_bits_per_slice=1,
+                added_state_bits_per_slice=lanes*(8+133)+1,
+                added_state_bits_total=slices*(lanes*(8+133)+1),
+                physical_owner="96 qfd_dv_lane_h_safe2 head contents currently flattened in SU_l0/l1, plus12 SU-parent fetch relays; changed parent partitions need fresh physical signoff",
+                extra_head_ring_shape=dict(width=133,logical_depth=17,ring_depth=16,ring_slot_bits=1995,
+                                           common_reply_stage_bits=133,prior_depth=16,added_state_bits=133),
+                SRAM_MIF_state_bits="already in the independently measured leaf MIF1 variants; not recounted here",
+                arithmetic_MACs_per_cycle_delta=0,memory_port_count_delta=0,
+                throughput="same streaming issue width; measured compiler ages required before adoption",
+                physical="parent/head changed views require new833ps TT/FF signoff and slot-fit/area measurement",
+                qualification="group read/write exact; head/control and full source-bound schedule gates mandatory")

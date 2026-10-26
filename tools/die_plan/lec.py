@@ -1748,14 +1748,16 @@ def structural_twin_closure(L, log):
         L.build(with_compare=False, with_hyp=False)
         new = []
         for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
+            paired_roots = {h[2] for (sd,k),h in L.hyp.items()
+                            if h[0] == "eq" and h[1] == side and sd != side}
             twins = {}
-            for c in L.matched:
+            for c in sorted(set(L.matched) | paired_roots):
                 d = L.dlit.get((side, c), 0)
                 if c.startswith("ff:") and d > 1 and (side, c) not in L.hyp:
                     twins.setdefault(d >> 1, []).append((c, d))
             for k in keys:
                 d = L.dlit.get((side, k), 0)
-                if not k.startswith("ff:") or (side, k) in L.hyp or d <= 1:
+                if not k.startswith("ff:") or (side, k) in L.hyp or k in paired_roots or d <= 1:
                     continue
                 choices = twins.get(d >> 1, [])
                 if choices:
