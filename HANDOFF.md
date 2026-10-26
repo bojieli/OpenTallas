@@ -1070,3 +1070,5 @@ CODEX: 2026-10-26 03:25 PDT KVhardcorepush: currentASTK/E1kitsregeneratedwithvec
 CODEX: 2026-10-26 03:28 PDT TOK-HBM actualFS failure diagnosed/fixed as2-vs4VMreturn contract(c7819177fe, exactmiter+mutantsPASS); physicalbodyregeneration delegatedsourceowner. SU31 residual256zeros exactlymapped to16sparsecontrolgroups, copyholdreplaylive0fe8442805.
 
 CODEX: 2026-10-26 03:34 PDT QC/N59: exact FUP local-reset source READY source-only87c8062db (20k/120k IO PASS + mutant10502 caught, original/E5 unchanged;3actualtypecandidatehop<=318um); N59 canonical resetbitloads fixed1340->5516/max138,173823cell synth+floorplanPASS, own DPL+new explicit-register-gold LEC liveintel2 (3563518/3787935).
+
+CODEX: 2026-10-26 03:37 PDT main51fe3d1f83 merged actual infra geometry/PG/island tools+regional schema, QC OUT-station order, KV legal edge clamp, strict-bound entry adapter;59+5 focused PASS, no plan/freeze adoption. Detailed failures/owners in CODEX-LOG03:37; PG source correction, native fixed-metal landing, KV skew and SRAMIF MIF-source mismatch all actively owned.
