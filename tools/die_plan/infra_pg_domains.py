@@ -97,7 +97,13 @@ foreach ot_mesh_name {VDD VSS} {
 puts "OT_PG_CORE_SEAM_STITCHES $ot_mesh_count"
 '''
 
-def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None, phy_grid_override=None):
+def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None, phy_grid_override=None, phy_m7_pitch=None, power=None, phy_m6_pitch=None, phy_m5_pitch=None):
+    """phy_m7_pitch: LOCAL PHY-footprint reinforcement -- the PHY load blocks expose VDDPHY/VSS M7 PG straps at this
+    pair pitch (default None = the partition 8.64-um M7 pin pitch). power: explicit worst-case power dict for load_model.
+    phy_m6_pitch: also lay VDDPHY/VSS 0.288-um M6 straps (horizontal) at this pair pitch inside the PHY footprint, contacted
+    to the M7 straps (V6) -- PHY-owned layers under the PHY outline only."""
+    if phy_m6_pitch is not None and phy_m6_pitch < .768-1e-9:raise ValueError("PHY M6 strap pair pitch < 0.768 um violates M6 wide-metal spacing")
+    if phy_m7_pitch is not None and (phy_m7_pitch < .768-1e-9):raise ValueError("PHY M7 strap pair pitch < 0.768 um violates M7 0.072-um wide-metal spacing at 0.288-um straps")
     core_grid={g['layer']:g for g in pg['grid']}
     if phy_grid_override is not None:
         supplied={g['layer']:g for g in phy_grid_override}
@@ -117,7 +123,7 @@ def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None, phy_grid_override=
             if ww < .04 or pp/2-ww < I.spacing(ww)-1e-8:raise ValueError('PHY pitch violates width/spacing rule')
             phy_grid.append(I.grid_entry(layer,pp,ww))
     x0,y0,x1,y1=window['window_um']; W,H=x1-x0,y1-y0
-    model=I.load_model(P,plan_dir,phy_w_per_macro=pg['phy_w_per_macro'],core_w_mm2=pg['core_w_mm2'])
+    model=I.load_model(P,plan_dir,power=power,phy_w_per_macro=pg['phy_w_per_macro'],core_w_mm2=None if power else pg['core_w_mm2'])
     phy=[]
     for r in model['regions']:
         if r['kind']!='phy':continue
@@ -128,7 +134,8 @@ def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None, phy_grid_override=
     blocks=[];masters={};loads=[];region_instances={}
     for regnum,reg in enumerate(G.regions(die)):
         a,b,c,d=reg['rect_um'];nx=max(1,round((c-a)/86.4));ny=max(1,round((d-b)/86.4));bw,bh=(c-a)/nx,(d-b)/ny
-        master=masters.setdefault((round(bw,4),round(bh,4)),f'irblk{len(masters)}')
+        step=phy_m7_pitch if (phy_m7_pitch and reg['nets'][0]!='VDD') else 8.64
+        master=masters.setdefault((round(bw,4),round(bh,4),step),f'irblk{len(masters)}')
         for ix in range(nx):
             for iy in range(ny):
                 xx,yy=a+ix*bw,b+iy*bh;rect=[xx+x0,yy+y0,xx+bw+x0,yy+bh+y0]
@@ -137,17 +144,17 @@ def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None, phy_grid_override=
                 for net,j in [(reg['nets'][0],0),('VSS',1)]:
                     pins=[];q=4.128+j*(.288+.096)
                     while q+.144<bw:
-                        pins.append([xx+q-.144,yy+(.144 if j==0 else 0),xx+q+.144,yy+bh-(.144 if j==0 else 0)]);q+=8.64
+                        pins.append([xx+q-.144,yy+(.144 if j==0 else 0),xx+q+.144,yy+bh-(.144 if j==0 else 0)]);q+=step
                     loads.append(dict(inst=name,net=net,pin='VDD'if j==0 else'VSS',rects=pins))
     out=Path(out);(out/'psm').mkdir(parents=True,exist_ok=True)
     lef=['VERSION 5.8 ;','BUSBITCHARS "[]" ;','DIVIDERCHAR "/" ;']
-    for (bw,bh),master in masters.items():
+    for (bw,bh,step),master in masters.items():
         lef += [f'MACRO {master}',' CLASS BLOCK ;',' ORIGIN 0 0 ;',f' SIZE {bw:.4f} BY {bh:.4f} ;']
         for net,j in [('VDD',0),('VSS',1)]:
             lef += [f' PIN {net}','  DIRECTION INOUT ;',f'  USE {"POWER"if net=="VDD"else"GROUND"} ;','  PORT','   LAYER M7 ;']
             q=4.128+j*(.288+.096)
             while q+.144<bw:
-                lef += [f'   RECT {q-.144:.4f} {(.144 if j==0 else 0):.4f} {q+.144:.4f} {bh-(.144 if j==0 else 0):.4f} ;'];q+=8.64
+                lef += [f'   RECT {q-.144:.4f} {(.144 if j==0 else 0):.4f} {q+.144:.4f} {bh-(.144 if j==0 else 0):.4f} ;'];q+=step
             lef += ['  END',f' END {net}']
         lef += [f'END {master}']
     lef += ['END LIBRARY'];(out/'psm/irblk.lef').write_text('\n'.join(lef)+'\n')
@@ -156,6 +163,14 @@ def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None, phy_grid_override=
     for k,insts in region_instances.items():
         pdn+=f'define_pdn_grid -name pins_{k} -voltage_domains {{ot_pg_{k}}} -macro -instances {{{" ".join("^"+n+"$"for n in insts)}}} -orient {{R0 R180 MX MY}} -halo {{0 0 0 0}}\n'
         pdn+=f'add_pdn_connect -grid pins_{k} -layers {{M7 M8}}\n'
+        if phy_m6_pitch and G.regions(die)[k]['nets'][0]!='VDD':
+            ry0=G.regions(die)[k]['rect_um'][1]
+            pdn+=f'add_pdn_stripe -grid ot_pg_{k} -layer M6 -width 0.288 -pitch {phy_m6_pitch:g} -offset {(0.144-ry0)%phy_m6_pitch+0.0:g} -spacing {phy_m6_pitch/2-0.288:g}\n'
+            pdn+=f'add_pdn_connect -grid pins_{k} -layers {{M6 M7}}\n'
+            if phy_m5_pitch:   # 0.312-um M5 straps (vertical), V5 to the M6 straps; spacing 0.072
+                rx0=G.regions(die)[k]['rect_um'][0]
+                pdn+=f'add_pdn_stripe -grid ot_pg_{k} -layer M5 -width 0.312 -pitch {phy_m5_pitch:g} -offset {(0.156-rx0)%phy_m5_pitch+0.0:g} -spacing {phy_m5_pitch/2-0.312:g}\n'
+                pdn+=f'add_pdn_connect -grid ot_pg_{k} -layers {{M5 M6}}\n'
     (out/'psm/pdn.tcl').write_text(pdn)
     (out/'psm/isolate.tcl').write_text(isolation_tcl(phy))
     (out/'psm/stitch.tcl').write_text(stitch_tcl(pg['grid']))
@@ -186,7 +201,7 @@ def make(P, plan_dir, pg, window, out, pitch, phy_bumps=None, phy_grid_override=
     (out/'psm/psm.tcl').write_text('\n'.join(t)+'\n');(out/'psm/tracks.tcl').write_text(D.coarse_tracks(P,.72))
     (out/'run_psm.sh').write_text(D.run_sh('psm',32,8,'/usr/bin/time -v openroad -no_init -threads 8 -exit /work/psm/psm.tcl > /work/psm/psm.log 2>&1'))
     os.chmod(out/'run_psm.sh',0o755)
-    meta=dict(window=window['window'],window_um=window['window_um'],die=die,bumps=bumps,load_blocks=len(blocks),power_w=round(sum(b[4]for b in blocks),6),phy_grid=phy_grid,subdivision=division,contacts='native per-domain macro PG grid',explicit_phy_sources=phy_bumps is not None,explicit_phy_grid=phy_grid_override is not None,scope=('separate PHY-local grid; explicit candidate PHY sources; core sources and load densities unchanged; open window boundaries; no plan adoption' if phy_bumps is not None else 'separate PHY-local grid; original bump positions and load densities unchanged; open window boundaries; no plan adoption'))
+    meta=dict(window=window['window'],window_um=window['window_um'],die=die,bumps=bumps,load_blocks=len(blocks),power_w=round(sum(b[4]for b in blocks),6),phy_grid=phy_grid,subdivision=division,phy_m7_pitch_um=phy_m7_pitch,phy_m6_pitch_um=phy_m6_pitch,phy_m5_pitch_um=phy_m5_pitch,contacts='native per-domain macro PG grid',explicit_phy_sources=phy_bumps is not None,explicit_phy_grid=phy_grid_override is not None,scope=('separate PHY-local grid; explicit candidate PHY sources; core sources and load densities unchanged; open window boundaries; no plan adoption' if phy_bumps is not None else 'separate PHY-local grid; original bump positions and load densities unchanged; open window boundaries; no plan adoption'))
     (out/'domains.json').write_text(json.dumps(meta,indent=1)+'\n');return meta
 
 def main():

@@ -1,0 +1,476 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/psm/irblk.lef, created 4 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2011] LEF master irblk0 has no liberty cell.
+[WARNING ORD-2011] LEF master irblk1 has no liberty cell.
+[WARNING ORD-2011] LEF master irblk2 has no liberty cell.
+[WARNING ORD-2011] LEF master irblk3 has no liberty cell.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 7328 rows of 25440 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 1373.760 1978.560 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 1373.760 1978.560 ) um
+[INFO IFP-0102] Core area:                      2718066.586 um^2
+[INFO IFP-0103] Total instances area:           2718070.888 um^2
+[INFO IFP-0104] Effective utilization:                1.000
+[INFO IFP-0105] Number of instances:                    368
+[INFO PDN-0001] Inserting grid: ot_pg_0
+[INFO PDN-0001] Inserting grid: pins_0 - u_b0
+[INFO PDN-0001] Inserting grid: pins_0 - u_b1
+[INFO PDN-0001] Inserting grid: pins_0 - u_b10
+[INFO PDN-0001] Inserting grid: pins_0 - u_b100
+[INFO PDN-0001] Inserting grid: pins_0 - u_b101
+[INFO PDN-0001] Inserting grid: pins_0 - u_b102
+[INFO PDN-0001] Inserting grid: pins_0 - u_b103
+[INFO PDN-0001] Inserting grid: pins_0 - u_b104
+[INFO PDN-0001] Inserting grid: pins_0 - u_b105
+[INFO PDN-0001] Inserting grid: pins_0 - u_b106
+[INFO PDN-0001] Inserting grid: pins_0 - u_b107
+[INFO PDN-0001] Inserting grid: pins_0 - u_b108
+[INFO PDN-0001] Inserting grid: pins_0 - u_b109
+[INFO PDN-0001] Inserting grid: pins_0 - u_b11
+[INFO PDN-0001] Inserting grid: pins_0 - u_b110
+[INFO PDN-0001] Inserting grid: pins_0 - u_b111
+[INFO PDN-0001] Inserting grid: pins_0 - u_b12
+[INFO PDN-0001] Inserting grid: pins_0 - u_b13
+[INFO PDN-0001] Inserting grid: pins_0 - u_b14
+[INFO PDN-0001] Inserting grid: pins_0 - u_b15
+[INFO PDN-0001] Inserting grid: pins_0 - u_b16
+[INFO PDN-0001] Inserting grid: pins_0 - u_b17
+[INFO PDN-0001] Inserting grid: pins_0 - u_b18
+[INFO PDN-0001] Inserting grid: pins_0 - u_b19
+[INFO PDN-0001] Inserting grid: pins_0 - u_b2
+[INFO PDN-0001] Inserting grid: pins_0 - u_b20
+[INFO PDN-0001] Inserting grid: pins_0 - u_b21
+[INFO PDN-0001] Inserting grid: pins_0 - u_b22
+[INFO PDN-0001] Inserting grid: pins_0 - u_b23
+[INFO PDN-0001] Inserting grid: pins_0 - u_b24
+[INFO PDN-0001] Inserting grid: pins_0 - u_b25
+[INFO PDN-0001] Inserting grid: pins_0 - u_b26
+[INFO PDN-0001] Inserting grid: pins_0 - u_b27
+[INFO PDN-0001] Inserting grid: pins_0 - u_b28
+[INFO PDN-0001] Inserting grid: pins_0 - u_b29
+[INFO PDN-0001] Inserting grid: pins_0 - u_b3
+[INFO PDN-0001] Inserting grid: pins_0 - u_b30
+[INFO PDN-0001] Inserting grid: pins_0 - u_b31
+[INFO PDN-0001] Inserting grid: pins_0 - u_b32
+[INFO PDN-0001] Inserting grid: pins_0 - u_b33
+[INFO PDN-0001] Inserting grid: pins_0 - u_b34
+[INFO PDN-0001] Inserting grid: pins_0 - u_b35
+[INFO PDN-0001] Inserting grid: pins_0 - u_b36
+[INFO PDN-0001] Inserting grid: pins_0 - u_b37
+[INFO PDN-0001] Inserting grid: pins_0 - u_b38
+[INFO PDN-0001] Inserting grid: pins_0 - u_b39
+[INFO PDN-0001] Inserting grid: pins_0 - u_b4
+[INFO PDN-0001] Inserting grid: pins_0 - u_b40
+[INFO PDN-0001] Inserting grid: pins_0 - u_b41
+[INFO PDN-0001] Inserting grid: pins_0 - u_b42
+[INFO PDN-0001] Inserting grid: pins_0 - u_b43
+[INFO PDN-0001] Inserting grid: pins_0 - u_b44
+[INFO PDN-0001] Inserting grid: pins_0 - u_b45
+[INFO PDN-0001] Inserting grid: pins_0 - u_b46
+[INFO PDN-0001] Inserting grid: pins_0 - u_b47
+[INFO PDN-0001] Inserting grid: pins_0 - u_b48
+[INFO PDN-0001] Inserting grid: pins_0 - u_b49
+[INFO PDN-0001] Inserting grid: pins_0 - u_b5
+[INFO PDN-0001] Inserting grid: pins_0 - u_b50
+[INFO PDN-0001] Inserting grid: pins_0 - u_b51
+[INFO PDN-0001] Inserting grid: pins_0 - u_b52
+[INFO PDN-0001] Inserting grid: pins_0 - u_b53
+[INFO PDN-0001] Inserting grid: pins_0 - u_b54
+[INFO PDN-0001] Inserting grid: pins_0 - u_b55
+[INFO PDN-0001] Inserting grid: pins_0 - u_b56
+[INFO PDN-0001] Inserting grid: pins_0 - u_b57
+[INFO PDN-0001] Inserting grid: pins_0 - u_b58
+[INFO PDN-0001] Inserting grid: pins_0 - u_b59
+[INFO PDN-0001] Inserting grid: pins_0 - u_b6
+[INFO PDN-0001] Inserting grid: pins_0 - u_b60
+[INFO PDN-0001] Inserting grid: pins_0 - u_b61
+[INFO PDN-0001] Inserting grid: pins_0 - u_b62
+[INFO PDN-0001] Inserting grid: pins_0 - u_b63
+[INFO PDN-0001] Inserting grid: pins_0 - u_b64
+[INFO PDN-0001] Inserting grid: pins_0 - u_b65
+[INFO PDN-0001] Inserting grid: pins_0 - u_b66
+[INFO PDN-0001] Inserting grid: pins_0 - u_b67
+[INFO PDN-0001] Inserting grid: pins_0 - u_b68
+[INFO PDN-0001] Inserting grid: pins_0 - u_b69
+[INFO PDN-0001] Inserting grid: pins_0 - u_b7
+[INFO PDN-0001] Inserting grid: pins_0 - u_b70
+[INFO PDN-0001] Inserting grid: pins_0 - u_b71
+[INFO PDN-0001] Inserting grid: pins_0 - u_b72
+[INFO PDN-0001] Inserting grid: pins_0 - u_b73
+[INFO PDN-0001] Inserting grid: pins_0 - u_b74
+[INFO PDN-0001] Inserting grid: pins_0 - u_b75
+[INFO PDN-0001] Inserting grid: pins_0 - u_b76
+[INFO PDN-0001] Inserting grid: pins_0 - u_b77
+[INFO PDN-0001] Inserting grid: pins_0 - u_b78
+[INFO PDN-0001] Inserting grid: pins_0 - u_b79
+[INFO PDN-0001] Inserting grid: pins_0 - u_b8
+[INFO PDN-0001] Inserting grid: pins_0 - u_b80
+[INFO PDN-0001] Inserting grid: pins_0 - u_b81
+[INFO PDN-0001] Inserting grid: pins_0 - u_b82
+[INFO PDN-0001] Inserting grid: pins_0 - u_b83
+[INFO PDN-0001] Inserting grid: pins_0 - u_b84
+[INFO PDN-0001] Inserting grid: pins_0 - u_b85
+[INFO PDN-0001] Inserting grid: pins_0 - u_b86
+[INFO PDN-0001] Inserting grid: pins_0 - u_b87
+[INFO PDN-0001] Inserting grid: pins_0 - u_b88
+[INFO PDN-0001] Inserting grid: pins_0 - u_b89
+[INFO PDN-0001] Inserting grid: pins_0 - u_b9
+[INFO PDN-0001] Inserting grid: pins_0 - u_b90
+[INFO PDN-0001] Inserting grid: pins_0 - u_b91
+[INFO PDN-0001] Inserting grid: pins_0 - u_b92
+[INFO PDN-0001] Inserting grid: pins_0 - u_b93
+[INFO PDN-0001] Inserting grid: pins_0 - u_b94
+[INFO PDN-0001] Inserting grid: pins_0 - u_b95
+[INFO PDN-0001] Inserting grid: pins_0 - u_b96
+[INFO PDN-0001] Inserting grid: pins_0 - u_b97
+[INFO PDN-0001] Inserting grid: pins_0 - u_b98
+[INFO PDN-0001] Inserting grid: pins_0 - u_b99
+[INFO PDN-0001] Inserting grid: ot_pg_1
+[INFO PDN-0001] Inserting grid: pins_1 - u_b112
+[INFO PDN-0001] Inserting grid: pins_1 - u_b113
+[INFO PDN-0001] Inserting grid: pins_1 - u_b114
+[INFO PDN-0001] Inserting grid: pins_1 - u_b115
+[INFO PDN-0001] Inserting grid: pins_1 - u_b116
+[INFO PDN-0001] Inserting grid: pins_1 - u_b117
+[INFO PDN-0001] Inserting grid: pins_1 - u_b118
+[INFO PDN-0001] Inserting grid: pins_1 - u_b119
+[INFO PDN-0001] Inserting grid: pins_1 - u_b120
+[INFO PDN-0001] Inserting grid: pins_1 - u_b121
+[INFO PDN-0001] Inserting grid: pins_1 - u_b122
+[INFO PDN-0001] Inserting grid: pins_1 - u_b123
+[INFO PDN-0001] Inserting grid: pins_1 - u_b124
+[INFO PDN-0001] Inserting grid: pins_1 - u_b125
+[INFO PDN-0001] Inserting grid: pins_1 - u_b126
+[INFO PDN-0001] Inserting grid: pins_1 - u_b127
+[INFO PDN-0001] Inserting grid: pins_1 - u_b128
+[INFO PDN-0001] Inserting grid: pins_1 - u_b129
+[INFO PDN-0001] Inserting grid: pins_1 - u_b130
+[INFO PDN-0001] Inserting grid: pins_1 - u_b131
+[INFO PDN-0001] Inserting grid: pins_1 - u_b132
+[INFO PDN-0001] Inserting grid: pins_1 - u_b133
+[INFO PDN-0001] Inserting grid: pins_1 - u_b134
+[INFO PDN-0001] Inserting grid: pins_1 - u_b135
+[INFO PDN-0001] Inserting grid: pins_1 - u_b136
+[INFO PDN-0001] Inserting grid: pins_1 - u_b137
+[INFO PDN-0001] Inserting grid: pins_1 - u_b138
+[INFO PDN-0001] Inserting grid: pins_1 - u_b139
+[INFO PDN-0001] Inserting grid: pins_1 - u_b140
+[INFO PDN-0001] Inserting grid: pins_1 - u_b141
+[INFO PDN-0001] Inserting grid: pins_1 - u_b142
+[INFO PDN-0001] Inserting grid: pins_1 - u_b143
+[INFO PDN-0001] Inserting grid: pins_1 - u_b144
+[INFO PDN-0001] Inserting grid: pins_1 - u_b145
+[INFO PDN-0001] Inserting grid: pins_1 - u_b146
+[INFO PDN-0001] Inserting grid: pins_1 - u_b147
+[INFO PDN-0001] Inserting grid: pins_1 - u_b148
+[INFO PDN-0001] Inserting grid: pins_1 - u_b149
+[INFO PDN-0001] Inserting grid: pins_1 - u_b150
+[INFO PDN-0001] Inserting grid: pins_1 - u_b151
+[INFO PDN-0001] Inserting grid: pins_1 - u_b152
+[INFO PDN-0001] Inserting grid: pins_1 - u_b153
+[INFO PDN-0001] Inserting grid: pins_1 - u_b154
+[INFO PDN-0001] Inserting grid: pins_1 - u_b155
+[INFO PDN-0001] Inserting grid: pins_1 - u_b156
+[INFO PDN-0001] Inserting grid: pins_1 - u_b157
+[INFO PDN-0001] Inserting grid: pins_1 - u_b158
+[INFO PDN-0001] Inserting grid: pins_1 - u_b159
+[INFO PDN-0001] Inserting grid: pins_1 - u_b160
+[INFO PDN-0001] Inserting grid: pins_1 - u_b161
+[INFO PDN-0001] Inserting grid: pins_1 - u_b162
+[INFO PDN-0001] Inserting grid: pins_1 - u_b163
+[INFO PDN-0001] Inserting grid: pins_1 - u_b164
+[INFO PDN-0001] Inserting grid: pins_1 - u_b165
+[INFO PDN-0001] Inserting grid: pins_1 - u_b166
+[INFO PDN-0001] Inserting grid: pins_1 - u_b167
+[INFO PDN-0001] Inserting grid: pins_1 - u_b168
+[INFO PDN-0001] Inserting grid: pins_1 - u_b169
+[INFO PDN-0001] Inserting grid: pins_1 - u_b170
+[INFO PDN-0001] Inserting grid: pins_1 - u_b171
+[INFO PDN-0001] Inserting grid: pins_1 - u_b172
+[INFO PDN-0001] Inserting grid: pins_1 - u_b173
+[INFO PDN-0001] Inserting grid: pins_1 - u_b174
+[INFO PDN-0001] Inserting grid: pins_1 - u_b175
+[INFO PDN-0001] Inserting grid: pins_1 - u_b176
+[INFO PDN-0001] Inserting grid: pins_1 - u_b177
+[INFO PDN-0001] Inserting grid: pins_1 - u_b178
+[INFO PDN-0001] Inserting grid: pins_1 - u_b179
+[INFO PDN-0001] Inserting grid: pins_1 - u_b180
+[INFO PDN-0001] Inserting grid: pins_1 - u_b181
+[INFO PDN-0001] Inserting grid: pins_1 - u_b182
+[INFO PDN-0001] Inserting grid: pins_1 - u_b183
+[INFO PDN-0001] Inserting grid: pins_1 - u_b184
+[INFO PDN-0001] Inserting grid: pins_1 - u_b185
+[INFO PDN-0001] Inserting grid: pins_1 - u_b186
+[INFO PDN-0001] Inserting grid: pins_1 - u_b187
+[INFO PDN-0001] Inserting grid: pins_1 - u_b188
+[INFO PDN-0001] Inserting grid: pins_1 - u_b189
+[INFO PDN-0001] Inserting grid: pins_1 - u_b190
+[INFO PDN-0001] Inserting grid: pins_1 - u_b191
+[INFO PDN-0001] Inserting grid: pins_1 - u_b192
+[INFO PDN-0001] Inserting grid: ot_pg_2
+[INFO PDN-0001] Inserting grid: pins_2 - u_b193
+[INFO PDN-0001] Inserting grid: pins_2 - u_b194
+[INFO PDN-0001] Inserting grid: pins_2 - u_b195
+[INFO PDN-0001] Inserting grid: pins_2 - u_b196
+[INFO PDN-0001] Inserting grid: pins_2 - u_b197
+[INFO PDN-0001] Inserting grid: pins_2 - u_b198
+[INFO PDN-0001] Inserting grid: pins_2 - u_b199
+[INFO PDN-0001] Inserting grid: pins_2 - u_b200
+[INFO PDN-0001] Inserting grid: pins_2 - u_b201
+[INFO PDN-0001] Inserting grid: pins_2 - u_b202
+[INFO PDN-0001] Inserting grid: pins_2 - u_b203
+[INFO PDN-0001] Inserting grid: pins_2 - u_b204
+[INFO PDN-0001] Inserting grid: pins_2 - u_b205
+[INFO PDN-0001] Inserting grid: pins_2 - u_b206
+[INFO PDN-0001] Inserting grid: pins_2 - u_b207
+[INFO PDN-0001] Inserting grid: pins_2 - u_b208
+[INFO PDN-0001] Inserting grid: pins_2 - u_b209
+[INFO PDN-0001] Inserting grid: pins_2 - u_b210
+[INFO PDN-0001] Inserting grid: pins_2 - u_b211
+[INFO PDN-0001] Inserting grid: pins_2 - u_b212
+[INFO PDN-0001] Inserting grid: pins_2 - u_b213
+[INFO PDN-0001] Inserting grid: pins_2 - u_b214
+[INFO PDN-0001] Inserting grid: pins_2 - u_b215
+[INFO PDN-0001] Inserting grid: pins_2 - u_b216
+[INFO PDN-0001] Inserting grid: pins_2 - u_b217
+[INFO PDN-0001] Inserting grid: pins_2 - u_b218
+[INFO PDN-0001] Inserting grid: pins_2 - u_b219
+[INFO PDN-0001] Inserting grid: pins_2 - u_b220
+[INFO PDN-0001] Inserting grid: pins_2 - u_b221
+[INFO PDN-0001] Inserting grid: pins_2 - u_b222
+[INFO PDN-0001] Inserting grid: pins_2 - u_b223
+[INFO PDN-0001] Inserting grid: pins_2 - u_b224
+[INFO PDN-0001] Inserting grid: pins_2 - u_b225
+[INFO PDN-0001] Inserting grid: pins_2 - u_b226
+[INFO PDN-0001] Inserting grid: pins_2 - u_b227
+[INFO PDN-0001] Inserting grid: pins_2 - u_b228
+[INFO PDN-0001] Inserting grid: pins_2 - u_b229
+[INFO PDN-0001] Inserting grid: pins_2 - u_b230
+[INFO PDN-0001] Inserting grid: pins_2 - u_b231
+[INFO PDN-0001] Inserting grid: pins_2 - u_b232
+[INFO PDN-0001] Inserting grid: pins_2 - u_b233
+[INFO PDN-0001] Inserting grid: pins_2 - u_b234
+[INFO PDN-0001] Inserting grid: pins_2 - u_b235
+[INFO PDN-0001] Inserting grid: pins_2 - u_b236
+[INFO PDN-0001] Inserting grid: pins_2 - u_b237
+[INFO PDN-0001] Inserting grid: pins_2 - u_b238
+[INFO PDN-0001] Inserting grid: pins_2 - u_b239
+[INFO PDN-0001] Inserting grid: pins_2 - u_b240
+[INFO PDN-0001] Inserting grid: pins_2 - u_b241
+[INFO PDN-0001] Inserting grid: pins_2 - u_b242
+[INFO PDN-0001] Inserting grid: pins_2 - u_b243
+[INFO PDN-0001] Inserting grid: pins_2 - u_b244
+[INFO PDN-0001] Inserting grid: pins_2 - u_b245
+[INFO PDN-0001] Inserting grid: pins_2 - u_b246
+[INFO PDN-0001] Inserting grid: pins_2 - u_b247
+[INFO PDN-0001] Inserting grid: pins_2 - u_b248
+[INFO PDN-0001] Inserting grid: pins_2 - u_b249
+[INFO PDN-0001] Inserting grid: pins_2 - u_b250
+[INFO PDN-0001] Inserting grid: pins_2 - u_b251
+[INFO PDN-0001] Inserting grid: pins_2 - u_b252
+[INFO PDN-0001] Inserting grid: pins_2 - u_b253
+[INFO PDN-0001] Inserting grid: pins_2 - u_b254
+[INFO PDN-0001] Inserting grid: pins_2 - u_b255
+[INFO PDN-0001] Inserting grid: ot_pg_3
+[INFO PDN-0001] Inserting grid: pins_3 - u_b256
+[INFO PDN-0001] Inserting grid: pins_3 - u_b257
+[INFO PDN-0001] Inserting grid: pins_3 - u_b258
+[INFO PDN-0001] Inserting grid: pins_3 - u_b259
+[INFO PDN-0001] Inserting grid: pins_3 - u_b260
+[INFO PDN-0001] Inserting grid: pins_3 - u_b261
+[INFO PDN-0001] Inserting grid: pins_3 - u_b262
+[INFO PDN-0001] Inserting grid: pins_3 - u_b263
+[INFO PDN-0001] Inserting grid: pins_3 - u_b264
+[INFO PDN-0001] Inserting grid: pins_3 - u_b265
+[INFO PDN-0001] Inserting grid: pins_3 - u_b266
+[INFO PDN-0001] Inserting grid: pins_3 - u_b267
+[INFO PDN-0001] Inserting grid: pins_3 - u_b268
+[INFO PDN-0001] Inserting grid: pins_3 - u_b269
+[INFO PDN-0001] Inserting grid: pins_3 - u_b270
+[INFO PDN-0001] Inserting grid: pins_3 - u_b271
+[INFO PDN-0001] Inserting grid: pins_3 - u_b272
+[INFO PDN-0001] Inserting grid: pins_3 - u_b273
+[INFO PDN-0001] Inserting grid: pins_3 - u_b274
+[INFO PDN-0001] Inserting grid: pins_3 - u_b275
+[INFO PDN-0001] Inserting grid: pins_3 - u_b276
+[INFO PDN-0001] Inserting grid: pins_3 - u_b277
+[INFO PDN-0001] Inserting grid: pins_3 - u_b278
+[INFO PDN-0001] Inserting grid: pins_3 - u_b279
+[INFO PDN-0001] Inserting grid: pins_3 - u_b280
+[INFO PDN-0001] Inserting grid: pins_3 - u_b281
+[INFO PDN-0001] Inserting grid: pins_3 - u_b282
+[INFO PDN-0001] Inserting grid: pins_3 - u_b283
+[INFO PDN-0001] Inserting grid: pins_3 - u_b284
+[INFO PDN-0001] Inserting grid: pins_3 - u_b285
+[INFO PDN-0001] Inserting grid: pins_3 - u_b286
+[INFO PDN-0001] Inserting grid: pins_3 - u_b287
+[INFO PDN-0001] Inserting grid: pins_3 - u_b288
+[INFO PDN-0001] Inserting grid: pins_3 - u_b289
+[INFO PDN-0001] Inserting grid: pins_3 - u_b290
+[INFO PDN-0001] Inserting grid: pins_3 - u_b291
+[INFO PDN-0001] Inserting grid: pins_3 - u_b292
+[INFO PDN-0001] Inserting grid: pins_3 - u_b293
+[INFO PDN-0001] Inserting grid: pins_3 - u_b294
+[INFO PDN-0001] Inserting grid: pins_3 - u_b295
+[INFO PDN-0001] Inserting grid: pins_3 - u_b296
+[INFO PDN-0001] Inserting grid: pins_3 - u_b297
+[INFO PDN-0001] Inserting grid: pins_3 - u_b298
+[INFO PDN-0001] Inserting grid: pins_3 - u_b299
+[INFO PDN-0001] Inserting grid: pins_3 - u_b300
+[INFO PDN-0001] Inserting grid: pins_3 - u_b301
+[INFO PDN-0001] Inserting grid: pins_3 - u_b302
+[INFO PDN-0001] Inserting grid: pins_3 - u_b303
+[INFO PDN-0001] Inserting grid: pins_3 - u_b304
+[INFO PDN-0001] Inserting grid: pins_3 - u_b305
+[INFO PDN-0001] Inserting grid: pins_3 - u_b306
+[INFO PDN-0001] Inserting grid: pins_3 - u_b307
+[INFO PDN-0001] Inserting grid: pins_3 - u_b308
+[INFO PDN-0001] Inserting grid: pins_3 - u_b309
+[INFO PDN-0001] Inserting grid: pins_3 - u_b310
+[INFO PDN-0001] Inserting grid: pins_3 - u_b311
+[INFO PDN-0001] Inserting grid: pins_3 - u_b312
+[INFO PDN-0001] Inserting grid: pins_3 - u_b313
+[INFO PDN-0001] Inserting grid: pins_3 - u_b314
+[INFO PDN-0001] Inserting grid: pins_3 - u_b315
+[INFO PDN-0001] Inserting grid: pins_3 - u_b316
+[INFO PDN-0001] Inserting grid: pins_3 - u_b317
+[INFO PDN-0001] Inserting grid: pins_3 - u_b318
+[INFO PDN-0001] Inserting grid: pins_3 - u_b319
+[INFO PDN-0001] Inserting grid: pins_3 - u_b320
+[INFO PDN-0001] Inserting grid: pins_3 - u_b321
+[INFO PDN-0001] Inserting grid: pins_3 - u_b322
+[INFO PDN-0001] Inserting grid: pins_3 - u_b323
+[INFO PDN-0001] Inserting grid: pins_3 - u_b324
+[INFO PDN-0001] Inserting grid: pins_3 - u_b325
+[INFO PDN-0001] Inserting grid: pins_3 - u_b326
+[INFO PDN-0001] Inserting grid: pins_3 - u_b327
+[INFO PDN-0001] Inserting grid: pins_3 - u_b328
+[INFO PDN-0001] Inserting grid: pins_3 - u_b329
+[INFO PDN-0001] Inserting grid: pins_3 - u_b330
+[INFO PDN-0001] Inserting grid: pins_3 - u_b331
+[INFO PDN-0001] Inserting grid: pins_3 - u_b332
+[INFO PDN-0001] Inserting grid: pins_3 - u_b333
+[INFO PDN-0001] Inserting grid: pins_3 - u_b334
+[INFO PDN-0001] Inserting grid: pins_3 - u_b335
+[INFO PDN-0001] Inserting grid: pins_3 - u_b336
+[INFO PDN-0001] Inserting grid: pins_3 - u_b337
+[INFO PDN-0001] Inserting grid: pins_3 - u_b338
+[INFO PDN-0001] Inserting grid: pins_3 - u_b339
+[INFO PDN-0001] Inserting grid: pins_3 - u_b340
+[INFO PDN-0001] Inserting grid: pins_3 - u_b341
+[INFO PDN-0001] Inserting grid: pins_3 - u_b342
+[INFO PDN-0001] Inserting grid: pins_3 - u_b343
+[INFO PDN-0001] Inserting grid: pins_3 - u_b344
+[INFO PDN-0001] Inserting grid: pins_3 - u_b345
+[INFO PDN-0001] Inserting grid: pins_3 - u_b346
+[INFO PDN-0001] Inserting grid: pins_3 - u_b347
+[INFO PDN-0001] Inserting grid: pins_3 - u_b348
+[INFO PDN-0001] Inserting grid: pins_3 - u_b349
+[INFO PDN-0001] Inserting grid: pins_3 - u_b350
+[INFO PDN-0001] Inserting grid: pins_3 - u_b351
+[INFO PDN-0001] Inserting grid: pins_3 - u_b352
+[INFO PDN-0001] Inserting grid: pins_3 - u_b353
+[INFO PDN-0001] Inserting grid: pins_3 - u_b354
+[INFO PDN-0001] Inserting grid: pins_3 - u_b355
+[INFO PDN-0001] Inserting grid: pins_3 - u_b356
+[INFO PDN-0001] Inserting grid: pins_3 - u_b357
+[INFO PDN-0001] Inserting grid: pins_3 - u_b358
+[INFO PDN-0001] Inserting grid: pins_3 - u_b359
+[INFO PDN-0001] Inserting grid: pins_3 - u_b360
+[INFO PDN-0001] Inserting grid: pins_3 - u_b361
+[INFO PDN-0001] Inserting grid: pins_3 - u_b362
+[INFO PDN-0001] Inserting grid: pins_3 - u_b363
+[INFO PDN-0001] Inserting grid: pins_3 - u_b364
+[INFO PDN-0001] Inserting grid: pins_3 - u_b365
+[INFO PDN-0001] Inserting grid: pins_3 - u_b366
+[INFO PDN-0001] Inserting grid: pins_3 - u_b367
+[INFO PDN-0500] Runtime: 29.54s
+OT_PG_POWER_ISOLATION_CLIPPED 1079
+OT_PG_SEAM_STITCHES VDD 688
+OT_PG_SEAM_STITCHES VSS 1950
+OT_PG_CORE_SEAM_STITCHES 2638
+OT_BUMPS actual_m9_sources 374 cached_columns 63
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_PG_CHECK_OK VDD
+[INFO PSM-0040] All shapes on net VDDPHY are connected.
+OT_PG_CHECK_OK VDDPHY
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_CHECK_OK VSS
+OT_ANALYZE_NET VDD
+[INFO PSM-0040] All shapes on net VDD are connected.
+########## IR report #################
+Net              : VDD
+Corner           : default
+Total power      : 1.60e+00 W
+Supply voltage   : 7.00e-01 V
+Worstcase voltage: 6.75e-01 V
+Average voltage  : 6.83e-01 V
+Average IR drop  : 1.69e-02 V
+Worstcase IR drop: 2.48e-02 V
+Percentage drop  : 3.54 %
+######################################
+OT_PSM_OK VDD
+OT_ANALYZE_NET VDDPHY
+[INFO PSM-0040] All shapes on net VDDPHY are connected.
+########## IR report #################
+Net              : VDDPHY
+Corner           : default
+Total power      : 2.46e+00 W
+Supply voltage   : 7.00e-01 V
+Worstcase voltage: 6.31e-01 V
+Average voltage  : 6.72e-01 V
+Average IR drop  : 2.82e-02 V
+Worstcase IR drop: 6.94e-02 V
+Percentage drop  : 9.91 %
+######################################
+OT_PSM_OK VDDPHY
+OT_T psm 467
+OT_DONE
+	Command being timed: "openroad -no_init -threads 8 -exit /work/psm/psm.tcl"
+	User time (seconds): 443.63
+	System time (seconds): 24.08
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 7:47.76
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 15088024
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 7613957
+	Voluntary context switches: 13
+	Involuntary context switches: 981
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 361488
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

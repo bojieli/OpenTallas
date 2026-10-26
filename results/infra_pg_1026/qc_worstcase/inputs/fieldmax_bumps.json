@@ -1,0 +1,4285 @@
+{
+ "schema": "ucie-extra-pg-prototype-v1",
+ "source": "https://hc2023.hotchips.org/assets/program/tutorials/ucie/Electrical%20Form%20Factor%20and%20Compliance.pdf",
+ "pdf_page": 23,
+ "slide": 74,
+ "rect_um": [
+  0.0,
+  9244.8,
+  777.6,
+  10022.4
+ ],
+ "pitch_um": 45.0,
+ "edge_clearance_um": 22.5,
+ "template_columns": 16,
+ "template_rows": 30,
+ "template_recommended_pitch_um": [
+  25,
+  37
+ ],
+ "counts": {
+  "POWER": 114,
+  "GND": 44,
+  "SIGNAL": 156
+ },
+ "original_sites": 240,
+ "vacant_sites_used": 74,
+ "added_power": 74,
+ "added_ground": 0,
+ "pg_fraction": 0.5031847133757962,
+ "published_positions_preserved": true,
+ "sites": [
+  {
+   "name": "extra_power_r-2c-2",
+   "role": "POWER",
+   "published": false,
+   "row": -2,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9273.6
+   ]
+  },
+  {
+   "name": "extra_power_r-2c0",
+   "role": "POWER",
+   "published": false,
+   "row": -2,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9273.6
+   ]
+  },
+  {
+   "name": "extra_power_r-2c2",
+   "role": "POWER",
+   "published": false,
+   "row": -2,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9273.6
+   ]
+  },
+  {
+   "name": "extra_power_r-2c4",
+   "role": "POWER",
+   "published": false,
+   "row": -2,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9273.6
+   ]
+  },
+  {
+   "name": "extra_power_r-2c6",
+   "role": "POWER",
+   "published": false,
+   "row": -2,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9273.6
+   ]
+  },
+  {
+   "name": "extra_power_r-2c8",
+   "role": "POWER",
+   "published": false,
+   "row": -2,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9273.6
+   ]
+  },
+  {
+   "name": "extra_power_r-2c10",
+   "role": "POWER",
+   "published": false,
+   "row": -2,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9273.6
+   ]
+  },
+  {
+   "name": "extra_power_r-2c12",
+   "role": "POWER",
+   "published": false,
+   "row": -2,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9273.6
+   ]
+  },
+  {
+   "name": "extra_power_r-2c14",
+   "role": "POWER",
+   "published": false,
+   "row": -2,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9273.6
+   ]
+  },
+  {
+   "name": "extra_power_r-2c16",
+   "role": "POWER",
+   "published": false,
+   "row": -2,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9273.6
+   ]
+  },
+  {
+   "name": "extra_power_r-1c-1",
+   "role": "POWER",
+   "published": false,
+   "row": -1,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9296.1
+   ]
+  },
+  {
+   "name": "extra_power_r-1c1",
+   "role": "POWER",
+   "published": false,
+   "row": -1,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9296.1
+   ]
+  },
+  {
+   "name": "extra_power_r-1c3",
+   "role": "POWER",
+   "published": false,
+   "row": -1,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9296.1
+   ]
+  },
+  {
+   "name": "extra_power_r-1c5",
+   "role": "POWER",
+   "published": false,
+   "row": -1,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9296.1
+   ]
+  },
+  {
+   "name": "extra_power_r-1c7",
+   "role": "POWER",
+   "published": false,
+   "row": -1,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9296.1
+   ]
+  },
+  {
+   "name": "extra_power_r-1c9",
+   "role": "POWER",
+   "published": false,
+   "row": -1,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9296.1
+   ]
+  },
+  {
+   "name": "extra_power_r-1c11",
+   "role": "POWER",
+   "published": false,
+   "row": -1,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9296.1
+   ]
+  },
+  {
+   "name": "extra_power_r-1c13",
+   "role": "POWER",
+   "published": false,
+   "row": -1,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9296.1
+   ]
+  },
+  {
+   "name": "extra_power_r-1c15",
+   "role": "POWER",
+   "published": false,
+   "row": -1,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9296.1
+   ]
+  },
+  {
+   "name": "extra_power_r0c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 0,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9318.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 0,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9318.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 0,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9318.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 0,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9318.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 0,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9318.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 0,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9318.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 0,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9318.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 0,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9318.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 0,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9318.6
+   ]
+  },
+  {
+   "name": "extra_power_r0c16",
+   "role": "POWER",
+   "published": false,
+   "row": 0,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9318.6
+   ]
+  },
+  {
+   "name": "extra_power_r1c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 1,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9341.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 1,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9341.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 1,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9341.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 1,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9341.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 1,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9341.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 1,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9341.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 1,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9341.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 1,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9341.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 1,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9341.1
+   ]
+  },
+  {
+   "name": "extra_power_r2c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 2,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9363.6
+   ]
+  },
+  {
+   "name": "txdataRD0",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 2,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9363.6
+   ]
+  },
+  {
+   "name": "txdata11",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 2,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9363.6
+   ]
+  },
+  {
+   "name": "txdata14",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 2,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9363.6
+   ]
+  },
+  {
+   "name": "txdata29",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 2,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9363.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 2,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9363.6
+   ]
+  },
+  {
+   "name": "txdata35",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 2,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9363.6
+   ]
+  },
+  {
+   "name": "txdata50",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 2,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9363.6
+   ]
+  },
+  {
+   "name": "txdata54",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 2,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9363.6
+   ]
+  },
+  {
+   "name": "extra_power_r2c16",
+   "role": "POWER",
+   "published": false,
+   "row": 2,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9363.6
+   ]
+  },
+  {
+   "name": "extra_power_r3c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 3,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9386.1
+   ]
+  },
+  {
+   "name": "txdata9",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 3,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9386.1
+   ]
+  },
+  {
+   "name": "txdata13",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 3,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9386.1
+   ]
+  },
+  {
+   "name": "txdata28",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 3,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9386.1
+   ]
+  },
+  {
+   "name": "txdataRD1",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 3,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9386.1
+   ]
+  },
+  {
+   "name": "txdata34",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 3,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9386.1
+   ]
+  },
+  {
+   "name": "txdata49",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 3,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9386.1
+   ]
+  },
+  {
+   "name": "txdata52",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 3,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9386.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 3,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9386.1
+   ]
+  },
+  {
+   "name": "extra_power_r4c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 4,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9408.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 4,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9408.6
+   ]
+  },
+  {
+   "name": "txdata10",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 4,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9408.6
+   ]
+  },
+  {
+   "name": "txdata15",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 4,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9408.6
+   ]
+  },
+  {
+   "name": "txdata30",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 4,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9408.6
+   ]
+  },
+  {
+   "name": "txdataRD2",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 4,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9408.6
+   ]
+  },
+  {
+   "name": "txdata36",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 4,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9408.6
+   ]
+  },
+  {
+   "name": "txdata51",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 4,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9408.6
+   ]
+  },
+  {
+   "name": "txdata55",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 4,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9408.6
+   ]
+  },
+  {
+   "name": "extra_power_r4c16",
+   "role": "POWER",
+   "published": false,
+   "row": 4,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9408.6
+   ]
+  },
+  {
+   "name": "extra_power_r5c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 5,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9431.1
+   ]
+  },
+  {
+   "name": "txdata8",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 5,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9431.1
+   ]
+  },
+  {
+   "name": "txdata12",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 5,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9431.1
+   ]
+  },
+  {
+   "name": "txdata27",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 5,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9431.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 5,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9431.1
+   ]
+  },
+  {
+   "name": "txdata33",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 5,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9431.1
+   ]
+  },
+  {
+   "name": "txdata48",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 5,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9431.1
+   ]
+  },
+  {
+   "name": "txdata53",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 5,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9431.1
+   ]
+  },
+  {
+   "name": "txdataRD3",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 5,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9431.1
+   ]
+  },
+  {
+   "name": "extra_power_r6c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 6,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9453.6
+   ]
+  },
+  {
+   "name": "txdata0",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 6,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9453.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 6,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9453.6
+   ]
+  },
+  {
+   "name": "txdata16",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 6,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9453.6
+   ]
+  },
+  {
+   "name": "txdata31",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 6,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9453.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 6,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9453.6
+   ]
+  },
+  {
+   "name": "txdata37",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 6,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9453.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 6,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9453.6
+   ]
+  },
+  {
+   "name": "txdata61",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 6,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9453.6
+   ]
+  },
+  {
+   "name": "extra_power_r6c16",
+   "role": "POWER",
+   "published": false,
+   "row": 6,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9453.6
+   ]
+  },
+  {
+   "name": "extra_power_r7c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 7,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9476.1
+   ]
+  },
+  {
+   "name": "txdata2",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 7,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9476.1
+   ]
+  },
+  {
+   "name": "txdata17",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 7,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9476.1
+   ]
+  },
+  {
+   "name": "txdata26",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 7,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9476.1
+   ]
+  },
+  {
+   "name": "txckRD",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 7,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9476.1
+   ]
+  },
+  {
+   "name": "txdata32",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 7,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9476.1
+   ]
+  },
+  {
+   "name": "txdata47",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 7,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9476.1
+   ]
+  },
+  {
+   "name": "txdata56",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 7,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9476.1
+   ]
+  },
+  {
+   "name": "txdata63",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 7,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9476.1
+   ]
+  },
+  {
+   "name": "extra_power_r8c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 8,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9498.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 8,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9498.6
+   ]
+  },
+  {
+   "name": "txdata7",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 8,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9498.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 8,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9498.6
+   ]
+  },
+  {
+   "name": "txdata25",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 8,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9498.6
+   ]
+  },
+  {
+   "name": "txvldRD",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 8,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9498.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 8,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9498.6
+   ]
+  },
+  {
+   "name": "txdata46",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 8,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9498.6
+   ]
+  },
+  {
+   "name": "txdata60",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 8,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9498.6
+   ]
+  },
+  {
+   "name": "extra_power_r8c16",
+   "role": "POWER",
+   "published": false,
+   "row": 8,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9498.6
+   ]
+  },
+  {
+   "name": "extra_power_r9c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 9,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9521.1
+   ]
+  },
+  {
+   "name": "txdata3",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 9,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9521.1
+   ]
+  },
+  {
+   "name": "txdata18",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 9,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9521.1
+   ]
+  },
+  {
+   "name": "txdata23",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 9,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9521.1
+   ]
+  },
+  {
+   "name": "txckn",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 9,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9521.1
+   ]
+  },
+  {
+   "name": "txdata38",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 9,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9521.1
+   ]
+  },
+  {
+   "name": "txdata43",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 9,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9521.1
+   ]
+  },
+  {
+   "name": "txdata57",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 9,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9521.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 9,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9521.1
+   ]
+  },
+  {
+   "name": "extra_power_r10c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 10,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9543.6
+   ]
+  },
+  {
+   "name": "txdata1",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 10,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9543.6
+   ]
+  },
+  {
+   "name": "txdata6",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 10,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9543.6
+   ]
+  },
+  {
+   "name": "txdata20",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 10,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9543.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 10,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9543.6
+   ]
+  },
+  {
+   "name": "txvld",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 10,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9543.6
+   ]
+  },
+  {
+   "name": "txdata40",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 10,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9543.6
+   ]
+  },
+  {
+   "name": "txdata45",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 10,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9543.6
+   ]
+  },
+  {
+   "name": "txdata59",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 10,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9543.6
+   ]
+  },
+  {
+   "name": "extra_power_r10c16",
+   "role": "POWER",
+   "published": false,
+   "row": 10,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9543.6
+   ]
+  },
+  {
+   "name": "extra_power_r11c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 11,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9566.1
+   ]
+  },
+  {
+   "name": "txdata4",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 11,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9566.1
+   ]
+  },
+  {
+   "name": "txdata19",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 11,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9566.1
+   ]
+  },
+  {
+   "name": "txdata22",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 11,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9566.1
+   ]
+  },
+  {
+   "name": "txckp",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 11,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9566.1
+   ]
+  },
+  {
+   "name": "txdata39",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 11,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9566.1
+   ]
+  },
+  {
+   "name": "txdata42",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 11,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9566.1
+   ]
+  },
+  {
+   "name": "txdata58",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 11,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9566.1
+   ]
+  },
+  {
+   "name": "txdata62",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 11,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9566.1
+   ]
+  },
+  {
+   "name": "extra_power_r12c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 12,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9588.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 12,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9588.6
+   ]
+  },
+  {
+   "name": "txdata5",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 12,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9588.6
+   ]
+  },
+  {
+   "name": "txdata21",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 12,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9588.6
+   ]
+  },
+  {
+   "name": "txdata24",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 12,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9588.6
+   ]
+  },
+  {
+   "name": "txtrk",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 12,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9588.6
+   ]
+  },
+  {
+   "name": "txdata41",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 12,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9588.6
+   ]
+  },
+  {
+   "name": "txdata44",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 12,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9588.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 12,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9588.6
+   ]
+  },
+  {
+   "name": "extra_power_r12c16",
+   "role": "POWER",
+   "published": false,
+   "row": 12,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9588.6
+   ]
+  },
+  {
+   "name": "extra_power_r13c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 13,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9611.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 13,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9611.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 13,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9611.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 13,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9611.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 13,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9611.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 13,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9611.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 13,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9611.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 13,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9611.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 13,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9611.1
+   ]
+  },
+  {
+   "name": "extra_power_r14c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 14,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9633.6
+   ]
+  },
+  {
+   "name": "vccfwdio",
+   "role": "POWER",
+   "published": true,
+   "row": 14,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9633.6
+   ]
+  },
+  {
+   "name": "vccfwdio",
+   "role": "POWER",
+   "published": true,
+   "row": 14,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9633.6
+   ]
+  },
+  {
+   "name": "vccfwdio",
+   "role": "POWER",
+   "published": true,
+   "row": 14,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9633.6
+   ]
+  },
+  {
+   "name": "vccfwdio",
+   "role": "POWER",
+   "published": true,
+   "row": 14,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9633.6
+   ]
+  },
+  {
+   "name": "vccfwdio",
+   "role": "POWER",
+   "published": true,
+   "row": 14,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9633.6
+   ]
+  },
+  {
+   "name": "vccfwdio",
+   "role": "POWER",
+   "published": true,
+   "row": 14,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9633.6
+   ]
+  },
+  {
+   "name": "vccfwdio",
+   "role": "POWER",
+   "published": true,
+   "row": 14,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9633.6
+   ]
+  },
+  {
+   "name": "vccfwdio",
+   "role": "POWER",
+   "published": true,
+   "row": 14,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9633.6
+   ]
+  },
+  {
+   "name": "extra_power_r14c16",
+   "role": "POWER",
+   "published": false,
+   "row": 14,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9633.6
+   ]
+  },
+  {
+   "name": "extra_power_r15c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 15,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9656.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 15,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9656.1
+   ]
+  },
+  {
+   "name": "rxdata44",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 15,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9656.1
+   ]
+  },
+  {
+   "name": "rxdata41",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 15,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9656.1
+   ]
+  },
+  {
+   "name": "rxtrk",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 15,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9656.1
+   ]
+  },
+  {
+   "name": "rxdata24",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 15,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9656.1
+   ]
+  },
+  {
+   "name": "rxdata21",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 15,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9656.1
+   ]
+  },
+  {
+   "name": "rxdata5",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 15,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9656.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 15,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9656.1
+   ]
+  },
+  {
+   "name": "extra_power_r16c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 16,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9678.6
+   ]
+  },
+  {
+   "name": "rxdata62",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 16,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9678.6
+   ]
+  },
+  {
+   "name": "rxdata58",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 16,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9678.6
+   ]
+  },
+  {
+   "name": "rxdata42",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 16,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9678.6
+   ]
+  },
+  {
+   "name": "rxdata39",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 16,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9678.6
+   ]
+  },
+  {
+   "name": "rxckp",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 16,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9678.6
+   ]
+  },
+  {
+   "name": "rxdata22",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 16,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9678.6
+   ]
+  },
+  {
+   "name": "rxdata19",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 16,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9678.6
+   ]
+  },
+  {
+   "name": "rxdata4",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 16,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9678.6
+   ]
+  },
+  {
+   "name": "extra_power_r16c16",
+   "role": "POWER",
+   "published": false,
+   "row": 16,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9678.6
+   ]
+  },
+  {
+   "name": "extra_power_r17c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 17,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9701.1
+   ]
+  },
+  {
+   "name": "rxdata59",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 17,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9701.1
+   ]
+  },
+  {
+   "name": "rxdata45",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 17,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9701.1
+   ]
+  },
+  {
+   "name": "rxdata40",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 17,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9701.1
+   ]
+  },
+  {
+   "name": "rxvld",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 17,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9701.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 17,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9701.1
+   ]
+  },
+  {
+   "name": "rxdata20",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 17,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9701.1
+   ]
+  },
+  {
+   "name": "rxdata6",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 17,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9701.1
+   ]
+  },
+  {
+   "name": "rxdata1",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 17,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9701.1
+   ]
+  },
+  {
+   "name": "extra_power_r18c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 18,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9723.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 18,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9723.6
+   ]
+  },
+  {
+   "name": "rxdata57",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 18,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9723.6
+   ]
+  },
+  {
+   "name": "rxdata43",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 18,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9723.6
+   ]
+  },
+  {
+   "name": "rxdata38",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 18,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9723.6
+   ]
+  },
+  {
+   "name": "rxckn",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 18,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9723.6
+   ]
+  },
+  {
+   "name": "rxdata23",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 18,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9723.6
+   ]
+  },
+  {
+   "name": "rxdata18",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 18,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9723.6
+   ]
+  },
+  {
+   "name": "rxdata3",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 18,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9723.6
+   ]
+  },
+  {
+   "name": "extra_power_r18c16",
+   "role": "POWER",
+   "published": false,
+   "row": 18,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9723.6
+   ]
+  },
+  {
+   "name": "extra_power_r19c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 19,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9746.1
+   ]
+  },
+  {
+   "name": "rxdata60",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 19,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9746.1
+   ]
+  },
+  {
+   "name": "rxdata46",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 19,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9746.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 19,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9746.1
+   ]
+  },
+  {
+   "name": "rxvldRD",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 19,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9746.1
+   ]
+  },
+  {
+   "name": "rxdata25",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 19,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9746.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 19,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9746.1
+   ]
+  },
+  {
+   "name": "rxdata7",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 19,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9746.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 19,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9746.1
+   ]
+  },
+  {
+   "name": "extra_power_r20c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 20,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9768.6
+   ]
+  },
+  {
+   "name": "rxdata63",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 20,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9768.6
+   ]
+  },
+  {
+   "name": "rxdata56",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 20,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9768.6
+   ]
+  },
+  {
+   "name": "rxdata47",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 20,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9768.6
+   ]
+  },
+  {
+   "name": "rxdata32",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 20,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9768.6
+   ]
+  },
+  {
+   "name": "rxckRD",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 20,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9768.6
+   ]
+  },
+  {
+   "name": "rxdata26",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 20,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9768.6
+   ]
+  },
+  {
+   "name": "rxdata17",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 20,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9768.6
+   ]
+  },
+  {
+   "name": "rxdata2",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 20,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9768.6
+   ]
+  },
+  {
+   "name": "extra_power_r20c16",
+   "role": "POWER",
+   "published": false,
+   "row": 20,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9768.6
+   ]
+  },
+  {
+   "name": "extra_power_r21c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 21,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9791.1
+   ]
+  },
+  {
+   "name": "rxdata61",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 21,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9791.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 21,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9791.1
+   ]
+  },
+  {
+   "name": "rxdata37",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 21,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9791.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 21,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9791.1
+   ]
+  },
+  {
+   "name": "rxdata31",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 21,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9791.1
+   ]
+  },
+  {
+   "name": "rxdata16",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 21,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9791.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 21,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9791.1
+   ]
+  },
+  {
+   "name": "rxdata0",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 21,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9791.1
+   ]
+  },
+  {
+   "name": "extra_power_r22c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 22,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9813.6
+   ]
+  },
+  {
+   "name": "rxdataRD3",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 22,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9813.6
+   ]
+  },
+  {
+   "name": "rxdata53",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 22,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9813.6
+   ]
+  },
+  {
+   "name": "rxdata48",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 22,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9813.6
+   ]
+  },
+  {
+   "name": "rxdata33",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 22,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9813.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 22,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9813.6
+   ]
+  },
+  {
+   "name": "rxdata27",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 22,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9813.6
+   ]
+  },
+  {
+   "name": "rxdata12",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 22,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9813.6
+   ]
+  },
+  {
+   "name": "rxdata8",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 22,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9813.6
+   ]
+  },
+  {
+   "name": "extra_power_r22c16",
+   "role": "POWER",
+   "published": false,
+   "row": 22,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9813.6
+   ]
+  },
+  {
+   "name": "extra_power_r23c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 23,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9836.1
+   ]
+  },
+  {
+   "name": "rxdata55",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 23,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9836.1
+   ]
+  },
+  {
+   "name": "rxdata51",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 23,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9836.1
+   ]
+  },
+  {
+   "name": "rxdata36",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 23,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9836.1
+   ]
+  },
+  {
+   "name": "rxdataRD2",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 23,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9836.1
+   ]
+  },
+  {
+   "name": "rxdata30",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 23,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9836.1
+   ]
+  },
+  {
+   "name": "rxdata15",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 23,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9836.1
+   ]
+  },
+  {
+   "name": "rxdata10",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 23,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9836.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 23,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9836.1
+   ]
+  },
+  {
+   "name": "extra_power_r24c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 24,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9858.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 24,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9858.6
+   ]
+  },
+  {
+   "name": "rxdata52",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 24,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9858.6
+   ]
+  },
+  {
+   "name": "rxdata49",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 24,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9858.6
+   ]
+  },
+  {
+   "name": "rxdata34",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 24,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9858.6
+   ]
+  },
+  {
+   "name": "rxdataRD1",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 24,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9858.6
+   ]
+  },
+  {
+   "name": "rxdata28",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 24,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9858.6
+   ]
+  },
+  {
+   "name": "rxdata13",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 24,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9858.6
+   ]
+  },
+  {
+   "name": "rxdata9",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 24,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9858.6
+   ]
+  },
+  {
+   "name": "extra_power_r24c16",
+   "role": "POWER",
+   "published": false,
+   "row": 24,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9858.6
+   ]
+  },
+  {
+   "name": "extra_power_r25c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 25,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9881.1
+   ]
+  },
+  {
+   "name": "rxdata54",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 25,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9881.1
+   ]
+  },
+  {
+   "name": "rxdata50",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 25,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9881.1
+   ]
+  },
+  {
+   "name": "rxdata35",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 25,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9881.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 25,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9881.1
+   ]
+  },
+  {
+   "name": "rxdata29",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 25,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9881.1
+   ]
+  },
+  {
+   "name": "rxdata14",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 25,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9881.1
+   ]
+  },
+  {
+   "name": "rxdata11",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 25,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9881.1
+   ]
+  },
+  {
+   "name": "rxdataRD0",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 25,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9881.1
+   ]
+  },
+  {
+   "name": "extra_power_r26c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 26,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9903.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 26,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9903.6
+   ]
+  },
+  {
+   "name": "txdatasbRD",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 26,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9903.6
+   ]
+  },
+  {
+   "name": "txdatasb",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 26,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9903.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 26,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9903.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 26,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9903.6
+   ]
+  },
+  {
+   "name": "txcksb",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 26,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9903.6
+   ]
+  },
+  {
+   "name": "txcksbRD",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 26,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9903.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 26,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9903.6
+   ]
+  },
+  {
+   "name": "extra_power_r26c16",
+   "role": "POWER",
+   "published": false,
+   "row": 26,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9903.6
+   ]
+  },
+  {
+   "name": "extra_power_r27c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 27,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9926.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 27,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9926.1
+   ]
+  },
+  {
+   "name": "rxcksbRD",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 27,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9926.1
+   ]
+  },
+  {
+   "name": "rxcksb",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 27,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9926.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 27,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9926.1
+   ]
+  },
+  {
+   "name": "rxdatasb",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 27,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9926.1
+   ]
+  },
+  {
+   "name": "rxdatasbRD",
+   "role": "SIGNAL",
+   "published": true,
+   "row": 27,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9926.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 27,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9926.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 27,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9926.1
+   ]
+  },
+  {
+   "name": "extra_power_r28c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 28,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9948.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 28,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9948.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 28,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9948.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 28,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9948.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 28,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9948.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 28,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9948.6
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 28,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9948.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 28,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9948.6
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 28,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9948.6
+   ]
+  },
+  {
+   "name": "extra_power_r28c16",
+   "role": "POWER",
+   "published": false,
+   "row": 28,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9948.6
+   ]
+  },
+  {
+   "name": "extra_power_r29c-1",
+   "role": "POWER",
+   "published": false,
+   "row": 29,
+   "col": -1,
+   "xy_um": [
+    77.030855,
+    9971.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 29,
+   "col": 1,
+   "xy_um": [
+    154.973141,
+    9971.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 29,
+   "col": 3,
+   "xy_um": [
+    232.915427,
+    9971.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 29,
+   "col": 5,
+   "xy_um": [
+    310.857714,
+    9971.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 29,
+   "col": 7,
+   "xy_um": [
+    388.8,
+    9971.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 29,
+   "col": 9,
+   "xy_um": [
+    466.742286,
+    9971.1
+   ]
+  },
+  {
+   "name": "vccio",
+   "role": "POWER",
+   "published": true,
+   "row": 29,
+   "col": 11,
+   "xy_um": [
+    544.684573,
+    9971.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 29,
+   "col": 13,
+   "xy_um": [
+    622.626859,
+    9971.1
+   ]
+  },
+  {
+   "name": "vss",
+   "role": "GND",
+   "published": true,
+   "row": 29,
+   "col": 15,
+   "xy_um": [
+    700.569145,
+    9971.1
+   ]
+  },
+  {
+   "name": "extra_power_r30c-2",
+   "role": "POWER",
+   "published": false,
+   "row": 30,
+   "col": -2,
+   "xy_um": [
+    38.059711,
+    9993.6
+   ]
+  },
+  {
+   "name": "extra_power_r30c0",
+   "role": "POWER",
+   "published": false,
+   "row": 30,
+   "col": 0,
+   "xy_um": [
+    116.001998,
+    9993.6
+   ]
+  },
+  {
+   "name": "extra_power_r30c2",
+   "role": "POWER",
+   "published": false,
+   "row": 30,
+   "col": 2,
+   "xy_um": [
+    193.944284,
+    9993.6
+   ]
+  },
+  {
+   "name": "extra_power_r30c4",
+   "role": "POWER",
+   "published": false,
+   "row": 30,
+   "col": 4,
+   "xy_um": [
+    271.88657,
+    9993.6
+   ]
+  },
+  {
+   "name": "extra_power_r30c6",
+   "role": "POWER",
+   "published": false,
+   "row": 30,
+   "col": 6,
+   "xy_um": [
+    349.828857,
+    9993.6
+   ]
+  },
+  {
+   "name": "extra_power_r30c8",
+   "role": "POWER",
+   "published": false,
+   "row": 30,
+   "col": 8,
+   "xy_um": [
+    427.771143,
+    9993.6
+   ]
+  },
+  {
+   "name": "extra_power_r30c10",
+   "role": "POWER",
+   "published": false,
+   "row": 30,
+   "col": 10,
+   "xy_um": [
+    505.71343,
+    9993.6
+   ]
+  },
+  {
+   "name": "extra_power_r30c12",
+   "role": "POWER",
+   "published": false,
+   "row": 30,
+   "col": 12,
+   "xy_um": [
+    583.655716,
+    9993.6
+   ]
+  },
+  {
+   "name": "extra_power_r30c14",
+   "role": "POWER",
+   "published": false,
+   "row": 30,
+   "col": 14,
+   "xy_um": [
+    661.598002,
+    9993.6
+   ]
+  },
+  {
+   "name": "extra_power_r30c16",
+   "role": "POWER",
+   "published": false,
+   "row": 30,
+   "col": 16,
+   "xy_um": [
+    739.540289,
+    9993.6
+   ]
+  }
+ ],
+ "bumps": [
+  [
+   "VDD",
+   38.059711,
+   9273.6
+  ],
+  [
+   "VDD",
+   116.001998,
+   9273.6
+  ],
+  [
+   "VDD",
+   193.944284,
+   9273.6
+  ],
+  [
+   "VDD",
+   271.88657,
+   9273.6
+  ],
+  [
+   "VDD",
+   349.828857,
+   9273.6
+  ],
+  [
+   "VDD",
+   427.771143,
+   9273.6
+  ],
+  [
+   "VDD",
+   505.71343,
+   9273.6
+  ],
+  [
+   "VDD",
+   583.655716,
+   9273.6
+  ],
+  [
+   "VDD",
+   661.598002,
+   9273.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9273.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9296.1
+  ],
+  [
+   "VDD",
+   154.973141,
+   9296.1
+  ],
+  [
+   "VDD",
+   232.915427,
+   9296.1
+  ],
+  [
+   "VDD",
+   310.857714,
+   9296.1
+  ],
+  [
+   "VDD",
+   388.8,
+   9296.1
+  ],
+  [
+   "VDD",
+   466.742286,
+   9296.1
+  ],
+  [
+   "VDD",
+   544.684573,
+   9296.1
+  ],
+  [
+   "VDD",
+   622.626859,
+   9296.1
+  ],
+  [
+   "VDD",
+   700.569145,
+   9296.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9318.6
+  ],
+  [
+   "VDD",
+   116.001998,
+   9318.6
+  ],
+  [
+   "VDD",
+   193.944284,
+   9318.6
+  ],
+  [
+   "VDD",
+   271.88657,
+   9318.6
+  ],
+  [
+   "VDD",
+   349.828857,
+   9318.6
+  ],
+  [
+   "VDD",
+   427.771143,
+   9318.6
+  ],
+  [
+   "VDD",
+   505.71343,
+   9318.6
+  ],
+  [
+   "VDD",
+   583.655716,
+   9318.6
+  ],
+  [
+   "VDD",
+   661.598002,
+   9318.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9318.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9341.1
+  ],
+  [
+   "VDD",
+   154.973141,
+   9341.1
+  ],
+  [
+   "VDD",
+   232.915427,
+   9341.1
+  ],
+  [
+   "VDD",
+   310.857714,
+   9341.1
+  ],
+  [
+   "VDD",
+   388.8,
+   9341.1
+  ],
+  [
+   "VDD",
+   466.742286,
+   9341.1
+  ],
+  [
+   "VDD",
+   544.684573,
+   9341.1
+  ],
+  [
+   "VDD",
+   622.626859,
+   9341.1
+  ],
+  [
+   "VDD",
+   700.569145,
+   9341.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9363.6
+  ],
+  [
+   "VSS",
+   427.771143,
+   9363.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9363.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9386.1
+  ],
+  [
+   "VSS",
+   700.569145,
+   9386.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9408.6
+  ],
+  [
+   "VSS",
+   116.001998,
+   9408.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9408.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9431.1
+  ],
+  [
+   "VSS",
+   388.8,
+   9431.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9453.6
+  ],
+  [
+   "VSS",
+   193.944284,
+   9453.6
+  ],
+  [
+   "VSS",
+   427.771143,
+   9453.6
+  ],
+  [
+   "VSS",
+   583.655716,
+   9453.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9453.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9476.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9498.6
+  ],
+  [
+   "VSS",
+   116.001998,
+   9498.6
+  ],
+  [
+   "VSS",
+   271.88657,
+   9498.6
+  ],
+  [
+   "VSS",
+   505.71343,
+   9498.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9498.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9521.1
+  ],
+  [
+   "VSS",
+   700.569145,
+   9521.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9543.6
+  ],
+  [
+   "VSS",
+   349.828857,
+   9543.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9543.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9566.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9588.6
+  ],
+  [
+   "VSS",
+   116.001998,
+   9588.6
+  ],
+  [
+   "VSS",
+   661.598002,
+   9588.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9588.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9611.1
+  ],
+  [
+   "VDD",
+   154.973141,
+   9611.1
+  ],
+  [
+   "VDD",
+   232.915427,
+   9611.1
+  ],
+  [
+   "VDD",
+   310.857714,
+   9611.1
+  ],
+  [
+   "VDD",
+   388.8,
+   9611.1
+  ],
+  [
+   "VDD",
+   466.742286,
+   9611.1
+  ],
+  [
+   "VDD",
+   544.684573,
+   9611.1
+  ],
+  [
+   "VDD",
+   622.626859,
+   9611.1
+  ],
+  [
+   "VDD",
+   700.569145,
+   9611.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9633.6
+  ],
+  [
+   "VDD",
+   116.001998,
+   9633.6
+  ],
+  [
+   "VDD",
+   193.944284,
+   9633.6
+  ],
+  [
+   "VDD",
+   271.88657,
+   9633.6
+  ],
+  [
+   "VDD",
+   349.828857,
+   9633.6
+  ],
+  [
+   "VDD",
+   427.771143,
+   9633.6
+  ],
+  [
+   "VDD",
+   505.71343,
+   9633.6
+  ],
+  [
+   "VDD",
+   583.655716,
+   9633.6
+  ],
+  [
+   "VDD",
+   661.598002,
+   9633.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9633.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9656.1
+  ],
+  [
+   "VSS",
+   154.973141,
+   9656.1
+  ],
+  [
+   "VSS",
+   700.569145,
+   9656.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9678.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9678.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9701.1
+  ],
+  [
+   "VSS",
+   466.742286,
+   9701.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9723.6
+  ],
+  [
+   "VSS",
+   116.001998,
+   9723.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9723.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9746.1
+  ],
+  [
+   "VSS",
+   310.857714,
+   9746.1
+  ],
+  [
+   "VSS",
+   544.684573,
+   9746.1
+  ],
+  [
+   "VSS",
+   700.569145,
+   9746.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9768.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9768.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9791.1
+  ],
+  [
+   "VSS",
+   232.915427,
+   9791.1
+  ],
+  [
+   "VSS",
+   388.8,
+   9791.1
+  ],
+  [
+   "VSS",
+   622.626859,
+   9791.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9813.6
+  ],
+  [
+   "VSS",
+   427.771143,
+   9813.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9813.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9836.1
+  ],
+  [
+   "VSS",
+   700.569145,
+   9836.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9858.6
+  ],
+  [
+   "VSS",
+   116.001998,
+   9858.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9858.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9881.1
+  ],
+  [
+   "VSS",
+   388.8,
+   9881.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9903.6
+  ],
+  [
+   "VSS",
+   116.001998,
+   9903.6
+  ],
+  [
+   "VSS",
+   349.828857,
+   9903.6
+  ],
+  [
+   "VSS",
+   427.771143,
+   9903.6
+  ],
+  [
+   "VSS",
+   661.598002,
+   9903.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9903.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9926.1
+  ],
+  [
+   "VSS",
+   154.973141,
+   9926.1
+  ],
+  [
+   "VSS",
+   388.8,
+   9926.1
+  ],
+  [
+   "VSS",
+   622.626859,
+   9926.1
+  ],
+  [
+   "VSS",
+   700.569145,
+   9926.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9948.6
+  ],
+  [
+   "VSS",
+   116.001998,
+   9948.6
+  ],
+  [
+   "VSS",
+   193.944284,
+   9948.6
+  ],
+  [
+   "VDD",
+   271.88657,
+   9948.6
+  ],
+  [
+   "VDD",
+   349.828857,
+   9948.6
+  ],
+  [
+   "VDD",
+   427.771143,
+   9948.6
+  ],
+  [
+   "VDD",
+   505.71343,
+   9948.6
+  ],
+  [
+   "VSS",
+   583.655716,
+   9948.6
+  ],
+  [
+   "VSS",
+   661.598002,
+   9948.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9948.6
+  ],
+  [
+   "VDD",
+   77.030855,
+   9971.1
+  ],
+  [
+   "VSS",
+   154.973141,
+   9971.1
+  ],
+  [
+   "VSS",
+   232.915427,
+   9971.1
+  ],
+  [
+   "VDD",
+   310.857714,
+   9971.1
+  ],
+  [
+   "VDD",
+   388.8,
+   9971.1
+  ],
+  [
+   "VDD",
+   466.742286,
+   9971.1
+  ],
+  [
+   "VDD",
+   544.684573,
+   9971.1
+  ],
+  [
+   "VSS",
+   622.626859,
+   9971.1
+  ],
+  [
+   "VSS",
+   700.569145,
+   9971.1
+  ],
+  [
+   "VDD",
+   38.059711,
+   9993.6
+  ],
+  [
+   "VDD",
+   116.001998,
+   9993.6
+  ],
+  [
+   "VDD",
+   193.944284,
+   9993.6
+  ],
+  [
+   "VDD",
+   271.88657,
+   9993.6
+  ],
+  [
+   "VDD",
+   349.828857,
+   9993.6
+  ],
+  [
+   "VDD",
+   427.771143,
+   9993.6
+  ],
+  [
+   "VDD",
+   505.71343,
+   9993.6
+  ],
+  [
+   "VDD",
+   583.655716,
+   9993.6
+  ],
+  [
+   "VDD",
+   661.598002,
+   9993.6
+  ],
+  [
+   "VDD",
+   739.540289,
+   9993.6
+  ]
+ ],
+ "assumptions": [
+  "Published 16-column row/column template instantiated rigidly at 45 um; outside the 25-37 um shoreline optimum",
+  "No signal, control, original ground or original supply site moves; only 74 vacant sites gain PG",
+  "32 GT/s, 0.6 pJ/b, 0.7 V and the current window stay unchanged; no vendor electrical qualification",
+  "All 44 published UCIe grounds retained; all 74 vacant sites assigned supply for a best-case supply-count bound; return-path/electrical qualification not asserted"
+ ]
+}

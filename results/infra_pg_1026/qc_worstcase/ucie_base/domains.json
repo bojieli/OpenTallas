@@ -1,0 +1,106 @@
+{
+ "window": "io_ucie_kv_u_ucie_kv",
+ "window_um": [
+  0.0,
+  8640.0,
+  1373.76,
+  10618.56
+ ],
+ "die": {
+  "outline_um": [
+   1373.76,
+   1978.5599999999995
+  ],
+  "pg": {
+   "grid": [
+    {
+     "layer": "M8",
+     "width_um": 0.48,
+     "pitch_um": 2.16,
+     "offset_um": 1.08,
+     "nets": [
+      "VDD",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 0.48,
+     "pitch_um": 1.728,
+     "offset_um": 0.864,
+     "nets": [
+      "VDD",
+      "VSS"
+     ]
+    }
+   ],
+   "domains": [
+    {
+     "name": "io_ucie_kv_u_ucie_kv",
+     "rect_um": [
+      0.0,
+      604.7999999999993,
+      777.6,
+      1382.3999999999996
+     ],
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 0.31200000000000006,
+       "pitch_um": 0.72,
+       "offset_um": 0.36,
+       "nets": [
+        "VDD",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 0.24,
+       "pitch_um": 0.576,
+       "offset_um": 0.288,
+       "nets": [
+        "VDD",
+        "VSS"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "load_blocks": 368,
+ "power_w": 4.061583,
+ "phy_grid": [
+  {
+   "layer": "M8",
+   "width_um": 0.31200000000000006,
+   "pitch_um": 0.72,
+   "offset_um": 0.36,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 0.24,
+   "pitch_um": 0.576,
+   "offset_um": 0.288,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  }
+ ],
+ "subdivision": 3,
+ "phy_m7_pitch_um": 8.64,
+ "contacts": "native per-domain macro PG grid",
+ "explicit_phy_sources": true,
+ "explicit_phy_grid": false,
+ "scope": "separate PHY-local grid; explicit candidate PHY sources; core sources and load densities unchanged; open window boundaries; no plan adoption"
+}
