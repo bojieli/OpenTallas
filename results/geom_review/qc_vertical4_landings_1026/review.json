@@ -1,0 +1,19 @@
+{
+  "picture": "bands.png",
+  "input": "65port fourverticalregion manifest08ba6e00f + ONEQC63b FEbeforelanding88candidate",
+  "review": "Viewed all six actual receiving-type storage-band layouts. Banks stay on the receiving face beside their pin windows, with open interior area and no new hard-core or macro moves. Forwarded-clock endpoints share the local receiving strips. This candidate eliminates former SU_C ring banks by keeping each slice/SU cohort in one region. Registered monitor infrastructure checks separately cover224typepins/136edges, max384.128um. No direct root-to-GLUE wire.",
+  "verdict": "PASS-COND proposed geometry for smallest mapped trial only; not a route or freeze release",
+  "conditions": [
+    "Mapped actual ring FF anchors and full register reach must fit proposed bands",
+    "Actual region forwarded-clock window and TT/FF pair80 proof",
+    "Real status/observer independent VERIFY proof",
+    "SLW_FE_V2 private reset six-site geometry remains HOLD",
+    "Normal flow canary and source review before P&R remain required"
+  ],
+  "cycles": {
+    "landing_each_crossing": 3,
+    "monitor_data_extra": 0,
+    "static_boot_ready": 405,
+    "observer_capture": 1
+  }
+}
