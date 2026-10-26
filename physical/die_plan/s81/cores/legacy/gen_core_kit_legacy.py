@@ -748,7 +748,7 @@ def main():
     if lerr:
         raise SystemExit(f"{mod}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "signoff.py", "pair_skew.tcl") \
-            + (("reg_fanout_gate.py", "lec.py", "legacy_gate.py", "postcts_gate.tcl") if modern else ()):
+            + (("reg_fanout_gate.py", "lec.py", "legacy_gate.py", "postcts_gate.tcl", "pinreg_measure.tcl") if modern else ()):
         shutil.copyfile(TOOL / f, kd / f)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     # S81/KITS 10-24: clock-insertion balance to the plan insertion before the CTS repair (the SIGNED c2 / VQ r12
