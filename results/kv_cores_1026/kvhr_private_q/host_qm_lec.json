@@ -1,0 +1,96 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-26T09:13:38+0000",
+ "verdict": "EQUIVALENT",
+ "top": "qkd_hr_host_qm",
+ "netlist": "/work/run/results/asap7/hc_qkd_hr_host_qm__77_76x77_76/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 8,
+  "outputs": 2
+ },
+ "t_aig_s": 1.6,
+ "t_corr_s": 0.3,
+ "keypoints": {
+  "gold": {
+   "inputs": 9,
+   "flops": 19,
+   "outputs": 0,
+   "ands": 861
+  },
+  "gate": {
+   "inputs": 60,
+   "flops": 36,
+   "outputs": 0,
+   "ands": 661
+  },
+  "matched": 25,
+  "gold_constant_flops": {
+   "n": 2,
+   "first": [
+    "ff:u_dut.u_pacer.owed[3]",
+    "ff:u_dut.u_pacer.pending[3]"
+   ]
+  },
+  "paired_flops": {
+   "n": 1,
+   "first": [
+    "both:ff:u_dut.u_pacer.fault=ff:u_dut.fault"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 1,
+  "gate_x_sources": 52,
+  "gold_only_compare": {
+   "n": 0,
+   "first": []
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 0.0,
+ "x_dont_care_points": {
+  "n": 0,
+  "first": []
+ },
+ "kept_registers": {
+  "declared": 1,
+  "in_netlist": 1,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "counts": {
+  "compare_points": 25,
+  "proved": 25,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "25 compare points proved; 25 key points matched by name, 1 register pairs / merges and 2 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs)",
+ "t_total_s": 2.0,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "error: ModuleNotFoundError"
+ }
+}

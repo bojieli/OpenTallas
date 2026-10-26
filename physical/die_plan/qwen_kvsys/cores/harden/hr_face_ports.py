@@ -151,6 +151,7 @@ def transform(J, top, mutant=False):
                         w = len(c["connections"]["Q"])
                         return (c["type"], tuple((k, tuple(c["connections"][k])) for k in CTRL if k in c["connections"]),
                                 tuple((k, v) for k, v in sorted(c["parameters"].items()) if k.endswith("POLARITY")),
+                                tuple((k, c["connections"][k][x[2]]) for k in WIDE if k not in ("D", "Q") and k in c["connections"]),
                                 tuple(pbits(c["parameters"][k], w)[::-1][x[2]] for k in VAL if k in c["parameters"]))
                     if len({key(x) for x in ld}) == 1:
                         keep = ld[0]
