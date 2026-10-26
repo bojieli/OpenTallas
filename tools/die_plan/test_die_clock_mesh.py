@@ -517,13 +517,15 @@ class Rule128Export(unittest.TestCase):
         self.assertEqual(t["untied"], [])                 # the drop shields are tied through the strap shields
         self.assertEqual(t["shorts"], [])
         self.assertEqual(t["stripes_with_grid_via"], 2)   # both M8 shields cross 6 M9 VSS stripes each
-        self.assertEqual(len(t["grid_vias"]), 12)
+        self.assertEqual(len(t["grid_vias"]), 6)          # tie pitch 34.56: x = 8.64, 43.2 + the end 51.84, per side
+        self.assertEqual(sorted({x for x, _ in t["grid_vias"]}), [8.64, 43.2, 51.84])
         self.assertGreaterEqual(len(t["shield_vias"]), 2)
-        self.assertEqual(t["used_grid"], {("M9", round(8.64 * k, 4)) for k in range(1, 7)})
+        self.assertEqual(t["used_grid"], {("M9", 8.64), ("M9", 43.2), ("M9", 51.84)})
+        self.assertEqual(len(C.shield_ties(st, pg, nd["width"], tie_pitch_um=0)["grid_vias"]), 12)
         r = C.shield_record([dict(wire_um=58.0, segs=segs)], "VSS", 1, 0, ties=t)
         self.assertTrue(r["vss_tied"] and r["freeze_evidence_ok"])
         tcl = C.tie_tcl(t, "$tsw")
-        self.assertEqual(sum("$v89" in x and "dbSBox_create" in x for x in tcl), 12 + len(t["shield_vias"]))
+        self.assertEqual(sum("$v89" in x and "dbSBox_create" in x for x in tcl), len(t["grid_vias"]) + len(t["shield_vias"]))
         # an isolated short stripe that crosses nothing stays untied; a strap on a VDD stripe is a short
         t2 = C.shield_ties(C.shield_stripes([("M9", 90.0, 1.0, 90.0, 3.0), ("M8", 2.0, 4.32, 60.0, 4.32)], nd),
                            pg, nd["width"])

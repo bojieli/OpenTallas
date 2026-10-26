@@ -455,7 +455,7 @@ def pg_grid(P):
     return grid
 
 
-def shield_ties(stripes, pg_rects, w_shield, net="VSS", tile_um=50.0):
+def shield_ties(stripes, pg_rects, w_shield, net="VSS", tile_um=50.0, tie_pitch_um=34.56):
     """12.7a electrical tie of the clock shields to the die VSS grid (COORD 07:04: no freeze evidence before it).
 
     stripes: shield centre lines from shield_stripes(); pg_rects: die_infra.pg_rects tuples (net, layer, x0, y0, x1, y1).
@@ -465,6 +465,7 @@ def shield_ties(stripes, pg_rects, w_shield, net="VSS", tile_um=50.0):
         crosses no grid stripe (a drop, a jog) is tied through the shield it meets;
       * a stripe is TIED when its connected shield component holds at least one grid via;
       * a SHORT is a shield stripe footprint overlapping a same-layer PG stripe of another net (VDD, VDDPHY).
+    Grid ties are spaced >= tie_pitch_um along a stripe (4 grid pitches at 8.64 um), both stripe ends always tied.
     Returns dict(grid_vias=[(x, y)], shield_vias=[(x, y)], untied=[stripe idx], shorts=[(idx, net)], counts...)."""
     import bisect
     hw = w_shield / 2
@@ -503,11 +504,16 @@ def shield_ties(stripes, pg_rects, w_shield, net="VSS", tile_um=50.0):
     for k, (L, x0, y0, x1, y1) in enumerate(stripes):
         c, a, b = (y0, min(x0, x1), max(x0, x1)) if L == "M8" else (x0, min(y0, y1), max(y0, y1))
         cs, rows = lines[perp[L]]
-        for q in rows[bisect.bisect_left(cs, a):bisect.bisect_right(cs, b)]:
-            if q[1] - 1e-6 <= c <= q[2] + 1e-6:
-                grid_vias.append((q[0], c) if L == "M8" else (c, q[0]))
-                used.add((perp[L], round(q[0], 4)))
-                has_grid.add(k)
+        hit = [q for q in rows[bisect.bisect_left(cs, a):bisect.bisect_right(cs, b)] if q[1] - 1e-6 <= c <= q[2] + 1e-6]
+        keep, last = [], None       # one tie per tie_pitch_um along the stripe, both ends always tied
+        for i_, q in enumerate(hit):
+            if last is None or q[0] - last >= tie_pitch_um - 1e-6 or i_ == len(hit) - 1:
+                keep.append(q)
+                last = q[0]
+        for q in keep:
+            grid_vias.append((q[0], c) if L == "M8" else (c, q[0]))
+            used.add((perp[L], round(q[0], 4)))
+            has_grid.add(k)
         lo_s, srows, wmax = same[L]
         for q in srows[bisect.bisect_left(lo_s, c - hw - wmax):bisect.bisect_right(lo_s, c + hw)]:
             if q[0] < c + hw - 1e-6 and q[1] > c - hw + 1e-6 and q[2] < b - 1e-6 and q[3] > a + 1e-6:
