@@ -211,13 +211,15 @@ def resolve(die, slice_inst, source_root=None):
         if sources[resolved_paths[streamer]] not in known:
             raise ValueError('changed XS4 source has no matching capture-stage receipt')
         added = 1
-    return dict(schema='opentallas.s81.selected_slice_source.v1', slice=slice_inst,
+    result = dict(schema='opentallas.s81.selected_slice_source.v1', slice=slice_inst,
                 die_master=die.inst[slice_inst]['master'], wrapper_chain=chain,
                 xg=xg, ring=ring, streamer=streamer, capture=cap,
                 xr=xr, xr_source_path=xr_path,
                 selected_hb=hb,
                 streamer_added_capture_edges=added, source_sha256=sources,
                 source_root=str(source_root), explicit_source_root=explicit, physical_binding_qualified=False,
-                selected_asbuilt_manifest=(str(selection[0].relative_to(source_root)) if selection else None),
-                resolved_module_sources=resolved_paths,
                 qualification='SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required')
+    if selection:
+        result.update(selected_asbuilt_manifest=str(selection[0].relative_to(source_root)),
+                      resolved_module_sources=resolved_paths)
+    return result

@@ -49,10 +49,11 @@ def source_contract(tree, fallback, instances=None):
             if pins.setdefault(path, sha) != sha:
                 raise ValueError('selected transports disagree on source '+path)
             selected[name] = dict(master=r['xr'], family=family, source_path=path, source_sha256=sha,
-                                  wrapper_chain=r['wrapper_chain'],
-                                  selected_asbuilt_manifest=r.get('selected_asbuilt_manifest'),
-                                  selected_source_sha256=r['source_sha256'],
-                                  resolved_module_sources=r.get('resolved_module_sources', {}))
+                                  wrapper_chain=r['wrapper_chain'])
+            if r.get('selected_asbuilt_manifest'):
+                selected[name].update(selected_asbuilt_manifest=r['selected_asbuilt_manifest'],
+                                      selected_source_sha256=r['source_sha256'],
+                                      resolved_module_sources=r['resolved_module_sources'])
         if not selected:
             raise ValueError('actual die has no selected slice transport')
         ages = {(XRT_MODEL if p['family'] == 'XRT' else QUALIFIED)[p['source_sha256']]
