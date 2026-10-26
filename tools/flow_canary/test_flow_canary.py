@@ -146,6 +146,10 @@ def test_submit_dry(tmp_path):
     job = (run / "job.sh").read_text()
     assert "gen.py phys physical/die_plan/s81/die_plan.json" in job and "canary.py lint" in job and "canary.py check" in job
     assert (run / "canary.py").is_file() and (run / "reg_fanout_gate.py").is_file()
+    # a dry run never looks like a live canary to the trigger / autopilot (they glob */canary_meta.json)
+    assert not (run / "canary_meta.json").exists() and (run / "canary_meta.dry.json").is_file()
+    assert T.live_dies(tmp_path / "runs") == set()
+    (run / "canary_meta.dry.json").rename(run / "canary_meta.json")     # now simulate a real, verdict-less run
     assert T.live_dies(tmp_path / "runs") == {"s81"}
     # a live canary blocks the trigger (no checkout under it)
     import subprocess
@@ -155,7 +159,8 @@ def test_submit_dry(tmp_path):
 
 def test_submit_dry_kv_core(tmp_path):
     assert C.main(["submit", "--src", str(tmp_path), "--root", str(tmp_path / "runs"), "--dry", "--die", "qwen_kvsys_core"]) == 0
-    job = (next((tmp_path / "runs").iterdir()) / "job.sh").read_text()
+    run = next((tmp_path / "runs").iterdir())
+    job = (run / "job.sh").read_text() + (run / "route.sh").read_text()   # 99154991a: the kit flow runs from route.sh
     inp = "/srv/opentallas-scratch2/claude/flow-canary/inputs/kv/20261025_head_e1"
     assert f"gen_core_kit_kv.py --core-json {inp}/core/kv3_head_eighth_e1_core.json --plan {inp}/plan/die_plan.json" in job
     assert "/kv3_head_eighth_e1__216x216/run_kit_kv.sh" in job and f"[ ! -f {inp}/MANIFEST.json ]" in job and "{" + "inputs}" not in job
