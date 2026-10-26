@@ -101,3 +101,4 @@ gate = tools/die_plan pytest + plain G0 on s81, s81_head, qwen_compute, qwen_kvs
 - FLOW TAG flow-20261025-b NOT CUT: no KV core canary NO-REGRESSION yet (FLOW-FANOUT attribution run e live).
 - Watch: path-hbm-reset-2335 carries an old canaries.json watch list; keep main's lists when it merges.
 - No live jobs. Worktree epyc1:/srv/opentallas-scratch2/claude/wt/root-merge14 removed at park.
+[ROOT-MERGE-15 2026-10-26 01:07 PDT] MERGED tok-ds-2330 b58f1bafdf + kits-wave2 be0e65d075 -> main 26576bc7b0 (gates = baseline). cp1-driverview -> FLOW-TAG; path-qc-2325 + path-qc-iohold READY-AT-FLOW-TAG; path-kv-lec HOLD (full-kit LEC reruns ~02:00).
