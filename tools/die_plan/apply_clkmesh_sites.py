@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """D-QC-CLKMESH plan item: reserve the die clock cell sites (mesh drivers, H-tree nodes/repeaters, tap stubs) built by
-die_clock_mesh.py build.  usage: apply_clkmesh_sites.py PLAN MESH_DIR [--write]
+die_clock_mesh.py build.  usage: apply_clkmesh_sites.py PLAN MESH_DIR [--write] [--delta-id D-...]
 
 * die level: plan.clock.mesh = the mesh profile + a pointer (repo-relative) to clock_mesh_sites.json (every die clock
   cell: name, kind, die xy, owning partition or "die" for a channel).
@@ -29,6 +29,8 @@ def main():
     ap.add_argument("mesh_dir")
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--sites-out")
+    ap.add_argument("--delta-id", default="D-QC-CLKMESH",
+                    help="PLAN-DELTA id stamped into plan.clock.mesh.delta (e.g. D-KV-CLKMESH for qwen_kvsys)")
     a = ap.parse_args()
     raw = json.loads(Path(a.plan).read_text())
     P = S.Plan(S.load(a.plan))
@@ -97,7 +99,7 @@ def main():
         sp = Path(a.sites_out or Path(a.plan).parent / "clock_mesh_sites.json")
         sp.write_text(json.dumps(dict(meta=M["meta"], sites=sites)) + "\n")
         mm = {k: M["meta"][k] for k in ("nx", "ny", "m", "rep_um", "ndr", "pitch_um")}
-        raw["clock"]["mesh"] = dict(mm, delta="D-QC-CLKMESH", layers={"straps_h": "M8", "straps_v": "M9"},
+        raw["clock"]["mesh"] = dict(mm, delta=a.delta_id, layers={"straps_h": "M8", "straps_v": "M9"},
                                     tool="tools/die_plan/die_clock_mesh.py build", sites_file=sp.name,
                                     sites_sha256=hashlib.sha256(sp.read_bytes()).hexdigest(), cells=len(sites))
         types = raw["partition_types"]
