@@ -19,7 +19,8 @@ CANON = 'rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/' + BASE + '.sv'
 FILELIST = 'tools/hbm_b2/q3sync/q3b.files'
 TOP = 'ot_hfd_coll_q3_hard_v8x_s'
 KEEP = ['ot_hgi_coll_ring_ag', 'ot_hgi_coll_reduce_static_pr', 'ot_hgi_coll_link_e',
-        'ot_hgi_coll_argmax_m_tp192', 'ot_hgi_coll_vmasm_sliced_v7',
+        'ot_hgi_coll_link_e_pr', 'ot_hgi_coll_argmax_m_tp192', 'ot_hgi_coll_argmax_m_tp192_pr',
+        'ot_hgi_coll_vmasm_sliced_v7',
         'ot_hgi_coll_static_vmwrite_roots_v6_physical']
 EXCLUDE = ['c:u_body.u_ring', 'c:u_body.u_reduce', 'c:u_body.g_link*', 'c:*u_arg',
            'c:u_body.u_vmasm', 'c:u_body.u_writer']
