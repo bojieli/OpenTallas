@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS-COND",
+  "picture": "results/qc_oneevent0733/dense_bank_review.png",
+  "findings": [
+    "LOOKED at east and west repeated layouts: bank remains in broad inter-core channel, no core move or channel obstruction",
+    "15 exact indexed bank layouts expanded to14rows; positions move at most0.54um, preserve every bit/station and all pins/cycles",
+    "Allocated-envelope collision checks against all existing FT stations and hard-core bodies PASS; actual DFF-centre paired hops max368.82um",
+    "Master static successor confirms bay_fill PASS and lot_fit/reach PASS; roads, entry pins and clock gates remain FAIL/NOT RUN"
+  ],
+  "scope": "Unfrozen QC event candidate only; no P&R/STA authorization"
+}

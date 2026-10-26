@@ -1,0 +1,177 @@
+{
+  "verdict": "PASS",
+  "changed_groups": 15,
+  "changed_types": 6,
+  "added_cycles": 0,
+  "permutation": "NONE",
+  "max_actual_paired_hop_um": 368.81999999999994,
+  "collision_basis": "allocated slot.bit_site_cell_um envelopes vs every existing station and hard core",
+  "hop_basis": "fixed type_pins and actual DFFHQNx1 1.08x0.27um cell centres",
+  "banks": [
+    {
+      "type": "sle_su_l1__cl15735621",
+      "slot": "rsf",
+      "group": 0,
+      "bits": 515,
+      "old_fill": 0.6037514654161781,
+      "new_fill": 0.5606263607435938,
+      "old_rows": 13,
+      "new_rows": 14,
+      "max_displacement_um": 0.27000000000000135
+    },
+    {
+      "type": "sle_su_l1__cl15735621",
+      "slot": "rsn",
+      "group": 1,
+      "bits": 515,
+      "old_fill": 0.6390798014509415,
+      "new_fill": 0.5477826869579447,
+      "old_rows": 12,
+      "new_rows": 14,
+      "max_displacement_um": 0.27000000000003865
+    },
+    {
+      "type": "sle_su_l1__cl3c610c2d",
+      "slot": "rsf",
+      "group": 0,
+      "bits": 515,
+      "old_fill": 0.6037514654161781,
+      "new_fill": 0.5606263607435938,
+      "old_rows": 13,
+      "new_rows": 14,
+      "max_displacement_um": 0.27000000000000135
+    },
+    {
+      "type": "sle_su_l1__cl3c610c2d",
+      "slot": "rsn",
+      "group": 1,
+      "bits": 515,
+      "old_fill": 0.6390798014509415,
+      "new_fill": 0.5477826869579447,
+      "old_rows": 12,
+      "new_rows": 14,
+      "max_displacement_um": 0.27000000000003865
+    },
+    {
+      "type": "sle_su_l1__cl9c71a39d",
+      "slot": "rsf",
+      "group": 0,
+      "bits": 515,
+      "old_fill": 0.6037514654161781,
+      "new_fill": 0.5606263607435938,
+      "old_rows": 13,
+      "new_rows": 14,
+      "max_displacement_um": 0.27000000000000135
+    },
+    {
+      "type": "sle_su_l1__cl9c71a39d",
+      "slot": "rsn",
+      "group": 1,
+      "bits": 515,
+      "old_fill": 0.6390798014509415,
+      "new_fill": 0.5477826869579447,
+      "old_rows": 12,
+      "new_rows": 14,
+      "max_displacement_um": 0.27000000000003865
+    },
+    {
+      "type": "slw_su_l1__cl766bacee",
+      "slot": "rsn",
+      "group": 0,
+      "bits": 515,
+      "old_fill": 0.654064087534199,
+      "new_fill": 0.5606263607435941,
+      "old_rows": 12,
+      "new_rows": 14,
+      "max_displacement_um": 0.27000000000003865
+    },
+    {
+      "type": "slw_su_l1__cl766bacee",
+      "slot": "rsn",
+      "group": 1,
+      "bits": 515,
+      "old_fill": 0.6037514654161766,
+      "new_fill": 0.5606263607435941,
+      "old_rows": 13,
+      "new_rows": 14,
+      "max_displacement_um": 0.2700000000000955
+    },
+    {
+      "type": "slw_su_l1__cl766bacee",
+      "slot": "rsn",
+      "group": 2,
+      "bits": 515,
+      "old_fill": 0.6037514654161766,
+      "new_fill": 0.5606263607435941,
+      "old_rows": 13,
+      "new_rows": 14,
+      "max_displacement_um": 0.2700000000002092
+    },
+    {
+      "type": "slw_su_l1__cl8312485b",
+      "slot": "rsn",
+      "group": 0,
+      "bits": 515,
+      "old_fill": 0.654064087534199,
+      "new_fill": 0.5606263607435941,
+      "old_rows": 12,
+      "new_rows": 14,
+      "max_displacement_um": 0.27000000000003865
+    },
+    {
+      "type": "slw_su_l1__cl8312485b",
+      "slot": "rsn",
+      "group": 1,
+      "bits": 515,
+      "old_fill": 0.6037514654161766,
+      "new_fill": 0.5606263607435941,
+      "old_rows": 13,
+      "new_rows": 14,
+      "max_displacement_um": 0.2700000000000955
+    },
+    {
+      "type": "slw_su_l1__cl8312485b",
+      "slot": "rsn",
+      "group": 2,
+      "bits": 515,
+      "old_fill": 0.6037514654161766,
+      "new_fill": 0.5606263607435941,
+      "old_rows": 13,
+      "new_rows": 14,
+      "max_displacement_um": 0.2700000000002092
+    },
+    {
+      "type": "slw_su_l1__clbd68af58",
+      "slot": "rsn",
+      "group": 0,
+      "bits": 515,
+      "old_fill": 0.654064087534199,
+      "new_fill": 0.5606263607435941,
+      "old_rows": 12,
+      "new_rows": 14,
+      "max_displacement_um": 0.27000000000003865
+    },
+    {
+      "type": "slw_su_l1__clbd68af58",
+      "slot": "rsn",
+      "group": 1,
+      "bits": 515,
+      "old_fill": 0.6037514654161766,
+      "new_fill": 0.5606263607435941,
+      "old_rows": 13,
+      "new_rows": 14,
+      "max_displacement_um": 0.2700000000000955
+    },
+    {
+      "type": "slw_su_l1__clbd68af58",
+      "slot": "rsn",
+      "group": 2,
+      "bits": 515,
+      "old_fill": 0.6037514654161766,
+      "new_fill": 0.5606263607435941,
+      "old_rows": 13,
+      "new_rows": 14,
+      "max_displacement_um": 0.2700000000002092
+    }
+  ]
+}
