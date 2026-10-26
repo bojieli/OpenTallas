@@ -4,6 +4,8 @@ import gzip
 import json
 import sys
 import tempfile
+import subprocess
+import shutil
 from pathlib import Path
 
 import pytest
@@ -98,6 +100,27 @@ def test_seam_hold_padding_relaxed():
     txt, ctx = _kit(TINY)
     bad = txt.replace(f"set_input_delay -min {-ctx['insertion_tol_ps']:.4f}", "set_input_delay -min 0.0000")
     assert any("seam-hold padding relaxed" in x for x in _errs(bad, ctx))
+
+
+def test_standalone_tightened_sender_contract(tmp_path):
+    """The bundled checker must not import the absent generator for a constant."""
+    txt, ctx = _kit(TINY)
+    txt = txt.replace('set_output_delay -min 0.0000', 'set_output_delay -min -27.5000')
+    ctx.update(hold_in_min_ps=-ctx['insertion_tol_ps'], hold_out_min_ps=-27.5,
+               seam_hold_ps=27.5+ctx['insertion_tol_ps'])
+    (tmp_path/'constraint.sdc').write_text(txt)
+    (tmp_path/'sdc_lint.json').write_text(json.dumps(ctx))
+    standalone = tmp_path/'sdc_lint.py'
+    shutil.copyfile(HERE/'sdc_lint.py', standalone)
+    r = subprocess.run([sys.executable, '-I', str(standalone), str(tmp_path)],
+                       text=True, capture_output=True)
+    assert r.returncode == 0, r.stdout+r.stderr
+    ctx['seam_hold_ps'] = 0
+    (tmp_path/'sdc_lint.json').write_text(json.dumps(ctx))
+    r = subprocess.run([sys.executable, '-I', str(standalone), str(tmp_path)],
+                       text=True, capture_output=True)
+    assert r.returncode != 0
+    assert 'seam hold contract' in r.stdout+r.stderr
 
 
 def test_undefined_clock_and_untapped_clock_port():

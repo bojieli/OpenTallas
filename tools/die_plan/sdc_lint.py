@@ -216,11 +216,10 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     if out_lim > EPS:
         err.append(f"hold: contract min output delay {out_lim:g} ps > 0 (sender hold check waived)")
     if hold_in_min_ps is not None or hold_out_min_ps is not None:
-        import gen_phys
         if seam_hold_ps is None or abs((-out_lim - in_lim) - float(seam_hold_ps)) > EPS \
-                or float(seam_hold_ps) < gen_phys.SEAM_HOLD_MIN_PS - EPS:
+                or float(seam_hold_ps) < POLICY_HOLD_PS - EPS:
             err.append(f"hold: seam hold contract sender {-out_lim:g} + receiver {-in_lim:g} ps != seam "
-                       f"{seam_hold_ps} ps or below {gen_phys.SEAM_HOLD_MIN_PS:g} ps")
+                       f"{seam_hold_ps} ps or below {POLICY_HOLD_PS:g} ps")
     # FLOW 10-25 (ruling 9.7 / 5e): the SDC vclk carries the TT-bound insertion; the FF-bound one (FF-only flow steps,
     # vclk_corner.tcl) must be a positive insertion not above TT
     if insertion_ff_ps is not None and not (0 < float(insertion_ff_ps) <= float(insertion_ps) + EPS):
