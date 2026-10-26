@@ -50,7 +50,7 @@ def main():
         writer=csv.DictWriter(f,fieldnames=fields,delimiter='\t');writer.writeheader();writer.writerows(rows)
     mp=json.loads((d/census['map']).read_text());mp['parts'].update({'@generated_eng_parent':'eng','@generated_svc14_parent':'svc_14'})
     cmap=d/'census_map_eng_live_1026.json';cmap.write_text(json.dumps(mp,indent=1)+'\n')
-    census.update(rows='census/s81_lanes_eng_live_1026.tsv',map='census_map_eng_live_1026.json',note='Historical rows preserved separately; exact877 generated parent live PCI264/RCO39 projection plus explicit real cfg_fault wrapper metadata bit; source mapping in eng_r5_parent_census_1026_v4.json. No padding exemption.')
+    census.update(rows='census/s81_lanes_eng_live_1026.tsv',map='census_map_eng_live_1026.json',note='Historical rows preserved separately; exact877 generated parent live PCI264/RCO39 projection plus explicit real cfg_fault wrapper metadata bit; source mapping in eng_r5_parent_census_1026_v5.json. No padding exemption.')
     t=raw['partition_types']['eng__t1']
     c=next(c for c in t['hard_cores'] if c['module']=='dsdv_eng_rr_e')
     oldpins=json.loads((d/c['pins_file']).read_text())['pins'];new=[]
@@ -126,7 +126,9 @@ def main():
     fresh=latency_table(S.Plan(raw,a.root/a.plan))
     latency_changes={lid:dict(old_cycles=old_latency.get(lid,{}).get('cycles'),new_cycles=row['cycles']) for lid,row in fresh.items() if old_latency.get(lid,{}).get('cycles')!=row['cycles']}
     raw['latency']={'lanes':fresh}
-    report=dict(census_projection=changes,cfgfault_source_row=extra,public_ABI_corrections=abi,latency_changes=latency_changes,status='PLANNING candidate; no bind/STA/signoff adoption',pins=len(new),moved=moved,
+    payload_ff=sum(raw['ports'][next(i for i,p in enumerate(raw['ports']) if p['id']==oldlane['ports'][0])]['width']*oldlane['fixed_cycles'] for oldlane in raw['lanes'] if oldlane['id'] in {v['lane'] for v in priced})
+    epoch_ff=sum(v['new_fixed'] for v in priced)
+    report=dict(newly_realized_FF_vs_877=dict(payload=payload_ff,epoch=epoch_ff,total=payload_ff+epoch_ff),reference_transport_gate=dict(source_commit='3682e5dc88a0e39144775ff4bd86c18b10d7bb03',checks=320,valid_data_mismatches=0,epoch_mismatches=0,cfgfault_live_observations=251,mutant_catches=58,scope='Exact generated parent with real configuration and arithmetic/hash stubs; no full current-engine/G5 claim'),census_projection=changes,cfgfault_source_row=extra,public_ABI_corrections=abi,latency_changes=latency_changes,status='PLANNING candidate; no bind/STA/signoff adoption',pins=len(new),moved=moved,
         parent_data_census=rows,old_station_counts={v['conn']:len(v['regs_um']) for v in before},
         new_station_counts={v['conn']:len(v['regs_um']) for v in entries},
         cycle_delta=dict(core_RTL=0,parent_xtier_i0=1,parent_unit_i1=1,geometry_added_cycles=2,geometry_added_bit_cycles=329,historical_unpriced_PCI_cycles=2,historical_unpriced_RCO_cycles=1,word_stage_cycles_vs_raw_plan=5,parallel_RCO_valid_stage=1,sum_per_lane_fixed_cycles=6),priced_lanes=priced,

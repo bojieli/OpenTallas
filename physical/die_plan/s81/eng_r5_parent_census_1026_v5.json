@@ -183,5 +183,19 @@
   "remaining": [
     "Materialize PCI2/RCOdata1/FKS1/VI_S1 plus parallel matching RCOvalid1 in bound RTL; lockstep/mutant and price actual causal graph. cfgfault must follow the same RCO word stage.",
     "R5 engine core placement/route/signoff remains owned PATH-S81/head_eng; candidate LEF is not a signed view."
-  ]
+  ],
+  "newly_realized_FF_vs_877": {
+    "payload": 897,
+    "epoch": 6,
+    "total": 903
+  },
+  "reference_transport_gate": {
+    "source_commit": "3682e5dc88a0e39144775ff4bd86c18b10d7bb03",
+    "checks": 320,
+    "valid_data_mismatches": 0,
+    "epoch_mismatches": 0,
+    "cfgfault_live_observations": 251,
+    "mutant_catches": 58,
+    "scope": "Exact generated parent with real configuration and arithmetic/hash stubs; no full current-engine/G5 claim"
+  }
 }
