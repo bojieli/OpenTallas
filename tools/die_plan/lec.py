@@ -239,8 +239,8 @@ SEQ_TAIL = [
 ]
 
 
-def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out):
-    s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False)
+def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extra=()):
+    s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False, slang_extra=slang_extra)
     s += [f"read_verilog -overwrite {stubs}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
           # declared kept registers (the kept-register check): (* keep *) wires and every wire of a keep_hierarchy
           # module (pin / replica flop cells), marked before the hierarchy attributes are dropped
@@ -2379,6 +2379,22 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
 
 
 # ---------------------------------------------------------------------------------------------- driver
+def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
+    """gold AIG.  An unpacked array that memory_map cannot convert (write ports on several clocks, e.g. a
+    per-tap clocked delay line r[p] <= r[p+1] on clk[(p-1)/48], ot_hbm_su_static_ins) stays a $mem_v2 cell and the
+    AIGER backend rejects it; synthesis (read_verilog) turned the same array into named registers (mem2reg), so the
+    gold is re-read with read_slang --no-implicit-memories: every array becomes its registers, as written."""
+    args = (env, kit, gold_fe, lib_bbs, out / "stubs.v", out / "wrap_gold.v", out / "lecff.v", out / "gold")
+    try:
+        return run_yosys(gold_script(*args), out / "gold.ys", log)
+    except Unproven as e:
+        if gold_fe != "slang" or "Unsupported cell type: $mem_v2" not in str(e):
+            raise
+        log.append(f"gold: unmappable memory ({str(e)[-160:]}); re-reading with read_slang --no-implicit-memories")
+        rec["gold_no_implicit_memories"] = True
+        return run_yosys(gold_script(*args, slang_extra=["--no-implicit-memories"]), out / "gold.ys", log)
+
+
 def run_yosys(script, path, log):
     Path(path).write_text(script)
     y = ORFS + "/tools/install/yosys/bin/yosys"
@@ -2445,8 +2461,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         else:
             from concurrent.futures import ThreadPoolExecutor
             with ThreadPoolExecutor(2) as ex:
-                fg = ex.submit(run_yosys, gold_script(env, kit, gold_fe, lib_bbs, out / "stubs.v", out / "wrap_gold.v",
-                                                      out / "lecff.v", out / "gold"), out / "gold.ys", log)
+                fg = ex.submit(run_gold, env, kit, gold_fe, lib_bbs, out, log, rec)
                 ft = ex.submit(run_yosys, gate_script(env, netlist, out / "stubs.v", out / "wrap_gate.v",
                                                       out / "lecff.v", out / "gate"), out / "gate.ys", log)
                 fg.result()
