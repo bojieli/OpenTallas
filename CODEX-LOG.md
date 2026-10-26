@@ -4141,3 +4141,5 @@ OWNER? S81 published-size PHY fit needs a die-level choice: existing north/south
 
 ## S81 milestone 2026-10-26 02:17 PDT
 Head source component READY 9412fd850b on codex/head-source-1026 (epyc1 scratch2 worktree). BEST64 and HOST276 component tests passed; no own live jobs left from those benches. B2, legacy core and HEAD/eng workers continue actual structural fixes. Whole-head controller/HBC/LEP composition remains open.
+
+2026-10-26 02:24 PDT root: MERGED canary fleet staging93d4ca84a3; nativePHY+reproducibleB2toolc495508ed2; runtimekitdependency+LECretryfix22c9932821 (all pushed HEAD==origin). Sharedinfra regionalcutpreservation1d5b87430 deliveredhub,11testsPASS; actualfixedroute replay assignedFLOW. Critical diagnoses: regional crossings lackedactualRTL; pre-routeexport wascapacityonly; HBMnativeW128 demand exceedsoldW64plan; KV nativePV calendar paths4..100 differ113/114 and need stagedrestore; QC boundSU literalalignment0 differspriced3. All haveactive implementers. DeepSeek genuinecheckpoint recoveryPASS6144rows+25600WKV+20480H+5120HCpre, enablesrealL14token.

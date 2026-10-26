@@ -110,3 +110,6 @@ gate = tools/die_plan pytest + plain G0 on s81, s81_head, qwen_compute, qwen_kvs
 - Next event: path-kv-lec-2330 070a15290 HOLD until full-kit LEC reruns (~02:00, epyc1 .../pathkv-lec-2330/full) post EQUIVALENT + mutant -> merge as URGENT-FLOW.
 - HOLDs unchanged: QC batch 2 (CLOCK-MESH related-pair PASS), KV delta a795ac1cb6, TR3-HBM 623e81076 + tok-hbm-strap 22f37073b2. Owner 10-26 die freeze gate = GRT0 incl clock AND related-pair skew <=80 TT/FF.
 - No live jobs; worktree epyc1:/srv/opentallas-scratch2/claude/wt/root-merge15 removed.
+
+## CODEX notes 2026-10-26 02:24 PDT
+CODEX took over central merges on actualepyc1. Merged93d4ca84a3 canarystaging (actualepyc2spillPASS), c495508ed2 nativePHYterminal+regen+B2composer (4geometrychecksPASS; productioncomposePASS),22c9932821 sharedkithelperbundle (15hubchecksPASS)+LECretrykey (43focusedPASS). Plainmerges,0filedeletions,pushedHEAD==origin each. Pendingphysicalplan events remain held; nofalsefreeze.
