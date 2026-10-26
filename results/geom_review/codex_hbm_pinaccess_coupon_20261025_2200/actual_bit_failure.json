@@ -1,0 +1,6 @@
+{
+  "verdict": "FAIL",
+  "scope": "Pre-repair candidate2 actual FT bit sites",
+  "finding": "q_b011 L42x4 stage1 had782bit cells inside relocated u_hcb_Q6_lanes6_7_bank despite coarse corridor image. No P&R launched.",
+  "action": "Run matching HBS actual-bit allocator and re-view result before G2."
+}

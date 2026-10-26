@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Experimental G2 partition FT skeleton only q_b001 andq_b011; noG3/signoff/adoption",
+  "image": "results/geom_review/codex_hbm_pinaccess_coupon_20261025_2200/corridor_tiles.png",
+  "plan_input": "codex-hbm-corridor-2149/candidate2/die_plan.json",
+  "findings": [
+    "Actual alternating M4/M6 face windows retained at inherited12/um, no assumedreceipt.",
+    "Three real hard-core footprints in each bank remain obstructions, and horizontal dieFT bands clear them after re-pack.",
+    "q_b001 central NS stripe is explicitly M7-only over hardcores; not counted as core-free M4/M5 corridor.",
+    "Channels and knee stations remain actual geometry; same-site pin access and corridor congestion measured byG2.",
+    "No final clock/PDN or core-internal timing inferred from skeleton. G2result required before assigning measuredfacebudget."
+  ],
+  "required_results": [
+    "GRT overflow",
+    "pin-access warningcount",
+    "actual pin-layer/band/channellayout",
+    "congestionhotspots"
+  ]
+}

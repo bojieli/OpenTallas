@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Experimental G2 skeleton q_b001/q_b011 only, noG3/signoffadoption",
+  "image": "results/geom_review/codex_hbm_pinaccess_coupon_20261025_2200/repaired_tiles.png",
+  "findings": [
+    "Actual16853+7491FTcells clear allthreehardcorefootprints pertype. q_b011 previouslycolliding782bits nowoutsidecore.",
+    "31FTslots repaired, no added station stage or lane-cycle delta; exact-bit hops<=405 and macro-free sites.",
+    "Pins/window density remains intended12/um alternatingM4/M6. Probe must retain exact footprints/channels/stations and measure GRT/pin access; no syntheticemptycoupon.",
+    "Repaired dense cellclusters are compact knee/relay sites; post-GRT congestion map determines feasibility."
+  ],
+  "data_cycle_delta": 0
+}
