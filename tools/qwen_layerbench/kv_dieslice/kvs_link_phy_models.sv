@@ -37,8 +37,15 @@ module ot_qkvd_ucie_x64_phy #(parameter integer LAT = 5, parameter integer UP = 
     input  wire         tx_v,
     input  wire [582:0] tx_flit,
     output wire         rx_v,
-    output wire [582:0] rx_flit
+    output wire [582:0] rx_flit,
+    // line-side bump ports (e1bb295d96: the physical blackbox and qfd_link_slots expose them); in this bench the far end
+    // is the compute-die driver (tb_kvslice.c2k_*), so far_* is unused and link_* mirrors the KV transmit word.
+    output wire         link_v,
+    output wire [582:0] link_flit,
+    input  wire         far_v,
+    input  wire [582:0] far_flit
 );
+    assign link_v = tx_v; assign link_flit = tx_flit;
     reg [583:0] pipe [0:LAT-1];
     integer n;
     always @(posedge clk or negedge rst_n)
