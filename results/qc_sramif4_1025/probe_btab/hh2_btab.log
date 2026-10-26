@@ -1,0 +1,17 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+BOUND I 345.7267055259678 n 1059 min 338.290253 max 365.886993
+CENSUS legacy fail 1061 input 1061 worst -66.321976
+HIST2 sender 12.5 slack<0 total 28 input 28 vector 24
+HIST2 sender 12.5 slack<15 total 1207 input 1060 vector 1056
+HIST2 sender 27.5 slack<0 total 4 input 4 vector 0
+HIST2 sender 27.5 slack<15 total 175 input 28 vector 24
+HIST2 sender 40 slack<0 total 4 input 4 vector 0
+HIST2 sender 40 slack<15 total 153 input 6 vector 2
+HIST2 sender 55 slack<0 total 4 input 4 vector 0
+HIST2 sender 55 slack<15 total 151 input 4 vector 0

@@ -1,0 +1,167 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+BOUND I 389.11019074973274 n 935 min 377.991028 max 400.027405
+CENSUS legacy fail 938 input 935 worst -60.210449
+Startpoint: tw_d1[315] (input port clocked by vclk)
+Endpoint: ptw_d1[315]$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock vclk (rise edge)
+ 389.110  389.110   clock network delay (ideal)
+ -40.000  349.110 v input external delay
+   2.453  351.563 v tw_d1[315] (in)
+  13.486  365.049 v input1985/Y (BUFx2_ASAP7_75t_R)
+   0.066  365.116 v ptw_d1[315]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          365.116   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck (in)
+  14.433   14.433 ^ ot_ms_root/Y (BUFx16f_ASAP7_75t_R)
+  22.860   37.293 ^ ot_ms_S2_s1/Y (BUFx8_ASAP7_75t_R)
+  16.917   54.210 ^ ot_ms_S2_s2/Y (BUFx8_ASAP7_75t_R)
+  16.894   71.104 ^ ot_ms_S2_s3/Y (BUFx8_ASAP7_75t_R)
+  16.734   87.839 ^ ot_ms_S2_s4/Y (BUFx8_ASAP7_75t_R)
+  16.316  104.155 ^ ot_ms_S2_s5/Y (BUFx8_ASAP7_75t_R)
+  16.797  120.953 ^ ot_ms_pad57/Y (BUFx4_ASAP7_75t_R)
+  16.843  137.795 ^ ot_ms_pad58/Y (BUFx4_ASAP7_75t_R)
+  16.730  154.525 ^ ot_ms_pad59/Y (BUFx4_ASAP7_75t_R)
+  16.656  171.181 ^ ot_ms_pad60/Y (BUFx4_ASAP7_75t_R)
+  16.671  187.853 ^ ot_ms_pad61/Y (BUFx4_ASAP7_75t_R)
+  16.705  204.557 ^ ot_ms_pad62/Y (BUFx4_ASAP7_75t_R)
+  16.782  221.340 ^ ot_ms_pad63/Y (BUFx4_ASAP7_75t_R)
+  16.822  238.162 ^ ot_ms_pad64/Y (BUFx4_ASAP7_75t_R)
+  16.813  254.975 ^ ot_ms_pad65/Y (BUFx4_ASAP7_75t_R)
+  16.807  271.782 ^ ot_ms_pad66/Y (BUFx4_ASAP7_75t_R)
+  17.920  289.702 ^ ot_ms_pad67/Y (BUFx4_ASAP7_75t_R)
+  19.434  309.136 ^ ot_ms_pad117/Y (BUFx4_ASAP7_75t_R)
+  14.617  323.753 ^ ot_ms_S2_tap/Y (BUFx16f_ASAP7_75t_R)
+  17.687  341.440 ^ clkbuf_0_ot_ms_S2_clk/Y (BUFx24_ASAP7_75t_R)
+  22.875  364.315 ^ clkbuf_1_1__f_ot_ms_S2_clk/Y (BUFx24_ASAP7_75t_R)
+  30.622  394.937 ^ clkbuf_leaf_8_ot_ms_S2_clk/Y (BUFx24_ASAP7_75t_R)
+   4.244  399.182 ^ ptw_d1[315]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  12.500  411.682   inter-clock uncertainty
+   0.000  411.682   clock reconvergence pessimism
+  13.644  425.326   library hold time
+          425.326   data required time
+-----------------------------------------------------------
+          425.326   data required time
+         -365.116   data arrival time
+-----------------------------------------------------------
+          -60.210   slack (VIOLATED)
+
+
+CENSUS ioholdA_vec12.5 fail 331 input 328 worst -48.809792
+CENSUS sender20 fail 6 input 3 worst -48.809792
+CENSUS sender25 fail 5 input 2 worst -48.809792
+CENSUS sender30 fail 5 input 2 worst -48.809792
+CENSUS sender35 fail 5 input 2 worst -48.809792
+CENSUS sender45 fail 5 input 2 worst -48.809792
+A_FAIL tw_we -> ptw_we$_DFF_P_/D -48.809792
+A_FAIL p_re -> pp_re$_DFF_P_/D -47.639866
+A_FAIL tw_d1[315] -> ptw_d1[315]$_DFF_P_/D -7.710443
+A_FAIL tw_d1[326] -> ptw_d1[326]$_DFF_P_/D -6.922657
+A_FAIL tw_d1[336] -> ptw_d1[336]$_DFF_P_/D -6.905921
+A_FAIL tw_d1[290] -> ptw_d1[290]$_DFF_P_/D -6.883133
+A_FAIL tw_d1[301] -> ptw_d1[301]$_DFF_P_/D -6.796341
+A_FAIL tw_d1[300] -> ptw_d1[300]$_DFF_P_/D -6.634471
+A_FAIL tw_d1[314] -> ptw_d1[314]$_DFF_P_/D -6.630863
+A_FAIL tw_d1[347] -> ptw_d1[347]$_DFF_P_/D -6.466966
+A_FAIL tw_d1[325] -> ptw_d1[325]$_DFF_P_/D -6.399520
+A_FAIL tw_d1[337] -> ptw_d1[337]$_DFF_P_/D -6.396411
+A_FAIL tw_d1[305] -> ptw_d1[305]$_DFF_P_/D -6.220080
+A_FAIL tw_d1[311] -> ptw_d1[311]$_DFF_P_/D -6.198459
+A_FAIL tw_d1[321] -> ptw_d1[321]$_DFF_P_/D -6.181500
+A_FAIL tw_d1[267] -> ptw_d1[267]$_DFF_P_/D -6.058098
+A_FAIL tw_d1[345] -> ptw_d1[345]$_DFF_P_/D -5.920708
+A_FAIL tw_d1[277] -> ptw_d1[277]$_DFF_P_/D -5.913936
+A_FAIL tw_d1[280] -> ptw_d1[280]$_DFF_P_/D -5.756895
+A_FAIL tw_d1[249] -> ptw_d1[249]$_DFF_P_/D -5.737854
+A_FAIL tw_d1[294] -> ptw_d1[294]$_DFF_P_/D -5.684731
+A_FAIL tw_d1[366] -> ptw_d1[366]$_DFF_P_/D -5.681233
+A_FAIL tw_d1[348] -> ptw_d1[348]$_DFF_P_/D -5.619227
+A_FAIL tw_d1[299] -> ptw_d1[299]$_DFF_P_/D -5.536072
+A_FAIL tw_d1[335] -> ptw_d1[335]$_DFF_P_/D -5.525053
+A_FAIL tw_d1[298] -> ptw_d1[298]$_DFF_P_/D -5.520223
+A_FAIL tw_d1[331] -> ptw_d1[331]$_DFF_P_/D -5.504763
+A_FAIL tw_d1[332] -> ptw_d1[332]$_DFF_P_/D -5.449807
+A_FAIL tw_d1[239] -> ptw_d1[239]$_DFF_P_/D -5.420553
+A_FAIL tw_d1[379] -> ptw_d1[379]$_DFF_P_/D -5.363016
+A_FAIL tw_d1[393] -> ptw_d1[393]$_DFF_P_/D -5.326489
+A_FAIL tw_d1[375] -> ptw_d1[375]$_DFF_P_/D -5.319467
+A_FAIL tw_d1[186] -> ptw_d1[186]$_DFF_P_/D -5.289546
+A_FAIL tw_d1[197] -> ptw_d1[197]$_DFF_P_/D -5.282719
+A_FAIL tw_d1[382] -> ptw_d1[382]$_DFF_P_/D -5.129786
+A_FAIL tw_d1[344] -> ptw_d1[344]$_DFF_P_/D -5.121320
+A_FAIL tw_d1[261] -> ptw_d1[261]$_DFF_P_/D -5.121043
+A_FAIL tw_d1[0] -> ptw_d1[0]$_DFF_P_/D -5.119100
+A_FAIL tw_d1[354] -> ptw_d1[354]$_DFF_P_/D -5.091039
+A_FAIL tw_d1[394] -> ptw_d1[394]$_DFF_P_/D -5.068807
+A_FAIL tw_d1[367] -> ptw_d1[367]$_DFF_P_/D -4.959533
+A_FAIL tw_d1[310] -> ptw_d1[310]$_DFF_P_/D -4.958755
+A_FAIL tw_d1[369] -> ptw_d1[369]$_DFF_P_/D -4.951622
+A_FAIL tw_d1[376] -> ptw_d1[376]$_DFF_P_/D -4.915540
+A_FAIL tw_d1[355] -> ptw_d1[355]$_DFF_P_/D -4.887313
+A_FAIL tw_d1[309] -> ptw_d1[309]$_DFF_P_/D -4.867079
+A_FAIL tw_d1[358] -> ptw_d1[358]$_DFF_P_/D -4.840933
+A_FAIL tw_d1[372] -> ptw_d1[372]$_DFF_P_/D -4.816647
+A_FAIL tw_d1[334] -> ptw_d1[334]$_DFF_P_/D -4.814538
+A_FAIL tw_d1[12] -> ptw_d1[12]$_DFF_P_/D -4.790057
+Startpoint: p_idx[0] (input port clocked by vclk)
+Endpoint: pp_idx[0]$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock vclk (rise edge)
+ 389.110  389.110   clock network delay (ideal)
+  12.500  401.610 v input external delay
+   1.226  402.836 v p_idx[0] (in)
+  13.348  416.184 v input1271/Y (BUFx2_ASAP7_75t_R)
+   0.077  416.261 v pp_idx[0]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          416.261   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck (in)
+  14.433   14.433 ^ ot_ms_root/Y (BUFx16f_ASAP7_75t_R)
+  28.572   43.004 ^ ot_ms_P0_s1/Y (BUFx8_ASAP7_75t_R)
+  25.417   68.422 ^ ot_ms_P0_s2/Y (BUFx8_ASAP7_75t_R)
+  25.489   93.910 ^ ot_ms_P0_s3/Y (BUFx8_ASAP7_75t_R)
+  24.148  118.058 ^ ot_ms_P0_s4/Y (BUFx8_ASAP7_75t_R)
+  23.156  141.214 ^ ot_ms_P0_s5/Y (BUFx8_ASAP7_75t_R)
+  17.846  159.060 ^ ot_ms_pad1/Y (BUFx4_ASAP7_75t_R)
+  16.928  175.988 ^ ot_ms_pad2/Y (BUFx4_ASAP7_75t_R)
+  16.902  192.890 ^ ot_ms_pad3/Y (BUFx4_ASAP7_75t_R)
+  16.902  209.792 ^ ot_ms_pad4/Y (BUFx4_ASAP7_75t_R)
+  16.894  226.687 ^ ot_ms_pad5/Y (BUFx4_ASAP7_75t_R)
+  16.796  243.482 ^ ot_ms_pad6/Y (BUFx4_ASAP7_75t_R)
+  16.736  260.218 ^ ot_ms_pad7/Y (BUFx4_ASAP7_75t_R)
+  17.596  277.814 ^ ot_ms_pad8/Y (BUFx4_ASAP7_75t_R)
+  19.199  297.013 ^ ot_ms_pad99/Y (BUFx4_ASAP7_75t_R)
+  14.755  311.768 ^ ot_ms_P0_tap/Y (BUFx16f_ASAP7_75t_R)
+  17.830  329.598 ^ clkbuf_0_ot_ms_P0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.176  352.773 ^ clkbuf_1_0__f_ot_ms_P0_clk/Y (BUFx24_ASAP7_75t_R)
+  28.330  381.103 ^ clkbuf_leaf_9_ot_ms_P0_clk/Y (BUFx24_ASAP7_75t_R)
+   4.253  385.356 ^ pp_idx[0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  12.500  397.856   inter-clock uncertainty
+   0.000  397.856   clock reconvergence pessimism
+  13.720  411.576   library hold time
+          411.576   data required time
+-----------------------------------------------------------
+          411.576   data required time
+         -416.261   data arrival time
+-----------------------------------------------------------
+            4.685   slack (MET)
+
+
+SCALARS 2: p_re tw_we

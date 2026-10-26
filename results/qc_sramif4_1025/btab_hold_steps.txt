@@ -1,0 +1,19 @@
+S6_HOLD_FF_BEFORE -58.19 ep 11 (vclk FF 345.48, margin 15)
+S6_HOLD_CLASS before in {11 -58.19} out {0 0.00} int {0 0.00}
+S6_HOLD_CLASS after in {0 0.00} out {0 0.00} int {0 0.00}
+S6_HOLD_FF_AFTER 14.97 ep 0 hold buffers 162 census in 31 out 0 int 131
+S6_GATE PASS
+OT_POSTCTS_GATE TT (global_routing) pinreg n 1318 mean 453.36 bound 452.90 dev 0.46 tol 20.0 setup_est 127.78 hold_est 23.86 PASS
+INFO kit-basis OT_POSTCTS_GATE TT (global_routing) pinreg n 1318 mean 459.33 bound 452.90 dev 6.43 tol 20.0 setup_est 118.64 hold_est 22.07 PASS
+OT_POSTCTS_GATE FF (global_routing) pinreg n 1318 mean 345.86 bound 345.48 dev 0.38 tol 20.0 setup_est 178.41 hold_est 14.71 PASS
+INFO kit-basis OT_POSTCTS_GATE FF (global_routing) pinreg n 1318 mean 349.05 bound 345.48 dev 3.57 tol 20.0 setup_est 172.90 hold_est 14.97 PASS
+S6_HOLD_FF_BEFORE -58.19 ep 209 (vclk FF 345.48, margin 15)
+S6_HOLD_CLASS before in {209 -58.19} out {0 0.00} int {0 0.00}
+S6_HOLD_CLASS after in {0 0.00} out {0 0.00} int {0 0.00}
+S6_HOLD_FF_AFTER 14.69 ep 0 hold buffers 1794 census in 1081 out 0 int 713
+S6_GATE PASS
+OT_POSTCTS_GATE TT (global_routing) pinreg n 1318 mean 453.34 bound 452.90 dev 0.44 tol 20.0 setup_est 127.78 hold_est 18.78 PASS
+INFO kit-basis OT_POSTCTS_GATE TT (global_routing) pinreg n 1318 mean 459.32 bound 452.90 dev 6.42 tol 20.0 setup_est 118.64 hold_est 16.19 PASS
+OT_POSTCTS_GATE FF (global_routing) pinreg n 1318 mean 345.85 bound 345.48 dev 0.37 tol 20.0 setup_est 178.41 hold_est 14.71 PASS
+INFO kit-basis OT_POSTCTS_GATE FF (global_routing) pinreg n 1318 mean 349.04 bound 345.48 dev 3.56 tol 20.0 setup_est 172.90 hold_est 14.69 PASS
+S6_GRT_GATE PASS vclk_ff 345.48 hold_ff_before -58.19 ep 11 hold_ff 14.97 ep 0 hold_bufs 162 census in 31 out 0 int 131 margin 15 setup_ff_est 172.90 | pass2 pre-hold TT record: S5_GRT_TT setup_tt 120.98 ep 0 slew 0 cap 0 tap_window PASS I_grt 459.83 rc_cal 0.8,0.9 Mon Oct 26 06:05:12 UTC 2026 | Mon Oct 26 06:44:37 UTC 2026

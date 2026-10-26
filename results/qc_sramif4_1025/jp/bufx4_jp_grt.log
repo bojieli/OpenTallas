@@ -1,0 +1,100 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING ORD-2056] The following 18 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+JP_GEOM_AUDIT_PASS pad BUFx4_ASAP7_75t_R added P0@346.842,129.87 R0W@75.762,33.21 R2E@283.77,163.62 S1@132.138,18.9 cells24661 FFdata10582
+OT_RC_CAL layer RC scaled: R h0.8 v0.8, C h0.9 v0.9 (estimates only; RCX unaffected)
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       15
+Number of viarulegen: 11
+
+
+Design:                   qfd_dv_s8x_prog
+Die area:                 ( 0 0 ) ( 354240 259200 )
+Number of track patterns: 26
+Number of DEF vias:       0
+Number of components:     24665
+Number of terminals:      1395
+Number of snets:          2
+Number of nets:           19569
+
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_MSCTS_TAP grt TT P0 n 467 mean 537.3 min 533.0 max 541.1
+OT_MSCTS_TAP grt TT R0E n 654 mean 529.1 min 520.5 max 535.1
+OT_MSCTS_TAP grt TT R0W n 195 mean 537.6 min 536.2 max 539.0
+OT_MSCTS_TAP grt TT R1E n 744 mean 523.6 min 517.0 max 528.4
+OT_MSCTS_TAP grt TT R1W n 360 mean 519.2 min 517.4 max 520.8
+OT_MSCTS_TAP grt TT R2E n 682 mean 537.6 min 531.2 max 544.4
+OT_MSCTS_TAP grt TT R2W n 195 mean 519.0 min 516.5 max 520.9
+OT_MSCTS_TAP grt TT R3E n 709 mean 525.5 min 520.9 max 528.8
+OT_MSCTS_TAP grt TT R3W n 360 mean 525.9 min 523.3 max 528.2
+OT_MSCTS_TAP grt TT S0 n 42 mean 519.5 min 518.9 max 519.8
+OT_MSCTS_TAP grt TT S1 n 415 mean 530.4 min 526.3 max 533.8
+OT_MSCTS_TAP grt TT S2 n 390 mean 527.8 min 524.3 max 531.2
+OT_MSCTS_TAP grt TT S3 n 78 mean 526.2 min 522.1 max 528.3
+OT_MSCTS_WINDOW grt TT tap-mean window 18.6 ps (limit 20) PASS
+OT_MSCTS_MACRO grt TT g_prog\[0\].u_hi clk 517.2 interface regs n 420 mean 530.4 (524.4..539.0) diff -13.2
+OT_MSCTS_MACRO grt TT g_prog\[0\].u_lo clk 531.8 interface regs n 530 mean 523.4 (517.4..527.0) diff +8.4
+OT_MSCTS_MACRO grt TT g_prog\[1\].u_hi clk 522.8 interface regs n 420 mean 535.8 (516.7..542.6) diff -13.0
+OT_MSCTS_MACRO grt TT g_prog\[1\].u_lo clk 535.5 interface regs n 530 mean 525.8 (522.7..528.8) diff +9.7
+OT_MSCTS_TAP grt FF P0 n 467 mean 399.8 min 396.1 max 403.0
+OT_MSCTS_TAP grt FF R0E n 654 mean 397.2 min 389.2 max 402.9
+OT_MSCTS_TAP grt FF R0W n 195 mean 396.5 min 395.2 max 397.7
+OT_MSCTS_TAP grt FF R1E n 744 mean 393.7 min 387.8 max 398.1
+OT_MSCTS_TAP grt FF R1W n 360 mean 385.1 min 383.6 max 386.6
+OT_MSCTS_TAP grt FF R2E n 682 mean 405.2 min 399.8 max 411.1
+OT_MSCTS_TAP grt FF R2W n 195 mean 384.7 min 382.5 max 386.3
+OT_MSCTS_TAP grt FF R3E n 709 mean 396.6 min 392.8 max 399.3
+OT_MSCTS_TAP grt FF R3W n 360 mean 392.2 min 389.9 max 394.2
+OT_MSCTS_TAP grt FF S0 n 42 mean 384.2 min 383.7 max 384.5
+OT_MSCTS_TAP grt FF S1 n 415 mean 391.8 min 388.2 max 394.7
+OT_MSCTS_TAP grt FF S2 n 390 mean 389.8 min 386.7 max 392.7
+OT_MSCTS_TAP grt FF S3 n 78 mean 389.1 min 385.7 max 390.9
+OT_MSCTS_WINDOW grt FF tap-mean window 21.0 ps (limit 20) FAIL
+OT_MSCTS_MACRO grt FF g_prog\[0\].u_hi clk 388.3 interface regs n 420 mean 396.8 (392.5..400.7) diff -8.5
+OT_MSCTS_MACRO grt FF g_prog\[0\].u_lo clk 399.9 interface regs n 530 mean 392.6 (383.6..396.8) diff +7.3
+OT_MSCTS_MACRO grt FF g_prog\[1\].u_hi clk 394.5 interface regs n 420 mean 402.9 (382.8..409.4) diff -8.3
+OT_MSCTS_MACRO grt FF g_prog\[1\].u_lo clk 404.7 interface regs n 530 mean 395.7 (389.9..399.3) diff +9.0
+JP_WINDOW_RESULT 0
+JP_DIAG setup 173.03025748066975 slew 0 cap 0

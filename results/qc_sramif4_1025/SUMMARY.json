@@ -1,0 +1,33 @@
+{
+  "lane": "PATH-QC-SRAMIF4",
+  "design": "Codex full-half landing SRAMIF (codex/qc-sramif-phase-2200 source ac0a49bd1, tip 9b94df100), COORD ruling: THE SRAMIF design",
+  "hold_family_root_cause": "IO contract, not clock: every input lands directly on a pin register (F6) and vclk is rebound to the mean of those same 935/1059 pin registers, so legacy in_min -40 + 12.5 hold uncertainty demands >= 52.5 ps + t_hold + (C-I) port->D delay on EVERY input. The GRT-vs-RCX clock offset (brief 4c) cancels for this class (capture = the rebound pin registers themselves); clock entry is fine (pin-reg spread FF 22 ps prog / 27.6 btab before pads, 13.3 prog after pads).",
+  "census_input_hold_FF": {
+    "prog_fullhalf_legacy": "935 input fail, worst -60.21",
+    "prog_padded_legacy": "935 fail, worst -55.85",
+    "prog_padded_ioholdA_plan12.5": "slack<0: 42 input (40 vector <=-3.35, 2 scalars p_re -55.3 / tw_we -43.0); slack<15: 931 input",
+    "prog_padded_ioholdA_sender27.5": "slack<0: 2 scalars; slack<15: 42 input",
+    "prog_padded_ioholdA_sender40": "slack<0: 2 scalars; slack<15: 2 input",
+    "btab_ioholdA_plan12.5": "slack<0: 28 input (24 vector, tw_data[998/999] -13.8); slack<15: 1060",
+    "btab_ioholdA_sender40": "slack<0: 4 scalars (bs_re, tw_we, rst_n x2); slack<15: 6 input"
+  },
+  "clock_window_prog": {
+    "fullhalf": "TT 19.0 / FF 21.2 FAIL",
+    "joint_pads_BUFx4 (Codex 5d3ea4fbd prediction 19.7/17.5)": "measured TT 18.6 / FF 21.0 FAIL (pad step 22-28 ps TT, too coarse)",
+    "joint_pads_BUFx16f same taps P0,R0W,R2E,S1": "TT 13.9 / FF 17.5 PASS, GRT0 (gcell overflow 0), slew/cap 0, TT setup +179.2 (native +177.2), half-cycle fall_to_sram setup TT +177.2 / FF hold +412.3",
+    "btab": "unchanged TT 18.1 / FF 12.9 PASS"
+  },
+  "macro_vs_IF_mean_diff_ps": {"prog_TT": "-12.4..+9.7", "prog_FF": "-8.0..+9.0", "note": "half-cycle landings: SRAM-input FF hold +412, TT setup +177; the 20-ps macro/IF bound no longer gates timing"},
+  "hold_step_GRT_FF_margin15": {
+    "prog_fh16_s40": "15 hold buffers (in 7, int 8), hold +15.00/0 ep, postcts insertion gate PASS TT/FF, S6 PASS after re-gate with the jp TT record",
+    "prog_fh16_s12": "1215 hold buffers (in 950, int 265) -> rejected, data deleted",
+    "btab_fh_s40": "162 hold buffers (in 31, int 131), S6 PASS",
+    "btab_fh_s12": "1794 hold buffers (in 1081, int 713) -> rejected, data deleted"
+  },
+  "kits": {
+    "prog": "intel1:/srv/opentallas-scratch2/claude/path-qc-sramif4/prog_fh16_s40",
+    "btab": "intel2:/srv/opentallas-scratch2/claude/path-qc-sramif4/btab_fh_s40"
+  },
+  "contract_dependency": "IO-HOLD A (COORD 10:23 (1); hard-core vector inputs COORD 15:23) with sender guarantee 40 ps = PROPOSED measured registered-sender output-min (gen_phys: pin-registered outputs cq+port 55-58 ps FF); needs COORD ruling + parent io_hold_parent receipt -> sign-off record LOCAL_PASS_NEEDS_PARENT until then. Scalars keep -40 (2 prog / 4 btab endpoints fixed by the ordinary hold step).",
+  "flow_fixes_in_kit": ["hold_grt_s6.tcl GRT layer adjustment 0.25 -> 0.0 (kit GRT profile; 0.25 = Codex native0 wrong-frame diagnostic)", "so_exact signoff bundle added from main", "btab stageA_post.sh (nickname templated from prog)"]
+}

@@ -1,0 +1,19 @@
+S6_HOLD_FF_BEFORE -62.05 ep 3 (vclk FF 396.38, margin 15)
+S6_HOLD_CLASS before in {2 -62.05} out {0 0.00} int {1 -0.00}
+S6_HOLD_CLASS after in {0 0.00} out {0 0.00} int {0 0.00}
+S6_HOLD_FF_AFTER 15.00 ep 0 hold buffers 15 census in 7 out 0 int 8
+S6_GATE FAIL
+OT_POSTCTS_GATE TT (global_routing) pinreg n 1392 mean 520.26 bound 520.26 dev 0.00 tol 20.0 setup_est 177.22 hold_est 24.29 PASS
+INFO kit-basis OT_POSTCTS_GATE TT (global_routing) pinreg n 1392 mean 527.71 bound 520.26 dev 7.45 tol 20.0 setup_est 179.18 hold_est 18.15 PASS
+OT_POSTCTS_GATE FF (global_routing) pinreg n 1392 mean 396.38 bound 396.38 dev 0.00 tol 20.0 setup_est 227.29 hold_est 14.78 PASS
+INFO kit-basis OT_POSTCTS_GATE FF (global_routing) pinreg n 1392 mean 400.57 bound 396.38 dev 4.19 tol 20.0 setup_est 231.40 hold_est 15.00 PASS
+S6_HOLD_FF_BEFORE -62.05 ep 35 (vclk FF 396.38, margin 15)
+S6_HOLD_CLASS before in {34 -62.05} out {0 0.00} int {1 -0.00}
+S6_HOLD_CLASS after in {0 0.00} out {0 0.00} int {0 0.00}
+S6_HOLD_FF_AFTER 15.00 ep 0 hold buffers 1215 census in 950 out 0 int 265
+S6_GATE FAIL
+OT_POSTCTS_GATE TT (global_routing) pinreg n 1392 mean 520.26 bound 520.26 dev 0.00 tol 20.0 setup_est 177.22 hold_est 17.93 PASS
+INFO kit-basis OT_POSTCTS_GATE TT (global_routing) pinreg n 1392 mean 527.71 bound 520.26 dev 7.45 tol 20.0 setup_est 179.18 hold_est 15.00 PASS
+OT_POSTCTS_GATE FF (global_routing) pinreg n 1392 mean 396.38 bound 396.38 dev 0.00 tol 20.0 setup_est 227.29 hold_est 14.78 PASS
+INFO kit-basis OT_POSTCTS_GATE FF (global_routing) pinreg n 1392 mean 400.57 bound 396.38 dev 4.19 tol 20.0 setup_est 231.40 hold_est 15.00 PASS
+S6_GRT_GATE PASS vclk_ff 396.38 hold_ff_before -62.05 ep 3 hold_ff 15.00 ep 0 hold_bufs 15 census in 7 out 0 int 8 margin 15 setup_ff_est 231.40 | pass2 pre-hold TT record: S5_GRT_TT setup_tt 179.18 ep 0 slew 0 cap 0 tap_window PASS I_grt 527.71 rc_cal 0.8,0.9 Mon Oct 26 06:52:53 UTC 2026 | PATH-QC-SRAMIF4 joint-pad GRT session jp_grt.log (MCMM TT 13.9 / FF 17.5, GRT0) replaces the fullhalf pre-pad record (TT 19.0 / FF 21.2 FAIL, kept in s5_grt_tt_fullhalf_codex.txt) | regated 2026-10-25T23:52:53-07:00 by PATH-QC-SRAMIF4 (same h1>=0 && e1==0 && tap_window rule; only the stale s5 TT record changed; original s6_grt_gate_stale_s5.txt)
