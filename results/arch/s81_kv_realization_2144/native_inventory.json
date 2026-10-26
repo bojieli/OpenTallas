@@ -1,0 +1,775 @@
+{
+ "top": "ot_s81sl_kv_leaf",
+ "params": {
+  "CNIK": 1,
+  "CP": 1,
+  "HARD_RQ": 0
+ },
+ "method": "Verilator5.050 JSON-only elaboration, actual SRAM compiler blackbox ports, no synthesis",
+ "native_macro_counts": {
+  "ot_sram_1r1w_64x512_m1_r2c2": 32,
+  "ot_sram_1r1w2c_32x64_m1": 144
+ },
+ "native_macros": [
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[0].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[0].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[1].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[1].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[2].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[2].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[3].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[3].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[4].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[4].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[5].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[5].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[6].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[6].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[7].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[7].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[8].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[8].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[9].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[9].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[10].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[10].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[11].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[11].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[12].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[12].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[13].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[13].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[14].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[14].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[15].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.u_bank.g_kvq[15].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[0].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[0].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[0].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[0].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[0].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[0].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[0].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[0].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[0].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[1].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[1].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[1].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[1].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[1].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[1].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[1].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[1].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[1].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[2].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[2].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[2].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[2].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[2].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[2].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[2].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[2].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[2].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[3].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[3].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[3].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[3].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[3].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[3].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[3].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[3].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[3].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[4].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[4].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[4].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[4].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[4].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[4].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[4].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[4].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[4].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[5].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[5].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[5].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[5].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[5].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[5].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[5].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[5].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[5].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[6].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[6].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[6].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[6].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[6].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[6].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[6].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[6].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[6].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[7].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[7].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[7].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[7].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[7].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[7].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[7].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[7].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[7].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[8].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[8].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[8].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[8].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[8].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[8].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[8].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[8].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[8].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[9].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[9].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[9].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[9].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[9].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[9].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[9].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[9].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[9].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[10].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[10].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[10].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[10].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[10].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[10].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[10].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[10].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[10].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[11].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[11].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[11].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[11].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[11].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[11].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[11].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[11].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[11].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[12].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[12].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[12].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[12].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[12].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[12].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[12].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[12].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[12].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[13].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[13].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[13].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[13].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[13].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[13].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[13].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[13].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[13].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[14].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[14].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[14].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[14].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[14].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[14].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[14].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[14].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[14].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[15].g_word[0].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[15].g_word[1].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[15].g_word[2].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[15].g_word[3].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[15].g_word[4].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[15].g_word[5].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[15].g_word[6].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[15].g_word[7].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  },
+  {
+   "inst": "u_lf.g_kv.u_kv.g_store[15].g_word[8].u_m",
+   "module": "ot_sram_1r1w2c_32x64_m1"
+  }
+ ],
+ "expanded_module_counts": {
+  "ot_s81sl_kv_leaf": 1,
+  "ot_s81sl_kv_bank": 1,
+  "ot_s81_su_ik_reduce": 1,
+  "ot_s81_su_qnh": 6,
+  "ot_hdc_vline": 306,
+  "ot_hdc_delay": 575,
+  "ot_dsrom_qadd": 214,
+  "ot_hdc_qadd_lat": 214,
+  "ot_hdc_fp32_add_f12_l4": 150,
+  "ot_hdc_fp32_add_f12": 214,
+  "ot_hdc_ksadd_k": 3030,
+  "ot_hdc_f12_cut": 6342,
+  "ot_hdc_lzc32": 1318,
+  "ot_hdc_inc_k": 982,
+  "ot_s81_su_qnr": 2,
+  "ot_dsrom_divc": 2,
+  "ot_hdc_kinc": 2,
+  "ot_dsrom_rsqrt": 2,
+  "ot_hdc_kadd": 2,
+  "ot_hdc_qmul_lat": 552,
+  "ot_hdc_fp32_mul_f12_l5": 552,
+  "ot_hdc_fp32_mul_f12": 552,
+  "ot_hdc_mul24_rows": 552,
+  "ot_s81_su_kve": 64,
+  "ot_hdc_fp32_add_f12_l5x": 64,
+  "ot_s81_su_qn_keep_ff": 276,
+  "ot_s81_su_cn_norm_write": 16,
+  "ot_s81_su_cn_write": 20,
+  "ot_s81_su_cn_quant": 20,
+  "ot_hgi_fp4qdq": 16,
+  "ot_s81_su_kvq": 16,
+  "ot_dsrom_actquant_f12": 20,
+  "ot_hdc_kge": 640,
+  "ot_sram_dline": 16,
+  "ot_sram_1r1w_64x512_m1_r2c2": 32,
+  "ot_s81_su_kvt": 4,
+  "ot_sram_1r1w2c_32x64_m1": 144,
+  "ot_s81sl_cmp_pool": 1,
+  "ot_psf_rtree": 73,
+  "ot_psf_go": 11,
+  "ot_s81sl_cmp_pool_lane": 8,
+  "ot_psf_mx1": 28272,
+  "ot_psf_add": 88,
+  "ot_psf_ks": 880,
+  "ot_psf_oh5": 496,
+  "ot_psf_inc": 336,
+  "ot_psf_lzc32": 216,
+  "ot_psf_vline": 56,
+  "ot_psf_exp": 8,
+  "ot_psf_mul": 64,
+  "ot_psf_rows": 64,
+  "ot_psf_ln2_bits": 8,
+  "ot_psf_delay": 72,
+  "ot_psf_div": 8
+ }
+}

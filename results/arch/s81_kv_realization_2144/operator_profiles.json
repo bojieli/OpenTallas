@@ -1,0 +1,137 @@
+{
+ "selected_provider": "ot_s81sl_slice_sukv_raw512_w3",
+ "provider_source": "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_slice_w3.sv",
+ "provider_actual": "KV_ENABLE1,CNIK1,CP1,KV_HARD_RQ0(default), VQ_XMEM2",
+ "native_leaf_source_sha256": "c53402ac248888b5853af03b0bf4cec78139968af0ffe266d5ceeb3ec398272c",
+ "operators": [
+  {
+   "module": "ot_s81_su_kve",
+   "elaborated_module": "ot_s81_su_kve",
+   "instances": 56,
+   "params": {
+    "RP": [
+     "32'sh0"
+    ],
+    "LM": [
+     "32'sh5"
+    ],
+    "LA": [
+     "32'sh4"
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_su_kve",
+   "elaborated_module": "ot_s81_su_kve__R1",
+   "instances": 8,
+   "params": {
+    "RP": [
+     "32'sh1"
+    ],
+    "LM": [
+     "32'sh5"
+    ],
+    "LA": [
+     "32'sh4"
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_su_cn_norm_write",
+   "elaborated_module": "ot_s81_su_cn_norm_write",
+   "instances": 16,
+   "params": {}
+  },
+  {
+   "module": "ot_s81_su_cn_write",
+   "elaborated_module": "ot_s81_su_cn_write",
+   "instances": 16,
+   "params": {
+    "E4M3": [
+     "32'sh1"
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_su_cn_quant",
+   "elaborated_module": "ot_s81_su_cn_quant",
+   "instances": 16,
+   "params": {
+    "E4M3": [
+     "32'sh1"
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_su_kvq",
+   "elaborated_module": "ot_s81_su_kvq",
+   "instances": 16,
+   "params": {
+    "N": [
+     "32'sh200"
+    ],
+    "MLAT": [
+     "32'sh5"
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_su_cn_write",
+   "elaborated_module": "ot_s81_su_cn_write__E0",
+   "instances": 4,
+   "params": {
+    "E4M3": [
+     "32'sh0"
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_su_cn_quant",
+   "elaborated_module": "ot_s81_su_cn_quant__E0",
+   "instances": 4,
+   "params": {
+    "E4M3": [
+     "32'sh0"
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_su_kvt",
+   "elaborated_module": "ot_s81_su_kvt",
+   "instances": 4,
+   "params": {
+    "N": [
+     "32'sh200"
+    ],
+    "S_RD": [
+     "32'sh10"
+    ],
+    "NFI": [
+     "32'sh41"
+    ],
+    "MUT": [
+     "32'sh0"
+    ],
+    "NB": [
+     "32'sh40"
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_cmp_pool_lane",
+   "elaborated_module": "ot_s81sl_cmp_pool_lane",
+   "instances": 8,
+   "params": {
+    "LM": [
+     "32'sh7"
+    ],
+    "LA": [
+     "32'sh6"
+    ],
+    "MUT": [
+     "32'sh0"
+    ]
+   }
+  }
+ ]
+}

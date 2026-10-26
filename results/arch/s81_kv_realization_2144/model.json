@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.s81.kv_compute_realization.v1",
+ "scope": "candidate, not adopted",
+ "basis": "selected hybrid KV source + entry_norm 16x5 reader contract",
+ "rows": [
+  {
+   "type": "ot_s81sl_kv_leaf__t1",
+   "donor": "ot_s81sl_leaf__t60",
+   "own_window_center_distance_um": 1.9200000000000728,
+   "hard_cores": 27,
+   "vp_banks": 2,
+   "hard_core_area_um2": 598256.35776,
+   "internal_station_groups": 93
+  },
+  {
+   "type": "ot_s81sl_kv_leaf__t2",
+   "donor": "ot_s81sl_leaf__t61",
+   "own_window_center_distance_um": 6.244000000000142,
+   "hard_cores": 27,
+   "vp_banks": 2,
+   "hard_core_area_um2": 598256.35776,
+   "internal_station_groups": 154
+  },
+  {
+   "type": "ot_s81sl_kv_leaf__t3",
+   "donor": "ot_s81sl_leaf__t58",
+   "own_window_center_distance_um": 67.09999999999991,
+   "hard_cores": 27,
+   "vp_banks": 2,
+   "hard_core_area_um2": 598256.35776,
+   "internal_station_groups": 109
+  },
+  {
+   "type": "ot_s81sl_kv_leaf__t4",
+   "donor": "ot_s81sl_leaf__t34",
+   "own_window_center_distance_um": 0.0,
+   "hard_cores": 27,
+   "vp_banks": 2,
+   "hard_core_area_um2": 598256.35776,
+   "internal_station_groups": 75
+  },
+  {
+   "type": "ot_s81sl_kv_leaf__t5",
+   "donor": "ot_s81sl_leaf__t35",
+   "own_window_center_distance_um": 0.0,
+   "hard_cores": 27,
+   "vp_banks": 2,
+   "hard_core_area_um2": 598256.35776,
+   "internal_station_groups": 153
+  }
+ ],
+ "normal_compute_cells_per_leaf_est": 2147983,
+ "normal_compute_leaves": 5,
+ "native_KV_extra_cells_estimate": 5336068,
+ "native_KV_extra_count": 1,
+ "old_KV_only_estimate": 1717115,
+ "corrected_lower_estimate": 16075983,
+ "native_KV_macro_instances": 176,
+ "native_KV_macro_area_um2": 506067.803136,
+ "native_KV_placement": "BLOCKED: actual operator count exceeds old L0 slot budget; distribute/cut before build",
+ "arithmetic_operator_cycle_change": 0,
+ "transport_cycle_change": "PROPOSED internal stations/FT depths require actual RTL-CS + compiler adoption; not zero-cost",
+ "proposed_internal_station_groups": 584,
+ "external_ports_changed": 0,
+ "die_outline_changed": false,
+ "open": [
+  "native bank/pool measured footprint/views and production-count repartition",
+  "FT repack + latency delta",
+  "actual-source internal relay realization and current clock/PDN/signoff"
+ ]
+}

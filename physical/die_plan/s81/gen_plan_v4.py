@@ -1366,11 +1366,18 @@ def build(ab):
                                    "band y 3412.8-4579.2); every external slice lane ends here")]
                     ck = "%s.C" % m
                 elif role.startswith("L") and role != "LP":
-                    lm = "ot_s81sl_kv_leaf" if m == "dsdv_slice_kv512" else "ot_s81sl_leaf"
+                    # KV_ENABLE adds the native bank/pool only at leaf0; all five
+                    # leaves retain normal compute (entry_norm's 16x5 contract).
+                    # Keep the historical KV partition type family, but describe
+                    # and harden the actual normal compute parent, not only u_kv.
+                    lm = "ot_s81sl_leaf"
                     cont = [C("u_lf", lm, "rework",
                               note="one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index "
                                    "k arrives in-band on dn (+3 b) from C (no strap)")]
-                    ck = lm
+                    if m == "dsdv_slice_kv512" and role == "L0":
+                        cont.append(C("u_lf.g_kv.u_kv", "ot_s81sl_kv_leaf", "rework",
+                                      note="native KV_ENABLE1 CNIK1 CP1 HARD_RQ0 bank/pool extra; measured sizing/views OPEN"))
+                    ck = "ot_s81sl_kv_leaf" if m == "dsdv_slice_kv512" else lm
                 elif role == "LP":
                     cont = [C("u_lp", "%s.LP" % m, "rework",
                               note="lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here")]
@@ -1758,9 +1765,16 @@ def cells_core_plan(p):
             return [], LP_CELLS[mm], "lep core + coll lanes + MU land measured (flattened, < cap)"
         if role.startswith("L"):
             if "kv_leaf" in m:
-                return [("kv_leaf", 62014 + 94804 + 58177 + 84923 + 43505)], 15000, \
-                    "MISSING kv512 leaf; SU KV leaves kve/kvp/kvq/kvr/kvt summed"
-            return LEAF_CORES, 15000, "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)"
+                raise ValueError("obsolete KV-only leaf sizing: normal 16x5 compute must be retained")
+            # CNIK1/CP1/HARD_RQ0 actual elaboration has64KVE,16KVQ,
+            # 4KVT plus CN and pool logic. Keep the missing large native cuts
+            # visible; the old one-of-each343k estimate hid millions of cells.
+            extra = [("native_kve_array",56*62014), ("native_kvp_array",8*94804),
+                     ("native_kvq_array",16*58177),
+                     ("native_kvt_array",4*43505)] \
+                if any(c["module"] == "ot_s81sl_kv_leaf" for c in p.contents[1:]) else []
+            return LEAF_CORES + extra, 15000, \
+                "normal ot_s81sl_leaf children measured; native KV counts are production-shape lower estimates, CN/pool additional, actual sizing/cuts OPEN"
         return [], 5000, "station-only partition (ft flops)"
     if p.name == "seqhost":
         # v4: the MU history window (dsdv_mu_hwin_capture_1019, 69,671 cells + SRAM columns) is a planned hard core
