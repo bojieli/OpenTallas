@@ -458,10 +458,11 @@ ASTK_TAP_RE = r"^(u_u_strip_u_strip_g_zn_[0-9]_u_zn)[./]"
 ASTK_FREE_RE = (r"^u_u_strip_u_strip_u_ctl[./]g_tc_faces[./]",)
 
 
-def astk_zone_fences(kd, cfg, w, h, m, face_taps=False, balance_levels=True):
+def astk_zone_fences(kd, cfg, w, h, m, face_taps=False, balance_levels=True, face_subroot=False):
     """GPL zone regions (zone_fence.tcl / zone_fence_release.tcl) + one clock tap per zone, the rest (ctl, strap, fault)
     on one more tap (astk_zone_taps.tcl with OT_LANE_RE = the zone instance prefix); CTS -balance_levels."""
-    for f in ("zone_fence.tcl", "zone_fence_release.tcl", "zone_members.tcl", "astk_zone_taps.tcl") + (("astk_face_taps.tcl",) if face_taps else ()):
+    for f in (("zone_fence.tcl", "zone_fence_release.tcl", "zone_members.tcl", "astk_zone_taps.tcl")
+              + (("astk_face_taps.tcl",) if face_taps else ()) + (("astk_tap_target.tcl", "astk_post_cts.tcl") if face_subroot else ())):
         shutil.copyfile(HERE / f, kd / f)
     x0, y0, cw, ch = m, m, w - 2 * m, h - 2 * m
     spec = []
@@ -498,6 +499,22 @@ def astk_zone_fences(kd, cfg, w, h, m, face_taps=False, balance_levels=True):
     # CTS still inserts 8 delay buffers with -delay_buffer_derate 0 too; landing insertion TT 256-273 / FF 206-221
     # (placement RC) follows the 5.4k-sink zone trees (TT 245-271).  Contract 250/202.5 needs a structural clock change.
     cts = "-sink_clustering_enable -repair_clock_nets" + (" -balance_levels" if balance_levels else "")
+    if face_subroot:
+        # PATH-KV-ASTK8 10-26 (COORD 01:13 ruling (1) STRUCTURAL, contract 250 / 202.5 kept): the face taps hang on their
+        # own sub-root rooted at the clock port (astk_face_taps.tcl OT_FACE_SUBROOT, face chunks <= 50 um, zero-logic
+        # partners of the face registers on the face tree); TritonCTS latency balancing off (-no_insertion_delay: it
+        # padded the face trees to the deepest zone tree, ASTK7 delaybuf_*); every tap tree is then balanced TO the
+        # contract by astk_tap_target.tcl (tap_balance rule: short trees get a delay chain up to T = OT_VCLK_TT), leaf
+        # affinity keeps face-tree anchors, and the one CTS setup / hold repair runs on that final tree
+        # (astk_post_cts.tcl; SKIP_CTS_REPAIR_TIMING: ORFS repairs hold before POST_CTS, ASTK7 9172 hold buffers).
+        if not any(l == "export POST_CTS_TCL = /work/leaf_affinity.tcl" for l in out):
+            raise SystemExit("--astk-face-subroot needs the core flow basis (POST_CTS leaf_affinity.tcl)")
+        out = [("export POST_CTS_TCL = /work/astk_post_cts.tcl" if l == "export POST_CTS_TCL = /work/leaf_affinity.tcl" else l)
+               for l in out]
+        cts += " -no_insertion_delay"
+        out += ["export SKIP_CTS_REPAIR_TIMING = 1", "export OT_FACE_SUBROOT = 1", "export OT_FACE_SUBROOT_AT = port",
+                "export OT_FACE_PARTNER_DEPTH = 4", "export OT_FT_MAX_SPAN_UM = 50",
+                "export OT_LEAF_AFF_ANCHORS = ot_face_tree_sinks.txt", "export OT_TAP_TARGET_RE = ^face_"]
     out.append("export CTS_ARGS = " + cts
                + (" -sink_clustering_size 30 -sink_clustering_max_diameter 60" if face_taps else ""))
     (kd / "astk_zone_delta.json").write_text(json.dumps(dict(
@@ -505,7 +522,7 @@ def astk_zone_fences(kd, cfg, w, h, m, face_taps=False, balance_levels=True):
         regions={nm: [round(x0 + a * cw, 2), round(y0 + b * ch, 2), round(x0 + c * cw, 2), round(y0 + d * ch, 2)]
                  for nm, _, a, b, c, d in ASTK_ZONES},
         region_kind="INCLUSIVE GPL guide, released before DPL", taps="one per zone (zn_0..3) + rest (ctl/strap/fault)",
-        cts_args=cts, face_owned_voted=list(ASTK_FREE_RE), anchors="FIRM face flops vote for the zone box at their location", added_cycles=0), indent=1) + "\n")
+        cts_args=cts, face_subroot=bool(face_subroot), face_owned_voted=list(ASTK_FREE_RE), anchors="FIRM face flops vote for the zone box at their location", added_cycles=0), indent=1) + "\n")
     return out
 
 
@@ -567,6 +584,10 @@ def main():
     ap.add_argument("--astk-face-taps", action="store_true",
                     help="PATH-KV-ASTK4 10-25 (GEOM-REVIEW-2 ruling (a), LC1): face pin registers on their own taps (one per "
                          "face chunk <= 500 sinks / 100 um), zone taps, one ctl tap (astk_face_taps.tcl); needs --astk-zone-fences")
+    ap.add_argument("--astk-face-subroot", action="store_true",
+                    help="PATH-KV-ASTK8 10-26 (COORD 01:13 (1)): face taps on their own clock sub-root at the port, zero-logic "
+                         "partners on the face tree, CTS -no_insertion_delay, every tap tree balanced to the 250/202.5 contract "
+                         "(astk_tap_target.tcl), one CTS repair after balance + leaf affinity (astk_post_cts.tcl); needs --astk-face-taps")
     ap.add_argument("--astk-strap-master", action="store_true",
                     help="OWNER option B (COORD 10-25 07:01): ONE kv3_astk master from a corner core json; the corner ID "
                          "constants (ctl st, zn zc[1:0]) come from input strap_corner[1:0] (EN 11 ES 10 WN 01 WS 00) via one "
@@ -1080,8 +1101,11 @@ def main():
     if a.astk_zone_fences:
         if not (mod == "kv3_astk" or mod.startswith("kv3_astk_")) or not a.astk_write_decode:
             raise SystemExit("--astk-zone-fences needs a kv3_astk core + --astk-write-decode")
-        cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM, face_taps=a.astk_face_taps, balance_levels=a.astk_balance_levels)
-    elif a.astk_face_taps:
+        if a.astk_face_subroot and not a.astk_face_taps:
+            raise SystemExit("--astk-face-subroot needs --astk-face-taps")
+        cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM, face_taps=a.astk_face_taps, balance_levels=a.astk_balance_levels,
+                               face_subroot=a.astk_face_subroot)
+    elif a.astk_face_taps or a.astk_face_subroot:
         raise SystemExit("--astk-face-taps needs --astk-zone-fences")
     if a.astk_storage_enable:
         if not a.astk_zone_fences:
