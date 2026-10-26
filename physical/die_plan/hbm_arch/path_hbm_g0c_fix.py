@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""G0C-FIX (PATH-HBM, 2026-10-26): structural G0C fixes on the D-HBM-B1 native plan (b1n2 -> b1n3).
+"""G0C-FIX (PATH-HBM, 2026-10-26): structural G0C fixes on the D-HBM-B1 native plan (b1n2 -> b1n3; b1n4 = argv[5] q_b100 column override + path_hbm_perbit_nudge.py).
 
  (b) hard-core lattice: q_b100 idx cores and hub subtree32 origins snapped to the 8.64-um lattice (smallest move, no
      overlap/halo clash); every type-frame coordinate tied to the moved core pins (core clock taps, internal-station
@@ -19,6 +19,13 @@ sys.path.insert(0, WT + "/tools/die_plan"); sys.path.insert(0, WT + "/physical/d
 import check as C, schema as S
 from cores_b2 import RelayRouter, free_point
 G = 8.64; LIM = 364.0; D0 = 10.0
+# optional argv[5]: per-type lattice x targets "type=old:new,old:new;type2=..." (b1n4: q_b100 columns 17.28/267.84/509.76: the
+# W strip keeps 2 FF columns (L70x1) and the col0|col1 channel 6 (L5x2 stages 1-2); the nearest snap 17.28/259.2/501.12 left
+# that channel 2 columns (b1n2 had 3) and broke the per-bit census; no lattice choice keeps all four b1n2 strips)
+XOVR = {}
+for item in (sys.argv[5].split(";") if len(sys.argv) > 5 and sys.argv[5] else []):
+    tn_, m_ = item.split("=")
+    XOVR[tn_] = {round(float(o), 3): float(n) for o, n in (q.split(":") for q in m_.split(","))}
 raw = json.loads((SRC / "die_plan.json").read_text())
 T = raw["partition_types"]
 log = dict(lattice=[], reach=[], orient=[], stations=[], cycle_delta={}, fails=[])
@@ -84,6 +91,10 @@ for tn, t in T.items():
         cands = sorted({(math.floor(ox / G + 1e-9) * G, math.floor(oy / G + 1e-9) * G), (math.ceil(ox / G - 1e-9) * G, math.floor(oy / G + 1e-9) * G),
                         (math.floor(ox / G + 1e-9) * G, math.ceil(oy / G - 1e-9) * G), (math.ceil(ox / G - 1e-9) * G, math.ceil(oy / G - 1e-9) * G)},
                        key=lambda q: abs(q[0] - ox) + abs(q[1] - oy))
+        if tn in XOVR:
+            nx_ = XOVR[tn][round(ox, 3)]
+            if abs(nx_ / G - round(nx_ / G)) > 1e-6: raise SystemExit(f"x override {tn} {nx_} off the {G}-um lattice")
+            cands = sorted({(nx_, q[1]) for q in cands}, key=lambda q: abs(q[1] - oy))
         ok = None
         for nx, ny in cands:
             b = (nx, ny, cw, ch)
