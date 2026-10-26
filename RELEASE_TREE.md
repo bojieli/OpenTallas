@@ -48,7 +48,7 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
   - [ ] KV.TILES Tile sign-offs · PATH-KV · RUNNING · ASTK native TT -85.91 / FF -13.22, AS6 cea44fd4c4 next; SYS_C ff3c8ad8fe not ready → FLOW.TAG
 
 ## DIE hbm · HBM B2n successor (next release) · rev main B2n f710e18c · est. next release
-- [ ] HBM.GRT Die GRT0 · PATH-HBM / DIE-PROTO · FAIL · edge+band 998,223 (M7 wrong-way FT over cores); corridor plan 82e095df4 → HBM.CORR
+- [ ] HBM.GRT Die GRT0 · PATH-HBM · FAIL as declared 1.73M; cause = hard cores at M6/M7 under root through-lanes; all cores M5 -> 0 @50 it (COORD approved M5 ceiling, D-HBM-B1) → rebuild + 4 cut fixes
   - [ ] HBM.CORR M7 bank-wall corridors + composite plan · PATH-HBM · RUNNING · 113 FT slots geometry PASS; SFU corridor repaired; compose + G0 next
 - [ ] HBM.CLK Die clock route · CLOCK · NOT RUN · → HBM.GRT
 - [ ] HBM.BIND Native one-clock bind · PATH-HBM · WAITS · q3 API ebeccf1c4 + oneclk 847a25a065 unmerged; 6 TR3 proofs live → INFRA.MERGE
