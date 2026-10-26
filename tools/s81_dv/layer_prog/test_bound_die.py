@@ -13,9 +13,11 @@ def example(tmp_path):
     (tmp_path/'rtl').mkdir()
     top = tmp_path/'rtl/t_bound_top.sv'
     top.write_text('module t_bound_top; endmodule\n')
+    graph=tmp_path/'asbuilt.json'; graph.write_text('{"modules":{}}\n')
     (tmp_path/'bind_report.json').write_text(json.dumps(dict(n_errors=0, errors=[], type_splits=[])))
     inv = dict(schema='opentallas.s81.bound_inventory.v1',
                source_top_sha256=hashlib.sha256(top.read_bytes()).hexdigest(),
+               source_asbuilt_sha256=hashlib.sha256(graph.read_bytes()).hexdigest(),
                units={'host': dict(master='host', ports={'o': dict(dir='output',bits=[11,12])}),
                       'slice': dict(master='slice', ports={'i': dict(dir='input',bits=[21,22])})},
                drivers={'11':['host.o[0]'], '12':['host.o[1]']},
@@ -33,7 +35,7 @@ def test_actual_word_source_and_age(tmp_path):
     assert route['source_pins'] == ['host.o[0]', 'host.o[1]']
 
 
-@pytest.mark.parametrize('fault', ['age', 'source', 'missing', 'ambiguous', 'stale'])
+@pytest.mark.parametrize('fault', ['age', 'source', 'missing', 'ambiguous', 'stale', 'stale_graph'])
 def test_wrong_current_transport_rejected(tmp_path, fault):
     inv, sinks = example(tmp_path)
     if fault == 'age': sinks['slice.i[1]'][2] = 8
@@ -41,6 +43,7 @@ def test_wrong_current_transport_rejected(tmp_path, fault):
     if fault == 'missing': sinks.pop('slice.i[1]')
     if fault == 'ambiguous': inv['drivers']['11'].append('other.o[0]')
     if fault == 'stale': inv['source_top_sha256'] = '0'*64
+    if fault == 'stale_graph': inv['source_asbuilt_sha256'] = '0'*64
     with pytest.raises(ValueError):
         BoundDie(tmp_path, inv, sinks=sinks).route('host','o','slice','i')
 

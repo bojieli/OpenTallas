@@ -95,6 +95,8 @@ class BoundDie:
         self.die_sha = file_sha(tops[0])
         if self.inventory.get('source_top_sha256') != self.die_sha:
             raise ValueError('logical inventory belongs to a different bound top')
+        if self.inventory.get('source_asbuilt_sha256') != file_sha(self.bound / 'asbuilt.json'):
+            raise ValueError('logical inventory belongs to a different elaborated source graph')
         self.units = self.inventory['units']
         self.inst = {name: dict(master=u['master'], params=u.get('params', {}),
                                conns={p: '@' + name + '.' + p for p in u['ports']})
