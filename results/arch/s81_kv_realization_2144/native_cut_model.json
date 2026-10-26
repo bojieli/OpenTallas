@@ -1,0 +1,297 @@
+{
+  "status": "MODEL_ONLY_NO_NATIVE_REALIZATION",
+  "selected_provider": "ot_s81sl_slice_sukv_raw512_w3 KV_ENABLE1 CNIK1 CP1 HARD_RQ0(default)",
+  "normal_geometry_current_gate": "0 errors1277warnings171/171 types clean; partial native hardware not inferred from G0C",
+  "profiles": [
+    {
+      "master": "dsfd_su_t_kve",
+      "count": 56,
+      "lef": "physical/ref_tile/s81su_kve_ref/views/dsfd_su_t_kve/dsfd_su_t_kve.lef",
+      "outline_um": [
+        125.28,
+        125.28
+      ],
+      "area_um2": 878924.3904,
+      "lef_total_pins": 590,
+      "clock": "ck",
+      "reset": "rst",
+      "current_native_missing_live_ports": {
+        "norm_v": 1,
+        "norm_y": 128
+      },
+      "adoption": "BLOCKED export live ports and compare exact source/pin/clock/timing before reuse",
+      "included_memories_per_instance": 0
+    },
+    {
+      "master": "dsfd_su_t_kvp",
+      "count": 8,
+      "lef": "physical/ref_tile/s81su_kvp_ref/views/dsfd_su_t_kvp/dsfd_su_t_kvp.lef",
+      "outline_um": [
+        151.2,
+        151.2
+      ],
+      "area_um2": 182891.51999999996,
+      "lef_total_pins": 846,
+      "clock": "ck",
+      "reset": "rst",
+      "current_native_missing_live_ports": {
+        "norm_v": 1,
+        "norm_y": 128
+      },
+      "adoption": "BLOCKED export live ports and compare exact source/pin/clock/timing before reuse",
+      "included_memories_per_instance": 0
+    },
+    {
+      "master": "dsfd_su_t_kvq",
+      "count": 16,
+      "lef": "physical/ref_tile/s81su_kvq_ref/views/dsfd_su_t_kvq/dsfd_su_t_kvq.lef",
+      "outline_um": [
+        259.2,
+        259.2
+      ],
+      "area_um2": 1074954.24,
+      "lef_total_pins": 2216,
+      "clock": "ck",
+      "reset": "rst",
+      "current_native_missing_live_ports": {},
+      "adoption": "BLOCKED export live ports and compare exact source/pin/clock/timing before reuse",
+      "included_memories_per_instance": 2
+    },
+    {
+      "master": "dsfd_su_t_kvt",
+      "count": 4,
+      "lef": "physical/ref_tile/s81su_kvt_ref/views/dsfd_su_t_kvt/dsfd_su_t_kvt.lef",
+      "outline_um": [
+        36.72,
+        453.6
+      ],
+      "area_um2": 66624.768,
+      "lef_total_pins": 6853,
+      "clock": "ck",
+      "reset": "rst",
+      "current_native_missing_live_ports": {
+        "e_mode": 2,
+        "e_nb": 14
+      },
+      "adoption": "BLOCKED export live ports and compare exact source/pin/clock/timing before reuse",
+      "included_memories_per_instance": 0
+    }
+  ],
+  "native_operator_area_um2": 2203394.9184,
+  "native_event_sram_area_um2": 79716.89779199999,
+  "memory_accounting": "32quantSRAM already inside16KVQ footprints; add only144eventSRAM. Do not add426350.905344 again. Current selected macro r2c2 remains until trueNRparent explicitly changes.",
+  "proposed_regions": [
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "partition": "s_3N_L2",
+      "native_proposal_only": {
+        "kve": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "kvq": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "qnh": 1,
+        "event_sram32x64": 36,
+        "cn_norm_write": 4,
+        "cn_write_e4m3": 4,
+        "ik_write_e4m3_0": 0
+      },
+      "controller_to_region_uncollapsed_bits": 4197,
+      "cut_components": {
+        "kvt_data": 4096,
+        "kvt_valid": 32,
+        "kvt_shared_controls": 36,
+        "qnr_return": 33,
+        "rope_cs": 0
+      },
+      "region_to_controller_uncollapsed_bits": 328,
+      "drain_request_bits": 7,
+      "uncollapsed_cut_bits": 4532,
+      "rectangle_gap_um": 0.0,
+      "physical_hops_floor": 1,
+      "registered_transport_cycles_floor": 2,
+      "note": "Geometric lower bound only; no port windows, track reservation, crossing-station fit or complete control/status census yet; local status aggregation may reduce bits. QNH35 + uncollapsed KVE/KVQ fault36 + drain257. Newly remote edges must all use equal-depth valid/data registers, reset epochs and published compiler timing."
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t3",
+      "partition": "s_3N_L1",
+      "native_proposal_only": {
+        "kve": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        "kvq": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "qnh": 1,
+        "event_sram32x64": 36,
+        "cn_norm_write": 4,
+        "cn_write_e4m3": 4,
+        "ik_write_e4m3_0": 0
+      },
+      "controller_to_region_uncollapsed_bits": 4197,
+      "cut_components": {
+        "kvt_data": 4096,
+        "kvt_valid": 32,
+        "kvt_shared_controls": 36,
+        "qnr_return": 33,
+        "rope_cs": 0
+      },
+      "region_to_controller_uncollapsed_bits": 328,
+      "drain_request_bits": 7,
+      "uncollapsed_cut_bits": 4532,
+      "rectangle_gap_um": 1226.88,
+      "physical_hops_floor": 4,
+      "registered_transport_cycles_floor": 5,
+      "note": "Geometric lower bound only; no port windows, track reservation, crossing-station fit or complete control/status census yet; local status aggregation may reduce bits. QNH35 + uncollapsed KVE/KVQ fault36 + drain257. Newly remote edges must all use equal-depth valid/data registers, reset epochs and published compiler timing."
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t4",
+      "partition": "s_3N_L3",
+      "native_proposal_only": {
+        "kve": [
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ],
+        "kvq": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "qnh": 1,
+        "event_sram32x64": 36,
+        "cn_norm_write": 4,
+        "cn_write_e4m3": 4,
+        "ik_write_e4m3_0": 0
+      },
+      "controller_to_region_uncollapsed_bits": 4197,
+      "cut_components": {
+        "kvt_data": 4096,
+        "kvt_valid": 32,
+        "kvt_shared_controls": 36,
+        "qnr_return": 33,
+        "rope_cs": 0
+      },
+      "region_to_controller_uncollapsed_bits": 328,
+      "drain_request_bits": 7,
+      "uncollapsed_cut_bits": 4532,
+      "rectangle_gap_um": 2453.76,
+      "physical_hops_floor": 7,
+      "registered_transport_cycles_floor": 8,
+      "note": "Geometric lower bound only; no port windows, track reservation, crossing-station fit or complete control/status census yet; local status aggregation may reduce bits. QNH35 + uncollapsed KVE/KVQ fault36 + drain257. Newly remote edges must all use equal-depth valid/data registers, reset epochs and published compiler timing."
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t5",
+      "partition": "s_3N_L4",
+      "native_proposal_only": {
+        "kve": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "kvq": [
+          12,
+          13,
+          14,
+          15
+        ],
+        "qnh": 1,
+        "event_sram32x64": 36,
+        "cn_norm_write": 4,
+        "cn_write_e4m3": 4,
+        "ik_write_e4m3_0": 4
+      },
+      "controller_to_region_uncollapsed_bits": 6245,
+      "cut_components": {
+        "kvt_data": 4096,
+        "kvt_valid": 32,
+        "kvt_shared_controls": 36,
+        "qnr_return": 33,
+        "rope_cs": 2048
+      },
+      "region_to_controller_uncollapsed_bits": 328,
+      "drain_request_bits": 7,
+      "uncollapsed_cut_bits": 6580,
+      "rectangle_gap_um": 3680.64,
+      "physical_hops_floor": 10,
+      "registered_transport_cycles_floor": 11,
+      "note": "Geometric lower bound only; no port windows, track reservation, crossing-station fit or complete control/status census yet; local status aggregation may reduce bits. QNH35 + uncollapsed KVE/KVQ fault36 + drain257. Newly remote edges must all use equal-depth valid/data registers, reset epochs and published compiler timing."
+    }
+  ],
+  "root_region": {
+    "type": "ot_s81sl_kv_leaf__t2",
+    "remaining": "controller+4KVT+rawNE4QNR+IKreduce+CPpool+otherglue; unsized, no fitclaim"
+  },
+  "coherence_obligations": [
+    "Existing wrappers omit64x129norm output pins and4x16 KVT mode/base pins. Never replace actual native instances with obsolete incomplete interfaces.",
+    "Exact production profiles match arithmetic parameters but source interface/timing export must be refreshed; KVE spec124.2 differs actualLEF125.28: LEF used.",
+    "Proposal keeps each4KVE\u2192KVQ local, pairedKVQ xor1 local and144event SRAM local in4groups; two exponent gathers cross region pairs (at least44bits each), not included in uncollapsed subtotal above.",
+    "QNH and CN/glue require source-correct cuts, mapped sizing pending inherited bank/pool jobs.",
+    "Controller-region branch distances vary; align all phase/data/valid/fault/epoch paths to maximum transport latency. Drain command+return adds at least twice branch cycle floor; golden fixed calendar/DRAIN_AGE and compiler need explicit adjustment.",
+    "No new ports/physicalroutes/RTLcycles adopted by this model. Existing584normalinternal station groups remain actual RTL/CS+compiler obligation;14FTstages6777bitcycles must be published."
+  ]
+}
