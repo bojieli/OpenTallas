@@ -4576,5 +4576,8 @@
   "kv3_pc_v1",
   "kv3_pc_v3"
  ],
- "land_r8": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_seams_2144/qwen_kvsys_r8_landing.json"
+ "land_r8": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_seams_2144/qwen_kvsys_r8_landing.json",
+ "param_regen": {
+  "file": "physical/die_plan/qwen_kvsys/bind/kvbind1025/regen_agebounds_2144.py"
+ }
 }
