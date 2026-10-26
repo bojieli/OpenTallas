@@ -43,3 +43,4 @@
  (4) LATENCY: 250 TT / 202.5 FF at the clk pin (common S81/QC value), no early core taps; plan hd_tile core_taps 'early' (415.6/378.8) retires.
  (5) IN-CORE BAYS: none (both cores < 405 um; hd_tile has no ft_slots). ENTRY PINS: none unless the plan routes an M8/M9 path over these cores.
  (6) SERDES BANDS (hd_serdes, soft): own clock region, driver island in each hd_serdes 150-um digital strip; no hard-core change.
+2026-10-26 06:14 PDT HEAD-CORE-LAT -> MASTER-PLAN: CORRECTION to (2) above, hd_tile-frame (R0 tile) island centres = core origin + core centre: elemA eA0 (177.12,168.48), eA1 (531.36,168.48), eA2 (177.12,540.00), eA3 (531.36,540.00); elemB (358.56,876.96); MY tiles mirror about x=354.24. All on the 4.32 lattice.
