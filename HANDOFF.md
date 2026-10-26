@@ -1031,3 +1031,4 @@ CODEX: 2026-10-26 02:18 PDT HBM M5 guard486442846 (14 testsPASS); inheritedtopk2
 CODEX: 2026-10-26 02:18 PDT shared kit dependency bundle READY5015c984a, hub15/15PASS; HEADB/KVchain/ECO/QChold auto-ship gate imports, no clock/RTL change. Canary current-generation holds retained.
 
 CODEX: 2026-10-26 02:20 PDT HBM idx quarter4LECdifferences root-caused scalar→unpacked-wire alias flattening; source687ef703ff defers alias to formalfunctionpairing. Actual immutable target ALL33871/33871 PROVED incl all10065old+3new obligations;43tests+mutantPASS. OriginalFAIL retained, noRTL/cycles/route.
+CODEX: 2026-10-26 02:21 PDT hard-core progress: KVHR host_qm e6cbdc9e7 face8/8+pins10/10+LEC25/25,1FF0cycles; QC SU exact-cut tool6e39e059f prevents stale alignment0 adoption; ECTLK Sface halo structural trial and fresh canaried VQ PLACE live.
