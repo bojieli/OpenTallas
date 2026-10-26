@@ -111,6 +111,15 @@ def _mst_length(points):
     return total
 
 
+def sink_cap(value, corner):
+    """Actual per-corner pin capacitance, or explicitly shared scalar input."""
+    result = value[corner] if isinstance(value, dict) else value
+    result = float(result)
+    if not math.isfinite(result) or result < 0:
+        raise CI.InfraError(f"invalid sink capacitance at {corner}")
+    return result
+
+
 def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_c_ff_um, input_slew_ps=40.):
     """NLDM buffer delay at total branch load + Elmore branch wires.
 
@@ -136,7 +145,7 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
             name=n["name"];point=cells[name]["xy_um"]
             if n["parent"].startswith("port:"):arrivals[name]=0.;slews[name]=input_slew_ps
             targets=[(q,cells[q]["xy_um"],libs[cells[q]["master"]]["cap"]) for q in children[name]]
-            targets += [(q,sink_points[q],sink_caps_ff[q]) for q in leaves[name]]
+            targets += [(q,sink_points[q],sink_cap(sink_caps_ff[q],corner)) for q in leaves[name]]
             if not targets:continue
             wire=_mst_length([point]+[q[1] for q in targets]);load=sum(q[2] for q in targets)
             lib=libs[cells[name]["master"]]

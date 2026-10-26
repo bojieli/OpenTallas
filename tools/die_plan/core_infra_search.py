@@ -16,8 +16,10 @@ import die_clock_128 as C128
 
 
 class Model:
-    def __init__(self, sl, libraries, points, caps, r, c):
+    def __init__(self, sl, libraries, points, caps, r, c, input_slew_ps=40.):
         plan=CI.compile_slice(sl);tree=plan['core_tree'];self.plan=plan
+        self.input_slew_ps=float(input_slew_ps)
+        if not math.isfinite(self.input_slew_ps) or self.input_slew_ps < 0:raise ValueError('invalid declared core input slew')
         self.nodes=tree['nodes'];self.n=len(self.nodes);index={n['name']:i for i,n in enumerate(self.nodes)}
         cells={n['name']:n for n in plan['cells']};self.libraries=libraries;self.r=r;self.c=c
         self.parent=[index.get(n['parent'],-1) for n in self.nodes]
@@ -27,32 +29,36 @@ class Model:
             if p>=0:self.children[p].append(i)
         for leaf in tree['leaves']:
             self.leaves[index[leaf['node']]]+=leaf['sinks']
-        self.dist=[];self.wire=[];self.sinkcap=[];self.sinkel=[];self.count=[]
+        self.dist=[];self.wire=[];self.sinkcap={c:[] for c in libraries};self.sinkel={c:[] for c in libraries};self.count=[]
         for i in range(self.n):
             x,y=self.xy[i];tg=[self.xy[j] for j in self.children[i]]+[points[q] for q in self.leaves[i]]
             self.wire.append(CP._mst_length([[x,y]]+tg))
             self.dist.append([abs(x-self.xy[j][0])+abs(y-self.xy[j][1]) for j in self.children[i]])
-            self.sinkcap.append(sum(caps[q] for q in self.leaves[i]));self.count.append(len(self.leaves[i]))
-            el=[]
-            for q in self.leaves[i]:
-                dx=abs(x-points[q][0])+abs(y-points[q][1]);el.append(dx*r*(dx*c/2+caps[q]))
-            self.sinkel.append((min(el),sum(el)/len(el),max(el)) if el else None)
+            self.count.append(len(self.leaves[i]))
+            for corner in libraries:
+                cpin=lambda q:CP.sink_cap(caps[q],corner)
+                self.sinkcap[corner].append(sum(cpin(q) for q in self.leaves[i]))
+                el=[]
+                for q in self.leaves[i]:
+                    dx=abs(x-points[q][0])+abs(y-points[q][1]);el.append(dx*r*(dx*c/2+cpin(q)))
+                self.sinkel[corner].append((min(el),sum(el)/len(el),max(el)) if el else None)
+
 
     def evaluate(self, choices):
         results={}
         for corner,libs in self.libraries.items():
-            ar=[0.]*self.n;sr=[40.]*self.n;mins=[];means=[];maxs=[];weighted=0.;nreg=0;peak=0.
+            ar=[0.]*self.n;sr=[self.input_slew_ps]*self.n;mins=[];means=[];maxs=[];weighted=0.;nreg=0;peak=0.
             for i in range(self.n):
                 lib=libs[choices[i]]
-                load=self.sinkcap[i]+sum(libs[choices[j]]['cap'] for j in self.children[i])
+                load=self.sinkcap[corner][i]+sum(libs[choices[j]]['cap'] for j in self.children[i])
                 d=C128._bilin(lib['delay'],sr[i],load+self.wire[i]*self.c)
                 s=C128._bilin(lib['trans'],sr[i],load+self.wire[i]*self.c)
                 peak=max(peak,s)
                 for j,dist in zip(self.children[i],self.dist[i]):
                     el=dist*self.r*(dist*self.c/2+libs[choices[j]]['cap'])
                     ar[j]=ar[i]+d+el;sr[j]=math.hypot(s,2.2*el);peak=max(peak,sr[j])
-                if self.sinkel[i]:
-                    lo,mean,hi=self.sinkel[i];mins.append(ar[i]+d+lo);means.append(ar[i]+d+mean);maxs.append(ar[i]+d+hi)
+                if self.sinkel[corner][i]:
+                    lo,mean,hi=self.sinkel[corner][i];mins.append(ar[i]+d+lo);means.append(ar[i]+d+mean);maxs.append(ar[i]+d+hi)
                     weighted+=(ar[i]+d+mean)*self.count[i];nreg+=self.count[i];peak=max(peak,math.hypot(s,2.2*hi))
             results[corner]=dict(mean=weighted/nreg,leaf_min=min(means),leaf_max=max(means),
                 leaf_window=max(means)-min(means),all_min=min(mins),all_max=max(maxs),all_window=max(maxs)-min(mins),slew_max=peak)
@@ -70,8 +76,8 @@ def score(res,slew_limit,window=18):
     return cost
 
 
-def design(sl, libraries, points, caps, r, c, slew_limit=80., passes=10):
-    model=Model(sl,libraries,points,caps,r,c)
+def design(sl, libraries, points, caps, r, c, slew_limit=80., passes=10, input_slew_ps=40.):
+    model=Model(sl,libraries,points,caps,r,c,input_slew_ps)
     choices=[n['master'] for n in model.nodes]
     options=list(libraries['TT'])
     baseline=model.evaluate(choices);best=baseline;bestscore=score(best,slew_limit)
@@ -96,7 +102,7 @@ def design(sl, libraries, points, caps, r, c, slew_limit=80., passes=10):
     out.pop('cell_placements',None)
     for i,n in enumerate(out['core_tree']['nodes']):n['master']=choices[i];n['xy_um']=frozen[n['name']]['xy_um']
     return out,dict(baseline=baseline,result=best,score=bestscore,steps=steps,
-                   driver_counts={n:choices.count(n) for n in options if choices.count(n)},slew_limit_ps=slew_limit)
+                   driver_counts={n:choices.count(n) for n in options if choices.count(n)},slew_limit_ps=slew_limit,input_slew_ps=input_slew_ps)
 
 
 def add_entry_chain(sl,n,cell):
@@ -110,14 +116,14 @@ def add_entry_chain(sl,n,cell):
     return out
 
 
-def design_entry(sl,libraries,points,caps,r,c,slew_limit=80.,max_stages=6):
+def design_entry(sl,libraries,points,caps,r,c,slew_limit=80.,max_stages=6,input_slew_ps=40.):
     """One identical designed common trunk, selected only from plan/NLDM."""
     best=None;trials=[]
     for count in range(max_stages+1):
         for cell in libraries['TT']:
             if count==0 and cell!=next(iter(libraries['TT'])):continue
             candidate=add_entry_chain(sl,count,cell)
-            model=Model(candidate,libraries,points,caps,r,c)
+            model=Model(candidate,libraries,points,caps,r,c,input_slew_ps)
             res=model.evaluate([n['master'] for n in candidate['core_tree']['nodes']])
             violation=0.;margin=1e9
             for corner,x in res.items():
@@ -127,7 +133,7 @@ def design_entry(sl,libraries,points,caps,r,c,slew_limit=80.,max_stages=6):
             trial=dict(count=count,cell=cell,result=res,violation_ps=violation,minimum_leaf_margin_ps=margin)
             trials.append(trial);key=(violation,count,-margin,cell)
             if best is None or key<best[0]:best=(key,candidate,trial)
-    return best[1],dict(chosen=best[2],trials=trials,basis='one common fixed trunk designed from geometry and joint TT/FF NLDM; no measured timing')
+    return best[1],dict(chosen=best[2],trials=trials,input_slew_ps=input_slew_ps,basis='one common fixed trunk designed from geometry and joint TT/FF NLDM; no measured timing')
 
 
 def main():
@@ -137,7 +143,7 @@ def main():
     for width,cf in data.get('profiles',[[1,1.],[2,1.1],[4,1.3],[8,1.6]]):
         r=data['wire_r_kohm_um']/width;c=data['wire_c_ff_um']*cf
         for slew in data.get('slew_limits',[80.]):
-            candidate,rep=design(sl,libs,points,caps,r,c,slew)
+            candidate,rep=design(sl,libs,points,caps,r,c,slew,input_slew_ps=data.get('input_slew_ps',40.))
             rep.update(width_multiplier=width,spacing_multiplier=width,capacitance_factor=cf,
                        rc_basis='R/width from fixed sheet resistance; C scaling stated sensitivity, NOT extracted NDR RC')
             label=f'w{width}_c{cf:g}_s{slew:g}'

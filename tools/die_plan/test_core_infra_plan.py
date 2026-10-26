@@ -37,3 +37,20 @@ def test_predictor_detects_wire_load_imbalance_without_changing_plan():
     pts['d/CLK']=[800,430]
     imbalanced=CP.predict_tree(s,libs,pts,caps,.02,.1)
     assert imbalanced['corners']['TT']['window_ps']>1 and s==saved
+
+
+def test_actual_corner_caps_and_declared_source_slew_propagate():
+    from core_infra_search import Model
+    s=sample();s['core_tree']=dict(clock_port='clk',nodes=[
+      dict(name='root',master='BUFx16f_ASAP7_75t_R',xy_um=[430,430],parent='port:clk')],
+      leaves=[dict(node='root',sinks=['a/CLK'])])
+    lib=dict(delay=([0,100],[0,100],[[10,30],[20,40]]),trans=([0,100],[0,100],[[10,30],[20,40]]),cap=1.)
+    libs={c:{'BUFx16f_ASAP7_75t_R':lib} for c in ('TT','FF')}
+    pts={'a/CLK':[435,430]};caps={'a/CLK':{'TT':.5,'FF':.8}}
+    result=CP.predict_tree(s,libs,pts,caps,.02,.1,input_slew_ps=0.)
+    fast=Model(s,libs,pts,caps,.02,.1,input_slew_ps=0.).evaluate(['BUFx16f_ASAP7_75t_R'])
+    for c in libs:assert fast[c]['mean']==pytest.approx(result['corners'][c]['mean_ps'])
+    assert fast['FF']['mean']>fast['TT']['mean']
+    slower=Model(s,libs,pts,caps,.02,.1,input_slew_ps=40.).evaluate(['BUFx16f_ASAP7_75t_R'])
+    assert slower['TT']['mean']>fast['TT']['mean']
+    with pytest.raises(KeyError):CP.sink_cap({'TT':.5},'FF')
