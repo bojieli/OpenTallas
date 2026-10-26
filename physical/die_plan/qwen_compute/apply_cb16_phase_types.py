@@ -43,7 +43,8 @@ def classify(plan,table,overlay):
                 added_ff_min=min(extras[p] for p in parts),added_ff_max=max(extras[p] for p in parts),
                 per_part_added_ff={p:extras[p] for p in sorted(parts)}))
             assignments.update({p:name for p in parts})
-    if len(assignments)!=192 or len(classes)!=18:raise ValueError(f'unexpected measured classes: {len(assignments)} parts/{len(classes)} classes')
+    if len(assignments)!=192 or len(byfamily)!=9:raise ValueError(f'unexpected CB16 scope: {len(assignments)} parts/{len(byfamily)} families')
+    if any(len({tuple(sorted(vectors[p].items())) for p in c['parts']})!=1 for c in classes):raise ValueError('nonuniform measured class')
     return dict(schema='opentallas.qwen.cb16.phase_types.v1',classes=classes,assignments=assignments,
         original_families=sorted(byfamily),new_type_count=len(classes)-len(byfamily),
         root_added_cycles_max=overlay['summary']['root_added_max'],logical_added_ff=overlay['summary']['logical_pad_flops'],
