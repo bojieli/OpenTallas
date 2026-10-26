@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.hbm.su_f12_full_lane_component.v1",
+  "status": "COMPONENT_PASS_NOT_FULL_SU_OR_TIMING_SIGNOFF",
+  "candidate_recipe": "e1fbefcfa",
+  "actual_frozen_source": "4d7525c689",
+  "actual_unit": "oth-ubuntu-692009-1793013340",
+  "actual_directory": "epyc1:/srv/opentallas-scratch2/claude/codex-hbm-native-1026/su_full_lane/run_r2",
+  "source_dependency": "24d192d273 deep insertion clocks: four driven roots for DMAX198 and above",
+  "profile": {"MLAT":4,"ALAT":4,"LEAF":1,"PINREG":1,"KIND":2,"lane":256,"QID_address_identity":2,"provider":"standard f12_l4 (c12), never lat4i"},
+  "positive": {"classes":31,"issues_per_class":64,"outputs":1984,"checks":3968,"first_output_edge":41,"issue_to_output_edge":29,"errors":0,"independent_golden":"hdc_golden NumPy plus actual six-SRAM commit readback"},
+  "mutants_caught": {"ADDR_errors":3584,"DATA_errors":3428,"PHASE_errors":1984},
+  "clock": {"functional_period_ps":833,"physical_timing_qualified":false},
+  "failed_predecessor": {"directory":"../run","cause":"testbench retained 1ns SRAM settle delay above833ps period; fixed50ps in fresh cohort; old failed logs preserved"},
+  "open_gates": ["FULL role selection in retained QID2/3 source", "SIDE function scheduling and return contracts", "actual compiler/native programme binding", "new physical cut maps", "TT setup60ps / FF hold25ps and related pair80ps"]
+}
