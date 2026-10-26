@@ -1,0 +1,5 @@
+BANK exact compared=3104 differences=0 mutant_caught=776
+- tb_bank.sv:28: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 32us; walltime 0.002 s; speed 14.435 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

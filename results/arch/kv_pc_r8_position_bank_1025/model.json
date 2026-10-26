@@ -1,0 +1,71 @@
+{
+ "status": "PROTOTYPE_EXACT_NO_PHYSICAL_ADOPTION",
+ "clock_ps": 833,
+ "source_table": "KV b12 full R8 after existing fault and invariant prep",
+ "id_contract": {
+  "stack": [
+   "WS",
+   "WN",
+   "ES",
+   "EN"
+  ],
+  "group": "existing slg cfg_group physical-position ID"
+ },
+ "positions": {
+  "token_2_cycles": [
+   "EN2",
+   "EN3",
+   "EN4",
+   "EN6"
+  ],
+  "epoch_1_cycle": [
+   "ES1"
+  ],
+  "otherwise": "bypass"
+ },
+ "masters": [
+  "kv3_pc",
+  "kv3_pc_v1"
+ ],
+ "replicas": 28,
+ "flops_per_replica": 52,
+ "flops_total": 1456,
+ "baseline_minimum_fixed_pad_flops": 160,
+ "mux_bits_per_replica": 34,
+ "extra_partition_pins": 0,
+ "extra_data_boundary_bits": 0,
+ "clock_sinks_per_replica": 52,
+ "area": {
+  "dff_cell": "DFFHQNx1_ASAP7_75t_R",
+  "dff_area_um2": 0.2916,
+  "dff_only_per_replica_um2": 15.1632,
+  "dff_only_total_um2": 424.5696,
+  "reserved_bank_region_um": [
+   20,
+   20
+  ],
+  "mux_decode_cell_area": "NOT_MEASURED",
+  "placement": "Must anchor near actual token/epoch sink and existing ID cells; no plan coordinates adopted"
+ },
+ "existing_id_wires": {
+  "kv3_pc": {
+   "stack": "i_idhr_Q_y_q[1:0]",
+   "group": "fixed4 for this type"
+  },
+  "kv3_pc_v1": {
+   "stack": "i_idpc_Q_N_y_q[1:0]",
+   "group": "pc_u_id_grp_rot__o[2:0]"
+  }
+ },
+ "exactness": {
+  "compared": 3104,
+  "differences": 0,
+  "wrong_position_mutant_mismatches": 776
+ },
+ "limitations": [
+  "No route/STA or SIGNED claim",
+  "Full R8 requires actual uniform-bank integration and exact per-instance bit mapping",
+  "No new physical coordinates adopted or rendered yet",
+  "No additional schedule delay beyond the proposed per-position R8 correction"
+ ]
+}
