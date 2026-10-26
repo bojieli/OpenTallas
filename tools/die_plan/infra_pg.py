@@ -69,7 +69,15 @@ DIE_CORE = {
                        "it charged to the core area)", 84.1),
 }
 FALLBACK_CORE = (0.15, "die_trial.py part_power default 0.15 W/mm2 (no die power figure for this die)")
-UCIE_X64_W = 128 * 32e9 * 0.6e-12   # 64 TX + 64 RX lanes x 32 GT/s x 0.6 pJ/b (UCIe-A upper, PHY_ASSUMPTIONS UCIE.ENERGY)
+# UCIe x64 PHY power basis (COORD default 2026-10-26 11:48, owner may veto; NUMBER-CHECK 11:46 CHECKED by PDNSim
+# re-solve: VDDPHY 10.9 mV M7-only at this load): the PHY abstract the QC / KV dies instantiate
+# (physical/die_plan/qwen_kvsys/cores/sys_c_views_m6/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.json: x64, 64 TX + 64 RX
+# at 16 GT/s, 0.29 pJ/b; liberty read_energy 169,070 fJ = 583-bit flit x 0.29 pJ/b), raw rate in both directions with
+# the full pJ/b charged to EACH end: 2 x 64 x 16 GT/s x 0.29 pJ/b = 0.59392 W per PHY.  The earlier 2.4576 W
+# (128 lanes x 32 GT/s x 0.6 pJ/b, UCIe-A upper spec at 2x the abstract's lane rate) stays as UCIE_X64_W_SPEC_UPPER,
+# a sensitivity value only.
+UCIE_X64_W_SPEC_UPPER = 128 * 32e9 * 0.6e-12
+UCIE_X64_W = 2 * 64 * 16e9 * 0.29e-12
 PHY_W_MM2 = 1.30                    # PHY_ASSUMPTIONS "PHY power density" (4.37 W / 3.36 mm2), for other PHY kinds
 UBUMP_UM = 45.0                     # PHY_ASSUMPTIONS BUMP.UBUMP (2.5D micro-bump field, bump contract 1)
 PHY_PG_SHARE = {"ucie": 0.30, "serdes": 0.45, "hbm": 0.45, "other": 0.45}   # UCIE.A.PG_SHARE / UCIE.S.PG_SHARE / HBM 45%
@@ -126,8 +134,9 @@ def phy_power(P, w, phy_w_per_macro):
         return phy_w_per_macro * lanes / 6.0, (f"SerDes {lanes} lanes = {lanes / 6:g} x {phy_w_per_macro:g} W per active "
                                               f"6-lane 112G macro (PHY_ASSUMPTIONS SER.MACRO6_POWER)")
     if "ucie" in iface or "ucie" in mod:
-        return UCIE_X64_W, ("UCIe x64: 128 lanes x 32 GT/s x 0.6 pJ/b = %.2f W (PHY_ASSUMPTIONS UCIE.ENERGY, UCIe-A "
-                            "upper; UCIE.RATE 32 GT/s)" % UCIE_X64_W)
+        return UCIE_X64_W, ("UCIe x64: PHY abstract ot_qkvd_ucie_x64_phy 2 x 64 lanes x 16 GT/s x 0.29 pJ/b = %.4f W "
+                            "(COORD default 10-26 11:48, owner may veto; spec upper %.4f W = sensitivity only)"
+                            % (UCIE_X64_W, UCIE_X64_W_SPEC_UPPER))
     a = (w["rect_um"][2] - w["rect_um"][0]) * (w["rect_um"][3] - w["rect_um"][1]) * 1e-6
     return PHY_W_MM2 * a, f"{iface or 'PHY'}: {PHY_W_MM2} W/mm2 x {a:.3f} mm2 (PHY_ASSUMPTIONS PHY power density)"
 

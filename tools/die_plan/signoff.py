@@ -706,8 +706,11 @@ exit
 
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
-                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False):
-    """hold_in_min / hold_out_min: the kit's seam hold contract (sdc_lint.json hold_in_min_ps / hold_out_min_ps,
+                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False,
+                tap_window=None):
+    """tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
+    golden SDC times every clock port W early, so the overlay's min output delay is the contract + W (exact IO shift);
+    None = no window.  hold_in_min / hold_out_min: the kit's seam hold contract (sdc_lint.json hold_in_min_ps / hold_out_min_ps,
     CLOCK-RESET IO-HOLD 10-25); None = legacy overlay (min input -ins_tol, min output 0).  hold_in_min_ports
     {input port: ps}: IO-HOLD option A per-port min input delays (sdc_lint.json hold_in_min_ports_ps) applied after
     the uniform one; None / {} = no per-port lines (session byte-identical)."""
@@ -715,6 +718,7 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
     hout = 0.0 if hold_out_min is None else float(hold_out_min)
     if hout > 0:
         raise ValueError(f"hold overlay: min output delay {hout:g} > 0 waives the sender hold check")
+    hout += float(tap_window or 0.0)
     if spef:
         par, src = "read_spef /base/6_final.spef", "spef"
     else:
@@ -905,7 +909,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 ff_bound_ps=disc.get("ff_bound_ps"),
                                                 hold_in_min=lctx.get("hold_in_min_ps"),
                                                 hold_out_min=lctx.get("hold_out_min_ps"),
-                                                hold_in_min_ports=lctx.get("hold_in_min_ports_ps"), core_taps_ff=core_overlay))
+                                                hold_in_min_ports=lctx.get("hold_in_min_ports_ps"), core_taps_ff=core_overlay,
+                                                tap_window=lctx.get("tap_window_ps")))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
