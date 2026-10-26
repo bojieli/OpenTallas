@@ -18,7 +18,8 @@ def install(recipe:Path,profile:Path,out:Path):
     rtl=ROOT/'rtl/qwen_sys/d2d_static_20261015'
     source=(rtl/'qfd_d2d_cal_seq_ovl_rope_image64.sv').read_text()
     source=source.replace('module qfd_d2d_cal_seq_ovl_rope_image64 #(','module qfd_d2d_cal_seq_ovl_rope #(',1)
-    source=source.replace('parameter string IMAGE_VIAMAP = ""',f'parameter string IMAGE_VIAMAP = "{rel(out/"content"/content["viamap"])}"',1)
+    if source.count('parameter IMAGE_VIAMAP = ""') != 1:raise ValueError('unexpected profile metadata declaration')
+    source=source.replace('parameter IMAGE_VIAMAP = ""',f'parameter IMAGE_VIAMAP = "{rel(out/"content"/content["viamap"])}"',1)
     alias=out/'qfd_d2d_cal_seq_ovl_rope_rom64.sv';alias.write_text(source)
     extra=[rel(alias),rel(rtl/'ot_qwen_d2d_ovl_seq_image64.sv'),rel(rtl/'ot_qwen_d2d_cal_seq_image64.sv'),rel(ROOT/f'physical/asap7_memory_macros_v2/{P.NAME}/{P.NAME}_bb.v')]
     for k in ('files','prefer','portbind_prefer'):

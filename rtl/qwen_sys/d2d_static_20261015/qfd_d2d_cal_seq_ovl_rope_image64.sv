@@ -1,7 +1,7 @@
 // Generated opt-in candidate by tools/qwen_static_kv/qc_dcal_rom/build_rtl.py.
 `timescale 1ns/1ps
 // Compute face's overlapping calendar producer. Lists are mask ROMs; only the next list word is held in flops.
-module qfd_d2d_cal_seq_ovl_rope_image64 #(parameter string IMAGE_VIAMAP = "",parameter ROM_DIR = "rtl/qwen_sys/d2d_static_20261015/ovl_release_rope", parameter integer MUT_HALT_REWIND = 0) (
+module qfd_d2d_cal_seq_ovl_rope_image64 #(parameter IMAGE_VIAMAP = "",parameter ROM_DIR = "rtl/qwen_sys/d2d_static_20261015/ovl_release_rope", parameter integer MUT_HALT_REWIND = 0) (
     input wire ck, rst_n, reload, epoch_go, halt,
     output wire cfg_tx_we, cfg_rx_we, output wire [5:0] cfg_addr, output wire [31:0] cfg_data,
     output wire cal_start, cal_seg, cal_start_rx, cal_seg_rx,

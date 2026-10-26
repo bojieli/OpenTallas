@@ -1,5 +1,5 @@
 // Generated opt-in candidate by tools/qwen_static_kv/qc_dcal_rom/build_rtl.py.
-module ot_qwen_d2d_ovl_seq_image64 #(parameter string IMAGE_VIAMAP = "", parameter string IMAGE_INSTANCE = "qc_dcal_image",
+module ot_qwen_d2d_ovl_seq_image64 #(parameter IMAGE_VIAMAP = "", parameter IMAGE_INSTANCE = "qc_dcal_image",
     parameter integer MUT_HALT_REWIND = 0, // bench-only old mid-list restart behavior
     parameter integer NE = 32,
     parameter integer AW = 11,           // list ROM address width (2,048 words: one 4-user frame is 1,703 a list)

@@ -24,7 +24,7 @@
 //     while a program runs, an admission start that finds the calendars busy or the bases not loaded.
 //     halt (the link end's epoch_abort) stops the program and the anchor at once; the next epoch strobe restarts both.
 // =====================================================================================================================
-module ot_qwen_d2d_cal_seq_image64 #(parameter string IMAGE_VIAMAP = "", parameter string IMAGE_INSTANCE = "qc_dcal_image",
+module ot_qwen_d2d_cal_seq_image64 #(parameter IMAGE_VIAMAP = "", parameter IMAGE_INSTANCE = "qc_dcal_image",
     parameter integer NE = 32,
     parameter integer NL = 36,          // layer runs per token (start 0 = token run incl. L0)
     parameter integer TW = 20,          // start-cycle width (token program 246,329 cycles < 2^18)
