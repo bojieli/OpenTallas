@@ -1,0 +1,40 @@
+BASE {'verdict': 'PASS', 'errors': 0, 'warnings': 366}
+ot_hbm_svc_sm_xcal_rel_t|250.56x250.56 -> {'verdict': 'FAIL', 'errors': 7, 'warnings': 366} new 7 gone 0
+    + ['ERROR', 'core_faces', 'type q_spb2 core u_xc_Q3 port cmd_ext: 109 pins on face S face away from its partner(s) station L76_o -> u_xc_Q3.cmd_ext: mean cos -0.33, 109 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_spt0 core u_xc_Q0 port kv_desc: 64 pins on face N face away from its partner(s) station L77_o -> u_xc_Q0.kv_desc: mean cos -0.53, 64 pins on the far side (re-pin to face W)']
+    + ['ERROR', 'core_faces', 'type q_spt0 core u_xc_Q1 port active: 1 pins on face N face away from its partner(s) face S (L41_o), face S (L50_i), face S (L84_i) ...: mean cos -0.27, 1 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_spt0 core u_xc_Q1 port cfg_addr: 12 pins on face N face away from its partner(s) face S (L41_o), face S (L50_i), face S (L84_i) ...: mean cos -0.27, 12 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_spt0 core u_xc_Q1 port cfg_data: 256 pins on face N face away from its partner(s) face S (L41_o), face S (L50_i), face S (L84_i) ...: mean cos -0.27, 256 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_spt0 core u_xc_Q1 port cfg_target: 8 pins on face N face away from its partner(s) face S (L41_o), face S (L50_i), face S (L84_i) ...: mean cos -0.27, 8 pins on the far side (re-pin to face E)']
+ot_hgi_sm_xload_cl2_bfqg|302.4x298.08 -> {'verdict': 'FAIL', 'errors': 6, 'warnings': 366} new 6 gone 0
+    + ['ERROR', 'core_faces', 'type q_hub core u_xq_Q_p1_bfq2 port c_d: 1024 pins on face W face away from its partner(s) u_xl_Q_ctl: mean cos -0.98, 1024 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_xq_Q_p1_bfq2 port mhi0: 1 pins on face W face away from its partner(s) u_xl_Q_ctl: mean cos -0.98, 1 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_xq_Q_p1_bfq2 port mhi1: 1 pins on face W face away from its partner(s) u_xl_Q_ctl: mean cos -0.98, 1 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_xq_Q_p1_bfq2 port mhi2: 1 pins on face W face away from its partner(s) u_xl_Q_ctl: mean cos -0.98, 1 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_xq_Q_p1_bfq2 port wce: 1 pins on face W face away from its partner(s) u_xl_Q_ctl: mean cos -0.98, 1 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_hub: 43 core ports face away from their partners (38 more not listed)']
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b|177.984x177.984 -> {'verdict': 'FAIL', 'errors': 6, 'warnings': 380} new 20 gone 0
+    + ['ERROR', 'core_faces', 'type q_hub core u_ctl_Q_p01 port dram_rdata: 256 pins on face S face away from its partner(s) station L114_i -> u_ctl_Q_p01.dram_rdata, station L21_i -> u_ctl_Q_p01.dram_rdata, station L22_i -> u_ctl_Q_p01.dram_rdata ...: mean cos -0.46, 256 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_ctl_Q_p01 port row_v: 1 pins on face S face away from its partner(s) station L114_i -> u_ctl_Q_p01.row_v, station L21_i -> u_ctl_Q_p01.row_v, station L22_i -> u_ctl_Q_p01.row_v ...: mean cos -0.73, 1 pins on the far side (re-pin to face N)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_ctl_Q_p03 port owner_fault_split: 6 pins on face S face away from its partner(s) station L66_o -> u_ctl_Q_p03.owner_fault_split, station L79_o -> u_ctl_Q_p03.owner_fault_split, station L82_i -> u_ctl_Q_p03.owner_fault_split: mean cos -0.74, 6 pins on the far side (re-pin to face N)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_ctl_Q_p03 port pc_fault: 1 pins on face S face away from its partner(s) station L66_o -> u_ctl_Q_p03.pc_fault, station L79_o -> u_ctl_Q_p03.pc_fault, station L82_i -> u_ctl_Q_p03.pc_fault: mean cos -0.73, 1 pins on the far side (re-pin to face N)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_ctl_Q_p03 port refresh_reload: 8 pins on face S face away from its partner(s) station L66_o -> u_ctl_Q_p03.refresh_reload, station L79_o -> u_ctl_Q_p03.refresh_reload, station L82_i -> u_ctl_Q_p03.refresh_reload: mean cos -0.75, 8 pins on the far side (re-pin to face N)']
+    + ['ERROR', 'core_faces', 'type q_hub: 50 core ports face away from their partners (45 more not listed)']
+ot_hbm_svc_vmdel_lane_n|257.04x108 -> {'verdict': 'FAIL', 'errors': 6, 'warnings': 373} new 13 gone 0
+    + ['ERROR', 'core_faces', 'type q_hub core u_vmdel_Q3 port full0: 1 pins on face N face away from its partner(s) u_vmdel_Q0, u_vmdel_Q1, u_vmdel_Q2 ...: mean cos -0.40, 1 pins on the far side (re-pin to face S)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_vmdel_Q3 port full0_all: 8 pins on face N face away from its partner(s) u_vmdel_Q0, u_vmdel_Q1, u_vmdel_Q2 ...: mean cos -0.40, 8 pins on the far side (re-pin to face S)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_vmdel_Q3 port full1: 1 pins on face N face away from its partner(s) u_vmdel_Q0, u_vmdel_Q1, u_vmdel_Q2 ...: mean cos -0.40, 1 pins on the far side (re-pin to face S)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_vmdel_Q3 port full1_all: 8 pins on face N face away from its partner(s) u_vmdel_Q0, u_vmdel_Q1, u_vmdel_Q2 ...: mean cos -0.40, 8 pins on the far side (re-pin to face S)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_vmdel_Q3 port pcbad_all: 8 pins on face N face away from its partner(s) u_vmdel_Q0, u_vmdel_Q1, u_vmdel_Q2 ...: mean cos -0.40, 8 pins on the far side (re-pin to face S)']
+    + ['ERROR', 'core_faces', 'type q_hub: 24 core ports face away from their partners (19 more not listed)']
+ot_hgi_sm_xload_cl2_bdring|86.4x302.4 -> {'verdict': 'PASS', 'errors': 0, 'warnings': 366} new 0 gone 0
+ot_hgi_sm_xload_xq_pegress|369.36x369.36 -> {'verdict': 'FAIL', 'errors': 2, 'warnings': 366} new 2 gone 0
+    + ['ERROR', 'core_faces', 'type q_hub core u_xq_Q_p1_eg port x_done: 1 pins on face S face away from its partner(s) u_obs_Q: mean cos -0.24, 1 pins on the far side (re-pin to face E)']
+    + ['ERROR', 'core_faces', 'type q_hub core u_xq_Q_p1_eg port xw_last: 1 pins on face S face away from its partner(s) u_obs_Q: mean cos -0.24, 1 pins on the far side (re-pin to face E)']
+ot_hbm_xp_aq_tree13_fmt|183.6x108 -> {'verdict': 'FAIL', 'errors': 6, 'warnings': 366} new 6 gone 0
+    + ['ERROR', 'hard_cores', 'type q_hub core u_xl_Q_aqlo pin x[448] M6: y 2213.9520 off the plan track (offset 0.032, pitch 0.064) in the type frame']
+    + ['ERROR', 'hard_cores', 'type q_hub core u_xl_Q_aqlo pin x[449] M6: y 2213.3120 off the plan track (offset 0.032, pitch 0.064) in the type frame']
+    + ['ERROR', 'hard_cores', 'type q_hub core u_xl_Q_aqlo pin x[450] M6: y 2212.7360 off the plan track (offset 0.032, pitch 0.064) in the type frame']
+    + ['ERROR', 'hard_cores', 'type q_hub core u_xl_Q_aqlo pin x[451] M6: y 2212.0960 off the plan track (offset 0.032, pitch 0.064) in the type frame']
+    + ['ERROR', 'hard_cores', 'type q_hub core u_xl_Q_aqlo pin x[452] M6: y 2211.5200 off the plan track (offset 0.032, pitch 0.064) in the type frame']
+    + ['ERROR', 'hard_cores', 'type q_hub core u_xl_Q_aqlo: 342 pins off the plan tracks']

@@ -41752,8 +41752,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sm_xload_cl2_bdring__86.4x302.4__q_hub_u_xq_Q_p0_bd.json",
-"note": "d4g hard core; 85191 cells"
+"pins_file": "cores_tmpl/ot_hgi_sm_xload_cl2_bdring__86.4x302.4.json",
+"note": "TYPE-REDUCE-3/HBM 10-25: one pin table per (master, outline) (cores_tmpl/ot_hgi_sm_xload_cl2_bdring__86.4x302.4.json), orient R0, track offset +0/+0; G0C 0 new findings; was cores/ot_hgi_sm_xload_cl2_bdring__86.4x302.4__q_hub_u_xq_Q_p0_bd.json | d4g hard core; 85191 cells"
 },
 {
 "inst": "u_xq_Q_p1_bd",
@@ -41770,8 +41770,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sm_xload_cl2_bdring__86.4x302.4__q_hub_u_xq_Q_p1_bd.json",
-"note": "d4g hard core; 85191 cells"
+"pins_file": "cores_tmpl/ot_hgi_sm_xload_cl2_bdring__86.4x302.4.json",
+"note": "TYPE-REDUCE-3/HBM 10-25: one pin table per (master, outline) (cores_tmpl/ot_hgi_sm_xload_cl2_bdring__86.4x302.4.json), orient R0, track offset +0/+0; G0C 0 new findings; was cores/ot_hgi_sm_xload_cl2_bdring__86.4x302.4__q_hub_u_xq_Q_p1_bd.json | d4g hard core; 85191 cells"
 },
 {
 "inst": "u_xq_Q_p0_bfq0",
@@ -42616,8 +42616,8 @@
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_xp_aq_tree13_fmt__183.6x108__q_hub_u_xl_Q_aqhi.json",
-"note": "d4g hard core; 81491 cells"
+"pins_file": "cores_tmpl/ot_hbm_xp_aq_tree13_fmt__183.6x108.json",
+"note": "TYPE-REDUCE-3/HBM 10-25: one pin table per (master, outline) (cores_tmpl/ot_hbm_xp_aq_tree13_fmt__183.6x108.json), orient R0, track offset +0/+0; G0C 0 new findings; was cores/ot_hbm_xp_aq_tree13_fmt__183.6x108__q_hub_u_xl_Q_aqhi.json | d4g hard core; 81491 cells"
 },
 {
 "inst": "u_xl_Q_aqlo",
@@ -42632,10 +42632,11 @@
 ],
 "track_offset_um": [
 0.0,
-0.0
+0.096
 ],
-"pins_file": "cores/ot_hbm_xp_aq_tree13_fmt__183.6x108__q_hub_u_xl_Q_aqlo.json",
-"note": "d4g hard core; 81491 cells"
+"pins_file": "cores_tmpl/ot_hbm_xp_aq_tree13_fmt__183.6x108.json",
+"note": "TYPE-REDUCE-3/HBM 10-25: one pin table per (master, outline) (cores_tmpl/ot_hbm_xp_aq_tree13_fmt__183.6x108.json), orient MX, track offset +0/+0.096; G0C 0 new findings; was cores/ot_hbm_xp_aq_tree13_fmt__183.6x108__q_hub_u_xl_Q_aqlo.json | d4g hard core; 81491 cells",
+"orient": "MX"
 }
 ],
 "internal_stations": [
