@@ -2,7 +2,13 @@
 """Retain SFU masters and open actual M7-free S landing and EW strips."""
 import argparse,json,shutil
 from pathlib import Path
-from path_hbm_bank_channels import update_core
+def update_core(t,c,new):
+ old=list(c['origin_um']);c['origin_um']=list(new)
+ for ct in t.get('contents',[]):
+  if ct['inst']==c['inst'] and 'origin_um' in ct:ct['origin_um']=list(new)
+ for tap in t.get('clock',{}).get('taps',[]):
+  if tap['name']==c['inst'] or tap['name'].startswith(c['inst']+'.'):tap['xy']=[round(tap['xy'][i]+new[i]-old[i],3) for i in [0,1]]
+ return {'inst':c['inst'],'before':old,'after':new}
 
 def main():
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
