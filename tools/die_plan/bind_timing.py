@@ -1,5 +1,6 @@
 """Exact intra/crossing timing views for compiler consumers; legacy depth() is unchanged."""
 from collections import defaultdict
+import bind_position_bank as PB
 
 
 def timing_depths(b,path,port):
@@ -10,7 +11,7 @@ def timing_depths(b,path,port):
             if old[0]!='int' or old[1:4]!=d[1:4]:raise ValueError('INNER original endpoint changed')
             return dict(kind='intra',source=b.F.cells[d[1]].path,source_port=d[2],source_bit=d[3],asbuilt_stages=old[4],landed_stages=d[4])
         if kind=='x':
-            depth=b.bitcyc[(d[1],d[6],d[2],d[3],d[4])]+(d[7] if len(d)>7 else 0)
+            depth=b.bitcyc[(d[1],d[6],d[2],d[3],d[4])]+(d[7] if len(d)>7 else 0)+PB.extra(b,ci,port)
             return dict(kind='crossing',source=b.F.cells[d[2]].path,source_port=d[3],source_bit=d[4],asbuilt_stages=d[5],landed_stages=depth)
         if kind in ('or','and'):
             if old[0]!=kind or len(d[1])!=len(old[1]):raise ValueError('INNER original logic changed')

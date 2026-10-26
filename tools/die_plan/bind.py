@@ -54,6 +54,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import bind_elab as E  # noqa: E402
+import bind_position_bank as PB  # noqa: E402
 
 SCHEMA = "opentallas.die_plan.bind.v1"
 
@@ -1753,6 +1754,12 @@ class Binder:
                                        f"{m['source']} as-built {m['asbuilt']} bound {m['bound']}")
                 continue
             pad = m["pad"]
+            position_bank = PB.spec(self, ci, pn)
+            if position_bank:
+                if pad != position_bank["pad"]:
+                    self.errors.append(f"POSITION_BANK {path}.{pn}: table pad {pad} != declared position pad {position_bank['pad']}")
+                st["position_bank_members"] = st.get("position_bank_members", 0) + 1
+                continue  # real kept stages live inside the uniform same-ABI slg wrapper
             if any(x.fullmatch(f"{path}.{pn}") for x in excl):
                 st["excluded_bits"] += 1
                 if pad and (not st["r8_excluded"] or st["r8_excluded"][-1]["id"] != m["id"]):
@@ -1906,7 +1913,7 @@ class Binder:
         out = {}
         for i in range(len(self.F.cells[ci].ports[port])):
             d = self.sinks[(ci, port, i)]
-            out[i] = (self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)) if d[0] == "x" else 0
+            out[i] = (self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0) + PB.extra(self, ci, port)) if d[0] == "x" else 0
         return out
 
     def timing_depths(self, path, port):
@@ -1982,7 +1989,7 @@ class Binder:
                 continue
             L, j = self.bitpos[(d[1], d[6], d[2], d[3], d[4])]
             b0 = self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
-            pad = d[7] if len(d) > 7 else 0
+            pad = (d[7] if len(d) > 7 else 0) + PB.extra(self, ci, pn)
             land[(ci, d[1])][(pn, f"{F.cells[d[2]].path}.{d[3]}", d[5], b0, b0 + pad,
                               L.get("lane") or ("spine" if L.get("spine") else "UNPLANNED"))].append((i, d[4]))
             rep[(d[2], d[3], d[4], d[5])][d[6]].add(b0 + pad)
@@ -1992,7 +1999,8 @@ class Binder:
             for (pn, src, st, b0, b1, lane), bl in sorted(m.items()):
                 mem.append(dict(sink_port=pn, sink_bits=ranges(x for x, _ in bl), source=src,
                                 source_bits=ranges(y for _, y in bl), asbuilt_stages=st, bound_stages=b0,
-                                landed_stages=b1, lane=lane))
+                                landed_stages=b1, lane=lane,
+                                **({"position_bank": PB.spec(self, ci, pn)} if PB.spec(self, ci, pn) else {})))
             off = {x["landed_stages"] - x["asbuilt_stages"] for x in mem}
             off0 = {x["bound_stages"] - x["asbuilt_stages"] for x in mem}
             groups.append(dict(sink=F.cells[ci].path, sink_part=self.cpart[ci], src_part=sp,
@@ -3362,6 +3370,10 @@ def cmd_bind(a):
     B.align_landings()
     B.uniform_inner()
     B.regen_params()
+    try:
+        B.position_bank_layout = PB.layout(B)
+    except ValueError as exc:
+        B.errors.append(f"POSITION_BANK {exc}")
     B.check_types()
     if B.ab.get("land_pad_tree"):
         B.pad_trees()
@@ -3398,6 +3410,8 @@ def cmd_bind(a):
     if getattr(B, "inner_uniform_stats", None):
         rep["inner_uniform"] = B.inner_uniform_stats
     rep["type_canon_merged"] = getattr(B, "type_canon_merged", [])
+    if getattr(B, "position_bank_layout", None):
+        rep["position_banks"] = B.position_bank_layout
     if B.param_regen:
         rep["param_regen"] = B.param_regen
         (out / "param_regen.json").write_text(json.dumps(B.param_regen, indent=1))
