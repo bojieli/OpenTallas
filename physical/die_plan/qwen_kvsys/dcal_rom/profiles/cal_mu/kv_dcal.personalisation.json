@@ -1,0 +1,45 @@
+{
+  "content_signature": "57cbe52c",
+  "data_bits": 32,
+  "ecc": "none",
+  "image": "kv_dcal.hex",
+  "image_sha256": "bf2be04399de192d81b15c051389b2d9031e7ec034e09a9ba7bd4a3d64f32e22",
+  "instances": [
+    {
+      "instance": "kv_dcal_r0_c0",
+      "macro": "ot_rom_64x32_m2",
+      "signature_crc32": "c0f4716a",
+      "signature_definition": "tools/mem_compiler/ecc.py: CRC-32 0x04C11DB7, init 0xFFFFFFFF, every word of the macro in address order, LSB first",
+      "via_density": 0.16162109375,
+      "viamap": "kv_dcal_r0_c0.viamap.hex",
+      "viamap_sha256": "e82841748f0ab794592bf99046447d813cf3dc3c7315c596aebf3873b4128cf7",
+      "vias_present": 331,
+      "words_programmed": 64
+    }
+  ],
+  "macro": "ot_rom_64x32_m2",
+  "profile": "kv_dcal.profile.json",
+  "profile_schema": "opentallas.kv-dcal-profile.v1",
+  "profile_sha256": "5e61a67be3ea1528d80e3ed293ee21d892eece3e6d25f236827349f780ff49ac",
+  "schema": "opentallas.rom-personalisation.v1",
+  "tile_data_bits": 32,
+  "viamap_set_sha256": "4dcfe21f339d1564779de316c1da4bb9097b741b360ce09aa24f063dd7b18f4f",
+  "word_addresses": {
+    "ADM_LEN": 42,
+    "ADM_OFS": 41,
+    "FIRST_OFS": 43,
+    "PERIOD": 36,
+    "RESERVED_ZERO": [
+      44,
+      63
+    ],
+    "RX_SEG1": 38,
+    "RX_SEG2": 40,
+    "START": [
+      0,
+      35
+    ],
+    "TX_SEG1": 37,
+    "TX_SEG2": 39
+  }
+}
