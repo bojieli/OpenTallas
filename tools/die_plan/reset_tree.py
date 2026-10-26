@@ -274,10 +274,17 @@ def _edge_ok(p, q, boxes):
     return False
 
 
-def _crosses(nodes, root, boxes):
+def _bbox_edge_ok(p, q, boxes):
+    """Every route inside the endpoint rectangle is core-free (resizer-safe corner)."""
+    x0,x1=sorted((p[0],q[0]));y0,y1=sorted((p[1],q[1]))
+    return not any(x1>a+1e-8 and x0<c-1e-8 and y1>b+1e-8 and y0<d-1e-8
+                   for a,b,c,d in boxes)
+
+
+def _crosses(nodes, root, boxes, bbox_clear=False):
     for nd in nodes:
         u = nd["par"]
-        if not _edge_ok(root if u is None or u < 0 else nodes[u]["xy"], nd["xy"], boxes):
+        if not (_bbox_edge_ok if bbox_clear else _edge_ok)(root if u is None or u < 0 else nodes[u]["xy"], nd["xy"], boxes):
             return True
     return False
 
@@ -387,7 +394,7 @@ def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(),
     return assign(topo, depth, prefix)
 
 
-def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, walls=(), avoid_cores=False):
+def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, walls=(), avoid_cores=False, bbox_clear=False):
     """the depth-independent part of build(): relay sites and parents.  A tap (or the entry) over a blockage gets its
     relay site at the nearest free point (tap_offset_um records how far).  `walls` (see walls()): every hop must have
     a wall-free L route, else the grid topology routes around them; a remaining walled hop fails closed."""
@@ -407,10 +414,10 @@ def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=
     # WALL rule (CLOCK-RESET 10-25): never a hop without a wall-free L route.  avoid_cores (plan reset.relay_avoid_cores,
     # KV-PLAN2 10-25): no hop whose both L routes cross ANY blockage (G2 kv3_pc: rrl_13 -> rrl_14 straight through
     # kvpc0, 1272 M3 overflow)
-    hb = boxes if avoid_cores else ()
+    hb = boxes if avoid_cores or bbox_clear else ()
     if ((_maxhop(nodes, root) > reach + 1e-6 and boxes) or walled_hops(nodes, root, walls)
-            or (hb and _crosses(nodes, root, hb))):
-        nodes, method = _topo_grid(pts, root, plan_reach, boxes, box_out, walls=walls, hop_boxes=hb), "grid"
+            or (hb and _crosses(nodes, root, hb, bbox_clear=bbox_clear))):
+        nodes, method = _topo_grid(pts, root, plan_reach, boxes, box_out, walls=walls, hop_boxes=hb, bbox_clear=bbox_clear), "grid"
     bad = walled_hops(nodes, root, walls)
     if bad:
         raise ResetError(f"reset tree: {len(bad)} relay hop(s) cross a wall (blockage closed to the top signal layer) "
@@ -470,7 +477,7 @@ def _topo_taps(pts, root, reach, boxes, box_out):
     return nodes
 
 
-def _topo_grid(pts, root, reach, boxes, box_out, pitch=None, walls=(), hop_boxes=()):
+def _topo_grid(pts, root, reach, boxes, box_out, pitch=None, walls=(), hop_boxes=(), bbox_clear=False):
     """shortest-hop tree over the taps + a grid of free relay sites (pitch um); ties: fewer hops, then less wire."""
     x0, y0, x1, y1 = box_out
     pitch = pitch or max(21.6, reach / 4)
@@ -506,7 +513,7 @@ def _topo_grid(pts, root, reach, boxes, box_out, pitch=None, walls=(), hop_boxes
         for dx in (-1, 0, 1):
             for dy in (-1, 0, 1):
                 for k in buckets.get((cx + dx, cy + dy), ()):
-                    if _man(q, allp[k]) <= reach and _lfree(q, allp[k], walls) and _edge_ok(q, allp[k], hop_boxes):
+                    if _man(q, allp[k]) <= reach and _lfree(q, allp[k], walls) and (_bbox_edge_ok if bbox_clear else _edge_ok)(q, allp[k], hop_boxes):
                         yield k
     dist = {}
     par = {}
@@ -1260,6 +1267,18 @@ def _wf_type_tree(P, tn):
                         box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
                         avoid_cores=bool(P.reset.get("relay_avoid_cores")))
         T = assign(topo, None)
+        if t.get("reset", {}).get("relay_route") == "core_free_bbox":
+            native = T
+            topo = topology(pts, in_pin(P, tn), reach=relay_um(P), boxes=blockages(t),
+                            box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM),
+                            walls=walls(P, tn), avoid_cores=True, bbox_clear=True)
+            contract_depth = int(t.get("reset", {}).get("relay_route_depth", native["depth"]))
+            T = assign(topo, contract_depth)
+            if T["depth"] != contract_depth:
+                raise ResetError(f"type {tn}: core-free relay geometry needs depth {T['depth']} "
+                                 f"instead of {contract_depth}; explicit boot/cycle proposal required")
+            T.update(relay_route="core_free_bbox", contract_depth=contract_depth, native_depth=native["depth"],
+                     native_relays=len(native["relays"]), relay_FF_delta=len(T["relays"])-len(native["relays"]))
         T.update(n_clock_taps=len(taps), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
         cache[key] = T
     import copy

@@ -17489,3 +17489,21 @@ def qwen_station_ctl_width_1309_model():
                 additional_cell_body_um2=24*.37908,
                 area_scope='ASAP7 unified-model FF body estimate; clock/reset/buffer overhead and final route remain measured gates',
                 receipt='physical/die_plan/qwen_compute/inputs/st_a_ctl_width_1309.json')
+
+
+def qwen_d3_short_span_geometry_model():
+    """One approved SU aspect + CBN channel geometry delta; no added data stages."""
+    return dict(schema='opentallas.qc-d3-short-span.v1',
+                su_parent_types=2,su_parent_instances=12,new_aspect_core_replicas=24,
+                new_aspect_core_outline_um=[354.24,259.2],old_core_outline_um=[259.2,354.24],
+                each_core_area_um2=91819.008,core_area_change_um2=0,FF_added=0,
+                data_cycles_added=0,token_cycles_added=0,MACs_per_cycle_change=0,
+                memory_bytes_per_cycle_change=0,boundary_bits_per_cycle_change=0,
+                CBN_rsf_stages=dict(cbn_q00=10,cbn_q01=9),
+                control_depths=dict(cbn_q00=10,cbn_q01=10,cbn_q11=7,cbx_q10=7),
+                control_relay_FF_delta_both_reset_START=-1296,
+                control_depth_boot_cycles_added=0,
+                registered_reach_um=405,measured_repeater_single_span_um=290,
+                CBN_core_free_turn_bands_um=dict(N=2566.08,S=25.92),
+                unadopted_channel_fallback_added_stages_per_cws=2,
+                adoption='Both NEW child aspects SIGNED + actual native pin/clock contracts + parent G0/G2/GEOM')

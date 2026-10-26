@@ -378,6 +378,9 @@ SCHEMA = {
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
+                        # Optional physical control-channel geometry; keeps the native relay depth or fails closed.
+                        "relay_route": {"enum": ["core_free_bbox"]},
+                        "relay_route_depth": {"type": "integer", "minimum": 1},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
