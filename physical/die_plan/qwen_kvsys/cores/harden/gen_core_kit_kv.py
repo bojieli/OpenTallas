@@ -552,7 +552,7 @@ def main():
     ap.add_argument("--astk-strap-master", action="store_true",
                     help="OWNER option B (COORD 10-25 07:01): ONE kv3_astk master from a corner core json; the corner ID "
                          "constants (ctl st, zn zc[1:0]) come from input strap_corner[1:0] (EN 11 ES 10 WN 01 WS 00) via one "
-                         "kept landing register; false path from strap_*; needs --astk-face-ports --astk-timing-regs "
+                         "direct static alias, settled before reset/clock start (METH 1.8); false path from strap_*; needs --astk-face-ports --astk-timing-regs "
                          "--astk-rep-split --am-g-drop (astk_strap_master.py)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
     ap.add_argument("--am-g-drop", action="store_true",
