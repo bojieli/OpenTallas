@@ -51,11 +51,13 @@ def boxes(t):
     return [(c['origin_um'][0],c['origin_um'][1],c['origin_um'][0]+c['outline_um'][0],c['origin_um'][1]+c['outline_um'][1]) for c in t.get('hard_cores',[])]
 
 def segment_clear(a,b,blocks):
-    # A routing segment may end on the core boundary. A midpoint inside a hard core is forbidden.
-    for k in range(1,20):
-        f=k/20;p=(a[0]+f*(b[0]-a[0]),a[1]+f*(b[1]-a[1]))
-        if any(inside(p,z) for z in blocks):return False
+    # Exact axis-aligned intersection: a thin macro cannot disappear between samples.
+    if a[0]!=b[0] and a[1]!=b[1]:raise ValueError('routing visibility edge must be rectilinear')
+    for x0,y0,x1,y1 in blocks:
+        if a[1]==b[1] and y0<a[1]<y1 and max(min(a[0],b[0]),x0)<min(max(a[0],b[0]),x1):return False
+        if a[0]==b[0] and x0<a[0]<x1 and max(min(a[1],b[1]),y0)<min(max(a[1],b[1]),y1):return False
     return True
+
 
 def manhattan(points,blocks):
     """Shortest obstacle-free rectilinear route, not a diagonal through a macro wall."""
