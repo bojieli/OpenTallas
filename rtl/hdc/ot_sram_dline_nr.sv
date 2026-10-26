@@ -2,7 +2,7 @@
 // Existing ot_sram_dline remains unchanged; explicit parent adoption required.
 `timescale 1ns/1ps
 // ot_sram_dline (el1011-s81su, 2026-10-12): a fixed D-cycle delay line of W-bit words held in 1R1W SRAM macros
-// (ot_sram_1r1w_64x512_m1_r2c2, ceil(W / 512) side by side) instead of W x D flops: q(t) = d(t - D), cycle-exact,
+// (ot_sram_1r1w_64x512_m1_r0c0, ceil(W / 512) side by side) instead of W x D flops: q(t) = d(t - D), cycle-exact,
 // for every cycle (a pure delay; validity travels on the caller's own reset line).  The macro is written every cycle
 // at wp and read at rp = wp - (D - 2) (the read is registered in the macro), then the read word is captured in a
 // flop right at the macro output (no logic before it) -> D = (D - 2) array cycles + macro read + capture.
