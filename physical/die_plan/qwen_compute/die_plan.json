@@ -89528,7 +89528,467 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "internal_stations": [
+    {
+     "conn": "bus:ag_ei",
+     "from_um": [
+      622.08,
+      5.24
+     ],
+     "to_um": [
+      0.0,
+      322.237
+     ],
+     "regs_um": [
+      [
+       311.04,
+       8.64
+      ]
+     ],
+     "bits": 11,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain ag_ei -> x_fw_o, max L 939 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:ard_ei",
+     "from_um": [
+      622.08,
+      51.472
+     ],
+     "to_um": [
+      0.0,
+      376.781
+     ],
+     "regs_um": [
+      [
+       302.4,
+       51.84
+      ]
+     ],
+     "bits": 513,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain ard_ei -> x_fw_o, max L 957 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arl_ei",
+     "from_um": [
+      622.08,
+      97.028
+     ],
+     "to_um": [
+      0.0,
+      430.385
+     ],
+     "regs_um": [
+      [
+       302.4,
+       95.04
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arl_ei -> x_fw_o, max L 955 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arm_ei",
+     "from_um": [
+      622.08,
+      98.816
+     ],
+     "to_um": [
+      0.0,
+      430.594
+     ],
+     "regs_um": [
+      [
+       302.4,
+       95.04
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arm_ei -> x_fw_o, max L 954 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:art_ei",
+     "from_um": [
+      622.08,
+      102.816
+     ],
+     "to_um": [
+      0.0,
+      444.812
+     ],
+     "regs_um": [
+      [
+       302.4,
+       103.68
+      ]
+     ],
+     "bits": 33,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o/x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain art_ei -> x_fw_o/x_fw_p1_o, max L 1069 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arv_ei",
+     "from_um": [
+      622.08,
+      106.624
+     ],
+     "to_um": [
+      0.0,
+      552.37
+     ],
+     "regs_um": [
+      [
+       267.84,
+       103.68
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arv_ei -> x_fw_p1_o, max L 1068 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:dd_ei",
+     "from_um": [
+      622.08,
+      176.592
+     ],
+     "to_um": [
+      0.0,
+      609.593
+     ],
+     "regs_um": [
+      [
+       267.84,
+       172.8
+      ]
+     ],
+     "bits": 549,
+     "launch": "face flop",
+     "capture": "face bus x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain dd_ei -> x_fw_p1_o, max L 1065 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:flt_e_i",
+     "from_um": [
+      622.08,
+      315.984
+     ],
+     "to_um": [
+      0.0,
+      119.02
+     ],
+     "regs_um": [
+      [
+       345.6,
+       319.68
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus flt_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain flt_e_i -> flt_o, max L 819 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:sc_ei",
+     "from_um": [
+      622.08,
+      586.68
+     ],
+     "to_um": [
+      0.0,
+      198.311
+     ],
+     "regs_um": [
+      [
+       371.52,
+       587.52
+      ],
+      [
+       120.96,
+       587.52
+      ]
+     ],
+     "bits": 49,
+     "launch": "face flop",
+     "capture": "face bus x_sc_o/x_stm_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain sc_ei -> x_sc_o/x_stm_o, max L 1208 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:st_ei",
+     "from_um": [
+      622.08,
+      694.794
+     ],
+     "to_um": [
+      0.0,
+      591.579
+     ],
+     "regs_um": [
+      [
+       345.6,
+       691.2
+      ],
+      [
+       69.12,
+       691.2
+      ]
+     ],
+     "bits": 1088,
+     "launch": "face flop",
+     "capture": "face bus x_stm_o/x_stm_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain st_ei -> x_stm_o/x_stm_p1_o, max L 1218 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_i",
+     "from_um": [
+      0.0,
+      494.2
+     ],
+     "to_um": [
+      622.08,
+      230.612
+     ],
+     "regs_um": [
+      [
+       293.76,
+       492.48
+      ],
+      [
+       587.52,
+       492.48
+      ]
+     ],
+     "bits": 540,
+     "launch": "face flop",
+     "capture": "face bus cmd_eo/dr_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_fw_i -> cmd_eo/dr_eo, max L 956 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_p1_i",
+     "from_um": [
+      0.0,
+      724.152
+     ],
+     "to_um": [
+      622.08,
+      346.627
+     ],
+     "regs_um": [
+      [
+       328.32,
+       725.76
+      ],
+      [
+       613.44,
+       682.56
+      ]
+     ],
+     "bits": 540,
+     "launch": "face flop",
+     "capture": "face bus dr_eo/hr_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain x_fw_p1_i -> dr_eo/hr_eo, max L 1009 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_p2_i",
+     "from_um": [
+      0.0,
+      837.784
+     ],
+     "to_um": [
+      622.08,
+      449.574
+     ],
+     "regs_um": [
+      [
+       328.32,
+       838.08
+      ],
+      [
+       604.8,
+       786.24
+      ]
+     ],
+     "bits": 539,
+     "launch": "face flop",
+     "capture": "face bus hr_eo/l9_eo/rd_eo/treq_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain x_fw_p2_i -> hr_eo/l9_eo/rd_eo/treq_eo, max L 1027 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_sc_i",
+     "from_um": [
+      0.0,
+      191.872
+     ],
+     "to_um": [
+      622.08,
+      595.733
+     ],
+     "regs_um": [
+      [
+       345.6,
+       190.08
+      ],
+      [
+       622.08,
+       250.56
+      ]
+     ],
+     "bits": 49,
+     "launch": "face flop",
+     "capture": "face bus sc_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_sc_i -> sc_eo, max L 1027 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_st_a_i",
+     "from_um": [
+      0.0,
+      921.872
+     ],
+     "to_um": [
+      622.08,
+      510.156
+     ],
+     "regs_um": [
+      [
+       345.6,
+       924.48
+      ],
+      [
+       622.08,
+       855.36
+      ]
+     ],
+     "bits": 259,
+     "launch": "face flop",
+     "capture": "face bus rd_eo/rr_eo/rv_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_st_a_i -> rd_eo/rr_eo/rv_eo, max L 1039 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_st_b_i",
+     "from_um": [
+      224.224,
+      1339.2
+     ],
+     "to_um": [
+      622.08,
+      553.941
+     ],
+     "regs_um": [
+      [
+       224.64,
+       1045.44
+      ],
+      [
+       224.64,
+       751.68
+      ],
+      [
+       328.32,
+       552.96
+      ]
+     ],
+     "bits": 257,
+     "launch": "face flop",
+     "capture": "face bus rd_eo/re_eo/rl_eo/rr_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_st_b_i -> rd_eo/re_eo/rl_eo/rr_eo, max L 1232 um; 3 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_stm_i",
+     "from_um": [
+      0.0,
+      1006.592
+     ],
+     "to_um": [
+      622.08,
+      836.813
+     ],
+     "regs_um": [
+      [
+       267.84,
+       1002.24
+      ],
+      [
+       527.04,
+       1002.24
+      ]
+     ],
+     "bits": 545,
+     "launch": "face flop",
+     "capture": "face bus st_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_i -> st_eo, max L 801 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_stm_p1_i",
+     "from_um": [
+      0.0,
+      1235.68
+     ],
+     "to_um": [
+      622.08,
+      930.727
+     ],
+     "regs_um": [
+      [
+       311.04,
+       1235.52
+      ],
+      [
+       613.44,
+       1235.52
+      ]
+     ],
+     "bits": 545,
+     "launch": "face flop",
+     "capture": "face bus st_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_eo, max L 937 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    }
+   ]
   },
   "slw_hc0": {
    "module": "qfd_qc_slw_hc0",
@@ -94710,7 +95170,409 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "internal_stations": [
+    {
+     "conn": "bus:ag_ei",
+     "from_um": [
+      622.08,
+      5.24
+     ],
+     "to_um": [
+      0.0,
+      316.885
+     ],
+     "regs_um": [
+      [
+       311.04,
+       8.64
+      ]
+     ],
+     "bits": 11,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain ag_ei -> x_fw_o, max L 934 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:ard_ei",
+     "from_um": [
+      622.08,
+      51.472
+     ],
+     "to_um": [
+      0.0,
+      366.44
+     ],
+     "regs_um": [
+      [
+       311.04,
+       51.84
+      ]
+     ],
+     "bits": 513,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain ard_ei -> x_fw_o, max L 941 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arl_ei",
+     "from_um": [
+      622.08,
+      97.028
+     ],
+     "to_um": [
+      0.0,
+      415.139
+     ],
+     "regs_um": [
+      [
+       311.04,
+       95.04
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arl_ei -> x_fw_o, max L 940 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arm_ei",
+     "from_um": [
+      622.08,
+      98.816
+     ],
+     "to_um": [
+      0.0,
+      415.329
+     ],
+     "regs_um": [
+      [
+       311.04,
+       95.04
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arm_ei -> x_fw_o, max L 939 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:art_ei",
+     "from_um": [
+      622.08,
+      102.816
+     ],
+     "to_um": [
+      0.0,
+      428.139
+     ],
+     "regs_um": [
+      [
+       302.4,
+       103.68
+      ]
+     ],
+     "bits": 33,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o/x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain art_ei -> x_fw_o/x_fw_p1_o, max L 1041 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arv_ei",
+     "from_um": [
+      622.08,
+      106.624
+     ],
+     "to_um": [
+      0.0,
+      524.818
+     ],
+     "regs_um": [
+      [
+       276.48,
+       103.68
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arv_ei -> x_fw_p1_o, max L 1040 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:dd_ei",
+     "from_um": [
+      622.08,
+      176.592
+     ],
+     "to_um": [
+      0.0,
+      576.418
+     ],
+     "regs_um": [
+      [
+       285.12,
+       172.8
+      ]
+     ],
+     "bits": 549,
+     "launch": "face flop",
+     "capture": "face bus x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain dd_ei -> x_fw_p1_o, max L 1026 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:flt_e_i",
+     "from_um": [
+      622.08,
+      315.984
+     ],
+     "to_um": [
+      0.0,
+      4.416
+     ],
+     "regs_um": [
+      [
+       311.04,
+       319.68
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus flt_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain flt_e_i -> flt_o, max L 934 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:sc_ei",
+     "from_um": [
+      622.08,
+      496.168
+     ],
+     "to_um": [
+      0.0,
+      198.78
+     ],
+     "regs_um": [
+      [
+       388.8,
+       492.48
+      ],
+      [
+       164.16,
+       492.48
+      ]
+     ],
+     "bits": 49,
+     "launch": "face flop",
+     "capture": "face bus x_sc_o/x_stm_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain sc_ei -> x_sc_o/x_stm_o, max L 1115 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:st_ei",
+     "from_um": [
+      622.08,
+      604.258
+     ],
+     "to_um": [
+      0.0,
+      585.261
+     ],
+     "regs_um": [
+      [
+       345.6,
+       604.8
+      ],
+      [
+       69.12,
+       604.8
+      ]
+     ],
+     "bits": 1088,
+     "launch": "face flop",
+     "capture": "face bus x_stm_o/x_stm_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain st_ei -> x_stm_o/x_stm_p1_o, max L 1125 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_i",
+     "from_um": [
+      0.0,
+      472.546
+     ],
+     "to_um": [
+      622.08,
+      230.612
+     ],
+     "regs_um": [
+      [
+       285.12,
+       475.2
+      ],
+      [
+       578.88,
+       475.2
+      ]
+     ],
+     "bits": 540,
+     "launch": "face flop",
+     "capture": "face bus cmd_eo/dr_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_fw_i -> cmd_eo/dr_eo, max L 938 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_p1_i",
+     "from_um": [
+      0.0,
+      679.906
+     ],
+     "to_um": [
+      622.08,
+      346.627
+     ],
+     "regs_um": [
+      [
+       311.04,
+       682.56
+      ],
+      [
+       613.44,
+       665.28
+      ]
+     ],
+     "bits": 540,
+     "launch": "face flop",
+     "capture": "face bus dr_eo/hr_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain x_fw_p1_i -> dr_eo/hr_eo, max L 959 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_p2_i",
+     "from_um": [
+      0.0,
+      782.968
+     ],
+     "to_um": [
+      622.08,
+      448.082
+     ],
+     "regs_um": [
+      [
+       311.04,
+       786.24
+      ],
+      [
+       596.16,
+       768.96
+      ]
+     ],
+     "bits": 539,
+     "launch": "face flop",
+     "capture": "face bus hr_eo/rd_eo/re_eo/rl_eo/rr_eo/rv_eo/treq_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain x_fw_p2_i -> hr_eo/rd_eo/re_eo/rl_eo/rr_eo/rv_eo/treq_eo, max L 967 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_sc_i",
+     "from_um": [
+      0.0,
+      193.16
+     ],
+     "to_um": [
+      622.08,
+      505.221
+     ],
+     "regs_um": [
+      [
+       311.04,
+       190.08
+      ],
+      [
+       622.08,
+       190.08
+      ]
+     ],
+     "bits": 49,
+     "launch": "face flop",
+     "capture": "face bus sc_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_sc_i -> sc_eo, max L 935 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_stm_i",
+     "from_um": [
+      0.0,
+      1007.496
+     ],
+     "to_um": [
+      622.08,
+      746.257
+     ],
+     "regs_um": [
+      [
+       293.76,
+       1010.88
+      ],
+      [
+       587.52,
+       1010.88
+      ]
+     ],
+     "bits": 545,
+     "launch": "face flop",
+     "capture": "face bus st_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_i -> st_eo, max L 888 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_stm_p1_i",
+     "from_um": [
+      0.0,
+      1215.496
+     ],
+     "to_um": [
+      622.08,
+      840.179
+     ],
+     "regs_um": [
+      [
+       328.32,
+       1218.24
+      ],
+      [
+       622.08,
+       1175.04
+      ]
+     ],
+     "bits": 545,
+     "launch": "face flop",
+     "capture": "face bus st_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_eo, max L 1001 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    }
+   ]
   },
   "slw_su_l1": {
    "module": "qfd_qc_slw_su_l1",
@@ -149772,7 +150634,409 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "internal_stations": [
+    {
+     "conn": "bus:ag_wi",
+     "from_um": [
+      622.08,
+      5.24
+     ],
+     "to_um": [
+      0.0,
+      400.069
+     ],
+     "regs_um": [
+      [
+       285.12,
+       8.64
+      ]
+     ],
+     "bits": 11,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain ag_wi -> x_fw_o, max L 1017 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:ard_wi",
+     "from_um": [
+      622.08,
+      51.472
+     ],
+     "to_um": [
+      0.0,
+      448.771
+     ],
+     "regs_um": [
+      [
+       285.12,
+       51.84
+      ]
+     ],
+     "bits": 513,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain ard_wi -> x_fw_o, max L 1023 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arl_wi",
+     "from_um": [
+      622.08,
+      97.028
+     ],
+     "to_um": [
+      0.0,
+      496.634
+     ],
+     "regs_um": [
+      [
+       285.12,
+       95.04
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arl_wi -> x_fw_o, max L 1022 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arm_wi",
+     "from_um": [
+      622.08,
+      98.816
+     ],
+     "to_um": [
+      0.0,
+      496.821
+     ],
+     "regs_um": [
+      [
+       285.12,
+       95.04
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arm_wi -> x_fw_o, max L 1020 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:art_wi",
+     "from_um": [
+      622.08,
+      102.816
+     ],
+     "to_um": [
+      0.0,
+      509.606
+     ],
+     "regs_um": [
+      [
+       276.48,
+       103.68
+      ]
+     ],
+     "bits": 33,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o/x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain art_wi -> x_fw_o/x_fw_p1_o, max L 1123 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arv_wi",
+     "from_um": [
+      622.08,
+      106.624
+     ],
+     "to_um": [
+      0.0,
+      606.518
+     ],
+     "regs_um": [
+      [
+       250.56,
+       103.68
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arv_wi -> x_fw_p1_o, max L 1122 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:dd_wi",
+     "from_um": [
+      622.08,
+      176.592
+     ],
+     "to_um": [
+      0.0,
+      658.468
+     ],
+     "regs_um": [
+      [
+       250.56,
+       172.8
+      ]
+     ],
+     "bits": 549,
+     "launch": "face flop",
+     "capture": "face bus x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain dd_wi -> x_fw_p1_o, max L 1109 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:flt_e_i",
+     "from_um": [
+      622.08,
+      315.984
+     ],
+     "to_um": [
+      0.0,
+      207.832
+     ],
+     "regs_um": [
+      [
+       380.16,
+       319.68
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus flt_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain flt_e_i -> flt_o, max L 730 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:sc_wi",
+     "from_um": [
+      622.08,
+      586.68
+     ],
+     "to_um": [
+      0.0,
+      288.636
+     ],
+     "regs_um": [
+      [
+       388.8,
+       587.52
+      ],
+      [
+       164.16,
+       587.52
+      ]
+     ],
+     "bits": 49,
+     "launch": "face flop",
+     "capture": "face bus x_sc_o/x_stm_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain sc_wi -> x_sc_o/x_stm_o, max L 1109 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:st_wi",
+     "from_um": [
+      622.08,
+      694.794
+     ],
+     "to_um": [
+      0.0,
+      638.289
+     ],
+     "regs_um": [
+      [
+       354.24,
+       691.2
+      ],
+      [
+       95.04,
+       691.2
+      ]
+     ],
+     "bits": 1088,
+     "launch": "face flop",
+     "capture": "face bus x_stm_o/x_stm_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain st_wi -> x_stm_o/x_stm_p1_o, max L 1119 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_i",
+     "from_um": [
+      0.0,
+      554.09
+     ],
+     "to_um": [
+      622.08,
+      230.612
+     ],
+     "regs_um": [
+      [
+       311.04,
+       552.96
+      ],
+      [
+       622.08,
+       544.32
+      ]
+     ],
+     "bits": 540,
+     "launch": "face flop",
+     "capture": "face bus cmd_wo/dr_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_fw_i -> cmd_wo/dr_wo, max L 1019 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_p1_i",
+     "from_um": [
+      0.0,
+      761.954
+     ],
+     "to_um": [
+      622.08,
+      346.627
+     ],
+     "regs_um": [
+      [
+       336.96,
+       760.32
+      ],
+      [
+       613.44,
+       699.84
+      ]
+     ],
+     "bits": 540,
+     "launch": "face flop",
+     "capture": "face bus dr_wo/hr_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain x_fw_p1_i -> dr_wo/hr_wo, max L 1041 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_p2_i",
+     "from_um": [
+      0.0,
+      864.872
+     ],
+     "to_um": [
+      622.08,
+      536.31
+     ],
+     "regs_um": [
+      [
+       302.4,
+       864.0
+      ],
+      [
+       596.16,
+       855.36
+      ]
+     ],
+     "bits": 539,
+     "launch": "face flop",
+     "capture": "face bus hr_wo/rd_wo/re_wo/rl_wo/rr_wo/rv_wo/treq_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain x_fw_p2_i -> hr_wo/rd_wo/re_wo/rl_wo/rr_wo/rv_wo/treq_wo, max L 1042 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_sc_i",
+     "from_um": [
+      0.0,
+      282.872
+     ],
+     "to_um": [
+      622.08,
+      595.733
+     ],
+     "regs_um": [
+      [
+       311.04,
+       285.12
+      ],
+      [
+       622.08,
+       285.12
+      ]
+     ],
+     "bits": 49,
+     "launch": "face flop",
+     "capture": "face bus sc_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_sc_i -> sc_wo, max L 935 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_stm_i",
+     "from_um": [
+      0.0,
+      1017.64
+     ],
+     "to_um": [
+      622.08,
+      836.813
+     ],
+     "regs_um": [
+      [
+       267.84,
+       1019.52
+      ],
+      [
+       535.68,
+       1019.52
+      ]
+     ],
+     "bits": 545,
+     "launch": "face flop",
+     "capture": "face bus st_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_i -> st_wo, max L 806 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_stm_p1_i",
+     "from_um": [
+      0.0,
+      1224.136
+     ],
+     "to_um": [
+      622.08,
+      930.727
+     ],
+     "regs_um": [
+      [
+       302.4,
+       1226.88
+      ],
+      [
+       613.44,
+       1226.88
+      ]
+     ],
+     "bits": 545,
+     "launch": "face flop",
+     "capture": "face bus st_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_wo, max L 920 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    }
+   ]
   },
   "sle_su_l1": {
    "module": "qfd_qc_sle_su_l1",
@@ -219011,7 +220275,467 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "internal_stations": [
+    {
+     "conn": "bus:ag_wi",
+     "from_um": [
+      622.08,
+      5.24
+     ],
+     "to_um": [
+      0.0,
+      407.386
+     ],
+     "regs_um": [
+      [
+       276.48,
+       8.64
+      ]
+     ],
+     "bits": 11,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain ag_wi -> x_fw_o, max L 1024 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:ard_wi",
+     "from_um": [
+      622.08,
+      51.472
+     ],
+     "to_um": [
+      0.0,
+      461.764
+     ],
+     "regs_um": [
+      [
+       276.48,
+       51.84
+      ]
+     ],
+     "bits": 513,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain ard_wi -> x_fw_o, max L 1042 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arl_wi",
+     "from_um": [
+      622.08,
+      97.028
+     ],
+     "to_um": [
+      0.0,
+      515.205
+     ],
+     "regs_um": [
+      [
+       276.48,
+       95.04
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arl_wi -> x_fw_o, max L 1040 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arm_wi",
+     "from_um": [
+      622.08,
+      98.816
+     ],
+     "to_um": [
+      0.0,
+      515.413
+     ],
+     "regs_um": [
+      [
+       276.48,
+       95.04
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arm_wi -> x_fw_o, max L 1039 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:art_wi",
+     "from_um": [
+      622.08,
+      102.816
+     ],
+     "to_um": [
+      0.0,
+      529.618
+     ],
+     "regs_um": [
+      [
+       276.48,
+       103.68
+      ]
+     ],
+     "bits": 33,
+     "launch": "face flop",
+     "capture": "face bus x_fw_o/x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain art_wi -> x_fw_o/x_fw_p1_o, max L 1154 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:arv_wi",
+     "from_um": [
+      622.08,
+      106.624
+     ],
+     "to_um": [
+      0.0,
+      637.138
+     ],
+     "regs_um": [
+      [
+       241.92,
+       103.68
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain arv_wi -> x_fw_p1_o, max L 1153 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:dd_wi",
+     "from_um": [
+      622.08,
+      176.592
+     ],
+     "to_um": [
+      0.0,
+      694.361
+     ],
+     "regs_um": [
+      [
+       241.92,
+       172.8
+      ]
+     ],
+     "bits": 549,
+     "launch": "face flop",
+     "capture": "face bus x_fw_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain dd_wi -> x_fw_p1_o, max L 1150 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:flt_e_i",
+     "from_um": [
+      622.08,
+      315.984
+     ],
+     "to_um": [
+      0.0,
+      227.412
+     ],
+     "regs_um": [
+      [
+       388.8,
+       319.68
+      ]
+     ],
+     "bits": 2,
+     "launch": "face flop",
+     "capture": "face bus flt_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain flt_e_i -> flt_o, max L 711 um; 1 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:sc_wi",
+     "from_um": [
+      622.08,
+      496.168
+     ],
+     "to_um": [
+      0.0,
+      283.977
+     ],
+     "regs_um": [
+      [
+       414.72,
+       492.48
+      ],
+      [
+       207.36,
+       492.48
+      ]
+     ],
+     "bits": 49,
+     "launch": "face flop",
+     "capture": "face bus x_sc_o/x_stm_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain sc_wi -> x_sc_o/x_stm_o, max L 1009 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:st_wi",
+     "from_um": [
+      622.08,
+      604.258
+     ],
+     "to_um": [
+      0.0,
+      660.555
+     ],
+     "regs_um": [
+      [
+       354.24,
+       604.8
+      ],
+      [
+       86.4,
+       604.8
+      ]
+     ],
+     "bits": 1088,
+     "launch": "face flop",
+     "capture": "face bus x_stm_o/x_stm_p1_o",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain st_wi -> x_stm_o/x_stm_p1_o, max L 1131 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_i",
+     "from_um": [
+      0.0,
+      578.984
+     ],
+     "to_um": [
+      622.08,
+      230.612
+     ],
+     "regs_um": [
+      [
+       319.68,
+       578.88
+      ],
+      [
+       622.08,
+       552.96
+      ]
+     ],
+     "bits": 540,
+     "launch": "face flop",
+     "capture": "face bus cmd_wo/dr_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_fw_i -> cmd_wo/dr_wo, max L 1041 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_p1_i",
+     "from_um": [
+      0.0,
+      808.912
+     ],
+     "to_um": [
+      622.08,
+      346.627
+     ],
+     "regs_um": [
+      [
+       354.24,
+       812.16
+      ],
+      [
+       613.44,
+       717.12
+      ]
+     ],
+     "bits": 540,
+     "launch": "face flop",
+     "capture": "face bus dr_wo/hr_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain x_fw_p1_i -> dr_wo/hr_wo, max L 1094 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_fw_p2_i",
+     "from_um": [
+      0.0,
+      922.44
+     ],
+     "to_um": [
+      622.08,
+      448.082
+     ],
+     "regs_um": [
+      [
+       354.24,
+       924.48
+      ],
+      [
+       604.8,
+       829.44
+      ]
+     ],
+     "bits": 539,
+     "launch": "face flop",
+     "capture": "face bus hr_wo/rd_wo/re_wo/rl_wo/rr_wo/rv_wo/treq_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup register chain x_fw_p2_i -> hr_wo/rd_wo/re_wo/rl_wo/rr_wo/rv_wo/treq_wo, max L 1112 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_sc_i",
+     "from_um": [
+      0.0,
+      277.056
+     ],
+     "to_um": [
+      622.08,
+      505.221
+     ],
+     "regs_um": [
+      [
+       285.12,
+       276.48
+      ],
+      [
+       570.24,
+       276.48
+      ]
+     ],
+     "bits": 49,
+     "launch": "face flop",
+     "capture": "face bus sc_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_sc_i -> sc_wo, max L 851 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_st_a_i",
+     "from_um": [
+      113.984,
+      0.0
+     ],
+     "to_um": [
+      0.0,
+      31.634
+     ],
+     "regs_um": [
+      [
+       95.04,
+       34.56
+      ],
+      [
+       51.84,
+       34.56
+      ]
+     ],
+     "bits": 259,
+     "launch": "face flop",
+     "capture": "face bus l9_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_st_a_i -> l9_eo, max L 203 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_st_b_i",
+     "from_um": [
+      224.224,
+      1339.2
+     ],
+     "to_um": [
+      0.0,
+      84.395
+     ],
+     "regs_um": [
+      [
+       224.64,
+       967.68
+      ],
+      [
+       224.64,
+       596.16
+      ],
+      [
+       224.64,
+       233.28
+      ]
+     ],
+     "bits": 257,
+     "launch": "face flop",
+     "capture": "face bus l9_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_st_b_i -> l9_eo, max L 1479 um; 3 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_stm_i",
+     "from_um": [
+      0.0,
+      1036.272
+     ],
+     "to_um": [
+      622.08,
+      746.257
+     ],
+     "regs_um": [
+      [
+       302.4,
+       1036.8
+      ],
+      [
+       604.8,
+       1036.8
+      ]
+     ],
+     "bits": 545,
+     "launch": "face flop",
+     "capture": "face bus st_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_i -> st_wo, max L 922 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_stm_p1_i",
+     "from_um": [
+      0.0,
+      1265.376
+     ],
+     "to_um": [
+      622.08,
+      840.179
+     ],
+     "regs_um": [
+      [
+       345.6,
+       1261.44
+      ],
+      [
+       622.08,
+       1192.32
+      ]
+     ],
+     "bits": 545,
+     "launch": "face flop",
+     "capture": "face bus st_wo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_wo, max L 1057 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    }
+   ]
   },
   "sle_fw_v3": {
    "module": "qfd_qc_sle_fw",
@@ -220965,7 +222689,67 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "internal_stations": [
+    {
+     "conn": "bus:x_st_a_i",
+     "from_um": [
+      113.984,
+      0.0
+     ],
+     "to_um": [
+      0.0,
+      414.773
+     ],
+     "regs_um": [
+      [
+       112.32,
+       172.8
+      ],
+      [
+       112.32,
+       354.24
+      ]
+     ],
+     "bits": 259,
+     "launch": "face flop",
+     "capture": "face bus l9_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_st_a_i -> l9_eo, max L 586 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:x_st_b_i",
+     "from_um": [
+      224.224,
+      1339.2
+     ],
+     "to_um": [
+      0.0,
+      467.463
+     ],
+     "regs_um": [
+      [
+       224.64,
+       1062.72
+      ],
+      [
+       224.64,
+       794.88
+      ],
+      [
+       224.64,
+       518.4
+      ]
+     ],
+     "bits": 257,
+     "launch": "face flop",
+     "capture": "face bus l9_eo",
+     "bit_route": "chain",
+     "core_glob": "u_core",
+     "note": "D-QC-FE-REACH: u_fup forwarder chain x_st_b_i -> l9_eo, max L 1096 um; 3 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
+    }
+   ]
   },
   "phy_serdes_b": {
    "module": "ot_qfd_serdes_112g_x12_phy_s597",
@@ -222445,7 +224229,8 @@
       "insertion_tol_ps": 40,
       "from_root_um": 406.1
      }
-    ]
+    ],
+    "out_hold_check_ps": 40
    },
    "reset": {
     "tap_um": [
@@ -222808,7 +224593,9 @@
     "tap_max_sinks": 1000,
     "tap_target_sinks": 800,
     "tap_radius_um": 180.0,
-    "tap_min_sinks": 1
+    "tap_min_sinks": 1,
+    "control_sinks": true,
+    "io_hold": "sender_min"
    },
    "reset": {
     "tap_um": [
@@ -223243,7 +225030,8 @@
       "insertion_tol_ps": 40,
       "from_root_um": 8.6
      }
-    ]
+    ],
+    "out_hold_check_ps": 40
    },
    "reset": {
     "tap_um": [
@@ -330024,6 +331812,513 @@
      "note": "R3-INTERNAL: 1269 um window<->pin route, 3 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
    ]
+  },
+  "slw_sc_v1r": {
+   "module": "qfd_qc_slw_sc",
+   "outline_um": [
+    613.44,
+    1339.2
+   ],
+   "buses": [
+    {
+     "name": "x_fw_o",
+     "dir": "out",
+     "width": 48,
+     "kind": "data",
+     "leaf": "u_sc.x_fw",
+     "face": "W",
+     "window_um": [
+      836.136,
+      845.048
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fe_o",
+     "dir": "out",
+     "width": 48,
+     "kind": "data",
+     "leaf": "u_sc.x_fe",
+     "face": "E",
+     "window_um": [
+      188.704,
+      197.616
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_ctl_o",
+     "dir": "out",
+     "width": 119,
+     "kind": "data",
+     "leaf": "u_sc.x_ctl",
+     "face": "N",
+     "window_um": [
+      122.592,
+      143.36
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_ctl_i",
+     "dir": "in",
+     "width": 160,
+     "kind": "data",
+     "leaf": "u_sc.x_ctl",
+     "face": "N",
+     "window_um": [
+      94.464,
+      121.632
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fe_i",
+     "dir": "in",
+     "width": 47,
+     "kind": "data",
+     "leaf": "u_sc.x_fe",
+     "face": "E",
+     "window_um": [
+      198.576,
+      207.312
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_i",
+     "dir": "in",
+     "width": 48,
+     "kind": "data",
+     "leaf": "u_sc.x_fw",
+     "face": "W",
+     "window_um": [
+      846.008,
+      854.92
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_i",
+     "dir": "in",
+     "width": 57,
+     "kind": "data",
+     "leaf": "u_sc.x_su_c",
+     "face": "S",
+     "window_um": [
+      380.768,
+      390.448
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_l0_i",
+     "dir": "in",
+     "width": 38,
+     "kind": "data",
+     "leaf": "u_sc.x_su_l0",
+     "face": "E",
+     "window_um": [
+      1267.512,
+      1274.616
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_l1_i",
+     "dir": "in",
+     "width": 4,
+     "kind": "data",
+     "leaf": "u_sc.x_su_l1",
+     "face": "S",
+     "window_um": [
+      471.648,
+      472.496
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_fe_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_fe_i",
+     "face": "E",
+     "window_um": [
+      4.32,
+      4.704
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "cws2",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 516,
+     "stations": 4,
+     "out_window_um": [
+      4.32,
+      93.504
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_fe_fw",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 553,
+     "stations": 2,
+     "out_window_um": [
+      315.8,
+      421.208
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_fe_fw_p1",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 552,
+     "stations": 2,
+     "out_window_um": [
+      524.072,
+      628.2
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_fw_fe",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 539,
+     "stations": 2,
+     "out_window_um": [
+      422.08,
+      523.2
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_fw_fe_p1",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 539,
+     "stations": 2,
+     "out_window_um": [
+      629.072,
+      730.928
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_fw_fe_p2",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 538,
+     "stations": 2,
+     "out_window_um": [
+      732.216,
+      833.72
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_stm_fe",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 544,
+     "stations": 2,
+     "out_window_um": [
+      955.8,
+      1059.192
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_stm_fe_p1",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 544,
+     "stations": 2,
+     "out_window_um": [
+      1164.44,
+      1266.552
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_st_a_fe",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 258,
+     "stations": 2,
+     "out_window_um": [
+      855.896,
+      904.888
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_fw_ctl_p1",
+     "in_face": "W",
+     "out_face": "N",
+     "width": 536,
+     "stations": 5,
+     "out_window_um": [
+      432.608,
+      525.232
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_fw_ctl_p2",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 536,
+     "stations": 2,
+     "out_window_um": [
+      213.312,
+      314.976
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_fe_stm",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 544,
+     "stations": 2,
+     "out_window_um": [
+      8.248,
+      109.352
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_fe_stm_p1",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 544,
+     "stations": 2,
+     "out_window_um": [
+      1060.152,
+      1163.48
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_fw_st_b",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 258,
+     "stations": 2,
+     "out_window_um": [
+      905.88,
+      954.84
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_su_l1_ctl",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 456,
+     "stations": 4,
+     "out_window_um": [
+      526.192,
+      604.448
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_ctl_su_c",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 552,
+     "stations": 4,
+     "out_window_um": [
+      94.464,
+      189.456
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_ctl_su_c_p1",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 552,
+     "stations": 4,
+     "out_window_um": [
+      190.416,
+      284.72
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_ctl_su_c_p2",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 551,
+     "stations": 4,
+     "out_window_um": [
+      285.68,
+      379.808
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "contents": [
+    {
+     "inst": "u_sc",
+     "module": "slice s8 u_sc",
+     "status": "rework",
+     "note": "slice glue re-derived per region partition"
+    },
+    {
+     "inst": "u_pstn",
+     "module": "slw_sc_v1_pstn",
+     "status": "new",
+     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    }
+   ],
+   "note": "slice region partition sc (W slice, landed region sc); est. std-cell fill 0.04 at util 0.6: 50% of M4-M7 to ft; D-QC-SCROOT 10-26: clone of slw_sc_v1 for the unique reset root partition sl_W0_sc (owner reset rule: ONE async root exception)",
+   "clock": {
+    "tap_um": [
+     311.04,
+     673.92
+    ],
+    "layer": "M9",
+    "insertion_ps": 250,
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       336.96
+      ],
+      "insertion_ps": 223,
+      "insertion_tol_ps": 40,
+      "from_root_um": 337.0
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       1002.24
+      ],
+      "insertion_ps": 223,
+      "insertion_tol_ps": 40,
+      "from_root_um": 328.3
+     }
+    ]
+   },
+   "reset": {
+    "tap_um": [
+     311.04,
+     673.92
+    ],
+    "sync_stages": 2
+   },
+   "ft_track_frac": 0.5
   }
  },
  "partitions": [
@@ -332468,7 +334763,7 @@
   },
   {
    "name": "sl_W0_sc",
-   "type": "slw_sc_v1",
+   "type": "slw_sc_v1r",
    "origin_um": [
     15154.56,
     11793.6
@@ -377106,7 +379401,8 @@
     "sl_W5_fw__x_fw_fe__0",
     "sl_W5_fw__x_fw_fe__1",
     "sl_W5_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W5_fw__x_fw_fe_p1",
@@ -377114,7 +379410,8 @@
     "sl_W5_fw__x_fw_fe_p1__0",
     "sl_W5_fw__x_fw_fe_p1__1",
     "sl_W5_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W5_fw__x_fw_fe_p2",
@@ -377122,27 +379419,31 @@
     "sl_W5_fw__x_fw_fe_p2__0",
     "sl_W5_fw__x_fw_fe_p2__1",
     "sl_W5_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W5_stm__x_stm_fe",
    "ports": [
     "sl_W5_stm__x_stm_fe__0",
     "sl_W5_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W5_stm__x_stm_fe_p1",
    "ports": [
     "sl_W5_stm__x_stm_fe_p1__0",
     "sl_W5_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W5_sc__x_sc_fe",
    "ports": [
     "sl_W5_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W5_st_a__x_st_a_fe",
@@ -377151,13 +379452,15 @@
     "sl_W5_st_a__x_st_a_fe__1",
     "sl_W5_st_a__x_st_a_fe__2",
     "sl_W5_st_a__x_st_a_fe__3"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W5_st_b__x_st_b_fe",
    "ports": [
     "sl_W5_st_b__x_st_b_fe__0"
-   ]
+   ],
+   "fixed_cycles": 3
   },
   {
    "id": "sl_W5_fw__x_fw_ctl",
@@ -377543,7 +379846,8 @@
     "sl_W4_fw__x_fw_fe__0",
     "sl_W4_fw__x_fw_fe__1",
     "sl_W4_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W4_fw__x_fw_fe_p1",
@@ -377551,7 +379855,8 @@
     "sl_W4_fw__x_fw_fe_p1__0",
     "sl_W4_fw__x_fw_fe_p1__1",
     "sl_W4_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W4_fw__x_fw_fe_p2",
@@ -377559,27 +379864,31 @@
     "sl_W4_fw__x_fw_fe_p2__0",
     "sl_W4_fw__x_fw_fe_p2__1",
     "sl_W4_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W4_stm__x_stm_fe",
    "ports": [
     "sl_W4_stm__x_stm_fe__0",
     "sl_W4_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W4_stm__x_stm_fe_p1",
    "ports": [
     "sl_W4_stm__x_stm_fe_p1__0",
     "sl_W4_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W4_sc__x_sc_fe",
    "ports": [
     "sl_W4_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W4_st_a__x_st_a_fe",
@@ -378002,7 +380311,8 @@
     "sl_W3_fw__x_fw_fe__0",
     "sl_W3_fw__x_fw_fe__1",
     "sl_W3_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W3_fw__x_fw_fe_p1",
@@ -378010,7 +380320,8 @@
     "sl_W3_fw__x_fw_fe_p1__0",
     "sl_W3_fw__x_fw_fe_p1__1",
     "sl_W3_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W3_fw__x_fw_fe_p2",
@@ -378018,27 +380329,31 @@
     "sl_W3_fw__x_fw_fe_p2__0",
     "sl_W3_fw__x_fw_fe_p2__1",
     "sl_W3_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W3_stm__x_stm_fe",
    "ports": [
     "sl_W3_stm__x_stm_fe__0",
     "sl_W3_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W3_stm__x_stm_fe_p1",
    "ports": [
     "sl_W3_stm__x_stm_fe_p1__0",
     "sl_W3_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W3_sc__x_sc_fe",
    "ports": [
     "sl_W3_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W3_st_a__x_st_a_fe",
@@ -378047,13 +380362,15 @@
     "sl_W3_st_a__x_st_a_fe__1",
     "sl_W3_st_a__x_st_a_fe__2",
     "sl_W3_st_a__x_st_a_fe__3"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W3_st_b__x_st_b_fe",
    "ports": [
     "sl_W3_st_b__x_st_b_fe__0"
-   ]
+   ],
+   "fixed_cycles": 3
   },
   {
    "id": "sl_W3_fw__x_fw_ctl",
@@ -378446,7 +380763,8 @@
     "sl_W2_fw__x_fw_fe__0",
     "sl_W2_fw__x_fw_fe__1",
     "sl_W2_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W2_fw__x_fw_fe_p1",
@@ -378454,7 +380772,8 @@
     "sl_W2_fw__x_fw_fe_p1__0",
     "sl_W2_fw__x_fw_fe_p1__1",
     "sl_W2_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W2_fw__x_fw_fe_p2",
@@ -378462,27 +380781,31 @@
     "sl_W2_fw__x_fw_fe_p2__0",
     "sl_W2_fw__x_fw_fe_p2__1",
     "sl_W2_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W2_stm__x_stm_fe",
    "ports": [
     "sl_W2_stm__x_stm_fe__0",
     "sl_W2_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W2_stm__x_stm_fe_p1",
    "ports": [
     "sl_W2_stm__x_stm_fe_p1__0",
     "sl_W2_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W2_sc__x_sc_fe",
    "ports": [
     "sl_W2_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W2_st_a__x_st_a_fe",
@@ -378905,7 +381228,8 @@
     "sl_W1_fw__x_fw_fe__0",
     "sl_W1_fw__x_fw_fe__1",
     "sl_W1_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W1_fw__x_fw_fe_p1",
@@ -378913,7 +381237,8 @@
     "sl_W1_fw__x_fw_fe_p1__0",
     "sl_W1_fw__x_fw_fe_p1__1",
     "sl_W1_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W1_fw__x_fw_fe_p2",
@@ -378921,27 +381246,31 @@
     "sl_W1_fw__x_fw_fe_p2__0",
     "sl_W1_fw__x_fw_fe_p2__1",
     "sl_W1_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W1_stm__x_stm_fe",
    "ports": [
     "sl_W1_stm__x_stm_fe__0",
     "sl_W1_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W1_stm__x_stm_fe_p1",
    "ports": [
     "sl_W1_stm__x_stm_fe_p1__0",
     "sl_W1_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W1_sc__x_sc_fe",
    "ports": [
     "sl_W1_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W1_st_a__x_st_a_fe",
@@ -378950,13 +381279,15 @@
     "sl_W1_st_a__x_st_a_fe__1",
     "sl_W1_st_a__x_st_a_fe__2",
     "sl_W1_st_a__x_st_a_fe__3"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W1_st_b__x_st_b_fe",
    "ports": [
     "sl_W1_st_b__x_st_b_fe__0"
-   ]
+   ],
+   "fixed_cycles": 3
   },
   {
    "id": "sl_W1_fw__x_fw_ctl",
@@ -379349,7 +381680,8 @@
     "sl_W0_fw__x_fw_fe__0",
     "sl_W0_fw__x_fw_fe__1",
     "sl_W0_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W0_fw__x_fw_fe_p1",
@@ -379357,7 +381689,8 @@
     "sl_W0_fw__x_fw_fe_p1__0",
     "sl_W0_fw__x_fw_fe_p1__1",
     "sl_W0_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W0_fw__x_fw_fe_p2",
@@ -379365,27 +381698,31 @@
     "sl_W0_fw__x_fw_fe_p2__0",
     "sl_W0_fw__x_fw_fe_p2__1",
     "sl_W0_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W0_stm__x_stm_fe",
    "ports": [
     "sl_W0_stm__x_stm_fe__0",
     "sl_W0_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W0_stm__x_stm_fe_p1",
    "ports": [
     "sl_W0_stm__x_stm_fe_p1__0",
     "sl_W0_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W0_sc__x_sc_fe",
    "ports": [
     "sl_W0_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W0_st_a__x_st_a_fe",
@@ -379808,7 +382145,8 @@
     "sl_E0_fw__x_fw_fe__0",
     "sl_E0_fw__x_fw_fe__1",
     "sl_E0_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E0_fw__x_fw_fe_p1",
@@ -379816,7 +382154,8 @@
     "sl_E0_fw__x_fw_fe_p1__0",
     "sl_E0_fw__x_fw_fe_p1__1",
     "sl_E0_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E0_fw__x_fw_fe_p2",
@@ -379824,27 +382163,31 @@
     "sl_E0_fw__x_fw_fe_p2__0",
     "sl_E0_fw__x_fw_fe_p2__1",
     "sl_E0_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E0_stm__x_stm_fe",
    "ports": [
     "sl_E0_stm__x_stm_fe__0",
     "sl_E0_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E0_stm__x_stm_fe_p1",
    "ports": [
     "sl_E0_stm__x_stm_fe_p1__0",
     "sl_E0_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E0_sc__x_sc_fe",
    "ports": [
     "sl_E0_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E0_st_a__x_st_a_fe",
@@ -380268,7 +382611,8 @@
     "sl_E1_fw__x_fw_fe__0",
     "sl_E1_fw__x_fw_fe__1",
     "sl_E1_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E1_fw__x_fw_fe_p1",
@@ -380276,7 +382620,8 @@
     "sl_E1_fw__x_fw_fe_p1__0",
     "sl_E1_fw__x_fw_fe_p1__1",
     "sl_E1_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E1_fw__x_fw_fe_p2",
@@ -380284,27 +382629,31 @@
     "sl_E1_fw__x_fw_fe_p2__0",
     "sl_E1_fw__x_fw_fe_p2__1",
     "sl_E1_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E1_stm__x_stm_fe",
    "ports": [
     "sl_E1_stm__x_stm_fe__0",
     "sl_E1_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E1_stm__x_stm_fe_p1",
    "ports": [
     "sl_E1_stm__x_stm_fe_p1__0",
     "sl_E1_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E1_sc__x_sc_fe",
    "ports": [
     "sl_E1_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E1_st_a__x_st_a_fe",
@@ -380314,13 +382663,15 @@
     "sl_E1_st_a__x_st_a_fe__2",
     "sl_E1_st_a__x_st_a_fe__3",
     "sl_E1_st_a__x_st_a_fe__4"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E1_st_b__x_st_b_fe",
    "ports": [
     "sl_E1_st_b__x_st_b_fe__0"
-   ]
+   ],
+   "fixed_cycles": 3
   },
   {
    "id": "sl_E1_fw__x_fw_ctl",
@@ -380713,7 +383064,8 @@
     "sl_E2_fw__x_fw_fe__0",
     "sl_E2_fw__x_fw_fe__1",
     "sl_E2_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E2_fw__x_fw_fe_p1",
@@ -380721,7 +383073,8 @@
     "sl_E2_fw__x_fw_fe_p1__0",
     "sl_E2_fw__x_fw_fe_p1__1",
     "sl_E2_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E2_fw__x_fw_fe_p2",
@@ -380729,27 +383082,31 @@
     "sl_E2_fw__x_fw_fe_p2__0",
     "sl_E2_fw__x_fw_fe_p2__1",
     "sl_E2_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E2_stm__x_stm_fe",
    "ports": [
     "sl_E2_stm__x_stm_fe__0",
     "sl_E2_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E2_stm__x_stm_fe_p1",
    "ports": [
     "sl_E2_stm__x_stm_fe_p1__0",
     "sl_E2_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E2_sc__x_sc_fe",
    "ports": [
     "sl_E2_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E2_st_a__x_st_a_fe",
@@ -381173,7 +383530,8 @@
     "sl_E3_fw__x_fw_fe__0",
     "sl_E3_fw__x_fw_fe__1",
     "sl_E3_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E3_fw__x_fw_fe_p1",
@@ -381181,7 +383539,8 @@
     "sl_E3_fw__x_fw_fe_p1__0",
     "sl_E3_fw__x_fw_fe_p1__1",
     "sl_E3_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E3_fw__x_fw_fe_p2",
@@ -381189,27 +383548,31 @@
     "sl_E3_fw__x_fw_fe_p2__0",
     "sl_E3_fw__x_fw_fe_p2__1",
     "sl_E3_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E3_stm__x_stm_fe",
    "ports": [
     "sl_E3_stm__x_stm_fe__0",
     "sl_E3_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E3_stm__x_stm_fe_p1",
    "ports": [
     "sl_E3_stm__x_stm_fe_p1__0",
     "sl_E3_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E3_sc__x_sc_fe",
    "ports": [
     "sl_E3_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E3_st_a__x_st_a_fe",
@@ -381219,13 +383582,15 @@
     "sl_E3_st_a__x_st_a_fe__2",
     "sl_E3_st_a__x_st_a_fe__3",
     "sl_E3_st_a__x_st_a_fe__4"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E3_st_b__x_st_b_fe",
    "ports": [
     "sl_E3_st_b__x_st_b_fe__0"
-   ]
+   ],
+   "fixed_cycles": 3
   },
   {
    "id": "sl_E3_fw__x_fw_ctl",
@@ -381618,7 +383983,8 @@
     "sl_E4_fw__x_fw_fe__0",
     "sl_E4_fw__x_fw_fe__1",
     "sl_E4_fw__x_fw_fe__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E4_fw__x_fw_fe_p1",
@@ -381626,7 +383992,8 @@
     "sl_E4_fw__x_fw_fe_p1__0",
     "sl_E4_fw__x_fw_fe_p1__1",
     "sl_E4_fw__x_fw_fe_p1__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E4_fw__x_fw_fe_p2",
@@ -381634,27 +384001,31 @@
     "sl_E4_fw__x_fw_fe_p2__0",
     "sl_E4_fw__x_fw_fe_p2__1",
     "sl_E4_fw__x_fw_fe_p2__2"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E4_stm__x_stm_fe",
    "ports": [
     "sl_E4_stm__x_stm_fe__0",
     "sl_E4_stm__x_stm_fe__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E4_stm__x_stm_fe_p1",
    "ports": [
     "sl_E4_stm__x_stm_fe_p1__0",
     "sl_E4_stm__x_stm_fe_p1__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E4_sc__x_sc_fe",
    "ports": [
     "sl_E4_sc__x_sc_fe__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E4_st_a__x_st_a_fe",
@@ -382108,13 +384479,15 @@
     "sl_E5_st_a__x_st_a_fe__2",
     "sl_E5_st_a__x_st_a_fe__3",
     "sl_E5_st_a__x_st_a_fe__4"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E5_st_b__x_st_b_fe",
    "ports": [
     "sl_E5_st_b__x_st_b_fe__0"
-   ]
+   ],
+   "fixed_cycles": 3
   },
   {
    "id": "sl_E5_fw__x_fw_ctl",
@@ -382476,37 +384849,43 @@
    "id": "sl_E0_fw__ag_eo_ag_ei",
    "ports": [
     "sl_E0_fw__ag_eo_ag_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E0_fw__ard_eo_ard_ei",
    "ports": [
     "sl_E0_fw__ard_eo_ard_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E0_fw__arl_eo_arl_ei",
    "ports": [
     "sl_E0_fw__arl_eo_arl_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E0_fw__arm_eo_arm_ei",
    "ports": [
     "sl_E0_fw__arm_eo_arm_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E0_fw__art_eo_art_ei",
    "ports": [
     "sl_E0_fw__art_eo_art_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E0_fw__arv_eo_arv_ei",
    "ports": [
     "sl_E0_fw__arv_eo_arv_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E0_fe__cmd_wo_cmd_ei",
@@ -382518,7 +384897,8 @@
    "id": "sl_E0_fw__dd_eo_dd_ei",
    "ports": [
     "sl_E0_fw__dd_eo_dd_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E0_fe__dr_wo_dr_ei",
@@ -382566,7 +384946,8 @@
    "id": "sl_E0_fw__sc_eo_sc_ei",
    "ports": [
     "sl_E0_fw__sc_eo_sc_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E0_fe__sc_wo_sc_ei",
@@ -382578,7 +384959,8 @@
    "id": "sl_E0_fw__st_eo_st_ei",
    "ports": [
     "sl_E0_fw__st_eo_st_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E0_fe__st_wo_st_ei",
@@ -382590,37 +384972,43 @@
    "id": "sl_E1_fw__ag_eo_ag_wi",
    "ports": [
     "sl_E1_fw__ag_eo_ag_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E1_fw__ard_eo_ard_wi",
    "ports": [
     "sl_E1_fw__ard_eo_ard_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E1_fw__arl_eo_arl_wi",
    "ports": [
     "sl_E1_fw__arl_eo_arl_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E1_fw__arm_eo_arm_wi",
    "ports": [
     "sl_E1_fw__arm_eo_arm_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E1_fw__art_eo_art_wi",
    "ports": [
     "sl_E1_fw__art_eo_art_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E1_fw__arv_eo_arv_wi",
    "ports": [
     "sl_E1_fw__arv_eo_arv_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E1_fe__cmd_wo_cmd_ei",
@@ -382632,7 +385020,8 @@
    "id": "sl_E1_fw__dd_eo_dd_wi",
    "ports": [
     "sl_E1_fw__dd_eo_dd_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E1_fe__dr_wo_dr_ei",
@@ -382692,7 +385081,8 @@
    "id": "sl_E1_fw__sc_eo_sc_wi",
    "ports": [
     "sl_E1_fw__sc_eo_sc_wi__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E1_fe__sc_wo_sc_ei",
@@ -382704,7 +385094,8 @@
    "id": "sl_E1_fw__st_eo_st_wi",
    "ports": [
     "sl_E1_fw__st_eo_st_wi__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E1_fe__st_wo_st_ei",
@@ -382716,37 +385107,43 @@
    "id": "sl_E2_fw__ag_eo_ag_wi",
    "ports": [
     "sl_E2_fw__ag_eo_ag_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E2_fw__ard_eo_ard_wi",
    "ports": [
     "sl_E2_fw__ard_eo_ard_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E2_fw__arl_eo_arl_wi",
    "ports": [
     "sl_E2_fw__arl_eo_arl_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E2_fw__arm_eo_arm_wi",
    "ports": [
     "sl_E2_fw__arm_eo_arm_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E2_fw__art_eo_art_wi",
    "ports": [
     "sl_E2_fw__art_eo_art_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E2_fw__arv_eo_arv_wi",
    "ports": [
     "sl_E2_fw__arv_eo_arv_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E2_fe__cmd_wo_cmd_ei",
@@ -382758,7 +385155,8 @@
    "id": "sl_E2_fw__dd_eo_dd_wi",
    "ports": [
     "sl_E2_fw__dd_eo_dd_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E2_fe__dr_wo_dr_ei",
@@ -382806,7 +385204,8 @@
    "id": "sl_E2_fw__sc_eo_sc_wi",
    "ports": [
     "sl_E2_fw__sc_eo_sc_wi__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E2_fe__sc_wo_sc_ei",
@@ -382818,7 +385217,8 @@
    "id": "sl_E2_fw__st_eo_st_wi",
    "ports": [
     "sl_E2_fw__st_eo_st_wi__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E2_fe__st_wo_st_ei",
@@ -382830,37 +385230,43 @@
    "id": "sl_E3_fw__ag_eo_ag_wi",
    "ports": [
     "sl_E3_fw__ag_eo_ag_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E3_fw__ard_eo_ard_wi",
    "ports": [
     "sl_E3_fw__ard_eo_ard_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E3_fw__arl_eo_arl_wi",
    "ports": [
     "sl_E3_fw__arl_eo_arl_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E3_fw__arm_eo_arm_wi",
    "ports": [
     "sl_E3_fw__arm_eo_arm_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E3_fw__art_eo_art_wi",
    "ports": [
     "sl_E3_fw__art_eo_art_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E3_fw__arv_eo_arv_wi",
    "ports": [
     "sl_E3_fw__arv_eo_arv_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E3_fe__cmd_wo_cmd_ei",
@@ -382872,7 +385278,8 @@
    "id": "sl_E3_fw__dd_eo_dd_wi",
    "ports": [
     "sl_E3_fw__dd_eo_dd_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E3_fe__dr_wo_dr_ei",
@@ -382932,7 +385339,8 @@
    "id": "sl_E3_fw__sc_eo_sc_wi",
    "ports": [
     "sl_E3_fw__sc_eo_sc_wi__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E3_fe__sc_wo_sc_ei",
@@ -382944,7 +385352,8 @@
    "id": "sl_E3_fw__st_eo_st_wi",
    "ports": [
     "sl_E3_fw__st_eo_st_wi__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E3_fe__st_wo_st_ei",
@@ -382956,37 +385365,43 @@
    "id": "sl_E4_fw__ag_eo_ag_wi",
    "ports": [
     "sl_E4_fw__ag_eo_ag_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E4_fw__ard_eo_ard_wi",
    "ports": [
     "sl_E4_fw__ard_eo_ard_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E4_fw__arl_eo_arl_wi",
    "ports": [
     "sl_E4_fw__arl_eo_arl_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E4_fw__arm_eo_arm_wi",
    "ports": [
     "sl_E4_fw__arm_eo_arm_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E4_fw__art_eo_art_wi",
    "ports": [
     "sl_E4_fw__art_eo_art_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E4_fw__arv_eo_arv_wi",
    "ports": [
     "sl_E4_fw__arv_eo_arv_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E4_fe__cmd_wo_cmd_ei",
@@ -382998,7 +385413,8 @@
    "id": "sl_E4_fw__dd_eo_dd_wi",
    "ports": [
     "sl_E4_fw__dd_eo_dd_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E4_fe__dr_wo_dr_ei",
@@ -383046,7 +385462,8 @@
    "id": "sl_E4_fw__sc_eo_sc_wi",
    "ports": [
     "sl_E4_fw__sc_eo_sc_wi__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E4_fe__sc_wo_sc_ei",
@@ -383058,7 +385475,8 @@
    "id": "sl_E4_fw__st_eo_st_wi",
    "ports": [
     "sl_E4_fw__st_eo_st_wi__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E4_fe__st_wo_st_ei",
@@ -383070,43 +385488,50 @@
    "id": "sl_E5_fw__ag_eo_ag_wi",
    "ports": [
     "sl_E5_fw__ag_eo_ag_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E5_fw__ard_eo_ard_wi",
    "ports": [
     "sl_E5_fw__ard_eo_ard_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E5_fw__arl_eo_arl_wi",
    "ports": [
     "sl_E5_fw__arl_eo_arl_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E5_fw__arm_eo_arm_wi",
    "ports": [
     "sl_E5_fw__arm_eo_arm_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E5_fw__art_eo_art_wi",
    "ports": [
     "sl_E5_fw__art_eo_art_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E5_fw__arv_eo_arv_wi",
    "ports": [
     "sl_E5_fw__arv_eo_arv_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E5_fw__dd_eo_dd_wi",
    "ports": [
     "sl_E5_fw__dd_eo_dd_wi__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E5_fe__l9_eo_l9_wi",
@@ -383124,49 +385549,57 @@
    "id": "sl_E5_fw__sc_eo_sc_wi",
    "ports": [
     "sl_E5_fw__sc_eo_sc_wi__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_E5_fw__st_eo_st_wi",
    "ports": [
     "sl_E5_fw__st_eo_st_wi__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W0_fw__ag_wo_ag_ei",
    "ports": [
     "sl_W0_fw__ag_wo_ag_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W0_fw__ard_wo_ard_ei",
    "ports": [
     "sl_W0_fw__ard_wo_ard_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W0_fw__arl_wo_arl_ei",
    "ports": [
     "sl_W0_fw__arl_wo_arl_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W0_fw__arm_wo_arm_ei",
    "ports": [
     "sl_W0_fw__arm_wo_arm_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W0_fw__art_wo_art_ei",
    "ports": [
     "sl_W0_fw__art_wo_art_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W0_fw__arv_wo_arv_ei",
    "ports": [
     "sl_W0_fw__arv_wo_arv_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W0_fe__cmd_eo_cmd_ei",
@@ -383178,7 +385611,8 @@
    "id": "sl_W0_fw__dd_wo_dd_ei",
    "ports": [
     "sl_W0_fw__dd_wo_dd_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W0_fe__dr_eo_dr_ei",
@@ -383232,7 +385666,8 @@
    "id": "sl_W0_fw__sc_wo_sc_ei",
    "ports": [
     "sl_W0_fw__sc_wo_sc_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W0_fe__st_eo_st_ei",
@@ -383244,43 +385679,50 @@
    "id": "sl_W0_fw__st_wo_st_ei",
    "ports": [
     "sl_W0_fw__st_wo_st_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W1_fw__ag_wo_ag_ei",
    "ports": [
     "sl_W1_fw__ag_wo_ag_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W1_fw__ard_wo_ard_ei",
    "ports": [
     "sl_W1_fw__ard_wo_ard_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W1_fw__arl_wo_arl_ei",
    "ports": [
     "sl_W1_fw__arl_wo_arl_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W1_fw__arm_wo_arm_ei",
    "ports": [
     "sl_W1_fw__arm_wo_arm_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W1_fw__art_wo_art_ei",
    "ports": [
     "sl_W1_fw__art_wo_art_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W1_fw__arv_wo_arv_ei",
    "ports": [
     "sl_W1_fw__arv_wo_arv_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W1_fe__cmd_eo_cmd_wi",
@@ -383292,7 +385734,8 @@
    "id": "sl_W1_fw__dd_wo_dd_ei",
    "ports": [
     "sl_W1_fw__dd_wo_dd_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W1_fe__dr_eo_dr_wi",
@@ -383352,7 +385795,8 @@
    "id": "sl_W1_fw__sc_wo_sc_ei",
    "ports": [
     "sl_W1_fw__sc_wo_sc_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W1_fe__st_eo_st_wi",
@@ -383364,43 +385808,50 @@
    "id": "sl_W1_fw__st_wo_st_ei",
    "ports": [
     "sl_W1_fw__st_wo_st_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W2_fw__ag_wo_ag_ei",
    "ports": [
     "sl_W2_fw__ag_wo_ag_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W2_fw__ard_wo_ard_ei",
    "ports": [
     "sl_W2_fw__ard_wo_ard_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W2_fw__arl_wo_arl_ei",
    "ports": [
     "sl_W2_fw__arl_wo_arl_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W2_fw__arm_wo_arm_ei",
    "ports": [
     "sl_W2_fw__arm_wo_arm_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W2_fw__art_wo_art_ei",
    "ports": [
     "sl_W2_fw__art_wo_art_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W2_fw__arv_wo_arv_ei",
    "ports": [
     "sl_W2_fw__arv_wo_arv_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W2_fe__cmd_eo_cmd_wi",
@@ -383412,7 +385863,8 @@
    "id": "sl_W2_fw__dd_wo_dd_ei",
    "ports": [
     "sl_W2_fw__dd_wo_dd_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W2_fe__dr_eo_dr_wi",
@@ -383466,7 +385918,8 @@
    "id": "sl_W2_fw__sc_wo_sc_ei",
    "ports": [
     "sl_W2_fw__sc_wo_sc_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W2_fe__st_eo_st_wi",
@@ -383478,43 +385931,50 @@
    "id": "sl_W2_fw__st_wo_st_ei",
    "ports": [
     "sl_W2_fw__st_wo_st_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W3_fw__ag_wo_ag_ei",
    "ports": [
     "sl_W3_fw__ag_wo_ag_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W3_fw__ard_wo_ard_ei",
    "ports": [
     "sl_W3_fw__ard_wo_ard_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W3_fw__arl_wo_arl_ei",
    "ports": [
     "sl_W3_fw__arl_wo_arl_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W3_fw__arm_wo_arm_ei",
    "ports": [
     "sl_W3_fw__arm_wo_arm_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W3_fw__art_wo_art_ei",
    "ports": [
     "sl_W3_fw__art_wo_art_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W3_fw__arv_wo_arv_ei",
    "ports": [
     "sl_W3_fw__arv_wo_arv_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W3_fe__cmd_eo_cmd_wi",
@@ -383526,7 +385986,8 @@
    "id": "sl_W3_fw__dd_wo_dd_ei",
    "ports": [
     "sl_W3_fw__dd_wo_dd_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W3_fe__dr_eo_dr_wi",
@@ -383586,7 +386047,8 @@
    "id": "sl_W3_fw__sc_wo_sc_ei",
    "ports": [
     "sl_W3_fw__sc_wo_sc_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W3_fe__st_eo_st_wi",
@@ -383598,43 +386060,50 @@
    "id": "sl_W3_fw__st_wo_st_ei",
    "ports": [
     "sl_W3_fw__st_wo_st_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W4_fw__ag_wo_ag_ei",
    "ports": [
     "sl_W4_fw__ag_wo_ag_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W4_fw__ard_wo_ard_ei",
    "ports": [
     "sl_W4_fw__ard_wo_ard_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W4_fw__arl_wo_arl_ei",
    "ports": [
     "sl_W4_fw__arl_wo_arl_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W4_fw__arm_wo_arm_ei",
    "ports": [
     "sl_W4_fw__arm_wo_arm_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W4_fw__art_wo_art_ei",
    "ports": [
     "sl_W4_fw__art_wo_art_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W4_fw__arv_wo_arv_ei",
    "ports": [
     "sl_W4_fw__arv_wo_arv_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W4_fe__cmd_eo_cmd_wi",
@@ -383646,7 +386115,8 @@
    "id": "sl_W4_fw__dd_wo_dd_ei",
    "ports": [
     "sl_W4_fw__dd_wo_dd_ei__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W4_fe__dr_eo_dr_wi",
@@ -383700,7 +386170,8 @@
    "id": "sl_W4_fw__sc_wo_sc_ei",
    "ports": [
     "sl_W4_fw__sc_wo_sc_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W4_fe__st_eo_st_wi",
@@ -383712,7 +386183,8 @@
    "id": "sl_W4_fw__st_wo_st_ei",
    "ports": [
     "sl_W4_fw__st_wo_st_ei__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "sl_W5_fw__ag_wo_ag5",
@@ -384667,7 +387139,8 @@
    "id": "sl_W4_fw__flte",
    "ports": [
     "sl_W4_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W3_stm__flt",
@@ -384715,7 +387188,8 @@
    "id": "sl_W3_fw__flte",
    "ports": [
     "sl_W3_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W2_stm__flt",
@@ -384763,7 +387237,8 @@
    "id": "sl_W2_fw__flte",
    "ports": [
     "sl_W2_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W1_stm__flt",
@@ -384811,7 +387286,8 @@
    "id": "sl_W1_fw__flte",
    "ports": [
     "sl_W1_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W0_stm__flt",
@@ -384859,7 +387335,8 @@
    "id": "sl_W0_fw__flte",
    "ports": [
     "sl_W0_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E0_stm__flt",
@@ -384907,7 +387384,8 @@
    "id": "sl_E0_fw__flte",
    "ports": [
     "sl_E0_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E1_stm__flt",
@@ -384955,7 +387433,8 @@
    "id": "sl_E1_fw__flte",
    "ports": [
     "sl_E1_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E2_stm__flt",
@@ -385003,7 +387482,8 @@
    "id": "sl_E2_fw__flte",
    "ports": [
     "sl_E2_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E3_stm__flt",
@@ -385051,7 +387531,8 @@
    "id": "sl_E3_fw__flte",
    "ports": [
     "sl_E3_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E4_stm__flt",
@@ -385099,7 +387580,8 @@
    "id": "sl_E4_fw__flte",
    "ports": [
     "sl_E4_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E5_stm__flt",
@@ -385141,7 +387623,8 @@
    "id": "sl_E5_fw__flte",
    "ports": [
     "sl_E5_fw__flte__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "coll_s__fltk",
@@ -392292,82 +394775,82 @@
     "param": "LAT_SL_W5_SC__X_SC_FW"
    },
    "sl_W5_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W5_FW__X_FW_FE"
    },
    "sl_W5_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W5_FW__X_FW_FE_P1"
    },
    "sl_W5_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W5_FW__X_FW_FE_P2"
    },
    "sl_W5_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W5_STM__X_STM_FE"
    },
    "sl_W5_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W5_STM__X_STM_FE_P1"
    },
    "sl_W5_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W5_SC__X_SC_FE"
    },
    "sl_W5_st_a__x_st_a_fe": {
-    "cycles": 8,
+    "cycles": 10,
     "stations": 6,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 8,
+    "fixed": 2,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_SL_W5_ST_A__X_ST_A_FE"
    },
    "sl_W5_st_b__x_st_b_fe": {
-    "cycles": 2,
+    "cycles": 5,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 3,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_SL_W5_ST_B__X_ST_B_FE"
    },
@@ -392942,62 +395425,62 @@
     "param": "LAT_SL_W4_SC__X_SC_FW"
    },
    "sl_W4_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W4_FW__X_FW_FE"
    },
    "sl_W4_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W4_FW__X_FW_FE_P1"
    },
    "sl_W4_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W4_FW__X_FW_FE_P2"
    },
    "sl_W4_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W4_STM__X_STM_FE"
    },
    "sl_W4_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W4_STM__X_STM_FE_P1"
    },
    "sl_W4_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W4_SC__X_SC_FE"
    },
@@ -393622,82 +396105,82 @@
     "param": "LAT_SL_W3_SC__X_SC_FW"
    },
    "sl_W3_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W3_FW__X_FW_FE"
    },
    "sl_W3_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W3_FW__X_FW_FE_P1"
    },
    "sl_W3_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W3_FW__X_FW_FE_P2"
    },
    "sl_W3_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W3_STM__X_STM_FE"
    },
    "sl_W3_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W3_STM__X_STM_FE_P1"
    },
    "sl_W3_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W3_SC__X_SC_FE"
    },
    "sl_W3_st_a__x_st_a_fe": {
-    "cycles": 8,
+    "cycles": 10,
     "stations": 6,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 8,
+    "fixed": 2,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_SL_W3_ST_A__X_ST_A_FE"
    },
    "sl_W3_st_b__x_st_b_fe": {
-    "cycles": 2,
+    "cycles": 5,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 3,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_SL_W3_ST_B__X_ST_B_FE"
    },
@@ -394282,62 +396765,62 @@
     "param": "LAT_SL_W2_SC__X_SC_FW"
    },
    "sl_W2_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W2_FW__X_FW_FE"
    },
    "sl_W2_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W2_FW__X_FW_FE_P1"
    },
    "sl_W2_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W2_FW__X_FW_FE_P2"
    },
    "sl_W2_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W2_STM__X_STM_FE"
    },
    "sl_W2_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W2_STM__X_STM_FE_P1"
    },
    "sl_W2_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W2_SC__X_SC_FE"
    },
@@ -394962,82 +397445,82 @@
     "param": "LAT_SL_W1_SC__X_SC_FW"
    },
    "sl_W1_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W1_FW__X_FW_FE"
    },
    "sl_W1_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W1_FW__X_FW_FE_P1"
    },
    "sl_W1_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W1_FW__X_FW_FE_P2"
    },
    "sl_W1_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W1_STM__X_STM_FE"
    },
    "sl_W1_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W1_STM__X_STM_FE_P1"
    },
    "sl_W1_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W1_SC__X_SC_FE"
    },
    "sl_W1_st_a__x_st_a_fe": {
-    "cycles": 8,
+    "cycles": 10,
     "stations": 6,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 8,
+    "fixed": 2,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_SL_W1_ST_A__X_ST_A_FE"
    },
    "sl_W1_st_b__x_st_b_fe": {
-    "cycles": 2,
+    "cycles": 5,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 3,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_SL_W1_ST_B__X_ST_B_FE"
    },
@@ -395622,62 +398105,62 @@
     "param": "LAT_SL_W0_SC__X_SC_FW"
    },
    "sl_W0_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W0_FW__X_FW_FE"
    },
    "sl_W0_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W0_FW__X_FW_FE_P1"
    },
    "sl_W0_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_W0_FW__X_FW_FE_P2"
    },
    "sl_W0_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W0_STM__X_STM_FE"
    },
    "sl_W0_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_W0_STM__X_STM_FE_P1"
    },
    "sl_W0_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W0_SC__X_SC_FE"
    },
@@ -396302,62 +398785,62 @@
     "param": "LAT_SL_E0_SC__X_SC_FW"
    },
    "sl_E0_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E0_FW__X_FW_FE"
    },
    "sl_E0_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E0_FW__X_FW_FE_P1"
    },
    "sl_E0_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E0_FW__X_FW_FE_P2"
    },
    "sl_E0_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_E0_STM__X_STM_FE"
    },
    "sl_E0_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_E0_STM__X_STM_FE_P1"
    },
    "sl_E0_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E0_SC__X_SC_FE"
    },
@@ -396982,82 +399465,82 @@
     "param": "LAT_SL_E1_SC__X_SC_FW"
    },
    "sl_E1_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E1_FW__X_FW_FE"
    },
    "sl_E1_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E1_FW__X_FW_FE_P1"
    },
    "sl_E1_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E1_FW__X_FW_FE_P2"
    },
    "sl_E1_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_E1_STM__X_STM_FE"
    },
    "sl_E1_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_E1_STM__X_STM_FE_P1"
    },
    "sl_E1_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E1_SC__X_SC_FE"
    },
    "sl_E1_st_a__x_st_a_fe": {
-    "cycles": 12,
+    "cycles": 14,
     "stations": 10,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 12,
+    "fixed": 2,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_SL_E1_ST_A__X_ST_A_FE"
    },
    "sl_E1_st_b__x_st_b_fe": {
-    "cycles": 2,
+    "cycles": 5,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 3,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_SL_E1_ST_B__X_ST_B_FE"
    },
@@ -397642,62 +400125,62 @@
     "param": "LAT_SL_E2_SC__X_SC_FW"
    },
    "sl_E2_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E2_FW__X_FW_FE"
    },
    "sl_E2_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E2_FW__X_FW_FE_P1"
    },
    "sl_E2_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E2_FW__X_FW_FE_P2"
    },
    "sl_E2_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_E2_STM__X_STM_FE"
    },
    "sl_E2_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_E2_STM__X_STM_FE_P1"
    },
    "sl_E2_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E2_SC__X_SC_FE"
    },
@@ -398322,82 +400805,82 @@
     "param": "LAT_SL_E3_SC__X_SC_FW"
    },
    "sl_E3_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E3_FW__X_FW_FE"
    },
    "sl_E3_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E3_FW__X_FW_FE_P1"
    },
    "sl_E3_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E3_FW__X_FW_FE_P2"
    },
    "sl_E3_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_E3_STM__X_STM_FE"
    },
    "sl_E3_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_E3_STM__X_STM_FE_P1"
    },
    "sl_E3_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E3_SC__X_SC_FE"
    },
    "sl_E3_st_a__x_st_a_fe": {
-    "cycles": 12,
+    "cycles": 14,
     "stations": 10,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 12,
+    "fixed": 2,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_SL_E3_ST_A__X_ST_A_FE"
    },
    "sl_E3_st_b__x_st_b_fe": {
-    "cycles": 2,
+    "cycles": 5,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 3,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_SL_E3_ST_B__X_ST_B_FE"
    },
@@ -398982,62 +401465,62 @@
     "param": "LAT_SL_E4_SC__X_SC_FW"
    },
    "sl_E4_fw__x_fw_fe": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E4_FW__X_FW_FE"
    },
    "sl_E4_fw__x_fw_fe_p1": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E4_FW__X_FW_FE_P1"
    },
    "sl_E4_fw__x_fw_fe_p2": {
-    "cycles": 6,
+    "cycles": 8,
     "stations": 4,
     "boundary": 2,
     "faces": 3,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_SL_E4_FW__X_FW_FE_P2"
    },
    "sl_E4_stm__x_stm_fe": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_E4_STM__X_STM_FE"
    },
    "sl_E4_stm__x_stm_fe_p1": {
-    "cycles": 4,
+    "cycles": 6,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_SL_E4_STM__X_STM_FE_P1"
    },
    "sl_E4_sc__x_sc_fe": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E4_SC__X_SC_FE"
    },
@@ -399702,22 +402185,22 @@
     "param": "LAT_SL_E5_SC__X_SC_FE"
    },
    "sl_E5_st_a__x_st_a_fe": {
-    "cycles": 12,
+    "cycles": 14,
     "stations": 10,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 12,
+    "fixed": 2,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_SL_E5_ST_A__X_ST_A_FE"
    },
    "sl_E5_st_b__x_st_b_fe": {
-    "cycles": 2,
+    "cycles": 5,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 3,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_SL_E5_ST_B__X_ST_B_FE"
    },
@@ -400272,62 +402755,62 @@
     "param": "LAT_GLUE__TX_USER_TX_USER"
    },
    "sl_E0_fw__ag_eo_ag_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E0_FW__AG_EO_AG_EI"
    },
    "sl_E0_fw__ard_eo_ard_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E0_FW__ARD_EO_ARD_EI"
    },
    "sl_E0_fw__arl_eo_arl_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E0_FW__ARL_EO_ARL_EI"
    },
    "sl_E0_fw__arm_eo_arm_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E0_FW__ARM_EO_ARM_EI"
    },
    "sl_E0_fw__art_eo_art_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E0_FW__ART_EO_ART_EI"
    },
    "sl_E0_fw__arv_eo_arv_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E0_FW__ARV_EO_ARV_EI"
    },
@@ -400342,12 +402825,12 @@
     "param": "LAT_SL_E0_FE__CMD_WO_CMD_EI"
    },
    "sl_E0_fw__dd_eo_dd_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E0_FW__DD_EO_DD_EI"
    },
@@ -400422,12 +402905,12 @@
     "param": "LAT_SL_E0_FE__RV_WO_RV_EI"
    },
    "sl_E0_fw__sc_eo_sc_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E0_FW__SC_EO_SC_EI"
    },
@@ -400442,12 +402925,12 @@
     "param": "LAT_SL_E0_FE__SC_WO_SC_EI"
    },
    "sl_E0_fw__st_eo_st_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E0_FW__ST_EO_ST_EI"
    },
@@ -400462,62 +402945,62 @@
     "param": "LAT_SL_E0_FE__ST_WO_ST_EI"
    },
    "sl_E1_fw__ag_eo_ag_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E1_FW__AG_EO_AG_WI"
    },
    "sl_E1_fw__ard_eo_ard_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E1_FW__ARD_EO_ARD_WI"
    },
    "sl_E1_fw__arl_eo_arl_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E1_FW__ARL_EO_ARL_WI"
    },
    "sl_E1_fw__arm_eo_arm_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E1_FW__ARM_EO_ARM_WI"
    },
    "sl_E1_fw__art_eo_art_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E1_FW__ART_EO_ART_WI"
    },
    "sl_E1_fw__arv_eo_arv_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E1_FW__ARV_EO_ARV_WI"
    },
@@ -400532,12 +403015,12 @@
     "param": "LAT_SL_E1_FE__CMD_WO_CMD_EI"
    },
    "sl_E1_fw__dd_eo_dd_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E1_FW__DD_EO_DD_WI"
    },
@@ -400622,12 +403105,12 @@
     "param": "LAT_SL_E1_FE__RV_WO_RV_EI"
    },
    "sl_E1_fw__sc_eo_sc_wi": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E1_FW__SC_EO_SC_WI"
    },
@@ -400642,12 +403125,12 @@
     "param": "LAT_SL_E1_FE__SC_WO_SC_EI"
    },
    "sl_E1_fw__st_eo_st_wi": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E1_FW__ST_EO_ST_WI"
    },
@@ -400662,62 +403145,62 @@
     "param": "LAT_SL_E1_FE__ST_WO_ST_EI"
    },
    "sl_E2_fw__ag_eo_ag_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E2_FW__AG_EO_AG_WI"
    },
    "sl_E2_fw__ard_eo_ard_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E2_FW__ARD_EO_ARD_WI"
    },
    "sl_E2_fw__arl_eo_arl_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E2_FW__ARL_EO_ARL_WI"
    },
    "sl_E2_fw__arm_eo_arm_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E2_FW__ARM_EO_ARM_WI"
    },
    "sl_E2_fw__art_eo_art_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E2_FW__ART_EO_ART_WI"
    },
    "sl_E2_fw__arv_eo_arv_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E2_FW__ARV_EO_ARV_WI"
    },
@@ -400732,12 +403215,12 @@
     "param": "LAT_SL_E2_FE__CMD_WO_CMD_EI"
    },
    "sl_E2_fw__dd_eo_dd_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E2_FW__DD_EO_DD_WI"
    },
@@ -400812,12 +403295,12 @@
     "param": "LAT_SL_E2_FE__RV_WO_RV_EI"
    },
    "sl_E2_fw__sc_eo_sc_wi": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E2_FW__SC_EO_SC_WI"
    },
@@ -400832,12 +403315,12 @@
     "param": "LAT_SL_E2_FE__SC_WO_SC_EI"
    },
    "sl_E2_fw__st_eo_st_wi": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E2_FW__ST_EO_ST_WI"
    },
@@ -400852,62 +403335,62 @@
     "param": "LAT_SL_E2_FE__ST_WO_ST_EI"
    },
    "sl_E3_fw__ag_eo_ag_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E3_FW__AG_EO_AG_WI"
    },
    "sl_E3_fw__ard_eo_ard_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E3_FW__ARD_EO_ARD_WI"
    },
    "sl_E3_fw__arl_eo_arl_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E3_FW__ARL_EO_ARL_WI"
    },
    "sl_E3_fw__arm_eo_arm_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E3_FW__ARM_EO_ARM_WI"
    },
    "sl_E3_fw__art_eo_art_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E3_FW__ART_EO_ART_WI"
    },
    "sl_E3_fw__arv_eo_arv_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E3_FW__ARV_EO_ARV_WI"
    },
@@ -400922,12 +403405,12 @@
     "param": "LAT_SL_E3_FE__CMD_WO_CMD_EI"
    },
    "sl_E3_fw__dd_eo_dd_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E3_FW__DD_EO_DD_WI"
    },
@@ -401012,12 +403495,12 @@
     "param": "LAT_SL_E3_FE__RV_WO_RV_EI"
    },
    "sl_E3_fw__sc_eo_sc_wi": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E3_FW__SC_EO_SC_WI"
    },
@@ -401032,12 +403515,12 @@
     "param": "LAT_SL_E3_FE__SC_WO_SC_EI"
    },
    "sl_E3_fw__st_eo_st_wi": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E3_FW__ST_EO_ST_WI"
    },
@@ -401052,62 +403535,62 @@
     "param": "LAT_SL_E3_FE__ST_WO_ST_EI"
    },
    "sl_E4_fw__ag_eo_ag_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E4_FW__AG_EO_AG_WI"
    },
    "sl_E4_fw__ard_eo_ard_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E4_FW__ARD_EO_ARD_WI"
    },
    "sl_E4_fw__arl_eo_arl_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E4_FW__ARL_EO_ARL_WI"
    },
    "sl_E4_fw__arm_eo_arm_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E4_FW__ARM_EO_ARM_WI"
    },
    "sl_E4_fw__art_eo_art_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E4_FW__ART_EO_ART_WI"
    },
    "sl_E4_fw__arv_eo_arv_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E4_FW__ARV_EO_ARV_WI"
    },
@@ -401122,12 +403605,12 @@
     "param": "LAT_SL_E4_FE__CMD_WO_CMD_EI"
    },
    "sl_E4_fw__dd_eo_dd_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E4_FW__DD_EO_DD_WI"
    },
@@ -401202,12 +403685,12 @@
     "param": "LAT_SL_E4_FE__RV_WO_RV_EI"
    },
    "sl_E4_fw__sc_eo_sc_wi": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E4_FW__SC_EO_SC_WI"
    },
@@ -401222,12 +403705,12 @@
     "param": "LAT_SL_E4_FE__SC_WO_SC_EI"
    },
    "sl_E4_fw__st_eo_st_wi": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E4_FW__ST_EO_ST_WI"
    },
@@ -401242,72 +403725,72 @@
     "param": "LAT_SL_E4_FE__ST_WO_ST_EI"
    },
    "sl_E5_fw__ag_eo_ag_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E5_FW__AG_EO_AG_WI"
    },
    "sl_E5_fw__ard_eo_ard_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E5_FW__ARD_EO_ARD_WI"
    },
    "sl_E5_fw__arl_eo_arl_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E5_FW__ARL_EO_ARL_WI"
    },
    "sl_E5_fw__arm_eo_arm_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E5_FW__ARM_EO_ARM_WI"
    },
    "sl_E5_fw__art_eo_art_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E5_FW__ART_EO_ART_WI"
    },
    "sl_E5_fw__arv_eo_arv_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E5_FW__ARV_EO_ARV_WI"
    },
    "sl_E5_fw__dd_eo_dd_wi": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E5_FW__DD_EO_DD_WI"
    },
@@ -401322,82 +403805,82 @@
     "param": "LAT_SL_E5_FE__L9_EO_L9_WI"
    },
    "sl_E5_fw__sc_eo_sc_wi": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E5_FW__SC_EO_SC_WI"
    },
    "sl_E5_fw__st_eo_st_wi": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_E5_FW__ST_EO_ST_WI"
    },
    "sl_W0_fw__ag_wo_ag_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W0_FW__AG_WO_AG_EI"
    },
    "sl_W0_fw__ard_wo_ard_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W0_FW__ARD_WO_ARD_EI"
    },
    "sl_W0_fw__arl_wo_arl_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W0_FW__ARL_WO_ARL_EI"
    },
    "sl_W0_fw__arm_wo_arm_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W0_FW__ARM_WO_ARM_EI"
    },
    "sl_W0_fw__art_wo_art_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W0_FW__ART_WO_ART_EI"
    },
    "sl_W0_fw__arv_wo_arv_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W0_FW__ARV_WO_ARV_EI"
    },
@@ -401412,12 +403895,12 @@
     "param": "LAT_SL_W0_FE__CMD_EO_CMD_EI"
    },
    "sl_W0_fw__dd_wo_dd_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W0_FW__DD_WO_DD_EI"
    },
@@ -401502,12 +403985,12 @@
     "param": "LAT_SL_W0_FE__SC_EO_SC_EI"
    },
    "sl_W0_fw__sc_wo_sc_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W0_FW__SC_WO_SC_EI"
    },
@@ -401522,72 +404005,72 @@
     "param": "LAT_SL_W0_FE__ST_EO_ST_EI"
    },
    "sl_W0_fw__st_wo_st_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W0_FW__ST_WO_ST_EI"
    },
    "sl_W1_fw__ag_wo_ag_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W1_FW__AG_WO_AG_EI"
    },
    "sl_W1_fw__ard_wo_ard_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W1_FW__ARD_WO_ARD_EI"
    },
    "sl_W1_fw__arl_wo_arl_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W1_FW__ARL_WO_ARL_EI"
    },
    "sl_W1_fw__arm_wo_arm_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W1_FW__ARM_WO_ARM_EI"
    },
    "sl_W1_fw__art_wo_art_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W1_FW__ART_WO_ART_EI"
    },
    "sl_W1_fw__arv_wo_arv_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W1_FW__ARV_WO_ARV_EI"
    },
@@ -401602,12 +404085,12 @@
     "param": "LAT_SL_W1_FE__CMD_EO_CMD_WI"
    },
    "sl_W1_fw__dd_wo_dd_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W1_FW__DD_WO_DD_EI"
    },
@@ -401702,12 +404185,12 @@
     "param": "LAT_SL_W1_FE__SC_EO_SC_WI"
    },
    "sl_W1_fw__sc_wo_sc_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W1_FW__SC_WO_SC_EI"
    },
@@ -401722,72 +404205,72 @@
     "param": "LAT_SL_W1_FE__ST_EO_ST_WI"
    },
    "sl_W1_fw__st_wo_st_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W1_FW__ST_WO_ST_EI"
    },
    "sl_W2_fw__ag_wo_ag_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W2_FW__AG_WO_AG_EI"
    },
    "sl_W2_fw__ard_wo_ard_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W2_FW__ARD_WO_ARD_EI"
    },
    "sl_W2_fw__arl_wo_arl_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W2_FW__ARL_WO_ARL_EI"
    },
    "sl_W2_fw__arm_wo_arm_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W2_FW__ARM_WO_ARM_EI"
    },
    "sl_W2_fw__art_wo_art_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W2_FW__ART_WO_ART_EI"
    },
    "sl_W2_fw__arv_wo_arv_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W2_FW__ARV_WO_ARV_EI"
    },
@@ -401802,12 +404285,12 @@
     "param": "LAT_SL_W2_FE__CMD_EO_CMD_WI"
    },
    "sl_W2_fw__dd_wo_dd_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W2_FW__DD_WO_DD_EI"
    },
@@ -401892,12 +404375,12 @@
     "param": "LAT_SL_W2_FE__SC_EO_SC_WI"
    },
    "sl_W2_fw__sc_wo_sc_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W2_FW__SC_WO_SC_EI"
    },
@@ -401912,72 +404395,72 @@
     "param": "LAT_SL_W2_FE__ST_EO_ST_WI"
    },
    "sl_W2_fw__st_wo_st_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W2_FW__ST_WO_ST_EI"
    },
    "sl_W3_fw__ag_wo_ag_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W3_FW__AG_WO_AG_EI"
    },
    "sl_W3_fw__ard_wo_ard_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W3_FW__ARD_WO_ARD_EI"
    },
    "sl_W3_fw__arl_wo_arl_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W3_FW__ARL_WO_ARL_EI"
    },
    "sl_W3_fw__arm_wo_arm_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W3_FW__ARM_WO_ARM_EI"
    },
    "sl_W3_fw__art_wo_art_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W3_FW__ART_WO_ART_EI"
    },
    "sl_W3_fw__arv_wo_arv_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W3_FW__ARV_WO_ARV_EI"
    },
@@ -401992,12 +404475,12 @@
     "param": "LAT_SL_W3_FE__CMD_EO_CMD_WI"
    },
    "sl_W3_fw__dd_wo_dd_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W3_FW__DD_WO_DD_EI"
    },
@@ -402092,12 +404575,12 @@
     "param": "LAT_SL_W3_FE__SC_EO_SC_WI"
    },
    "sl_W3_fw__sc_wo_sc_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W3_FW__SC_WO_SC_EI"
    },
@@ -402112,72 +404595,72 @@
     "param": "LAT_SL_W3_FE__ST_EO_ST_WI"
    },
    "sl_W3_fw__st_wo_st_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W3_FW__ST_WO_ST_EI"
    },
    "sl_W4_fw__ag_wo_ag_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W4_FW__AG_WO_AG_EI"
    },
    "sl_W4_fw__ard_wo_ard_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W4_FW__ARD_WO_ARD_EI"
    },
    "sl_W4_fw__arl_wo_arl_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W4_FW__ARL_WO_ARL_EI"
    },
    "sl_W4_fw__arm_wo_arm_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W4_FW__ARM_WO_ARM_EI"
    },
    "sl_W4_fw__art_wo_art_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W4_FW__ART_WO_ART_EI"
    },
    "sl_W4_fw__arv_wo_arv_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W4_FW__ARV_WO_ARV_EI"
    },
@@ -402192,12 +404675,12 @@
     "param": "LAT_SL_W4_FE__CMD_EO_CMD_WI"
    },
    "sl_W4_fw__dd_wo_dd_ei": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W4_FW__DD_WO_DD_EI"
    },
@@ -402282,12 +404765,12 @@
     "param": "LAT_SL_W4_FE__SC_EO_SC_WI"
    },
    "sl_W4_fw__sc_wo_sc_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W4_FW__SC_WO_SC_EI"
    },
@@ -402302,12 +404785,12 @@
     "param": "LAT_SL_W4_FE__ST_EO_ST_WI"
    },
    "sl_W4_fw__st_wo_st_ei": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_SL_W4_FW__ST_WO_ST_EI"
    },
@@ -403752,12 +406235,12 @@
     "param": "LAT_SL_W4_HC2__FLT"
    },
    "sl_W4_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W4_FW__FLTE"
    },
@@ -403832,12 +406315,12 @@
     "param": "LAT_SL_W3_HC2__FLT"
    },
    "sl_W3_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W3_FW__FLTE"
    },
@@ -403912,12 +406395,12 @@
     "param": "LAT_SL_W2_HC2__FLT"
    },
    "sl_W2_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W2_FW__FLTE"
    },
@@ -403992,12 +406475,12 @@
     "param": "LAT_SL_W1_HC2__FLT"
    },
    "sl_W1_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W1_FW__FLTE"
    },
@@ -404072,12 +406555,12 @@
     "param": "LAT_SL_W0_HC2__FLT"
    },
    "sl_W0_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_W0_FW__FLTE"
    },
@@ -404152,12 +406635,12 @@
     "param": "LAT_SL_E0_HC2__FLT"
    },
    "sl_E0_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E0_FW__FLTE"
    },
@@ -404232,12 +406715,12 @@
     "param": "LAT_SL_E1_HC2__FLT"
    },
    "sl_E1_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E1_FW__FLTE"
    },
@@ -404312,12 +406795,12 @@
     "param": "LAT_SL_E2_HC2__FLT"
    },
    "sl_E2_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E2_FW__FLTE"
    },
@@ -404392,12 +406875,12 @@
     "param": "LAT_SL_E3_HC2__FLT"
    },
    "sl_E3_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E3_FW__FLTE"
    },
@@ -404472,12 +406955,12 @@
     "param": "LAT_SL_E4_HC2__FLT"
    },
    "sl_E4_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E4_FW__FLTE"
    },
@@ -404542,12 +407025,12 @@
     "param": "LAT_SL_E5_HC2__FLT"
    },
    "sl_E5_fw__flte": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_SL_E5_FW__FLTE"
    },

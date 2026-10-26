@@ -2051,8 +2051,12 @@
         },
         "bit_route": {
          "enum": [
-          "per_bit"
+          "per_bit",
+          "chain"
          ]
+        },
+        "core_glob": {
+         "type": "string"
         }
        }
       }

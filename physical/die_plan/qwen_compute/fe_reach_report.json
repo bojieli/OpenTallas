@@ -1,0 +1,2269 @@
+{
+ "schema": "opentallas.die_plan.qc_fe_reach.v1",
+ "reach_um": 405.0,
+ "margin_um": 12.0,
+ "role_stations": {
+  "ag_Xi": 1,
+  "ard_Xi": 1,
+  "arl_Xi": 1,
+  "arm_Xi": 1,
+  "art_Xi": 1,
+  "arv_Xi": 1,
+  "dd_Xi": 1,
+  "flt_e_i": 1,
+  "sc_Xi": 2,
+  "st_Xi": 2,
+  "x_fw_i": 2,
+  "x_fw_p1_i": 2,
+  "x_fw_p2_i": 2,
+  "x_sc_i": 2,
+  "x_st_a_i": 2,
+  "x_st_b_i": 3,
+  "x_stm_i": 2,
+  "x_stm_p1_i": 2
+ },
+ "types": {
+  "sle_fe_v1": {
+   "in_bus_stations": {
+    "ag_wi": 1,
+    "ard_wi": 1,
+    "arl_wi": 1,
+    "arm_wi": 1,
+    "art_wi": 1,
+    "arv_wi": 1,
+    "dd_wi": 1,
+    "flt_e_i": 1,
+    "sc_wi": 2,
+    "st_wi": 2,
+    "x_fw_i": 2,
+    "x_fw_p1_i": 2,
+    "x_fw_p2_i": 2,
+    "x_sc_i": 2,
+    "x_stm_i": 2,
+    "x_stm_p1_i": 2
+   },
+   "out_bus_added": {
+    "x_fw_o": 1,
+    "x_fw_p1_o": 1,
+    "flt_o": 1,
+    "x_sc_o": 2,
+    "x_stm_o": 2,
+    "x_stm_p1_o": 2,
+    "cmd_wo": 2,
+    "dr_wo": 2,
+    "hr_wo": 2,
+    "rd_wo": 2,
+    "re_wo": 2,
+    "rl_wo": 2,
+    "rr_wo": 2,
+    "rv_wo": 2,
+    "treq_wo": 2,
+    "sc_wo": 2,
+    "st_wo": 2
+   },
+   "families": [
+    {
+     "in_bus": "ag_wi",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 1017.1,
+     "bits": 10,
+     "max_hop_um": 339.0
+    },
+    {
+     "in_bus": "ard_wi",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 1023.0,
+     "bits": 512,
+     "max_hop_um": 341.0
+    },
+    {
+     "in_bus": "arl_wi",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 1021.7,
+     "bits": 1,
+     "max_hop_um": 340.6
+    },
+    {
+     "in_bus": "arm_wi",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 1020.1,
+     "bits": 1,
+     "max_hop_um": 340.0
+    },
+    {
+     "in_bus": "art_wi",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 1019.5,
+     "bits": 29,
+     "max_hop_um": 339.8
+    },
+    {
+     "in_bus": "art_wi",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1123.1,
+     "bits": 3,
+     "max_hop_um": 374.4
+    },
+    {
+     "in_bus": "arv_wi",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1122.0,
+     "bits": 1,
+     "max_hop_um": 374.0
+    },
+    {
+     "in_bus": "dd_wi",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1108.5,
+     "bits": 548,
+     "max_hop_um": 369.5
+    },
+    {
+     "in_bus": "flt_e_i",
+     "out_bus": "flt_o",
+     "core": 1,
+     "max_um": 730.2,
+     "bits": 1,
+     "max_hop_um": 243.4
+    },
+    {
+     "in_bus": "sc_wi",
+     "out_bus": "x_sc_o",
+     "core": 1,
+     "max_um": 916.4,
+     "bits": 47,
+     "max_hop_um": 229.1
+    },
+    {
+     "in_bus": "sc_wi",
+     "out_bus": "x_stm_o",
+     "core": 1,
+     "max_um": 1108.6,
+     "bits": 1,
+     "max_hop_um": 277.2
+    },
+    {
+     "in_bus": "st_wi",
+     "out_bus": "x_stm_o",
+     "core": 1,
+     "max_um": 1118.9,
+     "bits": 543,
+     "max_hop_um": 279.7
+    },
+    {
+     "in_bus": "st_wi",
+     "out_bus": "x_stm_p1_o",
+     "core": 1,
+     "max_um": 1004.9,
+     "bits": 544,
+     "max_hop_um": 251.2
+    },
+    {
+     "in_bus": "x_fw_i",
+     "out_bus": "cmd_wo",
+     "core": 0,
+     "max_um": 1019.3,
+     "bits": 116,
+     "max_hop_um": 339.8
+    },
+    {
+     "in_bus": "x_fw_i",
+     "out_bus": "dr_wo",
+     "core": 0,
+     "max_um": 928.8,
+     "bits": 423,
+     "max_hop_um": 309.6
+    },
+    {
+     "in_bus": "x_fw_p1_i",
+     "out_bus": "dr_wo",
+     "core": 0,
+     "max_um": 1037.0,
+     "bits": 97,
+     "max_hop_um": 345.7
+    },
+    {
+     "in_bus": "x_fw_p1_i",
+     "out_bus": "hr_wo",
+     "core": 0,
+     "max_um": 1040.8,
+     "bits": 442,
+     "max_hop_um": 346.8
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "hr_wo",
+     "core": 1,
+     "max_um": 1042.2,
+     "bits": 11,
+     "max_hop_um": 260.5
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rd_wo",
+     "core": 1,
+     "max_um": 959.8,
+     "bits": 512,
+     "max_hop_um": 319.9
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "re_wo",
+     "core": 0,
+     "max_um": 958.6,
+     "bits": 1,
+     "max_hop_um": 319.5
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rl_wo",
+     "core": 0,
+     "max_um": 957.1,
+     "bits": 1,
+     "max_hop_um": 319.0
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rr_wo",
+     "core": 0,
+     "max_um": 956.0,
+     "bits": 3,
+     "max_hop_um": 318.7
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rv_wo",
+     "core": 0,
+     "max_um": 954.9,
+     "bits": 1,
+     "max_hop_um": 318.3
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "treq_wo",
+     "core": 0,
+     "max_um": 686.6,
+     "bits": 9,
+     "max_hop_um": 228.9
+    },
+    {
+     "in_bus": "x_sc_i",
+     "out_bus": "sc_wo",
+     "core": 0,
+     "max_um": 935.4,
+     "bits": 48,
+     "max_hop_um": 311.8
+    },
+    {
+     "in_bus": "x_stm_i",
+     "out_bus": "st_wo",
+     "core": 0,
+     "max_um": 806.3,
+     "bits": 544,
+     "max_hop_um": 268.8
+    },
+    {
+     "in_bus": "x_stm_p1_i",
+     "out_bus": "st_wo",
+     "core": 0,
+     "max_um": 919.8,
+     "bits": 544,
+     "max_hop_um": 306.6
+    }
+   ]
+  },
+  "sle_fe_v2": {
+   "in_bus_stations": {
+    "ag_wi": 1,
+    "ard_wi": 1,
+    "arl_wi": 1,
+    "arm_wi": 1,
+    "art_wi": 1,
+    "arv_wi": 1,
+    "dd_wi": 1,
+    "flt_e_i": 1,
+    "sc_wi": 2,
+    "st_wi": 2,
+    "x_fw_i": 2,
+    "x_fw_p1_i": 2,
+    "x_fw_p2_i": 2,
+    "x_sc_i": 2,
+    "x_st_a_i": 2,
+    "x_st_b_i": 3,
+    "x_stm_i": 2,
+    "x_stm_p1_i": 2
+   },
+   "out_bus_added": {
+    "x_fw_o": 1,
+    "x_fw_p1_o": 1,
+    "flt_o": 1,
+    "x_sc_o": 2,
+    "x_stm_o": 2,
+    "x_stm_p1_o": 2,
+    "cmd_wo": 2,
+    "dr_wo": 2,
+    "hr_wo": 2,
+    "rd_wo": 2,
+    "re_wo": 2,
+    "rl_wo": 2,
+    "rr_wo": 2,
+    "rv_wo": 2,
+    "treq_wo": 2,
+    "sc_wo": 2,
+    "l9_eo": 3,
+    "st_wo": 2
+   },
+   "families": [
+    {
+     "in_bus": "ag_wi",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 1024.5,
+     "bits": 10,
+     "max_hop_um": 341.5
+    },
+    {
+     "in_bus": "ard_wi",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 1041.5,
+     "bits": 512,
+     "max_hop_um": 347.2
+    },
+    {
+     "in_bus": "arl_wi",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 1040.3,
+     "bits": 1,
+     "max_hop_um": 346.8
+    },
+    {
+     "in_bus": "arm_wi",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 1038.7,
+     "bits": 1,
+     "max_hop_um": 346.2
+    },
+    {
+     "in_bus": "art_wi",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 1038.7,
+     "bits": 29,
+     "max_hop_um": 346.2
+    },
+    {
+     "in_bus": "art_wi",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1153.7,
+     "bits": 3,
+     "max_hop_um": 384.6
+    },
+    {
+     "in_bus": "arv_wi",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1152.6,
+     "bits": 1,
+     "max_hop_um": 384.2
+    },
+    {
+     "in_bus": "dd_wi",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1149.7,
+     "bits": 548,
+     "max_hop_um": 383.2
+    },
+    {
+     "in_bus": "flt_e_i",
+     "out_bus": "flt_o",
+     "core": 1,
+     "max_um": 710.7,
+     "bits": 1,
+     "max_hop_um": 236.9
+    },
+    {
+     "in_bus": "sc_wi",
+     "out_bus": "x_sc_o",
+     "core": 1,
+     "max_um": 831.2,
+     "bits": 47,
+     "max_hop_um": 207.8
+    },
+    {
+     "in_bus": "sc_wi",
+     "out_bus": "x_stm_o",
+     "core": 1,
+     "max_um": 1009.3,
+     "bits": 1,
+     "max_hop_um": 252.3
+    },
+    {
+     "in_bus": "st_wi",
+     "out_bus": "x_stm_o",
+     "core": 1,
+     "max_um": 1019.5,
+     "bits": 543,
+     "max_hop_um": 254.9
+    },
+    {
+     "in_bus": "st_wi",
+     "out_bus": "x_stm_p1_o",
+     "core": 1,
+     "max_um": 1131.3,
+     "bits": 544,
+     "max_hop_um": 282.8
+    },
+    {
+     "in_bus": "x_fw_i",
+     "out_bus": "cmd_wo",
+     "core": 0,
+     "max_um": 1041.0,
+     "bits": 116,
+     "max_hop_um": 347.0
+    },
+    {
+     "in_bus": "x_fw_i",
+     "out_bus": "dr_wo",
+     "core": 0,
+     "max_um": 959.3,
+     "bits": 423,
+     "max_hop_um": 319.8
+    },
+    {
+     "in_bus": "x_fw_p1_i",
+     "out_bus": "dr_wo",
+     "core": 0,
+     "max_um": 1080.2,
+     "bits": 97,
+     "max_hop_um": 360.1
+    },
+    {
+     "in_bus": "x_fw_p1_i",
+     "out_bus": "hr_wo",
+     "core": 0,
+     "max_um": 1093.6,
+     "bits": 442,
+     "max_hop_um": 364.0
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "hr_wo",
+     "core": 1,
+     "max_um": 1095.1,
+     "bits": 11,
+     "max_hop_um": 273.8
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rd_wo",
+     "core": 1,
+     "max_um": 1112.0,
+     "bits": 512,
+     "max_hop_um": 370.7
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "re_wo",
+     "core": 0,
+     "max_um": 1110.9,
+     "bits": 1,
+     "max_hop_um": 370.3
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rl_wo",
+     "core": 0,
+     "max_um": 1109.7,
+     "bits": 1,
+     "max_hop_um": 369.9
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rr_wo",
+     "core": 0,
+     "max_um": 1108.7,
+     "bits": 3,
+     "max_hop_um": 369.6
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rv_wo",
+     "core": 0,
+     "max_um": 1107.6,
+     "bits": 1,
+     "max_hop_um": 369.2
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "treq_wo",
+     "core": 0,
+     "max_um": 710.6,
+     "bits": 9,
+     "max_hop_um": 236.9
+    },
+    {
+     "in_bus": "x_sc_i",
+     "out_bus": "sc_wo",
+     "core": 0,
+     "max_um": 851.1,
+     "bits": 48,
+     "max_hop_um": 283.7
+    },
+    {
+     "in_bus": "x_st_a_i",
+     "out_bus": "l9_eo",
+     "core": 0,
+     "max_um": 203.3,
+     "bits": 258,
+     "max_hop_um": 67.8
+    },
+    {
+     "in_bus": "x_st_b_i",
+     "out_bus": "l9_eo",
+     "core": 0,
+     "max_um": 1479.1,
+     "bits": 256,
+     "max_hop_um": 369.8
+    },
+    {
+     "in_bus": "x_stm_i",
+     "out_bus": "st_wo",
+     "core": 0,
+     "max_um": 921.7,
+     "bits": 544,
+     "max_hop_um": 307.2
+    },
+    {
+     "in_bus": "x_stm_p1_i",
+     "out_bus": "st_wo",
+     "core": 0,
+     "max_um": 1056.9,
+     "bits": 544,
+     "max_hop_um": 352.3
+    }
+   ]
+  },
+  "sle_fe_v3": {
+   "in_bus_stations": {
+    "x_st_a_i": 2,
+    "x_st_b_i": 3
+   },
+   "out_bus_added": {
+    "l9_eo": 3
+   },
+   "families": [
+    {
+     "in_bus": "x_st_a_i",
+     "out_bus": "l9_eo",
+     "core": 0,
+     "max_um": 586.3,
+     "bits": 258,
+     "max_hop_um": 195.4
+    },
+    {
+     "in_bus": "x_st_b_i",
+     "out_bus": "l9_eo",
+     "core": 0,
+     "max_um": 1096.0,
+     "bits": 256,
+     "max_hop_um": 274.0
+    }
+   ]
+  },
+  "slw_fe_v1": {
+   "in_bus_stations": {
+    "ag_ei": 1,
+    "ard_ei": 1,
+    "arl_ei": 1,
+    "arm_ei": 1,
+    "art_ei": 1,
+    "arv_ei": 1,
+    "dd_ei": 1,
+    "flt_e_i": 1,
+    "sc_ei": 2,
+    "st_ei": 2,
+    "x_fw_i": 2,
+    "x_fw_p1_i": 2,
+    "x_fw_p2_i": 2,
+    "x_sc_i": 2,
+    "x_stm_i": 2,
+    "x_stm_p1_i": 2
+   },
+   "out_bus_added": {
+    "x_fw_o": 1,
+    "x_fw_p1_o": 1,
+    "flt_o": 1,
+    "x_sc_o": 2,
+    "x_stm_o": 2,
+    "x_stm_p1_o": 2,
+    "cmd_eo": 2,
+    "dr_eo": 2,
+    "hr_eo": 2,
+    "rd_eo": 2,
+    "re_eo": 2,
+    "rl_eo": 2,
+    "rr_eo": 2,
+    "rv_eo": 2,
+    "treq_eo": 2,
+    "sc_eo": 2,
+    "st_eo": 2
+   },
+   "families": [
+    {
+     "in_bus": "ag_ei",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 933.9,
+     "bits": 10,
+     "max_hop_um": 311.3
+    },
+    {
+     "in_bus": "ard_ei",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 941.5,
+     "bits": 512,
+     "max_hop_um": 313.8
+    },
+    {
+     "in_bus": "arl_ei",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 940.2,
+     "bits": 1,
+     "max_hop_um": 313.4
+    },
+    {
+     "in_bus": "arm_ei",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 938.6,
+     "bits": 1,
+     "max_hop_um": 312.9
+    },
+    {
+     "in_bus": "art_ei",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 938.1,
+     "bits": 29,
+     "max_hop_um": 312.7
+    },
+    {
+     "in_bus": "art_ei",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1041.4,
+     "bits": 3,
+     "max_hop_um": 347.1
+    },
+    {
+     "in_bus": "arv_ei",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1040.3,
+     "bits": 1,
+     "max_hop_um": 346.8
+    },
+    {
+     "in_bus": "dd_ei",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1026.1,
+     "bits": 548,
+     "max_hop_um": 342.0
+    },
+    {
+     "in_bus": "flt_e_i",
+     "out_bus": "flt_o",
+     "core": 1,
+     "max_um": 933.6,
+     "bits": 1,
+     "max_hop_um": 311.2
+    },
+    {
+     "in_bus": "sc_ei",
+     "out_bus": "x_sc_o",
+     "core": 1,
+     "max_um": 915.6,
+     "bits": 47,
+     "max_hop_um": 228.9
+    },
+    {
+     "in_bus": "sc_ei",
+     "out_bus": "x_stm_o",
+     "core": 1,
+     "max_um": 1114.7,
+     "bits": 1,
+     "max_hop_um": 278.7
+    },
+    {
+     "in_bus": "st_ei",
+     "out_bus": "x_stm_o",
+     "core": 1,
+     "max_um": 1125.0,
+     "bits": 543,
+     "max_hop_um": 281.2
+    },
+    {
+     "in_bus": "st_ei",
+     "out_bus": "x_stm_p1_o",
+     "core": 1,
+     "max_um": 1087.2,
+     "bits": 544,
+     "max_hop_um": 271.8
+    },
+    {
+     "in_bus": "x_fw_i",
+     "out_bus": "cmd_eo",
+     "core": 0,
+     "max_um": 937.9,
+     "bits": 116,
+     "max_hop_um": 312.6
+    },
+    {
+     "in_bus": "x_fw_i",
+     "out_bus": "dr_eo",
+     "core": 0,
+     "max_um": 847.1,
+     "bits": 423,
+     "max_hop_um": 282.4
+    },
+    {
+     "in_bus": "x_fw_p1_i",
+     "out_bus": "dr_eo",
+     "core": 0,
+     "max_um": 954.7,
+     "bits": 97,
+     "max_hop_um": 318.2
+    },
+    {
+     "in_bus": "x_fw_p1_i",
+     "out_bus": "hr_eo",
+     "core": 0,
+     "max_um": 959.1,
+     "bits": 442,
+     "max_hop_um": 319.5
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "hr_eo",
+     "core": 1,
+     "max_um": 960.8,
+     "bits": 11,
+     "max_hop_um": 240.2
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rd_eo",
+     "core": 1,
+     "max_um": 967.5,
+     "bits": 512,
+     "max_hop_um": 322.5
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "re_eo",
+     "core": 0,
+     "max_um": 966.4,
+     "bits": 1,
+     "max_hop_um": 322.1
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rl_eo",
+     "core": 0,
+     "max_um": 965.2,
+     "bits": 1,
+     "max_hop_um": 321.7
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rr_eo",
+     "core": 0,
+     "max_um": 964.1,
+     "bits": 3,
+     "max_hop_um": 321.4
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rv_eo",
+     "core": 0,
+     "max_um": 963.0,
+     "bits": 1,
+     "max_hop_um": 321.0
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "treq_eo",
+     "core": 0,
+     "max_um": 678.5,
+     "bits": 9,
+     "max_hop_um": 226.2
+    },
+    {
+     "in_bus": "x_sc_i",
+     "out_bus": "sc_eo",
+     "core": 0,
+     "max_um": 934.6,
+     "bits": 48,
+     "max_hop_um": 311.5
+    },
+    {
+     "in_bus": "x_stm_i",
+     "out_bus": "st_eo",
+     "core": 0,
+     "max_um": 887.9,
+     "bits": 544,
+     "max_hop_um": 296.0
+    },
+    {
+     "in_bus": "x_stm_p1_i",
+     "out_bus": "st_eo",
+     "core": 0,
+     "max_um": 1001.3,
+     "bits": 544,
+     "max_hop_um": 333.8
+    }
+   ]
+  },
+  "slw_fe_v2": {
+   "in_bus_stations": {
+    "ag_ei": 1,
+    "ard_ei": 1,
+    "arl_ei": 1,
+    "arm_ei": 1,
+    "art_ei": 1,
+    "arv_ei": 1,
+    "dd_ei": 1,
+    "flt_e_i": 1,
+    "sc_ei": 2,
+    "st_ei": 2,
+    "x_fw_i": 2,
+    "x_fw_p1_i": 2,
+    "x_fw_p2_i": 2,
+    "x_sc_i": 2,
+    "x_st_a_i": 2,
+    "x_st_b_i": 3,
+    "x_stm_i": 2,
+    "x_stm_p1_i": 2
+   },
+   "out_bus_added": {
+    "x_fw_o": 1,
+    "x_fw_p1_o": 1,
+    "flt_o": 1,
+    "x_sc_o": 2,
+    "x_stm_o": 2,
+    "x_stm_p1_o": 2,
+    "cmd_eo": 2,
+    "dr_eo": 2,
+    "hr_eo": 2,
+    "l9_eo": 2,
+    "rd_eo": 3,
+    "treq_eo": 2,
+    "sc_eo": 2,
+    "rr_eo": 3,
+    "rv_eo": 2,
+    "re_eo": 3,
+    "rl_eo": 3,
+    "st_eo": 2
+   },
+   "families": [
+    {
+     "in_bus": "ag_ei",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 939.3,
+     "bits": 10,
+     "max_hop_um": 313.1
+    },
+    {
+     "in_bus": "ard_ei",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 956.7,
+     "bits": 512,
+     "max_hop_um": 318.9
+    },
+    {
+     "in_bus": "arl_ei",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 955.4,
+     "bits": 1,
+     "max_hop_um": 318.5
+    },
+    {
+     "in_bus": "arm_ei",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 953.9,
+     "bits": 1,
+     "max_hop_um": 318.0
+    },
+    {
+     "in_bus": "art_ei",
+     "out_bus": "x_fw_o",
+     "core": 1,
+     "max_um": 953.9,
+     "bits": 29,
+     "max_hop_um": 318.0
+    },
+    {
+     "in_bus": "art_ei",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1068.9,
+     "bits": 3,
+     "max_hop_um": 356.3
+    },
+    {
+     "in_bus": "arv_ei",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1067.8,
+     "bits": 1,
+     "max_hop_um": 355.9
+    },
+    {
+     "in_bus": "dd_ei",
+     "out_bus": "x_fw_p1_o",
+     "core": 1,
+     "max_um": 1064.9,
+     "bits": 548,
+     "max_hop_um": 355.0
+    },
+    {
+     "in_bus": "flt_e_i",
+     "out_bus": "flt_o",
+     "core": 1,
+     "max_um": 819.0,
+     "bits": 1,
+     "max_hop_um": 273.0
+    },
+    {
+     "in_bus": "sc_ei",
+     "out_bus": "x_sc_o",
+     "core": 1,
+     "max_um": 1006.9,
+     "bits": 47,
+     "max_hop_um": 251.7
+    },
+    {
+     "in_bus": "sc_ei",
+     "out_bus": "x_stm_o",
+     "core": 1,
+     "max_um": 1208.2,
+     "bits": 1,
+     "max_hop_um": 302.0
+    },
+    {
+     "in_bus": "st_ei",
+     "out_bus": "x_stm_o",
+     "core": 1,
+     "max_um": 1218.4,
+     "bits": 543,
+     "max_hop_um": 304.6
+    },
+    {
+     "in_bus": "st_ei",
+     "out_bus": "x_stm_p1_o",
+     "core": 1,
+     "max_um": 1011.1,
+     "bits": 544,
+     "max_hop_um": 252.8
+    },
+    {
+     "in_bus": "x_fw_i",
+     "out_bus": "cmd_eo",
+     "core": 0,
+     "max_um": 956.2,
+     "bits": 116,
+     "max_hop_um": 318.7
+    },
+    {
+     "in_bus": "x_fw_i",
+     "out_bus": "dr_eo",
+     "core": 0,
+     "max_um": 874.5,
+     "bits": 423,
+     "max_hop_um": 291.5
+    },
+    {
+     "in_bus": "x_fw_p1_i",
+     "out_bus": "dr_eo",
+     "core": 0,
+     "max_um": 995.4,
+     "bits": 97,
+     "max_hop_um": 331.8
+    },
+    {
+     "in_bus": "x_fw_p1_i",
+     "out_bus": "hr_eo",
+     "core": 0,
+     "max_um": 1008.8,
+     "bits": 442,
+     "max_hop_um": 335.8
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "hr_eo",
+     "core": 1,
+     "max_um": 1010.4,
+     "bits": 11,
+     "max_hop_um": 252.6
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "l9_eo",
+     "core": 1,
+     "max_um": 1027.5,
+     "bits": 514,
+     "max_hop_um": 342.5
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "rd_eo",
+     "core": 0,
+     "max_um": 1026.5,
+     "bits": 4,
+     "max_hop_um": 342.2
+    },
+    {
+     "in_bus": "x_fw_p2_i",
+     "out_bus": "treq_eo",
+     "core": 0,
+     "max_um": 709.0,
+     "bits": 9,
+     "max_hop_um": 236.3
+    },
+    {
+     "in_bus": "x_sc_i",
+     "out_bus": "sc_eo",
+     "core": 0,
+     "max_um": 1026.8,
+     "bits": 48,
+     "max_hop_um": 342.3
+    },
+    {
+     "in_bus": "x_st_a_i",
+     "out_bus": "rr_eo",
+     "core": 0,
+     "max_um": 937.1,
+     "bits": 1,
+     "max_hop_um": 312.4
+    },
+    {
+     "in_bus": "x_st_a_i",
+     "out_bus": "rv_eo",
+     "core": 0,
+     "max_um": 936.0,
+     "bits": 1,
+     "max_hop_um": 312.0
+    },
+    {
+     "in_bus": "x_st_a_i",
+     "out_bus": "rd_eo",
+     "core": 0,
+     "max_um": 1038.9,
+     "bits": 256,
+     "max_hop_um": 346.3
+    },
+    {
+     "in_bus": "x_st_b_i",
+     "out_bus": "rd_eo",
+     "core": 0,
+     "max_um": 1231.7,
+     "bits": 252,
+     "max_hop_um": 307.9
+    },
+    {
+     "in_bus": "x_st_b_i",
+     "out_bus": "re_eo",
+     "core": 0,
+     "max_um": 1134.7,
+     "bits": 1,
+     "max_hop_um": 283.7
+    },
+    {
+     "in_bus": "x_st_b_i",
+     "out_bus": "rl_eo",
+     "core": 0,
+     "max_um": 1132.8,
+     "bits": 1,
+     "max_hop_um": 283.2
+    },
+    {
+     "in_bus": "x_st_b_i",
+     "out_bus": "rr_eo",
+     "core": 0,
+     "max_um": 1131.3,
+     "bits": 2,
+     "max_hop_um": 282.8
+    },
+    {
+     "in_bus": "x_stm_i",
+     "out_bus": "st_eo",
+     "core": 0,
+     "max_um": 801.5,
+     "bits": 544,
+     "max_hop_um": 267.2
+    },
+    {
+     "in_bus": "x_stm_p1_i",
+     "out_bus": "st_eo",
+     "core": 0,
+     "max_um": 936.6,
+     "bits": 544,
+     "max_hop_um": 312.2
+    }
+   ]
+  }
+ },
+ "stations": 111,
+ "lanes": 188,
+ "lane_rows": [
+  {
+   "lane": "sl_W5_fw__x_fw_fe",
+   "part": "sl_W5_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_fe_p1",
+   "part": "sl_W5_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_fe_p2",
+   "part": "sl_W5_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_stm__x_stm_fe",
+   "part": "sl_W5_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_stm__x_stm_fe_p1",
+   "part": "sl_W5_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_sc__x_sc_fe",
+   "part": "sl_W5_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_st_a__x_st_a_fe",
+   "part": "sl_W5_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_st_b__x_st_b_fe",
+   "part": "sl_W5_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_fe",
+   "part": "sl_W4_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_fe_p1",
+   "part": "sl_W4_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_fe_p2",
+   "part": "sl_W4_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_stm__x_stm_fe",
+   "part": "sl_W4_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_stm__x_stm_fe_p1",
+   "part": "sl_W4_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_sc__x_sc_fe",
+   "part": "sl_W4_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_fe",
+   "part": "sl_W3_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_fe_p1",
+   "part": "sl_W3_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_fe_p2",
+   "part": "sl_W3_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_stm__x_stm_fe",
+   "part": "sl_W3_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_stm__x_stm_fe_p1",
+   "part": "sl_W3_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_sc__x_sc_fe",
+   "part": "sl_W3_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_st_a__x_st_a_fe",
+   "part": "sl_W3_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_st_b__x_st_b_fe",
+   "part": "sl_W3_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_fe",
+   "part": "sl_W2_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_fe_p1",
+   "part": "sl_W2_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_fe_p2",
+   "part": "sl_W2_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_stm__x_stm_fe",
+   "part": "sl_W2_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_stm__x_stm_fe_p1",
+   "part": "sl_W2_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_sc__x_sc_fe",
+   "part": "sl_W2_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_fe",
+   "part": "sl_W1_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_fe_p1",
+   "part": "sl_W1_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_fe_p2",
+   "part": "sl_W1_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_stm__x_stm_fe",
+   "part": "sl_W1_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_stm__x_stm_fe_p1",
+   "part": "sl_W1_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_sc__x_sc_fe",
+   "part": "sl_W1_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_st_a__x_st_a_fe",
+   "part": "sl_W1_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_st_b__x_st_b_fe",
+   "part": "sl_W1_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_fe",
+   "part": "sl_W0_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_fe_p1",
+   "part": "sl_W0_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_fe_p2",
+   "part": "sl_W0_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_stm__x_stm_fe",
+   "part": "sl_W0_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_stm__x_stm_fe_p1",
+   "part": "sl_W0_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_sc__x_sc_fe",
+   "part": "sl_W0_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_fe",
+   "part": "sl_E0_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_fe_p1",
+   "part": "sl_E0_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_fe_p2",
+   "part": "sl_E0_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_stm__x_stm_fe",
+   "part": "sl_E0_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_stm__x_stm_fe_p1",
+   "part": "sl_E0_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_sc__x_sc_fe",
+   "part": "sl_E0_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_fe",
+   "part": "sl_E1_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_fe_p1",
+   "part": "sl_E1_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_fe_p2",
+   "part": "sl_E1_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_stm__x_stm_fe",
+   "part": "sl_E1_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_stm__x_stm_fe_p1",
+   "part": "sl_E1_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_sc__x_sc_fe",
+   "part": "sl_E1_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_st_a__x_st_a_fe",
+   "part": "sl_E1_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_st_b__x_st_b_fe",
+   "part": "sl_E1_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_fe",
+   "part": "sl_E2_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_fe_p1",
+   "part": "sl_E2_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_fe_p2",
+   "part": "sl_E2_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_stm__x_stm_fe",
+   "part": "sl_E2_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_stm__x_stm_fe_p1",
+   "part": "sl_E2_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_sc__x_sc_fe",
+   "part": "sl_E2_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_fe",
+   "part": "sl_E3_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_fe_p1",
+   "part": "sl_E3_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_fe_p2",
+   "part": "sl_E3_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_stm__x_stm_fe",
+   "part": "sl_E3_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_stm__x_stm_fe_p1",
+   "part": "sl_E3_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_sc__x_sc_fe",
+   "part": "sl_E3_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_st_a__x_st_a_fe",
+   "part": "sl_E3_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_st_b__x_st_b_fe",
+   "part": "sl_E3_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_fe",
+   "part": "sl_E4_fe",
+   "bus": "x_fw_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_fe_p1",
+   "part": "sl_E4_fe",
+   "bus": "x_fw_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_fe_p2",
+   "part": "sl_E4_fe",
+   "bus": "x_fw_p2_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_stm__x_stm_fe",
+   "part": "sl_E4_fe",
+   "bus": "x_stm_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_stm__x_stm_fe_p1",
+   "part": "sl_E4_fe",
+   "bus": "x_stm_p1_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_sc__x_sc_fe",
+   "part": "sl_E4_fe",
+   "bus": "x_sc_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_st_a__x_st_a_fe",
+   "part": "sl_E5_fe",
+   "bus": "x_st_a_i",
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_st_b__x_st_b_fe",
+   "part": "sl_E5_fe",
+   "bus": "x_st_b_i",
+   "added": 3
+  },
+  {
+   "lane": "sl_E0_fw__ag_eo_ag_ei",
+   "part": "sl_W0_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__ard_eo_ard_ei",
+   "part": "sl_W0_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__arl_eo_arl_ei",
+   "part": "sl_W0_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__arm_eo_arm_ei",
+   "part": "sl_W0_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__art_eo_art_ei",
+   "part": "sl_W0_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__arv_eo_arv_ei",
+   "part": "sl_W0_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__dd_eo_dd_ei",
+   "part": "sl_W0_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__sc_eo_sc_ei",
+   "part": "sl_W0_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_fw__st_eo_st_ei",
+   "part": "sl_W0_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__ag_eo_ag_wi",
+   "part": "sl_E0_fe",
+   "bus": "ag_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__ard_eo_ard_wi",
+   "part": "sl_E0_fe",
+   "bus": "ard_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__arl_eo_arl_wi",
+   "part": "sl_E0_fe",
+   "bus": "arl_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__arm_eo_arm_wi",
+   "part": "sl_E0_fe",
+   "bus": "arm_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__art_eo_art_wi",
+   "part": "sl_E0_fe",
+   "bus": "art_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__arv_eo_arv_wi",
+   "part": "sl_E0_fe",
+   "bus": "arv_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__dd_eo_dd_wi",
+   "part": "sl_E0_fe",
+   "bus": "dd_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__sc_eo_sc_wi",
+   "part": "sl_E0_fe",
+   "bus": "sc_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__st_eo_st_wi",
+   "part": "sl_E0_fe",
+   "bus": "st_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_fw__ag_eo_ag_wi",
+   "part": "sl_E1_fe",
+   "bus": "ag_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__ard_eo_ard_wi",
+   "part": "sl_E1_fe",
+   "bus": "ard_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__arl_eo_arl_wi",
+   "part": "sl_E1_fe",
+   "bus": "arl_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__arm_eo_arm_wi",
+   "part": "sl_E1_fe",
+   "bus": "arm_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__art_eo_art_wi",
+   "part": "sl_E1_fe",
+   "bus": "art_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__arv_eo_arv_wi",
+   "part": "sl_E1_fe",
+   "bus": "arv_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__dd_eo_dd_wi",
+   "part": "sl_E1_fe",
+   "bus": "dd_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__sc_eo_sc_wi",
+   "part": "sl_E1_fe",
+   "bus": "sc_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_fw__st_eo_st_wi",
+   "part": "sl_E1_fe",
+   "bus": "st_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__ag_eo_ag_wi",
+   "part": "sl_E2_fe",
+   "bus": "ag_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__ard_eo_ard_wi",
+   "part": "sl_E2_fe",
+   "bus": "ard_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__arl_eo_arl_wi",
+   "part": "sl_E2_fe",
+   "bus": "arl_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__arm_eo_arm_wi",
+   "part": "sl_E2_fe",
+   "bus": "arm_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__art_eo_art_wi",
+   "part": "sl_E2_fe",
+   "bus": "art_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__arv_eo_arv_wi",
+   "part": "sl_E2_fe",
+   "bus": "arv_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__dd_eo_dd_wi",
+   "part": "sl_E2_fe",
+   "bus": "dd_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__sc_eo_sc_wi",
+   "part": "sl_E2_fe",
+   "bus": "sc_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__st_eo_st_wi",
+   "part": "sl_E2_fe",
+   "bus": "st_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_fw__ag_eo_ag_wi",
+   "part": "sl_E3_fe",
+   "bus": "ag_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__ard_eo_ard_wi",
+   "part": "sl_E3_fe",
+   "bus": "ard_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__arl_eo_arl_wi",
+   "part": "sl_E3_fe",
+   "bus": "arl_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__arm_eo_arm_wi",
+   "part": "sl_E3_fe",
+   "bus": "arm_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__art_eo_art_wi",
+   "part": "sl_E3_fe",
+   "bus": "art_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__arv_eo_arv_wi",
+   "part": "sl_E3_fe",
+   "bus": "arv_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__dd_eo_dd_wi",
+   "part": "sl_E3_fe",
+   "bus": "dd_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__sc_eo_sc_wi",
+   "part": "sl_E3_fe",
+   "bus": "sc_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_fw__st_eo_st_wi",
+   "part": "sl_E3_fe",
+   "bus": "st_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_fw__ag_eo_ag_wi",
+   "part": "sl_E4_fe",
+   "bus": "ag_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__ard_eo_ard_wi",
+   "part": "sl_E4_fe",
+   "bus": "ard_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__arl_eo_arl_wi",
+   "part": "sl_E4_fe",
+   "bus": "arl_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__arm_eo_arm_wi",
+   "part": "sl_E4_fe",
+   "bus": "arm_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__art_eo_art_wi",
+   "part": "sl_E4_fe",
+   "bus": "art_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__arv_eo_arv_wi",
+   "part": "sl_E4_fe",
+   "bus": "arv_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__dd_eo_dd_wi",
+   "part": "sl_E4_fe",
+   "bus": "dd_wi",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__sc_eo_sc_wi",
+   "part": "sl_E4_fe",
+   "bus": "sc_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_fw__st_eo_st_wi",
+   "part": "sl_E4_fe",
+   "bus": "st_wi",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_fw__ag_wo_ag_ei",
+   "part": "sl_W1_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__ard_wo_ard_ei",
+   "part": "sl_W1_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__arl_wo_arl_ei",
+   "part": "sl_W1_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__arm_wo_arm_ei",
+   "part": "sl_W1_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__art_wo_art_ei",
+   "part": "sl_W1_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__arv_wo_arv_ei",
+   "part": "sl_W1_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__dd_wo_dd_ei",
+   "part": "sl_W1_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__sc_wo_sc_ei",
+   "part": "sl_W1_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_fw__st_wo_st_ei",
+   "part": "sl_W1_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_fw__ag_wo_ag_ei",
+   "part": "sl_W2_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__ard_wo_ard_ei",
+   "part": "sl_W2_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__arl_wo_arl_ei",
+   "part": "sl_W2_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__arm_wo_arm_ei",
+   "part": "sl_W2_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__art_wo_art_ei",
+   "part": "sl_W2_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__arv_wo_arv_ei",
+   "part": "sl_W2_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__dd_wo_dd_ei",
+   "part": "sl_W2_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__sc_wo_sc_ei",
+   "part": "sl_W2_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_fw__st_wo_st_ei",
+   "part": "sl_W2_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_fw__ag_wo_ag_ei",
+   "part": "sl_W3_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__ard_wo_ard_ei",
+   "part": "sl_W3_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__arl_wo_arl_ei",
+   "part": "sl_W3_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__arm_wo_arm_ei",
+   "part": "sl_W3_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__art_wo_art_ei",
+   "part": "sl_W3_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__arv_wo_arv_ei",
+   "part": "sl_W3_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__dd_wo_dd_ei",
+   "part": "sl_W3_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__sc_wo_sc_ei",
+   "part": "sl_W3_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_fw__st_wo_st_ei",
+   "part": "sl_W3_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_fw__ag_wo_ag_ei",
+   "part": "sl_W4_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__ard_wo_ard_ei",
+   "part": "sl_W4_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__arl_wo_arl_ei",
+   "part": "sl_W4_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__arm_wo_arm_ei",
+   "part": "sl_W4_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__art_wo_art_ei",
+   "part": "sl_W4_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__arv_wo_arv_ei",
+   "part": "sl_W4_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__dd_wo_dd_ei",
+   "part": "sl_W4_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__sc_wo_sc_ei",
+   "part": "sl_W4_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_fw__st_wo_st_ei",
+   "part": "sl_W4_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_fw__ag_wo_ag_ei",
+   "part": "sl_W5_fe",
+   "bus": "ag_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__ard_wo_ard_ei",
+   "part": "sl_W5_fe",
+   "bus": "ard_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__arl_wo_arl_ei",
+   "part": "sl_W5_fe",
+   "bus": "arl_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__arm_wo_arm_ei",
+   "part": "sl_W5_fe",
+   "bus": "arm_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__art_wo_art_ei",
+   "part": "sl_W5_fe",
+   "bus": "art_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__arv_wo_arv_ei",
+   "part": "sl_W5_fe",
+   "bus": "arv_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__dd_wo_dd_ei",
+   "part": "sl_W5_fe",
+   "bus": "dd_ei",
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__sc_wo_sc_ei",
+   "part": "sl_W5_fe",
+   "bus": "sc_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_fw__st_wo_st_ei",
+   "part": "sl_W5_fe",
+   "bus": "st_ei",
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_fw__flte",
+   "part": "sl_W5_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__flte",
+   "part": "sl_W4_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__flte",
+   "part": "sl_W3_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__flte",
+   "part": "sl_W2_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__flte",
+   "part": "sl_W1_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__flte",
+   "part": "sl_W0_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__flte",
+   "part": "sl_E0_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__flte",
+   "part": "sl_E1_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__flte",
+   "part": "sl_E2_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__flte",
+   "part": "sl_E3_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__flte",
+   "part": "sl_E4_fe",
+   "bus": "flt_e_i",
+   "added": 1
+  }
+ ],
+ "worst_hop_um": 384.6
+}

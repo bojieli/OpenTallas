@@ -135,6 +135,96 @@ proc is_bits {inst bus face W lx ly k n dir tag {offset 0}} {
   }
   if {!$hit} { lappend is_miss $inst }
 }
+# D-QC-FE-REACH 10-26 (plan internal_stations[].bit_route = "chain"): bit b of an in bus with n stations follows ITS
+# OWN L route (normal to the in face first, then along) from its in pin to the face pin register it lands on, traced
+# through the netlist: a zero-logic forwarder, or a leaf interface register (name glob core_glob) that then sits FIRM
+# at its own hop point.  edges = n + 1 (+1 with the register); station k at arclength L (k+1)/edges, the register at
+# L (n+1)/edges, so every planned hop is L / edges (<= the plan reach by the generator's n rule).
+set is_core_done {}
+set is_chain_worst 0.0
+proc is_fwd_ffs {inst} {
+  set out {}; set seen {}; set todo [list $inst]; set cnt 0
+  while {[llength $todo] && $cnt < 400} {
+    set i [lindex $todo 0]; set todo [lrange $todo 1 end]; incr cnt
+    foreach o [ff_sig_iterms $i out] {
+      set n [$o getNet]
+      if {$n eq "NULL" || $n eq ""} continue
+      foreach it [$n getITerms] {
+        if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+        set j [$it getInst]; set jn [$j getName]
+        if {[dict exists $seen $jn]} continue
+        dict set seen $jn 1
+        if {[ff_is_ff $j]} { lappend out $j } else { lappend todo $j }
+      }
+    }
+  }
+  return $out
+}
+proc is_chain {bus W names face core_glob tag} {
+  # names: the bus's station instances in chain order (bind pads u_bin_<bus>_pad<j> first, then u_ist_<bus>_<j>)
+  global ff_blk ff_dbu is_n is_miss is_fh is_core_done is_chain_worst
+  set n [llength $names]
+  set alt [join $names |]
+  set st {}
+  foreach i [$ff_blk getInsts] {
+    set nm [string map {\\\\ {}} [$i getName]]
+    # data flop q[b] (q for W == 1, yosys "q$_DFF_P_"), epoch flop eq (absent when synthesis merged it)
+    if {![regexp "(^|\\[./\\])($alt)\\[./\\](q\\\\\\[(\\[0-9\\]+)\\\\\\]|q\\\\\\$|q\\$|eq\\\\\\$|eq\\$)" $nm -> _ sn f b]} continue
+    if {![ff_is_ff $i]} continue
+    if {[string match eq* $f]} { set b $W } elseif {$b eq ""} { set b 0 }
+    dict set st "[lsearch -exact $names $sn],$b" $i
+  }
+  set lastE ""; set placed 0
+  for {set b 0} {$b <= $W} {incr b} {
+    if {![dict exists $st "[expr {$n-1}],$b"]} { continue }
+    set pin [$ff_blk findBTerm "${bus}\\[$b\\]"]
+    if {$pin eq "NULL"} { lappend is_miss "${bus}\\[$b\\]:nopin"; continue }
+    set bb [$pin getBBox]
+    set px [expr {([$bb xMin] + [$bb xMax]) / 2.0}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2.0}]
+    set core ""; set ends {}
+    foreach f [is_fwd_ffs [dict get $st "[expr {$n-1}],$b"]] {
+      set fn [string map {\\\\ {}} [$f getName]]
+      if {[string match "*u_bout_*" $fn]} { lappend ends $f } elseif {[string match "*${core_glob}*" $fn] && $core eq ""} { set core $f }
+    }
+    if {$core ne ""} {
+      foreach f [is_fwd_ffs $core] { if {[string match "*u_bout_*" [string map {\\\\ {}} [$f getName]]]} { lappend ends $f } }
+    }
+    if {[llength $ends]} {
+      set ex 0.0; set ey 0.0
+      foreach f $ends { lassign [$f getLocation] fx fy; set ex [expr {$ex + $fx}]; set ey [expr {$ey + $fy}] }
+      set E [list [expr {$ex / [llength $ends]}] [expr {$ey / [llength $ends]}]]
+      set lastE [list $E [expr {$core ne ""}]]
+    } elseif {$lastE ne ""} {
+      lassign $lastE E hc
+      if {$hc && $core eq ""} { set core "-" }
+    } else { lappend is_miss "${bus}\\[$b\\]:noend"; continue }
+    lassign $E ex ey
+    if {$face in {E W}} { set pts [list $px $py $ex $py $ex $ey] } else { set pts [list $px $py $px $ey $ex $ey] }
+    set L [expr {abs($px - $ex) + abs($py - $ey)}]
+    set edges [expr {$n + 1 + ($core ne "" ? 1 : 0)}]
+    set h [expr {$L / $edges / $ff_dbu}]
+    if {$h > $is_chain_worst} { set is_chain_worst $h }
+    for {set k 0} {$k < $n} {incr k} {
+      if {![dict exists $st "$k,$b"]} { lappend is_miss "${bus}_${k}\\[$b\\]"; continue }
+      set f [dict get $st "$k,$b"]
+      lassign [ff_point_at $pts [expr {$L * ($k + 1) / $edges}]] x y
+      set got [ff_put_near $f $x $y]
+      if {$got eq ""} { lappend is_miss [$f getName]; continue }
+      puts $is_fh "[$f getName]\\t$tag\\t[expr {[lindex $got 0] / double($ff_dbu)}]\\t[expr {[lindex $got 1] / double($ff_dbu)}]\\t-"
+      incr is_n; incr placed
+    }
+    if {$core ne "" && $core ne "-" && ![dict exists $is_core_done [$core getName]]} {
+      dict set is_core_done [$core getName] 1
+      lassign [ff_point_at $pts [expr {$L * ($n + 1) / $edges}]] x y
+      set got [ff_put_near $core $x $y]
+      if {$got ne ""} {
+        puts $is_fh "[$core getName]\\t${tag}:core\\t[expr {[lindex $got 0] / double($ff_dbu)}]\\t[expr {[lindex $got 1] / double($ff_dbu)}]\\t-"
+        incr is_n
+      } else { lappend is_miss [$core getName] }
+    }
+  }
+  puts "OT_ISTATIONS chain $bus: $placed station flops FIRM, worst planned hop so far [format %.1f $is_chain_worst] um"
+}
 """
 
 
@@ -360,7 +450,12 @@ def main(argv):
                 txt = txt[:m.start()] + line + txt[m.end():]
                 txt = re.sub(r"(\n\s*endmodule\b)", "\n" + "\n".join(decl + body) + r"\1", txt, count=1)
             # out bus: the stations run from the leaf toward the face, regs_um is ordered from_um -> to_um
-        if e.get("bit_route") == "per_bit":
+        if e.get("bit_route") == "chain":
+            # D-QC-FE-REACH 10-26: per-bit sites on each bit's own in-pin -> landing-register route (is_chain)
+            if b["dir"] != "in" or "face" not in b:
+                raise SystemExit(f"kit_istations: {tn} {bus}: bit_route chain needs an in bus with a face")
+            tcl.append(f"is_chain {n} {W} {{{' '.join(names)}}} {b['face']} {{{e.get('core_glob', 'u_core')}.}} ist:{bus}")
+        elif e.get("bit_route") == "per_bit":
             if "leaf_um" not in e or "face" not in b:
                 raise SystemExit(f"kit_istations: {tn} {bus}: bit_route per_bit needs leaf_um and a bus face")
             lx, ly = e["leaf_um"]

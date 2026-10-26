@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.die_plan.qc_infra_first.v1",
+ "deltas": {
+  "D-QC-FE-REACH": {
+   "stations": 111,
+   "lanes": 188,
+   "worst_hop_um": 384.6,
+   "role_stations": {
+    "ag_Xi": 1,
+    "ard_Xi": 1,
+    "arl_Xi": 1,
+    "arm_Xi": 1,
+    "art_Xi": 1,
+    "arv_Xi": 1,
+    "dd_Xi": 1,
+    "flt_e_i": 1,
+    "sc_Xi": 2,
+    "st_Xi": 2,
+    "x_fw_i": 2,
+    "x_fw_p1_i": 2,
+    "x_fw_p2_i": 2,
+    "x_sc_i": 2,
+    "x_st_a_i": 2,
+    "x_st_b_i": 3,
+    "x_stm_i": 2,
+    "x_stm_p1_i": 2
+   },
+   "added_cycles": 294,
+   "types": [
+    "sle_fe_v1",
+    "sle_fe_v2",
+    "sle_fe_v3",
+    "slw_fe_v1",
+    "slw_fe_v2"
+   ]
+  },
+  "D-QC-COLLFTM-CTL": {
+   "types": [
+    "coll_ftm"
+   ],
+   "key": "clock.control_sinks=true",
+   "cycles": 0
+  },
+  "D-QC-IOHOLD40": {
+   "types": [
+    "coll_ftm",
+    "coll_core",
+    "coll_ftc"
+   ],
+   "cycles": 0,
+   "keys": [
+    "coll_ftm.clock.io_hold=sender_min",
+    "coll_core.clock.out_hold_check_ps=40",
+    "coll_ftc.clock.out_hold_check_ps=40"
+   ]
+  },
+  "D-QC-SCROOT": {
+   "new_type": "slw_sc_v1r",
+   "cloned_from": "slw_sc_v1",
+   "partitions": [
+    "sl_W0_sc"
+   ],
+   "cycles": 0,
+   "before": {
+    "root_part": "sl_W0_sc",
+    "root_type": "slw_sc_v1",
+    "est_rel_max": 147,
+    "est_rel": {
+     "sl_W0_sc": 6,
+     "sl_W2_sc": 51,
+     "sl_W4_sc": 85
+    },
+    "root_async_reset": {
+     "slw_sc_v1": "ERROR: async root reset exception requires a unique root partition type",
+     "slw_sc_v2": false,
+     "slw_sc_v3": false
+    }
+   },
+   "after": {
+    "root_part": "sl_W0_sc",
+    "root_type": "slw_sc_v1r",
+    "est_rel_max": 147,
+    "est_rel": {
+     "sl_W0_sc": 6,
+     "sl_W2_sc": 50,
+     "sl_W4_sc": 84
+    },
+    "root_async_reset": {
+     "slw_sc_v1": false,
+     "slw_sc_v1r": true,
+     "slw_sc_v2": false,
+     "slw_sc_v3": false
+    }
+   }
+  },
+  "D-QC-CLKMESH": {
+   "status": "PENDING: apply tools/die_plan/apply_clkmesh_sites.py after the QC regional mesh exists (CLOCK-MESH / INFRA-FIRST step 2)"
+  },
+  "D-QC-CB-STRAPS": {
+   "status": "MISSING: no PATH-QC branch (cbf_q00/cbf_q11/cbn_q11, option B; sidx not yet in parent_id_straps.ID_PORTS)"
+  }
+ }
+}
