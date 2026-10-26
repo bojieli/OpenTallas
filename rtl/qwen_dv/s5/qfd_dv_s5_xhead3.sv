@@ -75,7 +75,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
             lbc = (bc >= 4) ? 2 : (bc >= 2) ? 1 : 0; lbr = (br >= 4) ? 2 : (br >= 2) ? 1 : 0;
             blk = (c / bc) * (2 * NH / br) + dr / br;
             z = 0; p = 0;
-            for (i = 0; i < 2; i = i + 1) begin
+            for (integer i = 0; i < 2; i = i + 1) begin
                 if (i < lbc) begin z = z | (((c % bc) >> i) & 1) << p; p = p + 1; end
                 if (i < lbr) begin z = z | (((dr % br) >> i) & 1) << p; p = p + 1; end
             end
@@ -160,15 +160,15 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
         r_f  <= p_f;
         r_dv <= {NV{p_f[0]}};
         r_dep <= {NV{p_f[1]}};
-        for (k = 0; k < 113; k = k + 1) r_fep[k] <= p_fep[k / 29];
-        for (c = 0; c < 4; c = c + 1) begin
+        for (integer k = 0; k < 113; k = k + 1) r_fep[k] <= p_fep[k / 29];
+        for (integer c = 0; c < 4; c = c + 1) begin
             r_fb[c] <= p_fb; r_fbm1[c] <= p_fb - 1'b1; r_fbp1[c] <= p_fb + 1'b1;
             r_fbnz[c] <= (p_fb != {BW{1'b0}}); r_fbnao[c] <= (p_fb != {BW{1'b1}});
         end
-        for (k = 0; k < NFO; k = k + 1) r_foff[k] <= p_foff[k / 28];
-        for (r = 0; r < NR; r = r + 1)
+        for (integer k = 0; k < NFO; k = k + 1) r_foff[k] <= p_foff[k / 28];
+        for (integer r = 0; r < NR; r = r + 1)
             r_q[r] <= tid_q[16*r +: 16] & ((({{SMAX{1'b0}}, 1'b1}) << (p_sp - $clog2(TG))) - 1'b1);
-        for (r = 0; r <= NR; r = r + 1) r_ks[r] <= p_ks;
+        for (integer r = 0; r <= NR; r = r + 1) r_ks[r] <= p_ks;
     end
     // fill fields (old f_q)
     wire              d_v   = r_f[0];
@@ -205,8 +205,8 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     // ib hold registers (ib_q for the check, ib_c + ib_c2 on the way out), enables from kept go copies
     reg [IBW-1:0] ib_q, ib_c, ib_c2;
     always @(posedge ck) begin
-        for (c = 0; c < 24; c = c + 1)
-            for (i = 0; i < 16; i = i + 1)
+        for (integer c = 0; c < 24; c = c + 1)
+            for (integer i = 0; i < 16; i = i + 1)
                 if (16 * c + i < IBW) begin
                     if (r_g[1 + c]) ib_q[16 * c + i] <= r_ib[16 * c + i];
                     if (gq_c[c]) ib_c[16 * c + i] <= ib_q[16 * c + i];
@@ -220,10 +220,10 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     wire [EVW-1:0] dvec = {d_rnd, d_k, d_sp, d_xks, d_xcs, d_xb};
     reg  [EVW-1:0] ev [0:1];
     always @(posedge ck)
-        for (c = 0; c < 5; c = c + 1)
-            for (e = 0; e < 2; e = e + 1)
+        for (integer c = 0; c < 5; c = c + 1)
+            for (integer e = 0; e < 2; e = e + 1)
                 if (r_dv[c] && (r_dep[c] == e[0]))
-                    for (i = 0; i < 15; i = i + 1)
+                    for (integer i = 0; i < 15; i = i + 1)
                         if (15 * c + i < EVW) ev[e][15 * c + i] <= dvec[15 * c + i];
     // stage A: product of the row's quad and k (old stage B), 4 k - 1 (footprint - 1)
     reg              a_v;
@@ -238,10 +238,10 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
         if (!rr[4]) begin a_v <= 1'b0; a_vc <= 2'b0; end else begin a_v <= r_dv[7]; a_vc <= {2{r_dv[7]}}; end
     always @(posedge ck) begin
         a_ep <= r_dep[7]; a_epc <= {2{r_dep[7]}};
-        for (c = 0; c < 4; c = c + 1) a_xb[c] <= d_xb;
+        for (integer c = 0; c < 4; c = c + 1) a_xb[c] <= d_xb;
         a_fm <= TG * d_k - 1;
         a_k <= d_k[5:0];
-        for (r = 0; r < NR; r = r + 1) begin
+        for (integer r = 0; r < NR; r = r + 1) begin
             q24 = ({{(AW-SMAX-1){1'b0}}, r_q[r]} << 4) + ({{(AW-SMAX-1){1'b0}}, r_q[r]} << 3);
             a_pr[r] <= ({AW{r_ks[r][0]}} & ({{(AW-SMAX-1){1'b0}}, r_q[r]} << 3)) |
                        ({AW{r_ks[r][1]}} & q24) |
@@ -274,14 +274,14 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
         b_ep <= a_ep;
         b_epc <= {{16{a_epc[1]}}, {16{a_epc[0]}}};
         b_epk <= {3{a_epc[1]}};
-        for (r = 0; r < NR; r = r + 1) b_emin[r] <= a_xb[r / 4] + a_pr[r];
+        for (integer r = 0; r < NR; r = r + 1) b_emin[r] <= a_xb[r / 4] + a_pr[r];
         b_pool <= {NR{a_fm >= 64}};
         b_poolm <= (a_fm >= 64);
         b_pf128 <= (a_fm >= 128);
-        for (c = 0; c < 2; c = c + 1) b_fm8[c] <= a_fm[7:0];
+        for (integer c = 0; c < 2; c = c + 1) b_fm8[c] <= a_fm[7:0];
         b_k <= a_k;
         b_k3 <= 8'(3 * a_k);
-        for (c = 0; c < 4; c = c + 1) begin b_k4m1[c] <= 9'(4 * a_k) - 9'd1; b_knz[c] <= (a_k != 6'd0); end
+        for (integer c = 0; c < 4; c = c + 1) begin b_k4m1[c] <= 9'(4 * a_k) - 9'd1; b_knz[c] <= (a_k != 6'd0); end
     end
     // write stage (old end of stage C): W (beat), start, pool fault, pooled-read integrity (old stage D input)
     reg  [BW-1:0]    w_W [0:NR-1];
@@ -289,7 +289,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     always @* begin
         pfault_n = b_pf128;
         pbad_n = 1'b0;
-        for (r = 0; r < NR; r = r + 1) begin
+        for (integer r = 0; r < NR; r = r + 1) begin
 `ifdef OT_S5_XH3_MUT_POOLW
             w_W[r] = b_emin[r][AW-1:6];
 `else
@@ -309,8 +309,8 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     reg  [5:0]       e_k6 [0:1];
     reg  [7:0]       e_k3 [0:1];
     always @(posedge ck) begin
-        for (e = 0; e < 2; e = e + 1)
-            for (r = 0; r < NR; r = r + 1) begin
+        for (integer e = 0; e < 2; e = e + 1)
+            for (integer r = 0; r < NR; r = r + 1) begin
                 if (b_vc[2*r] && b_epc[2*r] == e[0]) e_W[e][r][11:0] <= w_W[r][11:0];
                 if (b_vc[2*r+1] && b_epc[2*r+1] == e[0]) begin
                     e_W[e][r][BW-1:12] <= w_W[r][BW-1:12];
@@ -362,7 +362,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     reg  [5:0] lor, wo_s;
     always @* begin
         ctl = {(NH*18){1'b0}};
-        for (r = 0; r < NR; r = r + 1) begin
+        for (integer r = 0; r < NR; r = r + 1) begin
             // each half compare selected by its own fep copy (the epoch select may be pushed into the operands)
             d0  = (r_fep[7*r]     ? (r_fb[r/4][8:0] == e_W[1][r][8:0]) : (r_fb[r/4][8:0] == e_W[0][r][8:0])) &&
                   (r_fep[7*r + 1] ? (r_fb[r/4][17:9] == e_W[1][r][17:9]) : (r_fb[r/4][17:9] == e_W[0][r][17:9])) && (MUT != 9);
@@ -389,7 +389,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
         else begin lw_v_r <= {2{lwv_d}}; lc_v_r <= {2{r_dv[6]}}; end
     always @(posedge ck) begin
         lw_ep_r <= {2{r_fep[112]}}; lc_ep_r <= {2{r_dep[6]}};
-        for (c = 0; c < 2; c = c + 1) begin
+        for (integer c = 0; c < 2; c = c + 1) begin
             lw_off_r[c] <= r_foff[136]; lw_m_r[c] <= rm_s[6]; lw_d_r[c] <= rd_s[6];
         end
         lw_ctl_r <= ctl;
@@ -453,7 +453,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     wire aff_bad = (d_xks != 1) || (d_xcs != d_k) || !(|r_ks[NR]);
     wire sp_bad  = (d_sp < SMIN) || (d_sp > SMAX);
     reg  [EVW-1:0] evr;
-    always @* for (i = 0; i < EVW; i = i + 1) evr[i] = ev[ep_rd_c[1 + i / 15]][i];
+    always @* for (integer i = 0; i < EVW; i = i + 1) evr[i] = ev[ep_rd_c[1 + i / 15]][i];
     wire [AW-1:0]  e_xb_r  = evr[0 +: AW];
     wire [XCW-1:0] e_xcs_r = evr[AW +: XCW];
     wire [XCW-1:0] e_xks_r = evr[AW + XCW +: XCW];
@@ -537,10 +537,10 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     always @(posedge ck or negedge rr[8])
         if (!rr[8]) RDc <= 8'd0; else RDc <= {8{RD_x}};
     always @(posedge ck)
-        for (c = 0; c < 8; c = c + 1) PHc[c] <= {PH_x == 3'd3, PH_x == 3'd2, PH_x == 3'd1, PH_x == 3'd0};
-    always @* for (r = 0; r < 2 * NR; r = r + 1) RSEL[r] = RDc[r / 4] && PHc[r / 4][row_edge(r / 2)];
+        for (integer c = 0; c < 8; c = c + 1) PHc[c] <= {PH_x == 3'd3, PH_x == 3'd2, PH_x == 3'd1, PH_x == 3'd0};
+    always @* for (integer r = 0; r < 2 * NR; r = r + 1) RSEL[r] = RDc[r / 4] && PHc[r / 4][row_edge(r / 2)];
     always @(posedge ck) begin
-        for (c = 0; c < 4; c = c + 1) begin
+        for (integer c = 0; c < 4; c = c + 1) begin
             IKc[0][c] <= {2'b00, (c < 2) ? KOF_x0 : KOF_x1};
             IKc[1][c] <= {2'b00, k6_x} + {2'b00, (c < 2) ? KOF_x0 : KOF_x1};
             IKc[2][c] <= {1'b0, k6_x, 1'b0} + {2'b00, (c < 2) ? KOF_x0 : KOF_x1};
@@ -555,13 +555,13 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     reg  [5:0]       lo_r;
     always @* begin
         rp = {(NH*28){1'b0}}; rv = {NH{1'b0}}; rt = {NH{1'b0}};
-        for (r = 0; r < NR; r = r + 1) begin
+        for (integer r = 0; r < NR; r = r + 1) begin
             lo_r = REPc[r] ? e_lo[1][r] : e_lo[0][r];
             if (RSEL[2*r]) begin
                 rv[lf(r)] = 1'b1;
                 if (tb(r) != 0) rt[lf(r)] = 1'b1;
             end
-            for (i = 0; i < 4; i = i + 1) begin
+            for (integer i = 0; i < 4; i = i + 1) begin
                 ab = {2'b00, lo_r} + IKc[i][r / 4];
                 if (RSEL[2*r + i/2])
                     rp[28*lf(r) + 7*i +: 7] = POOLc[r / 2] ? {(r < NH) ? !ab[6] : ab[6], ab[5:0]} : {1'b1, ab[5:0]};
@@ -583,11 +583,11 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     reg          vdl [1:QD-1];
     reg          pdl [1:QD-1];
     always @(posedge ck or negedge rr[9])
-        if (!rr[9]) for (k = 1; k < QD; k = k + 1) vdl[k] <= 1'b0;
-        else begin vdl[1] <= RD && (PH < NE); for (k = 2; k < QD; k = k + 1) vdl[k] <= vdl[k-1]; end
+        if (!rr[9]) for (integer k = 1; k < QD; k = k + 1) vdl[k] <= 1'b0;
+        else begin vdl[1] <= RD && (PH < NE); for (integer k = 2; k < QD; k = k + 1) vdl[k] <= vdl[k-1]; end
     always @(posedge ck) begin
         phl[1] <= PH; pdl[1] <= POOLc[8];
-        for (k = 2; k < QD; k = k + 1) begin phl[k] <= phl[k-1]; pdl[k] <= pdl[k-1]; end
+        for (integer k = 2; k < QD; k = k + 1) begin phl[k] <= phl[k-1]; pdl[k] <= pdl[k-1]; end
     end
     wire [3:0] pho_x = {phl[QD-1] == 3'd3, phl[QD-1] == 3'd2, phl[QD-1] == 3'd1, phl[QD-1] == 3'd0};
     (* keep = "true" *) reg [3:0]  PHO [0:16];               // [0..15] 16-bit source chunks, [16] tags / miss
@@ -596,7 +596,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     always @(posedge ck or negedge rr[10])
         if (!rr[10]) VDc <= 17'd0; else VDc <= {17{vdl[QD-1]}};
     always @(posedge ck) begin
-        for (k = 0; k <= 16; k = k + 1) PHO[k] <= pho_x;
+        for (integer k = 0; k <= 16; k = k + 1) PHO[k] <= pho_x;
         PDc <= {16{pdl[QD-1]}};
     end
     always @(posedge ck) lqp <= lq;
@@ -613,7 +613,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
         for (src = 0; src < 4; src = src + 1) begin
             qs4[src] = 64'd0;
             for (bt = 0; bt < 64; bt = bt + 1)
-                for (e = 0; e < NE; e = e + 1)
+                for (integer e = 0; e < NE; e = e + 1)
                     if (PHO[4*src + bt/16][e])
                         qs4[src][bt] = qs4[src][bt] | lqp[64*lf((src == 0) ? e : (src == 1) ? e + NE :
                                                               (src == 2) ? NH + NH - 1 - e : NH + NE - 1 - e) + bt];
@@ -632,7 +632,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
             end
         end
         miss = 1'b0; na = 3'd0; nb = 3'd0; sa = 3'd0; sb = 3'd0;
-        for (e = 0; e < NE; e = e + 1)
+        for (integer e = 0; e < NE; e = e + 1)
             if (PHO[16][e]) begin
                 miss = !lqvp[lf(e)] || !lqvp[lf(e + NE)] || !lqvp[lf(NH + NH - 1 - e)] || !lqvp[lf(NH + NE - 1 - e)];
                 na = e; nb = e + NE; sa = NH - 1 - e; sb = NE - 1 - e;
