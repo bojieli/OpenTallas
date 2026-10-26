@@ -8,6 +8,7 @@
            "tools/die_plan/schema.py", "tools/die_plan/taps.py", "tools/die_plan/pin_audit.py",
            "physical/common_flow/*", "physical/die_plan/hbm_arch_cores/*", "physical/die_plan/qwen_kvsys/cores/harden/*",
            "tools/flow_canary/*"],
+ "die_plans": {"s81": ["s81"], "s81_head": ["s81_head"], "qwen_compute": ["qwen_compute"], "qwen_kvsys": ["qwen_kvsys"], "qwen_kvsys_core": ["qwen_kvsys"], "hbm": ["hbm", "hbm_arch", "hbm_arch_cores"], "hbm_sram": ["hbm", "hbm_arch", "hbm_arch_cores"]},
  "canaries": [
   {"die": "s81", "item": "slice_station__t12", "flow": "type", "top": "s81p_slice_station__t12", "mem_gb": 40, "threads": 8,
    "why": "signed-off type (B_1024 kitsB, +18.24/+8.62); ft stations = keep-reg relays + rst_o reset relays; adopt178 plan on main. No SRAM: S81 type macros are hard cores (119/176 types).",
