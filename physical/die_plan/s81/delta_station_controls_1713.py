@@ -31,7 +31,7 @@ def census(T):
     return sorted([x,y,n] for (x,y),n in cnt.items()),dict(Counter(r for _,_,r in entries))
 
 
-def apply(raw,types=STATIONS,rounds=16,require_start=True):
+def apply(raw,types=STATIONS,rounds=16,require_start=True,waveform=None):
     # Simultaneous group rounds matter: reset contract depth can span types.
     # Work on a copy so failure never leaves a partially updated plan.
     trial=copy.deepcopy(raw);types=tuple(types)
@@ -53,6 +53,8 @@ def apply(raw,types=STATIONS,rounds=16,require_start=True):
             report={tn:dict(sites=len(sites),flops=sum(r[2] for r in sites),roles=roles,rounds=k+1,fixed_point=True,initial_contract=base_contract[tn],final_contract=contracts[tn],
                                    release_delta=contracts[tn]["release_clocks"]-base_contract[tn]["release_clocks"])
                     for tn,(sites,roles) in inventories.items()}
+            if waveform is not None:
+                waveform.update(RT.wf_plan(P))
             raw.clear();raw.update(trial)
             return report
         if key in seen:raise ValueError("group control/tap census oscillates")
