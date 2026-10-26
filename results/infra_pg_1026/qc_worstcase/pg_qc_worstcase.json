@@ -2978,7 +2978,7 @@
  "phy_m7_strap_pair_pitch_um": 0.768,
  "psm": {
   "core_centre": {
-   "run": "../../results/infra_pg_1026/qc_worstcase/core_wc",
+   "run": "results/infra_pg_1026/qc_worstcase/core_wc",
    "net": "VDD",
    "power_w": 0.567,
    "worst_mv": 33.5,
@@ -2988,7 +2988,7 @@
    "verdict": "PASS"
   },
   "io_ucie_kv_u_ucie_kv:VDD": {
-   "run": "../../results/infra_pg_1026/qc_worstcase/ucie_m7",
+   "run": "results/infra_pg_1026/qc_worstcase/ucie_m567",
    "net": "VDD",
    "power_w": 1.6,
    "worst_mv": 24.8,
@@ -2998,16 +2998,16 @@
    "verdict": "PASS"
   },
   "io_ucie_kv_u_ucie_kv:VDDPHY": {
-   "run": "../../results/infra_pg_1026/qc_worstcase/ucie_m7",
+   "run": "results/infra_pg_1026/qc_worstcase/ucie_m567",
    "net": "VDDPHY",
    "power_w": 2.46,
-   "worst_mv": 45.2,
-   "avg_mv": 20.5,
+   "worst_mv": 32.1,
+   "avg_mv": 15.2,
    "budget_mv": 34.99999999999999,
    "continuity": "PASS",
-   "verdict": "FAIL"
+   "verdict": "PASS"
   }
  },
- "ir_verdict": "FAIL",
+ "ir_verdict": "PASS",
  "ir_scope": "native PDNSim coupons (core_centre 864 um, UCIe window) at WORST_CASE power; VDD/VDDPHY nets; 3 SerDes + coll_ucie windows not run (coll_ucie = same PHY/template)"
 }
