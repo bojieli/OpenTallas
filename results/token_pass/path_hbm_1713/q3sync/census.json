@@ -1,0 +1,1684 @@
+{
+ "status": "PASS_GENERATED",
+ "generated": "Sun Oct 25 18:52:24 PDT 2026",
+ "tool": "tools/hbm_b2/q3sync/q3_sync_profile.py",
+ "source_commit": "265fd232aa606c4632eb062af81a8e023b7ad7e5",
+ "inputs_clean_at_commit": true,
+ "helper_list": "tools/hbm_b2/q3sync/q3b.files",
+ "suffix": "__q3sync",
+ "rule": "each `always @(posedge C or|, negedge R)` (or posedge R active-high, reset proven by the body's first if) -> `@(posedge C)`; body byte-unchanged; no relay/synchroniser inserted; legacy RTL unchanged; macros are leaves",
+ "count_note": "*_static_paths = instance-weighted by static instantiation paths; a site inside a generate loop counts once (not elaborated); *_source = per module definition",
+ "modules_in_closure": 32,
+ "totals_per_core": {
+  "body": {
+   "top": "ot_hfd_coll_q3_body_core__q3sync",
+   "legacy_top": "ot_hfd_coll_q3_body_core",
+   "source": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_body_core.sv",
+   "modules_in_closure": 2,
+   "converted_blocks_source": 359,
+   "converted_blocks_static_paths": 359,
+   "clock_only_blocks_static_paths": 742,
+   "macro_instances_static_paths": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 6,
+    "ot_sram_1rw_256x64_m4_r2c2": 5
+   },
+   "unclassified": 0,
+   "distinct_reset_nets": 53,
+   "clocks": {
+    "top_clock_ports": [
+     "clk_control",
+     "clk_issue",
+     "clk_program",
+     "clk_qslots",
+     "clk_reduce",
+     "clk_upipe"
+    ],
+    "internal_clock_nets": [],
+    "unresolved_traces": [],
+    "local_clock_names": 49,
+    "converted_reset_sources_top_ports": [
+     "rst_n"
+    ],
+    "converted_reset_sources_internal": [
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[0]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[10]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[11]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[12]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[13]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[14]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[15]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[16]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[17]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[18]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[19]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[1]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[20]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[21]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[22]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[23]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[24]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[25]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[26]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[27]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[28]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[29]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[2]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[30]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[31]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[32]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[33]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[34]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[35]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[36]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[37]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[38]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[39]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[3]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[40]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[41]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[42]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[43]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[44]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[45]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[46]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[47]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[48]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[4]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[52]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[53]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[5]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[6]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[7]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_iss256.u_issuer.rcp[9]",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_q3.genblk1.n_u_control_r.u_control.u.rst_l",
+     "ot_hfd_coll_q3_body_core_x:\\u_body.g_q3.n_u_fj.u_fj.u.rst_q"
+    ],
+    "converted_reset_sources_internal_count": 52
+   }
+  },
+  "edge": {
+   "top": "ot_hfd_coll_q3_edge_core__q3sync",
+   "legacy_top": "ot_hfd_coll_q3_edge_core",
+   "source": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_edge_core.sv",
+   "modules_in_closure": 11,
+   "converted_blocks_source": 9,
+   "converted_blocks_static_paths": 17,
+   "clock_only_blocks_static_paths": 21,
+   "macro_instances_static_paths": {
+    "ot_sram_1r1w_64x512_m1_r2c2": 3
+   },
+   "unclassified": 0,
+   "distinct_reset_nets": 7,
+   "clocks": {
+    "top_clock_ports": [
+     "arg_clk",
+     "link0_ck",
+     "link1_ck",
+     "link2_ck"
+    ],
+    "internal_clock_nets": [],
+    "unresolved_traces": [],
+    "local_clock_names": 8,
+    "converted_reset_sources_top_ports": [
+     "arg_rst_n"
+    ],
+    "converted_reset_sources_internal": [
+     "ot_hgi_coll_argmax_m_tp192_pr:rst_l"
+    ],
+    "converted_reset_sources_internal_count": 1
+   }
+  },
+  "vm": {
+   "top": "ot_hfd_coll_q3_vm_core__q3sync",
+   "legacy_top": "ot_hfd_coll_q3_vm_core",
+   "source": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_vm_core.sv",
+   "modules_in_closure": 5,
+   "converted_blocks_source": 5,
+   "converted_blocks_static_paths": 5,
+   "clock_only_blocks_static_paths": 7,
+   "macro_instances_static_paths": {},
+   "unclassified": 0,
+   "distinct_reset_nets": 2,
+   "clocks": {
+    "top_clock_ports": [
+     "vmasm_clk",
+     "writer_clk_bank0",
+     "writer_clk_bank1",
+     "writer_clk_bank2",
+     "writer_clk_bank3",
+     "writer_clk_bank4",
+     "writer_clk_bank5",
+     "writer_clk_bank6",
+     "writer_clk_bank7",
+     "writer_clk_body",
+     "writer_clk_meta",
+     "writer_clk_rgx_ctrl",
+     "writer_clk_rgx_data0",
+     "writer_clk_rgx_data1",
+     "writer_clk_rgx_data2",
+     "writer_clk_rgx_data3",
+     "writer_clk_tkw"
+    ],
+    "internal_clock_nets": [],
+    "unresolved_traces": [],
+    "local_clock_names": 7,
+    "converted_reset_sources_top_ports": [
+     "writer_rst_n"
+    ],
+    "converted_reset_sources_internal": [
+     "ot_hgi_coll_static_vmwrite_roots_v6:rst_q"
+    ],
+    "converted_reset_sources_internal_count": 1
+   }
+  },
+  "reduce": {
+   "top": "ot_hfd_coll_q2_reduce_core__q3sync",
+   "legacy_top": "ot_hfd_coll_q2_reduce_core",
+   "source": "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv",
+   "modules_in_closure": 9,
+   "converted_blocks_source": 10,
+   "converted_blocks_static_paths": 16,
+   "clock_only_blocks_static_paths": 11,
+   "macro_instances_static_paths": {},
+   "unclassified": 0,
+   "distinct_reset_nets": 5,
+   "clocks": {
+    "top_clock_ports": [
+     "reduce_clk_add",
+     "reduce_clk_control",
+     "reduce_clk_state"
+    ],
+    "internal_clock_nets": [],
+    "unresolved_traces": [],
+    "local_clock_names": 6,
+    "converted_reset_sources_top_ports": [
+     "reduce_rst_n"
+    ],
+    "converted_reset_sources_internal": [],
+    "converted_reset_sources_internal_count": 0
+   }
+  },
+  "ring_ag": {
+   "top": "ot_hfd_coll_q2_ring_ag_core__q3sync",
+   "legacy_top": "ot_hfd_coll_q2_ring_ag_core",
+   "source": "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_ring_ag_core.sv",
+   "modules_in_closure": 10,
+   "converted_blocks_source": 8,
+   "converted_blocks_static_paths": 14,
+   "clock_only_blocks_static_paths": 11,
+   "macro_instances_static_paths": {},
+   "unclassified": 0,
+   "distinct_reset_nets": 4,
+   "clocks": {
+    "top_clock_ports": [
+     "ring_clk",
+     "ring_clk_add",
+     "ring_clk_state"
+    ],
+    "internal_clock_nets": [],
+    "unresolved_traces": [],
+    "local_clock_names": 6,
+    "converted_reset_sources_top_ports": [
+     "ring_rst_n"
+    ],
+    "converted_reset_sources_internal": [],
+    "converted_reset_sources_internal_count": 0
+   }
+  }
+ },
+ "unclassified_total": 0,
+ "unclassified": [],
+ "unresolved_instantiations": [],
+ "modules": {
+  "ot_hfd_coll_q3_body_core": {
+   "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_body_core.sv",
+   "emitted_as": "ot_hfd_coll_q3_body_core__q3sync",
+   "cores": {
+    "body": 1
+   },
+   "instantiation_sites_in_closure": 0,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hfd_coll_q3_body_core_x__q3sync"
+   ]
+  },
+  "ot_hfd_coll_q3_body_core_x": {
+   "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_body_core.sv",
+   "emitted_as": "ot_hfd_coll_q3_body_core_x__q3sync",
+   "cores": {
+    "body": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk_control",
+     "reset": "\\u_body.g_q3.genblk1.n_u_control_r.u_control.u.rst_l",
+     "polarity": "active_low",
+     "count": 129
+    },
+    {
+     "clock": "clk_program",
+     "reset": "\\u_body.g_q3.n_u_fj.u_fj.u.rst_q",
+     "polarity": "active_low",
+     "count": 38
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[0]",
+     "polarity": "active_low",
+     "count": 21
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[4]",
+     "polarity": "active_low",
+     "count": 5
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[1]",
+     "polarity": "active_low",
+     "count": 5
+    },
+    {
+     "clock": "clk_qslots[11]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 5
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[5]",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[21]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[22]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[23]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[24]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[25]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[26]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[27]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[28]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[12]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[13]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[14]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[15]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[16]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[17]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[18]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[19]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_qslots[20]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[3]",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[0]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[10]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[1]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[2]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[3]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[4]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[5]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[6]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[7]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[8]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_qslots[9]",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 3
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[6]",
+     "polarity": "active_low",
+     "count": 2
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[48]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[47]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[46]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[45]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[44]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[43]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[42]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[41]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[40]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[39]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[38]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[37]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[36]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[35]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[34]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[33]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[32]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[31]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[30]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[29]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[28]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[27]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[26]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[25]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[24]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[23]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[22]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[21]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[20]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[19]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[18]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[17]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[16]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[15]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[14]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[13]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[12]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[11]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[10]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[9]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[53]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[52]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[7]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "\\u_body.g_iss256.u_issuer.rcp[2]",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_issue",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_control",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    }
+   ],
+   "converted_total": 359,
+   "clock_only_blocks": 742,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_sram_1r1w_256x256_m2_r2c2",
+    "ot_sram_1rw_256x64_m4_r2c2"
+   ]
+  },
+  "ot_hfd_coll_q3_edge_core": {
+   "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_edge_core.sv",
+   "emitted_as": "ot_hfd_coll_q3_edge_core__q3sync",
+   "cores": {
+    "edge": 1
+   },
+   "instantiation_sites_in_closure": 0,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_argmax_m_tp192_pr__q3sync",
+    "ot_hgi_coll_link_e_pr__q3sync"
+   ]
+  },
+  "ot_hgi_coll_link_e_pr": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+   "emitted_as": "ot_hgi_coll_link_e_pr__q3sync",
+   "cores": {
+    "edge": 3
+   },
+   "instantiation_sites_in_closure": 3,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_static_capture_ctl_pr__q3sync",
+    "ot_hgi_coll_static_pinreg_store__q3sync"
+   ]
+  },
+  "ot_hgi_coll_static_capture_ctl_pr": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+   "emitted_as": "ot_hgi_coll_static_capture_ctl_pr__q3sync",
+   "cores": {
+    "edge": 3
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    }
+   ],
+   "converted_total": 1,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_static_pinreg_ctl__q3sync"
+   ]
+  },
+  "ot_hgi_coll_static_pinreg_ctl": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+   "emitted_as": "ot_hgi_coll_static_pinreg_ctl__q3sync",
+   "cores": {
+    "edge": 3
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 2
+    }
+   ],
+   "converted_total": 2,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_static_seq_ctl__q3sync"
+   ]
+  },
+  "ot_hgi_coll_static_seq_ctl": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+   "emitted_as": "ot_hgi_coll_static_seq_ctl__q3sync",
+   "cores": {
+    "edge": 3
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    }
+   ],
+   "converted_total": 1,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_qwen_crc_parallel__q3sync"
+   ]
+  },
+  "ot_qwen_crc_parallel": {
+   "file": "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+   "emitted_as": "ot_qwen_crc_parallel__q3sync",
+   "cores": {
+    "edge": 6
+   },
+   "instantiation_sites_in_closure": 2,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": []
+  },
+  "ot_hgi_coll_static_pinreg_store": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+   "emitted_as": "ot_hgi_coll_static_pinreg_store__q3sync",
+   "cores": {
+    "edge": 3
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_qkvd_llr_replay_sram_leaf__q3sync"
+   ]
+  },
+  "ot_qkvd_llr_replay_sram_leaf": {
+   "file": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "emitted_as": "ot_qkvd_llr_replay_sram_leaf__q3sync",
+   "cores": {
+    "edge": 3
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 2,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_sram_1r1w_64x512_m1_r2c2"
+   ]
+  },
+  "ot_hgi_coll_argmax_m_tp192_pr": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+   "emitted_as": "ot_hgi_coll_argmax_m_tp192_pr__q3sync",
+   "cores": {
+    "edge": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk",
+     "reset": "rst_l",
+     "polarity": "active_low",
+     "count": 2
+    },
+    {
+     "clock": "clk",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    }
+   ],
+   "converted_total": 3,
+   "clock_only_blocks": 2,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_argmax_static__q3sync"
+   ]
+  },
+  "ot_hgi_coll_argmax_static": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+   "emitted_as": "ot_hgi_coll_argmax_static__q3sync",
+   "cores": {
+    "edge": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    }
+   ],
+   "converted_total": 1,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_amerge__q3sync"
+   ]
+  },
+  "ot_hgi_coll_amerge": {
+   "file": "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+   "emitted_as": "ot_hgi_coll_amerge__q3sync",
+   "cores": {
+    "edge": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    }
+   ],
+   "converted_total": 1,
+   "clock_only_blocks": 0,
+   "comb_blocks": 1,
+   "unclassified_events": [],
+   "children": []
+  },
+  "ot_hfd_coll_q3_vm_core": {
+   "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_vm_core.sv",
+   "emitted_as": "ot_hfd_coll_q3_vm_core__q3sync",
+   "cores": {
+    "vm": 1
+   },
+   "instantiation_sites_in_closure": 0,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_static_vmwrite_roots_v6_physical__q3sync",
+    "ot_hgi_coll_vmasm_sliced_v7__q3sync"
+   ]
+  },
+  "ot_hgi_coll_static_vmwrite_roots_v6_physical": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+   "emitted_as": "ot_hgi_coll_static_vmwrite_roots_v6_physical__q3sync",
+   "cores": {
+    "vm": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_static_vmwrite_roots_v6__q3sync"
+   ]
+  },
+  "ot_hgi_coll_static_vmwrite_roots_v6": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+   "emitted_as": "ot_hgi_coll_static_vmwrite_roots_v6__q3sync",
+   "cores": {
+    "vm": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk_rgx_ctrl",
+     "reset": "rst_q",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_tkw",
+     "reset": "rst_q",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_meta",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_meta",
+     "reset": "rst_q",
+     "polarity": "active_low",
+     "count": 1
+    },
+    {
+     "clock": "clk_body",
+     "reset": "rst_q",
+     "polarity": "active_low",
+     "count": 1
+    }
+   ],
+   "converted_total": 5,
+   "clock_only_blocks": 6,
+   "comb_blocks": 1,
+   "unclassified_events": [],
+   "children": []
+  },
+  "ot_hgi_coll_vmasm_sliced_v7": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+   "emitted_as": "ot_hgi_coll_vmasm_sliced_v7__q3sync",
+   "cores": {
+    "vm": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_vmasm_slice16__q3sync"
+   ]
+  },
+  "ot_hgi_coll_vmasm_slice16": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+   "emitted_as": "ot_hgi_coll_vmasm_slice16__q3sync",
+   "cores": {
+    "vm": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": []
+  },
+  "ot_hfd_coll_q2_reduce_core": {
+   "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv",
+   "emitted_as": "ot_hfd_coll_q2_reduce_core__q3sync",
+   "cores": {
+    "reduce": 1
+   },
+   "instantiation_sites_in_closure": 0,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_reduce_static_pr__q3sync"
+   ]
+  },
+  "ot_hgi_coll_reduce_static_pr": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static_pr.sv",
+   "emitted_as": "ot_hgi_coll_reduce_static_pr__q3sync",
+   "cores": {
+    "reduce": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk_control",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 2
+    }
+   ],
+   "converted_total": 2,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_reduce_static__q3sync"
+   ]
+  },
+  "ot_hgi_coll_reduce_static": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+   "emitted_as": "ot_hgi_coll_reduce_static__q3sync",
+   "cores": {
+    "reduce": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk_control",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    }
+   ],
+   "converted_total": 1,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_pring_static_add_lane__q3sync",
+    "ot_hgi_coll_reduce_static_state_lane__q3sync"
+   ]
+  },
+  "ot_hgi_coll_pring_static_add_lane": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "emitted_as": "ot_hgi_coll_pring_static_add_lane__q3sync",
+   "cores": {
+    "reduce": 1,
+    "ring_ag": 1
+   },
+   "instantiation_sites_in_closure": 2,
+   "converted_blocks": [
+    {
+     "clock": "clk",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    }
+   ],
+   "converted_total": 1,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hdc_fp32_add_lat__q3sync"
+   ]
+  },
+  "ot_hdc_fp32_add_lat": {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "emitted_as": "ot_hdc_fp32_add_lat__q3sync",
+   "cores": {
+    "reduce": 1,
+    "ring_ag": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 4
+    }
+   ],
+   "converted_total": 4,
+   "clock_only_blocks": 3,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hdc_ksadd_k__q3sync",
+    "ot_hdc_lzc32__q3sync",
+    "ot_hdc_w11_cut__q3sync"
+   ]
+  },
+  "ot_hdc_w11_cut": {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "emitted_as": "ot_hdc_w11_cut__q3sync",
+   "cores": {
+    "reduce": 4,
+    "ring_ag": 4
+   },
+   "instantiation_sites_in_closure": 4,
+   "converted_blocks": [
+    {
+     "clock": "clk",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 2
+    }
+   ],
+   "converted_total": 2,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": []
+  },
+  "ot_hdc_ksadd_k": {
+   "file": "rtl/hdc/ot_hdc_prefix.sv",
+   "emitted_as": "ot_hdc_ksadd_k__q3sync",
+   "cores": {
+    "reduce": 8,
+    "ring_ag": 8
+   },
+   "instantiation_sites_in_closure": 8,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": []
+  },
+  "ot_hdc_lzc32": {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "emitted_as": "ot_hdc_lzc32__q3sync",
+   "cores": {
+    "reduce": 1,
+    "ring_ag": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 1,
+   "unclassified_events": [],
+   "children": []
+  },
+  "ot_hgi_coll_reduce_static_state_lane": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+   "emitted_as": "ot_hgi_coll_reduce_static_state_lane__q3sync",
+   "cores": {
+    "reduce": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": []
+  },
+  "ot_hfd_coll_q2_ring_ag_core": {
+   "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_ring_ag_core.sv",
+   "emitted_as": "ot_hfd_coll_q2_ring_ag_core__q3sync",
+   "cores": {
+    "ring_ag": 1
+   },
+   "instantiation_sites_in_closure": 0,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_ring_ag__q3sync"
+   ]
+  },
+  "ot_hgi_coll_ring_ag": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "emitted_as": "ot_hgi_coll_ring_ag__q3sync",
+   "cores": {
+    "ring_ag": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 0,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_pring_static_add_lane__q3sync",
+    "ot_hgi_coll_pring_static_state_capture_lane__q3sync",
+    "ot_hgi_coll_ring_ag_ctl__q3sync"
+   ]
+  },
+  "ot_hgi_coll_pring_static_state_capture_lane": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "emitted_as": "ot_hgi_coll_pring_static_state_capture_lane__q3sync",
+   "cores": {
+    "ring_ag": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": [
+    "ot_hgi_coll_pring_static_state_lane__q3sync"
+   ]
+  },
+  "ot_hgi_coll_pring_static_state_lane": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "emitted_as": "ot_hgi_coll_pring_static_state_lane__q3sync",
+   "cores": {
+    "ring_ag": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [],
+   "converted_total": 0,
+   "clock_only_blocks": 1,
+   "comb_blocks": 0,
+   "unclassified_events": [],
+   "children": []
+  },
+  "ot_hgi_coll_ring_ag_ctl": {
+   "file": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "emitted_as": "ot_hgi_coll_ring_ag_ctl__q3sync",
+   "cores": {
+    "ring_ag": 1
+   },
+   "instantiation_sites_in_closure": 1,
+   "converted_blocks": [
+    {
+     "clock": "clk",
+     "reset": "rst_n",
+     "polarity": "active_low",
+     "count": 1
+    }
+   ],
+   "converted_total": 1,
+   "clock_only_blocks": 1,
+   "comb_blocks": 1,
+   "unclassified_events": [],
+   "children": []
+  }
+ },
+ "emitted": [
+  {
+   "source": "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_ring_ag_core.sv",
+   "emitted": "ot_hfd_coll_q2_ring_ag_core__q3sync.sv",
+   "modules": [
+    "ot_hfd_coll_q2_ring_ag_core"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv",
+   "emitted": "ot_hfd_coll_q2_reduce_core__q3sync.sv",
+   "modules": [
+    "ot_hfd_coll_q2_reduce_core"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_vm_core.sv",
+   "emitted": "ot_hfd_coll_q3_vm_core__q3sync.sv",
+   "modules": [
+    "ot_hfd_coll_q3_vm_core"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_edge_core.sv",
+   "emitted": "ot_hfd_coll_q3_edge_core__q3sync.sv",
+   "modules": [
+    "ot_hfd_coll_q3_edge_core"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_body_core.sv",
+   "emitted": "ot_hfd_coll_q3_body_core__q3sync.sv",
+   "modules": [
+    "ot_hfd_coll_q3_body_core_x",
+    "ot_hfd_coll_q3_body_core"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+   "emitted": "ot_hgi_coll_slice_v7__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_vmasm_slice16",
+    "ot_hgi_coll_vmasm_sliced_v7"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+   "emitted": "ot_hgi_coll_amerge__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_amerge"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+   "emitted": "ot_hgi_coll_argmax_static__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_argmax_static"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+   "emitted": "ot_hgi_coll_reduce_static__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_reduce_static",
+    "ot_hgi_coll_reduce_static_state_lane"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static_pr.sv",
+   "emitted": "ot_hgi_coll_reduce_static_pr__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_reduce_static_pr"
+   ]
+  },
+  {
+   "source": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "emitted": "ot_qkvd_d2d_llr__q3sync.sv",
+   "modules": [
+    "ot_qkvd_llr_replay_sram_leaf"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+   "emitted": "ot_hgi_coll_static_pinreg_store__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_static_pinreg_store"
+   ]
+  },
+  {
+   "source": "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+   "emitted": "ot_qwen_crc_parallel__q3sync.sv",
+   "modules": [
+    "ot_qwen_crc_parallel"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+   "emitted": "ot_hgi_coll_static_seq_ctl__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_static_seq_ctl"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+   "emitted": "ot_hgi_coll_static_pinreg_ctl__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_static_pinreg_ctl"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+   "emitted": "ot_hgi_coll_static_vmwrite_roots_v6__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_static_vmwrite_roots_v6"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+   "emitted": "ot_hgi_coll_static_vmwrite_roots_v6_physical__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_static_vmwrite_roots_v6_physical"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "emitted": "ot_hgi_coll_ring_ag__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_ring_ag_ctl",
+    "ot_hgi_coll_ring_ag"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "emitted": "ot_hgi_coll_pring_static__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_pring_static_state_lane",
+    "ot_hgi_coll_pring_static_add_lane"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "emitted": "ot_hgi_coll_pring_static_state_capture__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_pring_static_state_capture_lane"
+   ]
+  },
+  {
+   "source": "rtl/hdc/ot_hdc_fastfp.sv",
+   "emitted": "ot_hdc_fastfp__q3sync.sv",
+   "modules": [
+    "ot_hdc_lzc32"
+   ]
+  },
+  {
+   "source": "rtl/hdc/ot_hdc_prefix.sv",
+   "emitted": "ot_hdc_prefix__q3sync.sv",
+   "modules": [
+    "ot_hdc_ksadd_k"
+   ]
+  },
+  {
+   "source": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "emitted": "ot_hdc_fp32_add_lat__q3sync.sv",
+   "modules": [
+    "ot_hdc_fp32_add_lat",
+    "ot_hdc_w11_cut"
+   ]
+  },
+  {
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+   "emitted": "ot_hgi_coll_edge_pr__q3sync.sv",
+   "modules": [
+    "ot_hgi_coll_static_capture_ctl_pr",
+    "ot_hgi_coll_link_e_pr",
+    "ot_hgi_coll_argmax_m_tp192_pr"
+   ]
+  }
+ ],
+ "core_filelists": {
+  "body": {
+   "files": [
+    "ot_hfd_coll_q3_body_core__q3sync.sv"
+   ],
+   "macros": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v"
+   ]
+  },
+  "edge": {
+   "files": [
+    "ot_hfd_coll_q3_edge_core__q3sync.sv",
+    "ot_hgi_coll_amerge__q3sync.sv",
+    "ot_hgi_coll_argmax_static__q3sync.sv",
+    "ot_qkvd_d2d_llr__q3sync.sv",
+    "ot_hgi_coll_static_pinreg_store__q3sync.sv",
+    "ot_qwen_crc_parallel__q3sync.sv",
+    "ot_hgi_coll_static_seq_ctl__q3sync.sv",
+    "ot_hgi_coll_static_pinreg_ctl__q3sync.sv",
+    "ot_hgi_coll_edge_pr__q3sync.sv"
+   ],
+   "macros": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+   ]
+  },
+  "vm": {
+   "files": [
+    "ot_hfd_coll_q3_vm_core__q3sync.sv",
+    "ot_hgi_coll_slice_v7__q3sync.sv",
+    "ot_hgi_coll_static_vmwrite_roots_v6__q3sync.sv",
+    "ot_hgi_coll_static_vmwrite_roots_v6_physical__q3sync.sv"
+   ],
+   "macros": []
+  },
+  "reduce": {
+   "files": [
+    "ot_hfd_coll_q2_reduce_core__q3sync.sv",
+    "ot_hgi_coll_reduce_static__q3sync.sv",
+    "ot_hgi_coll_reduce_static_pr__q3sync.sv",
+    "ot_hgi_coll_pring_static__q3sync.sv",
+    "ot_hdc_fastfp__q3sync.sv",
+    "ot_hdc_prefix__q3sync.sv",
+    "ot_hdc_fp32_add_lat__q3sync.sv"
+   ],
+   "macros": []
+  },
+  "ring_ag": {
+   "files": [
+    "ot_hfd_coll_q2_ring_ag_core__q3sync.sv",
+    "ot_hgi_coll_ring_ag__q3sync.sv",
+    "ot_hgi_coll_pring_static__q3sync.sv",
+    "ot_hgi_coll_pring_static_state_capture__q3sync.sv",
+    "ot_hdc_fastfp__q3sync.sv",
+    "ot_hdc_prefix__q3sync.sv",
+    "ot_hdc_fp32_add_lat__q3sync.sv"
+   ],
+   "macros": []
+  }
+ },
+ "next_gate": {
+  "claim_to_prove": "each <core>__q3sync equals its legacy core cycle-for-cycle once reset has been held >= the core's max reset release depth (the async->sync change only alters behaviour while reset is asserted: the reset now takes effect on the next clock edge instead of immediately)",
+  "bench": "reset-held-long lockstep sim: legacy core top and <core>__q3sync compiled together (names are disjoint), every clock port on one clock (single 833 ps domain), every reset port on one reset; identical per-cycle stimulus; cold reset held H cycles, run, warm reset re-asserted H cycles mid-run, run; compare every output on every cycle outside the reset windows; H >= max release depth (relay chains: body rcp[]/u_control rst_l/u_fj rst_q, vm rst_q, edge argmax rst_l; use H=256 for body unless the relay depth is measured)",
+  "tools": "tools/hbm_b2/q3sync/q3_lockstep_tb.py (TB generator) + lockstep.sh recipe in census lint field",
+  "stronger_followups": [
+   "production-shape stimulus (the selected TKM token-gate stimulus) instead of random inputs for writer/edge/reduce/ring_ag/body",
+   "Yosys equiv/SEC of the reset-free next-state functions (async vs sync differ only in reset timing)",
+   "die reset-contract check that every q3 flop's reset is now in the 833 ps clock's data timing (no recovery/removal arcs) after synthesis of the __q3sync tops"
+  ],
+  "not_done_here": [
+   "no P&R, no adoption, no substitution into the q3 parent",
+   "body/edge/reduce/ring_ag lockstep not run"
+  ]
+ },
+ "lint": {
+  "verilator": "verilator 5.050 --lint-only -Wno-fatal -Werror-SELRANGE -Werror-WIDTH -Wno-TIMESCALEMOD --error-limit 1000000",
+  "run": "ot-run --hosts localhost(epyc1/tender-ray) --threads 2 (body --mem 32, others 4)",
+  "logs": "results/token_pass/path_hbm_1713/q3sync/lint/",
+  "per_core": {
+   "body": {
+    "rc_gen": 1,
+    "rc_legacy": 1,
+    "diag_gen": 359,
+    "diag_legacy": 359,
+    "by_kind_gen": {
+     "Error-WIDTHEXPAND": 48,
+     "Error-WIDTHTRUNC": 311
+    },
+    "new_in_gen": 0,
+    "missing_in_gen": 0,
+    "new_examples": []
+   },
+   "edge": {
+    "rc_gen": 0,
+    "rc_legacy": 0,
+    "diag_gen": 0,
+    "diag_legacy": 0,
+    "by_kind_gen": {},
+    "new_in_gen": 0,
+    "missing_in_gen": 0,
+    "new_examples": []
+   },
+   "vm": {
+    "rc_gen": 0,
+    "rc_legacy": 0,
+    "diag_gen": 5,
+    "diag_legacy": 5,
+    "by_kind_gen": {
+     "Warning-MULTIDRIVEN": 5
+    },
+    "new_in_gen": 0,
+    "missing_in_gen": 0,
+    "new_examples": []
+   },
+   "reduce": {
+    "rc_gen": 1,
+    "rc_legacy": 1,
+    "diag_gen": 6,
+    "diag_legacy": 6,
+    "by_kind_gen": {
+     "Error-WIDTHTRUNC": 6
+    },
+    "new_in_gen": 0,
+    "missing_in_gen": 0,
+    "new_examples": []
+   },
+   "ring_ag": {
+    "rc_gen": 1,
+    "rc_legacy": 1,
+    "diag_gen": 6,
+    "diag_legacy": 6,
+    "by_kind_gen": {
+     "Error-WIDTHTRUNC": 6
+    },
+    "new_in_gen": 0,
+    "missing_in_gen": 0,
+    "new_examples": []
+   }
+  }
+ },
+ "lockstep_vm": [
+  "# build rc=0",
+  "LOCKSTEP compared_cycles=3873 mismatches=0 output_change_cycles=3873 in_reset_window_diff_cycles=2 hold=64 warm=2000",
+  "LOCKSTEP PASS",
+  "# sim rc=0 Sun Oct 25 18:52:58 PDT 2026"
+ ]
+}
