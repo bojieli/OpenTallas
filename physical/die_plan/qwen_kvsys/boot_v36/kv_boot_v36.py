@@ -297,7 +297,7 @@ def compile_(a):
     if die_cfg is not None and image_words.get(10)!=96:raise ValueError('compiled native bundle dropped DIECFG target 10')
     rep = P.write(r, Path(a.out))
     keep = dict(status=rep['status'], profile={k: pr[k] for k in ('start_relays', 'att', 'rx', 'writer', 'kvn', 'groups', 'qk_age',
-                                                                  'qk_row_latency', 'v_rl', 'd_rl', 'pv_result_extra', 'd_qk', 'f_dly')},
+                                                                  'qk_row_latency', 'v_rl', 'd_rl', 'pv_result_extra', 'attn_service_pad', 'd_qk', 'f_dly')},
                 link=r['link'], leads={k: v for k, v in r['leads'].items() if k != 'law'},
                 writer=dict(slots=r['writer']['slots'], stop=r['writer']['stop']), writer_die=r['writer_die'],
                 emb_fill=r['emb_fill'], ownership=r['ownership']['words'][:3],

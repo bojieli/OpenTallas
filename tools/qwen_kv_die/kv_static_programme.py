@@ -537,7 +537,8 @@ def profile(kind, ages=None):
                 groups=L['programme_to_groups']['edges'] + hl['fan'], crossing=True,
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
                 v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19,
-                pv_result_extra=int(ages['pv'].get('RESULT_TRUNK_EXTRA', 0)), d_qk=QKH32.calendar_d_qk(ages['qk']['QK_ISSUE_AGE'], AC.QK_CONSUME),
+                pv_result_extra=int(ages['pv'].get('RESULT_TRUNK_EXTRA', 0)),
+                attn_service_pad=int(os.environ.get('OT_KV_ATTN_SERVICE_PAD', '0')), d_qk=QKH32.calendar_d_qk(ages['qk']['QK_ISSUE_AGE'], AC.QK_CONSUME),
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
                 rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None,
                 # KV-BOOTAGE 10-19: the result face's boot F_DLY (kv_bootage image; 1 = the closed face law, unchanged)
