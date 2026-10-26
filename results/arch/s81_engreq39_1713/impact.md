@@ -1,0 +1,7 @@
+E1 request ABI impact
+
+New explicit masters are unselected by default. Existing E5/h0/h1 RTL files and their frozen native source/netlist cohort stay byte-identical. The new producer parent exports the E core's existing39-bit output directly. The new tap reconstructs the known four sector-prefix bits internally, then executes the same tap state/helper logic and forwards39 bits.
+
+Adopt source profile, whole request-chain bus widths/bit order, producer/consumer PCBASE, plan pins/lanes/reset roles, and compiler source-bit projection atomically. Old43-bit interfaces retain their original behavior until that adoption. Tag7 moves old42:36 to38:32; sectoroffset26/PC5/valid positions remain31:0. This adds zero data/reset cycles. PCBASE low26 must be zero and producer/consumer base must match; arbitrary low-base carry is not supported.
+
+Affected selected logical chain: one Engram producer and every east/west controller tap. New tap masters need current native views; old43-bit views cannot be aliased or treated as signed39-bit views. Native E5 interface itself is already39 bits and needs no source change for this ABI. Existing tap control/reset implementation is preserved for this width delta; native builder still must qualify its timed-reset profile under current rules. Parameter-specific hard-master identity must pin PCBASE and all existing RFD/EH/WEST settings. No physical view, timing, or whole-token adoption is claimed by these component results.

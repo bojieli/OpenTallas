@@ -1,0 +1,10 @@
+REQ39_DIFF cycle=3 case=0 rco=0 pco=0 rqo=1 rro=0 fault=0
+REQ39_DIFF cycle=3 case=1 rco=0 pco=0 rqo=1 rro=0 fault=0
+REQ39_DIFF cycle=3 case=2 rco=0 pco=0 rqo=1 rro=0 fault=0
+REQ39_DIFF cycle=3 case=3 rco=0 pco=0 rqo=1 rro=0 fault=0
+REQ39_DIFF cycle=3 case=4 rco=0 pco=0 rqo=1 rro=0 fault=0
+REQ39 FAIL seed=1 cycles=50000 mis=115356 active=271410
+- tb.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 100us; walltime 1.555 s; speed 64.297 us/s
+- Verilator: cpu 1.555 s on 1 threads; allocated 7 MB

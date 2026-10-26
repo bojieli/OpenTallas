@@ -1,0 +1,106 @@
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:1:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    1 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_slot (
+      |                                 ^~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:7:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    7 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_take (
+      |                                 ^~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:13:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   13 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_we (
+      |                                 ^~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:19:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   19 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_hit #(parameter integer P = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:25:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   25 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_eng #(parameter integer MUT = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:32:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   32 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_hs #(parameter integer MUT = 0, parameter integer W = 22) (
+      |                                 ^~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:89:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   89 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rqd #(parameter integer P = 0, parameter integer W = 22) (
+      |                                 ^~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:101:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  101 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_ofb #(parameter integer P = 0, parameter integer B = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:124:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  124 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rqc #(parameter integer P = 0, parameter integer RFD = 24,
+      |                                 ^~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:159:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  159 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rsc #(parameter integer MUT = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:195:33: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  195 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_sid4(input wire ck,input wire[3:0] d,output reg[3:0] q);
+      |                                 ^~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:199:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  199 | module dsdv_eng_tap_c #(
+      |        ^~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:294:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  294 | module dsdv_eng_tap (
+      |        ^~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/old_tap.sv:302:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  302 | module dsdv_eng_tap_w (
+      |        ^~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/new_tap.sv:1:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    1 | module dsdv_eng_tap_c_req39 #(
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/ot_rst_relay.sv:16:8: ... Location of module with timescale
+   16 | module ot_rst_relay #(
+      |        ^~~~~~~~~~~~
+%Error-MODMISSING: /srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter/new_tap.sv:41:9: Cannot find file containing module: 'OT_S81ENG_REQ39_REQUIRES_ALIGNED_PCBASE'
+   41 |         OT_S81ENG_REQ39_REQUIRES_ALIGNED_PCBASE invalid_configuration();
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        OT_S81ENG_REQ39_REQUIRES_ALIGNED_PCBASE
+                        OT_S81ENG_REQ39_REQUIRES_ALIGNED_PCBASE.v
+                        OT_S81ENG_REQ39_REQUIRES_ALIGNED_PCBASE.sv
+                        obj_dir/OT_S81ENG_REQ39_REQUIRES_ALIGNED_PCBASE
+                        obj_dir/OT_S81ENG_REQ39_REQUIRES_ALIGNED_PCBASE.v
+                        obj_dir/OT_S81ENG_REQ39_REQUIRES_ALIGNED_PCBASE.sv
+                   ... With current working directory '/srv/opentallas-scratch2/claude/codex-s81-engreq-1713/miter'
+%Error: Exiting due to 1 error(s)

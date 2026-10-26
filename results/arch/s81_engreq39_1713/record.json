@@ -1,0 +1,32 @@
+{
+  "scope": "New unselected explicit39b masters, SOURCE ONLY. No olddefault or nativeE5/h0/h1 file changed. No physicalview adoption.",
+  "source_sha256": "782736f0fac6b7f69e73061c88886f383a0a0bdc9c2b48e8d119d23617e39d60",
+  "modules": [
+    "dsdv_eng_rr_req39",
+    "dsdv_eng_tap_c_req39",
+    "dsdv_eng_tap_req39",
+    "dsdv_eng_tap_w_req39"
+  ],
+  "request_layout": {
+    "tag": "38:32",
+    "sector_offset": "31:6",
+    "pc": "5:1",
+    "valid": "0"
+  },
+  "precondition": "SamePCBASEatproducer/consumers;PCBASE[25:0]==0. Unalignedbase fails elaboration with explicitunresolvedconfigurationtrap.",
+  "added_data_cycles": 0,
+  "added_reset_cycles": 0,
+  "consumer_gate": "Actualfulltap43->39;PCBASE0/0x14000000/0x3c000000 \u00d7E/W\u00d73seeds50000, allrco/projected+pco+rqo+rro+fault0mis;active271410/270618/270642",
+  "mutant": "wrong4bsectorprefixCAUGHT115356/115746/115788",
+  "alignment_gate": "PCBASE1 rejected expectednamedtrap, unit2825141",
+  "main_gate_unit": "2801170-1792974859",
+  "producer_note": "Directexportsame existingE39port, sameE/Hstate/wiring/SPLIT_MUT. Fullassembledsource/profile/plan integration remainsparent-owned.",
+  "native": "NOT RUN; fresh39tapnativeview+resetcontract/currentLEC/signoffneeded beforephysicaladoption.",
+  "source_inputs": {
+    "new_tap.sv": "3f45471655d44b6dc71a96c483d0e924f8ef608687f75ff9c16f92b59e018133",
+    "tb.sv": "b4ba6070249f522cd2c2998c8b9432014554948d8dcedeb0c03ddb164740b815",
+    "ot_rst_relay_bounded32.sv": "d3ba9c38d47d5868efdec0e81dbba096732613299aba3a2b4f2e4d4498204785",
+    "ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "old_tap.sv": "b4585611214213350cdbe88927df572b79be414543ebaa1f13e33c521fbdba5a"
+  }
+}
