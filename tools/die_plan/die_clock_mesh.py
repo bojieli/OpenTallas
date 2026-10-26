@@ -758,13 +758,32 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         holes, cores = floorplan_holes(P, fp)
         islands = floorplan_islands(P, fp)
     axis_snap = None
+    # CLOCK-128 shield lane: a shielded strap's footprint is clock metal + both VSS shields (C128.shield_geom), so the
+    # PG-free track test clears the shields, not only the clock metal, from every parallel PG stripe
+    # When the die PG grid on a layer is too dense for drawn stripes (KV M9: 0.48 um every 0.864 um), the strap sits
+    # in a PG gap and the two neighbouring PG stripes are its shields (C128.FLANK, checked for every strap below).
+    shielded = rule128 is not None or bool((fp or {}).get("shield_net"))
+    shield_foot = C128.shield_geom(NDR[ndr])[2] if shielded else NDR[ndr]["width"] / 2
+    strap_mode = {}
     if pg_shapes is not None:
         if track_profile is None:
             raise ValueError("PG-aware mesh requires the actual die-kit routing tracks")
         old_xs, old_ys = xs, ys
+
+        def axis(v, layer, ax, span):
+            if shielded:
+                try:
+                    r_ = pg_free_axis(v, pg_shapes, layer, ax, span, track_profile[layer], shield_foot, NDR[ndr]["space"],
+                                      pg_mm)
+                    strap_mode[layer] = C128.DRAWN
+                    return r_
+                except ValueError:
+                    strap_mode[layer] = C128.FLANK
+            return pg_free_axis(v, pg_shapes, layer, ax, span, track_profile[layer], NDR[ndr]["width"] / 2,
+                                NDR[ndr]["space"], pg_mm)
         try:
-            xs = pg_free_axis(xs, pg_shapes, "M9", 0, W, track_profile["M9"], NDR[ndr]["width"] / 2, NDR[ndr]["space"], pg_mm)
-            ys = pg_free_axis(ys, pg_shapes, "M8", 1, H, track_profile["M8"], NDR[ndr]["width"] / 2, NDR[ndr]["space"], pg_mm)
+            xs = axis(xs, "M9", 0, W)
+            ys = axis(ys, "M8", 1, H)
         except ValueError as e:
             if SI is None:
                 raise
@@ -776,6 +795,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                xs=xs, ys=ys, drivers={}, htree=[], stubs=[], unplaced=[])
     if axis_snap is not None:
         out["meta"].update(pg_aware=True, pg_tracks=track_profile, pg_axis_snap_max_um=axis_snap)
+    if strap_mode:
+        out["meta"]["strap_shield"] = strap_mode
     import gen_phys as GP
     out["meta"]["tap_layer"] = P.layer_budget["partition_signal_max"]
     out["meta"]["tap_pin_size_um"] = [GP.LAYER_W.get(out["meta"]["tap_layer"], .04), 4 * GP.PIN_LEN_UM]
@@ -1039,7 +1060,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         planned_root = root
         # The actual die input is on M9; placing it on the old grid centre can short a newly sized PG rail.
         root = (pg_free_axis([root[0]], pg_shapes, "M9", 0, W, track_profile["M9"],
-                             NDR[ndr]["width"] / 2, NDR[ndr]["space"], max_move)[0], root[1])
+                             shield_foot if strap_mode.get("M9", C128.DRAWN) == C128.DRAWN else NDR[ndr]["width"] / 2,
+                             NDR[ndr]["space"], max_move)[0], root[1])
         out["meta"].update(root_plan_um=list(planned_root), root_pg_shift_um=round(abs(root[0]-planned_root[0]), 6))
     if fp is not None:
         c0 = root      # the die root drives one tree per explicit region: no trunk
@@ -1199,7 +1221,47 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 raise C128.PlanError(rows)
     if rule128 is not None:
         sh = (fp or {}).get("shield_net") or "VSS"
-        wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y)
+        # CLOCK-128 shield lane: legal by construction -- the die PG grid (the build's --pg-json rects, else the plan
+        # die.pg grid) and the mesh straps / jogs with their shields are reserved first, then every fixed tree trunk /
+        # drop takes the nearest PG-aware track whose metal + shields clear all other nets by the NDR space
+        if pg_shapes is not None:
+            pgr = pg_shapes
+        else:
+            import die_infra as DI
+            pgr = DI.pg_rects(P, C128.pg_grid(P)) if getattr(P, "die", None) is not None else []
+        router = C128.TrackRouter(NDR[ndr], sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM)
+        router.reserve(C128.pg_shapes(pgr))
+        msegs = mesh_segments(out, jogs=False)
+        bad = C128.flank_census(pgr, msegs, NDR[ndr])
+        if bad:
+            raise C128.PlanError([dict(kind="strap_unshielded", name=r_[5], detail=f"{r_[6]} {r_[0]} {r_[1:5]}: in a "
+                                       "PG gap but not flanked by PG on both sides over its span") for r_ in bad])
+        router.reserve(C128.clock_shapes(msegs, NDR[ndr], sh))
+        jerr = []
+        for dk, dv in sorted(out["drivers"].items()):     # island jogs: PG-aware track at the island cell row/column
+            if not dv.get("jog_um"):
+                continue
+            (fx, fy), (cx, cy) = dv["site"], dv["cell_site"]
+            lay, ideal, a0_, a1_ = (("M8", cy, fx, cx) if dv["strap"] == "M9" else ("M9", cx, fy, cy))
+            c_, m_, e_ = router.place(lay, ideal, a0_, a1_, mesh_net(dv.get("region")))
+            if c_ is None:
+                jerr.append(dict(kind="no_clock_track", name=str(dk), detail=f"island jog {lay} {ideal:.3f}"))
+                continue
+            dv.update(jog_c=c_, jog_mode=m_, jog_ext=e_)
+        if jerr:
+            raise C128.PlanError(jerr)
+        wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, router=router)
+        out["fixed_wires"] = wires
+        free = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y)
+        dl = [abs(a_["wire_um"] - b_["wire_um"]) for a_, b_ in zip(wires, free)]
+        out["meta"]["tree_tracks"] = dict(
+            method="C128.TrackRouter: nearest PG-aware track, clock metal + VSS shields clear of PG/clock/shields by "
+                   "the NDR space", tracks=track_profile or DEFAULT_TRACKS, max_move_um=TRACK_MOVE_UM,
+            segments=len(router.moves), moved=sum(1 for v in router.moves if v > 1e-6), modes=dict(router.modes),
+            strap_shield=strap_mode or None,
+            move_max_um=round(max(router.moves or [0.0]), 4),
+            net_wire_delta_max_um=round(max(dl or [0.0]), 4), pg_rects=len(pgr),
+            pg_source="--pg-json" if pg_shapes is not None else "plan die.pg.grid")
         straps = (sum(1 for v in out["strap_spans"].values() if v) if fp is not None else
                   sum((g["i1"] - g["i0"]) + (g["j1"] - g["j0"]) for g in R))
         out["meta"]["clock_shield"] = C128.shield_record(wires, sh, straps,
@@ -1208,6 +1270,48 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                                         early_offset_taps=len(out["rule_12_8"]["early_offset_taps"]),
                                         tap_slew_max_ps=rule128.get("tap_slew_max_ps", C128.TAP_SLEW_MAX_PS))
     return cells, nets, ports, out
+
+
+def mesh_segments(M, jogs=True):
+    """[(layer, x0, y0, x1, y1, net, kind)] centre lines of the mesh straps and island jogs exactly as cmd_combo draws
+    them (strap spans clipped at macro holes with --clock-floorplan)."""
+    xs, ys = M["xs"], M["ys"]
+    regs = M["meta"].get("regions") or [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))]
+    md = {L: (M["meta"].get("strap_shield") or {}).get(L, C128.DRAWN) for L in ("M8", "M9")}
+    out = []
+    for g in regs:
+        rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
+        net = mesh_net(g["k"])
+        if "strap_spans" in M:
+            hsp = [(y, strap_span(M, g, xs, ys, 0, j)) for j, y in zip(range(g["j0"], g["j1"]), ry)]
+            vsp = [(x, strap_span(M, g, xs, ys, 1, i)) for i, x in zip(range(g["i0"], g["i1"]), rx)]
+            hsp, vsp = [v for v in hsp if v[1]], [v for v in vsp if v[1]]
+        else:
+            xlo, xhi = strap_bounds(g, xs, ys, 0)
+            ylo, yhi = strap_bounds(g, xs, ys, 1)
+            hsp, vsp = [(y, (xlo, xhi)) for y in ry], [(x, (ylo, yhi)) for x in rx]
+        out += [("M8", lo, y, hi, y, net, "strap", md["M8"]) for y, (lo, hi) in hsp]
+        out += [("M9", x, lo, x, hi, net, "strap", md["M9"]) for x, (lo, hi) in vsp]
+        for dv in (M.get("drivers", {}).values() if jogs else ()):
+            if not dv.get("jog_um") or dv.get("region") != g["k"]:
+                continue
+            out.append(jog_segment(dv, net, md))
+    return out
+
+
+def jog_segment(dv, net, md):
+    """the island-driver jog (perpendicular from the strap to the island cell) as a mesh_segments row; on the build's
+    PG-aware track (jog_c / jog_mode / jog_ext) when the 12.8 build routed it"""
+    (fx, fy), (cx, cy) = dv["site"], dv["cell_site"]
+    if dv["strap"] == "M9":
+        c = dv.get("jog_c", cy)
+        return ("M8", min(fx, cx), c, max(fx, cx), c, net, "jog", dv.get("jog_mode", md["M8"]), dv.get("jog_ext"))
+    c = dv.get("jog_c", cx)
+    return ("M9", c, min(fy, cy), c, max(fy, cy), net, "jog", dv.get("jog_mode", md["M9"]), dv.get("jog_ext"))
+
+
+DEFAULT_TRACKS = {"M8": dict(pitch_um=0.08, offset_um=0.04), "M9": dict(pitch_um=0.08, offset_um=0.04)}
+TRACK_MOVE_UM = 8.64     # max PG-aware snap of one fixed tree segment (one M8 PG pitch); farther = plan error
 
 
 def mesh_net(region):
@@ -1259,11 +1363,16 @@ def cmd_build(a):
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     pg, pg_shapes, tracks = None, None, None
-    if bool(a.pg_json) != bool(a.track_file):
+    plan_grid = bool(a.track_file) and not a.pg_json and getattr(a, "rule_12_8", False) and bool(C128.pg_grid(P))
+    if bool(a.pg_json) != bool(a.track_file) and not plan_grid:
         raise SystemExit("PG-aware mesh needs both --pg-json and --track-file from the actual die kit")
-    if a.pg_json:
+    if a.pg_json or plan_grid:
+        # CLOCK-128 shield lane: a 12.8 build with --track-file but no --pg-json is PG-aware on the plan die.pg grid
+        # (the grid the combo ties land on when the build had no --pg-json)
         import die_infra as DI
-        pg = json.loads(Path(a.pg_json).read_text())
+        pg = json.loads(Path(a.pg_json).read_text()) if a.pg_json else None
+        # main pg_grid (HBM-PG 10-26: core grid + die.pg.domains with holes, die phase) for both --pg-json and the
+        # CLOCK-128 shield plan-grid build (pg_grid(P, None) = plan die.pg.grid + domains)
         pg_shapes = DI.pg_rects(P, DI.pg_grid(P, a.pg_json))      # + die.pg.domains (HBM-PG 10-26)
         tracks = mesh_tracks(a.track_file, P)
     region_spec = json.loads(Path(a.region_spec).read_text()) if a.region_spec else None
@@ -1295,12 +1404,16 @@ def cmd_build(a):
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
+    for w in M.get("fixed_wires", []):
+        w["name"] = ren.get(w["name"], w["name"])
     import hashlib
     M["meta"]["plan"] = str(a.plan)
     M["meta"]["plan_sha256"] = hashlib.sha256(Path(a.plan).read_bytes()).hexdigest()
     if pg is not None:
         M["meta"].update(pg_source=str(a.pg_json), pg_sha256=hashlib.sha256(Path(a.pg_json).read_bytes()).hexdigest(),
                          pg_feasible=pg.get("feasible"))
+    if "tree_tracks" in M["meta"]:
+        M["meta"]["tree_tracks"]["pg_source"] = str(a.pg_json) if a.pg_json else "plan die.pg.grid"
     M["meta"]["build_s"] = round(time.time() - t0, 1)
     (out / "mesh.json").write_text(json.dumps(M) + "\n")
     (out / "place.json").write_text(json.dumps(cells) + "\n")
@@ -1420,6 +1533,8 @@ def cmd_balance(a):
     ren = write_verilog(cells, nets, ports, out / "ctree.v")
     for n in nets:
         n["name"] = ren.get(n["name"], n["name"])
+    for w in M.get("fixed_wires", []):
+        w["name"] = ren.get(w["name"], w["name"])
     M["meta"]["cells"] = len(cells)
     M["clock_cell_overlaps"] = placement_overlaps(cells)
     M["meta"]["clock_cell_overlap_pairs"] = len(M["clock_cell_overlaps"])
@@ -1730,51 +1845,53 @@ def cmd_combo(a):
         # island drivers (12.2a): perpendicular jog from the window to the strap, on this region's mesh net
         jogs = [dv for dv in M.get("drivers", {}).values() if dv.get("jog_um") and dv.get("region") == g["k"]]
         jo = hw + 2 * nd["space"] + nd["width"] if shield else hs
-        for dv in jogs:
-            (fx, fy), (cx, cy) = dv["site"], dv["cell_site"]
-            lay, a0, b0, a1, b1 = (("$l8", min(fx, cx), cy, max(fx, cx), cy) if dv["strap"] == "M9" else
-                                   ("$l9", cx, min(fy, cy), cx, max(fy, cy)))
-            L.append(f"odb::dbObstruction_create $blk {lay} [um {a0 - jo:.4f}] [um {b0 - jo:.4f}] [um {a1 + jo:.4f}] "
-                     f"[um {b1 + jo:.4f}]")
-            if dv["strap"] == "M9":   # M8 jog in x at the window row
-                L.append(f"odb::dbSBox_create $sw $l8 [um {min(fx, cx) - hw:.4f}] [um {cy - hw:.4f}] "
-                         f"[um {max(fx, cx) + hw:.4f}] [um {cy + hw:.4f}] STRIPE")
+        md_ = {L_: (M["meta"].get("strap_shield") or {}).get(L_, C128.DRAWN) for L_ in ("M8", "M9")}
+        jrows = [jog_segment(dv, mesh_net(g["k"]), md_) for dv in jogs]
+        for r_ in jrows:
+            lay_, a0, b0, a1, b1 = r_[:5]
+            jx = max(jo, (r_[8] or 0) + hw)
+            if lay_ == "M8":
+                L.append(f"odb::dbObstruction_create $blk $l8 [um {a0 - jx:.4f}] [um {b0 - jo:.4f}] [um {a1 + jx:.4f}] "
+                         f"[um {b1 + jo:.4f}]")
             else:
-                L.append(f"odb::dbSBox_create $sw $l9 [um {cx - hw:.4f}] [um {min(fy, cy) - hw:.4f}] "
-                         f"[um {cx + hw:.4f}] [um {max(fy, cy) + hw:.4f}] STRIPE")
+                L.append(f"odb::dbObstruction_create $blk $l9 [um {a0 - jo:.4f}] [um {b0 - jx:.4f}] [um {a1 + jo:.4f}] "
+                         f"[um {b1 + jx:.4f}]")
+            L.append(f"odb::dbSBox_create $sw $l{lay_[1]} [um {a0 - hw:.4f}] [um {b0 - hw:.4f}] [um {a1 + hw:.4f}] "
+                     f"[um {b1 + hw:.4f}] STRIPE")
         if shield:   # 12.7a: a PG stripe on both sides of every clock strap and jog, one NDR space away
-            off = hw + nd["space"] + nd["width"] / 2
+            _, off, ext = C128.shield_geom(nd)
             L += [f"set pn [$blk findNet {shield}]",
                   f"if {{$pn eq \"NULL\"}} {{ set pn [odb::dbNet_create $blk {shield}] }}",
                   "$pn setSpecial", "$pn setSigType GROUND", "set psw [odb::dbSWire_create $pn ROUTED]"]
             segs = [("M8", xlo, y, xhi, y) for y, (xlo, xhi) in hsp] + [("M9", x, ylo, x, yhi) for x, (ylo, yhi) in vsp]
-            for dv in jogs:
-                (fx, fy), (cx, cy) = dv["site"], dv["cell_site"]
-                segs.append(("M8", min(fx, cx), cy, max(fx, cx), cy) if dv["strap"] == "M9" else
-                            ("M9", cx, min(fy, cy), cx, max(fy, cy)))
             sw2 = nd["width"] / 2
+            smode = M["meta"].get("strap_shield") or {}     # a 'pg' layer: the PG stripes are the shields, none drawn
+            segs = [s_ + (None,) for s_ in segs if smode.get(s_[0], C128.DRAWN) == C128.DRAWN]
+            segs += [tuple(r_[:5]) + (r_[8],) for r_ in jrows if r_[7] == C128.DRAWN]
             shield_segs_all += segs
-            for lay, a0, b0, a1, b1 in segs:
+            for lay, a0, b0, a1, b1, e_ in segs:
+                ext = C128.shield_geom(nd)[2] if e_ is None else e_
                 for sgn in (-1, 1):
                     if lay == "M8":
                         yy = b0 + sgn * off
-                        L.append(f"odb::dbSBox_create $psw $l8 [um {a0 - hw:.4f}] [um {yy - sw2:.4f}] [um {a1 + hw:.4f}] "
+                        L.append(f"odb::dbSBox_create $psw $l8 [um {a0 - ext:.4f}] [um {yy - sw2:.4f}] [um {a1 + ext:.4f}] "
                                  f"[um {yy + sw2:.4f}] STRIPE")
                     else:
                         xx = a0 + sgn * off
-                        L.append(f"odb::dbSBox_create $psw $l9 [um {xx - sw2:.4f}] [um {b0 - hw:.4f}] [um {xx + sw2:.4f}] "
-                                 f"[um {b1 + hw:.4f}] STRIPE")
+                        L.append(f"odb::dbSBox_create $psw $l9 [um {xx - sw2:.4f}] [um {b0 - ext:.4f}] [um {xx + sw2:.4f}] "
+                                 f"[um {b1 + ext:.4f}] STRIPE")
     if getattr(a, "mesh_vias", False):
         M["meta"]["mesh_vias"] = vias_meta
         (d / "mesh.json").write_text(json.dumps(M) + "\n")
     clock_nets = [n["name"] for n in data["nets"]]
     if C128.enabled(M):   # 12.7a/12.8: every tree net is a fixed, shielded pre-route; its RC is that geometry
-        wires = C128.fixed_wires(M, cells, data["nets"], BUF_W, ROW_Y)
+        # the build's PG-aware shielded tracks (CLOCK-128 shield lane) are the geometry; older builds recompute
+        wires = M.get("fixed_wires") or C128.fixed_wires(M, cells, data["nets"], BUF_W, ROW_Y)
         L += C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"])
         sp = C128.spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
         for c_ in ("TT", "FF"):
             (d / f"native_{c_}.spef").write_text(sp)
-        shield_segs_all += [s_ for w_ in wires for s_ in w_["segs"]]
+        shield_segs_all += [tuple(r_[:5]) + (r_[8],) for r_ in C128.tree_segs(wires) if r_[7] == C128.DRAWN]
     shield_net = (M["meta"].get("clock_floorplan") or {}).get("shield_net") or \
         (M["meta"]["rule_12_8"]["shield_net"] if C128.enabled(M) else None)
     if shield_net and shield_segs_all:
@@ -1790,6 +1907,12 @@ def cmd_combo(a):
         pgr = DI.pg_rects(Pp, grid_)
         stripes = C128.shield_stripes(shield_segs_all, nd)
         ties = C128.shield_ties(stripes, pgr, nd["width"], net=shield_net)
+        # same-layer legality of everything drawn on M8/M9 (PG grid, straps, jogs, tree wires, shields): no two nets
+        # closer than the NDR space; any short / spacing violation blocks freeze evidence
+        msegs = mesh_segments(M) + (C128.tree_segs(wires) if C128.enabled(M) else [])
+        census = C128.metal_census(C128.pg_shapes(pgr) + C128.clock_shapes(msegs, nd, shield_net), nd["space"])
+        census["unflanked"] = C128.flank_census(pgr, msegs, nd)
+        census["flank_mode_segments"] = sum(1 for r_ in msegs if len(r_) > 7 and r_[7] == C128.FLANK)
         L += [f"set tn [$blk findNet {shield_net}]",
               f"if {{$tn eq \"NULL\"}} {{ set tn [odb::dbNet_create $blk {shield_net}] }}",
               "$tn setSpecial", "$tn setSigType GROUND", "set tsw [odb::dbSWire_create $tn ROUTED]"]
@@ -1797,15 +1920,25 @@ def cmd_combo(a):
         L += C128.tie_tcl(ties, "$tsw")
         cs = M["meta"].get("clock_shield") or {}
         cs.update(C128.tie_record(ties))
-        cs["freeze_evidence_ok"] = bool(cs["vss_tied"] and cs.get("complete"))
+        cs.update(metal_shorts=census["shorts"], metal_spacing=census["spacing"],
+                  pg_flanked_segments=census["flank_mode_segments"], unflanked_segments=len(census["unflanked"]),
+                  shield_modes="drawn = 2 VSS stripes via-tied to the die VSS grid; pg = in a PG gap, the two "
+                               "neighbouring die PG stripes (VDD/VSS) are the shields (12.7a 'PG stripes on both sides')",
+                  metal_shorts_by_kind=census["shorts_by_kind"], metal_spacing_by_kind=census["spacing_by_kind"],
+                  metal_shapes=census["shapes"])
+        cs["vss_tied"] = bool(cs["vss_tied"] and not census["shorts"])
+        cs["freeze_evidence_ok"] = bool(cs["vss_tied"] and cs.get("complete") and not census["spacing"]
+                                        and not census["unflanked"])
         cs["tie_grid_stripes"] = len(ties["used_grid"])
         cs["tie_pg_source"] = pg_src or "plan die.pg.grid"
         M["meta"]["clock_shield"] = cs
         (d / "shield_ties.json").write_text(json.dumps(dict(
             record=C128.tie_record(ties), untied=[stripes[k] for k in ties["untied"][:200]],
-            shorts=[[stripes[k], n_] for k, n_ in ties["shorts"][:200]])) + "\n")
+            shorts=[[stripes[k], n_] for k, n_ in ties["shorts"][:200]],
+            metal_census={k: v for k, v in census.items()})) + "\n")
         (d / "mesh.json").write_text(json.dumps(M) + "\n")
-        print("shield ties", json.dumps(C128.tie_record(ties)))
+        print("shield ties", json.dumps(C128.tie_record(ties)), "metal shorts", census["shorts"], "spacing",
+              census["spacing"], json.dumps(census["shorts_by_kind"]), json.dumps(census["spacing_by_kind"]))
     L += [f"puts \"OT_MESH regions {len(regs)} straps {sum((g['i1'] - g['i0']) + (g['j1'] - g['j0']) for g in regs)}\"",
           "create_clock -name dck -period 833.000 [get_ports root]",
           "set_routing_layers -signal M4-M9 -clock M8-M9"]
