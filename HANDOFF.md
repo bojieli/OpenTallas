@@ -1029,3 +1029,5 @@ CODEX: 2026-10-26 02:17 PDT TOKENS checker cb183e0648 READY16testsPASS; recovere
 CODEX: 2026-10-26 02:18 PDT HBM M5 guard486442846 (14 testsPASS); inheritedtopk23h EXTRACT_FA diagnosed, fresh scoped no-adder-extractkitgen live; current stable-sort root extracted1312ports+M5kit3575pins/3572FF PASS, synth-only liveintel1, v8CTS stayscanaryheld.
 
 CODEX: 2026-10-26 02:18 PDT shared kit dependency bundle READY5015c984a, hub15/15PASS; HEADB/KVchain/ECO/QChold auto-ship gate imports, no clock/RTL change. Canary current-generation holds retained.
+
+CODEX: 2026-10-26 02:20 PDT HBM idx quarter4LECdifferences root-caused scalar→unpacked-wire alias flattening; source687ef703ff defers alias to formalfunctionpairing. Actual immutable target ALL33871/33871 PROVED incl all10065old+3new obligations;43tests+mutantPASS. OriginalFAIL retained, noRTL/cycles/route.
