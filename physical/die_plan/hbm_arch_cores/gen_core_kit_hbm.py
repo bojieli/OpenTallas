@@ -612,6 +612,16 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # (face_shell.py): one kept flop per signal pin bit at the face (+1 cycle in / +1 out), clock/reset pins through,
     # unread input bits dropped from the pin table (top-of-bus / whole-bus drops keep pin names; report in
     # face_shell.json, plan change for the lane owner).  The kit top keeps the plan module name.
+    # Qualified profiles may expose clock aliases outside the legacy name regex
+    # (q3 link0_ck/link1_ck/link2_ck are taps of the same core clock).
+    clock_re, reset_re = CLK_RE, RST_RE
+    if source_profile:
+        if source_profile.get("clock_ports"):
+            clock_re = "(?:" + CLK_RE + "|^(?:" + "|".join(
+                re.escape(p) for p in source_profile["clock_ports"]) + ")$)"
+        if source_profile.get("reset_ports"):
+            reset_re = "(?:" + RST_RE + "|^(?:" + "|".join(
+                re.escape(p) for p in source_profile["reset_ports"]) + ")$)"
     shell = None
     if a.face_shell == "on":
         import face_shell as FS
@@ -627,7 +637,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             if (md_ / f"{m_}_tt.lib").is_file():
                 mlibs.append(str(md_ / f"{m_}_tt.lib"))
         try:
-            shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, CLK_RE, RST_RE,
+            shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_})
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
@@ -644,8 +654,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         if bad:
             raise SystemExit(f"FACE_SHELL {a.view}: shell ports != pruned plan pins, e.g. {bad[:6]}")
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
-    clks = [n for n in names if re.match(CLK_RE, base(n))]
-    rsts = [n for n in names if re.match(RST_RE, base(n)) and n not in clks]
+    clks = [n for n in names if re.match(clock_re, base(n))]
+    rsts = [n for n in names if re.match(reset_re, base(n)) and n not in clks]
     if not clks:
         raise SystemExit(f"{a.view}: no clock pin")
     io, prow = io_tcl(pins, w, h, a.view)
