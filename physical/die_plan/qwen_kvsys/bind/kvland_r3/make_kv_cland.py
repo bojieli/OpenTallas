@@ -15,6 +15,15 @@ pp=D/"die_plan.json";p=json.loads(pp.read_text());t=json.loads(Path(sys.argv[1])
 O.mkdir(parents=True,exist_ok=True);(O/"landed_crossings_c3t.json").write_text(json.dumps(t,indent=1)+"\n")
 obs=dict(module="qkd_seq_core_static_s",instance_suffix="u_seq_u_core",fault_port="hf",ready_port="lp_run")
 a,b=C.compose(p,t,str(pp),observer_part="hub_C",observer=obs)
+# Price the landings in the plan's own latency table (schema.lane_latency semantics: +clock_landing into cycles).
+import clock_landings as CL
+add=CL.network_lane_cycles(a);lanes=a.setdefault("latency",{}).setdefault("lanes",{})
+for lid,n in add.items():
+    L=lanes.get(lid)
+    if L is None:raise SystemExit(f"lane {lid} has no latency row")
+    if L.get("clock_landing"):raise SystemExit(f"lane {lid} already priced")
+    L["clock_landing"]=n;L["cycles"]=int(L["cycles"])+n;L["natural"]=int(L.get("natural",L["cycles"]-n))+n
+print("priced lanes",len(add),"cycles",sum(add.values()))
 (D/"die_plan_cland_r3.json").write_text(json.dumps(a,indent=1)+"\n")
 (O/"landing_placement_table.json").write_text(json.dumps(b,indent=1)+"\n")
 rp=D/"dcal_rom/bind/position2144b19/recipe_kv_2350.json";r=json.loads(rp.read_text())
