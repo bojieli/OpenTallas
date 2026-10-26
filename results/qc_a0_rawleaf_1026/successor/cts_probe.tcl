@@ -1,8 +1,7 @@
 # Diagnostic placement-RC CTS report; never a routed sign-off or die freeze.
 set c $::env(CORNER)
-foreach l [glob /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/*RVT_${c}_nldm*.lib*] {
- if {![string match *FAKE* $l]} {read_liberty $l}
-}
+if {![info exists ::env(PLIBS)] || $::env(PLIBS) eq ""} {error "exact generated kit library list PLIBS required"}
+foreach l $::env(PLIBS) {read_liberty $l}
 read_db /work/run/results/asap7/lsl_rawfault_m3/base/4_cts_pg.odb
 read_sdc /work/constraint.sdc
 set_propagated_clock [all_clocks]

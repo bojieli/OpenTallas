@@ -1,0 +1,156 @@
+{
+  "sle_fe_v1": {
+    "status": "ACTUAL READ-ONLY SNAPSHOT",
+    "cells": 103087,
+    "FUP_scopes": [
+      {
+        "prefix": "u_bound.u_core",
+        "rs1": "u_bound.u_core.u_rl.rs1$_DFF_PN0_",
+        "rs1_xy": [
+          282.312,
+          484.92
+        ],
+        "root_drivers": [
+          {
+            "name": "u_bound.u_rrl_18.q$_DFF_P_",
+            "ref": "DFFHQNx1_ASAP7_75t_R",
+            "xy": [
+              154.602,
+              501.66
+            ],
+            "ins": [
+              "u_bound.u_rrl_18/_0_"
+            ],
+            "outs": [
+              "u_bound.u_rrl_18/_1_"
+            ]
+          }
+        ],
+        "groups": {
+          "agu": {
+            "cells": [
+              "u_bound.u_core.agu_q[0]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[1]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[2]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[3]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[4]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[5]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[6]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[7]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[8]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[9]$_DFF_PN0_"
+            ],
+            "count": 10,
+            "centroid": [
+              284.148,
+              398.43899999999996
+            ]
+          },
+          "chu": {
+            "cells": [
+              "u_bound.u_core.chu_q[1094]$_DFF_PN0_",
+              "u_bound.u_core.chu_q[547]$_DFF_PN0_"
+            ],
+            "count": 2,
+            "centroid": [
+              284.823,
+              550.26
+            ]
+          },
+          "cmd": {
+            "cells": [
+              "u_bound.u_core.cmd_o[0]$_DFF_PN0_"
+            ],
+            "count": 1,
+            "centroid": [
+              284.958,
+              565.65
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "sle_fe_v2": {
+    "status": "ACTUAL READ-ONLY SNAPSHOT",
+    "cells": 99492,
+    "FUP_scopes": [
+      {
+        "prefix": "u_bound.u_core",
+        "rs1": "u_bound.u_core.u_rl.rs1$_DFF_PN0_",
+        "rs1_xy": [
+          285.66,
+          449.28
+        ],
+        "root_drivers": [
+          {
+            "name": "u_bound.u_rrl_18.q$_DFF_P_",
+            "ref": "DFFHQNx1_ASAP7_75t_R",
+            "xy": [
+              154.116,
+              501.93
+            ],
+            "ins": [
+              "u_bound.u_rrl_18/_0_"
+            ],
+            "outs": [
+              "u_bound.u_rrl_18/_1_"
+            ]
+          }
+        ],
+        "groups": {
+          "agu": {
+            "cells": [
+              "u_bound.u_core.agu_q[0]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[1]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[2]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[3]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[4]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[5]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[6]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[7]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[8]$_DFF_PN0_",
+              "u_bound.u_core.agu_q[9]$_DFF_PN0_"
+            ],
+            "count": 10,
+            "centroid": [
+              287.523,
+              406.269
+            ]
+          },
+          "chu": {
+            "cells": [
+              "u_bound.u_core.chu_q[1094]$_DFF_PN0_",
+              "u_bound.u_core.chu_q[547]$_DFF_PN0_"
+            ],
+            "count": 2,
+            "centroid": [
+              287.658,
+              527.58
+            ]
+          },
+          "cmd": {
+            "cells": [
+              "u_bound.u_core.cmd_o[0]$_DFF_PN0_"
+            ],
+            "count": 1,
+            "centroid": [
+              287.928,
+              578.61
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "sle_fe_v3": {
+    "status": "ACTUAL READ-ONLY SNAPSHOT",
+    "cells": 42242,
+    "FUP_scopes": [],
+    "FUP_status": "NO LIVE RESETTABLE CORE STATE: actual qfd_dv_s6_fup_e5 chain-end, no matching AGU/CHU/CMD or u_rl.rs1 flops remain; no sites inferred"
+  },
+  "slw_fe_v2": {
+    "status": "NOT BUILT: no actual3_place/4_cts in known kits-wave/kits-wave2; prior kit failed anchor origin",
+    "sites": null
+  }
+}
