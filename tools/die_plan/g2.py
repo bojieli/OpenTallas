@@ -335,7 +335,13 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
         for rl in tree["relays"]:
             c, q = "pr_reset_" + rl["name"], "pr_reset_" + rl["q"]
             src = rename.get(rl["d"], "pr_reset_" + rl["d"])
-            cells.append(f"  {FLOP} {c} (.D({src}), .QN({q}));")
+            driven = RT.relay_cell(tree, rl) == "ot_dp_rrelay_drive"
+            rawq = q + "_raw" if driven else q
+            cells.append(f"  {FLOP} {c} (.D({src}), .QN({rawq}));")
+            if driven:
+                cells.append(f"  (* keep, dont_touch *) BUFx4f_ASAP7_75t_R {c}_drive (.A({rawq}), .Y({q}));")
+                nets.append(rawq)
+                place.append((c + "_drive", rl["xy"][0] + 1.0, rl["xy"][1]))
             nets.append(q)
             place.append((c, *rl["xy"]))
         souts = [o for o in reset_outs if o[0].startswith("start_o_")]
@@ -354,7 +360,13 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
             for rl in tree["relays"]:
                 c, q = "pr_run_" + rl["name"], "pr_run_" + rl["q"]
                 src = rename.get(rl["d"], "pr_run_" + rl["d"])
-                cells.append(f"  {FLOP} {c} (.D({src}), .QN({q}));")
+                driven = RT.relay_cell(tree, rl) == "ot_dp_rrelay_drive"
+                rawq = q + "_raw" if driven else q
+                cells.append(f"  {FLOP} {c} (.D({src}), .QN({rawq}));")
+                if driven:
+                    cells.append(f"  (* keep, dont_touch *) BUFx4f_ASAP7_75t_R {c}_drive (.A({rawq}), .Y({q}));")
+                    nets.append(rawq)
+                    place.append((c + "_drive", rl["xy"][0] + 1.0, rl["xy"][1]))
                 nets.append(q)
                 place.append((c, *rl["xy"]))
             for j, (nm, _, _) in enumerate(souts):

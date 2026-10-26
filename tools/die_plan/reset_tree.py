@@ -436,8 +436,9 @@ def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=
                 taps=[n for n, _, _ in taps], tap_offset_um=round(off, 1), walls=len(walls))
 
 
-def assign(topo, depth=None, prefix=""):
-    T = _assign(topo["nodes"], topo["root"], topo["ntap"], depth, prefix)
+def assign(topo, depth=None, prefix="", pad_spread=False, boxes=(), box_out=None, walls=()):
+    geometry = dict(boxes=boxes, box_out=box_out, walls=walls) if pad_spread else None
+    T = _assign(topo["nodes"], topo["root"], topo["ntap"], depth, prefix, geometry)
     reach = topo["reach"]
     T.update(reach_um=reach, plan_reach_um=topo["plan_reach"], topology=topo["method"], taps=list(topo["taps"]),
              tap_offset_um=topo["tap_offset_um"])
@@ -562,7 +563,37 @@ def _topo_grid(pts, root, reach, boxes, box_out, pitch=None, walls=(), hop_boxes
     return nodes
 
 
-def _assign(nodes, root, ntap, depth, prefix):
+def _pad_sites(p, q, count, boxes=(), box_out=None, walls=()):
+    """Latency-neutral pad sites on a legal incoming L path; short/blocked remainder stays at q.
+
+    Never push an interpolated point through a macro: a candidate route is accepted
+    only if its wires avoid walls and every new site is outside all placement boxes.
+    """
+    if not count:
+        return []
+    if box_out is None:
+        box_out = (-math.inf, -math.inf, math.inf, math.inf)
+    length = _man(p, q)
+    movable = min(count, max(0, int(length // 20) - 1))
+    if not movable:
+        return [q] * count
+    for corner in ((q[0], p[1]), (p[0], q[1])):
+        if _seg_hits(p, corner, walls) or _seg_hits(corner, q, walls):
+            continue
+        a = _man(p, corner)
+        sites = []
+        for j in range(1, movable + 1):
+            d = length * j / (movable + 1)
+            u, v, at = (p, corner, d) if d <= a else (corner, q, d-a)
+            seg = _man(u, v)
+            t = at / seg if seg else 0
+            sites.append((u[0] + t*(v[0]-u[0]), u[1] + t*(v[1]-u[1])))
+        if all(_free(xy, boxes, box_out) for xy in sites):
+            return sites + [q] * (count-movable)
+    return [q] * count
+
+
+def _assign(nodes, root, ntap, depth, prefix, pad_geometry=None):
     """relay names / nets / depths with shared pads: D = max(structural depth, depth)."""
     kids = {}
     for v, nd in enumerate(nodes):
@@ -596,9 +627,13 @@ def _assign(nodes, root, ntap, depth, prefix):
         src, a = net[u], arr[u]
         slack = D - (a + 1) - H[v]
         tapv = nd["tap"]
-        for _ in range(slack):                 # shared pads on the edge into v's subtree (at v's site)
+        padxy = [nd["xy"]] * slack
+        if pad_geometry is not None:
+            pxy = root if u < 0 else nodes[u]["xy"]
+            padxy = _pad_sites(pxy, nd["xy"], slack, **pad_geometry)
+        for xy_pad in padxy:                   # shared pads keep the exact same depth and topology
             a += 1
-            src = add(nd["xy"], src, "pad", tapv, a)
+            src = add(xy_pad, src, "pad", tapv, a)
         a += 1
         leaf_done = tapv is not None and a == D
         q = add(nd["xy"], src, "tap" if tapv is not None else "wire", tapv, a, tapv if leaf_done else None)
@@ -697,7 +732,10 @@ def _type_tree0(P, tn, depth, reach):
                                               boxes=blockages(t), box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM,
                                                                            h - CLEAR_UM), walls=walls(P, tn),
                                               avoid_cores=bool(P.reset.get("relay_avoid_cores")))
-    return assign(cache[("topo", tn, reach)], depth)
+    t = P.types[tn]; w, h = t["outline_um"]
+    return assign(cache[("topo", tn, reach)], depth,
+                  pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
+                  box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
 
 
 def part_depth(P):
@@ -722,7 +760,7 @@ def for_type(P, tn, reach=None):
             raise ResetError(f"type {tn}: hard partitions carry no generated reset tree")
         T = _wf_type_tree(P, tn)
         T.update(entry="sync" if tn == wf_solve(P)["root_type"] else "relayed", sync_stages=sync_stages(P, tn),
-                 type=tn, start=start_broadcast(P))
+                 type=tn, start=start_broadcast(P), relay_driver=bool(P.reset.get("relay_driver")))
         if T["entry"] == "sync" and lock_stages(P):
             lk = pad_spec(P)["lock"]
             T["lock"] = dict(inst=lk["inst"], pin=lk["pin"], stable=int(lk.get("stable_cycles", 16)),
@@ -753,7 +791,8 @@ def for_type(P, tn, reach=None):
     else:
         ent = "sync"
         T = _type_tree(P, tn, None, reach)
-    T.update(entry=ent, sync_stages=sync_stages(P, tn), type=tn)
+    T.update(entry=ent, sync_stages=sync_stages(P, tn), type=tn,
+             relay_driver=bool(P.reset.get("relay_driver")))
     return T
 
 
@@ -1276,7 +1315,8 @@ def _wf_type_tree(P, tn):
         topo = topology(pts, in_pin(P, tn), reach=relay_um(P), boxes=blockages(t),
                         box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
                         avoid_cores=bool(P.reset.get("relay_avoid_cores")))
-        T = assign(topo, None)
+        T = assign(topo, None, pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
+                   box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
         T.update(n_clock_taps=len(taps), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
         cache[key] = T
     import copy
@@ -1473,6 +1513,16 @@ def _root_entry_lines(T, ind, src, lock_src, note):
             "stable count, sticky synchronous release (loss of lock after boot = HOST status, not a die reset)"]
 
 
+def relay_cell(T, r, gated=False):
+    nck = T.get("n_clock_taps", len(T["taps"]))
+    external = set(range(nck, nck + len(T.get("outs", []))))
+    # A tap may also have raw/run copies; all copies at external output sites stay plain.
+    driven = T.get("relay_driver") and r.get("tap") not in external
+    if gated:
+        return "ot_dp_rgate_drive" if driven else "ot_dp_rgate"
+    return "ot_dp_rrelay_drive" if driven else "ot_dp_rrelay"
+
+
 def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SRC):
     """SystemVerilog body lines: entry stage + relays.  Declares rst_n_t<i> for every tap.  With T['start'] (decision
     13c START broadcast) the run entry / relays and the gated taps (start_relays) are emitted as well."""
@@ -1496,7 +1546,7 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SR
     for r in T["relays"]:
         if not r["q"].startswith("rst_n_t"):
             out.append(f"{ind}wire {r['q']};")
-        out.append(f"{ind}ot_dp_rrelay {r['name']} (.clk(clk), .d({r['d']}), .q({r['q']}));  "
+        out.append(f"{ind}{relay_cell(T, r)} {r['name']} (.clk(clk), .d({r['d']}), .q({r['q']}));  "
                    f"// {r['kind']} tap {r['tap']} depth {r['depth']} @ ({r['xy'][0]:.1f}, {r['xy'][1]:.1f})")
     nck = T.get("n_clock_taps", len(taps))
     for k in range(len(T.get("outs", []))):
@@ -1541,7 +1591,8 @@ def _rtl_lines_start(T, ind, src, start_src, lock_src=LOCK_SRC):
         if r["q"] not in declared:
             out.append(f"{ind}wire {r['q']};")
             declared.add(r["q"])
-        cell, run = ("ot_dp_rgate", f", .run({r['run']})") if r["role"] == "gated" else ("ot_dp_rrelay", "")
+        cell = relay_cell(T, r, gated=r["role"] == "gated")
+        run = f", .run({r['run']})" if r["role"] == "gated" else ""
         out.append(f"{ind}{cell} {r['name']} (.clk(clk), .d({r['d']}){run}, .q({r['q']}));  "
                    f"// {r['role']} {r['kind']} tap {r['tap']} depth {r['depth']} @ ({r['xy'][0]:.1f}, {r['xy'][1]:.1f})")
     for k in range(len(T.get("outs", []))):
@@ -1622,6 +1673,24 @@ def tcl_text(T):
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
          f"rtr_place rst_root_n {{*{ent}[./]*}} {T['root'][0]:.3f} {T['root'][1]:.3f} rentry"]
     rel = start_relays(T) if T.get("start") else [dict(r, dlab=r["d"]) for r in T["relays"]]
+    if T.get("relay_driver"):
+        t.append("""proc rtr_drive_place {pat x y} {
+  global ff_blk ff_dbu rtr_fh
+  set found 0
+  foreach i [$ff_blk getInsts] {
+    if {![string match $pat [$i getName]]} continue
+    if {![string match "BUF*" [[$i getMaster] getName]]} continue
+    set got [ff_put_near $i [expr {round($x*$ff_dbu)}] [expr {round($y*$ff_dbu)}]]
+    if {$got eq ""} {error "reset driver has no legal placement [$i getName]"}
+    $i setDoNotTouch true
+    puts $rtr_fh "[$i getName]\\treset_driver\\t[expr {[lindex $got 0]/double($ff_dbu)}]\\t[expr {[lindex $got 1]/double($ff_dbu)}]\\t-"
+    incr found
+  }
+  if {$found != 1} {error "expected one kept reset driver $pat, got $found"}
+}""")
+        for r in rel:
+            if relay_cell(T, r, gated=r.get("role") == "gated").endswith("_drive"):
+                t.append(f"rtr_drive_place {{*{r['name']}[./]u_drive}} {r['xy'][0]:.3f} {r['xy'][1]:.3f}")
     if T.get("start"):
         rent = "u_run_root" if T["entry"] == "sync" else "u_run_in"
         t.append(f"rtr_place run_root {{*{rent}[./]*}} {T['start_in'][0]:.3f} {T['start_in'][1]:.3f} sentry")
