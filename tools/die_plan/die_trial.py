@@ -295,7 +295,7 @@ def clock_kit(P, out, leaf_um, rep_um):
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}",
            "foreach f [glob $::env(LIBDIR)/*RVT_$::env(CORNER)_nldm*.lib*] { read_liberty $f }",
            "read_verilog /work/clock/ctree.v", "link_design ctree",
-           f"initialize_floorplan -die_area {{0 0 {P.W:g} {P.H:g}}} -core_area {{0 0 {P.W:g} {P.H:g}}} -site asap7sc7p5t",
+           f"initialize_floorplan -die_area {{0 0 {gen_phys._um(P.W)} {gen_phys._um(P.H)}}} -core_area {{0 0 {gen_phys._um(P.W)} {gen_phys._um(P.H)}}} -site asap7sc7p5t",
            "source /work/clock/make_tracks.tcl"]
     sz9 = "{0.04 0.32}"
     root = nodes[0]
@@ -664,7 +664,7 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
          f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}"]
     t += [f"read_lef /work/abstracts/{x}" for x in lefs]
     t += [f"read_verilog /work/grt/route.v", f"link_design {sv(P.name)}_route",
-          f"initialize_floorplan -die_area {{0 0 {W:g} {H:g}}} -core_area {{0 0 {W:g} {H:g}}} -site asap7sc7p5t",
+          f"initialize_floorplan -die_area {{0 0 {gen_phys._um(W)} {gen_phys._um(H)}}} -core_area {{0 0 {gen_phys._um(W)} {gen_phys._um(H)}}} -site asap7sc7p5t",
           "source /work/grt/tracks.tcl", PLACE_PROC,
           "puts \"OT_T floorplan [expr {[clock seconds]-$t0}]\""]
     rp = {n: (x, y, L) for n, L, x, y in gen_phys.die_root_pins(P)}
@@ -724,7 +724,7 @@ def psm_tcl(P, lefs, power, bumps):
     t += [f"read_lef /work/abstracts/{x}" for x in lefs]
     t += [f"foreach f [glob {PLAT}/lib/NLDM/*RVT_TT_nldm*.lib*] {{ read_liberty $f }}",
           "read_verilog /work/psm/psm.v", f"link_design {sv(P.name)}_psm",
-          f"initialize_floorplan -die_area {{0 0 {W:g} {H:g}}} -core_area {{0 0 {W:g} {H:g}}} -site asap7sc7p5t",
+          f"initialize_floorplan -die_area {{0 0 {gen_phys._um(W)} {gen_phys._um(H)}}} -core_area {{0 0 {gen_phys._um(W)} {gen_phys._um(H)}}} -site asap7sc7p5t",
           "source /work/grt/tracks.tcl", PLACE_PROC]
     for n, p in sorted(P.parts.items()):
         ox, oy = p["origin_um"]
@@ -750,20 +750,29 @@ def psm_tcl(P, lefs, power, bumps):
 
 
 def psm_pdn_tcl(P):
-    g = P.die.get("pg", {}).get("grid")
+    """die-trial PDN from the plan's PG rows (ONE PDN RULE, COORD 10-26 13:13): explicit offset + parity from the die
+    lattice (pg_regions.row_spec); a plan with die.pg.domains (PHY windows) builds its VDDPHY regions exactly as
+    pg_regions.pdn_tcl (PG first = real view), so the die-trial kit, the assembly and the die_infra model agree."""
+    import pg_regions
+    die = dict(P.die, outline_um=[P.W, P.H])
+    g = die.get("pg", {}).get("grid")
     lines = ["add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDD$} -power",
-             "add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground",
-             "global_connect", "set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}",
-             "define_pdn_grid -name {top} -voltage_domains {CORE}"]
-    for s in g:
-        lines.append(f"add_pdn_stripe -grid {{top}} -layer {{{s['layer']}}} -width {{{s['width_um']:g}}} "
-                     f"-pitch {{{s['pitch_um']:g}}} -offset {{{s['offset_um']:g}}} -spacing "
-                     f"{{{s['pitch_um'] / 2 - s['width_um']:g}}}")
-    ls = [s["layer"] for s in g]
-    for a, b in zip(ls, ls[1:]):
-        lines.append(f"add_pdn_connect -grid {{top}} -layers {{{a} {b}}}")
-    lines += ["define_pdn_grid -name {parts} -voltage_domains {CORE} -macro -orient {R0 R180 MX MY} "
-              "-halo {0 0 0 0} -default", f"add_pdn_connect -grid {{parts}} -layers {{M7 {ls[0]}}}"]
+             "add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground"]
+    if die.get("pg", {}).get("domains"):
+        phy = sorted({d["nets"][0] for d in die["pg"]["domains"]} - {"VDD"})
+        lines += [f"add_global_connection -net {{{n}}} -inst_pattern {{.*}} -pin_pattern {{^{n}$}} -power" for n in phy]
+        lines += [pg_regions.pdn_tcl(die).rstrip("\n")]
+        dom = "Core"
+    else:
+        lines += ["global_connect", "set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}",
+                  "define_pdn_grid -name {top} -voltage_domains {CORE}"]
+        lines += pg_regions.core_stripes_tcl(die, "{top}")
+        ls = [s["layer"] for s in g]
+        for a, b in zip(ls, ls[1:]):
+            lines.append(f"add_pdn_connect -grid {{top}} -layers {{{a} {b}}}")
+        dom = "CORE"
+    lines += [f"define_pdn_grid -name {{parts}} -voltage_domains {{{dom}}} -macro -orient {{R0 R180 MX MY}} "
+              "-halo {0 0 0 0} -default", f"add_pdn_connect -grid {{parts}} -layers {{M7 {g[0]['layer']}}}"]
     return "\n".join(lines) + "\n"
 
 

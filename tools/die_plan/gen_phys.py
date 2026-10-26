@@ -1446,9 +1446,8 @@ def die_pdn_tcl(P, domain_loads=None):
              "global_connect",
              "set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}",
              "define_pdn_grid -name {top} -voltage_domains {CORE}"]
-    for s in g:
-        lines.append(f"add_pdn_stripe -grid {{top}} -layer {{{s['layer']}}} -width {{{_um(s['width_um'])}}} "
-                     f"-pitch {{{_um(s['pitch_um'])}}} -offset {{{_um(s['offset_um'])}}}")
+    import pg_regions          # ONE PDN RULE (COORD 10-26 13:13): explicit die-lattice offset, spacing and parity
+    lines += pg_regions.core_stripes_tcl(dict(P.die, outline_um=[P.W, P.H]), "{top}", g)
     ls = [s["layer"] for s in g]
     for a, b in zip(ls, ls[1:]):
         lines.append(f"add_pdn_connect -grid {{top}} -layers {{{a} {b}}}")
