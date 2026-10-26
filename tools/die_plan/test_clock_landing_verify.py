@@ -33,8 +33,14 @@ def vehicle(mutant=None):
     tree=dict(root=[0,0],sync_stages=2,relays=[dict(name='u_rrl_0',q='rst_n_t0',d='rst_root_n',xy=[1,0])])
     A=dict(mask=dict(active=True),tree=tree,collector_root_node='rst_root_n',local_sources=[],children=[dict(part='b',node='rst_root_n',index=0,seam=True)])
     B=dict(mask=dict(active=True),tree=tree,collector_root_node='rst_root_n',local_sources=[dict(name='y',tap=0)],children=[])
-    raw=dict(partitions=[dict(name='a',type='A',origin_um=[0,0]),dict(name='b',type='B',origin_um=[10,0])],partition_types=dict(A=dict(outline_um=[10,10]),B=dict(outline_um=[10,10])),ports=[dict(id='p',src=dict(part='a',bus='x'),dst=dict(part='b',bus='y'))])
-    table=dict(ports=[dict(port='p',src='a',dst='b',width=1)],regions=[dict(tag='h0',parts=['a']),dict(tag='h1',parts=['b'])],collector=dict(root='a',types=dict(A=A,B=B),observer=dict(part='a',module=obs.module,instance_suffix='u_sys_face',fault_port='obs_fault',ready_port='seq_cfg_image_ready')))
+    if mutant=='representative_child':A['children'][0]['part']='representative_only'
+    if mutant=='different_status_tap':
+        bt1=cell('b.u_rrl_1','ot_dp_rrelay',{'clk':[bclk],'d':[br]},{'q':1}).ports['q'][0]
+        tree['relays'].append(dict(name='u_rrl_1',q='rst_n_t1',d='rst_root_n',xy=[2,0]))
+        B['local_sources'][0]['tap']=1;bc.path='b.u_cland_collect_rst_n_t1';bc.ports['rst_n']=[bt1]
+    raw=dict(partitions=[dict(name='a',type='A',origin_um=[0,0]),dict(name='b',type='B',origin_um=[10,0])],partition_types=dict(A=dict(outline_um=[10,10]),B=dict(outline_um=[10,10],buses=[dict(name='y',face='W',window_um=[0,2])])),ports=[dict(id='p',src=dict(part='a',bus='x'),dst=dict(part='b',bus='y'))])
+    table=dict(ports=[dict(port='p',src='a',dst='b',width=1)],regions=[dict(tag='h0',parts=['a']),dict(tag='h1',parts=['b'])],collector=dict(root='a',edges=[dict(src='b',dst='a',dst_index=0,seam=True)],types=dict(A=A,B=B),observer=dict(part='a',module=obs.module,instance_suffix='u_sys_face',fault_port='obs_fault',ready_port='seq_cfg_image_ready')))
+    if mutant=='wrong_child':table['collector']['edges'][0]['src']='a'
     if mutant in ('count_regions','bad_region_count'):
         table['regions'][0].update(parts=2 if mutant=='bad_region_count' else 1,box_um=[0,0,10,10])
         table['regions'][1].update(parts=1,box_um=[10,0,20,10])
@@ -86,3 +92,11 @@ def test_live_epoch_is_not_optional():assert any('payload/epoch' in x for x in v
 def test_allocated_spare_capacity_uses_authoritative_live_width():assert vehicle('spare_capacity')['errors']==[]
 
 def test_spare_capacity_cannot_hide_truncated_epoch():assert any('payload/epoch' in x for x in vehicle('spare_epoch_truncated')['errors'])
+
+
+def test_replica_child_uses_exact_top_edge():assert vehicle('representative_child')['errors']==[]
+
+
+def test_ring_and_status_can_use_distinct_declared_taps():assert vehicle('different_status_tap')['errors']==[]
+
+def test_wrong_child_edge_fails_actual_status_and_clock_checks():assert vehicle('wrong_child')['errors']
