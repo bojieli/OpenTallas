@@ -161,8 +161,8 @@ class TestGates(TickBase):
         self.assertEqual(j["status"], "RUNNING")
 
     def test_unversioned_signoff_not_counted_then_promoted(self):
-        self.ap.first_flow_tag_ts = lambda: 1.0          # a flow tag exists and the run started after it
-        self.ap.resolve_provenance = lambda src, flow="": {"src_commit": "0123456789ab" + "0" * 28, "flow_tag": "",
+        self.ap.first_flow_tag_ts = lambda die=None: 1.0          # a flow tag exists and the run started after it
+        self.ap.resolve_provenance = lambda src, flow="", die=None: {"src_commit": "0123456789ab" + "0" * 28, "flow_tag": "",
                                                            "error": "no flow-* tag on origin yet"}
         self.queue(ROW)
         self.tick()
@@ -170,7 +170,7 @@ class TestGates(TickBase):
         self.assertEqual(j["status"], "SIGNED-UNVERSIONED")
         self.assertFalse((Path(self.tmp.name) / "signed.tsv").exists())
         self.assertEqual(len((Path(self.tmp.name) / "unversioned.tsv").read_text().splitlines()), 2)
-        self.ap.resolve_provenance = lambda src, flow="": {"src_commit": "0123456789ab" + "0" * 28,
+        self.ap.resolve_provenance = lambda src, flow="", die=None: {"src_commit": "0123456789ab" + "0" * 28,
                                                            "flow_tag": "flow-20261026-a"}
         (j,) = self.tick().values()
         self.assertEqual(j["status"], "ARCHIVED")
@@ -182,8 +182,8 @@ class TestGates(TickBase):
 
     def test_pre_first_tag_signoff_is_signed_legacy(self):
         """GRANDFATHER (COORD 19:13): no flow tag yet -> a sign-off naming its src commit counts as SIGNED-LEGACY"""
-        self.ap.first_flow_tag_ts = lambda: None
-        self.ap.resolve_provenance = lambda src, flow="": {"src_commit": "0123456789ab" + "0" * 28, "flow_tag": "",
+        self.ap.first_flow_tag_ts = lambda die=None: None
+        self.ap.resolve_provenance = lambda src, flow="", die=None: {"src_commit": "0123456789ab" + "0" * 28, "flow_tag": "",
                                                            "error": "no flow-* tag on origin yet"}
         self.queue(ROW)
         self.tick()
@@ -195,7 +195,7 @@ class TestGates(TickBase):
         self.assertEqual([p["verdict"] for p in provs], ["SIGNED"])
 
     def test_run_started_before_first_tag_is_legacy_after_it_not(self):
-        self.ap.first_flow_tag_ts = lambda: 1000.0
+        self.ap.first_flow_tag_ts = lambda die=None: 1000.0
         j = {"src_commit": "ab" * 20, "started": 999.0}
         self.assertTrue(self.ap.apply_legacy(j)); self.assertEqual(j["flow_tag"], self.ap.LEGACY_TAG)
         j = {"src_commit": "ab" * 20, "started": 1001.0}
@@ -256,6 +256,38 @@ class TestProvenanceGit(unittest.TestCase):
         self.assertIn("differs from flow-20261025-a", p["error"])
         p = self.ap.resolve_provenance("claude/x@deadbeef12")
         self.assertIn("not found", p["error"])
+
+    def test_per_die_tags(self):
+        """12.9e: flow-YYYYMMDD-x-<die> covers only its die; a die without its tag keeps the previous (global) one"""
+        self.g("tag", "-a", "flow-20261026-b-qc", self.flow2, "-m", "qc")
+        self.ap.CLOSURE.clear()
+        self.assertTrue(self.ap.tag_covers("flow-20261026-b-qc", "qwen_compute"))
+        self.assertFalse(self.ap.tag_covers("flow-20261026-b-qc", "qwen_kvsys"))
+        self.assertTrue(self.ap.tag_covers("flow-20261025-a", "hbm"))
+        self.assertTrue(self.ap.tag_covers("flow-20261026-b-s81", "cp1"))
+        self.assertFalse(self.ap.tag_covers("flow-20261026-b-xx", None))
+        self.assertEqual(set(self.ap.flow_tags("qwen_compute")), {"flow-20261026-b-qc", "flow-20261025-a"})
+        self.assertEqual(self.ap.flow_tags("qwen_kvsys"), ["flow-20261025-a"])
+        p = self.ap.resolve_provenance(f"claude/x@{self.flow2[:10]}", "", "qwen_compute")
+        self.assertEqual((p["flow_tag"], p.get("error")), ("flow-20261026-b-qc", None))
+        p = self.ap.resolve_provenance(f"claude/x@{self.flow2[:10]}", "", "qwen_kvsys")   # KV canary pending
+        self.assertEqual(p["flow_tag"], "")
+        p = self.ap.resolve_provenance(f"claude/x@{self.flow2[:10]}", "flow-20261026-b-qc", "hbm")
+        self.assertIn("does not cover die hbm", p["error"])
+        p = self.ap.resolve_provenance(f"claude/x@{self.design[:10]}", "", "qwen_kvsys")
+        self.assertEqual(p["flow_tag"], "flow-20261025-a")
+
+    def test_per_die_first_tag_legacy(self):
+        """GRANDFATHER is per die: a die-only tag starts the tag requirement for that die only"""
+        self.g("tag", "-d", "flow-20261025-a")
+        self.g("tag", "-a", "flow-20261026-b-qc", self.flow2, "-m", "qc")
+        self.ap.CLOSURE.clear()
+        self.assertIsNotNone(self.ap.first_flow_tag_ts("qwen_compute"))
+        self.assertIsNone(self.ap.first_flow_tag_ts("hbm"))
+        j = {"die": "hbm", "src_commit": "ab" * 20, "started": 9e12}
+        self.assertTrue(self.ap.apply_legacy(j))
+        j = {"die": "qwen_compute", "src_commit": "ab" * 20, "started": 9e12}
+        self.assertFalse(self.ap.apply_legacy(j))
 
 
 class TestOwnershipProvenance(unittest.TestCase):

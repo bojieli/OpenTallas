@@ -1,0 +1,28 @@
+{
+ "verdict": "PASS",
+ "scope": "Actual emitted parameter declaration and real ROM primitive image selection only; no carve/token claim",
+ "selected": [
+  {
+   "original_cell": "u_f_6R01.u_r0.u_c0_0",
+   "loader_file": "u_f_6R01.u_r0.u_c0_0.viamap.hex",
+   "image_sha256": "a275a11bd9170a2ec74ed7b9e24af155025569b03ca5388ab164ef7aa6debf2b"
+  },
+  {
+   "original_cell": "u_f_6R01.u_r0.u_c0_1",
+   "loader_file": "u_f_6R01.u_r0.u_c0_1.viamap.hex",
+   "image_sha256": "561e613388c1854096fd7ea677da872081e621ff2cc768820e903a4b6829907a"
+  }
+ ],
+ "results": [
+  {
+   "mutant": 0,
+   "mismatches": 0,
+   "checked": 8192
+  },
+  {
+   "mutant": 1,
+   "mismatches": 2,
+   "checked": 8192
+  }
+ ]
+}
