@@ -1905,6 +1905,46 @@ def kept_wire_alias_copies(L, declared, aliases_file):
     return set()
 
 
+RRS_COPY = re.compile(r"^(ff:.*?)ot_rrs__([A-Za-z0-9_]+)__c(\d+)$")
+
+
+def kept_reset_copies(L, declared):
+    """Kept reset-relay copy bits that physical/common_flow/ot_rst_copies.py re-pointed (QC-LEC-3 10-26, N59: 664 of
+    680 'missing' kept bits were these).  The pass proves the N bits of a family wire WN identical, adds one alias wire
+    \\ot_rrs__<tag>__c<k> per copy bit k (tag = WN with non [A-Za-z0-9_] -> '_', last 60 characters) and moves loads
+    onto it; synthesis then names copy k's flop after that alias.  The copy is still a flop of its own, under a
+    deterministic new name.  A declared gold bit WN[k] counts as present only when exactly one gate family
+    <prefix>ot_rrs__<tag>__c* matches WN's sanitised name under the same hierarchy prefix, that family is claimed by
+    no other gold register, and its copy indices equal the declared bit indices of WN one for one (fail-closed:
+    a folded copy leaves a hole, a truncated-tag collision matches twice)."""
+    fams = collections.defaultdict(dict)
+    for k in L.tp:
+        m = RRS_COPY.match(k)
+        if m:
+            fams[(m.group(1), m.group(2))][int(m.group(3))] = k
+    if not fams:
+        return set()
+    bits = collections.defaultdict(dict)
+    for k in declared:
+        m = IDXK.match(k)
+        if m:
+            bits[m.group(1)][int(m.group(2))] = k
+    claim = collections.defaultdict(list)
+    for base in bits:
+        for pre, tag in fams:
+            if base.startswith(pre) and re.sub(r"[^A-Za-z0-9_]", "_", base[len(pre):])[-60:] == tag:
+                claim[(pre, tag)].append(base)
+    by_base = collections.defaultdict(list)
+    for fam, bases in claim.items():
+        if len(bases) == 1:
+            by_base[bases[0]].append(fam)
+    present = set()
+    for base, fl in by_base.items():
+        if len(fl) == 1 and set(fams[fl[0]]) == set(bits[base]):
+            present.update(bits[base].values())
+    return present
+
+
 def kept_registers(L, keep_file):
     """Kept-register check (fail-closed, PATH-KV-PC3 10-25): every RTL register bit the design declares kept --
     a (* keep *) register or a flop inside a keep_hierarchy cell (pin flops, placement replicas) -- must be a flop of
@@ -1939,6 +1979,7 @@ def kept_registers(L, keep_file):
             gold_rel[m.group(1)] += 1
     renamed = {h[2] for (sd, c), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[2] in L.gp}
     alias_copies = kept_wire_alias_copies(L, declared, Path(keep_file).with_suffix(".aliases.json"))
+    reset_copies = kept_reset_copies(L, declared)
     missing, const = [], []
     for k in sorted(declared):
         if k in gate or k in renamed:
@@ -1949,7 +1990,7 @@ def kept_registers(L, keep_file):
         if proved_state_constant(L,"gold",k) is not None:
             const.append(k)
             continue
-        if k not in alias_copies:
+        if k not in alias_copies and k not in reset_copies:
             missing.append(k)
     return sorted(declared), missing, const
 
@@ -2674,8 +2715,43 @@ def merged_proposals(L, log, cap=4096):
     for k, c in choice.items():
         L.hyp[("gold", k)] = ("eq", "gold", c, 0)
         n += 1
+    # The chosen copy need not be the one synthesis kept the merged register's loads on: QC slw_hc0 10-26 (QC-LEC-3,
+    # CHECKED on the AIGs) paired e_pool[1] with e_poolc1[0], but the gate POOLc next state reads e_poolc1[3]; the
+    # four copies are matched registers with their own (self-holding, never reset) state, so the miter left
+    # e_poolc1[0] != e_poolc1[3] free and 9 POOLc points differed.  The same-support siblings of the chosen copy are
+    # copies of one register (same load condition and data, each holding itself), so propose them equal to it on
+    # both sides; like every other hypothesis each is proved by the simultaneous induction and dropped if refuted.
+    # Only siblings whose next state simulates equal to the chosen copy's with the pair's state bound are proposed
+    # (the other epoch's copy e_poolc0 shares the support but not the load condition).
+    chosen = set(choice.values())
+    sib = collections.defaultdict(list)          # sibling copy -> chosen copies it may equal (in order)
+    for k, c in choice.items():
+        for c2 in cands[k]:
+            if c2 not in chosen and c2 in L.matched and ("both", c2) not in L.hyp and ("both", c) not in L.hyp \
+                    and c not in sib[c2]:
+                sib[c2].append(c)
+    pending = {c2: list(cs) for c2, cs in sib.items() if cs}
+    rounds = 0
+    while pending and rounds < 8:
+        rounds += 1
+        for c2, cs in pending.items():
+            L.hyp[("both", c2)] = ("eq", "gold", cs[0], 0)
+        m, _ = L.build(with_compare=False, with_hyp=True)
+        val, mask = m.simulate(4, seed=4646 + rounds)
+        for c2 in list(pending):
+            if lit_val(val, mask, L.dlit[("gold", c2)]) == lit_val(val, mask, L.dlit[("gold", pending[c2][0])]):
+                del pending[c2]                      # agrees: keep the proposal
+            else:
+                L.hyp.pop(("both", c2), None)
+                pending[c2].pop(0)
+                if not pending[c2]:
+                    del pending[c2]
+    for c2 in pending:                               # undecided after 8 rounds: not proposed
+        L.hyp.pop(("both", c2), None)
+    n_sib = sum(1 for c2 in sib if ("both", c2) in L.hyp)
     log.append(f"merged proposal: {n} of {len(gonly)} gold-only registers share a matched register's next-state support"
-               + (f" ({n_dis} re-chosen among same-support candidates by bound-state simulation)" if n_dis else ""))
+               + (f" ({n_dis} re-chosen among same-support candidates by bound-state simulation)" if n_dis else "")
+               + (f"; {n_sib} same-support sibling copies proposed equal to the chosen copy" if n_sib else ""))
 
 def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
