@@ -924,3 +924,8 @@ CODEX: 2026-10-25 22:01 PDT QC-A0 selected MODE3 missing noFP1 child/native-faul
 CODEX: 2026-10-25 22:02 PDT lint exacttop-parameterfixREADY66b5af5ed (5tests+4realYosyscontrolsPASS); broadMCMM20b6heldafteractualtwo-sceneholdfailure; smallsequentialcornerprooflive. HCPLstructuralstallsrecorded5b66, onlyowncontainersstopped.
 
 CODEX: 2026-10-25 22:05 PDT D-ROM-3b actual uniform KV ROM controller READY b864829e91; pair1024+MU each1.5M-edge exact+mutant PASS, all36layers, boot/production+0, macro81.404um2. Next fresh PATH-KV bind+macro placement/re-kit.
+CODEX: 2026-10-25 22:05 PDT FE reset keep source fixREADY8d1605822 deliveredactualhub; actualfreshFE56/56controlcells+0missing375.8umplacementPASS (old27/29missing retained),500edgeexact+mutant,0cycles; QCownsGPL/review/CTS.
+
+CODEX: 2026-10-25 22:06 PDT TOK-HBM narrow source-complete q3 integration0ab4a3504 actualhub;32module generation/41sourceSHA/P6compilerPASS; generatoraliasrootfix7c reproducesqualifiedSHA+negativecaught; runnerfalse-successfixed. StageAsyncreplayintel1unit3059663 andrealTOPKroot32stageBintel2unit2821207 live, noG5claim.
+CODEX: 2026-10-25 22:06 PDT RESET q_hubNW optional electrical prototype d3474ce65 exacttree2697/depth28,1159padsmoved,2690drivers,maxhop380,0cycles; topologyreviewed,G2TT/FFprototypepending,noSIGNEDclaim.
+2026-10-25 22:07 PDT CODEX: HBMsmall FF-vsMCMM GRT A/B terminalFAIL_BOTH99c276d75:TT+42.17/FF-31.13 vs+39.80/-24.61, nativeFFinternalcalendar172psclockbranch mismatch despite optimizer+5/TNS0; noDRT/adoption. KVcap64A/Bstilllive,9bca574fdheld.
