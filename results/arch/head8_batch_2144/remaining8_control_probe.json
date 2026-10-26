@@ -1,0 +1,125 @@
+{
+ "scope": "actual published control primitive census on existing remaining grids; missing source-provider witnesses remain explicit",
+ "types": {
+  "hd_tile": {
+   "controls": 85,
+   "roles": {
+    "reset_entry": 1,
+    "start_entry": 1,
+    "raw": 36,
+    "run": 36,
+    "gated": 11
+   },
+   "taps": 6,
+   "max_load": 507.0,
+   "max_distance_um": 496.8,
+   "empty": 0,
+   "verdict": "FAIL"
+  },
+  "hd_turn_a": {
+   "controls": 11,
+   "roles": {
+    "reset_entry": 1,
+    "start_entry": 1,
+    "raw": 3,
+    "run": 3,
+    "gated": 3
+   },
+   "taps": 3,
+   "max_load": 941.0,
+   "max_distance_um": 248.016,
+   "empty": 0,
+   "verdict": "FAIL"
+  },
+  "hd_turn_b": {
+   "controls": 7,
+   "roles": {
+    "reset_entry": 1,
+    "start_entry": 1,
+    "raw": 1,
+    "run": 1,
+    "gated": 3
+   },
+   "taps": 3,
+   "max_load": 1133.0,
+   "max_distance_um": 253.39199999999994,
+   "empty": 0,
+   "verdict": "FAIL"
+  },
+  "hd_serdes": {
+   "controls": 276,
+   "roles": {
+    "reset_entry": 1,
+    "start_entry": 1,
+    "raw": 121,
+    "run": 121,
+    "gated": 32
+   },
+   "taps": 32,
+   "max_load": 542.0,
+   "max_distance_um": 331.64,
+   "empty": 0,
+   "verdict": "FAIL"
+  },
+  "hd_mesh": {
+   "controls": 132,
+   "roles": {
+    "reset_entry": 1,
+    "start_entry": 1,
+    "raw": 57,
+    "run": 57,
+    "gated": 16
+   },
+   "taps": 16,
+   "max_load": 564.0,
+   "max_distance_um": 331.64000000000016,
+   "empty": 0,
+   "verdict": "FAIL"
+  },
+  "hd_lep0N": {
+   "controls": 66,
+   "roles": {
+    "reset_entry": 1,
+    "start_entry": 1,
+    "raw": 24,
+    "run": 24,
+    "gated": 16
+   },
+   "taps": 16,
+   "max_load": 1337.0,
+   "max_distance_um": 331.72000000000014,
+   "empty": 0,
+   "verdict": "FAIL"
+  },
+  "hd_ctl": {
+   "controls": 96,
+   "roles": {
+    "reset_entry": 1,
+    "start_entry": 1,
+    "raw": 39,
+    "run": 39,
+    "gated": 16
+   },
+   "taps": 16,
+   "max_load": 2577.0,
+   "max_distance_um": 331.72,
+   "empty": 0,
+   "verdict": "FAIL"
+  },
+  "hd_host": {
+   "controls": 80,
+   "roles": {
+    "reset_entry": 1,
+    "start_entry": 1,
+    "raw": 31,
+    "run": 31,
+    "gated": 16
+   },
+   "taps": 16,
+   "max_load": 635.0,
+   "max_distance_um": 331.6399999999999,
+   "empty": 0,
+   "verdict": "FAIL"
+  }
+ }
+}
