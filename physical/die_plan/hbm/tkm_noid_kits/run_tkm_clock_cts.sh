@@ -28,6 +28,25 @@ PY
 mapfile -t odbs < <(find "$kit/run/results" -name 1_synth.odb -type f)
 [ "${#odbs[@]}" = 1 ] && [ -s "${odbs[0]}" ] || { echo 'NOT RUN: missing unique validated synth checkpoint'; exit 3; }
 checkpoint=/work/${odbs[0]#"$kit/"}
+if [ -f "$kit/placement_resume.json" ]; then
+ checkpoint=$(python3 - "$kit" <<'PYCHECK'
+import hashlib,json,sys
+from pathlib import Path
+p=Path(sys.argv[1]);r=json.load(open(p/'placement_resume.json'));f=json.load(open(p/'freeze.json'))
+if r.get('scope')!='identical_rtl_pins_placement_clock_port_fix':raise SystemExit('NOT RUN: wrong placement-resume scope')
+if r.get('pins_sha256')!=f['pins_sha256']:raise SystemExit('NOT RUN: resumed placement pin contract changed')
+if hashlib.sha256((p/'io.tcl').read_bytes()).hexdigest()!=r['io_sha256']:raise SystemExit('NOT RUN: resumed placement io changed')
+for name,h in r['files'].items():
+ q=Path(name)
+ if q.is_absolute() or '..' in q.parts or not name.startswith('run/'):raise SystemExit('NOT RUN: invalid checkpoint path')
+ if hashlib.sha256((p/q).read_bytes()).hexdigest()!=h:raise SystemExit('NOT RUN: checkpoint changed: '+name)
+q=r['checkpoint']
+if not q.endswith('/3_place.odb') or q not in r['files']:raise SystemExit('NOT RUN: no verified 3_place checkpoint')
+if not any(x.endswith('/3_place.sdc') for x in r['files']):raise SystemExit('NOT RUN: missing placement SDC')
+print('/work/'+q)
+PYCHECK
+ )
+fi
 printf '%s\n' 'ONE CTS-only noID clock prototype; no GRT/DRT/signoff. Review actual tree before TT/FF probes.' > "$kit/DIAGNOSTIC_ONLY"
 printf 'requested=%s enforced=cts checkpoint=%s\n' "$requested" "$checkpoint"
 docker_cmd=(docker)
@@ -35,4 +54,11 @@ if ! docker ps >/dev/null 2>&1; then docker_cmd=(sudo docker);fi
 "${docker_cmd[@]}" run --rm --cpus="$threads" --memory="${mem}g" --memory-swap="${mem}g" \
  -v "$kit":/work -e HUID="$(id -u)" -e HGID="$(id -g)" \
  -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock \
- bash -lc 'set -euo pipefail; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$1" -o "$2" cts; chown -R "$HUID:$HGID" /work/run' tkm-clock "$threads" "$checkpoint"
+ bash -lc 'set -euo pipefail; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
+ if [[ "$2" == */3_place.odb ]]; then
+   make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$1" do-4_1_cts
+   make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$1" do-4_cts
+ else
+   make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$1" -o "$2" cts
+ fi
+ chown -R "$HUID:$HGID" /work/run' tkm-clock "$threads" "$checkpoint"

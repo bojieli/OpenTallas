@@ -11,7 +11,7 @@ referenced there; the rest (kit data: pins/io/sdc/config/face_shell, frozen help
 freeze.json names source_commit + repo-relative plan / pins / rtl paths; kit_hash = gen_core_kit_hbm.kit_hash rule
 (tree minus run/ views/ freeze.json run_*).  No absolute path is read at build time except OUT.
 """
-import argparse, gzip, hashlib, json, shutil, subprocess, sys
+import argparse, gzip, hashlib, json, re, shutil, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -21,6 +21,8 @@ MAN = HERE / "manifest.json"
 REF_DIRS = ("tools/die_plan/", "physical/die_plan/hbm_arch_cores/", "physical/common_flow/", "rtl/")
 CLOCK_FILES = ("hbm_clock_entry.tcl", "shallow_clock.py", "shallow_clock.tcl", "pre_cts_tkm_clock.tcl",
                "post_cts_tkm_clock.tcl", "clock_candidate.json")
+# COORD 2026-10-26 01:21 (PLAN-DELTA, owner rule 10-12): HBM hard cores route to M5 (pins M4/M5, OBS M1-M5).
+ROUTE_CEILING = "M5"
 VIEWS = {"common": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
          "terminal": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap"}
 
@@ -28,6 +30,20 @@ VIEWS = {"common": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
 def sha(b): return hashlib.sha256(b).hexdigest()
 def git(*a): return subprocess.run(["git", "-C", str(REPO), *a], check=True, capture_output=True, text=True).stdout
 def save(p, j): Path(p).write_text(json.dumps(j, indent=1, sort_keys=False) + "\n")
+
+
+def check_route_ceiling(out, ceiling=ROUTE_CEILING):
+    """NOT BUILT unless every kit pin (pins.json + io.tcl) is at or below the ceiling and config.mk sets
+    MAX_ROUTING_LAYER exactly once (incl. the clock-stage append) to the ceiling.  No clamp: fix the sources."""
+    out = Path(out); n = lambda L: int(re.fullmatch(r"M(\d+)", L).group(1))
+    over = [(p.get("bus"), p.get("bit"), p["layer"]) for p in json.load(open(out / "pins.json")) if n(p["layer"]) > n(ceiling)]
+    over += [(m.group(1), None, m.group(2)) for m in re.finditer(r"place_pin -pin_name \{(\S+)\} -layer (M\d+)",
+                                                              (out / "io.tcl").read_text()) if n(m.group(2)) > n(ceiling)]
+    if over:
+        raise SystemExit(f"NOT BUILT: PIN_ABOVE_CEILING {len(over)} kit pins above {ceiling}, e.g. {over[:3]}")
+    vals = re.findall(r"(?m)^\s*(?:override\s+)?export\s+MAX_ROUTING_LAYER\s*[:?]?=\s*(\S+)", (out / "config.mk").read_text())
+    if vals != [ceiling]:
+        raise SystemExit(f"NOT BUILT: ROUTE_CEILING config.mk MAX_ROUTING_LAYER {vals} != [{ceiling!r}]")
 
 
 def kit_hash(kd):
@@ -112,7 +128,12 @@ def clean_head(paths):
 
 
 def place(entry, dst):
-    src = REPO / entry["path"]; b = src.read_bytes()
+    src = REPO / entry["path"]
+    if entry.get("source_commit"):
+        b = subprocess.run(["git", "-C", str(REPO), "show", entry["source_commit"] + ":" + entry["path"]],
+                           check=True, capture_output=True).stdout
+    else:
+        b = src.read_bytes()
     if sha(b) != entry["sha256"]:
         raise SystemExit(f"NOT BUILT: {entry['path']} sha {sha(b)[:12]} != manifest {entry['sha256'][:12]}")
     dst.parent.mkdir(parents=True, exist_ok=True); dst.write_bytes(b)
@@ -152,6 +173,7 @@ def do_build(a):
         fz["clock_candidate"] = cc
         (out / "clock_candidate.json").write_text(json.dumps(cc, indent=1) + "\n")
         shutil.copyfile(REPO / REL / "run_tkm_clock_cts.sh", out / "run_tkm_clock_cts.sh"); (out / "run_tkm_clock_cts.sh").chmod(0o755)
+    check_route_ceiling(out); fz["route_ceiling"] = ROUTE_CEILING
     fz["kit_hash"] = kit_hash(out); fz["kit_hash_rule"] = "gen_core_kit_hbm.kit_hash (tree minus run/ views/ freeze.json run_*)"
     save(out / "freeze.json", fz)
     print(json.dumps(dict(kit=str(out), view=m["view"], kit_hash=fz["kit_hash"], source_commit=commit, clock=bool(a.clock))))

@@ -2,7 +2,7 @@
 """ELEM-HBM 10-24: ORFS kit for one hardened view of the HBM B2r2 plan (one (module, pins table) of views_b2r2.json).
 
     python3 gen_core_kit_hbm.py --views views_b2r2.json --view MODULE@SHA12 --out KITROOT
-                                [--corner WC] [--util 0.5] [--sigmax M5] [--recipe-key KEY] [--wrapper FILE.sv]
+                                [--corner WC] [--util 0.5] [--route-ceiling M5] [--recipe-key KEY] [--wrapper FILE.sv]
 
 Sources (CORE-HBM 10-23 harden data, merged from claude/core-hbm-1023 into ../hbm/cores/harden):
   * recipes_split / recipes_other / recipes .json: RTL files (read at the recipe source_commit when the file is gone
@@ -45,6 +45,37 @@ IO_BUDGET = 0.2
 UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 60.0, 25.0, 0.5, 2.0
 CLK_RE = r"^(clk|clk_[a-z0-9_]+|[a-z0-9_]*_clk|ck|ck_[a-z0-9_]+|[a-z0-9_]*clk_[a-z0-9_]*)$"
 RST_RE = r"^(rst_n|rst|arst_n|reset_n|rst_[a-z0-9_]+|[a-z0-9_]*_rst_n|[a-z0-9_]*rst_n|[a-z0-9_]*rst_[a-z0-9_]*n)$"
+
+# COORD 2026-10-26 01:21 (lanes/PLAN-DELTA.md, owner rule 10-12 "M5 default ceiling for new tiles"): every HBM hard
+# core routes to M5 (pins M4/M5, OBS M1-M5); the partition / die own M6+ over the core.  One explicit parameter;
+# a plan pin above it FAILS kit generation (re-pin the plan, e.g. hbm_arch/path_hbm_m5_ceiling.py) -- no silent clamp.
+HBM_CORE_ROUTE_CEILING = "M5"
+ROUTE_CEILINGS = (HBM_CORE_ROUTE_CEILING,)  # M6+ belongs to the partition/die; M5 also carries the core PDN.
+
+
+def layer_no(layer):
+    m = re.fullmatch(r"M(\d+)", str(layer))
+    if not m:
+        raise SystemExit(f"ROUTE_CEILING: bad layer {layer!r}")
+    return int(m.group(1))
+
+
+def check_route_ceiling(pins, ceiling, tag):
+    """Every plan pin at or below the core route ceiling, else SystemExit (PIN_ABOVE_CEILING)."""
+    if ceiling not in ROUTE_CEILINGS:
+        raise SystemExit(f"ROUTE_CEILING {tag}: ceiling {ceiling!r} not one of {ROUTE_CEILINGS}")
+    over = [(q["name"], q["layer"]) for q in pins if layer_no(q["layer"]) > layer_no(ceiling)]
+    if over:
+        raise SystemExit(f"PIN_ABOVE_CEILING {tag}: {len(over)}/{len(pins)} plan pins above the core route ceiling "
+                         f"{ceiling}, e.g. {over[:3]} (re-pin the plan; the kit generator never clamps)")
+
+
+def check_cfg_ceiling(cfg_lines, ceiling, tag):
+    """The kit config.mk names MAX_ROUTING_LAYER exactly once and = the ceiling (no orfs_var / append override)."""
+    vals = [ln.split("=", 1)[1].strip() for ln in cfg_lines
+            if re.match(r"^\s*(override\s+)?export\s+MAX_ROUTING_LAYER\s*[:?]?=", ln)]
+    if vals != [ceiling]:
+        raise SystemExit(f"ROUTE_CEILING {tag}: config.mk MAX_ROUTING_LAYER {vals} != [{ceiling!r}]")
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
 make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.045 -y_pitch 0.270
@@ -451,7 +482,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--out", required=True)
     ap.add_argument("--corner", default="TC", choices=["WC", "TC", "BC"])
     ap.add_argument("--util", type=float, default=None)
-    ap.add_argument("--sigmax", default="auto", help="auto = M5 or the highest plan pin layer (B2r2 pins use M6/M7 on 64 tables)")
+    ap.add_argument("--route-ceiling", "--sigmax", dest="sigmax", default=HBM_CORE_ROUTE_CEILING,
+                    choices=ROUTE_CEILINGS,
+                    help="core MAX_ROUTING_LAYER (M5 required, COORD 10-26); a plan pin above it fails generation")
     ap.add_argument("--recipe-key", default=None)
     ap.add_argument("--wrapper", default=None, help="hand-checked wrapper SV defining the plan module")
     # HBM-CORES 10-24: default 30 -> 0.  The gate (TT setup / FF hold, 60/25 ps uncertainty in the SDC) is unchanged;
@@ -495,6 +528,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--no-f1", action="store_true", help="no per-corner FF IO basis in the FF hold repair")
     ap.add_argument("--no-f4", action="store_true", help="no zero-logic chain leaf affinity post-CTS")
     ap.add_argument("--clock-tap-dmax", type=float, default=80.0)
+    ap.add_argument("--rtl-override", action="append", default=[], metavar="FILE.sv=PATH",
+                    help="PATH-HBM 10-25: replace the recipe RTL file with this basename by PATH (a reviewed successor "
+                         "with identical ports, e.g. the TOKEN-lane cb21 root core); recorded in freeze.json")
     a = ap.parse_args()
     V = json.load(open(a.views))
     v = next((x for x in V["view_list"] if x["view"] == a.view), None)
@@ -521,7 +557,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if off67:
         raise SystemExit(f"{a.view}: {len(off67)} M6/M7 pins off the plan lattice, e.g. {off67[:3]}")
     if a.sigmax == "auto":
-        a.sigmax = max(["M5"] + [q["layer"] for q in pins], key=lambda L: int(L[1:]))
+        raise SystemExit("--sigmax auto removed (COORD 2026-10-26): the core route ceiling is explicit, default M5")
+    check_route_ceiling(pins, a.sigmax, a.view)
     names = [p["name"] for p in pins]
     pb = buses_of(names)
     R = load_recipes()
@@ -589,9 +626,15 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             dst.write_bytes(data)
         else:
             fetch(f, fat.get(f, commit), dst, at_commit=bool(rec.get("read_at_commit")) or f in fat)
+        ovr = dict(kv.split("=", 1) for kv in a.rtl_override)
+        if dst.name in ovr:
+            shutil.copyfile(ovr[dst.name], dst)
         local.append(str(dst))
         if not f.endswith((".svh", ".vh")):
             srcs.append(f"/work/rtl/{dst.name}")
+    _miss = {kv.split("=", 1)[0] for kv in a.rtl_override} - {Path(f).name for f in files}
+    if _miss:
+        raise SystemExit(f"--rtl-override names not in the recipe files: {sorted(_miss)}")
     retained = rec.get("retain_unused_input_bits", {})
     retention_helper = retain_unused_inputs(local, top, retained, kd)
     if retention_helper:
@@ -984,6 +1027,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
     if a.prects_estimate:
         flow["prects_estimate"] = prects_phase_hooks(kd, cfg, clks, ins)
+    check_cfg_ceiling(cfg, a.sigmax, a.view)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
@@ -991,7 +1035,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
               plan=str(plan_path), plan_sha256=sha(plan_path), pins_file=v["pins_file"], pins_sha256=v["pins_sha256"],
               pins=len(pins), clocks=clks, resets=rsts, period_ps=per, common_latency_ps=ins, corner=a.corner,
               plan_common_latency_ps=common, core_clock_contract=contract, orfs_var_overrides=a.orfs_var,
-              sdc_lint="PASS (gen)", macros=rec.get("macros", []),
+              rtl_overrides={kv.split("=", 1)[0]: dict(path=kv.split("=", 1)[1], sha256=sha(kv.split("=", 1)[1]))
+                             for kv in a.rtl_override},
+              sdc_lint="PASS (gen)", macros=rec.get("macros", []), route_ceiling=a.sigmax,
               face_shell=(dict(core=shell["core"], in_cycles=1, out_cycles=1, face_flops=shell["face_flops"],
                                dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],

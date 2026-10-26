@@ -1,0 +1,18 @@
+{
+  "source_base": "main69d23a6a5",
+  "scope": "Nonpathslw_hc0 fixedsource place-only prototype; frozenboundtype wrapper andmain69cells copied exactly; not fullcurrentstrictbind",
+  "filelist": [
+    "results/kits_wave_qc_2155/hc0_cohort/qfd_qc_slw_hc0.sv",
+    "results/kits_wave_qc_2155/hc0_cohort/qfd_qc_slw_hc0_bound.sv",
+    "results/kits_wave_qc_2155/hc0_cohort/bind_cells.sv",
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv"
+  ],
+  "host": "epyc1",
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-hc0-2315/gen/slw_hc0",
+  "unit": "oth-ubuntu-3202052-1792995172",
+  "review": "results/geom_review/qc_kits_2155/review.json",
+  "next": "fresh3place actualgeometry/reset/FT/clockload review beforeCTS; no route"
+}

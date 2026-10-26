@@ -1,0 +1,76 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "q_b001/q_b010 floorplan + actual FT placement; scoped G2 prototypes only",
+  "source_commit": "7052a46dc",
+  "plan_sha256": "44f88a1d65c37f2f104735474788c319f252cdff3ce9009b703dda1643381588",
+  "plan": "epyc1:/srv/opentallas-scratch2/claude/codex-hbm-corridor-2149/bank_primary_final/die_plan.json",
+  "image": "results/geom_review/codex_hbm_channels_1025/bank_primary_sites.png",
+  "findings": [
+    "All current M1-M7 hard-core outlines remain; EW buses use the large core-free upper band and N turns use separate side channels.",
+    "Actual35-slot repair has0unfixed/0macrointersections; worst paired-bit reach392.541um<=403repairbudget<=405ownerlimit.19slotsgrew; report individual cycle changes to the model.",
+    "Core row/gutter spacing17.28um reserves real room beyond4.32um halos for reset FF+keptBUF pairs; shared hubs are42.8%hardcorefill afterrepack.",
+    "Canonical type-frame pin tables preserve exact MY replication; schema and abutment checks had0errors.",
+    "Clock taps, physical PDN continuity, related-pair skew and TT/FF timing still require the current source prototype; the drawing does not establish those gates."
+  ],
+  "conditions": [
+    "Use conservative union of real/declaredM7coreOBS; no genericM5over-corecapacitygrant.",
+    "Adopt qualified keptFF+BUF reset source and run its fullnew-plan pair preflight beforeG2.",
+    "Render/review the actual G2 placement; no SIGNED or whole-die adoption claim."
+  ],
+  "counts": {
+    "q_b001": {
+      "slots": 17,
+      "ft_cells": 24040
+    },
+    "q_b010": {
+      "slots": 18,
+      "ft_cells": 32957
+    }
+  },
+  "lane_cycle_delta_vs_corridor_input": {
+    "L11": 1,
+    "L11m": 1,
+    "L14": 1,
+    "L14m": 1,
+    "L36": 6,
+    "L36m": 6,
+    "L43": 2,
+    "L43m": 2,
+    "L52": 1,
+    "L52m": 1,
+    "L73": 2,
+    "L73m": 2,
+    "L86": 1,
+    "L86m": 1,
+    "L101": 2,
+    "L101m": 2,
+    "L107": 3,
+    "L107m": 3,
+    "L115": 1,
+    "L115m": 1,
+    "L116": 1,
+    "L116m": 1,
+    "L119": 2,
+    "L119m": 2,
+    "L126": 2,
+    "L126m": 2,
+    "L132": 2,
+    "L132m": 2,
+    "L133": 2,
+    "L133m": 2,
+    "L146": 2,
+    "L146m": 2,
+    "L148": 2,
+    "L148m": 2
+  },
+  "internal_type_max": {
+    "q_b001": {
+      "before": 7,
+      "after": 5
+    },
+    "q_b010": {
+      "before": 6,
+      "after": 7
+    }
+  }
+}

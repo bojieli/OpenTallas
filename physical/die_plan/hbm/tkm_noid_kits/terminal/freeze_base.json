@@ -23,7 +23,7 @@
   345.6
  ],
  "plan_sha256": "4768c4fa637759b995d8b5aba70e35d9a3d2bf8f05280431ce5dfbd26e8e1862",
- "pins_sha256": "d653592bf242ab646aeee4e044abf1fdceb2555a20fef6b17fd8eb40b097c9f7",
+ "pins_sha256": "00948825b997aec180f702543816bbc738f5cc1d026cd409993447fac1bd02ca",
  "pins": 694,
  "clocks": [
   "tile_clk"
@@ -119,5 +119,18 @@
   "vclk_corner.tcl": "a17e6d26fee3ff5cb54a229ffbd14f96c6553a345870a007dcea362a072b4f46",
   "postcts_gate.tcl": "613d2699276dce0154eb93a0959d02e5e580e3245f30c00b8968084f42b6988e",
   "pinreg_measure.tcl": "c559ee825ced2d88643457e4457bc4ae6922c44869fc44556fc9347cebfc0025"
+ },
+ "route_ceiling_delta": {
+  "rule": "COORD 2026-10-26 01:21 PLAN-DELTA: HBM hard cores M5 ceiling (pins M4/M5, OBS M1-M5)",
+  "max_routing_layer": "M7 -> M5",
+  "pins_moved": [
+   {
+    "pin": "tile_clk",
+    "layer": "M6->M4",
+    "y_um": 172.728
+   }
+  ],
+  "pins_source": "b1m5_0126 plan (die_plan.json sha256 107ae6726367) cores/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__chain.json sha256 76c8acd22222 = physical/die_plan/hbm_arch/path_hbm_m5_ceiling.py output",
+  "rtl_synth_unchanged": true
  }
 }

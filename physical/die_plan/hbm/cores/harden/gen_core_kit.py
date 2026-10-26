@@ -2,7 +2,7 @@
 """CORE-HBM: ORFS kit for ONE planned hard core of the HBM d4g plan (COORD 10-23 19:08 CORE-HARDEN).
 
     python3 gen_core_kit.py --plan PLAN.json --type TYPE_ID --recipes recipes.json --out KITROOT [--tool TOOLDIR]
-                            [--repo REPO] [--util 0.5] [--sigmax M5]
+                            [--repo REPO] [--util 0.5] [--route-ceiling M5]
 
 TYPE_ID = <module>__<w>x<h> as in census_*.json (one kit per (module, outline, pins_file); replicas share it).
 The kit (mount at /work; run with the plan tool's run_kit.sh through ot-run):
@@ -35,6 +35,37 @@ IO_BUDGET = 0.2
 UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 60.0, 25.0, 0.5, 2.0
 CLK_RE = r"^(clk|clk_[a-z0-9_]+|[a-z0-9_]*_clk|ck|ck_[a-z0-9_]+)$"
 RST_RE = r"^(rst_n|rst|arst_n|reset_n|rst_[a-z0-9_]+|[a-z0-9_]*_rst_n|[a-z0-9_]*rst_n)$"
+
+# COORD 2026-10-26 01:21 (lanes/PLAN-DELTA.md, owner rule 10-12 "M5 default ceiling for new tiles"): every HBM hard
+# core routes to M5 (pins M4/M5, OBS M1-M5); the partition / die own M6+ over the core.  One explicit parameter;
+# a plan pin above it FAILS kit generation (re-pin the plan, e.g. hbm_arch/path_hbm_m5_ceiling.py) -- no silent clamp.
+HBM_CORE_ROUTE_CEILING = "M5"
+ROUTE_CEILINGS = (HBM_CORE_ROUTE_CEILING,)  # M6+ belongs to the partition/die; M5 also carries the core PDN.
+
+
+def layer_no(layer):
+    m = re.fullmatch(r"M(\d+)", str(layer))
+    if not m:
+        raise SystemExit(f"ROUTE_CEILING: bad layer {layer!r}")
+    return int(m.group(1))
+
+
+def check_route_ceiling(pins, ceiling, tag):
+    """Every plan pin at or below the core route ceiling, else SystemExit (PIN_ABOVE_CEILING)."""
+    if ceiling not in ROUTE_CEILINGS:
+        raise SystemExit(f"ROUTE_CEILING {tag}: ceiling {ceiling!r} not one of {ROUTE_CEILINGS}")
+    over = [(q["name"], q["layer"]) for q in pins if layer_no(q["layer"]) > layer_no(ceiling)]
+    if over:
+        raise SystemExit(f"PIN_ABOVE_CEILING {tag}: {len(over)}/{len(pins)} plan pins above the core route ceiling "
+                         f"{ceiling}, e.g. {over[:3]} (re-pin the plan; the kit generator never clamps)")
+
+
+def check_cfg_ceiling(cfg_lines, ceiling, tag):
+    """The kit config.mk names MAX_ROUTING_LAYER exactly once and = the ceiling (no orfs_var / append override)."""
+    vals = [ln.split("=", 1)[1].strip() for ln in cfg_lines
+            if re.match(r"^\s*(override\s+)?export\s+MAX_ROUTING_LAYER\s*[:?]?=", ln)]
+    if vals != [ceiling]:
+        raise SystemExit(f"ROUTE_CEILING {tag}: config.mk MAX_ROUTING_LAYER {vals} != [{ceiling!r}]")
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
 make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.045 -y_pitch 0.270
@@ -157,7 +188,9 @@ def main():
     ap.add_argument("--tool", default="/home/ubuntu/wt/plan-tool-1023/tools/die_plan")
     ap.add_argument("--plan-commit", default="0ea1350db")
     ap.add_argument("--util", type=float, default=0.5)
-    ap.add_argument("--sigmax", default="M5")
+    ap.add_argument("--route-ceiling", "--sigmax", dest="sigmax", default=HBM_CORE_ROUTE_CEILING,
+                    choices=ROUTE_CEILINGS,
+                    help="core MAX_ROUTING_LAYER (M5 required, COORD 10-26); a plan pin above it fails generation")
     ap.add_argument("--pins-file", default=None, help="pick the plan core with this pins_file when one type id has "
                     "several (e.g. hfd_ep_static, vm_calendar pv0/pv1); the kit dir gets the pins-file stem as suffix")
     a = ap.parse_args()
@@ -182,6 +215,7 @@ def main():
     if not rec:
         raise SystemExit(f"no recipe for {a.type} / {c['module']}")
     pins = json.load(open(plandir / c["pins_file"]))
+    check_route_ceiling(pins, a.sigmax, a.type)
     kd = Path(a.out) / (a.type + (f"-{pstem}" if a.pins_file else ""))   # docker names allow [A-Za-z0-9_.-] only
     if kd.exists():
         shutil.rmtree(kd)
@@ -308,6 +342,7 @@ def main():
             "".join(f"place_macro -macro_name {{{i}}} -location {{{v[0]:.4f} {v[1]:.4f}}} -orientation {v[2] if len(v) > 2 else 'R0'}"
                     " -exact\n" for i, v in sorted(mp.items())))
         cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_place.tcl")
+    check_cfg_ceiling(cfg, a.sigmax, a.type)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rec_sha = hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest()
     try:
