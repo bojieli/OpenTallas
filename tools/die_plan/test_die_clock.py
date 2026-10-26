@@ -70,6 +70,26 @@ def test_split_keeps_related_taps_together():
     assert s == 50.0 and w == 100
 
 
+def test_pair_cost_count_cuts_fewest_related_pairs():
+    """--pair-cost count: the per-pair gate counts distinct tap pairs, so a split through one wide seam beats a split
+    through two narrow ones (bits would pick the opposite), and duplicate rows of one tap pair (several ports) count once."""
+    coords = {0: 10.0, 1: 40.0, 2: 60.0, 3: 90.0, 4: 95.0}
+    rows = [(1, 2, 100), (2, 3, 30), (3, 2, 30), (2, 4, 30)]
+    assert DC.count_pairs(rows) == [(1, 2, 1), (2, 3, 1), (2, 4, 1)]
+    s, w = DC.choose_split(0.0, 100.0, 0, coords, rows, edges=[45.0, 70.0], window=0.25)
+    assert s == 70.0 and w == 90                         # bits: two pairs (90 bits) cut
+    s, w = DC.choose_split(0.0, 100.0, 0, coords, DC.count_pairs(rows), edges=[45.0, 70.0], window=0.25)
+    assert s == 50.0 and w == 1                          # count: one pair cut
+
+
+def test_pair_cost_flag_reaches_build():
+    P = S.Plan(json.loads(PLANS[1].read_text()))
+    for cost in ("bits", "count"):
+        T, tree = DC.build(P, leaf_um=300.0, keep=[], pad="level", pair_cost=cost)
+        assert tree["meta"]["pair_cost"] == cost
+        assert len(set(signature(T, tree).values())) == 1, "pair cost moves cuts, never the balance"
+
+
 @pytest.mark.skipif(not (shutil.which("sta") or Path("~/.local/opentallas-tools/bin/sta").expanduser().is_file()),
                     reason="OpenSTA not installed")
 @pytest.mark.parametrize("pad", ["level", "sta"])

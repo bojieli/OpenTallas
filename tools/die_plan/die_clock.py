@@ -287,6 +287,17 @@ def split_pairs(P, taps):
     return out
 
 
+def count_pairs(pairs):
+    """--pair-cost count: one unit per distinct related tap pair, whatever its bits.  The gate is per pair (decision 5:
+    every related pair <= 80 ps), and a pair whose taps split at a top level keeps almost no CPPR credit, so a cut through
+    one 11-bit seam fails exactly like a cut through a 513-bit one: the top splits minimise the NUMBER of related pairs
+    they separate, not their bits."""
+    seen = {}
+    for a, b, _ in pairs:
+        seen.setdefault((min(a, b), max(a, b)), 1)
+    return [(a, b, w) for (a, b), w in sorted(seen.items())]
+
+
 def choose_split(lo, hi, ax, coords, pairs, edges, window):
     """split coordinate of region [lo, hi) on axis ax: the candidate (region midpoint or a partition edge within
     +-window x extent of it) cutting the least pair weight; ties -> nearest the midpoint.  -> (s, cut weight)."""
@@ -411,7 +422,8 @@ def route_domain_tree(T, tree, P, clear_um=8.64, rep_um=450.0):
 
 
 def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=None, window=None, aware_levels=None,
-          pad="sta", domain_corridors=False, domain_clear_um=8.64):
+          pad="sta", domain_corridors=False, domain_clear_um=8.64, pair_cost="bits",
+          count_levels=99):
     W, H = float(P.W), float(P.H)
     window = SPLIT_WINDOW if window is None else window
     aware_levels = AWARE_LEVELS if aware_levels is None else aware_levels
@@ -455,10 +467,11 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
             lo, hi = (reg[0], reg[2]) if ax == 0 else (reg[1], reg[3])
             mem = members.get((lev, idx), [])
             pr = npairs.get((lev, idx), [])
+            cpr = count_pairs(pr) if pair_cost == "count" and lev < count_levels else pr
             if mem and pr and lev < aware_levels:
-                s_, cw = choose_split(lo, hi, ax, co, pr, edges[ax], window)
+                s_, cw = choose_split(lo, hi, ax, co, cpr, edges[ax], window)
             elif mem and pr:
-                s_, cw = choose_split(lo, hi, ax, co, pr, (), 0.0)
+                s_, cw = choose_split(lo, hi, ax, co, cpr, (), 0.0)
             else:
                 s_, cw = (lo + hi) / 2, 0.0
             cut_w[lev] += cw
@@ -755,7 +768,7 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 targets += [[e, 0] for nn, _ in list(targets) for e in extra.get(nn, [])]
     over = max(geo - L for n in nets for L, _, _, geo in n["branches"])
     tot_w = sum(w for _, _, w in pairs)
-    meta = dict(leaf_um=leaf_um, rep_um=rep_um, pad=pad, levels=D, split_axes="".join("xy"[a] for a in levels),
+    meta = dict(leaf_um=leaf_um, rep_um=rep_um, pad=pad, levels=D, pair_cost=pair_cost, count_levels=count_levels if pair_cost == "count" else None, split_axes="".join("xy"[a] for a in levels),
                 split_window=window, aware_levels=aware_levels, root_um=list(root), centre_um=list(c0), trunk_um=round(tl, 1), taps=len(taps),
                 leaves_live=len(leaf_keys), tap_drivers_per_leaf=F,
                 last_mile_pad_um=[round(Lx, 2), round(Ly, 2)], last_mile_stages=[kx, ky],
@@ -970,7 +983,8 @@ def cmd_build(a):
     t0 = time.time()
     T, tree = build(P, a.leaf_um, a.rep_um, a.core_early, window=a.window, aware_levels=a.aware_levels, pad=a.pad,
                     domain_corridors=getattr(a,"domain_corridors",False),
-                    domain_clear_um=getattr(a,"domain_clear_um",8.64))
+                    domain_clear_um=getattr(a,"domain_clear_um",8.64),
+                    pair_cost=getattr(a, "pair_cost", "bits"), count_levels=getattr(a, "count_levels", 99))
     write_verilog(T, out / "ctree.v")
     write_spef(T, out / "ctree.spef")
     import hashlib
@@ -1474,6 +1488,9 @@ def main(argv=None):
     b.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
     b.add_argument("--domain-clear-um", type=float, default=8.64)
     b.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
+    b.add_argument("--pair-cost", choices=("bits", "count"), default="bits",
+                   help="split cost: seam bits (default) or one per distinct related tap pair (the per-pair gate)")
+    b.add_argument("--count-levels", type=int, default=99, help="--pair-cost count only on the top N levels")
     b.add_argument("--wide-levels", type=int, default=0, help="trunk + top N H-tree levels on the 8W NDR")
     b.add_argument("--ndr", choices=("2w", "4w"), default="2w", help="die-tree wire NDR: 2w (default; 4W only > WIDE_UM) or 4w everywhere")
     u = sub.add_parser("run")
@@ -1487,6 +1504,9 @@ def main(argv=None):
     u.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
     u.add_argument("--domain-clear-um", type=float, default=8.64)
     u.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
+    u.add_argument("--pair-cost", choices=("bits", "count"), default="bits",
+                   help="split cost: seam bits (default) or one per distinct related tap pair (the per-pair gate)")
+    u.add_argument("--count-levels", type=int, default=99, help="--pair-cost count only on the top N levels")
     u.add_argument("--wide-levels", type=int, default=0, help="trunk + top N H-tree levels on the 8W NDR")
     u.add_argument("--ndr", choices=("2w", "4w"), default="2w", help="die-tree wire NDR: 2w (default; 4W only > WIDE_UM) or 4w everywhere")
     u.add_argument("--corner", action="append")
