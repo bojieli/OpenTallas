@@ -2370,9 +2370,11 @@ def main(argv=None):
                    help="opt-in (>0, KV uses 700): leaf driver pair split by a macro beyond this span takes the shortest pair")
     b.add_argument("--split-yfirst", action="store_true", help="opt-in: split_long retries the y-first L (PHY corners)")
     b.add_argument("--delta-id", help="plan delta tag recorded in mesh.json meta (e.g. D-QC-CLKMESH)")
-    b.add_argument("--rule-12-8", action="store_true",
-                   help="METHODOLOGY v4.1 12.8: plan-model stub sizing (d1), early-offset taps FAIL, no measured "
+    b.add_argument("--rule-12-8", action="store_true", default=True,
+                   help="(DEFAULT) METHODOLOGY v4.1 12.8: plan-model stub sizing (d1), early-offset taps FAIL, no measured "
                         "balance, fixed VSS-shielded tree pre-routes, CPPR at the last common tree node")
+    b.add_argument("--legacy-pre-12-8", dest="rule_12_8", action="store_false",
+                   help="DIAGNOSTIC ONLY: the pre-12.8 build (never freeze/sign-off evidence)")
     b.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()),
                    help="liberty dir for the 12.8 plan sizing model")
     b.add_argument("--tap-slew-max-ps", type=float, default=C128.TAP_SLEW_MAX_PS)
