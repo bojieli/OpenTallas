@@ -443,12 +443,13 @@ def template(root=ROOT):
     This is engineering input for the compiler integration owner, never a die
     netlist. Unknown measured latencies are null, not guessed physical values.
     """
+    core_clock = __import__('os').environ.get('OT_KV_CONTROLLER_CORE', '0') == '1'
     params={
         'layer_programme':dict(MUT=0,**({'MU':1} if MU else {})),'attention_programme':dict(MUT=0,LAND=1 if __import__('os').environ.get('OT_KV_ATTN_LAND','0')=='1' else 0,RETIRE_STATIC=0),
-        'phase_launch':dict(PH0=None,SAFE_LOW_U=None,SAFE_HIGH_U=None,META_HOLD_CORE=None,MUT=0),
+        'phase_launch':dict(PH0=None,SAFE_LOW_U=None,SAFE_HIGH_U=None,META_HOLD_CORE=None,MUT=0,**({'SAME_CLOCK':1} if core_clock else {})),
         'ownership':dict(MUT=0,**({'MU':1} if MU else {})),'drain_guard':dict(MUT=0),
-        'pc_path':dict(MU=1 if MU else 0),'landing':dict(MUT=0,HOP_MUT=0),
-        'landing_calendar':dict(MUT=0,PH0=0),'front_calendar':dict(MUT=0),
+        'pc_path':dict(MU=1 if MU else 0,**({'CORE_CLOCK':1} if core_clock else {})),'landing':dict(MUT=0,HOP_MUT=0),
+        'landing_calendar':dict(MUT=0,PH0=0,**({'SAME_CLOCK':1} if core_clock else {})),'front_calendar':dict(MUT=0),
         'k_issuer':dict(RESPONSE_LAT=None,MUT=0),
         'vport':dict(MUT=0,DQ=None,RT=None),
         'ectla':dict(STATIC_QK=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=None,HXK=QKH32.capture_hxk()),

@@ -1,0 +1,7 @@
+{"status": "FUNCTIONAL_PASS_PHYSICAL_PENDING", "source": "claude/path-kv-head-1025 (ot_qkh_lane8 S3_COPY=1 on codex master kits new0/new2/new6)",
+ "cycles_added": 0, "edges_per_case": 19993,
+ "nominal": {"e0": {"master": "e0", "bsel": "00", "mismatches": 0}, "e2": {"master": "e2", "bsel": "01", "mismatches": 0},
+             "e4": {"master": "e6", "bsel": "10", "mismatches": 0}, "e6": {"master": "e6", "bsel": "11", "mismatches": 0}},
+ "hid": "old kit hid port mapped to strap_hid (random per run, as codex nom*)",
+ "mutant": {"wrong_bsel_e6": {"expected": "11", "supplied": "10", "mismatches": 10249}},
+ "old_kits": "epyc1:/srv/opentallas-scratch2/claude/codex-kv-cores-0719/miter/old{0,2,4,6} (constant variants)"}

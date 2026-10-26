@@ -143,3 +143,16 @@ def test_unknown_image_anchor_fails_before_any_mutation(tmp_path):
     with pytest.raises(ValueError, match='boundaries'):
         ir.patch(scripts)
     assert before == {p.name: p.read_bytes() for p in scripts.iterdir()}
+
+
+def test_generated_run_kit_defers_partition_ir():
+    """CRASH-TRIAGE 10-25: gen.py phys kits defer 6_report PDNSim out of the route container (10 OOM crash rows)."""
+    import gen_phys
+    rk = gen_phys.RUN_KIT
+    assert '-e OT_KIT_IR=${OT_KIT_IR:-defer}' in rk
+    assert 'python3 -I /work/partition_ir.py patch /OpenROAD-flow-scripts/flow/scripts && export OT_DEFER_PARTITION_IR=1' in rk
+    # the patch precedes every make step of the container
+    assert rk.index('partition_ir.py patch') < rk.index('\\$M synth')
+    assert subprocess.run(['bash', '-n'], input=rk, text=True).returncode == 0
+    src = (Path(__file__).with_name('gen_phys.py')).read_text()
+    assert 'with_name("partition_ir.py"), kd / "partition_ir.py"' in src
