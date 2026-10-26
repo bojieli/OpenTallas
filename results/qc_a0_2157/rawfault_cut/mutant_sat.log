@@ -1,0 +1,240 @@
+
+-- Running command `read_verilog cone_models.v reference_cone.v mutant_cone.v miter.v; hierarchy -top mutant_miter; proc; flatten; opt; sat -verify -prove ok 1 -show q' --
+
+1. Executing Verilog-2005 frontend: cone_models.v
+Parsing Verilog input from `cone_models.v' to AST representation.
+Generating RTLIL representation for module `\AND3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND4x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO21x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2x1_ASAP7_75t_R'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: reference_cone.v
+Parsing Verilog input from `reference_cone.v' to AST representation.
+Generating RTLIL representation for module `\reference_cone'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: mutant_cone.v
+Parsing Verilog input from `mutant_cone.v' to AST representation.
+Generating RTLIL representation for module `\mutant_cone'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: miter.v
+Parsing Verilog input from `miter.v' to AST representation.
+Generating RTLIL representation for module `\miter'.
+Generating RTLIL representation for module `\mutant_miter'.
+Successfully finished Verilog frontend.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \mutant_miter
+Used module:     \mutant_cone
+Used module:         \NAND2x1_ASAP7_75t_R
+Used module:         \AO21x1_ASAP7_75t_R
+Used module:         \INVx1_ASAP7_75t_R
+Used module:         \AND3x1_ASAP7_75t_R
+Used module:         \AND4x1_ASAP7_75t_R
+Used module:     \reference_cone
+
+5.2. Analyzing design hierarchy..
+Top module:  \mutant_miter
+Used module:     \mutant_cone
+Used module:         \NAND2x1_ASAP7_75t_R
+Used module:         \AO21x1_ASAP7_75t_R
+Used module:         \INVx1_ASAP7_75t_R
+Used module:         \AND3x1_ASAP7_75t_R
+Used module:         \AND4x1_ASAP7_75t_R
+Used module:     \reference_cone
+Removing unused module `\miter'.
+Removed 1 unused modules.
+Mapping positional arguments of cell mutant_miter.g (mutant_cone).
+Mapping positional arguments of cell mutant_miter.r (reference_cone).
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module mutant_miter.
+Optimizing module mutant_cone.
+<suppressed ~1 debug messages>
+Optimizing module reference_cone.
+Optimizing module NAND2x1_ASAP7_75t_R.
+Optimizing module INVx1_ASAP7_75t_R.
+Optimizing module AO21x1_ASAP7_75t_R.
+Optimizing module AND4x1_ASAP7_75t_R.
+Optimizing module AND3x1_ASAP7_75t_R.
+
+7. Executing FLATTEN pass (flatten design).
+Deleting now unused module mutant_cone.
+Deleting now unused module reference_cone.
+Deleting now unused module NAND2x1_ASAP7_75t_R.
+Deleting now unused module INVx1_ASAP7_75t_R.
+Deleting now unused module AO21x1_ASAP7_75t_R.
+Deleting now unused module AND4x1_ASAP7_75t_R.
+Deleting now unused module AND3x1_ASAP7_75t_R.
+<suppressed ~52 debug messages>
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module mutant_miter.
+<suppressed ~1 debug messages>
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\mutant_miter'.
+Computing hashes of 169 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+Computing hashes of 147 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+Computing hashes of 133 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+Computing hashes of 123 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+Computing hashes of 114 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+Computing hashes of 113 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+Computing hashes of 112 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+Computing hashes of 111 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+<suppressed ~174 debug messages>
+Removed a total of 58 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \mutant_miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \mutant_miter.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\mutant_miter'.
+Computing hashes of 111 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \mutant_miter..
+Removed 0 unused cells and 86 unused wires.
+<suppressed ~1 debug messages>
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module mutant_miter.
+
+8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \mutant_miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \mutant_miter.
+Performed a total of 0 changes.
+
+8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\mutant_miter'.
+Computing hashes of 111 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+Removed a total of 0 cells.
+
+8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \mutant_miter..
+Removed 40 unused cells and 72 unused wires.
+<suppressed ~89 debug messages>
+
+8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module mutant_miter.
+
+8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \mutant_miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \mutant_miter.
+Performed a total of 0 changes.
+
+8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\mutant_miter'.
+Computing hashes of 71 cells of `\mutant_miter'.
+Finding duplicate cells in `\mutant_miter'.
+Removed a total of 0 cells.
+
+8.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \mutant_miter..
+
+8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module mutant_miter.
+
+8.23. Finished fast OPT passes. (There is nothing left to do.)
+
+9. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 71 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+Import show expression: \q
+
+Solving problem with 150 variables and 260 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Signal Name             Dec       Hex                                                   Bin
+  --------------- ----------- --------- -----------------------------------------------------
+  \q                       --        --    00000000000000000000000000000000000000000000000000
+
+ERROR: Called with -verify and proof did fail!

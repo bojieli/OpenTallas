@@ -1,0 +1,387 @@
+{
+  "status": "STRUCTURAL_PARTITION_PASS, faultconeSATpending, no physical view",
+  "source_json_sha256": "2baaa04846fceb8eb670a6de4ed05761f4214f4592b5242642bd5d243fac875e",
+  "raw_flag_bits": 50,
+  "raw_flags": [
+    59502,
+    59503,
+    59504,
+    59506,
+    59535,
+    59536,
+    59537,
+    59539,
+    59540,
+    59541,
+    59543,
+    59544,
+    59545,
+    59547,
+    59548,
+    59549,
+    59551,
+    59552,
+    59553,
+    59555,
+    59556,
+    59557,
+    59644,
+    59645,
+    59646,
+    59648,
+    62143,
+    62144,
+    62145,
+    62147,
+    62347,
+    62348,
+    62349,
+    62351,
+    62786,
+    62787,
+    62788,
+    62790,
+    62798,
+    62799,
+    62800,
+    62802,
+    62817,
+    62818,
+    62819,
+    62821,
+    65254,
+    65255,
+    65256,
+    65258
+  ],
+  "moved_comb_cells": 25,
+  "moved_cell_types": {
+    "NAND2x1_ASAP7_75t_R": 8,
+    "AND4x1_ASAP7_75t_R": 1,
+    "AO21x1_ASAP7_75t_R": 14,
+    "INVx1_ASAP7_75t_R": 1,
+    "AND3x1_ASAP7_75t_R": 1
+  },
+  "original_physical_cells": 76756,
+  "leaf_physical_cells": 76731,
+  "leaf_area_um2": 8918.717220001075,
+  "leaf_FF": 12030,
+  "whole_graph_recombined_identical": true,
+  "all_state_cells_identical": true,
+  "raw_Q_internal_consumers_after_cut": 0,
+  "new_FF": 0,
+  "extra_flag_pins_per_LSL": 41,
+  "extra_flag_pins_per_A0": 328,
+  "cycles_added": {
+    "data": 0,
+    "fault": 0,
+    "boot": 0
+  },
+  "planned_new_leaf_um": [
+    115.2,
+    140.4
+  ],
+  "planned_util": 0.5514203725962202,
+  "actual_output_launch_cells": [
+    {
+      "bit": 0,
+      "original_cell": "u_ls.g_grp[3].g_lane[1].g_ladd.u_add.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 1,
+      "original_cell": "u_ls.g_grp[3].g_lane[1].g_ladd.u_add.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 2,
+      "original_cell": "u_ls.g_grp[3].g_lane[1].g_ladd.u_add.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 3,
+      "original_cell": "u_ls.g_grp[3].g_lane[1].g_candidate_mul.u_mul.fault$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 4,
+      "original_cell": "u_ls.g_lvl[1].g_add[2].u_add.g_l.u.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 5,
+      "original_cell": "u_ls.g_lvl[1].g_add[2].u_add.g_l.u.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 6,
+      "original_cell": "u_ls.g_lvl[1].g_add[2].u_add.g_l.u.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 7,
+      "original_cell": "u_ls.g_lvl[1].g_add[0].u_add.g_l.u.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 8,
+      "original_cell": "u_ls.g_lvl[1].g_add[0].u_add.g_l.u.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 9,
+      "original_cell": "u_ls.g_lvl[1].g_add[0].u_add.g_l.u.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 10,
+      "original_cell": "u_ls.g_lvl[2].g_add[1].u_add.g_l.u.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 11,
+      "original_cell": "u_ls.g_lvl[2].g_add[1].u_add.g_l.u.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 12,
+      "original_cell": "u_ls.g_lvl[2].g_add[1].u_add.g_l.u.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 13,
+      "original_cell": "u_ls.g_lvl[1].g_add[1].u_add.g_l.u.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 14,
+      "original_cell": "u_ls.g_lvl[1].g_add[1].u_add.g_l.u.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 15,
+      "original_cell": "u_ls.g_lvl[1].g_add[1].u_add.g_l.u.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 16,
+      "original_cell": "u_ls.g_lvl[2].g_add[0].u_add.g_l.u.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 17,
+      "original_cell": "u_ls.g_lvl[2].g_add[0].u_add.g_l.u.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 18,
+      "original_cell": "u_ls.g_lvl[2].g_add[0].u_add.g_l.u.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 19,
+      "original_cell": "u_ls.g_lvl[1].g_add[3].u_add.g_l.u.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 20,
+      "original_cell": "u_ls.g_lvl[1].g_add[3].u_add.g_l.u.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 21,
+      "original_cell": "u_ls.g_lvl[1].g_add[3].u_add.g_l.u.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 22,
+      "original_cell": "u_ls.g_grp[0].g_lane[0].g_ladd.u_add.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 23,
+      "original_cell": "u_ls.g_grp[0].g_lane[0].g_ladd.u_add.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 24,
+      "original_cell": "u_ls.g_grp[0].g_lane[0].g_ladd.u_add.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 25,
+      "original_cell": "u_ls.g_grp[0].g_lane[0].g_candidate_mul.u_mul.fault$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 26,
+      "original_cell": "u_ls.g_grp[2].g_lane[1].g_ladd.u_add.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 27,
+      "original_cell": "u_ls.g_grp[2].g_lane[1].g_ladd.u_add.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 28,
+      "original_cell": "u_ls.g_grp[2].g_lane[1].g_ladd.u_add.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 29,
+      "original_cell": "u_ls.g_grp[2].g_lane[1].g_candidate_mul.u_mul.fault$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 30,
+      "original_cell": "u_ls.g_grp[2].g_lane[0].g_ladd.u_add.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 31,
+      "original_cell": "u_ls.g_grp[2].g_lane[0].g_ladd.u_add.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 32,
+      "original_cell": "u_ls.g_grp[2].g_lane[0].g_ladd.u_add.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 33,
+      "original_cell": "u_ls.g_grp[2].g_lane[0].g_candidate_mul.u_mul.fault$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 34,
+      "original_cell": "u_ls.g_grp[1].g_lane[1].g_ladd.u_add.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 35,
+      "original_cell": "u_ls.g_grp[1].g_lane[1].g_ladd.u_add.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 36,
+      "original_cell": "u_ls.g_grp[1].g_lane[1].g_ladd.u_add.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 37,
+      "original_cell": "u_ls.g_grp[1].g_lane[1].g_candidate_mul.u_mul.fault$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 38,
+      "original_cell": "u_ls.g_grp[0].g_lane[1].g_ladd.u_add.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 39,
+      "original_cell": "u_ls.g_grp[0].g_lane[1].g_ladd.u_add.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 40,
+      "original_cell": "u_ls.g_grp[0].g_lane[1].g_ladd.u_add.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 41,
+      "original_cell": "u_ls.g_grp[0].g_lane[1].g_candidate_mul.u_mul.fault$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 42,
+      "original_cell": "u_ls.g_grp[1].g_lane[0].g_ladd.u_add.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 43,
+      "original_cell": "u_ls.g_grp[1].g_lane[0].g_ladd.u_add.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 44,
+      "original_cell": "u_ls.g_grp[1].g_lane[0].g_ladd.u_add.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 45,
+      "original_cell": "u_ls.g_grp[1].g_lane[0].g_candidate_mul.u_mul.fault$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 46,
+      "original_cell": "u_ls.g_grp[3].g_lane[0].g_ladd.u_add.g_nr.u.err[0]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 47,
+      "original_cell": "u_ls.g_grp[3].g_lane[0].g_ladd.u_add.g_nr.u.err[1]$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 48,
+      "original_cell": "u_ls.g_grp[3].g_lane[0].g_ladd.u_add.g_nr.u.valid_out$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    },
+    {
+      "bit": 49,
+      "original_cell": "u_ls.g_grp[3].g_lane[0].g_candidate_mul.u_mul.fault$_DFF_PN0_",
+      "cell_type": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    }
+  ]
+}

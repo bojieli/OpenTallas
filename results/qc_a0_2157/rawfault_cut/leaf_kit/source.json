@@ -1,0 +1,27 @@
+{
+  "physical_cells": 76731,
+  "FF": 12030,
+  "state_copies_added": 0,
+  "cycles_added": 0,
+  "wholegraph_recombine_identical": true,
+  "cone_SAT": "PASS all2^50",
+  "lockstep": "PASS32768 plus32768mutantdifferences",
+  "all_existing_FF_kept": 12030,
+  "area_um2": 8918.717220001075,
+  "outline_um": [
+    115.344,
+    140.4
+  ],
+  "util_fraction": 0.5507319576491589,
+  "raw_output_Q_internal_loads": 0,
+  "pins": 506,
+  "source_sha256": "cf01828e3b9900ea6bf841a7e7e7948cbb09f1327475d0481bb700b8d54b0524",
+  "status": "size-gated placement-only; no CTS/route until fresh review",
+  "core_area_um": [
+    2.16,
+    2.16,
+    113.184,
+    138.24
+  ],
+  "core_util_fraction": 0.5903250648509142
+}

@@ -1,0 +1,5 @@
+FAULTCUT LOCKSTEP PASS checks=32768 mutant_differences=32768 state_copies_added=0 cycles_added=0
+- tb_cone.sv:14: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 66us; walltime 0.013 s; speed 5.129 ms/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB
