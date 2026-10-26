@@ -4,6 +4,7 @@ import importlib.util,subprocess,sys
 from pathlib import Path
 repo=Path(__file__).resolve().parents[2]
 p=repo/'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py'
+sys.path.insert(0,str(p.parent))
 spec=importlib.util.spec_from_file_location('topk_tree_kit',p);gen=importlib.util.module_from_spec(spec);spec.loader.exec_module(gen)
 mod='ot_hbm_idx_topk_link_static';top=mod+'_tree'
 rec=dict(top=top,files=['rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv','rtl/hbm_accel/index/'+top+'.sv'],params={},defines=[],macros=['ot_sram_1r1w_64x512_m1_r2c2'],source='Opt-in bounded stable-tree compaction, exact same-edge candidate')
