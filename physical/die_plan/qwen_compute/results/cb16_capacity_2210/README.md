@@ -13,3 +13,9 @@ Reviewed `max_candidate.png` at full displayed resolution. Four hard-core rectan
 Remaining blockers: actual MODE3/noFP1 A0 LEF/lib and verified common-clock adapter; clock interface adoption; source/capture relay reservoir redistribution and schedule; actual mapped-cell/ODB hook and DPL; actual full-wrapper G2 including route and TT setup/FF hold. A skeleton cannot satisfy these gates.
 
 Runtime evidence retained on intel1 at `/srv/opentallas-scratch2/claude/codex-qc-phase-cap-2210/soft_synth/` (`run.ys`, `soft_mapped.json`, `inventory.json`, synthesis log); phase ledger local `/tmp/codex-qc-cap-ledger-2229/`; actual candidate sites local `/tmp/codex-qc-cap-mapped-sites-2234/`.
+
+## Fresh actual final6 source supersedes derived census
+
+All 18 actual strict-bound final6 CB types were synthesized and techmapped with exact selected NK/NL native headers as explicit hard blackboxes. All18 PASS, actual soft FF range33,776..60,153; maximum cbf_q01_s2=60,153 FF. The actual inventory has payload-only W1 alignment state; no epoch FF is inferred. See actual_final6_all18_ff.json. Job intel1 oth-ubuntu-775847-1792994780 retained fresh_v6_all under the lane scratch root. The earlier48,011FF/87soft-drop result was a derived preliminary source vehicle and is superseded for release decisions.
+
+Root approved D3->D4 output bank extension on four original families (eight final6 phase types), affecting72 logical lanes +1. geometry_final6.json uses inward PLANNED native pin maps and fabric regions moved22um from actual tap; d4_delta_final6.json and overrides are portable source-plan preparation. Each of115 declared station chains is snapped/core-clear and<=405um centre hop; this is not actual bank/bit-wire/route signoff. Actual source hard views/provider CTS and all final re-solved source gates remain required.

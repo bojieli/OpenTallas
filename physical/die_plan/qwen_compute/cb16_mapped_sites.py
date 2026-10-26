@@ -45,9 +45,10 @@ def tcl_sites(sites):
 
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('plan',type=Path);p.add_argument('--type',required=True);p.add_argument('--inventory',type=Path,required=True);p.add_argument('--physical',type=Path,required=True);p.add_argument('--rtl',type=Path,required=True);p.add_argument('--out',type=Path,required=True);q=p.parse_args();q.out.mkdir(exist_ok=False,parents=True)
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('plan',type=Path);p.add_argument('--type',required=True);p.add_argument('--inventory',type=Path,required=True);p.add_argument('--physical',type=Path,required=True);p.add_argument('--rtl',type=Path,required=True);p.add_argument('--native-plan',type=Path);p.add_argument('--out',type=Path,required=True);q=p.parse_args();q.out.mkdir(exist_ok=False,parents=True)
  raw=json.loads(q.plan.read_text());t=raw['partition_types'][q.type];P=C.schema.Plan(raw);inv=json.loads(q.inventory.read_text());report=json.loads((q.physical/'report.json').read_text());banks=json.loads((q.physical/'banks.json').read_text());by={(b['instance'],b['stage']):b for b in banks};used=[b['box_um'] for b in banks]+[h['box_um'] for h in report['fabric_homes']];homes={h['inst']:h for h in report['fabric_homes']};groups=collections.defaultdict(list);missing=[];sites=[];extra=[];txt=q.rtl.read_text();pinrows=C.gen_phys.type_pins(P,q.type);pinby=collections.defaultdict(list)
  for name,bit,layer,x,y,face in pinrows:pinby[name].append((x,y,face))
+ native=json.loads(q.native_plan.read_text())['partition_types'][q.type] if q.native_plan else None
  anchors={}
  for name,rest in re.findall(r'\bot_dp_r(?:relay|gate)\s+(\w+)\s*\(([^\n]+)',txt):
   m=re.search(r'@\s*\(([0-9.]+),\s*([0-9.]+)\)',rest)
@@ -79,6 +80,10 @@ def main():
     m=re.match(r'u_ft_(.+)_o_(\d+)$',root);slot=next((s for s in t['ft_slots'] if m and s['name']==m[1]),None)
     if not slot:missing.extend(regs);continue
     target=slot['regs_um'][int(m[2])];face='N'
+   elif root.startswith('u_ist_'):
+    m=re.match(r'u_ist_(.+)_(\d+)$',root);entry=next((e for e in (native or {}).get('internal_stations',[]) if m and e.get('conn')=='bus:'+m[1]),None)
+    if entry is None or int(m[2])>=len(entry['regs_um']):missing.extend(regs);continue
+    target=entry['regs_um'][int(m[2])];bus=next(b for b in t['buses'] if b['name']==m[1]);face=bus['face']
    elif root in anchors:target=anchors[root]
    else:missing.extend(regs);continue
    previous=ft_previous.get(m[1]) if root.startswith('u_ft_') else None
