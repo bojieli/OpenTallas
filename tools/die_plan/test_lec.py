@@ -841,3 +841,18 @@ def test_structural_cross_side_alias_and_wrong_enable(tmp_path):
         assert n == (0 if mutant else 1)
         m,_ = L.build(with_compare=True,with_hyp=True)
         assert ('differs' in _sim_prove(m).values()) == mutant
+
+
+def test_exact_twin_uses_an_already_paired_gold_root(tmp_path):
+    for bad in (False,True):
+        g,gm=_seq(tmp_path,'pairedgold',['d','wrong'],['root','copy','out'],
+                  lambda m,x:{'root':x['d'],'copy':x['d'],'out':x['copy']})
+        t,tm=_seq(tmp_path,'pairedgate',['d','wrong'],['alias','out'],
+                  lambda m,x:{'alias':x['d'],'out':x['wrong'] if bad else x['alias']})
+        L=lec.Lec(g,gm,t,tm)
+        L.hyp['gate','ff:u_dut.alias']=('eq','gold','ff:u_dut.root',0)
+        assert lec.structural_twin_closure(L,[])==1
+        assert ('gold','ff:u_dut.root') not in L.hyp
+        assert L.hyp['gold','ff:u_dut.copy']==('eq','gold','ff:u_dut.root',0)
+        m,_=L.build(with_compare=True,with_hyp=True)
+        assert ('differs' in _exact_prove(m).values())==bad
