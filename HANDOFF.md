@@ -1020,3 +1020,4 @@ CODEX: 2026-10-26 02:11 PDT S81 legacy took over latest2b9f7617e; collected l0/c
 CODEX: 2026-10-26 02:11 PDT TOK-HBM diagnosed nativePR0/1 OOM96GiB, checkpoint copies resumed192GB4t epyc2 units1250260/1250262; actual5oneclk face source helper READY a950c934ed, programme qualification next.
 
 CODEX: 2026-10-26 02:18 PDT auxiliary4HBM strapkitLECs EQUIVALENT (59246/57326/73368/71928 points); lane_exp7point correspondence + idx_score4point faults under diagnosis, no duplicate routes.
+CODEX: 2026-10-26 02:13 PDT KITS-WAVE fresh VQ canaried-flow kit25817a7cc preplan reviewed, place-only32GB8threads live intel2 unit1669667; old VQ row WAIT-CANARY diagnosed; existing VS alias-layout proof stilllive.
