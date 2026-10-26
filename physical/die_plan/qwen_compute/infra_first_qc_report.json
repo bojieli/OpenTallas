@@ -624,6 +624,84 @@
    "declarations": 72,
    "cycles": 0,
    "fixed_primitive": "cbf_q00 S_u_fab_not_*_A remains the same literal 1 in every replica; not an ID exemption"
+  },
+  "D-QC-VMR-LATENCY": {
+   "taps": [
+    {
+     "type": "slw_su_c",
+     "tap": "u_suvm_u_vm8q_u_va.ck",
+     "before": {
+      "TT": 386,
+      "FF": null
+     },
+     "after": {
+      "TT": 395.7,
+      "FF": 302.7
+     }
+    },
+    {
+     "type": "slw_su_c",
+     "tap": "u_suvm_u_vm8q_u_vb.ck",
+     "before": {
+      "TT": 386,
+      "FF": null
+     },
+     "after": {
+      "TT": 395.7,
+      "FF": 302.7
+     }
+    },
+    {
+     "type": "slw_su_c",
+     "tap": "u_suvm_u_vm8q_u_vc.ck",
+     "before": {
+      "TT": 386,
+      "FF": null
+     },
+     "after": {
+      "TT": 395.7,
+      "FF": 302.7
+     }
+    },
+    {
+     "type": "sle_su_c",
+     "tap": "u_suvm_u_vm8q_u_va.ck",
+     "before": {
+      "TT": 386,
+      "FF": null
+     },
+     "after": {
+      "TT": 395.7,
+      "FF": 302.7
+     }
+    },
+    {
+     "type": "sle_su_c",
+     "tap": "u_suvm_u_vm8q_u_vb.ck",
+     "before": {
+      "TT": 386,
+      "FF": null
+     },
+     "after": {
+      "TT": 395.7,
+      "FF": 302.7
+     }
+    },
+    {
+     "type": "sle_su_c",
+     "tap": "u_suvm_u_vm8q_u_vc.ck",
+     "before": {
+      "TT": 386,
+      "FF": null
+     },
+     "after": {
+      "TT": 395.7,
+      "FF": 302.7
+     }
+    }
+   ],
+   "cycles": 0,
+   "note": "absolute measured insertion, not an offset to the obsolete vmr_s6h budget"
   }
  }
 }

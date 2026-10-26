@@ -74,6 +74,22 @@ def scroot_notes(path):
     path.write_text(json.dumps(n, indent=1) + "\n")
 
 
+def vmr_core_latency(raw):
+    """Measured s6kc insertion; D-INFRA-FIRST compensates at the die stub."""
+    rows = []
+    for tn in ("slw_su_c", "sle_su_c"):
+        for tap in raw["partition_types"][tn]["clock"]["taps"]:
+            if tap.get("name") not in {f"u_suvm_u_vm8q_u_v{v}.ck" for v in "abc"}:
+                continue
+            before = dict(TT=tap["insertion_ps"], FF=tap.get("insertion_ff_ps"))
+            tap.update(insertion_ps=395.7, insertion_ff_ps=302.7,
+                       budget_owner="vmr_s6kc measured routed native mean TT395.7/FF302.7; die compensates residual (D-INFRA-FIRST), no tile retap")
+            rows.append(dict(type=tn, tap=tap["name"], before=before, after=dict(TT=395.7, FF=302.7)))
+    if len(rows) != 6:
+        raise ValueError(f"expected six VMR core taps, found {len(rows)}")
+    return dict(taps=rows, cycles=0, note="absolute measured insertion, not an offset to the obsolete vmr_s6h budget")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("plan")
@@ -135,9 +151,10 @@ def main(argv=None):
     rep["deltas"]["D-QC-CLKMESH"] = dict(status="PENDING: apply tools/die_plan/apply_clkmesh_sites.py after the QC "
                                                 "regional mesh exists (CLOCK-MESH / INFRA-FIRST step 2)")
     rep["deltas"]["D-QC-CB-STRAPS"] = CBIDS.apply(raw)
+    rep["deltas"]["D-QC-VMR-LATENCY"] = vmr_core_latency(raw)
 
     # every type no delta names keeps its interface byte-identical
-    touched = set(fe["types"]) | set(rep["deltas"]["D-QC-CB-STRAPS"]["types"]) | {"coll_ftm", *IOHOLD_SENDERS, SC_ROOT}
+    touched = set(fe["types"]) | set(rep["deltas"]["D-QC-CB-STRAPS"]["types"]) | {"coll_ftm", *IOHOLD_SENDERS, SC_ROOT, "slw_su_c", "sle_su_c"}
     for tn, bt in base["partition_types"].items():
         if tn not in touched:
             assert iface(types[tn]) == iface(bt), tn
