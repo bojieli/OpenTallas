@@ -132,3 +132,25 @@ def test_island_compact_leg_starts():
     assert max(span(v) for v in starts.values())<=10.0+1e-6
     # no two planned buffers overlap, none on the crowd cells
     ll=[tuple(n['ll']) for n in p['nodes']];assert len(ll)==len(set(ll))
+
+
+def test_compensation_cap_survives_feedback():
+    g=geometry(20)
+    p=S.plan_legs(g,leg_extra_um=15.0)
+    assert max(L['xmax'] for L in p['legs']) <= 15000
+    for _ in range(4):
+        tap,buf=simulate(p)
+        # Deliberately large unmatched local-tree delay must remain a reported
+        # residual; the controller cannot absorb it into unlimited trunk wire.
+        for nm in list(tap)[:4]:
+            a,b=tap[nm];tap[nm]=(a+190,b+150)
+        S.cl_step(p,tap,buf)
+        assert all(0<=L['x']<=15000 for L in p['legs'])
+        S.realize(p,g)
+    assert p['summary']['added_cycles']==0
+
+
+@pytest.mark.parametrize('bad',[-1.0,float('nan'),float('inf')])
+def test_compensation_cap_rejects_invalid(bad):
+    with pytest.raises(ValueError,match='leg_extra_um'):
+        S.plan_legs(geometry(5),leg_extra_um=bad)

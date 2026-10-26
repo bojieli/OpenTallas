@@ -175,7 +175,7 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
 def _man(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0):
+def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0, leg_extra_um=None):
     """topology 'htree' (default): symmetric 2x2 H-tree over the tap region,
     pruned where a quadrant has no tap; every tap gets a private leg from its
     H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
@@ -279,6 +279,12 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
     for L in sorted(legs,key=lambda L:(L['level'],L['id'])):
         L['n']=reps[L['level']]
         L['xmax']=max(0.0,2*rmax_um*u-2*L['d']/(L['n']+1)) if L['level'] and L['n'] else 0.0
+        # Explicit geometric cap on compensation wire. Intrinsic local-tree
+        # insertion must be fixed locally rather than hidden in long trunk legs.
+        if leg_extra_um is not None:
+            if not math.isfinite(leg_extra_um) or leg_extra_um < 0:
+                raise ValueError('leg_extra_um must be finite and nonnegative')
+            L['xmax'] = min(L['xmax'], leg_extra_um * u)
         # equal-length start: every leg of a level as long as its longest
         dm=max(M['d'] for M in legs if M['level']==L['level'])
         L['x']=min(L['xmax'],float(dm-L['d'])) if L['level'] else 0.0
@@ -586,7 +592,8 @@ def main():
         p=plan_legs(g,fanout=int(env.get('OT_DTSH_FANOUT','4')),leaf_fanout=int(env.get('OT_DTSH_LEAF_FANOUT','2')),
                     rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')),topology=env.get('OT_DTSH_TOPOLOGY','bisect'),
                     levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')),depth0=env.get('OT_DTSH_DEPTH0','')=='1',
-                    island_um=float(env.get('OT_DTSH_ISLAND_UM','0')),island_reach_um=float(env.get('OT_DTSH_ISLAND_REACH_UM','40')))
+                    island_um=float(env.get('OT_DTSH_ISLAND_UM','0')),island_reach_um=float(env.get('OT_DTSH_ISLAND_REACH_UM','40')),
+                    leg_extra_um=float(env['OT_DTSH_LEG_EXTRA_UM']) if 'OT_DTSH_LEG_EXTRA_UM' in env else None)
     else:
         p=plan(g)
     Path(a.out).write_text(json.dumps(p,indent=1)+'\n')
