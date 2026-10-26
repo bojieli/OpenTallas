@@ -1,0 +1,95 @@
+{
+  "timestamp": "2026-10-25 17:53 PDT",
+  "source_main_checked": "2aa9da43c45090db3dfcffcc17286037e733b341",
+  "scope": "Read-only release-consumer audit; no source/signoff/lib detector edits",
+  "findings": [
+    {
+      "file": "tools/die_plan/cores.py",
+      "lines": [
+        130,
+        157
+      ],
+      "functions": [
+        "find_views",
+        "fill_views"
+      ],
+      "admission": "LEF/TT/FF file existence, planhint or shortestmatchingdirectory; explicitexistinglib bypasseslookup",
+      "model_marker": "none",
+      "risk": "Composed hardchild lumpedETM can be selectedwithoutclockendpointcapability/SIGNEDmanifestinspection"
+    },
+    {
+      "file": "tools/die_plan/gen_phys.py",
+      "lines": [
+        610,
+        705,
+        719,
+        815
+      ],
+      "functions": [
+        "type_macros",
+        "write_type_kit",
+        "core_latency_files"
+      ],
+      "admission": "DeclaredLEF/Lib+position, requireLib/TTnotSS, copycornerfiles; defaultmean_contractFalse legacyETMmaxbound",
+      "model_marker": "none",
+      "risk": "Legacyrowslabelrelease_qualifiedFalse butkitgenerationcontinues; Libpresence isnotexpandedendpointproof"
+    },
+    {
+      "file": "tools/die_plan/core_clock_contract.py",
+      "lines": [
+        39,
+        85
+      ],
+      "functions": [
+        "from_signoff",
+        "_validate"
+      ],
+      "admission": "OptinSIGNED, extractedTTFFpinmean census/design/port andselectedLibhash",
+      "model_marker": "none",
+      "risk": "Measuredlatencymeancontract provesbudgetbasis, notnative/ILMexpandedendpointrepresentation"
+    },
+    {
+      "file": "tools/die_plan/die_sta.py",
+      "lines": [
+        1150,
+        1560,
+        1606,
+        1624,
+        1719
+      ],
+      "functions": [
+        "find_parts",
+        "cmd_run",
+        "verdict"
+      ],
+      "admission": "AnyPARTS/*/6_final.v,moduleidentity; flatnetlistorILM; view_snapshotmetadataonly",
+      "model_marker": "none",
+      "risk": "ETMwholemodeexplicitINFOgood; flat/ILMcanstillretaincomposedhardchildasLibcell, so modealoneisnotclockendpointproof"
+    },
+    {
+      "file": "tools/die_plan/io_hold_qualification.py",
+      "lines": [
+        19
+      ],
+      "function": "view_snapshot",
+      "admission": "Textbudgetmarkers/barestandin pattern versusothercellpresence; hashesV/SPEF",
+      "model_marker": "none",
+      "risk": "kindreal distinguishesbudgetstandin, notlumpedETM/nativehierarchy"
+    },
+    {
+      "file": "tools/s81_head/hd_views_rb.py",
+      "lines": [
+        48
+      ],
+      "function": "main",
+      "admission": "DefaultrepoexportrequiresverdictSIGNED; preview/outsideallowsunsignedbydesign; writesmanifestnumbers/hashes/earlylatency",
+      "model_marker": "none",
+      "risk": "ExporterSIGNEDbitdoesnotstateclockendpointrepresentation"
+    }
+  ],
+  "notes": [
+    "No tracked tools/die_plan/views.py exists; actualresolution/admissionabove",
+    "No blanketSRAMLib rule: nativeprimitive physicalclockpinmodel mustremain distinctfromcomposedclockedhardchildETM",
+    "PROTOownssignoff.py/consumedLib detector/sourceguard; untouchedbythisaudit"
+  ]
+}
