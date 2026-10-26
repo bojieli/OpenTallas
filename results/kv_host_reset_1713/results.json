@@ -1,0 +1,33 @@
+{
+ "results": [
+  {
+   "mode": "BASE",
+   "exit": 0,
+   "verdict": "PASS"
+  },
+  {
+   "mode": "MUT_ROUTE",
+   "exit": 1,
+   "verdict": "CAUGHT"
+  },
+  {
+   "mode": "MUT_COMMAND",
+   "exit": 1,
+   "verdict": "CAUGHT"
+  },
+  {
+   "mode": "MUT_POLARITY",
+   "exit": 1,
+   "verdict": "CAUGHT"
+  },
+  {
+   "mode": "MUT_WAVEFRONT",
+   "exit": 1,
+   "verdict": "CAUGHT"
+  }
+ ],
+ "transport_stages": 3,
+ "private_assert_cycles": 1,
+ "private_release_cycles": 2,
+ "source": "Actual qkd_host_rst_role_pins + ot_qwen_sys_rst_seq, actual old ot_dp_rsync and ot_dp_dly, actual qkd_astk_fault_join receiver; only private timed receiver changed"
+}
