@@ -378,6 +378,73 @@ endmodule
 // fault}.  MUT (bench negative controls only): 1 score of the neighbouring lane field, 2 the final BEAT without last,
 // 3 the grid one pitch late, 4 capture without the lane-valid mask.
 // ===================================================================================================================
+
+// TX input register cut. RETIME=0 is the legacy edge behavior. RETIME=1 changes
+// register(decode(raw)) into decode(register(raw)); sampled reset permissions keep
+// the legacy asynchronous clear and one-edge release semantics, including invalid data.
+module dsdv_tx_pin_front #(
+    parameter integer V=276, IK=4, EK=5, UID=8'h5C, RETIME=0, MUT=0
+)(
+    input wire ck,r0,r2,r3,r6,input wire[V-1:0]vi,vo,
+    output wire[V-1:0]vi_r,vo_r,output wire[63:0]hsw,output wire[31:0]shs,
+    output wire[3:0]scl_m,scl_w,output wire[15:0]eph,output wire[17:0]okk,
+    output wire ct_tick_pred,ct_delay_hi,ct_tick_lo
+);
+    generate if(RETIME==0) begin:g_legacy
+        reg[V-1:0]ir,orr;
+        always @(posedge ck or negedge r0)
+            if(!r0)begin ir[0]<=0;orr[0]<=0;end else begin ir[0]<=vi[0];orr[0]<=vo[0];end
+        always @(posedge ck)begin ir[V-1:1]<=vi[V-1:1];orr[V-1:1]<=vo[V-1:1];end
+        assign vi_r=ir;assign vo_r=orr;
+        wire p=vi[0]&&vi[3:1]==3'(IK)&&!vi[6]&&!vi[7];
+        wire c=vo[0]&&vo[3:1]==0&&vo[28:21]==8'(UID)&&vo[31:29]==2;
+        wire e=vo[0]&&vo[3:1]==3'(EK)&&!vo[6];
+        (* keep="true" *)reg[63:0]h;(* keep="true" *)reg[31:0]sh;
+        (* keep="true" *)reg[3:0]sm,sw;(* keep="true" *)reg[15:0]ep;
+        (* keep="true" *)reg[17:0]oc;
+        always @(posedge ck)begin:g_pre
+            integer l_,c_;
+            for(l_=0;l_<4;l_=l_+1)begin
+                for(c_=0;c_<16;c_=c_+1)h[16*l_+c_]<=p&&vi[5:4]==2'(l_);
+                for(c_=0;c_<8;c_=c_+1)sh[8*l_+c_]<=vi[5:4]==2'(l_);
+                sm[l_]<=vi[5:4]==2'(l_);sw[l_]<=vi[5:4]==2'(l_);
+            end
+            ep<={16{e}};
+        end
+        always @(posedge ck or negedge r2)if(!r2)oc[15:0]<=0;else oc[15:0]<={16{c}};
+        always @(posedge ck or negedge r3)if(!r3)oc[16]<=0;else oc[16]<=c;
+        always @(posedge ck or negedge r3)if(!r3)oc[17]<=0;else oc[17]<=c;
+        assign hsw=h;assign shs=sh;assign scl_m=sm;assign scl_w=sw;assign eph=ep;assign okk=oc;
+        dsdv_tx_copy #(.W(1),.RESET(1),.ID(6010))u_ctp(.ck(ck),.rn(r6),.d(c),.q(ct_tick_pred));
+        dsdv_tx_copy #(.W(1),.RESET(1),.ID(6011))u_cdh(.ck(ck),.rn(r6),.d(c),.q(ct_delay_hi));
+        dsdv_tx_copy #(.W(1),.RESET(1),.ID(6013))u_ctq(.ck(ck),.rn(r6),.d(c),.q(ct_tick_lo));
+    end else begin:g_retime
+        (* keep="true" *)reg[V-1:0]iq,oq;
+        always @(posedge ck)begin iq<=vi;oq<=vo;end
+        reg a0,a2,a3,a6;
+        always @(posedge ck or negedge r0)if(!r0)a0<=0;else a0<=1;
+        always @(posedge ck or negedge r2)if(!r2)a2<=0;else a2<=1;
+        always @(posedge ck or negedge r3)if(!r3)a3<=0;else a3<=1;
+        always @(posedge ck or negedge r6)if(!r6)a6<=0;else a6<=1;
+        wire m0=(MUT!=0)?r0:a0;
+        wire m2=(MUT!=0)?r2:a2;
+        wire m3=(MUT!=0)?r3:a3;
+        wire m6=(MUT!=0)?r6:a6;
+        assign vi_r={iq[V-1:1],iq[0]&m0};assign vo_r={oq[V-1:1],oq[0]&m0};
+        wire p=iq[0]&&iq[3:1]==3'(IK)&&!iq[6]&&!iq[7];
+        wire c=oq[0]&&oq[3:1]==0&&oq[28:21]==8'(UID)&&oq[31:29]==2;
+        wire e=oq[0]&&oq[3:1]==3'(EK)&&!oq[6];
+        genvar l_,c_;
+        for(l_=0;l_<4;l_=l_+1)begin:g_l
+            for(c_=0;c_<16;c_=c_+1)assign hsw[16*l_+c_]=p&&iq[5:4]==2'(l_);
+            for(c_=0;c_<8;c_=c_+1)assign shs[8*l_+c_]=iq[5:4]==2'(l_);
+            assign scl_m[l_]=iq[5:4]==2'(l_);assign scl_w[l_]=iq[5:4]==2'(l_);
+        end
+        assign eph={16{e}};assign okk={{2{c&m3}},{16{c&m2}}};
+        assign ct_tick_pred=c&m6;assign ct_delay_hi=c&m6;assign ct_tick_lo=c&m6;
+    end endgenerate
+endmodule
+
 module dsdv_idx_tx_n32 #(
     parameter integer V = 276,
     parameter integer IK = 4,
@@ -393,7 +460,8 @@ module dsdv_idx_tx_n32 #(
     parameter integer SCS = 0,      // STW-S81c-COLLA2-TX 10-22: grid-slot count compare carry-selected off slot_q (0 cycles)
     parameter integer RIL = 0,      // STW-S81c-COLLA2 10-22: score-store read issue landed at the macro pins (+1 lookup edge)
     parameter integer RHP = 0,      // STW-S81c-COLLA2 10-22: result-FIFO head prefetched into a register (0 cycles)
-    parameter integer SPLIT = 0     // STW-S81c-TOK4 10-22: score store as two bank groups (column A hardened child), 0 cycles
+    parameter integer SPLIT = 0,    // STW-S81c-TOK4 10-22: score store as two bank groups (column A hardened child), 0 cycles
+    parameter integer PIN_RETIME = 0 // opt-in private input capture + decode retime, 0 public cycles
 ) (
     input  wire          ck,
     input  wire          rst,       // active low (as dsdv_idx_tx / the bk_sel rst_n)
@@ -411,38 +479,16 @@ module dsdv_idx_tx_n32 #(
     wire [6:0] rl;
     ot_rst_relay #(.REGIONS(7), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst), .rst_n(rl));
 
-    // ------------------------------------------------------------------ pin registers
-    reg [V-1:0] vi_r, vo_r;
-    always @(posedge ck or negedge rl[0])
-        if (!rl[0]) begin vi_r[0] <= 1'b0; vo_r[0] <= 1'b0; end
-        else begin vi_r[0] <= vi[0]; vo_r[0] <= vo[0]; end
-    always @(posedge ck) begin vi_r[V-1:1] <= vi[V-1:1]; vo_r[V-1:1] <= vo[V-1:1]; end
-
-    // ------------------------------------------------------------------ one-edge-early selects from the pins (kept)
-    wire       n_p0w  = vi[0] && vi[3:1] == 3'(IK) && !vi[6] && !vi[7];      // BEAT part 0 of kind IK
-    wire       n_octl = vo[0] && vo[3:1] == 3'd0 && vo[28:21] == 8'(UID) && vo[31:29] == 3'd2;
-    wire       n_ep0  = vo[0] && vo[3:1] == 3'(EK) && !vo[6];                 // egress part 0
-    (* keep = "true" *) reg [63:0] hsw;      // [8 l + c]: hs[l][32 c +: 32] write enable
-    (* keep = "true" *) reg [31:0] shs;      // [8 l + c]: lane l one-hot for m_wd[32 c +: 32]
-    (* keep = "true" *) reg [3:0]  scl_m, scl_w;
-    (* keep = "true" *) reg [15:0] eph;      // e_lo[32 c +: 32] load
-    (* keep = "true" *) reg [17:0] okk;      // [16]: second sn copy (t/u census okk[12] 34 loads); [17]: nx_sm[5:0] (x census okk[14] 38)
-         // the CTL (o_ctl) copies, see the job block
-    always @(posedge ck) begin : g_pre
-        integer l_, c_;
-        for (l_ = 0; l_ < 4; l_ = l_ + 1) begin
-            for (c_ = 0; c_ < 16; c_ = c_ + 1)
-                hsw[16*l_+c_] <= n_p0w && vi[5:4] == 2'(l_);
-            for(c_=0;c_<8;c_=c_+1)shs[8*l_+c_] <= vi[5:4] == 2'(l_);
-            scl_m[l_] <= vi[5:4] == 2'(l_);
-            scl_w[l_] <= vi[5:4] == 2'(l_);
-        end
-        eph <= {16{n_ep0}};
-    end
-    always @(posedge ck or negedge rl[2])
-        if (!rl[2]) okk[15:0] <= 16'd0; else okk[15:0] <= {16{n_octl}};
-    always @(posedge ck or negedge rl[3]) if (!rl[3]) okk[16] <= 1'b0; else okk[16] <= n_octl;   // own reset leaf (rl[2] at 33)
-    always @(posedge ck or negedge rl[3]) if (!rl[3]) okk[17] <= 1'b0; else okk[17] <= n_octl;
+    // Dedicated input cut: optional combinational decoder retiming across the existing register edge.
+    // The helper reproduces all legacy data/decode/reset release values at the same edge.
+    wire [V-1:0] vi_r, vo_r;
+    wire [63:0] hsw; wire [31:0] shs;
+    wire [3:0] scl_m, scl_w; wire [15:0] eph; wire [17:0] okk;
+    wire ct_tick_pred, ct_delay_hi, ct_tick_lo;
+    dsdv_tx_pin_front #(.V(V),.IK(IK),.EK(EK),.UID(UID),.RETIME(PIN_RETIME)) u_pin_front (
+        .ck(ck),.r0(rl[0]),.r2(rl[2]),.r3(rl[3]),.r6(rl[6]),.vi(vi),.vo(vo),
+        .vi_r(vi_r),.vo_r(vo_r),.hsw(hsw),.shs(shs),.scl_m(scl_m),.scl_w(scl_w),
+        .eph(eph),.okk(okk),.ct_tick_pred(ct_tick_pred),.ct_delay_hi(ct_delay_hi),.ct_tick_lo(ct_tick_lo));
 
     reg [7:0] fc_set, fc;
 
@@ -695,12 +741,8 @@ module dsdv_idx_tx_n32 #(
     wire        o_ctl_c = okk[7];            // control copy
     wire        o_ctl_t = okk[10];            // tc / rc / sn copy
     wire        o_ctl_j = okk[13];            // next-state job-field copy
-    wire ct_tick_pred,ct_delay_hi,hdr_lcur;
-    dsdv_tx_copy #(.W(1),.RESET(1),.ID(6010))u_ctp(.ck(ck),.rn(rl[6]),.d(n_octl),.q(ct_tick_pred));
-    dsdv_tx_copy #(.W(1),.RESET(1),.ID(6011))u_cdh(.ck(ck),.rn(rl[6]),.d(n_octl),.q(ct_delay_hi));
+    wire hdr_lcur;
     dsdv_tx_copy #(.W(1),.RESET(1),.ID(6012))u_hlc(.ck(ck),.rn(rl[6]),.d(nx_hdr_q),.q(hdr_lcur));
-    wire ct_tick_lo;                    // RIL (x census u_ctp 34 loads): nx_tc_pred[7:0] clear copy
-    dsdv_tx_copy #(.W(1),.RESET(1),.ID(6013))u_ctq(.ck(ck),.rn(rl[6]),.d(n_octl),.q(ct_tick_lo));
     wire [15:0] nx_tc_inc = (armed&&tc!=16'hffff)?tc+16'd1:tc;
     wire [15:0] nx_tc_pred = {ct_tick_pred ? 8'd0 : nx_tc_inc[15:8], ((RIL != 0) ? ct_tick_lo : ct_tick_pred) ? 8'd0 : nx_tc_inc[7:0]};
     wire fl_lcur = armed&&hdr_lcur&&!fin&&flush_ok&&
