@@ -1,0 +1,5 @@
+VMSTAT_OBS PASS old_prefix=125 new_bits=19 words=5 fixed_leaf_edges=3
+- rtl/test/hbm_vmstat_obs/tb_vmstat_obs.sv:31: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.001 s; speed 8.340 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

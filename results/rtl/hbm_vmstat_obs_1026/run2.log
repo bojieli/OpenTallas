@@ -1,0 +1,3 @@
+[4700000] %Fatal: tb_vmstat_obs.sv:15: Assertion failed in tb_vmstat_obs.read_word: VMSTAT_OBS FAIL idx=04 got=00000000 expected=00008000 valid=1
+%Error: rtl/test/hbm_vmstat_obs/tb_vmstat_obs.sv:15: Verilog $stop
+Aborting...
