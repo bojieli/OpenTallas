@@ -1,11 +1,6 @@
 `timescale 1ns/1ps
 // Uniform same-ABI position-selected R8 landing bank, no new pins.
-module qkd_kvs_grp_r2c_r8pos #(
-    parameter LW = 194,
-    parameter NT = 8,
-    parameter DL = 4 * (NT - 1),
-    parameter NC = 8
-) (
+module qkd_kvs_grp_r2c_r8pos (
     input wire  ck,
     input wire  rst_n,
     input wire [0:0] afk,
@@ -43,7 +38,7 @@ module qkd_kvs_grp_r2c_r8pos #(
     wire [15:0] r8_epoch;
     (* keep_hierarchy = 1 *) kv_pc_r8_position_bank u_position_bank (.clk(ck), .stack_id(slg__cfg_stack), .group_id(slg__cfg_group),
         .tok_i(x__tok), .epoch_i(x__tep), .tok_o(r8_tok), .epoch_o(r8_epoch));
-    qkd_kvs_grp_r2c #(.LW(LW), .NT(NT), .DL(DL), .NC(NC)) u_native (
+    qkd_kvs_grp_r2c u_native (
         .ck(ck),
         .rst_n(rst_n),
         .afk(afk),
