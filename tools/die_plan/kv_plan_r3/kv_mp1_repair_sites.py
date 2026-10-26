@@ -26,6 +26,25 @@ def overlap(x,y,cw,ch,boxes):
     return any(x < c and x+cw > a and y < d and y+ch > b for a,b,c,d in boxes)
 
 
+
+def allocate_between(al,target,prev,nxt):
+    """Nearest unoccupied row footprint inside BOTH exact405um hop diamonds."""
+    import math
+    lo=max(al.ix0,math.ceil((max(prev[0],nxt[0])-405-al.ox-al.cw/2)/al.cp))
+    hi=min(al.ix1,math.floor((min(prev[0],nxt[0])+405-al.ox-al.cw/2)/al.cp))
+    ly=max(al.iy0,math.ceil((max(prev[1],nxt[1])-405-al.oy-al.ch/2)/al.rp))
+    hy=min(al.iy1,math.floor((min(prev[1],nxt[1])+405-al.oy-al.ch/2)/al.rp))
+    ix,iy=np.meshgrid(np.arange(lo,hi+1),np.arange(ly,hy+1));ix=ix.ravel();iy=iy.ravel()
+    x=al.ox+ix*al.cp+al.cw/2;y=al.oy+iy*al.rp+al.ch/2;ids=(iy-al.iy0)*al.nx+ix-al.ix0
+    ok=(np.abs(x-prev[0])+np.abs(y-prev[1])<=405.+1e-7)&(np.abs(x-nxt[0])+np.abs(y-nxt[1])<=405.+1e-7)
+    for a,b,c,d in al.blocks:ok &= ~((x-al.cw/2<c-1e-8)&(x+al.cw/2>a+1e-8)&(y-al.ch/2<d-1e-8)&(y+al.ch/2>b+1e-8))
+    ok &= np.fromiter((int(i) not in al.used for i in ids),bool,count=len(ids))
+    valid=np.flatnonzero(ok)
+    if not len(valid):raise ValueError('no free row footprint within both405um hop diamonds')
+    cost=np.abs(x[valid]-target[0])+np.abs(y[valid]-target[1]);j=valid[np.lexsort((ids[valid],cost))[0]]
+    al.used.add(int(ids[j]));return np.array([[x[j],y[j]]])
+
+
 def repair(raw):
     P=S.Plan(raw); report=[]
     for tn,ty in raw['partition_types'].items():
@@ -73,7 +92,11 @@ def repair(raw):
                     for stage,p in enumerate(ps):
                         x,y=old['bit_sites_um'][stage][bit]
                         if overlap(x,y,cw,ch,boxes) or abs(x+cw/2-p[0])+abs(y+ch/2-p[1])>1e-5:
-                            q,_=al.allocate(np.array(p),1,max_radius_um=12.)
+                            try:q,_=al.allocate(np.array(p),1,max_radius_um=12.)
+                            except ValueError:
+                                prev=a if stage==0 else (new[stage-1][bit][0]+cw/2,new[stage-1][bit][1]+ch/2)
+                                nxt=b if stage==len(ps)-1 else ps[stage+1]
+                                q=allocate_between(al,p,prev,nxt)
                             new[stage][bit]=[round(float(q[0][0]-cw/2),6),round(float(q[0][1]-ch/2),6)]
                 worst=0.
                 for bit,(a,b,*_) in pts.items():
