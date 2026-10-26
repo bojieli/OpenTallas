@@ -1136,3 +1136,28 @@ def test_gold_register_array_lowering_is_opt_in(monkeypatch,tmp_path,enabled):
     assert ("--no-implicit-memories" in scripts[0]) == enabled
     assert rec.get("gold_no_implicit_memories",False) == enabled
     assert "read_slang" in scripts[0] and "memory_map" in scripts[0]
+
+
+def test_renamed_narrowed_vector_kept_gate_bit_named_after_a_constant_bit(tmp_path, monkeypatch):
+    """hfd_coll q3: target_q <= sel ? 8'h34 : 0; synthesis kept ONE flop for bits 2/4/5 and named it [1] (the
+    narrowed vector's new index), so the name pair gold q[1] (constant 0) / gate q[1] (= sel) is wrong.  renamed()
+    re-keys the gate vector; the correspondence pairs gate q[1] with gold q[2] and proves gold q[1] constant."""
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    g = tmp_path / "g.aig"
+    g.write_bytes(b"aig 3 1 2 0 0\n0\n2\n")                       # q[1]' = 0, q[2]' = d
+    gm = {"input": {0: [("d", 0)]}, "latch": {0: [("u_dut.q[1]$_DFF_P_.lecq", 0)],
+                                               1: [("u_dut.q[2]$_DFF_P_.lecq", 0)]}, "output": {}}
+    t = tmp_path / "t.aig"
+    t.write_bytes(b"aig 2 1 1 0 0\n2\n")                          # gate q[1]' = d
+    tm = {"input": {0: [("d", 0)]}, "latch": {0: [("u_dut.q[1]$_DFF_P_.lecq", 0)]}, "output": {}}
+    L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+    assert "ff:u_dut.q[1]" in L.matched
+    m, kind = L.build(with_compare=True, with_hyp=False)
+    assert _sim_prove(m)["ff:u_dut.q[1]"] == "differs"            # the false name pair
+    log = []
+    lec.renamed(L, log)
+    assert "ff:u_dut.q[1]" not in L.matched and any(x.startswith("renamed: ff:u_dut.q") for x in log)
+    L2 = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+    lec.correspond(L2, tmp_path, 100, [])
+    m, kind = L2.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {"proved"}

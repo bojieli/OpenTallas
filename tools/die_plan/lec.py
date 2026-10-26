@@ -1205,8 +1205,30 @@ def renamed(L, log, words=4):
         mm = IDX.match(k)
         if k.startswith("ff:") and mm:
             bases[mm.group(1)].append(k)
+    gbits = collections.defaultdict(list)          # every gold bit of a vector, matched or gold-only
+    for k in L.gp:
+        mm = IDX.match(k)
+        if k.startswith("ff:") and mm and mm.group(1) in bases and ("gold", k) in L.dlit:
+            gbits[mm.group(1)].append(k)
     hit = []
     for b, ks in bases.items():
+        # the gate side of the same evidence: a narrowed vector whose surviving gate bit carries the NEW index of
+        # an RTL bit (hfd_coll q3 u_program.target_q <= sel ? 8'h34 : 0: bits 2/4/5 = sel, 0/1/3/6/7 = 0; the one
+        # kept gate flop is named [1], the RTL's constant bit).  Every disagreeing matched bit whose gate function
+        # is a non-constant function of ANOTHER gold bit of the vector (either polarity), and is no gold bit's
+        # under its own name, re-keys the vector; the pairing is then proved by induction like any other.
+        tw = [k for k in ks if sv("gold", k) != sv("gate", k)]
+        gsig = collections.defaultdict(set)
+        for k in gbits[b]:
+            if sv("gold", k) not in (0, mask):
+                gsig[sv("gold", k)].add(k)
+        gmoved = [k for k in tw if sv("gate", k) not in (0, mask)
+                  and (gsig.get(sv("gate", k), set()) | gsig.get(sv("gate", k) ^ mask, set())) - {k}]
+        if tw and len(gmoved) == len(tw):
+            hit.append(b)
+            log.append(f"renamed: {b} ({len(gmoved)} of {len(tw)} disagreeing gate bits simulate like another "
+                       f"gold bit)")
+            continue
         bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
         if len(bad) < 2:
             continue
