@@ -590,6 +590,7 @@ KV_EPOCH_CONVENTION = ("user = authority_epoch[1:0] = epoch[1:0] of every lprg e
                        "the writer / PC calendars take the stage user from that epoch (row 64 + l + 256 u, kv_user_rows)")
 KV_SRC_IMAGE = "results/arch/qwen_kv_static_programme_1017/die/target1.hex"      # kv_static_programme --profile die
 KV_HBM_BEAT = 768        # core edges a cycle of the core 625 u / HBM 768 u beat (qkd_static_kv_phase_launch next_gap)
+                         # (legacy two-clock profile; the compile's own phase ticks override it: kv_beat_cycle)
 KV_META_HOLD = 8         # qkd_static_kv_phase_launch META_HOLD_CORE (die template): another user's go within it faults
 KV_ATT_END = 1784        # qkd_native_attention_programme busy run .. run + compiled_end (cal_gen STRETCH 1, SERVICE_END
                          # 1777; MU-KV-PROG kvprog README section 2): a second user's issue inside it is a sticky fault
@@ -601,22 +602,44 @@ def _kv_phase_profile():
     """the die phase-launch profile the KV image was aligned with (kv_static_programme --profile die report: PH0, the
     SAFE window, the lprg -> group relay edges)"""
     r = json.loads((ROOT / "results/arch/qwen_kv_static_programme_1017/die/report.json").read_text())["profile"]
-    return dict(PH0=r["phase"]["PH0"], lo=r["phase"]["SAFE_LOW_U"], hi=r["phase"]["SAFE_HIGH_U"], groups=r["groups"])
+    return dict(PH0=r["phase"]["PH0"], lo=r["phase"]["SAFE_LOW_U"], hi=r["phase"]["SAFE_HIGH_U"], groups=r["groups"],
+                core_u=625, beat_u=KV_HBM_BEAT)
 
 
 KV_PHASE = _kv_phase_profile()
 
 
+def kv_phase_ticks():
+    """(core, beat) phase ticks of the compile's phase-launch profile: (625, 768) for the two-clock die (core 625 u /
+    HBM 768 u), (625, 625) for the common 833 ps controller-core clock (kv_static_programme CORE_U / HBM_U).
+    TOK-QK-MUFS 10-25: ONE source -- the frame compiler used to hard-code 768 while the 833 compile phases on 625."""
+    return KV_PHASE.get("core_u", 625), KV_PHASE.get("beat_u", KV_HBM_BEAT)
+
+
+def kv_beat_cycle():
+    """core edges after which the launch phase repeats: beat / gcd(core, beat) (768 two-clock, 1 common clock)"""
+    cu, bu = kv_phase_ticks()
+    return bu // math.gcd(cu, bu)
+
+
 def kv_launch_gap(c):
     """qkd_static_kv_phase_launch next_gap (u) of a root emitted on core cycle c of the frame (frame cycle 0 = token run
     start of user 0's first token, at HBM-beat phase 0 = the image's TOKEN_START_PHASE_U; kv_static_programme.launch_gap)"""
+    cu, bu = kv_phase_ticks()
     c2 = c + 1 + KV_PHASE["groups"] + 1
-    return (KV_PHASE["PH0"] - 625 * (c2 + 1)) % KV_HBM_BEAT or KV_HBM_BEAT
+    return (KV_PHASE["PH0"] - cu * (c2 + 1)) % bu or bu
 
 
 def kv_launch_legal(row, b):
     """every go root of a stage that begins on cycle b sits inside the phase launch's SAFE window"""
     return all(KV_PHASE["lo"] <= kv_launch_gap(b + row[n]) <= KV_PHASE["hi"] for n in KV_GO_ROOTS)
+
+
+def kv_legal_residues(row):
+    """the stage begins b mod kv_beat_cycle() at which every go root of the stage is phase-legal (kv_launch_legal is
+    periodic in b with that cycle): the frame compiler jumps to the next legal begin instead of stepping, and refuses a
+    stage with none (an unplaceable stage, never a search that cannot end)"""
+    return tuple(b for b in range(kv_beat_cycle()) if kv_launch_legal(row, b))
 
 
 def kv_attention_window(row):
@@ -804,13 +827,15 @@ def kv_frame_params(rows):
     kv_service = the RTL attention busy window (kv_attention_window, MU-KV-PROG kvprog README section 3); every filler KV
     stage placed where its launches are phase-legal (kv_phase_quantum: mu_opcal steps the group to the next legal
     cycle; the image's launches are legal at user 0's phases only, 219 of 768 shifts a stage are legal), and
-    the latency user's token padded to a multiple of 768 (token_pad, as the single-user image's 249,600)"""
+    the latency user's token padded to a multiple of 768 (token_pad, as the single-user image's 249,600)
+    TOK-QK-MUFS 10-25: the 768 is the two-clock beat cycle; quantum and pad follow kv_beat_cycle() (1 on the common
+    833 ps clock, where every begin is phase-legal)"""
     lp = rows[1]["stage_end"]
     p = dict(layer_period=lp, l0_extra=rows[0]["stage_end"] - lp, kv_lp_rows=rows, kv_service=kv_attention_window(rows[1]),
-             kv_phase_quantum=KV_HBM_BEAT)
+             kv_phase_quantum=kv_beat_cycle())
     from . import mu_opcal as O
     t0 = single_user_period(dict(SOURCED, users=KV_USERS, occupancy="measured", head_chunks=8, head_tok_ofs=O.EMB_T, **p))
-    p["token_pad"] = (-t0) % KV_HBM_BEAT
+    p["token_pad"] = (-t0) % p["kv_phase_quantum"]
     return p
 
 
