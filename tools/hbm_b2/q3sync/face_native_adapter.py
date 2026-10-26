@@ -15,7 +15,7 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def emit(face_dir, adapter_dir, assembly, out):
+def emit(face_dir, adapter_dir, assembly, testbench, out):
     faces = json.loads((face_dir / 'face_sources.json').read_text())
     manifest = json.loads((adapter_dir / 'manifest.json').read_text())
     qualification = json.loads((adapter_dir / 'qualification.json').read_text())
@@ -29,8 +29,18 @@ def emit(face_dir, adapter_dir, assembly, out):
         if sha(face_dir / name) != digest:
             raise ValueError('face source changed: ' + name)
     text, wrappers, result = assembly.read_text(), [], {}
+    compact = re.sub(r'\s+', '', text)
+    tb_compact = re.sub(r'\s+', '', testbench.read_text())
+    for port, connection in manifest['native_clock_bindings'].items():
+        expected = '.' + port + '(' + re.sub(r'\s+', '', connection) + ')'
+        if tb_compact.count(expected) != 1:
+            raise ValueError('programme testbench changes qualified clock alias: ' + port)
     for core, face in faces['cores'].items():
         original = manifest['cores'][core]
+        for clock in original['clocks']:
+            expected = '.' + clock['name'] + '(' + re.sub(r'\s+', '', clock['native_connection']) + ')'
+            if compact.count(expected) != 1:
+                raise ValueError('assembly changes qualified clock source: ' + clock['name'])
         profile = face['profile']
         if profile.get('common_clock_adapter', {}).get('manifest_sha256') != sha(adapter_dir / 'manifest.json'):
             raise ValueError('face view does not use the selected qualified clock adapter')
@@ -85,13 +95,14 @@ def emit(face_dir, adapter_dir, assembly, out):
                   clock_qualification_sha256=sha(adapter_dir / 'qualification.json'),
                   face_receipt_sha256=sha(face_dir / 'face_sources.json'),
                   assembly_sha256=sha(assembly), hub52_stations='EXCLUDED_NO_ABI')
+    report['testbench_sha256'] = sha(testbench)
     (out / 'adapter.json').write_text(json.dumps(report, indent=2) + '\n')
     return report
 
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__)
-    for arg in ['face-dir', 'adapter-dir', 'assembly', 'out']:
+    for arg in ['face-dir', 'adapter-dir', 'assembly', 'testbench', 'out']:
         ap.add_argument('--' + arg, type=Path, required=True)
     a = ap.parse_args()
-    print(json.dumps(emit(a.face_dir, a.adapter_dir, a.assembly, a.out)))
+    print(json.dumps(emit(a.face_dir, a.adapter_dir, a.assembly, a.testbench, a.out)))

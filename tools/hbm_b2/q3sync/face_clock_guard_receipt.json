@@ -1,0 +1,10 @@
+{
+  "testbench_clock_invert": {
+    "status": "CAUGHT",
+    "reason": "programme testbench changes qualified clock alias: clk_arg"
+  },
+  "assembly_clock_invert": {
+    "status": "CAUGHT",
+    "reason": "assembly changes qualified clock source: arg_clk"
+  }
+}

@@ -11,7 +11,7 @@ python3 tools/hbm_b2/q3sync/q3_sync_profile.py --root . --files tools/hbm_b2/q3s
 ASM=rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hbm_q3_producer_native.sv
 python3 tools/hbm_b2/q3prog/q3_asm_alias_loops.py "$ASM" "$D/asm.sv" "$D/alias.json"
 python3 tools/hbm_b2/q3sync/q3_assembly_sync.py --asm "$D/asm.sv" --census tools/hbm_b2/q3sync/cohort.json --gen "$D/gen" --out "$D/asm_sync.sv" --report "$D/asm_sync.json"
-python3 tools/hbm_b2/q3sync/face_native_adapter.py --face-dir "$FACE_SOURCES" --adapter-dir results/clock/q3_common_clock_2144 --assembly "$D/asm_sync.sv" --out "$D/faces" > "$D/face_adapter.log"
+python3 tools/hbm_b2/q3sync/face_native_adapter.py --face-dir "$FACE_SOURCES" --adapter-dir results/clock/q3_common_clock_2144 --assembly "$D/asm_sync.sv" --testbench tools/hbm_b2/q3stageb/tb_q3stageb.sv --out "$D/faces" > "$D/face_adapter.log"
 python3 - "$D" > "$D/qsrc.files" <<'PY'
 import sys,json
 c=json.load(open('tools/hbm_b2/q3sync/cohort.json'));fs=[]
