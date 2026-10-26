@@ -85,6 +85,10 @@ def test_stage_only_clock_estimate_keeps_golden_and_core_contract(tmp_path,monke
     original=gen_phys.sdc(p,'src',gen_phys.type_pins(p,'src'))
     kit=gen_phys.write_type_kit(p,'src',tmp_path,[])
     assert (kit/'constraint.sdc').read_text()==original
+    assert 'SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl' in (kit/'config.mk').read_text()
+    common = Path(__file__).resolve().parents[2]/'physical/common_flow'
+    for hook in ('ot_keep_regs.tcl','ot_pin_regs.tcl','ot_rst_copies.tcl','ot_rst_copies.py'):
+        assert (kit/hook).read_bytes() == (common/hook).read_bytes()
     assert 'set_clock_latency -clock clk' not in original
     assert 'PRE_FLOORPLAN_TCL = /work/prects_estimate.tcl' in (kit/'config.mk').read_text()
     assert 'PRE_CTS_TCL = /work/pre_cts.tcl' in (kit/'config.mk').read_text()
