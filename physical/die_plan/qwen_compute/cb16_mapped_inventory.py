@@ -23,7 +23,7 @@ def census(design,top):
     names=aliases.get(q,[]);delay=[(n,b) for n,b in names if DLY.search(n)];fabric=[(n,b) for n,b in names if 'u_u_fab_u_x_' in n];face=[(n,b) for n,b in names if re.search(r'(?:^|[./])u_b(?:in|out)_',n)];reset=[(n,b) for n,b in names if re.search(r'(?:^|[./])u_(?:rrl|srl|rst|run|rg|ro|so)_',n)]
     n,b=(delay or fabric or face or reset or names or [(path,bit)])[0]
     category='delay' if delay else 'fabric' if fabric else 'boundary' if face else 'reset_start' if reset else 'other'
-    row=dict(instance=path,type=typ,register=n,bit=b,category=category)
+    row=dict(instance=path,type=typ,register=n,bit=b,category=category,aliases=[dict(name=an,bit=ab) for an,ab in names])
     if delay:
      mm=DLY.search(n);row.update(delay_instance=mm[1],stage=int(mm[2]))
     rows.append(row)
