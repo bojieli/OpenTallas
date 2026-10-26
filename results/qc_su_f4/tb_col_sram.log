@@ -1,0 +1,4 @@
+COLSRAM cycles 200000 reads 148375 nonzero 148375 mismatches 0 PASS
+tb_col_sram.v:34: $finish called at 200000000 (1ps)
+MUTANT tb_col_sram.v:34: $finish called at 200000000 (1ps)
+MUTANT COLSRAM cycles 200000 reads 148375 nonzero 148375 mismatches 144 FAIL

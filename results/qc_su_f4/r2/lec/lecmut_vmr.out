@@ -1,0 +1,20 @@
+Warning: Replacing memory \gmx_r with list of registers. See /lec/vm8x_old_suffixed.sv:113
+Warning: Replacing memory \gw1_r with list of registers. See /lec/vm8x_old_suffixed.sv:113, /lec/vm8x_old_suffixed.sv:112
+Warning: Replacing memory \winS with list of registers. See /lec/vm8x_old_suffixed.sv:102
+Warning: Replacing memory \hitS with list of registers. See /lec/vm8x_old_suffixed.sv:100, /lec/vm8x_old_suffixed.sv:99
+Warning: Replacing memory \off_oh with list of registers. See /lec/vm8x_old_suffixed.sv:99, /lec/vm8x_old_suffixed.sv:97
+Warning: Replacing memory \cw_hi with list of registers. See /lec/vm8x_old_suffixed.sv:317
+Warning: Replacing memory \cw_lo with list of registers. See /lec/vm8x_old_suffixed.sv:316
+Warning: Latch inferred for signal `\qfd_dv_s8x_vmr_o.\l [2:0]' from process `\qfd_dv_s8x_vmr_o.$proc$/lec/vm8x_old_suffixed.sv:119$2328': $auto$proc_dlatch.cc:543:proc_dlatch$3830
+Warning: Latch inferred for signal `\qfd_dv_s8x_vmr_o.\l [3]' from process `\qfd_dv_s8x_vmr_o.$proc$/lec/vm8x_old_suffixed.sv:119$2328': $auto$proc_dlatch.cc:545:proc_dlatch$3833
+Warning: Latch inferred for signal `\qfd_dv_s8x_vmr_o.\l [31:4]' from process `\qfd_dv_s8x_vmr_o.$proc$/lec/vm8x_old_suffixed.sv:119$2328': $auto$proc_dlatch.cc:543:proc_dlatch$3836
+Warning: Replacing memory \gmx_r with list of registers. See /lec/vm8x_mut.sv:113
+Warning: Replacing memory \gw1_r with list of registers. See /lec/vm8x_mut.sv:113, /lec/vm8x_mut.sv:112
+Warning: Replacing memory \winS with list of registers. See /lec/vm8x_mut.sv:102
+Warning: Replacing memory \hitS with list of registers. See /lec/vm8x_mut.sv:100, /lec/vm8x_mut.sv:99
+Warning: Replacing memory \off_oh with list of registers. See /lec/vm8x_mut.sv:99, /lec/vm8x_mut.sv:97
+Warning: Replacing memory \cw_hi with list of registers. See /lec/vm8x_mut.sv:321
+Warning: Replacing memory \cw_lo with list of registers. See /lec/vm8x_mut.sv:320
+Warning: Latch inferred for signal `\qfd_dv_s8x_vmr.\l [2:0]' from process `\qfd_dv_s8x_vmr.$proc$/lec/vm8x_mut.sv:119$6623': $auto$proc_dlatch.cc:543:proc_dlatch$8127
+Warning: Latch inferred for signal `\qfd_dv_s8x_vmr.\l [3]' from process `\qfd_dv_s8x_vmr.$proc$/lec/vm8x_mut.sv:119$6623': $auto$proc_dlatch.cc:545:proc_dlatch$8130
+Warning: Latch inferred for signal `\qfd_dv_s8x_vmr.\l [31:4]' from process `\qfd_dv_s8x_vmr.$proc$/lec/vm8x_mut.sv:119$6623': $auto$proc_dlatch.cc:543:proc_dlatch$8133

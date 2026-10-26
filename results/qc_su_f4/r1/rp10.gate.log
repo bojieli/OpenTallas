@@ -1,0 +1,7 @@
+6 [305, 120, 401, 254, 1008, 120] [3, 1, 3, 2, 8, 1] {'T1': 258.66, 'T2': 64.26, 'T3': 15.66} {'mean': 258.97, 'min': 240.94, 'max': 271.96, 'window': 31.02} {'mean': 204.94, 'min': 191.56, 'max': 216.79, 'window': 25.23}
+BEST 6 {'TT': {'mean': 258.97, 'min': 240.94, 'max': 271.96, 'window': 31.02}, 'FF': {'mean': 204.94, 'min': 191.56, 'max': 216.79, 'window': 25.23}}
+rp10 VERDICT PASS {'G1_macro_orient': 'PASS', 'G2_island_rows': 'PASS', 'G3_cell_rows': 'PASS', 'G4_detour_sites': 'PASS'}
+ pred {'TT': {'mean': 260.87, 'window': 31.02}, 'FF': {'mean': 199.84, 'window': 25.23}} trunk {'TT': {'mean': 277.91, 'window': 31.02}, 'FF': {'mean': 212.14, 'window': 25.23}} BUFx6f_ASAP7_75t_R 1 5.0
+  G2_island_rows PASS {'max_disp_um': 6.48} fail 0
+  G3_cell_rows PASS {'n_sites': 82} fail 0
+  G4_detour_sites PASS {'n_edges': 88, 'n_repeaters': 12, 'n_detours': 84, 'max_shift_um': 2.16} fail 0

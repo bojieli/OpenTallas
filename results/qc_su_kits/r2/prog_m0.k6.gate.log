@@ -1,0 +1,7 @@
+6 [749, 305, 528, 584, 467, 658] [4, 2, 3, 3, 3, 4] {'T1': 245.16, 'T2': 55.08, 'T3': 21.06} {'mean': 246.68, 'min': 242.57, 'max': 253.14, 'window': 10.57} {'mean': 195.25, 'min': 192.81, 'max': 201.51, 'window': 8.7}
+BEST 6 {'TT': {'mean': 246.68, 'min': 242.57, 'max': 253.14, 'window': 10.57}, 'FF': {'mean': 195.25, 'min': 192.81, 'max': 201.51, 'window': 8.7}}
+prog_m0 VERDICT PASS {'G1_macro_orient': 'PASS', 'G2_island_rows': 'PASS', 'G3_cell_rows': 'PASS', 'G4_detour_sites': 'PASS'}
+ pred {'TT': {'mean': 248.58, 'window': 10.57}, 'FF': {'mean': 190.15, 'window': 8.7}} trunk None None None None
+  G2_island_rows PASS {'max_disp_um': 9.18} fail 0
+  G3_cell_rows PASS {'n_sites': 83} fail 0
+  G4_detour_sites PASS {'n_edges': 89, 'n_repeaters': 12, 'n_detours': 85, 'max_shift_um': 2.16} fail 0

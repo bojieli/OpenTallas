@@ -1,0 +1,129 @@
+{
+ "ot_sram_1r1w_1024x256_m1b2_r2c2_ns": {
+  "allowed_orientations": [
+   "R0",
+   "MX",
+   "MY",
+   "R180"
+  ],
+  "area_um2": 13558.2,
+  "builder": "results/qc_su_f4/build_col_sram.py",
+  "generator": "tools/mem_compiler/sram_gen.py v1.0+aligned-v2",
+  "outline": {
+   "aligned_v2": {
+    "delta_height_nm": 24,
+    "delta_width_nm": 0,
+    "height_um": 140.424,
+    "row_multiple": false,
+    "rule": "H and W = 0.024 mod 0.048 um: pins on track at origin 0 mod 0.048 in R0/MX/MY/R180, M5 crossing on both pin edges",
+    "v1_height_um": 140.4,
+    "v1_width_um": 96.552,
+    "width_um": 96.552
+   },
+   "pin_edges": "top/bottom (M5)",
+   "pin_limited": false,
+   "pin_stretch_um": 0.0,
+   "pins_per_edge": 416,
+   "signal_pins": 831,
+   "snap_overhead_um2": 9.013
+  },
+  "pin_layers": [
+   "M5"
+  ],
+  "port_delta": "identical ports except rr_addr: 2 x clog2(rows) = 2 x 10 = 20 bits (m2: 2 x 9 = 18); the cores tie the repair pins to 0 (rr_addr(18'd0) -> 20'd0)",
+  "ref_area_um2": 12317.4,
+  "ref_size_um": [
+   174.744,
+   70.488
+  ],
+  "ref_timing_ps": {
+   "ff": {
+    "clk_to_q_ps": 450.7,
+    "hold_ps": 19.7,
+    "min_period_ps": 435.3,
+    "setup_ps": 24.7
+   },
+   "ss": {
+    "clk_to_q_ps": 691.8,
+    "hold_ps": 30.1,
+    "min_period_ps": 671.5,
+    "setup_ps": 39.8
+   },
+   "tt": {
+    "clk_to_q_ps": 544.8,
+    "hold_ps": 21.6,
+    "min_period_ps": 527.2,
+    "setup_ps": 28.3
+   }
+  },
+  "replaces_in_floorplan": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "schema": "opentallas.qc-su-f4.column-sram.v1",
+  "size_um": [
+   96.552,
+   140.424
+  ],
+  "spec": {
+   "banks": 2,
+   "bits": 256,
+   "mux": 1,
+   "name": "ot_sram_1r1w_1024x256_m1b2_r2c2_ns",
+   "pin_faces": "ns",
+   "ports": "1r1w",
+   "spare_cols": 2,
+   "spare_rows": 2,
+   "words": 1024
+  },
+  "symmetry": [
+   "X",
+   "Y"
+  ],
+  "timing_ps": {
+   "ff": {
+    "clk_to_q_ps": 413.9,
+    "hold_ps": 19.7,
+    "min_period_ps": 405.9,
+    "setup_ps": 24.7
+   },
+   "ss": {
+    "clk_to_q_ps": 659.3,
+    "hold_ps": 30.1,
+    "min_period_ps": 650.9,
+    "setup_ps": 39.8
+   },
+   "tt": {
+    "clk_to_q_ps": 509.7,
+    "hold_ps": 21.6,
+    "min_period_ps": 501.2,
+    "setup_ps": 28.3
+   }
+  },
+  "track_check": {
+   "M5": {
+    "orientation_invariant": true,
+    "origin_0_legal_all_orientations": true,
+    "rule_mod_track_nm": {
+     "MX": [
+      0
+     ],
+     "MY": [
+      0
+     ],
+     "R0": [
+      0
+     ],
+     "R180": [
+      0
+     ]
+    }
+   }
+  },
+  "views": {
+   "ot_sram_1r1w_1024x256_m1b2_r2c2_ns.lef": "803d091b4921facf337740b49074819b0d115a60aa528b347780eb4eab4a7c64",
+   "ot_sram_1r1w_1024x256_m1b2_r2c2_ns.v": "e6d50702295627782f0a973dd93f5821593153e166607054024e0493cb2ee61e",
+   "ot_sram_1r1w_1024x256_m1b2_r2c2_ns_bb.v": "b637c73253d3e92ff79879f241f64dcc1d618e27f3a326abba79c971f77d075b",
+   "ot_sram_1r1w_1024x256_m1b2_r2c2_ns_ff.lib": "4ec5c91bf23f9ee8a734a4be1bd2d92c8df597fd9ada297014e6ca2f0814b8f7",
+   "ot_sram_1r1w_1024x256_m1b2_r2c2_ns_ss.lib": "ce4e3bf6ea445b38227d60cf3c8492a7e6dd035f5773209fe0abd798d5b15ad4",
+   "ot_sram_1r1w_1024x256_m1b2_r2c2_ns_tt.lib": "a243dd3e030b269aa0aba3780257e0b20ae5b8daba4aa1dd96deb2873cb6519c"
+  }
+ }
+}
