@@ -184,7 +184,7 @@ proc ::ot_dtsh::freeze {} {
   dict for {name info} $taps { [$blk findInst $name] setDoNotTouch true }
   $root setDoNotTouch true
 }
-proc ::ot_dtsh::audit {} {
+proc ::ot_dtsh::audit {{skip_orig 0}} {
   variable blk; variable nodes; variable leaves; variable taps; variable original; variable ff_data; variable root; variable root_extra; variable ndr
   if {$ndr ne ""} {
     if {[$root getNonDefaultRule] ne $ndr} { error "OT_DTSH root NDR changed" }
@@ -194,6 +194,7 @@ proc ::ot_dtsh::audit {} {
   }
   if {[lsort [dict keys $leaves]] ne [lsort [dict keys $taps]]} { error "OT_DTSH incomplete density-tap coverage" }
   dict for {name state} $original {
+    if {$skip_orig} break
     set inst [$blk findInst $name]
     if {$inst eq "NULL" || [list [box $inst] [$inst getOrient] [[$inst getMaster] getName]] ne $state} { error "OT_DTSH moved/resized existing cell $name" }
   }
@@ -224,7 +225,7 @@ proc ::ot_dtsh::audit {} {
   dict for {name pn} $leaves {
     if {[[dict get $taps $name input] getNet] ne $pn || [[dict get $taps $name output_pin] getNet] ne [dict get $taps $name output]} { error "OT_DTSH density-tap interface changed at $name" }
   }
-  puts "OT_DTSH AUDIT PASS: [dict size $nodes] frozen planned nodes, [dict size $leaves] existing taps; all [dict size $original] existing placements and FF data/control unchanged"
+  puts "OT_DTSH AUDIT PASS: [dict size $nodes] frozen planned nodes, [dict size $leaves] existing taps; [expr {$skip_orig ? "post-legalisation (placements checked before DPL)" : "all [dict size $original] existing placements"}] and FF data/control unchanged"
 }
 # Explicit prototype opt-in: leave local CTS nets on their normal routing rule.
 proc ::ot_dtsh::trunk_ndr {} {
@@ -295,11 +296,19 @@ proc ::ot_dtsh::cts {args} {
     rsz::repair_net_cmd [sta::db_net_to_sta $net] $max_wire 0 0
   }
   bind_new_pg
+  set skip_orig 0
   if {[info exists ::env(OT_DTSH_CL_SINK)] && $::env(OT_DTSH_CL_SINK) eq "1"} {
     variable cl_args
+    if {[info exists ::env(OT_DTSH_CL_GRT)] && $::env(OT_DTSH_CL_GRT) eq "1"} {
+      # routed balance needs legal local clock buffers (un-legalised TritonCTS buffers overlap -> GRT congestion):
+      # prove CTS moved nothing, legalise (the flow's own post-CTS detailed_placement, trunk/taps FIRM), then route
+      audit
+      detailed_placement
+      set skip_orig 1
+    }
     closed_loop {*}$cl_args measure_sinks _sink
   }
-  audit
+  audit $skip_orig
   puts "OT_DTSH CTS PASS: selected [llength $nets] existing density-tap output nets; no planned-trunk insertion before POST_CTS"
   return $result
 }

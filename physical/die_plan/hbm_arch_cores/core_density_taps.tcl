@@ -130,14 +130,27 @@ if {$dt_mgrp_on} {
 }
 set dt_sets [dt_split $dt_ff]
 # set index -> macro index for the S2 macro groups (each macro with >= 1 interface register)
-set dt_set_mac [dict create]
+set dt_set_mac [dict create]; set dt_set_mif [dict create]
 if {$dt_mgrp_on} {
   for {set k 0} {$k < [llength $dt_mac]} {incr k} {
     set S {}
     foreach p $dt_ff_all { set nm [[[lindex $p 2] getInst] getName]; if {[dict exists $dt_mgrp $nm] && [dict get $dt_mgrp $nm] == $k} { lappend S $p } }
     if {![llength $S]} continue
-    dict set dt_set_mac [llength $dt_sets] $k
-    lappend dt_sets $S
+    # a wide/large interface set (SRAM faces: 500-1150 regs over ~170 um) obeys the same tap rule (<= target sinks,
+    # <= DMAX): split it with the density bisection; the macro CK joins the sub-tap nearest its own clock pin
+    set subs [dt_split $S]
+    lassign [lindex $dt_mac $k] mx my
+    set bi 0; set bd 1e30
+    for {set j 0} {$j < [llength $subs]} {incr j} {
+      set n 0; set cx 0.0; set cy 0.0
+      foreach q [lindex $subs $j] { set cx [expr {$cx + [lindex $q 0]}]; set cy [expr {$cy + [lindex $q 1]}]; incr n }
+      set d [expr {abs($cx / $n - $mx) + abs($cy / $n - $my)}]
+      if {$d < $bd} { set bd $d; set bi $j }
+    }
+    for {set j 0} {$j < [llength $subs]} {incr j} {
+      if {$j == $bi} { dict set dt_set_mac [llength $dt_sets] $k } else { dict set dt_set_mif [llength $dt_sets] $k }
+      lappend dt_sets [lindex $subs $j]
+    }
   }
   set dt_ff $dt_ff_all
 }
@@ -162,7 +175,7 @@ foreach S $dt_sets {
   lassign [lindex $dt_med $k] mx my
   foreach p $S {
     set t $k
-    if {![dict exists $dt_set_mac $k] && abs([lindex $p 0] - $mx) + abs([lindex $p 1] - $my) > $dt_dmax} {
+    if {![dict exists $dt_set_mac $k] && ![dict exists $dt_set_mif $k] && abs([lindex $p 0] - $mx) + abs([lindex $p 1] - $my) > $dt_dmax} {
       set bd 1e30
       for {set j 0} {$j < [llength $dt_med]} {incr j} {
         lassign [lindex $dt_med $j] qx qy
