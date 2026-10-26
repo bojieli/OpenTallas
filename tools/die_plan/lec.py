@@ -1905,6 +1905,75 @@ def normalize_gold_elements(L, elements, log):
     return changed
 
 
+def slang_element_keys(L, log, work=None):
+    """gold-only flops of a slang-flattened array, paired by NAME with the gate flops of the same element, from slang's
+    per-element driver cells (slang_elements): gold 'ff:S.X[f]' is element '[i]..[b]'.
+      * the gate kept the element name: 'ff:S.X[i]..[b]' or its relaid form 'ff:S.X#t[i]..[b]' (gate-only) -> re-key;
+      * the LAST element of the array (i = its largest outer index) whose gate flops synthesis named after the wire
+        they drive (`assign q = r[D-1]`; rename -wire picks the output: ot_qkh_relay D=2 -> gate 'S.q[b]'): when the
+        scope S has exactly one gate-only base 'ff:S.W' whose bit indices are exactly the element's bit indices and
+        none of them is a gold name -> re-key gate 'ff:S.W[b]' to the gold key of element [i][b].
+    Sound: a bijection of key points; every next-state function is still proved (a wrong pairing can only produce a
+    difference).  PATH-KV 10-26: kv3_head_eighth_e1 KEEP FAIL 36 = u_ric.r[16..31] / u_rkv.r[2..3] (gold) vs
+    u_ric.q[0..15] / u_rkv.q[0..1] (gate), their relaid first stages paired to the wrong element by function."""
+    elem = slang_elements(Path(work) / "gold.aliases.json") if work is not None else {}
+    # Current main already normalized scalar unpacked names; keep those canonical indices.
+    elem.update(getattr(L, "element_names", {}))
+    if not elem:
+        return 0
+    held = {k for (_sd, k) in L.hyp}
+    tonly = set(L.tonly)
+    gonly = [k for k in L.gonly if k in elem and k not in held]
+    if not gonly:
+        return 0
+    arr = collections.defaultdict(dict)              # gold array base -> {gold key: (outer index, element suffix)}
+    for k, e in elem.items():
+        m = IDX.match(k)
+        if m:
+            arr[m.group(1)][k] = (int(re.match(r"\[(\d+)\]", e).group(1)), e)
+    tbase = collections.defaultdict(dict)            # (scope) -> {gate base: {bit suffix: gate key}}
+    for k in tonly:
+        m = IDX.match(k)
+        if m and k.startswith("ff:") and k not in held:
+            b = m.group(1)
+            tbase[b.rsplit(".", 1)[0]].setdefault(b, {})[m.group(2)] = k
+    mp = {}                                          # gate key -> gold key
+    for gb, members in arr.items():
+        top = max(i for i, _ in members.values())
+        last = {}
+        for gk, (i, e) in members.items():
+            if gk not in gonly:
+                continue
+            for tk in (gb + e, gb + "#t" + e):
+                if tk in tonly and tk not in mp:
+                    mp[tk] = gk
+                    break
+            else:
+                if i == top:
+                    last[e[len(f"[{i}]"):]] = gk     # bit suffix '[b]' -> gold key
+        if not last:
+            continue
+        scope = gb.rsplit(".", 1)[0]
+        cands = [b for b, bits in tbase.get(scope, {}).items()
+                 if b != gb and not b.endswith("#t") and set(bits) == set(last) and not any(k in L.gp for k in bits.values())]
+        if len(cands) == 1:
+            for sfx, gk in last.items():
+                mp[tbase[scope][cands[0]][sfx]] = gk
+            log.append(f"slang last element: gate {cands[0].split('.')[-1]} ({len(last)} b) -> gold "
+                       f"{gb.split('.')[-1]}[{top}] ({scope.split('.')[-1]})")
+    if not mp:
+        return 0
+    for tk, gk in mp.items():
+        L.tp[gk] = L.tp.pop(tk)
+        if tk in L.tc:
+            L.tc[gk] = L.tc.pop(tk)
+    L.matched = sorted(set(L.gp) & set(L.tp))
+    L.gonly = sorted(set(L.gp) - set(L.tp))
+    L.tonly = sorted(set(L.tp) - set(L.gp))
+    log.append(f"slang element keys: {len(mp)} gate flops re-keyed to their gold element names")
+    return len(mp)
+
+
 def alias_arrays(L, log, words=4, work=None):
     """an RTL array whose gate flops synthesis named after an ALIAS array (`assign SX[i] = X[i]`: rename -wire picked
     the alias wire, so the gate holds SX[i][b] while the gold, read with the other frontend, holds X[h][flat]): the
@@ -2106,6 +2175,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     refined and needs adding rounds after them; 10 left it free -> false NOT EQUIVALENT (gunit_l4 895 points,
     EQUIVALENT at 24 rounds, 738 s)."""
     normalize_gold_elements(L, slang_elements(Path(work) / "gold.aliases.json"), log)
+
+
+    slang_element_keys(L, log, work=work)
     alias_arrays(L, log, work=work)
     relayout(L, log)
     renamed(L, log)
