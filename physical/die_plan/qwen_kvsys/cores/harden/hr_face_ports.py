@@ -44,6 +44,12 @@ def pbits(v, w):
 def transform(J, top, mutant=False):
     M = J["modules"][top]
     cells, ports = M["cells"], M["ports"]
+    # Plan pin tables use p[0] even for width-one ports. Preserve that physical
+    # identity through write_verilog; scalar clocks otherwise become ck rather
+    # than ck[0] and OpenROAD rejects the planned pin (PPL-0061).
+    for pn, port in ports.items():
+        if len(port["bits"]) == 1:
+            M["netnames"][pn].setdefault("attributes", {})["single_bit_vector"] = ONE
     nid = [max([b for c in cells.values() for v in c["connections"].values() for b in v if isinstance(b, int)] +
                [b for p in ports.values() for b in p["bits"] if isinstance(b, int)] +
                [b for n in M["netnames"].values() for b in n["bits"] if isinstance(b, int)] + [1])]

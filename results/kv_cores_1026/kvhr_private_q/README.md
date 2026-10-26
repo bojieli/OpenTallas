@@ -44,3 +44,10 @@ by write_verilog/read_verilog. Without consolidation cdc_ch expanded a depth-8,
 The repaired cdc_ch proof is running on intel2 unit2117761-1793006272; its nominal
 post proof passed in 92.7s at 282 MB, with mutant/emitted stages still pending
 when this note was written. No passing result is inferred for those stages.
+
+Placement then exposed a separate representation error: plan/io.tcl requests
+ck[0], but the original wrapper's scalar clock survives emission as ck. Preserve
+Yosys single_bit_vector metadata on all width-one top ports, matching canonical
+plan p[0] pin identity. The emitted host_qm clock is now input [0:0] ck and that
+metadata survives actual synthesis (epyc2 unit1395055-1793006690). No bit widths,
+logic or cycles change. Placement repair/trial is owned by CORES legacy_vqvs.
