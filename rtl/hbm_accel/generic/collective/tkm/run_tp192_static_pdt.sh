@@ -28,7 +28,7 @@ case "$STEP" in
   fi
   for tc in syn_sel syn_cand rank128_zeros;do
    [ "${PAR:-0}" = 1 ] || for m in ref21 pd21;do "$OUT/obj_$m/Vtb_hgi_coll_tkm_static_pdt" +DIR="$OUT/vec/$tc" +ROTATE=128 +NO_TL=1 +TRACE="$OUT/tr_${m}_$tc.txt" > "$OUT/${m}_$tc.log" 2>&1 & done;wait
-   grep TKM_STATIC_PDT PASS "$OUT/ref21_$tc.log";grep TKM_STATIC_PDT PASS "$OUT/pd21_$tc.log"
+   grep -F 'TKM_STATIC_PDT PASS' "$OUT/ref21_$tc.log";grep -F 'TKM_STATIC_PDT PASS' "$OUT/pd21_$tc.log"
    python3 $L "$OUT/tr_ref21_$tc.txt" "$OUT/tr_pd21_$tc.txt" 0 | tee "$OUT/lockstep_pd21_$tc.log"
   done
   echo "TKM_TP192_STATIC_PDT_CB21_GATE_PASS (static_pd == static_p at PIPE1 HOP2 FRT4 CB21 CLRB0, shift 0, golden words)";; build_p1) build p1 0 1 0;; build_mut) build mut 0 1 1;;
@@ -46,11 +46,15 @@ case "$STEP" in
    python3 $L "$OUT/tr_pin_$tc.txt" "$OUT/tr_p1_$tc.txt" 2 | tee "$OUT/lockstep_p1_$tc.log"
   done
   set +e
-  if [ "${PAR:-0}" = 1 ];then grep -q TKM_STATIC_PDT PASS "$OUT/mut_syn_sel.log";[ $? = 0 ] && rc=0 || rc=1
+  if [ "${PAR:-0}" = 1 ];then grep -Fq 'TKM_STATIC_PDT PASS' "$OUT/mut_syn_sel.log";[ $? = 0 ] && rc=0 || rc=1
   else "$OUT/obj_mut/Vtb_hgi_coll_tkm_static_pdt" +DIR="$OUT/vec/syn_sel" +ROTATE=128 +TRACE="$OUT/tr_mut_syn_sel.txt" > "$OUT/mut_syn_sel.log" 2>&1;rc=$?;fi
   python3 $L "$OUT/tr_pin_syn_sel.txt" "$OUT/tr_mut_syn_sel.txt" 2 > "$OUT/lockstep_mut_syn_sel.log" 2>&1;lrc=$?
   set -e
-  [ "$rc" != 0 ] && grep -q 'TKM_STATIC_PDT FAIL' "$OUT/mut_syn_sel.log" && [ "$lrc" != 0 ] && echo "MUTANT MUTP1 FAILS as required: $(grep -m1 'TKM_STATIC_PDT FAIL' "$OUT/mut_syn_sel.log") | $(head -1 "$OUT/lockstep_mut_syn_sel.log")"
+  if [ "$rc" = 0 ] || ! grep -Fq 'TKM_STATIC_PDT FAIL' "$OUT/mut_syn_sel.log" || [ "$lrc" = 0 ]; then
+   echo "TKM_TP192_STATIC_PDT_GATE_FAIL: MUTP1 must fail golden and lock-step checks" >&2
+   exit 1
+  fi
+  echo "MUTANT MUTP1 FAILS as required: $(grep -m1 'TKM_STATIC_PDT FAIL' "$OUT/mut_syn_sel.log") | $(head -1 "$OUT/lockstep_mut_syn_sel.log")"
   echo "TKM_TP192_STATIC_PDT_GATE_PASS (ROOTPIPE static_pd lock-step = pinned +2 edges, zero edge change)";;
  *) echo "STEP vec|build_pin|build_p1|build_mut|sim|build_ref21|build_pd21|sim21";exit 2;;
 esac
