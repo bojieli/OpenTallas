@@ -1,6 +1,6 @@
 {
  "module": "dsdv_idx_tx_n32",
- "lef": "physical/s81_die_views/closed_import/dsdv_idx_tx_n32/dsdv_idx_tx_n32.lef",
+ "lef": "physical/die_plan/s81/cores/tx_current_1026/dsdv_idx_tx_n32_trial.lef",
  "source": "current parentdefault TX port contract; re-pinned Nface for height544.32, no RTLcyclechange; candidate notadopted",
  "pinhash": "2156a0ec994d",
  "pins": [
@@ -5081,5 +5081,5 @@
    "y": 544.278
   }
  ],
- "status": "B2 PIN PROPOSAL ONLY. Current-default physical preflight pending; no old timing/LEF reuse authorized."
+ "status": "CURRENT-DEFAULT PIN / GEOMETRY PROTOTYPE ONLY. Raw face FAIL790/844; off-default PIN_RETIME proofpasses and physical recut pending. Never old view timing/LEF crop."
 }
