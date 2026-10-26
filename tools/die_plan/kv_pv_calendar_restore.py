@@ -48,14 +48,21 @@ def derive(bg):
 
 
 def check(bg, table):
+    if table.get('schema') != r8.SCHEMA or table.get('die') != 'qwen_kvsys' or table.get('kind') != 'pv_exact_asbuilt_calendar':
+        raise ValueError('wrong PV calendar table schema/die/kind')
     expected = {m['id']: m for m in table['members']}
+    complete = {m['id'] for m in derive(bg)['members']}
+    if not expected or len(expected) != len(table['members']) or set(expected) != complete:
+        raise ValueError('PV calendar table omits or duplicates actual internal members')
     found = set()
     for g in bg['landing']:
         for m in g['members']:
             mid = r8.mkey(g, m)
             if mid in expected:
                 found.add(mid)
-                want = expected[mid]['asbuilt']
+                want = int(m['asbuilt_stages'])
+                if expected[mid]['asbuilt'] != want or expected[mid]['landed'] != want:
+                    raise ValueError('PV calendar table changes original age: ' + mid)
                 got = int(m.get('landed_stages', m['bound_stages']))
                 if got != want:
                     raise ValueError(f'PV calendar {mid}: landed {got} != asbuilt {want}')
