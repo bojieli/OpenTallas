@@ -11,12 +11,22 @@ module tb_s81hd_ctl;
  parameter integer MUT=0;
     wire result_v,result_p,result_cr,result_ov;
     wire [511:0] result_d;
-    ot_s81hd_result_landing_hsf0 #(.MUT_USER_HI(MUT)) probe(
+    ot_s81hd_result_landing_hsf0 #(.MUT_USER_HI(MUT==1)) probe(
       .ck(ck),.rst_result_n(dut.rr[7]),.merged_valid(dut.mg4),
       .merged_row_bits(dut.mg_rb),.merged_identity(dut.mg_t),
       .destination_header(dut.c_hds),.sequencer_grant(dut.t_rg),
       .result_pending(result_p),.result_ready(result_cr),.overwrite(result_ov),
       .flit_valid(result_v),.flit_data(result_d));
+    wire[16:0] fault_state;
+    wire fault_summary;
+    reg allow_fault=0;
+    ot_s81hd_fault_state_hsf0 #(.MUT_LEP_DROP(MUT==2)) fault_probe(
+      .ck(ck),.rst_vector_n(dut.rr[22]),.rst_output_n(dut.rr[23]),
+      .lep_fault_i(lep_f),.other_events_i({dut.fset[16:11],dut.fset[9:0]}),
+      .fault_vector(fault_state),.ctl_fault(fault_summary));
+    always @(negedge ck) if(rst_n && dut.rr[22] && dut.rr[23])
+      if({fault_state,fault_summary}!=={dut.fv,ctl_f})
+        $fatal(1,"fault miter live LEP state mismatch");
     integer result_miter_count=0,merge_edge=-1;
     always @(negedge ck) if(rst_n && dut.rr[7]) begin
       if({result_v,result_p,result_cr,result_ov} !==
@@ -73,7 +83,7 @@ module tb_s81hd_ctl;
                 end
             end else if (sn_o[513]) fail("xv outside the slice window");
         end
-        if (ctl_f) fail("ctl fault");
+        if (ctl_f && !allow_fault) fail("ctl fault");
     end
     // ---------------------------------------------------------------- token / RESULT monitor
     integer ntok = 0, nres = 0;
@@ -149,6 +159,10 @@ module tb_s81hd_ctl;
         if (ntok != 2) fail("token count");
         if (nres != 2) fail("host RESULT count");
         if(result_miter_count!=2)$fatal(1,"missing result miter records");
+        allow_fault=1;lep_f=1;tick;lep_f=0;repeat(8)tick;
+        if(!fault_state[10] || !dut.fv[10] || !fault_summary)
+          $fatal(1,"missing live LEP fault retirement");
+        $display("LEP_FAULT_STATE bit10 sticky and summary live");
         if (errs == 0) $display("PASS hd_ctl streams %0d tokens %0d slices/stream %0d", nstream, ntok, NSL);
         else $display("FAIL hd_ctl errors %0d", errs);
         $finish;
