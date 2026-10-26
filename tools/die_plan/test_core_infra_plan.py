@@ -66,7 +66,7 @@ def test_cached_rooted_model_matches_shared_predictor_after_driver_change():
     other={**lib,'cap':2.}
     libs={c:{'BUFx16f_ASAP7_75t_R':lib,'BUFx8_ASAP7_75t_R':other} for c in ('TT','FF')}
     pts={'a/CLK':[450,440],'b/CLK':[460,440]};caps={p:{'TT':.5,'FF':.8} for p in pts}
-    profile=dict(horizontal_rc=[.1,.2],vertical_rc=[.2,.3]);routing=dict(nonleaf=profile,leaf=profile)
+    profile=dict(horizontal_rc=[.1,.2],vertical_rc=[.2,.3],merge_collinear=True);routing=dict(nonleaf=profile,leaf=profile)
     model=Model(s,libs,pts,caps,0,0,input_slew_ps=0,routing_model=routing)
     for chosen in ('BUFx8_ASAP7_75t_R','BUFx16f_ASAP7_75t_R'):
         changed=copy.deepcopy(s);changed['core_tree']['nodes'][1]['master']=chosen
@@ -75,3 +75,13 @@ def test_cached_rooted_model_matches_shared_predictor_after_driver_change():
         for corner in libs:
             assert fast[corner]['mean']==pytest.approx(detailed['corners'][corner]['mean_ps'])
             assert fast[corner]['all_max']==pytest.approx(detailed['corners'][corner]['max_ps'])
+
+
+def test_snapshot_tcl_list_parser_without_python_tk(tmp_path,monkeypatch):
+    import sys
+    monkeypatch.setitem(sys.modules,'tkinter',None)
+    p=tmp_path/'technology.tsv'
+    p.write_text('DBU 1000\nCORE 0 0 100 100\nOBSTACLE {g_bank\\[0\\].u_m} macro 1 2 3 4\n')
+    data=CP.read_technology(p)
+    assert data['obstacles'][0]['name']==r'g_bank\[0\].u_m'
+    assert data['obstacles'][0]['rect']==[1,2,3,4]

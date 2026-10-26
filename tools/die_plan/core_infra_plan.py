@@ -13,11 +13,27 @@ import core_infra as CI
 
 def read_technology(path):
     """Read the small OpenDB technology.tsv snapshot produced before planning."""
-    import tkinter
-    interp = tkinter.Tcl()
+    try:
+        import tkinter
+        interp = tkinter.Tcl()
+        records = [list(interp.splitlist(line)) for line in open(path)]
+    except ModuleNotFoundError:
+        # Fleet Python can omit Tk while tclsh is installed. Parse list data
+        # with Tcl itself, never eval snapshot strings or shell interpolation.
+        import base64
+        import subprocess
+        script = """set f [open [lindex $argv 0] r]
+while {[gets $f row] >= 0} {
+ set fields {}
+ foreach item $row {lappend fields [binary encode base64 -maxlen 0 [encoding convertto utf-8 $item]]}
+ puts [join $fields "\t"]
+}
+close $f
+"""
+        result = subprocess.run(['tclsh', '/dev/stdin', str(path)], input=script, text=True, capture_output=True, check=True)
+        records = [[base64.b64decode(x).decode('utf-8') for x in line.split('\t')] if line else [] for line in result.stdout.splitlines()]
     out = dict(rows=[], masters={}, obstacles=[])
-    for line in open(path):
-        f = list(interp.splitlist(line))
+    for f in records:
         if not f:
             continue
         if f[0] == "DBU": out["dbu"] = int(f[1])
@@ -167,7 +183,8 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
                     arrivals[target]=arrival;slews[target]=math.hypot(slew,2.2*elmore)
                 else:sink_arr[target]=arrival
             nets.append(dict(driver=name,fanout=len(targets),wire_um=round(wire,3),load_ff=round(load,3),
-                             cell_delay_ps=round(delay,3),input_arrival_ps=round(arrivals[name],3)))
+                             cell_delay_ps=round(delay,3),input_arrival_ps=round(arrivals[name],3),
+                             wire_geometry={k:rc[k] for k in ('original_tree_wire_um','overlap_removed_um','overlap_removed_fraction','network_cycles') if k in rc} if rc else {}))
         vals=list(sink_arr.values());leaf_means=[]
         for leaf in tree["leaves"]:
             v=[sink_arr[q] for q in leaf["sinks"]]

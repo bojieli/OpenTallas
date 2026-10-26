@@ -1,0 +1,15 @@
+{
+ "scope": "Current known65QCcutlanding/collector candidate only, NOTallseamcounterfactual",
+ "source": "codex/qc-oneevent-0733 results/qc_oneevent0733 actual-widthflattenedcanonicalringstats",
+ "data_rings": 65,
+ "seam_monitor_rings": 5,
+ "canonical_data_and_monitor_ff": 86320,
+ "conservative_logical_cells": {
+  "landing_cells_upper": 1422792,
+  "reset_copy_cells_upper": 195,
+  "collector_cells_upper": 47895
+ },
+ "total_conservative_added_cells": 1470882,
+ "area": "UNMAPPED: logicalcellsboundisnotmappedcellarea",
+ "latency_note": "ot_dp_clk_landing DEPTH4+RDREG1 has5liveFF/bit pluscontrol/epoch/padding; +2/+3latencydoesnotmean2/3FFringimplementation"
+}

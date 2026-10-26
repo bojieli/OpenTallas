@@ -9,7 +9,7 @@ No timing measurement or routed geometry is an input.
 import math
 
 
-def channel_path(a,b,obstacles=(),clearance=0.,vertical_obstacles=()):
+def channel_path(a,b,obstacles=(),clearance=0.,vertical_obstacles=(),return_points=False):
     xs={a[0],b[0]};ys={a[1],b[1]}
     for r in [*obstacles,*vertical_obstacles]:
         xs.update((r[0]-clearance,r[2]+clearance));ys.update((r[1]-clearance,r[3]+clearance))
@@ -27,10 +27,11 @@ def channel_path(a,b,obstacles=(),clearance=0.,vertical_obstacles=()):
     if not good:raise ValueError('no valid two-bend channel; requires richer planned routing topology')
     def length(p):return sum(abs(x[0]-y[0])+abs(x[1]-y[1]) for x,y in zip(p,p[1:]))
     path=min(good,key=lambda p:(length(p),p))
+    if return_points:return path
     return [(abs(p[0]-q[0])+abs(p[1]-q[1]),'horizontal' if p[1]==q[1] else 'vertical') for p,q in zip(path,path[1:])]
 
 
-def rooted_rc(points,caps,horizontal_rc,vertical_rc,obstacles=(),clearance=0.,vertical_obstacles=()):
+def rooted_rc(points,caps,horizontal_rc,vertical_rc,obstacles=(),clearance=0.,vertical_obstacles=(),merge_collinear=False):
     """points[0] is driver; caps supplies every target in points[1:].
 
     Per-layer RC=(kohm/um,fF/um) must already reflect that layer's width rule.
@@ -49,6 +50,12 @@ def rooted_rc(points,caps,horizontal_rc,vertical_rc,obstacles=(),clearance=0.,ve
     while len(used)<n:
         _,i,j=min((distances[min(i,j),max(i,j)],i,j) for i in sorted(used) for j in range(n) if j not in used)
         parent[j]=i;paths[j]=routes[i,j] if i<j else list(reversed(routes[j,i]));used.add(j);order.append(j)
+    if merge_collinear:
+        from core_infra_network import merged_rc
+        polylines=[channel_path(points[parent[j]],points[j],obstacles,clearance,vertical_obstacles,return_points=True) for j in order[1:]]
+        result=merged_rc(points,caps,polylines,horizontal_rc,vertical_rc)
+        result.update(parent=parent,paths=paths)
+        return result
     edge_r=[0.]*n;edge_c=[0.]*n;intrinsic=[0.]*n
     for j in order[1:]:
         rc=[(length*(horizontal_rc if axis=='horizontal' else vertical_rc)[0],length*(horizontal_rc if axis=='horizontal' else vertical_rc)[1]) for length,axis in paths[j]]

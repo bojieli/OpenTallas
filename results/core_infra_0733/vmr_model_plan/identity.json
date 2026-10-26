@@ -1,0 +1,10 @@
+{
+ "register_sinks": 4308,
+ "macro_sinks": 2,
+ "atomic_pairs": 512,
+ "same_leaf_pairs_pass": true,
+ "clock_nodes": 174,
+ "planned_cells": 176,
+ "source": "intel1:qc-su-lat/vmr_R3 actualposthook4cts.odb; vmr_aligned.txt same4308geometry",
+ "qualification": "MODEL ONLY; noP&R; source0ps undeclaredparentinput; actualleafroutingrangeM2-M5 withdefaultM2/M3 profiles; clocktrunksM4/M5onlyNDR2W; macroclockM4access explicit"
+}
