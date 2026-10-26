@@ -117,7 +117,7 @@ def main():
         t=raw['partition_types']['q_b100']
         for c in t['hard_cores']:
             col=round((c['origin_um'][0]-8.64)/233.28)
-            c['origin_um'][0]=[18.24,256.32,494.016][col]
+            c['origin_um'][0]=[14.592,256.512,498.432][col]
             c['origin_um'][1]=round(c['origin_um'][1]+17.28,6)
     for tn in a.types.split(','):rep[tn]=repair_type(raw,tn)
     model=S.Plan(raw);raw['latency']['lanes']={lid:model.lane_latency(lid) for lid in model.lanes}
