@@ -57,6 +57,42 @@ def paths(manifest):
     return list(dict.fromkeys(result + [BOOT, SPLIT, GENERATED, MANIFEST.relative_to(ROOT), Path('physical/die_plan/s81/die_plan.json')]))
 
 
+PLAN = Path('physical/die_plan/s81/die_plan.json')
+
+
+def plan_inputs():
+    """[(repo-relative path, bytes)] of every repository file the die plan names."""
+    import subprocess
+
+    def strings(o):
+        if isinstance(o, dict):
+            for v in o.values():
+                yield from strings(v)
+        elif isinstance(o, list):
+            for v in o:
+                yield from strings(v)
+        elif isinstance(o, str):
+            yield o
+    tracked = None
+    out = {}
+    for s in set(strings(json.loads((ROOT / PLAN).read_text()))):
+        if '/' not in s or len(s) > 400 or s.startswith('/') or '..' in Path(s).parts:
+            continue
+        for rel in (Path(s), PLAN.parent / s):
+            if (ROOT / rel).is_file():
+                out[rel] = (ROOT / rel).read_bytes()
+                break
+            if tracked is None:
+                r = subprocess.run(['git', '-C', str(ROOT), 'ls-tree', '-r', '--name-only', 'HEAD'],
+                                   capture_output=True, text=True)
+                tracked = set(r.stdout.split()) if r.returncode == 0 else set()
+            if str(rel) in tracked:
+                out[rel] = subprocess.run(['git', '-C', str(ROOT), 'show', 'HEAD:' + str(rel)],
+                                          capture_output=True, check=True).stdout
+                break
+    return sorted(out.items())
+
+
 def prepare(check=False, stage=None):
     manifest = json.loads(MANIFEST.read_text())
     emitted = adopt_eng_split.emit((ROOT / BOOT).read_text(), (ROOT / SPLIT).read_text())
@@ -74,6 +110,14 @@ def prepare(check=False, stage=None):
             dest = stage / p
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / p, dest)
+        # The bind step also reads plan inputs (hard-core pin tables, reference LEF views, macro views): stage every
+        # repository file the die plan names (repo-relative or plan-relative), from the checkout or, when a sparse
+        # checkout lacks it, from git HEAD, so the cohort is closed for strict bind and not only for ELAB.
+        for rel, data in plan_inputs():
+            dest = stage / rel
+            if not dest.exists():
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_bytes(data)
         # Use the complete matching tool package, not a different host checkout.
         shutil.copytree(ROOT / 'tools/die_plan', stage / 'tools/die_plan', dirs_exist_ok=True)
         (stage / 'tools/s81_dv').mkdir(parents=True, exist_ok=True)
