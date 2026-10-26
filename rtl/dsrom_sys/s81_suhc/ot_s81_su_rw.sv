@@ -45,7 +45,6 @@ module ot_s81_su_rw #(
     reg  [3:0]   j, nw;
     reg  [31:0]  acc;
     reg  [31:0]  w [0:KMAX-1];
-    integer i, ww;
 
     // ---------------------------------------------------------------- units
     reg          a_v; reg [31:0] a_a, a_b; wire [31:0] a_y; wire a_f;
@@ -76,11 +75,11 @@ module ot_s81_su_rw #(
                 1: if (i_v) begin                               // operand rows
                        cnt <= cnt + 1;
                        if (cnt == 0) begin
-                           for (i = 0; i < KMAX; i = i + 1) id[i] <= i_x[32 * i +: 9];
+                           for (integer i = 0; i < KMAX; i = i + 1) id[i] <= i_x[32 * i +: 9];
                            k <= k_i; off <= off_i; scale <= scale_i;
                            if (k_i == 0 || k_i > KMAX || {1'b0, off_i} + {1'b0, k_i} > 5'd16) fault <= 1;
                        end
-                       else for (i = 0; i < KMAX; i = i + 1)
+                       else for (integer i = 0; i < KMAX; i = i + 1)
                            if (i < k && {7'd0, id[i][8:4]} == cnt - 16'd1) begin sc[i] <= i_x[32 * id[i][3:0] +: 32]; got[i] <= 1'b1; end
                        if (i_last && cnt >= 1) begin st <= 2; j <= 1; end
                    end
@@ -113,8 +112,8 @@ module ot_s81_su_rw #(
             reg [511:0] r;
             reg [15:0]  m;
             r = 512'd0; m = 16'd0;
-            for (ww = 0; ww < 16; ww = ww + 1)        // decoded constant-index slices (no runtime part-select)
-                for (i = 0; i < KMAX; i = i + 1)
+            for (integer ww = 0; ww < 16; ww = ww + 1)        // decoded constant-index slices (no runtime part-select)
+                for (integer i = 0; i < KMAX; i = i + 1)
                     if (i < k && {1'b0, off} + i[4:0] == ww[4:0]) begin r[32 * ww +: 32] = (MUT == 4) ? q_hold[i] : w[i]; m[ww] = 1'b1; end
             o_d <= r; o_m <= m;
         end
