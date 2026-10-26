@@ -187,7 +187,7 @@ P(r"""
             for (k = g - 1; k > 0; k = k - 1) begin idx = $urandom % (k + 1); {perm[k], perm[idx]} = {perm[idx], perm[k]}; end
             i_arg_start <= 1; i_arg_cfg_g <= 8'(g); i_arg_cfg_gbase <= 8'(gbase); i_arg_cfg_rank <= 8'(rank_r);
             best_ok = 0; remaining = g; st = S_WAIT; runs_started = runs_started + 1;
-            if (runs_started == next_reset_run) begin pending_reset = 1; phase_target = (nreset %% 8 == 7) ? 8 : (nreset %% 8); pend_age = 0; next_reset_run = runs_started + 2 + ($urandom % 6); end
+            if (runs_started >= next_reset_run && !pending_reset) begin pending_reset = 1; phase_target = (nreset %% 8 == 7) ? 8 : (nreset %% 8); pend_age = 0; next_reset_run = runs_started + 2 + ($urandom % 6); end
             end
           end
           S_WAIT: st = S_DLV;     // lanes no earlier than start + 2 (start pin -> start_qq is 2 edges, lanes 1 edge)
