@@ -20,3 +20,5 @@ export PRE_DETAIL_PLACE_TCL = /work/out_flop_release.tcl
 export GPL_ROUTABILITY_DRIVEN = 0
 export OT_OFLOP_COLS = 4
 export OT_OFLOP_GAP = 1.0
+export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)

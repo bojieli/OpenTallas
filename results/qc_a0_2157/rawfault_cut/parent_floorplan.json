@@ -1,0 +1,701 @@
+{
+  "nk": {
+    "status": "CANDIDATE actual zero-cycle rawfault LSL hierarchy; no old FP1 hardview substitution",
+    "hard_children": [
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          22.176
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          152.352
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          282.528
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          542.88
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          412.704
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          22.176
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          152.352
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          282.528
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          542.88
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          412.704
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/qw_a0_rc14_children/node_nb1/ot_qwen_tile_node",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node",
+        "at": [
+          394.416,
+          688.656
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          47.52,
+          432
+        ]
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+        "at": [
+          268.272,
+          673.92
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+        "at": [
+          268.272,
+          834.432
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+        "at": [
+          268.272,
+          994.944
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+        "at": [
+          142.128,
+          834.432
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "at": [
+          142.128,
+          994.944
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+        "at": [
+          15.984,
+          673.92
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+        "at": [
+          15.984,
+          834.432
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+        "at": [
+          15.984,
+          994.944
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      }
+    ],
+    "wide_pin_face": "E, original y/layer values retained",
+    "outline_um": [
+      457.92,
+      1157.76
+    ],
+    "clock_entry_count": 42,
+    "clock_tree_requirement": "actual+~94560 LSL FF means >=90 internal local taps may be needed under42/41 external entries; cap1000-1500sinks/localtap and measuredRC/bothcornercontract beforeCTS",
+    "generic_reset_wrapper": "DISABLED: preserve actualsource reset/control edges, no extra stages",
+    "openroad_cell_limit": 400000,
+    "clock_ps": 833,
+    "uncertainty_ps": {
+      "setup": 60,
+      "hold": 25
+    },
+    "PDN": "regularROMrowchannels and upper softregion leave continuous PG paths; actualPDN/native-pincheck required beforephysicalroute",
+    "halo_audit": {
+      "halo_um": 5.4,
+      "overlaps": [],
+      "lsl_gap_um": 10.8,
+      "node_gap_um": 10.8
+    },
+    "fault_cut": {
+      "raw_flags_per_leaf": 50,
+      "extra_links_per_leaf": 41,
+      "extra_links_per_A0": 328,
+      "new_ff": 0,
+      "new_cycles": 0,
+      "existing_parent_fault_q_hub": [
+        191.5,
+        984.888
+      ],
+      "maximum_estimated_route_um": 365,
+      "reach_limit_um": 405,
+      "actual_placed_reach_required": true
+    }
+  },
+  "nl": {
+    "status": "CANDIDATE actual zero-cycle rawfault LSL hierarchy; no old FP1 hardview substitution",
+    "hard_children": [
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          22.176
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          152.352
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          282.528
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          542.88
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          412.704
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          22.176
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          152.352
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          282.528
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          542.88
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          412.704
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          172.8,
+          110.16
+        ]
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+        "at": [
+          268.272,
+          673.92
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+        "at": [
+          268.272,
+          834.432
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+        "at": [
+          268.272,
+          994.944
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+        "at": [
+          142.128,
+          834.432
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "at": [
+          142.128,
+          994.944
+        ],
+        "orient": "MY",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+        "at": [
+          15.984,
+          673.92
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+        "at": [
+          15.984,
+          834.432
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      },
+      {
+        "view": "PENDING_NEW_NATIVE_RAWFAULT_LEF_LIB",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+        "at": [
+          15.984,
+          994.944
+        ],
+        "orient": "R0",
+        "at_exact": true,
+        "size_um": [
+          115.344,
+          140.4
+        ],
+        "existing_flag_links": 50,
+        "new_parent_links": 41,
+        "source_cells": 76731,
+        "source_ff": 12030
+      }
+    ],
+    "wide_pin_face": "E, original y/layer values retained",
+    "outline_um": [
+      457.92,
+      1157.76
+    ],
+    "clock_entry_count": 41,
+    "clock_tree_requirement": "actual+~94560 LSL FF means >=90 internal local taps may be needed under42/41 external entries; cap1000-1500sinks/localtap and measuredRC/bothcornercontract beforeCTS",
+    "generic_reset_wrapper": "DISABLED: preserve actualsource reset/control edges, no extra stages",
+    "openroad_cell_limit": 400000,
+    "clock_ps": 833,
+    "uncertainty_ps": {
+      "setup": 60,
+      "hold": 25
+    },
+    "PDN": "regularROMrowchannels and upper softregion leave continuous PG paths; actualPDN/native-pincheck required beforephysicalroute",
+    "halo_audit": {
+      "halo_um": 5.4,
+      "overlaps": [],
+      "lsl_gap_um": 10.8,
+      "node_gap_um": 10.8
+    },
+    "fault_cut": {
+      "raw_flags_per_leaf": 50,
+      "extra_links_per_leaf": 41,
+      "extra_links_per_A0": 328,
+      "new_ff": 0,
+      "new_cycles": 0,
+      "existing_parent_fault_q_hub": [
+        191.5,
+        984.888
+      ],
+      "maximum_estimated_route_um": 365,
+      "reach_limit_um": 405,
+      "actual_placed_reach_required": true
+    }
+  }
+}
