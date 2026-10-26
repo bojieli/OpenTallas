@@ -1,0 +1,697 @@
+{
+ "schema": "opentallas.s81.core_clock_structure_class.v1",
+ "rule": "METHODOLOGY 12.8b: centre entry; longest entry-to-sink (Manhattan centre->corner, (w+h)/2) > ~200 um => internal H-tree with in-core islands or split; shallow cores (below 230 TT) => fixed designed trunk chain per type (12.8c), no per-sink padding",
+ "source": "census_main.json",
+ "rows": [
+  {
+   "module": "dsdv_bksel_q",
+   "replicas": 4,
+   "outline_um": [
+    648.0,
+    648.0
+   ],
+   "centre_to_corner_um": 648.0,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 603.67224,
+    "min": 559.40479
+   }
+  },
+  {
+   "module": "dsdv_idx_tx_n32",
+   "replicas": 1,
+   "outline_um": [
+    626.4,
+    561.6
+   ],
+   "centre_to_corner_um": 594.0,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 857.66388,
+    "min": 727.58923
+   }
+  },
+  {
+   "module": "dsdv_eng_rr_e",
+   "replicas": 1,
+   "outline_um": [
+    410.4,
+    466.56
+   ],
+   "centre_to_corner_um": 438.5,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": null
+  },
+  {
+   "module": "ot_s81sl_capc5r",
+   "replicas": 16,
+   "outline_um": [
+    336.96,
+    414.72
+   ],
+   "centre_to_corner_um": 375.8,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 85.25973,
+    "min": 154.96245
+   }
+  },
+  {
+   "module": "ot_v41_rom_elem_q_qxpq_w10",
+   "replicas": 864,
+   "outline_um": [
+    510.84,
+    221.4
+   ],
+   "centre_to_corner_um": 366.1,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 552.30737,
+    "min": 437.5235
+   }
+  },
+  {
+   "module": "ot_s81dv_xfin",
+   "replicas": 16,
+   "outline_um": [
+    362.88,
+    362.88
+   ],
+   "centre_to_corner_um": 362.9,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 308.26154,
+    "min": 222.01741
+   }
+  },
+  {
+   "module": "ot_s81sl_xrt1",
+   "replicas": 14,
+   "outline_um": [
+    311.04,
+    395.28
+   ],
+   "centre_to_corner_um": 353.2,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 473.05081,
+    "min": 380.94388
+   }
+  },
+  {
+   "module": "ot_v41_bf_col",
+   "replicas": 456,
+   "outline_um": [
+    450.168,
+    198.72
+   ],
+   "centre_to_corner_um": 324.4,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 644.89056,
+    "min": 473.28232
+   }
+  },
+  {
+   "module": "dsdv_gunit_l5",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    302.4
+   ],
+   "centre_to_corner_um": 324.0,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 512.25568,
+    "min": 370.54269
+   }
+  },
+  {
+   "module": "dsdv_gunit_l1",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    216.0
+   ],
+   "centre_to_corner_um": 280.8,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 350.00586,
+    "min": 261.67303
+   }
+  },
+  {
+   "module": "dsdv_bksel_c",
+   "replicas": 1,
+   "outline_um": [
+    388.8,
+    172.8
+   ],
+   "centre_to_corner_um": 280.8,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 399.26196,
+    "min": 329.54874
+   }
+  },
+  {
+   "module": "dsdv_gunit_l0r",
+   "replicas": 1,
+   "outline_um": [
+    267.84,
+    267.84
+   ],
+   "centre_to_corner_um": 267.8,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 244.41205,
+    "min": 213.78786
+   }
+  },
+  {
+   "module": "ot_s81sl_vn_b",
+   "replicas": 75,
+   "outline_um": [
+    356.4,
+    172.8
+   ],
+   "centre_to_corner_um": 264.6,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": null
+  },
+  {
+   "module": "ot_s81sl_vn_a",
+   "replicas": 75,
+   "outline_um": [
+    356.4,
+    164.16
+   ],
+   "centre_to_corner_um": 260.3,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": null
+  },
+  {
+   "module": "ot_s81sl_ve_m",
+   "replicas": 75,
+   "outline_um": [
+    172.8,
+    345.6
+   ],
+   "centre_to_corner_um": 259.2,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": null
+  },
+  {
+   "module": "ot_s81sl_eg",
+   "replicas": 16,
+   "outline_um": [
+    259.2,
+    259.2
+   ],
+   "centre_to_corner_um": 259.2,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 364.44653,
+    "min": 320.53131
+   }
+  },
+  {
+   "module": "dsdv_gunit_l0",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "centre_to_corner_um": 259.2,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 320.12833,
+    "min": 250.74129
+   }
+  },
+  {
+   "module": "dsdv_gunit_l2",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "centre_to_corner_um": 259.2,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 304.56857,
+    "min": 244.80742
+   }
+  },
+  {
+   "module": "dsdv_gunit_l3",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "centre_to_corner_um": 259.2,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 293.32172,
+    "min": 217.88559
+   }
+  },
+  {
+   "module": "ot_s81sl_ve_s",
+   "replicas": 75,
+   "outline_um": [
+    164.16,
+    345.6
+   ],
+   "centre_to_corner_um": 254.9,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": null
+  },
+  {
+   "module": "ot_s81sl_vsw",
+   "replicas": 75,
+   "outline_um": [
+    224.64,
+    224.64
+   ],
+   "centre_to_corner_um": 224.6,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 323.47568,
+    "min": 267.72681
+   }
+  },
+  {
+   "module": "dsdv_eng_rr_h0",
+   "replicas": 1,
+   "outline_um": [
+    164.16,
+    267.84
+   ],
+   "centre_to_corner_um": 216.0,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": null
+  },
+  {
+   "module": "dsdv_eng_rr_h1",
+   "replicas": 1,
+   "outline_um": [
+    164.16,
+    267.84
+   ],
+   "centre_to_corner_um": 216.0,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 265.49384,
+    "min": 211.7775
+   }
+  },
+  {
+   "module": "ot_s81c_attn_hcore",
+   "replicas": 1024,
+   "outline_um": [
+    157.68,
+    259.2
+   ],
+   "centre_to_corner_um": 208.4,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": null
+  },
+  {
+   "module": "dsdv_gunit_l4",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    64.8
+   ],
+   "centre_to_corner_um": 205.2,
+   "class": "RESTRUCTURE_internal_htree_or_split",
+   "lib_insertion_tt": {
+    "max": 329.06592,
+    "min": 253.06265
+   }
+  },
+  {
+   "module": "dsdv_bk_g",
+   "replicas": 1,
+   "outline_um": [
+    216.0,
+    172.8
+   ],
+   "centre_to_corner_um": 194.4,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 366.897,
+    "min": 287.58185
+   }
+  },
+  {
+   "module": "ot_s81sl_xrt3",
+   "replicas": 2,
+   "outline_um": [
+    207.36,
+    164.16
+   ],
+   "centre_to_corner_um": 185.8,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 651.02209,
+    "min": 555.82404
+   }
+  },
+  {
+   "module": "dsfd_cfifo_crs4",
+   "replicas": 72,
+   "outline_um": [
+    280.8,
+    69.12
+   ],
+   "centre_to_corner_um": 175.0,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 214.1178,
+    "min": 144.32361
+   }
+  },
+  {
+   "module": "ot_s81sl_vs",
+   "replicas": 75,
+   "outline_um": [
+    172.8,
+    172.8
+   ],
+   "centre_to_corner_um": 172.8,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 262.39078,
+    "min": 213.91415
+   }
+  },
+  {
+   "module": "dsfd_bf_front_roots",
+   "replicas": 228,
+   "outline_um": [
+    116.64,
+    198.72
+   ],
+   "centre_to_corner_um": 157.7,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 231.19284,
+    "min": 195.21701
+   }
+  },
+  {
+   "module": "dsdv_svc_sx_hrow",
+   "replicas": 128,
+   "outline_um": [
+    138.24,
+    164.16
+   ],
+   "centre_to_corner_um": 151.2,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 296.62994,
+    "min": 229.32762
+   }
+  },
+  {
+   "module": "ot_s81sl_vq",
+   "replicas": 75,
+   "outline_um": [
+    172.8,
+    129.6
+   ],
+   "centre_to_corner_um": 151.2,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 279.40579,
+    "min": 203.37563
+   }
+  },
+  {
+   "module": "dsdv_gunit_l1c",
+   "replicas": 1,
+   "outline_um": [
+    86.4,
+    216.0
+   ],
+   "centre_to_corner_um": 151.2,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 237.80722,
+    "min": 177.23906
+   }
+  },
+  {
+   "module": "dsdv_gunit_l5f",
+   "replicas": 1,
+   "outline_um": [
+    151.2,
+    151.2
+   ],
+   "centre_to_corner_um": 151.2,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 253.63315,
+    "min": 221.77484
+   }
+  },
+  {
+   "module": "dsfd_su_t_rxsb",
+   "replicas": 75,
+   "outline_um": [
+    140.4,
+    140.4
+   ],
+   "centre_to_corner_um": 140.4,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 268.55948,
+    "min": 234.92281
+   }
+  },
+  {
+   "module": "dsfd_su_t_rxsf",
+   "replicas": 75,
+   "outline_um": [
+    140.4,
+    140.4
+   ],
+   "centre_to_corner_um": 140.4,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 210.46109,
+    "min": 163.55742
+   }
+  },
+  {
+   "module": "dsdv_gunit_l4r",
+   "replicas": 1,
+   "outline_um": [
+    129.6,
+    129.6
+   ],
+   "centre_to_corner_um": 129.6,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 269.90607,
+    "min": 228.49925
+   }
+  },
+  {
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "replicas": 1200,
+   "outline_um": [
+    114.48,
+    114.48
+   ],
+   "centre_to_corner_um": 114.5,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 264.07495,
+    "min": 232.86406
+   }
+  },
+  {
+   "module": "ot_sram_1r1w_512x128_m4_r0c0",
+   "replicas": 150,
+   "outline_um": [
+    169.368,
+    29.16
+   ],
+   "centre_to_corner_um": 99.3,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": null
+  },
+  {
+   "module": "dsfd_node_LLfu",
+   "replicas": 516,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "centre_to_corner_um": 60.5,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 117.1375,
+    "min": 88.73264
+   }
+  },
+  {
+   "module": "dsfd_node_NNfd",
+   "replicas": 516,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "centre_to_corner_um": 60.5,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 117.21299,
+    "min": 86.74113
+   }
+  },
+  {
+   "module": "dsfd_node_NNfu",
+   "replicas": 504,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "centre_to_corner_um": 60.5,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 122.11168,
+    "min": 86.80167
+   }
+  },
+  {
+   "module": "dsfd_node_LLfd",
+   "replicas": 504,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "centre_to_corner_um": 60.5,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 113.9127,
+    "min": 89.55394
+   }
+  },
+  {
+   "module": "dsfd_node_LLd",
+   "replicas": 72,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "centre_to_corner_um": 60.5,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 110.32134,
+    "min": 88.84732
+   }
+  },
+  {
+   "module": "ot_s81_sstn_base566",
+   "replicas": 660,
+   "outline_um": [
+    84.24,
+    30.24
+   ],
+   "centre_to_corner_um": 57.2,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 98.53783,
+    "min": 78.17512
+   }
+  },
+  {
+   "module": "ot_s81_sstn_payload536",
+   "replicas": 660,
+   "outline_um": [
+    86.4,
+    25.92
+   ],
+   "centre_to_corner_um": 56.2,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 91.42699,
+    "min": 77.24667
+   }
+  },
+  {
+   "module": "ot_s81_cfg7_seq_bfp",
+   "replicas": 228,
+   "outline_um": [
+    30.24,
+    60.48
+   ],
+   "centre_to_corner_um": 45.4,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 98.21368,
+    "min": 77.01402
+   }
+  },
+  {
+   "module": "dsfd_qbank_S",
+   "replicas": 864,
+   "outline_um": [
+    60.48,
+    25.92
+   ],
+   "centre_to_corner_um": 43.2,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 98.23283,
+    "min": 79.35539
+   }
+  },
+  {
+   "module": "dsfd_rstg",
+   "replicas": 216,
+   "outline_um": [
+    38.88,
+    34.56
+   ],
+   "centre_to_corner_um": 36.7,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 54.8358,
+    "min": 50.42186
+   }
+  },
+  {
+   "module": "dsfd_qbank_N",
+   "replicas": 864,
+   "outline_um": [
+    60.48,
+    8.64
+   ],
+   "centre_to_corner_um": 34.6,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 78.14114,
+    "min": 70.7233
+   }
+  },
+  {
+   "module": "ot_s81_cfg7_seq",
+   "replicas": 864,
+   "outline_um": [
+    17.28,
+    51.84
+   ],
+   "centre_to_corner_um": 34.6,
+   "class": "centre_entry_structured_tree",
+   "lib_insertion_tt": {
+    "max": 93.77752,
+    "min": 75.39694
+   }
+  }
+ ]
+}
