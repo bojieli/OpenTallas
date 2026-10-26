@@ -53,11 +53,13 @@ def main():
   m=re.search(r'@\s*\(([0-9.]+),\s*([0-9.]+)\)',rest)
   if m:anchors[name]=[float(m[1]),float(m[2])]
  anchors['u_rst_in']=C.gen_phys.tap_points(P,q.type)[1];anchors['u_run_in']=[anchors['u_rst_in'][0]+4.32,anchors['u_rst_in'][1]]
+ members={(name,b['stage']):(b,i) for b in banks for i,name in enumerate(b.get('member_instances',[]))}
  for r in inv['registers']:
   if r['category']=='delay':
-   b=by.get((r['delay_instance'],r['stage']))
-   if not b or r['bit']>=b['bits']:missing.append(r);continue
-   x,y,_,_=b['box_um'];col=r['bit']%b['columns'];row=r['bit']//b['columns'];sites.append(dict(**r,x_um=x+col*C.PITCH_X,y_um=y+row*C.CELL_H));continue
+   key=(r['delay_instance'],r['stage']);b=by.get(key);index=r['bit']
+   if key in members:b,index=members[key]
+   if not b or index>=b['bits']:missing.append(r);continue
+   x,y,_,_=b['box_um'];col=index%b['columns'];row=index//b['columns'];sites.append(dict(**r,x_um=x+col*C.PITCH_X,y_um=y+row*C.CELL_H));continue
   root=r['register'].split('/')[0].split('.')[0];groups[root].append(r)
  for root,regs in groups.items():
   face='N';region=None

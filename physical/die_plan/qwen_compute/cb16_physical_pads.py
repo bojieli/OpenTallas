@@ -200,6 +200,8 @@ def clock_inventory(raw,tn,txt,banks):
 
 def tcl_for(banks):
     """FIRM only existing mapped registers. Missing/merged state fails the hook instead of inventing cells."""
+    if any(b.get('member_instances') for b in banks):
+        return '# Actual W1 landing pads require the mapped FF alias hook, not source-width guesses.\nerror {Use cb16_mapped_sites.py place_actual_mapped.tcl for grouped W1 landing pads}\n'
     out=['# SOURCE inventory preparation: reconcile optimized bits against cb16_mapped_inventory before use.',
          '# Existing delay-register placement only: NO RTL insertion and NO changed stage count.',
          'set qc_pad_found 0; set qc_pad_missing {}; set qc_pad_ambiguous {}; array set qc_pad_seen {}',
@@ -244,8 +246,30 @@ def build(raw,tn,txt,plan_dir):
     t=raw['partition_types'][tn];ls=leafs(txt);homes=fabric_homes(t,ls,plan_dir);used=[q['box_um'] for q in homes.values()];bs=boxes(t);banks=[];unplaced=[];chains=[]
     stations={e['conn'][4:]:e for e in t.get('internal_stations',[]) if e.get('conn','').startswith('bus:')}
     buses={b['name']:b for b in t.get('buses',[])}
-    for m in DLY.finditer(txt):
-        W,D,name,body=int(m[1]),int(m[2]),m[3],m[4];con=dict(PIN.findall(body));face='W';pts=None;basis=''
+    # Fresh landing alignment emits payload-only W1 u_pd instances. Group actual equal-depth bits
+    # into physical banks; member mapping preserves each real instance and never invents epoch FF.
+    matches=list(DLY.finditer(txt));pd_groups={}
+    for m in matches:
+        if int(m[1])!=1 or not m[3].startswith('u_pd'):continue
+        con=dict(PIN.findall(m[4]));src=wire(con.get('d',''));bus=src[:-2] if src and src.endswith('_q') else None
+        if bus not in buses:continue
+        pd_groups.setdefault((bus,int(m[2])),[]).append(m)
+    grouped={m[3] for members in pd_groups.values() for m in members};items=[]
+    for m in matches:
+        if m[3] not in grouped:items.append((int(m[1]),int(m[2]),m[3],dict(PIN.findall(m[4])),None))
+    for (bus,depth),members in pd_groups.items():
+        items.append((len(members),depth,'actual_pd_'+bus+'_d'+str(depth),dict(bus=bus),[m[3] for m in members]))
+    for W,D,name,con,members in items:
+        face='W';pts=None;basis=''
+        if members:
+            bn=con['bus'];bus=buses[bn];leaf,port=bus['leaf'].rsplit('.',1);end=core_pin(t,leaf,port,plan_dir)
+            if end is None:
+                home=next((q for key,q in homes.items() if physical_name(key)==leaf),None)
+                if home:end=home['center_um']
+            if end is not None:
+                # Existing lane padding already transports this bus to its leaf. Extra alignment
+                # state is local to that leaf; each real W1 delay is represented exactly once.
+                pts=[end,end];face=bus.get('face','W');basis='actual payload-only W1 landing pads beside sink; no inferred epoch'
         if name.startswith('u_lpad_'):
             bn=name[len('u_lpad_'):];e=stations.get(bn);b=buses.get(bn)
             if e:
@@ -267,7 +291,9 @@ def build(raw,tn,txt,plan_dir):
         except ValueError as e:unplaced.append(dict(instance=name,W=W,D=D,ff=W*D,reason=str(e),endpoints=pts));continue
         start=len(banks)
         for stage in range(D):
-            target=at(route,(stage+1)/(D+1));bank=pack(target,W,face,t['outline_um'],bs,used);bank.update(instance=name,stage=stage,depth=D,basis=basis);banks.append(bank)
+            target=at(route,(stage+1)/(D+1));bank=pack(target,W,face,t['outline_um'],bs,used);bank.update(instance=name,stage=stage,depth=D,basis=basis);
+            if members:bank['member_instances']=members
+            banks.append(bank)
         here=banks[start:];centers=[(sum(z['box_um'][::2])/2,sum(z['box_um'][1::2])/2) for z in here]
         hops=[abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip([route[0]]+centers,centers+[route[-1]])]
         route_length=sum(abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(route,route[1:]));minimum=max(0,math.ceil(route_length/405)-1)
