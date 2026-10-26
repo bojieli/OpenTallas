@@ -1,0 +1,93 @@
+{
+ "schema": "opentallas.die_plan.g2.v1",
+ "plan": "/srv/opentallas-scratch2/claude/codex-s81-ft-2144/a18_src/physical/die_plan/s81/die_plan.json",
+ "probes": {
+  "part_ot_s81sl_leaf__t53": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 25209538,
+     "demand": 1057977,
+     "usage_pct": 4.2,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 28213378,
+     "demand": 1763808,
+     "usage_pct": 6.25,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 21159098,
+     "demand": 893464,
+     "usage_pct": 4.22,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 21345015,
+     "demand": 319038,
+     "usage_pct": 1.49,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 18503245,
+     "demand": 307396,
+     "usage_pct": 1.66,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 18498567,
+     "demand": 732544,
+     "usage_pct": 3.96,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 2912368.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "capacity_valid": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "s81",
+   "type": "ot_s81sl_leaf__t53",
+   "instance": "s_1N_L3",
+   "outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "pins": 3801,
+   "flops": 9659,
+   "leaf_blockages": 27,
+   "adjust": 0.5,
+   "route_layers": "M2-M7",
+   "ft_hops": {
+    "slots": 2,
+    "max_hop_um": 385.56,
+    "over_reach": {},
+    "over_reach_bits": 0,
+    "st_in_core": 0,
+    "st_in_core_slots": {},
+    "actual_sites": true,
+    "errors": [],
+    "station_cells": 8200,
+    "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+    "explicit_anchor_drift_um": 0.0
+   },
+   "geometry_verdict": "PASS"
+  }
+ },
+ "verdict": "PASS"
+}

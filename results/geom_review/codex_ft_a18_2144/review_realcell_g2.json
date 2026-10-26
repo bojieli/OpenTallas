@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "one real-cell G2 FT-only station placement/pin-access/capacity diagnostic after station-wire GRT0; no tile route/signoff",
+  "picture": "results/geom_review/codex_ft_a18_2144/t53_a18_review.png",
+  "plan_sha256": "d8d3dd75ef4188060508115a1abab364a03324d3e8a0499e6d2bf3f82a95169d",
+  "findings": [
+    "Viewed FT0/FT1 bit-site geometry and core pins. FT1 formerly concentrated near x139..183/y597..619 mouth moves to existing free top channel y1150.2; no core, port, outline or clock-tap move.",
+    "Actual LEF top M5 is the prototype obstruction contract; planned obs_max M7 metadata remains conservative/unresolved for final views. No M7-capacity grant or clock relaxation.",
+    "FT0/FT1 depths remain6/7, maxpairedhop385.56um,0addedcycles/0area change. All new FT stations remain outside macros and within reach (fullG0C0errors/1272warnings).",
+    "Regular bidirectional VSW-to-VS side-facing warning remains preexisting; this probe contains FT wires only and gives no complete tile interface/clock/PDN signoff.",
+    "Existing density/reset/START qualification remains separate; no broad P&R/signoff wave.",
+    "Paired station-aware probe independently reviewed PASS0overflow25%share,9467segments, source51cb13125. Same planned sites were visually reviewed before invoking G2; realG2 must preserve per-bit sites and macrokeepoffs. Generic clock/reset are prototype only, noCTS/SIGNEDcredit."
+  ]
+}

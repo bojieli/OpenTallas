@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "FT-only actual-station wire coupons for seven L3 families; no complete tile timing or route",
+  "picture": "results/geom_review/codex_ft_a19_2144/a19_montage.png",
+  "plan_sha256": "d115f3aa7bdd72385bcceaf0efb48ea64865ebd319b4edb3a465fed6f53d5e31",
+  "types": [
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t53"
+  ],
+  "findings": [
+    "Viewed all seven panels. Wide opposite-face FT groups head toward their destination face: NS bottom19.5, SN top1150.2, using existing perimeter corridors instead of the middle left macro mouths.",
+    "Core placements/outlines, external pins/windows, clock taps, registered depths unchanged. Other FT site arrays are exact-preserved and their cells reserved by the row allocator; zero added cycles/area.",
+    "All171types G0C clean (0errors/1272warnings). No station cell overlaps a macro or exceeds paired reach. Actual-M5-LEF obstruction contract same as measured A18t53, with plannedM7metadata not converted into a capacity grant.",
+    "No new macro wall or sliver introduced. Full CTS/reset/START/PDN and native hard-core interface obligations remain separate; no SIGNED claim."
+  ]
+}
