@@ -84,3 +84,4 @@ gate = tools/die_plan pytest + plain G0 on s81, s81_head, qwen_compute, qwen_kvs
 - FLOW TAG flow-20261025-b NOT CUT: KV core canary REGRESSION (-5.91 vs golden +36.61) until FLOW-FANOUT fanout-cap fix; then tag newest sha whose full canary set passes.
 - Evidence gate on main now refuses 7 in-repo bind manifests with absolute paths (HBM asbuilt.json, KV recipe_b2 + v36p/v36e/binder2, QC cb16 x2): notice in COORD-REVIEW-QUEUE.
 - No ot-run / ot-sizes-sync changes -> no INFRA resync. No live jobs; both epyc1 worktrees removed. Gate scripts/logs epyc1:/srv/opentallas-scratch2/claude/root-merge11-out (gates.sh, extra.sh, m1-m4).
+2026-10-25 21:20 PDT ROOT-MERGE-12: started (COORD-REVIEW + ROOT-MERGE; restart 18:30 brief). main 0f076c3f75. Watching: URGENT-FLOW FLOW-FANOUT, TYPE-REDUCE-3 KV ffc63645f / HBM 623e81076 (after kit LEC EQ), PATH manifest regens; flow tag flow-20261025-b after KV core canary.
