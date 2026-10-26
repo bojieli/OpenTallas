@@ -154,3 +154,29 @@ def test_compensation_cap_survives_feedback():
 def test_compensation_cap_rejects_invalid(bad):
     with pytest.raises(ValueError,match='leg_extra_um'):
         S.plan_legs(geometry(5),leg_extra_um=bad)
+
+
+def test_spatial_2d_split_keeps_points_and_avoids_long_slabs():
+    pts=[dict(name=f'{x}_{y}',xy=[x,y]) for x in range(4) for y in range(4)]
+    new=S.split_spatial_2d(pts);old=S.split(pts,4)
+    names=lambda gs: sorted(p['name'] for g in gs for p in g)
+    span=lambda g: sum(max(p['xy'][i] for p in g)-min(p['xy'][i] for p in g) for i in (0,1))
+    assert names(new)==names(old)==names([pts])
+    assert [len(g) for g in new]==[4,4,4,4]
+    assert max(map(span,new)) < max(map(span,old))
+
+
+def test_macro_corridors_keep_clock_wires_off_blocked_rectangles():
+    g=geometry(20)
+    p=S.plan_legs(g,avoid_macros=True)
+    for q in p['wire_paths'].values():
+        for a,b in zip(q,q[1:]):
+            assert a[0]==b[0] or a[1]==b[1]
+            for x0,y0,x1,y1 in p['obstacles']:
+                if a[1]==b[1]:
+                    assert not (y0<a[1]<y1 and min(a[0],b[0])<x1 and max(a[0],b[0])>x0)
+                else:
+                    assert not (x0<a[0]<x1 and min(a[1],b[1])<y1 and max(a[1],b[1])>y0)
+    assert {t['name'] for t in p['taps']}=={t['name']for t in g['taps']}
+    assert all(L['xmax']==0 for L in p['legs'])
+    assert p['summary']['added_cycles']==0

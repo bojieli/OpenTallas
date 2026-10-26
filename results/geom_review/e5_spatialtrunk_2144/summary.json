@@ -1,0 +1,22 @@
+{
+  "verdict": "FAIL_PREPLAN",
+  "summary": {
+    "mode": "closed_loop",
+    "new_buffers": 474,
+    "tap_buffers": 118,
+    "trunk_levels": 12,
+    "reps": {
+      "0": 1,
+      "1": 2,
+      "2": 1,
+      "3": 2,
+      "4": 1
+    },
+    "max_hop_um": 216.162,
+    "rmax_um": 120.0,
+    "added_cycles": 0,
+    "island_span_max_um": 6.696,
+    "added_area_um2": 103.6638
+  },
+  "cause": "Spatial2D cuts did not fix broad-SRAM repeater site gap. No route launched."
+}

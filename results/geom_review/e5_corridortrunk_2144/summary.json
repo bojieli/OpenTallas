@@ -1,0 +1,22 @@
+{
+  "verdict": "FAIL_PREPLAN",
+  "summary": {
+    "mode": "closed_loop",
+    "new_buffers": 470,
+    "tap_buffers": 118,
+    "trunk_levels": 11,
+    "reps": {
+      "0": 1,
+      "1": 1,
+      "2": 1,
+      "3": 2,
+      "4": 1
+    },
+    "max_hop_um": 181.494,
+    "rmax_um": 120.0,
+    "added_cycles": 0,
+    "island_span_max_um": 6.696,
+    "added_area_um2": 102.789
+  },
+  "cause": "Macro-aware paths improve212->181um butzero row corridor preventsintermediate repeaters. InternalSRAMmacrospacingmustopen rows beforeanyclockbuild."
+}

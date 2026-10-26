@@ -1,0 +1,2 @@
+FF read-only frame diagnostic, same co-leaf connectivity + original 4CTS + actual GRT guide; no reroute.
+TT guide reconstruction correlates nativeTT arrivals p50delta0 / p99~0.0123ps, max6.393ps in aq clock subtree. OpenROAD warns2 missingdriver routes (dtap66 and92 outputnets); this reconstructedFF is diagnostic only, notnativeexact extractedsignoff. The3 residualmacroIF offsets persist: ROMm0-21.5,m4-22.0,SRAMwl+25.2ps. No20psmacro-windowPASSclaim. BothTT/FFread-onlyjobs exit0 (epyc2 units67603/68582-1792991671/2). OriginalnativeTTFAIL_PARTIAL remainsunchanged.

@@ -122,6 +122,37 @@ def split(points, count):
     return [pts[len(pts)*i//count:len(pts)*(i+1)//count] for i in range(count)]
 
 
+def corridor_router(helper=None):
+    """Use the existing clock visibility-grid router, copied beside kit script."""
+    import importlib.util
+    paths=([Path(helper)] if helper else [])+[Path(__file__).parent/'clock_corridor.py',
+        Path(__file__).parent.parent.parent/'tools/die_plan/clock_corridor.py']
+    path=next((p for p in paths if p.is_file()),None)
+    if path is None:
+        raise ValueError('macro-aware clock trunk requires clock_corridor.py beside the kit script')
+    spec=importlib.util.spec_from_file_location('_ot_clock_corridor',path)
+    mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+    return mod.route
+
+
+def split_spatial_2d(points):
+    """Balanced 2x2 spatial cuts instead of four long one-axis slabs.
+
+    E5's SRAM columns make a slab span both opposite macro faces. Two orthogonal
+    count cuts keep each child spatially compact while retaining equal tree depth.
+    """
+    if len(points)<4:
+        return split(points,min(4,len(points)))
+    ax=max((0,1),key=lambda j:max(p['xy'][j] for p in points)-min(p['xy'][j] for p in points))
+    pts=sorted(points,key=lambda p:(p['xy'][ax],p['xy'][1-ax],p['name']))
+    halves=[pts[:len(pts)//2],pts[len(pts)//2:]]
+    groups=[]
+    for h in halves:
+        q=sorted(h,key=lambda p:(p['xy'][1-ax],p['xy'][ax],p['name']))
+        groups.extend([q[:len(q)//2],q[len(q)//2:]])
+    return [g for g in groups if g]
+
+
 def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
     if fanout<2 or leaf_fanout<1: raise ValueError('invalid clock fanout')
     a,b,c,d=g['core']
@@ -175,7 +206,7 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
 def _man(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0, leg_extra_um=None):
+def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0, leg_extra_um=None, spatial_2d=False, avoid_macros=False, corridor_helper=None):
     """topology 'htree' (default): symmetric 2x2 H-tree over the tap region,
     pruned where a quadrant has no tap; every tap gets a private leg from its
     H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
@@ -201,7 +232,8 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
         def build(pts,level):
             cid=len(clusters); clusters.append(dict(id=cid,level=level,point=medoid(pts),taps=[t['name'] for t in pts],legs=[]))
             if level<depth:
-                for grp in split(pts,fanout): link(cid,build(grp,level+1),level)
+                groups=split_spatial_2d(pts) if spatial_2d and fanout==4 else split(pts,fanout)
+                for grp in groups: link(cid,build(grp,level+1),level)
             else: add_taps(cid,pts,level)
             return cid
         # depth0 (opt-in OT_DTSH_DEPTH0=1): count bisections from zero so a terminal
@@ -265,10 +297,16 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
             cl['point']=[sum(s_['xy'][0] for s_ in sites_)/len(sites_),sum(s_['xy'][1] for s_ in sites_)/len(sites_)]
     lead=dict(id=len(legs),level=0,parent=None,child=['cluster',0]); legs.append(lead); clusters[0]['in_leg']=lead['id']
     tapxy={t['name']:t['xy'] for t in g['taps']}
+    router=corridor_router(corridor_helper) if avoid_macros else None
+    obstacles=[cc[1:5] for cc in g['cells'] if cc[5]]
     for L in legs:
         L['A']=list(g['root']) if L['parent'] is None else clusters[L['parent']]['point']
         L['C']=clusters[L['child'][1]]['point'] if L['child'][0]=='cluster' else tapxy[L['child'][1]]
-        L['d']=_man(L['A'],L['C'])
+        if router:
+            L['path']=[list(x) for x in router(L['A'],L['C'],obstacles,[g['core'][2],g['core'][3]])]
+            L['d']=sum(_man(a,b) for a,b in zip(L['path'],L['path'][1:]))
+        else:
+            L['d']=_man(L['A'],L['C'])
     reps={}
     tl=max(L['level'] for L in legs)
     for lv in sorted({L['level'] for L in legs}):
@@ -286,6 +324,7 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
             if not math.isfinite(leg_extra_um) or leg_extra_um < 0:
                 raise ValueError('leg_extra_um must be finite and nonnegative')
             L['xmax'] = min(L['xmax'], leg_extra_um * u)
+        if avoid_macros: L['xmax']=0.0  # no blind ellipse may leave the legal repeater corridor
         # equal-length start: every leg of a level as long as its longest
         dm=max(M['d'] for M in legs if M['level']==L['level'])
         L['x']=min(L['xmax'],float(dm-L['d'])) if L['level'] else 0.0
@@ -294,7 +333,7 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
     p=dict(mode='closed_loop',topology=topology,clusters=clusters,legs=legs,taps=g['taps'],root=g['root'],root_name=g.get('root_name',''),
            dbu=u,core=g['core'],master=g['master'],width=g['width'],height=g['height'],
            obstacles=[cc[1:5] for cc in g['cells'] if cc[5]],rmax_um=rmax_um,reps=reps,iters=[],
-           fanout=fanout,leaf_fanout=leaf_fanout)
+           fanout=fanout,leaf_fanout=leaf_fanout,avoid_macros=avoid_macros,corridor_helper=str(corridor_helper) if corridor_helper else None)
     realize(p,g)
     return p
 
@@ -369,12 +408,12 @@ def realize(p,g):
             pool[cl['id']]=[dict(ll=list(s_['ll']),xy=list(s_['xy']),orient=s_['orient']) for s_ in cl['island']]
     for L in sorted(p['legs'],key=lambda L:(L['level'],L['id'])):
         n=L['n'];A,C=L['A'],L['C'];d=L['d']
-        poly=leg_path(A,C,d,p['core'])
+        poly=L.get('path') or leg_path(A,C,d,p['core'])
         parent=None if L['parent'] is None else last[('cl',L['parent'])]
         pos=[]
         for i,nm in enumerate(L['bufs']):
             if i==0: xy=A
-            elif i<n: xy=along(poly,d*i/(n+1))
+            elif i<n or L.get('path'): xy=along(poly,d*i/(n+1))
             else:
                 B=pos[-1]
                 done=sum(_man(a,b) for a,b in zip(pos,pos[1:]))
@@ -396,7 +435,12 @@ def realize(p,g):
         else: edges.append([parent,L['child'][1]])
     p['nodes']=nodes; p['edges']=edges
     xy={n['name']:n['xy'] for n in nodes}|{t['name']:t['xy'] for t in p['taps']}
-    hop=max(_man(xy[a],xy[b]) for a,b in edges)/p['dbu']
+    if p.get('avoid_macros'):
+        route=corridor_router(p.get('corridor_helper'))
+        p['wire_paths']={'|'.join((a,b)):[list(z) for z in route(xy[a],xy[b],p['obstacles'],[p['core'][2],p['core'][3]])] for a,b in edges}
+        hop=max(sum(_man(a,b) for a,b in zip(q,q[1:])) for q in p['wire_paths'].values())/p['dbu']
+    else:
+        hop=max(_man(xy[a],xy[b]) for a,b in edges)/p['dbu']
     p['summary']=dict(mode='closed_loop',new_buffers=len(nodes),tap_buffers=len(p['taps']),
                       trunk_levels=sum(n+1 for n in p['reps'].values()),reps={str(k):v for k,v in p['reps'].items()},
                       max_hop_um=hop,rmax_um=p['rmax_um'],added_cycles=0,
@@ -524,8 +568,12 @@ def render(p,out):
     u=p['dbu']; xy={n['name']:n['xy'] for n in p['nodes']}|{t['name']:t['xy'] for t in p['taps']}
     for x0,y0,x1,y1 in p.get('obstacles',[]):ax.add_patch(Rectangle((x0/u,y0/u),(x1-x0)/u,(y1-y0)/u,color='#ddd'))
     for a,b in p['edges']:
-        x,y=xy[a];xx,yy=xy[b]
-        ax.plot([x/u,xx/u,xx/u],[y/u,y/u,yy/u],color='#4878a8',lw=.6)
+        route=p.get('wire_paths',{}).get('|'.join((a,b)))
+        if route:
+            ax.plot([q[0]/u for q in route],[q[1]/u for q in route],color='#4878a8',lw=.6)
+        else:
+            x,y=xy[a];xx,yy=xy[b]
+            ax.plot([x/u,xx/u,xx/u],[y/u,y/u,yy/u],color='#4878a8',lw=.6)
     ax.scatter([t['xy'][0]/u for t in p['taps']],[t['xy'][1]/u for t in p['taps']],s=12,label='existing tap buffer')
     ax.scatter([n['xy'][0]/u for n in p['nodes']],[n['xy'][1]/u for n in p['nodes']],marker='s',s=25,label='planned trunk buffer')
     ax.scatter([p['root'][0]/u],[p['root'][1]/u],marker='*',s=100,color='black',label='actual clock pin')
@@ -594,7 +642,9 @@ def main():
                     rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')),min_rep=int(env.get('OT_DTSH_MIN_REP','1')),topology=env.get('OT_DTSH_TOPOLOGY','bisect'),
                     levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')),depth0=env.get('OT_DTSH_DEPTH0','')=='1',
                     island_um=float(env.get('OT_DTSH_ISLAND_UM','0')),island_reach_um=float(env.get('OT_DTSH_ISLAND_REACH_UM','40')),
-                    leg_extra_um=float(env['OT_DTSH_LEG_EXTRA_UM']) if 'OT_DTSH_LEG_EXTRA_UM' in env else None)
+                    leg_extra_um=float(env['OT_DTSH_LEG_EXTRA_UM']) if 'OT_DTSH_LEG_EXTRA_UM' in env else None,
+                    spatial_2d=env.get('OT_DTSH_SPATIAL_2D','')=='1',avoid_macros=env.get('OT_DTSH_AVOID_MACROS','')=='1',
+                    corridor_helper=env.get('OT_DTSH_CORRIDOR_HELPER'))
     else:
         p=plan(g)
     Path(a.out).write_text(json.dumps(p,indent=1)+'\n')
