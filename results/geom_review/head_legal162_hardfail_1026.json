@@ -1,0 +1,11 @@
+{
+  "verdict": "FAIL STRUCTURAL",
+  "supersedes_geometry_trial": "head_legal162b1_1026.json",
+  "image": "/srv/opentallas-scratch/claude/codex-head-clock-1026/legal162b1/hard_body_fail.png",
+  "findings": [
+    "324 clock bodies intersect hard keepouts; all are split repeaters named ckm_x.",
+    "split_long silently used an ideal site inside a macro when nearby legalization failed. A body overlap count of zero did not establish macro clearance.",
+    "Shared fix 94cd43ed7 prevents that fallback, records unsplit clock tails only when <=750 um, and fails structurally otherwise. The complete hard-body census runs before combo."
+  ],
+  "next": "hardlegal0 is building; no P&R until hard-body and clock-body overlap counts are zero and the image is reviewed."
+}
