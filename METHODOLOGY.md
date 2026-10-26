@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4.4, 2026-10-26 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4.5, 2026-10-26 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -283,6 +283,9 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
 - 12.3 CLOCK LATENCY. One common per-die clock-latency target at every hard-core clock pin (default 250 ps TT; FF stated per die); deep cores
   restructure their CTS to meet it, shallow cores pad up. No early taps by design. Cores are rebuilt in parallel to it, signed cores included
   (owner 10-26). Early-tap branches are RETIRED (12.8): diagnostic evidence only, never a closure path.
+  12.3a (OWNER 10-26 16:5x) The core band (250 +-20 TT / 202.5 +-20 FF, tap window <= 20 ps) is a DESIGN TARGET, not a pass/fail gate:
+  every core is planned and predicted to it, but a core measured slightly outside it proceeds to sign-off and the die related-pair STA
+  (12.4a, real core numbers) decides. Still banned: trims/pads/post-measurement edits (12.8); a core far out of band is restructured.
 - 12.4 GATES (all dies, die_infra.py).
   a. Freeze (OWNER 10-26 06:33) = die GRT0 incl. clock (>= 50 it) AND DIE STA WITH THE REAL CLOCK on related pairs: TT setup >= 0 and FF hold >= 0
      for every related launch/capture pair (intra-partition, seam, die links), propagated clock arrivals from the routed die clock (routed RC, CPPR to
@@ -315,6 +318,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 06:15 OWNER: 12.9 execution rules (one owner per die clock/plan, QC critical path, rule freeze, predict-before-build, per-die flow releases, independent number check) = CURRENT.
   - 10-26 06:33 OWNER: freeze gate = die STA with the real clock (TT setup, FF hold) on related pairs; 80 ps related-pair skew becomes design target/diagnostic (12.4a) = CURRENT. Supersedes the 10-26 01:0x skew-gate form.
   - 10-26 06:39 OWNER: in-core islands built by PUSHDOWN (12.2a1); no parent cells inside core outlines = CURRENT.
+  - 10-26 16:5x OWNER: core latency band/window = design target, die related-pair STA decides (12.3a) = CURRENT. Supersedes treating 250+-20/window<=20 as hard core FAIL. Same exchange: bottom-up landed fallback run IN PARALLEL now on every die, first to pass wins.
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 05:58, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
