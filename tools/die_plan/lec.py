@@ -199,6 +199,34 @@ def rtl_standard_libs(env, kit):
     return [f"{NLDM}/{l}" for l in STD_LIBS if needed and needed.intersection(lib_cells(f"{NLDM}/{l}"))]
 
 
+def blackbox_genvar_cleanup(env, kit):
+    """Slang exports module-scope genvars as instance parameters even on blackboxed hard macros.
+
+    A genvar is an elaboration loop variable, not a module parameter or hardware state. Remove only names
+    literally declared as genvar in that exact hard macro's source before replacing it by a pin-only stub.
+    Formal parameters and unknown names remain untouched, so bad overrides still fail hierarchy checks.
+    """
+    commands = []
+    files = [Path(kpath(kit, f)) for f in env["VERILOG_FILES"].split()]
+    for master in env.get("SYNTH_BLACKBOXES", "").split():
+        declarations = []
+        for path in files:
+            text = re.sub(r"/\*.*?\*/|//[^\n]*", " ", path.read_text(), flags=re.S)
+            match = re.search(r"\bmodule\s+" + re.escape(master) + r"\b(.*?)\bendmodule\b", text, re.S)
+            if match:
+                names = set()
+                for declaration in re.findall(r"\bgenvar\s+([^;]+);", match.group(1)):
+                    for name in declaration.split(","):
+                        name = name.strip()
+                        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", name):
+                            names.add(name)
+                declarations.append(names)
+        if declarations and all(names == declarations[0] for names in declarations):
+            for name in sorted(declarations[0]):
+                commands.append(f"setparam -unset {name} t:{master}")
+    return commands
+
+
 def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
     cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
@@ -223,6 +251,7 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
             for c in lib_cells(l):
                 a += ["--blackboxed-module", c]
         cmds += ["read_slang " + " ".join(shlex.quote(x) for x in a), "setattr -unset init"]
+        cmds += blackbox_genvar_cleanup(env, kit)
     else:
         cmds += ["verilog_defaults -push", "verilog_defaults -add " + " ".join(defs)]
         cmds += ["read_verilog -defer -sv " + " ".join(f"-I{i}" for i in incs) + " " + f for f in files]
