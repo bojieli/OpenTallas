@@ -10,14 +10,18 @@ rx=re.compile(r'^\s*((?:DFF|SDF|ASYNC_DFF)\w*)\s+(\S+)\s*\(')
 for l in open(v):
     m=rx.match(l)
     if m:regs.add(norm(m[2].lstrip('\\')))
-keep=[];miss=Counter()
+keep=[];miss=Counter();remapped=0
 for l in open(a):
     m=re.match(r'\s*\{\{(.*)\} ([\d.]+) ([\d.]+)\}',l)
     if not m:continue
     # a name with '/' is a register inside a keep_hierarchy cell (not in the flat module body of 1_2_yosys.v):
     # kept here, resolved by findInst on the ODB (n59_reach405.tcl errors on a miss, never skips)
-    if norm(m[1]) in regs or '/' in m[1]:keep.append(l.rstrip('\n'))
+    collapsed=m[1].replace('/', '.')
+    if norm(m[1]) not in regs and '/' in m[1] and norm(collapsed) in regs:
+        # Exact instance match after the opt-in register-wrapper flatten; no alias inference.
+        keep.append(l.replace(m[1],collapsed,1).rstrip('\n'));remapped+=1
+    elif norm(m[1]) in regs or '/' in m[1]:keep.append(l.rstrip('\n'))
     else:miss[fam(m[1])]+=1
 open(o,'w').write('\n'.join(keep)+'\n')
-r=dict(netlist_regs=len(regs),kept=len(keep),missing=sum(miss.values()),missing_families=miss.most_common(40))
+r=dict(netlist_regs=len(regs),exact_flatten_remaps=remapped,kept=len(keep),missing=sum(miss.values()),missing_families=miss.most_common(40))
 json.dump(r,open(j,'w'),indent=1);print(json.dumps(r)[:1500])

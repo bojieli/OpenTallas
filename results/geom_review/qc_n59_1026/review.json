@@ -1,0 +1,19 @@
+{
+  "image": "/srv/opentallas-scratch/claude/codex-qc-n59-1026/n59_5_combined.png",
+  "verdict": "FAIL (current N59-5); PASS-COND structural synthesis/floorplan diagnostic only",
+  "findings": [
+    "Eight SRAM banks leave a continuous central logic corridor; macro pin capture passes max11.571um.",
+    "Remaining three data families cross from central producers to edge pins; own-netlist minimax projection places all within405um in model, awaiting actual placement.",
+    "Reset clone bp_c37 feeds distant SRAM writer faces: kept hierarchy hides32-bit loads; expand exact reset wrappers before canonical split.",
+    "No CTS, signal route or sign-off permitted; type routes also held by QC infra-first. Clock taps/PDN require later selected placement review."
+  ],
+  "next": "Synthesize exact same RTL with opt-in reset-wrapper expansion; review actual reset-copy census before place/route.",
+  "candidate_image": "data_anchors.png",
+  "candidate_verdict": "PASS-COND PLACE ONLY",
+  "candidate_findings": [
+    "4,892 data anchors form spaced clusters along the central corridor and SRAM access bands; macro rectangles remain unobstructed.",
+    "Data graph model 1,290 -> 0 arcs >405um; max120 anchors per10um bin; actual DPL and macro-pin/reset census remain required.",
+    "Exact reset wrappers expanded before canonical splitting; bp reset copy loads now5516 (138 max per copy) instead of coarse1340 (34 per copy).",
+    "Preserve native SRAM-pin anchors and face/FT stations; reset clones must be checked against actual new netlist. No CTS/route."
+  ]
+}
