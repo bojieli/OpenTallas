@@ -20,7 +20,7 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
   - [ ] S81.TILES Tile sign-offs (path parts trial-only until die gate) · PATH-S81 · WAITS · HCPL 1 DRT trial WAIT-CANARY; HCORE cap24 FF -5.34 → S81.GRT, → FLOW.TAG
 - [ ] S81.XDIE PHY footprint, power and bump contract · PATH-S81 / COORD · PENDING-DELTA · published assumptions claude/s81-phy-assume-1026@bea83f9105 (6-lane macro 3.36 mm2, 3.3 mm shore, 4.37 W); 14/14 windows short → D-S81-PHY
 
-## DIE s81_head · S81 head die · rev FROZEN d7b8d1eb · est. after HEAD8 batch
+## DIE s81_head · S81 head die · rev UNFROZEN (infra-first) d7b8d1eb · est. after HEAD8 batch
 - [ ] HEAD.GRT Die GRT0 · DIE-PROTO · FROZEN · ovf 0 on d7b8d1eb; re-run needed if the HEAD8 batch is adopted → HEAD.B8
 - [ ] HEAD.B8 HEAD8 clock-tap + global START batch · CODEX / COORD · RUNNING · 187b63494b G0C+visual running; +8 slot cycles; needs ROOT approval
 - [ ] HEAD.CLK Die clock route + related-pair CPPR <=80 · CLOCK-MESH-B · OWNER? · channel-only mesh impossible (0 interior channel area, 5235/6887 cells unplaceable); in-tile islands need all 16 types and still FAIL 229/193 (serdes bands undriven) → owner
@@ -28,7 +28,7 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
   - [ ] HEAD.TILES Head tile sign-offs · S81-HEAD · RUNNING · 16 hd_* WAIT-GEOM FAIL rows need successor/withdraw → FLOW.TAG
 
-## DIE qwen_compute · Qwen compute · rev FROZEN 54a1aeb5 · est. after die clock fix
+## DIE qwen_compute · Qwen compute · rev UNFROZEN (infra-first) 54a1aeb5 · est. after die clock fix
 - [ ] QC.GRT Die GRT0 signals + clock · DIE-PROTO · FROZEN · 54a1aeb5 ovf 0; batch 1+2 re-freeze pending → QC.B2
   - [ ] QC.B2 Batch 2: STM ROMs (24) + SRAM d4ae52687 + DEAD-FAULT 773a8e2ad · ROOT-MERGE · COORD · approved 23:26; merge, then combined GRT0+clock → INFRA.MERGE
 - [ ] QC.CLK Die clock related-pair <=80 · CLOCK / DIE-PROTO · FAIL · native mixed-NDR 574/506 ps TT/FF (seams 260/235); 57/50 estimate withdrawn
