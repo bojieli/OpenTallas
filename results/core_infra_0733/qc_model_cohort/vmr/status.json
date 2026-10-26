@@ -1,0 +1,36 @@
+{
+ "source_geometry": "/home/ubuntu/wt/codex-qc-su-0733/results/qc_su_lat/r4/geo/vmr_aligned.txt",
+ "atomic_pairs": 512,
+ "cap_inventory": {
+  "DFFHQNx1_ASAP7_75t_R": {
+   "nominal_cap_ff_by_corner": {
+    "TT": 0.474736,
+    "FF": 0.52201
+   },
+   "selected_cap_ff": 0.52201
+  },
+  "DFFASRHQNx1_ASAP7_75t_R": {
+   "nominal_cap_ff_by_corner": {
+    "TT": 0.462899,
+    "FF": 0.503152
+   },
+   "selected_cap_ff": 0.503152
+  },
+  "ot_sram_1r1w_1024x256_m2_r2c2": {
+   "nominal_cap_ff_by_corner": {
+    "TT": 9.3458,
+    "FF": 10.3732
+   },
+   "selected_cap_ff": 10.3732
+  },
+  "DFFHQNx2_ASAP7_75t_R": {
+   "nominal_cap_ff_by_corner": {
+    "TT": 0.474859,
+    "FF": 0.521959
+   },
+   "selected_cap_ff": 0.521959
+  }
+ },
+ "qualification": "MODEL ONLY; ideal0ps prototype input, parent-die driver slew undeclared; actual per-corner nominal pin caps; rise-only buffer NLDM; NDR C scaling assumed; geometry hook confirmation required",
+ "verdict": "CONDITIONAL BASELINE ONLY: historical uniform wire model does not represent actual leaf routing; no entry design, legal plan, route authorization or qualification."
+}

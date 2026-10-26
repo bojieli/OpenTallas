@@ -120,7 +120,7 @@ def sink_cap(value, corner):
     return result
 
 
-def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_c_ff_um, input_slew_ps=40.):
+def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_c_ff_um, input_slew_ps=40., routing_model=None):
     """NLDM buffer delay at total branch load + Elmore branch wires.
 
     libraries: {corner: die_clock_128.lib_cells(...)}; sink points/caps identify
@@ -148,12 +148,19 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
             targets += [(q,sink_points[q],sink_cap(sink_caps_ff[q],corner)) for q in leaves[name]]
             if not targets:continue
             wire=_mst_length([point]+[q[1] for q in targets]);load=sum(q[2] for q in targets)
+            rc=None
+            if routing_model is not None:
+                from core_infra_wire import rooted_rc
+                branch=routing_model['nonleaf' if children[name] else 'leaf']
+                rc=rooted_rc([point]+[q[1] for q in targets],[q[2] for q in targets],**branch)
+                wire=rc['wire_um'];wire_load=rc['wire_cap_ff']
+            else:wire_load=wire*wire_c_ff_um
             lib=libs[cells[name]["master"]]
-            delay=C128._bilin(lib["delay"],slews[name],wire*wire_c_ff_um+load)
-            slew=C128._bilin(lib["trans"],slews[name],wire*wire_c_ff_um+load)
-            for target,q,cap in targets:
+            delay=C128._bilin(lib["delay"],slews[name],wire_load+load)
+            slew=C128._bilin(lib["trans"],slews[name],wire_load+load)
+            for k,(target,q,cap) in enumerate(targets):
                 length=abs(point[0]-q[0])+abs(point[1]-q[1])
-                elmore=length*wire_r_kohm_um*(length*wire_c_ff_um/2+cap)
+                elmore=rc['target_elmore_ps'][k] if rc else length*wire_r_kohm_um*(length*wire_c_ff_um/2+cap)
                 arrival=arrivals[name]+delay+elmore
                 if target in cells:
                     arrivals[target]=arrival;slews[target]=math.hypot(slew,2.2*elmore)
@@ -168,4 +175,4 @@ def predict_tree(sl, libraries, sink_points, sink_caps_ff, wire_r_kohm_um, wire_
         answer[corner]=dict(sinks=len(vals),min_ps=min(vals),mean_ps=sum(vals)/len(vals),max_ps=max(vals),
                             window_ps=max(vals)-min(vals),leaf_means=leaf_means,nets=nets)
     return dict(basis="Geometry/ASAP7 NLDM + Manhattan-MST branch C + Elmore path R; no clock measurements/pad selection",
-                wire_r_kohm_um=wire_r_kohm_um,wire_c_ff_um=wire_c_ff_um,input_slew_ps=input_slew_ps,corners=answer)
+                wire_r_kohm_um=wire_r_kohm_um,wire_c_ff_um=wire_c_ff_um,input_slew_ps=input_slew_ps,routing_model=routing_model,corners=answer)

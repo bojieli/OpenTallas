@@ -1,0 +1,81 @@
+[
+ {
+  "profile": "w2_c1.1_s78",
+  "result": {
+   "TT": {
+    "mean": 215.60423065261838,
+    "leaf_min": 198.41830369076087,
+    "leaf_max": 225.09128469298952,
+    "leaf_window": 26.672981002228653,
+    "all_min": 198.41830369076087,
+    "all_max": 225.3258843127586,
+    "all_window": 26.907580621997738,
+    "slew_max": 77.98591934980517
+   },
+   "FF": {
+    "mean": 158.4516676792365,
+    "leaf_min": 147.76322703438336,
+    "leaf_max": 168.1076803367137,
+    "leaf_window": 20.34445330233035,
+    "all_min": 147.76322703438336,
+    "all_max": 168.15578741069854,
+    "all_window": 20.392560376315174,
+    "slew_max": 57.72228965753584
+   }
+  },
+  "driver_counts": {
+   "BUFx2_ASAP7_75t_R": 28,
+   "BUFx3_ASAP7_75t_R": 59,
+   "BUFx4_ASAP7_75t_R": 46,
+   "BUFx4f_ASAP7_75t_R": 13,
+   "BUFx5_ASAP7_75t_R": 4,
+   "BUFx6f_ASAP7_75t_R": 8,
+   "BUFx8_ASAP7_75t_R": 1,
+   "BUFx12_ASAP7_75t_R": 1,
+   "BUFx12f_ASAP7_75t_R": 19,
+   "BUFx16f_ASAP7_75t_R": 4,
+   "BUFx24_ASAP7_75t_R": 11
+  },
+  "score": 818.4240544754277
+ },
+ {
+  "profile": "w4_c1.3_s78",
+  "result": {
+   "TT": {
+    "mean": 201.20878871554243,
+    "leaf_min": 187.96463801290065,
+    "leaf_max": 211.50743466204804,
+    "leaf_window": 23.54279664914739,
+    "all_min": 187.95866503003182,
+    "all_max": 211.69083638155251,
+    "all_window": 23.73217135152069,
+    "slew_max": 77.81001290134651
+   },
+   "FF": {
+    "mean": 148.21005137488388,
+    "leaf_min": 138.78177934751338,
+    "leaf_max": 155.69619749581554,
+    "leaf_window": 16.91441814830216,
+    "all_min": 138.78177934751338,
+    "all_max": 155.83305704698347,
+    "all_window": 17.05127769947009,
+    "slew_max": 57.527263889819636
+   }
+  },
+  "driver_counts": {
+   "BUFx2_ASAP7_75t_R": 29,
+   "BUFx3_ASAP7_75t_R": 29,
+   "BUFx4_ASAP7_75t_R": 29,
+   "BUFx4f_ASAP7_75t_R": 20,
+   "BUFx5_ASAP7_75t_R": 3,
+   "BUFx6f_ASAP7_75t_R": 15,
+   "BUFx8_ASAP7_75t_R": 3,
+   "BUFx10_ASAP7_75t_R": 1,
+   "BUFx12_ASAP7_75t_R": 1,
+   "BUFx12f_ASAP7_75t_R": 23,
+   "BUFx16f_ASAP7_75t_R": 4,
+   "BUFx24_ASAP7_75t_R": 37
+  },
+  "score": 315.62955509158263
+ }
+]
