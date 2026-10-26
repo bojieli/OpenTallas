@@ -1,0 +1,107 @@
+{
+ "schema": "opentallas.s81.bound_entry_native_receipt.v1",
+ "die_sha256": "1c11db22badf63d1365251ceae327ad65b9c05d470f5898ef20d35fd246d33d8",
+ "rows": 3920,
+ "commands": 96,
+ "normr": 80,
+ "xfin": 16,
+ "eps_fp32_bits": "1e3ce508",
+ "selected_slices": {
+  "u_s_0N": {
+   "master": "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72",
+   "sid": 1
+  },
+  "u_s_1N": {
+   "master": "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+   "sid": 3
+  },
+  "u_s_2N": {
+   "master": "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+   "sid": 5
+  },
+  "u_s_3N": {
+   "master": "ot_s81sl_slice_sukv_raw512_w3",
+   "sid": 7
+  },
+  "u_s_4N": {
+   "master": "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+   "sid": 9
+  },
+  "u_s_5N": {
+   "master": "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+   "sid": 11
+  },
+  "u_s_6N": {
+   "master": "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+   "sid": 13
+  },
+  "u_s_7N": {
+   "master": "ot_s81sl_slice_lepe_mab_tp_mu_72",
+   "sid": 15
+  },
+  "u_s_0S": {
+   "master": "ot_s81sl_slice_lepw_mab_tp_mu_72",
+   "sid": 0
+  },
+  "u_s_1S": {
+   "master": "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+   "sid": 2
+  },
+  "u_s_2S": {
+   "master": "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+   "sid": 4
+  },
+  "u_s_3S": {
+   "master": "ot_s81sl_slice_iq_w3",
+   "sid": 6
+  },
+  "u_s_4S": {
+   "master": "ot_s81sl_slice_c3x_k8_cap5r_w_w3",
+   "sid": 8
+  },
+  "u_s_5S": {
+   "master": "ot_s81sl_slice_c1x_k8_cap5r_w_e6",
+   "sid": 10
+  },
+  "u_s_6S": {
+   "master": "ot_s81sl_slice_c1x_k8_cap5r_w_w3",
+   "sid": 12
+  },
+  "u_s_7S": {
+   "master": "ot_s81sl_slice_lepe_nh_mu_72",
+   "sid": 14
+  }
+ },
+ "input_sources": {
+  "io/h_in.bin": {
+   "sha256": "eaf3017e557b98cb4039ae5a07707ab151d65f909f749f470b853b059118ee42",
+   "dtype": "float32",
+   "shape": [
+    4,
+    5120
+   ]
+  },
+  "entry_engram": {
+   "manifest_sha256": "1a50acf7bcd41103a89aff18d23b8229e7680c7296fddb2fe07f4785506d66d1",
+   "producer": "checkpoint rows/scales/wkv + genuine layer inputs"
+  },
+  "io/pre_in.bin": {
+   "sha256": "6c29248eea3f09270ccf9822e1c4125b27f476982d15898f1c3720697760e3b6",
+   "dtype": "float32",
+   "shape": [
+    4
+   ]
+  },
+  "weights/attn_norm.bin": {
+   "sha256": "5582111c8c4137acab35749b26cfe96e911fafff7a811b2f9cc80c7d67f739b1",
+   "dtype": "uint8",
+   "shape": [
+    5120,
+    2
+   ]
+  }
+ },
+ "scope": "Native commands and genuine input rows on canonical source interfaces; no legacy geometry loaded; execution/dates/end/globalclock not qualified",
+ "runtime_artifacts": "intel1:/srv/opentallas-scratch2/claude/codex-tok-ds-1026",
+ "unit": "oth-ubuntu-2070982-1793008286"
+}
