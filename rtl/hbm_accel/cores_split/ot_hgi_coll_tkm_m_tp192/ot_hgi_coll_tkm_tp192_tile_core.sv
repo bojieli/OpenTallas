@@ -3,15 +3,6 @@
 // Members (roles): u_tile = ot_hgi_coll_tkm_tile_e86  (as-built ot_hgi_coll_tkm_tile_e86 at u/u/g_tiles[0].e86.u_tile)
 // Source wiring: rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)
 // Wired bit-exactly as the as-built master netlist (split_conn.py); straps = replica constants tied at the parent.
-// PATH-HBM/TOK 2026-10-25 (hand edit on top of the generated split top; build_split_tops.py tkm_tile must carry it):
-// in-tile control lanes of the face-shelled chain (plan: no parent glue in the column gaps).
-//   tile_clr  (S face, in) -> 1 flop -> tile_clr_o  (N face, out): clr travels SYSTOLIC DOWN the chain, 3 edges per hop
-//             (shell in + this flop + shell out) <= the data's 5: provably safe (ot_hgi_coll_tkm_static_p CLRB 0).
-//   tile_conv (N face, in; from tile t+1, tile 31 from the root's D=21 tree) -> wire -> tile_conv_o (S face, out, toward
-//             the root): conv travels UP the chain with exactly the up data's 2 face edges per hop, so tile t shifts 2
-//             edges after tile t+1 as the lock-step up_out->up_in shift requires (static_p HOP 2).  0 core flops: a
-//             face-flop to face-flop feed-through (shell in flop -> shell out flop, one tile width).
-//   The tile itself uses tile_clr / tile_conv exactly as before.  Tile 0's conv_o and tile 31's clr_o are unloaded.
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hgi_coll_tkm_tp192_tile_core (
@@ -23,7 +14,6 @@ module ot_hgi_coll_tkm_tp192_tile_core (
     input wire tile_ins_v,
     input wire [343:0] tile_ins_b,
     input wire [343:0] tile_up_in,
-    input wire [5:0] tile_tid,
     output wire tile_ovf_v,
     output wire [343:0] tile_ovf_b,
     output wire [343:0] tile_up_out
@@ -65,14 +55,12 @@ module ot_hgi_coll_tkm_tp192_tile_core (
         .up_out(u_tile__up_out),
         .tau_o(u_tile__tau_o),
         .busy(u_tile__busy));
-    always @(posedge tile_clk) tile_clr_o <= tile_clr;   // clr down-chain lane (no reset: control relay, flushed by the root)
-    assign tile_conv_o = tile_conv;                       // conv up-chain lane (face flop to face flop)
     assign u_tile__clk = tile_clk;
     assign u_tile__clk_r0 = tile_clk;
     assign u_tile__clk_r1 = tile_clk;
     assign u_tile__clk_r2 = tile_clk;
     assign u_tile__clk_r3 = tile_clk;
-    assign u_tile__tid = tile_tid;   // strap (replica constant at the parent)
+    assign u_tile__tid = 6'b000000;   // dead tau-only ID; owner ruling 10-25 14:44
     assign u_tile__clr = tile_clr;
     assign u_tile__conv = tile_conv;
     assign u_tile__tau_t[0] = 1'b0;
@@ -94,5 +82,8 @@ module ot_hgi_coll_tkm_tp192_tile_core (
     assign tile_ovf_b[343:0] = u_tile__ovf_b[343:0];
     assign u_tile__up_in[343:0] = tile_up_in[343:0];
     assign tile_up_out[343:0] = u_tile__up_out[343:0];
+    // Native chain control: clr +1 core edge; conv +0 core edge (shells remain separately priced).
+    always @(posedge tile_clk) tile_clr_o <= tile_clr;
+    assign tile_conv_o = tile_conv;
 endmodule
 `default_nettype wire
