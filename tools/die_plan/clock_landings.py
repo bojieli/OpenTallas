@@ -1,0 +1,314 @@
+"""Opt-in real clock-region landings for the as-built binder.
+
+The regional clock report's table identifies PHYSICAL port hops, not lane
+endpoints. This adapter puts the landing inside the receiving partition, exports
+the sender clock beside its bus, and exposes ready/fault (never dropped). It
+requires declared clock/status pins and uniform type masks; it does not invent
+placement, waive clocks, or silently split hardened types.
+"""
+import hashlib
+import json
+import re
+from collections import defaultdict
+from pathlib import Path
+
+
+def requirements(plan, table):
+    """Publish concrete type-mask/pin/latency work before changing a plan.
+
+    Pin faces/windows are copied as placement references only. A scalar clock
+    pin still needs a legal track and a status pin needs a destination; copying
+    the data window does not constitute a physical placement approval.
+    """
+    parts = {p["name"]: p for p in plan["partitions"]}
+    types = plan["partition_types"]
+    ports = {p["id"]: p for p in plan["ports"]}
+    masks = {pn: dict(inputs=set(), outputs=set()) for pn in parts}
+    pin_refs, lanes = [], defaultdict(int)
+    for r in table["ports"]:
+        p = ports[r["port"]]
+        sp, sb, dp, db = p["src"]["part"], p["src"]["bus"], p["dst"]["part"], p["dst"]["bus"]
+        if (sp, dp, int(p["width"])) != (r["src"], r["dst"], int(r["width"])):
+            raise LandingError(f"stale clock landing endpoints/width on {r['port']}")
+        masks[sp]["outputs"].add(sb)
+        masks[dp]["inputs"].add(db)
+        lanes[r["lane"]] += 3
+        pin_refs.append(dict(port=r["port"], lane=r["lane"], src=sp, dst=dp,
+                             src_bus=sb, dst_bus=db, width=p["width"],
+                             required_src_pin=f"fclk_out_{sb}",
+                             required_dst_pins=[f"fclk_in_{db}", f"landing_ready_{db}", f"landing_fault_{db}"],
+                             extra_cycles=3))
+    cohorts = defaultdict(dict)
+    for pn, p in parts.items():
+        mask = {k: sorted(v) for k, v in masks[pn].items()}
+        key = json.dumps(mask, sort_keys=True)
+        cohorts[p["type"]].setdefault(key, []).append(pn)
+    groups = {}
+    row_by_sink = {(r["dst"], r["dst_bus"]): r for r in pin_refs}
+    for tn, cs in cohorts.items():
+        groups[tn] = [dict(mask=json.loads(k), instances=ps,
+                          proposed_type=tn if len(cs) == 1 else tn + "__cl" + hashlib.sha256(k.encode()).hexdigest()[:8])
+                      for k, ps in sorted(cs.items())]
+        for g in groups[tn]:
+            rows = [row_by_sink[(g["instances"][0], b)] for b in g["mask"]["inputs"]]
+            g["added_live_data_storage_flops"] = sum(5 * (int(r["width"]) + 1) for r in rows)
+            g["control_flops_upper_estimate"] = sum(73 + 4 * ((int(r["width"]) + 64) // 64) for r in rows)
+            g["padded_data_storage_flops_upper_estimate"] = sum(5 * 64 * ((int(r["width"]) + 64) // 64) for r in rows)
+            g["clock_sink_addition_upper_estimate"] = g["added_live_data_storage_flops"] + g["control_flops_upper_estimate"]
+            g["placement_required"] = [dict(bus=r["dst_bus"], ring_instance=f"u_cland_{r['dst_bus']}.u_ring",
+                                            data_storage_flops=5 * (int(r["width"]) + 1),
+                                            write_clock_pin=f"fclk_in_{r['dst_bus']}", read_clock="clk",
+                                            window="received bus face; actual legal sites/tracks NOT assigned") for r in rows]
+    return dict(schema="opentallas.clock_landing_requirements.v1", implemented=False,
+                source_table_sha256=hashlib.sha256(json.dumps(table, sort_keys=True).encode()).hexdigest(),
+                crossings=len(pin_refs),
+                required_new_scalar_pins=len({(r["src"], r["src_bus"]) for r in pin_refs}) + 3 * len(pin_refs),
+                added_live_data_storage_flops=sum(5 * (int(r["width"]) + 1) for r in pin_refs),
+                type_count_before=len(types), type_count_after=sum(map(len, groups.values())),
+                split_types={tn: g for tn, g in groups.items() if len(g) > 1},
+                cohorts=groups, ports=pin_refs, lane_added_cycles=dict(sorted(lanes.items())),
+                nominal_added_cycles_per_crossing=3,
+                pending=["reserve forwarded-clock and observed status pin tracks", "split nonuniform landing masks",
+                         "update lane/R8/calendar price", "emit actual landing RTL", "ring window STA and token pass"])
+
+
+class LandingError(ValueError):
+    pass
+
+
+def ident(s):
+    return re.sub(r"[^A-Za-z0-9_]", "_", s)
+
+
+class Landings:
+    def __init__(self, plan, table, *, require_geometry=True):
+        self.plan = plan
+        self.parts = {p["name"]: p for p in plan["partitions"]}
+        self.types = plan["partition_types"]
+        ports = {p["id"]: p for p in plan["ports"]}
+        self.rows = []
+        self.region = {}
+        self.emitted_types = set()
+        self.emitted_top = False
+        self.reset_placements = {}
+        for pn, p in self.parts.items():
+            w, h = self.types[p["type"]]["outline_um"]
+            x, y = p["origin_um"][0] + w / 2, p["origin_um"][1] + h / 2
+            candidates = [r["tag"] for r in table["regions"]
+                          if r["box_um"][0] <= x < r["box_um"][2]
+                          and r["box_um"][1] <= y < r["box_um"][3]]
+            if len(candidates) != 1:
+                raise LandingError(f"clock landing {pn}: expected one whole-partition region")
+            self.region[pn] = candidates[0]
+        self.ins = defaultdict(dict)
+        self.outs = defaultdict(set)
+        seen = set()
+        for r in table["ports"]:
+            pid = r["port"]
+            if pid in seen:
+                raise LandingError(f"duplicate clock landing port {pid}")
+            seen.add(pid)
+            if pid not in ports:
+                raise LandingError(f"clock landing has no physical plan port {pid}")
+            p = ports[pid]
+            if p.get("kind", "data") not in ("data", "ctl"):
+                raise LandingError(f"clock landing {pid}: reset/clock needs its own contract")
+            sp, sb = p["src"]["part"], p["src"]["bus"]
+            dp, db = p["dst"]["part"], p["dst"]["bus"]
+            if (sp, dp, int(p["width"])) != (r["src"], r["dst"], int(r["width"])):
+                raise LandingError(f"stale clock landing endpoints/width on {pid}")
+            if r["src_region"] == r["dst_region"]:
+                raise LandingError(f"clock landing {pid} stays in one region")
+            for part, region in ((sp, r["src_region"]), (dp, r["dst_region"])):
+                if part not in self.parts:
+                    raise LandingError(f"clock landing {pid}: non-partition endpoint {part}")
+                if part in self.region and self.region[part] != region:
+                    raise LandingError(f"clock landing region conflict for {part}")
+                self.region[part] = region
+            if db in self.ins[dp]:
+                raise LandingError(f"two clock landings drive {dp}.{db}")
+            row = dict(r, src_bus=sb, dst_bus=db, added_cycles=3,
+                       module="ot_dp_clk_landing", ring_depth=4, ring_offset=2,
+                       ring_read_registered=True)
+            self.rows.append(row)
+            self.ins[dp][db] = row
+            self.outs[sp].add(sb)
+        # All copies of a type must expose identical hardware. Re-plan a type
+        # split rather than changing only the first bound replica's wrapper.
+        masks = defaultdict(dict)
+        for pn, p in self.parts.items():
+            mask = (tuple(sorted(self.ins[pn])), tuple(sorted(self.outs[pn])))
+            masks[p["type"]].setdefault(mask, []).append(pn)
+        bad = {tn: list(ms.values()) for tn, ms in masks.items() if len(ms) > 1}
+        if bad:
+            raise LandingError(f"clock landing TYPE_SPLIT required: {bad}")
+        self.by_type = {}
+        for tn, ms in masks.items():
+            mask = next(iter(ms))
+            self.by_type[tn] = dict(inputs=mask[0], outputs=mask[1])
+            if not require_geometry:
+                continue
+            declared = {b["name"]: b for b in self.types[tn].get("buses", [])}
+            required = {f"fclk_out_{b}": "out" for b in mask[1]}
+            for b in mask[0]:
+                required.update({f"fclk_in_{b}": "in", f"landing_ready_{b}": "out",
+                                 f"landing_fault_{b}": "out"})
+            for name, direction in required.items():
+                b = declared.get(name)
+                if not b or b.get("dir") != direction or int(b.get("width", 0)) != 1:
+                    raise LandingError(f"clock landing {tn}: declare placed scalar {direction} pin {name}")
+                if not all(k in b for k in ("face", "window_um", "layers")):
+                    raise LandingError(f"clock landing {tn}.{name}: missing physical pin geometry")
+
+    def type_rtl(self, tn, text):
+        """Emit actual landing hardware before each incoming boundary/station.
+
+        Existing data/epoch buses and their station chains stay intact. The
+        landing streams ALL bits before the original capture, including epoch.
+        """
+        mask = self.by_type[tn]
+        if not mask["inputs"] and not mask["outputs"]:
+            self.emitted_types.add(tn)
+            return text
+        marker = "\n);\n"
+        if marker not in text:
+            raise LandingError(f"{tn}: binder ANSI module header not found")
+        head, body = text.split(marker, 1)
+        extra, logic = [], []
+        for b in mask["outputs"]:
+            extra.append(f"    output wire fclk_out_{b}")
+            logic.append(f"    assign fclk_out_{b} = clk;")
+        part = next(p for p, v in self.parts.items() if v["type"] == tn)
+        for b in mask["inputs"]:
+            r = self.ins[part][b]
+            # Plan width excludes the in-band epoch bit; physical binding has
+            # the complete width+1 bundle, just like the original station.
+            input_decl = re.search(r"input\s+wire\s*\[(\d+):0\]\s+" + re.escape(b) + r"\b", head)
+            if not input_decl:
+                raise LandingError(f"{tn}: actual bound input {b} not found (unused/stale physical hop)")
+            w = int(input_decl.group(1)) + 1
+            if w > int(r["width"]) + 1:
+                raise LandingError(f"{tn}.{b}: bound width {w} exceeds planned bundle capacity")
+            # START must remain low while the rings train. Reusing the usual
+            # START-gated rst_n would start training AFTER mission launch.
+            # Copy the nearest tap's raw reset relay at the SAME parent/depth.
+            # This is a timed local data relay, never another synchronizer.
+            t = self.types[tn]
+            geom = next((x for x in t.get("buses", []) if x["name"] == b), None)
+            if geom is None:
+                slot = next((x for x in t.get("ft_slots", []) if x["name"] + "_i" == b), None)
+                if slot:
+                    geom = dict(face=slot["in_face"], window_um=slot["in_window_um"])
+            if geom is None:
+                raise LandingError(f"{tn}.{b}: receiver face geometry not found")
+            face = geom["face"]; at = sum(geom["window_um"]) / 2
+            tw, th = t["outline_um"]
+            x, y = (0 if face == "W" else tw, at) if face in "EW" else (at, 0 if face == "S" else th)
+            taps = t.get("clock", {}).get("taps", [])
+            if taps:
+                tap = min(range(len(taps)), key=lambda i: abs(taps[i]["xy"][0]-x) + abs(taps[i]["xy"][1]-y))
+                xy = taps[tap]["xy"]
+            else:
+                tap, xy = 0, t.get("clock", {}).get("tap_um", [tw/2, th/2])
+            reset = f"rst_n_t{tap}"
+            relay = re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\(" + reset + r"\)\);", body)
+            if relay is None:
+                raise LandingError(f"{tn}.{b}: timed local wavefront reset relay {reset} not found")
+            if relay.group(1) == "gate":
+                reset = f"cland_reset_{b}"
+                logic += [f"    wire {reset};",
+                          f"    ot_dp_rrelay u_cland_rst_{b} (.clk(clk), .d({relay.group(2)}), .q({reset}));"]
+            self.reset_placements.setdefault(tn, {})[b] = dict(net=reset, xy_um=xy,
+                copied_raw_parent=relay.group(2), extra_control_flops=int(relay.group(1) == "gate"),
+                must_be_ready_before_start=True, boot_settle_cycles=21)
+            extra += [f"    input wire fclk_in_{b}", f"    output wire landing_ready_{b}",
+                      f"    output wire landing_fault_{b}"]
+            landed = f"cland_{b}"
+            body = re.sub(r"\b" + re.escape(b) + r"\b", landed, body)
+            logic += [f"    wire [{w-1}:0] {landed};",
+                      f"    ot_dp_clk_landing #(.W({w})) u_cland_{b} (",
+                      f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}), .d({b}), .q({landed}),",
+                      f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
+        # The former last port can carry an end-of-line comment.
+        lines = head.splitlines()
+        code, sep, comment = lines[-1].partition("//")
+        lines[-1] = code.rstrip() + "," + ((" //" + comment) if sep else "")
+        head = "\n".join(lines) + "\n" + ",\n".join(extra)
+        self.emitted_types.add(tn)
+        return head + marker + "\n".join(logic) + "\n" + body
+
+    def top_rtl(self, text):
+        """Connect the new forwarded-clock pins and observed status at die top.
+
+        Region clocks are explicit inputs. No die-top data register or clock
+        synthesizer is invented; physical die-clock emission supplies them.
+        """
+        clocks = sorted(set(self.region.values()))
+        n = len(self.rows)
+        if not n:
+            self.emitted_top = True
+            return text
+        names = [f"clk_region_{ident(r)}" for r in clocks]
+        names += ["clock_landing_ready", "clock_landing_fault"]
+        match = re.search(r"(?m)^module (\w+) \(([^;]*)\);", text)
+        if not match:
+            raise LandingError("clock landing: binder non-ANSI die header not found")
+        header = f"module {match.group(1)} ({match.group(2)}, " + ", ".join(names) + ");"
+        text = text[:match.start()] + header + text[match.end():]
+        decl = [f"    input wire clk_region_{ident(r)};" for r in clocks]
+        decl += [f"    output wire [{n-1}:0] clock_landing_ready;",
+                 f"    output wire [{n-1}:0] clock_landing_fault;"]
+        fwd = {(r["src"], r["src_bus"]): f"clock_landing_fwd_{ident(r['src'])}__{ident(r['src_bus'])}"
+               for r in self.rows}
+        decl += [f"    wire {w};" for w in sorted(set(fwd.values()))]
+        match = re.search(r"(?m)^module \w+ \([^;]*\);", text)
+        text = text[:match.end()] + "\n" + "\n".join(decl) + text[match.end():]
+        index = {(r["dst"], r["dst_bus"]): i for i, r in enumerate(self.rows)}
+        for pn, p in self.parts.items():
+            # Anchor on the instance, then the binder's own closing line; leaf
+            # parameter parentheses can never terminate this module instance.
+            pat = re.compile(r"(?m)^(    " + re.escape(self.types[p["type"]]["module"]) +
+                             r"(?: #\([^\n]*\))? " + re.escape(ident(pn)) + r" \(\n)(.*?)(\n    \);)", re.S)
+            matches = list(pat.finditer(text))
+            if len(matches) != 1:
+                raise LandingError(f"clock landing: expected exactly one bound instance {pn}")
+            m = matches[0]
+            body, count = re.subn(r"\.clk\(clk_\w+\)", f".clk(clk_region_{ident(self.region[pn])})", m.group(2), count=1)
+            if count != 1:
+                raise LandingError(f"clock landing: default clock connection not found on {pn}")
+            conn = [f"        .fclk_out_{b}({fwd[(pn,b)]})" for b in sorted(self.outs[pn])]
+            for b, r in sorted(self.ins[pn].items()):
+                i = index[(pn,b)]
+                conn += [f"        .fclk_in_{b}({fwd[(r['src'],r['src_bus'])]})",
+                         f"        .landing_ready_{b}(clock_landing_ready[{i}])",
+                         f"        .landing_fault_{b}(clock_landing_fault[{i}])"]
+            body = ",\n".join(conn + [body])
+            text = text[:m.start()] + m.group(1) + body + m.group(3) + text[m.end():]
+        self.emitted_top = True
+        return text
+
+    def manifest(self):
+        by_lane = defaultdict(int)
+        for r in self.rows:
+            by_lane[r["lane"]] += 3
+        return dict(schema="opentallas.clock_landing_rtl.v1",
+                    implemented=self.emitted_top and self.emitted_types == set(self.types),
+                    physical_qualified=False, added_cycles_per_crossing=3,
+                    crossings=len(self.rows), ports=self.rows,
+                    lane_added_cycles=dict(sorted(by_lane.items())),
+                    types=self.by_type, reset_placements=self.reset_placements,
+                    remaining_gates=["placed clock/status pins", "landing ring window STA",
+                                     "trained region calendar offsets", "token pass"])
+
+
+if __name__ == "__main__":
+    import argparse
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("plan")
+    ap.add_argument("crossings")
+    ap.add_argument("--out", required=True)
+    args = ap.parse_args()
+    result = requirements(json.loads(Path(args.plan).read_text()), json.loads(Path(args.crossings).read_text()))
+    Path(args.out).write_text(json.dumps(result, indent=1) + "\n")
+    print(json.dumps({k: result[k] for k in ("crossings", "type_count_before", "type_count_after",
+                                            "required_new_scalar_pins", "added_live_data_storage_flops")}))
