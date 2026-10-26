@@ -5,8 +5,9 @@
 // (ot_hbm_q3_producer_native, NLINK3 TP192 VM_RT81 ROWS256) or its adopted SYNC_INPUT copy (`DUT = ..._native__q3sync).
 // Adapted from rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_v8x_argmax.sv (native host F20 programming 7 frames a
 // row + 55-edge drain, descriptor scan, launch, VM read group at 7 + VM_RT, golden FP32 total-order winner scoreboard).
-// Sequence: cold reset -> run A (full, scored) -> run B launched, WARM reset +WARMAT edges after launch, held +HOLD ->
-// run C (full re-programme + launch, scored). Every output port is written to +TRACE on every edge it changes
+// Sequence: cold reset -> run A (programme + launch, scored) -> run B (relaunch of the LOADED programme, scored; the
+// target's contract: a fresh reset is required to install a programme, frames to complete rows fault) -> run W
+// (relaunch, WARM reset +WARMAT edges after launch, held +HOLD) -> run C (full programme + launch after the reset, scored). Every output port is written to +TRACE on every edge it changes
 // (trace form: one engine per model; legacy vs sync traces are compared offline by tools/hbm_b2/q3prog/trace_compare.py).
 // Only declared boundary models: VM read group (vm_rq/vm_rr), every other off-assembly input idle (ARGMAX uses none).
 `ifndef DUT
@@ -167,6 +168,13 @@ module tb_q3prog_trace;
   clear_sb();
   @(negedge clk);launch=1;@(negedge clk);launch=0;
  endtask
+ task automatic relaunch(input string run);
+  if(!configured || program_fault || init_busy)begin
+   $display("Q3PROG FAIL run %s relaunch configured%0d program_fault%0d init_busy%0d",run,configured,program_fault,init_busy);
+   $fclose(tfd);$finish;end
+  clear_sb();
+  @(negedge clk);launch=1;@(negedge clk);launch=0;
+ endtask
  task automatic score(input string run,input integer t0);
   $display("Q3PROG_MEASURE run %s P%0d NR%0d host_programme_edges%0d drain55+%0d launch_to_first_vm_rq%0d launch_to_first_tkx_lane%0d tkx_lane_edges%0d launch_to_first_delivery%0d launch_to_last_delivery%0d done%0d positions%0d/%0d data_err%0d addr_err%0d stray%0d fault_first%0d",
    run,P,NR,launch_cyc-t0,drain_extra,first_vm<0?-1:first_vm-launch_cyc,first_tkx_arg<0?-1:first_tkx_arg-launch_cyc,tkx_v_edges,
@@ -195,8 +203,12 @@ module tb_q3prog_trace;
   t0=cyc;program_and_launch("A");
   while(done_count==0 && cyc-launch_cyc<MAXC)@(negedge clk);
   repeat(16)@(negedge clk);score("A",t0);
-  // run B: re-programme, launch, warm reset mid-run
-  t0=cyc;program_and_launch("B");
+  // run B: relaunch the loaded programme (no reset), scored
+  t0=cyc;relaunch("B");
+  while(done_count==0 && cyc-launch_cyc<MAXC)@(negedge clk);
+  repeat(16)@(negedge clk);score("B",t0);
+  // run W: relaunch, warm reset mid-run
+  t0=cyc;relaunch("W");
   repeat(WARMAT)@(negedge clk);
   $display("Q3PROG WARM_RESET cyc%0d launch+%0d delivered%0d",cyc,cyc-launch_cyc,cnt);
   rst_n=0;repeat(HOLD)@(negedge clk);rst_n=1;repeat(4)@(negedge clk);
@@ -204,7 +216,7 @@ module tb_q3prog_trace;
   t0=cyc;program_and_launch("C");
   while(done_count==0 && cyc-launch_cyc<MAXC)@(negedge clk);
   repeat(16)@(negedge clk);score("C",t0);
-  $display("Q3PROG %s runs A,C fails%0d end_cyc%0d",fails==0?"PASS":"FAIL",fails,cyc);
+  $display("Q3PROG %s runs A,B,C fails%0d end_cyc%0d",fails==0?"PASS":"FAIL",fails,cyc);
   $fclose(tfd);$finish;
  end
 endmodule
