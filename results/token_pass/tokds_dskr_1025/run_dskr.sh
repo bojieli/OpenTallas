@@ -34,6 +34,8 @@ receipt)
   python3 tools/s81_dv/layer_prog/entry_mechanism.py --w-result $O/entry_vp/w1/result.json --ev-result $O/entry_vp/ev1/result.json \
     --out $REC; echo "RECEIPT rc $?";;
 entry)
+  # entry_boot / run_entry_replay check the receipt's source hashes against the tree holding them: run from the selected root
+  cd $W/src
   [ -e $EJ ] || python3 tools/s81_dv/layer_prog/entry_boot.py --tree $T --fixtures $F --mechanism-receipt $REC --out $EJ \
     --replay-job 15 --replay-job 16 --replay-job 17 --replay-job 20 --replay-job 21 --replay-job 22 > $O/entry_boot.log 2>&1 \
     || { echo "entry_boot FAIL"; tail -5 $O/entry_boot.log; exit 1; }
