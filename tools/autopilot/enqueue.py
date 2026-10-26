@@ -37,7 +37,8 @@ def main(argv=None):
     ap.add_argument("--goal", default="")
     ap.add_argument("--runner", default="")
     ap.add_argument("--threads", default="")
-    ap.add_argument("--mode", default="", choices=["", "submit", "adopt"])
+    ap.add_argument("--mode", default="", choices=["", "submit", "adopt", "withdraw"],
+                    help="withdraw an unstarted row append-only (same kit/src/goal); never cancels existing work")
     ap.add_argument("--canary-fix", default="", help="explicit corrective kit: newest canary SRC_COMMIT@/abs/run/canary.json")
     ap.add_argument("--no-commit", action="store_true")
     a = ap.parse_args(argv)
@@ -48,7 +49,7 @@ def main(argv=None):
     (r,) = AP.parse_queue(line).values()
     if r["error"]:
         sys.exit(f"enqueue: REFUSED: {r['error']}")
-    if r["geom"].upper() not in AP.GEOM_OK and r["mode"] != "adopt":
+    if r["geom"].upper() not in AP.GEOM_OK and r["mode"] not in ("adopt", "withdraw"):
         print(f"enqueue: NOTE geom '{r['geom']}' is not PASS: the row waits for a GEOM-REVIEW verdict of tag "
               f"'{AP.geom_tag(r['geom_ref'])}' naming {r['type']} (or a PASS row appended later)")
     if not a.no_commit:

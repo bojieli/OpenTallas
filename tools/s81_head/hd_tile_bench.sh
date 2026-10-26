@@ -15,7 +15,7 @@ O=$(realpath -m "${1:?outdir}"); SC=${2:?scen}; M=${3:-none}; mkdir -p "$O"
 IMG=$(realpath results/rtl/s81_head_tile_1021/img)
 # 10-24: CUT (decimal, default 511 = 0x1ff) / SPLIT9 (default 1) env select the element pipeline (default = the closed
 # element views, SK 11; CUT=379 SPLIT9=0 = the 10-21 0x17b point, SK 8); SK != 8 re-skews the images into OUTDIR/img_skN.
-CUT=${CUT:-511}; S9=${SPLIT9:-1}; SKV=$(python3 -c "print(1+bin($CUT).count('1')+$S9)")
+CUT=${CUT:-511}; S9=${SPLIT9:-1}; L4=${FADD_L4:-0}; SKV=$(python3 -c "print(4 if $L4 else 1+bin($CUT).count('1')+$S9)")
 if [ $SKV != 8 ]; then
   [ -f $O/img_sk$SKV/hb_1.viamap.hex ] || python3 tools/s81_head/hd_reskew_images.py $IMG $O/img_sk$SKV --from 8 --to $SKV > $O/reskew.log || exit 4
   IMG=$O/img_sk$SKV
@@ -27,18 +27,19 @@ SRCS="rtl/common/ot_prefix.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_bmul2.
  rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv rtl/dsrom_sys/s81_head/ot_s81hd_oreg.sv rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv.sv rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv
  rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv rtl/dsrom_sys/s81_head/test/tb_s81hd_mini.sv"
 D=""; [ "$M" != none ] && D="+define+OT_S81HD_MUT_$M"
+if [ $L4 != 0 ]; then SRCS="$SRCS rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv"; fi
 CV=${CV:-0}   # 10-24: CV=1 = elements as the closed-view macro models (ot_s81hd_bundle CV)
 # 10-24: AIS / MH / CS env = tile A_INPUT_STAGES / MERGE_HOP / CMP_STAGES (default 0 = unchanged)
 AIS=${AIS:-0}; MH=${MH:-0}; CS=${CS:-0}
-OBJ=$O/obj_${M}_${CUT}_${S9}_cv${CV}_a${AIS}m${MH}c${CS}
+OBJ=$O/obj_${M}_${CUT}_${S9}_cv${CV}_l4${L4}_a${AIS}m${MH}c${CS}
 if [ ! -x $OBJ/Vtb_s81hd_mini ]; then
-  $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -GCUT=$CUT -GSPLIT9=$S9 -GCV=$CV -GAIS=$AIS -GMH=$MH -GCS=$CS -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
+  $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -GCUT=$CUT -GSPLIT9=$S9 -GFADD_L4=$L4 -GCV=$CV -GAIS=$AIS -GMH=$MH -GCS=$CS -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
     -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build_$M.log 2>&1 || { grep -m10 %Error $O/build_$M.log; echo "BUILD_FAILED $M"; exit 3; }
 fi
 link() {   # link DIR T SRC: tile T's ROM instances -> image prefix SRC
   for e in a0 a1 a2 a3 b; do for k in 0 1; do ln -sf $IMG/$3${e}_$k.viamap.hex $1/$2${e}_$k.viamap.hex; done; done
 }
-EXP_CYC_A=${EXP_CYC_A:-$([ $CUT = 379 ] && [ $S9 = 0 ] && echo 8375 || { [ $CV = 1 ] && echo 8432 || echo 8430; })}
+EXP_CYC_A=${EXP_CYC_A:-$([ $L4 = 1 ] && echo 8304 || { [ $CUT = 379 ] && [ $S9 = 0 ] && echo 8375 || { [ $CV = 1 ] && echo 8432 || echo 8430; }; })}
 # 10-24 pipelining: + AIS (A input stages) + 2 MH (bundle merge hops) + CS per tile on the 2-tile chain
 EXP_CYC_A=${EXP_CYC_X:-$((EXP_CYC_A + AIS + 2*MH + 2*CS))}  # +1 bundle pk_q stage (10-24 GEOM-REVIEW); CV 1: +2 more = the rebuilt elemB then elemA output register stages (ot_s81hd_oreg)
   # 8,429 at 0x1ff / SPLIT9 1 (10-24)   # measured go (spo input) -> spr output, 2-tile chain: bundle 8,357 (IOREG 1, SAFE 1: +2) + spo 1 + pin 1 + fire 2 x 2 + spr 5 + chain hop

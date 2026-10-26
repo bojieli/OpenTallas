@@ -43,7 +43,8 @@ module ot_s81hd_elem #(
     parameter integer ROWS = 32,           // rows the element holds (8192 >> LV)
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer SPLIT9 = 0,          // ot_v41_fadd SPLIT9 (+1 adder latency, the skew follows)
-    parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+    parameter integer FADD_L4 = 0, // opt-in standard4-stage retime; regenerate ROM/x skew together
+    parameter integer SK = (FADD_L4 != 0) ? 4 : 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
     parameter INSTANCE = "",
     // IOREG (default 0; redesign pass 2026-10-06): every input captured in a flop at its pin (+1 cycle, uniform);
     // outputs already leave flops (adder output stages, argmax/fault registers): register-to-register boundary
@@ -183,7 +184,7 @@ module ot_s81hd_elem #(
         assign cs[l][0] = 32'd0;
         assign cv[l][0] = pl[5];
         for (s = 0; s < 8; s = s + 1) begin : g_s
-            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(cv[l][s]), .a(cs[l][s]), .b(p[8*l + s]),
+            ot_s81hd_fadd #(.CUT(CUT), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(cv[l][s]), .a(cs[l][s]), .b(p[8*l + s]),
                                           .y(cs[l][s+1]), .err(ce[l][s]), .valid_out(cv[l][s+1]));
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) cerr[8*l + s] <= 1'b0;
@@ -194,7 +195,7 @@ module ot_s81hd_elem #(
     wire        n1_v;
     wire [31:0] n1_d;
     wire [1:0]  n1_e;
-    ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_pair (.clk(clk), .rst_n(rst_n), .valid_in(cv[0][8]), .a(cs[0][8]), .b(cs[1][8]),
+    ot_s81hd_fadd #(.CUT(CUT), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4)) u_pair (.clk(clk), .rst_n(rst_n), .valid_in(cv[0][8]), .a(cs[0][8]), .b(cs[1][8]),
                                      .y(n1_d), .err(n1_e), .valid_out(n1_v));
 
     // ---------------- streaming pairwise tree: LV levels, then PAD (+0) levels -----------------------------------
@@ -212,10 +213,10 @@ module ot_s81hd_elem #(
                 if (!rst_n) have <= 1'b0;
                 else if (tv[k]) have <= !have;
             always @(posedge clk) if (tv[k] && !have) held <= td[k];
-            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k] && have), .a(held), .b(td[k]),
+            ot_s81hd_fadd #(.CUT(CUT), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k] && have), .a(held), .b(td[k]),
                                           .y(td[k+1]), .err(te[k+1]), .valid_out(tv[k+1]));
         end else begin : g_pad
-            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k]), .a(td[k]), .b(32'd0),
+            ot_s81hd_fadd #(.CUT(CUT), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k]), .a(td[k]), .b(32'd0),
                                           .y(td[k+1]), .err(te[k+1]), .valid_out(tv[k+1]));
         end
     end endgenerate
@@ -263,7 +264,7 @@ module ot_s81hd_elem #(
             for (jc = 0; jc < 4; jc = jc + 1) j_b[8*jc +: 8] <= fb[fb_r[2*jc +: 2]][8*jc +: 8];
         end
         wire [1:0] le;
-        ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_join (.clk(clk), .rst_n(rst_n), .valid_in(j_v), .a(j_a), .b(j_b),
+        ot_s81hd_fadd #(.CUT(CUT), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4)) u_join (.clk(clk), .rst_n(rst_n), .valid_in(j_v), .a(j_a), .b(j_b),
                                          .y(l_d), .err(le), .valid_out(l_v));
         // argmax: registered key, then compare (rows arrive in increasing id)
         reg        k_v, k_bad;
@@ -336,4 +337,27 @@ module ot_s81hd_elem #(
             else if (go_e) fault <= 1'b0;
             else if ((|cerr) || (|terr)) fault <= 1'b1;
     end
+endmodule
+
+`timescale 1ns/1ps
+// Default preserves the released legacy adder. FADD_L4 is a new native head
+// profile: SK=4 must also select the corresponding ROM and x-stream skew.
+module ot_s81hd_fadd #(
+    parameter [8:0] CUT = 9'b1_0111_1011,
+    parameter integer SPLIT9 = 0,
+    parameter integer FADD_L4 = 0
+) (
+    input wire clk, rst_n, valid_in,
+    input wire [31:0] a,b,
+    output wire [31:0] y,
+    output wire [1:0] err,
+    output wire valid_out
+);
+    generate if (FADD_L4 != 0) begin : g_l4
+        ot_hdc_fp32_add_f12_l4 u (.clk(clk),.rst_n(rst_n),.valid_in(valid_in),
+            .a(a),.b(b),.y(y),.err(err),.valid_out(valid_out));
+    end else begin : g_legacy
+        ot_v41_fadd #(.CUT(CUT),.SPLIT9(SPLIT9)) u (.clk(clk),.rst_n(rst_n),.valid_in(valid_in),
+            .a(a),.b(b),.y(y),.err(err),.valid_out(valid_out));
+    end endgenerate
 endmodule

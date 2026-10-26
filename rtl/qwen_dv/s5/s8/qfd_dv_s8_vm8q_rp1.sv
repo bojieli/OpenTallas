@@ -53,7 +53,7 @@ module qfd_dv_s8_vm8q_rp1_twc (input wire ck, input wire [538:0] d, output reg [
     always @(posedge ck) q <= d;
 endmodule
 
-module qfd_dv_s8_vm8q_rp1 #(parameter integer MUT = 0) (
+module qfd_dv_s8_vm8q_rp1 #(parameter integer MUT = 0, parameter integer MIF = 0) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire [7:0]      a_re, b_re, c_re,
@@ -100,15 +100,15 @@ module qfd_dv_s8_vm8q_rp1 #(parameter integer MUT = 0) (
     qfd_dv_s8_vm8q_rp1_rst u_rsc (.ck(ck), .d(rst_n), .q(rsc));
     wire [255:0] qa, qb, qc;
     wire         fa, fb, fc;
-    qfd_dv_s8x_vmr u_va (.ck(ck), .rst_n(rsa), .re(rda[199:192]), .addr(rda[191:0]), .q(qa),
+    qfd_dv_s8x_vmr #(.MIF(MIF)) u_va (.ck(ck), .rst_n(rsa), .re(rda[199:192]), .addr(rda[191:0]), .q(qa),
         .vm_we(vwa[1049:1042]), .vm_waddr(vwa[1041:850]), .vm_wdata(vwa[849:594]), .w16_we(vwa[593]),
         .w16_addr(vwa[592:569]), .w16_data(vwa[568:57]), .w1_we(vwa[56]), .w1_addr(vwa[55:32]), .w1_data(vwa[31:0]),
         .fault(fa));
-    qfd_dv_s8x_vmr u_vb (.ck(ck), .rst_n(rsb), .re(rdb[199:192]), .addr(rdb[191:0]), .q(qb),
+    qfd_dv_s8x_vmr #(.MIF(MIF)) u_vb (.ck(ck), .rst_n(rsb), .re(rdb[199:192]), .addr(rdb[191:0]), .q(qb),
         .vm_we(vwb[1049:1042]), .vm_waddr(vwb[1041:850]), .vm_wdata(vwb[849:594]), .w16_we(vwb[593]),
         .w16_addr(vwb[592:569]), .w16_data(vwb[568:57]), .w1_we(vwb[56]), .w1_addr(vwb[55:32]), .w1_data(vwb[31:0]),
         .fault(fb));
-    qfd_dv_s8x_vmr u_vc (.ck(ck), .rst_n(rsc), .re(rdc[199:192]), .addr(rdc[191:0]), .q(qc),
+    qfd_dv_s8x_vmr #(.MIF(MIF)) u_vc (.ck(ck), .rst_n(rsc), .re(rdc[199:192]), .addr(rdc[191:0]), .q(qc),
         .vm_we(vwc[1049:1042]), .vm_waddr(vwc[1041:850]), .vm_wdata(vwc[849:594]), .w16_we(vwc[593]),
         .w16_addr(vwc[592:569]), .w16_data(vwc[568:57]), .w1_we(vwc[56]), .w1_addr(vwc[55:32]), .w1_data(vwc[31:0]),
         .fault(fc));
@@ -121,7 +121,7 @@ module qfd_dv_s8_vm8q_rp1 #(parameter integer MUT = 0) (
     wire [1033:0] twb;
     qfd_dv_s8_vm8q_rp1_twb u_twb (.ck(ck), .d({tw_we, tw_kind, tw_addr[8:2], tw_data}), .q(twb));
     wire [255:0] qbs;  wire fbt;
-    qfd_dv_s8x_btab u_bt (.ck(ck), .rst_n(rsbt), .bs_re(bs_re1), .bs_addr(bs_addr1), .bs_q(qbs),
+    qfd_dv_s8x_btab #(.MIF(MIF)) u_bt (.ck(ck), .rst_n(rsbt), .bs_re(bs_re1), .bs_addr(bs_addr1), .bs_q(qbs),
         .tw_we(twb[1033]), .tw_kind(twb[1032:1031]), .tw_addr(twb[1030:1024]), .tw_data(twb[1023:0]), .fault(fbt));
 
     // ---- PROG (d = 1; no reset pin): own read relay, own table-write copy ----
@@ -131,7 +131,7 @@ module qfd_dv_s8_vm8q_rp1 #(parameter integer MUT = 0) (
     wire [924:0] twp;
     qfd_dv_s8_vm8q_rp1_twp u_twp (.ck(ck), .d({tw_we, tw_kind, tw_addr[7:0], tw_data[456:0], tw_data[968:512]}), .q(twp));
     wire [456:0] qpg;
-    qfd_dv_s8x_prog u_pg (.ck(ck), .p_re(p_re1), .p_idx(p_idx1), .p_q(qpg),
+    qfd_dv_s8x_prog #(.MIF(MIF)) u_pg (.ck(ck), .p_re(p_re1), .p_idx(p_idx1), .p_q(qpg),
         .tw_we(twp[924]), .tw_kind(twp[923:922]), .tw_addr(twp[921:914]), .tw_d0(twp[913:457]), .tw_d1(twp[456:0]));
 
     // ---- CROM halves (d = 2): per-half read relays, per-half table-write chains, per-half reset relays ----
@@ -157,9 +157,9 @@ module qfd_dv_s8_vm8q_rp1 #(parameter integer MUT = 0) (
     qfd_dv_s8_vm8q_rp1_rst u_rsh1 (.ck(ck), .d(rst_n), .q(rsh1));
     qfd_dv_s8_vm8q_rp1_rst u_rsh2 (.ck(ck), .d(rsh1), .q(rsh2));
     wire [255:0] qlo, qhi;  wire fcl, fch;
-    qfd_dv_s8_crh_rp1 u_cl (.ck(ck), .rst_n(rsl2), .cr_re(crl2[199:192]), .cr_addr(crl2[191:0]), .q(qlo),
+    qfd_dv_s8_crh_rp1 #(.MIF(MIF)) u_cl (.ck(ck), .rst_n(rsl2), .cr_re(crl2[199:192]), .cr_addr(crl2[191:0]), .q(qlo),
         .tw_we(twl2_m[538]), .tw_kind(twl2_m[537:536]), .tw_addr(twl2_m[535:512]), .tw_d(twl2_m[511:0]), .fault(fcl));
-    qfd_dv_s8_crh_rp1 u_ch (.ck(ck), .rst_n(rsh2), .cr_re(crh2[199:192]), .cr_addr(crh2[191:0]), .q(qhi),
+    qfd_dv_s8_crh_rp1 #(.MIF(MIF)) u_ch (.ck(ck), .rst_n(rsh2), .cr_re(crh2[199:192]), .cr_addr(crh2[191:0]), .q(qhi),
         .tw_we(twh2[538]), .tw_kind(twh2[537:536]), .tw_addr(twh2[535:512]), .tw_d(twh2[511:0]), .fault(fch));
 
     // ---- answers: d_out relay edges (VM 0, BTAB / PROG 1, CROM 2), then the S-face capture register ----

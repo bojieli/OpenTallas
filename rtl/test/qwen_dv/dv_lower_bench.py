@@ -155,6 +155,7 @@ def calibrate(work, seed):
     hop = sorted(c for (m, c), tag in ps.items() if m == N - 2 and tag == lw['ssq'][N - 1]['tags'][0])
     own0 = probe[N - 1] + smap['cmd_arrival'][N - 1] + L[0]
     rec = dict(schema='opentallas.qwen.dv-slice-ages.v1', ssq_psum_out=L, root_cfg_lead=4,
+               memory_profile=D.memory_profile(),
                sc_hop_measured=(hop[0] - own0) if hop else None, per_slice=meas,
                source='rtl/test/qwen_dv/dv_lower_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050); offsets = '
                       'edge the PSUM j word leaves the slice dn_o (S<k>SD log) - (chain entry edge + cmd arrival)',
