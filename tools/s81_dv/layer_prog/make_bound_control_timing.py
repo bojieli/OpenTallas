@@ -45,6 +45,8 @@ def build(root,run):
         if not re.search(r'\.HB\('+str(hb)+r'\)',body):raise ValueError('wrapper HB changed '+name)
         models[name]=dict(source_path=path,measured_child='ot_s81sl_xrt',measured_hb=hb,
             wire_wrapper_proof='exact direct control pin expressions',edges=dict(dl_ctl_to_ci=3,dl_ctl_to_command=3))
+    define_scope=sorted({name for p in source for name in re.findall(r'^\s*`(?:ifdef|ifndef|elsif)\s+(\w+)',(root/p).read_text(),re.M)})
+    for entry in models.values():entry.update(defines=[],define_scope=define_scope)
     return dict(schema='opentallas.s81.bound_control_local.v1',verdict='PASS',
         source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in source},
         masters=models,witness=witness,edge_convention='source pin event after posedge; receiver samples next edge',

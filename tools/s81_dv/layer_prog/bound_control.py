@@ -71,6 +71,15 @@ class BoundControl:
             raise ValueError(label+' control/payload bound ages disagree: '+str(sorted(ages)))
         return dict(kind='transport',label=label,edges=ages.pop(),routes=routes)
 
+    @staticmethod
+    def _integer(value):
+        if type(value) is int:return value
+        text=str(value).replace('_','').strip()
+        if re.fullmatch(r'-?\d+',text):return int(text)
+        m=re.fullmatch(r"(?:\d+)?'[sS]?([bBoOdDhH])([0-9a-fA-F]+)",text)
+        if m:return int(m[2],{'b':2,'o':8,'d':10,'h':16}[m[1].lower()])
+        raise ValueError('unsupported measured parameter constant '+text)
+
     def local(self, unit, transition):
         master=self.die.units[unit]['master']
         entry=self.timing['masters'].get(master)
@@ -83,6 +92,29 @@ class BoundControl:
         expected=self.source_root/entry['source_path']
         if ambiguous or not chosen or Path(chosen).resolve()!=expected.resolve():
             raise ValueError('local timing is not for current preferred source: '+master)
+        actual_defines=set(self.selection[1].get('defines',[]))
+        if 'defines' in entry:
+            scope=set(entry.get('define_scope',actual_defines|set(entry['defines'])))
+            if actual_defines&scope!=set(entry['defines'])&scope:
+                raise ValueError('local measured define set changed: '+master)
+        body=bind_elab.module_body(expected,master)
+        actual_params=self.die.units[unit].get('params',{})
+        for name,wanted in entry.get('params',{}).items():
+            value=actual_params.get(name)
+            if value is None:
+                # An omitted source parameter uses its declared literal default,
+                # or this exact selected wrapper bakes the measured literal.
+                default=re.search(r'\b'+re.escape(name)+r'\s*=\s*([^,)\n]+)',body)
+                baked=re.findall(r'\.'+re.escape(name)+r'\(\s*([^()]+)\)',body)
+                choices=[default[1]] if default else baked
+                if len(choices)!=1:
+                    raise ValueError('measured parameter has no unique current value: '+master+'.'+name)
+                value=choices[0]
+            if self._integer(value)!=self._integer(wanted):
+                raise ValueError('local measured parameter changed: '+master+'.'+name)
+        for name,wanted in entry.get('straps',{}).items():
+            if self.die.strap(unit,name)!=self._integer(wanted):
+                raise ValueError('local measured source strap changed: '+unit+'.'+name)
         if entry['source_path'] not in self.timing['source_sha256']:
             raise ValueError('local wrapper source missing from receipt: '+master)
         return dict(kind='local',unit=unit,master=master,transition=transition,edges=entry['edges'][transition])
