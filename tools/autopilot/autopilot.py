@@ -1000,6 +1000,19 @@ def flow_exclude():
         return []
 
 
+def flow_plans():
+    """canaries.json 'die_plans' {canary die: [own physical/die_plan trees]} (another die's plan files are not this
+    die's flow, tools/flow_canary/flow_watch.py); unreadable -> {} (fail closed: every plan tree counts)"""
+    try:
+        return json.loads(read_repo("tools/flow_canary/canaries.json")).get("die_plans") or {}
+    except Exception:
+        return {}
+
+
+CANARY_DIE = {"cp1": "s81", "kv": "qwen_kvsys"}     # queue die -> canaries.json die_plans key
+PLAN_ROOT = "physical/die_plan/"
+
+
 def _all_flow_tags():
     """newest-first [(tag, creator unix time)] of every flow release tag on origin, fetched once per tick"""
     if "all_tags" not in CLOSURE:
@@ -1062,6 +1075,7 @@ def resolve_provenance(src, flow="", die=None):
     if not watch:
         return {"src_commit": full, "flow_tag": "", "error": "flow watch list tools/flow_canary/canaries.json unreadable"}
     exclude = flow_exclude()
+    own = flow_plans().get(CANARY_DIE.get(die, die)) if die else None
     tags = flow_tags(die)
     if flow and flow not in tags:
         if flow in flow_tags():
@@ -1072,7 +1086,8 @@ def resolve_provenance(src, flow="", die=None):
         if rc:
             continue
         changed = [p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)
-                   and not any(fnmatch.fnmatch(p, x) for x in exclude)]
+                   and not any(fnmatch.fnmatch(p, x) for x in exclude)
+                   and not (own is not None and p.startswith(PLAN_ROOT) and p[len(PLAN_ROOT):].split("/", 1)[0] not in own)]
         if not changed:
             return {"src_commit": full, "flow_tag": t}
         if flow:
