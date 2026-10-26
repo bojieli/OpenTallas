@@ -80,30 +80,24 @@ def pg_spacing(w, prl=float("inf")):
 
 def pg_grid(P, pg=None):
     """the die PG stripe rows in pg_rects form: the core grid (pg.json["grid"] when given, else the plan's die.pg.grid)
-    PLUS every die.pg.domains (OWNER decision 7 PHY supply) grid, with the same disjoint-region rule as the real PDN
-    (pg_regions.pdn_tcl: pdngen cuts the core domain at the PHY regions, every region on the die's global phase).
+    PLUS every die.pg.domains (OWNER decision 7 PHY supply) grid.
 
-    HBM-PG 10-26 root cause: the domain rows were overlaid on full-die core rows, and on a region-local phase, so the
-    1.92-um VDDPHY/VSS stripes lay on top of / beside the 0.48-um core VDD/VSS stripes (1,288 PG-PG overlaps in the HBM
-    PHY windows).  Now: core rows carry the domain rects as holes (bloated by the core stripe's own spacing), domain
-    rows stay inside their rect (by their own wide-metal spacing on edges that face the core, i.e. not the die edge),
-    and both use the die phase (net parity included), so no same-layer stripes of different nets touch or sit within
-    the LEF spacing.  A plan without domains returns the core rows unchanged (byte-identical PG)."""
+    ONE PDN RULE (COORD 10-26 13:13, lane PDN-ONE): with domains, the rows are exactly the regions and rows that
+    pg_regions.pdn_tcl hands pdngen (row["region"], row["rect_um"] = the region box, die-origin offset + nets order of
+    the plan row), and pg_rects() turns them into pdngen's stripes with pg_regions.region_model (fit-inside-region,
+    inner-edge trimming to the last same-net crossing).  pdn_model_match.py checks that model against a real pdngen
+    dump per die.  A plan without domains returns the core rows unchanged (byte-identical PG)."""
     core = json.loads(Path(pg).read_text())["grid"] if pg else P.die.get("pg", {}).get("grid", [])
     doms = P.die.get("pg", {}).get("domains") or []
     if not doms:
         return core
     import pg_regions
-    pg_regions.regions(dict(P.die, outline_um=[P.W, P.H], pg=dict(P.die.get("pg", {}), grid=core)))  # raises on
-    # overlapping domains with different supplies or mesh contracts (the same validity rule as the real PDN)
     rows = []
-    for g in core:
-        rows.append(dict(g, phase="die", holes_um=[list(map(float, d["rect_um"])) for d in doms],
-                         clear_um=pg_spacing(g["width_um"])))
-    for d in doms:
-        for g in d.get("grid") or []:
-            rows.append(dict(g, nets=list(g.get("nets") or d["nets"]), rect_um=list(map(float, d["rect_um"])),
-                             phase="die", clear_um=pg_spacing(g["width_um"])))
+    for r in pg_regions.regions(dict(P.die, outline_um=[P.W, P.H], pg=dict(P.die.get("pg", {}), grid=core))):
+        k = "ot_pg_%d" % len({q["region"] for q in rows})
+        for g in r["grid"]:
+            rows.append(dict(g, nets=list(g.get("nets") or r["nets"]), rect_um=list(map(float, r["rect_um"])),
+                             region=k, region_nets=list(r["nets"]), phase="die"))
     return rows
 
 
@@ -129,6 +123,13 @@ def pg_rects(P, grid):
     pg_regions.pdn_tcl), clear_um (the stripe's own spacing kept from every region edge that is not the die edge) and
     holes_um (rects the stripe is cut out of, bloated by clear_um: the core grid around the PHY regions)."""
     out = []
+    reg = [g for g in grid if g.get("region")]
+    if reg:                                   # pg_grid() regions: the pdngen model (pg_regions.region_model)
+        import pg_regions
+        D = pg_regions.DBU
+        out += [(n, L, x0 / D, y0 / D, x1 / D, y1 / D) for n, L, x0, y0, x1, y1 in
+                pg_regions.region_model(pg_regions.rows_regions(reg), (0, 0, pg_regions._d(P.W), pg_regions._d(P.H)))]
+        grid = [g for g in grid if not g.get("region")]
     for g in grid:
         L = P.layers.get(g["layer"])
         if not L:

@@ -603,7 +603,7 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     t = ["set t0 [clock seconds]", f"read_lef {D.TECH_LEF}", f"read_lef {D.SC_LEF}", "read_lef /work/psm/irblk.lef",
          f"foreach f [glob {D.PLAT}/lib/NLDM/*RVT_TT_nldm*.lib*] {{ read_liberty $f }}",
          "read_verilog /work/psm/psm.v", "link_design irwin",
-         f"initialize_floorplan -die_area {{0 0 {w:g} {h:g}}} -core_area {{0 0 {w:g} {h:g}}} -site asap7sc7p5t",
+         f"initialize_floorplan -die_area {{0 0 {D.gen_phys._um(w)} {D.gen_phys._um(h)}}} -core_area {{0 0 {D.gen_phys._um(w)} {D.gen_phys._um(h)}}} -site asap7sc7p5t",
          "source /work/psm/tracks.tcl", "set dbu [[ord::get_db_tech] getDbUnitsPerMicron]",
          "proc ot_pl {n x y} { global dbu; set i [[ord::get_db_block] findInst $n]; $i setOrient R0; "
          "$i setLocation [expr {round($x*$dbu)}] [expr {round($y*$dbu)}]; $i setPlacementStatus FIRM }"]

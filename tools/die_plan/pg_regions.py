@@ -33,6 +33,206 @@ def regions(die):
     return [{k:v for k,v in q.items() if k!='key'} for q in out]
 
 
+# ------------------------------------------------------------------ ONE PDN RULE (COORD 10-26 13:13, lane PDN-ONE)
+# The plan's PG rows (die.pg.grid / domain grids: layer, width, pitch, offset from the DIE origin, nets order) are the
+# single source of every real PDN script (pdn_tcl, die_trial.psm_pdn_tcl, gen_phys.die_pdn_tcl) and of the die_infra
+# PG model.  Stripe centres sit on the die lattice  offset + n * pitch/2, net = nets[n % 2], in every region; each
+# region's add_pdn_stripe gets the first lattice stripe that fits inside the region as its -offset (from the region's
+# lower edge, exact dbu) and that stripe's net as -starts_with, so no region drifts off phase or swaps parity.
+# model_rects() reproduces pdngen (OpenROAD 26Q3) on those scripts, measured with pdn_model_match.py:
+#   - a stripe is made only when it lies fully inside its region box;
+#   - a stripe end on the core (= die) boundary stays at the boundary; an end on an inner region edge is trimmed to
+#     the outer edge of the last same-net orthogonal stripe of the same grid it crosses (pdngen trims dangling
+#     metal back to its last via); a stripe with an inner end and no same-net crossing is removed.
+DBU = 1000
+DIRS = {'M1': 'V', 'M2': 'H', 'M3': 'V', 'M4': 'H', 'M5': 'V', 'M6': 'H', 'M7': 'V', 'M8': 'H', 'M9': 'V'}
+
+
+def _d(x):
+    return int(round(float(x) * DBU))
+
+
+def _u(v):
+    """exact um text of an integer dbu value (never %g: 6 significant digits moved 13328.36 to 13328.4)."""
+    t = f"{v / DBU:.3f}".rstrip('0').rstrip('.')
+    return t if t not in ('', '-0') else '0'
+
+
+def row_spec(s, rect, nets):
+    """one plan PG row in one region rect (dbu) -> dict(layer, V, w, pitch, half, lo, hi, offset (from lo), start, other)
+    or None when no lattice stripe fits.  nets = the row's own order (s['nets'], else the region's (power, ground))."""
+    nets = list(s.get('nets') or nets)
+    if len(nets) != 2:
+        raise ValueError(f"PG row {s['layer']}: pdngen stripes alternate exactly one power and one ground net, got {nets}")
+    V = DIRS[s['layer']] == 'V'
+    lo, hi = (rect[0], rect[2]) if V else (rect[1], rect[3])
+    w, pitch, off = _d(s['width_um']), _d(s['pitch_um']), _d(s['offset_um'])
+    if pitch % 2:
+        raise ValueError(f"PG row {s['layer']}: pitch {s['pitch_um']} is not an even number of dbu")
+    half = pitch // 2
+    n0 = -(-(2 * lo + w - 2 * off) // pitch)          # first lattice index with centre - w/2 >= lo
+    c0 = off + n0 * half
+    if 2 * c0 + w > 2 * hi:
+        return None
+    return dict(layer=s['layer'], V=V, w=w, pitch=pitch, half=half, lo=lo, hi=hi, offset=c0 - lo,
+                start=nets[n0 % 2], other=nets[(n0 + 1) % 2])
+
+
+def plan_regions(die, grid=None):
+    """[(name, rect_dbu, (power, ground), [row_spec ...], layers)] -- the regions pdn_tcl emits, in order.  A plan
+    without domains is one region = the die.  grid overrides die.pg.grid (infra_pg sized grid)."""
+    if grid is not None:
+        die = dict(die, pg=dict(die.get('pg', {}), grid=grid))
+    out = []
+    for k, r in enumerate(regions(die)):
+        rect = [_d(x) for x in r['rect_um']]
+        specs = [row_spec(s, rect, r['nets']) for s in r['grid']]
+        out.append((f'ot_pg_{k}', rect, tuple(r['nets']), specs, [s['layer'] for s in r['grid']]))
+    return out
+
+
+def stripe_tcl(grid_name, spec):
+    """add_pdn_stripe for one row_spec (offset from the region / core lower edge, exact dbu, explicit parity)."""
+    typ = 'GROUND' if spec['start'] == 'VSS' else 'POWER'
+    return (f"add_pdn_stripe -grid {grid_name} -layer {spec['layer']} -width {_u(spec['w'])} -pitch {_u(spec['pitch'])} "
+            f"-offset {_u(spec['offset'])} -spacing {_u(spec['half'] - spec['w'])} -starts_with {typ}")
+
+
+def core_stripes_tcl(die, grid_name, grid=None):
+    """the add_pdn_stripe lines of a plain CORE grid over the whole die (plans without domains): same lattice rule."""
+    W, H = die['outline_um']
+    g = grid if grid is not None else die.get('pg', {}).get('grid', [])
+    rect = [0, 0, _d(W), _d(H)]
+    return [stripe_tcl(grid_name, sp) for sp in (row_spec(s, rect, ('VDD', 'VSS')) for s in g) if sp]
+
+
+def _lattice(sp):
+    """[(net, centre)] of the stripes pdngen makes for one row_spec (fully inside lo..hi)."""
+    out, c, j = [], sp['lo'] + sp['offset'], 0
+    while 2 * c + sp['w'] <= 2 * sp['hi']:
+        out.append((sp['start'] if j % 2 == 0 else sp['other'], c))
+        c += sp['half']
+        j += 1
+    return out
+
+
+def model_rects(die, grid=None, core=None):
+    """[(net, layer, x0, y0, x1, y1)] in dbu: the exact pdngen result of pdn_tcl(die) (see the ONE PDN RULE note)."""
+    W, H = die['outline_um']
+    return region_model(plan_regions(die, grid), core or (0, 0, _d(W), _d(H)))
+
+
+def rows_regions(rows):
+    """plan_regions tuples back from die_infra.pg_grid region rows (row['region'], row['rect_um'], row['nets'])."""
+    out, by = [], {}
+    for g in rows:
+        k = g['region']
+        if k not in by:
+            by[k] = (k, [_d(x) for x in g['rect_um']], tuple(g['region_nets']), [], [])
+            out.append(by[k])
+        _k, rect, nets, specs, layers = by[k]
+        specs.append(row_spec(g, rect, nets))
+        layers.append(g['layer'])
+    return out
+
+
+def halo(w):
+    """pdngen's spacing halo (dbu) for a long M8/M9 stripe of width w (dbu): asap7_tech_1x_201209.lef SPACINGTABLE,
+    last parallel-run column (same table as die_infra.pg_spacing)."""
+    return 1000 if w >= 999.75 else 500 if w >= 499.75 else 40
+
+
+def _pieces(sp, rect, others, core):
+    """pieces of every lattice stripe of row_spec sp in region rect after pdngen's cut against the other regions'
+    grid obstructions (each region box, bloated by this stripe's own spacing halo; a cut that leaves less than the
+    full width drops that run).  -> [dict(net, c, lo, hi, blo, bhi)] (blo/bhi: end lies on the core boundary)."""
+    V, w = sp['V'], sp['w']
+    h = halo(w)
+    A0, A1 = (rect[1], rect[3]) if V else (rect[0], rect[2])
+    C0, C1 = (core[1], core[3]) if V else (core[0], core[2])
+    out = []
+    for net, c in _lattice(sp):
+        a, b = c - w / 2, c + w / 2
+        cuts = []
+        for q in others:
+            q0, q1, p0, p1 = (q[0], q[2], q[1], q[3]) if V else (q[1], q[3], q[0], q[2])
+            if q0 - h < b and a < q1 + h and p0 - h < A1 and A0 < p1 + h:
+                cuts.append((p0 - h, p1 + h))
+        lo = A0
+        for c0, c1 in sorted(cuts):
+            if c1 <= lo:
+                continue
+            if c0 > lo:
+                out.append(dict(net=net, c=c, lo=lo, hi=min(c0, A1)))
+            lo = max(lo, c1)
+            if lo >= A1:
+                break
+        if lo < A1:
+            out.append(dict(net=net, c=c, lo=lo, hi=A1))
+    for q in out:
+        q['blo'], q['bhi'] = q['lo'] == C0, q['hi'] == C1
+    return [q for q in out if q['hi'] > q['lo']]
+
+
+def region_model(regs, core):
+    """pdngen model of plan_regions tuples on core box core (dbu) -> [(net, layer, x0, y0, x1, y1)] in dbu.
+    (1) lattice stripes fully inside the region; (2) cut by the other regions' boxes + spacing halo; (3) vias where
+    same-net pieces of consecutive layers of the same grid overlap; (4) trim: a piece with < 2 vias is removed, the
+    others are cut back to their outermost via on every end that is not on the core boundary; (5) a piece left
+    without a via to a surviving piece is not written (pdngen writes only shapes with DB connectivity)."""
+    import bisect
+    out = []
+    boxes = [r[1] for r in regs]
+    for ri, (_name, rect, _nets, specs, layers) in enumerate(regs):
+        others = [b for k, b in enumerate(boxes) if k != ri]
+        rows = [(sp, _pieces(sp, rect, others, core)) for sp in specs if sp]
+        for sp, ps in rows:
+            for q in ps:
+                q['w'] = sp['w']
+        # orthogonal neighbours per row (add_pdn_connect between consecutive rows of the grid)
+        nb = [[j for j in (i - 1, i + 1) if 0 <= j < len(rows) and rows[j][0]['V'] != rows[i][0]['V']
+               and abs(layers.index(rows[j][0]['layer']) - layers.index(rows[i][0]['layer'])) == 1]
+              for i in range(len(rows))]
+        index = {}
+        for i, (sp, ps) in enumerate(rows):
+            for net in {q['net'] for q in ps}:
+                lst = sorted((q for q in ps if q['net'] == net), key=lambda q: q['c'])
+                index[(i, net)] = ([q['c'] for q in lst], lst)
+
+        def crossings(i, p, alive=None):
+            """[(along_lo, along_hi)] via spans of piece p of row i (with surviving pieces only when alive)."""
+            res = []
+            for j in nb[i]:
+                cs, lst = index.get((j, p['net']), ([], []))
+                wq = rows[j][0]['w']
+                k0 = bisect.bisect_left(cs, p['lo'] - wq / 2)
+                k1 = bisect.bisect_right(cs, p['hi'] + wq / 2)
+                pa, pb = p['c'] - p['w'] / 2, p['c'] + p['w'] / 2
+                for q in lst[k0:k1]:
+                    if alive is not None and id(q) not in alive:
+                        continue
+                    s0, s1 = max(p['lo'], q['c'] - wq / 2), min(p['hi'], q['c'] + wq / 2)
+                    if s0 < s1 and q['lo'] < pb and pa < q['hi']:
+                        res.append((s0, s1))
+            return res
+        new = {}
+        for i, (sp, ps) in enumerate(rows):
+            for p in ps:
+                v = crossings(i, p)
+                if len(set(v)) < 2:
+                    continue
+                new[id(p)] = (p['lo'] if p['blo'] else min(x for x, _ in v), p['hi'] if p['bhi'] else max(x for _, x in v))
+        alive = set(new)
+        for i, (sp, ps) in enumerate(rows):
+            for p in ps:
+                if id(p) not in alive or not crossings(i, p, alive):
+                    continue
+                lo, hi = new[id(p)]
+                a, b = p['c'] - sp['w'] / 2, p['c'] + sp['w'] / 2
+                out.append((p['net'], sp['layer']) + ((a, lo, b, hi) if sp['V'] else (lo, a, hi, b)))
+    return out
+
+
 def pdn_tcl(die,loads=()):
     """Emit top meshes and optional (instance, power_net) abstract M7 connections."""
     rs=regions(die)
@@ -47,15 +247,11 @@ def pdn_tcl(die,loads=()):
         t += [f'add_global_connection -net {{{net}}} -inst_pattern {{^{inst}$}} -pin_pattern {{^{pin}$}} -{flag}',f'add_global_connection -net {{VSS}} -inst_pattern {{^{inst}$}} -pin_pattern {{^VSS$}} -ground']
     secondary=sorted({r['nets'][0]for r in rs}-{'VDD'})
     t += ['global_connect', 'set_voltage_domain -name Core -power VDD -ground VSS'+(' -secondary_power {'+' '.join(secondary)+'}' if secondary else '')]
-    for k,r in enumerate(rs):
-        name=f'ot_pg_{k}';p,g=r['nets'];rect=r['rect_um']
-        t += [f'set region [odb::dbRegion_create $b {name}]',f'odb::dbBox_create $region '+ ' '.join(f'[expr {{round({x:g}*$dbu)}}]' for x in rect),f'set_voltage_domain -name {name} -region {name} -power {p} -ground {g}',f'define_pdn_grid -name {name} -voltage_domains {{{name}}} -starts_with GROUND']
-        for s in r['grid']:
-            # All region pieces use the die's global phase, including net parity.
-            axis=1 if s['layer']=='M8' else 0
-            offset=(s['offset_um']-rect[axis])%s['pitch_um']
-            t.append(f"add_pdn_stripe -grid {name} -layer {s['layer']} -width {s['width_um']:g} -pitch {s['pitch_um']:g} -offset {offset:g} -spacing {s['pitch_um']/2-s['width_um']:g}")
-        for a,b in zip(r['grid'],r['grid'][1:]):t.append(f"add_pdn_connect -grid {name} -layers {{{a['layer']} {b['layer']}}}")
+    # ONE PDN RULE: exact dbu region boxes, per-row offset + parity from the die lattice (plan_regions / row_spec)
+    for name,rect,(p,g),specs,layers in plan_regions(die):
+        t += [f'set region [odb::dbRegion_create $b {name}]',f'odb::dbBox_create $region '+' '.join(f'[expr {{round({_u(x)}*$dbu)}}]' for x in rect),f'set_voltage_domain -name {name} -region {name} -power {p} -ground {g}',f'define_pdn_grid -name {name} -voltage_domains {{{name}}}']
+        t += [stripe_tcl(name,sp) for sp in specs if sp]
+        for a,b in zip(layers,layers[1:]):t.append(f"add_pdn_connect -grid {name} -layers {{{a} {b}}}")
     if loads:
         t += ['set ot_pg_pin_rects {']
         for q in loads:
