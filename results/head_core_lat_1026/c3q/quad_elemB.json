@@ -1,0 +1,11 @@
+{"type": "ot_s81hd_elemB_cv", "centre": 142.56, "L": 128, "diam": 40,
+ "nodes": {"WS": [64.8, 69.12], "WN": [64.8, 216.0], "ES": [220.32, 69.12], "EN": [220.32, 216.0]},
+ "sinks_c2": {"WS": 2224, "WN": 2947, "ES": 4396, "EN": 3353},
+ "size": {"WS": 18, "WN": 24, "ES": 35, "EN": 27},
+ "ft_ports": [["ft_ck_i", "INPUT", -1.44, 1.44], ["ft_ck_o", "OUTPUT", 1.44, 1.44], ["ft_mesh_o0", "OUTPUT", 1.44, -1.44], ["ft_mesh_o1", "OUTPUT", 1.44, -0.72], ["ft_rst_i", "INPUT", -1.44, -1.44], ["ft_rst_o", "OUTPUT", 0.0, 2.88]],
+ "die_cells": [["DI_node", "BUFx24_ASAP7_75t_R", -2.0, 0.81, {"A": "ft_ck_i", "Y": "ft_ck_o"}],
+               ["DI_m0", "BUFx24_ASAP7_75t_R", -2.0, 0.54, {"A": "ft_ck_o", "Y": "ft_mesh_o0"}],
+               ["DI_m1", "BUFx24_ASAP7_75t_R", -2.0, 1.08, {"A": "ft_ck_o", "Y": "ft_mesh_o1"}],
+               ["DI_rr", "DFFHQNx2_ASAP7_75t_R", 2.0, -1.08, {"CLK": "ft_ck_o", "D": "ft_rst_i", "QN": "di_rq"}],
+               ["DI_rb", "BUFx12f_ASAP7_75t_R", 2.0, -1.35, {"A": "di_rq", "Y": "ft_rst_o"}]],
+ "prediction_12_9d": {"stages": "CT_c + CT_w/e + CT_q + ~5.5 TritonCTS levels (128 equal-count clusters, c2 fit levels~log2(N)-1.7) + leaf = ~9.5 BUFx24 @ ~25 ps TT", "trunk_wire_ps": 12, "pinreg_TT_ps": 250, "pinreg_FF_ps": 200, "per_quadrant": "equal leaf count -> same depth all 4 quadrants (+-1 level if TritonCTS splits differently: +-25 ps)"}}
