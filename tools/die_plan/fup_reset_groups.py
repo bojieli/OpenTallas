@@ -147,6 +147,63 @@ def plot(report, rows, path):
     fig.savefig(path, bbox_inches='tight')
 
 
+def load_fe_reset_overlay(path):
+    """I/O boundary: read the committed compose overlay and its exact site reports."""
+    path = Path(path).resolve()
+    overlay = json.loads(path.read_text())
+    # Paths in compose_overlay.json are repository relative, never machine paths.
+    root = path.parents[2]
+    overlay["site_reports"] = {name: json.loads((root / rel).read_text())
+                               for name, rel in overlay["per_type"].items()}
+    return overlay
+
+
+def apply_fe_reset_overlay(raw, asbuilt, *, enabled=False, overlay=None):
+    """Pure, default-OFF dictionary transform. Pass parsed load_fe_reset_overlay data.
+
+    Returns independent raw/asbuilt copies plus a short change record. The
+    caller owns writing files and applying this inside the single QC event.
+    """
+    from copy import deepcopy
+    raw, asbuilt = deepcopy(raw), deepcopy(asbuilt)
+    record = dict(enabled=bool(enabled), changed_types=[], holds=[], added_data_cycles=0, added_reset_cycles=0)
+    if not enabled:
+        return raw, asbuilt, record
+    if overlay is None or "site_reports" not in overlay:
+        raise ValueError("enabled FE reset overlay needs parsed compose_overlay.json + site_reports")
+    substitutions = asbuilt.setdefault("substitute_inst", [])
+    for sub in overlay["asbuilt_substitute_inst_append"]:
+        same = [x for x in substitutions if x["inst"] == sub["inst"]]
+        if same and any(x["module"] != sub["module"] for x in same):
+            raise ValueError("FE reset substitution conflicts with existing as-built variant")
+        if not same:
+            substitutions.append(deepcopy(sub))
+    for name, sites in overlay["site_reports"].items():
+        if name not in raw["partition_types"]:
+            raise ValueError("FE reset candidate type absent: " + name)
+        t = raw["partition_types"][name]
+        reset = t.setdefault("reset", {})
+        stages = reset.setdefault("physical_stages", [])
+        by_selector = {x["selector"]: deepcopy(x) for x in stages}
+        for selector, x, y in sites["anchors"]:
+            if not (0 <= x <= t["outline_um"][0] and 0 <= y <= t["outline_um"][1]):
+                raise ValueError("FE reset site outside type " + name)
+            by_selector[selector] = dict(selector=selector, xy_um=[x, y])
+        reset["physical_stages"] = list(by_selector.values())
+        modules = reset.setdefault("keep_modules", [])
+        for module in sites["synth_keep_modules_append"]:
+            if module not in modules:
+                modules.append(module)
+        sinks = t.setdefault("clock", {}).setdefault("sink_sites_um", [])
+        for row in sites["clock_sink_sites_um_append"]:
+            if row not in sinks:
+                sinks.append(deepcopy(row))
+        record["changed_types"].append(name)
+    record["holds"] = sorted(overlay.get("hold", {}))
+    record["unchanged"] = deepcopy(overlay.get("unchanged", {}))
+    return raw, asbuilt, record
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--conn', required=True); p.add_argument('--type', required=True)
