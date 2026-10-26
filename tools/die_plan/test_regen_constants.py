@@ -273,3 +273,41 @@ def test_kv_regen_hook_qk_floor_and_kvn_a0():
     assert r["params"]["ectl_WS_0"] == dict(RESPONSE_LAT=12, QK_ISSUE_AGE=34)
     assert r["params"]["seq__u_core"] == dict(KVN_A0=28)
     assert m.regen(_hook_ctx(kvn_landed=30, rx_landed=30, krq=20, krs=10))["params"]["ectl_WS_0"]["QK_ISSUE_AGE"] == 49
+
+
+def test_composed_ahub_uses_endpoint_ports(tmp_path):
+    """Physical ASTK source names change after composition; the AHUB pin identity stays exact."""
+    d = tmp_path / 'composed'
+    d.mkdir()
+    groups = []
+    for k, (st, old, new) in enumerate(zip(('WS', 'WN', 'ES', 'EN'), (19, 19, 22, 20), (16, 16, 14, 14))):
+        groups.append(dict(sink='ahub', src_part='outer', sink_part='hub_C', members=[dict(
+            source=f'native_composite_hub_outer_astk_{st}.u_strip_u_strip_u_ctl__ap', sink_port=f'ap{k}',
+            asbuilt_stages=old, bound_stages=new, landed_stages=new, lane=f'L{k}', sink_bits=[[0, 0]])]))
+    (d / 'bus_groups.json').write_text(json.dumps(dict(landing=groups)))
+    (d / 'param_regen.json').write_text(json.dumps(dict(changed=[dict(inst='ahub', param='AP_OFS',
+        asbuilt="64'hffddffdeffdcffdc", bound="64'hffd7ffd6ffd9ffd9")], record={})))
+    (d / 'rtl').mkdir()
+    (d / 'rtl' / 'hub.sv').write_text('module h; qkd_ahub_static_dw #(.FR_OFS(-7)) u_ahub (); endmodule')
+    b = RC.Bound(d)
+    o = RC.Out('qwen_kvsys', b)
+    RC.kv_ahub(o)
+    assert o.c['AP_OFS']['value'] == [-39, -39, -42, -41]
+    assert o.c['FR_OFS']['value'] == -7
+    # A real extra stage on one AP port changes exactly that stack's required offset.
+    groups[2]['members'][0]['landed_stages'] += 1
+    (d / 'bus_groups.json').write_text(json.dumps(dict(landing=groups)))
+    o = RC.Out('qwen_kvsys', RC.Bound(d))
+    RC.kv_ahub(o)
+    assert o.c['AP_OFS']['value'] == [-39, -39, -41, -41]
+
+
+def test_unchanged_param_still_read_with_unrelated_hook_changes(tmp_path):
+    d = tmp_path / 'bound'
+    d.mkdir()
+    (d / 'bus_groups.json').write_text(json.dumps(dict(landing=[])))
+    (d / 'param_regen.json').write_text(json.dumps(dict(changed=[dict(inst='ectl', param='RESPONSE_LAT', asbuilt='80', bound=12)])))
+    (d / 'rtl').mkdir()
+    (d / 'rtl' / 'pv.sv').write_text('module h; ot_qwen_tp8_pv_wide_ctl_tbf #(.TRUNK_D(54), .FLAG_D(58)) u_pvS_u_ctl (); endmodule')
+    b = RC.Bound(d)
+    assert b.asbuilt_param(r'pvw_\d__u_ctl$', 'TRUNK_D', module=r'ot_qwen_tp8_pv_wide_ctl_tbf') == '54'
