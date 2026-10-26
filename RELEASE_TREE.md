@@ -13,7 +13,7 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
   - [ ] S81.FT FT window/station re-lay to a legal chain on every seam · PATH-S81 · RUNNING · a8 G0C PASS but GRT FAIL; coupons t53/t29 PASS, t24/t44 FAIL 26571/47247
   - [ ] S81.SST Knee bit-sites + tap_mode for t31/t43/t44/t49/t52 (one plan delta) · PATH-S81 · TODO · GEOM-8 STRUCTURAL FAIL → S81.FT
   - [ ] S81.PRICE Price FT stations (a8: 21 lanes +1..+8, 16,400 bit-cyc) · TOK-DS · WAITS · → S81.FT
-- [ ] S81.CLK Die clock route + related-pair CPPR <=80 · CLOCK · NOT RUN · → S81.GRT, → SEAM.CLK
+- [ ] S81.CLK Die clock route + related-pair CPPR <=80 · CLOCK · NOT RUN · die GRT FAILs; same die_trial tree FAILs on HEAD/KV, so expect mesh → S81.GRT, → SEAM.CLK
 - [ ] S81.BIND Strict bind, 0 ties, on current main · TOK-DS · TODO · fresh bind on main877 not launched; PHY reset hop 788 um fix 0adb2ea659 unmerged → INFRA.MERGE
   - [ ] S81.TIES Svc dead-input proofs, relay pads, cfifo strap, no-repair SRAM view · TOK-DS · RUNNING · COORD 21:21 rulings; ABI fix 162f0033d
 - [ ] S81.STA Die STA TT/FF on real views · DIE-PROTO · WAITS · → S81.GRT, → S81.CLK, → S81.TILES
@@ -23,7 +23,7 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
 ## DIE s81_head · S81 head die · rev FROZEN d7b8d1eb · est. after HEAD8 batch
 - [ ] HEAD.GRT Die GRT0 · DIE-PROTO · FROZEN · ovf 0 on d7b8d1eb; re-run needed if the HEAD8 batch is adopted → HEAD.B8
 - [ ] HEAD.B8 HEAD8 clock-tap + global START batch · CODEX / COORD · RUNNING · 187b63494b G0C+visual running; +8 slot cycles; needs ROOT approval
-- [ ] HEAD.CLK Die clock route + related-pair CPPR <=80 · CLOCK · NOT RUN · → HEAD.B8
+- [ ] HEAD.CLK Die clock route + related-pair CPPR <=80 · CLOCK-MESH · FAIL · routes ovf 0, but pair 268/254 ps TT/FF (seams 246/230), 588 taps >320 slew; freeze was signal-GRT only → HEAD.B8
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX · WAITS · source d0eb3d3d01 ready; host/mesh/rank-row contract open (owner question in WAITS)
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
   - [ ] HEAD.TILES Head tile sign-offs · S81-HEAD · RUNNING · 16 hd_* WAIT-GEOM FAIL rows need successor/withdraw → FLOW.TAG
@@ -41,7 +41,7 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
 ## DIE qwen_kvsys · Qwen KV · rev main 36164be0 (e055) · est. after it5
 - [ ] KV.GRT Die GRT0 it5, strict core OBS + die clock (ruling a) · DIE-PROTO · RUNNING · 816,190 at 25% share; it5 on canonical plan not run yet → KV.SHARE
   - [ ] KV.SHARE Kits hg/hgi/io_W* reserve 0.5 M2-M7 FT in die-model tracks · DIE-PROTO · TODO · if it5 != 0, fallback (b) io_W3 row-0 seam (owner question in WAITS)
-- [ ] KV.CLK Die clock route + related-pair CPPR · CLOCK · NOT RUN · → KV.GRT
+- [ ] KV.CLK Die clock route + related-pair CPPR <=80 · CLOCK-MESH · FAIL · it5b routes ovf 0, pair 446/391 ps TT/FF (seams 418/364); tap-driver tree same 446/391 → KV.GRT
 - [ ] KV.BIND Strict repo-relative bind of record · PATH-KV · RUNNING · b15 intel1; b21 pad_por_n ERROR; seam bus skew
   - [ ] KV.PC833 PC833 LEC · PATH-KV · FAIL · NOT EQUIVALENT 528 pts each; calendar lowering being isolated
 - [ ] KV.STA Die STA on real views · DIE-PROTO · WAITS · → KV.CLK, → KV.TILES
