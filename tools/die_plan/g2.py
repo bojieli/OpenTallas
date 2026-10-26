@@ -300,6 +300,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
     core_boxes = [(c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
                    c["origin_um"][1] + c["outline_um"][1]) for c in probe_blockages(t, P.type_top_layer(tn))]
     ports, cells, nets, place = [], [], [], []
+    reset_pair_specs = []
     explicit_anchors = {}
 
     def inset(x, y, f):
@@ -332,14 +333,24 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
             cells.append(f"  {FLOP} {c} (.D({prev}), .QN({q}));")
             nets.append(q)
             place.append((c, *tree["root"]))
+            if tree.get("relay_driver"):
+                reset_pair_specs.append((c, "", *tree["root"]))
             prev = q
         rename = {"rst_root_n": prev}
         for rl in tree["relays"]:
             c, q = "pr_reset_" + rl["name"], "pr_reset_" + rl["q"]
             src = rename.get(rl["d"], "pr_reset_" + rl["d"])
-            cells.append(f"  {FLOP} {c} (.D({src}), .QN({q}));")
+            driven = RT.relay_cell(tree, rl) == "ot_dp_rrelay_drive"
+            rawq = q + "_raw" if driven else q
+            cells.append(f"  {FLOP} {c} (.D({src}), .QN({rawq}));")
+            if driven:
+                cells.append(f"  (* keep, dont_touch *) BUFx4f_ASAP7_75t_R {c}_drive (.A({rawq}), .Y({q}));")
+                nets.append(rawq)
+                place.append((c + "_drive", rl["xy"][0] + 1.0, rl["xy"][1]))
             nets.append(q)
             place.append((c, *rl["xy"]))
+            if tree.get("relay_driver"):
+                reset_pair_specs.append((c, c + "_drive" if driven else "", *rl["xy"]))
         souts = [o for o in reset_outs if o[0].startswith("start_o_")]
         routs = [o for o in reset_outs if not o[0].startswith("start_o_")]
         for j, (nm, _, _) in enumerate(routs):
@@ -351,14 +362,24 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
                 cells.append(f"  {FLOP} {c} (.D({prev}), .QN({q}));")
                 nets.append(q)
                 place.append((c, *tree["start_in"]))
+                if tree.get("relay_driver"):
+                    reset_pair_specs.append((c, "", *tree["start_in"]))
                 prev = q
             rename = {"rst_root_n": prev}
             for rl in tree["relays"]:
                 c, q = "pr_run_" + rl["name"], "pr_run_" + rl["q"]
                 src = rename.get(rl["d"], "pr_run_" + rl["d"])
-                cells.append(f"  {FLOP} {c} (.D({src}), .QN({q}));")
+                driven = RT.relay_cell(tree, rl) == "ot_dp_rrelay_drive"
+                rawq = q + "_raw" if driven else q
+                cells.append(f"  {FLOP} {c} (.D({src}), .QN({rawq}));")
+                if driven:
+                    cells.append(f"  (* keep, dont_touch *) BUFx4f_ASAP7_75t_R {c}_drive (.A({rawq}), .Y({q}));")
+                    nets.append(rawq)
+                    place.append((c + "_drive", rl["xy"][0] + 1.0, rl["xy"][1]))
                 nets.append(q)
                 place.append((c, *rl["xy"]))
+                if tree.get("relay_driver"):
+                    reset_pair_specs.append((c, c + "_drive" if driven else "", *rl["xy"]))
             for j, (nm, _, _) in enumerate(souts):
                 cells.append(f"  assign {nm} = pr_run_rst_n_t{tree['n_clock_taps'] + j};")
     # functional buses: one boundary flop per pin bit beside its pin
@@ -441,8 +462,18 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
         # Canonical packed per-bit sites are immutable; centroid clouds remain movable.
         status = "FIRM" if c in explicit_anchors else "PLACED"
         tcl.append(f"place_inst -name {c} -location {{{x:.3f} {y:.3f}}} -status {status}")
+    if reset_pair_specs:
+        import shutil
+        shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), out / "reset_pair_place.tcl")
+        specs = " ".join("{" + f"{{{f}}} {{{d}}} {x:.6f} {y:.6f}" + "}" for f, d, x, y in reset_pair_specs)
+        boxes = " ".join("{" + " ".join(f"{x:.6f}" for x in b) + "}" for b in RT.blockages(t))
+        tcl += ["source /work/reset_pair_place.tcl",
+                f"ot_reset_pair_place [ord::get_db_block] {{{specs}}} {{{boxes}}} 8"]
     tcl += ["detailed_placement -max_displacement {400 400}",
             "check_placement -verbose"]
+    if reset_pair_specs:
+        tcl += ["ot_reset_pair_check [ord::get_db_block]",
+                "ot_reset_pair_verify_hops [ord::get_db_block] 405"]
     tcl.append(grt_tail(f"M2-{top}", [(L, adjust) for L in lrange("M2", top)]))
     # Keep centroid clouds movable for legalization. Never present the planned
     # targets as a physical proof: dump final actual bounding boxes and gate
@@ -460,6 +491,8 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
     os.chmod(out / "run.sh", 0o755)
     meta = dict(kind="g2-partition", die=P.name, type=tn, instance=inst, outline_um=[w, h], pins=len(pins),
                 flops=len(place), leaf_blockages=nobs, adjust=adjust, route_layers=f"M2-{top}")
+    if reset_pair_specs:
+        meta["reset_pair_specs"] = reset_pair_specs
     (out / "probe.json").write_text(json.dumps(meta, indent=1) + "\n")
     (out / "station_sites.json").write_text(json.dumps(explicit_anchors, indent=1) + "\n")
     return out

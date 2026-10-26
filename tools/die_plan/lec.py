@@ -51,6 +51,7 @@ import argparse
 import collections
 import gzip
 import json
+import hashlib
 import os
 import re
 import shlex
@@ -2947,7 +2948,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         rec["cycle_dropped"] = dict(n=len(lc.cycle_dropped),
                                     first=[f"{sd}:{k} {list(h)}" for (sd, k), h in lc.cycle_dropped[:40]])
     rec["t_total_s"] = round(time.time() - t0, 1)
-    rec["provenance"] = _provenance()
+    rec["provenance"] = _provenance(kit)
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
     (out / "lec.log").write_text("\n".join(log))
     return rec
@@ -2990,14 +2991,69 @@ def via_docker(args, image, mem):
     return subprocess.run(cmd + [sh]).returncode
 
 
-def _provenance():
-    """closure order rule 3 (OWNER 10-25): the LEC verdict names the tool commit (manifest_paths.provenance)."""
+def _repo_provenance(repo=None):
+    """Existing repository provider; standalone kits may not ship its module."""
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import manifest_paths
-        return manifest_paths.provenance()
-    except Exception as e:  # noqa: BLE001 -- a missing commit fails the evidence gate, never the proof
+        return manifest_paths.provenance(repo) if repo is not None else manifest_paths.provenance()
+    except Exception as e:
         return dict(commit=None, dirty=None, source=f"error: {type(e).__name__}")
+
+
+def _kit_input_identity(kit):
+    kit = Path(kit).resolve()
+    required = ["config.mk", "freeze.json", "lec.py"]
+    paths = [kit / name for name in required]
+    paths += [kit / name for name in ("core.json", "pins.json", "straps.json") if (kit / name).is_file()]
+    rtl = sorted(p for p in (kit / "rtl").rglob("*") if p.is_file())
+    if not rtl:
+        raise ValueError("kit has no staged RTL inputs")
+    paths += rtl
+    result = {}
+    for p in paths:
+        p.resolve().relative_to(kit)  # no source outside the staged kit
+        result[p.relative_to(kit).as_posix()] = hashlib.sha256(p.read_bytes()).hexdigest()
+    return result
+
+
+def write_kit_provenance(kit, repo, provenance=None):
+    """Generator-time receipt for the exact staged inputs and copied LEC tool."""
+    kit = Path(kit)
+    p = provenance if provenance is not None else _repo_provenance(repo)
+    if not re.fullmatch(r"[0-9a-f]{40}", p.get("commit") or "") or p.get("dirty") is not False:
+        raise ValueError("kit provenance needs a clean, committed source checkout")
+    freeze = json.loads((kit / "freeze.json").read_text())
+    if freeze.get("source_commit") != p["commit"]:
+        raise ValueError("freeze/source commit mismatch")
+    rec = dict(schema="opentallas.kit_provenance.v1", provenance=p,
+               kit_hash=freeze.get("kit_hash"), files=_kit_input_identity(kit))
+    (kit / "PROVENANCE.json").write_text(json.dumps(rec, indent=1) + "\n")
+    return rec
+
+
+def _provenance(kit=None):
+    """Keep repository behavior; validate a generator receipt only as fallback."""
+    p = _repo_provenance()
+    if re.fullmatch(r"[0-9a-f]{7,40}", p.get("commit") or "") or kit is None:
+        return p
+    try:
+        kit = Path(kit)
+        rec = json.loads((kit / "PROVENANCE.json").read_text())
+        source = rec["provenance"]
+        freeze = json.loads((kit / "freeze.json").read_text())
+        valid = (rec.get("schema") == "opentallas.kit_provenance.v1"
+                 and re.fullmatch(r"[0-9a-f]{40}", source.get("commit") or "")
+                 and source.get("dirty") is False
+                 and freeze.get("source_commit") == source["commit"]
+                 and rec.get("kit_hash") == freeze.get("kit_hash")
+                 and rec.get("files") == _kit_input_identity(kit)
+                 and rec["files"]["lec.py"] == hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+        if not valid:
+            raise ValueError("source, input or running-tool identity mismatch")
+        return dict(source, source="validated kit PROVENANCE.json")
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
+        return dict(commit=None, dirty=None, source=f"kit provenance invalid: {type(e).__name__}: {e}")
 
 
 def main(argv=None):
