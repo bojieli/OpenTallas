@@ -1783,7 +1783,11 @@ def cmd_combo(a):
         # on are written as special wires of the shield net (the kit models the die grid only as obstructions).
         import die_infra as DI
         Pp = S.Plan(S.load(getattr(a, "plan", None) or M["meta"]["plan"]))
-        pgr = DI.pg_rects(Pp, C128.pg_grid(Pp))
+        # the build's actual IR-sized PG file (--pg-json, the same rects the mesh axes avoided) when it had one, else
+        # the plan's die.pg grid (CLOCK-128-R2: the ties must land on the grid the die is really built with)
+        pg_src = M["meta"].get("pg_source")
+        grid_ = json.loads(Path(pg_src).read_text())["grid"] if pg_src else C128.pg_grid(Pp)
+        pgr = DI.pg_rects(Pp, grid_)
         stripes = C128.shield_stripes(shield_segs_all, nd)
         ties = C128.shield_ties(stripes, pgr, nd["width"], net=shield_net)
         L += [f"set tn [$blk findNet {shield_net}]",
@@ -1795,6 +1799,7 @@ def cmd_combo(a):
         cs.update(C128.tie_record(ties))
         cs["freeze_evidence_ok"] = bool(cs["vss_tied"] and cs.get("complete"))
         cs["tie_grid_stripes"] = len(ties["used_grid"])
+        cs["tie_pg_source"] = pg_src or "plan die.pg.grid"
         M["meta"]["clock_shield"] = cs
         (d / "shield_ties.json").write_text(json.dumps(dict(
             record=C128.tie_record(ties), untied=[stripes[k] for k in ties["untied"][:200]],
