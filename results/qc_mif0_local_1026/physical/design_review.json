@@ -1,0 +1,38 @@
+{
+  "status": "GEOMETRY_DESIGN_CHECK_ONLY",
+  "viewed": "proposed_read_bindings.png",
+  "source": "codex/qc-mif0-local-1026@3b790d818",
+  "actual_sources": {
+    "prog": "intel1:/srv/opentallas-scratch2/claude/path-qc-sramif4/prog_fh16_s40",
+    "btab": "intel2:/srv/opentallas-scratch2/claude/path-qc-sramif4/btab_fh_s40",
+    "checkpoint": "run/results/asap7/<type>/base/5_1_grt_fullhalf_codex.odb",
+    "pin_ff_macro_coordinates": "existing fullhalf_place.csv",
+    "macro_pin_refresh": "read-only OpenDB dumpif_in.py on actual fullhalf GRT checkpoint, both ot-run exit0"
+  },
+  "proposed_anchors": "Four x columns on East face; 0.27um rows, raw addresses per-bit, RCE near all raw decode input pins. Falling bindings reuse actual inherited falling FF sites. No candidate netlist, legalizer or congestion result.",
+  "fanout": {
+    "prog_address_bit_1_to_8": 4,
+    "prog_enable": 4,
+    "prog_bank_bit_0": "4 RCE logic cohorts plus original functional bank FF=5",
+    "btab_address_bit_2_to_8": 4,
+    "btab_enable": "4 RCE cohorts plus original functional fault pp_re FF=5",
+    "btab_bank_bit_0_to_1": "4 RCE cohorts plus original functional bank FF=5"
+  },
+  "timing": {
+    "period_ps": 833,
+    "halfcycle_ps": 416.5,
+    "TT_setup_margin_ps": 60,
+    "FF_hold_margin_ps": 25,
+    "related_pair_limit_ps": 80,
+    "setup_equation": "Tcq + routed data RC + receiver setup <= 416.5 + capture_clock - launch_clock - 60",
+    "hold_equation": "Actual falling/rising waveform and FF data/clock early/late STA must satisfy 25ps; external sender40 unchanged",
+    "status": "NOT RUN; cannot infer GRT RC or STA from Manhattan distance"
+  },
+  "limits": [
+    "Read-only structural design proposal; no P&R run or adoption",
+    "Rising RCE decode logic before face FF still needs actual FF-retention, all-firstFF identity and input40 STA",
+    "All 68 proposed firstFF FACE and falling macroF6 distances <=20um; all interstage lengths <=405um",
+    "Data/write and clock/reset unchanged structural source but need all-path native census after generated source selection",
+    "No GRT/DRT launch before review/canary/generation gates"
+  ]
+}
