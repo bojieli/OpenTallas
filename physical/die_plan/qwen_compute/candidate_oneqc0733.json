@@ -6881,7 +6881,8 @@
      "capture": "face flop",
      "note": "R3-INTERNAL: 1269 um window<->pin route, 3 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 782764
   },
   "cbf_q01": {
    "module": "qfd_qc_cb_f_q01",
@@ -28060,7 +28061,8 @@
      "capture": "u_t12.n_b",
      "note": "R3-INTERNAL: 1736 um window<->pin route, 4 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 782764
   },
   "cbx_q10": {
    "module": "qfd_qc_cb_x_q10",
@@ -40148,7 +40150,8 @@
      "capture": "face flop",
      "note": "R3-INTERNAL: 412 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 782764
   },
   "cbf_q11": {
    "module": "qfd_qc_cb_f_q11",
@@ -48285,7 +48288,8 @@
      "capture": "u_t22.n_b",
      "note": "R3-INTERNAL: 1156 um window<->pin route, 2 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 782764
   },
   "cbn_q00": {
    "module": "qfd_qc_cb_n_q00",
@@ -73803,7 +73807,8 @@
      "capture": "face flop",
      "note": "R3-INTERNAL: 1187 um window<->pin route, 2 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 782764
   },
   "cbn_q01": {
    "module": "qfd_qc_cb_n_q01",
@@ -112225,7 +112230,8 @@
      "capture": "u_t12.n_b",
      "note": "R3-INTERNAL: 1736 um window<->pin route, 4 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 782764
   },
   "cbn_q11": {
    "module": "qfd_qc_cb_n_q11",
@@ -120797,7 +120803,8 @@
      "capture": "u_t22.n_b",
      "note": "R3-INTERNAL: 1156 um window<->pin route, 2 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 782764
   },
   "slw_fw_v3": {
    "module": "qfd_qc_slw_fw",
@@ -122265,7 +122272,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 61221
   },
   "slw_stm_v3": {
    "module": "qfd_qc_slw_stm",
@@ -122941,7 +122949,8 @@
      673.92
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 270598
   },
   "slw_sc_v3": {
    "module": "qfd_qc_slw_sc",
@@ -123550,7 +123559,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 40000
   },
   "slw_st_b_v2": {
    "module": "qfd_qc_slw_st_b",
@@ -124527,7 +124537,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 131126
   },
   "slw_st_a_v2": {
    "module": "qfd_qc_slw_st_a",
@@ -125576,7 +125587,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 141126
   },
   "slw_fw_v2": {
    "module": "qfd_qc_slw_fw",
@@ -126633,7 +126645,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 60000
   },
   "slw_stm_v2": {
    "module": "qfd_qc_slw_stm",
@@ -127486,7 +127499,8 @@
      673.92
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 270598
   },
   "slw_sc_v2": {
    "module": "qfd_qc_slw_sc",
@@ -128238,7 +128252,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 40000
   },
   "slw_hc0": {
    "module": "qfd_qc_slw_hc0",
@@ -129181,7 +129196,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 205356
   },
   "slw_hc1": {
    "module": "qfd_qc_slw_hc1",
@@ -130207,7 +130223,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 205356
   },
   "slw_hc2": {
    "module": "qfd_qc_slw_hc2",
@@ -131177,7 +131194,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 205356
   },
   "slw_hc3": {
    "module": "qfd_qc_slw_hc3",
@@ -132122,7 +132140,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 205356
   },
   "slw_st_b_v1": {
    "module": "qfd_qc_slw_st_b",
@@ -133110,7 +133129,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 131126
   },
   "slw_st_a_v1": {
    "module": "qfd_qc_slw_st_a",
@@ -134146,7 +134166,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 141126
   },
   "slw_sc_v1": {
    "module": "qfd_qc_slw_sc",
@@ -134901,7 +134922,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 40000
   },
   "sle_hc0": {
    "module": "qfd_qc_sle_hc0",
@@ -135484,7 +135506,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 15000
   },
   "sle_hc1": {
    "module": "qfd_qc_sle_hc1",
@@ -136156,7 +136179,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 15000
   },
   "sle_hc2": {
    "module": "qfd_qc_sle_hc2",
@@ -136754,7 +136778,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 15000
   },
   "sle_st_b_v1": {
    "module": "qfd_qc_sle_st_b",
@@ -137748,7 +137773,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 115514
   },
   "sle_ctl": {
    "module": "qfd_qc_sle_ctl",
@@ -139707,7 +139733,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 253360
   },
   "sle_st_a_v1": {
    "module": "qfd_qc_sle_st_a",
@@ -140809,7 +140836,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 125514
   },
   "sle_stm_v1": {
    "module": "qfd_qc_sle_stm",
@@ -141845,7 +141873,8 @@
      673.92
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 270598
   },
   "sle_sc_v1": {
    "module": "qfd_qc_sle_sc",
@@ -142768,7 +142797,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 40000
   },
   "sle_st_b_v2": {
    "module": "qfd_qc_sle_st_b",
@@ -143745,7 +143775,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 115514
   },
   "sle_st_a_v2": {
    "module": "qfd_qc_sle_st_a",
@@ -144830,7 +144861,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 125514
   },
   "sle_stm_v2": {
    "module": "qfd_qc_sle_stm",
@@ -145731,7 +145763,8 @@
      673.92
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 270598
   },
   "sle_sc_v2": {
    "module": "qfd_qc_sle_sc",
@@ -146483,7 +146516,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 40000
   },
   "sle_fe_v2": {
    "module": "qfd_qc_sle_fe",
@@ -148050,7 +148084,8 @@
      "core_glob": "u_core",
      "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_wo, max L 1057 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 50000
   },
   "sle_fw_v3": {
    "module": "qfd_qc_sle_fw",
@@ -148920,7 +148955,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 60000
   },
   "sle_stm_v3": {
    "module": "qfd_qc_sle_stm",
@@ -149565,7 +149601,8 @@
      673.92
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 270598
   },
   "sle_sc_v3": {
    "module": "qfd_qc_sle_sc",
@@ -150127,7 +150164,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 40000
   },
   "sle_fe_v3": {
    "module": "qfd_qc_sle_fe",
@@ -150582,7 +150620,8 @@
      "core_glob": "u_core",
      "note": "D-QC-FE-REACH: u_fup forwarder chain x_st_b_i -> l9_eo, max L 1096 um; 3 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 50000
   },
   "phy_serdes_b": {
    "module": "ot_qfd_serdes_112g_x12_phy_s597",
@@ -151055,7 +151094,8 @@
      1157.76
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 0
   },
   "phy_serdes": {
    "module": "ot_qfd_serdes_112g_x12_phy_s597",
@@ -151834,7 +151874,8 @@
      1157.76
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 0
   },
   "coll_s": {
    "module": "qfd_qc_coll_s_part",
@@ -152341,7 +152382,8 @@
      397.44
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 15000
   },
   "coll_ft": {
    "module": "qfd_qc_coll_ft_part",
@@ -152853,7 +152895,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 6000
   },
   "coll_core": {
    "module": "qfd_qc_coll_core_part",
@@ -153749,7 +153792,8 @@
      794.88
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 120000
   },
   "coll_ftm": {
    "module": "qfd_qc_coll_ftm_part",
@@ -154399,7 +154443,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 8000
   },
   "coll_ftc": {
    "module": "qfd_qc_coll_ftc_part",
@@ -155986,7 +156031,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 10013
   },
   "coll_ftn": {
    "module": "qfd_qc_coll_ftn_part",
@@ -156150,7 +156196,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 6000
   },
   "coll_n": {
    "module": "qfd_qc_coll_n_part",
@@ -156605,7 +156652,8 @@
      397.44
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 10000
   },
   "phy_ucie_kv": {
    "module": "ot_qkvd_ucie_x64_phy",
@@ -156799,7 +156847,8 @@
      388.8
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 0
   },
   "coll_ucie": {
    "module": "qfd_qc_coll_ucie_part",
@@ -157138,7 +157187,8 @@
      820.8
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 40000
   },
   "glue": {
    "module": "qfd_qc_glue_part",
@@ -158989,7 +159039,8 @@
     "sync_stages": 2,
     "start_role": "bootstrap"
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 120903
   },
   "native59": {
    "module": "qfd_qc_native59_part",
@@ -160390,7 +160441,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "cells": 60000
   },
   "tt_ctlm": {
    "module": "qfd_qc_tt_ctlm_part",
@@ -161135,7 +161187,8 @@
     ],
     "sync_stages": 2,
     "start_role": "bootstrap"
-   }
+   },
+   "cells": 190000
   },
   "cbf_q01_s2": {
    "module": "qfd_qc_cb_f_q01",
@@ -222541,7 +222594,8 @@
      "capture": "u_t12.n_b",
      "note": "R3-INTERNAL: 1736 um window<->pin route, 4 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 782764
   },
   "cbf_q00_s2": {
    "module": "qfd_qc_cb_f_q00",
@@ -264781,7 +264835,8 @@
      "capture": "face flop",
      "note": "R3-INTERNAL: 1269 um window<->pin route, 3 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 782764
   },
   "slw_sc_v1r": {
    "module": "qfd_qc_slw_sc",
@@ -265905,7 +265960,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 40825
   },
   "sle_fw_v1_e2": {
    "module": "qfd_qc_sle_fw_e2",
@@ -266863,7 +266919,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 60000
   },
   "slw_fe_v2__clacbd6592": {
    "module": "slw_fe_v2__clacbd6592",
@@ -268346,7 +268403,8 @@
      "core_glob": "u_core",
      "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_eo, max L 937 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 50000
   },
   "slw_fe_v2__cle5354d4d": {
    "module": "slw_fe_v2__cle5354d4d",
@@ -270885,7 +270943,8 @@
      "core_glob": "u_core",
      "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_eo, max L 937 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 250265
   },
   "slw_su_l1__clbd68af58": {
    "module": "slw_su_l1__clbd68af58",
@@ -294517,7 +294576,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 463590
   },
   "slw_su_l1__cl766bacee": {
    "module": "slw_su_l1__cl766bacee",
@@ -319193,7 +319253,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 464910
   },
   "slw_su_l1__cl8312485b": {
    "module": "slw_su_l1__cl8312485b",
@@ -343503,7 +343564,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 464910
   },
   "slw_su_c__cl77ab230a": {
    "module": "slw_su_c__cl77ab230a",
@@ -371062,7 +371124,8 @@
      "pins_file": "cores/su/slw_su_c_u_suvm_u_su8_pins.json",
      "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
     }
-   ]
+   ],
+   "cells": 713055
   },
   "slw_su_c__clbb0c543d": {
    "module": "slw_su_c__clbb0c543d",
@@ -398109,7 +398172,8 @@
      "pins_file": "cores/su/slw_su_c_u_suvm_u_su8_pins.json",
      "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
     }
-   ]
+   ],
+   "cells": 713067
   },
   "slw_su_c__cl49a25f5f": {
    "module": "slw_su_c__cl49a25f5f",
@@ -424279,7 +424343,8 @@
      "pins_file": "cores/su/slw_su_c_u_suvm_u_su8_pins.json",
      "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
     }
-   ]
+   ],
+   "cells": 711174
   },
   "slw_su_l0__cl72211ea3": {
    "module": "slw_su_l0__cl72211ea3",
@@ -426276,7 +426341,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 465042
   },
   "slw_su_l0__cl0cf5548e": {
    "module": "slw_su_l0__cl0cf5548e",
@@ -427824,7 +427890,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 466704
   },
   "slw_su_l0__cle4811ba5": {
    "module": "slw_su_l0__cle4811ba5",
@@ -428615,7 +428682,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 463590
   },
   "slw_fw_v1__cl80b8d16f": {
    "module": "slw_fw_v1__cl80b8d16f",
@@ -429681,7 +429749,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 60000
   },
   "slw_fw_v1__cl82aac3aa": {
    "module": "slw_fw_v1__cl82aac3aa",
@@ -432108,7 +432177,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 349437
   },
   "slw_stm_v1__cl522749b8": {
    "module": "slw_stm_v1__cl522749b8",
@@ -433006,7 +433076,8 @@
      673.92
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 270598
   },
   "slw_stm_v1__cla56d6dd9": {
    "module": "slw_stm_v1__cla56d6dd9",
@@ -434147,7 +434218,8 @@
      673.92
     ],
     "sync_stages": 2
-   }
+   },
+   "cells": 271390
   },
   "slw_fe_v1__clcb7b024a": {
    "module": "slw_fe_v1__clcb7b024a",
@@ -435661,7 +435733,8 @@
      "core_glob": "u_core",
      "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_eo, max L 1001 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 50000
   },
   "slw_fe_v1__cl8ba3358f": {
    "module": "slw_fe_v1__cl8ba3358f",
@@ -438530,7 +438603,8 @@
      "core_glob": "u_core",
      "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_eo, max L 1001 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 254174
   },
   "sle_fw_v1__cl3b7cacba": {
    "module": "sle_fw_v1__cl3b7cacba",
@@ -440698,7 +440772,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 303708
   },
   "sle_fw_v1__cl39c71cef": {
    "module": "sle_fw_v1__cl39c71cef",
@@ -441704,7 +441779,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 60000
   },
   "sle_fe_v1__clfcc50df9": {
    "module": "sle_fe_v1__clfcc50df9",
@@ -443214,7 +443290,8 @@
      "core_glob": "u_core",
      "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_wo, max L 920 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 50000
   },
   "sle_fe_v1__clad8c146b": {
    "module": "sle_fe_v1__clad8c146b",
@@ -446039,7 +446116,8 @@
      "core_glob": "u_core",
      "note": "D-QC-FE-REACH: u_fup forwarder chain x_stm_p1_i -> st_wo, max L 920 um; 2 FIRM station(s) per bit on its own L route (+ the u_fup register at its hop point); counted in the lane fixed_cycles"
     }
-   ]
+   ],
+   "cells": 296027
   },
   "sle_su_l1__cl15735621": {
    "module": "sle_su_l1__cl15735621",
@@ -474729,7 +474807,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 435390
   },
   "sle_su_l1__cl9c71a39d": {
    "module": "sle_su_l1__cl9c71a39d",
@@ -503479,7 +503558,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 435093
   },
   "sle_su_l1__cl3c610c2d": {
    "module": "sle_su_l1__cl3c610c2d",
@@ -531521,7 +531601,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 433443
   },
   "sle_su_c__cl78b6fe86": {
    "module": "sle_su_c__cl78b6fe86",
@@ -561825,7 +561906,8 @@
      "pins_file": "cores/su/sle_su_c_u_suvm_u_su8_pins.json",
      "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
     }
-   ]
+   ],
+   "cells": 712857
   },
   "sle_su_c__cl99d49f55": {
    "module": "sle_su_c__cl99d49f55",
@@ -591931,7 +592013,8 @@
      "pins_file": "cores/su/sle_su_c_u_suvm_u_su8_pins.json",
      "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
     }
-   ]
+   ],
+   "cells": 712857
   },
   "sle_su_c__cl3c67a3d5": {
    "module": "sle_su_c__cl3c67a3d5",
@@ -621692,7 +621775,8 @@
      "pins_file": "cores/su/sle_su_c_u_suvm_u_su8_pins.json",
      "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
     }
-   ]
+   ],
+   "cells": 711174
   },
   "sle_su_l0__clad02be3b": {
    "module": "sle_su_l0__clad02be3b",
@@ -631670,7 +631754,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 434730
   },
   "sle_su_l0__cld14716fc": {
    "module": "sle_su_l0__cld14716fc",
@@ -641072,7 +641157,8 @@
       ]
      }
     }
-   ]
+   ],
+   "cells": 433443
   },
   "sle_fw_v2__cl2b5fc15e": {
    "module": "sle_fw_v2__cl2b5fc15e",
@@ -642042,7 +642128,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 60000
   },
   "sle_fw_v2__clf90441df": {
    "module": "sle_fw_v2__clf90441df",
@@ -644192,7 +644279,8 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5
+   "ft_track_frac": 0.5,
+   "cells": 303708
   }
  },
  "partitions": [

@@ -1,0 +1,451 @@
+{
+ "schema": "opentallas.die_plan.g0.v1",
+ "plan": "/home/ubuntu/wt/codex-qc-oneevent-0733/physical/die_plan/qwen_compute/candidate_oneqc0733.json",
+ "verdict": "FAIL",
+ "mode": "G0C",
+ "errors": 88,
+ "warnings": 0,
+ "summary": {},
+ "findings": [
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.cbf_q00: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.cbf_q01: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.cbx_q10: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.cbf_q11: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.cbn_q00: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.cbn_q01: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.cbn_q11: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_fw_v3: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_stm_v3: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_sc_v3: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_st_b_v2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_st_a_v2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_fw_v2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_stm_v2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_sc_v2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_hc0: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_hc1: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_hc2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_hc3: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_st_b_v1: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_st_a_v1: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_sc_v1: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_hc0: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_hc1: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_hc2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_st_b_v1: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_ctl: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_st_a_v1: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_stm_v1: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_sc_v1: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_st_b_v2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_st_a_v2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_stm_v2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_sc_v2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_fe_v2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_fw_v3: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_stm_v3: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_sc_v3: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_fe_v3: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.phy_serdes_b: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.phy_serdes: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.coll_s: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.coll_ft: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.coll_core: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.coll_ftm: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.coll_ftc: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.coll_ftn: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.coll_n: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.phy_ucie_kv: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.coll_ucie: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.glue: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.native59: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.tt_ctlm: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.cbf_q01_s2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.cbf_q00_s2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_sc_v1r: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_fw_v1_e2: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_fe_v2__clacbd6592: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_fe_v2__cle5354d4d: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_su_l1__clbd68af58: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_su_l1__cl766bacee: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_su_l1__cl8312485b: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_su_c__cl77ab230a: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_su_c__clbb0c543d: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_su_c__cl49a25f5f: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_su_l0__cl72211ea3: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_su_l0__cl0cf5548e: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_su_l0__cle4811ba5: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_fw_v1__cl80b8d16f: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_fw_v1__cl82aac3aa: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_stm_v1__cl522749b8: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_stm_v1__cla56d6dd9: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_fe_v1__clcb7b024a: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.slw_fe_v1__cl8ba3358f: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_fw_v1__cl3b7cacba: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_fw_v1__cl39c71cef: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_fe_v1__clfcc50df9: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_fe_v1__clad8c146b: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_su_l1__cl15735621: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_su_l1__cl9c71a39d: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_su_l1__cl3c610c2d: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_su_c__cl78b6fe86: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_su_c__cl99d49f55: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_su_c__cl3c67a3d5: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_su_l0__clad02be3b: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_su_l0__cld14716fc: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_fw_v2__cl2b5fc15e: unknown key 'cells_basis'"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.partition_types.sle_fw_v2__clf90441df: unknown key 'cells_basis'"
+  }
+ ]
+}

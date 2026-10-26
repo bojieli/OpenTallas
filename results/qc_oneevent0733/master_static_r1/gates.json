@@ -1,0 +1,5038 @@
+{
+ "die": "qwen_compute",
+ "verdict": "FAIL",
+ "plan_sha256": "25f8e1915e3cc3ab5fdad0cc5068a5163cf12c79a815de10314df012193920da",
+ "master_plan_sha256": "f7fb536d90f32fb1ab737b599288e74d335b64baf341c99091213113c942c2ad",
+ "gates": {
+  "reach_gap": {
+   "verdict": "PASS",
+   "max_gap_um": 404.976,
+   "worst_path": "coll_core__out_rank_rr_wi",
+   "fails": 0,
+   "in_core_bays_proposed": 0,
+   "examples": []
+  },
+  "bay_fill": {
+   "verdict": "FAIL",
+   "bays": 4262,
+   "max_fill": 0.653,
+   "bay_fails": 30,
+   "bay_fail_kinds": {
+    "fill": 30
+   },
+   "partition_fill_fails": 0,
+   "examples": [
+    {
+     "part": "sl_W5_su_l1",
+     "type": "slw_su_l1__clbd68af58",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      1574.64,
+      10765.71,
+      1666.764,
+      10768.95
+     ],
+     "xy_um": [
+      1589.76,
+      10765.44
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.653,
+     "path": "c_W5_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       1574.64,
+       10765.71,
+       1666.764,
+       10768.95
+      ]
+     ],
+     "legal_area_um2": 298.482,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W5_su_l1",
+     "type": "slw_su_l1__clbd68af58",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      1574.64,
+      11118.06,
+      1666.764,
+      11121.57
+     ],
+     "xy_um": [
+      1607.04,
+      11119.68
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W5_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       1574.64,
+       11118.06,
+       1666.764,
+       11121.57
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W5_su_l1",
+     "type": "slw_su_l1__clbd68af58",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      1574.64,
+      11480.94,
+      1666.764,
+      11484.45
+     ],
+     "xy_um": [
+      1615.68,
+      11482.56
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W5_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       1574.64,
+       11480.94,
+       1666.764,
+       11484.45
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W4_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      4045.68,
+      10765.71,
+      4137.804,
+      10768.95
+     ],
+     "xy_um": [
+      4060.8,
+      10765.44
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.653,
+     "path": "c_W4_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       4045.68,
+       10765.71,
+       4137.804,
+       10768.95
+      ]
+     ],
+     "legal_area_um2": 298.482,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W4_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      4045.68,
+      11118.06,
+      4137.804,
+      11121.57
+     ],
+     "xy_um": [
+      4078.08,
+      11119.68
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W4_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       4045.68,
+       11118.06,
+       4137.804,
+       11121.57
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W4_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      4045.68,
+      11480.94,
+      4137.804,
+      11484.45
+     ],
+     "xy_um": [
+      4086.72,
+      11482.56
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W4_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       4045.68,
+       11480.94,
+       4137.804,
+       11484.45
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W3_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      6516.72,
+      10765.71,
+      6608.844,
+      10768.95
+     ],
+     "xy_um": [
+      6531.84,
+      10765.44
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.653,
+     "path": "c_W3_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       6516.72,
+       10765.71,
+       6608.844,
+       10768.95
+      ]
+     ],
+     "legal_area_um2": 298.482,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W3_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      6516.72,
+      11118.06,
+      6608.844,
+      11121.57
+     ],
+     "xy_um": [
+      6549.12,
+      11119.68
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W3_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       6516.72,
+       11118.06,
+       6608.844,
+       11121.57
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W3_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      6516.72,
+      11480.94,
+      6608.844,
+      11484.45
+     ],
+     "xy_um": [
+      6557.76,
+      11482.56
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W3_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       6516.72,
+       11480.94,
+       6608.844,
+       11484.45
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W2_su_l1",
+     "type": "slw_su_l1__cl8312485b",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      8987.76,
+      10765.71,
+      9079.884,
+      10768.95
+     ],
+     "xy_um": [
+      9002.88,
+      10765.44
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.653,
+     "path": "c_W2_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       8987.76,
+       10765.71,
+       9079.884,
+       10768.95
+      ]
+     ],
+     "legal_area_um2": 298.482,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W2_su_l1",
+     "type": "slw_su_l1__cl8312485b",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      8987.76,
+      11118.06,
+      9079.884,
+      11121.57
+     ],
+     "xy_um": [
+      9020.16,
+      11119.68
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W2_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       8987.76,
+       11118.06,
+       9079.884,
+       11121.57
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W2_su_l1",
+     "type": "slw_su_l1__cl8312485b",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      8987.76,
+      11480.94,
+      9079.884,
+      11484.45
+     ],
+     "xy_um": [
+      9028.8,
+      11482.56
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W2_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       8987.76,
+       11480.94,
+       9079.884,
+       11484.45
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W1_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      11458.8,
+      10765.71,
+      11550.924,
+      10768.95
+     ],
+     "xy_um": [
+      11473.92,
+      10765.44
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.653,
+     "path": "c_W1_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       11458.8,
+       10765.71,
+       11550.924,
+       10768.95
+      ]
+     ],
+     "legal_area_um2": 298.482,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W1_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      11458.8,
+      11118.06,
+      11550.924,
+      11121.57
+     ],
+     "xy_um": [
+      11491.2,
+      11119.68
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W1_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       11458.8,
+       11118.06,
+       11550.924,
+       11121.57
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W1_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      11458.8,
+      11480.94,
+      11550.924,
+      11484.45
+     ],
+     "xy_um": [
+      11499.84,
+      11482.56
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W1_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       11458.8,
+       11480.94,
+       11550.924,
+       11484.45
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W0_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      13929.84,
+      10765.71,
+      14021.964,
+      10768.95
+     ],
+     "xy_um": [
+      13944.96,
+      10765.44
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.653,
+     "path": "c_W0_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       13929.84,
+       10765.71,
+       14021.964,
+       10768.95
+      ]
+     ],
+     "legal_area_um2": 298.482,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W0_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      13929.84,
+      11118.06,
+      14021.964,
+      11121.57
+     ],
+     "xy_um": [
+      13962.24,
+      11119.68
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W0_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       13929.84,
+       11118.06,
+       14021.964,
+       11121.57
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_W0_su_l1",
+     "type": "slw_su_l1__cl766bacee",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      13929.84,
+      11480.94,
+      14021.964,
+      11484.45
+     ],
+     "xy_um": [
+      13970.88,
+      11482.56
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_W0_bn_00__rsn",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       13929.84,
+       11480.94,
+       14021.964,
+       11484.45
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_E0_su_l1",
+     "type": "sle_su_l1__cl15735621",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      16446.24,
+      10765.71,
+      16540.524,
+      10768.95
+     ],
+     "xy_um": [
+      16485.12,
+      10765.44
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.638,
+     "path": "c_E0_bn_00__rsn",
+     "horiz": false,
+     "band": 93.216,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       16446.24,
+       10765.71,
+       16540.524,
+       10768.95
+      ]
+     ],
+     "legal_area_um2": 305.48,
+     "explicit_sites": true
+    },
+    {
+     "part": "sl_E0_su_l1",
+     "type": "sle_su_l1__cl15735621",
+     "kind": "station",
+     "bits": 514,
+     "rect_um": [
+      16657.92,
+      10461.42,
+      16750.044,
+      10464.93
+     ],
+     "xy_um": [
+      16623.36,
+      10463.04
+     ],
+     "cell_area_um2": 194.847,
+     "fill": 0.603,
+     "path": "c_E0_bf_00__rsf",
+     "horiz": false,
+     "band": 88.0,
+     "issues": [
+      "fill"
+     ],
+     "regions_um": [
+      [
+       16657.92,
+       10461.42,
+       16750.044,
+       10464.93
+      ]
+     ],
+     "legal_area_um2": 323.355,
+     "explicit_sites": true
+    }
+   ]
+  },
+  "corridor_tracks": {
+   "verdict": "FAIL",
+   "limit": 0.6,
+   "layers": {
+    "M4": {
+     "max_use": 1.166,
+     "gcells_used": 172013,
+     "gcells_over": 8604,
+     "mean_use_where_used": 0.374
+    },
+    "M5": {
+     "max_use": 1.268,
+     "gcells_used": 259600,
+     "gcells_over": 39492,
+     "mean_use_where_used": 0.425
+    },
+    "M6": {
+     "max_use": 0.881,
+     "gcells_used": 229385,
+     "gcells_over": 1169,
+     "mean_use_where_used": 0.457
+    },
+    "M7": {
+     "max_use": 0.997,
+     "gcells_used": 586598,
+     "gcells_over": 2963,
+     "mean_use_where_used": 0.483
+    },
+    "M8": {
+     "max_use": 0.59,
+     "gcells_used": 30722,
+     "gcells_over": 0,
+     "mean_use_where_used": 0.505
+    },
+    "M9": {
+     "max_use": 0.992,
+     "gcells_used": 90425,
+     "gcells_over": 498,
+     "mean_use_where_used": 0.518
+    }
+   },
+   "worst_gcells": [
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1674.0,
+      2613.6
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1663.2,
+      2613.6
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1652.4,
+      2613.6
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1792.8,
+      2613.6
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1771.2,
+      2613.6
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1782.0,
+      2613.6
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1760.4,
+      2613.6
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1749.6,
+      2613.6
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1749.6,
+      2646.0
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1738.8,
+      2613.6
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1728.0,
+      2646.0
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1738.8,
+      2646.0
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1771.2,
+      2646.0
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1760.4,
+      2646.0
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1782.0,
+      2646.0
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1792.8,
+      2646.0
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1760.4,
+      2635.2
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1684.8,
+      2635.2
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1695.6,
+      2635.2
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M4",
+     "gcell_um": [
+      1706.4,
+      2635.2
+     ],
+     "use": 1.166
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1587.6,
+      4147.2
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1598.4,
+      4147.2
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1609.2,
+      4147.2
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1620.0,
+      4147.2
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1620.0,
+      4093.2
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1630.8,
+      4093.2
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1641.6,
+      4093.2
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1641.6,
+      4168.8
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1630.8,
+      4298.4
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1576.8,
+      4287.6
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1587.6,
+      4287.6
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1598.4,
+      4287.6
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1598.4,
+      4104.0
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1587.6,
+      4104.0
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1576.8,
+      4104.0
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1576.8,
+      4147.2
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1576.8,
+      4158.0
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1576.8,
+      4201.2
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1620.0,
+      4190.4
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M5",
+     "gcell_um": [
+      1630.8,
+      4190.4
+     ],
+     "use": 1.268
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25941.6,
+      13100.4
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25930.8,
+      13100.4
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25920.0,
+      13100.4
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25909.2,
+      13100.4
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25898.4,
+      13100.4
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      20811.6,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      20822.4,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      20833.2,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      20844.0,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      20854.8,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      20962.8,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      20973.6,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      20984.4,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      20995.2,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25650.0,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25660.8,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25671.6,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25682.4,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25693.2,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M6",
+     "gcell_um": [
+      25704.0,
+      13089.6
+     ],
+     "use": 0.881
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18187.2,
+      12171.6
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18198.0,
+      12171.6
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18208.8,
+      12171.6
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18219.6,
+      12171.6
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18187.2,
+      12128.4
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18198.0,
+      12128.4
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18208.8,
+      12128.4
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18219.6,
+      12128.4
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18198.0,
+      12106.8
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18208.8,
+      12106.8
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18219.6,
+      12106.8
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18187.2,
+      12182.4
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18198.0,
+      12182.4
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18208.8,
+      12182.4
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18219.6,
+      12182.4
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18187.2,
+      12117.6
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18198.0,
+      12117.6
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18208.8,
+      12117.6
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18219.6,
+      12117.6
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M7",
+     "gcell_um": [
+      18187.2,
+      12096.0
+     ],
+     "use": 0.997
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28069.2,
+      11869.2
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28080.0,
+      11869.2
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28090.8,
+      11869.2
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28101.6,
+      11869.2
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28069.2,
+      11880.0
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28101.6,
+      11880.0
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28090.8,
+      11880.0
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28080.0,
+      11880.0
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28069.2,
+      11890.8
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28080.0,
+      11890.8
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28080.0,
+      12214.8
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28090.8,
+      11901.6
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28069.2,
+      11901.6
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28080.0,
+      11901.6
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28101.6,
+      11890.8
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28090.8,
+      11890.8
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28101.6,
+      12214.8
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28090.8,
+      12214.8
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28069.2,
+      12214.8
+     ],
+     "use": 0.992
+    },
+    {
+     "layer": "M9",
+     "gcell_um": [
+      28101.6,
+      11901.6
+     ],
+     "use": 0.992
+    }
+   ],
+   "blocked_sections": 0,
+   "blocked": [],
+   "m89_roads": 549
+  },
+  "entry_pins": {
+   "verdict": "FAIL",
+   "pins": 886796,
+   "max_per_gcell": 35,
+   "unplaced": 109008,
+   "failed_drops": 116,
+   "missing_examples": [
+    {
+     "part": "c_W5_bf_10",
+     "path": "c_W5_bf_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W5_bf_10",
+     "path": "c_W5_bf_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W5_bn_10",
+     "path": "c_W5_bn_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W5_bn_10",
+     "path": "c_W5_bn_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W5_tn_10",
+     "path": "c_W5_tn_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W5_tn_10",
+     "path": "c_W5_tn_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W5_tf_10",
+     "path": "c_W5_tf_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W5_tf_10",
+     "path": "c_W5_tf_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W4_bf_10",
+     "path": "c_W4_bf_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W4_bf_10",
+     "path": "c_W4_bf_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W4_bn_10",
+     "path": "c_W4_bn_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W4_bn_10",
+     "path": "c_W4_bn_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W4_tn_10",
+     "path": "c_W4_tn_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W4_tn_10",
+     "path": "c_W4_tn_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W4_tf_10",
+     "path": "c_W4_tf_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W4_tf_10",
+     "path": "c_W4_tf_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W3_bf_10",
+     "path": "c_W3_bf_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W3_bf_10",
+     "path": "c_W3_bf_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W3_bn_10",
+     "path": "c_W3_bn_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    },
+    {
+     "part": "c_W3_bn_10",
+     "path": "c_W3_bn_00__a22",
+     "requested": 1028,
+     "placed": 0,
+     "reason": "no bay for die-to-partition drop"
+    }
+   ],
+   "max_drop_reach_um": 405.0,
+   "limit_per_gcell": 35,
+   "free_tracks_per_gcell": {
+    "M7": 126.562,
+    "M8": 117.5,
+    "M9": 117.5
+   },
+   "derivation": {
+    "margin": 0.6,
+    "stagger": 0.5,
+    "binding": "M8"
+   }
+  },
+  "clock_shield": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  },
+  "static_ir": {
+   "verdict": "NOT RUN",
+   "note": "no PDNSim region result (--ir); PG lane = INFRA-FIRST-R2"
+  },
+  "lot_fit": {
+   "verdict": "PASS",
+   "fails": [],
+   "n": 0
+  },
+  "clock_entry": {
+   "verdict": "FAIL",
+   "cores": 128,
+   "fails": 98,
+   "examples": [
+    {
+     "type": "cbf_q00",
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q00",
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q00",
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q00",
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q01",
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q01",
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q01",
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q01",
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbx_q10",
+     "inst": "u_t20",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbx_q10",
+     "inst": "u_t30",
+     "module": "qfd_tile_nl_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbx_q10",
+     "inst": "u_t21",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbx_q10",
+     "inst": "u_t31",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q11",
+     "inst": "u_t22",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q11",
+     "inst": "u_t32",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q11",
+     "inst": "u_t23",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q11",
+     "inst": "u_t33",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q00",
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q00",
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q00",
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q00",
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q01",
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q01",
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q01",
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q01",
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q11",
+     "inst": "u_t22",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q11",
+     "inst": "u_t32",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q11",
+     "inst": "u_t23",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbn_q11",
+     "inst": "u_t33",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q01_s2",
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q01_s2",
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q01_s2",
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q01_s2",
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q00_s2",
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q00_s2",
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q00_s2",
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "cbf_q00_s2",
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "pin_core_um": [
+      114.128,
+      143.26
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "off_um": 550.452
+    },
+    {
+     "type": "slw_su_l1__clbd68af58",
+     "inst": "u_lane4",
+     "module": "qfd_qc_su_lane_w_l4",
+     "issue": "no plan clock tap",
+     "entry_um": [
+      207.36,
+      133.92
+     ]
+    },
+    {
+     "type": "slw_su_l1__clbd68af58",
+     "inst": "u_lane5",
+     "module": "qfd_qc_su_lane_w_l5",
+     "issue": "no plan clock tap",
+     "entry_um": [
+      207.36,
+      133.92
+     ]
+    },
+    {
+     "type": "slw_su_l1__clbd68af58",
+     "inst": "u_lane6",
+     "module": "qfd_qc_su_lane_w_l6",
+     "issue": "no plan clock tap",
+     "entry_um": [
+      207.36,
+      133.92
+     ]
+    },
+    {
+     "type": "slw_su_l1__clbd68af58",
+     "inst": "u_lane7",
+     "module": "qfd_qc_su_lane_w_l7",
+     "issue": "no plan clock tap",
+     "entry_um": [
+      207.36,
+      133.92
+     ]
+    }
+   ]
+  },
+  "core_reach": {
+   "verdict": "FAIL",
+   "limit_um": 200.0,
+   "restructure": [
+    {
+     "module": "qfd_tile_nk_a0c",
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "farthest_corner_um": 807.84,
+     "uses": 35,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       8
+      ],
+      "leaf_reach_um": 186.84,
+      "islands": [
+       {
+        "centre_um": [
+         112.32,
+         73.44
+        ],
+        "rect_um": [
+         108.0,
+         69.12,
+         116.64,
+         77.76
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         216.0
+        ],
+        "rect_um": [
+         108.0,
+         211.68,
+         116.64,
+         220.32
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         362.88
+        ],
+        "rect_um": [
+         108.0,
+         358.56,
+         116.64,
+         367.2
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         505.44
+        ],
+        "rect_um": [
+         108.0,
+         501.12,
+         116.64,
+         509.76
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         652.32
+        ],
+        "rect_um": [
+         108.0,
+         648.0,
+         116.64,
+         656.64
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         794.88
+        ],
+        "rect_um": [
+         108.0,
+         790.56,
+         116.64,
+         799.2
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         941.76
+        ],
+        "rect_um": [
+         108.0,
+         937.44,
+         116.64,
+         946.08
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         1084.32
+        ],
+        "rect_um": [
+         108.0,
+         1080.0,
+         116.64,
+         1088.64
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         73.44
+        ],
+        "rect_um": [
+         341.28,
+         69.12,
+         349.92,
+         77.76
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         216.0
+        ],
+        "rect_um": [
+         341.28,
+         211.68,
+         349.92,
+         220.32
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         362.88
+        ],
+        "rect_um": [
+         341.28,
+         358.56,
+         349.92,
+         367.2
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         505.44
+        ],
+        "rect_um": [
+         341.28,
+         501.12,
+         349.92,
+         509.76
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         652.32
+        ],
+        "rect_um": [
+         341.28,
+         648.0,
+         349.92,
+         656.64
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         794.88
+        ],
+        "rect_um": [
+         341.28,
+         790.56,
+         349.92,
+         799.2
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         941.76
+        ],
+        "rect_um": [
+         341.28,
+         937.44,
+         349.92,
+         946.08
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         1084.32
+        ],
+        "rect_um": [
+         341.28,
+         1080.0,
+         349.92,
+         1088.64
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_tile_nl_a0c",
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "farthest_corner_um": 807.84,
+     "uses": 1,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       8
+      ],
+      "leaf_reach_um": 186.84,
+      "islands": [
+       {
+        "centre_um": [
+         112.32,
+         73.44
+        ],
+        "rect_um": [
+         108.0,
+         69.12,
+         116.64,
+         77.76
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         216.0
+        ],
+        "rect_um": [
+         108.0,
+         211.68,
+         116.64,
+         220.32
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         362.88
+        ],
+        "rect_um": [
+         108.0,
+         358.56,
+         116.64,
+         367.2
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         505.44
+        ],
+        "rect_um": [
+         108.0,
+         501.12,
+         116.64,
+         509.76
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         652.32
+        ],
+        "rect_um": [
+         108.0,
+         648.0,
+         116.64,
+         656.64
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         794.88
+        ],
+        "rect_um": [
+         108.0,
+         790.56,
+         116.64,
+         799.2
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         941.76
+        ],
+        "rect_um": [
+         108.0,
+         937.44,
+         116.64,
+         946.08
+        ]
+       },
+       {
+        "centre_um": [
+         112.32,
+         1084.32
+        ],
+        "rect_um": [
+         108.0,
+         1080.0,
+         116.64,
+         1088.64
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         73.44
+        ],
+        "rect_um": [
+         341.28,
+         69.12,
+         349.92,
+         77.76
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         216.0
+        ],
+        "rect_um": [
+         341.28,
+         211.68,
+         349.92,
+         220.32
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         362.88
+        ],
+        "rect_um": [
+         341.28,
+         358.56,
+         349.92,
+         367.2
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         505.44
+        ],
+        "rect_um": [
+         341.28,
+         501.12,
+         349.92,
+         509.76
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         652.32
+        ],
+        "rect_um": [
+         341.28,
+         648.0,
+         349.92,
+         656.64
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         794.88
+        ],
+        "rect_um": [
+         341.28,
+         790.56,
+         349.92,
+         799.2
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         941.76
+        ],
+        "rect_um": [
+         341.28,
+         937.44,
+         349.92,
+         946.08
+        ]
+       },
+       {
+        "centre_um": [
+         345.6,
+         1084.32
+        ],
+        "rect_um": [
+         341.28,
+         1080.0,
+         349.92,
+         1088.64
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l4",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l5",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l6",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l7",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l0",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l1",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l2",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l3",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l4",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l5",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l6",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l7",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 3,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l0",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 2,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l1",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 2,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l2",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 2,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l3",
+     "outline_um": [
+      414.72,
+      267.84
+     ],
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_corner_um": 341.28,
+     "uses": 2,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 170.64,
+      "islands": [
+       {
+        "centre_um": [
+         103.68,
+         64.8
+        ],
+        "rect_um": [
+         99.36,
+         60.48,
+         108.0,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         103.68,
+         198.72
+        ],
+        "rect_um": [
+         99.36,
+         194.4,
+         108.0,
+         203.04
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         64.8
+        ],
+        "rect_um": [
+         306.72,
+         60.48,
+         315.36,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         311.04,
+         198.72
+        ],
+        "rect_um": [
+         306.72,
+         194.4,
+         315.36,
+         203.04
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_dv_s8x_prog",
+     "outline_um": [
+      354.24,
+      259.2
+     ],
+     "entry_um": [
+      177.12,
+      129.6
+     ],
+     "farthest_corner_um": 306.72,
+     "uses": 6,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 153.36,
+      "islands": [
+       {
+        "centre_um": [
+         86.4,
+         64.8
+        ],
+        "rect_um": [
+         82.08,
+         60.48,
+         90.72,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         86.4,
+         194.4
+        ],
+        "rect_um": [
+         82.08,
+         190.08,
+         90.72,
+         198.72
+        ]
+       },
+       {
+        "centre_um": [
+         267.84,
+         64.8
+        ],
+        "rect_um": [
+         263.52,
+         60.48,
+         272.16,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         267.84,
+         194.4
+        ],
+        "rect_um": [
+         263.52,
+         190.08,
+         272.16,
+         198.72
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_dv_s8x_btab",
+     "outline_um": [
+      354.24,
+      259.2
+     ],
+     "entry_um": [
+      177.12,
+      129.6
+     ],
+     "farthest_corner_um": 306.72,
+     "uses": 6,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       2,
+       2
+      ],
+      "leaf_reach_um": 153.36,
+      "islands": [
+       {
+        "centre_um": [
+         86.4,
+         64.8
+        ],
+        "rect_um": [
+         82.08,
+         60.48,
+         90.72,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         86.4,
+         194.4
+        ],
+        "rect_um": [
+         82.08,
+         190.08,
+         90.72,
+         198.72
+        ]
+       },
+       {
+        "centre_um": [
+         267.84,
+         64.8
+        ],
+        "rect_um": [
+         263.52,
+         60.48,
+         272.16,
+         69.12
+        ]
+       },
+       {
+        "centre_um": [
+         267.84,
+         194.4
+        ],
+        "rect_um": [
+         263.52,
+         190.08,
+         272.16,
+         198.72
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_dv_s8x_vmr",
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "entry_um": [
+      129.6,
+      138.24
+     ],
+     "farthest_corner_um": 267.84,
+     "uses": 18,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       1,
+       2
+      ],
+      "leaf_reach_um": 198.72,
+      "islands": [
+       {
+        "centre_um": [
+         129.6,
+         69.12
+        ],
+        "rect_um": [
+         125.28,
+         64.8,
+         133.92,
+         73.44
+        ]
+       },
+       {
+        "centre_um": [
+         129.6,
+         207.36
+        ],
+        "rect_um": [
+         125.28,
+         203.04,
+         133.92,
+         211.68
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_dv_s8_crh_rp1",
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "entry_um": [
+      129.6,
+      138.24
+     ],
+     "farthest_corner_um": 267.84,
+     "uses": 6,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       1,
+       2
+      ],
+      "leaf_reach_um": 198.72,
+      "islands": [
+       {
+        "centre_um": [
+         129.6,
+         69.12
+        ],
+        "rect_um": [
+         125.28,
+         64.8,
+         133.92,
+         73.44
+        ]
+       },
+       {
+        "centre_um": [
+         129.6,
+         207.36
+        ],
+        "rect_um": [
+         125.28,
+         203.04,
+         133.92,
+         211.68
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "module": "qfd_dv_s8x_crh",
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "entry_um": [
+      129.6,
+      138.24
+     ],
+     "farthest_corner_um": 267.84,
+     "uses": 6,
+     "lane": "QC-SU-LAT",
+     "fix": "internal H-tree from the centre entry with in-core islands at the leaf centres below (12.8b/d1); split the core only as a last resort",
+     "in_core_islands": {
+      "grid": [
+       1,
+       2
+      ],
+      "leaf_reach_um": 198.72,
+      "islands": [
+       {
+        "centre_um": [
+         129.6,
+         69.12
+        ],
+        "rect_um": [
+         125.28,
+         64.8,
+         133.92,
+         73.44
+        ]
+       },
+       {
+        "centre_um": [
+         129.6,
+         207.36
+        ],
+        "rect_um": [
+         125.28,
+         203.04,
+         133.92,
+         211.68
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "early_taps": {
+   "verdict": "FAIL",
+   "plan_taps_offset": {
+    "glue": 195,
+    "core": 36
+   },
+   "mesh_taps_early": 0,
+   "examples": [
+    {
+     "type": "cbf_q00",
+     "tap": "glue_00",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbf_q00",
+     "tap": "glue_01",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbf_q00",
+     "tap": "glue_02",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbf_q00",
+     "tap": "glue_03",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbf_q00",
+     "tap": "glue_04",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbf_q01",
+     "tap": "glue_00",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbf_q01",
+     "tap": "glue_01",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbf_q01",
+     "tap": "glue_02",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbf_q01",
+     "tap": "glue_03",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbf_q01",
+     "tap": "glue_04",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbx_q10",
+     "tap": "glue_00",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbx_q10",
+     "tap": "glue_01",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbx_q10",
+     "tap": "glue_02",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbx_q10",
+     "tap": "glue_03",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbx_q10",
+     "tap": "glue_04",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbf_q11",
+     "tap": "glue_00",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbf_q11",
+     "tap": "glue_01",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbf_q11",
+     "tap": "glue_02",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbf_q11",
+     "tap": "glue_03",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbf_q11",
+     "tap": "glue_04",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbn_q00",
+     "tap": "glue_00",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbn_q00",
+     "tap": "glue_01",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbn_q00",
+     "tap": "glue_02",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbn_q00",
+     "tap": "glue_03",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbn_q00",
+     "tap": "glue_04",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbn_q01",
+     "tap": "glue_00",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbn_q01",
+     "tap": "glue_01",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbn_q01",
+     "tap": "glue_02",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    },
+    {
+     "type": "cbn_q01",
+     "tap": "glue_03",
+     "kind": "glue",
+     "insertion_ps": 276.0,
+     "offset_ps": 26.0
+    },
+    {
+     "type": "cbn_q01",
+     "tap": "glue_04",
+     "kind": "glue",
+     "insertion_ps": 277.0,
+     "offset_ps": 27.0
+    }
+   ]
+  },
+  "tree_balance": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  },
+  "core_insertion_model": {
+   "verdict": "FAIL",
+   "fails": 18,
+   "cores": 24,
+   "model": {
+    "form": "TT = RCX x K x L_max(entry -> farthest corner); FF = FF_RATIO x TT",
+    "K_ps_per_um": 0.8963,
+    "RCX": 0.9429,
+    "FF_RATIO": 0.7998,
+    "calibration": [
+     [
+      "qfd_dv_s8x_vmr",
+      406.08,
+      341.8,
+      271.8
+     ],
+     [
+      "qfd_dv_s8x_prog",
+      436.32,
+      419.4,
+      337.1
+     ],
+     [
+      "qfd_dv_s8x_btab",
+      436.32,
+      384.9,
+      308.1
+     ]
+    ],
+    "calibration_err_ps": [
+     22.2,
+     -28.3,
+     6.2
+    ],
+    "calibration_rms_ps": 21.1,
+    "note": "shallow cores (pred < target) pad up with a designed fixed trunk (12.8c): not a FAIL"
+   },
+   "examples": [
+    {
+     "module": "qfd_tile_nk_a0c",
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "farthest_um": 807.84,
+     "pred_TT_ps": 682.7,
+     "pred_FF_ps": 546.0,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_tile_nl_a0c",
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "farthest_um": 807.84,
+     "pred_TT_ps": 682.7,
+     "pred_FF_ps": 546.0,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l4",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l5",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l6",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l7",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l0",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l1",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l2",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l3",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l4",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l5",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l6",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l7",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l0",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l1",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l2",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l3",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    }
+   ],
+   "all": [
+    {
+     "module": "qfd_tile_nk_a0c",
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "farthest_um": 807.84,
+     "pred_TT_ps": 682.7,
+     "pred_FF_ps": 546.0,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_tile_nl_a0c",
+     "entry_um": [
+      228.96,
+      578.88
+     ],
+     "farthest_um": 807.84,
+     "pred_TT_ps": 682.7,
+     "pred_FF_ps": 546.0,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l4",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l5",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l6",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l7",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_dv_s8x_vmr",
+     "entry_um": [
+      129.6,
+      138.24
+     ],
+     "farthest_um": 267.84,
+     "pred_TT_ps": 226.4,
+     "pred_FF_ps": 181.0,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_dv_s8_crh_rp1",
+     "entry_um": [
+      129.6,
+      138.24
+     ],
+     "farthest_um": 267.84,
+     "pred_TT_ps": 226.4,
+     "pred_FF_ps": 181.0,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_dv_s8x_prog",
+     "entry_um": [
+      177.12,
+      129.6
+     ],
+     "farthest_um": 306.72,
+     "pred_TT_ps": 259.2,
+     "pred_FF_ps": 207.3,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_dv_s8x_btab",
+     "entry_um": [
+      177.12,
+      129.6
+     ],
+     "farthest_um": 306.72,
+     "pred_TT_ps": 259.2,
+     "pred_FF_ps": 207.3,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_dv_s5_su8_rst3",
+     "entry_um": [
+      86.4,
+      64.8
+     ],
+     "farthest_um": 151.2,
+     "pred_TT_ps": 127.8,
+     "pred_FF_ps": 102.2,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l0",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l1",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l2",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_w_l3",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l4",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l5",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l6",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l7",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_dv_s8x_crh",
+     "entry_um": [
+      129.6,
+      138.24
+     ],
+     "farthest_um": 267.84,
+     "pred_TT_ps": 226.4,
+     "pred_FF_ps": 181.0,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l0",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l1",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l2",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    },
+    {
+     "module": "qfd_qc_su_lane_e_l3",
+     "entry_um": [
+      207.36,
+      133.92
+     ],
+     "farthest_um": 341.28,
+     "pred_TT_ps": 288.4,
+     "pred_FF_ps": 230.7,
+     "target_TT_ps": 250.0,
+     "tol_ps": 20.0
+    }
+   ]
+  },
+  "die_pair_skew_model": {
+   "verdict": "NOT RUN",
+   "diagnostic_only": true,
+   "note": "no --mesh (clock plan geometry)"
+  },
+  "tree_commensurate": {
+   "verdict": "FAIL",
+   "core_lattice": {
+    "x": {
+     "pitch_um": 38.88,
+     "on_lattice": false,
+     "lines": 168,
+     "span_um": [
+      1788.48,
+      30991.68
+     ],
+     "irregular": [
+      47.52,
+      51.84,
+      82.08,
+      86.4,
+      90.72,
+      103.68,
+      133.92,
+      151.2,
+      276.48,
+      419.04,
+      449.28,
+      462.24
+     ],
+     "n_irregular": 12,
+     "leaf_pitch_um": null,
+     "leaf_cover": null,
+     "half_leaf_node_on_centre": null,
+     "breaks": []
+    },
+    "y": {
+     "pitch_um": 21.6,
+     "on_lattice": false,
+     "lines": 23,
+     "span_um": [
+      656.64,
+      25608.96
+     ],
+     "irregular": [
+      24.48,
+      254.88,
+      319.68,
+      347.04,
+      825.12,
+      1304.64,
+      1313.28,
+      4834.08
+     ],
+     "n_irregular": 8,
+     "leaf_pitch_um": null,
+     "leaf_cover": null,
+     "half_leaf_node_on_centre": null,
+     "breaks": []
+    }
+   },
+   "mesh_vs_core": null,
+   "phy_entries": 0,
+   "rule": "die H-tree leaf / mesh-driver pitch = the core-array repeat (leaf_pitch_um, an 8.64 multiple), tree node spans = integer multiples of it, so every node and mesh driver lands on a core-centre island (COORD 06:23); breaks = array gaps (e.g. a spine) the tree must bridge at a common node",
+   "no_leaf_axes": [
+    "x",
+    "y"
+   ],
+   "off_lattice_axes": []
+  },
+  "clock_sites": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh",
+   "plan_taps_inside_phy": []
+  },
+  "island_lattice": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  },
+  "infra_sites": {
+   "verdict": "FAIL",
+   "source": "infra_sites.run (INFRA-FIRST-R2)",
+   "error": null,
+   "checks": {
+    "htree_snap": "NOT RUN",
+    "reset_demand": "NOT RUN (ResetError: type cbf_q00: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/codex-qc-master0733)",
+    "a_corridor_gap": "PASS",
+    "b_cut_use": "PASS",
+    "d_bay_fill": "PASS",
+    "d_island": "NOT RUN (no --mesh: island clock demand unknown)",
+    "c_porosity": "NOT RUN (no --mesh)"
+   },
+   "islands": 88
+  },
+  "clock_rep_sites": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh (die H-tree)"
+  },
+  "tap_region_containment": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  },
+  "footless_stubs": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  },
+  "island_ft_inputs": {
+   "verdict": "NOT RUN",
+   "note": "no --mesh"
+  }
+ }
+}

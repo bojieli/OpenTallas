@@ -1,0 +1,20 @@
+{
+  "verdict": "FAIL",
+  "picture": "results/qc_oneevent0733/master_static_r1/master_plan.png",
+  "reviewed": true,
+  "source_geometry": "candidate_oneqc0733.json before embedding cell estimates; geometry/interfaces/latencies identical after embedding",
+  "findings": [
+    "LOOKED: regular repeated core banks and central SU/spine placed coherently, wide traffic concentrated in SU rows and collector transitions",
+    "Reach0gaps/max404.976um and core/bay lot_fit PASS; these do not establish route capacity",
+    "30 exact station bay reservations exceed50percent fill(max0.653); demand is based on conservative1.404x0.27um FF footprint, not measured mapped area",
+    "M4/M5 worst planned road use1.166/1.268, and109008 entry-pin drops cannot be placed within405um; inspect actual per-bit route representation and legal corridors before route",
+    "98/128 core clock entries disagree with centre entries;195glue and36core legacy tap offsets violate common clock plan;18/24 old core insertion models require internal-tree redesign",
+    "Reset input-table staging fixed in successor:reset_hop_reach PASS; clock mesh/PGIR absent so those checks remain NOT RUN"
+  ],
+  "next": [
+    "Shared core factory must qualify common centre-entry structured tree before per-die event updates actual core views/pins",
+    "Repair true channel/bay capacity or improve exact per-bit road accounting without hiding demand",
+    "Complete real die clock and worst-case PG plan before freezing slices"
+  ],
+  "permission": "NO P&R/STA authorization"
+}

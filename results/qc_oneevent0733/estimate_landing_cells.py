@@ -10,6 +10,7 @@ Collector bounds charge EVERY reset-tree node, including inactive nodes, and
 one extra raw-reset FF per node and local landing. No active source is dropped.
 """
 import json
+import argparse
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -61,7 +62,17 @@ def generate():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--apply-plan", action="store_true",
+                        help="embed the estimate in this owned one-event candidate")
+    args = parser.parse_args()
     out = HERE / "landing_cells_est.json"
     result = generate()
     out.write_text(json.dumps(result, indent=2) + "\n")
+    if args.apply_plan:
+        path = ROOT / "physical/die_plan/qwen_compute/candidate_oneqc0733.json"
+        plan = json.loads(path.read_text())
+        for name, row in result["cells_per_type"].items():
+            plan["partition_types"][name]["cells"] = row["cells"]
+        path.write_text(json.dumps(plan, indent=1) + "\n")
     print(f"{len(result['cells_per_type'])} complete type estimates -> {out}")
