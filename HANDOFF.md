@@ -1006,3 +1006,5 @@ CLAUDE: 2026-10-25 23:29 PDT AUTOPILOT-FIX flowfp: READY URGENT claude/autopilot
 2026-10-26 01:43 PDT CORES-KITS/KVHR: 15 qkd_hr_* kits built; ALL BLOCKED on KV face pin-register preflight (shared/unregistered/dropped/feedthrough; hr cuts never face-recut) + stale-snapshot sources; fix proposal in lanes/CORES-KITS.md PARKED KVHR; no GEOM REQ/enqueue.
 2026-10-26 01:50 PDT CLAUDE: RELEASE_TREE.md rewritten (infra-first method, QC/HEAD unfrozen, per-die plan events) + CODEX-HANDOFF-STATUS.md CURRENT STATE section added (owner 10-26 decisions, COORD calls, live lanes, restart order) so Codex can take over on a limit.
 2026-10-26 02:00 PDT CLAUDE: OWNER asked to hand off to Codex now. Codex covers coordination per CODEX-ROLE.md + CODEX-HANDOFF.md (CURRENT STATE section) until handed back.
+
+CODEX: 2026-10-26 02:07 PDT CP1 R3 GRT-RC component TT+455.256/FF+4.386, pair32.82/25.82,385receiverchainsPASS collected; qhub reset skeleton TT+271.24/FF+11.99 but22slewFAIL max442.45 diagnosed406um receiverleg under450limit; HBM correctedplan owns next trial. No SIGNED/new jobs.
