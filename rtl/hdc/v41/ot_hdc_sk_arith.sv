@@ -121,9 +121,12 @@ module ot_hdc_sk_csa #(
         end
     endgenerate
     assign s = g_lv[LV].v[0 +: W];
+    // last level read at module scope: Yosys does not resolve g_lv[LV].v from inside the g_two generate scope
+    // (default_nettype none -> "implicitly declared v"); row 1 of the last level, zero-extended for N == 1
+    wire [(N+1)*W-1:0] v_last = {{W{1'b0}}, g_lv[LV].v};
     generate
         if (cnt(LV) >= 2) begin : g_two
-            assign c = g_lv[LV].v[W +: W];
+            assign c = v_last[W +: W];
         end else begin : g_one
             assign c = {W{1'b0}};
         end

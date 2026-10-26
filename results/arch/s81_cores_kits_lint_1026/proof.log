@@ -1,0 +1,31 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026
+ot-run: localhost      admits    18 GB (avail 165, reserve 0, fresh 77.9, peak 4.6, headroom 0, waiters 0/0 GB) load 105/256 running 38 disk 720 GB 
+ot-run: SPILL not possible: localhost lacks /srv/opentallas-scratch2/claude/qcdieclk-2330 (data not on the queue host)
+ot-run: -> localhost (will queue: admits 18 GB < 16 GB)
+ot-heavy: waiting for memory on tender-ray: need 0.7 x 16 = 11 GB, admissible 10 GB: available 282 GB, growth charged 183 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 183 GB at x1), young 101 GB, floor 113 GB; invariant: committed 681 GB (in use 473, other 387, units max(now, peak) 111, + reserve 0 + fresh 182) vs physical - 64 = 691 GB -> headroom 10 GB
+ot-heavy: admitted on tender-ray as oth-ubuntu-4015518-1793004369 after 21 s
+cfg7_new: CFG7_LOCKSTEP cycles 300000 cfg_go 13034 busy_broadcasts 6554 mismatches 0 PASS
+cfg7_mut_pend: MISMATCH local1 cyc 43 old 173418dff7ceceae5631058 new 45d218dff7ceceae5630858
+cfg7_mut_pend: MISMATCH local0 cyc 44 old d0803d49749a40a6d4b00d2 new af003d49749a40a6d4b00d2
+cfg7_mut_pend: MISMATCH local1 cyc 44 old 17441a71960189222031040 new 45e21a91f22370f17030840
+cfg7_mut_nohold: MISMATCH local1 cyc 180 old 4f300f088a1c9e831cb8032 new 4f300f088a1c9e831ca8032
+cfg7_mut_nohold: MISMATCH local0 cyc 184 old d3808487d5d42f1b3cb8232 new d3808487d5d42f1b3ca8232
+cfg7_mut_nohold: MISMATCH local1 cyc 228 old 2b800a07131febad7cbc032 new 2b800a07131febad7cac032
+csa_new: CSA_LOCKSTEP vectors 50000 params 12 mismatches 0 sum_errors 0 PASS
+csa_mut_c: MISMATCH t 0 bad 111111110100
+csa_mut_c: MISMATCH t 1 bad 111111111110
+csa_mut_c: MISMATCH t 2 bad 111111111110
+eq_bfp_l1p1: YOSYS_EQUIV PASS (  Equivalence successfully proven!)
+eq_loc_pq0_l1p1: YOSYS_EQUIV PASS (  Equivalence successfully proven!)
+eq_bfl_l1p1: YOSYS_EQUIV PASS (  Equivalence successfully proven!)
+eq_loc_pq1_l1p1: YOSYS_EQUIV PASS (  Equivalence successfully proven!)
+eq_loc_pq1_l0p0: YOSYS_EQUIV PASS (  Equivalence successfully proven!)
+eq_csa_n3_w8: YOSYS_EQUIV PASS (  Equivalence successfully proven!)
+eq_csa_n13_w30: YOSYS_EQUIV PASS (  Equivalence successfully proven!)
+eq_csa_n29_w49: YOSYS_EQUIV PASS (  Equivalence successfully proven!)
+eq_csa_n2_w8: YOSYS_EQUIV PASS (  Equivalence successfully proven!)
+eq_csa_n1_w8: YOSYS_EQUIV PASS (  Equivalence successfully proven!)
+DONE
+ot-run: RAN on localhost (unit oth-ubuntu-4015518-1793004369): exit 0

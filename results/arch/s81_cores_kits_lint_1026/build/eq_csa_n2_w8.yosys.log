@@ -1,0 +1,264 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/build/eq_csa_n2_w8.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_hdc_sk_arith.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_hdc_sk_arith.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_sk_cadd'.
+Generating RTLIL representation for module `\ot_hdc_sk_csa'.
+Generating RTLIL representation for module `\ot_hdc_sk_mul'.
+Generating RTLIL representation for module `\ot_hdc_sk_add'.
+Generating RTLIL representation for module `\ot_hdc_sk_seed'.
+Generating RTLIL representation for module `\ot_hdc_sk_quot'.
+Generating RTLIL representation for module `\ot_hdc_sk_norm'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \N = 2
+Parameter \W = 8
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_csa'.
+Parameter \N = 2
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hdc_sk_csa'.
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_hdc_sk_csa
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_hdc_sk_csa
+Removing unused module `\ot_hdc_sk_norm'.
+Removing unused module `\ot_hdc_sk_quot'.
+Removing unused module `\ot_hdc_sk_seed'.
+Removing unused module `\ot_hdc_sk_add'.
+Removing unused module `\ot_hdc_sk_mul'.
+Removing unused module `$paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hdc_sk_csa'.
+Removing unused module `\ot_hdc_sk_cadd'.
+Removed 7 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hdc_sk_csa.
+
+5. Executing FLATTEN pass (flatten design).
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hdc_sk_csa..
+Renaming module \ot_hdc_sk_csa to \gold.
+
+7. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/hdc/v41/ot_hdc_sk_arith.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/hdc/v41/ot_hdc_sk_arith.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_sk_cadd'.
+Generating RTLIL representation for module `\ot_hdc_sk_csa'.
+Generating RTLIL representation for module `\ot_hdc_sk_mul'.
+Generating RTLIL representation for module `\ot_hdc_sk_add'.
+Generating RTLIL representation for module `\ot_hdc_sk_seed'.
+Generating RTLIL representation for module `\ot_hdc_sk_quot'.
+Generating RTLIL representation for module `\ot_hdc_sk_norm'.
+Successfully finished Verilog frontend.
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \N = 2
+Parameter \W = 8
+
+9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_csa'.
+Parameter \N = 2
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hdc_sk_csa'.
+
+9.1. Analyzing design hierarchy..
+Top module:  \ot_hdc_sk_csa
+
+9.2. Analyzing design hierarchy..
+Top module:  \ot_hdc_sk_csa
+Removing unused module `\ot_hdc_sk_norm'.
+Removing unused module `\ot_hdc_sk_quot'.
+Removing unused module `\ot_hdc_sk_seed'.
+Removing unused module `\ot_hdc_sk_add'.
+Removing unused module `\ot_hdc_sk_mul'.
+Removing unused module `$paramod$b1bba913dbf8393197b6458897c7be8bdbe9b285\ot_hdc_sk_csa'.
+Removing unused module `\ot_hdc_sk_cadd'.
+Removed 7 unused modules.
+
+10. Executing PROC pass (convert processes to netlists).
+
+10.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+10.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+10.4. Executing PROC_INIT pass (extract init attributes).
+
+10.5. Executing PROC_ARST pass (detect async resets in processes).
+
+10.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+10.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+10.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+10.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+10.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+10.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hdc_sk_csa.
+
+11. Executing FLATTEN pass (flatten design).
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hdc_sk_csa..
+
+13. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hdc_sk_csa...
+Found and reported 0 problems.
+Renaming module \ot_hdc_sk_csa to \gate.
+
+14. Executing SETUNDEF pass (replace undef values with defined constants).
+
+15. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: rows_gold (\rows_gold), rows_gate (\rows_gate) -> rows
+Presumably equivalent wires: s_gold (\rows_gold [7:0]), s_gate (\rows_gate [7:0]) -> s
+Presumably equivalent wires: c_gold (\rows_gold [15:8]), c_gate (\rows_gate [15:8]) -> c
+Presumably equivalent wires: g_lv[0].v_gold (\rows_gold), g_lv[0].v_gate (\rows_gate) -> g_lv[0].v
+
+16. Executing HIERARCHY pass (managing design hierarchy).
+
+16.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+16.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+17. Executing ASYNC2SYNC pass.
+
+18. Executing EQUIV_SIMPLE pass.
+Found 32 unproven $equiv cells (3 groups) in equiv:
+ Grouping SAT models for \c:
+  Trying to prove $equiv for \c [0]:ezsat
+ success!
+  Trying to prove $equiv for \c [1]:ezsat
+ success!
+  Trying to prove $equiv for \c [2]:ezsat
+ success!
+  Trying to prove $equiv for \c [3]:ezsat
+ success!
+  Trying to prove $equiv for \c [4]:ezsat
+ success!
+  Trying to prove $equiv for \c [5]:ezsat
+ success!
+  Trying to prove $equiv for \c [6]:ezsat
+ success!
+  Trying to prove $equiv for \c [7]:ezsat
+ success!
+ Grouping SAT models for \s:
+  Trying to prove $equiv for \s [0]:ezsat
+ success!
+  Trying to prove $equiv for \s [1]:ezsat
+ success!
+  Trying to prove $equiv for \s [2]:ezsat
+ success!
+  Trying to prove $equiv for \s [3]:ezsat
+ success!
+  Trying to prove $equiv for \s [4]:ezsat
+ success!
+  Trying to prove $equiv for \s [5]:ezsat
+ success!
+  Trying to prove $equiv for \s [6]:ezsat
+ success!
+  Trying to prove $equiv for \s [7]:ezsat
+ success!
+ Grouping SAT models for \g_lv[0].v:
+  Trying to prove $equiv for \g_lv[0].v [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [15]:ezsat
+ success!
+Proved 32 previously unproven $equiv cells.
+
+19. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+20. Executing EQUIV_STATUS pass.
+Found 32 $equiv cells in equiv:
+  Of those cells 32 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 937eb4c98f, time: 0.20s, user: 0.22s, system: 0.03s, MEM: 26.36 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 90% 4x read_verilog (0 sec), 7% 3x hierarchy (0 sec), ...

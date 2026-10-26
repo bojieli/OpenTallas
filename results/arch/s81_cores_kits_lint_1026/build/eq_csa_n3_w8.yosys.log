@@ -1,0 +1,406 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/build/eq_csa_n3_w8.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_hdc_sk_arith.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_hdc_sk_arith.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_sk_cadd'.
+Generating RTLIL representation for module `\ot_hdc_sk_csa'.
+Generating RTLIL representation for module `\ot_hdc_sk_mul'.
+Generating RTLIL representation for module `\ot_hdc_sk_add'.
+Generating RTLIL representation for module `\ot_hdc_sk_seed'.
+Generating RTLIL representation for module `\ot_hdc_sk_quot'.
+Generating RTLIL representation for module `\ot_hdc_sk_norm'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \N = 3
+Parameter \W = 8
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_csa'.
+Parameter \N = 3
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod$2f19939871d83960806585a557e50edbaf64f0e3\ot_hdc_sk_csa'.
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_hdc_sk_csa
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_hdc_sk_csa
+Removing unused module `\ot_hdc_sk_norm'.
+Removing unused module `\ot_hdc_sk_quot'.
+Removing unused module `\ot_hdc_sk_seed'.
+Removing unused module `\ot_hdc_sk_add'.
+Removing unused module `\ot_hdc_sk_mul'.
+Removing unused module `$paramod$2f19939871d83960806585a557e50edbaf64f0e3\ot_hdc_sk_csa'.
+Removing unused module `\ot_hdc_sk_cadd'.
+Removed 7 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hdc_sk_csa.
+
+5. Executing FLATTEN pass (flatten design).
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hdc_sk_csa..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+Renaming module \ot_hdc_sk_csa to \gold.
+
+7. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/hdc/v41/ot_hdc_sk_arith.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/hdc/v41/ot_hdc_sk_arith.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_sk_cadd'.
+Generating RTLIL representation for module `\ot_hdc_sk_csa'.
+Generating RTLIL representation for module `\ot_hdc_sk_mul'.
+Generating RTLIL representation for module `\ot_hdc_sk_add'.
+Generating RTLIL representation for module `\ot_hdc_sk_seed'.
+Generating RTLIL representation for module `\ot_hdc_sk_quot'.
+Generating RTLIL representation for module `\ot_hdc_sk_norm'.
+Successfully finished Verilog frontend.
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \N = 3
+Parameter \W = 8
+
+9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_csa'.
+Parameter \N = 3
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod$2f19939871d83960806585a557e50edbaf64f0e3\ot_hdc_sk_csa'.
+
+9.1. Analyzing design hierarchy..
+Top module:  \ot_hdc_sk_csa
+
+9.2. Analyzing design hierarchy..
+Top module:  \ot_hdc_sk_csa
+Removing unused module `\ot_hdc_sk_norm'.
+Removing unused module `\ot_hdc_sk_quot'.
+Removing unused module `\ot_hdc_sk_seed'.
+Removing unused module `\ot_hdc_sk_add'.
+Removing unused module `\ot_hdc_sk_mul'.
+Removing unused module `$paramod$2f19939871d83960806585a557e50edbaf64f0e3\ot_hdc_sk_csa'.
+Removing unused module `\ot_hdc_sk_cadd'.
+Removed 7 unused modules.
+
+10. Executing PROC pass (convert processes to netlists).
+
+10.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+10.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+10.4. Executing PROC_INIT pass (extract init attributes).
+
+10.5. Executing PROC_ARST pass (detect async resets in processes).
+
+10.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+10.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+10.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+10.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+10.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+10.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hdc_sk_csa.
+
+11. Executing FLATTEN pass (flatten design).
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hdc_sk_csa..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+13. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hdc_sk_csa...
+Found and reported 0 problems.
+Renaming module \ot_hdc_sk_csa to \gate.
+
+14. Executing SETUNDEF pass (replace undef values with defined constants).
+
+15. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: c_gold ({ \g_lv[1].g_step.g_fa[0].maj_gold [6:0] 1'0 }), c_gate ({ \g_lv[1].g_step.g_fa[0].maj_gate [6:0] 1'0 }) -> c
+Presumably equivalent wires: g_lv[0].v_gold (\rows_gold), g_lv[0].v_gate (\rows_gate) -> g_lv[0].v
+Presumably equivalent wires: g_lv[1].v_gold ({ 8'00000000 \g_lv[1].g_step.g_fa[0].maj_gold [6:0] 1'0 \s_gold }), g_lv[1].v_gate ({ 8'00000000 \g_lv[1].g_step.g_fa[0].maj_gate [6:0] 1'0 \s_gate }) -> g_lv[1].v
+Presumably equivalent wires: g_lv[1].g_step.g_fa[0].x_gold (\rows_gold [7:0]), g_lv[1].g_step.g_fa[0].x_gate (\rows_gate [7:0]) -> g_lv[1].g_step.g_fa[0].x
+Presumably equivalent wires: g_lv[1].g_step.g_fa[0].y_gold (\rows_gold [15:8]), g_lv[1].g_step.g_fa[0].y_gate (\rows_gate [15:8]) -> g_lv[1].g_step.g_fa[0].y
+Presumably equivalent wires: g_lv[1].g_step.g_fa[0].z_gold (\rows_gold [23:16]), g_lv[1].g_step.g_fa[0].z_gate (\rows_gate [23:16]) -> g_lv[1].g_step.g_fa[0].z
+Presumably equivalent wires: g_lv[1].g_step.g_fa[0].maj_gold (\g_lv[1].g_step.g_fa[0].maj_gold), g_lv[1].g_step.g_fa[0].maj_gate (\g_lv[1].g_step.g_fa[0].maj_gate) -> g_lv[1].g_step.g_fa[0].maj
+Presumably equivalent wires: s_gold (\s_gold), s_gate (\s_gate) -> s
+Presumably equivalent wires: rows_gold (\rows_gold), rows_gate (\rows_gate) -> rows
+
+16. Executing HIERARCHY pass (managing design hierarchy).
+
+16.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+16.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+17. Executing ASYNC2SYNC pass.
+
+18. Executing EQUIV_SIMPLE pass.
+Found 96 unproven $equiv cells (8 groups) in equiv:
+ Grouping SAT models for \c:
+  Trying to prove $equiv for \c [0]:ezsat
+ success!
+  Trying to prove $equiv for \c [1]:ezsat
+ success!
+  Trying to prove $equiv for \c [2]:ezsat
+ success!
+  Trying to prove $equiv for \c [3]:ezsat
+ success!
+  Trying to prove $equiv for \c [4]:ezsat
+ success!
+  Trying to prove $equiv for \c [5]:ezsat
+ success!
+  Trying to prove $equiv for \c [6]:ezsat
+ success!
+  Trying to prove $equiv for \c [7]:ezsat
+ success!
+ Grouping SAT models for \s:
+  Trying to prove $equiv for \s [0]:ezsat
+ success!
+  Trying to prove $equiv for \s [1]:ezsat
+ success!
+  Trying to prove $equiv for \s [2]:ezsat
+ success!
+  Trying to prove $equiv for \s [3]:ezsat
+ success!
+  Trying to prove $equiv for \s [4]:ezsat
+ success!
+  Trying to prove $equiv for \s [5]:ezsat
+ success!
+  Trying to prove $equiv for \s [6]:ezsat
+ success!
+  Trying to prove $equiv for \s [7]:ezsat
+ success!
+ Grouping SAT models for \g_lv[0].v:
+  Trying to prove $equiv for \g_lv[0].v [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [15]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [16]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [17]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [18]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [19]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [20]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [21]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [22]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[0].v [23]:ezsat
+ success!
+ Grouping SAT models for \g_lv[1].v:
+  Trying to prove $equiv for \g_lv[1].v [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [15]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [16]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [17]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [18]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [19]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [20]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [21]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [22]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].v [23]:ezsat
+ success!
+ Grouping SAT models for \g_lv[1].g_step.g_fa[0].x:
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].x [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].x [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].x [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].x [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].x [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].x [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].x [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].x [7]:ezsat
+ success!
+ Grouping SAT models for \g_lv[1].g_step.g_fa[0].y:
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].y [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].y [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].y [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].y [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].y [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].y [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].y [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].y [7]:ezsat
+ success!
+ Grouping SAT models for \g_lv[1].g_step.g_fa[0].z:
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].z [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].z [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].z [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].z [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].z [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].z [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].z [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].z [7]:ezsat
+ success!
+ Grouping SAT models for \g_lv[1].g_step.g_fa[0].maj:
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].maj [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].maj [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].maj [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].maj [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].maj [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].maj [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].maj [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_lv[1].g_step.g_fa[0].maj [7]:ezsat
+ success!
+Proved 96 previously unproven $equiv cells.
+
+19. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+20. Executing EQUIV_STATUS pass.
+Found 96 $equiv cells in equiv:
+  Of those cells 96 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 76e330f9b3, time: 0.26s, user: 0.28s, system: 0.03s, MEM: 22.27 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 72% 4x read_verilog (0 sec), 21% 3x hierarchy (0 sec), ...

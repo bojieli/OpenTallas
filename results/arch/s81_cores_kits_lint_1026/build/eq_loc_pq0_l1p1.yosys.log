@@ -1,0 +1,3500 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/build/eq_loc_pq0_l1p1.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_cfg7_seq_local'.
+Generating RTLIL representation for module `\ot_s81_cfg7_seq_bf_local'.
+Generating RTLIL representation for module `\ot_s81_cfg7_seq'.
+Generating RTLIL representation for module `\ot_s81_cfg7_seq_bf'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq_bfp.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq_bfp.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_cfg7_seq_bfp'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_bf_prog_seq'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:42
+Successfully finished Verilog frontend.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \PQ = 0
+Parameter \LAYOUT = 1
+Parameter \LOCAL_COPY = 1
+Parameter \PINREG = 1
+
+6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_cfg7_seq_local'.
+Parameter \PQ = 0
+Parameter \LAYOUT = 1
+Parameter \LOCAL_COPY = 1
+Parameter \PINREG = 1
+Generating RTLIL representation for module `$paramod$2e1103d91c9598a5de676147883080f181e6f8d9\ot_s81_cfg7_seq_local'.
+Warning: Replacing memory \g_dl.d_bk with list of registers. See /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:215
+Warning: Replacing memory \g_dl.d_np with list of registers. See /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:215
+Warning: Replacing memory \g_dl.d_k with list of registers. See /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:215
+
+6.1. Analyzing design hierarchy..
+Top module:  \ot_s81_cfg7_seq_local
+Used module:     \ot_rst_relay
+Parameter \REGIONS = 2
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 2
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:42
+
+6.3. Analyzing design hierarchy..
+Top module:  \ot_s81_cfg7_seq_local
+Used module:     $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+
+6.4. Analyzing design hierarchy..
+Top module:  \ot_s81_cfg7_seq_local
+Used module:     $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+Removing unused module `\ot_rst_relay'.
+Removing unused module `\ot_s81_bf_prog_seq'.
+Removing unused module `\ot_s81_cfg7_seq_bfp'.
+Removing unused module `\ot_s81_cfg7_seq_bf'.
+Removing unused module `\ot_s81_cfg7_seq'.
+Removing unused module `\ot_s81_cfg7_seq_bf_local'.
+Removing unused module `$paramod$2e1103d91c9598a5de676147883080f181e6f8d9\ot_s81_cfg7_seq_local'.
+Removed 7 unused modules.
+
+7. Executing PROC pass (convert processes to netlists).
+
+7.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+Found and cleaned up 4 empty switches in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:73$206'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:73$206'.
+Found and cleaned up 1 empty switch in `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$209'.
+Cleaned up 6 empty switches.
+
+7.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:234$162 in module ot_s81_cfg7_seq_local.
+Marked 2 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163 in module ot_s81_cfg7_seq_local.
+Marked 2 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:275$171 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:106$186 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:110$189 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:123$191 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:174$194 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:208$203 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$209 in module $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:28$207 in module $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.
+Removed a total of 0 dead cases.
+
+7.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 22 redundant assignments.
+Promoted 15 assignments to connections.
+
+7.4. Executing PROC_INIT pass (extract init attributes).
+
+7.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_c in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+Found async reset \rst_c in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:275$171'.
+Found async reset \rst_p in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:106$186'.
+Found async reset \rst_p in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:110$189'.
+Found async reset \rst_c in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:123$191'.
+Found async reset \rst_c in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:208$203'.
+Found async reset \rst_n_in in `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$209'.
+Found async reset \rst_n_in in `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:28$207'.
+
+7.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~10 debug messages>
+
+7.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:234$162'.
+     1/1: $1\cm_q[47:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+     1/8: $0\c_v[0:0]
+     2/8: $0\pend[0:0]
+     3/8: $0\fault[0:0]
+     4/8: $0\tag[1:0]
+     5/8: $0\ld_np[2:0]
+     6/8: $0\ld_k[4:0]
+     7/8: $0\ld_run[0:0]
+     8/8: $0\ld_a[14:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:275$171'.
+     1/1: $0\act[0:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:280$179'.
+     1/1: $0\c_d[47:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:106$186'.
+     1/2: $0\g_pin.ef_r[1:0]
+     2/2: $0\g_pin.lc_r[14:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:109$188'.
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:110$189'.
+     1/6: $0\g_pin.go_tag_r[1:0]
+     2/6: $0\g_pin.st_r[1:0]
+     3/6: $0\g_pin.go_e_r[0:0]
+     4/6: $0\g_pin.cfg_r[53:0]
+     5/6: $0\g_pin.ce_r[6:0]
+     6/6: $0\g_pin.a_r[11:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:123$191'.
+     1/3: $0\g_pin.g_local.go_l[0:0]
+     2/3: $0\g_pin.g_local.cfg_l[5:0]
+     3/3: $0\g_pin.g_local.ce_l[6:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:174$194'.
+     1/3: $0\g_il7.lph[9:0]
+     2/3: $0\g_il7.nr[1:0]
+     3/3: $0\g_il7.nb[2:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:208$203'.
+     1/6: $0\g_dl.d_ev1[1:0]
+     2/6: $0\g_dl.d_pend[1:0]
+     3/6: $0\g_dl.d_go[1:0]
+     4/6: $0\g_dl.d_st[1:0]
+     5/6: $0\g_dl.d_cgo[1:0]
+     6/6: $0\g_dl.d_run[1:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:214$205'.
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:192$158'.
+     1/1: $0\bank_q[2:0]
+Creating decoders for process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$209'.
+     1/1: $0\relay_q[0][1:0]
+Creating decoders for process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:28$207'.
+     1/1: $0\sync_q[1:0]
+
+7.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_s81_cfg7_seq_local.\cm_q' from process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:234$162'.
+
+7.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_s81_cfg7_seq_local.\ld_a' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+  created $dff cell `$procdff$267' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\c_v' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+  created $adff cell `$procdff$272' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\fault' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+  created $adff cell `$procdff$277' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\ld_run' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+  created $adff cell `$procdff$282' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\ld_k' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+  created $adff cell `$procdff$287' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\ld_np' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+  created $dff cell `$procdff$294' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\pend' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+  created $adff cell `$procdff$299' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\tag' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+  created $adff cell `$procdff$304' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\act' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:275$171'.
+  created $adff cell `$procdff$309' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\c_a' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:280$179'.
+  created $dff cell `$procdff$310' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\c_d' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:280$179'.
+  created $dff cell `$procdff$311' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.lc_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:106$186'.
+  created $adff cell `$procdff$316' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.ef_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:106$186'.
+  created $adff cell `$procdff$321' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q0_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:109$188'.
+  created $dff cell `$procdff$322' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q1_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:109$188'.
+  created $dff cell `$procdff$323' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q2_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:109$188'.
+  created $dff cell `$procdff$324' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q3_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:109$188'.
+  created $dff cell `$procdff$325' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q4_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:109$188'.
+  created $dff cell `$procdff$326' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q5_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:109$188'.
+  created $dff cell `$procdff$327' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q6_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:109$188'.
+  created $dff cell `$procdff$328' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.a_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:110$189'.
+  created $adff cell `$procdff$333' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.ce_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:110$189'.
+  created $adff cell `$procdff$338' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.cfg_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:110$189'.
+  created $adff cell `$procdff$343' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.go_e_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:110$189'.
+  created $adff cell `$procdff$348' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.st_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:110$189'.
+  created $adff cell `$procdff$353' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.go_tag_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:110$189'.
+  created $adff cell `$procdff$358' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.g_local.ce_l' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:123$191'.
+  created $adff cell `$procdff$363' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.g_local.cfg_l' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:123$191'.
+  created $adff cell `$procdff$368' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.g_local.go_l' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:123$191'.
+  created $adff cell `$procdff$373' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_il7.nb' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:174$194'.
+  created $dff cell `$procdff$374' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_il7.nr' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:174$194'.
+  created $dff cell `$procdff$375' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_il7.lph' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:174$194'.
+  created $dff cell `$procdff$376' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_run' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:208$203'.
+  created $adff cell `$procdff$381' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_cgo' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:208$203'.
+  created $adff cell `$procdff$386' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_st' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:208$203'.
+  created $adff cell `$procdff$391' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_go' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:208$203'.
+  created $adff cell `$procdff$396' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_pend' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:208$203'.
+  created $adff cell `$procdff$401' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_ev1' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:208$203'.
+  created $adff cell `$procdff$406' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_k[0]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:214$205'.
+  created $dff cell `$procdff$407' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_k[1]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:214$205'.
+  created $dff cell `$procdff$408' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_np[0]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:214$205'.
+  created $dff cell `$procdff$409' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_np[1]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:214$205'.
+  created $dff cell `$procdff$410' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_bk[0]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:214$205'.
+  created $dff cell `$procdff$411' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_bk[1]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:214$205'.
+  created $dff cell `$procdff$412' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\bank_q' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:192$158'.
+  created $dff cell `$procdff$413' with positive edge clock.
+Creating register for signal `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.\relay_q[0]' using process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$209'.
+  created $adff cell `$procdff$418' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.\sync_q' using process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:28$207'.
+  created $adff cell `$procdff$423' with positive edge clock and positive level reset.
+
+7.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:234$162'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:234$162'.
+Found and cleaned up 3 empty switches in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:245$163'.
+Found and cleaned up 2 empty switches in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:275$171'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:275$171'.
+Found and cleaned up 1 empty switch in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:280$179'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:280$179'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:106$186'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:109$188'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:110$189'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:123$191'.
+Found and cleaned up 2 empty switches in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:174$194'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:174$194'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:208$203'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:214$205'.
+Found and cleaned up 1 empty switch in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:192$158'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:192$158'.
+Removing empty process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$209'.
+Removing empty process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:28$207'.
+Cleaned up 10 empty switches.
+
+7.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81_cfg7_seq_local.
+<suppressed ~62 debug messages>
+Optimizing module $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.
+<suppressed ~4 debug messages>
+
+8. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.
+<suppressed ~1 debug messages>
+
+9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81_cfg7_seq_local..
+Removed 49 unused cells and 167 unused wires.
+<suppressed ~56 debug messages>
+Renaming module \ot_s81_cfg7_seq_local to \gold.
+
+10. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_cfg7_seq_local'.
+Generating RTLIL representation for module `\ot_s81_cfg7_seq_bf_local'.
+Generating RTLIL representation for module `\ot_s81_cfg7_seq'.
+Generating RTLIL representation for module `\ot_s81_cfg7_seq_bf'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq_bfp.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq_bfp.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_cfg7_seq_bfp'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_bf_prog_seq'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:42
+Successfully finished Verilog frontend.
+
+14. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \PQ = 0
+Parameter \LAYOUT = 1
+Parameter \LOCAL_COPY = 1
+Parameter \PINREG = 1
+
+15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_cfg7_seq_local'.
+Parameter \PQ = 0
+Parameter \LAYOUT = 1
+Parameter \LOCAL_COPY = 1
+Parameter \PINREG = 1
+Generating RTLIL representation for module `$paramod$2e1103d91c9598a5de676147883080f181e6f8d9\ot_s81_cfg7_seq_local'.
+Warning: Replacing memory \g_dl.d_bk with list of registers. See /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:228
+Warning: Replacing memory \g_dl.d_np with list of registers. See /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:228
+Warning: Replacing memory \g_dl.d_k with list of registers. See /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:228
+
+15.1. Analyzing design hierarchy..
+Top module:  \ot_s81_cfg7_seq_local
+Used module:     \ot_rst_relay
+Parameter \REGIONS = 2
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+15.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 2
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:42
+
+15.3. Analyzing design hierarchy..
+Top module:  \ot_s81_cfg7_seq_local
+Used module:     $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+
+15.4. Analyzing design hierarchy..
+Top module:  \ot_s81_cfg7_seq_local
+Used module:     $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+Removing unused module `\ot_rst_relay'.
+Removing unused module `\ot_s81_bf_prog_seq'.
+Removing unused module `\ot_s81_cfg7_seq_bfp'.
+Removing unused module `\ot_s81_cfg7_seq_bf'.
+Removing unused module `\ot_s81_cfg7_seq'.
+Removing unused module `\ot_s81_cfg7_seq_bf_local'.
+Removing unused module `$paramod$2e1103d91c9598a5de676147883080f181e6f8d9\ot_s81_cfg7_seq_local'.
+Removed 7 unused modules.
+
+16. Executing PROC pass (convert processes to netlists).
+
+16.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+Found and cleaned up 4 empty switches in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:73$630'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:73$630'.
+Found and cleaned up 1 empty switch in `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$633'.
+Cleaned up 6 empty switches.
+
+16.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:247$586 in module ot_s81_cfg7_seq_local.
+Marked 2 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587 in module ot_s81_cfg7_seq_local.
+Marked 2 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:288$595 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:106$610 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:110$613 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:123$615 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:187$618 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:221$627 in module ot_s81_cfg7_seq_local.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$633 in module $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:28$631 in module $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.
+Removed a total of 0 dead cases.
+
+16.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 22 redundant assignments.
+Promoted 15 assignments to connections.
+
+16.4. Executing PROC_INIT pass (extract init attributes).
+
+16.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_c in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+Found async reset \rst_c in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:288$595'.
+Found async reset \rst_p in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:106$610'.
+Found async reset \rst_p in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:110$613'.
+Found async reset \rst_c in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:123$615'.
+Found async reset \rst_c in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:221$627'.
+Found async reset \rst_n_in in `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$633'.
+Found async reset \rst_n_in in `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:28$631'.
+
+16.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~10 debug messages>
+
+16.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:247$586'.
+     1/1: $1\cm_q[47:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+     1/8: $0\c_v[0:0]
+     2/8: $0\pend[0:0]
+     3/8: $0\fault[0:0]
+     4/8: $0\ld_a[14:0]
+     5/8: $0\tag[1:0]
+     6/8: $0\ld_np[2:0]
+     7/8: $0\ld_k[4:0]
+     8/8: $0\ld_run[0:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:288$595'.
+     1/1: $0\act[0:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:293$603'.
+     1/1: $0\c_d[47:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:106$610'.
+     1/2: $0\g_pin.ef_r[1:0]
+     2/2: $0\g_pin.lc_r[14:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:109$612'.
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:110$613'.
+     1/6: $0\g_pin.go_tag_r[1:0]
+     2/6: $0\g_pin.st_r[1:0]
+     3/6: $0\g_pin.go_e_r[0:0]
+     4/6: $0\g_pin.cfg_r[53:0]
+     5/6: $0\g_pin.ce_r[6:0]
+     6/6: $0\g_pin.a_r[11:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:123$615'.
+     1/3: $0\g_pin.g_local.go_l[0:0]
+     2/3: $0\g_pin.g_local.cfg_l[5:0]
+     3/3: $0\g_pin.g_local.ce_l[6:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:187$618'.
+     1/3: $0\g_il7.lph[9:0]
+     2/3: $0\g_il7.nr[1:0]
+     3/3: $0\g_il7.nb[2:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:221$627'.
+     1/6: $0\g_dl.d_ev1[1:0]
+     2/6: $0\g_dl.d_pend[1:0]
+     3/6: $0\g_dl.d_go[1:0]
+     4/6: $0\g_dl.d_st[1:0]
+     5/6: $0\g_dl.d_cgo[1:0]
+     6/6: $0\g_dl.d_run[1:0]
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:227$629'.
+Creating decoders for process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:205$582'.
+     1/1: $0\bank_q[2:0]
+Creating decoders for process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$633'.
+     1/1: $0\relay_q[0][1:0]
+Creating decoders for process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:28$631'.
+     1/1: $0\sync_q[1:0]
+
+16.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_s81_cfg7_seq_local.\cm_q' from process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:247$586'.
+
+16.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_s81_cfg7_seq_local.\c_v' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+  created $adff cell `$procdff$689' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\fault' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+  created $adff cell `$procdff$694' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\ld_run' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+  created $adff cell `$procdff$699' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\ld_k' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+  created $adff cell `$procdff$704' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\ld_np' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+  created $dff cell `$procdff$711' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\pend' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+  created $adff cell `$procdff$716' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\tag' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+  created $adff cell `$procdff$721' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\ld_a' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+  created $dff cell `$procdff$728' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\act' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:288$595'.
+  created $adff cell `$procdff$733' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\c_a' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:293$603'.
+  created $dff cell `$procdff$734' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\c_d' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:293$603'.
+  created $dff cell `$procdff$735' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.ef_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:106$610'.
+  created $adff cell `$procdff$740' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.lc_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:106$610'.
+  created $adff cell `$procdff$745' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q0_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:109$612'.
+  created $dff cell `$procdff$746' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q1_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:109$612'.
+  created $dff cell `$procdff$747' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q2_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:109$612'.
+  created $dff cell `$procdff$748' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q3_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:109$612'.
+  created $dff cell `$procdff$749' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q4_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:109$612'.
+  created $dff cell `$procdff$750' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q5_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:109$612'.
+  created $dff cell `$procdff$751' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.q6_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:109$612'.
+  created $dff cell `$procdff$752' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.a_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:110$613'.
+  created $adff cell `$procdff$757' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.ce_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:110$613'.
+  created $adff cell `$procdff$762' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.cfg_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:110$613'.
+  created $adff cell `$procdff$767' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.go_e_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:110$613'.
+  created $adff cell `$procdff$772' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.st_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:110$613'.
+  created $adff cell `$procdff$777' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.go_tag_r' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:110$613'.
+  created $adff cell `$procdff$782' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.g_local.ce_l' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:123$615'.
+  created $adff cell `$procdff$787' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.g_local.cfg_l' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:123$615'.
+  created $adff cell `$procdff$792' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_pin.g_local.go_l' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:123$615'.
+  created $adff cell `$procdff$797' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_il7.nb' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:187$618'.
+  created $dff cell `$procdff$798' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_il7.nr' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:187$618'.
+  created $dff cell `$procdff$799' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_il7.lph' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:187$618'.
+  created $dff cell `$procdff$800' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_ev1' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:221$627'.
+  created $adff cell `$procdff$805' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_run' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:221$627'.
+  created $adff cell `$procdff$810' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_cgo' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:221$627'.
+  created $adff cell `$procdff$815' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_st' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:221$627'.
+  created $adff cell `$procdff$820' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_go' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:221$627'.
+  created $adff cell `$procdff$825' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_pend' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:221$627'.
+  created $adff cell `$procdff$830' with positive edge clock and positive level reset.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_k[0]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:227$629'.
+  created $dff cell `$procdff$831' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_k[1]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:227$629'.
+  created $dff cell `$procdff$832' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_np[0]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:227$629'.
+  created $dff cell `$procdff$833' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_np[1]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:227$629'.
+  created $dff cell `$procdff$834' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_bk[0]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:227$629'.
+  created $dff cell `$procdff$835' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\g_dl.d_bk[1]' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:227$629'.
+  created $dff cell `$procdff$836' with positive edge clock.
+Creating register for signal `\ot_s81_cfg7_seq_local.\bank_q' using process `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:205$582'.
+  created $dff cell `$procdff$837' with positive edge clock.
+Creating register for signal `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.\relay_q[0]' using process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$633'.
+  created $adff cell `$procdff$842' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.\sync_q' using process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:28$631'.
+  created $adff cell `$procdff$847' with positive edge clock and positive level reset.
+
+16.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+16.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:247$586'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:247$586'.
+Found and cleaned up 3 empty switches in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:258$587'.
+Found and cleaned up 2 empty switches in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:288$595'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:288$595'.
+Found and cleaned up 1 empty switch in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:293$603'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:293$603'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:106$610'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:109$612'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:110$613'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:123$615'.
+Found and cleaned up 2 empty switches in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:187$618'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:187$618'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:221$627'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:227$629'.
+Found and cleaned up 1 empty switch in `\ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:205$582'.
+Removing empty process `ot_s81_cfg7_seq_local.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:205$582'.
+Removing empty process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:40$633'.
+Removing empty process `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv:28$631'.
+Cleaned up 10 empty switches.
+
+16.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81_cfg7_seq_local.
+<suppressed ~65 debug messages>
+Optimizing module $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.
+<suppressed ~4 debug messages>
+
+17. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay.
+<suppressed ~1 debug messages>
+
+18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81_cfg7_seq_local..
+Removed 48 unused cells and 168 unused wires.
+<suppressed ~55 debug messages>
+
+19. Executing CHECK pass (checking for obvious problems).
+Checking module ot_s81_cfg7_seq_local...
+Found and reported 0 problems.
+Renaming module \ot_s81_cfg7_seq_local to \gate.
+
+20. Executing SETUNDEF pass (replace undef values with defined constants).
+
+21. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: ld_ok_gold (1'1), ld_ok_gate (1'1) -> ld_ok
+Presumably equivalent wires: ld_start_gold (\g_pin.lc_r_gold [1]), ld_start_gate (\g_pin.lc_r_gate [1]) -> ld_start
+Presumably equivalent wires: rce_gold (\rce_gold), rce_gate (\rce_gate) -> rce
+Presumably equivalent wires: rbank_gold (\rbank_gold), rbank_gate (\rbank_gate) -> rbank
+Presumably equivalent wires: bank_q_gold (\bank_q_gold), bank_q_gate (\bank_q_gate) -> bank_q
+Presumably equivalent wires: ld_run_x_gold (\g_dl.d_run_gold [1]), ld_run_x_gate (\g_dl.d_run_gate [1]) -> ld_run_x
+Presumably equivalent wires: cfg_go_x_gold (\g_dl.d_cgo_gold [1]), cfg_go_x_gate (\g_dl.d_cgo_gate [1]) -> cfg_go_x
+Presumably equivalent wires: ld_start_x_gold (\g_dl.d_st_gold [1]), ld_start_x_gate (\g_dl.d_st_gate [1]) -> ld_start_x
+Presumably equivalent wires: go_x_gold (\g_dl.d_go_gold [1]), go_x_gate (\g_dl.d_go_gate [1]) -> go_x
+Presumably equivalent wires: pend_x_gold (\g_dl.d_pend_gold [1]), pend_x_gate (\g_dl.d_pend_gate [1]) -> pend_x
+Presumably equivalent wires: ld_k_x_gold (\g_dl.d_k[1]_gold), ld_k_x_gate (\g_dl.d_k[1]_gate) -> ld_k_x
+Presumably equivalent wires: ld_np_x_gold (\g_dl.d_np[1]_gold), ld_np_x_gate (\g_dl.d_np[1]_gate) -> ld_np_x
+Presumably equivalent wires: bank_x_gold (\g_dl.d_bk[1]_gold), bank_x_gate (\g_dl.d_bk[1]_gate) -> bank_x
+Presumably equivalent wires: ev1_gold (1'0), ev1_gate (1'0) -> ev1
+Presumably equivalent wires: sel_gold (\g_dl.d_bk[1]_gold), sel_gate (\g_dl.d_bk[1]_gate) -> sel
+Presumably equivalent wires: cm_q_gold (\cm_q_gold), cm_q_gate (\cm_q_gate) -> cm_q
+Presumably equivalent wires: act_gold (\act_gold), act_gate (\act_gate) -> act
+Presumably equivalent wires: ld_busy_gold (\ld_busy_gold), ld_busy_gate (\ld_busy_gate) -> ld_busy
+Presumably equivalent wires: g_rst.rr__gold (\g_rst.u_rst.relay_q[0]_gold), g_rst.rr__gate (\g_rst.u_rst.relay_q[0]_gate) -> g_rst.rr_
+Presumably equivalent wires: g_pin.lc_r_gold (\g_pin.lc_r_gold), g_pin.lc_r_gate (\g_pin.lc_r_gate) -> g_pin.lc_r
+Presumably equivalent wires: g_pin.q0_r_gold (\g_pin.q0_r_gold), g_pin.q0_r_gate (\g_pin.q0_r_gate) -> g_pin.q0_r
+Presumably equivalent wires: g_pin.q1_r_gold (\g_pin.q1_r_gold), g_pin.q1_r_gate (\g_pin.q1_r_gate) -> g_pin.q1_r
+Presumably equivalent wires: g_pin.q2_r_gold (\g_pin.q2_r_gold), g_pin.q2_r_gate (\g_pin.q2_r_gate) -> g_pin.q2_r
+Presumably equivalent wires: g_pin.q3_r_gold (\g_pin.q3_r_gold), g_pin.q3_r_gate (\g_pin.q3_r_gate) -> g_pin.q3_r
+Presumably equivalent wires: g_pin.q4_r_gold (\g_pin.q4_r_gold), g_pin.q4_r_gate (\g_pin.q4_r_gate) -> g_pin.q4_r
+Presumably equivalent wires: g_pin.q5_r_gold (\g_pin.q5_r_gold), g_pin.q5_r_gate (\g_pin.q5_r_gate) -> g_pin.q5_r
+Presumably equivalent wires: g_pin.q6_r_gold (\g_pin.q6_r_gold), g_pin.q6_r_gate (\g_pin.q6_r_gate) -> g_pin.q6_r
+Presumably equivalent wires: g_pin.a_r_gold (\g_pin.a_r_gold), g_pin.a_r_gate (\g_pin.a_r_gate) -> g_pin.a_r
+Presumably equivalent wires: g_pin.ce_r_gold (\g_pin.ce_r_gold), g_pin.ce_r_gate (\g_pin.ce_r_gate) -> g_pin.ce_r
+Presumably equivalent wires: g_pin.cfg_r_gold (\g_pin.cfg_r_gold), g_pin.cfg_r_gate (\g_pin.cfg_r_gate) -> g_pin.cfg_r
+Presumably equivalent wires: g_pin.go_e_r_gold (\g_pin.go_e_r_gold), g_pin.go_e_r_gate (\g_pin.go_e_r_gate) -> g_pin.go_e_r
+Presumably equivalent wires: g_pin.st_r_gold (\g_pin.st_r_gold), g_pin.st_r_gate (\g_pin.st_r_gate) -> g_pin.st_r
+Presumably equivalent wires: g_pin.go_tag_r_gold (\g_pin.go_tag_r_gold), g_pin.go_tag_r_gate (\g_pin.go_tag_r_gate) -> g_pin.go_tag_r
+Presumably equivalent wires: g_pin.g_local.ce_l_gold (\g_pin.g_local.ce_l_gold), g_pin.g_local.ce_l_gate (\g_pin.g_local.ce_l_gate) -> g_pin.g_local.ce_l
+Presumably equivalent wires: g_pin.g_local.cfg_l_gold (\g_pin.g_local.cfg_l_gold), g_pin.g_local.cfg_l_gate (\g_pin.g_local.cfg_l_gate) -> g_pin.g_local.cfg_l
+Presumably equivalent wires: g_pin.g_local.go_l_gold (\g_pin.g_local.go_l_gold), g_pin.g_local.go_l_gate (\g_pin.g_local.go_l_gate) -> g_pin.g_local.go_l
+Presumably equivalent wires: g_il7.nb_gold (\g_il7.nb_gold), g_il7.nb_gate (\g_il7.nb_gate) -> g_il7.nb
+Presumably equivalent wires: g_il7.nr_gold (\g_il7.nr_gold), g_il7.nr_gate (\g_il7.nr_gate) -> g_il7.nr
+Presumably equivalent wires: g_il7.lph_gold (\g_il7.lph_gold), g_il7.lph_gate (\g_il7.lph_gate) -> g_il7.lph
+Presumably equivalent wires: g_dl.d_run_gold (\g_dl.d_run_gold), g_dl.d_run_gate (\g_dl.d_run_gate) -> g_dl.d_run
+Presumably equivalent wires: g_dl.d_cgo_gold (\g_dl.d_cgo_gold), g_dl.d_cgo_gate (\g_dl.d_cgo_gate) -> g_dl.d_cgo
+Presumably equivalent wires: g_dl.d_st_gold (\g_dl.d_st_gold), g_dl.d_st_gate (\g_dl.d_st_gate) -> g_dl.d_st
+Presumably equivalent wires: g_dl.d_go_gold (\g_dl.d_go_gold), g_dl.d_go_gate (\g_dl.d_go_gate) -> g_dl.d_go
+Presumably equivalent wires: g_dl.d_pend_gold (\g_dl.d_pend_gold), g_dl.d_pend_gate (\g_dl.d_pend_gate) -> g_dl.d_pend
+Presumably equivalent wires: g_dl.d_k[0]_gold (\g_dl.d_k[0]_gold), g_dl.d_k[0]_gate (\g_dl.d_k[0]_gate) -> g_dl.d_k[0]
+Presumably equivalent wires: g_dl.d_k[1]_gold (\g_dl.d_k[1]_gold), g_dl.d_k[1]_gate (\g_dl.d_k[1]_gate) -> g_dl.d_k[1]
+Presumably equivalent wires: g_dl.d_np[0]_gold (\g_dl.d_np[0]_gold), g_dl.d_np[0]_gate (\g_dl.d_np[0]_gate) -> g_dl.d_np[0]
+Presumably equivalent wires: g_dl.d_np[1]_gold (\g_dl.d_np[1]_gold), g_dl.d_np[1]_gate (\g_dl.d_np[1]_gate) -> g_dl.d_np[1]
+Presumably equivalent wires: g_dl.d_bk[0]_gold (\g_dl.d_bk[0]_gold), g_dl.d_bk[0]_gate (\g_dl.d_bk[0]_gate) -> g_dl.d_bk[0]
+Presumably equivalent wires: g_dl.d_bk[1]_gold (\g_dl.d_bk[1]_gold), g_dl.d_bk[1]_gate (\g_dl.d_bk[1]_gate) -> g_dl.d_bk[1]
+Presumably equivalent wires: clk_gold (\clk_gold), clk_gate (\clk_gate) -> clk
+Presumably equivalent wires: rst_n_gold (\rst_n_gold), rst_n_gate (\rst_n_gate) -> rst_n
+Presumably equivalent wires: lc_gold (\lc_gold), lc_gate (\lc_gate) -> lc
+Presumably equivalent wires: a_gold (\g_pin.a_r_gold), a_gate (\g_pin.a_r_gate) -> a
+Presumably equivalent wires: ce0_gold (\g_pin.ce_r_gold [0]), ce0_gate (\g_pin.ce_r_gate [0]) -> ce0
+Presumably equivalent wires: ce1_gold (\g_pin.ce_r_gold [1]), ce1_gate (\g_pin.ce_r_gate [1]) -> ce1
+Presumably equivalent wires: ce2_gold (\g_pin.ce_r_gold [2]), ce2_gate (\g_pin.ce_r_gate [2]) -> ce2
+Presumably equivalent wires: ce3_gold (\g_pin.ce_r_gold [3]), ce3_gate (\g_pin.ce_r_gate [3]) -> ce3
+Presumably equivalent wires: ce4_gold (\g_pin.ce_r_gold [4]), ce4_gate (\g_pin.ce_r_gate [4]) -> ce4
+Presumably equivalent wires: ce5_gold (\g_pin.ce_r_gold [5]), ce5_gate (\g_pin.ce_r_gate [5]) -> ce5
+Presumably equivalent wires: ce6_gold (\g_pin.ce_r_gold [6]), ce6_gate (\g_pin.ce_r_gate [6]) -> ce6
+Presumably equivalent wires: q0_gold (\q0_gold), q0_gate (\q0_gate) -> q0
+Presumably equivalent wires: q1_gold (\q1_gold), q1_gate (\q1_gate) -> q1
+Presumably equivalent wires: q2_gold (\q2_gold), q2_gate (\q2_gate) -> q2
+Presumably equivalent wires: q3_gold (\q3_gold), q3_gate (\q3_gate) -> q3
+Presumably equivalent wires: q4_gold (\q4_gold), q4_gate (\q4_gate) -> q4
+Presumably equivalent wires: q5_gold (\q5_gold), q5_gate (\q5_gate) -> q5
+Presumably equivalent wires: q6_gold (\q6_gold), q6_gate (\q6_gate) -> q6
+Presumably equivalent wires: cfg_gold (\g_pin.cfg_r_gold), cfg_gate (\g_pin.cfg_r_gate) -> cfg
+Presumably equivalent wires: go_e_gold (\g_pin.go_e_r_gold), go_e_gate (\g_pin.go_e_r_gate) -> go_e
+Presumably equivalent wires: st_gold (\g_pin.st_r_gold), st_gate (\g_pin.st_r_gate) -> st
+Presumably equivalent wires: ef_gold (\ef_gold), ef_gate (\ef_gate) -> ef
+Presumably equivalent wires: go_tag_gold (\g_pin.go_tag_r_gold), go_tag_gate (\g_pin.go_tag_r_gate) -> go_tag
+Presumably equivalent wires: ce_local_gold (\g_pin.g_local.ce_l_gold), ce_local_gate (\g_pin.g_local.ce_l_gate) -> ce_local
+Presumably equivalent wires: cfg_local_gold (\g_pin.g_local.cfg_l_gold), cfg_local_gate (\g_pin.g_local.cfg_l_gate) -> cfg_local
+Presumably equivalent wires: go_local_gold (\g_pin.g_local.go_l_gold), go_local_gate (\g_pin.g_local.go_l_gate) -> go_local
+Presumably equivalent wires: rst_p_gold (\g_rst.u_rst.relay_q[0]_gold [0]), rst_p_gate (\g_rst.u_rst.relay_q[0]_gate [0]) -> rst_p
+Presumably equivalent wires: rst_c_gold (\g_rst.u_rst.relay_q[0]_gold [1]), rst_c_gate (\g_rst.u_rst.relay_q[0]_gate [1]) -> rst_c
+Presumably equivalent wires: lc_i_gold (\g_pin.lc_r_gold), lc_i_gate (\g_pin.lc_r_gate) -> lc_i
+Presumably equivalent wires: q0_i_gold (\g_pin.q0_r_gold), q0_i_gate (\g_pin.q0_r_gate) -> q0_i
+Presumably equivalent wires: q1_i_gold (\g_pin.q1_r_gold), q1_i_gate (\g_pin.q1_r_gate) -> q1_i
+Presumably equivalent wires: q2_i_gold (\g_pin.q2_r_gold), q2_i_gate (\g_pin.q2_r_gate) -> q2_i
+Presumably equivalent wires: q3_i_gold (\g_pin.q3_r_gold), q3_i_gate (\g_pin.q3_r_gate) -> q3_i
+Presumably equivalent wires: q4_i_gold (\g_pin.q4_r_gold), q4_i_gate (\g_pin.q4_r_gate) -> q4_i
+Presumably equivalent wires: q5_i_gold (\g_pin.q5_r_gold), q5_i_gate (\g_pin.q5_r_gate) -> q5_i
+Presumably equivalent wires: q6_i_gold (\g_pin.q6_r_gold), q6_i_gate (\g_pin.q6_r_gate) -> q6_i
+Presumably equivalent wires: a_c_gold (\a_c_gold), a_c_gate (\a_c_gate) -> a_c
+Presumably equivalent wires: ce_c_gold (\ce_c_gold), ce_c_gate (\ce_c_gate) -> ce_c
+Presumably equivalent wires: cfg_c_gold ({ \c_v_gold \c_d_gold \c_a_gold }), cfg_c_gate ({ \c_v_gate \c_d_gate \c_a_gate }) -> cfg_c
+Presumably equivalent wires: go_e_c_gold (\go_e_c_gold), go_e_c_gate (\go_e_c_gate) -> go_e_c
+Presumably equivalent wires: st_c_gold ({ \fault_gold \ld_busy_gold }), st_c_gate ({ \fault_gate \ld_busy_gate }) -> st_c
+Presumably equivalent wires: go_tag_c_gold (2'00), go_tag_c_gate (2'00) -> go_tag_c
+Presumably equivalent wires: go_gold (\g_pin.lc_r_gold [0]), go_gate (\g_pin.lc_r_gate [0]) -> go
+Presumably equivalent wires: cfg_go_gold (\g_pin.lc_r_gold [1]), cfg_go_gate (\g_pin.lc_r_gate [1]) -> cfg_go
+Presumably equivalent wires: cfg_ph_gold (\g_pin.lc_r_gold [11:2]), cfg_ph_gate (\g_pin.lc_r_gate [11:2]) -> cfg_ph
+Presumably equivalent wires: cfg_np_gold (\g_pin.lc_r_gold [14:12]), cfg_np_gate (\g_pin.lc_r_gate [14:12]) -> cfg_np
+Presumably equivalent wires: c_v_gold (\c_v_gold), c_v_gate (\c_v_gate) -> c_v
+Presumably equivalent wires: c_a_gold (\c_a_gold), c_a_gate (\c_a_gate) -> c_a
+Presumably equivalent wires: c_d_gold (\c_d_gold), c_d_gate (\c_d_gate) -> c_d
+Presumably equivalent wires: fault_gold (\fault_gold), fault_gate (\fault_gate) -> fault
+Presumably equivalent wires: ld_run_gold (\ld_run_gold), ld_run_gate (\ld_run_gate) -> ld_run
+Presumably equivalent wires: ld_k_gold (\ld_k_gold), ld_k_gate (\ld_k_gate) -> ld_k
+Presumably equivalent wires: ld_np_gold (\ld_np_gold), ld_np_gate (\ld_np_gate) -> ld_np
+Presumably equivalent wires: pend_gold (\pend_gold), pend_gate (\pend_gate) -> pend
+Presumably equivalent wires: g_rst.u_rst.relay_q[0]_gold (\g_rst.u_rst.relay_q[0]_gold), g_rst.u_rst.relay_q[0]_gate (\g_rst.u_rst.relay_q[0]_gate) -> g_rst.u_rst.relay_q[0]
+Presumably equivalent wires: g_rst.u_rst.sync_q_gold (\g_rst.u_rst.sync_q_gold), g_rst.u_rst.sync_q_gate (\g_rst.u_rst.sync_q_gate) -> g_rst.u_rst.sync_q
+Presumably equivalent wires: g_rst.u_rst.rst_n_gold (\g_rst.u_rst.relay_q[0]_gold), g_rst.u_rst.rst_n_gate (\g_rst.u_rst.relay_q[0]_gate) -> g_rst.u_rst.rst_n
+Presumably equivalent wires: g_rst.u_rst.rst_n_in_gold (\rst_n_gold), g_rst.u_rst.rst_n_in_gate (\rst_n_gate) -> g_rst.u_rst.rst_n_in
+Presumably equivalent wires: g_rst.u_rst.clk_gold (\clk_gold), g_rst.u_rst.clk_gate (\clk_gate) -> g_rst.u_rst.clk
+Changing input ARST of cell $procdff$716_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$716_gate ($adff): \pend_gate -> \pend
+Changing input ARST of cell $procdff$757_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input D of cell $procdff$757_gate ($adff): \a_c_gate -> \a_c
+Changing input S of cell $auto$proc_dff.cc:242:proc_dff$709_gate ($mux): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input A of cell $auto$proc_dff.cc:242:proc_dff$709_gate ($mux): \ld_np_gate -> \ld_np
+Changing input ARST of cell $procdff$797_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$797_gate ($adff): \go_e_c_gate -> \go_e_c
+Changing input D of cell $procdff$835_gate ($dff): \bank_q_gate -> \bank_q
+Changing input ARST of cell $procdff$704_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input ARST of cell $procdff$782_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input ARST of cell $procdff$825_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$825_gate ($adff): { \g_dl.d_go_gate [0] \g_pin.lc_r_gate [0] } -> { \g_dl.d_go [0] \g_pin.lc_r [0] }
+Changing input ARST of cell $procdff$699_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input ARST of cell $procdff$792_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$792_gate ($adff): { \c_v_gate \c_a_gate } -> { \c_v \c_a }
+Changing input ARST of cell $procdff$694_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$694_gate ($adff): \fault_gate -> \fault
+Changing input ARST of cell $procdff$830_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$830_gate ($adff): { \g_dl.d_pend_gate [0] \pend_gate } -> { \g_dl.d_pend [0] \pend }
+Changing input ARST of cell $procdff$689_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$689_gate ($adff): \g_dl.d_run_gate [1] -> \g_dl.d_run [1]
+Changing input S of cell $procmux$683_gate ($mux): \rce_gate -> \rce
+Changing input B of cell $procmux$683_gate ($mux): \rbank_gate -> \rbank
+Changing input A of cell $procmux$683_gate ($mux): \bank_q_gate -> \bank_q
+Changing input S of cell $procmux$681_gate ($mux): \g_pin.lc_r_gate [1] -> \g_pin.lc_r [1]
+Changing input S of cell $procmux$678_gate ($mux): \ld_run_gate -> \ld_run
+Changing input A of cell $procmux$678_gate ($mux): \g_il7.nb_gate -> \g_il7.nb
+Changing input S of cell $procmux$676_gate ($mux): \g_pin.lc_r_gate [1] -> \g_pin.lc_r [1]
+Changing input S of cell $procmux$673_gate ($mux): \ld_run_gate -> \ld_run
+Changing input A of cell $procmux$673_gate ($mux): \g_il7.nr_gate -> \g_il7.nr
+Changing input S of cell $procmux$671_gate ($mux): \g_pin.lc_r_gate [1] -> \g_pin.lc_r [1]
+Changing input B of cell $procmux$671_gate ($mux): \g_pin.lc_r_gate [11:2] -> \g_pin.lc_r [11:2]
+Changing input A of cell $procmux$671_gate ($mux): \g_il7.lph_gate -> \g_il7.lph
+Changing input S of cell $procmux$668_gate ($mux): \g_dl.d_run_gate [1] -> \g_dl.d_run [1]
+Changing input A of cell $procmux$668_gate ($mux): \c_d_gate -> \c_d
+Changing input A of cell $procmux$663_gate ($mux): \act_gate -> \act
+Changing input S of cell $procmux$661_gate ($mux): \g_pin.lc_r_gate [1] -> \g_pin.lc_r [1]
+Changing input S of cell $procmux$658_gate ($mux): \ld_run_gate -> \ld_run
+Changing input A of cell $procmux$658_gate ($mux): \ld_run_gate -> \ld_run
+Changing input A of cell $procmux$656_gate ($mux): \ld_run_gate -> \ld_run
+Changing input S of cell $procmux$654_gate ($mux): \g_pin.lc_r_gate [1] -> \g_pin.lc_r [1]
+Changing input S of cell $procmux$651_gate ($mux): \ld_run_gate -> \ld_run
+Changing input A of cell $procmux$651_gate ($mux): \ld_k_gate -> \ld_k
+Changing input S of cell $procmux$649_gate ($mux): \g_pin.lc_r_gate [1] -> \g_pin.lc_r [1]
+Changing input B of cell $procmux$649_gate ($mux): \g_pin.lc_r_gate [14:12] -> \g_pin.lc_r [14:12]
+Changing input A of cell $procmux$649_gate ($mux): \ld_np_gate -> \ld_np
+Changing input ARST of cell $procdff$733_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$734_gate ($dff): \g_dl.d_k[1]_gate -> \g_dl.d_k[1]
+Changing input A of cell $procmux$642_CMP0_gate ($logic_not): \g_dl.d_bk[1]_gate -> \g_dl.d_bk[1]
+Changing input A of cell $procmux$641_CMP0_gate ($eq): \g_dl.d_bk[1]_gate -> \g_dl.d_bk[1]
+Changing input A of cell $procmux$640_CMP0_gate ($eq): \g_dl.d_bk[1]_gate -> \g_dl.d_bk[1]
+Changing input A of cell $procmux$639_CMP0_gate ($eq): \g_dl.d_bk[1]_gate -> \g_dl.d_bk[1]
+Changing input A of cell $procmux$638_CMP0_gate ($eq): \g_dl.d_bk[1]_gate -> \g_dl.d_bk[1]
+Changing input B of cell $procmux$636_gate ($pmux): { \g_pin.q0_r_gate \g_pin.q1_r_gate \g_pin.q2_r_gate \g_pin.q3_r_gate \g_pin.q4_r_gate \g_pin.q5_r_gate } -> { \g_pin.q0_r \g_pin.q1_r \g_pin.q2_r \g_pin.q3_r \g_pin.q4_r \g_pin.q5_r }
+Changing input A of cell $procmux$636_gate ($pmux): \g_pin.q6_r_gate -> \g_pin.q6_r
+Changing input A of cell $procmux$637_CMP0_gate ($eq): \g_dl.d_bk[1]_gate -> \g_dl.d_bk[1]
+Changing input ARST of cell $procdff$762_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input D of cell $procdff$762_gate ($adff): \ce_c_gate -> \ce_c
+Changing input D of cell $flatten\g_rst.u_rst.$procdff$847_gate ($adff): { \g_rst.u_rst.sync_q_gate [0] 1'1 } -> { \g_rst.u_rst.sync_q [0] 1'1 }
+Changing input D of cell $procdff$833_gate ($dff): \ld_np_gate -> \ld_np
+Changing input D of cell $procdff$834_gate ($dff): \g_dl.d_np[0]_gate -> \g_dl.d_np[0]
+Changing input D of cell $flatten\g_rst.u_rst.$procdff$842_gate ($adff): { \g_rst.u_rst.sync_q_gate [1] \g_rst.u_rst.sync_q_gate [1] } -> { \g_rst.u_rst.sync_q [1] \g_rst.u_rst.sync_q [1] }
+Changing input D of cell $procdff$832_gate ($dff): \g_dl.d_k[0]_gate -> \g_dl.d_k[0]
+Changing input A of cell $lt$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:173$564_gate ($lt): \ld_k_gate -> \ld_k
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:173$565_gate ($logic_and): \ld_run_gate -> \ld_run
+Changing input A of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:173$566_gate ($logic_or): \g_pin.lc_r_gate [1] -> \g_pin.lc_r [1]
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:173$567_gate ($logic_and): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:198$568_gate ($logic_not): \rbank_gate -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:198$569_gate ($logic_and): \rce_gate -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:199$570_gate ($eq): \rbank_gate -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:199$571_gate ($logic_and): \rce_gate -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:200$572_gate ($eq): \rbank_gate -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:200$573_gate ($logic_and): \rce_gate -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:201$574_gate ($eq): \rbank_gate -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:201$575_gate ($logic_and): \rce_gate -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:202$576_gate ($eq): \rbank_gate -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:202$577_gate ($logic_and): \rce_gate -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:203$578_gate ($eq): \rbank_gate -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:203$579_gate ($logic_and): \rce_gate -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:204$580_gate ($eq): \rbank_gate -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:204$581_gate ($logic_and): \rce_gate -> \rce
+Changing input ARST of cell $procdff$815_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$815_gate ($adff): { \g_dl.d_cgo_gate [0] \g_pin.lc_r_gate [1] } -> { \g_dl.d_cgo [0] \g_pin.lc_r [1] }
+Changing input ARST of cell $procdff$777_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input D of cell $procdff$777_gate ($adff): { \fault_gate \ld_busy_gate } -> { \fault \ld_busy }
+Changing input ARST of cell $procdff$772_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input D of cell $procdff$772_gate ($adff): \go_e_c_gate -> \go_e_c
+Changing input ARST of cell $procdff$810_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$810_gate ($adff): { \g_dl.d_run_gate [0] \ld_run_gate } -> { \g_dl.d_run [0] \ld_run }
+Changing input ARST of cell $procdff$767_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input D of cell $procdff$767_gate ($adff): { \c_v_gate \c_d_gate \c_a_gate } -> { \c_v \c_d \c_a }
+Changing input D of cell $procdff$831_gate ($dff): \ld_k_gate -> \ld_k
+Changing input A of cell $add$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:281$592_gate ($add): \ld_k_gate -> \ld_k
+Changing input ARST of cell $procdff$820_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$820_gate ($adff): { \g_dl.d_st_gate [0] \g_pin.lc_r_gate [1] } -> { \g_dl.d_st [0] \g_pin.lc_r [1] }
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:283$594_gate ($eq): \ld_k_gate -> \ld_k
+Changing input ARST of cell $procdff$745_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input B of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:290$597_gate ($logic_or): \g_dl.d_st_gate [1] -> \g_dl.d_st [1]
+Changing input A of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:290$597_gate ($logic_or): \g_dl.d_cgo_gate [1] -> \g_dl.d_cgo [1]
+Changing input A of cell $ge$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:291$598_gate ($ge): \c_a_gate -> \c_a
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:291$599_gate ($logic_and): \c_v_gate -> \c_v
+Changing input A of cell $lt$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:291$600_gate ($lt): \c_a_gate -> \c_a
+Changing input B of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:291$602_gate ($logic_and): \c_d_gate [0] -> \c_d [0]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:295$604_gate ($eq): \g_dl.d_k[1]_gate -> \g_dl.d_k[1]
+Changing input B of cell $or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:295$605_gate ($or): { 42'000000000000000000000000000000000000000000 \g_dl.d_np[1]_gate 3'000 } -> { 42'000000000000000000000000000000000000000000 \g_dl.d_np[1] 3'000 }
+Changing input A of cell $or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:295$605_gate ($or): \cm_q_gate -> \cm_q
+Changing input A of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:295$606_gate ($mux): \cm_q_gate -> \cm_q
+Changing input B of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:297$607_gate ($logic_and): \act_gate -> \act
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:297$607_gate ($logic_and): \g_dl.d_go_gate [1] -> \g_dl.d_go [1]
+Changing input B of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:302$608_gate ($logic_or): \c_v_gate -> \c_v
+Changing input A of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:302$608_gate ($logic_or): \g_dl.d_run_gate [1] -> \g_dl.d_run [1]
+Changing input B of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:302$609_gate ($logic_or): \g_dl.d_pend_gate [1] -> \g_dl.d_pend [1]
+Changing input ARST of cell $procdff$787_gate ($adff): \g_rst.u_rst.relay_q[0]_gate [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$787_gate ($adff): \ce_c_gate -> \ce_c
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:189$619_gate ($eq): \g_il7.nb_gate -> \g_il7.nb
+Changing input A of cell $add$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:189$620_gate ($add): \g_il7.nb_gate -> \g_il7.nb
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:189$622_gate ($eq): \g_il7.nb_gate -> \g_il7.nb
+Changing input A of cell $add$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:189$623_gate ($add): \g_il7.nr_gate -> \g_il7.nr
+Changing input A of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:189$624_gate ($mux): \g_il7.nr_gate -> \g_il7.nr
+Changing input S of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:191$625_gate ($mux): \g_pin.lc_r_gate [1] -> \g_pin.lc_r [1]
+Changing input B of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:191$625_gate ($mux): { \g_pin.lc_r_gate [11:2] 2'00 } -> { \g_pin.lc_r [11:2] 2'00 }
+Changing input A of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:191$625_gate ($mux): { \g_il7.lph_gate \g_il7.nr_gate } -> { \g_il7.lph \g_il7.nr }
+Changing input S of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:192$626_gate ($mux): \g_pin.lc_r_gate [1] -> \g_pin.lc_r [1]
+Changing input A of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv:192$626_gate ($mux): \g_il7.nb_gate -> \g_il7.nb
+Changing input D of cell $procdff$836_gate ($dff): \g_dl.d_bk[0]_gate -> \g_dl.d_bk[0]
+Changing input ARST of cell $procdff$386_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$386_gold ($adff): { \g_dl.d_cgo_gold [0] \g_pin.lc_r_gold [1] } -> { \g_dl.d_cgo [0] \g_pin.lc_r [1] }
+Changing input ARST of cell $procdff$343_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input D of cell $procdff$343_gold ($adff): { \c_v_gold \c_d_gold \c_a_gold } -> { \c_v \c_d \c_a }
+Changing input S of cell $auto$proc_dff.cc:242:proc_dff$292_gold ($mux): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input A of cell $auto$proc_dff.cc:242:proc_dff$292_gold ($mux): \ld_np_gold -> \ld_np
+Changing input D of cell $procdff$409_gold ($dff): \ld_np_gold -> \ld_np
+Changing input ARST of cell $procdff$353_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input D of cell $procdff$353_gold ($adff): { \fault_gold \ld_busy_gold } -> { \fault \ld_busy }
+Changing input ARST of cell $procdff$287_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input ARST of cell $procdff$338_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input D of cell $procdff$338_gold ($adff): \ce_c_gold -> \ce_c
+Changing input ARST of cell $procdff$282_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input ARST of cell $procdff$373_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$373_gold ($adff): \go_e_c_gold -> \go_e_c
+Changing input ARST of cell $procdff$396_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$396_gold ($adff): { \g_dl.d_go_gold [0] \g_pin.lc_r_gold [0] } -> { \g_dl.d_go [0] \g_pin.lc_r [0] }
+Changing input ARST of cell $procdff$277_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$277_gold ($adff): \fault_gold -> \fault
+Changing input D of cell $procdff$407_gold ($dff): \ld_k_gold -> \ld_k
+Changing input ARST of cell $procdff$401_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$401_gold ($adff): { \g_dl.d_pend_gold [0] \pend_gold } -> { \g_dl.d_pend [0] \pend }
+Changing input ARST of cell $procdff$272_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$272_gold ($adff): \g_dl.d_run_gold [1] -> \g_dl.d_run [1]
+Changing input ARST of cell $procdff$363_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$363_gold ($adff): \ce_c_gold -> \ce_c
+Changing input ARST of cell $procdff$333_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input D of cell $procdff$333_gold ($adff): \a_c_gold -> \a_c
+Changing input D of cell $procdff$310_gold ($dff): \g_dl.d_k[1]_gold -> \g_dl.d_k[1]
+Changing input D of cell $procdff$411_gold ($dff): \bank_q_gold -> \bank_q
+Changing input ARST of cell $procdff$368_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$368_gold ($adff): { \c_v_gold \c_a_gold } -> { \c_v \c_a }
+Changing input S of cell $procmux$259_gold ($mux): \rce_gold -> \rce
+Changing input B of cell $procmux$259_gold ($mux): \rbank_gold -> \rbank
+Changing input A of cell $procmux$259_gold ($mux): \bank_q_gold -> \bank_q
+Changing input S of cell $procmux$257_gold ($mux): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input S of cell $procmux$254_gold ($mux): \ld_run_gold -> \ld_run
+Changing input A of cell $procmux$254_gold ($mux): \g_il7.nb_gold -> \g_il7.nb
+Changing input S of cell $procmux$252_gold ($mux): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input S of cell $procmux$249_gold ($mux): \ld_run_gold -> \ld_run
+Changing input A of cell $procmux$249_gold ($mux): \g_il7.nr_gold -> \g_il7.nr
+Changing input S of cell $procmux$247_gold ($mux): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input A of cell $procmux$247_gold ($mux): \g_il7.lph_gold -> \g_il7.lph
+Changing input S of cell $procmux$244_gold ($mux): \g_dl.d_run_gold [1] -> \g_dl.d_run [1]
+Changing input A of cell $procmux$244_gold ($mux): \c_d_gold -> \c_d
+Changing input A of cell $procmux$239_gold ($mux): \act_gold -> \act
+Changing input D of cell $procdff$412_gold ($dff): \g_dl.d_bk[0]_gold -> \g_dl.d_bk[0]
+Changing input S of cell $procmux$232_gold ($mux): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input S of cell $procmux$229_gold ($mux): \ld_run_gold -> \ld_run
+Changing input A of cell $procmux$229_gold ($mux): \ld_run_gold -> \ld_run
+Changing input A of cell $procmux$227_gold ($mux): \ld_run_gold -> \ld_run
+Changing input S of cell $procmux$225_gold ($mux): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input S of cell $procmux$222_gold ($mux): \ld_run_gold -> \ld_run
+Changing input A of cell $procmux$222_gold ($mux): \ld_k_gold -> \ld_k
+Changing input S of cell $procmux$220_gold ($mux): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input A of cell $procmux$220_gold ($mux): \ld_np_gold -> \ld_np
+Changing input A of cell $procmux$218_CMP0_gold ($logic_not): \g_dl.d_bk[1]_gold -> \g_dl.d_bk[1]
+Changing input A of cell $procmux$217_CMP0_gold ($eq): \g_dl.d_bk[1]_gold -> \g_dl.d_bk[1]
+Changing input A of cell $procmux$216_CMP0_gold ($eq): \g_dl.d_bk[1]_gold -> \g_dl.d_bk[1]
+Changing input A of cell $procmux$215_CMP0_gold ($eq): \g_dl.d_bk[1]_gold -> \g_dl.d_bk[1]
+Changing input A of cell $procmux$214_CMP0_gold ($eq): \g_dl.d_bk[1]_gold -> \g_dl.d_bk[1]
+Changing input B of cell $procmux$212_gold ($pmux): { \g_pin.q0_r_gold \g_pin.q1_r_gold \g_pin.q2_r_gold \g_pin.q3_r_gold \g_pin.q4_r_gold \g_pin.q5_r_gold } -> { \g_pin.q0_r \g_pin.q1_r \g_pin.q2_r \g_pin.q3_r \g_pin.q4_r \g_pin.q5_r }
+Changing input A of cell $procmux$212_gold ($pmux): \g_pin.q6_r_gold -> \g_pin.q6_r
+Changing input A of cell $procmux$213_CMP0_gold ($eq): \g_dl.d_bk[1]_gold -> \g_dl.d_bk[1]
+Changing input D of cell $flatten\g_rst.u_rst.$procdff$418_gold ($adff): { \g_rst.u_rst.sync_q_gold [1] \g_rst.u_rst.sync_q_gold [1] } -> { \g_rst.u_rst.sync_q [1] \g_rst.u_rst.sync_q [1] }
+Changing input ARST of cell $procdff$381_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$381_gold ($adff): { \g_dl.d_run_gold [0] \ld_run_gold } -> { \g_dl.d_run [0] \ld_run }
+Changing input D of cell $procdff$408_gold ($dff): \g_dl.d_k[0]_gold -> \g_dl.d_k[0]
+Changing input ARST of cell $procdff$309_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input A of cell $lt$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:160$140_gold ($lt): \ld_k_gold -> \ld_k
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:160$141_gold ($logic_and): \ld_run_gold -> \ld_run
+Changing input A of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:160$142_gold ($logic_or): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:160$143_gold ($logic_and): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:185$144_gold ($logic_not): \rbank_gold -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:185$145_gold ($logic_and): \rce_gold -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:186$146_gold ($eq): \rbank_gold -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:186$147_gold ($logic_and): \rce_gold -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:187$148_gold ($eq): \rbank_gold -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:187$149_gold ($logic_and): \rce_gold -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:188$150_gold ($eq): \rbank_gold -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:188$151_gold ($logic_and): \rce_gold -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:189$152_gold ($eq): \rbank_gold -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:189$153_gold ($logic_and): \rce_gold -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:190$154_gold ($eq): \rbank_gold -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:190$155_gold ($logic_and): \rce_gold -> \rce
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:191$156_gold ($eq): \rbank_gold -> \rbank
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:191$157_gold ($logic_and): \rce_gold -> \rce
+Changing input ARST of cell $procdff$358_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input S of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:266$167_gold ($mux): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input B of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:266$167_gold ($mux): \g_pin.lc_r_gold [14:12] -> \g_pin.lc_r [14:12]
+Changing input A of cell $add$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:268$168_gold ($add): \ld_k_gold -> \ld_k
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:270$170_gold ($eq): \ld_k_gold -> \ld_k
+Changing input D of cell $procdff$410_gold ($dff): \g_dl.d_np[0]_gold -> \g_dl.d_np[0]
+Changing input B of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:277$173_gold ($logic_or): \g_dl.d_st_gold [1] -> \g_dl.d_st [1]
+Changing input A of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:277$173_gold ($logic_or): \g_dl.d_cgo_gold [1] -> \g_dl.d_cgo [1]
+Changing input A of cell $ge$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:278$174_gold ($ge): \c_a_gold -> \c_a
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:278$175_gold ($logic_and): \c_v_gold -> \c_v
+Changing input A of cell $lt$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:278$176_gold ($lt): \c_a_gold -> \c_a
+Changing input B of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:278$178_gold ($logic_and): \c_d_gold [0] -> \c_d [0]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:282$180_gold ($eq): \g_dl.d_k[1]_gold -> \g_dl.d_k[1]
+Changing input B of cell $or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:282$181_gold ($or): { 42'000000000000000000000000000000000000000000 \g_dl.d_np[1]_gold 3'000 } -> { 42'000000000000000000000000000000000000000000 \g_dl.d_np[1] 3'000 }
+Changing input A of cell $or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:282$181_gold ($or): \cm_q_gold -> \cm_q
+Changing input A of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:282$182_gold ($mux): \cm_q_gold -> \cm_q
+Changing input B of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:284$183_gold ($logic_and): \act_gold -> \act
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:284$183_gold ($logic_and): \g_dl.d_go_gold [1] -> \g_dl.d_go [1]
+Changing input B of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:289$184_gold ($logic_or): \c_v_gold -> \c_v
+Changing input A of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:289$184_gold ($logic_or): \g_dl.d_run_gold [1] -> \g_dl.d_run [1]
+Changing input B of cell $logic_or$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:289$185_gold ($logic_or): \g_dl.d_pend_gold [1] -> \g_dl.d_pend [1]
+Changing input ARST of cell $procdff$299_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$299_gold ($adff): \pend_gold -> \pend
+Changing input D of cell $flatten\g_rst.u_rst.$procdff$423_gold ($adff): { \g_rst.u_rst.sync_q_gold [0] 1'1 } -> { \g_rst.u_rst.sync_q [0] 1'1 }
+Changing input ARST of cell $procdff$348_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input D of cell $procdff$348_gold ($adff): \go_e_c_gold -> \go_e_c
+Changing input ARST of cell $procdff$316_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [0] -> \g_rst.u_rst.relay_q[0] [0]
+Changing input S of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:168$193_gold ($mux): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input B of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:168$193_gold ($mux): \g_pin.lc_r_gold [11:2] -> \g_pin.lc_r [11:2]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:176$195_gold ($eq): \g_il7.nb_gold -> \g_il7.nb
+Changing input A of cell $add$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:176$196_gold ($add): \g_il7.nb_gold -> \g_il7.nb
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:176$198_gold ($eq): \g_il7.nb_gold -> \g_il7.nb
+Changing input A of cell $add$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:176$199_gold ($add): \g_il7.nr_gold -> \g_il7.nr
+Changing input A of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:176$200_gold ($mux): \g_il7.nr_gold -> \g_il7.nr
+Changing input S of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:178$201_gold ($mux): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input A of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:178$201_gold ($mux): { \g_il7.lph_gold \g_il7.nr_gold } -> { \g_il7.lph \g_il7.nr }
+Changing input S of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:179$202_gold ($mux): \g_pin.lc_r_gold [1] -> \g_pin.lc_r [1]
+Changing input A of cell $ternary$/srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv:179$202_gold ($mux): \g_il7.nb_gold -> \g_il7.nb
+Changing input ARST of cell $procdff$391_gold ($adff): \g_rst.u_rst.relay_q[0]_gold [1] -> \g_rst.u_rst.relay_q[0] [1]
+Changing input D of cell $procdff$391_gold ($adff): { \g_dl.d_st_gold [0] \g_pin.lc_r_gold [1] } -> { \g_dl.d_st [0] \g_pin.lc_r [1] }
+Presumably equivalent cells: g_rst.u_rst_gold g_rst.u_rst_gate ($scopeinfo) -> g_rst.u_rst
+
+22. Executing HIERARCHY pass (managing design hierarchy).
+
+22.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+22.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+23. Executing ASYNC2SYNC pass.
+Replacing equiv.$procdff$716_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=\pend, Q=\pend_gate
+Replacing equiv.$procdff$757_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D=\a_c, Q=\g_pin.a_r_gate
+Replacing equiv.$procdff$797_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=\go_e_c, Q=\g_pin.g_local.go_l_gate
+Replacing equiv.$procdff$704_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=$0\ld_k[4:0]_gate, Q=\ld_k_gate
+Replacing equiv.$procdff$782_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D=2'00, Q=\g_pin.go_tag_r_gate
+Replacing equiv.$procdff$825_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \g_dl.d_go [0] \g_pin.lc_r [0] }, Q=\g_dl.d_go_gate
+Replacing equiv.$procdff$699_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=$0\ld_run[0:0]_gate, Q=\ld_run_gate
+Replacing equiv.$procdff$792_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \c_v \c_a }, Q=\g_pin.g_local.cfg_l_gate
+Replacing equiv.$procdff$694_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=\fault, Q=\fault_gate
+Replacing equiv.$procdff$830_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \g_dl.d_pend [0] \pend }, Q=\g_dl.d_pend_gate
+Replacing equiv.$procdff$689_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=\g_dl.d_run [1], Q=\c_v_gate
+Replacing equiv.$procdff$733_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=$0\act[0:0]_gate, Q=\act_gate
+Replacing equiv.$procdff$762_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D=\ce_c, Q=\g_pin.ce_r_gate
+Replacing equiv.$flatten\g_rst.u_rst.$procdff$847_gate ($adff): ARST=\rst_n_gate, D={ \g_rst.u_rst.sync_q [0] 1'1 }, Q=\g_rst.u_rst.sync_q_gate
+Replacing equiv.$flatten\g_rst.u_rst.$procdff$842_gate ($adff): ARST=\rst_n_gate, D={ \g_rst.u_rst.sync_q [1] \g_rst.u_rst.sync_q [1] }, Q=\g_rst.u_rst.relay_q[0]_gate
+Replacing equiv.$procdff$815_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \g_dl.d_cgo [0] \g_pin.lc_r [1] }, Q=\g_dl.d_cgo_gate
+Replacing equiv.$procdff$777_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D={ \fault \ld_busy }, Q=\g_pin.st_r_gate
+Replacing equiv.$procdff$772_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D=\go_e_c, Q=\g_pin.go_e_r_gate
+Replacing equiv.$procdff$810_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \g_dl.d_run [0] \ld_run }, Q=\g_dl.d_run_gate
+Replacing equiv.$procdff$767_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D={ \c_v \c_d \c_a }, Q=\g_pin.cfg_r_gate
+Replacing equiv.$procdff$820_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \g_dl.d_st [0] \g_pin.lc_r [1] }, Q=\g_dl.d_st_gate
+Replacing equiv.$procdff$745_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D=\lc_gate, Q=\g_pin.lc_r_gate
+Replacing equiv.$procdff$787_gate ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=\ce_c, Q=\g_pin.g_local.ce_l_gate
+Replacing equiv.$procdff$386_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \g_dl.d_cgo [0] \g_pin.lc_r [1] }, Q=\g_dl.d_cgo_gold
+Replacing equiv.$procdff$343_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D={ \c_v \c_d \c_a }, Q=\g_pin.cfg_r_gold
+Replacing equiv.$procdff$353_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D={ \fault \ld_busy }, Q=\g_pin.st_r_gold
+Replacing equiv.$procdff$287_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=$0\ld_k[4:0]_gold, Q=\ld_k_gold
+Replacing equiv.$procdff$338_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D=\ce_c, Q=\g_pin.ce_r_gold
+Replacing equiv.$procdff$282_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=$0\ld_run[0:0]_gold, Q=\ld_run_gold
+Replacing equiv.$procdff$373_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=\go_e_c, Q=\g_pin.g_local.go_l_gold
+Replacing equiv.$procdff$396_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \g_dl.d_go [0] \g_pin.lc_r [0] }, Q=\g_dl.d_go_gold
+Replacing equiv.$procdff$277_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=\fault, Q=\fault_gold
+Replacing equiv.$procdff$401_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \g_dl.d_pend [0] \pend }, Q=\g_dl.d_pend_gold
+Replacing equiv.$procdff$272_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=\g_dl.d_run [1], Q=\c_v_gold
+Replacing equiv.$procdff$363_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=\ce_c, Q=\g_pin.g_local.ce_l_gold
+Replacing equiv.$procdff$333_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D=\a_c, Q=\g_pin.a_r_gold
+Replacing equiv.$procdff$368_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \c_v \c_a }, Q=\g_pin.g_local.cfg_l_gold
+Replacing equiv.$flatten\g_rst.u_rst.$procdff$418_gold ($adff): ARST=\rst_n_gold, D={ \g_rst.u_rst.sync_q [1] \g_rst.u_rst.sync_q [1] }, Q=\g_rst.u_rst.relay_q[0]_gold
+Replacing equiv.$procdff$381_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \g_dl.d_run [0] \ld_run }, Q=\g_dl.d_run_gold
+Replacing equiv.$procdff$309_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=$0\act[0:0]_gold, Q=\act_gold
+Replacing equiv.$procdff$358_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D=2'00, Q=\g_pin.go_tag_r_gold
+Replacing equiv.$procdff$299_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D=\pend, Q=\pend_gold
+Replacing equiv.$flatten\g_rst.u_rst.$procdff$423_gold ($adff): ARST=\rst_n_gold, D={ \g_rst.u_rst.sync_q [0] 1'1 }, Q=\g_rst.u_rst.sync_q_gold
+Replacing equiv.$procdff$348_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D=\go_e_c, Q=\g_pin.go_e_r_gold
+Replacing equiv.$procdff$316_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [0], D=\lc_gold, Q=\g_pin.lc_r_gold
+Replacing equiv.$procdff$391_gold ($adff): ARST=\g_rst.u_rst.relay_q[0] [1], D={ \g_dl.d_st [0] \g_pin.lc_r [1] }, Q=\g_dl.d_st_gold
+
+24. Executing EQUIV_SIMPLE pass.
+Found 1182 unproven $equiv cells (98 groups) in equiv:
+ Grouping SAT models for \a:
+  Trying to prove $equiv for \a [0]:ezsat
+ success!
+  Trying to prove $equiv for \a [1]:ezsat
+ success!
+  Trying to prove $equiv for \a [2]:ezsat
+ success!
+  Trying to prove $equiv for \a [3]:ezsat
+ success!
+  Trying to prove $equiv for \a [4]:ezsat
+ success!
+  Trying to prove $equiv for \a [5]:ezsat
+ success!
+  Trying to prove $equiv for \a [6]:ezsat
+ success!
+  Trying to prove $equiv for \a [7]:ezsat
+ success!
+  Trying to prove $equiv for \a [8]:ezsat
+ success!
+  Trying to prove $equiv for \a [9]:ezsat
+ success!
+  Trying to prove $equiv for \a [10]:ezsat
+ success!
+  Trying to prove $equiv for \a [11]:ezsat
+ success!
+  Trying to prove $equiv for \ce0:ezsat
+ success!
+  Trying to prove $equiv for \ce1:ezsat
+ success!
+  Trying to prove $equiv for \ce2:ezsat
+ success!
+  Trying to prove $equiv for \ce3:ezsat
+ success!
+  Trying to prove $equiv for \ce4:ezsat
+ success!
+  Trying to prove $equiv for \ce5:ezsat
+ success!
+  Trying to prove $equiv for \ce6:ezsat
+ success!
+ Grouping SAT models for \cfg:
+  Trying to prove $equiv for \cfg [0]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [1]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [2]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [3]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [4]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [5]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [6]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [7]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [8]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [9]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [10]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [11]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [12]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [13]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [14]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [15]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [16]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [17]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [18]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [19]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [20]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [21]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [22]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [23]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [24]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [25]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [26]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [27]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [28]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [29]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [30]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [31]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [32]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [33]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [34]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [35]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [36]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [37]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [38]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [39]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [40]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [41]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [42]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [43]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [44]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [45]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [46]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [47]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [48]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [49]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [50]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [51]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [52]:ezsat
+ success!
+  Trying to prove $equiv for \cfg [53]:ezsat
+ success!
+  Trying to prove $equiv for \go_e:ezsat
+ success!
+ Grouping SAT models for \st:
+  Trying to prove $equiv for \st [0]:ezsat
+ success!
+  Trying to prove $equiv for \st [1]:ezsat
+ success!
+ Grouping SAT models for \go_tag:
+  Trying to prove $equiv for \go_tag [0]:ezsat
+ success!
+  Trying to prove $equiv for \go_tag [1]:ezsat
+ success!
+ Grouping SAT models for \ce_local:
+  Trying to prove $equiv for \ce_local [0]:ezsat
+ success!
+  Trying to prove $equiv for \ce_local [1]:ezsat
+ success!
+  Trying to prove $equiv for \ce_local [2]:ezsat
+ success!
+  Trying to prove $equiv for \ce_local [3]:ezsat
+ success!
+  Trying to prove $equiv for \ce_local [4]:ezsat
+ success!
+  Trying to prove $equiv for \ce_local [5]:ezsat
+ success!
+  Trying to prove $equiv for \ce_local [6]:ezsat
+ success!
+ Grouping SAT models for \cfg_local:
+  Trying to prove $equiv for \cfg_local [0]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_local [1]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_local [2]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_local [3]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_local [4]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_local [5]:ezsat
+ success!
+  Trying to prove $equiv for \go_local:ezsat
+ success!
+  Trying to prove $equiv for \rst_p:ezsat
+ success!
+  Trying to prove $equiv for \rst_c:ezsat
+ success!
+ Grouping SAT models for \lc_i:
+  Trying to prove $equiv for \lc_i [0]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [1]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [2]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [3]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [4]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [5]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [6]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [7]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [8]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [9]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [10]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [11]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [12]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [13]:ezsat
+ success!
+  Trying to prove $equiv for \lc_i [14]:ezsat
+ success!
+ Grouping SAT models for \q0_i:
+  Trying to prove $equiv for \q0_i [0]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [1]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [2]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [3]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [4]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [5]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [6]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [7]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [8]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [9]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [10]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [11]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [12]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [13]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [14]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [15]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [16]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [17]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [18]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [19]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [20]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [21]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [22]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [23]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [24]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [25]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [26]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [27]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [28]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [29]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [30]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [31]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [32]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [33]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [34]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [35]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [36]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [37]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [38]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [39]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [40]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [41]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [42]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [43]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [44]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [45]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [46]:ezsat
+ success!
+  Trying to prove $equiv for \q0_i [47]:ezsat
+ success!
+ Grouping SAT models for \q1_i:
+  Trying to prove $equiv for \q1_i [0]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [1]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [2]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [3]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [4]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [5]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [6]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [7]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [8]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [9]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [10]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [11]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [12]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [13]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [14]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [15]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [16]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [17]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [18]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [19]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [20]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [21]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [22]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [23]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [24]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [25]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [26]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [27]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [28]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [29]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [30]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [31]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [32]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [33]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [34]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [35]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [36]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [37]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [38]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [39]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [40]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [41]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [42]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [43]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [44]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [45]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [46]:ezsat
+ success!
+  Trying to prove $equiv for \q1_i [47]:ezsat
+ success!
+ Grouping SAT models for \q2_i:
+  Trying to prove $equiv for \q2_i [0]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [1]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [2]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [3]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [4]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [5]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [6]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [7]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [8]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [9]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [10]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [11]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [12]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [13]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [14]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [15]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [16]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [17]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [18]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [19]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [20]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [21]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [22]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [23]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [24]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [25]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [26]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [27]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [28]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [29]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [30]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [31]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [32]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [33]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [34]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [35]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [36]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [37]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [38]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [39]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [40]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [41]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [42]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [43]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [44]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [45]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [46]:ezsat
+ success!
+  Trying to prove $equiv for \q2_i [47]:ezsat
+ success!
+ Grouping SAT models for \q3_i:
+  Trying to prove $equiv for \q3_i [0]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [1]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [2]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [3]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [4]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [5]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [6]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [7]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [8]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [9]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [10]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [11]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [12]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [13]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [14]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [15]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [16]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [17]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [18]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [19]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [20]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [21]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [22]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [23]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [24]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [25]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [26]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [27]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [28]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [29]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [30]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [31]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [32]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [33]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [34]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [35]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [36]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [37]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [38]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [39]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [40]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [41]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [42]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [43]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [44]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [45]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [46]:ezsat
+ success!
+  Trying to prove $equiv for \q3_i [47]:ezsat
+ success!
+ Grouping SAT models for \q4_i:
+  Trying to prove $equiv for \q4_i [0]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [1]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [2]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [3]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [4]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [5]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [6]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [7]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [8]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [9]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [10]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [11]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [12]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [13]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [14]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [15]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [16]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [17]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [18]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [19]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [20]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [21]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [22]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [23]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [24]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [25]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [26]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [27]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [28]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [29]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [30]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [31]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [32]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [33]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [34]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [35]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [36]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [37]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [38]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [39]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [40]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [41]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [42]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [43]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [44]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [45]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [46]:ezsat
+ success!
+  Trying to prove $equiv for \q4_i [47]:ezsat
+ success!
+ Grouping SAT models for \q5_i:
+  Trying to prove $equiv for \q5_i [0]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [1]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [2]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [3]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [4]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [5]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [6]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [7]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [8]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [9]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [10]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [11]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [12]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [13]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [14]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [15]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [16]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [17]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [18]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [19]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [20]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [21]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [22]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [23]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [24]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [25]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [26]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [27]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [28]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [29]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [30]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [31]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [32]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [33]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [34]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [35]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [36]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [37]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [38]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [39]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [40]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [41]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [42]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [43]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [44]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [45]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [46]:ezsat
+ success!
+  Trying to prove $equiv for \q5_i [47]:ezsat
+ success!
+ Grouping SAT models for \q6_i:
+  Trying to prove $equiv for \q6_i [0]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [1]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [2]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [3]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [4]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [5]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [6]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [7]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [8]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [9]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [10]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [11]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [12]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [13]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [14]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [15]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [16]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [17]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [18]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [19]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [20]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [21]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [22]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [23]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [24]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [25]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [26]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [27]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [28]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [29]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [30]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [31]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [32]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [33]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [34]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [35]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [36]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [37]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [38]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [39]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [40]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [41]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [42]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [43]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [44]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [45]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [46]:ezsat
+ success!
+  Trying to prove $equiv for \q6_i [47]:ezsat
+ success!
+ Grouping SAT models for \a_c:
+  Trying to prove $equiv for \a_c [0]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [1]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [2]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [3]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [4]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [5]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [6]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [7]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [8]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [9]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [10]:ezsat
+ success!
+  Trying to prove $equiv for \a_c [11]:ezsat
+ success!
+ Grouping SAT models for \ce_c:
+  Trying to prove $equiv for \ce_c [0]:ezsat
+ success!
+  Trying to prove $equiv for \ce_c [1]:ezsat
+ success!
+  Trying to prove $equiv for \ce_c [2]:ezsat
+ success!
+  Trying to prove $equiv for \ce_c [3]:ezsat
+ success!
+  Trying to prove $equiv for \ce_c [4]:ezsat
+ success!
+  Trying to prove $equiv for \ce_c [5]:ezsat
+ success!
+  Trying to prove $equiv for \ce_c [6]:ezsat
+ success!
+ Grouping SAT models for \cfg_c:
+  Trying to prove $equiv for \cfg_c [0]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [1]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [2]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [3]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [4]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [5]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [6]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [7]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [8]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [9]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [10]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [11]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [12]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [13]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [14]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [15]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [16]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [17]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [18]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [19]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [20]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [21]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [22]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [23]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [24]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [25]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [26]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [27]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [28]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [29]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [30]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [31]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [32]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [33]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [34]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [35]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [36]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [37]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [38]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [39]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [40]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [41]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [42]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [43]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [44]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [45]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [46]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [47]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [48]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [49]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [50]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [51]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [52]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_c [53]:ezsat
+ success!
+  Trying to prove $equiv for \go_e_c:ezsat
+ success!
+ Grouping SAT models for \st_c:
+  Trying to prove $equiv for \st_c [0]:ezsat
+ success!
+  Trying to prove $equiv for \st_c [1]:ezsat
+ success!
+ Grouping SAT models for \go_tag_c:
+  Trying to prove $equiv for \go_tag_c [0]:ezsat
+ success!
+  Trying to prove $equiv for \go_tag_c [1]:ezsat
+ success!
+  Trying to prove $equiv for \go:ezsat
+ success!
+  Trying to prove $equiv for \cfg_go:ezsat
+ success!
+ Grouping SAT models for \cfg_ph:
+  Trying to prove $equiv for \cfg_ph [0]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_ph [1]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_ph [2]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_ph [3]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_ph [4]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_ph [5]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_ph [6]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_ph [7]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_ph [8]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_ph [9]:ezsat
+ success!
+ Grouping SAT models for \cfg_np:
+  Trying to prove $equiv for \cfg_np [0]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_np [1]:ezsat
+ success!
+  Trying to prove $equiv for \cfg_np [2]:ezsat
+ success!
+  Trying to prove $equiv for \c_v:ezsat
+ success!
+ Grouping SAT models for \c_a:
+  Trying to prove $equiv for \c_a [0]:ezsat
+ success!
+  Trying to prove $equiv for \c_a [1]:ezsat
+ success!
+  Trying to prove $equiv for \c_a [2]:ezsat
+ success!
+  Trying to prove $equiv for \c_a [3]:ezsat
+ success!
+  Trying to prove $equiv for \c_a [4]:ezsat
+ success!
+ Grouping SAT models for \c_d:
+  Trying to prove $equiv for \c_d [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \c_d [1]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [2]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [3]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [4]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [5]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [6]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [7]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [8]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [9]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [10]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [11]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [12]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [13]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [14]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [15]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [16]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [17]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [18]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [19]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [20]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [21]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [22]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [23]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [24]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [25]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [26]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [27]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [28]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [29]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [30]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [31]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [32]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [33]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [34]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [35]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [36]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [37]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [38]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [39]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [40]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [41]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [42]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [43]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [44]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [45]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [46]:ezsat
+ success!
+  Trying to prove $equiv for \c_d [47]:ezsat
+ success!
+  Trying to prove $equiv for \fault:ezsat
+ success!
+  Trying to prove $equiv for \ld_run:ezsat
+ezsat
+ success!
+ Grouping SAT models for \ld_k:
+  Trying to prove $equiv for \ld_k [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \ld_k [1]:ezsat
+ success!
+  Trying to prove $equiv for \ld_k [2]:ezsat
+ success!
+  Trying to prove $equiv for \ld_k [3]:ezsat
+ success!
+  Trying to prove $equiv for \ld_k [4]:ezsat
+ success!
+ Grouping SAT models for \ld_np:
+  Trying to prove $equiv for \ld_np [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \ld_np [1]:ezsat
+ success!
+  Trying to prove $equiv for \ld_np [2]:ezsat
+ success!
+  Trying to prove $equiv for \pend:ezsat
+ success!
+  Trying to prove $equiv for \ld_ok:ezsat
+ success!
+  Trying to prove $equiv for \ld_start:ezsat
+ success!
+  Trying to prove $equiv for \rce:ezsat
+ success!
+ Grouping SAT models for \rbank:
+  Trying to prove $equiv for \rbank [0]:ezsat
+ success!
+  Trying to prove $equiv for \rbank [1]:ezsat
+ success!
+  Trying to prove $equiv for \rbank [2]:ezsat
+ success!
+ Grouping SAT models for \bank_q:
+  Trying to prove $equiv for \bank_q [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \bank_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \bank_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \ld_run_x:ezsat
+ success!
+  Trying to prove $equiv for \cfg_go_x:ezsat
+ success!
+  Trying to prove $equiv for \ld_start_x:ezsat
+ success!
+  Trying to prove $equiv for \go_x:ezsat
+ success!
+  Trying to prove $equiv for \pend_x:ezsat
+ success!
+ Grouping SAT models for \ld_k_x:
+  Trying to prove $equiv for \ld_k_x [0]:ezsat
+ success!
+  Trying to prove $equiv for \ld_k_x [1]:ezsat
+ success!
+  Trying to prove $equiv for \ld_k_x [2]:ezsat
+ success!
+  Trying to prove $equiv for \ld_k_x [3]:ezsat
+ success!
+  Trying to prove $equiv for \ld_k_x [4]:ezsat
+ success!
+ Grouping SAT models for \ld_np_x:
+  Trying to prove $equiv for \ld_np_x [0]:ezsat
+ success!
+  Trying to prove $equiv for \ld_np_x [1]:ezsat
+ success!
+  Trying to prove $equiv for \ld_np_x [2]:ezsat
+ success!
+ Grouping SAT models for \bank_x:
+  Trying to prove $equiv for \bank_x [0]:ezsat
+ success!
+  Trying to prove $equiv for \bank_x [1]:ezsat
+ success!
+  Trying to prove $equiv for \bank_x [2]:ezsat
+ success!
+  Trying to prove $equiv for \ev1:ezsat
+ success!
+ Grouping SAT models for \sel:
+  Trying to prove $equiv for \sel [0]:ezsat
+ success!
+  Trying to prove $equiv for \sel [1]:ezsat
+ success!
+  Trying to prove $equiv for \sel [2]:ezsat
+ success!
+ Grouping SAT models for \cm_q:
+  Trying to prove $equiv for \cm_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [31]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [32]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [33]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [34]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [35]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [36]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [37]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [38]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [39]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [40]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [41]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [42]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [43]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [44]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [45]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [46]:ezsat
+ success!
+  Trying to prove $equiv for \cm_q [47]:ezsat
+ success!
+  Trying to prove $equiv for \act:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \ld_busy:ezsat
+ success!
+ Grouping SAT models for \g_rst.rr_:
+  Trying to prove $equiv for \g_rst.rr_ [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_rst.rr_ [1]:ezsat
+ success!
+ Grouping SAT models for \g_pin.lc_r:
+  Trying to prove $equiv for \g_pin.lc_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.lc_r [14]:ezsat
+ success!
+ Grouping SAT models for \g_pin.q0_r:
+  Trying to prove $equiv for \g_pin.q0_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [15]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [16]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [17]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [18]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [19]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [20]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [21]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [22]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [23]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [24]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [25]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [26]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [27]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [28]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [29]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [30]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [31]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [32]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [33]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [34]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [35]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [36]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [37]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [38]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [39]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [40]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [41]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [42]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [43]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [44]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [45]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [46]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q0_r [47]:ezsat
+ success!
+ Grouping SAT models for \g_pin.q1_r:
+  Trying to prove $equiv for \g_pin.q1_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [15]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [16]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [17]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [18]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [19]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [20]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [21]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [22]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [23]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [24]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [25]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [26]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [27]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [28]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [29]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [30]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [31]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [32]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [33]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [34]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [35]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [36]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [37]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [38]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [39]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [40]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [41]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [42]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [43]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [44]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [45]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [46]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q1_r [47]:ezsat
+ success!
+ Grouping SAT models for \g_pin.q2_r:
+  Trying to prove $equiv for \g_pin.q2_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [15]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [16]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [17]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [18]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [19]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [20]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [21]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [22]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [23]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [24]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [25]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [26]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [27]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [28]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [29]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [30]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [31]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [32]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [33]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [34]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [35]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [36]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [37]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [38]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [39]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [40]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [41]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [42]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [43]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [44]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [45]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [46]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q2_r [47]:ezsat
+ success!
+ Grouping SAT models for \g_pin.q3_r:
+  Trying to prove $equiv for \g_pin.q3_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [15]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [16]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [17]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [18]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [19]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [20]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [21]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [22]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [23]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [24]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [25]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [26]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [27]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [28]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [29]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [30]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [31]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [32]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [33]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [34]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [35]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [36]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [37]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [38]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [39]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [40]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [41]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [42]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [43]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [44]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [45]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [46]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q3_r [47]:ezsat
+ success!
+ Grouping SAT models for \g_pin.q4_r:
+  Trying to prove $equiv for \g_pin.q4_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [15]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [16]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [17]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [18]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [19]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [20]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [21]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [22]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [23]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [24]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [25]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [26]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [27]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [28]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [29]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [30]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [31]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [32]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [33]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [34]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [35]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [36]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [37]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [38]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [39]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [40]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [41]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [42]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [43]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [44]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [45]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [46]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q4_r [47]:ezsat
+ success!
+ Grouping SAT models for \g_pin.q5_r:
+  Trying to prove $equiv for \g_pin.q5_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [15]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [16]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [17]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [18]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [19]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [20]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [21]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [22]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [23]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [24]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [25]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [26]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [27]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [28]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [29]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [30]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [31]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [32]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [33]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [34]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [35]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [36]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [37]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [38]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [39]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [40]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [41]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [42]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [43]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [44]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [45]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [46]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q5_r [47]:ezsat
+ success!
+ Grouping SAT models for \g_pin.q6_r:
+  Trying to prove $equiv for \g_pin.q6_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [15]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [16]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [17]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [18]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [19]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [20]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [21]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [22]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [23]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [24]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [25]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [26]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [27]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [28]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [29]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [30]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [31]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [32]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [33]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [34]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [35]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [36]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [37]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [38]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [39]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [40]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [41]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [42]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [43]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [44]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [45]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [46]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.q6_r [47]:ezsat
+ success!
+ Grouping SAT models for \g_pin.a_r:
+  Trying to prove $equiv for \g_pin.a_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.a_r [11]:ezsat
+ success!
+ Grouping SAT models for \g_pin.ce_r:
+  Trying to prove $equiv for \g_pin.ce_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.ce_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.ce_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.ce_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.ce_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.ce_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.ce_r [6]:ezsat
+ success!
+ Grouping SAT models for \g_pin.cfg_r:
+  Trying to prove $equiv for \g_pin.cfg_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [9]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [10]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [11]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [12]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [13]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [14]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [15]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [16]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [17]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [18]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [19]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [20]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [21]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [22]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [23]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [24]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [25]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [26]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [27]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [28]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [29]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [30]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [31]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [32]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [33]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [34]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [35]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [36]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [37]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [38]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [39]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [40]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [41]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [42]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [43]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [44]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [45]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [46]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [47]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [48]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [49]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [50]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [51]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [52]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.cfg_r [53]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.go_e_r:ezsat
+ success!
+ Grouping SAT models for \g_pin.st_r:
+  Trying to prove $equiv for \g_pin.st_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.st_r [1]:ezsat
+ success!
+ Grouping SAT models for \g_pin.go_tag_r:
+  Trying to prove $equiv for \g_pin.go_tag_r [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.go_tag_r [1]:ezsat
+ success!
+ Grouping SAT models for \g_pin.g_local.ce_l:
+  Trying to prove $equiv for \g_pin.g_local.ce_l [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.ce_l [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.ce_l [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.ce_l [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.ce_l [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.ce_l [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.ce_l [6]:ezsat
+ success!
+ Grouping SAT models for \g_pin.g_local.cfg_l:
+  Trying to prove $equiv for \g_pin.g_local.cfg_l [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.cfg_l [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.cfg_l [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.cfg_l [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.cfg_l [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.cfg_l [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_pin.g_local.go_l:ezsat
+ success!
+ Grouping SAT models for \g_il7.nb:
+  Trying to prove $equiv for \g_il7.nb [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \g_il7.nb [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_il7.nb [2]:ezsat
+ success!
+ Grouping SAT models for \g_il7.nr:
+  Trying to prove $equiv for \g_il7.nr [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \g_il7.nr [1]:ezsat
+ success!
+ Grouping SAT models for \g_il7.lph:
+  Trying to prove $equiv for \g_il7.lph [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \g_il7.lph [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_il7.lph [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_il7.lph [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_il7.lph [4]:ezsat
+ success!
+  Trying to prove $equiv for \g_il7.lph [5]:ezsat
+ success!
+  Trying to prove $equiv for \g_il7.lph [6]:ezsat
+ success!
+  Trying to prove $equiv for \g_il7.lph [7]:ezsat
+ success!
+  Trying to prove $equiv for \g_il7.lph [8]:ezsat
+ success!
+  Trying to prove $equiv for \g_il7.lph [9]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_run:
+  Trying to prove $equiv for \g_dl.d_run [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_run [1]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_cgo:
+  Trying to prove $equiv for \g_dl.d_cgo [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_cgo [1]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_st:
+  Trying to prove $equiv for \g_dl.d_st [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_st [1]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_go:
+  Trying to prove $equiv for \g_dl.d_go [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_go [1]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_pend:
+  Trying to prove $equiv for \g_dl.d_pend [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_pend [1]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_k[0]:
+  Trying to prove $equiv for \g_dl.d_k[0] [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_k[0] [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_k[0] [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_k[0] [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_k[0] [4]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_k[1]:
+  Trying to prove $equiv for \g_dl.d_k[1] [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_k[1] [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_k[1] [2]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_k[1] [3]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_k[1] [4]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_np[0]:
+  Trying to prove $equiv for \g_dl.d_np[0] [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_np[0] [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_np[0] [2]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_np[1]:
+  Trying to prove $equiv for \g_dl.d_np[1] [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_np[1] [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_np[1] [2]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_bk[0]:
+  Trying to prove $equiv for \g_dl.d_bk[0] [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_bk[0] [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_bk[0] [2]:ezsat
+ success!
+ Grouping SAT models for \g_dl.d_bk[1]:
+  Trying to prove $equiv for \g_dl.d_bk[1] [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_bk[1] [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_dl.d_bk[1] [2]:ezsat
+ success!
+ Grouping SAT models for \g_rst.u_rst.relay_q[0]:
+  Trying to prove $equiv for \g_rst.u_rst.relay_q[0] [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_rst.u_rst.relay_q[0] [1]:ezsat
+ success!
+ Grouping SAT models for \g_rst.u_rst.sync_q:
+  Trying to prove $equiv for \g_rst.u_rst.sync_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_rst.u_rst.sync_q [1]:ezsat
+ success!
+ Grouping SAT models for \g_rst.u_rst.rst_n:
+  Trying to prove $equiv for \g_rst.u_rst.rst_n [0]:ezsat
+ success!
+  Trying to prove $equiv for \g_rst.u_rst.rst_n [1]:ezsat
+ success!
+  Trying to prove $equiv for \g_rst.u_rst.rst_n_in:ezsat
+ success!
+  Trying to prove $equiv for \g_rst.u_rst.clk:ezsat
+ success!
+Proved 1182 previously unproven $equiv cells.
+
+25. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+26. Executing EQUIV_STATUS pass.
+Found 1182 $equiv cells in equiv:
+  Of those cells 1182 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+Warnings: 7 unique messages, 10 total
+End of script. Logfile hash: 2609a459ba, time: 0.44s, user: 0.46s, system: 0.03s, MEM: 32.34 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 76% 1x equiv_simple (0 sec), 9% 10x read_verilog (0 sec), ...

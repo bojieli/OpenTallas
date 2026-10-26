@@ -1,0 +1,11 @@
+read_verilog -sv -DSYNTHESIS /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_s81_cfg7_seq.sv /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq_bfp.sv /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv
+hierarchy -top ot_s81_cfg7_seq_local -chparam PQ 1 -chparam LAYOUT 1 -chparam PINREG 1 -chparam LOCAL_COPY 1
+proc; flatten; opt_clean; rename ot_s81_cfg7_seq_local gold; design -stash gold
+read_verilog -sv -DSYNTHESIS /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq.sv /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/v41die/ot_s81_cfg7_seq_bfp.sv /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/lib/ot_rst_relay.sv
+hierarchy -top ot_s81_cfg7_seq_local -chparam PQ 1 -chparam LAYOUT 1 -chparam PINREG 1 -chparam LOCAL_COPY 1
+proc; flatten; opt_clean; check -assert; rename ot_s81_cfg7_seq_local gate; design -stash gate
+design -copy-from gold -as gold gold; design -copy-from gate -as gate gate
+setundef -undriven -anyseq gold
+
+equiv_make gold gate equiv; hierarchy -top equiv; async2sync
+equiv_simple -seq 5; equiv_induct -seq 5; equiv_status -assert

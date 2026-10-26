@@ -1,0 +1,5 @@
+CFG7_LOCKSTEP cycles 300000 cfg_go 13034 busy_broadcasts 6554 mismatches 0 PASS
+- /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/build/tb_cfg7_lockstep.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 3ms; walltime 0.417 s; speed 7.117 ms/s
+- Verilator: cpu 0.422 s on 1 threads; alloced 2041 MB

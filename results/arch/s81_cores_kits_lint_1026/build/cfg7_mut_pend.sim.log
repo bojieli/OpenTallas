@@ -1,0 +1,10 @@
+MISMATCH local1 cyc 43 old 173418dff7ceceae5631058 new 45d218dff7ceceae5630858
+MISMATCH local0 cyc 44 old d0803d49749a40a6d4b00d2 new af003d49749a40a6d4b00d2
+MISMATCH local1 cyc 44 old 17441a71960189222031040 new 45e21a91f22370f17030840
+MISMATCH local0 cyc 45 old d08053be409378c51530154 new af0053be409378c51530154
+MISMATCH local1 cyc 45 old 175412ea50495ea740b1042 new 45f2136aa43d59e7a0b0842
+CFG7_LOCKSTEP cycles 300000 cfg_go 13034 busy_broadcasts 6554 mismatches 286734 FAIL
+- /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/build/tb_cfg7_lockstep.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 3ms; walltime 0.424 s; speed 7.028 ms/s
+- Verilator: cpu 0.427 s on 1 threads; alloced 2041 MB

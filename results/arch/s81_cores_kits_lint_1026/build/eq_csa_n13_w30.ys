@@ -1,0 +1,11 @@
+read_verilog -sv -DSYNTHESIS /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/results/arch/s81_cores_kits_lint_1026/old/ot_hdc_sk_arith.sv
+hierarchy -top ot_hdc_sk_csa -chparam N 13 -chparam W 30
+proc; flatten; opt_clean; rename ot_hdc_sk_csa gold; design -stash gold
+read_verilog -sv -DSYNTHESIS /srv/opentallas-scratch2/claude/wt/cores-kits-s81-1026/rtl/hdc/v41/ot_hdc_sk_arith.sv
+hierarchy -top ot_hdc_sk_csa -chparam N 13 -chparam W 30
+proc; flatten; opt_clean; check -assert; rename ot_hdc_sk_csa gate; design -stash gate
+design -copy-from gold -as gold gold; design -copy-from gate -as gate gate
+setundef -undriven -anyseq gold
+
+equiv_make gold gate equiv; hierarchy -top equiv; async2sync
+equiv_simple -seq 5; equiv_induct -seq 5; equiv_status -assert
