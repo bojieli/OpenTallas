@@ -322,10 +322,11 @@ def static_refresh_kit(rtl, kd):
     STATIC_REFRESH down to ot_qkd_static_kv_timing, default 0) gets .STATIC_REFRESH(1)."""
     p = rtl / "qkd_static_kv_pc_path_nc.sv"
     s = p.read_text()
-    old = "qkd_ctrl_pc_host_static_nc #(.ROW0(64),"
-    if s.count(old) != 1 or "STATIC_REFRESH" in s:
+    # match the instance head, not its first parameter: --kvspc-core-clock puts .CORE_CLOCK(CORE_CLOCK) first
+    old = "qkd_ctrl_pc_host_static_nc #("
+    if s.count(old) != 1 or "STATIC_REFRESH" in s or ".ROW0(64)" not in s.split(old, 1)[1].split(") u_ctrl", 1)[0]:
         raise SystemExit(f"--kvspc-static-refresh: expected one u_ctrl instance without STATIC_REFRESH in {p}")
-    p.write_text(s.replace(old, "qkd_ctrl_pc_host_static_nc #(.STATIC_REFRESH(1), .ROW0(64),"))
+    p.write_text(s.replace(old, old + ".STATIC_REFRESH(1), "))
     (kd / "kvspc_static_refresh.json").write_text(json.dumps(dict(
         transform="u_ctrl .STATIC_REFRESH(1) (qkd_static_kv_pc_path_nc.sv)", refresh="REFpb every T_REFIPB at REF_PHASE "
         "(unchanged); bank = refresh_rr round robin (was run-time argmin of s1k/s2k)", requires="PULLIN=0, REF_MODE=1",
