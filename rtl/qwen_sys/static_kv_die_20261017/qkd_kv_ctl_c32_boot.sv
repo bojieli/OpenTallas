@@ -15,7 +15,7 @@
 //   * one-hot strobes: group-select leaves ot_s32_and(acc_t && group && rs_s[j], dec16) over shared 16-way decodes
 //     (controller: groups {target - 6, addr[9]} x addr[8:5] (MUT 2: ^1); landing / front: groups gi[4] x gi[3:0], gi = addr/6).
 // Lockstep vs the originals: rtl/test/mu_qwen_1018/run_kv_ctl_s32_d2.sh.
-module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer SRQ=0,parameter integer RS=24,parameter integer DSTG=0)(
+module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer AGES=0,parameter integer SRQ=0,parameter integer RS=24,parameter integer DSTG=0)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[9:0]boot_addr_b,input wire[3:0]boot_image_target,
  input wire[4:0]boot_gix,input wire[2:0]boot_rem6,
  input wire boot_seal,input wire[9:0]boot_addr_raw,
@@ -43,7 +43,7 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
  wire[9:0]addr_b=boot_addr_b;
  function automatic[10:0]word_count(input[3:0]t);
  case(t)1:word_count=327;2:word_count=181;3:word_count=4;4,5:word_count=192;
- 6,7,8,9:word_count=1024;10:word_count=(DIECFG!=0)?11'(32+NRST+1+((DIECAP!=0)?1:0)):11'd0;11:word_count=(LINKCFG!=0)?11'd66:11'd0;12:word_count=(ESCFG!=0)?11'd1024:11'd0;13:word_count=(ESCFG!=0)?11'd8:11'd0;default:word_count=0;endcase
+ 6,7,8,9:word_count=1024;10:word_count=(DIECFG!=0)?11'(32+NRST+1+((DIECAP!=0)?1:0)+((AGES!=0)?19:0)):11'd0;11:word_count=(LINKCFG!=0)?11'd66:11'd0;12:word_count=(ESCFG!=0)?11'd1024:11'd0;13:word_count=(ESCFG!=0)?11'd8:11'd0;default:word_count=0;endcase
  endfunction
  // KV-CTL10 10-20 (native census without face pin registers: the boot_image_target input PORT drove 33/34 mapped loads):
  // the target is decoded ONCE into KEPT one-hot wires (an ABC boundary) and every former target compare / case / index /
@@ -336,7 +336,7 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
 endmodule
 
 // ===== MU wrapper =====
-module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer MU=1,parameter integer WMUT=0,parameter integer SRQ=0,parameter integer DSTG=0)(
+module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer AGES=0,parameter integer MU=1,parameter integer WMUT=0,parameter integer SRQ=0,parameter integer DSTG=0)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[3:0]boot_image_target,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
  input wire[63:0]boot_image_digest,input wire execution_active,
@@ -363,7 +363,7 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
  wire o_lw,o_fault;wire[8:0]o_la;wire[63:0]o_ld;wire[7:0]o_fc;wire o_setup;
  wire[142:0]pr_o;wire[9:0]pr_ab;wire[4:0]pr_gix;wire[2:0]pr_rem6;wire pr_seal;
  reg x_fault;reg[7:0]x_fc;
- qkd_static_kv_boot_dispatch_c32 #(.MUT(MUT),.DIECFG(DIECFG),.NRST(NRST),.LINKCFG(LINKCFG),.ESCFG(ESCFG),.DIECAP(DIECAP),.SRQ(SRQ),.DSTG(DSTG))u_disp(
+ qkd_static_kv_boot_dispatch_c32 #(.MUT(MUT),.DIECFG(DIECFG),.NRST(NRST),.LINKCFG(LINKCFG),.ESCFG(ESCFG),.DIECAP(DIECAP),.AGES(AGES),.SRQ(SRQ),.DSTG(DSTG))u_disp(
   .ck(ck),.rst_n(rst_n),.boot_pr(pr_o),.boot_addr_b(pr_ab),.boot_gix(pr_gix),.boot_rem6(pr_rem6),.boot_seal(pr_seal),.boot_addr_raw(boot_pr[73:64]),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),
   .boot_image_fault(boot_image_fault),.boot_image_epoch(boot_image_epoch),.boot_image_digest(boot_image_digest),
   .execution_active(execution_active),.sink_applied(sink_applied),.local_configured(local_configured),.sink_fault(sink_fault),

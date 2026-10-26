@@ -1,0 +1,5 @@
+OT_DTAP macro u_m.u_rom1 -> ot_dtap_13 (interface regs 13, 42.8 um)
+OT_DTAP macro u_m.u_rom0 -> ot_dtap_11 (interface regs 13, 23.0 um)
+OT_DTAP done: 1 stray sinks re-homed; 2125 zero-logic capture regs joined their launch tap (F4); 17 density taps for 26170 register sinks (target 2500/tap), 2 macro clock pins on nearest tap
+OT_F4 pairs 13957 moved 5684 skipped 3454 far 2647 leaves_touched 822
+OT_DTAP_ALIGN final 16=319(310-330) 15=331(318-345) 14=324(311-332) 13=330(320-344) 12=328(319-336) 11=327(311-336) 10=321(315-330) 9=326(319-333) 8=318(301-340) 7=314(309-322) 6=333(324-342) 5=322(311-331) 4=328(323-335) 3=328(320-337) 2=317(310-323) 1=316(304-334) 0=317(306-327) | tap means 314.1..332.8 spread 18.8 ps

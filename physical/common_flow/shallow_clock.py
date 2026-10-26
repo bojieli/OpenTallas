@@ -140,7 +140,7 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
 def _man(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0):
+def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False):
     """topology 'htree' (default): symmetric 2x2 H-tree over the tap region,
     pruned where a quadrant has no tap; every tap gets a private leg from its
     H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
@@ -168,7 +168,11 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
                 for grp in split(pts,fanout): link(cid,build(grp,level+1),level)
             else: add_taps(cid,pts,level)
             return cid
-        build(g['taps'],1)
+        # depth0 (opt-in OT_DTSH_DEPTH0=1): count bisections from zero so a terminal
+        # cluster holds <= leaf_fanout taps.  Legacy start 1 leaves fanout*leaf_fanout
+        # (E5: 8) tap legs on one cluster net, whose 8 leg-start BUFx24 the legaliser
+        # spreads along one row (76-112 um) -> 87-175 ps trunk-input slew (CLOCK-RESET S1).
+        build(g['taps'],0 if depth0 else 1)
     elif topology=='htree':
         xs=[t['xy'][0] for t in g['taps']]; ys=[t['xy'][1] for t in g['taps']]
         box=[min(xs),min(ys),max(xs),max(ys)]
@@ -523,7 +527,7 @@ def main():
     if a.closed_loop:
         p=plan_legs(g,fanout=int(env.get('OT_DTSH_FANOUT','4')),leaf_fanout=int(env.get('OT_DTSH_LEAF_FANOUT','2')),
                     rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')),topology=env.get('OT_DTSH_TOPOLOGY','bisect'),
-                    levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')))
+                    levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')),depth0=env.get('OT_DTSH_DEPTH0','')=='1')
     else:
         p=plan(g)
     Path(a.out).write_text(json.dumps(p,indent=1)+'\n')

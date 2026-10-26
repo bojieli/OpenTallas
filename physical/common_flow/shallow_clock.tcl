@@ -230,17 +230,23 @@ proc ::ot_dtsh::audit {} {
 proc ::ot_dtsh::trunk_ndr {} {
   variable blk; variable root; variable nodes; variable ndr
   if {![info exists ::env(OT_DTSH_NDR)] || $::env(OT_DTSH_NDR) eq ""} { return }
-  if {$::env(OT_DTSH_NDR) ne "4w"} { error "OT_DTSH unknown NDR option $::env(OT_DTSH_NDR)" }
+  set opt $::env(OT_DTSH_NDR)
+  if {$opt ni {4w 2w45}} { error "OT_DTSH unknown NDR option $opt" }
   set tech [[ord::get_db] getTech]
   set dbu [$blk getDbUnitsPerMicron]
   set widths {}; set spacings {}
+  # 4w: 4x width / 2x spacing M2-M7 (legacy).  2w45 (CLOCK-RESET E5): 2x width / 2x spacing on
+  # M4/M5 only, technology default on M2/M3 (pin access) -- the pinned OpenROAD GRT underflows
+  # (GRT-0229 usage 65351/65356) on multi-track NDR costs at lower-layer pin stacks.
   foreach name {M2 M3 M4 M5 M6 M7} {
     set layer [$tech findLayer $name]
     if {$layer eq "NULL"} { error "OT_DTSH NDR missing layer $name" }
-    lappend widths $name [expr {4.0*[$layer getWidth]/$dbu}]
-    lappend spacings $name [expr {2.0*[$layer getSpacing]/$dbu}]
+    set kw [expr {$opt eq "4w" ? 4.0 : ($name in {M4 M5} ? 2.0 : 1.0)}]
+    set ks [expr {$opt eq "4w" ? 2.0 : ($name in {M4 M5} ? 2.0 : 1.0)}]
+    lappend widths $name [expr {$kw*[$layer getWidth]/$dbu}]
+    lappend spacings $name [expr {$ks*[$layer getSpacing]/$dbu}]
   }
-  set name ot_dtsh_4w2s
+  set name [expr {$opt eq "4w" ? "ot_dtsh_4w2s" : "ot_dtsh_2w2s_m45"}]
   # create_ndr makes a BLOCK-level rule (dbTechNonDefaultRule::create(block,..)); tech lookup never sees it
   if {[$blk findNonDefaultRule $name] ne "NULL"} { error "OT_DTSH NDR name already exists: $name" }
   create_ndr -name $name -width $widths -spacing $spacings
@@ -248,7 +254,7 @@ proc ::ot_dtsh::trunk_ndr {} {
   if {$ndr eq "NULL"} { error "OT_DTSH NDR was not created" }
   $root setNonDefaultRule $ndr
   dict for {node info} $nodes { [dict get $info net] setNonDefaultRule $ndr }
-  puts "OT_DTSH NDR: 4x technology width / 2x spacing M2-M7, planned root/trunk only"
+  puts "OT_DTSH NDR $name: planned root/trunk only"
 }
 proc ::ot_dtsh::bind_new_pg {} {
   variable blk; variable original; variable nodes
