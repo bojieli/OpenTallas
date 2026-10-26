@@ -31,22 +31,26 @@ module ot_rst_pipe #(
         if (!rst_n_in) begin s0 <= 1'b0; s1 <= 1'b0; end
         else begin s0 <= 1'b1; s1 <= s0; end
     genvar t;
+    // stage outputs as a flat wire array: Yosys -noautowire cannot resolve g_p[i].q hierarchical references (rtl_lint).
+    wire [REGIONS-1:0] st [0:STAGES-1];
     generate for (t = 0; t < STAGES; t = t + 1) begin : g_p
         (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] q;
+        assign st[t] = q;
         if (t == 0) begin : g_first
             always @(posedge clk) q <= {REGIONS{s1}};
         end else begin : g_next
-            always @(posedge clk) q <= g_p[t-1].q;
+            always @(posedge clk) q <= st[t-1];
         end
     end endgenerate
     generate if (COPIES <= 1) begin : g_one
-        assign rst_n = g_p[STAGES-1].q;
+        assign rst_n = st[STAGES-1];
     end else begin : g_fam
         // the last stage g_p[STAGES-1].q is replaced by the copy families (its flops have no load and are removed).
         // fam_all names every copy bit without a bracketed scope (ot_rst_copies.py addresses copies through it).
         (* keep = "true" *) wire [REGIONS*COPIES-1:0] fam_all;
         for (t = 0; t < REGIONS; t = t + 1) begin : g_c
-            wire d = (STAGES > 1) ? g_p[(STAGES > 1) ? STAGES-2 : 0].q[t] : s1;
+            wire [REGIONS-1:0] dv = st[(STAGES > 1) ? STAGES-2 : 0];
+            wire d = (STAGES > 1) ? dv[t] : s1;
             (* keep = "true", dont_touch = "true", ot_rst_split = "true" *) reg [COPIES-1:0] qv;
             (* keep = "true", dont_touch = "true" *) always @(posedge clk) qv <= {COPIES{d}};
             assign rst_n[t] = qv[0];

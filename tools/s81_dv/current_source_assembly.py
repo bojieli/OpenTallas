@@ -120,6 +120,8 @@ def prepare(check=False, stage=None):
                 dest.write_bytes(data)
         # Use the complete matching tool package, not a different host checkout.
         shutil.copytree(ROOT / 'tools/die_plan', stage / 'tools/die_plan', dirs_exist_ok=True)
+        # bind.py substitute_inst imports tools/die_port_bind.py (sys.path = tools/): stage it with the package
+        shutil.copy2(ROOT / 'tools/die_port_bind.py', stage / 'tools/die_port_bind.py')
         (stage / 'tools/s81_dv').mkdir(parents=True, exist_ok=True)
         for name in ('adopt_eng_split.py', 'current_source_assembly.py'):
             shutil.copy2(ROOT / 'tools/s81_dv' / name, stage / 'tools/s81_dv' / name)
