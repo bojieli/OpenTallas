@@ -22,7 +22,7 @@
 // Pair control tile: calendar walk, V requests, arrival identity per port, the column command word, output check.
 // Every port is registered at the pin: inputs (start/context/epoch, arrival identities, column flags) one edge in,
 // outputs (V requests, command word, flags, out_age) one edge out. Internal age 'pa' counts from the registered start.
-module ot_qwen_tp8_pv_wide_ctl_tb #(parameter integer FIRST_INPUT_AGE=127,parameter integer RESET_PIN=0,parameter integer MUT=0,
+module ot_qwen_tp8_pv_wide_ctl_tb #(parameter integer FIRST_INPUT_AGE=255,parameter integer RESET_PIN=0,parameter integer MUT=0,
  parameter integer TRUNK_D=0,   // registered stages ctl cmd pin -> every tile's command pin (balanced, KVPLAN trunk)
  parameter integer FLAG_D=0     // registered stages every column flag pin -> this tile's col_valid / col_fault pins (balanced)
 )(
