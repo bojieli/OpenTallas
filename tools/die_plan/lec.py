@@ -680,6 +680,22 @@ class Lec:
         # state-encoding constraints (FSM recoding): (side, keys, allowed value tuples) assumed on the current state
         # and proved on the next state together with the hypotheses (an inductive invariant like the others)
         self.cons = []
+        self.cycle_dropped = []                   # (node, hypothesis) dropped by build() to break a binding cycle
+
+    def _drop_cycle_hyp(self, pend):
+        """pend: unresolved hypothesis node -> the node it is bound to.  No pass made progress, so every walk along
+        the bindings either closes a cycle or ends at a node that is never bound in this pass (e.g. a 'cube' state
+        bit).  Drop exactly one hypothesis: on a cycle its largest key (the cycle's other equalities still relate all
+        its members; a wrong one is refuted by the induction like any other), on a dead end the node bound to it.
+        Dropping a hypothesis only removes an assumption: the flop becomes a free input, never a waiver.
+        -> [dropped node]"""
+        node, seen = min(pend), []
+        while node in pend and node not in seen:
+            seen.append(node)
+            node = pend[node]
+        drop = max(seen[seen.index(node):]) if node in seen else seen[-1]
+        self.cycle_dropped.append((drop, self.hyp.pop(drop)))
+        return [drop]
 
     def build(self, with_compare=True, with_hyp=True, extra=None, free_const=None, hold_matched=()):
         """one AIG with every matched key point a shared input; a hypothesised gold-only flop becomes its constant /
@@ -729,10 +745,15 @@ class Lec:
                 shared[k] = shared[rep] ^ inv
                 bind(lg, self.gp[k], shared[k])
                 bind(lt, self.tp[k], shared[k])
-            if len(nxt) == len(merged):
-                for k in nxt:
-                    self.hyp.pop(("both", k), None)
-                raise LecError("cyclic flop hypotheses (rebuild)")
+            if len(nxt) == len(merged):           # a cycle: drop ONE hypothesis on it (a free matched input)
+                pend = {("both", k): ("both", self.hyp[("both", k)][2]) for k in nxt}
+                (_, k), = self._drop_cycle_hyp(pend)
+                nxt.remove(k)
+                v = m.add_input(k)
+                kind[v >> 1] = ("matched", k)
+                shared[k] = v
+                bind(lg, self.gp[k], v)
+                bind(lt, self.tp[k], v)
             merged = nxt
         later = []
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
@@ -771,10 +792,14 @@ class Lec:
                     continue
                 lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
                 bind(lmap, p[k], v ^ inv)
-            if len(nxt) == len(later):
-                for side, k, h in nxt:          # cyclic partners: drop the hypothesis, free input
-                    self.hyp.pop((side, k), None)
-                raise LecError("cyclic flop hypotheses (rebuild)")
+            if len(nxt) == len(later):            # a cycle: drop ONE hypothesis on it (that flop a free input)
+                pend = {(side, k): (h[1], h[2]) for side, k, h in nxt}
+                (side, k), = self._drop_cycle_hyp(pend)
+                nxt = [e for e in nxt if (e[0], e[1]) != (side, k)]
+                lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
+                v = m.add_input(f"{side}:{k}")
+                kind[v >> 1] = (side + "_only", k)
+                bind(lmap, p[k], v)
             later = nxt
         for side, xs, anon, lmap in (("gold", self.gx, self.ganon, lg), ("gate", self.tx, self.tanon, lt)):
             for lit in xs:
@@ -2558,6 +2583,10 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         rec["verdict"], rec["reason"] = "ERROR", f"{type(e).__name__}: {e}"
         import traceback
         log.append(traceback.format_exc())
+    lc = locals().get("L")
+    if lc is not None and getattr(lc, "cycle_dropped", None):   # hypotheses dropped to break binding cycles
+        rec["cycle_dropped"] = dict(n=len(lc.cycle_dropped),
+                                    first=[f"{sd}:{k} {list(h)}" for (sd, k), h in lc.cycle_dropped[:40]])
     rec["t_total_s"] = round(time.time() - t0, 1)
     rec["provenance"] = _provenance()
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
