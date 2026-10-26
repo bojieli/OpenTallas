@@ -1,0 +1,7 @@
+PROG MISMATCH c=47
+PROG MISMATCH c=53
+PROG MISMATCH c=71
+MITER N=20000 seed=3 btab_mism=0 prog_mism=19704 fault_mism=0 mif0_vs_orig_prog=0 nonzero_cmp btab=19449 prog=18811
+[40000000] %Fatal: tb_row.sv:56: Assertion failed in tb: ROW_WRITE_RELAY MISMATCH
+%Error: tb_row.sv:56: Verilog $stop
+Aborting...
