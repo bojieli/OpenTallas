@@ -264,6 +264,18 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    "dead_inputs": {"type": "array", "items": {
+                        "type": "object", "additionalProperties": False,
+                        "required": ["module", "parameters", "ports", "proof", "source", "module_sha256"],
+                        "properties": {
+                            "module": _name,
+                            "parameters": {"type": "object", "additionalProperties": {"type": "string"}},
+                            "ports": {"type": "object", "minProperties": 1, "additionalProperties": {
+                                "type": "array", "minItems": 1, "items": {
+                                    "type": "array", "minItems": 2, "maxItems": 2,
+                                    "items": {"type": "integer", "minimum": 0}}}},
+                            "proof": {"type": "string"}, "source": {"type": "string"},
+                            "module_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}},
                     "outline_um": _wh,
                     # estimated std cells of one instance (synth / census); COORD 10-23 CORE-KS: a type over
                     # CORE_CELLS_MAX (400k) must list hard_cores[] (G0 ERROR).  Else the sum of contents[].cells.
@@ -315,6 +327,11 @@ SCHEMA = {
                         # (taps.density_taps: <= tap_target_sinks per tap within tap_radius_um, none on a hard
                         # core); sinks = face / ft registers + sink_sites_um + sink_bins_file (internal inventory)
                         "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density"]}, "tap_radius_um": _pos,
+                        # PATH-KV-SYSC2 10-25 (GEOM F2): opt-in "sinks" = an R4 grid tap that tap_clear had to move
+                        # off a macro / keepout (its cell centre is blocked) is re-centred on the weighted L1 median of
+                        # the planned sinks the kit's nearest-tap rule gives it (taps.recentre_displaced), so it never
+                        # sits on a keepout edge with half its circle over a sink-free PHY; undisplaced taps unchanged
+                        "tap_recentre": {"enum": ["sinks"]},
                         # OWNER DEC. 16 / FP32 audit (COORD 10-25): PHY-edge clocks a soft type takes as a bound-only
                         # port (QC clk_coll / clk_serdes / clk_d2d at the die period, clk_coll_blk = the /6 block
                         # clock of qfd_ckdiv6).  Each is an interior pin at tap_um and a kit clock (create_clock, period
@@ -548,6 +565,17 @@ SCHEMA = {
             # input's min input delay is its driving partition's guaranteed output-min, the related tap pair skew is
             # checked at the parent (io_hold_parent.py); "legacy" / absent = the flat contract above
             "io_hold": {"enum": ["legacy", "sender_min"]},
+            # CP1 proof harness (COORD 2026-10-25 23:26 ruling (3), CLOCK-RESET): a cut-out proof die keeps, for each
+            # die-edge input that the FULL plan drives from a registered partition, an explicit registered upstream
+            # driver view {port id: part, type, bus, out_hold_guarantee_ps, basis}; under io_hold sender_min that
+            # port takes the driver's guaranteed output-min (gen_phys.input_hold_min) and the seam is checked on the
+            # real parent (io_hold_parent.py) -- never an unconstrained die input, never a waiver
+            "io_hold_driver_views": {"type": "object", "additionalProperties": {
+                "type": "object", "additionalProperties": False,
+                "required": ["part", "type", "bus", "out_hold_guarantee_ps", "basis"],
+                "properties": {"part": {"type": "string"}, "type": {"type": "string"}, "bus": {"type": "string"},
+                               "out_hold_guarantee_ps": {"type": "number"}, "basis": {"type": "string"},
+                               "source_plan": {"type": "string"}}}},
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.
@@ -1148,11 +1176,18 @@ def _grid_taps(P, tn):
         x, y = tap_clear(t, float(x), float(y))
         return [("clk", x, y)]
     out = []
+    moved = []
     for j in range(ny):
         for i in range(nx):
             k = len(out)
-            x, y = tap_clear(t, (i + 0.5) * w / nx, (j + 0.5) * h / ny, [(a, b) for _, a, b in out])
+            cx, cy = (i + 0.5) * w / nx, (j + 0.5) * h / ny
+            x, y = tap_clear(t, cx, cy, [(a, b) for _, a, b in out])
+            if abs(x - cx) > 1e-6 or abs(y - cy) > 1e-6:
+                moved.append((k, (i * w / nx, j * h / ny, (i + 1) * w / nx, (j + 1) * h / ny)))
             out.append(("clk" if k == 0 else f"clk_t{k}", x, y))
+    if moved and t.get("clock", {}).get("tap_recentre") == "sinks":
+        import taps
+        out = taps.recentre_displaced(P, tn, out, moved)
     return out
 
 

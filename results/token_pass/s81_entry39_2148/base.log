@@ -1,0 +1,6 @@
+ENTRY39 checks=60000 requests=7029 mismatches=0 mutant=0
+ENTRY39_PASS
+- /srv/opentallas-scratch2/claude/wt/codex-s81-deadinputs-2148/results/token_pass/s81_entry39_2148/tb.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 50us; walltime 0.538 s; speed 92.997 us/s
+- Verilator: cpu 0.538 s on 1 threads; allocated 7 MB

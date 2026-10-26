@@ -206,6 +206,20 @@ def compile_pipeline(calendar, bookings, root, out):
     covered, coverage, compiled, gaps = set(), {}, [], []
     root = Path(root)
     out = Path(out); out.mkdir(parents=True, exist_ok=False)
+    reset_contract = None
+    reset_ref = bookings.get('reset_boot_contract')
+    if reset_ref:
+        reset_contract = json.loads((root / reset_ref).read_text())
+        if reset_contract.get('schema') != 'opentallas.reset_boot_contract.v1':
+            raise ValueError('unsupported reset/BOOT compiler contract')
+        selected = bookings.get('selected_physical_plan_fingerprint')
+        if selected != reset_contract['physical_plan_fingerprint']:
+            gaps.append(dict(cause='reset_BOOT_contract_not_bound_to_selected_physical_plan'))
+        if not reset_contract.get('compiler_ready'):
+            gaps.append(dict(cause='reset_START_source_or_booking_authority_missing',
+                detail=reset_contract.get('readiness_gaps', [])))
+    else:
+        gaps.append(dict(cause='published_local_reset_BOOT_contract_missing'))
     for index, booking in enumerate(bookings['jobs']):
         stage = booking['stage']; user = uint(booking, 'user', 10)
         pos = uint(booking, 'position_index', 3)
@@ -368,7 +382,7 @@ def compile_pipeline(calendar, bookings, root, out):
         calendar_source_sha256=calendar['checker']['source_sha256'],
         graph_positions=6, expected_stage_positions=len(expected), emitted=len(compiled),
         missing_stage_positions=[dict(stage=s,user=u,position_index=p,rank=r) for s,u,p,r in missing],
-        jobs=compiled, gaps=gaps, production_enabled=False,
+        jobs=compiled, gaps=gaps, reset_boot_contract=reset_contract, production_enabled=False,
         full_token=False, full_pipeline_RTL=False,
         next='Execute emitted real HOST/KS packets on the selected receiver/issuer; bind missing native stages and lifecycle')
     (out/'manifest.json').write_text(json.dumps(result,indent=1)+'\n')

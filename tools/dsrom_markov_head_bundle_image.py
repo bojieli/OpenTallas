@@ -6,21 +6,14 @@ Run image generation on an admitted remote host. No arithmetic or payload conver
 import argparse,hashlib,json,struct
 from pathlib import Path
 import numpy as np
+from mem_compiler.rom_content import write_viamap
 from dsrom_markov_head_weight_image import generate,DEFAULT,REV
 
 KEY='head.weight'
 def viamap(path,words):
-    spread=[sum(((b>>k)&1)<<(8*k) for k in range(8)) for b in range(256)]
-    p=[0]*512
-    for a,row in enumerate(words):
-        word=int.from_bytes(row.tobytes(),'little')
-        expanded=sum(spread[(word>>(8*j))&255]<<(64*j) for j in range(32))
-        p[a//8]|=expanded<<(a%8)
-    path.write_text(''.join(f'{v:0548x}\n' for v in p))
-    stored=[int(v,16) for v in path.read_text().splitlines()]
-    for a,row in enumerate(words):
-        got=sum(((stored[a//8]>>(8*bit+a%8))&1)<<bit for bit in range(256))
-        if got!=int.from_bytes(row.tobytes(),'little'):raise ValueError('serialized macro payload mismatch')
+    dense=[int.from_bytes(row.tobytes(),'little') for row in words]
+    write_viamap(path,dense,'ot_rom_4096x274_m8')
+
 def build(snapshot,manifest,out,die,bundle,sk=11,windows=None):
     m=json.loads(manifest.read_text())
     if m['released_vocab']!=129280 or m['head_dies']!=12:raise ValueError('unpriced manifest shape')

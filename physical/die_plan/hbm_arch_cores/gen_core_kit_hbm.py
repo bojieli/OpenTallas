@@ -404,7 +404,47 @@ def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=
     return "\n".join(txt), rep
 
 
-def main():
+
+def prects_phase_hooks(kd, cfg, clocks, insertion_ps):
+    """Opt-in ideal LOCAL network estimate, removed before any CTS builder.
+
+    Same stage-only convention as gen_phys.clock_phase_tcl. Never write this
+    estimate to the SDC: port network latency can survive propagated timing.
+    Preserve generated override guards and any existing stage hook.
+    """
+    if not clocks or insertion_ps < 0:
+        raise ValueError("pre-CTS estimate needs clock ports and nonnegative insertion")
+    def effective(name):
+        value, forced = None, False
+        for line in cfg:
+            m = re.match(r"^(override\s+)?export\s+" + name + r"\s*=\s*(.*?)\s*$", line)
+            if m and (m[1] or not forced):
+                value = m[2]
+                forced = bool(m[1])
+        if value and any(c in value for c in "$\n\r{}"):
+            raise ValueError("pre-CTS stage hook must be a literal Tcl path")
+        return value
+    before_floorplan = effective("PRE_FLOORPLAN_TCL")
+    before_cts = effective("PRE_CTS_TCL")
+    ports = " ".join(clocks)
+    estimate = "# Stage-only LOCAL network estimate; golden SDC is unchanged.\n"
+    if before_floorplan:
+        estimate += "source {" + before_floorplan + "}\n"
+    estimate += f"set_clock_latency -clock clk {insertion_ps:.4f} [get_ports {{{ports}}}]\n"
+    clear = "# Clear LOCAL network estimate BEFORE the CTS builder or multiport guard.\n"
+    clear += f"unset_clock_latency -clock clk [get_ports {{{ports}}}]\n"
+    if before_cts:
+        clear += "source {" + before_cts + "}\n"
+    (kd / "prects_estimate.tcl").write_text(estimate)
+    (kd / "core_pre_cts.tcl").write_text(clear)
+    cfg += ["override export PRE_FLOORPLAN_TCL = /work/prects_estimate.tcl",
+            "override export PRE_CTS_TCL = /work/core_pre_cts.tcl"]
+    return dict(insertion_ps=insertion_ps, ports=clocks, scope="ideal pre-CTS placement only",
+                clear_before_cts=True, previous_floorplan_hook=before_floorplan,
+                previous_cts_hook=before_cts, sdc_changed=False)
+
+
+def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--views", required=True)
     ap.add_argument("--view", required=True)
@@ -442,6 +482,8 @@ def main():
                          "(port -> CTS trunk -> density taps of <= --clock-tap-sinks sinks within --clock-tap-dmax um -> "
                          "local CTS trees; macro clock pin on its interface-register tap; POST_CTS tap alignment). "
                          "off = single-root TritonCTS (unchanged)")
+    ap.add_argument("--prects-estimate", action="store_true",
+                    help="stage-only planned local clock NETWORK insertion before placement; explicitly cleared before CTS; SDC unchanged")
     ap.add_argument("--clock-tap-sinks", type=int, default=1250)
     # HBM-KITS 2026-10-25: the FLOW 10-25 shared defaults (main tools/die_plan/gen_phys.py) for HBM core kits:
     # F2 = ASAP7 per-layer RC calibrated to routed RCX (tools/die_plan/setRC_rcx_asap7.tcl as LAYER_PARASITICS_FILE /
@@ -483,6 +525,7 @@ def main():
     names = [p["name"] for p in pins]
     pb = buses_of(names)
     R = load_recipes()
+    R.update(recipe_overrides or {})
     rk = a.recipe_key or (module if module in R and (HERE / "recipes_b2.json").is_file() and module in
                           json.load(open(HERE / "recipes_b2.json")) else None) or \
         (v["recipe_keys"][0] if v["recipe_keys"] else None)
@@ -524,7 +567,7 @@ def main():
     top = rec.get("top", module)
     params = dict(rec.get("params", {}))
     if canon:
-        if canon[0].get("file") and canon[0]["file"] not in files:
+        if not source_profile and canon[0].get("file") and canon[0]["file"] not in files:
             files = files + [canon[0]["file"]]
         top = canon[0]["top"]
         # HBM-FACE 10-25: keep the split recipe's parameters of the canonical top (build_split_tops.py writes them, e.g.
@@ -532,12 +575,20 @@ def main():
         # elaborated and hardened as HALF 0 (default) - the wrong per-head delay depth / seed head - and its cs_in /
         # cf_in looked unread.
         params = dict(rec.get("params", {})) if rec.get("top") == top else {}
+    if rec.get("profile_top"):
+        top = rec["profile_top"]
     commit = rec.get("source_commit", "HEAD")
     srcs, local = [], []
     for f in files:
         dst = kd / "rtl" / Path(f).name
         fat = rec.get("files_at", {})        # per-file source pin (RECIPES2: as-built scoped closure + committed core)
-        fetch(f, fat.get(f, commit), dst, at_commit=bool(rec.get("read_at_commit")) or f in fat)
+        if source_overrides and f in source_overrides:
+            data = Path(source_overrides[f]).read_bytes()
+            if dst.exists() and dst.read_bytes() != data:
+                raise SystemExit(f"rtl name clash {dst.name}")
+            dst.write_bytes(data)
+        else:
+            fetch(f, fat.get(f, commit), dst, at_commit=bool(rec.get("read_at_commit")) or f in fat)
         local.append(str(dst))
         if not f.endswith((".svh", ".vh")):
             srcs.append(f"/work/rtl/{dst.name}")
@@ -564,6 +615,17 @@ def main():
                 Path(p_).write_text(t_)
                 top = top + "__core"
                 break
+    def inventory(top_, params_):
+        pi = (source_profile or {}).get("port_inventory")
+        if pi and pi["top"] == top_:
+            if params_:
+                raise SystemExit("profile interface inventory cannot override parameters")
+            staged_top = kd / "rtl" / Path(pi["source_file"]).name
+            if sha(staged_top) != pi["source_sha256"]:
+                raise SystemExit("profile interface source hash changed before inventory")
+            return [tuple(p) for p in pi["ports"]]
+        return yosys_ports(local, top_, params_, rec.get("defines", []), kd / "rtl")
+
     wrap_rep = None
     if a.wrapper:
         shutil.copyfile(a.wrapper, kd / "rtl" / f"{module}__wrap.sv")
@@ -571,29 +633,31 @@ def main():
         local.append(str(kd / "rtl" / f"{module}__wrap.sv"))
         wrap_rep = dict(hand_wrapper=str(a.wrapper))
         design, dparams = module, {}
-        tports = yosys_ports(local, module, {}, rec.get("defines", []), kd / "rtl")
+        tports = inventory(module, {})
         tpw = {n: wd for n, _, wd in tports}
         bad = [b for b, (wd, _) in pb.items() if tpw.get(b) != wd] + [n for n in tpw if n not in pb]
         if bad:
             raise SystemExit(f"PORT_MISMATCH {a.view}: hand wrapper ports != plan pins, e.g. {bad[:6]}")
     elif top != module or canon:
-        tports = yosys_ports(local, top, params, rec.get("defines", []), kd / "rtl")
+        tports = inventory(top, params)
         if canon:
             ti = canon[1]
             ties = {}
             for k, n in (ti.get("tied_at_parent") or {}).items():
                 pn, val = k.split("=")
                 ties[pn] = val
-            txt, wrap_rep = build_wrapper(module, pb, top, params, tports, cmap=ti["cut_pins"],
+            txt, wrap_rep = build_wrapper(module, pb, top, params, tports, cmap=rec.get("canonical_pin_map", ti["cut_pins"]),
                                           straps=ti.get("straps") or {}, ties=ties)
         else:
             txt, wrap_rep = build_wrapper(module, pb, top, params, tports)
+        if source_profile and wrap_rep["open_outputs"]:
+            raise SystemExit("PORT_MISMATCH: unmatched profile outputs " + str(wrap_rep["open_outputs"]))
         (kd / "rtl" / f"{module}__wrap.sv").write_text(txt)
         srcs.append(f"/work/rtl/{module}__wrap.sv")
         local.append(str(kd / "rtl" / f"{module}__wrap.sv"))
         design, dparams = module, {}
     else:
-        tports = yosys_ports(local, top, params, rec.get("defines", []), kd / "rtl")
+        tports = inventory(top, params)
         tp = {n: wd for n, _, wd in tports}
         bad = [b for b, (wd, _) in pb.items() if tp.get(b) != wd] + [n for n in tp if n not in pb]
         if bad:
@@ -603,6 +667,16 @@ def main():
     # (face_shell.py): one kept flop per signal pin bit at the face (+1 cycle in / +1 out), clock/reset pins through,
     # unread input bits dropped from the pin table (top-of-bus / whole-bus drops keep pin names; report in
     # face_shell.json, plan change for the lane owner).  The kit top keeps the plan module name.
+    # Qualified profiles may expose clock aliases outside the legacy name regex
+    # (q3 link0_ck/link1_ck/link2_ck are taps of the same core clock).
+    clock_re, reset_re = CLK_RE, RST_RE
+    if source_profile:
+        if source_profile.get("clock_ports"):
+            clock_re = "(?:" + CLK_RE + "|^(?:" + "|".join(
+                re.escape(p) for p in source_profile["clock_ports"]) + ")$)"
+        if source_profile.get("reset_ports"):
+            reset_re = "(?:" + RST_RE + "|^(?:" + "|".join(
+                re.escape(p) for p in source_profile["reset_ports"]) + ")$)"
     shell = None
     if a.face_shell == "on":
         import face_shell as FS
@@ -618,7 +692,7 @@ def main():
             if (md_ / f"{m_}_tt.lib").is_file():
                 mlibs.append(str(md_ / f"{m_}_tt.lib"))
         try:
-            shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, CLK_RE, RST_RE,
+            shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_})
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
@@ -635,8 +709,8 @@ def main():
         if bad:
             raise SystemExit(f"FACE_SHELL {a.view}: shell ports != pruned plan pins, e.g. {bad[:6]}")
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
-    clks = [n for n in names if re.match(CLK_RE, base(n))]
-    rsts = [n for n in names if re.match(RST_RE, base(n)) and n not in clks]
+    clks = [n for n in names if re.match(clock_re, base(n))]
+    rsts = [n for n in names if re.match(reset_re, base(n)) and n not in clks]
     if not clks:
         raise SystemExit(f"{a.view}: no clock pin")
     io, prow = io_tcl(pins, w, h, a.view)
@@ -896,7 +970,20 @@ def main():
     if not a.no_f4:
         nxt = "/work/core_tap_align.tcl" if a.clock_taps == "density" else "/work/tap_balance.tcl"
         cfg += ["override export POST_CTS_TCL = /work/f4_chain_leaf.tcl", f"export OT_F4_NEXT_TCL = {nxt}"]
+    multiport_hold = len(clks) > 1 and (source_profile is not None or a.clock_taps == "density")
+    if multiport_hold:
+        # Every q3 cut has multiple named taps of one core domain.  The ordinary
+        # density helper selects one port (or falls back to clk), so it cannot
+        # qualify their common tree.  A reviewed multi-port stage must replace
+        # this explicit hold before CTS; never drop or short the native pins.
+        (kd / "multiport_clock_stage_hold.tcl").write_text(
+            'error "MULTIPORT_CTS_HOLD: reviewed common-domain multi-port clock stage required"\n')
+        cfg += ["override export PRE_CTS_TCL = /work/multiport_clock_stage_hold.tcl"]
+        if source_profile:
+            source_profile["clock_stage"] = "HOLD_CTS: common-domain multi-port stage required"
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
+    if a.prects_estimate:
+        flow["prects_estimate"] = prects_phase_hooks(kd, cfg, clks, ins)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
@@ -911,6 +998,16 @@ def main():
                                plan_pins=len(names) + len(shell["dropped"]))
                           if shell else None),
               kit_hash=kit_hash(kd))
+    if source_profile:
+        fz["source_profile"] = source_profile
+        fz["source_commit"] = source_profile["source_commit"]
+        if plan_path.resolve().is_relative_to(REPO):
+            fz["plan"] = str(plan_path.resolve().relative_to(REPO))
+            fz["pins_file"] = str((pdir / v["pins_file"]).resolve().relative_to(REPO))
+        elif not source_profile.get("diagnostic_inputs"):
+            raise SystemExit("external source-profile plan is diagnostic only")
+    if multiport_hold:
+        fz["clock_stage_hold"] = dict(ports=clks, reason="reviewed common-domain multi-port stage required")
     fz["flow_defaults"] = dict(flow, rule="FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)")
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)

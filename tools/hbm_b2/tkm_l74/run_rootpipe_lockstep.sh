@@ -18,4 +18,12 @@ if vvp "$OUT/mutant" > "$OUT/mutant.log" 2>&1; then
  exit 1
 fi
 grep -F 'ROOTPIPE_LOCKSTEP FAIL' "$OUT/mutant.log"
-echo 'ROOTPIPE_ROOT_CUT_GATE_PASS: reference/candidate shift 0, MUTP1 caught, data-cycle delta 0'
+python3 "$SELF/rootpipe_probe_sources.py" --out "$OUT/sortmut" --mutant-sort
+src[2]="$OUT/sortmut/root_pd.sv"
+iverilog -g2012 -s tb -Ptb.BDR=1 -o "$OUT/sortmutant" "${src[@]}" > "$OUT/sortmutant_build.log" 2>&1
+if vvp "$OUT/sortmutant" > "$OUT/sortmutant.log" 2>&1; then
+ echo 'ROOTPIPE_STABLE_SORT_MUTANT_SURVIVED' >&2
+ exit 1
+fi
+grep -F 'ROOTPIPE_LOCKSTEP FAIL' "$OUT/sortmutant.log"
+echo 'ROOTPIPE_ROOT_CUT_GATE_PASS: shift0, MUTP1 and stable-sort mutant caught, data-cycle delta0'

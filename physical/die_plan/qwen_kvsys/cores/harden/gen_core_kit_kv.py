@@ -967,10 +967,11 @@ def main():
     if flow_basis:
         shutil.copyfile(tool / "setRC_rcx_asap7.tcl", kd / "setRC_rcx.tcl")
         shutil.copyfile(tool / "leaf_affinity.tcl", kd / "leaf_affinity.tcl")
-        # design-rule fit (PV-PC fd4_mc in-flow recipe, now the core default): fanout cap 24 for every repair_design
-        # (ASTK B: 134 nets > 64, max 162 -> ~1100 routed slew pins) + 20 % slew / cap margin for the routed RC
-        (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 24 for every repair_design (in-flow, not in the golden SDC)\n"
-                                           "set_max_fanout 24 [current_design]\nputs \"KVCORES max_fanout 24\"\n")
+        # Match the sign-off fanout ceiling at every repair_design stage. A tighter cap of 24
+        # split timing-critical decode broadcasts into serial weak-buffer chains (FLOW-FANOUT).
+        # Keep the routed slew/cap margins; timing-driven repair chooses the buffer tree.
+        (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 64 for every repair_design (in-flow, not in the golden SDC)\n"
+                                           "set_max_fanout 64 [current_design]\nputs \"KVCORES max_fanout 64\"\n")
     mcmm = flow_basis and (not lefs or all(libs_ff))
     for f in ("pin_audit_core.py", "corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)

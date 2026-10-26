@@ -9,7 +9,7 @@ import argparse
 from pathlib import Path
 
 
-def build(repo, out):
+def build(repo, out, mutant_sort=False):
     out.mkdir(parents=True, exist_ok=True)
     for mode in ('p', 'pd'):
         source = repo / f'rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_{mode}.sv'
@@ -24,11 +24,17 @@ def build(repo, out):
         text = text[:a] + ''' assign up[0]=probe_up;
  assign probe_down=down[0];assign probe_dv=dv[0];assign probe_clr=t_clr;assign probe_conv=t_conv;
 ''' + text[b:]
+        if mode == 'pd' and mutant_sort:
+            marker = 'stable_key={e[EW-1:1],~tag};'
+            if text.count(marker) != 1:
+                raise ValueError('stable-sort mutant source changed')
+            text = text.replace(marker, 'stable_key={e[EW-1:1],tag};')
         (out / f'root_{mode}.sv').write_text(text)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', required=True, type=Path)
+    parser.add_argument('--mutant-sort', action='store_true')
     args = parser.parse_args()
-    build(Path(__file__).resolve().parents[3], args.out)
+    build(Path(__file__).resolve().parents[3], args.out, args.mutant_sort)
