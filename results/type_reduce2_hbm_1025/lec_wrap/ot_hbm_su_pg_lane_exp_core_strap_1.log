@@ -1,0 +1,570 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Executing script file `results/type_reduce2_hbm_1025/lec_wrap/ot_hbm_su_pg_lane_exp_core_strap_1.ys' --
+
+1. Executing Verilog-2005 frontend: results/type_reduce2_hbm_1025/lec_wrap/ot_hbm_su_pg_lane_exp_core_strap_1.v
+Parsing SystemVerilog input from `results/type_reduce2_hbm_1025/lec_wrap/ot_hbm_su_pg_lane_exp_core_strap_1.v' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_pg_lane_exp_core'.
+Generating RTLIL representation for module `\gold'.
+Generating RTLIL representation for module `\gate'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core_strap.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core_strap.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_pg_lane_exp_core_strap'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+4. Executing FLATTEN pass (flatten design).
+Using template ot_hbm_su_pg_lane_exp_core_strap for cells of type ot_hbm_su_pg_lane_exp_core_strap.
+<suppressed ~1 debug messages>
+No more expansions possible.
+
+5. Executing FLATTEN pass (flatten design).
+No more expansions possible.
+
+6. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: lane_coll_gold (\lane_coll_gold), lane_coll_gate (\u_w.lane_coll_gate) -> lane_coll
+Presumably equivalent wires: lane_fault_gold (\lane_fault_gold), lane_fault_gate (\u_w.lane_fault_gate) -> lane_fault
+Presumably equivalent wires: lane_ro_x_gold (\lane_ro_x_gold), lane_ro_x_gate (\u_w.lane_ro_x_gate) -> lane_ro_x
+Presumably equivalent wires: lane_ro_v_gold (\lane_ro_v_gold), lane_ro_v_gate (\u_w.lane_ro_v_gate) -> lane_ro_v
+Presumably equivalent wires: lane_kv_wdata_gold (\lane_kv_wdata_gold), lane_kv_wdata_gate (\u_w.lane_kv_wdata_gate) -> lane_kv_wdata
+Presumably equivalent wires: lane_kv_waddr_gold (\lane_kv_waddr_gold), lane_kv_waddr_gate (\u_w.lane_kv_waddr_gate) -> lane_kv_waddr
+Presumably equivalent wires: lane_kv_we_gold (\lane_kv_we_gold), lane_kv_we_gate (\u_w.lane_kv_we_gate) -> lane_kv_we
+Presumably equivalent wires: lane_vm_wdata_gold (\lane_vm_wdata_gold), lane_vm_wdata_gate (\u_w.lane_vm_wdata_gate) -> lane_vm_wdata
+Presumably equivalent wires: lane_vm_waddr_gold (\lane_vm_waddr_gold), lane_vm_waddr_gate (\u_w.lane_vm_waddr_gate) -> lane_vm_waddr
+Presumably equivalent wires: lane_vm_we_gold (\lane_vm_we_gold), lane_vm_we_gate (\u_w.lane_vm_we_gate) -> lane_vm_we
+Presumably equivalent wires: lane_rd_src_gold (\lane_rd_src_gold), lane_rd_src_gate (\u_w.lane_rd_src_gate) -> lane_rd_src
+Presumably equivalent wires: lane_rd_re_gold (\lane_rd_re_gold), lane_rd_re_gate (\u_w.lane_rd_re_gate) -> lane_rd_re
+Presumably equivalent wires: bank_read_data_gold (\bank_read_data_gold), bank_read_data_gate (\u_w.bank_read_data_gate) -> bank_read_data
+Presumably equivalent wires: lane_rd_addr_gold (\lane_rd_addr_gold), lane_rd_addr_gate (\u_w.lane_rd_addr_gate) -> lane_rd_addr
+Presumably equivalent wires: lane_side_y_gold (\lane_side_y_gold), lane_side_y_gate (\lane_side_y_gate) -> lane_side_y
+Presumably equivalent wires: lane_co_dst_gold (\lane_co_dst_gold), lane_co_dst_gate (\lane_co_dst_gate) -> lane_co_dst
+Presumably equivalent wires: lane_co_rnd_gold (\lane_co_rnd_gold), lane_co_rnd_gate (\lane_co_rnd_gate) -> lane_co_rnd
+Presumably equivalent wires: lane_ce_imm1_gold (\lane_ce_imm1_gold), lane_ce_imm1_gate (\lane_ce_imm1_gate) -> lane_ce_imm1
+Presumably equivalent wires: lane_ce_e2_gold (\lane_ce_e2_gold), lane_ce_e2_gate (\lane_ce_e2_gate) -> lane_ce_e2
+Presumably equivalent wires: lane_cs_imm2_gold (\lane_cs_imm2_gold), lane_cs_imm2_gate (\lane_cs_imm2_gate) -> lane_cs_imm2
+Presumably equivalent wires: lane_cs_e1_gold (\lane_cs_e1_gold), lane_cs_e1_gate (\lane_cs_e1_gate) -> lane_cs_e1
+Presumably equivalent wires: lane_cs_sfu_gold (\lane_cs_sfu_gold), lane_cs_sfu_gate (\lane_cs_sfu_gate) -> lane_cs_sfu
+Presumably equivalent wires: lane_ci_sfu_gold (\lane_ci_sfu_gold), lane_ci_sfu_gate (\lane_ci_sfu_gate) -> lane_ci_sfu
+Presumably equivalent wires: lane_ca_imm2_gold (\lane_ca_imm2_gold), lane_ca_imm2_gate (\lane_ca_imm2_gate) -> lane_ca_imm2
+Presumably equivalent wires: lane_ca_ad_gold (\lane_ca_ad_gold), lane_ca_ad_gate (\lane_ca_ad_gate) -> lane_ca_ad
+Presumably equivalent wires: lane_cm_imm1_gold (\lane_cm_imm1_gold), lane_cm_imm1_gate (\lane_cm_imm1_gate) -> lane_cm_imm1
+Presumably equivalent wires: lane_cm_qm_gold (\lane_cm_qm_gold), lane_cm_qm_gate (\lane_cm_qm_gate) -> lane_cm_qm
+Presumably equivalent wires: lane_cm_m2_gold (\lane_cm_m2_gold), lane_cm_m2_gate (\lane_cm_m2_gate) -> lane_cm_m2
+Presumably equivalent wires: lane_cm_m1_gold (\lane_cm_m1_gold), lane_cm_m1_gate (\lane_cm_m1_gate) -> lane_cm_m1
+Presumably equivalent wires: lane_cp_imm1_gold (\lane_cp_imm1_gold), lane_cp_imm1_gate (\lane_cp_imm1_gate) -> lane_cp_imm1
+Presumably equivalent wires: lane_cp_m1_gold (\lane_cp_m1_gold), lane_cp_m1_gate (\lane_cp_m1_gate) -> lane_cp_m1
+Presumably equivalent wires: lane_cx_imm3_gold (\lane_cx_imm3_gold), lane_cx_imm3_gate (\lane_cx_imm3_gate) -> lane_cx_imm3
+Presumably equivalent wires: lane_cx_cclip_gold (\lane_cx_cclip_gold), lane_cx_cclip_gate (\lane_cx_cclip_gate) -> lane_cx_cclip
+Presumably equivalent wires: lane_cx_amin_gold (\lane_cx_amin_gold), lane_cx_amin_gate (\lane_cx_amin_gate) -> lane_cx_amin
+Presumably equivalent wires: lane_cx_arelu_gold (\lane_cx_arelu_gold), lane_cx_arelu_gate (\lane_cx_arelu_gate) -> lane_cx_arelu
+Presumably equivalent wires: lane_cx_arnd_gold (\lane_cx_arnd_gold), lane_cx_arnd_gate (\lane_cx_arnd_gate) -> lane_cx_arnd
+Presumably equivalent wires: lane_rd_q_gold (\lane_rd_q_gold), lane_rd_q_gate (\lane_rd_q_gate) -> lane_rd_q
+Presumably equivalent wires: lane_srcs_gold (\lane_srcs_gold), lane_srcs_gate (\lane_srcs_gate) -> lane_srcs
+Presumably equivalent wires: lane_dst_gold (\lane_dst_gold), lane_dst_gate (\lane_dst_gate) -> lane_dst
+Presumably equivalent wires: lane_cpair_gold (\lane_cpair_gold), lane_cpair_gate (\lane_cpair_gate) -> lane_cpair
+Presumably equivalent wires: lane_gsh_gold (\lane_gsh_gold), lane_gsh_gate (\lane_gsh_gate) -> lane_gsh
+Presumably equivalent wires: lane_aind_gold (\lane_aind_gold), lane_aind_gate (\lane_aind_gate) -> lane_aind
+Presumably equivalent wires: lane_aibase_gold (\lane_aibase_gold), lane_aibase_gate (\lane_aibase_gate) -> lane_aibase
+Presumably equivalent wires: lane_obase_gold (\lane_obase_gold), lane_obase_gate (\lane_obase_gate) -> lane_obase
+Presumably equivalent wires: lane_krow_gold (\lane_krow_gold), lane_krow_gate (\lane_krow_gate) -> lane_krow
+Presumably equivalent wires: lane_vb_gold (\lane_vb_gold), lane_vb_gate (\lane_vb_gate) -> lane_vb
+Presumably equivalent wires: lane_lvw_gold (\lane_lvw_gold), lane_lvw_gate (\lane_lvw_gate) -> lane_lvw
+Presumably equivalent wires: lane_ls_gold (\lane_ls_gold), lane_ls_gate (\lane_ls_gate) -> lane_ls
+Presumably equivalent wires: lane_ni_gold (\lane_ni_gold), lane_ni_gate (\lane_ni_gate) -> lane_ni
+Presumably equivalent wires: lane_no_gold (\lane_no_gold), lane_no_gate (\lane_no_gate) -> lane_no
+Presumably equivalent wires: lane_i_v_gold (\lane_i_v_gold), lane_i_v_gate (\lane_i_v_gate) -> lane_i_v
+Presumably equivalent wires: lane_o_v_gold (\lane_o_v_gold), lane_o_v_gate (\lane_o_v_gate) -> lane_o_v
+Presumably equivalent wires: lane_bank_gold (\lane_bank_gold), lane_bank_gate (\lane_bank_gate) -> lane_bank
+Presumably equivalent wires: lane_emit_gold (\lane_emit_gold), lane_emit_gate (\lane_emit_gate) -> lane_emit
+Presumably equivalent wires: lane_ld_c_gold (\lane_ld_c_gold), lane_ld_c_gate (\lane_ld_c_gate) -> lane_ld_c
+Presumably equivalent wires: lane_ld_bank_gold (\lane_ld_bank_gold), lane_ld_bank_gate (\lane_ld_bank_gate) -> lane_ld_bank
+Presumably equivalent wires: lane_ld_gold (\lane_ld_gold), lane_ld_gate (\lane_ld_gate) -> lane_ld
+Presumably equivalent wires: lane_rst_n_gold (\lane_rst_n_gold), lane_rst_n_gate (\lane_rst_n_gate) -> lane_rst_n
+Presumably equivalent wires: lane_clk_insert_gold (\lane_clk_insert_gold), lane_clk_insert_gate (\lane_clk_insert_gate) -> lane_clk_insert
+Presumably equivalent wires: lane_clk_stage_gold (\lane_clk_stage_gold), lane_clk_stage_gate (\lane_clk_stage_gate) -> lane_clk_stage
+Presumably equivalent wires: bank_write_data_gold (\bank_write_data_gold), bank_write_data_gate (\bank_write_data_gate) -> bank_write_data
+Presumably equivalent wires: bank_write_addr_gold (\bank_write_addr_gold), bank_write_addr_gate (\bank_write_addr_gate) -> bank_write_addr
+Presumably equivalent wires: bank_write_v_gold (\bank_write_v_gold), bank_write_v_gate (\bank_write_v_gate) -> bank_write_v
+Presumably equivalent wires: bank_read_addr_gold (\bank_read_addr_gold), bank_read_addr_gate (\bank_read_addr_gate) -> bank_read_addr
+Presumably equivalent wires: bank_read_v_gold (\bank_read_v_gold), bank_read_v_gate (\bank_read_v_gate) -> bank_read_v
+Presumably equivalent wires: bank_clk_macro_gold (\bank_clk_macro_gold), bank_clk_macro_gate (\bank_clk_macro_gate) -> bank_clk_macro
+Presumably equivalent wires: bank_rst_n_gold (\bank_rst_n_gold), bank_rst_n_gate (\bank_rst_n_gate) -> bank_rst_n
+Presumably equivalent wires: bank_clk_gold (\bank_clk_gold), bank_clk_gate (\bank_clk_gate) -> bank_clk
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \eq
+
+7.2. Analyzing design hierarchy..
+Top module:  \eq
+Removing unused module `\ot_hbm_su_pg_lane_exp_core_strap'.
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 3 unused modules.
+
+8. Executing EQUIV_STRUCT pass.
+Running equiv_struct on module eq:
+  Starting iteration 1.
+    Fwd merging 2 ot_hbm_su_pg_lane_exp_core cells (from group of 2) using strategy gold-gate-pairs:
+      Merging cells u_core_gold and u_w.u_core_gate.
+  Starting iteration 2.
+    Nothing to merge.
+  Performed a total of 1 merges in module eq.
+
+9. Executing EQUIV_SIMPLE pass.
+Found 405 unproven $equiv cells (14 groups) in eq:
+ Grouping SAT models for \lane_rd_addr:
+  Trying to prove $equiv for \lane_rd_addr [0]: success!
+  Trying to prove $equiv for \lane_rd_addr [1]: success!
+  Trying to prove $equiv for \lane_rd_addr [2]: success!
+  Trying to prove $equiv for \lane_rd_addr [3]: success!
+  Trying to prove $equiv for \lane_rd_addr [4]: success!
+  Trying to prove $equiv for \lane_rd_addr [5]: success!
+  Trying to prove $equiv for \lane_rd_addr [6]: success!
+  Trying to prove $equiv for \lane_rd_addr [7]: success!
+  Trying to prove $equiv for \lane_rd_addr [8]: success!
+  Trying to prove $equiv for \lane_rd_addr [9]: success!
+  Trying to prove $equiv for \lane_rd_addr [10]: success!
+  Trying to prove $equiv for \lane_rd_addr [11]: success!
+  Trying to prove $equiv for \lane_rd_addr [12]: success!
+  Trying to prove $equiv for \lane_rd_addr [13]: success!
+  Trying to prove $equiv for \lane_rd_addr [14]: success!
+  Trying to prove $equiv for \lane_rd_addr [15]: success!
+  Trying to prove $equiv for \lane_rd_addr [16]: success!
+  Trying to prove $equiv for \lane_rd_addr [17]: success!
+  Trying to prove $equiv for \lane_rd_addr [18]: success!
+  Trying to prove $equiv for \lane_rd_addr [19]: success!
+  Trying to prove $equiv for \lane_rd_addr [20]: success!
+  Trying to prove $equiv for \lane_rd_addr [21]: success!
+  Trying to prove $equiv for \lane_rd_addr [22]: success!
+  Trying to prove $equiv for \lane_rd_addr [23]: success!
+  Trying to prove $equiv for \lane_rd_addr [24]: success!
+  Trying to prove $equiv for \lane_rd_addr [25]: success!
+  Trying to prove $equiv for \lane_rd_addr [26]: success!
+  Trying to prove $equiv for \lane_rd_addr [27]: success!
+  Trying to prove $equiv for \lane_rd_addr [28]: success!
+  Trying to prove $equiv for \lane_rd_addr [29]: success!
+  Trying to prove $equiv for \lane_rd_addr [30]: success!
+  Trying to prove $equiv for \lane_rd_addr [31]: success!
+  Trying to prove $equiv for \lane_rd_addr [32]: success!
+  Trying to prove $equiv for \lane_rd_addr [33]: success!
+  Trying to prove $equiv for \lane_rd_addr [34]: success!
+  Trying to prove $equiv for \lane_rd_addr [35]: success!
+  Trying to prove $equiv for \lane_rd_addr [36]: success!
+  Trying to prove $equiv for \lane_rd_addr [37]: success!
+  Trying to prove $equiv for \lane_rd_addr [38]: success!
+  Trying to prove $equiv for \lane_rd_addr [39]: success!
+  Trying to prove $equiv for \lane_rd_addr [40]: success!
+  Trying to prove $equiv for \lane_rd_addr [41]: success!
+  Trying to prove $equiv for \lane_rd_addr [42]: success!
+  Trying to prove $equiv for \lane_rd_addr [43]: success!
+  Trying to prove $equiv for \lane_rd_addr [44]: success!
+  Trying to prove $equiv for \lane_rd_addr [45]: success!
+  Trying to prove $equiv for \lane_rd_addr [46]: success!
+  Trying to prove $equiv for \lane_rd_addr [47]: success!
+  Trying to prove $equiv for \lane_rd_addr [48]: success!
+  Trying to prove $equiv for \lane_rd_addr [49]: success!
+  Trying to prove $equiv for \lane_rd_addr [50]: success!
+  Trying to prove $equiv for \lane_rd_addr [51]: success!
+  Trying to prove $equiv for \lane_rd_addr [52]: success!
+  Trying to prove $equiv for \lane_rd_addr [53]: success!
+  Trying to prove $equiv for \lane_rd_addr [54]: success!
+  Trying to prove $equiv for \lane_rd_addr [55]: success!
+  Trying to prove $equiv for \lane_rd_addr [56]: success!
+  Trying to prove $equiv for \lane_rd_addr [57]: success!
+  Trying to prove $equiv for \lane_rd_addr [58]: success!
+  Trying to prove $equiv for \lane_rd_addr [59]: success!
+  Trying to prove $equiv for \lane_rd_addr [60]: success!
+  Trying to prove $equiv for \lane_rd_addr [61]: success!
+  Trying to prove $equiv for \lane_rd_addr [62]: success!
+  Trying to prove $equiv for \lane_rd_addr [63]: success!
+  Trying to prove $equiv for \lane_rd_addr [64]: success!
+  Trying to prove $equiv for \lane_rd_addr [65]: success!
+  Trying to prove $equiv for \lane_rd_addr [66]: success!
+  Trying to prove $equiv for \lane_rd_addr [67]: success!
+  Trying to prove $equiv for \lane_rd_addr [68]: success!
+  Trying to prove $equiv for \lane_rd_addr [69]: success!
+  Trying to prove $equiv for \lane_rd_addr [70]: success!
+  Trying to prove $equiv for \lane_rd_addr [71]: success!
+  Trying to prove $equiv for \lane_rd_addr [72]: success!
+  Trying to prove $equiv for \lane_rd_addr [73]: success!
+  Trying to prove $equiv for \lane_rd_addr [74]: success!
+  Trying to prove $equiv for \lane_rd_addr [75]: success!
+  Trying to prove $equiv for \lane_rd_addr [76]: success!
+  Trying to prove $equiv for \lane_rd_addr [77]: success!
+  Trying to prove $equiv for \lane_rd_addr [78]: success!
+  Trying to prove $equiv for \lane_rd_addr [79]: success!
+  Trying to prove $equiv for \lane_rd_addr [80]: success!
+  Trying to prove $equiv for \lane_rd_addr [81]: success!
+  Trying to prove $equiv for \lane_rd_addr [82]: success!
+  Trying to prove $equiv for \lane_rd_addr [83]: success!
+  Trying to prove $equiv for \lane_rd_addr [84]: success!
+  Trying to prove $equiv for \lane_rd_addr [85]: success!
+  Trying to prove $equiv for \lane_rd_addr [86]: success!
+  Trying to prove $equiv for \lane_rd_addr [87]: success!
+  Trying to prove $equiv for \lane_rd_addr [88]: success!
+  Trying to prove $equiv for \lane_rd_addr [89]: success!
+  Trying to prove $equiv for \lane_rd_addr [90]: success!
+  Trying to prove $equiv for \lane_rd_addr [91]: success!
+  Trying to prove $equiv for \lane_rd_addr [92]: success!
+  Trying to prove $equiv for \lane_rd_addr [93]: success!
+  Trying to prove $equiv for \lane_rd_addr [94]: success!
+  Trying to prove $equiv for \lane_rd_addr [95]: success!
+ Grouping SAT models for \bank_read_data:
+  Trying to prove $equiv for \bank_read_data [0]: success!
+  Trying to prove $equiv for \bank_read_data [1]: success!
+  Trying to prove $equiv for \bank_read_data [2]: success!
+  Trying to prove $equiv for \bank_read_data [3]: success!
+  Trying to prove $equiv for \bank_read_data [4]: success!
+  Trying to prove $equiv for \bank_read_data [5]: success!
+  Trying to prove $equiv for \bank_read_data [6]: success!
+  Trying to prove $equiv for \bank_read_data [7]: success!
+  Trying to prove $equiv for \bank_read_data [8]: success!
+  Trying to prove $equiv for \bank_read_data [9]: success!
+  Trying to prove $equiv for \bank_read_data [10]: success!
+  Trying to prove $equiv for \bank_read_data [11]: success!
+  Trying to prove $equiv for \bank_read_data [12]: success!
+  Trying to prove $equiv for \bank_read_data [13]: success!
+  Trying to prove $equiv for \bank_read_data [14]: success!
+  Trying to prove $equiv for \bank_read_data [15]: success!
+  Trying to prove $equiv for \bank_read_data [16]: success!
+  Trying to prove $equiv for \bank_read_data [17]: success!
+  Trying to prove $equiv for \bank_read_data [18]: success!
+  Trying to prove $equiv for \bank_read_data [19]: success!
+  Trying to prove $equiv for \bank_read_data [20]: success!
+  Trying to prove $equiv for \bank_read_data [21]: success!
+  Trying to prove $equiv for \bank_read_data [22]: success!
+  Trying to prove $equiv for \bank_read_data [23]: success!
+  Trying to prove $equiv for \bank_read_data [24]: success!
+  Trying to prove $equiv for \bank_read_data [25]: success!
+  Trying to prove $equiv for \bank_read_data [26]: success!
+  Trying to prove $equiv for \bank_read_data [27]: success!
+  Trying to prove $equiv for \bank_read_data [28]: success!
+  Trying to prove $equiv for \bank_read_data [29]: success!
+  Trying to prove $equiv for \bank_read_data [30]: success!
+  Trying to prove $equiv for \bank_read_data [31]: success!
+  Trying to prove $equiv for \bank_read_data [32]: success!
+  Trying to prove $equiv for \bank_read_data [33]: success!
+  Trying to prove $equiv for \bank_read_data [34]: success!
+  Trying to prove $equiv for \bank_read_data [35]: success!
+  Trying to prove $equiv for \bank_read_data [36]: success!
+  Trying to prove $equiv for \bank_read_data [37]: success!
+  Trying to prove $equiv for \bank_read_data [38]: success!
+  Trying to prove $equiv for \bank_read_data [39]: success!
+  Trying to prove $equiv for \bank_read_data [40]: success!
+  Trying to prove $equiv for \bank_read_data [41]: success!
+  Trying to prove $equiv for \bank_read_data [42]: success!
+  Trying to prove $equiv for \bank_read_data [43]: success!
+  Trying to prove $equiv for \bank_read_data [44]: success!
+  Trying to prove $equiv for \bank_read_data [45]: success!
+  Trying to prove $equiv for \bank_read_data [46]: success!
+  Trying to prove $equiv for \bank_read_data [47]: success!
+  Trying to prove $equiv for \bank_read_data [48]: success!
+  Trying to prove $equiv for \bank_read_data [49]: success!
+  Trying to prove $equiv for \bank_read_data [50]: success!
+  Trying to prove $equiv for \bank_read_data [51]: success!
+  Trying to prove $equiv for \bank_read_data [52]: success!
+  Trying to prove $equiv for \bank_read_data [53]: success!
+  Trying to prove $equiv for \bank_read_data [54]: success!
+  Trying to prove $equiv for \bank_read_data [55]: success!
+  Trying to prove $equiv for \bank_read_data [56]: success!
+  Trying to prove $equiv for \bank_read_data [57]: success!
+  Trying to prove $equiv for \bank_read_data [58]: success!
+  Trying to prove $equiv for \bank_read_data [59]: success!
+  Trying to prove $equiv for \bank_read_data [60]: success!
+  Trying to prove $equiv for \bank_read_data [61]: success!
+  Trying to prove $equiv for \bank_read_data [62]: success!
+  Trying to prove $equiv for \bank_read_data [63]: success!
+  Trying to prove $equiv for \bank_read_data [64]: success!
+  Trying to prove $equiv for \bank_read_data [65]: success!
+  Trying to prove $equiv for \bank_read_data [66]: success!
+  Trying to prove $equiv for \bank_read_data [67]: success!
+  Trying to prove $equiv for \bank_read_data [68]: success!
+  Trying to prove $equiv for \bank_read_data [69]: success!
+  Trying to prove $equiv for \bank_read_data [70]: success!
+  Trying to prove $equiv for \bank_read_data [71]: success!
+  Trying to prove $equiv for \bank_read_data [72]: success!
+  Trying to prove $equiv for \bank_read_data [73]: success!
+  Trying to prove $equiv for \bank_read_data [74]: success!
+  Trying to prove $equiv for \bank_read_data [75]: success!
+  Trying to prove $equiv for \bank_read_data [76]: success!
+  Trying to prove $equiv for \bank_read_data [77]: success!
+  Trying to prove $equiv for \bank_read_data [78]: success!
+  Trying to prove $equiv for \bank_read_data [79]: success!
+  Trying to prove $equiv for \bank_read_data [80]: success!
+  Trying to prove $equiv for \bank_read_data [81]: success!
+  Trying to prove $equiv for \bank_read_data [82]: success!
+  Trying to prove $equiv for \bank_read_data [83]: success!
+  Trying to prove $equiv for \bank_read_data [84]: success!
+  Trying to prove $equiv for \bank_read_data [85]: success!
+  Trying to prove $equiv for \bank_read_data [86]: success!
+  Trying to prove $equiv for \bank_read_data [87]: success!
+  Trying to prove $equiv for \bank_read_data [88]: success!
+  Trying to prove $equiv for \bank_read_data [89]: success!
+  Trying to prove $equiv for \bank_read_data [90]: success!
+  Trying to prove $equiv for \bank_read_data [91]: success!
+  Trying to prove $equiv for \bank_read_data [92]: success!
+  Trying to prove $equiv for \bank_read_data [93]: success!
+  Trying to prove $equiv for \bank_read_data [94]: success!
+  Trying to prove $equiv for \bank_read_data [95]: success!
+  Trying to prove $equiv for \bank_read_data [96]: success!
+  Trying to prove $equiv for \bank_read_data [97]: success!
+  Trying to prove $equiv for \bank_read_data [98]: success!
+  Trying to prove $equiv for \bank_read_data [99]: success!
+  Trying to prove $equiv for \bank_read_data [100]: success!
+  Trying to prove $equiv for \bank_read_data [101]: success!
+  Trying to prove $equiv for \bank_read_data [102]: success!
+  Trying to prove $equiv for \bank_read_data [103]: success!
+  Trying to prove $equiv for \bank_read_data [104]: success!
+  Trying to prove $equiv for \bank_read_data [105]: success!
+  Trying to prove $equiv for \bank_read_data [106]: success!
+  Trying to prove $equiv for \bank_read_data [107]: success!
+  Trying to prove $equiv for \bank_read_data [108]: success!
+  Trying to prove $equiv for \bank_read_data [109]: success!
+  Trying to prove $equiv for \bank_read_data [110]: success!
+  Trying to prove $equiv for \bank_read_data [111]: success!
+  Trying to prove $equiv for \bank_read_data [112]: success!
+  Trying to prove $equiv for \bank_read_data [113]: success!
+  Trying to prove $equiv for \bank_read_data [114]: success!
+  Trying to prove $equiv for \bank_read_data [115]: success!
+  Trying to prove $equiv for \bank_read_data [116]: success!
+  Trying to prove $equiv for \bank_read_data [117]: success!
+  Trying to prove $equiv for \bank_read_data [118]: success!
+  Trying to prove $equiv for \bank_read_data [119]: success!
+  Trying to prove $equiv for \bank_read_data [120]: success!
+  Trying to prove $equiv for \bank_read_data [121]: success!
+  Trying to prove $equiv for \bank_read_data [122]: success!
+  Trying to prove $equiv for \bank_read_data [123]: success!
+  Trying to prove $equiv for \bank_read_data [124]: success!
+  Trying to prove $equiv for \bank_read_data [125]: success!
+  Trying to prove $equiv for \bank_read_data [126]: success!
+  Trying to prove $equiv for \bank_read_data [127]: success!
+  Trying to prove $equiv for \bank_read_data [128]: success!
+  Trying to prove $equiv for \bank_read_data [129]: success!
+  Trying to prove $equiv for \bank_read_data [130]: success!
+  Trying to prove $equiv for \bank_read_data [131]: success!
+  Trying to prove $equiv for \bank_read_data [132]: success!
+  Trying to prove $equiv for \bank_read_data [133]: success!
+  Trying to prove $equiv for \bank_read_data [134]: success!
+  Trying to prove $equiv for \bank_read_data [135]: success!
+  Trying to prove $equiv for \bank_read_data [136]: success!
+  Trying to prove $equiv for \bank_read_data [137]: success!
+  Trying to prove $equiv for \bank_read_data [138]: success!
+  Trying to prove $equiv for \bank_read_data [139]: success!
+  Trying to prove $equiv for \bank_read_data [140]: success!
+  Trying to prove $equiv for \bank_read_data [141]: success!
+  Trying to prove $equiv for \bank_read_data [142]: success!
+  Trying to prove $equiv for \bank_read_data [143]: success!
+  Trying to prove $equiv for \bank_read_data [144]: success!
+  Trying to prove $equiv for \bank_read_data [145]: success!
+  Trying to prove $equiv for \bank_read_data [146]: success!
+  Trying to prove $equiv for \bank_read_data [147]: success!
+  Trying to prove $equiv for \bank_read_data [148]: success!
+  Trying to prove $equiv for \bank_read_data [149]: success!
+  Trying to prove $equiv for \bank_read_data [150]: success!
+  Trying to prove $equiv for \bank_read_data [151]: success!
+  Trying to prove $equiv for \bank_read_data [152]: success!
+  Trying to prove $equiv for \bank_read_data [153]: success!
+  Trying to prove $equiv for \bank_read_data [154]: success!
+  Trying to prove $equiv for \bank_read_data [155]: success!
+  Trying to prove $equiv for \bank_read_data [156]: success!
+  Trying to prove $equiv for \bank_read_data [157]: success!
+  Trying to prove $equiv for \bank_read_data [158]: success!
+  Trying to prove $equiv for \bank_read_data [159]: success!
+ Grouping SAT models for \lane_rd_re:
+  Trying to prove $equiv for \lane_rd_re [0]: success!
+  Trying to prove $equiv for \lane_rd_re [1]: success!
+  Trying to prove $equiv for \lane_rd_re [2]: success!
+  Trying to prove $equiv for \lane_rd_re [3]: success!
+ Grouping SAT models for \lane_rd_src:
+  Trying to prove $equiv for \lane_rd_src [0]: success!
+  Trying to prove $equiv for \lane_rd_src [1]: success!
+  Trying to prove $equiv for \lane_rd_src [2]: success!
+  Trying to prove $equiv for \lane_rd_src [3]: success!
+  Trying to prove $equiv for \lane_rd_src [4]: success!
+  Trying to prove $equiv for \lane_rd_src [5]: success!
+  Trying to prove $equiv for \lane_rd_src [6]: success!
+  Trying to prove $equiv for \lane_rd_src [7]: success!
+  Trying to prove $equiv for \lane_vm_we: success!
+ Grouping SAT models for \lane_vm_waddr:
+  Trying to prove $equiv for \lane_vm_waddr [0]: success!
+  Trying to prove $equiv for \lane_vm_waddr [1]: success!
+  Trying to prove $equiv for \lane_vm_waddr [2]: success!
+  Trying to prove $equiv for \lane_vm_waddr [3]: success!
+  Trying to prove $equiv for \lane_vm_waddr [4]: success!
+  Trying to prove $equiv for \lane_vm_waddr [5]: success!
+  Trying to prove $equiv for \lane_vm_waddr [6]: success!
+  Trying to prove $equiv for \lane_vm_waddr [7]: success!
+  Trying to prove $equiv for \lane_vm_waddr [8]: success!
+  Trying to prove $equiv for \lane_vm_waddr [9]: success!
+  Trying to prove $equiv for \lane_vm_waddr [10]: success!
+  Trying to prove $equiv for \lane_vm_waddr [11]: success!
+  Trying to prove $equiv for \lane_vm_waddr [12]: success!
+  Trying to prove $equiv for \lane_vm_waddr [13]: success!
+  Trying to prove $equiv for \lane_vm_waddr [14]: success!
+  Trying to prove $equiv for \lane_vm_waddr [15]: success!
+  Trying to prove $equiv for \lane_vm_waddr [16]: success!
+  Trying to prove $equiv for \lane_vm_waddr [17]: success!
+ Grouping SAT models for \lane_vm_wdata:
+  Trying to prove $equiv for \lane_vm_wdata [0]: success!
+  Trying to prove $equiv for \lane_vm_wdata [1]: success!
+  Trying to prove $equiv for \lane_vm_wdata [2]: success!
+  Trying to prove $equiv for \lane_vm_wdata [3]: success!
+  Trying to prove $equiv for \lane_vm_wdata [4]: success!
+  Trying to prove $equiv for \lane_vm_wdata [5]: success!
+  Trying to prove $equiv for \lane_vm_wdata [6]: success!
+  Trying to prove $equiv for \lane_vm_wdata [7]: success!
+  Trying to prove $equiv for \lane_vm_wdata [8]: success!
+  Trying to prove $equiv for \lane_vm_wdata [9]: success!
+  Trying to prove $equiv for \lane_vm_wdata [10]: success!
+  Trying to prove $equiv for \lane_vm_wdata [11]: success!
+  Trying to prove $equiv for \lane_vm_wdata [12]: success!
+  Trying to prove $equiv for \lane_vm_wdata [13]: success!
+  Trying to prove $equiv for \lane_vm_wdata [14]: success!
+  Trying to prove $equiv for \lane_vm_wdata [15]: success!
+  Trying to prove $equiv for \lane_vm_wdata [16]: success!
+  Trying to prove $equiv for \lane_vm_wdata [17]: success!
+  Trying to prove $equiv for \lane_vm_wdata [18]: success!
+  Trying to prove $equiv for \lane_vm_wdata [19]: success!
+  Trying to prove $equiv for \lane_vm_wdata [20]: success!
+  Trying to prove $equiv for \lane_vm_wdata [21]: success!
+  Trying to prove $equiv for \lane_vm_wdata [22]: success!
+  Trying to prove $equiv for \lane_vm_wdata [23]: success!
+  Trying to prove $equiv for \lane_vm_wdata [24]: success!
+  Trying to prove $equiv for \lane_vm_wdata [25]: success!
+  Trying to prove $equiv for \lane_vm_wdata [26]: success!
+  Trying to prove $equiv for \lane_vm_wdata [27]: success!
+  Trying to prove $equiv for \lane_vm_wdata [28]: success!
+  Trying to prove $equiv for \lane_vm_wdata [29]: success!
+  Trying to prove $equiv for \lane_vm_wdata [30]: success!
+  Trying to prove $equiv for \lane_vm_wdata [31]: success!
+  Trying to prove $equiv for \lane_kv_we: success!
+ Grouping SAT models for \lane_kv_waddr:
+  Trying to prove $equiv for \lane_kv_waddr [0]: success!
+  Trying to prove $equiv for \lane_kv_waddr [1]: success!
+  Trying to prove $equiv for \lane_kv_waddr [2]: success!
+  Trying to prove $equiv for \lane_kv_waddr [3]: success!
+  Trying to prove $equiv for \lane_kv_waddr [4]: success!
+  Trying to prove $equiv for \lane_kv_waddr [5]: success!
+  Trying to prove $equiv for \lane_kv_waddr [6]: success!
+  Trying to prove $equiv for \lane_kv_waddr [7]: success!
+  Trying to prove $equiv for \lane_kv_waddr [8]: success!
+  Trying to prove $equiv for \lane_kv_waddr [9]: success!
+  Trying to prove $equiv for \lane_kv_waddr [10]: success!
+  Trying to prove $equiv for \lane_kv_waddr [11]: success!
+  Trying to prove $equiv for \lane_kv_waddr [12]: success!
+  Trying to prove $equiv for \lane_kv_waddr [13]: success!
+  Trying to prove $equiv for \lane_kv_waddr [14]: success!
+  Trying to prove $equiv for \lane_kv_waddr [15]: success!
+  Trying to prove $equiv for \lane_kv_waddr [16]: success!
+  Trying to prove $equiv for \lane_kv_waddr [17]: success!
+ Grouping SAT models for \lane_kv_wdata:
+  Trying to prove $equiv for \lane_kv_wdata [0]: success!
+  Trying to prove $equiv for \lane_kv_wdata [1]: success!
+  Trying to prove $equiv for \lane_kv_wdata [2]: success!
+  Trying to prove $equiv for \lane_kv_wdata [3]: success!
+  Trying to prove $equiv for \lane_kv_wdata [4]: success!
+  Trying to prove $equiv for \lane_kv_wdata [5]: success!
+  Trying to prove $equiv for \lane_kv_wdata [6]: success!
+  Trying to prove $equiv for \lane_kv_wdata [7]: success!
+  Trying to prove $equiv for \lane_kv_wdata [8]: success!
+  Trying to prove $equiv for \lane_kv_wdata [9]: success!
+  Trying to prove $equiv for \lane_kv_wdata [10]: success!
+  Trying to prove $equiv for \lane_kv_wdata [11]: success!
+  Trying to prove $equiv for \lane_kv_wdata [12]: success!
+  Trying to prove $equiv for \lane_kv_wdata [13]: success!
+  Trying to prove $equiv for \lane_kv_wdata [14]: success!
+  Trying to prove $equiv for \lane_kv_wdata [15]: success!
+  Trying to prove $equiv for \lane_kv_wdata [16]: success!
+  Trying to prove $equiv for \lane_kv_wdata [17]: success!
+  Trying to prove $equiv for \lane_kv_wdata [18]: success!
+  Trying to prove $equiv for \lane_kv_wdata [19]: success!
+  Trying to prove $equiv for \lane_kv_wdata [20]: success!
+  Trying to prove $equiv for \lane_kv_wdata [21]: success!
+  Trying to prove $equiv for \lane_kv_wdata [22]: success!
+  Trying to prove $equiv for \lane_kv_wdata [23]: success!
+  Trying to prove $equiv for \lane_kv_wdata [24]: success!
+  Trying to prove $equiv for \lane_kv_wdata [25]: success!
+  Trying to prove $equiv for \lane_kv_wdata [26]: success!
+  Trying to prove $equiv for \lane_kv_wdata [27]: success!
+  Trying to prove $equiv for \lane_kv_wdata [28]: success!
+  Trying to prove $equiv for \lane_kv_wdata [29]: success!
+  Trying to prove $equiv for \lane_kv_wdata [30]: success!
+  Trying to prove $equiv for \lane_kv_wdata [31]: success!
+  Trying to prove $equiv for \lane_ro_v: success!
+ Grouping SAT models for \lane_ro_x:
+  Trying to prove $equiv for \lane_ro_x [0]: success!
+  Trying to prove $equiv for \lane_ro_x [1]: success!
+  Trying to prove $equiv for \lane_ro_x [2]: success!
+  Trying to prove $equiv for \lane_ro_x [3]: success!
+  Trying to prove $equiv for \lane_ro_x [4]: success!
+  Trying to prove $equiv for \lane_ro_x [5]: success!
+  Trying to prove $equiv for \lane_ro_x [6]: success!
+  Trying to prove $equiv for \lane_ro_x [7]: success!
+  Trying to prove $equiv for \lane_ro_x [8]: success!
+  Trying to prove $equiv for \lane_ro_x [9]: success!
+  Trying to prove $equiv for \lane_ro_x [10]: success!
+  Trying to prove $equiv for \lane_ro_x [11]: success!
+  Trying to prove $equiv for \lane_ro_x [12]: success!
+  Trying to prove $equiv for \lane_ro_x [13]: success!
+  Trying to prove $equiv for \lane_ro_x [14]: success!
+  Trying to prove $equiv for \lane_ro_x [15]: success!
+  Trying to prove $equiv for \lane_ro_x [16]: success!
+  Trying to prove $equiv for \lane_ro_x [17]: success!
+  Trying to prove $equiv for \lane_ro_x [18]: success!
+  Trying to prove $equiv for \lane_ro_x [19]: success!
+  Trying to prove $equiv for \lane_ro_x [20]: success!
+  Trying to prove $equiv for \lane_ro_x [21]: success!
+  Trying to prove $equiv for \lane_ro_x [22]: success!
+  Trying to prove $equiv for \lane_ro_x [23]: success!
+  Trying to prove $equiv for \lane_ro_x [24]: success!
+  Trying to prove $equiv for \lane_ro_x [25]: success!
+  Trying to prove $equiv for \lane_ro_x [26]: success!
+  Trying to prove $equiv for \lane_ro_x [27]: success!
+  Trying to prove $equiv for \lane_ro_x [28]: success!
+  Trying to prove $equiv for \lane_ro_x [29]: success!
+  Trying to prove $equiv for \lane_ro_x [30]: success!
+  Trying to prove $equiv for \lane_ro_x [31]: success!
+  Trying to prove $equiv for \lane_fault: success!
+  Trying to prove $equiv for \lane_coll: success!
+Proved 405 previously unproven $equiv cells.
+
+10. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in eq.
+Proved 0 previously unproven $equiv cells.
+
+11. Executing EQUIV_STATUS pass.
+Found 405 $equiv cells in eq:
+  Of those cells 405 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 7666836ed9
+CPU: user 0.02s system 0.00s, MEM: 22.64 MB total, 12.63 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 36% 1x equiv_struct (0 sec), 22% 4x read_verilog (0 sec), ...

@@ -40,3 +40,12 @@ sm_xcal_rel_t 33, vm_kshare 5927, xload_bfqg 801, pg_pretree 79, pg_lanes4 (440x
 pc_ctrl h9b / vmdel / bdring / xq_pegress / aq_tree13: 0 pins >405 but new G0C core_faces findings.
 pg_lanes4 760.32x725.76 (15 designs): cut-pin name sets differ between pieces (needs the HBM-CORES bit map).
 PATH-HBM root partition excluded: TKM tiles (32, tile_tid; PATH lead's no-ID common/terminal templates), hc tails.
+
+## LEC (lec_wrap/, run from the repo root: `yosys -q lec_wrap/<case>.ys`; repo-relative paths)
+For each strap wrapper, 2 IDs (first and last variant in the plan): gold = canonical master with the ID input tied to
+the old variant's constant, gate = new `*_strap` wrapper with strap_* tied to the same constant (master kept as one
+blackbox cell on both sides, merged by equiv_struct; equiv_simple + equiv_induct + equiv_status -assert).
+6/6 EQUIVALENT (sfu lane j=0/15, lane_exp id 2/15, lanes4 ids 64-67/76-79). Mutant (sfu strap 4'b0000 -> 4'b0001 on
+the gate side) is caught: 1 unproven $equiv. The old per-replica piece = master with the ID tied is the census
+definition (canonical_ports_split.json type_ids[*].check = PASS, split tops wired bit-exactly from the as-built
+master); a gate-level kit LEC of the new strap master per ID belongs to the kit step (tools/die_plan/lec.py).

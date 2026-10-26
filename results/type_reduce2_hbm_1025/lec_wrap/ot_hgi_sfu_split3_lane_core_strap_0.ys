@@ -1,0 +1,11 @@
+read_verilog -sv results/type_reduce2_hbm_1025/lec_wrap/ot_hgi_sfu_split3_lane_core_strap_0.v
+read_verilog -sv rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_lane_core_strap.sv
+hierarchy -check
+flatten gate
+flatten gold
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_struct
+equiv_simple
+equiv_induct
+equiv_status -assert

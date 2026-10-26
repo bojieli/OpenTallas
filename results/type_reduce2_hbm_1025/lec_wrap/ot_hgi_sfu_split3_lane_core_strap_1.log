@@ -1,0 +1,408 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Executing script file `results/type_reduce2_hbm_1025/lec_wrap/ot_hgi_sfu_split3_lane_core_strap_1.ys' --
+
+1. Executing Verilog-2005 frontend: results/type_reduce2_hbm_1025/lec_wrap/ot_hgi_sfu_split3_lane_core_strap_1.v
+Parsing SystemVerilog input from `results/type_reduce2_hbm_1025/lec_wrap/ot_hgi_sfu_split3_lane_core_strap_1.v' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_sfu_split3_lane_core'.
+Generating RTLIL representation for module `\gold'.
+Generating RTLIL representation for module `\gate'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_lane_core_strap.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_lane_core_strap.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_sfu_split3_lane_core_strap'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+4. Executing FLATTEN pass (flatten design).
+Using template ot_hgi_sfu_split3_lane_core_strap for cells of type ot_hgi_sfu_split3_lane_core_strap.
+<suppressed ~1 debug messages>
+No more expansions possible.
+
+5. Executing FLATTEN pass (flatten design).
+No more expansions possible.
+
+6. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: sfu_coll_gold (\sfu_coll_gold), sfu_coll_gate (\u_w.sfu_coll_gate) -> sfu_coll
+Presumably equivalent wires: sfu_fault_gold (\sfu_fault_gold), sfu_fault_gate (\u_w.sfu_fault_gate) -> sfu_fault
+Presumably equivalent wires: sfu_ro_x_gold (\sfu_ro_x_gold), sfu_ro_x_gate (\u_w.sfu_ro_x_gate) -> sfu_ro_x
+Presumably equivalent wires: sfu_ro_v_gold (\sfu_ro_v_gold), sfu_ro_v_gate (\u_w.sfu_ro_v_gate) -> sfu_ro_v
+Presumably equivalent wires: sfu_kv_wdata_gold (\sfu_kv_wdata_gold), sfu_kv_wdata_gate (\u_w.sfu_kv_wdata_gate) -> sfu_kv_wdata
+Presumably equivalent wires: sfu_kv_waddr_gold (\sfu_kv_waddr_gold), sfu_kv_waddr_gate (\u_w.sfu_kv_waddr_gate) -> sfu_kv_waddr
+Presumably equivalent wires: sfu_kv_we_gold (\sfu_kv_we_gold), sfu_kv_we_gate (\u_w.sfu_kv_we_gate) -> sfu_kv_we
+Presumably equivalent wires: sfu_vm_wdata_gold (\sfu_vm_wdata_gold), sfu_vm_wdata_gate (\u_w.sfu_vm_wdata_gate) -> sfu_vm_wdata
+Presumably equivalent wires: sfu_vm_waddr_gold (\sfu_vm_waddr_gold), sfu_vm_waddr_gate (\u_w.sfu_vm_waddr_gate) -> sfu_vm_waddr
+Presumably equivalent wires: sfu_vm_we_gold (\sfu_vm_we_gold), sfu_vm_we_gate (\u_w.sfu_vm_we_gate) -> sfu_vm_we
+Presumably equivalent wires: sfu_rd_src_gold (\sfu_rd_src_gold), sfu_rd_src_gate (\u_w.sfu_rd_src_gate) -> sfu_rd_src
+Presumably equivalent wires: sfu_rd_re_gold (\sfu_rd_re_gold), sfu_rd_re_gate (\u_w.sfu_rd_re_gate) -> sfu_rd_re
+Presumably equivalent wires: sfu_rd_addr_gold (\sfu_rd_addr_gold), sfu_rd_addr_gate (\u_w.sfu_rd_addr_gate) -> sfu_rd_addr
+Presumably equivalent wires: sfu_vi_addr_gold (\sfu_vi_addr_gold), sfu_vi_addr_gate (\u_w.sfu_vi_addr_gate) -> sfu_vi_addr
+Presumably equivalent wires: sfu_vi_re_gold (\sfu_vi_re_gold), sfu_vi_re_gate (\u_w.sfu_vi_re_gate) -> sfu_vi_re
+Presumably equivalent wires: sfu_rd_q_gold (\sfu_rd_q_gold), sfu_rd_q_gate (\sfu_rd_q_gate) -> sfu_rd_q
+Presumably equivalent wires: sfu_vi_q_gold (\sfu_vi_q_gold), sfu_vi_q_gate (\sfu_vi_q_gate) -> sfu_vi_q
+Presumably equivalent wires: sfu_rst_n_gold (\sfu_rst_n_gold), sfu_rst_n_gate (\sfu_rst_n_gate) -> sfu_rst_n
+Presumably equivalent wires: sfu_clk_gold (\sfu_clk_gold), sfu_clk_gate (\sfu_clk_gate) -> sfu_clk
+Presumably equivalent wires: map_i_pass_gold (\map_i_pass_gold), map_i_pass_gate (\map_i_pass_gate) -> map_i_pass
+Presumably equivalent wires: map_i_emit_gold (\map_i_emit_gold), map_i_emit_gate (\map_i_emit_gate) -> map_i_emit
+Presumably equivalent wires: map_i_lvw_gold (\map_i_lvw_gold), map_i_lvw_gate (\map_i_lvw_gate) -> map_i_lvw
+Presumably equivalent wires: map_i_ls_gold (\map_i_ls_gold), map_i_ls_gate (\map_i_ls_gate) -> map_i_ls
+Presumably equivalent wires: map_i_krow_gold (\map_i_krow_gold), map_i_krow_gate (\map_i_krow_gate) -> map_i_krow
+Presumably equivalent wires: map_i_i_v_gold (\map_i_i_v_gold), map_i_i_v_gate (\map_i_i_v_gate) -> map_i_i_v
+Presumably equivalent wires: map_i_o_v_gold (\map_i_o_v_gold), map_i_o_v_gate (\map_i_o_v_gate) -> map_i_o_v
+Presumably equivalent wires: map_ld_terms_gold (\map_ld_terms_gold), map_ld_terms_gate (\map_ld_terms_gate) -> map_ld_terms
+Presumably equivalent wires: map_rst_n_gold (\map_rst_n_gold), map_rst_n_gate (\map_rst_n_gate) -> map_rst_n
+Presumably equivalent wires: map_clk_gold (\map_clk_gold), map_clk_gate (\map_clk_gate) -> map_clk
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \eq
+
+7.2. Analyzing design hierarchy..
+Top module:  \eq
+Removing unused module `\ot_hgi_sfu_split3_lane_core_strap'.
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 3 unused modules.
+
+8. Executing EQUIV_STRUCT pass.
+Running equiv_struct on module eq:
+  Starting iteration 1.
+    Fwd merging 2 ot_hgi_sfu_split3_lane_core cells (from group of 2) using strategy gold-gate-pairs:
+      Merging cells u_core_gold and u_w.u_core_gate.
+  Starting iteration 2.
+    Nothing to merge.
+  Performed a total of 1 merges in module eq.
+
+9. Executing EQUIV_SIMPLE pass.
+Found 282 unproven $equiv cells (15 groups) in eq:
+  Trying to prove $equiv for \sfu_vi_re: success!
+ Grouping SAT models for \sfu_vi_addr:
+  Trying to prove $equiv for \sfu_vi_addr [0]: success!
+  Trying to prove $equiv for \sfu_vi_addr [1]: success!
+  Trying to prove $equiv for \sfu_vi_addr [2]: success!
+  Trying to prove $equiv for \sfu_vi_addr [3]: success!
+  Trying to prove $equiv for \sfu_vi_addr [4]: success!
+  Trying to prove $equiv for \sfu_vi_addr [5]: success!
+  Trying to prove $equiv for \sfu_vi_addr [6]: success!
+  Trying to prove $equiv for \sfu_vi_addr [7]: success!
+  Trying to prove $equiv for \sfu_vi_addr [8]: success!
+  Trying to prove $equiv for \sfu_vi_addr [9]: success!
+  Trying to prove $equiv for \sfu_vi_addr [10]: success!
+  Trying to prove $equiv for \sfu_vi_addr [11]: success!
+  Trying to prove $equiv for \sfu_vi_addr [12]: success!
+  Trying to prove $equiv for \sfu_vi_addr [13]: success!
+  Trying to prove $equiv for \sfu_vi_addr [14]: success!
+  Trying to prove $equiv for \sfu_vi_addr [15]: success!
+  Trying to prove $equiv for \sfu_vi_addr [16]: success!
+  Trying to prove $equiv for \sfu_vi_addr [17]: success!
+  Trying to prove $equiv for \sfu_vi_addr [18]: success!
+  Trying to prove $equiv for \sfu_vi_addr [19]: success!
+  Trying to prove $equiv for \sfu_vi_addr [20]: success!
+  Trying to prove $equiv for \sfu_vi_addr [21]: success!
+  Trying to prove $equiv for \sfu_vi_addr [22]: success!
+  Trying to prove $equiv for \sfu_vi_addr [23]: success!
+ Grouping SAT models for \sfu_rd_addr:
+  Trying to prove $equiv for \sfu_rd_addr [0]: success!
+  Trying to prove $equiv for \sfu_rd_addr [1]: success!
+  Trying to prove $equiv for \sfu_rd_addr [2]: success!
+  Trying to prove $equiv for \sfu_rd_addr [3]: success!
+  Trying to prove $equiv for \sfu_rd_addr [4]: success!
+  Trying to prove $equiv for \sfu_rd_addr [5]: success!
+  Trying to prove $equiv for \sfu_rd_addr [6]: success!
+  Trying to prove $equiv for \sfu_rd_addr [7]: success!
+  Trying to prove $equiv for \sfu_rd_addr [8]: success!
+  Trying to prove $equiv for \sfu_rd_addr [9]: success!
+  Trying to prove $equiv for \sfu_rd_addr [10]: success!
+  Trying to prove $equiv for \sfu_rd_addr [11]: success!
+  Trying to prove $equiv for \sfu_rd_addr [12]: success!
+  Trying to prove $equiv for \sfu_rd_addr [13]: success!
+  Trying to prove $equiv for \sfu_rd_addr [14]: success!
+  Trying to prove $equiv for \sfu_rd_addr [15]: success!
+  Trying to prove $equiv for \sfu_rd_addr [16]: success!
+  Trying to prove $equiv for \sfu_rd_addr [17]: success!
+  Trying to prove $equiv for \sfu_rd_addr [18]: success!
+  Trying to prove $equiv for \sfu_rd_addr [19]: success!
+  Trying to prove $equiv for \sfu_rd_addr [20]: success!
+  Trying to prove $equiv for \sfu_rd_addr [21]: success!
+  Trying to prove $equiv for \sfu_rd_addr [22]: success!
+  Trying to prove $equiv for \sfu_rd_addr [23]: success!
+  Trying to prove $equiv for \sfu_rd_addr [24]: success!
+  Trying to prove $equiv for \sfu_rd_addr [25]: success!
+  Trying to prove $equiv for \sfu_rd_addr [26]: success!
+  Trying to prove $equiv for \sfu_rd_addr [27]: success!
+  Trying to prove $equiv for \sfu_rd_addr [28]: success!
+  Trying to prove $equiv for \sfu_rd_addr [29]: success!
+  Trying to prove $equiv for \sfu_rd_addr [30]: success!
+  Trying to prove $equiv for \sfu_rd_addr [31]: success!
+  Trying to prove $equiv for \sfu_rd_addr [32]: success!
+  Trying to prove $equiv for \sfu_rd_addr [33]: success!
+  Trying to prove $equiv for \sfu_rd_addr [34]: success!
+  Trying to prove $equiv for \sfu_rd_addr [35]: success!
+  Trying to prove $equiv for \sfu_rd_addr [36]: success!
+  Trying to prove $equiv for \sfu_rd_addr [37]: success!
+  Trying to prove $equiv for \sfu_rd_addr [38]: success!
+  Trying to prove $equiv for \sfu_rd_addr [39]: success!
+  Trying to prove $equiv for \sfu_rd_addr [40]: success!
+  Trying to prove $equiv for \sfu_rd_addr [41]: success!
+  Trying to prove $equiv for \sfu_rd_addr [42]: success!
+  Trying to prove $equiv for \sfu_rd_addr [43]: success!
+  Trying to prove $equiv for \sfu_rd_addr [44]: success!
+  Trying to prove $equiv for \sfu_rd_addr [45]: success!
+  Trying to prove $equiv for \sfu_rd_addr [46]: success!
+  Trying to prove $equiv for \sfu_rd_addr [47]: success!
+  Trying to prove $equiv for \sfu_rd_addr [48]: success!
+  Trying to prove $equiv for \sfu_rd_addr [49]: success!
+  Trying to prove $equiv for \sfu_rd_addr [50]: success!
+  Trying to prove $equiv for \sfu_rd_addr [51]: success!
+  Trying to prove $equiv for \sfu_rd_addr [52]: success!
+  Trying to prove $equiv for \sfu_rd_addr [53]: success!
+  Trying to prove $equiv for \sfu_rd_addr [54]: success!
+  Trying to prove $equiv for \sfu_rd_addr [55]: success!
+  Trying to prove $equiv for \sfu_rd_addr [56]: success!
+  Trying to prove $equiv for \sfu_rd_addr [57]: success!
+  Trying to prove $equiv for \sfu_rd_addr [58]: success!
+  Trying to prove $equiv for \sfu_rd_addr [59]: success!
+  Trying to prove $equiv for \sfu_rd_addr [60]: success!
+  Trying to prove $equiv for \sfu_rd_addr [61]: success!
+  Trying to prove $equiv for \sfu_rd_addr [62]: success!
+  Trying to prove $equiv for \sfu_rd_addr [63]: success!
+  Trying to prove $equiv for \sfu_rd_addr [64]: success!
+  Trying to prove $equiv for \sfu_rd_addr [65]: success!
+  Trying to prove $equiv for \sfu_rd_addr [66]: success!
+  Trying to prove $equiv for \sfu_rd_addr [67]: success!
+  Trying to prove $equiv for \sfu_rd_addr [68]: success!
+  Trying to prove $equiv for \sfu_rd_addr [69]: success!
+  Trying to prove $equiv for \sfu_rd_addr [70]: success!
+  Trying to prove $equiv for \sfu_rd_addr [71]: success!
+  Trying to prove $equiv for \sfu_rd_addr [72]: success!
+  Trying to prove $equiv for \sfu_rd_addr [73]: success!
+  Trying to prove $equiv for \sfu_rd_addr [74]: success!
+  Trying to prove $equiv for \sfu_rd_addr [75]: success!
+  Trying to prove $equiv for \sfu_rd_addr [76]: success!
+  Trying to prove $equiv for \sfu_rd_addr [77]: success!
+  Trying to prove $equiv for \sfu_rd_addr [78]: success!
+  Trying to prove $equiv for \sfu_rd_addr [79]: success!
+  Trying to prove $equiv for \sfu_rd_addr [80]: success!
+  Trying to prove $equiv for \sfu_rd_addr [81]: success!
+  Trying to prove $equiv for \sfu_rd_addr [82]: success!
+  Trying to prove $equiv for \sfu_rd_addr [83]: success!
+  Trying to prove $equiv for \sfu_rd_addr [84]: success!
+  Trying to prove $equiv for \sfu_rd_addr [85]: success!
+  Trying to prove $equiv for \sfu_rd_addr [86]: success!
+  Trying to prove $equiv for \sfu_rd_addr [87]: success!
+  Trying to prove $equiv for \sfu_rd_addr [88]: success!
+  Trying to prove $equiv for \sfu_rd_addr [89]: success!
+  Trying to prove $equiv for \sfu_rd_addr [90]: success!
+  Trying to prove $equiv for \sfu_rd_addr [91]: success!
+  Trying to prove $equiv for \sfu_rd_addr [92]: success!
+  Trying to prove $equiv for \sfu_rd_addr [93]: success!
+  Trying to prove $equiv for \sfu_rd_addr [94]: success!
+  Trying to prove $equiv for \sfu_rd_addr [95]: success!
+ Grouping SAT models for \sfu_rd_re:
+  Trying to prove $equiv for \sfu_rd_re [0]: success!
+  Trying to prove $equiv for \sfu_rd_re [1]: success!
+  Trying to prove $equiv for \sfu_rd_re [2]: success!
+  Trying to prove $equiv for \sfu_rd_re [3]: success!
+ Grouping SAT models for \sfu_rd_src:
+  Trying to prove $equiv for \sfu_rd_src [0]: success!
+  Trying to prove $equiv for \sfu_rd_src [1]: success!
+  Trying to prove $equiv for \sfu_rd_src [2]: success!
+  Trying to prove $equiv for \sfu_rd_src [3]: success!
+  Trying to prove $equiv for \sfu_rd_src [4]: success!
+  Trying to prove $equiv for \sfu_rd_src [5]: success!
+  Trying to prove $equiv for \sfu_rd_src [6]: success!
+  Trying to prove $equiv for \sfu_rd_src [7]: success!
+  Trying to prove $equiv for \sfu_vm_we: success!
+ Grouping SAT models for \sfu_vm_waddr:
+  Trying to prove $equiv for \sfu_vm_waddr [0]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [1]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [2]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [3]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [4]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [5]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [6]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [7]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [8]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [9]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [10]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [11]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [12]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [13]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [14]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [15]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [16]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [17]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [18]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [19]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [20]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [21]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [22]: success!
+  Trying to prove $equiv for \sfu_vm_waddr [23]: success!
+ Grouping SAT models for \sfu_vm_wdata:
+  Trying to prove $equiv for \sfu_vm_wdata [0]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [1]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [2]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [3]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [4]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [5]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [6]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [7]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [8]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [9]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [10]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [11]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [12]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [13]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [14]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [15]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [16]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [17]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [18]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [19]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [20]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [21]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [22]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [23]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [24]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [25]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [26]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [27]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [28]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [29]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [30]: success!
+  Trying to prove $equiv for \sfu_vm_wdata [31]: success!
+  Trying to prove $equiv for \sfu_kv_we: success!
+ Grouping SAT models for \sfu_kv_waddr:
+  Trying to prove $equiv for \sfu_kv_waddr [0]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [1]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [2]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [3]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [4]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [5]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [6]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [7]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [8]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [9]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [10]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [11]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [12]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [13]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [14]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [15]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [16]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [17]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [18]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [19]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [20]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [21]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [22]: success!
+  Trying to prove $equiv for \sfu_kv_waddr [23]: success!
+ Grouping SAT models for \sfu_kv_wdata:
+  Trying to prove $equiv for \sfu_kv_wdata [0]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [1]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [2]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [3]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [4]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [5]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [6]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [7]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [8]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [9]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [10]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [11]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [12]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [13]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [14]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [15]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [16]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [17]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [18]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [19]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [20]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [21]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [22]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [23]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [24]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [25]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [26]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [27]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [28]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [29]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [30]: success!
+  Trying to prove $equiv for \sfu_kv_wdata [31]: success!
+  Trying to prove $equiv for \sfu_ro_v: success!
+ Grouping SAT models for \sfu_ro_x:
+  Trying to prove $equiv for \sfu_ro_x [0]: success!
+  Trying to prove $equiv for \sfu_ro_x [1]: success!
+  Trying to prove $equiv for \sfu_ro_x [2]: success!
+  Trying to prove $equiv for \sfu_ro_x [3]: success!
+  Trying to prove $equiv for \sfu_ro_x [4]: success!
+  Trying to prove $equiv for \sfu_ro_x [5]: success!
+  Trying to prove $equiv for \sfu_ro_x [6]: success!
+  Trying to prove $equiv for \sfu_ro_x [7]: success!
+  Trying to prove $equiv for \sfu_ro_x [8]: success!
+  Trying to prove $equiv for \sfu_ro_x [9]: success!
+  Trying to prove $equiv for \sfu_ro_x [10]: success!
+  Trying to prove $equiv for \sfu_ro_x [11]: success!
+  Trying to prove $equiv for \sfu_ro_x [12]: success!
+  Trying to prove $equiv for \sfu_ro_x [13]: success!
+  Trying to prove $equiv for \sfu_ro_x [14]: success!
+  Trying to prove $equiv for \sfu_ro_x [15]: success!
+  Trying to prove $equiv for \sfu_ro_x [16]: success!
+  Trying to prove $equiv for \sfu_ro_x [17]: success!
+  Trying to prove $equiv for \sfu_ro_x [18]: success!
+  Trying to prove $equiv for \sfu_ro_x [19]: success!
+  Trying to prove $equiv for \sfu_ro_x [20]: success!
+  Trying to prove $equiv for \sfu_ro_x [21]: success!
+  Trying to prove $equiv for \sfu_ro_x [22]: success!
+  Trying to prove $equiv for \sfu_ro_x [23]: success!
+  Trying to prove $equiv for \sfu_ro_x [24]: success!
+  Trying to prove $equiv for \sfu_ro_x [25]: success!
+  Trying to prove $equiv for \sfu_ro_x [26]: success!
+  Trying to prove $equiv for \sfu_ro_x [27]: success!
+  Trying to prove $equiv for \sfu_ro_x [28]: success!
+  Trying to prove $equiv for \sfu_ro_x [29]: success!
+  Trying to prove $equiv for \sfu_ro_x [30]: success!
+  Trying to prove $equiv for \sfu_ro_x [31]: success!
+  Trying to prove $equiv for \sfu_fault: success!
+  Trying to prove $equiv for \sfu_coll: success!
+Proved 282 previously unproven $equiv cells.
+
+10. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in eq.
+Proved 0 previously unproven $equiv cells.
+
+11. Executing EQUIV_STATUS pass.
+Found 282 $equiv cells in eq:
+  Of those cells 282 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 18d47740ac
+CPU: user 0.01s system 0.00s, MEM: 21.39 MB total, 11.24 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 39% 1x equiv_struct (0 sec), 20% 1x equiv_make (0 sec), ...
