@@ -160,7 +160,7 @@ P(r"""
             (phase_target == 8 && since_pub == 2) ||              // publish in the fold / out_v register
 
             (phase_target == 4 && st == S_GAP && gap >= 3) ||
-            (phase_target == 5 && st == S_START) ||
+            (phase_target == 5 && st == S_WAIT) ||                  // start in the pin / START_REG registers
             (phase_target == 6 && st == S_GAP))) begin
         // phase 6 = back-to-back: very short hold, then another reset right after release
         do_reset(phase_target == 6 ? 1 + ($urandom % 3) : 3 + ($urandom % 40));
