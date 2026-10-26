@@ -31,7 +31,7 @@ def channel_path(a,b,obstacles=(),clearance=0.,vertical_obstacles=(),return_poin
     return [(abs(p[0]-q[0])+abs(p[1]-q[1]),'horizontal' if p[1]==q[1] else 'vertical') for p,q in zip(path,path[1:])]
 
 
-def rooted_rc(points,caps,horizontal_rc,vertical_rc,obstacles=(),clearance=0.,vertical_obstacles=(),merge_collinear=False):
+def rooted_rc(points,caps,horizontal_rc,vertical_rc,obstacles=(),clearance=0.,vertical_obstacles=(),merge_collinear=False,horizontal_layer=None,vertical_layer=None,terminal_layers=None,via_resistance_kohm=None):
     """points[0] is driver; caps supplies every target in points[1:].
 
     Per-layer RC=(kohm/um,fF/um) must already reflect that layer's width rule.
@@ -53,7 +53,7 @@ def rooted_rc(points,caps,horizontal_rc,vertical_rc,obstacles=(),clearance=0.,ve
     if merge_collinear:
         from core_infra_network import merged_rc
         polylines=[channel_path(points[parent[j]],points[j],obstacles,clearance,vertical_obstacles,return_points=True) for j in order[1:]]
-        result=merged_rc(points,caps,polylines,horizontal_rc,vertical_rc)
+        result=merged_rc(points,caps,polylines,horizontal_rc,vertical_rc,horizontal_layer,vertical_layer,terminal_layers,via_resistance_kohm)
         result.update(parent=parent,paths=paths)
         return result
     edge_r=[0.]*n;edge_c=[0.]*n;intrinsic=[0.]*n
