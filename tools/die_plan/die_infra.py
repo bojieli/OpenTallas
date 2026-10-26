@@ -34,6 +34,7 @@ Pre-route geometry model (one list, three consumers):
 GRT does not derate special wires (die_clock_mesh combo note), so every pre-route also goes in as an obstruction.
 """
 import argparse
+import bisect
 import json
 import math
 import re
@@ -332,6 +333,48 @@ def footprint(layer, r, w, s):
     return (x0, y0 - s, x1, y1 + s) if horiz else (x0 - s, y0, x1 + s, y1)
 
 
+def pg_clock_conflicts(P, pg_shapes, clock_shapes, clearance_um=0.08):
+    """Intersect actual PG and mesh strap rectangles on the same metal layer.
+
+    A special wire is not detoured around a PG obstruction by global routing.
+    Reserve its real NDR spacing before emitting it, rather than interpreting
+    signal GRT0 as evidence that two fixed special wires do not short.
+    Index PG by the narrow track axis so full-die stripes stay inexpensive.
+    """
+    indexed = {}
+    for net, layer, *box in pg_shapes:
+        horizontal = P.layers[layer]["dir"] == "H"
+        lo, hi = (box[1], box[3]) if horizontal else (box[0], box[2])
+        indexed.setdefault(layer, []).append((lo, hi, net, box))
+    for layer, rows in indexed.items():
+        rows.sort(key=lambda r: r[0])
+        indexed[layer] = (rows, [r[0] for r in rows], max(r[1] - r[0] for r in rows))
+    count, short_count, examples = 0, 0, []
+    for net, layer, x0, y0, x1, y1, _width in clock_shapes:
+        if layer not in indexed:
+            continue
+        horizontal = P.layers[layer]["dir"] == "H"
+        lo, hi = (y0, y1) if horizontal else (x0, x1)
+        rows, starts, widest = indexed[layer]
+        first = bisect.bisect_left(starts, lo - clearance_um - widest)
+        last = bisect.bisect_right(starts, hi + clearance_um)
+        for _, _, supply, (a, b, c, d) in rows[first:last]:
+            dx, dy = min(x1, c) - max(x0, a), min(y1, d) - max(y0, b)
+            # Include the NDR separation rule, but report an actual metal short
+            # separately from a spacing deficit. Touching end caps need spacing.
+            if dx < -clearance_um + 1e-9 or dy < -clearance_um + 1e-9:
+                continue
+            count += 1
+            short = dx > 1e-9 and dy > 1e-9
+            short_count += short
+            if len(examples) < 32:
+                examples.append(dict(clock_net=net, supply=supply, layer=layer,
+                                     clock_rect_um=[x0, y0, x1, y1], pg_rect_um=[a, b, c, d],
+                                     metal_overlap=short))
+    return dict(verdict="PASS" if not count else "FAIL", conflicts=count, metal_shorts=short_count,
+                clearance_um=clearance_um, examples=examples)
+
+
 def track_use(P, rects, layers=("M8", "M9"), g=10.8):
     """fraction of each layer's track capacity taken by rects [(cls, layer, x0, y0, x1, y1)], counted the way GRT
     counts it (blocked tracks per gcell, capped at the gcell's tracks) -> {layer: {cls: frac, "all": frac}}."""
@@ -402,13 +445,23 @@ def cmd_freeze(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     shapes, obs, cls_rects = [], [], []
-    for net, L, x0, y0, x1, y1 in pg_rects(P, pg_grid(P, a.pg)):
+    power_shapes = pg_rects(P, pg_grid(P, a.pg))
+    for net, L, x0, y0, x1, y1 in power_shapes:
         shapes.append((net, "pg", L, x0, y0, x1, y1, "STRIPE"))
         obs.append((L, x0, y0, x1, y1))
         cls_rects.append(("pg", L, x0 - SIG_S, y0, x1 + SIG_S, y1) if HV[L] == "V" else ("pg", L, x0, y0 - SIG_S, x1, y1 + SIG_S))
     meta = {}
     if a.clock:
         M, crs = clock_rects(a.clock, a.guide)
+        # Only physical mesh straps are exact here. Clock-tree guide boxes are
+        # still a capacity prototype and must be replaced by actual routed DB
+        # wires/vias before connected infrastructure can be frozen.
+        mesh_straps = [r for r in crs if r[0].startswith("ck_mesh")]
+        clash = pg_clock_conflicts(P, power_shapes, mesh_straps)
+        (out / "pg_clock_conflicts.json").write_text(json.dumps(clash, indent=1) + "\n")
+        if clash["conflicts"]:
+            raise ValueError(f"PG/clock fixed geometry conflicts: {clash['conflicts']} "
+                             f"({clash['metal_shorts']} metal shorts); snap straps to actual PG-free tracks")
         _w, s = NDR[M["meta"].get("ndr", "4w")]
         meta["clock"] = dict(dir=str(a.clock), guide=str(a.guide), ndr=M["meta"].get("ndr"), rects=len(crs),
                              nets=len({r[0] for r in crs}))

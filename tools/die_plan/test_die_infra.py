@@ -18,6 +18,19 @@ def plan(W=108.0, H=108.0, grid=None):
 
 
 class T(unittest.TestCase):
+    def test_fixed_mesh_cannot_short_or_violate_pg_spacing(self):
+        P = plan()
+        pg = [("VDD", "M9", 4.08, 0, 4.56, 108), ("VSS", "M9", 8.4, 0, 8.88, 108)]
+        clock = [("ck_mesh_r0", "M9", 4.24, 0, 4.4, 108, .16)]
+        r = DI.pg_clock_conflicts(P, pg, clock)
+        self.assertEqual((r["conflicts"], r["metal_shorts"]), (1, 1))
+        # Real separated tracks pass; a different metal layer also passes.
+        self.assertEqual(DI.pg_clock_conflicts(P, pg, [("ck_mesh", "M9", 6, 0, 6.16, 108, .16)])["verdict"], "PASS")
+        self.assertEqual(DI.pg_clock_conflicts(P, pg, [("ck_mesh", "M8", 4.24, 0, 4.4, 108, .16)])["verdict"], "PASS")
+        # No metal overlap but only40nm separation is still invalid for80nm NDR.
+        r = DI.pg_clock_conflicts(P, pg, [("ck_mesh", "M9", 4.60, 0, 4.76, 108, .16)])
+        self.assertEqual((r["conflicts"], r["metal_shorts"]), (1, 0))
+
     def test_regional_preroute_preserves_physical_clock_cuts(self):
         with tempfile.TemporaryDirectory() as td:
             d = Path(td)
