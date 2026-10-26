@@ -2,9 +2,10 @@
 # usage: lockstep.sh <core>   (inside ot-run) legacy vs __q3sync lockstep sim
 set -u
 core=$1
-WT=/srv/opentallas-scratch2/claude/wt/tok-hbm-1830
-S=/srv/opentallas-scratch2/claude/tok-hbm-1830/q3sync
-OUTROOT=${OUTROOT:-$S}
+WT=$(git rev-parse --show-toplevel) || exit 2
+S=${OUTROOT:?set OUTROOT to a fresh run directory}
+cd "$WT"
+[ -n "$(git status --porcelain --untracked-files=no)" ] && { echo "DIRTY tracked tree: refuse"; exit 2; }
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
 CEN=$WT/tools/hbm_b2/q3sync/cohort.json
 D=$S/lockstep_$core; rm -rf $D; mkdir -p $D

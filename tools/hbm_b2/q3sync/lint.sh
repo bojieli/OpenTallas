@@ -1,9 +1,10 @@
 #!/bin/bash
 # usage: lint.sh <gen|legacy> <core>   (run inside ot-run; writes logs under $OUT)
 set -u
-WT=/srv/opentallas-scratch2/claude/wt/tok-hbm-1830
-S=/srv/opentallas-scratch2/claude/tok-hbm-1830/q3sync
-OUTROOT=${OUTROOT:-$S}
+WT=$(git rev-parse --show-toplevel) || exit 2
+S=${OUTROOT:?set OUTROOT to a fresh run directory}
+cd "$WT"
+[ -n "$(git status --porcelain --untracked-files=no)" ] && { echo "DIRTY tracked tree: refuse"; exit 2; }
 G=$S/gen
 OUT=$S/lint; mkdir -p $OUT
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
