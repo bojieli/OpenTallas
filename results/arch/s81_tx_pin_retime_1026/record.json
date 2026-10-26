@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS, source proposal only",
+  "mechanism": "Retiming register(decode(raw)) into decode(register(raw)) makes one private input capture per field; four sampled asynchronous-reset permissions preserve old reset edge/release behavior. PIN_RETIME0 remains default; physical wrapper/parent adapter require explicit OT_S81_TX_PHYS.",
+  "helper": "30,001cycles x693bits=20,790,693bitchecks,0mismatch; wrong instantaneous reset-release mask mutant caught2377edges. Earlier checker counted mutant onlypostedge and missedtheasyncviolations; preservedfailedcontrol log, checker fixed tosampleasync edge too.",
+  "full_TX": "2522ALL292-bit public-output cycles,2epochs,48linkbeats,0mismatch vs originalcurrentTXreference; includesinvalidpayload andactual10SRAM functionalmodels.",
+  "physical_wrapper": "Same2522all-outputcycles/2epochs/48beats, randomized structurallydeadinputbits; removed23deadinputpins/7constantoutputpins,816physicalports. WrongVOpart-bit mutant causes1711mismatchingedges.",
+  "data_cycles_added": 0,
+  "model": "No token-rate credit or timing/area closure claim; all decoder/port transformations preserve exact cycles.",
+  "physical_candidate": "626.4x544.32M5 internal routing; pinmap/spec/trialLEF in physical/die_plan/s81/cores/tx_phys_1026; normalrawface/LEC/placedreach+geometry stillrequired.",
+  "parent": "OT_S81_TX_PHYS defaultOFF preserves logical276-bit word ABI and existing u_tx path; physicaltype dsdv_idx_tx_n32_phys with dense livefields. B2 batch must optin/sourceprefer it together."
+}

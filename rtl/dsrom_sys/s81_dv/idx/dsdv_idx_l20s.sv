@@ -445,6 +445,28 @@ module dsdv_tx_pin_front #(
     end endgenerate
 endmodule
 
+
+// Physical TX ABI. Only structurally live input fields and nonconstant output bits
+// cross the hard-core boundary. The logical body keeps its complete protocol word.
+module dsdv_idx_tx_n32_phys #(
+    parameter integer V=276,IK=4,EK=5,UID=8'h5C,D=8192,IB=64,
+    parameter bit SRAM_MACRO=1,parameter integer MUT=0,PHYS_MUT=0
+)(
+    input wire ck,rst,input wire[267:0]vi,input wire[260:0]vo,
+    output wire[272:0]lo,output wire[11:0]st
+);
+    initial if(V!=276)$fatal(1,"physical TX requires V276");
+    wire[275:0]vi_full={vi[267:8],8'b0,vi[7:0]};
+    wire part=(PHYS_MUT!=0)?1'b0:vo[4];
+    wire[275:0]vo_full={vo[260:5],13'b0,part,2'b0,vo[3:0]};
+    wire[275:0]lo_full;wire[15:0]st_full;
+    dsdv_idx_tx_n32 #(.V(V),.IK(IK),.EK(EK),.UID(UID),.D(D),.IB(IB),
+        .SRAM_MACRO(SRAM_MACRO),.MUT(MUT),.PIN_RETIME(1)) u_logic (
+        .ck(ck),.rst(rst),.vi(vi_full),.vo(vo_full),.lo(lo_full),.st(st_full));
+    assign lo={lo_full[275:20],lo_full[18:3],lo_full[0]};
+    assign st={st_full[15:8],st_full[3:0]};
+endmodule
+
 module dsdv_idx_tx_n32 #(
     parameter integer V = 276,
     parameter integer IK = 4,
@@ -1015,8 +1037,17 @@ module dsdv_bk_sel_vmtx #(
     wire [V-1:0] sel_vo_n; wire sel_f;
     dsdv_bk_sel #(.V(V), .MUT(MUT)) u_sel (.clk(clk), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek),
         .uid(uid), .eg_n(eg_n), .vi_s(vi_m), .vo_n(sel_vo_n), .vi_n(vi_n), .vo_s(vo_s), .fault(sel_f));
+`ifdef OT_S81_TX_PHYS
+    wire[272:0]tx_lo_live;wire[11:0]tx_st_live;
+    dsdv_idx_tx_n32_phys #(.V(V), .IK(4), .EK(5), .UID(8'h5C), .SRAM_MACRO(TX_SRAM), .MUT(TX_MUT)) u_tx (
+        .ck(clk), .rst(rst_n), .vi({vi_m[275:16],vi_m[7:0]}),
+        .vo({vo_s[275:20],vo_s[6],vo_s[3:0]}), .lo(tx_lo_live), .st(tx_st_live));
+    assign tl_o={tx_lo_live[272:17],1'b0,tx_lo_live[16:1],2'b0,tx_lo_live[0]};
+    assign tx_st={tx_st_live[11:4],4'b0,tx_st_live[3:0]};
+`else
     dsdv_idx_tx_n32 #(.V(V), .IK(4), .EK(5), .UID(8'h5C), .SRAM_MACRO(TX_SRAM), .MUT(TX_MUT)) u_tx (
         .ck(clk), .rst(rst_n), .vi(vi_m), .vo(vo_s), .lo(tl_o), .st(tx_st));
+`endif
     generate if (SELE != 0) begin : g_sel
         wire [V-1:0] eo; wire ef;
         dsdv_bk_selids #(.V(V), .EK(5), .UID(8'h5C), .MUT(SEL_MUT)) u_ids (.ck(clk), .rst(rst_n), .vo(vo_s), .o(eo), .fault(ef));
