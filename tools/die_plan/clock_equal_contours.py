@@ -105,9 +105,21 @@ def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False,relocat
                 for sy_ in [-1,1]:candidates.add((a[0]+sx_*u,a[1]+sy_*v))
         circle_cache[(a,r)]=tuple(candidates)
         return sorted(candidates,key=lambda p:abs(p[0]-b[0])+abs(p[1]-b[1]))
+    def meeting(a,b,r):
+        candidates=set(points(a,b,r));dx=abs(a[0]-b[0]);dy=abs(a[1]-b[1])
+        # In L1 geometry, diagonal centers can share a whole diamond edge,
+        # and near-coincident native bands share an arc. Two endpoint-only
+        # intersections are not a complete candidate set in these cases.
+        if dx+dy<=.600001:
+            center=((a[0]+b[0])/2,(a[1]+b[1])/2)
+            candidates.update(circle(center,r,b))
+        elif abs(dx-dy)<=.600001:
+            candidates.update(circle(a,r,b));candidates.update(circle(b,r,a))
+        center=((a[0]+b[0])/2,(a[1]+b[1])/2)
+        return sorted(candidates,key=lambda p:min(abs(p[0]-center[0]),abs(p[1]-center[1])))
     def route(a,b,r,legs):
         if legs==2:
-            for raw in points(a,b,r):
+            for raw in meeting(a,b,r):
                 q=site(raw,[(a,r),(b,r)])
                 if q is not None:
                     p,sites=q;occupied.update(sites);return [p],sites
@@ -116,7 +128,7 @@ def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False,relocat
                 one=site(raw,[(a,r)])
                 if one is None:continue
                 p,sites=one;occupied.update(sites)
-                for raw2 in points(p[:2],b,r):
+                for raw2 in meeting(p[:2],b,r):
                     two=site(raw2,[(p[:2],r),(b,r)])
                     if two is not None:
                         q,sites2=two;occupied.update(sites2);return [p,q],sites|sites2
@@ -130,7 +142,7 @@ def equalize(plan,source,out,max_legs=3,closure_first=False,resume=False,relocat
                     three=site(raw3,[(b,r)])
                     if three is None:continue
                     q,sites3=three;occupied.update(sites3)
-                    for raw2 in points(p[:2],q[:2],r):
+                    for raw2 in meeting(p[:2],q[:2],r):
                         two=site(raw2,[(p[:2],r),(q[:2],r)])
                         if two is not None:
                             middle,sites2=two;occupied.update(sites2);return [p,middle,q],sites|sites2|sites3
