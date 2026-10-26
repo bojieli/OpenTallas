@@ -350,6 +350,18 @@ SCHEMA = {
                                 "basis": {"enum": ["parent_budget"]}, "source": {"type": "string", "minLength": 1},
                                 "network": {"type": "object", "required": ["nodes", "endpoints"], "additionalProperties": False,
                                     "properties": {"nodes": {"type": "array"}, "endpoints": {"type": "array"}}}}}},
+                        # PATH-HBM 10-25 (COORD ruling (1) 14:44): planned shared clock branch buffers on std-cell
+                        # sites (never on a hard core) -- one buffer drives the core taps it names (taps[].parent),
+                        # so a chain hop across a corridor shares its last common clock point (CPPR) with legs
+                        # <= the M8/M9 reach.  The insertion budget per buffer is CLOCK-RESET's (budget_owner).
+                        "branch_buffers": {"type": "array", "items": {
+                            "type": "object", "required": ["name", "xy", "drives"], "additionalProperties": False,
+                            "properties": {"name": _name, "xy": _xy,
+                                           "drives": {"type": "array", "minItems": 1, "items": _name},
+                                           "cell": {"type": "string"}, "legs_um": {"type": "array", "items": _nonneg},
+                                           "insertion_ps": _nonneg, "budget_owner": {"type": "string"},
+                                           "site": {"type": "string"}, "note": {"type": "string"},
+                                           "cell_ll_um": _xy, "orient": {"type": "string"}}}},
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {
@@ -360,7 +372,7 @@ SCHEMA = {
                                            # or the FF budget); absent -> FF_TT_INSERTION_RATIO x insertion_ps
                                            "insertion_ff_ps": _pos,
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
-                                           "from_root_um": _nonneg, "note": {"type": "string"}}}}}},
+                                           "from_root_um": _nonneg, "parent": _name, "note": {"type": "string"}}}}}},
                     # hard cores built on PLATFORM tracks (macros inside): a per-core placement offset puts their
                     # boundary pins on the plan tracks (COORD 10-23 08:36; A0: y +0.012)
                     "hard_cores": {"type": "array", "items": {
@@ -464,6 +476,16 @@ SCHEMA = {
                         "properties": {"name": _name, "face": {"enum": list(FACES)}, "window_um": _win,
                                        "layers": {"type": "array", "items": _layer, "minItems": 1},
                                        "reason": {"type": "string"}}}},
+                    # die-owned FT bands (DIE-FT-HBM 10-25, COORD DIE GRT RULINGS 11:29): a type-frame span (EW: y over
+                    # the full width, NS: x over the full height) where `layers` belong to the die (die_share of their
+                    # tracks) instead of the ft_track_frac share; the ft pins of the type sit inside them. die_trial
+                    # models them with GRT region adjustments; the partition kit keeps its own routing off those layers.
+                    "die_ft_bands": {"type": "array", "items": {
+                        "type": "object", "required": ["dir", "span_um", "layers"], "additionalProperties": False,
+                        "properties": {"dir": {"enum": ["EW", "NS"]}, "span_um": _win,
+                                       "layers": {"type": "array", "items": _layer, "minItems": 1},
+                                       "die_share": {"type": "number", "minimum": 0, "maximum": 1},
+                                       "note": {"type": "string"}}}},
                 }}},
         "partitions": {"type": "array", "minItems": 1, "items": {
             "type": "object", "required": ["name", "type", "origin_um"], "additionalProperties": False,
@@ -487,6 +509,8 @@ SCHEMA = {
                            # beat-index bits ceil(log2 beats), MSB).  cycles stay the lane's register stages (no bind
                            # pads); latency adds word_cycles = cycles + beats - 1 (the last beat lands beats - 1 later)
                            "beats": {"type": "integer", "minimum": 2}, "word_bits": {"type": "integer", "minimum": 1},
+                           # PATH-HBM 10-25: beat_index_bits 0 = static slot from boot_start (tkx 2-beat), no index pin
+                           "beat_index_bits": {"type": "integer", "minimum": 0},
                            "reach_um": _pos, "param": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
                            "route_layers": {"type": "array", "items": _layer, "minItems": 1},
                            "note": {"type": "string"}}}},
@@ -1032,6 +1056,13 @@ def tap_grid(P, tn):
     only ADDS sink-anchored taps (taps.py) for face-register clusters after the grid taps, numbered on from the grid;
     a sink tap within taps.SEP_UM of a grid tap is dropped (same spine drop)."""
     t = P.types[tn]
+    if t.get("hard") and not t.get("hard_cores"):
+        # A bare hard macro (e.g. a PHY with registered FDI pins, COORD 10-25 11:31 option B) has ONE physical clock
+        # terminal, its LEF/lib clk pin at clock.tap_um: no R4 grid, no sink taps.  Same rule as die_clock.plan_taps,
+        # so the die tree, the die top, the kit stand-ins and the binder agree on the macro clock ports.
+        xy = t.get("clock", {}).get("tap_um")
+        if isinstance(xy, (list, tuple)) and len(xy) == 2:
+            return [("clk", float(xy[0]), float(xy[1]))]
     if t.get("clock", {}).get("tap_mode") == "density":
         import taps
         return [(n, x, y) for n, x, y, _, _ in taps.density_taps(P, tn)]

@@ -33,6 +33,9 @@ def test_endpoint_contract_consumers_agree_and_ordinary_stable(tmp_path):
     assert die_clock.plan_tap_early(P)[('pa','clk_selected')]=={'TT':300,'FF':227.5}
     manifest=CG.network_manifest(P,'src');assert manifest['release_qualified'] is False
     assert 'ot_ccg::setup' in CG.tcl_text(manifest)
+    ff=GP.core_tap_ff_sdc(P,'src')
+    assert '-227.5000 [get_ports clk_selected]' in ff
+    assert '-300.0000 [get_ports clk_selected]' not in ff
 
 
 @pytest.mark.parametrize('mutation,match',[
@@ -139,3 +142,16 @@ puts "LONG [catch {::ot_hbmentry::check} msg] $msg"
     assert 'OFF \n' in p.stdout
     assert 'SHORT 0 18.0' in p.stdout
     assert 'LONG 1 OT_HBM_ENTRY unbuffered root segment 21.0 um exceeds 20 um' in p.stdout
+
+
+def test_group_ff_overlay_restores_group_tt_source(tmp_path):
+    import subprocess
+    helper=Path(GP.__file__).with_name('vclk_corner.tcl')
+    (tmp_path/'vclk_corner.tcl').write_text(helper.read_text())
+    (tmp_path/'constraint.sdc').write_text('# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc\nset_clock_latency -source -clock clk -300.0000 [get_ports clk_selected]\n')
+    (tmp_path/'core_taps_ff.sdc').write_text('set_clock_latency -source -clock clk -227.5000 [get_ports clk_selected]\n')
+    body='proc get_ports {p} {return $p}\nproc set_clock_latency {args} {puts "LAT $args"}\nproc read_sdc {p} {uplevel #0 [list source $p]}\nsource vclk_corner.tcl\not_core_tap_bind ff\not_core_tap_bind tt\n'
+    r=subprocess.run(['tclsh'],input=body,text=True,cwd=tmp_path,capture_output=True)
+    assert not r.stderr,r.stderr
+    assert 'LAT -source -clock clk -227.5000 clk_selected' in r.stdout
+    assert 'LAT -source -clock clk -300.0000 clk_selected' in r.stdout

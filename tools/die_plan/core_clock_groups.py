@@ -1,7 +1,7 @@
 """Explicit opt-in shared core clock inputs; no implicit fanout or latency credit."""
 import math,re
 
-_NAME=re.compile(r'^[A-Za-z_][A-Za-z0-9_$]*$')
+_NAME=re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 
 
 def groups(P,tn):

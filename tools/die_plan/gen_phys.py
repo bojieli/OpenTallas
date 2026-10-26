@@ -155,14 +155,14 @@ def core_tap_pins(P, tn):
     return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
 
 
-def core_tap_rows(P, tn):
+def core_tap_rows(P, tn, corner="TT"):
     """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
     `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin."""
     insts = [c["inst"] for c in P.types[tn].get("hard_cores", []) or []]
     out = []
     for n, _, _, tp in S.core_taps(P, tn):
         if "core_group" in tp:
-            out.extend((n, m["inst"], m["pin"], S.core_tap_early_ps(P, tp), float(tp["insertion_ps"]))
+            out.extend((n, m["inst"], m["pin"], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner))
                        for m in tp["core_group"]["members"])
             continue
         nm = tp["name"]
@@ -176,8 +176,22 @@ def core_tap_rows(P, tn):
                 break
         if not hit:
             raise ValueError(f"type {tn}: core tap {nm} names no hard_cores[] inst")
-        out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp), float(tp.get("insertion_ps", 0.0))))
+        out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
     return out
+
+
+
+def core_tap_ff_sdc(P, tn):
+    """Corner overlay for dedicated core taps; the golden SDC retains its TT basis."""
+    seen = set()
+    lines = []
+    for n, inst, pin, early, ins in core_tap_rows(P, tn, "FF"):
+        if n in seen:
+            continue
+        seen.add(n)
+        lines.append(f"# CP2 FF core tap {n} ({inst}/{pin}: internal {ins:g} ps)\n"
+                     f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
+    return "".join(lines)
 
 
 def edge_clock_pins(P, tn):
@@ -553,6 +567,8 @@ def sdc(P, tn, pins):
            f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
     source_ports = set()
+    if core_tap_rows(P, tn):
+        out += "# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc\n"
     for n, inst, pin, early, ins in core_tap_rows(P, tn):
         if n in source_ports:
             continue
@@ -767,6 +783,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
+    if core_tap_rows(P, tn):
+        (kd / "core_taps_ff.sdc").write_text(core_tap_ff_sdc(P, tn))
     ioh = io_hold_tcl(P, tn)            # IO-HOLD option A: per-port min input delays for the hold_gate / sign-off overlays
     if ioh:
         (kd / "io_hold.tcl").write_text(ioh)
@@ -962,6 +980,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
     from ft_bit_sites import table as ft_bit_sites_table
     (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(t.get("ft_slots", [])))
+    ff_core_taps = {r[0]: r for r in core_tap_rows(P, tn, "FF")}
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
                signal_max=top,
@@ -978,7 +997,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                 for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
                           taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
-                          core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins)
+                          core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins,
+                                          early_ff_ps=ff_core_taps[n][3], insertion_ff_ps=ff_core_taps[n][4])
                                      for n, i, p_, e, ins in clat["taps"]],
                           uncertainty_split=UNC_SPLIT),
                core_latency=clat["rows"],
@@ -1002,11 +1022,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
-    shutil.copyfile(Path(__file__).with_name("signoff.py"), kd / "signoff.py")
-    if ioh:  # option-A only: legacy generated kit inventory is unchanged
-        shutil.copyfile(Path(__file__).with_name("io_hold_qualification.py"), kd / "io_hold_qualification.py")
-    shutil.copyfile(Path(__file__).with_name("pair_skew.tcl"), kd / "pair_skew.tcl")
-    shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
+    from signoff import copy_signoff_bundle
+    copy_signoff_bundle(kd)
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
     # pins.json is the data-face contract; include timed control/clock interior
