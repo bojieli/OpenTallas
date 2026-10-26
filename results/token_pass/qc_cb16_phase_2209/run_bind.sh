@@ -9,6 +9,8 @@ mkdir "$R"
 O=run_phase2209
 mkdir "$O"
 probe=$B/asbuilt_phase_probe_2209.json
+# Reprice changed physical fixed_cycles before any strict bind reads embedded lanes.
+python3 tools/die_plan/gen.py latency "$P/die_plan_base_2209.json" --inplace --out "$O/pricing" > "$O/pricing.log" 2>&1
 if [ -n "${QC_REUSE_ELAB:-}" ];then
  mkdir "$O/elab"
  cp "$QC_REUSE_ELAB/asbuilt.json" "$O/elab/asbuilt.json"
