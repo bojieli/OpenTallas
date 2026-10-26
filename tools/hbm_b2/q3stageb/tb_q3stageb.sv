@@ -116,7 +116,7 @@ module tb_q3stageb;
   if(last_clock_fs>=0 && now_fs-last_clock_fs!=833000)$fatal(1,"CLOCK_PERIOD_FS got%0d expected833000",now_fs-last_clock_fs);
   last_clock_fs=now_fs;clock_edges++;
  end
- integer cyc=0,lc=-1,errors=0,words=0,root_done=0,qdone=0,producer_start=0,producer_flits=0,first_write=-1,last_write=-1,done_age=-1,failed_runs=0;reg firstfault=0;
+ integer cyc=0,lc=-1,errors=0,words=0,root_done=0,qdone=0,producer_start=0,producer_flits=0,first_write=-1,last_write=-1,done_age=-1,failed_runs=0,vm_words=0,vm_launches=0,first_vmwrite=-1,last_vmwrite=-1;reg firstfault=0;
  always@(posedge clk)begin
   cyc<=cyc+1;if(launch)lc<=cyc;
   if(rst_n&&lc>=0)begin
@@ -126,6 +126,15 @@ module tb_q3stageb;
     if(first_write<0)first_write=cyc-lc;last_write=cyc-lc;
     $display("EV WRITE +%0d addr%0d mask%h data%h",cyc-lc,twa,twm,twd);
     for(integer j=0;j<16;j++)if(twm[j])begin words++;if(twa+j!=64 || twd[32*j+:32]!==32'd20)errors++;end
+   end
+   for(integer b=0;b<8;b++)if(kq[281*b+280])begin
+    reg[15:0]sec;reg[7:0]mask_;sec=kq[281*b+264+:16];mask_=kq[281*b+:8];vm_launches++;
+    if(sec[2:0]!=3'(b))errors++;
+    $display("EV VM_BANK +%0d bank%0d sector%0d mask%h data%h",cyc-lc,b,sec,mask_,kq[281*b+8+:256]);
+    for(integer j=0;j<8;j++)if(mask_[j])begin
+     vm_words++;if(first_vmwrite<0)first_vmwrite=cyc-lc;last_vmwrite=cyc-lc;
+     if(int'(sec)*8+j!=64 || kq[281*b+8+32*j+:32]!==32'd20)errors++;
+    end
    end
    if(tdone)begin root_done++;done_age=cyc-lc;$display("EV ROOT_DONE +%0d cycles%0d",cyc-lc,tcycles);end
    if(done)begin qdone++;$display("EV Q_DONE +%0d",cyc-lc);end
@@ -150,12 +159,12 @@ module tb_q3stageb;
    integer target;target=MISSION_AT+job*2048;
    if(cyc>=target)$fatal(1,"host programme not ready before static mission start");
    while(cyc<target)@(negedge clk);
-   lc=-1;errors=0;words=0;root_done=0;qdone=0;producer_start=0;producer_flits=0;firstfault=0;first_write=-1;last_write=-1;done_age=-1;
+   lc=-1;errors=0;words=0;root_done=0;qdone=0;producer_start=0;producer_flits=0;firstfault=0;first_write=-1;last_write=-1;done_age=-1;vm_words=0;vm_launches=0;first_vmwrite=-1;last_vmwrite=-1;
    $display("MISSION_ABS job%0d cycle%0d slot0%0d clock833ps loaded_programme%0d",job,cyc,slot0,job!=0);
    launch=1;@(negedge clk);launch=0;
    repeat(800)@(negedge clk);
-   $display("STAGEB_SUMMARY job%0d producer_start%0d producer_flits%0d words%0d root_done%0d qdone%0d errors%0d fault%0d first_write%0d last_write%0d done%0d",job,producer_start,producer_flits,words,root_done,qdone,errors,firstfault,first_write,last_write,done_age);
-   if(producer_start!=1||words!=1||root_done!=1||qdone!=1||errors||firstfault)failed_runs++;
+   $display("STAGEB_SUMMARY job%0d producer_start%0d producer_flits%0d words%0d root_done%0d qdone%0d errors%0d fault%0d first_write%0d last_write%0d done%0d vm_words%0d vm_launches%0d vm_first%0d vm_last%0d",job,producer_start,producer_flits,words,root_done,qdone,errors,firstfault,first_write,last_write,done_age,vm_words,vm_launches,first_vmwrite,last_vmwrite);
+   if(producer_start!=1||words!=1||vm_words!=1||vm_launches!=2||root_done!=1||qdone!=1||errors||firstfault)failed_runs++;
   end
   if(failed_runs)$fatal(1,"Q3STAGEB FAIL runs%0d",failed_runs);
   $display("CLOCK_GATE PASS period_fs833000 edges%0d",clock_edges);$display("Q3STAGEB PASS cold_and_loaded_relaunch");$display("Q3STAGEB PASS");$finish;
