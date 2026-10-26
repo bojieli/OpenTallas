@@ -139,7 +139,8 @@ def census(P):
             regs = [P.to_die(part, tuple(r)) for r in s.get("regs_um", [])]
             band = _win(s, "out_window_um") or _win(s, "in_window_um")
             legs.append(dict(part=part, slot=slot, pts=[tuple(a)] + regs + [tuple(b)], band_um=band,
-                             layers=list(s.get("layers", [])), bit_sites=s.get("bit_sites_um")))
+                             layers=list(s.get("layers", [])), bit_sites=s.get("bit_sites_um"),
+                             cell_size=s.get("bit_site_cell_um"), pin=pin, pout=pout))
         length = sum(IS.seg_len(p, q) for lg in legs for p, q in zip(lg["pts"], lg["pts"][1:]))
         paths.append(dict(id=lid, kind=ports[0].get("kind", "data"), bits=bits, ports=len(ports),
                           src=f"{src['part']}.{src['bus']}", dst=f"{dst['part']}.{dst['bus']}", legs=legs,
@@ -1006,6 +1007,14 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     gap_fail, in_core = [], []
     gap_max = (0.0, None)
     route_cache = {}
+    exact_roads, exact_blocked, correspondence_fail, exact_stats, legacy_legs = [], [], [], [], 0
+    import bit_roads as BR
+    def bit_ranges(indices):
+        out=[]
+        for bit in sorted(indices):
+            if out and bit==out[-1][1]+1:out[-1][1]=bit
+            else:out.append([bit,bit])
+        return out
     for pth in paths:
         for li, lg in enumerate(pth["legs"]):
             part = lg["part"]
@@ -1015,6 +1024,31 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             iv = IS.make_site_iv(box, blockers, cb)
             band = lg["band_um"] or max(G, pth["bits"] * 0.064 * 2)
             pts = lg["pts"]
+            if lg.get("bit_sites") and lg.get("pin"):
+                try:
+                    groups, stat = BR.plan(P,part,lg["slot"],lg["pin"],lg["pout"],grid,G,reach,track_max)
+                    exact_stats.append(dict(path=pth["id"],part=part,slot=lg["slot"],**stat))
+                    gap_max=max(gap_max,(stat["max_planned_route_um"],pth["id"]))
+                    for err in stat["blocked_hops"]:exact_blocked.append(dict(path=pth["id"],part=part,**err))
+                    for rec in groups:
+                        x0,y0,x1,y1=rec["actual_rect"];h=rec["horiz"]
+                        aa=(x0,(y0+y1)/2) if h else ((x0+x1)/2,y0)
+                        bb=(x1,(y0+y1)/2) if h else ((x0+x1)/2,y1)
+                        exact_roads.append(dict(path=pth["id"],part=part,layer=rec["selected_layer"],bits=rec["bits"],
+                            a=[r3(v) for v in aa],b=[r3(v) for v in bb],band_um=r3((y1-y0 if h else x1-x0)+.064),
+                            leg=li,stage=rec["stage"],model="indexed_bit",grid_slice=rec["sl"],
+                            bit_indices=bit_ranges(rec["bit_indices"]),route_sha256=stat["planned_routes_sha256"]))
+                except ValueError as ex:
+                    correspondence_fail.append(dict(path=pth["id"],part=part,error=str(ex)))
+                # Exact allocated stage inventory, including epoch. No centroid
+                # lookup may silently select a different stage or lose a bit.
+                for stage,grp in enumerate(lg["bit_sites"]):
+                    if not grp:continue
+                    cx=sum(q[0] for q in grp)/len(grp);cy=sum(q[1] for q in grp)/len(grp)
+                    bays_die.append(dict(part=part,xy=P.to_die(part,(cx,cy)),kind="station",bits=len(grp),band=band,
+                        horiz=False,path=pth["id"],sites=grp,cell_size=lg["cell_size"],stage=stage+1))
+                continue
+            legacy_legs += 1
             for k, (a, b) in enumerate(zip(pts, pts[1:])):
                 # station register at a (k > 0) -> station bay
                 if 0 < k:
@@ -1074,9 +1108,9 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     log(f"roads: {len(segs_all)} segments, {len(bays_die)} rest stops, {len(gap_fail)} reach gaps")
 
     # ---- layer assignment (greedy by bits)
-    roads = []
+    roads = list(exact_roads)
     m89_segs = []
-    blocked = []
+    blocked = list(exact_blocked)
     for bits, pid, li, a, b, band, decl, part in sorted(segs_all, key=lambda s: -s[0]):
         sl, horiz = grid.band(a, b, band)
         d = "H" if horiz else "V"
@@ -1112,11 +1146,14 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     bay_fail = []
     for k, bd in enumerate(bays_die):
         cell = A_FLOP if bd["kind"] == "station" else A_REP
+        if bd["sites"]:
+            cw,ch=bd.get("cell_size") or (1.404,ROW)
+            cell=cw*ch
         demand = bd["bits"] * cell
         if bd["sites"]:
             xs = [s[0] for s in bd["sites"]]
             ys = [s[1] for s in bd["sites"]]
-            rt = (min(xs), min(ys), max(xs) + 1.404, max(ys) + ROW)
+            rt = (min(xs), min(ys), max(xs) + cw, max(ys) + ch)
             pts = [P.to_die(bd["part"], c) for c in ((rt[0], rt[1]), (rt[2], rt[3]))]
             r = (min(p[0] for p in pts), min(p[1] for p in pts), max(p[0] for p in pts), max(p[1] for p in pts))
         else:
@@ -1127,7 +1164,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         if bd["sites"]:
             footprints = []
             for x,y in bd["sites"]:
-                pts = [P.to_die(bd["part"],c) for c in ((x,y),(x+1.404,y+ROW))]
+                pts = [P.to_die(bd["part"],c) for c in ((x,y),(x+cw,y+ch))]
                 footprints.append((min(p[0] for p in pts),min(p[1] for p in pts),
                                    max(p[0] for p in pts),max(p[1] for p in pts)))
             regions,actual_hits = explicit_bay_regions(r,footprints,blk[bd["part"]])
@@ -1443,7 +1480,15 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         infra_sites=sites_gate,
         **rulings,
     )
+    gates["road_correspondence"] = dict(verdict="FAIL" if correspondence_fail or exact_blocked else "PASS",
+        explicit_slots=len(exact_stats),failures=correspondence_fail,blocked_hops=exact_blocked[:40],
+        actual_bits=sum(x["bits"] for x in exact_stats),epoch_included=True,
+        track_cell_crossings=sum(x["raw_track_cell_crossings"] for x in exact_stats))
+    gates["road_model_coverage"] = dict(verdict="FAIL" if legacy_legs else "PASS",legacy_centroid_legs=legacy_legs,
+        note="unmodeled legs retain legacy conservative demand but cannot certify a corridor PASS")
     verdict = "PASS" if all(g["verdict"] == "PASS" for g in gates.values() if not g.get("diagnostic_only")) else "FAIL"
+
+    (out / "bit_roads.json").write_text(json.dumps(dict(slots=exact_stats,correspondence_fail=correspondence_fail,legacy_legs=legacy_legs),indent=1)+"\n")
 
     # ---- slices (type frame)
     mp = dict(schema=PLAN_SCHEMA, die=P.name, plan=str(P.path), plan_sha256=plan_sha, reach_um=reach,
