@@ -156,6 +156,7 @@ def canonical_oneclk_map(core, recipe, receipt, native_clocks, root=REPO):
     if len(entries) != 1:
         raise ValueError('ambiguous canonical q2 interface')
     old = entries[0]['cut_pins']
+    expected = {p[0]: (p[1], p[2]) for p in canonical['ports']}
     native = {n: (d, w) for n, d, w in receipt['port_inventory']['ports']}
     if native.get('clk') != ('input', 1):
         raise ValueError('canonical q2 adapter requires one scalar input clk')
@@ -171,7 +172,8 @@ def canonical_oneclk_map(core, recipe, receipt, native_clocks, root=REPO):
         if len(destinations) != 1:
             raise ValueError('ambiguous canonical data alias')
         port, width = next(iter(destinations.items()))
-        if port not in native or native[port][1] != width or port in covered:
+        if (port not in native or native[port] != expected.get(port) or
+                native[port][1] != width or port in covered):
             raise ValueError('canonical data alias width/coverage mismatch: ' + alias)
         mapping[alias] = dict(destinations)
         covered.add(port)
