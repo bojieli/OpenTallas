@@ -325,6 +325,70 @@ def seam_hold(P):
                 basis=f"clock.seam_hold: sender {snd:g} ps after vclk, seam {seam:g} ps")
 
 
+# INFRA-FIRST-R4 / COORD RULING 2026-10-26 11:24 (kit hold window; METHODOLOGY 12.4a "hold made safe by STRUCTURE",
+# 12.8 d1 timing-contract class): opt-in plan clock.tap_window {window_ps}.  The die delivers the grid taps of one
+# partition with a tap-to-tap arrival difference (related-pair damage after CPPR at the last tree node) of up to
+# window_ps; the kit SDC with every tap on ONE ideal clock guaranteed nothing for it (W_intra = 0).  The window is a
+# source latency range on every grid tap port, fixed in the plan BEFORE build and identical for every type:
+#     set_clock_latency -source -early -clock clk -W [get_ports {taps}]   ;   ... -late ... 0 ...
+# A path launched on one tap and captured on ANOTHER is then timed with the full W (hold: launch early / capture late;
+# setup: launch late / capture early), so the kit's own hold repair covers any die tap pair within W.  Same-tap pairs
+# keep their credit: OpenSTA CRPR removes the source-latency range at the common tap port once clocks are propagated
+# (probe 2026-10-26, OpenSTA asap7lock: cross-tap hold -80 / same-tap 0 at W 80).  late = 0 keeps every max arrival
+# (pin-register insertion gates, tap balance, sign-off clock check: arrival_max) unchanged.  The IO contract is kept
+# exactly (one declared seam number, clock.seam_hold.seam_ps): the early tap would tighten the input setup and the
+# output hold checks by W, so input max delays are W smaller and output min delays W larger in the SDC
+# (tap_window_io_shift); the CONTRACT values (seam_hold, sender guarantees) are unchanged.  Pre-CTS (ideal clocks, no
+# CRPR) the window would hit same-tap pairs too, so prects_estimate.tcl zeroes it and pre_cts.tcl restores it before
+# the tree is built.  Requires clock.seam_hold (the seam half of the same ruling) and no early core taps (12.8d).
+def tap_window_ps(P):
+    """the plan's declared per-tap latency window W (ps) of the kit SDC, 0.0 when absent (legacy kits unchanged)."""
+    tw = P.clock.get("tap_window")
+    if not tw:
+        return 0.0
+    w = float(tw["window_ps"])
+    per = float(P.die["period_ps"]) if hasattr(P, "die") else float("inf")
+    if not 0 <= w <= per / 4:
+        raise ValueError(f"clock.tap_window.window_ps {w:g} outside [0, T/4]")
+    if not P.clock.get("seam_hold"):
+        raise ValueError("clock.tap_window needs clock.seam_hold (COORD 11:24: one declared window for intra AND seam)")
+    return w
+
+
+def tap_window_tcl(P, tn, value_ps=None):
+    """the window's two set_clock_latency lines on the grid tap ports of type tn ('' without a window).
+    value_ps overrides the early value (0 = the pre-CTS ideal stage)."""
+    w = tap_window_ps(P)
+    if not w:
+        return ""
+    if core_tap_rows(P, tn):
+        raise ValueError(f"type {tn}: clock.tap_window with early core taps (banned by 12.8d) is not supported")
+    e = (-w if value_ps is None else -float(value_ps)) + 0.0     # never "-0.0000"
+    out = ""
+    for ck, ports in tap_window_ports(P, tn):
+        out += (f"set_clock_latency -source -early -clock {ck} {t_lib(e):.4f} [get_ports {{{' '.join(ports)}}}]\n"
+                f"set_clock_latency -source -late -clock {ck} {t_lib(0.0):.4f} [get_ports {{{' '.join(ports)}}}]\n")
+    return out
+
+
+def tap_window_ports(P, tn):
+    """[(clock, [ports])] the window applies to: every real clock source port of the type (the grid taps of clk and
+    each PHY-edge clock port), so every input / output path sees the same early range and the IO shift stays exact."""
+    return ([("clk", [n for n, _x, _y in clock_pins(P, tn)])] +
+            [(n, [n]) for n, _x, _y, _m in edge_clock_pins(P, tn)])
+
+
+def tap_window_io_shift(P):
+    """(input max delay shift, output min delay shift) in ps that keep the IO contract exact under the window."""
+    w = tap_window_ps(P)
+    return -w, w
+
+
+def hold_out_min_sdc_ps(P):
+    """the output min delay WRITTEN in the kit SDC / gate / sign-off overlay: contract hold_out_min_ps + window."""
+    return hold_out_min_ps(P) + tap_window_io_shift(P)[1]
+
+
 def hold_in_min_ps(P):
     """seam-hold padding: the kit's min input delay vs vclk (ps)."""
     return seam_hold(P)["in_min_ps"]
@@ -589,6 +653,7 @@ def sdc(P, tn, pins):
     ib = insertion_binding(P, tn)
     lat = t_lib(ib["tt"])
     io = IO_BUDGET * per
+    tw_in, _tw_out = tap_window_io_shift(P)
     cks = [n for n, _, _ in clock_pins(P, tn) + core_tap_pins(P, tn)]
     slots = [sv for sv in (s_["name"] for s_ in P.types[tn].get("ft_slots", []))]
     ft_in = " ".join(f"{n}_i[*]" for n in slots)
@@ -603,6 +668,9 @@ def sdc(P, tn, pins):
                      for n, _x, _y, m in edge_clock_pins(P, tn)) +
            f"create_clock -name vclk -period {per:.4f}\n"
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
+           + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P):g} ps on every "
+              "real clock port, [-W, 0]; IO delays shifted to keep the seam contract (gen_phys.tap_window_ps)\n"
+              + tap_window_tcl(P, tn) if tap_window_ps(P) else "") +
            f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]\n"
            f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]\n"
            f"# seam paths: uncertainty counted once per seam (COORD 16:58): {UNC_SPLIT:g} on each partition side\n"
@@ -611,7 +679,7 @@ def sdc(P, tn, pins):
            f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold {t_lib(UNC_SPLIT * UNC_HOLD_PS):.4f}\n"
            f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold {t_lib((1 - UNC_SPLIT) * UNC_HOLD_PS):.4f}\n"
            "set non_clk_in [all_inputs -no_clocks]\n"
-           f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
+           f"set_input_delay -max {io + t_lib(tw_in):.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
     source_ports = set()
     if core_tap_rows(P, tn):
@@ -625,7 +693,7 @@ def sdc(P, tn, pins):
     if slots:
         sh = ft_hop_in_share(P)
         out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment\n"
-                f"set_input_delay -max {(1 - sh) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
+                f"set_input_delay -max {(1 - sh) * per + t_lib(tw_in):.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
                 f"set_output_delay -max {sh * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
     # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
     # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
@@ -642,7 +710,7 @@ def sdc(P, tn, pins):
     # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
-    out += (f"set_output_delay -min {t_lib(hold_out_min_ps(P)):.4f} -clock vclk [all_outputs]\n")
+    out += (f"set_output_delay -min {t_lib(hold_out_min_sdc_ps(P)):.4f} -clock vclk [all_outputs]\n")
     import reset_tree as RT
     fp = RT.pad_false_path_pins(P, tn)
     if fp:
@@ -892,10 +960,14 @@ def clock_phase_tcl(P, tn, before_cts=False):
     if before_cts:
         return ("# Clear only the pre-CTS LOCAL network estimate; preserve early core source latencies.\n"
                 f"unset_clock_latency -clock clk [get_ports {{{ports}}}]\n"
+                + ("# plan clock.tap_window: restore the golden per-tap window before the tree (propagated + CRPR)\n"
+                   + tap_window_tcl(P, tn) if tap_window_ps(P) else "") +
                 "source /work/clock_taps.tcl\n")
     return ("# Pre-CTS ideal LOCAL tree insertion, matching the virtual neighbour clock budget.\n"
             "# Stage-only: pre_cts.tcl removes it before tree construction. Golden SDC stays unchanged.\n"
-            f"set_clock_latency -clock clk {t_lib(P.clock['insertion_ps']):.4f} [get_ports {{{ports}}}]\n")
+            f"set_clock_latency -clock clk {t_lib(P.clock['insertion_ps']):.4f} [get_ports {{{ports}}}]\n"
+            + ("# plan clock.tap_window: ideal clocks get no CRPR, so the window is zeroed until pre_cts.tcl\n"
+               + tap_window_tcl(P, tn, value_ps=0.0) if tap_window_ps(P) else ""))
 
 
 
@@ -1096,7 +1168,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export OT_VCLK_FF = {t_lib(ib['ff']):.4f}",
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
-           f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_ps(P)):.4f}",
+           f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_sdc_ps(P)):.4f}",
+           *([f"export OT_TAP_WINDOW = {t_lib(tap_window_ps(P)):.4f}"] if tap_window_ps(P) else []),
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
            # RCX (setRC_rcx_asap7.tcl; the stock setRC.tcl put clock sinks 11-57 ps above RCX).  ORFS reads
            # LAYER_PARASITICS_FILE (this image) / SET_RC_TCL (newer variables.yaml) instead of the platform setRC.tcl.
@@ -1339,6 +1412,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
         OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
         OT_HOLD_IN_MIN=\$(sed -n 's/^export OT_HOLD_IN_MIN = //p' /work/config.mk) OT_HOLD_OUT_MIN=\$(sed -n 's/^export OT_HOLD_OUT_MIN = //p' /work/config.mk) \
+        OT_TAP_WINDOW=\$(sed -n 's/^export OT_TAP_WINDOW = //p' /work/config.mk) \
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS FF structural hold gate (or NOT RUN)' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
