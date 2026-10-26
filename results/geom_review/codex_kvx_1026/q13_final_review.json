@@ -1,0 +1,29 @@
+{
+  "verdict": "Independent review requested; CTS-only scope, no route",
+  "source_design": "970fe2fa6; unchanged native RTL/pins/outline/cycles",
+  "q1": {
+    "kit": "epyc1:codex-kvx-1026/q1final",
+    "image": "q1final.png",
+    "anchors": 1966,
+    "missing": 0,
+    "pin_p90_um": 7.72,
+    "pin_max_um": 53.42,
+    "r2r_um": 257.47,
+    "over405": 0,
+    "auto_verdict": "FAIL fill0.1969",
+    "recipe": "south macro bank corridor; vector-control/column fixes; legal-site packing (standard DPL still fails four endtap overlaps; preserved q1standard) "
+  },
+  "q3": {
+    "kit": "epyc1:codex-kvx-1026/q3final",
+    "image": "q3final.png",
+    "anchors": 1988,
+    "missing": 0,
+    "pin_p90_um": 8.01,
+    "pin_max_um": 14.13,
+    "r2r_um": 251.8,
+    "over405": 0,
+    "auto_verdict": "FAIL fill0.1283 / empty0.6523",
+    "recipe": "south macro corridor; vector-control/column fixes; standard DPL"
+  },
+  "conditions": "ONE CTS-only trial per approved kit, ordinary canary/plan holds. Native TT/FF clock latencies, related-pair80, actual pin/reach and PDN review before any route; no uncertainty/clock/IO changes."
+}
