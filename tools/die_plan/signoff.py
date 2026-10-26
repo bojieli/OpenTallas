@@ -57,6 +57,7 @@ import argparse
 import concurrent.futures as cf
 import datetime
 import gzip
+import hashlib
 import json
 import os
 import math
@@ -252,6 +253,121 @@ def copy_core_tap_overlay(golden, destination):
     return True
 
 
+def _lib_groups(text, keyword):
+    """Yield named Liberty groups while respecting quoted strings and escapes."""
+    pattern = re.compile(r'\b' + re.escape(keyword) + r'\s*\(([^)]*)\)\s*\{')
+    position = 0
+    while (match := pattern.search(text, position)):
+        depth, quoted, escaped = 1, False, False
+        index = match.end()
+        while index < len(text) and depth:
+            char = text[index]
+            if escaped:
+                escaped = False
+            elif char == '\\':
+                escaped = True
+            elif char == '"':
+                quoted = not quoted
+            elif not quoted:
+                depth += (char == '{') - (char == '}')
+            index += 1
+        if depth:
+            raise ValueError('unterminated Liberty group')
+        yield match.group(1).strip().strip('"'), text[match.end():index - 1]
+        position = index
+
+
+def clock_model_coverage(library_files, instantiated_masters, expected_sha256=None):
+    """Pure, fail-closed composed-child endpoint detector, reusable by die STA.
+
+    Inputs are the actual selected libraries and exact sequential endpoint
+    master names. Clock-to-Q alone is not a composed-child marker: an ordinary
+    SRAM has that arc too. Nonzero clock_tree_path + is_macro_cell is the
+    capability marker here. No latency correction or expansion is performed.
+    """
+    result = dict(schema='opentallas.clock_endpoint_coverage.v1',
+                  raw_pair_basis='visible_clock_pins', models=[])
+    try:
+        if instantiated_masters is None:
+            raise ValueError('actual instantiated clock endpoint masters unavailable')
+        masters = set(instantiated_masters)
+        result['instantiated_masters'] = sorted(masters)
+        for filename in library_files:
+            path = Path(filename)
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            if expected_sha256 is not None and expected_sha256.get(str(path)) != digest:
+                raise ValueError(f'consumed Liberty hash mismatch: {path}')
+            text = gzip.open(path, 'rt').read() if path.suffix == '.gz' else path.read_text()
+            text = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*',
+                          lambda match: match.group(0) if match.group(0).startswith('"') else ' ', text, flags=re.S)
+            unit = re.search(r'\btime_unit\s*:\s*"([^"]+)"', text)
+            if not re.search(r'\b(?:min|max)_clock_tree_path\b', text):
+                continue
+            for master, body in _lib_groups(text, 'cell'):
+                if master not in masters or not re.search(r'\bis_macro_cell\s*:\s*true\s*;', body):
+                    continue
+                tree_paths = {}
+                for _, timing in _lib_groups(body, 'timing'):
+                    marker = re.search(r'\btiming_type\s*:\s*((?:min|max)_clock_tree_path)\s*;', timing)
+                    if not marker:
+                        continue
+                    values = []
+                    for table in re.findall(r'\bvalues\s*\(\s*"([^"]*)"\s*\)', timing, re.S):
+                        values.extend(float(word) for word in re.split(r'[,\s]+', table.replace('\\\n', ' ')) if word)
+                    if not values or not all(math.isfinite(value) for value in values):
+                        raise ValueError(f'invalid clock_tree_path values: {path}:{master}')
+                    tree_paths.setdefault(marker.group(1), []).extend(values)
+                if not any(value != 0 for values in tree_paths.values() for value in values):
+                    continue
+                model = dict(master=master, liberty=str(path), liberty_sha256=digest,
+                             marker='is_macro_cell + nonzero clock_tree_path', clock_tree_path_values=tree_paths,
+                             liberty_time_unit=unit.group(1) if unit else None)
+                corner = re.search(r'_(tt|ff|ss)\.lib(?:\.gz)?$', path.name)
+                export = path.parent / ('export_' + corner.group(1) + '.tcl') if corner else None
+                if export and export.is_file():
+                    producer = export.read_text()
+                    model['export_provenance'] = dict(path=str(export),
+                        sha256=hashlib.sha256(export.read_bytes()).hexdigest(),
+                        write_timing_model='write_timing_model' in producer,
+                        read_spef='read_spef' in producer, propagated_clock='set_propagated_clock' in producer)
+                result['models'].append(model)
+        unexpanded = bool(result['models'])
+        result.update(status='UNEXPANDED_CHILD_ETM' if unexpanded else 'NO_UNEXPANDED_CHILD_ETM',
+                      verdict='NOT RUN' if unexpanded else 'PASS',
+                      expanded_child_flop_pairs='NOT RUN' if unexpanded else 'NO_LUMPED_CHILD_CLOCKS')
+    except (OSError, ValueError, TypeError) as error:
+        result.update(status='UNAVAILABLE', verdict='NOT RUN', expanded_child_flop_pairs='NOT RUN', reason=str(error))
+    return result
+
+
+def consumed_clock_model_coverage(receipt_path, disc, masters, mapping_errors=0):
+    """Map exact container-library receipt paths to their immutable host inputs."""
+    try:
+        if mapping_errors != 0:
+            raise ValueError('clock endpoint master inventory incomplete')
+        receipt = json.loads(Path(receipt_path).read_text())
+        if receipt.get('status') != 'LOADED' or not isinstance(receipt.get('libraries'), list):
+            raise ValueError('exact loaded-library receipt unavailable')
+        root = Path(disc['kit']) if disc.get('kit') else Path(disc['library_config']).parent
+        files, expected, consumed = [], {}, {}
+        for row in receipt['libraries']:
+            source = row['path']
+            # These are the exact native PDK groups, not composed child models.
+            if re.fullmatch(r'/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_(AO|INVBUF|OA|SEQ|SIMPLE)_(RVT|LVT|SLVT)_(TT|FF|SS)_nldm_[^/]+\.lib(?:\.gz)?', source):
+                continue
+            if not source.startswith('/work/') or '..' in Path(source).parts:
+                raise ValueError(f'consumed non-PDK Liberty host mapping unavailable: {source}')
+            host = root / source[len('/work/'):]
+            files.append(host); expected[str(host)] = row['sha256']; consumed[str(host)] = source
+        result = clock_model_coverage(files, masters, expected)
+        for model in result['models']:
+            model['consumed_liberty'] = consumed[model['liberty']]
+        result['library_receipt'] = str(receipt_path)
+        return result
+    except (OSError, ValueError, TypeError, KeyError) as error:
+        return dict(schema='opentallas.clock_endpoint_coverage.v1', status='UNAVAILABLE', verdict='NOT RUN',
+                    raw_pair_basis='visible_clock_pins', expanded_child_flop_pairs='NOT RUN', models=[], reason=str(error))
+
 # ---- the OpenSTA session (one corner) -----------------------------------------------------------------------------
 def _clock_family_tcl():
     for p in (REPO / "physical/common_flow/clock_family.tcl", HERE / "clock_family.tcl"):   # repo, or a kit copy
@@ -407,6 +523,20 @@ so CORNER @C@
 so PARASITICS @PARSRC@
 so DESIGN [current_design]
 so CELLS [llength [get_cells *]]
+# Inventory actual sequential endpoint masters; a Liberty loaded but unused is
+# not evidence of an unexpanded child. Keep the raw pair census unchanged.
+set so_endpoint_masters {}; set so_endpoint_mapping_errors 0
+foreach p [all_registers -clock_pins] {
+  if {[catch {
+    set owners [get_cells -quiet -of_objects [list $p]]
+    if {[llength $owners] != 1} {error "nonunique clock endpoint owner"}
+    set master [get_property [lindex $owners 0] ref_name]
+    if {$master eq ""} {error "empty clock endpoint master"}
+  }]} {incr so_endpoint_mapping_errors; continue}
+  dict set so_endpoint_masters $master 1
+}
+so CLOCK_ENDPOINT_MASTERS {*}[lsort [dict keys $so_endpoint_masters]]
+so CLOCK_ENDPOINT_MAPPING_ERRORS $so_endpoint_mapping_errors
 # ---- ports (for sdc_lint context) and IO virtual clock ----
 set so_ck_ports {}
 foreach c [all_clocks] { foreach s [get_property $c sources] { if {[llength [get_ports -quiet [get_full_name $s]]]} { lappend so_ck_ports [get_full_name $s] } } }
@@ -686,6 +816,8 @@ def corner_result(parsed):
     out["insertion_all"] = stats(allck)
     out["insertion_pinflops"] = stats(bnd)
     out["pair_skew"] = pair_skew_result(kv)
+    out["clock_endpoint_masters"] = kv["CLOCK_ENDPOINT_MASTERS"].split() if "CLOCK_ENDPOINT_MASTERS" in kv else None
+    out["clock_endpoint_mapping_errors"] = _f(kv.get("CLOCK_ENDPOINT_MAPPING_ERRORS"))
     out["ocv5_wns_max"] = _f(kv.get("OCV5_WNS_MAX"))
     out["ocv5_wns_min"] = _f(kv.get("OCV5_WNS_MIN"))
     return out
@@ -750,6 +882,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     res = corner_result(parse_session(text))
     res.update(corner=corner, rc=rc, macro_libs=mlibs, macro_missing=mmiss,
                errors=re.findall(r"\[ERROR[^\n]*", text)[:5])
+    res["clock_endpoint_coverage"] = consumed_clock_model_coverage(od / "libraries.json", disc,
+        res.get("clock_endpoint_masters"), res.get("clock_endpoint_mapping_errors"))
     (od / "corner.json").write_text(json.dumps(res, indent=1) + "\n")
     return res
 
@@ -1033,7 +1167,15 @@ def evaluate(rec, insertion_target=None):
             if abs(pf["mean"] - float(bound[c])) > tol:
                 why.append(f"{c.upper()} pin-flop insertion {pf['mean']:.1f} ps not within bound {float(bound[c]):g} +- "
                            f"{tol:g}")
-        put("clock", "FAIL" if why else "PASS", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
+        raw_clock_verdict = "FAIL" if why else "PASS"
+        coverage = {c: C[c]["clock_endpoint_coverage"] for c in SPREAD_CORNERS if C[c].get("clock_endpoint_coverage")}
+        unqualified = {c: value for c, value in coverage.items() if value.get("verdict") != "PASS"}
+        if unqualified:
+            why.extend(f"{c.upper()}: expanded child-flop pair coverage NOT RUN ({value.get('status')})"
+                       for c, value in unqualified.items())
+        put("clock", "NOT RUN" if unqualified else ("FAIL" if why else "PASS"),
+            endpoint_model_coverage=coverage, raw_clock_verdict=raw_clock_verdict,
+            raw_pair_basis="visible_clock_pins", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
             by_corner=sp, problems=why,
             insertion_target_ps=insertion_target, insertion_bound=bound or None)
     else:
