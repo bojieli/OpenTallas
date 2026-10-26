@@ -1208,7 +1208,7 @@ def cmd_report(a):
         slew = {p: v[2] for p, v in arr.items()}
 
         def dmg(pa, pb):
-            c = lca(tagof[pa], tagof[pb])
+            c = M["meta"]["regions"][reg[pa]]["tag"] if regd else "h"
             while c not in rng and len(c) > 1:
                 c = c[:-1]
             return DC.pair_clock_damage(late[pa], early[pa], late[pb], early[pb], rng.get(c, 0.0))["max_damage_ps"]
