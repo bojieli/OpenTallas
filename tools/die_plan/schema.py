@@ -150,6 +150,16 @@ _core_id_straps = {"type": "array", "items": {
                "then": {"properties": {"width": {"const": 6}, "value": {"maximum": 63, "pattern": "^6'[bB][01]{6}$"}}},
                "else": {"properties": {"width": {"const": 2}, "value": {"maximum": 3, "pattern": "^2'[bB][01]{2}$"}}}}]}}
 
+_clock_mesh_region = {
+    "type": "object", "additionalProperties": False,
+    "required": ["k", "tag", "i0", "i1", "j0", "j1", "box_um"],
+    "properties": {
+        "k": {"type": "integer", "minimum": 0},
+        "tag": {"type": "string", "pattern": "^h[01]*$"},
+        "i0": {"type": "integer", "minimum": 0}, "i1": {"type": "integer", "minimum": 1},
+        "j0": {"type": "integer", "minimum": 0}, "j1": {"type": "integer", "minimum": 1},
+        "box_um": _rect, "strap_box_um": _rect}}
+
 SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": SCHEMA_ID,
@@ -316,6 +326,8 @@ SCHEMA = {
                         # output changes earlier = contract guarantee + worst output-hold slack; absent = contract
                         "out_hold_guarantee_ps": {"type": "number"},
                         "keepouts_um": {"type": "array", "items": _rect},
+                        # Die clock driver islands are uniform physical reservations, not extra tile IO.
+                        "die_islands_um": {"type": "array", "items": _rect},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
@@ -553,6 +565,20 @@ SCHEMA = {
                            "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "insertion_ps": _pos, "insertion_tol_ps": _nonneg, "neighbour_skew_ps": _pos,
+            # Accepted die mesh profile and immutable generated cell-site ledger.
+            "mesh": {"type": "object", "additionalProperties": False,
+                     "properties": {
+                         "nx": {"type": "integer", "minimum": 1}, "ny": {"type": "integer", "minimum": 1},
+                         "m": {"type": "integer", "minimum": 1}, "rep_um": _pos, "ndr": {"type": "string"},
+                         "pitch_um": {"type": "array", "items": _pos, "minItems": 2, "maxItems": 2},
+                         "delta": {"type": "string"}, "tool": {"type": "string"},
+                         "layers": {"type": "object", "additionalProperties": False,
+                                    "properties": {"straps_h": _layer, "straps_v": _layer}},
+                         "sites_file": {"type": "string"},
+                         "sites_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                         "regions_depth": {"type": "integer", "minimum": 0},
+                         "regions": {"type": "array", "minItems": 1, "items": _clock_mesh_region},
+                         "cells": {"type": "integer", "minimum": 1}}},
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
@@ -565,6 +591,17 @@ SCHEMA = {
             # input's min input delay is its driving partition's guaranteed output-min, the related tap pair skew is
             # checked at the parent (io_hold_parent.py); "legacy" / absent = the flat contract above
             "io_hold": {"enum": ["legacy", "sender_min"]},
+            # CP1 proof harness (COORD 2026-10-25 23:26 ruling (3), CLOCK-RESET): a cut-out proof die keeps, for each
+            # die-edge input that the FULL plan drives from a registered partition, an explicit registered upstream
+            # driver view {port id: part, type, bus, out_hold_guarantee_ps, basis}; under io_hold sender_min that
+            # port takes the driver's guaranteed output-min (gen_phys.input_hold_min) and the seam is checked on the
+            # real parent (io_hold_parent.py) -- never an unconstrained die input, never a waiver
+            "io_hold_driver_views": {"type": "object", "additionalProperties": {
+                "type": "object", "additionalProperties": False,
+                "required": ["part", "type", "bus", "out_hold_guarantee_ps", "basis"],
+                "properties": {"part": {"type": "string"}, "type": {"type": "string"}, "bus": {"type": "string"},
+                               "out_hold_guarantee_ps": {"type": "number"}, "basis": {"type": "string"},
+                               "source_plan": {"type": "string"}}}},
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.

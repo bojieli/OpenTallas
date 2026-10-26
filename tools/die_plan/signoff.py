@@ -226,9 +226,45 @@ def require_signoff_bundle():
     return signoff_bundle_sources()
 
 
-def copy_signoff_bundle(destination, source=HERE):
+# Dependencies of standalone kit hooks.  Existing custom hooks stay byte-identical;
+# their missing shared helpers are shipped by the same bundle as the sign-off tool.
+KIT_TOOL_DEPENDENCIES = {
+    "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
+    "pinreg_pad.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
+    "tap_balance.tcl": ("clock_family.tcl",),
+    "cts_post.tcl": ("tap_balance.tcl", "leaf_affinity.tcl"),
+    "tapbal_grt.tcl": ("tap_balance.tcl", "pinreg_pad.tcl"),
+    "hold_gate.tcl": ("vclk_corner.tcl",),
+    "face_guard_core.py": ("face_guard.py",),
+    "core_preflight.py": ("signoff.py", "face_guard.py"),
+}
+
+
+def copy_signoff_bundle(destination, source=HERE, extra=()):
     paths = signoff_bundle_sources(source)
-    destination = Path(destination)
+    destination, source = Path(destination), Path(source)
+    requested = list(extra)
+    if any(Path(name).name != name for name in requested):
+        raise ValueError("signoff: bundle helper names must be basenames")
+    pending = requested + [name for name in KIT_TOOL_DEPENDENCIES
+                           if (destination / name).is_file()]
+    seen = set()
+    while pending:
+        name = pending.pop()
+        if name in seen:
+            continue
+        seen.add(name)
+        # Preserve an already copied kit-specific hook; explicit --with roots and
+        # the canonical sign-off family are copied from the requested tool source.
+        if name not in paths and (name in requested or not (destination / name).is_file()):
+            path = source / name
+            if name == "clock_family.tcl" and not path.is_file():
+                path = source.parents[1] / "physical/common_flow/clock_family.tcl"
+            paths[name] = path
+        pending.extend(KIT_TOOL_DEPENDENCIES.get(name, ()))
+    missing = [name for name, path in paths.items() if not path.is_file()]
+    if missing:
+        raise ValueError("signoff: incomplete kit tool bundle: " + ", ".join(missing))
     destination.mkdir(parents=True, exist_ok=True)
     for name, path in paths.items():
         target = destination / name
@@ -1380,9 +1416,11 @@ def main(argv=None):
     v.add_argument("--insertion-target", type=float)
     b = sub.add_parser("bundle", help="Copy the complete standalone signoff tool bundle")
     b.add_argument("out")
+    b.add_argument("--with", dest="extra", action="append", default=[],
+                   help="Additional kit hook with its standalone helper dependencies (repeatable)")
     a = ap.parse_args(argv)
     if a.cmd == "bundle":
-        print("SIGNOFF_BUNDLE " + " ".join(copy_signoff_bundle(a.out)))
+        print("SIGNOFF_BUNDLE " + " ".join(copy_signoff_bundle(a.out, extra=a.extra)))
         return 0
     if a.cmd == "run" and a.ff_bound_ps is not None and a.ff_vclk != "bound-ff":
         ap.error("--ff-bound-ps requires --ff-vclk bound-ff")
