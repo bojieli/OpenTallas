@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "CP1 synthetic method pair CTS-only diagnostic",
+  "pictures": [
+    "pair.png",
+    "col_h10_r0_p1__t1_early.png",
+    "col_h10_r1__t1_early.png"
+  ],
+  "findings": [
+    "Abutting shared face and external windows unchanged; no macros or macro walls in proof vehicle.",
+    "Ingress bands have local early taps, 95/49 total taps, max315/298 sinks, radius75.6um; no long new clock branch is planned.",
+    "173TT/140FF early-local tree target; virtual interface250/202.5 and 833ps60/25 remain.",
+    "PDN and signal layer allocation unchanged. No production cycles added.",
+    "No current pair signed or actual parent clock seam check; early-local insertion and pair-skew must be measured before any route.",
+    "Synthetic G0 PASS; G0C cells+die bump windows remain INCOMPLETE, no die qualification claim."
+  ],
+  "conditions": [
+    "CTS only; collect per-tap means and FF endpoint census",
+    "No GRT/DRT or production adoption from this review"
+  ]
+}

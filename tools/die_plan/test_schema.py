@@ -171,3 +171,14 @@ def test_mirrored_instances_share_pins():
 
 def q_port(p, pid):
     return next(x for x in p["ports"] if x["id"] == pid)
+
+
+def test_exact_per_type_dead_input_contract_schema():
+    plan = copy.deepcopy(EX)
+    tn = next(iter(plan['partition_types']))
+    decl = dict(module='leaf', parameters={'FM_GI':"4'b0001"}, ports={'gi_d':[[0,31]]},
+                proof='results/dead/proof.json', source='rtl/leaf.sv', module_sha256='0'*64)
+    plan['partition_types'][tn]['dead_inputs']=[decl]
+    assert schema.validate(plan)==[]
+    decl['ports']['gi_d']=[[-1,31]]
+    assert schema.validate(plan)

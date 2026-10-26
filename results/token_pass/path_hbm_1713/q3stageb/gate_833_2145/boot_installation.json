@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.q3_programme_install_cost.v1",
+  "measurement": "Read-only observer of the same final f0393f111 compiled model, stopped at actual native configured; original archives unchanged",
+  "clock_period_fs": 833000,
+  "reset_release_edge": 64,
+  "transport_boot_edge": 80,
+  "prototype_11_rows": {
+    "unique_rows": 11,
+    "host_f20_frames": 77,
+    "first_frame": 82,
+    "last_frame": 728,
+    "row_start_period": 64,
+    "descriptor": 786,
+    "configured": 1045
+  },
+  "passing_16_rows": {
+    "unique_rows": 16,
+    "host_f20_frames": 112,
+    "first_frame": 82,
+    "last_frame": 1048,
+    "row_start_period": 64,
+    "descriptor": 1106,
+    "configured": 1365
+  },
+  "delta": {
+    "unique_rows": 5,
+    "host_f20_frames": 35,
+    "cold_install_clocks": 320,
+    "cold_install_ns": 266.56,
+    "frame_clocks": 35,
+    "row_clear_clocks": 5,
+    "effective_row_drain_clocks": 280,
+    "effective_drain_per_added_row": 56,
+    "per_operation_clocks": 0,
+    "loaded_relaunch_install_clocks": 0,
+    "hardware_area_um2": 0
+  },
+  "mission_spacing": {
+    "fixed_first": 2048,
+    "fixed_loaded_relaunch": 4096,
+    "passing_setup_margin_before_mission": 683,
+    "install_growth_absorbed_by_existing_fixed_mission": true,
+    "not_a_throughput_claim": true
+  },
+  "scope": "Measured current component loader versus the initial11-row diagnostic programme, not a comparison against an earlier released design. Die host transport and wavefront START are not included.",
+  "unit": "oth-ubuntu-768532-1792994694"
+}

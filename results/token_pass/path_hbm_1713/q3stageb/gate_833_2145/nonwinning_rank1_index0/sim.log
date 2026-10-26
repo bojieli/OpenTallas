@@ -1,0 +1,30 @@
+BOOT_ABS cycle80
+MISSION_ABS job0 cycle2048 slot00 clock833ps loaded_programme0
+EV START +95 slot01
+EV FLIT +105 slotf validf slot01
+FLIT_GOLD_MISMATCH lane1 got1ff010000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000015ffffffffffffffffffffffffffffffffffffffffffffffffffffffff40000000 want1ff010001ffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000015ffffffffffffffffffffffffffffffffffffffffffffffffffffffff40000000
+EV WRITE +613 addr64 mask0001 data00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014
+EV VM_META +613 tkw1 ingress10 slot_valid00 slot_owner00000000
+EV VM_META +614 tkw0 ingress00 slot_valid01 slot_owner00000004
+EV VM_META +615 tkw0 ingress00 slot_valid02 slot_owner00000090
+EV VM_BANK +616 bank0 sector8 mask01 data0000000000000000000000000000000000000000000000000000000000000014
+EV VM_BANK +617 bank1 sector9 mask00 data0000000000000000000000000000000000000000000000000000000000000000
+EV ROOT_DONE +620 cycles510
+EV Q_DONE +631
+STAGEB_SUMMARY job0 producer_start1 producer_flits1 words1 root_done1 qdone1 errors1 fault0 first_write613 last_write613 done620 vm_words1 vm_launches2 vm_first616 vm_last616
+MISSION_ABS job1 cycle4096 slot00 clock833ps loaded_programme1
+EV START +95 slot01
+EV FLIT +105 slotf validf slot01
+FLIT_GOLD_MISMATCH lane1 got1ff010000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000015ffffffffffffffffffffffffffffffffffffffffffffffffffffffff40000000 want1ff010001ffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000015ffffffffffffffffffffffffffffffffffffffffffffffffffffffff40000000
+EV WRITE +613 addr64 mask0001 data00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014
+EV VM_META +613 tkw1 ingress10 slot_valid00 slot_owner00000000
+EV VM_META +614 tkw0 ingress00 slot_valid01 slot_owner00000004
+EV VM_META +615 tkw0 ingress00 slot_valid02 slot_owner00000090
+EV VM_BANK +616 bank0 sector8 mask01 data0000000000000000000000000000000000000000000000000000000000000014
+EV VM_BANK +617 bank1 sector9 mask00 data0000000000000000000000000000000000000000000000000000000000000000
+EV ROOT_DONE +620 cycles510
+EV Q_DONE +631
+STAGEB_SUMMARY job1 producer_start1 producer_flits1 words1 root_done1 qdone1 errors1 fault0 first_write613 last_write613 done620 vm_words1 vm_launches2 vm_first616 vm_last616
+[4079000000] %Fatal: tb_q3stageb.sv:180: Assertion failed in tb_q3stageb: Q3STAGEB FAIL runs2
+%Error: tools/hbm_b2/q3stageb/tb_q3stageb.sv:180: Verilog $stop
+Aborting...

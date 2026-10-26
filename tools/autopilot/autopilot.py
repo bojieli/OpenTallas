@@ -967,6 +967,14 @@ def flow_watch():
         return None
 
 
+def flow_exclude():
+    """canaries.json 'watch_exclude' (tests, docs, logs, results ...): never part of the flow fingerprint"""
+    try:
+        return json.loads(read_repo("tools/flow_canary/canaries.json")).get("watch_exclude") or []
+    except Exception:
+        return []
+
+
 def flow_tags():
     """newest-first flow release tags on origin (ROOT-MERGE tags flow-YYYYMMDD-a/b), fetched once per tick"""
     if "tags" not in CLOSURE:
@@ -1021,6 +1029,7 @@ def resolve_provenance(src, flow=""):
     watch = flow_watch()
     if not watch:
         return {"src_commit": full, "flow_tag": "", "error": "flow watch list tools/flow_canary/canaries.json unreadable"}
+    exclude = flow_exclude()
     tags = flow_tags()
     if flow and flow not in tags:
         return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} not found on origin"}
@@ -1028,7 +1037,8 @@ def resolve_provenance(src, flow=""):
         rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--name-only", t, full], timeout=120)
         if rc:
             continue
-        changed = [p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)]
+        changed = [p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)
+                   and not any(fnmatch.fnmatch(p, x) for x in exclude)]
         if not changed:
             return {"src_commit": full, "flow_tag": t}
         if flow:

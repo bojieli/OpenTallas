@@ -62,6 +62,22 @@ def test_array_maps_relates_the_two_frontend_layouts():
     assert len(maps) >= 2                                # outer-index reversed variants too
 
 
+def test_slang_elements_reads_the_element_layout_from_driver_cells(tmp_path):
+    # slang `reg [3:0] q [0:1]`: one flat 8-bit vector, element 0 at the MSB, one $driver$q[i] cell per element
+    # (PATH-KV-LEC 10-25: the calendar's wait_q / left_q / burst_q tied in simulation and were paired reversed)
+    j = {"modules": {"lec_top": {
+        "netnames": {"u_dut.q": {"hide_name": 0, "bits": [20, 21, 22, 23, 10, 11, 12, 13]},
+                     "$flatten\\u_dut.$q$9": {"hide_name": 1, "bits": [10, 11, 12, 13, 20, 21, 22, 23]}},
+        "cells": {"$flatten\\u_dut.$driver$q[0]": {"type": "$aldff", "connections": {"Q": [10, 11, 12, 13]}},
+                  "$flatten\\u_dut.$driver$q[1]": {"type": "$aldff", "connections": {"Q": [20, 21, 22, 23]}}}}}}
+    f = tmp_path / "gold.aliases.json"
+    f.write_text(json.dumps(j))
+    e = lec.slang_elements(f)
+    assert e["ff:u_dut.q[4]"] == "[0][0]" and e["ff:u_dut.q[7]"] == "[0][3]" and e["ff:u_dut.q[0]"] == "[1][0]"
+    assert len(e) == 8
+    assert lec.slang_elements(tmp_path / "missing.json") == {}
+
+
 def test_merged_copy_pairs_with_its_own_name_shape():
     c = ["ff:u.g_ctl[1].u_c.g_c[0].f[0]", "ff:u.g_ctl[0].u_c.g_c[0].f[1]", "ff:u.g_ctl[0].u_c.g_c[0].f[0]"]
     assert lec.closest("ff:u.g_ctl[0].u_c.g_c[10].f[0]", c)[0] == "ff:u.g_ctl[0].u_c.g_c[0].f[0]"

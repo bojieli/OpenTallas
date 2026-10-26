@@ -5,6 +5,7 @@ Padded rows never replace released rows and are masked bydriver VALID_ROWS/globa
 """
 import argparse,hashlib,json,struct
 from pathlib import Path
+from mem_compiler.rom_content import write_viamap
 KEY='mtp.2.markov_head.head.weight'
 REV='dba1be0a40aa45a94ad051997016db3960a90277'
 DEFAULT=Path('/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots')/REV
@@ -14,8 +15,7 @@ def generate(snapshot,out,row0,valid_rows=32,instance='mk'):
  if not instance or any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_' for c in instance):raise ValueError('instance name')
  out.mkdir(parents=True,exist_ok=False)
  idxpath=snapshot/'model.safetensors.index.json';idx=json.loads(idxpath.read_text())['weight_map'];shard=snapshot/idx[KEY]
- physical=[[0]*512 for _ in range(2)];payload=hashlib.sha256();real=0
- spread=[sum(((b>>k)&1)<<(8*k) for k in range(8)) for b in range(256)]
+ physical=[[0]*4096 for _ in range(2)];payload=hashlib.sha256();real=0
  with shard.open('rb') as f:
   n=struct.unpack('<Q',f.read(8))[0];header=json.loads(f.read(n))[KEY]
   if header['shape']!=[129280,256] or header['dtype']!='BF16':raise ValueError('released head shape/dtype')
@@ -29,9 +29,8 @@ def generate(snapshot,out,row0,valid_rows=32,instance='mk'):
    for beat in range(16):
     logical=16*row+beat;macro=logical%2;addr=logical//2
     word=int.from_bytes(data[32*beat:32*(beat+1)],'little')
-    expanded=sum(spread[(word>>(8*j))&255]<<(64*j) for j in range(32))
-    physical[macro][addr//8]|=expanded<<(addr%8)
- for macro in (0,1):(out/f'{instance}_{macro}.viamap.hex').write_text(''.join(f'{v:0548x}\n' for v in physical[macro]))
+    physical[macro][addr]=word
+ for macro in (0,1):write_viamap(out/f'{instance}_{macro}.viamap.hex',physical[macro],'ot_rom_4096x274_m8')
  receipt=dict(schema='opentallas.md6.markovweight-image.v1',checkpoint_revision=REV,key=KEY,shard=idx[KEY],header=header,index_sha256=hashlib.sha256(idxpath.read_bytes()).hexdigest(),row0=row0,VALID_ROWS=valid_rows,released_rows_copied=real,padded_rows=32-real,payload_sha256=payload.hexdigest(),mapping='macro=(16*local_row+beat)%2; addr=(16*local_row+beat)//2',ROM_ECC=False,images={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.glob('*.viamap.hex')})
  (out/'manifest.json').write_text(json.dumps(receipt,indent=2)+'\n');return receipt
 if __name__=='__main__':

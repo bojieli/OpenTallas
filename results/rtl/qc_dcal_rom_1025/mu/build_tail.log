@@ -1,0 +1,6 @@
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch2/claude/codex-qc-dcal-rom/mu_r1/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.134 MB sources in 5 modules, into 0.798 MB in 8 C++ files needing 0.001 MB
+- Verilator: Walltime 11.886 s (elab=0.007, cvt=0.132, bld=11.716); cpu 0.187 s on 8 threads; allocated 63.676 MB

@@ -25,9 +25,13 @@ def install(recipe: Path, profile: Path, out: Path):
     if (recipe.parent/r.get('base','.')).resolve()!=ROOT:
         raise ValueError('source recipe base must resolve to this repository')
     data=json.loads(profile.read_text());P.pack_profile(data)
+    if out.exists() and any(out.iterdir()):raise ValueError('output must be a new empty bind cohort; existing source is immutable')
     out.mkdir(parents=True,exist_ok=True)
     content=P.personalise(data,out/'content',instance='kv_dcal')
     via=out/'content'/content['viamap']
+    # +OT_ROM_DIR resolves INSTANCE, while the canonical compiler tile has a _r0_c0 suffix.
+    simulation_alias=out/'content'/'kv_dcal.viamap.hex'
+    simulation_alias.write_bytes(via.read_bytes())
     rel=lambda p:str(p.relative_to(ROOT))
     rtl=ROOT/'rtl/qwen_sys/d2d_static_20261015'
     source=(rtl/'qkd_d2d_cal_seq_rom64.sv').read_text()
@@ -56,6 +60,8 @@ def install(recipe: Path, profile: Path, out: Path):
       'macro':P.NAME,'macro_sheet':rel(P.MACRO),'manifest':rel(out/'content'/content['manifest']),
       'macro_view_area_um2':81.404352,'macro_size_um':[8.856,9.192],
       'macro_instance':'dcal.u_profile','cache_scalar_bits':256,
+      'simulation_alias':rel(simulation_alias),'simulation_instance':'kv_dcal',
+      'functional_model':f'physical/asap7_memory_macros_v2/{P.NAME}/{P.NAME}.v',
       'scalar_read_order':[39,40,36,37,38,41,42,43],
       'existing_init_edges':66,'new_boot_edges':0,'new_production_edges':0,
       'layer_read_lead_edges_max':2,'layer_start_gap_min':min(b-a for a,b in zip(data['START'],data['START'][1:])),
