@@ -62,4 +62,3 @@ lint+='qkd_host_native_engine #(.HDMAX(128),.KVHMAX(2),.QPIPE(2)) u_eng('+','.jo
 (out/'lint_top.sv').write_text(lint)
 f='physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v'
 (out/Path(f).name).write_bytes(subprocess.check_output(['git','-C',str(wt),'show','HEAD:'+f]))
-
