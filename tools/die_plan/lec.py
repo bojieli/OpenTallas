@@ -1520,6 +1520,28 @@ def drop_failed(L, bad):
 
 
 
+
+def proved_state_constant(L, side, key, seen=None):
+    """Resolve only accepted induction equalities ending in a constant."""
+    seen = set() if seen is None else seen
+    node = (side,key)
+    if node in seen:
+        return None
+    seen.add(node)
+    h=L.hyp.get(node)
+    both=h is None
+    if both:
+        h=L.hyp.get(("both",key))
+    if not h:
+        return None
+    if h[0]=="const":
+        return int(h[1])
+    if h[0]=="eq":
+        c=proved_state_constant(L,side if both else h[1],h[2],seen)
+        return None if c is None else c ^ int(h[3])
+    return None
+
+
 def kept_wire_alias_copies(L, declared, aliases_file):
     """Recognize RTL Q-wire aliases while requiring one distinct gate FF per kept bit.
 
@@ -1551,7 +1573,7 @@ def kept_wire_alias_copies(L, declared, aliases_file):
             renamed[h[2]].add(c)
     candidates = {}
     for k in declared:
-        if L.hyp.get(("gold",k), ("",))[0] == "const":
+        if proved_state_constant(L,"gold",k) is not None:
             continue
         old = old_names.get(k,k)
         choices = set(bit_names.get(wire_bits.get(old), ())) & gate
@@ -1617,8 +1639,7 @@ def kept_registers(L, keep_file):
         m = IDX.match(k)
         if m and m.group(1) in relaid and relaid[m.group(1)] >= gold_rel[m.group(1)]:
             continue                 # an array the two frontends lay out differently: counted per array
-        h = L.hyp.get(("gold", k))
-        if h and h[0] == "const":
+        if proved_state_constant(L,"gold",k) is not None:
             const.append(k)
             continue
         if k not in alias_copies:
@@ -1747,6 +1768,7 @@ def structural_twin_closure(L, log):
     if total:
         log.append(f"structural twin closure: {total} relations proposed")
     return total
+
 
 
 def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
@@ -2028,7 +2050,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             val, mask = m.simulate(words, seed=999)
             reps = {h[2] for (sd, k), h in L.hyp.items() if sd == "both" and h[0] == "eq"}
             for k in L.matched:
-                if not k.startswith("ff:") or ("both", k) in L.hyp or k in reps or tried[("both", k, "c")] >= 2:
+                if not k.startswith("ff:") or ("both", k) in L.hyp or tried[("both", k, "c")] >= 2:
                     continue
                 a, b = lit_val(val, mask, L.dlit[("gold", k)]), lit_val(val, mask, L.dlit[("gate", k)])
                 if a == b and a in (0, mask):
@@ -2039,7 +2061,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # own Q is in its next-state cone.  Candidate only; induction decides.
             var_of = {kk: v for v, (t, kk) in kind.items() if t == "matched"}
             gdl = dict(L.dlit)
-            cands = {k for k in L.matched if k.startswith("ff:") and ("both", k) not in L.hyp and k not in reps
+            cands = {k for k in L.matched if k.startswith("ff:") and ("both", k) not in L.hyp
                      and tried[("both", k, "c")] < 2}
             selfc = []
             for c in (0, 1):
