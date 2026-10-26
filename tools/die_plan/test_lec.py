@@ -806,3 +806,38 @@ def test_gold_records_kept_wire_aliases():
     s=lec.gold_script({'VERILOG_FILES':'a.v','DESIGN_NAME':'t'},'/k','verilog',[],'s.v','w.v','f.v','/o/gold')
     assert 'write_json /o/gold.aliases.json' in s
     assert s.index('write_json') < s.index('memory -nomap')
+
+
+def test_matched_rep_can_be_a_proved_constant(tmp_path,monkeypatch):
+    monkeypatch.setattr(lec,'prove',_exact_prove)
+    for bad in (False,True):
+        def zero(m,x):
+            return m.AND(m.AND(x['a'],x['b']),x['a']^1)
+        g,gm=_seq(tmp_path,'rep_gold',['a','b'],['rep','copy','u','out'],
+                  lambda m,x:{'rep':zero(m,x),'copy':zero(m,x),'u':zero(m,x),'out':x['u']})
+        t,tm=_seq(tmp_path,'rep_gate',['a','b'],['rep','copy','out'],
+                  lambda m,x:{'rep':zero(m,x),'copy':zero(m,x),'out':x['a'] if bad else 0})
+        L=lec.Lec(g,gm,t,tm)
+        L.hyp['both','ff:u_dut.copy']=('eq','gold','ff:u_dut.rep',0)
+        L.hyp['gold','ff:u_dut.u']=('eq','gold','ff:u_dut.rep',0)
+        o=tmp_path/('bad' if bad else 'good');o.mkdir()
+        lec.correspond(L,o,1000,[],rounds=2,sim_iters=1,words=1)
+        m,_=L.build(with_compare=True,with_hyp=True)
+        st=_exact_prove(m)
+        assert ('differs' in st.values()) == bad
+        assert L.hyp.get(('both','ff:u_dut.rep'))==('const',0)
+
+
+def test_constant_alias_chain_does_not_waive_a_live_or_cyclic_copy(tmp_path):
+    g,gm=_seq(tmp_path,'aliasconst_gold',['d'],['a','b','live'],
+              lambda m,x:{'a':1,'b':x['a'],'live':x['d']})
+    t,tm=_seq(tmp_path,'aliasconst_gate',['d'],['live'],lambda m,x:{'live':x['d']})
+    L=lec.Lec(g,gm,t,tm)
+    L.hyp['gold','ff:u_dut.a']=('const',1)
+    L.hyp['gold','ff:u_dut.b']=('eq','gold','ff:u_dut.a',0)
+    assert lec.proved_state_constant(L,'gold','ff:u_dut.b')==1
+    L.hyp['gold','ff:u_dut.a']=('eq','gold','ff:u_dut.live',0)
+    assert lec.proved_state_constant(L,'gold','ff:u_dut.b') is None
+    L.hyp['gold','ff:u_dut.a']=('eq','gold','ff:u_dut.b',0)
+    assert lec.proved_state_constant(L,'gold','ff:u_dut.b') is None
+
