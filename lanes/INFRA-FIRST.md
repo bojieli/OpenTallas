@@ -175,3 +175,5 @@ OWNER?: none new (SU-LAT approved). COORD?: CPPR common point for taps on one re
 - (a) UCIe 2.4576 W/PHY = 128 lanes x 32 GT/s x 0.6 pJ/b (infra_pg.py:72). The PHY abstract ot_qkvd_ucie_x64_phy.json says x64 at 16 GT/s and 0.29 pJ/b. pJ/b likely counts both link ends (definition not verified), which would give ~0.31-0.61 W/PHY (4-8x lower); M7-only (45.2 mV) would pass at half power.
 - (b) Core 0.759 W/mm2 = the 09-28 two-die HBM ROM package model (618.55 W/die incl ~268 W hbm_controller_phy_io + 11.2 W HBM idle, 1.0986 GHz), not the post-10-14 QC die. Rough recompute: ~365 W, ~0.45 W/mm2 (below the 0.582 cap).
 - Inputs go to NUMBER-CHECK first; no owner question until it confirms them.
+
+2026-10-26 08:12 PDT CODEX collection: inherited N59 keep synth4110191 DONE throughfloorplan (face5690PASS); nomemLEC FAILphysicalkeeper3616/20855. Detailed CODEX notes CORES-KITS/PATH-QC. No current N59 job left silentlymarkedlive.
