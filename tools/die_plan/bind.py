@@ -1171,6 +1171,15 @@ class Binder:
             sb = buses[ptype[a["src"]["part"]]].get(a["src"]["bus"], {})
             db = buses[ptype[b["dst"]["part"]]].get(b["dst"]["bus"], {})
             L = lat.get(ln["id"], {})
+            # hardware landing cycles of this lane: one ring per physical crossing row, repeated crossings SUM.
+            # They must already be in the latency table (schema.lane_natural clock_landing) so bitcyc / bus_groups /
+            # R8 see the real delay; lane_pad() subtracts them so the receiver delay is never added twice.
+            cl = getattr(self, "clock_landings", None)
+            landing = sum(int(r["added_cycles"]) for r in cl.rows if r["lane"] == ln["id"]) if cl else 0
+            if int(L.get("clock_landing", 0)) != landing:
+                self.errors.append(f"LANE_LANDING_LATENCY {ln['id']}: latency table clock_landing "
+                                   f"{L.get('clock_landing', 0)} != bound landing hardware cycles {landing}"
+                                   + ("" if cl else " (no clock_landing_table bound)"))
             st = sum(f["stations"] for f in ft)
             if L and int(L.get("stations", st)) != st:
                 self.errors.append(f"LANE_LATENCY {ln['id']}: ft slot stations {st} != latency table {L.get('stations')}")
@@ -1178,7 +1187,8 @@ class Binder:
                 id=ln["id"], src=a["src"]["part"], dst=b["dst"]["part"], oname=a["src"]["bus"], iname=b["dst"]["bus"],
                 cap=min(int(x["width"]) for x in hp), sleaf=sb.get("leaf", ""), dleaf=db.get("leaf", ""), ft=ft,
                 hops=[(x["src"]["part"], x["src"]["bus"], x["dst"]["part"], x["dst"]["bus"]) for x in hp],
-                cycles=int(L.get("cycles", 2 + st)), param=L.get("param"), kind=a.get("kind", "data")))
+                cycles=int(L.get("cycles", 2 + st)), clock_landing_cycles=landing,
+                param=L.get("param"), kind=a.get("kind", "data")))
         return by_pair
 
     @staticmethod
@@ -2560,6 +2570,11 @@ class Binder:
         for tn, ps in sorted(self.by_type.items()):
             t = self.types[tn]
             txt, pnames = self.emit_type(tn, ps[0])
+            if getattr(self, "clock_landings", None):
+                try:
+                    txt = self.clock_landings.type_rtl(tn, txt, base=t.get("split_of", tn))
+                except ValueError as exc:
+                    raise BindError(str(exc)) from exc
             self.pnames[tn] = pnames
             f = out / f"{t['module']}.sv"
             f.write_text(txt)
@@ -2569,7 +2584,15 @@ class Binder:
         if self._native_glue is not None:
             files.extend(self._native_glue.files)
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
-        f.write_text(self.emit_top())
+        top_text = self.emit_top()
+        if getattr(self, "clock_landings", None):
+            try:
+                top_text = self.clock_landings.top_rtl(top_text, {tn:t["module"] for tn,t in self.types.items()})
+            except ValueError as exc:
+                raise BindError(str(exc)) from exc
+            (out.parent / "bind_clock_landings.json").write_text(
+                json.dumps(self.clock_landings.manifest(), indent=1) + "\n")
+        f.write_text(top_text)
         files.append(f)
         if P is not None and self._por_spec():
             # PATH-KV-POR 10-25: fail-closed die reset pad gate on the emitted RTL (por_gate.py G1-G4)
@@ -3171,7 +3194,7 @@ class Binder:
         rh = getattr(self, "_reg_hard", None) or {}
         for L in self.links:
             st = L["stages"]
-            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0))
+            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0)) + int(L.get("clock_landing_cycles", 0))
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
                             leaves=_seg_summary(L, F), source_bits=_source_bits(L, F), source_bit_order="lsb_first", forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
@@ -3421,8 +3444,27 @@ def cmd_bind(a):
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
     B.strict_types = bool(getattr(a, "strict", False))
+    if B.ab.get("clock_landing_table"):
+        import clock_landings as CL
+        landing_base = Path(B.base).resolve()
+        landing_path = (landing_base / B.ab["clock_landing_table"]).resolve()
+        try:
+            landing_path.relative_to(landing_base)
+            B._clock_landing_table = json.loads(landing_path.read_text())
+            CL.expand_station_types(B, B._clock_landing_table)
+            B.clock_landings = CL.Landings(raw, B._clock_landing_table)
+            B.extra_lib.extend(str(landing_base / f) for f in
+                               ("rtl/common/ot_meso_fifo.sv", "rtl/common/ot_dp_clk_landing.sv"))
+        except (ValueError, OSError) as exc:
+            raise BindError(f"clock landing: {exc}") from exc
     B.map_cells()
     B.analyse()
+    if getattr(B, "clock_landings", None):
+        import clock_landings as CL
+        try:
+            B.clock_landings.validate_observer(B)
+        except (CL.LandingError, ValueError) as exc:
+            raise BindError(f"clock landing: {exc}") from exc
     B.build_buses()
     B.align_landings()
     B.uniform_inner()
@@ -3999,7 +4041,7 @@ def lane_pad(L):
     """the latency table's pad on a plan lane: table cycles - (2 boundary flops + ft stations), when positive"""
     if L.get("spine") or not L.get("lane") or "cycles" not in L:
         return 0
-    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0)))
+    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0)) - int(L.get("clock_landing_cycles", 0)))
 
 
 def _desc_json(B, d, ci_part=None):

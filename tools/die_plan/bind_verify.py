@@ -135,10 +135,19 @@ def cmd_verify(a):
     F = E.flatten(json.loads(js.read_text()), top)
     errs = []
     vr = dict(VERIFY_RULES)
+    landing_table=None;landing_verify=None
+    if raw['asbuilt'].get('clock_landing_table'):
+        landing_file=(Path(_b.plan_base(a.plan,raw))/raw['asbuilt']['clock_landing_table']).resolve()
+        landing_table=json.loads(landing_file.read_text())
+        vr['transport']=vr['transport']+[dict(module='ot_dp_clk_landing',map={'q':'d'},
+            drop_in=['clk','fclk','rst_n'],drop_out=['ready','fault'],stages=3)]
     vr["clocks"], vr["resets"], vr["map"] = [], [], {}
     G = Graph(F, Rules(vr), errs)
     names = json.loads((out / "bind_names.json").read_text())
     sinks = json.loads((out / "bind_sinks.json").read_text())
+    if landing_table:
+        import clock_landing_verify as CLV
+        landing_verify=CLV.Verification(F,G,raw,landing_table,names)
     clk_top = {}
     for pn, (d, bits) in F.top_ports.items():
         if pn.startswith("clk_"):
@@ -181,7 +190,8 @@ def cmd_verify(a):
             for i, b in enumerate(bits):
                 key = f"{ap}.{pn}[{i}]"
                 want = sinks.get(key)
-                s = G.source(b)
+                original=landing_verify.observer_input(c,pn,i) if landing_verify else None
+                s = G.source(original if original is not None else b)
                 got = gdesc(s)
                 if got[0] in ("undriven", "dropped"):
                     cnt["undriven"] += 1
@@ -222,6 +232,11 @@ def cmd_verify(a):
                     # local START tap start_t<k> = ot_dp_rgate(raw reset, run): its reset leg traces to the die reset
                     # (run is dropped like on every gated tap); START timing is proven by the lockstep tests
                     got = want
+                if landing_verify and want[0]=='clk':
+                    part=c.path.split('.')[0]
+                    regions={sv_id(p):r for p,r in landing_verify.region.items()}
+                    if part in regions and got==['clk','region_'+sv_id(regions[part])]:
+                        got=want  # exact region clock proved against this actual leaf partition
                 ok = want[:3] == got[:3] if want[0] == "pin" else want == got
                 if ok:
                     cnt["matched"] += 1
@@ -248,7 +263,9 @@ def cmd_verify(a):
     else:
         lt = lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0)
     lt["closure_files"], lt["closure_missing"] = len(cl), cl_missing
-    v = dict(top=top, cells=len(F.cells), leaves_missing=len(missing), leaves_missing_examples=missing[:20],
+    landing_result=landing_verify.report() if landing_verify else None
+    if landing_result:errs.extend('CLOCK_LANDING '+e for e in landing_result['errors'])
+    v = dict(clock_landing=landing_result,top=top, cells=len(F.cells), leaves_missing=len(missing), leaves_missing_examples=missing[:20],
              counts=cnt, mismatches=mism[:200], tied_examples=tied_ex, graph_errors=errs[:50], lint=lt,
              asbuilt_proof=rep["proof"], asbuilt_errors=rep["n_errors"])
     ok = (cnt["mismatched"] == 0 and cnt["unbound"] == 0 and cnt["tied"] == 0 and cnt["multiply_driven"] == 0 and

@@ -1252,6 +1252,9 @@
                     }
                   }
                 }
+              },
+              "landing_contract": {
+                "type": "object"
               }
             }
           },
@@ -2612,6 +2615,9 @@
               "exclusiveMinimum": 0
             }
           }
+        },
+        "landing_network": {
+          "type": "object"
         }
       }
     },

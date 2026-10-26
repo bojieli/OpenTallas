@@ -99,7 +99,7 @@ def write_latency(raw, out_dir, inplace_path=None, r8_fold=None):
         a, b = P.ports[ln["ports"][0]], P.ports[ln["ports"][-1]]
         lines.append(f"  localparam int {d['param']} = {d['cycles']};  // {lid}: {a['src']['part']}.{a['src']['bus']}"
                      f" -> {b['dst']['part']}.{b['dst']['bus']} ({d['stations']} st, {d['faces']} faces, "
-                     f"{d['boundary']} boundary, {d['fixed']} fixed" + (f", +{d['pad']} R8 group pad" if d.get("pad") else "")
+                     f"{d['boundary']} boundary, {d['fixed']} fixed" + (f", +{d['clock_landing']} clock landing" if d.get("clock_landing") else "") + (f", +{d['pad']} R8 group pad" if d.get("pad") else "")
                      + (f", +{d['r8_pad']} R8 landing pad" if d.get("r8_pad") else "") + ")")
         if d.get("beats"):      # DEC12 multi-beat lane: the whole word lands beats - 1 cycles after the first beat
             lines.append(f"  localparam int {d['param']}_WORD = {d['cycles'] + d['beats'] - 1};  // {lid}: "

@@ -47,7 +47,8 @@ def annotate(b):
 
 def materialize(b,tn,file):
     typ=b.types[tn];original=typ.get('split_of',tn)
-    if original not in set(b.ab.get('internal_stations_types',[])):return
+    selected=set(b.ab.get('internal_stations_types',[]))
+    if tn not in selected and original not in selected:return
     typ=copy.deepcopy(typ)
     typ['internal_stations']=source_entries(typ,b.ab.get('internal_stations_skip_buses',()))
     if not typ['internal_stations']:return
