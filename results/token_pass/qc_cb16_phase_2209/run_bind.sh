@@ -63,6 +63,13 @@ print('FRESH_PHASE_SUMMARY',profiles['new_type_count'],profiles['logical_added_f
 PY
 python3 tools/die_plan/bind.py bind "$P/die_plan_phase_fresh_2209.json" --asbuilt "$B/asbuilt_phase_final_2209.json" --out "$O/final" --strict > "$O/final.log" 2>&1
 ok "$O/final"
+# Re-read the actual emitted bind ages: a correct overlay needs no further phase repair.
+python3 "$B/cb16_pads.py" --upstream "$O/final" "$R/r8/qwen_compute_r8_landing.json" "$R/dag_final_check.json" > "$O/final_phase_check.log" 2>&1
+python3 - "$R/dag_final_check.json" <<'CHECK'
+import json,sys
+r=json.load(open(sys.argv[1]));assert r['summary']['members']==0,r['summary']
+print('ACTUAL_FINAL_PHASE_FIXED_POINT_PASS',r['summary'])
+CHECK
 python3 tools/die_plan/regen_constants.py --die qwen_compute --bound "$O/final" --src-root . --out-json "$O/constants.json" > "$O/constants.log" 2>&1
 cp "$R/dag_candidate.json" results/rtl/qc_cb16_flow_1713/dag_candidate.json
 bash results/rtl/qc_cb16_flow_1713/run.sh > "$O/class_gate.log" 2>&1
