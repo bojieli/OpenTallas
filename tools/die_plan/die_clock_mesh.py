@@ -835,11 +835,11 @@ def cmd_build(a):
     return 0
 
 
-def pad_delay(corner, libdir, slew=40.0):
-    """BUFx24 stage delay driving the next abutted BUFx24 (smallest table load), ps."""
+def pad_delay(corner, libdir, slew=40.0, cell="BUFx24_ASAP7_75t_R"):
+    """pad-cell stage delay at the smallest table load (default BUFx24 driving the next abutted BUFx24), ps."""
     f = Path(libdir) / f"asap7sc7p5t_INVBUF_RVT_{corner}_nldm_220122.lib.gz"
     txt = gzip.open(f, "rt").read()
-    i = txt.index("cell (BUFx24_ASAP7_75t_R)")
+    i = txt.index(f"cell ({cell})")
     blk = txt[i:txt.index("cell (", i + 10)]
     m = re.search(r"cell_rise \(\w+\) \{\s*index_1 \(\"([^\"]+)\"\);\s*index_2 \(\"([^\"]+)\"\);\s*values \((.*?)\);",
                   blk, re.S)
@@ -868,6 +868,8 @@ def cmd_balance(a):
     nets, ports = data["nets"], [tuple(p) for p in data["ports"]]
     D, _ = read_tree(Path(a.tree) if a.tree else src / f"tree_{a.corner}.txt")
     dl = pad_delay(a.corner, a.libdir)
+    df = pad_delay(a.corner, a.libdir, cell=a.fine_lib) if a.fine_lib else None
+    hist_f = defaultdict(int)
     by_drv = {n["drv"]: n for n in nets}
     memo = {}
 
@@ -901,14 +903,20 @@ def cmd_balance(a):
         for x in n["loads"]:
             v = sub(x) if x in ld else None
             k = int(round((vmax - v) / dl)) if v is not None else 0
-            if k <= 0:
+            kf = 0
+            if v is not None and a.fine_lib:
+                # PATH-KV 10-26 fine step: best (BUFx24 count, fine-pad count <= 3) for the measured lift
+                k, kf = min(((i, j) for i in range(0, int((vmax - v) / dl) + 2) for j in range(4)),
+                            key=lambda ij: (abs(vmax - v - ij[0] * dl - ij[1] * df), ij[1]))
+            if k <= 0 and kf <= 0:
                 loads.append(x)
                 continue
+            hist_f[kf] += 1
             hist[min(k, 50) // 5 * 5] += 1
-            total_pad += k * dl
+            total_pad += k * dl + kf * (df or 0.0)
             cx, cy = cells[x]["x"], cells[x]["y"]
             chain = []
-            for i in range(k):
+            for i in range(k + kf):
                 col, row = i % 16, i // 16
                 for sgn in (-1, 1):
                     q = (cx + BUF_W / 2 + sgn * (col + 1) * (BUF_W + SITE_X * 2), cy + ROW_Y / 2 + 2 * ROW_Y * (row + 1))
@@ -922,6 +930,8 @@ def cmd_balance(a):
                 added += 1
                 cells[nm] = dict(x=snap(q[0] - BUF_W / 2, SITE_X), y=snap(q[1] - ROW_Y / 2, ROW_Y), kind="pad",
                                  level=cells[x].get("level"))
+                if i >= k:
+                    cells[nm]["lib"] = a.fine_lib
                 if reserve_sites:
                     reserve_cell(K, nm, cells[nm])
                 chain.append(nm)
@@ -938,7 +948,9 @@ def cmd_balance(a):
     M["clock_cell_overlaps"] = placement_overlaps(cells)
     M["meta"]["clock_cell_overlap_pairs"] = len(M["clock_cell_overlaps"])
     M["meta"]["balance"] = dict(src=str(src), corner=a.corner, pad_ps=round(dl, 2), pads=added,
-                                total_pad_ns=round(total_pad / 1e3, 2), hist=dict(sorted(hist.items())))
+                                total_pad_ns=round(total_pad / 1e3, 2), hist=dict(sorted(hist.items())),
+                                fine_lib=a.fine_lib, fine_pad_ps=round(df, 2) if df else None,
+                                fine_hist=dict(sorted(hist_f.items())))
     (out / "mesh.json").write_text(json.dumps(M) + "\n")
     (out / "place.json").write_text(json.dumps(cells) + "\n")
     (out / "nets.json").write_text(json.dumps(dict(ports=ports, nets=nets)) + "\n")
@@ -1614,6 +1626,7 @@ def main(argv=None):
     bl.add_argument("--corner", default="TT")
     bl.add_argument("--tree", help="measured tree_<corner>.txt of the same tree (default: DIR's)")
     bl.add_argument("--tag", default="", help="pad name tag (one per balancing pass)")
+    bl.add_argument("--fine-lib", help="fine-step pad master (e.g. BUFx6f_ASAP7_75t_R): <=3 per load after BUFx24 pads")
     bl.add_argument("--libdir", default=str(Path("~/.cache/opentallas/asap7_nldm").expanduser()))
     c = sub.add_parser("combo")
     c.add_argument("dir")
