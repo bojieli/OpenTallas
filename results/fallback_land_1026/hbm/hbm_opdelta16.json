@@ -1,0 +1,37 @@
+{
+ "design": "r25gq",
+ "unit": "FALLBACK.ALL",
+ "group": "FALLBACK.ALL",
+ "measured": 1.0,
+ "price": 1.0,
+ "unit_of_measure": "cycles",
+ "unit_ratio": 1.0,
+ "e2e_loss_pct": 5.686,
+ "binding_workload": "ds_ar",
+ "per_workload": {
+  "ds_ar": {
+   "model": "S2 schedule, fixed cycles added to every record of the op",
+   "base_cycles": 576702.4,
+   "cycles": 611471.4,
+   "added_cycles": 34769.0,
+   "program_records": 4120,
+   "added_cycles_per_record": 16.0,
+   "e2e_loss_pct": 5.686
+  },
+  "qwen_ar": {
+   "model": "S2 schedule, fixed cycles added to every record of the op",
+   "base_cycles": 1269120.1,
+   "cycles": 1285344.1,
+   "added_cycles": 16224.0,
+   "program_records": 46,
+   "added_cycles_per_record": 16.0,
+   "e2e_loss_pct": 1.262
+  }
+ },
+ "within_unit_limit": false,
+ "evidence": "",
+ "evidence_grade": "committed_bench",
+ "date": "2026-10-26",
+ "status": "proposed",
+ "note": ""
+}
