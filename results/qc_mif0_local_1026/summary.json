@@ -1,0 +1,39 @@
+{
+  "status": "FUNCTIONAL_PASS_PHYSICAL_OPEN",
+  "source_commit": "47bf86bc4",
+  "harness_commit": "c4962aeb2",
+  "baseline_commit": "d4347f1bc",
+  "cycles": 20000,
+  "clock_ps": 833,
+  "cycles_added": 0,
+  "observed": {
+    "btab_mismatches": 0,
+    "prog_mismatches": 0,
+    "fault_mismatches": 0,
+    "default_off_mismatches": 0,
+    "nonzero_output_comparisons_btab": 19556,
+    "nonzero_output_comparisons_prog": 19010,
+    "macro0_reads": 3832,
+    "macro0_writes": 5581,
+    "same_row_collisions_btab": 308,
+    "same_row_collisions_prog": 633
+  },
+  "mutants": {
+    "wrong_edge": "REJECT at c13 BTAB consumed readenable row1",
+    "wrong_row": "REJECT at c13 PROG consumed readaddr bank0"
+  },
+  "physical_open": [
+    "No placement/STA/adoption evidence yet",
+    "Commuted decoder can remove original functional face FF; retaining unused originals does not fix the path",
+    "Actual port-to-local FF fanout, face boundary identity, <=405um distribution, all macro F6 pins and half-cycle timing require reviewed native profile",
+    "TT/FF 833ps 60/25 and related-pair <=80ps gates unchanged"
+  ],
+  "run": {
+    "host": "epyc1/localhost",
+    "unit": "oth-ubuntu-440252-1793013004",
+    "memory_gb": 16,
+    "threads": 8,
+    "exit": 0
+  },
+  "initial_failure": "Initial native build rejected -j8; corrected to -j 8; no RTL change."
+}
