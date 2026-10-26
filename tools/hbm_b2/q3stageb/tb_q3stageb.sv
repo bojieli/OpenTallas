@@ -127,6 +127,8 @@ module tb_q3stageb;
     $display("EV WRITE +%0d addr%0d mask%h data%h",cyc-lc,twa,twm,twd);
     for(integer j=0;j<16;j++)if(twm[j])begin words++;if(twa+j!=64 || twd[32*j+:32]!==32'd20)errors++;end
    end
+   if(dut.u_ot_hfd_coll_q3_vm_core.writer_tkw_v || |dut.u_ot_hfd_coll_q3_vm_core.writer_ingress_slot || |dut.u_ot_hfd_coll_q3_vm_core.writer_slot_valid)
+    $display("EV VM_META +%0d tkw%0d ingress%h slot_valid%h slot_owner%h",cyc-lc,dut.u_ot_hfd_coll_q3_vm_core.writer_tkw_v,dut.u_ot_hfd_coll_q3_vm_core.writer_ingress_slot,dut.u_ot_hfd_coll_q3_vm_core.writer_slot_valid,dut.u_ot_hfd_coll_q3_vm_core.writer_slot_owner);
    for(integer b=0;b<8;b++)if(kq[281*b+280])begin
     reg[15:0]sec;reg[7:0]mask_;sec=kq[281*b+264+:16];mask_=kq[281*b+:8];vm_launches++;
     if(sec[2:0]!=3'(b))errors++;
