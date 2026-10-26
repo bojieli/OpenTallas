@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+`ifndef KVD_STMUT
+`define KVD_STMUT 0
+`endif
 // Native35-bit AM interface: exact same AM_G_PIN=0 static core from master M.
 module qkd_astk_ctl_s_g0 #(
     parameter integer Z_STRIDE=4, parameter integer PORT_REGS=0,

@@ -215,7 +215,7 @@ def cmd_verify(a):
                     got = want
                 if want == ["rootpad"]:
                     import reset_tree as RT
-                    ps = RT.pad_spec(__import__("schema").Plan(raw))
+                    ps = RT.pad_spec(__import__("schema").Plan(raw, Path(a.plan)))
                     if ps and got == ["top", ps["port"]]:
                         got = want
                 if want == ["start"] and got == ["rst", "low"]:
