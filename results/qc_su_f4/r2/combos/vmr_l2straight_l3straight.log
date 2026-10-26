@@ -1,0 +1,7 @@
+6 [670, 404, 801, 614, 854, 414] [3, 2, 4, 3, 4, 2] {'T1': 195.48, 'T2': 36.18, 'T3': 12.42} {'mean': 218.58, 'min': 215.3, 'max': 221.47, 'window': 6.17} {'mean': 173.43, 'min': 170.14, 'max': 176.54, 'window': 6.4}
+BEST 6 {'TT': {'mean': 218.58, 'min': 215.3, 'max': 221.47, 'window': 6.17}, 'FF': {'mean': 173.43, 'min': 170.14, 'max': 176.54, 'window': 6.4}}
+vmr_l2straight_l3straight VERDICT PASS {'G2_island_rows': 'PASS', 'G3_node_sites': 'PASS', 'G4_strict': 'PASS'} G4 {'n_edges': 88, 'n_detours': 5, 'n_cells': 6} K {'L1': 2, 'L2': 1, 'L3': 1}
+ T {'T1': 195.48, 'T2': 36.18, 'T3': 12.42} trunk BUFx4_ASAP7_75t_R 1 40.0
+  TT notrunk avg {'mean': 215.09, 'window': 17.65, 'window_incl_sram': 17.65} | pred {'avg': {'mean': 257.2, 'window': 17.65, 'window_incl_sram': 17.65}, 'early': {'mean': 251.19, 'window': 17.12, 'window_incl_sram': 17.12}, 'late': {'mean': 263.21, 'window': 18.18, 'window_incl_sram': 18.18}}
+  FF notrunk avg {'mean': 163.78, 'window': 16.66, 'window_incl_sram': 16.66} | pred {'avg': {'mean': 194.87, 'window': 16.66, 'window_incl_sram': 16.66}, 'early': {'mean': 191.53, 'window': 16.45, 'window_incl_sram': 16.45}, 'late': {'mean': 198.21, 'window': 16.88, 'window_incl_sram': 16.88}}
+ BAND {'TT_mean': 257.2, 'TT_window': 17.65, 'TT_window_incl_sram': 17.65, 'FF_early_mean': 191.53, 'FF_late_mean': 198.21, 'FF_early_window': 16.45, 'in_band_12_3': True, 'with_prog_residual_TT': 240.6}
