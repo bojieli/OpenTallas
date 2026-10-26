@@ -987,9 +987,11 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, entry_engram_inputs=None):
     if entry_norm and not fixtures:
         raise ValueError('--entry-norm-check needs --fixtures (the layer-entry inputs and the reference model checks)')
+    if entry_engram_inputs is not None and not entry_norm:
+        raise ValueError('--entry-engram-inputs requires --entry-norm-check so native entry rows actually consume H')
     if dense_stage is not None and mu_ctx:
         raise ValueError('DENSE2 MU requires the corrected per-position static stage graph binding')
     if svc_owner_epoch is not None and mu_ctx:
@@ -1066,7 +1068,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             raise ValueError(f'line slot reservation does not converge: {clash[:4]}')
         return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
                              mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid,
-                             entry_norm=entry_norm)
+                             entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs)
     prog.line_avoid = {k: sorted(v) for k, v in (line_avoid or {}).items()}
     if entry_norm:
         # TOK-DS-GAPS 10-24 (opt-in; default byte-identical): layer-entry residency of the smoke slice as pre-layer CTL
@@ -1078,13 +1080,13 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         import norm_nx
         if entry_norm == 'all':
             # the 16-slice composition: every slice's norm + entry state + the snake flit words (own + forwards)
-            sub['entry_norm'] = norm_nx.emit_all(die, prog, sub, fixtures, sys.modules[__name__])
+            sub['entry_norm'] = norm_nx.emit_all(die, prog, sub, fixtures, sys.modules[__name__], entry_engram_inputs)
             clash = line_slot_conflicts(die, prog)
             if clash:
                 raise ValueError(f'--entry-norm-check all: line slot collision of the 16-slice norm rows: {clash[:4]}')
         else:
             sub['entry_norm'] = norm_nx.emit(die, prog, sub, fixtures,
-                                             [e['cycle'] for e in prog.events if e['kind'] == 'CTL'])
+                                             [e['cycle'] for e in prog.events if e['kind'] == 'CTL'], entry_engram_inputs)
     files = {}
     for rel, text in prog.files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -1122,7 +1124,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
                                  svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid,
-                                 entry_norm=entry_norm)
+                                 entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1238,6 +1240,8 @@ def main(argv=None):
     ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
     ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
+    ap.add_argument('--entry-engram-inputs', default=None,
+                    help='Checkpoint-derived Engram sidecars for actual attention-entry native rows and NX partials')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
@@ -1261,7 +1265,8 @@ def main(argv=None):
             return
     tree = die_tree(a.die_ref, a.die_src)
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
-                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check)
+                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check,
+                      entry_engram_inputs=a.entry_engram_inputs)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
