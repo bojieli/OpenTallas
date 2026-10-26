@@ -727,7 +727,7 @@ def cmd_combo(a):
           "foreach nm [split [string trim [read $fh]] \"\\n\"] { set n [$blk findNet $nm]; if {$n == \"NULL\"} "
           "{ error \"missing clock net $nm\" }; $n setNonDefaultRule $ndr; $n setSigType CLOCK; incr nn }",
           "close $fh", "puts \"OT_NDR nets=$nn\"",
-          "global_route -congestion_iterations 5 -allow_congestion -verbose -congestion_report_file "
+          "global_route -congestion_iterations 50 -allow_congestion -verbose -congestion_report_file "
           "/out/congestion_$::env(CORNER).rpt",
           "write_guides /out/route_$::env(CORNER).guide",
           "source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl",
