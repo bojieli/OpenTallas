@@ -1,0 +1,29 @@
+{
+ "status": "TRIAL_CTS_ONLY (HBM die gate FAIL: trial builds only, closure order rule 1)",
+ "minimum_miter": "PASS",
+ "mutant": "CAUGHT",
+ "minimum_miter_detail": {
+  "proven": 159947,
+  "unproven": 0
+ },
+ "mutant_detail": "wrong_up_out_bit0 mutant rejected (proof.json; run on the common shell, the terminal shell is emitted by the same face_shell generator around the same canonical core 3118f95a)",
+ "minimum_proof": "results/geom_review/hbm_tkm_noid_1713/proof.json (main; = codex/hbm-physical-1713@4f800e1ed9)",
+ "canonical_file": "rtl/ot_hgi_coll_tkm_tp192_tile_core.sv",
+ "canonical_sha256": "3118f95a2b80427bc24e0bd240bab58369e5572691302ed189838ca387db8c9f",
+ "rtl_sha256": {
+  "rtl/ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+  "rtl/ot_hgi_coll_tkm.sv": "9dd57b88c999570f3c00bc9d6c418da2a0334baed0befded6148a9cb308a1b61",
+  "rtl/ot_hgi_coll_tkm_static.sv": "b0c1cb519892223d69201f72106334407b6a132cc5314be28d24bc32a4444634",
+  "rtl/ot_hgi_coll_tkm_tp192_tile_core.sv": "3118f95a2b80427bc24e0bd240bab58369e5572691302ed189838ca387db8c9f",
+  "rtl/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__fshell.sv": "8a7de5323e495d5423c2e6c1448f662d0579a1c1c6adc8dc3927f8c46755742e",
+  "rtl/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__wrap.sv": "c227993a36d0093c16560dbdf0d1e214c8a4c522bc0cf1e0faa6b3c581274f99"
+ },
+ "netlist_sha256": {
+  "run/results/asap7/hbc_ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap/base/1_synth.v": "2b24ca4d1ca45713d094f89e60caf962b03d677394977a756cc0e9e65aaca855",
+  "run/results/asap7/hbc_ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap/base/1_2_yosys.v": "3c9b66b2d51ba03551526dde9221ce8faa8787b2e74b96e45f0ea77ef96601c3",
+  "run/results/asap7/hbc_ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap/base/1_synth.odb": "0c79b11832131b3a2275925ed367e9f8739a59ecd4d7c62178d6708c76c26b33"
+ },
+ "synthesis_source": "this kit's run/ (run_tkm_kit_synth.sh via ot-run epyc2); kit = physical/die_plan/hbm/tkm_noid_kits/build_kit.py build terminal --clock @6d021fb609",
+ "lec_tool": "tools/die_plan/lec.py at claude/path-hbm-tkmlec2-1025@c5ba1df3a0 (sha256 d9185d4ab312)",
+ "lec_verdict": "EQUIVALENT 18919/18919 (344 RTL-X dont-care, no hints)"
+}
