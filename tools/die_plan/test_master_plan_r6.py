@@ -42,7 +42,9 @@ def test_regional_pass_regular_array_and_commensurate_tree():
 def test_regional_fails_irregular_type_and_off_phase_tree():
     P = _P({"A": (0, 0, 2000, 2000)})
     rows = [("A", f"c{i}", "m", (x, 100.0)) for i, x in enumerate((100.0, 151.84, 380.16, 1001.12, 1400.0))]
-    g = MP.regional_tree_commensurate(P, rows, [])
+    g = MP.regional_tree_commensurate(P, rows, [])               # fed from one point: INFO only
+    assert g["verdict"] == "PASS" and g["regions_irregular_islands"] == 1
+    g = MP.regional_tree_commensurate(P, rows, [("t0", (100.0, 50.0)), ("t1", (700.0, 50.0))])
     assert g["verdict"] == "FAIL" and g["fail_examples"][0]["axes"]["x"]["n_irregular_types"] == 1
     rows = _grid("A", "m", 100, 100, 4, 1, 259.2, 1)
     g = MP.regional_tree_commensurate(P, rows, [("t0", (100.0, 50.0)), ("t1", (100.0 + 77.0, 50.0))])

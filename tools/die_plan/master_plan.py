@@ -427,11 +427,13 @@ def regional_tree_commensurate(P, core_rows, tree_pts, lat=8.64, tol=0.5, need=0
     core_rows : [(part, inst, module, (x, y) die-frame clock-entry island centre)]
     tree_pts  : [(tag, (x, y))] die tree nodes / mesh drivers (die frame)
     Per region and axis:
-      * island lattice: per core type (module) with >= 2 instances in the region, its entry-island lines must have
-        a repeat (smallest translate mapping >= 90 % of the lines onto lines), an integer multiple of `lat`;
-      * region tree lattice: the tree points inside the region; their line offsets must be integer multiples of
-        half the dominant type's repeat (an H-tree arm = k x repeat/2), i.e. every tree point sits at the same
-        phase of the island lattice -> equal sub-trees per leaf (<= 1 tree line: trivially coincident);
+      * island lattice: per core type (module) with >= 2 instances in the region, its entry-island lines and their
+        repeat (smallest translate mapping >= 90 % of the in-array lines onto lines, an integer multiple of `lat`);
+      * region tree lattice: the tree points inside the region.  With >= 2 tree lines on the axis, every type must
+        have a repeat and the line offsets must be integer multiples of half the dominant type's repeat (an H-tree
+        arm = k x repeat/2): every tree point at the same phase of the island lattice -> equal sub-trees per leaf.
+        With <= 1 tree line the region is fed from one point: no lattice to coincide (irregular types reported as
+        INFO, regions_irregular_islands);
     regions join only through landed crossings: the die tree above them and the registered partition face pins
     (counted, not re-verified here)."""
     regions, how = clock_regions(P)
@@ -480,8 +482,14 @@ def regional_tree_commensurate(P, core_rows, tree_pts, lat=8.64, tol=0.5, need=0
             row["axes"][a] = dict(dominant_repeat_um=r3(rep_dom) if rep_dom else rep_dom, irregular_types=irr[:10],
                                   n_irregular_types=len(irr), tree_lines=len(tl), tree_coincides=tree_ok,
                                   tree_off_phase_um=off[:10])
+            # coincidence is a property of a region tree LATTICE: with >= 2 tree lines on the axis the dominant
+            # type must have a repeat and every tree line must sit on its half-repeat phase; with <= 1 line the
+            # region is fed from one point and there is no lattice to coincide (irregular types = INFO, listed)
             if irr:
-                row["issues"].append(f"{a}: {len(irr)} type(s) without an island repeat")
+                row.setdefault("info", []).append(f"{a}: {len(irr)} type(s) without an island repeat")
+                if len(tl) >= 2:
+                    row["issues"].append(f"{a}: {len(irr)} type(s) without an island repeat under a {len(tl)}-line "
+                                         f"region tree")
             if not tree_ok:
                 row["issues"].append(f"{a}: tree lines not on the island lattice phase")
         row["verdict"] = "FAIL" if row["issues"] else "PASS"
@@ -500,6 +508,9 @@ def regional_tree_commensurate(P, core_rows, tree_pts, lat=8.64, tol=0.5, need=0
                 fail_examples=[{k: v for k, v in r.items()} for r in fails[:40]],
                 fail_by_type=dict(sorted(Counter(P.parts[r["region"]]["type"] for r in fails
                                                  if r["region"] in P.parts).items())),
+                regions_irregular_islands=sum(1 for r in rows if r.get("info")),
+                irregular_islands_by_type=dict(sorted(Counter(P.parts[r["region"]]["type"] for r in rows
+                                                              if r.get("info") and r["region"] in P.parts).items())),
                 inter_region_lanes=xing,
                 rule="COORD 13:05 RULING HBM-B1E (1) / 12.2a1 per region: within each clock region the region tree "
                      "lattice coincides with that region's per-type island lattice; regions join only through landed "
