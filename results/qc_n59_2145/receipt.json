@@ -1,0 +1,9 @@
+{
+ "scope": "native59 synthesis replica retention; no timing or route verdict",
+ "source_base": "91018022e6",
+ "clock_cycles_added": 0,
+ "cause": "keep on RTL wires preserves aliases but does not prevent opt_merge merging their driving flops",
+ "old_full_kit": {"verdict":"KEEP FAIL","compare_points":61795,"proved":59629,"differs":2166,"undecided":0,"kept_declared":19407,"kept_in_netlist":15841,"kept_missing":3566},
+ "minimal_probe": {"plain_physical_flops":4,"kept_driver_physical_flops":8,"nominal_four_edge_miter":"PASS","flipped_output_mutant":"CAUGHT"},
+ "full_synth": "RUNNING; epyc1 alias localhost:/srv/opentallas-scratch2/claude/codex-n59-2145/kit"
+}
