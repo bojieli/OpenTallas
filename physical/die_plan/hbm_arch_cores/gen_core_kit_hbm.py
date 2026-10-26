@@ -404,6 +404,46 @@ def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=
     return "\n".join(txt), rep
 
 
+
+def prects_phase_hooks(kd, cfg, clocks, insertion_ps):
+    """Opt-in ideal LOCAL network estimate, removed before any CTS builder.
+
+    Same stage-only convention as gen_phys.clock_phase_tcl. Never write this
+    estimate to the SDC: port network latency can survive propagated timing.
+    Preserve generated override guards and any existing stage hook.
+    """
+    if not clocks or insertion_ps < 0:
+        raise ValueError("pre-CTS estimate needs clock ports and nonnegative insertion")
+    def effective(name):
+        value, forced = None, False
+        for line in cfg:
+            m = re.match(r"^(override\s+)?export\s+" + name + r"\s*=\s*(.*?)\s*$", line)
+            if m and (m[1] or not forced):
+                value = m[2]
+                forced = bool(m[1])
+        if value and any(c in value for c in "$\n\r{}"):
+            raise ValueError("pre-CTS stage hook must be a literal Tcl path")
+        return value
+    before_floorplan = effective("PRE_FLOORPLAN_TCL")
+    before_cts = effective("PRE_CTS_TCL")
+    ports = " ".join(clocks)
+    estimate = "# Stage-only LOCAL network estimate; golden SDC is unchanged.\n"
+    if before_floorplan:
+        estimate += "source {" + before_floorplan + "}\n"
+    estimate += f"set_clock_latency -clock clk {insertion_ps:.4f} [get_ports {{{ports}}}]\n"
+    clear = "# Clear LOCAL network estimate BEFORE the CTS builder or multiport guard.\n"
+    clear += f"unset_clock_latency -clock clk [get_ports {{{ports}}}]\n"
+    if before_cts:
+        clear += "source {" + before_cts + "}\n"
+    (kd / "prects_estimate.tcl").write_text(estimate)
+    (kd / "core_pre_cts.tcl").write_text(clear)
+    cfg += ["override export PRE_FLOORPLAN_TCL = /work/prects_estimate.tcl",
+            "override export PRE_CTS_TCL = /work/core_pre_cts.tcl"]
+    return dict(insertion_ps=insertion_ps, ports=clocks, scope="ideal pre-CTS placement only",
+                clear_before_cts=True, previous_floorplan_hook=before_floorplan,
+                previous_cts_hook=before_cts, sdc_changed=False)
+
+
 def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--views", required=True)
@@ -442,6 +482,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "(port -> CTS trunk -> density taps of <= --clock-tap-sinks sinks within --clock-tap-dmax um -> "
                          "local CTS trees; macro clock pin on its interface-register tap; POST_CTS tap alignment). "
                          "off = single-root TritonCTS (unchanged)")
+    ap.add_argument("--prects-estimate", action="store_true",
+                    help="stage-only planned local clock NETWORK insertion before placement; explicitly cleared before CTS; SDC unchanged")
     ap.add_argument("--clock-tap-sinks", type=int, default=1250)
     # HBM-KITS 2026-10-25: the FLOW 10-25 shared defaults (main tools/die_plan/gen_phys.py) for HBM core kits:
     # F2 = ASAP7 per-layer RC calibrated to routed RCX (tools/die_plan/setRC_rcx_asap7.tcl as LAYER_PARASITICS_FILE /
@@ -940,6 +982,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         if source_profile:
             source_profile["clock_stage"] = "HOLD_CTS: common-domain multi-port stage required"
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
+    if a.prects_estimate:
+        flow["prects_estimate"] = prects_phase_hooks(kd, cfg, clks, ins)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
