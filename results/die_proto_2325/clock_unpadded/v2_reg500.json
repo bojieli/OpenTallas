@@ -1,0 +1,46 @@
+{
+ "meta": {
+  "leaf_um": 500.0,
+  "split_window": 0.0,
+  "aware_levels": 0,
+  "cells": 63119,
+  "wire_um": 4695610.2,
+  "last_mile_pad_um": [
+   469.57,
+   312.14
+  ],
+  "padding_um": 883.6,
+  "balance": [
+   {
+    "iter": 0,
+    "tap_skew_ps": {
+     "TT": 1100.25,
+     "FF": 938.62
+    },
+    "pads": 0,
+    "pad_um": 0,
+    "stages": 0
+   }
+  ],
+  "ndr": "4W R/4 C*1.3; 8W R/8 C*1.6 on trunk + levels 1-6",
+  "plan_sha256": "2dd204af1806511cf46ef1179fc3199017cebba6ed843ec299403b490ddf6a20"
+ },
+ "corners": {
+  "TT": {
+   "insertion_min_ps": 4907.7,
+   "insertion_max_ps": 6007.95,
+   "tap_skew_ps": 1100.25,
+   "tap_slew_max_ps": 59.54,
+   "seam_max": 440.42,
+   "intra_max": 921.67
+  },
+  "FF": {
+   "insertion_min_ps": 3887.97,
+   "insertion_max_ps": 4826.59,
+   "tap_skew_ps": 938.62,
+   "tap_slew_max_ps": 54.85,
+   "seam_max": 378.65,
+   "intra_max": 773.2
+  }
+ }
+}
