@@ -53,5 +53,16 @@
     "per-type placement and routed timing not run",
     "compiled host/HBC slots and actual controller source composition still required",
     "physical straps/weight images must consume row map at bind"
-  ]
+  ],
+  "xstore_stage_load": {
+    "status": "PASS",
+    "native_pairs": 16538,
+    "positions": 2,
+    "stage_load": "80 consecutive1024-bit words",
+    "reference_load": "160 consecutive512-bit words",
+    "stream": "GO+5 unchanged",
+    "mutant_differences": 16538,
+    "extra_public_stream_cycles": 0,
+    "physical_storage": "unmapped; no timing/area claim"
+  }
 }

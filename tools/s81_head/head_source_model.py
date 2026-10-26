@@ -45,7 +45,7 @@ def model(plan_path):
         parts=rows,
         xstore=dict(provider='rtl/dsrom_sys/s81_head/ot_s81hd_xstore_replay.sv',
                     role='concrete ctl subcomponent; no host decode or whole-ctl provider',
-                    payload_bits=81920,stage_load_words=160,stage_word_bits=512,
+                    payload_bits=81920,stage_load_words=160,stage_word_bits=512, stage_ring_load_bits=1024, stage_ring_load_words=80,
                     banks=[dict(name='A',rows=256,bits=256),dict(name='B',rows=64,bits=256)],
                     local_load_layout='A consecutive low256/high256 halves, then B; explicit candidate ABI',
                     output='xa=A[m%256],xb=B[m%64] at G+5+m',
@@ -56,7 +56,7 @@ def model(plan_path):
                     fullhead_issue_authority='unresolved; consume compiled native/head START contract'),
         blockers=[
           'hd_ctl: real stage/context admission, x command origin, rank-argmax merge/token formation missing; xstore now implemented separately',
-          'hd_mesh: historical real HSF0 BEST has81 live bits including user10+position21, so64-bit lane needs explicit multi-beat framing; safe8_ntf rx515 includes channel-board bit while plan carries514',
+          'hd_mesh: historical real HSF0 BEST has81 live bits including user10+position21, so64-bit lane needs explicit multi-beat framing; safe8_ntf rx515 is locally constructed from coll514 plus endpoint rxv; chb is a separate strap, so no extra die data bit is required',
           'hd_host: real dsdv_hostb_stage_hbc1104-bit ring/context/status interface is not a drop-in276-bit endpoint; 553-bit record needs explicit N3 codec or279-bit N2 lane',
           'hd_lep0N: provider named dsdv_slice_lepw_mu.LP is nested historical source; exact current source extraction and input contracts required',
           'tile position mapping available in head_row_map.py; physical mask masters and weight images must consume it at bind',

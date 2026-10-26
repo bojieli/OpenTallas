@@ -570,6 +570,8 @@
     "payload_bits": 81920,
     "stage_load_words": 160,
     "stage_word_bits": 512,
+    "stage_ring_load_bits": 1024,
+    "stage_ring_load_words": 80,
     "banks": [
       {
         "name": "A",
@@ -594,7 +596,7 @@
   },
   "blockers": [
     "hd_ctl: real stage/context admission, x command origin, rank-argmax merge/token formation missing; xstore now implemented separately",
-    "hd_mesh: historical real HSF0 BEST has81 live bits including user10+position21, so64-bit lane needs explicit multi-beat framing; safe8_ntf rx515 includes channel-board bit while plan carries514",
+    "hd_mesh: historical real HSF0 BEST has81 live bits including user10+position21, so64-bit lane needs explicit multi-beat framing; safe8_ntf rx515 is locally constructed from coll514 plus endpoint rxv; chb is a separate strap, so no extra die data bit is required",
     "hd_host: real dsdv_hostb_stage_hbc1104-bit ring/context/status interface is not a drop-in276-bit endpoint; 553-bit record needs explicit N3 codec or279-bit N2 lane",
     "hd_lep0N: provider named dsdv_slice_lepw_mu.LP is nested historical source; exact current source extraction and input contracts required",
     "tile position mapping available in head_row_map.py; physical mask masters and weight images must consume it at bind",
