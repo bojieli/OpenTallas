@@ -751,7 +751,7 @@ def main():
         astk_storage_enable.apply_kit(kd / "rtl")
         exp = astk_storage_enable.replica_expect(json.loads((kd / "replica_expect.json").read_text()))
         (kd / "replica_expect.json").write_text(json.dumps(exp, indent=1) + "\n")
-        (kd / "astk_storage_enable_delta.json").write_text(json.dumps(dict(added_cycles=0, control_ff_added=256, row_modules=64, ff_per_row=4, sd_bits_per_enable=32), indent=1) + "\n")
+        (kd / "astk_storage_enable_delta.json").write_text(json.dumps(dict(added_cycles=0, control_ff_added=256, static_id_ff_removed=2, net_master_ff_added=254, net_die_ff_added=1016, row_modules=64, ff_per_row=4, sd_bits_per_enable=32), indent=1) + "\n")
     if a.astk_strap_master:
         src = kd / "rtl" / f"{mod}.sv"
         (kd / "rtl" / f"{astk_strap_master.MASTER}.sv").write_text(astk_strap_master.transform(src.read_text(), mod))
@@ -764,8 +764,8 @@ def main():
         (kd / "astk_strap_delta.json").write_text(json.dumps(dict(
             rule="OWNER option B, COORD 2026-10-25 07:01", master=astk_strap_master.MASTER, from_corner=corner_mod,
             strap_port=astk_strap_master.STRAP, values=astk_strap_master.CORNER_STRAP,
-            bound=["ctl st", "zn_1..3 zc[1:0]"], landing="one kept 2-b register (strap_q)", sdc="set_false_path -from [get_ports strap_*]",
-            added_cycles=0, settle="+1 edge after power-up (quasi-static)"), indent=1) + "\n")
+            bound=["ctl st", "zn_1..3 zc[1:0]"], landing="direct static strap alias; no boundary FF (METH 1.8 owner B)", sdc="set_false_path -from [get_ports strap_*]",
+            added_cycles=0, settle="static before reset/clock start (all four IDs full-master miter PASS)"), indent=1) + "\n")
     if a.ectlk_face_ports:
         if mod != "qkd_ectlk":
             raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
@@ -1055,6 +1055,12 @@ def main():
         cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM, face_taps=a.astk_face_taps)
     elif a.astk_face_taps:
         raise SystemExit("--astk-face-taps needs --astk-zone-fences")
+    if a.astk_storage_enable:
+        if not a.astk_zone_fences:
+            raise SystemExit("--astk-storage-enable physical trial needs --astk-zone-fences")
+        shutil.copyfile(HERE / "astk_face_output_inverters.tcl", kd / "astk_face_output_inverters.tcl")
+        with (kd / "zone_pre_dpl.tcl").open("a") as hook:
+            hook.write("source /work/astk_face_output_inverters.tcl\n")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),

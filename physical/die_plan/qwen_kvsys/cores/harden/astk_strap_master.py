@@ -5,8 +5,8 @@ bindings of the corner (side E/W, half N/S):
     ctl  .st(2'b{E}{N})              -> st_q, base slot of the corner
     zn_k .zc(4'b{k}{E}{N}), k = 1..3 -> zc_q[1:0] = S, zc_q[3:2] = L (zn_0 = qkd_astk_zn_head_p has no zc)
 EN = 2'b11, ES = 2'b10, WN = 2'b01, WS = 2'b00.  The master takes them from one ID strap input `strap_corner[1:0]`
-(tied TIEHI/TIELO at the parent), lands it in one kept 2-b register (the guard's pin register; false path from the
-port, quasi-static: +1 settle edge after power-up, before reset release) and binds st / zc[1:0] to that register.
+(tied TIEHI/TIELO at the parent) and binds st / zc[1:0] directly. IDs are static before reset/clock start;
+METHODOLOGY 1.8 owner option B forbids a boundary register on quasi-static inputs.
 The block works for every strap value (no case analysis).  Everything else is the corner kit (face ports, timing regs,
 rep-split, am g drop) unchanged.
 """
@@ -46,9 +46,8 @@ def transform(text, mod, mut=None):
     if text.count(anchor) != 1:
         raise SystemExit("strap master: wrapper body anchor not found")
     text = text.replace(anchor, (
-        f"    // ID strap landing (quasi-static, false path from the port): one kept register for the 5 leaf bindings\n"
-        f"    (* keep *) reg [1:0] strap_q;\n"
-        f"    always @(posedge ck) strap_q <= {STRAP};\n") + anchor, 1)
+        f"    // Static ID strap: settled before reset and clock start; no boundary landing FF.\n"
+        f"    wire [1:0] strap_q = {STRAP};\n") + anchor, 1)
     return text
 
 

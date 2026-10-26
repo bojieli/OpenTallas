@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "cases": [
+  "CORE MITER kv3_astk PASS mismatches=0 dropped_bit_nonzero=0 edges=19993 dropped_port_changes=0\nSTATIC_STRAP id=0 RAW_RESET_DIFF=0\n- tb.sv:44: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 20us; walltime 0.520 s; speed 38.466 us/s\n- Verilator: cpu 0.519 s on 1 threads; allocated 8 MB\n",
+  "CORE MITER kv3_astk PASS mismatches=0 dropped_bit_nonzero=0 edges=19993 dropped_port_changes=0\nSTATIC_STRAP id=1 RAW_RESET_DIFF=0\n- tb.sv:44: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 20us; walltime 0.519 s; speed 38.504 us/s\n- Verilator: cpu 0.519 s on 1 threads; allocated 8 MB\n",
+  "CORE MITER kv3_astk PASS mismatches=0 dropped_bit_nonzero=0 edges=19993 dropped_port_changes=0\nSTATIC_STRAP id=2 RAW_RESET_DIFF=0\n- tb.sv:44: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 20us; walltime 0.520 s; speed 38.446 us/s\n- Verilator: cpu 0.520 s on 1 threads; allocated 8 MB\n",
+  "CORE MITER kv3_astk PASS mismatches=0 dropped_bit_nonzero=0 edges=19993 dropped_port_changes=0\nSTATIC_STRAP id=3 RAW_RESET_DIFF=0\n- tb.sv:44: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 20us; walltime 0.523 s; speed 38.211 us/s\n- Verilator: cpu 0.523 s on 1 threads; allocated 8 MB\n"
+ ],
+ "contract": "IDs static before reset; raw-reset differences reported separately"
+}
