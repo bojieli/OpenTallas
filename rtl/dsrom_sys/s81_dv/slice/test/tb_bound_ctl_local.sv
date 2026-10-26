@@ -3,13 +3,13 @@
 // V pin -> real ring-stop delivery -> selected XRT -> real ring-stop line output.
 module tb_bound_ctl_local #(parameter integer HB=0);
   reg clk=0; always #0.4165 clk=~clk;
-  reg rst_n=0; reg [3:0] sid=0; reg [275:0] vi=0;
+  reg rst_n=0; reg [3:0] sid=0; reg [275:0] vi=0;reg[1103:0] riw=0,rie=0;
   wire [1103:0] re, rw, de, dw; wire [275:0] dv;
   wire ev,wv,vv; wire [1075:0] cb; wire [2:0] cd;
   wire rf,xf;
   wire [4:0] cv,swv; wire [159:0] cmd; wire [49:0] swa; wire [39:0] swm; wire [1279:0] swd;
   wire cfgv,isv,xgo;wire[159:0]cfgd,isd;wire[31:0]eps;
-  `OT_RING_MASTER rs(.clk(clk),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),
+  `OT_RING_MASTER rs(.clk(clk),.rst_n(rst_n),.sid(sid),.ri_w(riw),.ri_e(rie),
     .ro_e(re),.ro_w(rw),.vi(vi),.vo(),.xf_v(5'd0),.xf_s(5'd0),.xf(1380'd0),
     .nx_wi(),.nx_ei(),.nx_eo(173'd0),.nx_wo(173'd0),.g_v(),.g_fam(),.g_idx(),.g_d(),
     .dl_ev(ev),.dl_e(de),.dl_wv(wv),.dl_w(dw),.dl_vv(vv),.dl_vb(dv),
@@ -60,7 +60,39 @@ module tb_bound_ctl_local #(parameter integer HB=0);
         end
       end
     end
-    $display("BOUND_LOCAL hb=%0d jobs=192 checks=%0d age=%0d errors=%0d",HB,checks,expected_age,errors);
+    for(s=0;s<16;s=s+1) begin
+      sid=s;repeat(5) @(negedge clk);
+      for(j=0;j<12;j=j+1) begin
+        word_=276'd0;word_[0]=1;word_[8:4]=19;word_[12:9]=13;
+        word_[21+:16]=16'hffff;word_[37+:5]=j/2;word_[42+:5]=5'b10101;
+        word_[47+:160]={32'h12345678+s,32'h76543210+j,32'hdeadbeef,64'h0807060504030201};
+        if(j/2==4)word_[47+:160]=0;
+        if(j%2==0)riw={828'd0,word_};else rie={828'd0,word_};
+        ee=0;ew=0;if(j%2==0)begin ee={828'd0,word_};ee[8:4]=18;end
+        else begin ew={828'd0,word_};ew[8:4]=18;end
+        for(k=1;k<=11;k=k+1)begin
+          @(posedge clk);#0.00001;checks=checks+2;
+          if(re!==(k==2?ee:1104'd0) || rw!==(k==2?ew:1104'd0)) begin errors=errors+1;if(errors<5)$display("LINE_BAD forwarding sid=%0d j=%0d edge=%0d",s,j,k);end
+          if(ev!==(k==2 && j%2==0) || wv!==(k==2 && j%2==1) || vv!==1'b0)errors=errors+1;
+          if(ev && de!=={828'd0,word_})errors=errors+1;
+          if(wv && dw!=={828'd0,word_})errors=errors+1;
+          if(cb[0]!==1'b0)errors=errors+1;
+          if(cv!==((k==5 && j/2==0)?5'b10101:5'd0))errors=errors+1;
+          if((|cv) && cmd!==word_[47+:160])errors=errors+1;
+          if(swv!==((k==5 && j/2==5)?5'b10101:5'd0))errors=errors+1;
+          for(n=0;n<5;n=n+1)if(swv[n])begin
+            if(swa[10*n+:10]!==word_[47+:10] || swm[8*n+:8]!=={4'd0,word_[57+:4]} || swd[256*n+:256]!=={128'd0,word_[61+:128]})errors=errors+1;
+          end
+          if(cfgv!==(k==5 && j/2==3) || isv!==(k==5 && j/2==2) || xgo!==(k==5 && j/2==1))errors=errors+1;
+          if(cfgv && cfgd!==word_[47+:160])errors=errors+1;
+          if(isv && isd!==word_[47+:160])errors=errors+1;
+          if(xgo && eps!==word_[47+:32])errors=errors+1;
+          if(rf!==1'b0 || xf!==1'b0)errors=errors+1;
+          @(negedge clk);riw=0;rie=0;
+        end
+      end
+    end
+    $display("BOUND_LOCAL hb=%0d jobs=384 checks=%0d age=%0d errors=%0d",HB,checks,expected_age,errors);
     if(errors==0)$display("PASS");else $display("FAIL");$finish;
   end
 endmodule
