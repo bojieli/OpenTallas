@@ -24,7 +24,7 @@ cfg=[x for x in cfg if not any(x.startswith('export '+k+' =') for k in replace)]
 cfg+=apply(a.out,b,'hd_elemB_l4_native_DIAGNOSTIC',hold_ff_margin=5,grt_pre_extra=['/work/grt_clock_protect.tcl'])
 cfg+=['export SKIP_INCREMENTAL_REPAIR = 0','export CORNER = BC','export CORNERS = bc','export HOLD_SLACK_MARGIN = 5']
 (a.out/'config.mk').write_text('\n'.join(cfg)+'\n')
-(a.out/'grt_clock_protect.tcl').write_text('set_dont_touch [get_nets -of_objects [get_ports clk]]\n')
+(a.out/'grt_clock_protect.tcl').write_text('set_dont_touch [get_nets clk]\n')
 (a.out/'DIAGNOSTIC_SCOPE.txt').write_text(basis+'\nTT setup / FF hold,833ps,60/25ps uncertainty, pair80. No DRT or SIGNED. Intrinsic network means521.36TT/419.29FF differ from absolute insertion by source-120.\n')
 # do-grt avoids make prerequisites; only the reviewed4_cts checkpoint is consumed.
 (a.out/'run_grt_trial.sh').write_text(r'''#!/bin/bash
