@@ -1,0 +1,51 @@
+{
+   "creator": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+   "invocation": "stat -json ",
+   "modules": {
+      "\\ot_dp_clk_landing": {
+         "num_wires":         2347,
+         "num_wire_bits":     9915,
+         "num_pub_wires":     68,
+         "num_pub_wire_bits": 4047,
+         "num_ports":         7,
+         "num_port_bits":     1047,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         8720,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 2136,
+            "$_DFF_N_": 5,
+            "$_DFF_P_": 2703,
+            "$_MUX_": 2225,
+            "$_NOT_": 25,
+            "$_OR_": 1609,
+            "$_XOR_": 17
+         }
+      }
+   },
+      "design": {
+         "num_wires":         2347,
+         "num_wire_bits":     9915,
+         "num_pub_wires":     68,
+         "num_pub_wire_bits": 4047,
+         "num_ports":         7,
+         "num_port_bits":     1047,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         8720,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 2136,
+            "$_DFF_N_": 5,
+            "$_DFF_P_": 2703,
+            "$_MUX_": 2225,
+            "$_NOT_": 25,
+            "$_OR_": 1609,
+            "$_XOR_": 17
+         }
+      }
+}
+
