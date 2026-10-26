@@ -936,8 +936,11 @@ def cmd_report(a):
         for line in open(d / f"taps_{corner}.txt"):
             f = line.split()
             arr[f[1]] = (float(f[2]), float(f[3]), float(f[4]))   # T port late early slew
-        late = {p: v[0] for p, v in arr.items()}
-        early = {p: v[1] for p, v in arr.items()}
+        # opt-in (die_infra.py trim, COORD 10-26 "the die absorbs residuals"): tap_offsets.json = each tap's tile
+        # insertion minus plan (ps); the flops see tap arrival + offset.  No file = unchanged.
+        toff = json.loads((d / "tap_offsets.json").read_text()) if (d / "tap_offsets.json").exists() else {}
+        late = {p: v[0] + toff.get(p, 0.0) for p, v in arr.items()}
+        early = {p: v[1] + toff.get(p, 0.0) for p, v in arr.items()}
         slew = {p: v[2] for p, v in arr.items()}
 
         def dmg(pa, pb):
