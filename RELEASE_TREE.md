@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-25 23:33 PDT by CLAUDE RELEASE-TREE lane)
 
-Snapshot: 2026-10-25 23:33 PDT · main 877cfdeb28 (hub epyc1) · FROZEN: QC plan@54a1aeb5 (441d1401 + batch 1), S81-HEAD plan@d7b8d1eb · no die has die STA on real views · flow tag flow-20261025-b not cut.
+Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot canary-gate fix) · FROZEN: QC plan@54a1aeb5 (441d1401 + batch 1), S81-HEAD plan@d7b8d1eb · no die has die STA on real views · flow tag flow-20261025-b not cut.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
