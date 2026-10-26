@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4.1, 2026-10-26 ~08:0x; v4 ~07:3x; v3 ~07:0x; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4.2, 2026-10-26 ~08:1x; v4.1 ~08:0x; v4 ~07:3x; v3 ~07:0x; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -300,6 +300,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 ~07:0x OWNER: master plan first (city-planning model, 12.7) on all dies; leftover M8/M9 stays free for the router, entry via planned M7 pins = CURRENT.
   - 10-26 ~07:3x OWNER: root-cause clock structure, no tweaks (12.8): plan-defined centre clock entry + structured core trees; early taps, stub trims, clock ECOs, mesh-node CPPR credit banned as closure means = CURRENT.
   - 10-26 ~08:0x OWNER: 12.8 d1 plan-computed per-tap sizing before build ALLOWED (post-measurement values banned); core split = last resort after internal H-tree = CURRENT.
+  - 10-26 ~08:1x OWNER: 12.9 execution rules (one owner per die clock/plan, QC critical path, rule freeze, predict-before-build, per-die flow releases, independent number check) = CURRENT.
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 ~07:0x, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
@@ -345,3 +346,17 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   e. A measured failure goes back to the structure (plan or core architecture), recorded with its root cause before any rebuild.
   f. Existing results obtained with the banned means (QC early-tap 154/143, any stub-trimmed mesh result incl. KV c3t 63.95/54.71) are
      re-measured on the 12.8 structure with the 12.4b gate number before they count.
+
+- 12.9 EXECUTION RULES (OWNER 2026-10-26 ~08:1x, "yes, go with them").
+  a. ONE OWNER per die clock and ONE per die plan (table lanes/OWNERS-DIE.md); no other lane edits that die's clock/plan; shared tools have one
+     tool owner each (die_clock_mesh.py = CLOCK-128; master-plan mode = MASTER-PLAN; pg/clock/reset modes of die_infra.py = INFRA-FIRST).
+  b. QC = critical path, end to end: 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> die GRT0 -> skew gate -> die STA (real
+     views). Other dies follow the same template without pulling QC resources.
+  c. RULE FREEZE: section 12 changes only when a MEASURED failure shows a rule is wrong (cite the run), recorded with an OWNER decision; never
+     mid-flight on coordinator initiative.
+  d. PREDICT BEFORE BUILD: the master-plan gate includes a plan-level analytic model of clock insertion/skew and path reach so a FAIL appears in
+     minutes, before CTS/GRT.
+  e. PER-DIE FLOW RELEASES: a flow tag is released per die when that die's canaries are NO-REGRESSION; route holds lift per die. A die whose
+     canary is pending keeps the previous tag.
+  f. INDEPENDENT NUMBER CHECK: every gate number reported to the owner as PASS/FAIL (skew, GRT overflow, IR, STA WNS, sign-off counts) is
+     recomputed from run artifacts by the NUMBER-CHECK reviewer before it is reported; unchecked numbers are labelled UNCHECKED.
