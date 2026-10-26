@@ -1049,3 +1049,4 @@ CODEX: 2026-10-26 02:40 PDT TOK-DS real closing service fixed: codex/svc-fix-102
 CODEX: 2026-10-26 02:41 PDT actual QC landing source95840d0c0e/evidencee55b4744ef READY;6phases×1144streamchecks+resetPASS/mutantCAUGHT,265genericFF retained. +3cycles/hop,439crossings/99cohorts/1.01MliveFF ledger toQC+TOK; physical/calendar gatesopen.
 
 CODEX: 2026-10-26 02:48 PDT HBM relay-cell wall fix: q_b10010slots/12849FF/max348.57um andq_b1106slots/3153FF/max333.18um geometryPASS, unchangedoutlines/facepins,0halo/FFcollisions. Sourcecodex/hbm-plan-1026; +1L70/L100/L48/L53+mirrors. AuxiliaryrebuildLIVE; noP&R/GRT; SU21/30/31/10 structuralcellcapacityrepairscontinue.
+CODEX: 2026-10-26 02:48 PDT TOK-HBM collected completed SU/SFU composite strap proofs (SFU READY a5db08f2af), priced actual SU31nonzero calendarcost in proposed ledger b1183e7516, found/fixed programmableFS capturedate gap; samebinary candidate+mutants deferred behind active r3 compile.
