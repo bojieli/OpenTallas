@@ -1,4 +1,7 @@
 # HEAD-CORE-LAT 10-26: core clock-latency target pad (POST_CTS hook, before any repair).
+# BANNED under METHODOLOGY 12.8 (owner 10-26 ~07:3x): no per-core pad / clock ECO. Kept only as a record of the v1 idea;
+# the only allowed equivalent is a plan-designed fixed trunk at the entry, same cell chain per type (12.8c), in the kit, not a post-CTS hook.
+if {1} { error "core_root_pad.tcl is banned by METHODOLOGY 12.8" }
 # Owner: common per-die clock-latency target at the core clk pin.  The faster core type gets a delay chain between its
 # clk port and the CTS root, i.e. on the path COMMON to every sink of the core (intra-core skew unchanged), placed next
 # to the clk pin on the infra-island edge.  N stages are chosen from the measured intrinsic insertion of the trial
