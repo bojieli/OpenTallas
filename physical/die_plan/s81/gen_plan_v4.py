@@ -2630,6 +2630,9 @@ def emit(parts, lanes, routes, chans, fmap, out):
                     # DEC12 (COORD 22:35): hops / stations <= 405 um exactly -- no extra 0.9 G0C reach margin
                     "reach_margin": 1.0, "ft_station_max_um": FT_STATION_MAX},
     }
+    # Bare HBM PHY controls are the native LEF terminals, not a synthetic grid point.
+    from physical.die_plan.s81.apply_phy_control_pins import apply as project_phy_controls
+    STATS_V4["phy_control_pins"] = project_phy_controls(plan, Path(__file__).resolve().parents[3])
     STATS_V4["macrofree_ft_reach"] = macrofree_ft_reach(plan)
     from tools.die_plan.ft_reach import resize
     STATS_V4["corefull_ft_reach"] = resize(plan, reach_um=min(FT_STATION_MAX, FT_KIT_REACH_UM), margin=.98,
