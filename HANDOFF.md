@@ -1014,3 +1014,4 @@ CODEX: 2026-10-26 02:09 PDT takeover all lanes active; authoritative hub bd41cae
 CODEX: 2026-10-26 02:10 PDT FLOW canary staging READY99154991a hub codex/flow-1026; actual ot-run spill/copyback epyc2 PASS. Collected3 NO-REGRESSION known design failures;4 active gating dies retained, bd41 replacement QC/head/SRAM launched automatically02:07.
 
 CODEX: 2026-10-26 02:10 PDT HBM resumed all lanes; M5 FT bands clear all>.55 cuts (H0.624->0.478); current M5-aware station repair live4098105; clock diagnostics FAIL147/154, regional remedy owned; v8 TKM WAIT-CANARY, current stable-sort root successor in progress.
+CODEX: 2026-10-26 02:10 PDT KV takeover: batchb30 strict/R8PASS; inheritedverifylive; mixed4chainheadCORE_CLOCK cause fixeda8c24031c and exact+mutantjoblaunched; SYS3physicalprojection andASTKsubroot workersactive; acceptedmesh73.16/73.50preserved.
