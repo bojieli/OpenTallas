@@ -296,8 +296,18 @@ def explicit_taps(P, tn):
     out=[];taken=[(x,y) for _,x,y,_ in schema.core_taps(P,tn)]
     for p in table:
         x,y=map(float,p["xy"])
-        legal=schema.tap_clear(P.types[tn],x,y,taken,strict=True)
-        if abs(legal[0]-x)+abs(legal[1]-y)>1e-6:
+        # Frozen density coordinates are rounded to 4 decimals. Check the
+        # same halo/spacing geometry directly; binary 8.64-8.64 subtraction
+        # must not trigger a fresh legalizer move (t43 gap 8.639999999999986).
+        eps=1e-8
+        clear=schema.TAP_CLEAR_UM
+        typ=P.types[tn];w,h=typ["outline_um"]
+        boxes=list(schema.placed_macro_boxes(typ,halo=clear).values())
+        boxes += [(a-clear,b-clear,c+clear,d+clear) for a,b,c,d in ck.get("keepouts_um",[])]
+        legal=(clear-eps<=x<=w-clear+eps and clear-eps<=y<=h-clear+eps
+               and not any(abs(x-a)<clear-eps and abs(y-b)<clear-eps for a,b in taken)
+               and not any(a+eps<x<c-eps and b+eps<y<d-eps for a,b,c,d in boxes))
+        if not legal:
             raise ValueError("{}: explicit tap {} violates outline/halo/tap spacing".format(tn,p["name"]))
         out.append((p["name"],x,y));taken.append((x,y))
     sinks=sink_sites(P,tn)

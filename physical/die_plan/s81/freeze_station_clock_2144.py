@@ -48,6 +48,7 @@ def main():
     ap.add_argument('geometry_report',type=Path);ap.add_argument('out',type=Path)
     ap.add_argument('--tools',type=Path,default=Path(__file__).resolve().parents[3]/'tools/die_plan')
     ap.add_argument('--plan-context',type=Path,default=Path(__file__).resolve().parent/'die_plan.json')
+    ap.add_argument("--fixed-seed",type=Path,help="reuse an exact retained fixed tap table; do not rederive endpoints")
     args=ap.parse_args();sys.path.insert(0,str(args.tools));sys.path.insert(0,str(Path(__file__).resolve().parent))
     import schema as S,reset_tree as RT,taps,gen as G
     import delta_station_controls_1713 as D
@@ -58,23 +59,31 @@ def main():
     baseline=S.Plan(original,path=args.plan_context)
     print('BASELINE whole-die reset contract',flush=True);before=RT.wf_plan(baseline)
     (args.out/'baseline_wavefront.json').write_text(json.dumps(before,indent=1)+'\n')
-    seed=copy.deepcopy(geometry);seed.setdefault('reset',{})['start']='broadcast'
-    pseed=S.Plan(seed,path=args.plan_context)
-    report['shared_baseline_grids']=share_unchanged_grids(baseline,pseed,names,RT)
-    print('SEED actual RESET+START sites on data-density taps',flush=True)
-    inventories={n:D.census(RT.for_type(pseed,n)) for n in names}
-    for n,(sites,_) in inventories.items():seed['partition_types'][n]['clock']['sink_sites_um']=sites
-    density=S.Plan(seed,path=args.plan_context)
-    tables={n:taps.density_taps(density,n) for n in names}
-    fixed=copy.deepcopy(geometry)
-    for n,table in tables.items():
-        ck=fixed['partition_types'][n]['clock']
-        ck['taps']=[p for p in ck.get('taps',[]) if p.get('kind')=='core']+[
-            dict(name=port,xy=[x,y],kind='leaf',note='materialized bounded density; actual control coverage checked')
-            for port,x,y,_,_ in table]
-        ck['tap_mode']='explicit';ck['sink_sites_um']=inventories[n][0]
-    (args.out/'fixed_seed.json').write_text(json.dumps(fixed,indent=1)+'\n')
-    report['control_seed']={n:dict(sites=len(s),flops=sum(p[2] for p in s),roles=r) for n,(s,r) in inventories.items()}
+    if args.fixed_seed:
+        fixed=json.loads(args.fixed_seed.read_text())
+        tables={n:[(p["name"],*p["xy"],0,0) for p in fixed["partition_types"][n]["clock"]["taps"] if p.get("kind")!="core"] for n in names}
+        report["control_seed"]={n:dict(sites=len(fixed["partition_types"][n]["clock"]["sink_sites_um"]),
+                                          flops=sum(v[2] for v in fixed["partition_types"][n]["clock"]["sink_sites_um"])) for n in names}
+        report["fixed_seed_reused"]=str(args.fixed_seed)
+        (args.out/"fixed_seed.json").write_text(json.dumps(fixed,indent=1)+"\n")
+    else:
+        seed=copy.deepcopy(geometry);seed.setdefault('reset',{})['start']='broadcast'
+        pseed=S.Plan(seed,path=args.plan_context)
+        report['shared_baseline_grids']=share_unchanged_grids(baseline,pseed,names,RT)
+        print('SEED actual RESET+START sites on data-density taps',flush=True)
+        inventories={n:D.census(RT.for_type(pseed,n)) for n in names}
+        for n,(sites,_) in inventories.items():seed['partition_types'][n]['clock']['sink_sites_um']=sites
+        density=S.Plan(seed,path=args.plan_context)
+        tables={n:taps.density_taps(density,n) for n in names}
+        fixed=copy.deepcopy(geometry)
+        for n,table in tables.items():
+            ck=fixed['partition_types'][n]['clock']
+            ck['taps']=[p for p in ck.get('taps',[]) if p.get('kind')=='core']+[
+                dict(name=port,xy=[x,y],kind='leaf',note='materialized bounded density; actual control coverage checked')
+                for port,x,y,_,_ in table]
+            ck['tap_mode']='explicit';ck['sink_sites_um']=inventories[n][0]
+        (args.out/'fixed_seed.json').write_text(json.dumps(fixed,indent=1)+'\n')
+        report['control_seed']={n:dict(sites=len(s),flops=sum(p[2] for p in s),roles=r) for n,(s,r) in inventories.items()}
     for mode in ('reset','start'):
         raw=copy.deepcopy(fixed)
         if mode=='start':raw.setdefault('reset',{})['start']='broadcast'

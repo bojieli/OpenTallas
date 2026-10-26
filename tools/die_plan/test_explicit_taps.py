@@ -39,4 +39,14 @@ class ExplicitTaps(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'names/order'):
             T.explicit_taps(p,'t')
 
+    def test_rounded_density_spacing_boundary(self):
+        p=plan();p.types["t"]["outline_um"]=[1500,1300]
+        xy=[[712.6712,367.2908],[721.3112,375.9308]]
+        p.types["t"]["clock"]["taps"]=[dict(name=n,xy=v,kind="leaf") for n,v in zip(("clk","clk_t1"),xy)]
+        with patch.object(T,"sink_sites",return_value=[(*v,1.) for v in xy]):
+            self.assertEqual(len(T.explicit_taps(p,"t")),2)
+            p.types["t"]["clock"]["taps"][1]["xy"]=[721.3111,375.9307]
+            with self.assertRaisesRegex(ValueError,"spacing"):
+                T.explicit_taps(p,"t")
+
 if __name__=='__main__':unittest.main()
