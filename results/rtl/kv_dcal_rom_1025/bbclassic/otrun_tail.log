@@ -1,0 +1,7 @@
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-kv-dcal-rom/bbclassic
+ot-run: localhost      admits   131 GB (avail 455, reserve 0, fresh 258.9, peak 1.6, headroom 0, waiters 0/0 GB) load 46/256 running 31 disk 574 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-560365-1792992353 after 1 s
+ERROR: Module `ot_rom_64x32_m2' referenced in module `top' in cell `u' does not have a parameter named 'UNDECLARED_PARAMETER'.
+CLASSIC BB PASS named overrides accepted; unknown-param control rejected rc=1
+ot-run: RAN on localhost (unit oth-ubuntu-560365-1792992353): exit 0
