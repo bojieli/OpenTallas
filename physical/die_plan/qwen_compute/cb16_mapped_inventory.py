@@ -2,7 +2,7 @@
 """Count every mapped soft FF of a real CB wrapper, stopping only at explicit hard blackboxes."""
 import argparse,collections,json,re
 from pathlib import Path
-DLY=re.compile(r'(?:^|[./])(u_(?:lpad_[A-Za-z0-9_]+|d[0-9]+_[A-Za-z0-9_]+))[./]r\[([0-9]+)\]$')
+DLY=re.compile(r'(?:^|[./])(u_(?:lpad_[A-Za-z0-9_]+|d[0-9]+_[A-Za-z0-9_]+|pd[0-9]+_[A-Za-z0-9_]+))[./]r\[([0-9]+)\]$')
 
 def census(design,top):
  modules=design['modules'];rows=[];hard=[];unknown=[]
