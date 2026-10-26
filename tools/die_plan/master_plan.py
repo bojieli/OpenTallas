@@ -356,6 +356,90 @@ def clock_sites(M, islands_die, glue_parts, macros_die, tol=0.5):
                 declared_islands=len(islands_die), examples=examples)
 
 
+def island_lattice(M, island_centres, core_rects, B=400.0):
+    """12.2a1/12.2c gate: every die tree node / mesh driver coincides with a per-type island (displacement to the
+    nearest declared island centre, should be 0), and no die-level clock cell sits inside a hard-core outline (the
+    in-core island drivers are PUSHDOWN cells of the core netlist; the die only connects to their ft ports)."""
+    bins = defaultdict(list)
+    for c in island_centres:
+        bins[(int(c[0] // B), int(c[1] // B))].append(c)
+    cb = defaultdict(list)
+    for r in core_rects:
+        for i in range(int(r[0] // B), int(r[2] // B) + 1):
+            for j in range(int(r[1] // B), int(r[3] // B) + 1):
+                cb[(i, j)].append(r)
+
+    def near(xy):
+        i, j = int(xy[0] // B), int(xy[1] // B)
+        best = None
+        for di in (-1, 0, 1):
+            for dj in (-1, 0, 1):
+                for c in bins.get((i + di, j + dj), []):
+                    d = abs(c[0] - xy[0]) + abs(c[1] - xy[1])
+                    best = d if best is None or d < best else best
+        return best if best is not None else float("inf")
+    rows = defaultdict(list)
+    in_core = defaultdict(int)
+    worst = []
+    pts = [("tree_node", e.get("tag"), tuple(e["b"])) for e in M.get("htree", [])]
+    pts += [("mesh_driver", k, tuple(d.get("site") or d.get("ideal"))) for k, d in (M.get("drivers") or {}).items()]
+    for kind, name, xy in pts:
+        d = near(xy)
+        rows[kind].append(d)
+        worst.append((d, kind, name, xy))
+        if any(r[0] < xy[0] < r[2] and r[1] < xy[1] < r[3] for r in cb.get((int(xy[0] // B), int(xy[1] // B)), [])):
+            in_core[kind] += 1
+    worst.sort(key=lambda t: -t[0] if t[0] != float("inf") else -1e18)
+    stat = {k: dict(n=len(v), max_um=r3(max(v)) if v and max(v) < float("inf") else None,
+                    mean_um=r3(sum(x for x in v if x < float("inf")) / max(1, sum(1 for x in v if x < float("inf")))),
+                    displaced=sum(1 for x in v if x > 0.5)) for k, v in rows.items()}
+    bad = sum(v["displaced"] for v in stat.values()) + sum(in_core.values())
+    return dict(verdict="PASS" if not bad and pts else ("NOT RUN" if not pts else "FAIL"), displacement=stat,
+                die_cells_in_core_outline=dict(in_core),
+                worst=[dict(kind=k, name=n, xy_um=[r3(x[0]), r3(x[1])], disp_um=r3(d) if d < float("inf") else None)
+                       for d, k, n, x in worst[:30]],
+                note="a mesh driver / tree node at an in-core island is the core's PUSHDOWN driver (12.2a1): the die "
+                     "mesh build must reference its ft ports, not place a die cell there")
+
+
+# ---- 12.8 d1 / 12.2a1 island driver sizing from plan geometry only (deterministic, frozen with the slice)
+# ASAP7 clock buffers (TT, approx. effective drive resistance, input cap): the plan picks the smallest cell whose
+# R x C_load meets the 12.8 slew budget (slew ~ 2.2 R C <= 80 ps -> R C <= 36 ps).  C_load = NDR wire c x the
+# driven length + sink input caps.  No measurement feeds this choice.
+DRV_CELLS = [("BUFx4_ASAP7_75t_R", 2.40, 1.2), ("BUFx8_ASAP7_75t_R", 1.20, 1.7), ("BUFx12f_ASAP7_75t_R", 0.80, 2.0),
+             ("BUFx16f_ASAP7_75t_R", 0.60, 2.3), ("BUFx24_ASAP7_75t_R", 0.40, 2.35)]
+WIRE_FF_PER_UM = 0.20
+RC_BUDGET_PS = 36.0
+
+
+def size_driver(length_um, sinks, sink_cin_ff=2.0):
+    c = WIRE_FF_PER_UM * length_um + sinks * sink_cin_ff
+    for name, r, cin in DRV_CELLS:
+        if r * c <= RC_BUDGET_PS:
+            return dict(cell=name, parallel=1, load_ff=r3(c), rc_ps=r3(r * c))
+    name, r, cin = DRV_CELLS[-1]
+    n = math.ceil(r * c / RC_BUDGET_PS)
+    return dict(cell=name, parallel=n, load_ff=r3(c), rc_ps=r3(r * c / n))
+
+
+def pushdown_island(k, rect, centre, role, drive_len_um, sinks):
+    """12.2a1 pushdown spec of one in-core island: ft ports (in from the M9->M5 stack, out to the die mesh/tree or
+    the core-internal tree), fixed driver cells at the island centre, sizing per 12.8 d1."""
+    cx, cy = centre
+    return dict(name=f"isl{k}", role=role, rect_um=rect, centre_um=[r3(cx), r3(cy)], via_stack=["M9", "M5"],
+                ft_ports=[dict(name=f"mp_isl{k}_ck_i", dir="in", layer="M5", xy_um=[r3(cx), r3(cy)],
+                               connect="die M9 clock stack (M9->M5 at the island centre)"),
+                          dict(name=f"mp_isl{k}_ck_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy)],
+                               connect="die mesh/tree net" if role != "clock_entry" else "core clock tree root"),
+                          dict(name=f"mp_isl{k}_rst_i", dir="in", layer="M5", xy_um=[r3(cx), r3(cy - 2.16)],
+                               connect="die regional reset stack (M9->M5)"),
+                          dict(name=f"mp_isl{k}_rst_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy - 2.16)],
+                               connect="core reset tree root")],
+                driver=dict(size_driver(drive_len_um, sinks), placement="fixed dont_touch at centre_um",
+                            basis="12.8 d1: plan geometry only (driven length %.1f um, %d sinks)" % (drive_len_um, sinks)),
+                lec="die-owned feed-through: no core logic on mp_isl* ports (12.2a1)")
+
+
 def rect_overlap(a, b, eps=1e-6):
     return min(a[2], b[2]) - max(a[0], b[0]) > eps and min(a[3], b[3]) - max(a[1], b[1]) > eps
 
@@ -836,6 +920,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     bays_die = []                         # dict(part, xy, kind, bits, horiz, band, path, rect)
     gap_fail, in_core = [], []
     gap_max = (0.0, None)
+    route_cache = {}
     for pth in paths:
         for li, lg in enumerate(pth["legs"]):
             part = lg["part"]
@@ -855,7 +940,17 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                                              sites=grp))
                 if IS.seg_len(a, b) < 1e-6:
                     continue
-                R = IS.route_leg(a, b, box, blockers, cb, reach, detour)
+                # replicated partitions: the route only depends on the partition-relative geometry -> cache it per
+                # (type, orient, relative endpoints) and translate (route_leg is INFRA-FIRST-R2's, read-only)
+                ck = (P.parts[part]["type"], P.parts[part].get("orient", "R0"),
+                      round(a[0] - box[0], 3), round(a[1] - box[1], 3), round(b[0] - box[0], 3),
+                      round(b[1] - box[1], 3), round(box[2] - box[0], 3), round(box[3] - box[1], 3))
+                Rc = route_cache.get(ck)
+                if Rc is None:
+                    R = IS.route_leg(a, b, box, blockers, cb, reach, detour)
+                    route_cache[ck] = [(q[0] - box[0], q[1] - box[1]) for q in R["route"]]
+                else:
+                    R = dict(route=[(q[0] + box[0], q[1] + box[1]) for q in Rc])
                 route = R["route"]
                 stops, fails, T = place_stops(route, iv, reach)
                 prev = 0.0
@@ -979,7 +1074,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     pins = []
     occ = defaultdict(int)
     near = defaultdict(list)
-    for b in bays:
+    for k, b in enumerate(bays):
+        b["_k"] = k
         near[b["path"]].append(b)
     for sgm in m89_segs:
         for end in (sgm["a"], sgm["b"]):
@@ -989,7 +1085,9 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             bb = min(cand, key=lambda b: abs(b["xy_um"][0] - end[0]) + abs(b["xy_um"][1] - end[1]))
             for i, xy in enumerate(place_pins(occ, bb["rect_um"], 2 * sgm["bits"], lim, P)):
                 pins.append(dict(part=sgm["part"], path=sgm["path"], bit=i, layer="M7", xy_um=list(xy),
-                                 die_layer=sgm["layer"], bay=bays.index(bb)))
+                                 die_layer=sgm["layer"], bay=bb["_k"]))
+    for b in bays:
+        b.pop("_k", None)
     per_cell = defaultdict(int)
     for p in pins:
         per_cell[(int(p["xy_um"][0] // G), int(p["xy_um"][1] // G))] += 1
@@ -1100,6 +1198,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             macros_die.append(IS.rect_pts(P, part, core_to_type(h, (0, 0) + tuple(h["outline_um"]))))
         if tn in phy and phy[tn].get("island"):
             isl_decl.append(IS.rect_pts(P, part, phy[tn]["island"]))
+    n_core_macros = len(macros_die)
     for io in P.die.get("io") or []:
         if io.get("kind") in ("phy_macro", "phy", "serdes") and io.get("rect_um"):
             macros_die.append(tuple(io["rect_um"]))
@@ -1127,6 +1226,12 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         no_leaf_axes=no_leaf, off_lattice_axes=off_lat)
     sites = (clock_sites(M, isl_decl, glue_parts, macros_die) if mesh_dir else
              dict(verdict="NOT RUN", note="no --mesh"))
+    if mesh_dir:
+        cen = [((r[0] + r[2]) / 2, (r[1] + r[3]) / 2) for r in isl_decl]
+        core_only = macros_die[:n_core_macros]
+        isl_lat = island_lattice(M, cen, core_only)
+    else:
+        isl_lat = dict(verdict="NOT RUN", note="no --mesh")
     tap_in_phy = sorted(tn for tn, v in phy.items() if v.get("plan_tap_inside_phy"))
     sites["plan_taps_inside_phy"] = tap_in_phy
     if tap_in_phy:
@@ -1181,6 +1286,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         die_pair_skew_model=skew_model,
         tree_commensurate=tree_comm,
         clock_sites=sites,
+        island_lattice=isl_lat,
         infra_sites=sites_gate,
     )
     verdict = "PASS" if all(g["verdict"] == "PASS" for g in gates.values()) else "FAIL"
@@ -1314,6 +1420,20 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
                   bays=[dict(name=f"in_core_bay{i}", rect_um=b["core_local_um"], owner=mod, kind="repeater",
                              bits=0, cell_area_um2=0.0, fill=0.0, layer="M6/M7", paths=[]) for i, b in enumerate(ic)],
                   entry_pins=[], hard_cores=[], latency=lat, corridors=[], gates=gv)
+        w, h = c["outline_um"]
+        sub = e.get("in_core_islands") or {}
+        leaves = sub.get("islands", [])
+        far = max(abs(cx - e["xy"][0]) + abs(cy - e["xy"][1]) for cx in (0, w) for cy in (0, h))
+        pd = [pushdown_island(0, e["island"], e["xy"], "clock_entry",
+                              (far if not leaves else max(abs(q["centre_um"][0] - e["xy"][0]) +
+                                                          abs(q["centre_um"][1] - e["xy"][1]) for q in leaves)),
+                              max(1, len(leaves)))]
+        for i, q in enumerate(leaves):
+            pd.append(pushdown_island(i + 1, q["rect_um"], q["centre_um"], "tree_leaf",
+                                      sub.get("leaf_reach_um", 0.0), 0))
+        sl["pushdown"] = dict(rule="12.2a1: island drivers are core-netlist cells at these fixed coordinates, "
+                                   "identical for every instance; die connects only via the mp_isl* ft ports",
+                              islands=pd)
         (d / f"{_safe(mod)}.json").write_text(json.dumps(sl, indent=1))
 
 

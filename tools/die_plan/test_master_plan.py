@@ -235,3 +235,24 @@ def test_phy_entry_on_digital_strip_edge(tmp_path):
     assert s[0] - 1e-6 <= isl[0] and isl[2] <= s[2] + 1e-6 and s[1] - 1e-6 <= isl[1] and isl[3] <= s[3] + 1e-6
     ph = pe["phy_rect_um"]
     assert pe["clock_pin"]["xy_um"][1] in (ph[1], ph[3])     # pin on the PHY edge, not inside
+
+
+# ---------------------------------------------------------------- 12.2a1 pushdown islands + island lattice gate
+def test_island_lattice_displacement_and_in_core_cells():
+    M = dict(htree=[dict(tag="h0", b=[104.32, 104.32])], drivers={"a": dict(site=[504.32, 104.32])})
+    r = MP.island_lattice(M, [(104.32, 104.32), (504.32, 104.32)], [])
+    assert r["verdict"] == "PASS" and r["displacement"]["mesh_driver"]["max_um"] == 0.0
+    M["drivers"]["b"] = dict(site=[520.0, 104.32])
+    r = MP.island_lattice(M, [(104.32, 104.32), (504.32, 104.32)], [(400.0, 0.0, 700.0, 300.0)])
+    assert r["verdict"] == "FAIL" and r["displacement"]["mesh_driver"]["displaced"] == 1
+    assert r["die_cells_in_core_outline"]["mesh_driver"] == 2
+
+
+def test_pushdown_slice_ports_and_sizing(tmp_path):
+    raw = _with_core(json.loads(TINY.read_text()))
+    run(raw, tmp_path)
+    core = json.loads((tmp_path / "out" / "slices" / "core_m.json").read_text())
+    pd = core["pushdown"]["islands"][0]
+    assert {p["name"] for p in pd["ft_ports"]} == {"mp_isl0_ck_i", "mp_isl0_ck_o", "mp_isl0_rst_i", "mp_isl0_rst_o"}
+    assert pd["driver"]["cell"].startswith("BUF") and pd["driver"]["rc_ps"] <= MP.RC_BUDGET_PS
+    assert MP.size_driver(2000.0, 0)["parallel"] >= 1 and MP.size_driver(10.0, 0)["cell"].startswith("BUFx4")
