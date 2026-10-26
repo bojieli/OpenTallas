@@ -132,6 +132,8 @@ def main():
             tog.append(f"o_{p}")
         else:
             tog.append(f"i_{p}")
+    if a.identity_ports:
+        tog = [f"i_{p}" for p in ins if p not in clk and p not in rst]
     L.append(f"  wire [99999:0] tg = {{{', '.join(tog)}}}; reg [99999:0] tg_q = 0;")
     L.append("  integer n, mis = 0, dzc = 0, edges = 0, tgc = 0;")
     L.append("  always @(negedge ck) if (rn) begin edges = edges + 1;")
