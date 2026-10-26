@@ -76,7 +76,19 @@ def _flow_diff(run_git, repo, a, b, watch, spec=None, die=None):
     module_spec = importlib.util.spec_from_file_location("flow_canary_watch", module_path)
     module = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(module)
-    return module.flow_paths(paths.splitlines(), spec or {"watch": watch}, die)
+    changed = module.flow_paths(paths.splitlines(), spec or {"watch": watch}, die)
+    if "tools/flow_canary/canaries.json" in changed and die:
+        snapshots = []
+        for revision in (a, b):
+            status, content, _ = run_git(['git', '-C', str(repo), 'show',
+                                          revision + ':tools/flow_canary/canaries.json'], timeout=60)
+            try:
+                snapshots.append(json.loads(content) if status == 0 else None)
+            except ValueError:
+                snapshots.append(None)
+        if all(isinstance(s, dict) for s in snapshots) and not module.spec_flow_changed(*snapshots, die):
+            changed.remove("tools/flow_canary/canaries.json")
+    return changed
 
 
 def _corrective(correction, runs, root, die, repo, seed):
