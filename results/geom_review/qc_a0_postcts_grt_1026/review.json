@@ -1,0 +1,23 @@
+{
+ "verdict": "PASS-COND",
+ "permission": "ONE standard FF-GRT diagnostic only; no DRT/signoff claim; normal canary/source gates remain",
+ "source": "codex/qc-a0-1026@1ef4a0a12",
+ "images": [
+  "results/qc_a0_rawleaf_1026/successor/cts/clock.png",
+  "results/qc_a0_rawleaf_1026/successor/cts/ff_scalar_path.png",
+  "results/qc_a0_rawleaf_1026/successor/cts/ff_internal_path.png"
+ ],
+ "findings": [
+  "Viewed actual TT/FF insertion maps: smooth local clock tree with no remote sink clusters;0macros,PG fixed; every504pinFF within8.949um ofpin.",
+  "Viewed worst FF scalar path: first_d->s3_first,3.183um,scalarlegacyin_min-40/12.5psuncertainty,-55.284ps. Blankedgechannelavailablefornormalholdrepair, no longwire cause.",
+  "Viewed worst FF internal path:1.458um, launch136.370ps/capture139.201ps, full25pshold uncertainty,-6.398ps. Localshort-path deficit with balancedclock, standardhold step appropriate.",
+  "Exact remapped state12030FF,0HA/FA; placedr2r0/14034>405,max172.989. CTSrelatedpair15.77TT/14.42FF and setupTT+151.591 are diagnostic placementRC, not routed closure.",
+  "Read generatedIO40context: vectorinput/outputsender40have0failures;293internal+9scalarendpointsremain. Read FF SIMPLE211120/250407aliasbyteequality; actualmakeBC list canonical5libs. No constraint or clock change."
+ ],
+ "conditions": [
+  "Use preserved4_cts_pg checkpoint and canonical ORFS TT/FF library sets.",
+  "Run ONE standard FF-GRT hold repair in generated40ps two-sided context; no manual massresize/sweep or newtimingexception.",
+  "Collect GRT0, actualroutedRC TTsetup/FFhold, pair<=80, canonicalpinmeans/perfacecohorts,PG+reach/face gates; any residual structuralfailure returns toreview.",
+  "No DRT until source/canary/normalpostGRTreview qualify."
+ ]
+}
