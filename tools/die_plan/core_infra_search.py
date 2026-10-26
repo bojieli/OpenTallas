@@ -110,6 +110,26 @@ def add_entry_chain(sl,n,cell):
     return out
 
 
+def design_entry(sl,libraries,points,caps,r,c,slew_limit=80.,max_stages=6):
+    """One identical designed common trunk, selected only from plan/NLDM."""
+    best=None;trials=[]
+    for count in range(max_stages+1):
+        for cell in libraries['TT']:
+            if count==0 and cell!=next(iter(libraries['TT'])):continue
+            candidate=add_entry_chain(sl,count,cell)
+            model=Model(candidate,libraries,points,caps,r,c)
+            res=model.evaluate([n['master'] for n in candidate['core_tree']['nodes']])
+            violation=0.;margin=1e9
+            for corner,x in res.items():
+                low,high={'TT':(230.,270.),'FF':(182.5,222.5)}[corner]
+                violation+=max(0.,low-x['leaf_min'])+max(0.,x['leaf_max']-high)+max(0.,x['leaf_window']-20.)+max(0.,x['slew_max']-slew_limit)
+                margin=min(margin,x['leaf_min']-low,high-x['leaf_max'],20.-x['leaf_window'],slew_limit-x['slew_max'])
+            trial=dict(count=count,cell=cell,result=res,violation_ps=violation,minimum_leaf_margin_ps=margin)
+            trials.append(trial);key=(violation,count,-margin,cell)
+            if best is None or key<best[0]:best=(key,candidate,trial)
+    return best[1],dict(chosen=best[2],trials=trials,basis='one common fixed trunk designed from geometry and joint TT/FF NLDM; no measured timing')
+
+
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('input');ap.add_argument('--out',required=True);a=ap.parse_args()
     data=json.loads(Path(a.input).read_text());sl=data['slice'];libs=data['libraries'];points=data['points'];caps=data['caps']

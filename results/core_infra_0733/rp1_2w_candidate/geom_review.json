@@ -1,0 +1,16 @@
+{
+ "verdict": "PASS-COND",
+ "picture": "review.png",
+ "cells": 94,
+ "max_clock_edge_um": 136.404,
+ "findings": [
+  "Viewed plan-fixed94cells clearofSRAM4.32halos/fixedTAPs,entry1BUF4 fitsisland;pureFTisolated",
+  "Actualpost-data-hook RP1 geometry/named64memberships retained",
+  "2W2S width+spacing0.096um vs0.192um failed4W;M4/M5 scopeunchanged"
+ ],
+ "conditions": [
+  "RootreviewONEGRT-onlydiagnostic;noDRT/signoff",
+  "Synchronoustee guard mustrefuseGRT-0273beforetimingextraction;retainpartialguide/ODB",
+  "NDRCx1.1assumed;actualnativeGRTmeasuresprofileimplementationandclockresponse"
+ ]
+}
