@@ -208,3 +208,86 @@ def test_unchanged_param_still_read_with_unrelated_hook_changes(tmp_path):
     (d / 'rtl' / 'pv.sv').write_text('module h; ot_qwen_tp8_pv_wide_ctl_tbf #(.TRUNK_D(54), .FLAG_D(58)) u_pvS_u_ctl (); endmodule')
     b = RC.Bound(d)
     assert b.asbuilt_param(r'pvw_\d__u_ctl$', 'TRUNK_D', module=r'ot_qwen_tp8_pv_wide_ctl_tbf') == '54'
+# ------------------------------------------------------------------------ KV 833-ps PC controller (TOK-QK-KVCHK 10-26)
+PC_TOP = """module qwen_kvsys_bound_top;
+  kv3_pc_part u_pc_Q_0 (.clk(clk));
+  kv3_pc_part u_pc_Q_1 (.clk(clk));
+endmodule
+"""
+PC_PART = """module kv3_pc_part (input clk);
+    qkd_kvs_pc_h_head_p u_kvpc0 (.ck(clk));
+    qkd_kvs_pc u_kvpc1 (.ck(clk));
+    qkd_kvs_pc u_kvpc2 (.ck(clk));
+endmodule
+"""
+PC_MASTER = """module qkd_kvs_pc (input ck);
+    qkd_static_kv_pc_path_fan_nc_b #({cc}.MU(1)) u_pc (.ck(ck));   // the real master: .CORE_CLOCK(1), .MU(1)
+endmodule
+module qkd_kvs_pc_h_head_p #(parameter [4:0] PC = 0) (input ck);
+    qkd_static_kv_pc_path_fan_nc_b_head_p #({hcc}.MU(1), .PC(PC)) u_pc (.ck(ck));
+endmodule
+"""
+# kvspc_core_clock.apply_kit's head-p patch: the plan variant declares CORE_CLOCK and forwards it to its u_pce
+HEAD_P_KIT = """module qkd_static_kv_pc_path_fan_nc_b_head_p #(parameter integer CORE_CLOCK = 0,
+    parameter integer MU = 0, parameter [4:0] PC = 0) (input ck);
+    qkd_static_kv_pc_path_emb_nc_b #(.CORE_CLOCK(CORE_CLOCK),.MU(MU)) u_pce (.ck(ck));
+endmodule
+"""
+
+
+def _pc_bind(tmp_path, name, cc, hcc, head_kit=False):
+    b = tmp_path / name
+    shutil.copytree(FX / "kv39", b)
+    (b / "rtl").mkdir()
+    (b / "rtl" / "qwen_kvsys_bound_top.sv").write_text(PC_TOP)
+    (b / "rtl" / "kv3_pc_part.sv").write_text(PC_PART)
+    (b / "rtl" / "pc_masters.sv").write_text(PC_MASTER.format(cc=cc, hcc=hcc) + (HEAD_P_KIT if head_kit else ""))
+    return b
+
+
+def test_kv_pc833_table_without_bound_rtl():
+    """kv39 (bus_groups only): the profile is PENDING, the 833 controller constants come from the RTL CORE_CLOCK formulas
+    and equal the PATH-KV-PC833 reprice (HBM_RL 23->29, WDONE 17->19, tREFIpb 118->144 ...)"""
+    d = RC.run("qwen_kvsys", FX / "kv39")
+    c = d["constants"]
+    assert c["PC_CORE_CLOCK"]["status"] == "PENDING"
+    assert (_v(d, "PC_HBM_RL"), _v(d, "PC_WDONE"), _v(d, "PC_T_RCD"), _v(d, "PC_T_RP"), _v(d, "PC_T_RAS")) == (29, 19, 24, 20, 35)
+    assert (_v(d, "PC_T_FAW"), _v(d, "PC_T_WRR"), _v(d, "PC_T_WTR"), _v(d, "PC_T_REFI"), _v(d, "PC_T_REFIPB")) == (19, 35, 18, 4680, 144)
+    assert _v(d, "PC_PHASE_TICKS") == [625, 625] and "PC_TIMING_TABLE" not in c
+    assert all(c[k]["status"] == "OK" for k in c if k.startswith("PC_T") or k in ("PC_HBM_RL", "PC_WDONE"))
+
+
+def test_kv_pc833_mixed_die_is_an_error(tmp_path):
+    """the repo plan variant qkd_static_kv_pc_path_fan_nc_b_head_p has no CORE_CLOCK: a head PC master that binds it
+    runs the legacy 1024 controller next to CORE_CLOCK=1 masters -> MIXED -> ERROR (2 of 6 PCs here)"""
+    d = RC.run("qwen_kvsys", _pc_bind(tmp_path, "mixed", ".CORE_CLOCK(1), ", ""))
+    c = d["constants"]
+    assert c["PC_CORE_CLOCK"]["value"] == {"qkd_kvs_pc": 1, "qkd_kvs_pc_h_head_p": 0}
+    assert c["PC_CORE_CLOCK"]["status"] == "ERROR" and "MIXED" in c["PC_CORE_CLOCK"]["note"]
+    assert c["PC_CORE_CLOCK"]["inputs"]["die_pcs"] == {"1": 4, "0": 2}
+    assert (c["PC_CONTROLLER_PROFILE"]["value"], c["PC_CONTROLLER_PROFILE"]["status"]) == ("mixed", "ERROR")
+
+
+def test_kv_pc833_uniform_and_image(tmp_path):
+    """kit-patched head-p (forwards CORE_CLOCK) + CORE_CLOCK=1 everywhere -> common833 OK; the boot image must record
+    the same profile (static.json ticks 625/625), a legacy 625/768 image on that die is an ERROR, and the reverse"""
+    b = _pc_bind(tmp_path, "c833", ".CORE_CLOCK(1), ", ".CORE_CLOCK(1), ", head_kit=True)
+    img = tmp_path / "img833"
+    img.mkdir()
+    (img / "static.json").write_text(json.dumps(dict(ticks=[625, 625])))
+    d = RC.run("qwen_kvsys", b, kv_image=img)
+    c = d["constants"]
+    assert (c["PC_CONTROLLER_PROFILE"]["value"], c["PC_CORE_CLOCK"]["status"]) == ("common833", "OK")
+    assert c["PC_IMAGE_PROFILE"]["status"] == "OK"
+    leg = tmp_path / "img1024"
+    leg.mkdir()
+    (leg / "static.json").write_text(json.dumps(dict(ticks=[625, 768])))
+    assert RC.run("qwen_kvsys", b, kv_image=leg)["constants"]["PC_IMAGE_PROFILE"]["status"] == "ERROR"
+    # legacy die (no CORE_CLOCK anywhere) under an 833 image: profile ERROR + image ERROR; 1024 values reported
+    b0 = _pc_bind(tmp_path, "c1024", "", "")
+    d0 = RC.run("qwen_kvsys", b0, kv_image=img)
+    c0 = d0["constants"]
+    assert (c0["PC_CONTROLLER_PROFILE"]["value"], c0["PC_CORE_CLOCK"]["status"]) == ("legacy1024", "ERROR")
+    assert c0["PC_IMAGE_PROFILE"]["status"] == "ERROR" and _v(d0, "PC_HBM_RL") == 23
+
+
