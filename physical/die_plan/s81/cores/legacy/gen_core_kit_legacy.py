@@ -638,6 +638,25 @@ def main():
                   pins_file=rec["lef_contract"])
     else:
         ptype, hc = plan_core(plan, rec.get("plan_module", a.module), rec.get("plan_pins_file"))
+        if rec.get("master"):
+            # S81-QX-GB 10-26 (COORD 06:38 ruling (a) + 13:18 S81-CORE-LAT-R5 (a)): a COORD-adopted replacement master of
+            # the plan module (e.g. ot_v41_rom_elem_q_qxpq_w10_gb: strict go boundary, xs_sv removed).  Same plan type /
+            # instances / outline; pin contract = the master's own pin table (same face positions, ports removed only)
+            # and its LEF.  die_plan.json is not edited: the plan row keeps the old module until the die owner adopts.
+            ms = rec["master"]
+            pj = json.load(open(S81 / ms["pins_file"]))
+            if pj.get("module") != ms["module"]:
+                raise SystemExit(f"{a.module}: master pins file names {pj.get('module')} != {ms['module']}")
+            olef = re.search(r"SIZE ([\d.]+) BY ([\d.]+)", (REPO / pj["lef"]).read_text())
+            if [float(olef.group(1)), float(olef.group(2))] != [float(v) for v in hc["outline_um"]]:
+                raise SystemExit(f"{a.module}: master LEF outline {olef.groups()} != plan {hc['outline_um']}")
+            plan_names = {q["name"] for q in json.load(open(S81 / hc["pins_file"]))["pins"]}
+            pos = {q["name"]: (q["layer"], q["x"], q["y"]) for q in json.load(open(S81 / hc["pins_file"]))["pins"]}
+            moved = [q["name"] for q in pj["pins"] if pos.get(q["name"]) != (q["layer"], q["x"], q["y"])]
+            if moved:
+                raise SystemExit(f"{a.module}: master pins not at their plan positions: {moved[:4]}")
+            hc = dict(hc, module=ms["module"], pins_file=ms["pins_file"], lef=pj["lef"], plan_module=hc["module"],
+                      removed_pins=sorted(plan_names - {q["name"] for q in pj["pins"]}))
     spec_src = rec.get("spec_git")       # "<rev>:<path>" for a kit spec that is only in history (sources from the tree)
     spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
     mod = spec["top"]

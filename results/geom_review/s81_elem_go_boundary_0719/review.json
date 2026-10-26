@@ -1,0 +1,17 @@
+{
+  "image": "results/geom_review/s81_elem_go_boundary_0719/pre.png",
+  "verdict": "PASS-COND",
+  "scope": "Pre-floorplan geometry; PLACE ONLY after raw face guard PASS. Does not authorize CTS/route.",
+  "findings": [
+    "Four ROMs in two symmetric side pairs leave208.2um central logic corridor and25.9/26.1um outer capture strips; no macro wall.",
+    "ROM orientations bring clock/addr bands toward central logic; outer144-bit data bands need dedicated macro-interface flops in outer strips.",
+    "737pins:608south/129north; density10.5pins/um below modeled24.3pins/um capacity. Other pin coordinates unchanged; xs_sv2 deleted.",
+    "ClockS at231.372um feeds central logic; actual balanced ROM/core taps and per-corner I binding remain required.",
+    "Plan PDN stripes continuous; actual special-wire continuity unmeasured."
+  ],
+  "conditions": [
+    "After placement verify every ROM data-interface flop<=20um from its exact pin and no unregistered>405um leg.",
+    "Before CTS/route use shared F2 calibrated RC, per-corner vclk/insertion contracts, measured macro-clock grouping and balanced taps.",
+    "Adopt gb source+737pin contract together with+1go/tag compiler calendar; no predecessor timing view reuse."
+  ]
+}
