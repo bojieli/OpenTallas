@@ -76,3 +76,4 @@ CoretapcornerREADY codex/flow-1713@539f69b3e4 (5focusedPASS), jointlywith codex/
 
 ## PARKED 2026-10-25 18:23 PDT — CODEX RESET
 Main20b4554a0f includes shared core-FF/native-library/bundle and G3/G4 consumed-model guards. Pending IR adoptiond92696ea7c and postcts RC-scope fix owned PROTO; no live parent heavy jobs or half-merge. Exact handoff, jobs, failures and OWNER? VMR scope in CODEX-LOG. No new launches/merges after reset.
+2026-10-25 20:20 PDT CRASH-TRIAGE -> PATH-S81 + FLOW: structural row c5116ae54936 ot_s81hd_elemB_cv 'OT_HOLD_STRUCTURAL: synchronized FF scene BC unavailable; enable multi-mode FF timing before hold repair' is a kit-config fault (no BC scene at hold repair), not a layout verdict: the kit generator must emit the BC corner/scene. Details lanes/CRASH-TRIAGE.md S3.

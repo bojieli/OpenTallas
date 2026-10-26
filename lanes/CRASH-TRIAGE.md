@@ -41,3 +41,9 @@ Throughput effect of crash-triage-1025: C1+C2 (18 rows) now resubmit themselves 
 ## Re-enqueue / deletion
 - Re-enqueue: no crash row needs a plain re-enqueue. Each one has a successor row, a superseding rebuild, or a recorded verdict (see the table). Once crash-triage-1025 merges, these regenerated kits get the IR deferral automatically: kv3_io_ft / kv3_io_ft_v1 (PATH-KV / KITS-SPARE rebuild with gen.py phys on main). Enqueue them normally; they do not need extra --mem for 6_report.
 - Data release: autopilot/failure-resolved.tsv DELETE rows for the 40 crash rows above whose kit is not shared with a live, archived or near-miss row (20:3x). The autopilot deletes only run/results + run/objects and refuses while a container mounts the kit. KEPT (still in use): vq_f6 81cab70b3f92 (S81-CORES census; epyc3 retired), qbank_N 8da8b06c0f6a (S81-CORES re-sign), astk cts 3d790abf8b60/9c1dca017848, rp1 e91891f9eed3 / f62 897f05140dde, btab_s8 39a0c5d4d168, prog_s8b 610890e3f05e (kits shared with NEAR-MISS/ARCHIVED rows).
+
+## PARKED 2026-10-25 20:20 PDT
+- Done: 48 crash rows grouped into 12 signatures; 5 fixed at the root on READY claude/crash-triage-1025@3bda8a58af (merges cleanly on main 4347ae33b6: main has not touched these files); 48 structural rows summarised in 8 causes; owners told (PATH-S81/FLOW S3, PATH-KV C2/S5); 40 crash rows released for data deletion in autopilot/failure-resolved.tsv (8 kept, listed above).
+- Live jobs: none (only the read-only docker patch smoke test, finished).
+- Next: after ROOT-MERGE merges crash-triage-1025, check the hub log for "GOAL ..." and "REJECT ... signoff.py lacks" lines and that the next Error 247 row is resubmitted at 1.5x. KITS-SPARE/PATH-KV regenerate the kv3_io_ft kits. TYPE-REDUCE candidates: slice_station (S1, 16 rows over 12 variants) and kv3_astk EN/ES/WN/WS (S5, 7 rows).
+- OWNER? none.
