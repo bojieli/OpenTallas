@@ -10,10 +10,11 @@ run(){ local tag=$1; shift; verilator --binary --timing -Wno-fatal -Wno-lint -Wn
 for s in "0 0" "3 4" "11 17"; do set -- $s
   r=$(run m0_$1_$2 -GLS=$1 -GLR=$2 -GMUT=0); echo "$r"; echo "$r" | grep -q "PASS$" || fail=1; done
 for m in 1 2 3; do r=$(run m$m -GLS=3 -GLR=4 -GMUT=$m); echo "$r"; echo "$r" | grep -q " FAIL errs=" || fail=1; done
-# wrapper lint: real group RTL closure from the service_native dir + hdc/sm static children it instantiates
+# wrapper lint: real group RTL closure (rtl/hbm_accel + rtl/hdc by module name; reset sync + behavioural SRAM models)
 Y=$(find rtl/hbm_accel rtl/hdc -name '*.sv' -printf '%h\n' | sort -u | sed 's/^/-y /')
 verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-MULTITOP --top-module ot_hbm_svc_sm_group_rel_id_rc -GRQD=9 \
    -GLBANKS=4 -GNID=6 -GIDW=9 -GPAW=11 -GPREL=1 -GDD=256 -GID_COHORT=1 -GXSLOT=1 -GOPEN_IL=1 $Y \
+   rtl/lib/ot_reset_sync.sv rtl/test/full_sm_service/sram_models.sv \
    $D/ot_hbm_sm_req_check.sv > "$OUT/lint_rc.log" 2>&1 && echo "LINT ot_hbm_svc_sm_group_rel_id_rc PASS" \
    || { echo "LINT ot_hbm_svc_sm_group_rel_id_rc FAIL (see lint_rc.log)"; fail=1; }
 [ $fail = 0 ] && echo "SM_REQ_CHECK_GATE PASS" || echo "SM_REQ_CHECK_GATE FAIL"; exit $fail
