@@ -106,6 +106,12 @@ def main():
         ap.error('--recipe-key is supplied by this source profile')
     views_path = Path(args[args.index('--views') + 1]).resolve()
     views = json.loads(views_path.read_text())
+    selected_view = next((v for v in views['view_list'] if v['view'] == view), None)
+    allowed = {TOPS[a.core]}
+    if a.core in ('reduce', 'ring_ag'):
+        allowed.add('ot_hfd_coll_q2_hard_v8g__' + a.core)
+    if selected_view is None or selected_view['module'] not in allowed:
+        ap.error('selected plan view does not belong to the requested q3 core')
     plan_path = Path(views['plan'])
     if not plan_path.is_absolute():
         plan_path = views_path.parent / plan_path
@@ -115,6 +121,7 @@ def main():
                 ap.error('external plan requires --diagnostic-plan: ' + str(path))
     recipe, staged, receipt = materialize(a.core, a.profile_dir)
     receipt['diagnostic_inputs'] = bool(a.diagnostic_plan)
+    receipt['plan_module'] = selected_view['module']
     p = REPO / 'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py'
     sys.path.insert(0, str(p.parent))
     sys.path.insert(0, str(REPO / 'tools/die_plan'))
