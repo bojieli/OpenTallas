@@ -54,3 +54,13 @@ def test_exact_group_lockstep_and_mutant(tmp_path):
 def test_missing_leaf_rejected():
     with pytest.raises(ValueError,match='exactly five'):
         cut(fixture().replace('u_u_rcp0','u_u_other0'),0)
+
+
+def test_bound_head_alignment_contract():
+    source=fixture().replace('leaf u_u_head0 (', 'leaf #(.MEMORY_ALIGNMENT(3)) u_u_head0 (')
+    _,_,r=cut(source,0,memory_alignment=3)
+    assert r['memory_alignment']==3
+    with pytest.raises(ValueError,match='regenerate the canonical bind'):
+        cut(source.replace('MEMORY_ALIGNMENT(3)','MEMORY_ALIGNMENT(0)'),0,memory_alignment=3)
+    with pytest.raises(ValueError,match='regenerate the canonical bind'):
+        cut(fixture(),0,memory_alignment=3)
