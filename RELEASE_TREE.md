@@ -22,7 +22,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] QC.PATH CRITICAL PATH end to end (12.9b): 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> GRT0 -> skew gate -> die STA · INFRA-FIRST · RUNNING · dated ETA checklist in lanes/INFRA-FIRST.md
 - [ ] QC.INFRA One QC plan event: infra-first PG/clock/reset + batch 2 (STM ROMs, SRAM, DEAD-FAULT) + D-QC-FE-REACH stations (all FE variants) + COLLFTM-CTL + CB ID straps + SCROOT + vmr_s6kc · INFRA-FIRST + PATH-QC · RUNNING · PENDING-DELTA D-INFRA-FIRST-QC holds all 68 type routes
 - [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · CLOCK-128-R4 + QC-SU-KITS · RUNNING · c4x4 die tree lattice ADOPTED (31 nodes/232 reps in channels, UNCHECKED); 80 ps kit window in gen (i6p bound PASS CHECKED, r6p FAIL -> in-core islands); SU cores: btab R6 cal TT 262.9 (CHECKED) routing to sign-off, window decided on RCX; vmr/rp1/prog re-predict on MODEL-REFIT + trunks; FT ports die-timed (flow-ft-sdc)
-- [ ] QC.SU 4 SU core types (72 inst) rebuilt with centre clock island + structured tree to 250+-20 · QC-SU-LAT-R2 · RUNNING · points vmr/rp1 (129.6,169.0), prog/btab (177.12,135.0) → IF.MASTER
+- [ ] QC.SU 4 SU core types (72 inst) rebuilt to 250+-20 on MIF0 · QC-SU-F4-2 / MASTER-PLAN-R6 · RUNNING · prog4b MIF0 measured 213.4 FAIL (cell-less detours) -> as-built model + G4; vmr/rp1 F4A column SRAM adopted, build after as-built re-predict → IF.MASTER
 - [ ] QC.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · → QC.INFRA
 - [ ] QC.BIND Strict bind on the QC plan event (wavefront reset/START, CB16 phase classes) · PATH-QC · WAITS · → QC.INFRA
 - [ ] QC.STA Die STA on real views · DIE-PROTO · WAITS · → QC.GRT, → QC.TILES
@@ -61,7 +61,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] HBM.STA Die STA on real views · DIE-PROTO · WAITS · → HBM.GRT
 
 ## TOKEN · Token-pass gate per design
-- [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS · RUNNING · per-layer bound runs → S81.BIND, → HEAD.BIND
+- [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS-6 · RUNNING · L14 27/57/8; idx score scan re-priced -> S81 cost 14.275%/15% cap; lower_idx 3-stage shard + 3 unpriced items → S81.BIND, → HEAD.BIND
 - [ ] TOK.QW Qwen ROM token pass (compute + KV) · TOK · RUNNING · QK vehicle on KV rebased bind; prices landed seams + FE stations → KV.BIND, → QC.INFRA
 - [ ] TOK.HDS / TOK.HQ HBM token passes (next release) · TOK · RUNNING · SU programme-path fault (pgslice lw, side_pipe rsq) being root-caused
 - [ ] TOK.FREEZE Final evidence run at freeze · COORD · WAITS · → TOK.DS, → TOK.QW
