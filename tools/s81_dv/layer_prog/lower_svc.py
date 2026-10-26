@@ -677,12 +677,12 @@ def lower(die, op, ctx):
     if ctx.get('svc_timing_profile') is None:
         raise ValueError('service programme requires an explicit svc_timing_profile')
     key = (str(fx), ctx.get('layer'), ctx.get('svc_tag', 0), ctx.get('svc_owner_epoch'),
-           json.dumps(ctx.get('svc_sot_booking'), sort_keys=True), ctx.get('svc_timing_profile', 'legacy_fg3'))
+           json.dumps(ctx.get('svc_sot_booking'), sort_keys=True), ctx.get('svc_timing_profile', 'legacy_fg3'), ctx.get('svc_allq'))
     if key not in _CACHE:
         try:
             _CACHE[key] = build(fx, ctx.get('sched'), die, tag=ctx.get('svc_tag', 0),
                                 owner_epoch=ctx.get('svc_owner_epoch'), sot_booking=ctx.get('svc_sot_booking'),
-                                timing_profile=ctx.get('svc_timing_profile', 'legacy_fg3'))
+                                timing_profile=ctx.get('svc_timing_profile', 'legacy_fg3'), allq=ctx.get('svc_allq'))
         except AssertionError as e:
             _CACHE[key] = (None, str(e))
     job, s = _CACHE[key]
