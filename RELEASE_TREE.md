@@ -33,7 +33,7 @@ Snapshot: 2026-10-26 01:55 PDT · main 474b749b3 (flow-tag merge: cap64 9bca574f
 
 ## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
 - [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · B31 a8c24031c strict PASS 160 parts/51 types + R8 0 unequal + full verify 2553368/2553368; final batch (8-region landings, q2 rename, B32 PV) needs one re-bind
-- [ ] KV.CLK Legal mesh + routed skew · PATH-KV · RUNNING · 8 regions claude/path-kv-clk-1026@997a54b808 c3e GRT0 incl clock, 0 overlaps/PG shorts, neighbour-proxy pair 60.79/57.02; complete-coverage check + tool review owed; 662 landed ports → OWNER?
+- [ ] KV.CLK Legal mesh + routed skew · PATH-KV · RUNNING · c3t (8 regions + stub trim) claude/path-kv-r2-1026@6e753fb93: GRT0 incl clock, COMPLETE related pair 63.95 TT / 54.71 FF (0 >80); independent tool review owed
 - [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · RUNNING · die_infra reset 287 nets max hop 377um PASS; signal GRT50 M4-M9 w/ clock reservation ovf0; PG needs KV power figure (0.15 W/mm2 fallback) → IF.TOOL
 - [ ] KV.GRT GRT0 incl. clock on the batch · PATH-KV · PASS · batch 650841e1ef one global_route signals M4-M7 + mesh M8-M9: ovf 0 TT+FF; freeze waits KV.BIND + D-INFRA-FIRST PG/pre-route
 - [ ] KV.STA Die STA on real views · DIE-PROTO · WAITS · → KV.CLK, → KV.TILES
