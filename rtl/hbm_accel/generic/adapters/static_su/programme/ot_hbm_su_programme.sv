@@ -205,7 +205,7 @@ module ot_hbm_su_programme #(
 `ifndef SYNTHESIS
   initial if(MACROS!=TOTAL_BANKS) $fatal(1,"programme MACROS capacity mismatch");
   initial if(PIPE==1 && INDEX_PACK!=1) $fatal(1,"programme PIPE 1 requires unpacked indices");
-  initial if(FADV<0 || (PIPE!=2 && FADV!=0) || FADV>XP-1) $fatal(1,"programme FADV only with PIPE 2, < XP");
+  initial if(FADV<0 || (FADV!=0 && (PIPE!=2 || FADV>XP-1))) $fatal(1,"programme FADV only with PIPE 2, < XP");
 `endif
   logic issue,v1,v2;
   logic [15:0] pc, count, e1,e2;
