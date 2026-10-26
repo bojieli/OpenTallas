@@ -256,6 +256,17 @@ def lower(die, op, ctx):
         st = 'PARTIAL' if own else 'GAP'
         gap = GAP_PLACE if own else dict(GAP_PLACE, missing='same endpoint ABI as attn.a_allgather (bench_vpx); the '
                                          'production rows of this op are not placed')
+        if name.endswith('attn.rows_allgather'):
+            # TOK-DS-CMP2 (10-26, 877 die audit): the compressed-row attention ROWS (q frame type 6) have NO producer
+            gap = dict(module='877: no held-row export (dsdv_svc_att reads its held rows by SEL_IDS id into its own '
+                              'attention tile only; outputs qrq / l_d / pv_od / sm_* carry no row data) + no ROWS frame '
+                              'builder on the entry q path (u_s_3S / u_s_4S bo -> u_rsv_05 / u_rsv_11 q)',
+                       port='u_rsv_05 / u_rsv_11 q: ROWS words {scales [290 +: 32], nibbles [34 +: 256], pair [33:31], '
+                            'rank [9:0]} for every non-held selected row (L14: 476 of 512, 3808 words)',
+                       missing='the other (die, stack) owners of the selected compressed rows (g[5:4] die, g[7:6] stack) '
+                               'have no RTL path from their HBM row region (SB + 9 (g >> 9)) to a link / ring; the '
+                               'L14 bench_cmp drives ROWS at the compiled q cycles.  Owner-level design item; measured '
+                               'ingress lower bound 3809 q cycles vs price 1032.9 (ledger SVC.ROWS_INGRESS)')
         if re.search(r'substage_hop\d+$', name):
             gap = dict(gap, port=f'{STAGE_LEG[0]} pair A -> next stage {STAGE_LEG[2]} pair B (S81-LINK5 stage NEXT; '
                                  'TX window ab 0)')
