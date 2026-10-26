@@ -249,3 +249,23 @@ def test_grt_gate_spec_false_still_reads_gate_lines(tmp_path):
     (kit / "postcts_gate_FF.log").write_text("OT_POSTCTS_GATE FF (global_routing) pinreg n 557 mean 266.39 bound 202.50 dev 63.89 tol 20.0 FAIL\n")
     r = C.check_run(tmp_path)
     assert r["stages"]["grt_gate"]["verdict"] == "FAIL" and "304.90" in r["stages"]["grt_gate"]["why"]
+
+
+def test_kv_core_hold_step_runs_after_unsigned_route(tmp_path):
+    """The KV reference includes post-route hold repair, whose input can be unsigned."""
+    import subprocess
+    specs, _ = C.load_spec()
+    k = tmp_path / 'kit'
+    eco = tmp_path / 'physical/die_plan/qwen_kvsys/cores/harden/eco'
+    k.mkdir(); eco.mkdir(parents=True)
+    (k / 'run_kit_kv.sh').write_text('exit 1\n')
+    (eco / 'hold_step.sh').write_text('touch "$1/hold_ran"\n')
+    route = C.fmt(specs['qwen_kvsys_core']['run'], kit=str(k), src=str(tmp_path), mem=32, cpus=8)
+    subprocess.run(['bash', '-c', route], check=True)
+    assert (k / 'hold_ran').exists()
+
+
+def test_kv_runtime_packages_eco_siblings(tmp_path, capsys):
+    C.main(['submit', '--src', str(tmp_path), '--root', str(tmp_path / 'runs'), '--dry', '--die', 'qwen_kvsys_core'])
+    launch = capsys.readouterr().out
+    assert '{run_kit_kv.sh,corners.tcl,pin_audit_core.py}' in launch
