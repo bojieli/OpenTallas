@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.s81.component_candidate.v1",
+  "status": "PROPOSAL_ONLY_COMPONENT_PROOF_PENDING",
+  "reference_master": "dsfd_cfifo_crs4",
+  "candidate_master": "dsfd_cfifo_crs4p",
+  "candidate_source": "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4p.sv",
+  "fixed_parameters": {"LK": "12'b010010010010"},
+  "lane_offsets": [2, 2, 2, 2],
+  "removed_public_port": {"name": "lk", "width": 12},
+  "retained_public_ports": ["cc", "cr", "cr_s", "rd", "ri", "rs", "rst", "st", "xa", "xb", "x2", "xl0", "xl1", "xl2", "xl3", "xk"],
+  "data_cycle_delta": 0,
+  "reset": {
+    "semantics": "Existing asynchronous assertion is preserved, not converted or waived",
+    "rs_release": "Two rising cr edges after rst deassertion",
+    "secondary_status_reset": "Existing two rising cr_s edges after the cr-domain reset release",
+    "private_cycle_delta": 0,
+    "timed_input_qualified": false
+  },
+  "source_differences": [
+    "LK is a parameter rather than a public input",
+    "Existing successor splits landing rings into <=4-bit chunks and duplicates marker/reset controls to meet its native load census",
+    "Public data/reset ages are required to match the original fixed-LK source"
+  ],
+  "adoption": {
+    "current_default_changed": false,
+    "plan_changed": false,
+    "physical_view_adopted": false,
+    "requires": ["Fresh canonical ABI tie census", "Current-source public-port lockstep and wrong-LK mutant", "Analytical area/clock/reset sizing for the chunked successor", "A new declared core/pin profile without the twelve LK pins", "A resolved timed reset input/private-stage contract", "Fresh reviewed geometry and native source LEC", "TT setup/FF hold signoff at 833 ps, 60/25 ps uncertainty"]
+  }
+}
