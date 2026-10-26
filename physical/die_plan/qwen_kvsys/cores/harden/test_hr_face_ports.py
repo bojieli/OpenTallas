@@ -28,6 +28,19 @@ class BoundaryControls(unittest.TestCase):
         self.assertEqual(len(r['merged_in']), 1)
         self.assertEqual(r['n_multi_in'], 0)
 
+    def test_existing_equal_private_outputs_are_preserved(self):
+        j = pair(5)
+        m = j['modules']['top']
+        del m['ports']['d']
+        for port, bit in [('qa',4),('qb',6)]:
+            m['ports'][port] = dict(direction='output',bits=[bit])
+            m['netnames'][port] = dict(bits=[bit],attributes={})
+        out, r = H.transform(j, 'top')
+        self.assertEqual(r['added_ff_bits'],0)
+        for port, cell in [('qa','a'),('qb','b')]:
+            self.assertEqual(out['modules']['top']['cells'][cell]['attributes']['keep'],H.ONE)
+            self.assertEqual(out['modules']['top']['netnames'][port]['attributes']['keep'],H.ONE)
+
     def test_different_initial_states_must_not_merge(self):
         j = pair(5)
         j['modules']['top']['netnames'].update(

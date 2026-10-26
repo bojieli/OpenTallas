@@ -57,3 +57,14 @@ private output duplication retains known init values on both internal and
 private Q nets. Otherwise moving an initialized output name to the private copy
 could remove the original internal state's init. Six focused controls pass,
 including different-init rejection and preservation of both copies' init.
+
+phy_pad actual synthesis found a second folding case: 1573/1575 boundary bits
+passed; in_cr/out_v (both outputs) had distinct original registers with identical
+D/reset/clock, and later synthesis folded them into a forbidden output alias.
+The transform now preserves every registered output driver and its actual port
+Q, including already-private original output registers. No extra RTL cycles or
+new copies beyond the 547 planned duplicates. A three-flop equal-output
+microvehicle retains three flops and distinct a/b bits after re-synthesis; seven
+focused controls pass. Actual failed record retained as phy_pad_original_face_FAIL.
+Corrected full phy_pad2 proof runs at epyc2 unit1565590-1793008571; physical
+synthesis is still owed after the proof. No passing physical result is inferred.

@@ -136,6 +136,11 @@ def transform(J, top, mutant=False):
                 if d is None or cells[d[0]]["type"] not in FF or d[1] != "Q":
                     rep["unregistered_out"].append(f"{nm_}: {cells[d[0]]['type'] if d else 'undriven'}")
                     continue
+                # Two distinct output registers with equal next state may
+                # currently be private yet merge during later synthesis.
+                # Preserve every registered output, including existing ones.
+                cells[d[0]].setdefault("attributes", {})["keep"] = ONE
+                M["netnames"][pn].setdefault("attributes", {})["keep"] = ONE
                 occ = [x for x in pin_of[b] if ports[x[0]]["direction"] == "output"]
                 internal = len(loads[b])
                 if internal == 0 and len(occ) == 1:
