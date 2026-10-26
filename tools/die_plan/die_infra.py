@@ -114,9 +114,7 @@ def reset_wires(P):
         if tn in T:
             dst = P.to_die(p, T[tn]["in_um"])
         else:                                   # hard leaf: its reset tap is its IN (the type's reset pin)
-            dst = P.to_die(p, RT.part_reset_pin(P, p)) if hasattr(RT, "part_reset_pin") else None
-            if dst is None or not isinstance(dst, tuple):
-                continue
+            dst = tuple(RT.part_reset_pin(P, p))       # already in the die frame
         if r["parent"] is None:
             src = rp.get(RT.die_reset_port(P)) or rp.get("rst_n")
             out.append(("rst_n", "reset", tuple(src), tuple(dst)))
