@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.cfifo_capture_model_delta.v1",
+ "status": "PROTOTYPE_NOT_ADOPTED",
+ "old_files_unchanged": [
+  "rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv",
+  "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv"
+ ],
+ "added_root_cycles_per_visited_column": 1,
+ "global_replica_sum_is_not_latency": true,
+ "current_shape": {
+  "lanes": 4,
+  "bits_per_lane": 276,
+  "depth": 4,
+  "extra_flop_bits_per_lane": 281,
+  "extra_flop_bits_per_core": 1124,
+  "components": {
+   "data": 1104,
+   "write_epoch": 12,
+   "capture_valid": 4,
+   "wider_read_counter": 4
+  }
+ },
+ "notes": [
+  "K is extended internally before+1; K7->8 preserved without interface widening.",
+  "No clocks, reset, straps, pin locations or release plans adopted by this prototype.",
+  "Other raw-core face failures (cr_s/xk clock classification, lk straps, rs/rd private outputs) remain open.",
+  "Before B2 adoption: current-width source rebasing, model path count, clock/face gates, physical fit/render, TT/FF."
+ ]
+}
