@@ -1,0 +1,13 @@
+{
+  "edges": 30000,
+  "mismatches": 0,
+  "mutant_mismatches": 27029,
+  "mutant_first": 50,
+  "added_cycles": 0,
+  "verdict": "PASS",
+  "gold_commit": "0c7eb9491",
+  "gate_commit": "23376d17c3 + f4f76cb4b (RCG=1 explicit)",
+  "status": "MINIMUM FUNCTIONAL EXACTNESS ONLY; CTS/physical/synth-LEC not run",
+  "artifact": "epyc1:/srv/opentallas-scratch2/claude/codex-head0733/bf_gate",
+  "rule": "Compare every output trace row on every edge; inverted u_tc_l0 registered-enable mutant. No source numerical/dataflow/reduction changes."
+}

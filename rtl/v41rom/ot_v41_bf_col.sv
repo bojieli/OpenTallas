@@ -71,7 +71,18 @@ module ot_v41_bf_col #(
     parameter integer GRADUAL_RNE = 0,
     parameter INSTANCE = "",
     parameter integer HDLY = 0,       // bf-hier-1011: HB4 hold-delay cells per input bit ahead of the boundary registers
-    parameter integer MB = 0          // which column (simulation ROM image name only)
+    parameter integer MB = 0,         // which column (simulation ROM image name only)
+    // RCG (S81-CORE-LAT-R2/BF 2026-10-26, METHODOLOGY 12.8): TCG regional clock gates.  The TCG column tile u_tc gated
+    // 15,936 flops + both ROMs and the lanes' tree tile u_bf.u_tt 14,219 (measured, Yosys elaboration of the kit
+    // parameters), against 1,284 per lane tile: two whole-core gated trees under one ICG each, which set the core's
+    // 491-663 ps clock insertion.  RCG = 1 gives every unit group its own tile (ot_v41_tile_clk: a LOCAL copy of the
+    // same registered enable ze, same d / clock / reset as u_tc.u_ze, and a LOCAL ICG), all on the core root clock, so
+    // every gate drives ~0.5-4.5k sinks at ONE gate level: segment tree (u_tc_tr), FP lanes l0 / l1 (u_tc_l0/l1), their
+    // FXST input stages (u_tc_fx), chunk chains c0 / c1 (u_tc_c0/c1), sibling pair + delays (u_tc_pa); u_tc keeps the
+    // capture / x / control registers and the ROM macros; lanes3 gets one tile per tree adder node (TNODE).  Every copy
+    // is the same register function of the same inputs, so every register keeps exactly its clock edges (clock-network
+    // change only; bench + LEC: physical/die_plan/s81/core_lat/bf_col_gates.json).  RCG = 0: the original network.
+    parameter integer RCG = 0
 ) (
     input  wire          clk,
     input  wire          rst_n_pin,
@@ -187,11 +198,27 @@ module ot_v41_bf_col #(
 `endif
     // TCG: this macro column's clock tile (local enable copy + gate); else the element clock
     wire gclk_c;
+    wire gclk_tr, gclk_l0, gclk_l1, gclk_fx, gclk_c0, gclk_c1, gclk_pa;   // RCG regional tiles (= gclk_c edge for edge)
     if (TCG != 0) begin : g_tcg
         wire rst_tile_unused;
         ot_v41_tile_clk u_tc (.fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .gclk(gclk_c), .rst_n(rst_tile_unused));
+        if (RCG != 0) begin : g_rcg
+            wire [6:0] rst_rcg_unused;
+            ot_v41_tile_clk u_tc_tr (.fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .gclk(gclk_tr), .rst_n(rst_rcg_unused[0]));
+            ot_v41_tile_clk u_tc_l0 (.fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .gclk(gclk_l0), .rst_n(rst_rcg_unused[1]));
+            ot_v41_tile_clk u_tc_l1 (.fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .gclk(gclk_l1), .rst_n(rst_rcg_unused[2]));
+            ot_v41_tile_clk u_tc_fx (.fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .gclk(gclk_fx), .rst_n(rst_rcg_unused[3]));
+            ot_v41_tile_clk u_tc_c0 (.fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .gclk(gclk_c0), .rst_n(rst_rcg_unused[4]));
+            ot_v41_tile_clk u_tc_c1 (.fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .gclk(gclk_c1), .rst_n(rst_rcg_unused[5]));
+            ot_v41_tile_clk u_tc_pa (.fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .gclk(gclk_pa), .rst_n(rst_rcg_unused[6]));
+        end else begin : g_nrcg
+            assign gclk_tr = gclk_c; assign gclk_l0 = gclk_c; assign gclk_l1 = gclk_c; assign gclk_fx = gclk_c;
+            assign gclk_c0 = gclk_c; assign gclk_c1 = gclk_c; assign gclk_pa = gclk_c;
+        end
     end else begin : g_ntcg
         assign gclk_c = gclk;
+        assign gclk_tr = gclk_c; assign gclk_l0 = gclk_c; assign gclk_l1 = gclk_c; assign gclk_fx = gclk_c;
+        assign gclk_c0 = gclk_c; assign gclk_c1 = gclk_c; assign gclk_pa = gclk_c;
     end
     // QPIPE: this macro's own copy of the b_issue pipeline's control (the x slices stay shared), so nothing
     // synthesised from it is merged with the other macro's half across the die
@@ -374,10 +401,10 @@ module ot_v41_bf_col #(
         if (TCG != 0 && FXST != 0) begin : g_fx
             reg [FLW-3:0] fs [0:FXST-1];
             reg [1:0]     fv [0:FXST-1];
-            always @(posedge gclk_c or negedge rst_m)
+            always @(posedge gclk_fx or negedge rst_m)
                 if (!rst_m) for (int k = 0; k < FXST; k++) fv[k] <= 2'b00;
                 else begin fv[0] <= fl_i[FLW-1 -: 2]; for (int k = 1; k < FXST; k++) fv[k] <= fv[k-1]; end
-            always @(posedge gclk_c) begin
+            always @(posedge gclk_fx) begin
                 fs[0] <= fl_i[FLW-3:0]; for (int k = 1; k < FXST; k++) fs[k] <= fs[k-1];
             end
 `ifdef FXST_MUTANT_TAG
@@ -391,9 +418,9 @@ module ot_v41_bf_col #(
         wire f_v0, f_v1; wire [TW-1:0] f_t; wire [255:0] f_xq0, f_w0q, f_xq1, f_w1q; wire [9:0] f_xe0, f_xe1;
         wire signed [9:0] f_we0, f_we1;
         assign {f_v0, f_v1, f_t, f_xq0, f_xe0, f_w0q, f_we0, f_xq1, f_xe1, f_w1q, f_we1} = fl_o;
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l0 (.clk(gclk_c), .rst_n(rst_m), .v(f_v0), .fp4(f_t[0]),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l0 (.clk(gclk_l0), .rst_n(rst_m), .v(f_v0), .fp4(f_t[0]),
             .xq(f_xq0), .xe(f_xe0), .wq(f_w0q), .we(f_we0), .tag(f_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l1 (.clk(gclk_c), .rst_n(rst_m), .v(f_v1), .fp4(1'b1),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l1 (.clk(gclk_l1), .rst_n(rst_m), .v(f_v1), .fp4(1'b1),
             .xq(f_xq1), .xe(f_xe1), .wq(f_w1q), .we(f_we1), .tag(f_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0) begin : g_l2
         ot_v41_bterm2_w10 #(.TW(TW)) u_l0 (.clk(gclk_c), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
@@ -478,10 +505,10 @@ module ot_v41_bf_col #(
     wire          ci1_last = (BP != 0 && fam) ? m_last : l1_t[4];
     wire [TG:0]   ci1_tag = (BP != 0 && fam) ? m_tag : {l1_t[TW-HW-1 -: TG], l1_t[3]};
     if (FAST != 0 && QZ != 0) begin : g_ch3
-    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk_c), .rst_n(rst_mc), .v(ci0_v),
+    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk_c0), .rst_n(rst_mc), .v(ci0_v),
         .slot(ci_slot), .first(ci_first), .last(ci_last), .term(ci0_y), .term_f(ci0_f),
         .tag(ci_tag), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
-    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk_c), .rst_n(rst_mc), .v(ci1_v),
+    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk_c1), .rst_n(rst_mc), .v(ci1_v),
         .slot(ci1_slot), .first(ci1_first), .last(ci1_last), .term(ci1_y), .term_f(ci1_f),
         .tag(ci1_tag), .ov(c1_v), .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
     end else if (FAST != 0) begin : g_ch2
@@ -528,18 +555,18 @@ module ot_v41_bf_col #(
     wire [1:0] pr_err;
     wire pr_vo;
     if (FAST != 0) begin : g_pa2
-        ot_v41_fadd #(.CUT(CUT)) u_pair (.clk(gclk_c), .rst_n(rst_mp), .valid_in(both), .a(c0_s), .b(c1_s),
+        ot_v41_fadd #(.CUT(CUT)) u_pair (.clk(gclk_pa), .rst_n(rst_mp), .valid_in(both), .a(c0_s), .b(c1_s),
             .y(pr_sum), .err(pr_err), .valid_out(pr_vo));
     end else begin : g_pa1
         ot_fp32_add_rne_pipe u_pair (.clk(gclk_c), .rst_n(rst_mp), .valid_in(both), .a(c0_s), .b(c1_s),
             .y(pr_sum), .err(pr_err), .valid_out(pr_vo));
     end
-    ot_hdc_delay #(.W(32), .D(LAT)) u_pp (.clk(gclk_c), .rst_n(rst_mp), .d(one), .q(pr_pass));
+    ot_hdc_delay #(.W(32), .D(LAT)) u_pp (.clk(gclk_pa), .rst_n(rst_mp), .d(one), .q(pr_pass));
     wire [TG+2:0] pr_t;   // {position, tree, final, both, err}
-    ot_hdc_delay #(.W(TG + 3), .D(LAT)) u_pt (.clk(gclk_c), .rst_n(rst_mp),
+    ot_hdc_delay #(.W(TG + 3), .D(LAT)) u_pt (.clk(gclk_pa), .rst_n(rst_mp),
         .d({ct, both, both ? (c0_f | c1_f) : one_f}), .q(pr_t));
     reg [LAT-1:0] pr_vp;
-    always @(posedge gclk_c or negedge rst_mp)
+    always @(posedge gclk_pa or negedge rst_mp)
         if (!rst_mp) pr_vp <= '0; else pr_vp <= {pr_vp[LAT-2:0], any};
     wire        q_v = pr_vp[LAT-1];
     wire [31:0] q_val = pr_t[1] ? pr_sum : pr_pass;
@@ -572,7 +599,7 @@ module ot_v41_bf_col #(
     if (BF16 != 0) begin : g_bf
         if (FAST != 0 && QBF != 0 && TCG != 0) begin : g_fqt
         // TCG: the BF lanes as per-lane clock / reset tiles (+ BXST pipelined input stages)
-        ot_v41_bf16_lanes3 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0), .XST(BXST)) u_bf (
+        ot_v41_bf16_lanes3 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0), .XST(BXST), .TNODE(RCG)) u_bf (
             .fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .v(mi2_v && mi2_bf),
             .w(cap[255:0]), .x(mz_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
             .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
@@ -618,15 +645,15 @@ module ot_v41_bf_col #(
     wire [31:0] t_val;
     if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5
     // QX = 9: the decide stage split in two (one more cycle per tree level; see ot_v41_segtree5.sv)
-    ot_v41_segtree5 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_c), .rst_n(rst_mt), .in_v(b_v),
+    ot_v41_segtree5 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_tr), .rst_n(rst_mt), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     end else if (FAST != 0 && QPIPE != 0) begin : g_tr3
-    ot_v41_segtree4 #(.XR(0), .XC(QX >= 8 ? 4 : 1), .CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_c), .rst_n(rst_mt), .in_v(b_v),
+    ot_v41_segtree4 #(.XR(0), .XC(QX >= 8 ? 4 : 1), .CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_tr), .rst_n(rst_mt), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     end else if (FAST != 0) begin : g_tr2
-    ot_v41_segtree2 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_c), .rst_n(rst_mt), .in_v(b_v),
+    ot_v41_segtree2 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_tr), .rst_n(rst_mt), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     end else begin : g_tr1
@@ -640,11 +667,11 @@ module ot_v41_bf_col #(
     reg [4:0] o_seg, o_n;
     reg [2:0] o_pos;
     wire [SW-1:0] t_seg = t_tree[SW-1:0];
-    always @(posedge gclk_c or negedge rst_mt) begin
+    always @(posedge gclk_tr or negedge rst_mt) begin
         if (!rst_mt) o_v <= 1'b0;
         else o_v <= t_v && !(QK != 0 ? so_row_c[t_seg][15] : s_row_c[t_seg][15]);   // row bit 15: an idle half of a pair emits nothing
     end
-    always @(posedge gclk_c) begin
+    always @(posedge gclk_tr) begin
         o_val <= t_val; o_err <= t_err;
 `ifdef QP_MUTANT_SHADOW
         if (0) begin                                                           // negative control: live tables
