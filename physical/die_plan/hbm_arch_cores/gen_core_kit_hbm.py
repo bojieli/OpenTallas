@@ -404,7 +404,7 @@ def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=
     return "\n".join(txt), rep
 
 
-def main():
+def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--views", required=True)
     ap.add_argument("--view", required=True)
@@ -483,6 +483,7 @@ def main():
     names = [p["name"] for p in pins]
     pb = buses_of(names)
     R = load_recipes()
+    R.update(recipe_overrides or {})
     rk = a.recipe_key or (module if module in R and (HERE / "recipes_b2.json").is_file() and module in
                           json.load(open(HERE / "recipes_b2.json")) else None) or \
         (v["recipe_keys"][0] if v["recipe_keys"] else None)
@@ -532,12 +533,20 @@ def main():
         # elaborated and hardened as HALF 0 (default) - the wrong per-head delay depth / seed head - and its cs_in /
         # cf_in looked unread.
         params = dict(rec.get("params", {})) if rec.get("top") == top else {}
+    if rec.get("profile_top"):
+        top = rec["profile_top"]
     commit = rec.get("source_commit", "HEAD")
     srcs, local = [], []
     for f in files:
         dst = kd / "rtl" / Path(f).name
         fat = rec.get("files_at", {})        # per-file source pin (RECIPES2: as-built scoped closure + committed core)
-        fetch(f, fat.get(f, commit), dst, at_commit=bool(rec.get("read_at_commit")) or f in fat)
+        if source_overrides and f in source_overrides:
+            data = Path(source_overrides[f]).read_bytes()
+            if dst.exists() and dst.read_bytes() != data:
+                raise SystemExit(f"rtl name clash {dst.name}")
+            dst.write_bytes(data)
+        else:
+            fetch(f, fat.get(f, commit), dst, at_commit=bool(rec.get("read_at_commit")) or f in fat)
         local.append(str(dst))
         if not f.endswith((".svh", ".vh")):
             srcs.append(f"/work/rtl/{dst.name}")
@@ -911,6 +920,8 @@ def main():
                                plan_pins=len(names) + len(shell["dropped"]))
                           if shell else None),
               kit_hash=kit_hash(kd))
+    if source_profile:
+        fz["source_profile"] = source_profile
     fz["flow_defaults"] = dict(flow, rule="FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)")
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
