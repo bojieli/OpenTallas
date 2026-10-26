@@ -1,0 +1,338 @@
+{
+ "slw_su_l1": {
+  "hard_cores": [
+   {
+    "inst": "u_lane4",
+    "module": "qfd_qc_su_lane_w_l4",
+    "origin_um": [
+     17.28,
+     34.56
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/slw_su_l1_u_lane4_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane5",
+    "module": "qfd_qc_su_lane_w_l5",
+    "origin_um": [
+     17.28,
+     354.24
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/slw_su_l1_u_lane5_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane6",
+    "module": "qfd_qc_su_lane_w_l6",
+    "origin_um": [
+     17.28,
+     725.76
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/slw_su_l1_u_lane6_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane7",
+    "module": "qfd_qc_su_lane_w_l7",
+    "origin_um": [
+     17.28,
+     1045.44
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/slw_su_l1_u_lane7_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   }
+  ]
+ },
+ "slw_su_l0": {
+  "hard_cores": [
+   {
+    "inst": "u_lane0",
+    "module": "qfd_qc_su_lane_w_l0",
+    "origin_um": [
+     190.08,
+     34.56
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/slw_su_l0_u_lane0_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane1",
+    "module": "qfd_qc_su_lane_w_l1",
+    "origin_um": [
+     190.08,
+     354.24
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/slw_su_l0_u_lane1_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane2",
+    "module": "qfd_qc_su_lane_w_l2",
+    "origin_um": [
+     190.08,
+     725.76
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/slw_su_l0_u_lane2_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane3",
+    "module": "qfd_qc_su_lane_w_l3",
+    "origin_um": [
+     190.08,
+     1045.44
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/slw_su_l0_u_lane3_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   }
+  ]
+ },
+ "sle_su_l1": {
+  "hard_cores": [
+   {
+    "inst": "u_lane4",
+    "module": "qfd_qc_su_lane_e_l4",
+    "origin_um": [
+     17.28,
+     34.56
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/sle_su_l1_u_lane4_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane5",
+    "module": "qfd_qc_su_lane_e_l5",
+    "origin_um": [
+     17.28,
+     354.24
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/sle_su_l1_u_lane5_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane6",
+    "module": "qfd_qc_su_lane_e_l6",
+    "origin_um": [
+     17.28,
+     725.76
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/sle_su_l1_u_lane6_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane7",
+    "module": "qfd_qc_su_lane_e_l7",
+    "origin_um": [
+     17.28,
+     1045.44
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/sle_su_l1_u_lane7_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   }
+  ]
+ },
+ "sle_su_l0": {
+  "hard_cores": [
+   {
+    "inst": "u_lane0",
+    "module": "qfd_qc_su_lane_e_l0",
+    "origin_um": [
+     190.08,
+     34.56
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/sle_su_l0_u_lane0_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane1",
+    "module": "qfd_qc_su_lane_e_l1",
+    "origin_um": [
+     190.08,
+     354.24
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/sle_su_l0_u_lane1_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane2",
+    "module": "qfd_qc_su_lane_e_l2",
+    "origin_um": [
+     190.08,
+     725.76
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/sle_su_l0_u_lane2_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   },
+   {
+    "inst": "u_lane3",
+    "module": "qfd_qc_su_lane_e_l3",
+    "origin_um": [
+     190.08,
+     1045.44
+    ],
+    "outline_um": [
+     414.72,
+     267.84
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "obs_max": "M6",
+    "pins_file": "cores/su_exact/sle_su_l0_u_lane3_pins.json",
+    "note": "Exact five-leaf source group;0 added cycles; dedicated face gates required"
+   }
+  ]
+ }
+}

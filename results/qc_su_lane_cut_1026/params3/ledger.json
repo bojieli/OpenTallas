@@ -1,0 +1,338 @@
+[
+ {
+  "type": "sle_su_l0",
+  "instance": "u_lane0",
+  "module": "qfd_qc_su_lane_e_l0",
+  "inputs": 760,
+  "outputs": 302,
+  "output_slot_families": {
+   "c_o": 246,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   190.08,
+   34.56
+  ]
+ },
+ {
+  "type": "sle_su_l0",
+  "instance": "u_lane1",
+  "module": "qfd_qc_su_lane_e_l1",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   190.08,
+   354.24
+  ]
+ },
+ {
+  "type": "sle_su_l0",
+  "instance": "u_lane2",
+  "module": "qfd_qc_su_lane_e_l2",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   190.08,
+   725.76
+  ]
+ },
+ {
+  "type": "sle_su_l0",
+  "instance": "u_lane3",
+  "module": "qfd_qc_su_lane_e_l3",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   190.08,
+   1045.44
+  ]
+ },
+ {
+  "type": "sle_su_l1",
+  "instance": "u_lane4",
+  "module": "qfd_qc_su_lane_e_l4",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   17.28,
+   34.56
+  ]
+ },
+ {
+  "type": "sle_su_l1",
+  "instance": "u_lane5",
+  "module": "qfd_qc_su_lane_e_l5",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   17.28,
+   354.24
+  ]
+ },
+ {
+  "type": "sle_su_l1",
+  "instance": "u_lane6",
+  "module": "qfd_qc_su_lane_e_l6",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   17.28,
+   725.76
+  ]
+ },
+ {
+  "type": "sle_su_l1",
+  "instance": "u_lane7",
+  "module": "qfd_qc_su_lane_e_l7",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   17.28,
+   1045.44
+  ]
+ },
+ {
+  "type": "slw_su_l0",
+  "instance": "u_lane0",
+  "module": "qfd_qc_su_lane_w_l0",
+  "inputs": 760,
+  "outputs": 302,
+  "output_slot_families": {
+   "c_o": 246,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   190.08,
+   34.56
+  ]
+ },
+ {
+  "type": "slw_su_l0",
+  "instance": "u_lane1",
+  "module": "qfd_qc_su_lane_w_l1",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   190.08,
+   354.24
+  ]
+ },
+ {
+  "type": "slw_su_l0",
+  "instance": "u_lane2",
+  "module": "qfd_qc_su_lane_w_l2",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   190.08,
+   725.76
+  ]
+ },
+ {
+  "type": "slw_su_l0",
+  "instance": "u_lane3",
+  "module": "qfd_qc_su_lane_w_l3",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   190.08,
+   1045.44
+  ]
+ },
+ {
+  "type": "slw_su_l1",
+  "instance": "u_lane4",
+  "module": "qfd_qc_su_lane_w_l4",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   17.28,
+   34.56
+  ]
+ },
+ {
+  "type": "slw_su_l1",
+  "instance": "u_lane5",
+  "module": "qfd_qc_su_lane_w_l5",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   17.28,
+   354.24
+  ]
+ },
+ {
+  "type": "slw_su_l1",
+  "instance": "u_lane6",
+  "module": "qfd_qc_su_lane_w_l6",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   17.28,
+   725.76
+  ]
+ },
+ {
+  "type": "slw_su_l1",
+  "instance": "u_lane7",
+  "module": "qfd_qc_su_lane_w_l7",
+  "inputs": 760,
+  "outputs": 248,
+  "output_slot_families": {
+   "c_o": 192,
+   "ctl_o": 56
+  },
+  "added_cycles": 0,
+  "memory_alignment": 3,
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "origin_um": [
+   17.28,
+   1045.44
+  ]
+ }
+]
