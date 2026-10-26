@@ -1,0 +1,21 @@
+{
+  "source": "codex/kits-wave-qc-2155@d4ae52687",
+  "verdict": "PASS-COND",
+  "scope": "Construction and G2/die-batch review only; no full-cell placement, CTS, DRT or sign-off approval",
+  "pictures_viewed": ["results/kits_wave_qc_2155/sram_proposal/all_types.png", "results/kits_wave_qc_2155/sram_proposal/sle_st_a_v1.png", "results/kits_wave_qc_2155/sram_proposal/sle_st_b_v1.png", "results/kits_wave_qc_2155/sram_proposal/coll_n.png"],
+  "types": ["sle_st_a_v1", "sle_st_a_v2", "sle_st_b_v1", "sle_st_b_v2", "slw_st_a_v1", "slw_st_a_v2", "slw_st_b_v1", "slw_st_b_v2", "coll_n"],
+  "findings": [
+    "Viewed the updated aligned-v2 overview for all nine templates and detailed representatives of all three distinct geometries.182 actual macro slots are distributed in open regions, not a continuous wall; the ST-a hard-core column retains clear channels. coll_n's two macro columns leave a broad eastern routing region.",
+    "The 5.4um halos are separate and the slots avoid planned FT station sites, clock entries and reset sites. Existing red clock taps remain outside the macro halos. The small ST SRAM groups leave wide cross-partition space rather than pinching the main FT corridors.",
+    "The corrected aligned-v2 BTAB/codec extents (+0.024um) are used in the current pictures; origins are unchanged. The declared LEF/TT/FF shapes must remain those exact views.",
+    "This is a top-down macro-construction review. Pictures do not establish macro IF register distance, clock balancing, pin access, PDN connectivity or routed bus capacity. Those obligations remain with actual G2/full-cell implementation, not inferred from zero point collisions."
+  ],
+  "existing_gate": "Builder terminal G0C PASS0errors/111warnings/68types; not redundantly rerun by reviewer",
+  "conditions": [
+    "Use actual aligned-v2 LEF obstructions, macro PG/pin shapes and declared clocks in the construction/G2 probes; preserve every failed first-view probe as history.",
+    "Collect distinct ST-a/ST-b/coll_n G2 routability and pin-access results, then the combined die signal+clock GRT0 on this internal batch before a renewed die claim.",
+    "Before full-cell route, render actual placement with macro IF flops at their real pins, verify relay reach and related macro/IF clock pairs, and inspect PDN/halo channels. No inherited-template automatic route approval.",
+    "ST-a phantom flt_o binding and coll_n's bound-only clk_coll/clk_serdes remain explicitly blocked until native binding is resolved; this review does not waive either.",
+    "Keep the nine existing clock/reset trees, partition pins/outlines/latencies and all signed masters unchanged, as the approved internal batch requires. No new cycle or timing credit."
+  ]
+}
