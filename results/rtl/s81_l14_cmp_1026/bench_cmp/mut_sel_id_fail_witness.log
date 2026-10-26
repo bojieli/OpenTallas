@@ -1,0 +1,710 @@
+SVCLOW_IMG dir=/srv/opentallas-scratch2/claude/tok-ds-cmp-1026/img/sel_id nq=4660 T=640 jW=94 jE=84 go=4223 pv_frame=4808 exp_pv0=5340 exp_done=6345 hbm=2912 seed=1
+SC MISMATCH row 150 head 0 got 00000000 f0 exp 417caa24 f0
+SC MISMATCH row 150 head 1 got 00000000 f0 exp c2190052 f0
+SC MISMATCH row 150 head 2 got 00000000 f0 exp c00a7270 f0
+SC MISMATCH row 150 head 3 got 00000000 f0 exp c1bae0dd f0
+SC MISMATCH row 150 head 4 got 00000000 f0 exp c15f2be0 f0
+SC MISMATCH row 150 head 5 got 00000000 f0 exp 3f995ea8 f0
+SC MISMATCH row 150 head 6 got 00000000 f0 exp c23e7ccd f0
+SE MISMATCH slice 8 row 150 got 00000000 exp c00a7270
+SE MISMATCH slice 12 row 150 got 00000000 exp c2190052
+SE MISMATCH slice 1 row 150 got 00000000 exp 4177046e
+SE MISMATCH slice 2 row 150 got 00000000 exp c17317c6
+SE MISMATCH slice 9 row 150 got 00000000 exp c1bae0dd
+SE MISMATCH slice 10 row 150 got 00000000 exp 417caa24
+SE MISMATCH slice 13 row 150 got 00000000 exp 3f995ea8
+SVCEDGE EXP slice=8 cyc=4646 a=2
+SVCEDGE EXP slice=12 cyc=4646 a=1
+SVCEDGE EXP slice=8 cyc=4647 a=18
+SVCEDGE EXP slice=12 cyc=4647 a=17
+SVCEDGE EXP slice=8 cyc=4648 a=34
+SVCEDGE EXP slice=12 cyc=4648 a=33
+SVCEDGE EXP slice=8 cyc=4649 a=50
+SVCEDGE EXP slice=12 cyc=4649 a=49
+SVCEDGE EXP slice=8 cyc=4650 a=66
+SVCEDGE EXP slice=12 cyc=4650 a=65
+SVCEDGE EXP slice=1 cyc=4651 a=13
+SVCEDGE EXP slice=2 cyc=4651 a=15
+SVCEDGE EXP slice=8 cyc=4651 a=82
+SVCEDGE EXP slice=9 cyc=4651 a=3
+SVCEDGE EXP slice=10 cyc=4651 a=0
+SVCEDGE EXP slice=12 cyc=4651 a=81
+SVCEDGE EXP slice=13 cyc=4651 a=5
+SVCEDGE EXP slice=14 cyc=4651 a=6
+SVCEDGE EXP slice=1 cyc=4652 a=29
+SVCEDGE EXP slice=2 cyc=4652 a=31
+SVCEDGE EXP slice=8 cyc=4652 a=98
+SVCEDGE EXP slice=9 cyc=4652 a=19
+SVCEDGE EXP slice=10 cyc=4652 a=16
+SVCEDGE EXP slice=12 cyc=4652 a=97
+SVCEDGE EXP slice=13 cyc=4652 a=21
+SVCEDGE EXP slice=14 cyc=4652 a=22
+SVCEDGE EXP slice=1 cyc=4653 a=45
+SVCEDGE EXP slice=2 cyc=4653 a=47
+SVCEDGE EXP slice=8 cyc=4653 a=114
+SVCEDGE EXP slice=9 cyc=4653 a=35
+SVCEDGE EXP slice=10 cyc=4653 a=32
+SVCEDGE EXP slice=12 cyc=4653 a=113
+SVCEDGE EXP slice=13 cyc=4653 a=37
+SVCEDGE EXP slice=14 cyc=4653 a=38
+SVCEDGE EXP slice=1 cyc=4654 a=61
+SVCEDGE EXP slice=2 cyc=4654 a=63
+SVCEDGE EXP slice=8 cyc=4654 a=130
+SVCEDGE EXP slice=9 cyc=4654 a=51
+SVCEDGE EXP slice=10 cyc=4654 a=48
+SVCEDGE EXP slice=12 cyc=4654 a=129
+SVCEDGE EXP slice=13 cyc=4654 a=53
+SVCEDGE EXP slice=14 cyc=4654 a=54
+SVCEDGE EXP slice=1 cyc=4655 a=77
+SVCEDGE EXP slice=2 cyc=4655 a=79
+SVCEDGE EXP slice=8 cyc=4655 a=146
+SVCEDGE EXP slice=9 cyc=4655 a=67
+SVCEDGE EXP slice=10 cyc=4655 a=64
+SVCEDGE EXP slice=12 cyc=4655 a=145
+SVCEDGE EXP slice=13 cyc=4655 a=69
+SVCEDGE EXP slice=14 cyc=4655 a=70
+SVCEDGE EXP slice=0 cyc=4656 a=12
+SVCEDGE EXP slice=1 cyc=4656 a=93
+SVCEDGE EXP slice=2 cyc=4656 a=95
+SVCEDGE EXP slice=3 cyc=4656 a=14
+SVCEDGE EXP slice=4 cyc=4656 a=8
+SVCEDGE EXP slice=7 cyc=4656 a=10
+SVCEDGE EXP slice=8 cyc=4656 a=162
+SVCEDGE EXP slice=9 cyc=4656 a=83
+SVCEDGE EXP slice=10 cyc=4656 a=80
+SVCEDGE EXP slice=11 cyc=4656 a=4
+SVCEDGE EXP slice=12 cyc=4656 a=161
+SVCEDGE EXP slice=13 cyc=4656 a=85
+SVCEDGE EXP slice=14 cyc=4656 a=86
+SVCEDGE EXP slice=15 cyc=4656 a=7
+SVCEDGE EXP slice=0 cyc=4657 a=28
+SVCEDGE EXP slice=1 cyc=4657 a=109
+SVCEDGE EXP slice=2 cyc=4657 a=111
+SVCEDGE EXP slice=3 cyc=4657 a=30
+SVCEDGE EXP slice=4 cyc=4657 a=24
+SVCEDGE EXP slice=7 cyc=4657 a=26
+SVCEDGE EXP slice=8 cyc=4657 a=178
+SVCEDGE EXP slice=9 cyc=4657 a=99
+SVCEDGE EXP slice=10 cyc=4657 a=96
+SVCEDGE EXP slice=11 cyc=4657 a=20
+SVCEDGE EXP slice=12 cyc=4657 a=177
+SVCEDGE EXP slice=13 cyc=4657 a=101
+SVCEDGE EXP slice=14 cyc=4657 a=102
+SVCEDGE EXP slice=15 cyc=4657 a=23
+SVCEDGE EXP slice=0 cyc=4658 a=44
+SVCEDGE EXP slice=1 cyc=4658 a=125
+SVCEDGE EXP slice=2 cyc=4658 a=127
+SVCEDGE EXP slice=3 cyc=4658 a=46
+SVCEDGE EXP slice=4 cyc=4658 a=40
+SVCEDGE EXP slice=7 cyc=4658 a=42
+SVCEDGE EXP slice=8 cyc=4658 a=194
+SVCEDGE EXP slice=9 cyc=4658 a=115
+SVCEDGE EXP slice=10 cyc=4658 a=112
+SVCEDGE EXP slice=11 cyc=4658 a=36
+SVCEDGE EXP slice=12 cyc=4658 a=193
+SVCEDGE EXP slice=13 cyc=4658 a=117
+SVCEDGE EXP slice=14 cyc=4658 a=118
+SVCEDGE EXP slice=15 cyc=4658 a=39
+SVCEDGE EXP slice=0 cyc=4659 a=60
+SVCEDGE EXP slice=1 cyc=4659 a=141
+SVCEDGE EXP slice=2 cyc=4659 a=143
+SVCEDGE EXP slice=3 cyc=4659 a=62
+SVCEDGE EXP slice=4 cyc=4659 a=56
+SVCEDGE EXP slice=7 cyc=4659 a=58
+SVCEDGE EXP slice=8 cyc=4659 a=210
+SVCEDGE EXP slice=9 cyc=4659 a=131
+SVCEDGE EXP slice=10 cyc=4659 a=128
+SVCEDGE EXP slice=11 cyc=4659 a=52
+SVCEDGE EXP slice=12 cyc=4659 a=209
+SVCEDGE EXP slice=13 cyc=4659 a=133
+SVCEDGE EXP slice=14 cyc=4659 a=134
+SVCEDGE EXP slice=15 cyc=4659 a=55
+SVCEDGE EXP slice=0 cyc=4660 a=76
+SVCEDGE EXP slice=1 cyc=4660 a=157
+SVCEDGE EXP slice=2 cyc=4660 a=159
+SVCEDGE EXP slice=3 cyc=4660 a=78
+SVCEDGE EXP slice=4 cyc=4660 a=72
+SVCEDGE EXP slice=7 cyc=4660 a=74
+SVCEDGE EXP slice=8 cyc=4660 a=226
+SVCEDGE EXP slice=9 cyc=4660 a=147
+SVCEDGE EXP slice=10 cyc=4660 a=144
+SVCEDGE EXP slice=11 cyc=4660 a=68
+SVCEDGE EXP slice=12 cyc=4660 a=225
+SVCEDGE EXP slice=13 cyc=4660 a=149
+SVCEDGE EXP slice=14 cyc=4660 a=150
+SVCEDGE EXP slice=15 cyc=4660 a=71
+SVCEDGE EXP slice=0 cyc=4661 a=92
+SVCEDGE EXP slice=1 cyc=4661 a=173
+SVCEDGE EXP slice=2 cyc=4661 a=175
+SVCEDGE EXP slice=3 cyc=4661 a=94
+SVCEDGE EXP slice=4 cyc=4661 a=88
+SVCEDGE EXP slice=5 cyc=4661 a=9
+SVCEDGE EXP slice=6 cyc=4661 a=11
+SVCEDGE EXP slice=7 cyc=4661 a=90
+SVCEDGE EXP slice=8 cyc=4661 a=242
+SVCEDGE EXP slice=9 cyc=4661 a=163
+SVCEDGE EXP slice=10 cyc=4661 a=160
+SVCEDGE EXP slice=11 cyc=4661 a=84
+SVCEDGE EXP slice=12 cyc=4661 a=241
+SVCEDGE EXP slice=13 cyc=4661 a=165
+SVCEDGE EXP slice=14 cyc=4661 a=166
+SVCEDGE EXP slice=15 cyc=4661 a=87
+SVCEDGE EXP slice=0 cyc=4662 a=108
+SVCEDGE EXP slice=1 cyc=4662 a=189
+SVCEDGE EXP slice=2 cyc=4662 a=191
+SVCEDGE EXP slice=3 cyc=4662 a=110
+SVCEDGE EXP slice=4 cyc=4662 a=104
+SVCEDGE EXP slice=5 cyc=4662 a=25
+SVCEDGE EXP slice=6 cyc=4662 a=27
+SVCEDGE EXP slice=7 cyc=4662 a=106
+SVCEDGE EXP slice=8 cyc=4662 a=258
+SVCEDGE EXP slice=9 cyc=4662 a=179
+SVCEDGE EXP slice=10 cyc=4662 a=176
+SVCEDGE EXP slice=11 cyc=4662 a=100
+SVCEDGE EXP slice=12 cyc=4662 a=257
+SVCEDGE EXP slice=13 cyc=4662 a=181
+SVCEDGE EXP slice=14 cyc=4662 a=182
+SVCEDGE EXP slice=15 cyc=4662 a=103
+SVCEDGE EXP slice=0 cyc=4663 a=124
+SVCEDGE EXP slice=1 cyc=4663 a=205
+SVCEDGE EXP slice=2 cyc=4663 a=207
+SVCEDGE EXP slice=3 cyc=4663 a=126
+SVCEDGE EXP slice=4 cyc=4663 a=120
+SVCEDGE EXP slice=5 cyc=4663 a=41
+SVCEDGE EXP slice=6 cyc=4663 a=43
+SVCEDGE EXP slice=7 cyc=4663 a=122
+SVCEDGE EXP slice=8 cyc=4663 a=274
+SVCEDGE EXP slice=9 cyc=4663 a=195
+SVCEDGE EXP slice=10 cyc=4663 a=192
+SVCEDGE EXP slice=11 cyc=4663 a=116
+SVCEDGE EXP slice=12 cyc=4663 a=273
+SVCEDGE EXP slice=13 cyc=4663 a=197
+SVCEDGE EXP slice=14 cyc=4663 a=198
+SVCEDGE EXP slice=15 cyc=4663 a=119
+SVCEDGE EXP slice=0 cyc=4664 a=140
+SVCEDGE EXP slice=1 cyc=4664 a=221
+SVCEDGE EXP slice=2 cyc=4664 a=223
+SVCEDGE EXP slice=3 cyc=4664 a=142
+SVCEDGE EXP slice=4 cyc=4664 a=136
+SVCEDGE EXP slice=5 cyc=4664 a=57
+SVCEDGE EXP slice=6 cyc=4664 a=59
+SVCEDGE EXP slice=7 cyc=4664 a=138
+SVCEDGE EXP slice=8 cyc=4664 a=290
+SVCEDGE EXP slice=9 cyc=4664 a=211
+SVCEDGE EXP slice=10 cyc=4664 a=208
+SVCEDGE EXP slice=11 cyc=4664 a=132
+SVCEDGE EXP slice=12 cyc=4664 a=289
+SVCEDGE EXP slice=13 cyc=4664 a=213
+SVCEDGE EXP slice=14 cyc=4664 a=214
+SVCEDGE EXP slice=15 cyc=4664 a=135
+SVCEDGE EXP slice=0 cyc=4665 a=156
+SVCEDGE EXP slice=1 cyc=4665 a=237
+SVCEDGE EXP slice=2 cyc=4665 a=239
+SVCEDGE EXP slice=3 cyc=4665 a=158
+SVCEDGE EXP slice=4 cyc=4665 a=152
+SVCEDGE EXP slice=5 cyc=4665 a=73
+SVCEDGE EXP slice=6 cyc=4665 a=75
+SVCEDGE EXP slice=7 cyc=4665 a=154
+SVCEDGE EXP slice=8 cyc=4665 a=306
+SVCEDGE EXP slice=9 cyc=4665 a=227
+SVCEDGE EXP slice=10 cyc=4665 a=224
+SVCEDGE EXP slice=11 cyc=4665 a=148
+SVCEDGE EXP slice=12 cyc=4665 a=305
+SVCEDGE EXP slice=13 cyc=4665 a=229
+SVCEDGE EXP slice=14 cyc=4665 a=230
+SVCEDGE EXP slice=15 cyc=4665 a=151
+SVCEDGE EXP slice=0 cyc=4666 a=172
+SVCEDGE EXP slice=1 cyc=4666 a=253
+SVCEDGE EXP slice=2 cyc=4666 a=255
+SVCEDGE EXP slice=3 cyc=4666 a=174
+SVCEDGE EXP slice=4 cyc=4666 a=168
+SVCEDGE EXP slice=5 cyc=4666 a=89
+SVCEDGE EXP slice=6 cyc=4666 a=91
+SVCEDGE EXP slice=7 cyc=4666 a=170
+SVCEDGE EXP slice=8 cyc=4666 a=322
+SVCEDGE EXP slice=9 cyc=4666 a=243
+SVCEDGE EXP slice=10 cyc=4666 a=240
+SVCEDGE EXP slice=11 cyc=4666 a=164
+SVCEDGE EXP slice=12 cyc=4666 a=321
+SVCEDGE EXP slice=13 cyc=4666 a=245
+SVCEDGE EXP slice=14 cyc=4666 a=246
+SVCEDGE EXP slice=15 cyc=4666 a=167
+SVCEDGE EXP slice=0 cyc=4667 a=188
+SVCEDGE EXP slice=1 cyc=4667 a=269
+SVCEDGE EXP slice=2 cyc=4667 a=271
+SVCEDGE EXP slice=3 cyc=4667 a=190
+SVCEDGE EXP slice=4 cyc=4667 a=184
+SVCEDGE EXP slice=5 cyc=4667 a=105
+SVCEDGE EXP slice=6 cyc=4667 a=107
+SVCEDGE EXP slice=7 cyc=4667 a=186
+SVCEDGE EXP slice=8 cyc=4667 a=338
+SVCEDGE EXP slice=9 cyc=4667 a=259
+SVCEDGE EXP slice=10 cyc=4667 a=256
+SVCEDGE EXP slice=11 cyc=4667 a=180
+SVCEDGE EXP slice=12 cyc=4667 a=337
+SVCEDGE EXP slice=13 cyc=4667 a=261
+SVCEDGE EXP slice=14 cyc=4667 a=262
+SVCEDGE EXP slice=15 cyc=4667 a=183
+SVCEDGE EXP slice=0 cyc=4668 a=204
+SVCEDGE EXP slice=1 cyc=4668 a=285
+SVCEDGE EXP slice=2 cyc=4668 a=287
+SVCEDGE EXP slice=3 cyc=4668 a=206
+SVCEDGE EXP slice=4 cyc=4668 a=200
+SVCEDGE EXP slice=5 cyc=4668 a=121
+SVCEDGE EXP slice=6 cyc=4668 a=123
+SVCEDGE EXP slice=7 cyc=4668 a=202
+SVCEDGE EXP slice=8 cyc=4668 a=354
+SVCEDGE EXP slice=9 cyc=4668 a=275
+SVCEDGE EXP slice=10 cyc=4668 a=272
+SVCEDGE EXP slice=11 cyc=4668 a=196
+SVCEDGE EXP slice=12 cyc=4668 a=353
+SVCEDGE EXP slice=13 cyc=4668 a=277
+SVCEDGE EXP slice=14 cyc=4668 a=278
+SVCEDGE EXP slice=15 cyc=4668 a=199
+SVCEDGE EXP slice=0 cyc=4669 a=220
+SVCEDGE EXP slice=1 cyc=4669 a=301
+SVCEDGE EXP slice=2 cyc=4669 a=303
+SVCEDGE EXP slice=3 cyc=4669 a=222
+SVCEDGE EXP slice=4 cyc=4669 a=216
+SVCEDGE EXP slice=5 cyc=4669 a=137
+SVCEDGE EXP slice=6 cyc=4669 a=139
+SVCEDGE EXP slice=7 cyc=4669 a=218
+SVCEDGE EXP slice=8 cyc=4669 a=370
+SVCEDGE EXP slice=9 cyc=4669 a=291
+SVCEDGE EXP slice=10 cyc=4669 a=288
+SVCEDGE EXP slice=11 cyc=4669 a=212
+SVCEDGE EXP slice=12 cyc=4669 a=369
+SVCEDGE EXP slice=13 cyc=4669 a=293
+SVCEDGE EXP slice=14 cyc=4669 a=294
+SVCEDGE EXP slice=15 cyc=4669 a=215
+SVCEDGE EXP slice=0 cyc=4670 a=236
+SVCEDGE EXP slice=1 cyc=4670 a=317
+SVCEDGE EXP slice=2 cyc=4670 a=319
+SVCEDGE EXP slice=3 cyc=4670 a=238
+SVCEDGE EXP slice=4 cyc=4670 a=232
+SVCEDGE EXP slice=5 cyc=4670 a=153
+SVCEDGE EXP slice=6 cyc=4670 a=155
+SVCEDGE EXP slice=7 cyc=4670 a=234
+SVCEDGE EXP slice=8 cyc=4670 a=386
+SVCEDGE EXP slice=9 cyc=4670 a=307
+SVCEDGE EXP slice=10 cyc=4670 a=304
+SVCEDGE EXP slice=11 cyc=4670 a=228
+SVCEDGE EXP slice=12 cyc=4670 a=385
+SVCEDGE EXP slice=13 cyc=4670 a=309
+SVCEDGE EXP slice=14 cyc=4670 a=310
+SVCEDGE EXP slice=15 cyc=4670 a=231
+SVCEDGE EXP slice=0 cyc=4671 a=252
+SVCEDGE EXP slice=1 cyc=4671 a=333
+SVCEDGE EXP slice=2 cyc=4671 a=335
+SVCEDGE EXP slice=3 cyc=4671 a=254
+SVCEDGE EXP slice=4 cyc=4671 a=248
+SVCEDGE EXP slice=5 cyc=4671 a=169
+SVCEDGE EXP slice=6 cyc=4671 a=171
+SVCEDGE EXP slice=7 cyc=4671 a=250
+SVCEDGE EXP slice=8 cyc=4671 a=402
+SVCEDGE EXP slice=9 cyc=4671 a=323
+SVCEDGE EXP slice=10 cyc=4671 a=320
+SVCEDGE EXP slice=11 cyc=4671 a=244
+SVCEDGE EXP slice=12 cyc=4671 a=401
+SVCEDGE EXP slice=13 cyc=4671 a=325
+SVCEDGE EXP slice=14 cyc=4671 a=326
+SVCEDGE EXP slice=15 cyc=4671 a=247
+SVCEDGE EXP slice=0 cyc=4672 a=268
+SVCEDGE EXP slice=1 cyc=4672 a=349
+SVCEDGE EXP slice=2 cyc=4672 a=351
+SVCEDGE EXP slice=3 cyc=4672 a=270
+SVCEDGE EXP slice=4 cyc=4672 a=264
+SVCEDGE EXP slice=5 cyc=4672 a=185
+SVCEDGE EXP slice=6 cyc=4672 a=187
+SVCEDGE EXP slice=7 cyc=4672 a=266
+SVCEDGE EXP slice=8 cyc=4672 a=418
+SVCEDGE EXP slice=9 cyc=4672 a=339
+SVCEDGE EXP slice=10 cyc=4672 a=336
+SVCEDGE EXP slice=11 cyc=4672 a=260
+SVCEDGE EXP slice=12 cyc=4672 a=417
+SVCEDGE EXP slice=13 cyc=4672 a=341
+SVCEDGE EXP slice=14 cyc=4672 a=342
+SVCEDGE EXP slice=15 cyc=4672 a=263
+SVCEDGE EXP slice=0 cyc=4673 a=284
+SVCEDGE EXP slice=1 cyc=4673 a=365
+SVCEDGE EXP slice=2 cyc=4673 a=367
+SVCEDGE EXP slice=3 cyc=4673 a=286
+SVCEDGE EXP slice=4 cyc=4673 a=280
+SVCEDGE EXP slice=5 cyc=4673 a=201
+SVCEDGE EXP slice=6 cyc=4673 a=203
+SVCEDGE EXP slice=7 cyc=4673 a=282
+SVCEDGE EXP slice=8 cyc=4673 a=434
+SVCEDGE EXP slice=9 cyc=4673 a=355
+SVCEDGE EXP slice=10 cyc=4673 a=352
+SVCEDGE EXP slice=11 cyc=4673 a=276
+SVCEDGE EXP slice=12 cyc=4673 a=433
+SVCEDGE EXP slice=13 cyc=4673 a=357
+SVCEDGE EXP slice=14 cyc=4673 a=358
+SVCEDGE EXP slice=15 cyc=4673 a=279
+SVCEDGE EXP slice=0 cyc=4674 a=300
+SVCEDGE EXP slice=1 cyc=4674 a=381
+SVCEDGE EXP slice=2 cyc=4674 a=383
+SVCEDGE EXP slice=3 cyc=4674 a=302
+SVCEDGE EXP slice=4 cyc=4674 a=296
+SVCEDGE EXP slice=5 cyc=4674 a=217
+SVCEDGE EXP slice=6 cyc=4674 a=219
+SVCEDGE EXP slice=7 cyc=4674 a=298
+SVCEDGE EXP slice=8 cyc=4674 a=450
+SVCEDGE EXP slice=9 cyc=4674 a=371
+SVCEDGE EXP slice=10 cyc=4674 a=368
+SVCEDGE EXP slice=11 cyc=4674 a=292
+SVCEDGE EXP slice=12 cyc=4674 a=449
+SVCEDGE EXP slice=13 cyc=4674 a=373
+SVCEDGE EXP slice=14 cyc=4674 a=374
+SVCEDGE EXP slice=15 cyc=4674 a=295
+SVCEDGE EXP slice=0 cyc=4675 a=316
+SVCEDGE EXP slice=1 cyc=4675 a=397
+SVCEDGE EXP slice=2 cyc=4675 a=399
+SVCEDGE EXP slice=3 cyc=4675 a=318
+SVCEDGE EXP slice=4 cyc=4675 a=312
+SVCEDGE EXP slice=5 cyc=4675 a=233
+SVCEDGE EXP slice=6 cyc=4675 a=235
+SVCEDGE EXP slice=7 cyc=4675 a=314
+SVCEDGE EXP slice=8 cyc=4675 a=466
+SVCEDGE EXP slice=9 cyc=4675 a=387
+SVCEDGE EXP slice=10 cyc=4675 a=384
+SVCEDGE EXP slice=11 cyc=4675 a=308
+SVCEDGE EXP slice=12 cyc=4675 a=465
+SVCEDGE EXP slice=13 cyc=4675 a=389
+SVCEDGE EXP slice=14 cyc=4675 a=390
+SVCEDGE EXP slice=15 cyc=4675 a=311
+SVCEDGE EXP slice=0 cyc=4676 a=332
+SVCEDGE EXP slice=1 cyc=4676 a=413
+SVCEDGE EXP slice=2 cyc=4676 a=415
+SVCEDGE EXP slice=3 cyc=4676 a=334
+SVCEDGE EXP slice=4 cyc=4676 a=328
+SVCEDGE EXP slice=5 cyc=4676 a=249
+SVCEDGE EXP slice=6 cyc=4676 a=251
+SVCEDGE EXP slice=7 cyc=4676 a=330
+SVCEDGE EXP slice=8 cyc=4676 a=482
+SVCEDGE EXP slice=9 cyc=4676 a=403
+SVCEDGE EXP slice=10 cyc=4676 a=400
+SVCEDGE EXP slice=11 cyc=4676 a=324
+SVCEDGE EXP slice=12 cyc=4676 a=481
+SVCEDGE EXP slice=13 cyc=4676 a=405
+SVCEDGE EXP slice=14 cyc=4676 a=406
+SVCEDGE EXP slice=15 cyc=4676 a=327
+SVCEDGE EXP slice=0 cyc=4677 a=348
+SVCEDGE EXP slice=1 cyc=4677 a=429
+SVCEDGE EXP slice=2 cyc=4677 a=431
+SVCEDGE EXP slice=3 cyc=4677 a=350
+SVCEDGE EXP slice=4 cyc=4677 a=344
+SVCEDGE EXP slice=5 cyc=4677 a=265
+SVCEDGE EXP slice=6 cyc=4677 a=267
+SVCEDGE EXP slice=7 cyc=4677 a=346
+SVCEDGE EXP slice=8 cyc=4677 a=498
+SVCEDGE EXP slice=9 cyc=4677 a=419
+SVCEDGE EXP slice=10 cyc=4677 a=416
+SVCEDGE EXP slice=11 cyc=4677 a=340
+SVCEDGE EXP slice=12 cyc=4677 a=497
+SVCEDGE EXP slice=13 cyc=4677 a=421
+SVCEDGE EXP slice=14 cyc=4677 a=422
+SVCEDGE EXP slice=15 cyc=4677 a=343
+SVCEDGE EXP slice=0 cyc=4678 a=364
+SVCEDGE EXP slice=1 cyc=4678 a=445
+SVCEDGE EXP slice=2 cyc=4678 a=447
+SVCEDGE EXP slice=3 cyc=4678 a=366
+SVCEDGE EXP slice=4 cyc=4678 a=360
+SVCEDGE EXP slice=5 cyc=4678 a=281
+SVCEDGE EXP slice=6 cyc=4678 a=283
+SVCEDGE EXP slice=7 cyc=4678 a=362
+SVCEDGE EXP slice=8 cyc=4678 a=514
+SVCEDGE EXP slice=9 cyc=4678 a=435
+SVCEDGE EXP slice=10 cyc=4678 a=432
+SVCEDGE EXP slice=11 cyc=4678 a=356
+SVCEDGE EXP slice=12 cyc=4678 a=513
+SVCEDGE EXP slice=13 cyc=4678 a=437
+SVCEDGE EXP slice=14 cyc=4678 a=438
+SVCEDGE EXP slice=15 cyc=4678 a=359
+SVCEDGE EXP slice=0 cyc=4679 a=380
+SVCEDGE EXP slice=1 cyc=4679 a=461
+SVCEDGE EXP slice=2 cyc=4679 a=463
+SVCEDGE EXP slice=3 cyc=4679 a=382
+SVCEDGE EXP slice=4 cyc=4679 a=376
+SVCEDGE EXP slice=5 cyc=4679 a=297
+SVCEDGE EXP slice=6 cyc=4679 a=299
+SVCEDGE EXP slice=7 cyc=4679 a=378
+SVCEDGE EXP slice=8 cyc=4679 a=530
+SVCEDGE EXP slice=9 cyc=4679 a=451
+SVCEDGE EXP slice=10 cyc=4679 a=448
+SVCEDGE EXP slice=11 cyc=4679 a=372
+SVCEDGE EXP slice=12 cyc=4679 a=529
+SVCEDGE EXP slice=13 cyc=4679 a=453
+SVCEDGE EXP slice=14 cyc=4679 a=454
+SVCEDGE EXP slice=15 cyc=4679 a=375
+SVCEDGE EXP slice=0 cyc=4680 a=396
+SVCEDGE EXP slice=1 cyc=4680 a=477
+SVCEDGE EXP slice=2 cyc=4680 a=479
+SVCEDGE EXP slice=3 cyc=4680 a=398
+SVCEDGE EXP slice=4 cyc=4680 a=392
+SVCEDGE EXP slice=5 cyc=4680 a=313
+SVCEDGE EXP slice=6 cyc=4680 a=315
+SVCEDGE EXP slice=7 cyc=4680 a=394
+SVCEDGE EXP slice=8 cyc=4680 a=546
+SVCEDGE EXP slice=9 cyc=4680 a=467
+SVCEDGE EXP slice=10 cyc=4680 a=464
+SVCEDGE EXP slice=11 cyc=4680 a=388
+SVCEDGE EXP slice=12 cyc=4680 a=545
+SVCEDGE EXP slice=13 cyc=4680 a=469
+SVCEDGE EXP slice=14 cyc=4680 a=470
+SVCEDGE EXP slice=15 cyc=4680 a=391
+SVCEDGE EXP slice=0 cyc=4681 a=412
+SVCEDGE EXP slice=1 cyc=4681 a=493
+SVCEDGE EXP slice=2 cyc=4681 a=495
+SVCEDGE EXP slice=3 cyc=4681 a=414
+SVCEDGE EXP slice=4 cyc=4681 a=408
+SVCEDGE EXP slice=5 cyc=4681 a=329
+SVCEDGE EXP slice=6 cyc=4681 a=331
+SVCEDGE EXP slice=7 cyc=4681 a=410
+SVCEDGE EXP slice=8 cyc=4681 a=562
+SVCEDGE EXP slice=9 cyc=4681 a=483
+SVCEDGE EXP slice=10 cyc=4681 a=480
+SVCEDGE EXP slice=11 cyc=4681 a=404
+SVCEDGE EXP slice=12 cyc=4681 a=561
+SVCEDGE EXP slice=13 cyc=4681 a=485
+SVCEDGE EXP slice=14 cyc=4681 a=486
+SVCEDGE EXP slice=15 cyc=4681 a=407
+SVCEDGE EXP slice=0 cyc=4682 a=428
+SVCEDGE EXP slice=1 cyc=4682 a=509
+SVCEDGE EXP slice=2 cyc=4682 a=511
+SVCEDGE EXP slice=3 cyc=4682 a=430
+SVCEDGE EXP slice=4 cyc=4682 a=424
+SVCEDGE EXP slice=5 cyc=4682 a=345
+SVCEDGE EXP slice=6 cyc=4682 a=347
+SVCEDGE EXP slice=7 cyc=4682 a=426
+SVCEDGE EXP slice=8 cyc=4682 a=578
+SVCEDGE EXP slice=9 cyc=4682 a=499
+SVCEDGE EXP slice=10 cyc=4682 a=496
+SVCEDGE EXP slice=11 cyc=4682 a=420
+SVCEDGE EXP slice=12 cyc=4682 a=577
+SVCEDGE EXP slice=13 cyc=4682 a=501
+SVCEDGE EXP slice=14 cyc=4682 a=502
+SVCEDGE EXP slice=15 cyc=4682 a=423
+SVCEDGE EXP slice=0 cyc=4683 a=444
+SVCEDGE EXP slice=1 cyc=4683 a=525
+SVCEDGE EXP slice=2 cyc=4683 a=527
+SVCEDGE EXP slice=3 cyc=4683 a=446
+SVCEDGE EXP slice=4 cyc=4683 a=440
+SVCEDGE EXP slice=5 cyc=4683 a=361
+SVCEDGE EXP slice=6 cyc=4683 a=363
+SVCEDGE EXP slice=7 cyc=4683 a=442
+SVCEDGE EXP slice=8 cyc=4683 a=594
+SVCEDGE EXP slice=9 cyc=4683 a=515
+SVCEDGE EXP slice=10 cyc=4683 a=512
+SVCEDGE EXP slice=11 cyc=4683 a=436
+SVCEDGE EXP slice=12 cyc=4683 a=593
+SVCEDGE EXP slice=13 cyc=4683 a=517
+SVCEDGE EXP slice=14 cyc=4683 a=518
+SVCEDGE EXP slice=15 cyc=4683 a=439
+SVCEDGE EXP slice=0 cyc=4684 a=460
+SVCEDGE EXP slice=1 cyc=4684 a=541
+SVCEDGE EXP slice=2 cyc=4684 a=543
+SVCEDGE EXP slice=3 cyc=4684 a=462
+SVCEDGE EXP slice=4 cyc=4684 a=456
+SVCEDGE EXP slice=5 cyc=4684 a=377
+SVCEDGE EXP slice=6 cyc=4684 a=379
+SVCEDGE EXP slice=7 cyc=4684 a=458
+SVCEDGE EXP slice=8 cyc=4684 a=610
+SVCEDGE EXP slice=9 cyc=4684 a=531
+SVCEDGE EXP slice=10 cyc=4684 a=528
+SVCEDGE EXP slice=11 cyc=4684 a=452
+SVCEDGE EXP slice=12 cyc=4684 a=609
+SVCEDGE EXP slice=13 cyc=4684 a=533
+SVCEDGE EXP slice=14 cyc=4684 a=534
+SVCEDGE EXP slice=15 cyc=4684 a=455
+SVCEDGE EXP slice=0 cyc=4685 a=476
+SVCEDGE EXP slice=1 cyc=4685 a=557
+SVCEDGE EXP slice=2 cyc=4685 a=559
+SVCEDGE EXP slice=3 cyc=4685 a=478
+SVCEDGE EXP slice=4 cyc=4685 a=472
+SVCEDGE EXP slice=5 cyc=4685 a=393
+SVCEDGE EXP slice=6 cyc=4685 a=395
+SVCEDGE EXP slice=7 cyc=4685 a=474
+SVCEDGE EXP slice=8 cyc=4685 a=626
+SVCEDGE EXP slice=9 cyc=4685 a=547
+SVCEDGE EXP slice=10 cyc=4685 a=544
+SVCEDGE EXP slice=11 cyc=4685 a=468
+SVCEDGE EXP slice=12 cyc=4685 a=625
+SVCEDGE EXP slice=13 cyc=4685 a=549
+SVCEDGE EXP slice=14 cyc=4685 a=550
+SVCEDGE EXP slice=15 cyc=4685 a=471
+SVCEDGE EXP slice=0 cyc=4686 a=492
+SVCEDGE EXP slice=1 cyc=4686 a=573
+SVCEDGE EXP slice=2 cyc=4686 a=575
+SVCEDGE EXP slice=3 cyc=4686 a=494
+SVCEDGE EXP slice=4 cyc=4686 a=488
+SVCEDGE EXP slice=5 cyc=4686 a=409
+SVCEDGE EXP slice=6 cyc=4686 a=411
+SVCEDGE EXP slice=7 cyc=4686 a=490
+SVCEDGE EXP slice=9 cyc=4686 a=563
+SVCEDGE EXP slice=10 cyc=4686 a=560
+SVCEDGE EXP slice=11 cyc=4686 a=484
+SVCEDGE EXP slice=13 cyc=4686 a=565
+SVCEDGE EXP slice=14 cyc=4686 a=566
+SVCEDGE EXP slice=15 cyc=4686 a=487
+SVCEDGE EXP slice=0 cyc=4687 a=508
+SVCEDGE EXP slice=1 cyc=4687 a=589
+SVCEDGE EXP slice=2 cyc=4687 a=591
+SVCEDGE EXP slice=3 cyc=4687 a=510
+SVCEDGE EXP slice=4 cyc=4687 a=504
+SVCEDGE EXP slice=5 cyc=4687 a=425
+SVCEDGE EXP slice=6 cyc=4687 a=427
+SVCEDGE EXP slice=7 cyc=4687 a=506
+SVCEDGE EXP slice=9 cyc=4687 a=579
+SVCEDGE EXP slice=10 cyc=4687 a=576
+SVCEDGE EXP slice=11 cyc=4687 a=500
+SVCEDGE EXP slice=13 cyc=4687 a=581
+SVCEDGE EXP slice=14 cyc=4687 a=582
+SVCEDGE EXP slice=15 cyc=4687 a=503
+SVCEDGE EXP slice=0 cyc=4688 a=524
+SVCEDGE EXP slice=1 cyc=4688 a=605
+SVCEDGE EXP slice=2 cyc=4688 a=607
+SVCEDGE EXP slice=3 cyc=4688 a=526
+SVCEDGE EXP slice=4 cyc=4688 a=520
+SVCEDGE EXP slice=5 cyc=4688 a=441
+SVCEDGE EXP slice=6 cyc=4688 a=443
+SVCEDGE EXP slice=7 cyc=4688 a=522
+SVCEDGE EXP slice=9 cyc=4688 a=595
+SVCEDGE EXP slice=10 cyc=4688 a=592
+SVCEDGE EXP slice=11 cyc=4688 a=516
+SVCEDGE EXP slice=13 cyc=4688 a=597
+SVCEDGE EXP slice=14 cyc=4688 a=598
+SVCEDGE EXP slice=15 cyc=4688 a=519
+SVCEDGE EXP slice=0 cyc=4689 a=540
+SVCEDGE EXP slice=1 cyc=4689 a=621
+SVCEDGE EXP slice=2 cyc=4689 a=623
+SVCEDGE EXP slice=3 cyc=4689 a=542
+SVCEDGE EXP slice=4 cyc=4689 a=536
+SVCEDGE EXP slice=5 cyc=4689 a=457
+SVCEDGE EXP slice=6 cyc=4689 a=459
+SVCEDGE EXP slice=7 cyc=4689 a=538
+SVCEDGE EXP slice=9 cyc=4689 a=611
+SVCEDGE EXP slice=10 cyc=4689 a=608
+SVCEDGE EXP slice=11 cyc=4689 a=532
+SVCEDGE EXP slice=13 cyc=4689 a=613
+SVCEDGE EXP slice=14 cyc=4689 a=614
+SVCEDGE EXP slice=15 cyc=4689 a=535
+SVCEDGE EXP slice=0 cyc=4690 a=556
+SVCEDGE EXP slice=1 cyc=4690 a=637
+SVCEDGE EXP slice=2 cyc=4690 a=639
+SVCEDGE EXP slice=3 cyc=4690 a=558
+SVCEDGE EXP slice=4 cyc=4690 a=552
+SVCEDGE EXP slice=5 cyc=4690 a=473
+SVCEDGE EXP slice=6 cyc=4690 a=475
+SVCEDGE EXP slice=7 cyc=4690 a=554
+SVCEDGE EXP slice=9 cyc=4690 a=627
+SVCEDGE EXP slice=10 cyc=4690 a=624
+SVCEDGE EXP slice=11 cyc=4690 a=548
+SVCEDGE EXP slice=13 cyc=4690 a=629
+SVCEDGE EXP slice=14 cyc=4690 a=630
+SVCEDGE EXP slice=15 cyc=4690 a=551
+SVCEDGE EXP slice=0 cyc=4691 a=572
+SVCEDGE EXP slice=3 cyc=4691 a=574
+SVCEDGE EXP slice=4 cyc=4691 a=568
+SVCEDGE EXP slice=5 cyc=4691 a=489
+SVCEDGE EXP slice=6 cyc=4691 a=491
+SVCEDGE EXP slice=7 cyc=4691 a=570
+SVCEDGE EXP slice=11 cyc=4691 a=564
+SVCEDGE EXP slice=15 cyc=4691 a=567
+SVCEDGE EXP slice=0 cyc=4692 a=588
+SVCEDGE EXP slice=3 cyc=4692 a=590
+SVCEDGE EXP slice=4 cyc=4692 a=584
+SVCEDGE EXP slice=5 cyc=4692 a=505
+SVCEDGE EXP slice=6 cyc=4692 a=507
+SVCEDGE EXP slice=7 cyc=4692 a=586
+SVCEDGE EXP slice=11 cyc=4692 a=580
+SVCEDGE EXP slice=15 cyc=4692 a=583
+SVCEDGE EXP slice=0 cyc=4693 a=604
+SVCEDGE EXP slice=3 cyc=4693 a=606
+SVCEDGE EXP slice=4 cyc=4693 a=600
+SVCEDGE EXP slice=5 cyc=4693 a=521
+SVCEDGE EXP slice=6 cyc=4693 a=523
+SVCEDGE EXP slice=7 cyc=4693 a=602
+SVCEDGE EXP slice=11 cyc=4693 a=596
+SVCEDGE EXP slice=15 cyc=4693 a=599
+SVCEDGE EXP slice=0 cyc=4694 a=620
+SVCEDGE EXP slice=3 cyc=4694 a=622
+SVCEDGE EXP slice=4 cyc=4694 a=616
+SVCEDGE EXP slice=5 cyc=4694 a=537
+SVCEDGE EXP slice=6 cyc=4694 a=539
+SVCEDGE EXP slice=7 cyc=4694 a=618
+SVCEDGE EXP slice=11 cyc=4694 a=612
+SVCEDGE EXP slice=15 cyc=4694 a=615
+SVCEDGE EXP slice=0 cyc=4695 a=636
+SVCEDGE EXP slice=3 cyc=4695 a=638
+SVCEDGE EXP slice=4 cyc=4695 a=632
+SVCEDGE EXP slice=5 cyc=4695 a=553
+SVCEDGE EXP slice=6 cyc=4695 a=555
+SVCEDGE EXP slice=7 cyc=4695 a=634
+SVCEDGE EXP slice=11 cyc=4695 a=628
+SVCEDGE EXP slice=15 cyc=4695 a=631
+SVCEDGE EXP slice=5 cyc=4696 a=569
+SVCEDGE EXP slice=6 cyc=4696 a=571
+SVCEDGE EXP slice=5 cyc=4697 a=585
+SVCEDGE EXP slice=6 cyc=4697 a=587
+SVCEDGE EXP slice=5 cyc=4698 a=601
+SVCEDGE EXP slice=6 cyc=4698 a=603
+SVCEDGE EXP slice=5 cyc=4699 a=617
+SVCEDGE EXP slice=6 cyc=4699 a=619
+SVCEDGE EXP slice=5 cyc=4700 a=633
+SVCEDGE EXP slice=6 cyc=4700 a=635
+P MISMATCH root beat row 150 head 0 got 3c840000 exp 3d050000
+P MISMATCH root beat row 150 head 1 got 3dae0000 exp 3c800000
+P MISMATCH root beat row 150 head 2 got 3cf80000 exp 3ce20000
+P MISMATCH root beat row 150 head 3 got 3d8b0000 exp 3cc60000
+P MISMATCH root beat row 150 head 4 got 3d810000 exp 3d0c0000
+P MISMATCH root beat row 150 head 5 got 3d390000 exp 3d430000
+P MISMATCH root beat row 150 head 6 got 3ca70000 exp 3b230000
+PF MISMATCH entry 11 word 76
+PF MISMATCH entry 5 word 76
+PV MISMATCH entry 5 tile 8 dim 256 head 0 got bf0da6b5 f0 exp bf0acb35 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 1 got c086718d f0 exp c086458d f0
+PV MISMATCH entry 5 tile 8 dim 256 head 2 got c0026c54 f0 exp c001d0f4 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 3 got be909af0 f0 exp be8c59f0 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 4 got c0778e68 f0 exp c076cde8 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 5 got c03a5961 f0 exp c0394d41 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 6 got bfe9ce8a f0 exp bfe9b286 f0
+SO MISMATCH slice 10 head 0 row 0 a 200 m ff st 224
+SO MISMATCH slice 10 head 0 row 1 a 208 m ff st 224
+SO MISMATCH slice 10 head 0 row 2 a 210 m ff st 224
+SO MISMATCH slice 10 head 0 row 3 a 218 m ff st 224
+SO MISMATCH slice 10 head 0 row 4 a 220 m ff st 224
+SO MISMATCH slice 10 head 0 row 5 a 228 m ff st 224
+SO MISMATCH slice 10 head 0 row 6 a 230 m ff st 224
+GW MISMATCH entry 11 head 0 beat 0 row 0
+GW MISMATCH entry 11 head 0 beat 0 row 1
+GW MISMATCH entry 11 head 0 beat 0 row 2
+GW MISMATCH entry 11 head 0 beat 0 row 3
+GW MISMATCH entry 11 head 0 beat 1 row 0
+GW MISMATCH entry 11 head 0 beat 1 row 1
+GW MISMATCH entry 11 head 0 beat 1 row 2
+SVCLOW_ALLQ W first=5340 last=5659 words=320 E first=5340 last=5659 words=320 exp_first=5340 exp_last=5659
+SVCLOW_SCHED go=4223 pv_frame=4808 first_score=4365 last_score=4524 pv_first=5340 exp_pv_first=5340 pv_last=5659 done_W=6378 exp_done_W=6378 done_E=6345 exp_done_E=6345 n_done=1/1 q_sent=4660/4660 late_q=0 pv_early=0 hbm_wr=32 hbm_rd=2688 sched_bad=0
+SVCLOW_P pmode=1 go=4223 p_nominal=4808 erow_first=4646 erow_last_min=5816 erow_last_max=6316 p_beat_first=4883 p_beat_last=5201 pf_W=4898 pf_E=4893 pf_n=1/1 p_beats=160 p_checked=10240 p_errors=16 pf_errors=2 npw=321
+SVCLOW_SOH slice=0 head=12 so_rows=32 so_first=6092 so_last=6123 beats=8 gw_first=6198
+SVCLOW_SOH slice=1 head=13 so_rows=32 so_first=6153 so_last=6184 beats=8 gw_first=6246
+SVCLOW_SOH slice=2 head=15 so_rows=32 so_first=6285 so_last=6316 beats=8 gw_first=6342
+SVCLOW_SOH slice=3 head=14 so_rows=32 so_first=6214 so_last=6245 beats=8 gw_first=6294
+SVCLOW_SOH slice=4 head=8 so_rows=32 so_first=5818 so_last=5849 beats=8 gw_first=6006
+SVCLOW_SOH slice=5 head=9 so_rows=32 so_first=5879 so_last=5910 beats=8 gw_first=6054
+SVCLOW_SOH slice=6 head=11 so_rows=32 so_first=6021 so_last=6052 beats=8 gw_first=6150
+SVCLOW_SOH slice=7 head=10 so_rows=32 so_first=5950 so_last=5981 beats=8 gw_first=6102
+SVCLOW_SOH slice=8 head=2 so_rows=32 so_first=5922 so_last=5953 beats=8 gw_first=6069
+SVCLOW_SOH slice=9 head=3 so_rows=32 so_first=5983 so_last=6014 beats=8 gw_first=6117
+SVCLOW_SOH slice=10 head=0 so_rows=32 so_first=5785 so_last=5816 beats=8 gw_first=5973
+SVCLOW_SOH slice=11 head=4 so_rows=32 so_first=6044 so_last=6075 beats=8 gw_first=6165
+SVCLOW_SOH slice=12 head=1 so_rows=32 so_first=5856 so_last=5887 beats=8 gw_first=6021
+SVCLOW_SOH slice=13 head=5 so_rows=32 so_first=6115 so_last=6146 beats=8 gw_first=6213
+SVCLOW_SOH slice=14 head=6 so_rows=32 so_first=6191 so_last=6222 beats=8 gw_first=6261
+SVCLOW_SOH slice=15 head=7 so_rows=32 so_first=6252 so_last=6283 beats=8 gw_first=6309
+SVCLOW_SO so_errors=317 bad_heads=0 gw_W=192 gw_E=192 gw_first_W=6006 gw_last_W=6372 gw_first_E=5973 gw_last_E=6339 gw_errors=317
+SVCLOW die=0 st=0 allq=1 T=640 root_beats=160 sc_checked=10240 sc_errors=16 order_errors=0 se_checked=10240 se_errors=16 se_bad_slices=0 sm_rows_bad=0 pv_checked=8192 pv_errors=7488 pv_words=640 pv_gaps=0 pv_other_entry=0 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 sched_bad=0 cycles=6679 verdict=FAIL
+- /srv/opentallas-scratch2/claude/wt/tok-ds-l14cc-1026/tools/s81_dv/layer_prog/svc/tb_svc_lower.sv:447: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 1591.098 s; speed 4.198 ns/s
+- Verilator: cpu 1591.042 s on 17 threads; allocated 16967 MB
