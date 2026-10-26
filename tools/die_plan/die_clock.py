@@ -92,6 +92,7 @@ CORRIDOR_WINDOW = 0.25                  # a node may move +-25 % of its region e
 CORRIDOR_STEP_UM = 17.28
 MAX_SEG_X = 1.15                        # a legalised segment may reach 1.15 x rep_um, else the level gets a repeater more
 SIDE_MAX_UM = 1500.0
+ALONG_FIRST = False                     # --symmetric: legal sites along the leg before any sideways stub (see _slide)
 
 
 def net_leg_level(T, n):
@@ -240,6 +241,17 @@ def _slide(pt, a, b, K, fixed=False):
         return pt[0], pt[1], 0.0
     horiz = abs(b[0] - a[0]) >= abs(b[1] - a[1])
     lo = (min(a[0], b[0]), max(a[0], b[0])) if horiz else (min(a[1], b[1]), max(a[1], b[1]))
+    if ALONG_FIRST and not fixed:
+        # --symmetric: a buffer that slides ALONG its own leg keeps every root -> tap wire length (the wire still
+        # follows the H-tree line and branches at the lattice point; only the stage boundary moves).  A sideways stub
+        # adds 2 x offset to every path below it, which no routed geometry pays back.  So the whole leg is searched
+        # before any sideways site.
+        for k in range(1, int((lo[1] - lo[0]) / STEP_UM) + 2):
+            d = k * STEP_UM
+            for s in (-d, d) if (b[0] - a[0] if horiz else b[1] - a[1]) >= 0 else (d, -d):   # upstream first
+                q = (pt[0] + s, pt[1]) if horiz else (pt[0], pt[1] + s)
+                if lo[0] <= (q[0] if horiz else q[1]) <= lo[1] and not K.hit(*q):
+                    return q[0], q[1], 0.0
     for k in range(1, 100000):
         d = k * STEP_UM
         if d > lo[1] - lo[0] and d > SIDE_MAX_UM:
@@ -411,10 +423,18 @@ def route_domain_tree(T, tree, P, clear_um=8.64, rep_um=450.0):
 
 
 def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=None, window=None, aware_levels=None,
-          pad="sta", domain_corridors=False, domain_clear_um=8.64):
+          pad="sta", domain_corridors=False, domain_clear_um=8.64, symmetric=False):
     W, H = float(P.W), float(P.H)
     window = SPLIT_WINDOW if window is None else window
     aware_levels = AWARE_LEVELS if aware_levels is None else aware_levels
+    if symmetric:
+        # --symmetric (CLOCK-RESET QCDIECLK 10-25): a true H-tree, balanced by construction.  The partition-aware
+        # split window and the corridor node moves put sibling nodes of one level at unequal distances from their
+        # parent (QC native RC: L3 legs 2471..5011 um, L1 7258/8195 um), which only the modelled balance padding
+        # evened out; the routed geometry carries no padding, so routed related-pair skew was 574/506 ps.  Here every
+        # split is the region midpoint and every node sits on its region centre line: all legs of a level are
+        # geometrically equal, so no padding is needed (and none is snaked in the route).
+        window, aware_levels = 0.0, 0
     taps = plan_taps(P) if taps is None else taps
     early_c = plan_tap_early(P) if core_early == "pad" else {}
     base_keep = list(keep if keep is not None else keepouts(P))
@@ -546,10 +566,10 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 ax = levels[lev - 1]
                 px, py = npos[(lev - 1, key[1] // 2)]
                 cx, cy = (cx, py) if ax == 0 else (px, cy)
-                if lev < D and levels[lev] != ax and key in live:
+                if lev < D and levels[lev] != ax and key in live and not symmetric:
                     v = corridor(key, cx, cy, ax)
                     cx, cy = (v, cy) if ax == 0 else (cx, v)
-            elif D:
+            elif D and not symmetric:
                 oax = levels[0]
                 v = corridor(key, cx, cy, 1 - oax)
                 cx, cy = (cx, v) if oax == 0 else (v, cy)
@@ -959,8 +979,22 @@ def sta_tcl(d, corner, libdir):
         "puts OT_DONE"]) + "\n"
 
 
+def geo_legs(tree):
+    """{level: [min, max] Manhattan parent -> node distance} over the tree's nodes: the geometric (unpadded) leg
+    asymmetry a routed tree inherits.  Balanced by construction == min == max on every level."""
+    nodes = dict(tree["nodes"])
+    out = defaultdict(list)
+    for k, v in nodes.items():
+        par = [x for x in v["path"] if x in nodes and x != k]
+        if par:
+            px, py = nodes[par[-1]]["xy"]
+            out[v["level"]].append(abs(v["xy"][0] - px) + abs(v["xy"][1] - py))
+    return {str(l): [round(min(d), 2), round(max(d), 2)] for l, d in sorted(out.items())}
+
+
 def cmd_build(a):
-    global NDR_MODE, WIDE_LEVELS
+    global NDR_MODE, WIDE_LEVELS, ALONG_FIRST
+    ALONG_FIRST = bool(getattr(a, "symmetric", False))
     NDR_MODE = getattr(a, "ndr", NDR_MODE)
     WIDE_LEVELS = getattr(a, "wide_levels", WIDE_LEVELS)
     raw = S.load(a.plan)
@@ -970,7 +1004,9 @@ def cmd_build(a):
     t0 = time.time()
     T, tree = build(P, a.leaf_um, a.rep_um, a.core_early, window=a.window, aware_levels=a.aware_levels, pad=a.pad,
                     domain_corridors=getattr(a,"domain_corridors",False),
-                    domain_clear_um=getattr(a,"domain_clear_um",8.64))
+                    domain_clear_um=getattr(a,"domain_clear_um",8.64), symmetric=getattr(a, "symmetric", False))
+    tree["meta"]["symmetric"] = bool(getattr(a, "symmetric", False))
+    tree["meta"]["geo_leg_um_by_level"] = geo_legs(tree)
     write_verilog(T, out / "ctree.v")
     write_spef(T, out / "ctree.spef")
     import hashlib
@@ -1476,6 +1512,7 @@ def main(argv=None):
     b.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
     b.add_argument("--wide-levels", type=int, default=0, help="trunk + top N H-tree levels on the 8W NDR")
     b.add_argument("--ndr", choices=("2w", "4w"), default="2w", help="die-tree wire NDR: 2w (default; 4W only > WIDE_UM) or 4w everywhere")
+    b.add_argument("--symmetric", action="store_true", help="true H-tree: midpoint splits, no corridor node moves (balanced by construction, no padding)")
     u = sub.add_parser("run")
     u.add_argument("plan")
     u.add_argument("--out", required=True)

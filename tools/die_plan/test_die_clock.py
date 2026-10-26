@@ -188,3 +188,24 @@ def test_wide_levels_only_top_legs():
         assert r0 == pytest.approx(DC.LAYER_RC["M9"][0] / 8) and r9 == pytest.approx(DC.LAYER_RC["M9"][0] * DC.NDR_R)
     finally:
         DC.WIDE_LEVELS = old
+
+
+def test_symmetric_geometry_equal_legs_no_stubs():
+    """--symmetric (QCDIECLK 10-25): midpoint splits + no corridor moves -> every leg of a level is geometrically equal
+    (balanced without padding); with a keep-out on a node, the node slides ALONG its leg (no sideways stub), so the
+    unpadded root -> leaf wire length is unchanged."""
+    P = S.Plan(json.loads(PLANS[0].read_text()))
+    T, tree = DC.build(P, leaf_um=300.0, rep_um=450.0, keep=[], pad="level", symmetric=True)
+    g = DC.geo_legs(tree)
+    assert all(abs(lo - hi) < 1e-6 for lo, hi in g.values()), g
+    n1 = [v for k, v in tree["nodes"].items() if v["level"] == 1][0]
+    x, y = n1["xy"]
+    keep = [(x - 5.0, y - 5.0, x + 5.0, y + 5.0, "blk")]
+    old = DC.ALONG_FIRST
+    DC.ALONG_FIRST = True
+    try:
+        T2, tree2 = DC.build(P, leaf_um=300.0, rep_um=450.0, keep=keep, pad="level", symmetric=True)
+    finally:
+        DC.ALONG_FIRST = old
+    m = tree2["nodes"][[k for k, v in tree["nodes"].items() if v["xy"] == [x, y]][0]]["xy"]
+    assert (m[0] == x) != (m[1] == y), "node must stay on its incoming leg line"
