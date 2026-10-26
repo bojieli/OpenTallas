@@ -1848,6 +1848,66 @@ def slang_elements(aliases_file):
     return out
 
 
+def json_alias_keys(L, log, work=None):
+    """Recover public Q-wire aliases omitted by write_aiger's latch map.
+
+    gold.aliases.json is written from the same elaborated gold before techmap.
+    A gold-only and gate-only name denoting the SAME nonconstant bit there may
+    be paired when the relation is one-to-one. This only renames gate key
+    points: every D function and every downstream comparison stays in the
+    miter, so an incorrect implementation still fails induction. No simulated
+    signatures or inferred name similarity establish this correspondence.
+    """
+    if work is None:
+        return 0
+    try:
+        data = json.loads((Path(work) / "gold.aliases.json").read_text())
+    except (OSError, ValueError):
+        return 0
+    wanted = set(L.gonly) | set(L.tonly)
+    held = {k for (_side, k) in L.hyp}
+    bits = {}
+    ambiguous = set()
+    for mn, mod in data.get("modules", {}).items():
+        for nn, net in mod.get("netnames", {}).items():
+            if net.get("hide_name") or net.get("upto"):
+                continue
+            name = GENBLK.sub("", nn.replace("\\", "").replace(" ", "").replace("/", "."))
+            offset = int(net.get("offset", 0))
+            for i, bit in enumerate(net.get("bits", ())):
+                if not isinstance(bit, int):
+                    continue
+                keys = [f"ff:{name}[{i + offset}]"]
+                if len(net.get("bits", ())) == 1 and offset == 0:
+                    keys.append(f"ff:{name}")
+                for key in keys:
+                    if key not in wanted or key in held:
+                        continue
+                    value = (mn, bit)
+                    if key in bits and bits[key] != value:
+                        ambiguous.add(key)
+                    bits[key] = value
+    gold, gate = collections.defaultdict(list), collections.defaultdict(list)
+    for key in L.gonly:
+        if key in bits and key not in ambiguous:
+            gold[bits[key]].append(key)
+    for key in L.tonly:
+        if key in bits and key not in ambiguous:
+            gate[bits[key]].append(key)
+    pairs = [(gate[b][0], gs[0]) for b, gs in gold.items()
+             if len(gs) == 1 and len(gate.get(b, ())) == 1]
+    for tk, gk in pairs:
+        L.tp[gk] = L.tp.pop(tk)
+        if tk in L.tc:
+            L.tc[gk] = L.tc.pop(tk)
+    if pairs:
+        L.matched = sorted(set(L.gp) & set(L.tp))
+        L.gonly = sorted(set(L.gp) - set(L.tp))
+        L.tonly = sorted(set(L.tp) - set(L.gp))
+        log.append(f"gold JSON Q aliases: {len(pairs)} gate flops re-keyed to exact gold wire bits")
+    return len(pairs)
+
+
 def slang_element_keys(L, log, work=None):
     """gold-only flops of a slang-flattened array, paired by NAME with the gate flops of the same element, from slang's
     per-element driver cells (slang_elements): gold 'ff:S.X[f]' is element '[i]..[b]'.
@@ -2098,6 +2158,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     (u_tv.line[4] == u_k5.g_r.v == valid_out) is dropped while its upstream index-line constants are still being
     refined and needs adding rounds after them; 10 left it free -> false NOT EQUIVALENT (gunit_l4 895 points,
     EQUIVALENT at 24 rounds, 738 s)."""
+    json_alias_keys(L, log, work=work)
     slang_element_keys(L, log, work=work)
     alias_arrays(L, log, work=work)
     relayout(L, log)
