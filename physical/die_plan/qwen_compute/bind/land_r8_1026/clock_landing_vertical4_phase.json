@@ -1790,7 +1790,7 @@
     "active": false
    },
    "sl_W5_ctl": {
-    "type": "sle_ctl",
+    "type": "sle_ctl_r8p03",
     "parent": "sl_W5_fe",
     "active": false
    },
@@ -1860,7 +1860,7 @@
     "active": false
    },
    "sl_W4_ctl": {
-    "type": "sle_ctl",
+    "type": "sle_ctl_r8p02",
     "parent": "sl_W4_st_b",
     "active": false
    },
@@ -1930,7 +1930,7 @@
     "active": false
    },
    "sl_W3_ctl": {
-    "type": "sle_ctl",
+    "type": "sle_ctl_r8p03",
     "parent": "sl_W3_fe",
     "active": false
    },
@@ -2000,7 +2000,7 @@
     "active": false
    },
    "sl_W2_ctl": {
-    "type": "sle_ctl",
+    "type": "sle_ctl_r8p02",
     "parent": "sl_W2_st_b",
     "active": false
    },
@@ -2070,7 +2070,7 @@
     "active": false
    },
    "sl_W1_ctl": {
-    "type": "sle_ctl",
+    "type": "sle_ctl_r8p03",
     "parent": "sl_W1_fe",
     "active": false
    },
@@ -2140,7 +2140,7 @@
     "active": false
    },
    "sl_W0_ctl": {
-    "type": "sle_ctl",
+    "type": "sle_ctl_r8p02",
     "parent": "sl_W0_sc",
     "active": false
    },
@@ -2280,7 +2280,7 @@
     "active": false
    },
    "sl_E1_ctl": {
-    "type": "sle_ctl",
+    "type": "sle_ctl_r8p01",
     "parent": "sl_E1_sc",
     "active": false
    },
@@ -2420,7 +2420,7 @@
     "active": false
    },
    "sl_E3_ctl": {
-    "type": "sle_ctl",
+    "type": "sle_ctl_r8p01",
     "parent": "sl_E3_sc",
     "active": false
    },
@@ -2560,7 +2560,7 @@
     "active": false
    },
    "sl_E5_ctl": {
-    "type": "sle_ctl",
+    "type": "sle_ctl_r8p01",
     "parent": "sl_E5_sc",
     "active": false
    },
@@ -25394,6 +25394,210 @@
      837.024
     ]
    },
+   "sle_ctl_r8p01": {
+    "base_type": "sle_ctl",
+    "mask": {
+     "inputs": [],
+     "outputs": [],
+     "active": false,
+     "observer": false,
+     "up_xy": null,
+     "up_seam": false,
+     "children": []
+    },
+    "tree": null,
+    "local_sources": [],
+    "children": [],
+    "up_parent": null,
+    "reset_entry_um": [
+     1073.504,
+     8.608
+    ],
+    "bands": {},
+    "bus_geometry": {
+     "cws1_i": {
+      "name": "cws1_i",
+      "face": "N",
+      "window_um": [
+       277.248,
+       366.528
+      ],
+      "width": 516
+     },
+     "cws2_i": {
+      "name": "cws2_i",
+      "face": "N",
+      "window_um": [
+       890.688,
+       979.968
+      ],
+      "width": 516
+     },
+     "x_st_b_st_a_i": {
+      "name": "x_st_b_st_a_i",
+      "face": "E",
+      "window_um": [
+       716.424,
+       718.232
+      ],
+      "width": 8
+     },
+     "x_st_a_st_b_i": {
+      "name": "x_st_a_st_b_i",
+      "face": "W",
+      "window_um": [
+       719.04,
+       831.76
+      ],
+      "width": 652
+     },
+     "x_hc1_st_b_i": {
+      "name": "x_hc1_st_b_i",
+      "face": "N",
+      "window_um": [
+       373.776,
+       463.104
+      ],
+      "width": 516
+     }
+    }
+   },
+   "sle_ctl_r8p02": {
+    "base_type": "sle_ctl",
+    "mask": {
+     "inputs": [],
+     "outputs": [],
+     "active": false,
+     "observer": false,
+     "up_xy": null,
+     "up_seam": false,
+     "children": []
+    },
+    "tree": null,
+    "local_sources": [],
+    "children": [],
+    "up_parent": null,
+    "reset_entry_um": [
+     1073.504,
+     8.608
+    ],
+    "bands": {},
+    "bus_geometry": {
+     "cws1_i": {
+      "name": "cws1_i",
+      "face": "N",
+      "window_um": [
+       277.248,
+       366.528
+      ],
+      "width": 516
+     },
+     "cws2_i": {
+      "name": "cws2_i",
+      "face": "N",
+      "window_um": [
+       890.688,
+       979.968
+      ],
+      "width": 516
+     },
+     "x_st_b_st_a_i": {
+      "name": "x_st_b_st_a_i",
+      "face": "E",
+      "window_um": [
+       716.424,
+       718.232
+      ],
+      "width": 8
+     },
+     "x_st_a_st_b_i": {
+      "name": "x_st_a_st_b_i",
+      "face": "W",
+      "window_um": [
+       719.04,
+       831.76
+      ],
+      "width": 652
+     },
+     "x_hc1_st_b_i": {
+      "name": "x_hc1_st_b_i",
+      "face": "N",
+      "window_um": [
+       373.776,
+       463.104
+      ],
+      "width": 516
+     }
+    }
+   },
+   "sle_ctl_r8p03": {
+    "base_type": "sle_ctl",
+    "mask": {
+     "inputs": [],
+     "outputs": [],
+     "active": false,
+     "observer": false,
+     "up_xy": null,
+     "up_seam": false,
+     "children": []
+    },
+    "tree": null,
+    "local_sources": [],
+    "children": [],
+    "up_parent": null,
+    "reset_entry_um": [
+     1073.504,
+     8.608
+    ],
+    "bands": {},
+    "bus_geometry": {
+     "cws1_i": {
+      "name": "cws1_i",
+      "face": "N",
+      "window_um": [
+       277.248,
+       366.528
+      ],
+      "width": 516
+     },
+     "cws2_i": {
+      "name": "cws2_i",
+      "face": "N",
+      "window_um": [
+       890.688,
+       979.968
+      ],
+      "width": 516
+     },
+     "x_st_b_st_a_i": {
+      "name": "x_st_b_st_a_i",
+      "face": "E",
+      "window_um": [
+       716.424,
+       718.232
+      ],
+      "width": 8
+     },
+     "x_st_a_st_b_i": {
+      "name": "x_st_a_st_b_i",
+      "face": "W",
+      "window_um": [
+       719.04,
+       831.76
+      ],
+      "width": 652
+     },
+     "x_hc1_st_b_i": {
+      "name": "x_hc1_st_b_i",
+      "face": "N",
+      "window_um": [
+       373.776,
+       463.104
+      ],
+      "width": 516
+     }
+    }
+   },
    "cbf_q00_na00d15": {
     "base_type": "cbf_q00",
     "mask": {
@@ -26393,8 +26597,14 @@
  },
  "derived_from": {
   "table": "physical/die_plan/qwen_compute/bind/clock_landing_vertical4.json",
-  "phase_classes": "physical/die_plan/qwen_compute/bind/land_r8_1026/phase_classes.json",
+  "class_manifests": [
+   "physical/die_plan/qwen_compute/bind/land_r8_1026/support_classes.json",
+   "physical/die_plan/qwen_compute/bind/land_r8_1026/phase_classes.json"
+  ],
   "added_types": [
+   "sle_ctl_r8p01",
+   "sle_ctl_r8p02",
+   "sle_ctl_r8p03",
    "cbf_q00_na00d15",
    "cbf_q01_nb12d10",
    "cbf_q11_na22d3",

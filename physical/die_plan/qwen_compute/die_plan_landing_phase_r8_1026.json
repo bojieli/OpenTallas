@@ -580095,6 +580095,2043 @@
    },
    "ft_track_frac": 0.5
   },
+  "sle_ctl_r8p01": {
+   "module": "qfd_qc_sle_ctl_r8p01",
+   "outline_um": [
+    1226.88,
+    1339.2
+   ],
+   "buses": [
+    {
+     "name": "b_tw_data_i",
+     "dir": "in",
+     "width": 2103,
+     "kind": "data",
+     "leaf": "u_ctl.tw_data",
+     "face": "S",
+     "window_um": [
+      4.32,
+      366.336
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_tw_data_st_a_o",
+     "dir": "out",
+     "width": 1080,
+     "kind": "data",
+     "leaf": "u_pstn.b_tw_data_st_a_o",
+     "face": "W",
+     "window_um": [
+      277.472,
+      464.384
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc0_o",
+     "dir": "out",
+     "width": 1573,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc0_o",
+     "face": "W",
+     "window_um": [
+      4.32,
+      276.512
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc1_o",
+     "dir": "out",
+     "width": 1573,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc1_o",
+     "face": "N",
+     "window_um": [
+      4.32,
+      276.288
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc2_o",
+     "dir": "out",
+     "width": 1573,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc2_o",
+     "face": "N",
+     "window_um": [
+      617.76,
+      889.728
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc3_o",
+     "dir": "out",
+     "width": 1574,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc3_o",
+     "face": "E",
+     "window_um": [
+      4.32,
+      333.136
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_o",
+     "dir": "out",
+     "width": 631,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "W",
+     "window_um": [
+      465.344,
+      574.544
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_p1_o",
+     "dir": "out",
+     "width": 631,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "S",
+     "window_um": [
+      459.04,
+      568.144
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_i",
+     "dir": "in",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "W",
+     "window_um": [
+      622.752,
+      715.616
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_p1_i",
+     "dir": "in",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "S",
+     "window_um": [
+      1046.048,
+      1138.672
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_p2_i",
+     "dir": "in",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "E",
+     "window_um": [
+      334.096,
+      446.08
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_a_i",
+     "dir": "in",
+     "width": 268,
+     "kind": "data",
+     "leaf": "u_ctl.x_st_a",
+     "face": "W",
+     "window_um": [
+      575.504,
+      621.792
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_b_i",
+     "dir": "in",
+     "width": 256,
+     "kind": "data",
+     "leaf": "u_ctl.x_st_b",
+     "face": "E",
+     "window_um": [
+      570.768,
+      624.144
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_sc_i",
+     "dir": "in",
+     "width": 119,
+     "kind": "data",
+     "leaf": "u_ctl.x_sc",
+     "face": "S",
+     "window_um": [
+      736.032,
+      756.8
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc0_i",
+     "dir": "in",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc0",
+     "face": "N",
+     "window_um": [
+      368.832,
+      370.512
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_sc_o",
+     "dir": "out",
+     "width": 160,
+     "kind": "data",
+     "leaf": "u_ctl.x_sc",
+     "face": "S",
+     "window_um": [
+      707.904,
+      735.072
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_stm_o",
+     "dir": "out",
+     "width": 34,
+     "kind": "data",
+     "leaf": "u_ctl.x_stm",
+     "face": "S",
+     "window_um": [
+      569.104,
+      574.944
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_b_o",
+     "dir": "out",
+     "width": 29,
+     "kind": "data",
+     "leaf": "u_ctl.x_st_b",
+     "face": "E",
+     "window_um": [
+      625.104,
+      631.104
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc1_i",
+     "dir": "in",
+     "width": 7,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc1",
+     "face": "N",
+     "window_um": [
+      371.472,
+      372.816
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc2_i",
+     "dir": "in",
+     "width": 7,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc2",
+     "face": "N",
+     "window_um": [
+      982.272,
+      983.616
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc3_i",
+     "dir": "in",
+     "width": 8,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc3",
+     "face": "N",
+     "window_um": [
+      984.576,
+      986.08
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_l0_i",
+     "dir": "in",
+     "width": 456,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_l0",
+     "face": "E",
+     "window_um": [
+      474.512,
+      569.728
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_l1_i",
+     "dir": "in",
+     "width": 456,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_l1",
+     "face": "S",
+     "window_um": [
+      1139.632,
+      1217.888
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_i",
+     "dir": "in",
+     "width": 93,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      575.904,
+      591.584
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_o",
+     "dir": "out",
+     "width": 552,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      757.76,
+      853.6
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_p1_o",
+     "dir": "out",
+     "width": 552,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      854.56,
+      950.0
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_p2_o",
+     "dir": "out",
+     "width": 551,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      950.96,
+      1045.088
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_o",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_o",
+     "face": "S",
+     "window_um": [
+      457.696,
+      458.08
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_hc1_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_hc1_i",
+     "face": "N",
+     "window_um": [
+      367.488,
+      367.872
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_hc2_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_hc2_i",
+     "face": "N",
+     "window_um": [
+      980.928,
+      981.312
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "cws1",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 516,
+     "stations": 4,
+     "out_window_um": [
+      367.296,
+      456.736
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "cws2",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 516,
+     "stations": 5,
+     "out_window_um": [
+      617.76,
+      706.944
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_st_b_st_a",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 8,
+     "stations": 4,
+     "out_window_um": [
+      716.576,
+      718.08
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_st_a_st_b",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 652,
+     "stations": 4,
+     "out_window_um": [
+      719.192,
+      855.352
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_hc1_st_b",
+     "in_face": "N",
+     "out_face": "E",
+     "width": 516,
+     "stations": 3,
+     "out_window_um": [
+      1227.136,
+      1334.768
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "contents": [
+    {
+     "inst": "u_rp",
+     "module": "slice s6b u_rp",
+     "status": "rework",
+     "note": "slice glue re-derived per region partition"
+    },
+    {
+     "inst": "u_tap",
+     "module": "slice s6b u_tap",
+     "status": "rework",
+     "note": "slice glue re-derived per region partition"
+    },
+    {
+     "inst": "u_ctl",
+     "module": "qfd_dv_s5_ctl_repair4_leaf",
+     "status": "reuse",
+     "outline_um": [
+      345.6,
+      259.2
+     ],
+     "note": "closed slice leaf (reference; flattened unless macro)"
+    },
+    {
+     "inst": "u_pstn",
+     "module": "sle_ctl_pstn",
+     "status": "new",
+     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    }
+   ],
+   "note": "slice region partition ctl (E slice, landed region ctl); est. std-cell fill 0.13 at util 0.6: 40% of M4-M7 to ft Exact current native R8 support-class signature; zero lane-cycle change.",
+   "clock": {
+    "tap_um": [
+     613.44,
+     673.92
+    ],
+    "layer": "M9",
+    "insertion_ps": 250,
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       224.64
+      ],
+      "insertion_ps": 266,
+      "insertion_tol_ps": 40,
+      "from_root_um": 449.3
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       665.28
+      ],
+      "insertion_ps": 266,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       1114.56
+      ],
+      "insertion_ps": 266,
+      "insertion_tol_ps": 40,
+      "from_root_um": 440.6
+     }
+    ]
+   },
+   "reset": {
+    "tap_um": [
+     613.44,
+     673.92
+    ],
+    "sync_stages": 2
+   },
+   "ft_track_frac": 0.4
+  },
+  "sle_ctl_r8p02": {
+   "module": "qfd_qc_sle_ctl_r8p02",
+   "outline_um": [
+    1226.88,
+    1339.2
+   ],
+   "buses": [
+    {
+     "name": "b_tw_data_i",
+     "dir": "in",
+     "width": 2103,
+     "kind": "data",
+     "leaf": "u_ctl.tw_data",
+     "face": "S",
+     "window_um": [
+      4.32,
+      366.336
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_tw_data_st_a_o",
+     "dir": "out",
+     "width": 1080,
+     "kind": "data",
+     "leaf": "u_pstn.b_tw_data_st_a_o",
+     "face": "W",
+     "window_um": [
+      277.472,
+      464.384
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc0_o",
+     "dir": "out",
+     "width": 1573,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc0_o",
+     "face": "W",
+     "window_um": [
+      4.32,
+      276.512
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc1_o",
+     "dir": "out",
+     "width": 1573,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc1_o",
+     "face": "N",
+     "window_um": [
+      4.32,
+      276.288
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc2_o",
+     "dir": "out",
+     "width": 1573,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc2_o",
+     "face": "N",
+     "window_um": [
+      617.76,
+      889.728
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc3_o",
+     "dir": "out",
+     "width": 1574,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc3_o",
+     "face": "E",
+     "window_um": [
+      4.32,
+      333.136
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_o",
+     "dir": "out",
+     "width": 631,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "W",
+     "window_um": [
+      465.344,
+      574.544
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_p1_o",
+     "dir": "out",
+     "width": 631,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "S",
+     "window_um": [
+      459.04,
+      568.144
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_i",
+     "dir": "in",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "W",
+     "window_um": [
+      622.752,
+      715.616
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_p1_i",
+     "dir": "in",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "S",
+     "window_um": [
+      1046.048,
+      1138.672
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_p2_i",
+     "dir": "in",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "E",
+     "window_um": [
+      334.096,
+      446.08
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_a_i",
+     "dir": "in",
+     "width": 268,
+     "kind": "data",
+     "leaf": "u_ctl.x_st_a",
+     "face": "W",
+     "window_um": [
+      575.504,
+      621.792
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_b_i",
+     "dir": "in",
+     "width": 256,
+     "kind": "data",
+     "leaf": "u_ctl.x_st_b",
+     "face": "E",
+     "window_um": [
+      570.768,
+      624.144
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_sc_i",
+     "dir": "in",
+     "width": 119,
+     "kind": "data",
+     "leaf": "u_ctl.x_sc",
+     "face": "S",
+     "window_um": [
+      736.032,
+      756.8
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc0_i",
+     "dir": "in",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc0",
+     "face": "N",
+     "window_um": [
+      368.832,
+      370.512
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_sc_o",
+     "dir": "out",
+     "width": 160,
+     "kind": "data",
+     "leaf": "u_ctl.x_sc",
+     "face": "S",
+     "window_um": [
+      707.904,
+      735.072
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_stm_o",
+     "dir": "out",
+     "width": 34,
+     "kind": "data",
+     "leaf": "u_ctl.x_stm",
+     "face": "S",
+     "window_um": [
+      569.104,
+      574.944
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_b_o",
+     "dir": "out",
+     "width": 29,
+     "kind": "data",
+     "leaf": "u_ctl.x_st_b",
+     "face": "E",
+     "window_um": [
+      625.104,
+      631.104
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc1_i",
+     "dir": "in",
+     "width": 7,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc1",
+     "face": "N",
+     "window_um": [
+      371.472,
+      372.816
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc2_i",
+     "dir": "in",
+     "width": 7,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc2",
+     "face": "N",
+     "window_um": [
+      982.272,
+      983.616
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc3_i",
+     "dir": "in",
+     "width": 8,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc3",
+     "face": "N",
+     "window_um": [
+      984.576,
+      986.08
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_l0_i",
+     "dir": "in",
+     "width": 456,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_l0",
+     "face": "E",
+     "window_um": [
+      474.512,
+      569.728
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_l1_i",
+     "dir": "in",
+     "width": 456,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_l1",
+     "face": "S",
+     "window_um": [
+      1139.632,
+      1217.888
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_i",
+     "dir": "in",
+     "width": 93,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      575.904,
+      591.584
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_o",
+     "dir": "out",
+     "width": 552,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      757.76,
+      853.6
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_p1_o",
+     "dir": "out",
+     "width": 552,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      854.56,
+      950.0
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_p2_o",
+     "dir": "out",
+     "width": 551,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      950.96,
+      1045.088
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_o",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_o",
+     "face": "S",
+     "window_um": [
+      457.696,
+      458.08
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_hc1_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_hc1_i",
+     "face": "N",
+     "window_um": [
+      367.488,
+      367.872
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_hc2_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_hc2_i",
+     "face": "N",
+     "window_um": [
+      980.928,
+      981.312
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "cws1",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 516,
+     "stations": 4,
+     "out_window_um": [
+      367.296,
+      456.736
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "cws2",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 516,
+     "stations": 5,
+     "out_window_um": [
+      617.76,
+      706.944
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_st_b_st_a",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 8,
+     "stations": 4,
+     "out_window_um": [
+      716.576,
+      718.08
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_st_a_st_b",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 652,
+     "stations": 4,
+     "out_window_um": [
+      719.192,
+      855.352
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_hc1_st_b",
+     "in_face": "N",
+     "out_face": "E",
+     "width": 516,
+     "stations": 3,
+     "out_window_um": [
+      1227.136,
+      1334.768
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "contents": [
+    {
+     "inst": "u_rp",
+     "module": "slice s6b u_rp",
+     "status": "rework",
+     "note": "slice glue re-derived per region partition"
+    },
+    {
+     "inst": "u_tap",
+     "module": "slice s6b u_tap",
+     "status": "rework",
+     "note": "slice glue re-derived per region partition"
+    },
+    {
+     "inst": "u_ctl",
+     "module": "qfd_dv_s5_ctl_repair4_leaf",
+     "status": "reuse",
+     "outline_um": [
+      345.6,
+      259.2
+     ],
+     "note": "closed slice leaf (reference; flattened unless macro)"
+    },
+    {
+     "inst": "u_pstn",
+     "module": "sle_ctl_pstn",
+     "status": "new",
+     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    }
+   ],
+   "note": "slice region partition ctl (E slice, landed region ctl); est. std-cell fill 0.13 at util 0.6: 40% of M4-M7 to ft Exact current native R8 support-class signature; zero lane-cycle change.",
+   "clock": {
+    "tap_um": [
+     613.44,
+     673.92
+    ],
+    "layer": "M9",
+    "insertion_ps": 250,
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       224.64
+      ],
+      "insertion_ps": 266,
+      "insertion_tol_ps": 40,
+      "from_root_um": 449.3
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       665.28
+      ],
+      "insertion_ps": 266,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       1114.56
+      ],
+      "insertion_ps": 266,
+      "insertion_tol_ps": 40,
+      "from_root_um": 440.6
+     }
+    ]
+   },
+   "reset": {
+    "tap_um": [
+     613.44,
+     673.92
+    ],
+    "sync_stages": 2
+   },
+   "ft_track_frac": 0.4
+  },
+  "sle_ctl_r8p03": {
+   "module": "qfd_qc_sle_ctl_r8p03",
+   "outline_um": [
+    1226.88,
+    1339.2
+   ],
+   "buses": [
+    {
+     "name": "b_tw_data_i",
+     "dir": "in",
+     "width": 2103,
+     "kind": "data",
+     "leaf": "u_ctl.tw_data",
+     "face": "S",
+     "window_um": [
+      4.32,
+      366.336
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_tw_data_st_a_o",
+     "dir": "out",
+     "width": 1080,
+     "kind": "data",
+     "leaf": "u_pstn.b_tw_data_st_a_o",
+     "face": "W",
+     "window_um": [
+      277.472,
+      464.384
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc0_o",
+     "dir": "out",
+     "width": 1573,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc0_o",
+     "face": "W",
+     "window_um": [
+      4.32,
+      276.512
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc1_o",
+     "dir": "out",
+     "width": 1573,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc1_o",
+     "face": "N",
+     "window_um": [
+      4.32,
+      276.288
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc2_o",
+     "dir": "out",
+     "width": 1573,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc2_o",
+     "face": "N",
+     "window_um": [
+      617.76,
+      889.728
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "b_hw_hc3_o",
+     "dir": "out",
+     "width": 1574,
+     "kind": "data",
+     "leaf": "u_pstn.b_hw_hc3_o",
+     "face": "E",
+     "window_um": [
+      4.32,
+      333.136
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_o",
+     "dir": "out",
+     "width": 631,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "W",
+     "window_um": [
+      465.344,
+      574.544
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_p1_o",
+     "dir": "out",
+     "width": 631,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "S",
+     "window_um": [
+      459.04,
+      568.144
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_i",
+     "dir": "in",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "W",
+     "window_um": [
+      622.752,
+      715.616
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_p1_i",
+     "dir": "in",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "S",
+     "window_um": [
+      1046.048,
+      1138.672
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fw_p2_i",
+     "dir": "in",
+     "width": 536,
+     "kind": "data",
+     "leaf": "u_ctl.x_fw",
+     "face": "E",
+     "window_um": [
+      334.096,
+      446.08
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_a_i",
+     "dir": "in",
+     "width": 268,
+     "kind": "data",
+     "leaf": "u_ctl.x_st_a",
+     "face": "W",
+     "window_um": [
+      575.504,
+      621.792
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_b_i",
+     "dir": "in",
+     "width": 256,
+     "kind": "data",
+     "leaf": "u_ctl.x_st_b",
+     "face": "E",
+     "window_um": [
+      570.768,
+      624.144
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_sc_i",
+     "dir": "in",
+     "width": 119,
+     "kind": "data",
+     "leaf": "u_ctl.x_sc",
+     "face": "S",
+     "window_um": [
+      736.032,
+      756.8
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc0_i",
+     "dir": "in",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc0",
+     "face": "N",
+     "window_um": [
+      368.832,
+      370.512
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_sc_o",
+     "dir": "out",
+     "width": 160,
+     "kind": "data",
+     "leaf": "u_ctl.x_sc",
+     "face": "S",
+     "window_um": [
+      707.904,
+      735.072
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_stm_o",
+     "dir": "out",
+     "width": 34,
+     "kind": "data",
+     "leaf": "u_ctl.x_stm",
+     "face": "S",
+     "window_um": [
+      569.104,
+      574.944
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_b_o",
+     "dir": "out",
+     "width": 29,
+     "kind": "data",
+     "leaf": "u_ctl.x_st_b",
+     "face": "E",
+     "window_um": [
+      625.104,
+      631.104
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc1_i",
+     "dir": "in",
+     "width": 7,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc1",
+     "face": "N",
+     "window_um": [
+      371.472,
+      372.816
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc2_i",
+     "dir": "in",
+     "width": 7,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc2",
+     "face": "N",
+     "window_um": [
+      982.272,
+      983.616
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_hc3_i",
+     "dir": "in",
+     "width": 8,
+     "kind": "data",
+     "leaf": "u_ctl.x_hc3",
+     "face": "N",
+     "window_um": [
+      984.576,
+      986.08
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_l0_i",
+     "dir": "in",
+     "width": 456,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_l0",
+     "face": "E",
+     "window_um": [
+      474.512,
+      569.728
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_l1_i",
+     "dir": "in",
+     "width": 456,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_l1",
+     "face": "S",
+     "window_um": [
+      1139.632,
+      1217.888
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_i",
+     "dir": "in",
+     "width": 93,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      575.904,
+      591.584
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_o",
+     "dir": "out",
+     "width": 552,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      757.76,
+      853.6
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_p1_o",
+     "dir": "out",
+     "width": 552,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      854.56,
+      950.0
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_su_c_p2_o",
+     "dir": "out",
+     "width": 551,
+     "kind": "data",
+     "leaf": "u_ctl.x_su_c",
+     "face": "S",
+     "window_um": [
+      950.96,
+      1045.088
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_o",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_o",
+     "face": "S",
+     "window_um": [
+      457.696,
+      458.08
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_hc1_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_hc1_i",
+     "face": "N",
+     "window_um": [
+      367.488,
+      367.872
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_hc2_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_hc2_i",
+     "face": "N",
+     "window_um": [
+      980.928,
+      981.312
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "cws1",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 516,
+     "stations": 4,
+     "out_window_um": [
+      367.296,
+      456.736
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "cws2",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 516,
+     "stations": 5,
+     "out_window_um": [
+      617.76,
+      706.944
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_st_b_st_a",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 8,
+     "stations": 4,
+     "out_window_um": [
+      716.576,
+      718.08
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_st_a_st_b",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 652,
+     "stations": 4,
+     "out_window_um": [
+      719.192,
+      855.352
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_hc1_st_b",
+     "in_face": "N",
+     "out_face": "E",
+     "width": 516,
+     "stations": 3,
+     "out_window_um": [
+      1227.136,
+      1334.768
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "contents": [
+    {
+     "inst": "u_rp",
+     "module": "slice s6b u_rp",
+     "status": "rework",
+     "note": "slice glue re-derived per region partition"
+    },
+    {
+     "inst": "u_tap",
+     "module": "slice s6b u_tap",
+     "status": "rework",
+     "note": "slice glue re-derived per region partition"
+    },
+    {
+     "inst": "u_ctl",
+     "module": "qfd_dv_s5_ctl_repair4_leaf",
+     "status": "reuse",
+     "outline_um": [
+      345.6,
+      259.2
+     ],
+     "note": "closed slice leaf (reference; flattened unless macro)"
+    },
+    {
+     "inst": "u_pstn",
+     "module": "sle_ctl_pstn",
+     "status": "new",
+     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    }
+   ],
+   "note": "slice region partition ctl (E slice, landed region ctl); est. std-cell fill 0.13 at util 0.6: 40% of M4-M7 to ft Exact current native R8 support-class signature; zero lane-cycle change.",
+   "clock": {
+    "tap_um": [
+     613.44,
+     673.92
+    ],
+    "layer": "M9",
+    "insertion_ps": 250,
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       224.64
+      ],
+      "insertion_ps": 266,
+      "insertion_tol_ps": 40,
+      "from_root_um": 449.3
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       665.28
+      ],
+      "insertion_ps": 266,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       1114.56
+      ],
+      "insertion_ps": 266,
+      "insertion_tol_ps": 40,
+      "from_root_um": 440.6
+     }
+    ]
+   },
+   "reset": {
+    "tap_um": [
+     613.44,
+     673.92
+    ],
+    "sync_stages": 2
+   },
+   "ft_track_frac": 0.4
+  },
   "cbf_q00_na00d15": {
    "module": "qfd_qc_cb_f_q00_na00d15",
    "outline_um": [
@@ -690262,7 +692299,7 @@
   },
   {
    "name": "sl_W5_ctl",
-   "type": "sle_ctl",
+   "type": "sle_ctl_r8p03",
    "origin_um": [
     2185.92,
     13132.8
@@ -690388,7 +692425,7 @@
   },
   {
    "name": "sl_W4_ctl",
-   "type": "sle_ctl",
+   "type": "sle_ctl_r8p02",
    "origin_um": [
     4656.96,
     13132.8
@@ -690514,7 +692551,7 @@
   },
   {
    "name": "sl_W3_ctl",
-   "type": "sle_ctl",
+   "type": "sle_ctl_r8p03",
    "origin_um": [
     7128.0,
     13132.8
@@ -690640,7 +692677,7 @@
   },
   {
    "name": "sl_W2_ctl",
-   "type": "sle_ctl",
+   "type": "sle_ctl_r8p02",
    "origin_um": [
     9599.04,
     13132.8
@@ -690766,7 +692803,7 @@
   },
   {
    "name": "sl_W1_ctl",
-   "type": "sle_ctl",
+   "type": "sle_ctl_r8p03",
    "origin_um": [
     12070.08,
     13132.8
@@ -690892,7 +692929,7 @@
   },
   {
    "name": "sl_W0_ctl",
-   "type": "sle_ctl",
+   "type": "sle_ctl_r8p02",
    "origin_um": [
     14541.12,
     13132.8
@@ -691144,7 +693181,7 @@
   },
   {
    "name": "sl_E1_ctl",
-   "type": "sle_ctl",
+   "type": "sle_ctl_r8p01",
    "origin_um": [
     19483.2,
     13132.8
@@ -691396,7 +693433,7 @@
   },
   {
    "name": "sl_E3_ctl",
-   "type": "sle_ctl",
+   "type": "sle_ctl_r8p01",
    "origin_um": [
     24425.28,
     13132.8
@@ -691648,7 +693685,7 @@
   },
   {
    "name": "sl_E5_ctl",
-   "type": "sle_ctl",
+   "type": "sle_ctl_r8p01",
    "origin_um": [
     29367.36,
     13132.8
