@@ -60,4 +60,6 @@ set_nets_to_route [dict keys $pa_nets]
 set begin [clock seconds]
 global_route -congestion_iterations 50 -allow_congestion -verbose -congestion_report_file /work/congestion.rpt
 puts "OT_GRT_S [expr {[clock seconds]-$begin}]"
+pin_access -bottom_routing_layer M2 -top_routing_layer M7
 puts "PIN_ACCESS_PROBE_DONE ports $pa_count nets [dict size $pa_nets] capacity_reservation 0.4 original_capacity_utilization_upper_bound 0.6_if_zero_overflow"
+puts OT_DONE
