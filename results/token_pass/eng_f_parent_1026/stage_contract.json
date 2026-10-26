@@ -1,0 +1,74 @@
+{
+ "scope": "HISTORICAL_877_WRAPPER_TRANSPORT_ONLY_NOT_ADOPTED",
+ "source_commit": "877cfdeb28",
+ "next_current_source_elab_requires": "f8 fault-width and all other adopted source fixes",
+ "f3_plan_sha256": "ae8a3548a11f404f460d40346a4fc2ac584103e765c6ad474d3279dd765ddf9c",
+ "f4_plan_sha256": "7b0c5423a68453d2997d053caa5e65879d9e09cd98e759bd6ad6aa921175c05f",
+ "canonical_payloads": {
+  "PCI": 264,
+  "RCO_data_and_cfgfault": 39,
+  "RCO_valid": 1,
+  "FKS": 53,
+  "VI_S": 276
+ },
+ "exact_packing": {
+  "PCI": "core pci[i] = unit_i0[i], i=0..263",
+  "RCO_valid": "core rco[0] = flt_o0[0]",
+  "RCO_data": "core rco[i] = unit_o0[i-1], i=1..38",
+  "cfgfault": "unit_o0[38]"
+ },
+ "added_stages": {
+  "PCI": 2,
+  "FKS": 1,
+  "VI_S": 1,
+  "RCO_data_and_cfgfault": 1,
+  "RCO_valid_parallel": 1
+ },
+ "model_word_stage_budget_vs_877": 5,
+ "parallel_valid_stage_is_not_extra_serial_cost": true,
+ "raw_sum_of_lane_fixed_cycles": 6,
+ "F3": {
+  "transport_checks": 320,
+  "transport_errors": 0,
+  "valid_data_mismatches": 128,
+  "verdict": "FAIL"
+ },
+ "F4": {
+  "transport_checks": 320,
+  "transport_errors": 0,
+  "valid_data_mismatches": 0,
+  "output_epoch_mismatches": 0,
+  "live_cfgfault_observations": 251,
+  "verdict": "PASS"
+ },
+ "epoch_bypass_mutant": {
+  "mismatches": 58,
+  "verdict": "CAUGHT"
+ },
+ "real_modules": "Actual emitted engine parent, boundary/pad/reset cells, configuration control; arithmetic engine and hash cores are explicit transport stubs",
+ "not_qualified": [
+  "engine arithmetic",
+  "new current-source full strict bind",
+  "die token pass",
+  "physical timing or geometry sign-off",
+  "canonical plan or rate adoption"
+ ],
+ "open_physical_items": [
+  "soft cfgfault source placement and reach",
+  "fresh current-source ELAB with adopted f8 fault-width fix",
+  "actual route/clock/STA sign-off"
+ ],
+ "F5_census_projection": {
+  "packet": "63f8c6aba",
+  "G0C": "PASS",
+  "errors": 0,
+  "warnings": 1272,
+  "clean_types": 171,
+  "transport_fields": "identical to tested F4; no rerun needed"
+ },
+ "added_register_bits_vs_877": {
+  "payload": 897,
+  "epoch": 6,
+  "total": 903
+ }
+}

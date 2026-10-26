@@ -1,0 +1,5 @@
+PASS hd_ctl streams 2 tokens 2 slices/stream 8248
+- rtl/tb_s81hd_rank_merge_miter.sv:145: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 18us; walltime 0.415 s; speed 43.312 us/s
+- Verilator: cpu 0.415 s on 1 threads; allocated 7 MB

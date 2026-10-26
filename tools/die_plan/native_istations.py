@@ -58,6 +58,20 @@ def materialize(b,tn,file):
     typ=copy.deepcopy(typ)
     typ['internal_stations']=source_entries(typ)
     if not typ['internal_stations']:return
+    # Binding removes proven constant/unused payload bits from the functional
+    # lane. The native station carries that exact bound payload plus its epoch,
+    # rather than the wider planning pin capacity. Keep the public plan intact.
+    widths={}
+    for part in b.by_type.get(tn,[]):
+        for lane in b.out_bus.get(part,[]):
+            widths.setdefault(lane['oname'],set()).add(int(lane['width']))
+    for entry in typ['internal_stations']:
+        name=entry['conn'][4:]
+        actual=widths.get(name,set())
+        if len(actual)!=1:raise ValueError(f'native stations {tn}.{name}: no unique bound payload width')
+        width=next(iter(actual));bus=next(v for v in typ['buses'] if v['name']==name)
+        if not 0<width<=int(bus['width']):raise ValueError(f'native stations {tn}.{name}: bound width exceeds plan capacity')
+        bus['width']=width
     import kit_istations
     file=Path(file).resolve();kd=file.parent.parent/'native_internal_stations'/tn;kd.mkdir(parents=True,exist_ok=True)
     local=kd/file.name;shutil.copyfile(file,local)
