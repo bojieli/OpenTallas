@@ -25,10 +25,11 @@ def paths(manifest):
                 raise ValueError('required current source absent: ' + name)
             result.append(p)
     for field in ('map_file',):
+        # bind.py --asbuilt resolves a relative map_file against the manifest directory, not the repository root
         p = Path(manifest[field])
-        if p.is_absolute() or '..' in p.parts or not (ROOT / p).is_file():
+        if p.is_absolute() or '..' in p.parts or not (MANIFEST.parent / p).is_file():
             raise ValueError('invalid current ' + field + ': ' + str(p))
-        result.append(p)
+        result.append(MANIFEST.parent.relative_to(ROOT) / p)
     if (MANIFEST.parent / manifest['base']).resolve() != ROOT:
         raise ValueError('manifest base does not resolve to this repository')
     if manifest.get('rtl_roots'):

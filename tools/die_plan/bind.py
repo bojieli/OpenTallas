@@ -3137,7 +3137,27 @@ def load_plan(path):
         raw["asbuilt"] = ab
     if "asbuilt" not in raw:
         raise BindError(f"{path}: no `asbuilt` section (README: As-built binding)")
+    _gate_manifest_paths(raw["asbuilt"], Path(_AB_OVERRIDE.get("path") or path), bool(_AB_OVERRIDE.get("path")))
     return raw
+
+
+def _gate_manifest_paths(ab, mpath, override):
+    """TOK-SCHED 10-25: a manifest that lives in this repository must bind this checkout's sources only: every path
+    repository-relative and inside the repository (tools/die_plan/manifest_paths.py).  The S81 main manifest once read
+    a frozen worktree via absolute paths (12,800 false multi-driven nets).  Manifests outside the repository
+    (scratch diagnostics) are not gated; --allow-external-paths records an explicit diagnostic exception."""
+    import manifest_paths
+    if not manifest_paths._inside(mpath, E.REPO):
+        return
+    errs = manifest_paths.check(ab, mpath.parent, E.REPO, override=override)
+    if not errs:
+        return
+    if _AB_OVERRIDE.get("allow_external_paths"):
+        print(f"bind: WARNING {mpath}: {len(errs)} external manifest path(s) allowed by --allow-external-paths "
+              f"(diagnostic only, not a result of record): {errs[0]}", file=sys.stderr)
+        return
+    raise BindError(f"{mpath}: {len(errs)} absolute or out-of-repository manifest path(s), first: {errs[0]} "
+                    f"(tools/die_plan/manifest_paths.py lists all; make them repository-relative)")
 
 
 def plan_base(path, raw):
@@ -3781,8 +3801,11 @@ def main(argv=None):
         s.add_argument("--mem", type=int, default=32)
         s.add_argument("--strict", action="store_true")
         s.add_argument("--asbuilt", help="as-built binding section in its own file (overrides the plan's `asbuilt`)")
+        s.add_argument("--allow-external-paths", action="store_true",
+                       help="diagnostic only: do not fail on absolute / out-of-repository paths in an in-repo manifest")
     a = ap.parse_args(argv)
     _AB_OVERRIDE["path"] = a.asbuilt
+    _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
     try:
         if a.cmd == "kit-rtl":
             return cmd_kit_rtl(a)
