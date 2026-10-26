@@ -36,3 +36,37 @@ def test_die_obs_is_complement():
         a = sum((r[3] - r[1]) * (r[4] - r[2]) for r in ft if r[0] == L)
         b = sum((r[3] - r[1]) * (r[4] - r[2]) for r in obs if r[0] == L) / 4
         assert abs(a + b - 25.92 * 17.28) < 1e-3
+
+
+def test_hook_tcl_and_default_types(tmp_path):
+    import gen_phys as G
+    P = plan()
+    t = F.hook_tcl(P, "a")
+    assert "set ot_ftres_slots {}" in t and t.count("{M4 ") == len([r for r in F.type_rects(P, "a") if r[0] == "M4"]) + \
+        len([r for r in F.type_rects_nonft(P, "a") if r[0] == "M4"])
+    for tn in ("kv3_hg", "kv3_hg_v1", "kv3_hgi", "kv3_hgi_v8", "kv3_io_ft", "kv3_io_cor_v1"):
+        assert G.ft_reserve_on(tn)
+    for tn in ("kv3_sys_c", "kv3_pc", "q_hub", "a"):
+        assert not G.ft_reserve_on(tn)
+    assert G.ft_reserve_on("a", True) and not G.ft_reserve_on("kv3_hg", False)
+
+
+def _guide(path, nets):
+    with open(path, "w") as f:
+        for n, boxes in nets.items():
+            f.write(n + "\n(\n" + "".join(f"{a} {b} {c} {d} {L}\n" for L, a, b, c, d in boxes) + ")\n")
+
+
+def test_audit(tmp_path):
+    P = plan()
+    gc = 570
+    # FT net: M4 wire in the band of cell 0 (y 2.16..6.48 um), own net: M4 wire below it (y 0..1.14 um)
+    ft = {"ftn": [("M4", 0, 2280, 6 * gc, 2280 + gc), ("M2", 0, 0, gc, gc)]}
+    own = {"own": [("M4", 0, 0, 6 * gc, gc)], "ftn": ft["ftn"]}
+    _guide(tmp_path / "ft.g", ft)
+    _guide(tmp_path / "own.g", own)
+    r = F.audit(P, "a", tmp_path / "ft.g", tmp_path / "own.g")
+    assert r["PASS"] and r["own"]["nets"] == 1 and r["ft"]["layers"]["M4"]["wire_boxes"] == 1
+    own["own"] = [("M4", 0, 2280, 6 * gc, 2280 + gc)]          # own wire entirely on FT tracks -> FAIL
+    _guide(tmp_path / "own.g", own)
+    assert not F.audit(P, "a", tmp_path / "ft.g", tmp_path / "own.g")["PASS"]

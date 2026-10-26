@@ -520,6 +520,15 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # FLOW 10-25: default FF-only GRT hold repair margin (run_kit.sh grt CORNERS=bc with the FF-bound vclk); = the
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
 HOLD_FF_MARGIN_DEFAULT = 5.0
+# PATH-KV-FTRES 2026-10-26 (COORD rulings 10-25 21:16 (a) + 23:53): explicit FT track reservation (ft_reserve.py hook +
+# ft_grt.tcl two-pass GRT: FT nets on the lattice FT stripes M4-M7, own logic off them, M4-M7 adjustment 0 instead of
+# the uniform ORFS 25%) is the DEFAULT for the KV hg / hgi / io partition kits; other types opt in (ft_reserve=True)
+FT_RESERVE_DEFAULT_RE = r"^kv3_(hg|hgi|io)(_|$)"
+
+
+def ft_reserve_on(tn, ft_reserve=None):
+    """None = default by type name (FT_RESERVE_DEFAULT_RE), True / False = forced."""
+    return bool(re.match(FT_RESERVE_DEFAULT_RE, tn)) if ft_reserve is None else bool(ft_reserve)
 # FLOW-INFRA-2 10-25: GRT-RC tap pre-pass (tapbal_grt.tcl) between CTS and the FF GRT step.  Opt-in until the flow
 # canaries pass with it (plan clock.tap_grt_pre, or OT_GEN_TAP_GRT_PRE=1 at generation for A/B kits); then default on.
 TAP_GRT_PRE_DEFAULT = False
@@ -831,7 +840,7 @@ def _corner_libs(mlib, kd, corner):
     return out
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
-                   skip_ir=False, max_wire_um=None, rc_cal=True):
+                   skip_ir=False, max_wire_um=None, rc_cal=True, ft_reserve=None):
     t = P.types[tn]
     import core_clock_groups as CG
     grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
@@ -1080,6 +1089,20 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             hook.write_text(f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n" + hook.read_text())
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
+    ftres = None
+    if ft_reserve_on(tn, ft_reserve):
+        # PATH-KV-FTRES 10-26: the kit GRT routes the plan's FT nets (ft_slots) on the die-model FT stripes and its own
+        # logic off them (ft_grt.tcl wraps the first global_route; grt_pre.tcl is PRE_GLOBAL_ROUTE_TCL)
+        import ft_reserve as FR
+        (kd / "ft_reserve.tcl").write_text(FR.hook_tcl(P, tn))
+        shutil.copyfile(Path(__file__).with_name("ft_grt.tcl"), kd / "ft_grt.tcl")
+        with open(kd / "grt_pre.tcl", "a") as fh:
+            fh.write("\n# PATH-KV-FTRES 10-26: explicit FT track reservation (ft_reserve.tcl data, two-pass GRT)\n"
+                     "source [file join $gp_dir ft_grt.tcl]\n")
+        ftres = dict(tool="tools/die_plan/ft_reserve.py hook + ft_grt.tcl", layers=list(FR.RESERVE_LAYERS),
+                     share={L: v["share"] for L, v in FR.share(P).items()},
+                     slots=[s_["name"] for s_ in t.get("ft_slots", [])], m4_m7_layer_adjustment=0,
+                     rule="COORD 2026-10-25 21:16 (a) + 23:53: FT nets on the stripes, own logic off them")
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
                                                            insertion_tol_ps=ib["tol"], basis=ib["basis"],
                                                            parent_early_tap_ps=ib["early_tap_ps"],
@@ -1137,6 +1160,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
+    if ftres:
+        bud["ft_reserve"] = ftres
     if ioh:
         from io_hold_qualification import plan_digest
         bud['io_hold'] = dict(mode='sender_min',plan_sha256=plan_digest(P.raw),requires_parent=True)
@@ -1254,7 +1279,7 @@ exit $rc
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True):
+               rc_cal=True, ft_reserve=None):
     """margins (slew_pct, cap_pct): opt-in repair_design SLEW_MARGIN / CAP_MARGIN (None: not exported)."""
     """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
@@ -1289,7 +1314,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
-                                   skip_ir, max_wire_um, rc_cal))
+                                   skip_ir, max_wire_um, rc_cal, ft_reserve))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
