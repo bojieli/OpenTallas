@@ -56,6 +56,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
+import auto_geom as AG  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 HOME = Path.home()
@@ -101,7 +102,9 @@ TSV_HEAD = {
     "structural.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tlane",
     "provisional.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tlocal_verdict\treasons\tlane",
     "geom_alerts.tsv": "time\tid\tdie\ttype\tsrc\tkit\tstatus\tunit\tgeom_was\tverdict\tlane",
+    AG.AG_TSV: AG.AG_HEAD,
 }
+GEOM_TEXT = ""                                         # lanes/GEOM-REVIEW.md of this tick (AUTO-GEOM revocation)
 DRY = False
 
 
@@ -1088,6 +1091,15 @@ def admit_new(st, rows):
                 log(f"REJECT queue line {r['line']} ({r['kit']}): {r['error']}")
                 set_status(st, j, "REJECTED", r["error"])
             continue
+        if r["mode"] != "adopt" and r["geom"].upper() == "AUTO":
+            # AUTO-GEOM (owner 2026-10-25): a registered template replica gets the rule check; the verdict is
+            # applied by AG.prepare on the next tick (PASS -> submit, FAIL -> visual REQ on its AUTO-GEOM tag)
+            note = AG.step(sys.modules[__name__], st, r, GEOM_TEXT)
+            j = st["jobs"].setdefault(rid, dict(r))
+            if j.get("status") != "WAIT-GEOM" or j.get("auto_geom_note") != note:
+                j["auto_geom_note"] = note
+                set_status(st, j, "WAIT-GEOM", note)
+            continue
         if r["mode"] != "adopt" and (r["geom"].upper() not in GEOM_OK or not r["geom_ref"]):
             if not j:
                 j = st["jobs"][rid] = dict(r)
@@ -1463,6 +1475,9 @@ def tick(args):
     st = load_state()
     rows = parse_queue(read_queue_text())
     geom_text = read_coord("lanes/GEOM-REVIEW.md")
+    global GEOM_TEXT
+    GEOM_TEXT = geom_text
+    AG.prepare(sys.modules[__name__], st, rows)
     resolve_geom(rows, geom_text)
     load_closure()
     poll_running(st)
@@ -1518,6 +1533,7 @@ def write_loop_gaps(st, rows, geom_text):
     gaps += LG.gaps_review(trows, lane_texts, geom_text, now)
     gaps += LG.gaps_ready(read_coord("lanes/COORD-REVIEW-QUEUE.md"), now)
     gaps += LG.gaps_geom_ambiguous(geom_text, geom_groups(rows), now)
+    gaps += AG.gaps(st, now)
     cleared = LG.geom_fail_cleared(read_coord("autopilot/resolved.tsv"), read_coord("lanes/COORD-REVIEW-QUEUE.md"))
     for j in jobs:                                     # oldest-first render; keeps the line while the run is live
         if j["id"] in cleared and (cleared[j["id"]] is None or cleared[j["id"]] >= (j.get("geom_fail_alert_t") or 0)
