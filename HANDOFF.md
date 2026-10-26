@@ -1043,3 +1043,5 @@ CODEX: 2026-10-26 02:26 PDT TOK-DS recoveredgenuineL14Engram inputs fromreleased
 CODEX: 2026-10-26 02:31 PDT host_qm929a canonicalPLACEPASS179arcsmax104um; trialrow001d839021ce awaitsGEOM+canary. SCphysicalKEEPfixrestores6/6actualFFs and catches deletionmutant. FreshVQ LEC13045/13045PASS,placing. Reviewreceipts330101a02.
 CODEX: 2026-10-26 02:38 PDT HBM stable-sort M5 sourcebridge6801527de GENPASS3575/3572; rootLEC+topksynth liveintel1; H0 FINAL4faultfails rootcaused lost wire-arrayendpoints, fix475e753fa6exhaustivecasesPASS, actualgatepending; EXP7fails assignedparent.
 CODEX: 2026-10-26 02:40 PDT SYS_C native synth/face/fanout PASS; fixed ROM frontend+LEC metadata and actual PHY PG regex/M6landing, narrow tools1b8a62a4f READY. PDN PASS40.88s; exact8868pad allocation trial LIVE intel1unit1971908, fullLEC epyc1unit2216920; no route.
+
+CODEX: 2026-10-26 02:40 PDT TOK-DS real closing service fixed: codex/svc-fix-1026@81f42ce89 READY, seeds1/2 PASS8192PV+2048P/SE/scores each0errors/faults; +35servicecycles (GO0), model receipt, no RTLchange; baseline FAIL1136 retained. Compiler/bench explicit source-calendar matching + driver propagation.
