@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v3, 2026-10-26 ~07:0x; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4, 2026-10-26 ~07:3x; v3 ~07:0x; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -275,12 +275,11 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   c. The die H-tree lattice is snapped to the partition lattice so tree nodes land on island sites (report max node displacement).
 - 12.3 CLOCK LATENCY. One common per-die clock-latency target at every hard-core clock pin (default 250 ps TT; FF stated per die); deep cores
   restructure their CTS to meet it, shallow cores pad up. No early taps by design. Cores are rebuilt in parallel to it, signed cores included
-  (owner 10-26). Early-tap branches are a fallback only.
+  (owner 10-26). Early-tap branches are RETIRED (12.8): diagnostic evidence only, never a closure path.
 - 12.4 GATES (all dies, die_infra.py).
   a. Freeze = die GRT0 incl. clock (>= 50 it) AND related-pair skew <= 80 ps TT+FF (CPPR, routed RC).
-  b. CPPR on a regional mesh (COORD 10-26): common point = the mesh node when the mesh is one connected net; measured intra-mesh spread added in
-     full; per-tap buffer + stub early/late not credited; pairs on different meshes credit only to their last common H-tree node. Report the
-     region-root-credited number as INFO.
+  b. CPPR (OWNER 10-26 ~07:3x, 12.8): the GATE number credits CPPR only to the last common H-tree/tree node (region root for same-mesh pairs);
+     no credit at the mesh node. The mesh-node-credited number (COORD 10-26 early ruling) is INFO only.
   c. Site sufficiency: max gap between legal station/repeater sites along each die net corridor <= 405 um; corridor track use <= 0.6;
      via-field porosity + per-gcell pin-stack limit on every M8/M9 -> bay drop and every island stack; bay fill <= 60 %; mesh-driver
      power density / EM in islands.
@@ -299,6 +298,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 01:1x OWNER D-INFRA-FIRST: PG/clock/reset first, die signals on M4-M7 + leftover M8/M9 = CURRENT (12.1).
   - 10-26 ~06:3x OWNER: common core clock-latency target + in-core islands on all dies, rebuilt in parallel = CURRENT (12.2a, 12.3).
   - 10-26 ~07:0x OWNER: master plan first (city-planning model, 12.7) on all dies; leftover M8/M9 stays free for the router, entry via planned M7 pins = CURRENT.
+  - 10-26 ~07:3x OWNER: root-cause clock structure, no tweaks (12.8): plan-defined centre clock entry + structured core trees; early taps, stub trims, clock ECOs, mesh-node CPPR credit banned as closure means = CURRENT.
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 ~07:0x, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
@@ -324,3 +324,21 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   e. MARGINS so routing confirms rather than discovers: 60 % fill/tracks, 405 um plan reach (measured repeated 600-750), worst-case power.
   f. ORDER: QC first (all 68 types held), then S81-HEAD, S81, KV, HBM in parallel lanes on the same tool; running core rebuilds and
      early-tap work feed in. In-flight trials may finish, but sign-off kits must carry a master-plan slice.
+
+- 12.8 ROOT-CAUSE CLOCK STRUCTURE, NO TWEAKS (OWNER 2026-10-26 ~07:3x, "fix the root cause and structurally redesign. do not use tweaks and tricks").
+  Root cause: hard cores were closed bottom-up before the die clock plan existed -> clock pins on edges/corners, each core its own latency,
+  die compensating afterwards. Structural rule for ALL dies:
+  a. The master plan (12.7) defines, per hard-core type, the CLOCK ENTRY (a clock/reset island at/near the core's geometric centre, M9->M5 stack)
+     and the die's ONE latency target (12.3). Kits must place the clock pin exactly there; kit generator + GEOM review reject any other location.
+  b. Inside every core the clock is a STRUCTURED tree from that entry: symmetric (H-tree/fishbone) trunk to equal-load leaf clusters, stage
+     count fixed by geometry, same structure for every instance of the type. A core whose longest entry-to-sink distance exceeds ~200 um, or
+     that cannot meet 250 +-20 TT with a centre entry, is restructured (internal H-tree with in-core islands, or split into smaller cores)
+     -- never padded/trimmed into range.
+  c. Shallow cores reach the target with a designed fixed trunk delay at the entry (same cell chain per type), not per-sink padding.
+  d. The die clock is balanced by construction: H-tree snapped to the partition lattice, equal-length branches, equal load per tap (density
+     taps), regional meshes with landed seams. NOT allowed as closure means: early-tap offsets/branches, per-tap stub trims or useful-skew
+     offsets, post-CTS ECO padding/buffer swaps on the clock, mesh-node CPPR credit, gate-number relaxations. Sizing chosen in the PLAN
+     (uniform per tap class) is design, not a trim.
+  e. A measured failure goes back to the structure (plan or core architecture), recorded with its root cause before any rebuild.
+  f. Existing results obtained with the banned means (QC early-tap 154/143, any stub-trimmed mesh result incl. KV c3t 63.95/54.71) are
+     re-measured on the 12.8 structure with the 12.4b gate number before they count.
