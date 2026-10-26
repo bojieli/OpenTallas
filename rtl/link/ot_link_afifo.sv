@@ -149,15 +149,18 @@ module ot_link_afifo #(
     assign rdata=raw_rdata;
 `endif
     assign rcount = ((SAMECLK != 0) ? wbin_q : g2b(wgray_r)) - rbin;
+    // read-domain loop variable: its own integer (one shared `i` assigned in both clocked blocks is a
+    // multi-driven net for Yosys check -assert, rtl_lint FAIL_PREFLOOR in the hr cdc kits 10-26; no logic change)
+    integer j;
     always @(posedge rclk or negedge rrst_n) begin
         if (!rrst_n) begin
             rbin <= 0; rgray <= 0;
-            for (i = 0; i < SYNC; i = i + 1) wgray_s[i] <= 0;
+            for (j = 0; j < SYNC; j = j + 1) wgray_s[j] <= 0;
             wbin_q <= 0;
         end else begin
             wbin_q <= wbin;
             wgray_s[0] <= wgray_seam;
-            for (i = 1; i < SYNC; i = i + 1) wgray_s[i] <= wgray_s[i-1];
+            for (j = 1; j < SYNC; j = j + 1) wgray_s[j] <= wgray_s[j-1];
             if (rd && !rempty) begin
                 rbin <= rbin_n; rgray <= rbin_n ^ (rbin_n >> 1);
             end
