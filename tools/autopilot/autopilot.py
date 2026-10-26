@@ -94,6 +94,9 @@ WAITS = (None, "WAIT-GEOM", "WAIT-CANARY", "WAIT-PATH-GATE", "WAIT-PLAN-DELTA", 
 # closure order (owner 2026-10-25 18:45): release-tree die key -> path name in lanes/PATH-FREEZE.md
 DIE_PATH = {"s81": "S81", "s81_head": "S81", "cp1": "S81", "qwen_compute": "QC", "qwen_kvsys": "KV", "hbm": "HBM"}
 GATE_ITEMS = ("GRT0", "CLOCK-ROUTE", "PATH-STA")
+# Rule 1 amendment (owner 2026-10-25 ~21:00): 'FROZEN <NAME> plan@sha' in lanes/PATH-FREEZE.md freezes that DIE's plan and
+# ALL its tiles (path and non-path) route to sign-off.  FROZEN name -> release-tree die key (explicit, no guessing):
+FROZEN_DIE = {"QC": "qwen_compute", "S81-HEAD": "s81_head", "S81": "s81", "KV": "qwen_kvsys", "HBM": "hbm"}
 TSV_HEAD = {
     "signed.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\tmirror\ttt_wns_ps\tff_wns_ps\tlane\tsrc_commit\tflow_tag",
     "unversioned.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\ttt_wns_ps\tff_wns_ps\twhy\tlane",
@@ -914,10 +917,21 @@ def path_of(r):
     return None
 
 
+def die_frozen(die):
+    """the FROZEN line of the die's plan when lanes/PATH-FREEZE.md freezes it (no later FAIL gate line of that name)"""
+    gates = CLOSURE.get("gates", {})
+    for name, key in FROZEN_DIE.items():
+        g = gates.get(name)
+        if key == die and g and g.get("frozen"):
+            return g.get("frozen_line") or name
+    return ""
+
+
 def path_gate_hold(r):
-    """'' when the path part may route to sign-off, else why it is limited to trial builds"""
+    """'' when the path part may route to sign-off, else why it is limited to trial builds.  A row whose DIE is FROZEN
+    passes regardless of its path (rule 1 amendment: e.g. s81_head rows on path S81 once 'FROZEN S81-HEAD' is recorded)"""
     path = path_of(r)
-    if not path:
+    if not path or die_frozen(r.get("die") or ""):
         return ""
     g = CLOSURE.get("gates", {}).get(path)
     if g and g["pass"]:

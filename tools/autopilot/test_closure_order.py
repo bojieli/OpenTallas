@@ -88,6 +88,30 @@ class TestGates(TickBase):
         jobs = self.signed_finish(QPATH)
         self.assertEqual(list(jobs.values())[0]["status"], "ARCHIVED")
 
+    def test_frozen_die_part_on_failing_path_signs_off(self):
+        # s81_head is on path S81 (failing); 'FROZEN S81-HEAD' freezes the die -> sign-off, a later S81 FAIL is the path's
+        head = ["s81_head", "ot_s81hd_elemB"] + ROW[2:8] + ["PATH-S81"]
+        self.freeze(FREEZE_HEAD + "FROZEN S81-HEAD plan@d7b8d1eb\nS81 | GRT0 | FAIL later | x | d\n")
+        self.queue(head)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "RUNNING")
+        self.assertEqual(list(self.signed_finish(KPATH).values())[0]["status"], "ARCHIVED")
+
+    def test_non_frozen_die_stays_held(self):
+        self.freeze(FREEZE_HEAD + "FROZEN S81-HEAD plan@d7b8d1eb\n")
+        self.queue(ROW[:8] + ["PATH-S81"])                  # die s81, path S81, only s81_head frozen
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "WAIT-PATH-GATE")
+        self.assertEqual(self.f.launched, [])
+
+    def test_fail_after_frozen_reopens_die(self):
+        head = ["s81_head", "ot_s81hd_elemB"] + ROW[2:8] + ["PATH-S81"]
+        self.freeze(FREEZE_HEAD + "FROZEN S81-HEAD plan@d7b8d1eb\nS81-HEAD | GRT0 | FAIL regress | x | d\n")
+        self.queue(head)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "WAIT-PATH-GATE")
+        self.assertEqual(self.f.launched, [])
+
     def test_trial_build_runs_but_never_signs_off(self):
         self.freeze(FREEZE_HEAD)
         self.queue(mode(QC, "trial"))
