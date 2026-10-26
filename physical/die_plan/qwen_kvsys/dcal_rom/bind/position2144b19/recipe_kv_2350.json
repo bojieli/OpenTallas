@@ -4600,8 +4600,10 @@
  },
  "position_banks": "kv_pc_r8_position_bank_v1",
  "land_r8_extra": [
-  "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/vport_request_extra.json"
+  "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/vport_request_extra.json",
+  "physical/die_plan/qwen_kvsys/bind/kvbind1025/pv_calendar_restore_b31.json"
  ],
  "dcal_rom_note": "Approved D-ROM-3b: TX/RX init images are dead and removed; START/PERIOD/SEG/ADM/FIRST data comes from one generated64x32m2 ROM. No production or boot edge added; eight scalar reads occupy existing suppressed init. New recipe only.",
- "param_regen_note": "PATH-KV 2026-10-26: one composed KV hook (kv_regen ECTL/AHUB + PV age bounds + pair-image TXDP); the 2144 recipe had dropped kv_regen.py."
+ "param_regen_note": "PATH-KV 2026-10-26: one composed KV hook (kv_regen ECTL/AHUB + PV age bounds + pair-image TXDP); the 2144 recipe had dropped kv_regen.py.",
+ "pv_calendar_note": "CANDIDATE ONLY: restore all internal PV crossing ages to original source, +115581 FF, 0 original schedule cycles. Physical footprints and repeated-type matching pending."
 }
