@@ -460,9 +460,13 @@ OPMAP = [
       '128 E2M1 codes', 'UNIT PRESENT on 877 (one slice sid == key region hash writes code lo / hi + scales, rg3 layout).  '
       'Missing: lower_svc does not emit the IK_ROW frame (the new key comes from attn.cmp.k_rope_qdq, itself GAP) and '
       'no bench writes then scans the key')),
-    (r'attn\.(idx\.topk_merge)$', 'TP4 collective of the local selections (end-slice lep)', 'GAP',
-     ('u_s_4S rstop V receive -> end-slice lep', 'bk_sel egress kind 5 words', 'no path carries the bk_sel IDX words to '
-      'an end slice for the cross-die merge (lower_bk GAPS consumer); collective owned by TOKEN-XDIE-S81')),
+    (r'attn\.(idx\.topk_merge)$', 'TP4 peer merge of the 4 local selections: u_bk_sel dsdv_bk_sel_vmtx -> u_s_7S / u_s_7N '
+     'lep TP TX (tp_i) -> lk_EN2/3 / lk_WS2/3 -> u_s_0S tp_o -> u_s_0N lep_mu_ab_idxq tm -> ca -> bk_sel', 'GAP',
+     ('877 IDXNET (S81/IDXNET 10-25, die_b178.v:3555/3559/3627/3631/3699)', 'bk_sel 276-b IDX beats on tp_i / tp_o / tm / ca '
+      '(lep IDX_TP / IDX_MRG, every TP beat on pair A lane 2)', 'UNIT + NETS PRESENT on 877 (TOK-DS-CMP2 10-26 netlist audit; '
+      'the old "no path carries the bk_sel IDX words to an end slice" text was the legacy die).  Missing: lower_bk emits no '
+      'TP4 peer-merge programme for the IDXNET lep (compiled TP beat slots, RL relay count, tm / ca collision-free windows) '
+      'and no bench runs the 4-rank merge through the bound leps; price LEG 729 is the legacy S81-SCAND leg')),
     (r'attn\.gather$', 'svc SEL_IDS row fetch by index (dsdv_svc_att) + ROWS frames', 'GAP',
      ('dsdv_svc_att SEL_IDS / ROWS (lower_svc compressed job)', 'q frame type 7 ids + type 6 rows',
       'lowered by lower_svc for compressed layers (this row applies only without fixtures)')),
