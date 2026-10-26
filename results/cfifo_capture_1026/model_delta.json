@@ -12,18 +12,19 @@
   "bits_per_lane": 276,
   "depth": 4,
   "extra_flop_bits_per_lane": 281,
-  "extra_flop_bits_per_core": 1124,
+  "extra_flop_bits_per_core": 1127,
   "components": {
    "data": 1104,
    "write_epoch": 12,
    "capture_valid": 4,
-   "wider_read_counter": 4
+   "wider_read_counter": 4,
+   "private_outputs": 3
   }
  },
  "notes": [
   "K is extended internally before+1; K7->8 preserved without interface widening.",
   "No clocks, reset, straps, pin locations or release plans adopted by this prototype.",
-  "Other raw-core face failures (cr_s/xk clock classification, lk straps, rs/rd private outputs) remain open.",
+  "cr_s/xk clocks and strap_lk now have explicit typed metadata, with no data exemptions. Correct multi-root SDC and parent reset contract still required.",
   "Before B2 adoption: current-width source rebasing, model path count, clock/face gates, physical fit/render, TT/FF."
  ]
 }

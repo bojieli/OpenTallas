@@ -1,0 +1,134 @@
+{
+ "name": "s81coll_cfifo_crs4_pin_capture",
+ "top": "dsfd_cfifo_crs4_pin_capture",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4_pin_capture.sv",
+  "rtl/dsrom_sys/s81_dv/land/ot_s81_land_pin_capture.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "cr",
+ "clock_ports": [
+  "cr",
+  "cr_s",
+  "xk[0]",
+  "xk[1]",
+  "xk[2]",
+  "xk[3]"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cr"
+   ],
+   "inputs": [
+    "ri",
+    "st",
+    "rst",
+    "strap_lk"
+   ],
+   "outputs": [
+    "xa",
+    "xb",
+    "cc",
+    "x2",
+    "rs"
+   ]
+  },
+  "lane0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[0]"
+   ],
+   "inputs": [
+    "xl0"
+   ],
+   "outputs": []
+  },
+  "lane1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[1]"
+   ],
+   "inputs": [
+    "xl1"
+   ],
+   "outputs": []
+  },
+  "lane2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[2]"
+   ],
+   "inputs": [
+    "xl2"
+   ],
+   "outputs": []
+  },
+  "lane3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[3]"
+   ],
+   "inputs": [
+    "xl3"
+   ],
+   "outputs": []
+  },
+  "core_s": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cr_s"
+   ],
+   "inputs": [],
+   "outputs": [
+    "rd"
+   ]
+  }
+ },
+ "reset_ports": [
+  "rst"
+ ],
+ "straps": [
+  "strap_lk"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "entry_latencies": "required_from_current_plan"
+ },
+ "macros": [],
+ "children": [],
+ "route": {
+  "pd": 0.5
+ },
+ "model": {
+  "added_root_cycles_per_visited_column": 1,
+  "extra_flop_bits": 1127
+ },
+ "qualification": "Opt-in prototype, not adopted. Correct six-entry clock/landing-window/root-reset contract required; no legacy one-clock STA."
+}

@@ -549,6 +549,16 @@ def git_show(spec):
     return subprocess.run(["git", "-C", str(REPO), "show", spec], capture_output=True, text=True, check=True).stdout
 
 
+def require_supported_clock_contract(spec):
+    # The old generator silently used only clock_port even when the real closed
+    # spec declared multiple related CTS roots (CFIFO: cr, cr_s and four xk).
+    # A one-root SDC would time forwarded clocks as data and cannot qualify it.
+    roots = list(dict.fromkeys(spec.get("clock_ports") or [spec["clock_port"]]))
+    if len(roots) > 1:
+        raise ValueError(f'{spec["top"]}: legacy core generator cannot preserve {len(roots)} clock entries {roots}; '
+                         'provide actual per-entry clock latency and landing-window contract, never collapse them to clock_port')
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--module", required=True, help="recipe key (= plan module unless the recipe names plan_module)")
@@ -597,6 +607,7 @@ def main():
     spec_src = rec.get("spec_git")       # "<rev>:<path>" for a kit spec that is only in history (sources from the tree)
     spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
     mod = spec["top"]
+    require_supported_clock_contract(spec)
     assert mod == hc["module"], (mod, hc["module"])
     if spec.get("children"):
         raise SystemExit(f"{mod}: hard children {[c['view'] for c in spec['children']]} must be signed first (refused)")

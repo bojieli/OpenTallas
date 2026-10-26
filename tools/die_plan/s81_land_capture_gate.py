@@ -42,7 +42,21 @@ def main():
         if c.returncode: raise RuntimeError(c.stdout+c.stderr)
         r=subprocess.run(['vvp',str(exe)],capture_output=True,text=True);(a.out/(name+'.log')).write_text(r.stdout+r.stderr)
         rows.append(dict(k=k,phase=phase,mutant=mutant,rc=r.returncode,pass_gate=(r.returncode!=0 if mutant else r.returncode==0)))
-    result=dict(schema='opentallas.s81_land_capture_gate.v1',rows=rows,added_root_cycles=1,passed=all(r['pass_gate'] for r in rows))
+    full=[]
+    full_tb=Path(__file__).resolve().parent/'fixtures/cfifo_capture_tb.sv'
+    for mutant in (False,True):
+      core=rtl/'dsfd_cfifo_crs4_pin_capture.sv'
+      if mutant:
+        text=core.read_text()
+        if text.count('assign rs = rs_port;')!=1: raise ValueError('private-status mutant anchor changed')
+        core=a.out/'cfifo_wrong_rs.sv';core.write_text(text.replace('assign rs = rs_port;','assign rs = ~rs_port;'))
+      name='full_mut'+str(int(mutant));exe=a.out/name
+      cmd=['iverilog','-g2012','-s','tb','-o',str(exe),str(full_tb),str(core),str(rtl/'dsfd_cfifo_crs4.sv'),str(rtl/'ot_s81_land.sv'),str(rtl/'ot_s81_land_pin_capture.sv')]
+      c=subprocess.run(cmd,capture_output=True,text=True)
+      if c.returncode: raise RuntimeError(c.stdout+c.stderr)
+      r=subprocess.run(['vvp',str(exe)],capture_output=True,text=True);(a.out/(name+'.log')).write_text(r.stdout+r.stderr)
+      full.append(dict(mutant=mutant,rc=r.returncode,pass_gate=(r.returncode!=0 if mutant else r.returncode==0)))
+    result=dict(schema='opentallas.s81_land_capture_gate.v1',rows=rows,added_root_cycles=1,full_cfifos=full,passed=all(r['pass_gate'] for r in rows+full))
     (a.out/'summary.json').write_text(json.dumps(result,indent=1)+'\n');print(json.dumps(dict(passed=result['passed'],positive=sum(x['pass_gate'] for x in rows if not x['mutant']),mutant_caught=sum(x['pass_gate'] for x in rows if x['mutant']),cases=len(rows))))
     return 0 if result['passed'] else 1
 

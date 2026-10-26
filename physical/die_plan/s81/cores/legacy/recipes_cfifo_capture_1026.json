@@ -1,0 +1,8 @@
+{
+ "dsfd_cfifo_crs4_pin_capture": {
+  "ref_tile": "results/cfifo_capture_1026/ref_tile",
+  "plan_module": "dsfd_cfifo_crs4_pin_capture",
+  "suffix": "capture_proto",
+  "qualification": "Requires candidate B2 plan/pins with lk renamed strap_lk; legacy generator must reject six-clock spec until actual clock-entry support exists."
+ }
+}

@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.cfifo_capture_boundary.v1",
+ "module": "dsfd_cfifo_crs4_pin_capture",
+ "boundary_role": {
+  "cr": "clk",
+  "cr_s": "clk",
+  "xk": "clk",
+  "rst": "reset",
+  "strap_lk": "id_strap"
+ },
+ "clock_ports": [
+  "cr",
+  "cr_s",
+  "xk[0]",
+  "xk[1]",
+  "xk[2]",
+  "xk[3]"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "straps": [
+  "strap_lk"
+ ],
+ "data_pin_exemptions": [],
+ "original_pin_renames": {
+  "lk": "strap_lk"
+ },
+ "source_clock_contract": "preserve real six input roots; never replace them with one clock target",
+ "sta_status": "BLOCKED: per-entry actual clock latency/forwarded landing window and root-reset contract must come from current B2 plan; legacy one-clock SDC is not admissible",
+ "extra_output_ff_bits": 3,
+ "private_outputs": [
+  "rs",
+  "rd[0]",
+  "rd[1]"
+ ],
+ "added_root_cycles_per_visited_column": 1
+}

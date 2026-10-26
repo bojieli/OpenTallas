@@ -1,0 +1,178 @@
+{
+ "rows": [
+  {
+   "top": "dsfd_cfifo_crs4",
+   "flop_bits": 6841,
+   "xl_bits": 1104,
+   "all_xl_one_ff": false,
+   "private_outputs": {
+    "rs[0]": {
+     "drivers": [
+      [
+       "$procdff$244",
+       "$adff",
+       "Q"
+      ]
+     ],
+     "internal_loads": [
+      [
+       "$auto$ff.cc:337:slice$249",
+       "$adffe",
+       "ARST"
+      ],
+      [
+       "$auto$ff.cc:337:slice$250",
+       "$adffe",
+       "ARST"
+      ],
+      [
+       "$auto$ff.cc:337:slice$251",
+       "$adffe",
+       "ARST"
+      ],
+      [
+       "$auto$ff.cc:337:slice$252",
+       "$adffe",
+       "ARST"
+      ],
+      [
+       "$auto$ff.cc:337:slice$269",
+       "$adffe",
+       "ARST"
+      ],
+      [
+       "$auto$ff.cc:337:slice$272",
+       "$adffe",
+       "ARST"
+      ],
+      [
+       "$auto$ff.cc:337:slice$282",
+       "$adffe",
+       "ARST"
+      ],
+      [
+       "$auto$ff.cc:337:slice$283",
+       "$adffe",
+       "ARST"
+      ],
+      [
+       "$flatten\\g_lane[0].u_l.$procdff$198",
+       "$adff",
+       "ARST"
+      ],
+      [
+       "$flatten\\g_lane[0].u_l.$procdff$218",
+       "$adff",
+       "ARST"
+      ],
+      [
+       "$flatten\\g_lane[1].u_l.$procdff$198",
+       "$adff",
+       "ARST"
+      ],
+      [
+       "$flatten\\g_lane[1].u_l.$procdff$218",
+       "$adff",
+       "ARST"
+      ],
+      [
+       "$flatten\\g_lane[2].u_l.$procdff$198",
+       "$adff",
+       "ARST"
+      ],
+      [
+       "$flatten\\g_lane[2].u_l.$procdff$218",
+       "$adff",
+       "ARST"
+      ],
+      [
+       "$flatten\\g_lane[3].u_l.$procdff$198",
+       "$adff",
+       "ARST"
+      ],
+      [
+       "$flatten\\g_lane[3].u_l.$procdff$218",
+       "$adff",
+       "ARST"
+      ],
+      [
+       "$procdff$239",
+       "$adff",
+       "ARST"
+      ]
+     ]
+    },
+    "rd[0]": {
+     "drivers": [
+      [
+       "$procdff$239",
+       "$adff",
+       "Q"
+      ]
+     ],
+     "internal_loads": [
+      [
+       "$procdff$223",
+       "$adff",
+       "ARST"
+      ],
+      [
+       "$procdff$228",
+       "$adff",
+       "ARST"
+      ]
+     ]
+    },
+    "rd[1]": {
+     "drivers": [
+      [
+       "$procdff$223",
+       "$adff",
+       "Q"
+      ]
+     ],
+     "internal_loads": []
+    }
+   }
+  },
+  {
+   "top": "dsfd_cfifo_crs4_pin_capture",
+   "flop_bits": 7968,
+   "xl_bits": 1104,
+   "all_xl_one_ff": true,
+   "private_outputs": {
+    "rs[0]": {
+     "drivers": [
+      [
+       "$procdff$213",
+       "$adff",
+       "Q"
+      ]
+     ],
+     "internal_loads": []
+    },
+    "rd[0]": {
+     "drivers": [
+      [
+       "$procdff$188",
+       "$adff",
+       "Q"
+      ]
+     ],
+     "internal_loads": []
+    },
+    "rd[1]": {
+     "drivers": [
+      [
+       "$procdff$193",
+       "$adff",
+       "Q"
+      ]
+     ],
+     "internal_loads": []
+    }
+   }
+  }
+ ],
+ "added_flop_bits_actual": 1127
+}
