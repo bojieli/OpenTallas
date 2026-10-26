@@ -2,7 +2,7 @@
 "schema": "opentallas.die_plan.r8_extra.v1",
 "die": "qwen_kvsys",
 "source_bind_sha256": "fb28782864336360bf1bcc7cf412f427f22a5095e4cd13533f387ec9aa7c22d6",
-"note": "Request-only actual per-member R8 pads. Align pr_t+pr_valid word first, then add max(DQ-15,0) as the b15 image prep requires. Table authoritative for listed IDs, preserves all other R8. Physical source realization and shared-type consistency required before token adoption. | KV-BIND-R3 rebased onto die_plan_cland_r3.json: 12 moved, 12 pad-absorbed, 0 infeasible",
+"note": "Request-only actual per-member R8 pads. Align pr_t+pr_valid word first, then add max(DQ-15,0) as the b15 image prep requires. Table authoritative for listed IDs, preserves all other R8. Physical source realization and shared-type consistency required before token adoption. | KV-BIND-R3 rebased onto die_plan_cland_r3.json: 24 moved, 14 pad-absorbed, 10 infeasible",
 "members": [
 {
 "id": "vport_WS_0.pr_t[0:13]<-pvw_0__u_ctl.req_t@48",
@@ -124,9 +124,9 @@
 ]
 ],
 "asbuilt": 43,
-"bound": 42,
+"bound": 45,
 "pad": 1,
-"landed": 43,
+"landed": 46,
 "lane": "L1842"
 },
 {
@@ -149,9 +149,9 @@
 ]
 ],
 "asbuilt": 43,
-"bound": 43,
+"bound": 46,
 "pad": 0,
-"landed": 43,
+"landed": 46,
 "lane": "L1846"
 },
 {
@@ -224,8 +224,8 @@
 ]
 ],
 "asbuilt": 58,
-"bound": 29,
-"pad": 7,
+"bound": 32,
+"pad": 4,
 "landed": 36,
 "lane": "L1953"
 },
@@ -249,9 +249,9 @@
 ]
 ],
 "asbuilt": 58,
-"bound": 34,
-"pad": 2,
-"landed": 36,
+"bound": 37,
+"pad": 5,
+"landed": 42,
 "lane": "L1957"
 },
 {
@@ -274,8 +274,8 @@
 ]
 ],
 "asbuilt": 48,
-"bound": 15,
-"pad": 39,
+"bound": 18,
+"pad": 36,
 "landed": 54,
 "lane": "L1952"
 },
@@ -299,8 +299,8 @@
 ]
 ],
 "asbuilt": 48,
-"bound": 20,
-"pad": 34,
+"bound": 23,
+"pad": 31,
 "landed": 54,
 "lane": "L1956"
 },
@@ -324,9 +324,9 @@
 ]
 ],
 "asbuilt": 65,
-"bound": 42,
+"bound": 48,
 "pad": 1,
-"landed": 43,
+"landed": 49,
 "lane": "L1954"
 },
 {
@@ -349,9 +349,9 @@
 ]
 ],
 "asbuilt": 65,
-"bound": 43,
+"bound": 49,
 "pad": 0,
-"landed": 43,
+"landed": 49,
 "lane": "L1958"
 },
 {
@@ -524,9 +524,9 @@
 ]
 ],
 "asbuilt": 41,
-"bound": 42,
+"bound": 45,
 "pad": 1,
-"landed": 43,
+"landed": 46,
 "lane": "L1842"
 },
 {
@@ -549,9 +549,9 @@
 ]
 ],
 "asbuilt": 41,
-"bound": 43,
+"bound": 46,
 "pad": 0,
-"landed": 43,
+"landed": 46,
 "lane": "L1846"
 },
 {
@@ -624,8 +624,8 @@
 ]
 ],
 "asbuilt": 53,
-"bound": 29,
-"pad": 7,
+"bound": 32,
+"pad": 4,
 "landed": 36,
 "lane": "L1953"
 },
@@ -649,9 +649,9 @@
 ]
 ],
 "asbuilt": 53,
-"bound": 34,
-"pad": 2,
-"landed": 36,
+"bound": 37,
+"pad": 5,
+"landed": 42,
 "lane": "L1957"
 },
 {
@@ -674,8 +674,8 @@
 ]
 ],
 "asbuilt": 42,
-"bound": 15,
-"pad": 36,
+"bound": 18,
+"pad": 33,
 "landed": 51,
 "lane": "L1952"
 },
@@ -699,8 +699,8 @@
 ]
 ],
 "asbuilt": 42,
-"bound": 20,
-"pad": 31,
+"bound": 23,
+"pad": 28,
 "landed": 51,
 "lane": "L1956"
 },
@@ -724,9 +724,9 @@
 ]
 ],
 "asbuilt": 60,
-"bound": 42,
+"bound": 48,
 "pad": 1,
-"landed": 43,
+"landed": 49,
 "lane": "L1954"
 },
 {
@@ -749,9 +749,9 @@
 ]
 ],
 "asbuilt": 60,
-"bound": 43,
+"bound": 49,
 "pad": 0,
-"landed": 43,
+"landed": 49,
 "lane": "L1958"
 },
 {

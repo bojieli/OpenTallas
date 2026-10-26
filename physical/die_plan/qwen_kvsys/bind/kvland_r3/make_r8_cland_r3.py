@@ -7,6 +7,8 @@ re-padding.  Method = KV-405 r8_rebase (r8.rebase + r8.pads --bus leaf --replica
                                 bus groups after r8_fault_exempt.py + r8_invariant_split.py, bound on die_plan.json
   old lane depths               die_plan.json latency.lanes (== B33 bind_latency.json buses plan_cycles, all 2404)
   new lane depths               gen.latency_table(die_plan_cland_r3.json)
+Pass 2 (KV-BIND-R3 after B35): r8/b35_bus_groups_r8.json.gz (the B35 bind of this plan at 84104e5023, after
+r8_fault_exempt.py + r8_invariant_split.py) replaces the rebased B33 groups: exact bound depths for every member.
 Extras (asbuilt.land_r8_extra, authoritative per id): each member on a moved lane gets bound += d; its landed depth is
 the schedule the extra exists for (PV calendar: landed == as-built; vport request: materialised RT), so pad -= d keeps
 landed.  A member whose pad < d cannot keep landed: it is reported (INFEASIBLE) and keeps pad 0, landed = new bound
@@ -31,6 +33,7 @@ NEW = KV / "die_plan_cland_r3.json"
 EXTRAS = [KV / "bind/kvbind1025/r8_position_2144/vport_request_extra.json",
           KV / "bind/kvbind1025/pv_calendar_restore_b31.json"]
 OUT = HERE / "r8"
+BG35 = OUT / "b35_bus_groups_r8.json.gz"   # B35 bind (84104e5023) bus groups after r8_fault_exempt + r8_invariant_split
 
 
 def main():
@@ -49,12 +52,19 @@ def main():
         for k in stale:
             inplan[k] = json.loads(json.dumps(tab[k]))
         NEW.write_text(json.dumps(raw, indent=1) + "\n")
-    bg = json.loads(gzip.open(OUT / "b33_bus_groups_r8.json.gz", "rt").read())
-    bl = dict(buses=[dict(lane=k, plan_cycles=c) for k, c in old.items()])
-    bg, rb = r8.rebase(bg, bl, tab)
+    if BG35.exists():
+        # pass 2: the bus groups of the B35 bind of THIS plan (bound depths exact, incl. multi-lane members that
+        # r8.rebase cannot move: 5894 of 12228 B33 members carry no single lane)
+        bg = json.loads(gzip.open(BG35, "rt").read())
+        rb = dict(source=BG35.name, rebase="none (bound on this plan)")
+    else:
+        bg = json.loads(gzip.open(OUT / "b33_bus_groups_r8.json.gz", "rt").read())
+        bl = dict(buses=[dict(lane=k, plan_cycles=c) for k, c in old.items()])
+        bg, rb = r8.rebase(bg, bl, tab)
+    bound = {r8.mkey(g, m): m["bound_stages"] for g in bg["landing"] for m in g["members"]}
     lp, sm = r8.write_pads(raw, bg, OUT, "type", "leaf")
     js = json.loads(lp.read_text())
-    js["rebase"] = dict(source="r8/b33_bus_groups_r8.json.gz (B33 @2a130d7df6)", old_plan=OLD.name, new_plan=NEW.name, **rb)
+    js["rebase"] = dict(old_plan=OLD.name, new_plan=NEW.name, **rb)
     lp.write_text(json.dumps(js, indent=0) + "\n")
     rep = dict(inplan_latency_fixed=stale, rebase=rb, table=sm, extras={})
     delta = {k: tab[k]["cycles"] - c for k, c in old.items() if tab[k]["cycles"] != c}
@@ -62,7 +72,7 @@ def main():
         x = json.loads(f.read_text())
         st = dict(members=len(x["members"]), moved=0, pad_absorbed=0, infeasible=[])
         for m in x["members"]:
-            d = delta.get(m.get("lane"), 0)
+            d = (bound[m["id"]] - m["bound"]) if m["id"] in bound else delta.get(m.get("lane"), 0)
             if not d:
                 continue
             st["moved"] += 1

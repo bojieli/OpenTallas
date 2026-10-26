@@ -1,24 +1,8 @@
 {
- "inplan_latency_fixed": {
-  "L637": [
-   15,
-   18
-  ],
-  "L1456": [
-   15,
-   18
-  ],
-  "L1490": [
-   13,
-   16
-  ]
- },
+ "inplan_latency_fixed": {},
  "rebase": {
-  "members": 12228,
-  "moved": 1164,
-  "kept_no_lane": 5894,
-  "max_shift": 12,
-  "min_shift": 0
+  "source": "b35_bus_groups_r8.json.gz",
+  "rebase": "none (bound on this plan)"
  },
  "table": {
   "members": 5733,
@@ -26,7 +10,7 @@
   "replica_links": 9,
   "padded_members": 382,
   "padded_bits": 17056,
-  "pad_flops": 67665,
+  "pad_flops": 67713,
   "max_pad": 16,
   "max_depth_before": 77,
   "max_depth_after": 77,
@@ -40,16 +24,97 @@
   "vport_request_extra.json": {
    "out": "vport_request_extra_cland_r3.json",
    "members": 32,
-   "moved": 12,
-   "pad_absorbed": 12,
-   "infeasible": 0,
-   "infeasible_list": []
+   "moved": 24,
+   "pad_absorbed": 14,
+   "infeasible": 10,
+   "infeasible_list": [
+    {
+     "id": "vport_WS_2.pr_t[0:13]<-pvw_0__u_ctl.req_t@43",
+     "lane": "L1842",
+     "d": 3,
+     "pad": 1,
+     "landed_was": 43,
+     "landed_now": 46
+    },
+    {
+     "id": "vport_WS_2.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@43",
+     "lane": "L1846",
+     "d": 3,
+     "pad": 0,
+     "landed_was": 43,
+     "landed_now": 46
+    },
+    {
+     "id": "vport_WN_0.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@58",
+     "lane": "L1957",
+     "d": 6,
+     "pad": 5,
+     "landed_was": 36,
+     "landed_now": 42
+    },
+    {
+     "id": "vport_WN_2.pr_t[0:13]<-pvw_1__u_ctl.req_t@65",
+     "lane": "L1954",
+     "d": 6,
+     "pad": 1,
+     "landed_was": 43,
+     "landed_now": 49
+    },
+    {
+     "id": "vport_WN_2.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@65",
+     "lane": "L1958",
+     "d": 6,
+     "pad": 0,
+     "landed_was": 43,
+     "landed_now": 49
+    },
+    {
+     "id": "vport_ES_2.pr_t[0:13]<-pvw_0__u_ctl.req_t@41",
+     "lane": "L1842",
+     "d": 3,
+     "pad": 1,
+     "landed_was": 43,
+     "landed_now": 46
+    },
+    {
+     "id": "vport_ES_2.pr_valid[0:0]<-pvw_0__u_ctl.req_valid@41",
+     "lane": "L1846",
+     "d": 3,
+     "pad": 0,
+     "landed_was": 43,
+     "landed_now": 46
+    },
+    {
+     "id": "vport_EN_0.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@53",
+     "lane": "L1957",
+     "d": 6,
+     "pad": 5,
+     "landed_was": 36,
+     "landed_now": 42
+    },
+    {
+     "id": "vport_EN_2.pr_t[0:13]<-pvw_1__u_ctl.req_t@60",
+     "lane": "L1954",
+     "d": 6,
+     "pad": 1,
+     "landed_was": 43,
+     "landed_now": 49
+    },
+    {
+     "id": "vport_EN_2.pr_valid[0:0]<-pvw_1__u_ctl.req_valid@60",
+     "lane": "L1958",
+     "d": 6,
+     "pad": 0,
+     "landed_was": 43,
+     "landed_now": 49
+    }
+   ]
   },
   "pv_calendar_restore_b31.json": {
    "out": "pv_calendar_restore_cland_r3.json",
    "members": 944,
-   "moved": 244,
-   "pad_absorbed": 220,
+   "moved": 568,
+   "pad_absorbed": 544,
    "infeasible": 24,
    "infeasible_list": [
     {
