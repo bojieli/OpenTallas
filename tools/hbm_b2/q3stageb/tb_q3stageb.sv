@@ -110,6 +110,12 @@ module tb_q3stageb;
   .tkx_del_flit(tkx_del_flit),.tkx_w_v(twv),.tkx_w_addr(twa),.tkx_w_mask(twm),.tkx_w_data(twd),
   .tkx_busy(tbusy),.tkx_done(tdone),.tkx_fault(tfault),
   .fault(fault),.fault_cause(fault_cause),.done(done2),.stat_cycles(stat));
+ longint last_clock_fs=-1;integer clock_edges=0;
+ always@(posedge clk)begin : clock_contract
+  longint now_fs;now_fs=longint'($realtime/1fs);
+  if(last_clock_fs>=0 && now_fs-last_clock_fs!=833000)$fatal(1,"CLOCK_PERIOD_FS got%0d expected833000",now_fs-last_clock_fs);
+  last_clock_fs=now_fs;clock_edges++;
+ end
  integer cyc=0,lc=-1,errors=0,words=0,root_done=0,qdone=0,producer_start=0,producer_flits=0;reg firstfault=0;
  always@(posedge clk)begin
   cyc<=cyc+1;if(launch)lc<=cyc;
@@ -146,7 +152,7 @@ module tb_q3stageb;
   repeat(800)@(negedge clk);
   $display("STAGEB_SUMMARY producer_start%0d producer_flits%0d words%0d root_done%0d qdone%0d errors%0d fault%0d",producer_start,producer_flits,words,root_done,qdone,errors,firstfault);
   if(producer_start!=1||words!=1||root_done!=1||qdone!=1||errors||firstfault)$fatal(1,"Q3STAGEB FAIL");
-  $display("Q3STAGEB PASS");$finish;
+  $display("CLOCK_GATE PASS period_fs833000 edges%0d",clock_edges);$display("Q3STAGEB PASS");$finish;
  end
 endmodule
 `default_nettype wire
