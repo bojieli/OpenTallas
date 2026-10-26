@@ -46,5 +46,9 @@
     "FT": "6380actualbit-hops<=405um,max382.698um"
   },
   "next": "One CTS-only prototype after independent GEOM460f8041f8 and normal queue/canary gates; no route/signoff claim",
-  "latency_delta_cycles": 0
+  "latency_delta_cycles": 0,
+  "reviewed_checkpoint_sha256": {
+    "run/results/asap7/dp_sle_fe_v1/base/3_place.odb": "65a61c766093159308aa8e330a8496365c7d7ddf94aaf12cb983c1483d055095",
+    "run/results/asap7/dp_sle_fe_v1/base/3_place.sdc": "7bdb95f47152af6e49a8bc167b5b2a419a9cfe53aa2e1d3786cf85476f6b82b8"
+  }
 }
