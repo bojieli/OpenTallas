@@ -1,0 +1,18 @@
+{
+  "scope": "Same-area floorplan candidate geometry only; no connected-plan or route authorization",
+  "picture": "physical/die_plan/s81/phy_relayout_1026/candidate.png",
+  "verdict": "PASS-COND",
+  "findings": [
+    "Fourteen central-size published PHY macros fit on die edges,9north/5south, no partition overlap/outside. Die size/link count unchanged.",
+    "Gunit hard-core body already fits one cell after translation removing empty left margin; all core-to-core distances unchanged.",
+    "Compact BK uses4x648um quarter cores in one row and a fresh TX626.4x544.32 in secondrow; zero geometric overlaps, TX actualplacement/facepreflight still required.",
+    "New lower-left gunit and WS3 north placement create long paths; all76affected logical lanes are spatially reachable via non-PHY partitions, but every path needs real <=405um stations, full channel census and cycle pricing.",
+    "All macro core strips face inward; old E-W multi-link SerDes chains cannot be retained in the215.88um strip. Reroute through interior partitions.",
+    "PG macro supplies/bump rows, mesh islands, reset offsets and current per-type trial placements remain to be built and reviewed."
+  ],
+  "conditions": [
+    "Build a connected candidate plan, allocate every changed pin/FT station and run G0C/strictbind.",
+    "Complete current-default TX placement and full placed reach census.",
+    "Measure/prices all added cycles and full-die cut demand before infra-first route."
+  ]
+}
