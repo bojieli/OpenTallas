@@ -117,6 +117,12 @@ def run(args):
     gm,tm = lec.read_map(source/'gold.map'),lec.read_map(source/'gate.map')
     model = lec.Lec(gold,gm,gate,tm)
     constraints,history_name = profile(model,original)
+    if args.ordinary_correspondence:
+        model.cons = []
+        for tail,value in (('_70890_[0]',0),('_70893_[0]',1),('_70860_[0]',1),('_70867_[0]',1)):
+            key = PRE+tail
+            side = 'both' if key in model.tp else 'gold'
+            model.hyp[(side,key)] = ('const',value)
     log = []
     def prove(m,tag,required=True):
         result = lec.prove(m,out,1000,log,tag=tag,single_cap=30)
@@ -126,19 +132,23 @@ def run(args):
         if required and (not result or any(v != 'proved' for v in result.values())):
             raise lec.Unproven(tag+' contains a failed or undecided obligation')
         return result
-    prove(config_history(gold,lec.key_points(gold,gm)[0]),'config_history')
-    base = lec.Lec(gold,gm,gate,tm)
-    m,_ = base.build(with_compare=False,with_hyp=False)
-    reset0 = 2*(m.inames.index('pi:rst_n[0]')+1) ^ 1
-    m.outs = [m.AND(reset0,member(m,[base.dlit[(side,key)] for key in keys],allowed) ^ 1)
-              for side,keys,allowed in constraints]
-    m.onames = ['RESET_BASE:'+keys[0] for side,keys,allowed in constraints]
-    prove(m,'other_history_reset_bases')
+    if not args.ordinary_correspondence:
+        prove(config_history(gold,lec.key_points(gold,gm)[0]),'config_history')
+        base = lec.Lec(gold,gm,gate,tm)
+        m,_ = base.build(with_compare=False,with_hyp=False)
+        reset0 = 2*(m.inames.index('pi:rst_n[0]')+1) ^ 1
+        m.outs = [m.AND(reset0,member(m,[base.dlit[(side,key)] for key in keys],allowed) ^ 1)
+                  for side,keys,allowed in constraints]
+        m.onames = ['RESET_BASE:'+keys[0] for side,keys,allowed in constraints]
+        prove(m,'other_history_reset_bases')
     m,_ = model.build(with_compare=False,with_hyp=True)
     # The omitted next-state obligation is independently proved by THREE-induction above.
     ids = [i for i,name in enumerate(m.onames) if name != history_name]
     m.outs,m.onames = [m.outs[i] for i in ids],[m.onames[i] for i in ids]
     prove(m,'joint_correspondence')
+    if args.emit_hints:
+        args.emit_hints.write_text(json.dumps([[side,key,list(value)]
+            for (side,key),value in sorted(model.hyp.items())],indent=1)+'\n')
     if args.proofs_only:
         (out/'status.json').write_text(json.dumps({'status':'PROOFS_ONLY','equivalence_claim':False})+'\n')
         return 0
@@ -157,6 +167,9 @@ if __name__ == '__main__':
     parser.add_argument('--snapshot',type=Path,required=True)
     parser.add_argument('--out',type=Path,required=True)
     parser.add_argument('--proofs-only',action='store_true')
+    parser.add_argument('--ordinary-correspondence',action='store_true',
+                        help='replace history with four source-derived, jointly proved constants')
+    parser.add_argument('--emit-hints',type=Path,help='emit canonical untrusted-hint JSON only after joint proof')
     parser.add_argument('--solver-path',type=Path,help='optional matching Python pycryptosat directory')
     try:
         raise SystemExit(run(parser.parse_args()))
