@@ -1,0 +1,12 @@
+{
+  "status": "DIAGNOSTIC_NO_FIX",
+  "source": "frozenPC8336aa42 read-only copied gold script forced read_slang --no-implicit-memories",
+  "runtime_s": 42.36,
+  "peak_mb": 2860.98,
+  "calendar_ALDFF_aliases_before": 649,
+  "calendar_ALDFF_aliases_after": 649,
+  "undriven_bits_before": 1831,
+  "undriven_bits_after": 1831,
+  "full_equivalence": "NOT_RUN",
+  "conclusion": "No-implicit-memory lowering alone does not eliminate suspect reset-array lowering. Original528differences remain open; need smallest actual calendar mapped-gate proof and counterexample investigation, including fullymatched flags."
+}
