@@ -1,0 +1,6 @@
+FIXED_REPAIR MUT=0 checks=12000 errors=0 same_address=3381 masked_writes=8628
+PASS
+- tb_fixed_repair.sv:23: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 120us; walltime 0.047 s; speed 2.561 ms/s
+- Verilator: cpu 0.047 s on 1 threads; allocated 7 MB
