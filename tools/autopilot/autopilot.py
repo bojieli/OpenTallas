@@ -180,7 +180,7 @@ def geom_groups(rows):
     btab_s7 + prog_s7 share PATH-QC-SRAMIF-S7 and @90bf56dfa)"""
     out = {}
     for r in rows.values():
-        if r["error"] or not r["geom_ref"]:
+        if r["error"] or r.get("mode") == "withdraw" or not r["geom_ref"]:
             continue
         tag = geom_tag(r["geom_ref"])
         if tag:
@@ -199,7 +199,7 @@ def resolve_geom(rows, geom_text):
     that is already submitted: it records a geom_alerts.tsv row + a LOOP-GAPS line for the coordinator instead."""
     groups = geom_groups(rows)
     for r in rows.values():
-        if r["error"] or not r["geom_ref"]:
+        if r["error"] or r.get("mode") == "withdraw" or not r["geom_ref"]:
             continue
         tag = geom_tag(r["geom_ref"])
         if not tag:
@@ -271,8 +271,10 @@ def validate_row(r):
         return "threads not an integer"
     if r["runner"] and not r["runner"].startswith("/"):
         return "runner must be an absolute path"
-    if r["mode"] not in ("", "submit", "adopt"):
-        return "mode must be submit|adopt"
+    if r["mode"] not in ("", "submit", "adopt", "withdraw"):
+        return "mode must be submit|adopt|withdraw"
+    if r["mode"] == "withdraw" and not r["geom_ref"].strip():
+        return "withdraw requires an explicit reason/evidence in geom_ref"
     return ""
 
 
@@ -760,6 +762,21 @@ def admit_new(st, rows):
     withdraw_unqueued(st, rows)
     for rid, r in sorted(rows.items(), key=lambda kv: kv[1]["line"]):
         j = st["jobs"].get(rid)
+        if not r["error"] and r.get("mode") == "withdraw":
+            # Append-only withdrawal is queue control, never a cancellation or a
+            # replacement of an existing physical verdict.
+            j = st["jobs"].setdefault(rid, dict(r))
+            why = r["geom_ref"]
+            if j.get("status") in (None, "WAIT-GEOM", "WAIT-CANARY", "REJECTED", "WITHDRAWN"):
+                if j.get("status") != "WITHDRAWN" or j.get("withdraw_requested") != why:
+                    j.update({k: v for k, v in r.items() if k != "error"})
+                    j.update(queue_line=r["line"], withdraw_requested=why)
+                    log(f"WITHDRAWN {rid}: {why}; no job launched or evidence removed")
+                    set_status(st, j, "WITHDRAWN", why)
+            elif j.get("withdraw_requested") != why:
+                j["withdraw_requested"] = why
+                log(f"WITHDRAW-REQUESTED {rid}: {why}; {j.get('status')} state and job preserved")
+            continue
         if j and j.get("status") not in (None, "WAIT-GEOM", "WAIT-CANARY", "REJECTED", "WITHDRAWN"):
             geom_fail_after_submit(st, j, r)
             continue                                   # already handled; the queue never restarts a job

@@ -84,6 +84,43 @@ class TestQueue(Base):
         self.assertEqual(list(rows.values())[0]["geom"], "PASS")
 
 
+class TestAppendWithdrawal(Base):
+    def row(self):
+        (r,) = self.ap.parse_queue("\t".join(ROW + ["route", "/srv/opentallas-scratch2/claude/run.sh", "8", "withdraw"])).values()
+        r["geom_ref"] = "OWNER withdrawal: superseded source; preserve evidence"
+        return r
+
+    def test_waiting_withdrawal_is_idempotent_and_never_probes_or_launches(self):
+        r=self.row();self.assertEqual(r["error"], "")
+        j=dict(r, status="WAIT-CANARY", history=[])
+        st={"jobs":{r["id"]:j}}
+        self.ap.rpy=lambda *a,**k:self.fail("withdrawal must not probe a kit")
+        self.ap.canary_wave_gate=lambda *a:self.fail("withdrawal cannot admit work")
+        self.ap.admit_new(st,{r["id"]:r})
+        self.assertEqual(j["status"],"WITHDRAWN")
+        self.assertNotIn("unit",j)
+        count=len(j["history"])
+        self.ap.admit_new(st,{r["id"]:r})
+        self.assertEqual(len(j["history"]),count)
+        self.assertEqual(self.ap.geom_groups({r["id"]:r}),{})
+
+    def test_running_or_terminal_verdicts_are_preserved(self):
+        for status in ["RUNNING","ORPHAN","ARCHIVED","DONE-STRUCTURAL"]:
+            with self.subTest(status=status):
+                r=self.row();j=dict(r,status=status,unit="existing-unit",history=[])
+                self.ap.admit_new({"jobs":{r["id"]:j}},{r["id"]:r})
+                self.assertEqual(j["status"],status)
+                self.assertEqual(j["unit"],"existing-unit")
+                self.assertEqual(j["history"],[])
+                self.assertIn("withdraw_requested",j)
+
+    def test_requeue_reenters_geometry_gate(self):
+        r=self.row();j=dict(r,status="WITHDRAWN",history=[])
+        r.update(mode="submit",geom="REQ")
+        self.ap.admit_new({"jobs":{r["id"]:j}},{r["id"]:r})
+        self.assertEqual(j["status"],"WAIT-GEOM")
+
+
 class TestClassify(Base):
     def test_signed(self):
         self.assertEqual(self.ap.classify(so("SIGNED", 1, 1, ()), {"exit": 0})[0], "SIGNED")
