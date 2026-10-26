@@ -413,6 +413,23 @@ def compile_frame(F=16, p=None, layers=36, starts=None, filler_tokens=None):
     if Q and T % Q:
         raise ScheduleError(f"token period {T} not a multiple of the KV HBM-beat cycle {Q} (token_pad)")
     kvr = p.get("kv_lp_rows")
+    # TOK-QK-MUFS 10-25: legality is periodic in the stage begin (cycle Q); per stage the legal residues, once.  A stage
+    # with none cannot be placed at any cycle: refuse it (the old +1 step loop never ended -- the 833 compile ran 42 min)
+    legal = {}
+    if Q and kvr:
+        for n, b in uf:
+            if "kv_begin" in b and b["stage"] not in legal:
+                r = M.kv_legal_residues(kvr[b["stage"] - 1])
+                if not r:
+                    raise ScheduleError(f"KV stage {b['stage']}: no phase-legal stage begin in the {Q}-edge beat cycle "
+                                        f"(window {M.KV_PHASE['lo']}..{M.KV_PHASE['hi']} u, ticks {M.kv_phase_ticks()})")
+                legal[b["stage"]] = r
+
+    def next_legal(stage, c):
+        """smallest c' >= c with c' mod Q a legal residue of the stage"""
+        r, q = legal[stage], c % Q
+        nxt = next((x for x in r if x >= q), None)
+        return c + (nxt - q) if nxt is not None else c + (Q - q) + r[0]
     ntok = {0: F}
     for k in range(1, NU):
         t = starts[k - 1] if starts else round(k * P / NU)
@@ -424,8 +441,10 @@ def compile_frame(F=16, p=None, layers=36, starts=None, filler_tokens=None):
             for n, b in uf:
                 tt = R.earliest(b["windows"], tt, k)
                 while Q and "kv_begin" in b and not M.kv_launch_legal(kvr[b["stage"] - 1], tt + b["kv_begin"]):
-                    tt += 1                                             # MU-KV-BOOT: every launch of the KV stage on a
-                    tt = R.earliest(b["windows"], tt, k)                # legal HBM-beat phase (phase launch window)
+                    if tt + b["length"] > s_k + H:                      # past the frame: the token cannot fit
+                        break
+                    tt = next_legal(b["stage"], tt + b["kv_begin"]) - b["kv_begin"]   # MU-KV-BOOT: every launch of
+                    tt = R.earliest(b["windows"], tt, k)                # the KV stage on a legal HBM-beat phase
                 if tt + b["length"] > s_k + H:
                     break
                 R.add(b["windows"], tt, k)

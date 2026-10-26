@@ -1238,7 +1238,8 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     if MU:              # MU-KV-BOOT 10-19 (OT_KV_MU=1): target 1 MU form + target 3 MU ownership roots (mu_calendar)
         mu = mu_images(layer_words, own, lead=own_lead, att_end=tx_end - LR.RX_CMD,
                        phase=None if not pr['phase'] else dict(PH0=pr['phase']['PH0'], lo=pr['phase']['SAFE_LOW_U'],
-                                                               hi=pr['phase']['SAFE_HIGH_U'], groups=pr['groups']))
+                                                               hi=pr['phase']['SAFE_HIGH_U'], groups=pr['groups'],
+                                                               core_u=CORE_U, beat_u=HBM_U))   # TOK-QK-MUFS: this compile's ticks
         layer_words, own = mu['layer'], mu['ownership']
         images[0] = dict(target=1, program=layer_words, descriptors=[])
         images[2] = dict(target=3, program=own, descriptors=[])
