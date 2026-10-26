@@ -364,8 +364,8 @@ PROOF_RESET_ITERS = 6
 
 
 def reset_sink_sites(P, tn, bin_um=PROOF_SINK_BIN_UM):
-    """[[x, y, n]] binned sites of the type's generated reset relays (reset_tree.for_type: wire relays, per-tap
-    synchronisers and pads) -- clocked flops the kit places at those sites.  [] when the plan builds no tree."""
+    """[[x, y, n]] binned sites of every generated reset/START clock sink: input stages, relays, per-tap
+    synchronisers and pads. [] when the plan builds no tree."""
     import collections
     import reset_tree as RT
     try:
@@ -373,7 +373,16 @@ def reset_sink_sites(P, tn, bin_um=PROOF_SINK_BIN_UM):
     except Exception:       # noqa: BLE001 -- a plan without a generated reset tree: no reset sinks
         return []
     c = collections.Counter()
-    for r in T.get("relays", []):
+    # The input stage is a real clock sink too. Omitting it gave the CP1 receiver's u_rst_in a tap 200.85 um
+    # away despite an 80-um density radius; all relay sites alone still appeared covered in the plan report.
+    nentry = int(T["sync_stages"]) if T["entry"] == "sync" else 1
+    x, y = T["root"]
+    c[(int(x // bin_um), int(y // bin_um))] += nentry
+    if T.get("start"):
+        x, y = T["start_in"]
+        c[(int(x // bin_um), int(y // bin_um))] += nentry
+    relays = RT.start_relays(T) if T.get("start") else T.get("relays", [])
+    for r in relays:
         x, y = r["xy"]
         c[(int(x // bin_um), int(y // bin_um))] += 1
     return [[round((i + 0.5) * bin_um, 3), round((j + 0.5) * bin_um, 3), n] for (i, j), n in sorted(c.items())]

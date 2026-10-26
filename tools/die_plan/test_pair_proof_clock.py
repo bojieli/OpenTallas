@@ -77,3 +77,23 @@ def test_cores_pair_untouched():
     assert not pair.is_proof_type({"module": "m", "contents": [{"module": "m_proof_leaf"}],
                                    "hard_cores": [{"inst": "c"}]})
     assert pair.is_proof_type({"module": "m", "contents": [{"module": "m_proof_leaf"}]})
+
+
+@pytest.mark.parametrize("entry,n", [("sync", 2), ("relayed", 1)])
+def test_reset_inventory_includes_actual_input_stage(monkeypatch, entry, n):
+    import reset_tree as RT
+    tree=dict(entry=entry,sync_stages=2,root=[905,8],relays=[dict(xy=[300,8])])
+    monkeypatch.setattr(RT,"for_type",lambda p,tn:tree)
+    sites=pair.reset_sink_sites(None,"r1",bin_um=10)
+    assert [905.0,5.0,n] in sites
+    assert sum(v[2] for v in sites)==n+1
+
+
+def test_start_inventory_counts_entry_and_actual_mirrored_flops(monkeypatch):
+    import reset_tree as RT
+    tree=dict(entry="relayed",sync_stages=2,root=[905,8],start=True,start_in=[905,28],relays=[dict(xy=[300,8])])
+    monkeypatch.setattr(RT,"for_type",lambda p,tn:tree)
+    monkeypatch.setattr(RT,"start_relays",lambda t:[dict(xy=[300,8]),dict(xy=[300,8]),dict(xy=[300,28])])
+    sites=pair.reset_sink_sites(None,"r1",bin_um=10)
+    assert [905.0,5.0,1] in sites and [905.0,25.0,1] in sites
+    assert sum(v[2] for v in sites)==5

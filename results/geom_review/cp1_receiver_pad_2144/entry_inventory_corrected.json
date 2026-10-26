@@ -1,0 +1,50 @@
+{
+  "col_h10_r0_p1__t1": {
+    "taps": 96,
+    "entry_root_um": [
+      901.792,
+      8.608
+    ],
+    "entry_closest_tap": [
+      "clk_t3",
+      901.792,
+      17.312
+    ],
+    "entry_distance_um": 8.704,
+    "release": 8,
+    "report": {
+      "n": 96,
+      "empty": 0,
+      "max_sinks": 315,
+      "min_sinks": 2,
+      "sinks": 16135,
+      "max_radius_um": 75.6,
+      "reset_relays": 258,
+      "reset_relay_max_tap_um": 75.6
+    }
+  },
+  "col_h10_r1__t1": {
+    "taps": 50,
+    "entry_root_um": [
+      901.792,
+      8.608
+    ],
+    "entry_closest_tap": [
+      "clk_t16",
+      901.792,
+      17.312
+    ],
+    "entry_distance_um": 8.704,
+    "release": 7,
+    "report": {
+      "n": 50,
+      "empty": 0,
+      "max_sinks": 313,
+      "min_sinks": 1,
+      "sinks": 7946,
+      "max_radius_um": 75.6,
+      "reset_relays": 168,
+      "reset_relay_max_tap_um": 75.6
+    }
+  }
+}
