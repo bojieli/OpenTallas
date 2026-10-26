@@ -1,7 +1,10 @@
 # Candidate SU lane0 actual native TLM bank sites, no interface or RTL change.
 # X remains on the4.32um PG lattice; Y+.012 aligns native M4 pins to symmetric.024.
 set b [ord::get_db_block]
-set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+set dbu [$b getDbUnitsPerMicron]
+set ncell [llength [$b getInsts]]
+if {$ncell > 400000} { error "SU actual cellcount $ncell exceeds400k" }
+puts "SU_ACTUAL_CELLS $ncell"
 set seen {}
 foreach i [$b getInsts] {
   if {[[$i getMaster] getName] ne "ot_sram_1r1w2c_128x64_m1"} continue
