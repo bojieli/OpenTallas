@@ -1,5 +1,5 @@
 {
- "note": "BINDER 10-23: Qwen compute as-built = r56 GEN die.v (sha256 bdee7c3c..., /home/ubuntu/scratch/plan-qc/r56) + RTL of record. Slices: the r56 master qfd_dv_slice2_w/_e wraps qfd_dv_slice2; the plan's 15 slice regions come from the s8 landed-parent record, whose logical parent is qfd_dv_s8_flat, so qfd_dv_slice2 is substituted by qfd_dv_s8_flat (recorded; same ports except s8's extra treq_i / treq_o). | ELEMQK-BIND 10-24: copy of asbuilt_tie.json for the P6 main plan (map asbuilt_map_p6.json, no land_r8_extra) | CODEX 10-25: current source root including S8 program-start+3 fix, portable relative paths; per-leaf interface unchanged, calibrate bound SU ages. | QC 10-26: align native S8 VM/BTAB response with CROM (OT_S8_CROM_ALIGN -> qfd_dv_lane_h_safe2 MEMORY_ALIGNMENT=3, MEMORY_READ_EXTRA=0). Uses the qualified default-off exact source; +3 edges per SU op already included by the QCL/QCE price. Fresh ELAB and bound regeneration required; old literal-0 bound RTL cannot be fixed by simulation defines. Included in the ONE QC infra-first plan event; SU lane hard cores must carry the same evaluated value.",
+ "note": "BINDER 10-23: Qwen compute as-built = r56 GEN die.v (sha256 bdee7c3c..., /home/ubuntu/scratch/plan-qc/r56) + RTL of record. Slices: the r56 master qfd_dv_slice2_w/_e wraps qfd_dv_slice2; the plan's 15 slice regions come from the s8 landed-parent record, whose logical parent is qfd_dv_s8_flat, so qfd_dv_slice2 is substituted by qfd_dv_s8_flat (recorded; same ports except s8's extra treq_i / treq_o). | ELEMQK-BIND 10-24: copy of asbuilt_tie.json for the P6 main plan (map asbuilt_map_p6.json, no land_r8_extra) | CODEX 10-25: current source root including S8 program-start+3 fix, portable relative paths; per-leaf interface unchanged, calibrate bound SU ages. | QC 10-26: align native S8 VM/BTAB response with CROM (OT_S8_CROM_ALIGN -> qfd_dv_lane_h_safe2 MEMORY_ALIGNMENT=3, MEMORY_READ_EXTRA=0). Uses the qualified default-off exact source; +3 edges per SU op already included by the QCL/QCE price. Fresh ELAB and bound regeneration required; old literal-0 bound RTL cannot be fixed by simulation defines. Included in the ONE QC infra-first plan event; SU lane hard cores must carry the same evaluated value. | QC infra-first: dissolve the native SU/VM structural wrappers to reach the exact planned memory hard children; preserve all wrapper glue/state. Canonicalize auto glue names only after full connectivity equality.",
  "base": "../../../..",
  "netlist": [
   "physical/die_plan/qwen_compute/bind/inputs/die_r56.v.gz"
@@ -35,7 +35,9 @@
   "qfd_dv_slice2",
   "qfd_dv_s8_flat",
   "qfd_collective_static_io_production",
-  "qfd_collective_static_io"
+  "qfd_collective_static_io",
+  "qfd_dv_s8_suvm_rp1",
+  "qfd_dv_s8_vm8q_rp1"
  ],
  "substitute": {
   "qfd_dv_slice2": {
@@ -358,5 +360,6 @@
  "land_r8_extra": [
   "physical/die_plan/qwen_compute/bind/qc_cb16_pads_meth.json"
  ],
- "land_r8_cb16_note": "QC 10-24: CB16 pads re-derived on the capacity+lane_eq plan (cb16_pads.py on bind_meth_probe + plan r8 table)"
+ "land_r8_cb16_note": "QC 10-24: CB16 pads re-derived on the capacity+lane_eq plan (cb16_pads.py on bind_meth_probe + plan r8 table)",
+ "type_canon": true
 }
