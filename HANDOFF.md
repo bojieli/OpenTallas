@@ -933,3 +933,5 @@ CODEX: 2026-10-25 22:08 PDT DSABI first4 diagnosticterminalFAIL(ties135158,-1040
 2026-10-25 22:12 PDT CODEX: FLOW-CANARY actual hd_turn_a same4CTS GRT A/B rejects genericMCMM (FFhold+4.82->-44.57 whileTT-31.28->+25.74); evidence12ddd958f2, sequentialFFproofliveintel2, noDRT/defaultchange.
 
 CODEX: 2026-10-25 22:13 PDT main 5e8ce49592 pushed and verified. HBM real q3 source cohort/rootpipe, S81 true service interfaces and loop fixes, FE wavefront keep/start preservation, exact root-reset CDC exception, parameter-correct lint, and repeater schema integrated. Focused gates PASS; 42 source hashes match. Physical and whole-token failures remain explicit.
+
+CODEX: 2026-10-25 22:15 PDT QC LIVE image-ROM opt-in READY1a2d190f4f; actual OVL_C+MU each1.5M clocks exact+mutantPASS, init/production+0, macro113.172um2; internal placement/re-kit pending batch2. ROM content writers now advancing exact72/266/274-bit noECC formats.
