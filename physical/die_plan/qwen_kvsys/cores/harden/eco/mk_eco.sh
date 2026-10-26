@@ -26,6 +26,10 @@ for f in 6_final.spef 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_fl
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
 cp $HERE/eco_route.tcl $OUT/
+# FLOW-TAG 10-26: current kits set 'override export POST_GLOBAL_ROUTE_TCL = grt_post_core.tcl' (core_flow.py), which beat
+# the plain export below, so the ECO hook never ran (route-only re-route). eco_post.tcl = the ECO, then the kit's own
+# post-GRT hook (grt_post.tcl: IO vclk back to TT) when the kit has one; the FF-only variant runs in the FF vclk frame.
+{ echo 'source /work/eco_route.tcl'; test -f $OUT/grt_post_core.tcl && echo 'source /work/grt_post_core.tcl'; } > $OUT/eco_post.tcl
 cp $HERE/../run_kit_kv.sh $HERE/../corners.tcl $HERE/../pin_audit_core.py $OUT/
 cp $SO/tools/die_plan/signoff.py $SO/tools/die_plan/pair_skew.tcl $SO/tools/die_plan/face_guard.py $SO/tools/die_plan/sdc_lint.py $OUT/
 # macro (SRAM) liberty per corner: the CORNERS=... route reads only <CORNER>_LIB_FILES, so the kit's ADDITIONAL_LIBS
@@ -35,7 +39,7 @@ ML_FF=$(echo "$ML_TT" | sed 's/_tt\.lib/_ff.lib/g')
 for f in $ML_FF; do test -f "$OUT/${f#/work/}" || { echo "mk_eco: missing FF macro lib $f"; exit 2; }; done
 cat >> $OUT/config.mk <<CFG
 # KV-CORES warm post-route ECO (physical/die_plan/qwen_kvsys/cores/harden/eco, variant $V)
-export POST_GLOBAL_ROUTE_TCL = /work/eco_route.tcl
+override export POST_GLOBAL_ROUTE_TCL = /work/eco_post.tcl
 export TC_LIB_FILES = \$(TC_NLDM_LIB_FILES) $ML_TT
 export BC_LIB_FILES = \$(BC_NLDM_LIB_FILES) $ML_FF
 override export PWR_NETS_VOLTAGES =
@@ -50,6 +54,7 @@ esac > $OUT/variant.env
 [ -n "${OT_DRV_LAST:-}" ] && echo "OT_DRV_LAST=$OT_DRV_LAST" >> $OUT/variant.env
 [ -n "${OT_DRV_PLACE:-}" ] && echo "OT_DRV_PLACE=$OT_DRV_PLACE" >> $OUT/variant.env
 [ -n "${OT_RETIME_LAST:-}" ] && echo "OT_RETIME_LAST=$OT_RETIME_LAST" >> $OUT/variant.env
+[ ${V:0:1} = b ] && [ -f $OUT/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $OUT/variant.env
 [ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env
 printf '{"variant": "%s", "source_kit": "%s:%s", "source_route": "%s/5_2_route.odb", "signoff_tools": "%s"}\n' \
   $V "$(hostname)" $KIT $RS "$SO" > $OUT/ECO.json
