@@ -87,6 +87,7 @@ proc ::ot_local_depth::pad_short_taps {tap_list} {
       lassign [site_near $x $y $radius] xx yy orient
       set pi [odb::dbInst_create $blk $master $pn]
       $pi setOrient $orient; $pi setLocation $xx $yy; $pi setPlacementStatus FIRM
+      if {[lrange [::ot_dtsh::box $pi] 0 1] ne [list $xx $yy]} {error "OT_LOCAL_DEPTH actual footprint moved from checked site"}
       ::ot_dtsh::pg $pi
       ::ot_dtsh::occ_add $pn [::ot_dtsh::box $pi]
       lappend pads $pi
@@ -113,6 +114,7 @@ proc ::ot_local_depth::pad_short_taps {tap_list} {
     foreach r $records {puts $f [join $r "\t"]}
     close $f
   }
-  puts "OT_LOCAL_DEPTH DONE $made non-inverting compact clock buffers, zero data cycles"
+  set area [expr {$made*double([$master getWidth])*[$master getHeight]/($dbu*$dbu)}]
+  puts "OT_LOCAL_DEPTH DONE $made non-inverting compact clock buffers, area${area}um2, zero data cycles"
   return $made
 }
