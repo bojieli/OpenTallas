@@ -12,11 +12,15 @@ from pathlib import Path
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('plan',type=Path);ap.add_argument('--report',type=Path,required=True)
-    ap.add_argument('--chunk',type=int,default=0);ap.add_argument('--chunks',type=int,default=1);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
+    ap.add_argument('--chunk',type=int,default=0);ap.add_argument('--chunks',type=int,default=1);ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--types',help='Allocate only these comma-separated failed types; preserve successful chunks')
+    ap.add_argument('--jog',action='append',default=[],help='type/slot=coordinate, reviewed structural path override')
+    a=ap.parse_args();jogs={k:float(v) for k,v in (s.split('=') for s in a.jog)}
     root=Path(__file__).resolve().parents[3];sys.path[:0]=[str(root),str(root/'tools/die_plan')]
     import ft_corridor as F
     import numpy as np
     raw=json.loads(a.plan.read_text());rep=json.loads(a.report.read_text());model=F.S.Plan(raw,a.plan);names=sorted(rep['new_slots'])[a.chunk::a.chunks]
+    if a.types:names=[tn for tn in names if tn in a.types.split(',')]
     results=[]
     for tn in names:
         t=raw['partition_types'][tn];w,h=t['outline_um'];before=copy.deepcopy(t['ft_slots']);newnames=set(rep['new_slots'][tn]);pins={(b,i):(x,y) for b,i,ln,x,y,d in F.type_pins(model,tn)}
@@ -38,7 +42,7 @@ def main():
             for extra in range(13):
                 slot['stations']=start+extra;alloc.used=set(used)
                 try:
-                    sites,cents,path,ledger=F.place_slot(slot,aa,bb,slot['in_face'],slot['out_face'],w,h,boxes,alloc,405*.98-2)
+                    sites,cents,path,ledger=F.place_slot(slot,aa,bb,slot['in_face'],slot['out_face'],w,h,boxes,alloc,405*.98-2,jog=jogs.get(tn+'/'+slot['name']))
                 except (ValueError,F.NoChain) as exc:last=str(exc);continue
                 slot['regs_um']=[aa.mean(axis=0).round(4).tolist()]+[c.round(4).tolist() for c in cents]
                 slot['bit_site_cell_um']=list(F.CELL);slot['bit_sites_um']=[(points-np.array([F.CELL[0]/2,F.CELL[1]/2])).round(6).tolist() for points in sites]
