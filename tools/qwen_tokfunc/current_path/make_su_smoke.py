@@ -53,8 +53,14 @@ def make(bound,out,slice_name):
             status_net=name;lines.append(f'wire[93:0]{name};');connections.append(f'.{name}({name})')
         else:connections.append(f'.{name}()')
     if status_net is None:raise ValueError('native SU status output absent')
+    lines.append('reg[93:0] last_status=0;')
+    for part in keep:
+        if not part['name'].endswith(('su_l0','su_l1')):continue
+        text=(bound/'rtl'/(part['module']+'.sv')).read_text()
+        for lane in re.findall(r'wire\s+\[0:0\]\s+w_u_head(\d+)_retire;',text):
+            lines.append(f'always @(posedge ck)if(start&&u_d.{part["name"]}.w_u_head{lane}_retire===1\'b1)$display("SU_RETIRE cycle=%0d lane={lane}",cycle);')
     lines.append('qc_su_native u_d('+','.join(connections)+');')
-    lines.extend(['initial begin','program_word[18:1]=1;program_word[36:19]=8;program_word[530:513]=2;program_word[548:531]=16;','for(cycle=0;cycle<2000;cycle=cycle+1)begin','@(negedge ck);rst_n=(cycle>15);start=(cycle>=200);ctl0=0;ctl1=0;ctl2=0;','if(cycle>=400&&cycle<416)begin ctl1[75:52]=cycle-400;ctl1[551:76]=program_word[475:0];ctl2[547:0]=program_word[1023:476];ctl2[550:548]=3\'b111;end','if(cycle>=480&&cycle%128==96)ctl0[9:0]={1\'b1,9\'(2*((cycle/128)%8))};','@(posedge ck);#0.001;',f'if(cycle>450)begin programs={status_net}[76:61];rows={status_net}[92:77];if({status_net}[58]===1\'b1)faults=faults+1;end','end','$display("QC_SU_NATIVE_DIAGNOSTIC programs=%0d rows=%0d fault_cycles=%0d",programs,rows,faults);','$finish;end endmodule'])
+    lines.extend(['initial begin','program_word[18:1]=1;program_word[36:19]=8;program_word[530:513]=2;program_word[548:531]=16;','for(cycle=0;cycle<2000;cycle=cycle+1)begin','@(negedge ck);rst_n=(cycle>15);start=(cycle>=200);ctl0=0;ctl1=0;ctl2=0;','if(cycle>=360&&cycle<376)begin ctl0[546]=1;ctl0[33:10]=16*(cycle-360);end','if(cycle>=400&&cycle<416)begin ctl1[75:52]=cycle-400;ctl1[551:76]=program_word[475:0];ctl2[547:0]=program_word[1023:476];ctl2[550:548]=3\'b111;end','if(cycle>=480&&cycle%128==96)ctl0[9:0]={1\'b1,9\'(2*((cycle/128)%8))};','@(posedge ck);#0.001;',f'if(cycle>450)begin programs={status_net}[76:61];rows={status_net}[92:77];if({status_net}[58:57]!==2\'b00)faults=faults+1;if({status_net}!==last_status)$display(\"SU_STATUS cycle=%0d status=%h\",cycle,{status_net});last_status={status_net};end','end','$display("QC_SU_NATIVE_DIAGNOSTIC programs=%0d rows=%0d fault_cycles=%0d",programs,rows,faults);','$finish;end endmodule'])
     (out/'tb_qc_su_native.sv').write_text('\n'.join(lines)+'\n')
     (out/'scope.json').write_text(json.dumps(dict(scope='Diagnostic native SU programme fetch/retirement only; no numeric or G5 claim. Other omitted-controller lanes inactive.',source_top_sha256=BC.sha256(top),seeds=seeds,expected_head_profile=dict(memory_alignment=3,memory_read_extra=0),reset=meta),indent=1)+'\n')
 if __name__=='__main__':
