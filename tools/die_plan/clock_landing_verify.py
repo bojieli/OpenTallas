@@ -86,6 +86,13 @@ class Verification:
         if len(bits)!=1:self.fail(c.path+': exact one-bit raw reset required');return
         tree=self.collector['types'][self.parts[part]['type']]['tree']
         rows={r['q']:r for r in tree['relays']};prefix=ident(part)+'.'
+        if tree.get('hard'):
+            # Hard wrapper: every landing/collector stage uses the delivered
+            # reset, i.e. exactly the reset of the wrapper's own stations.
+            ref=self.hard_reset(part)
+            if ref is None or self.term(bits[0])!=ref:
+                self.fail(c.path+': hard-wrapper landing reset is not the delivered partition reset')
+            return
         def walk(net,n,seen):
             if n in seen:return False
             ds=self.G.drv.get(net,[])
@@ -107,6 +114,16 @@ class Verification:
         if not walk(bits[0],node,set()):
             self.fail(c.path+': raw reset is not the exact original local reset-parent/depth contract at '+node)
 
+    def hard_reset(self,part):
+        if not hasattr(self,'_hard_reset'):self._hard_reset={}
+        if part not in self._hard_reset:
+            prefix=ident(part)+'.';ref=None
+            for c in self.F.cells:
+                if c.path.startswith(prefix) and c.module=='ot_dp_st' and len(c.ports.get('rst_n',[]))==1:
+                    ref=self.term(c.ports['rst_n'][0]);break
+            self._hard_reset[part]=ref
+        return self._hard_reset[part]
+
     def _check_all(self):
         rows=self.table['ports'];ports={p['id']:p for p in self.raw['ports']}
         for r in rows:
@@ -116,7 +133,7 @@ class Verification:
                 self.clock(c,r['dst']);self.clock(c,r['src'],'fclk')
                 info=self.collector['types'][self.parts[r['dst']]['type']]
                 local=next(x for x in info['local_sources'] if x['name']==bus)
-                self.check_reset(c,r['dst'],f"rst_n_t{local['tap']}",'u_cland_rst_'+bus)
+                self.check_reset(c,r['dst'],local.get('node') or f"rst_n_t{local['tap']}",'u_cland_rst_'+bus)
                 if len(c.ports.get('q',[]))!=len(c.ports.get('d',[])) or len(c.ports.get('q',[]))<r['width']:
                     self.fail(path+': whole live payload/epoch bus must survive')
         for pn,p in self.parts.items():
@@ -125,7 +142,7 @@ class Verification:
             sources=[]
             for src in info['local_sources']:
                 path=ident(pn)+'.u_cland_'+src['name']
-                sources.append(dict(node=f"rst_n_t{src['tap']}",ready=self.output(path,'ready'),fault=self.output(path,'fault')))
+                sources.append(dict(node=src.get('node') or f"rst_n_t{src['tap']}",ready=self.output(path,'ready'),fault=self.output(path,'fault')))
             for child in info['children']:
                 cn=child['part'];root=self.root_collect[cn];r=self.output(root,'ready_o');f=self.output(root,'fault_o')
                 if child['seam']:
