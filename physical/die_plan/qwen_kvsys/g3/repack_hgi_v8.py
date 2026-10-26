@@ -7,7 +7,7 @@ out=Path(sys.argv[2]);out.mkdir(parents=True,exist_ok=True)
 sys.path[:0]=[str(W/"tools/die_plan"),str(W/"physical/die_plan/qwen_kvsys/g3")]
 import schema as S,ft_bit_sites_chan as C
 p=Path(sys.argv[1]).resolve();raw=S.load(p);P=S.Plan(raw,p);tn="kv3_hgi_v8";t=raw["partition_types"][tn]
-chosen={"ft4","ft17","ft26","ft27"};old=t["ft_slots"];saved=json.loads(json.dumps(old))
+chosen={"ft4","ft17","ft26","ft27"};old=t["ft_slots"];saved=json.loads(json.dumps(old));before=json.loads(json.dumps(t))
 base_init=C.StripSites.__init__
 def init(self,*args):
  base_init(self,*args)
@@ -34,6 +34,13 @@ t["ft_slots"]=[s for s in old if s["name"] in chosen]
 r=C.run(raw,P,tn,png=str(out/"review.png"))
 new={s["name"]:s for s in t["ft_slots"]};t["ft_slots"]=[new.get(s["name"],s) for s in saved]
 a=C.audit(raw,P,tn)
+# Only station coordinates may differ: every type interface and every cycle stays fixed.
+def sans_sites(q):
+ q=json.loads(json.dumps(q))
+ for slot in q["ft_slots"]:
+  slot.pop("bit_sites_um",None);slot.pop("bit_site_cell_um",None)
+ return q
+assert sans_sites(t)==sans_sites(before),"unexpected interface/count/clock change"
 print(json.dumps({"run":r,"audit":a},default=str))
 (out/"report.json").write_text(json.dumps({"run":r,"audit":a},indent=1)+"\n")
 if a["over"] or a["in_core"]:raise SystemExit("FAIL reach/core")
