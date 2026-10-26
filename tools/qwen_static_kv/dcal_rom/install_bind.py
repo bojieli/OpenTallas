@@ -42,6 +42,8 @@ def install(recipe: Path, profile: Path, out: Path):
             r[key]=[s for s in r[key] if not old(s)]
     for key in ('files','prefer'):
         r[key]=list(dict.fromkeys(r.get(key,[])+extra))
+    if r.get('map_file'):
+        r['map_file']=os.path.relpath((recipe.parent/r['map_file']).resolve(),out)
     r['base']=os.path.relpath(ROOT,out)
     r['dcal_rom_note']='Approved D-ROM-3b: TX/RX init images are dead and removed; START/PERIOD/SEG/ADM/FIRST data comes from one generated64x32m2 ROM. No production or boot edge added; eight scalar reads occupy existing suppressed init. New recipe only.'
     target=out/(recipe.stem+'.rom64.json');target.write_text(json.dumps(r,indent=2)+'\n')
