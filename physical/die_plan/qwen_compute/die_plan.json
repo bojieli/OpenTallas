@@ -141835,7 +141835,7 @@
      ],
      "note": "closed slice leaf (reference; flattened unless macro)",
      "origin_um": [
-      941.76,
+      1036.8,
       380.16
      ]
     },
@@ -141886,12 +141886,12 @@
      "module": "qfd_dv_s8x_prog",
      "status": "reuse",
      "outline_um": [
-      259.2,
-      354.24
+      354.24,
+      259.2
      ],
      "note": "closed slice leaf (reference; flattened unless macro)",
      "origin_um": [
-      25.92,
+      17.28,
       380.16
      ]
     },
@@ -141900,8 +141900,8 @@
      "module": "qfd_dv_s8x_btab",
      "status": "reuse",
      "outline_um": [
-      259.2,
-      354.24
+      354.24,
+      259.2
      ],
      "note": "closed slice leaf (reference; flattened unless macro)",
      "origin_um": [
@@ -141933,7 +141933,7 @@
      ],
      "note": "closed slice leaf (reference; flattened unless macro)",
      "origin_um": [
-      302.4,
+      388.8,
       380.16
      ]
     },
@@ -142039,19 +142039,19 @@
       "name": "u_suvm_u_vm8q_u_pg.ck",
       "kind": "core",
       "xy": [
-       155.52,
-       552.96
+       194.424,
+       380.214
       ],
       "orient": "R0",
       "insertion_ps": 481,
       "insertion_tol_ps": 40,
-      "budget_owner": "SU core kit: MEASURED TT insertion 481 ps (prog_s6); early core tap, the spine delivers it 231 ps early"
+      "budget_owner": "UNQUALIFIED new-aspect planning budget only; fresh native child insertion contract required before adoption"
      },
      {
       "name": "u_suvm_u_vm8q_u_ch.ck",
       "kind": "core",
       "xy": [
-       432.0,
+       518.4,
        518.4
       ],
       "orient": "R0",
@@ -142063,19 +142063,19 @@
       "name": "u_suvm_u_vm8q_u_bt.ck",
       "kind": "core",
       "xy": [
-       794.88,
-       552.96
+       842.424,
+       380.214
       ],
       "orient": "R0",
       "insertion_ps": 445,
       "insertion_tol_ps": 40,
-      "budget_owner": "SU core kit: MEASURED TT insertion 445 ps (btab_s6); early core tap, the spine delivers it 195 ps early"
+      "budget_owner": "UNQUALIFIED new-aspect planning budget only; fresh native child insertion contract required before adoption"
      },
      {
       "name": "u_suvm_u_su8.ck",
       "kind": "core",
       "xy": [
-       1028.16,
+       1123.2,
        449.28
       ],
       "orient": "R0",
@@ -142174,26 +142174,26 @@
      "inst": "u_suvm_u_vm8q_u_pg",
      "module": "qfd_dv_s8x_prog",
      "origin_um": [
-      25.92,
+      17.28,
       380.16
      ],
      "outline_um": [
-      259.2,
-      354.24
+      354.24,
+      259.2
      ],
      "orient": "R0",
      "track_offset_um": [
-      0.0,
-      0.0
+      0.012,
+      0.012
      ],
-     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_pg_pins.json",
-     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_pg_pins_aspect1713.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional; NEW R0 ASPECT UNQUALIFIED: old signed view not applicable, require both new child SIGNED"
     },
     {
      "inst": "u_suvm_u_vm8q_u_ch",
      "module": "qfd_dv_s8_crh_rp1",
      "origin_um": [
-      302.4,
+      388.8,
       380.16
      ],
      "outline_um": [
@@ -142216,22 +142216,22 @@
       380.16
      ],
      "outline_um": [
-      259.2,
-      354.24
+      354.24,
+      259.2
      ],
      "orient": "R0",
      "track_offset_um": [
-      0.0,
-      0.0
+      0.012,
+      0.012
      ],
-     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_bt_pins.json",
-     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_bt_pins_aspect1713.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional; NEW R0 ASPECT UNQUALIFIED: old signed view not applicable, require both new child SIGNED"
     },
     {
      "inst": "u_suvm_u_su8",
      "module": "qfd_dv_s5_su8_rst3",
      "origin_um": [
-      941.76,
+      1036.8,
       380.16
      ],
      "outline_um": [
@@ -203414,7 +203414,7 @@
      ],
      "note": "closed slice leaf (reference; flattened unless macro)",
      "origin_um": [
-      941.76,
+      1036.8,
       380.16
      ]
     },
@@ -203465,12 +203465,12 @@
      "module": "qfd_dv_s8x_prog",
      "status": "reuse",
      "outline_um": [
-      259.2,
-      354.24
+      354.24,
+      259.2
      ],
      "note": "closed slice leaf (reference; flattened unless macro)",
      "origin_um": [
-      25.92,
+      17.28,
       380.16
      ]
     },
@@ -203498,7 +203498,7 @@
      ],
      "note": "closed slice leaf (reference; flattened unless macro)",
      "origin_um": [
-      302.4,
+      388.8,
       380.16
      ]
     },
@@ -203507,8 +203507,8 @@
      "module": "qfd_dv_s8x_btab",
      "status": "reuse",
      "outline_um": [
-      259.2,
-      354.24
+      354.24,
+      259.2
      ],
      "note": "closed slice leaf (reference; flattened unless macro)",
      "origin_um": [
@@ -203618,19 +203618,19 @@
       "name": "u_suvm_u_vm8q_u_pg.ck",
       "kind": "core",
       "xy": [
-       155.52,
-       552.96
+       194.424,
+       380.214
       ],
       "orient": "R0",
       "insertion_ps": 481,
       "insertion_tol_ps": 40,
-      "budget_owner": "SU core kit: MEASURED TT insertion 481 ps (prog_s6); early core tap, the spine delivers it 231 ps early"
+      "budget_owner": "UNQUALIFIED new-aspect planning budget only; fresh native child insertion contract required before adoption"
      },
      {
       "name": "u_suvm_u_vm8q_u_ch.ck",
       "kind": "core",
       "xy": [
-       432.0,
+       518.4,
        518.4
       ],
       "orient": "R0",
@@ -203642,19 +203642,19 @@
       "name": "u_suvm_u_vm8q_u_bt.ck",
       "kind": "core",
       "xy": [
-       794.88,
-       552.96
+       842.424,
+       380.214
       ],
       "orient": "R0",
       "insertion_ps": 445,
       "insertion_tol_ps": 40,
-      "budget_owner": "SU core kit: MEASURED TT insertion 445 ps (btab_s6); early core tap, the spine delivers it 195 ps early"
+      "budget_owner": "UNQUALIFIED new-aspect planning budget only; fresh native child insertion contract required before adoption"
      },
      {
       "name": "u_suvm_u_su8.ck",
       "kind": "core",
       "xy": [
-       1028.16,
+       1123.2,
        449.28
       ],
       "orient": "R0",
@@ -203753,26 +203753,26 @@
      "inst": "u_suvm_u_vm8q_u_pg",
      "module": "qfd_dv_s8x_prog",
      "origin_um": [
-      25.92,
+      17.28,
       380.16
      ],
      "outline_um": [
-      259.2,
-      354.24
+      354.24,
+      259.2
      ],
      "orient": "R0",
      "track_offset_um": [
-      0.0,
-      0.0
+      0.012,
+      0.012
      ],
-     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_pg_pins.json",
-     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_pg_pins_aspect1713.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional; NEW R0 ASPECT UNQUALIFIED: old signed view not applicable, require both new child SIGNED"
     },
     {
      "inst": "u_suvm_u_vm8q_u_ch",
      "module": "qfd_dv_s8x_crh",
      "origin_um": [
-      302.4,
+      388.8,
       380.16
      ],
      "outline_um": [
@@ -203795,22 +203795,22 @@
       380.16
      ],
      "outline_um": [
-      259.2,
-      354.24
+      354.24,
+      259.2
      ],
      "orient": "R0",
      "track_offset_um": [
-      0.0,
-      0.0
+      0.012,
+      0.012
      ],
-     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_bt_pins.json",
-     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_bt_pins_aspect1713.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional; NEW R0 ASPECT UNQUALIFIED: old signed view not applicable, require both new child SIGNED"
     },
     {
      "inst": "u_suvm_u_su8",
      "module": "qfd_dv_s5_su8_rst3",
      "origin_um": [
-      941.76,
+      1036.8,
       380.16
      ],
      "outline_um": [
@@ -222294,8 +222294,8 @@
      "leaf": "u_native59.dr_o",
      "face": "E",
      "window_um": [
-      283.1613,
-      391.7373
+      115.0,
+      223.576
      ],
      "layers": [
       "M6",
