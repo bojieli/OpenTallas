@@ -30,3 +30,12 @@ def test_contract_bound_intra_and_seam():
 def test_no_window_no_contract_block():
     r = R.time_class([("a", "b", "p")], _taps(), {"h0": 10.0}, REG, 20.0, 833.333, 60.0, 25.0)
     assert "kit_contract_hold" not in r
+
+
+def test_windows_read_from_plan():
+    legacy = R.kit_windows(dict(insertion_tol_ps=40))
+    assert legacy["intra"]["ps"] == 0.0 and legacy["seam"]["ps"] == 40.0
+    w = R.kit_windows(dict(insertion_tol_ps=40, seam_hold=dict(sender_ps=25, seam_ps=80), tap_window=dict(window_ps=80)))
+    assert w["intra"]["ps"] == 80.0 and w["seam"]["ps"] == 80.0 and "clock.tap_window" in w["intra"]["basis"]
+    wi = R.kit_windows(dict(tap_window=dict(window_ps=80)), 120.0)
+    assert wi["intra"]["ps"] == 120.0 and "WHAT-IF" in wi["intra"]["basis"]
