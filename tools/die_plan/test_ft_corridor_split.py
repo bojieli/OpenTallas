@@ -20,3 +20,16 @@ def test_l_corner_split_depth_reach_and_legal_nonoverlap():
     assert ledger["groups"] == 5
     all_sites = np.concatenate(sites)
     assert len({tuple(x) for x in all_sites}) == len(all_sites)
+
+
+def test_split_z_corridor_keeps_explicit_jog():
+    width=33
+    a=np.column_stack((np.full(width,240.0),np.linspace(20,180,width)))
+    b=np.column_stack((np.zeros(width),np.linspace(30,110,width)))
+    alloc=RowAllocator((4.32,4.32,235.68,235.68),blocked=[],cell_size=F.CELL,
+                       column_pitch=2.16,row_pitch=.27,origin=(4.32,4.32))
+    sites,centres,path,ledger=F.place_split_slot({"name":"z","stations":4},
+        a,b,"E","W",240.,240.,[],alloc,150.,split_bits=8,jog=60.)
+    assert len(sites)==3 and max(ledger["hops_um"])<=150.
+    for group in ledger["group_paths"]:
+        assert group["path"][1][0]==60. and group["path"][2][0]==60.

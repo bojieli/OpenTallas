@@ -255,7 +255,7 @@ def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, lo
                                     path=[[round(float(v), 2) for v in p] for p in path])
 
 
-def place_split_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, split_bits):
+def place_split_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, split_bits, jog=None, band=None):
     """Route contiguous bit bands separately through an L corner, preserving every bit's pipeline depth."""
     if split_bits < 1:
         raise ValueError("split_bits must be positive")
@@ -265,7 +265,7 @@ def place_split_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, split_bi
         for start in range(0, len(a), split_bits):
             stop = min(start + split_bits, len(a))
             try:
-                results.append(place_slot(slot, a[start:stop], b[start:stop], fin, fout, w, h, boxes, alloc, budget))
+                results.append(place_slot(slot, a[start:stop], b[start:stop], fin, fout, w, h, boxes, alloc, budget, jog=jog, band=band))
             except ValueError as e:
                 raise ValueError(f"{slot['name']} bits{start}:{stop} stations{slot['stations']}: {e}") from e
     except Exception:
@@ -311,7 +311,8 @@ def place(raw, types, reach_um=405., margin=.98, jogs=None, bands=None, split_bi
             b = np.array([pins[(name + "_o", i)] for i in range(wd)])
             args = (slot, a, b, slot["in_face"], slot["out_face"], w, h, boxes, alloc, budget)
             if split_bits.get(f"{tn}/{name}"):
-                sites, cents, path, led = place_split_slot(*args, split_bits=split_bits[f"{tn}/{name}"])
+                sites, cents, path, led = place_split_slot(*args, split_bits=split_bits[f"{tn}/{name}"],
+                    jog=jogs.get(f"{tn}/{name}"), band=bands.get(f"{tn}/{name}"))
             else:
                 sites, cents, path, led = place_slot(*args, jog=jogs.get(f"{tn}/{name}"),band=bands.get(f"{tn}/{name}"))
             slot["regs_um"] = [a.mean(axis=0).round(4).tolist()] + [c.round(4).tolist() for c in cents]
