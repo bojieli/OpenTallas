@@ -17,9 +17,9 @@ module tb_seqhost_timing;
  reg[185:0]templ[0:3];integer cyc=0,errors=0,job=-1,ks_edge=-1,accept_edge=-1,cmd_edge[0:4];
  integer counts_n=0,counts_s=0,counts_g=0,kits=0,jobs=0;reg[275:0]expect_n[0:3],expect_s[0:3];
  integer pending_n[0:3],pending_s[0:3],next_n=0,next_s=0;
- integer mut_payload=0,launch_phase=0;reg[9:0]expect_cwa;reg[255:0]expect_cwd;
+ integer mut_payload=0,launch_phase=0,host_quiet=7;reg[9:0]expect_cwa;reg[255:0]expect_cwd;
  function[514:0]csr(input[7:0]idx,input[511:0]data);reg[511:0]d;begin d=data;d[7:0]=idx;csr={2'd0,d,1'b1};end endfunction
- task host(input[514:0]word_);begin @(negedge ck);f_host=word_;@(negedge ck);f_host=0;repeat(7)@(negedge ck);end endtask
+ task host(input[514:0]word_);begin @(negedge ck);f_host=word_;@(negedge ck);f_host=0;repeat(host_quiet)@(negedge ck);end endtask
  task pw(input integer a,input[27:0]v);reg[511:0]d;begin d=0;d[102:96]=a;d[59:32]=v;host(csr(8'h10,d));end endtask
  task row(input integer index,input integer eng,iss,done_,arg_);reg[75:0]r;integer k;begin
  r={24'(done_),24'(iss),4'(eng),24'(arg_)};for(k=0;k<3;k=k+1)pw(index,{2'(k),r[26*k+:26]});end endtask
@@ -58,6 +58,8 @@ module tb_seqhost_timing;
  initial begin
   if($value$plusargs("mut_payload=%d",mut_payload))begin end
   if($value$plusargs("phase=%d",launch_phase))begin end
+  if($value$plusargs("host_quiet=%d",host_quiet))begin end
+  if(host_quiet<0)$fatal(1,"negative host gap");
   for(i=0;i<4;i=i+1)begin templ[i]={26'h128910+i,32'hfedcba98+i,64'hffeeddccbbaa9988,64'h0706050403020100+i};end
   repeat(30)@(negedge ck);rst_n=1;repeat(80)@(negedge ck);
   d=0;d[39:32]=6;host(csr(8'h11,d));pw(0,(28'd3<<26)|(28'd6<<9));
