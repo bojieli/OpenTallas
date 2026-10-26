@@ -1,0 +1,19 @@
+{
+ "scope": "native open-edge UCIe coupon; original 16-column template positions preserved, extra PG only vacant sites; prototype45um outside published25-37um optimum",
+ "source_commit": "745dc7b5dd",
+ "counts": {
+  "POWER": 79,
+  "GND": 79,
+  "SIGNAL": 156
+ },
+ "all_nets_connected": true,
+ "phy_worst_mv": 78.591,
+ "budget_mv": 35,
+ "verdict": "FAIL",
+ "worst_global_um": [
+  475.008,
+  9806.4
+ ],
+ "nearest_supply_distance_um": 145.477,
+ "diagnosis": "Published-template power rows leave long source-free signal-band interiors; added vacant sites lie around perimeter. Extra supply count does not reproduce the homogeneous lattice estimate. Ground-return and vendor electrical qualification not asserted."
+}
