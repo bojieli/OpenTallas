@@ -2,9 +2,9 @@
  "schema": "opentallas.qwen.cb16.phase_types.v1",
  "classes": [
   {
-   "type": "cbf_q00_na00d17",
+   "type": "cbf_q00_na00d18",
    "family": "cbf_q00",
-   "profile_sha256": "d7703540378730360504c5ece2a66e629dbb25b3a7e5e5175a85d24a797f608e",
+   "profile_sha256": "c92105d00bf39a49bae4bc42f8380cee0d92d3bfd1fa779e7df7978b87aea3cb",
    "parts": [
     "c_E0_bf_00",
     "c_E2_bf_00",
@@ -34,24 +34,24 @@
        513
       ]
      ],
-     "pad": 17
+     "pad": 18
     }
    ],
-   "added_ff_min": 9770,
-   "added_ff_max": 9770,
+   "added_ff_min": 10284,
+   "added_ff_max": 10284,
    "per_part_added_ff": {
-    "c_E0_bf_00": 9770,
-    "c_E2_bf_00": 9770,
-    "c_E4_bf_00": 9770,
-    "c_W0_bf_00": 9770,
-    "c_W2_bf_00": 9770,
-    "c_W4_bf_00": 9770
+    "c_E0_bf_00": 10284,
+    "c_E2_bf_00": 10284,
+    "c_E4_bf_00": 10284,
+    "c_W0_bf_00": 10284,
+    "c_W2_bf_00": 10284,
+    "c_W4_bf_00": 10284
    }
   },
   {
    "type": "cbf_q00",
    "family": "cbf_q00",
-   "profile_sha256": "954f3401f963b0e2eaae445e1845821ca301a6635b2a9c4b42343623bd64d893",
+   "profile_sha256": "d7703540378730360504c5ece2a66e629dbb25b3a7e5e5175a85d24a797f608e",
    "parts": [
     "c_E0_tf_00",
     "c_E1_bf_00",
@@ -92,35 +92,35 @@
        513
       ]
      ],
-     "pad": 16
+     "pad": 17
     }
    ],
-   "added_ff_min": 9256,
-   "added_ff_max": 9256,
+   "added_ff_min": 9770,
+   "added_ff_max": 9770,
    "per_part_added_ff": {
-    "c_E0_tf_00": 9256,
-    "c_E1_bf_00": 9256,
-    "c_E1_tf_00": 9256,
-    "c_E2_tf_00": 9256,
-    "c_E3_bf_00": 9256,
-    "c_E3_tf_00": 9256,
-    "c_E4_tf_00": 9256,
-    "c_E5_bf_00": 9256,
-    "c_E5_tf_00": 9256,
-    "c_W0_tf_00": 9256,
-    "c_W1_bf_00": 9256,
-    "c_W1_tf_00": 9256,
-    "c_W2_tf_00": 9256,
-    "c_W3_bf_00": 9256,
-    "c_W3_tf_00": 9256,
-    "c_W4_tf_00": 9256,
-    "c_W5_tf_00": 9256
+    "c_E0_tf_00": 9770,
+    "c_E1_bf_00": 9770,
+    "c_E1_tf_00": 9770,
+    "c_E2_tf_00": 9770,
+    "c_E3_bf_00": 9770,
+    "c_E3_tf_00": 9770,
+    "c_E4_tf_00": 9770,
+    "c_E5_bf_00": 9770,
+    "c_E5_tf_00": 9770,
+    "c_W0_tf_00": 9770,
+    "c_W1_bf_00": 9770,
+    "c_W1_tf_00": 9770,
+    "c_W2_tf_00": 9770,
+    "c_W3_bf_00": 9770,
+    "c_W3_tf_00": 9770,
+    "c_W4_tf_00": 9770,
+    "c_W5_tf_00": 9770
    }
   },
   {
    "type": "cbf_q00_s2",
    "family": "cbf_q00_s2",
-   "profile_sha256": "954f3401f963b0e2eaae445e1845821ca301a6635b2a9c4b42343623bd64d893",
+   "profile_sha256": "d7703540378730360504c5ece2a66e629dbb25b3a7e5e5175a85d24a797f608e",
    "parts": [
     "c_W5_bf_00"
    ],
@@ -145,13 +145,13 @@
        513
       ]
      ],
-     "pad": 16
+     "pad": 17
     }
    ],
-   "added_ff_min": 9256,
-   "added_ff_max": 9256,
+   "added_ff_min": 9770,
+   "added_ff_max": 9770,
    "per_part_added_ff": {
-    "c_W5_bf_00": 9256
+    "c_W5_bf_00": 9770
    }
   },
   {
@@ -426,9 +426,9 @@
    }
   },
   {
-   "type": "cbn_q00_xb10d1_na00d17",
+   "type": "cbn_q00_xb10d1_na00d18",
    "family": "cbn_q00",
-   "profile_sha256": "ed3dcd9e028868c155bc8f626cffb047d850ea6bc81ad1710301c4a9f3f21c01",
+   "profile_sha256": "b0d3efba331b1ea26eff9fbff7c17445977d45b62f7e62783b1e8a7e78893bf3",
    "parts": [
     "c_E0_bn_00",
     "c_E2_bn_00",
@@ -458,24 +458,24 @@
        513
       ]
      ],
-     "pad": 17
+     "pad": 18
     }
    ],
-   "added_ff_min": 9254,
-   "added_ff_max": 9254,
+   "added_ff_min": 9768,
+   "added_ff_max": 9768,
    "per_part_added_ff": {
-    "c_E0_bn_00": 9254,
-    "c_E2_bn_00": 9254,
-    "c_E4_bn_00": 9254,
-    "c_W0_bn_00": 9254,
-    "c_W2_bn_00": 9254,
-    "c_W4_bn_00": 9254
+    "c_E0_bn_00": 9768,
+    "c_E2_bn_00": 9768,
+    "c_E4_bn_00": 9768,
+    "c_W0_bn_00": 9768,
+    "c_W2_bn_00": 9768,
+    "c_W4_bn_00": 9768
    }
   },
   {
    "type": "cbn_q00",
    "family": "cbn_q00",
-   "profile_sha256": "92a9f5f8b3915fd4ac2710ecd40056a6fdf0f572816f8bdad695262c982a7ab7",
+   "profile_sha256": "d808a453733e32245926515e866b0c8ade3ac204a83dc88ea83a54bb8495d006",
    "parts": [
     "c_E0_tn_00",
     "c_E1_tn_00",
@@ -500,30 +500,30 @@
        513
       ]
      ],
-     "pad": 16
+     "pad": 17
     }
    ],
-   "added_ff_min": 8224,
-   "added_ff_max": 8224,
+   "added_ff_min": 8738,
+   "added_ff_max": 8738,
    "per_part_added_ff": {
-    "c_E0_tn_00": 8224,
-    "c_E1_tn_00": 8224,
-    "c_E2_tn_00": 8224,
-    "c_E3_tn_00": 8224,
-    "c_E4_tn_00": 8224,
-    "c_E5_tn_00": 8224,
-    "c_W0_tn_00": 8224,
-    "c_W1_tn_00": 8224,
-    "c_W2_tn_00": 8224,
-    "c_W3_tn_00": 8224,
-    "c_W4_tn_00": 8224,
-    "c_W5_tn_00": 8224
+    "c_E0_tn_00": 8738,
+    "c_E1_tn_00": 8738,
+    "c_E2_tn_00": 8738,
+    "c_E3_tn_00": 8738,
+    "c_E4_tn_00": 8738,
+    "c_E5_tn_00": 8738,
+    "c_W0_tn_00": 8738,
+    "c_W1_tn_00": 8738,
+    "c_W2_tn_00": 8738,
+    "c_W3_tn_00": 8738,
+    "c_W4_tn_00": 8738,
+    "c_W5_tn_00": 8738
    }
   },
   {
    "type": "cbn_q00_xb00d1",
    "family": "cbn_q00",
-   "profile_sha256": "a7412b8b3733a0df6b71c11ce196c30d2707b2d8b058575cea549201a1020354",
+   "profile_sha256": "afbc74529e5574b760edc2185e143e53f023cc20d825e179927b35f3cfb8f43d",
    "parts": [
     "c_E1_bn_00",
     "c_E3_bn_00",
@@ -553,18 +553,18 @@
        513
       ]
      ],
-     "pad": 16
+     "pad": 17
     }
    ],
-   "added_ff_min": 8740,
-   "added_ff_max": 8740,
+   "added_ff_min": 9254,
+   "added_ff_max": 9254,
    "per_part_added_ff": {
-    "c_E1_bn_00": 8740,
-    "c_E3_bn_00": 8740,
-    "c_E5_bn_00": 8740,
-    "c_W1_bn_00": 8740,
-    "c_W3_bn_00": 8740,
-    "c_W5_bn_00": 8740
+    "c_E1_bn_00": 9254,
+    "c_E3_bn_00": 9254,
+    "c_E5_bn_00": 9254,
+    "c_W1_bn_00": 9254,
+    "c_W3_bn_00": 9254,
+    "c_W5_bn_00": 9254
    }
   },
   {
@@ -973,12 +973,12 @@
   }
  ],
  "assignments": {
-  "c_W4_bf_00": "cbf_q00_na00d17",
-  "c_W2_bf_00": "cbf_q00_na00d17",
-  "c_W0_bf_00": "cbf_q00_na00d17",
-  "c_E0_bf_00": "cbf_q00_na00d17",
-  "c_E2_bf_00": "cbf_q00_na00d17",
-  "c_E4_bf_00": "cbf_q00_na00d17",
+  "c_W4_bf_00": "cbf_q00_na00d18",
+  "c_W2_bf_00": "cbf_q00_na00d18",
+  "c_W0_bf_00": "cbf_q00_na00d18",
+  "c_E0_bf_00": "cbf_q00_na00d18",
+  "c_E2_bf_00": "cbf_q00_na00d18",
+  "c_E4_bf_00": "cbf_q00_na00d18",
   "c_W5_tf_00": "cbf_q00",
   "c_W4_tf_00": "cbf_q00",
   "c_W3_bf_00": "cbf_q00",
@@ -1045,12 +1045,12 @@
   "c_E4_tf_11": "cbf_q11",
   "c_E5_bf_11": "cbf_q11",
   "c_E5_tf_11": "cbf_q11",
-  "c_W4_bn_00": "cbn_q00_xb10d1_na00d17",
-  "c_W2_bn_00": "cbn_q00_xb10d1_na00d17",
-  "c_W0_bn_00": "cbn_q00_xb10d1_na00d17",
-  "c_E0_bn_00": "cbn_q00_xb10d1_na00d17",
-  "c_E2_bn_00": "cbn_q00_xb10d1_na00d17",
-  "c_E4_bn_00": "cbn_q00_xb10d1_na00d17",
+  "c_W4_bn_00": "cbn_q00_xb10d1_na00d18",
+  "c_W2_bn_00": "cbn_q00_xb10d1_na00d18",
+  "c_W0_bn_00": "cbn_q00_xb10d1_na00d18",
+  "c_E0_bn_00": "cbn_q00_xb10d1_na00d18",
+  "c_E2_bn_00": "cbn_q00_xb10d1_na00d18",
+  "c_E4_bn_00": "cbn_q00_xb10d1_na00d18",
   "c_W5_tn_00": "cbn_q00",
   "c_W4_tn_00": "cbn_q00",
   "c_W3_tn_00": "cbn_q00",
@@ -1179,6 +1179,6 @@
  ],
  "new_type_count": 9,
  "root_added_cycles_max": 1,
- "logical_added_ff": 824112,
+ "logical_added_ff": 848784,
  "qualification": "CANDIDATE: actual type-uniform bind, wrapper cell/cut/slot/clock budgets and G0/G2/GEOM required"
 }

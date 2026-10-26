@@ -352,7 +352,7 @@
      "note": "generated: boundary flops of every port, ft-slot stations (reset-less data + 1 epoch bit), tree operand aligners from the latency table, fault OR, reset synchronizer"
     }
    ],
-   "note": "CB16 quad (0, 0), far; bottom half = MX copies; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile 954f3401f963b0e2eaae445e1845821ca301a6635b2a9c4b42343623bd64d893; unsigned frame, hard A0 unchanged.",
+   "note": "CB16 quad (0, 0), far; bottom half = MX copies; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile d7703540378730360504c5ece2a66e629dbb25b3a7e5e5175a85d24a797f608e; unsigned frame, hard A0 unchanged.",
    "clock": {
     "tap_um": [
      622.08,
@@ -2796,8 +2796,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t10",
@@ -2815,8 +2815,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t01",
@@ -2834,8 +2834,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t11",
@@ -2853,8 +2853,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -2979,17 +2979,17 @@
       2609.280000000022
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       1993.410708661418
      ],
      "regs_um": [
       [
-       429.84,
+       427.68,
        2604.96
       ],
       [
-       574.5600000000001,
-       2373.84
+       565.9200000000001,
+       2371.6800000000003
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -3004,13 +3004,13 @@
       2609.280000000022
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       1993.410708661418
      ],
      "regs_um": [
       [
-       660.96,
-       2306.88
+       669.6,
+       2302.56
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -3046,17 +3046,17 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       688.7707086614176
      ],
      "regs_um": [
       [
-       378.0,
+       375.84,
        73.44
       ],
       [
        550.8,
-       311.04
+       302.4
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -3071,19 +3071,19 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       688.7707086614176
      ],
      "regs_um": [
       [
-       660.96,
-       339.12
+       669.6,
+       343.44
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
     }
    ],
-   "cells": 792020
+   "cells": 792534
   },
   "cbf_q01": {
    "module": "qfd_qc_cb_f_q01",
@@ -20196,8 +20196,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t12",
@@ -20215,8 +20215,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t03",
@@ -20234,8 +20234,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t13",
@@ -20253,8 +20253,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -20270,16 +20270,20 @@
      ],
      "regs_um": [
       [
-       848.88,
+       930.96,
        64.8
       ],
       [
        686.88,
-       313.2
+       151.2
       ],
       [
        686.88,
-       717.12
+       475.2
+      ],
+      [
+       686.88,
+       797.04
       ]
      ],
      "bits": 515,
@@ -20334,17 +20338,17 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       680.1307086614172
      ],
      "regs_um": [
       [
-       384.48,
+       380.16,
        64.8
       ],
       [
-       574.5600000000001,
-       278.64000000000004
+       565.9200000000001,
+       280.8
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -20359,13 +20363,13 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       680.1307086614172
      ],
      "regs_um": [
       [
-       660.96,
-       334.8
+       669.6,
+       339.12
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -23012,8 +23016,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t30",
@@ -23031,8 +23035,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nl_pins.json",
-     "note": "A0 NL core (kit qfd_tile_nl_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nl_planned.json",
+     "note": "A0 NL core (kit qfd_tile_nl_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t21",
@@ -23050,8 +23054,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t31",
@@ -23069,8 +23073,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -23105,17 +23109,17 @@
       2609.280000000022
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       1993.410708661418
      ],
      "regs_um": [
       [
-       486.0,
+       483.84,
        2604.96
       ],
       [
-       565.9200000000001,
-       2341.44
+       557.2800000000001,
+       2339.28
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -23130,13 +23134,13 @@
       2609.280000000022
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       1993.410708661418
      ],
      "regs_um": [
       [
-       669.6,
-       2304.7200000000003
+       678.24,
+       2309.04
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -23151,17 +23155,17 @@
       0.0
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       688.7707086614176
      ],
      "regs_um": [
       [
-       406.08,
+       401.76,
        73.44
       ],
       [
        542.16,
-       330.48
+       324.0
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -23176,13 +23180,13 @@
       0.0
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       688.7707086614176
      ],
      "regs_um": [
       [
-       669.6,
-       341.28000000000003
+       678.24,
+       336.96000000000004
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -25845,8 +25849,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t32",
@@ -25864,8 +25868,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t23",
@@ -25883,8 +25887,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t33",
@@ -25902,8 +25906,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -25975,17 +25979,17 @@
       0.0
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       680.1307086614172
      ],
      "regs_um": [
       [
-       507.6,
+       505.44,
        4.32
       ],
       [
-       565.9200000000001,
-       311.04
+       557.2800000000001,
+       313.20000000000005
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -26000,13 +26004,13 @@
       0.0
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       680.1307086614172
      ],
      "regs_um": [
       [
-       669.6,
-       336.96000000000004
+       678.24,
+       332.64000000000004
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -44921,7 +44925,7 @@
      "note": "generated: boundary flops of every port, ft-slot stations (reset-less data + 1 epoch bit), tree operand aligners from the latency table, fault OR, reset synchronizer"
     }
    ],
-   "note": "CB16 quad (0, 0), near; bottom half = MX copies; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile 92a9f5f8b3915fd4ac2710ecd40056a6fdf0f572816f8bdad695262c982a7ab7; unsigned frame, hard A0 unchanged.",
+   "note": "CB16 quad (0, 0), near; bottom half = MX copies; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile d808a453733e32245926515e866b0c8ade3ac204a83dc88ea83a54bb8495d006; unsigned frame, hard A0 unchanged.",
    "clock": {
     "tap_um": [
      622.08,
@@ -47365,8 +47369,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t10",
@@ -47384,8 +47388,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t01",
@@ -47403,8 +47407,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t11",
@@ -47422,8 +47426,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -47521,16 +47525,20 @@
      ],
      "regs_um": [
       [
-       384.48,
+       304.56,
        73.44
       ],
       [
        550.8,
-       321.84
+       159.84
       ],
       [
        550.8,
-       725.76
+       483.84
+      ],
+      [
+       550.8,
+       805.68
       ]
      ],
      "bits": 515,
@@ -47548,17 +47556,17 @@
       2609.280000000022
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       1993.410708661418
      ],
      "regs_um": [
       [
-       429.84,
+       427.68,
        2604.96
       ],
       [
-       574.5600000000001,
-       2373.84
+       565.9200000000001,
+       2371.6800000000003
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -47573,13 +47581,13 @@
       2609.280000000022
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       1993.410708661418
      ],
      "regs_um": [
       [
-       660.96,
-       2306.88
+       669.6,
+       2302.56
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -47615,13 +47623,13 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       688.7707086614176
      ],
      "regs_um": [
       [
-       574.5600000000001,
-       298.08000000000004
+       565.9200000000001,
+       302.40000000000003
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -47636,19 +47644,19 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       688.7707086614176
      ],
      "regs_um": [
       [
-       660.96,
-       330.48
+       669.6,
+       334.8
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
     }
    ],
-   "cells": 790988
+   "cells": 791502
   },
   "cbn_q01": {
    "module": "qfd_qc_cb_n_q01",
@@ -81350,8 +81358,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t12",
@@ -81369,8 +81377,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t03",
@@ -81388,8 +81396,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t13",
@@ -81407,8 +81415,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -81424,16 +81432,20 @@
      ],
      "regs_um": [
       [
-       848.88,
+       930.96,
        64.8
       ],
       [
        686.88,
-       313.2
+       151.2
       ],
       [
        686.88,
-       717.12
+       475.2
+      ],
+      [
+       686.88,
+       797.04
       ]
      ],
      "bits": 515,
@@ -81488,17 +81500,17 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       680.1307086614172
      ],
      "regs_um": [
       [
-       384.48,
+       380.16,
        64.8
       ],
       [
-       574.5600000000001,
-       278.64000000000004
+       565.9200000000001,
+       280.8
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -81513,13 +81525,13 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       680.1307086614172
      ],
      "regs_um": [
       [
-       660.96,
-       334.8
+       669.6,
+       339.12
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -81534,17 +81546,17 @@
       2617.9199999999973
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       1993.410708661418
      ],
      "regs_um": [
       [
-       432.0,
+       429.84,
        2613.6
       ],
       [
-       574.5600000000001,
-       2376.0
+       565.9200000000001,
+       2373.84
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -81559,13 +81571,13 @@
       2617.9199999999973
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       1993.410708661418
      ],
      "regs_um": [
       [
-       660.96,
-       2311.2000000000003
+       669.6,
+       2306.88
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -84261,8 +84273,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t32",
@@ -84280,8 +84292,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t23",
@@ -84299,8 +84311,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t33",
@@ -84318,8 +84330,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -84391,17 +84403,17 @@
       0.0
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       680.1307086614172
      ],
      "regs_um": [
       [
-       507.6,
+       505.44,
        4.32
       ],
       [
-       565.9200000000001,
-       311.04
+       557.2800000000001,
+       313.20000000000005
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -84416,13 +84428,13 @@
       0.0
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       680.1307086614172
      ],
      "regs_um": [
       [
-       669.6,
-       336.96000000000004
+       678.24,
+       332.64000000000004
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -84479,17 +84491,17 @@
       2617.9199999999973
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       1993.410708661418
      ],
      "regs_um": [
       [
-       460.08,
+       455.76,
        2613.6
       ],
       [
-       565.9200000000001,
-       2358.7200000000003
+       557.2800000000001,
+       2356.56
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -84504,13 +84516,13 @@
       2617.9199999999973
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       1993.410708661418
      ],
      "regs_um": [
       [
-       669.6,
-       2309.04
+       678.24,
+       2313.36
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -285582,8 +285594,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t12",
@@ -285601,8 +285613,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t03",
@@ -285620,8 +285632,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t13",
@@ -285639,8 +285651,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -285656,16 +285668,20 @@
      ],
      "regs_um": [
       [
-       848.88,
+       930.96,
        64.8
       ],
       [
        686.88,
-       313.2
+       151.2
       ],
       [
        686.88,
-       717.12
+       475.2
+      ],
+      [
+       686.88,
+       797.04
       ]
      ],
      "bits": 515,
@@ -285720,17 +285736,17 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       680.1307086614172
      ],
      "regs_um": [
       [
-       384.48,
+       380.16,
        64.8
       ],
       [
-       574.5600000000001,
-       278.64000000000004
+       565.9200000000001,
+       280.8
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -285745,13 +285761,13 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       680.1307086614172
      ],
      "regs_um": [
       [
-       660.96,
-       334.8
+       669.6,
+       339.12
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -324858,7 +324874,7 @@
      "note": "generated: boundary flops of every port, ft-slot stations (reset-less data + 1 epoch bit), tree operand aligners from the latency table, fault OR, reset synchronizer"
     }
    ],
-   "note": "CB16 quad (0, 0), far; bottom half = MX copies; W5 far-bottom: carries the serdes S2 <-> coll ft slots; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile 954f3401f963b0e2eaae445e1845821ca301a6635b2a9c4b42343623bd64d893; unsigned frame, hard A0 unchanged.",
+   "note": "CB16 quad (0, 0), far; bottom half = MX copies; W5 far-bottom: carries the serdes S2 <-> coll ft slots; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile d7703540378730360504c5ece2a66e629dbb25b3a7e5e5175a85d24a797f608e; unsigned frame, hard A0 unchanged.",
    "clock": {
     "tap_um": [
      622.08,
@@ -327302,8 +327318,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t10",
@@ -327321,8 +327337,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t01",
@@ -327340,8 +327356,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t11",
@@ -327359,8 +327375,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -327485,17 +327501,17 @@
       2609.280000000022
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       1993.410708661418
      ],
      "regs_um": [
       [
-       429.84,
+       427.68,
        2604.96
       ],
       [
-       574.5600000000001,
-       2373.84
+       565.9200000000001,
+       2371.6800000000003
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -327510,13 +327526,13 @@
       2609.280000000022
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       1993.410708661418
      ],
      "regs_um": [
       [
-       660.96,
-       2306.88
+       669.6,
+       2302.56
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -327552,17 +327568,17 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       688.7707086614176
      ],
      "regs_um": [
       [
-       378.0,
+       375.84,
        73.44
       ],
       [
        550.8,
-       311.04
+       302.4
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -327577,19 +327593,19 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       688.7707086614176
      ],
      "regs_um": [
       [
-       660.96,
-       339.12
+       669.6,
+       343.44
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
     }
    ],
-   "cells": 792020
+   "cells": 792534
   },
   "sle_ctl_r8phase": {
    "module": "qfd_qc_sle_ctl_r8phase",
@@ -328268,8 +328284,7 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4,
-   "cells": 253360
+   "ft_track_frac": 0.4
   },
   "sle_fw_v1_r8phase": {
    "module": "qfd_qc_sle_fw_r8phase",
@@ -329110,11 +329125,10 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.5,
-   "cells": 60000
+   "ft_track_frac": 0.5
   },
-  "cbf_q00_na00d17": {
-   "module": "qfd_qc_cb_f_q00_na00d17",
+  "cbf_q00_na00d18": {
+   "module": "qfd_qc_cb_f_q00_na00d18",
    "outline_um": [
     1235.52,
     2609.28
@@ -329358,7 +329372,7 @@
      "note": "generated: boundary flops of every port, ft-slot stations (reset-less data + 1 epoch bit), tree operand aligners from the latency table, fault OR, reset synchronizer"
     }
    ],
-   "note": "CB16 quad (0, 0), far; bottom half = MX copies; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile d7703540378730360504c5ece2a66e629dbb25b3a7e5e5175a85d24a797f608e; unsigned frame, hard A0 unchanged.",
+   "note": "CB16 quad (0, 0), far; bottom half = MX copies; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile c92105d00bf39a49bae4bc42f8380cee0d92d3bfd1fa779e7df7978b87aea3cb; unsigned frame, hard A0 unchanged.",
    "clock": {
     "tap_um": [
      622.08,
@@ -331802,8 +331816,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t10",
@@ -331821,8 +331835,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t01",
@@ -331840,8 +331854,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t11",
@@ -331859,8 +331873,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -331985,17 +331999,17 @@
       2609.280000000022
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       1993.410708661418
      ],
      "regs_um": [
       [
-       429.84,
+       427.68,
        2604.96
       ],
       [
-       574.5600000000001,
-       2373.84
+       565.9200000000001,
+       2371.6800000000003
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -332010,13 +332024,13 @@
       2609.280000000022
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       1993.410708661418
      ],
      "regs_um": [
       [
-       660.96,
-       2306.88
+       669.6,
+       2302.56
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -332052,17 +332066,17 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       688.7707086614176
      ],
      "regs_um": [
       [
-       378.0,
+       375.84,
        73.44
       ],
       [
        550.8,
-       311.04
+       302.4
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -332077,19 +332091,19 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       688.7707086614176
      ],
      "regs_um": [
       [
-       660.96,
-       339.12
+       669.6,
+       343.44
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
     }
    ],
-   "cells": 792534
+   "cells": 793048
   },
   "cbf_q01_nb12d8": {
    "module": "qfd_qc_cb_f_q01_nb12d8",
@@ -349202,8 +349216,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t12",
@@ -349221,8 +349235,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t03",
@@ -349240,8 +349254,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t13",
@@ -349259,8 +349273,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -349276,16 +349290,20 @@
      ],
      "regs_um": [
       [
-       848.88,
+       930.96,
        64.8
       ],
       [
        686.88,
-       313.2
+       151.2
       ],
       [
        686.88,
-       717.12
+       475.2
+      ],
+      [
+       686.88,
+       797.04
       ]
      ],
      "bits": 515,
@@ -349340,17 +349358,17 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       680.1307086614172
      ],
      "regs_um": [
       [
-       384.48,
+       380.16,
        64.8
       ],
       [
-       574.5600000000001,
-       278.64000000000004
+       565.9200000000001,
+       280.8
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -349365,13 +349383,13 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       680.1307086614172
      ],
      "regs_um": [
       [
-       660.96,
-       334.8
+       669.6,
+       339.12
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -352034,8 +352052,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t32",
@@ -352053,8 +352071,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t23",
@@ -352072,8 +352090,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t33",
@@ -352091,8 +352109,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -352164,17 +352182,17 @@
       0.0
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       680.1307086614172
      ],
      "regs_um": [
       [
-       507.6,
+       505.44,
        4.32
       ],
       [
-       565.9200000000001,
-       311.04
+       557.2800000000001,
+       313.20000000000005
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -352189,13 +352207,13 @@
       0.0
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       680.1307086614172
      ],
      "regs_um": [
       [
-       669.6,
-       336.96000000000004
+       678.24,
+       332.64000000000004
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -352245,8 +352263,8 @@
    ],
    "cells": 784824
   },
-  "cbn_q00_xb10d1_na00d17": {
-   "module": "qfd_qc_cb_n_q00_xb10d1_na00d17",
+  "cbn_q00_xb10d1_na00d18": {
+   "module": "qfd_qc_cb_n_q00_xb10d1_na00d18",
    "outline_um": [
     1235.52,
     2609.28
@@ -371110,7 +371128,7 @@
      "note": "generated: boundary flops of every port, ft-slot stations (reset-less data + 1 epoch bit), tree operand aligners from the latency table, fault OR, reset synchronizer"
     }
    ],
-   "note": "CB16 quad (0, 0), near; bottom half = MX copies; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile ed3dcd9e028868c155bc8f626cffb047d850ea6bc81ad1710301c4a9f3f21c01; unsigned frame, hard A0 unchanged.",
+   "note": "CB16 quad (0, 0), near; bottom half = MX copies; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile b0d3efba331b1ea26eff9fbff7c17445977d45b62f7e62783b1e8a7e78893bf3; unsigned frame, hard A0 unchanged.",
    "clock": {
     "tap_um": [
      622.08,
@@ -373554,8 +373572,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t10",
@@ -373573,8 +373591,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t01",
@@ -373592,8 +373610,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t11",
@@ -373611,8 +373629,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -373710,16 +373728,20 @@
      ],
      "regs_um": [
       [
-       384.48,
+       304.56,
        73.44
       ],
       [
        550.8,
-       321.84
+       159.84
       ],
       [
        550.8,
-       725.76
+       483.84
+      ],
+      [
+       550.8,
+       805.68
       ]
      ],
      "bits": 515,
@@ -373737,17 +373759,17 @@
       2609.280000000022
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       1993.410708661418
      ],
      "regs_um": [
       [
-       429.84,
+       427.68,
        2604.96
       ],
       [
-       574.5600000000001,
-       2373.84
+       565.9200000000001,
+       2371.6800000000003
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -373762,13 +373784,13 @@
       2609.280000000022
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       1993.410708661418
      ],
      "regs_um": [
       [
-       660.96,
-       2306.88
+       669.6,
+       2302.56
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -373804,13 +373826,13 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       688.7707086614176
      ],
      "regs_um": [
       [
-       574.5600000000001,
-       298.08000000000004
+       565.9200000000001,
+       302.40000000000003
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -373825,19 +373847,19 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       688.7707086614176
      ],
      "regs_um": [
       [
-       660.96,
-       330.48
+       669.6,
+       334.8
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
     }
    ],
-   "cells": 792018
+   "cells": 792532
   },
   "cbn_q00_xb00d1": {
    "module": "qfd_qc_cb_n_q00_xb00d1",
@@ -392704,7 +392726,7 @@
      "note": "generated: boundary flops of every port, ft-slot stations (reset-less data + 1 epoch bit), tree operand aligners from the latency table, fault OR, reset synchronizer"
     }
    ],
-   "note": "CB16 quad (0, 0), near; bottom half = MX copies; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile a7412b8b3733a0df6b71c11ce196c30d2707b2d8b058575cea549201a1020354; unsigned frame, hard A0 unchanged.",
+   "note": "CB16 quad (0, 0), near; bottom half = MX copies; est. std-cell fill 0.21 at util 0.6: 40% of M4-M7 to ft CB16 whole-port DAG phase profile afbc74529e5574b760edc2185e143e53f023cc20d825e179927b35f3cfb8f43d; unsigned frame, hard A0 unchanged.",
    "clock": {
     "tap_um": [
      622.08,
@@ -395148,8 +395170,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t10",
@@ -395167,8 +395189,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t01",
@@ -395186,8 +395208,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t11",
@@ -395205,8 +395227,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -395304,16 +395326,20 @@
      ],
      "regs_um": [
       [
-       384.48,
+       304.56,
        73.44
       ],
       [
        550.8,
-       321.84
+       159.84
       ],
       [
        550.8,
-       725.76
+       483.84
+      ],
+      [
+       550.8,
+       805.68
       ]
      ],
      "bits": 515,
@@ -395331,17 +395357,17 @@
       2609.280000000022
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       1993.410708661418
      ],
      "regs_um": [
       [
-       429.84,
+       427.68,
        2604.96
       ],
       [
-       574.5600000000001,
-       2373.84
+       565.9200000000001,
+       2371.6800000000003
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -395356,13 +395382,13 @@
       2609.280000000022
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       1993.410708661418
      ],
      "regs_um": [
       [
-       660.96,
-       2306.88
+       669.6,
+       2302.56
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -395398,13 +395424,13 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       688.7707086614176
      ],
      "regs_um": [
       [
-       574.5600000000001,
-       298.08000000000004
+       565.9200000000001,
+       302.40000000000003
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -395419,19 +395445,19 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       688.7707086614176
      ],
      "regs_um": [
       [
-       660.96,
-       330.48
+       669.6,
+       334.8
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
     }
    ],
-   "cells": 791504
+   "cells": 792018
   },
   "cbn_q01_nb12d8": {
    "module": "qfd_qc_cb_n_q01_nb12d8",
@@ -429133,8 +429159,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t12",
@@ -429152,8 +429178,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t03",
@@ -429171,8 +429197,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t13",
@@ -429190,8 +429216,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -429207,16 +429233,20 @@
      ],
      "regs_um": [
       [
-       848.88,
+       930.96,
        64.8
       ],
       [
        686.88,
-       313.2
+       151.2
       ],
       [
        686.88,
-       717.12
+       475.2
+      ],
+      [
+       686.88,
+       797.04
       ]
      ],
      "bits": 515,
@@ -429271,17 +429301,17 @@
       0.0
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       680.1307086614172
      ],
      "regs_um": [
       [
-       384.48,
+       380.16,
        64.8
       ],
       [
-       574.5600000000001,
-       278.64000000000004
+       565.9200000000001,
+       280.8
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -429296,13 +429326,13 @@
       0.0
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       680.1307086614172
      ],
      "regs_um": [
       [
-       660.96,
-       334.8
+       669.6,
+       339.12
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -429317,17 +429347,17 @@
       2617.9199999999973
      ],
      "to_um": [
-      574.2239999999939,
+      566.2239999999939,
       1993.410708661418
      ],
      "regs_um": [
       [
-       432.0,
+       429.84,
        2613.6
       ],
       [
-       574.5600000000001,
-       2376.0
+       565.9200000000001,
+       2373.84
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -429342,13 +429372,13 @@
       2617.9199999999973
      ],
      "to_um": [
-      661.2959999999944,
+      669.2959999999944,
       1993.410708661418
      ],
      "regs_um": [
       [
-       660.96,
-       2311.2000000000003
+       669.6,
+       2306.88
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -432044,8 +432074,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t32",
@@ -432063,8 +432093,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t23",
@@ -432082,8 +432112,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t33",
@@ -432101,8 +432131,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -432174,17 +432204,17 @@
       0.0
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       680.1307086614172
      ],
      "regs_um": [
       [
-       507.6,
+       505.44,
        4.32
       ],
       [
-       565.9200000000001,
-       311.04
+       557.2800000000001,
+       313.20000000000005
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -432199,13 +432229,13 @@
       0.0
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       680.1307086614172
      ],
      "regs_um": [
       [
-       669.6,
-       336.96000000000004
+       678.24,
+       332.64000000000004
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -432262,17 +432292,17 @@
       2617.9199999999973
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       1993.410708661418
      ],
      "regs_um": [
       [
-       460.08,
+       455.76,
        2613.6
       ],
       [
-       565.9200000000001,
-       2358.7200000000003
+       557.2800000000001,
+       2356.56
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -432287,13 +432317,13 @@
       2617.9199999999973
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       1993.410708661418
      ],
      "regs_um": [
       [
-       669.6,
-       2309.04
+       678.24,
+       2313.36
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -434940,8 +434970,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t30",
@@ -434959,8 +434989,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nl_pins.json",
-     "note": "A0 NL core (kit qfd_tile_nl_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nl_planned.json",
+     "note": "A0 NL core (kit qfd_tile_nl_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t21",
@@ -434978,8 +435008,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t31",
@@ -434997,8 +435027,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -435033,17 +435063,17 @@
       2609.280000000022
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       1993.410708661418
      ],
      "regs_um": [
       [
-       486.0,
+       483.84,
        2604.96
       ],
       [
-       565.9200000000001,
-       2341.44
+       557.2800000000001,
+       2339.28
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -435058,13 +435088,13 @@
       2609.280000000022
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       1993.410708661418
      ],
      "regs_um": [
       [
-       669.6,
-       2304.7200000000003
+       678.24,
+       2309.04
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -435079,17 +435109,17 @@
       0.0
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       688.7707086614176
      ],
      "regs_um": [
       [
-       406.08,
+       401.76,
        73.44
       ],
       [
        542.16,
-       330.48
+       324.0
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -435104,13 +435134,13 @@
       0.0
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       688.7707086614176
      ],
      "regs_um": [
       [
-       669.6,
-       341.28000000000003
+       678.24,
+       336.96000000000004
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -437757,8 +437787,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t30",
@@ -437776,8 +437806,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nl_pins.json",
-     "note": "A0 NL core (kit qfd_tile_nl_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nl_planned.json",
+     "note": "A0 NL core (kit qfd_tile_nl_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t21",
@@ -437795,8 +437825,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     },
     {
      "inst": "u_t31",
@@ -437814,8 +437844,8 @@
       0.0,
       0.012
      ],
-     "pins_file": "cores/a0_nk_pins.json",
-     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+     "pins_file": "cores/cb16_m3flat_inward_nk_planned.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012); PLANNED inward MODE3/noFP1 candidate pins only, actual native LEF/lib/CTS still required"
     }
    ],
    "internal_stations": [
@@ -437850,17 +437880,17 @@
       2609.280000000022
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       1993.410708661418
      ],
      "regs_um": [
       [
-       486.0,
+       483.84,
        2604.96
       ],
       [
-       565.9200000000001,
-       2341.44
+       557.2800000000001,
+       2339.28
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -437875,13 +437905,13 @@
       2609.280000000022
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       1993.410708661418
      ],
      "regs_um": [
       [
-       669.6,
-       2304.7200000000003
+       678.24,
+       2309.04
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -437896,17 +437926,17 @@
       0.0
      ],
      "to_um": [
-      565.5840000000011,
+      557.5840000000011,
       688.7707086614176
      ],
      "regs_um": [
       [
-       406.08,
+       401.76,
        73.44
       ],
       [
        542.16,
-       330.48
+       324.0
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -437921,13 +437951,13 @@
       0.0
      ],
      "to_um": [
-      669.9359999999922,
+      677.9359999999922,
       688.7707086614176
      ],
      "regs_um": [
       [
-       669.6,
-       341.28000000000003
+       678.24,
+       336.96000000000004
       ]
      ],
      "note": "CB16 actual inward-pin physical route: payload+epoch, priced in lane.fixed_cycles; fresh R8 required, no RTL insertion"
@@ -438083,7 +438113,7 @@
   },
   {
    "name": "c_W4_bf_00",
-   "type": "cbf_q00_na00d17",
+   "type": "cbf_q00_na00d18",
    "origin_um": [
     4034.88,
     2617.92
@@ -438119,7 +438149,7 @@
   },
   {
    "name": "c_W4_bn_00",
-   "type": "cbn_q00_xb10d1_na00d17",
+   "type": "cbn_q00_xb10d1_na00d18",
    "origin_um": [
     4034.88,
     7845.12
@@ -438371,7 +438401,7 @@
   },
   {
    "name": "c_W2_bf_00",
-   "type": "cbf_q00_na00d17",
+   "type": "cbf_q00_na00d18",
    "origin_um": [
     8976.96,
     2617.92
@@ -438407,7 +438437,7 @@
   },
   {
    "name": "c_W2_bn_00",
-   "type": "cbn_q00_xb10d1_na00d17",
+   "type": "cbn_q00_xb10d1_na00d18",
    "origin_um": [
     8976.96,
     7845.12
@@ -438659,7 +438689,7 @@
   },
   {
    "name": "c_W0_bf_00",
-   "type": "cbf_q00_na00d17",
+   "type": "cbf_q00_na00d18",
    "origin_um": [
     13919.04,
     2617.92
@@ -438695,7 +438725,7 @@
   },
   {
    "name": "c_W0_bn_00",
-   "type": "cbn_q00_xb10d1_na00d17",
+   "type": "cbn_q00_xb10d1_na00d18",
    "origin_um": [
     13919.04,
     7845.12
@@ -438803,7 +438833,7 @@
   },
   {
    "name": "c_E0_bf_00",
-   "type": "cbf_q00_na00d17",
+   "type": "cbf_q00_na00d18",
    "origin_um": [
     16390.08,
     2617.92
@@ -438839,7 +438869,7 @@
   },
   {
    "name": "c_E0_bn_00",
-   "type": "cbn_q00_xb10d1_na00d17",
+   "type": "cbn_q00_xb10d1_na00d18",
    "origin_um": [
     16390.08,
     7845.12
@@ -439091,7 +439121,7 @@
   },
   {
    "name": "c_E2_bf_00",
-   "type": "cbf_q00_na00d17",
+   "type": "cbf_q00_na00d18",
    "origin_um": [
     21332.16,
     2617.92
@@ -439127,7 +439157,7 @@
   },
   {
    "name": "c_E2_bn_00",
-   "type": "cbn_q00_xb10d1_na00d17",
+   "type": "cbn_q00_xb10d1_na00d18",
    "origin_um": [
     21332.16,
     7845.12
@@ -439379,7 +439409,7 @@
   },
   {
    "name": "c_E4_bf_00",
-   "type": "cbf_q00_na00d17",
+   "type": "cbf_q00_na00d18",
    "origin_um": [
     26274.24,
     2617.92
@@ -439415,7 +439445,7 @@
   },
   {
    "name": "c_E4_bn_00",
-   "type": "cbn_q00_xb10d1_na00d17",
+   "type": "cbn_q00_xb10d1_na00d18",
    "origin_um": [
     26274.24,
     7845.12
@@ -480448,7 +480478,7 @@
    "ports": [
     "c_W5_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W5_bf_11__b12",
@@ -480513,7 +480543,7 @@
    "ports": [
     "c_W5_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W5_bn_11__b12",
@@ -480578,7 +480608,7 @@
    "ports": [
     "c_W5_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W5_tn_11__b12",
@@ -480643,7 +480673,7 @@
    "ports": [
     "c_W5_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W5_tf_11__b12",
@@ -480708,7 +480738,7 @@
    "ports": [
     "c_W4_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W4_bf_11__b12",
@@ -480773,7 +480803,7 @@
    "ports": [
     "c_W4_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W4_bn_11__b12",
@@ -480838,7 +480868,7 @@
    "ports": [
     "c_W4_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W4_tn_11__b12",
@@ -480903,7 +480933,7 @@
    "ports": [
     "c_W4_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W4_tf_11__b12",
@@ -480968,7 +480998,7 @@
    "ports": [
     "c_W3_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W3_bf_11__b12",
@@ -481033,7 +481063,7 @@
    "ports": [
     "c_W3_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W3_bn_11__b12",
@@ -481098,7 +481128,7 @@
    "ports": [
     "c_W3_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W3_tn_11__b12",
@@ -481163,7 +481193,7 @@
    "ports": [
     "c_W3_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W3_tf_11__b12",
@@ -481228,7 +481258,7 @@
    "ports": [
     "c_W2_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W2_bf_11__b12",
@@ -481293,7 +481323,7 @@
    "ports": [
     "c_W2_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W2_bn_11__b12",
@@ -481358,7 +481388,7 @@
    "ports": [
     "c_W2_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W2_tn_11__b12",
@@ -481423,7 +481453,7 @@
    "ports": [
     "c_W2_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W2_tf_11__b12",
@@ -481488,7 +481518,7 @@
    "ports": [
     "c_W1_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W1_bf_11__b12",
@@ -481553,7 +481583,7 @@
    "ports": [
     "c_W1_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W1_bn_11__b12",
@@ -481618,7 +481648,7 @@
    "ports": [
     "c_W1_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W1_tn_11__b12",
@@ -481683,7 +481713,7 @@
    "ports": [
     "c_W1_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W1_tf_11__b12",
@@ -481748,7 +481778,7 @@
    "ports": [
     "c_W0_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W0_bf_11__b12",
@@ -481813,7 +481843,7 @@
    "ports": [
     "c_W0_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W0_bn_11__b12",
@@ -481878,7 +481908,7 @@
    "ports": [
     "c_W0_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W0_tn_11__b12",
@@ -481943,7 +481973,7 @@
    "ports": [
     "c_W0_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_W0_tf_11__b12",
@@ -482008,7 +482038,7 @@
    "ports": [
     "c_E0_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E0_bf_11__b12",
@@ -482073,7 +482103,7 @@
    "ports": [
     "c_E0_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E0_bn_11__b12",
@@ -482138,7 +482168,7 @@
    "ports": [
     "c_E0_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E0_tn_11__b12",
@@ -482203,7 +482233,7 @@
    "ports": [
     "c_E0_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E0_tf_11__b12",
@@ -482268,7 +482298,7 @@
    "ports": [
     "c_E1_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E1_bf_11__b12",
@@ -482333,7 +482363,7 @@
    "ports": [
     "c_E1_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E1_bn_11__b12",
@@ -482398,7 +482428,7 @@
    "ports": [
     "c_E1_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E1_tn_11__b12",
@@ -482463,7 +482493,7 @@
    "ports": [
     "c_E1_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E1_tf_11__b12",
@@ -482528,7 +482558,7 @@
    "ports": [
     "c_E2_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E2_bf_11__b12",
@@ -482593,7 +482623,7 @@
    "ports": [
     "c_E2_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E2_bn_11__b12",
@@ -482658,7 +482688,7 @@
    "ports": [
     "c_E2_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E2_tn_11__b12",
@@ -482723,7 +482753,7 @@
    "ports": [
     "c_E2_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E2_tf_11__b12",
@@ -482788,7 +482818,7 @@
    "ports": [
     "c_E3_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E3_bf_11__b12",
@@ -482853,7 +482883,7 @@
    "ports": [
     "c_E3_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E3_bn_11__b12",
@@ -482918,7 +482948,7 @@
    "ports": [
     "c_E3_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E3_tn_11__b12",
@@ -482983,7 +483013,7 @@
    "ports": [
     "c_E3_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E3_tf_11__b12",
@@ -483048,7 +483078,7 @@
    "ports": [
     "c_E4_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E4_bf_11__b12",
@@ -483113,7 +483143,7 @@
    "ports": [
     "c_E4_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E4_bn_11__b12",
@@ -483178,7 +483208,7 @@
    "ports": [
     "c_E4_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E4_tn_11__b12",
@@ -483243,7 +483273,7 @@
    "ports": [
     "c_E4_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E4_tf_11__b12",
@@ -483308,7 +483338,7 @@
    "ports": [
     "c_E5_bf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E5_bf_11__b12",
@@ -483373,7 +483403,7 @@
    "ports": [
     "c_E5_bn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E5_bn_11__b12",
@@ -483438,7 +483468,7 @@
    "ports": [
     "c_E5_tn_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E5_tn_11__b12",
@@ -483503,7 +483533,7 @@
    "ports": [
     "c_E5_tf_01__b00__0"
    ],
-   "fixed_cycles": 10
+   "fixed_cycles": 11
   },
   {
    "id": "c_E5_tf_11__b12",
@@ -483581,7 +483611,7 @@
     "c_W5_tn_00__rsn__0",
     "c_W5_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W5_tf_00__rsf",
@@ -483668,7 +483698,7 @@
     "c_W5_bn_00__rsn__1",
     "c_W5_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W5_bf_00__rsf",
@@ -483743,7 +483773,7 @@
     "c_W4_tn_00__rsn__0",
     "c_W4_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W4_tf_00__rsf",
@@ -483830,7 +483860,7 @@
     "c_W4_bn_00__rsn__1",
     "c_W4_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W4_bf_00__rsf",
@@ -483905,7 +483935,7 @@
     "c_W3_tn_00__rsn__0",
     "c_W3_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W3_tf_00__rsf",
@@ -483992,7 +484022,7 @@
     "c_W3_bn_00__rsn__1",
     "c_W3_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W3_bf_00__rsf",
@@ -484067,7 +484097,7 @@
     "c_W2_tn_00__rsn__0",
     "c_W2_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W2_tf_00__rsf",
@@ -484154,7 +484184,7 @@
     "c_W2_bn_00__rsn__1",
     "c_W2_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W2_bf_00__rsf",
@@ -484229,7 +484259,7 @@
     "c_W1_tn_00__rsn__0",
     "c_W1_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W1_tf_00__rsf",
@@ -484316,7 +484346,7 @@
     "c_W1_bn_00__rsn__1",
     "c_W1_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W1_bf_00__rsf",
@@ -484391,7 +484421,7 @@
     "c_W0_tn_00__rsn__0",
     "c_W0_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W0_tf_00__rsf",
@@ -484478,7 +484508,7 @@
     "c_W0_bn_00__rsn__1",
     "c_W0_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_W0_bf_00__rsf",
@@ -484553,7 +484583,7 @@
     "c_E0_tn_00__rsn__0",
     "c_E0_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E0_tf_00__rsf",
@@ -484640,7 +484670,7 @@
     "c_E0_bn_00__rsn__1",
     "c_E0_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E0_bf_00__rsf",
@@ -484715,7 +484745,7 @@
     "c_E1_tn_00__rsn__0",
     "c_E1_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E1_tf_00__rsf",
@@ -484802,7 +484832,7 @@
     "c_E1_bn_00__rsn__1",
     "c_E1_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E1_bf_00__rsf",
@@ -484877,7 +484907,7 @@
     "c_E2_tn_00__rsn__0",
     "c_E2_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E2_tf_00__rsf",
@@ -484964,7 +484994,7 @@
     "c_E2_bn_00__rsn__1",
     "c_E2_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E2_bf_00__rsf",
@@ -485039,7 +485069,7 @@
     "c_E3_tn_00__rsn__0",
     "c_E3_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E3_tf_00__rsf",
@@ -485126,7 +485156,7 @@
     "c_E3_bn_00__rsn__1",
     "c_E3_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E3_bf_00__rsf",
@@ -485201,7 +485231,7 @@
     "c_E4_tn_00__rsn__0",
     "c_E4_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E4_tf_00__rsf",
@@ -485288,7 +485318,7 @@
     "c_E4_bn_00__rsn__1",
     "c_E4_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E4_bf_00__rsf",
@@ -485363,7 +485393,7 @@
     "c_E5_tn_00__rsn__0",
     "c_E5_tn_00__rsn__1"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E5_tf_00__rsf",
@@ -485450,7 +485480,7 @@
     "c_E5_bn_00__rsn__1",
     "c_E5_bn_00__rsn__2"
    ],
-   "fixed_cycles": 3
+   "fixed_cycles": 4
   },
   {
    "id": "c_E5_bf_00__rsf",
@@ -494024,12 +494054,12 @@
     "param": "LAT_C_W5_BF_00__A22"
    },
    "c_W5_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W5_BF_01__B00"
    },
@@ -494114,12 +494144,12 @@
     "param": "LAT_C_W5_BN_00__A22"
    },
    "c_W5_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W5_BN_01__B00"
    },
@@ -494204,12 +494234,12 @@
     "param": "LAT_C_W5_TN_00__A22"
    },
    "c_W5_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W5_TN_01__B00"
    },
@@ -494294,12 +494324,12 @@
     "param": "LAT_C_W5_TF_00__A22"
    },
    "c_W5_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W5_TF_01__B00"
    },
@@ -494384,12 +494414,12 @@
     "param": "LAT_C_W4_BF_00__A22"
    },
    "c_W4_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W4_BF_01__B00"
    },
@@ -494474,12 +494504,12 @@
     "param": "LAT_C_W4_BN_00__A22"
    },
    "c_W4_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W4_BN_01__B00"
    },
@@ -494564,12 +494594,12 @@
     "param": "LAT_C_W4_TN_00__A22"
    },
    "c_W4_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W4_TN_01__B00"
    },
@@ -494654,12 +494684,12 @@
     "param": "LAT_C_W4_TF_00__A22"
    },
    "c_W4_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W4_TF_01__B00"
    },
@@ -494744,12 +494774,12 @@
     "param": "LAT_C_W3_BF_00__A22"
    },
    "c_W3_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W3_BF_01__B00"
    },
@@ -494834,12 +494864,12 @@
     "param": "LAT_C_W3_BN_00__A22"
    },
    "c_W3_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W3_BN_01__B00"
    },
@@ -494924,12 +494954,12 @@
     "param": "LAT_C_W3_TN_00__A22"
    },
    "c_W3_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W3_TN_01__B00"
    },
@@ -495014,12 +495044,12 @@
     "param": "LAT_C_W3_TF_00__A22"
    },
    "c_W3_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W3_TF_01__B00"
    },
@@ -495104,12 +495134,12 @@
     "param": "LAT_C_W2_BF_00__A22"
    },
    "c_W2_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W2_BF_01__B00"
    },
@@ -495194,12 +495224,12 @@
     "param": "LAT_C_W2_BN_00__A22"
    },
    "c_W2_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W2_BN_01__B00"
    },
@@ -495284,12 +495314,12 @@
     "param": "LAT_C_W2_TN_00__A22"
    },
    "c_W2_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W2_TN_01__B00"
    },
@@ -495374,12 +495404,12 @@
     "param": "LAT_C_W2_TF_00__A22"
    },
    "c_W2_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W2_TF_01__B00"
    },
@@ -495464,12 +495494,12 @@
     "param": "LAT_C_W1_BF_00__A22"
    },
    "c_W1_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W1_BF_01__B00"
    },
@@ -495554,12 +495584,12 @@
     "param": "LAT_C_W1_BN_00__A22"
    },
    "c_W1_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W1_BN_01__B00"
    },
@@ -495644,12 +495674,12 @@
     "param": "LAT_C_W1_TN_00__A22"
    },
    "c_W1_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W1_TN_01__B00"
    },
@@ -495734,12 +495764,12 @@
     "param": "LAT_C_W1_TF_00__A22"
    },
    "c_W1_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W1_TF_01__B00"
    },
@@ -495824,12 +495854,12 @@
     "param": "LAT_C_W0_BF_00__A22"
    },
    "c_W0_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W0_BF_01__B00"
    },
@@ -495914,12 +495944,12 @@
     "param": "LAT_C_W0_BN_00__A22"
    },
    "c_W0_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W0_BN_01__B00"
    },
@@ -496004,12 +496034,12 @@
     "param": "LAT_C_W0_TN_00__A22"
    },
    "c_W0_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W0_TN_01__B00"
    },
@@ -496094,12 +496124,12 @@
     "param": "LAT_C_W0_TF_00__A22"
    },
    "c_W0_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_W0_TF_01__B00"
    },
@@ -496184,12 +496214,12 @@
     "param": "LAT_C_E0_BF_00__A22"
    },
    "c_E0_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E0_BF_01__B00"
    },
@@ -496274,12 +496304,12 @@
     "param": "LAT_C_E0_BN_00__A22"
    },
    "c_E0_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E0_BN_01__B00"
    },
@@ -496364,12 +496394,12 @@
     "param": "LAT_C_E0_TN_00__A22"
    },
    "c_E0_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E0_TN_01__B00"
    },
@@ -496454,12 +496484,12 @@
     "param": "LAT_C_E0_TF_00__A22"
    },
    "c_E0_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E0_TF_01__B00"
    },
@@ -496544,12 +496574,12 @@
     "param": "LAT_C_E1_BF_00__A22"
    },
    "c_E1_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E1_BF_01__B00"
    },
@@ -496634,12 +496664,12 @@
     "param": "LAT_C_E1_BN_00__A22"
    },
    "c_E1_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E1_BN_01__B00"
    },
@@ -496724,12 +496754,12 @@
     "param": "LAT_C_E1_TN_00__A22"
    },
    "c_E1_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E1_TN_01__B00"
    },
@@ -496814,12 +496844,12 @@
     "param": "LAT_C_E1_TF_00__A22"
    },
    "c_E1_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E1_TF_01__B00"
    },
@@ -496904,12 +496934,12 @@
     "param": "LAT_C_E2_BF_00__A22"
    },
    "c_E2_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E2_BF_01__B00"
    },
@@ -496994,12 +497024,12 @@
     "param": "LAT_C_E2_BN_00__A22"
    },
    "c_E2_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E2_BN_01__B00"
    },
@@ -497084,12 +497114,12 @@
     "param": "LAT_C_E2_TN_00__A22"
    },
    "c_E2_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E2_TN_01__B00"
    },
@@ -497174,12 +497204,12 @@
     "param": "LAT_C_E2_TF_00__A22"
    },
    "c_E2_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E2_TF_01__B00"
    },
@@ -497264,12 +497294,12 @@
     "param": "LAT_C_E3_BF_00__A22"
    },
    "c_E3_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E3_BF_01__B00"
    },
@@ -497354,12 +497384,12 @@
     "param": "LAT_C_E3_BN_00__A22"
    },
    "c_E3_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E3_BN_01__B00"
    },
@@ -497444,12 +497474,12 @@
     "param": "LAT_C_E3_TN_00__A22"
    },
    "c_E3_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E3_TN_01__B00"
    },
@@ -497534,12 +497564,12 @@
     "param": "LAT_C_E3_TF_00__A22"
    },
    "c_E3_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E3_TF_01__B00"
    },
@@ -497624,12 +497654,12 @@
     "param": "LAT_C_E4_BF_00__A22"
    },
    "c_E4_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E4_BF_01__B00"
    },
@@ -497714,12 +497744,12 @@
     "param": "LAT_C_E4_BN_00__A22"
    },
    "c_E4_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E4_BN_01__B00"
    },
@@ -497804,12 +497834,12 @@
     "param": "LAT_C_E4_TN_00__A22"
    },
    "c_E4_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E4_TN_01__B00"
    },
@@ -497894,12 +497924,12 @@
     "param": "LAT_C_E4_TF_00__A22"
    },
    "c_E4_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E4_TF_01__B00"
    },
@@ -497984,12 +498014,12 @@
     "param": "LAT_C_E5_BF_00__A22"
    },
    "c_E5_bf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E5_BF_01__B00"
    },
@@ -498074,12 +498104,12 @@
     "param": "LAT_C_E5_BN_00__A22"
    },
    "c_E5_bn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E5_BN_01__B00"
    },
@@ -498164,12 +498194,12 @@
     "param": "LAT_C_E5_TN_00__A22"
    },
    "c_E5_tn_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E5_TN_01__B00"
    },
@@ -498254,12 +498284,12 @@
     "param": "LAT_C_E5_TF_00__A22"
    },
    "c_E5_tf_01__b00": {
-    "cycles": 12,
+    "cycles": 13,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 10,
-    "natural": 12,
+    "fixed": 11,
+    "natural": 13,
     "pad": 0,
     "param": "LAT_C_E5_TF_01__B00"
    },
@@ -498364,12 +498394,12 @@
     "param": "LAT_C_W5_TN_11__BCF3"
    },
    "c_W5_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_W5_TN_00__RSN"
    },
@@ -498464,12 +498494,12 @@
     "param": "LAT_C_W5_BN_11__BCF3"
    },
    "c_W5_bn_00__rsn": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 8,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 13,
+    "fixed": 4,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W5_BN_00__RSN"
    },
@@ -498564,12 +498594,12 @@
     "param": "LAT_C_W4_TN_11__BCF3"
    },
    "c_W4_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_W4_TN_00__RSN"
    },
@@ -498664,12 +498694,12 @@
     "param": "LAT_C_W4_BN_11__BCF3"
    },
    "c_W4_bn_00__rsn": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 8,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 13,
+    "fixed": 4,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W4_BN_00__RSN"
    },
@@ -498764,12 +498794,12 @@
     "param": "LAT_C_W3_TN_11__BCF3"
    },
    "c_W3_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_W3_TN_00__RSN"
    },
@@ -498864,12 +498894,12 @@
     "param": "LAT_C_W3_BN_11__BCF3"
    },
    "c_W3_bn_00__rsn": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 8,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 13,
+    "fixed": 4,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W3_BN_00__RSN"
    },
@@ -498964,12 +498994,12 @@
     "param": "LAT_C_W2_TN_11__BCF3"
    },
    "c_W2_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_W2_TN_00__RSN"
    },
@@ -499064,12 +499094,12 @@
     "param": "LAT_C_W2_BN_11__BCF3"
    },
    "c_W2_bn_00__rsn": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 8,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 13,
+    "fixed": 4,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W2_BN_00__RSN"
    },
@@ -499164,12 +499194,12 @@
     "param": "LAT_C_W1_TN_11__BCF3"
    },
    "c_W1_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_W1_TN_00__RSN"
    },
@@ -499264,12 +499294,12 @@
     "param": "LAT_C_W1_BN_11__BCF3"
    },
    "c_W1_bn_00__rsn": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 8,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 13,
+    "fixed": 4,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W1_BN_00__RSN"
    },
@@ -499364,12 +499394,12 @@
     "param": "LAT_C_W0_TN_11__BCF3"
    },
    "c_W0_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_W0_TN_00__RSN"
    },
@@ -499464,12 +499494,12 @@
     "param": "LAT_C_W0_BN_11__BCF3"
    },
    "c_W0_bn_00__rsn": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 8,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 13,
+    "fixed": 4,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W0_BN_00__RSN"
    },
@@ -499564,12 +499594,12 @@
     "param": "LAT_C_E0_TN_11__BCF3"
    },
    "c_E0_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_E0_TN_00__RSN"
    },
@@ -499664,12 +499694,12 @@
     "param": "LAT_C_E0_BN_11__BCF3"
    },
    "c_E0_bn_00__rsn": {
-    "cycles": 14,
+    "cycles": 15,
     "stations": 9,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 14,
+    "fixed": 4,
+    "natural": 15,
     "pad": 0,
     "param": "LAT_C_E0_BN_00__RSN"
    },
@@ -499764,12 +499794,12 @@
     "param": "LAT_C_E1_TN_11__BCF3"
    },
    "c_E1_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_E1_TN_00__RSN"
    },
@@ -499864,12 +499894,12 @@
     "param": "LAT_C_E1_BN_11__BCF3"
    },
    "c_E1_bn_00__rsn": {
-    "cycles": 14,
+    "cycles": 15,
     "stations": 9,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 14,
+    "fixed": 4,
+    "natural": 15,
     "pad": 0,
     "param": "LAT_C_E1_BN_00__RSN"
    },
@@ -499964,12 +499994,12 @@
     "param": "LAT_C_E2_TN_11__BCF3"
    },
    "c_E2_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_E2_TN_00__RSN"
    },
@@ -500064,12 +500094,12 @@
     "param": "LAT_C_E2_BN_11__BCF3"
    },
    "c_E2_bn_00__rsn": {
-    "cycles": 14,
+    "cycles": 15,
     "stations": 9,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 14,
+    "fixed": 4,
+    "natural": 15,
     "pad": 0,
     "param": "LAT_C_E2_BN_00__RSN"
    },
@@ -500164,12 +500194,12 @@
     "param": "LAT_C_E3_TN_11__BCF3"
    },
    "c_E3_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_E3_TN_00__RSN"
    },
@@ -500264,12 +500294,12 @@
     "param": "LAT_C_E3_BN_11__BCF3"
    },
    "c_E3_bn_00__rsn": {
-    "cycles": 14,
+    "cycles": 15,
     "stations": 9,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 14,
+    "fixed": 4,
+    "natural": 15,
     "pad": 0,
     "param": "LAT_C_E3_BN_00__RSN"
    },
@@ -500364,12 +500394,12 @@
     "param": "LAT_C_E4_TN_11__BCF3"
    },
    "c_E4_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_E4_TN_00__RSN"
    },
@@ -500464,12 +500494,12 @@
     "param": "LAT_C_E4_BN_11__BCF3"
    },
    "c_E4_bn_00__rsn": {
-    "cycles": 14,
+    "cycles": 15,
     "stations": 9,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 14,
+    "fixed": 4,
+    "natural": 15,
     "pad": 0,
     "param": "LAT_C_E4_BN_00__RSN"
    },
@@ -500564,12 +500594,12 @@
     "param": "LAT_C_E5_TN_11__BCF3"
    },
    "c_E5_tn_00__rsn": {
-    "cycles": 10,
+    "cycles": 11,
     "stations": 5,
     "boundary": 2,
     "faces": 2,
-    "fixed": 3,
-    "natural": 10,
+    "fixed": 4,
+    "natural": 11,
     "pad": 0,
     "param": "LAT_C_E5_TN_00__RSN"
    },
@@ -500664,12 +500694,12 @@
     "param": "LAT_C_E5_BN_11__BCF3"
    },
    "c_E5_bn_00__rsn": {
-    "cycles": 14,
+    "cycles": 15,
     "stations": 9,
     "boundary": 2,
     "faces": 3,
-    "fixed": 3,
-    "natural": 14,
+    "fixed": 4,
+    "natural": 15,
     "pad": 0,
     "param": "LAT_C_E5_BN_00__RSN"
    },
