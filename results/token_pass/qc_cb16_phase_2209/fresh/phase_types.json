@@ -1,0 +1,1184 @@
+{
+ "schema": "opentallas.qwen.cb16.phase_types.v1",
+ "classes": [
+  {
+   "type": "cbf_q00_na00d17",
+   "family": "cbf_q00",
+   "profile_sha256": "d7703540378730360504c5ece2a66e629dbb25b3a7e5e5175a85d24a797f608e",
+   "parts": [
+    "c_E0_bf_00",
+    "c_E2_bf_00",
+    "c_E4_bf_00",
+    "c_W0_bf_00",
+    "c_W2_bf_00",
+    "c_W4_bf_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 17
+    }
+   ],
+   "added_ff_min": 9770,
+   "added_ff_max": 9770,
+   "per_part_added_ff": {
+    "c_E0_bf_00": 9770,
+    "c_E2_bf_00": 9770,
+    "c_E4_bf_00": 9770,
+    "c_W0_bf_00": 9770,
+    "c_W2_bf_00": 9770,
+    "c_W4_bf_00": 9770
+   }
+  },
+  {
+   "type": "cbf_q00",
+   "family": "cbf_q00",
+   "profile_sha256": "954f3401f963b0e2eaae445e1845821ca301a6635b2a9c4b42343623bd64d893",
+   "parts": [
+    "c_E0_tf_00",
+    "c_E1_bf_00",
+    "c_E1_tf_00",
+    "c_E2_tf_00",
+    "c_E3_bf_00",
+    "c_E3_tf_00",
+    "c_E4_tf_00",
+    "c_E5_bf_00",
+    "c_E5_tf_00",
+    "c_W0_tf_00",
+    "c_W1_bf_00",
+    "c_W1_tf_00",
+    "c_W2_tf_00",
+    "c_W3_bf_00",
+    "c_W3_tf_00",
+    "c_W4_tf_00",
+    "c_W5_tf_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 16
+    }
+   ],
+   "added_ff_min": 9256,
+   "added_ff_max": 9256,
+   "per_part_added_ff": {
+    "c_E0_tf_00": 9256,
+    "c_E1_bf_00": 9256,
+    "c_E1_tf_00": 9256,
+    "c_E2_tf_00": 9256,
+    "c_E3_bf_00": 9256,
+    "c_E3_tf_00": 9256,
+    "c_E4_tf_00": 9256,
+    "c_E5_bf_00": 9256,
+    "c_E5_tf_00": 9256,
+    "c_W0_tf_00": 9256,
+    "c_W1_bf_00": 9256,
+    "c_W1_tf_00": 9256,
+    "c_W2_tf_00": 9256,
+    "c_W3_bf_00": 9256,
+    "c_W3_tf_00": 9256,
+    "c_W4_tf_00": 9256,
+    "c_W5_tf_00": 9256
+   }
+  },
+  {
+   "type": "cbf_q00_s2",
+   "family": "cbf_q00_s2",
+   "profile_sha256": "954f3401f963b0e2eaae445e1845821ca301a6635b2a9c4b42343623bd64d893",
+   "parts": [
+    "c_W5_bf_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 16
+    }
+   ],
+   "added_ff_min": 9256,
+   "added_ff_max": 9256,
+   "per_part_added_ff": {
+    "c_W5_bf_00": 9256
+   }
+  },
+  {
+   "type": "cbf_q01_nb12d8",
+   "family": "cbf_q01",
+   "profile_sha256": "1377d9a8ba064ef073d5a7e6826ae9e133459d9d7e5e06b73c99baeb32b7500b",
+   "parts": [
+    "c_E0_bf_01",
+    "c_E2_bf_01",
+    "c_E4_bf_01",
+    "c_W0_bf_01",
+    "c_W2_bf_01",
+    "c_W4_bf_01"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_1_2",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_1_2",
+     "port": "n_b",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 8
+    }
+   ],
+   "added_ff_min": 5144,
+   "added_ff_max": 5144,
+   "per_part_added_ff": {
+    "c_E0_bf_01": 5144,
+    "c_E2_bf_01": 5144,
+    "c_E4_bf_01": 5144,
+    "c_W0_bf_01": 5144,
+    "c_W2_bf_01": 5144,
+    "c_W4_bf_01": 5144
+   }
+  },
+  {
+   "type": "cbf_q01",
+   "family": "cbf_q01",
+   "profile_sha256": "f0b8c1c03d819aa3ec6240847eb8f26969034cb7dacaa3358cab302898b8db66",
+   "parts": [
+    "c_E0_tf_01",
+    "c_E1_bf_01",
+    "c_E1_tf_01",
+    "c_E2_tf_01",
+    "c_E3_bf_01",
+    "c_E3_tf_01",
+    "c_E4_tf_01",
+    "c_E5_bf_01",
+    "c_E5_tf_01",
+    "c_W0_tf_01",
+    "c_W1_bf_01",
+    "c_W1_tf_01",
+    "c_W2_tf_01",
+    "c_W3_bf_01",
+    "c_W3_tf_01",
+    "c_W4_tf_01",
+    "c_W5_tf_01"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_1_2",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_1_2",
+     "port": "n_b",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 7
+    }
+   ],
+   "added_ff_min": 4630,
+   "added_ff_max": 4630,
+   "per_part_added_ff": {
+    "c_E0_tf_01": 4630,
+    "c_E1_bf_01": 4630,
+    "c_E1_tf_01": 4630,
+    "c_E2_tf_01": 4630,
+    "c_E3_bf_01": 4630,
+    "c_E3_tf_01": 4630,
+    "c_E4_tf_01": 4630,
+    "c_E5_bf_01": 4630,
+    "c_E5_tf_01": 4630,
+    "c_W0_tf_01": 4630,
+    "c_W1_bf_01": 4630,
+    "c_W1_tf_01": 4630,
+    "c_W2_tf_01": 4630,
+    "c_W3_bf_01": 4630,
+    "c_W3_tf_01": 4630,
+    "c_W4_tf_01": 4630,
+    "c_W5_tf_01": 4630
+   }
+  },
+  {
+   "type": "cbf_q01_s2",
+   "family": "cbf_q01_s2",
+   "profile_sha256": "f0b8c1c03d819aa3ec6240847eb8f26969034cb7dacaa3358cab302898b8db66",
+   "parts": [
+    "c_W5_bf_01"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_1_2",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_1_2",
+     "port": "n_b",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 7
+    }
+   ],
+   "added_ff_min": 4630,
+   "added_ff_max": 4630,
+   "per_part_added_ff": {
+    "c_W5_bf_01": 4630
+   }
+  },
+  {
+   "type": "cbf_q11_na22d2",
+   "family": "cbf_q11",
+   "profile_sha256": "fdbe874d393694a07c0a579c78886879756f1292b7d1a30233abfd88419336a4",
+   "parts": [
+    "c_E0_bf_11",
+    "c_E2_bf_11",
+    "c_E4_bf_11",
+    "c_W0_bf_11",
+    "c_W2_bf_11",
+    "c_W4_bf_11"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_3_2",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_2_2",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 2
+    }
+   ],
+   "added_ff_min": 2060,
+   "added_ff_max": 2060,
+   "per_part_added_ff": {
+    "c_E0_bf_11": 2060,
+    "c_E2_bf_11": 2060,
+    "c_E4_bf_11": 2060,
+    "c_W0_bf_11": 2060,
+    "c_W2_bf_11": 2060,
+    "c_W4_bf_11": 2060
+   }
+  },
+  {
+   "type": "cbf_q11",
+   "family": "cbf_q11",
+   "profile_sha256": "fe917353ddaa1dca2478c1f0f3db17063a8facff2b9f614e80e8d23fc033c6e4",
+   "parts": [
+    "c_E0_tf_11",
+    "c_E1_bf_11",
+    "c_E1_tf_11",
+    "c_E2_tf_11",
+    "c_E3_bf_11",
+    "c_E3_tf_11",
+    "c_E4_tf_11",
+    "c_E5_bf_11",
+    "c_E5_tf_11",
+    "c_W0_tf_11",
+    "c_W1_bf_11",
+    "c_W1_tf_11",
+    "c_W2_tf_11",
+    "c_W3_bf_11",
+    "c_W3_tf_11",
+    "c_W4_tf_11",
+    "c_W5_bf_11",
+    "c_W5_tf_11"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_3_2",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_2_2",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 3
+    }
+   ],
+   "added_ff_min": 2574,
+   "added_ff_max": 2574,
+   "per_part_added_ff": {
+    "c_E0_tf_11": 2574,
+    "c_E1_bf_11": 2574,
+    "c_E1_tf_11": 2574,
+    "c_E2_tf_11": 2574,
+    "c_E3_bf_11": 2574,
+    "c_E3_tf_11": 2574,
+    "c_E4_tf_11": 2574,
+    "c_E5_bf_11": 2574,
+    "c_E5_tf_11": 2574,
+    "c_W0_tf_11": 2574,
+    "c_W1_bf_11": 2574,
+    "c_W1_tf_11": 2574,
+    "c_W2_tf_11": 2574,
+    "c_W3_bf_11": 2574,
+    "c_W3_tf_11": 2574,
+    "c_W4_tf_11": 2574,
+    "c_W5_bf_11": 2574,
+    "c_W5_tf_11": 2574
+   }
+  },
+  {
+   "type": "cbn_q00_xb10d1_na00d17",
+   "family": "cbn_q00",
+   "profile_sha256": "ed3dcd9e028868c155bc8f626cffb047d850ea6bc81ad1710301c4a9f3f21c01",
+   "parts": [
+    "c_E0_bn_00",
+    "c_E2_bn_00",
+    "c_E4_bn_00",
+    "c_W0_bn_00",
+    "c_W2_bn_00",
+    "c_W4_bn_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 1
+    },
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 17
+    }
+   ],
+   "added_ff_min": 9254,
+   "added_ff_max": 9254,
+   "per_part_added_ff": {
+    "c_E0_bn_00": 9254,
+    "c_E2_bn_00": 9254,
+    "c_E4_bn_00": 9254,
+    "c_W0_bn_00": 9254,
+    "c_W2_bn_00": 9254,
+    "c_W4_bn_00": 9254
+   }
+  },
+  {
+   "type": "cbn_q00",
+   "family": "cbn_q00",
+   "profile_sha256": "92a9f5f8b3915fd4ac2710ecd40056a6fdf0f572816f8bdad695262c982a7ab7",
+   "parts": [
+    "c_E0_tn_00",
+    "c_E1_tn_00",
+    "c_E2_tn_00",
+    "c_E3_tn_00",
+    "c_E4_tn_00",
+    "c_E5_tn_00",
+    "c_W0_tn_00",
+    "c_W1_tn_00",
+    "c_W2_tn_00",
+    "c_W3_tn_00",
+    "c_W4_tn_00",
+    "c_W5_tn_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 16
+    }
+   ],
+   "added_ff_min": 8224,
+   "added_ff_max": 8224,
+   "per_part_added_ff": {
+    "c_E0_tn_00": 8224,
+    "c_E1_tn_00": 8224,
+    "c_E2_tn_00": 8224,
+    "c_E3_tn_00": 8224,
+    "c_E4_tn_00": 8224,
+    "c_E5_tn_00": 8224,
+    "c_W0_tn_00": 8224,
+    "c_W1_tn_00": 8224,
+    "c_W2_tn_00": 8224,
+    "c_W3_tn_00": 8224,
+    "c_W4_tn_00": 8224,
+    "c_W5_tn_00": 8224
+   }
+  },
+  {
+   "type": "cbn_q00_xb00d1",
+   "family": "cbn_q00",
+   "profile_sha256": "a7412b8b3733a0df6b71c11ce196c30d2707b2d8b058575cea549201a1020354",
+   "parts": [
+    "c_E1_bn_00",
+    "c_E3_bn_00",
+    "c_E5_bn_00",
+    "c_W1_bn_00",
+    "c_W3_bn_00",
+    "c_W5_bn_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_0_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 1
+    },
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 16
+    }
+   ],
+   "added_ff_min": 8740,
+   "added_ff_max": 8740,
+   "per_part_added_ff": {
+    "c_E1_bn_00": 8740,
+    "c_E3_bn_00": 8740,
+    "c_E5_bn_00": 8740,
+    "c_W1_bn_00": 8740,
+    "c_W3_bn_00": 8740,
+    "c_W5_bn_00": 8740
+   }
+  },
+  {
+   "type": "cbn_q01_nb12d8",
+   "family": "cbn_q01",
+   "profile_sha256": "1377d9a8ba064ef073d5a7e6826ae9e133459d9d7e5e06b73c99baeb32b7500b",
+   "parts": [
+    "c_E0_bn_01",
+    "c_E2_bn_01",
+    "c_E4_bn_01",
+    "c_W0_bn_01",
+    "c_W2_bn_01",
+    "c_W4_bn_01"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_1_2",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_1_2",
+     "port": "n_b",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 8
+    }
+   ],
+   "added_ff_min": 5144,
+   "added_ff_max": 5144,
+   "per_part_added_ff": {
+    "c_E0_bn_01": 5144,
+    "c_E2_bn_01": 5144,
+    "c_E4_bn_01": 5144,
+    "c_W0_bn_01": 5144,
+    "c_W2_bn_01": 5144,
+    "c_W4_bn_01": 5144
+   }
+  },
+  {
+   "type": "cbn_q01",
+   "family": "cbn_q01",
+   "profile_sha256": "f0b8c1c03d819aa3ec6240847eb8f26969034cb7dacaa3358cab302898b8db66",
+   "parts": [
+    "c_E0_tn_01",
+    "c_E1_bn_01",
+    "c_E1_tn_01",
+    "c_E2_tn_01",
+    "c_E3_bn_01",
+    "c_E3_tn_01",
+    "c_E4_tn_01",
+    "c_E5_bn_01",
+    "c_E5_tn_01",
+    "c_W0_tn_01",
+    "c_W1_bn_01",
+    "c_W1_tn_01",
+    "c_W2_tn_01",
+    "c_W3_bn_01",
+    "c_W3_tn_01",
+    "c_W4_tn_01",
+    "c_W5_bn_01",
+    "c_W5_tn_01"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_1_2",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_1_2",
+     "port": "n_b",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 7
+    }
+   ],
+   "added_ff_min": 4630,
+   "added_ff_max": 4630,
+   "per_part_added_ff": {
+    "c_E0_tn_01": 4630,
+    "c_E1_bn_01": 4630,
+    "c_E1_tn_01": 4630,
+    "c_E2_tn_01": 4630,
+    "c_E3_bn_01": 4630,
+    "c_E3_tn_01": 4630,
+    "c_E4_tn_01": 4630,
+    "c_E5_bn_01": 4630,
+    "c_E5_tn_01": 4630,
+    "c_W0_tn_01": 4630,
+    "c_W1_bn_01": 4630,
+    "c_W1_tn_01": 4630,
+    "c_W2_tn_01": 4630,
+    "c_W3_bn_01": 4630,
+    "c_W3_tn_01": 4630,
+    "c_W4_tn_01": 4630,
+    "c_W5_bn_01": 4630,
+    "c_W5_tn_01": 4630
+   }
+  },
+  {
+   "type": "cbn_q11_na22d2",
+   "family": "cbn_q11",
+   "profile_sha256": "fdbe874d393694a07c0a579c78886879756f1292b7d1a30233abfd88419336a4",
+   "parts": [
+    "c_E0_bn_11",
+    "c_E2_bn_11",
+    "c_E4_bn_11",
+    "c_W0_bn_11",
+    "c_W2_bn_11",
+    "c_W4_bn_11"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_3_2",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_2_2",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 2
+    }
+   ],
+   "added_ff_min": 2060,
+   "added_ff_max": 2060,
+   "per_part_added_ff": {
+    "c_E0_bn_11": 2060,
+    "c_E2_bn_11": 2060,
+    "c_E4_bn_11": 2060,
+    "c_W0_bn_11": 2060,
+    "c_W2_bn_11": 2060,
+    "c_W4_bn_11": 2060
+   }
+  },
+  {
+   "type": "cbn_q11",
+   "family": "cbn_q11",
+   "profile_sha256": "fe917353ddaa1dca2478c1f0f3db17063a8facff2b9f614e80e8d23fc033c6e4",
+   "parts": [
+    "c_E0_tn_11",
+    "c_E1_bn_11",
+    "c_E1_tn_11",
+    "c_E2_tn_11",
+    "c_E3_bn_11",
+    "c_E3_tn_11",
+    "c_E4_tn_11",
+    "c_E5_bn_11",
+    "c_E5_tn_11",
+    "c_W0_tn_11",
+    "c_W1_bn_11",
+    "c_W1_tn_11",
+    "c_W2_tn_11",
+    "c_W3_bn_11",
+    "c_W3_tn_11",
+    "c_W4_tn_11",
+    "c_W5_bn_11",
+    "c_W5_tn_11"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_3_2",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    },
+    {
+     "leaf": "u_t_2_2",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 3
+    }
+   ],
+   "added_ff_min": 2574,
+   "added_ff_max": 2574,
+   "per_part_added_ff": {
+    "c_E0_tn_11": 2574,
+    "c_E1_bn_11": 2574,
+    "c_E1_tn_11": 2574,
+    "c_E2_tn_11": 2574,
+    "c_E3_bn_11": 2574,
+    "c_E3_tn_11": 2574,
+    "c_E4_tn_11": 2574,
+    "c_E5_bn_11": 2574,
+    "c_E5_tn_11": 2574,
+    "c_W0_tn_11": 2574,
+    "c_W1_bn_11": 2574,
+    "c_W1_tn_11": 2574,
+    "c_W2_tn_11": 2574,
+    "c_W3_bn_11": 2574,
+    "c_W3_tn_11": 2574,
+    "c_W4_tn_11": 2574,
+    "c_W5_bn_11": 2574,
+    "c_W5_tn_11": 2574
+   }
+  },
+  {
+   "type": "cbx_q10",
+   "family": "cbx_q10",
+   "profile_sha256": "3a426cc9e8dd24c484105a50feb7b856a9ec5e39d65cdc8c6670f3389a41605d",
+   "parts": [
+    "c_E0_bf_10",
+    "c_E0_bn_10",
+    "c_E0_tf_10",
+    "c_E1_bf_10",
+    "c_E1_bn_10",
+    "c_E1_tf_10",
+    "c_E2_bf_10",
+    "c_E2_bn_10",
+    "c_E2_tf_10",
+    "c_E3_bf_10",
+    "c_E3_bn_10",
+    "c_E3_tf_10",
+    "c_E4_bf_10",
+    "c_E4_bn_10",
+    "c_E4_tf_10",
+    "c_E5_bf_10",
+    "c_E5_bn_10",
+    "c_E5_tf_10",
+    "c_W0_bf_10",
+    "c_W0_tf_10",
+    "c_W1_bf_10",
+    "c_W1_tf_10",
+    "c_W2_bf_10",
+    "c_W2_tf_10",
+    "c_W3_bf_10",
+    "c_W3_tf_10",
+    "c_W4_bf_10",
+    "c_W4_tf_10",
+    "c_W5_bf_10",
+    "c_W5_tf_10"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_3_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    }
+   ],
+   "added_ff_min": 1032,
+   "added_ff_max": 1032,
+   "per_part_added_ff": {
+    "c_E0_bf_10": 1032,
+    "c_E0_bn_10": 1032,
+    "c_E0_tf_10": 1032,
+    "c_E1_bf_10": 1032,
+    "c_E1_bn_10": 1032,
+    "c_E1_tf_10": 1032,
+    "c_E2_bf_10": 1032,
+    "c_E2_bn_10": 1032,
+    "c_E2_tf_10": 1032,
+    "c_E3_bf_10": 1032,
+    "c_E3_bn_10": 1032,
+    "c_E3_tf_10": 1032,
+    "c_E4_bf_10": 1032,
+    "c_E4_bn_10": 1032,
+    "c_E4_tf_10": 1032,
+    "c_E5_bf_10": 1032,
+    "c_E5_bn_10": 1032,
+    "c_E5_tf_10": 1032,
+    "c_W0_bf_10": 1032,
+    "c_W0_tf_10": 1032,
+    "c_W1_bf_10": 1032,
+    "c_W1_tf_10": 1032,
+    "c_W2_bf_10": 1032,
+    "c_W2_tf_10": 1032,
+    "c_W3_bf_10": 1032,
+    "c_W3_tf_10": 1032,
+    "c_W4_bf_10": 1032,
+    "c_W4_tf_10": 1032,
+    "c_W5_bf_10": 1032,
+    "c_W5_tf_10": 1032
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d1",
+   "family": "cbx_q10",
+   "profile_sha256": "391f907d1f7762080773316db4a331ce3eed77535ed3faaec46d595591a95743",
+   "parts": [
+    "c_E0_tn_10",
+    "c_E1_tn_10",
+    "c_E2_tn_10",
+    "c_E3_tn_10",
+    "c_E4_tn_10",
+    "c_E5_tn_10",
+    "c_W0_tn_10",
+    "c_W1_tn_10",
+    "c_W2_tn_10",
+    "c_W3_tn_10",
+    "c_W4_tn_10",
+    "c_W5_tn_10"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_3_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 1
+    }
+   ],
+   "added_ff_min": 516,
+   "added_ff_max": 516,
+   "per_part_added_ff": {
+    "c_E0_tn_10": 516,
+    "c_E1_tn_10": 516,
+    "c_E2_tn_10": 516,
+    "c_E3_tn_10": 516,
+    "c_E4_tn_10": 516,
+    "c_E5_tn_10": 516,
+    "c_W0_tn_10": 516,
+    "c_W1_tn_10": 516,
+    "c_W2_tn_10": 516,
+    "c_W3_tn_10": 516,
+    "c_W4_tn_10": 516,
+    "c_W5_tn_10": 516
+   }
+  },
+  {
+   "type": "cbx_q10_xb30d3",
+   "family": "cbx_q10",
+   "profile_sha256": "be1db6011219baaca3de520380455702c58ffaa0cfcefc181451f08b48760d1b",
+   "parts": [
+    "c_W0_bn_10",
+    "c_W1_bn_10",
+    "c_W2_bn_10",
+    "c_W3_bn_10",
+    "c_W4_bn_10",
+    "c_W5_bn_10"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_3_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 3
+    }
+   ],
+   "added_ff_min": 1548,
+   "added_ff_max": 1548,
+   "per_part_added_ff": {
+    "c_W0_bn_10": 1548,
+    "c_W1_bn_10": 1548,
+    "c_W2_bn_10": 1548,
+    "c_W3_bn_10": 1548,
+    "c_W4_bn_10": 1548,
+    "c_W5_bn_10": 1548
+   }
+  }
+ ],
+ "assignments": {
+  "c_W4_bf_00": "cbf_q00_na00d17",
+  "c_W2_bf_00": "cbf_q00_na00d17",
+  "c_W0_bf_00": "cbf_q00_na00d17",
+  "c_E0_bf_00": "cbf_q00_na00d17",
+  "c_E2_bf_00": "cbf_q00_na00d17",
+  "c_E4_bf_00": "cbf_q00_na00d17",
+  "c_W5_tf_00": "cbf_q00",
+  "c_W4_tf_00": "cbf_q00",
+  "c_W3_bf_00": "cbf_q00",
+  "c_W3_tf_00": "cbf_q00",
+  "c_W2_tf_00": "cbf_q00",
+  "c_W1_bf_00": "cbf_q00",
+  "c_W1_tf_00": "cbf_q00",
+  "c_W0_tf_00": "cbf_q00",
+  "c_E0_tf_00": "cbf_q00",
+  "c_E1_bf_00": "cbf_q00",
+  "c_E1_tf_00": "cbf_q00",
+  "c_E2_tf_00": "cbf_q00",
+  "c_E3_bf_00": "cbf_q00",
+  "c_E3_tf_00": "cbf_q00",
+  "c_E4_tf_00": "cbf_q00",
+  "c_E5_bf_00": "cbf_q00",
+  "c_E5_tf_00": "cbf_q00",
+  "c_W5_bf_00": "cbf_q00_s2",
+  "c_W4_bf_01": "cbf_q01_nb12d8",
+  "c_W2_bf_01": "cbf_q01_nb12d8",
+  "c_W0_bf_01": "cbf_q01_nb12d8",
+  "c_E0_bf_01": "cbf_q01_nb12d8",
+  "c_E2_bf_01": "cbf_q01_nb12d8",
+  "c_E4_bf_01": "cbf_q01_nb12d8",
+  "c_W5_tf_01": "cbf_q01",
+  "c_W4_tf_01": "cbf_q01",
+  "c_W3_bf_01": "cbf_q01",
+  "c_W3_tf_01": "cbf_q01",
+  "c_W2_tf_01": "cbf_q01",
+  "c_W1_bf_01": "cbf_q01",
+  "c_W1_tf_01": "cbf_q01",
+  "c_W0_tf_01": "cbf_q01",
+  "c_E0_tf_01": "cbf_q01",
+  "c_E1_bf_01": "cbf_q01",
+  "c_E1_tf_01": "cbf_q01",
+  "c_E2_tf_01": "cbf_q01",
+  "c_E3_bf_01": "cbf_q01",
+  "c_E3_tf_01": "cbf_q01",
+  "c_E4_tf_01": "cbf_q01",
+  "c_E5_bf_01": "cbf_q01",
+  "c_E5_tf_01": "cbf_q01",
+  "c_W5_bf_01": "cbf_q01_s2",
+  "c_W4_bf_11": "cbf_q11_na22d2",
+  "c_W2_bf_11": "cbf_q11_na22d2",
+  "c_W0_bf_11": "cbf_q11_na22d2",
+  "c_E0_bf_11": "cbf_q11_na22d2",
+  "c_E2_bf_11": "cbf_q11_na22d2",
+  "c_E4_bf_11": "cbf_q11_na22d2",
+  "c_W5_bf_11": "cbf_q11",
+  "c_W5_tf_11": "cbf_q11",
+  "c_W4_tf_11": "cbf_q11",
+  "c_W3_bf_11": "cbf_q11",
+  "c_W3_tf_11": "cbf_q11",
+  "c_W2_tf_11": "cbf_q11",
+  "c_W1_bf_11": "cbf_q11",
+  "c_W1_tf_11": "cbf_q11",
+  "c_W0_tf_11": "cbf_q11",
+  "c_E0_tf_11": "cbf_q11",
+  "c_E1_bf_11": "cbf_q11",
+  "c_E1_tf_11": "cbf_q11",
+  "c_E2_tf_11": "cbf_q11",
+  "c_E3_bf_11": "cbf_q11",
+  "c_E3_tf_11": "cbf_q11",
+  "c_E4_tf_11": "cbf_q11",
+  "c_E5_bf_11": "cbf_q11",
+  "c_E5_tf_11": "cbf_q11",
+  "c_W4_bn_00": "cbn_q00_xb10d1_na00d17",
+  "c_W2_bn_00": "cbn_q00_xb10d1_na00d17",
+  "c_W0_bn_00": "cbn_q00_xb10d1_na00d17",
+  "c_E0_bn_00": "cbn_q00_xb10d1_na00d17",
+  "c_E2_bn_00": "cbn_q00_xb10d1_na00d17",
+  "c_E4_bn_00": "cbn_q00_xb10d1_na00d17",
+  "c_W5_tn_00": "cbn_q00",
+  "c_W4_tn_00": "cbn_q00",
+  "c_W3_tn_00": "cbn_q00",
+  "c_W2_tn_00": "cbn_q00",
+  "c_W1_tn_00": "cbn_q00",
+  "c_W0_tn_00": "cbn_q00",
+  "c_E0_tn_00": "cbn_q00",
+  "c_E1_tn_00": "cbn_q00",
+  "c_E2_tn_00": "cbn_q00",
+  "c_E3_tn_00": "cbn_q00",
+  "c_E4_tn_00": "cbn_q00",
+  "c_E5_tn_00": "cbn_q00",
+  "c_W5_bn_00": "cbn_q00_xb00d1",
+  "c_W3_bn_00": "cbn_q00_xb00d1",
+  "c_W1_bn_00": "cbn_q00_xb00d1",
+  "c_E1_bn_00": "cbn_q00_xb00d1",
+  "c_E3_bn_00": "cbn_q00_xb00d1",
+  "c_E5_bn_00": "cbn_q00_xb00d1",
+  "c_W4_bn_01": "cbn_q01_nb12d8",
+  "c_W2_bn_01": "cbn_q01_nb12d8",
+  "c_W0_bn_01": "cbn_q01_nb12d8",
+  "c_E0_bn_01": "cbn_q01_nb12d8",
+  "c_E2_bn_01": "cbn_q01_nb12d8",
+  "c_E4_bn_01": "cbn_q01_nb12d8",
+  "c_W5_bn_01": "cbn_q01",
+  "c_W5_tn_01": "cbn_q01",
+  "c_W4_tn_01": "cbn_q01",
+  "c_W3_bn_01": "cbn_q01",
+  "c_W3_tn_01": "cbn_q01",
+  "c_W2_tn_01": "cbn_q01",
+  "c_W1_bn_01": "cbn_q01",
+  "c_W1_tn_01": "cbn_q01",
+  "c_W0_tn_01": "cbn_q01",
+  "c_E0_tn_01": "cbn_q01",
+  "c_E1_bn_01": "cbn_q01",
+  "c_E1_tn_01": "cbn_q01",
+  "c_E2_tn_01": "cbn_q01",
+  "c_E3_bn_01": "cbn_q01",
+  "c_E3_tn_01": "cbn_q01",
+  "c_E4_tn_01": "cbn_q01",
+  "c_E5_bn_01": "cbn_q01",
+  "c_E5_tn_01": "cbn_q01",
+  "c_W4_bn_11": "cbn_q11_na22d2",
+  "c_W2_bn_11": "cbn_q11_na22d2",
+  "c_W0_bn_11": "cbn_q11_na22d2",
+  "c_E0_bn_11": "cbn_q11_na22d2",
+  "c_E2_bn_11": "cbn_q11_na22d2",
+  "c_E4_bn_11": "cbn_q11_na22d2",
+  "c_W5_bn_11": "cbn_q11",
+  "c_W5_tn_11": "cbn_q11",
+  "c_W4_tn_11": "cbn_q11",
+  "c_W3_bn_11": "cbn_q11",
+  "c_W3_tn_11": "cbn_q11",
+  "c_W2_tn_11": "cbn_q11",
+  "c_W1_bn_11": "cbn_q11",
+  "c_W1_tn_11": "cbn_q11",
+  "c_W0_tn_11": "cbn_q11",
+  "c_E0_tn_11": "cbn_q11",
+  "c_E1_bn_11": "cbn_q11",
+  "c_E1_tn_11": "cbn_q11",
+  "c_E2_tn_11": "cbn_q11",
+  "c_E3_bn_11": "cbn_q11",
+  "c_E3_tn_11": "cbn_q11",
+  "c_E4_tn_11": "cbn_q11",
+  "c_E5_bn_11": "cbn_q11",
+  "c_E5_tn_11": "cbn_q11",
+  "c_W5_bf_10": "cbx_q10",
+  "c_W5_tf_10": "cbx_q10",
+  "c_W4_bf_10": "cbx_q10",
+  "c_W4_tf_10": "cbx_q10",
+  "c_W3_bf_10": "cbx_q10",
+  "c_W3_tf_10": "cbx_q10",
+  "c_W2_bf_10": "cbx_q10",
+  "c_W2_tf_10": "cbx_q10",
+  "c_W1_bf_10": "cbx_q10",
+  "c_W1_tf_10": "cbx_q10",
+  "c_W0_bf_10": "cbx_q10",
+  "c_W0_tf_10": "cbx_q10",
+  "c_E0_bf_10": "cbx_q10",
+  "c_E0_bn_10": "cbx_q10",
+  "c_E0_tf_10": "cbx_q10",
+  "c_E1_bf_10": "cbx_q10",
+  "c_E1_bn_10": "cbx_q10",
+  "c_E1_tf_10": "cbx_q10",
+  "c_E2_bf_10": "cbx_q10",
+  "c_E2_bn_10": "cbx_q10",
+  "c_E2_tf_10": "cbx_q10",
+  "c_E3_bf_10": "cbx_q10",
+  "c_E3_bn_10": "cbx_q10",
+  "c_E3_tf_10": "cbx_q10",
+  "c_E4_bf_10": "cbx_q10",
+  "c_E4_bn_10": "cbx_q10",
+  "c_E4_tf_10": "cbx_q10",
+  "c_E5_bf_10": "cbx_q10",
+  "c_E5_bn_10": "cbx_q10",
+  "c_E5_tf_10": "cbx_q10",
+  "c_W5_tn_10": "cbx_q10_xb30d1",
+  "c_W4_tn_10": "cbx_q10_xb30d1",
+  "c_W3_tn_10": "cbx_q10_xb30d1",
+  "c_W2_tn_10": "cbx_q10_xb30d1",
+  "c_W1_tn_10": "cbx_q10_xb30d1",
+  "c_W0_tn_10": "cbx_q10_xb30d1",
+  "c_E0_tn_10": "cbx_q10_xb30d1",
+  "c_E1_tn_10": "cbx_q10_xb30d1",
+  "c_E2_tn_10": "cbx_q10_xb30d1",
+  "c_E3_tn_10": "cbx_q10_xb30d1",
+  "c_E4_tn_10": "cbx_q10_xb30d1",
+  "c_E5_tn_10": "cbx_q10_xb30d1",
+  "c_W5_bn_10": "cbx_q10_xb30d3",
+  "c_W4_bn_10": "cbx_q10_xb30d3",
+  "c_W3_bn_10": "cbx_q10_xb30d3",
+  "c_W2_bn_10": "cbx_q10_xb30d3",
+  "c_W1_bn_10": "cbx_q10_xb30d3",
+  "c_W0_bn_10": "cbx_q10_xb30d3"
+ },
+ "original_families": [
+  "cbf_q00",
+  "cbf_q00_s2",
+  "cbf_q01",
+  "cbf_q01_s2",
+  "cbf_q11",
+  "cbn_q00",
+  "cbn_q01",
+  "cbn_q11",
+  "cbx_q10"
+ ],
+ "new_type_count": 9,
+ "root_added_cycles_max": 1,
+ "logical_added_ff": 824112,
+ "qualification": "CANDIDATE: actual type-uniform bind, wrapper cell/cut/slot/clock budgets and G0/G2/GEOM required"
+}

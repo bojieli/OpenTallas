@@ -57,7 +57,7 @@ raw=json.load(open(p/'die_plan_phase_fresh_2209.json'));profiles=json.load(open(
 for c in profiles['classes']:
  old=next(x for x in json.load(open(p/'inputs/cb16_phase_profiles_1713.json'))['classes'] if x['type']==c['family'])
  base=notes['cells_per_type'][c['family']]['cells']-max(old['per_part_added_ff'][q]+old_epoch[q] for q in old['parts'])
- raw['partition_types'][c['type']]['cells']=base+max(c['per_part_added_ff'][q]+epoch[q] for q in c['parts'])
+ raw['partition_types'][c['type']]['cells']=base+max(c['per_part_added_ff'].values())
 (p/'die_plan_phase_fresh_2209.json').write_text(json.dumps(raw,indent=1)+'\n')
 print('FRESH_PHASE_SUMMARY',profiles['new_type_count'],profiles['logical_added_ff'],profiles['root_added_cycles_max'])
 PY

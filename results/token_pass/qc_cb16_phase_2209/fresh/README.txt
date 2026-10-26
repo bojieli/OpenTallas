@@ -1,0 +1,7 @@
+QC v6 current-source candidate. Strict probe/base/final PASS, 377 partitions / 79 final types, no connectivity errors or type splits. Regen constants PASS22. Actual final phase fixed point requires zero further repair. Exact nine payload delay classes replay4096cycles PASS, bypass/early-valid/early-fault mutants CAUGHT.
+
+Fresh physical pipeline pricing changes648lanes (+4:144,+2:312,+1:192). Legal DAG now324members /824112actual payload-only FF,18CBfunctionalclasses,60CBrenames+8supportrenames. Maximum added payloadFF9770/part. Roots are+0for36/+1for12 relative freshR8base, and+6for24/+14for24 relative old1713CBcandidate. This is CB graph pricing; whole token/compiler cost remains required.
+
+NOT ADOPTED: G0C found actual pin-direction/405um station geometry mismatches; physical worker correcting them. Native hard views and complete clock provider census remain required. First actual max-source mapped wrapper has60153softFF; all-class actual census/sites pending. Previous48011FF/87softclock entries came from derived whole-lane vehicles and are superseded. Epoch-inclusive old713850 estimate was conservative; bound per-leaf DAG pads are W1 payload-only. Whole-lane epoch is separate.
+
+Runtime intel1:/srv/opentallas-scratch2/claude/codex-qc-phase-2209-v6; main finite job700602 exit0, finalfixedpoint756675 exit0. Candidate plan and estimates are in this branch; no main adoption or G2 claim.
