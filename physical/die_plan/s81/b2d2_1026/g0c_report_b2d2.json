@@ -3,7 +3,7 @@
  "plan": "/srv/opentallas-scratch2/claude/path-s81-taps-1026/src/physical/die_plan/s81/die_plan_b2d2.json",
  "verdict": "FAIL",
  "mode": "G0C",
- "errors": 8,
+ "errors": 9,
  "warnings": 1380,
  "summary": {
   "die": "s81",
@@ -1068,50 +1068,50 @@
     },
     {
      "at_um": 17500,
-     "bits": 6968,
+     "bits": 6692,
      "tracks": 223650,
-     "ratio": 0.0312,
-     "m89_only_ratio": 0.0225,
+     "ratio": 0.0299,
+     "m89_only_ratio": 0.0216,
      "worst_part": "s_5S_x00",
      "worst_part_ratio": 0.159,
      "worst_part_bits": 1778
     },
     {
      "at_um": 17750,
-     "bits": 7565,
+     "bits": 7289,
      "tracks": 223650,
-     "ratio": 0.0338,
-     "m89_only_ratio": 0.0245,
+     "ratio": 0.0326,
+     "m89_only_ratio": 0.0236,
      "worst_part": "s_5S_x00",
      "worst_part_ratio": 0.159,
      "worst_part_bits": 1778
     },
     {
      "at_um": 18000,
-     "bits": 9601,
+     "bits": 9325,
      "tracks": 223650,
-     "ratio": 0.0429,
-     "m89_only_ratio": 0.031,
+     "ratio": 0.0417,
+     "m89_only_ratio": 0.0301,
      "worst_part": "s_5S_x00",
      "worst_part_ratio": 0.159,
      "worst_part_bits": 1778
     },
     {
      "at_um": 18250,
-     "bits": 10820,
+     "bits": 10544,
      "tracks": 223650,
-     "ratio": 0.0484,
-     "m89_only_ratio": 0.035,
+     "ratio": 0.0471,
+     "m89_only_ratio": 0.0341,
      "worst_part": "s_5S_L1",
      "worst_part_ratio": 0.1709,
      "worst_part_bits": 1911
     },
     {
      "at_um": 18500,
-     "bits": 13625,
+     "bits": 13349,
      "tracks": 223650,
-     "ratio": 0.0609,
-     "m89_only_ratio": 0.044,
+     "ratio": 0.0597,
+     "m89_only_ratio": 0.0432,
      "worst_part": "s_5N_L1",
      "worst_part_ratio": 0.2884,
      "worst_part_bits": 3225
@@ -3450,7 +3450,7 @@
    "cb__s_0N_LP__bk_sel": 33,
    "tp__bk_sel__s_7N_LP": 29,
    "tp__s_7N_LP__bk_sel": 29,
-   "tp__bk_sel__s_7S_LP": 54,
+   "tp__bk_sel__s_7S_LP": 58,
    "tp__s_0S_LP__s_0N_LP": 22,
    "ql__s_0N_LP__iqf": 60,
    "qc__iqf__s_0N_LP": 59,
@@ -8180,6 +8180,12 @@
    "check": "geometry",
    "msg": "type ot_s81sl_leaf__t21_phy1026_s_2S_L2 slot ft10: crossing ~1335 um > 3 station(s) x reach 405 (see hops)",
    "type": "ot_s81sl_leaf__t21_phy1026_s_2S_L2"
+  },
+  {
+   "level": "ERROR",
+   "check": "latency",
+   "msg": "lane tp__bk_sel__s_7S_LP: table says 54 cycles, plan gives 58",
+   "lane": "tp__bk_sel__s_7S_LP"
   },
   {
    "level": "WARN",

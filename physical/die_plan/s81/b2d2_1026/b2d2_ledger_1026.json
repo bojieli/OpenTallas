@@ -229,7 +229,111 @@
    "u_bk_sel.u_sel.u_c|u_bk_sel.u_tx": 626.4,
    "u_bk_sel.u_sel.u_c|u_bk_sel.u_sel.u_g": 43.2,
    "u_bk_sel.u_sel.u_g|u_bk_sel.u_tx": 367.2
-  }
+  },
+  "windows_moved": [
+   {
+    "bus": "idx_i0",
+    "face": "S",
+    "window_from": [
+     1449.024,
+     1509.241391
+    ],
+    "window_to": [
+     2399.28,
+     2459.497391
+    ]
+   },
+   {
+    "bus": "tp_o0",
+    "face": "S",
+    "window_from": [
+     1511.241391,
+     1571.458783
+    ],
+    "window_to": [
+     2461.497391,
+     2521.714783
+    ]
+   },
+   {
+    "bus": "tp_i0",
+    "face": "S",
+    "window_from": [
+     1573.458783,
+     1633.676174
+    ],
+    "window_to": [
+     2523.714783,
+     2583.932174
+    ]
+   }
+  ],
+  "neighbour_aligned": [
+   {
+    "port": "idx__svc_14__bk_sel__phy1026_16",
+    "die_window_from": [
+     17424.384,
+     17484.601391
+    ],
+    "die_window_to": [
+     18374.64,
+     18434.857391
+    ],
+    "s_5N_L4_slot": "ft_phy0",
+    "key": "out_window_um",
+    "local_from": [
+     1376.518609,
+     1436.736
+    ],
+    "local_to": [
+     426.262609,
+     486.48
+    ]
+   },
+   {
+    "port": "tp__bk_sel__s_7S_LP__phy1026_0",
+    "die_window_from": [
+     17486.601391,
+     17546.818783
+    ],
+    "die_window_to": [
+     18436.857391,
+     18497.074783
+    ],
+    "s_5N_L4_slot": "ft_phy1",
+    "key": "in_window_um",
+    "local_from": [
+     1314.301217,
+     1374.518609
+    ],
+    "local_to": [
+     364.045217,
+     424.262609
+    ]
+   },
+   {
+    "port": "tp__s_7N_LP__bk_sel__phy1026_6",
+    "die_window_from": [
+     17548.818783,
+     17609.036174
+    ],
+    "die_window_to": [
+     18499.074783,
+     18559.292174
+    ],
+    "s_5N_L4_slot": "ft_phy2",
+    "key": "out_window_um",
+    "local_from": [
+     1252.083826,
+     1312.301217
+    ],
+    "local_to": [
+     301.827826,
+     362.045217
+    ]
+   }
+  ],
+  "neighbour_type": "ot_s81sl_leaf__t54_phy1026_s_5N_L4"
  },
  "clock_128": {
   "col_h10_r0_p1__t1": {

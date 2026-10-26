@@ -140,6 +140,21 @@ led["bk_sel"] = dict(cores=rows, box_manhattan_um=dist)
 t["note"] = t.get("note", "") + ("; PATH-S81-R3 D-S81-B2 10-26: COORD option B, q re-cut 864x483.84 vertical cut "
                                  "(S q0/q1, middle u_g+u_c, N q2/q3), u_tx SW corner, 12.8 centre clock entries")
 
+# GEOM-REVIEW-17 07:02 FAIL LOCAL: idx_i0/tp_o0/tp_i0 (828 b, soft-logic consumers only) sat under the q0|q1 seam with
+# no pin-reg/station space within 405 um -> move them along the same S face to the free E strip (x >= 2393, E of q1),
+# same order and widths, so their pin regs + soft logic land in the E strip.
+x0 = X_Q1 + QW + G + 6.0                                # 2399.28 + 6 um face clearance
+mv = []
+for b in sorted([b for b in t["buses"] if b["face"] == "S" and b["name"] in ("idx_i0", "tp_o0", "tp_i0")],
+                key=lambda b: b["window_um"][0]):
+    lo, hi = b["window_um"]
+    nlo = round(x0, 6)
+    b["window_um"] = [nlo, round(nlo + (hi - lo), 6)]
+    mv.append(dict(bus=b["name"], face="S", window_from=[lo, hi], window_to=b["window_um"]))
+    x0 = b["window_um"][1] + 2.0
+assert len(mv) == 3 and x0 < W - 6, mv
+led["bk_sel"]["windows_moved"] = mv
+
 # ------------------------------------------------------------------ 12.8: retire every early core tap
 LAT_TT = float(raw["clock"]["common_latency_ps"])
 for tn, tt in T.items():
@@ -184,6 +199,35 @@ for tn, tt in T.items():
     tt["clock"] = ck
     led["clock_128"][tn] = dict(retired_early=retired, centre_entries=len(entries), parent_tap_from=old_tap,
                                 parent_tap_to=ck["tap_um"])
+
+# neighbour alignment for the 3 moved S windows: their die ports and the abutted s_5N_L4 (MY) ft_phy0/1/2 N windows
+# move by the same die-frame x; s_5N_L4 ft stations are then re-sited by tools/die_plan/ft_sites.py (driver step).
+PI = {q["name"]: q for q in raw["partitions"]}
+bko = PI["bk_sel"]["origin_um"][0]
+nb = PI["s_5N_L4"]
+assert nb.get("orient") == "MY", nb
+NT = T[nb["type"]]
+nx0, nw = nb["origin_um"][0], NT["outline_um"][0]
+newwin = {m["bus"]: [bko + m["window_to"][0], bko + m["window_to"][1]] for m in mv}
+nbmap = {"idx_i0": ("ft_phy0", "out_window_um"), "tp_o0": ("ft_phy1", "in_window_um"), "tp_i0": ("ft_phy2", "out_window_um")}
+led["bk_sel"]["neighbour_aligned"] = []
+for pr in raw["ports"]:
+    for side in ("src", "dst"):
+        if pr[side]["part"] == "bk_sel" and pr[side]["bus"] in newwin:
+            bus = pr[side]["bus"]
+            dlo, dhi = newwin[bus]
+            other = pr["dst" if side == "src" else "src"]
+            assert other["part"] == "s_5N_L4", pr
+            sl, key = nbmap[bus]
+            slot = next(x for x in NT["ft_slots"] if x["name"] == sl)
+            old_l = slot[key]
+            slot[key] = [round(nx0 + nw - dhi, 6), round(nx0 + nw - dlo, 6)]
+            led["bk_sel"]["neighbour_aligned"].append(dict(port=pr["id"], die_window_from=pr["window_um"],
+                                                           die_window_to=[round(dlo, 6), round(dhi, 6)],
+                                                           s_5N_L4_slot=sl, key=key, local_from=old_l, local_to=slot[key]))
+            pr["window_um"] = [round(dlo, 6), round(dhi, 6)]
+assert len(led["bk_sel"]["neighbour_aligned"]) == 3, led["bk_sel"]["neighbour_aligned"]
+led["bk_sel"]["neighbour_type"] = nb["type"]
 
 PLAN_OUT.write_text(json.dumps(raw, separators=(",", ":")) + "\n")
 LEDGER.write_text(json.dumps(led, indent=1) + "\n")
