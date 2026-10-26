@@ -25,6 +25,7 @@ VERIFY_RULES = {
     "transport": [
         {"module": "ot_dp_st", "map": {"q": "d", "eq": "ea"}, "drop_in": ["clk", "rst_n"], "stages": 1},
         {"module": "ot_dp_dly", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"},
+        {"module": "ot_dp_landing_bank", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"},
         {"module": "ot_dp_rsync", "map": {"q": "a"}, "drop_in": ["clk"], "stages": 2, "stages_param": "S"},
         {"module": "ot_dp_rrelay", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
         # decision 13c consumer-tap relay: reset traced through d; the START (run) leg is checked by the lockstep tests
@@ -83,7 +84,7 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
         t = Path(f).read_text(errors="replace")
         mods = re.findall(r"^module\s+(\w+)", t, re.M)
         leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) -
-                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
+                       {"ot_dp_st", "ot_dp_dly", "ot_dp_landing_bank", "ot_dp_landing_ff", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
         cl, _ = E.closure(leafm, idx, prefer)
         for m in mods:
             byfile[m] = [f] + cells + [str(rs)] + cl
@@ -147,7 +148,16 @@ def cmd_verify(a):
     sinks = json.loads((out / "bind_sinks.json").read_text())
     if landing_table:
         import clock_landing_verify as CLV
-        landing_verify=CLV.Verification(F,G,raw,landing_table,names)
+        latency=json.loads((out / "bind_latency.json").read_text())
+        live_widths={}
+        for bus in latency["buses"]:
+            lane=bus["lane"];width=int(bus["width"])
+            if len(bus.get("source_bits",[]))!=width:
+                raise ValueError(f"landing verify: actual source-bit inventory mismatch on {lane}")
+            if lane in live_widths and live_widths[lane]!=width:
+                raise ValueError(f"landing verify: ambiguous actual live width on {lane}")
+            live_widths[lane]=width
+        landing_verify=CLV.Verification(F,G,raw,landing_table,names,live_widths=live_widths)
     clk_top = {}
     for pn, (d, bits) in F.top_ports.items():
         if pn.startswith("clk_"):

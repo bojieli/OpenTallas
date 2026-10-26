@@ -35,8 +35,18 @@ def vehicle(mutant=None):
     B=dict(mask=dict(active=True),tree=tree,collector_root_node='rst_root_n',local_sources=[dict(name='y',tap=0)],children=[])
     raw=dict(partitions=[dict(name='a',type='A',origin_um=[0,0]),dict(name='b',type='B',origin_um=[10,0])],partition_types=dict(A=dict(outline_um=[10,10]),B=dict(outline_um=[10,10])),ports=[dict(id='p',src=dict(part='a',bus='x'),dst=dict(part='b',bus='y'))])
     table=dict(ports=[dict(port='p',src='a',dst='b',width=1)],regions=[dict(tag='h0',parts=['a']),dict(tag='h1',parts=['b'])],collector=dict(root='a',types=dict(A=A,B=B),observer=dict(part='a',module=obs.module,instance_suffix='u_sys_face',fault_port='obs_fault',ready_port='seq_cfg_image_ready')))
+    if mutant in ('count_regions','bad_region_count'):
+        table['regions'][0].update(parts=2 if mutant=='bad_region_count' else 1,box_um=[0,0,10,10])
+        table['regions'][1].update(parts=1,box_um=[10,0,20,10])
+    if mutant=='unknown_region_schema':table['regions'][0]['parts']='1'
     F=N(cells=cells);G=N(drv=drv,top_in={aclk:('clk_region_h0',0),bclk:('clk_region_h1',0),rst:('rst_n',0)})
-    v=Verification(F,G,raw,table,{})
+    live=None
+    if mutant in ('spare_capacity','epoch_truncated','spare_epoch_truncated'):
+        live={'p':1}
+        if mutant!='epoch_truncated':
+            table['ports'][0]['width']=8;raw['ports'][0]['width']=8
+        if mutant!='spare_capacity':ring.ports['d']=ring.ports['d'][:-1];ring.ports['q']=ring.ports['q'][:-1]
+    v=Verification(F,G,raw,table,{},live_widths=live)
     for port in obs.ports:v.observer_input(obs,port,0)
     return v.report()
 
@@ -57,3 +67,22 @@ def test_wrong_real_observer_gate_fails():assert any('observer' in s for s in ve
 
 
 def test_unpriced_extra_ring_fails():assert any('unpriced' in s for s in vehicle('extra')['errors'])
+
+
+def test_actual_count_regions_keep_exact_graph_checks():assert vehicle('count_regions')['errors']==[]
+
+def test_region_count_mismatch_fails_closed():
+    import pytest
+    with pytest.raises(ValueError,match='actual parts'):vehicle('bad_region_count')
+
+
+def test_unknown_region_parts_schema_fails_closed():
+    import pytest
+    with pytest.raises(ValueError,match='count or explicit list'):vehicle('unknown_region_schema')
+
+
+def test_live_epoch_is_not_optional():assert any('payload/epoch' in x for x in vehicle('epoch_truncated')['errors'])
+
+def test_allocated_spare_capacity_uses_authoritative_live_width():assert vehicle('spare_capacity')['errors']==[]
+
+def test_spare_capacity_cannot_hide_truncated_epoch():assert any('payload/epoch' in x for x in vehicle('spare_epoch_truncated')['errors'])

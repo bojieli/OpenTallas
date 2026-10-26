@@ -2542,6 +2542,12 @@ class Binder:
             shutil.rmtree(out)
         out.mkdir(parents=True)
         cells = CELLS
+        native_banks = self.ab.get("native_landing_banks", False)
+        if type(native_banks) is not bool:
+            raise BindError("native_landing_banks must be boolean")
+        self.native_bank_manifest = {} if native_banks else None
+        if native_banks:
+            cells += "\n" + (Path(__file__).resolve().parents[2] / "rtl/physical/ot_dp_landing_bank.sv").read_text()
         P = self.wavefront_plan()
         if P is not None:
             import gen_rtl
@@ -2616,6 +2622,14 @@ class Binder:
             raise BindError(f"tie-off audit: {aud['reason']}")
         if aud["rows"]:
             (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(aud["rows"]))
+        if native_banks:
+            total=sum(len(info["parts"])*sum(b["depth"] for b in info["banks"].values()) for info in self.native_bank_manifest.values())
+            expected=self.ab.get("native_landing_banks_expected_ff")
+            if expected is not None and total!=expected:
+                raise BindError(f"native landing bank FF inventory {total} != frozen expected {expected}")
+            manifest=dict(schema="opentallas.native_landing_banks.v1",total_ff=total,types=self.native_bank_manifest,
+                placement="UNALLOCATED: exact source and consumer 405um gates required")
+            (out.parent / "native_landing_banks.json").write_text(json.dumps(manifest,indent=1)+"\n")
         return files
 
     def _pname(self, k):
@@ -2950,8 +2964,15 @@ class Binder:
                         nm = short_id(f"pd{d[7]}_{L['iname']}_{j}", 100)
                         pads[key] = nm
                         decl.append(f"    wire [0:0] {nm};")
-                        body.append(f"    ot_dp_dly #(.W(1), .D({d[7]})) u_{nm} (.clk(clk), .d({L['iname']}_q[{j}]), "
+                        bank_module = "ot_dp_landing_bank" if self.ab.get("native_landing_banks", False) else "ot_dp_dly"
+                        body.append(f"    {bank_module} #(.W(1), .D({d[7]})) u_{nm} (.clk(clk), .d({L['iname']}_q[{j}]), "
                                     f".q({nm}));  // landing pad: as-built relative timing")
+                    if self.ab.get("native_landing_banks", False):
+                        info=self.native_bank_manifest.setdefault(tn,dict(module=mod,parts=list(self.by_type[tn]),banks={}))
+                        bank=info["banks"].setdefault("u_"+pads[key],dict(width=1,depth=d[7],source_bus=L["iname"],source_bit=j,
+                            stage_ids=[f"u_{pads[key]}/g_stage[{stage}].u_ff" for stage in range(d[7])],consumers=[]))
+                        consumer=dict(leaf=self.rel_of(ci),actual_leaf=F.cells[ci].path,module=F.cells[ci].module,instance=short_id("u_"+self.rel_of(ci),90),port=pn,bit=i)
+                        if consumer not in bank["consumers"]:bank["consumers"].append(consumer)
                     return f"{pads[key]}[0]"
                 return f"{L['iname']}_q[{j}]"
             if k == "clk":

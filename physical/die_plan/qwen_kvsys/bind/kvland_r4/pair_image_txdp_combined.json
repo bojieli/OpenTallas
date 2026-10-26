@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.kv.pair_image_txdp.v1",
+ "D2D_TXDP_K": [
+  137,
+  4,
+  3,
+  3
+ ],
+ "sv_literal": "32'h03030489",
+ "XDIE_SEAM_K": "68,68,66,66,66,67,67",
+ "seam_inputs": {
+  "KS_RXV": 68,
+  "KS_RXP": 68,
+  "KS_TXS": 66,
+  "KS_TXK": 66,
+  "KS_TXB": 66,
+  "SK_TXV": 67,
+  "SK_TXP": 67
+ },
+ "formula": "[KS_TXS + KV_CODEC(2) + SK_TXP, 2 + host, 1, 1] + PINREG_EXT (d2d_link_calendar producer_txd); the compute die must bind the same pair image",
+ "source": "actual B44 constants_b44.json and image_b44_32, RL148/FIA149/result_extra6/service_pad32",
+ "commit": "2eea38c9fb",
+ "note": "ONE combined KV candidate; common pair image must match QC peer; immutable B44 ancestor TXDP is stale"
+}

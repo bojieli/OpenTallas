@@ -21,11 +21,16 @@ def boolean(op,terms):
 
 
 class Verification:
-    def __init__(self,F,G,raw,table,names):
+    def __init__(self,F,G,raw,table,names,live_widths=None):
         self.F,self.G,self.raw,self.table,self.names=F,G,raw,table,names
         self.observer_seen=set();self.errors=[];self.byname={c.path:c for c in F.cells};self.expected=set();self.memo={}
         self.parts={p['name']:p for p in raw['partitions']};self.collector=table['collector']
-        self.region={pn:r['tag'] for r in table['regions'] for pn in r['parts']}
+        self.live_widths=live_widths
+        self.region={pn:r['tag'] for r in table['regions']
+                     if isinstance(r.get('parts'),list) for pn in r['parts']}
+        for r in table['regions']:
+            if type(r.get('parts')) not in (int,list):
+                raise ValueError('landing verify: region parts must be a count or explicit list')
         # Some profile manifests carry the authoritative part map separately.
         for p in self.parts:
             if p not in self.region:
@@ -33,6 +38,11 @@ class Verification:
                 rr=[r['tag'] for r in table['regions'] if r['box_um'][0]<=x+w/2<r['box_um'][2] and r['box_um'][1]<=y+h/2<r['box_um'][3]]
                 if len(rr)!=1:raise ValueError('landing verify: ambiguous region '+p)
                 self.region[p]=rr[0]
+        for r in table['regions']:
+            if type(r.get('parts')) is int:
+                count=sum(tag==r['tag'] for tag in self.region.values())
+                if count!=r['parts']:
+                    raise ValueError(f"landing verify: region {r['tag']} has {count} actual parts, expected {r['parts']}")
         self.root_collect={};self.checks=0
         for pn,p in self.parts.items():
             info=self.collector['types'][p['type']]
@@ -134,8 +144,15 @@ class Verification:
                 info=self.collector['types'][self.parts[r['dst']]['type']]
                 local=next(x for x in info['local_sources'] if x['name']==bus)
                 self.check_reset(c,r['dst'],local.get('node') or f"rst_n_t{local['tap']}",'u_cland_rst_'+bus)
-                if len(c.ports.get('q',[]))!=len(c.ports.get('d',[])) or len(c.ports.get('q',[]))<r['width']:
-                    self.fail(path+': whole live payload/epoch bus must survive')
+                import schema
+                lane=r.get('lane',r['port'])
+                data_width=int(r['width']) if self.live_widths is None else self.live_widths.get(lane)
+                if type(data_width) is not int or not 0<data_width<=int(r['width']):
+                    self.fail(path+': missing/invalid authoritative live lane width')
+                else:
+                    expected=data_width+int(schema.has_epoch(pr))
+                    if len(c.ports.get('q',[]))!=expected or len(c.ports.get('d',[]))!=expected:
+                        self.fail(path+f': whole live payload/epoch bus must survive (expected {expected})')
         for pn,p in self.parts.items():
             info=self.collector['types'][p['type']]
             if not info['mask']['active']:continue
