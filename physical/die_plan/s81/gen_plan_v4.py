@@ -1891,16 +1891,49 @@ def candidates(a, b):
         yield [a, (ax, m), (bx, m), b]
 
 
+def ir_candidates(a, b):
+    """Allow a PHY endpoint to leave its edge row before crossing the die.
+
+    A same-row lane needs an outer dogleg when the direct path crosses another
+    PHY. Intermediate SerDes are rejected by route(); endpoint PHYs stay legal.
+    """
+    seen = set()
+    def unique(points):
+        out = []
+        for point in points:
+            if not out or out[-1] != point:
+                out.append(point)
+        key = tuple(out)
+        if len(out) >= 2 and key not in seen:
+            seen.add(key)
+            return out
+    ax, ay = a
+    bx, by = b
+    for points in ([a, (bx, ay), b], [a, (ax, by), b]):
+        path = unique(points)
+        if path:
+            yield path
+    for row in sorted(range(NR), key=lambda v: (abs(ay-v)+abs(by-v), v)):
+        path = unique([a, (ax, row), (bx, row), b])
+        if path:
+            yield path
+    for col in sorted(range(NC), key=lambda v: (abs(ax-v)+abs(bx-v), v)):
+        path = unique([a, (col, ay), (col, by), b])
+        if path:
+            yield path
+
+
 XCOST = dict(svc=1.2, slice=0.6, unit=0.4, idx=0.4, serdes=0.6)
 
 
-def route(grid, lanes, slices):
+def route(grid, lanes, slices, ir_detours=False):
     P = grid.P
     res = {}
     order = sorted(lanes, key=lambda l: (l.get("path") is None, -l["width"]))
     for lk in order:
         s, d = lk["src"][0], lk["dst"][0]
         w = lk["width"] + 1
+        ir_lane = ir_detours and (s.startswith("lk_") or d.startswith("lk_"))
         if lk.get("path") and lk["path"][0] == "cells":
             # S81/H4: an explicit corner path (cell polyline); every cell between the end partitions must be ft-able
             seq = poly_cells(list(lk["path"][1]))
@@ -1944,7 +1977,7 @@ def route(grid, lanes, slices):
             best = None
             for ca in cells_of(s):
                 for cb in cells_of(d):
-                    for pts in candidates(ca, cb):
+                    for pts in (ir_candidates(ca, cb) if ir_lane else candidates(ca, cb)):
                         cells = poly_cells(pts)
                         cost = len(cells) * 1.0 + 0.3 * (len(pts) - 2)
                         ok = True
@@ -1960,7 +1993,7 @@ def route(grid, lanes, slices):
                             continue
                         for o in names[1:-1]:
                             q = P[o]
-                            if not q.ft_ok or q.kind == "frame" or (q.kind == "serdes" and not (s.startswith("lk_") or d.startswith("lk_"))):
+                            if not q.ft_ok or (q.kind == "frame" and not ir_lane) or (q.kind == "serdes" and (ir_lane or not (s.startswith("lk_") or d.startswith("lk_")))):
                                 ok = False
                                 break
                             cost += XCOST.get(q.kind, 0.6)        # station / partition crossing (pin-limited kinds dearer)
@@ -1992,13 +2025,13 @@ def route(grid, lanes, slices):
     return res
 
 
-def route_v48(grid, lanes47, lanes):
+def route_v48(grid, lanes47, lanes, ir_detours=False):
     """v4.8 (S81-P9-R8EQ): route the v4.7 lane set first, exactly as v4.7 did (same order, same face loads), and keep
     those routes for every v4.8 lane that is unchanged (id, width, endpoints); only the lanes v4.8 adds or re-ends
     (lep buses C -> LP, bound supplement, the shrunk C lanes) are routed after, on top of the v4.7 loads (the removed
     v4.7 lanes stay as load: conservative).  So no v4.7 lane changes its route or its cycles (no schedule churn)."""
     key = {l["id"]: (l["width"], l["src"][0], l["dst"][0]) for l in lanes47}
-    res47 = route(grid, lanes47, {})
+    res47 = route(grid, lanes47, {}, ir_detours=ir_detours)
     by47 = {l["id"]: l for l in lanes47}
     res, todo = {}, []
     for lk in lanes:
@@ -2012,12 +2045,12 @@ def route_v48(grid, lanes47, lanes):
     rsv = [l for l in todo if RESERVE_RE.search(l["id"])]
     tree = [l for l in todo if l["role"] in ("tree", "idxnet")]
     late = [l for l in todo if l["role"] in ("sid", "vid", "flt")]
-    res.update(route(grid, [l for l in todo if l not in rsv and l not in tree and l not in late], {}))
-    res.update(route(grid, rsv, {}))
+    res.update(route(grid, [l for l in todo if l not in rsv and l not in tree and l not in late], {}, ir_detours=ir_detours))
+    res.update(route(grid, rsv, {}, ir_detours=ir_detours))
     # S81/H4 10-24: the bk_sel tree lanes (fixed station path) are applied after every other lane: no lane moves
-    res.update(route(grid, tree, {}))
+    res.update(route(grid, tree, {}, ir_detours=ir_detours))
     # S81/PORTFIX 10-25: the 1-b fault ring / feeder lanes (resized sid / vid, new flt) route after every other lane
-    res.update(route(grid, late, {}))
+    res.update(route(grid, late, {}, ir_detours=ir_detours))
     ROUTE_V48.update(kept=len(res) - len(todo), rerouted=sorted(l["id"] for l in todo))
     return res
 
@@ -2724,6 +2757,7 @@ def main():
     ap.add_argument("--asbuilt", required=True)
     ap.add_argument("--census", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--ir-detours", action="store_true", help="Keep far-link transit out of PHY partitions; reprice all changed routes")
     a = ap.parse_args()
     ab = json.load(open(a.asbuilt))
     census = list(csv.DictReader(open(a.census), delimiter="\t"))
@@ -2743,7 +2777,7 @@ def main():
                     chan_cells.add((c, r))
     miss = [(c, r) for c in range(NC) for r in range(NR) if (c, r) not in grid.owner and (c, r) not in chan_cells]
     assert not miss, miss
-    routes = route_v48(grid, lanes_all(ab, census, parts, frames, serdes, slices, v47=True)[0], lanes)
+    routes = route_v48(grid, lanes_all(ab, census, parts, frames, serdes, slices, v47=True)[0], lanes, ir_detours=a.ir_detours)
     stats = emit(parts, lanes, routes, chans, fmap, Path(a.out))
     print(json.dumps({k: v for k, v in stats.items() if k != "instances_per_type"}, indent=1, default=str))
 
