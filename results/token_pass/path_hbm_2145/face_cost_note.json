@@ -77,5 +77,14 @@
     "Do not add the full 271 or 323 edges to the model until existing split, e86, PHY and transport terms are reconciled; they may already charge some stages.",
     "The internal shell term is analytically recurring, but matched cold/warm operation launch-to-write/done measurement is pending the current connected stageB vehicle.",
     "No physical SIGNED view, final G5 or new headline rate is established."
-  ]
+  ],
+  "stat_counter_attribution": {
+    "observed_selected_stat_cycles": 886,
+    "observed_pinned_stat_cycles": 628,
+    "delta": 258,
+    "internal_shell_growth": 256,
+    "split_pipeline": 2,
+    "root_face_registers_in_counter": 0,
+    "warning": "The counter delta 258 and the output-path face term 258 are numerically equal but have different attribution. Do not add them together."
+  }
 }
