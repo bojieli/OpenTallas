@@ -1168,3 +1168,5 @@ CODEX: 2026-10-26 07:42 PDT HBM VM status orphan fixed in D-HBM-B1 candidate bb3
 
 2026-10-26 08:52 PDT CODEX: nativePG/sharedcorehelperworking; QC model-first4Wclockstructurecandidateunderprep; HBMbaybboxfalsefailfixedwithlegalregions/actualFFchecks; routinechecker nowretriescapacitycontinue every3min perowner. MergedBFS81optins/maina96cdebef; KVflowtagreleased.
 2026-10-26 09:18 PDT CODEX: B2singleevent12a0c04f0 composed+minimum277-bittransportPASS;7corefaces/PG/reset/native/tokenblockers retained. HEADGRTstructuralFAIL diagnosed/modelstillNO_BUILD. Packetcodex_s81_head_20261026_0918.md; now HBMROOTtargetedphaseinvariant259/259PASS, base/fullcomparelive.
+
+2026-10-26 09:35 PDT CODEX: QC one-event G0C88/88 after real landing-cost accounting; master static FAIL diagnosed and preserved. RP1 4W router NDRfallback caused failed diagnostic; model-first2W successor reviewed/oneGRTtrial authorized. Master slice20ps fix1a9ae41b3; QC R4 failed packet909400839 pushed. Token interfaces still being repaired from actual bound graph, no stale cost promotion.
