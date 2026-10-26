@@ -41,8 +41,8 @@ def script(kit, mount='/work'):
     # S81-CORE-LAT/QB 10-26: RTL that instantiates a platform cell by name (ot_hdc_cg -> ICGx1_ASAP7_75t_R) failed
     # hierarchy -check (missing module): read the platform SEQ liberty as interface-only cells (-lib), like the macros.
     import glob as _glob
-    for _p in sorted(_glob.glob(/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_*.lib*))[:1]:
-        libs.append(fread_liberty -lib -ignore_miss_func {_p})
+    for _p in sorted(_glob.glob('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_*.lib*'))[:1]:
+        libs.append(f'read_liberty -lib -ignore_miss_func {_p}')
     defines = ['-DSYNTHESIS'] + [v if v.startswith('-D') else '-D'+v for v in cfg.get('VERILOG_DEFINES', [])]
     includes = ['-I'+v for v in cfg.get('VERILOG_INCLUDE_DIRS', []) + cfg.get('SYNTH_INCLUDE_DIRS', [])]
     return '\n'.join(libs + ['verilog_defines ' + ' '.join(dict.fromkeys(defines))] +
