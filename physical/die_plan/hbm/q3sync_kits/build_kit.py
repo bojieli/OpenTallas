@@ -145,6 +145,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--core', required=True, choices=TOPS)
     ap.add_argument('--profile-dir', required=True)
+    ap.add_argument('--common-clock-dir', help='opt-in qualified one-clock adapters; requires explicit matching plan clock-pin batch')
     ap.add_argument('--diagnostic-plan', action='store_true',
                     help='allow an external scratch plan; not release evidence')
     ap.add_argument('core_args', nargs=argparse.REMAINDER)
@@ -172,6 +173,10 @@ def main():
             if not path.is_relative_to(REPO):
                 ap.error('external plan requires --diagnostic-plan: ' + str(path))
     recipe, staged, receipt = materialize(a.core, a.profile_dir)
+    if a.common_clock_dir:
+        sys.path.insert(0, str(REPO / 'tools/hbm_b2/q3sync'))
+        from q3_common_clock import adapt_recipe
+        recipe, staged, receipt = adapt_recipe(a.core, recipe, staged, receipt, a.common_clock_dir)
     receipt['diagnostic_inputs'] = bool(a.diagnostic_plan)
     receipt['plan_module'] = selected_view['module']
     p = REPO / 'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py'
