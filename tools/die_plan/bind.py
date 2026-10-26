@@ -1968,7 +1968,8 @@ class Binder:
         """as-built timing groups for the planner (COORD R8): bits that must keep their as-built relative timing.
         landing: per sink leaf and source partition, its crossing input bits with their as-built register stages (bits
           with equal stages were same-cycle as built; different stages = a fixed as-built offset, e.g. valid one cycle
-          ahead of data), the lanes they ride and the bound depth per bit (before / after landing pads);
+          ahead of data), the lanes they ride and the bound depth per bit (before / after landing pads, including the effective
+          consumer stage of a declared uniform position-ID wrapper bank);
         replica: per source pin, the sink partitions that received it at the SAME as-built depth (broadcast to replicas,
           e.g. heads hc0..hc3): their bound depths must stay equal too."""
         F = self.F

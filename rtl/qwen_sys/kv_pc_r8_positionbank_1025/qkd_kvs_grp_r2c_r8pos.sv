@@ -41,7 +41,7 @@ module qkd_kvs_grp_r2c_r8pos #(
 );
     wire [17:0] r8_tok;
     wire [15:0] r8_epoch;
-    kv_pc_r8_position_bank u_position_bank (.clk(ck), .stack_id(slg__cfg_stack), .group_id(slg__cfg_group),
+    (* keep_hierarchy = 1 *) kv_pc_r8_position_bank u_position_bank (.clk(ck), .stack_id(slg__cfg_stack), .group_id(slg__cfg_group),
         .tok_i(x__tok), .epoch_i(x__tep), .tok_o(r8_tok), .epoch_o(r8_epoch));
     qkd_kvs_grp_r2c #(.LW(LW), .NT(NT), .DL(DL), .NC(NC)) u_native (
         .ck(ck),

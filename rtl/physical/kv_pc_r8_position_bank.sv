@@ -2,6 +2,7 @@
 // Current KV R8 PC token/epoch repair. Selection is a pure function of the
 // declared physical position IDs, never an arbitrary phase or delay strap.
 // All 52 data flops survive in every template; no reset on datapath flops.
+(* keep_hierarchy = 1 *)
 module kv_pc_r8_position_bank #(parameter integer MUT = 0) (
     input wire clk,
     input wire [1:0] stack_id, // WS=0 WN=1 ES=2 EN=3 (plan ID lane)
