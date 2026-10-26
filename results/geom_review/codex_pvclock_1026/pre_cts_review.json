@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS-COND for one CTS diagnostic, independent review pending",
+  "image": "pv3_plan.png",
+  "vehicle": "kv3_pv_pair; actual reused fd4_cc3_place",
+  "source_parent": "claude/cores-kits-kvx-1026-pvp@96d50e728",
+  "defect": "c_r[0] clock289.74ps and leaf70.44ps; ctl250.4..301.4ps vs data region lower, TTsetup-18.446ps. Dedicated inputflop cannot be duplicated without violating face contract.",
+  "change": "Optional OT_PV_CONTROL_REGIONS=4; eight spatial control sub-roots194..253sinks instead of two899-sink broad control groups; total root count16. Dedicated inputflops, data/macro group membership, native pins/SDC/RTL unchanged.",
+  "findings": [
+    "All8newcontrol subroots in open N standard-cell band; no macro overlap.",
+    "Existing8memory/data roots and SRAM pairing retained.",
+    "Each control group spans~46um horizontally rather than whole~190umslice; 16globalroot endpoints support even top-level split.",
+    "PDN unchanged; CTS legalization and clock RC/pair checks still required.",
+    "FF reset input contract remains UNQUALIFIED: min-40 vs FFvclk202.5. Parent waveform minimum must be measured, no assumed min or false path."
+  ],
+  "gates": "After actual CTS collect TT/FF native clock latencies, related pairs and setup/hold; no route claim",
+  "cycles_added": 0
+}

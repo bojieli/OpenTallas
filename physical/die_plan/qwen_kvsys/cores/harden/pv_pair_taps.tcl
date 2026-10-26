@@ -21,12 +21,31 @@ foreach mt [$pt_master getMTerms] {
   if {[$mt getIoType] eq "INPUT"} { set pt_in [$mt getName] } elseif {[$mt getIoType] eq "OUTPUT"} { set pt_out [$mt getName] }
 }
 proc ot_pv_key {name} {
+  global pt_blk
   set n [string map {\\ {}} $name]
   if {![regexp {^(u_s[0-9]+)\.(.*)$} $n -> s r]} { return rest }
   if {[regexp {^u_slice\.g_mem\[([0-9]+)\]\.} $r -> m]} { return ${s}_m$m }
   if {[regexp {^u_slice\.g_lane\[([0-9]+)\]\.} $r -> l]} { return ${s}_m[expr {$l / 4}] }
   if {[regexp {^u_slice\.old\[[0-9]+\]\[([0-9]+)\]} $r -> b]} { return ${s}_m[expr {$b / 128}] }
   if {[regexp {^u_slice\.(reduce_a|tree_sum)\[([0-9]+)\]} $r -> _ b]} { return ${s}_m[expr {$b / 128}] }
+  # The original control group mixes all face-input/face-output and issue
+  # registers across a slice.  A high-capacitance c_r[0] clock leaf arrived
+  # 39 ps after an adjacent data group.  Optional spatial sub-roots bound
+  # this control clock's wire span without duplicating its dedicated pin FF.
+  set regions [expr {[info exists ::env(OT_PV_CONTROL_REGIONS)] ? $::env(OT_PV_CONTROL_REGIONS) : 1}]
+  if {$regions > 1} {
+    if {$regions != 4} { error "OT_PV_CONTROL_REGIONS must be 1 or 4" }
+    set inst [$pt_blk findInst $name]
+    if {$inst eq "NULL" || $inst eq ""} { error "OT_PV_TAPS missing control instance $name" }
+    set area [$pt_blk getCoreArea]
+    set width [expr {double([$area xMax]-[$area xMin])/2.0}]
+    regexp {^u_s([0-9]+)$} $s -> slice
+    if {$slice ni {0 1}} { error "OT_PV_CONTROL_REGIONS expects exactly two slices" }
+    set box [$inst getBBox]
+    set cx [expr {0.5*([$box xMin]+[$box xMax])}]
+    set group [expr {max(0,min(3,int(floor(($cx-[$area xMin]-$slice*$width)*4.0/$width))))}]
+    return ${s}_ctl$group
+  }
   return ${s}_ctl
 }
 set pt_roots {}
