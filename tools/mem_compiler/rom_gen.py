@@ -44,6 +44,10 @@ from views import Pin, Timing, blackbox_verilog, macro_outline, write_lef, write
 
 GENERATOR_VERSION = "1.0"
 ROM_MODULE_PARAMS = '#(parameter string VIAMAP = "", parameter string INSTANCE = "") '
+# The physical blackbox carries metadata only. Classic Yosys read_verilog accepts
+# untyped string-valued parameters; typed string parameters require read_slang.
+ROM_BLACKBOX_PARAMS = '#(parameter VIAMAP = "", parameter INSTANCE = "") '
+
 ROOT = asap7.ROOT
 
 
@@ -258,7 +262,7 @@ def compile_macro(spec: RomSpec, out_dir: Path | None = None) -> dict[str, Any]:
         for c, t in corners.items():
             (d / f"{spec.name}_{c}.lib").write_text(write_liberty(spec.name, t, pins, w * h, mem, header))
         (d / f"{spec.name}.v").write_text(behavioural(spec, pins, "// " + header))
-        (d / f"{spec.name}_bb.v").write_text(blackbox_verilog(spec.name, pins, header, module_params=ROM_MODULE_PARAMS))
+        (d / f"{spec.name}_bb.v").write_text(blackbox_verilog(spec.name, pins, header, module_params=ROM_BLACKBOX_PARAMS))
         files = sorted(p.name for p in d.iterdir() if p.name != f"{spec.name}.json")
         sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
         (d / f"{spec.name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")

@@ -1,0 +1,7 @@
+{
+ "change":"configure product -> ingress/offsets -> final bounds during existing idle tick0..3 before tick8 ingress",
+ "data_cycle_delta":0,
+ "root_cut_gate":{"verdict":"PASS","checks_per_reset_mode":7115,"configurations":5,"buffer_reset_modes":[0,1],"MUTP1":"CAUGHT entries edge676","unit":"intel1 oth-ubuntu-3234735-1792991589"},
+ "predecessor_failure":{"source":"1cfd27347","TT_WNS_ps":-592.571,"worst_endpoint":"u.finish[24]","cause":"multiply followed by serial32bit configure additions on one edge","own_unit":"intel1 oth-ubuntu-3190461-1792991234","own_container":"4e496d781827","disposition":"stopped own setup-repair loop; reports retained"},
+ "physical":"NOT_RUN on configure3 successor; no CTS/GRT approval"
+}

@@ -11,7 +11,9 @@ cd "$WT"
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
 ASM=rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hbm_q3_producer_native.sv
 CEN=tools/hbm_b2/q3sync/cohort.json
-D=$OUT/$MODE; rm -rf "$D"; mkdir -p "$D"
+D=$OUT/$MODE
+[ -e "$D" ] && { echo "OUTPUT EXISTS: refuse to overwrite $D"; exit 2; }
+mkdir -p "$D"
 git rev-parse HEAD > "$D/source_commit.txt"
 sha256sum -c tools/hbm_b2/q3sync/q3_producer_native.sha256 > "$D/asm_sha.log" 2>&1 || { echo "ASM SHA FAIL"; exit 2; }
 # programme: actual argmax_rows compiler, q3 profile VM_RT81 ROWS256 NPT3, argmax_m_tp192_pr contract
@@ -54,6 +56,12 @@ echo "# files: $(echo $files $mac | wc -w)" >> $log
 brc=$?; echo "# build rc=$brc $(grep 'Maximum resident' $D/build.log)" >> $log
 [ $brc = 0 ] || { tail -30 $D/build.log; echo "Q3PROG build FAIL"; exit 2; }
 /usr/bin/time -v $D/obj/tb +DIR=$D/prog +P=$P +NR=$NR +WARMAT=$WARMAT +HOLD=$HOLD +TRACE=$D/trace.txt >> $log 2>&1
-echo "# sim rc=$? $(date)" >> $log
+simrc=$?
+echo "# sim rc=$simrc $(date)" >> $log
 [ -n "${KEEP_OBJ:-}" ] || rm -rf $D/obj
 grep -E "^Q3PROG|^FAULT|^ARG_|^ADDR_|Maximum resident" $log
+[ "$simrc" = 0 ] || exit "$simrc"
+if ! grep -q '^Q3PROG PASS runs A,B,C fails0 ' "$log"; then
+  echo "Q3PROG runner FAIL: simulation did not publish its complete PASS verdict"
+  exit 1
+fi
