@@ -2,7 +2,8 @@
 """Extract the opt-in Q3 body with the physical VM face round-trip contract.
 
 Run through ot-run. The one-way select remains VM_RT=81; VM_FACE_RT=2
-accounts for the existing physical face stages on checker/metadata returns.
+accounts for direct checker returns; VM_ASM_FACE_RT=2 adds the VM-to-body
+assembly face pair. Metadata and assembled-valid move four cycles in total.
 The generated body keeps every canonical cut port and the original wrapper.
 """
 import argparse
@@ -52,7 +53,7 @@ def main():
               for s in lines if s.startswith('macro:')]
     cmds = [f'read_verilog -lib {p}' for p in macros]
     cmds += [f'read_verilog -sv -DSYNTHESIS -DOT_COLL_ISSUER256_NATIVE32 {p}' for p in files]
-    params = dict(NLINK=3, TP=192, AR_ITER=1, ROWS=256, VM_RT=81, VM_FACE_RT=2)
+    params = dict(NLINK=3, TP=192, AR_ITER=1, ROWS=256, VM_RT=81, VM_FACE_RT=2, VM_ASM_FACE_RT=2)
     cmds += [f'chparam -set {k} {v} {TOP}' for k, v in params.items()]
     cmds += [f'hierarchy -check -top {TOP}', 'rename -top elab_top', 'proc', 'opt_clean']
     cmds += [f'setattr -mod -set keep_hierarchy 1 {m} $paramod*\\\\{m}*' for m in KEEP]
@@ -72,7 +73,7 @@ def main():
             dict(added=sorted(set(ports(new))-set(ports(old))), removed=sorted(set(ports(old))-set(ports(new)))), indent=2))
         raise SystemExit('Q3_VMF_BODY_FAIL: canonical raw cut ports changed; revise the source before adoption')
     result = out / (BASE + '.sv')
-    result.write_text('// GENERATED opt-in VM_FACE_RT=2 by tools/hbm_b2/q3sync/build_vmface_body.py; '
+    result.write_text('// GENERATED opt-in VM_FACE_RT=2 VM_ASM_FACE_RT=2 by tools/hbm_b2/q3sync/build_vmface_body.py; '
                       'VM_RT=81 one-way select unchanged; canonical cut/wrapper unchanged.\n'
                       '`timescale 1ns/1ps\n' + new + '\n\n' + module(original, BASE) + '\n')
     h = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
@@ -80,8 +81,9 @@ def main():
     receipt = dict(source_commit=commit, params=params, defines=['SYNTHESIS', 'OT_COLL_ISSUER256_NATIVE32'],
                    source_inputs={p: h(ROOT / p) for p in [FILELIST, CANON, *files, *macros]},
                    output=result.name, output_sha256=h(result), canonical_cut_ports=len(ports(new)),
-                   exported_select_added_cycles=0, checker_metadata_added_cycles=2,
-                   additional_control_metadata_flops=328, physical_qualification='NOT_BUILT')
+                   exported_select_added_cycles=0, checker_added_cycles=2, metadata_added_cycles=4,
+                   assembled_valid_added_cycles=4, additional_control_metadata_flops=600,
+                   physical_qualification='NOT_BUILT')
     (out / 'source_receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print('Q3_VMF_BODY_PASS', len(ports(new)), 'canonical cut ports;', result)
 
