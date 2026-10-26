@@ -1,33 +1,347 @@
 {
  "schema": "opentallas.s81.core_lat_plan.v1",
  "owner_decision": "2026-10-26 05:38 PDT: SU decision applies to all dies -- hard cores rebuilt in parallel to a common per-die clock-latency target at the core clock pin (no early core taps) + in-core driver islands where no channel site; signed redo approved",
- "coord_corrections": ["06:0x islands = die clock + reset drivers ONLY (top-owned, M9->M1 via stack); die-signal FT stations/repeaters stay pushed down (<=M7, repeater bays <=405 um); in-core bays only where a core longer than reach blocks a corridor",
-                       "06:1x die signals M4-M7 + leftover M8/M9 after frozen PG/clock/reset where measured need justifies; M8/M9 drops via via fields passing porosity + per-gcell pin-stack check"],
- "target": {"tt_ps": 250.0, "ff_ps": 202.5, "tol_ps": 40.0, "window_tt_ps": [210.0, 290.0], "window_ff_ps": [162.5, 242.5],
-            "definition": "core clock pin -> core register/macro clock pins, routed RCX, pin-register mean; same number as the partition local tree from its die tap, so every core tap has offset 0 (no early tap)",
-            "basis": ["plan clock.insertion_ps 250 / insertion_tol_ps 40 (die_plan.json)", "QC INFRA-FIRST 05:41 agreed 250 TT for all dies", "every current S81 legacy kit already binds OT_TAP_TARGET_PS 250 / OT_VCLK_FF 202.5 (FF/TT 0.81, core_flow)", "16 signed S81 cores measure pin-flop mean 244-269 TT / 189-216 FF (FF/TT 0.77-0.82)"]},
+ "coord_corrections": [
+  "06:0x islands = die clock + reset drivers ONLY (top-owned, M9->M1 via stack); die-signal FT stations/repeaters stay pushed down (<=M7, repeater bays <=405 um); in-core bays only where a core longer than reach blocks a corridor",
+  "06:1x die signals M4-M7 + leftover M8/M9 after frozen PG/clock/reset where measured need justifies; M8/M9 drops via via fields passing porosity + per-gcell pin-stack check"
+ ],
+ "target": {
+  "tt_ps": 250.0,
+  "ff_ps": 202.5,
+  "tol_ps": 20.0,
+  "window_tt_ps": [
+   230.0,
+   270.0
+  ],
+  "window_ff_ps": [
+   182.5,
+   222.5
+  ],
+  "definition": "core clock pin -> core register/macro clock pins, routed RCX, pin-register mean; same number as the partition local tree from its die tap, so every core tap has offset 0 (no early tap)",
+  "basis": [
+   "plan clock.insertion_ps 250 / insertion_tol_ps 40 (die_plan.json)",
+   "QC INFRA-FIRST 05:41 agreed 250 TT for all dies",
+   "every current S81 legacy kit already binds OT_TAP_TARGET_PS 250 / OT_VCLK_FF 202.5 (FF/TT 0.81, core_flow)",
+   "16 signed S81 cores measure pin-flop mean 244-269 TT / 189-216 FF (FF/TT 0.77-0.82)"
+  ],
+  "tol_note": "COORD 2026-10-26 06:38 ruling (d): window +-20 (was +-40); METHODOLOGY 12.8b 250 +-20 TT"
+ },
  "early_tap_types_on_B2": [
-   {"module": "ot_v41_rom_elem_q_qxpq_w10", "replicas": 864, "plan_tap_ps": 552.3, "view_tt": [456.2, 552.3], "view_ff_max": 434.4, "action": "REBUILD to target (sub-lane S81-CORE-LAT/QB); no generator in the current flow"},
-   {"module": "ot_v41_bf_col", "replicas": 456, "plan_tap_ps": 644.9, "view_tt_max": 644.9, "last_kit": "ot_v41_bf_col_c 10-25 CTS 491-663 (18 ICGs x 1400 sinks, single tree) author FAIL-F5", "action": "REBUILD: ICG-aware regional taps + centre clock pin (sub-lane QB)"},
-   {"module": "dsdv_gunit_l5", "replicas": 1, "plan_tap_ps": 520.0, "last_kit": "l5_n32 10-25 I 415 (375-447) FAIL-F5/F3/F6", "action": "REBUILD: F6 SRAM IF regs + F3 per-SRAM skew group + F5 regional taps + centre clock pin; gunit re-lay owned by PATH-S81-R2"},
-   {"module": "dsdv_bksel_c", "replicas": 1, "plan_tap_ps": 430.0, "last_kit": "bksel_c_c 10-25 I 378 (361-402) FAIL-F5; k26 FAIL_PREFLOOR LEC NOT EQUIVALENT", "action": "REBUILD after LEC fix: load-balanced regional taps + centre clock pin; bk_sel re-plan owned by PATH-S81-R2"}],
+  {
+   "module": "ot_v41_rom_elem_q_qxpq_w10",
+   "replicas": 864,
+   "plan_tap_ps": 552.3,
+   "view_tt": [
+    456.2,
+    552.3
+   ],
+   "view_ff_max": 434.4,
+   "action": "REBUILD to target (sub-lane S81-CORE-LAT/QB); no generator in the current flow"
+  },
+  {
+   "module": "ot_v41_bf_col",
+   "replicas": 456,
+   "plan_tap_ps": 644.9,
+   "view_tt_max": 644.9,
+   "last_kit": "ot_v41_bf_col_c 10-25 CTS 491-663 (18 ICGs x 1400 sinks, single tree) author FAIL-F5",
+   "action": "REBUILD: ICG-aware regional taps + centre clock pin (sub-lane QB)"
+  },
+  {
+   "module": "dsdv_gunit_l5",
+   "replicas": 1,
+   "plan_tap_ps": 520.0,
+   "last_kit": "l5_n32 10-25 I 415 (375-447) FAIL-F5/F3/F6",
+   "action": "REBUILD: F6 SRAM IF regs + F3 per-SRAM skew group + F5 regional taps + centre clock pin; gunit re-lay owned by PATH-S81-R2"
+  },
+  {
+   "module": "dsdv_bksel_c",
+   "replicas": 1,
+   "plan_tap_ps": 430.0,
+   "last_kit": "bksel_c_c 10-25 I 378 (361-402) FAIL-F5; k26 FAIL_PREFLOOR LEC NOT EQUIVALENT",
+   "action": "REBUILD after LEC fix: load-balanced regional taps + centre clock pin; bk_sel re-plan owned by PATH-S81-R2"
+  }
+ ],
  "over_window_no_declared_offset": {
-   "note": "plan assumes 250 for these, so they are hidden early-tap demand until a successor measures inside the window; latest measured values",
-   "rows": {"dsdv_bk_g": "RT 2-tap 286-302 (10-25)", "dsdv_gunit_l1": "RT 4x2 347-364", "dsdv_gunit_l0": "old lib 320", "dsdv_gunit_l2": "old lib 305", "dsdv_gunit_l3": "old lib 293",
-            "dsdv_gunit_l4": "old lib 329 (trial cl26c/cl26rt running: centre pin)", "ot_s81sl_vsw": "RT f6s 315-335 TT / 257-269 FF", "ot_s81sl_eg": "308 (298-320)", "ot_s81sl_xrt1": "old lib 473",
-            "ot_s81sl_xrt3": "550 (531-611), outline 60% empty -> PLAN2 outline first", "ot_s81dv_xfin": "old lib 308; GPL 256% -> outline growth delta", "dsdv_idx_tx_n32": "old lib 858; TX V1 phys26c trial (PATH-S81) targets 250",
-            "dsdv_bksel_q": "old lib 604; hard children unsigned", "ot_s81sl_capc5r": "lib anomalous (min 155 > max 85); hard children unsigned"}},
- "in_window_signed_keep": ["dsfd_node_LLd", "dsfd_node_LLfd", "dsfd_node_LLfu", "dsfd_node_NNfd", "dsfd_node_NNfu", "ot_dsrom_su_hcpost_lane_pr", "ot_s81_cfg7_seq", "dsdv_svc_sx_hrow", "dsfd_su_t_rxsb", "ot_s81sl_vq", "dsdv_gunit_l4r", "dsdv_gunit_l5f", "dsdv_eng_rr_h1"],
- "below_window_signed": {"rows": {"dsfd_qbank_N": 78.1, "dsfd_rstg": 54.8, "ot_s81_sstn_payload536": 91.4},
-            "proposal": "KEEP (COORD confirm): a core below target is a LATE tap -- its parent partition tree delays the core pin like any sink (no early tap, no die offset); redo only if its parent's related-pair check fails on it"},
+  "note": "plan assumes 250 for these, so they are hidden early-tap demand until a successor measures inside the window; latest measured values",
+  "rows": {
+   "dsdv_bk_g": "RT 2-tap 286-302 (10-25)",
+   "dsdv_gunit_l1": "RT 4x2 347-364",
+   "dsdv_gunit_l0": "old lib 320",
+   "dsdv_gunit_l2": "old lib 305",
+   "dsdv_gunit_l3": "old lib 293",
+   "dsdv_gunit_l4": "old lib 329 (trial cl26c/cl26rt running: centre pin)",
+   "ot_s81sl_vsw": "RT f6s 315-335 TT / 257-269 FF",
+   "ot_s81sl_eg": "308 (298-320)",
+   "ot_s81sl_xrt1": "old lib 473",
+   "ot_s81sl_xrt3": "550 (531-611), outline 60% empty -> PLAN2 outline first",
+   "ot_s81dv_xfin": "old lib 308; GPL 256% -> outline growth delta",
+   "dsdv_idx_tx_n32": "old lib 858; TX V1 phys26c trial (PATH-S81) targets 250",
+   "dsdv_bksel_q": "old lib 604; hard children unsigned",
+   "ot_s81sl_capc5r": "lib anomalous (min 155 > max 85); hard children unsigned"
+  }
+ },
+ "in_window_signed_keep": [
+  "dsfd_node_LLd",
+  "dsfd_node_LLfd",
+  "dsfd_node_LLfu",
+  "dsfd_node_NNfd",
+  "dsfd_node_NNfu",
+  "ot_dsrom_su_hcpost_lane_pr",
+  "ot_s81_cfg7_seq",
+  "dsdv_svc_sx_hrow",
+  "dsfd_su_t_rxsb",
+  "ot_s81sl_vq",
+  "dsdv_gunit_l4r",
+  "dsdv_gunit_l5f",
+  "dsdv_eng_rr_h1"
+ ],
+ "below_window_signed": {
+  "rows": {
+   "dsfd_qbank_N": {
+    "lib_insertion_tt": {
+     "max": 78.14114,
+     "min": 70.7233
+    },
+    "lib_insertion_ff": {
+     "max": 62.57573,
+     "min": 55.97308
+    },
+    "chain_basis_tt_ff": [
+     74.432,
+     59.274
+    ],
+    "trunk_chain": {
+     "stages": 8,
+     "cell": "BUFx4_ASAP7_75t_R",
+     "at": "entry island",
+     "tt_ps": 190.8,
+     "ff_ps": 141.2
+    },
+    "pred_total_tt_ff": [
+     265.232,
+     200.474
+    ],
+    "pred_in_window": {
+     "TT": true,
+     "FF": true
+    },
+    "entry": {
+     "xy_um": [
+      30.24,
+      4.32
+     ],
+     "island_rect_um": [
+      25.92,
+      0.0,
+      34.56,
+      8.64
+     ],
+     "pin": "clk M5 interior at xy",
+     "stack": "M9->M5",
+     "pushdown_ports": [
+      "isl_clk_i",
+      "isl_clk_o",
+      "isl_rst_i",
+      "isl_rst_o"
+     ],
+     "cells": [
+      "die clock driver (plan-sized, fixed/dont_touch)",
+      "die reset relay register + repeater"
+     ]
+    }
+   },
+   "dsfd_rstg": {
+    "lib_insertion_tt": {
+     "max": 54.8358,
+     "min": 50.42186
+    },
+    "lib_insertion_ff": {
+     "max": 42.17035,
+     "min": 38.6632
+    },
+    "chain_basis_tt_ff": [
+     52.629,
+     40.417
+    ],
+    "trunk_chain": {
+     "stages": 9,
+     "cell": "BUFx4_ASAP7_75t_R",
+     "at": "entry island",
+     "tt_ps": 214.65,
+     "ff_ps": 158.85
+    },
+    "pred_total_tt_ff": [
+     267.279,
+     199.267
+    ],
+    "pred_in_window": {
+     "TT": true,
+     "FF": true
+    },
+    "entry": {
+     "xy_um": [
+      17.28,
+      17.28
+     ],
+     "island_rect_um": [
+      12.96,
+      12.96,
+      21.6,
+      21.6
+     ],
+     "pin": "clk M5 interior at xy",
+     "stack": "M9->M5",
+     "pushdown_ports": [
+      "isl_clk_i",
+      "isl_clk_o",
+      "isl_rst_i",
+      "isl_rst_o"
+     ],
+     "cells": [
+      "die clock driver (plan-sized, fixed/dont_touch)",
+      "die reset relay register + repeater"
+     ]
+    }
+   },
+   "ot_s81_sstn_payload536": {
+    "lib_insertion_tt": {
+     "max": 91.42699,
+     "min": 77.24667
+    },
+    "lib_insertion_ff": {
+     "max": 74.26108,
+     "min": 61.14544
+    },
+    "chain_basis_tt_ff": [
+     84.337,
+     67.703
+    ],
+    "trunk_chain": {
+     "stages": 7,
+     "cell": "BUFx4_ASAP7_75t_R",
+     "at": "entry island",
+     "tt_ps": 166.95,
+     "ff_ps": 123.55
+    },
+    "pred_total_tt_ff": [
+     251.287,
+     191.253
+    ],
+    "pred_in_window": {
+     "TT": true,
+     "FF": true
+    },
+    "entry": {
+     "xy_um": [
+      43.2,
+      12.96
+     ],
+     "island_rect_um": [
+      38.88,
+      8.64,
+      47.52,
+      17.28
+     ],
+     "pin": "clk M5 interior at xy",
+     "stack": "M9->M5",
+     "pushdown_ports": [
+      "isl_clk_i",
+      "isl_clk_o",
+      "isl_rst_i",
+      "isl_rst_o"
+     ],
+     "cells": [
+      "die clock driver (plan-sized, fixed/dont_touch)",
+      "die reset relay register + repeater"
+     ]
+    }
+   }
+  },
+  "decision": "COORD 06:38 ruling (c) + METHODOLOGY 12.8c: REBUILD with a designed FIXED TRUNK CHAIN at the centre entry island (same cell chain every instance, plan-computed before build, 12.8d1); the 05:5x 'keep as late tap' proposal is WITHDRAWN",
+  "chain_rule": "n x BUFx4_ASAP7_75t_R in series between the core clk pin (entry island, M5 interior) and the core's existing tree root; placed fixed/dont_touch in the entry island rows; n chosen by island_plan_s81.py to put BOTH corners inside +-20 (basis = signed-view lib insertion mean); stage 23.85 TT / 17.65 FF analytic (KV-CORELAT-R3), to be confirmed by the first CTS of each type (a miss goes back to the stage model, not a per-instance trim)"
+ },
  "islands": {
-   "criterion": "B2 plan (sha256 c6b5e29a) rasterised at 8.64 um, distance transform blocked->free: a die clock leg / reset hop crossing the core runs 2D without a channel site; island if 2D > 405 (reset hop) or > 450 (clock rep)",
-   "need": [{"module": "dsdv_bksel_q", "replicas": 4, "span_um": 656.6, "reset": true, "clock": true},
-            {"module": "dsdv_idx_tx_n32", "replicas": 1, "span_um": 553.0, "reset": true, "clock": true},
-            {"module": "dsdv_eng_rr_e", "replicas": 1, "span_um": 414.7, "reset": "marginal (+9.7 um)", "clock": false, "proposal": "no island: route the reset hop around (only needed if the INFRA lattice forces a hop across)"}],
-   "all_others_max_span_um": 362.9,
-   "island_spec": {"size_um": [8.64, 8.64], "where": "die 8.64 grid cell nearest the core centre (lattice-aligned, same in every replica of the type)", "content": "die clock mesh/H-tree driver (<=4 BUFx24) + die reset relay (1 DFF + 1 BUF); no signal FT", "layers": "core keep-out M1..core top layer + M9->M1 via stack landing", "demand_basis": "one clock leg + one reset hop crossing per core (both dims < 2x450)"},
-   "implementation_question": "COORD?: OpenROAD places no parent std cell inside a hard-core bbox, so a top-owned hole is not representable as a rectangular abstract; options (a) die-owned driver cells pushed into the core netlist as dont_touch FIXED instances in the island with an interior M7 pin pair for the M9 via-stack drop, (b) split the core around a channel (bk_sel R2 re-plan)."},
- "repeater_bays_check": {"note": "COORD correction: in-core <=M7 FT bays only where a core longer than 405 um blocks an FT corridor; candidates for the INFRA-SITE SUFFICIENCY gate (INFRA-FIRST NEXT 1)", "cores_longer_than_reach": {"dsdv_bksel_q": [648.0, 648.0], "dsdv_idx_tx_n32": [626.4, 561.6], "dsdv_eng_rr_e": [410.4, 466.56], "ot_v41_rom_elem_q_qxpq_w10": [510.84, 221.4], "ot_v41_bf_col": [450.168, 198.72], "ot_s81sl_capc5r": [336.96, 414.72]}},
- "structural_recipe_for_big_cores": ["centre clock pin (gen_core_kit_legacy --clock-pin-center M5, claude/s81-core-lat-trial-1026@5a8255d9d3): die stub drops M9->M5 onto the sink centroid, removes the in-core face->centre trunk", "regional taps (recipe regional_taps, F5) with taps <=20 ps, ICG-aware for gated cores", "per-SRAM skew groups (F3) where macros exist", "measured insertion gate TT 210..290 / FF 162.5..242.5 on GRT-RC before route"]
+  "criterion": "B2 plan (sha256 c6b5e29a) rasterised at 8.64 um, distance transform blocked->free: a die clock leg / reset hop crossing the core runs 2D without a channel site; island if 2D > 405 (reset hop) or > 450 (clock rep)",
+  "need": [
+   {
+    "module": "dsdv_bksel_q",
+    "replicas": 4,
+    "span_um": 656.6,
+    "reset": true,
+    "clock": true
+   },
+   {
+    "module": "dsdv_idx_tx_n32",
+    "replicas": 1,
+    "span_um": 553.0,
+    "reset": true,
+    "clock": true
+   },
+   {
+    "module": "dsdv_eng_rr_e",
+    "replicas": 1,
+    "span_um": 414.7,
+    "reset": "marginal (+9.7 um)",
+    "clock": false,
+    "proposal": "no island: route the reset hop around (only needed if the INFRA lattice forces a hop across)"
+   }
+  ],
+  "all_others_max_span_um": 362.9,
+  "island_spec": {
+   "size_um": [
+    8.64,
+    8.64
+   ],
+   "where": "die 8.64 grid cell nearest the core centre (lattice-aligned, same in every replica of the type)",
+   "content": "die clock mesh/H-tree driver (<=4 BUFx24) + die reset relay (1 DFF + 1 BUF); no signal FT",
+   "layers": "core keep-out M1..core top layer + M9->M1 via stack landing",
+   "demand_basis": "one clock leg + one reset hop crossing per core (both dims < 2x450)"
+  },
+  "implementation_question": "COORD?: OpenROAD places no parent std cell inside a hard-core bbox, so a top-owned hole is not representable as a rectangular abstract; options (a) die-owned driver cells pushed into the core netlist as dont_touch FIXED instances in the island with an interior M7 pin pair for the M9 via-stack drop, (b) split the core around a channel (bk_sel R2 re-plan)."
+ },
+ "repeater_bays_check": {
+  "note": "COORD correction: in-core <=M7 FT bays only where a core longer than 405 um blocks an FT corridor; candidates for the INFRA-SITE SUFFICIENCY gate (INFRA-FIRST NEXT 1)",
+  "cores_longer_than_reach": {
+   "dsdv_bksel_q": [
+    648.0,
+    648.0
+   ],
+   "dsdv_idx_tx_n32": [
+    626.4,
+    561.6
+   ],
+   "dsdv_eng_rr_e": [
+    410.4,
+    466.56
+   ],
+   "ot_v41_rom_elem_q_qxpq_w10": [
+    510.84,
+    221.4
+   ],
+   "ot_v41_bf_col": [
+    450.168,
+    198.72
+   ],
+   "ot_s81sl_capc5r": [
+    336.96,
+    414.72
+   ]
+  }
+ },
+ "structural_recipe_for_big_cores": [
+  "centre clock pin (gen_core_kit_legacy --clock-pin-center M5, claude/s81-core-lat-trial-1026@5a8255d9d3): die stub drops M9->M5 onto the sink centroid, removes the in-core face->centre trunk",
+  "regional taps (recipe regional_taps, F5) with taps <=20 ps, ICG-aware for gated cores",
+  "per-SRAM skew groups (F3) where macros exist",
+  "measured insertion gate TT 210..290 / FF 162.5..242.5 on GRT-RC before route"
+ ],
+ "island_plan": {
+  "file": "physical/die_plan/s81/core_lat/island_plan_s81_1026.json",
+  "tool": "physical/die_plan/s81/core_lat/island_plan_s81.py",
+  "summary": {
+   "CENTRE_TREE": 26,
+   "CENTRE_HTREE": 16,
+   "DIE_TREE_IN": 9
+  },
+  "note": "per-type entry + in-core islands (12.2a1 pushdown), H-tree nodes, mode, trunk chain, predicted TT/FF (12.9d model), lattice check"
+ }
 }

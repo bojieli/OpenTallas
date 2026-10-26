@@ -1,0 +1,9711 @@
+{
+ "schema": "opentallas.s81.core_island_plan.v1",
+ "plan": "physical/die_plan/s81/die_plan.json",
+ "plan_rev": "eebf41e286",
+ "census": "physical/die_plan/s81/core_lat/census_main.json",
+ "rules": [
+  "12.2a1 pushdown islands",
+  "12.3 common latency 250/202.5 +-20",
+  "12.8a-d",
+  "12.9d model"
+ ],
+ "model": {
+  "K_ps_per_um": 0.8963,
+  "rcx": 0.9429,
+  "ff_ratio": 0.7998,
+  "source": "tools/die_plan/master_plan.py @ claude/master-plan-1026 02c545dd4b",
+  "stage": {
+   "cell": "BUFx4_ASAP7_75t_R",
+   "tt": 23.85,
+   "ff": 17.65,
+   "source": "KV-CORELAT-R3 pv_join analytic"
+  }
+ },
+ "target": {
+  "tt": 250.0,
+  "ff": 202.5,
+  "tol": 20.0
+ },
+ "reach_um": 200.0,
+ "summary": {
+  "CENTRE_TREE": 26,
+  "CENTRE_HTREE": 16,
+  "DIE_TREE_IN": 9
+ },
+ "types": [
+  {
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "replicas": 1200,
+   "outline_um": [
+    114.48,
+    114.48
+   ],
+   "entry": {
+    "xy_um": [
+     56.16,
+     56.16
+    ],
+    "island_rect_um": [
+     51.84,
+     51.84,
+     60.48,
+     60.48
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 116.64,
+   "lib_insertion_tt": {
+    "max": 264.07495,
+    "min": 232.86406
+   },
+   "lib_insertion_ff": {
+    "max": 204.23428,
+    "min": 177.88925
+   },
+   "pred_core_tt_ff": [
+    98.6,
+    78.8
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    98.6,
+    78.8
+   ],
+   "trunk_chain": {
+    "stages": 7,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 166.95,
+    "ff_ps": 123.55
+   },
+   "pred_total_tt_ff": [
+    265.55,
+    202.35
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 1200,
+    "off_lattice": 672,
+    "verdict": "FAIL",
+    "why": {
+     "core MX part R0 core-origin-on-lat True": 320,
+     "core MX part MY core-origin-on-lat True": 352
+    },
+    "outline_over_8p64": [
+     13.25,
+     13.25
+    ],
+    "outline_snap_delta": {
+     "to_um": [
+      116.64,
+      116.64
+     ],
+     "note": "outline -> next multiple of 4.32 (mirror w-x of a 4.32 point stays on the lattice; instance origins already on it)"
+    }
+   }
+  },
+  {
+   "module": "ot_s81c_attn_hcore",
+   "replicas": 1024,
+   "outline_um": [
+    157.68,
+    259.2
+   ],
+   "entry": {
+    "xy_um": [
+     77.76,
+     129.6
+    ],
+    "island_rect_um": [
+     73.44,
+     125.28,
+     82.08,
+     133.92
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 209.52,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "grid": [
+    1,
+    2
+   ],
+   "split_order": [
+    "y"
+   ],
+   "leaf_reach_um": 143.64,
+   "pred_core_tt_ff": [
+    177.1,
+    141.6
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    177.1,
+    141.6
+   ],
+   "trunk_chain": {
+    "stages": 3,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 71.55,
+    "ff_ps": 52.95
+   },
+   "pred_total_tt_ff": [
+    248.65,
+    194.55
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      77.76,
+      129.6
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      77.76,
+      64.8
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      77.76,
+      194.4
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      77.76,
+      129.6
+     ],
+     "to": [
+      77.76,
+      64.8
+     ],
+     "len_um": 64.8
+    },
+    {
+     "level": 1,
+     "frm": [
+      77.76,
+      129.6
+     ],
+     "to": [
+      77.76,
+      194.4
+     ],
+     "len_um": 64.8
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      77.76,
+      64.8
+     ],
+     "rect_um": [
+      73.44,
+      60.48,
+      82.08,
+      69.12
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      77.76,
+      194.4
+     ],
+     "rect_um": [
+      73.44,
+      190.08,
+      82.08,
+      198.72
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 1024,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     18.25,
+     30.0
+    ]
+   }
+  },
+  {
+   "module": "dsfd_qbank_N",
+   "replicas": 864,
+   "outline_um": [
+    60.48,
+    8.64
+   ],
+   "entry": {
+    "xy_um": [
+     30.24,
+     4.32
+    ],
+    "island_rect_um": [
+     25.92,
+     0.0,
+     34.56,
+     8.64
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 34.56,
+   "lib_insertion_tt": {
+    "max": 78.14114,
+    "min": 70.7233
+   },
+   "lib_insertion_ff": {
+    "max": 62.57573,
+    "min": 55.97308
+   },
+   "pred_core_tt_ff": [
+    29.2,
+    23.4
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    74.432,
+    59.274
+   ],
+   "trunk_chain": {
+    "stages": 8,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 190.8,
+    "ff_ps": 141.2
+   },
+   "pred_total_tt_ff": [
+    265.232,
+    200.474
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 864,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     7.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "module": "dsfd_qbank_S",
+   "replicas": 864,
+   "outline_um": [
+    60.48,
+    25.92
+   ],
+   "entry": {
+    "xy_um": [
+     30.24,
+     12.96
+    ],
+    "island_rect_um": [
+     25.92,
+     8.64,
+     34.56,
+     17.28
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 43.2,
+   "lib_insertion_tt": {
+    "max": 98.23283,
+    "min": 79.35539
+   },
+   "lib_insertion_ff": {
+    "max": 79.9539,
+    "min": 62.4773
+   },
+   "pred_core_tt_ff": [
+    36.5,
+    29.2
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    88.794,
+    71.216
+   ],
+   "trunk_chain": {
+    "stages": 7,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 166.95,
+    "ff_ps": 123.55
+   },
+   "pred_total_tt_ff": [
+    255.744,
+    194.766
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 864,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     7.0,
+     3.0
+    ]
+   }
+  },
+  {
+   "module": "ot_v41_rom_elem_q_qxpq_w10",
+   "replicas": 864,
+   "outline_um": [
+    510.84,
+    221.4
+   ],
+   "entry": {
+    "xy_um": [
+     254.88,
+     112.32
+    ],
+    "island_rect_um": [
+     250.56,
+     108.0,
+     259.2,
+     116.64
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 368.28,
+   "lib_insertion_tt": {
+    "max": 552.30737,
+    "min": 437.5235
+   },
+   "lib_insertion_ff": {
+    "max": 434.3559,
+    "min": 344.91623
+   },
+   "grid": [
+    4,
+    1
+   ],
+   "split_order": [
+    "x",
+    "x"
+   ],
+   "leaf_reach_um": 174.555,
+   "pred_core_tt_ff": [
+    147.5,
+    118.0
+   ],
+   "pred_note": "centre entry predicts 311.2/248.9 > 270.0: die tree descends to the 4 leaf islands; core latency from each leaf island",
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    147.5,
+    118.0
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "each leaf island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    266.75,
+    206.25
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "DIE_TREE_IN",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      254.88,
+      112.32
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      129.6,
+      112.32
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 1,
+     "xy": [
+      384.48,
+      112.32
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      64.8,
+      112.32
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      190.08,
+      112.32
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      319.68,
+      112.32
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      444.96,
+      112.32
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      254.88,
+      112.32
+     ],
+     "to": [
+      129.6,
+      112.32
+     ],
+     "len_um": 125.28
+    },
+    {
+     "level": 1,
+     "frm": [
+      254.88,
+      112.32
+     ],
+     "to": [
+      384.48,
+      112.32
+     ],
+     "len_um": 129.6
+    },
+    {
+     "level": 2,
+     "frm": [
+      129.6,
+      112.32
+     ],
+     "to": [
+      64.8,
+      112.32
+     ],
+     "len_um": 64.8
+    },
+    {
+     "level": 2,
+     "frm": [
+      129.6,
+      112.32
+     ],
+     "to": [
+      190.08,
+      112.32
+     ],
+     "len_um": 60.48
+    },
+    {
+     "level": 2,
+     "frm": [
+      384.48,
+      112.32
+     ],
+     "to": [
+      319.68,
+      112.32
+     ],
+     "len_um": 64.8
+    },
+    {
+     "level": 2,
+     "frm": [
+      384.48,
+      112.32
+     ],
+     "to": [
+      444.96,
+      112.32
+     ],
+     "len_um": 60.48
+    }
+   ],
+   "islands": [
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      129.6,
+      112.32
+     ],
+     "rect_um": [
+      125.28,
+      108.0,
+      133.92,
+      116.64
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      384.48,
+      112.32
+     ],
+     "rect_um": [
+      380.16,
+      108.0,
+      388.8,
+      116.64
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      64.8,
+      112.32
+     ],
+     "rect_um": [
+      60.48,
+      108.0,
+      69.12,
+      116.64
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      190.08,
+      112.32
+     ],
+     "rect_um": [
+      185.76,
+      108.0,
+      194.4,
+      116.64
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      319.68,
+      112.32
+     ],
+     "rect_um": [
+      315.36,
+      108.0,
+      324.0,
+      116.64
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      444.96,
+      112.32
+     ],
+     "rect_um": [
+      440.64,
+      108.0,
+      449.28,
+      116.64
+     ],
+     "die_tree_node": true
+    }
+   ],
+   "lattice": {
+    "instances": 864,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     59.125,
+     25.625
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_cfg7_seq",
+   "replicas": 864,
+   "outline_um": [
+    17.28,
+    51.84
+   ],
+   "entry": {
+    "xy_um": [
+     8.64,
+     25.92
+    ],
+    "island_rect_um": [
+     4.32,
+     21.6,
+     12.96,
+     30.24
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 34.56,
+   "lib_insertion_tt": {
+    "max": 93.77752,
+    "min": 75.39694
+   },
+   "lib_insertion_ff": {
+    "max": 74.97504,
+    "min": 59.19283
+   },
+   "pred_core_tt_ff": [
+    29.2,
+    23.4
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    84.587,
+    67.084
+   ],
+   "trunk_chain": {
+    "stages": 7,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 166.95,
+    "ff_ps": 123.55
+   },
+   "pred_total_tt_ff": [
+    251.537,
+    190.634
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 864,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     2.0,
+     6.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_sstn_base566",
+   "replicas": 660,
+   "outline_um": [
+    84.24,
+    30.24
+   ],
+   "entry": {
+    "xy_um": [
+     43.2,
+     12.96
+    ],
+    "island_rect_um": [
+     38.88,
+     8.64,
+     47.52,
+     17.28
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 60.48,
+   "lib_insertion_tt": {
+    "max": 98.53783,
+    "min": 78.17512
+   },
+   "lib_insertion_ff": {
+    "max": 80.86909,
+    "min": 61.9237
+   },
+   "pred_core_tt_ff": [
+    51.1,
+    40.9
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    88.356,
+    71.396
+   ],
+   "trunk_chain": {
+    "stages": 7,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 166.95,
+    "ff_ps": 123.55
+   },
+   "pred_total_tt_ff": [
+    255.306,
+    194.946
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 660,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     9.75,
+     3.5
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_sstn_payload536",
+   "replicas": 660,
+   "outline_um": [
+    86.4,
+    25.92
+   ],
+   "entry": {
+    "xy_um": [
+     43.2,
+     12.96
+    ],
+    "island_rect_um": [
+     38.88,
+     8.64,
+     47.52,
+     17.28
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 56.16,
+   "lib_insertion_tt": {
+    "max": 91.42699,
+    "min": 77.24667
+   },
+   "lib_insertion_ff": {
+    "max": 74.26108,
+    "min": 61.14544
+   },
+   "pred_core_tt_ff": [
+    47.5,
+    38.0
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    84.337,
+    67.703
+   ],
+   "trunk_chain": {
+    "stages": 7,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 166.95,
+    "ff_ps": 123.55
+   },
+   "pred_total_tt_ff": [
+    251.287,
+    191.253
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 660,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     10.0,
+     3.0
+    ]
+   }
+  },
+  {
+   "module": "dsfd_node_LLfu",
+   "replicas": 516,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "entry": {
+    "xy_um": [
+     21.6,
+     38.88
+    ],
+    "island_rect_um": [
+     17.28,
+     34.56,
+     25.92,
+     43.2
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 60.48,
+   "lib_insertion_tt": {
+    "max": 117.1375,
+    "min": 88.73264
+   },
+   "lib_insertion_ff": {
+    "max": 97.3701,
+    "min": 70.67866
+   },
+   "pred_core_tt_ff": [
+    51.1,
+    40.9
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    102.935,
+    84.024
+   ],
+   "trunk_chain": {
+    "stages": 6,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 143.1,
+    "ff_ps": 105.9
+   },
+   "pred_total_tt_ff": [
+    246.035,
+    189.924
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 516,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     5.0,
+     9.0
+    ]
+   }
+  },
+  {
+   "module": "dsfd_node_NNfd",
+   "replicas": 516,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "entry": {
+    "xy_um": [
+     21.6,
+     38.88
+    ],
+    "island_rect_um": [
+     17.28,
+     34.56,
+     25.92,
+     43.2
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 60.48,
+   "lib_insertion_tt": {
+    "max": 117.21299,
+    "min": 86.74113
+   },
+   "lib_insertion_ff": {
+    "max": 97.30123,
+    "min": 68.48822
+   },
+   "pred_core_tt_ff": [
+    51.1,
+    40.9
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    101.977,
+    82.895
+   ],
+   "trunk_chain": {
+    "stages": 6,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 143.1,
+    "ff_ps": 105.9
+   },
+   "pred_total_tt_ff": [
+    245.077,
+    188.795
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 516,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     5.0,
+     9.0
+    ]
+   }
+  },
+  {
+   "module": "dsfd_node_NNfu",
+   "replicas": 504,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "entry": {
+    "xy_um": [
+     21.6,
+     38.88
+    ],
+    "island_rect_um": [
+     17.28,
+     34.56,
+     25.92,
+     43.2
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 60.48,
+   "lib_insertion_tt": {
+    "max": 122.11168,
+    "min": 86.80167
+   },
+   "lib_insertion_ff": {
+    "max": 101.65302,
+    "min": 68.94405
+   },
+   "pred_core_tt_ff": [
+    51.1,
+    40.9
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    104.457,
+    85.299
+   ],
+   "trunk_chain": {
+    "stages": 6,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 143.1,
+    "ff_ps": 105.9
+   },
+   "pred_total_tt_ff": [
+    247.557,
+    191.199
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 504,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     5.0,
+     9.0
+    ]
+   }
+  },
+  {
+   "module": "dsfd_node_LLfd",
+   "replicas": 504,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "entry": {
+    "xy_um": [
+     21.6,
+     38.88
+    ],
+    "island_rect_um": [
+     17.28,
+     34.56,
+     25.92,
+     43.2
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 60.48,
+   "lib_insertion_tt": {
+    "max": 113.9127,
+    "min": 89.55394
+   },
+   "lib_insertion_ff": {
+    "max": 93.48103,
+    "min": 70.68227
+   },
+   "pred_core_tt_ff": [
+    51.1,
+    40.9
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    101.733,
+    82.082
+   ],
+   "trunk_chain": {
+    "stages": 6,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 143.1,
+    "ff_ps": 105.9
+   },
+   "pred_total_tt_ff": [
+    244.833,
+    187.982
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 504,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     5.0,
+     9.0
+    ]
+   }
+  },
+  {
+   "module": "ot_v41_bf_col",
+   "replicas": 456,
+   "outline_um": [
+    450.168,
+    198.72
+   ],
+   "entry": {
+    "xy_um": [
+     224.64,
+     99.36
+    ],
+    "island_rect_um": [
+     220.32,
+     95.04,
+     228.96,
+     103.68
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 324.888,
+   "lib_insertion_tt": {
+    "max": 644.89056,
+    "min": 473.28232
+   },
+   "lib_insertion_ff": {
+    "max": 519.71045,
+    "min": 375.18033
+   },
+   "grid": [
+    4,
+    1
+   ],
+   "split_order": [
+    "x",
+    "x"
+   ],
+   "leaf_reach_um": 155.631,
+   "pred_core_tt_ff": [
+    131.5,
+    105.2
+   ],
+   "pred_note": "centre entry predicts 274.6/219.6 > 270.0: die tree descends to the 4 leaf islands; core latency from each leaf island",
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    131.5,
+    105.2
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "each leaf island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    250.75,
+    193.45
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "DIE_TREE_IN",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      224.64,
+      99.36
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      112.32,
+      99.36
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 1,
+     "xy": [
+      336.96,
+      99.36
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      56.16,
+      99.36
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      168.48,
+      99.36
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      280.8,
+      99.36
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      393.12,
+      99.36
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      224.64,
+      99.36
+     ],
+     "to": [
+      112.32,
+      99.36
+     ],
+     "len_um": 112.32
+    },
+    {
+     "level": 1,
+     "frm": [
+      224.64,
+      99.36
+     ],
+     "to": [
+      336.96,
+      99.36
+     ],
+     "len_um": 112.32
+    },
+    {
+     "level": 2,
+     "frm": [
+      112.32,
+      99.36
+     ],
+     "to": [
+      56.16,
+      99.36
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 2,
+     "frm": [
+      112.32,
+      99.36
+     ],
+     "to": [
+      168.48,
+      99.36
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 2,
+     "frm": [
+      336.96,
+      99.36
+     ],
+     "to": [
+      280.8,
+      99.36
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 2,
+     "frm": [
+      336.96,
+      99.36
+     ],
+     "to": [
+      393.12,
+      99.36
+     ],
+     "len_um": 56.16
+    }
+   ],
+   "islands": [
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      112.32,
+      99.36
+     ],
+     "rect_um": [
+      108.0,
+      95.04,
+      116.64,
+      103.68
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      336.96,
+      99.36
+     ],
+     "rect_um": [
+      332.64,
+      95.04,
+      341.28,
+      103.68
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      56.16,
+      99.36
+     ],
+     "rect_um": [
+      51.84,
+      95.04,
+      60.48,
+      103.68
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      168.48,
+      99.36
+     ],
+     "rect_um": [
+      164.16,
+      95.04,
+      172.8,
+      103.68
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      280.8,
+      99.36
+     ],
+     "rect_um": [
+      276.48,
+      95.04,
+      285.12,
+      103.68
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      393.12,
+      99.36
+     ],
+     "rect_um": [
+      388.8,
+      95.04,
+      397.44,
+      103.68
+     ],
+     "die_tree_node": true
+    }
+   ],
+   "lattice": {
+    "instances": 456,
+    "off_lattice": 228,
+    "verdict": "FAIL",
+    "why": {
+     "core MY part MX core-origin-on-lat True": 114,
+     "core MY part R180 core-origin-on-lat True": 114
+    },
+    "outline_over_8p64": [
+     52.103,
+     23.0
+    ],
+    "outline_snap_delta": {
+     "to_um": [
+      453.6,
+      198.72
+     ],
+     "note": "outline -> next multiple of 4.32 (mirror w-x of a 4.32 point stays on the lattice; instance origins already on it)"
+    }
+   }
+  },
+  {
+   "module": "dsfd_bf_front_roots",
+   "replicas": 228,
+   "outline_um": [
+    116.64,
+    198.72
+   ],
+   "entry": {
+    "xy_um": [
+     60.48,
+     99.36
+    ],
+    "island_rect_um": [
+     56.16,
+     95.04,
+     64.8,
+     103.68
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 159.84,
+   "lib_insertion_tt": {
+    "max": 231.19284,
+    "min": 195.21701
+   },
+   "lib_insertion_ff": {
+    "max": 190.72153,
+    "min": 158.08061
+   },
+   "pred_core_tt_ff": [
+    135.1,
+    108.0
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    135.1,
+    108.0
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    254.35,
+    196.25
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 228,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     13.5,
+     23.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81_cfg7_seq_bfp",
+   "replicas": 228,
+   "outline_um": [
+    30.24,
+    60.48
+   ],
+   "entry": {
+    "xy_um": [
+     12.96,
+     30.24
+    ],
+    "island_rect_um": [
+     8.64,
+     25.92,
+     17.28,
+     34.56
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 47.52,
+   "lib_insertion_tt": {
+    "max": 98.21368,
+    "min": 77.01402
+   },
+   "lib_insertion_ff": {
+    "max": 79.28922,
+    "min": 60.64494
+   },
+   "pred_core_tt_ff": [
+    40.2,
+    32.1
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    87.614,
+    69.967
+   ],
+   "trunk_chain": {
+    "stages": 7,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 166.95,
+    "ff_ps": 123.55
+   },
+   "pred_total_tt_ff": [
+    254.564,
+    193.517
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 228,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     3.5,
+     7.0
+    ]
+   }
+  },
+  {
+   "module": "dsfd_rstg",
+   "replicas": 216,
+   "outline_um": [
+    38.88,
+    34.56
+   ],
+   "entry": {
+    "xy_um": [
+     17.28,
+     17.28
+    ],
+    "island_rect_um": [
+     12.96,
+     12.96,
+     21.6,
+     21.6
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 38.88,
+   "lib_insertion_tt": {
+    "max": 54.8358,
+    "min": 50.42186
+   },
+   "lib_insertion_ff": {
+    "max": 42.17035,
+    "min": 38.6632
+   },
+   "pred_core_tt_ff": [
+    32.9,
+    26.3
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    52.629,
+    40.417
+   ],
+   "trunk_chain": {
+    "stages": 9,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 214.65,
+    "ff_ps": 158.85
+   },
+   "pred_total_tt_ff": [
+    267.279,
+    199.267
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 216,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     4.5,
+     4.0
+    ]
+   }
+  },
+  {
+   "module": "ot_sram_1r1w_512x128_m4_r0c0",
+   "replicas": 150,
+   "outline_um": [
+    169.368,
+    29.16
+   ],
+   "entry": {
+    "xy_um": [
+     86.4,
+     12.96
+    ],
+    "island_rect_um": [
+     82.08,
+     8.64,
+     90.72,
+     17.28
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 102.6,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "pred_core_tt_ff": [
+    86.7,
+    69.4
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    86.7,
+    69.4
+   ],
+   "trunk_chain": {
+    "stages": 7,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 166.95,
+    "ff_ps": 123.55
+   },
+   "pred_total_tt_ff": [
+    253.65,
+    192.95
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 150,
+    "off_lattice": 84,
+    "verdict": "FAIL",
+    "why": {
+     "core MX part R0 core-origin-on-lat True": 40,
+     "core MX part MY core-origin-on-lat True": 44
+    },
+    "outline_over_8p64": [
+     19.603,
+     3.375
+    ],
+    "outline_snap_delta": {
+     "to_um": [
+      172.8,
+      30.24
+     ],
+     "note": "outline -> next multiple of 4.32 (mirror w-x of a 4.32 point stays on the lattice; instance origins already on it)"
+    }
+   }
+  },
+  {
+   "module": "dsdv_svc_sx_hrow",
+   "replicas": 128,
+   "outline_um": [
+    138.24,
+    164.16
+   ],
+   "entry": {
+    "xy_um": [
+     69.12,
+     82.08
+    ],
+    "island_rect_um": [
+     64.8,
+     77.76,
+     73.44,
+     86.4
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 151.2,
+   "lib_insertion_tt": {
+    "max": 296.62994,
+    "min": 229.32762
+   },
+   "lib_insertion_ff": {
+    "max": 241.60785,
+    "min": 179.41072
+   },
+   "pred_core_tt_ff": [
+    127.8,
+    102.2
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    127.8,
+    102.2
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    247.05,
+    190.45
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 128,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     16.0,
+     19.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_ve_m",
+   "replicas": 75,
+   "outline_um": [
+    172.8,
+    345.6
+   ],
+   "entry": {
+    "xy_um": [
+     86.4,
+     172.8
+    ],
+    "island_rect_um": [
+     82.08,
+     168.48,
+     90.72,
+     177.12
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 259.2,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "grid": [
+    1,
+    2
+   ],
+   "split_order": [
+    "y"
+   ],
+   "leaf_reach_um": 172.8,
+   "pred_core_tt_ff": [
+    219.1,
+    175.2
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    219.1,
+    175.2
+   ],
+   "trunk_chain": {
+    "stages": 1,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 23.85,
+    "ff_ps": 17.65
+   },
+   "pred_total_tt_ff": [
+    242.95,
+    192.85
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      86.4,
+      172.8
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      86.4,
+      86.4
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      86.4,
+      259.2
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      86.4,
+      172.8
+     ],
+     "to": [
+      86.4,
+      86.4
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 1,
+     "frm": [
+      86.4,
+      172.8
+     ],
+     "to": [
+      86.4,
+      259.2
+     ],
+     "len_um": 86.4
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      86.4,
+      86.4
+     ],
+     "rect_um": [
+      82.08,
+      82.08,
+      90.72,
+      90.72
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      86.4,
+      259.2
+     ],
+     "rect_um": [
+      82.08,
+      254.88,
+      90.72,
+      263.52
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 75,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     20.0,
+     40.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_ve_s",
+   "replicas": 75,
+   "outline_um": [
+    164.16,
+    345.6
+   ],
+   "entry": {
+    "xy_um": [
+     82.08,
+     172.8
+    ],
+    "island_rect_um": [
+     77.76,
+     168.48,
+     86.4,
+     177.12
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 254.88,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "grid": [
+    1,
+    2
+   ],
+   "split_order": [
+    "y"
+   ],
+   "leaf_reach_um": 168.48,
+   "pred_core_tt_ff": [
+    215.4,
+    172.3
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    215.4,
+    172.3
+   ],
+   "trunk_chain": {
+    "stages": 2,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 47.7,
+    "ff_ps": 35.3
+   },
+   "pred_total_tt_ff": [
+    263.1,
+    207.6
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      82.08,
+      172.8
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      82.08,
+      86.4
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      82.08,
+      259.2
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      82.08,
+      172.8
+     ],
+     "to": [
+      82.08,
+      86.4
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 1,
+     "frm": [
+      82.08,
+      172.8
+     ],
+     "to": [
+      82.08,
+      259.2
+     ],
+     "len_um": 86.4
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      82.08,
+      86.4
+     ],
+     "rect_um": [
+      77.76,
+      82.08,
+      86.4,
+      90.72
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      82.08,
+      259.2
+     ],
+     "rect_um": [
+      77.76,
+      254.88,
+      86.4,
+      263.52
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 75,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     19.0,
+     40.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_vsw",
+   "replicas": 75,
+   "outline_um": [
+    224.64,
+    224.64
+   ],
+   "entry": {
+    "xy_um": [
+     112.32,
+     112.32
+    ],
+    "island_rect_um": [
+     108.0,
+     108.0,
+     116.64,
+     116.64
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 224.64,
+   "lib_insertion_tt": {
+    "max": 323.47568,
+    "min": 267.72681
+   },
+   "lib_insertion_ff": {
+    "max": 268.31491,
+    "min": 216.13266
+   },
+   "grid": [
+    2,
+    1
+   ],
+   "split_order": [
+    "x"
+   ],
+   "leaf_reach_um": 168.48,
+   "pred_core_tt_ff": [
+    189.8,
+    151.8
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    189.8,
+    151.8
+   ],
+   "trunk_chain": {
+    "stages": 3,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 71.55,
+    "ff_ps": 52.95
+   },
+   "pred_total_tt_ff": [
+    261.35,
+    204.75
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      112.32,
+      112.32
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      56.16,
+      112.32
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      168.48,
+      112.32
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      112.32,
+      112.32
+     ],
+     "to": [
+      56.16,
+      112.32
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 1,
+     "frm": [
+      112.32,
+      112.32
+     ],
+     "to": [
+      168.48,
+      112.32
+     ],
+     "len_um": 56.16
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      56.16,
+      112.32
+     ],
+     "rect_um": [
+      51.84,
+      108.0,
+      60.48,
+      116.64
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      168.48,
+      112.32
+     ],
+     "rect_um": [
+      164.16,
+      108.0,
+      172.8,
+      116.64
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 75,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     26.0,
+     26.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_vn_b",
+   "replicas": 75,
+   "outline_um": [
+    356.4,
+    172.8
+   ],
+   "entry": {
+    "xy_um": [
+     177.12,
+     86.4
+    ],
+    "island_rect_um": [
+     172.8,
+     82.08,
+     181.44,
+     90.72
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 265.68,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "grid": [
+    2,
+    1
+   ],
+   "split_order": [
+    "x"
+   ],
+   "leaf_reach_um": 175.5,
+   "pred_core_tt_ff": [
+    224.5,
+    179.6
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    224.5,
+    179.6
+   ],
+   "trunk_chain": {
+    "stages": 1,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 23.85,
+    "ff_ps": 17.65
+   },
+   "pred_total_tt_ff": [
+    248.35,
+    197.25
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      177.12,
+      86.4
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      90.72,
+      86.4
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      267.84,
+      86.4
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      177.12,
+      86.4
+     ],
+     "to": [
+      90.72,
+      86.4
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 1,
+     "frm": [
+      177.12,
+      86.4
+     ],
+     "to": [
+      267.84,
+      86.4
+     ],
+     "len_um": 90.72
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      90.72,
+      86.4
+     ],
+     "rect_um": [
+      86.4,
+      82.08,
+      95.04,
+      90.72
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      267.84,
+      86.4
+     ],
+     "rect_um": [
+      263.52,
+      82.08,
+      272.16,
+      90.72
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 75,
+    "off_lattice": 42,
+    "verdict": "FAIL",
+    "why": {
+     "core MY part R0 core-origin-on-lat True": 9,
+     "core R180 part R0 core-origin-on-lat True": 10,
+     "core R180 part MY core-origin-on-lat True": 12,
+     "core MY part MY core-origin-on-lat True": 11
+    },
+    "outline_over_8p64": [
+     41.25,
+     20.0
+    ],
+    "outline_snap_delta": {
+     "to_um": [
+      358.56,
+      172.8
+     ],
+     "note": "outline -> next multiple of 4.32 (mirror w-x of a 4.32 point stays on the lattice; instance origins already on it)"
+    }
+   }
+  },
+  {
+   "module": "ot_s81sl_vs",
+   "replicas": 75,
+   "outline_um": [
+    172.8,
+    172.8
+   ],
+   "entry": {
+    "xy_um": [
+     86.4,
+     86.4
+    ],
+    "island_rect_um": [
+     82.08,
+     82.08,
+     90.72,
+     90.72
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 172.8,
+   "lib_insertion_tt": {
+    "max": 262.39078,
+    "min": 213.91415
+   },
+   "lib_insertion_ff": {
+    "max": 218.59801,
+    "min": 173.65564
+   },
+   "pred_core_tt_ff": [
+    146.0,
+    116.8
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    146.0,
+    116.8
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    265.25,
+    205.05
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 75,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     20.0,
+     20.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_vn_a",
+   "replicas": 75,
+   "outline_um": [
+    356.4,
+    164.16
+   ],
+   "entry": {
+    "xy_um": [
+     177.12,
+     82.08
+    ],
+    "island_rect_um": [
+     172.8,
+     77.76,
+     181.44,
+     86.4
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 261.36,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "grid": [
+    2,
+    1
+   ],
+   "split_order": [
+    "x"
+   ],
+   "leaf_reach_um": 171.18,
+   "pred_core_tt_ff": [
+    220.9,
+    176.7
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    220.9,
+    176.7
+   ],
+   "trunk_chain": {
+    "stages": 1,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 23.85,
+    "ff_ps": 17.65
+   },
+   "pred_total_tt_ff": [
+    244.75,
+    194.35
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      177.12,
+      82.08
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      90.72,
+      82.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      267.84,
+      82.08
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      177.12,
+      82.08
+     ],
+     "to": [
+      90.72,
+      82.08
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 1,
+     "frm": [
+      177.12,
+      82.08
+     ],
+     "to": [
+      267.84,
+      82.08
+     ],
+     "len_um": 90.72
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      90.72,
+      82.08
+     ],
+     "rect_um": [
+      86.4,
+      77.76,
+      95.04,
+      86.4
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      267.84,
+      82.08
+     ],
+     "rect_um": [
+      263.52,
+      77.76,
+      272.16,
+      86.4
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 75,
+    "off_lattice": 42,
+    "verdict": "FAIL",
+    "why": {
+     "core MY part R0 core-origin-on-lat True": 9,
+     "core R180 part R0 core-origin-on-lat True": 10,
+     "core R180 part MY core-origin-on-lat True": 12,
+     "core MY part MY core-origin-on-lat True": 11
+    },
+    "outline_over_8p64": [
+     41.25,
+     19.0
+    ],
+    "outline_snap_delta": {
+     "to_um": [
+      358.56,
+      164.16
+     ],
+     "note": "outline -> next multiple of 4.32 (mirror w-x of a 4.32 point stays on the lattice; instance origins already on it)"
+    }
+   }
+  },
+  {
+   "module": "dsfd_su_t_rxsb",
+   "replicas": 75,
+   "outline_um": [
+    140.4,
+    140.4
+   ],
+   "entry": {
+    "xy_um": [
+     69.12,
+     69.12
+    ],
+    "island_rect_um": [
+     64.8,
+     64.8,
+     73.44,
+     73.44
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 142.56,
+   "lib_insertion_tt": {
+    "max": 268.55948,
+    "min": 234.92281
+   },
+   "lib_insertion_ff": {
+    "max": 210.84151,
+    "min": 181.22372
+   },
+   "pred_core_tt_ff": [
+    120.5,
+    96.4
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    120.5,
+    96.4
+   ],
+   "trunk_chain": {
+    "stages": 6,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 143.1,
+    "ff_ps": 105.9
+   },
+   "pred_total_tt_ff": [
+    263.6,
+    202.3
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 75,
+    "off_lattice": 42,
+    "verdict": "FAIL",
+    "why": {
+     "core MX part R0 core-origin-on-lat True": 20,
+     "core MX part MY core-origin-on-lat True": 22
+    },
+    "outline_over_8p64": [
+     16.25,
+     16.25
+    ],
+    "outline_snap_delta": {
+     "to_um": [
+      142.56,
+      142.56
+     ],
+     "note": "outline -> next multiple of 4.32 (mirror w-x of a 4.32 point stays on the lattice; instance origins already on it)"
+    }
+   }
+  },
+  {
+   "module": "dsfd_su_t_rxsf",
+   "replicas": 75,
+   "outline_um": [
+    140.4,
+    140.4
+   ],
+   "entry": {
+    "xy_um": [
+     69.12,
+     69.12
+    ],
+    "island_rect_um": [
+     64.8,
+     64.8,
+     73.44,
+     73.44
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 142.56,
+   "lib_insertion_tt": {
+    "max": 210.46109,
+    "min": 163.55742
+   },
+   "lib_insertion_ff": {
+    "max": 176.76752,
+    "min": 133.3118
+   },
+   "pred_core_tt_ff": [
+    120.5,
+    96.4
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    120.5,
+    96.4
+   ],
+   "trunk_chain": {
+    "stages": 6,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 143.1,
+    "ff_ps": 105.9
+   },
+   "pred_total_tt_ff": [
+    263.6,
+    202.3
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 75,
+    "off_lattice": 42,
+    "verdict": "FAIL",
+    "why": {
+     "core MX part R0 core-origin-on-lat True": 20,
+     "core MX part MY core-origin-on-lat True": 22
+    },
+    "outline_over_8p64": [
+     16.25,
+     16.25
+    ],
+    "outline_snap_delta": {
+     "to_um": [
+      142.56,
+      142.56
+     ],
+     "note": "outline -> next multiple of 4.32 (mirror w-x of a 4.32 point stays on the lattice; instance origins already on it)"
+    }
+   }
+  },
+  {
+   "module": "ot_s81sl_vq",
+   "replicas": 75,
+   "outline_um": [
+    172.8,
+    129.6
+   ],
+   "entry": {
+    "xy_um": [
+     86.4,
+     64.8
+    ],
+    "island_rect_um": [
+     82.08,
+     60.48,
+     90.72,
+     69.12
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 151.2,
+   "lib_insertion_tt": {
+    "max": 279.40579,
+    "min": 203.37563
+   },
+   "lib_insertion_ff": {
+    "max": 232.14925,
+    "min": 161.65503
+   },
+   "pred_core_tt_ff": [
+    127.8,
+    102.2
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    127.8,
+    102.2
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    247.05,
+    190.45
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 75,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     20.0,
+     15.0
+    ]
+   }
+  },
+  {
+   "module": "dsfd_cfifo_crs4",
+   "replicas": 72,
+   "outline_um": [
+    280.8,
+    69.12
+   ],
+   "entry": {
+    "xy_um": [
+     138.24,
+     34.56
+    ],
+    "island_rect_um": [
+     133.92,
+     30.24,
+     142.56,
+     38.88
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 177.12,
+   "lib_insertion_tt": {
+    "max": 214.1178,
+    "min": 144.32361
+   },
+   "lib_insertion_ff": {
+    "max": 181.17931,
+    "min": 114.34958
+   },
+   "pred_core_tt_ff": [
+    149.7,
+    119.7
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    149.7,
+    119.7
+   ],
+   "trunk_chain": {
+    "stages": 4,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 95.4,
+    "ff_ps": 70.6
+   },
+   "pred_total_tt_ff": [
+    245.1,
+    190.3
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 72,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     32.5,
+     8.0
+    ]
+   }
+  },
+  {
+   "module": "dsfd_node_LLd",
+   "replicas": 72,
+   "outline_um": [
+    43.2,
+    77.76
+   ],
+   "entry": {
+    "xy_um": [
+     21.6,
+     38.88
+    ],
+    "island_rect_um": [
+     17.28,
+     34.56,
+     25.92,
+     43.2
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 60.48,
+   "lib_insertion_tt": {
+    "max": 110.32134,
+    "min": 88.84732
+   },
+   "lib_insertion_ff": {
+    "max": 89.88971,
+    "min": 70.26496
+   },
+   "pred_core_tt_ff": [
+    51.1,
+    40.9
+   ],
+   "basis": "measured lib mean (signed view, face pin)",
+   "chain_basis_tt_ff": [
+    99.584,
+    80.077
+   ],
+   "trunk_chain": {
+    "stages": 7,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 166.95,
+    "ff_ps": 123.55
+   },
+   "pred_total_tt_ff": [
+    266.534,
+    203.627
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 72,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     5.0,
+     9.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_capc5r",
+   "replicas": 16,
+   "outline_um": [
+    336.96,
+    414.72
+   ],
+   "entry": {
+    "xy_um": [
+     168.48,
+     207.36
+    ],
+    "island_rect_um": [
+     164.16,
+     203.04,
+     172.8,
+     211.68
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 375.84,
+   "lib_insertion_tt": {
+    "max": 85.25973,
+    "min": 154.96245
+   },
+   "lib_insertion_ff": {
+    "max": 72.69569,
+    "min": 125.78483
+   },
+   "grid": [
+    2,
+    2
+   ],
+   "split_order": [
+    "y",
+    "x"
+   ],
+   "leaf_reach_um": 187.92,
+   "pred_core_tt_ff": [
+    158.8,
+    127.0
+   ],
+   "pred_note": "centre entry predicts 317.6/254.0 > 270.0: die tree descends to the 4 leaf islands; core latency from each leaf island",
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    158.8,
+    127.0
+   ],
+   "trunk_chain": {
+    "stages": 4,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "each leaf island",
+    "tt_ps": 95.4,
+    "ff_ps": 70.6
+   },
+   "pred_total_tt_ff": [
+    254.2,
+    197.6
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "DIE_TREE_IN",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      168.48,
+      207.36
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      168.48,
+      103.68
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 1,
+     "xy": [
+      168.48,
+      311.04
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      82.08,
+      103.68
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      250.56,
+      103.68
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      82.08,
+      311.04
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      250.56,
+      311.04
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      168.48,
+      207.36
+     ],
+     "to": [
+      168.48,
+      103.68
+     ],
+     "len_um": 103.68
+    },
+    {
+     "level": 1,
+     "frm": [
+      168.48,
+      207.36
+     ],
+     "to": [
+      168.48,
+      311.04
+     ],
+     "len_um": 103.68
+    },
+    {
+     "level": 2,
+     "frm": [
+      168.48,
+      103.68
+     ],
+     "to": [
+      82.08,
+      103.68
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 2,
+     "frm": [
+      168.48,
+      103.68
+     ],
+     "to": [
+      250.56,
+      103.68
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 2,
+     "frm": [
+      168.48,
+      311.04
+     ],
+     "to": [
+      82.08,
+      311.04
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 2,
+     "frm": [
+      168.48,
+      311.04
+     ],
+     "to": [
+      250.56,
+      311.04
+     ],
+     "len_um": 82.08
+    }
+   ],
+   "islands": [
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      168.48,
+      103.68
+     ],
+     "rect_um": [
+      164.16,
+      99.36,
+      172.8,
+      108.0
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      168.48,
+      311.04
+     ],
+     "rect_um": [
+      164.16,
+      306.72,
+      172.8,
+      315.36
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      82.08,
+      103.68
+     ],
+     "rect_um": [
+      77.76,
+      99.36,
+      86.4,
+      108.0
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      250.56,
+      103.68
+     ],
+     "rect_um": [
+      246.24,
+      99.36,
+      254.88,
+      108.0
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      82.08,
+      311.04
+     ],
+     "rect_um": [
+      77.76,
+      306.72,
+      86.4,
+      315.36
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      250.56,
+      311.04
+     ],
+     "rect_um": [
+      246.24,
+      306.72,
+      254.88,
+      315.36
+     ],
+     "die_tree_node": true
+    }
+   ],
+   "lattice": {
+    "instances": 16,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     39.0,
+     48.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_eg",
+   "replicas": 16,
+   "outline_um": [
+    259.2,
+    259.2
+   ],
+   "entry": {
+    "xy_um": [
+     129.6,
+     129.6
+    ],
+    "island_rect_um": [
+     125.28,
+     125.28,
+     133.92,
+     133.92
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 259.2,
+   "lib_insertion_tt": {
+    "max": 364.44653,
+    "min": 320.53131
+   },
+   "lib_insertion_ff": {
+    "max": 303.02069,
+    "min": 263.05939
+   },
+   "grid": [
+    2,
+    1
+   ],
+   "split_order": [
+    "x"
+   ],
+   "leaf_reach_um": 194.4,
+   "pred_core_tt_ff": [
+    219.1,
+    175.2
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    219.1,
+    175.2
+   ],
+   "trunk_chain": {
+    "stages": 1,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 23.85,
+    "ff_ps": 17.65
+   },
+   "pred_total_tt_ff": [
+    242.95,
+    192.85
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      129.6,
+      129.6
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      64.8,
+      129.6
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      194.4,
+      129.6
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      129.6,
+      129.6
+     ],
+     "to": [
+      64.8,
+      129.6
+     ],
+     "len_um": 64.8
+    },
+    {
+     "level": 1,
+     "frm": [
+      129.6,
+      129.6
+     ],
+     "to": [
+      194.4,
+      129.6
+     ],
+     "len_um": 64.8
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      64.8,
+      129.6
+     ],
+     "rect_um": [
+      60.48,
+      125.28,
+      69.12,
+      133.92
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      194.4,
+      129.6
+     ],
+     "rect_um": [
+      190.08,
+      125.28,
+      198.72,
+      133.92
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 16,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     30.0,
+     30.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81dv_xfin",
+   "replicas": 16,
+   "outline_um": [
+    362.88,
+    362.88
+   ],
+   "entry": {
+    "xy_um": [
+     181.44,
+     181.44
+    ],
+    "island_rect_um": [
+     177.12,
+     177.12,
+     185.76,
+     185.76
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 362.88,
+   "lib_insertion_tt": {
+    "max": 308.26154,
+    "min": 222.01741
+   },
+   "lib_insertion_ff": {
+    "max": 261.46188,
+    "min": 179.27629
+   },
+   "grid": [
+    2,
+    2
+   ],
+   "split_order": [
+    "x",
+    "y"
+   ],
+   "leaf_reach_um": 181.44,
+   "pred_core_tt_ff": [
+    153.3,
+    122.6
+   ],
+   "pred_note": "centre entry predicts 306.7/245.3 > 270.0: die tree descends to the 4 leaf islands; core latency from each leaf island",
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    153.3,
+    122.6
+   ],
+   "trunk_chain": {
+    "stages": 4,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "each leaf island",
+    "tt_ps": 95.4,
+    "ff_ps": 70.6
+   },
+   "pred_total_tt_ff": [
+    248.7,
+    193.2
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "DIE_TREE_IN",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      181.44,
+      181.44
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      90.72,
+      181.44
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 1,
+     "xy": [
+      272.16,
+      181.44
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      90.72,
+      90.72
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      90.72,
+      272.16
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      272.16,
+      90.72
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      272.16,
+      272.16
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      181.44,
+      181.44
+     ],
+     "to": [
+      90.72,
+      181.44
+     ],
+     "len_um": 90.72
+    },
+    {
+     "level": 1,
+     "frm": [
+      181.44,
+      181.44
+     ],
+     "to": [
+      272.16,
+      181.44
+     ],
+     "len_um": 90.72
+    },
+    {
+     "level": 2,
+     "frm": [
+      90.72,
+      181.44
+     ],
+     "to": [
+      90.72,
+      90.72
+     ],
+     "len_um": 90.72
+    },
+    {
+     "level": 2,
+     "frm": [
+      90.72,
+      181.44
+     ],
+     "to": [
+      90.72,
+      272.16
+     ],
+     "len_um": 90.72
+    },
+    {
+     "level": 2,
+     "frm": [
+      272.16,
+      181.44
+     ],
+     "to": [
+      272.16,
+      90.72
+     ],
+     "len_um": 90.72
+    },
+    {
+     "level": 2,
+     "frm": [
+      272.16,
+      181.44
+     ],
+     "to": [
+      272.16,
+      272.16
+     ],
+     "len_um": 90.72
+    }
+   ],
+   "islands": [
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      90.72,
+      181.44
+     ],
+     "rect_um": [
+      86.4,
+      177.12,
+      95.04,
+      185.76
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      272.16,
+      181.44
+     ],
+     "rect_um": [
+      267.84,
+      177.12,
+      276.48,
+      185.76
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      90.72,
+      90.72
+     ],
+     "rect_um": [
+      86.4,
+      86.4,
+      95.04,
+      95.04
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      90.72,
+      272.16
+     ],
+     "rect_um": [
+      86.4,
+      267.84,
+      95.04,
+      276.48
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      272.16,
+      90.72
+     ],
+     "rect_um": [
+      267.84,
+      86.4,
+      276.48,
+      95.04
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      272.16,
+      272.16
+     ],
+     "rect_um": [
+      267.84,
+      267.84,
+      276.48,
+      276.48
+     ],
+     "die_tree_node": true
+    }
+   ],
+   "lattice": {
+    "instances": 16,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     42.0,
+     42.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_xrt1",
+   "replicas": 14,
+   "outline_um": [
+    311.04,
+    395.28
+   ],
+   "entry": {
+    "xy_um": [
+     155.52,
+     198.72
+    ],
+    "island_rect_um": [
+     151.2,
+     194.4,
+     159.84,
+     203.04
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 354.24,
+   "lib_insertion_tt": {
+    "max": 473.05081,
+    "min": 380.94388
+   },
+   "lib_insertion_ff": {
+    "max": 394.02768,
+    "min": 310.97879
+   },
+   "grid": [
+    2,
+    2
+   ],
+   "split_order": [
+    "y",
+    "x"
+   ],
+   "leaf_reach_um": 176.58,
+   "pred_core_tt_ff": [
+    149.2,
+    119.4
+   ],
+   "pred_note": "centre entry predicts 299.4/239.4 > 270.0: die tree descends to the 4 leaf islands; core latency from each leaf island",
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    149.2,
+    119.4
+   ],
+   "trunk_chain": {
+    "stages": 4,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "each leaf island",
+    "tt_ps": 95.4,
+    "ff_ps": 70.6
+   },
+   "pred_total_tt_ff": [
+    244.6,
+    190.0
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "DIE_TREE_IN",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      155.52,
+      198.72
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      155.52,
+      99.36
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 1,
+     "xy": [
+      155.52,
+      298.08
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      77.76,
+      99.36
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      233.28,
+      99.36
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      77.76,
+      298.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      233.28,
+      298.08
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      155.52,
+      198.72
+     ],
+     "to": [
+      155.52,
+      99.36
+     ],
+     "len_um": 99.36
+    },
+    {
+     "level": 1,
+     "frm": [
+      155.52,
+      198.72
+     ],
+     "to": [
+      155.52,
+      298.08
+     ],
+     "len_um": 99.36
+    },
+    {
+     "level": 2,
+     "frm": [
+      155.52,
+      99.36
+     ],
+     "to": [
+      77.76,
+      99.36
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 2,
+     "frm": [
+      155.52,
+      99.36
+     ],
+     "to": [
+      233.28,
+      99.36
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 2,
+     "frm": [
+      155.52,
+      298.08
+     ],
+     "to": [
+      77.76,
+      298.08
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 2,
+     "frm": [
+      155.52,
+      298.08
+     ],
+     "to": [
+      233.28,
+      298.08
+     ],
+     "len_um": 77.76
+    }
+   ],
+   "islands": [
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      155.52,
+      99.36
+     ],
+     "rect_um": [
+      151.2,
+      95.04,
+      159.84,
+      103.68
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      155.52,
+      298.08
+     ],
+     "rect_um": [
+      151.2,
+      293.76,
+      159.84,
+      302.4
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      77.76,
+      99.36
+     ],
+     "rect_um": [
+      73.44,
+      95.04,
+      82.08,
+      103.68
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      233.28,
+      99.36
+     ],
+     "rect_um": [
+      228.96,
+      95.04,
+      237.6,
+      103.68
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      77.76,
+      298.08
+     ],
+     "rect_um": [
+      73.44,
+      293.76,
+      82.08,
+      302.4
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      233.28,
+      298.08
+     ],
+     "rect_um": [
+      228.96,
+      293.76,
+      237.6,
+      302.4
+     ],
+     "die_tree_node": true
+    }
+   ],
+   "lattice": {
+    "instances": 14,
+    "off_lattice": 5,
+    "verdict": "FAIL",
+    "why": {
+     "core MX part R0 core-origin-on-lat True": 3,
+     "core MX part MY core-origin-on-lat True": 2
+    },
+    "outline_over_8p64": [
+     36.0,
+     45.75
+    ],
+    "outline_snap_delta": {
+     "to_um": [
+      311.04,
+      397.44
+     ],
+     "note": "outline -> next multiple of 4.32 (mirror w-x of a 4.32 point stays on the lattice; instance origins already on it)"
+    }
+   }
+  },
+  {
+   "module": "dsdv_bksel_q",
+   "replicas": 4,
+   "outline_um": [
+    648.0,
+    648.0
+   ],
+   "entry": {
+    "xy_um": [
+     324.0,
+     324.0
+    ],
+    "island_rect_um": [
+     319.68,
+     319.68,
+     328.32,
+     328.32
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 648.0,
+   "lib_insertion_tt": {
+    "max": 603.67224,
+    "min": 559.40479
+   },
+   "lib_insertion_ff": {
+    "max": 489.51486,
+    "min": 453.4201
+   },
+   "grid": [
+    4,
+    4
+   ],
+   "split_order": [
+    "x",
+    "y",
+    "x",
+    "y"
+   ],
+   "leaf_reach_um": 162.0,
+   "pred_core_tt_ff": [
+    136.9,
+    109.5
+   ],
+   "pred_note": "centre entry predicts 547.6/438.0 > 270.0: die tree descends to the 16 leaf islands; core latency from each leaf island",
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    136.9,
+    109.5
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "each leaf island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    256.15,
+    197.75
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "DIE_TREE_IN",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      324.0,
+      324.0
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      164.16,
+      324.0
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 1,
+     "xy": [
+      483.84,
+      324.0
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      164.16,
+      164.16
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      164.16,
+      483.84
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      483.84,
+      164.16
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      483.84,
+      483.84
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      82.08,
+      164.16
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      241.92,
+      164.16
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      82.08,
+      483.84
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      241.92,
+      483.84
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      406.08,
+      164.16
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      565.92,
+      164.16
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      406.08,
+      483.84
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      565.92,
+      483.84
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 4,
+     "xy": [
+      82.08,
+      82.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      82.08,
+      241.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      241.92,
+      82.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      241.92,
+      241.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      82.08,
+      406.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      82.08,
+      565.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      241.92,
+      406.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      241.92,
+      565.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      406.08,
+      82.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      406.08,
+      241.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      565.92,
+      82.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      565.92,
+      241.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      406.08,
+      406.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      406.08,
+      565.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      565.92,
+      406.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      565.92,
+      565.92
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      324.0,
+      324.0
+     ],
+     "to": [
+      164.16,
+      324.0
+     ],
+     "len_um": 159.84
+    },
+    {
+     "level": 1,
+     "frm": [
+      324.0,
+      324.0
+     ],
+     "to": [
+      483.84,
+      324.0
+     ],
+     "len_um": 159.84
+    },
+    {
+     "level": 2,
+     "frm": [
+      164.16,
+      324.0
+     ],
+     "to": [
+      164.16,
+      164.16
+     ],
+     "len_um": 159.84
+    },
+    {
+     "level": 2,
+     "frm": [
+      164.16,
+      324.0
+     ],
+     "to": [
+      164.16,
+      483.84
+     ],
+     "len_um": 159.84
+    },
+    {
+     "level": 2,
+     "frm": [
+      483.84,
+      324.0
+     ],
+     "to": [
+      483.84,
+      164.16
+     ],
+     "len_um": 159.84
+    },
+    {
+     "level": 2,
+     "frm": [
+      483.84,
+      324.0
+     ],
+     "to": [
+      483.84,
+      483.84
+     ],
+     "len_um": 159.84
+    },
+    {
+     "level": 3,
+     "frm": [
+      164.16,
+      164.16
+     ],
+     "to": [
+      82.08,
+      164.16
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 3,
+     "frm": [
+      164.16,
+      164.16
+     ],
+     "to": [
+      241.92,
+      164.16
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      164.16,
+      483.84
+     ],
+     "to": [
+      82.08,
+      483.84
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 3,
+     "frm": [
+      164.16,
+      483.84
+     ],
+     "to": [
+      241.92,
+      483.84
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      483.84,
+      164.16
+     ],
+     "to": [
+      406.08,
+      164.16
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      483.84,
+      164.16
+     ],
+     "to": [
+      565.92,
+      164.16
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 3,
+     "frm": [
+      483.84,
+      483.84
+     ],
+     "to": [
+      406.08,
+      483.84
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      483.84,
+      483.84
+     ],
+     "to": [
+      565.92,
+      483.84
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 4,
+     "frm": [
+      82.08,
+      164.16
+     ],
+     "to": [
+      82.08,
+      82.08
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 4,
+     "frm": [
+      82.08,
+      164.16
+     ],
+     "to": [
+      82.08,
+      241.92
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 4,
+     "frm": [
+      241.92,
+      164.16
+     ],
+     "to": [
+      241.92,
+      82.08
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 4,
+     "frm": [
+      241.92,
+      164.16
+     ],
+     "to": [
+      241.92,
+      241.92
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 4,
+     "frm": [
+      82.08,
+      483.84
+     ],
+     "to": [
+      82.08,
+      406.08
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 4,
+     "frm": [
+      82.08,
+      483.84
+     ],
+     "to": [
+      82.08,
+      565.92
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 4,
+     "frm": [
+      241.92,
+      483.84
+     ],
+     "to": [
+      241.92,
+      406.08
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 4,
+     "frm": [
+      241.92,
+      483.84
+     ],
+     "to": [
+      241.92,
+      565.92
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 4,
+     "frm": [
+      406.08,
+      164.16
+     ],
+     "to": [
+      406.08,
+      82.08
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 4,
+     "frm": [
+      406.08,
+      164.16
+     ],
+     "to": [
+      406.08,
+      241.92
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 4,
+     "frm": [
+      565.92,
+      164.16
+     ],
+     "to": [
+      565.92,
+      82.08
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 4,
+     "frm": [
+      565.92,
+      164.16
+     ],
+     "to": [
+      565.92,
+      241.92
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 4,
+     "frm": [
+      406.08,
+      483.84
+     ],
+     "to": [
+      406.08,
+      406.08
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 4,
+     "frm": [
+      406.08,
+      483.84
+     ],
+     "to": [
+      406.08,
+      565.92
+     ],
+     "len_um": 82.08
+    },
+    {
+     "level": 4,
+     "frm": [
+      565.92,
+      483.84
+     ],
+     "to": [
+      565.92,
+      406.08
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 4,
+     "frm": [
+      565.92,
+      483.84
+     ],
+     "to": [
+      565.92,
+      565.92
+     ],
+     "len_um": 82.08
+    }
+   ],
+   "islands": [
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      164.16,
+      324.0
+     ],
+     "rect_um": [
+      159.84,
+      319.68,
+      168.48,
+      328.32
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      483.84,
+      324.0
+     ],
+     "rect_um": [
+      479.52,
+      319.68,
+      488.16,
+      328.32
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      164.16,
+      164.16
+     ],
+     "rect_um": [
+      159.84,
+      159.84,
+      168.48,
+      168.48
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      164.16,
+      483.84
+     ],
+     "rect_um": [
+      159.84,
+      479.52,
+      168.48,
+      488.16
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      483.84,
+      164.16
+     ],
+     "rect_um": [
+      479.52,
+      159.84,
+      488.16,
+      168.48
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      483.84,
+      483.84
+     ],
+     "rect_um": [
+      479.52,
+      479.52,
+      488.16,
+      488.16
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      82.08,
+      164.16
+     ],
+     "rect_um": [
+      77.76,
+      159.84,
+      86.4,
+      168.48
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      241.92,
+      164.16
+     ],
+     "rect_um": [
+      237.6,
+      159.84,
+      246.24,
+      168.48
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      82.08,
+      483.84
+     ],
+     "rect_um": [
+      77.76,
+      479.52,
+      86.4,
+      488.16
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      241.92,
+      483.84
+     ],
+     "rect_um": [
+      237.6,
+      479.52,
+      246.24,
+      488.16
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      406.08,
+      164.16
+     ],
+     "rect_um": [
+      401.76,
+      159.84,
+      410.4,
+      168.48
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      565.92,
+      164.16
+     ],
+     "rect_um": [
+      561.6,
+      159.84,
+      570.24,
+      168.48
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      406.08,
+      483.84
+     ],
+     "rect_um": [
+      401.76,
+      479.52,
+      410.4,
+      488.16
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      565.92,
+      483.84
+     ],
+     "rect_um": [
+      561.6,
+      479.52,
+      570.24,
+      488.16
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      82.08,
+      82.08
+     ],
+     "rect_um": [
+      77.76,
+      77.76,
+      86.4,
+      86.4
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      82.08,
+      241.92
+     ],
+     "rect_um": [
+      77.76,
+      237.6,
+      86.4,
+      246.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      241.92,
+      82.08
+     ],
+     "rect_um": [
+      237.6,
+      77.76,
+      246.24,
+      86.4
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      241.92,
+      241.92
+     ],
+     "rect_um": [
+      237.6,
+      237.6,
+      246.24,
+      246.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      82.08,
+      406.08
+     ],
+     "rect_um": [
+      77.76,
+      401.76,
+      86.4,
+      410.4
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      82.08,
+      565.92
+     ],
+     "rect_um": [
+      77.76,
+      561.6,
+      86.4,
+      570.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      241.92,
+      406.08
+     ],
+     "rect_um": [
+      237.6,
+      401.76,
+      246.24,
+      410.4
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      241.92,
+      565.92
+     ],
+     "rect_um": [
+      237.6,
+      561.6,
+      246.24,
+      570.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      406.08,
+      82.08
+     ],
+     "rect_um": [
+      401.76,
+      77.76,
+      410.4,
+      86.4
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      406.08,
+      241.92
+     ],
+     "rect_um": [
+      401.76,
+      237.6,
+      410.4,
+      246.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      565.92,
+      82.08
+     ],
+     "rect_um": [
+      561.6,
+      77.76,
+      570.24,
+      86.4
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      565.92,
+      241.92
+     ],
+     "rect_um": [
+      561.6,
+      237.6,
+      570.24,
+      246.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      406.08,
+      406.08
+     ],
+     "rect_um": [
+      401.76,
+      401.76,
+      410.4,
+      410.4
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      406.08,
+      565.92
+     ],
+     "rect_um": [
+      401.76,
+      561.6,
+      410.4,
+      570.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      565.92,
+      406.08
+     ],
+     "rect_um": [
+      561.6,
+      401.76,
+      570.24,
+      410.4
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      565.92,
+      565.92
+     ],
+     "rect_um": [
+      561.6,
+      561.6,
+      570.24,
+      570.24
+     ],
+     "die_tree_node": true
+    }
+   ],
+   "lattice": {
+    "instances": 4,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     75.0,
+     75.0
+    ]
+   }
+  },
+  {
+   "module": "ot_s81sl_xrt3",
+   "replicas": 2,
+   "outline_um": [
+    207.36,
+    164.16
+   ],
+   "entry": {
+    "xy_um": [
+     103.68,
+     82.08
+    ],
+    "island_rect_um": [
+     99.36,
+     77.76,
+     108.0,
+     86.4
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 185.76,
+   "lib_insertion_tt": {
+    "max": 651.02209,
+    "min": 555.82404
+   },
+   "lib_insertion_ff": {
+    "max": 534.87317,
+    "min": 457.81662
+   },
+   "pred_core_tt_ff": [
+    157.0,
+    125.6
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    157.0,
+    125.6
+   ],
+   "trunk_chain": {
+    "stages": 4,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 95.4,
+    "ff_ps": 70.6
+   },
+   "pred_total_tt_ff": [
+    252.4,
+    196.2
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 2,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     24.0,
+     19.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l5",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    302.4
+   ],
+   "entry": {
+    "xy_um": [
+     172.8,
+     151.2
+    ],
+    "island_rect_um": [
+     168.48,
+     146.88,
+     177.12,
+     155.52
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 324.0,
+   "lib_insertion_tt": {
+    "max": 512.25568,
+    "min": 370.54269
+   },
+   "lib_insertion_ff": {
+    "max": 430.37888,
+    "min": 304.50452
+   },
+   "grid": [
+    2,
+    2
+   ],
+   "split_order": [
+    "x",
+    "y"
+   ],
+   "leaf_reach_um": 162.0,
+   "pred_core_tt_ff": [
+    136.9,
+    109.5
+   ],
+   "pred_note": "centre entry predicts 273.8/219.0 > 270.0: die tree descends to the 4 leaf islands; core latency from each leaf island",
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    136.9,
+    109.5
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "each leaf island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    256.15,
+    197.75
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "DIE_TREE_IN",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      172.8,
+      151.2
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      86.4,
+      151.2
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 1,
+     "xy": [
+      259.2,
+      151.2
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      86.4,
+      73.44
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      86.4,
+      224.64
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      259.2,
+      73.44
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      259.2,
+      224.64
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      151.2
+     ],
+     "to": [
+      86.4,
+      151.2
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      151.2
+     ],
+     "to": [
+      259.2,
+      151.2
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 2,
+     "frm": [
+      86.4,
+      151.2
+     ],
+     "to": [
+      86.4,
+      73.44
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 2,
+     "frm": [
+      86.4,
+      151.2
+     ],
+     "to": [
+      86.4,
+      224.64
+     ],
+     "len_um": 73.44
+    },
+    {
+     "level": 2,
+     "frm": [
+      259.2,
+      151.2
+     ],
+     "to": [
+      259.2,
+      73.44
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 2,
+     "frm": [
+      259.2,
+      151.2
+     ],
+     "to": [
+      259.2,
+      224.64
+     ],
+     "len_um": 73.44
+    }
+   ],
+   "islands": [
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      86.4,
+      151.2
+     ],
+     "rect_um": [
+      82.08,
+      146.88,
+      90.72,
+      155.52
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      259.2,
+      151.2
+     ],
+     "rect_um": [
+      254.88,
+      146.88,
+      263.52,
+      155.52
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      86.4,
+      73.44
+     ],
+     "rect_um": [
+      82.08,
+      69.12,
+      90.72,
+      77.76
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      86.4,
+      224.64
+     ],
+     "rect_um": [
+      82.08,
+      220.32,
+      90.72,
+      228.96
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      259.2,
+      73.44
+     ],
+     "rect_um": [
+      254.88,
+      69.12,
+      263.52,
+      77.76
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      259.2,
+      224.64
+     ],
+     "rect_um": [
+      254.88,
+      220.32,
+      263.52,
+      228.96
+     ],
+     "die_tree_node": true
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     40.0,
+     35.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l1",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    216.0
+   ],
+   "entry": {
+    "xy_um": [
+     172.8,
+     108.0
+    ],
+    "island_rect_um": [
+     168.48,
+     103.68,
+     177.12,
+     112.32
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 280.8,
+   "lib_insertion_tt": {
+    "max": 350.00586,
+    "min": 261.67303
+   },
+   "lib_insertion_ff": {
+    "max": 296.35745,
+    "min": 212.48373
+   },
+   "grid": [
+    2,
+    1
+   ],
+   "split_order": [
+    "x"
+   ],
+   "leaf_reach_um": 194.4,
+   "pred_core_tt_ff": [
+    237.3,
+    189.8
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    237.3,
+    189.8
+   ],
+   "trunk_chain": {
+    "stages": 0,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 0.0,
+    "ff_ps": 0.0
+   },
+   "pred_total_tt_ff": [
+    237.3,
+    189.8
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      172.8,
+      108.0
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      86.4,
+      108.0
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      259.2,
+      108.0
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      108.0
+     ],
+     "to": [
+      86.4,
+      108.0
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      108.0
+     ],
+     "to": [
+      259.2,
+      108.0
+     ],
+     "len_um": 86.4
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      86.4,
+      108.0
+     ],
+     "rect_um": [
+      82.08,
+      103.68,
+      90.72,
+      112.32
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      259.2,
+      108.0
+     ],
+     "rect_um": [
+      254.88,
+      103.68,
+      263.52,
+      112.32
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     40.0,
+     25.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l1c",
+   "replicas": 1,
+   "outline_um": [
+    86.4,
+    216.0
+   ],
+   "entry": {
+    "xy_um": [
+     43.2,
+     108.0
+    ],
+    "island_rect_um": [
+     38.88,
+     103.68,
+     47.52,
+     112.32
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 151.2,
+   "lib_insertion_tt": {
+    "max": 237.80722,
+    "min": 177.23906
+   },
+   "lib_insertion_ff": {
+    "max": 201.53757,
+    "min": 145.25734
+   },
+   "pred_core_tt_ff": [
+    127.8,
+    102.2
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    127.8,
+    102.2
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    247.05,
+    190.45
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     10.0,
+     25.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l0",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "entry": {
+    "xy_um": [
+     172.8,
+     86.4
+    ],
+    "island_rect_um": [
+     168.48,
+     82.08,
+     177.12,
+     90.72
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 259.2,
+   "lib_insertion_tt": {
+    "max": 320.12833,
+    "min": 250.74129
+   },
+   "lib_insertion_ff": {
+    "max": 267.96899,
+    "min": 203.0208
+   },
+   "grid": [
+    2,
+    1
+   ],
+   "split_order": [
+    "x"
+   ],
+   "leaf_reach_um": 172.8,
+   "pred_core_tt_ff": [
+    219.1,
+    175.2
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    219.1,
+    175.2
+   ],
+   "trunk_chain": {
+    "stages": 1,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 23.85,
+    "ff_ps": 17.65
+   },
+   "pred_total_tt_ff": [
+    242.95,
+    192.85
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      172.8,
+      86.4
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      86.4,
+      86.4
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      259.2,
+      86.4
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      86.4
+     ],
+     "to": [
+      86.4,
+      86.4
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      86.4
+     ],
+     "to": [
+      259.2,
+      86.4
+     ],
+     "len_um": 86.4
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      86.4,
+      86.4
+     ],
+     "rect_um": [
+      82.08,
+      82.08,
+      90.72,
+      90.72
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      259.2,
+      86.4
+     ],
+     "rect_um": [
+      254.88,
+      82.08,
+      263.52,
+      90.72
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     40.0,
+     20.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l2",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "entry": {
+    "xy_um": [
+     172.8,
+     86.4
+    ],
+    "island_rect_um": [
+     168.48,
+     82.08,
+     177.12,
+     90.72
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 259.2,
+   "lib_insertion_tt": {
+    "max": 304.56857,
+    "min": 244.80742
+   },
+   "lib_insertion_ff": {
+    "max": 253.64865,
+    "min": 197.21242
+   },
+   "grid": [
+    2,
+    1
+   ],
+   "split_order": [
+    "x"
+   ],
+   "leaf_reach_um": 172.8,
+   "pred_core_tt_ff": [
+    219.1,
+    175.2
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    219.1,
+    175.2
+   ],
+   "trunk_chain": {
+    "stages": 1,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 23.85,
+    "ff_ps": 17.65
+   },
+   "pred_total_tt_ff": [
+    242.95,
+    192.85
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      172.8,
+      86.4
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      86.4,
+      86.4
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      259.2,
+      86.4
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      86.4
+     ],
+     "to": [
+      86.4,
+      86.4
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      86.4
+     ],
+     "to": [
+      259.2,
+      86.4
+     ],
+     "len_um": 86.4
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      86.4,
+      86.4
+     ],
+     "rect_um": [
+      82.08,
+      82.08,
+      90.72,
+      90.72
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      259.2,
+      86.4
+     ],
+     "rect_um": [
+      254.88,
+      82.08,
+      263.52,
+      90.72
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     40.0,
+     20.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l3",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    172.8
+   ],
+   "entry": {
+    "xy_um": [
+     172.8,
+     86.4
+    ],
+    "island_rect_um": [
+     168.48,
+     82.08,
+     177.12,
+     90.72
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 259.2,
+   "lib_insertion_tt": {
+    "max": 293.32172,
+    "min": 217.88559
+   },
+   "lib_insertion_ff": {
+    "max": 247.70711,
+    "min": 176.75401
+   },
+   "grid": [
+    2,
+    1
+   ],
+   "split_order": [
+    "x"
+   ],
+   "leaf_reach_um": 172.8,
+   "pred_core_tt_ff": [
+    219.1,
+    175.2
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    219.1,
+    175.2
+   ],
+   "trunk_chain": {
+    "stages": 1,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 23.85,
+    "ff_ps": 17.65
+   },
+   "pred_total_tt_ff": [
+    242.95,
+    192.85
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      172.8,
+      86.4
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      86.4,
+      86.4
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      259.2,
+      86.4
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      86.4
+     ],
+     "to": [
+      86.4,
+      86.4
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      86.4
+     ],
+     "to": [
+      259.2,
+      86.4
+     ],
+     "len_um": 86.4
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      86.4,
+      86.4
+     ],
+     "rect_um": [
+      82.08,
+      82.08,
+      90.72,
+      90.72
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      259.2,
+      86.4
+     ],
+     "rect_um": [
+      254.88,
+      82.08,
+      263.52,
+      90.72
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     40.0,
+     20.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l0r",
+   "replicas": 1,
+   "outline_um": [
+    267.84,
+    267.84
+   ],
+   "entry": {
+    "xy_um": [
+     133.92,
+     133.92
+    ],
+    "island_rect_um": [
+     129.6,
+     129.6,
+     138.24,
+     138.24
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 267.84,
+   "lib_insertion_tt": {
+    "max": 244.41205,
+    "min": 213.78786
+   },
+   "lib_insertion_ff": {
+    "max": 200.96223,
+    "min": 172.60754
+   },
+   "grid": [
+    2,
+    2
+   ],
+   "split_order": [
+    "x",
+    "y"
+   ],
+   "leaf_reach_um": 133.92,
+   "pred_core_tt_ff": [
+    226.4,
+    181.0
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    226.4,
+    181.0
+   ],
+   "trunk_chain": {
+    "stages": 1,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 23.85,
+    "ff_ps": 17.65
+   },
+   "pred_total_tt_ff": [
+    250.25,
+    198.65
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      133.92,
+      133.92
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      64.8,
+      133.92
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 1,
+     "xy": [
+      198.72,
+      133.92
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      64.8,
+      64.8
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      64.8,
+      198.72
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      198.72,
+      64.8
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 2,
+     "xy": [
+      198.72,
+      198.72
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      133.92,
+      133.92
+     ],
+     "to": [
+      64.8,
+      133.92
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 1,
+     "frm": [
+      133.92,
+      133.92
+     ],
+     "to": [
+      198.72,
+      133.92
+     ],
+     "len_um": 64.8
+    },
+    {
+     "level": 2,
+     "frm": [
+      64.8,
+      133.92
+     ],
+     "to": [
+      64.8,
+      64.8
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 2,
+     "frm": [
+      64.8,
+      133.92
+     ],
+     "to": [
+      64.8,
+      198.72
+     ],
+     "len_um": 64.8
+    },
+    {
+     "level": 2,
+     "frm": [
+      198.72,
+      133.92
+     ],
+     "to": [
+      198.72,
+      64.8
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 2,
+     "frm": [
+      198.72,
+      133.92
+     ],
+     "to": [
+      198.72,
+      198.72
+     ],
+     "len_um": 64.8
+    }
+   ],
+   "islands": [
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      64.8,
+      133.92
+     ],
+     "rect_um": [
+      60.48,
+      129.6,
+      69.12,
+      138.24
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      198.72,
+      133.92
+     ],
+     "rect_um": [
+      194.4,
+      129.6,
+      203.04,
+      138.24
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      64.8,
+      64.8
+     ],
+     "rect_um": [
+      60.48,
+      60.48,
+      69.12,
+      69.12
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      64.8,
+      198.72
+     ],
+     "rect_um": [
+      60.48,
+      194.4,
+      69.12,
+      203.04
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      198.72,
+      64.8
+     ],
+     "rect_um": [
+      194.4,
+      60.48,
+      203.04,
+      69.12
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 2,
+     "centre_um": [
+      198.72,
+      198.72
+     ],
+     "rect_um": [
+      194.4,
+      194.4,
+      203.04,
+      203.04
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     31.0,
+     31.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l5f",
+   "replicas": 1,
+   "outline_um": [
+    151.2,
+    151.2
+   ],
+   "entry": {
+    "xy_um": [
+     73.44,
+     73.44
+    ],
+    "island_rect_um": [
+     69.12,
+     69.12,
+     77.76,
+     77.76
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 155.52,
+   "lib_insertion_tt": {
+    "max": 253.63315,
+    "min": 221.77484
+   },
+   "lib_insertion_ff": {
+    "max": 203.60571,
+    "min": 174.27914
+   },
+   "pred_core_tt_ff": [
+    131.4,
+    105.1
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    131.4,
+    105.1
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    250.65,
+    193.35
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     17.5,
+     17.5
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l4r",
+   "replicas": 1,
+   "outline_um": [
+    129.6,
+    129.6
+   ],
+   "entry": {
+    "xy_um": [
+     64.8,
+     64.8
+    ],
+    "island_rect_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 129.6,
+   "lib_insertion_tt": {
+    "max": 269.90607,
+    "min": 228.49925
+   },
+   "lib_insertion_ff": {
+    "max": 212.21124,
+    "min": 175.54651
+   },
+   "pred_core_tt_ff": [
+    109.5,
+    87.6
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    109.5,
+    87.6
+   ],
+   "trunk_chain": {
+    "stages": 6,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 143.1,
+    "ff_ps": 105.9
+   },
+   "pred_total_tt_ff": [
+    252.6,
+    193.5
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     15.0,
+     15.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_gunit_l4",
+   "replicas": 1,
+   "outline_um": [
+    345.6,
+    64.8
+   ],
+   "entry": {
+    "xy_um": [
+     172.8,
+     30.24
+    ],
+    "island_rect_um": [
+     168.48,
+     25.92,
+     177.12,
+     34.56
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 207.36,
+   "lib_insertion_tt": {
+    "max": 329.06592,
+    "min": 253.06265
+   },
+   "lib_insertion_ff": {
+    "max": 278.37833,
+    "min": 206.56465
+   },
+   "grid": [
+    2,
+    1
+   ],
+   "split_order": [
+    "x"
+   ],
+   "leaf_reach_um": 118.8,
+   "pred_core_tt_ff": [
+    175.2,
+    140.2
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    175.2,
+    140.2
+   ],
+   "trunk_chain": {
+    "stages": 3,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 71.55,
+    "ff_ps": 52.95
+   },
+   "pred_total_tt_ff": [
+    246.75,
+    193.15
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      172.8,
+      30.24
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      86.4,
+      30.24
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      259.2,
+      30.24
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      30.24
+     ],
+     "to": [
+      86.4,
+      30.24
+     ],
+     "len_um": 86.4
+    },
+    {
+     "level": 1,
+     "frm": [
+      172.8,
+      30.24
+     ],
+     "to": [
+      259.2,
+      30.24
+     ],
+     "len_um": 86.4
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      86.4,
+      30.24
+     ],
+     "rect_um": [
+      82.08,
+      25.92,
+      90.72,
+      34.56
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      259.2,
+      30.24
+     ],
+     "rect_um": [
+      254.88,
+      25.92,
+      263.52,
+      34.56
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     40.0,
+     7.5
+    ]
+   }
+  },
+  {
+   "module": "dsdv_idx_tx_n32",
+   "replicas": 1,
+   "outline_um": [
+    626.4,
+    561.6
+   ],
+   "entry": {
+    "xy_um": [
+     311.04,
+     280.8
+    ],
+    "island_rect_um": [
+     306.72,
+     276.48,
+     315.36,
+     285.12
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 596.16,
+   "lib_insertion_tt": {
+    "max": 857.66388,
+    "min": 727.58923
+   },
+   "lib_insertion_ff": {
+    "max": 703.86664,
+    "min": 582.1734
+   },
+   "grid": [
+    4,
+    4
+   ],
+   "split_order": [
+    "x",
+    "y",
+    "x",
+    "y"
+   ],
+   "leaf_reach_um": 148.5,
+   "pred_core_tt_ff": [
+    125.5,
+    100.4
+   ],
+   "pred_note": "centre entry predicts 503.8/403.0 > 270.0: die tree descends to the 16 leaf islands; core latency from each leaf island",
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    125.5,
+    100.4
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "each leaf island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    244.75,
+    188.65
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "DIE_TREE_IN",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      311.04,
+      280.8
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      155.52,
+      280.8
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 1,
+     "xy": [
+      470.88,
+      280.8
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      155.52,
+      138.24
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      155.52,
+      423.36
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      470.88,
+      138.24
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      470.88,
+      423.36
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      77.76,
+      138.24
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      233.28,
+      138.24
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      77.76,
+      423.36
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      233.28,
+      423.36
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      393.12,
+      138.24
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      548.64,
+      138.24
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      393.12,
+      423.36
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      548.64,
+      423.36
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 4,
+     "xy": [
+      77.76,
+      69.12
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      77.76,
+      211.68
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      233.28,
+      69.12
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      233.28,
+      211.68
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      77.76,
+      349.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      77.76,
+      492.48
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      233.28,
+      349.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      233.28,
+      492.48
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      393.12,
+      69.12
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      393.12,
+      211.68
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      548.64,
+      69.12
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      548.64,
+      211.68
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      393.12,
+      349.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      393.12,
+      492.48
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      548.64,
+      349.92
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 4,
+     "xy": [
+      548.64,
+      492.48
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      311.04,
+      280.8
+     ],
+     "to": [
+      155.52,
+      280.8
+     ],
+     "len_um": 155.52
+    },
+    {
+     "level": 1,
+     "frm": [
+      311.04,
+      280.8
+     ],
+     "to": [
+      470.88,
+      280.8
+     ],
+     "len_um": 159.84
+    },
+    {
+     "level": 2,
+     "frm": [
+      155.52,
+      280.8
+     ],
+     "to": [
+      155.52,
+      138.24
+     ],
+     "len_um": 142.56
+    },
+    {
+     "level": 2,
+     "frm": [
+      155.52,
+      280.8
+     ],
+     "to": [
+      155.52,
+      423.36
+     ],
+     "len_um": 142.56
+    },
+    {
+     "level": 2,
+     "frm": [
+      470.88,
+      280.8
+     ],
+     "to": [
+      470.88,
+      138.24
+     ],
+     "len_um": 142.56
+    },
+    {
+     "level": 2,
+     "frm": [
+      470.88,
+      280.8
+     ],
+     "to": [
+      470.88,
+      423.36
+     ],
+     "len_um": 142.56
+    },
+    {
+     "level": 3,
+     "frm": [
+      155.52,
+      138.24
+     ],
+     "to": [
+      77.76,
+      138.24
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      155.52,
+      138.24
+     ],
+     "to": [
+      233.28,
+      138.24
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      155.52,
+      423.36
+     ],
+     "to": [
+      77.76,
+      423.36
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      155.52,
+      423.36
+     ],
+     "to": [
+      233.28,
+      423.36
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      470.88,
+      138.24
+     ],
+     "to": [
+      393.12,
+      138.24
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      470.88,
+      138.24
+     ],
+     "to": [
+      548.64,
+      138.24
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      470.88,
+      423.36
+     ],
+     "to": [
+      393.12,
+      423.36
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 3,
+     "frm": [
+      470.88,
+      423.36
+     ],
+     "to": [
+      548.64,
+      423.36
+     ],
+     "len_um": 77.76
+    },
+    {
+     "level": 4,
+     "frm": [
+      77.76,
+      138.24
+     ],
+     "to": [
+      77.76,
+      69.12
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 4,
+     "frm": [
+      77.76,
+      138.24
+     ],
+     "to": [
+      77.76,
+      211.68
+     ],
+     "len_um": 73.44
+    },
+    {
+     "level": 4,
+     "frm": [
+      233.28,
+      138.24
+     ],
+     "to": [
+      233.28,
+      69.12
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 4,
+     "frm": [
+      233.28,
+      138.24
+     ],
+     "to": [
+      233.28,
+      211.68
+     ],
+     "len_um": 73.44
+    },
+    {
+     "level": 4,
+     "frm": [
+      77.76,
+      423.36
+     ],
+     "to": [
+      77.76,
+      349.92
+     ],
+     "len_um": 73.44
+    },
+    {
+     "level": 4,
+     "frm": [
+      77.76,
+      423.36
+     ],
+     "to": [
+      77.76,
+      492.48
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 4,
+     "frm": [
+      233.28,
+      423.36
+     ],
+     "to": [
+      233.28,
+      349.92
+     ],
+     "len_um": 73.44
+    },
+    {
+     "level": 4,
+     "frm": [
+      233.28,
+      423.36
+     ],
+     "to": [
+      233.28,
+      492.48
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 4,
+     "frm": [
+      393.12,
+      138.24
+     ],
+     "to": [
+      393.12,
+      69.12
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 4,
+     "frm": [
+      393.12,
+      138.24
+     ],
+     "to": [
+      393.12,
+      211.68
+     ],
+     "len_um": 73.44
+    },
+    {
+     "level": 4,
+     "frm": [
+      548.64,
+      138.24
+     ],
+     "to": [
+      548.64,
+      69.12
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 4,
+     "frm": [
+      548.64,
+      138.24
+     ],
+     "to": [
+      548.64,
+      211.68
+     ],
+     "len_um": 73.44
+    },
+    {
+     "level": 4,
+     "frm": [
+      393.12,
+      423.36
+     ],
+     "to": [
+      393.12,
+      349.92
+     ],
+     "len_um": 73.44
+    },
+    {
+     "level": 4,
+     "frm": [
+      393.12,
+      423.36
+     ],
+     "to": [
+      393.12,
+      492.48
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 4,
+     "frm": [
+      548.64,
+      423.36
+     ],
+     "to": [
+      548.64,
+      349.92
+     ],
+     "len_um": 73.44
+    },
+    {
+     "level": 4,
+     "frm": [
+      548.64,
+      423.36
+     ],
+     "to": [
+      548.64,
+      492.48
+     ],
+     "len_um": 69.12
+    }
+   ],
+   "islands": [
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      155.52,
+      280.8
+     ],
+     "rect_um": [
+      151.2,
+      276.48,
+      159.84,
+      285.12
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      470.88,
+      280.8
+     ],
+     "rect_um": [
+      466.56,
+      276.48,
+      475.2,
+      285.12
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      155.52,
+      138.24
+     ],
+     "rect_um": [
+      151.2,
+      133.92,
+      159.84,
+      142.56
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      155.52,
+      423.36
+     ],
+     "rect_um": [
+      151.2,
+      419.04,
+      159.84,
+      427.68
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      470.88,
+      138.24
+     ],
+     "rect_um": [
+      466.56,
+      133.92,
+      475.2,
+      142.56
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      470.88,
+      423.36
+     ],
+     "rect_um": [
+      466.56,
+      419.04,
+      475.2,
+      427.68
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      77.76,
+      138.24
+     ],
+     "rect_um": [
+      73.44,
+      133.92,
+      82.08,
+      142.56
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      233.28,
+      138.24
+     ],
+     "rect_um": [
+      228.96,
+      133.92,
+      237.6,
+      142.56
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      77.76,
+      423.36
+     ],
+     "rect_um": [
+      73.44,
+      419.04,
+      82.08,
+      427.68
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      233.28,
+      423.36
+     ],
+     "rect_um": [
+      228.96,
+      419.04,
+      237.6,
+      427.68
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      393.12,
+      138.24
+     ],
+     "rect_um": [
+      388.8,
+      133.92,
+      397.44,
+      142.56
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      548.64,
+      138.24
+     ],
+     "rect_um": [
+      544.32,
+      133.92,
+      552.96,
+      142.56
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      393.12,
+      423.36
+     ],
+     "rect_um": [
+      388.8,
+      419.04,
+      397.44,
+      427.68
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 3,
+     "centre_um": [
+      548.64,
+      423.36
+     ],
+     "rect_um": [
+      544.32,
+      419.04,
+      552.96,
+      427.68
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      77.76,
+      69.12
+     ],
+     "rect_um": [
+      73.44,
+      64.8,
+      82.08,
+      73.44
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      77.76,
+      211.68
+     ],
+     "rect_um": [
+      73.44,
+      207.36,
+      82.08,
+      216.0
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      233.28,
+      69.12
+     ],
+     "rect_um": [
+      228.96,
+      64.8,
+      237.6,
+      73.44
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      233.28,
+      211.68
+     ],
+     "rect_um": [
+      228.96,
+      207.36,
+      237.6,
+      216.0
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      77.76,
+      349.92
+     ],
+     "rect_um": [
+      73.44,
+      345.6,
+      82.08,
+      354.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      77.76,
+      492.48
+     ],
+     "rect_um": [
+      73.44,
+      488.16,
+      82.08,
+      496.8
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      233.28,
+      349.92
+     ],
+     "rect_um": [
+      228.96,
+      345.6,
+      237.6,
+      354.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      233.28,
+      492.48
+     ],
+     "rect_um": [
+      228.96,
+      488.16,
+      237.6,
+      496.8
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      393.12,
+      69.12
+     ],
+     "rect_um": [
+      388.8,
+      64.8,
+      397.44,
+      73.44
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      393.12,
+      211.68
+     ],
+     "rect_um": [
+      388.8,
+      207.36,
+      397.44,
+      216.0
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      548.64,
+      69.12
+     ],
+     "rect_um": [
+      544.32,
+      64.8,
+      552.96,
+      73.44
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      548.64,
+      211.68
+     ],
+     "rect_um": [
+      544.32,
+      207.36,
+      552.96,
+      216.0
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      393.12,
+      349.92
+     ],
+     "rect_um": [
+      388.8,
+      345.6,
+      397.44,
+      354.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      393.12,
+      492.48
+     ],
+     "rect_um": [
+      388.8,
+      488.16,
+      397.44,
+      496.8
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      548.64,
+      349.92
+     ],
+     "rect_um": [
+      544.32,
+      345.6,
+      552.96,
+      354.24
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 4,
+     "centre_um": [
+      548.64,
+      492.48
+     ],
+     "rect_um": [
+      544.32,
+      488.16,
+      552.96,
+      496.8
+     ],
+     "die_tree_node": true
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     72.5,
+     65.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_bksel_c",
+   "replicas": 1,
+   "outline_um": [
+    388.8,
+    172.8
+   ],
+   "entry": {
+    "xy_um": [
+     194.4,
+     86.4
+    ],
+    "island_rect_um": [
+     190.08,
+     82.08,
+     198.72,
+     90.72
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 280.8,
+   "lib_insertion_tt": {
+    "max": 399.26196,
+    "min": 329.54874
+   },
+   "lib_insertion_ff": {
+    "max": 332.73706,
+    "min": 269.07681
+   },
+   "grid": [
+    2,
+    1
+   ],
+   "split_order": [
+    "x"
+   ],
+   "leaf_reach_um": 183.6,
+   "pred_core_tt_ff": [
+    237.3,
+    189.8
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    237.3,
+    189.8
+   ],
+   "trunk_chain": {
+    "stages": 0,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 0.0,
+    "ff_ps": 0.0
+   },
+   "pred_total_tt_ff": [
+    237.3,
+    189.8
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      194.4,
+      86.4
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      95.04,
+      86.4
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      293.76,
+      86.4
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      194.4,
+      86.4
+     ],
+     "to": [
+      95.04,
+      86.4
+     ],
+     "len_um": 99.36
+    },
+    {
+     "level": 1,
+     "frm": [
+      194.4,
+      86.4
+     ],
+     "to": [
+      293.76,
+      86.4
+     ],
+     "len_um": 99.36
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      95.04,
+      86.4
+     ],
+     "rect_um": [
+      90.72,
+      82.08,
+      99.36,
+      90.72
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      293.76,
+      86.4
+     ],
+     "rect_um": [
+      289.44,
+      82.08,
+      298.08,
+      90.72
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     45.0,
+     20.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_bk_g",
+   "replicas": 1,
+   "outline_um": [
+    216.0,
+    172.8
+   ],
+   "entry": {
+    "xy_um": [
+     108.0,
+     86.4
+    ],
+    "island_rect_um": [
+     103.68,
+     82.08,
+     112.32,
+     90.72
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 194.4,
+   "lib_insertion_tt": {
+    "max": 366.897,
+    "min": 287.58185
+   },
+   "lib_insertion_ff": {
+    "max": 302.48663,
+    "min": 233.01927
+   },
+   "pred_core_tt_ff": [
+    164.3,
+    131.4
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    164.3,
+    131.4
+   ],
+   "trunk_chain": {
+    "stages": 4,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 95.4,
+    "ff_ps": 70.6
+   },
+   "pred_total_tt_ff": [
+    259.7,
+    202.0
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_TREE",
+   "htree_nodes": [],
+   "htree_edges": [],
+   "islands": [],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     25.0,
+     20.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_eng_rr_e",
+   "replicas": 1,
+   "outline_um": [
+    410.4,
+    466.56
+   ],
+   "entry": {
+    "xy_um": [
+     203.04,
+     233.28
+    ],
+    "island_rect_um": [
+     198.72,
+     228.96,
+     207.36,
+     237.6
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 440.64,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "grid": [
+    2,
+    4
+   ],
+   "split_order": [
+    "y",
+    "x",
+    "y"
+   ],
+   "leaf_reach_um": 160.92,
+   "pred_core_tt_ff": [
+    136.0,
+    108.8
+   ],
+   "pred_note": "centre entry predicts 372.4/297.8 > 270.0: die tree descends to the 8 leaf islands; core latency from each leaf island",
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    136.0,
+    108.8
+   ],
+   "trunk_chain": {
+    "stages": 5,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "each leaf island",
+    "tt_ps": 119.25,
+    "ff_ps": 88.25
+   },
+   "pred_total_tt_ff": [
+    255.25,
+    197.05
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "DIE_TREE_IN",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      203.04,
+      233.28
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      203.04,
+      116.64
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 1,
+     "xy": [
+      203.04,
+      349.92
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      103.68,
+      116.64
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      306.72,
+      116.64
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      103.68,
+      349.92
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 2,
+     "xy": [
+      306.72,
+      349.92
+     ],
+     "role": "branch"
+    },
+    {
+     "level": 3,
+     "xy": [
+      103.68,
+      60.48
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 3,
+     "xy": [
+      103.68,
+      172.8
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 3,
+     "xy": [
+      306.72,
+      60.48
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 3,
+     "xy": [
+      306.72,
+      172.8
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 3,
+     "xy": [
+      103.68,
+      293.76
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 3,
+     "xy": [
+      103.68,
+      406.08
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 3,
+     "xy": [
+      306.72,
+      293.76
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 3,
+     "xy": [
+      306.72,
+      406.08
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      203.04,
+      233.28
+     ],
+     "to": [
+      203.04,
+      116.64
+     ],
+     "len_um": 116.64
+    },
+    {
+     "level": 1,
+     "frm": [
+      203.04,
+      233.28
+     ],
+     "to": [
+      203.04,
+      349.92
+     ],
+     "len_um": 116.64
+    },
+    {
+     "level": 2,
+     "frm": [
+      203.04,
+      116.64
+     ],
+     "to": [
+      103.68,
+      116.64
+     ],
+     "len_um": 99.36
+    },
+    {
+     "level": 2,
+     "frm": [
+      203.04,
+      116.64
+     ],
+     "to": [
+      306.72,
+      116.64
+     ],
+     "len_um": 103.68
+    },
+    {
+     "level": 2,
+     "frm": [
+      203.04,
+      349.92
+     ],
+     "to": [
+      103.68,
+      349.92
+     ],
+     "len_um": 99.36
+    },
+    {
+     "level": 2,
+     "frm": [
+      203.04,
+      349.92
+     ],
+     "to": [
+      306.72,
+      349.92
+     ],
+     "len_um": 103.68
+    },
+    {
+     "level": 3,
+     "frm": [
+      103.68,
+      116.64
+     ],
+     "to": [
+      103.68,
+      60.48
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 3,
+     "frm": [
+      103.68,
+      116.64
+     ],
+     "to": [
+      103.68,
+      172.8
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 3,
+     "frm": [
+      306.72,
+      116.64
+     ],
+     "to": [
+      306.72,
+      60.48
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 3,
+     "frm": [
+      306.72,
+      116.64
+     ],
+     "to": [
+      306.72,
+      172.8
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 3,
+     "frm": [
+      103.68,
+      349.92
+     ],
+     "to": [
+      103.68,
+      293.76
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 3,
+     "frm": [
+      103.68,
+      349.92
+     ],
+     "to": [
+      103.68,
+      406.08
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 3,
+     "frm": [
+      306.72,
+      349.92
+     ],
+     "to": [
+      306.72,
+      293.76
+     ],
+     "len_um": 56.16
+    },
+    {
+     "level": 3,
+     "frm": [
+      306.72,
+      349.92
+     ],
+     "to": [
+      306.72,
+      406.08
+     ],
+     "len_um": 56.16
+    }
+   ],
+   "islands": [
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      203.04,
+      116.64
+     ],
+     "rect_um": [
+      198.72,
+      112.32,
+      207.36,
+      120.96
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 1,
+     "centre_um": [
+      203.04,
+      349.92
+     ],
+     "rect_um": [
+      198.72,
+      345.6,
+      207.36,
+      354.24
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      103.68,
+      116.64
+     ],
+     "rect_um": [
+      99.36,
+      112.32,
+      108.0,
+      120.96
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      306.72,
+      116.64
+     ],
+     "rect_um": [
+      302.4,
+      112.32,
+      311.04,
+      120.96
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      103.68,
+      349.92
+     ],
+     "rect_um": [
+      99.36,
+      345.6,
+      108.0,
+      354.24
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "branch",
+     "level": 2,
+     "centre_um": [
+      306.72,
+      349.92
+     ],
+     "rect_um": [
+      302.4,
+      345.6,
+      311.04,
+      354.24
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 3,
+     "centre_um": [
+      103.68,
+      60.48
+     ],
+     "rect_um": [
+      99.36,
+      56.16,
+      108.0,
+      64.8
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 3,
+     "centre_um": [
+      103.68,
+      172.8
+     ],
+     "rect_um": [
+      99.36,
+      168.48,
+      108.0,
+      177.12
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 3,
+     "centre_um": [
+      306.72,
+      60.48
+     ],
+     "rect_um": [
+      302.4,
+      56.16,
+      311.04,
+      64.8
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 3,
+     "centre_um": [
+      306.72,
+      172.8
+     ],
+     "rect_um": [
+      302.4,
+      168.48,
+      311.04,
+      177.12
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 3,
+     "centre_um": [
+      103.68,
+      293.76
+     ],
+     "rect_um": [
+      99.36,
+      289.44,
+      108.0,
+      298.08
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 3,
+     "centre_um": [
+      103.68,
+      406.08
+     ],
+     "rect_um": [
+      99.36,
+      401.76,
+      108.0,
+      410.4
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 3,
+     "centre_um": [
+      306.72,
+      293.76
+     ],
+     "rect_um": [
+      302.4,
+      289.44,
+      311.04,
+      298.08
+     ],
+     "die_tree_node": true
+    },
+    {
+     "role": "leaf",
+     "level": 3,
+     "centre_um": [
+      306.72,
+      406.08
+     ],
+     "rect_um": [
+      302.4,
+      401.76,
+      311.04,
+      410.4
+     ],
+     "die_tree_node": true
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     47.5,
+     54.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_eng_rr_h0",
+   "replicas": 1,
+   "outline_um": [
+    164.16,
+    267.84
+   ],
+   "entry": {
+    "xy_um": [
+     82.08,
+     133.92
+    ],
+    "island_rect_um": [
+     77.76,
+     129.6,
+     86.4,
+     138.24
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 216.0,
+   "lib_insertion_tt": null,
+   "lib_insertion_ff": null,
+   "grid": [
+    1,
+    2
+   ],
+   "split_order": [
+    "y"
+   ],
+   "leaf_reach_um": 149.04,
+   "pred_core_tt_ff": [
+    182.5,
+    146.0
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    182.5,
+    146.0
+   ],
+   "trunk_chain": {
+    "stages": 3,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 71.55,
+    "ff_ps": 52.95
+   },
+   "pred_total_tt_ff": [
+    254.05,
+    198.95
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      82.08,
+      133.92
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      82.08,
+      64.8
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      82.08,
+      198.72
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      82.08,
+      133.92
+     ],
+     "to": [
+      82.08,
+      64.8
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 1,
+     "frm": [
+      82.08,
+      133.92
+     ],
+     "to": [
+      82.08,
+      198.72
+     ],
+     "len_um": 64.8
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      82.08,
+      64.8
+     ],
+     "rect_um": [
+      77.76,
+      60.48,
+      86.4,
+      69.12
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      82.08,
+      198.72
+     ],
+     "rect_um": [
+      77.76,
+      194.4,
+      86.4,
+      203.04
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     19.0,
+     31.0
+    ]
+   }
+  },
+  {
+   "module": "dsdv_eng_rr_h1",
+   "replicas": 1,
+   "outline_um": [
+    164.16,
+    267.84
+   ],
+   "entry": {
+    "xy_um": [
+     82.08,
+     133.92
+    ],
+    "island_rect_um": [
+     77.76,
+     129.6,
+     86.4,
+     138.24
+    ],
+    "pin": "clk M5 interior at xy",
+    "stack": "M9->M5",
+    "pushdown_ports": [
+     "isl_clk_i",
+     "isl_clk_o",
+     "isl_rst_i",
+     "isl_rst_o"
+    ],
+    "cells": [
+     "die clock driver (plan-sized, fixed/dont_touch)",
+     "die reset relay register + repeater"
+    ]
+   },
+   "centre_to_corner_um": 216.0,
+   "lib_insertion_tt": {
+    "max": 265.49384,
+    "min": 211.7775
+   },
+   "lib_insertion_ff": {
+    "max": 214.2892,
+    "min": 167.31731
+   },
+   "grid": [
+    1,
+    2
+   ],
+   "split_order": [
+    "y"
+   ],
+   "leaf_reach_um": 149.04,
+   "pred_core_tt_ff": [
+    182.5,
+    146.0
+   ],
+   "basis": "model",
+   "chain_basis_tt_ff": [
+    182.5,
+    146.0
+   ],
+   "trunk_chain": {
+    "stages": 3,
+    "cell": "BUFx4_ASAP7_75t_R",
+    "at": "entry island",
+    "tt_ps": 71.55,
+    "ff_ps": 52.95
+   },
+   "pred_total_tt_ff": [
+    254.05,
+    198.95
+   ],
+   "pred_in_window": {
+    "TT": true,
+    "FF": true
+   },
+   "mode": "CENTRE_HTREE",
+   "htree_nodes": [
+    {
+     "level": 0,
+     "xy": [
+      82.08,
+      133.92
+     ],
+     "role": "entry"
+    },
+    {
+     "level": 1,
+     "xy": [
+      82.08,
+      64.8
+     ],
+     "role": "leaf"
+    },
+    {
+     "level": 1,
+     "xy": [
+      82.08,
+      198.72
+     ],
+     "role": "leaf"
+    }
+   ],
+   "htree_edges": [
+    {
+     "level": 1,
+     "frm": [
+      82.08,
+      133.92
+     ],
+     "to": [
+      82.08,
+      64.8
+     ],
+     "len_um": 69.12
+    },
+    {
+     "level": 1,
+     "frm": [
+      82.08,
+      133.92
+     ],
+     "to": [
+      82.08,
+      198.72
+     ],
+     "len_um": 64.8
+    }
+   ],
+   "islands": [
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      82.08,
+      64.8
+     ],
+     "rect_um": [
+      77.76,
+      60.48,
+      86.4,
+      69.12
+     ],
+     "die_tree_node": false
+    },
+    {
+     "role": "leaf",
+     "level": 1,
+     "centre_um": [
+      82.08,
+      198.72
+     ],
+     "rect_um": [
+      77.76,
+      194.4,
+      86.4,
+      203.04
+     ],
+     "die_tree_node": false
+    }
+   ],
+   "lattice": {
+    "instances": 1,
+    "off_lattice": 0,
+    "verdict": "PASS",
+    "why": {},
+    "outline_over_8p64": [
+     19.0,
+     31.0
+    ]
+   }
+  }
+ ]
+}
