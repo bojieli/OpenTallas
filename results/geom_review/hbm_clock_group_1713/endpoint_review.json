@@ -1,0 +1,24 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "Grouped TKM clock endpoint and membership geometry proposal only; no physical adoption or P&R approval",
+ "picture": "tkm_group_endpoint_delta.png",
+ "proposal": "tkm_group_endpoint_delta.json",
+ "source": "codex/hbm-clock-1713@471bc91cde",
+ "gate_rule": "neutral",
+ "gate_rule_reason": "Explicit opt-in only; existing ungrouped CP2 ports and default behavior remain unchanged. No signoff threshold, clock target, uncertainty, or release gate is relaxed.",
+ "reviewer": "HBM plan owner /root/hbm/plan, reviewed actual proposal image and member JSON during takeover1713",
+ "findings": [
+  "Proposed entry [1036.8,2916.0] is clear inside the existing L4 corridor.",
+  "Exact membership is 33 cores and 34 named clock pins: root clk plus buffer_clk, and 32 tile_clk pins.",
+  "Existing eight corridor branch buffers and 24 repeaters align with column-gap corridors.",
+  "Gray lines show membership only and are explicitly not physical clock wires.",
+  "API alone adds zero data cycles; no CP2 physical port is actually removed from a production plan by this source change."
+ ],
+ "conditions": [
+  "Complete actual entry-to-eight-branch-to-34-pin network with legal sites, PG/core avoidance, and every actual hop checked.",
+  "Actual selected-view per-corner root-to-flop means and current TT/FF timing; parent budgets carry no SIGNED credit.",
+  "Exact source consumers must reject missing or extra endpoint coverage before kit generation and at physical runtime.",
+  "HBM plan owner adoption/re-kit review after the replacement graph physically drives every declared pin."
+ ],
+ "source_checks": "29 focused grouped-clock, existing CP2, and TT/FF overlay tests PASS; physical grouped-tree qualification NOT RUN"
+}
