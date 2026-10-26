@@ -5,6 +5,14 @@
 // output must match on every edge, including invalid cycles and reset windows.
 // RSTP1 DUT/reset one edge early also retains the existing reset-release check.
 // Bypass mutant must fail: its command arrives one edge before the priced date.
+// S81-QX-GB 2026-10-26: TB_DUT_CGR / TB_REF_CGR (default 0) set the CGR of the _gb DUT / legacy ref; the CGR mutant is
+// OT_CGR_MUTANT_R3 (qx_pq: region 3 gate ungated) with TB_DUT_CGR=8 (the ref at CGR 0 never instantiates g_cgr).
+`ifndef TB_DUT_CGR
+`define TB_DUT_CGR 0
+`endif
+`ifndef TB_REF_CGR
+`define TB_REF_CGR 0
+`endif
 module tb_qxpq_go_boundary;
  parameter integer NCYC = 60000;
  integer SEED = 1;
@@ -29,12 +37,12 @@ module tb_qxpq_go_boundary;
  always @(posedge clk or negedge rst_l)
    if (!rst_l) ref_go<=0; else ref_go<=go;
  always @(posedge clk) ref_tag<=go_tag;
- ot_v41_rom_elem_q_qxpq_w10 #(`QP, .RSTP(0), .INSTANCE("r")) ref_e (
+ ot_v41_rom_elem_q_qxpq_w10 #(`QP, .RSTP(0), .CGR(`TB_REF_CGR), .INSTANCE("r")) ref_e (
   .clk(clk), .rst_n(rst_l), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(ref_go), .go_tag(ref_tag),
   .walking(awk), .bank_free(abf), .sh_free(ash),
   .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
   .xs_pos(xs_pos), .pv(av), .pval(ad), .prow(ar), .pseg(asg), .pnseg(an), .perr(ae), .ppos(ap), .busy(ab), .fault(af));
- ot_v41_rom_elem_q_qxpq_w10_gb #(`QP, .GO_BOUNDARY(1), .RSTP(1), .INSTANCE("d")) dut_e (
+ ot_v41_rom_elem_q_qxpq_w10_gb #(`QP, .GO_BOUNDARY(1), .RSTP(1), .CGR(`TB_DUT_CGR), .INSTANCE("d")) dut_e (
   .clk(clk), .rst_n(dut_rst), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag),
   .walking(bwk), .bank_free(bbf), .sh_free(bsh),
   .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
@@ -175,6 +183,7 @@ module tb_qxpq_go_boundary;
      end
    end
    tick(400);
+   $display("QXPQ_GO_BOUNDARY dut_cgr=%0d ref_cgr=%0d", `TB_DUT_CGR, `TB_REF_CGR);
    $display("QXPQ_GO_BOUNDARY cycles=%0d windows=%0d rel_ref=%0d rel_dut=%0d rel_bad=%0d mism=%0d first_mism=%0d phases=%0d resets=%0d early=%0d go=%0d cfg=%0d xs=%0d pv_cycles=%0d busy=%0d fault=%0d bank_free=%0d walking=%0d",
      cyc, windows, rel_ref, rel_dut, rel_bad, mism, first_mism, phases, resets, early_go, go_cnt, cfg_cnt, xs_cnt, pv_seen, busy_seen, flt_seen, bf_seen, wk_seen);
    if (mism == 0 && rel_bad == 0 && windows >= 3 && pv_seen >= 200) $display("QXPQ_GO_BOUNDARY PASS");

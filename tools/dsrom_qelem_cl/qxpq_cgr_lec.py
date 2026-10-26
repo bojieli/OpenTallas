@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """RTL-vs-RTL equivalence of the qxpq_w10 clock-gate change (S81-CORE-LAT/QX 2026-10-26): CGR = 8 vs the single-gate RTL.
 
-    python3 tools/dsrom_qelem_cl/qxpq_cgr_lec.py GATE_ROOT GOLD_ROOT OUT [--yosys Y]
+    python3 tools/dsrom_qelem_cl/qxpq_cgr_lec.py GATE_ROOT GOLD_ROOT OUT [--yosys Y] [--top T] [--gold-top T]
+        [--gate-param K=V ... | --gate-param none]   (S81-QX-GB 2026-10-26: other masters, e.g. the _gb top at CGR default)
         GATE_ROOT: tree with the new rtl/ (elaborated with CGR = 8);  GOLD_ROOT: tree with the reference rtl/ (CGR absent/0)
         exit 0 EQUIVALENT, 1 transform refused, 2 UNPROVEN (equiv_* left compare points), 3 tool error;  OUT/lec_cgr.json = verdict
 
@@ -45,11 +46,16 @@ BB = """(* blackbox *) module ot_hdc_cg (input wire clk, input wire en, output w
 """
 
 
-def elab(y, root, out, name, extra):
-    files = " ".join(os.path.join(root, f) for f in SRC)
+def srcs(top):
+    """SRC with the top file swapped for rtl/v41rom/<top>.sv (S81-QX-GB 2026-10-26: --top / --gold-top, e.g. the _gb master)"""
+    return [f"rtl/v41rom/{top}.sv"] + SRC[1:]
+
+
+def elab(y, root, out, name, extra, top=TOP):
+    files = " ".join(os.path.join(root, f) for f in srcs(top))
     ch = " ".join(f"-chparam {k} {v}" for k, v in {**PARAMS, **extra}.items())
     js = os.path.join(out, name + ".elab.json")
-    scr = (f"read_verilog -sv -DSYNTHESIS {files} {out}/lec_bb.v; hierarchy -top {TOP} {ch}; "
+    scr = (f"read_verilog -sv -DSYNTHESIS {files} {out}/lec_bb.v; hierarchy -top {top} {ch}; "
            f"setattr -mod -unset keep_hierarchy; proc; flatten; memory_map; opt_clean; stat; write_json {js}")
     r = subprocess.run([y, "-q", "-l", os.path.join(out, name + ".elab.log"), "-p", scr])
     if r.returncode:
@@ -285,7 +291,14 @@ def main():
                     help="prove the 8 kept enable copies equal to u_z structurally and merge them (no induction needed)")
     ap.add_argument("--state-points",action="store_true",
                     help="with --merge-enables: retain every state bit and true port, remove combinational alias cuts")
+    ap.add_argument("--top", default=TOP, help="gate top module (file rtl/v41rom/<top>.sv)")
+    ap.add_argument("--gold-top", default=None, help="gold top module (default = --top)")
+    ap.add_argument("--gate-param", action="append", default=None, metavar="K=V",
+                    help="gate-only parameter override (repeatable); default CGR=8. 'none' = no override")
     a = ap.parse_args()
+    a.gold_top = a.gold_top or a.top
+    gate_extra = {"CGR": 8} if a.gate_param is None else {
+        k: int(v) for k, v in (x.split("=", 1) for x in a.gate_param if x != "none")}
     if a.state_points and not a.merge_enables:
         ap.error("--state-points requires structural --merge-enables")
     a.state_points = a.state_points or a.merge_enables
@@ -293,8 +306,8 @@ def main():
     json.dump(dict(schema="opentallas.lec_cgr.v1",verdict="RUNNING"),open(os.path.join(a.out,"lec_cgr.json"),"w"))
     open(os.path.join(a.out, "lec_bb.v"), "w").write(BB)
     t0 = time.time()
-    gj, gst = cg_to_enable(elab(a.yosys, a.gold_root, a.out, "gold", {}), "gold", a.out)
-    tj, tst = cg_to_enable(elab(a.yosys, a.gate_root, a.out, "gate", {"CGR": 8}), "gate", a.out, a.merge_enables)
+    gj, gst = cg_to_enable(elab(a.yosys, a.gold_root, a.out, "gold", {}, a.gold_top), "gold", a.out)
+    tj, tst = cg_to_enable(elab(a.yosys, a.gate_root, a.out, "gate", gate_extra, a.top), "gate", a.out, a.merge_enables)
     scope = None
     if a.state_points:
         try:
@@ -320,7 +333,8 @@ def main():
         verdict = "TOOL ERROR"
     summ += errs[-1:]
     res = {"schema": "opentallas.lec_cgr.v1", "verdict": verdict, "gold": a.gold_root, "gate": a.gate_root,
-           "params": PARAMS, "gate_extra": {"CGR": 8}, "merge_enables": a.merge_enables, "gold_cg": gst, "gate_cg": tst, "equiv_summary": summ,
+           "params": PARAMS, "gate_extra": gate_extra,
+           "gold_top": a.gold_top, "gate_top": a.top, "merge_enables": a.merge_enables, "gold_cg": gst, "gate_cg": tst, "equiv_summary": summ,
            "state_point_scope":scope,"clock_abstraction":"unchanged registered-enable ICG-to-enable transform",
            "seconds": round(time.time() - t0)}
     json.dump(res, open(os.path.join(a.out, "lec_cgr.json"), "w"), indent=1)

@@ -189,7 +189,12 @@
    ]
   },
   "_why": "S81-CORES2/NC-H 10-25 F3/F6: g_mac[0] ROM pair on the W side (R180 below / MY above: clk/addr/130 rd on the E edge), g_mac[1] pair mirrored on the E side (MX / R0: clk/addr/130 rd on the W edge); every ROM pin band at the core centre y facing the centre logic (S/N plan pins x 136-375); the 144-bit rd edges face 26 um outer capture strips at the same y.",
-  "suffix": "lat26",
-  "_lat": "S81-CORE-LAT/QB 2026-10-26 (OWNER 05:38 common core-pin latency 250 TT / 202.5 FF): recipe + spec adopted from codex/s81-legacy-0719 (S81-CORES2/NC-H 10-25) unchanged, LEGACY master (pins/outline/ABI = plan, efs view LEF). Synth+place only for GEOM review; CTS recipe (ICG clone per sink cluster, cg_pushdown form) is a separate pending item, no CTS/route before GEOM PASS."
+  "suffix": "gbcgr8",
+  "_lat": "S81-CORE-LAT/QB 2026-10-26 (OWNER 05:38 common core-pin latency 250 TT / 202.5 FF): recipe + spec adopted from codex/s81-legacy-0719 (S81-CORES2/NC-H 10-25) unchanged, LEGACY master (pins/outline/ABI = plan, efs view LEF). Synth+place only for GEOM review; CTS recipe (ICG clone per sink cluster, cg_pushdown form) is a separate pending item, no CTS/route before GEOM PASS.",
+  "master": {
+   "module": "ot_v41_rom_elem_q_qxpq_w10_gb",
+   "pins_file": "inputs/core_pins/ot_v41_rom_elem_q_qxpq_w10_gb.json"
+  },
+  "_gb": "S81-QX-GB 2026-10-26 (COORD 06:38 (a) _gb ADOPTED, 13:18 S81-CORE-LAT-R5 (a)): kit top = ot_v41_rom_elem_q_qxpq_w10_gb (go/go_tag pin capture +1 go edge, xs_sv[1:0] removed: 737 pins, other pins at plan positions) with CGR 8 = one ICG per in-core region (spec params); the legacy top fails raw face_guard (go shared, xs_sv dropped)."
  }
 }
