@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.kv.sysc_fixed_cycles.v1",
+ "changes": [
+  {
+   "lane": "L747",
+   "type": "kv3_sys_c",
+   "bus": "o_host_link_rst_n",
+   "fixed": [
+    5,
+    8
+   ],
+   "latency_before": {
+    "cycles": 19,
+    "stations": 12,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 5,
+    "natural": 19,
+    "pad": 0,
+    "param": "LAT_L747"
+   },
+   "latency_after": {
+    "cycles": 22,
+    "stations": 12,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 8,
+    "natural": 22,
+    "pad": 0,
+    "param": "LAT_L747"
+   }
+  }
+ ]
+}

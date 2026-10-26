@@ -922753,8 +922753,8 @@
     "L747_1",
     "L747_2"
    ],
-   "note": "tap_tree host.link_rst_n | v3.9f fwd_reach +5 internal forward stations at <= 405 um",
-   "fixed_cycles": 5
+   "note": "tap_tree host.link_rst_n | v3.9f fwd_reach +5 internal forward stations at <= 405 um | 0125 fixed_cycles = kv3_sys_c internal_stations o_host_link_rst_n (8, SYS3 north detour)",
+   "fixed_cycles": 8
   },
   {
    "id": "L748",
@@ -943293,12 +943293,12 @@
     "param": "LAT_L746"
    },
    "L747": {
-    "cycles": 19,
+    "cycles": 22,
     "stations": 12,
     "boundary": 2,
     "faces": 3,
-    "fixed": 5,
-    "natural": 19,
+    "fixed": 8,
+    "natural": 22,
     "pad": 0,
     "param": "LAT_L747"
    },
