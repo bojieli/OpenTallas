@@ -104,7 +104,7 @@ def recipe_from_census(core, census, profile_dir, root=REPO):
                    source_commit=census['source_commit'], core=core,
                    modules_in_qualified_closure=32, data_cycle_delta=0,
                    reset='synchronous reset on existing reset pins; no reset logic removed',
-                   control_only_datapath_reset='NOT QUALIFIED; DRST variant exactness still required',
+                   control_only_datapath_reset='Not established by this mechanical transform; use actual elaborated reset-target audit',
                    source_files={}, generated_files={}, macros={},
                    clock_ports=census['totals_per_core'][core]['clocks']['top_clock_ports'],
                    reset_ports=census['totals_per_core'][core]['clocks']['converted_reset_sources_top_ports'])
