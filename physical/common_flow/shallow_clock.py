@@ -206,7 +206,7 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
 def _man(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0, leg_extra_um=None, spatial_2d=False, avoid_macros=False, corridor_helper=None, even_stages=False):
+def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0, depth0=False, island_um=0.0, island_reach_um=40.0, leg_extra_um=None, spatial_2d=False, avoid_macros=False, corridor_helper=None, even_stages=False, medoid_level=0):
     """topology 'htree' (default): symmetric 2x2 H-tree over the tap region,
     pruned where a quadrant has no tap; every tap gets a private leg from its
     H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
@@ -266,11 +266,19 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
     # the nominal level distance, so one snapped quadrant does not force every
     # sibling leg to be padded to its length.
     probe=FreeSites(g)
+    tapxy0={t['name']:t['xy'] for t in g['taps']}
     ideal={cl['id']:list(cl['point']) for cl in clusters}
     par={}
     for L in legs: par[L['child'][1]]=L['parent'] if L['child'][0]=='cluster' else None
     for cl in sorted(clusters,key=lambda c:c['level']):
         pid=par.get(cl['id'])
+        # medoid_level (opt-in OT_DTSH_HTREE_MEDOID_LEVEL, CLOCK-RESET E5-EQ): H-tree clusters at this level and
+        # deeper sit on the medoid of their own taps (always a legal logic site next to the taps) instead of the
+        # geometric box centre, which on a macro-walled core lands on a macro and snaps up to ~90 um away.
+        if medoid_level and topology=='htree' and cl['level']>=medoid_level:
+            c0=[sum(tapxy0[t][j] for t in cl['taps'])/len(cl['taps']) for j in (0,1)]
+            m_=min(cl['taps'],key=lambda t:(_man(tapxy0[t],c0),t))
+            cl['point']=probe.legal(list(tapxy0[m_]),reserve=False)['xy'];continue
         if topology!='htree' or pid is None:
             cl['point']=probe.legal(cl['point'],reserve=False)['xy'];continue
         P=clusters[pid]['point'];I=ideal[cl['id']];dn=_man(ideal[pid],I)
@@ -648,7 +656,8 @@ def main():
                     island_um=float(env.get('OT_DTSH_ISLAND_UM','0')),island_reach_um=float(env.get('OT_DTSH_ISLAND_REACH_UM','40')),
                     leg_extra_um=float(env['OT_DTSH_LEG_EXTRA_UM']) if 'OT_DTSH_LEG_EXTRA_UM' in env else None,
                     spatial_2d=env.get('OT_DTSH_SPATIAL_2D','')=='1',avoid_macros=env.get('OT_DTSH_AVOID_MACROS','')=='1',
-                    corridor_helper=env.get('OT_DTSH_CORRIDOR_HELPER'),even_stages=env.get('OT_DTSH_EVEN_STAGES','')=='1')
+                    corridor_helper=env.get('OT_DTSH_CORRIDOR_HELPER'),even_stages=env.get('OT_DTSH_EVEN_STAGES','')=='1',
+                    medoid_level=int(env.get('OT_DTSH_HTREE_MEDOID_LEVEL','0')))
     else:
         p=plan(g)
     Path(a.out).write_text(json.dumps(p,indent=1)+'\n')
