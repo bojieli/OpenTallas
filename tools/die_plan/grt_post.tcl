@@ -5,5 +5,8 @@ set gq_dir [file dirname [file normalize [info script]]]
 if {[info exists ::env(OT_TAP_GRT_MODE)] && $::env(OT_TAP_GRT_MODE) ne ""} { source [file join $gq_dir tap_balance_grt.tcl] }
 if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq "ff"} { ot_vclk_bind tt }
 # CTS/GRT timing repair creates cells after floorplan PG assignment. Apply the
-# persisted global-connect rules to those cells before writing this checkpoint.
-global_connect
+# persisted global-connect rules to those cells (protected ones included, pg_connect.tcl) before writing this
+# checkpoint, then the hard check (OT_PG_OPEN fails the GRT step).
+uplevel #0 [list source [file join $gq_dir pg_connect.tcl]]
+ot_pg_connect_all grt_post
+ot_pg_require_bound grt_post

@@ -1,0 +1,9 @@
+FLOW 2026-10-26 PG real-tool control (openroad/orfs:latest, intel2, read-only copy of the signed s8b ODB)
+ODB: intel2:/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/base/6_final.odb
+signoff.py session census block : SO PG 408482 216 ot_ms_m3_leaf/VDD
+pg_connect.tcl ot_pg_require_bound: FAIL OT_PG_OPEN before open_pg_terms=216 of 408482 first=ot_ms_m3_leaf(BUFx8_ASAP7_75t_R dont_touch=1)
+pg_connect.tcl ot_pg_connect_all  : OT_PG_CONNECT ctl rules=2 protected_rebound=108
+ot_pg_require_bound after         : OT_PG_BOUND after pg_terms=408482 open=0
+dont_touch 108 -> 108 ; signal ITerm state IDENTICAL (52013 terms, hash 238857551) ; insts 204241 -> 204241 ; nets 24044 -> 24044
+second ot_pg_connect_all          : protected_rebound=0 (idempotent)
+OT_PG_STRICT=1                    : skipped (native_pg_binding owns binding)

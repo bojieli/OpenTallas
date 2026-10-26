@@ -784,7 +784,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
               "lec.py", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "pinreg_measure.tcl"):
         shutil.copyfile(TOOL / f, kd / f)
     (kd / "core_grt_pre.tcl").write_text("source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n")
-    (kd / "core_grt_post.tcl").write_text("if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq \"ff\"} { ot_vclk_bind tt }\n")
+    # FLOW 10-26 PG: cells created by CTS / tap / F4 / GRT repair (dont_touch ones included) get their supplies, then
+    # the hard check (OT_PG_OPEN fails the GRT step); tools/die_plan/pg_connect.tcl
+    shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
+    (kd / "core_grt_post.tcl").write_text("if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq \"ff\"} { ot_vclk_bind tt }\n"
+                                          "uplevel #0 [list source /work/pg_connect.tcl]\not_pg_connect_all grt_post\not_pg_require_bound grt_post\n")
     # Keep the standalone runtime complete, including sender-min qualification and clock helpers.
     subprocess.run([sys.executable, "-I", str(TOOL / "signoff.py"), "bundle", str(kd)], check=True)
     # HBM-KITS-B2 10-25: replicated (* keep *) registers (ot_rst_relay region copies, ...) need the ORFS

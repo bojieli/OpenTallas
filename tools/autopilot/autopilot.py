@@ -454,6 +454,7 @@ if so:
         "fails": sorted(k for k, v in c.items() if isinstance(v, dict) and v.get("verdict") == "FAIL"),
         "tt_wns": (c.get("setup_tt") or {}).get("wns_ps"), "ff_wns": (c.get("hold_ff") or {}).get("wns_ps"),
         "drc": (c.get("drc") or {}).get("count"), "antenna": (c.get("antenna") or {}).get("count"),
+        "pg": (c.get("pg") or {}).get("verdict"),
         "base": (d.get("inputs") or {}).get("base"), "odb": (d.get("inputs") or {}).get("odb")}
     try:
         out["signoff"]["odb_bytes"] = os.path.getsize(out["signoff"]["odb"])
@@ -598,6 +599,10 @@ def classify(c, client):
     if so:
         if so.get("verdict") == "LOCAL_PASS_NEEDS_PARENT" and so.get("local_verdict") == "SIGNED":
             return "WAIT-PARENT", "parent-receipt-pending", "; ".join(so.get("reasons") or []) or "matching actual parent seam receipt required"
+        if so.get("verdict") == "SIGNED" and so.get("pg") != "PASS":
+            # FLOW 10-26 PG: a sign-off without a passing supply-binding census of its ODB is not a sign-off
+            # (s8b d73a0fbb938f: 108 dont_touch spine buffers with VDD/VSS open; kit signoff.py predates the check)
+            return "STRUCTURAL", "pg-unbound", f"pg: {so.get('pg') or 'NOT RUN'} (supply-binding census of the signed ODB)"
         if so.get("verdict") == "SIGNED":
             return "SIGNED", "signed", "SIGNED"
         reasons = "; ".join(so.get("reasons") or []) or "NOT SIGNED"
@@ -605,7 +610,7 @@ def classify(c, client):
         tt, ff = so.get("tt_wns"), so.get("ff_wns")
         drc = so.get("drc") or 0
         ov = c.get("grt_overflow")
-        structural_fail = fails & {"clock", "sdc_lint", "face_guard", "unconstrained", "antenna"}
+        structural_fail = fails & {"clock", "sdc_lint", "face_guard", "unconstrained", "antenna", "pg"}
         timing_ok = all(w is None or w >= NEAR_WNS_PS for w in (tt, ff))
         timing_neg = any(w is not None and w < 0 for w in (tt, ff))
         if (not structural_fail and timing_ok and (ov in (None, 0)) and drc <= NEAR_DRC_MAX

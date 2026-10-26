@@ -91,7 +91,7 @@ FANOUT_MAX = 64
 SPREAD_CORNERS = ("tt", "ff")
 CORNERS = ("tt", "ff")                 # the sign-off corners; "ss" may be added for information
 ALL_CORNERS = ("tt", "ff", "ss")
-BLOCKING = ("setup_tt", "hold_ff", "drv", "unconstrained", "clock", "sdc_lint", "face_guard", "drc", "antenna")
+BLOCKING = ("setup_tt", "hold_ff", "drv", "unconstrained", "clock", "sdc_lint", "face_guard", "drc", "antenna", "pg")
 
 
 # ---- discovery ----------------------------------------------------------------------------------------------------
@@ -232,7 +232,8 @@ KIT_TOOL_DEPENDENCIES = {
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "pinreg_pad.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "tap_balance.tcl": ("clock_family.tcl",),
-    "cts_post.tcl": ("tap_balance.tcl", "leaf_affinity.tcl"),
+    "cts_post.tcl": ("tap_balance.tcl", "leaf_affinity.tcl", "pg_connect.tcl"),
+    "grt_post.tcl": ("pg_connect.tcl",),
     "tapbal_grt.tcl": ("tap_balance.tcl", "pinreg_pad.tcl"),
     "hold_gate.tcl": ("vclk_corner.tcl",),
     "face_guard_core.py": ("face_guard.py",),
@@ -551,6 +552,24 @@ proc so_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }
 @TIMING_LIBRARIES@
 ot_lib_load @C@ /out/libraries.json
 read_db /base/@ODB@
+# FLOW 10-26 PG: every POWER/GROUND MTerm of every instance master bound to a net of that type in the signed ODB
+# (global_connect skips dont_touch cells: s8b ot_ms_* spine buffers had VDD/VSS open in 6_final.odb).
+set so_pg_terms 0; set so_pg_open 0; set so_pg_first "-"
+foreach so_i [[ord::get_db_block] getInsts] {
+  foreach so_mt [[$so_i getMaster] getMTerms] {
+    set so_r [$so_mt getSigType]
+    if {$so_r ni {POWER GROUND}} continue
+    incr so_pg_terms
+    set so_t [$so_i findITerm [$so_mt getName]]
+    set so_n NULL
+    if {$so_t ne "NULL" && $so_t ne ""} { set so_n [$so_t getNet] }
+    if {$so_n eq "NULL" || $so_n eq "" || [$so_n getSigType] ne $so_r} {
+      incr so_pg_open
+      if {$so_pg_first eq "-"} { set so_pg_first "[$so_i getName]/[$so_mt getName]" }
+    }
+  }
+}
+so PG $so_pg_terms $so_pg_open $so_pg_first
 @PARASITICS@
 read_sdc /sdc/golden.sdc
 @CORE_TAPS_FF@
@@ -849,6 +868,10 @@ def corner_result(parsed):
     out["fanout_viol"] = _f(kv.get("FANOUT_VIOL"))
     out["check_setup"] = check_setup_counts(parsed["blocks"].get("CHECK_SETUP", ""))
     out["ck_errors"] = _f(kv.get("CK_ERRORS"))
+    pg = (kv.get("PG") or "").split()
+    out["pg_terms"] = _f(pg[0]) if pg else None
+    out["pg_open"] = _f(pg[1]) if len(pg) > 1 else None
+    out["pg_first_open"] = pg[2] if len(pg) > 2 and pg[2] != "-" else None
     out["insertion_all"] = stats(allck)
     out["insertion_pinflops"] = stats(bnd)
     out["pair_skew"] = pair_skew_result(kv)
@@ -1227,6 +1250,14 @@ def evaluate(rec, insertion_target=None):
         count=rc.get("drc"), source=rc.get("drc_source"))
     put("antenna", "NOT RUN" if rc.get("antenna_nets") is None else ("PASS" if rc["antenna_nets"] == 0 else "FAIL"),
         count=rc.get("antenna_nets"), source=rc.get("antenna_source"))
+    # FLOW 10-26 PG: supply binding of the signed ODB (census in every corner session; NOT RUN blocks too)
+    pgc = {c: C[c] for c in ("tt", "ff") if ok_corner(c)}
+    if not pgc or any(x.get("pg_open") is None or not x.get("pg_terms") for x in pgc.values()):
+        put("pg", "NOT RUN", reason="no PG census in the corner sessions")
+    else:
+        n = max(int(x["pg_open"]) for x in pgc.values())
+        put("pg", "PASS" if n == 0 else "FAIL", open_terms=n, pg_terms=int(max(x["pg_terms"] for x in pgc.values())),
+            first=next((x.get("pg_first_open") for x in pgc.values() if x.get("pg_first_open")), None))
     reasons = []
     for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()):
         v = ch[k]["verdict"]
@@ -1267,6 +1298,8 @@ def _detail(k, c):
         return f" {c['count']} ({c.get('source')})"
     if k == "macro_libs":
         return f" {c.get('missing')}"
+    if k == "pg" and c.get("open_terms"):
+        return f" {c['open_terms']} of {c.get('pg_terms')} supply terminals unbound (first {c.get('first')})"
     return ""
 
 

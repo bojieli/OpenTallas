@@ -6,3 +6,8 @@
 set cp_dir [file dirname [file normalize [info script]]]
 uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]
 if {![info exists ::env(OT_LEAF_AFFINITY)] || $::env(OT_LEAF_AFFINITY) ne "0"} { uplevel #0 [list source [file join $cp_dir leaf_affinity.tcl]] }
+# FLOW 2026-10-26 PG: every clock/pad/leaf cell created up to here gets its supplies before 4_1_cts.odb is written
+# (global_connect skips dont_touch cells: s8b ot_ms_* spine buffers), then a hard check (OT_PG_OPEN fails CTS).
+uplevel #0 [list source [file join $cp_dir pg_connect.tcl]]
+ot_pg_connect_all cts_post
+ot_pg_require_bound cts_post
