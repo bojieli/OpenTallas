@@ -51,52 +51,42 @@ def mem_gb(P, tn):
     return int(min(256, max(10, math.ceil(4 + 8 * a))))     # pilot: 0.67 mm2 4.7 GB, 1.47 mm2 10.6, 1.95 mm2 12.3
 
 
-def gap_bands(t, clearance=2.0):
-    """y bands (lo, hi) of the partition outside every over-routable hard core (cores declaring obs_max below the
-    partition top layer: M7 ribbons cross them, so their repeaters belong in the inter-core gap rows)."""
-    m = g2.gen_phys.CORE_MARGIN_UM
-    h = t["outline_um"][1]
-    boxes = sorted((c["origin_um"][1], c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores", [])
-                   if "origin_um" in c and "outline_um" in c)
-    bands, lo = [], m
-    for a, b in boxes:
-        if a - clearance > lo:
-            bands.append((lo, a - clearance))
-        lo = max(lo, b + clearance)
-    if lo < h - m:
-        bands.append((lo, h - m))
-    return bands
+def over_routable(t, top):
+    """boxes (x0, y0, x1, y1, obs_max) of every probe blockage whose routing obstruction stops below the partition top layer
+    (same obstruction rule as g2.part_probe: obs_max, default M5): wires cross them on the layers above, so the
+    repeaters of those wires belong in the islands outside them, never inside (tools/die_plan/gap_repeaters.tcl)."""
+    out = []
+    for c in g2.probe_blockages(t, top):
+        if "origin_um" not in c or "outline_um" not in c:
+            continue
+        obs = c.get("obs_max", "M5")
+        if int(obs[1:]) < int(top[1:]):
+            x0, y0 = c["origin_um"]
+            out.append((x0, y0, x0 + c["outline_um"][0], y0 + c["outline_um"][1], obs))
+    return out
+
+
+REPAIR_ARGS = "{-max_wire_length 450}"
 
 
 def gap_repair_tcl(t, top):
-    """repair_design, then (STRICT M7-ribbon types) gap-row repeater legalisation, then detailed placement.
+    """placement-stage repair_design with repeater islands (gap_repeaters.tcl ot_gap_repair).
 
     Industry practice for feedthroughs routed over a hard macro on the layers above its OBS: the repeaters of those
-    nets sit in the channel rows between the macros (repeater islands), at the ribbon's x.  repair_design drops a
-    buffer on the Steiner point, i.e. inside the macro footprint; plain DPL then shoves it sideways to the nearest
-    free row (a 17-um side strip), which piles hundreds of repeaters into the strip and turns every ribbon into an
-    E-W jog (QC slw_su_l1 G2 overflow 8,787).  Here every NEW buffer/inverter whose origin lies inside an over-routable
-    core is moved, before DPL, to the nearest gap-band row at the same x; DPL then only resolves overlaps inside the
-    band.  Fail-closed check after DPL: OT_GAP_FAIL counts moved repeaters that did not end in a gap band within 4 um
-    of their ribbon x.  Same procs are meant for the partition kit flow (tools/die_plan/gap_repeaters.tcl)."""
-    cores = [c for c in t.get("hard_cores", []) if "origin_um" in c and "outline_um" in c
-             and c.get("obs_max") and int(c["obs_max"][1:]) < int(top[1:])]
-    if not cores:
-        return ["repair_design -max_wire_length 450", "detailed_placement -max_displacement {400 400}"]
-    bands = gap_bands(t)
-    boxes = [(c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
-              c["origin_um"][1] + c["outline_um"][1]) for c in cores]
-    m = g2.gen_phys.CORE_MARGIN_UM
+    nets sit in islands in the channel rows outside the macros, on the ribbon's line, on the driver side of the
+    crossing.  The cores are hard placement blockages before repair_design, but the resizer drops a new buffer on the
+    Steiner point regardless (only DPL honours blockages, and DPL alone shoves it sideways into the nearest strip: QC
+    slw_su_l1 G2 overflow 8,787).  ot_gap_repair moves such repeaters along their ribbon to the island; the GRT stage
+    (ot_gap_repair_grt, after global_route) then re-runs repair_design on global-route parasitics with the islands in
+    place, as ORFS global_route.tcl does, so the island repeaters are sized and spaced for the span they drive."""
+    boxes = over_routable(t, top)
     return [
-        "set ot_gap_bands {" + " ".join(f"{{{a:.3f} {b:.3f}}}" for a, b in bands) + "}",
-        "set ot_gap_cores {" + " ".join("{" + " ".join(f"{v:.3f}" for v in bx) + "}" for bx in boxes) + "}",
-        f"set ot_gap_m {m:g}",
+        "set ot_gap_cores {" + " ".join("{" + " ".join(f"{v:.3f}" for v in bx[:4]) + f" {bx[4]}}}" for bx in boxes)
+        + "}",
+        f"set ot_gap_top {top}",
+        f"set ot_gap_m {g2.gen_phys.CORE_MARGIN_UM:g}",
         "source /work/gap_repeaters.tcl",
-        "ot_gap_before_repair",
-        "repair_design -max_wire_length 450",
-        "ot_gap_move_to_rows",
-        "detailed_placement -max_displacement {400 400}",
-        "ot_gap_check_after_dpl 4.0",
+        f"ot_gap_repair {REPAIR_ARGS}",
     ]
 
 
@@ -160,12 +150,15 @@ def gen_one(P, tn, out, adjust):
     tcl = tcl[:j + 1] + timing + tcl[j + 1:]
     k = next(k for k, ln in enumerate(tcl) if ln.startswith("if {[catch {pin_access}"))
     post = [
-        "estimate_parasitics -global_routing",
+        # ORFS global_route.tcl order: repair_design on GRT parasitics + incremental GRT, islands kept (cores blocked)
+        f"ot_gap_repair_grt {REPAIR_ARGS} {{-allow_congestion -verbose -congestion_report_file /work/grt_congestion.rpt}}",
+        "ot_gap_check 4.0",
         "report_checks -path_delay max -scenes tt -format end -group_path_count 1000000 -endpoint_path_count 1 "
         "> /work/tt_setup_end.rpt",
         "report_checks -path_delay min -scenes ff -format end -group_path_count 1000000 -endpoint_path_count 1 "
         "> /work/ff_hold_end.rpt",
         "report_check_types -max_slew -max_capacitance -violators -scenes tt > /work/drv.rpt",
+        "ot_drv_classify /work/drv.rpt /work/drv_class.tsv",
         "report_checks -path_delay max -scenes tt -group_path_count 5 -format full > /work/tt_setup.rpt",
         "report_checks -path_delay min -scenes ff -group_path_count 5 -format full > /work/ff_hold.rpt",
         "set ot_nb 0; foreach i [[ord::get_db_block] getInsts] { if {[regexp {^(BUF|INV|HB)} [[$i getMaster] getName]]} "
@@ -222,20 +215,68 @@ def end_slacks(text):
     return out
 
 
+def drv_classes(d):
+    """max slew / cap violators split into INTERNAL pins (in-partition wires: must be 0), port legs (a pin on a net that
+    has a top-level port = the die hop to the neighbour's first station, measured by the die reach scan) and the port
+    pins themselves.  drv_class.tsv comes from ot_drv_classify in the probe; older probes fall back to the pin name
+    (a hierarchical pin counts as INTERNAL: fail-closed)."""
+    rows = []
+    if (d / "drv_class.tsv").exists():
+        for ln in (d / "drv_class.tsv").read_text().splitlines()[1:]:
+            p = ln.split("\t")
+            if len(p) >= 6:
+                rows.append((p[0], p[1], float(p[3]), p[5]))
+    else:
+        chk = ""
+        for ln in (d / "drv.rpt").read_text(errors="replace").splitlines():
+            if ln.startswith("max slew"):
+                chk = "slew"
+            elif ln.startswith("max capacitance"):
+                chk = "cap"
+            m = re.match(r"(\S+)\s+[-\d.]+\s+([-\d.]+)\s+[-\d.]+\s+\(VIOLATED\)", ln)
+            if m:
+                rows.append((chk, m.group(1), float(m.group(2)), "internal" if "/" in m.group(1) else "port_pin"))
+    out = dict(violators=len(rows), source="drv_class.tsv" if (d / "drv_class.tsv").exists() else "drv.rpt names")
+    for cls in ("internal", "port_leg", "port_pin"):
+        for chk in ("slew", "cap"):
+            v = [val for c, _, val, k in rows if k == cls and c == chk]
+            out[f"{cls}_{chk}"] = len(v)
+            if v and chk == "slew":
+                out[f"{cls}_slew_max_ps"] = round(max(v), 2)
+    worst = sorted(((val, pin) for c, pin, val, k in rows if k == "internal" and c == "slew"), reverse=True)[:5]
+    out["internal_worst"] = [f"{p} {v:g}" for v, p in worst]
+    return out
+
+
 def parse_dir(d):
     d = Path(d)
     meta = json.loads((d / "probe.json").read_text())
     log = (d / "grt.log").read_text(errors="replace") if (d / "grt.log").exists() else ""
     r = g2.parse_grt(log)
     r.update(meta)
-    r["exit"] = (d / "probe.exit").read_text().strip() if (d / "probe.exit").exists() else "NOT RUN"
-    gm = re.search(r"OT_GAP moved (\d+) of (\d+)", log)
+    # run status from the files, not from the memory figure: probe.exit is written after openroad exits, OT_DONE is
+    # the last line of the probe; a probe collected while still running is RUNNING / INCOMPLETE, never 'NOT RUN'
+    if (d / "probe.exit").exists():
+        r["exit"] = (d / "probe.exit").read_text().strip()
+        r["status"] = "DONE" if (r["exit"] == "EXIT 0" and "OT_DONE" in log) else (
+            "INCOMPLETE" if r["exit"] == "EXIT 0" else "FAILED")
+    else:
+        r["exit"] = "NOT RUN"
+        r["status"] = "RUNNING" if log else "NOT RUN"
+    gm = re.findall(r"OT_GAP pass (\d+) \((\w+)\) moved (\d+) of (\d+)", log)
     if gm:
-        gp = re.search(r"OT_GAP_PASS (\d+) repeaters in gap rows, max \|dx\| ([0-9.]+)", log)
+        gp = re.search(r"OT_GAP_PASS (\d+) repeaters in gap rows, max \|dx\| ([0-9.]+) um, max \|dy\| ([0-9.]+) um, "
+                       r"max ribbon dev ([0-9.]+)", log)
         gf = re.search(r"OT_GAP_FAIL (\d+)", log)
-        r["gap_repeaters"] = dict(moved=int(gm.group(1)), new=int(gm.group(2)), passed=bool(gp) and not gf,
+        r["gap_repeaters"] = dict(passes=[dict(stage=st, moved=int(mv), new=int(nw)) for _, st, mv, nw in gm],
+                                  moved=sum(int(mv) for _, _, mv, _ in gm),
+                                  last_pass_moved=int(gm[-1][2]), passed=bool(gp) and not gf,
                                   fail=int(gf.group(1)) if gf else (0 if gp else None),
-                                  max_dx_um=float(gp.group(2)) if gp else None)
+                                  islands=int(gp.group(1)) if gp else None,
+                                  max_dx_um=float(gp.group(2)) if gp else None,
+                                  max_dy_um=float(gp.group(3)) if gp else None,
+                                  max_ribbon_dev_um=float(gp.group(4)) if gp else None,
+                                  unrepeatable=sum(int(x) for x in re.findall(r"OT_GAP_UNREPEATABLE pass \d+ (\d+)", log)))
     sta = {}
     for key, fn in (("tt_setup", "tt_setup_end.rpt"), ("ff_hold", "ff_hold_end.rpt")):
         sl = None
@@ -253,8 +294,7 @@ def parse_dir(d):
     m = re.search(r"OT_BUFS (\d+)", log)
     r["repair_buffers"] = int(m.group(1)) if m else None
     if (d / "drv.rpt").exists():
-        t = (d / "drv.rpt").read_text(errors="replace")
-        r["drv"] = dict(violators=len(re.findall(r"VIOLATED", t)))
+        r["drv"] = drv_classes(d)
     tl = (d / "time.log").read_text(errors="replace") if (d / "time.log").exists() else ""
     m = re.search(r"Maximum resident set size \(kbytes\): (\d+)", tl)
     r["peak_gb"] = round(int(m.group(1)) / 1e6, 2) if m else None
@@ -297,6 +337,9 @@ def classify(r, hot):
     """CLEAN: GRT 0 overflow, no unreachable pins, skeleton setup / hold within fixable range.
     HOTSPOT: local GRT overflow (< 2000, hot bbox < 10 % of the outline), sites moved 50-100 um, or fixable timing (WNS >= -100 ps).
     STRUCTURAL: wide overflow, pin access failure, or skeleton timing a re-pin / station change must fix."""
+    st = r.get("status", "DONE" if r.get("exit") == "EXIT 0" and r.get("done") else "NOT RUN")
+    if st in ("RUNNING", "INCOMPLETE"):
+        return dict(cls=st, why=f"probe {st.lower()} at collect time ({r.get('exit')}): collect again when it exits")
     if r.get("exit") != "EXIT 0" or not r.get("done"):
         return dict(cls="NOT RUN", why=f"exit {r.get('exit')}")
     why = []
@@ -354,9 +397,26 @@ def classify(r, hot):
     gap = r.get("gap_repeaters")
     if gap is not None and not gap.get("passed"):
         cls = "STRUCTURAL"
-        why.append(f"gap-row repeater check failed ({gap.get('fail')} of {gap.get('moved')} moved repeaters off the gap rows)")
-    elif gap is not None:
-        why.append(f"{gap['moved']} over-core repeaters in gap rows (max dx {gap['max_dx_um']} um)")
+        why.append(f"repeater island check failed ({gap.get('fail')} of {gap.get('moved')} island repeaters in a core "
+                   f"or off the ribbon)")
+    elif gap is not None and gap.get("moved"):
+        why.append(f"{gap['islands']} over-core repeaters in islands (max dx {gap['max_dx_um']} / dy "
+                   f"{gap['max_dy_um']} um, last pass moved {gap['last_pass_moved']})")
+    if gap is not None and gap.get("unrepeatable"):
+        cls = "STRUCTURAL"
+        why.append(f"{gap['unrepeatable']} repeaters on hard-core crossings longer than the 290-um single-span reach "
+                   f"(plan item: re-aspect the core or route the ribbon through a repeater channel)")
+    drv = r.get("drv") or {}
+    ni = drv.get("internal_slew", 0) + drv.get("internal_cap", 0)
+    if ni:
+        # an internal max-slew / max-cap violator is an under-driven in-partition wire: never CLEAN
+        cls = "STRUCTURAL"
+        why.append(f"{drv.get('internal_slew', 0)} internal max-slew (worst {drv.get('internal_slew_max_ps')} ps) + "
+                   f"{drv.get('internal_cap', 0)} internal max-cap violators")
+    npl = drv.get("port_leg_slew", 0) + drv.get("port_pin_slew", 0)
+    if npl:
+        why.append(f"port legs: {drv.get('port_leg_slew', 0)} driver + {drv.get('port_pin_slew', 0)} port max-slew "
+                   f"(die hop, last station -> neighbour first station, in the die reach scan)")
     if geometry.get("st_in_core"):
         cls = "STRUCTURAL"
         why.append(f"{geometry['st_in_core']} planned ft station sites inside hard cores")
@@ -397,8 +457,11 @@ def main(argv=None):
         Path(a.json).write_text(json.dumps(rows, indent=1) + "\n")
     for tn, r in rows.items():
         s = r.get("sta", {})
+        dv = r.get("drv") or {}
         print(f"{tn}\t{r['classify']['cls']}\tov={r.get('total_overflow')}\ttt={s.get('tt_setup_wns')}\t"
-              f"ff={s.get('ff_hold_wns')}\tpeak={r.get('peak_gb')}\t{r['classify']['why']}")
+              f"ff={s.get('ff_hold_wns')}\tdrv_int={dv.get('internal_slew')}/{dv.get('internal_cap')}\t"
+              f"drv_port={dv.get('port_leg_slew')}+{dv.get('port_pin_slew')}\t"
+              f"peak={r.get('peak_gb') if r.get('peak_gb') is not None else 'n/a'}\t{r['classify']['why']}")
     return 0
 
 

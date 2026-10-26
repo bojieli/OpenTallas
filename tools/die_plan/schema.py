@@ -338,6 +338,18 @@ SCHEMA = {
                         # latency) early, so the core's internal flops see the common latency.  Absent: taps[] are
                         # plan records only (unchanged kits).
                         "core_taps": {"enum": ["early"]},
+                        # Explicit selected parent clock endpoint delta; runtime network required before phys.
+                        "core_groups": {"type": "array", "items": {"type": "object", "required":
+                            ["name", "port", "xy", "members", "insertion_ps", "insertion_ff_ps", "basis", "source"],
+                            "additionalProperties": False, "properties": {
+                                "name": _name, "port": _name, "xy": _xy,
+                                "members": {"type": "array", "minItems": 1, "items": {"type": "object",
+                                    "required": ["inst", "pin", "tap"], "additionalProperties": False,
+                                    "properties": {"inst": _name, "pin": _name, "tap": _name}}},
+                                "insertion_ps": _pos, "insertion_ff_ps": _pos,
+                                "basis": {"enum": ["parent_budget"]}, "source": {"type": "string", "minLength": 1},
+                                "network": {"type": "object", "required": ["nodes", "endpoints"], "additionalProperties": False,
+                                    "properties": {"nodes": {"type": "array"}, "endpoints": {"type": "array"}}}}}},
                         # PATH-HBM 10-25 (COORD ruling (1) 14:44): planned shared clock branch buffers on std-cell
                         # sites (never on a hard core) -- one buffer drives the core taps it names (taps[].parent),
                         # so a chain hop across a corridor shares its last common clock point (CPPR) with legs
@@ -1076,7 +1088,8 @@ def core_taps(P, tn):
     for tp in ck.get("taps", []) or []:
         if tp.get("kind") == "core":
             out.append((f"clk_c{len(out)}", float(tp["xy"][0]), float(tp["xy"][1]), tp))
-    return out
+    import core_clock_groups as CG
+    return CG.merge_taps(P, tn, out)
 
 
 # = gen_phys.FF_TT_INSERTION_RATIO (routed RCX FF/TT pin-register mean ratio); used only when a plan gives no FF value
@@ -1377,6 +1390,13 @@ def validate(raw):
                 errs.append(f"{what} '{x[key]}' defined twice")
             seen.add(x[key])
     for tn, t in raw["partition_types"].items():
+        import core_clock_groups as CG
+        try:
+            CG.groups(P, tn)
+            if t.get("clock", {}).get("core_groups") and all("network" in g for g in t["clock"]["core_groups"]):
+                CG.network_manifest(P, tn)
+        except (ValueError, KeyError, TypeError) as exc:
+            errs.append(f"type {tn}: {exc}")
         names = [b["name"] for b in t.get("buses", [])] + \
             [s["name"] + sfx for s in t.get("ft_slots", []) for sfx in ("_i", "_o")]
         dup = {n for n in names if names.count(n) > 1}
