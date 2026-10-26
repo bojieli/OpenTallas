@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS_COMPONENT_CTS",
+  "setup_tt_ps": 397.90715326238603,
+  "hold_ff_ps": -24.566682120161694,
+  "hold_ff_endpoints": 24,
+  "pair_tt_ps": 31.25,
+  "pair_ff_ps": 24.21,
+  "pairs": 8536,
+  "verify_ps": 0,
+  "postcts_identity": "385chainsx8BUF including synchronous arst_n PASS TT/FF",
+  "wrong_reset_input_mutant": "caught at actual APPLY",
+  "registers_added": 0,
+  "static_reset_release_clocks": 7,
+  "cycles": "No addedregisters; timingfit unchanged; fullBOOTG5 notclaimed",
+  "next": "Parent-approved GRT-only normalFFrepair; exact timed-reset contract; no DRT/SIGNED/parentAclaim",
+  "picture": "r3_sync_reset_row.png"
+}

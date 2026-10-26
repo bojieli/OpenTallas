@@ -52,10 +52,10 @@ if a.apply:
  finally:first.disconnect();first.connect(saved)
  assert caught,'cross-input identity mutant was not detected'
  audit()
- Path(a.out+'.identity.json').write_text(json.dumps(dict(verdict='PASS',chains=len(j['chains']),buffers_per_chain=a.count,truth=truth,cross_input_mutant_caught=caught,registers_added=0),indent=2)+'\n')
+ Path(a.out+'.identity.json').write_text(json.dumps(dict(verdict='PASS',chains=len(j['chains']),buffers_per_chain=a.count,truth=truth,cross_input_mutant_caught=caught,mutant_port=j['chains'][0]['port'],registers_added=0),indent=2)+'\n')
  odb.write_db(db,a.out);print('CP1_RXPAD_IDENTITY PASS',len(j['chains']),'chains',a.count,'buffers/chain',a.out);raise SystemExit
 
-report=json.load(open(a.manifest));external=set(report['external_ports']);expected=sum(report['selected'].values());rows=sorted(blk.getRows(),key=lambda r:r.getOrigin()[1]);ys=[];grid=[]
+report=json.load(open(a.manifest));external=set(report['external_ports']);expected=report.get('expected_input_bits',sum(report['selected'].values()));rows=sorted(blk.getRows(),key=lambda r:r.getOrigin()[1]);ys=[];grid=[]
 for row in rows:
  b=row.getBBox();site=row.getSite();sw=site.getWidth();rh=site.getHeight();ys.append(b.yMin());grid.append([b.xMin(),b.xMax(),b.yMin(),rh,sw,row.getOrient(),bytearray((b.xMax()-b.xMin())//sw+1)])
 # Existing placements, including tap/decap/filler cells, are obstacles, never moved by this planner.

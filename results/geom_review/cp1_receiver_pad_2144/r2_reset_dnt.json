@@ -1,0 +1,24 @@
+{
+  "inst": "u_rst_in/q$_DFF_P_",
+  "master": "DFFHQNx1_ASAP7_75t_R",
+  "placement": "PLACED",
+  "inst_dnt": false,
+  "pins": {
+    "CLK": {
+      "net": "clknet_2_2__leaf_clk_t16",
+      "net_dnt": false,
+      "iterm_dnt": "noODBpinflag"
+    },
+    "D": {
+      "net": "net4",
+      "net_dnt": false,
+      "iterm_dnt": "noODBpinflag"
+    },
+    "QN": {
+      "net": "u_rst_in/_0_",
+      "net_dnt": false,
+      "iterm_dnt": "noODBpinflag"
+    }
+  },
+  "arst_net_dnt": false
+}

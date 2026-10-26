@@ -1,0 +1,11 @@
+{
+  "verdict": "FAIL_STALLED_NORMAL_HOLD",
+  "endpoint": "u_rst_in/q$_DFF_P_/D",
+  "wns_tns_ps": -13.277,
+  "unchanged_records": 50,
+  "first": "      330 |       0 |     337 |            0 |    +0.3% | -13.277 | -13.277 | u_rst_in/q$_DFF_P_/D",
+  "last": "      820 |       0 |     827 |            0 |    +0.8% | -13.277 | -13.277 | u_rst_in/q$_DFF_P_/D",
+  "action": "Stop only this owned container; preserve all logs and input CTS. New reviewed pre-CTS receiver hold stage includes this synchronous reset input; no timing waiver.",
+  "owner_container": "ca13da3fd061cc5f91c1ea52f0ba70a633ae2f26cf89487990e4c1e41b429612",
+  "source_checkpoint": "4_cts.odb"
+}

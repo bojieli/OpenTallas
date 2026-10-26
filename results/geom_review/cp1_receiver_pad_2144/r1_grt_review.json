@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "R1 component GRT-only normal FFholdrepair trial",
+  "picture": "r1_actual_cts_GRT_review.png",
+  "findings": [
+    "Viewed actual uniform clock sink plot and planned fixed receiver row strip; no early-clock region remains.",
+    "TTsetup397.91ps and related-pairTT31.25/FF24.21ps; all3072BUForiginalDnetidentity retained postCTS;384chains verified.",
+    "Pads stay within7.56um oforiginalD in free rows; no macro obstacles or long new data wires. Coreutil0.4percent, continuous originalrowPDN; inserted cell PG attached.",
+    "25 FFholdendpoints remain (-41.16ps): synchronousarst_ninput, bare resetrelay, proofleafdelay andepoch paths. They remain normally timed; conventional FFholdrepair budgeted.",
+    "GRTprofile clocksM6-M7(top2blocklayers), signals<=M7;plannedreceiverBUFkept. Same833ps/60,25ps/realAinput mapping."
+  ],
+  "conditions": [
+    "GRTonly; noDRT,SIGNED,orparentAqualification claim.",
+    "Collect actualTT/FFGRTsetuphold+relatedpair+geometry/DRC/congestion; revise before any further route if failing.",
+    "CTSinputSHA mustnotchange; preserves reviewed checkpoint"
+  ]
+}

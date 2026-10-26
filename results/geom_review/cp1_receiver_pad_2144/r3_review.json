@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "R3 pre-CTS receiver rows includingone synchronousresetinput",
+  "picture": "r3_sync_reset_row.png",
+  "findings": [
+    "Viewed addedrow directlybeloworiginalu_rst_in FF:8BUF cells, only1.35um L1 fromD, legalMXrow, no existingcellmoved orclocktapblocked.",
+    "Prior384datachains unchanged; total385chains/3080BUF/224.532um2. Controlrow adds0.5832um2.",
+    "Onlysynchronousarst_n->u_rst_in/D getsrealdata delay; nofalsepath, same-40min/166.6max/833ps/60,25uncertainty/commonclock250/202.5.",
+    "R2normalFFrepair stalled atthisoneendpoint-13.277ps afterallotherscleared; ownedjobstopped after>400nonprogressiterations, immutablelog+inputCTSretained.",
+    "Physicalidentityaudits mustincludeall385originalDnconnections andwrong-reset-inputmutant; no addedregisters, staticrelease7unchanged. Actualtiming mustconfirm no addedcycle."
+  ],
+  "conditions": [
+    "APPLYaudits+directCTSinputhashguard beforeGRT",
+    "Normal synchronousreset timingremainsfullyactive",
+    "No DRT/SIGNED/parentAorwholeBOOTG5claim"
+  ]
+}
