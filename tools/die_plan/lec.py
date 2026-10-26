@@ -73,6 +73,9 @@ STD_LIBS = [f"asap7sc7p5t_{g}_{vt}_TT_nldm_{d}" for vt in ("RVT", "LVT", "SLVT")
 WRAP = "lec_top"            # wrapper: the kit top as u_dut, every output port bit captured by a keep flop lec_po_*
 BB = "lec_bb"               # stub register prefix: lec_bbi_<pin> (compare point) / lec_bbo_<pin> (free input)
 UNSUPPORTED_CELLS = re.compile(r"^(ICG|DHL|DLL|SDF|SDFH|SDFL)")   # clock gates, latches, scan flops (not modelled)
+# latch-based integrated clock gates modelled by the clock-gate -> enable abstraction (icg_to_enable); every ASAP7
+# ICG drive strength has the same statetable: IQ = ENA | SE while CLK is low, held while high; GCLK = CLK & IQ
+ICG_CELLS = re.compile(r"^ICGx(1|2|2p67DC|3|4|4DC|5|5p33DC|6p67DC|8DC)_ASAP7_75t_(R|L|SL)$")
 TYPE_SFX = re.compile(r"\$_[A-Z]+(?:_[A-Z0-9]+)?_$")
 IDX = re.compile(r"^(.*?)((?:\[\d+\])+)$")
 GENBLK = re.compile(r"(?<![^.])genblk\d+\.")
@@ -207,6 +210,8 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     # Functional cells must never be replaced by free black-box outputs.
     cmds = [f"read_liberty -ignore_miss_func {l}" for l in rtl_standard_libs(env, kit)]
     cmds += [f"read_liberty -lib -ignore_miss_func {l}" for l in lib_bbs]
+    if env.get("_LEC_ICG_GOLD_V"):        # ICG cells instantiated by the RTL: read_liberty skips them (statetable)
+        cmds.append(f"read_verilog -sv {env['_LEC_ICG_GOLD_V']}")
     if frontend == "slang":
         a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
         a += [f"-I{i}" for i in incs] + defs + files
@@ -240,6 +245,19 @@ SEQ_TAIL = [
 ]
 
 
+def seq_tail(out, lecff, icg):
+    """SEQ_TAIL; with clock gates (icg) it is split at the clock-gate -> enable abstraction: phase A writes the
+    flattened fine-grained design as JSON, icg_to_enable rewrites it, phase B (seq_tail_b) reads it back."""
+    if not icg:
+        return [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]
+    return [SEQ_TAIL[0], f"write_json {out}.preicg.json"]
+
+
+def seq_tail_b(out, lecff):
+    return "\n".join([f"read_json {out}.icg.json", f"hierarchy -top {WRAP}"] +
+                     [c.format(lecff=lecff, out=out) for c in SEQ_TAIL[1:]]) + "\n"
+
+
 def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extra=()):
     s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False, slang_extra=slang_extra)
     s += [f"read_verilog -overwrite {stubs}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
@@ -260,7 +278,7 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
           # the RTL registers as written and an asynchronous read port
           "memory -nomap -nordff", "memory_map", "opt_expr -keepdc", "opt_clean",
           "techmap", "opt_clean"]
-    return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
+    return "\n".join(s + seq_tail(out, lecff, env.get("_LEC_ICG_V"))) + "\n"
 
 
 # Formal preparation must retain every FF already present in the physical netlist.
@@ -272,10 +290,248 @@ GATE_PHYSICAL_FF_KEEP = "setattr -set keep 1 t:$*ff* t:$_*FF*_"
 
 def gate_script(env, netlist, stubs, wrap, lecff, out):
     s = [f"read_liberty -ignore_miss_func {NLDM}/{l}" for l in STD_LIBS]
+    s += [f"read_verilog {env['_LEC_ICG_V']}"] if env.get("_LEC_ICG_V") else []
     s += [f"read_verilog {stubs}", f"read_verilog {netlist}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
           "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc",
           GATE_PHYSICAL_FF_KEEP, "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
-    return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
+    return "\n".join(s + seq_tail(out, lecff, env.get("_LEC_ICG_V"))) + "\n"
+
+
+# ---------------------------------------------------------------------------------------------- clock gates
+def icg_verilog(cells):
+    """black-box definitions of the ICG cells (read_liberty skips statetable cells); never a stub: icg_to_enable
+    removes every instance before the AIG is written."""
+    return "".join(f"(* blackbox *) module {c} (input CLK, input ENA, input SE, output GCLK); endmodule\n"
+                   for c in sorted(cells))
+
+
+FF_TYPE = re.compile(r"^\$_(DFF|DFFE|SDFF|SDFFE|SDFFCE|DFFSR|DFFSRE|ALDFF|ALDFFE)_([NP])([NP01]*)_$")
+LATCH_TYPE = re.compile(r"^\$_(DLATCH|DLATCHSR|SR)_")
+
+
+def icg_to_enable(src, dst, side):
+    """Clock-gate -> enable abstraction (the standard commercial-LEC model of a latch-based ICG), applied
+    identically to gold and gate on the flattened fine-grained design (JSON src -> dst); returns statistics.
+
+    A latch-based ICG (statetable: IQ = ENA | SE transparent while CLK is low; GCLK = CLK & IQ) gives a rising
+    GCLK edge at a rising CLK edge iff ENA | SE held during the preceding low phase.  When ENA / SE are functions
+    of primary inputs and of state that changes only at rising edges of the same root clock, that value is the
+    value an enable flop on the root clock samples at the same edge, so: a rising-edge flop clocked by GCLK ==
+    the same flop on CLK whose clocked update (data, enable, sync reset) is additionally enabled by ENA | SE
+    (async set / reset untouched).  A black-box clock pin on GCLK becomes the compare point ENA | SE (edge iff
+    enabled; every other pin is compared every cycle).  Refused (Unproven), never approximated: a GCLK load that is
+    not a rising-edge flop clock or a black-box clock pin (logic, port, falling-edge flop, latch, memory, another
+    ICG = cascaded gates), a CLK that is not a primary input (derived / gated clock), and an ENA / SE cone that
+    reads a clock net, a latch, a falling-edge flop, an unknown cell or a flop of another clock.  Asynchronous set /
+    reset / load (in a gated flop or in the enable cone) keep the synchronous async2sync model of the rest of LEC."""
+    d = json.loads(Path(src).read_text())
+    tops = [k for k, v in d["modules"].items() if str(v.get("attributes", {}).get("top", "0")).strip("0") != ""]
+    if len(tops) != 1:
+        raise LecError(f"icg {side}: {len(tops)} top modules in {src}")
+    m = d["modules"][tops[0]]
+    cells = m["cells"]
+    nxt = [1 + max([b for n in m["netnames"].values() for b in n["bits"] if isinstance(b, int)] +
+                   [b for p in m["ports"].values() for b in p["bits"] if isinstance(b, int)] + [1])]
+    name_of = {}
+    for n, w in m["netnames"].items():
+        for b in w["bits"]:
+            if isinstance(b, int):
+                name_of.setdefault(b, n)
+    pis = {b for p in m["ports"].values() if p["direction"] == "input" for b in p["bits"] if isinstance(b, int)}
+    pos = {b for p in m["ports"].values() if p["direction"] != "input" for b in p["bits"] if isinstance(b, int)}
+    drv, loads = {}, collections.defaultdict(list)
+    for cn, c in cells.items():
+        for p, bits in c["connections"].items():
+            out = c.get("port_directions", {}).get(p) == "output"
+            for i, b in enumerate(bits):
+                if isinstance(b, int):
+                    if out:
+                        drv[b] = (cn, p)
+                    else:
+                        loads[b].append((cn, p, i))
+    icgs = {cn: c for cn, c in cells.items() if ICG_CELLS.match(c["type"])}
+    st = dict(gates=len(icgs), gated_flops=0, gated_bb_clock_pins=0, per_gate={}, flop_types={})
+    if not icgs:
+        Path(dst).write_text(json.dumps(d))
+        return st
+
+    def bit(cn, p):
+        b = cells[cn]["connections"].get(p, ["x"])
+        if len(b) != 1:
+            raise Unproven(f"icg {side}: {cn}.{p} is not a single bit")
+        return b[0]
+
+    def through_bufs(b):
+        while isinstance(b, int) and b in drv and cells[drv[b][0]]["type"] == "$_BUF_":
+            b = cells[drv[b][0]]["connections"]["A"][0]
+        return b
+
+    gclk_of = {}                          # GCLK bit (and $_BUF_ copies) -> ICG cell
+    for cn in icgs:
+        g, todo = bit(cn, "GCLK"), []
+        if isinstance(g, int):
+            todo.append(g)
+        while todo:
+            b = todo.pop()
+            gclk_of[b] = cn
+            todo += [cells[l]["connections"]["Y"][0] for l, p, i in loads.get(b, ()) if cells[l]["type"] == "$_BUF_"]
+    root = {}
+    for cn in icgs:
+        r = through_bufs(bit(cn, "CLK"))
+        if r in gclk_of:
+            raise Unproven(f"icg {side}: cascaded clock gates ({gclk_of[r]} GCLK drives {cn}.CLK): not modelled")
+        if r not in pis:
+            raise Unproven(f"icg {side}: {cn}.CLK is not driven by a primary input ({name_of.get(r, r)}): not modelled")
+        root[cn] = r
+
+    def ff_root(cn):
+        """root clock bit of a flop / None for the LEC's own stub and wrapper flops (lec_clk, undriven)."""
+        r = through_bufs(cells[cn]["connections"]["C"][0])
+        if r in gclk_of:
+            return root[gclk_of[r]]
+        if r in pis:
+            return r
+        q = cells[cn]["connections"].get("Q", [None])[0]
+        if r not in drv and re.search(r"(^|\.)lec_(bbo|bbi|po)_", str(name_of.get(q, ""))):
+            return None
+        raise Unproven(f"icg {side}: flop {cn} has a clock that is neither a primary input nor a modelled gate")
+
+    clock_bits = set(pis & {root[c] for c in icgs}) | set(gclk_of)
+    for cn, c in cells.items():
+        if FF_TYPE.match(c["type"]):
+            clock_bits.add(c["connections"]["C"][0])
+
+    def check_cone(cn, b0, r):
+        seen, todo = set(), [b0]
+        while todo:
+            b = todo.pop()
+            if not isinstance(b, int) or b in seen:
+                continue
+            seen.add(b)
+            if b in clock_bits:
+                raise Unproven(f"icg {side}: {cn} enable reads a clock net ({name_of.get(b, b)}): not modelled")
+            if b in pis or b not in drv:
+                continue
+            dn, dp = drv[b]
+            t = cells[dn]["type"]
+            f = FF_TYPE.match(t)
+            if f:
+                if f[2] != "P":
+                    raise Unproven(f"icg {side}: {cn} enable reads {t} {dn} (not a rising-edge flop)")
+                fr = ff_root(dn)
+                if fr is not None and fr != r:
+                    raise Unproven(f"icg {side}: {cn} enable reads flop {dn} of another clock")
+                continue
+            if LATCH_TYPE.match(t) or not t.startswith("$_") or ICG_CELLS.match(t):
+                raise Unproven(f"icg {side}: {cn} enable reads {t} {dn}: not modelled")
+            todo += [x for p, bits in cells[dn]["connections"].items()
+                     if cells[dn].get("port_directions", {}).get(p) != "output" for x in bits]
+        return len(seen)
+
+    def newcell(t, conns, outp="Y"):
+        y = nxt[0]
+        nxt[0] += 1
+        cells[f"$lec_icg${y}"] = {"hide_name": 1, "type": t, "parameters": {}, "attributes": {},
+                                  "port_directions": {p: ("output" if p == outp else "input") for p in conns},
+                                  "connections": {p: ([y] if p == outp else [v]) for p, v in conns.items()}}
+        return y
+
+    def and_(a, b):
+        if a == "0" or b == "0":
+            return "0"
+        if a == "1":
+            return b
+        if b == "1":
+            return a
+        return newcell("$_AND_", {"A": a, "B": b, "Y": None})
+
+    def or_(a, b):
+        if a == "1" or b == "1":
+            return "1"
+        if a == "0":
+            return b
+        if b == "0":
+            return a
+        return newcell("$_OR_", {"A": a, "B": b, "Y": None})
+
+    def act(sig, pol):                    # active-high form of a control of polarity pol
+        if pol == "P":
+            return sig
+        if sig in ("0", "1"):
+            return "1" if sig == "0" else "0"
+        return newcell("$_NOT_", {"A": sig, "Y": None})
+
+    eff = {}
+    for cn in sorted(icgs):
+        r = root[cn]
+        n = check_cone(cn, bit(cn, "ENA"), r) + check_cone(cn, bit(cn, "SE"), r)
+        eff[cn] = or_(bit(cn, "ENA"), bit(cn, "SE"))
+        st["per_gate"][cn] = dict(type=icgs[cn]["type"], clk=name_of.get(r, str(r)), enable_cone_nets=n, flops=0,
+                                  bb_clock_pins=0)
+    for g, cn in sorted(gclk_of.items(), key=lambda x: str(x)):
+        en = eff[cn]
+        for ln, lp, li in list(loads.get(g, ())):
+            c = cells[ln]
+            t = c["type"]
+            if t == "$_BUF_":
+                continue
+            f = FF_TYPE.match(t)
+            pc = c["connections"]
+            q = pc.get("Q", [None])[0] if f else None
+            if f and lp == "D" and re.search(r"(^|\.)lec_bbi_", str(name_of.get(q, ""))):
+                pc["D"] = [en]               # black-box clock pin: compare 'an edge reaches the macro'
+                st["gated_bb_clock_pins"] += 1
+                st["per_gate"][cn]["bb_clock_pins"] += 1
+                continue
+            if not f or lp != "C" or f[2] != "P":
+                raise Unproven(f"icg {side}: {cn} GCLK reaches {t} {ln}.{lp}[{li}] (only rising-edge flop clocks "
+                               f"and black-box clock pins are modelled)")
+            kind, ctl = f[1], f[3]
+            if kind == "DFF" and ctl == "":
+                c["type"] = "$_DFFE_PP_"
+                pc["E"] = [en]
+            elif kind == "DFF":                                            # async reset: untouched by the clock
+                c["type"] = f"$_DFFE_P{ctl}P_"
+                pc["E"] = [en]
+            elif kind == "DFFE":
+                c["type"] = f"$_DFFE_P{ctl[:-1]}P_"
+                pc["E"] = [and_(en, act(pc["E"][0], ctl[-1]))]
+            elif kind == "SDFF":                                           # sync reset is clocked: gated too
+                c["type"] = f"$_SDFFCE_P{ctl}P_"
+                pc["E"] = [en]
+            elif kind == "SDFFCE":
+                c["type"] = f"$_SDFFCE_P{ctl[:-1]}P_"
+                pc["E"] = [and_(en, act(pc["E"][0], ctl[-1]))]
+            elif kind == "SDFFE":                                          # reset over enable: CE = en & (R | E)
+                c["type"] = f"$_SDFFCE_P{ctl[:-1]}P_"
+                pc["E"] = [and_(en, or_(act(pc["R"][0], ctl[0]), act(pc["E"][0], ctl[-1])))]
+            elif kind == "DFFSR":
+                c["type"] = f"$_DFFSRE_P{ctl}P_"
+                pc["E"] = [en]
+            elif kind == "ALDFF":                                          # async load: untouched by the clock
+                c["type"] = f"$_ALDFFE_P{ctl}P_"
+                pc["E"] = [en]
+            elif kind == "ALDFFE":
+                c["type"] = f"$_ALDFFE_P{ctl[:-1]}P_"
+                pc["E"] = [and_(en, act(pc["E"][0], ctl[-1]))]
+            elif kind == "DFFSRE":
+                c["type"] = f"$_DFFSRE_P{ctl[:-1]}P_"
+                pc["E"] = [and_(en, act(pc["E"][0], ctl[-1]))]
+            else:
+                raise Unproven(f"icg {side}: {cn} GCLK clocks {t} {ln}: not modelled")
+            pc["C"] = [root[cn]]
+            c.setdefault("port_directions", {})["E"] = "input"
+            st["gated_flops"] += 1
+            st["per_gate"][cn]["flops"] += 1
+            st["flop_types"][t] = st["flop_types"].get(t, 0) + 1
+        if g in pos:
+            raise Unproven(f"icg {side}: {cn} GCLK is a module output: not modelled")
+    for cn in icgs:
+        del cells[cn]
+    for k in [k for k, v in d["modules"].items() if ICG_CELLS.match(k)]:
+        del d["modules"][k]
+    Path(dst).write_text(json.dumps(d))
+    return st
 
 
 IMPLICIT_NET = re.compile(r"^(\S+?):(\d+):\d+: warning: implicit net '([^']+)' created \[-Wimplicit-net\]")
@@ -2883,13 +3139,27 @@ def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
     if no_mem:
         rec["gold_no_implicit_memories"] = True
     try:
-        return run_yosys(gold_script(*args, slang_extra=["--no-implicit-memories"] if no_mem else ()), out / "gold.ys", log)
+        return run_side(env, gold_script(*args, slang_extra=["--no-implicit-memories"] if no_mem else ()), out,
+                        "gold", log, rec)
     except Unproven as e:
         if no_mem or gold_fe != "slang" or "Unsupported cell type: $mem_v2" not in str(e):
             raise
         log.append(f"gold: unmappable memory ({str(e)[-160:]}); re-reading with read_slang --no-implicit-memories")
         rec["gold_no_implicit_memories"] = True
-        return run_yosys(gold_script(*args, slang_extra=["--no-implicit-memories"]), out / "gold.ys", log)
+        return run_side(env, gold_script(*args, slang_extra=["--no-implicit-memories"]), out, "gold", log, rec)
+
+
+def run_side(env, script, out, side, log, rec):
+    """one side's AIG: one yosys run, or with clock gates phase A -> icg_to_enable -> phase B."""
+    r = run_yosys(script, out / f"{side}.ys", log)
+    if not env.get("_LEC_ICG_V"):
+        return r
+    pre = out / f"{side}"
+    rec.setdefault("clock_gates", {})[side] = icg_to_enable(f"{pre}.preicg.json", f"{pre}.icg.json", side)
+    r = run_yosys(seq_tail_b(pre, out / "lecff.v"), out / f"{side}_b.ys", log)
+    for f in (f"{pre}.preicg.json", f"{pre}.icg.json"):
+        Path(f).unlink(missing_ok=True)
+    return r
 
 
 def run_yosys(script, path, log):
@@ -2920,12 +3190,28 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         rec.update(top=top, netlist=netlist, synth_frontend=gate_fe, gold_frontend=gold_fe)
         if gold_fe == gate_fe:
             rec["warning"] = "gold frontend == synthesis frontend (frontend bugs are not independent)"
-        bad = sorted(c for c in netlist_cell_types(netlist) if UNSUPPORTED_CELLS.match(c))
+        types = netlist_cell_types(netlist)
+        bad = sorted(c for c in types if UNSUPPORTED_CELLS.match(c) and not ICG_CELLS.match(c))
         if bad:
             raise Unproven(f"netlist holds cells LEC does not model: {bad[:8]}")
-        srcmods = set()
+        srcmods, rtl_cells = set(), set()
         for f in env["VERILOG_FILES"].split():
             srcmods |= set(src_modules(kpath(kit, f)))
+            try:
+                rtl_cells |= set(re.findall(r"\bICG\w+_ASAP7_75t_[RLS]+\b", Path(kpath(kit, f)).read_text(errors="replace")))
+            except OSError:
+                pass
+        icg = sorted({c for c in types if ICG_CELLS.match(c)} | (rtl_cells - srcmods))
+        if any(not ICG_CELLS.match(c) for c in icg):
+            raise Unproven(f"RTL instantiates clock-gate cells LEC does not model: {icg[:8]}")
+        if icg:                           # clock-gate -> enable abstraction on both sides (icg_to_enable)
+            (out / "icg_bb.v").write_text(icg_verilog(icg))
+            env["_LEC_ICG_V"] = str(out / "icg_bb.v")
+            gicg = sorted((rtl_cells - srcmods) & set(icg))
+            if gicg:
+                (out / "icg_gold_bb.v").write_text(icg_verilog(gicg))
+                env["_LEC_ICG_GOLD_V"] = str(out / "icg_gold_bb.v")
+            rec["clock_gate_cells"] = icg
         lib_bbs = [l for l in macro_libs(env, kit) if not set(lib_cells(l)) <= srcmods]
         # 0. lint: implicit nets fail the kit before any proof (see implicit_net_lint)
         hits = implicit_net_lint(env, kit, lib_bbs, out, log)
@@ -2939,7 +3225,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         # 1. black boxes of the gold elaboration (ports) -> one stub file for both sides
         run_yosys(bb_script(env, kit, gold_fe, lib_bbs, out / "bb"), out / "bb.ys", log)
         bbports = parse_bb_verilog(out / "bb.v")
-        bbports = {k: v for k, v in bbports.items() if not k.startswith("$abstract")}
+        bbports = {k: v for k, v in bbports.items() if not k.startswith("$abstract") and not ICG_CELLS.match(k)}
         rec["black_boxes"] = {k: len(v) for k, v in sorted(bbports.items())}
         (out / "stubs.v").write_text(stub_verilog(bbports))
         tops = parse_bb_verilog(out / "bb_top.v")
@@ -2959,8 +3245,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             from concurrent.futures import ThreadPoolExecutor
             with ThreadPoolExecutor(2) as ex:
                 fg = ex.submit(run_gold, env, kit, gold_fe, lib_bbs, out, log, rec)
-                ft = ex.submit(run_yosys, gate_script(env, netlist, out / "stubs.v", out / "wrap_gate.v",
-                                                      out / "lecff.v", out / "gate"), out / "gate.ys", log)
+                ft = ex.submit(run_side, env, gate_script(env, netlist, out / "stubs.v", out / "wrap_gate.v",
+                                                          out / "lecff.v", out / "gate"), out, "gate", log, rec)
                 fg.result()
                 ft.result()
         rec["t_aig_s"] = round(time.time() - t1, 1)
