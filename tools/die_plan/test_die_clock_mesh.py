@@ -246,6 +246,20 @@ class T(unittest.TestCase):
         self.assertTrue(all(K.hit(x, y, m=0.) is None for x, y in made))
         self.assertLessEqual(max(abs(b[0] - a[0]) + abs(b[1] - a[1]) for a, b in zip(pts, pts[1:])), 480.)
 
+    def test_island_window_is_a_legal_driver_site_only_in_its_own_core(self):
+        wins = [(100., 200., 108.64, 204.32, "P/core_a"), (400., 200., 408.64, 204.32, "P/core_b")]
+        site = CM.island_site(wins, "P/core_a", 130., 230., 250., 60., lambda ax: (0., 1000.))
+        (cx, cy), foot, axis, slide, jog = site
+        self.assertEqual((cx, cy), (104.32, 202.16))
+        self.assertLessEqual(jog, 60.)
+        self.assertEqual(foot[axis], (cx, cy)[axis])                  # the foot lies on the strap through the window
+        self.assertIsNone(CM.island_site(wins, "P/core_c", 130., 230., 250., 60., lambda ax: (0., 1000.)))
+        P = SimpleNamespace(W=1000., H=1000.)
+        cells = dict(d=dict(x=101., y=201., kind="drv"), r=dict(x=101., y=201.5, kind="rep"))
+        with patch.object(CM.DC, "keepouts", return_value=[(50., 50., 300., 300., "P/core_a")]):
+            bad = CM.hard_keepout_violations(P, cells, wins)
+        self.assertEqual([b["cell"] for b in bad], ["r"])           # islands hold clock drivers only
+
     def test_hard_keepout_census_checks_the_whole_real_cell_body(self):
         P = SimpleNamespace(W=100., H=100.)
         with patch.object(CM.DC, "keepouts", return_value=[(11.5, 0., 20., 100., "macro")]):
