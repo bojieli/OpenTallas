@@ -1,0 +1,96 @@
+{
+ "schema": "opentallas.s81.bound_boot_contract.v1",
+ "status": "PARTIAL",
+ "die_sha256": "1c11db22badf63d1365251ceae327ad65b9c05d470f5898ef20d35fd246d33d8",
+ "stage": 0,
+ "start_phase": null,
+ "source_sha256": {
+  "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_hostb_seqhost_mux.sv": "84cc15d882c4d7fbd7b19931fd74a86455b4471da81c6357dbacaeaa4f52b8f5",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv": "fe83722aed98be5c319ebc7c2b63514b75016add0dfa7522e878c907f6bfee49",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv": "9fa7ee0971842e66d799cd1b0582ac35fa8fde1b1610ea28716779a58506999e",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv": "6bdcd4970e2b7c2ee8e28ea4e10edc6a74d096ed80f6aa0a663751a6f96b23c4",
+  "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv": "6c77b4c5d7f2e84da15089bc5e0f94abedc5b7a4f772cc911a8193aee80d0a3f"
+ },
+ "stage_basis": "selected mux omits STAGE override; exact mu wrapper declaration STAGE0 propagates through seq_host/sh_sq into walker",
+ "begin_permitted": false,
+ "seal_permitted": false,
+ "phase": {
+  "header_field": "PWheader[8:7]",
+  "accept_equation": "(issuer phase_q + 1) modulo4 == header start_phase",
+  "ks_descriptor": "start,user10,token21,position21; no phase field",
+  "measured": {
+   "reset_deassert_after_edge": 30,
+   "first_unreset_edge": 31,
+   "accepted_ks_edge_mod4": 2,
+   "accepted_ks_offset_from_first_unreset_mod4": 3,
+   "accepted_ks_sampling_edge_mod4": 2,
+   "accepted_ks_pin_event_mod4": 1,
+   "accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4": 3
+  },
+  "holds": [
+   "actual KS pin events and actual reset release in the same local clock required",
+   "only start_phase0 has the supplied local injection proof; no arbitrary alternate phase adopted"
+  ]
+ },
+ "mu": {
+  "slot_count_limit": 47,
+  "event_count": 8,
+  "endpoint_order": [
+   "7n",
+   "7s",
+   "0n",
+   "0s"
+  ],
+  "gap_rule": "actual consecutive KS pin-event differences; table cycles, never calendar command count",
+  "slot_count_rule": "one gap word uses47slots; two or more gap words use exactly table length slots",
+  "rl_rule": "KIT issue + measured f_ks_pin_event_plus_kit_issue_to_t_kd - 1",
+  "constraints": [
+   "min gap > used slots+1",
+   "RL > used slots",
+   "RL <= sum(expanded slot gaps)",
+   "each event delay is in [used slots+2, RL-2]",
+   "all8event rows have explicit kind/endpoint/delay and all used slots have explicit land/ab",
+   "endpoint events must not collide over the periodic actual start calendar",
+   "actual KS user must not be duplicated while its prior start remains outstanding",
+   "configuration occurs while tracker unarmed with no outstanding starts"
+  ],
+  "missing": [
+   "actual KS start calendar",
+   "actual KIT issue and static END/retirement contract",
+   "matching actual KS user/token/position descriptors",
+   "actual eight tag/replay event allocations, delays and per-slot copy/replay attributes",
+   "current target5 commit/HLOAD/GAIN and NORM/GO/NX readiness records"
+  ]
+ },
+ "readiness_provider_api": {
+  "required_identity": [
+   "die_sha256",
+   "source_asbuilt_sha256",
+   "source_sha256",
+   "clock_reset_id"
+  ],
+  "required_entry": [
+   "target5_command_pin_edges",
+   "store_commit_edges",
+   "hload_command_pin_edges",
+   "last_hload_word_edges",
+   "gain_command_pin_edges",
+   "last_gain_word_edges"
+  ],
+  "required_norm": [
+   "normr_command_pin_edges",
+   "pre_resident_before_normr",
+   "go_command_pin_edges",
+   "nx_partial_ready_edges",
+   "rstd_completion_edges",
+   "xq_tx_tag_and_replay_event_edges"
+  ],
+  "required_retirement": [
+   "actual_kit_issue",
+   "fixed_end_issue",
+   "all_row_last_use_edges"
+  ],
+  "rule": "consume exact static records in explicit local pin-event clocks; never infer completion from issue+5 ACK"
+ },
+ "full_token": false
+}
