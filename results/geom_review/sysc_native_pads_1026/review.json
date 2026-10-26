@@ -1,0 +1,16 @@
+{
+ "verdict": "PASS-COND: one placement trial only",
+ "picture": "review.png",
+ "plan": "a8c24031c current KV batch, accepted mesh unchanged",
+ "actual_flops": 8868,
+ "source_pad_max_hop_um": 320.004,
+ "consumer_reach": "NOT RUN; full postplace census required",
+ "findings": [
+  "Wide ATT chain detours over PHY north using its existing ten stages; EMB uses five west-side stages.",
+  "Exact mapped FF names, FT/resets/macro-PG masks and all 74 reserved clock islands excluded.",
+  "No macro walls or PG crossings introduced by pad sites. Final consumer clustering and local clock taps require actual placement review."
+ ],
+ "rtl_changes": 0,
+ "added_cycles": 0,
+ "route_authorization": false
+}
