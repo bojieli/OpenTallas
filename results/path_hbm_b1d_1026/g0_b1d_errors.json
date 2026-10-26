@@ -1,0 +1,53 @@
+{
+ "verdict": "FAIL",
+ "errors": [
+  {
+   "level": "ERROR",
+   "check": "clock",
+   "msg": "type root: branch buffer u_tkmclk_L4_c0 leg to u_tkm_SW_tile3 475.1 um > reach 405",
+   "type": "root"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock",
+   "msg": "type root: branch buffer u_tkmclk_L4_c0 leg to u_tkm_SW_tile4 475.3 um > reach 405",
+   "type": "root"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock",
+   "msg": "type root: branch buffer u_tkmclk_L4_c1 leg to u_tkm_SW_tile11 475.1 um > reach 405",
+   "type": "root"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock",
+   "msg": "type root: branch buffer u_tkmclk_L4_c1 leg to u_tkm_SW_tile12 475.3 um > reach 405",
+   "type": "root"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock",
+   "msg": "type root: branch buffer u_tkmclk_L4_c2 leg to u_tkm_SW_tile19 475.1 um > reach 405",
+   "type": "root"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock",
+   "msg": "type root: branch buffer u_tkmclk_L4_c2 leg to u_tkm_SW_tile20 475.3 um > reach 405",
+   "type": "root"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock",
+   "msg": "type root: branch buffer u_tkmclk_L4_c3 leg to u_tkm_SW_tile27 475.1 um > reach 405",
+   "type": "root"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock",
+   "msg": "type root: branch buffer u_tkmclk_L4_c3 leg to u_tkm_SW_tile28 475.3 um > reach 405",
+   "type": "root"
+  }
+ ]
+}

@@ -1,0 +1,3154 @@
+{
+ "common_tt_ps": 250.0,
+ "common_ff_ps": 202.5,
+ "offsets_dropped": 746,
+ "taps_before": 979,
+ "taps_after": 578,
+ "cores": 578,
+ "ip_cores": 4,
+ "single_port": 429,
+ "merged_entry": 149,
+ "conns_rewired": 1301,
+ "conns_peer_relays_removed": 307,
+ "mode_set_early": [
+  "q_b002",
+  "q_b011",
+  "q_su20",
+  "q_su21",
+  "q_su30",
+  "q_su31"
+ ],
+ "modules": {
+  "ot_hbm_hc_bank128_pair_first_core": {
+   "uses": 8,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    125.28,
+    133.92
+   ],
+   "ip": false
+  },
+  "ot_hbm_hc_bank128_pair_core": {
+   "uses": 56,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    125.28,
+    133.92
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k0h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k0h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k1h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k1h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k2h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k2h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k3h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k3h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k0h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k0h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k1h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k1h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k2h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k2h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k3h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k3h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k0h0": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k0h1": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k1h0": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k1h1": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k2h0": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k2h1": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k3h0": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k3h1": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k0h0": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k0h1": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k1h0": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k1h1": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k2h0": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k2h1": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k3h0": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k3h1": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k0h0": {
+   "uses": 2,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k0h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k1h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k1h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k2h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k2h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k3h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k3h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k0h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k0h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k1h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k1h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k2h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k2h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k3h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k3h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k0h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k0h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k1h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k1h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k2h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k2h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k3h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k3h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k0h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k0h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k1h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k1h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k2h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k2h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k3h0": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k3h1": {
+   "uses": 1,
+   "ports": [
+    "clk_pair"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__tail0": {
+   "uses": 1,
+   "ports": [
+    "clk_tail"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_score_quarter_static__tail1": {
+   "uses": 1,
+   "ports": [
+    "clk_tail"
+   ],
+   "entry_um": [
+    108.0,
+    95.04
+   ],
+   "ip": false
+  },
+  "ot_hgi_sfu_split3_lane_core__idpin": {
+   "uses": 16,
+   "ports": [
+    "map_clk",
+    "sfu_clk"
+   ],
+   "entry_um": [
+    194.4,
+    172.8
+   ],
+   "ip": false
+  },
+  "ot_hgi_sfu_core_split3__opstore_a": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    194.4,
+    172.8
+   ],
+   "ip": false
+  },
+  "ot_hgi_sfu_core_split3__opstore_b": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    380.16,
+    345.6
+   ],
+   "ip": false
+  },
+  "ot_hgi_sfu_core_split3__ctl": {
+   "uses": 1,
+   "ports": [
+    "clk",
+    "clk_lg",
+    "clk_pe",
+    "clk_pw"
+   ],
+   "entry_um": [
+    336.96,
+    311.04
+   ],
+   "ip": false
+  },
+  "ot_pdie_serdes": {
+   "uses": 4,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    299.88,
+    0.019
+   ],
+   "ip": true
+  },
+  "hfd_ep_static": {
+   "uses": 5,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    125.28,
+    185.76
+   ],
+   "ip": false
+  },
+  "hnx_rp3lp3h_s": {
+   "uses": 64,
+   "ports": [
+    "ck_s"
+   ],
+   "entry_um": [
+    315.36,
+    518.4
+   ],
+   "ip": false
+  },
+  "hnx_rp3lp3h_n": {
+   "uses": 64,
+   "ports": [
+    "ck_n"
+   ],
+   "entry_um": [
+    315.36,
+    604.8
+   ],
+   "ip": false
+  },
+  "ot_hbm_svc_sm_xcal_rel_t": {
+   "uses": 4,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    125.28,
+    125.28
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp0": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp2": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp4": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp6": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp8": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp10": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp12": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp14": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain0_3": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain8_11": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__side_softplus": {
+   "uses": 2,
+   "ports": [
+    "clk_side"
+   ],
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__pretree": {
+   "uses": 4,
+   "ports": [
+    "clk_ctl"
+   ],
+   "entry_um": [
+    82.08,
+    228.96
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp1": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp3": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp5": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp7": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp9": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp11": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp13": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp_l": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain4_7": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain12_15": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__side_rest": {
+   "uses": 2,
+   "ports": [
+    "clk_side"
+   ],
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes0_3": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes8_11": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes16_19": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes24_27": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes4_7": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes12_15": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes20_23": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes28_31": {
+   "uses": 2,
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "entry_um": [
+    380.16,
+    362.88
+   ],
+   "ip": false
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
+   "uses": 31,
+   "ports": [
+    "tile_clk"
+   ],
+   "entry_um": [
+    159.84,
+    172.8
+   ],
+   "ip": false
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap": {
+   "uses": 1,
+   "ports": [
+    "tile_clk"
+   ],
+   "entry_um": [
+    159.84,
+    172.8
+   ],
+   "ip": false
+  },
+  "ot_hgi_coll_tkm_m_tp192__root": {
+   "uses": 1,
+   "ports": [
+    "buffer_clk",
+    "clk"
+   ],
+   "entry_um": [
+    159.84,
+    172.8
+   ],
+   "ip": false
+  },
+  "ot_hbm_hc_root_static__tail0_sk_step0": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "ip": false
+  },
+  "ot_hbm_hc_root_static__tail0_sk_steady": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "ip": false
+  },
+  "ot_hbm_hc_root_static__tail0_rest": {
+   "uses": 1,
+   "ports": [
+    "clk",
+    "x_g_tail_0_u_t_u_tail_sink_clk"
+   ],
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "ip": false
+  },
+  "ot_hbm_hc_root_static__tail1_sk_step0": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "ip": false
+  },
+  "ot_hbm_hc_root_static__tail1_sk_steady": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "ip": false
+  },
+  "ot_hbm_hc_root_static__tail1_rest": {
+   "uses": 1,
+   "ports": [
+    "clk",
+    "x_g_tail_1_u_t_u_tail_sink_clk"
+   ],
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "ip": false
+  },
+  "ot_hbm_hc_root_static__hcp_sys1": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    77.76,
+    86.4
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_topk_link_static": {
+   "uses": 1,
+   "ports": [
+    "clk",
+    "clk_mem"
+   ],
+   "entry_um": [
+    324.0,
+    250.56
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_selector_static_sel": {
+   "uses": 1,
+   "ports": [
+    "clk_ctl",
+    "clk_mem",
+    "clk_q"
+   ],
+   "entry_um": [
+    298.08,
+    224.64
+   ],
+   "ip": false
+  },
+  "ot_hbm_host_cp_rxs": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    216.0,
+    216.0
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_rootctl_static_am": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    237.6,
+    129.6
+   ],
+   "ip": false
+  },
+  "ot_hbm_argmax_static_sw_vm_r2": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    60.48,
+    60.48
+   ],
+   "ip": false
+  },
+  "ot_hbm_static_cfg_collar_idx256r": {
+   "uses": 1,
+   "ports": [
+    "clk",
+    "clk_in"
+   ],
+   "entry_um": [
+    51.84,
+    51.84
+   ],
+   "ip": false
+  },
+  "ot_hgi_sfu_programme_store_r10": {
+   "uses": 2,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    285.12,
+    371.52
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_programme_pslice_c5": {
+   "uses": 2,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    470.88,
+    380.16
+   ],
+   "ip": false
+  },
+  "ot_hbm_svc_sm_group_rel_id": {
+   "uses": 8,
+   "ports": [
+    "hbm_clk",
+    "hbm_fifo_clk",
+    "hbm_pc_clk",
+    "stream_bank_clk",
+    "stream_clk"
+   ],
+   "entry_um": [
+    388.8,
+    324.0
+   ],
+   "ip": false
+  },
+  "ot_hfd_coll_q2_hard_v8g__ring_ag": {
+   "uses": 2,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    116.64,
+    116.64
+   ],
+   "ip": false
+  },
+  "ot_hfd_coll_q2_hard_v8g__reduce": {
+   "uses": 2,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    116.64,
+    116.64
+   ],
+   "ip": false
+  },
+  "ot_hfd_coll_q3_body_core": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    289.44,
+    527.04
+   ],
+   "ip": false
+  },
+  "ot_hfd_coll_q3_edge_core": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    95.04,
+    527.04
+   ],
+   "ip": false
+  },
+  "ot_hfd_coll_q3_vm_core": {
+   "uses": 1,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    164.16,
+    358.56
+   ],
+   "ip": false
+  },
+  "ot_hbm_svc_wb_kport_q": {
+   "uses": 2,
+   "ports": [
+    "hbm_clk",
+    "stream_clk",
+    "stream_fifo_clk"
+   ],
+   "entry_um": [
+    237.6,
+    237.6
+   ],
+   "ip": false
+  },
+  "ot_hgi_coll_inj_idx_join_rg": {
+   "uses": 2,
+   "ports": [
+    "clk_r0",
+    "clk_r1"
+   ],
+   "entry_um": [
+    103.68,
+    155.52
+   ],
+   "ip": false
+  },
+  "hfd_hgi_vms_glue_nw_t": {
+   "uses": 2,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    436.32,
+    665.28
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_cxport_ij_q": {
+   "uses": 2,
+   "ports": [
+    "clk_q"
+   ],
+   "entry_um": [
+    125.28,
+    224.64
+   ],
+   "ip": false
+  },
+  "ot_hbm_sm_vm_wr_q_t_lanes4": {
+   "uses": 2,
+   "ports": [
+    "clk",
+    "clk_cal",
+    "clk_l0",
+    "clk_l1",
+    "clk_l2",
+    "clk_l3"
+   ],
+   "entry_um": [
+    69.12,
+    194.4
+   ],
+   "ip": false
+  },
+  "ot_hgi_sm_xload_cl2_ctlx": {
+   "uses": 2,
+   "ports": [
+    "clk",
+    "clk_cal"
+   ],
+   "entry_um": [
+    194.4,
+    194.4
+   ],
+   "ip": false
+  },
+  "ot_hgi_sm_xload_xq_pegress": {
+   "uses": 4,
+   "ports": [
+    "clk",
+    "clk_c",
+    "clk_e",
+    "clk_s",
+    "clk_w"
+   ],
+   "entry_um": [
+    185.76,
+    185.76
+   ],
+   "ip": false
+  },
+  "hfd_vms_bank_native_q0_faces": {
+   "uses": 16,
+   "ports": [
+    "clk",
+    "clk_e",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_n",
+    "clk_s",
+    "clk_w"
+   ],
+   "entry_um": [
+    133.92,
+    155.52
+   ],
+   "ip": false
+  },
+  "ot_hgi_sm_xload_cl2_bdring": {
+   "uses": 4,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    43.2,
+    151.2
+   ],
+   "ip": false
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+   "uses": 16,
+   "ports": [
+    "clk",
+    "clk_ctrl",
+    "clk_l0",
+    "clk_l1",
+    "clk_l2",
+    "clk_l3",
+    "clk_l4",
+    "clk_l5",
+    "clk_l6",
+    "clk_l7",
+    "clk_m0",
+    "clk_m1",
+    "clk_m2",
+    "clk_m3",
+    "clk_m4",
+    "clk_m5",
+    "clk_m6",
+    "clk_m7",
+    "clk_n",
+    "clk_s"
+   ],
+   "entry_um": [
+    151.2,
+    146.88
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_qcore_r13": {
+   "uses": 2,
+   "ports": [
+    "clk_ctl"
+   ],
+   "entry_um": [
+    151.2,
+    138.24
+   ],
+   "ip": false
+  },
+  "ot_hbm_su_static_sfustore_hw": {
+   "uses": 2,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    168.48,
+    164.16
+   ],
+   "ip": false
+  },
+  "ot_hgi_qw_dec": {
+   "uses": 2,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    129.6,
+    129.6
+   ],
+   "ip": false
+  },
+  "ot_hgi_dma_back_static_vp4_banks_cp": {
+   "uses": 2,
+   "ports": [
+    "clk",
+    "clk_bank",
+    "clk_cp"
+   ],
+   "entry_um": [
+    120.96,
+    120.96
+   ],
+   "ip": false
+  },
+  "ot_hgi_coll_gq_issue": {
+   "uses": 2,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    116.64,
+    116.64
+   ],
+   "ip": false
+  },
+  "ot_hgi_coll_gq_land": {
+   "uses": 2,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    69.12,
+    103.68
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_qctl_static": {
+   "uses": 2,
+   "ports": [
+    "clk_program",
+    "clk_program_mem"
+   ],
+   "entry_um": [
+    99.36,
+    99.36
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_query_static": {
+   "uses": 2,
+   "ports": [
+    "clk",
+    "clk_bank",
+    "clk_quant",
+    "clk_quant_delay"
+   ],
+   "entry_um": [
+    86.4,
+    82.08
+   ],
+   "ip": false
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+   "uses": 32,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    90.72,
+    90.72
+   ],
+   "ip": false
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap": {
+   "uses": 8,
+   "ports": [
+    "hbm_clk",
+    "stream_clk"
+   ],
+   "entry_um": [
+    177.12,
+    224.64
+   ],
+   "ip": false
+  },
+  "hfd_hgi_vm_calendar_f20": {
+   "uses": 2,
+   "ports": [
+    "clk",
+    "clk_cap",
+    "clk_mem",
+    "clk_tgt"
+   ],
+   "entry_um": [
+    120.96,
+    60.48
+   ],
+   "ip": false
+  },
+  "ot_hbm_idx_vm_query_static_n12": {
+   "uses": 2,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    108.0,
+    51.84
+   ],
+   "ip": false
+  },
+  "ot_hbm_svc_vmdel_lane_n": {
+   "uses": 16,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    129.6,
+    51.84
+   ],
+   "ip": false
+  },
+  "ot_hbm_xp_aq_tree13_fmt": {
+   "uses": 4,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    90.72,
+    51.84
+   ],
+   "ip": false
+  },
+  "ot_hbm_hc_subtree32_core": {
+   "uses": 8,
+   "ports": [
+    "clk"
+   ],
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "ip": false
+  },
+  "ot_hfd_coll_q2n2_body_core": {
+   "uses": 1,
+   "ports": [
+    "clk_control",
+    "clk_issue",
+    "clk_link",
+    "clk_program",
+    "clk_qslots",
+    "clk_reduce",
+    "clk_upipe"
+   ],
+   "entry_um": [
+    393.12,
+    371.52
+   ],
+   "ip": false
+  },
+  "ot_hfd_coll_q2n2_vm_core": {
+   "uses": 1,
+   "ports": [
+    "vmasm_clk",
+    "writer_clk_bank0",
+    "writer_clk_bank1",
+    "writer_clk_bank2",
+    "writer_clk_bank3",
+    "writer_clk_bank4",
+    "writer_clk_bank5",
+    "writer_clk_bank6",
+    "writer_clk_bank7",
+    "writer_clk_body",
+    "writer_clk_meta",
+    "writer_clk_rgx_ctrl",
+    "writer_clk_rgx_data0",
+    "writer_clk_rgx_data1",
+    "writer_clk_rgx_data2",
+    "writer_clk_rgx_data3"
+   ],
+   "entry_um": [
+    462.24,
+    254.88
+   ],
+   "ip": false
+  }
+ },
+ "entries": {
+  "ot_hbm_hc_bank128_pair_first_core": {
+   "xy": [
+    125.28,
+    133.92
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_hc_bank128_pair_core": {
+   "xy": [
+    125.28,
+    133.92
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k0h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k0h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k1h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k1h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k2h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k2h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k3h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k3h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k0h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k0h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k1h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k1h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k2h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k2h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k3h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k3h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k0h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k0h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k1h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k1h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k2h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k2h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k3h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k3h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k0h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k0h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k1h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k1h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k2h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k2h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k3h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k3h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k0h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k0h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k1h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k1h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k2h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k2h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k3h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k3h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k0h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k0h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k1h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k1h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k2h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k2h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k3h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k3h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k0h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k0h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k1h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k1h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k2h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k2h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k3h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k3h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k0h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k0h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k1h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k1h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k2h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k2h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k3h0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k3h1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__tail0": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_score_quarter_static__tail1": {
+   "xy": [
+    108.0,
+    95.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_sfu_split3_lane_core__idpin": {
+   "xy": [
+    194.4,
+    172.8
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_sfu_core_split3__opstore_a": {
+   "xy": [
+    194.4,
+    172.8
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_sfu_core_split3__opstore_b": {
+   "xy": [
+    380.16,
+    345.6
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_sfu_core_split3__ctl": {
+   "xy": [
+    336.96,
+    311.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_pdie_serdes": {
+   "xy": [
+    299.88,
+    0.019
+   ],
+   "source": "IP_DECLARED native clock pin (IP cannot be rebuilt; 12.8a centre not applicable)"
+  },
+  "hfd_ep_static": {
+   "xy": [
+    125.28,
+    185.76
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "hnx_rp3lp3h_s": {
+   "xy": [
+    315.36,
+    518.4
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "hnx_rp3lp3h_n": {
+   "xy": [
+    315.36,
+    604.8
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_svc_sm_xcal_rel_t": {
+   "xy": [
+    125.28,
+    125.28
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp0": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp2": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp4": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp6": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp8": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp10": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp12": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp14": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain0_3": {
+   "xy": [
+    220.32,
+    228.96
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain8_11": {
+   "xy": [
+    220.32,
+    228.96
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__side_softplus": {
+   "xy": [
+    220.32,
+    228.96
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__pretree": {
+   "xy": [
+    82.08,
+    228.96
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp1": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp3": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp5": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp7": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp9": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp11": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp13": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp_l": {
+   "xy": [
+    220.32,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain4_7": {
+   "xy": [
+    220.32,
+    228.96
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain12_15": {
+   "xy": [
+    220.32,
+    228.96
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__side_rest": {
+   "xy": [
+    220.32,
+    228.96
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes0_3": {
+   "xy": [
+    380.16,
+    362.88
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes8_11": {
+   "xy": [
+    380.16,
+    362.88
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes16_19": {
+   "xy": [
+    380.16,
+    362.88
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes24_27": {
+   "xy": [
+    380.16,
+    362.88
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes4_7": {
+   "xy": [
+    380.16,
+    362.88
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes12_15": {
+   "xy": [
+    380.16,
+    362.88
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes20_23": {
+   "xy": [
+    380.16,
+    362.88
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes28_31": {
+   "xy": [
+    380.16,
+    362.88
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
+   "xy": [
+    159.84,
+    172.8
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap": {
+   "xy": [
+    159.84,
+    172.8
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_coll_tkm_m_tp192__root": {
+   "xy": [
+    159.84,
+    172.8
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_hc_root_static__tail0_sk_step0": {
+   "xy": [
+    77.76,
+    86.4
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_hc_root_static__tail0_sk_steady": {
+   "xy": [
+    77.76,
+    86.4
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_hc_root_static__tail0_rest": {
+   "xy": [
+    77.76,
+    86.4
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_hc_root_static__tail1_sk_step0": {
+   "xy": [
+    77.76,
+    86.4
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_hc_root_static__tail1_sk_steady": {
+   "xy": [
+    77.76,
+    86.4
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_hc_root_static__tail1_rest": {
+   "xy": [
+    77.76,
+    86.4
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_hc_root_static__hcp_sys1": {
+   "xy": [
+    77.76,
+    86.4
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_topk_link_static": {
+   "xy": [
+    324.0,
+    250.56
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_selector_static_sel": {
+   "xy": [
+    298.08,
+    224.64
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_host_cp_rxs": {
+   "xy": [
+    216.0,
+    216.0
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_rootctl_static_am": {
+   "xy": [
+    237.6,
+    129.6
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_argmax_static_sw_vm_r2": {
+   "xy": [
+    60.48,
+    60.48
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_static_cfg_collar_idx256r": {
+   "xy": [
+    51.84,
+    51.84
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_sfu_programme_store_r10": {
+   "xy": [
+    285.12,
+    371.52
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_programme_pslice_c5": {
+   "xy": [
+    470.88,
+    380.16
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_svc_sm_group_rel_id": {
+   "xy": [
+    388.8,
+    324.0
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hfd_coll_q2_hard_v8g__ring_ag": {
+   "xy": [
+    116.64,
+    116.64
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hfd_coll_q2_hard_v8g__reduce": {
+   "xy": [
+    116.64,
+    116.64
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hfd_coll_q3_body_core": {
+   "xy": [
+    289.44,
+    527.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hfd_coll_q3_edge_core": {
+   "xy": [
+    95.04,
+    527.04
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hfd_coll_q3_vm_core": {
+   "xy": [
+    164.16,
+    358.56
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_svc_wb_kport_q": {
+   "xy": [
+    237.6,
+    237.6
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_coll_inj_idx_join_rg": {
+   "xy": [
+    103.68,
+    155.52
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "hfd_hgi_vms_glue_nw_t": {
+   "xy": [
+    436.32,
+    665.28
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_cxport_ij_q": {
+   "xy": [
+    125.28,
+    224.64
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_sm_vm_wr_q_t_lanes4": {
+   "xy": [
+    69.12,
+    194.4
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_sm_xload_cl2_ctlx": {
+   "xy": [
+    194.4,
+    194.4
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_sm_xload_xq_pegress": {
+   "xy": [
+    185.76,
+    185.76
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "hfd_vms_bank_native_q0_faces": {
+   "xy": [
+    133.92,
+    155.52
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_sm_xload_cl2_bdring": {
+   "xy": [
+    43.2,
+    151.2
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+   "xy": [
+    151.2,
+    146.88
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_qcore_r13": {
+   "xy": [
+    151.2,
+    138.24
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_su_static_sfustore_hw": {
+   "xy": [
+    168.48,
+    164.16
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_qw_dec": {
+   "xy": [
+    129.6,
+    129.6
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_dma_back_static_vp4_banks_cp": {
+   "xy": [
+    120.96,
+    120.96
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_coll_gq_issue": {
+   "xy": [
+    116.64,
+    116.64
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hgi_coll_gq_land": {
+   "xy": [
+    69.12,
+    103.68
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_qctl_static": {
+   "xy": [
+    99.36,
+    99.36
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_query_static": {
+   "xy": [
+    86.4,
+    82.08
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+   "xy": [
+    90.72,
+    90.72
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap": {
+   "xy": [
+    177.12,
+    224.64
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "hfd_hgi_vm_calendar_f20": {
+   "xy": [
+    120.96,
+    60.48
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_idx_vm_query_static_n12": {
+   "xy": [
+    108.0,
+    51.84
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_svc_vmdel_lane_n": {
+   "xy": [
+    129.6,
+    51.84
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_xp_aq_tree13_fmt": {
+   "xy": [
+    90.72,
+    51.84
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hbm_hc_subtree32_core": {
+   "xy": [
+    108.0,
+    108.0
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hfd_coll_q2n2_body_core": {
+   "xy": [
+    393.12,
+    371.52
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  },
+  "ot_hfd_coll_q2n2_vm_core": {
+   "xy": [
+    462.24,
+    254.88
+   ],
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)"
+  }
+ },
+ "branch_legs": [
+  {
+   "type": "root",
+   "buffer": "u_tkmclk_L4_c0",
+   "legs_before": [
+    315.36,
+    315.36
+   ],
+   "legs_after": [
+    475.085,
+    475.277
+   ]
+  },
+  {
+   "type": "root",
+   "buffer": "u_tkmclk_L150_c0",
+   "legs_before": [
+    203.04,
+    203.04
+   ],
+   "legs_after": [
+    362.765,
+    362.957
+   ]
+  },
+  {
+   "type": "root",
+   "buffer": "u_tkmclk_L150_c1",
+   "legs_before": [
+    203.04,
+    203.04
+   ],
+   "legs_after": [
+    362.765,
+    362.957
+   ]
+  },
+  {
+   "type": "root",
+   "buffer": "u_tkmclk_L4_c1",
+   "legs_before": [
+    315.36,
+    315.36
+   ],
+   "legs_after": [
+    475.085,
+    475.277
+   ]
+  },
+  {
+   "type": "root",
+   "buffer": "u_tkmclk_L4_c2",
+   "legs_before": [
+    315.36,
+    315.36
+   ],
+   "legs_after": [
+    475.085,
+    475.277
+   ]
+  },
+  {
+   "type": "root",
+   "buffer": "u_tkmclk_L150_c2",
+   "legs_before": [
+    203.04,
+    203.04
+   ],
+   "legs_after": [
+    362.765,
+    362.957
+   ]
+  },
+  {
+   "type": "root",
+   "buffer": "u_tkmclk_L150_c3",
+   "legs_before": [
+    203.04,
+    203.04
+   ],
+   "legs_after": [
+    362.765,
+    362.957
+   ]
+  },
+  {
+   "type": "root",
+   "buffer": "u_tkmclk_L4_c3",
+   "legs_before": [
+    315.36,
+    315.36
+   ],
+   "legs_after": [
+    475.085,
+    475.277
+   ]
+  }
+ ]
+}
