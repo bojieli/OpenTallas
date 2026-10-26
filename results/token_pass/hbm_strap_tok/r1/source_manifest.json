@@ -1,0 +1,680 @@
+[
+ {
+  "name": "ot_dsrom_su_add6.sv",
+  "sha256": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+  "benches": 16,
+  "repo": "physical/die_plan/s81/cores/svc/kits/ot_s81c_attn_hcore__157.68x259.2/rtl/ot_dsrom_su_add6.sv"
+ },
+ {
+  "name": "ot_dsrom_su_f12.sv",
+  "sha256": "923d7442321f1673ac2542c0c7bef70486b566dae80ab10c6378083bcc51eb79",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv"
+ },
+ {
+  "name": "ot_fp32_add_rne_pipe.sv",
+  "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "benches": 35,
+  "repo": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_fp32_add_rne_pipe.sv"
+ },
+ {
+  "name": "ot_hbm_su_pg_lane_exp_core.sv",
+  "sha256": "e3840d9a7317d99c1d744b8a580dbf8995172ede2dd89125f001973dd9171b4f",
+  "benches": 15,
+  "repo": "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core.sv"
+ },
+ {
+  "name": "ot_hbm_su_pg_lane_exp_core_strap.sv",
+  "sha256": "80c625e7cd4d5e16cc09549abf615fc75de60fd8c05c249eee3ecb564b1b3c54",
+  "benches": 15,
+  "repo": "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core_strap.sv"
+ },
+ {
+  "name": "ot_hbm_su_pg_lanes4_core.sv",
+  "sha256": "30fc6d4cdd4ead0b440b201b1cd556189c498e70c02de2d8cf040cd4ece9bfdc",
+  "benches": 4,
+  "repo": "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv"
+ },
+ {
+  "name": "ot_hbm_su_pg_lanes4_core_strap.sv",
+  "sha256": "5cc4386693e971048fff31dc5c5b65038f9f9c9aec6f45a51261d8c1a4e28329",
+  "benches": 4,
+  "repo": "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core_strap.sv"
+ },
+ {
+  "name": "ot_hbm_su_static_data_store.sv",
+  "sha256": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219",
+  "benches": 19,
+  "repo": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv"
+ },
+ {
+  "name": "ot_hbm_su_static_ins.sv",
+  "sha256": "5689f7f3baad5435b2bac95cb31d908600a5434d2768a145fb5fe93276ba8bd2",
+  "benches": 19,
+  "repo": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv"
+ },
+ {
+  "name": "ot_hbm_su_static_lane.sv",
+  "sha256": "24fb5a39f64796a9471f50973d0b2436d9561ce27df0e19d0061157d03bde53d",
+  "benches": 19,
+  "repo": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv"
+ },
+ {
+  "name": "ot_hbm_su_static_lane_pinreg.sv",
+  "sha256": "00d43c502abb3d308c359c1d82bf053233113c62a83562e8adbf9efb7a9aa6ea",
+  "benches": 19,
+  "repo": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp10__wrap.sv",
+  "sha256": "67ede4669f8825be416fcd241442f5254ff843003d3740158efa018b25c60f63",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp11__wrap.sv",
+  "sha256": "a2d020ba8a28e23f3c1d38903b130dbcc5d98b0ae7166faf66ee71a30f4166c6",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp12__wrap.sv",
+  "sha256": "4bbfbef4cc03ee019b8623ec4551c9fc46767b168997b4774ec061e81a7bfc3d",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp13__wrap.sv",
+  "sha256": "773ea605d9cabc85396fc99010405080a8101cca5c4c68dbe15ea1d8832812ed",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp14__wrap.sv",
+  "sha256": "e922a4ddb3ab35dee4d280f666e863b9ac11a52f857d4fbe9ceef9cee8de3dde",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp1__wrap.sv",
+  "sha256": "72945c7e5a8a51315ec99b176c58a00cf78ef0dbbc18f621977089026af9928a",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp2__wrap.sv",
+  "sha256": "2f25afc10a03d765a4c1df81f48c2184ee73ec18e690204043ab0ebd7e9de59a",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp3__wrap.sv",
+  "sha256": "3867b855ecee7e5214dc5642e71a7d0c1feac9a0c3102416747a25d3a2ffeffc",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp4__wrap.sv",
+  "sha256": "d827f0a12407d774524b881a53eed04264beacc563570efcf4afb54b2f7bb359",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp5__wrap.sv",
+  "sha256": "885fe8efe00f802f14a8baf4bef7a70d892b655cfa10fd1538a931cccd793931",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp6__wrap.sv",
+  "sha256": "7b392894abf4ca64ff5975af6780ad848942371e19bbd0e0a0f29b4c92094f28",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp7__wrap.sv",
+  "sha256": "4617d24a3251d44228330e6cae189da92aa5bacbaabb82aebcd6dead8a697f79",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp8__wrap.sv",
+  "sha256": "aec9adbace8b62f91c35e32a82e79bd2c40b3832e9810522e103f3e262094668",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp9__wrap.sv",
+  "sha256": "6fd7035330d4ba73c99371a71277a07de6b0970b9169f465280ed89668b1badb",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lane_exp_l__wrap.sv",
+  "sha256": "4cf160e6f4689941c0d19b83dc6f228e1f525362f5f5ab791b3c14c597bca178",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3__wrap.sv",
+  "sha256": "3a0c4063ecba6a8da0707a4bf11346a3eb6b559a0cefdc91b2769de165400b20",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15__wrap.sv",
+  "sha256": "98f84bdae081494415946a053db2aa687f9ff0de8990ecc5b2e5ef126f7c8be9",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7__wrap.sv",
+  "sha256": "b0a5d4d44faac053f011e513fa0c77943035c6c3cf975ca80bca6003a61b75bd",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11__wrap.sv",
+  "sha256": "76040d4121c7722f24f4c87e008a8a723661d280ec865e8695009fdb4c7702c1",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hbm_su_static_pinned_bank.sv",
+  "sha256": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a",
+  "benches": 19,
+  "repo": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv"
+ },
+ {
+  "name": "ot_hdc_delay.sv",
+  "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "benches": 35,
+  "repo": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_delay.sv"
+ },
+ {
+  "name": "ot_hdc_delay_ring.sv",
+  "sha256": "b73ee094bbf20688a072fe60251127e47ca39e1f3c0fc04499a33623a19bdfc6",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay_ring.sv"
+ },
+ {
+  "name": "ot_hdc_fastfp.sv",
+  "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "benches": 16,
+  "repo": "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl/hdc/ot_hdc_fastfp.sv"
+ },
+ {
+  "name": "ot_hdc_fastfp.sv",
+  "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "benches": 19,
+  "repo": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_fastfp.sv"
+ },
+ {
+  "name": "ot_hdc_fastfp_lat.sv",
+  "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+  "benches": 19,
+  "repo": "rtl/hdc/ot_hdc_fastfp_lat.sv"
+ },
+ {
+  "name": "ot_hdc_fastfp_lat_c12.sv",
+  "sha256": "870020b95d623ed481ec8caebda69cb80f57e43dd824ece5fa31c381ebd4c5ac",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv"
+ },
+ {
+  "name": "ot_hdc_fdiv.sv",
+  "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+  "benches": 35,
+  "repo": "physical/die_plan/s81/cores/views/ot_s81sl_vq/source/ot_hdc_fdiv.sv"
+ },
+ {
+  "name": "ot_hdc_fp32_add_lat.sv",
+  "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+  "benches": 16,
+  "repo": "physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv"
+ },
+ {
+  "name": "ot_hdc_fp32_add_lat.sv",
+  "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+  "benches": 19,
+  "repo": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_fp32_add_lat.sv"
+ },
+ {
+  "name": "ot_hdc_fp32_f12.sv",
+  "sha256": "c161c7064aaacbc344df2e345fa4301dfef74a6f3bea927a52f502ff6b66fbb1",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv"
+ },
+ {
+  "name": "ot_hdc_fp32_mul_lat.sv",
+  "sha256": "4cd501e8a4155fd694b2327b90bd92548209e535e7472b6d75016579f4ead9d8",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+ },
+ {
+  "name": "ot_hdc_fp32_mul_lat.sv",
+  "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+  "benches": 19,
+  "repo": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_fp32_mul_lat.sv"
+ },
+ {
+  "name": "ot_hdc_fp32_mul_pipe.sv",
+  "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "benches": 35,
+  "repo": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_fp32_mul_pipe.sv"
+ },
+ {
+  "name": "ot_hdc_fpu.sv",
+  "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "benches": 35,
+  "repo": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_fpu.sv"
+ },
+ {
+  "name": "ot_hdc_fsqrt.sv",
+  "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+  "benches": 35,
+  "repo": "physical/die_plan/s81/cores/views/ot_s81sl_vq/source/ot_hdc_fsqrt.sv"
+ },
+ {
+  "name": "ot_hdc_fsqrt_c12.sv",
+  "sha256": "5d09b4df12d1d4da73aa331b3b21cc5af540e289bbf3f45c0773754b489c5584",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"
+ },
+ {
+  "name": "ot_hdc_prefix.sv",
+  "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "benches": 35,
+  "repo": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_prefix.sv"
+ },
+ {
+  "name": "ot_hdc_sfu.sv",
+  "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "benches": 35,
+  "repo": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_sfu.sv"
+ },
+ {
+  "name": "ot_hdc_softplus.sv",
+  "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+  "benches": 35,
+  "repo": "physical/die_plan/s81/cores/views/ot_s81sl_vq/source/ot_hdc_softplus.sv"
+ },
+ {
+  "name": "ot_hdc_v41x_sfu.sv",
+  "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+  "benches": 19,
+  "repo": "physical/die_plan/s81/cores/views/dsdv_gunit_l4r/source/ot_hdc_v41x_sfu.sv"
+ },
+ {
+  "name": "ot_hdc_v41x_sfu_c12.sv",
+  "sha256": "458ebaf11f1f37ab02905a525a589f9615ebe689830254235f69e11c936847c6",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv"
+ },
+ {
+  "name": "ot_hdc_v41x_su_c12_phys.sv",
+  "sha256": "d2a00a522f56745046a8e3cd894eff38488bde3894e119f82c1d50f0879127d4",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv"
+ },
+ {
+  "name": "ot_hdc_v41x_vec_c12.sv",
+  "sha256": "30b7b872de2d67f5cac5ba21139a0d5fb3f2db3d881ea78786dcdca720ab79bb",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv"
+ },
+ {
+  "name": "ot_hdc_v41x_vec_lane_c12.sv",
+  "sha256": "0242b18cb33456607a7deedf70c8e8a290d7677a8139a9fac77befbbbd00b693",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+ },
+ {
+  "name": "ot_hdc_v41x_vec_red_c12.sv",
+  "sha256": "3a9f450155950ff07aa66d4ead8fab17b6b7404eb8dfc03eafe4c4516f437197",
+  "benches": 16,
+  "repo": "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv"
+ },
+ {
+  "name": "ot_hdc_v41x_vec_side_c12.sv",
+  "sha256": "02587325f5e56a5dcb45fc46457f3e0fea9d3202d3e8b36ac1285ab6d80a8c27",
+  "benches": 16,
+  "repo": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane0__wrap.sv",
+  "sha256": "f898f8882b162f7199c60ad740bd64c54a83b28d969766cfcd4afc9977969502",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane10__wrap.sv",
+  "sha256": "db92d5263a183cc810586627c81acb7195ca5a8e1c088ca919a388cccc29f3bc",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane11__wrap.sv",
+  "sha256": "0dc2d843ac2f9353079fa671bc74566625a72318a82c893736367f4559c2a789",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane12__wrap.sv",
+  "sha256": "0f9e406214f4cc33068393bdee121a737cc317655273c1faef7c793a60aa734b",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane13__wrap.sv",
+  "sha256": "ba4f26f58f41f0990c0cce478ff347d9f4ec107ec0a4c1789115f4a0c4805421",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane14__wrap.sv",
+  "sha256": "0f50de85afa568a60555fc198ab28af6583b5172fb5604aa3373cbad5963ed37",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane15__wrap.sv",
+  "sha256": "648b100ed297d5187356965fe3110e81ffe58943ec35fd0156e5eb92e830dc66",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane1__wrap.sv",
+  "sha256": "9a302a741b9f1c854f57e5ba523fea9d2117055c5d18542f40f7752c68738f6c",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane2__wrap.sv",
+  "sha256": "a5f175cf418fc0337cc7e0b608123aac7ba3f3fc2321f9097c53f69f9b1527cb",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane3__wrap.sv",
+  "sha256": "6e8a8241e786818ce626c1abf2b263fee5a6338d8be29d5ba1517bc0aa37a02a",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane4__wrap.sv",
+  "sha256": "6c03b2f56bd6326328dc690e461ed438fe630808e6e13ac3a4cc39a3f21172e3",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane5__wrap.sv",
+  "sha256": "d3880c6b6fd171d8ddb06879c94b9e4cb224f3e5a262ed73a5a1806cf3d29aa5",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane6__wrap.sv",
+  "sha256": "72e0a02c990927b35a66384bfe07376c3e80e1dcd37b6a082e0a918f1d480122",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane7__wrap.sv",
+  "sha256": "60fed2adb2c28364052d715adfaf047a94f73be0ef042eb719c530c04d180824",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane8__wrap.sv",
+  "sha256": "74d5b4225ad4cd8d45635d9d14adcd6ce6d0e234e6d8fd1c7bce6956cbc5a28b",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_core_split3__lane9__wrap.sv",
+  "sha256": "02d0c1bb954f3b8e122ac89d4e7f7b702530dbb68694eb3f264e586fa40e9302",
+  "benches": 1,
+  "generated": "gen_core_kit_hbm.py"
+ },
+ {
+  "name": "ot_hgi_sfu_lane_map.sv",
+  "sha256": "2c5f658b4fb2833ffbd1de63837ac5286a3acd58f9bda00d2720d6c124108365",
+  "benches": 16,
+  "repo": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv"
+ },
+ {
+  "name": "ot_hgi_sfu_split3_lane_core.sv",
+  "sha256": "7305925572bd950d8bc60f6ae9411387cb22079d835258f666e05a6e895f8233",
+  "benches": 16,
+  "repo": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_lane_core.sv"
+ },
+ {
+  "name": "ot_hgi_sfu_split3_lane_core_strap.sv",
+  "sha256": "ae92c923c9351a29cc3a601923c55b0026a55fb2c774802782803f529ff3b0ba",
+  "benches": 16,
+  "repo": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_lane_core_strap.sv"
+ },
+ {
+  "name": "ot_sram_1r1w_128x256_m1_r2c2.v",
+  "sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "benches": 19,
+  "repo": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+ },
+ {
+  "name": "ot_su12_sfu_sp2.sv",
+  "sha256": "dc11122b1ef670352df6ca6a44afa4f1066f2ceaeec1e1b888cece2aaaf6d1a6",
+  "benches": 16,
+  "repo": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_su12_sfu_sp2.sv"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "7bc4ddb1d80ea7f2c243c7cdfd6c98de97b6d288ab4ebf58648e79454b9f5668",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "9ca0011404d4824765fcccc258aa1f22aa8004a9ba651b98b7bf47593b7f0b77",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "5b3dd67e2b10badcebc79d7d3a87227c1c1378a22016c6bae66d3a5a245a671a",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "11ff7cf48923039b55975dd2ef1d1db4e4ddc1d04b8036e22d8cb9601943551d",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "9f3cbd4f7c58733e89fccddb7e2f4b813f4c48992a8a9c24b2cf1da1163dbfac",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "be91a36639633251ea433e3d34e0ca088a151b093736315f62c43a621f38e5e0",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "e7181b71f5073c95f125ff4bb39240930b435697258523f93c7495d318c65e6a",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "54336fe2bf11b7e389a2c2780814b0a004332477b8171b4f2b0c6652b3cfd894",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "7df262870fb5949dae97513aa7d36413e6bf2bb6b4563bcf3fffaeab24a94276",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "dfb216f6c965ce9ae73db605f5bdeeb68764b3ae6c4c09602723c50e64a485d4",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "c8266df2f093338197ab94705697651076de40429603873dd032aa5d96fc7dcb",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "7857dcb5de51f398b1081400608c6413a5e676e6cbb2527cdfb800ab26a2f482",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "9af221ffca2112129824d080b8b2b202af0d5abd281828e1ed5883b6ea860e1b",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "7dbb470b8c2e68ce824ee0316f3de9aad04af26039ac4c995b330bbaee02be92",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "b1bd054f0fbbcd6a13791b0794c14dcde0fd8def08f30234cdd068237bce7d4e",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "9c8e87c9c62417246f5200e09b87f355e89a1a8109e1f4840d141142c6ed5f99",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "e71a197fb7e91756838a7ba74d68a019db199072cd9ea6f0277a7ecbc6a920c9",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "2c0f8432a9a62d36c203d6e74455e5b72c0895f9fbfdba5fc491233782daf909",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "b398a9866c4ae7eb8f8d2bfcd881e3184ab675751c2d71642bd2276e2286582d",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "6536d3d6af2aa7999ee9737f4fb24333a153b0fb1788600f1a321ab3352706ec",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "29a83a2870b150fc06cc943fa0fe942daa37200740ff2ef3d4e5f6c4af9306eb",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "ca16d22a43f2865c0a998d4c14e90a497fe4b4b487e9234b7578e443fcd5e71d",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "f23f1bd4c587bfdd3bed93c19c14709fb41ae5c985a3c13f3ef914faa4a55cec",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "ffd2eabd3851fed56a82c8fdf27cbc84031fd73a183b024dde3e2e80bcc7c3c4",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "4fc79363e6f728418c3ae99974acef67562282684313c768919801ddf119a354",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "4e8c0f4f1355ae8ef5ba090418cddbf2dbd9120c815e3584add7e4fbe8f8aa3b",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "2abb41e7e418073e6d461d071f8a83de3c03bbb91b3d6269c00564e8819dc0ae",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "07e3395bd04c8fc427dfe286cdf1b17957200e0b82a1f8aefd40757fe7413210",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "c6693b97f1e2daa24653c2d05177f5121fcbfc961d87f3853f7b8dc033482875",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "e0700add55a51bf306475ea5b1cd3f3864d8276ff70165344b8bd7ba072e1396",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "28592dc8d278d05a7a46c62a54e852e80eb6f1975d400b9d905d15a4b0d6cfc7",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "ba1dc31651cb537519ea79a4e5ace6e0f87adafa8dd984c5f68a9e9b7fa9fcb1",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "e02138d659ca31c0c1e333b99f4da8df001f678b11cff81290e26d1a2f3b2e8a",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "3657e43686e148919a9724ffcbace337df50908fbc491aac3b8da522e972a3c5",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ },
+ {
+  "name": "tb.sv",
+  "sha256": "561725f28662d6c725ee02881339edd712170520383643dd152d4674585ddff9",
+  "benches": 1,
+  "generated": "gen_bench.py"
+ }
+]

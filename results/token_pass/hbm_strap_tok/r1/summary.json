@@ -1,0 +1,551 @@
+{
+ "test": "TOK-HBM strap token test: every HBM B2n plan strap_* tie value, strap master vs the old constant variant",
+ "source_commit": "81d4fbfa8d5ff4484a468448f6aa6a5cf3f1ae70",
+ "plan": "physical/die_plan/hbm_arch/B2n/die_plan.json",
+ "plan_ties": 54,
+ "per_master": {
+  "ot_hgi_sfu_split3_lane_core_strap": {
+   "pass_values": 16,
+   "fail_values": 0,
+   "plan_instances_covered": 16
+  },
+  "ot_hbm_su_pg_lane_exp_core_strap": {
+   "pass_values": 15,
+   "fail_values": 0,
+   "plan_instances_covered": 30
+  },
+  "ot_hbm_su_pg_lanes4_core_strap": {
+   "pass_values": 4,
+   "fail_values": 0,
+   "plan_instances_covered": 8
+  }
+ },
+ "benches": [
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane0",
+   "straps": {
+    "strap_map_lane_j": "4'b0000"
+   },
+   "plan_instances": [
+    "q_b110/u_sfucore_Q_lane0"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3849,
+   "ref_output_changes": 14208
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane1",
+   "straps": {
+    "strap_map_lane_j": "4'b0001"
+   },
+   "plan_instances": [
+    "q_b110/u_sfucore_Q_lane1"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3849,
+   "ref_output_changes": 14176
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane2",
+   "straps": {
+    "strap_map_lane_j": "4'b0010"
+   },
+   "plan_instances": [
+    "q_b110/u_sfucore_Q_lane2"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14106
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane3",
+   "straps": {
+    "strap_map_lane_j": "4'b0011"
+   },
+   "plan_instances": [
+    "q_b110/u_sfucore_Q_lane3"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14106
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane4",
+   "straps": {
+    "strap_map_lane_j": "4'b0100"
+   },
+   "plan_instances": [
+    "q_b111/u_sfucore_Q_lane4"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14072
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane5",
+   "straps": {
+    "strap_map_lane_j": "4'b0101"
+   },
+   "plan_instances": [
+    "q_b111/u_sfucore_Q_lane5"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14072
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane6",
+   "straps": {
+    "strap_map_lane_j": "4'b0110"
+   },
+   "plan_instances": [
+    "q_b111/u_sfucore_Q_lane6"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14072
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane7",
+   "straps": {
+    "strap_map_lane_j": "4'b0111"
+   },
+   "plan_instances": [
+    "q_b111/u_sfucore_Q_lane7"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14072
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane8",
+   "straps": {
+    "strap_map_lane_j": "4'b1000"
+   },
+   "plan_instances": [
+    "q_b111/u_sfucore_Q_lane8"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14008
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane9",
+   "straps": {
+    "strap_map_lane_j": "4'b1001"
+   },
+   "plan_instances": [
+    "q_b112/u_sfucore_Q_lane9"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14008
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane10",
+   "straps": {
+    "strap_map_lane_j": "4'b1010"
+   },
+   "plan_instances": [
+    "q_b112/u_sfucore_Q_lane10"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14008
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane11",
+   "straps": {
+    "strap_map_lane_j": "4'b1011"
+   },
+   "plan_instances": [
+    "q_b112/u_sfucore_Q_lane11"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14008
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane12",
+   "straps": {
+    "strap_map_lane_j": "4'b1100"
+   },
+   "plan_instances": [
+    "q_b112/u_sfucore_Q_lane12"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14008
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane13",
+   "straps": {
+    "strap_map_lane_j": "4'b1101"
+   },
+   "plan_instances": [
+    "q_b112/u_sfucore_Q_lane13"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14008
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane14",
+   "straps": {
+    "strap_map_lane_j": "4'b1110"
+   },
+   "plan_instances": [
+    "q_b113/u_sfucore_Q_lane14"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14008
+  },
+  {
+   "master": "ot_hgi_sfu_split3_lane_core_strap",
+   "old_module": "ot_hgi_sfu_core_split3__lane15",
+   "straps": {
+    "strap_map_lane_j": "4'b1111"
+   },
+   "plan_instances": [
+    "q_b113/u_sfucore_Q_lane15"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 3811,
+   "ref_output_changes": 14008
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp2",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000010"
+   },
+   "plan_instances": [
+    "q_su00/u_su_Q0_lane_exp2",
+    "q_su10/u_su_Q1_lane_exp2"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9138,
+   "ref_output_changes": 21603
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp4",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000100"
+   },
+   "plan_instances": [
+    "q_su00/u_su_Q0_lane_exp4",
+    "q_su10/u_su_Q1_lane_exp4"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9132,
+   "ref_output_changes": 21488
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp6",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000110"
+   },
+   "plan_instances": [
+    "q_su00/u_su_Q0_lane_exp6",
+    "q_su10/u_su_Q1_lane_exp6"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9113,
+   "ref_output_changes": 21468
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp8",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001000"
+   },
+   "plan_instances": [
+    "q_su00/u_su_Q0_lane_exp8",
+    "q_su10/u_su_Q1_lane_exp8"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9113,
+   "ref_output_changes": 21404
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp10",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001010"
+   },
+   "plan_instances": [
+    "q_su00/u_su_Q0_lane_exp10",
+    "q_su10/u_su_Q1_lane_exp10"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9106,
+   "ref_output_changes": 21403
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp12",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001100"
+   },
+   "plan_instances": [
+    "q_su00/u_su_Q0_lane_exp12",
+    "q_su10/u_su_Q1_lane_exp12"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9110,
+   "ref_output_changes": 21435
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp14",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001110"
+   },
+   "plan_instances": [
+    "q_su00/u_su_Q0_lane_exp14",
+    "q_su10/u_su_Q1_lane_exp14"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9123,
+   "ref_output_changes": 21396
+  },
+  {
+   "master": "ot_hbm_su_pg_lanes4_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3",
+   "straps": {
+    "strap_lane0_lane_id": "11'b00001000000",
+    "strap_lane1_lane_id": "11'b00001000001",
+    "strap_lane2_lane_id": "11'b00001000010",
+    "strap_lane3_lane_id": "11'b00001000011"
+   },
+   "plan_instances": [
+    "q_su00/u_su_Q0_lanes_plain0_3",
+    "q_su10/u_su_Q1_lanes_plain0_3"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 14858,
+   "ref_output_changes": 109163
+  },
+  {
+   "master": "ot_hbm_su_pg_lanes4_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11",
+   "straps": {
+    "strap_lane0_lane_id": "11'b00001001000",
+    "strap_lane1_lane_id": "11'b00001001001",
+    "strap_lane2_lane_id": "11'b00001001010",
+    "strap_lane3_lane_id": "11'b00001001011"
+   },
+   "plan_instances": [
+    "q_su00/u_su_Q0_lanes_plain8_11",
+    "q_su10/u_su_Q1_lanes_plain8_11"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 14851,
+   "ref_output_changes": 109158
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp1",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000001"
+   },
+   "plan_instances": [
+    "q_su01/u_su_Q0_lane_exp1",
+    "q_su11/u_su_Q1_lane_exp1"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9226,
+   "ref_output_changes": 21714
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp3",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000011"
+   },
+   "plan_instances": [
+    "q_su01/u_su_Q0_lane_exp3",
+    "q_su11/u_su_Q1_lane_exp3"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9138,
+   "ref_output_changes": 21598
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp5",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000101"
+   },
+   "plan_instances": [
+    "q_su01/u_su_Q0_lane_exp5",
+    "q_su11/u_su_Q1_lane_exp5"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9132,
+   "ref_output_changes": 21465
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp7",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000000111"
+   },
+   "plan_instances": [
+    "q_su01/u_su_Q0_lane_exp7",
+    "q_su11/u_su_Q1_lane_exp7"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9113,
+   "ref_output_changes": 21507
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp9",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001001"
+   },
+   "plan_instances": [
+    "q_su01/u_su_Q0_lane_exp9",
+    "q_su11/u_su_Q1_lane_exp9"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9113,
+   "ref_output_changes": 21408
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp11",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001011"
+   },
+   "plan_instances": [
+    "q_su01/u_su_Q0_lane_exp11",
+    "q_su11/u_su_Q1_lane_exp11"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9106,
+   "ref_output_changes": 21407
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp13",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001101"
+   },
+   "plan_instances": [
+    "q_su01/u_su_Q0_lane_exp13",
+    "q_su11/u_su_Q1_lane_exp13"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9110,
+   "ref_output_changes": 21403
+  },
+  {
+   "master": "ot_hbm_su_pg_lane_exp_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lane_exp_l",
+   "straps": {
+    "strap_lane_lane_id": "11'b00000001111"
+   },
+   "plan_instances": [
+    "q_su01/u_su_Q0_lane_exp_l",
+    "q_su11/u_su_Q1_lane_exp_l"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 9123,
+   "ref_output_changes": 21434
+  },
+  {
+   "master": "ot_hbm_su_pg_lanes4_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7",
+   "straps": {
+    "strap_lane0_lane_id": "11'b00001000100",
+    "strap_lane1_lane_id": "11'b00001000101",
+    "strap_lane2_lane_id": "11'b00001000110",
+    "strap_lane3_lane_id": "11'b00001000111"
+   },
+   "plan_instances": [
+    "q_su01/u_su_Q0_lanes_plain4_7",
+    "q_su11/u_su_Q1_lanes_plain4_7"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 14850,
+   "ref_output_changes": 109169
+  },
+  {
+   "master": "ot_hbm_su_pg_lanes4_core_strap",
+   "old_module": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15",
+   "straps": {
+    "strap_lane0_lane_id": "11'b00001001100",
+    "strap_lane1_lane_id": "11'b00001001101",
+    "strap_lane2_lane_id": "11'b00001001110",
+    "strap_lane3_lane_id": "11'b00001001111"
+   },
+   "plan_instances": [
+    "q_su01/u_su_Q0_lanes_plain12_15",
+    "q_su11/u_su_Q1_lanes_plain12_15"
+   ],
+   "verdict": "PASS",
+   "dut_vs_ref_diffs": 0,
+   "mutant_diffs": 14864,
+   "ref_output_changes": 109148
+  }
+ ],
+ "manifest_files": 113,
+ "manifest_repo": 43,
+ "manifest_generated": 70,
+ "errors": [],
+ "verdict": "PASS"
+}
