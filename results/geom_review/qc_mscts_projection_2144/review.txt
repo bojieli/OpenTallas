@@ -1,0 +1,17 @@
+QC PROG SRAMIF discrete MSCTS projection, 2026-10-25 22:25 PDT.
+Image site.png was rendered and personally viewed BEFORE the new GRT/STA run.
+PASS-COND for clock-only GRT/STA confirmation; no detailed-route/signoff approval.
+One BUF4 at132.030/19.170um lies on the free legal standard-cell row immediately
+below S1's existing tap at132.030/19.440um. It is11um below the nearest SRAM,
+clear of its halo; new input/output wires are local (~1um), pins and original
+signal/PDN topology unchanged. New cell PG-bound/FIRM/DNT. No FF/data moves:
+actual geometry audit retained all24635 prior cell placements/master identities
+and10510 non-clock FF-pin connections. No SDC/clock/window edit, +0data cycles.
+Root cause: stale common target519.2, measured padstep23.0, S1mean508.1 yields
+round((519.2-508.1)/23)=0 despite the actual20.6ps window FAIL. The pure helper
+chooses minimum total discrete edits; actual13-tap case gives only S1+1,
+predicted TT511.4..531.1/window19.7 and max latency+2.5ps. These are predictions;
+actual RC is mandatory before adoption. Original prog_half checkpoint remains
+untouched; native falling-edge phase STA remains owned by QC physical.
+Own job: intel1:/srv/opentallas-scratch2/claude/codex-qc-projection-2144/kit.
+Geometry unit3319407-1792992247 EXIT0; GRT project_grt.sh via ot-run20GB/8t.
