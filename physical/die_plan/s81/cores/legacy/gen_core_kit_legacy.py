@@ -605,6 +605,11 @@ def main():
     ap.add_argument("--hold-ff-margin", type=float, default=None, help="FF-only GRT hold margin ps (recipe hold_ff_margin, 5)")
     ap.add_argument("--regional-taps", default=None, help="NXxNY: override / add the recipe regional_taps grid")
     ap.add_argument("--suffix", default=None, help="kit suffix (variant), default recipe suffix or c")
+    ap.add_argument("--clock-pin-center", default=None, metavar="LAYER",
+                    help="S81-CORE-LAT 10-26 (opt-in, recipe clock_pin_center): put the core clock pin at the outline "
+                         "centre on LAYER (M4/M5), snapped to the kit tracks, so the die tap stub drops M9->LAYER by a "
+                         "via stack onto the sink centroid instead of a face pin + in-core trunk (common core latency "
+                         "target, owner 10-26 05:38); the reset and every data pin stay on their faces")
     a = ap.parse_args()
     modern = not a.legacy_flow
     rec = json.load(open(a.recipes))[a.module]
@@ -666,6 +671,18 @@ def main():
         nx_, ny_ = a.regional_taps.lower().split("x")
         rt.update(nx=int(nx_), ny=int(ny_))
     pins = hc["pins"] if "pins" in hc else json.load(open(S81 / hc["pins_file"]))["pins"]
+    cpc = a.clock_pin_center or rec.get("clock_pin_center")
+    cpc_pins = []
+    if cpc:
+        if cpc not in ("M4", "M5"):
+            raise SystemExit(f"clock_pin_center layer {cpc}: only M4/M5 (core signal layers below the die stub)")
+        ckn = spec["clock_port"]
+        cpc_pins = [q for q in pins if re.sub(r"\[\d+\]$", "", q["name"]) == ckn]
+        if len(cpc_pins) != 1:
+            raise SystemExit(f"clock_pin_center: expected one {ckn} pin, got {[q['name'] for q in cpc_pins]}")
+        pins = [q for q in pins if q not in cpc_pins]
+        snap = lambda v, o, p_: round(o + round((v - o) / p_) * p_, 4)
+        cpc_pins = [dict(cpc_pins[0], layer=cpc, x=snap(w / 2, 0.012, 0.048), y=snap(h / 2, 0.012, 0.048))]
     dirs = lef_dirs(REPO / hc["lef"])
     shapes = lef_pin_rects(REPO / hc["lef"])
     suffix = a.suffix or rec.get("suffix", "c")
@@ -766,6 +783,15 @@ def main():
             assert abs((q["x"] - pw / 2) if f == "W" else (w - q["x"] - pw / 2)) < 1e-3, q
         else:
             assert abs((q["y"] - ph_ / 2) if f == "S" else (h - q["y"] - ph_ / 2)) < 1e-3, q
+    for q in cpc_pins:   # S81-CORE-LAT: interior clock pin at the outline centre (face "C")
+        pw, ph_ = RECT[q["layer"]]
+        io.append(f"place_pin -pin_name {{{q['name']}}} -layer {q['layer']} -location {{{q['x']:.4f} {q['y']:.4f}}} "
+                  f"-pin_size {{{pw:.4f} {ph_:.4f}}}")
+        mt = re.match(r"^(.*)\[(\d+)\]$", q["name"])
+        rows.append(dict(bus=mt.group(1) if mt else q["name"], bit=int(mt.group(2)) if mt else None,
+                         layer=q["layer"], x=q["x"], y=q["y"], face="C"))
+    if cpc_pins:
+        pins = pins + cpc_pins
     io[0] += f" {snapped} pins snapped from the access-extension centre onto their face."
     (kd / "io.tcl").write_text("\n".join(io) + "\n")
     (kd / "pins.json").write_text(json.dumps(rows) + "\n")
