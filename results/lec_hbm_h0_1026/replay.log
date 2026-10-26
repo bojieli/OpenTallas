@@ -1,0 +1,14 @@
+Skipped unavailable old normalized candidates: 0
+Prior seeds loaded as untrusted candidates: 9841
+structural twin closure: 3 relations proposed
+==== all0
+======== ABC command line "&r target/all0.aig; &ps; &fraig -C 10000; &ps; &sat -a -z -v -C 100000; &ps; &w target/all0_swept.aig"
+[1;37mtarget/all0[0m : i/o =  39942/  30981  [1;36mand =  637282[0m  [1;35mlev =   54[0m [1;35m(6.15)[0m  mem = 8.38 MB
+[1;37mtarget/all0[0m : i/o =  39942/  30981  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.08 MB
+SAT solver statistics:
+CO =    30981  AND =        0  Conf = 100000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37mtarget/all0[0m : i/o =  39942/  30981  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.08 MB

@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.lec.cohort-replay.v1",
+  "functional_result": "ALL_OBLIGATIONS_PROVED",
+  "qualification": "HISTORICAL_DIAGNOSTIC; original source commit UNKNOWN; no route/signoff qualification",
+  "kit": "intel2:/srv/opentallas-scratch2/claude/hbm-kits-1025/batch1/runs/ot_hbm_idx_score_quarter_static__r0c0_k1h0_59bebf732a32",
+  "netlist": "run/results/asap7/hbc_ot_hbm_idx_score_quarter_static__r0c0_k1h0/base/1_2_yosys.v",
+  "netlist_sha256": "9be79ec31333e3beea0099acd08da90ac79a431b8d93d0054d832a6ad096dbd4",
+  "source_components": {
+    "base": "6483d030dd348e29496ebeee38c0ec332737055c",
+    "patch": "687ef703ffc83b61031cb58602507b3d9102a6fb scalar-to-indexed guard",
+    "tool_sha256": "f89382a805fac6c56aa48b2a52de0940b7602594896f1d84e14501509577ff43",
+    "inputs": "../h0_recovered/inputs",
+    "scope": "historical k1h0 correspondence diagnosis; all candidates and comparisons re-proved"
+  },
+  "inputs_sha256": {
+    "gate.aig": "6fa4802b997b83a067b287c6429de130ceba03b6fc209944bb849f37022d7276",
+    "gold.aliases.json": "87de3990af609a6d4a038ba22362825325fae2efce07b7acc7bf504278c1a358",
+    "hyp.json": "ffc3d7e66f3cbb6e6a22cf5db51b9dd1de3cd1333e701d82488e9ac29d025cd9",
+    "gold.map": "eba620f8d89221f8ca894b0bbb36fe2e3ddd5c9843646f0867dc243fe073b430",
+    "gate.map": "a640e1427521b88442a688cfa8f329bf92a14af898aa01ad299c50c6cf18afd0",
+    "gold.aig": "217d9300fc468254691e75fb027a92cc517dd4005ded3fafee9d26e51ef77f38"
+  },
+  "replay_script_sha256": "67a728bd3d1c86627695fa442452d7e3f5e1c608015149dfea2f7766dee042aa",
+  "proof": {
+    "proved": 30981,
+    "total": 30981,
+    "bad": {},
+    "added": 3,
+    "elapsed": 51.0487585067749
+  },
+  "unit": "intel2:oth-ubuntu-3613878-1793008344",
+  "result_path": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-cores-1026/h0_constructor/target",
+  "old_verdict": "NOT EQUIVALENT",
+  "old_counts": {
+    "compare_points": 30981,
+    "proved": 30977,
+    "differs": 4,
+    "undecided": 0
+  },
+  "old_failing": [
+    "ff:u_dut.u_fcore.u_core.cf[1]",
+    "ff:u_dut.u_fcore.u_core.cf[3]",
+    "ff:u_dut.u_fcore.u_core.g_rgn[0].g_h[1].cfi_p",
+    "ff:u_dut.u_fcore.u_core.g_rgn[1].g_h[1].cfi_p"
+  ],
+  "original_kept_registers": {
+    "declared": 1182,
+    "in_netlist": 1182,
+    "constant_proved": {
+      "n": 0,
+      "first": []
+    },
+    "missing": {
+      "n": 0,
+      "first": []
+    }
+  },
+  "added_data_cycles": 0,
+  "source_rtl_change": false,
+  "baseline_retirement": "Only own c495 latest-tool baseline container fe22027ad898 stopped after this exact cohort proved all obligations; original failures and inherited jobs preserved"
+}
