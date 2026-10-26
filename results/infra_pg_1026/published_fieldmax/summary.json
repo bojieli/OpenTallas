@@ -1,0 +1,17 @@
+{
+ "source_commit": "01373c0d30",
+ "scope": "vacant-site maximum-supply bound on fixed published16-column template and current localmesh;45um latticeprototype; no plan adoption",
+ "counts": {
+  "POWER": 114,
+  "GND": 44,
+  "SIGNAL": 156
+ },
+ "published_sites_preserved": 240,
+ "all_nets_connected": true,
+ "worst_mv": 69.362,
+ "budget_mv": 35,
+ "verdict": "FAIL",
+ "half_power_linear_dc_sensitivity_mv": 34.681,
+ "half_power_qualification": "conditional linear DC sensitivity only; no rate adoption, no return-path or vendor electrical qualification",
+ "diagnosis": "All74vacant sites are now supply. Available-site allocation cannot meet35mV at2.4576W with current template/localmesh; worst supply-free signal band remains."
+}
