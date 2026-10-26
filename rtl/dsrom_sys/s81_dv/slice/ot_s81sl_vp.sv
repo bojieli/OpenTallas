@@ -292,7 +292,7 @@ module ot_s81sl_vp #(
         // hardened cluster: the closed s81sl_hcpl view (its kit fixes ML 7 / AL 6; no #() on a hard child)
         ot_dsrom_su_hcpost_lane_pr u_l (.clk(clk), .rst_n(rs_p), .v(liv),
 `endif
-            .r0({li[15:0], 16'd0}), .r1({li[31:16], 16'd0}), .r2({li[47:32], 16'd0}), .r3({li[63:48], 16'd0}),
+            .r0(li[15:0]), .r1(li[31:16]), .r2(li[47:32]), .r3(li[63:48]),   // V1: BF16 rows, width-exact pins
             .y(li[95:64]), .c0(li[127:96]), .c1(li[159:128]), .c2(li[191:160]), .c3(li[223:192]), .p(li[255:224]),
             .vo(lvn), .o(lon), .fault(lfn));
         ot_s81sl_cst #(.W(16), .V(2), .D(CS_HO_D - CS_HO_GS)) u_cst_ho (.clk(clk), .rst_n(rs_p), .d(lon), .dv({lfn, lvn}),

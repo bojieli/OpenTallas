@@ -1,0 +1,330 @@
+{
+ "schema": "toksched.tkx_measure.v1",
+ "source": "epyc1:/srv/opentallas-scratch2/claude/path-hbm/plan_delta/q_hub_nw/plan_nw/die_plan.json (sha256 3044f0bc3fc6..., q_hub_nw.py PATH-HBM/HUBNW, W-end placement; plan delta branch claude/path-hbm-plan-1025@d52086a102 carries B2p_inputs/q_hub_nw.py) partition_types.q_hub_nw.internal_stations, conns bus:L74_o / bus:L13_i captured in u_hb_coll_Q_*",
+ "rule": "one internal station = one register = one edge (cores_b2 RelayRouter, hop <= 360 um)",
+ "hub_outline_um": [
+  8726.4,
+  2419.2
+ ],
+ "tkx_out_L74_stations_max": 26,
+ "tkx_return_L13_stations_max": 26,
+ "hub_internal_round_trip_edges": 52,
+ "e_end_alternative": {
+  "method": "same core pins mirrored to the E end of NW_hub (x -> W - x), stations = ceil(manhattan / 360) - 1",
+  "out_stations": 4,
+  "return_stations": 9,
+  "round_trip_edges": 13
+ },
+ "delta_vs_e_end_edges": 39,
+ "cost_basis_edges": 52,
+ "cost_basis_note": "the priced S2 schedule has tkx local to the COLL quadrant (TKM engine inside the hub, no hub-internal transport); with the TKM at the root, the q_hub_nw W-end placement adds the full measured hub-internal round trip (26 out + 26 return) to every tkx transfer = every COLL.TOPK_MERGE record. 39 edges = the delta vs an E-end placement (sensitivity).",
+ "chains": [
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_g_qout_14_g3_w_o_u_out_u_dst_d",
+   "bits": 512,
+   "stations": 26,
+   "route_um": 9143.0,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    34.579,
+    600.497
+   ],
+   "direct_um": 9082.5,
+   "e_end_mirror_direct_um": 775.8,
+   "e_end_mirror_stations_est": 2
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_g_qout_13_g3_w_o_u_out_u_dst_d",
+   "bits": 512,
+   "stations": 26,
+   "route_um": 9208.9,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    34.579,
+    718.237
+   ],
+   "direct_um": 9200.2,
+   "e_end_mirror_direct_um": 893.5,
+   "e_end_mirror_stations_est": 2
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_g_qout_12_g3_w_o_u_out_u_dst_d",
+   "bits": 512,
+   "stations": 26,
+   "route_um": 8947.4,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    34.579,
+    404.894
+   ],
+   "direct_um": 8886.9,
+   "e_end_mirror_direct_um": 580.2,
+   "e_end_mirror_stations_est": 1
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_g_qout_11_g3_w_o_u_out_u_dst_d",
+   "bits": 512,
+   "stations": 26,
+   "route_um": 9123.8,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    34.579,
+    581.352
+   ],
+   "direct_um": 9063.3,
+   "e_end_mirror_direct_um": 756.6,
+   "e_end_mirror_stations_est": 2
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_3_u_d3",
+   "bits": 6,
+   "stations": 24,
+   "route_um": 8307.6,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    959.021,
+    750.112
+   ],
+   "direct_um": 8307.6,
+   "e_end_mirror_direct_um": 1499.3,
+   "e_end_mirror_stations_est": 4
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_4_u_d3",
+   "bits": 14,
+   "stations": 24,
+   "route_um": 8323.6,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    959.021,
+    766.117
+   ],
+   "direct_um": 8323.6,
+   "e_end_mirror_direct_um": 1515.3,
+   "e_end_mirror_stations_est": 4
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_6_u_d3",
+   "bits": 88,
+   "stations": 26,
+   "route_um": 9051.9,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    34.579,
+    509.431
+   ],
+   "direct_um": 8991.4,
+   "e_end_mirror_direct_um": 684.7,
+   "e_end_mirror_stations_est": 1
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_7_u_d3",
+   "bits": 75,
+   "stations": 26,
+   "route_um": 9176.0,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    379.704,
+    611.086
+   ],
+   "direct_um": 8747.9,
+   "e_end_mirror_direct_um": 780.9,
+   "e_end_mirror_stations_est": 2
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_8_u_d3",
+   "bits": 96,
+   "stations": 26,
+   "route_um": 9073.1,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    34.579,
+    530.588
+   ],
+   "direct_um": 9012.5,
+   "e_end_mirror_direct_um": 705.9,
+   "e_end_mirror_stations_est": 1
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_9_u_d3",
+   "bits": 10,
+   "stations": 24,
+   "route_um": 8314.0,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    959.021,
+    756.512
+   ],
+   "direct_um": 8314.0,
+   "e_end_mirror_direct_um": 1505.7,
+   "e_end_mirror_stations_est": 4
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_15_u_d3",
+   "bits": 15,
+   "stations": 24,
+   "route_um": 8335.3,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    959.021,
+    777.743
+   ],
+   "direct_um": 8335.3,
+   "e_end_mirror_direct_um": 1526.9,
+   "e_end_mirror_stations_est": 4
+  },
+  {
+   "bus": "L74_o",
+   "core_pin": "u_hb_coll_Q_body_core.u_body_g_qout_0_g3_w_o_u_out_u_dst_v",
+   "bits": 16,
+   "stations": 24,
+   "route_um": 8347.7,
+   "window_um": [
+    8516.54,
+    0.0
+   ],
+   "pin_um": [
+    959.021,
+    790.152
+   ],
+   "direct_um": 8347.7,
+   "e_end_mirror_direct_um": 1539.3,
+   "e_end_mirror_stations_est": 4
+  },
+  {
+   "bus": "L13_i",
+   "core_pin": "u_hb_coll_Q_body_core.tkx_busy",
+   "bits": 1,
+   "stations": 24,
+   "route_um": 8271.2,
+   "window_um": [
+    8726.4,
+    468.344
+   ],
+   "pin_um": [
+    959.021,
+    37.656
+   ],
+   "direct_um": 8198.1,
+   "e_end_mirror_direct_um": 1389.7,
+   "e_end_mirror_stations_est": 3
+  },
+  {
+   "bus": "L13_i",
+   "core_pin": "u_hb_coll_Q_body_core.tkx_done",
+   "bits": 1,
+   "stations": 24,
+   "route_um": 8271.5,
+   "window_um": [
+    8726.4,
+    468.344
+   ],
+   "pin_um": [
+    959.021,
+    37.896
+   ],
+   "direct_um": 8197.8,
+   "e_end_mirror_direct_um": 1389.5,
+   "e_end_mirror_stations_est": 3
+  },
+  {
+   "bus": "L13_i",
+   "core_pin": "u_hb_coll_Q_body_core.tkx_fault",
+   "bits": 1,
+   "stations": 24,
+   "route_um": 8271.7,
+   "window_um": [
+    8726.4,
+    468.344
+   ],
+   "pin_um": [
+    959.021,
+    38.136
+   ],
+   "direct_um": 8197.6,
+   "e_end_mirror_direct_um": 1389.2,
+   "e_end_mirror_stations_est": 3
+  },
+  {
+   "bus": "L13_i",
+   "core_pin": "u_hb_coll_Q_vm.writer_tkw_v",
+   "bits": 1,
+   "stations": 26,
+   "route_um": 9024.6,
+   "window_um": [
+    8726.4,
+    468.344
+   ],
+   "pin_um": [
+    1943.981,
+    1686.984
+   ],
+   "direct_um": 8001.1,
+   "e_end_mirror_direct_um": 3162.6,
+   "e_end_mirror_stations_est": 8
+  },
+  {
+   "bus": "L13_i",
+   "core_pin": "u_hb_coll_Q_vm.writer_tkw_d",
+   "bits": 568,
+   "stations": 26,
+   "route_um": 9133.0,
+   "window_um": [
+    8726.4,
+    468.344
+   ],
+   "pin_um": [
+    1943.981,
+    2010.869
+   ],
+   "direct_um": 8324.9,
+   "e_end_mirror_direct_um": 3486.5,
+   "e_end_mirror_stations_est": 9
+  }
+ ],
+ "verified": "TOK-SCHED 2026-10-25 14:3x re-read on epyc1: sha256 3044f0bc3fc6, L74_o 12 chains max 26 regs (launch face bus), L13_i chains captured in u_hb_coll_Q_body_core max 24 / u_hb_coll_Q_vm max 26 (other L13_i chains go to pgp/hc/svg/vmb/idx, not tkx)"
+}
