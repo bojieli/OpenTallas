@@ -2461,6 +2461,11 @@ class Binder:
             f.write_text(txt)
             import native_istations
             native_istations.materialize(self, tn, f)
+            import bound_groups
+            try:
+                files.extend(bound_groups.materialize(self, tn, f))
+            except (bound_groups.BoundGroupError, ValueError) as exc:
+                raise BindError(str(exc)) from exc
             files.append(f)
         if self._native_glue is not None:
             files.extend(self._native_glue.files)
@@ -2611,6 +2616,18 @@ class Binder:
         if rtree is not None:
             for target in rtree.get("core_resets", []):
                 pin = target["pin"]
+                hc = next((h for h in t.get("hard_cores", []) if h["inst"] == target["inst"] and h.get("bound_group")), None)
+                if hc is not None:
+                    import bound_groups
+                    try:
+                        group = bound_groups.reset_members(F.cells, self.members[p], self.rel_of, target, hc, rtree, RT.leaf_tap(P, ptn))
+                    except bound_groups.BoundGroupError as exc:
+                        raise BindError(str(exc)) from exc
+                    for key in group:
+                        if key in core_reset:
+                            raise BindError("overlapping bound-group reset projection")
+                        core_reset[key] = f"rst_n_t{target['tap']}"
+                    continue
                 candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
                               target["inst"] in {self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
                 if not candidates:
