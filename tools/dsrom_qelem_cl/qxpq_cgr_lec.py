@@ -79,7 +79,7 @@ def cg_to_enable(js, name, out):
         t, pc = c["type"], c["connections"]
         if t == "ot_hdc_cg":
             continue
-        for p, bits in pc.items():
+        for p, bits in list(pc.items()):
             for i, b in enumerate(bits):
                 if b not in gates or c["port_directions"].get(p) != "input":
                     continue
