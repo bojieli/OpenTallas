@@ -1,5 +1,7 @@
 `timescale 1ns/1ps
 // Exact full B return plus actual timed-reset and explicit-GO start mechanism.
+// HEADB4: GO has one pin register (go_q): the DUT accepts GO one edge later, so the
+// gold core gets GO and the x schedule one cycle later; output alignment is unchanged.
 module tb_s81hd_native_l4;
   reg clk=0;always #5 clk=~clk;
   reg rst_n=0,go=0,ref_go=0;reg [255:0] x=0;
@@ -45,8 +47,8 @@ module tb_s81hd_native_l4;
     edge_sample();if(!dut.ready) $fatal(1,"second release late");
     @(negedge clk);
     for(cyc=0;cyc<9000;cyc=cyc+1) begin
-      go=(cyc==0);ref_go=go;
-      for(j=0;j<16;j=j+1) x[16*j+:16]=activation(cyc-5-4*(j%8),j);
+      go=(cyc==0);ref_go=(cyc==1);
+      for(j=0;j<16;j=j+1) x[16*j+:16]=activation(cyc-6-4*(j%8),j);
       @(negedge clk);
       if(nf || rfo || nv!==rvo || (nv && nd!==rdo))
         $fatal(1,"NATIVE_DIFF cycle=%0d valid=%b/%b data=%h/%h fault=%b/%b",cyc,nv,rvo,nd,rdo,nf,rfo);
@@ -56,8 +58,8 @@ module tb_s81hd_native_l4;
         last=cyc;rows=rows+1;
       end
     end
-    if(rows!=128 || first!=145 || last!=8273) $fatal(1,"COUNTS rows=%0d first=%0d last=%0d",rows,first,last);
-    $display("PASS native_rows=%0d cadence=64 first=%0d last=%0d reset_assert=2 release_ready=2 GO_accept=3 early_GO_fault_drop=PASS",rows,first,last);
+    if(rows!=128 || first!=146 || last!=8274) $fatal(1,"COUNTS rows=%0d first=%0d last=%0d",rows,first,last);
+    $display("PASS native_rows=%0d cadence=64 first=%0d last=%0d reset_assert=2 release_ready=2 GO_accept=4 early_GO_fault_drop=PASS",rows,first,last);
     $finish;
   end
 endmodule
