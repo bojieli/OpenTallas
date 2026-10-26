@@ -1,0 +1,288 @@
+{
+  "slice_station__t24": {
+    "sites": 23,
+    "flops": 108,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 45,
+      "run": 45,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "final_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "release_delta": 0
+  },
+  "slice_station__t25": {
+    "sites": 22,
+    "flops": 112,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 47,
+      "run": 47,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 6,
+      "release_clocks": 7
+    },
+    "final_contract": {
+      "depth": 6,
+      "release_clocks": 7
+    },
+    "release_delta": 0
+  },
+  "slice_station__t26": {
+    "sites": 20,
+    "flops": 98,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 40,
+      "run": 40,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "final_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "release_delta": 0
+  },
+  "slice_station__t27": {
+    "sites": 23,
+    "flops": 104,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 43,
+      "run": 43,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "final_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "release_delta": 0
+  },
+  "slice_station__t30": {
+    "sites": 21,
+    "flops": 108,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 45,
+      "run": 45,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "final_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "release_delta": 0
+  },
+  "slice_station__t36": {
+    "sites": 22,
+    "flops": 112,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 47,
+      "run": 47,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 6,
+      "release_clocks": 7
+    },
+    "final_contract": {
+      "depth": 6,
+      "release_clocks": 7
+    },
+    "release_delta": 0
+  },
+  "slice_station__t37": {
+    "sites": 23,
+    "flops": 104,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 43,
+      "run": 43,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "final_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "release_delta": 0
+  },
+  "slice_station__t38": {
+    "sites": 18,
+    "flops": 94,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 38,
+      "run": 38,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "final_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "release_delta": 0
+  },
+  "slice_station__t40": {
+    "sites": 21,
+    "flops": 108,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 45,
+      "run": 45,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "final_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "release_delta": 0
+  },
+  "slice_station__t41": {
+    "sites": 19,
+    "flops": 96,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 39,
+      "run": 39,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "final_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "release_delta": 0
+  },
+  "slice_station__t42": {
+    "sites": 21,
+    "flops": 108,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 45,
+      "run": 45,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "final_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "release_delta": 0
+  },
+  "slice_station__t46": {
+    "sites": 20,
+    "flops": 116,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 48,
+      "run": 48,
+      "gated": 18
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "final_contract": {
+      "depth": 7,
+      "release_clocks": 8
+    },
+    "release_delta": 0
+  },
+  "slice_station__t47": {
+    "sites": 20,
+    "flops": 84,
+    "roles": {
+      "reset_entry": 1,
+      "start_entry": 1,
+      "raw": 33,
+      "run": 33,
+      "gated": 16
+    },
+    "rounds": 3,
+    "fixed_point": true,
+    "initial_contract": {
+      "depth": 6,
+      "release_clocks": 7
+    },
+    "final_contract": {
+      "depth": 6,
+      "release_clocks": 7
+    },
+    "release_delta": 0
+  }
+}
