@@ -1039,13 +1039,12 @@
   "OT_S81SL_KV_TRANSPORT",
   "OT_SVC_ALLQ",
   "SU_SMU_T",
-  "SVCQ_ENG_FG3",
   "OT_ATTN_HCORE",
   "OT_S81ENG_RR_N32",
   "OT_S81C_HCORE_CTLA",
   "OT_S81C_HCORE_RST_TIMED"
  ],
- "defines_note": "Qualified source-only hcore CTLA/WPRE2 + timed synchronous private reset, connected sender load stage; fresh physical qualification required",
+ "defines_note": "Qualified source-only hcore CTLA/WPRE2 + timed synchronous private reset, connected sender load stage; fresh physical qualification required. TOK-SCHED 10-25: SVCQ_ENG_FG3 removed: it selected the legacy FPL3/FML3 tile_l engine (E_TS 0), so OT_ATTN_HCORE had no effect and the 64 ot_s81c_attn_hcore cores the plan places in every svc partition were absent (svc_5 core reset found 0); the plan engine is FPL4 FML6 F12 tile_s (rtl/hdc/v41x/ot_s81c_attn_hcore.sv header)",
  "netlist_note": "Versioned logical adopt178 topology; current repository source definitions and plan transport elaborate afresh. Generated current bound top is a separate strict binding gate.",
  "base": "../../../..",
  "io_roles": [

@@ -2571,6 +2571,33 @@ class Binder:
                     want = {k + "." + rest for k, v in self.R.parts.items() if v == p}
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
                                   F.cells[ci].module in modules and F.cells[ci].path in want]
+                    if not candidates:
+                        # TOK-SCHED 10-25 (svc_5 ATT hcore): the canonical name also omits the manifest-DISSOLVED
+                        # pass-through wrappers between the map key and the core (u_rsv_05.u.u.u_att... =
+                        # dsdv_svc_rs_pvso_entry -> dsdv_svc_rs_c -> dsdv_svc_att). Accept a path key.<w..>.rest only
+                        # when every inserted level is an elaborated instance of a module the manifest dissolves;
+                        # replica tokens and the full rest stay exact, and the unique-candidate check below holds.
+                        dis = set(self.ab.get("dissolve", []))
+                        keys = [k for k, v in self.R.parts.items() if v == p]
+
+                        def _via_dissolved(path):
+                            for k in keys:
+                                if not (path.startswith(k + ".") and path.endswith("." + rest)):
+                                    continue
+                                mid = path[len(k) + 1:len(path) - len(rest) - 1]
+                                if not mid:
+                                    continue
+                                pre, ok = k, True
+                                for tok in mid.split("."):
+                                    pre = pre + "." + tok
+                                    if F.dissolved.get(pre) not in dis:
+                                        ok = False
+                                        break
+                                if ok:
+                                    return True
+                            return False
+                        candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
+                                      F.cells[ci].module in modules and _via_dissolved(F.cells[ci].path)]
                 if not candidates:
                     # Plan-local matrix names commonly compact coordinate
                     # separators (u_t00 versus RTL u_t_0_0). Accept only a unique
