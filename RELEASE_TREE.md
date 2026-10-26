@@ -78,8 +78,8 @@ Snapshot: 2026-10-25 23:33 PDT · main cfea7b3a12 (= 877cfdeb28 + autopilot cana
 
 ## WAITS · who
 ### Waiting on the owner
-- KV: does the G2 half-share + real joint-kit route meet the 21:16 reservation condition, or is an explicit reservation hook needed? (Codex OWNER?)
-- HEAD: current host 553/276 and mesh 81/64 framing, ch_b source, ctl role, rank-row mapping.
 - S81 PHY dimensions, PHY power and final signal/PG bump contract.
 ### Waiting on COORD / ROOT-MERGE
+- KV FT reservation: COORD 2026-10-25 23:42 = explicit reservation hook in the kits (routing guides/blockage on the FT tracks); G2 half-share alone is not proof. DIE-PROTO then runs it5 → KV.GRT
+- HEAD host/mesh framing, ch_b source, ctl role, rank-row mapping: spec items for PATH-S81 + TOK-SCHED (no owner input needed) → HEAD8 batch
 - QC batch 2 merge + re-freeze run; HEAD8 batch approval; INFRA.MERGE list.
