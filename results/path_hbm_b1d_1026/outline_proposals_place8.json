@@ -1,0 +1,211 @@
+{
+ "_note": "Outline-from-content proposals for the 8 place_b1 types (GEOM-REVIEW-3). std area = placed design area (3_4 resized) - macro area; target std fill 0.6 of free core (core minus macro+4.32 halo), sides on 8.64 lattice, current aspect ratio kept, perimeter >= pins x 0.192 um. UNCHECKED (12.9f), not applied; b1e sizes these before any CTS.",
+ "proposals": [
+  {
+   "kit": "hfd_ep_static_916cfe0a1db9-_b1pl",
+   "outline_now_um": [
+    250.56,
+    375.84
+   ],
+   "outline_proposed_um": [
+    216.0,
+    328.32
+   ],
+   "std_area_um2": 5061,
+   "macros": [
+    {
+     "name": "ot_sram_1r1w_64x512_m1_r2c2",
+     "n": 4,
+     "um": [
+      171.288,
+      77.784
+     ]
+    }
+   ],
+   "pins": 2288,
+   "est_fill_of_free_now": 0.162,
+   "est_fill_of_free_proposed": 0.587,
+   "area_change": -0.247,
+   "limit": "area-limited"
+  },
+  {
+   "kit": "ot_hbm_su_static_qcore_r13_30cedff7c089-_b1pl",
+   "outline_now_um": [
+    302.4,
+    280.8
+   ],
+   "outline_proposed_um": [
+    224.64,
+    207.36
+   ],
+   "std_area_um2": 19889,
+   "macros": [
+    {
+     "name": "ot_sram_1r1w_128x256_m1_r2c2",
+     "n": 2,
+     "um": [
+      94.824,
+      41.064
+     ]
+    }
+   ],
+   "pins": 1472,
+   "est_fill_of_free_now": 0.28,
+   "est_fill_of_free_proposed": 0.586,
+   "area_change": -0.451,
+   "limit": "area-limited"
+  },
+  {
+   "kit": "ot_hbm_su_static_sfustore_hw_bd010b710b2e-_b1pl",
+   "outline_now_um": [
+    336.96,
+    328.32
+   ],
+   "outline_proposed_um": [
+    293.76,
+    285.12
+   ],
+   "std_area_um2": 2796,
+   "macros": [
+    {
+     "name": "ot_sram_1r1w_128x256_m1_r2c2",
+     "n": 16,
+     "um": [
+      94.824,
+      41.064
+     ]
+    }
+   ],
+   "pins": 1829,
+   "est_fill_of_free_now": 0.085,
+   "est_fill_of_free_proposed": 0.409,
+   "area_change": -0.243,
+   "limit": "area-limited"
+  },
+  {
+   "kit": "ot_hbm_svc_sm_xcal_rel_t_3a407d730120-_b1pl",
+   "outline_now_um": [
+    250.56,
+    250.56
+   ],
+   "outline_proposed_um": [
+    207.36,
+    207.36
+   ],
+   "std_area_um2": 1671,
+   "macros": [
+    {
+     "name": "ot_sram_1r1w_128x256_m1_r2c2",
+     "n": 2,
+     "um": [
+      94.824,
+      41.064
+     ]
+    },
+    {
+     "name": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "n": 2,
+     "um": [
+      174.744,
+      70.488
+     ]
+    }
+   ],
+   "pins": 507,
+   "est_fill_of_free_now": 0.073,
+   "est_fill_of_free_proposed": 0.452,
+   "area_change": -0.315,
+   "limit": "area-limited"
+  },
+  {
+   "kit": "ot_hgi_coll_inj_idx_join_rg_b6dd9997aa33-_b1pl",
+   "outline_now_um": [
+    211.68,
+    315.36
+   ],
+   "outline_proposed_um": [
+    181.44,
+    276.48
+   ],
+   "std_area_um2": 9929,
+   "macros": [],
+   "pins": 4730,
+   "est_fill_of_free_now": 0.159,
+   "est_fill_of_free_proposed": 0.215,
+   "area_change": -0.249,
+   "limit": "pin-limited"
+  },
+  {
+   "kit": "ot_hgi_sm_xload_cl2_bfqg_c13e769a54d7-_b1pl",
+   "outline_now_um": [
+    302.4,
+    298.08
+   ],
+   "outline_proposed_um": [
+    216.0,
+    207.36
+   ],
+   "std_area_um2": 2423,
+   "macros": [
+    {
+     "name": "ot_sram_1r1w_128x256_m1_r2c2",
+     "n": 8,
+     "um": [
+      94.824,
+      41.064
+     ]
+    }
+   ],
+   "pins": 1340,
+   "est_fill_of_free_now": 0.049,
+   "est_fill_of_free_proposed": 0.465,
+   "area_change": -0.503,
+   "limit": "area-limited"
+  },
+  {
+   "kit": "ot_hgi_sm_xload_cl2_ctlx_5c4bdf2162af-_b1pl",
+   "outline_now_um": [
+    388.8,
+    388.8
+   ],
+   "outline_proposed_um": [
+    285.12,
+    285.12
+   ],
+   "std_area_um2": 10909,
+   "macros": [
+    {
+     "name": "ot_sram_1r1w_128x256_m1_r2c2",
+     "n": 1,
+     "um": [
+      94.824,
+      41.064
+     ]
+    }
+   ],
+   "pins": 5782,
+   "est_fill_of_free_now": 0.078,
+   "est_fill_of_free_proposed": 0.152,
+   "area_change": -0.462,
+   "limit": "pin-limited"
+  },
+  {
+   "kit": "ot_hgi_sm_xload_xq_pegress_6ecf1f533cd6-_b1pl",
+   "outline_now_um": [
+    369.36,
+    369.36
+   ],
+   "outline_proposed_um": [
+    250.56,
+    250.56
+   ],
+   "std_area_um2": 6522,
+   "macros": [],
+   "pins": 5184,
+   "est_fill_of_free_now": 0.05,
+   "est_fill_of_free_proposed": 0.111,
+   "area_change": -0.54,
+   "limit": "pin-limited"
+  }
+ ]
+}
