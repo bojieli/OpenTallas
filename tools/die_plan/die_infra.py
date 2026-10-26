@@ -538,6 +538,21 @@ def cmd_clockkit(a):
     return 0
 
 
+def pg_ir_state(pg):
+    """{file, sha256, ir}: ir = PASS only when the sized PG json carries an IR-qualified verdict (psm verdict PASS
+    on every domain, or top-level ir_verdict PASS); no PG file / no IR result -> OPEN."""
+    import hashlib
+    if not pg or not Path(pg).exists():
+        return dict(file=str(pg) if pg else None, sha256=None, ir="OPEN")
+    raw = Path(pg).read_bytes()
+    d = json.loads(raw)
+    v = d.get("ir_verdict")
+    if v is None and isinstance(d.get("psm"), dict):
+        vs = [x.get("verdict") for x in d["psm"].values() if isinstance(x, dict) and "verdict" in x]
+        v = "PASS" if vs and all(x == "PASS" for x in vs) else ("FAIL" if vs else None)
+    return dict(file=str(pg), sha256=hashlib.sha256(raw).hexdigest(), ir=v or "OPEN")
+
+
 def cmd_grt(a):
     if a.iterations < 50:
         raise ValueError("infra-first die GRT requires at least 50 congestion iterations")
@@ -552,10 +567,28 @@ def cmd_grt(a):
     t = (kit / "grt" / "grt.tcl").read_text()
     t = t.replace("read_verilog /work/grt/route.v", "read_verilog /out/route.v")
     t = t.replace("source /work/grt/obs.tcl", "source /out/obs_base.tcl\nsource /pre/preroute_obs.tcl")
-    if a.m89:
+    # METHODOLOGY 12.1c (owner 10-26 D-INFRA-FIRST): die-top signals route on M4-M7 PLUS the leftover M8/M9 after
+    # the fixed PG/clock/reset pre-routes (their exact footprints incl. clock NDR spacing are preroute_obs.tcl, so
+    # the M8/M9 adjustment is 0: the obstructions ARE the taken capacity).  --m47-only = the 9.3-era legacy
+    # diagnostic (never freeze evidence).
+    if not any(f"set_routing_layers -signal M4-{L}" in t for L in ("M7", "M9")):
+        raise ValueError("die_infra grt: kit grt.tcl has no set_routing_layers -signal M4-M7 / M4-M9 line")
+    if a.m47_only:
+        t = t.replace("set_routing_layers -signal M4-M9", "set_routing_layers -signal M4-M7")
+    else:
         t = t.replace("set_routing_layers -signal M4-M7", "set_routing_layers -signal M4-M9")
+        t = re.sub(r"set_global_routing_layer_adjustment M[89] [0-9.]+\n", "", t)
         t = t.replace("global_route ", "set_global_routing_layer_adjustment M8 0\nset_global_routing_layer_adjustment "
                                        "M9 0\nglobal_route ", 1)
+    # METHODOLOGY 12.4e: PG IR is closed BEFORE signal GRT; the PG used is recorded so a later PG growth forces a re-route
+    pgq = pg_ir_state(pg)
+    if pgq["ir"] != "PASS" and not a.pg_ir_open_trial:
+        raise ValueError(f"die_infra grt: PG IR not closed ({pgq}); METHODOLOGY 12.4e -- close PG IR first, or pass "
+                         "--pg-ir-open-trial (result is a TRIAL, never freeze evidence)")
+    (out / "grt_meta.json").write_text(json.dumps(dict(
+        signal_layers="M4-M7" if a.m47_only else "M4-M9 (leftover M8/M9 after pre-routes)",
+        rule="METHODOLOGY 12.1c" if not a.m47_only else "LEGACY 9.3 diagnostic (--m47-only), not freeze evidence",
+        pg=pgq, pre=str(pre), trial=bool(a.pg_ir_open_trial and pgq["ir"] != "PASS")), indent=1) + "\n")
     t = re.sub(r"-congestion_iterations \d+", f"-congestion_iterations {a.iterations}", t)
     t = t.replace("/work/grt/congestion.rpt", "/out/congestion.rpt").replace("/work/grt/route.guide", "/out/route.guide")
     (out / "grt.tcl").write_text(t)
@@ -598,12 +631,34 @@ def cmd_report(a):
     rep["tracks_taken"] = pre["tracks_taken"]
     rep["leftover_M8_M9"] = {L: round(1 - v["all"], 4) for L, v in pre["tracks_taken"].items()}
     for g in a.grt or []:
-        rep.setdefault("grt", {})[str(g)] = parse_grt(Path(g) / "grt.log")
+        r_ = parse_grt(Path(g) / "grt.log")
+        gm = Path(g) / "grt_meta.json"
+        if gm.exists():                       # METHODOLOGY 12.4e: PG growth after signal GRT -> signal GRT is stale
+            m_ = json.loads(gm.read_text())
+            r_["meta"] = m_
+            now = pg_ir_state(m_["pg"]["file"]) if m_["pg"].get("file") else m_["pg"]
+            r_["pg_unchanged_since_grt"] = now.get("sha256") == m_["pg"].get("sha256")
+            if not r_["pg_unchanged_since_grt"] or m_.get("trial"):
+                r_["freeze_evidence"] = False
+        rep.setdefault("grt", {})[str(g)] = r_
     if a.clock:
         cr = json.loads((Path(a.clock) / "clock_report.json").read_text())
         rep["clock"] = {c: {k: r[k] for k in ("related_pair_max_ps", "verdict", "pairs_over_80", "seam_max_ps",
                                              "intra_max_ps", "insertion_ps", "tap_slew_max_ps", "clock_wire_power_W")
                             if k in r} for c, r in cr["corners"].items()}
+    if a.clock_post:   # METHODOLOGY 12.4d: the skew gate is re-run after signal GRT (signals on leftover M8/M9 next
+        # to the mesh/spine change the clock RC); freeze needs BOTH the clock-alone and the post-signal report to PASS
+        cp = json.loads((Path(a.clock_post) / "clock_report.json").read_text())
+        rep["clock_post_signal"] = {c: {k: r[k] for k in ("related_pair_max_ps", "verdict", "pairs_over_80",
+                                                          "region_root_related_pair_max_ps", "insertion_ps")
+                                        if k in r} for c, r in cp["corners"].items()}
+    clk_ok = all(v.get("verdict") == "PASS" for v in rep.get("clock", {}).values()) and bool(rep.get("clock"))
+    post_ok = all(v.get("verdict") == "PASS" for v in rep.get("clock_post_signal", {}).values()) and \
+        bool(rep.get("clock_post_signal"))
+    grt_ok = bool(rep.get("grt")) and all(g_["verdict"] == "PASS" and g_.get("freeze_evidence", True)
+                                          for g_ in rep["grt"].values())
+    rep["freeze_gate"] = dict(rule="METHODOLOGY 12.4a/d/e", clock_alone=clk_ok, clock_post_signal=post_ok,
+                              signal_grt0=grt_ok, verdict="PASS" if clk_ok and post_ok and grt_ok else "FAIL")
     if a.pg:
         pg = json.loads(Path(a.pg).read_text())
         rep["pg"] = {k: pg.get(k) for k in ("grid", "tracks", "regions", "psm")}
@@ -731,13 +786,17 @@ def main(argv=None):
     g.add_argument("--pre", required=True)
     g.add_argument("--out", required=True)
     g.add_argument("--pg")
-    g.add_argument("--m89", action="store_true", help="signals may also use the leftover M8/M9 (FT-M89-PROBE)")
+    g.add_argument("--m89", action="store_true", help="no-op: leftover M8/M9 is the default now (METHODOLOGY 12.1c)")
+    g.add_argument("--m47-only", action="store_true", help="LEGACY 9.3 diagnostic: die signals M4-M7 only")
+    g.add_argument("--pg-ir-open-trial", action="store_true",
+                   help="allow signal GRT before PG IR is closed (TRIAL only, METHODOLOGY 12.4e)")
     g.add_argument("--iterations", type=int, default=50)
     g.add_argument("--mem", type=int, default=256)
     q = sub.add_parser("report")
     q.add_argument("--pre", required=True)
     q.add_argument("--grt", action="append")
     q.add_argument("--clock")
+    q.add_argument("--clock-post", help="clock report dir re-run AFTER signal GRT (METHODOLOGY 12.4d)")
     q.add_argument("--pg")
     q.add_argument("--sites")
     q.add_argument("--out", required=True)

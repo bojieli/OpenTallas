@@ -926,7 +926,7 @@ def cmd_combo(a):
     clock_nets = [n["name"] for n in data["nets"]]
     L += [f"puts \"OT_MESH regions {len(regs)} straps {sum((g['i1'] - g['i0']) + (g['j1'] - g['j0']) for g in regs)}\"",
           "create_clock -name dck -period 833.000 [get_ports root]",
-          "set_routing_layers -signal M4-M7 -clock M8-M9"]
+          "set_routing_layers -signal M4-M9 -clock M8-M9"]
     L += [f"set_global_routing_layer_adjustment M{k} 0.75" for k in (4, 5, 6, 7)]
     L += ["set_global_routing_layer_adjustment M8 0.4", "set_global_routing_layer_adjustment M9 0.4",
           f"create_ndr -name ot_mesh_ndr -width {{M8 {nd['width']} M9 {nd['width']}}} "
