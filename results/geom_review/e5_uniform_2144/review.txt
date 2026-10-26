@@ -1,0 +1,20 @@
+E5 uniform local-load grouping, 2026-10-25 21:50 PDT
+Source base: claude/clock-reset-e5b-1025@65be8563f.
+Picture: results/geom_review/e5_uniform_2144/taps.png; rendered and personally viewed.
+Verdict: PASS-COND for a CTS-only structural trial; no route/signoff approval.
+The 18,058 unchanged register clock sinks follow the macro edge channels. The
+204 taps remain in the whitespace corridors rather than forming a macro wall.
+Splitting the central high-density bands reduces the largest local group from
+512 to151 sinks; the median drops142->91, at +86 local tap buffers and +0 data
+cycles. Ordinary sparse-group merges respect full DMAX bounds and reject macro
+straddling. Macro interface groups retain their identity. F4 zero-logic pair
+assignment remains intact; 8 final groups exceed128 (maximum151), and tiny
+1-sink groups remain, so equal local insertion is NOT established by this map.
+Conditions: parent planned-trunk geometry must be reviewed on these204 taps;
+measure per-tap local insertion on actual GRT RC before adopting. Do not absorb
+remaining local insertion in long trunk-wire detours. Macro clock co-leaf
+alignment is a separate parent change. Data buses/pins/macros/PDN unchanged;
+clock fanout/channel burden grows, and routed congestion/slew remain unmeasured.
+Job: ot-run epyc2 oth-ubuntu-4065251-1792990145, exit0; group-only DB operation.
+First attempt failed before OpenROAD because docker PATH omitted ORFS env.sh;
+corrected command sourced env.sh. No design failure was overwritten.
