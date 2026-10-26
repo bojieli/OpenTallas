@@ -156,7 +156,7 @@ module ot_qkh_lane8 #(
         if (LT_COPY == 0) begin : g_lt0
             assign dw = lt_d[8:0];
         end else begin : g_ltc   // this lane's own copy of the last decision-word flop (LT_COPY)
-            ot_hdc_delay #(.W(9), .D(1), .RESET(1)) u_ltl (.clk(clk), .rst_n(rl), .d(lt_d[8:0]), .q(dw));
+            ot_qkh_lt_rep9 u_ltl (.clk(clk), .rst_n(rl), .d(lt_d[8:0]), .q(dw));
         end
         wire        lis = dw[0], lsel = dw[1], lst0 = dw[4], lsty = dw[5], lob = dw[8];
         wire [1:0]  lal = dw[3:2], lsl = dw[7:6];
@@ -267,3 +267,18 @@ module ot_qkh_ktree #(
         else begin sc_f <= sv && (merr != 2'd0); kf <= |nf; g_f <= (|gf_r) || kf; end
 endmodule
 
+
+// Physical copies of the last LT stage. A kept non-parameter module prevents
+// synthesis from merging identical-D decision copies across the eight lanes.
+// LT_COPY=0 never instantiates this module; the legacy default is unchanged.
+(* keep_hierarchy = "yes" *) module ot_qkh_lt_rep9 (
+    input wire clk, rst_n,
+    input wire [8:0] d,
+    (* keep = 1 *) output reg [8:0] q
+);
+    // Keep all nine fields even when a particular scheduled role leaves one unused.
+    // The post-synthesis replica census checks each lane independently.
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 9'b0;
+        else q <= d;
+endmodule

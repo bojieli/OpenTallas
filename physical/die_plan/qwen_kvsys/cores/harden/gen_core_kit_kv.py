@@ -261,6 +261,15 @@ def head_lane_ltcopy(text, mod, kd):
     text, n = rx.subn(r"\1.LT_COPY(1), ", text)
     if n < 1:
         raise SystemExit(f"{mod}: --head-lane-ltcopy found no parameterised ot_qkh_lane8 instance")
+    instances = re.findall(r"ot_qkh_lane8\s*#\([^;]*?\)\s+(\w+)\s*\(", text, re.S)
+    if len(instances) != n:
+        raise SystemExit(f"{mod}: LT-copy instance census {len(instances)} != {n}")
+    shutil.copyfile(HERE / "replica_check.py", kd / "replica_check.py")
+    spec = dict(schema="opentallas.replica_expect.v1", core=mod, rules=[dict(
+        name="lane decision-word last-stage copies", module="ot_qkh_lt_rep9",
+        inst_re="(" + "|".join(re.escape(i) for i in instances) + r")[./]g_d\\?\[(\d+)\\?\][./]g_ltc[./]u_ltl$",
+        groups=[f"{i},{lane}" for i in instances for lane in range(8)], ff_per_inst=9)])
+    (kd / "replica_expect.json").write_text(json.dumps(spec, indent=1) + "\n")
     (kd / "head_lane_ltcopy_delta.json").write_text(json.dumps(dict(
         lane8_lt_copy=n, extra_flops_estimate=63 * n, added_cycles=0,
         source="COORD ruling 5 (KV-CORES RULINGS 2026-10-25 05:28): structural fix of the e6 216 TT -12 ps "
@@ -386,6 +395,22 @@ def write_core_contract(kd, cj, clks, rsts):
         data_pin_exemptions=[]), indent=1) + "\n")
 
 
+def static_refresh_kit(rtl, kd):
+    """--kvspc-static-refresh (PATH-KV-PC5 10-25): the PC path controller instance (u_ctrl in
+    qkd_static_kv_pc_path_nc.sv, the only place the PC path sets the controller parameters; every level below threads
+    STATIC_REFRESH down to ot_qkd_static_kv_timing, default 0) gets .STATIC_REFRESH(1)."""
+    p = rtl / "qkd_static_kv_pc_path_nc.sv"
+    s = p.read_text()
+    old = "qkd_ctrl_pc_host_static_nc #(.ROW0(64),"
+    if s.count(old) != 1 or "STATIC_REFRESH" in s:
+        raise SystemExit(f"--kvspc-static-refresh: expected one u_ctrl instance without STATIC_REFRESH in {p}")
+    p.write_text(s.replace(old, "qkd_ctrl_pc_host_static_nc #(.STATIC_REFRESH(1), .ROW0(64),"))
+    (kd / "kvspc_static_refresh.json").write_text(json.dumps(dict(
+        transform="u_ctrl .STATIC_REFRESH(1) (qkd_static_kv_pc_path_nc.sv)", refresh="REFpb every T_REFIPB at REF_PHASE "
+        "(unchanged); bank = refresh_rr round robin (was run-time argmin of s1k/s2k)", requires="PULLIN=0, REF_MODE=1",
+        source="PATH-KV-PC4 15:19 observation; COORD rules adoption"), indent=1) + "\n")
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and "run" not in p.relative_to(kd).parts[:1]
@@ -488,13 +513,13 @@ def main():
                     help="even head_eighth cores (e0/e2/e4/e6): frontq PORT_REGS=1 + fault-pin flop (+124FF, 0 cycles), e0 also "
                          "ktree_lk PORT_REGS=1 (+31FF, +1 parent fault edge, COORD ruling 2); leaves from this repo")
     ap.add_argument("--head-lane-ltcopy", action="store_true",
-                    help="even head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
-                         "0 cycles, COORD ruling 5); needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
+                    help="head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
+                         "0 cycles, COORD ruling 5); odd heads refresh only the LT-copy leaf; even heads need --head-port-regs")
     ap.add_argument("--head-lane-s3copy", action="store_true",
                     help="even head_eighth: ot_qkh_lane8 S3_COPY=1 (per-lane S3 pin-flop copies, 0 cycles, PATH-KV-HEAD 10-25)")
     ap.add_argument("--head-lane-taps", action=argparse.BooleanOptionalAction, default=None,
                     help="per-lane regional clock taps + GPL lane guide regions (KV-HEADCLK 10-25); default ON for the even "
-                         "head_eighth cores, --no-head-lane-taps = old single-tree CTS")
+                         "head_eighth cores, odd heads opt in (PATH-KV e1 LT_COPY successor), --no-head-lane-taps = old single-tree CTS")
     ap.add_argument("--head-strap-master", action="store_true",
                     help="even head_eighth: BSEL constant + HID port -> strap_bsel / strap_hid input pins (OWNER 10-25 07:01 option B)")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
@@ -527,6 +552,16 @@ def main():
                     help="COORD ruling 2 (10-25): drop the constant LMAX head-group bit g (am[1]) from qkd_ahub am0..3 and the "
                          "ASTK am input (+ its qo[537] copy); ASTK ctl AM_G_PIN=0/G_CONST=0; plan pins renamed compactly "
                          "(old b -> b-1 above the dropped bit) in memory until the KV-PLAN3 delta lands (am_g_drop.py)")
+    ap.add_argument("--kvspc-face-ports", action="store_true", help="kvs_pc / kvs_pc_h_head_p boundary recut: one clock (hck + HBM data clocks := ck), dead-pin drop (land_er[258:1]; head ki[30:21]/[14:1]) as an in-memory plan delta until KV-PLAN3 lands it, ki/ko split (+1 hclk per kc station), fi landing (+1 fault edge), po / land_es private port flops (0 cycles); miter results/kvspc_face_1025")
+    ap.add_argument("--kvspc-private-ports", action="store_true", help="with --kvspc-face-ports: private output ports (kvspc_private_ports.py, PATH-KV-PC 10-25): return actual_* port flops with internal hold copy + actual_valid kept (0 cycles), o_grp[296:289] status pin flops (+1 fault/drain observation edge; o_grp[294] no longer a pc__fo feedthrough), o_prev private launch (+1 edge per o_prev hop, non-head), pi[0] single capture, pc/cfg_stack single landing (chain station reads the landed copy), head upo kept pin flops (0 cycles)")
+    ap.add_argument("--kvspc-static-refresh", action="store_true",
+                    help="with --kvspc-face-ports: PC controller u_ctrl (qkd_static_kv_pc_path_nc) instantiated with "
+                         "STATIC_REFRESH=1: REFpb bank = round-robin refresh_rr (compiler-known) instead of the run-time "
+                         "argmin of the bank-state keys; needs PULLIN=0 + REF_MODE=1 (ot_qkd_static_kv_timing $fatal "
+                         "otherwise; both hold on the PC path). PATH-KV-PC5 10-25 fallback variant, COORD rules adoption")
+    ap.add_argument("--lec-hints", default=None,
+                    help="untrusted LEC correspondence hints copied into the kit as lec_hints.json (lec.py proves each "
+                         "by induction and drops failing ones; never a waiver)")
     ap.add_argument("--stock-flow", action="store_true",
                     help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=0.6)
@@ -547,6 +582,11 @@ def main():
         if cj["module"].startswith("kv3_astk_") and not a.astk_face_ports:
             raise SystemExit("--am-g-drop on ASTK needs --astk-face-ports (repo qkd_astk_static_leaves.sv carries AM_G_PIN)")
         am_g_drop.core_json(cj)
+    if a.kvspc_face_ports:
+        if cj["module"] not in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
+            raise SystemExit("--kvspc-face-ports only applies to qkd_kvs_pc / qkd_kvs_pc_h_head_p")
+        import kvspc_face_ports as KVSPC
+        cj = KVSPC.core_json_update(cj)
     if a.ectlk_three_taps:
         if cj["module"] != "qkd_ectlk":
             raise SystemExit("--ectlk-three-taps only applies to qkd_ectlk")
@@ -560,17 +600,17 @@ def main():
     mod = cj["module"]
     if a.astk_face_ports and not mod.startswith("kv3_astk_"):
         raise SystemExit("--astk-face-ports only applies to kv3_astk_* cores")
-    if a.head_lane_ltcopy and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
-        raise SystemExit("--head-lane-ltcopy only applies to the even head_eighth cores (e0/e2/e4/e6)")
-    if a.head_lane_ltcopy and not a.head_port_regs:
+    if a.head_lane_ltcopy and not re.fullmatch(r"kv3_head_eighth_e[0-7]", mod):
+        raise SystemExit("--head-lane-ltcopy only applies to head_eighth cores e0..e7")
+    if a.head_lane_ltcopy and mod[-1] in "0246" and not a.head_port_regs:
         raise SystemExit("--head-lane-ltcopy needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
     if a.head_port_regs and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
         raise SystemExit("--head-port-regs only applies to the even head_eighth cores (e0/e2/e4/e6)")
     is_even_head = bool(re.fullmatch(r"kv3_head_eighth_e[0246]", mod))
     if a.head_lane_taps is None:
         a.head_lane_taps = is_even_head
-    if a.head_lane_taps and not is_even_head:
-        raise SystemExit("--head-lane-taps only applies to the even head_eighth cores (e0/e2/e4/e6)")
+    if a.head_lane_taps and not re.fullmatch(r"kv3_head_eighth_e[0-7]", mod):
+        raise SystemExit("--head-lane-taps only applies to head_eighth cores (default ON for e0/e2/e4/e6; odd heads opt in)")
     if a.head_lane_taps and a.stock_flow:
         raise SystemExit("--head-lane-taps needs the FLOW 10-25 basis (max_fanout.tcl hooks); drop --stock-flow")
     if a.head_strap_master and not is_even_head:
@@ -605,6 +645,8 @@ def main():
             f = str(REPO / "rtl/qwen_sys/kv_plan_leaves_1023/qkd_astk_ctl_s_p.sv")
         if a.head_port_regs and Path(f).name in HEAD_PORT_REGS_LEAVES:
             f = str(REPO / HEAD_PORT_REGS_LEAVES[Path(f).name])
+        if a.head_lane_ltcopy and Path(f).name == "ot_qkh_subtiles.sv":
+            f = str(REPO / "rtl/hdc/nearhbm/ot_qkh_subtiles.sv")
         dst = kd / "rtl" / Path(f).name
         if dst.exists():
             if dst.read_bytes() != Path(f).read_bytes():
@@ -702,6 +744,26 @@ def main():
         (kd / "ectlk_clock_delta.json").write_text(json.dumps(dict(
             source_ports=["ck[0]", "ck[1]", "ck[2]"], related_clock="one die clock, all edges co-timed",
             clock_period_ps=833, added_cycles=0, pin_geometry="unchanged plan pins"), indent=1) + "\n")
+    if a.kvspc_face_ports:
+        KVSPC.apply_kit(kd / "rtl", mod)
+        if a.kvspc_private_ports:
+            import kvspc_private_ports as KVPP
+            for f in KVPP.apply_kit(kd / "rtl", mod):
+                srcs.append(f"/work/rtl/{f}")
+            (kd / "kvspc_private_delta.json").write_text(json.dumps(dict(
+                transform="kvspc_private_ports.py", cycles=dict(
+                    o_prev="n/a (head)" if mod.endswith("_h_head_p") else "+1 edge per o_prev chain hop (private launch flop)",
+                    o_grp_289_296="+1 edge (fault / drain observation flags: cal_fault_hbm, completion_fault, drain_fault_core, drain_fault_hbm, er[260], fo copy, front_fault_go_hbm, front_fault_overflow_hbm)",
+                    other=0), straps="pc__pc / pc__cfg_stack: one landing register per bit; strap_* rename = plan delta (STRAP_RENAME off)",
+                miter="results/kvspc_private_1025"), indent=1) + "\n")
+        if a.kvspc_static_refresh:
+            static_refresh_kit(kd / "rtl", kd)
+        hd = mod.endswith("_h_head_p")
+        (kd / "kvspc_face_delta.json").write_text(json.dumps(dict(
+            plan_dropped_pins=KVSPC.dropped_pins(hd), plan_delta="IN-MEMORY until KV-PLAN3 lands it",
+            renamed_buses=["pc__land_er[260:259] -> pc__land_er_259"] + (["pc__ki[20:15] -> pc__ki_15", "pc__ki[32:31] -> pc__ki_31"] if hd else []),
+            cycles=dict(kc_ko="n/a (head: no ko)" if hd else "+1 hclk per kc chain station", fi="n/a (head: no fi)" if hd else "+1 upstream-fault edge", other=0),
+            miter="results/kvspc_face_1025"), indent=1) + "\n")
     if a.astk_face_ports:
         (kd / "astk_face_delta.json").write_text(json.dumps(dict(
             extra_flops_estimate=78, command_cycles=0, local_fault_cycles=0, external_fault_cycles=1,
@@ -764,6 +826,8 @@ def main():
                    for p, d in am_g_drop.drops_for(mod).items()},
             plan_pins=("renamed in memory (KV-PLAN3 delta pending): dropped " + ", ".join(g_dropped)) if g_dropped
             else "plan already carries the delta"), indent=1) + "\n")
+    if a.kvspc_face_ports:
+        pins = KVSPC.plan_pins_update(pins, mod.endswith("_h_head_p"))
     have = {p["name"] for p in pins}
     names = []
     for n, c in cj["pin_class"].items():
@@ -844,6 +908,8 @@ def main():
     shutil.copyfile(Path(a.tool) / "adder_map_dontuse.py", kd / "adder_map_dontuse.py")
     shutil.copyfile(Path(a.tool) / "selrange_gate.py", kd / "selrange_gate.py")
     shutil.copyfile(Path(a.tool) / "lec.py", kd / "lec.py")       # LEC 10-24: RTL vs netlist after synth (run_kit_kv.sh)
+    if a.lec_hints:
+        shutil.copyfile(a.lec_hints, kd / "lec_hints.json")         # lec.py reads KIT/lec_hints.json (PATH-KV-PC4)
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
     shutil.copyfile(Path(a.tool) / "signoff.py", kd / "signoff.py")
     shutil.copyfile(Path(a.tool) / "pair_skew.tcl", kd / "pair_skew.tcl")   # signoff.py reads it beside itself (crashed without it 10-25)
