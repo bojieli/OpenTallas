@@ -1,0 +1,31 @@
+{
+  "status": "DEFAULT_OFF_SOURCE_CANDIDATE_NOT_ADOPTED",
+  "module": "qfd_dv_s8x_vmr",
+  "parameter": "MIF0_LOCAL_HALF=1 withMIF0",
+  "mechanism": "Capture raw read/bank and NEXTwrite collision(rwe/rrow) at original pa register edge; falling perbank read/write SRAM inputs before original rising consumption. Original cap-bank/reply selection and legacy default branch preserved.",
+  "cycles_added": 0,
+  "clock_ps": 833,
+  "proof": {
+    "cycles": 20000,
+    "nonzero_output_compares": 19517,
+    "data_mismatches": 0,
+    "fault_mismatches": 0,
+    "default_vs_pinned_original_mismatches": 0,
+    "wrong_collision_mutant_mismatches": 276,
+    "wrong_edge_mutant_mismatches": 18688,
+    "reset": "repeated5cycle bursts every4096cycles; originalassertion/release code unchanged"
+  },
+  "storage": {
+    "extra_rising_read_FF": 22,
+    "extra_falling_read_FF": 22,
+    "extra_falling_write_FF": 550,
+    "total_added_FF": 594
+  },
+  "job": "epyc1 ot-run localhost unit645143-1793013258 EXIT0",
+  "physical_holds": [
+    "No candidate placement/STA/route",
+    "Actual risingFACE/fallingmacroF6 sites and halfcycle setup/hold must be measured",
+    "ParentIO40 receipt/current-source freeze and normalcanary remain",
+    "Do not alias inherited MIF1 vmr_s6kc view to this MIF0 source"
+  ]
+}

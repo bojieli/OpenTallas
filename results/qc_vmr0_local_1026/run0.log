@@ -1,0 +1,6 @@
+MITER_VMR N=20000 seed=1 q_mism=0 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19517
+VMR0_LOCAL PASS
+- results/qc_vmr0_local_1026/tb.sv:54: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 0.057 s; speed 294.628 us/s
+- Verilator: cpu 0.057 s on 1 threads; allocated 7 MB

@@ -1,0 +1,7 @@
+VMR MISMATCH c=23
+VMR MISMATCH c=29
+VMR MISMATCH c=32
+MITER_VMR N=20000 seed=1 q_mism=18688 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19517
+[16660000000] %Fatal: tb.sv:53: Assertion failed in tb: VMR0 exactness failed
+%Error: results/qc_vmr0_local_1026/tb.sv:53: Verilog $stop
+Aborting...
