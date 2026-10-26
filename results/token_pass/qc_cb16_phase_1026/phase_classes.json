@@ -1,0 +1,1987 @@
+{
+ "schema": "opentallas.qwen.cb16.phase_types.v1",
+ "classes": [
+  {
+   "type": "cbf_q00",
+   "family": "cbf_q00",
+   "profile_sha256": "92a9f5f8b3915fd4ac2710ecd40056a6fdf0f572816f8bdad695262c982a7ab7",
+   "parts": [
+    "c_E0_bf_00",
+    "c_E2_bf_00",
+    "c_E4_bf_00",
+    "c_W0_bf_00",
+    "c_W2_bf_00",
+    "c_W4_bf_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 16
+    }
+   ],
+   "added_ff_min": 8224,
+   "added_ff_max": 8224,
+   "per_part_added_ff": {
+    "c_E0_bf_00": 8224,
+    "c_E2_bf_00": 8224,
+    "c_E4_bf_00": 8224,
+    "c_W0_bf_00": 8224,
+    "c_W2_bf_00": 8224,
+    "c_W4_bf_00": 8224
+   },
+   "representative_part": "c_E0_bf_00",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_0_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 7
+    },
+    {
+     "leaf": "u_t_1_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 7
+    },
+    {
+     "leaf": "u_t_0_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_0_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 6
+    },
+    {
+     "leaf": "u_t_1_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_1_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 6
+    }
+   ],
+   "native_id_family": "cbf_q00"
+  },
+  {
+   "type": "cbf_q00_na00d15",
+   "family": "cbf_q00",
+   "profile_sha256": "81a6dc4a925880a5344a6d816a7ce1d87af03e665688463fd0f96ca398b09faa",
+   "parts": [
+    "c_E0_tf_00",
+    "c_E1_bf_00",
+    "c_E1_tf_00",
+    "c_E2_tf_00",
+    "c_E3_bf_00",
+    "c_E3_tf_00",
+    "c_E4_tf_00",
+    "c_E5_bf_00",
+    "c_E5_tf_00",
+    "c_W0_tf_00",
+    "c_W1_bf_00",
+    "c_W1_tf_00",
+    "c_W2_tf_00",
+    "c_W3_bf_00",
+    "c_W3_tf_00",
+    "c_W4_tf_00",
+    "c_W5_tf_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 15
+    }
+   ],
+   "added_ff_min": 7710,
+   "added_ff_max": 7710,
+   "per_part_added_ff": {
+    "c_E0_tf_00": 7710,
+    "c_E1_bf_00": 7710,
+    "c_E1_tf_00": 7710,
+    "c_E2_tf_00": 7710,
+    "c_E3_bf_00": 7710,
+    "c_E3_tf_00": 7710,
+    "c_E4_tf_00": 7710,
+    "c_E5_bf_00": 7710,
+    "c_E5_tf_00": 7710,
+    "c_W0_tf_00": 7710,
+    "c_W1_bf_00": 7710,
+    "c_W1_tf_00": 7710,
+    "c_W2_tf_00": 7710,
+    "c_W3_bf_00": 7710,
+    "c_W3_tf_00": 7710,
+    "c_W4_tf_00": 7710,
+    "c_W5_tf_00": 7710
+   },
+   "representative_part": "c_E0_tf_00",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_0_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 7
+    },
+    {
+     "leaf": "u_t_1_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 7
+    },
+    {
+     "leaf": "u_t_0_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_0_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 6
+    },
+    {
+     "leaf": "u_t_1_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_1_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 6
+    }
+   ],
+   "native_id_family": "cbf_q00"
+  },
+  {
+   "type": "cbf_q00_s2",
+   "family": "cbf_q00_s2",
+   "profile_sha256": "81a6dc4a925880a5344a6d816a7ce1d87af03e665688463fd0f96ca398b09faa",
+   "parts": [
+    "c_W5_bf_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 15
+    }
+   ],
+   "added_ff_min": 7710,
+   "added_ff_max": 7710,
+   "per_part_added_ff": {
+    "c_W5_bf_00": 7710
+   },
+   "representative_part": "c_W5_bf_00",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 0
+    },
+    {
+     "leaf": "u_fab.u_x_0_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 7
+    },
+    {
+     "leaf": "u_t_1_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 0
+    },
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 7
+    },
+    {
+     "leaf": "u_t_0_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 0
+    },
+    {
+     "leaf": "u_fab.u_x_0_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 6
+    },
+    {
+     "leaf": "u_t_1_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 0
+    },
+    {
+     "leaf": "u_fab.u_x_1_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 6
+    }
+   ],
+   "native_id_family": "cbf_q00_s2"
+  },
+  {
+   "type": "cbf_q01",
+   "family": "cbf_q01",
+   "profile_sha256": "b4bdb1e3f0e987abc3ea45d48b7123a3cd16cc858e10624efc11250b61b997ec",
+   "parts": [
+    "c_E0_bf_01",
+    "c_E2_bf_01",
+    "c_E4_bf_01",
+    "c_W0_bf_01",
+    "c_W2_bf_01",
+    "c_W4_bf_01"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_1_2",
+     "port": "n_b",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 11
+    }
+   ],
+   "added_ff_min": 5654,
+   "added_ff_max": 5654,
+   "per_part_added_ff": {
+    "c_E0_bf_01": 5654,
+    "c_E2_bf_01": 5654,
+    "c_E4_bf_01": 5654,
+    "c_W0_bf_01": 5654,
+    "c_W2_bf_01": 5654,
+    "c_W4_bf_01": 5654
+   },
+   "representative_part": "c_E0_bf_01",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_0_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 5
+    },
+    {
+     "leaf": "u_t_1_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_1_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 5
+    },
+    {
+     "leaf": "u_t_0_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_0_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 4
+    },
+    {
+     "leaf": "u_t_1_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_1_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 4
+    }
+   ],
+   "native_id_family": "cbf_q01"
+  },
+  {
+   "type": "cbf_q01_nb12d10",
+   "family": "cbf_q01",
+   "profile_sha256": "07f880326a298ce9eb75948ac45c7e9a53dc33f2897f3761cd479c3e1bfcf368",
+   "parts": [
+    "c_E0_tf_01",
+    "c_E1_bf_01",
+    "c_E1_tf_01",
+    "c_E2_tf_01",
+    "c_E3_bf_01",
+    "c_E3_tf_01",
+    "c_E4_tf_01",
+    "c_E5_bf_01",
+    "c_E5_tf_01",
+    "c_W0_tf_01",
+    "c_W1_bf_01",
+    "c_W1_tf_01",
+    "c_W2_tf_01",
+    "c_W3_bf_01",
+    "c_W3_tf_01",
+    "c_W4_tf_01",
+    "c_W5_tf_01"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_1_2",
+     "port": "n_b",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 10
+    }
+   ],
+   "added_ff_min": 5140,
+   "added_ff_max": 5140,
+   "per_part_added_ff": {
+    "c_E0_tf_01": 5140,
+    "c_E1_bf_01": 5140,
+    "c_E1_tf_01": 5140,
+    "c_E2_tf_01": 5140,
+    "c_E3_bf_01": 5140,
+    "c_E3_tf_01": 5140,
+    "c_E4_tf_01": 5140,
+    "c_E5_bf_01": 5140,
+    "c_E5_tf_01": 5140,
+    "c_W0_tf_01": 5140,
+    "c_W1_bf_01": 5140,
+    "c_W1_tf_01": 5140,
+    "c_W2_tf_01": 5140,
+    "c_W3_bf_01": 5140,
+    "c_W3_tf_01": 5140,
+    "c_W4_tf_01": 5140,
+    "c_W5_tf_01": 5140
+   },
+   "representative_part": "c_E0_tf_01",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_0_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 5
+    },
+    {
+     "leaf": "u_t_1_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_1_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 5
+    },
+    {
+     "leaf": "u_t_0_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_0_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 4
+    },
+    {
+     "leaf": "u_t_1_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_1_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 4
+    }
+   ],
+   "native_id_family": "cbf_q01"
+  },
+  {
+   "type": "cbf_q01_s2",
+   "family": "cbf_q01_s2",
+   "profile_sha256": "07f880326a298ce9eb75948ac45c7e9a53dc33f2897f3761cd479c3e1bfcf368",
+   "parts": [
+    "c_W5_bf_01"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_1_2",
+     "port": "n_b",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 10
+    }
+   ],
+   "added_ff_min": 5140,
+   "added_ff_max": 5140,
+   "per_part_added_ff": {
+    "c_W5_bf_01": 5140
+   },
+   "representative_part": "c_W5_bf_01",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 0
+    },
+    {
+     "leaf": "u_fab.u_x_0_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 5
+    },
+    {
+     "leaf": "u_t_1_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 0
+    },
+    {
+     "leaf": "u_fab.u_x_1_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 5
+    },
+    {
+     "leaf": "u_t_0_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 0
+    },
+    {
+     "leaf": "u_fab.u_x_0_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 4
+    },
+    {
+     "leaf": "u_t_1_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 0
+    },
+    {
+     "leaf": "u_fab.u_x_1_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 4
+    }
+   ],
+   "native_id_family": "cbf_q01_s2"
+  },
+  {
+   "type": "cbf_q11",
+   "family": "cbf_q11",
+   "profile_sha256": "21ec234453e2277e980549f95cc4c718e375a301639deaed3d168e70c618adf2",
+   "parts": [
+    "c_E0_bf_11",
+    "c_E2_bf_11",
+    "c_E4_bf_11",
+    "c_W0_bf_11",
+    "c_W2_bf_11",
+    "c_W4_bf_11"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_2_2",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 2
+    }
+   ],
+   "added_ff_min": 1028,
+   "added_ff_max": 1028,
+   "per_part_added_ff": {
+    "c_E0_bf_11": 1028,
+    "c_E2_bf_11": 1028,
+    "c_E4_bf_11": 1028,
+    "c_W0_bf_11": 1028,
+    "c_W2_bf_11": 1028,
+    "c_W4_bf_11": 1028
+   },
+   "representative_part": "c_E0_bf_11",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_2_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_2_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 5
+    },
+    {
+     "leaf": "u_t_3_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_3_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 5
+    },
+    {
+     "leaf": "u_t_2_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_2_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 4
+    },
+    {
+     "leaf": "u_t_3_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_3_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 4
+    }
+   ],
+   "native_id_family": "cbf_q11"
+  },
+  {
+   "type": "cbf_q11_na22d3",
+   "family": "cbf_q11",
+   "profile_sha256": "f4d5f192d12574b6b0794d48cc4621727e5b0cf19e8bf51c7267b1778247e38a",
+   "parts": [
+    "c_E0_tf_11",
+    "c_E1_bf_11",
+    "c_E1_tf_11",
+    "c_E2_tf_11",
+    "c_E3_bf_11",
+    "c_E3_tf_11",
+    "c_E4_tf_11",
+    "c_E5_bf_11",
+    "c_E5_tf_11",
+    "c_W0_tf_11",
+    "c_W1_bf_11",
+    "c_W1_tf_11",
+    "c_W2_tf_11",
+    "c_W3_bf_11",
+    "c_W3_tf_11",
+    "c_W4_tf_11",
+    "c_W5_bf_11",
+    "c_W5_tf_11"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_2_2",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 3
+    }
+   ],
+   "added_ff_min": 1542,
+   "added_ff_max": 1542,
+   "per_part_added_ff": {
+    "c_E0_tf_11": 1542,
+    "c_E1_bf_11": 1542,
+    "c_E1_tf_11": 1542,
+    "c_E2_tf_11": 1542,
+    "c_E3_bf_11": 1542,
+    "c_E3_tf_11": 1542,
+    "c_E4_tf_11": 1542,
+    "c_E5_bf_11": 1542,
+    "c_E5_tf_11": 1542,
+    "c_W0_tf_11": 1542,
+    "c_W1_bf_11": 1542,
+    "c_W1_tf_11": 1542,
+    "c_W2_tf_11": 1542,
+    "c_W3_bf_11": 1542,
+    "c_W3_tf_11": 1542,
+    "c_W4_tf_11": 1542,
+    "c_W5_bf_11": 1542,
+    "c_W5_tf_11": 1542
+   },
+   "representative_part": "c_E0_tf_11",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_2_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_2_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 5
+    },
+    {
+     "leaf": "u_t_3_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_3_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 5
+    },
+    {
+     "leaf": "u_t_2_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_2_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 4
+    },
+    {
+     "leaf": "u_t_3_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 432
+    },
+    {
+     "leaf": "u_fab.u_x_3_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 4
+    }
+   ],
+   "native_id_family": "cbf_q11"
+  },
+  {
+   "type": "cbn_q00",
+   "family": "cbn_q00",
+   "profile_sha256": "a2a4a58498287030e1428a3afb0898de886a418f925c810ca289b6d14c4cafb6",
+   "parts": [
+    "c_E0_bn_00",
+    "c_E2_bn_00",
+    "c_E4_bn_00",
+    "c_W0_bn_00",
+    "c_W2_bn_00",
+    "c_W4_bn_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 1
+    },
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 16
+    }
+   ],
+   "added_ff_min": 8740,
+   "added_ff_max": 8740,
+   "per_part_added_ff": {
+    "c_E0_bn_00": 8740,
+    "c_E2_bn_00": 8740,
+    "c_E4_bn_00": 8740,
+    "c_W0_bn_00": 8740,
+    "c_W2_bn_00": 8740,
+    "c_W4_bn_00": 8740
+   },
+   "representative_part": "c_E0_bn_00",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_0_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 0
+    },
+    {
+     "leaf": "u_t_1_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 0
+    },
+    {
+     "leaf": "u_t_0_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_0_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 1
+    },
+    {
+     "leaf": "u_t_1_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_1_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 1
+    }
+   ],
+   "native_id_family": "cbn_q00"
+  },
+  {
+   "type": "cbn_q00_xb10d0_na00d15",
+   "family": "cbn_q00",
+   "profile_sha256": "81a6dc4a925880a5344a6d816a7ce1d87af03e665688463fd0f96ca398b09faa",
+   "parts": [
+    "c_E0_tn_00",
+    "c_E1_tn_00",
+    "c_E2_tn_00",
+    "c_E3_tn_00",
+    "c_E4_tn_00",
+    "c_E5_tn_00",
+    "c_W0_tn_00",
+    "c_W1_tn_00",
+    "c_W2_tn_00",
+    "c_W3_tn_00",
+    "c_W4_tn_00",
+    "c_W5_tn_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 15
+    }
+   ],
+   "added_ff_min": 7710,
+   "added_ff_max": 7710,
+   "per_part_added_ff": {
+    "c_E0_tn_00": 7710,
+    "c_E1_tn_00": 7710,
+    "c_E2_tn_00": 7710,
+    "c_E3_tn_00": 7710,
+    "c_E4_tn_00": 7710,
+    "c_E5_tn_00": 7710,
+    "c_W0_tn_00": 7710,
+    "c_W1_tn_00": 7710,
+    "c_W2_tn_00": 7710,
+    "c_W3_tn_00": 7710,
+    "c_W4_tn_00": 7710,
+    "c_W5_tn_00": 7710
+   },
+   "representative_part": "c_E0_tn_00",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_0_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 0
+    },
+    {
+     "leaf": "u_t_1_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 0
+    },
+    {
+     "leaf": "u_t_0_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_0_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 1
+    },
+    {
+     "leaf": "u_t_1_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_1_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 1
+    }
+   ],
+   "native_id_family": "cbn_q00"
+  },
+  {
+   "type": "cbn_q00_xb00d1_xb10d0_na00d15",
+   "family": "cbn_q00",
+   "profile_sha256": "72d0592acb7d98b2a343a4f3b3ddec128fdc141b6e9a23f4d88637c571872f32",
+   "parts": [
+    "c_E1_bn_00",
+    "c_E3_bn_00",
+    "c_E5_bn_00",
+    "c_W1_bn_00",
+    "c_W3_bn_00",
+    "c_W5_bn_00"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_0_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 1
+    },
+    {
+     "leaf": "u_t_0_0",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 15
+    }
+   ],
+   "added_ff_min": 8226,
+   "added_ff_max": 8226,
+   "per_part_added_ff": {
+    "c_E1_bn_00": 8226,
+    "c_E3_bn_00": 8226,
+    "c_E5_bn_00": 8226,
+    "c_W1_bn_00": 8226,
+    "c_W3_bn_00": 8226,
+    "c_W5_bn_00": 8226
+   },
+   "representative_part": "c_E1_bn_00",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 464
+    },
+    {
+     "leaf": "u_fab.u_x_0_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 0
+    },
+    {
+     "leaf": "u_t_1_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 464
+    },
+    {
+     "leaf": "u_fab.u_x_1_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 0
+    },
+    {
+     "leaf": "u_t_0_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 464
+    },
+    {
+     "leaf": "u_fab.u_x_0_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 1
+    },
+    {
+     "leaf": "u_t_1_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 464
+    },
+    {
+     "leaf": "u_fab.u_x_1_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 1
+    }
+   ],
+   "native_id_family": "cbn_q00"
+  },
+  {
+   "type": "cbn_q01",
+   "family": "cbn_q01",
+   "profile_sha256": "b4bdb1e3f0e987abc3ea45d48b7123a3cd16cc858e10624efc11250b61b997ec",
+   "parts": [
+    "c_E0_bn_01",
+    "c_E2_bn_01",
+    "c_E4_bn_01",
+    "c_W0_bn_01",
+    "c_W2_bn_01",
+    "c_W4_bn_01"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_1_2",
+     "port": "n_b",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 11
+    }
+   ],
+   "added_ff_min": 5654,
+   "added_ff_max": 5654,
+   "per_part_added_ff": {
+    "c_E0_bn_01": 5654,
+    "c_E2_bn_01": 5654,
+    "c_E4_bn_01": 5654,
+    "c_W0_bn_01": 5654,
+    "c_W2_bn_01": 5654,
+    "c_W4_bn_01": 5654
+   },
+   "representative_part": "c_E0_bn_01",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_0_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 2
+    },
+    {
+     "leaf": "u_t_1_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_1_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 2
+    },
+    {
+     "leaf": "u_t_0_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_0_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 3
+    },
+    {
+     "leaf": "u_t_1_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_1_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 3
+    }
+   ],
+   "native_id_family": "cbn_q01"
+  },
+  {
+   "type": "cbn_q01_nb12d10",
+   "family": "cbn_q01",
+   "profile_sha256": "07f880326a298ce9eb75948ac45c7e9a53dc33f2897f3761cd479c3e1bfcf368",
+   "parts": [
+    "c_E0_tn_01",
+    "c_E1_bn_01",
+    "c_E1_tn_01",
+    "c_E2_tn_01",
+    "c_E3_bn_01",
+    "c_E3_tn_01",
+    "c_E4_tn_01",
+    "c_E5_bn_01",
+    "c_E5_tn_01",
+    "c_W0_tn_01",
+    "c_W1_bn_01",
+    "c_W1_tn_01",
+    "c_W2_tn_01",
+    "c_W3_bn_01",
+    "c_W3_tn_01",
+    "c_W4_tn_01",
+    "c_W5_bn_01",
+    "c_W5_tn_01"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_1_2",
+     "port": "n_b",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 10
+    }
+   ],
+   "added_ff_min": 5140,
+   "added_ff_max": 5140,
+   "per_part_added_ff": {
+    "c_E0_tn_01": 5140,
+    "c_E1_bn_01": 5140,
+    "c_E1_tn_01": 5140,
+    "c_E2_tn_01": 5140,
+    "c_E3_bn_01": 5140,
+    "c_E3_tn_01": 5140,
+    "c_E4_tn_01": 5140,
+    "c_E5_bn_01": 5140,
+    "c_E5_tn_01": 5140,
+    "c_W0_tn_01": 5140,
+    "c_W1_bn_01": 5140,
+    "c_W1_tn_01": 5140,
+    "c_W2_tn_01": 5140,
+    "c_W3_bn_01": 5140,
+    "c_W3_tn_01": 5140,
+    "c_W4_tn_01": 5140,
+    "c_W5_bn_01": 5140,
+    "c_W5_tn_01": 5140
+   },
+   "representative_part": "c_E0_tn_01",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_0_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_0_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 2
+    },
+    {
+     "leaf": "u_t_1_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_1_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 2
+    },
+    {
+     "leaf": "u_t_0_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_0_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 3
+    },
+    {
+     "leaf": "u_t_1_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_1_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 3
+    }
+   ],
+   "native_id_family": "cbn_q01"
+  },
+  {
+   "type": "cbn_q11",
+   "family": "cbn_q11",
+   "profile_sha256": "21ec234453e2277e980549f95cc4c718e375a301639deaed3d168e70c618adf2",
+   "parts": [
+    "c_E0_bn_11",
+    "c_E2_bn_11",
+    "c_E4_bn_11",
+    "c_W0_bn_11",
+    "c_W2_bn_11",
+    "c_W4_bn_11"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_2_2",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 2
+    }
+   ],
+   "added_ff_min": 1028,
+   "added_ff_max": 1028,
+   "per_part_added_ff": {
+    "c_E0_bn_11": 1028,
+    "c_E2_bn_11": 1028,
+    "c_E4_bn_11": 1028,
+    "c_W0_bn_11": 1028,
+    "c_W2_bn_11": 1028,
+    "c_W4_bn_11": 1028
+   },
+   "representative_part": "c_E0_bn_11",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_2_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_2_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 2
+    },
+    {
+     "leaf": "u_t_3_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_3_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 2
+    },
+    {
+     "leaf": "u_t_2_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_2_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 3
+    },
+    {
+     "leaf": "u_t_3_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_3_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 3
+    }
+   ],
+   "native_id_family": "cbn_q11"
+  },
+  {
+   "type": "cbn_q11_na22d3",
+   "family": "cbn_q11",
+   "profile_sha256": "f4d5f192d12574b6b0794d48cc4621727e5b0cf19e8bf51c7267b1778247e38a",
+   "parts": [
+    "c_E0_tn_11",
+    "c_E1_bn_11",
+    "c_E1_tn_11",
+    "c_E2_tn_11",
+    "c_E3_bn_11",
+    "c_E3_tn_11",
+    "c_E4_tn_11",
+    "c_E5_bn_11",
+    "c_E5_tn_11",
+    "c_W0_tn_11",
+    "c_W1_bn_11",
+    "c_W1_tn_11",
+    "c_W2_tn_11",
+    "c_W3_bn_11",
+    "c_W3_tn_11",
+    "c_W4_tn_11",
+    "c_W5_bn_11",
+    "c_W5_tn_11"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_t_2_2",
+     "port": "n_a",
+     "bits": [
+      [
+       0,
+       513
+      ]
+     ],
+     "pad": 3
+    }
+   ],
+   "added_ff_min": 1542,
+   "added_ff_max": 1542,
+   "per_part_added_ff": {
+    "c_E0_tn_11": 1542,
+    "c_E1_bn_11": 1542,
+    "c_E1_tn_11": 1542,
+    "c_E2_tn_11": 1542,
+    "c_E3_bn_11": 1542,
+    "c_E3_tn_11": 1542,
+    "c_E4_tn_11": 1542,
+    "c_E5_bn_11": 1542,
+    "c_E5_tn_11": 1542,
+    "c_W0_tn_11": 1542,
+    "c_W1_bn_11": 1542,
+    "c_W1_tn_11": 1542,
+    "c_W2_tn_11": 1542,
+    "c_W3_bn_11": 1542,
+    "c_W3_tn_11": 1542,
+    "c_W4_tn_11": 1542,
+    "c_W5_bn_11": 1542,
+    "c_W5_tn_11": 1542
+   },
+   "representative_part": "c_E0_tn_11",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_2_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_2_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 2
+    },
+    {
+     "leaf": "u_t_3_2",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_3_2",
+     "port": "sidx",
+     "width": 3,
+     "value": 2
+    },
+    {
+     "leaf": "u_t_2_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_2_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 3
+    },
+    {
+     "leaf": "u_t_3_3",
+     "port": "tile_id",
+     "width": 16,
+     "value": 416
+    },
+    {
+     "leaf": "u_fab.u_x_3_3",
+     "port": "sidx",
+     "width": 3,
+     "value": 3
+    }
+   ],
+   "native_id_family": "cbn_q11"
+  },
+  {
+   "type": "cbx_q10",
+   "family": "cbx_q10",
+   "profile_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "parts": [
+    "c_E0_bf_10",
+    "c_E0_tf_10",
+    "c_E0_tn_10",
+    "c_E1_bf_10",
+    "c_E1_tf_10",
+    "c_E1_tn_10",
+    "c_E2_bf_10",
+    "c_E2_tf_10",
+    "c_E2_tn_10",
+    "c_E3_bf_10",
+    "c_E3_tf_10",
+    "c_E3_tn_10",
+    "c_E4_bf_10",
+    "c_E4_tf_10",
+    "c_E4_tn_10",
+    "c_E5_bf_10",
+    "c_E5_tf_10",
+    "c_E5_tn_10",
+    "c_W0_bf_10",
+    "c_W0_tf_10",
+    "c_W0_tn_10",
+    "c_W1_bf_10",
+    "c_W1_tf_10",
+    "c_W1_tn_10",
+    "c_W2_bf_10",
+    "c_W2_tf_10",
+    "c_W2_tn_10",
+    "c_W3_bf_10",
+    "c_W3_tf_10",
+    "c_W3_tn_10",
+    "c_W4_bf_10",
+    "c_W4_tf_10",
+    "c_W4_tn_10",
+    "c_W5_bf_10",
+    "c_W5_tf_10",
+    "c_W5_tn_10"
+   ],
+   "pad_vector": [],
+   "added_ff_min": 0,
+   "added_ff_max": 0,
+   "per_part_added_ff": {
+    "c_E0_bf_10": 0,
+    "c_E0_tf_10": 0,
+    "c_E0_tn_10": 0,
+    "c_E1_bf_10": 0,
+    "c_E1_tf_10": 0,
+    "c_E1_tn_10": 0,
+    "c_E2_bf_10": 0,
+    "c_E2_tf_10": 0,
+    "c_E2_tn_10": 0,
+    "c_E3_bf_10": 0,
+    "c_E3_tf_10": 0,
+    "c_E3_tn_10": 0,
+    "c_E4_bf_10": 0,
+    "c_E4_tf_10": 0,
+    "c_E4_tn_10": 0,
+    "c_E5_bf_10": 0,
+    "c_E5_tf_10": 0,
+    "c_E5_tn_10": 0,
+    "c_W0_bf_10": 0,
+    "c_W0_tf_10": 0,
+    "c_W0_tn_10": 0,
+    "c_W1_bf_10": 0,
+    "c_W1_tf_10": 0,
+    "c_W1_tn_10": 0,
+    "c_W2_bf_10": 0,
+    "c_W2_tf_10": 0,
+    "c_W2_tn_10": 0,
+    "c_W3_bf_10": 0,
+    "c_W3_tf_10": 0,
+    "c_W3_tn_10": 0,
+    "c_W4_bf_10": 0,
+    "c_W4_tf_10": 0,
+    "c_W4_tn_10": 0,
+    "c_W5_bf_10": 0,
+    "c_W5_tf_10": 0,
+    "c_W5_tn_10": 0
+   },
+   "representative_part": "c_E0_bf_10",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_2_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_2_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 7
+    },
+    {
+     "leaf": "u_t_3_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_3_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 7
+    },
+    {
+     "leaf": "u_t_2_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_2_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 6
+    },
+    {
+     "leaf": "u_t_3_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 384
+    },
+    {
+     "leaf": "u_fab.u_x_3_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 6
+    }
+   ],
+   "native_id_family": "cbx_q10"
+  },
+  {
+   "type": "cbx_q10_xb30d1",
+   "family": "cbx_q10",
+   "profile_sha256": "391f907d1f7762080773316db4a331ce3eed77535ed3faaec46d595591a95743",
+   "parts": [
+    "c_E0_bn_10",
+    "c_E1_bn_10",
+    "c_E2_bn_10",
+    "c_E3_bn_10",
+    "c_E4_bn_10",
+    "c_E5_bn_10"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_3_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 1
+    }
+   ],
+   "added_ff_min": 516,
+   "added_ff_max": 516,
+   "per_part_added_ff": {
+    "c_E0_bn_10": 516,
+    "c_E1_bn_10": 516,
+    "c_E2_bn_10": 516,
+    "c_E3_bn_10": 516,
+    "c_E4_bn_10": 516,
+    "c_E5_bn_10": 516
+   },
+   "representative_part": "c_E0_bn_10",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_2_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_2_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 0
+    },
+    {
+     "leaf": "u_t_3_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_3_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 0
+    },
+    {
+     "leaf": "u_t_2_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_2_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 1
+    },
+    {
+     "leaf": "u_t_3_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 400
+    },
+    {
+     "leaf": "u_fab.u_x_3_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 1
+    }
+   ],
+   "native_id_family": "cbx_q10"
+  },
+  {
+   "type": "cbx_q10_xb30d2",
+   "family": "cbx_q10",
+   "profile_sha256": "3a426cc9e8dd24c484105a50feb7b856a9ec5e39d65cdc8c6670f3389a41605d",
+   "parts": [
+    "c_W0_bn_10",
+    "c_W1_bn_10",
+    "c_W2_bn_10",
+    "c_W3_bn_10",
+    "c_W4_bn_10",
+    "c_W5_bn_10"
+   ],
+   "pad_vector": [
+    {
+     "leaf": "u_fab.u_x_3_0",
+     "port": "b_d",
+     "bits": [
+      [
+       0,
+       515
+      ]
+     ],
+     "pad": 2
+    }
+   ],
+   "added_ff_min": 1032,
+   "added_ff_max": 1032,
+   "per_part_added_ff": {
+    "c_W0_bn_10": 1032,
+    "c_W1_bn_10": 1032,
+    "c_W2_bn_10": 1032,
+    "c_W3_bn_10": 1032,
+    "c_W4_bn_10": 1032,
+    "c_W5_bn_10": 1032
+   },
+   "representative_part": "c_W0_bn_10",
+   "parent_id_contracts": [
+    {
+     "leaf": "u_t_2_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 336
+    },
+    {
+     "leaf": "u_fab.u_x_2_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 0
+    },
+    {
+     "leaf": "u_t_3_0",
+     "port": "tile_id",
+     "width": 16,
+     "value": 336
+    },
+    {
+     "leaf": "u_fab.u_x_3_0",
+     "port": "sidx",
+     "width": 3,
+     "value": 0
+    },
+    {
+     "leaf": "u_t_2_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 336
+    },
+    {
+     "leaf": "u_fab.u_x_2_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 1
+    },
+    {
+     "leaf": "u_t_3_1",
+     "port": "tile_id",
+     "width": 16,
+     "value": 336
+    },
+    {
+     "leaf": "u_fab.u_x_3_1",
+     "port": "sidx",
+     "width": 3,
+     "value": 1
+    }
+   ],
+   "native_id_family": "cbx_q10"
+  }
+ ],
+ "assignments": {
+  "c_W4_bf_00": "cbf_q00",
+  "c_W2_bf_00": "cbf_q00",
+  "c_W0_bf_00": "cbf_q00",
+  "c_E0_bf_00": "cbf_q00",
+  "c_E2_bf_00": "cbf_q00",
+  "c_E4_bf_00": "cbf_q00",
+  "c_W5_tf_00": "cbf_q00_na00d15",
+  "c_W4_tf_00": "cbf_q00_na00d15",
+  "c_W3_bf_00": "cbf_q00_na00d15",
+  "c_W3_tf_00": "cbf_q00_na00d15",
+  "c_W2_tf_00": "cbf_q00_na00d15",
+  "c_W1_bf_00": "cbf_q00_na00d15",
+  "c_W1_tf_00": "cbf_q00_na00d15",
+  "c_W0_tf_00": "cbf_q00_na00d15",
+  "c_E0_tf_00": "cbf_q00_na00d15",
+  "c_E1_bf_00": "cbf_q00_na00d15",
+  "c_E1_tf_00": "cbf_q00_na00d15",
+  "c_E2_tf_00": "cbf_q00_na00d15",
+  "c_E3_bf_00": "cbf_q00_na00d15",
+  "c_E3_tf_00": "cbf_q00_na00d15",
+  "c_E4_tf_00": "cbf_q00_na00d15",
+  "c_E5_bf_00": "cbf_q00_na00d15",
+  "c_E5_tf_00": "cbf_q00_na00d15",
+  "c_W5_bf_00": "cbf_q00_s2",
+  "c_W4_bf_01": "cbf_q01",
+  "c_W2_bf_01": "cbf_q01",
+  "c_W0_bf_01": "cbf_q01",
+  "c_E0_bf_01": "cbf_q01",
+  "c_E2_bf_01": "cbf_q01",
+  "c_E4_bf_01": "cbf_q01",
+  "c_W5_tf_01": "cbf_q01_nb12d10",
+  "c_W4_tf_01": "cbf_q01_nb12d10",
+  "c_W3_bf_01": "cbf_q01_nb12d10",
+  "c_W3_tf_01": "cbf_q01_nb12d10",
+  "c_W2_tf_01": "cbf_q01_nb12d10",
+  "c_W1_bf_01": "cbf_q01_nb12d10",
+  "c_W1_tf_01": "cbf_q01_nb12d10",
+  "c_W0_tf_01": "cbf_q01_nb12d10",
+  "c_E0_tf_01": "cbf_q01_nb12d10",
+  "c_E1_bf_01": "cbf_q01_nb12d10",
+  "c_E1_tf_01": "cbf_q01_nb12d10",
+  "c_E2_tf_01": "cbf_q01_nb12d10",
+  "c_E3_bf_01": "cbf_q01_nb12d10",
+  "c_E3_tf_01": "cbf_q01_nb12d10",
+  "c_E4_tf_01": "cbf_q01_nb12d10",
+  "c_E5_bf_01": "cbf_q01_nb12d10",
+  "c_E5_tf_01": "cbf_q01_nb12d10",
+  "c_W5_bf_01": "cbf_q01_s2",
+  "c_W4_bf_11": "cbf_q11",
+  "c_W2_bf_11": "cbf_q11",
+  "c_W0_bf_11": "cbf_q11",
+  "c_E0_bf_11": "cbf_q11",
+  "c_E2_bf_11": "cbf_q11",
+  "c_E4_bf_11": "cbf_q11",
+  "c_W5_bf_11": "cbf_q11_na22d3",
+  "c_W5_tf_11": "cbf_q11_na22d3",
+  "c_W4_tf_11": "cbf_q11_na22d3",
+  "c_W3_bf_11": "cbf_q11_na22d3",
+  "c_W3_tf_11": "cbf_q11_na22d3",
+  "c_W2_tf_11": "cbf_q11_na22d3",
+  "c_W1_bf_11": "cbf_q11_na22d3",
+  "c_W1_tf_11": "cbf_q11_na22d3",
+  "c_W0_tf_11": "cbf_q11_na22d3",
+  "c_E0_tf_11": "cbf_q11_na22d3",
+  "c_E1_bf_11": "cbf_q11_na22d3",
+  "c_E1_tf_11": "cbf_q11_na22d3",
+  "c_E2_tf_11": "cbf_q11_na22d3",
+  "c_E3_bf_11": "cbf_q11_na22d3",
+  "c_E3_tf_11": "cbf_q11_na22d3",
+  "c_E4_tf_11": "cbf_q11_na22d3",
+  "c_E5_bf_11": "cbf_q11_na22d3",
+  "c_E5_tf_11": "cbf_q11_na22d3",
+  "c_W4_bn_00": "cbn_q00",
+  "c_W2_bn_00": "cbn_q00",
+  "c_W0_bn_00": "cbn_q00",
+  "c_E0_bn_00": "cbn_q00",
+  "c_E2_bn_00": "cbn_q00",
+  "c_E4_bn_00": "cbn_q00",
+  "c_W5_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_W4_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_W3_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_W2_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_W1_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_W0_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_E0_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_E1_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_E2_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_E3_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_E4_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_E5_tn_00": "cbn_q00_xb10d0_na00d15",
+  "c_W5_bn_00": "cbn_q00_xb00d1_xb10d0_na00d15",
+  "c_W3_bn_00": "cbn_q00_xb00d1_xb10d0_na00d15",
+  "c_W1_bn_00": "cbn_q00_xb00d1_xb10d0_na00d15",
+  "c_E1_bn_00": "cbn_q00_xb00d1_xb10d0_na00d15",
+  "c_E3_bn_00": "cbn_q00_xb00d1_xb10d0_na00d15",
+  "c_E5_bn_00": "cbn_q00_xb00d1_xb10d0_na00d15",
+  "c_W4_bn_01": "cbn_q01",
+  "c_W2_bn_01": "cbn_q01",
+  "c_W0_bn_01": "cbn_q01",
+  "c_E0_bn_01": "cbn_q01",
+  "c_E2_bn_01": "cbn_q01",
+  "c_E4_bn_01": "cbn_q01",
+  "c_W5_bn_01": "cbn_q01_nb12d10",
+  "c_W5_tn_01": "cbn_q01_nb12d10",
+  "c_W4_tn_01": "cbn_q01_nb12d10",
+  "c_W3_bn_01": "cbn_q01_nb12d10",
+  "c_W3_tn_01": "cbn_q01_nb12d10",
+  "c_W2_tn_01": "cbn_q01_nb12d10",
+  "c_W1_bn_01": "cbn_q01_nb12d10",
+  "c_W1_tn_01": "cbn_q01_nb12d10",
+  "c_W0_tn_01": "cbn_q01_nb12d10",
+  "c_E0_tn_01": "cbn_q01_nb12d10",
+  "c_E1_bn_01": "cbn_q01_nb12d10",
+  "c_E1_tn_01": "cbn_q01_nb12d10",
+  "c_E2_tn_01": "cbn_q01_nb12d10",
+  "c_E3_bn_01": "cbn_q01_nb12d10",
+  "c_E3_tn_01": "cbn_q01_nb12d10",
+  "c_E4_tn_01": "cbn_q01_nb12d10",
+  "c_E5_bn_01": "cbn_q01_nb12d10",
+  "c_E5_tn_01": "cbn_q01_nb12d10",
+  "c_W4_bn_11": "cbn_q11",
+  "c_W2_bn_11": "cbn_q11",
+  "c_W0_bn_11": "cbn_q11",
+  "c_E0_bn_11": "cbn_q11",
+  "c_E2_bn_11": "cbn_q11",
+  "c_E4_bn_11": "cbn_q11",
+  "c_W5_bn_11": "cbn_q11_na22d3",
+  "c_W5_tn_11": "cbn_q11_na22d3",
+  "c_W4_tn_11": "cbn_q11_na22d3",
+  "c_W3_bn_11": "cbn_q11_na22d3",
+  "c_W3_tn_11": "cbn_q11_na22d3",
+  "c_W2_tn_11": "cbn_q11_na22d3",
+  "c_W1_bn_11": "cbn_q11_na22d3",
+  "c_W1_tn_11": "cbn_q11_na22d3",
+  "c_W0_tn_11": "cbn_q11_na22d3",
+  "c_E0_tn_11": "cbn_q11_na22d3",
+  "c_E1_bn_11": "cbn_q11_na22d3",
+  "c_E1_tn_11": "cbn_q11_na22d3",
+  "c_E2_tn_11": "cbn_q11_na22d3",
+  "c_E3_bn_11": "cbn_q11_na22d3",
+  "c_E3_tn_11": "cbn_q11_na22d3",
+  "c_E4_tn_11": "cbn_q11_na22d3",
+  "c_E5_bn_11": "cbn_q11_na22d3",
+  "c_E5_tn_11": "cbn_q11_na22d3",
+  "c_W5_bf_10": "cbx_q10",
+  "c_W5_tn_10": "cbx_q10",
+  "c_W5_tf_10": "cbx_q10",
+  "c_W4_bf_10": "cbx_q10",
+  "c_W4_tn_10": "cbx_q10",
+  "c_W4_tf_10": "cbx_q10",
+  "c_W3_bf_10": "cbx_q10",
+  "c_W3_tn_10": "cbx_q10",
+  "c_W3_tf_10": "cbx_q10",
+  "c_W2_bf_10": "cbx_q10",
+  "c_W2_tn_10": "cbx_q10",
+  "c_W2_tf_10": "cbx_q10",
+  "c_W1_bf_10": "cbx_q10",
+  "c_W1_tn_10": "cbx_q10",
+  "c_W1_tf_10": "cbx_q10",
+  "c_W0_bf_10": "cbx_q10",
+  "c_W0_tn_10": "cbx_q10",
+  "c_W0_tf_10": "cbx_q10",
+  "c_E0_bf_10": "cbx_q10",
+  "c_E0_tn_10": "cbx_q10",
+  "c_E0_tf_10": "cbx_q10",
+  "c_E1_bf_10": "cbx_q10",
+  "c_E1_tn_10": "cbx_q10",
+  "c_E1_tf_10": "cbx_q10",
+  "c_E2_bf_10": "cbx_q10",
+  "c_E2_tn_10": "cbx_q10",
+  "c_E2_tf_10": "cbx_q10",
+  "c_E3_bf_10": "cbx_q10",
+  "c_E3_tn_10": "cbx_q10",
+  "c_E3_tf_10": "cbx_q10",
+  "c_E4_bf_10": "cbx_q10",
+  "c_E4_tn_10": "cbx_q10",
+  "c_E4_tf_10": "cbx_q10",
+  "c_E5_bf_10": "cbx_q10",
+  "c_E5_tn_10": "cbx_q10",
+  "c_E5_tf_10": "cbx_q10",
+  "c_E0_bn_10": "cbx_q10_xb30d1",
+  "c_E1_bn_10": "cbx_q10_xb30d1",
+  "c_E2_bn_10": "cbx_q10_xb30d1",
+  "c_E3_bn_10": "cbx_q10_xb30d1",
+  "c_E4_bn_10": "cbx_q10_xb30d1",
+  "c_E5_bn_10": "cbx_q10_xb30d1",
+  "c_W5_bn_10": "cbx_q10_xb30d2",
+  "c_W4_bn_10": "cbx_q10_xb30d2",
+  "c_W3_bn_10": "cbx_q10_xb30d2",
+  "c_W2_bn_10": "cbx_q10_xb30d2",
+  "c_W1_bn_10": "cbx_q10_xb30d2",
+  "c_W0_bn_10": "cbx_q10_xb30d2"
+ },
+ "original_families": [
+  "cbf_q00",
+  "cbf_q00_s2",
+  "cbf_q01",
+  "cbf_q01_s2",
+  "cbf_q11",
+  "cbn_q00",
+  "cbn_q01",
+  "cbn_q11",
+  "cbx_q10"
+ ],
+ "new_type_count": 9,
+ "root_added_cycles_max": 0,
+ "logical_added_ff": 712464,
+ "qualification": "CANDIDATE: actual type-uniform bind, wrapper cell/cut/slot/clock budgets and G0/G2/GEOM required",
+ "family_ancestry": {
+  "cbf_q00_na00d15": "cbf_q00",
+  "cbf_q01_nb12d10": "cbf_q01",
+  "cbf_q11_na22d3": "cbf_q11",
+  "cbn_q00_xb10d0_na00d15": "cbn_q00",
+  "cbn_q00_xb00d1_xb10d0_na00d15": "cbn_q00",
+  "cbn_q01_nb12d10": "cbn_q01",
+  "cbn_q11_na22d3": "cbn_q11",
+  "cbx_q10_xb30d1": "cbx_q10",
+  "cbx_q10_xb30d2": "cbx_q10"
+ }
+}

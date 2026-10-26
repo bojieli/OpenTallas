@@ -10,6 +10,10 @@ asbuilt.land_r8_extra (authoritative for the ids it lists).
 """
 import json, re, sys
 from collections import defaultdict
+if '--upstream' in sys.argv[1:]:
+    from cb16_dag import main
+    main([x for x in sys.argv[1:] if x != '--upstream'])
+    sys.exit(0)
 bdir, table, outp = sys.argv[1:4]
 sinks = json.load(open(bdir + "/bind_sinks.json"))
 bg = json.load(open(bdir + "/bus_groups.json"))

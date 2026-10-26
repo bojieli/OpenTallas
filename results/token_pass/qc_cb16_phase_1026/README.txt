@@ -1,0 +1,11 @@
+Current QC logical phase composition, pre-landing candidate.
+
+Baseline: ONEQC 70 types on 1f9be87cfa, native CROM3/MIF0 + actual grouped-SU reset bridge. Fresh R8 has9050members,631354padFF. Four explicit support classes separate actual controller/forwarder signatures without changing any lane cycles. CB16 DAG adds168whole-port members/712464logical payloadFF,18classes (9new) across192partitions. Root added cycles max0 relative to the fresh base. Output83types.
+
+Actual final1 strict bind:377partitions,83types,1921crossings,790393bits,0errors/unbound/tied/undriven/multiply_bound,11568straps. Re-reading its emitted source yields0remainingDAGpads across48clusters. Repeating composition with the effective existing overlay also adds0types/0FF/0rootcycles. These are source/data-phase gates, not physical sign-off or a token pass.
+
+Use physical/die_plan/qwen_compute/compose_cb16_phase.py with --plan current_plan --bound fresh_base_R8_bind --r8 fresh_table --parent-ids native_bind_parent_id_straps.json --out NEW_DIR. The output plan and manifests are pure transforms; keep the generated plan beside the original for relative core-pin paths when binding. Set asbuilt.internal_stations_types to composition.json internal_stations_types. For landing/cohort descendants, provide --family-manifest prior_phase_classes.json and --landing-table exact_collector_table.json so identity lineage is explicit, then refresh class representatives from each real partition ID.
+
+A final landing-aware solve is still required: prefer a fresh post-landing probe with old optional phase overlays off, then new R8/DAG/classes and actual-source fixedpoint. If deliberately preserving existing phase hardware, provide --existing-overlay repeatedly (absolute values against the same base); --rebase-existing instead applies recorded tree_align deltas onto a regenerated base. Expand native internal-station type selection to every clock cohort before probing. Do not retain stale original-nine selection.
+
+The group identity/VERIFY bridge4fc71d172 and later final FE/MIF/clock landing source changes require their final combined bind and token gate. No83type freeze or physical capacity claim. Failed earlier runs remain under the runtime directory; final1 is the successful source-phase vehicle.

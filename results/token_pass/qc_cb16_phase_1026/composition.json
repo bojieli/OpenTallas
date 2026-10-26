@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.qc.cb16.composition.v1",
+ "input_types": 70,
+ "output_types": 83,
+ "support_new_types": 4,
+ "cb_new_types": 9,
+ "cb_classes": 18,
+ "logical_added_ff": 712464,
+ "root_added_cycles_max": 0,
+ "internal_stations_types": [
+  "cbf_q00",
+  "cbf_q00_na00d15",
+  "cbf_q00_s2",
+  "cbf_q01",
+  "cbf_q01_nb12d10",
+  "cbf_q01_s2",
+  "cbf_q11",
+  "cbf_q11_na22d3",
+  "cbn_q00",
+  "cbn_q00_xb10d0_na00d15",
+  "cbn_q00_xb00d1_xb10d0_na00d15",
+  "cbn_q01",
+  "cbn_q01_nb12d10",
+  "cbn_q11",
+  "cbn_q11_na22d3",
+  "cbx_q10",
+  "cbx_q10_xb30d1",
+  "cbx_q10_xb30d2"
+ ],
+ "scope": "Logical candidate composition. Rebind at these explicit classes and require actual-source DAG fixedpoint zero; physical closure and full token gate remain separate."
+}
