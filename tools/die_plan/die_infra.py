@@ -523,6 +523,82 @@ def cmd_report(a):
     return 0
 
 
+# --------------------------------------------------------------------------------------------------------- render
+def cmd_render(a):
+    """the frozen pre-routes from preroute.def: partitions (grey), hard cores / keep-outs (light), PG (VDD orange /
+    VSS brown, thin), clock (mesh straps blue, routed clock nets red), reset (green) / START (purple).  --window
+    x0,y0,x1,y1 crops a zoom (PG stripes are 4 um apart, so only a zoom shows them one by one)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.collections import PolyCollection
+    from matplotlib.patches import Rectangle
+    import die_clock as DC
+    P = load_plan(a.plan)
+    win = [float(v) for v in a.window.split(",")] if a.window else [0, 0, P.W, P.H]
+    ww, wh = win[2] - win[0], win[3] - win[1]
+    sc = max(ww, wh) / 18.0
+    fig, ax = plt.subplots(figsize=(ww / sc, wh / sc), dpi=a.dpi)
+
+    def inwin(r):
+        return r[2] >= win[0] and r[0] <= win[2] and r[3] >= win[1] and r[1] <= win[3]
+    for n in P.parts:
+        r = P.rect(n)
+        if inwin(r):
+            ax.add_patch(Rectangle((r[0], r[1]), r[2] - r[0], r[3] - r[1], fill=False, lw=0.25, ec="0.55"))
+            if a.window:
+                ax.text((r[0] + r[2]) / 2, (r[1] + r[3]) / 2, n, fontsize=4, color="0.4", ha="center")
+    for r in DC.keepouts(P):
+        if inwin(r):
+            ax.add_patch(Rectangle((r[0], r[1]), r[2] - r[0], r[3] - r[1], fc="0.88", ec="none"))
+    col = {"VDD": "tab:orange", "VSS": "saddlebrown", "ck_mesh": "tab:blue"}
+    polys = defaultdict(list)
+    net, use = None, None
+    pend = []
+    for line in open(Path(a.pre) / "preroute.def"):
+        m_ = re.match(r"- (\S+)", line)
+        if m_:
+            net, pend = m_.group(1), []
+            continue
+        m_ = re.search(r"(?:FIXED|NEW) (M\d) (\d+) \+ SHAPE \w+ \( (-?\d+) (-?\d+) \) \( (-?\d+) (-?\d+) \)", line)
+        if m_:
+            L, w, x0, y0, x1, y1 = m_.group(1), int(m_.group(2)) / DBU, *(int(v) / DBU for v in m_.groups()[2:])
+            h = w / 2                                  # edges (linewidths) keep thin wires visible
+            r = (min(x0, x1) - (h if x0 == x1 else 0), min(y0, y1) - (h if y0 == y1 else 0),
+                 max(x0, x1) + (h if x0 == x1 else 0), max(y0, y1) + (h if y0 == y1 else 0))
+            pend.append(r)
+            continue
+        m_ = re.search(r"\+ USE (\w+)", line)
+        if m_ and net:
+            use = m_.group(1)
+            key = net if net in col else {"CLOCK": "clock", "RESET": "reset"}.get(use, "start" if net.startswith(
+                ("stw_", "start")) else "other")
+            if key in ("VDD", "VSS") and not a.window and not a.pg_full:
+                pend = pend[::max(1, int(len(pend) / 300))]   # die view: a sample of the stripes (they are ~4 um apart)
+            polys[key] += [[(r[0], r[1]), (r[2], r[1]), (r[2], r[3]), (r[0], r[3])] for r in pend if inwin(r)]
+            net = None
+    col.update(clock="tab:red", reset="tab:green", start="tab:purple", other="k")
+    lw = {"VDD": 0.15, "VSS": 0.15, "ck_mesh": 0.4, "clock": 0.6, "reset": 0.8, "start": 0.5, "other": 0.3}
+    for k in ("VDD", "VSS", "ck_mesh", "clock", "start", "reset", "other"):
+        if polys.get(k):
+            ax.add_collection(PolyCollection(polys[k], facecolors=col[k], edgecolors=col[k], linewidths=lw[k],
+                                             alpha=0.5 if k in ("VDD", "VSS") else 0.9, label=f"{k} ({len(polys[k])})"))
+    rep = json.loads((Path(a.pre) / "preroute.json").read_text())
+    tt = rep["tracks_taken"]
+    ax.set_xlim(win[0], win[2])
+    ax.set_ylim(win[1], win[3])
+    ax.set_aspect("equal")
+    ax.legend(loc="upper right", fontsize=5)
+    ax.set_title(f"{P.name} infra-first fixed pre-routes: M8 taken {tt['M8']['all']:.1%} "
+                 f"({', '.join(f'{k} {v:.1%}' for k, v in tt['M8'].items() if k != 'all')}), M9 taken "
+                 f"{tt['M9']['all']:.1%} ({', '.join(f'{k} {v:.1%}' for k, v in tt['M9'].items() if k != 'all')})"
+                 + (f"  window {win}" if a.window else ""), fontsize=6)
+    out = a.out or str(Path(a.pre) / ("preroute_zoom.png" if a.window else "preroute.png"))
+    fig.savefig(out, bbox_inches="tight")
+    print(out)
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -572,9 +648,16 @@ def main(argv=None):
     q.add_argument("--pg")
     q.add_argument("--sites")
     q.add_argument("--out", required=True)
+    v = sub.add_parser("render")
+    v.add_argument("plan")
+    v.add_argument("--pre", required=True)
+    v.add_argument("--window", help="x0,y0,x1,y1 um zoom")
+    v.add_argument("--out")
+    v.add_argument("--dpi", type=int, default=200)
+    v.add_argument("--pg-full", action="store_true")
     a = ap.parse_args(argv)
     return dict(pg=cmd_pg, reset=cmd_reset, clockkit=cmd_clockkit, trim=cmd_trim, freeze=cmd_freeze, grt=cmd_grt,
-                report=cmd_report)[a.cmd](a)
+                report=cmd_report, render=cmd_render)[a.cmd](a)
 
 
 if __name__ == "__main__":
