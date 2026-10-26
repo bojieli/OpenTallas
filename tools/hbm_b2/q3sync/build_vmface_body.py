@@ -24,6 +24,15 @@ KEEP = ['ot_hgi_coll_ring_ag', 'ot_hgi_coll_reduce_static_pr', 'ot_hgi_coll_link
         'ot_hgi_coll_static_vmwrite_roots_v6_physical']
 EXCLUDE = ['c:u_body.u_ring', 'c:u_body.u_reduce', 'c:u_body.g_link*', 'c:*u_arg',
            'c:u_body.u_vmasm', 'c:u_body.u_writer']
+Q3 = 'rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/'
+Q2 = 'rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/'
+PIECES = [
+    (Q3 + 'ot_hfd_coll_q3_edge_core.sv',
+     '\\u_body.g_link[0].u_link=u_link0,\\u_body.g_link[1].u_link=u_link1,'
+     '\\u_body.g_link[2].u_link=u_link2,\\u_body.g_q3.t192.u_arg=u_arg'),
+    (Q3 + 'ot_hfd_coll_q3_vm_core.sv', '\\u_body.u_vmasm=u_vmasm,\\u_body.u_writer=u_writer'),
+    (Q2 + 'ot_hfd_coll_q2_reduce_core.sv', '\\u_body.u_reduce=u_reduce'),
+    (Q2 + 'ot_hfd_coll_q2_ring_ag_core.sv', '\\u_body.u_ring=u_ring')]
 
 
 def module(text, name):
@@ -61,7 +70,8 @@ def main():
     cmds += ['flatten', 'opt_clean', 'splitnets', 'opt_clean', 'memory_map elab_top', 'cd elab_top',
              'select -set ex ' + ' '.join(EXCLUDE), 'tee -o /out/excluded.txt select -list @ex',
              f'submod -name {BASE}_x c:* @ex %d', 'cd ..', f'select {BASE}_x',
-             'write_verilog -selected -noattr /out/body_extract.v']
+             'write_verilog -selected -noattr /out/body_extract.v', 'select elab_top',
+             'write_verilog -selected -noattr /out/body_parent.v']
     (out / 'extract.ys').write_text('\n'.join(cmds) + '\n')
     subprocess.run(['docker', 'run', '--rm', '-v', f'{ROOT}:/src:ro', '-v', f'{out}:/out', '-w', '/src',
                     'openroad/orfs:asap7lock', 'bash', '-lc',
@@ -77,11 +87,20 @@ def main():
     result.write_text('// GENERATED opt-in VM_FACE_RT=2 VM_ASM_FACE_RT=2 by tools/hbm_b2/q3sync/build_vmface_body.py; '
                       'VM_RT=81 one-way select unchanged; canonical cut/wrapper unchanged.\n'
                       '`timescale 1ns/1ps\n' + new + '\n\n' + module(original, BASE) + '\n')
+    native = out / 'ot_hbm_q3_producer_native.sv'
+    assembly = [str(ROOT / 'physical/die_plan/hbm/cores/harden/split_asm.py'),
+                '--parent', str(out / 'body_parent.v'), '--top', 'ot_hbm_q3_producer_native',
+                '--rest', str(result) + ':' + BASE + '_x', '--out', str(native)]
+    for path, members in PIECES:
+        assembly += ['--piece', str(ROOT / path) + ':' + members]
+    subprocess.run(['python3', '-I', *assembly], check=True)
     h = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
     commit = subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip()
     receipt = dict(source_commit=commit, params=params, defines=['SYNTHESIS', 'OT_COLL_ISSUER256_NATIVE32'],
-                   source_inputs={p: h(ROOT / p) for p in [FILELIST, CANON, *files, *macros]},
+                   source_inputs={p: h(ROOT / p) for p in [FILELIST, CANON, *files, *macros,
+                       *[p for p, _ in PIECES], 'physical/die_plan/hbm/cores/harden/split_asm.py']},
                    output=result.name, output_sha256=h(result), canonical_cut_ports=len(ports(new)),
+                   native_assembly=native.name, native_assembly_sha256=h(native),
                    exported_select_added_cycles=0, checker_added_cycles=2, metadata_added_cycles=4,
                    assembled_valid_added_cycles=4, additional_control_metadata_flops=600,
                    physical_qualification='NOT_BUILT')
