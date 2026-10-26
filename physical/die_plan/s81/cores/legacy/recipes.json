@@ -189,7 +189,29 @@
    ]
   },
   "_why": "S81-CORES2/NC-H 10-25 F3/F6: g_mac[0] ROM pair on the W side (R180 below / MY above: clk/addr/130 rd on the E edge), g_mac[1] pair mirrored on the E side (MX / R0: clk/addr/130 rd on the W edge); every ROM pin band at the core centre y facing the centre logic (S/N plan pins x 136-375); the 144-bit rd edges face 26 um outer capture strips at the same y.",
-  "suffix": "lat26",
+  "suffix": "cgr8",
+  "_cgr": "S81-CORE-LAT r4 2026-10-26: spec params CGR 8 = one ICG per in-core region (main 7b0603a55e, COORD 11:47 (2), ROOT-MERGE-19 LEC 57041/57041 + mutant caught); regions/gates physical/die_plan/s81/core_lat/qxpq_w10_regions.json; CGR 0 kits = old 37k-sink single gate.",
   "_lat": "S81-CORE-LAT/QB 2026-10-26 (OWNER 05:38 common core-pin latency 250 TT / 202.5 FF): recipe + spec adopted from codex/s81-legacy-0719 (S81-CORES2/NC-H 10-25) unchanged, LEGACY master (pins/outline/ABI = plan, efs view LEF). Synth+place only for GEOM review; CTS recipe (ICG clone per sink cluster, cg_pushdown form) is a separate pending item, no CTS/route before GEOM PASS."
+ },
+ "ot_v41_bf_col": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_bf_col",
+  "util": 0.6,
+  "macro_sites": {
+   "ot_rom_4096x274_m8": [
+    [
+     42.12,
+     32.064,
+     "R180"
+    ],
+    [
+     42.12,
+     103.68,
+     "MY"
+    ]
+   ]
+  },
+  "suffix": "r4",
+  "_why": "S81-CORE-LAT r4 2026-10-26 (COORD 11:47 (1), 12.8a centre entry): the PP ROM pair stays on the W side 40 um in (closed bfh_compact199 place_col.tcl x) but mirrored about the core centre row: lower u_rom0 R180 / upper u_rom1 MY (closed view had MY/R180) so both ROM clk/addr pin bands (R0 W edge y 0.78) land on the ROM E edge at the core centre y (99.36 -4.34 / +4.32 um gap), facing the logic and 57 um from the plan centre clock entry (224.64, 99.36); 4.32 um gap to the centre row (qxpq_w10 convention). 144 read bits face the W capture strip as before.",
+  "_lat": "Clock: centre entry + ICG-aware internal tree come from the master-plan slice (--master-slice, core_infra core_tree.gates for the 40 RCG ICGs, physical/die_plan/s81/core_lat/bf_col_gates.json); without a slice this recipe only gives the macro/pin/RTL frame (plan N-face clk pin) for synth+place / GEOM."
  }
 }

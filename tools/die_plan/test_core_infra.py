@@ -117,3 +117,48 @@ def test_tcl_word_preserves_real_yosys_sink_identity():
     name=r"c1_off\[0\]$_DFF_P_/CLK"
     assert interp.eval("set x "+CI.word(name)) == name
     with pytest.raises(CI.InfraError): CI.word("unsafe"+chr(92))
+
+
+def icg_tree():
+    s = sample()
+    s["pg_obstructions_um"] = {}
+    s["core_tree"] = {"clock_port": "ck", "nodes": [
+        dict(name="root", master="BUFx16f_ASAP7_75t_R", xy_um=[432, 432], parent="port:ck"),
+        dict(name="w", master="BUFx12_ASAP7_75t_R", xy_um=[216, 432], parent="root"),
+        dict(name="e", master="BUFx12_ASAP7_75t_R", xy_um=[648, 432], parent="root"),
+        dict(name="tw", master="BUFx8_ASAP7_75t_R", xy_um=[216, 433], parent="w"),
+        dict(name="te", master="BUFx8_ASAP7_75t_R", xy_um=[648, 433], parent="e")],
+        "gates": [dict(inst="u_e.g_cgr.u_cg_r0.u_icg", master="ICGx1_ASAP7_75t_R", parent="w", xy_um=[216, 430]),
+                  dict(inst="u_e.g_cgr.u_cg_r1.u_icg", master="ICGx1_ASAP7_75t_R", parent="e", xy_um=[648, 430])],
+        "leaves": [dict(node="u_e.g_cgr.u_cg_r0.u_icg", load_class="gated_domain", domain_sinks=6000),
+                   dict(node="u_e.g_cgr.u_cg_r1.u_icg", load_class="gated_domain", domain_sinks=5800),
+                   dict(node="tw", sinks=["a/CLK", "b/CLK"], cts_open=True, domain_sinks=1500),
+                   dict(node="te", sinks=["c/CLK", "d/CLK"], cts_open=True, domain_sinks=1500)]}
+    return s
+
+
+def test_icg_gates_are_equal_depth_tree_stages_with_open_domains():
+    s = icg_tree()
+    p = CI.compile_slice(s)["core_tree"]
+    assert p["depth"] == 3 and len(p["gates"]) == 2
+    assert p["cts_open"] == ["te", "tw", "u_e.g_cgr.u_cg_r0.u_icg", "u_e.g_cgr.u_cg_r1.u_icg"]
+    tcl = CI.emit_tcl(s)
+    assert "ot_ci_tree_gate {u_e.g_cgr.u_cg_r0.u_icg} ICGx1_ASAP7_75t_R {w} {CLK} {GCLK} 216 430" in tcl
+    assert "ot_ci_tree_domain {u_e.g_cgr.u_cg_r1.u_icg} 5800" in tcl and "ot_ci_tree_open {tw}" in tcl
+    # gates hang from a node, not the port, and are not created cells
+    assert not any(c["name"].startswith("u_e") for c in CI.compile_slice(s)["cells"])
+
+
+@pytest.mark.parametrize("mut,frag", [
+    (lambda t: t["gates"][0].update(parent="root"), "unequal stage"),
+    (lambda t: t["gates"][0].update(parent="port:ck"), "planned root only"),
+    (lambda t: t["gates"][0].update(master="BUFx4_ASAP7_75t_R"), "ICG master"),
+    (lambda t: t["leaves"].pop(0), "without a gated_domain"),
+    (lambda t: t["leaves"][0].update(sinks=["x/CLK"]), "stay on the gate"),
+    (lambda t: t["leaves"][2].update(domain_sinks=20), "local stage counts"),
+    (lambda t: t["gates"].append(dict(t["gates"][0])), "duplicate"),
+])
+def test_icg_tree_mutants_refused(mut, frag):
+    s = icg_tree(); mut(s["core_tree"])
+    with pytest.raises(CI.InfraError, match=frag):
+        CI.emit_tcl(s)
