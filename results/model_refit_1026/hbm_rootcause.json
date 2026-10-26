@@ -1,0 +1,813 @@
+{
+ "schema": "opentallas.hbm.core_rebuild_rootcause.v1",
+ "lane": "HBM-CORE-LAT-R2",
+ "rule": "METHODOLOGY 12.8 (owner 10-26 ~07:3x): centre entry from the master-plan slice; structured symmetric tree with equal-load leaves; centre->corner > 200 um -> internal H-tree with in-core islands (same threshold as S81-CORE-LAT clock_structure_class_s81.json), > 405 um -> split or internal H-tree; no padding/early taps/ECO; v4.1 (owner): internal H-tree + in-core islands FIRST for every miss incl. >405 um; split only as a last resort, proposed with type + link cost before any build; per-tap sizing only if computed in the plan before the build",
+ "basis": "natural TT insertion = core_insertion_b2l.json (ORFS CTS, placement RC); pins = views_b2n pins files; fit tt = a + b*Lmax_pin over 17 types (programme_store excluded) is INFO only",
+ "types": [
+  {
+   "module": "ot_hgi_sfu_programme_store_r10",
+   "tt_ps": 1150,
+   "inst": 2,
+   "b2l_outline": [
+    1080.0,
+    950.4
+   ],
+   "b2n_outline": [
+    613.44,
+    691.2
+   ],
+   "clk_ports": 1,
+   "sinks": 18194,
+   "intra_spread_ps": 536,
+   "clk_pins_b2n": 1,
+   "clk_pin_xy": [
+    [
+     "clk",
+     306.7,
+     0.0
+    ]
+   ],
+   "lmax_from_pin_um": 998,
+   "lmax_from_centre_um": 652,
+   "pred_centre_tt_ps": 462,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    574.56,
+    738.72
+   ],
+   "centre_to_corner_um": 656.6,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 998 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS (>405 um: in-core repeater stages on the trunk; split = last-resort proposal only)"
+  },
+  {
+   "module": "hfd_ep_static",
+   "tt_ps": 577,
+   "inst": 6,
+   "b2l_outline": [
+    434.72,
+    371.52
+   ],
+   "b2n_outline": [
+    276.48,
+    315.36
+   ],
+   "clk_ports": 1,
+   "sinks": 7563,
+   "intra_spread_ps": 183,
+   "clk_pins_b2n": 1,
+   "clk_pin_xy": [
+    [
+     "clk",
+     2.3,
+     0.0
+    ]
+   ],
+   "lmax_from_pin_um": 589,
+   "lmax_from_centre_um": 296,
+   "pred_centre_tt_ps": 319,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    276.48,
+    315.36
+   ],
+   "centre_to_corner_um": 295.9,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 589 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__side_softplus",
+   "tt_ps": 572,
+   "inst": 4,
+   "b2l_outline": [
+    440.64,
+    457.92
+   ],
+   "b2n_outline": [
+    440.64,
+    457.92
+   ],
+   "clk_ports": 3,
+   "sinks": 23623,
+   "intra_spread_ps": 121,
+   "clk_pins_b2n": 3,
+   "clk_pin_xy": [
+    [
+     "clk_side[0]",
+     220.3,
+     0.0
+    ],
+    [
+     "clk_side[1]",
+     329.4,
+     0.0
+    ],
+    [
+     "clk_side[2]",
+     438.3,
+     0.0
+    ]
+   ],
+   "lmax_from_pin_um": 896,
+   "lmax_from_centre_um": 449,
+   "pred_centre_tt_ps": 381,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    440.64,
+    457.92
+   ],
+   "centre_to_corner_um": 449.3,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 896 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS (>405 um: in-core repeater stages on the trunk; split = last-resort proposal only)"
+  },
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "tt_ps": 550,
+   "inst": 2,
+   "b2l_outline": [
+    561.6,
+    276.48
+   ],
+   "b2n_outline": [
+    293.76,
+    354.24
+   ],
+   "clk_ports": 1,
+   "sinks": 2424,
+   "intra_spread_ps": 157,
+   "clk_pins_b2n": 1,
+   "clk_pin_xy": [
+    [
+     "clk",
+     2.3,
+     0.0
+    ]
+   ],
+   "lmax_from_pin_um": 646,
+   "lmax_from_centre_um": 324,
+   "pred_centre_tt_ps": 330,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    293.76,
+    354.24
+   ],
+   "centre_to_corner_um": 324.0,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 646 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hbm_svc_vm_kshare_splitstrap",
+   "tt_ps": 543,
+   "inst": 8,
+   "b2l_outline": [
+    354.24,
+    453.6
+   ],
+   "b2n_outline": [
+    354.24,
+    453.6
+   ],
+   "clk_ports": 2,
+   "sinks": 24634,
+   "intra_spread_ps": 162,
+   "clk_pins_b2n": 0,
+   "clk_pin_xy": [],
+   "lmax_from_pin_um": null,
+   "lmax_from_centre_um": 404,
+   "pred_centre_tt_ps": 362,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    354.24,
+    453.6
+   ],
+   "centre_to_corner_um": 403.9,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink None um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "tt_ps": 527,
+   "inst": 8,
+   "b2l_outline": [
+    209.952,
+    210.6
+   ],
+   "b2n_outline": [
+    250.56,
+    250.56
+   ],
+   "clk_ports": 1,
+   "sinks": 2641,
+   "intra_spread_ps": 424,
+   "clk_pins_b2n": 1,
+   "clk_pin_xy": [
+    [
+     "clk",
+     248.2,
+     0.0
+    ]
+   ],
+   "lmax_from_pin_um": 499,
+   "lmax_from_centre_um": 251,
+   "pred_centre_tt_ps": 301,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    250.56,
+    250.56
+   ],
+   "centre_to_corner_um": 250.6,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 499 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__side_rest",
+   "tt_ps": 515,
+   "inst": 4,
+   "b2l_outline": [
+    440.64,
+    457.92
+   ],
+   "b2n_outline": [
+    440.64,
+    457.92
+   ],
+   "clk_ports": 3,
+   "sinks": 18190,
+   "intra_spread_ps": 128,
+   "clk_pins_b2n": 3,
+   "clk_pin_xy": [
+    [
+     "clk_side[0]",
+     22.8,
+     0.0
+    ],
+    [
+     "clk_side[1]",
+     33.4,
+     0.0
+    ],
+    [
+     "clk_side[2]",
+     43.7,
+     0.0
+    ]
+   ],
+   "lmax_from_pin_um": 876,
+   "lmax_from_centre_um": 449,
+   "pred_centre_tt_ps": 381,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    440.64,
+    457.92
+   ],
+   "centre_to_corner_um": 449.3,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 876 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS (>405 um: in-core repeater stages on the trunk; split = last-resort proposal only)"
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_ctlx",
+   "tt_ps": 505,
+   "inst": 2,
+   "b2l_outline": [
+    388.8,
+    388.8
+   ],
+   "b2n_outline": [
+    388.8,
+    388.8
+   ],
+   "clk_ports": 2,
+   "sinks": 11299,
+   "intra_spread_ps": 98,
+   "clk_pins_b2n": 2,
+   "clk_pin_xy": [
+    [
+     "clk",
+     0.0,
+     384.1
+    ],
+    [
+     "clk_cal",
+     0.0,
+     384.4
+    ]
+   ],
+   "lmax_from_pin_um": 773,
+   "lmax_from_centre_um": 389,
+   "pred_centre_tt_ps": 356,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    388.8,
+    388.8
+   ],
+   "centre_to_corner_um": 388.8,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 773 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hgi_sm_xload_xq_pegress",
+   "tt_ps": 448,
+   "inst": 4,
+   "b2l_outline": [
+    369.36,
+    369.36
+   ],
+   "b2n_outline": [
+    369.36,
+    369.36
+   ],
+   "clk_ports": 5,
+   "sinks": 7237,
+   "intra_spread_ps": 176,
+   "clk_pins_b2n": 5,
+   "clk_pin_xy": [
+    [
+     "clk",
+     124.0,
+     0.0
+    ],
+    [
+     "clk_w",
+     184.8,
+     0.0
+    ],
+    [
+     "clk_s",
+     245.6,
+     0.0
+    ]
+   ],
+   "lmax_from_pin_um": 737,
+   "lmax_from_centre_um": 369,
+   "pred_centre_tt_ps": 348,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    369.36,
+    369.36
+   ],
+   "centre_to_corner_um": 369.4,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 737 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "tt_ps": 447,
+   "inst": 2,
+   "b2l_outline": [
+    250.56,
+    449.28
+   ],
+   "b2n_outline": [
+    250.56,
+    449.28
+   ],
+   "clk_ports": 1,
+   "sinks": 6982,
+   "intra_spread_ps": 91,
+   "clk_pins_b2n": 1,
+   "clk_pin_xy": [
+    [
+     "clk_q",
+     0.0,
+     446.8
+    ]
+   ],
+   "lmax_from_pin_um": 697,
+   "lmax_from_centre_um": 350,
+   "pred_centre_tt_ps": 341,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    250.56,
+    449.28
+   ],
+   "centre_to_corner_um": 349.9,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 697 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "hfd_vms_bank_native_q0_faces",
+   "tt_ps": 437,
+   "inst": 16,
+   "b2l_outline": [
+    270.0,
+    313.2
+   ],
+   "b2n_outline": [
+    270.0,
+    313.2
+   ],
+   "clk_ports": 8,
+   "sinks": 7927,
+   "intra_spread_ps": 149,
+   "clk_pins_b2n": 8,
+   "clk_pin_xy": [
+    [
+     "clk_s",
+     135.0,
+     0.0
+    ],
+    [
+     "clk_e",
+     270.0,
+     311.0
+    ],
+    [
+     "clk",
+     0.0,
+     307.3
+    ]
+   ],
+   "lmax_from_pin_um": 581,
+   "lmax_from_centre_um": 292,
+   "pred_centre_tt_ps": 318,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    270.0,
+    313.2
+   ],
+   "centre_to_corner_um": 291.6,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 581 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hbm_su_static_qcore_r13",
+   "tt_ps": 434,
+   "inst": 2,
+   "b2l_outline": [
+    302.4,
+    280.8
+   ],
+   "b2n_outline": [
+    302.4,
+    280.8
+   ],
+   "clk_ports": 1,
+   "sinks": 22998,
+   "intra_spread_ps": 137,
+   "clk_pins_b2n": 1,
+   "clk_pin_xy": [
+    [
+     "clk_ctl",
+     299.8,
+     0.0
+    ]
+   ],
+   "lmax_from_pin_um": 581,
+   "lmax_from_centre_um": 292,
+   "pred_centre_tt_ps": 318,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    302.4,
+    280.8
+   ],
+   "centre_to_corner_um": 291.6,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 581 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hgi_coll_inj_idx_join_rg",
+   "tt_ps": 417,
+   "inst": 2,
+   "b2l_outline": [
+    216.0,
+    432.0
+   ],
+   "b2n_outline": [
+    211.68,
+    315.36
+   ],
+   "clk_ports": 2,
+   "sinks": 10017,
+   "intra_spread_ps": 111,
+   "clk_pins_b2n": 2,
+   "clk_pin_xy": [
+    [
+     "clk_r0",
+     2.3,
+     0.0
+    ],
+    [
+     "clk_r1",
+     0.0,
+     2.2
+    ]
+   ],
+   "lmax_from_pin_um": 525,
+   "lmax_from_centre_um": 264,
+   "pred_centre_tt_ps": 306,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    211.68,
+    315.36
+   ],
+   "centre_to_corner_um": 263.5,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 525 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_bfqg",
+   "tt_ps": 385,
+   "inst": 16,
+   "b2l_outline": [
+    302.4,
+    298.08
+   ],
+   "b2n_outline": [
+    302.4,
+    298.08
+   ],
+   "clk_ports": 20,
+   "sinks": 3898,
+   "intra_spread_ps": 148,
+   "clk_pins_b2n": 20,
+   "clk_pin_xy": [
+    [
+     "clk",
+     2.3,
+     0.0
+    ],
+    [
+     "clk_n",
+     17.1,
+     0.0
+    ],
+    [
+     "clk_s",
+     31.8,
+     0.0
+    ]
+   ],
+   "lmax_from_pin_um": 598,
+   "lmax_from_centre_um": 300,
+   "pred_centre_tt_ps": 321,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    302.4,
+    298.08
+   ],
+   "centre_to_corner_um": 300.2,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 598 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hgi_qw_dec",
+   "tt_ps": 368,
+   "inst": 2,
+   "b2l_outline": [
+    260.0,
+    260.0
+   ],
+   "b2n_outline": [
+    260.0,
+    260.0
+   ],
+   "clk_ports": 1,
+   "sinks": 35678,
+   "intra_spread_ps": 34,
+   "clk_pins_b2n": 1,
+   "clk_pin_xy": [
+    [
+     "clk",
+     257.4,
+     0.0
+    ]
+   ],
+   "lmax_from_pin_um": 517,
+   "lmax_from_centre_um": 260,
+   "pred_centre_tt_ps": 305,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    260.0,
+    260.0
+   ],
+   "centre_to_corner_um": 260.0,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 517 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "tt_ps": 356,
+   "inst": 2,
+   "b2l_outline": [
+    142.56,
+    388.8
+   ],
+   "b2n_outline": [
+    142.56,
+    388.8
+   ],
+   "clk_ports": 6,
+   "sinks": 8801,
+   "intra_spread_ps": 141,
+   "clk_pins_b2n": 6,
+   "clk_pin_xy": [
+    [
+     "clk",
+     142.5,
+     380.8
+    ],
+    [
+     "clk_cal",
+     142.5,
+     381.2
+    ],
+    [
+     "clk_l0",
+     0.0,
+     385.6
+    ]
+   ],
+   "lmax_from_pin_um": 529,
+   "lmax_from_centre_um": 266,
+   "pred_centre_tt_ps": 307,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    142.56,
+    388.8
+   ],
+   "centre_to_corner_um": 265.7,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 529 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hgi_coll_gq_issue",
+   "tt_ps": 343,
+   "inst": 2,
+   "b2l_outline": [
+    237.6,
+    237.6
+   ],
+   "b2n_outline": [
+    237.6,
+    237.6
+   ],
+   "clk_ports": 1,
+   "sinks": 34855,
+   "intra_spread_ps": 33,
+   "clk_pins_b2n": 1,
+   "clk_pin_xy": [
+    [
+     "clk",
+     0.0,
+     227.7
+    ]
+   ],
+   "lmax_from_pin_um": 465,
+   "lmax_from_centre_um": 238,
+   "pred_centre_tt_ps": 296,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    237.6,
+    237.6
+   ],
+   "centre_to_corner_um": 237.6,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 465 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "INTERNAL_HTREE_WITH_ISLANDS"
+  },
+  {
+   "module": "ot_hgi_coll_gq_land",
+   "tt_ps": 328,
+   "inst": 2,
+   "b2l_outline": [
+    237.6,
+    237.6
+   ],
+   "b2n_outline": [
+    142.56,
+    207.36
+   ],
+   "clk_ports": 1,
+   "sinks": 4550,
+   "intra_spread_ps": 100,
+   "clk_pins_b2n": 1,
+   "clk_pin_xy": [
+    [
+     "clk",
+     0.0,
+     2.2
+    ]
+   ],
+   "lmax_from_pin_um": 348,
+   "lmax_from_centre_um": 175,
+   "pred_centre_tt_ps": 271,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    142.56,
+    207.36
+   ],
+   "centre_to_corner_um": 175.0,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 348 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "CENTRE_ENTRY_STRUCTURED_TREE"
+  },
+  {
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "tt_ps": 295,
+   "inst": 32,
+   "b2l_outline": [
+    155.52,
+    155.52
+   ],
+   "b2n_outline": [
+    177.984,
+    177.984
+   ],
+   "clk_ports": 1,
+   "sinks": 8548,
+   "intra_spread_ps": 89,
+   "clk_pins_b2n": 1,
+   "clk_pin_xy": [
+    [
+     "clk",
+     0.0,
+     2.2
+    ]
+   ],
+   "lmax_from_pin_um": 354,
+   "lmax_from_centre_um": 178,
+   "pred_centre_tt_ps": 272,
+   "fit": {
+    "a": 200,
+    "b": 0.401,
+    "sd": 64
+   },
+   "plan_outline_um": [
+    177.984,
+    177.984
+   ],
+   "centre_to_corner_um": 178.0,
+   "root_cause": "clock entry on the core edge/corner (L_max pin->sink 354 um = ~2x centre->corner); ORFS TritonCTS single-entry tree, no structured trunk",
+   "cls_12_8": "CENTRE_ENTRY_STRUCTURED_TREE"
+  }
+ ]
+}
