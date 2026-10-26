@@ -1,0 +1,13 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "ONE CTS+GRT diagnostic per type on retained GEOM-reviewed R3 placement; no signoff or detailed route",
+ "picture": "results/qc_su_lat/r4/r4_plan.png",
+ "findings": [
+  "Viewed all four macro plans: centre entries in SRAM-row gaps, island sites remain outside macros; no outline/pins/data placement changed.",
+  "Five equal stages remove overdeep entry/S structure; precise pre-CTS named sink groups replace nearest-leaf assignment.",
+  "Core-clock wires still cross macro spans and must route around blocked layers; GRT RC required, model not yet calibrated for these shapes.",
+  "PG connected before donttouch, no pad/ECO loops, exact assignment fails missing/duplicate sinks."
+ ],
+ "added_data_cycles": 0,
+ "added_reset_cycles": 0
+}

@@ -1,0 +1,16 @@
+{
+  "verdict": "FAIL",
+  "scope": "Structural clock experiments only; NOT SIGNED",
+  "r4b": {
+    "rp1": "native GRT TT201.397 FF157.252 means; tap windows99.2/85.7 FAIL",
+    "prog": "native GRT TT222.789 FF174.858; windows74.9/66.8 FAIL",
+    "btab": "native GRT TT211.468 FF164.577; windows80.2/71.0 FAIL",
+    "vmr": "CTS refused existing60sink/leaf and30um same-leaf pair radius gates"
+  },
+  "causes": [
+    "Equal-count structural groups still have unequal electrical load/wire lengths; do not repeat expected failures",
+    "VMR old geometry preceded mandatory data hooks; use aligned post-hook ODB and atomic g_wr/g_mw pairs",
+    "Copied summary.json is stale R3, not this run; use native collection only"
+  ],
+  "next": "Shared core planner uses real post-hook named sinks, joint TT/FF NLDM prediction and frozen legal sites before another diagnostic; see codex/shared-core-0733"
+}

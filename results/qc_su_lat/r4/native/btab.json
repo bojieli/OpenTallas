@@ -1,0 +1,26 @@
+{
+ "scope": "GRT clock structural diagnostic only; native records rounded to0.1ps; NOT SIGNED; no independent number-check",
+ "source": "cts_grt.log",
+ "corners": {
+  "TT": {
+   "n": 5644,
+   "mean_ps": 211.46778880226788,
+   "min_ps": 171.6,
+   "max_ps": 262.1,
+   "tap_mean_window_ps": 80.20000000000002,
+   "target_ps": 250.0,
+   "latency_target": "FAIL",
+   "window": "FAIL"
+  },
+  "FF": {
+   "n": 5644,
+   "mean_ps": 164.57675407512403,
+   "min_ps": 129.3,
+   "max_ps": 209.3,
+   "tap_mean_window_ps": 71.0,
+   "target_ps": 202.5,
+   "latency_target": "FAIL",
+   "window": "FAIL"
+  }
+ }
+}
