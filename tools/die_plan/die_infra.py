@@ -22,6 +22,9 @@ signal GRT sees the exact leftover capacity.  Opt-in; die_trial.py / die_clock_m
     die_infra.py report  --pre D [--grt G ...] [--clock MESH] [--sites S.json] --out R.json
                                                              # (6) GRT overflow, skew TT/FF, IR, clock power, island
                                                              # area per type, leftover M8/M9
+    die_infra.py master-plan PLAN --out D [--mesh M] [--tracks T] [--pg P] [--ir R.json ...] [--entries E]
+                                                             # METHODOLOGY 12.7/12.8 master plan (master_plan.py):
+                                                             # census, roads, bays, entry pins, slices + static gates
     die_infra.py sites   PLAN --out D [--mesh MESH] [--tracks D/preroute.json] [--pg D/pg.json] [--m89] [--bays B]
                                                              # INFRA-SITE SUFFICIENCY gate (infra_sites.py): corridor
                                                              # bay gaps <= reach, cut use, island via-stack porosity,
@@ -794,7 +797,11 @@ def main(argv=None):
     st.add_argument("--no-reset", action="store_true")
     st.add_argument("--render", action="store_true")
     st.add_argument("--window", action="append", help="x0,y0,x1,y1 zoom render (repeatable)")
+    import master_plan as MP                      # METHODOLOGY 12.7/12.8 master-plan mode (MASTER-PLAN lane)
+    MP.add_args(sub.add_parser("master-plan", help="master plan + static plan gates (master_plan.py)"))
     a = ap.parse_args(argv)
+    if a.cmd == "master-plan":
+        return MP.cmd(a)
     return dict(sites=cmd_sites, pg=cmd_pg, reset=cmd_reset, clockkit=cmd_clockkit, trim=cmd_trim, freeze=cmd_freeze, grt=cmd_grt,
                 report=cmd_report, render=cmd_render)[a.cmd](a)
 
