@@ -1,0 +1,6 @@
+7 [338, 357, 665, 754, 282, 555, 491] [2, 2, 4, 4, 2, 3, 3] {'T1': 208.44, 'T2': 45.9, 'T3': 30.24} {'mean': 239.15, 'min': 233.23, 'max': 245.37, 'window': 12.14} {'mean': 188.27, 'min': 183.95, 'max': 193.05, 'window': 9.1}
+BEST 7 {'TT': {'mean': 239.15, 'min': 233.23, 'max': 245.37, 'window': 12.14}, 'FF': {'mean': 188.27, 'min': 183.95, 'max': 193.05, 'window': 9.1}}
+uf {'mean': 239.15, 'min': 233.23, 'max': 245.37, 'window': 12.14} {'mean': 188.27, 'min': 183.95, 'max': 193.05, 'window': 9.1}
+ASBUILT {'TT': {'mean_raw': 244.11, 'mean': 246.01, 'min': 238.7, 'max': 251.57, 'window': 12.87}, 'FF': {'mean_raw': 191.38, 'mean': 186.28, 'min': 186.1, 'max': 198.16, 'window': 12.06}}
+EARLY/LATE {'TT': {'early': {'mean_raw': 237.77, 'mean': 239.67, 'min': 232.04, 'max': 245.49, 'window': 13.45}, 'late': {'mean_raw': 246.32, 'mean': 248.22, 'min': 241.46, 'max': 253.07, 'window': 11.61}}, 'FF': {'early': {'mean_raw': 188.07, 'mean': 182.97, 'min': 182.76, 'max': 194.85, 'window': 12.09}, 'late': {'mean_raw': 192.71, 'mean': 187.61, 'min': 187.58, 'max': 199.27, 'window': 11.69}}}
+spec btab_ls_k7_L3.gate.asbuilt.tcl 61 nodes 64 leaves 4 macros
