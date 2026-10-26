@@ -1,0 +1,6 @@
+FE control-tree source fix; no geometry or logic-cycle change.
+Exact failing sourcekit: epyc1 /srv/opentallas-scratch2/claude/codex-kits-wave-qc-2155/face_fe1 (immutable original retained).
+Binder.emit discarded canonical module attributes from gen_rtl.CELLS and replaced them with keep_hierarchy only. Module keep is needed to retain planned unused reset tap chains.
+Actual FE reset/START graph isolated unchanged: original cells synth27/56, corrected canonical attrs56/56. All29 originally missing names recovered (summary.json). Source graph5 relay stages+1 entry release unchanged;500edge lockstep PASS, changed mission-chain parent mutant caughtedge13. Ten focused canonical-keep/binder tests PASS including removing keep as a synthesis mutant (3 expected control cells ->1).
+Required next step: regenerate FE from synthesis using corrected bind_cells, render/review actual placement, require reset_tree0missing before CTS/route. Old3_place and failed report cannot qualify. No physical closure claimed here.
+Driver option helper includes optional driven cells only when reset.relay_driver is enabled, otherwise canonical default modules only. Those driven definitions are owned separately by RESET sourceprototype; missing requested definition fails closed.

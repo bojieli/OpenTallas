@@ -52,3 +52,33 @@ def test_buffer_clear_of_station_ok():
     r = Report()
     check_clock_branch_buffers(SimpleNamespace(types={"root": tt}), r)
     assert not r.errors()
+
+
+def _rep(name, tap, k, xy):
+    return dict(name=name, tap=tap, k=k, xy=xy, cell_ll_um=[xy[0] - 0.7, xy[1]], cell_wh_um=[1.404, 0.27])
+
+
+def test_symmetric_leg_repeaters_ok():
+    tt = _t([60, 125])
+    tt["clock"]["branch_buffers"][0]["leg_repeaters"] = [_rep("rA", "tileA", 1, [60, 75]),
+                                                         _rep("rB", "tileB", 1, [60, 175])]
+    r = Report()
+    out = check_clock_branch_buffers(SimpleNamespace(types={"root": tt}), r)
+    assert not r.errors() and out["leg_repeaters"] == 2
+
+
+def test_asymmetric_leg_repeaters_fail():
+    tt = _t([60, 125])
+    tt["clock"]["branch_buffers"][0]["leg_repeaters"] = [_rep("rA", "tileA", 1, [60, 75])]
+    r = Report()
+    out = check_clock_branch_buffers(SimpleNamespace(types={"root": tt}), r)
+    assert out["types"] == ["root"]
+
+
+def test_leg_repeater_on_core_fails():
+    tt = _t([60, 125])
+    tt["clock"]["branch_buffers"][0]["leg_repeaters"] = [_rep("rA", "tileA", 1, [40, 30]),
+                                                         _rep("rB", "tileB", 1, [60, 175])]
+    r = Report()
+    out = check_clock_branch_buffers(SimpleNamespace(types={"root": tt}), r)
+    assert out["types"] == ["root"]
