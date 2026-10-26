@@ -78,6 +78,30 @@ def test_slang_elements_reads_the_element_layout_from_driver_cells(tmp_path):
     assert lec.slang_elements(tmp_path / "missing.json") == {}
 
 
+def test_slang_element_keys_pair_relay_last_stage_with_its_output_name(tmp_path):
+    # ot_qkh_relay W=2 D=2 (`reg [1:0] r [0:1]; assign q = r[1]`): gold slang flat r[0..3], element 1 at r[0..1];
+    # gate keeps the first stage relaid (r#t[0][b]) and names the last stage after the output (q[b]) -- PATH-KV e1f
+    j = {"modules": {"lec_top": {
+        "netnames": {"u_dut.u_r.r": {"hide_name": 0, "bits": [10, 11, 20, 21]}},
+        "cells": {"$flatten\\u_dut.u_r.$driver$r[0]": {"type": "$dff", "connections": {"Q": [20, 21]}},
+                  "$flatten\\u_dut.u_r.$driver$r[1]": {"type": "$dff", "connections": {"Q": [10, 11]}}}}}}
+    (tmp_path / "gold.aliases.json").write_text(json.dumps(j))
+
+    class _L:
+        pass
+    L = _L()
+    L.hyp = {}
+    L.gp = {f"ff:u_dut.u_r.r[{f}]": f for f in range(4)}
+    L.tp = {"ff:u_dut.u_r.r#t[0][0]": 0, "ff:u_dut.u_r.r#t[0][1]": 1, "ff:u_dut.u_r.q[0]": 2, "ff:u_dut.u_r.q[1]": 3}
+    L.tc = {}
+    L.matched, L.gonly, L.tonly = [], sorted(L.gp), sorted(L.tp)
+    log = []
+    assert lec.slang_element_keys(L, log, work=tmp_path) == 4
+    # element 0 (gold r[2..3]) <- relaid first stage; element 1 = last stage (gold r[0..1]) <- q
+    assert L.tp == {"ff:u_dut.u_r.r[2]": 0, "ff:u_dut.u_r.r[3]": 1, "ff:u_dut.u_r.r[0]": 2, "ff:u_dut.u_r.r[1]": 3}
+    assert L.gonly == [] and L.tonly == []
+
+
 def test_merged_copy_pairs_with_its_own_name_shape():
     c = ["ff:u.g_ctl[1].u_c.g_c[0].f[0]", "ff:u.g_ctl[0].u_c.g_c[0].f[1]", "ff:u.g_ctl[0].u_c.g_c[0].f[0]"]
     assert lec.closest("ff:u.g_ctl[0].u_c.g_c[10].f[0]", c)[0] == "ff:u.g_ctl[0].u_c.g_c[0].f[0]"
