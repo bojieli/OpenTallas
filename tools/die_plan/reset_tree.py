@@ -254,15 +254,25 @@ def blockages(t, clear=CLEAR_UM):
         if c.get("orient") in ("R90", "R270", "MXR90", "MYR90"):
             cw, ch = ch, cw
         out.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
+    # Analog/isolated-PG keepouts are uniform per type, shared with the clock
+    # planner. Reset relay cells and wavefront port sites must not reoccupy a
+    # domain from which the plan has removed clock taps.
+    for x0, y0, x1, y1 in (t.get("clock", {}) or {}).get("keepouts_um", []):
+        halo = max(clear, 8.64)
+        out.append((x0 - halo, y0 - halo, x1 + halo, y1 + halo))
     return out
 
 
 def _free(p, boxes, box_out):
     x, y = p
     x0, y0, x1, y1 = box_out
-    if not (x0 <= x <= x1 and y0 <= y <= y1):
+    # Grown blockage faces are legal (the full CLEAR_UM is already included).
+    # Decimal abutting faces can differ by binary roundoff, e.g. 816.48
+    # versus 816.4799999999999. This tolerance is far below one physical DBU.
+    eps = 1e-9
+    if not (x0-eps <= x <= x1+eps and y0-eps <= y <= y1+eps):
         return False
-    return not any(a < x < c and b < y < d for a, b, c, d in boxes)
+    return not any(a+eps < x < c-eps and b+eps < y < d-eps for a, b, c, d in boxes)
 
 
 def _edge_ok(p, q, boxes):
@@ -291,7 +301,9 @@ def push_off(p, boxes, box_out, step=2.16):
 
     def clampo(q):
         return (min(max(q[0], x0o), x1o), min(max(q[1], y0o), y1o))
-    eps = 0.01
+    # Project onto the legal grown face; an epsilon enters the opposite halo
+    # when the channel is exactly two CLEAR_UM halos wide.
+    eps = 0.0
     seen, front, best = set(), [p], None
     for _ in range(6):
         nxt = []
