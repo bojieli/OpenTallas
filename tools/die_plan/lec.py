@@ -2674,10 +2674,18 @@ def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
     AIGER backend rejects it; synthesis (read_verilog) turned the same array into named registers (mem2reg), so the
     gold is re-read with read_slang --no-implicit-memories: every array becomes its registers, as written."""
     args = (env, kit, gold_fe, lib_bbs, out / "stubs.v", out / "wrap_gold.v", out / "lecff.v", out / "gold")
+    # Opt-in for register arrays whose implicit-memory lowering hides element
+    # driver metadata at gold.aliases.json (N59 qe_rep, QC HC e_W). The same
+    # frontend option already serves the unmappable-memory fallback below.
+    # This preserves individual logical register elements before memory_map;
+    # every next-state and output compare still passes normal induction.
+    no_mem = gold_fe == "slang" and str(env.get("OT_LEC_GOLD_NO_IMPLICIT_MEMORIES", "0")) == "1"
+    if no_mem:
+        rec["gold_no_implicit_memories"] = True
     try:
-        return run_yosys(gold_script(*args), out / "gold.ys", log)
+        return run_yosys(gold_script(*args, slang_extra=["--no-implicit-memories"] if no_mem else ()), out / "gold.ys", log)
     except Unproven as e:
-        if gold_fe != "slang" or "Unsupported cell type: $mem_v2" not in str(e):
+        if no_mem or gold_fe != "slang" or "Unsupported cell type: $mem_v2" not in str(e):
             raise
         log.append(f"gold: unmappable memory ({str(e)[-160:]}); re-reading with read_slang --no-implicit-memories")
         rec["gold_no_implicit_memories"] = True

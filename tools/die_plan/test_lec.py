@@ -1126,3 +1126,13 @@ def test_relay_keying_preserves_main_scalar_element_normalization(tmp_path, monk
     assert lec.slang_element_keys(L, [], work=tmp_path) == 1
     assert L.tp == {'ff:u.rv[4]': 40}
     assert L.tc == {'ff:u.rv[4]': 41}
+@pytest.mark.parametrize("enabled", [False,True])
+def test_gold_register_array_lowering_is_opt_in(monkeypatch,tmp_path,enabled):
+    scripts=[]
+    monkeypatch.setattr(lec,"run_yosys",lambda script,path,log:scripts.append(script))
+    env={"VERILOG_FILES":"a.v","DESIGN_NAME":"t"}
+    if enabled:env["OT_LEC_GOLD_NO_IMPLICIT_MEMORIES"]="1"
+    rec={};lec.run_gold(env,"/k","slang",[],tmp_path,[],rec)
+    assert ("--no-implicit-memories" in scripts[0]) == enabled
+    assert rec.get("gold_no_implicit_memories",False) == enabled
+    assert "read_slang" in scripts[0] and "memory_map" in scripts[0]
