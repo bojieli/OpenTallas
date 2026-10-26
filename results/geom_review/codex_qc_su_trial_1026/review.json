@@ -1,0 +1,16 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "candidate placement only after actual synth/raw-face gates; no route/STA authorization",
+ "picture": "results/geom_review/codex_qc_su_trial_1026/planned.png",
+ "findings": [
+  "Both native TLM banks central, short links to head logic; wide760-bit input band west remains unobstructed.",
+  "Bank gap13.80um, halos4.32um; no macro wall or sliver. All other area remains available to actual placed std cells.",
+  "Clock/reset north center; macro X sites preserve4.32um PG phase, Y+.012 aligns native M4 ports to symmetric.024 tracks.",
+  "Actual PG continuity, macro instance count/locations, all register reach, density and balanced clock must be reviewed on placed ODB."
+ ],
+ "conditions": [
+  "Actual two native SRAMbanks only, no undiscovered memories; cells<=400k.",
+  "Raw+ODB dedicated-face gate must pass before any placement; source arithmetic/exactness adoption gates retained.",
+  "Full actual r2r reach census and independent placed review before CTS/route."
+ ]
+}

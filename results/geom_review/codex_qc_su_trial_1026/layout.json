@@ -1,0 +1,38 @@
+{
+ "module": "qfd_qc_su_lane_w_l0",
+ "outline_um": [
+  414.72,
+  267.84
+ ],
+ "macros": [
+  {
+   "bank": 0,
+   "master": "ot_sram_1r1w2c_128x64_m1",
+   "origin_um": [
+    168.48,
+    120.972
+   ],
+   "size_um": [
+    33.72,
+    27.576
+   ],
+   "halo_um": 4.32
+  },
+  {
+   "bank": 1,
+   "master": "ot_sram_1r1w2c_128x64_m1",
+   "origin_um": [
+    216.0,
+    120.972
+   ],
+   "size_um": [
+    33.72,
+    27.576
+   ],
+   "halo_um": 4.32
+  }
+ ],
+ "routing_ceiling": "M6",
+ "added_cycles": 0,
+ "status": "candidate before actual macro-count/raw-face gates"
+}
