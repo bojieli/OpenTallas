@@ -385,6 +385,27 @@ if not r:
         c = sorted(glob.glob(os.path.join(d, "run_kit*.sh")))
         if c: r = c[0]; break
 out["runner"] = r if r and os.path.isfile(r) else ""
+# CRASH-TRIAGE 10-25 (4 rows: dsfd_qbank_N, SRAMIF btab_s8/prog_s8b/rp1_f62): the kit's signoff.py was copied without
+# the helpers it reads/imports -> the route finished and sign-off died (FileNotFoundError / ModuleNotFoundError).
+def _txt(p):
+    try:
+        with open(p, errors="replace") as f: return f.read()
+    except Exception: return ""
+st = _txt(os.path.join(K, "signoff.py"))
+need = {"pair_skew.tcl": '"pair_skew.tcl"' in st, "sdc_lint.py": "import sdc_lint" in st,
+        "face_guard.py": "import face_guard" in st, "io_hold_qualification.py": "io_hold_qualification import" in st}
+out["signoff_missing"] = sorted(n for n, v in need.items() if v and not os.path.isfile(os.path.join(K, n)))
+# the goals on which the runner runs signoff.py (the 'if' guarding the signoff.py call); macro kits without GDS
+rt = _txt(out["runner"]).splitlines() if out["runner"] else []
+goals = set()
+for i, line in enumerate(rt):
+    if "signoff.py" in line and not line.lstrip().startswith("#"):
+        for w in rt[max(0, i - 3):i + 1]:
+            goals.update(re.findall(r'\$\{?GOAL\}?"?\s*=\s*"?(\w+)', w))
+out["signoff_goals"] = sorted(goals)
+out["route_runs_finish"] = any("do-finish" in l and "route" in l for l in rt)
+cfg = _txt(os.path.join(K, "config.mk"))
+out["gds_gap"] = bool(re.search(r"^export ADDITIONAL_LEFS", cfg, re.M)) and "ADDITIONAL_GDS" not in cfg
 done()
 '''
 
@@ -435,7 +456,9 @@ alltxt = txt + "\n" + runlog
 out["runlog_tail"] = runlog[-600:]
 pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*",
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
-       "oom": r"Error 137[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
+       "oom": r"Error 137[^\n]*|\] Error 247[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
+       # design gates that print their verdict but write no FAIL_PREFLOOR/FAIL_POSTCTS marker (custom runners)
+       "gate_fail": r"(?m)^(?:CORE_PREFLIGHT|RP1_GATE|SDC_LINT|S6_GRT_GATE|OT_HOLD_GATE) FAIL\b[^\n]*",
        "orfs_error": r"\[ERROR [A-Z]+-\d+\][^\n]*"}
 for k, p in pat.items():
     m = re.search(p, alltxt)
@@ -576,6 +599,10 @@ def classify(c, client):
         return "STRUCTURAL", "grt-overflow", c["congestion"]
     if c.get("cells", 0) > CELL_CAP:
         return "STRUCTURAL", "cell-cap", f"{c['cells']} std cells > {CELL_CAP}"
+    if c.get("gate_fail"):
+        # CRASH-TRIAGE 10-25: 8 rows (CORE_PREFLIGHT shared, RP1_GATE FF hold, SDC_LINT) were design verdicts
+        # filed as CRASH because the runner printed the gate line without a FAIL_* marker file
+        return "STRUCTURAL", "gate", c["gate_fail"]
     if c.get("segfault"):
         return "CRASH", "tool-segfault", c["segfault"]
     if client.get("not_run"):
@@ -589,6 +616,9 @@ def classify(c, client):
                                         "placement / clock / reset images and review before the next scope")
     if client.get("exit") == 0:
         return "CRASH", "no-signoff", "flow exit 0 but no signoff.json"
+    if client.get("exit") is None and not c.get("last_log") and not c.get("runlog_tail"):
+        # adopted run that was not live and left no logs: nothing ran here, not a flow error
+        return "CRASH", "infra-lost", "no client exit and no run logs (adopted run not live / run data gone)"
     return "CRASH", "flow-error", c.get("orfs_error") or (c.get("runlog_tail") or "")[-300:] or f"exit {client.get('exit')}"
 
 
@@ -718,6 +748,20 @@ def poll_adopted(st, j):
 
 def default_goal(runner):
     return "route" if os.path.basename(runner) == "run_kit.sh" else "finish"
+
+
+def runner_goal(goal, p):
+    """CRASH-TRIAGE 10-25: the goal the runner actually signs off on.  gq_rk19 ran GOAL=route through run_kit_hbm.sh
+    (sign-off only on finish/post) -> 'flow exit 0 but no signoff.json'; elemB_cv / s81sl_vq ran GOAL=finish = ORFS
+    'make finish' = GDS merge of macro LEFs without GDS -> crash after the route.  cts stays cts."""
+    sg = p.get("signoff_goals") or []
+    if goal == "cts" or not sg:
+        return goal
+    if goal == "finish" and p.get("gds_gap") and "route" in sg and p.get("route_runs_finish"):
+        return "route"
+    if goal not in sg:
+        return "route" if "route" in sg else "finish" if "finish" in sg else goal
+    return goal
 
 
 def submit(st, j, attempt_note=""):
@@ -1156,6 +1200,9 @@ def admit_new(st, rows):
                "enqueue a fresh kit" if p.get("routed") or p.get("signoff_dirs") else
                f"kit carries {'+'.join(p['fail_marks'])} from an earlier run; enqueue a fresh kit"
                if p.get("fail_marks") else "no run_kit*.sh runner found" if not p.get("runner") else "")
+        if not why and p.get("signoff_missing") and r.get("goal") != "cts":
+            why = (f"kit signoff.py lacks {', '.join(p['signoff_missing'])} (sign-off would crash after the route); "
+                   "stage the whole bundle: tools/die_plan/signoff.py copy_signoff_bundle(kit)")
         if r["mode"] == "adopt":
             why = "kit dir missing" if not p["exists"] else "no config.mk" if not p.get("config") else ""
         busy = p.get("busy") is not False or (la is not None and la < 900) or bool(hub_procs(r["path"]))
@@ -1175,6 +1222,11 @@ def admit_new(st, rows):
             j["trial"] = trial_why                        # rule 1: never recorded as a sign-off
         if j.get("goal") in ("", "auto", None):
             j["goal"] = default_goal(p["runner"])
+        g = runner_goal(j["goal"], p)
+        if g != j["goal"]:
+            log(f"GOAL {rid} {r['die']}/{r['type']}: {j['goal']} -> {g} (runner signs off on "
+                f"{'/'.join(p.get('signoff_goals') or [])}{'; no ADDITIONAL_GDS for macros' if p.get('gds_gap') else ''})")
+            j["goal"] = g
         if j.get("mode") == "adopt":
             adopt(st, j, p)
             continue
