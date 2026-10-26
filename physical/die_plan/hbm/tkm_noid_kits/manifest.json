@@ -531,12 +531,13 @@
    },
    "pre_cts_tkm_clock.tcl": {
     "path": "physical/die_plan/hbm/tkm_noid_kits/clock/pre_cts_tkm_clock.tcl",
-    "sha256": "c2e9f4cd40f798bbe1d93015c94fd31a7dc09d4f4a4e84dc5e2f17f245a083e2"
+    "sha256": "b827074041b56172033599a238b7505b4048b47ce595fc60ad87e5762647dcaf",
+    "note": "PATH-HBM/TKMFIX 10-25: existing placements FIRM across CTS legalisation, restored PLACED after OT_DTSH audit"
    },
    "post_cts_tkm_clock.tcl": {
     "path": "physical/die_plan/hbm/tkm_noid_kits/clock/post_cts_tkm_clock.tcl",
-    "sha256": "f8df00201eb2c40502b7d3a98186e158234d255de42494038b46691fd49fbba9",
-    "source_commit": "2dfb44654c49f90ddbc2136718f467917bdf027d"
+    "sha256": "061fa23b0a45ac9378e15a94b61eb6d8498f012c1dc99eea00c4b738be116032",
+    "note": "PATH-HBM/TKMFIX 10-25: existing placements FIRM across CTS legalisation, restored PLACED after OT_DTSH audit"
    },
    "clock_candidate.json": {
     "path": "physical/die_plan/hbm/tkm_noid_kits/clock/clock_candidate.json",
