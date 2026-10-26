@@ -1,0 +1,238 @@
+[
+ {
+  "label": "TOK-QK-QCE ref441: CB16 matvec path x-in -> c16 root -> slice rs, max over 48 clusters = 7 per matvec pass x 4",
+  "cycles": 7,
+  "scope": "die",
+  "grade": "PRICED",
+  "at": [
+   "pre_qkv",
+   "pre_o",
+   "pre_gu",
+   "pre_down"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: cb16_path.json binds.ref441.max_root_plus_rs 7 (max_root 1)",
+  "rederive_key": "q3h x broadcast + rs reduction -> CB16 x-in/root/rs path",
+  "cycles_1020": "6 @pre_qkv,pre_gu + 6 @pre_qk,pre_silu = 24/layer"
+ },
+ {
+  "label": "TOK-QK-QCE ref441: 11 inter-slice face hops x 0",
+  "cycles": 0,
+  "scope": "die",
+  "grade": "PRICED",
+  "at": [
+   "pre_r2"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: sl_fe->sl_fw.ch_dn_i max(landed-asbuilt) 0 [sl_E0_fe__cmd_wo_cmd_ei 2->2; sl_E0_fe__dr_wo_dr_ei 2->2; sl_E0_fe__hr_wo_hr_ei 2->2; ... 34 lanes] | sl_fe->sl_fw.cmd_i max(landed-asbuilt) 0 [sl_E0_fe__hr_wo_hr_ei 2->2; sl_E0_fe__rd_wo_rd_ei 2->2; sl_E1_fe__hr_wo_hr_ei 2->2; ... 22 lanes] | sl_fe->sl_fw.st_up_i max(landed-asbuilt) 0 [sl_E0_fe__st_wo_st_ei 2->2; sl_E1_fe__st_wo_st_ei 2->2; sl_E2_fe__st_wo_st_ei 2->2; ... 11 lanes] | sl_fw->sl_fe.ag_up_i max(landed-asbuilt) 0 [sl_E0_fw__ag_eo_ag_ei 2->2; sl_E1_fw__ag_eo_ag_wi 2->2; sl_E2_fw__ag_eo_ag_wi 2->2; ... 11 lanes]",
+  "rederive_key": "dv chain slice<->slice hops",
+  "cycles_1020": 33
+ },
+ {
+  "label": "TOK-QK-QCE ref441: native59 hardened split service +5 (inside the native59 partition: no die lane in the bind; 10-20 value kept)",
+  "cycles": 5,
+  "scope": "die",
+  "grade": "PRICED",
+  "at": [
+   "pre_attn"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: no crossing lane: partition-internal",
+  "rederive_key": "native59 split service (inside native59)",
+  "cycles_1020": 5
+ },
+ {
+  "label": "TOK-QK-QCE ref441: attention command lane tt_ctlm -> native59 +3 (as-built 0-stage connection, now a crossing)",
+  "cycles": 3,
+  "scope": "die",
+  "grade": "PRICED",
+  "at": [
+   "pre_attn"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: tt_ctlm->native59.native_cmd max(landed-asbuilt) 3 [tt_ctlm__native_cmd_native_cmd 0->3]",
+  "rederive_key": "NEW: tt_ctlm.native_cmd -> native59 (attention command)",
+  "cycles_1020": 0
+ },
+ {
+  "label": "TOK-QK-QCE ref441: attention completion lane native59 -> tt_ctlm +2, priced serial before the o-proj go (as the ledger ctlm8 native_ret)",
+  "cycles": 2,
+  "scope": "die",
+  "grade": "PRICED",
+  "at": [
+   "pre_o"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: native59->tt_ctlm.native_ret max(landed-asbuilt) 2 [native59__native_ret_native_ret 0->2]",
+  "rederive_key": "NEW: native59.native_ret -> tt_ctlm (attention completion)",
+  "cycles_1020": 0
+ },
+ {
+  "label": "TOK-QK-QCE ref441: native59__dr_o_dr_wi landed 5 vs the dh2 lane age 20 the attention pair was measured with",
+  "cycles": 0,
+  "scope": "die",
+  "grade": "PRICED",
+  "at": [
+   "pre_o"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: native59__dr_o_dr_wi asbuilt 30 landed 5",
+  "rederive_key": "attention return lane dr (R_DR - 20)",
+  "cycles_1020": 1
+ },
+ {
+  "label": "TOK-QK-QCE ref441: sl_W5_fw__dd_wo_dd_i landed 5 vs the dh2 lane age 20 the attention pair was measured with",
+  "cycles": 0,
+  "scope": "die",
+  "grade": "PRICED",
+  "at": [
+   "pre_attn"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: sl_W5_fw__dd_wo_dd_i asbuilt 28 landed 5",
+  "rederive_key": "attention send lane dd (R_DD - 20)",
+  "cycles_1020": 0
+ },
+ {
+  "label": "TOK-QK-QCE ref441: slice partition crossings, QW-SLICE5 law on the bind offsets: pass 600 + taps 196",
+  "cycles": 796,
+  "scope": "die",
+  "grade": "PRICED",
+  "at": [
+   "pre_r2"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: pass 10 hops x (st 2x6 + ch 2x12 + sc 4x6) = 600; taps 2x(x 21 + ar 31 + mv 24 + norm 19) + su 6 = 196; x: SU xw -> stream insert 10, st tap -> stream 2, xt -> tap (ctl) 2, tap -> xhead columns 7, cw_s corridor -> clusters 0; ar: station r -> ctl 12, ctl own word -> out face 7, return tap -> ctl 12; mv: rs in-slice continuation (rs_n hc1 -> station / rs_s st_a -> st_b) 6, station -> ctl 12, ctl -> VM (su_c) 6; norm: red psum -> sc 7, sc chain tap/insert 4, sc w1 -> VM (sc -> ctl -> su_c) 8; su: SU issue ctl -> su_c 6",
+  "rederive_key": "slice2 landed-parent forwarded lanes + taps -> s8 partition crossings",
+  "cycles_1020": "536 (plan 327)",
+  "detail": {
+   "pass_cost_per_slice": {
+    "st": 6,
+    "ch": 12,
+    "sc": 6
+   },
+   "passes": {
+    "st": 2,
+    "ch": 2,
+    "sc": 4
+   },
+   "hops": 10,
+   "taps": {
+    "x": [
+     {
+      "crossing": "SU xw -> stream insert",
+      "cycles": 10,
+      "lanes": "sl_su_l0->sl_stm.vm_w.* max(landed-asbuilt) 10 [sl_E0_su_l0__x_su_l0_stm 0->10; sl_E1_su_l0__x_su_l0_stm 0->10; sl_E2_su_l0__x_su_l0_stm 0->10; ... 12 lanes]"
+     },
+     {
+      "crossing": "st tap -> stream",
+      "cycles": 2,
+      "lanes": "sl_fw->sl_stm.sw_i max(landed-asbuilt) 2 [sl_E0_fw__x_fw_stm 0->2; sl_E0_fw__x_fw_stm_p1 0->2; sl_E1_fw__x_fw_stm 0->2; ... 24 lanes]"
+     },
+     {
+      "crossing": "xt -> tap (ctl)",
+      "cycles": 2,
+      "lanes": "sl_stm->sl_ctl.xt_d max(landed-asbuilt) 2 [sl_E0_stm__b_tw_data_stm_ctl 0->2; sl_E1_stm__b_tw_data_stm_ctl 0->2; sl_E2_stm__b_tw_data_stm_ctl 0->2; ... 12 lanes]"
+     },
+     {
+      "crossing": "tap -> xhead columns",
+      "cycles": 7,
+      "lanes": "sl_ctl->sl_hc[0-3].a_d max(landed-asbuilt) 7 [sl_E0_ctl__b_hw_ctl_hc0 0->7; sl_E0_ctl__b_hw_ctl_hc1 0->7; sl_E0_ctl__b_hw_ctl_hc2 0->7; ... 48 lanes]"
+     },
+     {
+      "crossing": "cw_s corridor -> clusters",
+      "cycles": 0,
+      "lanes": "in the CB16 path edge (not counted twice)"
+     }
+    ],
+    "ar": [
+     {
+      "crossing": "station r -> ctl",
+      "cycles": 12,
+      "lanes": "sl_st_a->sl_ctl.r_d max(landed-asbuilt) 12 [sl_E0_st_a__x_st_a_ctl 0->12; sl_E1_st_a__x_st_a_ctl 0->12; sl_E2_st_a__x_st_a_ctl 0->12; ... 12 lanes]"
+     },
+     {
+      "crossing": "ctl own word -> out face",
+      "cycles": 7,
+      "lanes": "sl_ctl->sl_fw.own_ch max(landed-asbuilt) 7 [sl_E0_ctl__x_ctl_fw 0->7; sl_E0_ctl__x_ctl_fw_p1 0->7; sl_E1_ctl__x_ctl_fw 0->7; ... 24 lanes]"
+     },
+     {
+      "crossing": "return tap -> ctl",
+      "cycles": 12,
+      "lanes": "sl_fw->sl_ctl.chd_q max(landed-asbuilt) 12 [sl_E0_fw__x_fw_ctl 0->12; sl_E0_fw__x_fw_ctl_p1 0->12; sl_E1_fw__x_fw_ctl 0->12; ... 24 lanes]"
+     }
+    ],
+    "mv": [
+     {
+      "crossing": "rs in-slice continuation (rs_n hc1 -> station / rs_s st_a -> st_b)",
+      "cycles": 6,
+      "lanes": "sl_hc1->sl_st_a.rs_n_.* max(landed-asbuilt) 5 [sl_E0_hc1__x_hc1_st_a 0->5; sl_E1_hc1__x_hc1_st_a 0->5; sl_E2_hc1__x_hc1_st_a 0->5; ... 12 lanes] | sl_st_a->sl_st_b.rs_s_.* max(landed-asbuilt) 6 [sl_E0_st_a__x_st_a_st_b 0->6; sl_E1_st_a__x_st_a_st_b 0->6; sl_E2_st_a__x_st_a_st_b 0->6; ... 12 lanes]"
+     },
+     {
+      "crossing": "station -> ctl",
+      "cycles": 12,
+      "lanes": "sl_st_a->sl_ctl.r_d max(landed-asbuilt) 12 [sl_E0_st_a__x_st_a_ctl 0->12; sl_E1_st_a__x_st_a_ctl 0->12; sl_E2_st_a__x_st_a_ctl 0->12; ... 12 lanes]"
+     },
+     {
+      "crossing": "ctl -> VM (su_c)",
+      "cycles": 6,
+      "lanes": "sl_ctl->sl_su_c..* max(landed-asbuilt) 6 [sl_E0_ctl__x_ctl_su_c 0->6; sl_E0_ctl__x_ctl_su_c_p1 0->6; sl_E0_ctl__x_ctl_su_c_p2 0->6; ... 36 lanes]"
+     }
+    ],
+    "norm": [
+     {
+      "crossing": "red psum -> sc",
+      "cycles": 7,
+      "lanes": "sl_su_c->sl_sc.red_.* max(landed-asbuilt) 7 [sl_E0_su_c__x_su_c_sc 0->7; sl_E1_su_c__x_su_c_sc 0->7; sl_E2_su_c__x_su_c_sc 0->7; ... 12 lanes]"
+     },
+     {
+      "crossing": "sc chain tap/insert",
+      "cycles": 4,
+      "lanes": "sl_fw->sl_sc.up_i max(landed-asbuilt) 4 [sl_E0_fw__x_fw_sc 0->4; sl_E1_fw__x_fw_sc 0->4; sl_E2_fw__x_fw_sc 0->4; ... 11 lanes]"
+     },
+     {
+      "crossing": "sc w1 -> VM (sc -> ctl -> su_c)",
+      "cycles": 8,
+      "lanes": "sl_sc->sl_ctl.sc_w._.* max(landed-asbuilt) 2 [sl_E0_sc__x_sc_ctl 0->2; sl_E1_sc__x_sc_ctl 0->2; sl_E2_sc__x_sc_ctl 0->2; ... 12 lanes] + ctl->su_c"
+     }
+    ],
+    "su": [
+     {
+      "crossing": "SU issue ctl -> su_c",
+      "cycles": 6,
+      "lanes": "sl_ctl->sl_su_c..* max(landed-asbuilt) 6 [sl_E0_ctl__x_ctl_su_c 0->6; sl_E0_ctl__x_ctl_su_c_p1 0->6; sl_E0_ctl__x_ctl_su_c_p2 0->6; ... 36 lanes]"
+     }
+    ]
+   }
+  }
+ },
+ {
+  "label": "TOK-QK-QCE ref441: L9 sender -> receiver pair word on the qkv matvec +34 (10-20 crossing table: l9 LAND +3, not in its tap sum)",
+  "cycles": 34,
+  "scope": "die",
+  "grade": "PRICED",
+  "at": [
+   "pre_qk"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: sl_st_a->sl_fe.l._c max(landed-asbuilt) 12 [sl_E0_st_a__x_st_a_fe 0->12; sl_E1_st_a__x_st_a_fe 0->12; sl_E2_st_a__x_st_a_fe 0->12; ... 12 lanes] + sl_fe->sl_fw.l._i max(landed-asbuilt) 14 [sl_E1_fe__l9_eo_l9_wi 2->16; sl_E3_fe__l9_eo_l9_wi 2->16; sl_E5_fe__l9_eo_l9_wi 2->16; ... 18 lanes] + sl_fw->sl_st_a.nb_d_p max(landed-asbuilt) 8 [sl_E0_fw__x_fw_st_a 0->8; sl_E2_fw__x_fw_st_a 0->8; sl_E4_fw__x_fw_st_a 0->8; ... 6 lanes]",
+  "rederive_key": "NEW: qkv L9 pair word (station -> fe -> neighbour fw -> station)",
+  "cycles_1020": 0
+ },
+ {
+  "label": "TOK-QK-QCE ref441: class views: R8 replica_unequal 0",
+  "cycles": 0,
+  "scope": "die",
+  "grade": "PRICED",
+  "at": [
+   "pre_qkv"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: bus_groups summary {'landing_groups': 1727, 'landing_misaligned_by_lanes': 38, 'landing_misaligned_after_pads': 3, 'replica_sets': 597, 'replica_unequal': 0}",
+  "rederive_key": "forwarded-lane class views",
+  "cycles_1020": 0
+ },
+ {
+  "label": "TOK-QK-QCE ref441: XDIE QC v7 x KV b19 pair: X 8 + STATUS tail 213 per layer (L0 X -214 + 213 = -1); C2K 77 / K2C 77 / roundtrip 1933 / exposed 155 fit inside the period 7056 (unchanged)",
+  "cycles": 221,
+  "scope": "die",
+  "grade": "NEWEST",
+  "at": [
+   "pre_o"
+  ],
+  "source": "results/token_pass/qc_v7_1025/rederive_edges.py on bus_groups_ref441.json.gz: claude/tok-qk-xd2-1025@004bfaf96 results/token_pass/qc_kv_link_v7_1025/result.json xdie.cycles X_per_layer 8, L0_X -214, period_per_layer 7056; STATUS_DELAY 213",
+  "rederive_key": "XDIE pair link (X + STATUS tail)",
+  "cycles_1020": "221 (L0 -1)",
+  "cycles_l0": -1
+ }
+]

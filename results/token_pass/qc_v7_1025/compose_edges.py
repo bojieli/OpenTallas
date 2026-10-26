@@ -1,7 +1,9 @@
 """TOK-QK-QCL 10-25: compose the 1u token from S8 ages with the price engine of results/uarch/qwen_s8_crom_price_1025
 (engine tree = git archive 94cd97b7a BASE_PATHS; compiler overlay = dv_lower*.py of the named main commit; same steps as
 price.py 'bound_*' scenarios).  python3 compose_edges.py ROOT NAME SLICE VEC STN VFLAGS [EXTRA_EDGES_JSON]
-TOK-QK-QCV7 10-25: EXTRA_EDGES_JSON = list of ledger die_edges appended to the sched ledger (bind-derived lane deltas)."""
+TOK-QK-QCV7 10-25: EXTRA_EDGES_JSON = list of ledger die_edges appended to the sched ledger (bind-derived lane deltas).
+TOK-QK-QCE 10-26: ... VFLAGS --replace EDGES_JSON LANE_AGES_JSON|-  REPLACES every scope 'die' ledger edge by EDGES_JSON
+(rederive_edges.py) and, unless -, the ledger lane_ages file (R_CMD/R_HR/R_SS/R_AG/R_ST) by LANE_AGES_JSON."""
 import importlib.util, json, os, re, shutil, subprocess, sys
 from pathlib import Path
 R = Path(sys.argv[1]); name = sys.argv[2]; ages = dict(slice=sys.argv[3], vec=sys.argv[4], stn=sys.argv[5])
@@ -23,7 +25,17 @@ if len(sys.argv) > 7:
     lp = T / 'results/token_pass/measured_qwen_1019/sched/ledger.json'
     lg = json.loads(lp.read_text())
     if lp.is_symlink(): lp.unlink()
-    lg['die_edges'] += json.loads(Path(sys.argv[7]).read_text()); lp.write_text(json.dumps(lg, indent=1))
+    if sys.argv[7] == '--replace':
+        old = [e['label'] for e in lg['die_edges'] if e.get('scope') == 'die']
+        lg['die_edges'] = [e for e in lg['die_edges'] if e.get('scope') != 'die'] + json.loads(Path(sys.argv[8]).read_text())
+        lg['replaced_die_edges'] = old
+        if len(sys.argv) > 9 and sys.argv[9] != '-':
+            rel = f'results/token_pass/qc_v7_1025/lane_ages_{name}.json'
+            (T / rel).parent.mkdir(parents=True, exist_ok=True); shutil.copy(sys.argv[9], T / rel)
+            lg['lane_ages'] = dict(lg['lane_ages'], path=rel, replaced=lg['lane_ages']['path'])
+    else:
+        lg['die_edges'] += json.loads(Path(sys.argv[7]).read_text())
+    lp.write_text(json.dumps(lg, indent=1))
 ad = T / 'results/analytic_s8'; ad.mkdir(parents=True, exist_ok=True)
 for k, f in ages.items(): shutil.copy(f, ad / f'{k}_ages.json')
 inp = json.loads((S / 'results/uarch/qwen_s8_crom_price_1025/inputs_source.json').read_text())
