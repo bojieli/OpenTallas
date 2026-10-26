@@ -1,0 +1,178 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+21. Printing statistics.
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        4        -        4        - wire bits
+        3        -        3        - public wires
+        3        -        3        - public wire bits
+        3        -        3        - ports
+        3        -        3        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2    0.365        2    0.365 cells
+        1    0.292        1    0.292   DFFHQNx1_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001': 0.364500
+     of which used for sequential elements: 0.291600 (80.00%)
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000010010010011 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     1174        -     1174        - wires
+     3514        -     3514        - wire bits
+        3        -        3        - public wires
+     2343        -     2343        - public wire bits
+        3        -        3        - ports
+     2343        -     2343        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     2342  392.683     2342  392.683 cells
+     1171  341.464     1171  341.464   DFFHQNx1_ASAP7_75t_R
+     1171    51.22     1171    51.22   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hbm_face_reg\W=s32'00000000000000000000010010010011': 392.683140
+     of which used for sequential elements: 341.463600 (86.96%)
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000100100100101 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     2344        -     2344        - wires
+     7024        -     7024        - wire bits
+        3        -        3        - public wires
+     4683        -     4683        - public wire bits
+        3        -        3        - ports
+     4683        -     4683        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     4682  785.031     4682  785.031 cells
+     2341  682.636     2341  682.636   DFFHQNx1_ASAP7_75t_R
+     2341  102.395     2341  102.395   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hbm_face_reg\W=s32'00000000000000000000100100100101': 785.030940
+     of which used for sequential elements: 682.635600 (86.96%)
+
+=== ot_hbm_tkx_2beat_tx_pr ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    17935        -    14405        - wires
+    28465        -    17915        - wire bits
+     3685        -     3670        - public wires
+    14215        -     7180        - public wire bits
+       22        -        7        - ports
+    10552        -     3517        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    19086 2.71E+03    12056 1.53E+03 cells
+       38    3.324       38    3.324   AND2x2_ASAP7_75t_R
+     1206  105.501     1206  105.501   AND3x1_ASAP7_75t_R
+     1169  102.264     1169  102.264   AO21x1_ASAP7_75t_R
+     1209  141.018     1209  141.018   AOI21x1_ASAP7_75t_R
+       36    9.448       36    9.448   BUFx12f_ASAP7_75t_R
+      575   41.917      575   41.917   BUFx2_ASAP7_75t_R
+      185   16.184      185   16.184   BUFx3_ASAP7_75t_R
+      112    16.33      112    16.33   BUFx6f_ASAP7_75t_R
+     6007 1.75E+03     2492  726.667   DFFHQNx1_ASAP7_75t_R
+     5930  259.378     2418  105.763   INVx1_ASAP7_75t_R
+       37    2.158       37    2.158   INVx2_ASAP7_75t_R
+       37    2.697       34    2.479   INVx3_ASAP7_75t_R
+        4     0.35        4     0.35   INVx4_ASAP7_75t_R
+     1173  102.614     1173  102.614   NAND2x1_ASAP7_75t_R
+       36    5.249       36    5.249   NAND2x2_ASAP7_75t_R
+     1171  136.585     1171  136.585   OA211x2_ASAP7_75t_R
+      115   11.737      115   11.737   OA21x2_ASAP7_75t_R
+        1    0.219        1    0.219   OA31x2_ASAP7_75t_R
+        1    0.117        1    0.117   OAI21x1_ASAP7_75t_R
+       42    3.674       42    3.674   OR3x1_ASAP7_75t_R
+        2    0.204        2    0.204   OR4x1_ASAP7_75t_R
+        5 1.18E+03        5        - submodules
+        3    1.094        3        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+        1  392.683        1        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000010010010011
+        1  785.031        1        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000100100100101
+
+   Chip area for module '\ot_hbm_tkx_2beat_tx_pr': 2712.609000
+     of which used for sequential elements: 1751.641200 (64.57%)
+
+=== design hierarchy ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    19086 2.71E+03    12056 1.53E+03 ot_hbm_tkx_2beat_tx_pr
+        2    0.365        2    0.365 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+     2342  392.683     2342  392.683 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000010010010011
+     4682  785.031     4682  785.031 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000100100100101
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    17935        -    14405        - wires
+    28465        -    17915        - wire bits
+     3685        -     3670        - public wires
+    14215        -     7180        - public wire bits
+       22        -        7        - ports
+    10552        -     3517        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    19086 2.71E+03    12056 1.53E+03 cells
+       38    3.324       38    3.324   AND2x2_ASAP7_75t_R
+     1206  105.501     1206  105.501   AND3x1_ASAP7_75t_R
+     1169  102.264     1169  102.264   AO21x1_ASAP7_75t_R
+     1209  141.018     1209  141.018   AOI21x1_ASAP7_75t_R
+       36    9.448       36    9.448   BUFx12f_ASAP7_75t_R
+      575   41.917      575   41.917   BUFx2_ASAP7_75t_R
+      185   16.184      185   16.184   BUFx3_ASAP7_75t_R
+      112    16.33      112    16.33   BUFx6f_ASAP7_75t_R
+     6007 1.75E+03     2492  726.667   DFFHQNx1_ASAP7_75t_R
+     5930  259.378     2418  105.763   INVx1_ASAP7_75t_R
+       37    2.158       37    2.158   INVx2_ASAP7_75t_R
+       37    2.697       34    2.479   INVx3_ASAP7_75t_R
+        4     0.35        4     0.35   INVx4_ASAP7_75t_R
+     1173  102.614     1173  102.614   NAND2x1_ASAP7_75t_R
+       36    5.249       36    5.249   NAND2x2_ASAP7_75t_R
+     1171  136.585     1171  136.585   OA211x2_ASAP7_75t_R
+      115   11.737      115   11.737   OA21x2_ASAP7_75t_R
+        1    0.219        1    0.219   OA31x2_ASAP7_75t_R
+        1    0.117        1    0.117   OAI21x1_ASAP7_75t_R
+       42    3.674       42    3.674   OR3x1_ASAP7_75t_R
+        2    0.204        2    0.204   OR4x1_ASAP7_75t_R
+        5 1.18E+03        5        - submodules
+        3    1.094        3        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+        1  392.683        1        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000010010010011
+        1  785.031        1        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000100100100101
+
+   Chip area for top module '\ot_hbm_tkx_2beat_tx_pr': 2712.609000
+     of which used for sequential elements: 1751.641200 (64.57%)
+

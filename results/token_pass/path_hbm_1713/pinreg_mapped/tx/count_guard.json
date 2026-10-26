@@ -1,0 +1,350 @@
+{
+  "top": "ot_hbm_tkx_2beat_tx_pr",
+  "mapped_cells": 19086,
+  "flops": 6007,
+  "guard": "PASS",
+  "checked": 3515,
+  "ok": 3515,
+  "phase_control_nets": {
+    "u.u.g_banked_payload.phase_b[69]": 1,
+    "u.u.g_banked_payload.phase_b[1]": 1,
+    "u.u.g_banked_payload.phase_b[2]": 1,
+    "u.u.g_banked_payload.phase_b[3]": 1,
+    "u.u.g_banked_payload.phase_b[4]": 1,
+    "u.u.g_banked_payload.phase_b[5]": 1,
+    "u.u.g_banked_payload.phase_b[6]": 1,
+    "u.u.g_banked_payload.phase_b[7]": 1,
+    "u.u.g_banked_payload.phase_b[8]": 1,
+    "u.u.g_banked_payload.phase_b[9]": 1,
+    "u.u.g_banked_payload.phase_b[10]": 1,
+    "u.u.g_banked_payload.phase_b[11]": 1,
+    "u.u.g_banked_payload.phase_b[12]": 1,
+    "u.u.g_banked_payload.phase_b[13]": 1,
+    "u.u.g_banked_payload.phase_b[14]": 1,
+    "u.u.g_banked_payload.phase_b[15]": 1,
+    "u.u.g_banked_payload.phase_b[16]": 1,
+    "u.u.g_banked_payload.phase_b[17]": 1,
+    "u.u.g_banked_payload.phase_b[18]": 1,
+    "u.u.g_banked_payload.phase_b[19]": 1,
+    "u.u.g_banked_payload.phase_b[20]": 1,
+    "u.u.g_banked_payload.phase_b[21]": 1,
+    "u.u.g_banked_payload.phase_b[22]": 1,
+    "u.u.g_banked_payload.phase_b[23]": 1,
+    "u.u.g_banked_payload.phase_b[24]": 1,
+    "u.u.g_banked_payload.phase_b[25]": 1,
+    "u.u.g_banked_payload.phase_b[26]": 1,
+    "u.u.g_banked_payload.phase_b[27]": 1,
+    "u.u.g_banked_payload.phase_b[28]": 1,
+    "u.u.g_banked_payload.phase_b[29]": 1,
+    "u.u.g_banked_payload.phase_b[30]": 1,
+    "u.u.g_banked_payload.phase_b[31]": 1,
+    "u.u.g_banked_payload.phase_b[32]": 1,
+    "u.u.g_banked_payload.phase_b[33]": 1,
+    "u.u.g_banked_payload.phase_b[34]": 1,
+    "u.u.g_banked_payload.phase_b[35]": 1,
+    "u.u.g_banked_payload.phase_b[0]": 1
+  },
+  "max_phase_control_loads": 1,
+  "phase_replica_flops": 74,
+  "running_replica_flops": 74,
+  "warmup_replica_flops": 0,
+  "max_phase_FF_Q_fanout": 7,
+  "phase_FF_details": [
+    {
+      "path": "u.u.g_banked_payload.phase_b[0]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[10]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[11]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[12]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[13]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[14]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[15]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[16]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[17]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[18]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[19]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[1]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[20]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[21]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[22]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[23]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[24]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[25]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[26]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[27]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[28]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[29]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[2]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[30]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[31]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[32]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[33]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[34]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[35]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[36]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[37]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[38]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[39]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[3]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[40]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[41]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[42]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[43]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[44]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[45]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[46]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[47]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[48]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[49]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[4]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[50]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[51]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[52]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[53]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[54]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[55]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[56]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[57]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[58]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[59]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[5]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[60]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[61]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[62]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[63]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[64]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[65]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[66]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[67]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[68]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[69]$_SDFFE_PP0P_",
+      "max_Q_fanout": 7
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[6]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[70]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[71]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[72]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[73]$_SDFFE_PP0P_",
+      "max_Q_fanout": 1
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[7]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[8]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    },
+    {
+      "path": "u.u.g_banked_payload.phase_b[9]$_SDFFE_PP0P_",
+      "max_Q_fanout": 3
+    }
+  ]
+}

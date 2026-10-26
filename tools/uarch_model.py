@@ -17096,6 +17096,51 @@ def hgi_coll_tkm_static_calendar(G=96, n=512, k=2048, kmax=2048, has_r=True):
                 price_comparison='historical estimate retained separately; static throughput remains unqualified until measured')
 
 
+
+def hbm_tkx_registered_endpoint_model(link_stages=2, return_stages=2):
+    """Selected RAW2341/1171x2 pin-register profile, not physical adoption.
+
+    Old R3 independently measured age267 for link2/return2. Strict R2
+    endpoints add one input and one output boundary cohort at each end.
+    The two new beat-channel stages also enter RX phase/warmup accounting.
+    Runtime II is unchanged; boot remains an explicitly scheduled event.
+    """
+    if link_stages < 1 or return_stages < 1:
+        raise ValueError('selected channel/return stage counts must be explicit positive integers')
+    native_age = link_stages + 3 + 2 + 258 + return_stages
+    extra = 4
+    ds_base = 576702.4  # current S2 DS_AR cost ledger; nine TOPK_MERGE records
+    return dict(status='PROPOSED_COMPONENT_NOT_PHYSICAL_ADOPTION',clock_period_ps=833,
+        core_clock_domains=1,raw_bits=2341,beat_bits=1171,side_channel_bits=0,
+        frame_beats=2,fault_header_bits=1,padding_bits=0,
+        serializer_II=2,TKM_producer_II=8,producer_raw_bits_per_cycle=2341/8,
+        channel_peak_bits_per_cycle=1171,minimum_signal_tracks=1171,
+        tx_boundary_register_bits=3515,rx_boundary_register_bits=3514,
+        added_boundary_register_bits=7029,
+        tx_local_control_banks=74,rx_local_control_banks=110,bank_payload_FF_max=32,
+        tx_control_replica_bits=148,
+        rx_control_replica_bits=110*(3+(link_stages+3).bit_length()),
+        added_register_bits=7029+148+110*(3+(link_stages+3).bit_length())+((link_stages+3).bit_length()-(link_stages+1).bit_length()),
+        tx_added_edges=2,rx_added_edges=2,
+        added_path_edges=extra,native_reference_age=native_age,
+        registered_candidate_age=native_age+extra,
+        rx_phase_model_link_stages=link_stages+2,
+        physical_channel_stages=link_stages,return_channel_stages=return_stages,
+        original_native_mapped_cells=dict(tx=11467,rx=13686),
+        registered_mapped_cells=dict(tx=19086,rx=24523),
+        registered_mapped_FF=dict(tx=6007,rx=7693),
+        mapped_count_profile_link_stages=2,
+        strict_pin_guard=dict(tx='3515/3515 PASS',rx='3514/3514 PASS'),
+        measured_phase_FF_Q_fanout=dict(tx_max=7,rx_max=4),
+        routing_and_area='existing plan endpoint pockets; new mapped counts and face-bank/reach placement still required',
+        token_cost=dict(ds_ar_records=9,ds_ar_added_cycles=9*extra,
+            ds_ar_base_cycles=ds_base,ds_ar_rate_loss_pct=100*(9*extra)/(ds_base+9*extra),
+            qwen_ar_records=0,qwen_ar_added_cycles=0,
+            scope='endpoint-only additive price, not the unadopted52edge draft route'),
+        boot='boundary cohorts flush under timed delivered reset before explicit boot; actual q3 whole-core reset still pending',
+        qualification='component odd/even channel cold/warm temporal gate plus mutants; actual new mapped pin guard and source/netlist LEC required')
+
+
 def s81_static_hc_source_model():
     """Source preflight only: fixed TP4 gather -> exact pairwise HC row.
 

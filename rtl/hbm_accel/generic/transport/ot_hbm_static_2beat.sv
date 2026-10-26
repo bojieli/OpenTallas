@@ -15,7 +15,7 @@ module ot_hbm_static_2beat_tx #(
  parameter integer W=3749,B=1875,S=1,
  parameter [W-1:0] CONTROL_MASK={W{1'b0}},HOLD_MASK={W{1'b0}},
  parameter [S-1:0] SIDE_CONTROL_MASK={S{1'b1}},SIDE_HOLD_MASK={S{1'b0}},
- parameter integer MUT=0
+ parameter integer MUT=0,BANK_BITS=0
 )(input wire clk,rst_n,start,input wire[W-1:0] d,input wire[S-1:0] side_d,
  output reg[B-1:0] beat,output reg[S-1:0] side_beat,
  output reg fault,output wire slot0);
@@ -34,6 +34,7 @@ module ot_hbm_static_2beat_tx #(
   else if(start&&!running)begin running<=1;phase<=0;end
   else if(running)begin phase<=~phase;if(bad_phase||start)fault<=1;end
  end
+ generate if(BANK_BITS==0)begin:g_native_payload
  always @(posedge clk)if(running)begin
   if(!phase)begin high_q<=d[W-1:B];beat<=d[B-1:0];side_beat<=side_d;end
   else begin
@@ -44,13 +45,40 @@ module ot_hbm_static_2beat_tx #(
    beat[B-1]<=fault||bad_phase;
   end
  end
+ end else begin:g_banked_payload
+  localparam integer NB=(W+BANK_BITS-1)/BANK_BITS;
+  (* keep = "true", dont_touch = "true" *) reg[NB-1:0] run_b,phase_b;
+  initial if(W!=2341||B!=1171||PAD!=0)$fatal(1,"banked TX supports selected2341/1171 only");
+  for(genvar b=0;b<NB;b=b+1)begin:g_ctrl
+   always@(posedge clk)begin
+    if(!rst_n)begin run_b[b]<=0;phase_b[b]<=0;end
+    else if(start&&!run_b[b])begin run_b[b]<=1;phase_b[b]<=0;end
+    else if(run_b[b])phase_b[b]<=~phase_b[b];
+   end
+  end
+  for(genvar j=0;j<HI;j=j+1)begin:g_high
+   localparam integer K=(B+j)/BANK_BITS;
+   always@(posedge clk)if(run_b[K]&&!phase_b[K])high_q[j]<=d[B+j];
+  end
+  for(genvar j=0;j<HI;j=j+1)begin:g_beat
+   localparam integer K=j/BANK_BITS;
+   always@(posedge clk)if(run_b[K])begin
+    if(!phase_b[K])beat[j]<=d[j];else beat[j]<=high_q[j] ^ ((MUT==1&&j==2)?1'b1:1'b0);
+   end
+  end
+  localparam integer FK=(B-1)/BANK_BITS;
+  always@(posedge clk)if(run_b[FK])begin
+   if(!phase_b[FK])beat[B-1]<=d[B-1];else beat[B-1]<=fault||bad_phase;
+  end
+ end endgenerate
+
 endmodule
 
 module ot_hbm_static_2beat_rx #(
  parameter integer W=3749,B=1875,S=1,LINK_STAGES=0,
  parameter [W-1:0] CONTROL_MASK={W{1'b0}},HOLD_MASK={W{1'b0}},
  parameter [S-1:0] SIDE_CONTROL_MASK={S{1'b1}},SIDE_HOLD_MASK={S{1'b0}},
- parameter integer MUT=0
+ parameter integer MUT=0,BANK_BITS=0
 )(input wire clk,rst_n,start,input wire[B-1:0] beat,input wire[S-1:0] side_beat,
  output wire[W-1:0] q,output wire[S-1:0] side_q,output reg fault);
  localparam integer HI=W-B,PAD=B-HI-1,CW=$clog2(LINK_STAGES+2);
@@ -95,9 +123,39 @@ module ot_hbm_static_2beat_rx #(
    end
   end
  end
+ generate if(BANK_BITS==0)begin:g_native_payload
  always @(posedge clk)if(active)begin
   if((MUT==2)?!phase:phase)begin if(MUT!=1)low_q<=beat;end
   if(!phase&&have_low)begin data_q<=complete_word;side_data_q<=side_beat;end
  end
+ end else begin:g_banked_payload
+  localparam integer NB=(W+B+BANK_BITS-1)/BANK_BITS;
+  (* keep = "true", dont_touch = "true" *) reg[NB-1:0] run_b,phase_b,low_b;
+  (* keep = "true", dont_touch = "true" *) reg[CW-1:0] warm_b[0:NB-1];
+  initial if(W!=2341||B!=1171||PAD!=0)$fatal(1,"banked RX supports selected2341/1171 only");
+  for(genvar b=0;b<NB;b=b+1)begin:g_ctrl
+   always@(posedge clk)begin
+    if(!rst_n)begin run_b[b]<=0;phase_b[b]<=0;low_b[b]<=0;warm_b[b]<=0;end
+    else if(start&&!run_b[b])begin run_b[b]<=1;phase_b[b]<=1'(LINK_STAGES%2);low_b[b]<=0;warm_b[b]<=CW'(LINK_STAGES+1);end
+    else if(run_b[b])begin
+     phase_b[b]<=~phase_b[b];
+     if(warm_b[b]!=0)warm_b[b]<=warm_b[b]-1'b1;
+     else if(phase_b[b])low_b[b]<=1;
+    end
+   end
+  end
+  for(genvar j=0;j<B;j=j+1)begin:g_low
+   localparam integer K=j/BANK_BITS;
+   always@(posedge clk)if(run_b[K]&&warm_b[K]==0)begin
+    if((MUT==2)?!phase_b[K]:phase_b[K])begin if(MUT!=1)low_q[j]<=beat[j];end
+   end
+  end
+  for(genvar j=0;j<W;j=j+1)begin:g_word
+   localparam integer K=(B+j)/BANK_BITS;
+   always@(posedge clk)if(run_b[K]&&warm_b[K]==0&&!phase_b[K]&&low_b[K])data_q[j]<=complete_word[j];
+  end
+  always@(posedge clk)if(active&&!phase&&have_low)side_data_q<=side_beat;
+ end endgenerate
+
 endmodule
 `default_nettype wire

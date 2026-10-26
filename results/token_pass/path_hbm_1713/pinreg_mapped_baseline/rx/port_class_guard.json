@@ -1,0 +1,32 @@
+{
+ "top": "ot_hbm_tkx_2beat_rx_pr",
+ "checked": 3514,
+ "ok": 3514,
+ "fails": {},
+ "flops": {
+  "boot_start": "u_in_boot/q$_DFF_P_",
+  "beat[1170]": "u_in_beat/q[1170]$_DFF_P_",
+  "beat[1169]": "u_in_beat/q[1169]$_DFF_P_",
+  "beat[1168]": "u_in_beat/q[1168]$_DFF_P_",
+  "beat[1167]": "u_in_beat/q[1167]$_DFF_P_",
+  "beat[1166]": "u_in_beat/q[1166]$_DFF_P_",
+  "beat[1165]": "u_in_beat/q[1165]$_DFF_P_",
+  "beat[1164]": "u_in_beat/q[1164]$_DFF_P_",
+  "beat[1163]": "u_in_beat/q[1163]$_DFF_P_",
+  "beat[1162]": "u_in_beat/q[1162]$_DFF_P_",
+  "beat[1161]": "u_in_beat/q[1161]$_DFF_P_",
+  "beat[1160]": "u_in_beat/q[1160]$_DFF_P_",
+  "beat[1159]": "u_in_beat/q[1159]$_DFF_P_",
+  "beat[1158]": "u_in_beat/q[1158]$_DFF_P_",
+  "beat[1157]": "u_in_beat/q[1157]$_DFF_P_",
+  "beat[1156]": "u_in_beat/q[1156]$_DFF_P_",
+  "beat[1155]": "u_in_beat/q[1155]$_DFF_P_",
+  "beat[1154]": "u_in_beat/q[1154]$_DFF_P_",
+  "beat[1153]": "u_in_beat/q[1153]$_DFF_P_",
+  "beat[1152]": "u_in_beat/q[1152]$_DFF_P_"
+ },
+ "straps_exempt": [],
+ "fail_counts": {},
+ "verdict": "PASS",
+ "netlist": "/srv/opentallas-scratch2/claude/codex-hbm-token-1713/pinreg_synth_r1/rx/run/results/asap7/tkx_rx_pr_count/base/1_2_yosys.v"
+}

@@ -1,0 +1,70 @@
+{
+  "status": "PROPOSED_COMPONENT_NOT_PHYSICAL_ADOPTION",
+  "clock_period_ps": 833,
+  "core_clock_domains": 1,
+  "raw_bits": 2341,
+  "beat_bits": 1171,
+  "side_channel_bits": 0,
+  "frame_beats": 2,
+  "fault_header_bits": 1,
+  "padding_bits": 0,
+  "serializer_II": 2,
+  "TKM_producer_II": 8,
+  "producer_raw_bits_per_cycle": 292.625,
+  "channel_peak_bits_per_cycle": 1171,
+  "minimum_signal_tracks": 1171,
+  "tx_boundary_register_bits": 3515,
+  "rx_boundary_register_bits": 3514,
+  "added_boundary_register_bits": 7029,
+  "tx_local_control_banks": 74,
+  "rx_local_control_banks": 110,
+  "bank_payload_FF_max": 32,
+  "tx_control_replica_bits": 148,
+  "rx_control_replica_bits": 660,
+  "added_register_bits": 7838,
+  "tx_added_edges": 2,
+  "rx_added_edges": 2,
+  "added_path_edges": 4,
+  "native_reference_age": 267,
+  "registered_candidate_age": 271,
+  "rx_phase_model_link_stages": 4,
+  "physical_channel_stages": 2,
+  "return_channel_stages": 2,
+  "original_native_mapped_cells": {
+    "tx": 11467,
+    "rx": 13686
+  },
+  "registered_mapped_cells": {
+    "tx": 19086,
+    "rx": 24523
+  },
+  "registered_mapped_FF": {
+    "tx": 6007,
+    "rx": 7693
+  },
+  "mapped_count_profile_link_stages": 2,
+  "strict_pin_guard": {
+    "tx": "3515/3515 PASS",
+    "rx": "3514/3514 PASS"
+  },
+  "measured_phase_FF_Q_fanout": {
+    "tx_max": 7,
+    "rx_max": 4
+  },
+  "routing_and_area": "existing plan endpoint pockets; new mapped counts and face-bank/reach placement still required",
+  "token_cost": {
+    "ds_ar_records": 9,
+    "ds_ar_added_cycles": 36,
+    "ds_ar_base_cycles": 576702.4,
+    "ds_ar_rate_loss_pct": 0.006241998105206797,
+    "qwen_ar_records": 0,
+    "qwen_ar_added_cycles": 0,
+    "scope": "endpoint-only additive price, not the unadopted52edge draft route"
+  },
+  "boot": "boundary cohorts flush under timed delivered reset before explicit boot; actual q3 whole-core reset still pending",
+  "qualification": "component odd/even channel cold/warm temporal gate plus mutants; actual new mapped pin guard and source/netlist LEC required",
+  "mapped_area_um2": {
+    "tx": 2712.609,
+    "rx": 3507.84594
+  }
+}
