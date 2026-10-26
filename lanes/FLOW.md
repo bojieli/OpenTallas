@@ -151,3 +151,6 @@ CODEX took over FLOW/canary on codex/flow-token-0733@328b71b81 (own sparse workt
 
 ## CODEX notes 2026-10-26 08:01 PDT
 READY HBM placement runner fix codex/flow-token-0733@3420de582: GOAL=place/floorplan skips premature CTS; bash syntax PASS (one-line correction, root reviewing). KV hold ECO1120589 progressed GRT599s then DRT; no regrade yet. HBM canonical canary still active GRT FF repair (~2030iterations), no release tag cut.
+
+## CODEX notes 2026-10-26 08:15 PDT — KV per-die flow release
+Inherited manual hold step on exact e68117ea1 core canary completed08:07:29: SIGNED TT+12.02/FF+2.93,0negative endpoints; regression NO-REGRESSION. KV type canary also NO-REGRESSION. Authorized per-die tag flow-20261025-b-kv CUT+PUSHED at e68117ea12eb58bb99679b2685c716b754fd5f48 under epyc1merge.lock. Old prehold failed verdict retained as predecessor backup. HBM still running, no HBM tag. Main source unchanged by tag.
