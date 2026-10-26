@@ -326,7 +326,10 @@ for lev in ("L1", "L2", "L3"):
         rec = dict(edge=nm, level=lev, policy=pol, shortest_um=round(s * G, 2), K=Kl)
         reps = []
         if pol == "wp" and (s < need or lev in CLEAR):
-            assert Kl == 2, f"wp with K={Kl} not implemented"
+            # K = 2: the waypoint is the single cut (unchanged).  K >= 3 (placed-geometry re-plan, su_tree_uf chose 3+
+            # segments): the waypoint sits at one equal cut c*T/K (r3 rule: a detour waypoint coincides with a cut and
+            # carries that cut's repeater); the other K-2 repeaters go at their equal cuts along the walked path.
+            CUTS = [c_ * need / Kl for c_ in range(1, Kl)]
             bestw, cand = None, []
             for i in range(NX + 1):
                 base = i * W
@@ -338,13 +341,18 @@ for lev in ("L1", "L2", "L3"):
                         continue
                     cand.append((i, j, da, db))
             for i, j, da, db in cand:
-                bal = abs(da - db) > 0.25 * need          # leg balance within 25 % of T (stage delay), else last resort
+                if Kl == 2:
+                    bal = abs(da - db) > 0.25 * need          # leg balance within 25 % of T (stage delay), else last resort
+                    dev = abs(da - db)
+                else:
+                    dev = 2 * min(abs(da - c_) for c_ in CUTS)
+                    bal = dev > 0.5 * need / Kl           # same 25 %-of-stage tolerance per segment
                 bc = (0 if (proof_leg(a, (i, j), Da) and proof_leg(b, (i, j), Db)) else 1) if (lev in CLEAR and s >= need - 1) else 0
                 if lev in CLEAR and bestw is not None and bc > bestw[0][0]:
                     continue
                 pth = list(reversed(walk(Da, (i, j)))) + walk(Db, (i, j))[1:]
                 conf = sum(1 for cc in pth if in_pinwin(*xy(cc)))   # GEOM-5 cond 2: keep legs out of the pin-escape bands
-                key = (bc,) + ((bal, conf) if WPKEY == "bal" else (conf, bal)) + (abs(da - db), abs(i - (a[0] + b[0]) / 2) + abs(j - (a[1] + b[1]) / 2))
+                key = (bc,) + ((bal, conf) if WPKEY == "bal" else (conf, bal)) + (dev, abs(i - (a[0] + b[0]) / 2) + abs(j - (a[1] + b[1]) / 2))
                 if bestw is None or key < bestw[0]:
                     bestw = (key, (i, j))
             if bestw is None:
@@ -354,6 +362,23 @@ for lev in ("L1", "L2", "L3"):
             w = bestw[1]
             reps = [w]
             path = list(reversed(walk(Da, w))) + walk(Db, w)[1:]
+            if Kl > 2:                                   # remaining equal cuts on the walked path, ordered a -> b
+                dw = Da[w[0] * W + w[1]]
+                cw = min(range(1, Kl), key=lambda c_: abs(dw - c_ * need / Kl))
+                reps = []
+                for jj in range(1, Kl):
+                    if jj == cw:
+                        reps.append(w)
+                        continue
+                    cc, shf = snap_on(path, round(jj * (len(path) - 1) / Kl))
+                    if cc is None:
+                        rec.update(ok=False, why=f"no legal repeater site near cut {jj}")
+                        break
+                    reps.append(cc)
+                if rec.get("ok") is False:
+                    g4.append(rec)
+                    continue
+                rec["waypoint_cut"] = cw
             planned = need
             rec["waypoint"] = list(xy(w))
             rec["router_proof"] = bool(proof_leg(a, w, Da) and proof_leg(b, w, Db))

@@ -1,0 +1,35 @@
+{
+ "macros": [
+  [
+   "g_bank\\[1\\].u_m",
+   "ot_sram_1r1w_1024x256_m1b2_r2c2_ns",
+   [
+    136.08,
+    38.88,
+    232.632,
+    179.304
+   ],
+   "R0",
+   [
+    136.86,
+    179.292
+   ]
+  ],
+  [
+   "g_bank\\[0\\].u_m",
+   "ot_sram_1r1w_1024x256_m1b2_r2c2_ns",
+   [
+    17.904,
+    38.88,
+    114.456,
+    179.304
+   ],
+   "MY",
+   [
+    113.676,
+    179.292
+   ]
+  ]
+ ],
+ "source": "placed DB dump; orient from the kit fixed sites = plan /srv/opentallas-scratch2/claude/wt/qc-plan-f4a-1026/results/qc_plan_f4a/geo/vmr_f4s.geo.json"
+}

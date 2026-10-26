@@ -1,0 +1,53 @@
+replica proposal: 127 generated-register relations (gold input support modulo copy indices)
+register aliases: 0 same-name / register-output relations proposed
+sequential traces: 4274 registers, 0 constant, 2+48 cycles x 256 lanes
+==== hyp0
+======== ABC command line "&r /lecout/hyp0.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp0_swept.aig"
+[1;37m/lecout/hyp0[0m : i/o =   5177/    718  [1;36mand =    3781[0m  [1;35mlev =   10[0m [1;35m(4.35)[0m  mem = 0.13 MB
+[1;37m/lecout/hyp0[0m : i/o =   5177/    718  [1;36mand =     264[0m  [1;35mlev =    4[0m [1;35m(1.25)[0m  mem = 0.09 MB
+SAT solver statistics:
+CO =      718  AND =      264  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls    224  (100.00 %)   Ave conf =      0.0   Time =     0.01 sec ( 65.15 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.01 sec
+[1;37m/lecout/hyp0[0m : i/o =   5177/    718  [1;36mand =     264[0m  [1;35mlev =    4[0m [1;35m(1.25)[0m  mem = 0.09 MB
+
+correspondence round 0: 718 hypotheses, 224 failed (0 undecided) ['hyp:both:ff:u_dut.g_cext[1].u0.q[0]', 'hyp:bothg:ff:u_dut.g_cext[1].u0.q[0]', 'hyp:both:ff:u_dut.g_cext[1].u0.q[1]', 'hyp:bothg:ff:u_dut.g_cext[1].u0.q[1]', 'hyp:both:ff:u_dut.g_cext[1].u0.q[2]', 'hyp:bothg:ff:u_dut.g_cext[1].u0.q[2]']
+==== hyp1
+======== ABC command line "&r /lecout/hyp1.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp1_swept.aig"
+[1;37m/lecout/hyp1[0m : i/o =   5233/    606  [1;36mand =   10816[0m  [1;35mlev =   12[0m [1;35m(8.13)[0m  mem = 0.21 MB
+[1;37m/lecout/hyp1[0m : i/o =   5233/    606  [1;36mand =    5280[0m  [1;35mlev =   12[0m [1;35m(8.87)[0m  mem = 0.15 MB
+SAT solver statistics:
+CO =      606  AND =     5280  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls    448  (100.00 %)   Ave conf =      0.0   Time =     0.04 sec ( 80.28 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.06 sec
+[1;37m/lecout/hyp1[0m : i/o =   5233/    606  [1;36mand =    5280[0m  [1;35mlev =   12[0m [1;35m(8.87)[0m  mem = 0.15 MB
+
+correspondence round 1: 606 hypotheses, 448 failed (0 undecided) ['hyp:both:ff:u_dut.q[10]', 'hyp:bothg:ff:u_dut.q[10]', 'hyp:both:ff:u_dut.q[11]', 'hyp:bothg:ff:u_dut.q[11]', 'hyp:both:ff:u_dut.q[128]', 'hyp:bothg:ff:u_dut.q[128]']
+==== hyp2
+======== ABC command line "&r /lecout/hyp2.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp2_swept.aig"
+[1;37m/lecout/hyp2[0m : i/o =   5457/    158  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.09 MB
+[1;37m/lecout/hyp2[0m : i/o =   5457/    158  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.09 MB
+SAT solver statistics:
+CO =      158  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/hyp2[0m : i/o =   5457/    158  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.09 MB
+
+correspondence round 2: 158 hypotheses, 0 failed (0 undecided) []
+==== miter
+======== ABC command line "&r /lecout/miter.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/miter_swept.aig"
+[1;37m/lecout/miter[0m : i/o =   5457/   3702  [1;36mand =   11215[0m  [1;35mlev =   39[0m [1;35m(0.98)[0m  mem = 0.27 MB
+[1;37m/lecout/miter[0m : i/o =   5457/   3702  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.14 MB
+SAT solver statistics:
+CO =     3702  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/miter[0m : i/o =   5457/   3702  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.14 MB
