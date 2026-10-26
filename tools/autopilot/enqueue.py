@@ -13,6 +13,10 @@ mode submit (default): the autopilot launches the kit through ot-run once it car
   --geom REQ --geom-ref "<GEOM REQ tag>"       : waits; the tick reads lanes/GEOM-REVIEW.md and submits within one tick
                                                  of a REPLY/VERDICT [<tag>] that names the kit (type, __suffix or sha)
                                                  with PASS/PASS-COND (mixed/unclear verdicts never submit).
+  --geom AUTO --geom-ref "TEMPLATE <tid>"      : AUTO-GEOM (owner 2026-10-25, hub AP_AUTO_GEOM=1 only): a replica of a
+                                                 registered visually passed template (autopilot/geom_templates.tsv) is
+                                                 judged by tools/autopilot/geom_rules.py on its 3_place / 4_cts; PASS
+                                                 routes, FAIL + a 1-in-10 sample go to the visual reviewers.
 mode adopt: the lane already launched the run by hand; the autopilot only watches it (hub ot-run client + containers +
   logs), then classifies, archives SIGNED / renders + records failures, and deletes failed data.
 mode trial (closure order rule 1, owner 2026-10-25): a part of a path whose die gate in lanes/PATH-FREEZE.md is not
@@ -56,7 +60,10 @@ def main(argv=None):
     (r,) = AP.parse_queue(line).values()
     if r["error"]:
         sys.exit(f"enqueue: REFUSED: {r['error']}")
-    if r["geom"].upper() not in AP.GEOM_OK and r["mode"] not in ("adopt", "withdraw"):
+    if r["geom"].upper() == "AUTO":
+        print("enqueue: NOTE geom AUTO: AUTO-GEOM rule check if the kit is a registered template replica, else the row "
+              "waits for a visual GEOM REQ verdict")
+    elif r["geom"].upper() not in AP.GEOM_OK and r["mode"] not in ("adopt", "withdraw"):
         print(f"enqueue: NOTE geom '{r['geom']}' is not PASS: the row waits for a GEOM-REVIEW verdict of tag "
               f"'{AP.geom_tag(r['geom_ref'])}' naming {r['type']} (or a PASS row appended later)")
     if not a.no_commit:

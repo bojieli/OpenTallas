@@ -56,6 +56,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
+import auto_geom as AG  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 HOME = Path.home()
@@ -72,8 +73,8 @@ OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 IMAGE = os.environ.get("AP_IMAGE", "openroad/orfs:asap7lock")
 ARCHIVE_ROOT = "/srv/opentallas-scratch2/claude/autopilot/closed"
 REVIEW_ROOT = "/srv/opentallas-scratch2/claude/autopilot/review"
-MIRROR = {"epyc3": "localhost"}                        # archive mirror host per source host (default epyc3)
-MIRROR_DEFAULT = "epyc3"
+MIRROR = {"intel2": "localhost"}                       # archive mirror host per source host (default intel2)
+MIRROR_DEFAULT = "intel2"                               # EPYC3-RETIRE 2026-10-25: was epyc3 (terminated); intel2 = hub standby
 CELL_CAP = 400_000
 NEAR_WNS_PS = -30.0
 NEAR_DRC_MAX = 50
@@ -93,6 +94,9 @@ WAITS = (None, "WAIT-GEOM", "WAIT-CANARY", "WAIT-PATH-GATE", "WAIT-PLAN-DELTA", 
 # closure order (owner 2026-10-25 18:45): release-tree die key -> path name in lanes/PATH-FREEZE.md
 DIE_PATH = {"s81": "S81", "s81_head": "S81", "cp1": "S81", "qwen_compute": "QC", "qwen_kvsys": "KV", "hbm": "HBM"}
 GATE_ITEMS = ("GRT0", "CLOCK-ROUTE", "PATH-STA")
+# Rule 1 amendment (owner 2026-10-25 ~21:00): 'FROZEN <NAME> plan@sha' in lanes/PATH-FREEZE.md freezes that DIE's plan and
+# ALL its tiles (path and non-path) route to sign-off.  FROZEN name -> release-tree die key (explicit, no guessing):
+FROZEN_DIE = {"QC": "qwen_compute", "S81-HEAD": "s81_head", "S81": "s81", "KV": "qwen_kvsys", "HBM": "hbm"}
 TSV_HEAD = {
     "signed.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\tmirror\ttt_wns_ps\tff_wns_ps\tlane\tsrc_commit\tflow_tag",
     "unversioned.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\ttt_wns_ps\tff_wns_ps\twhy\tlane",
@@ -101,7 +105,9 @@ TSV_HEAD = {
     "structural.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tlane",
     "provisional.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tlocal_verdict\treasons\tlane",
     "geom_alerts.tsv": "time\tid\tdie\ttype\tsrc\tkit\tstatus\tunit\tgeom_was\tverdict\tlane",
+    AG.AG_TSV: AG.AG_HEAD,
 }
+GEOM_TEXT = ""                                         # lanes/GEOM-REVIEW.md of this tick (AUTO-GEOM revocation)
 DRY = False
 
 
@@ -382,6 +388,27 @@ if not r:
         c = sorted(glob.glob(os.path.join(d, "run_kit*.sh")))
         if c: r = c[0]; break
 out["runner"] = r if r and os.path.isfile(r) else ""
+# CRASH-TRIAGE 10-25 (4 rows: dsfd_qbank_N, SRAMIF btab_s8/prog_s8b/rp1_f62): the kit's signoff.py was copied without
+# the helpers it reads/imports -> the route finished and sign-off died (FileNotFoundError / ModuleNotFoundError).
+def _txt(p):
+    try:
+        with open(p, errors="replace") as f: return f.read()
+    except Exception: return ""
+st = _txt(os.path.join(K, "signoff.py"))
+need = {"pair_skew.tcl": '"pair_skew.tcl"' in st, "sdc_lint.py": "import sdc_lint" in st,
+        "face_guard.py": "import face_guard" in st, "io_hold_qualification.py": "io_hold_qualification import" in st}
+out["signoff_missing"] = sorted(n for n, v in need.items() if v and not os.path.isfile(os.path.join(K, n)))
+# the goals on which the runner runs signoff.py (the 'if' guarding the signoff.py call); macro kits without GDS
+rt = _txt(out["runner"]).splitlines() if out["runner"] else []
+goals = set()
+for i, line in enumerate(rt):
+    if "signoff.py" in line and not line.lstrip().startswith("#"):
+        for w in rt[max(0, i - 3):i + 1]:
+            goals.update(re.findall(r'\$\{?GOAL\}?"?\s*=\s*"?(\w+)', w))
+out["signoff_goals"] = sorted(goals)
+out["route_runs_finish"] = any("do-finish" in l and "route" in l for l in rt)
+cfg = _txt(os.path.join(K, "config.mk"))
+out["gds_gap"] = bool(re.search(r"^export ADDITIONAL_LEFS", cfg, re.M)) and "ADDITIONAL_GDS" not in cfg
 done()
 '''
 
@@ -432,7 +459,9 @@ alltxt = txt + "\n" + runlog
 out["runlog_tail"] = runlog[-600:]
 pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*",
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
-       "oom": r"Error 137[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
+       "oom": r"Error 137[^\n]*|\] Error 247[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
+       # design gates that print their verdict but write no FAIL_PREFLOOR/FAIL_POSTCTS marker (custom runners)
+       "gate_fail": r"(?m)^(?:CORE_PREFLIGHT|RP1_GATE|SDC_LINT|S6_GRT_GATE|OT_HOLD_GATE) FAIL\b[^\n]*",
        "orfs_error": r"\[ERROR [A-Z]+-\d+\][^\n]*"}
 for k, p in pat.items():
     m = re.search(p, alltxt)
@@ -573,6 +602,10 @@ def classify(c, client):
         return "STRUCTURAL", "grt-overflow", c["congestion"]
     if c.get("cells", 0) > CELL_CAP:
         return "STRUCTURAL", "cell-cap", f"{c['cells']} std cells > {CELL_CAP}"
+    if c.get("gate_fail"):
+        # CRASH-TRIAGE 10-25: 8 rows (CORE_PREFLIGHT shared, RP1_GATE FF hold, SDC_LINT) were design verdicts
+        # filed as CRASH because the runner printed the gate line without a FAIL_* marker file
+        return "STRUCTURAL", "gate", c["gate_fail"]
     if c.get("segfault"):
         return "CRASH", "tool-segfault", c["segfault"]
     if client.get("not_run"):
@@ -586,6 +619,9 @@ def classify(c, client):
                                         "placement / clock / reset images and review before the next scope")
     if client.get("exit") == 0:
         return "CRASH", "no-signoff", "flow exit 0 but no signoff.json"
+    if client.get("exit") is None and not c.get("last_log") and not c.get("runlog_tail"):
+        # adopted run that was not live and left no logs: nothing ran here, not a flow error
+        return "CRASH", "infra-lost", "no client exit and no run logs (adopted run not live / run data gone)"
     return "CRASH", "flow-error", c.get("orfs_error") or (c.get("runlog_tail") or "")[-300:] or f"exit {client.get('exit')}"
 
 
@@ -715,6 +751,20 @@ def poll_adopted(st, j):
 
 def default_goal(runner):
     return "route" if os.path.basename(runner) == "run_kit.sh" else "finish"
+
+
+def runner_goal(goal, p):
+    """CRASH-TRIAGE 10-25: the goal the runner actually signs off on.  gq_rk19 ran GOAL=route through run_kit_hbm.sh
+    (sign-off only on finish/post) -> 'flow exit 0 but no signoff.json'; elemB_cv / s81sl_vq ran GOAL=finish = ORFS
+    'make finish' = GDS merge of macro LEFs without GDS -> crash after the route.  cts stays cts."""
+    sg = p.get("signoff_goals") or []
+    if goal == "cts" or not sg:
+        return goal
+    if goal == "finish" and p.get("gds_gap") and "route" in sg and p.get("route_runs_finish"):
+        return "route"
+    if goal not in sg:
+        return "route" if "route" in sg else "finish" if "finish" in sg else goal
+    return goal
 
 
 def submit(st, j, attempt_note=""):
@@ -867,10 +917,21 @@ def path_of(r):
     return None
 
 
+def die_frozen(die):
+    """the FROZEN line of the die's plan when lanes/PATH-FREEZE.md freezes it (no later FAIL gate line of that name)"""
+    gates = CLOSURE.get("gates", {})
+    for name, key in FROZEN_DIE.items():
+        g = gates.get(name)
+        if key == die and g and g.get("frozen"):
+            return g.get("frozen_line") or name
+    return ""
+
+
 def path_gate_hold(r):
-    """'' when the path part may route to sign-off, else why it is limited to trial builds"""
+    """'' when the path part may route to sign-off, else why it is limited to trial builds.  A row whose DIE is FROZEN
+    passes regardless of its path (rule 1 amendment: e.g. s81_head rows on path S81 once 'FROZEN S81-HEAD' is recorded)"""
     path = path_of(r)
-    if not path:
+    if not path or die_frozen(r.get("die") or ""):
         return ""
     g = CLOSURE.get("gates", {}).get(path)
     if g and g["pass"]:
@@ -1088,6 +1149,15 @@ def admit_new(st, rows):
                 log(f"REJECT queue line {r['line']} ({r['kit']}): {r['error']}")
                 set_status(st, j, "REJECTED", r["error"])
             continue
+        if r["mode"] != "adopt" and r["geom"].upper() == "AUTO":
+            # AUTO-GEOM (owner 2026-10-25): a registered template replica gets the rule check; the verdict is
+            # applied by AG.prepare on the next tick (PASS -> submit, FAIL -> visual REQ on its AUTO-GEOM tag)
+            note = AG.step(sys.modules[__name__], st, r, GEOM_TEXT)
+            j = st["jobs"].setdefault(rid, dict(r))
+            if j.get("status") != "WAIT-GEOM" or j.get("auto_geom_note") != note:
+                j["auto_geom_note"] = note
+                set_status(st, j, "WAIT-GEOM", note)
+            continue
         if r["mode"] != "adopt" and (r["geom"].upper() not in GEOM_OK or not r["geom_ref"]):
             if not j:
                 j = st["jobs"][rid] = dict(r)
@@ -1144,6 +1214,9 @@ def admit_new(st, rows):
                "enqueue a fresh kit" if p.get("routed") or p.get("signoff_dirs") else
                f"kit carries {'+'.join(p['fail_marks'])} from an earlier run; enqueue a fresh kit"
                if p.get("fail_marks") else "no run_kit*.sh runner found" if not p.get("runner") else "")
+        if not why and p.get("signoff_missing") and r.get("goal") != "cts":
+            why = (f"kit signoff.py lacks {', '.join(p['signoff_missing'])} (sign-off would crash after the route); "
+                   "stage the whole bundle: tools/die_plan/signoff.py copy_signoff_bundle(kit)")
         if r["mode"] == "adopt":
             why = "kit dir missing" if not p["exists"] else "no config.mk" if not p.get("config") else ""
         busy = p.get("busy") is not False or (la is not None and la < 900) or bool(hub_procs(r["path"]))
@@ -1163,6 +1236,11 @@ def admit_new(st, rows):
             j["trial"] = trial_why                        # rule 1: never recorded as a sign-off
         if j.get("goal") in ("", "auto", None):
             j["goal"] = default_goal(p["runner"])
+        g = runner_goal(j["goal"], p)
+        if g != j["goal"]:
+            log(f"GOAL {rid} {r['die']}/{r['type']}: {j['goal']} -> {g} (runner signs off on "
+                f"{'/'.join(p.get('signoff_goals') or [])}{'; no ADDITIONAL_GDS for macros' if p.get('gds_gap') else ''})")
+            j["goal"] = g
         if j.get("mode") == "adopt":
             adopt(st, j, p)
             continue
@@ -1463,6 +1541,9 @@ def tick(args):
     st = load_state()
     rows = parse_queue(read_queue_text())
     geom_text = read_coord("lanes/GEOM-REVIEW.md")
+    global GEOM_TEXT
+    GEOM_TEXT = geom_text
+    AG.prepare(sys.modules[__name__], st, rows)
     resolve_geom(rows, geom_text)
     load_closure()
     poll_running(st)
@@ -1518,6 +1599,7 @@ def write_loop_gaps(st, rows, geom_text):
     gaps += LG.gaps_review(trows, lane_texts, geom_text, now)
     gaps += LG.gaps_ready(read_coord("lanes/COORD-REVIEW-QUEUE.md"), now)
     gaps += LG.gaps_geom_ambiguous(geom_text, geom_groups(rows), now)
+    gaps += AG.gaps(st, now)
     cleared = LG.geom_fail_cleared(read_coord("autopilot/resolved.tsv"), read_coord("lanes/COORD-REVIEW-QUEUE.md"))
     for j in jobs:                                     # oldest-first render; keeps the line while the run is live
         if j["id"] in cleared and (cleared[j["id"]] is None or cleared[j["id"]] >= (j.get("geom_fail_alert_t") or 0)

@@ -143,10 +143,10 @@ PORT_Y1 = [
 CLONES = [
     # (file, original module, clone name, [(old, new), ...], [kept copy families])
     (FAN, 'qkd_static_kv_pc_path_fan_nc_b', 'qkd_kvpc_s_fan_nc_b',
-     [('qkd_static_kv_pc_path_emb_nc_b #(.MU(MU)) u_pce (', 'qkd_kvpc_s_emb_nc_b #(.MU(MU)) u_pce ('),
+     [('qkd_static_kv_pc_path_emb_nc_b #(.MU(MU),.CORE_CLOCK(CORE_CLOCK)) u_pce (', 'qkd_kvpc_s_emb_nc_b #(.MU(MU),.CORE_CLOCK(CORE_CLOCK)) u_pce ('),
       ('    qkd_kv_pc_chain_station_b u_chain (', '    qkd_kvpc_s_chain u_chain (')]),
     (FAN, 'qkd_static_kv_pc_path_emb_nc_b', 'qkd_kvpc_s_emb_nc_b',
-     [('qkd_static_kv_pc_path_nc #(.MU(MU)) u_path (', 'qkd_kvpc_s_path_nc #(.MU(MU)) u_path ('),
+     [('qkd_static_kv_pc_path_nc #(.MU(MU),.CORE_CLOCK(CORE_CLOCK)) u_path (', 'qkd_kvpc_s_path_nc #(.MU(MU),.CORE_CLOCK(CORE_CLOCK)) u_path ('),
       ('    qkd_static_kv_pc_es_merge_b u_esm (', '    qkd_kvpc_s_esm u_esm (')]),
     (PATH, 'qkd_static_kv_pc_path_nc', 'qkd_kvpc_s_path_nc',
      [('qkd_ctrl_pc_host_static_nc #(', 'qkd_kvpc_s_ctrl #('),
