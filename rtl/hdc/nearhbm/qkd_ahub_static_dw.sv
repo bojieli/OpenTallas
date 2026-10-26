@@ -478,19 +478,25 @@ module qkd_ahub_static_core_la #(
     reg [15:0] lm_seen;
     reg [3:0] done_seen;
     always @(posedge clk or negedge rn[1])
-        if(!rn[1])begin lany<=0;lm_seen<=0;done_seen<=0;zseen[0]<=0;zseen[1]<=0;end
-        else if(start_b)begin lany<=0;lm_seen<=0;done_seen<=0;zseen[0]<=0;zseen[1]<=0;end
+        if(!rn[1])begin lany<=0;lm_seen<=0;done_seen<=0;end
+        else if(start_b)begin lany<=0;lm_seen<=0;done_seen<=0;end
         else begin
             for(integer a=0;a<4;a=a+1)begin
                 if(lm_b[a])begin lany[4*a+hh_b[2*a+:2]]<=any_b[a];lm_seen[4*a+hh_b[2*a+:2]]<=1;end
                 if(done_slot[a])done_seen[a]<=1;
-                if(z_b[a] && !hh_b[2*a+1])zseen[hh_b[2*a+:2]][{1'b0,k_b[4*a+:4],2'(a)}]<=1;
             end
         end
-    always @(posedge clk or negedge rn[4])
-        if(!rn[4])begin zseen[2]<=0;zseen[3]<=0;end
-        else if(start_b)begin zseen[2]<=0;zseen[3]<=0;end
-        else for(integer a=0;a<4;a=a+1)if(z_b[a] && hh_b[2*a+1])zseen[hh_b[2*a+:2]][{1'b0,k_b[4*a+:4],2'(a)}]<=1;
+    // Each static bank has exactly one procedural driver. The prior two dynamic array writes were
+    // mutually exclusive by hh_b[1], but slang retained a second self-held FF for the other half.
+    for (genvar bank = 0; bank < 4; bank = bank + 1) begin : g_zseen_bank
+        wire bank_rst_n = rn[(bank < 2) ? 1 : 4];
+        always @(posedge clk or negedge bank_rst_n)
+            if (!bank_rst_n) zseen[bank] <= 0;
+            else if (start_b) zseen[bank] <= 0;
+            else for (integer a = 0; a < 4; a = a + 1)
+                if (z_b[a] && hh_b[2*a +: 2] == 2'(bank))
+                    zseen[bank][{1'b0, k_b[4*a +: 4], 2'(a)}] <= 1;
+    end
     always @(posedge clk)for(integer a=0;a<4;a=a+1)if(lm_b[a])lm[4*a+hh_b[2*a+:2]]<=data_b[32*a+:32];
     always @(posedge clk or negedge rn[0])if(!rn[0])zh_start<=0;else zh_start<={4{start_b}};
     always @(posedge clk)begin
