@@ -1,0 +1,19 @@
+{
+  "scope": "Explicit selected PORTFIX/IDXNET providers for the existing bind178 structural top; no default RTL selection or physical view adoption.",
+  "sources": [
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_seqhost_mux.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_hostb_seqhost_mux.sv",
+      "sha256": "84cc15d882c4d7fbd7b19931fd74a86455b4471da81c6357dbacaeaa4f52b8f5",
+      "origin_commit": "4460aee667",
+      "actual_frozen_650_identical": true
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv",
+      "sha256": "47dfc9031ac3f2d0ec0fd176ea1d72e4c1fb4ad42e4c913b62ea0e75903dbedc",
+      "origin_commit": "4460aee667",
+      "actual_frozen_650_identical": true
+    }
+  ]
+}
