@@ -9,10 +9,21 @@ set -euo pipefail
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 O=$(realpath -m "$1"); IMG=$2; JOBS=${JOBS:-8}   # absolute: the tb link runs inside $O/obj
 source tools/s81_dv/svc_rs/rs_files.sh
+PROFILE=${SVC_ENGINE_PROFILE:-closing}
+case "$PROFILE" in
+ closing)
+  ENGDEF=()
+  RS_DEF+=(-DOT_SVC_ALLQ -DOT_ATTN_HCORE -DOT_S81C_HCORE_CTLA -DOT_S81C_HCORE_RST_TIMED)
+  RS_SRC+=(rtl/hdc/v41x/ot_s81c_attn_hcore.sv)
+  ;;
+ legacy_fg3) ENGDEF=(-DSVCQ_ENG_FG3);;
+ *) echo "unknown SVC engine profile $PROFILE" >&2;exit 2;;
+esac
+O=${O}_${PROFILE} # qualified libraries are never reused across source profiles
 mkdir -p "$O"
 "$VL" --version > "$O/verilator.version"
 COMMON=(-Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --output-split 20000 --output-split-cfuncs 2000 -fno-inline
-        --unroll-count 16 --unroll-limit 131072 -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS -O1 -I$D -DRS_OBS -DSVCQ_ENG_FG3
+        --unroll-count 16 --unroll-limit 131072 -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS -O1 -I$D -DRS_OBS "${ENGDEF[@]}"
         "${RS_DEF[@]}" -DMUT=0 ${MUTDEF:+-D$MUTDEF} ${SVC_DEFS:-})   # SVC_DEFS: e.g. -DOT_SVC_ALLQ (RTLGAP-SO)
 lib() {
   local L=$O/pl_$1
@@ -31,6 +42,7 @@ if [ ! -x "$O/obj/Vtb_svc_lower" ]; then
     || { tail -30 "$O/build_tb.log"; exit 1; }
   echo "build done $(date)"
 fi
+printf "%s\n" "$PROFILE" > "$O/engine_profile.txt"
 sha256sum "${RS_SRC[@]}" rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv $D/dsdv_svc_rs_roles.svh $D/dsdv_svc_sx_roles.svh $TB \
   tools/s81_dv/svc_rs/rs_files.sh tools/s81_dv/layer_prog/svc/run_svc_bench.sh > "$O/sources.sha256"
 run() {  # $1 image, $2 seed
