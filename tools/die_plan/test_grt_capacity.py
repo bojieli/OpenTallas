@@ -28,6 +28,20 @@ def test_impossible_reduction_rejected_without_diagnostic_id():
     assert not r['capacity_valid'] and 'GRT-CAPACITY-UNDERFLOW' in r['errors']
 
 
+def test_grt_0113_actual_warning_and_missing_numeric_detail_fail_closed():
+    # Actual die-ft-hbm/band5/kit/grt/grt.log warning. Its full numeric form
+    # was caught by the fallback; the ID must also protect partial log formats.
+    warning='[WARNING GRT-0113] Underflow in reduce: cap, reducedCap: 0, 65520\n'
+    for diagnostic in (warning, '[WARNING GRT-0113] Underflow in reduce\n'):
+        r=g2.parse_grt(diagnostic+CLEAN)
+        assert 'GRT-0113' in r['errors']
+        assert not r['capacity_valid'] and not r['done']
+        assert r['reported_total_overflow']==0 and r['total_overflow'] is None
+        assert not g2.probe_passes(r)
+    # Warning removal changes only invalidity, not the printed congestion.
+    assert g2.probe_passes(g2.parse_grt(CLEAN))
+
+
 def test_legitimate_capacity_reduction_and_large_net_number_are_not_rejected():
     r=g2.parse_grt('[INFO GRT] cap, reducedCap: 80, 48\nnet65480 route\n'+CLEAN)
     assert r['capacity_valid'] and g2.probe_passes(r)
