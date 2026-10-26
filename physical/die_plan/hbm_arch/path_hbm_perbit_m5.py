@@ -65,7 +65,12 @@ def repair_type(raw,tn):
             k=round((bound-alloc.ox-CELL[0]/2)/alloc.cp)
             cols.update(range(max(alloc.ix0,k-2),min(alloc.ix1,k+2)+1))
     xs=np.array([alloc.ox+k*alloc.cp+CELL[0]/2 for k in sorted(cols)])
-    ys=np.arange(8.64,h-4.32,8.64)
+    rows=set(range(alloc.iy0,alloc.iy1+1,32))
+    for a,b,c,d in boxes:
+        for bound in (b-CELL[1]/2,d+CELL[1]/2):
+            k=round((bound-alloc.oy-CELL[1]/2)/alloc.rp)
+            rows.update(range(max(alloc.iy0,k-2),min(alloc.iy1,k+2)+1))
+    ys=np.array([alloc.oy+k*alloc.rp+CELL[1]/2 for k in sorted(rows)])
     x,y=np.meshgrid(xs,ys);targets=np.column_stack((x.ravel(),y.ravel()))
     ok=np.ones(len(targets),bool)
     for a,b,c,d in boxes:
@@ -107,7 +112,10 @@ def repair_type(raw,tn):
 
 
 def main():
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--types',required=True);ap.add_argument('--bank-corridors',action='store_true');a=ap.parse_args()
+    global REACH
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--src',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--types',required=True);ap.add_argument('--bank-corridors',action='store_true');ap.add_argument('--reach-budget',type=float,default=323.0);a=ap.parse_args()
+    if not 0<a.reach_budget<=403:raise SystemExit('reach budget must be in(0,403]')
+    REACH=a.reach_budget
     if a.out.exists():raise SystemExit('output must be new')
     raw=json.loads((a.src/'die_plan.json').read_text());before=S.Plan(copy.deepcopy(raw));rep={}
     if a.bank_corridors:
@@ -115,10 +123,13 @@ def main():
         # Origins preserve M4/M5 track phases (0.192um common lattice).
         # Narrow strips include actual row-legal FF columns, not grid centroids.
         t=raw['partition_types']['q_b100']
-        for c in t['hard_cores']:
+        for c in (t['hard_cores'] if 'q_b100' in a.types.split(',') else []):
             col=round((c['origin_um'][0]-8.64)/233.28)
             c['origin_um'][0]=[14.592,256.512,498.432][col]
             c['origin_um'][1]=round(c['origin_um'][1]+17.28,6)
+        if 'q_b110' in a.types.split(','):
+            cores=sorted(raw['partition_types']['q_b110']['hard_cores'],key=lambda c:c['origin_um'][1])
+            for c,y in zip(cores,[86.4,457.92,829.44,1200.96]):c['origin_um'][1]=y
     shutil.copytree(a.src,a.out)
     try:
         for tn in a.types.split(','):rep[tn]=repair_type(raw,tn)
