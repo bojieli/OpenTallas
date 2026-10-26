@@ -1,0 +1,18 @@
+CENSUS_ALL TT max n 5253 worst 73.92 bounded 0 u_twd1/q[138]$_DFF_P_ -> g_prog[1].g_r.u_lo_wd/q[138]$_DFF_P_
+CENSUS_ALL TT min n 5253 worst 61.1 bounded 0 u_twd1/q[110]$_DFF_P_ -> g_prog[1].g_r.u_lo_wd/q[110]$_DFF_P_
+CENSUS_MACRO TT to_macro NA max n 986 damage max 60.05 min 3.61
+CENSUS_MACRO TT to_macro NA min n 986 damage max 11.19 min -34.02
+CENSUS_MACRO TT from_macro NA max n 914 damage max 10.14 min -24.31
+CENSUS_MACRO TT from_macro NA min n 914 damage max 44.76 min 9.23
+CENSUS_PDN TT VDD result 1
+CENSUS_PDN TT VSS result 1
+CENSUS_DONE TT
+CENSUS_ALL FF max n 5253 worst 72.12 bounded 0 u_twd1/q[138]$_DFF_P_ -> g_prog[1].g_r.u_lo_wd/q[138]$_DFF_P_
+CENSUS_ALL FF min n 5253 worst 63.35 bounded 0 ptw_d1[138]$_DFF_P_ -> u_twd1/q[138]$_DFF_P_
+CENSUS_MACRO FF to_macro NA max n 986 damage max 47.83 min -13.81
+CENSUS_MACRO FF to_macro NA min n 986 damage max 25.08 min -27.19
+CENSUS_MACRO FF from_macro NA max n 914 damage max 27.02 min -13.44
+CENSUS_MACRO FF from_macro NA min n 914 damage max 32.81 min -16.07
+CENSUS_PDN FF VDD result 1
+CENSUS_PDN FF VSS result 1
+CENSUS_DONE FF
