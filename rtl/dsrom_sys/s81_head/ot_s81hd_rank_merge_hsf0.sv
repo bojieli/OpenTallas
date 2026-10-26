@@ -9,7 +9,7 @@ module ot_s81hd_rank_merge_hsf0 # (parameter integer MUT_ROW=0)(
  input wire ov_p,input wire[80:0] orec_d,
  input wire[5:0] mrx_v,input wire[6*553-1:0] mrx_d,
  output wire valid,output wire[48:0] row_bits,output wire[30:0] identity,
- output wire tag_fault,copy_fault,nan_fault,output wire[6:0] overwrite
+ output wire tag_fault,copy_fault,nan_fault,check_valid,output wire[6:0] overwrite
 );
  localparam integer FW=553;
  localparam[3:0]T_BEST=1;
@@ -63,6 +63,7 @@ module ot_s81hd_rank_merge_hsf0 # (parameter integer MUT_ROW=0)(
  assign valid=mg4;
  assign row_bits=mg_rb ^ (MUT_ROW ? 49'd1 : 49'd0);
  assign identity=mg_t;
+ assign check_valid=mg1;
  assign tag_fault=mchk_tag;assign copy_fault=mchk_cpy;
  assign nan_fault=mchk_nan;assign overwrite=sl_ovw;
 endmodule
