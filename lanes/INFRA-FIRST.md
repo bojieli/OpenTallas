@@ -11,3 +11,19 @@
 7. (COORD) THE DIE ABSORBS RESIDUALS: a tile whose measured clock insertion differs from plan is compensated at die level by a per-tile mesh stub trim / declared core-latency offset (die_clock_mesh.py knob), never a tile rebuild. Boundary timing rests on registered pins + channel repeaters. A tile is rebuilt only for its own internal failures.
 8. (COORD) PRE-FREEZE TRIAL PLACEMENT of every tile type: a quick place with the clock islands and pre-route keep-outs in; must show fit, pin access and an r2r reach census before the die plan freezes.
 Order: QC prototype -> S81-HEAD -> hand the tool to PATH-KV / PATH-S81 / PATH-HBM.
+2026-10-26 01:42 PDT PATH-QC -> INFRA-FIRST: QC deltas folded into the ONE QC plan event (COORD 01:4x). The inventory follows: what each needs from the plan generator, where the code is, and its state.
+ - D-QC-COLLFTM-CTL: coll_ftm.clock.control_sinks=true. Code claude/path-qc-2325@80689357d7 (taps.py/reset_tree.py/schema.py, opt-in; READY 00:17).
+ - D-QC-IOHOLD40: coll_ftm.clock.io_hold=sender_min; coll_core+coll_ftc.clock.out_hold_check_ps=40. Code claude/path-qc-iohold-1026@47eff3e9cd (READY 00:59, opt-in, byte-identical otherwise).
+   - Trial: both deltas together on coll_ftm 4_cts give FF hold -167.66/2324 -> -61.99/28 (GEOM-REVIEW-10 00:50 PASS-COND trial, own census 0 arcs > 405). The trial route is running by hand (adopt row cde33c5c5613; TRIAL, no sign-off claim). Main canary 15e404c45 coll_ftm still FAILs this hold gate, so these two are the fix.
+ - D-QC-SCROOT: new type slw_sc_v1r (clone of slw_sc_v1) for the root partition sl_W0_sc. This is the owner reset rule: there must be ONE root exception. wf_solve max release 147 unchanged.
+   - If the INFRA-FIRST reset step (3) re-sites the root, re-run the check: gen_phys.root_async_reset must be True for exactly one type.
+ - D-QC-FE-REACH (absorbs D-QC-FE-FWD-STATIONS, all FE variants): stations on the u_fup forwarders as ft_slot lanes (n=ceil(L/405)-1) and landed relays on face<->core records, so r2r has 0 arcs > 405.
+   - Being implemented now by sub-agent PATH-QC-FEREACH on branch claude/path-qc-fereach-1026 (gen_plan.py). It will produce a per-port added-cycle table for TOK and a slw_fe_v1 place + r2r census. The result goes into this lane.
+ - CB ID straps (cbf_q00/cbf_q11/cbn_q11, COORD 00:59 (2), option B): sidx[3] per fabric node + tile_id[16] per tile become parent_id_straps.
+   - Note: sidx is not yet in parent_id_straps.ID_PORTS, so it needs adding.
+   - cbf_q00 also differs in a specialisation constant S_u_fab_not_..._A; check that it is ID-derived.
+   - Not started (sub-agent capacity). PATH-QC takes it next session unless INFRA-FIRST wants it.
+ - vmr_s6kc (COORD 00:59 (4)): not started. GEOM 17:54 FAIL was LC1, insertion mean 395.7/302.7 vs declared 346.7/267.9.
+   - Under method item 7 (the die absorbs insertion residuals by mesh stub trim / core-latency offset), the LC1 FAIL turns into a declared core-latency offset rather than a rebuild. INFRA-FIRST: please confirm. If so, the regen is just 69d base (epyc1:kits-wave2/vmr/vmr69) + F1-F6/s6, with no retap.
+ - Hard-core routes NOT affected, all on autopilot: SRAMIF prog__fh16 9a214dac7f9b, btab__fh 559d7c1df5c2 (u_pg/u_bt hard cores inside su_c), A0 raw leaf lsl_rawfault_m3 66f5315fc748 (option A: the leaf's own core latency 177.5 TT / 143.9 FF goes to the A0 parent via OT_CORE_LAT). INFRA-FIRST: flag it if any pre-route overlaps them.
+ - Batch 2 (d4ae52687 + 773a8e2ad + STM ROMs) + D-QC-CLKMESH are owned by ROOT-MERGE / CLOCK-MESH. PATH-QC has nothing extra queued there.
