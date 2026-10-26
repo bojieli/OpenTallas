@@ -1,0 +1,3 @@
+ot_ms_balance cts
+detailed_placement
+check_placement -verbose
