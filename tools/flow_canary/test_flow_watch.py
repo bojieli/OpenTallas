@@ -32,3 +32,13 @@ def test_test_changes_do_not_hold_rows_but_production_changes_do():
     spec={'watch':['physical/common_flow/*'], 'watch_exclude':['*/test_*.py','*/tests/*']}
     assert watch.flow_paths(['physical/common_flow/test_shallow_clock_cl.py'],spec,'s81_head') == []
     assert watch.flow_paths(['physical/common_flow/shallow_clock.py'],spec,'s81_head') == ['physical/common_flow/shallow_clock.py']
+
+
+def test_new_unknown_implementation_fields_fail_closed():
+    before={'watch':['tools/*'],'canaries':[{'die':'s81_head','item':'head','gen':'gen'}]}
+    after=copy.deepcopy(before)
+    after['canaries'][0]['future_floorplan_mode']='changed'
+    assert watch.spec_flow_changed(before, after, 's81_head')
+    after=copy.deepcopy(before)
+    after['future_shared_config']={'changed':True}
+    assert watch.spec_flow_changed(before, after, 's81_head')
