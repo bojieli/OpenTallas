@@ -88,5 +88,62 @@ class GeneratedKit(unittest.TestCase):
         self.assertLess(post.index("post_grt_drv.tcl"), post.index("source /work/grt_post.tcl"))
 
 
+
+def _lef(pins_e, pins_w=0, w=172.824, h=41.064, pitch=0.096):
+    out = [f"MACRO m\n  CLASS BLOCK ;\n  SIZE {w} BY {h} ;"]
+    for i in range(pins_e):
+        y = 0.768 + i * pitch
+        out.append(f"  PIN e{i}\n    DIRECTION INPUT ;\n    PORT\n      LAYER M4 ;\n        RECT {w - 0.024:.3f} {y:.3f} {w:.3f} {y + 0.024:.3f} ;\n    END\n  END e{i}")
+    for i in range(pins_w):
+        y = 0.768 + i * 2.0
+        out.append(f"  PIN w{i}\n    DIRECTION INPUT ;\n    PORT\n      LAYER M4 ;\n        RECT 0.000 {y:.3f} 0.024 {y + 0.024:.3f} ;\n    END\n  END w{i}")
+    out.append("  PIN VDD\n    USE POWER ;\n    PORT\n      LAYER M4 ;\n        RECT 0 0 0.024 41 ;\n    END\n  END VDD\nEND m")
+    return "\n".join(out)
+
+
+class SramPinColumnHalo(unittest.TestCase):
+    """QC-SU-SRAMHALO: strips in front of dense pin columns only, depth = halo + rho*turn*p_v/fill, orientation-aware"""
+
+    def test_blockage_rects_leave_row_end_endcap_column(self):
+        # the cut rows beside the macro end at the rows halo with a fixed TAPCELL endcap; no blockage rect may cover it
+        s = G.pincol_halo_strips(_lef(410), [(90.72, 86.4, "R0")], 4.32)[0]
+        x0, y0, x1, y1 = s["rect"]
+        area = sum((q[2] - q[0]) * (q[3] - q[1]) for q in s["rects"])
+        cy = [round(86.4 - 4.32 + k * 0.27, 3) for k in range(int((s["macro_rect"][3] - 86.4 + 8.64) / 0.27))]
+        ex = s["macro_rect"][2] + 4.32 + 0.03                    # endcap origin as snapped by tapcell (prog L2h)
+        for q in s["rects"]:
+            for y in cy:
+                self.assertFalse(q[0] < ex + 0.108 and q[2] > ex and q[1] < y + 0.27 and q[3] > y, (q, y))
+        self.assertLess(area, (x1 - x0) * (y1 - y0))
+        self.assertGreater(area, 0.95 * (x1 - x0) * (y1 - y0))
+
+    def test_dense_column_depth_and_corner_extension(self):
+        s = G.pincol_halo_strips(_lef(410), [(90.72, 86.4, "R0")], 4.32)
+        self.assertEqual(len(s), 1)
+        st = s[0]
+        self.assertEqual(st["edge"], "E")
+        rho = 410 / (409 * 0.096)   # pins / column span
+        self.assertAlmostEqual(st["ext_um"], rho * 4.32 * 0.036 / 0.6, places=3)
+        self.assertGreaterEqual(st["depth_um"], 4.32 + st["ext_um"])
+        self.assertAlmostEqual(st["depth_um"] / 0.054, round(st["depth_um"] / 0.054), places=6)
+        x0, y0, x1, y1 = st["rect"]
+        self.assertAlmostEqual(x0, 90.72 + 172.824, places=4)
+        self.assertAlmostEqual(x1 - x0, st["depth_um"], places=4)
+        self.assertLess(y0, 86.4 + 0.78 - st["depth_um"] + 1e-6)   # extended past the column ends (corner junction)
+
+    def test_sparse_column_and_power_ignored(self):
+        s = G.pincol_halo_strips(_lef(0, pins_w=10), [(10, 10, "R0")], 4.32)
+        self.assertEqual(s, [])
+
+    def test_mirror_flips_edge(self):
+        s = G.pincol_halo_strips(_lef(410), [(90.72, 86.4, "MY")], 4.32)
+        self.assertEqual(s[0]["edge"], "W")
+        self.assertAlmostEqual(s[0]["rect"][2], 90.72, places=4)
+
+    def test_hits_and_tcl(self):
+        s = G.pincol_halo_strips(_lef(410), [(0, 0, "R0")], 4.32)
+        self.assertEqual(G.pch_hits(s, [("in", 175.0, 20.0), ("out", 190.0, 20.0)]), ["in"])
+        self.assertIn("odb::dbBlockage_create", G.pch_tcl(s))
+
 if __name__ == "__main__":
     unittest.main()
