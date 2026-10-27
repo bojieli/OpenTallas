@@ -16,9 +16,7 @@ Conventions (binding for every tool):
   DIE frame; the destination uses the opposite face.  `window_um` = [lo, hi] along that face in DIE coordinates
   (y for E/W faces, x for N/S faces).  For a port whose src is "@die", `face` is the dst partition's face on the
   die edge.  Both partitions get pins at exactly the same die coordinates (pin_positions()).
-- Every port is registered on both sides (a boundary flop at the source pin and at the destination pin).  On the side
-  of a REGISTERED-PIN hard partition (its single hard core declares `registered_pins`, tools/die_plan/hard_pinreg.py)
-  that flop is the macro's own registered pin (lib: setup+hold / clk->q), not a generated station.
+- Every port is registered on both sides (a boundary flop at the source pin and at the destination pin).
 - A feedthrough slot `S` of a partition type defines two buses `S_i` (in, on `in_face`) and `S_o` (out, on `out_face`),
   with `stations` reset-less data registers (+ one reset epoch bit) between them.
 - A lane is an ordered list of ports; consecutive ports meet inside a partition at the `_i`/`_o` buses of one ft slot.
@@ -65,29 +63,20 @@ ASAP7_LAYERS = [
 BASE_LATTICE_UM = 2.16
 GRID_UM = 8.64
 
-FACE_PINS_HARD_CAP = 16.0   # pins/um per face pin layer pair: no type budget above this (COORD KV RULING 10-25 (a))
 DEFAULT_BUDGETS = dict(face_pins_per_um=6.0, face_pin_layers=2, face_window_um=10.0, pin_track_max=0.6,
                        cut_ratio_max=0.6, cut_step_um=250.0, pin_reg_p90_um=30.0,
-                       # R3 (METHODOLOGY 5.1 / ruling 9.4, 2026-10-24; was 750 COORD 10-23): ft stations at most
-                       # 405 um apart on every die (SIGNAL_REACH_UM, a ceiling: a plan may only lower it); R4 (CP1 r8 RULING 21:26):
+                       # COORD 10-23 R3: ft stations at most 750 um apart on every die; R4 (CP1 r8 RULING 21:26):
                        # partition clock tap GRID at <= 400 um pitch covering all sinks (CP1 r6: 16 taps @400 =
                        # face-flop spread 68/57 ps TT, seam skew <= 52)
-                       ft_station_max_um=405.0, tap_pitch_um=400.0,
+                       ft_station_max_um=750.0, tap_pitch_um=400.0,
                        # PLAN-TOOL5 (COORD 10-23 die review): G0C reach = hop <= reach_margin x the per-layer measured
                        # reach (reach.py); die IO bump fields within io_edge_max_um of a die edge (die_io.py)
                        reach_margin=0.9, io_edge_max_um=200.0)
 DEFAULT_CLOCK = dict(insertion_ps=250.0, insertion_tol_ps=40.0, neighbour_skew_ps=80.0, face_xing="budgeted")
 DEFAULT_RESET = dict(sync_stages=2, data_reset=False, epoch_bit=True, release="counted")
-# METHODOLOGY 5.1 / ruling 9.3 (B#12, 2026-10-24): ALL signal routing -- partition pins, ft and die-top nets -- on
-# <= M7; M8/M9 carry only the die clock spine, die reset and PG.  One-cycle signal hop = the 405-um M4-M7 figure
-# (reach.py).  `ft_reserved` and any signal on M8/M9 are G0 ERRORs (check.py `m89_signals`); cut_avail is not a
-# signal capacity any more (kept in the schema for old plans, ignored by the cut checks).
-SIGNAL_LAYER_MAX = "M7"
-RESERVED_DIE_LAYERS = ("M8", "M9")
-SIGNAL_REACH_UM = 405.0
 DEFAULT_LAYER_BUDGET = dict(partition_signal_max="M7", die_layers=["M8", "M9"],
-                            die_use=["clock_spine", "reset", "pg"],
-                            cut_avail={"M8": 0.0, "M9": 0.0})
+                            die_use=["clock_spine", "pg", "ft_reserved"],
+                            cut_avail={"M8": 0.6, "M9": 0.6})
 
 # ---------------------------------------------------------------------------------------------------------- schema
 _num = {"type": "number"}
@@ -103,62 +92,6 @@ _lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3}   # 3 o
 _order = {"enum": ["lsb_low", "lsb_high"]}
 _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
         "properties": {"part": _name, "bus": _name}}
-# PATH-KV-POR 10-25 (reset_tree.py "die reset pad"): the die reset source may name its ONE external reset pad (a die_io
-# entry kind die_root_pad), the pad's declared analog loads (PLL por_n: {inst, pin} in the root partition), the leaf
-# power-on-reset pin regex the binder rebinds to the partition's wavefront reset, and the PLL lock that qualifies the
-# root release through its own synchroniser (ot_dp_lockq; stable_cycles consecutive locked cycles)
-_reset_source = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
-                 "properties": {"part": _name, "bus": _name, "pad": _name,
-                                "analog_loads": {"type": "array", "minItems": 1, "items": {
-                                    "type": "object", "required": ["inst", "pin"], "additionalProperties": False,
-                                    "properties": {"inst": _name, "pin": _name, "note": {"type": "string"}}}},
-                                "por_pins": {"type": "string"},
-                                "lock": {"type": "object", "required": ["inst", "pin"], "additionalProperties": False,
-                                         "properties": {"inst": _name, "pin": _name,
-                                                        "stable_cycles": {"type": "integer", "minimum": 1}}},
-                                "note": {"type": "string"}}}
-
-# B2 (PATH-QC-B12 10-25): hard-IP LINE SIDE of a hard core (its bumps, e.g. a UCIe PHY's link_* / far_*): pins absent
-# from the as-built die that the binder exports as die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins)
-_bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", "dir", "width"],
-                                          "additionalProperties": False,
-                                          "properties": {"pin": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
-                                                         "dir": {"enum": ["input", "output"]},
-                                                         "width": {"type": "integer", "minimum": 1},
-                                                         "note": {"type": "string"}}}}
-
-# Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
-_physical_id_widths = {"strap_corner": 2, "strap_hid": 2, "strap_bsel": 2, "strap_tile_tid": 6}
-_parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
-    name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
-           "properties": {"width": ({"type": "integer", "const": _physical_id_widths[name]} if name in _physical_id_widths
-                                   else {"type": "integer", "minimum": 1}),
-                          "value": {"type": "integer", "minimum": 0,
-                                    **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
-    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", *_physical_id_widths)}}
-
-# Exact identity ports only. G0's semantic validator enforces each port's width;
-# allOf gives full JSON-Schema consumers the same cross-field restriction.
-_core_id_straps = {"type": "array", "items": {
-    "type": "object", "required": ["port", "width", "value"], "additionalProperties": False,
-    "properties": {"port": {"enum": list(_physical_id_widths)},
-                   "width": {"enum": [2, 6]},
-                   "value": {"type": ["integer", "string"], "minimum": 0, "maximum": 63,
-                             "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6})$"},
-                   "note": {"type": "string"}},
-    "allOf": [{"if": {"properties": {"port": {"const": "strap_tile_tid"}}},
-               "then": {"properties": {"width": {"const": 6}, "value": {"maximum": 63, "pattern": "^6'[bB][01]{6}$"}}},
-               "else": {"properties": {"width": {"const": 2}, "value": {"maximum": 3, "pattern": "^2'[bB][01]{2}$"}}}}]}}
-
-_clock_mesh_region = {
-    "type": "object", "additionalProperties": False,
-    "required": ["k", "tag", "i0", "i1", "j0", "j1", "box_um"],
-    "properties": {
-        "k": {"type": "integer", "minimum": 0},
-        "tag": {"type": "string", "pattern": "^h[01]*$"},
-        "i0": {"type": "integer", "minimum": 0}, "i1": {"type": "integer", "minimum": 1},
-        "j0": {"type": "integer", "minimum": 0}, "j1": {"type": "integer", "minimum": 1},
-        "box_um": _rect, "strap_box_um": _rect}}
 
 SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -176,7 +109,7 @@ SCHEMA = {
             "properties": {
                 "name": _name, "label": {"type": "string"}, "tech": {"enum": ["asap7"]},
                 "outline_um": _wh, "period_ps": _pos,
-                "reach_um": _pos,                    # one-cycle signal hop: 405 (M4-M7; larger values are capped, G0 WARN)
+                "reach_um": _pos,                    # measured one-cycle hop (REACH-M89): S81 1500, KV 1200, QC 1000, HBM 1000
                 "rep_um": _pos,                      # repeater spacing (450)
                 "grid_um": _pos,                     # the die lattice: partition origins + outlines (8.64)
                 "rows": {"type": "object", "additionalProperties": False,
@@ -192,7 +125,7 @@ SCHEMA = {
                     "die_use": {"type": "array", "items": {"enum": ["clock_spine", "pg", "ft_reserved", "reset"]}},
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                             "maximum": 1}},
-                    # layers a lane hop routes on (reach.py), <= M7 only (M8/M9 = G0 ERROR m89_signals)
+                    # layers a lane hop routes on (reach.py): default die_layers when die_use has ft_reserved
                     "ft_route_layers": {"type": "array", "items": _layer, "minItems": 1}}},
                 # die IO (COORD 10-23, S81-P5): pad / bump windows of every off-die signal (SerDes PMA pads, HBM PHY
                 # memory side, host).  Each window sits over its host partition (the PHY / IO partition), offers
@@ -200,26 +133,15 @@ SCHEMA = {
                 "io": {"type": "array", "items": {
                     # PLAN-TOOL5 (die_io.py): a PHY-macro window may instead declare its interface class + off-die
                     # signal count (`iface`, `signals`; the modelled PHY has no RTL pad ports), and `host` when it
-                    # also carries the die's host link (true), or, on a die without a host link, its host traffic
-                    # in-band ("in_band", with the on-die `host_route`; S81-XDIE 10-24)
+                    # also carries the die's host link
                     "type": "object", "required": ["name", "kind", "rect_um", "sites", "part"],
                     "additionalProperties": False,
-                    # die_root_pad (PATH-KV-POR 10-25): the die's ONE external reset pad = the die reset root pin
-                    # (iface reset, part = the reset root partition, pad_port = the as-built top port it carries)
-                    "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro", "die_root_pad"]},
-                                   "rect_um": _rect, "pad_port": _name,
+                    "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro"]}, "rect_um": _rect,
                                    "sites": {"type": "integer", "minimum": 1}, "pitch_um": _pos, "layer": _layer,
                                    "part": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
-                                   "iface": {"enum": ["serdes", "ucie", "hbm_phy", "host", "refclk", "reset", "other"]},
-                                   "signals": {"type": "integer", "minimum": 1}, "host": {"enum": [True, False, "in_band"]},
-                                   "host_route": {"type": "string"},
-                                   "basis": {"type": "string"}, "note": {"type": "string"},
-                                   # rack table macro name (lk_<name>) of this window when its partition is not
-                                   # named after it (xdie_io.py; HBM B2l, HBM-ARCH 10-24)
-                                   "rack_macro": {"type": "string"},
-                                   # S81-XDIE 10-24 (die-corner PHY windows): signal-bump depopulation rects inside the
-                                   # window (package corner stress zone); `sites` counts only the bumps outside them
-                                   "bump_exclude_um": {"type": "array", "items": _rect, "minItems": 1}}}},
+                                   "iface": {"enum": ["serdes", "ucie", "hbm_phy", "host", "refclk", "other"]},
+                                   "signals": {"type": "integer", "minimum": 1}, "host": {"type": "boolean"},
+                                   "basis": {"type": "string"}, "note": {"type": "string"}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
                     # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops
@@ -237,36 +159,7 @@ SCHEMA = {
                         "type": "object", "required": ["layer", "width_um", "pitch_um", "offset_um"],
                         "additionalProperties": False,
                         "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos, "offset_um": _nonneg,
-                                       "nets": {"type": "array", "items": _name}}}},
-                    # OWNER DECISION 7 (2026-10-24, IR over SerDes windows): a separate PHY supply per window with its own
-                    # dense die-layer straps and dedicated power/ground bump rows over the macro (die_io.check_pg_domains)
-                    "domains": {"type": "array", "items": {
-                        "type": "object", "required": ["name", "nets", "io", "rect_um", "grid", "bumps"],
-                        "additionalProperties": False,
-                        "properties": {
-                            "name": _name, "nets": {"type": "array", "items": _name, "minItems": 2},
-                            "io": {"type": "array", "items": _name, "minItems": 1}, "rect_um": _rect,
-                            "grid": {"type": "array", "minItems": 1, "items": {
-                                "type": "object", "required": ["layer", "width_um", "pitch_um", "offset_um"],
-                                "additionalProperties": False,
-                                "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos,
-                                               "offset_um": _nonneg, "nets": {"type": "array", "items": _name}}}},
-                            "bumps": {"type": "object", "required": ["rect_um", "pitch_um"], "additionalProperties": False,
-                                      "properties": {"rect_um": _rect, "pitch_um": _pos,
-                                                     "use": {"enum": ["power_ground"]}, "note": {"type": "string"},
-                                                     # S81-XDIE 10-24: no power bumps here (= the window's
-                                                     # bump_exclude_um, die-corner stress zone)
-                                                     "exclude_um": {"type": "array", "items": _rect, "minItems": 1}}},
-                            # S81-XDIE 10-24: the domain's VDDPHY rail-clamp ESD + decap sites (no bumps over them)
-                            "esd_um": {"type": "array", "items": _rect, "minItems": 1},
-                            # S81.IR split (coordinator 10-25): the PHY macro footprint (die frame) on the die-edge side,
-                            # the core strip(s) of the partition outside the domain, the core C4 rule at the domain's
-                            # core-facing edges and the macro area target (die_io.check_pg_domains)
-                            "phy_macro_um": _rect,
-                            "core_strip_um": {"type": "array", "items": _rect},
-                            "core_edge_bumps": {"enum": ["relocate", "drop"]},
-                            "phy_area_target_mm2": _pos,
-                            "note": {"type": "string"}}}}}},
+                                       "nets": {"type": "array", "items": _name}}}}}},
             }},
         "partition_types": {
             "type": "object", "minProperties": 1,
@@ -274,18 +167,6 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
-                    "dead_inputs": {"type": "array", "items": {
-                        "type": "object", "additionalProperties": False,
-                        "required": ["module", "parameters", "ports", "proof", "source", "module_sha256"],
-                        "properties": {
-                            "module": _name,
-                            "parameters": {"type": "object", "additionalProperties": {"type": "string"}},
-                            "ports": {"type": "object", "minProperties": 1, "additionalProperties": {
-                                "type": "array", "minItems": 1, "items": {
-                                    "type": "array", "minItems": 2, "maxItems": 2,
-                                    "items": {"type": "integer", "minimum": 0}}}},
-                            "proof": {"type": "string"}, "source": {"type": "string"},
-                            "module_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}},
                     "outline_um": _wh,
                     # estimated std cells of one instance (synth / census); COORD 10-23 CORE-KS: a type over
                     # CORE_CELLS_MAX (400k) must list hard_cores[] (G0 ERROR).  Else the sum of contents[].cells.
@@ -303,22 +184,6 @@ SCHEMA = {
                                        "face": {"enum": list(FACES)}, "window_um": _win, "layers": _lays,
                                        "order": _order,
                                        "note": {"type": "string"}}}},
-                    # HEAD-BIND-4 10-27 (OWNER 10-25 option B): per-INSTANCE ID strap input ports of the partition
-                    # (strap_* names, exact widths in parent_id_straps.PHYSICAL_ID_WIDTHS).  No pin register, kit SDC
-                    # set_false_path -from, each instance ties its own value (partitions[].id_straps) at the die top;
-                    # leaves bind them as "strap:<name>".
-                    "id_straps": {"type": "array", "items": {
-                        "type": "object", "required": ["name", "width"], "additionalProperties": False,
-                        "properties": {"name": {"type": "string", "pattern": "^strap_[A-Za-z0-9_]+$"},
-                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"}}}},
-                    # HEAD-BIND-4 10-27: off-die PHY pad ports (PMA side of a PHY leaf): NO boundary flop (their
-                    # timing belongs to the PHY's own clocks), bound to the leaf as "pad:<name>", carried to the die
-                    # top as <part>_<name> (behavioural word pads; die.io phy_macro windows hold the bumps)
-                    "pads": {"type": "array", "items": {
-                        "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
-                        "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
-                                       "width": {"type": "integer", "minimum": 1}, "clock": {"type": "boolean"},
-                                       "note": {"type": "string"}}}},
                     "ft_slots": {"type": "array", "items": {
                         "type": "object", "required": ["name", "in_face", "out_face", "width"],
                         "additionalProperties": False,
@@ -327,129 +192,34 @@ SCHEMA = {
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
-                                       "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
-                                       "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
-                                       "layers": _lays, "order": _order,
-                                       "in_layers": _lays, "out_layers": _lays,
-                                       "in_order": _order, "out_order": _order,
-                                       "note": {"type": "string"}}}},
+                                       "layers": _lays, "order": _order}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
-                        # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
-                        # (insertion_ps = TT, insertion_ff_ps = FF) = the signed view's routed RCX pin-register mean,
-                        # or the parent budget before the first sign-off; insertion_basis says which
-                        "insertion_ff_ps": _pos, "insertion_basis": {"type": "string"},
-                        # IO-HOLD option A: the signed view's measured guarantee (ps after vclk, FF) that no
-                        # output changes earlier = contract guarantee + worst output-hold slack; absent = contract
-                        "out_hold_guarantee_ps": {"type": "number"},
-                        "keepouts_um": {"type": "array", "items": _rect},
-                        # Die clock driver islands are uniform physical reservations, not extra tile IO.
-                        "die_islands_um": {"type": "array", "items": _rect},
-                        # FALLBACK-HEAD-2 (opt-in): reserved site rectangles in the type frame (gen_phys
-                        # reserved_sites_tcl): die_clock_tree = hard, landing_ring_bank = GPL-only after the rings
-                        "reserved_sites_um": {"type": "array", "items": {"type": "object", "required": ["rect_um", "kind"],
-                            "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank"]},
-                                           "ref": {"type": "string"}}}},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
-                        # CLOCK-KV-R8: opt-in array-facing edge rows (one tap per grid column).
-                        "tap_edge_y_um": {"type": "array", "minItems": 1, "uniqueItems": True, "items": _nonneg},
                         # default "grid" (R4, CP1 r8 RULING 21:26).  "grid+sinks" (alias "sinks", KV-P6) = the
                         # grid PLUS sink-anchored taps (taps.py k-medians of face registers + ft stations) ADDED
                         # for face-register clusters; sink taps never replace the grid (CP1 r8: interior logic
                         # 4.5-5.7k sinks piled on one tap, spread 133 ps)
-                        # "density" (OWNER decision 5, 10-24; opt-in): NO grid -- taps placed by sink density
-                        # (taps.density_taps: <= tap_target_sinks per tap within tap_radius_um, none on a hard
-                        # core); sinks = face / ft registers + sink_sites_um + sink_bins_file (internal inventory)
-                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density", "explicit"]}, "tap_radius_um": _pos,
-                        # PATH-KV-SYSC2 10-25 (GEOM F2): opt-in "sinks" = an R4 grid tap that tap_clear had to move
-                        # off a macro / keepout (its cell centre is blocked) is re-centred on the weighted L1 median of
-                        # the planned sinks the kit's nearest-tap rule gives it (taps.recentre_displaced), so it never
-                        # sits on a keepout edge with half its circle over a sink-free PHY; undisplaced taps unchanged
-                        "tap_recentre": {"enum": ["sinks"]},
-                        # OWNER DEC. 16 / FP32 audit (COORD 10-25): PHY-edge clocks a soft type takes as a bound-only
-                        # port (QC clk_coll / clk_serdes / clk_d2d at the die period, clk_coll_blk = the /6 block
-                        # clock of qfd_ckdiv6).  Each is an interior pin at tap_um and a kit clock (create_clock, period
-                        # period_mult x the die period, synchronous with clk: no exception, no clock group).
-                        "edge_clocks": {"type": "array", "items": {
-                            "type": "object", "required": ["port", "tap_um"], "additionalProperties": False,
-                            "properties": {"port": _name, "tap_um": _xy,
-                                           "period_mult": {"type": "integer", "minimum": 1},
-                                           "source": {"type": "string"}, "note": {"type": "string"}}}},
+                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks"]}, "tap_radius_um": _pos,
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
-                        "tap_target_sinks": {"type": "integer", "minimum": 1},
-                        "tap_min_sinks": {"type": "integer", "minimum": 1},
-                        # rule LC1 (10-25): density taps also cover the registered control pins (arst_n, start_i,
-                        # rst_o_<k>, start_o_<k>), so a remote control pin gets its own light tap (taps.control_pin_sinks)
-                        "control_sinks": {"type": "boolean"},
-                        "sink_sites_um": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
-                                                                     "items": {"type": "number"}}},
-                        "sink_bins_file": {"type": "string"},
-                        # density kits: tap trees re-balanced on GRT RC after global route ("grt", POST_GLOBAL_ROUTE
-                        # tap_balance.tcl) or measured only ("grt_report", default for density); "placement" = off
-                        "tap_balance_rc": {"enum": ["placement", "grt_report", "grt"]},
-                        # CP2: "early" turns the kind 'core' taps[] into kit clock ports clk_c<k> (core_taps()): the
-                        # core's clock pins hang on their own tap, which the spine delivers (insertion_ps - common
-                        # latency) early, so the core's internal flops see the common latency.  Absent: taps[] are
-                        # plan records only (unchanged kits).
-                        "core_taps": {"enum": ["early"]},
-                        # Explicit selected parent clock endpoint delta; runtime network required before phys.
-                        "core_groups": {"type": "array", "items": {"type": "object", "required":
-                            ["name", "port", "xy", "members", "insertion_ps", "insertion_ff_ps", "basis", "source"],
-                            "additionalProperties": False, "properties": {
-                                "name": _name, "port": _name, "xy": _xy,
-                                "members": {"type": "array", "minItems": 1, "items": {"type": "object",
-                                    "required": ["inst", "pin", "tap"], "additionalProperties": False,
-                                    "properties": {"inst": _name, "pin": _name, "tap": _name}}},
-                                "insertion_ps": _pos, "insertion_ff_ps": _pos,
-                                "basis": {"enum": ["parent_budget"]}, "source": {"type": "string", "minLength": 1},
-                                "network": {"type": "object", "required": ["nodes", "endpoints"], "additionalProperties": False,
-                                    "properties": {"nodes": {"type": "array"}, "endpoints": {"type": "array"}}}}}},
-                        # PATH-HBM 10-25 (COORD ruling (1) 14:44): planned shared clock branch buffers on std-cell
-                        # sites (never on a hard core) -- one buffer drives the core taps it names (taps[].parent),
-                        # so a chain hop across a corridor shares its last common clock point (CPPR) with legs
-                        # <= the M8/M9 reach.  The insertion budget per buffer is CLOCK-RESET's (budget_owner).
-                        "branch_buffers": {"type": "array", "items": {
-                            "type": "object", "required": ["name", "xy", "drives"], "additionalProperties": False,
-                            "properties": {"name": _name, "xy": _xy,
-                                           "drives": {"type": "array", "minItems": 1, "items": _name},
-                                           "cell": {"type": "string"}, "legs_um": {"type": "array", "items": _nonneg},
-                                           "insertion_ps": _nonneg, "budget_owner": {"type": "string"},
-                                           "site": {"type": "string"}, "note": {"type": "string"},
-                                           "cell_ll_um": _xy, "orient": {"type": "string"},
-                                           # PATH-HBM TKMCOND 10-25 (GEOM 15:24 cond 2): symmetric leg repeaters
-                                           # (same count on every driven leg; check.py verifies) + the probe record
-                                           "leg_repeaters": {"type": "array", "items": {
-                                               "type": "object", "required": ["name", "tap", "k", "xy"],
-                                               "additionalProperties": False,
-                                               "properties": {"name": _name, "tap": _name,
-                                                              "k": {"type": "integer", "minimum": 1}, "xy": _xy,
-                                                              "cell": {"type": "string"}, "cell_ll_um": _xy,
-                                                              "cell_wh_um": _xy, "orient": {"type": "string"}}}},
-                                           "leg_slew_probe": {"type": "object"}}}},
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {
                             "type": "object", "required": ["name", "xy"], "additionalProperties": False,
                             "properties": {"name": _name, "xy": _xy, "kind": {"enum": ["core", "glue", "leaf"]},
                                            "orient": {"enum": list(ORIENTS)}, "insertion_ps": _pos,
-                                           # CORELAT 10-25: the core's FF insertion (SIGNED FF pin-register mean,
-                                           # or the FF budget); absent -> FF_TT_INSERTION_RATIO x insertion_ps
-                                           "insertion_ff_ps": _pos,
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
-                                           "from_root_um": _nonneg, "parent": _name, "note": {"type": "string"}}}}}},
+                                           "from_root_um": _nonneg, "note": {"type": "string"}}}}}},
                     # hard cores built on PLATFORM tracks (macros inside): a per-core placement offset puts their
                     # boundary pins on the plan tracks (COORD 10-23 08:36; A0: y +0.012)
                     "hard_cores": {"type": "array", "items": {
                         "type": "object", "required": ["inst", "origin_um", "outline_um"],
                         "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
-                                       "straps": _core_id_straps,
-                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
-                                       "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
@@ -460,47 +230,22 @@ SCHEMA = {
                                        # hardened views (repo-relative): the partition kit places the core as a
                                        # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
-                                       # REGISTERED-PIN hard partition (COORD 10-25 11:31; hard_pinreg.py): the single
-                                       # hard core of a hard type whose registered boundary pins (lib: setup+hold on
-                                       # every input, clk->q on every output) are the partition's boundary registers
-                                       "registered_pins": {"type": "boolean"},
-                                       # routing obstruction top layer of the core (its LEF OBS/PIN top; G2 probe
-                                       # obstructs M1..obs_max, default partition_signal_max when absent)
-                                       "obs_max": _layer,
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
-                        "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
-                        # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
-                        "leaf_um": _xy,
-                        # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
-                        "depth": {"type": "integer", "minimum": 1},
-                        # reset.start = broadcast plans (reset_tree.start_roles): "mission" (default) = control state
-                        # released by reset AND run; "bootstrap" = raw delivered wavefront reset (boot/program/PHY
-                        # cal before START) + ONE local registered START tap (leaf bind "start") for the contents'
-                        # mission admission.  core_start_roles: per hard-core reset target override {inst: role}
-                        "start_role": {"enum": ["bootstrap", "mission"]},
-                        "core_start_roles": {"type": "object",
-                                             "additionalProperties": {"enum": ["bootstrap", "mission"]}}}},
+                        "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2}}},
                     "contents": {"type": "array", "items": {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
-                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
-                                       "bump_ports": _bump_ports,
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
                                        # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
                                        # at origin_um (type frame) with orient (mandatory when lef is given)
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
-                                       # REGISTERED-PIN hard partition (COORD 10-25 11:31; hard_pinreg.py): the single
-                                       # hard core of a hard type whose registered boundary pins (lib: setup+hold on
-                                       # every input, clk->q on every output) are the partition's boundary registers
-                                       "registered_pins": {"type": "boolean"},
                                        "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
                                        "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
-                                       #   | "start" (bootstrap types: the local registered START tap, active high)
                                        "bind": {"type": "object", "additionalProperties": {"type": "string"}},
                                        "params": {"type": "object",
                                                   "additionalProperties": {"type": ["integer", "string"]}}}}},
@@ -508,32 +253,24 @@ SCHEMA = {
                     "nets": {"type": "array", "items": {                         # internal leaf-to-leaf nets
                         "type": "object", "required": ["name", "width"], "additionalProperties": False,
                         "properties": {"name": _name, "width": {"type": "integer", "minimum": 1}}}},
-                    # R3-INTERNAL (COORD 10-23 18:15): FIRM stations of an internal reg-reg connection over
-                    # ft_station_max_um (405); face window -> internal block, block -> block; type frame; every hop <= it
+                    # R3-INTERNAL (COORD 10-23 18:15): FIRM stations of an internal reg-reg connection > 750 um
+                    # (face window -> internal block, block -> block); type frame; every hop <= ft_station_max_um
                     "internal_stations": {"type": "array", "items": {
                         "type": "object", "required": ["from_um", "to_um", "regs_um"], "additionalProperties": False,
                         "properties": {"conn": {"type": "string"},    # "bus:<bus>" | "<leaf inst>.<port>" | "<a>|<b>"
                                        "from_um": _xy, "to_um": _xy, "regs_um": {"type": "array", "items": _xy},
                                        "bits": {"type": "integer", "minimum": 1}, "launch": {"type": "string"},
-                                       "capture": {"type": "string"}, "note": {"type": "string"},
-                                       # per-bit station sites (kit_istations): bit b on its own L leaf_um <-> pin b
-                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit"]}}}},
+                                       "capture": {"type": "string"}, "note": {"type": "string"}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
                     "ft_track_frac": {"type": "number", "minimum": 0, "maximum": 1},
-                    # PLAN-TOOL5 (e): share of the M4-M7 tracks across this type given to ft (default the type's
-                    # ft_track_frac); M8 / M9 keys are G0 ERRORs (m89_signals: no over-the-top ft)
+                    # PLAN-TOOL5 (e): share of the M8 / M9 tracks over this type reserved for over-the-top die ft
+                    # (default die.layer_budget.cut_avail)
                     "ft_budget": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                              "maximum": 1}},
-                    # per-type face pin density budget (COORD KV RULING 10-25 05:07 (a)): above the die budget only
-                    # after the pins sit in channel gaps, up to the density a per-type G2 probe with hard cores
-                    # obstructing routes clean (face_budget_g2: the probe record), pin_track_max unchanged, hard cap
-                    # FACE_PINS_HARD_CAP pins/um
-                    "face_pins_per_um": {"type": "number", "exclusiveMinimum": 0, "maximum": 16.0},
-                    "face_budget_g2": {"type": "string", "minLength": 3},
-                    # per-face pin layer sets (type frame faces); every layer <= M7 (an M8 / M9 face layer, e.g. the
-                    # 10-23 S81 svc fold / rail faces, is a G0 ERROR since ruling 9.3)
+                    # per-face pin layer sets (type frame faces); a layer above partition_signal_max (e.g. M8 on an
+                    # S81 svc fold / rail face) is allowed only when listed here for that face (COORD 10-23)
                     "face_layers": {"type": "object", "additionalProperties": False, "properties": {
                         f: {"type": "array", "items": _layer, "minItems": 1} for f in FACES}},
                     # spare slots: reserved face windows WITHOUT ports, so partitions of one slot class keep one
@@ -544,23 +281,10 @@ SCHEMA = {
                         "properties": {"name": _name, "face": {"enum": list(FACES)}, "window_um": _win,
                                        "layers": {"type": "array", "items": _layer, "minItems": 1},
                                        "reason": {"type": "string"}}}},
-                    # die-owned FT bands (DIE-FT-HBM 10-25, COORD DIE GRT RULINGS 11:29): a type-frame span (EW: y over
-                    # the full width, NS: x over the full height) where `layers` belong to the die (die_share of their
-                    # tracks) instead of the ft_track_frac share; the ft pins of the type sit inside them. die_trial
-                    # models them with GRT region adjustments; the partition kit keeps its own routing off those layers.
-                    "die_ft_bands": {"type": "array", "items": {
-                        "type": "object", "required": ["dir", "span_um", "layers"], "additionalProperties": False,
-                        "properties": {"dir": {"enum": ["EW", "NS"]}, "span_um": _win,
-                                       "layers": {"type": "array", "items": _layer, "minItems": 1},
-                                       "die_share": {"type": "number", "minimum": 0, "maximum": 1},
-                                       "note": {"type": "string"}}}},
                 }}},
         "partitions": {"type": "array", "minItems": 1, "items": {
             "type": "object", "required": ["name", "type", "origin_um"], "additionalProperties": False,
             "properties": {"name": _name, "type": _name, "origin_um": _xy, "orient": {"enum": list(ORIENTS)},
-                           # HEAD-BIND-4 10-27 (OWNER 10-25 option B): this INSTANCE's values of its type's declared
-                           # partition ID straps (partition_types.<t>.id_straps), tied at the die top (gen_rtl.die_top)
-                           "id_straps": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
                            "note": {"type": "string"}}}},
         "ports": {"type": "array", "items": {
             "type": "object", "required": ["id", "src", "dst", "width"],   # face/layers/window: or from the type
@@ -575,13 +299,6 @@ SCHEMA = {
             "type": "object", "required": ["id", "ports"], "additionalProperties": False,
             "properties": {"id": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
                            "fixed_cycles": {"type": "integer", "minimum": 0},
-                           # DEC12 (S81 svc fold rung, 2026-10-24): a lane that carries a word of word_bits in `beats`
-                           # consecutive beats (endpoint RTL serialises; port width = ceil(word_bits / beats) + the
-                           # beat-index bits ceil(log2 beats), MSB).  cycles stay the lane's register stages (no bind
-                           # pads); latency adds word_cycles = cycles + beats - 1 (the last beat lands beats - 1 later)
-                           "beats": {"type": "integer", "minimum": 2}, "word_bits": {"type": "integer", "minimum": 1},
-                           # PATH-HBM 10-25: beat_index_bits 0 = static slot from boot_start (tkx 2-beat), no index pin
-                           "beat_index_bits": {"type": "integer", "minimum": 0},
                            "reach_um": _pos, "param": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
                            "route_layers": {"type": "array", "items": _layer, "minItems": 1},
                            "note": {"type": "string"}}}},
@@ -591,108 +308,22 @@ SCHEMA = {
         # automatically (Plan.latency_groups()).
         "latency_groups": {"type": "array", "items": {
             "type": "object", "required": ["name", "lanes"], "additionalProperties": False,
-            "properties": {"name": _name, "kind": {"enum": ["bus", "replica", "landed"]},
-                           "window": {"type": "integer", "minimum": 2},
+            "properties": {"name": _name, "kind": {"enum": ["bus", "replica"]},
                            "lanes": {"type": "array", "items": _name, "minItems": 2},
                            "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "insertion_ps": _pos, "insertion_tol_ps": _nonneg, "neighbour_skew_ps": _pos,
-            # Accepted die mesh profile and immutable generated cell-site ledger.
-            "mesh": {"type": "object", "additionalProperties": False,
-                     "properties": {
-                         "nx": {"type": "integer", "minimum": 1}, "ny": {"type": "integer", "minimum": 1},
-                         "m": {"type": "integer", "minimum": 1}, "rep_um": _pos, "ndr": {"type": "string"},
-                         "pitch_um": {"type": "array", "items": _pos, "minItems": 2, "maxItems": 2},
-                         "delta": {"type": "string"}, "tool": {"type": "string"},
-                         "layers": {"type": "object", "additionalProperties": False,
-                                    "properties": {"straps_h": _layer, "straps_v": _layer}},
-                         "sites_file": {"type": "string"},
-                         "sites_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-                         "regions_depth": {"type": "integer", "minimum": 0},
-                         "regions": {"type": "array", "minItems": 1, "items": _clock_mesh_region},
-                         "cells": {"type": "integer", "minimum": 1}}},
-            # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
-            # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
-            "insertion_ff_ps": _pos,
-            # INFRA-FIRST-R4 kit hold window (COORD 10-26 11:24 ruling, opt-in, gen_phys.tap_window_ps): the die
-            # delivers every grid tap of one partition within window_ps of each other ([-W, 0] source latency on each
-            # real clock port in the kit SDC, CRPR credits same-tap); absent = all taps on one ideal clock (feature off).
-            # Requires clock.seam_hold; window_ps <= T/4 is checked in gen_phys.
-            "tap_window": {"type": "object", "additionalProperties": False, "required": ["window_ps"],
-                           "properties": {"window_ps": _nonneg, "note": {"type": "string"}}},
-            # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
-            # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
-            # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
-            "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
-                          "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
-            # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
-            # input's min input delay is its driving partition's guaranteed output-min, the related tap pair skew is
-            # checked at the parent (io_hold_parent.py); "legacy" / absent = the flat contract above
-            "io_hold": {"enum": ["legacy", "sender_min", "plan_demand"]},
-            # HOLD-REPAIR 10-26 (12.4a a1, opt-in io_hold plan_demand; gen_phys.hold_demand_ps): plan-declared FF seam
-            # hold demand per seam pair (tools/die_plan/hold_demand.py from the plan clock arrival model, source
-            # "plan" only); the receiving kit's min input delay = sender guarantee - demand, landed seams keep fallback
-            "hold_demand": {"type": "object", "required": ["source"], "properties": {
-                "source": {"enum": ["plan"]}, "pairs": {"type": "object", "additionalProperties": _nonneg},
-                "landed": {"type": "array", "items": {"type": "string"}}, "default_ps": _nonneg}},
-            # CP1 proof harness (COORD 2026-10-25 23:26 ruling (3), CLOCK-RESET): a cut-out proof die keeps, for each
-            # die-edge input that the FULL plan drives from a registered partition, an explicit registered upstream
-            # driver view {port id: part, type, bus, out_hold_guarantee_ps, basis}; under io_hold sender_min that
-            # port takes the driver's guaranteed output-min (gen_phys.input_hold_min) and the seam is checked on the
-            # real parent (io_hold_parent.py) -- never an unconstrained die input, never a waiver
-            "io_hold_driver_views": {"type": "object", "additionalProperties": {
-                "type": "object", "additionalProperties": False,
-                "required": ["part", "type", "bus", "out_hold_guarantee_ps", "basis"],
-                "properties": {"part": {"type": "string"}, "type": {"type": "string"}, "bus": {"type": "string"},
-                               "out_hold_guarantee_ps": {"type": "number"}, "basis": {"type": "string"},
-                               "source_plan": {"type": "string"}}}},
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.
             "common_latency_ps": _pos,
-            # ft seam budget split (COORD RULING 2026-10-24 12:37, S81): receiver share of T at the ft face (input delay
-            # max (1 - share) T on ft_i, output delay max share T on ft_o); default gen_phys.FT_HOP_IN_SHARE (0.08)
-            "ft_hop_in_share": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 0.5},
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,
-                "topology": {"enum": ["htree", "fishbone", "mesh"]},
-                # CP2 branch model (spine.py, pair plans): the FULL die's root / outline and each partition's origin
-                # in that die; branch latency = H-tree path length x branch_ps_per_mm (default 60), recursion down to
-                # regions <= branch_leaf_um (default budgets.tap_pitch_um)
-                "die_root_um": _xy, "die_outline_um": _xy,
-                "part_die_origin_um": {"type": "object", "additionalProperties": _xy},
-                "branch_ps_per_mm": _pos, "branch_leaf_um": _pos}}}},
+                "topology": {"enum": ["htree", "fishbone", "mesh"]}}}}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
-            "source": _reset_source, "sync_stages": {"type": "integer", "minimum": 2},
-            "data_reset": {"const": False}, "epoch_bit": {"const": True},
-            # OWNER RESET RULE 2026-10-24 (BRIEFING decision 2; tools/die_plan/reset_tree.py): "pipelined" = ONE root
-            # synchroniser per die region, then synchronous relay flops every <= relay_um (405) with equal depth to every
-            # clock tap; partitions take arst_n as a SYNCHRONOUS input (pin register + equal-depth tree, part_depth K).
-            # "counted" = legacy per-tap asynchronous synchronisers (does not meet the rule; G0 warns).
-            # OWNER DECISION 13 (2026-10-24, supersedes equal depth): "wavefront" = ONE root synchroniser per die, then
-            # every partition registers its incoming reset (arst_n) and re-drives registered rst_o_<k> outs to its
-            # neighbours; per-partition release cycles published by reset_tree.py offsets.  hop_um = die hop reach
-            # (parent rst_o relay -> child u_rst_in, default relay_um); in_sites {type: [x, y]} overrides the solver's
-            # IN pin; root_part names the root partition (default: the one at the die rst_n pin).
-            "release": {"enum": ["counted", "pipelined", "wavefront"]}, "relay_um": _pos, "hop_um": _pos,
-            "in_sites": {"type": "object", "additionalProperties": _xy}, "root_part": _name,
-            # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
-            # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
-            "start": {"enum": ["none", "broadcast"]},
-            # KV-PLAN2 10-25 (opt-in, default false = main wall-only rule): every relay hop keeps one L route outside
-            # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14
-            # through kvpc0 gave 1272 M3 overflow)
-            "relay_avoid_cores": {"type": "boolean"},
-            # raw binder: the FUNCTIONAL top input that carries the mission START level to the sources' declared
-            # mission-admission inputs (e.g. KV host mission_start); every such sink binds to its partition's local
-            # registered START tap start_t<k> (bootstrap types only).  Unset: such a top port stays a die IO.
-            "start_port": _name,
-            "part_depth": {"type": "integer", "minimum": 1},
-            "regions": {"type": "array", "items": {
-                "type": "object", "required": ["name"], "additionalProperties": False,
-                "properties": {"name": _name, "parts": {"type": "array", "items": _name}, "root_um": _xy,
-                               "note": {"type": "string"}}}}}},
+            "source": _end, "sync_stages": {"type": "integer", "minimum": 2},
+            "data_reset": {"const": False}, "epoch_bit": {"const": True}, "release": {"enum": ["counted"]}}},
         "latency": {"type": "object", "additionalProperties": False, "properties": {
             "lanes": {"type": "object", "additionalProperties": {
                 "type": "object", "required": ["cycles"], "additionalProperties": False,
@@ -700,34 +331,16 @@ SCHEMA = {
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
                                "natural": {"type": "integer"}, "pad": {"type": "integer", "minimum": 0},
-                               "clock_landing": {"type": "integer", "minimum": 0},   # landed +3k (schema.lane_latency)
-                               "beats": {"type": "integer", "minimum": 2}, "word_cycles": {"type": "integer"},
                                "param": {"type": "string"}}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
         "census": {"type": ["array", "object"]},
-        # METHODOLOGY 12.7c (OWNER 10-26): the die master plan the kits consume, set at the plan freeze through COORD;
-        # required=true -> gen.py phys / core kit generators refuse a sign-off kit without a slice (master_slice.py)
-        "master_plan": {"type": "object", "properties": {"required": {"type": "boolean"}, "sha256": {"type": "string"},
-                                                         "path": {"type": "string"}}},
-        "budgets": {"type": "object", "additionalProperties": False, "properties": dict(
-            {k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS},
-            # S81 10-24 (coordinator ruling (a)): R3 reach inside hardened types with declared core connectivity
-            # (core_conns.json); no default: unset = those types keep ft_station_max_um (check.py R3-INTERNAL)
-            core_internal_reach_um=_pos)},
+        "budgets": {"type": "object", "additionalProperties": False, "properties": {
+            k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS}},
     },
 }
 
 
 # ------------------------------------------------------------------------------- structural validator (subset)
-# Regional landing pins use the existing clock/reset infrastructure model,
-# not functional R8 bus ports. Exact scalar endpoints and <=405um registered
-# status hops are checked by landing_contract.py; default plans are unchanged.
-SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
-SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
-# clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
-SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
-
-
 def _check(v, s, path, errs):
     """Minimal draft-2020-12 subset (type, const, enum, required, properties, additionalProperties, items, min/max*,
     pattern, minLength, minProperties).  No external dependency, so it runs on every fleet host."""
@@ -788,51 +401,6 @@ def _check(v, s, path, errs):
 def validate_structure(obj):
     errs = []
     _check(obj, SCHEMA, "$", errs)
-    id_types = {tn: t for tn, t in obj.get("partition_types", {}).items()
-                if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", []))} if not errs else {}
-    if id_types:
-        try:
-            from .parent_id_straps import type_parent_id_straps
-        except ImportError:
-            from parent_id_straps import type_parent_id_straps
-        for tn, t in id_types.items():
-            try:
-                type_parent_id_straps(t)
-            except ValueError as e:
-                errs.append(f"partition type {tn}: {e}")
-    if not errs:
-        errs += _id_strap_errors(obj)
-    return errs
-
-
-def _id_strap_errors(obj):
-    """HEAD-BIND-4: partition ID straps = approved strap_* port + exact width; every instance of a declaring type gives
-    exactly one value per declared strap, fitting its width; instances of other types give none."""
-    try:
-        from .parent_id_straps import PHYSICAL_ID_WIDTHS
-    except ImportError:
-        from parent_id_straps import PHYSICAL_ID_WIDTHS
-    errs, decl = [], {}
-    for tn, t in obj.get("partition_types", {}).items():
-        d = {}
-        for s in t.get("id_straps", []):
-            n, w = s["name"], s["width"]
-            if PHYSICAL_ID_WIDTHS.get(n) != w:
-                errs.append(f"partition type {tn}: id_strap {n} width {w}: not an approved ID strap of that width "
-                            f"(parent_id_straps.PHYSICAL_ID_WIDTHS)")
-            if n in d:
-                errs.append(f"partition type {tn}: id_strap {n} declared twice")
-            d[n] = w
-        decl[tn] = d
-    for p in obj.get("partitions", []):
-        d = decl.get(p.get("type"), {})
-        v = p.get("id_straps", {})
-        if set(v) != set(d):
-            errs.append(f"partition {p.get('name')}: id_straps {sorted(v)} != type {p.get('type')} declared {sorted(d)}")
-            continue
-        for n, x in v.items():
-            if x >= 1 << d[n]:
-                errs.append(f"partition {p.get('name')}: id_strap {n}={x} does not fit {d[n]} bits")
     return errs
 
 
@@ -847,9 +415,7 @@ class Plan:
         self.die = d
         self.name = d["name"]
         self.W, self.H = d["outline_um"]
-        # signal hop: die.reach_um capped at the 405-um M4-M7 figure (ruling 9.3; check.py WARNs on a larger value)
-        self.die_reach_um = float(d["reach_um"])
-        self.reach = min(self.die_reach_um, SIGNAL_REACH_UM)
+        self.reach = float(d["reach_um"])
         self.rep_um = float(d.get("rep_um", 450.0))
         self.grid = float(d.get("grid_um", GRID_UM))
         self.layers = {L["name"]: L for L in d.get("layers", ASAP7_LAYERS)}
@@ -875,11 +441,8 @@ class Plan:
                 return b["face"], b["window_um"], b["layers"], b.get("order", "lsb_low")
         for s_ in t.get("ft_slots", []):
             for sfx, fk, wk in (("_i", "in_face", "in_window_um"), ("_o", "out_face", "out_window_um")):
-                if bus == s_["name"] + sfx and wk in s_:
-                    stem = "in" if sfx == "_i" else "out"
-                    lays = s_.get(stem + "_layers", s_.get("layers"))
-                    if lays:
-                        return s_[fk], s_[wk], lays, s_.get(stem + "_order", s_.get("order", "lsb_low"))
+                if bus == s_["name"] + sfx and wk in s_ and "layers" in s_:
+                    return s_[fk], s_[wk], s_["layers"], s_.get("order", "lsb_low")
         return None
 
     def geom_to_die(self, part, g):
@@ -1088,24 +651,6 @@ class Plan:
                 out.append((f"replica:{sp}.{sb}->{dt}.{db}", "replica", sorted(lids)))
         return out
 
-    def landed_skew(self):
-        """LANDED BUNDLES (COORD rule 10-23, r8.py doc): a latency group of kind `landed` = the lanes of one bundle
-        that lands in ONE forwarded-clock landing ring with one K strap (window = ring depth D cycles, default 4).  The
-        bundle arrives at ONE group depth (lane_pads pads every lane to the slowest, as a bus group); its natural
-        per-lane spread must stay under the landing window margin D - 1, else the bundle cannot land coherently and the
-        stations must be re-planned.  Returns [message] for every landed group over the margin."""
-        bad = []
-        for g in self.raw.get("latency_groups", []):
-            if g.get("kind") != "landed" or not all(l in self.lanes for l in g["lanes"]):
-                continue
-            nat = {l: self.lane_natural(l)["cycles"] for l in g["lanes"]}
-            d = g.get("window", 4)
-            if max(nat.values()) - min(nat.values()) > d - 1:
-                bad.append(f"landed group {g['name']}: natural lane spread {max(nat.values()) - min(nat.values())} "
-                           f"cycles {nat} > landing window margin {d - 1} (re-plan the stations so the bundle lands "
-                           "in one window)")
-        return bad
-
     def lane_pads(self):
         """R8: {lane: pad cycles} so every latency group arrives in one cycle (fixpoint over overlapping groups)."""
         if getattr(self, "_pads", None) is not None:
@@ -1171,8 +716,6 @@ class Plan:
         pad = self.lane_pads()[lid]
         d["natural"], d["pad"] = d["cycles"], pad
         d["cycles"] += pad
-        if d.get("beats"):
-            d["word_cycles"] = d["cycles"] + d["beats"] - 1     # DEC12 2-beat lanes: the whole word's arrival
         return d
 
     def lane_natural(self, lid):
@@ -1187,17 +730,7 @@ class Plan:
         fixed = int(ln.get("fixed_cycles", 0))
         a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
         bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
-        d = dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
-        if not hasattr(self,"_lane_clock_landing_cycles"):
-            import clock_landings
-            self._lane_clock_landing_cycles=clock_landings.network_lane_cycles(self.raw)
-        landing=self._lane_clock_landing_cycles.get(lid,0)
-        if landing:
-            d["clock_landing"]=landing
-            d["cycles"]+=landing
-        if ln.get("beats"):
-            d["beats"] = int(ln["beats"])     # word_cycles (cycles + beats - 1) is added by lane_latency()
-        return d
+        return dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
 
 
 def tap_pitch(P, tn):
@@ -1209,7 +742,7 @@ def tap_pitch(P, tn):
 def sink_tap_mode(t):
     """True when the type adds sink-anchored taps to its grid (clock.tap_mode "grid+sinks", or the KV-P6 alias
     "sinks", which since the CP1 r8 RULING no longer replaces the grid)."""
-    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks", "density", "explicit")
+    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks")
 
 
 def tap_grid(P, tn):
@@ -1221,19 +754,6 @@ def tap_grid(P, tn):
     only ADDS sink-anchored taps (taps.py) for face-register clusters after the grid taps, numbered on from the grid;
     a sink tap within taps.SEP_UM of a grid tap is dropped (same spine drop)."""
     t = P.types[tn]
-    if t.get("hard") and not t.get("hard_cores"):
-        # A bare hard macro (e.g. a PHY with registered FDI pins, COORD 10-25 11:31 option B) has ONE physical clock
-        # terminal, its LEF/lib clk pin at clock.tap_um: no R4 grid, no sink taps.  Same rule as die_clock.plan_taps,
-        # so the die tree, the die top, the kit stand-ins and the binder agree on the macro clock ports.
-        xy = t.get("clock", {}).get("tap_um")
-        if isinstance(xy, (list, tuple)) and len(xy) == 2:
-            return [("clk", float(xy[0]), float(xy[1]))]
-    if t.get("clock", {}).get("tap_mode") == "explicit":
-        import taps
-        return [(n, x, y) for n, x, y, _, _ in taps.explicit_taps(P, tn)]
-    if t.get("clock", {}).get("tap_mode") == "density":
-        import taps
-        return [(n, x, y) for n, x, y, _, _ in taps.density_taps(P, tn)]
     out = _grid_taps(P, tn)
     if sink_tap_mode(t):
         import taps
@@ -1245,137 +765,39 @@ def tap_grid(P, tn):
     return out
 
 
-def core_taps(P, tn):
-    """CP2: the type's EARLY core taps [(port, x, y, tap)] (type frame, unsnapped): clock.taps[] kind 'core' when
-    clock.core_taps == 'early', ports clk_c<k> in taps[] order.  A tap names its core (`<inst>`, every clock pin) or one
-    clock pin (`<inst>.<pin>`); tap['insertion_ps'] = the core's internal clock latency.  Otherwise []."""
-    ck = P.types[tn].get("clock", {}) or {}
-    if ck.get("core_taps") != "early":
-        return []
-    out = []
-    for tp in ck.get("taps", []) or []:
-        if tp.get("kind") == "core":
-            out.append((f"clk_c{len(out)}", float(tp["xy"][0]), float(tp["xy"][1]), tp))
-    import core_clock_groups as CG
-    return CG.merge_taps(P, tn, out)
-
-
-# = gen_phys.FF_TT_INSERTION_RATIO (routed RCX FF/TT pin-register mean ratio); used only when a plan gives no FF value
-FF_TT_INSERTION_RATIO = 0.81
-
-
-def _corner(corner):
-    c = str(corner).upper()
-    if c not in ("TT", "FF"):
-        raise ValueError(f"corner {corner!r}: sign-off is TT setup / FF hold only")
-    return c
-
-
-def common_latency_ps(P, corner="TT"):
-    """the die common (pin-register) latency at a corner: TT clock.insertion_ps; FF clock.insertion_ff_ps, absent ->
-    FF_TT_INSERTION_RATIO x TT (250 -> 202.5)."""
-    tt = float(P.clock["insertion_ps"])
-    if _corner(corner) == "TT":
-        return tt
-    return float(P.clock.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
-
-
-def core_tap_insertion_ps(tp, corner="TT"):
-    """a core tap's declared core insertion at a corner: TT insertion_ps; FF insertion_ff_ps, absent ->
-    FF_TT_INSERTION_RATIO x TT."""
-    tt = float(tp.get("insertion_ps", 0.0))
-    if _corner(corner) == "TT":
-        return tt
-    return float(tp.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
-
-
-def core_tap_early_ps(P, tp, corner="TT"):
-    """how early the spine delivers a core tap at a corner: max(0, core insertion - the die common latency), both
-    at that corner (CORELAT 10-25: FF = insertion_ff_ps - clock.insertion_ff_ps, never the TT number)."""
-    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner))
-
-
 def _grid_taps(P, tn):
     """the R4 pitch grid of tap_grid (no added sink taps)."""
     t = P.types[tn]
     w, h = t["outline_um"]
     pitch = tap_pitch(P, tn)
     nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))
-    if nx == 1 and ny == 1 and not t.get("clock", {}).get("tap_edge_y_um"):
+    if nx == 1 and ny == 1:
         x, y = t.get("clock", {}).get("tap_um", [w / 2, h / 2])
-        x, y = tap_clear(t, float(x), float(y))
-        return [("clk", x, y)]
+        return [("clk", float(x), float(y))]
     out = []
-    moved = []
     for j in range(ny):
         for i in range(nx):
             k = len(out)
-            cx, cy = (i + 0.5) * w / nx, (j + 0.5) * h / ny
-            x, y = tap_clear(t, cx, cy, [(a, b) for _, a, b in out])
-            if abs(x - cx) > 1e-6 or abs(y - cy) > 1e-6:
-                moved.append((k, (i * w / nx, j * h / ny, (i + 1) * w / nx, (j + 1) * h / ny)))
+            x, y = tap_clear(t, (i + 0.5) * w / nx, (j + 0.5) * h / ny, [(a, b) for _, a, b in out])
             out.append(("clk" if k == 0 else f"clk_t{k}", x, y))
-    if moved and t.get("clock", {}).get("tap_recentre") == "sinks":
-        import taps
-        out = taps.recentre_displaced(P, tn, out, moved)
-    edge = t.get("clock", {}).get("tap_edge_y_um")
-    if edge:
-        # CLOCK-KV-R8 (opt-in, COORD RULING CLOCK-KV-R7 (3) option a): a band partition outside the driven die-mesh rows
-        # takes its die clock entries on the array-facing edge(s) only: every grid column keeps one tap per listed
-        # type-frame y (plan-computed from the die mesh cover), the partition CTS reaches the interior (12.3 target).
-        xs_ = sorted({round((i + 0.5) * w / nx, 6) for i in range(nx)})
-        new = []
-        for ey in edge:
-            for cx in xs_:
-                x, y = tap_clear(t, cx, float(ey), [(a, b) for _, a, b in new])
-                new.append(("clk" if not new else f"clk_t{len(new)}", x, y))
-        out = new
     return out
-
-
-def placed_macro_boxes(t, halo=0.0):
-    """Type-frame obstacles shared by FT siting, clock taps and geometry gates.
-
-    Planned hard cores remain obstacles even before a view exists. Physical
-    contents (LEF-bearing SRAM/ROM/hard leaves) are equally real obstacles.
-    Match kit placement: a hard-core record wins over the same content instance,
-    and its track offset is applied once. R0/MX/MY/R180 preserve box dimensions.
-    Logical contents without a physical view do not reserve a macro footprint.
-    """
-    entries = {c['inst']: c for c in t.get('hard_cores', []) or []}
-    for c in t.get('contents', []) or []:
-        if c.get('lef') and c['inst'] not in entries:
-            entries[c['inst']] = c
-    boxes = {}
-    cores = {c['inst'] for c in t.get('hard_cores', []) or []}
-    for name, c in entries.items():
-        if 'origin_um' not in c or 'outline_um' not in c:
-            raise ValueError(f"physical macro {name}: origin_um and outline_um required")
-        x, y = map(float, c['origin_um']); w, h = map(float, c['outline_um'])
-        dx, dy = c.get('track_offset_um', [0.0, 0.0]) if name in cores else (0.0, 0.0)
-        x += dx; y += dy
-        if not all(math.isfinite(v) for v in (x, y, w, h, halo)) or w <= 0 or h <= 0:
-            raise ValueError(f"physical macro {name}: nonphysical footprint")
-        boxes[name] = (x-halo, y-halo, x+w+halo, y+h+halo)
-    return boxes
 
 
 TAP_CLEAR_UM = 8.64       # tap pin (and its root buffer) >= one lattice step off every hard core / macro of the type
 TAP_STEP_UM = 2.16
 
 
-def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
+def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM):
     """S81-P8 10-23 (GEOM-REVIEW5 15:14 condition (b)): an R4 grid tap at a cell centre landed ON a ROM / hard-core
     macro in 4-10 of 10 interior pins of the S81 frame kits (h9_r1: all), so its root buffer sat on a macro.  Move the
     tap to the nearest point (rings of 2.16 um) that is >= `clear` from every hard_cores box of the type (a channel),
     inside the outline by `clear`, and >= `clear` from the taps already placed.  Types without hard cores, or whose
-    tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
-    without hard cores)."""
+    tap is already in a channel, are unchanged."""
     w, h = t["outline_um"]
-    boxes = list(placed_macro_boxes(t, halo=clear).values())
-
-    boxes.extend((a - clear, b - clear, c + clear, d + clear)
-                 for a, b, c, d in t.get("clock", {}).get("keepouts_um", []))
+    boxes = []
+    for c in t.get("hard_cores", []) or []:
+        (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
+        boxes.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
 
     def free(px, py):
         if not (clear <= px <= w - clear and clear <= py <= h - clear):
@@ -1383,30 +805,17 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
         if any(abs(px - a) < clear and abs(py - b) < clear for a, b in taken):
             return False
         return not any(x0 < px < x1 and y0 < py < y1 for x0, y0, x1, y1 in boxes)
-    if (not boxes and not strict) or free(x, y):
+    if not boxes or free(x, y):
         return x, y
-    # Legal regions have axis-aligned boundaries. Project each boundary onto the same origin-centred 2.16-um
-    # lattice as the old expanding rings; their Cartesian product contains the nearest legal ring site. This
-    # avoids enumerating millions of interior points when an analog window pushes a tap hundreds of um.
-    def candidates(origin, extent, edges):
-        values = {origin}
-        for edge in [clear, extent - clear] + list(edges):
-            q = (edge - origin) / TAP_STEP_UM
-            for k in (math.floor(q), math.ceil(q)):
-                v = round(origin + k * TAP_STEP_UM, 8)
-                if clear - 1e-7 <= v <= extent - clear + 1e-7:
-                    values.add(v)
-        return values
-    obs = boxes + [(a - clear, b - clear, a + clear, b + clear) for a, b in taken]
-    xs = candidates(x, w, [v for a, b, c, d in obs for v in (a, c)])
-    ys = candidates(y, h, [v for a, b, c, d in obs for v in (b, d)])
-    ok = [(px, py) for px in xs for py in ys if free(px, py)]
-    if ok:
-        px, py = min(ok, key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7),
-                                       (p[0] - x) ** 2 + (p[1] - y) ** 2, p))
-        return round(px, 4), round(py, 4)
-    raise ValueError(f"no legal clock tap site in {t.get('module', 'type')} near ({x}, {y}); "
-                     f"clearance {clear} um, {len(boxes)} keepouts")
+    for r in range(1, int(max(w, h) / TAP_STEP_UM) + 1):
+        d = r * TAP_STEP_UM
+        ring = [(x + i * TAP_STEP_UM, y + s * d) for i in range(-r, r + 1) for s in (-1, 1)] + \
+               [(x + s * d, y + i * TAP_STEP_UM) for i in range(-r + 1, r) for s in (-1, 1)]
+        ok = [p for p in ring if free(*p)]
+        if ok:
+            px, py = min(ok, key=lambda p: ((p[0] - x) ** 2 + (p[1] - y) ** 2, p))
+            return round(px, 4), round(py, 4)
+    return x, y
 
 
 def has_epoch(port):
@@ -1577,27 +986,12 @@ def validate(raw):
                 errs.append(f"{what} '{x[key]}' defined twice")
             seen.add(x[key])
     for tn, t in raw["partition_types"].items():
-        for y in t.get("clock", {}).get("tap_edge_y_um", []):
-            if not 0 <= y <= t["outline_um"][1]:
-                errs.append(f"type {tn}: clock edge y {y} outside outline")
-        import core_clock_groups as CG
-        try:
-            CG.groups(P, tn)
-            if t.get("clock", {}).get("core_groups") and all("network" in g for g in t["clock"]["core_groups"]):
-                CG.network_manifest(P, tn)
-        except (ValueError, KeyError, TypeError) as exc:
-            errs.append(f"type {tn}: {exc}")
         names = [b["name"] for b in t.get("buses", [])] + \
             [s["name"] + sfx for s in t.get("ft_slots", []) for sfx in ("_i", "_o")]
         dup = {n for n in names if names.count(n) > 1}
         if dup:
             errs.append(f"type {tn}: bus names defined twice: {sorted(dup)}")
         for s in t.get("ft_slots", []):
-            from ft_bit_sites import validate_slot
-            try:
-                validate_slot(s)
-            except ValueError as exc:
-                errs.append(f"type {tn} slot {s['name']}: {exc}")
             if s["in_face"] == s["out_face"]:
                 errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
             if "regs_um" in s and len(s["regs_um"]) != s.get("stations", 1):

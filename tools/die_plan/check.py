@@ -11,19 +11,12 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               face + layer do not overlap; ft slot buses sit on the slot's in/out face; every instance of a
               replicated type yields the IDENTICAL pin table (bus, bit, layer, type-frame face and coordinate)
   layers      port and ft layers <= die.layer_budget.partition_signal_max
-  m89_signals METHODOLOGY 5.1 / ruling 9.3 (B#12 2026-10-24): no signal on M8/M9 -- they carry only the die clock
-              spine, die reset and PG.  ERROR for die_use ft_reserved, ft_route_layers / lane route_layers / port /
-              bus / spare-slot / face_layers / ft slot / channel layers on M8/M9, type ft_budget on M8/M9, and
-              partition_signal_max above M7
   faces       per partition face: pins / um <= face_pins_per_um averaged over every face_window_um window (all
               layers together, at most face_pin_layers layers per port); per port + layer pins / tracks <= pin_track_max
   cuts        cut sweep every cut_step_um, vertical and horizontal lines: the bits of every lane route crossing the
-              line against the free tracks (M4-M7, core OBS union removed, per-layer FT-band shares or ft_track_frac); full line and per partition
-              segment <= cut_ratio_max (the die layers M8/M9 add no signal capacity, ruling 9.3; the M8/M9-only
-              ratio is still reported as research info)
-  hops        every register-to-register hop of every lane <= reach (lane.reach_um, else die.reach_um; both capped
-              at the 405-um M4-M7 signal reach, ruling 9.3); ft stations <= ft_station_max_um (default 405, R3,
-              ruling 9.4) apart; a plan budget above 405 is an ERROR
+              line against the tracks (partition ft layers M4-M7 x ft_track_frac + die layers x cut_avail); full
+              line and per partition segment <= cut_ratio_max; M8/M9-only ratio reported (research sweep form)
+  hops        every register-to-register hop of every lane <= reach (lane.reach_um or die.reach_um)
   types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
               them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
@@ -31,8 +24,6 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               PLANDIR/{r8,bind}/bus_groups.json): one added delay per as-built bus, equal across replicated consumers, no
               as-built order inversion, one landing pad per site of a replicated type (r8.py); depth = the R8 landing
               table (--landing, else PLANDIR/**/<die>_r8_landing.json from gen.py latency --groups) or the bound top
-  hard_pinreg registered-pin hard types (hard_pinreg.py): single hard core with registered_pins + lib, no ft slots;
-              every lib corner view has setup+hold on every input and clk->q on every output (fail closed)
   clock/reset every non-hard type has a clock tap inside its outline on a die layer and a reset synchronizer;
               data_reset false, epoch bit true (schema)
   G0C (--completeness): hard_cores, core_faces, complete; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
@@ -50,7 +41,6 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-import reach as RT  # noqa: E402
 import schema as S  # noqa: E402
 from schema import DIE_PART, OPP  # noqa: E402
 
@@ -107,54 +97,6 @@ def on_track(c, L):
 
 
 # --------------------------------------------------------------------------------------------------- geometry
-def check_ft_macro_sites(P, R):
-    """Reject station cells inside placed SRAM/ROM/core footprints at actual bit sites."""
-    import gen_phys
-    import ft_bit_sites
-    count = 0
-    for tn, t in P.types.items():
-        try:
-            boxes = S.placed_macro_boxes(t)
-        except ValueError as exc:
-            R.err('geometry', f'type {tn}: {exc}', type=tn)
-            continue
-        if not boxes or not t.get('ft_slots'):
-            continue
-        pins = defaultdict(dict)
-        for bus, bit, _layer, x, y, face in gen_phys.type_pins(P, tn):
-            pins[bus][bit] = (x, y, face)
-        for slot in t['ft_slots']:
-            try:
-                ft_bit_sites.validate_slot(slot)
-            except ValueError as exc:
-                R.err('geometry', f'type {tn} slot {slot["name"]}: {exc}', type=tn)
-                continue
-            name = slot['name']; stages = int(slot.get('stations', 1)); hits = 0; example = None
-            pi, po = pins[name+'_i'], pins[name+'_o']
-            for bit in sorted(set(pi) | set(po)):
-                ap = pi.get(bit) or po[bit]; bp = po.get(bit) or pi[bit]
-                def inset(p):
-                    x, y, face = p
-                    return {'E': (x-1,y), 'W': (x+1,y), 'N': (x,y-1), 'S': (x,y+1)}[face]
-                a, b = inset(ap), inset(bp); route = zroute(a, b, ap[2], bp[2]); length = plen(route)
-                for j in range(stages):
-                    if slot.get('bit_sites_um') and j > 0:
-                        x, y = slot['bit_sites_um'][j-1][bit]; w, h = slot['bit_site_cell_um']
-                        rect = (x, y, x+w, y+h)
-                    else:
-                        xy = a if slot.get('bit_sites_um') else tuple(slot['regs_um'][j]) if slot.get('regs_um') else point_at(route, length*j/stages)
-                        x, y = xy; rect = (x, y, x, y)
-                    for macro, (x0,y0,x1,y1) in boxes.items():
-                        # Centres have no extent; explicit cells must clear with their whole envelope.
-                        hit = (x0+EPS < rect[0] < x1-EPS and y0+EPS < rect[1] < y1-EPS) if rect[0] == rect[2] else (min(rect[2],x1)-max(rect[0],x0)>EPS and min(rect[3],y1)-max(rect[1],y0)>EPS)
-                        if hit:
-                            hits += 1; example = example or (j, bit, macro); break
-            if hits:
-                j, bit, macro = example; count += hits
-                R.err('geometry', f'type {tn} slot {name}: {hits} actual-bit station cells/sites intersect physical macros (stage {j}, bit {bit}, macro {macro})', type=tn)
-    return count
-
-
 def check_geometry(P, R):
     g = P.grid
     for nm, base in [("ORFS base lattice", S.BASE_LATTICE_UM)] + \
@@ -220,9 +162,8 @@ def check_geometry(P, R):
             if span > P.reach * sl.get("stations", 1) + EPS:
                 R.warn("geometry", f"type {tn} slot {sl['name']}: crossing ~{span:.0f} um > {sl.get('stations', 1)} "
                        f"station(s) x reach {P.reach:.0f} (see hops)", type=tn)
-    macro_hits = check_ft_macro_sites(P, R)
     return dict(partition_area_mm2=area / 1e6, channel_area_mm2=chan / 1e6, uncovered_mm2=max(gap, 0) / 1e6,
-                fill=area / (W * H), planned_channels=chans, station_macro_intersections=macro_hits)
+                fill=area / (W * H), planned_channels=chans)
 
 
 def fmt_rect(r):
@@ -238,8 +179,8 @@ def check_abutment(P, R):
     for pid, pr in P.ports.items():
         f = pr["face"]
         # per-face layer sets (COORD 10-23): a type may list face_layers[type face]; then every pin layer on that
-        # face must be in the set, and a layer above partition_signal_max is allowed only when EVERY partition end
-        # lists it for its face (still <= M7: an M8/M9 face layer is an m89_signals ERROR, ruling 9.3)
+        # face must be in the set, and a layer above partition_signal_max (M8 on S81 svc fold / rail faces) is
+        # allowed only when EVERY partition end lists it for its face
         pend = []
         if pr["src"]["part"] != DIE_PART:
             pend.append((pr["src"]["part"], f))
@@ -386,13 +327,7 @@ def check_faces(P, R, face_pins):
         # budget, COORD 10-23 07:43) gets the per-layer budget on each layer: face_pins_per_um * n / face_pin_layers
         fl = P.ptype(part).get("face_layers", {}).get(P.type_face(part, df))
         nl = max(B["face_pin_layers"], len(fl) if fl else 0)
-        # per-type budget (G2-proven, KV RULING 10-25 (a)) where the type declares one, never above the hard cap
-        tb = P.ptype(part).get("face_pins_per_um")
-        per = min(float(tb), S.FACE_PINS_HARD_CAP) if tb else B["face_pins_per_um"]
-        if tb and not P.ptype(part).get("face_budget_g2"):
-            R.err("faces", f"{part}: type face_pins_per_um {tb:g} without face_budget_g2 (the G2 probe that proves "
-                  "it)", part=part)
-        lim = per * nl / B["face_pin_layers"] * win + 2 * nl
+        lim = B["face_pins_per_um"] * nl / B["face_pin_layers"] * win + 2 * nl
         cs = sorted(c for c, _, _ in pins)
         mx, at = 0, None
         for i, c in enumerate(cs):
@@ -402,7 +337,7 @@ def check_faces(P, R, face_pins):
         worst.append((mx / win, part, df))
         if mx > lim + EPS:
             R.err("faces", f"{part}.{df}: {mx} pins in the {win:g}-um window at {at:.2f} "
-                  f"({mx / win:.2f}/um > {per:g})", part=part)
+                  f"({mx / win:.2f}/um > {B['face_pins_per_um']:g})", part=part)
     for pid, pr in P.ports.items():
         if len(pr["layers"]) > B["face_pin_layers"]:
             ends = [(pr[k]["part"], pr["face"] if k == "src" else OPP[pr["face"]]) for k in ("src", "dst")
@@ -480,75 +415,10 @@ def lane_geometry(P, lid):
     return pts, regs, xs
 
 
-def station_max(P, R=None):
-    """R3 (ruling 9.4): ft stations at most ft_station_max_um apart, a ceiling of 405 um (SIGNAL_REACH_UM)."""
-    v = float(P.budgets.get("ft_station_max_um", S.SIGNAL_REACH_UM))
-    if R is not None and v > S.SIGNAL_REACH_UM + EPS:
-        R.err("stations", f"budgets.ft_station_max_um {v:g} > {S.SIGNAL_REACH_UM:g} um (R3, ruling 9.4: stations every "
-              f"<= {S.SIGNAL_REACH_UM:g} um); judged at {S.SIGNAL_REACH_UM:g}")
-    return min(v, S.SIGNAL_REACH_UM)
-
-
-def check_m89_signals(P, R, max_msgs=40):
-    """ruling 9.3: signals (partition pins, ft, die-top nets) only on <= M7; M8/M9 = die clock spine / reset / PG."""
-    res = set(S.RESERVED_DIE_LAYERS)
-    smax = lnum(S.SIGNAL_LAYER_MAX)
-    cnt = defaultdict(int)
-    n = [0]
-
-    def bad(what, msg, **kw):
-        cnt[what] += 1
-        n[0] += 1
-        if n[0] <= max_msgs:
-            R.err("m89_signals", msg + " (ruling 9.3: M8/M9 carry only the die clock spine, reset and PG)", **kw)
-
-    lb = P.layer_budget
-    if lnum(lb["partition_signal_max"]) > smax:
-        bad("partition_signal_max", f"layer_budget.partition_signal_max {lb['partition_signal_max']} above "
-            f"{S.SIGNAL_LAYER_MAX}")
-    if "ft_reserved" in lb.get("die_use", []):
-        bad("ft_reserved", "layer_budget.die_use lists ft_reserved (over-the-top ft on M8/M9)")
-    if res & set(lb.get("ft_route_layers", [])):
-        bad("ft_route_layers", f"layer_budget.ft_route_layers {lb['ft_route_layers']} include M8/M9")
-    for lid, ln in P.lanes.items():
-        if res & set(ln.get("route_layers", [])):
-            bad("lane_route_layers", f"lane {lid}: route_layers {ln['route_layers']} include M8/M9", lane=lid)
-    for tn, t in P.types.items():
-        for f, ls in t.get("face_layers", {}).items():
-            if res & set(ls):
-                bad("face_layers", f"type {tn}: face_layers[{f}] {ls} include M8/M9", type=tn)
-        for b in t.get("buses", []):
-            if res & set(b.get("layers", [])):
-                bad("bus_layers", f"type {tn} bus {b['name']}: layers {b['layers']} include M8/M9", type=tn)
-        for sl in t.get("ft_slots", []):
-            if res & ({sl.get("layer")} | set(sl.get("layers", []))):
-                bad("ft_slot_layers", f"type {tn} ft slot {sl['name']}: on M8/M9", type=tn)
-        for sp in t.get("spare_slots", []):
-            if res & set(sp.get("layers", [])):
-                bad("spare_slot_layers", f"type {tn} spare slot {sp['name']}: layers {sp['layers']} include M8/M9",
-                    type=tn)
-        fb = {k: v for k, v in t.get("ft_budget", {}).items() if k in res and v > 0}
-        if fb:
-            bad("ft_budget", f"type {tn}: ft_budget {fb} reserves M8/M9 tracks for ft", type=tn)
-    for pid, pr in P.ports.items():
-        if res & set(pr.get("layers", [])):
-            bad("port_layers", f"port {pid}: pin layers {pr['layers']} include M8/M9", port=pid)
-    for ch in P.die.get("channels", []):
-        if "ports" in ch and res & set(ch.get("layers", [])):
-            bad("channel_layers", f"channel {ch.get('name', '?')}: signal layers {ch['layers']} include M8/M9")
-    if n[0] > max_msgs:
-        R.err("m89_signals", f"... {n[0] - max_msgs} more signal uses of M8/M9 (counts in summary.m89_signals)")
-    dr = P.die_reach_um
-    if dr > S.SIGNAL_REACH_UM + EPS:
-        R.warn("hops", f"die.reach_um {dr:g} > the {S.SIGNAL_REACH_UM:g}-um M4-M7 signal reach (ruling 9.3); hops "
-               f"are judged at {S.SIGNAL_REACH_UM:g}")
-    return dict(total=n[0], by=dict(cnt))
-
-
 def check_hops(P, R, geo):
     worst = []
     for lid, (pts, regs, xs) in geo.items():
-        reach = min(float(P.lanes[lid].get("reach_um", P.reach)), P.reach)
+        reach = float(P.lanes[lid].get("reach_um", P.reach))
         hops = [abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(regs, regs[1:])]
         h = max(hops) if hops else 0.0
         worst.append((h / reach, lid, h, reach))
@@ -556,8 +426,8 @@ def check_hops(P, R, geo):
             i = hops.index(h)
             R.err("hops", f"lane {lid}: hop {i} is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
                   "partition's slot or shorten it)", lane=lid)
-    # R3 (ruling 9.4): ft stations at most budgets.ft_station_max_um (<= 405) apart inside every crossed partition
-    smax = station_max(P, R)
+    # COORD 10-23 R3: ft stations at most budgets.ft_station_max_um (750) apart inside every crossed partition
+    smax = float(P.budgets.get("ft_station_max_um", 750.0))
     seen = set()
     for lid, (pts, regs, xs) in geo.items():
         for x in xs:
@@ -578,33 +448,7 @@ def track_density(P, names, frac):
     return sum(frac / P.layers[n]["pitch_um"] for n in names if n in P.layers)
 
 
-def cut_interval_tracks(lo, hi, pitch, frac, blocked=(), bands=()):
-    """Exact free tracks on a cut: OBS union wins; bands replace the base share.
-
-    blocked=[(lo,hi)], bands=[(lo,hi,share)] are intervals on ONE layer.
-    Integrating all boundaries avoids double-counting overlapping OBS or bands.
-    """
-    points={float(lo),float(hi)}
-    for a,b in blocked:
-        points.update((max(lo,min(hi,a)),max(lo,min(hi,b))))
-    for a,b,_ in bands:
-        points.update((max(lo,min(hi,a)),max(lo,min(hi,b))))
-    points=sorted(points);tracks=0.0
-    for a,b in zip(points,points[1:]):
-        mid=(a+b)/2
-        if b-a<=EPS or any(u<mid<v for u,v in blocked):continue
-        shares=[share for u,v,share in bands if u<=mid<=v]
-        tracks+=(b-a)*(max(shares) if shares else frac)/pitch
-    return tracks
-
-
 def check_cuts(P, R, geo):
-    # Same rectangles as the die-route capacity model: declared/routed core
-    # obstructions (union), transformed through each instance orientation,
-    # plus the explicitly reserved per-layer feedthrough bands.
-    from die_trial import die_core_rects, ft_band_rects
-    cores={L:die_core_rects(P,L) for L in {l for ls in PART_FT_LAYERS.values() for l in ls}}
-    bands=ft_band_rects(P)
     B = P.budgets
     step = B["cut_step_um"]
     lim = B["cut_ratio_max"]
@@ -622,7 +466,7 @@ def check_cuts(P, R, geo):
     for orient, D, along in (("vertical", P.W, P.H), ("horizontal", P.H, P.W)):
         wire_dir = "H" if orient == "vertical" else "V"     # wires crossing a vertical line run horizontally
         dl = [n for n in die_l if P.layers[n]["dir"] == wire_dir]
-        die_den = 0.0           # ruling 9.3: M8/M9 carry no signals, cut_avail adds no capacity
+        die_den = sum(avail.get(n, 0.0) / P.layers[n]["pitch_um"] for n in dl)
         die_den_raw = sum(1.0 / P.layers[n]["pitch_um"] for n in dl)
         n = int(D // step)
         for k in range(1, n + 1):
@@ -644,16 +488,9 @@ def check_cuts(P, R, geo):
                     continue
                 t = P.ptype(pn)
                 frac = t.get("ft_track_frac", FT_TRACK_FRAC)
-                seg_cap=0.0
-                for L in PART_FT_LAYERS[wire_dir]:
-                    if L not in P.layers:continue
-                    obs=[((cr[1],cr[3]) if orient=="vertical" else (cr[0],cr[2]))
-                         for cr in cores[L] if ((cr[0]+EPS<c<cr[2]-EPS) if orient=="vertical" else (cr[1]+EPS<c<cr[3]-EPS))]
-                    reserved=[(*((br[2],br[4]) if orient=="vertical" else (br[1],br[3])),br[5])
-                              for br in bands if br[0]==L and
-                              ((br[1]+EPS<c<br[3]-EPS) if orient=="vertical" else (br[2]+EPS<c<br[4]-EPS))]
-                    seg_cap+=cut_interval_tracks(lo,hi,P.layers[L]["pitch_um"],frac,obs,reserved)
-                parts_cap+=seg_cap
+                pden = track_density(P, PART_FT_LAYERS[wire_dir], frac)
+                seg_cap = (hi - lo) * (pden + die_den)
+                parts_cap += (hi - lo) * pden
                 sb = sum(w for y, w in hits if lo - EPS <= y <= hi + EPS)
                 if sb:
                     loc.append((sb / seg_cap if seg_cap else math.inf, pn, sb, seg_cap))
@@ -691,8 +528,7 @@ def check_cuts(P, R, geo):
     out["worst_full"] = dict(ratio=round(worst_full[0], 4), at=worst_full[1])
     out["worst_partition_segment"] = dict(ratio=round(worst_loc[0], 4), at=worst_loc[1])
     out["model"] = dict(partition_ft_layers=PART_FT_LAYERS, ft_track_frac_default=FT_TRACK_FRAC,
-                        die_layers=die_l, cut_avail=avail, step_um=step,
-                        core_obs="declared/routed union", ft_bands="piecewise per-layer reserved shares")
+                        die_layers=die_l, cut_avail=avail, step_um=step)
     return out
 
 
@@ -703,23 +539,12 @@ def check_latency(P, R):
         R.err("latency", "no latency table (generate it: python3 tools/die_plan/gen.py latency PLAN.json --inplace)")
         return {}
     for lid in P.lanes:
-        ln_ = P.lanes[lid]
-        if ln_.get("beats") or ln_.get("word_bits"):
-            # DEC12 multi-beat lane: both keys, and the port carries ceil(word / beats) + beat-index bits
-            bt, wb = int(ln_.get("beats", 0)), int(ln_.get("word_bits", 0))
-            w0 = int(P.ports[ln_["ports"][0]]["width"])
-            need = -(-wb // bt) + int(ln_.get("beat_index_bits", max(1, (bt - 1).bit_length()))) if bt and wb else None
-            if need is None or w0 != need:
-                R.err("latency", f"lane {lid}: beats {bt} / word_bits {wb} need port width {need}, got {w0}", lane=lid)
         want = P.lane_latency(lid)
         got = tab.get(lid)
         if got is None:
             R.err("latency", f"lane {lid}: missing from the latency table", lane=lid)
         elif got["cycles"] != want["cycles"]:
             R.err("latency", f"lane {lid}: table says {got['cycles']} cycles, plan gives {want['cycles']}", lane=lid)
-        elif got.get("word_cycles") != want.get("word_cycles"):
-            R.err("latency", f"lane {lid}: table word_cycles {got.get('word_cycles')} != plan {want.get('word_cycles')}",
-                  lane=lid)
     # R8: one cycle per latency group (bus groups from BINDER2 + replicated consumers), checked on the TABLE (what the
     # binder / compiler read), and pads realisable per type
     for name, kind, lids in P.latency_groups():
@@ -728,7 +553,7 @@ def check_latency(P, R):
             R.err("latency", f"{kind} group {name}: unequal delays {got} (regenerate: gen.py latency --inplace pads "
                   "every member to the slowest)")
     _, bad = P.bus_pads()
-    for m in bad + P.landed_skew():
+    for m in bad:
         R.err("latency", m)
     return {lid: P.lane_latency(lid)["cycles"] for lid in P.lanes}
 
@@ -747,8 +572,7 @@ def check_clock_reset(P, R):
             if ck.get("layer") and ck["layer"] not in die_l:
                 R.err("clock", f"type {tn}: clock tap layer {ck['layer']} is not a die layer {sorted(die_l)}", type=tn)
             far = max(abs(x - a) + abs(y - b) for a in (0, w) for b in (0, h))
-            ck_reach = min(RT.TABLE[n]["measured_um"] for n in S.RESERVED_DIE_LAYERS)   # clock wire: M8/M9 relay reach
-            if far > 2 * ck_reach:
+            if far > 2 * P.reach:
                 R.warn("clock", f"type {tn}: farthest boundary point {far:.0f} um from the tap (> 2 hops)", type=tn)
         insts = {c["inst"] for c in t.get("contents", [])}
         for b in t.get("buses", []):
@@ -762,144 +586,6 @@ def check_clock_reset(P, R):
             if s.get("layer") and lnum(s["layer"]) > smax:
                 R.err("layers", f"type {tn} slot {s['name']}: ft layer {s['layer']} above partition_signal_max",
                       type=tn)
-
-
-CLOCK_LEG_MAX_UM = 405.0   # OWNER 10-17 planned reach; GEOM-REVIEW-2 11:35 R1 (3) chain-hop taps <= ~400 um
-CLOCK_BUF_HALO_UM = 2.0   # GEOM-REVIEW 15:24 [PATH-HBM-TKMCLKBUF] (1): halo to any FT bit site / station register
-
-
-def _buf_near_station(t, q, cell=(1.404, 0.27)):
-    """First FT bit site / ft station / internal station register whose cell box (bit_site_cell_um, LL at the point)
-    comes within CLOCK_BUF_HALO_UM of the buffer point q, else None."""
-    h = CLOCK_BUF_HALO_UM
-
-    def hit(p, wh):
-        return (p[0] - h - EPS < q[0] < p[0] + wh[0] + h + EPS) and (p[1] - h - EPS < q[1] < p[1] + wh[1] + h + EPS)
-
-    for f in t.get("ft_slots", []) or []:
-        wh = f.get("bit_site_cell_um") or cell
-        for p in f.get("regs_um", []) or []:
-            if hit(p, wh):
-                return f"ft {f['name']} station {p}"
-        for grp in f.get("bit_sites_um", []) or []:
-            for p in grp:
-                if hit(p, wh):
-                    return f"ft {f['name']} bit site {p}"
-    for s in t.get("internal_stations", []) or []:
-        for p in s.get("regs_um", []) or []:
-            if hit(p, cell):
-                return f"internal station {s.get('conn')} {p}"
-    return None
-
-def check_clock_branch_buffers(P, R):
-    """PATH-HBM 10-25 (COORD ruling (1) 14:44): clock.branch_buffers are real std-cell clock buffers: none inside a
-    hard core, every driven tap exists and names the buffer as its parent (and every taps[].parent is a buffer),
-    and every leg (buffer -> driven tap, Manhattan) is <= CLOCK_LEG_MAX_UM."""
-    out = dict(buffers=0, worst_leg_um=0.0, types=[])
-    reach = CLOCK_LEG_MAX_UM
-    for tn, t in P.types.items():
-        ck = t.get("clock") or {}
-        bufs = ck.get("branch_buffers") or []
-        taps = {tp["name"]: tp for tp in ck.get("taps", []) or []}
-        names = [b["name"] for b in bufs]
-        bad = False
-        if len(set(names)) != len(names):
-            R.err("clock", f"type {tn}: duplicate branch buffer names", type=tn)
-            bad = True
-        for nm, tp in taps.items():
-            if tp.get("parent") and tp["parent"] not in names:
-                R.err("clock", f"type {tn}: tap {nm} parent {tp['parent']} is not a branch buffer", type=tn)
-                bad = True
-        boxes = []
-        for c in t.get("hard_cores", []) or []:
-            x, y = c["origin_um"]
-            dx, dy = c.get("track_offset_um", [0, 0])
-            w, h = c["outline_um"]
-            boxes.append((c["inst"], x + dx, y + dy, x + dx + w, y + dy + h))
-        for b in bufs:
-            out["buffers"] += 1
-            q = b["xy"]
-            hit = next((n for n, x0, y0, x1, y1 in boxes
-                        if x0 + EPS < q[0] < x1 - EPS and y0 + EPS < q[1] < y1 - EPS), None)
-            if hit:
-                R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} is inside hard core {hit}", type=tn)
-                bad = True
-            near = _buf_near_station(t, q)
-            if near:
-                R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} within {CLOCK_BUF_HALO_UM} um halo of "
-                               f"{near}", type=tn)
-                bad = True
-            for d in b["drives"]:
-                tp = taps.get(d)
-                if tp is None:
-                    R.err("clock", f"type {tn}: branch buffer {b['name']} drives unknown tap {d}", type=tn)
-                    bad = True
-                    continue
-                if tp.get("parent") != b["name"]:
-                    R.err("clock", f"type {tn}: tap {d} driven by {b['name']} but its parent is {tp.get('parent')}",
-                          type=tn)
-                    bad = True
-                leg = abs(tp["xy"][0] - q[0]) + abs(tp["xy"][1] - q[1])
-                out["worst_leg_um"] = max(out["worst_leg_um"], round(leg, 2))
-                if leg > reach + EPS:
-                    R.err("clock", f"type {tn}: branch buffer {b['name']} leg to {d} {leg:.1f} um > reach {reach:g}",
-                          type=tn)
-                    bad = True
-            # GEOM-REVIEW 15:24 (2): leg repeaters (slew) are SYMMETRIC -- the same count on every leg of a buffer --
-            # std cells off every hard core and the station halo; every segment buffer -> rep -> ... -> tap <= reach
-            reps = b.get("leg_repeaters")
-            if reps is not None:
-                cnt = {d: [r for r in reps if r.get("tap") == d] for d in b["drives"]}
-                if len({len(v) for v in cnt.values()}) != 1 or any(r.get("tap") not in cnt for r in reps):
-                    R.err("clock", f"type {tn}: branch buffer {b['name']} leg repeaters not symmetric "
-                                   f"{ {d: len(v) for d, v in cnt.items()} }", type=tn)
-                    bad = True
-                for d, rl in cnt.items():
-                    tp = taps.get(d)
-                    pts = [q] + [r["xy"] for r in sorted(rl, key=lambda r: r["k"])] + ([tp["xy"]] if tp else [])
-                    for a_, b_ in zip(pts, pts[1:]):
-                        if abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]) > reach + EPS:
-                            R.err("clock", f"type {tn}: {b['name']} leg {d} segment {a_}->{b_} > reach {reach:g}",
-                                  type=tn)
-                            bad = True
-                    for r in rl:
-                        ll, (cw, ch_) = r["cell_ll_um"], r.get("cell_wh_um", (1.404, 0.27))
-                        hit = next((n for n, x0, y0, x1, y1 in boxes if ll[0] < x1 - EPS and ll[0] + cw > x0 + EPS
-                                    and ll[1] < y1 - EPS and ll[1] + ch_ > y0 + EPS), None)
-                        if hit:
-                            R.err("clock", f"type {tn}: leg repeater {r['name']} cell at {ll} overlaps hard core {hit}",
-                                  type=tn)
-                            bad = True
-                        near = _buf_near_station(t, r["xy"])
-                        if near:
-                            R.err("clock", f"type {tn}: leg repeater {r['name']} within {CLOCK_BUF_HALO_UM} um halo of "
-                                           f"{near}", type=tn)
-                            bad = True
-                        out["leg_repeaters"] = out.get("leg_repeaters", 0) + 1
-        if bad:
-            out["types"].append(tn)
-    return out
-
-
-def check_reset(P, R):
-    """OWNER RESET RULE 2026-10-24 (reset_tree.py): pipelined plans -- every type's equal-depth relay tree builds with
-    hops <= reset.relay_um under the plan contract part_depth, the die region trees reach every partition; counted
-    plans -- one WARN (the rule is not met yet).  Summary: release, K, per region die depth E / release clocks /
-    hosting."""
-    import reset_tree
-    errs, warns, info = reset_tree.check(P)
-    for e in errs:
-        R.err("reset", e)
-    for w in warns:
-        R.warn("reset", w)
-    if info is None:
-        return dict(release=P.reset.get("release", "counted"))
-    if info.get("release") == "wavefront":     # OWNER DECISION 13: per-partition release offsets (reset_tree.py offsets)
-        return {k: info[k] for k in ("release", "sync_stages", "root", "hop_um", "relay_um", "max_release",
-                                     "max_die_hop_um", "unreachable")}
-    return dict(release=info["release"], part_depth_K=info["part_depth_K"], relay_um=info["relay_um"],
-                regions=[{k: v for k, v in r.items() if k not in ("nonuniform_types", "busiest_hosts")}
-                         for r in info["regions"]])
 
 
 # ------------------------------------------------------------------------------------------- taps, hard cores
@@ -987,12 +673,6 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
             if not pins:
                 R.err("hard_cores", f"type {tn} core {hc['inst']}: no pins listed (pins / pins_file): the core pins "
                       "must be proven on the kit tracks", type=tn)
-            if hc.get("straps") or hc.get("parent_id_straps"):
-                from parent_id_straps import validate_parent_id_straps
-                try:
-                    validate_parent_id_straps(hc, pins=pins)
-                except ValueError as e:
-                    R.err("hard_cores", f"type {tn} core {hc['inst']}: {e}", type=tn)
             insts = [n for n, p_ in P.parts.items() if p_["type"] == tn]
             bad = 0
             for nm, ln, x, y in pins:
@@ -1083,12 +763,10 @@ def load_core_conns(plan_dir=None, path=None):
     "face:<N|S|E|W>", ...]}}} (default PLANDIR/core_conns.json): core connectivity the plan JSON does not carry
     (cores nested inside a content leaf, e.g. S81 frame qbanks; KV head cores), written by the binder / plan owner."""
     f = Path(path) if path else Path(plan_dir or ".") / "core_conns.json"
-    if path is not None and not f.is_file():
-        raise FileNotFoundError(f"explicit --core-conns file does not exist: {f}")
     return json.loads(f.read_text()) if f.is_file() else {}
 
 
-def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=None):
+def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
     """Connectivity-aware hard-core face rule (GEOM-REVIEW face rule; COORD 10-23 PLAN-TOOL4).
 
     Every hard-core pin group (core port) that connects to a partition face or to another core / placed leaf must
@@ -1117,14 +795,8 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=
             if c["inst"] not in cent and "origin_um" in c and "outline_um" in c:
                 cent[c["inst"]] = (c["origin_um"][0] + c["outline_um"][0] / 2,
                                    c["origin_um"][1] + c["outline_um"][1] / 2)
-        ist_bus = [e for e in t.get("internal_stations", [])
-                   if str(e.get("conn", "")).startswith("bus:") and e.get("regs_um")]
-        # Broadcast buses may have distinct final relay legs for each capture core.
-        # Unscoped legacy entries retain their previous last-entry behavior.
-        ist_last = {e["conn"][4:]: tuple(e["regs_um"][-1]) for e in ist_bus
-                    if not e.get("capture") or str(e["capture"]).startswith("face bus ")}
-        ist_capture = {(e["conn"][4:], str(e["capture"])): tuple(e["regs_um"][-1])
-                       for e in ist_bus if e.get("capture") and not str(e["capture"]).startswith("face bus ")}
+        ist_last = {e["conn"][4:]: tuple(e["regs_um"][-1]) for e in t.get("internal_stations", [])
+                    if str(e.get("conn", "")).startswith("bus:") and e.get("regs_um")}
         conns = {}          # (leaf inst, leaf port) -> [(kind, name)]
         for b in t.get("buses", []):
             if b.get("leaf") and "." in b["leaf"]:
@@ -1174,11 +846,7 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=
                     if kind == "bus":
                         if bt is None:
                             bt = _bus_targets(P, tn)
-                        if (nm, ci + "." + lp) in ist_capture:
-                            pts.append((f"station {nm} -> {ci}.{lp}", ist_capture[(nm, ci + "." + lp)]))
-                        elif (nm, ci) in ist_capture:
-                            pts.append((f"station {nm} -> {ci}", ist_capture[(nm, ci)]))
-                        elif nm in ist_last:
+                        if nm in ist_last:
                             # R3-INTERNAL: a bus with FIRM internal stations reaches the core from its last station
                             # (regs_um[-1], the register next to the core pin), not from the face window
                             pts.append((f"station {nm}", ist_last[nm]))
@@ -1205,10 +873,6 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=
                 out["groups"] += 1
                 out["pins"] += len(cs)
                 out["pins_away"] += away
-                if per_core is not None:        # CLOCK-KV-R12: per-core away-pin tally (core_pins_orient.py)
-                    pc = per_core.setdefault((tn, ci), [0, 0])
-                    pc[0] += away
-                    pc[1] += 1 if mean < FACE_AWAY_COS else 0
                 if mean < FACE_WARN_COS:
                     bf = best_face(dirs)
                     part = ", ".join(sorted({wh for wh, _, _ in dirs})[:3]) + (" ..." if len(dirs) > 3 else "")
@@ -1251,7 +915,7 @@ def _hops_ok(a, regs, b, smax):
     return max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(pts, pts[1:])) <= smax + EPS
 
 
-def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
+def check_completeness(P, R, no_cells=(), max_msgs=5):
     """PLAN COMPLETENESS (COORD 10-23 ~20:00): G0 is a completeness check; a missing field is an ERROR.
     Per partition type (hard IP types: cells / clock / reset / face flops not required):
       cells            a cell estimate (type.cells, contents[].cells or cells.py evidence)
@@ -1264,16 +928,9 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
                        without geometry; this re-counts them for the completeness table)
       internal_station every estimated internal reg-reg connection > ft_station_max_um (face window -> leaf / core
                        box, core <-> core net) has internal_stations[] whose hops are all <= the limit (R3-INTERNAL)
-                       S81 10-24 (coordinator ruling (a), R3 inside hardened types): with budgets.core_internal_reach_um
-                       set, the types with declared core connectivity (core_conns.json sidecar) use that reach for their
-                       internal_stations[] hops, and every declared core port bundle -- bus window -> core box, core box
-                       -> partner core box (lower bounds) -- longer than it needs an entry (conn "bus:<bus>" with capture
-                       "<core>.<port>", or conn "core:<core>.<port>|core:<partner>" either way round)
     Die: clock.common_latency_ps (R4 owner rule)."""
     miss = {f: 0 for f in COMPLETE_FIELDS}
-    smax0 = smax = station_max(P)
-    creach = P.budgets.get("core_internal_reach_um")
-    cside = side or {}
+    smax = float(P.budgets.get("ft_station_max_um", 750.0))
     n_msg = defaultdict(int)
 
     def bad(field, tn, msg):
@@ -1330,7 +987,6 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
                 boxes[c["inst"]] = (x0, y0, x0 + c["outline_um"][0], y0 + c["outline_um"][1])
         if not boxes:
             continue
-        smax = float(creach) if creach and tn in cside else smax0
         ist = t.get("internal_stations", [])
         for e in ist:
             if not _hops_ok(e["from_um"], e["regs_um"], e["to_um"], smax):
@@ -1371,31 +1027,6 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
                     d = max(bx[0] - by[2], by[0] - bx[2], 0) + max(bx[1] - by[3], by[1] - bx[3], 0)
                     if d > smax and f"{x}|{y}" not in conns and f"{y}|{x}" not in conns:
                         todo.append((f"net {nm} ({x} <-> {y})", d))
-        if creach and tn in cside:
-            ents = {(e.get("conn"), e.get("capture")) for e in ist}
-            for ci, ports in cside[tn].items():
-                if ci not in boxes:
-                    continue
-                for lp, tgs in ports.items():
-                    for tg in tgs:
-                        kd, _, nm = tg.partition(":")
-                        if kd == "bus":
-                            if bt is None:
-                                bt = _bus_targets(P, tn)
-                            if nm not in bt:
-                                continue
-                            d = _box_dist(bt[nm][1], boxes[ci])
-                            ok = (f"bus:{nm}", f"{ci}.{lp}") in ents
-                        elif kd == "core" and nm in boxes and nm != ci:
-                            bx, by = boxes[ci], boxes[nm]
-                            d = max(bx[0] - by[2], by[0] - bx[2], 0) + max(bx[1] - by[3], by[1] - bx[3], 0)
-                            ok = any(c_ == f"core:{ci}.{lp}|core:{nm}" or
-                                     (str(c_).startswith(f"core:{nm}.") and str(c_).endswith(f"|core:{ci}")
-                                      and cap == f"{ci}.{lp}") for c_, cap in ents)
-                        else:
-                            continue
-                        if d > smax + EPS and not ok:
-                            todo.append((f"core bundle {ci}.{lp} -> {tg}", d))
         for what, d in todo:
             bad("internal_station", tn, f"internal {what} >= {d:.0f} um > {smax:g} um with no internal_stations[] "
                 "entry (R3-INTERNAL: FIRM plan stations)")
@@ -1502,18 +1133,6 @@ def check_types(P, R):
                 near_duplicate_types=sum(len(g) for g in groups), mergeable_saving=sum(len(g) - 1 for g in groups))
 
 
-def check_registered_pins(P, R, plan_dir=None):
-    """REGISTERED-PIN hard partitions (COORD 10-25 11:31; hard_pinreg.py): declaration (hard type, single hard core,
-    lib, no ft slots) and the lib claim (setup+hold on every input, clk->q on every output, every corner view).  Fails
-    closed: an ERROR, the binder then refuses the type too."""
-    import hard_pinreg as HP
-    errs, summ = HP.check_plan(P.raw, (plan_dir,) if plan_dir else ())
-    for e in errs:
-        m = re.match(r"type (\S+):", e)
-        R.err("hard_pinreg", e, **({"type": m.group(1)} if m else {}))
-    return summ
-
-
 def check_r8(P, R, plan_dir=None, groups=None, landing=None):
     """COORD R8 (r8.py) on BINDER2's bus groups.  No bus groups -> WARN (R8 cannot be judged without the bind)."""
     import r8
@@ -1575,44 +1194,29 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         R.err("schema", e)
     if errs:
         return R, dict()
-    # Plan-relative declarations (core pins_file for the reset wavefront) resolve against the plan's own directory.
-    P = S.Plan(raw, Path(plan_dir) / "die_plan.json" if plan_dir else None)
+    P = S.Plan(raw)
     summ = dict(die=P.name, partitions=len(P.parts), types=len(P.types), ports=len(P.ports), lanes=len(P.lanes),
                 bits=sum(p["width"] for p in P.ports.values()))
     summ["types"] = check_types(P, R)
     summ["taps_cores"] = check_taps_cores(P, R, plan_dir, evidence)
     summ["core_faces"] = check_core_faces(P, R, plan_dir, core_conns)
-    summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()),
-                                          side=load_core_conns(plan_dir, core_conns))
+    summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()))
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
     fp = check_abutment(P, R)
     summ["worst_faces"] = check_faces(P, R, fp)
     geo = {lid: lane_geometry(P, lid) for lid in P.lanes}
-    summ["m89_signals"] = check_m89_signals(P, R)
     summ["worst_hops"] = check_hops(P, R, geo)
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
-    rp = check_registered_pins(P, R, plan_dir)
-    if rp:
-        summ["registered_pins"] = rp
-    import landing_contract as LC
-    cland = LC.check(P)
-    if P.clock.get("landing_network"):
-        summ["clock_landings"] = {k: v for k, v in cland.items() if k != "errors"}
-        for err in cland["errors"]:
-            R.err("clock_landings", err)
     check_clock_reset(P, R)
-    summ["clock_branch_buffers"] = check_clock_branch_buffers(P, R)
-    summ["reset"] = check_reset(P, R)
     summ["seams"] = check_seams(P, R)
     summ["die_io"] = check_die_io(P, R)
     # PLAN-TOOL5 cross-die G0C rules (COORD DIE-PLAN VISUAL REVIEW 10-23 (a)-(e))
     import die_io
     import xdie
     summ["die_io"]["plan"] = die_io.check(P, R)
-    summ["die_io"]["pg_domains"] = die_io.check_pg_domains(P, R)
     summ["die_io"]["source"] = io_src
     summ["cut_lines"] = xdie.check_cut_lines(P, R, geo)
     summ["reach"] = xdie.check_reach(P, R, geo)

@@ -65,12 +65,13 @@ module dsdv_bk_vin #(
     reg [3:0]   wv, err;                  // this cycle: word complete / protocol error, per lane
     reg [511:0] wd [0:3];
     reg [3:0]   wf;
+    integer l;
     always @(*) begin
-        for (integer l = 0; l < 4; l = l + 1) begin : g_ln
-            reg [V-1:0] b;                    // the lane beat, assigned on every pass (comb temporary, no latch)
-            b = (dn && dl_n[5:4] == l) ? dl_n : dl_s;
+        for (l = 0; l < 4; l = l + 1) begin
             wv[l] = 1'b0; err[l] = 1'b0; wf[l] = 1'b0; wd[l] = 512'd0;
-            if ((dn && dl_n[5:4] == l) || (ds && dl_s[5:4] == l)) begin
+            if ((dn && dl_n[5:4] == l) || (ds && dl_s[5:4] == l)) begin : g_hit
+                reg [V-1:0] b;
+                b = (dn && dl_n[5:4] == l) ? dl_n : dl_s;
                 if (dn && ds && dl_n[5:4] == dl_s[5:4]) err[l] = 1'b1;          // two beats of one lane in a cycle
                 if (!b[6]) begin
                     if (b[7]) begin
@@ -87,16 +88,12 @@ module dsdv_bk_vin #(
             end
         end
     end
-    reg [4*515-1:0] lq;                   // lane registers; bit 515*l+513 (live) comes from lv_q[l] instead
-    // S81-KITS-RTLC 10-25: one KEPT live chain per lane (the 4 identical chains were merged into one flop that fed all
-    // four ln*[513] pins); the data bits load the word and are 0 when no word arrives (no hold self-loop at the pin)
-    (* keep = "true" *) reg [3:0] lv_0, lv_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin lv_0 <= 4'd0; lv_q <= 4'd0; end
-        else begin lv_0 <= 4'hf; lv_q <= lv_0; end
+    reg [4*515-1:0] lq;                   // lane registers; bit 515*l+513 (live) comes from u_live[l] instead
     genvar gl;
     generate for (gl = 0; gl < 4; gl = gl + 1) begin : g_live
-        assign lanes[515 * gl +: 515] = {lq[515 * gl + 514], lv_q[gl], lq[515 * gl + 1 +: 512], lq[515 * gl]};
+        wire lv;
+        dsdv_bk_live u_live (.clk(clk), .rst_n(rst_n), .q(lv));
+        assign lanes[515 * gl +: 515] = {lq[515 * gl + 514], lv, lq[515 * gl + 1 +: 512], lq[515 * gl]};
     end endgenerate
 `ifdef OT_DSDV_BK_TRACE
     integer tc = 0;
@@ -107,11 +104,11 @@ module dsdv_bk_vin #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             hv <= 4'd0; fault <= 1'b0; dr_v <= 1'b0;
-            for (integer l = 0; l < 4; l = l + 1) begin lq[515 * l] <= 1'b0; lq[515 * l + 514] <= 1'b0; end
+            for (l = 0; l < 4; l = l + 1) begin lq[515 * l] <= 1'b0; lq[515 * l + 514] <= 1'b0; end
         end else begin
             dr_v <= cn | cs;
             if ((cn && cs) || err != 4'd0) fault <= 1'b1;
-            for (integer l = 0; l < 4; l = l + 1) begin
+            for (l = 0; l < 4; l = l + 1) begin
                 if ((dn && dl_n[5:4] == l && !dl_n[6] && !dl_n[7]) || (!(dn && dl_n[5:4] == l) && ds && dl_s[5:4] == l && !dl_s[6] && !dl_s[7]))
                     hv[l] <= 1'b1;
                 else if (wv[l]) hv[l] <= 1'b0;
@@ -122,12 +119,8 @@ module dsdv_bk_vin #(
     always @(posedge clk) begin
         dr_n <= cn ? dl_n[39:32] : dl_s[39:32];
         dr_d <= cn ? dl_n[47:40] : dl_s[47:40];
-        for (integer l = 0; l < 4; l = l + 1) begin
-`ifdef OT_RTLC_MUT_BKLN   // bench mutant: lane 1 keeps its previous word on a new word
-            lq[515 * l + 1 +: 512] <= (wv[l] && l != 1) ? wd[l] : (l == 1 ? lq[515 * l + 1 +: 512] : 512'd0);
-`else
-            lq[515 * l + 1 +: 512] <= wv[l] ? wd[l] : 512'd0;     // wd[l] is 0 when !wv[l] (comb default)
-`endif
+        for (l = 0; l < 4; l = l + 1) begin
+            if (wv[l]) lq[515 * l + 1 +: 512] <= wd[l];
             if ((dn && dl_n[5:4] == l && !dl_n[6]) || (!(dn && dl_n[5:4] == l) && ds && dl_s[5:4] == l && !dl_s[6]))
                 hd[l] <= (dn && dl_n[5:4] == l) ? dl_n[275:20] : dl_s[275:20];
         end

@@ -1,7 +1,0 @@
-6 [779, 555, 1146, 942, 467, 1402] [3, 2, 4, 3, 2, 5] {'T1': 217.62, 'T2': 68.04, 'T3': 31.32} {'mean': 252.16, 'min': 245.15, 'max': 263.22, 'window': 18.07} {'mean': 199.06, 'min': 194.43, 'max': 209.22, 'window': 14.79}
-BEST 6 {'TT': {'mean': 252.16, 'min': 245.15, 'max': 263.22, 'window': 18.07}, 'FF': {'mean': 199.06, 'min': 194.43, 'max': 209.22, 'window': 14.79}}
-prog4b VERDICT PASS {'G1_macro_orient': 'PASS', 'G2_island_rows': 'PASS', 'G3_cell_rows': 'PASS', 'G4_detour_sites': 'PASS'}
- pred {'TT': {'mean': 254.06, 'window': 18.07}, 'FF': {'mean': 193.96, 'window': 14.79}} trunk None None None None
-  G2_island_rows PASS {'max_disp_um': 4.86} fail 0
-  G3_cell_rows PASS {'n_sites': 83} fail 0
-  G4_detour_sites PASS {'n_edges': 89, 'n_repeaters': 12, 'n_detours': 86, 'max_shift_um': 2.16} fail 0

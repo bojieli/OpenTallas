@@ -121,7 +121,7 @@ def track_phase_x0(x0: float, w: float) -> float:
 
 
 def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, west: bool = False,
-              track_phase: bool = False, pg_access_layer: str = "M4"):
+              track_phase: bool = False):
     L = [f"# OpenTallas tools/qwen_missing/link_phy_gen.py: {name} hard-macro ABSTRACT (licensed PHY IP; FDI side only)",
          "VERSION 5.7 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {name}",
          f"  FOREIGN {name} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;", "  CLASS BLOCK ;"]
@@ -144,28 +144,15 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, wes
               f"      RECT 0 {y:.3f} {pl:.3f} {y + pw:.3f} ;" if west else
               f"      RECT {x:.3f} {h - pl:.3f} {x + pw:.3f} {h:.3f} ;", "    END",
               f"  END {b}"]
-    if pg_access_layer not in ("M4", "M6"):
-        raise ValueError("PHY PG access layer must be M4 or M6")
-    sw = 0.288
+    sw, sp = 0.288, 2.4
     straps = {"VDD": [], "VSS": []}
-    if pg_access_layer == "M4":
-        # Historical view, byte-identical by default. M5 OBS can hide this
-        # interface from a legal external PDN; retain it as failure evidence.
-        y, k = 1.0, 0
-        while y + sw < h - 1.0:
-            straps["VDD" if k % 2 == 0 else "VSS"].append(y)
-            y += 1.2
-            k += 1
-    else:
-        # Explicit generated-model interface ABOVE the M5 obstruction. These
-        # are power terminals, not permission to route signals inside the IP.
-        # Macro internal PG/GDS is outside this abstract's claim boundary.
-        for net, centre in (("VDD", 2.352), ("VSS", 1.968)):
-            while centre + sw / 2 < h - 1.0:
-                straps[net].append(centre - sw / 2)
-                centre += 4.32
+    y, k = 1.0, 0
+    while y + sw < h - 1.0:
+        straps["VDD" if k % 2 == 0 else "VSS"].append(y)
+        y += sp / 2
+        k += 1
     for net, use in (("VDD", "POWER"), ("VSS", "GROUND")):
-        L += [f"  PIN {net}", "    DIRECTION INOUT ;", f"    USE {use} ;", "    PORT", f"      LAYER {pg_access_layer} ;"]
+        L += [f"  PIN {net}", "    DIRECTION INOUT ;", f"    USE {use} ;", "    PORT", "      LAYER M4 ;"]
         L += [f"      RECT 0.500 {yy:.3f} {w - 0.5:.3f} {yy + sw:.3f} ;" for yy in straps[net]]
         L += ["    END", f"  END {net}"]
     L += ["  OBS"]
@@ -193,9 +180,6 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, wes
     L += ["  END", f"END {name}", "", "END LIBRARY"]
     pin_info = dict(signal_pins=len(bits), pin_pitch_um=pitch, pin_layer="M4" if west else "M5",
                     pin_edge="west (adapter-facing)" if west else "top (core-facing)")
-    if pg_access_layer != "M4":
-        pin_info["pg_access_layer"] = pg_access_layer
-        pin_info["pg_claim"] = "generated-model external PG interface; no licensed macro internal GDS claim"
     pin_info["pin_block_y_um" if west else "pin_block_x_um"] = [600.0, round(600.0 + span, 3)] if west else [x0, round(x0 + span, 3)]
     return "\n".join(L) + "\n", pin_info
 
@@ -205,10 +189,6 @@ def model_sv(name: str, fw: int, lat: int) -> str:
 // SIMULATION MODEL of the {name} hard macro (tools/qwen_missing/link_phy_gen.py): the far end is a second macro;
 // a flit launched on tx_* appears on the FAR macro's rx_* {lat} FDI cycles later (link_* ports carry it between the
 // pair).  tx_up rises UP cycles after reset.  Not synthesised.
-// REGISTERED FDI PINS, as the lib states (setup/hold on every input, clk->q on every output; PATH-QC-PHYB 10-25): tx_*
-// is captured by the macro's input register and leaves on the line side (link_*) from it; the far macro's LAT-1 stage
-// pipe ends in its rx output register.  Pin-to-pin (tx_* -> far rx_*) stays LAT cycles (LAT >= 2).  A die binder
-// may use these registers as the partition's boundary registers (tools/die_plan/hard_pinreg.py).
 module {name}_model #(parameter integer LAT = {lat}, parameter integer UP = 16, parameter integer FW = {fw}) (
     input  wire clk, input wire rst_n,
     output reg  tx_up,
@@ -217,18 +197,13 @@ module {name}_model #(parameter integer LAT = {lat}, parameter integer UP = 16, 
     output wire link_v, output wire [FW-1:0] link_flit,      // to the far macro
     input  wire far_v,  input  wire [FW-1:0] far_flit
 );
-    reg [(LAT-1)*(FW+1)-1:0] pipe;
-    reg          tx_v_q;
-    reg [FW-1:0] tx_flit_q;
+    reg [LAT*(FW+1)-1:0] pipe;
     integer n;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin pipe <= 0; n <= 0; tx_up <= 1'b0; tx_v_q <= 1'b0; tx_flit_q <= {{FW{{1'b0}}}}; end
-        else begin
-            pipe <= {{pipe, far_v, far_flit}}; n <= n + 1; if (n >= UP) tx_up <= 1'b1;
-            tx_v_q <= tx_v; tx_flit_q <= tx_flit;
-        end
-    assign {{rx_v, rx_flit}} = pipe[(LAT-1)*(FW+1)-1 -: (FW+1)];
-    assign link_v = tx_v_q; assign link_flit = tx_flit_q;
+        if (!rst_n) begin pipe <= 0; n <= 0; tx_up <= 1'b0; end
+        else begin pipe <= {{pipe, far_v, far_flit}}; n <= n + 1; if (n >= UP) tx_up <= 1'b1; end
+    assign {{rx_v, rx_flit}} = pipe[LAT*(FW+1)-1 -: (FW+1)];
+    assign link_v = tx_v; assign link_flit = tx_flit;
 endmodule
 """
 

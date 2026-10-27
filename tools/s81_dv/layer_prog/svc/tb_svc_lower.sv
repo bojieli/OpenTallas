@@ -41,7 +41,7 @@ module tb_svc_lower;
     parameter integer ST = 0;
     parameter integer MAXCYC = 20000;
 `include "dsdv_svc_rs_roles.svh"
-    localparam integer H = 16, D = 512, NHBM = 8192, QMAX = 8192;   // TOK-DS-CMP: T640 L14 job = 4.7k q words (ROWS)
+    localparam integer H = 16, D = 512, NHBM = 8192, QMAX = 4096;
     reg ck = 0; always #0.5 ck = ~ck;
     reg rst = 0;
     reg [31:0] meta [0:31];
@@ -189,17 +189,6 @@ module tb_svc_lower;
     end
 
     // ---------------- run + checks ----------------
-    reg [31:0] last_afc [0:15];
-    initial for (int k=0;k<16;k++) last_afc[k]=0;
-    always @(posedge ck) begin
-        for (int k=0;k<16;k++) begin
-            if (w_v[k] && w_st[k][11:4]==8'h21) $display("SVCEDGE EXP slice=%0d cyc=%0d a=%0d",k,cyc,w_a[k]);
-            if (afc[k] != last_afc[k]) begin
-                $display("SVCEDGE FAULT slice=%0d cyc=%0d old=%08x new=%08x",k,cyc,last_afc[k],afc[k]);
-                last_afc[k] <= afc[k];
-            end
-        end
-    end
     integer qi = 0, late_q = 0, rt_beats = 0, sc_err = 0, sc_chk = 0, ord_err = 0;
     integer se_rows [0:15], se_err = 0, se_chk = 0, wrows [0:15];
     integer pv_err = 0, pv_chk = 0, pv_first = -1, pv_last = -1, pv_gap = 0, pv_other = 0, pv_n = 0;

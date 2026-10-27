@@ -1,9 +1,0 @@
-OBS RAW_START cycle37
-OBS RETURN_WRITE cycle555 raw_age518
-OBS RETURN_DONE cycle562 raw_age525
-TKM_L74 PASS words=1 cycles=510 pinned_cycles=252 lockstep_edges=556 lockstep_writes=1 pipe=1
-TKM_L74_AGE forward9 split2 face258(root_io2 settle2x41 xl2x87 cb2x21) return2 data_pad0 total271
-- tools/hbm_b2/tkm_l74/tb_hbm_tkm_bound_tkx_ft21.sv:141: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 472ns; walltime 21.650 s; speed 21.804 ns/s
-- Verilator: cpu 21.648 s on 65 threads; allocated 76739 MB

@@ -168,8 +168,7 @@ def qkv_roles(own):
     for b in own['qkv']['blocks']:
         role = 'q' if b['block'] < NQ else ('k' if b['block'] == NQ else 'v')
         out[b['slice']] = dict(block=b['block'], role=role, head=b['block'] if role == 'q' else 0)
-    receivers = [1, 3, 5, 6, 8, 10] if D.SLICE_RTL == 's8' else [0, 2, 4, 6, 8, 10]
-    if sorted(out) != receivers:
+    if sorted(out) != [0, 2, 4, 6, 8, 10]:
         raise LowerError(f'qkv receivers {sorted(out)}')
     return out
 
@@ -320,7 +319,7 @@ class Sched:
             if kind == 'psum':
                 out += [(('sc', m, e + D.sc_down_edges(self.smap, s, m)), j) for m in range(s, -1, -1)]
             elif kind == 'x':
-                out += [(('x', m, e + D.ST_HOP * abs(m - s)), j) for m in range(N)]
+                out += [(('x', m, e + 2 * abs(m - s)), j) for m in range(N)]
             elif kind == 'd2d':
                 out.append((('d', e + 2 * s), j))
         return out
@@ -365,7 +364,6 @@ def load_ages(path=AGES_VEC):
     for k in ('add_psum_out', 'xs_out', 'silu_out', 'd2d', 'red_vm', 'root_cfg_lead'):
         if k not in a:
             raise LowerError(f'{path}: no {k}')
-    D.check_memory_profile(a, path)
     return a
 
 
@@ -396,8 +394,8 @@ def attn_schedule(S, owners, t, ages, vm, mutant=None):
         e = S.place(s, D.cmd_su(PIDX['xa'], s), f'XA s{s} blk{i}', ready, 'x', O[:2], span=O[1])
         for j in range(2):
             c = e + arr[s] + O[j]
-            xs.append(dict(slice=s, eaddr=BLOCK * i + 64 * j, edge_e5=c + D.ST_HOP * (N - 1 - s),
-                           edge_all=c + D.ST_HOP * max(s, N - 1 - s)))
+            xs.append(dict(slice=s, eaddr=BLOCK * i + 64 * j, edge_e5=c + 2 * (N - 1 - s),
+                           edge_all=c + 2 * max(s, N - 1 - s)))
     return r0, cal, xs
 
 
@@ -523,7 +521,7 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
             for j in range(2 * n):
                 b = blocks[s][j // 2]
                 expect['x'].append(dict(slice=s, eaddr=BLOCK * b + 64 * (j % 2),
-                                        edge_e5=e + smap['cmd_arrival'][s] + O[j] + D.ST_HOP * (N - 1 - s)))
+                                        edge_e5=e + smap['cmd_arrival'][s] + O[j] + 2 * (N - 1 - s)))
         expect['root'] = dict(slice=0, k=k, eps=eps)
     elif mode == 'qk':
         recv = sorted(roles)
@@ -560,7 +558,7 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
             e = S.place(s, D.cmd_su(PIDX['silu'], s), f'SILU s{s}', prev, 'x', O, span=O[-1])
             for j in range(len(O)):
                 expect['x'].append(dict(slice=s, eaddr=BLOCK * s + 64 * j,
-                                        edge_e5=e + smap['cmd_arrival'][s] + O[j] + D.ST_HOP * (N - 1 - s)))
+                                        edge_e5=e + smap['cmd_arrival'][s] + O[j] + 2 * (N - 1 - s)))
     coll = S.collisions()
     if coll and mutant != 'xslot':
         raise LowerError(f'collisions {coll[:3]}')

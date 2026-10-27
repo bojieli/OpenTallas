@@ -48,7 +48,7 @@ def node_of_inst(inst, bus):
         return IMAP["inst_part"][inst]
     if inst in IMAP["slice_part"]:
         sp = IMAP["slice_part"][inst]
-        if sp["LP"] and re.match(IMAP.get("lp_bus_re", r"(rx|tx)\d$"), bus or ""):
+        if sp["LP"] and re.match(r"(rx|tx)\d$", bus or ""):
             return sp["LP"]
         return sp["C"]
     return group_of_inst(inst)
@@ -126,9 +126,8 @@ def main():
         if "inst_part" in IMAP and re.match(r"(dn|up|kd|ku)_", ln["id"]):
             internal["slice_split"] += p0["width"]      # C <-> leaf / LP lanes: the slice's own band split
             continue
-        wb = int(ln.get("word_bits", p0["width"])) if ln.get("beats") else p0["width"]   # DEC12 2-beat lanes
-        planned[(gs, gd)] += wb
-        cls_of[ln["id"]] = (gs, gd, wb)
+        planned[(gs, gd)] += p0["width"]
+        cls_of[ln["id"]] = (gs, gd, p0["width"])
     # re-topologised broadcast: the plan chains x through the frame relay port xo (u_xo0..3 relay x -> xo in
     # col_h9/h10_l4_lp); as-built drives frame p2 from the slice directly.  x content reaching fB over a planned
     # xo lane fA -> fB counts as delivered from the slice that feeds fA (extra hop is in the latency table).
@@ -149,10 +148,6 @@ def main():
     for k, w_ in retopo.items():
         planned[k] += w_
     rows2, unresolved = collapse_landing(rows)
-    # S81/H4 10-24: retired V-rung units (gen_plan_v4.RETIRED_RUNG: bk_col) -> the direct slice <-> slice rung
-    retired = {"u_bk_col": {"vo_n": "u_s_1S", "vo_s": "u_s_1N"}}
-    rows2 = [dict(r, src=retired[r["src"]][r["src_bus"]], src_bus="vo") if r["src"] in retired else r
-             for r in rows2 if r["dst"] not in retired]
     asb = collections.Counter()
     seen_bus = {}
     clkrst = collections.Counter()

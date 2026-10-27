@@ -233,80 +233,12 @@ def plan_sources(ab, base, idx=None, shim_dir=None):
     return tops, full, lib, rec
 
 
-def load_hard_params(files, base=None):
-    """merge the frame-kit hard_params sidecars (tools/s81_dv/hard_params.py): {master: {param: value}}.  Fail closed on
-    a master recorded with two different hardened sets (one hard view cannot hold both).
-    Relative sidecars use the supplied source base, just like netlist/files; absolute paths stay absolute."""
-    merged, src = {}, {}
-    for f in files or []:
-        path = Path(f)
-        if base is not None and not path.is_absolute():
-            path = Path(base) / path
-        rec = json.loads(path.read_text())
-        if rec.get("schema") != "opentallas.frame_kit.hard_params.v1":
-            raise ElabError(f"hard_params: {f}: unknown schema {rec.get('schema')!r}")
-        for m, ps in rec["masters"].items():
-            if m in merged and merged[m] != ps:
-                diff = {k: (merged[m].get(k), ps.get(k)) for k in sorted(set(merged[m]) | set(ps))
-                        if merged[m].get(k) != ps.get(k)}
-                raise ElabError(f"hard_params: {m}: {src[m]} and {f} record different hardened sets {diff}")
-            merged[m], src[m] = dict(ps), src.get(m, f)
-    return merged
-
-
-def _bake(hdr, decl, mod, params):
-    """hardened parameter values -> the stub's parameter defaults (header #() block or body parameter statements);
-    every recorded parameter must be declared exactly once, else fail closed"""
-    j = hdr.find("#")
-    k = hdr.find("(", j) if j >= 0 else -1
-    blk = (k, _match(hdr, k)) if j >= 0 and k >= 0 and not hdr[j + 1:k].strip() else None
-    for p, v in params.items():
-        rx = re.compile(rf"(?<![.\w$])({re.escape(p)}\s*=(?!=)\s*)")
-        hits = []
-        if blk:
-            hits += [("hdr", m) for m in rx.finditer(hdr, blk[0], blk[1])]
-        for i, d in enumerate(decl):
-            if d.lstrip().startswith("parameter"):
-                hits += [(i, m) for m in rx.finditer(d)]
-        if len(hits) != 1:
-            raise ElabError(f"hard_params: {mod}: parameter {p} declared {len(hits)} times in the stub (need 1) -- "
-                            "the hardened set does not match this RTL")
-        where, m = hits[0]
-        s = hdr if where == "hdr" else decl[where]
-        e, d = m.end(), 0
-        while e < len(s):
-            c = s[e]
-            if c in "({[":
-                d += 1
-            elif c in ")}]":
-                if d == 0:
-                    break
-                d -= 1
-            elif c in ",;" and d == 0:
-                break
-            e += 1
-        s = s[:m.end()] + str(v) + s[e:]
-        if where == "hdr":
-            if blk:
-                blk = (blk[0], _match(s, blk[0]))
-            hdr = s
-        else:
-            decl[where] = s
-    return hdr, decl
-
-
-def lib_stubs(lib, out_path, hard_params=None):
+def lib_stubs(lib, out_path):
     """interface-only copies of the leaf (lib) files: each module's header (parameters + port list) and, for a
     non-ANSI header, its parameter / port declarations, then endmodule.  Yosys then never parses leaf bodies (some
     leaf RTL elaborates only under the tool of record, e.g. hierarchical references into generate blocks); the
-    leaves stay black boxes either way, and the Verilator lint reads the real files.
-
-    hard_params ({master: {param: value}}, PATH-S81/F2 10-25): a hard master whose frame kit stripped its #() overrides
-    gets the hardened values as its stub defaults, so the black box has the interface of the hard VIEW (e.g. the NB=2
-    q element), not of the RTL defaults.  Fail closed if a recorded master has no stub here."""
+    leaves stay black boxes either way, and the Verilator lint reads the real files."""
     out = []
-    hard_params = dict(hard_params or {})
-    baked = set()
     for f in lib:
         t = _strip(Path(f).read_text(errors="replace"))
         out.append(f"// ---- interface of {f}")
@@ -359,19 +291,9 @@ def lib_stubs(lib, out_path, hard_params=None):
                         need_txt += " " + x
                         changed = True
             keep_lp.sort(key=lp.index)
-            if hard_params.get(m.group(1)):
-                # baked before the localparam selection so width localparams see the hardened values unchanged
-                hdr, decl = _bake(hdr, decl, m.group(1), hard_params[m.group(1)])
-                baked.add(m.group(1))
-                out.append(f"// hardened parameter set baked from the frame kit hard_params sidecar: "
-                           + ", ".join(f"{k}={v}" for k, v in hard_params[m.group(1)].items()))
             decl = ["    " + x for x in keep_lp + decl]
             fns = keep_fn
             out.append(hdr + "\n" + "\n".join(fns + decl) + "\nendmodule")
-    missing = sorted(m for m, ps in hard_params.items() if ps and m not in baked)
-    if missing:
-        raise ElabError(f"hard_params: hardened masters with no leaf (lib) stub to bake: {missing} -- a full-body or "
-                        "missing source would elaborate them with RTL defaults")
     Path(out_path).write_text("\n".join(out) + "\n")
     return str(out_path)
 
@@ -393,33 +315,10 @@ def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
     incs = sorted({str(Path(f).parent) for f in list(tops) + list(full) + list(lib) + list(inc_files)})
     iflags = " ".join(f"-I{d}" for d in incs)
     lines = []
-    if ab.get("frontend", "native") == "slang":
-        # One compilation unit preserves cross-file parameterisation; interface
-        # stubs are explicit empty blackboxes, structural parents retain names.
-        body_modules = ({ab['top'], ab.get('_elab_top', ab['top'])} | set(ab.get('dissolve', []))
-                        | set(ab.get('substitute', {})) | {r['module'] for r in ab.get('substitute_parent', [])})
-        all_modules = set()
-        for name in lib + full + tops:
-            all_modules.update(m.group(1) for m in MOD_RE.finditer(_strip(Path(name).read_text())))
-        # A full source file can co-host structural wrappers and physical hard
-        # cores. Blackbox leaves BEFORE elaboration, including those co-hosts.
-        # Named parameterized interfaces must be specialized before late blackboxing.
-        abi_leaves = set(ab.get("slang_parameterized_blackboxes", []))
-        bb = " ".join("--blackboxed-module " + n for n in sorted(all_modules - body_modules - abi_leaves))
-        lines.append(f"read_slang --keep-hierarchy --empty-blackboxes --allow-use-before-declare --top {ab.get('_elab_top', ab['top'])} "
-                     f"{bb} {dflags} {iflags} " + " ".join(lib + full + tops))
-        # sv-elab specialises structural masters as master$top.instance.
-        # Restore the same source-master metadata native paramod uses, before
-        # selection/blackboxing and the flat-netlist instance identity proof.
-        for name in sorted(all_modules):
-            lines.append(f'setattr -mod -set hdlname "{name}" ={name} ={name}$*')
-    elif ab.get("frontend", "native") == "native":
-        for f in lib:
-            lines.append(f"read_verilog -sv -lib -overwrite {dflags} {iflags} {f}")
-        for f in full + tops:
-            lines.append(f"read_verilog -sv -overwrite {dflags} {iflags} {f}")
-    else:
-        raise ElabError(f"unknown asbuilt.frontend {ab['frontend']}")
+    for f in lib:
+        lines.append(f"read_verilog -sv -lib -overwrite {dflags} {iflags} {f}")
+    for f in full + tops:
+        lines.append(f"read_verilog -sv -overwrite {dflags} {iflags} {f}")
     subst = ab.get("substitute", {})
     pvar = sorted({r["module"] for r in ab.get("substitute_parent", [])})
     top = ab.get("_elab_top", ab["top"])
@@ -428,12 +327,8 @@ def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
     lines += [f"hierarchy {'-check ' if check else ''}-top {top}",
               f"select -set keep {sel}",
               "blackbox =* @keep %d",
-              "proc"]
-    if ab.get("collect_memories"):
-        if ab["collect_memories"] is not True:
-            raise ElabError("asbuilt.collect_memories must be true when enabled")
-        lines.append("memory_collect")
-    lines.append(f"write_json {out_json}")
+              "proc",
+              f"write_json {out_json}"]
     return "\n".join(x for x in lines if x) + "\n"
 
 
@@ -455,60 +350,6 @@ def run_yosys(script_path, log_path, mounts, mem_gb=32):
     if r.returncode != 0:
         tail = (r.stderr or "")[-3000:] + (Path(log_path).read_text()[-3000:] if Path(log_path).exists() else "")
         raise ElabError(f"yosys failed (rc {r.returncode}):\n{tail}")
-
-
-def structural_sources(files, keep, out):
-    """Interface-only leaf bodies even when co-hosted with structural wrappers.
-
-    Slang resolves missing private-body references before applying its blackbox
-    attribute, so the same selective source abstraction used by native elab must
-    happen before parsing. Original files remain the verification source set.
-    """
-    import hashlib
-    out.mkdir(parents=True, exist_ok=True)
-    staged = []
-    for name in files:
-        source = Path(name)
-        text = _strip(source.read_text())
-        interfaces = Path(lib_stubs([name], out / "interfaces.sv")).read_text()
-        stubs = {}
-        for match in MOD_RE.finditer(interfaces):
-            end = interfaces.index("endmodule", match.end()) + len("endmodule")
-            stubs[match.group(1)] = interfaces[match.start():end]
-        edits = []
-        for match in MOD_RE.finditer(text):
-            if match.group(1) not in keep:
-                end = text.index("endmodule", match.end()) + len("endmodule")
-                edits.append((match.start(), end, stubs[match.group(1)]))
-        for start, end, replacement in reversed(edits):
-            text = text[:start] + replacement + text[end:]
-        dest = out / (hashlib.sha256(str(source).encode()).hexdigest()[:12] + "_" + source.name)
-        dest.write_text(text)
-        staged.append(str(dest))
-    return staged
-
-
-def string_parameter_compat(files, out):
-    """Stage typed string parameters for native Yosys, preserving literal defaults.
-
-    Enabled only by asbuilt.string_parameter_compat; real verification sources
-    remain unchanged. Native read_verilog accepts untyped string-valued parameters.
-    """
-    import hashlib
-    staged, record = [], []
-    for name in files:
-        f = Path(name)
-        text = f.read_text()
-        fixed = re.sub(r"\b(parameter|localparam)\s+string\b", r"\1", text)
-        if fixed == text:
-            staged.append(str(f))
-            continue
-        out.mkdir(parents=True, exist_ok=True)
-        dest = out / (hashlib.sha256(str(f).encode()).hexdigest()[:12] + "_" + f.name)
-        dest.write_text(fixed)
-        staged.append(str(dest))
-        record.append(dict(original=str(f), staged=str(dest)))
-    return staged, record
 
 
 def elab(ab, base, out_dir, mem_gb=32, idx=None):
@@ -551,47 +392,12 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
     sc = out / "asbuilt.ys"
     ylib = lib
     if ab.get("lib_stubs", True):
-        hp = load_hard_params(ab.get("hard_params", []), base=base)
-        ylib = [lib_stubs(lib, out / "asbuilt_lib_stubs.sv", hp)] if lib else []
-        rec["hard_params"] = dict(files=list(ab.get("hard_params", [])), masters=hp)
-    elif ab.get("hard_params"):
-        raise ElabError("hard_params needs lib_stubs (the real leaf files would elaborate with RTL defaults)")
-    parse_tops, parse_full, parse_lib = tops, full, ylib
-    if ab.get("frontend", "native") == "slang":
-        keep_bodies = ({ab['top'], ab.get('_elab_top', ab['top'])} | set(ab.get('dissolve', []))
-                       | set(ab.get('substitute', {})) | set(pvar))
-        parse_tops = structural_sources(tops, keep_bodies, out / "structural_tops")
-        parse_full = structural_sources(full, keep_bodies, out / "structural_full")
-    if ab.get("string_parameter_compat", False):
-        compat = out / "string_parameter_compat"
-        parse_tops, rt = string_parameter_compat(parse_tops, compat)
-        parse_full, rf = string_parameter_compat(parse_full, compat)
-        parse_lib, rl = string_parameter_compat(parse_lib, compat)
-        rec["string_parameter_compat"] = rt + rf + rl
-    if ab.get("slang_parameterized_blackboxes"):
-        if ab.get("frontend", "native") != "slang":
-            raise ElabError("slang_parameterized_blackboxes requires the slang frontend")
-        import bind_slang_abi as ABI
-        keep = ({ab['top'], ab.get('_elab_top', ab['top'])} | set(ab.get('dissolve', []))
-                | set(ab.get('substitute', {})) | set(pvar))
-        nt, nf = len(parse_tops), len(parse_full)
-        try:
-            staged, records = ABI.stage(parse_tops + parse_full + parse_lib, keep,
-                ab["slang_parameterized_blackboxes"], out / "parameterized_interfaces", MOD_RE, _strip, _match)
-        except ValueError as e:
-            raise ElabError(str(e)) from e
-        parse_tops, parse_full, parse_lib = staged[:nt], staged[nt:nt+nf], staged[nt+nf:]
-        rec["parameterized_interfaces"] = records
-    sc.write_text(yosys_script(ab, parse_tops, parse_full, parse_lib, js, inc_files=lib + tops + full))
+        ylib = [lib_stubs(lib, out / "asbuilt_lib_stubs.sv")] if lib else []
+    sc.write_text(yosys_script(ab, tops, full, ylib, js, inc_files=lib))
     mounts = [out, Path(base).resolve(), REPO] + [Path(f).parent for f in tops + full + lib]
     roots = sorted({str(Path(m).resolve()) for m in mounts}, key=len)
     mounts = [m for i, m in enumerate(roots) if not any(m.startswith(r + "/") for r in roots[:i])]
     run_yosys(sc, out / "asbuilt.yosys.log", mounts, mem_gb)
-    if ab.get("slang_parameterized_blackboxes"):
-        try:
-            rec["parameterized_interface_restore"] = ABI.restore(js, ab["slang_parameterized_blackboxes"])
-        except ValueError as e:
-            raise ElabError(str(e)) from e
     rec.update(json=str(js), script=str(sc), top=ab["top"])
     (out / "asbuilt_sources.json").write_text(json.dumps(dict(rec, tops=tops, full=full, lib=lib), indent=1))
     return rec
@@ -661,25 +467,14 @@ class Flat:
         for k, (d, bits) in list(self.top_ports.items()):
             self.top_ports[k] = (d, [b if isinstance(b, str) else self.find(b) for b in bits])
         self.const_drivers = {self.find(k): v for k, v in self.const_drivers.items()}
-        for rec in getattr(self, 'instances', {}).values():
-            for port in rec['ports'].values():
-                port['bits'] = [b if isinstance(b, str) else self.find(b) for b in port['bits']]
 
 
-def flatten(yjs, top, parent_variants=(), retain_hierarchy_ports=False):
+def flatten(yjs, top, parent_variants=()):
     """parent_variants: [{"inst": regex on the hierarchical path, "module": M}] -- a dissolved parent instance is
     elaborated as variant M (its ports a subset): connections to ports M lacks are dropped (recorded: literal or net),
-    ports M adds stay unconnected (recorded).
-    retain_hierarchy_ports is default off. True retains all dissolved-parent
-    interfaces; an iterable retains only those exact instance paths in
-    F.instances, with effective literal parameters and canonical global nets.
-    This metadata does not allocate nets or change the default flattened graph.
-    """
+    ports M adds stay unconnected (recorded)."""
     mods = yjs["modules"]
     F = Flat()
-    if retain_hierarchy_ports:
-        F.instances = {}
-    requested_instances = None if retain_hierarchy_ports is True else set(retain_hierarchy_ports or ())
     F.parent_variants = []
     pv = [(re.compile(r["inst"]), r["module"]) for r in parent_variants]
     byname = {}
@@ -694,7 +489,7 @@ def flatten(yjs, top, parent_variants=(), retain_hierarchy_ports=False):
             return mname
         return m.get("attributes", {}).get("hdlname", mname)
 
-    def walk(mname, path, portmap, instance_params=None):
+    def walk(mname, path, portmap):
         """portmap: {local bit: global net or const} for the module's port bits"""
         m = mods[mname]
         local = {}
@@ -711,12 +506,6 @@ def flatten(yjs, top, parent_variants=(), retain_hierarchy_ports=False):
             if b in portmap:
                 return portmap[b]
             return base + b
-        if retain_hierarchy_ports and (requested_instances is None or path in requested_instances):
-            params = {k: _pval(v)[0] for k, v in m.get('parameter_default_values', {}).items()}
-            params.update({k: _pval(v)[0] for k, v in (instance_params or {}).items()})
-            F.instances[path] = dict(master=orig(mname), params=params,
-                ports={pn: dict(dir=p['direction'], bits=[g(b) for b in p['bits']])
-                       for pn, p in m.get('ports', {}).items()})
         for c_name, c in m.get("cells", {}).items():
             # Yosys names glue cells $type$<absolute src path>:<line>$<n>: keep the file name only (stable names)
             c_name = re.sub(r"\$(/[^$:]*/)([^/$:]+:)", r"$\2", c_name)
@@ -768,7 +557,7 @@ def flatten(yjs, top, parent_variants=(), retain_hierarchy_ports=False):
                         else:
                             pm[b] = x
                 F.dissolved[cpath] = orig(ct)
-                walk(ct, cpath, pm, {} if vm is not None else c.get("parameters", {}))
+                walk(ct, cpath, pm)
                 continue
             if ct.startswith("$") and ct not in mods:
                 F.cells.append(Cell(cpath, ct, {}, conns, dict(c.get("port_directions", {})), "glue", ct,

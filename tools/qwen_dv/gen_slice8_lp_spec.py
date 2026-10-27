@@ -66,15 +66,7 @@ def make_flat():
         for o,n in [(f'.rs_s_c_p(rss_r{k}[131:128])','.rs_s_c_p(rss_c)'),(f'.rs_n_c_p(rsn_r{k}[131:128])','.rs_n_c_p(rsn_c)'),
                     (f'.nb_c_p(nb_r{k}[65:64])','.nb_c_p(nb_c)')]:
             assert text.count(o)==1,o;text=text.replace(o,n)
-    # Optional exact S8 VM/CROM response alignment. Hard views with this switch must be re-closed.
-    text=text.replace('qfd_dv_lane_h_safe2 u_head',
-                      'qfd_dv_lane_h_safe2 #(.MEMORY_ALIGNMENT(S8_MEMORY_ALIGNMENT)) u_head')
-    pos=text.index(');')+2
-    text=text[:pos]+'\n`ifdef OT_S8_CROM_ALIGN\n    localparam integer S8_MEMORY_ALIGNMENT = 3;\n`else\n    localparam integer S8_MEMORY_ALIGNMENT = 0;\n`endif\n'+text[pos:]
     path=ROOT/'rtl/qwen_dv/s5/s8/qfd_dv_s8_flat.sv' ;path.parent.mkdir(parents=True,exist_ok=True)
-    text=text.replace('qfd_dv_s8_suvm_rp1 u_suvm', 'qfd_dv_s8_suvm_rp1 #(.MIF(S8_SRAM_MIF)) u_suvm')
-    text=text.replace('.MEMORY_ALIGNMENT(S8_MEMORY_ALIGNMENT)', '.MEMORY_ALIGNMENT(S8_MEMORY_ALIGNMENT), .MEMORY_READ_EXTRA(S8_SRAM_MIF)')
-    text=text.replace('`ifdef OT_S8_CROM_ALIGN', '`ifdef OT_QC_SRAM_MIF\n    localparam integer S8_SRAM_MIF = 1;\n`else\n    localparam integer S8_SRAM_MIF = 0;\n`endif\n`ifdef OT_S8_CROM_ALIGN')
     path.write_text('// Opt-in s8: actual CLOSED hard-leaf1/1 simulation; physical baked1/1.\n'+text)
 
 def base_spec(name,D,E):

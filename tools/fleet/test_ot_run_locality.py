@@ -110,15 +110,11 @@ class PlacementLocality(unittest.TestCase):
         code = self.m.SCRATCH_PLACE_PY.replace('/srv/opentallas-scratch', str(self.base) + '/srv/opentallas-scratch')
         real_stat = os.stat
         def stat(path, *args, **kwargs):
-            p = pathlib.Path(path)
-            p = p.parent if p.name == 'claude' else p        # v13 measures <root>/claude
-            if p in self.roots:
-                return types.SimpleNamespace(st_dev=1 + self.roots.index(p), st_mode=0o40755)
+            if str(path) in [str(r) for r in self.roots]:
+                return types.SimpleNamespace(st_dev=1 + self.roots.index(pathlib.Path(path)))
             return real_stat(path, *args, **kwargs)
         def statvfs(path):
-            p = pathlib.Path(path)
-            p = p.parent if p.name == 'claude' else p
-            return types.SimpleNamespace(f_bavail=(100 if p == self.roots[0] else 800) << 30,
+            return types.SimpleNamespace(f_bavail=(100 if pathlib.Path(path) == self.roots[0] else 800) << 30,
                                          f_frsize=1)
         argv = ['scratch-place', str(cwd), base64.b64encode(json.dumps(command).encode()).decode()]
         with mock.patch.object(os, 'stat', side_effect=stat), mock.patch.object(os, 'statvfs', side_effect=statvfs), \

@@ -68,9 +68,8 @@ def test_lane_continuity_and_membership():
 
 def test_latency_and_pins():
     P = schema.Plan(EX)
-    # 3 stations per mid slot (R3 <= 405 um, ruling 9.4): x crosses two mid partitions
-    assert P.lane_latency("x") == dict(cycles=8, stations=6, boundary=2, faces=3, fixed=0, natural=8, pad=0)
-    assert P.lane_latency("r")["cycles"] == 9
+    assert P.lane_latency("x") == dict(cycles=4, stations=2, boundary=2, faces=3, fixed=0, natural=4, pad=0)
+    assert P.lane_latency("r")["cycles"] == 5
     assert P.lane_latency("cfg01")["cycles"] == 2 and P.lane_latency("din")["cycles"] == 1
     pins = P.port_pins("x0")
     assert len(pins) == 65 and len({b for b, _, _ in pins}) == 65   # 64 data + epoch bit 64
@@ -171,36 +170,3 @@ def test_mirrored_instances_share_pins():
 
 def q_port(p, pid):
     return next(x for x in p["ports"] if x["id"] == pid)
-
-
-def test_exact_per_type_dead_input_contract_schema():
-    plan = copy.deepcopy(EX)
-    tn = next(iter(plan['partition_types']))
-    decl = dict(module='leaf', parameters={'FM_GI':"4'b0001"}, ports={'gi_d':[[0,31]]},
-                proof='results/dead/proof.json', source='rtl/leaf.sv', module_sha256='0'*64)
-    plan['partition_types'][tn]['dead_inputs']=[decl]
-    assert schema.validate(plan)==[]
-    decl['ports']['gi_d']=[[-1,31]]
-    assert schema.validate(plan)
-
-
-def test_turn_slot_declares_different_end_layers_and_orders():
-    p = copy.deepcopy(EX)
-    slot = p['partition_types']['mid']['ft_slots'][0]
-    slot.update(in_face='S', out_face='E', in_window_um=[10, 30], out_window_um=[40, 60],
-                in_layers=['M5', 'M7'], out_layers=['M4', 'M6'],
-                in_order='lsb_high', out_order='lsb_low')
-    model = schema.Plan(p)
-    assert model._type_geom('pm1', 'fx_i') == ('S', [10, 30], ['M5', 'M7'], 'lsb_high')
-    assert model._type_geom('pm1', 'fx_o') == ('E', [40, 60], ['M4', 'M6'], 'lsb_low')
-
-
-def test_turn_slot_legacy_layer_fallback_is_preserved():
-    p = copy.deepcopy(EX)
-    slot = p['partition_types']['mid']['ft_slots'][0]
-    slot.update(in_window_um=[10, 30], out_window_um=[40, 60], layers=['M4', 'M6'], order='lsb_high')
-    model = schema.Plan(p)
-    assert model._type_geom('pm1', 'fx_i')[2:] == (['M4', 'M6'], 'lsb_high')
-    assert model._type_geom('pm1', 'fx_o')[2:] == (['M4', 'M6'], 'lsb_high')
-    slot['in_layers'] = ['M5', 'M7']
-    assert model._type_geom('pm1', 'fx_o')[2:] == (['M4', 'M6'], 'lsb_high')

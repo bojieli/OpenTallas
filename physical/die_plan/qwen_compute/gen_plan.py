@@ -47,10 +47,8 @@ _LAYERS = {L["name"]: L for L in _S.ASAP7_LAYERS}
 
 G = 8.64                             # die lattice: PLAN-TOOL G0 needs a multiple of every M2-M9 pitch (2.16 is not a multiple of 0.064)
 G8 = 8.64
-REACH = 405.0                         # METHODOLOGY 9.3/9.4 + OWNER DECISION 12 (10-24): die hops / ft stations <= 405 um, M2-M7
-REACH_OLD = 1000.0
-ST_LEN = float(__import__('os').environ.get('QC_FT_REACH', 405.0))  # OWNER DECISION 12 (10-24): ft on <= M7, stations every <= 405 um
-ST_LEN_OLD = 750.0                       # one station per <= 750 um of slot route (GEOM-REVIEW4 10-23: a 1-station slot
+REACH = 1000.0
+ST_LEN = 750.0                       # one station per <= 750 um of slot route (GEOM-REVIEW4 10-23: a 1-station slot
                                      # hop must stay within the measured M5-M7 repeated reach 600-750 um)
 DENS = 4.2                           # pins / um per port window (budget 6 incl. track rounding)
 GAP = 0.96
@@ -60,17 +58,9 @@ CW = [622.08, 613.44, 613.44, 622.08]
 RH = [1313.28, 1296.0, 1296.0, 1321.92]
 A0W, A0H = 457.92, 1157.76
 CLW, CLH = sum(CW), sum(RH)          # 2471.04 x 5227.2
-# QC-SUROW 10-25: slice rows 1080 -> 1339.2 (155 x 8.64).  The SU row (su_l1 | su_c | su_l0) is
-# crossed by every N-S cluster lane of its columns (cws*, rsf/rsn turning W->N: 1,544 bits through each su_l) and the
-# lane cores filled 86% of the su_l width (macro-free V strip 69 + 17 um), so the slice negotiation with SU transit priced
-# physically (QC_NEG_CORE_FT) was infeasible (su_l V 1.104 from the pre-routed lanes alone; ctl|stm 1.085, fw|stm 1.09).
-# Taller rows + narrower/taller lane cores (SU_LANE_CORE) give each su_l a 190-um macro-free V channel: negotiation
-# feasible with the S-half rs words on the SU row (SU_ROW_RS); E slices (extra fixed fe->fw lane) need 1339.2, 1296
-# leaves E ctl|stm at 1.075.  Die height +4 x 259.2 = +1036.8 um (+32.4 mm2, 787.5 -> 819.9 mm2).
-SRH = float(__import__("os").environ.get("QC_SRH", "1339.2"))   # slice row height (was 1080; 864 overflowed at 4.7 pins/um)
-SLH = 4 * SRH
+SRH = 1080.0                         # slice row height (864 overflowed the slice faces at 4.7 pins/um)
+SLH = 4 * SRH                        # 3456
 NCOL = 12
-RESET_ENTRY_FACE = {"phy_serdes": "E", "phy_serdes_b": "E", "phy_ucie_kv": "E"}   # hard PHY reset entries face the coll column
 WS_W = 1563.84                       # west strip = serdes PHY depth
 SUB_W = 777.6                        # west-strip edge column (UCIe PHYs + glue)
 COLL_W = WS_W - SUB_W                # 786.24
@@ -115,12 +105,6 @@ class Plan:
         tp = tap or [snap(w / 2, G8), snap(h / 2, G8)]
         t["clock"] = {"tap_um": tp, "layer": "M9", "insertion_ps": 250, "insertion_tol_ps": 40}
         t["reset"] = {"tap_um": tp, "sync_stages": 2}
-        if name in RESET_ENTRY_FACE:
-            # OWNER DECISION 13 wavefront (RESET 10-24): a hard partition is a leaf whose reset tap = its registered
-            # entry; put it on the face toward its soft neighbour so the parent rst_o hop stays <= 405 um
-            f = RESET_ENTRY_FACE[name]
-            t["reset"]["tap_um"] = {"E": [snap(w - 10.0, G8), snap(h / 2, G8)], "W": [snap(10.0, G8), snap(h / 2, G8)],
-                                    "N": [snap(w / 2, G8), snap(h - 10.0, G8)], "S": [snap(w / 2, G8), snap(10.0, G8)]}[f]
         self.types[name] = t
         if cells is not None:
             self.cells[name] = cells
@@ -185,24 +169,11 @@ def shared_face(P, a, b, quiet=False):
 
 
 PITCH = {"M4": (0.048, 0.024), "M5": (0.048, 0.024), "M6": (0.064, 0.032), "M7": (0.064, 0.032)}
-# Joint face/over-the-top negotiation: 5.7 pins/um stays below G0 6/um and PIN_MAX 5.8.
-NEG_PIN_UM = float(__import__("os").environ.get("QC_NEG_PIN_UM", "5.7"))   # slice negotiation face capacity (QC-P5 10-23: 5.0 -> 5.1 pins/um, G0 face budget 6; frees the detours that padded R8 classes)
+NEG_PIN_UM = float(__import__("os").environ.get("QC_NEG_PIN_UM", "5.1"))   # slice negotiation face capacity (QC-P5 10-23: 5.0 -> 5.1 pins/um, G0 face budget 6; frees the detours that padded R8 classes)
 NEG_BCAST_HOP = float(__import__("os").environ.get("QC_NEG_BCAST_HOP", "1"))  # hop-cost multiplier of broadcast-tree flows
 NEG_BCAST_FIX = __import__("os").environ.get("QC_NEG_BCAST_FIX", "1") == "1"
 NEG_HOP_UM = float(__import__("os").environ.get("QC_NEG_HOP_UM", "2500"))  # per-partition-hop cost of a slice flow (QC-P6-R8:
                                      # every hop is a register stage; raise it to trade face detours for fewer stages)
-# QC-A0 10-24 (G0C ft_budget, xdie.check_ft_budget): a flow that crosses a partition uses its over-the-top die layers --
-# M8 when its in/out faces include E/W, M9 when they include N/S (a turning slot uses both).  The negotiation now also
-# prices each partition's M8 / M9 ft use against usable die-layer tracks across it (8.796 / um, the check's PG-free
-# M8 / M9 count) x cut_avail 0.6 x NEG_FT_FILL (head-room for the census / treq / fault lanes routed after it).
-NEG_FT_TRK_UM = float(__import__("os").environ.get("QC_NEG_FT_TRK_UM", "8.796"))
-NEG_FT_AVAIL = 0.6
-NEG_L9_RESERVE = int(__import__("os").environ.get("QC_NEG_L9_RESERVE", "514"))
-NEG_SPLIT = int(__import__("os").environ.get("QC_NEG_SPLIT", "800"))
-NEG_FT_FILL = float(__import__("os").environ.get("QC_NEG_FT_FILL", "1.0"))     # V (M9)
-NEG_FT_FILL_H = float(__import__("os").environ.get("QC_NEG_FT_FILL_H", "1.0"))  # H (M8)
-NEG_CORE_FT = __import__("os").environ.get("QC_NEG_CORE_FT", "1") == "1"   # price SU-core partitions by macro-free ft length
-NEG_CORE_OVER = float(__import__("os").environ.get("QC_NEG_CORE_OVER", "0.3333"))  # share of cored length usable (M6/M7 of M2-M7)
 PIN_MAX = 5.8                          # pins/um the laid window may reach at its worst 10-um span (G0 budget 6)
 FACE_MAX = 6.0                         # QC-P2: per-window pins/um by the tool rule (G0 = 6/um + 2 pins/layer allowance)
 _QL = {}
@@ -267,29 +238,6 @@ def qlen(width, dens, layers, lo=100.0, flip=False, fmax=None):
             _QL[key] = round(L, 4)
             return _QL[key]
         L += 0.016
-
-
-def _qlen_cache_setup():
-    """PATH-QC-PLAN3 10-25 (gen_plan profile: qlen -> schema.pin_positions = 712 of 900 s): QC_QLEN_CACHE=<path> loads /
-    saves the exact qlen() memo (keyed by the sha256 of schema.py, the only code its values depend on), so a regen with
-    a warm cache skips the pin-rule search.  Values are the function's own results: output is byte-identical."""
-    import atexit
-    import hashlib
-    base = __import__("os").environ.get("QC_QLEN_CACHE")
-    if not base:
-        return
-    h = hashlib.sha256(Path(_S.__file__).read_bytes()).hexdigest()[:12]
-    fn = Path(f"{base}.{h}.json")
-    if fn.exists():
-        for k, v in json.loads(fn.read_text()):
-            _QL[(k[0], tuple(k[1]), k[2], k[3], k[4])] = v
-        print(f"qlen cache: {len(_QL)} entries from {fn}", file=sys.stderr)
-
-    def save():
-        tmp = fn.with_suffix(".tmp")
-        tmp.write_text(json.dumps([[list(k[:1]) + [list(k[1])] + list(k[2:]), v] for k, v in _QL.items()]))
-        tmp.replace(fn)
-    atexit.register(save)
 
 
 def wlen(width, dens=None):
@@ -447,13 +395,8 @@ def cb_links(P, variant, geo):
 # slice regions on the 4x4 grid: chosen by slice_layout_search.py (negotiated routing over 3 x 524k layouts, fw/fe
 # row 0/1/2; args 5517 3159 1500 <row>); fw/fe on the W/E edges of one row so they abut the neighbour slices; hc row fixed
 # on the cluster side. Best max face load 0.928 at 5.15 pins/um, 1080-um rows (fw/fe row 2: 0.959; row 0: 1.028)
-# PATH-QC-PLAN3 10-25 (G2 slw_su_l1 9,999 / su_l0 2,820): st_a (u_frs, the S-half rs landing) swaps with st_b into
-# column 0, so the CB-south returns rsn/rsf (2 x 514 b) go STRAIGHT up column 0 (su_l1 -> fw -> st_a: 2 hops, ~2.7 mm)
-# instead of along the SU row (su_l1 -> su_c -> su_l0 -> fe -> st_a: 4 hops, ~4.5 mm, two corner turns over lane
-# cores).  QC_ST_SWAP=0 restores the old layout.
-ST_SWAP = __import__("os").environ.get("QC_ST_SWAP", "1") == "1"
 SL_CELLS_W = {"hc0": (0, 3), "hc1": (1, 3), "hc2": (2, 3), "hc3": (3, 3),
-              "st_b": (3, 2) if ST_SWAP else (0, 2), "ctl": [(1, 2), (2, 2)], "st_a": (0, 2) if ST_SWAP else (3, 2),
+              "st_b": (0, 2), "ctl": [(1, 2), (2, 2)], "st_a": (3, 2),
               "fw": (0, 1), "stm": (1, 1), "sc": (2, 1), "fe": (3, 1),
               "su_l1": (0, 0), "su_c": [(1, 0), (2, 0)], "su_l0": (3, 0)}
 # E slices: SAME layout as W (QC-P2 10-23, census coverage).  The as-built die places the e16real kit MY, so every
@@ -534,10 +477,8 @@ BCAST = {  # broadcast nets of the slice record -> plan forwarding trees (regist
     ("r_tap", "hw"): [("ctl", "hc0"), ("ctl", "hc1"), ("ctl", "hc2"), ("ctl", "hc3")],
     ("r_stm", "tw_data"): [("stm", "ctl"), ("ctl", "st_a")],
 }
-BCAST_PATH = {("ctl", "hc1"): ["ctl", "hc1"], ("ctl", "hc2"): ["ctl", "hc2"],
-              ("ctl", "hc0"): ["ctl", "st_a" if ST_SWAP else "st_b", "hc0"],
-              ("ctl", "hc3"): ["ctl", "st_b" if ST_SWAP else "st_a", "hc3"], ("stm", "ctl"): ["stm", "ctl"],
-              ("ctl", "st_a"): ["ctl", "st_a"]}
+BCAST_PATH = {("ctl", "hc1"): ["ctl", "hc1"], ("ctl", "hc2"): ["ctl", "hc2"], ("ctl", "hc0"): ["ctl", "st_b", "hc0"],
+              ("ctl", "hc3"): ["ctl", "st_a", "hc3"], ("stm", "ctl"): ["stm", "ctl"], ("ctl", "st_a"): ["ctl", "st_a"]}
 # QC-P6-R8 10-23 (COORD R8 PAD BUDGET, target < 150k pad flops): the chain tap -> hc2 -> hc1 -> hc0 / hc2 -> hc3 landed
 # hw at 2/4/6/4 (pads 4/2/0/2 x 1,573 b x 12 slices = 150k) and tw_data stm -> ctl -> st_a at 2/5.  Now r_tap and r_ctl
 # share ONE partition `ctl` spanning slice cells (1,2)+(2,2), centred under hc1|hc2: hw is a balanced tree of direct
@@ -555,14 +496,7 @@ def directed_slice_landings(record, su_directed):
     The old L0|L1=504 was shared gb/gv/reset input overlap, not a driven lane.
     Preserve every external landing bit; count actual internal SU directions.
     """
-    rows = [dict(r) for r in record["landings"] if "r_su" not in (r["src_region"], r["dst_region"])]
-    # The landed-parent record describes entire source rings. Plan each destination's consumed port bits,
-    # e.g. cid[23:0] is four independent six-bit identities, not a 24-bit input to every head.
-    consumed = record.get("_reader_port_bits", {})
-    for row in rows:
-        readers = row.get("readers", [])
-        if readers and all(reader in consumed for reader in readers):
-            row["width"] = min(row["width"], sum(consumed[reader] for reader in set(readers)))
+    rows = [r for r in record["landings"] if "r_su" not in (r["src_region"], r["dst_region"])]
     rows += [dict(src_region=r["src"], dst_region=r["dst"], net=r["net"], width=r["bits"])
              for r in su_directed["external"]]
     return rows
@@ -598,25 +532,13 @@ def slice_internal_links(P, geo, record, su_split, su_directed):
                 hopw[(bk, a, b)] = w + agg.pop((a, b), 0)
         flows = [(f"b_{bk[1]}_{a}_{b}", a, b, hopw[(bk, a, b)], f"b_{bk[1]}_{b}_o", f"b_{bk[1]}_i",
                   f"u_pstn.{bk[1]}_fwd", f"u_{b}.{bk[1]}") for bk in trees for a, b in BCAST[bk]]
-        # QC-A0 10-24 (G0C ft_budget): a pair flow wider than NEG_SPLIT bits becomes ceil(w / NEG_SPLIT) near-equal
-        # lanes (x_a_b, x_a_b_p1, ...) so the negotiation can spread it over two feedthrough partitions; the binder packs
-        # a pair's crossing bits over all of the pair's lanes (bind.py build_buses pass 1b).
-        for (a, b), w in agg.items():
-            n = max(1, -(-w // NEG_SPLIT)) if NEG_SPLIT > 0 else 1
-            for j in range(n):
-                wj = w // n + (1 if j < w % n else 0)
-                sx = "" if j == 0 else f"_p{j}"
-                flows.append((f"x_{a}_{b}{sx}", a, b, wj, f"x_{b}{sx}_o", f"x_{a}{sx}_i", f"u_{a}.x_{b}", f"u_{b}.x_{a}"))
+        flows += [(f"x_{a}_{b}", a, b, w, f"x_{b}_o", f"x_{a}_i", f"u_{a}.x_{b}", f"u_{b}.x_{a}")
+                  for (a, b), w in agg.items()]
         hopw = [NEG_BCAST_HOP if f[0].startswith("b_") else 1.0 for f in flows]
         fixed = [[sl(geo, k, r) for r in BCAST_PATH.get((f[1], f[2]), [])] if f[0].startswith("b_") and NEG_BCAST_FIX
                  and (f[1], f[2]) in BCAST_PATH else None for f in flows]
-        nflows = [(sl(geo, k, f[1]), sl(geo, k, f[2]), f[3], hw, fx) for f, hw, fx in zip(flows, hopw, fixed)]
-        # QC-A0 10-24: the E slices' l9 pair word (census_links, routed after this negotiation fe -> sc -> stm -> fw) is
-        # reserved here on that straight middle-row path, so the face / ft budgets it needs stay free
-        if geo["col_name"][k].startswith("E") and NEG_L9_RESERVE > 0:
-            nflows.append((sl(geo, k, "fe"), sl(geo, k, "fw"), NEG_L9_RESERVE, 1.0,
-                           [sl(geo, k, r) for r in ("fe", "sc", "stm", "fw")]))
-        paths = negotiate(P, geo, k, nflows)[:len(flows)]
+        paths = negotiate(P, geo, k, [(sl(geo, k, f[1]), sl(geo, k, f[2]), f[3], hw, fx)
+                                      for f, hw, fx in zip(flows, hopw, fixed)])
         for f, pth in zip(flows, paths):
             P.link(f[0], pth, f[4], f[5], f[3], src_leaf=f[6], dst_leaf=f[7])
 
@@ -637,53 +559,11 @@ def negotiate(P, geo, k, flows, iters=300):
                 nb[m].append((n, cap, d))
     base = {e: v for e, v in P.load.items() if e[0] in nb}
     sfc = {(n, m): shared_face(P, n, m)[0] for n in nb for m, _, _ in nb[n]}
-    # partition over-the-top ft budget (H = M8 across the height, V = M9 across the width) and its use by the links
-    # already planned through this slice's partitions (cluster lanes routed before the negotiation)
-    ncap = {}
-    for n in nb:
-        x0, y0, x1, y1 = P.rect(n)
-        f = NEG_FT_TRK_UM * NEG_FT_AVAIL
-        ncap[(n, "H")], ncap[(n, "V")] = (y1 - y0) * f * NEG_FT_FILL_H, (x1 - x0) * f * NEG_FT_FILL
-        reg = n.split("_", 2)[2]
-        if NEG_CORE_FT and reg in ("su_l0", "su_l1", "su_c"):
-            # QC-PLAN 10-25 (PROTO sle_su_l0 STRUCTURAL, GRT ov 17k point / 397k strict channel): ft runs on M2-M7
-            # inside the partition (decision 12), the SU lane cores block M1-M5 and every station site must sit in
-            # the macro-free strip / gaps.  Price a SU partition's transit capacity by its macro-free length plus
-            # NEG_CORE_OVER of the cored length (M6/M7 over the macros), not by its full outline.
-            ncol = 2 if reg == "su_c" else 1
-            cw, ch = SU_LANE_CORE
-            hfree, hcore = (y1 - y0) - len(SU_LANE_Y) * ch, len(SU_LANE_Y) * ch
-            vfree, vcore = (x1 - x0) - ncol * cw, ncol * cw
-            ncap[(n, "H")] = (hfree + NEG_CORE_OVER * hcore) * f
-            ncap[(n, "V")] = (vfree + NEG_CORE_OVER * vcore) * f
-
-    def ftdirs(fi, fo):
-        fs = {fi, fo}
-        return [d for d, ff in (("H", {"E", "W"}), ("V", {"N", "S"})) if fs & ff]
-
-    nbase = collections.Counter()
-    for lk in P.links:
-        pth = lk["path"]
-        for i in range(1, len(pth) - 1):
-            n = pth[i]
-            if n in nb:
-                fi = shared_face(P, n, pth[i - 1], quiet=True)
-                fo = shared_face(P, n, pth[i + 1], quiet=True)
-                if fi and fo:
-                    for d in ftdirs(fi[0], fo[0]):
-                        nbase[(n, d)] += lk["width"]
-    nhist = collections.Counter()
-    if __import__("os").environ.get("QC_NEG_DUMP"):
-        import pickle
-        with open(__import__("os").environ["QC_NEG_DUMP"] + f".{k}.pkl", "wb") as fh:
-            pickle.dump(dict(flows=[tuple(f) for f in flows], nb=nb, base=dict(base), sfc=sfc, nbase=dict(nbase),
-                             ncap=ncap), fh)
     hist = collections.Counter()
     pf = 0.5
     order = sorted(range(len(flows)), key=lambda i: (len(flows[i]) < 5 or flows[i][4] is None, -flows[i][2]))
     for it in range(iters):
         load = collections.Counter(base)
-        nload = collections.Counter(nbase)
         paths = [None] * len(flows)
         for i in order:
             a, b, w, hopw, fx = (tuple(flows[i]) + (1.0, None))[:5]
@@ -691,9 +571,6 @@ def negotiate(P, geo, k, flows, iters=300):
                 paths[i] = fx
                 for x, y in zip(fx, fx[1:]):
                     load[tuple(sorted((x, y)))] += w
-                for j in range(1, len(fx) - 1):
-                    for dd_ in ftdirs(sfc[(fx[j], fx[j - 1])], sfc[(fx[j], fx[j + 1])]):
-                        nload[(fx[j], dd_)] += w
                 continue
             st0 = (a, None)
             dist, prev, pq = {st0: 0.0}, {}, [(0.0, a, None)]
@@ -718,12 +595,7 @@ def negotiate(P, geo, k, flows, iters=300):
                         continue                  # simple paths only (one slot per partition per flow)
                     e = tuple(sorted((n, m)))
                     over = max(0.0, (load[e] + w) / cap - 1.0)
-                    nover, nh = 0.0, 0.0
-                    if pn is not None:          # n becomes a feedthrough of this flow: pn-face -> m-face
-                        for dn in ftdirs(sfc[(n, pn)], sfc[(n, m)]):
-                            nover = max(nover, (nload[(n, dn)] + w) / ncap[(n, dn)] - 1.0)
-                            nh = max(nh, nhist[(n, dn)])
-                    nd = dd + (d + NEG_HOP_UM * hopw) * (1 + hist[e] + nh) * (1 + pf * (over + nover) * 10)
+                    nd = dd + (d + NEG_HOP_UM * hopw) * (1 + hist[e]) * (1 + pf * over * 10)
                     if nd < dist.get((m, n), float("inf")):
                         dist[(m, n)], prev[(m, n)] = nd, (n, pn)
                         heapq.heappush(pq, (nd, m, n))
@@ -739,28 +611,16 @@ def negotiate(P, geo, k, flows, iters=300):
             paths[i] = pth
             for x, y in zip(pth, pth[1:]):
                 load[tuple(sorted((x, y)))] += w
-            for j in range(1, len(pth) - 1):
-                for dn in ftdirs(sfc[(pth[j], pth[j - 1])], sfc[(pth[j], pth[j + 1])]):
-                    nload[(pth[j], dn)] += w
         caps = {tuple(sorted((n, m))): cap for n in nb for m, cap, _ in nb[n]}
         over = {e: load[e] / caps[e] for e in caps if load[e] > caps[e]}
-        nover_ = {k_: nload[k_] / ncap[k_] for k_ in ncap if nload[k_] > ncap[k_]}
-        if not over and not nover_:
+        if not over:
             return paths
         for e, r in over.items():
             hist[e] += r - 1.0 + 0.2
-        for k_, r in nover_.items():
-            nhist[k_] += r - 1.0 + 0.2
         pf = min(pf * 1.3, 1e4)
     rep = {f"{x[5:]}|{y[5:]}": (round(base.get((x, y), 0)), round(load[(x, y)]), round(caps[(x, y)])) for x, y in caps}
-    over = dict(over, **{f"ft:{a[0]}:{a[1]}": round(r, 3) for a, r in nover_.items()})
     raise SystemExit(f"slice {geo['col_name'][k]}: negotiated routing left overflow {over}; base/load/cap {rep}; "
                      f"flows {[(f[0][5:], f[1][5:], f[2]) for f in flows]}")
-
-
-def _ftdirs(fi, fo):
-    fs = {fi, fo}
-    return [d for d, ff in (("H", {"E", "W"}), ("V", {"N", "S"})) if fs & ff]
 
 
 def route(P, a, b, geo, k, width=1):
@@ -770,27 +630,6 @@ def route(P, a, b, geo, k, width=1):
         raise SystemExit(f"route {a}->{b}")
     import heapq
     ca = P.centre
-    # QC-A0 10-24 (G0C ft_budget): a hop that would push the partition it crosses over its over-the-top M8 / M9 budget
-    # (xdie.check_ft_budget arithmetic: usable tracks x 0.6) is not taken; partitions already over keep the old rule
-    nuse = collections.Counter()
-    for lk in P.links:
-        pth = lk["path"]
-        for i in range(1, len(pth) - 1):
-            fi = shared_face(P, pth[i], pth[i - 1], quiet=True)
-            fo = shared_face(P, pth[i], pth[i + 1], quiet=True)
-            if fi and fo:
-                for dn in _ftdirs(fi[0], fo[0]):
-                    nuse[(pth[i], dn)] += lk["width"]
-
-    def ft_ok(n, pn, m):
-        if pn is None:
-            return True
-        for dn in _ftdirs(shared_face(P, n, pn)[0], shared_face(P, n, m)[0]):
-            x0, y0, x1, y1 = P.rect(n)
-            capn = (y1 - y0 if dn == "H" else x1 - x0) * NEG_FT_TRK_UM * NEG_FT_AVAIL
-            if nuse[(n, dn)] <= capn and nuse[(n, dn)] + width > capn:
-                return False
-        return True
     dist = {a: 0.0}
     prev = {}
     pq = [(0.0, a)]
@@ -804,11 +643,7 @@ def route(P, a, b, geo, k, width=1):
             sf = shared_face(P, n, m, quiet=True) if m != n else None
             if sf is None:
                 continue
-            if not ft_ok(n, prev.get(n), m):
-                continue
-            # QC-A0 10-24: after the slice negotiation (P.neg_done) the face capacity is the negotiation's (the l9 lane
-            # reserved there must fit the same faces)
-            cap = (sf[2] - sf[1] - 2 * EDGE) * (max(5.6, NEG_PIN_UM) if getattr(P, "neg_done", False) else 5.6)
+            cap = (sf[2] - sf[1] - 2 * EDGE) * 5.6
             ld = P.load[tuple(sorted((n, m)))] + width
             if ld > cap:
                 continue
@@ -852,16 +687,7 @@ def slice_cluster_links(P, variant, geo):
             rs_dst = "hc1" if fs == "n" else "st_a"
             entry = "hc0" if fs == "n" else [reg for reg, cc in slice_cells(side).items()
                                              if (0, 0) in (cc if isinstance(cc, list) else [cc])][0]
-            if fs == "s" and SU_ROW_RS:
-                # QC-SUROW 10-25: the S-half rsn/rsf words (2 x 514) run along the SU row to st_a (su_l1 -> su_c -> su_l0
-                # -> fe -> st_a) in every slice.  route() sent them up column 0 in W1/W2 (fw/st_b/ctl), which together
-                # with the slice flows over-filled ctl|stm and st_b V once SU transit is priced physically; the SU row has
-                # H room with the taller rows (su H ft <= 0.45).  8 of 12 slices already used this path.
-                inner = [sl(geo, k, r) for r in (("su_l1", "fw", "st_a") if ST_SWAP else
-                                                  ("su_l1", "su_c", "su_l0", "fe", "st_a"))]
-                assert inner[0] == sl(geo, k, entry), (inner, entry)
-            else:
-                inner = route(P, sl(geo, k, entry), sl(geo, k, rs_dst), geo, k, 2 * RSW)
+            inner = route(P, sl(geo, k, entry), sl(geo, k, rs_dst), geo, k, 2 * RSW)
             P.link("rsn", [cb_part(variant, near, 0, 0)] + inner, f"y_o{sfx(0, 0)}", f"rs_{fs}0", RSW,
                    src_leaf=f"u_t{sfx(0, 0)}.n_y", dst_leaf=f"u_f{'n' if fs == 'n' else 'rs'}.rs_{fs}_lo")
             P.link("rsf", [cb_part(variant, far, 0, 0)] + [cb_part(variant, near, 0, r) for r in (3, 2, 1, 0)] +
@@ -883,26 +709,22 @@ def slice_cluster_links(P, variant, geo):
 #   coll_f5    feedthrough (S0 spoke)        coll_n  S0 face core (S0 PHY above)
 # The face <-> core records (tx W+3 / rx W+1, rtl/physical/ot_qfd_collective_static_io.sv: the as-built RU/RS2 paid
 # relay rows) become plan lanes with stations.
-# QC-SUROW 10-25: the slice rows grew (SRH); the W5 fw row (slice row 1) starts WS_DY higher, so coll_f4 / f5 / coll_n,
-# native59 / tt_ctlm and the top serdes PHY move up by WS_DY and the coll_f3 / glue segments below them grow by WS_DY
-# (coll_f4 keeps its 734.4-um seam with W5 fw).
-WS_DY = round(SRH - 1080.0, 2)
 COLL_SEGS = [  # (partition, type, y0, h)
     ("coll_s", "coll_s", 4648.32, 803.52),
     ("coll_f0", "coll_ft", 5451.84, 993.6), ("coll_f1", "coll_ft", 6445.44, 993.6),
     ("coll_f2", "coll_ft", 7439.04, 993.6),
     ("coll_core", "coll_core", 8432.64, 1589.76),
-    ("coll_f3", "coll_ftm", 10022.4, 1209.6 + WS_DY),
-    ("coll_f4", "coll_ftc", 11232.0 + WS_DY, 1036.8),
-    ("coll_f5", "coll_ftn", 12268.8 + WS_DY, 691.2),
-    ("coll_n", "coll_n", 12960.0 + WS_DY, 786.24),
+    ("coll_f3", "coll_ftm", 10022.4, 1209.6),
+    ("coll_f4", "coll_ftc", 11232.0, 1036.8),
+    ("coll_f5", "coll_ftn", 12268.8, 691.2),
+    ("coll_n", "coll_n", 12960.0, 786.24),
 ]
 COLL_PARTS = [c[0] for c in COLL_SEGS]
 WS = {  # name: (type, module, (w, h), (x, y), orient, hard)
     "io_serdes_2": ("phy_serdes_b", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 0.0), "R0", True),
     "io_serdes_1": ("phy_serdes", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 2324.16), "R0", True),
     **{n: (tn, f"qfd_qc_{tn}_part", (COLL_W, h), (SUB_W, y0), "R0", False) for n, tn, y0, h in COLL_SEGS},
-    "io_serdes": ("phy_serdes", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 13746.24 + WS_DY), "MX", True),
+    "io_serdes": ("phy_serdes", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 13746.24), "MX", True),
     "ucie_kv": ("phy_ucie_kv", "ot_qkvd_ucie_x64_phy", (SUB_W, 777.6), (0.0, 9244.8), "R0", True),
     # QC-P6-G0C 10-23 (PLAN-TOOL5 die IO: a die PHY sits on the beachfront, <= 200 um from the edge): the coll UCIe PHY
     # leaves coll_core (778 um behind the edge column) for its own edge-column partition directly W of coll_core,
@@ -911,17 +733,16 @@ WS = {  # name: (type, module, (w, h), (x, y), orient, hard)
     # PHY at the bottom (die y 7603-8381), share/gearbox glue band above it covers the whole coll_core seam (die y
     # 8432-9245), so no share-frame pin sits beside the full-width PHY (G2 v1 1209.6-tall: 59.9k overflow M7/M5)
     "coll_ucie": ("coll_ucie", "qfd_qc_coll_ucie_part", (SUB_W, 1641.6), (0.0, 7603.2), "R0", False),
-    "glue": ("glue", "qfd_qc_wglue", (SUB_W, 1209.6 + WS_DY), (0.0, 10022.4), "R0", False),
-    "native59": ("native59", "qfd_native59_dv_headprep_obs1", (SUB_W, 518.4), (0.0, 11232.0 + WS_DY), "R0", False),
-    "tt_ctlm": ("tt_ctlm", "qfd_tt_ctlm_dv_hp13_rp", (SUB_W, 518.4), (0.0, 11750.4 + WS_DY), "R0", False),
+    "glue": ("glue", "qfd_qc_wglue", (SUB_W, 1209.6), (0.0, 10022.4), "R0", False),
+    "native59": ("native59", "qfd_native59_dv_headprep_obs1", (SUB_W, 518.4), (0.0, 11232.0), "R0", False),
+    "tt_ctlm": ("tt_ctlm", "qfd_tt_ctlm_dv_hp13_rp", (SUB_W, 518.4), (0.0, 11750.4), "R0", False),
 }
 COLL_FACE_WH = (518.4, 388.8)
 COLL_FACE_CELLS = 116000
 COLL_FIDX = {"p": 0, "r": 1, "s0": 2, "s1": 3, "s2": 4}
 COLL_FW = {"p": 546, "r": 514, "s0": 546, "s1": 546, "s2": 546}     # face record width W (RTL localparam)
 # face core -> (segment, origin in the segment frame)
-# QC 10-24 (dec. 12, 405-um internal reach): s1 core 2.16 um up so its N-face rec windows are <= 405 um from it
-COLL_CORES = {"s1": ("coll_s", (8.64, 10.8)), "s2": ("coll_s", (267.84, 406.08)),
+COLL_CORES = {"s1": ("coll_s", (8.64, 8.64)), "s2": ("coll_s", (267.84, 406.08)),
               # QC-P6-G0C: R moves down beside P (the UCIe PHY left coll_core): both share-frame cores sit on the
               # coll_core | coll_ucie seam (W face y 0-812), R3-INTERNAL <= 750 um without stations
               "p": ("coll_core", (8.64, 8.64)), "r": ("coll_core", (8.64, 406.08)),
@@ -960,10 +781,6 @@ def coll_contents(P, n, tn, census_blocks):
     if n == COLL_UCIE[0]:
         cont.append({"inst": "u_io_ucie", "module": "ot_qfd_ucie_x64_phy", "status": "reuse",
                      "outline_um": list(COLL_UCIE[2]), "origin_um": list(COLL_UCIE[1]),
-                     # QC-PLAN3 10-25 (QC-KITS coll_ucie synth ORD-2013 'LEF master ot_qfd_ucie_x64_phy not found'):
-                     # the PHY hard view (777.6 x 777.6, same as phy_ucie_kv's) travels with the content
-                     "lef": "physical/qwen_missing_phy/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef",
-                     "lib": "physical/qwen_missing_phy/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_tt.lib",
                      "note": "planned hard core (TOPDOWN L1 amend): the coll UCIe PHY sits in coll_core with u_shared + "
                              "u_gearbox, so its forwarded FDI clocks (lclk -> fdi_ck / fdi_rx_ck) stay inside one "
                              "partition (a seam carries no clock)"})
@@ -1346,13 +1163,12 @@ def fault_links(P, variant, geo):
            kind="ctl", src_leaf="u_pstn.flt_o", dst_leaf="u_pstn.flt_s_i")
     P.link("fltk", ["coll_n", "coll_f5", "coll_f4", "coll_f3", "coll_core"], "flt_o", "flt_n_i", 1, kind="ctl",
            src_leaf="u_pstn.flt_o", dst_leaf="u_pstn.flt_n_i")
-    # P6 bound census: UCIe rx_valid[1:0] and tx_up need three status bits besides the fault bit.
-    P.link("fltu", [COLL_UCIE[0], "coll_core"], "flt_o", "flt_u_i", 4, kind="ctl",
+    P.link("fltu", [COLL_UCIE[0], "coll_core"], "flt_o", "flt_u_i", 1, kind="ctl",
            src_leaf="u_pstn.flt_o", dst_leaf="u_collective.fault_ucie")
     P.link("fltc", ws_path(P, "coll_core", "glue"), "flt_o", "coll_flt_i", 1, kind="ctl",
            src_leaf="u_collective.fault_or", dst_leaf="u_sys_face.obs_fault_coll")
-    # native59.fault already has the census-derived native59__fault_native_fault lane below.
-    # A second fltn lane gives kit-rtl a duplicate source pin tied to zero (face_guard shared FAIL).
+    P.link("fltn", ["native59", "glue"], "flt_o", "n59_flt_i", 1, kind="ctl",
+           src_leaf="u_native59.fault", dst_leaf="u_sys_face.obs_fault_n59")
     P.link("fltt", ["tt_ctlm", "native59", "glue"], "flt_o", "ctlm_flt_i", 1, kind="ctl",
            src_leaf="u_tt_ctlm.cf", dst_leaf="u_sys_face.obs_fault_ctlm")
     # QC-P4 10-23 (BINDER2 per-bit UNPLANNED list on 16437c592, 85 b): the as-built carries the coll face fault
@@ -1360,146 +1176,16 @@ def fault_links(P, variant, geo):
     # rx_valid -> coll_core reduce-ORs and sr*_valid) where the 1-b flt lanes above carry only the OR, plus the two
     # MU fault bits glue -> tt_ctlm and the KV PHY reset glue -> ucie_kv.  Planned as static ctl lanes at the as-built
     # widths: S chain 9 (to coll_core) + 26 (forwarded to glue), N chain 4 + 13, coll_core -> glue 30 + 26 + 13.
-    # P6 bound census includes g_face[4].fault_cause[7] in sys_face.obs_fault.
-    P.link("fltv", ["coll_s", "coll_f0", "coll_f1", "coll_f2", "coll_core"], "fltv_o", "fltv_s_i", 36, kind="ctl",
+    P.link("fltv", ["coll_s", "coll_f0", "coll_f1", "coll_f2", "coll_core"], "fltv_o", "fltv_s_i", 35, kind="ctl",
            src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
     P.link("fltv", ["coll_n", "coll_f5", "coll_f4", "coll_f3", "coll_core"], "fltv_o", "fltv_n_i", 17, kind="ctl",
            src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
-    P.link("fltvc", ws_path(P, "coll_core", "glue"), "fltv_o", "coll_fltv_i", 70, kind="ctl",
+    P.link("fltvc", ws_path(P, "coll_core", "glue"), "fltv_o", "coll_fltv_i", 69, kind="ctl",
            src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
     P.link("mufl", ws_path(P, "glue", "tt_ctlm"), "mu_flt_o", "mu_flt_i", 2, kind="ctl",
            src_leaf="mu_ctxrx.mu_fault", dst_leaf="core.mu_fault")
     P.link("kvrst", ["glue", "ucie_kv"], "kv_phy_rst_o", "phy_rst_i", 1, kind="ctl",
            src_leaf="d2d_rom.phy_rst_n", dst_leaf="core.rst_n")
-
-
-def drop_unloaded_lanes(P, path):
-    """COORD 10-25 03:45 ruling (2): the plan carries the as-built loads only.  Lanes the fixed-source bind found with
-    no as-built crossing bit (inputs/unloaded_lanes.json: 253 template fault-OR hops on CB/slice partitions whose
-    as-built cells have no fault source there, 17 slice x_* template forwards, the duplicate shared-fault lane) are
-    removed before materialize, so they take no ports, pins, stations or tracks.  As-built fault reducers keep their
-    carried lanes; nothing is tied off (bind proof unbound/tied 0 is re-checked after the rebind)."""
-    if not Path(path).exists():
-        return dict(dropped=[], absent=[])
-    want = set(json.loads(Path(path).read_text())["lanes"])
-
-    def ids(links):
-        n = collections.Counter()
-        out = []
-        for lk in links:
-            base = f"{lk['path'][0]}__{lk['role']}"
-            n[base] += 1
-            out.append(base if n[base] == 1 else f"{base}_{n[base]}")
-        return out
-    before = ids(P.links)
-    keep = [lk for lk, i in zip(P.links, before) if i not in want]
-    kept_ids = [i for i in before if i not in want]
-    if ids(keep) != kept_ids:
-        raise SystemExit("drop_unloaded_lanes: dropping would rename surviving lanes: "
-                         + str([(a, b) for a, b in zip(kept_ids, ids(keep)) if a != b][:5]))
-    pairs = collections.defaultdict(list)
-    for lk, i in zip(P.links, before):
-        if i in want:
-            pairs[(lk["path"][0], lk["path"][-1])].append(i)
-            for x, y in zip(lk["path"], lk["path"][1:]):
-                P.load[tuple(sorted((x, y)))] -= lk["width"]
-    P.links = keep
-    P.unloaded_pairs = dict(pairs)
-    return dict(dropped=sorted(set(before) & want), absent=sorted(want - set(before)))
-
-
-def bind_width_reconcile(P, path):
-    """QC-PLAN3 10-25 (QC-KITS face_guard 'shared': planned buses wider than the bound buses, e.g. sle_ctl
-    b_tw_data_st_a_o 1167 vs 1080, x_st_b_o 116 vs 29): a lane whose fixed-source bind carries fewer bits than planned
-    (inputs/bind_lane_widths.json from bind_latency.json buses[].width < planned_width; proof unbound 0 / tied 0)
-    takes the bound width -- the plan carries the as-built bits only, no padding, no tie-offs.  The planned width
-    must still equal the bind's planned_width (else the evidence is stale and the plan refuses)."""
-    if not Path(path).exists():
-        return dict(narrowed=0, bits=0)
-    ev = {r["lane"]: r for r in json.loads(Path(path).read_text())["lanes"]}
-    n = collections.Counter()
-    nar, bits, seen = 0, 0, set()
-    pairs = collections.Counter()
-    for lk in P.links:
-        base = f"{lk['path'][0]}__{lk['role']}"
-        n[base] += 1
-        lid = base if n[base] == 1 else f"{base}_{n[base]}"
-        r = ev.get(lid)
-        if r is None:
-            continue
-        seen.add(lid)
-        if (lk["path"][0], lk["path"][-1]) != (r["src"], r["dst"]) or lk["width"] < r["bound_width"]:
-            raise SystemExit(f"bind_width_reconcile: {lid} plan width {lk['width']} {lk['path'][0]}->{lk['path'][-1]} "
-                             f"vs bind evidence bound {r['bound_width']} {r['src']}->{r['dst']} (stale evidence / "
-                             f"plan narrower than the bound bus)")
-        d = lk["width"] - r["bound_width"]       # 0 when the plan already carries the bound width
-        if d == 0:
-            continue
-        for x, y in zip(lk["path"], lk["path"][1:]):
-            P.load[tuple(sorted((x, y)))] -= d
-        lk["width"] = r["bound_width"]
-        nar += 1
-        bits += d
-        pairs[(lk["path"][0], lk["path"][-1])] += d
-    missing = sorted(set(ev) - seen)
-    if missing:
-        raise SystemExit(f"bind_width_reconcile: {len(missing)} evidence lanes not in the plan: {missing[:5]}")
-    P.bind_narrowed = {k: (v["planned_width"], v["bound_width"]) for k, v in ev.items()}
-    P.bind_narrowed_pairs = dict(pairs)
-    P.bind_narrowed_src = json.loads(Path(path).read_text())["source"]
-    return dict(narrowed=nar, bits=bits)
-
-
-def bind_width_census(P, rows, parts, tag):
-    """census side of bind_width_reconcile (QC-PLAN3 10-25): the template census rows ([1] slice record x 12, [2]
-    io_collective) carry the base-RTL widths; where the fixed-source bind proves a partition pair carries fewer bits
-    (P.bind_narrowed_pairs: sum of planned - bound over that pair's narrowed lanes), the pair's census rows are reduced
-    by exactly that many bits (largest row first, never below 0) and each reduction is recorded with its evidence.
-    Pairs without bind evidence are untouched and still fail the census if under-planned."""
-    left = dict(getattr(P, "bind_narrowed_pairs", {}))
-    src = getattr(P, "bind_narrowed_src", {})
-    out, rec = [], []
-    byp = collections.defaultdict(list)
-    for i, r in enumerate(rows):
-        byp[(parts.get(r["src"]), parts.get(r["dst"]))].append(i)
-    rows = [dict(r) for r in rows]
-    for pr, idx in byp.items():
-        d = left.get(pr, 0)
-        if not d:
-            continue
-        for i in sorted(idx, key=lambda j: -rows[j]["bits"]):
-            take = min(d, rows[i]["bits"])
-            if take <= 0:
-                break
-            rec.append(dict(census=tag, pair=list(pr), src=rows[i]["src"], src_bus=rows[i]["src_bus"],
-                            dst=rows[i]["dst"], dst_bus=rows[i]["dst_bus"], template_bits=rows[i]["bits"],
-                            bound_bits=rows[i]["bits"] - take,
-                            evidence="bind_lane_widths.json " + str(src.get("bind_latency_json_sha256", ""))[:12]))
-            rows[i]["bits"] -= take
-            d -= take
-    return rows, rec
-
-
-def unloaded_census_filter(P, rows, parts, tag):
-    """census reconciliation for the dropped unloaded lanes (QC 10-25): a census row is removed only when BOTH
-    (a) every plan lane between its two partitions was dropped by drop_unloaded_lanes, and (b) the fixed-source bind
-    (inputs/bind_carried_pairs.json, bind_latency.json buses[]) has 0 bound crossing bits between those partitions.
-    The template census rows ([1] slice record x 12, [2] io_collective) assume the base slice/collective RTL; the bound
-    slice variants (qfd_dv_s8_ce_e5 / _l9h ...) and the single shared-fault source do not carry those bits.  Any other
-    row stays and still fails the census if unplanned.  Returns (kept rows, removed records with evidence)."""
-    ev = json.loads((Path(__file__).parent / "inputs" / "bind_carried_pairs.json").read_text())
-    carried = {(s_, d_) for s_, d_, _w in ev["pairs"]}
-    up = getattr(P, "unloaded_pairs", {})
-    planned = {(lk["path"][0], lk["path"][-1]) for lk in P.links}
-    kept, removed = [], []
-    for r in rows:
-        pr = (parts.get(r["src"]), parts.get(r["dst"]))
-        if pr in up and pr not in carried and pr not in planned:
-            removed.append(dict(r, census=tag, pair=list(pr), dropped_lanes=up[pr],
-                                evidence="bind_carried_pairs.json: 0 bound bits " + ev["source"]["bind_latency.json_sha256"][:12]))
-        else:
-            kept.append(r)
-    return kept, removed
 
 
 # ====================================================================== ports / slots / windows
@@ -1654,381 +1340,6 @@ def align_coll_ft(P, facepairs, lanes, ports):
             _lay_targeted(P, *k, prs, tg)
 
 
-def _lay_aligned(P, a, b, prs, targets):
-    """QC-PLAN3 10-25: two-pass legaliser for the slice straight-transit alignment (align_slice_transits).  Forward:
-    each window (ascending target) at max(previous end + GAP, target - L/2); if the last one overruns the face, a
-    backward pass pulls windows down only as far as needed (end <= next start - GAP).  The result is verified (no
-    overlap, inside the face) -- _lay_targeted's single pass could clamp a window below the previous one's end when the
-    face top was tight (sl_E1_fe|sc: x_fw_ctl_p2 over x_fe_sc).  False when no density step fits; the caller keeps
-    the default packing for that face."""
-    f, lo, hi = shared_face(P, a, b)
-    ll = a if P.parts[a]["orient"] == "R0" else b
-    x0, y0, x1, y1 = P.rect(ll)
-    fl = f if ll == a else OPP[f]
-    slo = max(y0 if fl in "EW" else x0, lo) + EDGE
-    shi = min(y1 if fl in "EW" else x1, hi) - EDGE
-    order = sorted(prs, key=lambda pr: (targets[pr["id"]], pr["id"]))
-    for fm in [5.0, 5.5, 5.8, None]:
-        L = lambda pr, st: qlen(pr["width"] + 1, PIN_MAX, pr["layers"], st, False, fmax=fm)
-        st, cur = [], slo
-        for pr in order:
-            x = max(cur, targets[pr["id"]][0] - L(pr, max(cur, slo)) / 2)
-            st.append(x)
-            cur = x + L(pr, x) + GAP
-        top = shi
-        for i in range(len(order) - 1, -1, -1):
-            pr = order[i]
-            if st[i] + L(pr, st[i]) > top:
-                x = top - L(pr, max(slo, top - L(pr, st[i])))
-                for _ in range(3):                      # L depends on the start (PG bands): settle it
-                    x = top - L(pr, max(slo, x))
-                st[i] = x
-            top = st[i] - GAP
-        ok = st[0] >= slo - 1e-6
-        ends = [x + L(pr, x) for pr, x in zip(order, st)]
-        for i in range(len(order)):
-            if ends[i] > shi + 1e-6 or (i and st[i] < ends[i - 1] + GAP - 1e-6):
-                ok = False
-        if ok:
-            for pr, x, e in zip(order, st, ends):
-                pr["window_um"] = [round(x, 4), round(e, 4)]
-                pr.pop("order", None)
-            return True
-    return False
-
-
-# PATH-QC-PLAN2 10-25: QC_SLICE_TRANSIT_FIRST=0 restores the 10-25 QC-PLAN3 alignment (all windows ordered by target)
-SLICE_TRANSIT_FIRST = __import__("os").environ.get("QC_SLICE_TRANSIT_FIRST", "1") == "1"
-
-
-def _lay_transit_first(P, a, b, prs, tg, transit):
-    """PATH-QC-PLAN2 10-25 (G2 slw_stm_v3 M3-V overflow 156,908): a slice partition's E face is laid TRANSITS FIRST.
-    The straight E<->W pass-throughs take the y span of their W-face window (one shared ordered transit list per W/E
-    face pair: forward/backward legaliser over the transits only), and the partition's own E buses (and turns) then
-    fill the spans the transits leave free, each in the free span nearest its target.  _lay_aligned ordered ALL windows
-    of a nearly full face by target, so every own bus below a transit pushed it up: on sl_W5_stm the fw<->fe chain
-    (x_fw_fe*, x_fe_fw*, x_st_b_fe, x_sc_fw: ~3.2k bits) jogged 224-474 um inside the partition, up and down across
-    each other.  False when no density step fits; the caller then uses _lay_aligned."""
-    f, lo, hi = shared_face(P, a, b)
-    ll = a if P.parts[a]["orient"] == "R0" else b
-    x0, y0, x1, y1 = P.rect(ll)
-    fl = f if ll == a else OPP[f]
-    slo = max(y0 if fl in "EW" else x0, lo) + EDGE
-    shi = min(y1 if fl in "EW" else x1, hi) - EDGE
-    tr = sorted([pr for pr in prs if pr["id"] in transit], key=lambda pr: (tg[pr["id"]], pr["id"]))
-    own = [pr for pr in prs if pr["id"] not in transit]
-    for fm in [5.0, 5.5, 5.8, None]:
-        L = lambda pr, st: qlen(pr["width"] + 1, PIN_MAX, pr["layers"], st, False, fmax=fm)
-        st, cur = [], slo
-        for pr in tr:
-            x = max(cur, tg[pr["id"]][0] - L(pr, max(cur, slo)) / 2)
-            st.append(x)
-            cur = x + L(pr, x) + GAP
-        top = shi
-        for i in range(len(tr) - 1, -1, -1):
-            pr = tr[i]
-            if st[i] + L(pr, st[i]) > top:
-                x = top - L(pr, max(slo, top - L(pr, st[i])))
-                for _ in range(3):
-                    x = top - L(pr, max(slo, x))
-                st[i] = x
-            top = st[i] - GAP
-        if tr and st[0] < slo - 1e-6:
-            continue
-        wins = {}
-        free = [[slo, shi]]
-        ok = True
-        for pr, x in zip(tr, st):
-            e = x + L(pr, x)
-            if (wins and x < max(w[1] for w in wins.values()) + GAP - 1e-6) or e > shi + 1e-6:
-                ok = False
-                break
-            wins[pr["id"]] = [x, e]
-            nf = []
-            for u, v in free:
-                if x - GAP > u + 1e-9:
-                    nf.append([u, min(v, x - GAP)])
-                if e + GAP < v - 1e-9:
-                    nf.append([max(u, e + GAP), v])
-            free = [iv for iv in nf if iv[1] - iv[0] > 1e-6]
-        if not ok:
-            continue
-        for order in (sorted(own, key=lambda pr: (tg[pr["id"]], pr["id"])),
-                      sorted(own, key=lambda pr: (-pr["width"], tg[pr["id"]], pr["id"]))):
-            fr, ow, ok = [list(iv) for iv in free], {}, True
-            for pr in order:
-                t = tg[pr["id"]][0]
-                best = None
-                for k, (u, v) in enumerate(fr):
-                    x = min(max(u, t - L(pr, max(u, t)) / 2), v)
-                    for _ in range(3):
-                        if x + L(pr, x) > v:
-                            x = max(u, v - L(pr, x))
-                    if x < u - 1e-9 or x + L(pr, x) > v + 1e-6:
-                        continue
-                    d = abs(x + L(pr, x) / 2 - t)
-                    if best is None or d < best[0]:
-                        best = (d, k, x)
-                if best is None:
-                    ok = False
-                    break
-                _, k, x = best
-                e = x + L(pr, x)
-                ow[pr["id"]] = [x, e]
-                u, v = fr.pop(k)
-                if e + GAP < v - 1e-9:
-                    fr.insert(k, [e + GAP, v])
-                if x - GAP > u + 1e-9:
-                    fr.insert(k, [u, x - GAP])
-            if ok:
-                break
-        if not ok:
-            continue
-        wins.update(ow)
-        for pr in prs:
-            pr["window_um"] = [round(wins[pr["id"]][0], 4), round(wins[pr["id"]][1], 4)]
-            pr.pop("order", None)
-        return True
-    return False
-
-
-SU_TURN_CORNER = __import__("os").environ.get("QC_SU_TURN_CORNER", "1") == "1"
-
-
-def align_slice_transits(P, facepairs, lanes, ports):
-    """QC-PLAN3 10-25 (G0 cuts: sl_W4_stm horizontal cut 0.61): a straight E<->W feedthrough slot of a slice partition
-    has its E window laid at the height of its W window (the same rule as the coll feedthroughs, "straight slots run
-    straight").  With independently packed faces the two windows of one slot sat up to ~460 um apart, so the routed
-    feedthrough ran as a Z whose vertical leg crossed horizontal cuts the slice negotiation never priced (it books an
-    E/W transit as H only).  Partitions are processed W -> E inside each slice row, so a chain of straight transits
-    runs straight across the slice; ports that are not straight transits keep their packed position as target."""
-    pmap = {pr["id"]: pr for pr in ports}
-    partner = {}
-    for ln in lanes:
-        ids = ln["ports"]
-        for i in range(len(ids) - 1):
-            partner[(ids[i], pmap[ids[i]]["dst"]["part"])] = ids[i + 1]
-            partner[(ids[i + 1], pmap[ids[i + 1]]["src"]["part"])] = ids[i]
-
-    def face_of(pr, x):
-        return pr["face"] if pr["src"]["part"] == x else OPP[pr["face"]]
-
-    def slice_of(n):
-        return n.split("_")[1] if n.startswith("sl_") else None
-
-    pairs = [(k, prs) for k, prs in facepairs.items() if slice_of(k[0]) and slice_of(k[0]) == slice_of(k[1])
-             and P.parts[k[0]]["orient"] == "R0" and P.parts[k[1]]["orient"] == "R0"]
-    moved, kept = 0, []
-    for k, prs in sorted(pairs, key=lambda kp: (min(P.rect(kp[0][0])[0], P.rect(kp[0][1])[0]), kp[0])):
-        if prs[0]["face"] not in "EW":
-            continue
-        # x = the partition whose E face this is (its W face is already final when processed W -> E)
-        x = k[0] if face_of(prs[0], k[0]) == "E" else k[1]
-        y_ = k[1] if x == k[0] else k[0]
-        tg, nt, transit, nturn = {}, 0, set(), 0
-        X0, Y0, X1, Y1 = P.rect(x)
-        for pr in prs:
-            c = sum(pr["window_um"]) / 2
-            tg[pr["id"]] = (c, 0)
-            q = partner.get((pr["id"], x))
-            if q is not None and face_of(pmap[q], x) == "W":
-                tg[pr["id"]] = (sum(pmap[q]["window_um"]) / 2, 0)
-                nt += 1
-                transit.add(pr["id"])
-            elif q is not None and face_of(pmap[q], x) in "NS" and SLICE_TRANSIT_FIRST:
-                # PATH-QC-PLAN2 (G2 slw_su_l1: rsf/rsn S->E turn crossed): a turn's E window is nested at the corner,
-                # the partner nearest the E edge lands nearest the corner (no crossing L's); the turns stay packed at
-                # the corner (target = corner + 1e-3 x the partner's distance from the E edge: order only)
-                px = sum(pmap[q]["window_um"]) / 2
-                tg[pr["id"]] = ((Y0 + 1e-3 * (X1 - px)) if face_of(pmap[q], x) == "S" else (Y1 - 1e-3 * (X1 - px)), 0)
-                nturn += 1
-            q2 = partner.get((pr["id"], y_))
-            if (SU_TURN_CORNER and q2 is not None and face_of(pmap[q2], y_) in "NS" and pr["id"] not in transit
-                    and y_.split("_", 2)[2] == "su_c"):
-                # PATH-QC-PLAN3 10-25 (G2 slw_su_c 2,828: x_su_l1_ctl / x_su_l1_stm turned W -> N across the su_c core
-                # rows y 51-734): a turn INSIDE the W-face owner su_c lands at its corner (the macro-free glue band at
-                # the N edge, y > 734), nested by the partner's distance from su_c's W edge (no crossing L's)
-                Xy0, Yy0, Xy1, Yy1 = P.rect(y_)
-                px = sum(pmap[q2]["window_um"]) / 2
-                tg[pr["id"]] = ((Yy0 + 1e-3 * (px - Xy0)) if face_of(pmap[q2], y_) == "S" else
-                                (Yy1 - 1e-3 * (px - Xy0)), 0)
-                nturn += 1
-        if nt or (nturn and SU_TURN_CORNER and "su_c" in (x.split("_", 2)[2], y_.split("_", 2)[2])):
-            before = {pr["id"]: list(pr["window_um"]) for pr in prs}
-            if not ((SLICE_TRANSIT_FIRST and _lay_transit_first(P, *k, prs, tg, transit))
-                    or _lay_aligned(P, *k, prs, tg)):
-                kept.append(f"{k[0]}|{k[1]}")
-            moved += sum(1 for pr in prs if pr["window_um"] != before[pr["id"]])
-    print(f"align_slice_transits: {moved} slice E/W windows re-laid at their straight-transit partner height; "
-          f"{len(kept)} faces kept packed (no aligned fit): {kept}", file=sys.stderr)
-
-
-
-# PATH-QC-PLAN-D3 10-25 (G2 sle_ctl cws2 405.85 um, slw_st_a_v2 cws0 406.67 um at actual post-DPL station centres): an
-# N<->S feedthrough of a coreless slice partition took the WHOLE column jog between its packed N and S windows (sl_W5_ctl
-# cws2: hc2 x 3100 -> sc x 2848 = 252 um in ctl; sl_W5_st_a cws0 zig-zagged hc0 x 1865 -> fw x 1612 -> su_l1 channel
-# x 2045), so L/k sat at 401.9 um / 4 stations and the 517-bit station rows had ~3 um left for the D/Q offsets and the
-# row legalisation.  Rule: when a straight N<->S transit's hop L/k is within NS_TIGHT_UM of ST_LEN, the window on the
-# face it shares with the NEXT straight transit partition (not an SU face: those are laid by su free spans) is re-laid
-# at the midpoint of the two partitions' far windows, so both partitions share the jog (the station count of neither
-# grows, no cycle changes); other windows on that face keep their packed centres as targets (_lay_aligned legaliser).
-# When that face is full (no aligned fit: sl_*_ctl|sc carries ctl's three x_ctl_su_c words beside cws2) the slot takes
-# the next station count instead (k = ceil(L / (ST_LEN - NS_TIGHT_UM)), P.ns_tight): reach with the legalisation margin.
-NS_BALANCE = __import__("os").environ.get("QC_NS_BALANCE", "1") == "1"
-NS_TIGHT_UM = 8.0
-
-
-def balance_ns_transits(P, facepairs, lanes, ports):
-    P.ns_tight = set()
-    if not NS_BALANCE:
-        return
-    pmap = {pr["id"]: pr for pr in ports}
-
-    def face_of(pr, x):
-        return pr["face"] if pr["src"]["part"] == x else OPP[pr["face"]]
-
-    def centre(pr):
-        return sum(pr["window_um"]) / 2
-
-    def plain(n):
-        return n.startswith("sl_") and n.split("_", 2)[2] not in ("su_l0", "su_l1", "su_c") and not su_core_rects(P, n)
-
-    def hop(part, ca, cb):
-        X0, Y0, X1, Y1 = P.rect(part)
-        L = abs(ca - cb) + (Y1 - Y0)
-        return L / max(1, math.ceil(L / ST_LEN))
-
-    moves = {}
-    for ln in lanes:
-        ids = ln["ports"]
-        for j in range(1, len(ids) - 1):
-            pa, pb = pmap[ids[j - 1]], pmap[ids[j]]
-            part = pb["src"]["part"]
-            if not plain(part) or {face_of(pa, part), face_of(pb, part)} != {"N", "S"}:
-                continue
-            h = hop(part, centre(pa), centre(pb))
-            if h <= ST_LEN - NS_TIGHT_UM or j + 1 >= len(ids):
-                continue
-            pc, nb = pmap[ids[j + 1]], pb["dst"]["part"]
-            if not plain(nb) or {face_of(pb, nb), face_of(pc, nb)} != {"N", "S"}:
-                print(f"balance_ns_transits: {pb['id']} tight {h:.1f} um, next partition {nb} is not a plain transit",
-                      file=sys.stderr)
-                continue
-            t = (centre(pa) + centre(pc)) / 2
-            if hop(nb, t, centre(pc)) > ST_LEN - NS_TIGHT_UM:
-                print(f"balance_ns_transits: {pb['id']} tight {h:.1f} um, {nb} has no slack", file=sys.stderr)
-                continue
-            key = (part, nb) if part < nb else (nb, part)
-            moves.setdefault(key, {})[pb["id"]] = (t, part, nb, ids[j - 1], ids[j + 1], h)
-    for key, mv in sorted(moves.items()):
-        prs = facepairs[key]
-        tg = {pr["id"]: (mv[pr["id"]][0] if pr["id"] in mv else centre(pr), 0) for pr in prs}
-        before = {pr["id"]: list(pr["window_um"]) for pr in prs}
-        if not _lay_aligned(P, *key, prs, tg):
-            for pr in prs:
-                pr["window_um"] = before[pr["id"]]
-            for pid, (t, part, nb, ida, idc, h) in mv.items():
-                P.ns_tight.add((P.parts[part]["type"], pmap[pid]["src"]["bus"][:-2]))
-            print(f"balance_ns_transits: face {key[0]}|{key[1]} no aligned fit, kept packed; +1 station on "
-                  f"{sorted((P.parts[v[1]]['type'], pmap[k]['src']['bus'][:-2]) for k, v in mv.items())}", file=sys.stderr)
-            continue
-        for pid, (t, part, nb, ida, idc, h) in mv.items():
-            c = centre(pmap[pid])
-            print(f"balance_ns_transits: {pid} {part} hop {h:.1f} -> {hop(part, centre(pmap[ida]), c):.1f} um, "
-                  f"{nb} {hop(nb, c, centre(pmap[idc])):.1f} um (window centre {sum(before[pid]) / 2:.1f} -> {c:.1f})",
-                  file=sys.stderr)
-
-
-# PATH-QC-PLAN3 10-25 (G2 slw_su_l1 rsn 6701 / cws0 3313 gcells, slw_su_l0 2,820): a SU partition's N/S face windows
-# sat over its hard cores (su_l1 S cws0/rsf/rsn x 4-273 over u_lane4 x 17-432; core OBS M1-M5, so the M5 pins and every
-# turn had only M6/M7).  Top-down rule: the N/S faces of su_l0 / su_l1 / su_c are cut into macro-free spans (x not under
-# a hard core whose edge is within SU_PIN_NEAR of the face); the face REFERENCE type (the more-replicated side, e.g. the
-# CB quad cbn_q00 whose same face also feeds tn_00 -> hc0) carries these blocked spans in its type frame, so every
-# instance of it (the SU-facing one and the hc0-facing one) lays the same windows (parent sets, children follow).
-# Turns / bus endpoints take the free spans first, then straight N<->S transits; a straight transit that does not fit
-# goes over the core on M7 only (straight V over the OBS, no M5 pin, no turn there).  QC_SU_FREE_SPANS=0 = old packing.
-SU_FREE_SPANS = __import__("os").environ.get("QC_SU_FREE_SPANS", "1") == "1"
-SU_PIN_NEAR = 200.0
-
-
-def su_core_rects(P, n):
-    """die-frame rects of the hard cores of SU partition n (from the plan geometry constants)."""
-    reg = n.split("_", 2)[2] if n.startswith("sl_") else ""
-    if reg not in ("su_l0", "su_l1", "su_c"):
-        return []
-    X0, Y0, X1, Y1 = P.rect(n)
-    o = P.parts[n]["orient"]
-    if reg.startswith("su_l"):
-        cw, ch = SU_LANE_CORE
-        loc = [(SU_LANE_X[reg], y, cw, ch) for y in SU_LANE_Y]
-    else:
-        byi = {x["inst"]: x for x in P.types[P.parts[n]["type"]]["contents"]}
-        loc = [(x0, y0, *byi[i]["outline_um"]) for i, (x0, y0) in SU_C_CORES.items() if i in byi]
-    out = []
-    for cx, cy, cw, ch in loc:
-        x0 = X1 - cx - cw if o in ("MY", "R180") else X0 + cx
-        y0 = Y1 - cy - ch if o in ("MX", "R180") else Y0 + cy
-        out.append((x0, y0, x0 + cw, y0 + ch))
-    return out
-
-
-def su_blocked(P, n, die_face):
-    """die-frame x intervals of n's N/S die face that lie over a hard core near that face."""
-    X0, Y0, X1, Y1 = P.rect(n)
-    out = []
-    for x0, y0, x1, y1 in su_core_rects(P, n):
-        if (die_face == "N" and y1 > Y1 - SU_PIN_NEAR) or (die_face == "S" and y0 < Y0 + SU_PIN_NEAR):
-            out.append((x0 - EDGE, x1 + EDGE))
-    return out
-
-
-def _span_minus(lo, hi, blocks):
-    free = [[lo, hi]]
-    for u, v in sorted(blocks):
-        nf = []
-        for a, b in free:
-            if v <= a or u >= b:
-                nf.append([a, b])
-                continue
-            if u > a:
-                nf.append([a, u])
-            if v < b:
-                nf.append([v, b])
-        free = nf
-    return [iv for iv in free if iv[1] - iv[0] > 1e-6]
-
-
-def _lay_free_spans(seg_t, blocked_t, sp, straight, dens, tag):
-    """pack windows of one face segment in the TYPE frame [t0, t1]: free spans first-fit (turns/endpoints first, then
-    straight transits); a straight transit that fits no free span goes over a blocked span on M7 only.  Returns
-    {id: (t0, t1)}; raises when a window fits nowhere."""
-    t0, t1 = seg_t
-    free = _span_minus(t0 + EDGE, t1 - EDGE, blocked_t)
-    over = [[max(t0 + EDGE, u), min(t1 - EDGE, v)] for u, v in sorted(blocked_t) if min(t1 - EDGE, v) > max(t0 + EDGE, u)]
-    res, m7 = {}, []
-
-    def fit(pr, spans):
-        for iv in spans:
-            L = qlen(pr["width"] + 1, dens, pr["layers"], iv[0], False)
-            if iv[0] + L <= iv[1] + 1e-6:
-                res[pr["id"]] = (iv[0], iv[0] + L)
-                iv[0] += L + GAP
-                return True
-        return False
-    for pr in [p for p in sp if p["id"] not in straight] + [p for p in sp if p["id"] in straight]:
-        if fit(pr, free):
-            continue
-        if pr["id"] not in straight:
-            print(f"su_free_spans {tag}: non-straight {pr['id']} ({pr['width']} b) placed over a core", file=sys.stderr)
-        pr["layers"] = ["M7"]
-        m7.append(pr["id"])
-        if not fit(pr, over) and not fit(pr, free):
-            raise SystemExit(f"su_free_spans {tag}: {pr['id']} ({pr['width']} b) fits no span; free {free} over {over}")
-    if m7:
-        print(f"su_free_spans {tag}: M7-only over-core straight transits {m7}", file=sys.stderr)
-    return res
-
-
 def materialize(P):
     ports, lanes = [], []
     facepairs = collections.defaultdict(list)
@@ -2073,44 +1384,6 @@ def materialize(P):
             slot_req.setdefault(k, s)
         lanes.append({"id": lid, "ports": pids, **({"param": lk["param"]} if lk.get("param") else {})})
     ninst = collections.Counter(p["type"] for p in P.parts.values())
-
-    def ref_of(a, b, f):
-        cand = [x for x, df in ((a, f), (b, OPP[f])) if P.tface(x, df) in "NE"]
-        na, nb_ = ninst[P.parts[a]["type"]], ninst[P.parts[b]["type"]]
-        if na != nb_:
-            return a if na > nb_ else b
-        if len(cand) == 1:
-            return cand[0]
-        r0 = [x for x in (a, b) if P.parts[x]["orient"] == "R0"]
-        return r0[0] if r0 else a
-    # PATH-QC-PLAN3: blocked (over-core) spans of SU N/S faces, in the face reference's type frame
-    su_block = collections.defaultdict(list)
-    su_partner = {}
-    if SU_FREE_SPANS:
-        pmap0 = {pr["id"]: pr for pr in ports}
-        for ln in lanes:
-            ids = ln["ports"]
-            for i in range(len(ids) - 1):
-                su_partner[(ids[i], pmap0[ids[i]]["dst"]["part"])] = ids[i + 1]
-                su_partner[(ids[i + 1], pmap0[ids[i + 1]]["src"]["part"])] = ids[i]
-        for (a, b), prs in facepairs.items():
-            f, lo, hi = shared_face(P, a, b)
-            if f not in "NS":
-                continue
-            ll = ref_of(a, b, f)
-            o = P.parts[ll]["orient"]
-            flip = o in ("MY", "R180")
-            x0, y0, x1, y1 = P.rect(ll)
-            fl = f if ll == a else OPP[f]
-            for s_, df in ((a, f), (b, OPP[f])):
-                for u, v in su_blocked(P, s_, df):
-                    u, v = max(u, lo), min(v, hi)
-                    if v <= u:
-                        continue
-                    iv = (round(x1 - v, 4), round(x1 - u, 4)) if flip else (round(u - x0, 4), round(v - x0, 4))
-                    key = (P.parts[ll]["type"], P.tface(ll, fl))
-                    if iv not in su_block[key]:
-                        su_block[key].append(iv)
     for (a, b), prs in facepairs.items():
         f, lo, hi = shared_face(P, a, b)
         fb = OPP[f]
@@ -2133,39 +1406,6 @@ def materialize(P):
         ref_lo = y0 if f in "EW" else x0
         ref_hi = y1 if f in "EW" else x1
         segs = quad_segments(P, ll, f, flip, ref_lo, ref_hi, prs)
-        fl_ = f if ll == a else OPP[f]
-        blk = su_block.get((P.parts[ll]["type"], P.tface(ll, fl_))) if f in "NS" else None
-        if blk:
-            def is_straight(pr):
-                for s_ in (a, b):
-                    if not su_core_rects(P, s_):
-                        continue            # straight THROUGH the SU partition only (over its cores)
-                    q = su_partner.get((pr["id"], s_))
-                    if q is not None:
-                        pq = pmap0[q]
-                        # pr crosses face f between a and b; in s_ the partner leaves through the opposite N/S face
-                        if pq["face"] in "NS" and shared_face(P, pq["src"]["part"], pq["dst"]["part"])[0] in "NS":
-                            fin = f if s_ == a else OPP[f]
-                            fq = pq["face"] if pq["src"]["part"] == s_ else OPP[pq["face"]]
-                            if fq == OPP[fin]:
-                                return True
-                return False
-            for (slo, shi), sp in segs:
-                slo, shi = max(slo, lo), min(shi, hi)
-                seg_t = (round(ref_hi - shi, 4), round(ref_hi - slo, 4)) if flip else (round(slo - ref_lo, 4),
-                                                                                       round(shi - ref_lo, 4))
-                res = _lay_free_spans(seg_t, blk, sp, {pr["id"] for pr in sp if is_straight(pr)}, dens,
-                                      f"{a}|{b}")
-                for pr in sp:
-                    u, v = res[pr["id"]]
-                    if flip:
-                        pr["window_um"] = [round(ref_hi - v, 4), round(ref_hi - u, 4)]
-                        pr["order"] = "lsb_high"
-                    else:
-                        pr["window_um"] = [round(ref_lo + u, 4), round(ref_lo + v, 4)]
-                        pr.pop("order", None)
-            del ref_lo, ref_hi
-            continue
         for (slo, shi), sp in segs:
             slo, shi = max(slo, lo), min(shi, hi)
             # QC-FIX (c): W-strip faces (PHYs, coll segments, glue) are laid at the lowest density that fits
@@ -2196,8 +1436,6 @@ def materialize(P):
                                  ", ".join(f"{pr['id']}:{pr['width']}" for pr in sp))
         del ref_lo, ref_hi
     align_coll_ft(P, facepairs, lanes, ports)
-    align_slice_transits(P, facepairs, lanes, ports)
-    balance_ns_transits(P, facepairs, lanes, ports)
     pmap = {pr["id"]: pr for pr in ports}
     for ln in lanes:
         for a, b in zip(ln["ports"], ln["ports"][1:]):
@@ -2207,11 +1445,7 @@ def materialize(P):
             ka = (P.parts[part]["type"], role)
             ca, cb = port_pt(P, pa), port_pt(P, pb)
             L = abs(ca[0] - cb[0]) + abs(ca[1] - cb[1])
-            # OWNER 12: route / stations <= ST_LEN (check.py R3 convention); ft_regs then checks the ROUTED hops around
-            # hard cores and adds stations where a detour exceeds it
             k = max(1, math.ceil(L / ST_LEN))
-            if ka in getattr(P, "ns_tight", ()):          # PATH-QC-PLAN-D3: unbalanced tight N/S transit
-                k = max(k, math.ceil(L / (ST_LEN - NS_TIGHT_UM)))
             slot_req[ka]["stations"] = max(slot_req[ka].get("stations", 1), k)
     # pins on the TYPE: every out bus / slot out window in its type frame (from ANY instance, inverse transform);
     # instances of one type must agree
@@ -2250,23 +1484,7 @@ def materialize(P):
                 s["order"] = g["order"]
         P.types[tn]["ft_slots"].append(s)
     stagger_coll_ft_stations(P)
-    sink_anchored_taps(P)
     return ports, lanes
-
-
-# QC-P6-FTC 10-23 (GEOM-REVIEW7 18:19, coll_ftc g3g: the 2x2 R4 grid taps sat 366-456 um from their sinks and the one
-# centre u_rst_sync was a clock sink ~450 um from every tap -> 524.9 ps source latency, 324 ps setup skew).  The coll
-# feedthrough types take the R4 grid taps PLUS sink-anchored taps as additions (QC-A0 10-24: tap_mode grid+sinks, CP1 r8
-# RULING 21:26; tools/die_plan/taps.py, KV-P6-TAP: radius 250 um / cap 1,500 planned
-# sinks, k-medians of face registers + ft stations); with > 1 tap gen_rtl gives every tap its own reset synchroniser,
-# placed FIRM at the tap (reset_taps.tcl), so no clock or reset sink is > ~250 um from its root.
-SINK_TAP_TYPES = ("coll_ftc",)
-
-
-def sink_anchored_taps(P, radius=250.0, cap=1500):
-    for tn in SINK_TAP_TYPES:
-        if tn in P.types:
-            P.types[tn]["clock"].update(tap_mode="grid+sinks", tap_radius_um=radius, tap_max_sinks=cap)
 
 
 def stagger_coll_ft_stations(P, tap_keep=40.0, site_sep=24.0, step=8.64):
@@ -2295,63 +1513,25 @@ def stagger_coll_ft_stations(P, tap_keep=40.0, site_sep=24.0, step=8.64):
             ci, co = sum(gi["window_um"]) / 2, sum(s["out_window_um"]) / 2
             fp = {"E": lambda c: (W, c), "W": lambda c: (0.0, c), "N": lambda c: (c, H), "S": lambda c: (c, 0.0)}
             a, b = fp[s["in_face"]](ci), fp[s["out_face"]](co)
-            # QC-P6-FTC 10-23 (GEOM-REVIEW6 17:44 / 7 18:19: 240 of dr_o_dr_wi's 521 bits had an out-box spanning the
-            # keep-out although the box to the window CENTRE was clear): test each hop against the whole pin window
-            # (both window ends), i.e. against every bit's hop box, not the centre bit's.
-            ae = [fp[s["in_face"]](c) for c in gi["window_um"]]
-            be = [fp[s["out_face"]](c) for c in s["out_window_um"]]
+            best = None
             nx, ny = int(W / step), int(H / step)
-
-            def search(strict):
-                best = None
-                for ix in range(1, nx):
-                    for iy in range(1, ny):
-                        x, y = ix * step, iy * step
-                        h1 = abs(x - a[0]) + abs(y - a[1])
-                        h2 = abs(x - b[0]) + abs(y - b[1])
-                        if strict:
-                            m1 = max(abs(x - p[0]) + abs(y - p[1]) for p in ae + [a])
-                            m2 = max(abs(x - p[0]) + abs(y - p[1]) for p in be + [b])
-                            bad = (m1 > ST_LEN or m2 > ST_LEN or any(hits(p, (x, y)) for p in ae)
-                                   or any(hits((x, y), p) for p in be))
-                        else:
-                            bad = h1 > ST_LEN or h2 > ST_LEN or hits(a, (x, y)) or hits((x, y), b)
-                        if bad:
-                            continue
-                        crowd = min((abs(x - u) + abs(y - v) for u, v in taken), default=1e9)
-                        key = (crowd < site_sep, h1 + h2, abs(h1 - h2))
-                        if best is None or key < best[0]:
-                            best = (key, (round(x, 3), round(y, 3)))
-                return best
-            # whole-window test first; a slot with no such site keeps the centre-bit test (pre-10-23-18:19 sites)
-            best = search(True) or search(False)
+            for ix in range(1, nx):
+                for iy in range(1, ny):
+                    x, y = ix * step, iy * step
+                    h1 = abs(x - a[0]) + abs(y - a[1])
+                    h2 = abs(x - b[0]) + abs(y - b[1])
+                    if h1 > ST_LEN or h2 > ST_LEN or hits(a, (x, y)) or hits((x, y), b):
+                        continue
+                    crowd = min((abs(x - u) + abs(y - v) for u, v in taken), default=1e9)
+                    key = (crowd < site_sep, h1 + h2, abs(h1 - h2))
+                    if best is None or key < best[0]:
+                        best = (key, (round(x, 3), round(y, 3)))
             if best is None:
                 print(f"stagger_coll_ft_stations: {tn}.{s['name']}: no site keeps both hops off the tap; tool route kept")
                 continue
             taken.append(best[1])
             s0 = (round(min(max(a[0], 1.0), W - 1.0), 3), round(min(max(a[1], 1.0), H - 1.0), 3))
             s["regs_um"] = [list(s0), list(best[1])]
-
-# OWNER DEC. 16 + FP32 audit (COORD 10-25): PHY-edge clocks the bound coll / glue partitions take as bound-only ports
-# (bind kit-rtl), declared so the kit SDC clocks them (create_clock, synchronous with clk) instead of leaving them
-# unconstrained: clk_coll / clk_serdes = the collective core clock (die period), clk_d2d = the forwarded d2d clock
-# (mesochronous, die period), clk_coll_blk = qfd_ckdiv6's /6 block clock (5000 ps).
-EDGE_CLOCKS = {"coll_n": [("clk_coll", 1, "collective core clock"), ("clk_serdes", 1, "SerDes PHY parallel clock (die period)")],
-               "coll_s": [("clk_coll", 1, "collective core clock"), ("clk_serdes", 1, "SerDes PHY parallel clock (die period)")],
-               "coll_ucie": [("clk_coll", 1, "collective core clock"), ("clk_coll_blk", 6, "qfd_ckdiv6 /6 block clock")],
-               "glue": [("clk_d2d", 1, "forwarded d2d clock (mesochronous)")]}
-
-
-def edge_clocks(P):
-    """interior pins one lattice step apart, E of the type's clock tap (never on a tap: GRT-0080)."""
-    for tn, lst in EDGE_CLOCKS.items():
-        t = P.types.get(tn)
-        if t is None:
-            continue
-        x0, y0 = t["clock"]["tap_um"]
-        t["clock"]["edge_clocks"] = [{"port": n, "tap_um": [round(x0 + 2 * G8 * (k + 1), 4), round(y0 + G8, 4)],
-                                      "period_mult": m, "source": src} for k, (n, m, src) in enumerate(lst)]
-
 
 def ft_fracs(P):
     """sparse soft partitions give more of their M4-M7 tracks to feedthroughs (G0 cut model default 0.25)."""
@@ -2362,11 +1542,8 @@ def ft_fracs(P):
         cells = P.cells.get(tn) or 0
         fill = cells * CELL_UM2 / UTIL / (w * h)
         if fill < 0.25:
-            # METHODOLOGY 9.3 (10-24): M8/M9 carry no signals any more, so the cut capacity is the partitions' own
-            # M4-M7 share; very sparse types (est. fill < 0.10) give half of it to feedthroughs
-            fr = 0.5 if fill < 0.10 else 0.4
-            t["ft_track_frac"] = fr
-            t["note"] = (t.get("note", "") + f"; est. std-cell fill {fill:.2f} at util {UTIL}: {fr:.0%} of M4-M7 to ft").lstrip("; ")
+            t["ft_track_frac"] = 0.4
+            t["note"] = (t.get("note", "") + f"; est. std-cell fill {fill:.2f} at util {UTIL}: 40% of M4-M7 to ft").lstrip("; ")
 
 
 def bind_leaves(P):
@@ -2564,26 +1741,9 @@ def declare_a0_hard_cores(P):
 # glue).  Core boxes are on the 8.64 lattice with outlines that are lattice multiples, pins on the SYMMETRIC M4 (E/W
 # faces) / M5 (N/S faces) plan tracks (offset = pitch/2), so every R0/MX/MY instance frame is on track with
 # track_offset [0, 0].  Glue taps (clock_taps) stay in the channels between cores.
-# QC-SUROW 10-25: lane cores 414.72 x 267.84 (48 x 31 lattice = 111,081 um2, same area as the old 535.68 x 207.36) so the
-# su_l partition keeps a 190.08-um macro-free V channel on its bus face side (ft stations + face pin registers) and a
-# 17.28-um strip on the far side.  Rows (SRH 1339.2): 34.56 | core | 51.84 | core | 103.68 (glue tap gap, partition
-# centre) | core | 51.84 | core | 25.92.  QC_SU_LANE_CORE=535.68x207.36 with QC_SRH=1080 restores the old geometry.
-SU_LANE_OBS_MAX = __import__("os").environ.get("QC_SU_LANE_OBS_MAX", "M6")   # PATH-QC-PLAN-D3: M7 = over-core transit
-SU_LANE_CORE = tuple(float(v) for v in __import__("os").environ.get("QC_SU_LANE_CORE", "414.72x267.84").split("x"))
-
-
-def _su_lane_y(srh, ch):
-    """4 stacked lane cores; free height split like the 1080 plan (edges 3/26, inner gaps 5/26, centre tap gap 10/26)."""
-    gaps = srh - 4 * ch
-    e = round(gaps * 3 / 26 / 8.64) * 8.64
-    tap = round(gaps * 10 / 26 / 8.64) * 8.64
-    inner = round((gaps - 2 * e - tap) / 2 / 8.64) * 8.64
-    return tuple(round(v, 2) for v in (e, e + ch + inner, e + 2 * ch + inner + tap, e + 3 * ch + 2 * inner + tap))
-
-
-SU_ROW_RS = __import__("os").environ.get("QC_SU_ROW_RS", "1") == "1"   # S-half rs words along the SU row
-SU_LANE_Y = ((25.92, 285.12, 578.88, 838.08) if (SRH, SU_LANE_CORE) == (1080.0, (535.68, 207.36)) else _su_lane_y(SRH, SU_LANE_CORE[1]))
-SU_LANE_X = {"su_l0": round(622.08 - 17.28 - SU_LANE_CORE[0], 2), "su_l1": 17.28}   # channel on the bus face side (su_l0 W, su_l1 E)
+SU_LANE_CORE = (535.68, 207.36)                 # 62 x 8.64 by 24 x 8.64 = 111,078 um2 (lane leaf kits 89.6-96.1k um2)
+SU_LANE_Y = (25.92, 285.12, 578.88, 838.08)      # 4 cores; gap 492.48-578.88 holds the partition glue tap (y 535.68)
+SU_LANE_X = {"su_l0": 69.12, "su_l1": 17.28}     # 69.12-um glue channel on the bus face side (su_l0 W, su_l1 E)
 # su_c: two leaf columns per half, centre channel x 561.6-665.28 keeps both glue taps (x 613.44) and the cws2 slot;
 # the top band y 734-1080 is the glue (u_suvm / u_red rework + u_pstn) under the N-face ctl/sc windows.
 SU_C_CORES = {"u_suvm_u_vm8q_u_va": (25.92, 51.84), "u_suvm_u_vm8q_u_vb": (302.4, 51.84),
@@ -2628,15 +1788,6 @@ def _core_pin_table(cw, ch, groups):
     return out
 
 
-# PATH-QC-PLAN3 10-25 (PATH-QC-SU: slw_su_c hard cores measured TT clock insertion vs the plan tap 250 +/- 40): the
-# su_c type publishes each core's measured latency and takes early core taps (schema clock.core_taps = "early": the
-# core clock pins hang on their own tap, delivered (insertion_ps - common latency) early, so core flops see the common
-# 250).  Sources: prog_s6 / btab_s6 GRT CTS (intel2 / intel1 path-qc-su), vmr_s6h, rp1 f58.  QC_SU_C_EARLY=0 = old.
-SU_C_EARLY = __import__("os").environ.get("QC_SU_C_EARLY", "1") == "1"
-SU_C_CORE_INS = {"qfd_dv_s8x_prog": (481, "prog_s6"), "qfd_dv_s8x_btab": (445, "btab_s6"),
-                 "qfd_dv_s8x_vmr": (386, "vmr_s6h"), "qfd_dv_s8_crh_rp1": (349, "rp1 f58")}
-
-
 def declare_su_hard_cores(P, outdir, su_directed):
     lane_c = collections.Counter()
     for r in su_directed["source_rows"]:
@@ -2647,7 +1798,7 @@ def declare_su_hard_cores(P, outdir, su_directed):
     pdir = Path(outdir) / "cores" / "su"
     pdir.mkdir(parents=True, exist_ok=True)
     for tn, t in sorted(P.types.items()):
-        m = re.match(r"^sl([we])_(su_l[01]|su_c)(?:_v[0-9]+)?$", tn)
+        m = re.match(r"^sl([we])_(su_l[01]|su_c)$", tn)
         if not m:
             continue
         side, reg = m.groups()
@@ -2678,11 +1829,8 @@ def declare_su_hard_cores(P, outdir, su_directed):
                                          "frame": "core R0, origin (0,0)", "source": "QC-P6-G0C top-down plan pins",
                                          "pins": pins}, indent=0) + "\n")
                 lv = [x for x in t["contents"] if re.match(rf"^u_(exp|rsq|head|rcp|lrly){lane}$", x["inst"])]
-                # PATH-QC-PLAN-D3 10-25: the lane core routes M1-M6 (obs_max M6, its pins are M4/M5); M7 over it is
-                # the partition's straight N<->S transit layer (su_l1 rsn M7-only over u_lane4..7, stations in the gap
-                # rows).  Without it the G2 probe obstructed M1-M7 (core named by no content leaf -> partition ceiling).
                 hcs.append(dict(inst=inst, module=f"qfd_qc_su_lane_{side}", origin_um=[SU_LANE_X[reg], y],
-                                outline_um=[cw, ch], orient="R0", track_offset_um=[0.0, 0.0], obs_max=SU_LANE_OBS_MAX,
+                                outline_um=[cw, ch], orient="R0", track_offset_um=[0.0, 0.0],
                                 pins_file=str(f.relative_to(outdir)),
                                 note=f"SU lane-group {lane} hard core = {', '.join(x['inst'] for x in lv)} "
                                      f"(closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. "
@@ -2708,19 +1856,12 @@ def declare_su_hard_cores(P, outdir, su_directed):
                 byi[inst]["origin_um"] = [x0, y0]
                 cells[f"{tn}.{inst}"] = int(cw * ch * UTIL / CELL_UM2)
         t["hard_cores"] = hcs
-        early = SU_C_EARLY and reg == "su_c"
         for h in hcs:
             ox, oy = h["origin_um"]
             cw, ch = h["outline_um"]
-            ins = SU_C_CORE_INS.get(h["module"]) if early else None
             t["clock"].setdefault("taps", []).append(dict(
                 name=f"{h['inst']}.ck", kind="core", xy=[snap(ox + cw / 2), snap(oy + ch / 2)], orient="R0",
-                insertion_ps=ins[0] if ins else 250, insertion_tol_ps=40,
-                budget_owner=(f"SU core kit: MEASURED TT insertion {ins[0]} ps ({ins[1]}); early core tap, the spine "
-                              f"delivers it {ins[0] - 250} ps early" if ins else
-                              "SU core kit (own CTS, balanced to the die 250)")))
-        if early and any(SU_C_CORE_INS.get(h["module"]) for h in hcs):
-            t["clock"]["core_taps"] = "early"
+                insertion_ps=250, insertion_tol_ps=40, budget_owner="SU core kit (own CTS, balanced to the die 250)"))
         if tc:
             conns[tn] = tc
     (Path(outdir) / "core_conns.json").write_text(json.dumps(conns, indent=1, sort_keys=True) + "\n")
@@ -2941,12 +2082,9 @@ def write_census(P, geo, census, record, outdir, su_directed):
         for row in su_directed["internal"]:
             rows1.append(dict(src=f"{nm}/{row['src']}", src_bus=row["net"],
                               dst=f"{nm}/{row['dst']}", dst_bus=row["net"], kind="data", bits=row["bits"]))
-    rows1, unl1 = unloaded_census_filter(P, rows1, parts1, 1)
-    rows1, bnw1 = bind_width_census(P, rows1, parts1, 1)
     _tsv(cdir / "slice_rows.tsv.gz", rows1)
     json.dump({"note": "QC-FIX slice-region census map (gen_plan.py write_census [1])", "parts": parts1,
-               "groups": groups1, "unloaded_removed": unl1,
-               "bind_narrowed": bnw1}, open(cdir / "slice_map.json", "w"), indent=1)
+               "groups": groups1}, open(cdir / "slice_map.json", "w"), indent=1)
     # [2] io_collective internals
     rows2 = []
     for f, (seg, _) in COLL_CORES.items():
@@ -2974,12 +2112,10 @@ def write_census(P, geo, census, record, outdir, su_directed):
     parts2.update({"u_collective": "coll_core", "u_shared": COLL_UCIE[0], "io_ucie": COLL_UCIE[0], "io_serdes": "io_serdes",
                    "io_serdes_1": "io_serdes_1", "io_serdes_2": "io_serdes_2", "sys_face": "glue",
                    "dvs_W5": "slice_W5"})
-    rows2, unl2 = unloaded_census_filter(P, rows2, parts2, 2)
-    rows2, bnw2 = bind_width_census(P, rows2, parts2, 2)
     _tsv(cdir / "coll_rows.tsv.gz", rows2)
     json.dump({"note": "QC-FIX io_collective internal census map (gen_plan.py write_census [2]; widths from "
                        "rtl/physical/ot_qfd_collective_static_io.sv: record W+3/W+1, PW = W+51, slots 1+1)",
-               "parts": parts2, "groups": {"slice_W5": groups["slice_W5"]}, "unloaded_removed": unl2, "bind_narrowed": bnw2},
+               "parts": parts2, "groups": {"slice_W5": groups["slice_W5"]}},
               open(cdir / "coll_map.json", "w"), indent=1)
     # [3] CB16 cluster internals (R7, 10-23): the as-built reduction tree CB_TREE (traced from qfd_c_b16_dv_fabric)
     # per cluster (the bc relay chain u_dn<c>_rly* is BINDER2-clean and not re-traced here); parts = the tile cell's CB unit, so the 4-quad cl_* groups of [0] are
@@ -3020,14 +2156,12 @@ def main():
                     help="slice2_face_map.json (slice_face_map.py: die slice bus -> slice core port)")
     ap.add_argument("--out", default=str(Path(__file__).with_name("die_plan.json")))
     a = ap.parse_args()
-    _qlen_cache_setup()
     global VARIANT
     VARIANT = a.variant
     census = json.load(gzip.open(a.census)) if a.census.endswith(".gz") else json.loads(Path(a.census).read_text())
     fp = {"w": json.loads(Path(a.slice_fp_w).read_text()), "e": json.loads(Path(a.slice_fp_e).read_text())}
     fp_pins = {s: {b: f for f, bs in fp[s]["pins"].items() for b in bs} for s in "we"}
     record = json.loads(Path(a.slice_record).read_text())
-    record["_reader_port_bits"] = json.loads(Path(a.slice_record).with_name("slice_reader_widths.json").read_text())["reader_port_bits"]
     su_split = json.loads(Path(a.su_split).read_text())["su_split_bits"]
     su_directed = json.loads(Path(a.su_split).with_name("su_directed.json").read_text())
     cblocks = {b["inst"]: b["master"] for b in census["blocks"]}
@@ -3047,32 +2181,21 @@ def main():
     cb_links(P, a.variant, geo)
     slice_cluster_links(P, a.variant, geo)
     slice_internal_links(P, geo, record, su_split, su_directed)
-    P.neg_done = True
     face_map = json.loads(Path(a.slice_face_map).read_text())
     dropped = census_links(P, geo, census, fp_pins, face_map)
     treq_links(P, geo, census, fp_pins, face_map)
     P.coll_rows = coll_internal_links(P)
     fault_links(P, a.variant, geo)
-    unl = drop_unloaded_lanes(P, Path(__file__).parent / "inputs" / "unloaded_lanes.json")
-    print(f"unloaded lanes: dropped {len(unl['dropped'])}, absent {unl['absent']}")
-    bwr = bind_width_reconcile(P, Path(__file__).parent / "inputs" / "bind_lane_widths.json")
-    print(f"bind width reconcile: {bwr['narrowed']} lanes narrowed to the bound width, {bwr['bits']} bits")
     cov = coverage(P, census)
     ports, lanes = materialize(P)
     merged = merge_types(P)
     bind_leaves(P)
-    # COORD 10-25 11:31 (PATH-QC-PHYB): the die-edge PHY partitions are the bare macro; its registered FDI pins are the
-    # boundary registers (registered_pins + lib on the core, no u_pstn; tools/die_plan/hard_pinreg.py)
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    import apply_registered_phy
-    apply_registered_phy.apply_types(P.types)
     ft_fracs(P)
-    edge_clocks(P)
     chans = [{"rect_um": [0.0, 4648.32, SUB_W, 7603.2],
               "reason": "west-strip edge column below coll_ucie: the strip width is set by the serdes PHY depth "
                         "(1563.84 um); coll (786.24 wide) is taller than the edge-column content. PHY bump/decap/ESD "
                         "field, no logic"},
-             {"rect_um": [0.0, 12268.8 + WS_DY, SUB_W, 13746.24 + WS_DY],
+             {"rect_um": [0.0, 12268.8, SUB_W, 13746.24],
               "reason": "west-strip edge column above tt_ctlm: same strip-depth reason; decap"},
              {"rect_um": [0.0, 16070.4, WS_W, H],
               "reason": f"west strip above serdes S3: IO content (16.07 mm tall) is shorter than the compute "
@@ -3095,7 +2218,7 @@ def main():
                 "tech": "asap7", "outline_um": [round(W, 4), round(H, 4)], "period_ps": 833, "reach_um": REACH,
                 "rep_um": 450.0, "grid_um": G,
                 "layer_budget": {"partition_signal_max": "M7", "die_layers": ["M8", "M9"],
-                                 "die_use": ["clock_spine", "pg", "reset"],
+                                 "die_use": ["clock_spine", "pg", "ft_reserved", "reset"],
                                  "cut_avail": {"M8": 0.6, "M9": 0.6}},
                 "channels": chans,
                 "pg": {"partition_pg_max": "M7", "grid": [
@@ -3111,37 +2234,10 @@ def main():
                   "spine": {"layers": ["M8", "M9"], "root_um": [round(W / 2, 2), round(y_sl + SLH / 2, 2)],
                             "topology": "htree"}},
         "reset": {"source": {"part": "glue", "bus": "rstseq_rom"}, "sync_stages": 2, "data_reset": False,
-                  "epoch_bit": True, "release": "wavefront", "start": "broadcast", "relay_um": REACH, "hop_um": REACH},
+                  "epoch_bit": True, "release": "counted"},
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
-                    "cut_ratio_max": 0.6, "cut_step_um": 250, "ft_station_max_um": ST_LEN,
-                    "reach_margin": 1.0},   # COORD 22:35: hops/stations <= 405 um exactly, no 0.9 margin
+                    "cut_ratio_max": 0.6, "cut_step_um": 250},
     }
-    # QC-P6-A0 10-23: A0 v6 core clock drops per CB quad (inputs/a0_core_taps.json; no file -> no change)
-    a0_taps = __import__("a0_core_taps").declare(P, Path(__file__).parent / "inputs" / "a0_core_taps.json", plan["clock"])
-    # QC-A0 10-24 (GEOM-REVIEW batch 1): ft stations of hard-core partitions get declared sites off the cores
-    # (routed hop = shortest path around the cores).  Slots whose routed hops still exceed the limit with their planned
-    # station count are listed in ft_regs_report.json (more stations = a bound-RTL / R8 change: COORD decision)
-    # QC 10-24 (owner-accepted capacity plan): every lane family into one hardened type gets ONE natural depth
-    # (lane_eq.py: short lanes padded with ft stations along their route, not with per-instance landing pads);
-    # ft_regs may add stations for routed hops, so equalise again until nothing moves
-    leq = __import__("lane_eq")
-    eqr = leq.equalise(plan)
-    ftr = __import__("ft_regs").ft_regs_off_cores(plan)
-    for _ in range(3):
-        e2 = leq.equalise(plan)
-        eqr["added"] += e2["added"]
-        eqr["unfixed"], eqr["families_unequal_after"] = e2["unfixed"], e2["families_unequal_after"]
-        if not e2["added"]:
-            break
-        f2 = __import__("ft_regs").ft_regs_off_cores(plan)
-        ftr.setdefault("added_stations", []).extend(f2.get("added_stations", []))
-        ftr["unfixed"] = f2["unfixed"]
-    (Path(a.out).parent / "ft_regs_report.json").write_text(json.dumps(ftr, indent=1) + "\n")
-    (Path(a.out).parent / "lane_eq_report.json").write_text(json.dumps(eqr, indent=1) + "\n")
-    # Centres alone miss wide-window tails. Close every bit, allocate internal
-    # cells in macro-free channels, and restore common lane-family depths.
-    bsr = __import__("bit_stations").repair_equalised(plan)
-    (Path(a.out).parent / "bit_stations_report.json").write_text(json.dumps(bsr, indent=1) + "\n")
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(plan, indent=1) + "\n")
     st = collections.Counter()
@@ -3154,8 +2250,7 @@ def main():
                       + (1 if P.types[tn].get("hard") else 0))
              for tn in sorted(P.types)}
     notes = {"variant": a.variant, "partitions": len(P.parts), "types": len(P.types), "types_merged": merged,
-             "ports": len(ports), "lanes": len(lanes), "unloaded_lanes_dropped": len(unl["dropped"]),
-             "unloaded_lanes_absent": unl["absent"],
+             "ports": len(ports), "lanes": len(lanes),
              "die_um": [round(W, 2), round(H, 2)], "die_mm2": round(W * H / 1e6, 1),
              "content_status_per_instance": dict(st),
              "max_cells_type": max(((v["cells"] or 0, k) for k, v in cells.items())),
@@ -3172,7 +2267,6 @@ def main():
                                     "binder connects it with asbuilt rewire class 'treq' (bind/plan_rewires_treq.json)",
                             "lanes": P.treq},
              "planned_cores": P.cores,
-             "a0_core_taps": a0_taps,
              # QC-P2 (COORD 10-23 head landed-LP 3317/27981): leaf parameters the die netlist binder MUST pass from
              # the plan.  The old landed parents qfd_tt_ctlm_dv_lpf.sv:93 / lp/qfd_tt_ctlm_dv_lpf_lp.sv:196 /
              # headprep/qfd_tt_ctlm_dv_lpf_hp.sv:123 instantiate ot_qfd_tt_ctlm_static_hr without .SEGCAL (default

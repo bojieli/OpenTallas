@@ -41,28 +41,7 @@ module ot_s81sl_leaf #(
     parameter integer KV_HARD_RQ = 0, // reuse CLOSED D512 reduce and quant views
     parameter integer KV_CNIK = 0,   // RTLGAP-SUKV: KV_ENABLE leaf also runs CN 12 / IK 13 on its bank (opt-in)
     parameter integer KV_CP = 0,     // RTLGAP-SUKV: KV_ENABLE leaf also has the compressor pool CP 14 (opt-in)
-    parameter integer VS_MUT = 0,      // bench negative controls only (ot_s81sl_vs MUT); 0 in every build
-    // S81-PLAN R3 (10-25): core<->core stations of the leaf plan (die_plan internal_stations), one depth per interface
-    // group and direction, every signal of a group (data, valid, index, flags) the same depth; 0 = the pre-R3 netlist.
-    // Stage j of class <c> is u_cst_<c>.gd.s[j].u (j = 0 nearest the launching sub-leaf); tools/die_plan/kit_istations.py
-    // places them at the plan's regs_um and fails closed when a depth here differs from the plan's stage count.
-    parameter integer CS_HI_D = 0,   // vp glue -> the 16 hc_post lanes (all lane inputs), tree: CS_HI_GS shared stages
-    parameter integer CS_HI_GS = 0,  //   per CS_H_G lanes (u_vp.g_hig[g].u_cst), then per lane (u_vp.g_ln[l].u_cst_hi)
-    parameter integer CS_HO_D = 0,   // lanes -> vp glue (vo, o, fault): per lane (u_vp.g_ln[l].u_cst_ho), then
-    parameter integer CS_HO_GS = 0,  //   CS_HO_GS shared per group (u_vp.g_hog[g].u_cst)
-    parameter integer CS_H_G = 4,    // lane group size of the h trees (divides 16)
-    parameter integer CS_VNI_D = 0,  // vp -> vn (u_a + u_b): hw_*, hr_*, n_go / n_pre, wl_*           (u_cst_vni)
-    parameter integer CS_VNO_D = 0,  // vn -> vp: hq_v / hq_d                                         (u_cst_vno)
-    parameter integer CS_Y_D = 0,    // vn -> vq: y_v / y_i / y; vp -> vq m_* rides CS_VNI_D + CS_Y_D  (u_cst_y, u_cst_m)
-    parameter integer CS_U_D = 0,    // vs -> vq: u_v / u_i / u, um_v / um_q / um_b / um_i            (u_cst_u)
-    parameter integer CS_SW_D = 0,   // vs -> vsw: sw_v / sw_d / sw_w / sw_lim                         (u_cst_sw)
-    parameter integer CS_SWR_D = 0,  // vsw -> vs: sw_vi / sw_ri / sw_fi                               (u_cst_swr)
-    parameter integer CS_RA_D = 0,   // vs -> rxsf: ra_v / ra_x                                        (u_cst_ra)
-    parameter integer CS_RAR_D = 0,  // rxsb -> vs: ra_vi / ra_ri / ra_fi                              (u_cst_rar)
-    parameter integer CS_VE_D = 0,   // vs -> ve: ve_r* (reduce stream), ve_a* (add beats)            (u_cst_ve)
-    parameter integer CS_VER_D = 0,  // ve -> vs: ve_p* (beat partials), ve_o*, ve_fi                  (u_cst_ver)
-    parameter integer CS_PVS_D = 0,  // vp -> vs (and the KV bank): s_v / s_d, x_qv / x_qd            (u_cst_pvs)
-    parameter integer CS_VSP_D = 0   // vs (KV) -> vp: x_rv / x_ra, x_wv / x_wa / x_wm / x_wd          (u_cst_vsp)
+    parameter integer VS_MUT = 0       // bench negative controls only (ot_s81sl_vs MUT); 0 in every build
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -94,70 +73,17 @@ module ot_s81sl_leaf #(
     input  wire [31:0]   g_d,
     output wire          fault
 );
-    wire vr_v, vp_v, va_v, vo_v, vef; wire [1:0] vr_c, vp_c, va_c, vo_c; wire [63:0] vr_h; wire [127:0] vr_k, vr_w;
-    wire [31:0] vp_hh, vp_kk, vp_dd, va_g; wire [127:0] va_h; wire [255:0] va_val; wire [127:0] vo_y;
+    wire vr_v, vp_v, va_v, vo_v, vef; wire [1:0] vr_c, vp_c, va_c, vo_c; wire [127:0] vr_h, vr_k, vr_w;
+    wire [31:0] vp_hh, vp_kk, vp_dd, va_g; wire [255:0] va_h, va_val, vo_y;
     wire hw_v, hw_hf, hr_v, hr_hf, hq_v, n_go, m_v, m_q, m_b, wl_v, y_v;
-    wire [2:0] hw_j, hr_j, wl_i, y_i; wire [255:0] hw_d, hq_d, wl_d; wire [127:0] y; wire [127:0] n_pre; wire [7:0] m_i;
+    wire [2:0] hw_j, hr_j, wl_i, y_i; wire [255:0] hw_d, hq_d, wl_d, y; wire [127:0] n_pre; wire [7:0] m_i;
     wire s_v; wire [159:0] s_d; wire x_rv, x_qv, x_wv; wire [9:0] x_ra, x_wa; wire [7:0] x_wm; wire [255:0] x_qd, x_wd;
     wire u_v, um_v, um_q, um_b; wire [2:0] u_i; wire [255:0] u; wire [7:0] um_i;
     wire swv, swvi, swfi; wire [255:0] swd; wire [31:0] sww, swl; wire [63:0] swri;
-    wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rfmx; wire [30:0] rfu, rfu2, rari;
+    wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rari, rfu, rfu2, rfmx;
     wire f_vp, f_vn, f_vq, f_vs;
     wire vs_xrv,vs_xwv;wire [9:0]vs_xra,vs_xwa;wire[7:0]vs_xwm;wire[255:0]vs_xwd;
     wire kvbusy,kvdone,kvfault,kv_xrv,kv_xwv;wire[9:0]kv_xra,kv_xwa;wire[7:0]kv_xwm;wire[255:0]kv_xwd;
-    initial if (KV_ENABLE != 0 && (CS_PVS_D != 0 || CS_VSP_D != 0))
-        $fatal(1, "ot_s81sl_leaf: x-port stations (CS_PVS_D / CS_VSP_D) are not validated with the KV bank's fixed timeline");
-    // ---- S81-PLAN R3 station chains (D = 0: wires).  Sub-leaf side names: *_p = the vp side, *_n = vn, *_q = vq,
-    // *_s = vs, *_w = vsw, *_e = ve, *_r = rxsf / rxsb.
-    wire hw_v_n, hw_hf_n, hr_v_n, hr_hf_n, n_go_n, wl_v_n; wire [2:0] hw_j_n, hr_j_n, wl_i_n; wire [255:0] hw_d_n, wl_d_n;
-    wire [127:0] n_pre_n;
-    wire hq_v_n; wire [255:0] hq_d_n;
-    wire y_v_n; wire [2:0] y_i_n; wire [127:0] y_n;
-    wire m_v_p, m_q_p, m_b_p; wire [7:0] m_i_p;
-    wire u_v_s, um_v_s, um_q_s, um_b_s; wire [2:0] u_i_s; wire [255:0] u_s; wire [7:0] um_i_s;
-    wire swv_s, swvi_w, swfi_w; wire [255:0] swd_s; wire [31:0] sww_s, swl_s; wire [63:0] swri_w;
-    wire rav_s, ravi_r, rafi_r; wire [31:0] rax_s; wire [30:0] rari_r;
-    wire vr_v_s, vp_v_e, va_v_s, vo_v_e, vef_e; wire [1:0] vr_c_s, vp_c_e, va_c_s, vo_c_e; wire [63:0] vr_h_s;
-    wire [127:0] vr_k_s, vr_w_s, va_h_s, vo_y_e; wire [31:0] vp_hh_e, vp_kk_e, vp_dd_e, va_g_s; wire [255:0] va_val_s;
-    wire s_v_p, x_qv_p; wire [159:0] s_d_p; wire [255:0] x_qd_p;
-    wire x_rv_x, x_wv_x; wire [9:0] x_ra_x, x_wa_x; wire [7:0] x_wm_x; wire [255:0] x_wd_x;
-    ot_s81sl_cst #(.W(3 + 1 + 256 + 3 + 1 + 128 + 3 + 256), .V(4), .D(CS_VNI_D)) u_cst_vni (.clk(clk), .rst_n(rst_n),
-        .d({hw_j, hw_hf, hw_d, hr_j, hr_hf, n_pre, wl_i, wl_d}), .dv({hw_v, hr_v, n_go, wl_v}),
-        .q({hw_j_n, hw_hf_n, hw_d_n, hr_j_n, hr_hf_n, n_pre_n, wl_i_n, wl_d_n}), .qv({hw_v_n, hr_v_n, n_go_n, wl_v_n}));
-    ot_s81sl_cst #(.W(256), .V(1), .D(CS_VNO_D)) u_cst_vno (.clk(clk), .rst_n(rst_n), .d(hq_d_n), .dv(hq_v_n),
-        .q(hq_d), .qv(hq_v));
-    ot_s81sl_cst #(.W(3 + 128), .V(1), .D(CS_Y_D)) u_cst_y (.clk(clk), .rst_n(rst_n), .d({y_i_n, y_n}), .dv(y_v_n),
-        .q({y_i, y}), .qv(y_v));
-    ot_s81sl_cst #(.W(2 + 8), .V(1), .D(CS_VNI_D + CS_Y_D)) u_cst_m (.clk(clk), .rst_n(rst_n), .d({m_q_p, m_b_p, m_i_p}),
-        .dv(m_v_p), .q({m_q, m_b, m_i}), .qv(m_v));
-`ifndef OT_S81SL_CST_MUT_UV
-    ot_s81sl_cst #(.W(3 + 256 + 2 + 8), .V(2), .D(CS_U_D)) u_cst_u (.clk(clk), .rst_n(rst_n),
-        .d({u_i_s, u_s, um_q_s, um_b_s, um_i_s}), .dv({u_v_s, um_v_s}), .q({u_i, u, um_q, um_b, um_i}), .qv({u_v, um_v}));
-`else
-    // bench mutant: u_v one station deeper than the rest of its interface (u_i / u, um_*)
-    wire u_v_m;
-    ot_s81sl_cst #(.W(3 + 256 + 2 + 8), .V(2), .D(CS_U_D)) u_cst_u (.clk(clk), .rst_n(rst_n),
-        .d({u_i_s, u_s, um_q_s, um_b_s, um_i_s}), .dv({u_v_s, um_v_s}), .q({u_i, u, um_q, um_b, um_i}), .qv({u_v_m, um_v}));
-    ot_s81sl_cst #(.W(1), .V(1), .D(1)) u_cst_mut (.clk(clk), .rst_n(rst_n), .d(1'b0), .dv(u_v_m), .q(), .qv(u_v));
-`endif
-    ot_s81sl_cst #(.W(256 + 32 + 32), .V(1), .D(CS_SW_D)) u_cst_sw (.clk(clk), .rst_n(rst_n), .d({swd_s, sww_s, swl_s}),
-        .dv(swv_s), .q({swd, sww, swl}), .qv(swv));
-    ot_s81sl_cst #(.W(64), .V(2), .D(CS_SWR_D)) u_cst_swr (.clk(clk), .rst_n(rst_n), .d(swri_w), .dv({swvi_w, swfi_w}),
-        .q(swri), .qv({swvi, swfi}));
-    ot_s81sl_cst #(.W(32), .V(1), .D(CS_RA_D)) u_cst_ra (.clk(clk), .rst_n(rst_n), .d(rax_s), .dv(rav_s), .q(rax), .qv(rav));
-    ot_s81sl_cst #(.W(31), .V(2), .D(CS_RAR_D)) u_cst_rar (.clk(clk), .rst_n(rst_n), .d(rari_r), .dv({ravi_r, rafi_r}),
-        .q(rari), .qv({ravi, rafi}));
-    ot_s81sl_cst #(.W(2 + 64 + 128 + 128 + 2 + 128 + 256 + 32), .V(2), .D(CS_VE_D)) u_cst_ve (.clk(clk),
-        .rst_n(rst_n), .d({vr_c_s, vr_h_s, vr_k_s, vr_w_s, va_c_s, va_h_s, va_val_s, va_g_s}), .dv({vr_v_s, va_v_s}),
-        .q({vr_c, vr_h, vr_k, vr_w, va_c, va_h, va_val, va_g}), .qv({vr_v, va_v}));
-    ot_s81sl_cst #(.W(2 + 96 + 2 + 128), .V(3), .D(CS_VER_D)) u_cst_ver (.clk(clk), .rst_n(rst_n),
-        .d({vp_c_e, vp_hh_e, vp_kk_e, vp_dd_e, vo_c_e, vo_y_e}), .dv({vp_v_e, vo_v_e, vef_e}),
-        .q({vp_c, vp_hh, vp_kk, vp_dd, vo_c, vo_y}), .qv({vp_v, vo_v, vef}));
-    ot_s81sl_cst #(.W(160 + 256), .V(2), .D(CS_PVS_D)) u_cst_pvs (.clk(clk), .rst_n(rst_n), .d({s_d_p, x_qd_p}),
-        .dv({s_v_p, x_qv_p}), .q({s_d, x_qd}), .qv({s_v, x_qv}));
-    ot_s81sl_cst #(.W(10 + 10 + 8 + 256), .V(2), .D(CS_VSP_D)) u_cst_vsp (.clk(clk), .rst_n(rst_n),
-        .d({x_ra, x_wa, x_wm, x_wd}), .dv({x_rv, x_wv}), .q({x_ra_x, x_wa_x, x_wm_x, x_wd_x}), .qv({x_rv_x, x_wv_x}));
-
     wire kv_cmd=KV_ENABLE && s_d[3:0]==15;
     assign x_rv=kvbusy?kv_xrv:vs_xrv;assign x_ra=kvbusy?kv_xra:vs_xra;
     assign x_wv=kvbusy?kv_xwv:vs_xwv;assign x_wa=kvbusy?kv_xwa:vs_xwa;
@@ -174,47 +100,43 @@ module ot_s81sl_leaf #(
       assign kv_xrv=0;assign kv_xra=0;assign kv_xwv=0;assign kv_xwa=0;assign kv_xwm=0;assign kv_xwd=0;
     end endgenerate
 
-    ot_s81sl_vp #(.CS_HI_D(CS_HI_D), .CS_HI_GS(CS_HI_GS), .CS_HO_D(CS_HO_D), .CS_HO_GS(CS_HO_GS), .CS_H_G(CS_H_G),
-                  .HQX(CS_VNI_D + CS_VNO_D)) u_vp (
-        .clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
+    ot_s81sl_vp u_vp (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d), .lo_v(lo_v), .lo_d(lo_d),
-        .s_v(s_v_p), .s_d(s_d_p), .x_rv(x_rv_x), .x_ra(x_ra_x), .x_qv(x_qv_p), .x_qd(x_qd_p),
-        .x_wv(x_wv_x), .x_wa(x_wa_x), .x_wm(x_wm_x), .x_wd(x_wd_x),
+        .s_v(s_v), .s_d(s_d), .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd),
+        .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
         .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d), .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf),
-        .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v_p), .m_q(m_q_p), .m_b(m_b_p), .m_i(m_i_p),
+        .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(f_vp));
-    ot_s81sl_vn_sp u_vn (   // S81/RTLSPLIT: vn = u_a (ot_s81sl_vn_a) + u_b (ot_s81sl_vn_b), p +2 edges
-   .clk(clk), .rst_n(rst_n), .hw_v(hw_v_n), .hw_j(hw_j_n), .hw_hf(hw_hf_n), .hw_d(hw_d_n),
-        .hr_v(hr_v_n), .hr_j(hr_j_n), .hr_hf(hr_hf_n), .hq_v(hq_v_n), .hq_d(hq_d_n), .n_go(n_go_n), .n_pre(n_pre_n),
-        .wl_v(wl_v_n), .wl_i(wl_i_n), .wl_d(wl_d_n), .rb_v(rb_v), .rb_d(rb_d),
-        .p_v(p_v), .p_d(p_d), .y_v(y_v_n), .y_i(y_i_n), .y(y_n), .fault(f_vn));
+    ot_s81sl_vn u_vn (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
+        .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
+        .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d),
+        .p_v(p_v), .p_d(p_d), .y_v(y_v), .y_i(y_i), .y(y), .fault(f_vn));
 `ifndef OT_S81SL_HARD
     ot_s81sl_vs #(.MUT(VS_MUT)) u_vs (
 `else
     // Frozen hard child: its Liberty/blackbox has no parameters.
     ot_s81sl_vs u_vs (
 `endif
-        .clk(clk), .rst_n(rst_n), .s_v(s_v && !kv_cmd), .s_d({s_d[159:64], s_d[62], s_d[60:0]}),
+        .clk(clk), .rst_n(rst_n), .s_v(s_v && !kv_cmd), .s_d(s_d),
         .x_rv(vs_xrv), .x_ra(vs_xra), .x_qv(x_qv && !kvbusy), .x_qd(x_qd), .x_wv(vs_xwv), .x_wa(vs_xwa), .x_wm(vs_xwm), .x_wd(vs_xwd),
-        .u_v(u_v_s), .u_i(u_i_s), .u(u_s), .um_v(um_v_s), .um_q(um_q_s), .um_b(um_b_s), .um_i(um_i_s),
-        .sw_v(swv_s), .sw_d(swd_s), .sw_w(sww_s), .sw_lim(swl_s), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
-        .ra_v(rav_s), .ra_x(rax_s), .ra_vi(ravi), .ra_ri(rari), .ra_fi(rafi),
-        .ve_rv(vr_v_s), .ve_rc(vr_c_s), .ve_rh(vr_h_s), .ve_rk(vr_k_s), .ve_rw(vr_w_s),
+        .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
+        .sw_v(swv), .sw_d(swd), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
+        .ra_v(rav), .ra_x(rax), .ra_vi(ravi), .ra_ri(rari), .ra_fi(rafi),
+        .ve_rv(vr_v), .ve_rc(vr_c), .ve_rh(vr_h), .ve_rk(vr_k), .ve_rw(vr_w),
         .ve_pv(vp_v), .ve_pc(vp_c), .ve_phh(vp_hh), .ve_pkk(vp_kk), .ve_pdd(vp_dd),
-        .ve_av(va_v_s), .ve_ac(va_c_s), .ve_ah(va_h_s), .ve_aval(va_val_s), .ve_ag(va_g_s),
+        .ve_av(va_v), .ve_ac(va_c), .ve_ah(va_h), .ve_aval(va_val), .ve_ag(va_g),
         .ve_ov(vo_v), .ve_oc(vo_c), .ve_oy(vo_y), .ve_fi(vef),
         .e_v(e_v), .e_c(e_c), .e_d(e_d), .g_v(g_v), .g_c(g_c), .g_d(g_d), .fault(f_vs));
-    ot_s81sl_ve_sp u_ve (   // S81/RTLSPLIT: ve = u_m (ot_s81sl_ve_m) + u_s (ot_s81sl_ve_s), reduce stream +2 edges
-   .clk(clk), .rst_n(rst_n), .r_v(vr_v), .r_c(vr_c), .r_h(vr_h), .r_k(vr_k), .r_w(vr_w),
-        .p_v(vp_v_e), .p_c(vp_c_e), .p_hh(vp_hh_e), .p_kk(vp_kk_e), .p_dd(vp_dd_e),
+    ot_s81sl_ve u_ve (.clk(clk), .rst_n(rst_n), .r_v(vr_v), .r_c(vr_c), .r_h(vr_h), .r_k(vr_k), .r_w(vr_w),
+        .p_v(vp_v), .p_c(vp_c), .p_hh(vp_hh), .p_kk(vp_kk), .p_dd(vp_dd),
         .a_v(va_v), .a_c(va_c), .a_h(va_h), .a_val(va_val), .a_g(va_g),
-        .o_v(vo_v_e), .o_c(vo_c_e), .o_y(vo_y_e), .fault(vef_e));
+        .o_v(vo_v), .o_c(vo_c), .o_y(vo_y), .fault(vef));
     ot_s81sl_vsw u_vsw (.clk(clk), .rst_n(rst_n), .i_v(swv), .i_d(swd), .i_w(sww), .i_lim(swl),
-        .o_v(swvi_w), .o_d(swri_w), .o_f(swfi_w));
+        .o_v(swvi), .o_d(swri), .o_f(swfi));
     dsfd_su_t_rxsf u_rxsf (.ck(clk), .rst(rst_n), .i_v(rav), .i_x(rax), .o_v(rfv), .o_u(rfu), .o_u2(rfu2), .o_mx(rfmx),
         .o_f(rff));
     dsfd_su_t_rxsb u_rxsb (.ck(clk), .rst(rst_n), .i_v(rfv), .i_u(rfu), .i_u2(rfu2), .i_mx(rfmx), .i_f(rff),
-        .o_v(ravi_r), .o_r(rari_r), .o_f(rafi_r));
+        .o_v(ravi), .o_r(rari), .o_f(rafi));
 `ifndef OT_S81SL_HARD
     ot_s81sl_vq #(.AQ_XMEM(AQ_XMEM)) u_vq (
 `else
@@ -238,29 +160,7 @@ module ot_s81sl_slice #(
     parameter integer KV_HARD_RQ = 0, // reuse CLOSED D512 reduce and quant views
     parameter integer KV_CNIK = 0,   // RTLGAP-SUKV: leaf0 bank also runs CN / IK (needs KV_ENABLE)
     parameter integer KV_CP = 0,     // RTLGAP-SUKV: leaf0 also hosts the compressor pool (needs KV_ENABLE)
-    parameter integer VS_MUT = 0,    // bench negative controls only (ot_s81sl_vs MUT through the leaves); 0 in every build
-    // PATH-S81 X2 (10-25): per-leaf S81-PLAN R3 core<->core station depths, forwarded to lf[k].u_lf.CS_<class>; 4 bits a
-    // leaf, leaf k = LF_CS_<class>[4 k +: 4].  The die plan gives each leaf partition type its own depths (normal t7 / t55 /
-    // t56 / t57: HI 2, HO 2, H_G 4, PVS / SWR / U / VNI / VSP / Y 1, the rest 0).  Every default = today's leaf (CS 0,
-    // H_G 4), so a slice without overrides is the pre-R3 netlist exactly.  The KV_ENABLE leaf 0 must keep PVS / VSP 0
-    // (ot_s81sl_leaf $fatal).
-    parameter [19:0] LF_CS_HI_D = 20'd0,
-    parameter [19:0] LF_CS_HI_GS = 20'd0,
-    parameter [19:0] LF_CS_HO_D = 20'd0,
-    parameter [19:0] LF_CS_HO_GS = 20'd0,
-    parameter [19:0] LF_CS_H_G = {5{4'd4}},
-    parameter [19:0] LF_CS_VNI_D = 20'd0,
-    parameter [19:0] LF_CS_VNO_D = 20'd0,
-    parameter [19:0] LF_CS_Y_D = 20'd0,
-    parameter [19:0] LF_CS_U_D = 20'd0,
-    parameter [19:0] LF_CS_SW_D = 20'd0,
-    parameter [19:0] LF_CS_SWR_D = 20'd0,
-    parameter [19:0] LF_CS_RA_D = 20'd0,
-    parameter [19:0] LF_CS_RAR_D = 20'd0,
-    parameter [19:0] LF_CS_VE_D = 20'd0,
-    parameter [19:0] LF_CS_VER_D = 20'd0,
-    parameter [19:0] LF_CS_PVS_D = 20'd0,
-    parameter [19:0] LF_CS_VSP_D = 20'd0
+    parameter integer VS_MUT = 0     // bench negative controls only (ot_s81sl_vs MUT through the leaves); 0 in every build
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -296,11 +196,7 @@ module ot_s81sl_slice #(
     wire [4:0] ev_l, ev_x, gv_l; wire [9:0] ec_l, ec_x, gc_l; wire [479:0] ed_l, ed_x; wire [159:0] gd_l;
     genvar k;
     generate for (k = 0; k < 5; k = k + 1) begin : lf
-        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ),
-            // PATH-S81 X2: this leaf's R3 station depths
-            .CS_HI_D(LF_CS_HI_D[4 * k +: 4]), .CS_HI_GS(LF_CS_HI_GS[4 * k +: 4]), .CS_HO_D(LF_CS_HO_D[4 * k +: 4]), .CS_HO_GS(LF_CS_HO_GS[4 * k +: 4]), .CS_H_G(LF_CS_H_G[4 * k +: 4]),
-            .CS_VNI_D(LF_CS_VNI_D[4 * k +: 4]), .CS_VNO_D(LF_CS_VNO_D[4 * k +: 4]), .CS_Y_D(LF_CS_Y_D[4 * k +: 4]), .CS_U_D(LF_CS_U_D[4 * k +: 4]), .CS_SW_D(LF_CS_SW_D[4 * k +: 4]), .CS_SWR_D(LF_CS_SWR_D[4 * k +: 4]),
-            .CS_RA_D(LF_CS_RA_D[4 * k +: 4]), .CS_RAR_D(LF_CS_RAR_D[4 * k +: 4]), .CS_VE_D(LF_CS_VE_D[4 * k +: 4]), .CS_VER_D(LF_CS_VER_D[4 * k +: 4]), .CS_PVS_D(LF_CS_PVS_D[4 * k +: 4]), .CS_VSP_D(LF_CS_VSP_D[4 * k +: 4])) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
+        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
             .c_v(c_v_l[k]), .c_d(c_d_l[160 * k +: 160]),
             .sw_v(sw_v_l[k]), .sw_a(sw_a_l[10 * k +: 10]), .sw_m(sw_m_l[8 * k +: 8]), .sw_d(sw_d_l[256 * k +: 256]),
             .cw_v(cw_v_l[2 * k +: 2]), .cw_a(cw_a_l[24 * k +: 24]), .cw_d(cw_d_l[64 * k +: 64]),
@@ -334,19 +230,10 @@ module ot_s81sl_slice #(
         .is_v(is_v), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_xg));
     generate if (HB != 0) begin : g_c3
 `ifdef OT_S81SL_KV_TRANSPORT
-        // S81-KITS-RTLC 10-24 (OWNER DECISION 8): xrt3 ring / band ports carry only read / non-constant bits; the parent
-        // zero-fills ci_b[1103:1076] and x_si[7] (plain logic) and packs the B word (bits 7..36 / 1076.. are not read)
-        assign ci_b[1103:1076] = 28'd0; assign x_si[7] = 1'b0;
         ot_s81sl_xrt3 u_xr (
-            .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e[1075:1]), .dl_wv(dl_wv), .dl_w(dl_w[1075:1]),
-            .dl_vv(dl_vv), .dl_vb(dl_vb[275:1]), .ci_dir(ci_dir), .ci_b(ci_b[1075:0]), .bi({bi[1075:37], bi[6:0]}), .bo(bo),
-            .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
-            .p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x),
-            .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
-            .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si[6:0]),
-            .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
 `else
         ot_s81sl_xr3 u_xr (
+`endif
             .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo),
             .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
@@ -354,21 +241,12 @@ module ot_s81sl_slice #(
             .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
             .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si),
             .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
-`endif
     end else begin : g_c1
 `ifdef OT_S81SL_KV_TRANSPORT
-        // S81-KITS-RTLC 10-24 (OWNER DECISION 8): see the C3 branch
-        assign ci_b[1103:1076] = 28'd0; assign x_si[7] = 1'b0;
         ot_s81sl_xrt1 u_xr (
-            .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e[1075:1]), .dl_wv(dl_wv), .dl_w(dl_w[1075:1]),
-            .dl_vv(dl_vv), .dl_vb(dl_vb[275:1]), .ci_dir(ci_dir), .ci_b(ci_b[1075:0]),
-            .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
-            .p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x),
-            .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
-            .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si[6:0]),
-            .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
 `else
         ot_s81sl_xr1 u_xr (
+`endif
             .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b),
             .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
@@ -376,12 +254,11 @@ module ot_s81sl_slice #(
             .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
             .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si),
             .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
-`endif
         assign bo = 513'd0;      // C1 has no band port: the C1 cluster master does not expose bi / bo
     end endgenerate
     // xfin (S81-DV leaf): sid = the slice strap (RTL-BUILD-S81: was unconnected); mode ENG -> e_* -> eg
     ot_s81dv_xfin u_xf (.clk(clk), .rst_n(rst_n), .go(x_go), .mode(x_mode), .sid(sid), .eps(x_eps), .s_v(x_sv),
-        .s_i(x_si[6:0]), .s(x_s),
+        .s_i(x_si), .s(x_s),
         .wi_v(nx_wi[172]), .wi_h(nx_wi[171:168]), .wi_b(nx_wi[167:160]), .wi_d(nx_wi[159:0]),
         .ei_v(nx_ei[172]), .ei_h(nx_ei[171:168]), .ei_b(nx_ei[167:160]), .ei_d(nx_ei[159:0]),
         .eo_v(nx_eo[172]), .eo_h(nx_eo[171:168]), .eo_b(nx_eo[167:160]), .eo_d(nx_eo[159:0]),

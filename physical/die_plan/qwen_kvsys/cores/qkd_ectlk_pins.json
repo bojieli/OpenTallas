@@ -2,24 +2,18 @@
 "schema": "opentallas.die_plan.core_pins.v1",
 "core": "qkd_ectlk",
 "frame": "core R0, origin (0,0), outline 881.28 x 216.0",
-"source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | v3.9 clock entry ck[0..2] + rst_n -> N face centre on M5 (COORD ruling 4, centre-feed)",
+"source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks",
 "faces": {
-"E": {
-"pins": 733,
-"layers": [
-"M4"
-]
-},
-"N": {
-"pins": 4,
-"layers": [
-"M5"
-]
-},
 "S": {
 "pins": 3625,
 "layers": [
 "M5"
+]
+},
+"E": {
+"pins": 737,
+"layers": [
+"M4"
 ]
 },
 "W": {
@@ -21782,21 +21776,21 @@
 },
 {
 "name": "ck[0]",
-"layer": "M5",
-"x": 440.376,
-"y": 215.904
+"layer": "M4",
+"x": 881.184,
+"y": 2.28
 },
 {
 "name": "ck[1]",
-"layer": "M5",
-"x": 440.568,
-"y": 215.904
+"layer": "M4",
+"x": 881.184,
+"y": 2.568
 },
 {
 "name": "ck[2]",
-"layer": "M5",
-"x": 440.76,
-"y": 215.904
+"layer": "M4",
+"x": 881.184,
+"y": 2.856
 },
 {
 "name": "e0[0]",
@@ -21992,9 +21986,9 @@
 },
 {
 "name": "rst_n[0]",
-"layer": "M5",
-"x": 440.952,
-"y": 215.904
+"layer": "M4",
+"x": 881.184,
+"y": 12.36
 },
 {
 "name": "s0[0]",

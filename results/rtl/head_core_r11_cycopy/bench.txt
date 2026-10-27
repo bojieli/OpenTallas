@@ -1,7 +1,0 @@
-# HEAD-CORE-R11 Mon Oct 26 22:22:22 PDT 2026 benches (Verilator 5.050, epyc1)
-tb_fadd_cycopy (CY_COPY 0 == 1, 400k cycles, a=+0 half): PASS fadd CY_COPY 0 == 1 adds=299856 a0=199833 carry1=17
-tb_fadd_cycopy NEGATIVE (CY_COPY 0 branch cyk={4{r8[24]}}, one stage early): Assertion failed in tb_fadd_cycopy: cy_copy lockstep 44338: 1/0/ad400000 vs 1/0/ac800000
-tb_fadd_split9 regression: PASS fadd SPLIT9 == CUT reference +1 adds=149803
-hd_elem_eq.sh (lane ot_s81hd_elem w/ CY_COPY(s!=0) vs CLOSED f11f3cc47 element, cycle lockstep):
-EQ_BENCH_PASS elem=A CUT=511 SPLIT9=1 (4/4)
-EQ_BENCH_PASS elem=B CUT=511 SPLIT9=1 (4/4)

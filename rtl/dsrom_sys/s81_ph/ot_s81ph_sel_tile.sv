@@ -306,7 +306,6 @@ module dsfd_selt_c #(
     reg [2*Q-1:0] qs;                        // the quarter each slice serves (from its lane's header)
     reg        coll_n;
     integer q, s;
-    integer sqi;                             // clocked-block loop index (one integer per always block, rtl_lint, KITS-SPARE 10-25)
     always @(*) begin
         coll_n = 1'b0;
         for (s = 0; s < Q; s = s + 1)
@@ -354,21 +353,14 @@ module dsfd_selt_c #(
         .c_p2(c_p2), .c_p3(c_p3), .c_rep(c_rep), .c_st(c_st), .c_rem(c_rem), .c_hclr(c_hclr),
         .rep_req(rep_req), .ovf(ovf), .busy(busy));
     end endgenerate
-    // command bundles, one per tile, from flops at the pins.  S81-KITS-RTLC 10-24 (owner: register every pin, in RTL;
-    // face_guard: the four quarter bundles share every bit but c_rem, so synthesis merged them and the t_c_n / t_c_s
-    // pins shared flops): each quarter's bundle is its own KEPT register (same D, 0 cycles).
+    // command bundles, one per tile, from flops at the pins
+    reg [`SELT_CB-1:0] cmd [0:Q-1];
     generate for (g = 0; g < Q; g = g + 1) begin : g_c
-        (* keep *) reg [`SELT_CB-1:0] cmd;
         always @(posedge ck[0] or negedge rst_n)
-            if (!rst_n) cmd <= {`SELT_CB{1'b0}};
-`ifdef OT_RTLC_MUT_SELT   // RTLC bench mutant: the last quarters bundle carries quarter 0s c_rem (a merged-copy slip)
-            else cmd <= {c_hclr, c_rem[(KW+1)*((g == Q - 1) ? 0 : g) +: KW+1], c_st, c_rep, c_p3, c_p2, c_stop, c_ing, c_fg,
-                         c_cg, c_fclr, c_Bt, c_T};
-`else
-            else cmd <= {c_hclr, c_rem[(KW+1)*g +: KW+1], c_st, c_rep, c_p3, c_p2, c_stop, c_ing, c_fg, c_cg, c_fclr,
-                         c_Bt, c_T};
-`endif
-        assign t_c[`SELT_CB * g +: `SELT_CB] = cmd;
+            if (!rst_n) cmd[g] <= {`SELT_CB{1'b0}};
+            else cmd[g] <= {c_hclr, c_rem[(KW+1)*g +: KW+1], c_st, c_rep, c_p3, c_p2, c_stop, c_ing, c_fg, c_cg, c_fclr,
+                            c_Bt, c_T};
+        assign t_c[`SELT_CB * g +: `SELT_CB] = cmd[g];
     end endgenerate
     // ---- landing FIFOs (head at entry 0), credits
     function automatic [4:0] pop16(input [15:0] x);
@@ -379,14 +371,13 @@ module dsfd_selt_c #(
     reg  [CW-1:0] lc [0:Q-1];
     reg  [Q-1:0]  lpop;
     wire [Q-1:0]  lv;
-    integer l, e, lr;                       // lr: loop index of the credit-count block (one integer per always block:
-                                            // a shared loop integer is multi-driven, rtl_lint check -assert, KITS-SPARE 10-25)
+    integer l, e;
     generate for (g = 0; g < Q; g = g + 1) begin : g_l
         assign lv[g] = lc[g] != 0;
     end endgenerate
     always @(posedge ck[0] or negedge rst_n)
-        if (!rst_n) for (lr = 0; lr < Q; lr = lr + 1) lc[lr] <= {CW{1'b0}};
-        else for (lr = 0; lr < Q; lr = lr + 1) lc[lr] <= lc[lr] + (oq[OB * lr] ? 1'b1 : 1'b0) - (lpop[lr] ? 1'b1 : 1'b0);
+        if (!rst_n) for (l = 0; l < Q; l = l + 1) lc[l] <= {CW{1'b0}};
+        else for (l = 0; l < Q; l = l + 1) lc[l] <= lc[l] + (oq[OB * l] ? 1'b1 : 1'b0) - (lpop[l] ? 1'b1 : 1'b0);
     always @(posedge ck[0])
         for (l = 0; l < Q; l = l + 1)
             for (e = 0; e < DM; e = e + 1) begin
@@ -444,7 +435,7 @@ module dsfd_selt_c #(
             kld_r <= |s_acc;
             if (|s_acc) k_r <= seg_k;
             e_coll <= coll_n;
-            for (sqi = 0; sqi < Q; sqi = sqi + 1) if (h_v[sqi]) qs[2*sqi +: 2] <= act_q[2*sqi +: 2];
+            for (s = 0; s < Q; s = s + 1) if (h_v[s]) qs[2*s +: 2] <= act_q[2*s +: 2];
             e_kt <= 1'b0;
             begin : hdr
                 integer t; reg op; reg [KW-1:0] kk; reg [7:0] tt;

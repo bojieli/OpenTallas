@@ -1,8 +1,0 @@
-e1 vs master e1 | strap_bsel := 2'b00: IDENTICAL (186 vs 186 lines, 0 differing)
-rc=0
-e3 vs master e1 | strap_bsel := 2'b01: IDENTICAL (186 vs 186 lines, 0 differing)
-rc=0
-e5 vs master e5 | strap_bsel := 2'b10: IDENTICAL (186 vs 186 lines, 0 differing)
-rc=0
-e7 vs master e5 | strap_bsel := 2'b11: IDENTICAL (186 vs 186 lines, 0 differing)
-rc=0

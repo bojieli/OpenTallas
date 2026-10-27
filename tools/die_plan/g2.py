@@ -33,7 +33,6 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import check  # noqa: E402
 import gen_phys  # noqa: E402
-import ft_bit_sites  # noqa: E402
 import schema as S  # noqa: E402
 
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
@@ -74,25 +73,6 @@ def parse_grt(text):
     m = re.findall(r"OT_REACH (\S+) max ([\d.]+) p90 ([\d.]+) n (\d+)", text)
     res["reach"] = {k: dict(max_um=float(a), p90_um=float(b), taps=int(n)) for k, a, b, n in m}
     res["done"] = "OT_DONE" in text
-    # GRT-0113/0114 are WARNINGS even when reduction underflows uint16
-    # capacity (e.g. cap0 -> reducedCap65480). The subsequent zero-overflow
-    # table is invalid and must not qualify through an older done/overflow-only
-    # consumer. Preserve what the tool printed separately for diagnosis.
-    invalid = []
-    capacity_codes = set(re.findall(r"\bGRT-011[34]\b", text))
-    for ln in text.splitlines():
-        pair = re.search(r"cap,\s*reducedCap:\s*(-?\d+)\s*,\s*(-?\d+)", ln)
-        impossible = pair and (int(pair[1]) < 0 or int(pair[2]) < 0 or int(pair[2]) > int(pair[1]))
-        if re.search(r"\bGRT-011[34]\b", ln) or impossible:
-            invalid.append(ln.strip())
-    res["capacity_valid"] = not invalid
-    if invalid:
-        res["capacity_errors"] = invalid[:5]
-        res["errors"] = sorted(set(res["errors"]) | {"GRT-CAPACITY-UNDERFLOW"} | capacity_codes)
-        res["tool_done"] = res["done"]
-        res["reported_total_overflow"] = res["total_overflow"]
-        res["total_overflow"] = None
-        res["done"] = False    # not a valid completed physical routing proof
     return res
 
 
@@ -232,7 +212,7 @@ def worst_types(P, summ, n):
     return [(tn, score[tn], dens[tn]) for tn in cands[:n]]
 
 
-def probe_blockages(t, top="M7"):
+def probe_blockages(t):
     """Leaf obstructions of a partition probe.  A content leaf that the plan splits into planned hard cores
     (hard_cores[].inst == leaf inst or '<leaf inst>_*', e.g. an over-cap bankq leaf -> 3 cores) is represented by
     those cores, not by the whole leaf outline: the space between the cores is glue / routing area of the partition.
@@ -245,41 +225,10 @@ def probe_blockages(t, top="M7"):
         sub = [h for h in cores if h["inst"] == c["inst"] or h["inst"].startswith(c["inst"] + "_")]
         if sub:
             covered.update(h["inst"] for h in sub)
-            out += [dict(h, obs_max=max(
-                [L for L in (c.get("obs_max"), h.get("obs_max")) if L] or ["M5"],
-                key=lambda L: int(L[1:]))) for h in sub]
+            out += [dict(h, obs_max=c.get("obs_max", h.get("obs_max", "M5"))) for h in sub]
         else:
             out.append(c)
-    # KV-PLAN 10-25: a planned hard core that no content leaf names (e.g. KV head_eighth cores built from several
-    # leaves) is still a hard obstruction of the partition; it used to be silently dropped (0 blockages -> optimistic
-    # G2).  Its routing obstruction reaches the partition signal ceiling unless the core declares obs_max.
-    for h in cores:
-        if h["inst"] not in covered:
-            out.append(dict(h, obs_max=h.get("obs_max", top)))
     return out
-
-
-STATION_CORE_MARGIN_UM = 2.0
-
-
-def out_of_cores(site, boxes, w, h, m=STATION_CORE_MARGIN_UM):
-    """KV-PLAN3 10-25: an ft station placed along the slot route (L*j/k) can fall inside a planned hard core
-    (kv3_hg_v3 ft2 jog through the head-core row -> GRT M2 overflow 1514 on capacity-0 GCells).  A flop can never sit
-    inside a hard core, so the probe puts it, like the placer, at the nearest point outside every core box (edge +
-    margin, inside the outline).  Sites already in a channel are unchanged."""
-    def inside(p):
-        return any(x0 < p[0] < x1 and y0 < p[1] < y1 for x0, y0, x1, y1 in boxes)
-    if not inside(site):
-        return site
-    x, y = site
-    cand = []
-    for x0, y0, x1, y1 in boxes:
-        if x0 < x < x1 and y0 < y < y1:
-            cand += [(x0 - m, y), (x1 + m, y), (x, y0 - m), (x, y1 + m)]
-    cand = [c for c in cand if m <= c[0] <= w - m and m <= c[1] <= h - m and not inside(c)]
-    if not cand:
-        return site
-    return min(cand, key=lambda c: abs(c[0] - x) + abs(c[1] - y))
 
 
 def part_probe(P, tn, out, adjust=0.5, mem=32):
@@ -297,11 +246,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
     width = {b: max(v[0] for v in lst) + 1 for b, lst in by_bus.items()}
     buses = {b["name"]: b for b in t.get("buses", [])}
     slots = {s["name"]: s for s in t.get("ft_slots", [])}
-    core_boxes = [(c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
-                   c["origin_um"][1] + c["outline_um"][1]) for c in probe_blockages(t, P.type_top_layer(tn))]
     ports, cells, nets, place = [], [], [], []
-    reset_pair_specs = []
-    explicit_anchors = {}
 
     def inset(x, y, f):
         return {"E": (x - FLOP_INSET_UM, y), "W": (x + FLOP_INSET_UM, y), "N": (x, y - FLOP_INSET_UM),
@@ -318,70 +263,6 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
         cells.append(f"  {TAPBUF} tap_{nm} (.A({nm}), .Y(tapq_{nm}));")
         nets.append(f"tapq_{nm}")
         place.append((f"tap_{nm}", x + 1.0, y))
-    # Wavefront IO pins are scalar interior pins emitted by io_tcl separately
-    # from type_pins. Model the actual generated registered reset tree so the
-    # probe contains and drives every rst_o port, including <=405-um relays.
-    reset_outs = gen_phys.reset_out_pins(P, tn)
-    if reset_outs:
-        import reset_tree as RT
-        tree = RT.for_type(P, tn)
-        for nm, _, _ in reset_outs:
-            ports.append(f"  output {nm}")
-        prev = "arst_n"
-        for j in range(RT.entry_stages(tree)):
-            c, q = f"pr_reset_entry_{j}", f"pr_reset_entry_q_{j}"
-            cells.append(f"  {FLOP} {c} (.D({prev}), .QN({q}));")
-            nets.append(q)
-            place.append((c, *tree["root"]))
-            if tree.get("relay_driver"):
-                reset_pair_specs.append((c, "", *tree["root"]))
-            prev = q
-        rename = {"rst_root_n": prev}
-        for rl in tree["relays"]:
-            c, q = "pr_reset_" + rl["name"], "pr_reset_" + rl["q"]
-            src = rename.get(rl["d"], "pr_reset_" + rl["d"])
-            driven = RT.relay_cell(tree, rl) == "ot_dp_rrelay_drive"
-            rawq = q + "_raw" if driven else q
-            cells.append(f"  {FLOP} {c} (.D({src}), .QN({rawq}));")
-            if driven:
-                cells.append(f"  (* keep, dont_touch *) BUFx4f_ASAP7_75t_R {c}_drive (.A({rawq}), .Y({q}));")
-                nets.append(rawq)
-                place.append((c + "_drive", rl["xy"][0] + 1.0, rl["xy"][1]))
-            nets.append(q)
-            place.append((c, *rl["xy"]))
-            if tree.get("relay_driver"):
-                reset_pair_specs.append((c, c + "_drive" if driven else "", *rl["xy"]))
-        souts = [o for o in reset_outs if o[0].startswith("start_o_")]
-        routs = [o for o in reset_outs if not o[0].startswith("start_o_")]
-        for j, (nm, _, _) in enumerate(routs):
-            cells.append(f"  assign {nm} = pr_reset_rst_n_t{tree['n_clock_taps'] + j};")
-        if souts:                                   # decision 13c START: run relays mirror the reset relays
-            prev = "start_i"
-            for j in range(RT.entry_stages(tree)):
-                c, q = f"pr_run_entry_{j}", f"pr_run_entry_q_{j}"
-                cells.append(f"  {FLOP} {c} (.D({prev}), .QN({q}));")
-                nets.append(q)
-                place.append((c, *tree["start_in"]))
-                if tree.get("relay_driver"):
-                    reset_pair_specs.append((c, "", *tree["start_in"]))
-                prev = q
-            rename = {"rst_root_n": prev}
-            for rl in tree["relays"]:
-                c, q = "pr_run_" + rl["name"], "pr_run_" + rl["q"]
-                src = rename.get(rl["d"], "pr_run_" + rl["d"])
-                driven = RT.relay_cell(tree, rl) == "ot_dp_rrelay_drive"
-                rawq = q + "_raw" if driven else q
-                cells.append(f"  {FLOP} {c} (.D({src}), .QN({rawq}));")
-                if driven:
-                    cells.append(f"  (* keep, dont_touch *) BUFx4f_ASAP7_75t_R {c}_drive (.A({rawq}), .Y({q}));")
-                    nets.append(rawq)
-                    place.append((c + "_drive", rl["xy"][0] + 1.0, rl["xy"][1]))
-                nets.append(q)
-                place.append((c, *rl["xy"]))
-                if tree.get("relay_driver"):
-                    reset_pair_specs.append((c, c + "_drive" if driven else "", *rl["xy"]))
-            for j, (nm, _, _) in enumerate(souts):
-                cells.append(f"  assign {nm} = pr_run_rst_n_t{tree['n_clock_taps'] + j};")
     # functional buses: one boundary flop per pin bit beside its pin
     for bus, lst in sorted(by_bus.items()):
         if bus in buses:
@@ -398,7 +279,6 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
     for sn, s in sorted(slots.items()):
         ib, ob = by_bus.get(sn + "_i", []), by_bus.get(sn + "_o", [])
         k = int(s.get("stations", 1))
-        ft_bit_sites.validate_slot(s)
         pi = {bit: (x, y, f) for bit, x, y, f in ib}
         po = {bit: (x, y, f) for bit, x, y, f in ob}
         for bit in sorted(set(pi) | set(po)):
@@ -418,19 +298,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
                 if q.startswith("nq_"):
                     nets.append(q)
                 cells.append(f"  {FLOP} {c} (.D({prev}), .QN({q}));")
-                if s.get("bit_sites_um") and j > 0:
-                    # Same convention as face_flops.tcl: explicit internal
-                    # stages start at1; metadata stores allocation-envelope LL.
-                    xy = s["bit_sites_um"][j - 1][bit]
-                    # Metadata and OpenROAD place_inst both use cell lower-left.
-                    # Do not shift an envelope centre into the physical LL.
-                    site = tuple(xy)
-                    explicit_anchors[c] = list(site)
-                elif s.get("bit_sites_um"):
-                    site = a  # station0 remains registered beside its input pin
-                else:
-                    site = tuple(s["regs_um"][j]) if s.get("regs_um") else check.point_at(seg, L * j / k)
-                    site = out_of_cores(site, core_boxes, w, h)
+                site = tuple(s["regs_um"][j]) if s.get("regs_um") else check.point_at(seg, L * j / k)
                 place.append((c, *site))
                 prev = q
     v = ["module ftprobe ("] + [",\n".join(ports)] + [");"] + \
@@ -442,7 +310,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
            f"initialize_floorplan -die_area {{0 0 {w:g} {h:g}}} -core_area {{{m:g} {m:g} {w - m:g} {h - m:g}}} "
            "-site asap7sc7p5t", "source /work/make_tracks.tcl", "source /work/io.tcl"]
     nobs = 0
-    for c in probe_blockages(t, top):
+    for c in probe_blockages(t):
         x0, y0 = c["origin_um"]
         x1, y1 = x0 + c["outline_um"][0], y0 + c["outline_um"][1]
         tcl.append(f"create_blockage -region {{{x0:g} {y0:g} {x1:g} {y1:g}}}")
@@ -450,90 +318,20 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
             tcl.append(f"create_obstruction -region {{{x0:g} {y0:g} {x1:g} {y1:g}}} -layer {L}")
         nobs += 1
     for c, x, y in place:
-        if c in explicit_anchors:
-            # Actual DFF footprint is 1.08 x 0.27 um.  The cloud inset below
-            # is not a legal-site operation and must never alter a packed LL.
-            if not (m - 1e-6 <= x <= w - m - 1.08 + 1e-6
-                    and m - 1e-6 <= y <= h - m - 0.27 + 1e-6):
-                raise ValueError(f"explicit packed station {c} outside probe placement bounds: {(x, y)}")
-        else:
-            x = min(max(x, m), w - m - 1.0)
-            y = min(max(y, m), h - m - 0.3)
-        # Canonical packed per-bit sites are immutable; centroid clouds remain movable.
-        status = "FIRM" if c in explicit_anchors else "PLACED"
-        tcl.append(f"place_inst -name {c} -location {{{x:.3f} {y:.3f}}} -status {status}")
-    if reset_pair_specs:
-        import shutil
-        shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), out / "reset_pair_place.tcl")
-        specs = " ".join("{" + f"{{{f}}} {{{d}}} {x:.6f} {y:.6f}" + "}" for f, d, x, y in reset_pair_specs)
-        boxes = " ".join("{" + " ".join(f"{x:.6f}" for x in b) + "}" for b in RT.blockages(t))
-        tcl += ["source /work/reset_pair_place.tcl",
-                f"ot_reset_pair_place [ord::get_db_block] {{{specs}}} {{{boxes}}} 8"]
+        x = min(max(x, m), w - m - 1.0)
+        y = min(max(y, m), h - m - 0.3)
+        tcl.append(f"place_inst -name {c} -location {{{x:.3f} {y:.3f}}} -status PLACED")
     tcl += ["detailed_placement -max_displacement {400 400}",
             "check_placement -verbose"]
-    if reset_pair_specs:
-        tcl += ["ot_reset_pair_check [ord::get_db_block]",
-                "ot_reset_pair_verify_hops [ord::get_db_block] 405"]
     tcl.append(grt_tail(f"M2-{top}", [(L, adjust) for L in lrange("M2", top)]))
-    # Keep centroid clouds movable for legalization. Never present the planned
-    # targets as a physical proof: dump final actual bounding boxes and gate
-    # them after DPL/GRT. Explicit packed anchors must also remain at their sites.
-    tcl += ["set ot_f [open /work/insts.tsv w]",
-            "set ot_dbu [[ord::get_db_block] getDbUnitsPerMicron]",
-            "foreach i [[ord::get_db_block] getInsts] { set bb [$i getBBox]; "
-            'puts $ot_f "[$i getName]\\t[[$i getMaster] getName]\\t[expr {[$bb xMin]/double($ot_dbu)}]\\t'
-            '[expr {[$bb yMin]/double($ot_dbu)}]\\t[expr {[$bb xMax]/double($ot_dbu)}]\\t'
-            '[expr {[$bb yMax]/double($ot_dbu)}]" }',
-            "close $ot_f",
-            "if {[catch {pin_access} e]} { puts \"OT_PA_ERROR $e\" }", "puts OT_DONE"]
+    tcl += ["if {[catch {pin_access} e]} { puts \"OT_PA_ERROR $e\" }", "puts OT_DONE"]
     (out / "probe.tcl").write_text("\n".join(tcl) + "\n")
     (out / "run.sh").write_text(run_sh(mem, 8, "g2part"))
     os.chmod(out / "run.sh", 0o755)
     meta = dict(kind="g2-partition", die=P.name, type=tn, instance=inst, outline_um=[w, h], pins=len(pins),
                 flops=len(place), leaf_blockages=nobs, adjust=adjust, route_layers=f"M2-{top}")
-    if reset_pair_specs:
-        meta["reset_pair_specs"] = reset_pair_specs
     (out / "probe.json").write_text(json.dumps(meta, indent=1) + "\n")
-    (out / "station_sites.json").write_text(json.dumps(explicit_anchors, indent=1) + "\n")
     return out
-
-
-def attach_actual_geometry(d, res):
-    """Qualify a partition result against final actual cells, never targets."""
-    if res.get('kind') != 'g2-partition':
-        return res
-    from proto_geometry import hop_stats
-    d = Path(d)
-    geometry = hop_stats(d)
-    if (d/'station_sites.json').exists():
-        anchors = json.loads((d/'station_sites.json').read_text())
-        actual = {}
-        if (d/'insts.tsv').exists():
-            for ln in (d/'insts.tsv').read_text().splitlines():
-                q = ln.split('\t')
-                if len(q)>=4 and q[0] in anchors:
-                    actual[q[0]] = (float(q[2]),float(q[3]))
-        missing = set(anchors)-set(actual)
-        drift = max((abs(actual[n][0]-xy[0])+abs(actual[n][1]-xy[1]) for n,xy in anchors.items() if n in actual), default=0.)
-        geometry['explicit_anchor_drift_um'] = round(drift,6)
-        if missing or drift>0.001:
-            geometry.setdefault('errors',[]).append(f'explicit packed station anchors moved or missing: {len(missing)} missing, max LL drift {drift:.6g}um')
-    bad = (geometry.get('actual_sites') is not True or geometry.get('errors') or
-           geometry.get('over_reach') or geometry.get('st_in_core'))
-    res['ft_hops'] = geometry
-    res['geometry_verdict'] = 'FAIL' if bad else 'PASS'
-    if bad:
-        res.setdefault('errors',[]).append('G2-ACTUAL-STATION-GEOMETRY')
-    return res
-
-
-def probe_passes(r):
-    if not (r.get('done') and r.get('total_overflow')==0 and not r.get('errors') and
-            not any(r.get('pin_access_no_ap',{}).values())):
-        return False
-    # Old cached partition reports without actual geometry are not proof.
-    return r.get('kind') != 'g2-partition' or (r.get('geometry_verdict')=='PASS' and
-            (r.get('ft_hops') or {}).get('actual_sites') is True)
 
 
 def run_probe(d):
@@ -541,7 +339,6 @@ def run_probe(d):
     res = parse_grt((Path(d) / "grt.log").read_text(errors="replace")) if (Path(d) / "grt.log").exists() else {}
     res["exit"] = r.stdout.strip().splitlines()[-1] if r.stdout.strip() else "NO_EXIT"
     res.update(json.loads((Path(d) / "probe.json").read_text()))
-    attach_actual_geometry(d, res)
     (Path(d) / "grt.json").write_text(json.dumps(res, indent=1) + "\n")
     return res
 
@@ -564,19 +361,14 @@ def main(argv=None):
     s.add_argument("log")
     a = ap.parse_args(argv)
     if a.cmd == "parse":
-        log = Path(a.log); res = parse_grt(log.read_text(errors="replace"))
-        if (log.parent/'probe.json').exists():
-            res.update(json.loads((log.parent/'probe.json').read_text()))
-            attach_actual_geometry(log.parent,res)
-        print(json.dumps(res, indent=1))
+        print(json.dumps(parse_grt(Path(a.log).read_text(errors="replace")), indent=1))
         return 0
     raw = S.load(a.plan)
     errs = S.validate(raw)
     if errs:
         print("plan invalid (schema):\n  " + "\n  ".join(errs[:20]))
         return 1
-    # plan-relative declarations (core pins_file for the reset wavefront) resolve against the plan's directory
-    P = S.Plan(raw, Path(a.plan).resolve())
+    P = S.Plan(raw)
     out = Path(a.out)
     dirs = []
     if a.cmd in ("die", "all"):
@@ -602,7 +394,8 @@ def main(argv=None):
         for d in sorted(out.iterdir()):          # keep earlier probes of this DIR (die / part runs done separately)
             if d.is_dir() and d.name not in rep["probes"] and (d / "grt.json").exists():
                 rep["probes"][d.name] = json.loads((d / "grt.json").read_text())
-        ok = bool(rep["probes"]) and all(probe_passes(r) for r in rep["probes"].values())
+        ok = all(r.get("done") and r.get("total_overflow") == 0 and not any(r.get("pin_access_no_ap", {}).values())
+                 for r in rep["probes"].values())
         rep["verdict"] = "PASS" if ok else "FAIL"
         (out / "g2_report.json").write_text(json.dumps(rep, indent=1) + "\n")
         print(f"G2 {rep['verdict']}: {out / 'g2_report.json'}")

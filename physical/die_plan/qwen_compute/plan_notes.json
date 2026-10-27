@@ -1,23 +1,19 @@
 {
  "variant": "B",
  "partitions": 377,
- "types": 69,
- "types_merged": 122,
- "ports": 3005,
- "lanes": 1933,
- "unloaded_lanes_dropped": 273,
- "unloaded_lanes_absent": [
-  "native59__fltn"
- ],
+ "types": 56,
+ "types_merged": 135,
+ "ports": 3002,
+ "lanes": 2015,
  "die_um": [
   31216.32,
-  26265.6
+  25228.8
  ],
- "die_mm2": 819.9,
+ "die_mm2": 787.6,
  "content_status_per_instance": {
   "reuse": 1717,
   "rework": 906,
-  "new": 369
+  "new": 370
  },
  "max_cells_type": [
   782764,
@@ -137,7 +133,7 @@
    "instances": 1,
    "outline_um": [
     786.24,
-    1468.8
+    1209.6
    ],
    "macros": 0
   },
@@ -182,7 +178,7 @@
    "instances": 1,
    "outline_um": [
     777.6,
-    1468.8
+    1209.6
    ],
    "macros": 0
   },
@@ -227,7 +223,7 @@
    "instances": 12,
    "outline_um": [
     1226.88,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -236,7 +232,7 @@
    "instances": 3,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -245,7 +241,7 @@
    "instances": 2,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -254,7 +250,7 @@
    "instances": 1,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -263,25 +259,16 @@
    "instances": 3,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
   "sle_fw_v2": {
    "cells": 60000,
-   "instances": 2,
+   "instances": 3,
    "outline_um": [
     622.08,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "sle_fw_v3": {
-   "cells": 60000,
-   "instances": 1,
-   "outline_um": [
-    622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -290,7 +277,7 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -299,7 +286,7 @@
    "instances": 6,
    "outline_um": [
     613.44,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -308,7 +295,7 @@
    "instances": 6,
    "outline_um": [
     613.44,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -317,97 +304,43 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
-  "sle_sc_v1": {
+  "sle_sc": {
    "cells": 40000,
-   "instances": 3,
+   "instances": 6,
    "outline_um": [
     613.44,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
-  "sle_sc_v2": {
-   "cells": 40000,
-   "instances": 2,
-   "outline_um": [
-    613.44,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "sle_sc_v3": {
-   "cells": 40000,
-   "instances": 1,
-   "outline_um": [
-    613.44,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "sle_st_a_v1": {
+  "sle_st_a": {
    "cells": 125514,
-   "instances": 3,
+   "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
-  "sle_st_a_v2": {
-   "cells": 125514,
-   "instances": 3,
-   "outline_um": [
-    622.08,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "sle_st_b_v1": {
+  "sle_st_b": {
    "cells": 115514,
-   "instances": 3,
+   "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
-  "sle_st_b_v2": {
-   "cells": 115514,
-   "instances": 3,
-   "outline_um": [
-    622.08,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "sle_stm_v1": {
+  "sle_stm": {
    "cells": 270598,
-   "instances": 3,
+   "instances": 6,
    "outline_um": [
     613.44,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "sle_stm_v2": {
-   "cells": 270598,
-   "instances": 2,
-   "outline_um": [
-    613.44,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "sle_stm_v3": {
-   "cells": 270598,
-   "instances": 1,
-   "outline_um": [
-    613.44,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -416,7 +349,7 @@
    "instances": 6,
    "outline_um": [
     1226.88,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -425,7 +358,7 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -434,7 +367,7 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -443,7 +376,7 @@
    "instances": 3,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -452,7 +385,7 @@
    "instances": 3,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -461,7 +394,7 @@
    "instances": 3,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -470,7 +403,7 @@
    "instances": 2,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -479,7 +412,7 @@
    "instances": 1,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -488,7 +421,7 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -497,7 +430,7 @@
    "instances": 6,
    "outline_um": [
     613.44,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -506,7 +439,7 @@
    "instances": 6,
    "outline_um": [
     613.44,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -515,97 +448,43 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
-  "slw_sc_v1": {
+  "slw_sc": {
    "cells": 40000,
-   "instances": 3,
+   "instances": 6,
    "outline_um": [
     613.44,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
-  "slw_sc_v2": {
-   "cells": 40000,
-   "instances": 2,
-   "outline_um": [
-    613.44,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "slw_sc_v3": {
-   "cells": 40000,
-   "instances": 1,
-   "outline_um": [
-    613.44,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "slw_st_a_v1": {
+  "slw_st_a": {
    "cells": 141126,
-   "instances": 3,
+   "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
-  "slw_st_a_v2": {
-   "cells": 141126,
-   "instances": 3,
-   "outline_um": [
-    622.08,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "slw_st_b_v1": {
+  "slw_st_b": {
    "cells": 131126,
-   "instances": 3,
+   "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
-  "slw_st_b_v2": {
-   "cells": 131126,
-   "instances": 3,
-   "outline_um": [
-    622.08,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "slw_stm_v1": {
+  "slw_stm": {
    "cells": 270598,
-   "instances": 3,
+   "instances": 6,
    "outline_um": [
     613.44,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "slw_stm_v2": {
-   "cells": 270598,
-   "instances": 2,
-   "outline_um": [
-    613.44,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "slw_stm_v3": {
-   "cells": 270598,
-   "instances": 1,
-   "outline_um": [
-    613.44,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -614,7 +493,7 @@
    "instances": 6,
    "outline_um": [
     1226.88,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -623,7 +502,7 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -632,7 +511,7 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1339.2
+    1080.0
    ],
    "macros": 0
   },
@@ -682,29 +561,28 @@
  },
  "r3_internal_stations": {
   "buses": {
-   "cbf_q00.na_i00": 4,
-   "cbf_q00.nb_i00": 7,
-   "cbf_q00.y_o00": 3,
-   "cbf_q00_s2.na_i00": 4,
-   "cbf_q00_s2.nb_i00": 7,
-   "cbf_q00_s2.y_o00": 3,
-   "cbf_q01.nb_i12": 4,
-   "cbf_q01.y_o12": 2,
-   "cbf_q01_s2.nb_i12": 4,
-   "cbf_q01_s2.y_o12": 2,
-   "cbf_q11.na_i22": 2,
-   "cbf_q11.nb_i22": 2,
-   "cbn_q00.na_i00": 4,
-   "cbn_q00.nb_i00": 7,
-   "cbn_q00.y_o00": 2,
-   "cbn_q01.nb_i12": 4,
-   "cbn_q01.y_o12": 2,
-   "cbn_q11.na_i22": 2,
-   "cbn_q11.nb_i22": 2,
-   "cbx_q10.y_o21": 1
+   "cbf_q00.na_i00": 2,
+   "cbf_q00.nb_i00": 3,
+   "cbf_q00.y_o00": 1,
+   "cbf_q00_s2.na_i00": 2,
+   "cbf_q00_s2.nb_i00": 3,
+   "cbf_q00_s2.y_o00": 1,
+   "cbf_q01.nb_i12": 2,
+   "cbf_q01.y_o12": 1,
+   "cbf_q01_s2.nb_i12": 2,
+   "cbf_q01_s2.y_o12": 1,
+   "cbf_q11.na_i22": 1,
+   "cbf_q11.nb_i22": 1,
+   "cbn_q00.na_i00": 2,
+   "cbn_q00.nb_i00": 3,
+   "cbn_q00.y_o00": 1,
+   "cbn_q01.nb_i12": 2,
+   "cbn_q01.y_o12": 1,
+   "cbn_q11.na_i22": 1,
+   "cbn_q11.nb_i22": 1
   },
   "lanes": 288,
-  "stations": 68
+  "stations": 31
  },
  "internal_bits_absorbed": {
   "bc00": 24768,
@@ -893,7 +771,7 @@
    "module": "qfd_coll_static_face",
    "origin_um": [
     8.64,
-    10.8
+    8.64
    ],
    "outline_um": [
     518.4,
@@ -970,27 +848,6 @@
    "cells_est": 116000
   }
  ],
- "a0_core_taps": {
-  "source": "a0_core_taps.json",
-  "insertion_ps": 250,
-  "insertion_tol_ps": 40,
-  "neighbour_skew_ps": 80,
-  "taps_per_core": {
-   "nk": 42,
-   "nl": 41
-  },
-  "drops_per_quad": {
-   "cbf_q00": 168,
-   "cbf_q00_s2": 168,
-   "cbf_q01": 168,
-   "cbf_q01_s2": 168,
-   "cbf_q11": 168,
-   "cbn_q00": 168,
-   "cbn_q01": 168,
-   "cbn_q11": 168,
-   "cbx_q10": 167
-  }
- },
  "leaf_params": {
   "tt_ctlm": {
    "ot_qfd_tt_ctlm_static_hr": {
@@ -1039,24 +896,24 @@
     "part": "coll_f3",
     "type": "coll_ftm",
     "y0_um": 10022.4,
-    "h_um": 1468.8
+    "h_um": 1209.6
    },
    {
     "part": "coll_f4",
     "type": "coll_ftc",
-    "y0_um": 11491.2,
+    "y0_um": 11232.0,
     "h_um": 1036.8
    },
    {
     "part": "coll_f5",
     "type": "coll_ftn",
-    "y0_um": 12528.0,
+    "y0_um": 12268.8,
     "h_um": 691.2
    },
    {
     "part": "coll_n",
     "type": "coll_n",
-    "y0_um": 13219.2,
+    "y0_um": 12960.0,
     "h_um": 786.24
    }
   ],
@@ -2588,7 +2445,7 @@
    "coll_ftm": {
     "root_um": [
      388.8,
-     734.4
+     604.8
     ],
     "taps": [
      {
@@ -2596,40 +2453,40 @@
       "kind": "glue",
       "xy": [
        397.44,
-       362.88
+       302.4
       ],
       "region_um": [
        0.0,
        0.0,
        786.24,
-       734.4
+       604.8
       ],
-      "reach_um": 769.0,
-      "insertion_ps": 250,
+      "reach_um": 699.8,
+      "insertion_ps": 235,
       "insertion_tol_ps": 40,
-      "from_root_um": 380.2
+      "from_root_um": 311.0
      },
      {
       "name": "glue_01",
       "kind": "glue",
       "xy": [
        397.44,
-       1097.28
+       907.2
       ],
       "region_um": [
        0.0,
-       734.4,
+       604.8,
        786.24,
-       1468.8
+       1209.6
       ],
-      "reach_um": 769.0,
-      "insertion_ps": 250,
+      "reach_um": 699.8,
+      "insertion_ps": 235,
       "insertion_tol_ps": 40,
-      "from_root_um": 371.5
+      "from_root_um": 311.0
      }
     ],
-    "max_from_root_um": 380.2,
-    "max_nearest_tap_um": 734.4,
+    "max_from_root_um": 311.0,
+    "max_nearest_tap_um": 604.8,
     "glue_taps_over_290ps": []
    },
    "coll_ftn": {
@@ -2817,7 +2674,7 @@
    "glue": {
     "root_um": [
      388.8,
-     734.4
+     604.8
     ],
     "taps": [
      {
@@ -2825,40 +2682,40 @@
       "kind": "glue",
       "xy": [
        388.8,
-       362.88
+       302.4
       ],
       "region_um": [
        0.0,
        0.0,
        777.6,
-       734.4
+       604.8
       ],
-      "reach_um": 760.3,
-      "insertion_ps": 248,
+      "reach_um": 691.2,
+      "insertion_ps": 233,
       "insertion_tol_ps": 40,
-      "from_root_um": 371.5
+      "from_root_um": 302.4
      },
      {
       "name": "glue_01",
       "kind": "glue",
       "xy": [
        388.8,
-       1097.28
+       907.2
       ],
       "region_um": [
        0.0,
-       734.4,
+       604.8,
        777.6,
-       1468.8
+       1209.6
       ],
-      "reach_um": 760.3,
-      "insertion_ps": 248,
+      "reach_um": 691.2,
+      "insertion_ps": 233,
       "insertion_tol_ps": 40,
-      "from_root_um": 362.9
+      "from_root_um": 302.4
      }
     ],
-    "max_from_root_um": 371.5,
-    "max_nearest_tap_um": 734.4,
+    "max_from_root_um": 302.4,
+    "max_nearest_tap_um": 604.8,
     "glue_taps_over_290ps": []
    },
    "native59": {
@@ -2893,7 +2750,7 @@
    "sle_ctl": {
     "root_um": [
      613.44,
-     673.92
+     535.68
     ],
     "taps": [
      {
@@ -2901,1004 +2758,423 @@
       "kind": "glue",
       "xy": [
        613.44,
-       224.64
+       267.84
       ],
       "region_um": [
        0.0,
        0.0,
        1226.88,
-       446.4
+       540.0
       ],
-      "reach_um": 838.1,
-      "insertion_ps": 266,
+      "reach_um": 885.6,
+      "insertion_ps": 276,
       "insertion_tol_ps": 40,
-      "from_root_um": 449.3
+      "from_root_um": 267.8
      },
      {
       "name": "glue_01",
       "kind": "glue",
       "xy": [
        613.44,
-       665.28
+       812.16
       ],
       "region_um": [
        0.0,
-       446.4,
+       540.0,
        1226.88,
-       892.8
+       1080.0
       ],
-      "reach_um": 841.0,
-      "insertion_ps": 266,
+      "reach_um": 885.6,
+      "insertion_ps": 276,
       "insertion_tol_ps": 40,
-      "from_root_um": 8.6
-     },
-     {
-      "name": "glue_02",
-      "kind": "glue",
-      "xy": [
-       613.44,
-       1114.56
-      ],
-      "region_um": [
-       0.0,
-       892.8,
-       1226.88,
-       1339.2
-      ],
-      "reach_um": 838.1,
-      "insertion_ps": 266,
-      "insertion_tol_ps": 40,
-      "from_root_um": 440.6
+      "from_root_um": 276.5
      }
     ],
-    "max_from_root_um": 449.3,
-    "max_nearest_tap_um": 449.3,
+    "max_from_root_um": 276.5,
+    "max_nearest_tap_um": 544.3,
     "glue_taps_over_290ps": []
    },
    "sle_fe_v1": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "sle_fe_v2": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "sle_fe_v3": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "sle_fw_v1": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "sle_fw_v2": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "sle_fw_v3": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       622.08,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "sle_hc0": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "sle_hc1": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        613.44,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "sle_hc2": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        613.44,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "sle_hc3": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
-   "sle_sc_v1": {
+   "sle_sc": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        613.44,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
-   "sle_sc_v2": {
+   "sle_st_a": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       613.44,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "sle_sc_v3": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       613.44,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "sle_st_a_v1": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
-   "sle_st_a_v2": {
+   "sle_st_b": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
-   "sle_st_b_v1": {
+   "sle_stm": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       622.08,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "sle_st_b_v2": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       622.08,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "sle_stm_v1": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        613.44,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "sle_stm_v2": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       613.44,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "sle_stm_v3": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       613.44,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "sle_su_c": {
     "root_um": [
      613.44,
-     673.92
+     535.68
     ],
     "taps": [
      {
@@ -3906,1051 +3182,481 @@
       "kind": "glue",
       "xy": [
        613.44,
-       224.64
+       267.84
       ],
       "region_um": [
        0.0,
        0.0,
        1226.88,
-       446.4
+       540.0
       ],
-      "reach_um": 838.1,
-      "insertion_ps": 266,
+      "reach_um": 885.6,
+      "insertion_ps": 276,
       "insertion_tol_ps": 40,
-      "from_root_um": 449.3
+      "from_root_um": 267.8
      },
      {
       "name": "glue_01",
       "kind": "glue",
       "xy": [
        613.44,
-       665.28
+       812.16
       ],
       "region_um": [
        0.0,
-       446.4,
+       540.0,
        1226.88,
-       892.8
+       1080.0
       ],
-      "reach_um": 841.0,
-      "insertion_ps": 266,
+      "reach_um": 885.6,
+      "insertion_ps": 276,
       "insertion_tol_ps": 40,
-      "from_root_um": 8.6
-     },
-     {
-      "name": "glue_02",
-      "kind": "glue",
-      "xy": [
-       613.44,
-       1114.56
-      ],
-      "region_um": [
-       0.0,
-       892.8,
-       1226.88,
-       1339.2
-      ],
-      "reach_um": 838.1,
-      "insertion_ps": 266,
-      "insertion_tol_ps": 40,
-      "from_root_um": 440.6
+      "from_root_um": 276.5
      }
     ],
-    "max_from_root_um": 449.3,
-    "max_nearest_tap_um": 449.3,
+    "max_from_root_um": 276.5,
+    "max_nearest_tap_um": 544.3,
     "glue_taps_over_290ps": []
    },
    "sle_su_l0": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "sle_su_l1": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_fe_v1": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_fe_v2": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_fw_v1": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_fw_v2": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_fw_v3": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_hc0": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_hc1": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        613.44,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_hc2": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        613.44,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_hc3": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
-   "slw_sc_v1": {
+   "slw_sc": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        613.44,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
-   "slw_sc_v2": {
+   "slw_st_a": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       613.44,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "slw_sc_v3": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       613.44,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "slw_st_a_v1": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
-   "slw_st_a_v2": {
+   "slw_st_b": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
-   "slw_st_b_v1": {
+   "slw_stm": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       622.08,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "slw_st_b_v2": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       622.08,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "slw_stm_v1": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        613.44,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "slw_stm_v2": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       613.44,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "slw_stm_v3": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       613.44,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       613.44,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_su_c": {
     "root_um": [
      613.44,
-     673.92
+     535.68
     ],
     "taps": [
      {
@@ -4958,152 +3664,98 @@
       "kind": "glue",
       "xy": [
        613.44,
-       224.64
+       267.84
       ],
       "region_um": [
        0.0,
        0.0,
        1226.88,
-       446.4
+       540.0
       ],
-      "reach_um": 838.1,
-      "insertion_ps": 266,
+      "reach_um": 885.6,
+      "insertion_ps": 276,
       "insertion_tol_ps": 40,
-      "from_root_um": 449.3
+      "from_root_um": 267.8
      },
      {
       "name": "glue_01",
       "kind": "glue",
       "xy": [
        613.44,
-       665.28
+       812.16
       ],
       "region_um": [
        0.0,
-       446.4,
+       540.0,
        1226.88,
-       892.8
+       1080.0
       ],
-      "reach_um": 841.0,
-      "insertion_ps": 266,
+      "reach_um": 885.6,
+      "insertion_ps": 276,
       "insertion_tol_ps": 40,
-      "from_root_um": 8.6
-     },
-     {
-      "name": "glue_02",
-      "kind": "glue",
-      "xy": [
-       613.44,
-       1114.56
-      ],
-      "region_um": [
-       0.0,
-       892.8,
-       1226.88,
-       1339.2
-      ],
-      "reach_um": 838.1,
-      "insertion_ps": 266,
-      "insertion_tol_ps": 40,
-      "from_root_um": 440.6
+      "from_root_um": 276.5
      }
     ],
-    "max_from_root_um": 449.3,
-    "max_nearest_tap_um": 449.3,
+    "max_from_root_um": 276.5,
+    "max_nearest_tap_um": 544.3,
     "glue_taps_over_290ps": []
    },
    "slw_su_l0": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "slw_su_l1": {
     "root_um": [
      311.04,
-     673.92
+     535.68
     ],
     "taps": [
      {
-      "name": "glue_00",
+      "name": "glue",
       "kind": "glue",
       "xy": [
        311.04,
-       336.96
+       535.68
       ],
       "region_um": [
        0.0,
        0.0,
        622.08,
-       669.6
+       1080.0
       ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
+      "reach_um": 855.4,
+      "insertion_ps": 270,
       "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
+      "from_root_um": 0.0
      }
     ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
    "tt_ctlm": {
@@ -5233,7 +3885,7 @@
     ]
    },
    "coll_n": {
-    "abutting": 3,
+    "abutting": 4,
     "linked": 2,
     "linked_to": [
      "coll_f5",

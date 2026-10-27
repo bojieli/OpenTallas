@@ -1,7 +1,0 @@
-KV b15 MU833 image and native boot ABI component gate
-
-Current source9650ec980e, strict b15 connectivity0errors, KST56/56/54/54/54/55/55. MU833 F2compile18.12s produces14targetimages including real MU471 and native DIECFG96. Static independently recomputed frame F2H586878 has0collisions, all launches legal and image bytes equal; native MU471installed/fault0, AGES96sealed/fault0, defaultAGES0lockstepPASS. Old MU327fault80 and oldAGES77fault08 are caught. Embedding-fill schedule nowPASS with1147edges margin. Model290059cycles token, frame aggregate10223.6tok/s are compiled analytical values, not measured whole-token rates.
-
-Status COMPILED_NOT_QUALIFIED is retained. This bind has partial R8 only. Image preparation virtually adds5700request-padFF to cap VportDQ15. Actual request words also have data/valid skew26vs31,15vs20,42vs43 on12ports. The supplied32-member R8extra table aligns the complete15bit words then adds the DQpads:6316FFtotal=5700DQ+616coherence. It must be realized in native RTL/bind with shared-type consistency before a whole boot/token run can qualify. Remaining group/PC R8bank and PHYsource closure are KV-owned blockers; no full G5 claim.
-
-Commands: physical/die_plan/qwen_kvsys/boot_v36/run_mu833.sh BIND OUT; results/rtl/kv_img_mu833_1025/token_gate.sh OUT GATE. Runtime intel1 scratch2/claude/codex-kv-image-2204/b15r6 and b15_gate. Earlier setup attempts failed for sparse-checkout fixtures; no functional result was overwritten. Final compiled image and all source gates run from committed sources; no whole-system build was started.

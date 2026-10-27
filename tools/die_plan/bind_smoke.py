@@ -14,7 +14,7 @@ qwen_compute vehicle (= STEWARD-TOKh/TOKi xt1, made automatically here, never ha
     tt_ctlm -> sl_W5_fw lane ends (cmd / hr / tl) are the XT1 bench event ports, every other open lane end idles at 0;
   * source closure: every module the carve instantiates, resolved from <bound>/rtl, then the bind.f files, then the
     source revision REV (git), with `include files and their incdirs; the file list is generated, not hand kept;
-  * bench: xt1_bench.py gen (nominal lead 8 + XT1_FILL_LEAD_OFFSET / gap 4) -> tb_smoke -> xt1n_bench.py check (near [+ far] words exact vs the
+  * bench: xt1_bench.py gen (nominal lead 8 / gap 4) -> tb_smoke -> xt1n_bench.py check (near [+ far] words exact vs the
     TOKe-QWM record gold, ROM masks masks_fixed);
   * mutant: +SMOKE_MUT_SKEW=1 delays the hr lane end by one cycle against cmd/tl (models one schedule constant off by
     one), same binary;
@@ -56,53 +56,12 @@ def sha256(p: Path) -> str:
 # ------------------------------------------------------------------------------------------------ QC carve (xt1)
 # vendored from STEWARD-TOKh bound_carve.py (10-23), plus --clusters near (far cluster dropped, its lanes idle)
 INST = re.compile(r'^\s*(\w+)\s*(#\(.*\))?\s+(\w+)\s*\($')
-CONN = re.compile(r"^\s*\.(\w+)\(([\w\[\]:']*)\),?$")
+CONN = re.compile(r'^\s*\.(\w+)\((\w*)\),?$')
 WIRE = re.compile(r'^\s*wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*;\s*(//\s*lane\s+(\S+))?')
 PORT = re.compile(r'^\s*(input|output)\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)')
 EVENT = {'tt_ctlm__cmd_cmd_wi': ('cmd0', 116), 'tt_ctlm__hr_hr_wi': ('hr0', 453), 'tt_ctlm__tl_st_wi': ('swi', 1088)}
 SLOT = {(0, 0): 0, (0, 1): 2, (0, 2): 8, (0, 3): 10, (1, 0): 1, (1, 1): 3, (1, 2): 9, (1, 3): 11,
         (2, 0): 4, (2, 1): 6, (2, 2): 12, (2, 3): 14, (3, 0): 5, (3, 1): 7, (3, 2): 13, (3, 3): 15}
-
-
-# Bind parent ID ports are explicit quasi-static straps. Never treat their literal
-# values as open signal nets, and never silently drop a non-strap constant input.
-KNOWN_LITERAL = re.compile(r"([0-9]+)'([bBdDhH])([0-9a-fA-F_]+)")
-
-
-def known_literal(expr):
-    m = KNOWN_LITERAL.fullmatch(expr)
-    if not m:
-        raise ValueError(f'expected a known sized literal: {expr}')
-    width = int(m[1])
-    try:
-        value = int(m[3].replace('_', ''), {'b': 2, 'd': 10, 'h': 16}[m[2].lower()])
-    except ValueError:
-        raise ValueError(f'invalid literal digits: {expr}') from None
-    if width <= 0 or value >= 1 << width:
-        raise ValueError(f'literal does not fit its declared width: {expr}')
-    return width, value
-
-
-def strap_literal(port, expr, direction):
-    if "'" not in expr:
-        return False
-    known_literal(expr)
-    legacy_id = re.fullmatch(r'S_u_t_[0-3]_[0-3]_tile_id', port)
-    if direction != 'input' or not (port.startswith('strap_') or legacy_id):
-        raise ValueError(f'constant on non-strap input/output {port}: {expr}')
-    return True
-
-
-def tile_identity(inst, row, column):
-    """Read the exact source ID through either emitted parent-strap spelling."""
-    suffix = f'u_t_{row}_{column}_tile_id'
-    values = [(p, n) for p, n in inst['conns'] if p in ('S_' + suffix, 'strap_' + suffix)]
-    if len(values) != 1:
-        raise ValueError(f'{inst["name"]}.{suffix}: expected exactly one source tile strap, got {values}')
-    width, value = known_literal(values[0][1])
-    if width != 16:
-        raise ValueError(f'{inst["name"]}.{suffix}: source tile ID width {width} != 16')
-    return value
 
 
 def parse_top(p: Path):
@@ -153,87 +112,15 @@ def tiles_of(rtl: Path, module: str):
     return out
 
 
-def qc_reset_contract(top: Path, keep):
-    """Carve external reset prefixes by their published age; real kept reset links remain live."""
-    resets = {i['name']: dict(i['conns']).get('arst_n', 'rst_n') for i in keep}
-    starts = {i['name']: dict(i['conns'])['start_i'] for i in keep if dict(i['conns']).get('start_i')}
-    meta = top.parent.parent / 'bind_reset.json'
-    if not meta.exists():
-        if any(n != 'rst_n' for n in resets.values()) or starts:
-            raise SystemExit('carve: nonlocal reset/START without bind_reset.json (refuse idle-zero reset)')
-        return dict(release='legacy', calendar_start_delay=0, boundary_prefixes={})
-    w = json.loads(meta.read_text())
-    if w.get('release') != 'wavefront' or w.get('unreachable') or w.get('long_hops'):
-        raise SystemExit('carve: invalid wavefront reset metadata')
-    parts = w['parts']; kept = set(resets); prefixes = {}
-    latest = max([int(w['max_release'])] + [int(v) for q in parts.values()
-                 for v in q.get('core_release', {}).values()])
-    for name, net in resets.items():
-        if name not in parts:
-            raise SystemExit(f'carve: missing reset release for {name}')
-        q = parts[name]
-        if net == 'rst_n' or q.get('parent') in kept:
-            continue
-        age = int(q['release']) - int(q['entry_stages']) - int(q['depth_K'])
-        if age < 0 or (net in prefixes and prefixes[net] != age):
-            raise SystemExit(f'carve: inconsistent reset boundary age {net} -> {name}: {age}')
-        prefixes[net] = age
-    rep = dict(release='wavefront', metadata_sha256=sha256(meta), root=w['root'],
-               latest_partition_release=int(w['max_release']), latest_published_core_pin_release=latest,
-               calendar_start_delay=latest+1, boundary_prefixes=prefixes,
-               scope='Published reset pin ages at omitted-carrier boundaries; kept partition reset RTL is real. '
-                     'Calendar begins after pin release; whole-die start remains the existing forwarded epoch.')
-    st = w.get('start')
-    if not st:
-        if starts:
-            raise SystemExit('carve: start_i pins without a bind_reset.json start block')
-        return rep
-    # OWNER DECISION 13c (reset.start = "broadcast"): START rides the reset wavefront (start_i / start_o_<k> beside
-    # arst_n / rst_o_<k>, run relays on the reset relay sites, every tap releases on registered reset AND run), so a
-    # partition releases at S + release[p] with S = the die start pin's rise after rst_n deassert.  An omitted START
-    # carrier boundary is the die start pin delayed by the SAME published age as the reset carrier beside it.
-    if st.get('mode') != 'broadcast' or st.get('die_pin') != 'start':
-        raise SystemExit(f'carve: unsupported START metadata {st.get("mode")}/{st.get("die_pin")}')
-    if set(starts) != set(resets):
-        raise SystemExit(f'carve: kept partitions without start_i {sorted(set(resets) - set(starts))}')
-    sp = {}
-    for name, net in starts.items():
-        q = parts[name]
-        if net == st['die_pin'] or q.get('parent') in kept:
-            if (net == st['die_pin']) != (resets[name] == 'rst_n'):
-                raise SystemExit(f'carve: START source of {name} ({net}) is not beside its reset ({resets[name]})')
-            continue
-        if resets[name] == 'rst_n' or not net.startswith('stw_') or net[4:].replace('start_o_', '') != \
-                resets[name][5:].replace('rst_o_', ''):
-            raise SystemExit(f'carve: START carrier {net} of {name} is not beside its reset carrier {resets[name]}')
-        age = prefixes[resets[name]]
-        if net in sp and sp[net] != age:
-            raise SystemExit(f'carve: inconsistent START boundary age {net} -> {name}')
-        sp[net] = age
-    rep.update(start=dict(mode='broadcast', die_pin=st['die_pin'], sync_stages=st.get('sync_stages'),
-                          boundary_prefixes=sp,
-                          scope='START boundary = die start pin delayed by the published age of the reset carrier '
-                                'beside it; the calendar begins CALENDAR_START_DELAY (latest published release + 1) '
-                                'clocks after the start pin rises, not after rst_n.'),
-               scope='Published reset AND START pin ages at omitted-carrier boundaries; kept partition reset/run RTL '
-                     'is real. Calendar begins latest release + 1 clocks after the die start pin rises.')
-    return rep
-
-
 def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
     seed = re.compile(r'^(sl_W5_\w+|c_W5_tn_\d\d' + (r'|c_W5_tf_\d\d' if clusters == 'both' else '') + r')$')
+    nseed = 23 if clusters == 'both' else 19
     out.mkdir(parents=True, exist_ok=True)
     wires, insts = parse_top(top)
     keep = [i for i in insts if seed.match(i['name'])]
-    required = {f"sl_W5_{role}" for role in ("ctl", "fe", "fw", "hc0", "hc1", "hc2", "hc3", "sc", "st_a", "st_b", "stm", "su_c", "su_l0", "su_l1")}
-    required.update(f"c_W5_{side}_{x}{y}" for side in (["tn", "tf"] if clusters == "both" else ["tn"]) for x in (0, 1) for y in (0, 1))
-    missing = required - {i["name"] for i in keep}
-    if missing:
-        raise SystemExit(f"carve: missing required current-plan partitions {sorted(missing)}")
-    reset_contract = qc_reset_contract(top, keep)
-    start = reset_contract.get('start')
-    pins = {'rst_n'} | ({start['die_pin']} if start else set())
-    drv, rd, literal_straps = {}, {}, []
+    if len(keep) != nseed:
+        raise SystemExit(f'carve: {len(keep)} seed partitions != {nseed}: {[i["name"] for i in keep]}')
+    drv, rd = {}, {}
     for i in keep:
         pd = ports_of(rtl, i['module'])
         for p, n in i['conns']:
@@ -242,53 +129,24 @@ def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
             dirn = pd.get(p)
             if not dirn:
                 raise SystemExit(f'carve: {i["name"]}.{p} not a port of {i["module"]}')
-            if strap_literal(p, n, dirn):
-                literal_straps.append(dict(instance=i['name'], port=p, literal=n))
-                continue
             (drv if dirn == 'output' else rd).setdefault(n, []).append((i['name'], p))
     clocks = sorted({n for n in rd if n.startswith('clk_')})
-    ext = sorted(n for n in rd if n not in drv and n not in clocks and n not in pins)
-    used = sorted((set(drv) | set(rd)) - set(clocks) - pins)
+    ext = sorted(n for n in rd if n not in drv and n not in clocks and n != 'rst_n')
+    used = sorted((set(drv) | set(rd)) - set(clocks) - {'rst_n'})
     L = ['// GENERATED by tools/die_plan/bind_smoke.py (CAL-AUTO, from STEWARD-TOKh bound_carve.py): xt1 smoke carve',
          f'// source: {top} sha256 {sha256(top)}; seeds = sl_W5_* + c_W5_tn_*' + (' + c_W5_tf_*' if clusters == 'both' else ''),
          '`timescale 1ns/1ps',
-         'module xt1b_carve (input wire ck, input wire rst_n,' + (f' input wire {start["die_pin"]},' if start else '') +
-         ' input wire [115:0] cmd0, input wire [452:0] hr0,',
+         'module xt1b_carve (input wire ck, input wire rst_n, input wire [115:0] cmd0, input wire [452:0] hr0,',
          '    input wire [1087:0] swi, output wire [515:0] cw_n0, output wire [515:0] cw_n1, output wire [515:0] cw_n2,',
          '    output wire [515:0] cw_n3, output wire [513:0] rs, output wire [513:0] rs_o, output wire [513:0] rsc,',
          '    output wire [513:0] rsoc);']
-    L.append(f'    localparam integer CALENDAR_START_DELAY = {reset_contract["calendar_start_delay"]};')
     L += [f'    wire {c} = ck;' for c in clocks]
-    if start:
-        L.append("    reg ep = 1'b0;  // epoch bit of the bench-driven lane ends (driver boundary epoch = control state: rst_n AND run)")
-        L.append(f'    always @(posedge ck) ep <= rst_n & {start["die_pin"]};')
-    else:
-        L.append("    reg ep = 1'b0;  // epoch bit of the bench-driven lane ends (the driver boundary flop loads ea = rst_n)")
-        L.append('    always @(posedge ck) ep <= rst_n;')
+    L.append("    reg ep = 1'b0;  // epoch bit of the bench-driven lane ends (the driver boundary flop loads ea = rst_n)")
+    L.append('    always @(posedge ck) ep <= rst_n;')
     L += [wires[n]['decl'] for n in used]
-    rep = dict(seeds=[i['name'] for i in keep], clusters=clusters, clocks=clocks, event_lanes={}, zero_lanes=[], literal_straps=literal_straps, reset=reset_contract)
+    rep = dict(seeds=[i['name'] for i in keep], clusters=clusters, clocks=clocks, event_lanes={}, zero_lanes=[])
     for n in ext:
         w, lane = wires[n]['width'], wires[n]['lane']
-        if n in reset_contract['boundary_prefixes']:
-            age = reset_contract['boundary_prefixes'][n]
-            if age:
-                L += [f"    reg [{age-1}:0] prefix_{n} = {age}'d0;",
-                      f"    always @(posedge ck) prefix_{n} <= {{prefix_{n}, rst_n}};",
-                      f"    assign {n} = prefix_{n}[{age-1}];  // omitted reset carrier prefix, {age} edges"]
-            else:
-                L.append(f'    assign {n} = rst_n;  // root reset boundary')
-            continue
-        if start and n in start['boundary_prefixes']:
-            age, pin = start['boundary_prefixes'][n], start['die_pin']
-            if age:
-                L += [f"    reg [{age-1}:0] sprefix_{n} = {age}'d0;",
-                      f"    always @(posedge ck) sprefix_{n} <= {{sprefix_{n}, {pin}}};",
-                      f"    assign {n} = sprefix_{n}[{age-1}];  // omitted START carrier prefix, {age} edges"]
-            else:
-                L.append(f'    assign {n} = {pin};  // root START boundary')
-            continue
-        if n.startswith('rstw_') or n.startswith('stw_'):
-            raise SystemExit(f'carve: reset/START net {n} missing a published boundary age')
         if lane in EVENT:
             sig, dw = EVENT[lane]
             if w != dw + 1:
@@ -359,7 +217,7 @@ module tb_xt1b (input wire ck);
         .cw_n2(cw_n2), .cw_n3(cw_n3), .rs(rs), .rs_o(rs_o), .rsc(rsc), .rsoc(rsoc));
 `define OT_ROM_BIND_TOP tb_xt1b.u_d
 `include "rom_bind_xt1b.vh"
-    integer fd, lg, cyc, ncyc, ec, ep, r, pre = 0, nrst, boot_wait = 0;
+    integer fd, lg, cyc, ncyc, ec, ep, r, pre = 0, nrst;
     reg [1087:0] ev;
     reg have, hdf, stf, rsf, rof;
     reg [1023:0] evf, lgf;
@@ -386,9 +244,7 @@ module tb_xt1b (input wire ck);
     end
     always @(negedge ck) begin
         if (pre < nrst) begin pre = pre + 1; if (pre == nrst) rst_n = 1'b1; end
-        else if (boot_wait < u_d.CALENDAR_START_DELAY) boot_wait = boot_wait + 1;
         else begin
-            if (cyc == 0) $fdisplay(lg, "%0d BOOT_START %0d", cyc, boot_wait);
             if (hr0[452]) $fdisplay(lg, "%0d HRGO", cyc);
             if (hr0[1])   $fdisplay(lg, "%0d HRXPF", cyc);
             if (|cwgo)    $fdisplay(lg, "%0d CWGO %h", cyc, cwgo);
@@ -419,50 +275,6 @@ module tb_xt1b (input wire ck);
     end
 endmodule
 '''
-
-TB_START_BOOT = r"""        if (pre < nrst) begin
-            pre = pre + 1;
-            if (pre == nrst) begin rst_n = 1'b1; if (start_at == 0 && start_never == 0) start = 1'b1; end
-        end
-        else if (boot_wait < cal_at) begin
-            boot_wait = boot_wait + 1;
-            if (boot_wait == start_at && start_never == 0) start = 1'b1;
-        end
-        else begin
-            if (cyc == 0) $fdisplay(lg, "%0d BOOT_START %0d START_AT %0d START_NEVER %0d CAL_DELAY %0d", cyc, boot_wait,
-                                    start_at, start_never, u_d.CALENDAR_START_DELAY);"""
-TB_START_ARGS = r"""        if (!$value$plusargs("SMOKE_MUT_SKEW=%d", mut)) mut = 0;
-        if (!$value$plusargs("START_AT=%d", start_at)) start_at = 200;
-        if (!$value$plusargs("START_NEVER=%d", start_never)) start_never = 0;
-        if (!$value$plusargs("CAL_AT=%d", cal_at)) cal_at = start_at + u_d.CALENDAR_START_DELAY;
-        if (start_at < 0 || cal_at < 0) $fatal(1, "START_AT / CAL_AT >= 0");
-"""
-
-
-def start_tb():
-    """TB for a bind with the die START pin (OWNER DECISION 13c): rst_n deasserts after NRST cycles, the die start pin
-    stays low until +START_AT=S cycles after that (default 200), and the calendar begins +CAL_AT cycles after rst_n
-    deasserts (default S + CALENDAR_START_DELAY = S + latest published release + 1).  Negative controls: +CAL_AT=<k>
-    with k < S + CALENDAR_START_DELAY (calendar before the START wavefront has released), +START_NEVER=1 (start pin never
-    rises).  start rises on the negedge S counts after the rst_n negedge (same edge discipline as rst_n)."""
-    t = TB
-
-    def rep(a, b):
-        nonlocal t
-        if t.count(a) != 1:
-            raise SystemExit(f'start_tb: template anchor {a[:40]!r}')
-        t = t.replace(a, b)
-    rep('schedule mutant +SMOKE_MUT_SKEW=k (hr lane k cycles late)',
-        'schedule mutant +SMOKE_MUT_SKEW=k (hr lane k cycles late) + die START pin (+START_AT / +CAL_AT / +START_NEVER)')
-    rep("    reg rst_n = 1'b0;\n", "    reg rst_n = 1'b0;\n    reg start = 1'b0;\n")
-    rep('xt1b_carve u_d (.ck(ck), .rst_n(rst_n), ', 'xt1b_carve u_d (.ck(ck), .rst_n(rst_n), .start(start), ')
-    rep('pre = 0, nrst, boot_wait = 0;', 'pre = 0, nrst, boot_wait = 0, start_at, cal_at, start_never;')
-    rep('        if (!$value$plusargs("SMOKE_MUT_SKEW=%d", mut)) mut = 0;\n', TB_START_ARGS)
-    rep("""        if (pre < nrst) begin pre = pre + 1; if (pre == nrst) rst_n = 1'b1; end
-        else if (boot_wait < u_d.CALENDAR_START_DELAY) boot_wait = boot_wait + 1;
-        else begin
-            if (cyc == 0) $fdisplay(lg, "%0d BOOT_START %0d", cyc, boot_wait);""", TB_START_BOOT)
-    return t
 
 
 # --------------------------------------------------------------------------------------------- source closure
@@ -611,48 +423,20 @@ else
   BUILT=0
 fi
 T1=$(date +%s)
-python3 bench/xt1_bench.py gen --gold inputs/gold_near.json --out ev.txt --mode nominal --lead __LEAD__ --gap 4 > gen.out 2>&1 \
+python3 bench/xt1_bench.py gen --gold inputs/gold_near.json --out ev.txt --mode nominal --lead 8 --gap 4 > gen.out 2>&1 \
   || { echo "RESULT SMOKE GEN_FAIL"; tail -5 gen.out; exit 2; }
 GF=inputs/gold_far.json; [ -f $GF ] || GF=inputs/gold_near.json
 for m in 0 __MUT__; do
   /usr/bin/time -v -o sim_m$m.time $OBJ/Vtb +EV=$W/ev.txt +LOG=$W/log_m$m.txt +NCYC=__NCYC__ +OT_ROM_DIR=$W/inputs/masks \
-     +SMOKE_MUT_SKEW=$m __STARTARGS__> sim_m$m.out 2>&1; echo "sim rc=$?" >> sim_m$m.out
+     +SMOKE_MUT_SKEW=$m > sim_m$m.out 2>&1; echo "sim rc=$?" >> sim_m$m.out
   [ -f log_m$m.txt ] || : > log_m$m.txt
   python3 bench/xt1n_bench.py check --gold-near inputs/gold_near.json --gold-far $GF --log log_m$m.txt --mode nominal \
-     --lead __LEAD__ --gap 4 > check_m$m.txt 2>&1
+     --lead 8 --gap 4 > check_m$m.txt 2>&1
   echo "[mut=$m] $(grep -h '^RESULT' check_m$m.txt | tail -1)"
 done
-__NEGATIVES__T2=$(date +%s)
+T2=$(date +%s)
 echo "TIMES built=$BUILT build_s=$((T1-T0)) sim_s=$((T2-T1)) obj=$OBJ"
 '''
-
-
-# START negative controls (start binds only): the record stage must NOT compute when the calendar begins before
-# S + the latest published release, or when the die start pin never rises.
-NEG_SH = (
-    'm=n___N__\n'
-    '/usr/bin/time -v -o sim_$m.time $OBJ/Vtb +EV=$W/ev.txt +LOG=$W/log_$m.txt +NCYC=__NCYC__ +OT_ROM_DIR=$W/inputs/masks \\\n'
-    '   +SMOKE_MUT_SKEW=0 __STARTARGS____ARGS__ > sim_$m.out 2>&1; echo "sim rc=$?" >> sim_$m.out\n'
-    '[ -f log_$m.txt ] || : > log_$m.txt\n'
-    'python3 bench/xt1n_bench.py check --gold-near inputs/gold_near.json --gold-far $GF --log log_$m.txt --mode nominal \\\n'
-    '   --lead __LEAD__ --gap 4 > check_$m.txt 2>&1\n'
-    'echo "[neg=__N__] $(grep -h \'^RESULT\' check_$m.txt | tail -1)"\n')
-
-
-def xt1_lead(a):
-    """x fill lead of the xt1 bench: as-built 8 + XT1_FILL_LEAD_OFFSET of the bound top (regen_constants.py qc_xfill;
-    QC-TOK 10-24: the hr x-arm crossing and the fill stream crossings land with different (landed - as-built))."""
-    if getattr(a, '_lead', None) is None:
-        off, c = 0, {}
-        if a.constants:
-            c = json.loads(Path(a.constants).read_text()).get('constants', {}).get('XT1_FILL_LEAD_OFFSET', {})
-            if c.get('status') == 'OK' and isinstance(c.get('value'), int):
-                off = c['value']
-            elif c:
-                raise SystemExit(f'XT1_FILL_LEAD_OFFSET not one value: {c}')
-        a.lead_offset_used = bool(c)
-        a._lead = 8 + off
-    return a._lead
 
 
 def qc_prepare(a, work: Path):
@@ -661,8 +445,7 @@ def qc_prepare(a, work: Path):
     if not top.exists():
         raise SystemExit(f'no bound top {top}')
     rep, mods = qc_carve(top, bound / 'rtl', work / 'carve', a.clusters)
-    start = rep['reset'].get('start')
-    (work / 'carve' / 'tb_smoke.sv').write_text(start_tb() if start else TB)
+    (work / 'carve' / 'tb_smoke.sv').write_text(TB)
     S = Sources(bound, a.asbuilt, a.src_rev, a.repo)
     files, amb, missing = S.closure(mods)
     if missing:
@@ -683,18 +466,7 @@ def qc_prepare(a, work: Path):
             raise SystemExit(f'bench file {f} not in {a.src_rev}')
         (bench / Path(f).name).write_bytes(r.stdout)
     run = (RUN_SH.replace('__VERILATOR__', VERILATOR).replace('__JOBS__', str(a.jobs)).replace('__BJOBS__', str(a.build_jobs)).replace('__GROUPS__', str(a.output_groups))
-           .replace('__NCYC__', str(a.ncyc)).replace('__MUT__', str(a.mut_skew)).replace('__LEAD__', str(xt1_lead(a))))
-    if start:
-        d = rep['reset']['calendar_start_delay']
-        negs = {'early_cal_at_s': f'+CAL_AT={a.start_at}', 'early_cal_by1': f'+CAL_AT={a.start_at + d - 1}',
-                'start_never': '+START_NEVER=1'}
-        rep['start_bench'] = dict(start_at=a.start_at, calendar_at=a.start_at + d, calendar_start_delay=d, negatives=negs)
-        neg = ''.join(NEG_SH.replace('__N__', k).replace('__ARGS__', v) for k, v in negs.items())
-        neg = (neg.replace('__NCYC__', str(a.ncyc)).replace('__LEAD__', str(xt1_lead(a))))
-        sa = f'+START_AT={a.start_at} '
-        run = run.replace('__NEGATIVES__', neg).replace('__STARTARGS__', sa)
-    else:
-        run = run.replace('__STARTARGS__', '').replace('__NEGATIVES__', '')
+           .replace('__NCYC__', str(a.ncyc)).replace('__MUT__', str(a.mut_skew)))
     (work / 'run_smoke.sh').write_text(run)
     (work / 'run_smoke.sh').chmod(0o755)
     meta = dict(carve=rep, closure_files=len(flist), files=flist, includes=[str(Path(i).relative_to(S.base)) for i in incs],
@@ -708,15 +480,9 @@ def sh(cmd, **kw):
     return subprocess.run(cmd, shell=True, text=True, capture_output=True, **kw)
 
 
-def qc_inputs(work: Path, clusters: str, inputs: Path | None = None):
-    """gold + masks of the TOKe-QWM xt1 record (gold2) -> work/inputs (cached locally).  --inputs DIR (opt-in): a local
-    dir holding gold_near.json, gold_far.json and masks/ (e.g. regenerated by rtl/test/qwen_dv/xhead/xt1_inputs.py);
-    nothing is fetched then."""
-    cache = inputs or Path(os.environ.get('CAL_SMOKE_CACHE', '/home/ubuntu/scratch/cal-auto-smoke/xt1_inputs'))
-    if inputs is not None:
-        miss = [n for n in ('gold_near.json', 'gold_far.json', 'masks') if not (cache / n).exists()]
-        if miss:
-            raise SystemExit(f'--inputs {cache}: missing {miss}')
+def qc_inputs(work: Path, clusters: str):
+    """gold + masks of the TOKe-QWM xt1 record (gold2) -> work/inputs (cached locally)."""
+    cache = Path(os.environ.get('CAL_SMOKE_CACHE', '/home/ubuntu/scratch/cal-auto-smoke/xt1_inputs'))
     if not (cache / 'gold_far.json').exists():
         cache.mkdir(parents=True, exist_ok=True)
         host, path = XT1_INPUTS.split(':')
@@ -728,7 +494,7 @@ def qc_inputs(work: Path, clusters: str, inputs: Path | None = None):
     inp = work / 'inputs'
     if inp.exists():
         shutil.rmtree(inp)
-    shutil.copytree(cache, inp, symlinks=False)
+    shutil.copytree(cache, inp)
     if clusters == 'near':
         (inp / 'gold_far.json').unlink()
 
@@ -757,7 +523,7 @@ def run_qc(a):
     work.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     meta = qc_prepare(a, work)
-    qc_inputs(work, a.clusters, a.inputs)
+    qc_inputs(work, a.clusters)
     tag = work.name
     remote = f'{REMOTE_ROOT}/{tag}'
     cmd = f'ot-run --mem {a.mem} --threads {a.jobs} --disk 30 --dir {remote} -- bash {remote}/run_smoke.sh'
@@ -768,16 +534,12 @@ def run_qc(a):
                             partitions=meta['carve']['seeds'], rom_tiles=meta['carve']['rom_tiles'],
                             closure_files=meta['closure_files'], unresolved_modules=meta['unresolved_modules'],
                             ambiguous_modules=sorted(meta['ambiguous']), src_rev=a.src_rev,
-                            bench=f'xt1_bench gen nominal lead {xt1_lead(a)} gap 4 -> xt1n_bench check (record gold c2/c3, masks_fixed)',
+                            bench='xt1_bench gen nominal lead 8 gap 4 -> xt1n_bench check (record gold c2/c3, masks_fixed)',
                             mutant=f'+SMOKE_MUT_SKEW={a.mut_skew} (hr lane end {a.mut_skew} cycle late vs cmd/tl)'),
                cycles=a.ncyc, command=cmd)
     if a.constants:
-        rep['constants_note'] = ('the bound top carries the regenerated RTL parameters (bind param_regen); xt1 consumes '
-                                 'XT1_FILL_LEAD_OFFSET (x fill lead = 8 + offset) when present' if a.lead_offset_used else
-                                 'the bound top carries the regenerated RTL parameters (bind param_regen); no XT1_FILL_LEAD_OFFSET '
-                                 'in the constants: lead 8 (as-built)')
-    if a.local:
-        return run_qc_local(a, work, rep, t0)
+        rep['constants_note'] = ('the bound top carries the regenerated RTL parameters (bind param_regen); xt1 uses no '
+                                 'compiler constant beyond lead/gap, so the file is recorded, not consumed')
     if not a.submit:
         print(f'staged {work} ({meta["closure_files"]} files); submit with:\n  rsync -a {work}/ <host>:{remote}/ && {cmd}')
         return rep, None
@@ -805,65 +567,15 @@ def run_qc(a):
     if 'BUILD_FAIL' in out or nominal is None:
         verdict = 'BUILD_FAIL'
     else:
-        schedule = fixed_schedule_gate(work / 'results', a.mut_skew)
-        rep['schedule_gate'] = schedule
-        verdict = 'PASS' if ok(nominal) and schedule['verdict'] == 'PASS' else 'FAIL'
+        verdict = 'PASS' if ok(nominal) and not ok(mutant) else 'FAIL'
     rep.update(host=host, run_dir=f'{host}:{remote}', otrun_exit=p.returncode,
                runs=dict(nominal=nominal, mutant=mutant), verdict=verdict,
-               gate_rule='nominal near (and far) words exact AND numeric mismatch or actual fixed-consumer edges catch mutant',
+               gate_rule='nominal near (and far) words exact AND mutant not exact',
                build_cached=(tm.group(1) == '0') if tm else None,
                build_s=int(tm.group(2)) if tm else None, sim_s=int(tm.group(3)) if tm else None,
                wall_s=round(time.time() - t0), peak_build_gb=peak)
     if verdict == 'FAIL' and ok(mutant):
-        rep['note'] = 'numeric mutant PASS is preserved; fixed-consumer schedule gate failed or lacks actual edge records'
-    elif verdict == 'FAIL' and not ok(nominal):
-        rep['note'] = 'nominal FAIL: the bound top (with its regenerated constants) does not compute the record stage'
-    return rep, verdict
-
-
-def fixed_schedule_gate(results: Path, mutant_index: int):
-    # Numeric acceptance remains truthful; a shifted static-consumer calendar is an effective negative control.
-    from xt1_schedule_gate import evaluate
-    n=results/'log_m0.txt.xt1n.json'; m=results/f'log_m{mutant_index}.txt.xt1n.json'
-    if not n.exists() or not m.exists():
-        return dict(verdict='FAIL',mutant_caught=False,reason='missing actual schedule-edge records')
-    gate=evaluate(json.loads(n.read_text()),json.loads(m.read_text()))
-    (results/'schedule_gate.json').write_text(json.dumps(gate,indent=1)+'\n')
-    return gate
-
-
-def run_qc_local(a, work: Path, rep: dict, t0: float):
-    """--local (opt-in): run run_smoke.sh in the work dir on THIS host (no ot-run, no staging); the caller is responsible
-    for host admission (measured: near 43 GB / both 76 GB peak build RSS)."""
-    import socket
-    rep['command'] = f'bash {work}/run_smoke.sh'
-    p = subprocess.run(['bash', str(work / 'run_smoke.sh')], text=True, capture_output=True)
-    out = p.stdout
-    (work / 'local_run.log').write_text(p.stdout + '\n--- stderr\n' + p.stderr)
-    res, ok, tm = parse_run(out, a.clusters)
-    peak = None
-    bt = work / 'build.time'
-    if bt.exists():
-        mm = re.search(r'Maximum resident set size \(kbytes\): (\d+)', bt.read_text())
-        peak = round(int(mm.group(1)) / 1048576, 1) if mm else None
-    nominal, mutant = res.get(0), res.get(a.mut_skew)
-    if 'BUILD_FAIL' in out or nominal is None:
-        verdict = 'BUILD_FAIL'
-    else:
-        schedule = fixed_schedule_gate(work, a.mut_skew)
-        rep['schedule_gate'] = schedule
-        verdict = 'PASS' if ok(nominal) and schedule['verdict'] == 'PASS' else 'FAIL'
-    rep.update(host=socket.gethostname(), run_dir=f'{socket.gethostname()}:{work}', run_exit=p.returncode,
-               runs=dict(nominal=nominal, mutant=mutant), verdict=verdict,
-               gate_rule='nominal near (and far) words exact AND numeric mismatch or actual fixed-consumer edges catch mutant',
-               build_cached=(tm.group(1) == '0') if tm else None,
-               build_s=int(tm.group(2)) if tm else None, sim_s=int(tm.group(3)) if tm else None,
-               wall_s=round(time.time() - t0), peak_build_gb=peak)
-    if a.inputs:
-        man = a.inputs / 'MANIFEST.json'
-        rep['inputs'] = dict(dir=str(a.inputs), manifest=json.loads(man.read_text()) if man.exists() else None)
-    if verdict == 'FAIL' and ok(mutant):
-        rep['note'] = 'numeric mutant PASS is preserved; fixed-consumer schedule gate failed or lacks actual edge records'
+        rep['note'] = 'mutant PASSED: the bench does not see a one-cycle hr skew -> gate not sensitive (fix the mutant)'
     elif verdict == 'FAIL' and not ok(nominal):
         rep['note'] = 'nominal FAIL: the bound top (with its regenerated constants) does not compute the record stage'
     return rep, verdict
@@ -904,25 +616,17 @@ def main():
                     help='near (default: 37 min, 43 GB measured) or both (64 min, 76 GB)')
     ap.add_argument('--ncyc', type=int, default=60 + 1600 * 4)
     ap.add_argument('--mut-skew', type=int, default=1)
-    ap.add_argument('--start-at', type=int, default=200,
-                    help='START binds only: the die start pin rises S cycles after rst_n deasserts (calendar at S + '
-                         'latest published release + 1)')
     ap.add_argument('--mem', type=int, default=None, help='ot-run --mem GB (default: near 56 / both 90; measured peak 43.4 / 75.8 GB)')
     ap.add_argument('--jobs', type=int, default=32)
     ap.add_argument('--build-jobs', type=int, default=96)
     ap.add_argument('--output-groups', type=int, default=192,
                     help='Verilator C++ unity groups (default 5.050 made ~34 x ~100 MB units: 6 compiles at a time)')
     ap.add_argument('--submit', action='store_true', help='stage to an admitting host and run through ot-run')
-    ap.add_argument('--local', action='store_true', help='opt-in: run the staged smoke on this host directly (no ot-run)')
-    ap.add_argument('--inputs', type=Path, help='opt-in: local xt1 inputs dir (gold_near.json, gold_far.json, masks/); '
-                    'default = the TOKe-QWM record inputs fetched from ot-gold2 into $CAL_SMOKE_CACHE')
     ap.add_argument('--no-report', action='store_true', help='do not write <bound>/smoke/smoke_report.json')
     a = ap.parse_args()
     if a.mem is None:
         a.mem = 56 if a.clusters == 'near' else 90
     a.bound = a.bound.resolve()
-    if a.inputs:
-        a.inputs = a.inputs.resolve()
     if a.die == 'qwen_compute':
         if not a.src_rev:
             ap.error('--src-rev is required for qwen_compute (the as-built tree bind.f refers to)')

@@ -8,19 +8,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkh_lane8 #(
     parameter integer ADD_LAT = 7,
-    parameter integer LTW = 12,
-    // KV-CORES 10-25 (COORD ruling 5): LT_COPY = 1 duplicates the LAST flop of the decision-word delay line u_ltd per lane
-    // (g_d[d].g_ltc.u_ltl, bits [8:0] = the lane's P.V tree controls) plus one shared copy of the node-slice bits [LTW-1:9]
-    // (g_ltn.u_ltn): the 8-lane x 32-bit broadcast of lal / lsel (head_eighth e6 TT -12 ps from u_ltd line[39]) becomes
-    // eight short lane nets.  Same D (PLAT) edges, 0 added cycles (u_ltd is one stage shorter).  LT_COPY = 0 (default) is
-    // the unchanged RTL (u_ltd D = PLAT drives every lane).
-    parameter integer LT_COPY = 0,
-    // PATH-KV-HEAD 10-25 (head6ff TT -71.6: u_l8 g3g / e3 S3 pin flops broadcast to 8 lanes x (16-bit a mux + valid) through
-    // a 3-level BUFx2 fanout tree, ~240 ps): S3_COPY = 1 gives every lane its own S3 pin-flop copy of {c_in[3:2], c_in[0],
-    // e_in, q_valid_in, q_beat_in} (27 FF / lane; the hid / bsel straps stay one shared register, same D as the shared S3 flops, same edges, 0 added cycles) and
-    // its own q0/q1 16-bit slice write enables, so each copy drives one lane (~17-34 loads).  The shared c3[3:1] still feeds
-    // u_ctl.  S3_COPY = 0 (default) is the unchanged RTL (odd heads e1/e3/e5/e7 signed).
-    parameter integer S3_COPY = 0
+    parameter integer LTW = 12
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -73,9 +61,9 @@ module ot_qkh_lane8 #(
     wire [3:0]     kl;                    // kt of levels 1, 2, 3; kl[3] = the level-3 result's valid
     ot_hdc_delay #(.W(3), .D(PLAT), .RESET(1)) u_ctl (.clk(clk), .rst_n(rc), .d(c3[3:1]), .q(kvz_d));
 `ifdef KVD_HMUT
-    ot_hdc_delay #(.W(LTW), .D(PLAT + 1 - (LT_COPY != 0)), .RESET(1)) u_ltd (.clk(clk), .rst_n(rc), .d(lt3), .q(lt_d));
+    ot_hdc_delay #(.W(LTW), .D(PLAT + 1), .RESET(1)) u_ltd (.clk(clk), .rst_n(rc), .d(lt3), .q(lt_d));
 `else
-    ot_hdc_delay #(.W(LTW), .D(PLAT - (LT_COPY != 0)), .RESET(1)) u_ltd (.clk(clk), .rst_n(rc), .d(lt3), .q(lt_d));
+    ot_hdc_delay #(.W(LTW), .D(PLAT), .RESET(1)) u_ltd (.clk(clk), .rst_n(rc), .d(lt3), .q(lt_d));
 `endif
     assign kl[0] = kvz_d[2];
     genvar l, d;
@@ -87,48 +75,16 @@ module ot_qkh_lane8 #(
     // ---- the lanes -------------------------------------------------------------------------------------------------------
     wire [8*32-1:0] p_y, l_y, fb, obw;
     wire [7:0]      p_vo, p_f, l_vo, l_f, b_f;
-    wire [LTW-1:9]  dn;                   // node-slice select of the decision word at PLAT
-    generate if (LT_COPY == 0) begin : g_ltn0
-        assign dn = lt_d[LTW-1:9];
-    end else begin : g_ltn
-        ot_hdc_delay #(.W(LTW - 9), .D(1), .RESET(1)) u_ltn (.clk(clk), .rst_n(rc), .d(lt_d[LTW-1:9]), .q(dn));
-    end endgenerate
+    wire [LTW-1:0]  dw = lt_d;
     generate for (d = 0; d < 8; d = d + 1) begin : g_d
         wire rl = rr[d];      // this lane's reset copy
         // tree role: 0 2 4 6 level 1 (own pair); 1: level 2 (0, 2); 5: level 2 (4, 6); 3: level 3 (1, 5); 7: none
         localparam integer TL = (d % 2 == 0) ? 1 : ((d == 1 || d == 5) ? 2 : ((d == 3) ? 3 : 0));
         localparam integer LA = (d == 3) ? 1 : d - 1;
         localparam integer LB = (d == 3) ? 5 : d + 1;
-        wire        lk, lv, lg;           // this lane's view of the S3 controls
-        wire [15:0] le, lq0, lq1;
-        if (S3_COPY == 0) begin : g_s3s
-            assign lk = g3k; assign lv = g3v; assign lg = g3g; assign le = e3;
-            assign lq0 = q0[d * 16 +: 16]; assign lq1 = q1[d * 16 +: 16];
-        end else begin : g_s3c       // this lane's own S3 pin-flop copy (S3_COPY)
-            // keep: identical-D copies; without it yosys opt_merge folds the 8 lane copies back into one flop
-            // (first s3 kit: 2 ck3 / 32 el3 cells per core instead of 16 / 256)
-            (* keep *) reg        ck3, cv3, qvl, cg3;
-            (* keep *) reg [15:0] el3;
-            reg [15:0] ql0, ql1;
-            (* keep *) reg [5:0]  qbl;
-            // hid / bsel are quasi-static ID straps (OWNER option B): the lanes share the one hid3 / bs3 register
-            always @(posedge clk or negedge rc)
-                if (!rc) begin ck3 <= 1'b0; cv3 <= 1'b0; qvl <= 1'b0; end
-                else begin ck3 <= c_in[3]; cv3 <= c_in[2]; qvl <= q_valid_in; end
-            always @(posedge clk) begin
-                cg3 <= c_in[0]; el3 <= e_in; qbl <= q_beat_in;
-            end
-            wire lw0 = qvl && (qbl == {2'b00, hid3, bs3});
-            wire lw1 = qvl && (qbl == {2'b01, hid3, bs3});
-            always @(posedge clk) begin
-                if (lw0) ql0 <= qd3[d * 16 +: 16];
-                if (lw1) ql1 <= qd3[d * 16 +: 16];
-            end
-            assign lk = ck3; assign lv = cv3; assign lg = cg3; assign le = el3; assign lq0 = ql0; assign lq1 = ql1;
-        end
-        wire [15:0] qv = lg ? lq1 : lq0;
-        (* keep_hierarchy *) ot_qwen_nearhbm_prod u_p (.clk(clk), .rst_n(rl), .valid_in(lk || lv),
-            .a(lk ? qv : le), .k(row3[8*d +: 8]), .y(p_y[32*d +: 32]), .fault(p_f[d]), .valid_out(p_vo[d]));
+        wire [15:0] qv = g3g ? q1[d * 16 +: 16] : q0[d * 16 +: 16];
+        (* keep_hierarchy *) ot_qwen_nearhbm_prod u_p (.clk(clk), .rst_n(rl), .valid_in(g3k || g3v),
+            .a(g3k ? qv : e3), .k(row3[8*d +: 8]), .y(p_y[32*d +: 32]), .fault(p_f[d]), .valid_out(p_vo[d]));
         wire [31:0] va = czd ? 32'd0 : fb[32*d +: 32];
         wire [31:0] vb = vd ? p_y[32*d +: 32] : 32'd0;
         wire [31:0] la, lb;
@@ -152,12 +108,6 @@ module ot_qkh_lane8 #(
         assign l_f[d] = l_vo[d] && (err != 2'd0);
         ot_hdc_delay #(.W(32), .D(8 - ADD_LAT)) u_pad (.clk(clk), .rst_n(rl), .d(l_y[32*d +: 32]), .q(fb[32*d +: 32]));
         // the local P.V tree (levels 1-3) of this lane, executing the decision word delayed PLAT
-        wire [8:0]  dw;
-        if (LT_COPY == 0) begin : g_lt0
-            assign dw = lt_d[8:0];
-        end else begin : g_ltc   // this lane's own copy of the last decision-word flop (LT_COPY)
-            ot_qkh_lt_rep9 u_ltl (.clk(clk), .rst_n(rl), .d(lt_d[8:0]), .q(dw));
-        end
         wire        lis = dw[0], lsel = dw[1], lst0 = dw[4], lsty = dw[5], lob = dw[8];
         wire [1:0]  lal = dw[3:2], lsl = dw[7:6];
         reg  [31:0] lp0, lp1, lp2, obr;
@@ -179,9 +129,9 @@ module ot_qkh_lane8 #(
     end endgenerate
     // ---- registered outputs ----------------------------------------------------------------------------------------------
     // node slice (LFB 4): word k of this tile = lane 4k + beat
-    always @(posedge clk) if (dn[9]) begin
-        nb[31:0]  <= obw[32*(0 + dn[11:10]) +: 32];
-        nb[63:32] <= obw[32*(4 + dn[11:10]) +: 32];
+    always @(posedge clk) if (dw[9]) begin
+        nb[31:0]  <= obw[32*(0 + dw[11:10]) +: 32];
+        nb[63:32] <= obw[32*(4 + dw[11:10]) +: 32];
     end
     wire k3v;
     ot_hdc_delay #(.W(1), .D(ADD_LAT), .RESET(1)) u_k3v (.clk(clk), .rst_n(rc), .d(kl[2]), .q(k3v));
@@ -206,10 +156,7 @@ module ot_qkh_ktree #(
     input  wire [15:0]   gf_in,
     output reg  [31:0]   sc_d,
     output reg           sc_f,
-    output reg           g_f,
-    // KVG3-CORES 10-24: the kpv_in face register (kv_r) for a parent that compares other lanes against the REGISTERED
-    // lane 0 (ot_qkh_ktree_lk PORT_REGS=1); unconnected elsewhere (no logic, timing or cycle change)
-    output wire          kv_q
+    output reg           g_f
 );
     // idle1012 textbook class 2: one reset copy per K-tree adder + one for the scale multiply / control (one copy drove 1,004)
     wire [16:0] rr;
@@ -222,7 +169,6 @@ module ot_qkh_ktree #(
     always @(posedge clk or negedge rc)
         if (!rc) begin kv_r <= 1'b0; gf_r <= 16'd0; end
         else begin kv_r <= kpv_in; gf_r <= gf_in; end
-    assign kv_q = kv_r;
     // node storage: level 4 nodes 0..7 at n[0..7], level 5 at n[8..11], level 6 at n[12..13], level 7 (root) at n[14]
     wire [15*32-1:0] n;
     wire [14:0]      nvo, nf;
@@ -267,18 +213,3 @@ module ot_qkh_ktree #(
         else begin sc_f <= sv && (merr != 2'd0); kf <= |nf; g_f <= (|gf_r) || kf; end
 endmodule
 
-
-// Physical copies of the last LT stage. A kept non-parameter module prevents
-// synthesis from merging identical-D decision copies across the eight lanes.
-// LT_COPY=0 never instantiates this module; the legacy default is unchanged.
-(* keep_hierarchy = "yes" *) module ot_qkh_lt_rep9 (
-    input wire clk, rst_n,
-    input wire [8:0] d,
-    (* keep = 1 *) output reg [8:0] q
-);
-    // Keep all nine fields even when a particular scheduled role leaves one unused.
-    // The post-synthesis replica census checks each lane independently.
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) q <= 9'b0;
-        else q <= d;
-endmodule

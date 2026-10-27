@@ -26,12 +26,9 @@ VERIFY_RULES = {
         {"module": "ot_dp_st", "map": {"q": "d", "eq": "ea"}, "drop_in": ["clk", "rst_n"], "stages": 1},
         {"module": "ot_dp_dly", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"},
         {"module": "ot_dp_rsync", "map": {"q": "a"}, "drop_in": ["clk"], "stages": 2, "stages_param": "S"},
-        {"module": "ot_dp_rrelay", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
-        # decision 13c consumer-tap relay: reset traced through d; the START (run) leg is checked by the lockstep tests
-        {"module": "ot_dp_rgate", "map": {"q": "d"}, "drop_in": ["clk", "run"], "stages": 1},
     ],
     "reducers": [{"module": "ot_dp_or", "out": "y"}, {"module": "ot_dp_and", "out": "y", "op": "and"}],
-    "sources": [{"module": "ot_reset_sync|ot_dp_rsync_s[23]", "kind": "reset", "outputs": {"sync_rst_n": "low"},
+    "sources": [{"module": "ot_reset_sync", "kind": "reset", "outputs": {"sync_rst_n": "low"},
                  "drop_in": ["clk", "async_rst_n"]}],
 }
 
@@ -80,7 +77,7 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
         t = Path(f).read_text(errors="replace")
         mods = re.findall(r"^module\s+(\w+)", t, re.M)
         leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) -
-                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
+                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync"})
         cl, _ = E.closure(leafm, idx, prefer)
         for m in mods:
             byfile[m] = [f] + cells + [str(rs)] + cl
@@ -132,19 +129,10 @@ def cmd_verify(a):
     F = E.flatten(json.loads(js.read_text()), top)
     errs = []
     vr = dict(VERIFY_RULES)
-    landing_table=None;landing_verify=None
-    if raw['asbuilt'].get('clock_landing_table'):
-        landing_file=(Path(_b.plan_base(a.plan,raw))/raw['asbuilt']['clock_landing_table']).resolve()
-        landing_table=json.loads(landing_file.read_text())
-        vr['transport']=vr['transport']+[dict(module='ot_dp_clk_landing',map={'q':'d'},
-            drop_in=['clk','fclk','rst_n'],drop_out=['ready','fault'],stages=3)]
     vr["clocks"], vr["resets"], vr["map"] = [], [], {}
     G = Graph(F, Rules(vr), errs)
     names = json.loads((out / "bind_names.json").read_text())
     sinks = json.loads((out / "bind_sinks.json").read_text())
-    if landing_table:
-        import clock_landing_verify as CLV
-        landing_verify=CLV.Verification(F,G,raw,landing_table,names)
     clk_top = {}
     for pn, (d, bits) in F.top_ports.items():
         if pn.startswith("clk_"):
@@ -159,8 +147,6 @@ def cmd_verify(a):
         if k == "top":
             if s[1] in clk_top:
                 return ["clk", clk_top[s[1]]]
-            if raw.get("reset", {}).get("release") == "wavefront" and s[1] == "rst_n":
-                return ["rst", "low"]  # native hard-partition delivered reset; timing checked by offsets
             return ["top", s[1]]
         if k == "reset":
             return ["rst", s[1]]
@@ -170,7 +156,6 @@ def cmd_verify(a):
             return ["tied", s[1]]
         return [k]
 
-    reg_parts = {sv_id(p) for p in rep.get("registered_pins", {})}
     cnt = dict(compared=0, matched=0, mismatched=0, glue_unmatched=0, unbound=0, tied=0, undriven=0, multiply_driven=0, plan_driven=0)
     mism, tied_ex = [], []
     seen = set()
@@ -187,8 +172,7 @@ def cmd_verify(a):
             for i, b in enumerate(bits):
                 key = f"{ap}.{pn}[{i}]"
                 want = sinks.get(key)
-                original=landing_verify.observer_input(c,pn,i) if landing_verify else None
-                s = G.source(original if original is not None else b)
+                s = G.source(b)
                 got = gdesc(s)
                 if got[0] in ("undriven", "dropped"):
                     cnt["undriven"] += 1
@@ -216,19 +200,6 @@ def cmd_verify(a):
                 if want[0] == "pin" and (want[3] or got[0] == "pin" and got[3]):
                     cnt["glue_unmatched"] += 1
                     continue
-                if want == ["rst", "low"] and got == ["top", "rst_n"] and c.path.split(".")[0] in reg_parts:
-                    # registered-pin hard partition (bind.py reg_hard): no synchroniser of ours inside the bare
-                    # macro, its leaf reset is the delivered die reset (arst_n) as in a wavefront hard partition
-                    got = want
-                if want == ["start"] and got == ["rst", "low"]:
-                    # local START tap start_t<k> = ot_dp_rgate(raw reset, run): its reset leg traces to the die reset
-                    # (run is dropped like on every gated tap); START timing is proven by the lockstep tests
-                    got = want
-                if landing_verify and want[0]=='clk':
-                    part=c.path.split('.')[0]
-                    regions={sv_id(p):r for p,r in landing_verify.region.items()}
-                    if part in regions and got==['clk','region_'+sv_id(regions[part])]:
-                        got=want  # exact region clock proved against this actual leaf partition
                 ok = want[:3] == got[:3] if want[0] == "pin" else want == got
                 if ok:
                     cnt["matched"] += 1
@@ -252,9 +223,7 @@ def cmd_verify(a):
     else:
         lt = lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0)
     lt["closure_files"], lt["closure_missing"] = len(cl), cl_missing
-    landing_result=landing_verify.report() if landing_verify else None
-    if landing_result:errs.extend('CLOCK_LANDING '+e for e in landing_result['errors'])
-    v = dict(clock_landing=landing_result,top=top, cells=len(F.cells), leaves_missing=len(missing), leaves_missing_examples=missing[:20],
+    v = dict(top=top, cells=len(F.cells), leaves_missing=len(missing), leaves_missing_examples=missing[:20],
              counts=cnt, mismatches=mism[:200], tied_examples=tied_ex, graph_errors=errs[:50], lint=lt,
              asbuilt_proof=rep["proof"], asbuilt_errors=rep["n_errors"])
     ok = (cnt["mismatched"] == 0 and cnt["unbound"] == 0 and cnt["tied"] == 0 and cnt["multiply_driven"] == 0 and

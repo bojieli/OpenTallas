@@ -16,18 +16,8 @@ Per non-hard partition type, DIR/<module>.sv:
   - every ft slot S: a chain of `stations` ot_dp_st from S_i to S_o (data + epoch in band, the Qwen ot_qfd_lane_st
     pattern on the partition clock; no reset on data).
   - leaf instances bound by NAME: bus.leaf "inst.port" and contents[].bind {port: clk | rst_n | rst | net:N | bus:B |
-    epoch:B | strap:S | pad:D}.  Nothing is tied inside a partition: a constant is never generated there.
-  - HEAD-BIND-4 10-27 (OWNER 10-25 option B): type id_straps -> input ports strap_* bound to leaves as strap:<name> (no
-    pin register); the die top ties each instance's partitions[].id_straps value as a literal on those pins (the only
-    constants the die top carries, listed in DIR/parent_id_straps.json for straps.audit_top_ties).  Type pads -> PHY
-    pad ports bound to leaves as pad:<name> with NO boundary flop, carried to die-top ports <part>_<name>.  With --rtl-root the leaf modules' ANSI headers are
+    epoch:B}.  Nothing is tied: a constant is never generated.  With --rtl-root the leaf modules' ANSI headers are
     parsed from the type's `sources` and every leaf port must be bound exactly (unbound or unknown ports are errors).
-  - OWNER RESET RULE 10-24 (plan reset.release "pipelined", tools/die_plan/reset_tree.py): no per-partition async
-    synchroniser.  arst_n enters through ONE stage at the reset pin -- the region root synchroniser u_rst_root in a
-    region-root type, a synchronous pin register u_rst_in elsewhere (arst_n is then a SYNCHRONOUS input from the die
-    reset tree) -- then a relay tree u_rrl_<k> (hops <= reset.relay_um) with the plan's equal depth to every tap ->
-    rst_n_t<i>; rst_n = the tap nearest the outline centre for the leaves.  The die top holds the region root
-    synchroniser(s) and the die relay tree to every partition's arst_n (functional model of the hosted die relays).
 DIR/ot_dp_cells.sv: ot_dp_st (ot_dp_ste with a kept ot_dp_ep epoch flop where ea is a reset net).  DIR/<die>_top.sv: the die top (3d netlist): every partition instance, one wire per port,
 die IO as top ports, clk / rst_n fanned to every partition's clock entry / reset input (die spine nets).
 """
@@ -45,11 +35,6 @@ CELLS = """`timescale 1ns/1ps
 // ot_dp_st: one partition station / boundary flop.  W data bits with NO reset (flushed by the producer under the static
 // schedule) plus one epoch bit: asynchronously cleared by the partition's synchronised reset rst_n, then loading ea (the
 // upstream epoch, or rst_n itself at a lane source).  The Qwen ot_qfd_lane_st pattern on the partition clock.
-// (* keep_hierarchy, keep *) on ot_dp_st / ot_dp_ste / ot_dp_ep (CP1-R10 10-24, face_guard.py): every planned face
-// register survives Yosys as its own flop.  Flattened, opt_merge folded identical boundary flops of different buses
-// into one flop driving several ports (CP1 r6/r10: xo_o0[682] + xo_o0[225]), opt_clean dropped in-bus flops whose q
-// the leaf leaves unused (r10: 120 frame_int_i0 bits) and opt_dff / wreduce removed constant-D out flops.
-(* keep_hierarchy, keep *)
 module ot_dp_st #(parameter integer W = 1) (
     input  wire         clk,
     input  wire         rst_n,
@@ -66,12 +51,11 @@ endmodule
 // every such eq has the same D, clock and reset, so Yosys opt_merge folded them into ONE flop that drove the epoch
 // pins of several faces (S81 r0 frames: u_bout_xo_o0.eq -> ret_o0[70] 2.27 mm, unregistered at its face).  The
 // epoch flop sits in a kept module (ot_dp_ep), so each station keeps its own, placed at its own face.
-(* keep_hierarchy, keep *)
+(* keep_hierarchy *)
 module ot_dp_ep (input wire clk, input wire rst_n, input wire ea, output reg eq);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) eq <= 1'b0; else eq <= ea;
 endmodule
-(* keep_hierarchy, keep *)
 module ot_dp_ste #(parameter integer W = 1) (
     input  wire         clk,
     input  wire         rst_n,
@@ -88,89 +72,17 @@ endmodule
 // per-tap copies have identical inputs and would otherwise be merged back into one (Yosys opt_merge).
 (* keep_hierarchy *)
 module ot_dp_rsync_s2 (input wire clk, input wire async_rst_n, output wire sync_rst_n);
-    // Intentional reset CDC shift register; only this async_reg declaration
-    // mixes asynchronous assertion with synchronous release/feedback.
-    /* verilator lint_off SYNCASYNCNET */
     (* async_reg = "true" *) reg [1:0] p;
-    /* verilator lint_on SYNCASYNCNET */
     always @(posedge clk or negedge async_rst_n)
         if (!async_rst_n) p <= 2'b0; else p <= {p[0], 1'b1};
     assign sync_rst_n = p[1];
 endmodule
 (* keep_hierarchy *)
 module ot_dp_rsync_s3 (input wire clk, input wire async_rst_n, output wire sync_rst_n);
-    // Intentional reset CDC shift register; only this async_reg declaration
-    // mixes asynchronous assertion with synchronous release/feedback.
-    /* verilator lint_off SYNCASYNCNET */
     (* async_reg = "true" *) reg [2:0] p;
-    /* verilator lint_on SYNCASYNCNET */
     always @(posedge clk or negedge async_rst_n)
         if (!async_rst_n) p <= 3'b0; else p <= {p[1:0], 1'b1};
     assign sync_rst_n = p[2];
-endmodule
-// ot_dp_rrelay: one synchronous reset relay flop (OWNER RESET RULE 10-24, tools/die_plan/reset_tree.py).  No reset
-// of its own: the synchronised reset is carried like data, so assertion is synchronous too (the clock runs at boot).
-// keep_hierarchy + keep: the per-tap relays have identical inputs and would otherwise be merged (Yosys opt_merge), and a
-// relay whose tap has no sinks is kept.  The flop drives q DIRECTLY (output reg, like ot_dp_ep): an internal kept alias
-// (keep reg r; assign q = r) made ORFS insbuf hang a dangling BUFx2 q->r on every relay output, so a registered
-// rst_o_<k> / start_o_<k> pin register had a load besides its port (face_guard 'shared', S81 stations 10-25).
-(* keep_hierarchy, keep *)
-module ot_dp_rrelay (input wire clk, input wire d, output reg q);
-    always @(posedge clk) q <= d;
-endmodule
-// Opt-in internal relay driver, reset.relay_driver. Boundary pin registers remain
-// ot_dp_rrelay with direct flop Q. The non-inverting technology driver is kept
-// through synthesis; it adds no register stage or boot/schedule cycle.
-(* keep_hierarchy, keep *)
-module ot_dp_rrelay_drive (input wire clk, input wire d, output wire q);
-    (* keep *) reg state;
-    always @(posedge clk) state <= d;
-`ifdef SYNTHESIS
-    (* keep, dont_touch *) BUFx4f_ASAP7_75t_R u_drive (.A(state), .Y(q));
-`else
-    assign q = state;
-`endif
-endmodule
-(* keep_hierarchy, keep *)
-module ot_dp_rgate_drive (input wire clk, input wire d, input wire run, output wire q);
-    (* keep *) reg state;
-    always @(posedge clk) state <= d & run;
-`ifdef SYNTHESIS
-    (* keep, dont_touch *) BUFx4f_ASAP7_75t_R u_drive (.A(state), .Y(q));
-`else
-    assign q = state;
-`endif
-endmodule
-// ot_dp_rgate: the consumer-tap reset relay of a START-broadcast plan (OWNER DECISION 13c): one flop of
-// (reset AND run).  Releases with the same depth as ot_dp_rrelay, measured from the later of reset and START.
-(* keep_hierarchy, keep *)
-module ot_dp_rgate (input wire clk, input wire d, input wire run, output reg q);
-    always @(posedge clk) q <= d & run;
-endmodule
-// ot_dp_lockq: PLL lock qualification of the die ROOT reset release (PATH-KV-POR 10-25, CLOCK-RESET amendment A).
-// d = the root synchroniser output (synchronous, active low); locked = the PLL lock flag (analog status, asynchronous):
-// own 2-flop synchroniser + STABLE consecutive synchronised-locked cycles, then a STICKY qualifier flop
-// q <= d & (q | stable): the root releases synchronously after sync(por) AND lock-stable; a later loss of lock never
-// re-asserts the die reset (HOST status).  No combinational path from locked (or the pad) into any reset; every flop
-// is cleared synchronously by d.  Release = STABLE + 3 clocks after d (lock already steady).
-(* keep_hierarchy, keep *)
-module ot_dp_lockq #(parameter integer STABLE = 16) (input wire clk, input wire d, input wire locked, output reg q);
-    localparam integer CW = $clog2(STABLE + 1);
-    (* async_reg = "true" *) reg [1:0] ls;
-    reg [CW-1:0] cnt;
-    wire stable = (cnt == STABLE);
-    always @(posedge clk) begin
-        if (!d) begin
-            ls <= 2'b00;
-            cnt <= {CW{1'b0}};
-            q <= 1'b0;
-        end else begin
-            ls <= {ls[0], locked};
-            if (!ls[1]) cnt <= {CW{1'b0}};
-            else if (!stable) cnt <= cnt + 1'b1;
-            q <= q | stable;
-        end
-    end
 endmodule
 `default_nettype wire
 """
@@ -264,40 +176,8 @@ def wrapper(P, tn, epochs, rtl_root=None):
     for n, x, y in S.tap_grid(P, tn)[1:]:
         ports.append((f"input  wire {n}", f"spine tap at ({x:.0f}, {y:.0f}) um: the kit (clock_taps.tcl) moves the "
                       "nearest sinks onto it before CTS; same die clock"))
-    for n, x, y, tp in S.core_taps(P, tn):
-        ports.append((f"input  wire {n}", f"EARLY core tap {tp['name']} at ({x:.0f}, {y:.0f}) um (CP2): the kit "
-                      "(clock_taps.tcl) hangs the core's clock pins on it; the spine delivers it "
-                      f"{S.core_tap_early_ps(P, tp):g} ps early"))
-    import reset_tree as RT
-    rtree = RT.for_type(P, tn) if RT.delivered(P) else None
-    if rtree is None:
-        ports.append(("input  wire arst_n", "die reset: asynchronous assert; released through " +
-                      ("the per-tap u_rsync_t<i>" if len(S.tap_grid(P, tn)) > 1 else "u_rst_sync")))
-    elif RT.wavefront(P):
-        ports.append(("input  wire arst_n", (
-            "reset IN (OWNER DECISION 13 wavefront): at the root partition the die rst_n (asynchronous, into the ONE "
-            "root synchroniser u_rst_root), elsewhere a neighbour's registered rst_o (synchronous)"
-            if rtree["entry"] == "sync" else "SYNCHRONOUS reset IN from a neighbour's registered rst_o (OWNER DECISION "
-            "13 wavefront): pin register u_rst_in") + f" + {rtree['depth']} relay stages; every tap and rst_o released "
-            f"{RT.release_clocks(rtree)} clocks after this pin"))
-        for n, x, y in RT.out_pins(P, tn):
-            ports.append((f"output wire {n}", f"registered reset OUT to a neighbour's arst_n (wavefront) at "
-                          f"({x:.0f}, {y:.0f}) um"))
-        if rtree.get("start"):
-            ports.append(("input  wire start_i", "START IN (OWNER DECISION 13c broadcast, beside arst_n): " + (
-                "the die start pin (asynchronous level) into the ONE START synchroniser u_run_root"
-                if rtree["entry"] == "sync" else "a neighbour's registered start_o (synchronous): pin register u_run_in")
-                + "; control state releases on reset AND run"))
-            for n, x, y in RT.start_out_pins(P, tn):
-                ports.append((f"output wire {n}", f"registered START OUT beside rst_o_{n.rsplit('_', 1)[1]} at "
-                              f"({x:.0f}, {y:.0f}) um"))
-    elif rtree["entry"] == "sync":
-        ports.append(("input  wire arst_n", f"die reset (region root): asynchronous, into the region's ONE root "
-                      f"synchroniser u_rst_root; every tap released {RT.release_clocks(rtree)} clocks after deassert"))
-    else:
-        ports.append(("input  wire arst_n", f"SYNCHRONOUS reset from the die reset tree (OWNER RESET RULE 10-24): pin "
-                      f"register u_rst_in + {rtree['depth']} relay stages; every tap released "
-                      f"{RT.release_clocks(rtree)} clocks after this pin"))
+    ports.append(("input  wire arst_n", "die reset: asynchronous assert; released through " +
+                  ("the per-tap u_rsync_t<i>" if len(S.tap_grid(P, tn)) > 1 else "u_rst_sync")))
     decl, body = [], []
     for b in buses:
         w = b["width"] + (1 if b["ep"] else 0)
@@ -305,37 +185,25 @@ def wrapper(P, tn, epochs, rtl_root=None):
         note = f"{b['width']} data" + (f" + epoch [{b['width']}]" if b["ep"] else "") + \
             (f", leaf {b['leaf']}" if b.get("leaf") else "")
         ports.append((f"{d} wire [{w - 1}:0] {sv_id(b['name'])}", note))
-    for sp in t.get("id_straps", []):
-        ports.append((f"input  wire [{sp['width'] - 1}:0] {sp['name']}", "ID strap (OWNER 10-25 B): quasi-static, tied "
-                      "at the parent per instance, no pin register, set_false_path -from in the kit SDC"))
-    for pd in t.get("pads", []):
-        ports.append((f"{'input ' if pd['dir'] == 'in' else 'output'} wire [{pd['width'] - 1}:0] {sv_id(pd['name'])}",
-                      "PHY pad (no boundary flop: PHY-side timing)" + (", PHY clock" if pd.get("clock") else "")))
     for s in slots:
         for sfx, d in (("_i", "input "), ("_o", "output")):
             w = s["width"] + (1 if epochs.get((tn, s["name"] + sfx), True) else 0)
             ports.append((f"{d} wire [{w - 1}:0] {sv_id(s['name'] + sfx)}", f"ft slot {s['name']} "
                           f"({s['in_face']} -> {s['out_face']}, {s.get('stations', 1)} station(s))"))
     taps = S.tap_grid(P, tn)
-    if rtree is not None or len(taps) > 1:
+    if len(taps) > 1:
         # one local synchroniser per tap region (u_rsync_t<i>, rst_n_t<i>); rst_n = tap 0 (leaves).  Boundary flops and
         # ft stations take the synchroniser of the tap NEAREST their planned site (S81-P9 10-23: the bus's pin centroid;
         # ft station j of k at j/k between the slot's in and out pins).  Round-robin left the face taps without a
         # synchroniser (Yosys drops the unloaded ones), so reset_taps.tcl had to fall back to a farther tap (S81 r0:
         # u_rsync_t3 -> ft1_s0.eq 753-803 um).  The kit (reset_taps.tcl, pre-GPL) still re-points every FIRM placed one
         # to its nearest tap's synchroniser and places each synchroniser FIRM at its tap.
-        if rtree is not None:
-            # OWNER RESET RULE 10-24: entry stage + equal-depth synchronous relay tree (reset_tree.py); the leaves take
-            # the tap nearest the outline centre
-            body += RT.rtl_lines(rtree)
-            body.append(f"    wire rst_n = rst_n_t{RT.leaf_tap(P, tn)};")
-        else:
-            if ns not in (2, 3):
-                raise GenError(f"type {tn}: reset.sync_stages {ns}: per-tap synchronisers exist for 2 or 3 stages")
-            for i in range(len(taps)):
-                body.append(f"    wire rst_n_t{i};\n    ot_dp_rsync_s{ns} u_rsync_t{i} "
-                            f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n_t{i}));")
-            body.append("    wire rst_n = rst_n_t0;")
+        if ns not in (2, 3):
+            raise GenError(f"type {tn}: reset.sync_stages {ns}: per-tap synchronisers exist for 2 or 3 stages")
+        for i in range(len(taps)):
+            body.append(f"    wire rst_n_t{i};\n    ot_dp_rsync_s{ns} u_rsync_t{i} "
+                        f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n_t{i}));")
+        body.append("    wire rst_n = rst_n_t0;")
         rr = [0]
         try:
             import gen_phys
@@ -428,12 +296,6 @@ def wrapper(P, tn, epochs, rtl_root=None):
         decl.append(f"    wire [{nt['width'] - 1}:0] n_{sv_id(nt['name'])};")
         sig[f"net:{nt['name']}"] = f"n_{sv_id(nt['name'])}"
     sig["clk"], sig["rst_n"], sig["rst"] = "clk", "rst_n", "rst"
-    for sp in t.get("id_straps", []):
-        sig[f"strap:{sp['name']}"] = sp["name"]
-    for pd in t.get("pads", []):
-        sig[f"pad:{pd['name']}"] = sv_id(pd["name"])
-    if rtree is not None and rtree.get("start_tap") is not None:
-        sig["start"] = f"start_t{rtree['start_tap']}"     # bootstrap type: local registered START (reset AND run)
     # leaf bindings: contents[].bind plus bus.leaf
     binds = {c["inst"]: dict(c.get("bind", {})) for c in t.get("contents", [])}
     for b in buses:
@@ -457,13 +319,6 @@ def wrapper(P, tn, epochs, rtl_root=None):
             raise GenError(f"type {tn}: bus {b['name']} is not bound to any leaf port (open {'input' if b['dir'] == 'in' else 'output'})")
         if b["dir"] == "out" and len(use[k]) != 1:
             raise GenError(f"type {tn}: out bus {b['name']} driven by {len(use[k])} leaf ports {use[k]}")
-    for sp in t.get("id_straps", []):
-        if not use.get(f"strap:{sp['name']}"):
-            raise GenError(f"type {tn}: id strap {sp['name']} is not bound to any leaf port")
-    for pd in t.get("pads", []):
-        k = f"pad:{pd['name']}"
-        if not use.get(k) or (pd["dir"] == "out" and len(use[k]) != 1):
-            raise GenError(f"type {tn}: pad {pd['name']} must bind {'exactly one leaf port' if pd['dir'] == 'out' else 'a leaf port'}: {use.get(k)}")
     for nt in t.get("nets", []):
         if len(use.get(f"net:{nt['name']}", [])) < 2:
             raise GenError(f"type {tn}: net {nt['name']} has {len(use.get('net:' + nt['name'], []))} leaf ports")
@@ -506,10 +361,6 @@ def die_top(P, epochs, dropped=None):
         else:
             wires.append(f"    wire [{n - 1}:0] w_{sv_id(pid)};  // {pr['src']['part']}.{pr['src']['bus']} -> "
                          f"{pr['dst']['part']}.{pr['dst']['bus']}")
-    for name, p in P.parts.items():
-        for pd in P.types[p["type"]].get("pads", []):
-            io.append(f"    {'input ' if pd['dir'] == 'in' else 'output'} wire [{pd['width'] - 1}:0] "
-                      f"{sv_id(name)}_{sv_id(pd['name'])}")
     conn = {}
     for pid, pr in P.ports.items():
         if pr["src"]["part"] == S.DIE_PART:
@@ -521,47 +372,27 @@ def die_top(P, epochs, dropped=None):
         for side in ("src", "dst"):
             if pr[side]["part"] != S.DIE_PART:
                 conn.setdefault(pr[side]["part"], []).append((pr[side]["bus"], net))
-    import reset_tree as RT
-    rlines, rnet = RT.die_rtl(P) if RT.pipelined(P) else ([], {})
-    wouts, snet = {}, {}
-    if RT.wavefront(P):
-        rlines, rnet, wouts = RT.wf_die_rtl(P)
-        miss = sorted(n for n in P.parts if n not in rnet)
-        if miss:
-            raise GenError(f"reset wavefront: partitions without a reset source (reset_tree.py offsets): {miss[:10]}")
-        if RT.start_broadcast(P):
-            sl, snet, souts = RT.wf_die_start(P)
-            rlines += sl
-            for q, d in souts.items():
-                wouts.setdefault(q, {}).update(d)
     for name, p in P.parts.items():
         t = P.types[p["type"]]
         # dropped taps (kit clock_taps.tcl: no sinks, COORD 10-23) stay unconnected: no dead spine drop
         dr = (dropped or {}).get(p["type"], ())
         cs = [f"        .{n}({'' if n in dr else 'clk'})" for n, _, _ in S.tap_grid(P, p["type"])] + \
-            [f"        .{n}(clk)" for n, _, _, _ in S.core_taps(P, p["type"])] + \
-            [f"        .arst_n({rnet.get(name, 'rst_n')})"] + \
-            [f"        .{n}({wouts.get(name, {}).get(n, '')})" for n, _, _ in RT.out_pins(P, p["type"])] + \
-            ([f"        .start_i({snet[name]})"] if name in snet else []) + \
-            [f"        .{n}({wouts.get(name, {}).get(n, '')})" for n, _, _ in RT.start_out_pins(P, p["type"])] + \
-            [f"        .{sv_id(b)}({net})" for b, net in sorted(conn.get(name, []))] + \
-            [f"        .{sp['name']}({sp['width']}'d{int(p['id_straps'][sp['name']])})" for sp in t.get("id_straps", [])] + \
-            [f"        .{sv_id(pd['name'])}({sv_id(name)}_{sv_id(pd['name'])})" for pd in t.get("pads", [])]
+            ["        .arst_n(rst_n)"] + \
+            [f"        .{sv_id(b)}({net})" for b, net in sorted(conn.get(name, []))]
         insts.append(f"    {t['module']} {sv_id(name)} (\n" + ",\n".join(cs) + "\n    );")
     mod = f"{sv_id(P.name)}_top"
     return (f"// GENERATED by tools/die_plan/gen.py rtl: die top of {P.name} (partitions abutted; die nets = clk spine,\n"
             "// rst_n, and the zero-length abutment wires w_<port>).  Do not edit.\n`timescale 1ns/1ps\n"
             "`default_nettype none\n"
-            f"module {mod} (\n    input  wire clk,\n    input  wire rst_n" +
-            (",\n    input  wire start" if RT.start_broadcast(P) else "") + "".join(",\n" + x for x in io) + "\n);\n"
-            + "\n".join(wires + rlines) + "\n" + "\n".join(insts) + f"\nendmodule : {mod}\n`default_nettype wire\n")
+            f"module {mod} (\n    input  wire clk,\n    input  wire rst_n" + "".join(",\n" + x for x in io) + "\n);\n"
+            + "\n".join(wires) + "\n" + "\n".join(insts) + f"\nendmodule : {mod}\n`default_nettype wire\n")
 
 
-def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None):
+def write_rtl(raw, out, rtl_root=None, types=None):
     errs = S.validate(raw)
     if errs:
         raise GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
-    P = S.Plan(raw, plan_path)
+    P = S.Plan(raw)
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     ep = bus_epochs(P)
@@ -576,20 +407,4 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None):
     f = out / f"{sv_id(P.name)}_top.sv"
     f.write_text(die_top(P, ep))
     files.append(f)
-    man = parent_id_manifest(P)
-    if man["types"]:
-        import json
-        f = out / "parent_id_straps.json"
-        f.write_text(json.dumps(man, indent=1) + "\n")
-        files.append(f)
     return files
-
-
-def parent_id_manifest(P):
-    """the binder-manifest form (straps.manifest_straps / audit_top_ties) of the plan's partition ID straps."""
-    types = {tn: {sp["name"]: dict(width=sp["width"]) for sp in t.get("id_straps", [])}
-             for tn, t in sorted(P.types.items()) if t.get("id_straps")}
-    inst = {n: {k: dict(width=types[p["type"]][k]["width"], value=v) for k, v in sorted(p["id_straps"].items())}
-            for n, p in sorted(P.parts.items()) if p["type"] in types}
-    return dict(schema="opentallas.parent_id_straps.v1", types=types, instances=inst, added_data_cycles=0,
-                source="die_plan partition_types.<t>.id_straps + partitions[].id_straps (gen_rtl.die_top literals)")

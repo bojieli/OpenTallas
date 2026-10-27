@@ -4,9 +4,7 @@
 // so the slice's vq u / um seam, the vp vs seam and vq's SRAM-ring wait line are checked end to end: every SU result
 // read back by vp RDOUT, the vq XQ beats (SW -> quant2, QB z_quant) against the golden act-quant.  Only the leaf's
 // ports are driven.  Negative controls: -GMUT=1..6 (vs MUT through VS_MUT) must FAIL.  Derived from tb_s81sl_vs.
-module tb_s81sl_leaf #(parameter integer MUT = 0, parameter integer BEAT = 37, parameter integer XMEM = 2,
-    // S81-PLAN R3 (10-25): ot_s81sl_leaf core<->core station depths (0 = the pre-R3 leaf)
-    parameter integer CS_HI_D = 0, parameter integer CS_HI_GS = 0, parameter integer CS_HO_D = 0, parameter integer CS_HO_GS = 0, parameter integer CS_VNI_D = 0, parameter integer CS_VNO_D = 0, parameter integer CS_Y_D = 0, parameter integer CS_U_D = 0, parameter integer CS_SW_D = 0, parameter integer CS_SWR_D = 0, parameter integer CS_RA_D = 0, parameter integer CS_RAR_D = 0, parameter integer CS_VE_D = 0, parameter integer CS_VER_D = 0, parameter integer CS_PVS_D = 0, parameter integer CS_VSP_D = 0, parameter integer CS_H_G = 4);
+module tb_s81sl_leaf #(parameter integer MUT = 0, parameter integer BEAT = 37, parameter integer XMEM = 2);
     reg clk = 1'b0;
     always #0.5 clk = ~clk;
     reg [127:0] img [0:1023]; reg imgv [0:1023];
@@ -23,7 +21,7 @@ module tb_s81sl_leaf #(parameter integer MUT = 0, parameter integer BEAT = 37, p
     localparam [3:0] SID = BEAT / 5; localparam [2:0] KL = BEAT % 5;
     wire xf_v, xf_s; wire [275:0] xf; wire p_v, f_lf; wire [31:0] p_d;
     // the slice's beat leaf exactly as ot_s81sl_slice instantiates it (vq AQ_XMEM = the slice default 2)
-    ot_s81sl_leaf #(.AQ_XMEM(XMEM), .VS_MUT(MUT), .CS_HI_D(CS_HI_D), .CS_HI_GS(CS_HI_GS), .CS_HO_D(CS_HO_D), .CS_HO_GS(CS_HO_GS), .CS_VNI_D(CS_VNI_D), .CS_VNO_D(CS_VNO_D), .CS_Y_D(CS_Y_D), .CS_U_D(CS_U_D), .CS_SW_D(CS_SW_D), .CS_SWR_D(CS_SWR_D), .CS_RA_D(CS_RA_D), .CS_RAR_D(CS_RAR_D), .CS_VE_D(CS_VE_D), .CS_VER_D(CS_VER_D), .CS_PVS_D(CS_PVS_D), .CS_VSP_D(CS_VSP_D), .CS_H_G(CS_H_G)) u_lf (.clk(clk), .rst_n(rst_n), .sid(SID), .k(KL),
+    ot_s81sl_leaf #(.AQ_XMEM(XMEM), .VS_MUT(MUT)) u_lf (.clk(clk), .rst_n(rst_n), .sid(SID), .k(KL),
         .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(2'b00), .cw_a(24'd0), .cw_d(64'd0), .lo_v(lo_v), .lo_d(lo_d), .rb_v(1'b0), .rb_d(32'd0),
         .p_v(p_v), .p_d(p_d), .xf_v(xf_v), .xf_s(xf_s), .xf(xf),
@@ -89,7 +87,7 @@ module tb_s81sl_leaf #(parameter integer MUT = 0, parameter integer BEAT = 37, p
                        $display("SLVS mut=%0d err SW=%0d QB=%0d RA=%0d RB=%0d QR=%0d MOE=%0d checked_pairs SW=%0d RA=%0d RB=%0d QR=%0d MOE=%0d xq=%0d fault=vp%b/vs%b/vq%b",
                                 MUT, err[8], err[9], err[10], err[11], err[12], err[13], nck[8], nck[10], nck[11], nck[12], nck[13],
                                 nxq, fp, fs, fq);
-                       if (f_lf == 1'b0 && err[8] + err[9] + err[10] + err[11] + err[12] + err[13] == 0 && nxq == 3 && !fp && !fs && !fq &&
+                       if (f_lf == 1'b0 && err[8] + err[9] + err[10] + err[11] + err[12] + err[13] == 0 && nxq == 2 && !fp && !fs && !fq &&
                            nck[8] > 0 && nck[10] > 0 && nck[11] > 0 && nck[12] > 0 && nck[13] > 0) $display("PASS"); else $display("FAIL");
                        $finish;
                    end

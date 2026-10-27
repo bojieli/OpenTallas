@@ -29,11 +29,6 @@ module ot_v41_fadd #(
     // copies (one per 6-8 loads), step 9a forms the normalised mantissa / exponent / subnormal / overflow terms into a
     // register, step 9b encodes and selects. Bit-identical.
     parameter integer SPLIT9 = 0,
-    // CY_COPY (default 1; HEAD-CORE-R11 2026-10-26): with SPLIT9, the round carry leaves u_c8 as four KEPT copies.
-    // 0 = no kept copies: cyk is the registered round carry rnd9[24] itself (same value, same edge as every copy, so
-    // bit-identical for any operands).  For an adder whose operand the instantiating generate ties to a constant (the
-    // chain head of ot_dsrom_head_elem: a = +0), where the copies are dead kept flops by construction.
-    parameter integer CY_COPY = 1,
     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
 ) (
     input  wire        clk,
@@ -65,16 +60,9 @@ module ot_v41_fadd #(
     wire        age0;
     ot_v41_ksadd #(.W(24)) u_cm0 (.a(a_man0), .b(~b_man0), .cin(1'b1), .s(dm0), .cout(age0));
     localparam integer W0 = 1 + 8 + 8 + 24 + 24 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 32;
-    // Off-default head retime: finite zero operands use the real arithmetic
-    // pipeline. Only nonfinite inputs bypass, with the same fail-closed result.
-    // Removing the unused payload eliminates its long identity-register chain.
-`ifdef OT_S81HD_FADD_ZERO_ARITH
-    wire [31:0] bypass_code0 = 32'd0;
-`else
-    wire [31:0] bypass_code0 = nonf0 ? 32'd0 : (az0 ? (bz0 ? 32'd0 : b) : a);
-`endif
     wire [W0-1:0] o0 = {valid_in, a_exp0, b_exp0, a_man0, b_man0, a[31], b[31], nonf0, az0, bz0,
-                        b_exp0 > a_exp0, b_exp0 == a_exp0, !age0, bypass_code0};
+                        b_exp0 > a_exp0, b_exp0 == a_exp0, !age0,
+                        nonf0 ? 32'd0 : (az0 ? (bz0 ? 32'd0 : b) : a)};
     wire [W0-1:0] i1;
     ot_v41_cut #(.W(W0), .EN(CUT[0])) u_c0 (.clk(clk), .rst_n(rst_n), .d(o0), .q(i1));
 
@@ -86,16 +74,7 @@ module ot_v41_fadd #(
     wire [7:0]  bigx1 = swap1 ? be1 : ae1;
     wire [7:0]  smlx1 = swap1 ? ae1 : be1;
     localparam integer W1 = 1 + 1 + 2 + 32 + 1 + 1 + 8 + 8 + 24 + 24;
-`ifdef OT_S81HD_FADD_ZERO_ARITH
-`ifdef OT_S81HD_FADD_ZERO_MUT
-    wire bypass1 = nonf1 || az1; // negative control: incorrectly discard zero+a
-`else
-    wire bypass1 = nonf1;
-`endif
-`else
-    wire bypass1 = nonf1 || az1 || bz1;
-`endif
-    wire [W1-1:0] o1 = {v1, bypass1, nonf1 ? E_NONFINITE : E_NONE, code1, as1 != bs1,
+    wire [W1-1:0] o1 = {v1, nonf1 || az1 || bz1, nonf1 ? E_NONFINITE : E_NONE, code1, as1 != bs1,
                         swap1 ? bs1 : as1, bigx1, bigx1 - smlx1, swap1 ? bm1 : am1, swap1 ? am1 : bm1};
     wire [W1-1:0] i2;
     ot_v41_cut #(.W(W1), .EN(CUT[1])) u_c1 (.clk(clk), .rst_n(rst_n), .d(o1), .q(i2));
@@ -209,7 +188,7 @@ module ot_v41_fadd #(
     initial if (SPLIT9 && !CUT[8]) $fatal(1, "SPLIT9 needs CUT[8] (the round carry copies sit in the u_c8 stage)");
 `endif
     wire [3:0]  cyk;                       // the round carry, one copy per load group
-    if (SPLIT9 && CY_COPY) begin : g_cy_copy
+    if (SPLIT9) begin : g_cy_copy
         (* keep = 1 *) reg [3:0] cyq;
         always @(posedge clk) cyq <= {4{r8[24]}};
         assign cyk = cyq;

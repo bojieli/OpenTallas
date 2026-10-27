@@ -1,7 +1,0 @@
-{"file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hbm_q3_producer_native.sv",
- "sha256": "c1ff31a94cbd139afaea7c00adf20e5beb21732f4f54398888b22a9a2a2d1b5e",
- "imported": "Sun Oct 25 08:21:58 PM PDT 2026 TOK-HBM, byte-for-byte from epyc1:/srv/opentallas-scratch2/claude/codex-hbm-token-1713/q3_producer/ot_hbm_q3_producer_native.sv (Codex 17:13 lane, 17:56)",
- "generator": "physical/die_plan/hbm/cores/harden/split_asm.py (codex/hbm-token-1713), no --mut arguments",
- "generated_from": "rest_extract parent coll_q3_body_rest2.parent.v of ot_hfd_coll_q3_hard_v8x_s (NLINK=3,TP=192,AR_ITER=1,ROWS=256,VM_RT=81, OT_COLL_ISSUER256_NATIVE32; physical/die_plan/hbm/over_cap_split/bench/coll_q3_split/rest2.sh) + the five canonical cores in this directory and ../ot_hfd_coll_q2_hard_v8g",
- "content": "wiring only: 1 module, 0 always/initial, 0 event controls, exactly 5 core instances (body, edge, vm, q2 reduce, q2 ring_ag), unmapped inputs 0, 5127 alias drives",
- "why_in_repo": "closure order rule 3: the q3 SYNC adoption and token gates must read repo-relative inputs at a named commit"}

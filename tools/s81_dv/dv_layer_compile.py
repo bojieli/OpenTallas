@@ -35,7 +35,6 @@ import json
 import math
 import os
 import re
-import struct
 import subprocess
 import sys
 from pathlib import Path
@@ -75,10 +74,6 @@ BEAT = dict(go_to_partial=112, go_to_partial_normr=115, rstd_to_y0=18, rstd_to_x
 # dv_price.py (S81-DV measured): beat partial -> xfin DL 4 + collector 5; xfin last partial -> rstd 234 (tb_s81dv_xfin16);
 # rstd -> XQ complete at the ring stop 59 + 4 * 4 (last leaf) + DL 4.
 XFIN = dict(dl=4, collector=5, last_partial_to_rstd=234, rstd_to_xq_ring=59 + 16 + 4)
-# TOK-DS NORM-DESKEW 10-25 (COORD ruling 01:34; claude/s81-norm-deskew-1025): ot_s81sl_xrt1 / xrt3 PDSK = leaf 0..4
-# depth 4, 3, 2, 1, 0 -- the per-leaf NORMRs must reach the slice on 5 consecutive edges in leaf order (lower_norm_smoke
-# issues them on t .. t + 4) and the partial set leaves xr 4 edges after the first one would have.
-XR_DESKEW = 4
 HOST_SLOT = 5            # tb_dsdv_seq_host: one host word every 5th edge (the compiler's host slots)
 NOPS = 128               # ot_dsdv_fixed_issue calendar rows per job (NOPS <= 128) and CTL templates (128 x 186 b)
 ENG = dict(VN=0, VS=1, GUNIT=2, SVC=4, KIT=14, END=15)
@@ -358,12 +353,6 @@ def layer_schedule(tree, layer, workload='ar'):
         for node in doc['nodes']:
             if any(re.search(pattern, node.get('op', '')) for pattern in capture_ops):
                 delta[node['id']] = delta.get(node['id'], 0.0) + cap5_extra
-    # Main adopts vsw LR=1: keep dependent issues behind the extra SW output
-    # edge as well as extending the leaf-busy duration in lower_vs.
-    from layer_prog.lower_vs import VSW_LR_CYCLES
-    for node in doc['nodes']:
-        if re.fullmatch(r'ffn\.(?:shared_)?swiglu(?:\.r\d+)?', node.get('op', '')):
-            delta[node['id']] = delta.get(node['id'], 0.0) + VSW_LR_CYCLES
     _, end = ac.solve(doc['nodes'], doc['edges'], delta)
     by = {n['id']: n for n in doc['nodes']}
     if layer in LAYERS:
@@ -401,7 +390,7 @@ def layer_schedule(tree, layer, workload='ar'):
     prefetch_lead = -min(0.0, min(o['start'] for o in ops))
     crit = sum(o['cycles'] for o in ops if o['critical'])
     return dict(layer=layer, workload=workload, span=round(span, 1), crit=round(crit, 1),
-                capture_extra_edges=cap5_extra, vsw_lr_extra_edges=VSW_LR_CYCLES,
+                capture_extra_edges=cap5_extra,
                 prefetch_lead=round(prefetch_lead, 1), ops=ops, deps=deps,
                 price_source='tools/s81_dv/dv_layer_price.py facts + dv_price.dv_deltas dv_base + accepted_cost.solve')
 
@@ -447,29 +436,21 @@ OPMAP = [
      GAP_KV_UNIT),
     # TOK-S81-GAPS/IDX 10-18: topk_local / topk_final / cand.* are lowered by layer_prog/lower_bk.py (bk_sel job);
     # what stays here has NO unit on the p4l3 die (bind_p4l3_g8 masters: no index scan, no mix4)
-    # TOK-DS-CMP (10-26): the texts below are the 877 strict-bound die (die_b178.v, asbuilt_b178_coll) source audit; the
-    # legacy bind_p4l3_g8 "no index-score unit" texts were stale for 877.  Units exist; their job programmes are not lowered.
-    (r'attn\.idx\.score$', 'idx chain u_iqf (dsdv_idx_qfs) -> u_irg_00..06 dsdv_idx_rg3 + u_irg_07 rg3_nq -> u_bk_sel vi_idx', 'GAP',
-     ('dsdv_idx_rg3 IDX_S job (877: die_b178.v:3709-3717)', 'iq frames s_3S_C -> iqf -> qr type-4 IDX_S header + 64 q/weight '
-      'words; so score chain (276 b BK beats, 16 BF16 scores) svc_0 -> .. -> svc_14 -> bk_sel',
-      'UNIT PRESENT on 877 (rg3 key read kb + 34 n, 4 x rg2_chunk of 8 idx_hslice: FP4 q.k, bf16(relu . w), head sum, FP32 '
-      'tree -> BF16).  Missing: the compiler emits no IDX_S job (spec B/N/k/KB/T0/P/ik/om, rtl/dsrom_sys/s81_dv/idx/'
-      'dsdv_idx_rg.sv:27-45) nor the slice iq send programme; no L14 bench of the 131,072-key quarter scan')),
-    (r'attn\.idx\.newkey$', 'dsdv_svc_att IK_ROW (q frame type 15) on the owning svc slice', 'GAP',
-     ('dsdv_svc_att IK_ROW (dsdv_svc_att.sv:43-56, 242-275)', 'q frame type 15: [29:0] KB, [63:32] 4 UE8M0 scales, pos, '
-      '128 E2M1 codes', 'UNIT PRESENT on 877 (one slice sid == key region hash writes code lo / hi + scales, rg3 layout).  '
-      'Missing: lower_svc does not emit the IK_ROW frame (the new key comes from attn.cmp.k_rope_qdq, itself GAP) and '
-      'no bench writes then scans the key')),
-    (r'attn\.(idx\.topk_merge)$', 'TP4 peer merge of the 4 local selections: u_bk_sel dsdv_bk_sel_vmtx -> u_s_7S / u_s_7N '
-     'lep TP TX (tp_i) -> lk_EN2/3 / lk_WS2/3 -> u_s_0S tp_o -> u_s_0N lep_mu_ab_idxq tm -> ca -> bk_sel', 'GAP',
-     ('877 IDXNET (S81/IDXNET 10-25, die_b178.v:3555/3559/3627/3631/3699)', 'bk_sel 276-b IDX beats on tp_i / tp_o / tm / ca '
-      '(lep IDX_TP / IDX_MRG, every TP beat on pair A lane 2)', 'UNIT + NETS PRESENT on 877 (TOK-DS-CMP2 10-26 netlist audit; '
-      'the old "no path carries the bk_sel IDX words to an end slice" text was the legacy die).  Missing: lower_bk emits no '
-      'TP4 peer-merge programme for the IDXNET lep (compiled TP beat slots, RL relay count, tm / ca collision-free windows) '
-      'and no bench runs the 4-rank merge through the bound leps; price LEG 729 is the legacy S81-SCAND leg')),
-    (r'attn\.gather$', 'svc SEL_IDS row fetch by index (dsdv_svc_att) + ROWS frames', 'GAP',
-     ('dsdv_svc_att SEL_IDS / ROWS (lower_svc compressed job)', 'q frame type 7 ids + type 6 rows',
-      'lowered by lower_svc for compressed layers (this row applies only without fixtures)')),
+    (r'attn\.idx\.score$', 'DV index scan (none on the die)', 'GAP',
+     ('bind_p4l3_g8 (no index-score unit)', 'HBM index-key scan q.k -> BF16 scores -> u_bk_sel vi_s',
+      'no DV unit computes the indexer scores: dsdv_svc_rs (x16) has attention (svc_att / svc_sx / su_sms) only, the '
+      'hub-era scan dsfd_svc_idx (rtl/dsrom_sys/s81_ph/svc) is not instantiated; the scan must also emit BK-format beats '
+      '(lower_bk GAPS producer).  Rate: 131,072 scores / die at the 276-b rung = 8 scores / edge -> >= 16,388 edges')),
+    (r'attn\.idx\.newkey$', 'svc_rs HBM index-key append (none on the die)', 'GAP',
+     ('dsdv_svc_rs', 's_j job (index-key row write)', 'no svc job writes the new index key row into the HBM index '
+      'cache (dsdv_svc_rs job table: attention window / own row only); the key itself (idx.q . wk path) is a slice op')),
+    (r'attn\.(idx\.topk_merge)$', 'TP4 collective of the local selections (end-slice lep)', 'GAP',
+     ('u_s_4S rstop V receive -> end-slice lep', 'bk_sel egress kind 5 words', 'no path carries the bk_sel IDX words to '
+      'an end slice for the cross-die merge (lower_bk GAPS consumer); collective owned by TOKEN-XDIE-S81')),
+    (r'attn\.gather$', 'selected-row gather (svc HBM read by index; bk_col frame merge)', 'GAP',
+     ('dsdv_svc_rs / dsdv_bk_col', 'svc row-read job by index list + bk_col frames', 'no svc job reads HBM rows by a '
+      'runtime index list, and nothing produces bk_col frames on the column-1 rung; the 512 selected rows (fixture '
+      'attn.gather 512 x 512) would also cost >= 2 V beats per 512-b word at the rung (bk_col ingress + egress)')),
     (r'^eng\.(lead_flit|hash|hbm_read)$', 'svc_rs HBM service (Engram rows) + lep stage hop', 'GAP',
      ('dsdv_svc_rs', 's_j job (Engram row read)', 'svc job ABI for the Engram HBM row read is not documented as a compiler '
       'ABI; Engram table image belongs to the fixtures')),
@@ -669,17 +650,10 @@ def ctl_path(die, sl):
                 'ot_s81_land E + 1 + half-cycle stations + bk_sel 3 + V inject 6 + rstop 2/stop; G8 cut_3S_ctl L0 replay measured)')
 
 
-def norm_eps_bits():
-    """The released checkpoint's RMSNorm epsilon, encoded as binary32."""
-    config = json.loads((ROOT / 'compiler/models/deepseek-v4.1-flash/inference_config.json').read_text())
-    return struct.unpack('<I', struct.pack('<f', config['norm_eps']))[0]
-
-
-def lower_norm_smoke(die, prog, sl, t0, eps=None, r_h=0, r_gain=64, which='attn'):
+def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which='attn'):
     """slice-local hc_pre + RMSNorm + act-quant on ONE slice (the beat bench's proven sequence, issued through the
     seq_host calendar as CTL beats): HLOAD (5 leaves) -> GAIN -> NORMR per leaf (a0 = G-unit row R, a1 = global beat 5 sid + k, n = 3:
     q + BF16 family) -> xfin go (eps).  The partial / rstd / XQ edges follow from the unit latencies."""
-    eps = norm_eps_bits() if eps is None else eps
     s = die.slices()[sl]
     sid, smask = s['sid'], 1 << s['sid']
     eng = ENG['VN'] if sl.endswith('N') else ENG['VS']
@@ -735,9 +709,6 @@ def lower_norm_smoke(die, prog, sl, t0, eps=None, r_h=0, r_gain=64, which='attn'
     prog.events.append(dict(cycle=t + 5 + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL', tag=f'{which}.XFIN_GO',
                             payload=f'template {tx}'))
     # derived internal / outgoing edges (plan values the bench checks at the slice boundary where they are visible)
-    # NORM-DESKEW: four edges after leaf0, already present in go[-1]. The
-    # previous faulting serializer restarted at each leaf, so adding another
-    # four edges after the last command would double count that delay.
     last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector']
     rstd = last_partial + XFIN['last_partial_to_rstd']
     xq = rstd + XFIN['rstd_to_xq_ring']
@@ -753,20 +724,6 @@ def lower_norm_smoke(die, prog, sl, t0, eps=None, r_h=0, r_gain=64, which='attn'
                 end=xq, templates=[th, tg] + tn + [tx], hc_pre_row=r_pre, hc_pre_row_land=row_land, dep_shift=dep_shift,
                 hc_pre_source=pre_source, hc_pre_source_event_present=bool(rows_out), hc_pre_source_bound=False,
                 qualification='PARTIAL: previous-sublayer pre row must have a source-bound producer and transfer')
-
-
-BK_SEL_INST = 'u_bk_sel'
-BK_SEL_UID = 0x5B            # die strap u_bk_sel.uid (lower_bk asserts it on the build)
-
-
-def bk_drain_consumed(die, payload186):
-    """RTL rule of ot_dsdv_vstop with BK_DRAIN_SINK=1 (canonical 10-24): a kind-0 V CTL beat whose payload
-    p[7:0] = the BK uid and p[10:8] = op 1 (drain) is removed from the S rung at u_bk_sel (beat [28:21] / [31:29])."""
-    try:
-        uid = die.strap(BK_SEL_INST, 'uid')
-    except (KeyError, AttributeError):
-        uid = None
-    return (payload186 & 0xFF) == (BK_SEL_UID if uid is None else uid) and (payload186 >> 8) & 7 == 1
 
 
 def row_ctl_events(die, prog):
@@ -788,19 +745,6 @@ def row_ctl_events(die, prog):
         ti = r.get('tix', r['arg'] & 0x7F)
         mask = prog.templates[ti] & 0xFFFF
         tier = 'N' if r['eng'] == ENG['VN'] else 'S'
-        if tier == 'S' and bk_drain_consumed(die, prog.templates[ti]):
-            # canonical BK addressed-drain sink (COORD ruling 2026-10-24 18:55; ot_dsdv_vstop BK_DRAIN_SINK=1): the
-            # u_bk_sel rung stop between u_seqhost and u_s_4S consumes a kind-0 CTL beat addressed to its uid with op 1,
-            # so the beat never reaches a slice (no vi / line arrival); record the consumption only.
-            # ctl_at = the edge the beat lands at u_bk_sel.vi_n (seqhost V command register -> vo_s + rung land + tvS_seqhost
-            # age): dv_cut_replay lists it as an internal event (not partial); its effect -- no slice / line CTL arrival --
-            # is what the line checks assert (their expected beats exclude it).
-            lk = die.links.get('tvS_seqhost', {})
-            ctl_at = r['issue'] + SEQ['v_cmd_to_vo'] + SEQ['vo_s_land'] + lk['age_edges'] if 'age_edges' in lk else None
-            prog.events.append(dict(cycle=r['issue'], inst=BK_SEL_INST, port='vi_n', dir='internal', kind='BKDRAIN', ctl_at=ctl_at,
-                                    tag=f"{prog.tnames[ti]}", payload=f'template {ti}', from_row=r['issue'],
-                                    note='consumed at the BK stop (addressed drain sink); no slice CTL arrival'))
-            continue
         for sid in range(16):
             sl = sid_of.get(sid)
             if not (mask >> sid) & 1 or sl is None or not sl.endswith(tier):
@@ -995,24 +939,9 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, entry_engram_inputs=None, svc_timing_profile=None):
-    if entry_norm and not fixtures:
-        raise ValueError('--entry-norm-check needs --fixtures (the layer-entry inputs and the reference model checks)')
-    if entry_engram_inputs is not None and not entry_norm:
-        raise ValueError('--entry-engram-inputs requires --entry-norm-check so native entry rows actually consume H')
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None):
     if dense_stage is not None and mu_ctx:
         raise ValueError('DENSE2 MU requires the corrected per-position static stage graph binding')
-    if fixtures is not None and layer in LAYERS:
-        if svc_timing_profile is None:
-            raise ValueError('fixture programmes require explicit --svc-timing-profile matching the selected service engine')
-        defines = {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}
-        expected = 'legacy_fg3' if 'SVCQ_ENG_FG3' in defines else 'closing_allq'
-        if svc_timing_profile != expected:
-            raise ValueError(f'service timing profile {svc_timing_profile} disagrees with selected source {expected}')
-        if svc_timing_profile == 'closing_allq':
-            required = {'OT_ATTN_HCORE', 'OT_S81C_HCORE_CTLA', 'OT_S81C_HCORE_RST_TIMED', 'OT_SVC_ALLQ'}
-            if not required <= defines:
-                raise ValueError('closing_allq timing requires selected source defines ' + ','.join(sorted(required)))
     if svc_owner_epoch is not None and mu_ctx:
         raise ValueError('SO source-owner fields require per-user MU remapping before admission')
     out = Path(out)
@@ -1033,8 +962,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     low = []
     fams = family_lowerings()
     ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag,
-               svc_owner_epoch=svc_owner_epoch, svc_timing_profile=svc_timing_profile,
-               svc_allq=('OT_SVC_ALLQ' in {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}) if svc_timing_profile is not None else None, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
+               svc_owner_epoch=svc_owner_epoch, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -1087,26 +1015,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if sum(len(v) for v in avoid.values()) > 64:
             raise ValueError(f'line slot reservation does not converge: {clash[:4]}')
         return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
-                             mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid,
-                             entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile)
+                             mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid)
     prog.line_avoid = {k: sorted(v) for k, v in (line_avoid or {}).items()}
-    if entry_norm:
-        # TOK-DS-GAPS 10-24 (opt-in; default byte-identical): layer-entry residency of the smoke slice as pre-layer CTL
-        # target-5 events + the xfin NX flit as checked output words (layer_prog/norm_nx.py).  After row_ctl_events
-        # and the line-slot pass: the entry beats are not calendar rows and carry an explicit payload186.
-        if sub is None or not str(sub.get('hc_pre_source', '')).startswith('entry.'):
-            raise ValueError('--entry-norm-check: no attn norm smoke on this layer (the NX flit needs the attn norm)')
-        sys.path.insert(0, str(ROOT / 'tools/s81_dv/layer_prog'))
-        import norm_nx
-        if entry_norm == 'all':
-            # the 16-slice composition: every slice's norm + entry state + the snake flit words (own + forwards)
-            sub['entry_norm'] = norm_nx.emit_all(die, prog, sub, fixtures, sys.modules[__name__], entry_engram_inputs)
-            clash = line_slot_conflicts(die, prog)
-            if clash:
-                raise ValueError(f'--entry-norm-check all: line slot collision of the 16-slice norm rows: {clash[:4]}')
-        else:
-            sub['entry_norm'] = norm_nx.emit(die, prog, sub, fixtures,
-                                             [e['cycle'] for e in prog.events if e['kind'] == 'CTL'], entry_engram_inputs)
     files = {}
     for rel, text in prog.files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -1143,8 +1053,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
-                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid,
-                                 entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile)
+                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1185,14 +1094,13 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     'calendar shifted by its CTL arrival; the layer span is max over slices and units of the last '
                     'scheduled event (op schedule span below = the priced critical slice)',
         price=dict(span=sched['span'], crit=sched['crit'], source=sched['price_source'],
-                   capture_extra_edges=sched['capture_extra_edges'], vsw_lr_extra_edges=sched['vsw_lr_extra_edges']),
+                   capture_extra_edges=sched['capture_extra_edges']),
         ops=sched['ops'], deps=sched['deps'], smoke=sub, line_slot_reserved=getattr(prog, 'line_avoid', {}), events=sorted(prog.events, key=lambda e: e['cycle']),
         event_words='LB2-S81/EVENTS: an encoded boundary event carries words [[edge, value hex, mask hex]] on `ports` '
                     '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '
                     'edge the producer\'s output register takes it; boundary offdie = beyond the die\'s elastic link '
                     'layer (no fixed-cycle cut word); dir internal = inside one instance, carried_by its CTL template',
-        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links,
-        all_links=die.links if entry_norm == 'all' else None), indent=1) + '\n')
+        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links), indent=1) + '\n')
     ul = die.unlanded()
     die_gaps = [dict(module='results/arch/s81_dv_1016/bind9/die.v (S81 die GEN, lead S81-DIE6/7)',
                      port=', '.join(sorted(x['link'] for x in ul)),
@@ -1260,55 +1168,11 @@ def main(argv=None):
     ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
     ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
-    ap.add_argument('--bound-control-only', action='store_true',
-                    help='Compile actual current bound control routes; never read a legacy die tree')
-    ap.add_argument('--bound', type=Path, help='Current strict bind out/ for native control mode')
-    ap.add_argument('--bound-inventory', type=Path, help='Current logical and atomic source inventory')
-    ap.add_argument('--bound-local-timing', type=Path, help='Source-qualified atomic control-stage receipts')
-    ap.add_argument('--bound-source-root', type=Path, help='Exact current implementation source root')
-    ap.add_argument('--bound-asbuilt-manifest', help='Repo-relative exact as-built source selection manifest')
-    ap.add_argument('--native-entry-program', type=Path, help='Optional actual bound entry command/template record')
-    ap.add_argument('--retime-native-entry', action='store_true',help='Propose consecutive per-slice NORMR commands; keep GO dates and all readiness holds')
-    ap.add_argument('--compose-native-boot', action='store_true', help='Emit concrete unsealed HOST words from measured native control')
-    ap.add_argument('--native-boot-cadence', type=Path, help='Actual direct-native CSR cadence receipt')
-    ap.add_argument('--native-boot-seqhost-timing', type=Path, help='Original source-qualified seqhost reset/KS phase receipt')
-    ap.add_argument('--native-entry-rows', type=Path, help='Optional actual entry writes, encoded in template-table batches')
-    ap.add_argument('--native-mux-config', type=Path, help='Explicit programme-specific MU tracker/window values')
-    ap.add_argument('--native-host-booking', type=Path, help='Explicit candidate host pin-event dates')
-    ap.add_argument('--entry-engram-inputs', default=None,
-                    help='Checkpoint-derived Engram sidecars for actual attention-entry native rows and NX partials')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
-    ap.add_argument('--svc-timing-profile', choices=('legacy_fg3', 'closing_allq'), default=None,
-                    help='Service engine timing calendar; closing_allq requires actual ALLQ+SMT source')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
                     help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
-    ap.add_argument('--entry-norm-check', nargs='?', const='smoke', choices=('smoke', 'all'), default=None,
-                    help='TOK-DS-GAPS: emit the smoke slice\'s layer-entry rows (pre-layer CTL target 5) and its attn '
-                         'xfin NX flit as checked output words (needs --fixtures; layer_prog/norm_nx.py); "all" = every '
-                         'slice\'s norm + entry state + the 16-flit snake words')
     a = ap.parse_args(argv)
-    if a.retime_native_entry and not a.native_entry_program:
-        ap.error('--retime-native-entry requires the actual native entry command record')
-    boot_inputs=(a.native_boot_cadence,a.native_boot_seqhost_timing,a.native_entry_rows,a.native_mux_config,a.native_host_booking)
-    if a.compose_native_boot and not (a.bound_control_only and a.native_entry_program and a.native_boot_cadence and a.native_boot_seqhost_timing):
-        ap.error('--compose-native-boot requires native control, entry programme, cadence and original seqhost timing')
-    if any(boot_inputs) and not a.compose_native_boot:
-        ap.error('native boot inputs require --compose-native-boot')
-    if a.bound_control_only:
-        if not all((a.bound,a.bound_inventory,a.bound_local_timing,a.bound_source_root,a.bound_asbuilt_manifest)):
-            ap.error('--bound-control-only requires bound, inventory, local timing, source root and source manifest')
-        if a.die_src or a.mu_cal or a.mu_ctx or a.dense_stage:
-            ap.error('native bound control cannot consume legacy geometry or MU/dense schedule tables')
-        from layer_prog.bound_control import compile_control
-        raise SystemExit(compile_control(layer=a.layer,out=a.out,bound=a.bound,inventory=a.bound_inventory,
-            timing=a.bound_local_timing,source_root=a.bound_source_root,asbuilt_manifest=a.bound_asbuilt_manifest,
-            entry_program=a.native_entry_program,retime_entry=a.retime_native_entry,
-            boot=dict(cadence=a.native_boot_cadence,seqhost_receipt=a.native_boot_seqhost_timing,
-                      entry_rows=a.native_entry_rows,mux_config=a.native_mux_config,
-                      host_booking=a.native_host_booking) if a.compose_native_boot else None))
-    if any((a.bound,a.bound_inventory,a.bound_local_timing,a.bound_source_root,a.bound_asbuilt_manifest,a.native_entry_program,a.retime_native_entry)):
-        ap.error('native bound inputs require --bound-control-only; do not mix current and legacy ages')
     if a.dense_stage is not None and (a.mu_cal or a.mu_ctx):
         ap.error('--dense-stage MU requires corrected per-position static stage graph binding')
     if a.svc_owner_epoch is not None and a.mu_cal:
@@ -1323,8 +1187,7 @@ def main(argv=None):
             return
     tree = die_tree(a.die_ref, a.die_src)
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
-                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check,
-                      entry_engram_inputs=a.entry_engram_inputs, svc_timing_profile=a.svc_timing_profile)
+                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
