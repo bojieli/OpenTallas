@@ -211,27 +211,33 @@ module ot_hbm_xp_aq_mul_pipe13 (
                         s3_product[s4_round_in_range ? s4_round_index[5:0]
                                                      : 6'd0];
     wire s4_sticky = sticky_below(s3_product, s3_shift_q);
-    wire [24:0] s4_rounded =
-        {1'b0, s4_main} +
-        {24'd0, (s4_round_bit && (s4_sticky || s4_main[0]))};
+    //: HBM-CORES-R13 (COORD 10-27 11:37 ruling 3): the round-to-nearest-even
+    //: DECISION stays in stage 4, the 25-bit increment moves to stage 5
+    //: (k11m sign-off: stage 4 TT -19.33 ps, stage 5 +105.6 ps).  Same
+    //: latency, same interface, same result bit for bit.
+    wire s4_round_up = s4_round_bit && (s4_sticky || s4_main[0]);
 
     reg        s4_v, s4_byp, s4_sign, s4_is_sub;
     reg [1:0]  s4_err;
-    reg [24:0] s4_mant;
+    reg [23:0] s4_main_q;
+    reg        s4_round_up_q;
     reg signed [11:0] s4_floor;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             s4_v <= 1'b0; s4_byp <= 1'b0; s4_sign <= 1'b0; s4_is_sub <= 1'b0;
-            s4_err <= E_NONE; s4_mant <= 25'd0; s4_floor <= 12'sd0;
+            s4_err <= E_NONE; s4_main_q <= 24'd0; s4_round_up_q <= 1'b0;
+            s4_floor <= 12'sd0;
         end else begin
             s4_v <= s3_v; s4_byp <= s3_byp; s4_sign <= s3_sign;
             s4_err <= s3_err; s4_is_sub <= s3_is_sub_q;
-            s4_mant <= s4_rounded;
+            s4_main_q <= s4_main; s4_round_up_q <= s4_round_up;
             s4_floor <= s3_floor_q;
         end
     end
 
-    // -- stage 5: the post-round carry, the encoding, and the refusals --------
+    // -- stage 5: the round increment, the post-round carry, the encoding,
+    //    and the refusals ---------------------------------------------------
+    wire [24:0] s4_mant = {1'b0, s4_main_q} + {24'd0, s4_round_up_q};
     //: A carry out of bit 24 moves the leading bit up one exponent.
     wire        s5_carry = !s4_is_sub && s4_mant[24];
     wire [23:0] s5_man = s5_carry ? s4_mant[24:1] : s4_mant[23:0];
