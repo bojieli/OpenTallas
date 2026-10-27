@@ -1416,7 +1416,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export DESIGN_NAME = {t['module']}",
            "export PLATFORM = asap7",
            "export VERILOG_FILES = " + " ".join(srcs),
-           "export VERILOG_DEFINES = -DSYNTHESIS",
+           "export VERILOG_DEFINES = " + " ".join(type_verilog_defines(t)),
            "export SDC_FILE = /work/constraint.sdc",
            f"export DIE_AREA = 0 0 {_um(w)} {_um(h)}",
            f"export CORE_AREA = {_um(m)} {_um(m)} {_um(w - m)} {_um(h - m)}",
@@ -1719,6 +1719,15 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     port_pins += [dict(bus=b["port"], bit=i) for b in (bump_ports or []) for i in range(b["width"])]
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
     return kd
+
+
+def type_verilog_defines(t):
+    """One declared source profile for synthesis, RTL lint and the LEC gold reader."""
+    values = t.get("verilog_defines", [])
+    if not isinstance(values, list) or any(not isinstance(v, str) or
+            not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", v) for v in values):
+        raise ValueError("type verilog_defines must be a list of bare Verilog macro names")
+    return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values]))
 
 
 RUN_KIT = r"""#!/bin/bash

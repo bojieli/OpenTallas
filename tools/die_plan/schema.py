@@ -295,6 +295,10 @@ SCHEMA = {
                     "cells": {"type": "integer", "minimum": 0},
                     "hard": {"type": "boolean"},     # hard IP (PHY, closed macro used as-is): no generated wrapper
                     "kit": {"type": "string"},
+                    # Source profile shared by synthesis, lint and cross-frontend LEC.
+                    # Bare macro names only: no command-line flags or shell syntax.
+                    "verilog_defines": {"type": "array", "uniqueItems": True, "items": {
+                        "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}},
                     "note": {"type": "string"},
                     "buses": {"type": "array", "items": {
                         "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,

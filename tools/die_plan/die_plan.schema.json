@@ -638,6 +638,14 @@
      "kit": {
       "type": "string"
      },
+     "verilog_defines": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+       "type": "string",
+       "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+      }
+     },
      "note": {
       "type": "string"
      },
