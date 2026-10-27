@@ -82,7 +82,11 @@
  "dsfd_cfifo_crs4": {
   "ref_tile": "physical/ref_tile/s81coll_cfifo_crs4",
   "multi_root": true,
-  "why_multi_root": "S81-CORE-LAT-R20 10-27 (COORD S81-CORES-R1 ruling 2): DECLARED multi-root core (spec clock_entry_domains, same_pll_fixed_phase 1:1): one clock / entry per root pin, each at the 12.3 budget, inter-root paths timed as related pairs"
+  "why_multi_root": "S81-CORE-LAT-R20 10-27 (COORD S81-CORES-R1 ruling 2): DECLARED multi-root core (spec clock_entry_domains, same_pll_fixed_phase 1:1): one clock / entry per root pin, each at the 12.3 budget, inter-root paths timed as related pairs",
+  "defines": ["DSFD_CRS4_LGATE"],
+  "includes": ["rtl/hdc/ot_hdc_cg.sv"],
+  "land_slots": {"xl0": 4, "xl1": 4, "xl2": 4, "xl3": 4},
+  "why_land_slots": "S81-CORE-LAT-R21 10-27 (COORD S81-CORE-LAT-R20 ruling (a)): face register per landing slot, no added cycle: DSFD_CRS4_LGATE = ot_s81_land GSLOT 1 (each of the D = 4 ring slots written through its own ICG at the same ck_f edges), so every xl<k> bit drives exactly 4 slot flop D pins on xk[k]; bench tools/s81_dv/crs4_bench.py --lgate. The die bind must build dsfd_cfifo_crs4 with the same define."
  },
  "dsfd_qbank_N": {
   "ref_tile": "physical/ref_tile/s81fill2_qbank_n",
