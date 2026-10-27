@@ -22,3 +22,6 @@ global_route -end_incremental
 ot_clk_freeze_assert post_grt
 estimate_parasitics -global_routing
 write_guides $::env(RESULTS_DIR)/route.guide
+# ORFS detail_route.tcl takes the dbGuides in 5_1_grt.odb (F4C finding), and a warm ECO from a fully routed DB has none
+# ('Global routing failed' at detail_route.tcl:8, QC canary 10-27 12:16; the f4d kit DRT hook used to read them itself)
+read_guides $::env(RESULTS_DIR)/route.guide
