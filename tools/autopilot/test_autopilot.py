@@ -350,6 +350,16 @@ class TestTick(TickBase):
         self.assertEqual(len(self.f.launched), 1)
         self.assertEqual(list(jobs.values())[0]["status"], "RUNNING")
 
+    def test_chain_dispatch_is_self_contained_for_existing_data_host(self):
+        self.queue(ROW)
+        self.tick()
+        argv=self.f.launched[0][1]
+        command=argv[argv.index("--")+1:]
+        self.assertEqual(command[:2],["python3","-c"])
+        self.assertIn("def continue_kit",command[2])
+        compile(command[2],"<inline-chain>","exec")
+        self.assertFalse(any(p.endswith("/signoff_chain.py") for p in argv))
+
     def test_signed_archived_once(self):
         self.queue(ROW)
         self.tick()
@@ -417,7 +427,7 @@ class TestTick(TickBase):
         self.queue(ROW + ["route"])
         self.tick()
         argv = self.f.launched[0][1]
-        self.assertEqual(argv[argv.index("--") + 5], "finish")
+        self.assertEqual(argv[argv.index("--") + 6], "finish")
 
     def test_segfault_is_marked_not_resubmitted(self):
         self.queue(ROW)
