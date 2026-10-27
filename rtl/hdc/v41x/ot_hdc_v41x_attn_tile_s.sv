@@ -29,6 +29,11 @@ module ot_hdc_v41x_attn_hgrp_s #(
     parameter integer F12 = 0,         // 1: the f12 FP32 adds (LAT 4 / 5) in the chunk chains and trees
     parameter integer PCOLP = 0,       // 1: each head's p-mode columns arrive pre-selected on ld_wp (tile wiring),
                                        //    replacing the gsel AND-OR over the H/HG groups (same bits, same cycle)
+    parameter integer BZ0 = 0,         // 1 (LEC-FPREG-3 10-27, opt-in): dq_b bit 0 (the bf16 LSB, 1'b0 in every deq_b /
+                                       //    deq_b2 arm) is a wire, not carried by the skew lines and the product's operand
+                                       //    register, and the product decodes mb[0] as 1'b0.  Same values, same edges; the
+                                       //    constant no longer rides up to 24 unreset registers (power-up X past the reset
+                                       //    window in the strict no-reset LEC base case).  0 = the original lines.
     parameter integer WPRE = 0         // 1 (S81-P10, opt-in): the write predicates (ld_grp == slot group, ld_grp + 1 ==
                                        //    slot group, ld_grp == hh) are decoded from the ld_* pins and captured in
                                        //    the head's R0 (kept) registers, so the R0 -> DFFE-enable path is one AND-OR
@@ -130,7 +135,12 @@ module ot_hdc_v41x_attn_hgrp_s #(
         end
         for (gk = 0; gk < TD; gk = gk + 1) begin : g_ske
             localparam integer DS = ((gk % 8) == 0) ? 0 : FPL * ((gk % 8) - 1);
-            ot_hdc_v41x_dly #(.W(18), .D(DS)) u_d (.clk(clk), .d(dq_b[gk*18 +: 18]), .q(sk_b[gk*18 +: 18]));
+            if (BZ0 != 0) begin : g_z
+                ot_hdc_v41x_dly #(.W(17), .D(DS)) u_d (.clk(clk), .d(dq_b[gk*18 + 1 +: 17]), .q(sk_b[gk*18 + 1 +: 17]));
+                assign sk_b[gk*18] = 1'b0;
+            end else begin : g_f
+                ot_hdc_v41x_dly #(.W(18), .D(DS)) u_d (.clk(clk), .d(dq_b[gk*18 +: 18]), .q(sk_b[gk*18 +: 18]));
+            end
         end
     endgenerate
 
@@ -263,7 +273,7 @@ module ot_hdc_v41x_attn_hgrp_s #(
             end
             wire [31:0] y;
             wire f;
-            ot_hdc_v41x_attn_hdp_s #(.TD(TD), .NBANK(NBANK), .BW(BW), .FPL(FPL), .FML(BML), .F12(F12)) u_hdp (
+            ot_hdc_v41x_attn_hdp_s #(.TD(TD), .NBANK(NBANK), .BW(BW), .FPL(FPL), .FML(BML), .F12(F12), .BZ0(BZ0)) u_hdp (
                 .clk(clk), .rst_n(rst_n), .we(we_q), .wbank(wb_q), .wd(wd_q), .sk_bank(sk_bank), .sk_b(sk_b),
                 .y(y), .f(f));
             always @(posedge clk) begin
@@ -383,7 +393,8 @@ endmodule
 // its leading-zero count, before the ML >= 5 cut.  Same value, same cycle as bmul_l at ML = 6.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_attn_bmul_s #(
-    parameter integer ML = 6           // 6 only (the split needs the operand register)
+    parameter integer ML = 6,          // 6 only (the split needs the operand register)
+    parameter integer BZ0 = 0          // 1: b[0] is 1'b0 by contract (deq_b's bf16 LSB); mb[0] decodes as 1'b0
 ) (
     input  wire        clk,
     input  wire [15:0] a,
@@ -400,7 +411,7 @@ module ot_hdc_v41x_attn_bmul_s #(
     wire [7:0] ea = oa[14:7];
     wire [7:0] eb = ob[14:7];
     wire [7:0] ma = {(ea != 8'd0), oa[6:0]};
-    wire [7:0] mb = {(eb != 8'd0), ob[6:0]};
+    wire [7:0] mb = {(eb != 8'd0), ob[6:1], (BZ0 != 0) ? 1'b0 : ob[0]};
     wire [8:0] esum_c = {1'b0, (ea == 8'd0) ? 8'd1 : ea} + {1'b0, (eb == 8'd0) ? 8'd1 : eb};
     wire nonfin_c = !opad && ((ea == 8'hff) || (eb == 8'hff));
     wire zero_c = opad || (ma == 8'd0) || (mb == 8'd0);
@@ -493,7 +504,8 @@ module ot_hdc_v41x_attn_hdp_s #(
     parameter integer BW = 2,
     parameter integer FPL = 3,
     parameter integer FML = 3,
-    parameter integer F12 = 0
+    parameter integer F12 = 0,
+    parameter integer BZ0 = 0          // hgrp_s BZ0: sk_b bit 0 is 1'b0 (passed to the product)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -523,7 +535,7 @@ module ot_hdc_v41x_attn_hdp_s #(
             if (FML == 7) begin : g_m7
                 ot_hdc_v41x_attn_bmul_s7 u_m (.clk(clk), .a(av), .b(be[15:0]), .pad(be[17]), .y(p[gk*32 +: 32]), .flt(mf));
             end else begin : g_m6
-                ot_hdc_v41x_attn_bmul_s #(.ML(FML)) u_m (.clk(clk), .a(av), .b(be[15:0]), .pad(be[17]), .y(p[gk*32 +: 32]), .flt(mf));
+                ot_hdc_v41x_attn_bmul_s #(.ML(FML), .BZ0(BZ0)) u_m (.clk(clk), .a(av), .b(be[15:0]), .pad(be[17]), .y(p[gk*32 +: 32]), .flt(mf));
             end
             // dequant fault rides with the product
             wire dfq;
