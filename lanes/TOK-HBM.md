@@ -329,3 +329,23 @@ ConcretebankcapacityfixavailabletoHBMplanowner: R8alreadycut-feasible(q,key)=(5,
 
 ## CODEX notes 2026-10-26 21:02 PDT -- producer fix measured
 Actual L0/MTP6 producer-aligned emitter42d0caba4 completed:85records,0errors,VMneed373024; all four FUSED VM A/B/O phase0 and256-word row strides PASS. Remaining raw I7 issues are only real HBM gain installation and POST C+4. Latest lowerer3842596e3 derives hidden attention table extents from actual producers; batch3 all six I1-I7 PASS unchanged traffic. Whole-token allocator3508070 and automatic materialization follow-up3632846 live; detailed packet handoff/codex-token-current-20261026.md.
+
+## 2026-10-27 02:00 PDT TOK-HBM (Claude fresh lane): planU2 SU ds_ar, measured stages vs price
+- Result: claude/tok-hbm-su-main-1027@28e1c5a57 (results only; receipt results/token_pass/tok_hbm_1027/README.md).
+- LAYERS: 0/41 DS segments (40 layers + head) pass a per-layer RTL sim on the current/unified die (CHECKED: count from ds_full.json). No unified die top exists: the planU2 LAT pkg is ungenerated, MU pins/views are unbuilt, and the only slice vehicle is d4g-era.
+- CYCLES/TOKEN ds_ar, priced (S2): base 576702.4. planU2 lower/mid/upper = 590813.4 / 592510.0 / 626045.0 cycles = 2031.1 / 2025.28 / 1916.8 tok/s (CHECKED: combine.py rerun reproduces U2_price.json exactly).
+  - Measured on current RTL: no whole-token number exists. The only current-RTL SU stage is the SU native multirate top, which runs exactly at its compiled calendar (PR0/PR1 serial 7116/7120, stream 9489/9495, delta 0 vs compiled). It is now being rerun on main 262d07038 (41/42 sources byte-identical; ins.sv differs by the SPR clock-root grouping; vectors identical): LIVE intel1 tok-hbm-su-main-1027/pr{0,1}, units 1184282/1184281-1793090750, --mem 192.
+  - To collect: positive.log PASS with the same edge counts, and rc.txt RC=0. Expected ~70 min of simulation after the build (UNCHECKED estimate).
+- -> HBM-MU-QUAD-3 (upper term): the measured VM8 x-load gate (xload_service_gate_r5, ledger 30 cyc/rec = 17695 cyc/token) has the per-record serial chain xl_ctl -> bfq -> release -> xl_ctl; the aq/bd/eg fill legs are overlapped.
+  - On planU2 that round trip is c_mhi +11 + wce +10 = +21 (mapping UNCHECKED).
+  - S2 with SM upper at 21: 608245.0 cyc, 1972.89 tok/s, 5.186 %. At 25: 5.603 %. At 32: 6.555 % (tool run CHECKED, model UNCHECKED).
+  - So even the measured-causal chain FAILS 5 %/1973 by a hair. The fix must shorten the xl_ctl<->xq_bfq legs themselves (605->3825 um, 335->3858 um), consistent with your partners+xq/xl k1 = 4.737 %.
+- MISSING stages, each with its blocking lane:
+  - unified die top + planU2 LAT pkg + MU pins/views -> HBM-MU-QUAD-3.
+  - hub core rebuilds (hcp_sys1/argmax/collar/xcal/ep/hc_root/root) -> HBM-CORE-LAT-R4.
+  - SU backend-control canonical fix (a: RTL pipeline vs b: compiler hold) -> HBM-SU/COORD.
+  - whole-layer slice vehicle on B2/unified (SM/ATT/DMA/IDX/FUSED) -> TOK-HBM after the die top exists.
+  - P3 token image native replay + joint WAIT/drain pricing -> TOK-HBM (the epyc1 Codex P3 jobs are lost with epyc1; rerun on epyc2/intel).
+  - serializer RTL / B2 binding, and MU hub static rate (81/103) -> PATH-HBM.
+  - cross-die collectives on the current die -> TOK-HBM.
+- OWNER?: none.
