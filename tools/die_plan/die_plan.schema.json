@@ -19,6 +19,9 @@
   "note": {
    "type": "string"
   },
+  "station_model_keys": {
+   "type": "boolean"
+  },
   "die": {
    "type": "object",
    "required": [
@@ -1596,6 +1599,21 @@
          },
          "minItems": 2,
          "maxItems": 2
+        },
+        "pin_select": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "string"
+         }
+        },
+        "unused_pins": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "unused_pins_policy": {
+         "type": "string"
         },
         "halo_um": {
          "type": "number",
