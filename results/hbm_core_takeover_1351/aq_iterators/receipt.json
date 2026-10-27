@@ -1,0 +1,14 @@
+{
+ "scope": "Source recovery only: preserve unnamed native process scopes while assigning a distinct module-level loop index to each process. No arithmetic or cycle change. Retimed u_scale copied exact R12 approved source, independently tempinduct-proven there.",
+ "positive": "Slang --compat=vcs baseline d9d8 tree vs Yosys candidate, same R12 retimed scale helper both sides: 7840/7840 equiv proven, 546.55s, peak2873MB",
+ "negative": "MUT=1 scale-selector control leaves3203 unproven and equiv_status fails",
+ "lint": "Yosys proc/opt/check -assert PASS0problems,1.06s",
+ "remaining": "One freshly generated current-source ordinary ASIC-mapped kit LEC required before physical progression; no source or timing waiver",
+ "source_hashes": {
+  "ot_hbm_xp_aq_scale13.sv": "3942fa3a48a5cb294ff18872157f3d30c54c917e21542e5ffde3d0b5535a9ae4",
+  "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "candidate.sv": "d42034a2d482f5127aab6368c0f17fc9866e88126b629de89d8226dacc7048f3",
+  "baseline.sv": "3dae1fc99a134a9607a63afaa804615676b2e58e27577bc271b95fa5bf1b12c8",
+  "candidate_mut.sv": "89c9ca6f05aff68b1e27e147fec9064d18d2051aad76b37bbcb3715154ecf868"
+ }
+}

@@ -1,0 +1,27 @@
+read_slang --compat=vcs --top ot_hbm_xp_aq_tree13 --ignore-assertions baseline.sv ot_hbm_xp_aq_scale13.sv ot_hdc_delay.sv
+hierarchy -top ot_hbm_xp_aq_tree13
+proc
+memory_map
+flatten
+opt
+async2sync
+opt
+rename ot_hbm_xp_aq_tree13 gold
+design -stash gold
+read_verilog -sv candidate_mut.sv ot_hbm_xp_aq_scale13.sv ot_hdc_delay.sv
+hierarchy -top ot_hbm_xp_aq_tree13
+proc
+memory_map
+flatten
+opt
+async2sync
+opt
+rename ot_hbm_xp_aq_tree13 gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple
+equiv_induct -seq 16
+equiv_status -assert
