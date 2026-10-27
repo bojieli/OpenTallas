@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.hbm.vms_plan_role_map.v1",
+  "status": "COORD_SELECTED_SOURCE_ROLES_PLAN_MASTER_REBIND_PENDING",
+  "role_map": {
+    "q_hub_nw:u_hb_vms_Q__q0": {
+      "native_instance": "hb_vms_SW",
+      "native_role": "SW",
+      "logical_sid": 0,
+      "expected_plan_master": "hfd_hgi_vms_glue_sw_t"
+    },
+    "q_hub_ne:u_hb_vms_Q__q0": {
+      "native_instance": "hb_vms_SE",
+      "native_role": "SE",
+      "logical_sid": 1,
+      "expected_plan_master": "hfd_hgi_vms_static_SE_glue"
+    },
+    "q_hub_nw:u_hb_vms_Q__q1": {
+      "native_instance": "hb_vms_NW",
+      "native_role": "NW",
+      "logical_sid": 2,
+      "expected_plan_master": "hfd_hgi_vms_glue_nw_t"
+    },
+    "q_hub_ne:u_hb_vms_Q__q1": {
+      "native_instance": "hb_vms_NE",
+      "native_role": "NE",
+      "logical_sid": 3,
+      "expected_plan_master": "hfd_hgi_vms_static_NE_glue"
+    }
+  },
+  "scope": "Explicit per-instance logical source roles for unified four-role graph. Current U6d all-NW masters must be corrected; matching port width alone is insufficient because NW has hardcoded sid2.",
+  "clock_policy": "One833pscore domain; multiple clock aliases on static_SE/NE_glue must bind the same die clock with explicit actual port names. No domain relaxation or generic pin mapping.",
+  "legacy_two_stop": "Historical B2 NW2/NE2 source is a separate vehicle; do not apply its remaster/drop_ports to this graph."
+}

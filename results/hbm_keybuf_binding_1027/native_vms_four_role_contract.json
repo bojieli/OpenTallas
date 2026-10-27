@@ -1,0 +1,444 @@
+{
+  "schema": "opentallas.hbm.vms_four_role_contract.v1",
+  "status": "SOURCE_GRAPH_ONLY_PENDING_PLAN_BIND",
+  "logical_roles": {
+    "SW": {
+      "source_instance": "hb_vms_SW",
+      "source_module": "hfd_hgi_vms_glue_sw_t",
+      "logical_sid": 0,
+      "scalar_clients": 2,
+      "proposed_physical_slot": {
+        "partition": "NW_hub",
+        "service_q": 0
+      },
+      "source_ports": {
+        "cq": [
+          [
+            [
+              "n",
+              "hb_argmax__cq",
+              0,
+              337
+            ],
+            30
+          ],
+          [
+            [
+              "n",
+              "hb_idx__ctl__cq",
+              0,
+              337
+            ],
+            25
+          ]
+        ],
+        "cr": [
+          [
+            [
+              "n",
+              "hb_vms_SW__cr",
+              0,
+              547
+            ],
+            0
+          ]
+        ],
+        "client_seq": [
+          [
+            [
+              "n",
+              "calendar_SW__client_seq",
+              0,
+              5
+            ],
+            3
+          ]
+        ],
+        "response_enable": [
+          [
+            [
+              "n",
+              "calendar_SW__response_enable",
+              0,
+              2
+            ],
+            3
+          ]
+        ],
+        "response_seq": [
+          [
+            [
+              "n",
+              "calendar_SW__response_seq",
+              0,
+              5
+            ],
+            3
+          ]
+        ],
+        "bank_client": [
+          [
+            [
+              "n",
+              "calendar_SW__bank_client",
+              0,
+              15
+            ],
+            3
+          ]
+        ],
+        "replay_source": [
+          [
+            [
+              "n",
+              "calendar_SW__replay_source",
+              0,
+              0
+            ],
+            3
+          ]
+        ],
+        "cw_in": [
+          [
+            [
+              "n",
+              "hb_vms_NW__cw_out",
+              0,
+              2223
+            ],
+            36
+          ]
+        ],
+        "ccw_in": [
+          [
+            [
+              "n",
+              "hb_vms_SE__ccw_out",
+              0,
+              2223
+            ],
+            8
+          ]
+        ]
+      },
+      "source_widths": {
+        "cq": 676,
+        "cr": 548,
+        "client_seq": 6,
+        "response_enable": 3,
+        "response_seq": 6,
+        "bank_client": 16,
+        "replay_source": 1,
+        "cw_in": 2224,
+        "ccw_in": 2224
+      }
+    },
+    "SE": {
+      "source_instance": "hb_vms_SE",
+      "source_module": "hfd_hgi_vms_static_SE_glue",
+      "logical_sid": 1,
+      "scalar_clients": 0,
+      "proposed_physical_slot": {
+        "partition": "NE_hub",
+        "service_q": 0
+      },
+      "source_ports": {
+        "client_seq": [
+          [
+            [
+              "n",
+              "calendar_SE__client_seq",
+              0,
+              1
+            ],
+            7
+          ]
+        ],
+        "response_enable": [
+          [
+            [
+              "n",
+              "calendar_SE__response_enable",
+              0,
+              0
+            ],
+            7
+          ]
+        ],
+        "response_seq": [
+          [
+            [
+              "n",
+              "calendar_SE__response_seq",
+              0,
+              1
+            ],
+            7
+          ]
+        ],
+        "bank_client": [
+          [
+            [
+              "n",
+              "calendar_SE__bank_client",
+              0,
+              7
+            ],
+            7
+          ]
+        ],
+        "replay_source": [
+          [
+            [
+              "n",
+              "calendar_SE__replay_source",
+              0,
+              0
+            ],
+            7
+          ]
+        ],
+        "cw_in": [
+          [
+            [
+              "n",
+              "hb_vms_SW__cw_out",
+              0,
+              2223
+            ],
+            7
+          ]
+        ],
+        "ccw_in": [
+          [
+            [
+              "n",
+              "hb_vms_NE__ccw_out",
+              0,
+              2223
+            ],
+            31
+          ]
+        ]
+      },
+      "source_widths": {
+        "client_seq": 2,
+        "response_enable": 1,
+        "response_seq": 2,
+        "bank_client": 8,
+        "replay_source": 1,
+        "cw_in": 2224,
+        "ccw_in": 2224
+      }
+    },
+    "NW": {
+      "source_instance": "hb_vms_NW",
+      "source_module": "hfd_hgi_vms_glue_nw_t",
+      "logical_sid": 2,
+      "scalar_clients": 0,
+      "proposed_physical_slot": {
+        "partition": "NW_hub",
+        "service_q": 1
+      },
+      "source_ports": {
+        "client_seq": [
+          [
+            [
+              "n",
+              "calendar_NW__client_seq",
+              0,
+              1
+            ],
+            3
+          ]
+        ],
+        "response_enable": [
+          [
+            [
+              "n",
+              "calendar_NW__response_enable",
+              0,
+              0
+            ],
+            3
+          ]
+        ],
+        "response_seq": [
+          [
+            [
+              "n",
+              "calendar_NW__response_seq",
+              0,
+              1
+            ],
+            3
+          ]
+        ],
+        "bank_client": [
+          [
+            [
+              "n",
+              "calendar_NW__bank_client",
+              0,
+              7
+            ],
+            3
+          ]
+        ],
+        "replay_source": [
+          [
+            [
+              "n",
+              "calendar_NW__replay_source",
+              0,
+              0
+            ],
+            3
+          ]
+        ],
+        "cw_in": [
+          [
+            [
+              "n",
+              "hb_vms_NE__cw_out",
+              0,
+              2223
+            ],
+            7
+          ]
+        ],
+        "ccw_in": [
+          [
+            [
+              "n",
+              "hb_vms_SW__ccw_out",
+              0,
+              2223
+            ],
+            36
+          ]
+        ]
+      },
+      "source_widths": {
+        "client_seq": 2,
+        "response_enable": 1,
+        "response_seq": 2,
+        "bank_client": 8,
+        "replay_source": 1,
+        "cw_in": 2224,
+        "ccw_in": 2224
+      }
+    },
+    "NE": {
+      "source_instance": "hb_vms_NE",
+      "source_module": "hfd_hgi_vms_static_NE_glue",
+      "logical_sid": 3,
+      "scalar_clients": 0,
+      "proposed_physical_slot": {
+        "partition": "NE_hub",
+        "service_q": 1
+      },
+      "source_ports": {
+        "client_seq": [
+          [
+            [
+              "n",
+              "calendar_NE__client_seq",
+              0,
+              1
+            ],
+            10
+          ]
+        ],
+        "response_enable": [
+          [
+            [
+              "n",
+              "calendar_NE__response_enable",
+              0,
+              0
+            ],
+            10
+          ]
+        ],
+        "response_seq": [
+          [
+            [
+              "n",
+              "calendar_NE__response_seq",
+              0,
+              1
+            ],
+            10
+          ]
+        ],
+        "bank_client": [
+          [
+            [
+              "n",
+              "calendar_NE__bank_client",
+              0,
+              7
+            ],
+            10
+          ]
+        ],
+        "replay_source": [
+          [
+            [
+              "n",
+              "calendar_NE__replay_source",
+              0,
+              0
+            ],
+            10
+          ]
+        ],
+        "cw_in": [
+          [
+            [
+              "n",
+              "hb_vms_SE__cw_out",
+              0,
+              2223
+            ],
+            32
+          ]
+        ],
+        "ccw_in": [
+          [
+            [
+              "n",
+              "hb_vms_NW__ccw_out",
+              0,
+              2223
+            ],
+            7
+          ]
+        ]
+      },
+      "source_widths": {
+        "client_seq": 2,
+        "response_enable": 1,
+        "response_seq": 2,
+        "bank_client": 8,
+        "replay_source": 1,
+        "cw_in": 2224,
+        "ccw_in": 2224
+      }
+    }
+  },
+  "ring_stops": 4,
+  "physical_ring_cw_order": [
+    "SW",
+    "SE",
+    "NE",
+    "NW"
+  ],
+  "source_policy": "Use existing main four-stop masters and primitives. Do not apply make_wiring.py R-VM NW2/NE2 remaster or cw/ccw/replay_source drop_ports for the canonical unified four-role graph.",
+  "latency_policy": "Traced register ages are historical reference only; bind and price new plan stations from the actual composed graph.",
+  "remaining": [
+    "Actual unified source composition and physical partition mapping",
+    "Static calendar, request/response identity, root-client CQ/CR and source-graph exactness on current plan"
+  ]
+}
