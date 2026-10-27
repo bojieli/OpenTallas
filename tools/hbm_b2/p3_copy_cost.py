@@ -46,6 +46,7 @@ def price(model_root: Path, image_dir: Path):
             c,grade,how=T.cost(rr,dyn,0)
             unit=rr.unit+'.'+rr.op
             kinds[unit]+=1;cycles[unit]+=c;words['VM_copy' if rr.unit=='SU' else 'HBM_load']+=n
+            if rr.unit=='DMA':words['HBM_bytes']+=n*T.ESZ[rr.desc['A'].fmt]
             details.append(dict(offset=off,row=row,origin=origin,unit=unit,words=n,cycles=c,grade=grade,how=how))
     bw=T.cv('hbm','bytes_per_cycle')
     return dict(schema='opentallas.p3.materialization_cost.v1',input_image=str(image_dir),
@@ -53,8 +54,8 @@ def price(model_root: Path, image_dir: Path):
         scope='selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included',
         instructions_selected=len(selected),rowx_instructions_expanded_serially=rowx_records,
         records_per_unit=dict(kinds),cycles_per_unit=dict(cycles),unit_work_serial_sum_cycles=sum(cycles.values()),
-        vm_copy_words=words['VM_copy'],hbm_load_words=words['HBM_load'],HBM_bytes_per_cycle=bw,
-        HBM_traffic_floor_cycles=4*words['HBM_load']/bw,
+        vm_copy_words=words['VM_copy'],hbm_load_words=words['HBM_load'],hbm_load_bytes=words['HBM_bytes'],HBM_bytes_per_cycle=bw,
+        HBM_traffic_floor_cycles=words['HBM_bytes']/bw,
         record_costs=details)
 
 
