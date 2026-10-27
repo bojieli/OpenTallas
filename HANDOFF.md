@@ -1451,3 +1451,5 @@ CODEX: 2026-10-27 09:49 PDT HEAD transport coupon PASS fa34757d2:3 real HOST276 
 
 CODEX: HEAD native40FT source e25676d2da ready; actual A/B HM0 routed hold residuals diagnosed (A-8.86/199, B-3.92/53), no clock changes. A/B data-only margin2 successors live intel1/epyc2 under codex-head-1027/{elemA_m2,elemB}.eco_residual2_clean. B missing signoff bundle + stale absent-port metadata repaired only in own successor kit; original failures preserved. Images/source guard in codex/head-1027@1d54678770. Final extracted signoff/LEC pending; no SIGNED claim.
 CODEX: KV pending event563778e9a integrates legalwidePV+127actualstationmoves/0cycles+160parentclockresites; imageviewed, combinedG0client2143415 live. Native5c7strictPASS0, portbind5workeractive. FallbackPLANPREP d06cccbc4 done/no builds. ModeledSerDesPGconnects but IR114mVPHY/485-493mVglueFAIL; R4densePHYdiagnosticclient2163557 live.
+
+CODEX: 2026-10-27 10:00 PDT Collected legacy KV reference physical SIGNED TT+12.02/FF+2.93 (0f978 signoff_hold), Qwen owns fit/proof/preservation. QC7fd actual-placement review PASS-COND and continuation live; exact5b canonical canary still repairing hold.
