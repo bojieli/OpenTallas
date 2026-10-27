@@ -98,6 +98,8 @@ above the centre channel moves +8.64 um (centre gap 336.96 -> 345.60), x unchang
   with it; r8 5/5 and shield 11/11 tests pass.
 - guard51 dry build re-run with the fix ($S/dryfix/dry, 8.2 s, the same plan sha 37937a86): proxy check `wide_vss_check.py` gives
   baseline 24 wide M9 VSS pairs / 48 metal violations (= the R17 count; columns x 2176, 4647, ...), fixed 0 / 0.
+  Render dryfix/fix_w2176.png (viewed): leg 85_0 moves 2175.72 -> 2175.56; its shield now ends 0.04 um from the 98_0 trunk shield
+  (same net VSS, two 0.64 shapes; the LEF wide row has no SAMENET, min 0.04 met exactly -> legal but marginal, confirm in die DRC).
   48 nets move by one 0.08-um track; tree wire 1562.338 -> 1562.348 mm; 120 M9:wide_merge_skip. UNCHECKED (NUMBER-CHECK-QC-R24c
   running). A die DRC re-run on the fixed build is owed (combo + DRT DRC, >30 min).
 ### (1) A0-CLK-R3b strap re-phase adopted in the R24 lattice + mesh RC with the 16,896 drop loads -- FAIL as specified
