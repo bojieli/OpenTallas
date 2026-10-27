@@ -92,3 +92,6 @@ S81 subgroup parked on RESET; all jobs preserved. Main summary in CODEX-LOG.md H
 
 ## CODEX notes 2026-10-26 — inherited-job disposition
 Old t58 unit1839966-1792961705 was on retired epyc3 (FLEET-NEW3/FLEET-DISK explicitly retire host; owner wipe closed recovery). No surviving terminal receipt collected: classify historical result unavailable, superseded geometry, not PASS or current running work. Old t6/t56/t57 are also superseded by current B5/F5/PHY interface batch; retain their recorded iterations/failures and do not duplicate or use for current gate credit. Old actual t55/st41 overflow0 and their reviewed geometry receipts remain historical evidence only. Current signal-only B5/v5 50-iteration-budget jobs both overflow0; actual PHY-fit connected plan is still allocating/reviewing wrappers and is held for PG/regional-clock/reset infrastructure. No old die route was restarted.
+
+## CODEX notes 2026-10-26 20:12 PDT takeover
+Old retiredhost t58 unavailable/superseded; noPASScredit. Current inherited signalGRT0notclockfreeze; currenttrial assignedPD2 after plan/clockreview.

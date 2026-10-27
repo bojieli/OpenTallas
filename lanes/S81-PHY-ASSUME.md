@@ -2,3 +2,6 @@
 2026-10-26 01:00 PDT S81-PHY-ASSUME: DONE claude/s81-phy-assume-1026@bea83f9105. Table: physical/die_plan/s81/PHY_ASSUMPTIONS.md (+ json, check). 14/14 SerDes windows short vs published N7 macro (3.36 mm2, 3.3 mm shore); IR trial power 18x below the published 4.37 W/macro; HBM PHY OK. D-S81-PHY PENDING-DELTA in PLAN-DELTA.md + COORD-REVIEW-QUEUE READY. No jobs launched. Worktree /home/ubuntu/wt/s81-phy-assume-1026 removed after push.
 ## PARKED 2026-10-26 01:00 PDT
 Live jobs: none. Next (for PATH-S81 / DIE-PROTO): (1) COORD folds D-S81-PHY into the next S81 batch; (2) VDDPHY PDNSim re-run at the published power (tools/die_plan/phy_ir.py --density 1.30) on WS0, WS3 and a 2.41-mm2 window; (3) a 72-frame die power report that states whether the PHY is inside the die figure.
+
+## CODEX notes 2026-10-26 20:12 PDT takeover
+Published assumptions recorded; PHY folded B2 zero-area14/14, not ownerquestion. PG at published4.37Wmacro still open; sharedPDN first. No duplicate IRwave.

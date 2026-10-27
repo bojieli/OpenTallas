@@ -620,3 +620,6 @@ Scope parked safely while agent takes HBMROOTnext. B2event codex/s81b2-0733@12a0
   - Insertion 9.8-14.1 ns TT.
   - GEOM-9 conditions: per-edge routed/Manhattan max +21.4 %, 4 of 1,902 ref-tree edges >10 % (level-9 jogs); die-root->region-root path 27.1-28.8 mm (spread 1.7 mm); root-site displacement from req p50 1.0 / p90 98 / max 402 um; PHY region intra spread 152 TT / 135 FF ps (7 tapped parts; worst related pair <= that). Script results/path_s81_pd_1026/scripts/land_report_regions.py, landed_report_regions.json.
 - (3) NUMBER-CHECK price: compose_tok_ds on the composed tap plan's own regenerated table (gen_lat_tap/s81_latency.json, 873 lanes: +4 lpc lanes of 2 cycles vs the committed lat_plan, off the critical path) = AR 766.4 / MTP 2,689.5 vs base 784.9 / 2,749.3 (base recomputed on this tree) -> **-2.36 % / -2.18 % CHECKED**. It prices the current regions with 60 unplaced bands and the landed-|d| FAIL above, so it is not a closed number.
+
+## CODEX notes 2026-10-26 20:12 PDT takeover
+PD2 active on own child: directed exact-partition PHY driver grouping, 2x2svc regions, thin bands, combined ROWX/R9 delta, G0 cut anomaly, equal-root clock/repeater repair. Inherited signal-only dieGRT not freeze evidence.

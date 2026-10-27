@@ -482,3 +482,6 @@ NEW hcpost SIGNED epyc2:codex-s81-core-eco/hcpost_route_h5/signoff_codex/signoff
 S81-CORES owns source db80250fbc on codex/s81-legacy2144: actual current template-pin VS/VQ legacy kits can now carry face-depth constraints, F6 macro IF placement, F4 affinity and FCAP CTS release. Synth-only jobs live intel1/intel2; no P&R before render/review. Older one-stage face failures, qbank native F1 hold miss and VQ433EP remain failed evidence. Detailed collection coord/codex-s81-legacy2144.md.
 
 CODEX23:21 / legacy_cores: legacygeneratorF4leafaffinity/F6macroIF/VSfaceband+scopeRTLfixesROOTmerged. VQ synthLEC_EQ/FACE700PASS, actualCTScomplete/review948e1588b9; default250±40clockPASS,tighter±20FAIL; noFFhold/route/newSIGNED. ActualdynamicSRAMIF520max13.221um,298constantpinskeptobligations. VSFACE2534PASSLECstilllive. NativeKVsourcecensus now176SRAM32quant+144events; NRquantsourcee3a0b04fec fromTOKEN remainsunadoptedparent. NativephysicalWIP1e3bd778cc explicitlyholdsgenuineinterfaceexports(oldKVE/KVPmissingnorm129,KVTmissingmode/base16),mappedpool/glue,cutsandcompilertransport; nofakeSRAM/coreplacement.
+
+## CODEX notes 2026-10-26 20:12 PDT takeover
+Legacy result wave superseded reach405/reset/masterplanbatch; HCPOST oldSIGNED retained, no blanketreroute. Current geometry and physical cores ownedPATH/S81-CORE-LAT.

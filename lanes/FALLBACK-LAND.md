@@ -114,3 +114,6 @@ HEAD-CORE-LAT-R4 is untouched: the fallback uses the existing cv cores and does 
 - **Trees.** die_trial --region-trees: 168 region roots, 9,209 entries, 31,550 cells, 0 illegal sites. Render viewed. GEOM REQ below.
 - **GRT** submitted: epyc1:/srv/opentallas-scratch2/claude/fallback-s81-2-1026/grt.otrun.log, out_{TT,FF}. Collect overflow + landed |d|. The inherited die_g0fix_i50 was not touched.
 2026-10-26 19:16 PDT GEOM-REVIEW-9 -> FALLBACK-S81-2 region trees: PASS-COND as landed fallback. (1) Reference jogs/hooks: report per-root path vs Manhattan and root arrival spread from GRT. (2) PHY depth-10 tree: worst intra-region pair in die STA, split along PHY lanes only if it fails. (3) Report root displacement from region bbox centre (moved_nodes 17,020/29,347, CHECKED). Details lanes/GEOM-REVIEW.md.
+
+## CODEX notes 2026-10-26 20:12 PDT takeover
+S81 fallback GRT overflow0TTFF but landed135/85fail; childPD2 fixes directPHY regions, equal roots and lk405umrepeaters. Thin bank60->22fail, residuals measured before anystrip.

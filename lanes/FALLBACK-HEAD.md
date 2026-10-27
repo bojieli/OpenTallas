@@ -50,3 +50,6 @@ Branch claude/fallback-head-2-1026@ba603056a (base eb56dcd125). All numbers UNCH
 - Also regenerated tools/die_plan/die_plan.schema.json: branch ba603056a added reserved_sites_um to schema.py without dumping it (test_schema_file_in_sync failed on the branch, passed on main).
 - Tests CHECKED: 111 passed + 47 subtests (test_clock_landings, landing_collector, clock_landing_verify/latency, reserved_sites, tools/s81_head/*, test_schema, mesh_profile_schema, ref_tile reset-landing x4).
 - Bind still BLOCKED on HEAD-RTL (ot_s81hd_ctl/mesh_ep/host_ep); not touched here. No jobs submitted.
+
+## CODEX notes 2026-10-26 20:12 PDT takeover
+Tool monitor=dataflow and reserved-site source READY982a208cfa; root merge review. Rings cannot build until HEAD-RTL and strict real bind; sl300 GRT0 historical, no dieSTA.

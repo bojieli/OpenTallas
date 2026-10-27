@@ -76,3 +76,6 @@ compose_tok_ds / ds_rom_mtp.json token DAG, reset_tree.py START broadcast (decis
 6. Observers (ruling task 3): clock-landing observer = module ot_s81hd_ctl, instance u_core, fault_port lep_fault_i
    (feeds fault_state bit 10 = other_events/fault vector; the collector ORs cland_up_fault in), ready_port start_i (the
    START gate; the collector ANDs cland_up_ready in). Both are one-bit inputs already bound to real nets, as gate_observer needs.
+
+## CODEX notes 2026-10-26 20:12 PDT takeover
+Root/head_ctl implements approved19:50 contract for ctl/host; mesh realRTL completed fa6598bd6. Strict head bind waits these providers; no synthetic asbuilt.

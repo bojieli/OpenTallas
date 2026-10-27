@@ -170,3 +170,6 @@ change to pin faces, landings or lanes, and no new straps. The CFG DP field repl
     - Ledger % = table 17.045 + the change in the A+B rows from the same compute. UNCHECKED. It differs from ROWX-BUDGET's 17.97 % because compute now binds MTP for these rows.
     - Transport is not counted, the same as for the 3809 row.
   - Open: the TOK-DS/xr transport must OR-merge the 15 peers' slot-aligned RO streams, excluding the receiver's own, and re-pair them into PK2 in rank order. This is not RTL here. The svc_rs ROWX=1 rebuild is left to COORD (one rebuild after this lane).
+
+## CODEX notes 2026-10-26 20:12 PDT takeover
+Tokens/ds_compiler collects ROWX benches and implements rankorderOR/re-pair. Physical merged delta in PD2. Found nw160 leaf overwrite: evacuate every160words before reuse; no transport/store claim until scheduled.

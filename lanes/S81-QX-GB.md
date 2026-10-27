@@ -4,3 +4,6 @@
 
 ## CODEX notes 2026-10-26 20:07 PDT
 CGR8functional5.7Mcycle co-sim+mutant already closes designclassification; EQUIVALENT gate stillblocked on85LECtoolcorrespondence, activeLEC-ICG-2 successor; no route.
+
+## CODEX notes 2026-10-26 20:12 PDT takeover
+Boundary737pins RAW735/735 fixed; later kit204LEC failure triaged LEC-ICG-2/tokens. No gatedrebuild before exactproof.
