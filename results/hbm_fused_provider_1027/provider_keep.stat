@@ -1,0 +1,66 @@
+
+12. Printing statistics.
+
+=== ot_hnx_fused_job217_provider ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     2141        - wires
+     3228        - wire bits
+       31        - public wires
+     1085        - public wire bits
+       24        - ports
+      559        - port bits
+     2395  342.061 cells
+        4     0.35   A2O1A1Ixp33_ASAP7_75t_R
+        2    0.262   A2O1A1O1Ixp25_ASAP7_75t_R
+        9    0.787   AND2x2_ASAP7_75t_R
+        3    0.262   AND3x1_ASAP7_75t_R
+        3    0.306   AND4x1_ASAP7_75t_R
+        1    0.117   AND5x1_ASAP7_75t_R
+        4     0.35   AO21x1_ASAP7_75t_R
+        1    0.175   AO222x2_ASAP7_75t_R
+        9    0.787   AOI211xp5_ASAP7_75t_R
+      258   18.808   AOI21xp33_ASAP7_75t_R
+       10    1.021   AOI221xp5_ASAP7_75t_R
+        1    0.146   AOI222xp33_ASAP7_75t_R
+       26    2.274   AOI22xp33_ASAP7_75t_R
+        3    0.262   AOI31xp33_ASAP7_75t_R
+        1    0.102   AOI32xp33_ASAP7_75t_R
+      584  221.383   DFFASRHQNx1_ASAP7_75t_R
+        3    0.875   DFFHQNx1_ASAP7_75t_R
+      333   14.565   INVx1_ASAP7_75t_R
+        1    0.102   MAJIxp5_ASAP7_75t_R
+      345    20.12   NAND2xp33_ASAP7_75t_R
+       10    0.729   NAND3xp33_ASAP7_75t_R
+        7    0.612   NAND4xp25_ASAP7_75t_R
+        3    0.306   NAND5xp2_ASAP7_75t_R
+      251   14.638   NOR2xp33_ASAP7_75t_R
+       14    1.021   NOR3xp33_ASAP7_75t_R
+       10    0.875   NOR4xp25_ASAP7_75t_R
+        8    0.816   NOR5xp2_ASAP7_75t_R
+       13    1.137   O2A1O1Ixp33_ASAP7_75t_R
+        1    0.117   OA211x2_ASAP7_75t_R
+       16    1.633   OA21x2_ASAP7_75t_R
+        1    0.146   OA22x2_ASAP7_75t_R
+        8      0.7   OAI211xp5_ASAP7_75t_R
+      334   24.349   OAI21xp33_ASAP7_75t_R
+        9    0.919   OAI221xp5_ASAP7_75t_R
+        1    0.146   OAI222xp33_ASAP7_75t_R
+       42    3.674   OAI22xp33_ASAP7_75t_R
+        7    0.612   OAI31xp33_ASAP7_75t_R
+        3    0.306   OAI32xp33_ASAP7_75t_R
+        2    0.175   OR2x2_ASAP7_75t_R
+       12     1.05   OR3x1_ASAP7_75t_R
+        4    0.408   OR4x1_ASAP7_75t_R
+        6      0.7   OR5x1_ASAP7_75t_R
+       14    1.837   XNOR2xp5_ASAP7_75t_R
+       16      2.1   XOR2xp5_ASAP7_75t_R
+        2        -   ot_sram_1r1w_256x256_m2_r2c2
+
+   Area for cell type \ot_sram_1r1w_256x256_m2_r2c2 is unknown!
+
+   Chip area for module '\ot_hnx_fused_job217_provider': 342.061380
+     of which used for sequential elements: 222.257520 (64.98%)
+

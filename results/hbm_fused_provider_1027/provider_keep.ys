@@ -1,0 +1,12 @@
+read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v
+read_verilog -sv -DSYNTHESIS rtl/hbm_next/fused/ot_hnx_fused_job217_provider.sv
+chparam -set DELIVERED_RESET 1 ot_hnx_fused_job217_provider
+hierarchy -check -top ot_hnx_fused_job217_provider
+tcl /src/physical/common_flow/ot_keep_regs.tcl
+tee -o /out/provider.hier.stat stat
+synth -top ot_hnx_fused_job217_provider -flatten
+dfflibmap -liberty /tmp/lib/seq.lib
+abc -liberty /tmp/lib/all.lib
+opt_clean
+tee -o /out/provider.stat stat -liberty /tmp/lib/all.lib
+write_verilog -noattr /out/provider.netlist.v
