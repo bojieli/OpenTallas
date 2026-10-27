@@ -1,0 +1,7 @@
+# HCOL source recovery and content sizing
+
+The current plan names ot_hbm_idx_score_hcol_h0/h1 are aliases of the existing canonical ot_hidx_score_hcol with HALF=0/1,MUT=0. recipes_patch.json copies the proven split recipes exactly and pins all eight source files at the R8 source commit. It is a proposed recipe overlay, not a new arithmetic wrapper. Current plan clock-port remapping must match its approved entries before kit generation.
+
+Actual RVT TT mapped synthesis of each half used tools/hbm_die_v15/synth_master.sh with HIER=1, same eight source files, no black boxes, no unresolved modules. synthesis_summary.json and hcol*.stat carry content area/cells/FFs. Narrowing to a164x187.488 lot requires72-76% logic fill before clock and repair. No placement, route, or sign-off claimed.
+
+source_contract.json records the exact64-core-per-quarter graph and key-bit mapping. Native four-quarter composition needs256 hcols. Both half masters already register their active data ports and output ports. Generic external +1input/+1output shells introduce a two-edge relative phase error at the h0-to-h1 sum seam unless corrected. Proposed INTERNAL_CORE treatment uses --face-shell off and anchors/preserves those existing source boundary flops; it keeps the original zero-added-cycle split. This proposal requires the normal generated-kit face and geometry gates. No source timing/arithmetic has changed.
