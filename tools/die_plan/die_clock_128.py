@@ -394,6 +394,7 @@ PIN_BAR_X = {f"BUFx{k}_ASAP7_75t_R": {"A": 0.027, "Y": yx}
 # LEF AREA (asap7_tech_1x_201209.lef: M2/M3 0.000666, M4/M5 0.002, M6 0.0021875)
 STACK_PAD = {"M2": (0.019, 0.009), "M3": (0.009, 0.020), "M4": (0.043, 0.012), "M5": (0.012, 0.043),
              "M6": (0.035, 0.016)}
+SHORT_STACK_PAD = {"M7": (0.016, 0.036), "M8": (0.08, 0.08)}
 STACK_RISER_MAX_UM = 2.5     # longest M7 riser (TREE_OFF_UM + track move) the island window is sized for
 
 
@@ -403,9 +404,13 @@ def pin_xy(cells, c, pin, row_y, buf="BUFx24_ASAP7_75t_R"):
     lib = v.get("lib", buf)
     if lib not in PIN_BAR_X:
         raise PlanError([dict(kind="no_pin_stack", name=c, detail=f"no pin-bar model for {lib}")])
-    if v.get("orient", "R0") not in ("R0", "MX"):
+    if v.get("orient", "R0") not in ("R0", "MX", "MY", "R180"):
         raise PlanError([dict(kind="no_pin_stack", name=c, detail=f"orient {v.get('orient')} not modelled")])
-    return round(v["x"] + PIN_BAR_X[lib][pin], 4), round(v["y"] + row_y / 2, 4)
+    bar = PIN_BAR_X[lib][pin]
+    if v.get("orient") in ("MY", "R180"):
+        # ASAP7 buffer footprint is the Y-bar x plus the 0.027-um edge margin.
+        bar = PIN_BAR_X[lib]["Y"] + PIN_BAR_X[lib]["A"] - bar
+    return round(v["x"] + bar, 4), round(v["y"] + row_y / 2, 4)
 
 
 def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False):

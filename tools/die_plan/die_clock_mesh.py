@@ -1856,6 +1856,41 @@ def write_verilog(cells, nets, ports, path):
 LAT_TOL_UM = 0.01            # plan coordinates are r3-rounded: equal-cut / midpoint checks to 0.01 um
 
 
+def apply_lattice_cell_sites(cells, nets, taps, declared, host, part_rects=None):
+    """Consume plan-declared physical cell origins after the ideal balanced tree is constructed.
+
+    Sites are lower-left row coordinates, not clock delay corrections. Every generated
+    cell must have exactly one site and a legal full-body host. Orientation is computed
+    from load direction before any route is measured (R9 westward-chain mirroring).
+    """
+    errors = []
+    if set(declared) != set(cells):
+        raise C128.PlanError([dict(kind="cell_site_inventory", name="lattice", detail=
+            f"missing {sorted(set(cells)-set(declared))}, extra {sorted(set(declared)-set(cells))}")])
+    for name, v in cells.items():
+        site = declared[name]
+        x, y = map(float, site["origin_um"])
+        if abs(snap(x, SITE_X)-x) > 1e-6 or abs(snap(y, ROW_Y)-y) > 1e-6:
+            errors.append(dict(kind="cell_site_off_row", name=name, detail=str([x, y])))
+        part, why = host((x + BUF_W/2, y + ROW_Y/2))
+        if why or part != site.get("part"):
+            errors.append(dict(kind="cell_site_host", name=name, detail=f"{part}/{why} vs {site.get('part')}"))
+        if part_rects is not None and part in part_rects:
+            r = part_rects[part]
+            if not (r[0] <= x and r[1] <= y and x + BUF_W <= r[2] and y + ROW_Y <= r[3]):
+                errors.append(dict(kind="cell_site_seam", name=name, detail=f"cell body leaves host {part}"))
+        v.update(x=x, y=y)
+    txy = {"port:"+t["port"]: t["xy"] for t in taps}
+    for n in nets:
+        if n["drv"] not in cells:
+            continue
+        v = cells[n["drv"]]
+        loads = [cells[k]["x"] + BUF_W/2 if k in cells else txy[k][0] for k in n["loads"]]
+        v["orient"] = "MY" if sum(loads)/len(loads) < v["x"] + BUF_W/2 else "R0"
+    if errors:
+        raise C128.PlanError(errors)
+
+
 def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, track_profile=None, rule128=None,
                   tree_only=False, pin_stack=False, stack_r8=False):
     """CLOCK-128-R4 (COORD RULING MASTER-PLAN-R5 12:58): the die H-tree built FROM the master plan's die_tree_plan.json
@@ -2043,6 +2078,12 @@ def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, trac
         perr.append(dict(kind="no_regional_distribution", name="regions",
                          detail=f"{n_t} partition clock taps: the plan declares no distribution (regional mesh drivers / "
                                 f"sub-tree islands) below the {len(lv)} lattice leaves; MASTER-PLAN must declare it"))
+    if lat.get("cell_sites") is not None:
+        apply_lattice_cell_sites(cells, nets, tap_rows, lat["cell_sites"], host, dict(parts))
+        out["meta"]["lattice_tree"]["cell_sites"] = dict(
+            count=len(cells), mirrored=sum(c.get("orient") == "MY" for c in cells.values()),
+            source="lattice.cell_sites (lower-left origins, per-cell host)",
+            ideal_path_basis="path lengths above describe the ideal balanced topology; routed RC uses these actual sites")
     overlaps = placement_overlaps(cells)
     out["clock_cell_overlaps"] = overlaps
     out["clock_hard_keepout_violations"] = hard_keepout_violations(P, cells)
@@ -2063,8 +2104,14 @@ def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, trac
     router = C128.TrackRouter(NDR[ndr], sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM,
                               **(dict(wide_merge_um=C128.WIDE_MERGE_UM) if stack_r8 else {}))
     router.reserve(C128.pg_shapes(pgr))
-    wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, router=router, pin_stack=pin_stack,
+    stack_offset = lat.get("stack_track_offset_um", C128.TREE_OFF_UM)
+    wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=pin_stack,
                              **(dict(port_on_trunk=True) if stack_r8 else {}))
+    if "stack_track_offset_um" in lat:
+        out["meta"]["lattice_tree"]["stack_track_offset_um"] = stack_offset
+        for w in wires:
+            for s_ in w.get("stacks", []):
+                s_["short_stack"] = True
     if stack_r8:    # CLOCK-128-R8: clock_routed encodes every downward via as a junction split (see clock_routed)
         for w in wires:
             if w.get("pin_stack"):
@@ -2558,7 +2605,7 @@ def cmd_combo(a):
         L.append(f"place_pin -pin_name {t_['port']} -layer {tap_layer} -location {{{t_['xy'][0]:.3f} {t_['xy'][1]:.3f}}} "
                  f"-pin_size {{{pin_size[0]:g} {pin_size[1]:g}}}")
     for c, v_ in sorted(cells.items()):
-        L.append(f"place_inst -name {c} -location {{{v_['x']} {v_['y']}}} -orient R0 -status FIRM")
+        L.append(f"place_inst -name {c} -location {{{v_['x']} {v_['y']}}} -orient {v_.get('orient', 'R0')} -status FIRM")
     hw = nd["width"] / 2
     L += ["set blk [ord::get_db_block]", "set tech [ord::get_db_tech]", "set l8 [$tech findLayer M8]",
           "set l9 [$tech findLayer M9]", "set dbu [$tech getDbUnitsPerMicron]",

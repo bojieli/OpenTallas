@@ -133,7 +133,10 @@ def load_island_sites(paths):
     for p in paths:
         d = json.loads(Path(p).read_text())
         tag = Path(p).name
-        if isinstance(d.get("lattice"), dict):
+        if isinstance(d.get("lattice"), dict) and d["lattice"].get("cell_sites") is not None:
+            for name, site in d["lattice"]["cell_sites"].items():
+                out.append((tuple(site["xy_um"]), f"{tag}:cell:{name}"))
+        elif isinstance(d.get("lattice"), dict):
             for n in d["lattice"].get("nodes", []):
                 out.append((tuple(n["xy_um"]), f"{tag}:node:{n.get('tag')}"))
             for k, r in enumerate(d["lattice"].get("gate", {}).get("leg_repeater_sites", [])):
