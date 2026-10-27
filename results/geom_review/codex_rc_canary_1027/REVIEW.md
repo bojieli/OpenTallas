@@ -27,3 +27,7 @@ Viewed qwen_kvsys.actual_place.png from ab3ae7c3a kv3_io_ft3_place.odb. Two stra
 ## S81 actual placement, 08:52 PDT
 
 Viewed s81.actual_place.png from ab3ae7c3a slice_station__t12 3_place.odb. North/south pin groups align with two vertical station/repeater strips; remaining routing area and clock-grid access are open, with no macros/new walls or overlaps.16 clock entries remain on the reference lattice. PG315024terms/0open; shared60um repair146766->157512cells (+10746). Verdict PASS-COND for one diagnostic CTS/route continuation, retaining the known reference insertion/hold checks.
+
+## Exact5b critical S81 canary placement, 09:09 PDT
+
+Viewed exact5b_s81.actual_place.png from source5b2b94251fc5 (noRC60/preflight additions), same canonical plan9101a4f12c38d784151db6392afe2ed401e9cc8888df249c8566f45e231092f9. Two north/south station strips and aligned face pins leave open routing area; no macros, added walls or overlaps.16clock-grid entries retain the canonical geometry. Verdict PASS-COND for exact-source diagnostic CTS/route, preserving original insertion/hold gates. This t12 vehicle contains no12.7core slice; the core-pin-snap mechanism is separately covered by96tests and the core-owner actual probe. Final receipt is canonical solely to release matching5b core-kit flow, never the combinedRC60flow.
