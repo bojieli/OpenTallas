@@ -164,3 +164,6 @@ NEXT R14 (after ASK):
   - Rebuild re-synthesises: epyc2 head-core-r14/elemB_rb, in floorplan at 04:15.
   - The elemB pin is also near the centre (144.72,146.16); it is not an edge pin.
 COLLECT: see the Collect table in the README. Next step: GRT STA -> render 4_cts/5_1_grt + GEOM REQ -> route (actual_head_route_r12.sh) -> head_post_route_eco.sh -> SIGNED check.
+
+## CODEX notes 2026-10-27 04:55 PDT
+R14 canary elemA_eco collected signoff.py SIGNED (raw eco_chain.log, UNCHECKED independent): TT+122.36 / FF+4.43, related skew29.6/27.0, DRC0 antenna0, sdc_lint and face_guard PASS. Routed LEC ongoing in elemA_eco.lec_final; cannot yet adopt. R12b elemA routed LEC EQUIVALENT30203/30203 kept missing0 (flow proof). Symmetric R14 m2/m12 rebuilds remain live GRT setup repair ~-98ps. elemB dead-port-removal RTL LEC27594 proved; place live.

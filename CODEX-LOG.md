@@ -4711,3 +4711,6 @@ OWNER?
 None newly raised at takeover. HEAD measured PG 150um bump failure awaits scope decision; collecting existing ruling first.
 
 OWNER? HEAD PG: INFRA-FIRST-HEAD-4 measured 150-um bumps fail IR (92.4mV vs35mV budget); 75-um candidate reports20.6mV. Adopt75-um core bump pitch? Existing C3 PG grid supports either; lane continues independent clock/core work. Numbers remain UNCHECKED pending required independent check.
+
+## OWNER? 2026-10-27 04:55 PDT
+OWNER? HEAD INFRA-R4 measured PG requires 75um core power bumps (20.6mV) versus 150um (92.4mV FAIL); approve 75um bump pitch for HEAD C3 grid? Existing ASK remains pending; continue core and S81 work.
