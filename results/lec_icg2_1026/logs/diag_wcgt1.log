@@ -1,0 +1,15 @@
+ADD gold ff:u_dut.u_e.w_cgt[1] = gold ff:u_dut.u_e.w_coh[0] 0
+== hyp:gold:ff:u_dut.u_e.w_cgt[1]: PROVED; cone inputs 78
+== ff:u_dut.u_e.cfg_d[0]: DIFFERS (cex); cone inputs 8
+   cone input kinds {'matched': 8}
+    matched ff:u_dut.u_e.g_pq.g_rp2.rg_a[2] = 1
+    matched ff:u_dut.u_e.g_pq.g_rp2.rg_a[3] = 1
+    matched ff:u_dut.u_e.g_pq.g_rp2.rg_d[0][0] = 1
+    matched ff:u_dut.u_e.g_pq.g_rp2.rg_d[1][0] = 1
+    matched ff:u_dut.u_e.g_pq.g_rp2.rg_d[2][0] = 0
+    matched ff:u_dut.u_e.g_pq.g_rp2.rg_d[3][0] = 0
+    matched ff:u_dut.u_e.g_pq.g_rp2.rg_d[4][0] = 1
+    matched ff:u_dut.u_e.g_pq.g_rp2.rg_s[2] = 1
+== ff:u_dut.u_e.wA[3]: PROVED; cone inputs 57
+== ff:u_dut.u_e.w_run: PROVED; cone inputs 64
+== ff:u_dut.u_e.a_ctr[0]: PROVED; cone inputs 52

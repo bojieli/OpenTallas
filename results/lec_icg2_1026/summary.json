@@ -1,0 +1,23 @@
+{
+ "lane": "LEC-ICG-2", "generated": "2026-10-26 19:44 PDT",
+ "kit": "ot_v41_rom_elem_q_qxpq_w10_gb_gbcgr8 (epyc1:/srv/opentallas-scratch2/claude/lec-icg-1026/kits/, netlist + hyp.json sha256 in logs/inputs.sha256)",
+ "question": "LEC-ICG NOT EQUIVALENT 261/64536 (claude/lec-icg-1026@549aa6b960): real or tool?",
+ "verdict": "tool (lec.py false differences); no RTL-vs-netlist mismatch found",
+ "cosim": {"tool": "verilator 5.032 docker, RTL vs 1_2_yosys.v + liberty-derived ASAP7 cell models (sim/gen_cells.py), lock-step from reset",
+   "compared": "all outputs + 521 internal state bits (196 failing/unproven LEC points mapped + 325 proved controls)",
+   "runs": [{"seed":1,"cycles":1910506,"out_mism":0,"int_mism":0,"toggled":496},
+            {"seed":2,"cycles":1898761,"out_mism":0,"int_mism":0,"toggled":498},
+            {"seed":3,"cycles":1887544,"out_mism":0,"int_mism":0,"toggled":483},
+            {"seed":1,"phases":40,"cycles":247454,"out_mism":0,"int_mism":0,"note":"v1 bench"}],
+   "stimulus": "300 phases/seed, go/cfg/pq_swap/xs, chaos 1/50000 random pins + resets, 1/4 idle gaps (gate_edges 314)",
+   "negative_control": {"mutant":"ENA of u_e.g_cgr.u_cg_r3.u_icg tied 1","out_mism":290,"first":86,"int_bits_differ":7,"verdict":"FAIL as required"},
+   "untoggled_failpoints": ["w_pos[2]","w_q[1]","w_q[2]"]},
+ "yc_scan": "rtl_lint.py --scan (YOSYS-CONCAT 47aa9825d): 1 YC1 hit ot_v41_elem_pq_tags.sv:96 RW(mb*NSEG)+RW(ts), genvar-constant widening cast, benign class",
+ "root_causes": {
+   "cfg_d_27": "slang pads rg_d[0:4] to 8 words; rg_d[5..7] never written, -zinit const 0 vs read_verilog X; differs only at rg_s>=5, unreachable (rk<=17). FIXED in lec.py (never-written gold register = X source)",
+   "walker_wA_wB_a_ctr_149": "gold-only w_cgt[1] == w_coh[0] (qx_gt(oh)[1]==oh[0], merged by synthesis) never kept by correspondence; with that one hint the hypothesis set stays inductive and 149 more points prove",
+   "residual_85": "relaid-array pairs missed (pa_sg<-q1_sg#t, g_pl.r_t<-g_mi.u_c2.q#t, drain<-drain#t feeding u_ze_r*), and RTL registers removed by synthesis (pl[6], line[57], u_c8.g_r.r[66]) feeding g_fw q, line[68], err, valid_out; UNCHECKED per group"},
+ "reproof_on_saved_aigs": {"base": 261, "unwritten_fix": 234, "unwritten_fix_plus_wcgt1_hint": 85, "hyp_not_proved": 0},
+ "canary_8785f895a5": "s81 3549 EQ, s81_head 2275 EQ, qc 11704 EQ, hbm 25864 EQ, kvcore pending",
+ "tests": "tools/die_plan test_lec*.py 106 passed 2 skipped; test_lec_unwritten_x.py fails 2/4 on base lec.py"
+}

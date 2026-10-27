@@ -1,0 +1,87 @@
+== ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][1]: DIFFERS (cex); cone inputs 5
+   cone input kinds {'matched': 3, 'gold_only': 1, 'gate_only': 1}
+    gate_only ff:u_dut.u_e.g_mac[0].g_l3.u_l1.q1_sg#t[17] = 1
+    gold_only ff:u_dut.u_e.g_mac[0].g_l3.u_l1.q1_sg[1][1] = 0
+    matched ff:u_dut.g_rstp.rst_pf = 0
+    matched ff:u_dut.u_e.g_cgr.u_ze_r0.q = 0
+    matched ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][1] = 0
+== ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[3]: DIFFERS (cex); cone inputs 5
+   cone input kinds {'matched': 3, 'paired': 1, 'gate_only': 1}
+    gate_only ff:u_dut.u_e.g_mac[1].g_mi.u_c2.q#t[3] = 1
+    matched ff:u_dut.g_rstp.rst_pf = 0
+    matched ff:u_dut.u_e.g_cgr.u_ze_r0.q = 0
+    paired ff:u_dut.u_e.g_mac[0].g_mi.u_c2.q[3] = 0
+    matched ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[3] = 0
+== ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.g_fw[0].u_f.q[0]: DIFFERS (cex); cone inputs 15
+   cone input kinds {'matched': 14, 'gold_only': 1}
+    gold_only ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.pl[6] = 0
+    matched ff:u_dut.g_rstp.rst_pf = 1
+    matched ff:u_dut.u_e.g_cgr.u_ze_r0.q = 1
+    matched ff:u_dut.u_e.g_mac[0].g_mz.u_rs.q = 1
+    matched ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.g_fw[0].u_f.q[0] = 1
+    matched ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.ps[6][0] = 1
+    matched ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.ps[6][1] = 0
+    matched ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.ps[6][2] = 1
+    matched ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.ps[6][3] = 0
+    matched ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.pv[6] = 1
+    matched ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.u_t.g_line.line[68] = 1
+    matched ff:u_dut.u_e.g_mac[1].g_l3.u_l0.u_tag.g_line.line[336] = 1
+    matched ff:u_dut.u_e.g_mac[1].g_l3.u_l0.u_tag.g_line.line[337] = 0
+    matched ff:u_dut.u_e.g_mac[1].g_l3.u_l0.u_tag.g_line.line[338] = 1
+    matched ff:u_dut.u_e.g_mac[1].g_l3.u_l0.u_tag.g_line.line[339] = 0
+== ff:u_dut.u_e.g_cgr.u_ze_r0.q: DIFFERS (cex); cone inputs 26
+   cone input kinds {'matched': 12, 'gold_only': 7, 'gate_only': 7}
+    gate_only ff:u_dut.u_e.drain#t[0] = 0
+    gate_only ff:u_dut.u_e.drain#t[1] = 0
+    gate_only ff:u_dut.u_e.drain#t[2] = 1
+    gate_only ff:u_dut.u_e.drain#t[3] = 0
+    gate_only ff:u_dut.u_e.drain#t[4] = 0
+    gate_only ff:u_dut.u_e.drain#t[5] = 0
+    gate_only ff:u_dut.u_e.drain#t[6] = 0
+    gold_only ff:u_dut.u_e.drain[0] = 0
+    gold_only ff:u_dut.u_e.drain[1] = 0
+    gold_only ff:u_dut.u_e.drain[2] = 0
+    gold_only ff:u_dut.u_e.drain[3] = 0
+    gold_only ff:u_dut.u_e.drain[4] = 0
+    gold_only ff:u_dut.u_e.drain[5] = 0
+    gold_only ff:u_dut.u_e.drain[6] = 0
+    matched ff:u_dut.g_go_boundary.go_q = 0
+    matched ff:u_dut.g_rstp.rst_pf = 1
+    matched ff:u_dut.u_e.g_hpk.g_k[0].u_w.q = 1
+    matched ff:u_dut.u_e.g_ir.g_gok.u_gm.q = 0
+    matched ff:u_dut.u_e.g_mac[0].g_mz.u_rs.q = 1
+    matched ff:u_dut.u_e.g_qb.b_go = 0
+    matched ff:u_dut.u_e.g_qt_cg.en_r = 0
+    matched ff:u_dut.u_e.hz_v[0] = 0
+    matched ff:u_dut.u_e.hz_v[2] = 0
+    matched ff:u_dut.u_e.nN_r[15] = 0
+    matched ff:u_dut.u_e.n_run_s = 0
+    matched ff:u_dut.u_e.w_run = 0
+== ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.err[1]: DIFFERS (cex); cone inputs 19
+   cone input kinds {'matched': 15, 'gold_only': 1, 'gold_x': 3}
+    gold_only ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[66] = 1
+    gold_x x303 = 0
+    gold_x x305 = 0
+    gold_x x371 = 1
+    matched ff:u_dut.g_rstp.rst_pf = 1
+    matched ff:u_dut.u_e.g_cgr.u_ze_r0.q = 1
+    matched ff:u_dut.u_e.g_mac[0].g_mz.u_rs.q = 1
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.err[1] = 0
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[24] = 0
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[25] = 0
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[26] = 0
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[27] = 0
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[28] = 0
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[29] = 0
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[30] = 0
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[31] = 0
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[32] = 1
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[67] = 1
+    matched ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.u_c8.g_r.r[69] = 1
+== ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.u_t.g_line.line[68]: DIFFERS (cex); cone inputs 5
+   cone input kinds {'matched': 4, 'gold_only': 1}
+    gold_only ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.u_t.g_line.line[57] = 0
+    matched ff:u_dut.g_rstp.rst_pf = 0
+    matched ff:u_dut.u_e.g_cgr.u_ze_r0.q = 0
+    matched ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.pl[5] = 1
+    matched ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.u_t.g_line.line[68] = 0
