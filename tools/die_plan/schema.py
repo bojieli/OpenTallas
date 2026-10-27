@@ -271,6 +271,8 @@ SCHEMA = {
                                    "ports": {"type": "array", "items": _name}}}},
                 "pg": {"type": "object", "additionalProperties": False, "properties": {
                     "partition_pg_max": _layer,
+                    "bumps": {"type": "object", "additionalProperties": False,
+                              "properties": {"pitch_um": _pos, "pad_um": _nonneg, "edge_margin_um": _nonneg}},
                     "grid": {"type": "array", "items": {
                         "type": "object", "required": ["layer", "width_um", "pitch_um", "offset_um"],
                         "additionalProperties": False,
