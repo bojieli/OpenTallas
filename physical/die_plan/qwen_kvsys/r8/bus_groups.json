@@ -1,7 +1,7 @@
 {
 "schema": "opentallas.die_plan.bus_groups.v1",
 "die": "qwen_kvsys",
-"note": "as-built timing groups for the planner (COORD R8): bits that must keep their as-built relative timing.\nlanding: per sink leaf and source partition, its crossing input bits with their as-built register stages (bits\n  with equal stages were same-cycle as built; different stages = a fixed as-built offset, e.g. valid one cycle\n  ahead of data), the lanes they ride and the bound depth per bit (before / after landing pads);\nreplica: per source pin, the sink partitions that received it at the SAME as-built depth (broadcast to replicas,\n  e.g. heads hc0..hc3): their bound depths must stay equal too. | KV-P5 r8_invariant_split: bus_sub on members whose as-built offset varies across the sink type | KV-PLAN3F r8_row_publish: r8_invariant_split rule over the hg row family ['kv3_hg', 'kv3_hg_v1', 'kv3_hg_v3'] (row-blind leaf names): 5 family buses split, 104 members re-bused, 72 replica sets split per row; their per-row depth is published (lat_v39f/row_latency.json) | KV-405 r8_rebase onto die_plan.json: {\"members\": 12030, \"moved\": 3595, \"kept_no_lane\": 5892, \"max_shift\": 32, \"min_shift\": 0}",
+"note": "as-built timing groups for the planner (COORD R8): bits that must keep their as-built relative timing.\nlanding: per sink leaf and source partition, its crossing input bits with their as-built register stages (bits\n  with equal stages were same-cycle as built; different stages = a fixed as-built offset, e.g. valid one cycle\n  ahead of data), the lanes they ride and the bound depth per bit (before / after landing pads);\nreplica: per source pin, the sink partitions that received it at the SAME as-built depth (broadcast to replicas,\n  e.g. heads hc0..hc3): their bound depths must stay equal too. | KV-P5 r8_invariant_split: bus_sub on members whose as-built offset varies across the sink type | KV-PLAN3F r8_row_publish: r8_invariant_split rule over the hg row family ['kv3_hg', 'kv3_hg_v1', 'kv3_hg_v3'] (row-blind leaf names): 5 family buses split, 104 members re-bused, 72 replica sets split per row; their per-row depth is published (lat_v39f/row_latency.json) | KV-405 r8_rebase onto plan_combined.json: {\"members\": 12030, \"moved\": 3595, \"kept_no_lane\": 5892, \"max_shift\": 32, \"min_shift\": 0}",
 "summary": {
 "landing_groups": 8908,
 "landing_misaligned_by_lanes": 842,
@@ -336980,7 +336980,7 @@
 ]
 ],
 "asbuilt_stages": 7,
-"bound_stages": 47,
+"bound_stages": 50,
 "landed_stages": 35,
 "lane": "L747"
 },
@@ -337000,7 +337000,7 @@
 ]
 ],
 "asbuilt_stages": 4,
-"bound_stages": 50,
+"bound_stages": 56,
 "landed_stages": 36,
 "lane": "L664"
 },
@@ -337020,7 +337020,7 @@
 ]
 ],
 "asbuilt_stages": 4,
-"bound_stages": 50,
+"bound_stages": 56,
 "landed_stages": 36,
 "lane": "L664"
 }
