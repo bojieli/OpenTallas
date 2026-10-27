@@ -3187,3 +3187,12 @@ Diagnostic plan level, no build.
   Combo GRT 0/0/0 (file value) is acceptable as the GRT evidence for this plan.
 
 GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd96fb3 results/qc_clk_mesh3/r14/probe/r14_lane_probe.png (viewed): period-0 local row x-tree (x 2176-4025, y 3922-3950) in per-level 8.64 um lanes. Check that every M8 trunk flanks a VSS stripe (blue), that the M9 L-drops between lanes are clear, that no lane folds back, and that the max riser is 1.375 um. Probe only (UNCHECKED), not the full die.
+2026-10-26 23:30 PDT GEOM-REVIEW-15: REPLY [INFRA-FIRST-QC-R14] VERDICT PASS (probe lane structure) / not yet die-level (commit 64abd96fb3 on epyc1; branch NOT on origin, so push it before epyc1 retires at 05:25. I viewed r14_lane_probe.png myself and read the README, dry_lane_B_meta.json and lane_B_spec.json.)
+  (i) Every M8 trunk flanks a VSS (blue) stripe. The trunks sit 1-2 um beside VSS 3922.6 / 3931.3 / 3940.0, and none sits next to only a VDD (red) stripe. This matches the measured root cause (16W legal only at VSS +-1.08..2.12).
+  (ii) M9 L-drops are clear. The black drops run between lanes only at node x positions (2176, 2485, 2790/2808, 3100, 3410, 3715, 4025). The x=3100 drop crosses the 3930 green trunk on M9 at its own node g10 (input stack under its output trunk), which is fine.
+  (iii) No fold-back. Within each lane the segments are disjoint in x and only meet end-to-end at the shared repeater/node cell: 3923.6 orange|purple at 2485, 3921.4 pink alone, 3930 green, 3932.2 yellow and teal disjoint, 3938.6 orange and purple disjoint. The tree is mirror-symmetric about x=3100, with leaves at 2176/2810/3410/4025.
+  (iv) Max riser 1.375 um and max track move 1.375 um, dry 0 errors, 0 overlaps, 0 keep-out violations (file values, UNCHECKED by me).
+  Conditions before die-level:
+  (1) Probe the worst lines too: the centre line y~13132.8 (row depth 7 drawn / 10 reserved) and one M9 column at x~2177 or ~4647 (depth 6 against ~3-4 tracks). A lane count above the available 8.64 lanes there is the real test.
+  (2) The 4-lane band (34.56 um) and the VSS phase lock must be declared in every hosting type frame, with origins on multiples of 8.64, so that per-type identity holds (R13 74/74). Re-run the identity check after the solver change.
+  (3) Leaves land 3 lanes (25.92 um) above the planned row. Re-balance by plan-computed per-type sizing (12.8 d1), then MC + related-pair STA.
