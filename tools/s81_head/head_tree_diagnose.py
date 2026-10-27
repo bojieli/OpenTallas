@@ -68,7 +68,7 @@ def spread_rows(spec):
     return out
 
 
-def colored_rows(spec):
+def colored_rows(spec, row_pitch=3.24, column_pitch=0.0):
     """Reserve distinct horizontal corridors for adjacent clock stages.
 
     This candidate needs a new per-type island census before adoption: unlike
@@ -82,11 +82,14 @@ def colored_rows(spec):
     children = defaultdict(list)
     incoming = set()
     horizontal = set()
+    vertical = set()
     for net in out['nets']:
         children[net['drv']].append(net['load'])
         incoming.add(net['load'])
         if net['layer'] == 'M8':
             horizontal.update((net['drv'], net['load']))
+        else:
+            vertical.update((net['drv'], net['load']))
     root, = set(groups) - incoming
     depth, order = {root: 0}, [root]
     for g in order:
@@ -97,10 +100,20 @@ def colored_rows(spec):
     shifts = []
     for g in sorted(horizontal):
         cells = sorted(groups[g], key=lambda c: c['origin_um'][1])
-        phase = ((depth[g] % 3) - 1) * 3.24
+        phase = ((depth[g] % 3) - 1) * row_pitch
         for cell in cells:
             cell['origin_um'][1] = round(cell['origin_um'][1] + phase, 4)
         shifts.append(dict(group=g, depth=depth[g], phase_um=phase))
+    columns = []
+    if column_pitch:
+        for g in sorted(vertical):
+            cells = groups[g]
+            if not all(c['part'].startswith('sp') for c in cells):
+                raise ValueError('vertical column allocation leaves the soft spine: ' + g)
+            phase = ((depth[g] % 3) - 1) * column_pitch
+            for cell in cells:
+                cell['origin_um'][0] = round(cell['origin_um'][0] + phase, 4)
+            columns.append(dict(group=g, depth=depth[g], phase_um=phase))
     # Recompute short corner legs from actual pins. Long trunks keep their axis.
     reps = {g: sorted(cs, key=lambda c: c['origin_um'][1])[0] for g, cs in groups.items()}
     def pin(g, name):
@@ -117,6 +130,7 @@ def colored_rows(spec):
     for net in out['nets']:
         net['layer'] = layers[net['drv']]
     out['summary']['corridor_rows'] = shifts
+    out['summary']['corridor_columns'] = columns
     out['summary']['requires_new_island_census'] = True
     return out
 
@@ -126,7 +140,7 @@ def main():
     ap.add_argument('plan', type=Path)
     ap.add_argument('spec', type=Path)
     ap.add_argument('out', type=Path)
-    ap.add_argument('--only', choices=['exact', 'mirror_exact', 'spread_rows', 'colored_rows', 'pg_only_DIAGNOSTIC'], action='append')
+    ap.add_argument('--only', choices=['exact', 'mirror_exact', 'spread_rows', 'colored_rows', 'allocated_corridors', 'pg_only_DIAGNOSTIC'], action='append')
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     plan = S.Plan(S.load(args.plan))
@@ -134,6 +148,7 @@ def main():
     report = {}
     for label, spec in [('exact', copy.deepcopy(original)), ('mirror_exact', mirrored(original)), ('spread_rows', spread_rows(original)),
                         ('colored_rows', colored_rows(original)),
+                        ('allocated_corridors', colored_rows(original, row_pitch=4.32, column_pitch=17.28)),
                         ('pg_only_DIAGNOSTIC', mirrored(original))]:
         if args.only and label not in args.only:
             continue
