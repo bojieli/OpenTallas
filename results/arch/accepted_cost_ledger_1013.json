@@ -1544,6 +1544,44 @@
   },
   {
    "design": "s81",
+   "unit": "S81.VSW_LR1 (main 8d6af30b15: ot_s81sl_vsw LR=1 lane-input register stage, +1 cycle on o_v/o_d/o_f in every beat leaf; ffn.quant2 SW command -> last result 191 -> 192, 40x a token)",
+   "group": "S81.VSW_LR1",
+   "measured": 192.0,
+   "price": 191.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.0052,
+   "e2e_loss_pct": 0.0026,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "compose_tok_ds + dv_mu_calendar_phys REL241 single user on the 241-stage map (price of record, I13 612); +1 priced edge on each ffn.quant2 node (40 critical)",
+     "base_cycles": 1528913.6,
+     "cycles": 1528953.6,
+     "added_cycles": 40.0,
+     "tok_s_before": 784.87,
+     "tok_s_after": 784.85,
+     "e2e_loss_pct": 0.0026
+    },
+    "mtp": {
+     "model": "same, MTP causal six-position pipeline law of record (owner decision 15); 40 critical + 5 wave positions",
+     "base_cycles": 1815440.6,
+     "cycles": 1815485.6,
+     "added_cycles": 45.0,
+     "tok_s_before": 2749.1,
+     "tok_s_after": 2749.0,
+     "e2e_loss_pct": 0.0025
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/token_pass/toksched_s81_vsw_1025/README.md",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-25",
+   "status": "proposed",
+   "note": "Recorded per COORD 11:59 (cycle in the static schedule + ledger). Ratio 1.005 (< 1.10); row records the cycle only. Static schedule: lower_vs VS_DUR SW +1 (VSW_LR); layer compiles unchanged. Calendars AR50/MTP6 PASS 0 collisions. +1 = lockstep eq bench tb_s81sl_vsw_lr_eq (see README). Bracket if 8 SW a leaf priced serially: +320 AR / +360 MTP (0.021 %).",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "s81",
    "unit": "SU.HC_POST (ot_dsrom_su_hcpost, current production POST)",
    "group": "SU.HC_POST",
    "measured": 287.0,
@@ -3182,11 +3220,11 @@
   },
   "s81": {
    "accepted_pct": 3.499,
-   "proposed_pct": 6.349,
-   "accepted_plus_proposed_pct": 9.848,
+   "proposed_pct": 6.352,
+   "accepted_plus_proposed_pct": 9.851,
    "limit_pct": 15.0,
    "accepted_rows": 3,
-   "proposed_rows": 9,
+   "proposed_rows": 10,
    "headroom_pct": 11.501,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,

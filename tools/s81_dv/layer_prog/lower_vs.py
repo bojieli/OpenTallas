@@ -64,8 +64,11 @@ NSLICE = 16
 VS_ROWS = dict(QR_IN=512, QR_OUT=544, QB_IN=560, RA_IN=576, RA_OUT=578, RB_IN=580, RB_OUT=592, SW_IN=600, SW_OUT=632)
 # fixed op durations, vp command edge -> the last vs result (bench VSOP on the L0 fixtures, bench_vs run.log: QR 16 = 57,
 # QB 8 = 19, RA 6 = 147, RB 6 = 25, SW 16 = 191; the bench fails on measured > model), + GUARD edges before the next
-# command of the same leaf
-VS_DUR = dict(SW=lambda n, wr=0: 4 * n + 127 + 4 * wr, QB=lambda n: n + 11, QR=lambda n: 2 * n + 25, RB=lambda n: n + 19,
+# command of the same leaf.  TOK-SCHED 10-25: SW + VSW_LR edges -- ot_s81sl_vsw LR = 1 (main 8d6af30b15, the vsw
+# lane-input register stage) delivers o_v / o_d / o_f exactly one edge later (tb_s81sl_vsw_lr_eq lockstep), and vs
+# consumes sw_vi by event, so the SW command -> last result is 191 + 1 = 192 (wr 196); the bench slot follows.
+VSW_LR = 1
+VS_DUR = dict(SW=lambda n, wr=0: 4 * n + 127 + VSW_LR + 4 * wr, QB=lambda n: n + 11, QR=lambda n: 2 * n + 25, RB=lambda n: n + 19,
               RA=lambda n: n + 141)                   # RA measured for n <= 8 only (one read): plan() asserts it
 GUARD = 3
 W_GUARD = 16                                  # bench: the weights rows are written this many edges before the SW command
