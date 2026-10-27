@@ -338,3 +338,5 @@ HCPLseparateoneDRTtrialrowe5576679ac45 publishedsource6599f6761a, currentbatch4m
 
 ## CODEX notes 2026-10-26 20:12 PDT takeover
 Legacy head contracts superseded approvedHEAD-RTL2 mapping; existing library/indexed/tagged helper evidence retained. No fullHEADG5 until provider/bind.
+
+2026-10-27 01:43 PDT HEAD-KITS-1: the 16 s81_head partition types (hd_tile hd_turn_a hd_turn_b hd_spn hd_spn_end hd_serdes hd_st_turn hd_st_str hd_st_n3 hd_st_n4 hd_st_m hd_st_k5 hd_mesh hd_lep0N hd_ctl hd_host) are ALL held by PENDING-DELTA D-INFRA-FIRST-HEAD (lanes/PLAN-DELTA.md:229, RELEASE_TREE HEAD.INFRA WAITS; ctl/host/mesh/lep0N also carry the provider bus delta ruled 22:21 into the next HEAD PLAN-DELTA) -> none kitted, none run (task rule: skip pending-delta types). They need the head infra-first plan event first. Hard cores: see lanes/HEAD-CORE-LAT.md HEAD-KITS-1.
