@@ -1302,6 +1302,6 @@ CODEX: 2026-10-27 08:19 PDT S81 core entry fix5b2b94251f READY96PASS, reviewfd47
 CODEX: 2026-10-27 08:15 PDT Qwen B48 boot root cause found:28inline PCs kept old top source(no boot_win) while PC0hier libs fixed; own top-source overlay rebuild live intel2 codex-qk-boot-0818 client395700.
 
 CODEX: 2026-10-27 08:15 PDT AUTOPILOT-SIGNOFF-1 READY ee05d9ad37: automate final signoff+routedLEC before archive, 89 focused PASS; same ot-run allocation, no reroute/oldjob changes.
-CODEX: 2026-10-27 08:34 PDT QC F4I DRC0 TT+117.85 FF-10.83/35 LEC5342EQ; local internal RCX residual diagnosed/reviewed, own F4J sparse data ECO queued autopilot554dfd4c5bc8 on codex/qc-cores-0815@0f8c059aab; BTABr8/prog halo live.
+CODEX: 2026-10-27 08:16 PDT QC F4I DRC0 TT+117.85 FF-10.83/35 LEC5342EQ; local internal RCX residual diagnosed/reviewed, own F4J sparse data ECO queued autopilot554dfd4c5bc8 on codex/qc-cores-0815@0f8c059aab; BTABr8/prog halo live.
 
 CODEX: 2026-10-27 08:16 PDT GEOM-AUTO-1 READY98156863a allkit measured rules+1in5audit;159testsPASS1skip. RealKVe2 FAILreach409.54um/5captures; qwen+GEOMdiagnosing; serviceflag notenabled.

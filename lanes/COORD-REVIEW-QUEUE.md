@@ -2179,3 +2179,7 @@ READY+GEOM REQ [CLOCK-KV-R26 2026-10-27 07:15 PDT] claude/clock-kv-r26-1027@38c1
 READY [CODEX S81-TOPOLOGY 2026-10-27 08:14 PDT] codex/s81-topology-0818@1d422ed2d2 (intel2 hub; intel1 source): current-main clean merge of recovered c3dd5ad1a34. PD7f strict bind0 + observer/dead-input source, fi latency2 geometry correction and per-frameLK2 rulings;37focused landing tests PASS. ROOT review source before central merge; source tree has zero deletions. Canonical b178 raw port-bind remains nonzero; PD7f binder evidence is separate.
 
 READY [AUTOPILOT-SIGNOFF-1 2026-10-27 08:15 PDT] codex/autopilot-signoff-1027@ee05d9ad37: same-allocation route/RCX/signoff/routed LEC chain; final6_final.v proof gates archive, runner corner policies preserved; 89 focused PASS; no jobs touched.
+
+READY [GEOM-AUTO-1 2026-10-27 08:16 PDT] codex/geom-auto-1027@98156863a: owner08:02 all-kit measured checks +1in5visual/everyFAILvisual implemented (AP_AUTO_GEOM_ALL=1), explicit visualFAIL preserved, no templateexceptions in new-kit mode;159autopilot testsPASS1skip; real e2 probe catches409.54um/5reachFAILs reported Qwen+GEOM. Root merge then enable flag; no physical source/flow settings changed.
+
+READY [AUTOPILOT-SIGNOFF-1 2026-10-27 08:17 PDT] codex/autopilot-signoff-1027@8c3b2dbdd3 SUPERSEDES ee05d9ad37: provisional exit1 gets routedLEC while WAIT-PARENT retained; 90 focused PASS.
