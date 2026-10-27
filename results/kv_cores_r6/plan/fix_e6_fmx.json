@@ -1,0 +1,109 @@
+{
+ "schema": "opentallas.kv_cores_r6.fix_fmx_clocks.v1",
+ "plan_dir": "pdS",
+ "canonical": "cores/kv3_head_eighth_e6_pins.json",
+ "canonical_sha256": "f406e3163906315c8a224126c6491dae7f99c5689d3fad6630b3fa49121ee422",
+ "fmx": "cores/kv3_head_eighth_e6_pins_fMX.json",
+ "fmx_sha256_before": "06f13e844e0088aa66ae111ea1fb376f91666b525b955945af82a5cad5bcd816",
+ "fmx_sha256_after": "f9206cfe7cf7a0ff4d4f5c32a2ac2f47c9892fe5618cb31078d89515bb9a7600",
+ "fixed": [
+  {
+   "pin": "g_front_3_u_front__clk[0]",
+   "old": [
+    "M5",
+    3.24,
+    215.904
+   ],
+   "new": [
+    "M5",
+    108.024,
+    108.0
+   ]
+  },
+  {
+   "pin": "g_t_12_u_l8__clk[0]",
+   "old": [
+    "M5",
+    195.384,
+    215.904
+   ],
+   "new": [
+    "M5",
+    108.408,
+    108.0
+   ]
+  },
+  {
+   "pin": "g_t_12_u_stin__clk[0]",
+   "old": [
+    "M5",
+    195.624,
+    215.904
+   ],
+   "new": [
+    "M5",
+    107.64,
+    108.0
+   ]
+  },
+  {
+   "pin": "g_t_12_u_stk__clk[0]",
+   "old": [
+    "M5",
+    196.104,
+    215.904
+   ],
+   "new": [
+    "M5",
+    108.792,
+    108.0
+   ]
+  },
+  {
+   "pin": "g_t_13_u_l8__clk[0]",
+   "old": [
+    "M5",
+    204.648,
+    215.904
+   ],
+   "new": [
+    "M5",
+    107.256,
+    108.0
+   ]
+  },
+  {
+   "pin": "g_t_13_u_stin__clk[0]",
+   "old": [
+    "M5",
+    204.888,
+    215.904
+   ],
+   "new": [
+    "M5",
+    109.176,
+    108.0
+   ]
+  },
+  {
+   "pin": "g_t_13_u_stk__clk[0]",
+   "old": [
+    "M5",
+    205.368,
+    215.904
+   ],
+   "new": [
+    "M5",
+    106.872,
+    108.0
+   ]
+  }
+ ],
+ "kept_reset": [
+  "g_front_3_u_front__rst_n[0]",
+  "g_t_12_u_stin__rst_n[0]",
+  "g_t_12_u_stk__rst_n[0]",
+  "g_t_13_u_stin__rst_n[0]",
+  "g_t_13_u_stk__rst_n[0]"
+ ]
+}

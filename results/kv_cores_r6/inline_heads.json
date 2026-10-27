@@ -1,0 +1,62 @@
+{
+ "source": "/srv/opentallas-scratch2/claude/kv-cores-r4/kit_rtl/kv3_hg/kv3_hg_part_bound.sv",
+ "dropped_files": [
+  "/srv/opentallas-scratch2/claude/kv-cores-r4/composed/34f66e887d155f5f2008a882b51ad358c8c0e86dce3f710538a42cd069472368.sv",
+  "/srv/opentallas-scratch2/claude/kv-cores-r4/composed/9f20da4363565c6740f19c36fb48ea8bc71e7776a34585e29277627bfffad5da.sv",
+  "/srv/opentallas-scratch2/claude/kv-cores-r4/composed/bd12dd6c99c7c915b197a1d7979a29bf87fd7408538a4e4cbbb71b74937ad046.sv"
+ ],
+ "cores": {
+  "u_head0_e1": {
+   "module": "kv3_head_eighth_e1",
+   "composite": "/srv/opentallas-scratch2/claude/kv-cores-r4/composed/bd12dd6c99c7c915b197a1d7979a29bf87fd7408538a4e4cbbb71b74937ad046.sv",
+   "members": [
+    "head_EN_4_0__g_t_2__u_l8",
+    "head_EN_4_0__g_t_2__u_stin",
+    "head_EN_4_0__g_t_2__u_stk",
+    "head_EN_4_0__g_t_3__u_l8",
+    "head_EN_4_0__g_t_3__u_stin",
+    "head_EN_4_0__g_t_3__u_stk"
+   ],
+   "wires": 664,
+   "assigns": 0,
+   "instances": 6,
+   "unconnected_output_bits": 0,
+   "bound_ports": 16
+  },
+  "u_head0_e2": {
+   "module": "kv3_head_eighth_e2",
+   "composite": "/srv/opentallas-scratch2/claude/kv-cores-r4/composed/34f66e887d155f5f2008a882b51ad358c8c0e86dce3f710538a42cd069472368.sv",
+   "members": [
+    "head_EN_4_0__g_front_1__u_front",
+    "head_EN_4_0__g_t_4__u_l8",
+    "head_EN_4_0__g_t_4__u_stin",
+    "head_EN_4_0__g_t_4__u_stk",
+    "head_EN_4_0__g_t_5__u_l8",
+    "head_EN_4_0__g_t_5__u_stin",
+    "head_EN_4_0__g_t_5__u_stk"
+   ],
+   "wires": 1130,
+   "assigns": 0,
+   "instances": 7,
+   "unconnected_output_bits": 0,
+   "bound_ports": 24
+  },
+  "u_head0_e5": {
+   "module": "kv3_head_eighth_e5",
+   "composite": "/srv/opentallas-scratch2/claude/kv-cores-r4/composed/9f20da4363565c6740f19c36fb48ea8bc71e7776a34585e29277627bfffad5da.sv",
+   "members": [
+    "head_EN_4_0__g_t_10__u_l8",
+    "head_EN_4_0__g_t_10__u_stin",
+    "head_EN_4_0__g_t_10__u_stk",
+    "head_EN_4_0__g_t_11__u_l8",
+    "head_EN_4_0__g_t_11__u_stin",
+    "head_EN_4_0__g_t_11__u_stk"
+   ],
+   "wires": 664,
+   "assigns": 0,
+   "instances": 6,
+   "unconnected_output_bits": 0,
+   "bound_ports": 16
+  }
+ }
+}

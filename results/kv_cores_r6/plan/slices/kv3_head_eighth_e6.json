@@ -1,0 +1,189 @@
+{
+ "schema": "opentallas.kv_core_slice.v1",
+ "lane": "KV-CORE-SLICE-1",
+ "plan": "pdE6/hm_r24.json",
+ "plan_sha256": "23f995a88121db70e0a8b48209ef2e86b0c9170bb3997d469e3e3a12b52f8328",
+ "census": "/srv/opentallas-scratch2/claude/clock-kv-r24-1027/m24_census.json",
+ "census_sha256": "4ef95fc5f74e6aebbcd44bc01de46c5a00e8663872a9c55560b9314c602c554c",
+ "mesh": "/srv/opentallas-scratch2/claude/clock-kv-r24-1027/m24/mesh.json",
+ "mesh_sha256": "4eeccae33bee874ff6a0c7c5b304e31121d5a50b320d054c2ebc107febf0f373",
+ "applied_plan_sha256": "23f995a88121db70e0a8b48209ef2e86b0c9170bb3997d469e3e3a12b52f8328",
+ "common_latency_ps": 250.0,
+ "model": {
+  "A": 86.86,
+  "B": 0.8057,
+  "FF_RATIO": 0.8118,
+  "rms_ps": 4.8,
+  "loo_max_ps": 10.9
+ },
+ "slice": {
+  "module": "kv3_head_eighth_e6",
+  "outline_um": [
+   216.0,
+   216.0
+  ],
+  "instances": 256,
+  "partition_types": [
+   "kv3_hg",
+   "kv3_hg_v1",
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hg_v3",
+   "kv3_hgi",
+   "kv3_hgi_v1",
+   "kv3_hgi_v2",
+   "kv3_hgi_v3",
+   "kv3_hgi_v4",
+   "kv3_hgi_v5",
+   "kv3_hgi_v6",
+   "kv3_hgi_v7",
+   "kv3_hgi_v8"
+  ],
+  "pin_views": {
+   "cores/kv3_head_eighth_e6_pins.json": 256
+  },
+  "die_clocked": true,
+  "entry": {
+   "xy_um": [
+    108.0,
+    108.0
+   ],
+   "island_um": [
+    103.68,
+    103.68,
+    112.32,
+    112.32
+   ],
+   "layer": "M5",
+   "via_stack": [
+    "VIA89",
+    "VIA78",
+    "VIA67",
+    "VIA56"
+   ],
+   "stack_from": "M9",
+   "pins": [
+    {
+     "pin": "g_front_3_u_front__clk[0]",
+     "from_": [
+      "M5",
+      108.024,
+      108.0
+     ],
+     "to": [
+      "M5",
+      108.024,
+      108.0
+     ]
+    },
+    {
+     "pin": "g_t_12_u_l8__clk[0]",
+     "from_": [
+      "M5",
+      108.408,
+      108.0
+     ],
+     "to": [
+      "M5",
+      108.408,
+      108.0
+     ]
+    },
+    {
+     "pin": "g_t_12_u_stin__clk[0]",
+     "from_": [
+      "M5",
+      107.64,
+      108.0
+     ],
+     "to": [
+      "M5",
+      107.64,
+      108.0
+     ]
+    },
+    {
+     "pin": "g_t_12_u_stk__clk[0]",
+     "from_": [
+      "M5",
+      108.792,
+      108.0
+     ],
+     "to": [
+      "M5",
+      108.792,
+      108.0
+     ]
+    },
+    {
+     "pin": "g_t_13_u_l8__clk[0]",
+     "from_": [
+      "M5",
+      107.256,
+      108.0
+     ],
+     "to": [
+      "M5",
+      107.256,
+      108.0
+     ]
+    },
+    {
+     "pin": "g_t_13_u_stin__clk[0]",
+     "from_": [
+      "M5",
+      109.176,
+      108.0
+     ],
+     "to": [
+      "M5",
+      109.176,
+      108.0
+     ]
+    },
+    {
+     "pin": "g_t_13_u_stk__clk[0]",
+     "from_": [
+      "M5",
+      106.872,
+      108.0
+     ],
+     "to": [
+      "M5",
+      106.872,
+      108.0
+     ]
+    }
+   ],
+   "rule": "12.8a centre (outline centre on the 4.32 PG lattice)"
+  },
+  "phy_clocks": [],
+  "far_corner_um": 216.0,
+  "core_tree": {
+   "form": "single CTS tree from the centre entry",
+   "grid": [
+    1,
+    1
+   ]
+  },
+  "die_islands": null,
+  "island_conflicts": [],
+  "insertion_model": {
+   "L_max_um": 216.0,
+   "pred_TT_ps": 260.9,
+   "pred_FF_ps": 211.8,
+   "target_TT_ps": 250.0,
+   "htree": null,
+   "in_cal_range": true,
+   "band": "IN",
+   "form": "master_plan.core_insertion (CTS-grown centre-entry fit, MODEL UNCHECKED)",
+   "note": null
+  },
+  "trunk": null,
+  "m6_m7_pins": {},
+  "outline_delta": null
+ }
+}
