@@ -18,8 +18,12 @@ mkdir -p "$O"; bad=0
 for v in $VARS; do
   X=""; case $v in base) M=0;; miter) M=0; X=-DTB_MITER;; mut*) M=${v#mut};; *) echo "variant? $v"; exit 2;; esac
   B=$O/$v; mkdir -p "$B/obj"
+  # a generated but unbuilt obj dir (interrupted C++ build) is finished with make instead of re-running Verilator
+  if [ ! -x "$B/obj/Vtb_dsdv_svc_rowx" ] && [ -f "$B/obj/Vtb_dsdv_svc_rowx.mk" ]; then
+    make -s -j "${BJ:-16}" -C "$B/obj" -f Vtb_dsdv_svc_rowx.mk OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0 > "$O/make_$v.log" 2>&1 || true
+  fi
   if [ ! -x "$B/obj/Vtb_dsdv_svc_rowx" ]; then
-    $VL --binary --timing -j "${J:-8}" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DOT_SVC_ALLQ -DTB_MUT=$M $X \
+    $VL --binary --timing -j "${J:-8}" --build-jobs "${BJ:-16}" -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DOT_SVC_ALLQ -DTB_MUT=$M $X \
       --top-module tb_dsdv_svc_rowx -Mdir "$B/obj" $(for f in $SRC; do echo "$R/$f"; done) > "$O/build_$v.log" 2>&1 \
       || { echo "BUILD_FAIL $v"; tail -20 "$O/build_$v.log"; bad=1; continue; }
   fi
