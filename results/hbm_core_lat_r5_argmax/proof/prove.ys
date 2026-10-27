@@ -1,0 +1,7 @@
+read_verilog -sv -formal -DOT_PROOF /r/proof_core.sv
+read_verilog -sv /r/kit/rtl/ot_rst_relay.sv
+read_verilog -sv -lib /r/kit/rtl/ot_hgi_argmax18_m.sv
+hierarchy -top ot_hbm_argmax_static_sw_vm_r2__rtl
+proc; flatten; delete t:ot_hgi_argmax18_m; setundef -undriven -expose; opt_clean; async2sync; dffunmap; opt -fast
+stat
+sat -tempinduct -prove-asserts -set-init-zero -maxsteps 20 -show-regs -verify

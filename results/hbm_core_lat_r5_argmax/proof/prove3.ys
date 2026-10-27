@@ -1,0 +1,3 @@
+read_verilog /r/comb.v
+prep -top p3
+sat -prove ok 1 -prove eq_hi 1 -verify -show-inputs

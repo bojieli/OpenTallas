@@ -1,0 +1,204 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/r/prove3.ys' --
+
+1. Executing Verilog-2005 frontend: /r/comb.v
+Parsing Verilog input from `/r/comb.v' to AST representation.
+Generating RTLIL representation for module `\p3'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \p3
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \p3
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module p3.
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module p3.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \p3..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module p3...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module p3.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\p3'.
+Computing hashes of 6 cells of `\p3'.
+Finding duplicate cells in `\p3'.
+Removed a total of 0 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \p3..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \p3.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\p3'.
+Computing hashes of 6 cells of `\p3'.
+Finding duplicate cells in `\p3'.
+Removed a total of 0 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \p3..
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module p3.
+
+2.7.8. Finished fast OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 29 bits (of 32) from mux cell p3.$ternary$/r/comb.v:3$1 ($mux).
+Removed top 14 bits (of 32) from port A of cell p3.$sub$/r/comb.v:3$2 ($sub).
+Removed top 29 bits (of 32) from port B of cell p3.$sub$/r/comb.v:3$2 ($sub).
+Removed top 13 bits (of 32) from port Y of cell p3.$sub$/r/comb.v:3$2 ($sub).
+Removed top 16 bits (of 19) from mux cell p3.$ternary$/r/comb.v:4$3 ($mux).
+Removed top 1 bits (of 19) from port A of cell p3.$sub$/r/comb.v:4$4 ($sub).
+Removed top 16 bits (of 19) from port B of cell p3.$sub$/r/comb.v:4$4 ($sub).
+Removed top 16 bits (of 19) from wire p3.$ternary$/r/comb.v:4$3_Y.
+Removed top 29 bits (of 32) from wire p3.$ternary$/r/comb.v:3$1_Y.
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \p3..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module p3.
+<suppressed ~1 debug messages>
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\p3'.
+Computing hashes of 5 cells of `\p3'.
+Finding duplicate cells in `\p3'.
+Computing hashes of 4 cells of `\p3'.
+Finding duplicate cells in `\p3'.
+Computing hashes of 3 cells of `\p3'.
+Finding duplicate cells in `\p3'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \p3..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Executing SORT pass.
+
+2.13. Printing statistics.
+
+=== p3 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      126 wire bits
+        8 public wires
+      107 public wire bits
+        5 ports
+       24 port bits
+        3 cells
+        1   $eq
+        1   $mux
+        1   $sub
+
+2.14. Executing CHECK pass (checking for obvious problems).
+Checking module p3...
+Found and reported 0 problems.
+
+3. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 3 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Import proof-constraint: \eq_hi = 1'1
+Final proof equation: { \eq_hi \ok } = 2'11
+Import show expression: \ab
+Import show expression: \o_idx
+Import show expression: \z
+
+Solving problem with 220 variables and 546 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: b6553724ed, time: 0.01s, user: 0.01s, system: 0.00s, MEM: 24.30 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 23% 1x sat (0 sec), 17% 4x opt_clean (0 sec), ...
