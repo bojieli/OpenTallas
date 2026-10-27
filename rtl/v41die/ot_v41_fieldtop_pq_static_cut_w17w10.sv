@@ -39,7 +39,8 @@ module ot_v41_fieldtop_pq_static_cut_w17w10 #(
     parameter integer CONTROL_STAGE = 37,
     parameter integer GAP = 12,
     parameter integer GUARD = 180,
-    parameter integer GSLACK = 6
+    parameter integer GSLACK = 6,
+    parameter integer QX_GO_BOUNDARY = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -130,7 +131,7 @@ module ot_v41_fieldtop_pq_static_cut_w17w10 #(
     wire [32*R-1:0]   r_fp32;
     wire              f_fault;
     ot_v41_spine_pq_static_w17w10 #(.PHW(PHW), .SAW(SAW), .R(R), .VAW(VAW), .VRD(VRD), .KMAX(KMAX), .BST(BST), .PQ(PQ),
-                             .GAP(GAP), .GUARD(GUARD), .GSLACK(GSLACK), .ADDR_LOOKAHEAD(ADDR_LOOKAHEAD), .STATIC_CONTROLS(STATIC_CONTROLS), .CONTROL_STAGE(CONTROL_STAGE)) u_sp (
+                             .GAP(GAP), .GUARD(GUARD), .GSLACK(GSLACK), .QX_GO_BOUNDARY(QX_GO_BOUNDARY), .ADDR_LOOKAHEAD(ADDR_LOOKAHEAD), .STATIC_CONTROLS(STATIC_CONTROLS), .CONTROL_STAGE(CONTROL_STAGE)) u_sp (
         .clk(clk), .rst_n(rst_n), .go(go), .i_ph(i_ph), .i_np(i_np), .i_xbase(i_xbase), .i_xps(i_xps),
         .i_obase(i_obase), .i_ops(i_ops), .i_fmt(2'd0), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_q(x_q),
         .w_we(w_we), .w_addr(w_addr), .w_data(w_data),
