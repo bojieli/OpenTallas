@@ -126,3 +126,10 @@ change to pin faces, landings or lanes, and no new straps. The CFG DP field repl
   - (1) S81 plan owner: rebuild svc_rs with ROWX=1, plus the CFG DP field (a pre-existing bug: DIE_ID is never set on the die, so every die fetches die 0's rows).
   - (2) OWNER: static per-owner budget B (40 or 80 rows, or 2 passes). It overflows (fault 26) when one (die, stack) holds more than B.
   - (3) TOK-DS: per-half ROWS filtering, PK2 re-pairing in the xr transport, and the export words per half must be a multiple of 160 (the pvrd nw strap).
+- 2026-10-26 17:38 PDT Claude ROWX-BUDGET (analysis only): claude/rowx-budget-1026@9f97c5c993 results/rowx_budget_1026/README.md.
+  - NO real-prompt indexer selections exist in the repo/fixtures. The only top-512 sets are the 1M golden reference token (released weights, SYNTHETIC i.i.d. KV / index keys, 1 token). Real evidence needs a GPU forward of the V4.1-Flash checkpoint over real >=32K-128K prompts dumping index_select of L2/8/14/20/24/28/32/36 (~3e4 tokens for p<1e-4/token).
+  - Fixture token per-(die,stack) max: 43/42/41/43/46/49/43/47 (L2..L36). All 8/8 layers > 40, none > 80. CHECKED (recomputed; L14 d0s0 36 matches).
+  - Uniform i.i.d. REFERENCE ONLY: layer max p50 42, p99.9 55, p99.99 58. B=40 overflows 71 % of layers / 99.996 % of tokens. B=80: ~3e-12 per token. >128: ~1e-40.
+  - Price (TOK-DS-6b composition, baseline 1259.6/3655.3 reproduced, CHECKED tool output): B=40 2401 -> MTP 3704.9 (+49.6) but NOT schedulable. B=80 1-pass 4801 -> MTP 3621.1 (-34.2), AR 1249.2 (-10.4), ledger ~17.97 % (+0.93 pp, UNCHECKED sum). 2x B=40 = 4802 is the same cost, no benefit. Data-exact 1905 -> 3722.7.
+  - RECOMMEND B=80 single pass (NXW=40).
+  - OWNER ASKs: accept B=80 without real traces? What happens at run time on fault 26/24? Optional rank-ordered export slots (~2049, no budget; RTL change, UNCHECKED).
