@@ -1,0 +1,11 @@
+Old P3 fork functional compiler successor, source 4cb3339f16 (16-SM model).
+
+Serialized baseline88e89a5b5: six preserved whole images AR_N1/MTP_N6/MU_N1..4 now pass I1-I7. Original363/403I7 violations are retained in the original image cohort. Real records install gain by DMA.LOAD, copy unaligned coefficients including POST C+4 through SU bypass, and retain original logical output addresses. The actual emitted multi-row TOPK ID output is pinned by a real bypass copy before UNION.A / indexed I consumers; this repairs an additional allocator reuse bug.
+
+Optimized --batch4cb3339f16: same6/6 I1-I7PASS on fleet unit2286863-1793072471. It keeps phase-legal producer inputs, broadcasts one installed gain over all rows, and preserves native N-row FUSED operations except where temporary storage forces a split. MTP8424->4236records; VMcopy34,571,544->12,328,320words, gain2,488,320->414,720words. Eight focused tests pass, including two-row payload lockstep via the existing Python DMA/SU unit model, address mutant and native phase mutant. No RTL changed.
+
+Existing16SM unit-cost model, MTP: copy/DMA/RID137,737.851cycles plus4,929FUSED chunk-splitting cycles =142,666.851 extra unit work, BEFORE added drains and lost overlap. This is NOT a token price. Serialized baseline was approximately531,086 extra unit-work cycles including RID and lost FUSED row overlap. The copy and first-access costs are real model terms, not free relocations.
+
+LIMITS: no native dispatcher/value-front replay, no8SM recomposition, no new physical views, no current B2 token rate, no release adoption. I1-I7 do not prove full arithmetic or the upstream programme's other correctness contracts. Temporary liveness is descriptor-based and refuses unknown dynamic VM bounds; actual TOPK/UNION producer semantics bound supported indexed score reads. Producer-aligned whole-programme allocation remains the preferable successor to costly scratch publication copies.
+
+Runtime: epyc1:/srv/opentallas-scratch2/claude/codex-p3-compiler-2018/{baseline,batch2}/<image>. The malformed intermediate batch invocation put '--batch' inside an output directory name; it repeated baseline lowering and establishes no batch result. It was preserved separately; batch2 is the corrected actual batch invocation.

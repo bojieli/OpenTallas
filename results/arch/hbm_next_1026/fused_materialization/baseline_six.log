@@ -1,0 +1,13 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-p3-compiler-2018
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-p3-compiler-2018
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-p3-compiler-2018
+ot-run: localhost      admits   298 GB (avail 557, reserve 0, fresh 0, peak 194.3, headroom 0, waiters 0/0 GB) load 41/256 running 16 disk 769 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-2071988-1793072138 after 1 s
+{"source": "/srv/opentallas-scratch2/claude/wt/codex-p3-compiler-2018/results/arch/hbm_next_1019/cmtp/p3/emitter/whole/ar_N1", "records": 4638, "before_violations": 363, "after_violations": [], "I1_I7_PASS": true, "materialized_fused": 161, "vm_copy_words": 5761924, "hbm_load_words": 414720, "native_execution": false}
+{"source": "/srv/opentallas-scratch2/claude/wt/codex-p3-compiler-2018/results/arch/hbm_next_1019/cmtp/p3/emitter/whole/mtp_N6", "records": 8424, "before_violations": 403, "after_violations": [], "I1_I7_PASS": true, "materialized_fused": 161, "vm_copy_words": 34571544, "hbm_load_words": 2488320, "native_execution": false}
+{"source": "/srv/opentallas-scratch2/claude/wt/codex-p3-compiler-2018/results/arch/hbm_next_1019/cmtp/p3/emitter/whole/mu_N1", "records": 4639, "before_violations": 363, "after_violations": [], "I1_I7_PASS": true, "materialized_fused": 161, "vm_copy_words": 5761924, "hbm_load_words": 414720, "native_execution": false}
+{"source": "/srv/opentallas-scratch2/claude/wt/codex-p3-compiler-2018/results/arch/hbm_next_1019/cmtp/p3/emitter/whole/mu_N2", "records": 5084, "before_violations": 403, "after_violations": [], "I1_I7_PASS": true, "materialized_fused": 161, "vm_copy_words": 11523848, "hbm_load_words": 829440, "native_execution": false}
+{"source": "/srv/opentallas-scratch2/claude/wt/codex-p3-compiler-2018/results/arch/hbm_next_1019/cmtp/p3/emitter/whole/mu_N3", "records": 5889, "before_violations": 403, "after_violations": [], "I1_I7_PASS": true, "materialized_fused": 161, "vm_copy_words": 17285772, "hbm_load_words": 1244160, "native_execution": false}
+{"source": "/srv/opentallas-scratch2/claude/wt/codex-p3-compiler-2018/results/arch/hbm_next_1019/cmtp/p3/emitter/whole/mu_N4", "records": 6814, "before_violations": 403, "after_violations": [], "I1_I7_PASS": true, "materialized_fused": 161, "vm_copy_words": 23047696, "hbm_load_words": 1658880, "native_execution": false}
+ot-run: RAN on localhost (unit oth-ubuntu-2071988-1793072138): exit 0

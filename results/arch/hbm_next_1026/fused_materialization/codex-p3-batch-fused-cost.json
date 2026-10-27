@@ -1,0 +1,42 @@
+{
+  "scope": "preserved16SM calibrated native firstrow/II model only; no8SM or physical/native replayclaim",
+  "firstrow_II": {
+    "HC_PRE_NORM": [
+      404,
+      81
+    ],
+    "HC_POST": [
+      196,
+      103
+    ]
+  },
+  "original_fused_cycles": 122409,
+  "lowered_fused_cycles": 127338,
+  "additional_fused_cycles": 4929,
+  "chunks": [
+    {
+      "op": "HC_PRE_NORM",
+      "rows": 6,
+      "count": 81
+    },
+    {
+      "op": "HC_POST",
+      "rows": 6,
+      "count": 27
+    },
+    {
+      "op": "HC_POST",
+      "rows": 5,
+      "count": 53
+    },
+    {
+      "op": "HC_POST",
+      "rows": 1,
+      "count": 53
+    }
+  ],
+  "lowered_per_op": {
+    "HC_PRE_NORM": 65529,
+    "HC_POST": 61809
+  }
+}
