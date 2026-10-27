@@ -1,0 +1,10 @@
+{
+ "verdict": "FAIL",
+ "raw_vertices": 92,
+ "raw_resistors": 91,
+ "raw_cycles": 0,
+ "same_layer_contact_join_cycles": 20,
+ "literal_geometry_cycles": 25,
+ "reason": "native from-to tree plus default series/via merging loses explicit contact vertices; no 3-rail qualification",
+ "native_total_cap_pf": 1.39621
+}

@@ -1,0 +1,91 @@
+{
+ "verdict": "PASS",
+ "required_widths_um": [
+  1.6,
+  1.68,
+  1.76
+ ],
+ "missing": [],
+ "coverage": [
+  {
+   "layer": "M8",
+   "kind": "RESOVER",
+   "widths_um": [
+    0.04,
+    1.6,
+    1.68,
+    1.76
+   ]
+  },
+  {
+   "layer": "M8",
+   "kind": "OVER",
+   "widths_um": [
+    0.04,
+    1.6,
+    1.68,
+    1.76
+   ]
+  },
+  {
+   "layer": "M8",
+   "kind": "UNDER",
+   "widths_um": [
+    0.04,
+    1.6,
+    1.68,
+    1.76
+   ]
+  },
+  {
+   "layer": "M8",
+   "kind": "DIAGUNDER",
+   "widths_um": [
+    0.04,
+    1.6,
+    1.68,
+    1.76
+   ]
+  },
+  {
+   "layer": "M8",
+   "kind": "OVERUNDER",
+   "widths_um": [
+    0.04,
+    1.6,
+    1.68,
+    1.76
+   ]
+  },
+  {
+   "layer": "M9",
+   "kind": "RESOVER",
+   "widths_um": [
+    0.04,
+    1.6,
+    1.68,
+    1.76
+   ]
+  },
+  {
+   "layer": "M9",
+   "kind": "OVER",
+   "widths_um": [
+    0.04,
+    1.6,
+    1.68,
+    1.76
+   ]
+  },
+  {
+   "layer": "M9",
+   "kind": "OVERUNDER",
+   "widths_um": [
+    0.04,
+    1.6,
+    1.68,
+    1.76
+   ]
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+{
+ "verdict": "HYBRID_DIAGNOSTIC",
+ "raw_native_mesh_verdict": "FAIL_TREE",
+ "method": "Exact integer-DBU same-layer same-XY nodes with actual conductive polygon contact joined after native RCX; every native resistor/capacitor and actual via resistance retained. No R/rails shortcut. Not unmodified native RCX mesh PASS.",
+ "raw_graph": {
+  "nodes": 97,
+  "edges": 96,
+  "components": 1,
+  "cycles": 0
+ },
+ "joined_graph": {
+  "nodes": 72,
+  "edges": 96,
+  "components": 1,
+  "cycles": 25
+ },
+ "source_sink_effective_resistance_ohm": 31.217333343580858,
+ "total_cap_pf_native": 1.39621,
+ "summed_ground_cap_pf": 1.39621314,
+ "explicit_coupling_capacitors": 0,
+ "coupling_model": "OpenRCX PG SPECIALNETS treated as ground; no independent switching aggressor; same-clock internal coupling not separately qualified",
+ "minimum_native_resistance_ohm": 0.337862,
+ "negative_control_same_xy_different_layer_without_via": "PASS remains two separate nodes",
+ "source_geometry_sha256": "a20860aa3e3e33615a15d550dc0cf4801adfc5635bf56fea6c487b26ac2d60b4",
+ "native_spef_sha256": "f7c975a6c026040809a6e0df8d09275505338d7b72004f9a2d01026135712388",
+ "limits": "local component only; full mesh variation/EM/timing and whole-die BLOCKED obligations remain"
+}

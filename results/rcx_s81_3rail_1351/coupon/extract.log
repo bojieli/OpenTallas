@@ -1,0 +1,22 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-rcx-1351/coupon
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-rcx-1351/coupon
+ot-run: localhost      admits   686 GB (avail 800, reserve 0, fresh 4, peak 46, headroom 0, waiters 0/0 GB) load 41/112 running 19 disk 299 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-149974-1793137486 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /out/physical_multi.rules ...
+[INFO RCX-0434] Defined process_corner MinMax0 with ext_model_index 0 (using extRulesFile defaults)
+[INFO RCX-0436] RC segment generation s81_3rail_coupon (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 91 rc segments
+[INFO RCX-0439] Coupling Cap extraction s81_3rail_coupon ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0442] 46% of 170 wires extracted
+[INFO RCX-0442] 100% of 170 wires extracted
+[INFO RCX-0045] Extract 1 nets, 92 rsegs, 92 caps, 0 ccs
+[INFO RCX-0443] 1 nets finished
+ot-run: RAN on localhost (unit oth-ubuntu-149974-1793137486): exit 0
