@@ -71,3 +71,25 @@ def die_lines(P, provider_ports=None):
   if not d['drivers'] or (d['drivers']!=1 and d['kind']!='clock_mesh'):raise ValueError('infrastructure net drivers invalid: '+n)
   if not d['loads'] and not (d.get('unused') and d.get('owner_inventory')):raise ValueError('unconsumed active infrastructure net: '+n)
  return wires,instances,conn
+
+
+def provider_ports(text, module, ansi_parser):
+ """Actual clock exporters use non-ANSI root/tap headers; validate their declarations too."""
+ have = ansi_parser(text, module)
+ if have:
+  return have
+ clean = re.sub(r"//[^\n]*|/\*.*?\*/", "", text, flags=re.S)
+ m = re.search(r"\bmodule\s+"+re.escape(module)+r"\s*\((.*?)\)\s*;(.*?)\bendmodule\b", clean, re.S)
+ if not m:
+  return have
+ names = [n.strip() for n in m[1].split(',')]
+ if any(not IDENT.fullmatch(n) for n in names) or len(set(names)) != len(names):
+  raise ValueError('invalid non-ANSI provider header '+module)
+ out = {}
+ for q in re.finditer(r"\b(input|output|inout)\s+(?:wire\s+)?(\[[^\]]+\])?\s*([^;]+);",m[2]):
+  for name in q[3].split(','):
+   name=name.strip()
+   if name not in names or name in out:raise ValueError('provider direction declaration disagrees with header '+module)
+   out[name]=(q[1],q[2] or '')
+ if set(out)!=set(names):raise ValueError('provider port direction missing '+module)
+ return out
