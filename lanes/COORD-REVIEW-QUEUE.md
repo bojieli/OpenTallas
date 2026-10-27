@@ -2201,3 +2201,9 @@ READY [KV-NATIVE-SIDECAR 2026-10-27 08:26 PDT] codex/kv-reset-bind-1027@f51684c5
 READY [CODEX HBM-RP3 2026-10-27 08:28 PDT] codex/hbm-rp3-macroscope-0825@380d546462: fix rp3 n/s Slang macro scope via pinned selfcontained leaf profile4673cf757e; body byte-identical,0cycles, exact original-kit lint PASS; no unproved ctlx/VMS hint edits in this branch. Full LEC separate.
 
 READY [CODEX-FLOW 2026-10-27 08:29 PDT] codex/type-defines-1027@8598634d8b: HEAD source-profile unblock optional partition_types.<t>.verilog_defines (bare macro names); schemaJSON regenerated, gen_phys config shared synthesis/lint/LEC, 9 focused PASS; default -DSYNTHESIS unchanged. HEAD plan adoption separate owned s81_head. Watched source normal canary rule.
+
+READY [CODEX INFRA IMPORT 2026-10-27 08:31 PDT] codex/infra-gate-1027@fe6831d634 SUPERSEDES5cef: outerwrapperescapingfixed; actualgeneratedmockdockerargv+nativeexactouterGRT50ovf0/PRESERVED2infra3signal; 7focusedPASS; results/infra_grt_import_1027/outer_fixed.
+
+READY [AUTOPILOT PROOF RESOURCES 2026-10-27 08:31 PDT] codex/autopilot-signoff-1027@98560e3183 includesf4aa: proofOOM distinct, no reroute, measuredmem --proof-only resume; immutable failure receipts; 95focusedPASS.
+
+READY [CANARY KV ALIAS 2026-10-27 08:31 PDT] codex/canary-alias-1027@3b60baae53: kv->qwen_kvsys then core/typecanaryselect, matchingflowunchanged; 26focusedPASS.
