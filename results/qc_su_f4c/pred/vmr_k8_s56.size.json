@@ -1,0 +1,451 @@
+{
+ "before": {
+  "J": 26.315,
+  "TT_rise": {
+   "mean": 244.86,
+   "min": 231.69,
+   "max": 255.87,
+   "window": 24.18
+  },
+  "FF_early": {
+   "mean": 188.23,
+   "min": 176.82,
+   "max": 197.73,
+   "window": 20.91
+  },
+  "max_slew": 160.93
+ },
+ "after": {
+  "J": 8.99,
+  "TT_rise": {
+   "mean": 256.3,
+   "min": 250.1,
+   "max": 260.44,
+   "window": 10.34
+  },
+  "FF_early": {
+   "mean": 195.2,
+   "min": 188.08,
+   "max": 198.33,
+   "window": 10.25
+  },
+  "max_slew": 160.88
+ },
+ "slew_limit": 160.93,
+ "passes": [
+  {
+   "pass_": 0,
+   "J": 11.885,
+   "changed": 53
+  },
+  {
+   "pass_": 1,
+   "J": 8.99,
+   "changed": 23
+  },
+  {
+   "pass_": 2,
+   "J": 8.99,
+   "changed": 0
+  }
+ ],
+ "sizes": [
+  "BUFx8_ASAP7_75t_R",
+  "BUFx10_ASAP7_75t_R",
+  "BUFx12f_ASAP7_75t_R",
+  "BUFx16f_ASAP7_75t_R",
+  "BUFx24_ASAP7_75t_R"
+ ],
+ "changes": {
+  "Q0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q2_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q2": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q3": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q5_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q6_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q6": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx16f_ASAP7_75t_R"
+  ],
+  "Q0B0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q0B0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q0B1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q0B1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q1B0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q1B0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q1B1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q1B1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q2B0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q2B1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q2B1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q3B0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q3B1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q3B1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q4B0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q4B1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q4B1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q5B0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q5B0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q5B1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q6B0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q6B0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q6B1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q6B1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q7B0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q7B1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q7B1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q0B0L0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q0B0L1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q1B0L0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q1B0L1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q1B0L2_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q1B0L3_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q1B1L0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q1B1L1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q1B1L2_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q1B1L3_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q2B0L1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q2B0L3_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q3B0L0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q3B0L2_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q4B0L0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q5B1L0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q5B1L2_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q5B1L3_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q6B0L0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q6B0L1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q6B0L3_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q6B1L0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q6B1L2_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q6B1L3_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q7B0L1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q7B0L2_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q7B0L3_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q7B1L1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ]
+ },
+ "cells": {
+  "Q0_r0": "BUFx16f_ASAP7_75t_R",
+  "Q0": "BUFx8_ASAP7_75t_R",
+  "Q1_r0": "BUFx16f_ASAP7_75t_R",
+  "Q1": "BUFx8_ASAP7_75t_R",
+  "Q2_r0": "BUFx8_ASAP7_75t_R",
+  "Q2": "BUFx8_ASAP7_75t_R",
+  "Q3_r0": "BUFx16f_ASAP7_75t_R",
+  "Q3": "BUFx8_ASAP7_75t_R",
+  "Q4_r0": "BUFx16f_ASAP7_75t_R",
+  "Q4": "BUFx24_ASAP7_75t_R",
+  "Q5_r0": "BUFx24_ASAP7_75t_R",
+  "Q5": "BUFx24_ASAP7_75t_R",
+  "Q6_r0": "BUFx24_ASAP7_75t_R",
+  "Q6": "BUFx16f_ASAP7_75t_R",
+  "Q7_r0": "BUFx16f_ASAP7_75t_R",
+  "Q7": "BUFx24_ASAP7_75t_R",
+  "Q0B0_r0": "BUFx24_ASAP7_75t_R",
+  "Q0B0": "BUFx8_ASAP7_75t_R",
+  "Q0B1_r0": "BUFx24_ASAP7_75t_R",
+  "Q0B1": "BUFx8_ASAP7_75t_R",
+  "Q1B0_r0": "BUFx24_ASAP7_75t_R",
+  "Q1B0": "BUFx10_ASAP7_75t_R",
+  "Q1B1_r0": "BUFx24_ASAP7_75t_R",
+  "Q1B1": "BUFx8_ASAP7_75t_R",
+  "Q2B0_r0": "BUFx10_ASAP7_75t_R",
+  "Q2B0": "BUFx24_ASAP7_75t_R",
+  "Q2B1_r0": "BUFx24_ASAP7_75t_R",
+  "Q2B1": "BUFx10_ASAP7_75t_R",
+  "Q3B0_r0": "BUFx8_ASAP7_75t_R",
+  "Q3B0": "BUFx24_ASAP7_75t_R",
+  "Q3B1_r0": "BUFx24_ASAP7_75t_R",
+  "Q3B1": "BUFx10_ASAP7_75t_R",
+  "Q4B0_r0": "BUFx8_ASAP7_75t_R",
+  "Q4B0": "BUFx24_ASAP7_75t_R",
+  "Q4B1_r0": "BUFx8_ASAP7_75t_R",
+  "Q4B1": "BUFx10_ASAP7_75t_R",
+  "Q5B0_r0": "BUFx24_ASAP7_75t_R",
+  "Q5B0": "BUFx10_ASAP7_75t_R",
+  "Q5B1_r0": "BUFx10_ASAP7_75t_R",
+  "Q5B1": "BUFx24_ASAP7_75t_R",
+  "Q6B0_r0": "BUFx24_ASAP7_75t_R",
+  "Q6B0": "BUFx8_ASAP7_75t_R",
+  "Q6B1_r0": "BUFx10_ASAP7_75t_R",
+  "Q6B1": "BUFx10_ASAP7_75t_R",
+  "Q7B0_r0": "BUFx10_ASAP7_75t_R",
+  "Q7B0": "BUFx24_ASAP7_75t_R",
+  "Q7B1_r0": "BUFx10_ASAP7_75t_R",
+  "Q7B1": "BUFx10_ASAP7_75t_R",
+  "Q0B0L0_r0": "BUFx24_ASAP7_75t_R",
+  "Q0B0L1_r0": "BUFx24_ASAP7_75t_R",
+  "Q0B0L2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q0B0L3_r0": "BUFx16f_ASAP7_75t_R",
+  "Q0B1L0_r0": "BUFx16f_ASAP7_75t_R",
+  "Q0B1L1_r0": "BUFx16f_ASAP7_75t_R",
+  "Q0B1L2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q0B1L3_r0": "BUFx16f_ASAP7_75t_R",
+  "Q1B0L0_r0": "BUFx24_ASAP7_75t_R",
+  "Q1B0L1_r0": "BUFx24_ASAP7_75t_R",
+  "Q1B0L2_r0": "BUFx24_ASAP7_75t_R",
+  "Q1B0L3_r0": "BUFx24_ASAP7_75t_R",
+  "Q1B1L0_r0": "BUFx24_ASAP7_75t_R",
+  "Q1B1L1_r0": "BUFx24_ASAP7_75t_R",
+  "Q1B1L2_r0": "BUFx24_ASAP7_75t_R",
+  "Q1B1L3_r0": "BUFx24_ASAP7_75t_R",
+  "Q2B0L0_r0": "BUFx16f_ASAP7_75t_R",
+  "Q2B0L1_r0": "BUFx24_ASAP7_75t_R",
+  "Q2B0L2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q2B0L3_r0": "BUFx24_ASAP7_75t_R",
+  "Q2B1L0_r0": "BUFx16f_ASAP7_75t_R",
+  "Q2B1L1_r0": "BUFx16f_ASAP7_75t_R",
+  "Q2B1L2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q2B1L3_r0": "BUFx16f_ASAP7_75t_R",
+  "Q3B0L0_r0": "BUFx10_ASAP7_75t_R",
+  "Q3B0L1_r0": "BUFx16f_ASAP7_75t_R",
+  "Q3B0L2_r0": "BUFx10_ASAP7_75t_R",
+  "Q3B0L3_r0": "BUFx16f_ASAP7_75t_R",
+  "Q3B1L0_r0": "BUFx16f_ASAP7_75t_R",
+  "Q3B1L1_r0": "BUFx16f_ASAP7_75t_R",
+  "Q3B1L2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q3B1L3_r0": "BUFx16f_ASAP7_75t_R",
+  "Q4B0L0_r0": "BUFx24_ASAP7_75t_R",
+  "Q4B0L1_r0": "BUFx16f_ASAP7_75t_R",
+  "Q4B0L2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q4B0L3_r0": "BUFx16f_ASAP7_75t_R",
+  "Q4B1L0_r0": "BUFx16f_ASAP7_75t_R",
+  "Q4B1L1_r0": "BUFx16f_ASAP7_75t_R",
+  "Q4B1L2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q4B1L3_r0": "BUFx16f_ASAP7_75t_R",
+  "Q5B0L0_r0": "BUFx16f_ASAP7_75t_R",
+  "Q5B0L1_r0": "BUFx16f_ASAP7_75t_R",
+  "Q5B0L2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q5B0L3_r0": "BUFx16f_ASAP7_75t_R",
+  "Q5B1L0_r0": "BUFx24_ASAP7_75t_R",
+  "Q5B1L1_r0": "BUFx16f_ASAP7_75t_R",
+  "Q5B1L2_r0": "BUFx24_ASAP7_75t_R",
+  "Q5B1L3_r0": "BUFx24_ASAP7_75t_R",
+  "Q6B0L0_r0": "BUFx24_ASAP7_75t_R",
+  "Q6B0L1_r0": "BUFx24_ASAP7_75t_R",
+  "Q6B0L2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q6B0L3_r0": "BUFx24_ASAP7_75t_R",
+  "Q6B1L0_r0": "BUFx24_ASAP7_75t_R",
+  "Q6B1L1_r0": "BUFx16f_ASAP7_75t_R",
+  "Q6B1L2_r0": "BUFx24_ASAP7_75t_R",
+  "Q6B1L3_r0": "BUFx24_ASAP7_75t_R",
+  "Q7B0L0_r0": "BUFx16f_ASAP7_75t_R",
+  "Q7B0L1_r0": "BUFx24_ASAP7_75t_R",
+  "Q7B0L2_r0": "BUFx24_ASAP7_75t_R",
+  "Q7B0L3_r0": "BUFx24_ASAP7_75t_R",
+  "Q7B1L0_r0": "BUFx16f_ASAP7_75t_R",
+  "Q7B1L1_r0": "BUFx24_ASAP7_75t_R",
+  "Q7B1L2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q7B1L3_r0": "BUFx16f_ASAP7_75t_R"
+ },
+ "layers": "m56",
+ "fit": "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/model_refit3_1026/uf_phys3_v1.json",
+ "provenance": {
+  "argv": [
+   "/usr/bin/python3",
+   "f4c_size.py",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026",
+   "../plan/vmr_k8.tcl",
+   "../plan/vmr_placed.geo",
+   "/srv/opentallas-scratch2/claude/master-plan-r4-1026/su_refloor",
+   "vmr_k8_s56.tcl",
+   "--layers",
+   "m56"
+  ],
+  "sha256": {
+   "../plan/vmr_k8.tcl": "6dd7512a5478c70a2bb320574a960b88c07ba2575c0af81b0624ca916d6e1c2c",
+   "../plan/vmr_placed.geo": "9e6cf475894efa18c0882ae9dea65fdf93dd5a3096561570d385f9d4d44df615",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/qc_su_f4c/pred/f4c_size.py": "befcdad7542efdf38718f471fcf6841a7e4ef8755a85a501ff37db87425e0279",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/qc_su_prog_l1_1026/su_branch_size.py": "112ac246210502de812254c6ca2b16930aa053c193ec8bcb4528d1270f588da8",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/qc_su_prog_l1_1026/phys_gate.py": "8b0cd6026724baa0c446eb3b5816b6ef71c8549d593530cd98205cbb0d294e14",
+   "vmr_k8_s56.tcl": "94f9fa2b915ed47f4cac728879f8ea5bc5d8c5900012ce52e6b06f84ddce62f0",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/model_refit3_1026/uf_phys3_v1.json": "cef9c3672fc8aa6b5410afc461747846132eaa17424589c624272ba77e21a990"
+  }
+ }
+}

@@ -1,0 +1,208 @@
+{
+ "TT_rise": {
+  "mean": 243.19,
+  "min": 230.92,
+  "max": 252.64,
+  "window": 21.72
+ },
+ "TT_early": {
+  "mean": 231.96,
+  "min": 220.43,
+  "max": 240.24,
+  "window": 19.81
+ },
+ "TT_late": {
+  "mean": 259.8,
+  "min": 246.91,
+  "max": 270.65,
+  "window": 23.74
+ },
+ "FF_rise": {
+  "mean": 195.91,
+  "min": 185.34,
+  "max": 204.27,
+  "window": 18.93
+ },
+ "FF_early": {
+  "mean": 186.72,
+  "min": 176.53,
+  "max": 194.45,
+  "window": 17.92
+ },
+ "FF_late": {
+  "mean": 207.58,
+  "min": 196.28,
+  "max": 217.28,
+  "window": 21.0
+ },
+ "gate": {
+  "verdict": "FAIL",
+  "checks": {
+   "TT_mean": true,
+   "FF_mean": false,
+   "TT_window": false,
+   "FF_window": false
+  },
+  "band": {
+   "TT_rise_mean": [
+    241.0,
+    259.0
+   ],
+   "FF_early_mean": [
+    192.5,
+    212.5
+   ],
+   "window_max": 14.0
+  },
+  "rule": "build only if predicted TT rise mean in 250+-(20-11), FF early mean in 202.5+-(20-10), both windows <=20 (COORD RULING MODEL-REFIT-2; guard = LOO max per-leaf error of the fit in use: uf_phys3 v1 (MODEL-REFIT-3 2026-10-26): uf_phys + KSTAGE + BLEAF, GRT basis, 10 builds)"
+ },
+ "sensitivity": {
+  "textbook": {
+   "params": {
+    "max": {
+     "alpha": 0.0,
+     "beta": 0.6931471805599453,
+     "gslew": 2.1972245773362196,
+     "kleaf": 1.2955
+    },
+    "min": {
+     "alpha": 0.0,
+     "beta": 0.6931471805599453,
+     "gslew": 2.1972245773362196,
+     "kleaf": 1.2955
+    }
+   },
+   "TT_rise": {
+    "mean": 234.55,
+    "min": 221.45,
+    "max": 246.23,
+    "window": 24.78
+   },
+   "FF_early": {
+    "mean": 190.16,
+    "min": 178.05,
+    "max": 201.4,
+    "window": 23.35
+   },
+   "delta_vs_gate": {
+    "TT_rise_mean": -8.64,
+    "TT_rise_window": 3.06,
+    "FF_early_mean": 3.44,
+    "FF_early_window": 5.43
+   },
+   "gate_under_these_params": "FAIL"
+  },
+  "ln2_fit": {
+   "params": {
+    "max": {
+     "alpha": 0.0,
+     "beta": 0.69,
+     "gslew": 3.0,
+     "kleaf": 1.2955
+    },
+    "min": {
+     "alpha": 0.2,
+     "beta": 0.69,
+     "gslew": 2.2,
+     "kleaf": 1.2955
+    }
+   },
+   "TT_rise": {
+    "mean": 241.36,
+    "min": 227.34,
+    "max": 253.8,
+    "window": 26.46
+   },
+   "FF_early": {
+    "mean": 186.83,
+    "min": 175.01,
+    "max": 197.81,
+    "window": 22.8
+   },
+   "delta_vs_gate": {
+    "TT_rise_mean": -1.83,
+    "TT_rise_window": 4.74,
+    "FF_early_mean": 0.11,
+    "FF_early_window": 4.88
+   },
+   "gate_under_these_params": "FAIL"
+  }
+ },
+ "params": {
+  "max": {
+   "alpha": 0.2,
+   "beta": 0.45,
+   "gslew": 4.0,
+   "bleaf": 0.25,
+   "kstage": 1.5,
+   "kleaf": 1.2868
+  },
+  "min": {
+   "alpha": 0.2,
+   "beta": 0.5,
+   "gslew": 3.0,
+   "bleaf": 0.25,
+   "kstage": 0.75,
+   "kleaf": 1.2868
+  },
+  "loo_max": {
+   "TT": 11,
+   "FF": 10
+  },
+  "fit": "uf_phys3 v1 (MODEL-REFIT-3 2026-10-26): uf_phys + KSTAGE + BLEAF, GRT basis, 10 builds",
+  "fit_file": "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/model_refit3_1026/uf_phys3_v1.json"
+ },
+ "provenance": {
+  "argv": [
+   "/usr/bin/python3",
+   "f4b_pred3.py",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026",
+   "../plan/vmr_k4.tcl",
+   "../plan/vmr_placed.geo",
+   "/srv/opentallas-scratch2/claude/master-plan-r4-1026/su_refloor",
+   "vmr_k4_m45.json",
+   "m45"
+  ],
+  "cwd": "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/qc_su_f4c/pred",
+  "predictor_call": [
+   "phys_gate.predict_file",
+   "../plan/vmr_k4.tcl",
+   "/tmp/tmp7y7l4dzu.json",
+   "../plan/vmr_placed.geo",
+   "/srv/opentallas-scratch2/claude/master-plan-r4-1026/su_refloor"
+  ],
+  "sha256": {
+   "../plan/vmr_k4.tcl": "db5ee0ece3b27dbcb815ddca282c96090c53eca0cacd08eec766b6062d3b68d1",
+   "/tmp/tmp7y7l4dzu.json": "546d33497eac893758bcac5cc038367c06998594cd1799773f4bac31aae4fffe",
+   "../plan/vmr_placed.geo": "9e6cf475894efa18c0882ae9dea65fdf93dd5a3096561570d385f9d4d44df615",
+   "/srv/opentallas-scratch2/claude/master-plan-r4-1026/su_refloor/invbuf_tt.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+   "/srv/opentallas-scratch2/claude/master-plan-r4-1026/su_refloor/invbuf_ff.lib": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/qc_su_prog_l1_1026/phys_gate.py": "8b0cd6026724baa0c446eb3b5816b6ef71c8549d593530cd98205cbb0d294e14",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/model_refit2_1026/py/uf_phys.py": "d7427e6d1f1ca699558cb42e89100192e8975b517832d345f7f2ebedf4b041ea",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/model_refit2_1026/py/uf_phys_predict.py": "37311b8df3c3b849294a0b1217dc037b3b3fe71e6656e915f424b31ff10bdd94",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/model_refit2_1026/py/common.py": "9ecbd3cf512a19a8ef090869eef8f803e473b30a0857841a802980cda16c6a7e",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/model_refit2_1026/py/lib.py": "993fd4175bb75d7f72101ead4c3af9b8abd43a51d90af95651bd0e105682d630",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4c-1026/results/model_refit3_1026/uf_phys3_v1.json": "cef9c3672fc8aa6b5410afc461747846132eaa17424589c624272ba77e21a990"
+  }
+ },
+ "scope": "PLAN MODEL uf_phys (MODEL-REFIT-2), UNCHECKED",
+ "coord_band_1026": {
+  "TT": "250+-9",
+  "FF": "202.5+-10",
+  "window": 14,
+  "inside": false
+ },
+ "island_leaves": {
+  "Q0": 16,
+  "Q1": 16,
+  "Q2": 16,
+  "Q3": 16
+ },
+ "island_sinks": {
+  "Q0": 717,
+  "Q1": 717,
+  "Q2": 1139,
+  "Q3": 1138
+ },
+ "layers": "m45"
+}

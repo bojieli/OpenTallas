@@ -1,0 +1,531 @@
+{
+ "lane": "MODEL-REFIT-3",
+ "scope": "uf_phys3 v1 GRT-basis refit + GRT->RCX analysis; numbers UNCHECKED unless marked",
+ "points": {
+  "prog_r1": {
+   "family": "QC-SU prog",
+   "basis": [
+    "GRT"
+   ],
+   "origin": "claude/model-refit2-1026@3d6754e1f4 meas/prog_r1 (KITS-2 r2 kit 5_1_grt)",
+   "files": {
+    "spec": {
+     "path": "results/qc_su_kits/r2/prog_m0.ab.tcl",
+     "sha256": "a804cc3b7baa6e25ce6af800ee3821a28508763e1d6a49400284af2a1a4244b1"
+    },
+    "seg": {
+     "path": "results/qc_su_kits/r2/prog_m0.ab.json",
+     "sha256": "04f51004cd3b80b48d932acde122c903e940dfa0c9b77d44e90ddeee9e6f32d0"
+    },
+    "geo": {
+     "path": "results/qc_su_kits/r2/prog_m0.geo",
+     "sha256": "73c70c50d7538616979320ad95fdba1b672c73e92f255f12044948f2bb4dba25"
+    },
+    "grt_TT": {
+     "path": "results/model_refit2_1026/meas/prog_r1/meas_ck_TT.tsv",
+     "sha256": "4efc2767a572f6ff725ac2c39e60b8031975862065cc98660ed7abdf68824ede"
+    },
+    "grt_FF": {
+     "path": "results/model_refit2_1026/meas/prog_r1/meas_ck_FF.tsv",
+     "sha256": "2152c5b4e89d85ca2d4112bcb4fab0c5d8c4508e471b7c43e29214cbaa0b922b"
+    }
+   }
+  },
+  "prog_r3": {
+   "family": "QC-SU prog",
+   "basis": [
+    "GRT"
+   ],
+   "origin": "claude/model-refit2-1026@3d6754e1f4 meas/prog_r3 (KITS-3 prog_m0 r3 5_1_grt)",
+   "files": {
+    "spec": {
+     "path": "results/qc_su_kits/r3/out/prog_m0_r3.gate.asbuilt.tcl",
+     "sha256": "b5ceabb95ea3b44b7cb5eac9729ab475d0364d46454f3abce0cf81c7c06c7a33"
+    },
+    "seg": {
+     "path": "results/qc_su_kits/r3/out/prog_m0_r3.gate.asbuilt.json",
+     "sha256": "6afdda1944b8f3c58b2416407dc041c071257628a196c259c3cdbddb9469b104"
+    },
+    "geo": {
+     "path": "results/qc_su_kits/r2/prog_m0.geo",
+     "sha256": "73c70c50d7538616979320ad95fdba1b672c73e92f255f12044948f2bb4dba25"
+    },
+    "grt_TT": {
+     "path": "results/model_refit2_1026/meas/prog_r3/meas_ck_TT.tsv",
+     "sha256": "640c78a93e775c89c6bcd1a9c191b15446e7211090fa3a8a47db5acd9abd0389"
+    },
+    "grt_FF": {
+     "path": "results/model_refit2_1026/meas/prog_r3/meas_ck_FF.tsv",
+     "sha256": "99d9aa1573eebae3ef40fb51230d162fb1b26484c8c9e439d91c522f8928b32f"
+    }
+   }
+  },
+  "btab_r4": {
+   "family": "QC-SU btab",
+   "basis": [
+    "GRT"
+   ],
+   "origin": "claude/model-refit2-1026@3d6754e1f4 meas/btab_r4 (KITS-3 btab_m0 r4 5_1_grt); RCX pending intel2 oth-ubuntu-1332751 (DRT)",
+   "files": {
+    "spec": {
+     "path": "results/qc_su_kits/r4/btab_m0_r4/btab_ls_k6_L3.gate.asbuilt.tcl",
+     "sha256": "a38c6de723a65d2f3ffb679c075b282ea423354f59bfd6cb514b3e3b16ac008f"
+    },
+    "seg": {
+     "path": "results/qc_su_kits/r4/btab_m0_r4/btab_ls_k6_L3.gate.asbuilt.json",
+     "sha256": "1c4617cd3d58a9eb12388635ccb91e7de8a0d18a00c18d248edf56a79b356515"
+    },
+    "geo": {
+     "path": "results/qc_su_kits/r2/btab_m0.geo",
+     "sha256": "f60ecb8fb3fe779618514805d7208866b514a076e47149bd62757f80836e0aa0"
+    },
+    "grt_TT": {
+     "path": "results/model_refit2_1026/meas/btab_r4/meas_ck_TT.tsv",
+     "sha256": "aad7fb9e9da055eac356660aa122c1dc8125a5bd67efef0e29539e3397a921f2"
+    },
+    "grt_FF": {
+     "path": "results/model_refit2_1026/meas/btab_r4/meas_ck_FF.tsv",
+     "sha256": "4df45defa0466016e4b14af4cd9bd8133ad5f780f3431bec7a548edd3d087ff4"
+    }
+   }
+  },
+  "prog_k5": {
+   "family": "QC-SU prog",
+   "basis": [
+    "GRT"
+   ],
+   "origin": "claude/qc-su-prog-l2-1026@5f2bf0d12 meas/prog_k5 (L1 kit_l1 c_ls_k5_S13 5_1_grt)",
+   "files": {
+    "spec": {
+     "path": "results/qc_su_prog_l1_1026/sweep_c/c_ls_k5_S13.gate.asbuilt.sized.tcl",
+     "sha256": "3bef89b6dfce1df11b78487d30769ce011b5bfa7b38c9eb66ee130f9aada0a01"
+    },
+    "seg": {
+     "path": "results/qc_su_prog_l1_1026/sweep_c/c_ls_k5_S13.gate.asbuilt.json",
+     "sha256": "71f4f96b9732ec5792910f98e31788f8012b912a6c35b2895ac0c74758983366"
+    },
+    "geo": {
+     "path": "results/qc_su_kits/r2/prog_m0.geo",
+     "sha256": "73c70c50d7538616979320ad95fdba1b672c73e92f255f12044948f2bb4dba25"
+    },
+    "grt_TT": {
+     "path": "results/model_refit2_1026/meas/prog_k5/meas_ck_TT.tsv",
+     "sha256": "5aa68fc8920ff4fd12d336d2ae6d2183b21b02104f7fdefdf81f4bb8a4e48225"
+    },
+    "grt_FF": {
+     "path": "results/model_refit2_1026/meas/prog_k5/meas_ck_FF.tsv",
+     "sha256": "f9608dbee62137627638307bea17ff62021c579586b0197c9b217398a88e5b06"
+    }
+   }
+  },
+  "prog_l2": {
+   "family": "QC-SU prog",
+   "basis": [
+    "GRT"
+   ],
+   "origin": "claude/qc-su-prog-l2-1026@7b065a34b cts_grt_l2/grt_meas == epyc2:/srv/opentallas-scratch2/claude/qc-su-prog-l2-1026/kit_l2/meas (sha equal, CHECKED; built spec kit_l2/mscts_spec_l2.tcl == sweep/h3_d55_s95.sized.tcl CHECKED); RCX pending (DRT 513 viol 17:46)",
+   "files": {
+    "spec": {
+     "path": "results/qc_su_prog_l2_1026/sweep/h3_d55_s95.sized.tcl",
+     "sha256": "cbe1c4e49fad5b044be09a26885f00eb596604e58d90e55daa4f336f28ab9c4e"
+    },
+    "seg": {
+     "path": "results/qc_su_prog_l2_1026/sweep/h3_d55_s95.seg.json",
+     "sha256": "517239afd626e36321e4ebdedd0dd96855f12cf43e1ecfa14777cd9a766ba483"
+    },
+    "geo": {
+     "path": "results/qc_su_kits/r2/prog_m0.geo",
+     "sha256": "73c70c50d7538616979320ad95fdba1b672c73e92f255f12044948f2bb4dba25"
+    },
+    "grt_TT": {
+     "path": "results/qc_su_prog_l2_1026/cts_grt_l2/grt_meas/meas_ck_TT.tsv",
+     "sha256": "f2999c4896c1b6962ebf77d28ee31c6bf78ce55ab0b0c44eb6e8627cedba7e10"
+    },
+    "grt_FF": {
+     "path": "results/qc_su_prog_l2_1026/cts_grt_l2/grt_meas/meas_ck_FF.tsv",
+     "sha256": "9aaa6ad02e5a332f8b46927d252f98f7c2947056f5d073248b2a9c43e9c04929"
+    }
+   }
+  },
+  "btab_r5": {
+   "family": "QC-SU btab",
+   "basis": [
+    "GRT",
+    "RCX"
+   ],
+   "origin": "intel1:/srv/opentallas-scratch2/claude/qc-su-btab-r5-1026/{plan,meas} (branch 9a9b3382b8 local only); built spec mscts_spec_r5.tcl == plan asbuilt.tcl (CHECKED); RCX = MODEL-REFIT-3 meas_ck.tcl on 6_final.odb+spef (DRT 0, ANT 0) -> btab_r5_rcx/, vias from 6_final.def",
+   "files": {
+    "spec": {
+     "path": "results/model_refit3_1026/points/btab_r5/btab_r5_k6_L3.gate.asbuilt.tcl",
+     "sha256": "5bbd752b37510ef66a703ed8032ea39a876b8cab17a3d8d7bf5bb009d93e1ab9"
+    },
+    "seg": {
+     "path": "results/model_refit3_1026/points/btab_r5/btab_r5_k6_L3.gate.asbuilt.json",
+     "sha256": "76fa943f1cfb69fb61a4aa114540ee83e6400883bfd05faf9c3994f390af0aa8"
+    },
+    "geo": {
+     "path": "results/model_refit3_1026/points/btab_r5/btab_m0_r5.geo",
+     "sha256": "891e598cbac60d9c29f3f609862a453f3b42fb07827ee8cf8bbea58d36873ea3"
+    },
+    "grt_TT": {
+     "path": "results/model_refit3_1026/points/btab_r5/meas_grt_TT.tsv",
+     "sha256": "7db8c1debc69559526f022e12c7d6ab182dfdc0f9b2f3b4e2bc36ec4e008b386"
+    },
+    "grt_FF": {
+     "path": "results/model_refit3_1026/points/btab_r5/meas_grt_FF.tsv",
+     "sha256": "d401d156b714ad865df43e85e906344c7bafa18c3f9dc2c9de9d1bc69cf99414"
+    },
+    "rcx_TT": {
+     "path": "results/model_refit3_1026/points/btab_r5/meas_rcx_TT.tsv",
+     "sha256": "a793df55fc6a4e80c9f9c1e909b002cbb8c388296365396a7ea7fc1565936d4b"
+    },
+    "rcx_FF": {
+     "path": "results/model_refit3_1026/points/btab_r5/meas_rcx_FF.tsv",
+     "sha256": "2b939b6b213d7dbd855c9d03f8a7e8f03babac7744a2130dff715fb9c042a576"
+    },
+    "vias_rcx": {
+     "path": "results/model_refit3_1026/points/btab_r5/vias_rcx.tsv",
+     "sha256": "5177086c2cebbf7fe379df04e1d6017db77a1c13068478cbe2870b51bcc42601"
+    }
+   }
+  },
+  "vmr_f4a": {
+   "family": "QC-SU F4A",
+   "basis": [
+    "GRT",
+    "RCX"
+   ],
+   "origin": "intel1:/srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits/qfd_dv_s8x_vmr_f4a/meas (grt_*, rcx_*_prehold, ck_wires_prehold, nodes_*); spec == placed_g4c.tcl (CHECKED); geo claude/qc-su-f4a-sign-1026@ac473525d placed/vmr_placed.geo",
+   "files": {
+    "spec": {
+     "path": "results/model_refit3_1026/points/vmr_f4a/mscts_spec_f4a.tcl",
+     "sha256": "2ee9a1166a57734ca42d383228feea8e4f67a06cc688d28d5cf9d743351568fa"
+    },
+    "geo": {
+     "path": "results/model_refit3_1026/points/vmr_f4a/vmr_placed.geo",
+     "sha256": "9e6cf475894efa18c0882ae9dea65fdf93dd5a3096561570d385f9d4d44df615"
+    },
+    "grt_TT": {
+     "path": "results/model_refit3_1026/points/vmr_f4a/grt_TT.tsv",
+     "sha256": "7ccef39ea249a2ee0842880448bde301293e1b2e3d9bceb4f1bab5644477fdf9"
+    },
+    "grt_FF": {
+     "path": "results/model_refit3_1026/points/vmr_f4a/grt_FF.tsv",
+     "sha256": "3038677dd5e3e0258e244d3ada2d1afbc0c734c60c950d8eb4434afd686cfb4c"
+    },
+    "rcx_TT": {
+     "path": "results/model_refit3_1026/points/vmr_f4a/rcx_TT_prehold.tsv",
+     "sha256": "11cdb2a0208194a12350726bc5a7a6bc0974ddbb294ac38f562a4c046f580d84"
+    },
+    "rcx_FF": {
+     "path": "results/model_refit3_1026/points/vmr_f4a/rcx_FF_prehold.tsv",
+     "sha256": "d7f431d4a386c4285310c83e3583551fb378b47ffbbd311c634a1d701ebbd9c8"
+    },
+    "vias_rcx": {
+     "path": "results/model_refit3_1026/points/vmr_f4a/vias_rcx.tsv",
+     "sha256": "a55dbc89db94cf33d85477658fc85a9b97f7e3985ea97ad4c50e1bc5d18026f0"
+    }
+   }
+  },
+  "rp1_f4a": {
+   "family": "QC-SU F4A",
+   "basis": [
+    "GRT",
+    "RCX"
+   ],
+   "origin": "intel1:/srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits/qfd_dv_s8_crh_rp1_f4a/meas (as vmr)",
+   "files": {
+    "spec": {
+     "path": "results/model_refit3_1026/points/rp1_f4a/mscts_spec_f4a.tcl",
+     "sha256": "dd3719a6a35dbf13632dc245e5d26078f239d988b66001ab9e6cbc8862efc6dd"
+    },
+    "geo": {
+     "path": "results/model_refit3_1026/points/rp1_f4a/rp1_placed.geo",
+     "sha256": "ea8be4cd5226b68d6e71cec2e50c626ff5b5920d9e711d60ad62e6b8a43f6388"
+    },
+    "grt_TT": {
+     "path": "results/model_refit3_1026/points/rp1_f4a/grt_TT.tsv",
+     "sha256": "5e3866e1a2bd9ea2347dbbe841093eaf5e9e0ba43b7ac054fbb0d6b22861167a"
+    },
+    "grt_FF": {
+     "path": "results/model_refit3_1026/points/rp1_f4a/grt_FF.tsv",
+     "sha256": "adab1fbcb72f82662f360ef5c75bc31deb1ea16411880b0848729fafbea0d81a"
+    },
+    "rcx_TT": {
+     "path": "results/model_refit3_1026/points/rp1_f4a/rcx_TT_prehold.tsv",
+     "sha256": "07996f89c92e462c1e5ad0429c8a573842db72b47ef682293357650d02a5b190"
+    },
+    "rcx_FF": {
+     "path": "results/model_refit3_1026/points/rp1_f4a/rcx_FF_prehold.tsv",
+     "sha256": "93815c9ea6a2822739166ef2b50c92aa6d7d30b2467bde1793a2e35ba07103b8"
+    },
+    "vias_rcx": {
+     "path": "results/model_refit3_1026/points/rp1_f4a/vias_rcx.tsv",
+     "sha256": "c6cb7228ad3107ff7e584b2ab7b6d457952099f6e13093614e19ec131769f28d"
+    }
+   }
+  },
+  "head_cal1": {
+   "family": "S81-HEAD elemA",
+   "basis": [
+    "GRT"
+   ],
+   "origin": "intel1:/srv/opentallas-scratch2/claude/head-core-lat-r5-1026 kits/elemA_n50_cal meas_ck_* + p/q44442_e1_b1.* (spec == kit mscts_spec_r5.tcl CHECKED)",
+   "files": {
+    "spec": {
+     "path": "results/model_refit3_1026/points/head_cal1/mscts_spec_r5.tcl",
+     "sha256": "9bede704cb8c092012235ef87f2b0dfd3b213fc4f8c76df51ec1d8d3915461df"
+    },
+    "seg": {
+     "path": "results/model_refit3_1026/points/head_cal1/q44442_e1_b1.seg.json",
+     "sha256": "f2f6b7c47ba52e85bad416df93499d57fc807f7fabe2e02bd99268d1ca163cf5"
+    },
+    "geo": {
+     "path": "results/model_refit3_1026/points/head_cal1/q44442_e1_b1.geo",
+     "sha256": "135c71c042ecce09c90e41387e354d007295159ae4d900ee8e0680b118eafe30"
+    },
+    "grt_TT": {
+     "path": "results/model_refit3_1026/points/head_cal1/meas_ck_TT.tsv",
+     "sha256": "64ddfdb01ed3f322f626b24edeb81c31d3f4105f933e30e7b16d6c58f27f19ce"
+    },
+    "grt_FF": {
+     "path": "results/model_refit3_1026/points/head_cal1/meas_ck_FF.tsv",
+     "sha256": "fef12c6cf48f4c91af0bfa439ed40bf48dded01cf45881691ee0bcdb4e0bef36"
+    }
+   }
+  },
+  "head_cal2": {
+   "family": "S81-HEAD elemA",
+   "basis": [
+    "GRT"
+   ],
+   "origin": "intel1:/srv/opentallas-scratch2/claude/head-core-lat-r5-1026 kits/elemA_n50_cal2 meas_ck_* + p/n_44442_b1.* (spec == kit mscts_spec_r5.tcl CHECKED)",
+   "files": {
+    "spec": {
+     "path": "results/model_refit3_1026/points/head_cal2/mscts_spec_r5.tcl",
+     "sha256": "bc07ace943edad8045efb3f29d6d3fa7de4813e3d77293335ea9fe13cc55e320"
+    },
+    "seg": {
+     "path": "results/model_refit3_1026/points/head_cal2/n_44442_b1.seg.json",
+     "sha256": "9e97352df687d6cdfd6fd1f2c8d6144dbac8dff49bc183a8d12cf4f9df92a791"
+    },
+    "geo": {
+     "path": "results/model_refit3_1026/points/head_cal2/n_44442_b1.geo",
+     "sha256": "f8c7776f735ee5ed7dc8b002c90a71902a50399095fb72e9095e555db58cfe69"
+    },
+    "grt_TT": {
+     "path": "results/model_refit3_1026/points/head_cal2/meas_ck_TT.tsv",
+     "sha256": "f82a30fa0d2ae856245f7d0a1fc39e3fceebdf82b36fb7a6cf2d60e1a240fcdd"
+    },
+    "grt_FF": {
+     "path": "results/model_refit3_1026/points/head_cal2/meas_ck_FF.tsv",
+     "sha256": "c7bfcf768fb4505bfb9c4e9e0c64ccb2c86d19ea0bb6043140a586e6a29fc867"
+    }
+   }
+  },
+  "S81_l0r_R6": {
+   "excluded": "no build: R6 tree plans FAIL STRUCTURAL (GEOM-REVIEW-7 17:11), R7 plan only (no CTS/GRT measurement)"
+  }
+ },
+ "model": {
+  "file": "results/model_refit3_1026/uf_phys3_v1.json",
+  "PMAX": {
+   "alpha": 0.2,
+   "beta": 0.45,
+   "gslew": 4.0,
+   "bleaf": 0.25,
+   "kstage": 1.5,
+   "kleaf": 1.2868
+  },
+  "PMIN": {
+   "alpha": 0.2,
+   "beta": 0.5,
+   "gslew": 3.0,
+   "bleaf": 0.25,
+   "kstage": 0.75,
+   "kleaf": 1.2868
+  },
+  "LOO_MAX": {
+   "TT": 11,
+   "FF": 10
+  },
+  "WIN_GUARD": {
+   "TT": 6,
+   "FF": 5
+  },
+  "LOO_maxabs": {
+   "TT_max_analysis": {
+    "prog_r1": 4.42,
+    "prog_r3": 7.5,
+    "btab_r4": 4.27,
+    "prog_k5": 6.53,
+    "prog_l2": 10.41,
+    "btab_r5": 4.89,
+    "vmr_f4a": 5.05,
+    "rp1_f4a": 3.93,
+    "head_cal1": 9.39,
+    "head_cal2": 10.93
+   },
+   "FF_min_analysis": {
+    "prog_r1": 3.13,
+    "prog_r3": 3.49,
+    "btab_r4": 3.98,
+    "prog_k5": 3.09,
+    "prog_l2": 9.33,
+    "btab_r5": 5.08,
+    "vmr_f4a": 4.06,
+    "rp1_f4a": 3.79,
+    "head_cal1": 7.68,
+    "head_cal2": 8.27
+   }
+  },
+  "LOO_window_err": {
+   "TT": {
+    "prog_r1": 1.8,
+    "prog_r3": -2.14,
+    "btab_r4": -1.65,
+    "prog_k5": 1.87,
+    "prog_l2": -5.29,
+    "btab_r5": -0.23,
+    "vmr_f4a": -2.6,
+    "rp1_f4a": -0.64,
+    "head_cal1": 11.43,
+    "head_cal2": 4.04
+   },
+   "FF": {
+    "prog_r1": 0.7,
+    "prog_r3": 0.37,
+    "btab_r4": -0.33,
+    "prog_k5": -0.25,
+    "prog_l2": -4.42,
+    "btab_r5": 2.09,
+    "vmr_f4a": -1.98,
+    "rp1_f4a": -1.15,
+    "head_cal1": 8.68,
+    "head_cal2": 3.76
+   }
+  }
+ },
+ "ablation": {
+  "abl_nostage": {
+   "params": {
+    "max": {
+     "alpha": 0.2,
+     "beta": 0.55,
+     "gslew": 5.0,
+     "bleaf": 0.25,
+     "kstage": 0.0
+    },
+    "min": {
+     "alpha": 0.0,
+     "beta": 0.55,
+     "gslew": 3.0,
+     "bleaf": 0.25,
+     "kstage": 0.0
+    }
+   },
+   "LOO_max": {
+    "TT": 16.83,
+    "FF": 12.7
+   }
+  },
+  "abl_nobleaf": {
+   "params": {
+    "max": {
+     "alpha": 0.2,
+     "beta": 0.4,
+     "gslew": 4.0,
+     "bleaf": null,
+     "kstage": 1.5
+    },
+    "min": {
+     "alpha": 0.0,
+     "beta": 0.35,
+     "gslew": 3.0,
+     "bleaf": null,
+     "kstage": 1.0
+    }
+   },
+   "LOO_max": {
+    "TT": 11.51,
+    "FF": 12.41
+   }
+  }
+ },
+ "rcx": {
+  "transfer_stage_fit": {
+   "C0": -1.9542569695708663,
+   "CV": 0.14434608256608394,
+   "CL": -0.02467709963459873,
+   "CLEAF0": 0.0,
+   "CLEAFL": 0.0,
+   "n_stage": 230,
+   "n_leaf": 0,
+   "stage_resid_sd": 2.6433514410573853,
+   "stage_resid_max": 10.327993141340059,
+   "RFF": 1.7041642567279098
+  },
+  "transfer_holdout": {
+   "btab_r5": {
+    "TT": {
+     "err_mean": 10.31,
+     "err_sd": 10.81,
+     "err_max": 30.07,
+     "noterm_mean": 4.26,
+     "noterm_max": 21.84,
+     "rcx_meas_mean": 246.81,
+     "rcx_meas_window": 48.89,
+     "rcx_pred_mean": 236.5,
+     "rcx_pred_window": 21.45
+    },
+    "FF": {
+     "err_mean": 15.06,
+     "err_sd": 11.12,
+     "err_max": 34.09,
+     "noterm_mean": 4.74,
+     "noterm_max": 20.06,
+     "rcx_meas_mean": 189.63,
+     "rcx_meas_window": 42.71,
+     "rcx_pred_mean": 174.57,
+     "rcx_pred_window": 22.33
+    }
+   }
+  },
+  "island_shift_fits": {
+   "leaves": {
+    "coef": [
+     -30.4054,
+     3.1612
+    ],
+    "loo_island_err_sd": 7.71,
+    "loo_island_err_max": 14.37
+   },
+   "feed_vias": {
+    "coef": [
+     -7.2863,
+     0.1232
+    ],
+    "loo_island_err_sd": 14.68,
+    "loo_island_err_max": 28.85
+   },
+   "leaves+feed_vias": {
+    "coef": [
+     -35.4412,
+     3.0259,
+     0.0753
+    ],
+    "loo_island_err_sd": 6.69,
+    "loo_island_err_max": 13.61
+   },
+   "sinks": {
+    "coef": [
+     -22.1194,
+     0.0489
+    ],
+    "loo_island_err_sd": 10.01,
+    "loo_island_err_max": 25.03
+   }
+  },
+  "verdict": "NOT ADOPTED: per-via stage term fits F4A stages (CV 0.13-0.16 ps/via) but fails hold-out btab_r5; RCX-GRT shift is per L1 island and tracks island size (~3 ps/leaf), not vias"
+ }
+}

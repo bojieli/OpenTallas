@@ -1,0 +1,7 @@
+4 [717, 717, 1139, 1138] [4, 4, 4, 4] {'T1': 196.56, 'T2': 54.54, 'T3': 30.24} {'mean': 219.4, 'min': 216.07, 'max': 227.02, 'window': 10.95} {'mean': 174.98, 'min': 172.05, 'max': 181.86, 'window': 9.81}
+BEST 4 {'TT': {'mean': 219.4, 'min': 216.07, 'max': 227.02, 'window': 10.95}, 'FF': {'mean': 174.98, 'min': 172.05, 'max': 181.86, 'window': 9.81}}
+vmr_k4 VERDICT PASS {'G1_macro_pin_track': 'PASS', 'G2_island_rows': 'PASS', 'G3_node_sites': 'PASS', 'G4_strict': 'PASS', 'G5_sram_structure': 'PASS'} G4 {'n_edges': 84, 'n_detours': 80, 'n_cells': 84} K {'L1': 2, 'L2': 2, 'L3': 2}
+ T {'T1': 196.56, 'T2': 54.54, 'T3': 30.24} trunk None None None
+  TT notrunk avg {'mean': 254.25, 'window': 13.17, 'window_incl_sram': 13.17} | pred {'avg': {'mean': 254.25, 'window': 13.17, 'window_incl_sram': 13.17}, 'early': {'mean': 247.95, 'window': 13.56, 'window_incl_sram': 13.56}, 'late': {'mean': 260.55, 'window': 12.78, 'window_incl_sram': 12.78}}
+  FF notrunk avg {'mean': 195.49, 'window': 11.26, 'window_incl_sram': 11.26} | pred {'avg': {'mean': 195.49, 'window': 11.26, 'window_incl_sram': 11.26}, 'early': {'mean': 192.23, 'window': 11.43, 'window_incl_sram': 11.43}, 'late': {'mean': 198.74, 'window': 11.08, 'window_incl_sram': 11.08}}
+ BAND {'TT_mean': 254.25, 'TT_window': 13.17, 'TT_window_incl_sram': 13.17, 'FF_early_mean': 192.23, 'FF_late_mean': 198.74, 'FF_early_window': 11.43, 'in_band_12_3': True, 'with_prog_residual_TT': 237.65}

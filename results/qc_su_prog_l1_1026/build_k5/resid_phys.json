@@ -1,0 +1,53 @@
+{
+ "TT_rise": {
+  "meas_mean": 263.77,
+  "meas_window": 20.5,
+  "meas_window_incl_macros": 21.52,
+  "pred_mean": 255.88,
+  "pred_window": 17.19,
+  "resid_mean": 7.27,
+  "resid_sd": 2.56,
+  "resid_maxabs": 11.62,
+  "n_leaves": 64,
+  "macros": [
+   250.4,
+   254.2,
+   255.8,
+   255.8
+  ]
+ },
+ "FF_early": {
+  "meas_mean": 198.21,
+  "meas_window": 13.21,
+  "meas_window_incl_macros": 14.24,
+  "pred_mean": 193.58,
+  "pred_window": 14.33,
+  "resid_mean": 4.15,
+  "resid_sd": 1.55,
+  "resid_maxabs": 6.56,
+  "n_leaves": 64,
+  "macros": [
+   189.2,
+   192.0,
+   192.9,
+   191.9
+  ]
+ },
+ "TT_late": {
+  "meas_mean": 277.12,
+  "meas_window": 23.79,
+  "meas_window_incl_macros": 23.79,
+  "pred_mean": 270.6,
+  "pred_window": 17.9,
+  "resid_mean": 5.95,
+  "resid_sd": 3.25,
+  "resid_maxabs": 11.3,
+  "n_leaves": 64,
+  "macros": [
+   263.8,
+   267.3,
+   271.3,
+   270.8
+  ]
+ }
+}
