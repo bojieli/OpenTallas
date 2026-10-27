@@ -136,7 +136,7 @@ def module(kind_entry, m):
     hdr = (f"// slice role faces: " + ", ".join(f"{g} {''.join(FACES[f].upper() for f in range(4) if m[g] >> f & 1) or '-'}"
                                                  for g in GROUPS) + "\n")
     L = [hdr + f"module {name} #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,\n"
-         f"    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1"
+         f"    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0"
          + (", parameter integer PVSO_ENABLE = 0" if kind_entry else "") + ") (\n    "
          + ",\n    ".join(ports) + "\n" + OBS + ");",
          "    /*verilator hier_block*/",
@@ -165,7 +165,7 @@ def module(kind_entry, m):
     pc = ", ".join(f".{p}({n})" for p, n in conn.items())
     if kind_entry:
         L.append(f"    dsdv_svc_rs_pvso_entry #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), "
-                 f".SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .FM({fmv})) u (\n"
+                 f".SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .ROWX(ROWX), .FM({fmv})) u (\n"
                  f"        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q({{2'b00, q}}), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),\n"
                  f"        {pc},\n"
                  f"        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),\n"
@@ -175,7 +175,7 @@ def module(kind_entry, m):
     else:
         L.append("    wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc;"
                  " wire [1:0] st_rg_nc;")
-        L.append(f"    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), "
+        L.append(f"    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), "
                  f".PV_IDENTITY(PV_IDENTITY), .FM({fmv})) u (\n"
                  f"        .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),\n"
                  f"        .st_rg(st_rg_nc), {pc},\n"

@@ -10,7 +10,7 @@
 
 // slice role faces: DI N, DO -, UI -, UO N, RI -, RO N, GI -, GO N, SI N, SO -
 module dsdv_svc_rs_fv_0110101001 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -77,7 +77,7 @@ module dsdv_svc_rs_fv_0110101001 #(parameter integer MUT = 0, parameter integer 
     wire [3:0] c_so_v;
     wire [4303:0] c_so_d;
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'h0110101001)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'h0110101001)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -90,7 +90,7 @@ endmodule
 
 // slice role faces: DI E, DO S, UI S, UO E, RI S, RO E, GI S, GO E, SI E, SO S
 module dsdv_svc_rs_fv_4224242442 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -167,7 +167,7 @@ module dsdv_svc_rs_fv_4224242442 #(parameter integer MUT = 0, parameter integer 
     wire [4303:0] c_so_d;
     assign so_d_s = c_so_d[3227:2152];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'h4224242442)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'h4224242442)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -180,7 +180,7 @@ endmodule
 
 // slice role faces: DI N, DO -, UI -, UO N, RI -, RO N, GI N, GO N, SI N, SO N
 module dsdv_svc_rs_fv_1111101001 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -253,7 +253,7 @@ module dsdv_svc_rs_fv_1111101001 #(parameter integer MUT = 0, parameter integer 
     wire [4303:0] c_so_d;
     assign so_d_n = c_so_d[1075:0];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'h1111101001)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'h1111101001)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -266,7 +266,7 @@ endmodule
 
 // slice role faces: DI E, DO SW, UI SW, UO E, RI SW, RO E, GI SW, GO ES, SI ES, SO SW
 module dsdv_svc_rs_fv_c66c2c2cc2 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -359,7 +359,7 @@ module dsdv_svc_rs_fv_c66c2c2cc2 #(parameter integer MUT = 0, parameter integer 
     assign so_d_s = c_so_d[3227:2152];
     assign so_d_w = c_so_d[4303:3228];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'hc66c2c2cc2)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'hc66c2c2cc2)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -372,7 +372,7 @@ endmodule
 
 // slice role faces: DI N, DO -, UI -, UO N, RI -, RO N, GI NE, GO NE, SI NE, SO NE
 module dsdv_svc_rs_fv_3333101001 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -457,7 +457,7 @@ module dsdv_svc_rs_fv_3333101001 #(parameter integer MUT = 0, parameter integer 
     assign so_d_n = c_so_d[1075:0];
     assign so_d_e = c_so_d[2151:1076];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'h3333101001)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'h3333101001)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -470,7 +470,7 @@ endmodule
 
 // slice role faces: DI -, DO ESW, UI ESW, UO -, RI ESW, RO -, GI SW, GO ES, SI ES, SO SW
 module dsdv_svc_rs_pvso_entry_fv_c66c0e0ee0 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer PVSO_ENABLE = 0) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0, parameter integer PVSO_ENABLE = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -565,7 +565,7 @@ module dsdv_svc_rs_pvso_entry_fv_c66c0e0ee0 #(parameter integer MUT = 0, paramet
     wire [4303:0] c_so_d;
     assign so_d_s = c_so_d[3227:2152];
     assign so_d_w = c_so_d[4303:3228];
-    dsdv_svc_rs_pvso_entry #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .FM(40'hc66c0e0ee0)) u (
+    dsdv_svc_rs_pvso_entry #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .ROWX(ROWX), .FM(40'hc66c0e0ee0)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q({2'b00, q}), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),
         .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -579,7 +579,7 @@ endmodule
 
 // slice role faces: DI N, DO -, UI -, UO N, RI -, RO N, GI NW, GO NW, SI NW, SO NW
 module dsdv_svc_rs_fv_9999101001 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -664,7 +664,7 @@ module dsdv_svc_rs_fv_9999101001 #(parameter integer MUT = 0, parameter integer 
     assign so_d_n = c_so_d[1075:0];
     assign so_d_w = c_so_d[4303:3228];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'h9999101001)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'h9999101001)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -677,7 +677,7 @@ endmodule
 
 // slice role faces: DI W, DO S, UI S, UO W, RI ES, RO W, GI SW, GO ES, SI ES, SO SW
 module dsdv_svc_rs_fv_c66c868448 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -767,7 +767,7 @@ module dsdv_svc_rs_fv_c66c868448 #(parameter integer MUT = 0, parameter integer 
     assign so_d_s = c_so_d[3227:2152];
     assign so_d_w = c_so_d[4303:3228];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'hc66c868448)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'hc66c868448)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -780,7 +780,7 @@ endmodule
 
 // slice role faces: DI N, DO -, UI -, UO N, RI -, RO N, GI N, GO E, SI E, SO N
 module dsdv_svc_rs_fv_1221101001 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -853,7 +853,7 @@ module dsdv_svc_rs_fv_1221101001 #(parameter integer MUT = 0, parameter integer 
     wire [4303:0] c_so_d;
     assign so_d_n = c_so_d[1075:0];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'h1221101001)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'h1221101001)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -866,7 +866,7 @@ endmodule
 
 // slice role faces: DI E, DO S, UI S, UO E, RI S, RO EW, GI EW, GO S, SI S, SO EW
 module dsdv_svc_rs_fv_a44aa42442 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -951,7 +951,7 @@ module dsdv_svc_rs_fv_a44aa42442 #(parameter integer MUT = 0, parameter integer 
     assign so_d_e = c_so_d[2151:1076];
     assign so_d_w = c_so_d[4303:3228];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'ha44aa42442)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'ha44aa42442)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -964,7 +964,7 @@ endmodule
 
 // slice role faces: DI N, DO -, UI -, UO N, RI -, RO N, GI EW, GO NE, SI NE, SO EW
 module dsdv_svc_rs_fv_a33a101001 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -1049,7 +1049,7 @@ module dsdv_svc_rs_fv_a33a101001 #(parameter integer MUT = 0, parameter integer 
     assign so_d_e = c_so_d[2151:1076];
     assign so_d_w = c_so_d[4303:3228];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'ha33a101001)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'ha33a101001)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -1062,7 +1062,7 @@ endmodule
 
 // slice role faces: DI -, DO ESW, UI ESW, UO -, RI ESW, RO -, GI ES, GO EW, SI EW, SO ES
 module dsdv_svc_rs_pvso_entry_fv_6aa60e0ee0 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer PVSO_ENABLE = 0) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0, parameter integer PVSO_ENABLE = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -1157,7 +1157,7 @@ module dsdv_svc_rs_pvso_entry_fv_6aa60e0ee0 #(parameter integer MUT = 0, paramet
     wire [4303:0] c_so_d;
     assign so_d_e = c_so_d[2151:1076];
     assign so_d_s = c_so_d[3227:2152];
-    dsdv_svc_rs_pvso_entry #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .FM(40'h6aa60e0ee0)) u (
+    dsdv_svc_rs_pvso_entry #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .ROWX(ROWX), .FM(40'h6aa60e0ee0)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q({2'b00, q}), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),
         .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -1171,7 +1171,7 @@ endmodule
 
 // slice role faces: DI N, DO -, UI -, UO N, RI -, RO N, GI W, GO W, SI W, SO W
 module dsdv_svc_rs_fv_8888101001 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -1244,7 +1244,7 @@ module dsdv_svc_rs_fv_8888101001 #(parameter integer MUT = 0, parameter integer 
     wire [4303:0] c_so_d;
     assign so_d_w = c_so_d[4303:3228];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'h8888101001)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'h8888101001)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -1257,7 +1257,7 @@ endmodule
 
 // slice role faces: DI W, DO ES, UI ES, UO W, RI ES, RO W, GI EW, GO EW, SI EW, SO EW
 module dsdv_svc_rs_fv_aaaa868668 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -1350,7 +1350,7 @@ module dsdv_svc_rs_fv_aaaa868668 #(parameter integer MUT = 0, parameter integer 
     assign so_d_e = c_so_d[2151:1076];
     assign so_d_w = c_so_d[4303:3228];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'haaaa868668)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'haaaa868668)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
@@ -1363,7 +1363,7 @@ endmodule
 
 // slice role faces: DI W, DO S, UI S, UO W, RI S, RO W, GI SW, GO SW, SI SW, SO SW
 module dsdv_svc_rs_fv_cccc848448 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1, parameter integer ROWX = 0) (
     input wire ck, input wire rst, input wire [3:0] sid,
     output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,
     input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -1452,7 +1452,7 @@ module dsdv_svc_rs_fv_cccc848448 #(parameter integer MUT = 0, parameter integer 
     assign so_d_s = c_so_d[3227:2152];
     assign so_d_w = c_so_d[4303:3228];
     wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc; wire [1:0] st_rg_nc;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .FM(40'hcccc848448)) u (
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .ROWX(ROWX), .PV_IDENTITY(PV_IDENTITY), .FM(40'hcccc848448)) u (
         .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),
         .st_rg(st_rg_nc), .dn_i(c_dn_i), .dn_o(c_dn_o), .up_i(c_up_i), .up_o(c_up_o), .ri(c_ri), .ro(c_ro), .gi_v(c_gi_v), .gi_d(c_gi_d), .go_v(c_go_v), .go_d(c_go_d), .si_v(c_si_v), .si_d(c_si_d), .so_v(c_so_v), .so_d(c_so_d),
         .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
