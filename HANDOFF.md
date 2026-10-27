@@ -1227,3 +1227,5 @@ CODEX: 2026-10-26 20:42 PDT TOK-LEC QXPQ exactAIG formalclose64713/64713+outputm
 CODEX: 2026-10-26 20:51 PDT P3 serialized and optimized successors both6/6I1-I7PASS, true gain/C/ID transfers; batched MTP extra unit-work142666.851cycles before drains, no8SM/native claim. Producer-aligned allocator42d0caba4 under actual L0 trial. QXPQ pinned-AIG64713/64713 proof closed with mutant; source provenance remains unknown, no route release. B48 corrected18PCbuilds complete, top frontend live.
 
 CODEX: 2026-10-26 20:53 PDT HBMprice25d0786c4: frozenP3batch2sixcostsconcrete, buddybothhubs96nativeVMlegsk1fixoldserializationfailure, bank5/3avoidsnativeVMII2calendaroverflow; current8SMrate/native/treebindingstillopen.
+
+2026-10-26 20:57 PDT CODEX: mainf795e41b9a pushed/plainmerge HEADproviders0missing/0unresolved + actual2coreHBC/7CSR/HFWD and5stepMTPcontrolPASS/mutants; canonicalHEADplanheld, notG5. HBMunifiedscope recommendation loggedOWNER? basedfullnativebuddycandidatea810b810f; all96VMlegsparallel, nativecuts<=.553/.588, root/pins/clocks/8SMprice stillopen.

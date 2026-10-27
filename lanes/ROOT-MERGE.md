@@ -161,3 +161,6 @@ HOLD (do NOT merge): codex/qc-crom-bind-1026@d58e17858a (folds into ONE QC infra
 ## CODEX notes 2026-10-26 20:05 PDT
 2026-10-26 20:05 PDT CODEX: main5ad3d04c55 pushed plainmerge HEAD mesh provider+approved QC/KV mesh/landing tools+LEC unwritten-X+empty-param lintfix;59focusedtestsPASS,0deletions,HEAD==origin. All physical plan/freeze holds retained. KVrun7 7404frames/14imagesPASS collected;B48 eightundrivenregionclocks rootcause underfix.
 Own integration codex/root-2000@6c6816b4b2; central merge5ad3d04c55.59 focused LEC/lint/uniform/landing/fallback tests passed. No new route or freeze claim.
+
+## CODEX notes 2026-10-26 20:57 PDT
+mainf795e41b9a pushedHEAD==origin. Plainmerges: a90c886f6b HBMnativecapacity/VMadapter/cutgate/namedends/exactfastpack/calendar+clockRCXconnectivity; f795e41b9a HEAD testedproviders/staticSTART/HBC-onlyhostframes/real5stepMTPvalidfix andKVapprovededge-schema. Allfocusedgates passed; no canonicalphysicalplan/freeze adoption. Main tool source helper branches codex/infra-2044 and codex/root-2000 retained.
