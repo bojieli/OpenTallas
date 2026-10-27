@@ -1,0 +1,14 @@
+{
+ "type": "native59",
+ "insertion_ps": {
+  "tt": 250.0,
+  "ff": 202.5
+ },
+ "insertion_tol_ps": 40.0,
+ "basis": {
+  "tt": "type clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "parent_early_tap_ps": 0.0,
+ "rule": "METHODOLOGY 9.7 / BRIEFING 5e; FLOW 2026-10-25"
+}

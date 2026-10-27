@@ -1,0 +1,368 @@
+ot-run: intel2         admits   623 GB (avail 845, reserve 0, fresh 143.7, peak 13.5, headroom 0, waiters 0/0 GB) load 21/112 running 15 disk 2226 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3531683-1792995661 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+N59_CONES 42967 targets 2781457 endpoint edges
+{
+ "scope": "ACTUAL post-DPL complete FF data, macro F6 and reset cones; clock/timing remain separate gates",
+ "auxiliary_geometry": {
+  "macro_cones": {
+   "pins": 8416,
+   "empty_endpoint_cones": 0,
+   "limit_um": 20,
+   "max_um": 12.063,
+   "over_limit": 0,
+   "worst": [
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[331]",
+     "distance_um": 12.063,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[470]",
+     "distance_um": 11.349,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[181]",
+     "distance_um": 11.337,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[202]",
+     "distance_um": 11.277,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[402]",
+     "distance_um": 11.049,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[2\\].u_mem/wd_in[483]",
+     "distance_um": 11.031,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[264]",
+     "distance_um": 10.965,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[303]",
+     "distance_um": 10.959,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[478]",
+     "distance_um": 10.905,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[55]",
+     "distance_um": 10.899,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[1\\].u_mem/wd_in[473]",
+     "distance_um": 10.899,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[491]",
+     "distance_um": 10.803,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[2\\].u_mem/wd_in[221]",
+     "distance_um": 10.791,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[2\\].u_mem/wd_in[371]",
+     "distance_um": 10.767,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[436]",
+     "distance_um": 10.767,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[461]",
+     "distance_um": 10.731,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[180]",
+     "distance_um": 10.731,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[7\\].u_mem/wd_in[172]",
+     "distance_um": 10.719,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[43]",
+     "distance_um": 10.713,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[347]",
+     "distance_um": 10.689,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[25]",
+     "distance_um": 10.677,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[401]",
+     "distance_um": 10.665,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[1\\].u_mem/wd_in[469]",
+     "distance_um": 10.635,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[2\\].u_mem/wd_in[276]",
+     "distance_um": 10.623,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[467]",
+     "distance_um": 10.611,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[7\\].u_mem/wd_in[478]",
+     "distance_um": 10.611,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[0\\].u_mem/wd_in[273]",
+     "distance_um": 10.587,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[3\\].u_mem/wd_in[80]",
+     "distance_um": 10.575,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[1\\].u_mem/wd_in[480]",
+     "distance_um": 10.563,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.u_qseat.g_writer\\[2\\].u_mem/wd_in[127]",
+     "distance_um": 10.557,
+     "endpoints": 1
+    }
+   ]
+  },
+  "reset_cones": {
+   "pins": 21109,
+   "empty_endpoint_cones": 8,
+   "limit_um": 405,
+   "max_um": 701.122,
+   "over_limit": 4040,
+   "worst": [
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.u_wc/q\\[1\\]$_DFF_PN0_/RESETN",
+     "distance_um": 701.122,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.u_wc/q\\[5\\]$_DFF_PN0_/RESETN",
+     "distance_um": 700.605,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[25\\]$_DFF_PN0_/RESETN",
+     "distance_um": 700.389,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[2\\]$_DFF_PN0_/RESETN",
+     "distance_um": 700.281,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.u_wc/q\\[3\\]$_DFF_PN0_/RESETN",
+     "distance_um": 700.281,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[22\\]$_DFF_PN0_/RESETN",
+     "distance_um": 700.15,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.u_wc/q\\[2\\]$_DFF_PN0_/RESETN",
+     "distance_um": 699.903,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[3\\]$_DFF_PN0_/RESETN",
+     "distance_um": 699.525,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.u_wc/q\\[0\\]$_DFF_PN0_/RESETN",
+     "distance_um": 699.502,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[1\\].u_wd/q\\[3\\]$_DFF_PN0_/RESETN",
+     "distance_um": 698.985,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[5\\]$_DFF_PN0_/RESETN",
+     "distance_um": 698.962,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[8\\]$_DFF_PN0_/RESETN",
+     "distance_um": 698.854,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[16\\]$_DFF_PN0_/RESETN",
+     "distance_um": 698.823,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[12\\]$_DFF_PN0_/RESETN",
+     "distance_um": 698.746,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[0\\]$_DFF_PN0_/RESETN",
+     "distance_um": 698.661,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[1\\]$_DFF_PN0_/RESETN",
+     "distance_um": 698.391,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[19\\]$_DFF_PN0_/RESETN",
+     "distance_um": 698.206,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[4\\]$_DFF_PN0_/RESETN",
+     "distance_um": 698.121,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[10\\]$_DFF_PN0_/RESETN",
+     "distance_um": 697.828,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[14\\]$_DFF_PN0_/RESETN",
+     "distance_um": 697.797,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[30\\]$_DFF_PN0_/RESETN",
+     "distance_um": 697.666,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[1\\].u_wd/q\\[23\\]$_DFF_PN0_/RESETN",
+     "distance_um": 697.666,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.u_wc/q\\[4\\]$_DFF_PN0_/RESETN",
+     "distance_um": 697.558,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[6\\]$_DFF_PN0_/RESETN",
+     "distance_um": 697.342,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[20\\]$_DFF_PN0_/RESETN",
+     "distance_um": 697.203,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[7\\]$_DFF_PN0_/RESETN",
+     "distance_um": 697.149,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[17\\]$_DFF_PN0_/RESETN",
+     "distance_um": 696.879,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[9\\]$_DFF_PN0_/RESETN",
+     "distance_um": 696.748,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[1\\].u_wd/q\\[6\\]$_DFF_PN0_/RESETN",
+     "distance_um": 696.586,
+     "endpoints": 1
+    },
+    {
+     "pin": "u_bound.u_core.u_qb.g_wif.g_w\\[0\\].g_stn.g_lane\\[0\\].u_wd/q\\[11\\]$_DFF_PN0_/RESETN",
+     "distance_um": 696.316,
+     "endpoints": 1
+    }
+   ]
+  }
+ },
+ "registers": 42967,
+ "endpoint_arcs": 1380223,
+ "selected": 2227,
+ "missing_selected": [],
+ "max_hop_um": 708.588,
+ "over405": {
+  "other": 21409,
+  "selected": 422
+ },
+ "selected_groups": {
+  "f_dd": {
+   "count": 548,
+   "over405": 84,
+   "max_hop_um": 489.42900000000003
+  },
+  "f_lcv": {
+   "count": 1,
+   "over405": 0,
+   "max_hop_um": 271.89
+  },
+  "s1_w4": {
+   "count": 43,
+   "over405": 0,
+   "max_hop_um": 391.17600000000004
+  },
+  "dr_o": {
+   "count": 516,
+   "over405": 0,
+   "max_hop_um": 386.31600000000003
+  },
+  "pd": {
+   "count": 1119,
+   "over405": 1,
+   "max_hop_um": 466.34400000000005
+  }
+ }
+}
+ot-run: RAN on intel2 (unit oth-ubuntu-3531683-1792995661): exit 0

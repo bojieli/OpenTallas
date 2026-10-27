@@ -1,0 +1,45 @@
+ot-run: intel2         admits   586 GB (avail 679, reserve 0, fresh 0, peak 28.5, headroom 0, waiters 0/0 GB) load 20/112 running 13 disk 2238 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3077174-1792992652 after 0 s
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/ot_sram_1r1w_32x512_m1_tt.lib
+read_db /work/run/results/asap7/dp_native59/base/3_2_place_iop.odb
+read_sdc /work/run/results/asap7/dp_native59/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/pre_gpl.tcl
+OT_FACE_FLOPS placed 4929 pin registers FIRM at their faces (0 signal ports without a flop within 2 buffers; 0 cells duplicated for output ports sharing a merged flop); 1520 ft stations j>=1 FIRM on their routes (0 missing)
+OT_RESET_TREE entry relayed depth 3 (6 tree + 4 pad relays, planned max hop 311.0 um): placed 18 flops FIRM, placed max hop 311.0 um, 0 hops > 405 um: PASS (missing: 0 )
+OT_RESET_TAPS 4 taps (0 without a synchroniser: their flops use the nearest tap that has one), 0 synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: 53 re-pointed to the nearest tap's synchroniser, 75 already there, 0 without a same-polarity net (kept); per tap: 0 21 1 41 2 47 3 19
+OT_RELAY_MID placed 0 relay flops of 0 stations (0 relay groups) FIRM on their source-sink lines
+OT_ANCHOR_PACK: legally packed 1472 owned anchors; maximum Manhattan displacement 2442.0 DBU
+OT_N59_STN w0 write: pin (777.5,421.5) s1 (424.2,421.5) s2 (70.9,436.5) face (69.4,69.7) L 1059.9 hops 353.3 368.3 368.3
+OT_N59_STN r0 read : pin (602.1,0.1) sr (393.1,0.1) face (253.6,69.7) L 418.1 hops 209.1 209.1
+OT_N59_STN w1 write: pin (777.5,428.2) s1 (456.5,428.2) s2 (135.5,437.2) face (69.4,173.4) L 962.9 hops 321.0 330.0 330.0
+OT_N59_STN r1 read : pin (602.1,0.1) sr (341.2,0.1) face (253.6,173.4) L 521.8 hops 260.9 260.9
+OT_N59_STN w2 write: pin (777.5,434.8) s1 (491.8,434.8) s2 (206.0,436.8) face (69.4,285.7) L 857.3 hops 285.8 287.8 287.8
+OT_N59_STN r2 read : pin (602.1,0.1) sr (285.1,0.1) face (253.6,285.7) L 634.1 hops 317.1 317.1
+OT_N59_STN w3 write: pin (777.5,441.5) s1 (527.0,441.5) s2 (276.4,441.5) face (69.4,398.0) L 751.6 hops 250.5 250.5 250.5
+OT_N59_STN r3 read : pin (602.1,0.1) sr (253.6,24.8) face (253.6,398.0) L 746.5 hops 373.2 373.2
+OT_N59_STN w4 write: pin (777.5,448.2) s1 (702.9,358.8) s2 (702.9,220.7) face (702.9,69.7) L 453.1 hops 164.0 138.0 151.0
+OT_N59_STN r4 read : pin (602.1,0.1) sr (525.6,0.1) face (518.7,69.7) L 153.1 hops 76.5 76.5
+OT_N59_STN w5 write: pin (777.5,454.8) s1 (702.9,436.8) s2 (702.9,325.1) face (702.9,173.4) L 356.1 hops 92.7 111.7 151.7
+OT_N59_STN r5 read : pin (602.1,0.1) sr (518.7,31.0) face (518.7,173.4) L 256.7 hops 114.4 142.4
+OT_N59_STN w6 write: pin (777.5,461.5) s1 (702.9,452.6) s2 (702.9,359.1) face (702.9,285.7) L 250.4 hops 83.5 93.5 73.5
+OT_N59_STN r6 read : pin (602.1,0.1) sr (518.7,108.1) face (518.7,285.7) L 369.1 hops 191.5 177.5
+OT_N59_STN w7 write: pin (777.5,468.2) s1 (729.2,468.2) s2 (702.9,446.3) face (702.9,398.0) L 144.8 hops 48.3 48.3 48.3
+OT_N59_STN r7 read : pin (602.1,0.1) sr (518.7,134.3) face (518.7,398.0) L 481.4 hops 217.7 263.7
+OT_N59_STN placed 1472 station flops in 24 groups (FIRM until PRE_DETAIL_PLACE)
+OT_ANCHOR_PACK: legally packed 8416 owned anchors; maximum Manhattan displacement 1902.0 DBU
+OT_MPF anchored 8416 macro-pin flops (4096 read captures, 4320 write landings) outside the 5.40 um halo
+Error: global_place.tcl, 5 can't read "n59r_blk": no such variable
+Elapsed time: 0:33.07[h:]min:sec. CPU time: user 32.21 sys 0.86 (99%). Peak memory: 806636KB.
+make[1]: *** [Makefile:499: do-3_3_place_gp] Error 1
+make: *** [Makefile:499: /work/run/results/asap7/dp_native59/base/3_3_place_gp.odb] Error 2
+ot-run: RAN on intel2 (unit oth-ubuntu-3077174-1792992652): exit 2

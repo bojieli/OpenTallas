@@ -1,0 +1,152 @@
+ot-run: intel2         admits   668 GB (avail 836, reserve 0, fresh 90.5, peak 12.2, headroom 0, waiters 0/0 GB) load 20/112 running 13 disk 2226 GB 
+ot-run: -> intel2
+ot-heavy: request 32G is charged 13G (class 'place_current#.sh' measured peak 4.8G, n=1+0 proved); the cap stays 32G
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3504941-1792995532 after 1 s
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+Running detail_place.tcl, stage 3_5_place_dp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/ot_sram_1r1w_32x512_m1_tt.lib
+read_db /work/run/results/asap7/dp_native59/base/3_4_place_resized.odb
+read_sdc /work/run/results/asap7/dp_native59/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/pre_dpl.tcl
+OT_FACE_FLOPS released 6467 pin registers for DPL
+OT_RELAY_MID released 0 relay flops for DPL
+OT_N59_STN released 1472 station flops
+OT_MPF released 8416 macro-pin flops for DPL
+N59_REACH405 exact boundary-D alias: u_bound.u_core.u_svc.dr_o\[516\]$_DFF_PN0_ -> u_bound.u_core.u_svc.g_emb_relay.em_c\[0\]\[4\]$_DFF_PN0_
+N59_REACH405 exact final-delay-state alias: u_bound.u_pd1_command_stage_0.r\[0\]$_DFF_P_ -> u_bound.u_pd1_command_stage_0.q$_DFF_P_
+N59_REACH405 exact final-delay-state alias: u_bound.u_pd1_command_stage_1.r\[0\]$_DFF_P_ -> u_bound.u_pd1_command_stage_1.q$_DFF_P_
+N59_REACH405 exact final-delay-state alias: u_bound.u_pd1_command_stage_2.r\[0\]$_DFF_P_ -> u_bound.u_pd1_command_stage_2.q$_DFF_P_
+N59_REACH405 exact final-delay-state alias: u_bound.u_pd1_command_stage_3.r\[0\]$_DFF_P_ -> u_bound.u_pd1_command_stage_3.q$_DFF_P_
+OT_ANCHOR_PACK: legally packed 2227 owned anchors; maximum Manhattan displacement 2241.0 DBU
+N59_REACH405 anchored 2227 FFs; actual405um post-DPL gate still required
+N59_REACH405 exact final-delay-state aliases 1041
+Took 8 seconds: source /work/pre_dpl.tcl
+detailed_placement
+[INFO DPL-0006] Core area: 391985.05 um^2
+[INFO DPL-0007] Movable instances area: 27714.28 um^2
+[INFO DPL-0008] Fixed instances area within core: 72433.61 um^2
+[INFO DPL-0009] Utilization: 25.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 234739 cells
+[INFO DPL-0393]   height 196 row(s): 8 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      22974 |      5344 |     17465
+        1 |      16319 |      2024 |     13887
+        2 |       9027 |       619 |      8354
+        3 |       8264 |       412 |      7846
+        4 |       6579 |       311 |      6268
+        5 |       5230 |       254 |      4976
+        6 |       4186 |       188 |      3998
+        7 |       3473 |       151 |      3322
+        8 |       2989 |       137 |      2852
+        9 |       2737 |       119 |      2618
+       10 |       2460 |       106 |      2354
+       20 |        564 |        24 |       540
+       30 |        258 |        10 |       248
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 258 for 3 consecutive iterations.
+Using old diamond search for 10 remaining illegal cells.
+diamond recovery: recovered 5/10 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 31.23s
+Placement Analysis
+---------------------------------
+total displacement      60244.7 u
+average displacement        0.3 u
+max displacement           32.1 u
+original HPWL         3767687.4 u
+legalized HPWL        3799634.3 u
+delta HPWL                    1 %
+
+Took 32 seconds: detailed_placement
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 39329 fixed cells.
+[INFO DPL-0318] Collected 202810 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (4320, 4320) - (773280, 514080)
+[INFO DPL-0310] Assigned 202810 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 3.798310e+09.
+[INFO DPL-0302] End of matching; objective is 3.796465e+09, improvement is 0.05 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 3.784358e+09.
+[INFO DPL-0307] End of global swaps; objective is 3.784358e+09, improvement is 0.32 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 3.781716e+09.
+[INFO DPL-0309] End of vertical swaps; objective is 3.781716e+09, improvement is 0.07 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 3.779998e+09.
+[INFO DPL-0305] End of reordering; objective is 3.779998e+09, improvement is 0.05 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 4056200 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 4056200, swaps 277730, moves 1500852 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 3.774753e+09, Scratch cost 3.762938e+09, Incremental cost 3.762938e+09, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 3.762938e+09.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.31 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.313021 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 77546 cell flips.
+[INFO DPL-0384] End of flipping; objective is 3.742158e+09, improvement is 0.69 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL          3799634.3 u ( 2182250.9,  1617383.4)
+Final HPWL             3740818.1 u ( 2138561.4,  1602256.7)
+Delta HPWL                  -1.5 % (      -2.0,       -0.9)
+
+Took 103 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 30635 instances
+[INFO DPL-0021] HPWL before          3740818.1 u
+[INFO DPL-0022] HPWL after           3739689.8 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+Took 5 seconds: optimize_mirroring
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Took 18 seconds: estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 100148 um^2 26% utilization.
+write_db /work/run/results/asap7/dp_native59/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/run/results/asap7/dp_native59/base/3_place.sdc
+Elapsed time: 5:01.40[h:]min:sec. CPU time: user 376.53 sys 47.50 (140%). Peak memory: 3117352KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb          301           3044 a2b7cc38e1f898c99297
+cp /work/run/results/asap7/dp_native59/base/3_5_place_dp.odb /work/run/results/asap7/dp_native59/base/3_place.odb
+ot-run: RAN on intel2 (unit oth-ubuntu-3504941-1792995532): exit 0

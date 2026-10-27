@@ -1,0 +1,104 @@
+{
+ "schema": "opentallas.die_plan.partition_budget.v1",
+ "die": "qwen_compute",
+ "type": "native59",
+ "module": "qfd_qc_native59_part",
+ "outline_um": [
+  777.6,
+  518.4
+ ],
+ "period_ps": 833,
+ "pins": 5690,
+ "signal_max": "M7",
+ "clock": {
+  "tap_um": [
+   388.8,
+   259.2
+  ],
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "type clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "parent_early_tap_ps": 0.0,
+  "common_latency_ps": 250.0,
+  "insertion_tol_ps": 40,
+  "tap_mode": "grid",
+  "tap_pitch_um": 400.0,
+  "grid_taps": 4,
+  "taps": [
+   {
+    "name": "clk",
+    "xy": [
+     194.4,
+     129.6
+    ],
+    "kind": "grid"
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     583.2,
+     129.6
+    ],
+    "kind": "grid"
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     194.4,
+     362.88
+    ],
+    "kind": "grid"
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     583.2,
+     362.88
+    ],
+    "kind": "grid"
+   }
+  ],
+  "sink_taps": [],
+  "taps_snapped": [
+   {
+    "name": "clk",
+    "xy": [
+     193.888,
+     129.568
+    ]
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     583.712,
+     129.568
+    ]
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     193.888,
+     362.912
+    ]
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     583.712,
+     362.912
+    ]
+   }
+  ],
+  "core_taps": [],
+  "uncertainty_split": 0.5
+ },
+ "core_latency": [],
+ "pin_reg_p90_um": 30.0,
+ "io_budget": 0.2,
+ "instances": [
+  "native59"
+ ]
+}

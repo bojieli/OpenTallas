@@ -1,0 +1,574 @@
+{
+ "scope": "old_P3_not_fresh_keep_not_adopted",
+ "adopted": false,
+ "cycles_added": 0,
+ "register_sinks": 37043,
+ "old_ports": 4,
+ "proposed_ports": 76,
+ "clock": {
+  "tap_um": [
+   388.8,
+   259.2
+  ],
+  "layer": "M9",
+  "insertion_ps": 250,
+  "insertion_tol_ps": 40,
+  "taps": [
+   {
+    "name": "glue",
+    "kind": "glue",
+    "xy": [
+     388.8,
+     259.2
+    ],
+    "insertion_ps": 223,
+    "insertion_tol_ps": 40,
+    "from_root_um": 0.0
+   }
+  ],
+  "tap_mode": "density",
+  "sink_bins_file": "results/qc_n59_2145/density_clock_seed/clock_bins.json",
+  "tap_target_sinks": 1000,
+  "tap_max_sinks": 1250,
+  "tap_radius_um": 100
+ },
+ "taps": [
+  {
+   "port": "clk",
+   "x_um": 385.0,
+   "y_um": 235.0,
+   "sinks": 534,
+   "max_radius_um": 90.0
+  },
+  {
+   "port": "clk_t1",
+   "x_um": 75.0,
+   "y_um": 17.28,
+   "sinks": 490,
+   "max_radius_um": 82.3
+  },
+  {
+   "port": "clk_t2",
+   "x_um": 185.0,
+   "y_um": 17.28,
+   "sinks": 914,
+   "max_radius_um": 37.7
+  },
+  {
+   "port": "clk_t3",
+   "x_um": 325.0,
+   "y_um": 17.28,
+   "sinks": 508,
+   "max_radius_um": 22.3
+  },
+  {
+   "port": "clk_t4",
+   "x_um": 355.0,
+   "y_um": 17.28,
+   "sinks": 766,
+   "max_radius_um": 37.7
+  },
+  {
+   "port": "clk_t5",
+   "x_um": 385.0,
+   "y_um": 17.28,
+   "sinks": 512,
+   "max_radius_um": 22.3
+  },
+  {
+   "port": "clk_t6",
+   "x_um": 415.0,
+   "y_um": 17.28,
+   "sinks": 943,
+   "max_radius_um": 47.7
+  },
+  {
+   "port": "clk_t7",
+   "x_um": 435.0,
+   "y_um": 17.28,
+   "sinks": 661,
+   "max_radius_um": 37.7
+  },
+  {
+   "port": "clk_t8",
+   "x_um": 465.0,
+   "y_um": 17.28,
+   "sinks": 671,
+   "max_radius_um": 22.3
+  },
+  {
+   "port": "clk_t9",
+   "x_um": 485.0,
+   "y_um": 17.28,
+   "sinks": 631,
+   "max_radius_um": 27.7
+  },
+  {
+   "port": "clk_t10",
+   "x_um": 515.0,
+   "y_um": 17.28,
+   "sinks": 709,
+   "max_radius_um": 22.3
+  },
+  {
+   "port": "clk_t11",
+   "x_um": 545.0,
+   "y_um": 17.28,
+   "sinks": 864,
+   "max_radius_um": 67.7
+  },
+  {
+   "port": "clk_t12",
+   "x_um": 645.0,
+   "y_um": 17.28,
+   "sinks": 316,
+   "max_radius_um": 62.3
+  },
+  {
+   "port": "clk_t13",
+   "x_um": 145.0,
+   "y_um": 25.0,
+   "sinks": 1075,
+   "max_radius_um": 50.0
+  },
+  {
+   "port": "clk_t14",
+   "x_um": 225.0,
+   "y_um": 25.0,
+   "sinks": 832,
+   "max_radius_um": 40.0
+  },
+  {
+   "port": "clk_t15",
+   "x_um": 275.0,
+   "y_um": 25.0,
+   "sinks": 749,
+   "max_radius_um": 40.0
+  },
+  {
+   "port": "clk_t16",
+   "x_um": 305.0,
+   "y_um": 25.0,
+   "sinks": 750,
+   "max_radius_um": 50.0
+  },
+  {
+   "port": "clk_t17",
+   "x_um": 325.0,
+   "y_um": 35.0,
+   "sinks": 461,
+   "max_radius_um": 50.0
+  },
+  {
+   "port": "clk_t18",
+   "x_um": 395.0,
+   "y_um": 35.0,
+   "sinks": 553,
+   "max_radius_um": 50.0
+  },
+  {
+   "port": "clk_t19",
+   "x_um": 455.0,
+   "y_um": 35.0,
+   "sinks": 644,
+   "max_radius_um": 40.0
+  },
+  {
+   "port": "clk_t20",
+   "x_um": 505.0,
+   "y_um": 35.0,
+   "sinks": 397,
+   "max_radius_um": 20.0
+  },
+  {
+   "port": "clk_t21",
+   "x_um": 255.0,
+   "y_um": 55.0,
+   "sinks": 571,
+   "max_radius_um": 40.0
+  },
+  {
+   "port": "clk_t22",
+   "x_um": 516.36,
+   "y_um": 55.0,
+   "sinks": 293,
+   "max_radius_um": 31.4
+  },
+  {
+   "port": "clk_t23",
+   "x_um": 68.52,
+   "y_um": 65.0,
+   "sinks": 534,
+   "max_radius_um": 36.5
+  },
+  {
+   "port": "clk_t24",
+   "x_um": 705.0,
+   "y_um": 65.0,
+   "sinks": 612,
+   "max_radius_um": 100.0
+  },
+  {
+   "port": "clk_t25",
+   "x_um": 255.0,
+   "y_um": 85.0,
+   "sinks": 576,
+   "max_radius_um": 50.0
+  },
+  {
+   "port": "clk_t26",
+   "x_um": 455.0,
+   "y_um": 85.0,
+   "sinks": 420,
+   "max_radius_um": 70.0
+  },
+  {
+   "port": "clk_t27",
+   "x_um": 516.36,
+   "y_um": 85.0,
+   "sinks": 264,
+   "max_radius_um": 28.6
+  },
+  {
+   "port": "clk_t28",
+   "x_um": 345.0,
+   "y_um": 95.0,
+   "sinks": 449,
+   "max_radius_um": 50.0
+  },
+  {
+   "port": "clk_t29",
+   "x_um": 195.0,
+   "y_um": 115.0,
+   "sinks": 578,
+   "max_radius_um": 70.0
+  },
+  {
+   "port": "clk_t30",
+   "x_um": 275.0,
+   "y_um": 115.0,
+   "sinks": 613,
+   "max_radius_um": 40.0
+  },
+  {
+   "port": "clk_t31",
+   "x_um": 405.0,
+   "y_um": 115.0,
+   "sinks": 499,
+   "max_radius_um": 90.0
+  },
+  {
+   "port": "clk_t32",
+   "x_um": 225.0,
+   "y_um": 125.0,
+   "sinks": 312,
+   "max_radius_um": 30.0
+  },
+  {
+   "port": "clk_t33",
+   "x_um": 585.0,
+   "y_um": 125.0,
+   "sinks": 3,
+   "max_radius_um": 10.0
+  },
+  {
+   "port": "clk_t34",
+   "x_um": 255.0,
+   "y_um": 145.0,
+   "sinks": 402,
+   "max_radius_um": 40.0
+  },
+  {
+   "port": "clk_t35",
+   "x_um": 315.0,
+   "y_um": 145.0,
+   "sinks": 249,
+   "max_radius_um": 60.0
+  },
+  {
+   "port": "clk_t36",
+   "x_um": 68.52,
+   "y_um": 165.0,
+   "sinks": 336,
+   "max_radius_um": 86.5
+  },
+  {
+   "port": "clk_t37",
+   "x_um": 255.0,
+   "y_um": 175.0,
+   "sinks": 589,
+   "max_radius_um": 30.0
+  },
+  {
+   "port": "clk_t38",
+   "x_um": 515.0,
+   "y_um": 175.0,
+   "sinks": 677,
+   "max_radius_um": 50.0
+  },
+  {
+   "port": "clk_t39",
+   "x_um": 705.0,
+   "y_um": 175.0,
+   "sinks": 534,
+   "max_radius_um": 40.0
+  },
+  {
+   "port": "clk_t40",
+   "x_um": 68.52,
+   "y_um": 185.0,
+   "sinks": 201,
+   "max_radius_um": 26.5
+  },
+  {
+   "port": "clk_t41",
+   "x_um": 295.0,
+   "y_um": 185.0,
+   "sinks": 401,
+   "max_radius_um": 80.0
+  },
+  {
+   "port": "clk_t42",
+   "x_um": 255.0,
+   "y_um": 205.0,
+   "sinks": 534,
+   "max_radius_um": 70.0
+  },
+  {
+   "port": "clk_t43",
+   "x_um": 145.0,
+   "y_um": 248.52,
+   "sinks": 372,
+   "max_radius_um": 56.5
+  },
+  {
+   "port": "clk_t44",
+   "x_um": 615.0,
+   "y_um": 248.52,
+   "sinks": 310,
+   "max_radius_um": 56.5
+  },
+  {
+   "port": "clk_t45",
+   "x_um": 685.0,
+   "y_um": 248.52,
+   "sinks": 170,
+   "max_radius_um": 43.5
+  },
+  {
+   "port": "clk_t46",
+   "x_um": 325.0,
+   "y_um": 255.0,
+   "sinks": 451,
+   "max_radius_um": 70.0
+  },
+  {
+   "port": "clk_t47",
+   "x_um": 505.0,
+   "y_um": 255.0,
+   "sinks": 667,
+   "max_radius_um": 60.0
+  },
+  {
+   "port": "clk_t48",
+   "x_um": 295.0,
+   "y_um": 265.0,
+   "sinks": 288,
+   "max_radius_um": 50.0
+  },
+  {
+   "port": "clk_t49",
+   "x_um": 68.52,
+   "y_um": 285.0,
+   "sinks": 536,
+   "max_radius_um": 53.5
+  },
+  {
+   "port": "clk_t50",
+   "x_um": 255.0,
+   "y_um": 285.0,
+   "sinks": 541,
+   "max_radius_um": 70.0
+  },
+  {
+   "port": "clk_t51",
+   "x_um": 515.0,
+   "y_um": 295.0,
+   "sinks": 769,
+   "max_radius_um": 60.0
+  },
+  {
+   "port": "clk_t52",
+   "x_um": 705.0,
+   "y_um": 295.0,
+   "sinks": 559,
+   "max_radius_um": 80.0
+  },
+  {
+   "port": "clk_t53",
+   "x_um": 455.0,
+   "y_um": 315.0,
+   "sinks": 200,
+   "max_radius_um": 70.0
+  },
+  {
+   "port": "clk_t54",
+   "x_um": 205.0,
+   "y_um": 325.0,
+   "sinks": 30,
+   "max_radius_um": 50.0
+  },
+  {
+   "port": "clk_t55",
+   "x_um": 315.0,
+   "y_um": 325.0,
+   "sinks": 171,
+   "max_radius_um": 60.0
+  },
+  {
+   "port": "clk_t56",
+   "x_um": 760.32,
+   "y_um": 325.0,
+   "sinks": 416,
+   "max_radius_um": 54.7
+  },
+  {
+   "port": "clk_t57",
+   "x_um": 405.0,
+   "y_um": 345.0,
+   "sinks": 898,
+   "max_radius_um": 70.0
+  },
+  {
+   "port": "clk_t58",
+   "x_um": 485.0,
+   "y_um": 355.0,
+   "sinks": 178,
+   "max_radius_um": 50.0
+  },
+  {
+   "port": "clk_t59",
+   "x_um": 595.0,
+   "y_um": 355.0,
+   "sinks": 38,
+   "max_radius_um": 80.0
+  },
+  {
+   "port": "clk_t60",
+   "x_um": 295.0,
+   "y_um": 385.0,
+   "sinks": 185,
+   "max_radius_um": 70.0
+  },
+  {
+   "port": "clk_t61",
+   "x_um": 255.0,
+   "y_um": 395.0,
+   "sinks": 560,
+   "max_radius_um": 70.0
+  },
+  {
+   "port": "clk_t62",
+   "x_um": 425.0,
+   "y_um": 395.0,
+   "sinks": 287,
+   "max_radius_um": 80.0
+  },
+  {
+   "port": "clk_t63",
+   "x_um": 515.0,
+   "y_um": 395.0,
+   "sinks": 708,
+   "max_radius_um": 30.0
+  },
+  {
+   "port": "clk_t64",
+   "x_um": 68.52,
+   "y_um": 405.0,
+   "sinks": 577,
+   "max_radius_um": 36.5
+  },
+  {
+   "port": "clk_t65",
+   "x_um": 495.0,
+   "y_um": 405.0,
+   "sinks": 755,
+   "max_radius_um": 70.0
+  },
+  {
+   "port": "clk_t66",
+   "x_um": 705.0,
+   "y_um": 405.0,
+   "sinks": 763,
+   "max_radius_um": 90.0
+  },
+  {
+   "port": "clk_t67",
+   "x_um": 760.32,
+   "y_um": 405.0,
+   "sinks": 656,
+   "max_radius_um": 44.7
+  },
+  {
+   "port": "clk_t68",
+   "x_um": 135.0,
+   "y_um": 435.0,
+   "sinks": 43,
+   "max_radius_um": 0.0
+  },
+  {
+   "port": "clk_t69",
+   "x_um": 205.0,
+   "y_um": 435.0,
+   "sinks": 43,
+   "max_radius_um": 10.0
+  },
+  {
+   "port": "clk_t70",
+   "x_um": 525.0,
+   "y_um": 445.0,
+   "sinks": 166,
+   "max_radius_um": 90.0
+  },
+  {
+   "port": "clk_t71",
+   "x_um": 605.0,
+   "y_um": 445.0,
+   "sinks": 17,
+   "max_radius_um": 60.0
+  },
+  {
+   "port": "clk_t72",
+   "x_um": 760.32,
+   "y_um": 475.0,
+   "sinks": 399,
+   "max_radius_um": 54.7
+  },
+  {
+   "port": "clk_t73",
+   "x_um": 17.28,
+   "y_um": 501.12,
+   "sinks": 168,
+   "max_radius_um": 61.6
+  },
+  {
+   "port": "clk_t74",
+   "x_um": 115.0,
+   "y_um": 501.12,
+   "sinks": 669,
+   "max_radius_um": 53.9
+  },
+  {
+   "port": "clk_t75",
+   "x_um": 175.0,
+   "y_um": 501.12,
+   "sinks": 826,
+   "max_radius_um": 83.9
+  }
+ ],
+ "notes": [
+  "Need fresh-kept P3c placed bins; source scope is explicit.",
+  "No setup/hold, die clock CPPR, signal+clock GRT or pin/PG gate claimed.",
+  "DATA/FT/R8 clocks/833ps unchanged; clock ABI changes require per-die batch."
+ ]
+}
