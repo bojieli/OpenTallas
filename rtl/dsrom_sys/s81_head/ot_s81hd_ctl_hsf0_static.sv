@@ -4,7 +4,7 @@
 // Issue authority is compiled START dates; physical codecs are in ot_s81hd_ctl_core.
 // The current spine root already merges north/south; feeding both comparison inputs the same
 // root record preserves that record exactly and retains the established two-edge pick latency.
-module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0) (
+module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0) (
     input wire start_i, input wire adapter_fault,
     output wire job_active_o,
     input  wire              ck,
@@ -383,12 +383,15 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     ot_s81hd_hreg32 u_wh(.ck(ck),.en(|dwc),.d({22'd0,wsel}),.q(rows_h));
     wire [33:0] q_hold = qw_h[33:0]; wire [9:0] w_hold = rows_h[9:0];
     // Independent DHRES and ROWS landing holds preserve each user identity. Coincident arrivals are a schedule fault.
-    reg dq_l, dw_l, qpend, wpend; wire q_cr, w_cr;
+    reg dq_l, dw_l, dq_ready, dw_ready, qpend, wpend; wire q_cr, w_cr;
     always @(posedge ck or negedge rr[8])
-        if (!rr[8]) begin dq_l <= 1'b0; dw_l <= 1'b0; qpend <= 1'b0; wpend <= 1'b0; end
+        if (!rr[8]) begin dq_l <= 1'b0; dw_l <= 1'b0; dq_ready<=0;dw_ready<=0;qpend <= 1'b0; wpend <= 1'b0; end
         else begin
             dq_l <= |dq_n; dw_l <= |dw_n;
-            qpend <= (qpend && !q_cr) || dq_l; wpend <= (wpend && !w_cr) || dw_l;
+            // hreg32 has a capture+enable stage before Q. Advertise only once
+            // that Q is stable; early qpend launched the previous DHRES (j0).
+            dq_ready<=dq_l;dw_ready<=dw_l;
+            qpend <= (qpend && !q_cr) || (MUT_DRAFT_EARLY?dq_l:dq_ready); wpend <= (wpend && !w_cr) || (MUT_DRAFT_EARLY?dw_l:dw_ready);
         end
     wire f_qv, t_qg, f_wv, t_wg; wire [DW-1:0] f_qd; wire [UW-1:0] f_wd;
     ot_dsrom_mtp_ltx #(.W(DW)) u_ltq (.clk(ck), .rst_n(rr[8]), .c_valid(qpend), .c_ready(q_cr), .c_data(q_hold),
