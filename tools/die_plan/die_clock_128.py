@@ -270,7 +270,7 @@ def load_plan_sites(path, plan_sha256=None):
 
 # ------------------------------------------------------------------------------------------------ fixed wires
 def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_stack=False, port_on_trunk=False,
-                ties=None, l_drops=False):
+                ties=None, l_drops=False, exact_reserve=False):
     """every tree net (root, H-tree legs/nodes/leaves, split tails, stubs) as a fixed comb pre-route: one trunk on the
     net's dominant axis (M8 horizontal / M9 vertical), offset `off` from the driver pin line, plus one perpendicular
     drop per load, offset `off` from the load pin line.  Returns [dict(name, drv, pins, segs, rc_nodes)].
@@ -289,7 +289,8 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
         raise PlanError([dict(kind="empty_tree_net", name=x, detail="tree net without loads") for x in empty])
     if pin_stack:   # CLOCK-128-R7 opt-in: straight pin stacks (the default path below is unchanged)
         return _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=port_on_trunk,
-                                  **(dict(ties=ties, l_drops=l_drops) if ties or l_drops else {}))
+                                  **(dict(ties=ties, l_drops=l_drops) if ties or l_drops else {}),
+                                  **(dict(exact_reserve=True) if exact_reserve else {}))
     out, errs = [], []
 
     def track(layer, ideal, a0, a1, name, what):
@@ -415,12 +416,18 @@ def pin_xy(cells, c, pin, row_y, buf="BUFx24_ASAP7_75t_R"):
     return round(v["x"] + bar, 4), round(v["y"] + row_y / 2, 4)
 
 
-def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, ties=None, l_drops=False):
+def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, ties=None, l_drops=False,
+                       exact_reserve=False):
     """ties (INFRA-FIRST-QC-R12): {representative cell: [unit cells, row order]} of stacked parallel-buffer groups; the
     pin stack of such a cell carries a `tie` (M7 strap along the shared bar column through every unit's pin row, the
     straight VIA67..VIA12 stack of each unit hangs off it) and enters at the unit nearest the junction.
     l_drops (R12): a horizontal-trunk cell load farther than STACK_RISER_MAX_UM from the trunk gets an M9 drop on a
-    PG-aware track at its bar column, then an M8 jog at the load row (an L net) instead of a plan error."""
+    PG-aware track at its bar column, then an M8 jog at the load row (an L net) instead of a plan error.
+    exact_reserve (INFRA-FIRST-QC-R14, opt-in): reserve each trunk over the extent it can actually be drawn on instead
+    of the span widened by router.max_move: a horizontal trunk whose loads all land on it (pin stacks / on-trunk
+    ports) is reserved exactly over its pin-bar span; a vertical trunk over its span widened by the riser bound
+    (STACK_RISER_MAX_UM + off: a drop farther than that is a no_pin_stack error anyway).  A drawn trunk that
+    leaves its reservation (an L drop moved past it) is a plan error (reserve_overflow), never silently drawn."""
     txy = {t["port"]: tuple(t["xy"]) for t in M["taps"]}
     root = tuple(M["meta"]["root_um"])
     errs, out, last_ext = [], [], [None]
@@ -481,7 +488,12 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
             exts.append(last_ext[0])
         if horiz:
             xs_all = [D[0]] + [p[0] + (off if ld.startswith("port:") else 0.0) for ld, p in Ls]
-            ty, tm = track("M8", D[1] + off, min(xs_all) - mm, max(xs_all) + mm, nm, "trunk")
+            exact_h = exact_reserve and all((ld.startswith("port:") and port_on_trunk) or
+                                            (not ld.startswith("port:") and abs(p[1] - D[1]) <= STACK_RISER_MAX_UM - off)
+                                            for ld, p in Ls)
+            mh = 0.0 if exact_h else mm
+            rsv = (min(xs_all) - mh, max(xs_all) + mh)
+            ty, tm = track("M8", D[1] + off, rsv[0], rsv[1], nm, "trunk")
             te = last_ext[0]
             xs_ = []
             if dcell:
@@ -522,6 +534,9 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                 branches.append((ld, p[0], ty))
                 xs_.append(p[0])
             xlo, xhi = min([D[0]] + xs_), max([D[0]] + xs_)
+            if exact_reserve and (xlo < rsv[0] - 1e-6 or xhi > rsv[1] + 1e-6):
+                errs.append(dict(kind="reserve_overflow", name=nm, detail=f"M8 trunk {xlo:.3f}..{xhi:.3f} outside "
+                                 f"reservation {rsv[0]:.3f}..{rsv[1]:.3f}"))
             if xhi > xlo:
                 if router is not None and tm == DRAWN and te is not None:
                     e2 = router.tie_ext("M8", ty, xlo, xhi)
@@ -532,7 +547,9 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
             tap0 = (D[0], ty)
         else:
             ys_all = [D[1]] + [p[1] + off for _, p in Ls]
-            tx, tm = track("M9", D[0] + off, min(ys_all) - mm, max(ys_all) + mm, nm, "trunk")
+            mv = min(mm, STACK_RISER_MAX_UM + off + 2 * row_y) if exact_reserve else mm
+            rsv = (min(ys_all) - mv, max(ys_all) + mv)
+            tx, tm = track("M9", D[0] + off, rsv[0], rsv[1], nm, "trunk")
             te = last_ext[0]
             yd = D[1]
             if dcell:      # driver jog one track pair off the pin row toward the loads, Y bar -> trunk
@@ -554,6 +571,9 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                 if not port:
                     stacks.append(stack(ld, "A", p, (p[0], by)))
             ylo, yhi = min([yd] + ys_), max([yd] + ys_)
+            if exact_reserve and (ylo < rsv[0] - 1e-6 or yhi > rsv[1] + 1e-6):
+                errs.append(dict(kind="reserve_overflow", name=nm, detail=f"M9 trunk {ylo:.3f}..{yhi:.3f} outside "
+                                 f"reservation {rsv[0]:.3f}..{rsv[1]:.3f}"))
             if yhi > ylo:
                 if router is not None and tm == DRAWN and te is not None:
                     e2 = router.tie_ext("M9", tx, ylo, yhi)

@@ -2187,7 +2187,7 @@ def _body_keepout_violations(K, W, H, cells):
 
 
 def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, die=None, parts=None, keepouts=None,
-                   root_um=None, leaf_stub_um=8.64, stack_offset=0.0, stack_r8=True):
+                   root_um=None, leaf_stub_um=8.64, stack_offset=0.0, stack_r8=True, exact_reserve=None):
     """INFRA-FIRST-QC-R12: the die clock tree from an EXPLICIT cell + net list (the planner's delay-balanced mesh3 top
     tree, results/qc_clk_mesh3/r11/r11_top_sites.json format) instead of build_lattice's binary / midpoint / equal-cut
     H-tree.  No midpoint, equal-cut, arity or path-spread check (the planner balanced the delays); kept fail-closed
@@ -2366,7 +2366,8 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
     # physical view: one pin stack per GROUP (the tie reaches the other units); logical nets keep every unit
     phys = [dict(n, loads=[ld for ld in n["loads"] if ld.startswith("port:") or rep_of[ld] == ld]) for n in nets]
     wires = C128.fixed_wires(out, cells, phys, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=True,
-                             port_on_trunk=stack_r8, ties=ties, l_drops=True)
+                             port_on_trunk=stack_r8, ties=ties, l_drops=True,
+                             exact_reserve=bool(spec.get("exact_reserve") if exact_reserve is None else exact_reserve))
     for w in wires:
         w["ndr"] = ndr
         for s_ in w.get("stacks", []):

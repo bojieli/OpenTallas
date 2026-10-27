@@ -1,0 +1,115 @@
+{
+ "nx": 0,
+ "ny": 0,
+ "m": 0,
+ "rep_um": null,
+ "ndr": "16w",
+ "sites": "explicit_cells",
+ "W": 31216.32,
+ "H": 26265.6,
+ "root_um": [
+  2167.317,
+  3922.68
+ ],
+ "tap_layer": "M8",
+ "tap_pin_size_um": [
+  1.28,
+  0.64
+ ],
+ "explicit_tree": {
+  "source": "explicit cells",
+  "groups": 12,
+  "units": 20,
+  "stacked_groups": 8,
+  "plan_nets": 11,
+  "nets": 13,
+  "leaves": 4,
+  "checks": "geometry only (sites, host, seam, keep-out, overlap, tie column, Manhattan trunk layer); no midpoint / equal-cut (planner-balanced)",
+  "file": "out/r14/lane_B.json"
+ },
+ "tree_tracks": {
+  "method": "C128.TrackRouter: nearest PG-aware track, clock metal + VSS shields clear of PG/clock/shields by the NDR space",
+  "tracks": {
+   "M8": {
+    "pitch_um": 0.08,
+    "offset_um": 0.04
+   },
+   "M9": {
+    "pitch_um": 0.08,
+    "offset_um": 0.04
+   }
+  },
+  "max_move_um": 8.64,
+  "segments": 27,
+  "moved": 27,
+  "modes": {
+   "M8:drawn": 20,
+   "M9:drawn": 7
+  },
+  "move_max_um": 1.375,
+  "pg_rects": 13304,
+  "pin_stack": {
+   "rule": "R7 straight stacks + short-stack pads; stacked groups: M7 tie strap along the bar column through every unit pin row (A tie / Y tie), L nets = trunk + one M9 (M8) drop + M8 jog",
+   "stacks": 24,
+   "ties": 16,
+   "l_drops": 7,
+   "pads": {
+    "M2": [
+     0.019,
+     0.009
+    ],
+    "M3": [
+     0.009,
+     0.02
+    ],
+    "M4": [
+     0.043,
+     0.012
+    ],
+    "M5": [
+     0.012,
+     0.043
+    ],
+    "M6": [
+     0.035,
+     0.016
+    ]
+   },
+   "r8": {
+    "wide_merge_um": 0.99975
+   }
+  },
+  "pg_source": "plan die.pg.grid"
+ },
+ "clock_shield": {
+  "net": "VSS",
+  "straps_shielded": 0,
+  "jogs_shielded": 0,
+  "fixed_tree_nets": 13,
+  "fixed_tree_mm": 3.5,
+  "fixed_tree_segs": 27,
+  "grt_routed_tree_nets": 0,
+  "grt_routed_tree_mm": 0.0,
+  "complete": true,
+  "vss_tied": false,
+  "freeze_evidence_ok": false,
+  "method": "12.7a: H-tree legs, split tails, stubs and root net pre-routed as fixed special M8/M9 NDR wires, VSS stripe both sides, obstruction over the shield spacing (die_clock_128.combo_tcl)"
+ },
+ "rule_12_8": {
+  "methodology": "v5.1 12.8 (explicit planner tree)",
+  "shield_net": "VSS",
+  "sizing": "BUFx24 groups (planner)",
+  "early_offset_taps": 0
+ },
+ "cells": 20,
+ "nodes": 12,
+ "reps": 8,
+ "stubs": 4,
+ "clock_cell_overlap_pairs": 0,
+ "clock_hard_keepout_violations": 0,
+ "unplaced": 0,
+ "tree_wire_mm": 3.511,
+ "plan": "inputs/candidate_oneqc0733.json",
+ "plan_sha256": "e4829ce26d222eac5fb51ab34454e28d0174585995bc0e837fc7e29d660f48d2",
+ "build_s": 0.1
+}
