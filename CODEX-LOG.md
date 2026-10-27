@@ -4703,3 +4703,9 @@ Explicit owner RESET received. All Codex engineering stopped; all agents/childre
 ### Handback state / OWNER?
 Only outstanding new ROOT owner decision is the unified HBM scope recommendation above (also in earlier OWNER? section). No blocking dialogue, no waiting for owner input. All engineering has stopped on the explicit reset; jobs may continue. Every remaining failure has its source/owner/next step in these packets. Follow current METHODOLOGY and review-before-route; models/component gates above do not substitute for signoff.py SIGNED or real-view die release gates.
 
+
+## Takeover 2026-10-27 04:52 PDT
+Main d7fd2c861c; current hub intel2. Three workers qwen/s81_head/hbm; root shared flow, merge backlog, retirement and auxiliary lanes. No blocking questions. Latest METHODOLOGY12 v5.1 supersedes older handoff restrictions (early taps, sparse residuals and data hold repair permitted; freeze real clock related-pair STA).
+
+OWNER?
+None newly raised at takeover. HEAD measured PG 150um bump failure awaits scope decision; collecting existing ruling first.
