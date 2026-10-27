@@ -543,6 +543,24 @@ def netlist(rec, corner, box=None, ring_um=0.0, seg_um=54.0, sigma=None, seed=0,
                 continue
             nst = max(1, math.ceil(n["leg_um"] / 450.0 - 1e-9))
             off[n["tag"]] = off[n["parent"]] + rnd.gauss(0.0, sg["tree_ps_per_stage"] * math.sqrt(nst))
+    if seed and sg.get("tree_wire_rel"):
+        # CLOCK-KV-R18 (RULING NUMBER-CHECK-KV-R17, opt-in sigma key): wire-RC variation of the tree ABOVE the mesh.
+        # One Gaussian per routed tree edge (one repeater hop <= 450 um = one segment), sigma = tree_wire_rel x the
+        # edge's WIRE delay (edge delay = routed arrival(node) - arrival(parent); wire share = 1 - AOCV class-A cell
+        # share per corner, sigma key tree_wire_share), hierarchical (shared by everything below the edge).  Separate
+        # RNG stream, so every other term draws exactly as before.
+        rw = random.Random(1000 * seed + 29)
+        ws = (sg.get("tree_wire_share") or {}).get(corner, 0.5)
+        if not off:
+            off = {n["tag"]: 0.0 for n in rec["nodes"]}
+        woff = {}
+        for n in sorted(rec["nodes"], key=lambda n: len(n["tag"])):
+            if n["parent"] is None:
+                woff[n["tag"]] = 0.0
+                continue
+            d_e = max(0.0, n["arr"][corner] - by[n["parent"]]["arr"][corner])
+            woff[n["tag"]] = woff[n["parent"]] + rw.gauss(0.0, sg["tree_wire_rel"] * ws * d_e)
+        off = {k: off.get(k, 0.0) + woff[k] for k in woff}
     hp, vp = defaultdict(set), defaultdict(set)      # attach points per strap
     for y in Y:
         hp[y] |= set(X) | {xl, xh}
