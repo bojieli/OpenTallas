@@ -2195,3 +2195,5 @@ READY [CODEX FLOW 2026-10-27 08:23 PDT] codex/ft-overlay-1027@79a0cfe0a: signoff
 READY [CODEX FLOW-WATCH 2026-10-27 08:25 PDT] codex/flow-watch-1027@3400e5da8: explicit core_flow/core_infra/master_slice/native_bb/kit_preflight watch paths close helper-only fingerprint bypass;33focusedwatch/trigger/canary testsPASS incl3oldempty-sourcefixtures fixed aftercheckerpin7689. Dispatch/test-only; no physicalcanary rerun needed; no unreadyRC60um ancestry.
 
 READY [CODEX DIE-PROTO 2026-10-27 08:25 PDT] codex/ft-overlay-1027@ced7b8d2d: shared trial GRT/clock exactexit propagation,5actualshellcontrolsPASS; standalonecommit afterFTfix79a0cfe0a; noRTL/physicalchange.
+
+READY [KV-NATIVE-SIDECAR 2026-10-27 08:26 PDT] codex/kv-reset-bind-1027@f51684c55: bind.py kit-rtl preserves validated native station geometry and source-ordered plan, fails closed on missing/partial sites; 3 focused tests PASS, actual b53 source receipts PASS 13 io_cor / 7 hroot stations. No RTL/cycle changes. Fold into same KV regeneration with QK 200-FT/R8 + coverage local reset grid.
