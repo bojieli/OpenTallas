@@ -66,7 +66,14 @@ module qkd_host_native_qm_debt #(
     // u_cx) keep their storage, flags and credit (wfreed) logic but publish pointers through ONE register instead of a
     // 2-flop synchroniser (SYNC 2 -> 1): a same-clock FIFO = plain register stage + buffer, 1 cycle less per crossing
     // (and 1 cycle earlier credit return).  Order, values, credits and faults unchanged.  Caller ties the clocks.
-    parameter integer SAMECLK = 0
+    parameter integer SAMECLK = 0,
+    // ENG_PREG = 1 (QK-CORES-6 2026-10-27, opt-in, 0 = unchanged): the engine is qkd_host_native_engine_preg (the KV
+    // hard core qkd_hr_ingest_eng with every pin registered).  Glue here: the write port becomes ready-latency 2
+    // against an ox credit counter (e_wrdy = room for a write 2 cycles later; e_wv = a write taken now), and the
+    // marker / quiet idle checks also wait one cycle after any descriptor / payload take (the registered busy of
+    // the core covers everything after that).  Same sector stream, completion words and order; +1 cycle on every
+    // engine bus.  Requires the read port off (RMW_EN 0 or QPIPE != 0).
+    parameter integer ENG_PREG = 0
 ) (
     input  wire              rst_n,
     // host link face
@@ -100,7 +107,7 @@ module qkd_host_native_qm_debt #(
      else quiet_h<=!h_v&&!hv_q&&hx_freed==0&&!t_v&&cx_empty&&tcr==TCRED&&!t_cr&&!tcr_q&&!fault;
     always @(posedge clk_i or negedge rn_i)
      if(!rn_i)quiet_i<=0;
-     else quiet_i<=hx_empty&&!hx_pop&&(QUIET_MUT==1||!e_busy)&&!e_wv&&!e_rv&&!e_done&&!e_rdv&&
+     else quiet_i<=hx_empty&&!hx_pop&&!took_q&&(QUIET_MUT==1||!e_busy)&&!e_wv&&!e_rv&&!e_done&&!e_rdv&&
       !ox_wr&&outst==0&&rx_empty&&!rx_pop&&!cx_wr&&!f_any&&!hx_ovf_i&&!rx_ovf_i;
     always @(posedge ck or negedge rn_c)
      if(!rn_c)quiet_c<=0;
@@ -160,19 +167,35 @@ module qkd_host_native_qm_debt #(
     reg          e_rdv;
     reg  [255:0] e_rdd;
     wire         e_wrdy, e_rrdy;
+    reg          took_q;                    // ENG_PREG: a descriptor / payload beat went to the core last cycle
     reg  [3:0]   pcnt;                      // payload beats seen (MUT 1)
     wire [511:0] pay = (MUT == 1 && pcnt == 4'd6) ? (hx_head[511:0] ^ (512'd1 << 30)) : hx_head[511:0];
     wire         hv_i = !hx_empty;
     wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw && !bad_native;
     wire         take_p = hv_i && !f_any && hcl == 2'd2;
-    qkd_host_native_engine #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV((ENG_TRIM != 0 && QKV_EN == 0) ? 0 : 1), .APIPE(APIPE),
-                      .QPIPE(QPIPE), .NATIVE_ROWS(NATIVE_ROWS), .QMUT((MUT >= 3) ? MUT - 2 : 0)) u_eng (
-        .clk(clk_i),.clk_bank(clk_i_bank),.clk_out(clk_i_out), .rst_n(rn_i),
-        .d_v(take_d), .d_rdy(e_drdy), .d_data(hdesc),
-        .in_v(take_p), .in_rdy(e_inrdy), .in_data(pay),
-        .w_v(e_wv), .w_rdy(e_wrdy), .w_addr(e_waddr), .w_data(e_wdata),
-        .r_v(e_rv), .r_rdy(e_rrdy), .r_addr(e_raddr), .rd_v(e_rdv), .rd_data(e_rdd),
-        .done_v(e_done), .done_tag(e_tag), .busy(e_busy), .n_sectors(e_nsec), .n_beats(e_nbeat));
+    generate if (ENG_PREG != 0) begin : g_preg
+        initial if (RMW_EN != 0 && QPIPE == 0) $fatal(1, "qkd_host_native_qm_debt ENG_PREG needs the read port off");
+        qkd_host_native_engine_preg #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV((ENG_TRIM != 0 && QKV_EN == 0) ? 0 : 1), .APIPE(APIPE),
+                          .QPIPE(QPIPE), .NATIVE_ROWS(NATIVE_ROWS), .QMUT((MUT >= 3) ? MUT - 2 : 0)) u_eng (
+            .clk(clk_i),.clk_bank(clk_i_bank),.clk_out(clk_i_out), .rst_n(rn_i),
+            .d_v(take_d), .d_rdy(e_drdy), .d_data(hdesc),
+            .in_v(take_p), .in_rdy(e_inrdy), .in_data(pay),
+            .w_v(e_wv), .w_rdy(e_wrdy), .w_addr(e_waddr), .w_data(e_wdata),
+            .r_v(e_rv), .r_rdy(e_rrdy), .r_addr(e_raddr), .rd_v(e_rdv), .rd_data(e_rdd),
+            .done_v(e_done), .done_tag(e_tag), .busy(e_busy), .n_sectors(e_nsec), .n_beats(e_nbeat));
+    end else begin : g_eng
+        qkd_host_native_engine #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV((ENG_TRIM != 0 && QKV_EN == 0) ? 0 : 1), .APIPE(APIPE),
+                          .QPIPE(QPIPE), .NATIVE_ROWS(NATIVE_ROWS), .QMUT((MUT >= 3) ? MUT - 2 : 0)) u_eng (
+            .clk(clk_i),.clk_bank(clk_i_bank),.clk_out(clk_i_out), .rst_n(rn_i),
+            .d_v(take_d), .d_rdy(e_drdy), .d_data(hdesc),
+            .in_v(take_p), .in_rdy(e_inrdy), .in_data(pay),
+            .w_v(e_wv), .w_rdy(e_wrdy), .w_addr(e_waddr), .w_data(e_wdata),
+            .r_v(e_rv), .r_rdy(e_rrdy), .r_addr(e_raddr), .rd_v(e_rdv), .rd_data(e_rdd),
+            .done_v(e_done), .done_tag(e_tag), .busy(e_busy), .n_sectors(e_nsec), .n_beats(e_nbeat));
+    end endgenerate
+    always @(posedge clk_i or negedge rn_i)
+        if (!rn_i) took_q <= 1'b0;
+        else took_q <= (ENG_PREG != 0) && ((take_d && e_drdy) || (take_p && e_inrdy));
     always @(*) begin
         hx_pop = 1'b0;
         if (hv_i) begin
@@ -197,10 +220,21 @@ module qkd_host_native_qm_debt #(
     wire         rd_room = outst < (1 << RFA);
     // CSR 2 (boot end): one marker word, in order after every sector of the descriptors before it
     wire         csr_mark = hv_i && !f_any && hcl == 2'd0 && hx_head[7:0] == 8'd2;
-    wire         mark_go = csr_mark && !e_busy && !e_wv && !e_rv && !ox_full;
-    assign e_wrdy = !ox_full;
-    assign e_rrdy = (RMW_EN != 0 && QPIPE == 0) && !e_wv && !ox_full && rd_room;
-    wire         ox_wr = (e_wv && e_wrdy) || (e_rv && e_rrdy) || mark_go;
+    // ENG_PREG: ox credits (free entries as seen by the writer, returned through wfreed) and the write authorised
+    // last cycle (it may land next cycle).  e_wrdy(t) = 1 only if a write 2 cycles later still fits.
+    reg  [OFA+1:0] oc;
+    reg            oa1;
+    wire         mark_go = csr_mark && !e_busy && !e_wv && !e_rv &&
+                           ((ENG_PREG != 0) ? (!took_q && oc > {{OFA+1{1'b0}}, oa1}) : !ox_full);
+    wire         ox_wr = (ENG_PREG != 0) ? (e_wv || mark_go) : ((e_wv && e_wrdy) || (e_rv && e_rrdy) || mark_go);
+    assign e_wrdy = (ENG_PREG != 0) ? (oc > {{OFA+1{1'b0}}, oa1} + {{OFA+1{1'b0}}, ox_wr}) : !ox_full;
+    assign e_rrdy = (ENG_PREG == 0) && (RMW_EN != 0 && QPIPE == 0) && !e_wv && !ox_full && rd_room;
+    always @(posedge clk_i or negedge rn_i)
+        if (!rn_i) begin oc <= (1 << OFA); oa1 <= 1'b0; end
+        else begin
+            oc  <= oc - {{OFA+1{1'b0}}, ox_wr} + {1'b0, ox_freed};
+            oa1 <= (ENG_PREG != 0) && e_wrdy;
+        end
     // Preserve the optional marker region in bits65:64. Existing markers use
     // zero there and retain their exact low64 payload / RoPE dispatch behavior.
     wire [AW+256:0] ox_w = mark_go ? {1'b1, {AW{1'b1}}, 190'd0, hx_head[129:64]}
