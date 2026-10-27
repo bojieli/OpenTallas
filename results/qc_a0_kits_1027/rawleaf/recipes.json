@@ -1,0 +1,14 @@
+{
+ "ot_qwen_tile_lsl_rawfault_m3": {
+  "plan": "results/qc_a0_kits_1027/rawleaf/plan_child.json",
+  "lef_contract": "results/qc_a0_kits_1027/rawleaf/rawleaf_contract.lef",
+  "plan_type": "a0_rawleaf",
+  "ref_tile": "results/qc_a0_kits_1027/rawleaf",
+  "suffix": "a0k",
+  "insertion_ps": 201.0,
+  "insertion_ff_ps": 161.5,
+  "insertion_basis": "QC-CORES-2 R3 B_child 201 TT / 161.5 FF (child-only mean, UNCHECKED-model)",
+  "util": 0.6,
+  "insertion_balance": true
+ }
+}
