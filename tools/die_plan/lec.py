@@ -76,6 +76,8 @@ UNSUPPORTED_CELLS = re.compile(r"^(ICG|DHL|DLL|SDF|SDFH|SDFL)")   # clock gates,
 # latch-based integrated clock gates modelled by the clock-gate -> enable abstraction (icg_to_enable); every ASAP7
 # ICG drive strength has the same statetable: IQ = ENA | SE while CLK is low, held while high; GCLK = CLK & IQ
 ICG_CELLS = re.compile(r"^ICGx(1|2|2p67DC|3|4|4DC|5|5p33DC|6p67DC|8DC)_ASAP7_75t_(R|L|SL)$")
+# transparent-low latches (lockup latches, latch : enable "!CLK"): modelled by latch_to_wire (OT_LEC_LATCH=0 refuses)
+LOCKUP_CELLS = re.compile(r"^DLLx(1|2|3)_ASAP7_75t_(R|L|SL)$")
 TYPE_SFX = re.compile(r"\$_[A-Z]+(?:_[A-Z0-9]+)?_$")
 IDX = re.compile(r"^(.*?)((?:\[\d+\])+)$")
 GENBLK = re.compile(r"(?<![^.])genblk\d+\.")
@@ -276,6 +278,11 @@ SEQ_TAIL = [
 ]
 
 
+def split_seq(env):
+    """phase A / JSON rewrite / phase B is needed for clock gates and for lockup latches."""
+    return bool(env.get("_LEC_ICG_V") or env.get("_LEC_LATCH"))
+
+
 def seq_tail(out, lecff, icg):
     """SEQ_TAIL; with clock gates (icg) it is split at the clock-gate -> enable abstraction: phase A writes the
     flattened fine-grained design as JSON, icg_to_enable rewrites it, phase B (seq_tail_b) reads it back."""
@@ -309,7 +316,7 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
           # the RTL registers as written and an asynchronous read port
           "memory -nomap -nordff", "memory_map", "opt_expr -keepdc", "opt_clean",
           "techmap", "opt_clean"]
-    return "\n".join(s + seq_tail(out, lecff, env.get("_LEC_ICG_V"))) + "\n"
+    return "\n".join(s + seq_tail(out, lecff, split_seq(env))) + "\n"
 
 
 # Formal preparation must retain every FF already present in the physical netlist.
@@ -325,7 +332,7 @@ def gate_script(env, netlist, stubs, wrap, lecff, out):
     s += [f"read_verilog {stubs}", f"read_verilog {netlist}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
           "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc",
           GATE_PHYSICAL_FF_KEEP, "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
-    return "\n".join(s + seq_tail(out, lecff, env.get("_LEC_ICG_V"))) + "\n"
+    return "\n".join(s + seq_tail(out, lecff, split_seq(env))) + "\n"
 
 
 # ---------------------------------------------------------------------------------------------- clock gates
@@ -561,6 +568,146 @@ def icg_to_enable(src, dst, side):
         del cells[cn]
     for k in [k for k, v in d["modules"].items() if ICG_CELLS.match(k)]:
         del d["modules"][k]
+    Path(dst).write_text(json.dumps(d))
+    return st
+
+
+def latch_to_wire(src, dst, side):
+    """Lockup-latch abstraction (JSON src -> dst, both sides): a transparent-low latch ($_DLATCH_N_ with E = a
+    primary-input clock, or $_DLATCH_P_ with E = NOT(that clock): the ASAP7 DLL liberty model) whose data cone
+    holds only primary inputs, constants and rising-edge flops on primary-input clocks, and whose Q reaches (through
+    combinational logic only) nothing but synchronous pins (D / E / sync R) of rising-edge flops on primary-input
+    clocks, is a wire in the cycle model: its sources change only at rising edges, it is transparent for the low
+    phase before the next rising edge, and its readers sample only at that edge -> they see D of the same cycle.
+    The high-phase hold value is never sampled (hold / phase timing is STA's).  Refused (Unproven), never
+    approximated: transparent-high latches, an enable that is not a (buffered / inverted) primary input, a data
+    source that is a latch / falling-edge flop / clock net / unknown cell / LEC stub, a Q load that is a clock or
+    async pin, a falling-edge flop, a latch, a module output, a black-box compare pin, memory or unknown cell."""
+    d = json.loads(Path(src).read_text())
+    tops = [k for k, v in d["modules"].items() if str(v.get("attributes", {}).get("top", "0")).strip("0") != ""]
+    if len(tops) != 1:
+        raise LecError(f"latch {side}: {len(tops)} top modules in {src}")
+    m = d["modules"][tops[0]]
+    cells = m["cells"]
+    name_of = {}
+    for n, w in m["netnames"].items():
+        for b in w["bits"]:
+            if isinstance(b, int):
+                name_of.setdefault(b, n)
+    pis = {b for p in m["ports"].values() if p["direction"] == "input" for b in p["bits"] if isinstance(b, int)}
+    pos = {b for p in m["ports"].values() if p["direction"] != "input" for b in p["bits"] if isinstance(b, int)}
+    drv, loads = {}, collections.defaultdict(list)
+    for cn, c in cells.items():
+        for p, bits in c["connections"].items():
+            out = c.get("port_directions", {}).get(p) == "output"
+            for i, b in enumerate(bits):
+                if isinstance(b, int):
+                    if out:
+                        drv[b] = (cn, p)
+                    else:
+                        loads[b].append((cn, p, i))
+    lats = {cn: c for cn, c in cells.items() if LATCH_TYPE.match(c["type"])}
+    st = dict(latches=len(lats), to_wire=0, per_latch={})
+    if not lats:
+        Path(dst).write_text(json.dumps(d))
+        return st
+
+    def one(cn, p):
+        b = cells[cn]["connections"].get(p, ["x"])
+        if len(b) != 1:
+            raise Unproven(f"latch {side}: {cn}.{p} is not a single bit")
+        return b[0]
+
+    def through(b, inv=False):            # through $_BUF_ (and $_NOT_ when inv): -> (bit, inverted)
+        neg = False
+        while isinstance(b, int) and b in drv and cells[drv[b][0]]["type"] in (("$_BUF_", "$_NOT_") if inv else ("$_BUF_",)):
+            neg ^= cells[drv[b][0]]["type"] == "$_NOT_"
+            b = cells[drv[b][0]]["connections"]["A"][0]
+        return b, neg
+
+    stub = re.compile(r"(^|\.)lec_(bbo|bbi|po)_")
+
+    def rise_ff(cn):
+        """a rising-edge flop on a primary-input clock (no LEC stub / wrapper flop) -> its FF_TYPE match, else None."""
+        f = FF_TYPE.match(cells[cn]["type"])
+        if not f or f[2] != "P":
+            return None
+        if through(cells[cn]["connections"]["C"][0])[0] not in pis:
+            return None
+        if stub.search(str(name_of.get(cells[cn]["connections"].get("Q", [None])[0], ""))):
+            return None
+        return f
+
+    clock_bits = set()
+    for cn, c in cells.items():
+        if FF_TYPE.match(c["type"]):
+            clock_bits.add(through(c["connections"]["C"][0])[0])
+    ff_clocks = set(clock_bits)          # a latch enable must be a clock of some flop, not any input
+    for cn in lats:
+        clock_bits.add(through(one(cn, "E"), True)[0])
+
+    for cn in sorted(lats):
+        c = cells[cn]
+        t = c["type"]
+        e, neg = through(one(cn, "E"), True)
+        if t not in ("$_DLATCH_N_", "$_DLATCH_P_") or e not in pis or e not in ff_clocks or (t == "$_DLATCH_P_") != neg:
+            raise Unproven(f"latch {side}: {t} {cn} is not a transparent-low latch on a primary-input clock")
+        seen, todo, srcs = set(), [one(cn, "D")], 0
+        while todo:                        # data cone
+            b = todo.pop()
+            if not isinstance(b, int) or b in seen:
+                continue
+            seen.add(b)
+            if b in clock_bits:
+                raise Unproven(f"latch {side}: {cn} data reads a clock net ({name_of.get(b, b)})")
+            if b in pis or b not in drv:
+                srcs += 1
+                continue
+            dn, dp = drv[b]
+            if FF_TYPE.match(cells[dn]["type"]):
+                if not rise_ff(dn):
+                    raise Unproven(f"latch {side}: {cn} data reads {cells[dn]['type']} {dn} (not a rising-edge flop "
+                                   f"on a primary-input clock)")
+                srcs += 1
+                continue
+            if not re.match(r"^\$_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_$",
+                            cells[dn]["type"]):
+                raise Unproven(f"latch {side}: {cn} data reads {cells[dn]['type']} {dn}: not modelled")
+            todo += [x for p, bits in cells[dn]["connections"].items()
+                     if cells[dn].get("port_directions", {}).get(p) != "output" for x in bits]
+        q = one(cn, "Q")
+        seen2, todo, sinks = set(), [q], 0
+        while todo:                        # Q fan-out
+            b = todo.pop()
+            if not isinstance(b, int) or b in seen2:
+                continue
+            seen2.add(b)
+            if b in pos:
+                raise Unproven(f"latch {side}: {cn} Q reaches module output {name_of.get(b, b)}")
+            for ln, lp, li in loads.get(b, ()):
+                lt = cells[ln]["type"]
+                f = FF_TYPE.match(lt)
+                if f:
+                    ok = rise_ff(ln) and (lp in ("D", "E") or (lp == "R" and f[1].startswith("SDFF")))
+                    if not ok:
+                        raise Unproven(f"latch {side}: {cn} Q reaches {lt} {ln}.{lp} (only D / E / sync R of "
+                                       f"rising-edge flops on primary-input clocks are modelled)")
+                    sinks += 1
+                    continue
+                if not re.match(r"^\$_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_$",
+                                lt):
+                    raise Unproven(f"latch {side}: {cn} Q reaches {lt} {ln}.{lp}: not modelled")
+                todo += [x for p, bits in cells[ln]["connections"].items()
+                         if cells[ln].get("port_directions", {}).get(p) == "output" for x in bits]
+        if q in clock_bits:
+            raise Unproven(f"latch {side}: {cn} Q is a clock net")
+        st["per_latch"][cn] = dict(type=t, clk=name_of.get(e, str(e)), data_sources=srcs, sinks=sinks)
+    for cn in sorted(lats):               # all checked first: then each latch -> $_BUF_ D -> Q
+        c = cells[cn]
+        cells[cn] = {"hide_name": c.get("hide_name", 1), "type": "$_BUF_", "parameters": {}, "attributes": {},
+                     "port_directions": {"A": "input", "Y": "output"},
+                     "connections": {"A": [one(cn, "D")], "Y": [one(cn, "Q")]}}
+        st["to_wire"] += 1
     Path(dst).write_text(json.dumps(d))
     return st
 
@@ -4077,10 +4224,12 @@ def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
 def run_side(env, script, out, side, log, rec):
     """one side's AIG: one yosys run, or with clock gates phase A -> icg_to_enable -> phase B."""
     r = run_yosys(script, out / f"{side}.ys", log)
-    if not env.get("_LEC_ICG_V"):
+    if not split_seq(env):
         return r
     pre = out / f"{side}"
     rec.setdefault("clock_gates", {})[side] = icg_to_enable(f"{pre}.preicg.json", f"{pre}.icg.json", side)
+    if env.get("_LEC_LATCH"):
+        rec.setdefault("lockup_latches", {})[side] = latch_to_wire(f"{pre}.icg.json", f"{pre}.icg.json", side)
     r = run_yosys(seq_tail_b(pre, out / "lecff.v"), out / f"{side}_b.ys", log)
     for f in (f"{pre}.preicg.json", f"{pre}.icg.json"):
         Path(f).unlink(missing_ok=True)
@@ -4264,7 +4413,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             rec["warning"] = "gold frontend == synthesis frontend (frontend bugs are not independent)"
         netlist = ft_parallel_normalise(kit, top, netlist, out, rec)
         types = netlist_cell_types(netlist)
-        bad = sorted(c for c in types if UNSUPPORTED_CELLS.match(c) and not ICG_CELLS.match(c))
+        latch_ok = os.environ.get("OT_LEC_LATCH", "1") != "0"
+        bad = sorted(c for c in types if UNSUPPORTED_CELLS.match(c) and not ICG_CELLS.match(c)
+                     and not (latch_ok and LOCKUP_CELLS.match(c)))
+        if any(LOCKUP_CELLS.match(c) for c in types):
+            env["_LEC_LATCH"] = "1"
+            rec["lockup_latch_cells"] = sorted(c for c in types if LOCKUP_CELLS.match(c))
         if bad:
             raise Unproven(f"netlist holds cells LEC does not model: {bad[:8]}")
         srcmods, rtl_cells = set(), set()
@@ -4470,6 +4624,9 @@ def via_docker(args, image, mem):
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
+    for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES"):      # model switches (the reset contract is KIT/reset_contract.json)
+        if os.environ.get(k):
+            cmd += ["-e", f"{k}={os.environ[k]}"]
     sol = os.environ.get("OT_LEC_SOLVER", "")
     if sol and os.path.isdir(sol):
         cmd += ["-v", f"{os.path.abspath(sol)}:/lecsolver:ro", "-e", "LEC_SOLVER_PATH=/lecsolver"]
