@@ -31,6 +31,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[4]
 CORE_MARGIN_UM = 4.32
 PIN_LEN_UM = 0.192
+INTERIOR_TOL_UM = 0.5   # KV-CORES-R2: plan pin farther than this from every face = interior entry pin (12.8a)
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032)
 # CORES-KITS/KVX 10-26: M3 core pins (vertical, N/S faces) on the M3 track grid of M123_TRACKS (0.009 + k 0.036):
 # the re-used pv_join view keeps 1024 S-face M3 pins (plan v3.9e pv_join_pins.json; r4..r6 closed with them)
@@ -147,6 +148,14 @@ def io_tcl(pins, w, h, tid):
         f = face_of(p["x"], p["y"], w, h)
         lw = LAYER_W.get(p["layer"], 0.04)
         x, y = p["x"], p["y"]
+        if min(x, w - x, y, h - y) > INTERIOR_TOL_UM:
+            # KV-CORES-R2 10-27 (METHODOLOGY 12.8a): interior clock/reset entry pin (KV core slice centre entry island,
+            # M5 via stack from M9) -- placed at its exact plan xy, never projected onto a face
+            out.append(f"place_pin -pin_name {{{p['name']}}} -layer {p['layer']} -location {{{x:.4f} {y:.4f}}} "
+                       f"-pin_size {{{lw:.4f} {PIN_LEN_UM:.4f}}}   ;# 12.8a interior entry")
+            b, i = split_name(p["name"])
+            rows.append(dict(bus=b, bit=i, layer=p["layer"], x=round(x, 4), y=round(y, 4), face="interior"))
+            continue
         if f in "EW":
             x = w if f == "E" else 0.0
             size, cx, cy = (PIN_LEN_UM, lw), (x - PIN_LEN_UM / 2 if f == "E" else x + PIN_LEN_UM / 2), y
