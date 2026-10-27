@@ -1,0 +1,72 @@
+{
+ "source_sites": [
+  "tools/die_plan/kv_core_slice.py:46 constant",
+  "tools/die_plan/kv_core_slice.py:146 grid candidate selection",
+  "tools/die_plan/kv_core_slice.py:240-242 predicted insertion"
+ ],
+ "excluded_false_positive": "master_plan.WIRE_FF_PER_UM=0.20 is wire capacitance, not delay",
+ "measured_q5_ahub": "TT138.7..147.8ps for273.6..295.3um, vs0.20ps/um model54.7..59.1; sharedstage/gate loads matter",
+ "current_slices": [
+  {
+   "source": "slice_pv_pair_r26.json",
+   "sha256": "c18cedce1ed6a05e25d2f6aaa07cd01cf465906268f8fe9d2c512eee8e5e1bb8",
+   "module": "kv3_pv_pair",
+   "uses_trunk_020": true,
+   "pred_TT_ps": 259.0,
+   "pred_FF_ps": 210.2,
+   "trunk_um": 95.04,
+   "trunk_TT_ps": 19.0,
+   "sensitivity_only_050_TT_ps": 287.52,
+   "warning": "0.50 is ahub-only measured sensitivity, NOT a universal calibration or signoff bound"
+  },
+  {
+   "source": "slice_ot_qwen_tp8_pv_join_t_r26.json",
+   "sha256": "27c1a4bdee5939cfb71d65d5c08869486f40dfd09176ae15ae0b081ae0809101",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "uses_trunk_020": false,
+   "pred_TT_ps": 226.1,
+   "pred_FF_ps": 183.5
+  },
+  {
+   "source": "slice_qkd_kvs_pc_r26.json",
+   "sha256": "3601aa99f0dfd3cbc9d19b085df01eb57068f590acf1b35948b65f0aa8bee6e7",
+   "module": "qkd_kvs_pc",
+   "uses_trunk_020": true,
+   "pred_TT_ps": 247.5,
+   "pred_FF_ps": 201.0,
+   "trunk_um": 237.6,
+   "trunk_TT_ps": 47.5,
+   "sensitivity_only_050_TT_ps": 318.8,
+   "warning": "0.50 is ahub-only measured sensitivity, NOT a universal calibration or signoff bound"
+  },
+  {
+   "source": "slice_qkd_kvs_pc_h_head_p_r26.json",
+   "sha256": "d89709e3addd5c6e1fe11fa2322056ce1ae5d2de25a300916ff721b0e6751e6f",
+   "module": "qkd_kvs_pc_h_head_p",
+   "uses_trunk_020": true,
+   "pred_TT_ps": 247.5,
+   "pred_FF_ps": 201.0,
+   "trunk_um": 237.6,
+   "trunk_TT_ps": 47.5,
+   "sensitivity_only_050_TT_ps": 318.8,
+   "warning": "0.50 is ahub-only measured sensitivity, NOT a universal calibration or signoff bound"
+  },
+  {
+   "source": "slice_qkd_ectlk_q2_r26.json",
+   "sha256": "1c52bbaac48d12084705c86e236c0b417b923f58e111683b8d9c9908c16c5ee4",
+   "module": "qkd_ectlk_q2",
+   "uses_trunk_020": false,
+   "pred_TT_ps": 243.5,
+   "pred_FF_ps": 197.7
+  },
+  {
+   "source": "slice_qkd_ectlk_q0_r26.json",
+   "sha256": "6f4017986f9b6ecb48836d7d4d7c0b1cd88b57f0108b39b69d479d7a39fe0865",
+   "module": "qkd_ectlk_q0",
+   "uses_trunk_020": false,
+   "pred_TT_ps": 243.5,
+   "pred_FF_ps": 197.7
+  }
+ ],
+ "policy": "Do not replace0.20blindly. ActualPDK/lib+route prediction at kit time supersedes these analytical fields; current signed views remain measured evidence. Other cores require actualfamily trunk model before using old predictions."
+}

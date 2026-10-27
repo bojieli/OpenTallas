@@ -1,0 +1,520 @@
+{
+ "source_sha256": "99b9d6ddfe8937824efead26687709bbfb1e2cc439555a00d211dde7d732dfa6",
+ "ports": [
+  {
+   "port": "L2056_1",
+   "old": [
+    22322.132,
+    22406.692
+   ],
+   "new": [
+    22300.412,
+    22428.412
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2061_1",
+   "old": [
+    20801.492,
+    20886.052
+   ],
+   "new": [
+    20779.772,
+    20907.772
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2066_1",
+   "old": [
+    19280.852,
+    19365.412
+   ],
+   "new": [
+    19259.132,
+    19387.132
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2071_1",
+   "old": [
+    17760.212,
+    17844.772
+   ],
+   "new": [
+    17738.492,
+    17866.492
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2080_1",
+   "old": [
+    23842.772,
+    23927.332
+   ],
+   "new": [
+    23821.052,
+    23949.052
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2085_1",
+   "old": [
+    16239.572,
+    16324.132
+   ],
+   "new": [
+    16217.852,
+    16345.852
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2090_1",
+   "old": [
+    14718.932,
+    14803.492
+   ],
+   "new": [
+    14697.212,
+    14825.212
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2095_1",
+   "old": [
+    3599.708,
+    3684.268
+   ],
+   "new": [
+    3577.988,
+    3705.988
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2100_1",
+   "old": [
+    5120.348,
+    5204.908
+   ],
+   "new": [
+    5098.628,
+    5226.628
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2105_1",
+   "old": [
+    6640.988,
+    6725.548
+   ],
+   "new": [
+    6619.268,
+    6747.268
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2110_1",
+   "old": [
+    8161.628,
+    8246.188
+   ],
+   "new": [
+    8139.908,
+    8267.908
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2119_1",
+   "old": [
+    2079.068,
+    2163.628
+   ],
+   "new": [
+    2057.348,
+    2185.348
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2124_1",
+   "old": [
+    9682.268,
+    9766.828
+   ],
+   "new": [
+    9660.548,
+    9788.548
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2129_1",
+   "old": [
+    11202.908,
+    11287.468
+   ],
+   "new": [
+    11181.188,
+    11309.188
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2134_1",
+   "old": [
+    22322.132,
+    22406.692
+   ],
+   "new": [
+    22300.412,
+    22428.412
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2139_1",
+   "old": [
+    20801.492,
+    20886.052
+   ],
+   "new": [
+    20779.772,
+    20907.772
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2144_1",
+   "old": [
+    19280.852,
+    19365.412
+   ],
+   "new": [
+    19259.132,
+    19387.132
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2149_1",
+   "old": [
+    17760.212,
+    17844.772
+   ],
+   "new": [
+    17738.492,
+    17866.492
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2158_1",
+   "old": [
+    23842.772,
+    23927.332
+   ],
+   "new": [
+    23821.052,
+    23949.052
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2163_1",
+   "old": [
+    16239.572,
+    16324.132
+   ],
+   "new": [
+    16217.852,
+    16345.852
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2168_1",
+   "old": [
+    14718.932,
+    14803.492
+   ],
+   "new": [
+    14697.212,
+    14825.212
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2173_1",
+   "old": [
+    3599.708,
+    3684.268
+   ],
+   "new": [
+    3577.988,
+    3705.988
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2178_1",
+   "old": [
+    5120.348,
+    5204.908
+   ],
+   "new": [
+    5098.628,
+    5226.628
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2183_1",
+   "old": [
+    6640.988,
+    6725.548
+   ],
+   "new": [
+    6619.268,
+    6747.268
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2188_1",
+   "old": [
+    8161.628,
+    8246.188
+   ],
+   "new": [
+    8139.908,
+    8267.908
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2197_1",
+   "old": [
+    2079.068,
+    2163.628
+   ],
+   "new": [
+    2057.348,
+    2185.348
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2202_1",
+   "old": [
+    9682.268,
+    9766.828
+   ],
+   "new": [
+    9660.548,
+    9788.548
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  },
+  {
+   "port": "L2207_1",
+   "old": [
+    11202.908,
+    11287.468
+   ],
+   "new": [
+    11181.188,
+    11309.188
+   ],
+   "reason": "Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure"
+  }
+ ],
+ "type_bus_closure": [
+  [
+   "kv3_hg_v1",
+   "ft3_o"
+  ],
+  [
+   "kv3_hg_v1p2",
+   "ft3_o"
+  ],
+  [
+   "kv3_hg_v1p3",
+   "ft3_o"
+  ],
+  [
+   "kv3_hg_v1p4",
+   "ft3_o"
+  ],
+  [
+   "kv3_hg_v1p5",
+   "ft3_o"
+  ],
+  [
+   "kv3_hg_v1p6",
+   "ft3_o"
+  ],
+  [
+   "kv3_hg_v3",
+   "ft3_o"
+  ],
+  [
+   "kv3_hgi_v1",
+   "ft2_i"
+  ],
+  [
+   "kv3_hgi_v2",
+   "ft3_i"
+  ],
+  [
+   "kv3_hgi_v4",
+   "ft23_i"
+  ],
+  [
+   "kv3_hgi_v5",
+   "ft24_i"
+  ],
+  [
+   "kv3_hgi_v7",
+   "ft25_i"
+  ],
+  [
+   "kv3_hgi_v8",
+   "ft26_i"
+  ]
+ ],
+ "sys_c_taps_before": [
+  [
+   "clk",
+   180.0,
+   21.6
+  ],
+  [
+   "clk_t1",
+   540.0,
+   21.6
+  ],
+  [
+   "clk_t2",
+   900.0,
+   21.6
+  ],
+  [
+   "clk_t3",
+   1260.0,
+   21.6
+  ],
+  [
+   "clk_t4",
+   1620.0,
+   21.6
+  ],
+  [
+   "clk_t5",
+   1980.0,
+   21.6
+  ]
+ ],
+ "sys_c_taps_after": [
+  [
+   "clk",
+   180.0,
+   172.79999999999998
+  ],
+  [
+   "clk_t1",
+   540.0,
+   172.79999999999998
+  ],
+  [
+   "clk_t2",
+   900.0,
+   36.72
+  ],
+  [
+   "clk_t3",
+   1260.0,
+   36.72
+  ],
+  [
+   "clk_t4",
+   1620.0,
+   172.79999999999998
+  ],
+  [
+   "clk_t5",
+   1980.0,
+   172.79999999999998
+  ],
+  [
+   "clk_t6",
+   180.0,
+   518.4
+  ],
+  [
+   "clk_t7",
+   540.0,
+   518.4
+  ],
+  [
+   "clk_t8",
+   615.87,
+   492.885
+  ],
+  [
+   "clk_t9",
+   1577.502,
+   689.985
+  ],
+  [
+   "clk_t10",
+   1620.0,
+   518.4
+  ],
+  [
+   "clk_t11",
+   1980.0,
+   518.4
+  ],
+  [
+   "clk_t12",
+   180.0,
+   864.0
+  ],
+  [
+   "clk_t13",
+   540.0,
+   864.0
+  ],
+  [
+   "clk_t14",
+   900.0,
+   864.0
+  ],
+  [
+   "clk_t15",
+   1260.0,
+   864.0
+  ],
+  [
+   "clk_t16",
+   1620.0,
+   864.0
+  ],
+  [
+   "clk_t17",
+   1980.0,
+   864.0
+  ]
+ ],
+ "cycles_added": 0
+}
