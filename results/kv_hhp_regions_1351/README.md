@@ -1,1 +1,3 @@
 Head-p ownership regional copies: zero-cycle component lockstep 20000 cycles PASS0 mismatches; ownership-polarity mutant caught19251. Pin/outline/clock/reset geometry unchanged. Existing R10 build continues; source successor addresses GEOM62paths from one NW ownership register. Full new mapped/placed census remains owed.
+
+Physical follow-up: same-input0edge copies are NOT released for P&R: input x__est__0_1 at(2.328,362.784) directly captures own onN, so distant copies can violate150um first-seqreach. COORD authorized opt-in+1 bootphase central-delivery candidate instead. Default remains unchanged.
