@@ -39,6 +39,7 @@ def main():
     ap.add_argument('plan', type=Path)
     ap.add_argument('spec', type=Path)
     ap.add_argument('out', type=Path)
+    ap.add_argument('--only', choices=['exact', 'mirror_exact', 'pg_only_DIAGNOSTIC'], action='append')
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     plan = S.Plan(S.load(args.plan))
@@ -46,6 +47,8 @@ def main():
     report = {}
     for label, spec in [('exact', copy.deepcopy(original)), ('mirror_exact', mirrored(original)),
                         ('pg_only_DIAGNOSTIC', mirrored(original))]:
+        if args.only and label not in args.only:
+            continue
         spec['exact_reserve'] = True
         target = args.out / label
         target.mkdir(exist_ok=True)
