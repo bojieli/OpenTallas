@@ -1,0 +1,72 @@
+{
+  "521": {
+    "native_commit": "db605b665d",
+    "view_commit": "9b66de546",
+    "ports": {
+      "clk": [
+        "input",
+        1
+      ],
+      "rst_n": [
+        "input",
+        1
+      ],
+      "tx_up": [
+        "output",
+        1
+      ],
+      "tx_v": [
+        "input",
+        1
+      ],
+      "tx_flit": [
+        "input",
+        521
+      ],
+      "rx_v": [
+        "output",
+        1
+      ],
+      "rx_flit": [
+        "output",
+        521
+      ]
+    },
+    "pass": true
+  },
+  "522": {
+    "native_commit": "db605b665d",
+    "view_commit": "9b66de546",
+    "ports": {
+      "clk": [
+        "input",
+        1
+      ],
+      "rst_n": [
+        "input",
+        1
+      ],
+      "tx_up": [
+        "output",
+        1
+      ],
+      "tx_v": [
+        "input",
+        1
+      ],
+      "tx_flit": [
+        "input",
+        522
+      ],
+      "rx_v": [
+        "output",
+        1
+      ],
+      "rx_flit": [
+        "output",
+        522
+      ]
+    },
+    "pass": true
+  }
+}
