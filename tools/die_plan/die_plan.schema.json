@@ -19,6 +19,9 @@
   "note": {
    "type": "string"
   },
+  "station_model_keys": {
+   "type": "boolean"
+  },
   "die": {
    "type": "object",
    "required": [
@@ -635,6 +638,14 @@
      "kit": {
       "type": "string"
      },
+     "verilog_defines": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+       "type": "string",
+       "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+      }
+     },
      "note": {
       "type": "string"
      },
@@ -704,6 +715,64 @@
           "lsb_low",
           "lsb_high"
          ]
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "id_straps": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "width"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "type": "string",
+         "pattern": "^strap_[A-Za-z0-9_]+$"
+        },
+        "width": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "pads": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "dir",
+        "width"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "type": "string",
+         "minLength": 1
+        },
+        "dir": {
+         "enum": [
+          "in",
+          "out"
+         ]
+        },
+        "width": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "clock": {
+         "type": "boolean"
         },
         "note": {
          "type": "string"
@@ -2402,6 +2471,13 @@
        "R180"
       ]
      },
+     "id_straps": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "integer",
+       "minimum": 0
+      }
+     },
      "note": {
       "type": "string"
      }
@@ -2773,6 +2849,43 @@
       "cells": {
        "type": "integer",
        "minimum": 1
+      },
+      "core_islands": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "rule",
+         "instances",
+         "rects_um",
+         "frame"
+        ],
+        "properties": {
+         "rule": {
+          "type": "string"
+         },
+         "frame": {
+          "type": "string"
+         },
+         "instances": {
+          "type": "integer",
+          "minimum": 1
+         },
+         "rects_um": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          }
+         }
+        }
+       }
       }
      }
     },

@@ -117,6 +117,23 @@ class Gate(unittest.TestCase):
         ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('kvcore',why)
         del self.row['runner'];k=self.root/'kit';k.mkdir();(k/'run_kit_kv.sh').write_text('')
         self.row['kit']='epyc1:'+str(k);self.assertFalse(self.gate())
+    def test_legacy_kv_alias_keeps_type_and_core_canaries_separate(self):
+        self.runref('kvio','PASS',die='qwen_kvsys')
+        self.runref('kvcore','FAIL',die='qwen_kvsys_core',item='e1')
+        self.row['die']='kv'
+        self.assertTrue(self.gate())
+        self.row['runner']='/x/run_kit_kv.sh'
+        ok,why=assess(self.row,self.root,self.repo,self.git)
+        self.assertFalse(ok)
+        self.assertIn('kvcore',why)
+        self.assertNotIn('no reference canary for die kv',why)
+
+    def test_legacy_kv_alias_does_not_relax_matching_flow(self):
+        self.runref('kvio','PASS',die='qwen_kvsys')
+        self.row['die']='kv'
+        self.git=lambda *a,**kw:(0,'tools/die_plan/gen_phys.py\n','')
+        self.assertFalse(self.gate())
+
     def test_other_die_core_change_does_not_hold_frozen_qc(self):
         self.row['die']='qwen_compute'
         self.runref('qc','PASS',die='qwen_compute')

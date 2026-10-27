@@ -632,6 +632,7 @@ if {[llength $so_vclk] == 1 && $so_reference_ok} {
   if {[llength $so_din]} { set_input_delay -min @IN_MIN@ -clock [lindex $so_vclk 0] $so_din }
   if {[llength [all_outputs]]} { set_output_delay -min @OUT_MIN@ -clock [lindex $so_vclk 0] [all_outputs] }
 @IN_MIN_PORTS@
+@OUT_MIN_PORTS@
   so OVERLAY applied [get_full_name [lindex $so_vclk 0]] in_min @IN_MIN_LOG@ out_min @OUT_MIN@
 } else {
   so OVERLAY skipped vclks [llength $so_vclk]
@@ -772,7 +773,7 @@ def ft_fill_model(decl, model, corners):
 
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
-                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False,
+                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
                 ft_decl=None, tap_window=None):
     """tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
     golden SDC times every clock port W early, so the overlay's min output delay is the contract + W (exact IO shift);
@@ -821,15 +822,34 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@CORE_TAPS_FF@", "read_sdc /sdc/core_taps_ff.sdc" if corner == "ff" and core_taps_ff else ""),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@IN_MIN@", f"[expr {{-{ins_tol:g}}}]" if hold_in_min is None else f"{hin:g}"),
                  ("@IN_MIN_LOG@", f"{hin:g}"), ("@OUT_MIN@", f"{hout:g}"),
-                 ("@IN_MIN_PORTS@\n", "".join(
-                     f"  set_input_delay -min {v:g} -clock [lindex $so_vclk 0] [get_ports {{{' '.join(p + '[*]' for p in ps)}}}]\n"
-                     for v, ps in _group_ports(hold_in_min_ports))),
+                 ("@IN_MIN_PORTS@\n", _port_hold_overlay("input", hold_in_min_ports, ft_decl)),
+                 # Sender-owned demand is shifted by the same tap window as the uniform output contract.
+                 ("@OUT_MIN_PORTS@\n", _port_hold_overlay("output", hold_out_min_ports, ft_decl,
+                                                         float(tap_window or 0.0))),
                  ("@FANOUT_MAX@", str(int(fanout_max))),
                  ("@CLOCK_FAMILY@", _clock_family_tcl()),
                  ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text()),
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
     return t
+
+
+def _port_hold_overlay(direction, values, ft_decl, shift=0.0):
+    """Keep die-timed FT endpoints out of per-port overrides after bus expansion."""
+    out = []
+    for value, ports in _group_ports(values):
+        selected = f"[get_ports {{{' '.join(p + '[*]' for p in ports)}}}]"
+        command = f"set_{direction}_delay -min {value + shift:g} -clock [lindex $so_vclk 0]"
+        if ft_decl:
+            excluded = "$so_ft_in" if direction == "input" else "$so_ft_out"
+            # Filter resolved pins, not bus strings: an override can contain a mix
+            # of core-owned and die-owned bits of the same bus.
+            out += [f"  set so_override_ports {selected}\n",
+                    f"  set so_override_ports [lmap p $so_override_ports {{if {{[get_full_name $p] in {excluded}}} continue; set p}}]\n",
+                    f"  if {{[llength $so_override_ports]}} {{ {command} $so_override_ports }}\n"]
+        else:
+            out.append(f"  {command} {selected}\n")
+    return "".join(out)
 
 
 def _group_ports(m):
@@ -1012,6 +1032,7 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 hold_in_min=lctx.get("hold_in_min_ps"),
                                                 hold_out_min=lctx.get("hold_out_min_ps"),
                                                 hold_in_min_ports=lctx.get("hold_in_min_ports_ps"), core_taps_ff=core_overlay,
+                                                hold_out_min_ports=lctx.get("hold_out_min_ports_ps"),
                                                 tap_window=lctx.get("tap_window_ps")))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
@@ -1151,6 +1172,11 @@ def run_face_guard(disc, clock_ports=()):
     except Exception as e:
         return dict(verdict="FAIL", reason=f"invalid boundary control context: {e}", fail_counts={"context": 1})
     skip = sorted(set(clock_ports) | set(typed_controls) | {"arst_n", "rst_n"})
+    # 12.2a1 (COORD 10-26 12:55): declared die-timed ft ports (kit ft_ports.json) are not core IO, so not face registers;
+    # their structure (port -> fixed BUF -> port) is checked by the kit's own ft gate (KV core_preflight island_ft)
+    ftp = Path(disc["kit"]) / "ft_ports.json" if disc.get("kit") else None
+    if ftp is not None and ftp.is_file():
+        skip = sorted(set(skip) | {p["name"] for p in json.loads(ftp.read_text()).get("ports", [])})
     # Keep the guard's canonical clock/reset contract (including registered wavefront rst_o_<k>
     # controls). Supplying the native-clock override must not turn reset-tree fanout into a data-face failure.
     skip_re = r"(?:" + face_guard.SKIP_RE + r")|^(?:" + "|".join(re.escape(x) for x in skip) + r")$"
@@ -1483,6 +1509,11 @@ def cmd_run(a):
     disc["library_config"] = str(Path(a.library_config).resolve()) if getattr(a, "library_config", None) else None
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
+    # An explicit source-pinned FF reference applies to every kit family.  Keep
+    # it outside the hard-core branch: die-plan kits otherwise reach the FF
+    # session with bound-ff selected but no value, despite a valid CLI request.
+    if getattr(a, "ff_bound_ps", None) is not None:
+        disc["ff_bound_ps"] = float(a.ff_bound_ps)
     bound = None
     if core_contract:
         # COORD ruling 10-24: a hard core carries a core-latency contract -- its measured insertion is published

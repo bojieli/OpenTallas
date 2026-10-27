@@ -61,6 +61,79 @@ class GrtLayers(unittest.TestCase):
             out, _ = self._run(td, pg_ir="FAIL", pg_ir_open_trial=True)
             self.assertTrue(json.loads((out / "grt_meta.json").read_text())["trial"])
 
+    def test_actual_route_import_is_opt_in_and_keeps_guarded_api(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            source, names, provisional = root/"source.odb", root/"nets.txt", root/"provisional.txt"
+            source.touch()
+            names.write_text("clock\nVDD\n")
+            provisional.write_text("old_clock\n")
+            out, _ = self._run(td, infra_odb=str(source), infra_nets=str(names),
+                               infra_provisional_nets=str(provisional))
+            prep, route = (out/"prepare_signal.tcl").read_text(), (out/"grt.tcl").read_text()
+            self.assertIn("write_db /out/target_signal.odb", prep)
+            self.assertNotIn("global_route ", prep)
+            self.assertNotIn("source /pre/preroute_obs.tcl", prep)
+            self.assertIn("read_db /out/combined_infra.odb", route)
+            self.assertNotIn("read_verilog", route)
+            self.assertIn("write_db /out/routed_signal.odb", route)
+            shell = (out/"run_import_inside.sh").read_text()
+            self.assertIn("--nets /out/infra_nets.txt", shell)
+            self.assertIn("--provisional-nets /out/infra_provisional.txt", shell)
+            self.assertIn("verify_import.py", shell)
+            compile((out/"verify_import.py").read_text(), "verify_import.py", "exec")
+            self.assertIn("actual_fixed_import", (out/"grt_meta.json").read_text())
+            # Execute the GENERATED outer shell with a docker argv recorder;
+            # bash -n alone cannot catch a backslash followed by spaces.
+            import os, subprocess
+            bindir = root/"bin"; bindir.mkdir()
+            docker = bindir/"docker"
+            docker.write_text("#!/usr/bin/env python3\nimport json,sys\nprint(json.dumps(sys.argv[1:]))\n")
+            docker.chmod(0o755)
+            (root/"kit/abstracts").mkdir()
+            result = subprocess.run(["bash", str(out/"run_grt.sh")], text=True, capture_output=True,
+                env={**os.environ, "PATH": str(bindir)+":"+os.environ["PATH"]}, check=True)
+            argv = json.loads(result.stdout)
+            self.assertTrue(all(arg and arg == arg.strip() for arg in argv))
+            self.assertEqual(argv.count("-v"), 5)
+            self.assertIn("HUID="+str(os.getuid()), argv)
+            self.assertEqual(argv[-3:], ["openroad/orfs:latest", "bash", "/out/run_import_inside.sh"])
+
+
+    def test_actual_import_requires_complete_pair_and_inventory(self):
+        with tempfile.TemporaryDirectory() as td:
+            with self.assertRaisesRegex(ValueError, "required together"):
+                self._run(td, infra_odb="missing.odb")
+        with tempfile.TemporaryDirectory() as td:
+            d=Path(td)
+            (d/"s.odb").touch(); (d/"nets.txt").write_text("# empty\n")
+            with self.assertRaisesRegex(ValueError, "nonempty"):
+                self._run(td, infra_odb=str(d/"s.odb"), infra_nets=str(d/"nets.txt"))
+
+    def test_capacity_only_never_freezes_even_with_passing_clock_and_grt(self):
+        with tempfile.TemporaryDirectory() as td:
+            out, _ = self._run(td)
+            (out / "grt.log").write_text("Final congestion report\n M4 100 1 1.0% 0 / 0 / 0\n"
+                                         " Total 100 1 1.0% 0 / 0 / 0\nEXIT 0\n")
+            d = Path(td)
+            clk = d / "clock"
+            clk.mkdir()
+            (clk / "clock_report.json").write_text(json.dumps({"corners": {
+                c: {"verdict": "PASS", "related_pair_max_ps": 10} for c in ("TT", "FF")}}))
+            a = SimpleNamespace(pre=str(d / "pre"), grt=[str(out)], clock=str(clk), clock_post=str(clk),
+                                pg=None, sites=None, out=str(d / "report.json"))
+            for extra, expected in (({}, "FAIL"), ({"connected_preroutes": False}, "FAIL"),
+                                    ({"connected_preroutes": True, "qualification": "CAPACITY_RESERVATION_ONLY"}, "FAIL"),
+                                    ({"connected_preroutes": True, "qualification": "CONNECTED_FIXED_ROUTES"}, "PASS")):
+                pre = {"tracks_taken": {"M8": {"all": 0.1}}, **extra}
+                (d / "pre/preroute.json").write_text(json.dumps(pre))
+                DI.cmd_report(a)
+                gate = json.loads((d / "report.json").read_text())["freeze_gate"]
+                self.assertTrue(gate["signal_grt0"])
+                self.assertTrue(gate["clock_alone"])
+                self.assertTrue(gate["clock_post_signal"])
+                self.assertEqual(gate["verdict"], expected)
+
     def test_pg_growth_after_grt_and_post_signal_skew_gate(self):
         with tempfile.TemporaryDirectory() as td:
             out, pg = self._run(td)

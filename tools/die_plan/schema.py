@@ -170,6 +170,9 @@ SCHEMA = {
     "properties": {
         "schema": {"const": SCHEMA_ID},
         "note": {"type": "string"},
+        # HBM-MU-QUAD-3 (opt-in, default absent/false = strict internal_stations): accept the PATH-HBM R8-R13
+        # station-model keys on internal_stations[] (STATION_MODEL_PROPS below; consistency in validate_structure)
+        "station_model_keys": {"type": "boolean"},
         "die": {
             "type": "object", "required": ["name", "outline_um", "period_ps", "reach_um"],
             "additionalProperties": False,
@@ -292,6 +295,10 @@ SCHEMA = {
                     "cells": {"type": "integer", "minimum": 0},
                     "hard": {"type": "boolean"},     # hard IP (PHY, closed macro used as-is): no generated wrapper
                     "kit": {"type": "string"},
+                    # Source profile shared by synthesis, lint and cross-frontend LEC.
+                    # Bare macro names only: no command-line flags or shell syntax.
+                    "verilog_defines": {"type": "array", "uniqueItems": True, "items": {
+                        "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}},
                     "note": {"type": "string"},
                     "buses": {"type": "array", "items": {
                         "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
@@ -302,6 +309,22 @@ SCHEMA = {
                                        # of the type, in any orient, derives its die window from it)
                                        "face": {"enum": list(FACES)}, "window_um": _win, "layers": _lays,
                                        "order": _order,
+                                       "note": {"type": "string"}}}},
+                    # HEAD-BIND-4 10-27 (OWNER 10-25 option B): per-INSTANCE ID strap input ports of the partition
+                    # (strap_* names, exact widths in parent_id_straps.PHYSICAL_ID_WIDTHS).  No pin register, kit SDC
+                    # set_false_path -from, each instance ties its own value (partitions[].id_straps) at the die top;
+                    # leaves bind them as "strap:<name>".
+                    "id_straps": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "width"], "additionalProperties": False,
+                        "properties": {"name": {"type": "string", "pattern": "^strap_[A-Za-z0-9_]+$"},
+                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"}}}},
+                    # HEAD-BIND-4 10-27: off-die PHY pad ports (PMA side of a PHY leaf): NO boundary flop (their
+                    # timing belongs to the PHY's own clocks), bound to the leaf as "pad:<name>", carried to the die
+                    # top as <part>_<name> (behavioural word pads; die.io phy_macro windows hold the bumps)
+                    "pads": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
+                        "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
+                                       "width": {"type": "integer", "minimum": 1}, "clock": {"type": "boolean"},
                                        "note": {"type": "string"}}}},
                     "ft_slots": {"type": "array", "items": {
                         "type": "object", "required": ["name", "in_face", "out_face", "width"],
@@ -550,6 +573,9 @@ SCHEMA = {
         "partitions": {"type": "array", "minItems": 1, "items": {
             "type": "object", "required": ["name", "type", "origin_um"], "additionalProperties": False,
             "properties": {"name": _name, "type": _name, "origin_um": _xy, "orient": {"enum": list(ORIENTS)},
+                           # HEAD-BIND-4 10-27 (OWNER 10-25 option B): this INSTANCE's values of its type's declared
+                           # partition ID straps (partition_types.<t>.id_straps), tied at the die top (gen_rtl.die_top)
+                           "id_straps": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
                            "note": {"type": "string"}}}},
         "ports": {"type": "array", "items": {
             "type": "object", "required": ["id", "src", "dst", "width"],   # face/layers/window: or from the type
@@ -599,7 +625,17 @@ SCHEMA = {
                          "sites_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
                          "regions_depth": {"type": "integer", "minimum": 0},
                          "regions": {"type": "array", "minItems": 1, "items": _clock_mesh_region},
-                         "cells": {"type": "integer", "minimum": 1}}},
+                         "cells": {"type": "integer", "minimum": 1},
+                         # CLOCK-KV-R24 (12.2a1): per hard-core module, the core-frame bodies of the die clock cells
+                         # pushed down into that core (identical on every instance; apply_clkmesh_sites.py)
+                         "core_islands": {"type": "object", "additionalProperties": {
+                             "type": "object", "additionalProperties": False,
+                             "required": ["rule", "instances", "rects_um", "frame"],
+                             "properties": {"rule": {"type": "string"}, "frame": {"type": "string"},
+                                            "instances": {"type": "integer", "minimum": 1},
+                                            "rects_um": {"type": "array", "minItems": 1, "items": {
+                                                "type": "array", "items": {"type": "number"},
+                                                "minItems": 4, "maxItems": 4}}}}}}},
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
@@ -784,9 +820,61 @@ def _check(v, s, path, errs):
             errs.append(f"{path}: {v} <= {s['exclusiveMinimum']}")
 
 
+# HBM-MU-QUAD-3: PATH-HBM R8-R13 station-model keys (hbm_r11_delta / hbm_mu_quad pack), accepted only with the
+# top-level opt-in "station_model_keys": true.  serial_k = registered beats of one word (bits = ceil(bits_parallel /
+# serial_k), the serialised wire count); r9_segments = hub segment of the two ends; r9_share = face share;
+# r10 = face-pin interval record; r10_we_chain / r11_cc_serial / r13_face_affine = model flags; r13 = R13 class.
+STATION_MODEL_PROPS = {
+    "serial_k": {"type": "integer", "minimum": 1},
+    "bits_parallel": {"type": "integer", "minimum": 1},
+    "r9_segments": {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 2, "maxItems": 2},
+    "r9_share": {"type": "number", "minimum": 0, "maximum": 1},
+    "r10": {"type": "object", "required": ["face", "fend", "bus"], "additionalProperties": False,
+            "properties": {"face": {"enum": list(FACES)}, "fend": {"enum": ["from", "to"]}, "bus": {"type": "string"},
+                           "ivx": _win, "ivy": _win, "pin_frac": {"type": "number", "minimum": 0, "maximum": 1},
+                           "bcast": {"type": "boolean"}}},
+    "r10_we_chain": {"type": "boolean"},
+    "r11_cc_serial": {"type": "boolean"},
+    "r13": {"enum": ["mcast", "in_surplus", "soft_glue"]},
+    "r13_face_affine": {"type": "boolean"},
+}
+_SCHEMA_STATION_MODEL = None
+
+
+def _schema_station_model():
+    """SCHEMA with STATION_MODEL_PROPS added to partition_types.*.internal_stations[] (built once)."""
+    global _SCHEMA_STATION_MODEL
+    if _SCHEMA_STATION_MODEL is None:
+        import copy
+        sc = copy.deepcopy(SCHEMA)
+        it = sc["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]
+        it["properties"].update(copy.deepcopy(STATION_MODEL_PROPS))
+        _SCHEMA_STATION_MODEL = sc
+    return _SCHEMA_STATION_MODEL
+
+
+def station_model_errors(obj):
+    """Consistency of the opt-in station-model keys: serial_k and bits_parallel come together and
+    bits == ceil(bits_parallel / serial_k) (the serialised beats carry exactly the parallel word)."""
+    errs = []
+    for tn, t in obj.get("partition_types", {}).items():
+        for i, e in enumerate(t.get("internal_stations", [])):
+            k, bp = e.get("serial_k"), e.get("bits_parallel")
+            if (k is None) != (bp is None):
+                errs.append(f"partition type {tn}: internal_stations[{i}]: serial_k and bits_parallel must be given "
+                            "together")
+            elif k is not None and "bits" in e and e["bits"] != -(-bp // k):
+                errs.append(f"partition type {tn}: internal_stations[{i}]: bits {e['bits']} != ceil(bits_parallel "
+                            f"{bp} / serial_k {k}) = {-(-bp // k)}")
+    return errs
+
+
 def validate_structure(obj):
     errs = []
-    _check(obj, SCHEMA, "$", errs)
+    opt = isinstance(obj, dict) and obj.get("station_model_keys") is True
+    _check(obj, _schema_station_model() if opt else SCHEMA, "$", errs)
+    if opt and not errs:
+        errs += station_model_errors(obj)
     id_types = {tn: t for tn, t in obj.get("partition_types", {}).items()
                 if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", []))} if not errs else {}
     if id_types:
@@ -799,6 +887,39 @@ def validate_structure(obj):
                 type_parent_id_straps(t)
             except ValueError as e:
                 errs.append(f"partition type {tn}: {e}")
+    if not errs:
+        errs += _id_strap_errors(obj)
+    return errs
+
+
+def _id_strap_errors(obj):
+    """HEAD-BIND-4: partition ID straps = approved strap_* port + exact width; every instance of a declaring type gives
+    exactly one value per declared strap, fitting its width; instances of other types give none."""
+    try:
+        from .parent_id_straps import PHYSICAL_ID_WIDTHS
+    except ImportError:
+        from parent_id_straps import PHYSICAL_ID_WIDTHS
+    errs, decl = [], {}
+    for tn, t in obj.get("partition_types", {}).items():
+        d = {}
+        for s in t.get("id_straps", []):
+            n, w = s["name"], s["width"]
+            if PHYSICAL_ID_WIDTHS.get(n) != w:
+                errs.append(f"partition type {tn}: id_strap {n} width {w}: not an approved ID strap of that width "
+                            f"(parent_id_straps.PHYSICAL_ID_WIDTHS)")
+            if n in d:
+                errs.append(f"partition type {tn}: id_strap {n} declared twice")
+            d[n] = w
+        decl[tn] = d
+    for p in obj.get("partitions", []):
+        d = decl.get(p.get("type"), {})
+        v = p.get("id_straps", {})
+        if set(v) != set(d):
+            errs.append(f"partition {p.get('name')}: id_straps {sorted(v)} != type {p.get('type')} declared {sorted(d)}")
+            continue
+        for n, x in v.items():
+            if x >= 1 << d[n]:
+                errs.append(f"partition {p.get('name')}: id_strap {n}={x} does not fit {d[n]} bits")
     return errs
 
 

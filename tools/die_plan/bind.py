@@ -3852,6 +3852,45 @@ def kit_dedupe(tn, fl):
     return out
 
 
+def kit_native_station_geometry(out, bound_type, bound_text, kit):
+    """Carry native FIRM station sites with bound RTL through the kit wrapper.
+
+    Native binding already inserted/priced these registers.  Dropping their placement
+    sidecar makes GPL cluster them near the producer and silently recreates long hops.
+    A native chain without complete geometry is an error, not an unplaced fallback.
+    """
+    stations = set(re.findall(r"^\s*ot_dp_st\s+#\([^\n]*?\)\s+(u_ist_\w+)\s*\(", bound_text, re.M))
+    if not stations:
+        return None
+    source = Path(out) / "native_internal_stations" / bound_type
+    tcl, receipt = source / "istations.tcl", source / "receipt.json"
+    if not tcl.is_file() or not receipt.is_file():
+        raise BindError(f"kit-rtl {bound_type}: native station RTL requires {source}/istations.tcl and receipt.json")
+    try:
+        evidence = json.loads(receipt.read_text())
+        declared = [name for row in evidence["entries"] for name in row["stations"]]
+    except (ValueError, KeyError, TypeError) as exc:
+        raise BindError(f"kit-rtl {bound_type}: invalid native station placement receipt: {exc}") from exc
+    if len(declared) != len(set(declared)) or set(declared) != stations:
+        raise BindError(f"kit-rtl {bound_type}: native station geometry/RTL mismatch: "
+                        f"missing {sorted(stations-set(declared))[:5]}, extra {sorted(set(declared)-stations)[:5]}")
+    text = tcl.read_text()
+    missing = [name for name in sorted(stations) if not re.search(r"^\s*(?:is_place|is_bits)\s+[^\n]*?(?<![\w])" + re.escape(name) + r"(?![\w])", text, re.M)]
+    if missing:
+        raise BindError(f"kit-rtl {bound_type}: native station sites missing from istations.tcl: {missing[:5]}")
+    for source_file, target_name in ((tcl, "istations.tcl"), (receipt, "native_station_receipt.json")):
+        shutil.copyfile(source_file, Path(kit) / target_name)
+    plan_file = source / "plan.json"
+    plan_name = None
+    if plan_file.is_file():
+        # Native materialization stores source-ordered regs_um here; reset assignment needs
+        # those exact sites rather than the public plan's face-to-core ordering.
+        plan_name = "native_station_plan.json"
+        shutil.copyfile(plan_file, Path(kit) / plan_name)
+    return dict(stations=len(stations), tcl="istations.tcl", receipt="native_station_receipt.json", plan=plan_name,
+                source=str(source), rtl_cycles_changed=0)
+
+
 def cmd_kit_rtl(a):
     """bind.py kit-rtl PLAN --out BIND_OUT --type T [--variant V] [--kit DIR]  (COORD 18:04 G3 KIT RTL OWNERSHIP)
     The G3 kit RTL of plan partition type T = the BOUND partition module (bind.py output: as-built leaves, boundary
@@ -3999,6 +4038,7 @@ def cmd_kit_rtl(a):
     mod = t["module"]
     kd = (Path(a.kit) if a.kit else out / "kit_rtl" / tn).resolve()
     kd.mkdir(parents=True, exist_ok=True)
+    native_geometry = kit_native_station_geometry(out, key, btxt, kd)
     if bmod == mod:          # bound module and plan module share a name: the kit carries the bound module renamed
         nb = bmod + "_bound"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
@@ -4012,7 +4052,9 @@ def cmd_kit_rtl(a):
     # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
     ab0 = raw["asbuilt"]
     base = plan_base(a.plan, raw)
-    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []), base)
+    # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
+    # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
         rep.get("extra_lib", []) + bindf_prefer(out, base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
@@ -4041,7 +4083,7 @@ def cmd_kit_rtl(a):
                variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, narrow_buses=narrow,
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
-               hard_macros=dict(sorted(macros.items())),
+               hard_macros=dict(sorted(macros.items())), native_station_geometry=native_geometry,
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")

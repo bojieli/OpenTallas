@@ -18,7 +18,8 @@ Per hard-core module of the plan (every instance of a module uses one slice, cor
   trunk       12.8c designed fixed trunk for shallow cores: N x BUFx4 from the plan insertion model
               (master_plan.core_insertion: TT = A + B x L_max) -> N = round((target - pred) / stage), frozen.
 Outputs OUT/kv_core_slice.json (+ per-type OUT/slices/<module>.json) and OUT/pd_slice/cores/*.json = the plan pin views
-with the slice applied (only clock/reset pins move; data pins byte-for-byte the same values).
+with the slice applied (only clock/reset pins move; data pins byte-for-byte the same values).  OUT/pd_slice carries REAL
+copies of its views + views.sha256 (plan_views.snapshot); the source plan dir is never written.
 """
 import argparse
 import copy
@@ -34,6 +35,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import master_plan as MP  # noqa: E402
+import plan_views as PV  # noqa: E402
 
 SCHEMA = "opentallas.kv_core_slice.v1"
 ISL = 8.64
@@ -74,6 +76,12 @@ def main(argv=None):
     ap.add_argument("--out", required=True)
     ap.add_argument("--hr-price")
     ap.add_argument("--outline", action="append", default=[], help="MODULE=W,H,anchor (anchor SE|SW|NE|NW) outline delta")
+    ap.add_argument("--heads", default="", help="KV-CORES-R3 (opt-in): comma list of kv3_head_eighth_* modules sliced like every "
+                    "other core (12.8a centre entry, R15 die islands); default = heads out of slice (KV-CORE-SLICE-1)")
+    ap.add_argument("--single-tree-in-band", action="store_true",
+                    help="KV-CORES-R3 (opt-in): keep one CTS tree from the centre entry (no 12.8b in-core H-tree) when the plan "
+                         "insertion model of the single tree (master_plan.core_insertion(L_max)) is already inside 250+-20 TT; "
+                         "basis PATH-KV R5 heads centre entry measured 239.0-244.6 TT (CTS-only)")
     a = ap.parse_args(argv)
     pd = Path(a.plan_dir)
     plan_path = pd / a.plan
@@ -109,7 +117,7 @@ def main(argv=None):
     new_views = {}
     for mod in sorted(mods):
         m = mods[mod]
-        if mod.startswith("kv3_head_eighth_"):
+        if mod.startswith("kv3_head_eighth_") and mod not in set(filter(None, a.heads.split(","))):
             # heads: out of this slice (PATH-KV R5 centre entry measured 239-245 TT; e1/e5 signed views are the only
             # KV real views for R15 die STA) -> listed, pins untouched
             slices[mod] = dict(module=mod, outline_um=m["outline"], instances=sum(u["n"] for u in m["uses"]),
@@ -127,7 +135,8 @@ def main(argv=None):
         far = max(abs(cx - ex) + abs(cy - ey) for cx in (0, w) for cy in (0, h))
         tree = None
         grid_choice = None
-        if far > 200.0:
+        single_ok = a.single_tree_in_band and abs(MP.core_insertion(far)[0] - common) <= 20.0
+        if far > 200.0 and not single_ok:
             # 12.8b + 12.9d: smallest island grid whose plan-model insertion is in band (250 +-20); else the lowest
             cands = []
             for reach in (200.0, 150.0, 110.0):
@@ -275,9 +284,10 @@ def main(argv=None):
     pdo = out / "pd_slice"
     if pdo.exists():
         shutil.rmtree(pdo)
-    shutil.copytree(pd, pdo, symlinks=True, ignore=shutil.ignore_patterns("*.png"))
+    # COORD KV-CORES-R6: real view copies + views.sha256; never write through a shared cores/ symlink
+    PV.snapshot(pd, pdo, ignore=shutil.ignore_patterns("*.png"))
     for view, J2 in new_views.items():
-        (pdo / view).write_text(json.dumps(J2, indent=1) + "\n")
+        PV.safe_write(pdo, view, json.dumps(J2, indent=1) + "\n")
     if outlines:
         P2 = json.loads((pdo / a.plan).read_text())
         for tn, t in P2["partition_types"].items():
@@ -293,7 +303,7 @@ def main(argv=None):
                     hc["origin_um"] = [MP.r3(ox + (ow - W2) if e_side else ox), MP.r3(oy + (oh - H2) if n_side else oy)]
                     hc["outline_um"] = [W2, H2]
                     hc["note"] = hc.get("note", "") + f" | KV-CORE-SLICE-1 outline {ow}x{oh} -> {W2}x{H2} anchored {anc}"
-        (pdo / a.plan).write_text(json.dumps(P2) + "\n")
+        PV.safe_write(pdo, a.plan, json.dumps(P2) + "\n")
     meta = dict(schema=SCHEMA, lane="KV-CORE-SLICE-1", plan=str(plan_path), plan_sha256=sha(plan_path),
                 census=str(a.census), census_sha256=sha(a.census), mesh=str(a.mesh), mesh_sha256=sha(a.mesh),
                 applied_plan_sha256=sha(pdo / a.plan),

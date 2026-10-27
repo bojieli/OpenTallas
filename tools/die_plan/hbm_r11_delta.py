@@ -430,3 +430,260 @@ def main(argv=None):
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+# ------------------------------------------------------------------------------------- die growth, spanning (QUAD-3)
+def _span_forbidden(P, parts):
+    """die-frame y intervals a growth line must not cut: hard cores / contents and every W/E pin window, W/E ft-slot
+    window and EW die-ft band of the given partitions (a cut through a window would split its pins)."""
+    T = P["partition_types"]
+    pos = {p["name"]: p for p in P["partitions"]}
+    iv = []
+    for n in parts:
+        p = pos[n]
+        t = T[p["type"]]
+        oy = p["origin_um"][1]
+        for h in t.get("hard_cores", []) + t.get("contents", []):
+            if h.get("origin_um") and h.get("outline_um"):
+                iv.append((oy + h["origin_um"][1], oy + h["origin_um"][1] + h["outline_um"][1], n, h.get("inst")))
+        for b in t.get("buses", []):
+            if b.get("face") in ("W", "E") and b.get("window_um"):
+                a, c = sorted(b["window_um"])
+                iv.append((oy + a, oy + c, n, "bus:" + b["name"]))
+        for s in t.get("ft_slots", []):
+            for f, w in (("in_face", "in_window_um"), ("out_face", "out_window_um")):
+                if s.get(f) in ("W", "E") and s.get(w):
+                    a, c = sorted(s[w])
+                    iv.append((oy + a, oy + c, n, "slot:" + s["name"]))
+        for s in t.get("spare_slots", []):
+            if s.get("face") in ("W", "E"):
+                a, c = sorted(s["window_um"])
+                iv.append((oy + a, oy + c, n, "spare:" + s["name"]))
+    for pt in P["ports"]:
+        if pt.get("face") in ("W", "E") and pt.get("window_um") and {pt["src"]["part"], pt["dst"]["part"]} & set(parts):
+            a, c = sorted(pt["window_um"])
+            iv.append((a, c, "port", pt["id"]))
+    return iv
+
+
+def _face_point(t, face, win):
+    W, H = t["outline_um"]
+    m = (win[0] + win[1]) / 2.0
+    return {"N": (m, H), "S": (m, 0.0), "W": (0.0, m), "E": (W, m)}[face]
+
+
+def _restation(pts, blocks, reach, target):
+    """insert registers on every hop of the point chain longer than `reach` (Manhattan), evenly at <= `target` along
+    the L path (y leg first, else x leg first if the y-first points hit a block).  Returns (new inner points per
+    hop index, failures)."""
+    adds, fails = {}, []
+    inside = lambda q: any(x0 + 1e-6 < q[0] < x1 - 1e-6 and y0 + 1e-6 < q[1] < y1 - 1e-6  # noqa: E731
+                           for x0, y0, x1, y1 in blocks)
+    for i, (p, q) in enumerate(zip(pts, pts[1:])):
+        L = abs(p[0] - q[0]) + abs(p[1] - q[1])
+        if L <= reach + 1e-6:
+            continue
+        n = math.ceil(L / target) - 1
+        best = None
+        for first in ("y", "x"):
+            mid = (p[0], q[1]) if first == "y" else (q[0], p[1])
+            leg = abs(p[0] - mid[0]) + abs(p[1] - mid[1])
+            out = []
+            for j in range(1, n + 1):
+                d = L * j / (n + 1)
+                if d <= leg:
+                    f = d / leg if leg else 0.0
+                    out.append((r3(p[0] + (mid[0] - p[0]) * f), r3(p[1] + (mid[1] - p[1]) * f)))
+                else:
+                    f = (d - leg) / (L - leg)
+                    out.append((r3(mid[0] + (q[0] - mid[0]) * f), r3(mid[1] + (q[1] - mid[1]) * f)))
+            if not any(inside(o) for o in out):
+                best = out
+                break
+        if best is None:
+            fails.append(dict(hop=i, len_um=r3(L)))
+            continue
+        adds[i] = best
+    return adds, fails
+
+
+def grow_die_span(P, hub_parts, H_old, H_new, reach=405.0, target=360.0):
+    """HBM-MU-QUAD-3 compose fix (opt-in successor of grow_die): insert dH = H_new - H_old at ONE die line Y* inside
+    the hub row and grow EVERY partition that spans Y* (the hub-row column partitions as well as the root), so their
+    upper part moves with the rows above and every N/S face still abuts.  Y* avoids the hard cores / contents and all
+    W/E pin windows, W/E ft-slot windows of the spanning partitions; EW die-ft bands that span Y* grow with it.
+    Afterwards every ft-slot / internal-station hop in a grown type that is longer than `reach` gets registers in
+    the new strip (<= `target` apart; partition stations, pushdown); the added registers are reported per slot
+    (they are latency cycles to price)."""
+    dH = r3(H_new - H_old)
+    pos = {p["name"]: p for p in P["partitions"]}
+    T = P["partition_types"]
+    y0 = min(pos[h]["origin_um"][1] for h in hub_parts)
+    y1 = y0 + H_old
+    hgt = lambda p: T[p["type"]]["outline_um"][1]  # noqa: E731
+    cand = [p["name"] for p in P["partitions"] if p["name"] not in hub_parts
+            and p["origin_um"][1] < y1 - 1e-6 and p["origin_um"][1] + hgt(p) > y0 + 1e-6]
+    for n in cand:
+        if pos[n].get("orient", "R0") not in ("R0", "MY"):
+            raise ValueError(f"{n}: orient {pos[n].get('orient')} flips y; spanning growth supports R0/MY only")
+    forb = _span_forbidden(P, cand)
+    best = None
+    for i in range(1, int(round(H_old / 4.32))):
+        y = r3(HR.sn(y0 + i * 4.32))
+        if any(a + 1e-6 < y < b - 1e-6 for a, b, _, _ in forb):
+            continue
+        d = abs(y - (y0 + H_old / 2))
+        if best is None or d < best[0]:
+            best = (d, y)
+    if best is None:
+        raise ValueError("no growth line inside the hub row avoids the cores / W-E windows of the spanning partitions")
+    ys = best[1]
+    span = [n for n in cand if pos[n]["origin_um"][1] < ys - 1e-6 < pos[n]["origin_um"][1] + hgt(pos[n])]
+    moved = []
+    for p in P["partitions"]:
+        if p["name"] in hub_parts or p["name"] in span:
+            continue
+        if p["origin_um"][1] >= ys - 1e-6:
+            p["origin_um"] = [p["origin_um"][0], r3(p["origin_um"][1] + dH)]
+            moved.append(p["name"])
+    yl_of = {}
+    for n in span:
+        tn = pos[n]["type"]
+        yl = r3(ys - pos[n]["origin_um"][1])
+        if yl_of.setdefault(tn, yl) != yl:
+            raise ValueError(f"type {tn}: instances span Y* at different local y ({yl_of[tn]} vs {yl})")
+    ysh = lambda v, yl: r3(v + dH) if v >= yl - 1e-6 else v  # noqa: E731
+    pt2 = lambda q, yl: [q[0], ysh(q[1], yl)]  # noqa: E731
+    restation = []
+    for tn, yl in sorted(yl_of.items()):
+        t = T[tn]
+        h0 = t["outline_um"][1]
+        t["outline_um"] = [t["outline_um"][0], r3(h0 + dH)]
+        for h in t.get("hard_cores", []) + t.get("contents", []):
+            if h.get("origin_um") and h["origin_um"][1] >= yl - 1e-6:
+                h["origin_um"] = [h["origin_um"][0], r3(h["origin_um"][1] + dH)]
+        for b in t.get("buses", []):
+            if b.get("face") in ("W", "E") and b.get("window_um") and min(b["window_um"]) >= yl - 1e-6:
+                b["window_um"] = [r3(v + dH) for v in b["window_um"]]
+        for s in t.get("spare_slots", []):
+            if s.get("face") in ("W", "E") and min(s["window_um"]) >= yl - 1e-6:
+                s["window_um"] = [r3(v + dH) for v in s["window_um"]]
+        for bd in t.get("die_ft_bands", []):
+            if bd.get("dir") == "EW":
+                a, c = bd["span_um"]
+                bd["span_um"] = [ysh(a, yl), ysh(c, yl)]
+        for c in t.get("channels", []):
+            r = c["rect_um"]
+            c["rect_um"] = [r[0], ysh(r[1], yl), r[2], ysh(r[3], yl)]
+        for s in t.get("internal_stations", []):
+            s["from_um"] = pt2(s["from_um"], yl)
+            s["to_um"] = pt2(s["to_um"], yl)
+            s["regs_um"] = [pt2(q, yl) for q in s.get("regs_um", [])]
+            if s.get("leaf_um"):
+                s["leaf_um"] = pt2(s["leaf_um"], yl)
+        for f in t.get("ft_slots", []):
+            f["regs_um"] = [pt2(q, yl) for q in f.get("regs_um", [])]
+            if f.get("bit_sites_um"):
+                f["bit_sites_um"] = [[pt2(q, yl) for q in st] for st in f["bit_sites_um"]]
+            for fk, wk in (("in_face", "in_window_um"), ("out_face", "out_window_um")):
+                if f.get(fk) in ("W", "E") and f.get(wk) and min(f[wk]) >= yl - 1e-6:
+                    f[wk] = [r3(v + dH) for v in f[wk]]
+        ck = t.get("clock", {})
+        if ck.get("tap_um"):
+            ck["tap_um"] = pt2(ck["tap_um"], yl)
+        for tp in ck.get("taps", []):
+            if tp.get("xy"):
+                tp["xy"] = pt2(tp["xy"], yl)
+        rs = t.get("reset", {})
+        if rs.get("tap_um"):
+            rs["tap_um"] = pt2(rs["tap_um"], yl)
+        # re-station hops longer than reach (crossing the strip, or pre-existing)
+        blocks = [(h["origin_um"][0], h["origin_um"][1], h["origin_um"][0] + h["outline_um"][0],
+                   h["origin_um"][1] + h["outline_um"][1]) for h in t.get("hard_cores", []) + t.get("contents", [])
+                  if h.get("origin_um") and h.get("outline_um")]
+        crosses = lambda a, b: (min(a[1], b[1]) < yl + 1e-6) and (max(a[1], b[1]) > yl + dH - 1e-6)  # noqa: E731
+        for f in t.get("ft_slots", []):
+            if not f.get("regs_um"):
+                continue
+            pts = [tuple(q) for q in f["regs_um"]]
+            if f.get("out_face") and f.get("out_window_um"):
+                pts.append(_face_point(t, f["out_face"], f["out_window_um"]))
+            adds, fails = _restation(pts, blocks, reach, target)
+            if not adds and not fails:
+                continue
+            regs, sites = [], []
+            old_sites = f.get("bit_sites_um")
+            for i, q in enumerate(f["regs_um"]):
+                regs.append(q)
+                if i > 0 and old_sites is not None:
+                    sites.append(old_sites[i - 1])
+                for a in adds.get(i, []):
+                    regs.append(list(a))
+                    if old_sites is not None:
+                        ref_i = i if i > 0 else (1 if len(f["regs_um"]) > 1 else None)
+                        if ref_i is None or not old_sites:
+                            ref, rq = None, None
+                        else:
+                            ref, rq = old_sites[ref_i - 1], f["regs_um"][ref_i]
+                        if ref is not None:
+                            dx, dy = a[0] - rq[0], a[1] - rq[1]
+                            sites.append([[r3(u[0] + dx), r3(u[1] + dy)] for u in ref])
+            n_add = sum(len(v) for v in adds.values())
+            restation.append(dict(type=tn, slot=f["name"], added_regs=n_add, fails=fails,
+                                  crossing=[i for i in adds if crosses(pts[i], pts[i + 1])],
+                                  hops_um=[r3(abs(pts[i][0] - pts[i + 1][0]) + abs(pts[i][1] - pts[i + 1][1]))
+                                           for i in adds]))
+            f["regs_um"] = regs
+            f["stations"] = int(f.get("stations", len(regs))) + n_add
+            if old_sites is not None:
+                f["bit_sites_um"] = sites
+        for s in t.get("internal_stations", []):
+            pts = [tuple(s["from_um"])] + [tuple(q) for q in s.get("regs_um", [])] + [tuple(s["to_um"])]
+            adds, fails = _restation(pts, blocks, reach, target)
+            if not adds and not fails:
+                continue
+            regs = []
+            for i, q in enumerate(pts[:-1]):
+                if i > 0:
+                    regs.append(list(q))
+                regs.extend(list(a) for a in adds.get(i, []))
+            n_add = sum(len(v) for v in adds.values())
+            restation.append(dict(type=tn, istation=s.get("conn"), added_regs=n_add, fails=fails,
+                                  crossing=[i for i in adds if crosses(pts[i], pts[i + 1])]))
+            s["regs_um"] = regs
+        t["note"] = (t.get("note", "") + f" | HBM-MU-QUAD-3 spanning die growth: +{dH} um at local y {yl}"
+                     " (content above moves; strip = street with pushdown stations)").strip(" |")
+    nwin, hubwin = 0, []
+    for pt in P["ports"]:
+        if pt.get("face") in ("W", "E") and pt.get("window_um"):
+            a, b = pt["window_um"]
+            na, nb = (r3(a + dH), r3(b + dH)) if min(a, b) >= ys - 1e-6 else (a, b)
+            if (na, nb) != (a, b):
+                nwin += 1
+                if {pt["src"]["part"], pt["dst"]["part"]} & set(hub_parts):
+                    hubwin.append(pt["id"])
+            pt["window_um"] = [na, nb]
+    die = P["die"]
+    die["outline_um"] = [die["outline_um"][0], r3(die["outline_um"][1] + dH)]
+    for io in die.get("io", []):
+        if io.get("part") in hub_parts:
+            continue
+        r = io.get("rect_um")
+        if r and r[1] >= ys - 1e-6:
+            io["rect_um"] = [r[0], r3(r[1] + dH), r[2], r3(r[3] + dH)]
+    for dm in die.get("pg", {}).get("domains", []):
+        r = dm.get("rect_um")
+        if r and r[1] >= ys - 1e-6:
+            dm["rect_um"] = [r[0], r3(r[1] + dH), r[2], r3(r[3] + dH)]
+        bm = dm.get("bumps", {})
+        r = bm.get("rect_um")
+        if r and r[1] >= ys - 1e-6:
+            bm["rect_um"] = [r[0], r3(r[1] + dH), r[2], r3(r[3] + dH)]
+    sp = P.get("clock", {}).get("spine", {})
+    if sp.get("root_um"):
+        sp["root_um"] = [sp["root_um"][0], ysh(sp["root_um"][1], ys)]
+    return dict(dH_um=dH, insertion_y_um=ys, hub_row_y_um=[r3(y0), r3(y1)], grown_types=sorted(yl_of),
+                grown_local_y_um=yl_of, spanning_partitions=span, moved_partitions=len(moved),
+                windows_moved=nwin, hub_windows_moved=hubwin, restation=restation,
+                added_regs=sum(r["added_regs"] for r in restation),
+                restation_fails=[r for r in restation if r["fails"]], die_outline_um=die["outline_um"])

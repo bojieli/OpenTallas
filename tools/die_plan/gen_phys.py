@@ -227,6 +227,112 @@ def reset_out_pins(P, tn):
     return RT.out_pins(P, tn) + RT.start_out_pins(P, tn)
 
 
+# KV-KITS-4 10-27: declared hard-IP LINE SIDE (plan contents[]/hard_cores[].bump_ports, bind.py bump_pins) in the kit
+# port contract.  The binder exports each declared bump pin of a hard core as a partition port (bind_report.json
+# bump_ports[].part_port, named from the as-built leaf); kit-rtl keeps it as a bound-only wrapper pin.  Without it in
+# port_bind_pins.json the pre-floorplan port_bind gate counts the line side as extra ports (kv3_sys_c: 1168 bits of
+# u_ucie_rom link_*/far_*).  Names come from the bind (never re-derived here); the plan declaration, the bind report
+# and the kit-rtl wrapper must agree or the kit is refused.
+def declared_bumps(P, tn):
+    """[(inst, module, pin, dir, width)] of the plan type's declared hard-IP line side (contents[] + hard_cores[])."""
+    t = P.types[tn]
+    out = []
+    for e in t.get("contents", []) + t.get("hard_cores", []):
+        for b in e.get("bump_ports") or []:
+            out.append((e["inst"], e.get("module", e["inst"]), b["pin"], b["dir"], int(b["width"])))
+    return out
+
+
+def kit_bump_ports(P, tn, kit_rtl_filelist):
+    """[dict(port, inst, module, pin, dir, width)]: the declared bump pins of a kit-rtl type with the bound partition
+    port names, read from <filelist dir>/kit_rtl.json -> bind_out/bind_report.json.  [] when the plan declares none."""
+    import gen_rtl
+    dec = declared_bumps(P, tn)
+    if not dec:
+        return []
+    kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
+    if not kj.is_file():
+        raise gen_rtl.GenError(f"type {tn}: declares bump_ports but kit-rtl {kj} is missing (bound port names unknown)")
+    kr = json.loads(kj.read_text())
+    rep_f = Path(kr["bind_out"]) / "bind_report.json"
+    if not rep_f.is_file():
+        raise gen_rtl.GenError(f"type {tn}: declares bump_ports but {rep_f} is missing")
+    rep = json.loads(rep_f.read_text())
+    insts = set(kr.get("instances") or [])
+    bound = {}
+    for b in rep.get("bump_ports", []):
+        if b["partition"] not in insts:
+            continue
+        k = (b["pin"], b["dir"], int(b["width"]))
+        if bound.setdefault(k, b["part_port"]) != b["part_port"]:
+            raise gen_rtl.GenError(f"type {tn}: bump {b['pin']} bound under two port names "
+                                   f"{bound[k]} / {b['part_port']} across instances")
+    want = {(pin, d, w): (inst, mod) for inst, mod, pin, d, w in dec}
+    if set(want) != set(bound):
+        raise gen_rtl.GenError(f"type {tn}: plan bump_ports {sorted(set(want) - set(bound))[:4]} not bound / bound "
+                               f"{sorted(set(bound) - set(want))[:4]} not declared ({rep_f})")
+    bop = {b["port"]: (b["dir"], int(b["width"])) for b in kr.get("bound_only_pins", [])}
+    out = []
+    for (pin, d, w), port in sorted(bound.items(), key=lambda kv: kv[1]):
+        if bop.get(port) != (d, w):
+            raise gen_rtl.GenError(f"type {tn}: bump port {port} ({d} {w}) is not a bound-only pin of the kit-rtl "
+                                   f"wrapper ({bop.get(port)})")
+        inst, mod = want[(pin, d, w)]
+        out.append(dict(port=port, inst=inst, module=mod, pin=pin, dir=d, width=w))
+    return out
+
+
+def _lef_macro_pins(lef, module):
+    """{pin bit name: (layer, x0, y0, x1, y1)} (first PORT rect) and the SIZE (w, h) of MACRO module in a LEF."""
+    text = Path(lef).read_text()
+    m = re.search(r"\bMACRO\s+" + re.escape(module) + r"\b(.*?)\bEND\s+" + re.escape(module) + r"\b", text, re.S)
+    if m is None:
+        raise ValueError(f"{lef}: no MACRO {module}")
+    body = m[1]
+    sz = re.search(r"\bSIZE\s+([0-9.]+)\s+BY\s+([0-9.]+)", body)
+    if sz is None:
+        raise ValueError(f"{lef}: MACRO {module} has no SIZE")
+    pins = {}
+    for pm in re.finditer(r"^\s*PIN\s+(\S+)\s*$(.*?)^\s*END\s+\1\s*$", body, re.S | re.M):
+        g = re.search(r"\bLAYER\s+(\S+)\s*;\s*RECT\s+([-0-9.]+)\s+([-0-9.]+)\s+([-0-9.]+)\s+([-0-9.]+)", pm[2])
+        if g:
+            pins[pm[1]] = (g[1],) + tuple(float(v) for v in g.groups()[1:])
+    return pins, (float(sz[1]), float(sz[2]))
+
+
+def _orient_rect(o, w, h, x0, y0, x1, y1):
+    f = {"R0": lambda x, y: (x, y), "MX": lambda x, y: (x, h - y), "MY": lambda x, y: (w - x, y),
+         "R180": lambda x, y: (w - x, h - y)}.get(o)
+    if f is None:
+        raise ValueError(f"bump pin placement: macro orient {o} not supported (R0/MX/MY/R180)")
+    (a, b), (c, d) = f(x0, y0), f(x1, y1)
+    return min(a, c), min(b, d), max(a, c), max(b, d)
+
+
+def bump_pin_sites(P, tn, bumps, macros, base):
+    """[(port, bit, layer, cx, cy, w, h)] type frame: every bump bit ON its hard core's own LEF pin shape (the bump is
+    the hard IP's pin: no partition wiring, the die connects to it from above)."""
+    by_inst = {m[0]: m for m in macros}
+    out = []
+    cache = {}
+    for b in bumps:
+        if b["inst"] not in by_inst:
+            raise ValueError(f"type {tn}: bump {b['port']}: hard core {b['inst']} has no placed view (lef/origin)")
+        inst, mod, lef, lib, x, y, o = by_inst[b["inst"]]
+        if lef not in cache:
+            cache[lef] = _lef_macro_pins(Path(base) / lef, mod)
+        pins, (mw, mh) = cache[lef]
+        for i in range(b["width"]):
+            key = f"{b['pin']}[{i}]" if f"{b['pin']}[{i}]" in pins or b["width"] > 1 else b["pin"]
+            if key not in pins:
+                raise ValueError(f"type {tn}: bump {b['port']}[{i}]: {lef} MACRO {mod} has no pin {key}")
+            ln, *r = pins[key]
+            x0, y0, x1, y1 = _orient_rect(o, mw, mh, *r)
+            out.append((b["port"], i, ln, round(x + (x0 + x1) / 2, 4), round(y + (y0 + y1) / 2, 4),
+                        round(x1 - x0, 4), round(y1 - y0, 4)))
+    return out
+
+
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
 make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.045 -y_pitch 0.270
 make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.081 -y_pitch 0.270
@@ -851,6 +957,12 @@ def sdc(P, tn, pins):
         # downstream (rst_por_n, the lock qualifier, the wavefront relays) is timed (recovery / removal, data).
         out += ("# die reset pad (reset_tree.pad_false_path_pins): raw pad -> u_rst_root async + PLL analog pin only\n"
                 f"set_false_path -from [get_ports arst_n] -to [get_pins {{{' '.join(fp)}}}]\n")
+    ids = [sp["name"] for sp in P.types[tn].get("id_straps", [])]
+    if ids:
+        # HEAD-BIND-4 10-27 (OWNER 10-25 option B rule 2): declared partition ID straps are quasi-static, tied per
+        # instance at the die top; the one allowed exception (sdc_lint straps)
+        out += ("# OWNER 10-25 option B: per-instance ID straps (plan id_straps), tied at the parent\n"
+                f"set_false_path -from [get_ports {{{' '.join(ids)}}}]\n")
     out += (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
             "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
     if P.types[tn].get("clock", {}).get("landing_contract"):
@@ -1175,7 +1287,8 @@ def _corner_libs(mlib, kd, corner):
     return out
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
-                   skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False):
+                   skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
+                   bump_ports=None):
     t = P.types[tn]
     import core_clock_groups as CG
     grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
@@ -1227,7 +1340,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
     pins = type_pins(P, tn)
-    (kd / "io.tcl").write_text(io_tcl(P, tn, pins))
+    bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
+        if bump_ports else []
+    io_text = io_tcl(P, tn, pins)
+    for port, i, ln, cx, cy, pw, ph in bump_sites:
+        io_text += (f"place_pin -pin_name {{{port}[{i}]}} -layer {ln} -location {{{cx:.4f} {cy:.4f}}} "
+                    f"-pin_size {{{pw:.4f} {ph:.4f}}}   ;# interior: hard-IP line side (bump) on the macro pin\n")
+    (kd / "io.tcl").write_text(io_text)
     top = P.type_top_layer(tn)
     pdn = PDN
     if int(top[1:]) > int(P.layer_budget["partition_signal_max"][1:]):
@@ -1297,7 +1416,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export DESIGN_NAME = {t['module']}",
            "export PLATFORM = asap7",
            "export VERILOG_FILES = " + " ".join(srcs),
-           "export VERILOG_DEFINES = -DSYNTHESIS",
+           "export VERILOG_DEFINES = " + " ".join(type_verilog_defines(t)),
            "export SDC_FILE = /work/constraint.sdc",
            f"export DIE_AREA = 0 0 {_um(w)} {_um(h)}",
            f"export CORE_AREA = {_um(m)} {_um(m)} {_um(w - m)} {_um(h - m)}",
@@ -1560,6 +1679,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             hb4_cells=sum(v[0] for side in ('inputs', 'outputs') for b in _dsd[side].values() for v in b.values()))
     if ms is not None:
         bud["master_plan"] = ms
+    if bump_ports:
+        bud["bump_ports"] = [dict(b) for b in bump_ports]
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
@@ -1589,8 +1710,19 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # pins explicitly for exact top-level port binding (including wavefront outs).
     port_pins = [dict(bus=b, bit=i) for b, i, _l, _x, _y, _f in pins]
     port_pins += [dict(bus=n, bit=None) for n, _x, _y in tap_pins(P, tn) + reset_out_pins(P, tn)]
+    # declared hard-IP line side (bump_ports): exact bound bits, never a wildcard waiver of extras
+    port_pins += [dict(bus=b["port"], bit=i) for b in (bump_ports or []) for i in range(b["width"])]
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
     return kd
+
+
+def type_verilog_defines(t):
+    """One declared source profile for synthesis, RTL lint and the LEC gold reader."""
+    values = t.get("verilog_defines", [])
+    if not isinstance(values, list) or any(not isinstance(v, str) or
+            not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", v) for v in values):
+        raise ValueError("type verilog_defines must be a list of bare Verilog macro names")
+    return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values]))
 
 
 RUN_KIT = r"""#!/bin/bash
@@ -1616,7 +1748,7 @@ done
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
-  python3 -I /work/native_bb.py /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl || exit 9; \
+  python3 -I /work/native_bb.py /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl --physical-synth /OpenROAD-flow-scripts/flow/scripts/synth.tcl || exit 9; \
   if [ -f /work/partition_ir.py ] && [ \"\$OT_KIT_IR\" = defer ]; then python3 -I /work/partition_ir.py patch /OpenROAD-flow-scripts/flow/scripts && export OT_DEFER_PARTITION_IR=1 || echo 'PARTITION_IR WARNING: patch refused, kit IR runs inline in 6_report'; fi; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
@@ -1720,8 +1852,9 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             mine = fl
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
+        bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
-                                   skip_ir, max_wire_um, rc_cal, master_slice, trial))
+                                   skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

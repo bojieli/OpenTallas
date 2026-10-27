@@ -140,7 +140,16 @@ def test_spec_complete():
         ["tools/die_plan/cts_post.tcl", "tools/die_plan/gen_phys.py"]
 
 
+def _dry_source(tmp_path):
+    # Submit pins the submitted revision's checker, including in dry mode.
+    # A synthetic source must therefore provide that production dependency.
+    tool = tmp_path / "tools/die_plan"
+    tool.mkdir(parents=True, exist_ok=True)
+    (tool / "face_guard.py").write_bytes((HERE.parent / "die_plan/face_guard.py").read_bytes())
+
+
 def test_submit_dry(tmp_path):
+    _dry_source(tmp_path)
     assert C.main(["submit", "--src", str(tmp_path), "--root", str(tmp_path / "runs"), "--dry", "--die", "s81"]) == 0
     run = next((tmp_path / "runs").iterdir())
     job = (run / "job.sh").read_text()
@@ -158,6 +167,7 @@ def test_submit_dry(tmp_path):
 
 
 def test_submit_dry_kv_core(tmp_path):
+    _dry_source(tmp_path)
     assert C.main(["submit", "--src", str(tmp_path), "--root", str(tmp_path / "runs"), "--dry", "--die", "qwen_kvsys_core"]) == 0
     run = next((tmp_path / "runs").iterdir())
     job = (run / "job.sh").read_text() + (run / "route.sh").read_text()   # 99154991a: the kit flow runs from route.sh
@@ -266,6 +276,7 @@ def test_kv_core_hold_step_runs_after_unsigned_route(tmp_path):
 
 
 def test_kv_runtime_packages_eco_siblings(tmp_path, capsys):
+    _dry_source(tmp_path)
     C.main(['submit', '--src', str(tmp_path), '--root', str(tmp_path / 'runs'), '--dry', '--die', 'qwen_kvsys_core'])
     launch = capsys.readouterr().out
     assert '{run_kit_kv.sh,corners.tcl,pin_audit_core.py}' in launch

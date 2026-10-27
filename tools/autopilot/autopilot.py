@@ -419,6 +419,7 @@ st = _txt(os.path.join(K, "signoff.py"))
 need = {"pair_skew.tcl": '"pair_skew.tcl"' in st, "sdc_lint.py": "import sdc_lint" in st,
         "face_guard.py": "import face_guard" in st, "io_hold_qualification.py": "io_hold_qualification import" in st}
 out["signoff_missing"] = sorted(n for n, v in need.items() if v and not os.path.isfile(os.path.join(K, n)))
+if not os.path.isfile(os.path.join(K, "lec.py")): out["signoff_missing"].append("lec.py")
 # the goals on which the runner runs signoff.py (the 'if' guarding the signoff.py call); macro kits without GDS
 rt = _txt(out["runner"]).splitlines() if out["runner"] else []
 goals = set()
@@ -483,7 +484,7 @@ pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
        "oom": r"Error 137[^\n]*|\] Error 247[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
        # design gates that print their verdict but write no FAIL_PREFLOOR/FAIL_POSTCTS marker (custom runners)
-       "gate_fail": r"(?m)^(?:CORE_PREFLIGHT|RP1_GATE|SDC_LINT|S6_GRT_GATE|OT_HOLD_GATE) FAIL\b[^\n]*",
+       "gate_fail": r"(?m)^(?:CORE_PREFLIGHT|KIT_PREFLIGHT|RP1_GATE|SDC_LINT|S6_GRT_GATE|OT_HOLD_GATE) FAIL\b[^\n]*",
        "orfs_error": r"\[ERROR [A-Z]+-\d+\][^\n]*"}
 for k, p in pat.items():
     m = re.search(p, alltxt)
@@ -499,6 +500,7 @@ g = rd(next(iter(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", 
 tot = re.findall(r"^Total\s+.*?(\d+)\s*$", g, re.M)
 out["grt_overflow"] = int(tot[-1]) if tot else None
 out["goal"] = goal
+out["chain"] = jl(os.path.join(K, "autopilot_chain.json"))
 cts = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "4_cts.odb")) if os.path.getmtime(p) >= since]
 if cts: out["cts_odb"] = max(cts, key=os.path.getmtime)
 grt = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "5_1_grt.odb")) if os.path.getmtime(p) >= since]
@@ -561,6 +563,11 @@ for f in sorted(os.listdir(K)):
 for d in ("views",):
     if os.path.isdir(os.path.join(K, d)): cp(os.path.join(K, d), os.path.join("kit", d))
 cp(so, os.path.join("kit", os.path.basename(so)))
+for p in glob.glob(os.path.join(K, "lec_routed_autopilot_*")):
+    if os.path.isdir(p):
+        for f in ("lec.json", "lec.log"):
+            if os.path.isfile(os.path.join(p, f)):
+                cp(os.path.join(p, f), os.path.join("kit", os.path.basename(p), f))
 for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base")):
     cp(p, "logs")
 with open(os.path.join(A, "AUTOPILOT.json"), "w") as f:
@@ -813,7 +820,12 @@ def submit(st, j, attempt_note=""):
     argv = [OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit]
     if not runner.startswith(kit + "/"):
         argv += ["--stage", runner]
-    argv += ["--", "bash", runner, kit, j["goal"], str(mem), str(thr)]
+    if j["goal"] not in ("cts", "grt"):
+        chain = str(Path(__file__).with_name("signoff_chain.py").resolve())
+        argv += ["--stage", chain, "--", "python3", chain, runner, kit, j["goal"], str(mem), str(thr)]
+        j["chain_required"] = True
+    else:
+        argv += ["--", "bash", runner, kit, j["goal"], str(mem), str(thr)]
     if DRY:
         log(f"would SUBMIT {j['id']} {j['die']}/{j['type']} {attempt_note}: {' '.join(argv)}")
         return
@@ -875,6 +887,11 @@ def geom_fail_after_submit(st, j, r):
 CLOSURE = {}                                           # per tick: parsed PATH-FREEZE / PLAN-DELTA + flow tags
 
 
+def canonical_die(die):
+    """Use the same canonical die for closure guards and legacy queue canaries."""
+    return {"kv": "qwen_kvsys"}.get(die, die)
+
+
 def parse_path_freeze(text):
     """-> ({PATH: {"pass": bool, "why": str, "items": {item: state}}}, {PATH: set(types)})
     lines 'PATH | GRT0 / CLOCK-ROUTE / PATH-STA | PASS|FAIL|RUNNING|NOT RUN ... | evidence | date' (latest line per
@@ -920,7 +937,7 @@ def parse_plan_delta(text):
         line = raw.strip()
         m = re.match(r"^PENDING-DELTA\s+(\S+)\s+(\S+)\s+(\S+)", line)
         if m:
-            pend[m.group(1)] = (m.group(2), {t for t in m.group(3).split(",") if t})
+            pend[m.group(1)] = (canonical_die(m.group(2)), {t for t in m.group(3).split(",") if t})
             continue
         m = re.match(r"^(?:CLOSED|MERGED|DROPPED)-DELTA\s+(\S+)", line)
         if m:
@@ -944,7 +961,7 @@ def _base_type(t):
 
 def path_of(r):
     """the path name of a queue row / job when it is a path part, else None"""
-    path = DIE_PATH.get(r.get("die") or "")
+    path = DIE_PATH.get(canonical_die(r.get("die") or ""))
     if not path:
         return None
     lane = (r.get("lane") or "").upper()
@@ -958,6 +975,7 @@ def path_of(r):
 def die_frozen(die):
     """the FROZEN line of the die's plan when lanes/PATH-FREEZE.md freezes it (no later FAIL gate line of that name)"""
     gates = CLOSURE.get("gates", {})
+    die = canonical_die(die)
     for name, key in FROZEN_DIE.items():
         g = gates.get(name)
         if key == die and g and g.get("frozen"):
@@ -979,8 +997,9 @@ def path_gate_hold(r):
 
 
 def plan_delta_hold(r):
-    did = CLOSURE.get("delta", {}).get((r.get("die"), r.get("type"))) or \
-        CLOSURE.get("delta", {}).get((r.get("die"), _base_type(r.get("type"))))
+    die = canonical_die(r.get("die"))
+    did = CLOSURE.get("delta", {}).get((die, r.get("type"))) or \
+        CLOSURE.get("delta", {}).get((die, _base_type(r.get("type"))))
     return (f"pending plan delta {did} in lanes/PLAN-DELTA.md touches {r.get('die')}/{r.get('type')} "
             f"(closure order rule 4: no kit run until the delta is CLOSED/MERGED/DROPPED)") if did else ""
 
@@ -1384,6 +1403,12 @@ def poll_running(st):
 
 def finish(st, j, c, client):
     cls, kind, reasons = classify(c, client)
+    if j.get("chain_required") and cls in ("SIGNED", "WAIT-PARENT"):
+        chain = c.get("chain") or {}
+        if (chain.get("started", 0) < j.get("started", 0) - 120
+                or chain.get("verdict") != "PASS" or chain.get("lec_verdict") != "EQUIVALENT"
+                or chain.get("lec_exit") != 0):
+            cls, kind, reasons = "STRUCTURAL", "routed-lec", "autopilot chain incomplete: " + str(chain.get("reason") or "missing current routed LEC")
     if client.get("orphan") and cls == "CRASH" and kind not in ("tool-segfault",):
         kind, reasons = "infra-orphan", client["msg"]
     j.update(cls=cls, kind=kind, reasons=reasons[:600], probe=c.get("probe_host"),
@@ -1615,6 +1640,9 @@ def tick(args):
     geom_text = read_coord("lanes/GEOM-REVIEW.md")
     global GEOM_TEXT
     GEOM_TEXT = geom_text
+    # Resolve explicit visual verdicts before promoting pending requests to measured checks.
+    # Resolve again after prepare to apply a later reviewer FAIL on an AUTO-GEOM result.
+    resolve_geom(rows, geom_text)
     AG.prepare(sys.modules[__name__], st, rows)
     resolve_geom(rows, geom_text)
     load_closure()

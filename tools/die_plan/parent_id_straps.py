@@ -12,7 +12,10 @@ with TIEHI/TIELO next to the pin (gate side: straps.py).
 """
 
 KV_ID_WIDTHS = {'strap_corner': 2, 'strap_hid': 2, 'strap_bsel': 2}
-PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6}
+# HEAD-BIND-4 10-27 (COORD ruling on HEAD-CORE-R13 ASK4): s81_head hd_tile position straps (row0 = the bundle's first
+# local vocab row, ten = 1 used / 0 dark tile), per-instance partition straps tied at the die top (plan id_straps)
+S81HD_ID_WIDTHS = {'strap_row0': 17, 'strap_ten': 1}
+PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS}
 ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', *PHYSICAL_ID_WIDTHS})
 
 
