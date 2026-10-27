@@ -127,6 +127,16 @@ class TestAdmissionBundle(unittest.TestCase):
             self.assertNotEqual(Path(second["preflight"]).parent,tools)
 
 
+class TestAdmissionFailure(Base):
+    def test_preflight_and_transport_failures_are_diagnosed_from_client_stdout(self):
+        for message, expected in (("ADMISSION_TOOLS FAIL: ssh transfer failed", ("CRASH","admission-tools")),
+                                  ("KIT_PREFLIGHT FAIL issues 1\n  - staged_tools: missing pins.json", ("STRUCTURAL","preflight"))):
+            client=self.ap.parse_client_log(message+"\not-run: RAN on epyc2 (unit x): exit 1\nAP_RC=1\n")
+            cls,kind,reason=self.ap.classify({},client)
+            self.assertEqual((cls,kind),expected)
+            self.assertIn(message.splitlines()[0],reason)
+
+
 class TestRoutedChainGate(Base):
     def test_proof_oom_is_distinct_and_never_retries_route(self):
         j = {"id": "chain", "die": "s81", "type": "t", "chain_required": True, "started": time.time()}
