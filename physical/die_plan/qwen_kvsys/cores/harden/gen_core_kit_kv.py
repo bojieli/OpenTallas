@@ -592,6 +592,15 @@ def preserve_head_relays(path):
     Path(path).write_text(text[:start] + body + text[end:])
 
 
+def face_control_skip_re(cj, clks, rsts):
+    """Exclude live AND unused clock pins from data-capture discovery."""
+    controls = sorted(set(clks + rsts + [
+        split_name(n)[0] for n, kind in cj["pin_class"].items()
+        if kind in ("clk", "clk_unused")
+    ]))
+    return "^(" + "|".join(re.escape(n) for n in controls) + r")(\[[0-9]+\])?$"
+
+
 def core_clocks_resets(cj):
     """(clock ports, reset ports) of a core RTL record, by the same rules main() uses for the SDC."""
     clks = list(dict.fromkeys(split_name(n)[0] for n, c in cj["pin_class"].items() if c == "clk"))
@@ -1266,7 +1275,7 @@ def main():
     # ck[0]/rst_n[0] even though the contract names its bus ck/rst_n.  Without
     # the suffix, face_flops treats CLK/reset loads as data and steals a real
     # data flop's anchor before its own port is visited.
-    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + r")(\[[0-9]+\])?$"
+    skip = face_control_skip_re(cj, clks, rsts)
     ff = (tool / "face_flops.tcl").read_text()
     ff, replacements = re.subn(r"^set ff_skip_re \{[^}\n]*\}",
                                lambda _: "set ff_skip_re {" + skip + "}", ff, flags=re.M)
