@@ -26,6 +26,12 @@ sha256sum preload.txt vecl/L*/kvn.hex > inputs.sha256
 /usr/bin/time -v stdbuf -oL $B +PHASE=boot +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$(cat $I/epoch.txt) +START_AFTER_SETUP \
   +FAR=1 +VECL=$O/$N/vecl +CTX=$CTX +POST=$POST +HBM_LOG=16 +HBM_PRELOAD=$O/$N/preload.txt +HB=20000 "$@" > sim.log 2> time.log
 rc=$?; echo $rc > exit
-echo "$N rc=$rc | $(grep -m1 '^KVSLICE_BOOT' sim.log | cut -c1-40) | $(grep -m1 '^FAR_SUMMARY' sim.log)"
+# TOK-QK-3 10-27: exit 0 is not a pass; VERDICT = kv_verdict.py (boot PASS + all 36 FAR_LAYER_SUMMARY PASS, fail-closed).
+# Negative controls (MUT_L01 / MUT_KSWAP / +MUT_* plusargs) must be CAUGHT, i.e. a FAIL verdict.
+X=pass; [ "${MUT_L01:-0}" != 0 ] && X=fail; [ -n "${MUT_KSWAP:-}" ] && X=fail
+case " $* " in *" +MUT_"*) X=fail ;; esac
+V=$(/usr/bin/python3 -I $H/kv_verdict.py . --layers 36 --expect $X); vrc=$?
+echo "$N rc=$rc VERDICT $V | $(grep -m1 '^KVSLICE_BOOT' sim.log | cut -c1-40) | $(grep -m1 '^FAR_SUMMARY' sim.log)"
 grep '^FAR_LAYER_SUMMARY' sim.log | awk '{p+=($NF=="PASS")} END{print "layers PASS " p "/" NR}'
-exit $rc
+[ $vrc = 0 ] || exit 3
+exit 0
