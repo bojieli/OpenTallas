@@ -1,0 +1,43 @@
+{
+ "config": "G450: top 16W x2 BUFx24 reach 450, no spine, 4W column trees, 8W fine mesh, 2x16W 54-um driver stubs, d1 sizing, 48 columns",
+ "C_pF": {
+  "fine_mesh_pF": 3361.082,
+  "top_tree_pF": 853.286,
+  "col_tree_and_driver_in_pF": 552.974,
+  "total_pF": 5513.478
+ },
+ "P_W": {
+  "TT": 3.242,
+  "FF": 3.923
+ },
+ "buffers_BUFx24_equiv": 44412.8,
+ "em_worst_driver": {
+  "xy": [
+   7741.44,
+   11226.24
+  ],
+  "C_cell_fF": 731.07,
+  "mult": 4.0,
+  "per_stub_width": {
+   "8w": {
+    "J_avg": 0.738,
+    "J_rms": 3.479,
+    "J_peak": 24.603
+   },
+   "16w": {
+    "J_avg": 0.369,
+    "J_rms": 1.74,
+    "J_peak": 12.302
+   },
+   "2x16w": {
+    "J_avg": 0.185,
+    "J_rms": 0.87,
+    "J_peak": 6.151
+   }
+  },
+  "used": "2x16w (54 um driver stubs)",
+  "r2_J_rms": 1.74
+ },
+ "em_method": "r2 budgets_em.json: I_avg=CVf, I_peak=CV/tr (tr 25 ps), I_rms=I_peak*sqrt(2 tr f/3), branch I/4, t 65 nm; budget J_avg,J_rms <= 1.0 MA/cm2 (declared)",
+ "note": "C = fd2d over-lower-plane (conservative) + BUFx24 input 2.3 fF/unit + ASSUMED internal 0.7 fF per drive unit; UNCHECKED"
+}
