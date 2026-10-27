@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.kv.astk_synth.v1",
+ "source": "ORFS synth (yosys, ASAP7 RVT TC), SYNTH_HIERARCHICAL=1 SYNTH_MINIMUM_KEEP_SIZE=0, SYNTH_MEMORY_MAX_BITS=32768 (as-built astk kits: flop FIFOs), on the KV-P6 G3 hub_Eo kit RTL (gen.py phys --kit-rtl, BINDER3 kv39 bound kv3_hub_Eo_part_bound); gold2 /srv/opentallas-scratch/claude/kv-p7-1023/hub/kv3_hub_Eo_hs, report synth_stat.txt (ot-run unit oth-ubuntu-359042-1792816311)",
+ "per_module": {
+  "qkd_astk_zn_head_p": {
+   "cells": 33906,
+   "std_area_um2": 4066.31826,
+   "count_per_astk": 1
+  },
+  "qkd_astk_zn": {
+   "cells": 33907,
+   "std_area_um2": 4086.045,
+   "count_per_astk": 3
+  },
+  "qkd_astk_ctl_s #(Z_STRIDE 4)": {
+   "cells": 16446,
+   "std_area_um2": 2222.89596,
+   "count_per_astk": 1
+  },
+  "qkd_astk_fault_join": {
+   "cells": 4,
+   "std_area_um2": 0.64152,
+   "count_per_astk": 1
+  }
+ },
+ "partition": {
+  "hub_Eo_hier_cells": 499604,
+  "hub_Eo_hier_area_um2": 67465.04,
+  "hub_Eo_flat_cells": 398674,
+  "glue_hier_cells": 195450,
+  "glue_flat_est_cells": 155965,
+  "note": "hierarchical counts exceed flat by 25% (no cross-boundary optimisation); glue = partition minus the 2 astk cores"
+ },
+ "cores": {
+  "EN": {
+   "cells": 152077,
+   "std_area_um2": 18548.0
+  },
+  "ES": {
+   "cells": 152077,
+   "std_area_um2": 18548.0
+  },
+  "WN": {
+   "cells": 152077,
+   "std_area_um2": 18548.0
+  },
+  "WS": {
+   "cells": 152077,
+   "std_area_um2": 18548.0
+  }
+ }
+}
