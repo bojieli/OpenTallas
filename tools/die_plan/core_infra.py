@@ -62,7 +62,7 @@ def buffer(cell, where):
     return cell
 
 
-def compile_slice(sl):
+def compile_slice(sl, kd=None):
     """Compile physical identities before a build; returns cells, FT ports/arcs, tree and bay assignments."""
     outline = sl["outline_um"]
     cells, ports, arcs, bays = [], [], [], []
@@ -314,6 +314,9 @@ def compile_slice(sl):
         raise InfraError("core clock entry must terminate on M5")
     if entry:
         xy(entry.get("xy_um"), "clock entry", outline)
+        if kd is not None:
+            import master_slice as MS
+            entry = dict(entry, xy_um=list(MS.snap_on_track(kd, entry["layer"], *entry["xy_um"])))
     pin_shapes = [(p["name"], p["xy_um"]) for p in ports]
     if entry:
         pin_shapes.append((clock_port, entry["xy_um"]))
@@ -428,8 +431,8 @@ def trunk_pg_clearance(sl, plan):
                 blocked_edges=len(bad), examples=bad[:10])
 
 
-def emit_tcl(sl):
-    plan = compile_slice(sl)
+def emit_tcl(sl, kd=None):
+    plan = compile_slice(sl, kd)
     tree = plan.get("core_tree")
     pgc = trunk_pg_clearance(sl, plan)
     if pgc["verdict"] not in ("PASS", "NOT APPLICABLE"):
@@ -695,7 +698,7 @@ def install(kd, sl):
     if sl.get("kind") not in ("core", "partition") or not sl.get("pushdown"):
         return False
     kd = Path(kd)
-    script = emit_tcl(sl)  # refuse incomplete plan BEFORE writing kit files
+    script = emit_tcl(sl, kd)  # refuse incomplete plan BEFORE writing kit files
     wrapper = None
     if sl.get("logic_module") is not None or sl.get("logic_ports") is not None:
         if not sl.get("logic_module") or not sl.get("logic_ports"):
@@ -704,7 +707,7 @@ def install(kd, sl):
     (kd / "master_core_infra.tcl").write_text(script)
     if wrapper is not None:
         (kd / "master_core_wrapper.v").write_text(wrapper)
-    plan = compile_slice(sl)
+    plan = compile_slice(sl, kd)
     (kd / "core_infra_plan.json").write_text(json.dumps(plan, indent=2) + "\n")
     if plan.get("core_tree"):
         # every core-kit generator chains it at PRE_CTS via kit_cts_hook (master_slice.plan_tree_cts); unused otherwise

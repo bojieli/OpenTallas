@@ -22,7 +22,8 @@ def so(verdict="NOT SIGNED", tt=5.0, ff=-3.0, fails=("hold_ff",), drc=0, pg="PAS
     return {"signoff": {"path": "/k/signoff/signoff.json", "verdict": verdict, "reasons": ["r"], "fails": list(fails),
                         "tt_wns": tt, "ff_wns": ff, "drc": drc, "odb": "/k/run/x/6_final.odb", "base": "/k/run/x",
                         "pg": pg},
-            "grt_overflow": 0}
+            "grt_overflow": 0, "chain": {"started": time.time(), "verdict": "PASS", "lec_verdict": "EQUIVALENT", "lec_exit": 0,
+                                          "lec_all_shown": True, "gates": {"setup_tt": "PASS", "routed_lec": "PASS"}}}
 
 
 class Base(unittest.TestCase):
@@ -36,6 +37,9 @@ class Base(unittest.TestCase):
         import autopilot
         self.ap = importlib.reload(autopilot)
         self.ap.DRY = False
+        self.ap.stage_admission_tools = lambda: dict(dir="/srv/opentallas-scratch2/claude/ap-tools/v1",
+            chain="/srv/opentallas-scratch2/claude/ap-tools/v1/signoff_chain.py",
+            preflight="/srv/opentallas-scratch2/claude/ap-tools/v1/die_plan/kit_preflight.py", sha256="tools-v1")
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -83,6 +87,90 @@ class TestQueue(Base):
         rows = self.ap.parse_queue(t)
         self.assertEqual(len(rows), 1)
         self.assertEqual(list(rows.values())[0]["geom"], "PASS")
+
+
+class TestAdmissionBundle(unittest.TestCase):
+    def test_cached_bundle_bootstrap_executes_its_checker_and_helpers(self):
+        import autopilot,base64,subprocess
+        ap=importlib.reload(autopilot);ap.DRY=False
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);tools=root/"source";tools.mkdir()
+            chain=root/"chain.py"
+            chain.write_text("import subprocess,sys\nassert sys.argv[1]=='--preflight'\nsubprocess.run([sys.executable,sys.argv[2]],check=True)\nprint('CHAIN_PASS')\n")
+            (tools/"helper.py").write_text("message='HELPER_PASS'\n")
+            (tools/"kit_preflight.py").write_text("from helper import message\nprint(message)\n")
+            bundle=ap.stage_admission_tools(chain,tools,root/"scratch")
+            bundle["source_host"]="not-used-for-cached-bundle"
+            meta=base64.b64encode(json.dumps(bundle).encode()).decode()
+            result=subprocess.run([sys.executable,"-c",ap.ADMISSION_BOOTSTRAP,meta],capture_output=True,text=True,check=True)
+            self.assertIn("ADMISSION_TOOLS READY",result.stdout)
+            self.assertIn("HELPER_PASS",result.stdout)
+            self.assertIn("CHAIN_PASS",result.stdout)
+
+    def test_source_changes_create_new_immutable_own_scratch_bundle(self):
+        import autopilot
+        ap = importlib.reload(autopilot)
+        ap.DRY = False
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            chain=root/"chain.py"; chain.write_text("# chain")
+            tools=root/"source"; tools.mkdir()
+            (tools/"kit_preflight.py").write_text("# checker")
+            (tools/"helper.py").write_text("# helper1")
+            first=ap.stage_admission_tools(chain, tools, root/"own-scratch")
+            before=Path(first["dir"])/"die_plan/helper.py"
+            (tools/"helper.py").write_text("# helper2")
+            second=ap.stage_admission_tools(chain, tools, root/"own-scratch")
+            self.assertNotEqual(first["dir"],second["dir"])
+            self.assertEqual(before.read_text(),"# helper1")
+            self.assertEqual((tools/"helper.py").read_text(),"# helper2")
+            self.assertEqual(Path(second["preflight"]).read_text(),"# checker")
+            self.assertNotEqual(Path(second["preflight"]).parent,tools)
+
+
+class TestAdmissionFailure(Base):
+    def test_preflight_and_transport_failures_are_diagnosed_from_client_stdout(self):
+        for message, expected in (("ADMISSION_TOOLS FAIL: ssh transfer failed", ("CRASH","admission-tools")),
+                                  ("KIT_PREFLIGHT FAIL issues 1\n  - staged_tools: missing pins.json", ("STRUCTURAL","preflight"))):
+            client=self.ap.parse_client_log(message+"\not-run: RAN on epyc2 (unit x): exit 1\nAP_RC=1\n")
+            cls,kind,reason=self.ap.classify({},client)
+            self.assertEqual((cls,kind),expected)
+            self.assertIn(message.splitlines()[0],reason)
+
+
+class TestRoutedChainGate(Base):
+    def test_proof_oom_is_distinct_and_never_retries_route(self):
+        j = {"id": "chain", "die": "s81", "type": "t", "chain_required": True, "started": time.time()}
+        c = so("SIGNED", 3, 2, ())
+        c["chain"] = {"started": time.time(), "verdict": "LEC_OOM", "reason": "24GB proof stopped; route retained"}
+        self.ap.after_class = lambda st, j: None
+        self.ap.submit = lambda *a, **kw: self.fail("proof OOM must not reroute")
+        self.ap.finish({"jobs": {}}, j, c, {"exit": 137})
+        self.assertEqual((j["status"], j["kind"]), ("CRASH", "proof-oom"))
+
+    def test_new_proof_only_receipt_resumes_publication(self):
+        j = {"id": "chain", "path": "/kit", "status": "DONE-CRASH", "kind": "proof-oom", "finished": 10}
+        c = so("SIGNED", 3, 2, ())
+        c["chain"]["started"] = 20
+        seen = []
+        self.ap.failure_resolutions = lambda: {}
+        self.ap.hub_procs = lambda path: []
+        self.ap.probe_job = lambda job: c
+        self.ap.finish = lambda st, job, probe, client: seen.append(client)
+        self.ap.retry_pending({"jobs": {"chain": j}})
+        self.assertEqual(seen, [{"proof_only_resume": True}])
+
+    def test_signed_record_without_current_equivalence_is_not_archived(self):
+        for proof in (None, {"started": time.time(), "verdict": "PASS", "lec_verdict": "NOT EQUIVALENT", "lec_exit": 0},
+                      {"started": 1, "verdict": "PASS", "lec_verdict": "EQUIVALENT", "lec_exit": 0}):
+            j = {"id": "chain", "die": "s81", "type": "t", "chain_required": True, "started": time.time()}
+            c = so("SIGNED", 3, 2, ())
+            c["chain"] = proof
+            self.ap.after_class = lambda st, j: None
+            self.ap.finish({"jobs": {}}, j, c, {"exit": 0})
+            self.assertEqual(j["status"], "STRUCTURAL")
+            self.assertEqual(j["kind"], "routed-lec")
+            self.assertEqual(c["signoff"]["verdict"], "SIGNED")
 
 
 class TestMissingAdopted(Base):
@@ -233,7 +321,13 @@ class FakeHosts:
         if code is self.ap.PROBE_DELETE:
             return {"deleted": [args["kit"] + "/run/results"], "errors": []}
         if code is self.ap.PROBE_ARCHIVE:
-            return {"files": 12, "errors": []}
+            self.archived = args
+            return {"files": 12, "errors": [], "view": args["dest"] + "/view/" + str((args.get("view") or {}).get("module"))}
+        if code is self.ap.PROBE_VIEW_READ:
+            return k.get("view_read", {"module": "slice_station", "core": {"module": "slice_station",
+                    "outline_um": [10.0, 8.0]}, "pins": {"pins": [{"name": "a", "x": 0.0, "y": 1.0, "layer": "M5"}]},
+                    "files": {"slice_station.lef": "/k/x.lef", "slice_station_tt.lib": "/k/tt.lib",
+                              "slice_station_ff.lib": "/k/ff.lib"}})
         if code is self.ap.PROBE_MD5CHECK:
             return {"ok": True}
         return {"error": "unknown probe"}
@@ -336,6 +430,18 @@ class TestTick(TickBase):
         self.assertEqual(len(self.f.launched), 1)
         self.assertEqual(list(jobs.values())[0]["status"], "RUNNING")
 
+    def test_chain_dispatch_is_self_contained_for_existing_data_host(self):
+        self.queue(ROW)
+        self.tick()
+        argv=self.f.launched[0][1]
+        command=argv[argv.index("--")+1:]
+        self.assertEqual(command[:2],["python3","-c"])
+        # The portable bootstrap now fetches the immutable chain on the chosen worker.
+        self.assertIn("ADMISSION_TOOLS READY",command[2])
+        self.assertIn("os.execv",command[2])
+        compile(command[2],"<inline-chain>","exec")
+        self.assertFalse(any(p.endswith("/signoff_chain.py") for p in argv))
+
     def test_signed_archived_once(self):
         self.queue(ROW)
         self.tick()
@@ -349,7 +455,7 @@ class TestTick(TickBase):
         self.assertEqual(len(rows), 2)                   # header + one row
         self.assertNotIn(path, [c[2]["kit"] for c in self.f.calls if c[1] == self.ap.PROBE_DELETE[:40]])
 
-    def test_near_miss_keeps_checkpoint_until_diagnosed(self):
+    def test_near_miss_rendered_then_stopped_and_deleted(self):
         self.queue(ROW)
         self.tick()
         path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
@@ -372,7 +478,89 @@ class TestTick(TickBase):
         self.assertIn("/r/paths.png", rv)
         self.assertIn("/r/paths_ff_hold.txt", rv)
         self.assertEqual(len(self.f.launched), 2)        # the run + the render, never an ECO / re-route
+        # AUTOPILOT-SIGNOFF-2: a chain job's failed run data is deleted once the review bundle exists (logs kept)
+        self.assertTrue(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
+        self.assertTrue(j["data_deleted"])
+        self.tick()
+        self.assertEqual(len(self.f.launched), 2)        # never retried
+
+    def test_signed_view_published_with_canon_pins_and_gates(self):
+        self.queue(ROW)
+        self.tick()
+        path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
+        self.f.kits[path] = {"classify": so("SIGNED", 3.0, 2.0, ()), "mtime": 9e9}
+        self.finish_client(self.f.launched[0][0], "ot-run: RAN on epyc2: exit 0\nAP_RC=0\n")
+        self.assertEqual(list(self.tick().values())[0]["status"], "ARCHIVED")
+        v = self.f.archived["view"]
+        sys.path.insert(0, str(HERE.parent / "die_plan"))
+        import die_sta_related as DSR
+        doc = {"pins": [{"name": "a", "x": 0.0, "y": 1.0, "layer": "M5"}]}
+        self.assertEqual(v["provenance"]["kit"]["pins_canon_sha256"], DSR.canon_sha256(DSR.canon_pins(doc, [10.0, 8.0])))
+        self.assertEqual(v["provenance"]["views_status"], "signoff")
+        self.assertEqual(v["gates"]["routed_lec_all_shown"], True)
+        self.assertEqual(v["gates"]["gates"]["routed_lec"], "PASS")
+
+    def test_kit_pin_list_with_bus_bit_is_canonicalised(self):
+        doc = self.ap.pins_doc([{"bus": "addr", "bit": 0, "layer": "M4", "x": 0.042, "y": 1.0}, {"bus": "ck", "bit": None,
+                                "layer": "M5", "x": 1.0, "y": 0.0}])
+        self.assertEqual([p["name"] for p in doc["pins"]], ["addr[0]", "ck"])
+        self.assertEqual(len(self.ap.pins_canon(doc, [2.0, 2.0])), 64)
+
+    def test_chain_without_all_shown_is_not_archived(self):
+        self.queue(ROW)
+        self.tick()
+        path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
+        c = so("SIGNED", 3.0, 2.0, ())
+        c["chain"]["lec_all_shown"] = None
+        self.f.kits[path] = {"classify": c, "mtime": 9e9}
+        self.finish_client(self.f.launched[0][0], "ot-run: RAN on epyc2: exit 0\nAP_RC=0\n")
+        j = list(self.tick().values())[0]
+        self.assertNotIn(j["status"], ("ARCHIVED", "SIGNED"))
+        self.assertEqual(j["kind"], "routed-lec")
+
+    def test_failure_notice_goes_to_lane_and_coord_queue(self):
+        lines = []
+        self.ap.coord_append = lambda rel, line: lines.append((rel, line))
+        self.queue(ROW)
+        self.tick()
+        path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
+        self.f.kits[path] = {"classify": {"FAIL_POSTCTS": "FF structural hold gate"}, "mtime": 9e9}
+        self.finish_client(self.f.launched[0][0], "ot-run: RAN on epyc2: exit 1\nAP_RC=1\n")
+        j = list(self.tick().values())[0]
+        self.assertEqual(j["status"], "DONE-STRUCTURAL")
+        self.assertEqual([r for r, _ in lines], ["lanes/S81.md", "lanes/COORD-REVIEW-QUEUE.md"])
+        self.assertIn("FAILED", lines[0][1])
+        self.assertTrue(j["data_deleted"])
+
+    def test_job_from_earlier_chain_is_never_demoted_or_deleted(self):
+        lines = []
+        self.ap.coord_append = lambda rel, line: lines.append((rel, line))
+        self.queue(ROW)
+        self.tick()
+        st = json.loads((Path(self.tmp.name) / "state.json").read_text())
+        (j,) = st["jobs"].values()
+        self.assertEqual(j["chain_version"], 2)
+        j.pop("chain_version")                           # launched before AUTOPILOT-SIGNOFF-2
+        (Path(self.tmp.name) / "state.json").write_text(json.dumps(st))
+        path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
+        c = so("SIGNED", 3.0, 2.0, ())
+        c["chain"].pop("lec_all_shown")
+        self.f.kits[path] = {"classify": c, "mtime": 9e9}
+        self.finish_client(self.f.launched[0][0], "ot-run: RAN on epyc2: exit 0\nAP_RC=0\n")
+        j = list(self.tick().values())[0]
+        self.assertEqual(j["status"], "ARCHIVED")
+        self.assertEqual(self.f.archived["view"], {})
+        self.assertEqual(lines, [])
         self.assertFalse(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
+
+    def test_admission_priority_kv_qc_head_s81_hbm(self):
+        rows = []
+        for i, die in enumerate(("hbm", "s81", "s81_head", "qwen_compute", "kv")):
+            rows.append([die, f"t{i}", KIT + f"_{i}"] + ROW[3:])
+        self.queue(*rows)
+        self.tick()
+        order = [a[a.index("--dir") + 1].rsplit("_", 1)[1] for _, a in self.f.launched]
+        self.assertEqual(order, ["4", "3", "2", "1", "0"])
 
     def test_infra_oom_resubmits_once_with_more_mem_then_marks(self):
         self.queue(ROW)
@@ -403,7 +591,7 @@ class TestTick(TickBase):
         self.queue(ROW + ["route"])
         self.tick()
         argv = self.f.launched[0][1]
-        self.assertEqual(argv[argv.index("--") + 4], "finish")
+        self.assertEqual(argv[argv.index("--") + 7], "finish")
 
     def test_segfault_is_marked_not_resubmitted(self):
         self.queue(ROW)
@@ -1255,7 +1443,7 @@ class TestCrashTriage1025(unittest.TestCase):
                '  python3 "$K/signoff.py" run --run-dir "$K/run"\nfi\n')
         p = self.probe_kit({"config.mk": "export ADDITIONAL_LEFS = /work/macros/a.lef\n", "signoff.py": so,
                             "sdc_lint.py": "", "run_kit_hbm.sh": hbm})
-        self.assertEqual(p["signoff_missing"], ["face_guard.py", "pair_skew.tcl"])
+        self.assertEqual(p["signoff_missing"], ["face_guard.py", "pair_skew.tcl", "lec.py"])
         self.assertEqual(p["signoff_goals"], ["finish", "post"])
         self.assertTrue(p["gds_gap"])
         self.assertFalse(p["route_runs_finish"])

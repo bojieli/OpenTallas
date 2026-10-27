@@ -39,6 +39,9 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   core_channels (G0C) real macro crossing demand <= 0.6 and legal pin escape; fixed-width checks diagnostic
               (core_macros.json; min_channel_um default 10.8) and plan channel demand <= 0.6 track use
   G0C (--completeness): hard_cores, core_faces, complete, clock_entry_macro; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
+  clock_mesh  (--clock-build DIR, repeatable; COORD PATH-S81-PD12 ruling A 10-27) the die clock mesh build in DIR is
+              ONE connected net: an M8-M9 VIA89 at every strap crossing, emitted (mesh.json meta.mesh_vias) and in the
+              routed DB (OT_MESH_VIAS of combo_<corner>.log); ERROR in G0 and G0C (die_clock_mesh.mesh_via_findings)
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
 """
@@ -1304,6 +1307,121 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
     return out
 
 
+# ------------------------------------------------------------------------- core pin face form + island ft rows
+# CLOCK-KV hm_r26q3 (COORD 10-27): two plan-view rules every hardened-core kit relies on.
+#  core_pin_form: a face of one pin view uses ONE pin form: edge (pin centre on the outline, d = 0) or centre
+#    (pin centre inside, 0 < d < 0.5 um, the kit's half-pin form).  A mixed face (kv3_head_eighth_e1 N:
+#    strap_bsel[0..1] at y = 216.000 beside the 215.904 bus pins) is an ERROR.
+#  island_ft_rows: every island_ft arc rect of every pin view (12.2a1 in-core clock islands) sits on a real
+#    std-cell row and site of the kit core area (CORE_AREA = outline inset 4.32, rows 0.27, sites 0.054) in the
+#    view's own frame AND in its R0/MX/MY/R180 images, is n x cell-width by one row, is one of the plan
+#    clock.mesh.core_islands rects of its module, and its ports are interior M5 pins on the M5 tracks on the row.
+CORE_INSET_UM, CORE_ROW_UM, CORE_SITE_UM = 4.32, 0.27, 0.054
+CORE_M5 = dict(offset_um=0.024, pitch_um=0.048)
+FT_CELL_W = {"BUFx24_ASAP7_75t_R": 1.62}
+PIN_FORM_D_MAX = 0.5
+
+
+def _pin_views(P, plan_dir):
+    """{pins_file: (module, (w, h), doc)} of every hard core that names a pins_file (one entry per file)."""
+    out = {}
+    for t in P.types.values():
+        for hc in t.get("hard_cores", []):
+            pf = hc.get("pins_file")
+            if pf and pf not in out:
+                try:
+                    doc = json.loads((Path(plan_dir or ".") / pf).read_text())
+                except (OSError, ValueError):
+                    continue          # check_taps_cores reports unreadable pin files
+                out[pf] = (hc.get("module"), tuple(hc["outline_um"]), doc if isinstance(doc, dict) else {"pins": doc})
+    return out
+
+
+def _img_rect(o, w, h, r):
+    x0, y0, x1, y1 = r
+    xs = (x0, x1) if o in ("R0", "MX") else (w - x1, w - x0)
+    ys = (y0, y1) if o in ("R0", "MY") else (h - y1, h - y0)
+    return (xs[0], ys[0], xs[1], ys[1])
+
+
+def check_core_pin_forms(P, R, plan_dir=None, views=None):
+    out = dict(views=0, faces=0, mixed=0)
+    for pf, (mod, (w, h), doc) in sorted((views or _pin_views(P, plan_dir)).items()):
+        out["views"] += 1
+        forms = {}
+        for q in doc.get("pins", []):
+            x, y = q["x"], q["y"]
+            d, face = min((h - y, "N"), (y, "S"), (w - x, "E"), (x, "W"))
+            if d < -EPS or d >= PIN_FORM_D_MAX:
+                continue
+            form = "edge" if d <= 1e-4 else "centre"
+            forms.setdefault(face, {}).setdefault(form, []).append(q.get("name"))
+        for face, fm in sorted(forms.items()):
+            out["faces"] += 1
+            if len(fm) == 1 and "edge" in fm and any("centre" in f2 for f2 in forms.values()) \
+                    and not all(str(n).startswith("strap_") for n in fm["edge"]):
+                # data-pin faces of mixed-form views (qkd_hr_* edge N/S + centre W): kitted as is -> WARNING only
+                R.warn("core_pin_form", f"{pf} ({mod}) face {face}: {len(fm['edge'])} edge-form pins in a view with "
+                       f"centre-form faces")
+                continue
+            if len(fm) == 1 and "edge" in fm and any("centre" in f2 for f2 in forms.values()):
+                # COORD 10-27 (hm_r26q4): one VIEW uses one form.  In a centre-form view (0 < d < 0.5 um, e.g. 0.096 /
+                # 215.904, what the kits emit) a face whose only pins are edge form (x=0 / y=h; e.g. the e0/e2/e6
+                # strap faces) breaks PREFLIGHT pins_canonical against the kits.  All-edge views (qkd_hr_*) stay legal.
+                out["edge_only"] = out.get("edge_only", 0) + 1
+                R.err("core_pin_form", f"{pf} ({mod}) face {face}: {len(fm['edge'])} edge-form pins and no centre-form "
+                      f"pin; plan pins use the centre form ({', '.join(fm['edge'][:6])})")
+                continue
+            if len(fm) > 1:
+                out["mixed"] += 1
+                few = min(fm, key=lambda k: len(fm[k]))
+                R.err("core_pin_form", f"{pf} ({mod}) face {face}: {len(fm['edge'])} edge-form + {len(fm['centre'])} "
+                      f"centre-form pins; one face uses one form (minority {few}: {', '.join(fm[few][:6])})")
+    return out
+
+
+def check_island_ft_rows(P, R, plan_dir=None, views=None):
+    out = dict(views=0, arcs=0, bad=0)
+    ci = (P.clock.get("mesh") or {}).get("core_islands") or {}
+    for pf, (mod, (w, h), doc) in sorted((views or _pin_views(P, plan_dir)).items()):
+        isl = doc.get("island_ft")
+        if not isl:
+            continue
+        out["views"] += 1
+        plan_rects = [tuple(round(v, 4) for v in r) for r in (ci.get(mod) or {}).get("rects_um", [])]
+        pins = {q["name"]: q for q in doc.get("pins", [])}
+        x0c, y0c, x1c, y1c = CORE_INSET_UM, CORE_INSET_UM, w - CORE_INSET_UM, h - CORE_INSET_UM
+        for a in isl.get("arcs") or []:
+            out["arcs"] += 1
+            bad = []
+            r = tuple(float(v) for v in a["rect_um"])
+            n, cw = a.get("cells"), FT_CELL_W.get(a.get("master"))
+            if cw is None or not isinstance(n, int) or abs((r[2] - r[0]) - n * cw) > 1e-4 \
+                    or abs((r[3] - r[1]) - CORE_ROW_UM) > 1e-4:
+                bad.append(f"not {n} x {a.get('master')} by one row")
+            for o in ("R0", "MX", "MY", "R180"):
+                q = _img_rect(o, w, h, r)
+                if q[0] < x0c - EPS or q[1] < y0c - EPS or q[2] > x1c + EPS or q[3] > y1c + EPS:
+                    bad.append(f"{o} image {fmt_rect(q)} outside the core area"); continue
+                if not on_grid(round(q[1] - y0c, 6), CORE_ROW_UM) or not on_grid(round(q[0] - x0c, 6), CORE_SITE_UM):
+                    bad.append(f"{o} image {fmt_rect(q)} off the std row/site grid")
+            if cw:
+                cells = [tuple(round(v, 4) for v in (r[0] + j * cw, r[1], r[0] + (j + 1) * cw, r[3]))
+                         for j in range(n or 0)]
+                if plan_rects and not all(c in plan_rects for c in cells):
+                    bad.append(f"cells {cells} not in clock.mesh.core_islands.{mod}.rects_um")
+            for nm in (a.get("source"), a.get("sink")):
+                p = pins.get(nm)
+                if p is None:
+                    bad.append(f"port {nm} missing"); continue
+                if p["layer"] != "M5" or not on_track(p["x"], CORE_M5) or not (r[1] - EPS <= p["y"] <= r[3] + EPS):
+                    bad.append(f"port {nm} {p['layer']} ({p['x']:g},{p['y']:g}) not an M5-track pin on the island row")
+            if bad:
+                out["bad"] += 1
+                R.err("island_ft_rows", f"{pf} ({mod}) island_ft {a.get('source')} rect {fmt_rect(r)}: " + "; ".join(bad))
+    return out
+
+
 # ------------------------------------------------------------------------------------- hard-core face rule
 _NORMAL = dict(N=(0.0, 1.0), S=(0.0, -1.0), E=(1.0, 0.0), W=(-1.0, 0.0))
 FACE_AWAY_COS = -0.1     # a core port whose pins' mean best cos(face normal, direction to a partner) is below this
@@ -1826,6 +1944,26 @@ def check_r8(P, R, plan_dir=None, groups=None, landing=None):
 
 
 # ------------------------------------------------------------------------------------------------------- run
+def check_clock_mesh(R, builds):
+    """--clock-build DIRs: fail-closed mesh continuity (die_clock_mesh.mesh_via_findings); a plain G0 ERROR."""
+    import die_clock_mesh as DCM
+    out = []
+    for b in builds or []:
+        p = Path(b) / "mesh.json"
+        if not p.is_file():
+            R.err("clock_mesh", f"--clock-build {b}: no mesh.json")
+            out.append(dict(build=str(b), continuous=False, findings=["no mesh.json"]))
+            continue
+        M = json.loads(p.read_text())
+        f_ = DCM.mesh_via_findings(M, b)
+        for m_ in f_:
+            R.err("clock_mesh", f"{b}: {m_}")
+        out.append(dict(build=str(b), continuous=not f_, crossings={str(g["k"]): DCM.mesh_crossings(M, g)
+                                                                     for g in DCM.mesh_regions(M)},
+                        emitted=M["meta"].get("mesh_vias"), routed=DCM.routed_mesh_vias(b)[0], findings=f_))
+    return out
+
+
 def g0c_summary(P, R):
     """per partition type: G0C findings by check; types with none are G3-eligible (as far as the plan goes)."""
     by = {tn: defaultdict(int) for tn in P.types}
@@ -1841,7 +1979,7 @@ def g0c_summary(P, R):
 
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
-        core_macros=None):
+        core_macros=None, clock_builds=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -1859,9 +1997,18 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     P = S.Plan(raw, Path(plan_dir) / "die_plan.json" if plan_dir else None)
     summ = dict(die=P.name, partitions=len(P.parts), types=len(P.types), ports=len(P.ports), lanes=len(P.lanes),
                 bits=sum(p["width"] for p in P.ports.values()))
+    if any(t.get("infra_ports") for t in P.types.values()):
+        import infra_rtl as IR
+        try:
+            IR.die_lines(P)
+        except (ValueError, KeyError, TypeError) as ex:
+            R.err("infrastructure", str(ex))
     summ["types"] = check_types(P, R)
     summ["taps_cores"] = check_taps_cores(P, R, plan_dir, evidence)
     summ["core_faces"] = check_core_faces(P, R, plan_dir, core_conns)
+    _views = _pin_views(P, plan_dir)
+    summ["core_pin_form"] = check_core_pin_forms(P, R, plan_dir, _views)
+    summ["island_ft_rows"] = check_island_ft_rows(P, R, plan_dir, _views)
     summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()),
                                           side=load_core_conns(plan_dir, core_conns))
     summ["g0c"] = g0c_summary(P, R)
@@ -1914,6 +2061,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["xdie_counts"] = {c: sum(1 for i in R.items if i["check"] == c and i.get("g0c")) for c in G0C_CHECKS}
     import census_cov
     summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
+    if clock_builds:
+        summ["clock_mesh"] = check_clock_mesh(R, clock_builds)
     if png:
         import render
         render.render(P, geo, R, png)
@@ -1938,13 +2087,16 @@ def main(argv=None):
                          "summary in summary.g0c (types with 0 findings = G3-eligible)")
     ap.add_argument("--core-conns", help="hard-core connectivity sidecar (default PLANDIR/core_conns.json)")
     ap.add_argument("--core-macros", help="hard-core macro sidecar for clock_entry_macro (default PLANDIR/core_macros.json)")
+    ap.add_argument("--clock-build", action="append", default=[],
+                    help="die clock mesh build dir (die_clock_mesh build/combo); repeatable: ERROR unless the mesh is one "
+                         "connected net (VIA89 at every strap crossing, emitted + routed DB)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
-                  completeness=a.completeness, core_macros=a.core_macros)
+                  completeness=a.completeness, core_macros=a.core_macros, clock_builds=a.clock_build)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)

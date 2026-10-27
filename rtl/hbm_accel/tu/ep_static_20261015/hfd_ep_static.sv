@@ -111,7 +111,7 @@ module ot_hep_rx_gbx #(parameter integer MUT = 0) (
     (* keep *) reg [NSL*4-1:0] oh;      // per slice: phase 1..4 one-hot (phase 0 = all zero)
     reg [612:0] slot;
     reg [2:0] ph_n; reg lk_n;
-    integer s, j;
+    integer s, j, k;
     always @(*) begin
         for (j = 0; j < 613; j = j + 1) begin
             s = j / SL;
@@ -149,7 +149,7 @@ module ot_hep_rx_gbx #(parameter integer MUT = 0) (
             end
         end
     always @(posedge clk) begin
-        for (j = 0; j < 510; j = j + 1) if ((MUT == 2) ? 1'b1 : data_r[j / SL]) pg[j] <= gcur[j];
+        for (k = 0; k < 510; k = k + 1) if ((MUT == 2) ? 1'b1 : data_r[k / SL]) pg[k] <= gcur[k];
         f_d <= slot[612:1];
     end
 endmodule

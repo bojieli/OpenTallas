@@ -704,6 +704,38 @@ def _taps(P, tn):
 _S_TAP_GRID = S.tap_grid
 
 
+def consumer_taps(P, tn):
+    """Reset consumers independent of clock entry pins (opt-in type.reset.local_taps_um).
+
+    Clock tap indices stay first and unchanged. Extra local reset/START terminal
+    relays share the type's equal release depth; they add no clock ports.
+    """
+    taps = _taps(P, tn)
+    extra = P.types[tn].get("reset", {}).get("local_taps_um", [])
+    if extra and not (wavefront(P) or pipelined(P)):
+        raise ResetError(f"type {tn}: reset.local_taps_um needs synchronous wavefront/pipelined reset")
+    w, h = P.types[tn]["outline_um"]
+    boxes = blockages(P.types[tn])
+    for j, xy in enumerate(extra):
+        x, y = map(float, xy)
+        if not (CLEAR_UM <= x <= w-CLEAR_UM and CLEAR_UM <= y <= h-CLEAR_UM):
+            raise ResetError(f"type {tn}: local reset tap {xy} is outside the legal interior")
+        if not _free((x, y), boxes, (CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM)):
+            raise ResetError(f"type {tn}: local reset tap {xy} is blocked")
+        if any(abs(x-a) < 1e-6 and abs(y-b) < 1e-6 for _, a, b in taps):
+            raise ResetError(f"type {tn}: duplicate local reset tap {xy}")
+        taps.append((f"reset_local_{j}", x, y))
+    return taps
+
+
+def consumer_count(T):
+    if "n_reset_consumers" in T:
+        return T["n_reset_consumers"]
+    if "n_clock_taps" in T:
+        return T["n_clock_taps"]
+    return len(T["taps"])
+
+
 def _plan_taps(P, tn):
     """the taps the wavefront SITING reads (face / corner / start sites, depth estimate): for a density type with
     clock.control_sinks these are the planning taps without the control-pin sinks (taps.density_taps control=False),
@@ -740,14 +772,17 @@ def _type_tree0(P, tn, depth, reach):
     if ("topo", tn, reach) not in cache:
         t = P.types[tn]
         w, h = t["outline_um"]
-        cache[("topo", tn, reach)] = topology(_taps(P, tn), reset_pin(P, tn), reach=reach,
+        cache[("topo", tn, reach)] = topology(consumer_taps(P, tn), reset_pin(P, tn), reach=reach,
                                               boxes=blockages(t), box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM,
                                                                            h - CLEAR_UM), walls=walls(P, tn),
                                               avoid_cores=bool(P.reset.get("relay_avoid_cores")))
     t = P.types[tn]; w, h = t["outline_um"]
-    return assign(cache[("topo", tn, reach)], depth,
-                  pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
-                  box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
+    T = assign(cache[("topo", tn, reach)], depth,
+               pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
+               box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
+    if t.get("reset", {}).get("local_taps_um"):
+        T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(consumer_taps(P, tn)), local_reset_taps=True)
+    return T
 
 
 def part_depth(P):
@@ -767,6 +802,7 @@ def for_type(P, tn, reach=None):
     Pipelined plans: entry 'relayed', depth = the plan contract K.  Other plans (kit_rsync interim): entry 'sync', the
     type's own depth."""
     reach = float(reach or relay_um(P))
+    boot_buses, boot_contents = bootstrap_consumers(P, tn)
     if wavefront(P):
         if P.types[tn].get("hard"):
             raise ResetError(f"type {tn}: hard partitions carry no generated reset tree")
@@ -786,7 +822,7 @@ def for_type(P, tn, reach=None):
             bad = sorted(set(core_roles) - known)
             if bad:
                 raise ResetError(f"type {tn}: reset.core_start_roles names {bad}, not hard-core reset targets {sorted(known)}")
-            nck = T.get("n_clock_taps", len(T["taps"]))
+            nck = consumer_count(T)
             T["start_role"] = role
             T["tap_roles"] = {i: role for i in range(nck)}
             for c in T.get("core_resets", []):
@@ -794,6 +830,9 @@ def for_type(P, tn, reach=None):
             # BOOTSTRAP types publish ONE registered local START tap (start_t<leaf tap>, = what a MISSION tap would be:
             # registered reset AND run at the same site/depth) for the contents' explicit mission-admission input
             T["start_tap"] = leaf_tap(P, tn) if role == "bootstrap" else None
+            if boot_buses or boot_contents:
+                T.update(bootstrap_buses=boot_buses, bootstrap_contents=boot_contents,
+                         bootstrap_taps=list(range(nck)))
         return T
     if pipelined(P):
         K = part_depth(P)
@@ -995,6 +1034,7 @@ def _est_depth(P, tn, xy):
     """planning estimate of a type's relay depth from an entry at xy (reach-limited hops to the farthest tap / site)."""
     pr = relay_um(P) - MARGIN_UM
     pts = [(x, y) for _, x, y in _plan_taps(P, tn)] + [s["xy"] for s in face_sites(P, tn)]
+    pts += [tuple(p) for p in P.types[tn].get("reset", {}).get("local_taps_um", [])]
     return max(1, max(math.ceil(_man(xy, p) / pr) for p in pts))
 
 
@@ -1219,6 +1259,32 @@ def _start_sites(P, tn):
 START_ROLES = ("bootstrap", "mission")
 
 
+def bootstrap_consumers(P, tn):
+    """Explicit raw-reset transports inside an otherwise mission-gated type.
+
+    These are equal-depth copies of delivered reset, never raw die reset. The
+    selected content must have a declared reset binding; other content and all
+    unselected boundary/station consumers retain their existing mission role.
+    """
+    t = P.types[tn]; r = t.get('reset', {})
+    buses = list(r.get('bootstrap_buses', []))
+    contents = list(r.get('bootstrap_contents', []))
+    if not buses and not contents:
+        return [], []
+    if not start_broadcast(P) or t.get('hard'):
+        raise ResetError(f'type {tn}: bootstrap consumers need a soft START-broadcast wrapper')
+    names = {b['name'] for b in t.get('buses', [])}
+    names |= {s['name'] + suffix for s in t.get('ft_slots', []) for suffix in ('_i', '_o')}
+    bad = sorted(set(buses)-names)
+    cs = {c['inst']: c for c in t.get('contents', [])}
+    if bad or set(contents)-set(cs):
+        raise ResetError(f'type {tn}: unknown bootstrap consumers buses={bad}, contents={sorted(set(contents)-set(cs))}')
+    for inst in contents:
+        if not any(v in ('rst_n', 'rst') for v in cs[inst].get('bind', {}).values()):
+            raise ResetError(f'type {tn}: bootstrap content {inst} has no declared reset binding')
+    return sorted(set(buses)), sorted(set(contents))
+
+
 def start_roles(P, tn):
     """(type role, {hard-core inst: role}) of a START-broadcast plan (reset fix 10-25, KV/QC bootstrap deadlock).
     Declared explicitly in the plan type's reset block, never inferred from names:
@@ -1321,7 +1387,7 @@ def _wf_type_tree(P, tn):
     if key not in cache:
         t = P.types[tn]
         w, h = t["outline_um"]
-        taps = _taps(P, tn)
+        taps = consumer_taps(P, tn)
         outs = out_pins(P, tn)
         core_rst = core_reset_targets(P, tn)
         pts = list(taps) + [(f"o{k}", x, y) for k, (_, x, y) in enumerate(outs)]
@@ -1333,7 +1399,8 @@ def _wf_type_tree(P, tn):
                         avoid_cores=bool(P.reset.get("relay_avoid_cores")))
         T = assign(topo, None, pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
                    box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
-        T.update(n_clock_taps=len(taps), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
+        T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(taps),
+                 local_reset_taps=bool(t.get("reset", {}).get("local_taps_um")), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
         cache[key] = T
     import copy
     return copy.deepcopy(cache[key])
@@ -1354,9 +1421,16 @@ def wf_plan(P):
                          for o in out_pins(P, tn)], depth_K=T["depth"], entry=T["entry"],
                          entry_stages=entry_stages(T), release_after_pin=release_clocks(T), relays=len(T["relays"]),
                          max_hop_um=T["max_hop_um"], core_resets=T.get("core_resets", []))
+        if T.get("local_reset_taps"):
+            types[tn].update(local_taps_um=P.types[tn]["reset"]["local_taps_um"],
+                             clock_ports=len(_taps(P, tn)), reset_consumers=consumer_count(T))
         if T.get("start_role"):
             types[tn].update(start_role=T["start_role"], start_tap=T["start_tap"],
                              core_start_roles={c["inst"]: T["tap_roles"][c["tap"]] for c in T.get("core_resets", [])})
+        if T.get('bootstrap_taps'):
+            types[tn].update(bootstrap_buses=T['bootstrap_buses'], bootstrap_contents=T['bootstrap_contents'],
+                             bootstrap_reset_relays=len(T['bootstrap_taps']),
+                             bootstrap_release_after_pin=release_clocks(T))
     kids = {}
     for p, pr in sol["parent"].items():
         if pr is not None:
@@ -1515,7 +1589,7 @@ def start_relays(T):
     releases on the same cycle depth as before, measured from the later of reset and START.  Raw / run copies
     (u_rrl_<k>_r, u_srl_<k>) exist only where something downstream (a deeper relay or an rst_o / start_o) needs them.
     [{name, d (SV expression), q, dlab (parent net label for the hop check), xy, kind, depth, role}]"""
-    nck = T.get("n_clock_taps", len(T["taps"]))
+    nck = consumer_count(T)
     outs = set(range(nck, nck + len(T.get("outs", []))))
 
     def raw(n):
@@ -1542,6 +1616,9 @@ def start_relays(T):
                 # the type's ONE local START tap: registered (reset AND run) beside the leaf tap relay
                 out.append(dict(base, name=r["name"] + "_g", d=raw(r["d"]), run=run(r["d"]), q=f"start_t{i}",
                                 role="gated"))
+            if i in T.get('bootstrap_taps', []):
+                out.append(dict(base, name=r['name'] + '_b', d=raw(r['d']), q=f'rst_boot_t{i}',
+                                role='bootstrap_transport'))
             if raw(r["q"]) in used:
                 out.append(dict(base, name=r["name"] + "_r", d=raw(r["d"]), q=raw(r["q"]), role="raw"))
                 out.append(dict(base, name=srl, d=run(r["d"]), q=run(r["q"]), role="run"))
@@ -1569,7 +1646,7 @@ def _root_entry_lines(T, ind, src, lock_src, note):
 
 
 def relay_cell(T, r, gated=False):
-    nck = T.get("n_clock_taps", len(T["taps"]))
+    nck = consumer_count(T)
     external = set(range(nck, nck + len(T.get("outs", []))))
     # A tap may also have raw/run copies; all copies at external output sites stay plain.
     driven = T.get("relay_driver") and r.get("tap") not in external
@@ -1597,13 +1674,13 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SR
     else:
         out.append(f"{ind}ot_dp_rrelay u_rst_in (.clk(clk), .d({src}), .q(rst_root_n));  "
                    "// pin register of the SYNCHRONOUS reset input (die reset tree)")
-    out += [f"{ind}wire rst_n_t{i};" for i in taps]
+    out += [f"{ind}" + ("(* keep = 1 *) " if T.get("local_reset_taps") else "") + f"wire rst_n_t{i};" for i in taps]
     for r in T["relays"]:
         if not r["q"].startswith("rst_n_t"):
             out.append(f"{ind}wire {r['q']};")
         out.append(f"{ind}{relay_cell(T, r)} {r['name']} (.clk(clk), .d({r['d']}), .q({r['q']}));  "
                    f"// {r['kind']} tap {r['tap']} depth {r['depth']} @ ({r['xy'][0]:.1f}, {r['xy'][1]:.1f})")
-    nck = T.get("n_clock_taps", len(taps))
+    nck = consumer_count(T)
     for k in range(len(T.get("outs", []))):
         out.append(f"{ind}assign rst_o_{k} = rst_n_t{nck + k};  // registered reset out (wavefront): the relay at "
                    f"({T['outs'][k][0]:.1f}, {T['outs'][k][1]:.1f}), released with the taps")
@@ -1630,9 +1707,9 @@ def _rtl_lines_start(T, ind, src, start_src, lock_src=LOCK_SRC):
                    "// pin register of the SYNCHRONOUS reset input (neighbour's rst_o)")
         out.append(f"{ind}ot_dp_rrelay u_run_in (.clk(clk), .d({start_src}), .q(run_root));  "
                    "// pin register of the SYNCHRONOUS START input (neighbour's start_o)")
-    nck = T.get("n_clock_taps", len(taps))
+    nck = consumer_count(T)
     outs = set(range(nck, nck + len(T.get("outs", []))))
-    out += [f"{ind}wire rst_n_t{i};" for i in taps if i not in outs]     # consumer taps (gated / boot)
+    out += [f"{ind}" + ("(* keep = 1 *) " if T.get("local_reset_taps") else "") + f"wire rst_n_t{i};" for i in taps if i not in outs]     # consumer taps (gated / boot)
     if T.get("start_role"):
         out.append(f"{ind}// START role {T['start_role']}" + (
             f": consumer taps = registered RAW wavefront reset (boot before START); start_t{T['start_tap']} = the "
@@ -1664,7 +1741,7 @@ def leaf_tap(P, tn):
     # optional plan point reset.leaf_um = the planned leaf-logic region (HEAD-SPINE2 10-25: the spine node spo / spr
     # sit under the N face, so the centre tap left their control flops ~1.5 mm from their relay)
     cx, cy = P.types[tn].get("reset", {}).get("leaf_um", (w / 2, h / 2))
-    taps = _taps(P, tn)
+    taps = consumer_taps(P, tn)
     return min(range(len(taps)), key=lambda i: (abs(taps[i][1] - cx) + abs(taps[i][2] - cy), i))
 
 
@@ -1886,7 +1963,7 @@ def render(P, tn, png):
         ax.plot([x0, x1], [y0, y1], "-", color="#c33" if RT_hop(x0, y0, x1, y1) > T["reach_um"] else "#888", lw=0.6)
     for r in T["relays"]:
         ax.plot(*r["xy"], "o", ms=3 if r["kind"] == "pad" else 5, color=cm(r["depth"] / max(1, T["depth"])))
-    for i, (_, x, y) in enumerate(_taps(P, tn)):
+    for i, (_, x, y) in enumerate(consumer_taps(P, tn)):
         ax.plot(x, y, "+", color="b", ms=7)
     ax.plot(*T["root"], "s", color="r", ms=9)
     ax.set_title(f"{tn}: reset entry {T['entry']} (red square) -> depth {T['depth']} to {len(T['taps'])} taps (+), "

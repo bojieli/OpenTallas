@@ -34,8 +34,8 @@ import gen_rtl  # noqa: E402
 import reset_tree  # noqa: E402
 import schema as S  # noqa: E402
 
-FIRM = re.compile(r"^\s*ot_dp_st\s+#\(\.W\(\d+\)\)\s+(u_(?:bin|bout|ft)_\w+)\s*\(")
-TAPSYNC = re.compile(r"^\s*(?:wire rst_n_t\d+;|ot_dp_rsync_s(\d)\s+u_rsync_t\d+\s*\(.*\);.*|assign rst_n = rst_n_t\d+;)\s*$")
+FIRM = re.compile(r"^\s*ot_dp_(?:st|ste)\s+#\(\.W\(\d+\)\)\s+(u_(?:bin|bout|ft|ist)_\w+)\s*\(")
+TAPSYNC = re.compile(r"^\s*(?:(?:\(\* keep = 1 \*\) )?wire rst_n_t\d+;|ot_dp_rsync_s(\d)\s+u_rsync_t\d+\s*\(.*\);.*|assign rst_n = rst_n_t\d+;)\s*$")
 # an earlier reset_tree conversion (re-running kit_rsync re-plans the tree)
 TREE = re.compile(r"^\s*(?://\s*OWNER RESET RULE 10-24 (?:\+ DECISION 13c )?\(tools/die_plan/reset_tree\.py\).*|"
                   r"wire rst_root_n(?:, run_root)?;|wire (?:rn_)?(?:rst_rl_\d+|rr_t\d+);|"
@@ -108,7 +108,7 @@ def strip_module(txt, name):
     return new
 
 
-def _nearest_rsel(P, tn, taps):
+def _nearest_rsel(P, tn, taps, native_plan=None):
     """bound FIRM instance name -> rst_n_t<i> of the tap nearest its pins (gen_rtl rsel), else None."""
     import gen_phys
     cen = {}
@@ -126,7 +126,22 @@ def _nearest_rsel(P, tn, taps):
     def near(x, y):
         return f"rst_n_t{min(range(len(taps)), key=lambda k: abs(taps[k][1] - x) + abs(taps[k][2] - y))}"
 
+    local_sites = {}
+    if P.types[tn].get("reset", {}).get("local_taps_um"):
+        nt = (native_plan or {}).get("partition_types", {}).get(tn, P.types[tn])
+        for st in nt.get("internal_stations", []):
+            bus = st["conn"].split(":", 1)[-1]
+            for j, xy in enumerate(st.get("regs_um", [])):
+                local_sites[f"u_ist_{gen_rtl.sv_id(bus)}_{j}"] = xy
+        for st in P.types[tn].get("ft_slots", []):
+            for j, xy in enumerate(st.get("regs_um", [])):
+                local_sites[f"u_ft_{gen_rtl.sv_id(st['name'])}_o_{j}"] = xy
+
     def rsel(name):
+        if name in local_sites:
+            return near(*local_sites[name])
+        if name.startswith("u_ist_") and P.types[tn].get("reset", {}).get("local_taps_um"):
+            raise ValueError(f"{tn}: native station {name} has no planned position for local reset delivery")
         m = re.fullmatch(r"u_(?:bin|bout)_(\w+?)(?:_pad\d+)?", name)
         if m and m.group(1) in cen:
             return near(*cen[m.group(1)])
@@ -152,17 +167,25 @@ def main(argv):
     if rel:
         raw.setdefault("reset", {})["release"] = rel
     P = S.Plan(raw, plan)
-    taps = S.tap_grid(P, tn)
+    taps = reset_tree.consumer_taps(P, tn)
     man = json.loads((kd / "kit_rtl.json").read_text())
     files = [Path(x) for x in man["files"]]
     bfile = next(f for f in files if f.stem == man["bound_module"])
     cfile = next((f for f in files if f.name == "bind_cells.sv"), None)
     lines = bfile.read_text().splitlines(keepends=True)
     tree = reset_tree.for_type(P, tn)
-    rsel = _nearest_rsel(P, tn, taps)
+    native_file = kd / "native_station_plan.json"
+    native_plan = json.loads(native_file.read_text()) if native_file.exists() else None
+    rsel = _nearest_rsel(P, tn, taps, native_plan)
     leaf = reset_tree.leaf_tap(P, tn)
     out, ns, nfirm, nnear, nste, rr, conv, placed = [], None, 0, 0, 0, 0, None, False
     for ln in lines:
+        # A native bind declares the old leaf reset with an initializer. Re-plan
+        # replaces its driver; retaining the initializer shorts old/new relays.
+        old_leaf = re.match(r"^(\s*)wire\s+rst_n\s*=\s*rst_n_t\d+;\s*(?://.*)?$", ln)
+        if old_leaf:
+            out.append(old_leaf.group(1) + "wire rst_n;\n")
+            continue
         m = RSYNC.match(ln)
         t = TAPSYNC.match(ln) if m is None else None
         tr = TREE.match(ln) if m is None and t is None else None
@@ -183,6 +206,8 @@ def main(argv):
                 placed = True
             continue
         m = FIRM.match(ln)
+        if m and (m.group(1).startswith("u_ist_") or "ot_dp_ste" in ln) and not P.types[tn].get("reset", {}).get("local_taps_um"):
+            m = None  # preserve existing kits unless independent local reset delivery is requested
         if m and placed and ".rst_n(rst_n)" in ln:
             r = rsel(m.group(1))
             if r is None:

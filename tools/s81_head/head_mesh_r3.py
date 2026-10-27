@@ -130,7 +130,114 @@ def straps(PL, tile_cols, st_rows):
             out.append(("M9", x, sd_rows[0], sd_rows[-1], "column_full"))
         else:                                       # corner reserve frames: no strap crosses them
             out.append(("M9", x, ty0 + 8.64, ty1 - 8.64, "column_array"))
+    if SPINE_COLUMNS:
+        # INFRA-FIRST-HEAD-4 / GEOM-REVIEW-18 on HEAD-3: the 1.74-mm spine gap between the tile column groups had
+        # no M9 strap -> fill every column gap > 1.5x the tile column pitch with evenly spaced spine columns (one
+        # continuous mesh, 12.8e1; no mesh-region boundary at the spine).  Same extent as the full columns.
+        cols = sorted(x for L, x, *_ in out if L == "M9")
+        pitch = sorted(b_ - a_ for a_, b_ in zip(cols, cols[1:]))[len(cols) // 2]
+        for a_, b_ in zip(cols, cols[1:]):
+            n = int(round((b_ - a_) / pitch))
+            if b_ - a_ > 1.5 * pitch and n >= 2:
+                for j in range(1, n):
+                    out.append(("M9", r3(a_ + j * (b_ - a_) / n), sd_rows[0], sd_rows[-1], "column_spine"))
     return out, sd_rows
+
+
+SPINE_COLUMNS = False
+
+
+def densify_m8(S, max_pitch):
+    """HEAD-CORE-R17 (COORD ruling 3): extra M8 rows so that no gap between consecutive tile-array M8 rows exceeds
+    max_pitch: every gap g gets ceil(g / max_pitch) - 1 evenly spaced rows (same x extent as the tile rows).  Plan
+    geometry only; the rows are then lane-snapped with the others (--pg-lanes)."""
+    rows = sorted({(f, lo, hi) for L, f, lo, hi, k in S if L == "M8" and k == "tile_row"})
+    out = list(S)
+    for (a, lo, hi), (b, _, _) in zip(rows, rows[1:]):
+        n = math.ceil((b - a) / max_pitch - 1e-9) - 1
+        for j in range(1, n + 1):
+            out.append(("M8", r3(a + j * (b - a) / (n + 1)), lo, hi, "tile_row_dense"))
+    return out
+
+
+def snap_lanes(S, plan_raw, clk_w=0.64):
+    """INFRA-FIRST-HEAD-4 (opt-in --pg-lanes): move every strap to the nearest legal VSS-locked clock lane of the
+    plan's die PG grid (head_pg_sweep.lanes: lane in a VSS-adjacent half-gap, wide spacing to both stripes).  Returns
+    (snapped straps, per-strap jog um).  The island / driver / tap then reaches its strap through a riser of <= jog."""
+    import head_pg_sweep as HP
+    grid = {g["layer"]: g for g in plan_raw["die"]["pg"]["grid"] if not g.get("region")}
+    out, jog = [], []
+    for L, f, lo, hi, k in S:
+        st = grid[L]
+        ivs, _gap = HP.lanes(st, clk_w)
+        if not ivs:
+            raise SystemExit(f"--pg-lanes: no legal {clk_w}-um clock lane in the {L} grid {st}")
+        p = st["pitch_um"]
+        vss0 = st["offset_um"] + p / 2
+        r = (f - vss0) % p
+        best = None
+        for kk in (-1, 0, 1):
+            for a_, b_ in ivs:
+                lo_, hi_ = a_ + kk * p, b_ + kk * p
+                c = min(max(r, lo_), hi_)
+                if best is None or abs(c - r) < abs(best - r):
+                    best = c
+        nf = r3(f + (best - r))
+        out.append((L, nf, lo, hi, k))
+        jog.append(r3(abs(nf - f)))
+    # strap ends that sat on an end strap of the other layer follow that strap's snap (keeps the mesh one
+    # component); every end is widened to cover the snapped crossing
+    mv = {L: {} for L in ("M8", "M9")}
+    for (L, f, *_), (_, nf, *_) in zip(S, out):
+        mv[L][f] = nf
+    fix = []
+    for L, nf, lo, hi, k in out:
+        other = mv["M9" if L == "M8" else "M8"]
+        lo2, hi2 = other.get(lo, lo), other.get(hi, hi)
+        fix.append((L, nf, r3(min(lo, lo2)), r3(max(hi, hi2)), k))
+    return fix, jog
+
+
+def lane_residual(S, plan_raw, clk_w=0.64):
+    """HEAD-CORE-R19 (GEOM-25 condition 1): per strap, distance of its centre line from the nearest legal VSS-locked
+    clock lane of the plan die.pg.grid (0 = inside the half-gap band).  -> (per-layer summary, off-band list)."""
+    import head_pg_sweep as HP
+    grid = {g["layer"]: g for g in plan_raw["die"]["pg"]["grid"] if not g.get("region")}
+    out, off = {}, []
+    for L in ("M8", "M9"):
+        st = grid[L]
+        ivs, _ = HP.lanes(st, clk_w)
+        p = st["pitch_um"]
+        vss0 = st["offset_um"] + p / 2
+        res = []
+        for L2, f, lo, hi, k in S:
+            if L2 != L:
+                continue
+            r = (f - vss0) % p
+            d = min((0.0 if a_ + kk * p - 1e-6 <= r <= b_ + kk * p + 1e-6 else
+                     min(abs(r - a_ - kk * p), abs(r - b_ - kk * p))) for kk in (-1, 0, 1) for a_, b_ in ivs)
+            res.append(d)
+            if d > 1e-3:
+                off.append(dict(layer=L, fixed_um=f, kind=k, residual_um=r3(d)))
+        out[L] = dict(straps=len(res), off_band=sum(1 for d in res if d > 1e-3), max_residual_um=r3(max(res, default=0.0)),
+                      grid=dict(width_um=st["width_um"], pitch_um=p, offset_um=st["offset_um"]),
+                      band_rel_vss_um=[[r3(a_), r3(b_)] for a_, b_ in ivs])
+    return out, off
+
+
+def snap_root(PL, root):
+    """HEAD-CORE-R19 (COORD ruling on head-r17-plan 2b67cdc6c3): the plan root sits on a partition abutment edge; the
+    first tree node is sited at the snap_inside centre of that site in the owning partition (the island
+    head_infra_delta_r4 declares there), the root itself stays the plan source point (root stub = the clamp)."""
+    import head_infra_delta_r4 as D
+    p = PL.part_at(root)
+    if p is None or p["o"] != "R0":
+        raise SystemExit(f"--snap-root: root {root} not in an R0 partition")
+    lx, ly = root[0] - p["x0"], root[1] - p["y0"]
+    cx, cy = D.snap_inside(lx, ly, p["w"], p["h"])
+    return (r3(p["x0"] + cx), r3(p["y0"] + cy)), dict(part=p["name"], type=p["type"], root_um=list(root),
+                                                      root_local_um=[r3(lx), r3(ly)], island_centre_local_um=[cx, cy],
+                                                      stub_um=r3(abs(cx - lx) + abs(cy - ly)))
 
 
 def on_strap(S, xy, tol=0.01):
@@ -184,6 +291,36 @@ def sites_of(nodes):
             for k in range(1, n["nseg"]):
                 out.append(("rep", n["tag"], (p[0] + (n["xy"][0] - p[0]) * k / n["nseg"],
                                               p[1] + (n["xy"][1] - p[1]) * k / n["nseg"])))
+    return out
+
+
+def sibling_rep_findings(nodes, reach=450.0, tol=1e-6):
+    """GEOM-24 (a): every sibling family (children of one node) carries the SAME repeater count at the SAME positions:
+    equal straight (Manhattan) legs, equal nseg, so the k/nseg sites of sites_of() sit at equal distances from the
+    parent on every sibling; every root->driver path has the same stage count; no segment above reach.  [] = PASS."""
+    by = {n["tag"]: n for n in nodes}
+    out = []
+    for n in nodes:
+        ks = [by[k] for k in n["kids"]]
+        for c in ks:
+            dx, dy = abs(c["xy"][0] - n["xy"][0]), abs(c["xy"][1] - n["xy"][1])
+            if min(dx, dy) > tol:
+                out.append(f"{c['tag']}: diagonal leg from {n['tag']}")
+            if abs(dx + dy - c["leg"]) > 1e-3:
+                out.append(f"{c['tag']}: leg {c['leg']} != geometric {dx + dy:.3f}")
+            if c["leg"] / c["nseg"] > reach + tol:
+                out.append(f"{c['tag']}: segment {c['leg'] / c['nseg']:.1f} um > {reach}")
+        if len({(round(c["leg"], 3), c["nseg"]) for c in ks}) > 1:
+            out.append(f"{n['tag']}: sibling (leg, nseg) differ {sorted({(round(c['leg'], 3), c['nseg']) for c in ks})}")
+    depth = {}
+    for n in nodes:
+        k, m = 0, n
+        while m.get("parent"):
+            k += m["nseg"]; m = by[m["parent"]]
+        if not n["kids"]:
+            depth[n["tag"]] = k
+    if len(set(depth.values())) > 1:
+        out.append(f"root->driver segment counts differ {sorted(set(depth.values()))}")
     return out
 
 
@@ -274,6 +411,220 @@ def build_tree(drv, st_rows, et, root, step=8.64):
     return nodes, top, info
 
 
+def _lattice_1d(vals, pitch, centre, tol=0.05):
+    """smallest power-of-two half-integer lattice about `centre` (slots centre + (j + 0.5) x pitch) holding every value;
+    returns (levels, half_slots) or raises when a value is off the lattice."""
+    offs = [(v - centre) / pitch for v in vals]
+    for o in offs:
+        if abs((o - 0.5) - round(o - 0.5)) > tol / pitch:
+            raise SystemExit(f"--symmetric: value {centre + o * pitch:.3f} not on the half-integer lattice about {centre:.3f}")
+    need = max(abs(o) for o in offs) + 0.5      # slots needed on each side of the centre
+    L = 1
+    while 2 ** (L - 1) < need - 1e-9:
+        L += 1
+    return L
+
+
+def _h1d(nodes, et, tag, ax, fixed, centre, half, pitch, leaves, mult, tol=0.05):
+    """equal-leg binary 1-D H-tree over the half-integer lattice centre +- half x pitch; empty subtrees pruned.
+    leaves: {coordinate: leaf node}.  Every surviving node of one level has children at the SAME +-half/2 x pitch."""
+    if half < 0.5 + 1e-9:
+        for v, n in leaves.items():
+            if abs(v - centre) < tol:
+                return n
+        return None
+    kids = []
+    for s, sub in (("0", -1), ("1", 1)):
+        c = centre + sub * half / 2 * pitch
+        k = _h1d(nodes, et, tag + s, ax, fixed, c, half / 2, pitch, leaves, mult, tol)
+        if k is not None:
+            kids.append(k)
+    if not kids:
+        return None
+    xy = (centre, fixed) if ax == "x" else (fixed, centre)
+    leg = half / 2 * pitch
+    n = dict(tag=tag, xy=(r3(xy[0]), r3(xy[1])), kids=[k["tag"] for k in kids], T={"TT": 0.0, "FF": 0.0}, S=0, et=et,
+             drive_mult=mult * len(kids), level_leg_um=r3(leg))
+    for k in kids:
+        k["parent"], k["leg"], k["nseg"], k["et"] = tag, leg, et.nseg(leg), et
+    nodes.append(n)
+    return n
+
+
+def build_tree_sym(drv, st_rows, et, root, trunk_x, mult):
+    """HEAD-CORE-R17 (COORD ruling 3, 12.8d / d1): SYMMETRIC re-site.  Equal legs per level BY CONSTRUCTION:
+    y = one binary H on the spine column over the half-integer row lattice (tile-row pitch, centred on the tile rows;
+    station driver rows re-sited onto the nearest free lattice slot inside the station band), x = per row one spine node
+    with two equal legs to the mirrored half-lattice roots, then a binary H over the half-integer column lattice of each
+    half.  Empty lattice slots are pruned (no dummy branch).  d1 plan-computed sizing: a node that drives ONE child
+    after pruning gets half the branch-node drive (drive_mult = mult x children), so every leg sees the same driver per load.
+    No measured input.  Returns (nodes, top, info, row_moves)."""
+    st_set = set(st_rows)
+    rows = defaultdict(list)
+    for x, y in drv:
+        rows[r3(y)].append(float(x))
+    tile_ys = sorted(y for y in rows if y not in st_set)
+    gaps = sorted(b - a for a, b in zip(tile_ys, tile_ys[1:]))
+    py = gaps[len(gaps) // 2]
+    yc = (tile_ys[0] + tile_ys[-1]) / 2
+    Ly = _lattice_1d(tile_ys, py, yc)
+    used = {round((y - yc) / py - 0.5) for y in tile_ys}
+    moves = {}
+    for y in sorted(st_set & set(rows)):
+        o = (y - yc) / py - 0.5
+        cand = sorted((abs(j - o), j) for j in range(-2 ** (Ly + 1), 2 ** (Ly + 1)) if j not in used)
+        j = cand[0][1]
+        used.add(j)
+        moves[y] = r3(yc + (j + 0.5) * py)
+    Ly = _lattice_1d(tile_ys + list(moves.values()), py, yc)      # lattice wide enough for the re-sited station rows
+    allx = sorted({x for xs in rows.values() for x in xs})
+    left = [x for x in allx if x < trunk_x]
+    right = [x for x in allx if x > trunk_x]
+    if not left or not right:
+        raise SystemExit("--symmetric: drivers on one side of the spine only")
+    px = sorted(b - a for a, b in zip(left, left[1:]))[(len(left) - 1) // 2]
+    cl = (left[0] + left[-1]) / 2
+    if round((left[-1] - left[0]) / px) % 2 == 0:      # odd column count: shift half a pitch toward the spine
+        cl += px / 2
+    cr = 2 * trunk_x - cl
+    mir = [r3(2 * trunk_x - x) for x in right]
+    if any(min(abs(m - l) for l in left) > 0.05 for m in mir):
+        raise SystemExit("--symmetric: column sets are not mirror images about the spine")
+    Lx = max(_lattice_1d(left, px, cl), _lattice_1d(right, px, cr))
+    nodes, rroots = [], {}
+    for i, y in enumerate(sorted(rows)):
+        yn = moves.get(y, y)
+        lv = {}
+        for x in sorted(rows[y]):
+            n = dict(tag=f"r{i:02d}_{x:.0f}", xy=(r3(x), yn), kids=[], T={"TT": 0.0, "FF": 0.0}, S=0, et=et, drive_mult=mult)
+            nodes.append(n)
+            lv[x] = n
+        hl = _h1d(nodes, et, f"r{i:02d}_L", "x", yn, cl, 2 ** (Lx - 1), px, {x: n for x, n in lv.items() if x < trunk_x}, mult)
+        hr = _h1d(nodes, et, f"r{i:02d}_R", "x", yn, cr, 2 ** (Lx - 1), px, {x: n for x, n in lv.items() if x > trunk_x}, mult)
+        kids = [k for k in (hl, hr) if k is not None]
+        rn = dict(tag=f"r{i:02d}_", xy=(r3(trunk_x), yn), kids=[k["tag"] for k in kids], T={"TT": 0.0, "FF": 0.0}, S=0, et=et,
+                  drive_mult=mult * len(kids), level_leg_um=r3(abs(trunk_x - cl)))
+        for k in kids:
+            k["parent"], k["leg"], k["nseg"], k["et"] = rn["tag"], abs(trunk_x - cl), et.nseg(abs(trunk_x - cl)), et
+        nodes.append(rn)
+        rroots[yn] = rn
+    top = _h1d(nodes, et, "Y", "y", trunk_x, yc, 2 ** (Ly - 1), py, rroots, mult)
+    reach = set()
+    st_ = [top]
+    while st_:
+        n = st_.pop()
+        reach.add(n["tag"])
+        st_.extend(m for m in nodes if m.get("parent") == n["tag"] and m["tag"] not in reach)
+    lost = [n["tag"] for n in nodes if not n["kids"] and n["tag"] not in reach]
+    if lost:
+        raise SystemExit(f"--symmetric: {len(lost)} drivers not on the lattice tree (e.g. {lost[:3]})")
+    if Q.md(top["xy"], root) > 1e-6:
+        top = Q.lift(top, tuple(root), et, "SRC", nodes)
+    top["parent"] = None
+    # model arrivals (stage table, straight legs) for the report
+    for n in nodes:
+        n["T"] = {"TT": 0.0, "FF": 0.0}
+        n["S"] = 0
+    info = dict(form="symmetric binary H (R17)", trunk_x=r3(trunk_x), row_lattice=dict(centre=r3(yc), pitch=r3(py),
+                levels=Ly), col_lattice=dict(left_centre=r3(cl), right_centre=r3(cr), pitch=r3(px), levels=Lx),
+                station_row_moves={str(k): v for k, v in moves.items()},
+                sizing=dict(rule="12.8 d1: drive_mult = base x children (each leg driven by base x BUFx24 = the modelled 16w stage; pruned single-child nodes half the branch-node drive)",
+                            base_mult=mult, nodes_half_drive=sum(1 for n in nodes if n.get("kids") and len(n["kids"]) == 1)),
+                lifted_rows=[])
+    return nodes, top, info, moves
+
+
+def build_tree_r18(drv, st_rows, et, root, trunk_x, mult, xoff=4.32):
+    """HEAD-CORE-R18 (COORD R17 ruling 5): shorten the R17 equal-leg H (17.49 mm unshared path vs 14.00 mm Manhattan
+    bound) without giving up sibling balance.  Two structural changes, no meander / trim:
+      (1) OUTER-ANCHORED half lattices.  R17 centred each binary lattice on its leaf set, so a 16-slot lattice holding
+          11 columns (x) or 14 rows (y) wasted the unused end slots on BOTH sides.  Here each half (x: left/right of the
+          spine; y: below/above the die centre row) gets its own binary lattice whose OUTERMOST leaf sits on the
+          extreme slot; the pruned slots are on the spine/centre side, so the root->leaf path equals the Manhattan
+          distance to the farthest leaf (the bound) in both axes.
+      (2) station rows carry no tree drivers: their M8 straps are continuous-mesh rows fed through the M9 columns, like
+          the serdes-strip rows (sd_rows) already are.  R17 re-sited them onto lattice slots off every declared island
+          (36 drivers + their x-trees = the clock_sites FAIL).  12 tile rows = 6 per half on an 8-slot lattice.
+    Islands: x-lattice nodes would sit on tile boundaries (outline crossing, ROOT-MERGE-32 snap_inside); every x-tree
+    (nodes AND leaves) of a half is translated by xoff toward the half's outside... (uniform translation: legs unchanged,
+    nodes on the snapped edge islands 4.32 / 704.16, drivers at tile channel x 354.24 +- xoff).  y nodes fall on the
+    spine channel-midpoint rows (spine frame 872.64 / 1909.44).  d1 sizing as R17.  Returns (nodes, top, info, {})."""
+    st_set = set(st_rows)
+    rows = defaultdict(list)
+    for x, y in drv:
+        if r3(y) in st_set:
+            continue
+        rows[r3(y)].append(float(x))
+    ys = sorted(rows)
+    py = sorted(b - a for a, b in zip(ys, ys[1:]))[len(ys) // 2]
+    yc = (ys[0] + ys[-1]) / 2
+    lo = [y for y in ys if y < yc]
+    hi = [y for y in ys if y > yc]
+    allx = sorted({x for xs in rows.values() for x in xs})
+    left = [x for x in allx if x < trunk_x]
+    right = [x for x in allx if x > trunk_x]
+    px = sorted(b - a for a, b in zip(left, left[1:]))[(len(left) - 1) // 2]
+    mir = [r3(2 * trunk_x - x) for x in right]
+    if any(min(abs(m - l) for l in left) > 0.05 for m in mir) or len(lo) != len(hi):
+        raise SystemExit("--r18: drivers not mirror-symmetric")
+
+    def anchor(vals, pitch, outer_sign):
+        n = round(abs(vals[-1] - vals[0]) / pitch) + 1
+        L = 1
+        while 2 ** L < n:
+            L += 1
+        outer = vals[0] if outer_sign < 0 else vals[-1]
+        return outer - outer_sign * (2 ** (L - 1) - 0.5) * pitch, L
+    cl, Lx = anchor(left, px, -1)
+    cl += xoff
+    cr = 2 * trunk_x - cl
+    nodes, rroots = [], {}
+    for i, y in enumerate(ys):
+        lv = {}
+        for x in sorted(rows[y]):
+            xs_ = x + (xoff if x < trunk_x else -xoff)
+            n = dict(tag=f"r{i:02d}_{x:.0f}", xy=(r3(xs_), y), kids=[], T={"TT": 0.0, "FF": 0.0}, S=0, et=et, drive_mult=mult)
+            nodes.append(n)
+            lv[xs_] = n
+        hl = _h1d(nodes, et, f"r{i:02d}_L", "x", y, cl, 2 ** (Lx - 1), px, {x: n for x, n in lv.items() if x < trunk_x}, mult)
+        hr = _h1d(nodes, et, f"r{i:02d}_R", "x", y, cr, 2 ** (Lx - 1), px, {x: n for x, n in lv.items() if x > trunk_x}, mult)
+        kids = [k for k in (hl, hr) if k is not None]
+        leg = abs(trunk_x - cl)
+        rn = dict(tag=f"r{i:02d}_", xy=(r3(trunk_x), y), kids=[k["tag"] for k in kids], T={"TT": 0.0, "FF": 0.0}, S=0,
+                  et=et, drive_mult=mult * len(kids), level_leg_um=r3(leg))
+        for k in kids:
+            k["parent"], k["leg"], k["nseg"], k["et"] = rn["tag"], leg, et.nseg(leg), et
+        nodes.append(rn)
+        rroots[y] = rn
+    cu, Ly = anchor(hi, py, +1)
+    cd = 2 * yc - cu
+    hu = _h1d(nodes, et, "YU", "y", trunk_x, cu, 2 ** (Ly - 1), py, {y: rroots[y] for y in hi}, mult)
+    hd = _h1d(nodes, et, "YD", "y", trunk_x, cd, 2 ** (Ly - 1), py, {y: rroots[y] for y in lo}, mult)
+    leg = abs(cu - yc)
+    top = dict(tag="Y", xy=(r3(trunk_x), r3(yc)), kids=[hu["tag"], hd["tag"]], T={"TT": 0.0, "FF": 0.0}, S=0, et=et,
+               drive_mult=mult * 2, level_leg_um=r3(leg))
+    for k in (hu, hd):
+        k["parent"], k["leg"], k["nseg"], k["et"] = "Y", leg, et.nseg(leg), et
+    nodes.append(top)
+    lost = [n["tag"] for n in nodes if not n["kids"] and not n.get("parent")]
+    if lost:
+        raise SystemExit(f"--r18: {len(lost)} drivers not on the tree (e.g. {lost[:3]})")
+    if Q.md(top["xy"], root) > 1e-6:
+        top = Q.lift(top, tuple(root), et, "SRC", nodes)
+    top["parent"] = None
+    for n in nodes:
+        n["T"] = {"TT": 0.0, "FF": 0.0}
+        n["S"] = 0
+    info = dict(form="outer-anchored half-lattice binary H (R18)", trunk_x=r3(trunk_x), x_island_offset_um=xoff,
+                row_lattice=dict(centre=r3(yc), half_centres=[r3(cd), r3(cu)], pitch=r3(py), levels=Ly),
+                col_lattice=dict(left_centre=r3(cl), right_centre=r3(cr), pitch=r3(px), levels=Lx),
+                station_rows="mesh rows without tree drivers (fed through M9 columns, as sd_rows)",
+                sizing=dict(rule="12.8 d1: drive_mult = base x children (as R17)", base_mult=mult,
+                            nodes_half_drive=sum(1 for n in nodes if n.get("kids") and len(n["kids"]) == 1)),
+                lifted_rows=[])
+    return nodes, top, info, {}
+
+
 def edge_pins(PL, pins):
     """die-frame position of every real-core clock pin (R12 kit pins.json), rebuilt outline, plan origin + orient."""
     out = []
@@ -300,7 +651,8 @@ def render(PL, S, nodes, sites, cls, path, box=None, title=""):
     ax.add_patch(Rectangle((0, 0), die[0], die[1], fill=False, lw=0.6))
     for p in PL.parts:
         r = p["rect"]
-        ax.add_patch(Rectangle(r[:2], r[2] - r[0], r[3] - r[1], fill=False, lw=0.2, ec="0.6"))
+        ax.add_patch(Rectangle(r[:2], r[2] - r[0], r[3] - r[1], fill=False, lw=0.3, ec="tab:olive", ls=(0, (4, 3)),
+                               alpha=0.7))
     for c in PL.cores:
         ax.add_patch(Rectangle(c[:2], c[2] - c[0], c[3] - c[1], fc="0.85", ec="0.5", lw=0.15))
     for r in PL.phy:
@@ -310,6 +662,8 @@ def render(PL, S, nodes, sites, cls, path, box=None, title=""):
             ax.plot([lo, hi], [f, f], color="tab:blue", lw=0.35 if box is None else 0.8)
         else:
             ax.plot([f, f], [lo, hi], color="tab:cyan", lw=0.35 if box is None else 0.8)
+            if box and box[0] <= f <= box[2]:
+                ax.text(f, box[3], f"M9 {f:.0f}", rotation=90, fontsize=6, color="tab:cyan", ha="right", va="top")
     by = {n["tag"]: n for n in nodes}
     for n in nodes:
         if n.get("parent"):
@@ -324,7 +678,7 @@ def render(PL, S, nodes, sites, cls, path, box=None, title=""):
         ax.set_xlim(box[0], box[2])
         ax.set_ylim(box[1], box[3])
     ax.set_aspect("equal")
-    ax.set_title(title, fontsize=9)
+    ax.set_title(title + "\n(M8 blue, M9 cyan, partition outlines olive dashed)", fontsize=9)
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)
@@ -340,18 +694,65 @@ def main(argv=None):
     ap.add_argument("--top-m", type=int, default=2)
     ap.add_argument("--reach", type=float, default=450.0)
     ap.add_argument("--stub-max", type=float, default=200.0, help="local-tree reach limit (12.8b core reach analogue)")
+    ap.add_argument("--pg-lanes", action="store_true", help="INFRA-FIRST-HEAD-4: snap straps to the VSS-locked lanes "
+                    "of the plan die.pg.grid (16W)")
+    ap.add_argument("--spine-columns", action="store_true", help="INFRA-FIRST-HEAD-4: M9 straps across the spine gap")
+    ap.add_argument("--symmetric", action="store_true", help="HEAD-CORE-R17: equal-leg binary H re-site (build_tree_sym)")
+    ap.add_argument("--r18", action="store_true", help="HEAD-CORE-R18: outer-anchored half lattices, no station tree drivers (build_tree_r18)")
+    ap.add_argument("--r18-xoff", type=float, default=4.32, help="R18 x-tree translation onto the snapped edge islands (um)")
+    ap.add_argument("--snap-root", action="store_true", help="HEAD-CORE-R19: first tree node on the snap_inside centre "
+                    "of the plan root (partition-edge root -> island 4.32 um inside)")
+    ap.add_argument("--m8-max-pitch", type=float, default=0.0, help="HEAD-CORE-R17: densify tile-array M8 rows to <= this pitch (um)")
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     od = Path(a.out)
     od.mkdir(parents=True, exist_ok=True)
     PL = Plan(a.plan)
     drv, tile_cols, st_rows = drive_grid(PL)
+    global SPINE_COLUMNS
+    SPINE_COLUMNS = a.spine_columns
     S, sd_rows = straps(PL, tile_cols, st_rows)
+    if a.m8_max_pitch > 0:
+        S = densify_m8(S, a.m8_max_pitch)
+    lane_jog = None
+    if a.pg_lanes:
+        S, jogs = snap_lanes(S, PL.P)
+        lane_jog = dict(max_um=max(jogs), mean_um=r3(sum(jogs) / len(jogs)), straps=len(jogs),
+                        rule="straps on VSS-locked lanes of die.pg.grid; risers <= max_um from island/driver/tap")
     st = Q.Stage(a.stage)
     et = Q.EdgeType(st, a.top_w, a.top_m, a.reach)
     root = tuple(PL.P["clock"]["spine"]["root_um"])
-    nodes, top, info = build_tree(drv, st_rows, et, root)
+    root_snap = None
+    if a.snap_root:
+        root, root_snap = snap_root(PL, root)
+    if a.r18:
+        nodes, top, info, _ = build_tree_r18(drv, st_rows, et, root, TRUNK_X, a.top_m, a.r18_xoff)
+        drv = sorted({(r3(n["xy"][0]), r3(n["xy"][1])) for n in nodes if not n["kids"]})
+    elif a.symmetric:
+        nodes, top, info, moves = build_tree_sym(drv, st_rows, et, root, TRUNK_X, a.top_m)
+        if moves:   # station driver rows re-sited onto lattice slots: one M8 strap per new row over the station band
+            sx0 = min(p["rect"][0] for p in PL.parts if p["type"] in STATIONS)
+            sx1 = max(p["rect"][2] for p in PL.parts if p["type"] in STATIONS)
+            new = [("M8", y, sx0, sx1, "station_lattice_row") for y in sorted(moves.values())]
+            if a.pg_lanes:
+                new, j2 = snap_lanes(new, PL.P)
+                shift = {v: s[1] for v, s in zip(sorted(moves.values()), new)}
+                for n in nodes:   # drivers / x-tree of a moved row follow their strap's lane snap
+                    if r3(n["xy"][1]) in shift:
+                        n["xy"] = (n["xy"][0], shift[r3(n["xy"][1])])
+                for n in nodes:
+                    if n.get("parent"):
+                        pxy = next(m["xy"] for m in nodes if m["tag"] == n["parent"])
+                        n["leg"] = abs(pxy[0] - n["xy"][0]) + abs(pxy[1] - n["xy"][1])
+                        n["nseg"] = et.nseg(n["leg"]) if n["leg"] > 1e-6 else 1
+                lane_jog["max_um"] = max(lane_jog["max_um"], max(j2))
+            S = S + new
+            drv = sorted({(r3(n["xy"][0]), r3(n["xy"][1])) for n in nodes if not n["kids"]})
+    else:
+        nodes, top, info = build_tree(drv, st_rows, et, root)
     rep, arr = Q.grid_report(nodes, top)
+    if root_snap:
+        info["root_snap"] = root_snap
     # ---- islands (in-core core entries, plan taps) for classification
     isl = []
     for p in PL.parts:
@@ -372,7 +773,7 @@ def main(argv=None):
                           "on a declared island or channel slot (hd_tile channel row 354.24 / channel cross, spine column, "
                           "station tap row slots); none on a hard core (+1.08 clr), PHY zone, reserve frame or tile glue")
     # ---- mesh gates
-    drv_on = sum(1 for d in drv if on_strap(S, d))
+    drv_on = sum(1 for d in drv if on_strap(S, d, tol=(lane_jog["max_um"] + 0.01) if lane_jog else 0.01))
     comps = mesh_connected(S)
     taps = []
     for p in PL.parts:
@@ -407,6 +808,9 @@ def main(argv=None):
     m8 = [s for s in S if s[0] == "M8"]
     m9 = [s for s in S if s[0] == "M9"]
     wire = dict(M8_um=r3(sum(s[3] - s[2] for s in m8)), M9_um=r3(sum(s[3] - s[2] for s in m9)))
+    m9x = sorted(s[1] for s in m9)
+    m9_min = min((b - c for c, b in zip(m9x, m9x[1:])), default=float("inf"))
+    m9_floor = 177.12 - 8.64
     die = PL.P["die"]["outline_um"]
     # M8/M9 track share of the mesh: strap 8w 0.32 um + 0.04 shields at 0.08 spacing both sides (QC fine-mesh form)
     # = 0.32 + 2 x (0.08 + 0.04) + 0.08 = 0.64 um of pitch per strap, over the die span the straps cover (UNCHECKED)
@@ -420,7 +824,15 @@ def main(argv=None):
         drivers_on_strap=dict(verdict="PASS" if drv_on == len(drv) else "FAIL", drivers=len(drv), on=drv_on),
         tap_stubs=dict(verdict="PASS" if edge_ok else "FAIL", limit_um=a.stub_max, by_kind=stub_sum,
                        edge_pin_stub_identical_per_inst={k: sorted(v) for k, v in ident.items()}),
-        wire=wire, track_share=share)
+        wire=wire, track_share=share, lane_jog=lane_jog,
+        m9_spacing=dict(verdict="PASS" if m9_min >= m9_floor else "FAIL", min_um=r3(m9_min), floor_um=r3(m9_floor),
+                        basis="GEOM-24 (b): no doubled M9 straps; min column gap >= 177.12 - 8.64 (one island step)"))
+    lres, loff = lane_residual(S, PL.P)
+    mesh_gate["lane_band"] = dict(verdict="PASS" if not loff else "FAIL", by_layer=lres, off_band=loff[:40],
+                                  rule="GEOM-25 cond. 1: every clock strap centre inside a VSS-locked half-gap lane of "
+                                       "the plan die.pg.grid (0 straps off band, no clock-PG overlap)")
+    sib = sibling_rep_findings(nodes, a.reach)
+    info["sibling_reps"] = dict(verdict="PASS" if not sib else "FAIL", findings=sib[:20], n_findings=len(sib))
     summ = dict(schema="opentallas.head_mesh_r3.v1", plan=a.plan, plan_sha256=__import__("hashlib").sha256(
         Path(a.plan).read_bytes()).hexdigest(), tree=dict(rep, **info), tree_on_islands=tree_gate, mesh=mesh_gate,
         sd_rows=sd_rows, st_rows=st_rows, note="plan model (ngspice stage-table fit); all numbers UNCHECKED")
@@ -438,7 +850,8 @@ def main(argv=None):
     render(PL, S, nodes, sites, cls, od / "r3_zoom_tile.png", box=(2350, 4550, 4600, 6750),
            title="zoom: 3x2 tiles, eA/eB cores grey, edge-pin stubs not drawn")
     print(json.dumps(dict(tree={k: summ["tree"][k] for k in ("drivers", "stages", "arrival_ps", "repeaters", "wire_um",
-                                                              "max_merge_imbalance_ps", "lifted_rows")},
+                                                              "max_merge_imbalance_ps", "lifted_rows",
+                                                              "sibling_reps")},
                           tree_on_islands={k: tree_gate[k] for k in ("verdict", "sites", "by_class", "max_seg_um")},
                           mesh={k: (v if k in ("wire", "track_share") else {kk: vv for kk, vv in v.items()
                                                                             if kk != "edge_pin_stub_identical_per_inst"})

@@ -611,10 +611,10 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     t += ["source /work/psm/pdn.tcl", "pdngen", "puts \"OT_T pdngen [expr {[clock seconds]-$t0}]\"",
           "source /work/psm/bumps.tcl", "puts \"OT_T bumps [expr {[clock seconds]-$t0}]\"", f"source {D.PLAT}/setRC.tcl"]
     t += [f"set_pdnsim_inst_power -inst {n} -power {pw:.8f}" for n, _, _, pw in blks if pw > 0]
-    t += ["foreach n {VDD VSS} { if {[catch {check_power_grid -net $n} e]} { puts \"OT_PG_CHECK_FAIL $n $e\" } "
+    t += ["foreach n {VDD VSS} { if {[catch {check_power_grid -net $n} e]} { puts \"OT_PG_CHECK_FAIL $n $e\"; error $e } "
           "else { puts \"OT_PG_CHECK_OK $n\" } }",
           "if {[catch {analyze_power_grid -net VDD -error_file /work/psm/psm_VDD.rpt -voltage_file /work/psm/ir_VDD.csv} e]} "
-          "{ puts \"OT_PSM_FAIL $e\" } else { puts OT_PSM_OK }",
+          "{ puts \"OT_PSM_FAIL $e\"; error $e } else { puts OT_PSM_OK }",
           "puts \"OT_T psm [expr {[clock seconds]-$t0}]\"", "puts OT_DONE"]
     (out / "psm" / "tracks.tcl").write_text(D.coarse_tracks(P, 0.72))
     (out / "psm" / "psm.tcl").write_text("\n".join(t) + "\n")

@@ -845,22 +845,43 @@ module qkd_kvpc_s_sched #(
     always @(posedge hclk or negedge h_rn)if(!h_rn)rawslot_q<=0;else rawslot_q<=expected_raw_valid;
     always @(posedge hclk or negedge h_rn) if (!h_rn) rv_q <= 1'b0; else rv_q <= pi_v;
 
-    // ---- raw PHY return check: exact slot (historical) or elastic window (0az) ---------------------------------------
+    // ---- KV-TOK B 2026-10-24: controller BOOT WINDOW ------------------------------------------------------------------
+    // Maintenance mode before mission mode (as a memory controller's init / BIST phase). From the scheduler's reset until
+    // the HBM calendar first takes ownership of this PC (static_cmd_owner: set by the first compiled layer go, never
+    // cleared) the static queue head's column issues as soon as it is JEDEC-legal, without a calendar reservation. This
+    // is what the destructive cold-boot scratch check (qkd_hbm_boot_pc: WR, RD, WR, RD of one reserved sector, issued
+    // while the die is held in reset) needs: the calendar image that would reserve its columns is in the boot image,
+    // which loads only after the die leaves reset, which the HOST does only after every slice's check passed.
+    // The window closes on the first ownership edge and never reopens, so the compiled static schedule is unchanged:
+    // every later column needs its reservation exactly as before (lockstep vs the original controller,
+    // tools/qwen_kv_die/kv_boot_window_gate.sh). Ownership needs an idle controller (f_cmd), so no boot column is in
+    // flight when it closes. A boot column carries the observations a reserved one gets from the calendar: the write
+    // observer's expected static column (expected_sr) and, for a boot read, the elastic raw-return nominal slot RAW =
+    // PHYSICAL_CMD_EDGES 4 + HBM_RL 23 edges after its virtual reservation (qkd_static_kv_return_calendar), i.e. BRAW
+    // edges after u_ctl's col_boot register (reservation R -> sched srslot_q R+1 -> u_ctl srslot_q R+2 -> col R+3).
+    localparam integer BRAW = 4 + 23 + 1 - 3;
+    reg boot_win;
+    reg [BRAW-1:0] boot_raw;
+    wire col_boot;
     localparam integer TQA = $clog2(TQD);
     reg [6:0] raw_out;               // nominal raw returns not yet received (<= TQD outstanding tags)
     reg [8:0] raw_age;
     reg f_raw;
+    // KV-TOK B: the nominal raw slot is the calendar's (rawslot_q) or, in the boot window, a boot static read's own
+    // nominal slot (boot_raw, the same RAW edges after its virtual reservation; see BOOT WINDOW below). The two are
+    // exclusive (the window closes before the calendar can reserve); with the window closed boot_raw is 0.
+    wire raw_nom = rawslot_q | boot_raw[BRAW-1];
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) begin raw_out <= 6'd0; raw_age <= 9'd0; f_raw <= 1'b0; end
         else if (ELASTIC != 0) begin
-            raw_out <= raw_out + {6'd0, rawslot_q} - {6'd0, rv_q};
-            if (rv_q && raw_out == 7'd0 && !rawslot_q) f_raw <= 1'b1;           // earlier than nominal / unsolicited
-            if (raw_out == 7'(TQD) && rawslot_q && !rv_q) f_raw <= 1'b1;        // outstanding count overflow
+            raw_out <= raw_out + {6'd0, raw_nom} - {6'd0, rv_q};
+            if (rv_q && raw_out == 7'd0 && !raw_nom) f_raw <= 1'b1;             // earlier than nominal / unsolicited
+            if (raw_out == 7'(TQD) && raw_nom && !rv_q) f_raw <= 1'b1;          // outstanding count overflow
             if (rv_q || raw_out == 7'd0) raw_age <= 9'd0;
             else if (raw_age == 9'(RAW_WD - 1)) f_raw <= 1'b1;                  // PHY late beyond watchdog
             else raw_age <= raw_age + 9'd1;
         end
-    wire raw_bad = (ELASTIC == 0) ? (rv_q != rawslot_q) : f_raw;
+    wire raw_bad = (ELASTIC == 0) ? (rv_q != raw_nom) : f_raw;
 
     // ---- command arbiter ---------------------------------------------------------------------------------------------
     wire [346:0] col_context;
@@ -881,6 +902,7 @@ module qkd_kvpc_s_sched #(
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin static_owner_q__qv <= {3{static_owner_q__f(0)}};static_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;end
       else begin static_owner_q__qv <= {3{static_owner_q__f(static_cmd_owner)}};static_v_q<=static_cmd[0];rdslot_q<=reserved_rd;srslot_q<=reserved_static_col;wrslot_q<=reserved_write_col;end
+    always @(posedge hclk or negedge h_rn) if (!h_rn) boot_win <= 1'b1; else if (static_owner_q) boot_win <= 1'b0;
     wire        cmd_v  = static_owner_q ? static_v_q : tc_v;
     wire [31:0] cmd    = static_owner_q ? static_d_q : tc_d;
     always @(posedge hclk or negedge hgo)
@@ -903,7 +925,7 @@ module qkd_kvpc_s_sched #(
     wire [4:0]  row_bank, col_bank, col_col;
     wire [18:0] row_row;
     ot_qkd_static_ctrl_pc_emb_kvpc_s #(.CORE_CLOCK(CORE_CLOCK),.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
-        .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q), .cmd_credit(cmd_credit),
+        .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.boot_window(boot_win),.col_boot(col_boot), .cmd_credit(cmd_credit),
         .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
         .s_context({c_context,c_d[274:256],c_d[284:280],c_d[279:275],c_d[255:0]}),.col_context(col_context),.s_v(c_v), .s_we(c_d[285]), .s_bank(c_d[284:280]), .s_col(c_d[279:275]), .s_row(c_d[274:256]),
@@ -987,9 +1009,14 @@ module qkd_kvpc_s_sched #(
     // Dedicated raw PHY pin stage: all command and write-data bits move
     // together, preserving JEDEC spacings and CWL alignment. Physical static
     // completion and KV write retirement move with the actual launched column.
-    reg [3:0] expected_sr_pipe;
-    assign expected_sr=expected_sr_pipe[3];
-    always @(posedge hclk or negedge h_rn)if(!h_rn)expected_sr_pipe<=0;else expected_sr_pipe<={expected_sr_pipe[2:0],reserved_static_col};
+    // KV-TOK B: expected_sr is ONE flop: the reservation 4 edges late (was expected_sr_pipe[3]) or a boot column one
+    // edge late (aligned with physical_col_sr <= col_sr); boot_raw delays a boot READ column to its nominal raw slot.
+    reg [2:0] expected_sr_pipe;
+    reg expected_sr_q;
+    assign expected_sr=expected_sr_q;
+    always @(posedge hclk or negedge h_rn)if(!h_rn)begin expected_sr_pipe<=0;expected_sr_q<=0;boot_raw<=0;end
+      else begin expected_sr_pipe<={expected_sr_pipe[1:0],reserved_static_col};expected_sr_q<=expected_sr_pipe[2]|col_boot;
+        boot_raw<={boot_raw[BRAW-2:0],col_boot&&!col_we};end
     always @(posedge hclk)physical_context<=col_context;
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin po<=0;physical_col_sr<=0;end
@@ -1019,7 +1046,7 @@ module qkd_kvpc_s_sched #(
     // all legal traffic; an unsolicited zero-debt landing still raises drain_fault_hbm and drops idle_hbm one edge later.
     // e_l_v now loads only its pin flop.
     wire hbm_drain_activity=obs_commit_valid||rd_kv||tc_v||cmd_v||static_v_q||c_v||s_cr||
-      row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||kv_v||em_v||l_v||native_commit_valid;
+      row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||(|boot_raw)||kv_v||em_v||l_v||native_commit_valid;
     reg hbm_debt_zero_q;reg [1:0] hbm_quiet_q;
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin hbm_debt_zero_q<=0;hbm_quiet_q<=0;end
@@ -1042,7 +1069,7 @@ module qkd_kvpc_s_sched #(
         else idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0&&
           !tc_v&&!cmd_v&&!static_v_q&&!c_v&&!s_cr&&
           dv==0&&!row_v&&!col_v&&!po[0]&&!po[28]&&
-          !rv_q&&!rawslot_q&&!kv_v&&!em_v&&!l_v&&!e_l_v&&!native_commit_valid&&!obs_commit_valid&&
+          !rv_q&&!rawslot_q&&!(|boot_raw)&&!kv_v&&!em_v&&!l_v&&!e_l_v&&!native_commit_valid&&!obs_commit_valid&&
           !drain_fault_hbm&&!fo&&!f_ecdc;
       end
 endmodule
@@ -1648,6 +1675,9 @@ module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer CORE_CLOCK=0,ENABLE=
  input wire clk,rst_n,
  input wire cmd_v,input wire [31:0] cmd,
  input wire [9:0] cmd_first, input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
+ // KV-TOK B 2026-10-24: boot window (see ot_qkd_static_kv_timing.boot_static_col), captured in a pin flop like the
+ // reservations; col_boot marks a static column issued in the window WITHOUT a reservation (registered with col_sr).
+ input wire boot_window,output reg col_boot,
  output reg cmd_credit,
  output reg row_v,output reg [2:0] row_op,output reg [4:0] row_bank,
  output wire [18:0] row_row,
@@ -1669,7 +1699,7 @@ module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer CORE_CLOCK=0,ENABLE=
  (* keep *) reg cmd_v_q;
  (* keep *) reg [31:0] cmd_q;
  (* keep *) reg [9:0] first_q;
- (* keep *) reg rdslot_q,srslot_q,wrslot_q;
+ (* keep *) reg rdslot_q,srslot_q,wrslot_q,bootwin_q;
  reg [9:0] first_fifo[0:7];reg [9:0] head_first;
  reg [31:0] fifo[0:7];
  reg [2:0] wp;
@@ -1698,7 +1728,7 @@ module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer CORE_CLOCK=0,ENABLE=
  ot_qkd_static_kv_timing_kvpc_s #(.CORE_CLOCK(CORE_CLOCK),.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.PROFILE(PROFILE),.SROW(1),.SQD(SQD),.S_STARVE(S_STARVE),.TWIN(TWIN),.TWIN_ROFF(TWIN_ROFF),.READY_CUT(1),.ENABLE(ENABLE),.REF_MODE(1),.PC(PC),
   .REF_PHASE((PHASE+(PC*(CORE_CLOCK ? (2*((118*1024)/(2*833))) : 118))/32)%(CORE_CLOCK ? (2*((118*1024)/(2*833))) : 118)),.WR_EN(1),.WQ(4),.PULLIN(PULLIN),.AQ_RD(0)) core(
   .clk(clk),.rst_n(rst_n),.desc_v(live && !malformed && descriptor_head),
-  .desc_r(desc_ready),.desc_row(head[18:0]),.desc_n(context_head?{2'b0,head[27:19]}:head[29:19]),.desc_first(head_first),.desc_context(context_head),.desc_vpass(head[28]),.desc_k_order_b(head[29]),.desc_k_count0(head_first[7:0]),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.schedule_fault(schedule_fault),.phase_idle(core_idle),
+  .desc_r(desc_ready),.desc_row(head[18:0]),.desc_n(context_head?{2'b0,head[27:19]}:head[29:19]),.desc_first(head_first),.desc_context(context_head),.desc_vpass(head[28]),.desc_k_order_b(head[29]),.desc_k_count0(head_first[7:0]),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.boot_static_col(bootwin_q),.schedule_fault(schedule_fault),.phase_idle(core_idle),
   .go(live && head[31:30]==1),.next_posted(1'b0),
   .row_v(rv),.row_prio(),.row_gnt(1'b1),.row_op(rop),.row_bank(rb),.row_row(rr),
   .col_v(cv),.col_bank(cb),.col_col(cc),
@@ -1722,11 +1752,11 @@ module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer CORE_CLOCK=0,ENABLE=
  end
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
-   cmd_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;cmd_credit<=0;wp<=0;rp__qv <= {15{rp__f(0)}};count<=0;s_v_q<=0;s_cr<=0;col_sr<=0;
+   cmd_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;bootwin_q<=0;col_boot<=0;cmd_credit<=0;wp<=0;rp__qv <= {15{rp__f(0)}};count<=0;s_v_q<=0;s_cr<=0;col_sr<=0;
    row_v<=0;col_v<=0;col_we<=0;busy<=0;fault_q<=0;fault<=0;
   end else begin
    cmd_v_q<=cmd_v;rdslot_q<=reserved_rd;srslot_q<=reserved_static_col;wrslot_q<=reserved_write_col;
-   s_v_q<=s_v;s_cr<=spop;col_sr<=csr;
+   s_v_q<=s_v;s_cr<=spop;col_sr<=csr;bootwin_q<=boot_window;col_boot<=csr&&bootwin_q&&!srslot_q;
    cmd_credit<=pop;
    if(push) wp<=wp+1'b1;
    if(pop) rp__qv <= {15{rp__f(rp+1'b1)}};
@@ -1777,6 +1807,10 @@ module ot_qkd_static_kv_timing_kvpc_s #(
   output wire [2:0]  row_op, output wire [4:0] row_bank, output wire [18:0] row_row,
   output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
   input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
+  // KV-TOK B 2026-10-24: controller boot window (maintenance mode before the calendar first owns the PC; driven by the
+  // parent's boot-window state, never by a reservation): the static queue head's column issues when JEDEC-legal with no
+  // reserved_static_col.  0 = original (every static column needs its reservation).
+  input wire boot_static_col,
   input wire [9:0] desc_first,
   input wire desc_context,desc_vpass,desc_k_order_b,input wire [7:0] desc_k_count0,
   output wire schedule_fault,
@@ -2080,7 +2114,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire s_col_ok = s_hit && ccdl_z[sb[1:0]] && !(|(sb_oh & blk)) && !rd_block &&
                     (swe ? (W && |(sb_oh & rcdw_z) && rtw_c == 0) : (|(sb_oh & rcd_z) && wtr_c == 0));
     wire legal_static = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
-    assign s_go = legal_static && (PROFILE == 1 || reserved_static_col);
+    assign s_go = legal_static && (PROFILE == 1 || reserved_static_col || boot_static_col);
     wire legal_rd = rd_ok0 && !s_go && !(|(rd_oh & s_pblk));
     assign rd_ok = legal_rd && (PROFILE == 1 || reserved_rd);
     reg fault_schedule;

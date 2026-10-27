@@ -111,11 +111,24 @@ def test_wrapper_preserves_original_packed_bus_range():
     assert "input wire [4:11] d" in v
 
 
+def _tcl_eval_set(word):
+    """value Tcl gives `set x <word>`: tkinter when the interpreter has it, else the system tclsh (the fleet
+    pytest venv python has no _tkinter); skip only when neither Tcl is present."""
+    try:
+        import tkinter
+        return tkinter.Tcl().eval("set x "+word)
+    except ImportError:
+        import shutil, subprocess
+        tclsh=shutil.which("tclsh") or shutil.which("tclsh8.6")
+        if not tclsh:
+            pytest.skip("no Tcl interpreter (tkinter or tclsh)")
+        r=subprocess.run([tclsh],input="puts -nonewline [set x "+word+"]\n",capture_output=True,text=True,check=True)
+        return r.stdout
+
+
 def test_tcl_word_preserves_real_yosys_sink_identity():
-    import tkinter
-    interp=tkinter.Tcl()
     name=r"c1_off\[0\]$_DFF_P_/CLK"
-    assert interp.eval("set x "+CI.word(name)) == name
+    assert _tcl_eval_set(CI.word(name)) == name
     with pytest.raises(CI.InfraError): CI.word("unsafe"+chr(92))
 
 
@@ -237,3 +250,25 @@ def test_cts_hook_written_with_plan_open_count(tmp_path):
 def test_no_cts_hook_without_plan_tree(tmp_path):
     assert CI.install(tmp_path, sample())
     assert not (tmp_path / CI.CTS_HOOK).exists()
+
+
+def test_installed_clock_entry_uses_same_track_and_access_as_kit_io(tmp_path):
+    # Regression: the later pushdown hook used to undo io.tcl's track snap and
+    # via-access shape, causing DRT-0255 at the centre clock entry.
+    sl = sample()
+    original = copy.deepcopy(sl)
+    (tmp_path / "make_tracks.tcl").write_text(
+        "make_tracks M5 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048\n")
+    CI.install(tmp_path, sl)
+    p = json.loads((tmp_path / "core_infra_plan.json").read_text())
+    assert p["clock_entry"]["xy_um"] == [432.012, 432.0]
+    assert "ot_ci_clock_entry {clk} 432.012 432" in (tmp_path / "master_core_infra.tcl").read_text()
+    impl = (tmp_path / "core_infra_impl.tcl").read_text()
+    clock_proc = impl.split("proc ot_ci_clock_entry", 1)[1].split("proc ot_ci_port", 1)[0]
+    assert "-pin_size {0.048 0.48}" in clock_proc
+    assert sl == original  # the frozen slice stays byte-identical
+    # A kit with a nondefault track grid must use that exact grid as io.tcl does.
+    (tmp_path / "make_tracks.tcl").write_text(
+        "make_tracks M5 -x_offset 0.02 -x_pitch 0.08 -y_offset 0.012 -y_pitch 0.048\n")
+    CI.install(tmp_path, sl)
+    assert json.loads((tmp_path / "core_infra_plan.json").read_text())["clock_entry"]["xy_um"] == [432.02, 432.0]

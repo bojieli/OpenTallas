@@ -75,8 +75,8 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
     reg [GW:0]   go_d;
     reg          ep_q, eact, tokbase, adm_pend, adm_run;
     reg [31:0]   e, pcnt;
-    reg          auto_go, prun;
-    wire         go_in = AUTO ? auto_go : tok_go;
+    reg          prun;
+    wire         go_in = AUTO ? tok_start : tok_go;
     reg [GW:0]   gd;
     wire         go_now = (GO_OFS > 0) ? go_d[GO_OFS-1] : go_in;
     wire [19:0] nxt = rom_start;
@@ -125,7 +125,6 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
     reg [0:0] adm_pend_next;
     reg [0:0] adm_run_next;
     reg [0:0] adm_done_next;
-    reg [0:0] auto_go_next;
     reg [31:0] pcnt_next;
     reg [0:0] prun_next;
     reg [0:0] tok_start_next;
@@ -171,7 +170,6 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
     reg [0:0] adm_pend_part0;
     reg [0:0] adm_run_part0;
     reg [0:0] adm_done_part0;
-    reg [0:0] auto_go_part0;
     reg [31:0] pcnt_part0;
     reg [31:0] pcnt_part1;
     reg [0:0] prun_part0;
@@ -1927,76 +1925,6 @@ cfg_data_part1[24 +: 8] = 8'b0;
         adm_done_next[0:0] = adm_done_part0[0:0];
     end
     always @* begin
-        auto_go_part0 = auto_go;
-            ;
-            ;
-            ; ; ; ;
-            auto_go_part0 = 1'b0; ;
-            // ---- epoch anchor
-            if (ep_rise && ADM) begin
-                ; ; ; ; ;
-            end else if (eact) ;
-            if (halt) begin ; ; ; end
-            // ---- AUTO token anchor: first token at E_TOK, then every rom_period
-            if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin auto_go_part0 = 1'b1; ; ; ; end
-                else if (prun) begin
-                    if (pcnt == rom_period) begin auto_go_part0 = 1'b1; ; ; end
-                    else ;
-                end
-            end
-            if (init_copy1) begin
-                // TX entry i (even step), RX entry i (odd step), then the two segment-1 bases
-                ;
-                if (ip < 2 * NE) begin
-                    ;
-                    ;
-;
-;
-;
-                    ; ;
-                end else begin
-                    ;
-                    ;
-                    ; ;
-                end
-                ;
-                if (ip == NI - 1) begin ; ; ; end
-                if (go_in) ;
-            end else if (halt) begin
-                ;                            // exceptional mode: the HOST replays from the next epoch
-            end else if (ADM && eact && (e == 32'd1 || e == 32'd2) && tokbase) begin
-                // new epoch: back to the admission segment (the calendars are stopped after the epoch begin)
-                ; ;
-                ; ;
-                if (e == 32'd2) ;
-                if (running_copy1) ;
-            end else if (ADM && eact && e == E_ADM && adm_pend) begin
-                if (!cal_ready || tokbase || running_copy1) ;
-                ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
-                // admission over: segment-1 bases to the token run
-                ; ;
-                ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
-            end else if (running_copy1) begin
-                if (go_now) ;                  // a second token start inside a running_copy1 program
-                ;
-                if (t + 1'b1 == nxt) begin
-                    ; ; ;
-                    if (li == NL - 1) ; else ;
-                end
-            end else if (go_now) begin
-                if (!cal_ready || !adm_done || !tokbase) ;
-                ; ; ;
-                ; ; ;
-            end else if (reload) begin
-                ; ; ; ;
-            end
-        
-        auto_go_next[0:0] = auto_go_part0[0:0];
-    end
-    always @* begin
         pcnt_part0 = pcnt;
             ;
             ;
@@ -2380,9 +2308,6 @@ cfg_data_part1[24 +: 8] = 8'b0;
     always @(posedge ck or negedge rst_bank_n[7])
         if (!rst_bank_n[7]) adm_done <= (ADM == 0);
         else adm_done <= adm_done_next;
-    always @(posedge ck or negedge rst_bank_n[7])
-        if (!rst_bank_n[7]) auto_go <= 1'b0;
-        else auto_go <= auto_go_next;
     always @(posedge ck or negedge rst_bank_n[7])
         if (!rst_bank_n[7]) pcnt[1:0] <= ((32'(32'd0)) >> 0);
         else pcnt[1:0] <= pcnt_next[1:0];

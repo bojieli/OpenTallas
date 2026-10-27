@@ -16,7 +16,10 @@ mode submit (default): the autopilot launches the kit through ot-run once it car
   --geom AUTO --geom-ref "TEMPLATE <tid>"      : AUTO-GEOM (owner 2026-10-25, hub AP_AUTO_GEOM=1 only): a replica of a
                                                  registered visually passed template (autopilot/geom_templates.tsv) is
                                                  judged by tools/autopilot/geom_rules.py on its 3_place / 4_cts; PASS
-                                                 routes, FAIL + a 1-in-10 sample go to the visual reviewers.
+                                                 routes, FAIL + a 1-in-5 sample go to the visual reviewers.
+  AP_AUTO_GEOM_ALL=1 on the hub (owner 2026-10-27 08:02) also checks new kits independently: pending REQ rows
+  and AUTO rows without TEMPLATE run absolute measured checks. A missing source/outline/pin input or failed rule
+  stays for visual review. Explicit visual FAILs, canary holds and plan-delta holds remain in force.
 mode adopt: the lane already launched the run by hand; the autopilot only watches it (hub ot-run client + containers +
   logs), then classifies, archives SIGNED / renders + records failures, and deletes failed data.
 mode trial (closure order rule 1, owner 2026-10-25): a part of a path whose die gate in lanes/PATH-FREEZE.md is not
@@ -61,8 +64,8 @@ def main(argv=None):
     if r["error"]:
         sys.exit(f"enqueue: REFUSED: {r['error']}")
     if r["geom"].upper() == "AUTO":
-        print("enqueue: NOTE geom AUTO: AUTO-GEOM rule check if the kit is a registered template replica, else the row "
-              "waits for a visual GEOM REQ verdict")
+        print("enqueue: NOTE geom AUTO: measured checks when the hub enables AP_AUTO_GEOM_ALL=1, otherwise registered "
+              "template replicas only; every rule FAIL and 1-in-5 PASS sample request visual review")
     elif r["geom"].upper() not in AP.GEOM_OK and r["mode"] not in ("adopt", "withdraw"):
         print(f"enqueue: NOTE geom '{r['geom']}' is not PASS: the row waits for a GEOM-REVIEW verdict of tag "
               f"'{AP.geom_tag(r['geom_ref'])}' naming {r['type']} (or a PASS row appended later)")

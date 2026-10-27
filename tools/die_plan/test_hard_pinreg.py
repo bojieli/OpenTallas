@@ -37,17 +37,25 @@ def lib_text(cell="lf_rphy", setup=True, hold=True, c2q=True, w=8):
             f"{tim('rising_edge') if c2q else tim('combinational')}    }}\n  }}\n}}\n")
 
 
+# KV-KITS-3 line-side views (d4747695cc): the UCIe macro's bump lanes are declared bump_ports in the KV plan, untimed in
+# the LIB, and check_plan skips them exactly like this (hard_pinreg.check_plan skip = the entry's bump_ports)
+KV_UCIE_LINE = ("link_v", "link_flit", "far_v", "far_flit")
+
+
 def test_lib_checker_on_the_phy_views():
-    """the QC PHY views (UCIe KV + SerDes s597) carry the registered-pin claim at every corner"""
-    for d, cell in (("physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy", "ot_qkvd_ucie_x64_phy"),
-                    ("physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597",
-                     "ot_qfd_serdes_112g_x12_phy_s597")):
+    """the QC PHY views (UCIe KV + SerDes s597) carry the registered-pin claim at every corner on the FDI pins"""
+    for d, cell, line in (("physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy", "ot_qkvd_ucie_x64_phy", KV_UCIE_LINE),
+                          ("physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597",
+                           "ot_qfd_serdes_112g_x12_phy_s597", ())):
         for c in ("tt", "ff", "ss"):
             f = REPO / d / f"{cell}_{c}.lib"
             if not f.exists():
                 pytest.skip(f"{f} not in this checkout")
-            errs, s = HP.check_lib(f, cell)
+            errs, s = HP.check_lib(f, cell, None, line)
             assert errs == [] and s["inputs"] == 3 and s["outputs"] == 3 and s["clocks"] == ["clk"], (f, errs)
+            if line:  # the line side really is untimed (never a silently skipped FDI pin)
+                pins = HP.parse_lib(f)[cell]
+                assert all(n in pins and not pins[n]["arcs"] for n in line), (f, line)
 
 
 def test_lib_checker_fails_closed(tmp_path):

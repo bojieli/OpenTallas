@@ -8,20 +8,42 @@
 #   P  k name io sig layer cx cy                     top pin (first box of the first BPin)
 #   N  sig drv sink...                               signal/clock net: drv / sink = i<id> (cell pin), i<id>c (clock pin
 #                                                    of a seq/macro), p<k> (top pin), '-' (no driver); PG nets skipped
+#   R  x0 y0 x1 y1                                   core area (row origin)
+#   T  layer dir pitch                               routing layer of the tech (GEOM-AUTO-2: channel/column capacity)
+#   O  master layer...                               routing layers obstructed by a hard-macro master (OBS / pins)
+#   Q  id status                                     non-PLACED placement status (FIRM/LOCKED/COVER: pre-placed islands)
 set gd_b [ord::get_db_block]
 set gd_u [expr {double([$gd_b getDbUnitsPerMicron])}]
 proc gd_f {v} { return [format %.4f [expr {$v / $::gd_u}]] }
 set gd_o [open $::env(OT_GEOM_OUT) w]
 set d [$gd_b getDieArea]
 puts $gd_o "D\t[gd_f [$d xMin]]\t[gd_f [$d yMin]]\t[gd_f [$d xMax]]\t[gd_f [$d yMax]]"
+set ca [$gd_b getCoreArea]
+puts $gd_o "R\t[gd_f [$ca xMin]]\t[gd_f [$ca yMin]]\t[gd_f [$ca xMax]]\t[gd_f [$ca yMax]]"
+foreach l [[ord::get_db_tech] getLayers] {
+  if {[$l getType] ne "ROUTING"} { continue }
+  puts $gd_o "T\t[$l getName]\t[$l getDirection]\t[gd_f [$l getPitch]]"
+}
 array set gd_skip {}
+array set gd_mobs {}
 foreach i [$gd_b getInsts] {
   set m [$i getMaster]; set mn [$m getName]
-  if {[$m isBlock]} { set k M } elseif {[regexp {^(TAPCELL|FILLER|FILL|DECAP)} $mn]} { set gd_skip([$i getId]) 1; continue
+  if {[$m isBlock]} { set k M
+    if {![info exists gd_mobs($mn)]} {
+      set ls {}
+      foreach ob [$m getObstructions] { set tl [$ob getTechLayer]; if {$tl ne "NULL"} { lappend ls [$tl getName] } }
+      foreach mt [$m getMTerms] { foreach mp [$mt getMPins] { foreach g [$mp getGeometry] {
+        set tl [$g getTechLayer]; if {$tl ne "NULL"} { lappend ls [$tl getName] } } } }
+      set gd_mobs($mn) 1
+      puts $gd_o "O\t$mn\t[join [lsort -unique $ls] \t]"
+    }
+  } elseif {[regexp {^(TAPCELL|FILLER|FILL|DECAP)} $mn]} { set gd_skip([$i getId]) 1; continue
   } elseif {[regexp {^(ICG|CKINV|CKBUF|CLKBUF)} $mn]} { set k K
   } elseif {[regexp {^(DFF|DHL|DLL|SDF|ASYNC)} $mn]} { set k S
   } elseif {[regexp {^(BUF|INV|HB)} $mn]} { set k B } else { set k L }
   set bb [$i getBBox]
+  set ps [$i getPlacementStatus]
+  if {$ps ni {PLACED NONE UNPLACED SUGGESTED}} { puts $gd_o "Q\t[$i getId]\t$ps" }
   puts $gd_o "C\t[$i getId]\t$k\t$mn\t[gd_f [$bb xMin]]\t[gd_f [$bb yMin]]\t[gd_f [$bb xMax]]\t[gd_f [$bb yMax]]\t[$i getName]"
 }
 set k 0

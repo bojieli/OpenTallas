@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import re
 import struct
 import sys
@@ -63,11 +64,59 @@ class SynMat(I.Mat):
         self.w = G.Q8(G.E4M3[self.codes].astype(np.float64), self.exp.astype(np.int64) - 127)
 
 
-def frame_pairs(master):
-    """frame-local pair index -> kind, from the emitted wrapper (q = ot_v41_rom_elem_q_qxpq_w10 u_e<k>)"""
-    txt = (ROOT / f'rtl/dsrom_sys/s81_dv/frame/{master}.sv').read_text()
-    q = sorted(int(m.group(1)) for m in re.finditer(r'^\s*ot_v41_rom_elem_q_qxpq_w10 #\(.*?\) u_e(\d+) ', txt, re.M))
-    bf = sorted(int(m.group(1)) for m in re.finditer(r'^\s*dsfd_bf_front_(?:static|roots) #\(.*?\) u_e(\d+) ', txt, re.M))
+_Q_RE = re.compile(r'^\s*ot_v41_rom_elem_q_qxpq_w10\s+(?:#\(.*?\)\s*)?u_e(\d+)\s*\(', re.M)
+_BF_RE = re.compile(r'^\s*dsfd_bf_front_(?:static|roots)\s+(?:#\(.*?\)\s*)?u_e(\d+)\s*\(', re.M)
+# a frame band child (as-built col_<M>_l4_lp_asb_{x,nx} -> u_r0/u_r1/u_r2 = col_<M>_l4_lp_r<i>[_nx] plan kits)
+_BAND_RE = re.compile(r'^\s*(col_h\d+\w*)\s+(?:#\s*\(.*?\)\s*)?(u_\w+)\s*\(', re.M)
+
+
+def frame_module_source(master):
+    """TOK-DS-10 (10-27): the ONE source definition of frame module `master` from a module index, never a
+    file-per-module path guess.  With OT_S81_SELECTED_ASBUILT_MANIFEST set, the binder's exact file/prefer precedence
+    (layer_prog/slice_source.manifest_selection + die_plan/bind_elab.pick) resolves it: the current die top binds the
+    as-built band frames col_h*_l4_lp_asb_{x,nx}, which live in physical/die_plan/s81/bind/models/s81_asb_models.sv,
+    and their plan-kit bands (frame_lp/plan/col_h*_l4_lp_plan_kit.sv).  A module the manifest does not select (the
+    legacy flat frame col_h9 / col_h10 that LP dies name by base_master) resolves to its canonical emitted wrapper
+    rtl/dsrom_sys/s81_dv/frame/<master>.sv.  Returns (path, comment-stripped module body); missing / ambiguous fails."""
+    sys.path.insert(0, str(ROOT / 'tools/die_plan'))
+    sys.path.insert(0, str(ROOT / 'tools/s81_dv/layer_prog'))
+    import bind_elab
+    import slice_source
+    manifest = os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST')
+    if manifest:
+        src_root = Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or ROOT)
+        _p, _ab, idx, prefer = slice_source.manifest_selection(src_root, manifest)
+        picked, ambiguous = bind_elab.pick(idx, master, prefer)
+        if ambiguous:
+            raise ValueError(f'frame master {master}: ambiguous selected definitions {idx.get(master)}')
+        if picked:
+            body = slice_source.preprocess(bind_elab.module_body(picked, master))
+            return Path(picked), body
+    path = ROOT / f'rtl/dsrom_sys/s81_dv/frame/{master}.sv'
+    if not path.is_file():
+        raise ValueError(f'frame master {master}: no selected definition and no canonical wrapper {path}')
+    body = bind_elab.module_body(path, master)
+    if not body:
+        raise ValueError(f'frame master {master}: {path} does not define it')
+    return path, slice_source.preprocess(body)
+
+
+def frame_pairs(master, _depth=0):
+    """frame-local pair index -> kind, from the frame's element instances (q = ot_v41_rom_elem_q_qxpq_w10 u_e<k>,
+    bf = dsfd_bf_front_{static,roots} u_e<k>), followed through band children (as-built band compositions keep the
+    flat frame's u_e<k> numbering inside u_r0/u_r1/u_r2)"""
+    assert _depth < 4, ('frame band nesting too deep', master)
+    _path, txt = frame_module_source(master)
+    q = [int(m.group(1)) for m in _Q_RE.finditer(txt)]
+    bf = [int(m.group(1)) for m in _BF_RE.finditer(txt)]
+    for m in _BAND_RE.finditer(txt):
+        cq, cbf = frame_pairs(m.group(1), _depth + 1)
+        q += cq
+        bf += cbf
+    if _depth:
+        return q, bf
+    assert len(q) == len(set(q)) and len(bf) == len(set(bf)), ('duplicate frame element', master, q, bf)
+    q, bf = sorted(q), sorted(bf)
     assert q and bf and not set(q) & set(bf) and sorted(q + bf) == list(range(len(q) + len(bf))), (q, bf)
     return q, bf
 

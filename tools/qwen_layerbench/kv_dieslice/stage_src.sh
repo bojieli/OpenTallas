@@ -24,11 +24,13 @@ while read -r f; do [ -z "$f" ] && continue; case "$f" in *ot_qkvd_ucie_x64_phy_
   d=$(dirname $f); stage_dir $d; echo "$O/src/$(tag $d)/$(basename $f)" >> $O/files.f; done < $B/bind.f
 : > $O/hostside.f
 # host board-side end of the SerDes link (real host link adapter + CDC RTL = the off-die host model's transport)
-A=$(cd "$H/../../.." && pwd)  # host transport comes from this same source cohort
+A=${HOSTSIDE_SOURCE_TREE:-$(cd "$H/../../.." && pwd)}  # default: this same source cohort
 # the bind source root (leaf search roots for resolve_missing.py): the tree most bind.f entries come from
 sed -n "s#/rtl/.*##p" $B/bind.f | sort | uniq -c | sort -rn | awk '{print $2}' > $O/src_roots.txt
 for f in $A/rtl/test/qwen_host/qkd_host_board_port_fixture.sv $A/rtl/physical/ot_qfd_link_adp512_split.sv; do
   d=$(dirname $f); mkdir -p $O/src/$(tag $d); cp -a $f $O/src/$(tag $d)/; echo "$O/src/$(tag $d)/$(basename $f)" >> $O/hostside.f; done
 for f in bind_latency.json param_regen.json bus_groups.json bus_groups.json.gz; do [ -f $B/$f ] && cp -a $B/$f $O/ || true; done
 sha256sum $B/rtl/qwen_kvsys_bound_top.sv | cut -c1-64 > $O/bound_top.sha256
+# Optional coherent boot-window implementation refresh, before any elaboration.
+[ -z "${BOOT_SOURCE_TREE:-}" ] || python3 "$H/native_boot_sources.py" "$O" "$BOOT_SOURCE_TREE"
 echo "files $(grep -c . $O/files.f) incdirs $(grep -c . $O/incdirs.f) top_sha $(cut -c1-12 $O/bound_top.sha256) $(du -sh $O/src | cut -f1)"

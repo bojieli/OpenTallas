@@ -58,9 +58,13 @@ def main():
     for k in rec:
         rec_by_mod[re.sub(r"__[\d.]+x[\d.]+(@.*)?$", "", k)].append(k)
     views = {}
+    no_pins = []
     tables = collections.defaultdict(set)
     for tn, t in plan["partition_types"].items():
         for c in t.get("hard_cores", []):
+            if not c.get("pins_file"):   # HBM-KITS-1: plan core without a pin table (e.g. U4f keybuf) -> no view
+                no_pins.append(f"{tn}.{c['inst']}:{c['module']}")
+                continue
             pf = pdir / c["pins_file"]
             key = f"{c['module']}@{sha(pf)[:12]}"
             v = views.setdefault(key, dict(view=key, module=c["module"], outline_um=c["outline_um"],
@@ -84,7 +88,7 @@ def main():
         v["blockers"] = blk
     out = dict(schema="opentallas.hbm_arch.core_views.v1", plan=str(a.plan), plan_sha256=sha(a.plan),
                views=len(views), placed=sum(v["placed"] for v in views.values()),
-               modules=len(tables), by_family=dict(collections.Counter(v["family"] for v in views.values())),
+               modules=len(tables), no_pins_table=no_pins, by_family=dict(collections.Counter(v["family"] for v in views.values())),
                view_list=sorted(views.values(), key=lambda v: (v["family"], v["module"], v["view"])))
     Path(a.out).write_text(json.dumps(out, indent=1) + "\n")
     print(json.dumps({k: out[k] for k in ("views", "placed", "modules", "by_family")}))

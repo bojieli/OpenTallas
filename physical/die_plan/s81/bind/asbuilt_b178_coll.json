@@ -259,6 +259,7 @@
   "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_guarded_mux.sv",
   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
@@ -1259,5 +1260,12 @@
    },
    "reason": "PCBASE0 entry sector address has26bits;39bit real entry ABI keeps tags/PC/v exact. Require all4 removedsourcebits to resolve0; no waiver."
   }
- ]
+ ],
+ "instance_path_params": [
+  {
+   "module": "ot_rom_4096x72_m8",
+   "param": "INSTANCE"
+  }
+ ],
+ "instance_path_params_note": "TOK-DS-9 10-27 (COORD ruling): emit each ROM leaf INSTANCE = its original elaborated path (tools/die_plan/bind.py instance_path_params, 3b444bc718) so bound partitions read their own viamap image (<path>.viamap.hex); before this every carve ROM was emitted INSTANCE(\"\") and loaded no image (tokds8 l14_missing/rom_ids.json, 84 ROMs). Simulation image selector only: an explicit non-empty selector must equal the path (BindError otherwise); no port/connectivity/timing change."
 }

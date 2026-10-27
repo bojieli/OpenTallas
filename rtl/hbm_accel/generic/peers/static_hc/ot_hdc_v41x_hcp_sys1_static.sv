@@ -88,6 +88,7 @@ module ot_hdc_v41x_hcp_sys1_static #(
     // builds the remaining LW - TPRE levels, and SYS_LAT counts to the arrival of those subtree sums.  Same pairs, same
     // order, so the run sums are bit-identical to TPRE = 0.
     parameter integer TPRE = 0,
+    parameter integer CMD_RST = 0,      // HBM-CORE-LAT-R5: 1 = async reset on the command / issue registers
     parameter integer PW   = (PMAX > 1) ? $clog2(PMAX) : 1,
     parameter integer OXW  = (OMAX > 1) ? $clog2(OMAX) : 1
 ) (
@@ -199,24 +200,56 @@ module ot_hdc_v41x_hcp_sys1_static #(
             if (o_valid && (STATIC_CALENDAR || o_ready) && o_last) busy <= 1'b0;
         end
     end
-    always @(posedge clk) begin
-        if (accept_cmd) begin
-            npos_r <= cmd_npos; nout_r <= cmd_nout; scale_r <= cmd_scale;
-            nrun_r <= nrun_c; nlast_r <= ((cmd_nchunk - 1'b1) & (W - 1)) + 1'b1;
-            nf_r <= cmd_nf; eps_r <= cmd_eps; wbase_r <= cmd_wbase;
-            p <= 0; o <= 0; r <= 0; ssph <= cmd_scale; wcur <= cmd_wbase; xpos <= cmd_xbase;
-        end else if (iss) begin
-            if (!last_r) r <= r + 1'b1;
-            else begin
-                r <= 0;
-                if (ssph) ssph <= 1'b0;
-                else if (!last_o) o <= o + 1'b1;
-                else begin
-                    o <= 0; p <= p + 1'b1; ssph <= scale_r; wcur <= wbase_r; xpos <= xpos + nrun_r;
+    // HBM-CORE-LAT-R5 (COORD RULING R4 (1), 2026-10-27; default 0 = unchanged): CMD_RST = 1 gives the command / issue
+    // registers an async reset, so a tied command field becomes a reset-provable constant (no undefined-init register).
+    generate if (CMD_RST != 0) begin : g_cmd_rst
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin
+                npos_r <= 0; nout_r <= 0; scale_r <= 1'b0; nrun_r <= 0; nlast_r <= 0;
+                nf_r <= 32'd0; eps_r <= 32'd0; wbase_r <= 0;
+                p <= 0; o <= 0; r <= 0; ssph <= 1'b0; wcur <= 0; xpos <= 0;
+            end else begin
+                if (accept_cmd) begin
+                    npos_r <= cmd_npos; nout_r <= cmd_nout; scale_r <= cmd_scale;
+                    nrun_r <= nrun_c; nlast_r <= ((cmd_nchunk - 1'b1) & (W - 1)) + 1'b1;
+                    nf_r <= cmd_nf; eps_r <= cmd_eps; wbase_r <= cmd_wbase;
+                    p <= 0; o <= 0; r <= 0; ssph <= cmd_scale; wcur <= cmd_wbase; xpos <= cmd_xbase;
+                end else if (iss) begin
+                    if (!last_r) r <= r + 1'b1;
+                    else begin
+                        r <= 0;
+                        if (ssph) ssph <= 1'b0;
+                        else if (!last_o) o <= o + 1'b1;
+                        else begin
+                            o <= 0; p <= p + 1'b1; ssph <= scale_r; wcur <= wbase_r; xpos <= xpos + nrun_r;
+                        end
+                    end
+                    if (!ssph && !(last_r && last_o)) wcur <= wcur + 1'b1;
                 end
             end
-            if (!ssph && !(last_r && last_o)) wcur <= wcur + 1'b1;
         end
+    end else begin : g_cmd_nrst
+        always @(posedge clk) begin
+            if (accept_cmd) begin
+                npos_r <= cmd_npos; nout_r <= cmd_nout; scale_r <= cmd_scale;
+                nrun_r <= nrun_c; nlast_r <= ((cmd_nchunk - 1'b1) & (W - 1)) + 1'b1;
+                nf_r <= cmd_nf; eps_r <= cmd_eps; wbase_r <= cmd_wbase;
+                p <= 0; o <= 0; r <= 0; ssph <= cmd_scale; wcur <= cmd_wbase; xpos <= cmd_xbase;
+            end else if (iss) begin
+                if (!last_r) r <= r + 1'b1;
+                else begin
+                    r <= 0;
+                    if (ssph) ssph <= 1'b0;
+                    else if (!last_o) o <= o + 1'b1;
+                    else begin
+                        o <= 0; p <= p + 1'b1; ssph <= scale_r; wcur <= wbase_r; xpos <= xpos + nrun_r;
+                    end
+                end
+                if (!ssph && !(last_r && last_o)) wcur <= wcur + 1'b1;
+            end
+        end
+    end endgenerate
+    always @(posedge clk) begin
         // the task descriptor entering the delay line (a bubble still carries its group)
         d0 <= {DW{1'b0}};
         d0[F_V] <= iss;

@@ -22,6 +22,10 @@ not a stacked clump).  This tool does that, per ft slot:
 Only these types' ft_slots regs_um / bit_sites_um change; outlines, cores, windows, pins, stations do not.
 
     ft_corridor.py PLAN --types a,b [--out PLAN] [--ledger L.json] [--jog type/slot=y_or_x ...]
+                   [--reach UM] [--margin F] [--keep-going]
+hop budget = reach x margin - 2 um (default 405 x 0.98 -> 394.9 um, an internal margin); the KV hop gate is the
+measured 405-um repeated reach (COORD GEOM-21 10-27) -> --margin 1.  --keep-going sites every type it can and lists the
+types that fail; a failed type is left unchanged (no partial siting inside a type).
 """
 import argparse
 import json
@@ -43,6 +47,9 @@ KEEPOFF = 1.08          # flop keep-off from a core edge (pin access ring), not 
 MAX_PROJ = 40.0         # a lane point may move at most this far to reach free space at a station
 PROJ_W = 4.0            # DP weight of the mean projection distance (prefer stations fully in a channel)
 SLACK = 10.0            # allocator displacement allowance per hop
+LANE_UM_PER_BIT = 0.0458  # Z-jog lane width per bit: 0.6 of the M5 (0.048) + M7 (0.064) tracks (ASAP7 GRT pitches)
+LANE_SPAN = (0.15, 0.85)
+LANE_PACK = "bin"         # bin: lanes binned into core/leg-free intervals; walk: one even sequence over the span  # jog lanes of one type are spread over this fraction of the jog axis (widened if too narrow)
 
 
 def _face_coord(face, xy):
@@ -89,7 +96,8 @@ def in_boxes(pts, boxes):
     return hit
 
 
-def place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog=None, step=2.0, look=8.0, band=None):
+def place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog=None, step=2.0, look=8.0, band=None,
+               jog_lane=None):
     """retry with a tighter hop target when the bit spread (L corners, lane offsets) exceeds the slack."""
     base = set(alloc.used)
     for proj in (MAX_PROJ, 3 * MAX_PROJ, 6 * MAX_PROJ):
@@ -97,7 +105,8 @@ def place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog=None, step
         for _ in range(12):
             alloc.used = set(base)
             try:
-                return _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, look, extra, proj, band)
+                return _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, look, extra, proj, band,
+                                   jog_lane)
             except HopError as e:
                 extra += e.excess + 2.0
             except NoChain:
@@ -162,7 +171,8 @@ def _band_offsets(pts, c, band, axis):
     return off, nc
 
 
-def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, look, extra, max_proj, band=None):
+def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, look, extra, max_proj, band=None,
+                jog_lane=None):
     """returns (sites per internal station [(width+1)x2 centres], centroids, path, ledger dict)."""
     k = int(slot["stations"])
     ca, cb = a.mean(axis=0), b.mean(axis=0)
@@ -178,7 +188,37 @@ def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, lo
     L = cum[-1]
     nb = len(a)
 
+    zjog = len(path) == 4 and jog_lane is not None
+    if zjog:
+        # GEOM-23 10-27: on the jog of a Z path the bundle keeps its own lane (width jog_lane um): each bit's window
+        # offset is rotated with the bundle direction (no crossing at the turn) and scaled into the lane, instead of
+        # every bit collapsing onto the jog line (hub_Ei: 3,187 b on one ~20-um column)
+        d1 = (path[1] - path[0]) / max(seg[0], 1e-9)
+        d2 = (path[2] - path[1]) / max(seg[1], 1e-9)
+        c, sn = float(d1 @ d2), float(d1[0] * d2[1] - d1[1] * d2[0])
+        o = off_in @ np.array([[c, -sn], [sn, c]]).T
+        span = float(np.ptp(o, axis=0).max())
+        off_jog = o * (jog_lane / span if span > 1e-9 else 0.0)
+        # each bit runs its own Manhattan polyline: in pin -> turn at its lane coordinate -> out-window row -> out pin,
+        # and a station sits at the same FRACTION of every bit's own length (equal per-bit hops, no corner overshoot)
+        ax = 0 if fin in "EW" else 1                  # coordinate of the jog leg
+        t_i = path[1][ax] + off_jog[:, ax]
+        P = np.stack([a, a.copy(), b.copy(), b], axis=1)
+        P[:, 1, ax] = t_i
+        P[:, 2, ax] = t_i
+        Pseg = np.abs(np.diff(P, axis=1)).sum(axis=2)          # (nb, 3)
+        Pcum = np.concatenate([np.zeros((nb, 1)), np.cumsum(Pseg, axis=1)], axis=1)
+
+    def bit_points(s):
+        u = (s / L) * Pcum[:, -1]
+        j = np.clip((u >= Pcum[:, 1]).astype(int) + (u >= Pcum[:, 2]), 0, 2)
+        r = np.arange(nb)
+        f = (u - Pcum[r, j]) / np.maximum(Pseg[r, j], 1e-9)
+        return P[r, j] + (P[r, j + 1] - P[r, j]) * f[:, None]
+
     def lane_points(s):
+        if zjog:
+            return bit_points(s)
         p, d = point_dir(path, s)
         last = s >= (cum[-2] if len(cum) > 2 else 0.0)
         off = off_out if last else off_in
@@ -201,8 +241,11 @@ def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, lo
     n = len(cands)
     if n < k - 1:
         raise NoChain(f"{slot['name']}: {n} free station positions on a {L:.0f}-um path, need {k - 1}")
-    H = budget - SLACK - extra
     ideal = L / k
+    # allocator allowance: SLACK, but never more than the room between the even hop and the budget less 3 um (2-um
+    # candidate grid + 1); the
+    # final per-bit hop check against `budget` (HopError -> retry tighter) stays the gate
+    H = budget - min(SLACK, max(1.0, budget - ideal - 3.0)) - extra
     INF = 1e18
     pen = PROJ_W * Dm ** 2
     hop_a = np.abs(Q - a[None]).sum(axis=2).max(axis=1)
@@ -255,39 +298,156 @@ def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, lo
                                     path=[[round(float(v), 2) for v in p] for p in path])
 
 
-def place(raw, types, reach_um=405., margin=.98, jogs=None, bands=None):
+def jog_lanes(ty, pins, w, h, fixed=None):
+    """GEOM-23 10-27: one jog lane per Z slot (opposite faces, offset windows) instead of every slot jogging on the
+    type's midline.  Lane width = (width + 1) x LANE_UM_PER_BIT; the lanes of one jog axis are packed in order of the
+    in-window centre over LANE_SPAN of that axis (widened to the full outline minus 8.64 um when they do not fit),
+    with equal gaps.  Returns {slot: (jog coordinate, lane width)}; a slot with an explicit --jog keeps it."""
+    fixed = fixed or {}
+    groups = {}
+    for slot in ty.get("ft_slots", []):
+        fin, fout, name = slot["in_face"], slot["out_face"], slot["name"]
+        if S.OPP.get(fin) != fout:
+            continue
+        wd = slot["width"] + 1
+        ca = np.mean([pins[(name + "_i", i)] for i in range(wd)], axis=0)
+        cb = np.mean([pins[(name + "_o", i)] for i in range(wd)], axis=0)
+        if abs(_face_coord(fin, ca) - _face_coord(fin, cb)) < 1.0:
+            continue
+        axis = 1 if fin in "NS" else 0           # NS slots jog along y, EW slots along x
+        groups.setdefault(axis, []).append((_face_coord(fin, ca), name, wd * LANE_UM_PER_BIT))
+    # KV-PLAN-DELTA-2 10-27: the vertical (horizontal) legs of the other slots of the type -- L slots and straight
+    # slots with a face on the jog axis -- occupy their window span (at least their own lane width) on that axis;
+    # Z lanes are packed into the remaining free span only, so a Z jog never stacks onto another bundle's leg
+    occ = {0: [], 1: []}
+    for slot in ty.get("ft_slots", []):
+        fin, fout, name = slot["in_face"], slot["out_face"], slot["name"]
+        if name in {n for g in groups.values() for _, n, _ in g}:
+            continue
+        wd = slot["width"] + 1
+        for face, nm in ((fin, "_i"), (fout, "_o")):
+            axis = 0 if face in "NS" else 1      # an N/S face pin window = a vertical leg at those x
+            v = [pins[(name + nm, i)][axis] for i in range(wd)]
+            c, half = (min(v) + max(v)) / 2, max((max(v) - min(v)) / 2, wd * LANE_UM_PER_BIT / 2)
+            occ[axis].append((c - half, c + half))
+    # and the jog leg of a Z slot runs in a core-free channel: macro x (y) spans are occupied for x (y) lanes, so
+    # its stations do not get projected onto a core edge as one stacked column (hgi_v8 ft26: 1056 b at x 555)
+    for x0, y0, x1, y1 in S.placed_macro_boxes(ty, halo=KEEPOFF).values():
+        occ[0].append((x0, x1))
+        occ[1].append((y0, y1))
+    out = {}
+    for axis, g in groups.items():
+        g.sort()
+        ext = h if axis == 1 else w
+        lo, hi = LANE_SPAN[0] * ext, LANE_SPAN[1] * ext
+        need = sum(x[2] for x in g)
+
+        def free_span(lo, hi):
+            iv = sorted((max(lo, a), min(hi, b)) for a, b in occ[axis] if b > lo and a < hi)
+            fr, cur = [], lo
+            for a, b in iv:
+                if a > cur:
+                    fr.append((cur, a))
+                cur = max(cur, b)
+            if cur < hi:
+                fr.append((cur, hi))
+            return fr
+        fr = free_span(lo, hi)
+        if need * 1.25 > sum(b - a for a, b in fr):
+            lo, hi = 8.64, ext - 8.64
+            fr = free_span(lo, hi)
+        if LANE_PACK == "walk":
+            # walk: one evenly gapped sequence in window order over the free span, skipping occupied spans (a lane
+            # never straddles one; it may overrun the last free interval end) -- chosen per type by the GEOM census
+            F = sum(b - a for a, b in fr)
+            gap = max(0.0, (F - need) / len(g))
+            fi, pos = 0, fr[0][0] + gap / 2
+            for _, name, lw in g:
+                while fi < len(fr) - 1 and pos + lw > fr[fi][1]:
+                    fi += 1
+                    pos = max(pos, fr[fi][0])
+                out[name] = (fixed.get(name, pos + lw / 2), lw)
+                pos += lw + gap
+            continue
+        # bin the lanes (in window order) into the free intervals, then spread each bin evenly inside its interval;
+        # when they do not all fit, fall back to the whole span (lanes may then lie over macros: stations project)
+        bins, fi, used = [[] for _ in fr], 0, 0.0
+        for item in g:
+            while fi < len(fr) and used + item[2] > (fr[fi][1] - fr[fi][0]):
+                fi, used = fi + 1, 0.0
+            if fi == len(fr):
+                break
+            bins[fi].append(item)
+            used += item[2]
+        if fi == len(fr):
+            fr, bins = [(lo, hi)], [list(g)]
+        for (a0, a1), bn in zip(fr, bins):
+            if not bn:
+                continue
+            gap = max(0.0, (a1 - a0 - sum(x[2] for x in bn)) / len(bn))
+            pos = a0 + gap / 2
+            for _, name, lw in bn:
+                out[name] = (fixed.get(name, pos + lw / 2), lw)
+                pos += lw + gap
+    return out
+
+
+def place(raw, types, reach_um=405., margin=.98, jogs=None, bands=None, failed=None):
+    """site every ft slot of each type; failed=list -> a type that cannot be sited is restored and appended there"""
+    import copy
     model = S.Plan(raw)
     ledger = []
-    jogs = jogs or {}
-    bands = bands or {}
     for tn in types:
-        ty = model.types[tn]
-        w, h = ty["outline_um"]
-        pins = {(bn, i): (x, y) for bn, i, _, x, y, _ in type_pins(model, tn)}
-        boxes = []
-        for c in ty.get("hard_cores", []):
-            x, y = c["origin_um"]
-            cw, ch = c["outline_um"]
-            dx, dy = c.get("track_offset_um", [0, 0])
-            boxes.append((x + dx - KEEPOFF, y + dy - KEEPOFF, x + dx + cw + KEEPOFF, y + dy + ch + KEEPOFF))
-        alloc = RowAllocator((4.32, 4.32, w - 4.32, h - 4.32), blocked=boxes, cell_size=CELL,
-                             column_pitch=2.16, row_pitch=.27, origin=(4.32, 4.32))
-        budget = reach_um * margin - 2.0
-        for slot in sorted(ty["ft_slots"], key=lambda s: -s["width"]):
-            name = slot["name"]
-            wd = slot["width"] + 1
-            a = np.array([pins[(name + "_i", i)] for i in range(wd)])
-            b = np.array([pins[(name + "_o", i)] for i in range(wd)])
+        if failed is None:
+            ledger += _place_type(model, tn, reach_um, margin, jogs or {}, bands or {})
+            continue
+        keep = copy.deepcopy(model.types[tn]["ft_slots"])
+        try:
+            ledger += _place_type(model, tn, reach_um, margin, jogs or {}, bands or {}, errs=[])
+        except ValueError as ex:
+            model.types[tn]["ft_slots"][:] = keep
+            failed.append(dict(type=tn, error=str(ex)))
+            print(f"{tn}: FAIL {ex}")
+    return ledger
+
+
+def _place_type(model, tn, reach_um, margin, jogs, bands, errs=None):
+    ledger = []
+    ty = model.types[tn]
+    w, h = ty["outline_um"]
+    pins = {(bn, i): (x, y) for bn, i, _, x, y, _ in type_pins(model, tn)}
+    # walls = every placed physical macro (hard cores AND LEF-bearing SRAM/ROM contents, e.g. sys_c u_ucie_rom), the
+    # same obstacle set the G0 geometry gate checks (schema.placed_macro_boxes), with the KEEPOFF pin-access ring
+    boxes = list(S.placed_macro_boxes(ty, halo=KEEPOFF).values())
+    alloc = RowAllocator((4.32, 4.32, w - 4.32, h - 4.32), blocked=boxes, cell_size=CELL,
+                         column_pitch=2.16, row_pitch=.27, origin=(4.32, 4.32))
+    budget = reach_um * margin - 2.0
+    lanes = jog_lanes(ty, pins, w, h, {k.split("/", 1)[1]: v for k, v in jogs.items() if k.startswith(tn + "/")})
+    for slot in sorted(ty["ft_slots"], key=lambda s: -s["width"]):
+        name = slot["name"]
+        wd = slot["width"] + 1
+        a = np.array([pins[(name + "_i", i)] for i in range(wd)])
+        b = np.array([pins[(name + "_o", i)] for i in range(wd)])
+        jg, lw = lanes.get(name, (jogs.get(f"{tn}/{name}"), None))
+        try:
             sites, cents, path, led = place_slot(slot, a, b, slot["in_face"], slot["out_face"], w, h, boxes, alloc,
-                                                 budget, jog=jogs.get(f"{tn}/{name}"),
-                                                 band=bands.get(f"{tn}/{name}"))
-            slot["regs_um"] = [a.mean(axis=0).round(4).tolist()] + [c.round(4).tolist() for c in cents]
-            slot["bit_site_cell_um"] = list(CELL)
-            slot["bit_sites_um"] = [(p - np.array([CELL[0] / 2, CELL[1] / 2])).round(6).tolist() for p in sites]
-            led.update(type=tn, slot=name, width=slot["width"], budget_um=round(budget, 2))
-            ledger.append(led)
-            print(f"{tn}/{name}: {slot['width']} b, {led['len_um']} um, {led['stations']} hops "
-                  f"{led.get('hops_um')} disp {led.get('max_alloc_disp_um')} proj {led.get('proj_mean_um')}")
+                                                 budget, jog=jg, band=bands.get(f"{tn}/{name}"), jog_lane=lw)
+        except ValueError as ex:
+            if errs is None:
+                raise
+            errs.append(str(ex))
+            continue
+        if lw is not None:
+            led.update(jog_um=round(float(jg), 3), jog_lane_um=round(float(lw), 3))
+        slot["regs_um"] = [a.mean(axis=0).round(4).tolist()] + [c.round(4).tolist() for c in cents]
+        slot["bit_site_cell_um"] = list(CELL)
+        slot["bit_sites_um"] = [(p - np.array([CELL[0] / 2, CELL[1] / 2])).round(6).tolist() for p in sites]
+        led.update(type=tn, slot=name, width=slot["width"], budget_um=round(budget, 2))
+        ledger.append(led)
+        print(f"{tn}/{name}: {slot['width']} b, {led['len_um']} um, {led['stations']} hops "
+              f"{led.get('hops_um')} disp {led.get('max_alloc_disp_um')} proj {led.get('proj_mean_um')}")
+    if errs:
+        raise ValueError(f"{len(errs)} slot(s): " + " | ".join(errs))
     return ledger
 
 
@@ -299,11 +459,25 @@ def main():
     ap.add_argument("--ledger")
     ap.add_argument("--jog", action="append", default=[], help="type/slot=coord: Z-path jog coordinate")
     ap.add_argument("--band", action="append", default=[], help="type/slot=lo,hi: corridor band of a straight slot")
+    ap.add_argument("--reach", type=float, default=405.)
+    ap.add_argument("--margin", type=float, default=.98)
+    ap.add_argument("--keep-going", action="store_true")
+    ap.add_argument("--lane-pack", choices=("bin", "walk"), default="bin")
+    ap.add_argument("--lane-um-per-bit", type=float, default=None,
+                    help="Z-jog lane width per bit (default LANE_UM_PER_BIT); KV GEOM-24 gate 0.6 x 32 tr/um -> >= 0.0521")
     a = ap.parse_args()
+    global LANE_PACK
+    LANE_PACK = a.lane_pack
+    if a.lane_um_per_bit:
+        global LANE_UM_PER_BIT
+        LANE_UM_PER_BIT = a.lane_um_per_bit
     raw = json.loads(Path(a.plan).read_text())
     jogs = {k: float(v) for k, v in (j.split("=") for j in a.jog)}
     bands = {k: tuple(map(float, v.split(","))) for k, v in (j.split("=") for j in a.band)}
-    ledger = place(raw, a.types.split(","), jogs=jogs, bands=bands)
+    failed = [] if a.keep_going else None
+    ledger = place(raw, a.types.split(","), reach_um=a.reach, margin=a.margin, jogs=jogs, bands=bands, failed=failed)
+    if failed:
+        ledger.append(dict(failed_types=failed))
     Path(a.out or a.plan).write_text(json.dumps(raw, indent=0) + "\n")
     if a.ledger:
         Path(a.ledger).write_text(json.dumps(ledger, indent=1) + "\n")

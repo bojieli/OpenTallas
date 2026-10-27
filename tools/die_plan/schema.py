@@ -135,7 +135,7 @@ _parent_id_straps = {"type": "object", "additionalProperties": False, "propertie
                                    else {"type": "integer", "minimum": 1}),
                           "value": {"type": "integer", "minimum": 0,
                                     **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
-    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", *_physical_id_widths)}}
+    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "sidx", *_physical_id_widths)}}
 
 # Exact identity ports only. G0's semantic validator enforces each port's width;
 # allOf gives full JSON-Schema consumers the same cross-field restriction.
@@ -160,6 +160,40 @@ _clock_mesh_region = {
         "j0": {"type": "integer", "minimum": 0}, "j1": {"type": "integer", "minimum": 1},
         "box_um": _rect, "strap_box_um": _rect}}
 
+# Optional native clock/reset infrastructure. Strict shape validation supplements
+# infra_rtl's complete graph, source-header and M7 interface checks.
+_infra_id = {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}
+_infra_port = {"type": "object", "additionalProperties": False,
+    "required": ["name", "dir", "kind", "leaf", "xy_um", "layer"],
+    "properties": {"name": _infra_id, "dir": {"enum": ["in", "out"]},
+        "kind": {"enum": ["clock", "reset"]}, "leaf": _name,
+        "xy_um": _xy, "layer": {"const": "M7"}, "native_xy_um": _xy,
+        "native_core": _name, "native_port": _infra_id}}
+_infra_arc = {"type": "object", "additionalProperties": False,
+    "required": ["cell", "source", "sink"],
+    "properties": {"cell": _name, "source": _infra_id, "sink": _infra_id,
+        "kind": {"enum": ["clock", "reset"]}}}
+_infra_binding = {"type": "object", "additionalProperties": False,
+    "required": ["part", "port", "net"],
+    "properties": {"part": _name, "port": _infra_id, "net": _infra_id}}
+_infra_network = {"type": "object", "additionalProperties": False,
+    "required": ["nets", "instances", "bindings", "sources"],
+    "properties": {
+        "sources": {"type": "array", "minItems": 1,
+            "items": {"type": "string", "minLength": 1, "pattern": "^(?!/)"}},
+        "nets": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "additionalProperties": False, "required": ["name", "kind"],
+            "properties": {"name": _infra_id, "kind": {"enum": ["clock", "reset", "clock_mesh"]},
+                "unused": {"type": "boolean"}, "owner_inventory": _name}}},
+        "instances": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "additionalProperties": False, "required": ["module", "inst", "bind"],
+            "properties": {"module": _infra_id, "inst": _infra_id,
+                "bind": {"type": "object", "minProperties": 1, "additionalProperties": {
+                    "type": "object", "additionalProperties": False, "required": ["signal", "dir"],
+                    "properties": {"signal": _name, "dir": {"enum": ["in", "out"]}}}}}}},
+        "bindings": {"type": "array", "minItems": 1, "items": _infra_binding},
+        "clock_tap_bindings": {"type": "array", "items": _infra_binding}}}
+
 SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": SCHEMA_ID,
@@ -173,6 +207,10 @@ SCHEMA = {
         # station-model keys on internal_stations[] (STATION_MODEL_PROPS below; consistency in validate_structure)
         "station_model_keys": {"type": "boolean"},
         "note": {"type": "string"},
+        "infrastructure": _infra_network,
+        # HBM-MU-QUAD-3 (opt-in, default absent/false = strict internal_stations): accept the PATH-HBM R8-R13
+        # station-model keys on internal_stations[] (STATION_MODEL_PROPS below; consistency in validate_structure)
+        "station_model_keys": {"type": "boolean"},
         "die": {
             "type": "object", "required": ["name", "outline_um", "period_ps", "reach_um"],
             "additionalProperties": False,
@@ -277,6 +315,8 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    "infra_ports": {"type": "array", "items": _infra_port},
+                    "infra_arcs": {"type": "array", "items": _infra_arc},
                     "dead_inputs": {"type": "array", "items": {
                         "type": "object", "additionalProperties": False,
                         "required": ["module", "parameters", "ports", "proof", "source", "module_sha256"],
@@ -295,6 +335,10 @@ SCHEMA = {
                     "cells": {"type": "integer", "minimum": 0},
                     "hard": {"type": "boolean"},     # hard IP (PHY, closed macro used as-is): no generated wrapper
                     "kit": {"type": "string"},
+                    # Source profile shared by synthesis, lint and cross-frontend LEC.
+                    # Bare macro names only: no command-line flags or shell syntax.
+                    "verilog_defines": {"type": "array", "uniqueItems": True, "items": {
+                        "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}},
                     "note": {"type": "string"},
                     "buses": {"type": "array", "items": {
                         "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
@@ -305,6 +349,22 @@ SCHEMA = {
                                        # of the type, in any orient, derives its die window from it)
                                        "face": {"enum": list(FACES)}, "window_um": _win, "layers": _lays,
                                        "order": _order,
+                                       "note": {"type": "string"}}}},
+                    # HEAD-BIND-4 10-27 (OWNER 10-25 option B): per-INSTANCE ID strap input ports of the partition
+                    # (strap_* names, exact widths in parent_id_straps.PHYSICAL_ID_WIDTHS).  No pin register, kit SDC
+                    # set_false_path -from, each instance ties its own value (partitions[].id_straps) at the die top;
+                    # leaves bind them as "strap:<name>".
+                    "id_straps": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "width"], "additionalProperties": False,
+                        "properties": {"name": {"type": "string", "pattern": "^strap_[A-Za-z0-9_]+$"},
+                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"}}}},
+                    # HEAD-BIND-4 10-27: off-die PHY pad ports (PMA side of a PHY leaf): NO boundary flop (their
+                    # timing belongs to the PHY's own clocks), bound to the leaf as "pad:<name>", carried to the die
+                    # top as <part>_<name> (behavioural word pads; die.io phy_macro windows hold the bumps)
+                    "pads": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
+                        "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
+                                       "width": {"type": "integer", "minimum": 1}, "clock": {"type": "boolean"},
                                        "note": {"type": "string"}}}},
                     "ft_slots": {"type": "array", "items": {
                         "type": "object", "required": ["name", "in_face", "out_face", "width"],
@@ -474,6 +534,8 @@ SCHEMA = {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
+                        # Local synchronous reset/START consumers; clock entry pins are unchanged.
+                        "local_taps_um": {"type": "array", "items": _xy},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
                         "depth": {"type": "integer", "minimum": 1},
                         # reset.start = broadcast plans (reset_tree.start_roles): "mission" (default) = control state
@@ -481,6 +543,8 @@ SCHEMA = {
                         # cal before START) + ONE local registered START tap (leaf bind "start") for the contents'
                         # mission admission.  core_start_roles: per hard-core reset target override {inst: role}
                         "start_role": {"enum": ["bootstrap", "mission"]},
+                        "bootstrap_buses": {"type": "array", "uniqueItems": True, "items": _name},
+                        "bootstrap_contents": {"type": "array", "uniqueItems": True, "items": _name},
                         "core_start_roles": {"type": "object",
                                              "additionalProperties": {"enum": ["bootstrap", "mission"]}}}},
                     "contents": {"type": "array", "items": {
@@ -564,6 +628,9 @@ SCHEMA = {
         "partitions": {"type": "array", "minItems": 1, "items": {
             "type": "object", "required": ["name", "type", "origin_um"], "additionalProperties": False,
             "properties": {"name": _name, "type": _name, "origin_um": _xy, "orient": {"enum": list(ORIENTS)},
+                           # HEAD-BIND-4 10-27 (OWNER 10-25 option B): this INSTANCE's values of its type's declared
+                           # partition ID straps (partition_types.<t>.id_straps), tied at the die top (gen_rtl.die_top)
+                           "id_straps": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
                            "note": {"type": "string"}}}},
         "ports": {"type": "array", "items": {
             "type": "object", "required": ["id", "src", "dst", "width"],   # face/layers/window: or from the type
@@ -613,7 +680,17 @@ SCHEMA = {
                          "sites_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
                          "regions_depth": {"type": "integer", "minimum": 0},
                          "regions": {"type": "array", "minItems": 1, "items": _clock_mesh_region},
-                         "cells": {"type": "integer", "minimum": 1}}},
+                         "cells": {"type": "integer", "minimum": 1},
+                         # CLOCK-KV-R24 (12.2a1): per hard-core module, the core-frame bodies of the die clock cells
+                         # pushed down into that core (identical on every instance; apply_clkmesh_sites.py)
+                         "core_islands": {"type": "object", "additionalProperties": {
+                             "type": "object", "additionalProperties": False,
+                             "required": ["rule", "instances", "rects_um", "frame"],
+                             "properties": {"rule": {"type": "string"}, "frame": {"type": "string"},
+                                            "instances": {"type": "integer", "minimum": 1},
+                                            "rects_um": {"type": "array", "minItems": 1, "items": {
+                                                "type": "array", "items": {"type": "number"},
+                                                "minItems": 4, "maxItems": 4}}}}}}},
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
@@ -741,6 +818,39 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["l
     "type": "array", "items": {"type": "object", "required": ["name", "port", "rect_um", "cells", "owner", "demand"]}}
 
 
+# QC event: exact opt-in schema fields carried from native100 af589e572a.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['clock']["properties"]['out_hold_check_ps'] = {'minimum': 0, 'type': 'number'}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['clock']["properties"]['io_hold'] = {'enum': ['legacy', 'sender_min']}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['reset']["properties"]['physical_stages'] = {'items': {'additionalProperties': False,
+           'properties': {'selector': {'minLength': 1, 'type': 'string'},
+                          'xy_um': {'items': {'type': 'number'},
+                                    'maxItems': 2,
+                                    'minItems': 2,
+                                    'type': 'array'}},
+           'required': ['selector', 'xy_um'],
+           'type': 'object'},
+ 'type': 'array'}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['reset']["properties"]['keep_modules'] = {'items': {'minLength': 1, 'type': 'string'}, 'type': 'array'}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["bound_group"] = {'additionalProperties': False,
+ 'properties': {'kind': {'const': 'exact_post_bind_group'},
+                'members': {'items': {'additionalProperties': False,
+                                      'properties': {'inst': {'minLength': 1, 'type': 'string'},
+                                                     'module': {'minLength': 1, 'type': 'string'},
+                                                     'reset_pin': {'const': 'rst_n'}},
+                                      'required': ['inst', 'module', 'reset_pin'],
+                                      'type': 'object'},
+                            'maxItems': 5,
+                            'minItems': 5,
+                            'type': 'array'},
+                'memory_alignment': {'minimum': 0, 'type': 'integer'},
+                'reset_pin': {'const': 'rst_n'}},
+ 'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
+ 'type': 'object'}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
+SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
+
+
 def _check(v, s, path, errs):
     """Minimal draft-2020-12 subset (type, const, enum, required, properties, additionalProperties, items, min/max*,
     pattern, minLength, minProperties).  No external dependency, so it runs on every fleet host."""
@@ -865,6 +975,39 @@ def validate_structure(obj):
                 type_parent_id_straps(t)
             except ValueError as e:
                 errs.append(f"partition type {tn}: {e}")
+    if not errs:
+        errs += _id_strap_errors(obj)
+    return errs
+
+
+def _id_strap_errors(obj):
+    """HEAD-BIND-4: partition ID straps = approved strap_* port + exact width; every instance of a declaring type gives
+    exactly one value per declared strap, fitting its width; instances of other types give none."""
+    try:
+        from .parent_id_straps import PHYSICAL_ID_WIDTHS
+    except ImportError:
+        from parent_id_straps import PHYSICAL_ID_WIDTHS
+    errs, decl = [], {}
+    for tn, t in obj.get("partition_types", {}).items():
+        d = {}
+        for s in t.get("id_straps", []):
+            n, w = s["name"], s["width"]
+            if PHYSICAL_ID_WIDTHS.get(n) != w:
+                errs.append(f"partition type {tn}: id_strap {n} width {w}: not an approved ID strap of that width "
+                            f"(parent_id_straps.PHYSICAL_ID_WIDTHS)")
+            if n in d:
+                errs.append(f"partition type {tn}: id_strap {n} declared twice")
+            d[n] = w
+        decl[tn] = d
+    for p in obj.get("partitions", []):
+        d = decl.get(p.get("type"), {})
+        v = p.get("id_straps", {})
+        if set(v) != set(d):
+            errs.append(f"partition {p.get('name')}: id_straps {sorted(v)} != type {p.get('type')} declared {sorted(d)}")
+            continue
+        for n, x in v.items():
+            if x >= 1 << d[n]:
+                errs.append(f"partition {p.get('name')}: id_strap {n}={x} does not fit {d[n]} bits")
     return errs
 
 

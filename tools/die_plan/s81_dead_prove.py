@@ -18,9 +18,10 @@ def ranges(bits):
 def extract(text,mod):
  return re.search(r'^module\s+'+re.escape(mod)+r'\b.*?^endmodule',text,re.M|re.S).group()
 
-def run(root,instances,stubs,out):
+def run(root,instances,stubs,out,manifest="physical/die_plan/s81/bind/asbuilt_b178_coll.json"):
  root=pathlib.Path(root);out=pathlib.Path(out);out.mkdir(parents=True,exist_ok=False)
- man=json.loads((root/'physical/die_plan/s81/bind/asbuilt_b178_coll.json').read_text())
+ if pathlib.Path(manifest).is_absolute(): raise ValueError('manifest must be repository-relative')
+ man=json.loads((root/manifest).read_text())
  src={}
  wanted={'dsdv_svc_sx','dsdv_svc_rs_up','dsdv_pv_so_ingress','dsdv_pv_so_program'}
  for f in man['prefer']:
@@ -69,4 +70,4 @@ def run(root,instances,stubs,out):
  (out/'proof.json').write_text(json.dumps(rec,indent=1)+'\n')
  print('S81_DEAD_INPUTS_PROVED',len(declarations),'declarations',len(cache),'specializations',flush=True)
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--root',required=True);p.add_argument('--instances',required=True);p.add_argument('--stubs',required=True);p.add_argument('--out',required=True);a=p.parse_args();run(a.root,a.instances,a.stubs,a.out)
+ p=argparse.ArgumentParser();p.add_argument('--root',required=True);p.add_argument('--instances',required=True);p.add_argument('--stubs',required=True);p.add_argument('--out',required=True);p.add_argument('--manifest',default='physical/die_plan/s81/bind/asbuilt_b178_coll.json');a=p.parse_args();run(a.root,a.instances,a.stubs,a.out,a.manifest)

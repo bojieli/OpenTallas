@@ -19,6 +19,7 @@ without a slice is refused; `--trial` kits (not sign-off) stay allowed and are s
 """
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -469,6 +470,57 @@ def slice_pins(sl, clock_port=None):
     return want
 
 
+# Clock entry port geometry (COORD GEOM-21 10-27): the centre clock entry is one full-width M5 shape
+# (>= 0.048 x 0.48 um) whose centre lies ON a routing track of its layer, so detailed route can reach the root driver
+# (DRT-0255 = small AND off-track entry; the 0.048-wide shape alone sat 12 nm off the M5 track in the c15b kits).
+CLOCK_PIN_SIZE = (0.048, 0.48)
+_VERTICAL = {"M1", "M3", "M5", "M7", "M9"}           # ASAP7 preferred direction: odd metals vertical (track grid in x)
+# ASAP7 platform make_tracks (openRoad/make_tracks.tcl), used only when the kit has no make_tracks.tcl of its own.
+_ASAP7_TRACKS = {"M1": (0.009, 0.036, 0.009, 0.036), "M3": (0.009, 0.036, 0.009, 0.036),
+                 "M4": (0.009, 0.036, 0.012, 0.048), "M5": (0.012, 0.048, 0.012, 0.048),
+                 "M6": (0.012, 0.048, 0.016, 0.064), "M7": (0.016, 0.064, 0.016, 0.064),
+                 "M8": (0.116, 0.080, 0.116, 0.080), "M9": (0.116, 0.080, 0.116, 0.080)}
+_MKTRACK = re.compile(r"^\s*make_tracks\s+(\S+)\s+-x_offset\s+([-\d.]+)\s+-x_pitch\s+([-\d.]+)\s+"
+                      r"-y_offset\s+([-\d.]+)\s+-y_pitch\s+([-\d.]+)", re.M)
+
+
+def _layer_tracks(kd, layer):
+    """(x_offset, x_pitch, y_offset, y_pitch, source) of LAYER: the kit's own make_tracks.tcl, else the ASAP7 platform."""
+    f = Path(kd) / "make_tracks.tcl"
+    if f.is_file():
+        rows = [m for m in _MKTRACK.finditer(f.read_text()) if m.group(1) == layer]
+        if len(rows) == 1:
+            return tuple(float(v) for v in rows[0].groups()[1:]) + ("kit make_tracks.tcl",)
+        if len(rows) > 1:
+            raise ValueError(f"make_tracks.tcl: {len(rows)} track rows for {layer}; on-track snap is ambiguous")
+    if layer not in _ASAP7_TRACKS:
+        raise ValueError(f"no routing track grid known for layer {layer}")
+    return _ASAP7_TRACKS[layer] + ("asap7 platform make_tracks.tcl",)
+
+
+def _die_origin(kd):
+    cfg = Path(kd) / "config.mk"
+    m = re.search(r"^\s*export\s+DIE_AREA\s*:?=\s*([-\d.eE+]+)\s+([-\d.eE+]+)", cfg.read_text(), re.M) \
+        if cfg.is_file() else None
+    return (float(m.group(1)), float(m.group(2))) if m else (0.0, 0.0)
+
+
+def snap_on_track(kd, layer, x, y):
+    """Pin centre moved to the NEAREST routing track of LAYER (preferred-direction normal coordinate only; ties go up)."""
+    xo, xp, yo, yp, _ = _layer_tracks(kd, layer)
+    ox, oy = _die_origin(kd)
+    if layer in _VERTICAL:
+        x = ox + xo + math.floor((x - ox - xo) / xp + 0.5) * xp
+    else:
+        y = oy + yo + math.floor((y - oy - yo) / yp + 0.5) * yp
+    return round(x, 4), round(y, 4)
+
+
+def on_track(kd, layer, x, y, tol=1e-4):
+    sx, sy = snap_on_track(kd, layer, x, y)
+    return abs(sx - x) <= tol and abs(sy - y) <= tol
+
+
 def _consume_io(kd, sl, clock_port):
     want = slice_pins(sl, clock_port)
     done = {}
@@ -484,9 +536,13 @@ def _consume_io(kd, sl, clock_port):
                 continue
             name = _pin_name(m.group(2))
             layer, (x, y) = want[name]
-            # The centre clock entry needs a full M5 routing track and
-            # enough length for via access beside the root driver.
-            size = "0.048 0.48" if name == clock_port else "0.032 0.192"
+            # The centre clock entry needs a full M5 routing track, enough length for via access beside the root
+            # driver, and its centre ON that track (GEOM-21).
+            if name == clock_port:
+                x, y = snap_on_track(kd, layer, x, y)
+                size = "%g %g" % CLOCK_PIN_SIZE
+            else:
+                size = "0.032 0.192"
             lines[i] = (f"{m.group(1)}{{{name}}} -layer {layer} -location {{{x:.4f} {y:.4f}}} -pin_size {{{size}}}"
                         f"   ;# master-plan slice (was:{m.group(3).strip()[:80]})")
             done.setdefault(name, []).append(f.name)
@@ -539,7 +595,7 @@ def check_kit(kd, slice_path=None, tol=1e-3):
         import core_infra as CI
         try:
             eff = dict(sl, core_clock_port=clock_port) if clock_port else sl
-            plan = CI.compile_slice(eff)
+            plan = CI.compile_slice(eff, kd)
             got = json.loads((kd / "core_infra_plan.json").read_text())
             if got != json.loads(json.dumps(plan)):
                 issues.append("core_infra_plan.json differs from compile_slice(slice)")
@@ -549,7 +605,7 @@ def check_kit(kd, slice_path=None, tol=1e-3):
                 want = ft_ports.from_core_infra_plan(json.loads(json.dumps(plan)))
                 if not fp.is_file() or json.loads(fp.read_text()).get("sha256") != want["sha256"]:
                     issues.append("ft_ports.json missing or not the slice ft declaration (12.2a1 die-timed ports)")
-            if (kd / "master_core_infra.tcl").read_text() != CI.emit_tcl(eff):
+            if (kd / "master_core_infra.tcl").read_text() != CI.emit_tcl(eff, kd):
                 issues.append("master_core_infra.tcl not generated from this slice")
             impl = (kd / "core_infra_impl.tcl").read_text()
             if impl != (Path(__file__).with_name("core_infra.tcl")).read_text():
@@ -594,6 +650,22 @@ def check_kit(kd, slice_path=None, tol=1e-3):
             xm = re.search(r"-location\s+\{\s*([-\d.eE+]+)\s+([-\d.eE+]+)\s*\}", ln)
             lay, (x, y) = want[n]
             seen[n] = seen.get(n, 0) + 1
+            if n == clock_port:
+                try:
+                    x, y = snap_on_track(kd, lay, x, y)
+                except ValueError as e:
+                    issues.append(f"{f.name}: clock entry {n}: {e}")
+                sm = re.search(r"-pin_size\s+\{\s*([-\d.eE+]+)\s+([-\d.eE+]+)\s*\}", ln)
+                if not sm or float(sm.group(1)) < CLOCK_PIN_SIZE[0] - 1e-6 or float(sm.group(2)) < CLOCK_PIN_SIZE[1] - 1e-6:
+                    issues.append(f"{f.name}: clock entry {n} pin_size {sm.groups() if sm else '?'} < "
+                                  f"{CLOCK_PIN_SIZE[0]}x{CLOCK_PIN_SIZE[1]} (GEOM-21)")
+                if xm and lm:
+                    try:
+                        if not on_track(kd, lm.group(1), float(xm.group(1)), float(xm.group(2))):
+                            issues.append(f"{f.name}: clock entry {n} centre ({xm.group(1)}, {xm.group(2)}) is off the "
+                                          f"{lm.group(1)} routing track (GEOM-21)")
+                    except ValueError as e:
+                        issues.append(f"{f.name}: clock entry {n}: {e}")
             if not lm or lm.group(1) != lay or not xm or abs(float(xm.group(1)) - x) > tol or abs(float(xm.group(2)) - y) > tol:
                 issues.append(f"{f.name}: {n} placed at {xm.groups() if xm else '?'} {lm.group(1) if lm else '?'}, "
                               f"slice {lay} ({x:g}, {y:g})")
