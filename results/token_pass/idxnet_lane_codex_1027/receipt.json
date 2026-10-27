@@ -1,0 +1,24 @@
+{
+  "source": "df1d18625",
+  "unit": "2207017-1793120299",
+  "pass_": true,
+  "source_profile": "selected portfix178 dsdv_idx_tx_n32, D8192 IB64 SRAM_MACRO1",
+  "lockstep": "actual legacy reference vs explicit PHYS_LANE2 variant: all bits/status every edge except route lane bits; full16 BF16 score words",
+  "cases": "12 cases: CTL dst0/1/2 x HDR q0/1/2/3",
+  "semantics": "dst0 tree lane remains HDR q (including3); dst1/2 TP physical lane2 while HDR q remains unchanged",
+  "mutant": "MUT6 restores old coupling; caught cycle126 for dst1/q0",
+  "added_cycles": 0,
+  "default": "PHYS_LANE=-1 unchanged; no instantiation enables new variant",
+  "limits": [
+    "no signed/physical view adoption",
+    "score storage capacity unchanged; new TP root/pair forwarding must establish producer capture/range/lifetime contract",
+    "no compiled TP4 dates or whole-token claim"
+  ],
+  "failures": [
+    {
+      "path": "intel2:/srv/opentallas-scratch2/claude/codex-idxnet-tx-0954/lane_m0/build.log",
+      "cause": "missing sparse tracked SRAM model",
+      "fix": "stage actual tracked1024x256 model; fresh retry2 and route3 outputs"
+    }
+  ]
+}

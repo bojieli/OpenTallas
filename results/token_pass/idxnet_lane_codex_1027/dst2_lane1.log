@@ -1,0 +1,6 @@
+IDXNET_TX_HEADER physical_lane2 quarter1
+IDXNET_TX_LANE_LOCKSTEP PASS cycles859 score_words16 lane1
+- tools/s81_dv/layer_prog/tb_idxnet_tx_lane.sv:57: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 716ns; walltime 0.009 s; speed 78.643 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 8 MB
