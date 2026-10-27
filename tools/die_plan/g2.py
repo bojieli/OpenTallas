@@ -354,7 +354,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
         souts = [o for o in reset_outs if o[0].startswith("start_o_")]
         routs = [o for o in reset_outs if not o[0].startswith("start_o_")]
         for j, (nm, _, _) in enumerate(routs):
-            cells.append(f"  assign {nm} = pr_reset_rst_n_t{tree['n_clock_taps'] + j};")
+            cells.append(f"  assign {nm} = pr_reset_rst_n_t{RT.consumer_count(tree) + j};")
         if souts:                                   # decision 13c START: run relays mirror the reset relays
             prev = "start_i"
             for j in range(RT.entry_stages(tree)):
@@ -381,7 +381,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
                 if tree.get("relay_driver"):
                     reset_pair_specs.append((c, c + "_drive" if driven else "", *rl["xy"]))
             for j, (nm, _, _) in enumerate(souts):
-                cells.append(f"  assign {nm} = pr_run_rst_n_t{tree['n_clock_taps'] + j};")
+                cells.append(f"  assign {nm} = pr_run_rst_n_t{RT.consumer_count(tree) + j};")
     # functional buses: one boundary flop per pin bit beside its pin
     for bus, lst in sorted(by_bus.items()):
         if bus in buses:
