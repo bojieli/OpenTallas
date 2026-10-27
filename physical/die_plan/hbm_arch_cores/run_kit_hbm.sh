@@ -1,6 +1,6 @@
 #!/bin/bash
 # ELEM-HBM (gen_core_kit_hbm.py): run one HBM B2r2 core kit through ORFS in docker:
-#   sdc_lint (CP1-R10, fail-closed, vs the image liberty) -> SELRANGE (selrange_gate.py: FAIL stops, NOT RUN warns) -> synth -> face_guard / port-bind (fail closed) -> LEC (lec.py 10-24: NOT EQUIVALENT stops the kit, UNPROVEN recorded in lec/lec.json) ->
+#   RTL lint (fail-closed, native macro/platform interfaces) -> sdc_lint (CP1-R10, fail-closed, vs the image liberty) -> SELRANGE (selrange_gate.py: FAIL stops, NOT RUN warns) -> synth -> face_guard / port-bind (fail closed) -> LEC (lec.py 10-24: NOT EQUIVALENT stops the kit, UNPROVEN recorded in lec/lec.json) ->
 #   GOAL (finish) -> generate_abstract -> pin audit -> corners_hbm.tcl at TT / FF
 #   (STA, face-flop CK spread, ETM).  Outputs chowned back to the caller.
 #   run_kit_hbm.sh KITDIR [GOAL=finish] [MEM_GB=32] [CPUS=16]     (heavy: call through ot-run --mem MEM_GB)
@@ -20,6 +20,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
   rc=0; if [ $GOAL != post ]; then rm -f /work/FAIL_PREFLOOR /work/FAIL_POSTCTS; \
+  python3 -I /work/rtl_lint.py /work > /work/rtl_lint.log 2>&1 || { tail -3 /work/rtl_lint.log; echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; chown -R \$HUID:\$HGID /work; exit 8; }; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -2 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
   SP=; if [ \$rc = 0 ] && [ -f /work/selrange_gate.py ]; then ( python3 -I /work/selrange_gate.py /work --out /work/selrange.json > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc ) & SP=\$!; fi; \
