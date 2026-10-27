@@ -732,6 +732,11 @@ def main(argv=None):
                          "shared for table, stated for flat")
     ap.add_argument("--clock-aocv-table", help="clock_aocv block (default tools/die_plan/clk_aocv_table.json)")
     ap.add_argument("--clock-ocv-cell-share", type=float, help="cell share of the die branch (default: table class A)")
+    ap.add_argument("--pair-unc", help="opt-in per related pair clock uncertainty (qc_clk_mesh3 sta-export pair_unc.json: "
+                    "U[corner]['partA|partB'], signed-mesh MC + approved AOCV below the mesh), subtracted from setup and "
+                    "hold of every pair; replaces --clock-ocv (main e94f224396, reconciled PATH-S81-PD7: exclusive with "
+                    "--clock-ocv and --mesh-signoff, which price the same non-common clock; --cppr-lca only picks the CPPR "
+                    "node and is compatible)")
     ap.add_argument("--droop-region", choices=("mesh", "tree"), default="mesh",
                     help="shared-droop region (12.4a b1): mesh = mesh/PDN region (default, R17 fix); tree = pre-R17 rule")
     ap.add_argument("--droop-regions", help="JSON {port: region} override (e.g. PDNSim regions)")
@@ -808,7 +813,18 @@ def main(argv=None):
         if real:
             cr["real_view_coverage"] = cr_real
         ocv = None
-        if a.clock_ocv != "none":
+        if a.pair_unc:
+            if a.clock_ocv != "none" or a.mesh_signoff:
+                raise SystemExit("--pair-unc is exclusive with --clock-ocv and --mesh-signoff (all price the non-common clock)")
+            PU = json.loads(Path(a.pair_unc).read_text())["U"][c]
+
+            def ocv(x, y, check, PU=PU):
+                k = "|".join(sorted((taps[x]["part"], taps[y]["part"])))
+                if k not in PU:
+                    raise SystemExit(f"--pair-unc: no uncertainty for pair {k}")
+                return float(PU[k])
+            cr["clock_ocv"] = dict(mode="pair-unc", file=str(Path(a.pair_unc).resolve()), status="UNCHECKED")
+        elif a.clock_ocv != "none":
             droop = a.clock_droop or ("shared" if a.clock_ocv == "table" else "stated")
             dreg = droop_regions(d, taps, a.droop_region, a.droop_regions) if droop == "shared" else None
             ocv = clock_ocv_fn(a.clock_ocv, droop, dict(meta, corner=c), taps, lat[c], a.clock_aocv_table,
