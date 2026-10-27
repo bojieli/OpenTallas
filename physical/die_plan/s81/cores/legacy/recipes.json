@@ -45,7 +45,9 @@
   "rtl_dirs": true
  },
  "ot_s81sl_capc5r": {
-  "ref_tile": "physical/ref_tile/s81sl_capc5r"
+  "ref_tile": "physical/ref_tile/s81sl_capc5r",
+  "multi_root": true,
+  "why_multi_root": "S81-CORE-LAT-R20 10-27 (COORD S81-CORES-R1 ruling 2): DECLARED multi-root core (spec clock_entry_domains, same_pll_fixed_phase 1:1): one clock / entry per root pin, each at the 12.3 budget, inter-root paths timed as related pairs"
  },
  "ot_s81sl_eg": {
   "ref_tile": "physical/ref_tile/s81sl_eg"
@@ -78,7 +80,9 @@
   "note": "CLOCK-RESET/relay2 10-25: main RTL is the 2-flop station (S81-KITS-RTLC dc23a738f, +1 edge priced in gen_plan_v4 FRAME_BAND_STATION_EDGES); no one-station pair (rejected 10-24 20:42), canonical face_guard"
  },
  "dsfd_cfifo_crs4": {
-  "ref_tile": "physical/ref_tile/s81coll_cfifo_crs4"
+  "ref_tile": "physical/ref_tile/s81coll_cfifo_crs4",
+  "multi_root": true,
+  "why_multi_root": "S81-CORE-LAT-R20 10-27 (COORD S81-CORES-R1 ruling 2): DECLARED multi-root core (spec clock_entry_domains, same_pll_fixed_phase 1:1): one clock / entry per root pin, each at the 12.3 budget, inter-root paths timed as related pairs"
  },
  "dsfd_qbank_N": {
   "ref_tile": "physical/ref_tile/s81fill2_qbank_n",

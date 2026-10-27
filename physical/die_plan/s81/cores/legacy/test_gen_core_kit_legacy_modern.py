@@ -76,7 +76,7 @@ def test_hard_child_master_kit(tmp_path):
     # the parent itself stays refused until the child view is signed off
     r = subprocess.run([sys.executable, str(GEN), "--module", "dsdv_bksel_q", "--out", str(tmp_path / "p")],
                        capture_output=True, text=True)
-    assert r.returncode != 0 and "must be signed first" in r.stderr
+    assert r.returncode != 0 and "must be SIGNED first" in r.stderr
 
 
 def test_pin_gate_refusal_message():
