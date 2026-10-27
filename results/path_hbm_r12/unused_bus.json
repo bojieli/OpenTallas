@@ -1,0 +1,2928 @@
+{
+ "q_hub_nw": {
+  "report": {
+   "old_face_bits_S": 222879,
+   "old_face_bits_N": 206854,
+   "old_face_bits_W": 36570,
+   "old_face_bits_E": 78754,
+   "new_face_bits_N": 21166,
+   "new_face_bits_S": 24674,
+   "new_face_bits_W": 9475,
+   "new_face_bits_E": 18366,
+   "core_pins": 631,
+   "core_pin_bits": 73681,
+   "bus_supply_bits": 84746,
+   "unused_bus_bits": 21195,
+   "broadcast_bits": 10130,
+   "lane_slices": 683,
+   "old_face_stations": 3365
+  },
+  "buses": [
+   {
+    "bus": "L0_o",
+    "width": 2999,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2999,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su01",
+     "L0_i",
+     "L0",
+     "NW_hub->NW_su01 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L100_o",
+    "width": 22,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 22,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm3",
+     "L100_i",
+     "L100",
+     "NW_hub->NW_sm3 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L101_o",
+    "width": 21,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 2452,
+    "unused": 0,
+    "n_pins": 15,
+    "pin_bits": 3681,
+    "partner": [
+     "NW_io",
+     "L101_i",
+     "L101",
+     "NW_hub->NW_io ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L102_o",
+    "width": 21,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 577,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su00",
+     "L102_i",
+     "L102",
+     "NW_hub->NW_su00 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L103_o",
+    "width": 21,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 21,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su11",
+     "L103_i",
+     "L103",
+     "NW_hub->NW_su11 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L104_o",
+    "width": 21,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 808,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su20",
+     "L104_i",
+     "L104",
+     "NW_hub->NW_su20 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L105_o",
+    "width": 21,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 21,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su31",
+     "L105_i",
+     "L105",
+     "NW_hub->NW_su31 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L110_o",
+    "width": 16,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 16,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su01",
+     "L110_i",
+     "L110",
+     "NW_hub->NW_su01 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L111_o",
+    "width": 16,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 16,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su10",
+     "L111_i",
+     "L111",
+     "NW_hub->NW_su10 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L112_o",
+    "width": 16,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 16,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su21",
+     "L112_i",
+     "L112",
+     "NW_hub->NW_su21 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L113_o",
+    "width": 16,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 16,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su30",
+     "L113_i",
+     "L113",
+     "NW_hub->NW_su30 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L114_i",
+    "width": 16,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 16,
+    "unused": 0,
+    "n_pins": 192,
+    "pin_bits": 9360,
+    "partner": [
+     "PHY_N",
+     "L114_o",
+     "L114",
+     "PHY_N->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L120_i",
+    "width": 9,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 9,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm0",
+     "L120_o",
+     "L120",
+     "NW_sm0->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L121_i",
+    "width": 9,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 9,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm1",
+     "L121_o",
+     "L121",
+     "NW_sm1->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L122_i",
+    "width": 9,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 9,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm2",
+     "L122_o",
+     "L122",
+     "NW_sm2->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L123_i",
+    "width": 9,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 9,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm3",
+     "L123_o",
+     "L123",
+     "NW_sm3->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L126_i",
+    "width": 5,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 5,
+    "unused": 0,
+    "n_pins": 15,
+    "pin_bits": 3681,
+    "partner": [
+     "NW_io",
+     "L126_o",
+     "L126",
+     "NW_io->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L12_i",
+    "width": 2996,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 3252,
+    "unused": 0,
+    "n_pins": 74,
+    "pin_bits": 5770,
+    "partner": [
+     "root",
+     "L12_o",
+     "L12",
+     "root->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L131_i",
+    "width": 4,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 4,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su31",
+     "L131_o",
+     "L131",
+     "NW_su31->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L134_i",
+    "width": 3,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 3,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su00",
+     "L134_o",
+     "L134",
+     "NW_su00->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L135_i",
+    "width": 3,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 3,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su11",
+     "L135_o",
+     "L135",
+     "NW_su11->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L136_i",
+    "width": 3,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 3,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su20",
+     "L136_o",
+     "L136",
+     "NW_su20->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L137_i",
+    "width": 2,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 2,
+    "unused": 0,
+    "n_pins": 8,
+    "pin_bits": 4418,
+    "partner": [
+     "NW_b100",
+     "L137_o",
+     "L137",
+     "NW_b100->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L13_i",
+    "width": 2628,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 4351,
+    "unused": 0,
+    "n_pins": 83,
+    "pin_bits": 8566,
+    "partner": [
+     "root",
+     "L13_o",
+     "L13",
+     "root->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L156_o",
+    "width": 2740,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 664,
+    "unused": 2076,
+    "n_pins": 19,
+    "pin_bits": 2446,
+    "partner": [
+     "root",
+     "L156_i",
+     "L156",
+     "NW_hub->root idx return data (PATH-HBM/EDGE 10-25, COORD Q1): ctl.cr 274 + argmax.cr 274 + ctl.index_rq 136 + vm_rr 8 banks x 257 = 2740"
+    ]
+   },
+   {
+    "bus": "L19_i",
+    "width": 4098,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 4096,
+    "unused": 2,
+    "n_pins": 4,
+    "pin_bits": 4096,
+    "partner": [
+     "NW_b000",
+     "L19_o",
+     "L19",
+     "NW_b000->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L1_o",
+    "width": 2999,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2735,
+    "unused": 264,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su10",
+     "L1_i",
+     "L1",
+     "NW_hub->NW_su10 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L21_i",
+    "width": 2048,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 2048,
+    "unused": 0,
+    "n_pins": 192,
+    "pin_bits": 9360,
+    "partner": [
+     "PHY_N",
+     "L21_o",
+     "L21",
+     "PHY_N->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L22_i",
+    "width": 2048,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 2048,
+    "unused": 0,
+    "n_pins": 192,
+    "pin_bits": 9360,
+    "partner": [
+     "PHY_N",
+     "L22_o",
+     "L22",
+     "PHY_N->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L23_i",
+    "width": 1792,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 1312,
+    "unused": 480,
+    "n_pins": 98,
+    "pin_bits": 4037,
+    "partner": [
+     "NW_b110",
+     "L23_o",
+     "L23",
+     "NW_b110->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L24_i",
+    "width": 1719,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 984,
+    "unused": 735,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su01",
+     "L24_o",
+     "L24",
+     "NW_su01->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L25_i",
+    "width": 1719,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 1719,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su10",
+     "L25_o",
+     "L25",
+     "NW_su10->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L26_i",
+    "width": 1719,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 984,
+    "unused": 735,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su21",
+     "L26_o",
+     "L26",
+     "NW_su21->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L27_i",
+    "width": 1719,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 1719,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su30",
+     "L27_o",
+     "L27",
+     "NW_su30->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L28_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 369,
+    "unused": 1246,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm0",
+     "L28_i",
+     "L28",
+     "NW_hub->NW_sm0 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L29_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1615,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm0",
+     "L29_i",
+     "L29",
+     "NW_hub->NW_sm0 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L2_o",
+    "width": 2999,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1928,
+    "unused": 1071,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su21",
+     "L2_i",
+     "L2",
+     "NW_hub->NW_su21 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L30_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1288,
+    "unused": 327,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm1",
+     "L30_i",
+     "L30",
+     "NW_hub->NW_sm1 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L31_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 1615,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm1",
+     "L31_i",
+     "L31",
+     "NW_hub->NW_sm1 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L32_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1615,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm2",
+     "L32_i",
+     "L32",
+     "NW_hub->NW_sm2 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L33_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1615,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm2",
+     "L33_i",
+     "L33",
+     "NW_hub->NW_sm2 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L34_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 354,
+    "unused": 1261,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm3",
+     "L34_i",
+     "L34",
+     "NW_hub->NW_sm3 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L35_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 1615,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm3",
+     "L35_i",
+     "L35",
+     "NW_hub->NW_sm3 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L36_o",
+    "width": 1329,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1329,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su00",
+     "L36_i",
+     "L36",
+     "NW_hub->NW_su00 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L37_o",
+    "width": 1329,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1329,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su11",
+     "L37_i",
+     "L37",
+     "NW_hub->NW_su11 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L38_o",
+    "width": 1329,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1329,
+    "unused": 0,
+    "n_pins": 36,
+    "pin_bits": 14074,
+    "partner": [
+     "NW_su20",
+     "L38_i",
+     "L38",
+     "NW_hub->NW_su20 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L39_o",
+    "width": 1329,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1329,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su31",
+     "L39_i",
+     "L39",
+     "NW_hub->NW_su31 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L3_o",
+    "width": 2999,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 417,
+    "unused": 2582,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NW_su30",
+     "L3_i",
+     "L3",
+     "NW_hub->NW_su30 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L40_i",
+    "width": 1064,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 1064,
+    "unused": 0,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NW_spb2",
+     "L40_o",
+     "L40",
+     "NW_spb2->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L41_i",
+    "width": 1064,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 1064,
+    "unused": 0,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NW_spt0",
+     "L41_o",
+     "L41",
+     "NW_spt0->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L42_o",
+    "width": 788,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 788,
+    "n_pins": 0,
+    "pin_bits": 0,
+    "partner": [
+     "NW_b002",
+     "L42_i",
+     "L42",
+     "NW_hub->NW_b002 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L43_o",
+    "width": 788,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 788,
+    "n_pins": 0,
+    "pin_bits": 0,
+    "partner": [
+     "NW_b011",
+     "L43_i",
+     "L43",
+     "NW_hub->NW_b011 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L49_o",
+    "width": 618,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 60,
+    "unused": 558,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NW_spb2",
+     "L49_i",
+     "L49",
+     "NW_hub->NW_spb2 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L4_i",
+    "width": 2816,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 5524,
+    "unused": 0,
+    "n_pins": 7,
+    "pin_bits": 7792,
+    "partner": [
+     "NE_hub",
+     "L4_o",
+     "L4m",
+     "NE_hub->NW_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L4_o",
+    "width": 2816,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 4448,
+    "unused": 0,
+    "n_pins": 6,
+    "pin_bits": 5568,
+    "partner": [
+     "NE_hub",
+     "L4_i",
+     "L4",
+     "NW_hub->NE_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L50_o",
+    "width": 618,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 60,
+    "unused": 558,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NW_spt0",
+     "L50_i",
+     "L50",
+     "NW_hub->NW_spt0 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L51_o",
+    "width": 612,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 612,
+    "unused": 0,
+    "n_pins": 15,
+    "pin_bits": 3681,
+    "partner": [
+     "NW_io",
+     "L51_i",
+     "L51",
+     "NW_hub->NW_io data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L52_i",
+    "width": 612,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 612,
+    "unused": 0,
+    "n_pins": 15,
+    "pin_bits": 3681,
+    "partner": [
+     "NW_io",
+     "L52_o",
+     "L52",
+     "NW_io->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L55_i",
+    "width": 514,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 514,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su00",
+     "L55_o",
+     "L55",
+     "NW_su00->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L57_i",
+    "width": 514,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 514,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su11",
+     "L57_o",
+     "L57",
+     "NW_su11->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L59_i",
+    "width": 514,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 514,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su20",
+     "L59_o",
+     "L59",
+     "NW_su20->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L5_o",
+    "width": 2725,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2725,
+    "unused": 0,
+    "n_pins": 98,
+    "pin_bits": 4037,
+    "partner": [
+     "NW_b110",
+     "L5_i",
+     "L5",
+     "NW_hub->NW_b110 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L61_i",
+    "width": 514,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 514,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 14234,
+    "partner": [
+     "NW_su31",
+     "L61_o",
+     "L61",
+     "NW_su31->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L62_i",
+    "width": 324,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 324,
+    "unused": 0,
+    "n_pins": 73,
+    "pin_bits": 7971,
+    "partner": [
+     "root",
+     "L62_o",
+     "L62",
+     "root->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L63_o",
+    "width": 336,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 336,
+    "unused": 0,
+    "n_pins": 192,
+    "pin_bits": 9360,
+    "partner": [
+     "PHY_N",
+     "L63_i",
+     "L63",
+     "NW_hub->PHY_N ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L65_o",
+    "width": 304,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 304,
+    "n_pins": 0,
+    "pin_bits": 0,
+    "partner": [
+     "NW_b000",
+     "L65_i",
+     "L65",
+     "NW_hub->NW_b000 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L66_o",
+    "width": 268,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 262,
+    "unused": 6,
+    "n_pins": 80,
+    "pin_bits": 272,
+    "partner": [
+     "NW_mcb",
+     "L66_i",
+     "L66",
+     "NW_hub->NW_mcb data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L67_i",
+    "width": 268,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 268,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm0",
+     "L67_o",
+     "L67",
+     "NW_sm0->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L68_i",
+    "width": 268,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 268,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm1",
+     "L68_o",
+     "L68",
+     "NW_sm1->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L69_i",
+    "width": 268,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 268,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm2",
+     "L69_o",
+     "L69",
+     "NW_sm2->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L6_o",
+    "width": 2484,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1614,
+    "unused": 870,
+    "n_pins": 13,
+    "pin_bits": 4987,
+    "partner": [
+     "NW_b100",
+     "L6_i",
+     "L6",
+     "NW_hub->NW_b100 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L70_i",
+    "width": 268,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 268,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm3",
+     "L70_o",
+     "L70",
+     "NW_sm3->NW_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L73_o",
+    "width": 274,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 274,
+    "n_pins": 0,
+    "pin_bits": 0,
+    "partner": [
+     "NW_b013",
+     "L73_i",
+     "L73",
+     "NW_hub->NW_b013 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L74_o",
+    "width": 1171,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 190,
+    "unused": 981,
+    "n_pins": 10,
+    "pin_bits": 254,
+    "partner": [
+     "root",
+     "L74_i",
+     "L74",
+     "NW_hub->root data (B2o re-route) | PATH-HBM/HUBNW 10-25: TKM-only tkx 2-beat (static slot from boot_start, pulse bits 2340:2332, no beat-index pin); TX u_tkx_tx_Q in NW_hub, RX u_tkx_rx_SW in root | PATH-HBM/EDGE 10-25: direct (NW_b101 L74x1 slot removed)"
+    ]
+   },
+   {
+    "bus": "L79_o",
+    "width": 172,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 172,
+    "n_pins": 80,
+    "pin_bits": 272,
+    "partner": [
+     "NW_mcb",
+     "L79_i",
+     "L79",
+     "NW_hub->NW_mcb ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L7_o",
+    "width": 2484,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 820,
+    "unused": 1664,
+    "n_pins": 8,
+    "pin_bits": 4418,
+    "partner": [
+     "NW_b100",
+     "L7_i",
+     "L7",
+     "NW_hub->NW_b100 data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L81_i",
+    "width": 161,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 161,
+    "n_pins": 98,
+    "pin_bits": 4037,
+    "partner": [
+     "NW_b110",
+     "L81_o",
+     "L81",
+     "NW_b110->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L82_i",
+    "width": 140,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 140,
+    "n_pins": 80,
+    "pin_bits": 272,
+    "partner": [
+     "NW_mcb",
+     "L82_o",
+     "L82",
+     "NW_mcb->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L83_o",
+    "width": 99,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 99,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NW_spb2",
+     "L83_i",
+     "L83",
+     "NW_hub->NW_spb2 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L84_o",
+    "width": 99,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 99,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NW_spt0",
+     "L84_i",
+     "L84",
+     "NW_hub->NW_spt0 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L87_i",
+    "width": 68,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 68,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NW_spb2",
+     "L87_o",
+     "L87",
+     "NW_spb2->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L88_i",
+    "width": 68,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 68,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NW_spt0",
+     "L88_o",
+     "L88",
+     "NW_spt0->NW_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L89_o",
+    "width": 2,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 39,
+    "unused": 0,
+    "n_pins": 74,
+    "pin_bits": 7990,
+    "partner": [
+     "root",
+     "L89_i",
+     "L89",
+     "NW_hub->root ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L8_o",
+    "width": 2456,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2456,
+    "unused": 0,
+    "n_pins": 192,
+    "pin_bits": 9360,
+    "partner": [
+     "PHY_N",
+     "L8_i",
+     "L8",
+     "NW_hub->PHY_N data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L91_o",
+    "width": 54,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 54,
+    "unused": 0,
+    "n_pins": 13,
+    "pin_bits": 4987,
+    "partner": [
+     "NW_b100",
+     "L91_i",
+     "L91",
+     "NW_hub->NW_b100 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L96_i",
+    "width": 22,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 22,
+    "unused": 0,
+    "n_pins": 8,
+    "pin_bits": 10016,
+    "partner": [
+     "NE_hub",
+     "L96_o",
+     "L96m",
+     "NE_hub->NW_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L96_o",
+    "width": 22,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 22,
+    "unused": 0,
+    "n_pins": 8,
+    "pin_bits": 10016,
+    "partner": [
+     "NE_hub",
+     "L96_i",
+     "L96",
+     "NW_hub->NE_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L97_o",
+    "width": 22,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 22,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm0",
+     "L97_i",
+     "L97",
+     "NW_hub->NW_sm0 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L98_o",
+    "width": 22,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 22,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm1",
+     "L98_i",
+     "L98",
+     "NW_hub->NW_sm1 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L99_o",
+    "width": 22,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 9,
+    "unused": 13,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NW_sm2",
+     "L99_i",
+     "L99",
+     "NW_hub->NW_sm2 ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L9_o",
+    "width": 2456,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2446,
+    "unused": 10,
+    "n_pins": 180,
+    "pin_bits": 8775,
+    "partner": [
+     "PHY_N",
+     "L9_i",
+     "L9",
+     "NW_hub->PHY_N data (B2o re-route)"
+    ]
+   }
+  ],
+  "unused_total": 21195,
+  "unused_nopin": 2154
+ },
+ "q_hub_ne": {
+  "report": {
+   "old_face_bits_S": 194225,
+   "old_face_bits_N": 180100,
+   "old_face_bits_W": 27840,
+   "old_face_bits_E": 67488,
+   "new_face_bits_N": 20985,
+   "new_face_bits_S": 25868,
+   "new_face_bits_W": 8068,
+   "new_face_bits_E": 13139,
+   "core_pins": 618,
+   "core_pin_bits": 68060,
+   "bus_supply_bits": 78491,
+   "unused_bus_bits": 20617,
+   "broadcast_bits": 10186,
+   "lane_slices": 666,
+   "old_face_stations": 3287
+  },
+  "buses": [
+   {
+    "bus": "L0_o",
+    "width": 2999,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2999,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su01",
+     "L0_i",
+     "L0m",
+     "NE_hub->NE_su01 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L100_o",
+    "width": 22,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 22,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm3",
+     "L100_i",
+     "L100m",
+     "NE_hub->NE_sm3 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L101_o",
+    "width": 21,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 1225,
+    "unused": 0,
+    "n_pins": 7,
+    "pin_bits": 2454,
+    "partner": [
+     "NE_io",
+     "L101_i",
+     "L101m",
+     "NE_hub->NE_io ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L102_o",
+    "width": 21,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 21,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su00",
+     "L102_i",
+     "L102m",
+     "NE_hub->NE_su00 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L103_o",
+    "width": 21,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 21,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su11",
+     "L103_i",
+     "L103m",
+     "NE_hub->NE_su11 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L104_o",
+    "width": 21,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 21,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su20",
+     "L104_i",
+     "L104m",
+     "NE_hub->NE_su20 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L105_o",
+    "width": 21,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 21,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su31",
+     "L105_i",
+     "L105m",
+     "NE_hub->NE_su31 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L110_o",
+    "width": 16,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 16,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su01",
+     "L110_i",
+     "L110m",
+     "NE_hub->NE_su01 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L111_o",
+    "width": 16,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 16,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su10",
+     "L111_i",
+     "L111m",
+     "NE_hub->NE_su10 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L112_o",
+    "width": 16,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 16,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su21",
+     "L112_i",
+     "L112m",
+     "NE_hub->NE_su21 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L113_o",
+    "width": 16,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 16,
+    "unused": 0,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su30",
+     "L113_i",
+     "L113m",
+     "NE_hub->NE_su30 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L114_i",
+    "width": 16,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 16,
+    "unused": 0,
+    "n_pins": 192,
+    "pin_bits": 9360,
+    "partner": [
+     "PHY_N",
+     "L114m_o",
+     "L114m",
+     "PHY_N->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L120_i",
+    "width": 9,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 9,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm0",
+     "L120_o",
+     "L120m",
+     "NE_sm0->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L121_i",
+    "width": 9,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 9,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm1",
+     "L121_o",
+     "L121m",
+     "NE_sm1->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L122_i",
+    "width": 9,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 9,
+    "n_pins": 7,
+    "pin_bits": 1453,
+    "partner": [
+     "NE_sm2",
+     "L122_o",
+     "L122m",
+     "NE_sm2->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L123_i",
+    "width": 9,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 9,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm3",
+     "L123_o",
+     "L123m",
+     "NE_sm3->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L126_i",
+    "width": 5,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 5,
+    "unused": 0,
+    "n_pins": 7,
+    "pin_bits": 2454,
+    "partner": [
+     "NE_io",
+     "L126_o",
+     "L126m",
+     "NE_io->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L12_i",
+    "width": 2996,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 5395,
+    "unused": 0,
+    "n_pins": 74,
+    "pin_bits": 5770,
+    "partner": [
+     "root",
+     "L12m_o",
+     "L12m",
+     "root->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L131_i",
+    "width": 4,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 4,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su31",
+     "L131_o",
+     "L131m",
+     "NE_su31->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L134_i",
+    "width": 3,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 3,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su00",
+     "L134_o",
+     "L134m",
+     "NE_su00->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L135_i",
+    "width": 3,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 3,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su11",
+     "L135_o",
+     "L135m",
+     "NE_su11->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L136_i",
+    "width": 3,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 3,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su20",
+     "L136_o",
+     "L136m",
+     "NE_su20->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L137_i",
+    "width": 2,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 2,
+    "unused": 0,
+    "n_pins": 8,
+    "pin_bits": 4418,
+    "partner": [
+     "NE_b100",
+     "L137_o",
+     "L137m",
+     "NE_b100->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L19_i",
+    "width": 4098,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 4096,
+    "unused": 2,
+    "n_pins": 4,
+    "pin_bits": 4096,
+    "partner": [
+     "NE_b000",
+     "L19_o",
+     "L19m",
+     "NE_b000->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L1_o",
+    "width": 2999,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2995,
+    "unused": 4,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su10",
+     "L1_i",
+     "L1m",
+     "NE_hub->NE_su10 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L21_i",
+    "width": 2048,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 2048,
+    "unused": 0,
+    "n_pins": 192,
+    "pin_bits": 9360,
+    "partner": [
+     "PHY_N",
+     "L21m_o",
+     "L21m",
+     "PHY_N->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L22_i",
+    "width": 2048,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 2048,
+    "unused": 0,
+    "n_pins": 192,
+    "pin_bits": 9360,
+    "partner": [
+     "PHY_N",
+     "L22m_o",
+     "L22m",
+     "PHY_N->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L23_i",
+    "width": 1792,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 1312,
+    "unused": 480,
+    "n_pins": 98,
+    "pin_bits": 4037,
+    "partner": [
+     "NE_b110",
+     "L23_o",
+     "L23m",
+     "NE_b110->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L24_i",
+    "width": 1719,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 984,
+    "unused": 735,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su01",
+     "L24_o",
+     "L24m",
+     "NE_su01->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L25_i",
+    "width": 1719,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 1719,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su10",
+     "L25_o",
+     "L25m",
+     "NE_su10->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L26_i",
+    "width": 1719,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 984,
+    "unused": 735,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su21",
+     "L26_o",
+     "L26m",
+     "NE_su21->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L27_i",
+    "width": 1719,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 1024,
+    "unused": 695,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su30",
+     "L27_o",
+     "L27m",
+     "NE_su30->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L28_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 189,
+    "unused": 1426,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm0",
+     "L28_i",
+     "L28m",
+     "NE_hub->NE_sm0 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L29_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1615,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm0",
+     "L29_i",
+     "L29m",
+     "NE_hub->NE_sm0 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L2_o",
+    "width": 2999,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1112,
+    "unused": 1887,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su21",
+     "L2_i",
+     "L2m",
+     "NE_hub->NE_su21 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L30_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1468,
+    "unused": 147,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm1",
+     "L30_i",
+     "L30m",
+     "NE_hub->NE_sm1 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L31_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 1615,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm1",
+     "L31_i",
+     "L31m",
+     "NE_hub->NE_sm1 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L32_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1615,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm2",
+     "L32_i",
+     "L32m",
+     "NE_hub->NE_sm2 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L33_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1453,
+    "unused": 162,
+    "n_pins": 7,
+    "pin_bits": 1453,
+    "partner": [
+     "NE_sm2",
+     "L33_i",
+     "L33m",
+     "NE_hub->NE_sm2 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L34_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 708,
+    "unused": 907,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm3",
+     "L34_i",
+     "L34m",
+     "NE_hub->NE_sm3 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L35_o",
+    "width": 1615,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 1615,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm3",
+     "L35_i",
+     "L35m",
+     "NE_hub->NE_sm3 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L36_o",
+    "width": 1329,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1329,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su00",
+     "L36_i",
+     "L36m",
+     "NE_hub->NE_su00 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L37_o",
+    "width": 1329,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1329,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su11",
+     "L37_i",
+     "L37m",
+     "NE_hub->NE_su11 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L38_o",
+    "width": 1329,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1329,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su20",
+     "L38_i",
+     "L38m",
+     "NE_hub->NE_su20 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L39_o",
+    "width": 1329,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 1087,
+    "unused": 242,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su31",
+     "L39_i",
+     "L39m",
+     "NE_hub->NE_su31 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L3_o",
+    "width": 2999,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 2999,
+    "n_pins": 17,
+    "pin_bits": 5470,
+    "partner": [
+     "NE_su30",
+     "L3_i",
+     "L3m",
+     "NE_hub->NE_su30 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L40_i",
+    "width": 1064,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 1064,
+    "unused": 0,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NE_spb2",
+     "L40_o",
+     "L40m",
+     "NE_spb2->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L41_i",
+    "width": 1064,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 1064,
+    "unused": 0,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NE_spt0",
+     "L41_o",
+     "L41m",
+     "NE_spt0->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L42_o",
+    "width": 788,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 788,
+    "n_pins": 0,
+    "pin_bits": 0,
+    "partner": [
+     "NE_b002",
+     "L42_i",
+     "L42m",
+     "NE_hub->NE_b002 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L43_o",
+    "width": 788,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 788,
+    "n_pins": 0,
+    "pin_bits": 0,
+    "partner": [
+     "NE_b011",
+     "L43_i",
+     "L43m",
+     "NE_hub->NE_b011 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L49_o",
+    "width": 618,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 60,
+    "unused": 558,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NE_spb2",
+     "L49_i",
+     "L49m",
+     "NE_hub->NE_spb2 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L4_i",
+    "width": 2816,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 4404,
+    "unused": 0,
+    "n_pins": 7,
+    "pin_bits": 7792,
+    "partner": [
+     "NW_hub",
+     "L4_o",
+     "L4",
+     "NW_hub->NE_hub data (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L4_o",
+    "width": 2816,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2816,
+    "unused": 0,
+    "n_pins": 6,
+    "pin_bits": 5568,
+    "partner": [
+     "NW_hub",
+     "L4_i",
+     "L4m",
+     "NE_hub->NW_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L50_o",
+    "width": 618,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 60,
+    "unused": 558,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NE_spt0",
+     "L50_i",
+     "L50m",
+     "NE_hub->NE_spt0 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L51_o",
+    "width": 612,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 612,
+    "unused": 0,
+    "n_pins": 7,
+    "pin_bits": 2454,
+    "partner": [
+     "NE_io",
+     "L51_i",
+     "L51m",
+     "NE_hub->NE_io data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L52_i",
+    "width": 612,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 612,
+    "unused": 0,
+    "n_pins": 7,
+    "pin_bits": 2454,
+    "partner": [
+     "NE_io",
+     "L52_o",
+     "L52m",
+     "NE_io->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L55_i",
+    "width": 514,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 514,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su00",
+     "L55_o",
+     "L55m",
+     "NE_su00->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L57_i",
+    "width": 514,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 459,
+    "unused": 55,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su11",
+     "L57_o",
+     "L57m",
+     "NE_su11->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L59_i",
+    "width": 514,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 514,
+    "unused": 0,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su20",
+     "L59_o",
+     "L59m",
+     "NE_su20->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L5_o",
+    "width": 2725,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2725,
+    "unused": 0,
+    "n_pins": 98,
+    "pin_bits": 4037,
+    "partner": [
+     "NE_b110",
+     "L5_i",
+     "L5m",
+     "NE_hub->NE_b110 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L61_i",
+    "width": 514,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 514,
+    "n_pins": 37,
+    "pin_bits": 10412,
+    "partner": [
+     "NE_su31",
+     "L61_o",
+     "L61m",
+     "NE_su31->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L62_i",
+    "width": 330,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 330,
+    "unused": 0,
+    "n_pins": 73,
+    "pin_bits": 7971,
+    "partner": [
+     "root",
+     "L62m_o",
+     "L62m",
+     "root->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L63_o",
+    "width": 336,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 336,
+    "unused": 0,
+    "n_pins": 192,
+    "pin_bits": 9360,
+    "partner": [
+     "PHY_N",
+     "L63m_i",
+     "L63m",
+     "NE_hub->PHY_N ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L65_o",
+    "width": 304,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 304,
+    "n_pins": 0,
+    "pin_bits": 0,
+    "partner": [
+     "NE_b000",
+     "L65_i",
+     "L65m",
+     "NE_hub->NE_b000 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L66_o",
+    "width": 268,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 260,
+    "unused": 8,
+    "n_pins": 80,
+    "pin_bits": 272,
+    "partner": [
+     "NE_mcb",
+     "L66_i",
+     "L66m",
+     "NE_hub->NE_mcb data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L67_i",
+    "width": 268,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 268,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm0",
+     "L67_o",
+     "L67m",
+     "NE_sm0->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L68_i",
+    "width": 268,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 268,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm1",
+     "L68_o",
+     "L68m",
+     "NE_sm1->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L69_i",
+    "width": 268,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 268,
+    "n_pins": 7,
+    "pin_bits": 1453,
+    "partner": [
+     "NE_sm2",
+     "L69_o",
+     "L69m",
+     "NE_sm2->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L6_o",
+    "width": 2484,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2484,
+    "unused": 0,
+    "n_pins": 13,
+    "pin_bits": 4987,
+    "partner": [
+     "NE_b100",
+     "L6_i",
+     "L6m",
+     "NE_hub->NE_b100 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L70_i",
+    "width": 268,
+    "dir": "in",
+    "kind": "data",
+    "assigned": 268,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm3",
+     "L70_o",
+     "L70m",
+     "NE_sm3->NE_hub data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L73_o",
+    "width": 274,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 0,
+    "unused": 274,
+    "n_pins": 0,
+    "pin_bits": 0,
+    "partner": [
+     "NE_b013",
+     "L73_i",
+     "L73m",
+     "NE_hub->NE_b013 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L74_o",
+    "width": 279,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2522,
+    "unused": 0,
+    "n_pins": 77,
+    "pin_bits": 7951,
+    "partner": [
+     "root",
+     "L74m_i",
+     "L74m",
+     "NE_hub->root data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L79_o",
+    "width": 172,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 172,
+    "n_pins": 80,
+    "pin_bits": 272,
+    "partner": [
+     "NE_mcb",
+     "L79_i",
+     "L79m",
+     "NE_hub->NE_mcb ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L7_o",
+    "width": 2484,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 22,
+    "unused": 2462,
+    "n_pins": 8,
+    "pin_bits": 4418,
+    "partner": [
+     "NE_b100",
+     "L7_i",
+     "L7m",
+     "NE_hub->NE_b100 data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L81_i",
+    "width": 161,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 161,
+    "n_pins": 98,
+    "pin_bits": 4037,
+    "partner": [
+     "NE_b110",
+     "L81_o",
+     "L81m",
+     "NE_b110->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L82_i",
+    "width": 140,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 140,
+    "n_pins": 80,
+    "pin_bits": 272,
+    "partner": [
+     "NE_mcb",
+     "L82_o",
+     "L82m",
+     "NE_mcb->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L83_o",
+    "width": 99,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 99,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NE_spb2",
+     "L83_i",
+     "L83m",
+     "NE_hub->NE_spb2 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L84_o",
+    "width": 99,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 99,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NE_spt0",
+     "L84_i",
+     "L84m",
+     "NE_hub->NE_spt0 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L87_i",
+    "width": 68,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 68,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NE_spb2",
+     "L87_o",
+     "L87m",
+     "NE_spb2->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L88_i",
+    "width": 68,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 0,
+    "unused": 68,
+    "n_pins": 26,
+    "pin_bits": 1124,
+    "partner": [
+     "NE_spt0",
+     "L88_o",
+     "L88m",
+     "NE_spt0->NE_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L89_o",
+    "width": 1,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 1,
+    "unused": 0,
+    "n_pins": 74,
+    "pin_bits": 7990,
+    "partner": [
+     "root",
+     "L89m_i",
+     "L89m",
+     "NE_hub->root ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L8_o",
+    "width": 2456,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2448,
+    "unused": 8,
+    "n_pins": 192,
+    "pin_bits": 9360,
+    "partner": [
+     "PHY_N",
+     "L8m_i",
+     "L8m",
+     "NE_hub->PHY_N data (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L91_o",
+    "width": 54,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 54,
+    "unused": 0,
+    "n_pins": 13,
+    "pin_bits": 4987,
+    "partner": [
+     "NE_b100",
+     "L91_i",
+     "L91m",
+     "NE_hub->NE_b100 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L96_i",
+    "width": 22,
+    "dir": "in",
+    "kind": "ctl",
+    "assigned": 1142,
+    "unused": 0,
+    "n_pins": 8,
+    "pin_bits": 10016,
+    "partner": [
+     "NW_hub",
+     "L96_o",
+     "L96",
+     "NW_hub->NE_hub ctl (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L96_o",
+    "width": 22,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 1654,
+    "unused": 0,
+    "n_pins": 8,
+    "pin_bits": 10016,
+    "partner": [
+     "NW_hub",
+     "L96_i",
+     "L96m",
+     "NE_hub->NW_hub ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L97_o",
+    "width": 22,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 22,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm0",
+     "L97_i",
+     "L97m",
+     "NE_hub->NE_sm0 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L98_o",
+    "width": 22,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 22,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm1",
+     "L98_i",
+     "L98m",
+     "NE_hub->NE_sm1 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L99_o",
+    "width": 22,
+    "dir": "out",
+    "kind": "ctl",
+    "assigned": 22,
+    "unused": 0,
+    "n_pins": 11,
+    "pin_bits": 3516,
+    "partner": [
+     "NE_sm2",
+     "L99_i",
+     "L99m",
+     "NE_hub->NE_sm2 ctl (mirror) (B2o re-route)"
+    ]
+   },
+   {
+    "bus": "L9_o",
+    "width": 2456,
+    "dir": "out",
+    "kind": "data",
+    "assigned": 2456,
+    "unused": 0,
+    "n_pins": 180,
+    "pin_bits": 8775,
+    "partner": [
+     "PHY_N",
+     "L9m_i",
+     "L9m",
+     "NE_hub->PHY_N data (mirror) (B2o re-route)"
+    ]
+   }
+  ],
+  "unused_total": 20617,
+  "unused_nopin": 2154
+ }
+}

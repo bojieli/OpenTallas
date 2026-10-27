@@ -1,0 +1,40 @@
+PATH-HBM-R12 (2026-10-26) -- on claude/path-hbm-r11-1026@2947bd5953 planA2 (sha 1eb7ee48). Diagnostic scripts + results only;
+no tool or plan changed. Numbers UNCHECKED unless marked CHECKED (= my own independent recompute).
+
+(3) NUMBER-CHECK of the R11 hub cuts (cut_check.py: own re-implementation of the per-sink blocked model, no plan_cut import,
+    run on planA2/die_plan.json hub types):
+    q_hub_nw whole x 0.580 / y 0.431 -- EXACT match (bits 30799/55454, tracks 53092/128723, same cut lines). CHECKED.
+    q_hub_ne whole y 0.444 exact; x 0.576 vs report 0.591 (mine lower). Segments: nw (0.507,0.514)(0.576,0.456) vs
+    (0.507,0.524)(0.580,0.459); ne (0.574,0.534)(0.562,0.511) vs (0.591,0.535)(0.570,0.516). Max |diff| 0.017, mine never
+    higher -> "all <= 0.6" CHECKED under the R11 model.
+
+(4) 21.2k/20.6k bus bits with no core sink = NOT dead lanes and NOT a die-census bug: an R10 lane-transport MODEL omission.
+    - Die census (physical/die_plan/hbm/census/hbm_r18h5_rows.tsv.gz + planA2 census_map) supports the hub bus widths where
+      names resolve (e.g. NW_sm0..3 out 3252 vs census 3261, su00/11/20/31 out 1350 vs 1352, PHY_N 5248/4112 exact).
+    - Hub->outside census bits beyond the source port width (one hub port multicast to >= 2 partitions): NW 21,057, NE 20,695
+      (pgp.command 2470 -> 4 SU groups = 7616; xq_p*_eg.xw_data 2048 -> 4110; svg_Q*.sm_packet 1099 -> 2 SMs; hleaf cfg;
+      sucore rf_*; cic inj_addr). R10 delivers each core pin ONCE, so these copies show up as unused bus bits.
+    - core_conns is direction-blind (e.g. out-bus L3_o station: launch "face bus L3_o" -> capture u_pgp_Q.command, an
+      output); R10 unused split nw out 17,087 / in 4,108, ne out 14,968 / in 5,649 -> the in-bus part is the same blindness.
+    - 2,154 b/hub on L42_o/L43_o/L65_o/L73_o (to b002/b011/b000/b013) have no hard-core pin at all: census 819/819/..
+      -> soft hub glue (hc root), real.
+    => they MUST be wired. WHAT-IF (mcast_whatif.py: each unused bus slice added as its own net face->nearest allowed core
+       pin, no Steiner sharing = upper bound): nw x 0.58 -> 0.620 (4 cuts > 0.6 near x 5391), seg1 x 0.601, y 0.45;
+       ne x 0.589, y 0.475, all <= 0.6.
+
+(2) PRICE (TOK-HBM tools/hbm_b2/b1_lane_traversal.py price t_banks -> planA2, + cc_price.py for hub core-core legs, combined
+    in the exact accepted_cost.hbm_schedule S2, r25gq basis ds_ar 576702.4 / qwen_ar 1269120.1 reproduced):
+    (all figures = tok/s LOSS; negative = gain)
+    lane part (face route registers, R10 lanes, die growth): ds_ar 2.09 % lower / 1.53 % upper; qwen_ar -0.42/-0.63 %.
+    cc part (x2 serialise +1, k3 inter-segment +2, station re-route deltas, per-family max leg): ds_ar 2.42 % (lower),
+      10.45 % (upper = longest module chain, pessimistic).
+    TOTAL ds_ar: lower 4.38 % (2080.8 -> 1989.7 tok/s), SM-serial 4.71 % (1982.9), upper 11.75 % (1836.4);
+    qwen_ar -0.05 / 0.06 / 1.43 %.
+    Bandwidth halving NOT priced (no link-duty data): latency-only price.
+    FLAG: unit <= 5 % only in the lower/mid modes; upper > 5 %. r25gq accepted total 11.414 % (headroom 3.586 %) ->
+    even the lower 4.38 % takes the design over 15 % (15.79 %).
+
+(1) DIE GRT PROBE planA2 (die_trial kit + run_grt.sh, 50 congestion iterations, all cores obs_max M5): launched
+    epyc1 18:37 (ot-run placed it on epyc1/tender-ray: the probe dir exists only on epyc1). Dir
+    epyc1:/srv/opentallas-scratch2/claude/path-hbm-r12-1026/grt_A2 (go.sh, go.log, kit_build.log, kit/grt/grt.log).
+    Kit build (single-threaded python) still running at lane end; GRT not reached -> collect (see lane note).
