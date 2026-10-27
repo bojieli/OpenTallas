@@ -2662,7 +2662,9 @@ class Binder:
             body.append("    wire rst_n = arst_n;  // registered-pin hard partition: the delivered reset, no synchroniser")
         elif P is not None:
             import reset_tree as RT
-            ptn = t.get("split_of", tn)
+            # Persisted landing/profile variants own a reset-tree contract.
+            # Only binder-created pad variants absent from the plan inherit it.
+            ptn = tn if tn in P.types else t.get("split_of", tn)
             if P.types[ptn].get("hard"):
                 # Native hard-partition reset depth is already in wf_plan.
                 body.append("    wire rst_n = arst_n;  // delivered reset to the native hard partition")
