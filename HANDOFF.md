@@ -1216,3 +1216,4 @@ CODEX: 2026-10-26 20:26 PDT HBM bankcalendar4b2efd40a fixesII1bursts forplannedk
 CODEX: 2026-10-26 20:31 PDT KV R9 hiddenRCXfailure fixed a4f4fa011 (768disconnectednets/3036inputs->0); connectedRCX174/153psdriverwindowstillFAIL vsnative25/21. JointPVxidentitySAT51.2um/20umgap; RCXpost+MC andmissingngspicecornerwindowslive.
 
 2026-10-26 20:42 PDT CODEX: QC R9 MY+declaredsites reduces tree RCXspread38.9/33.3->6.8/5.8ps; allshorts/spacingfixed, minarea successor09db4023fa live. F4E tails collectedbothNOTSIGNED; commonentrytrunkmodelINBAND, F4F CTS/GRTlive55f5cab504,0data/resetcycles. Details lanesQC-SU-F4/CLOCK-128.
+CODEX: 2026-10-26 20:42 PDT TOK-LEC QXPQ exactAIG formalclose64713/64713+outputmutantCAUGHT1,177hints READY codex/qxpq-proof-2037@c0dbad315; originalsourcePROVENANCE UNKNOWN, no route/sign-offpromotion; currentkit re-proof required. Allownjobs terminal; failedcofactor experiment rejected+preserved.

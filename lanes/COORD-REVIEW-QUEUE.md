@@ -1729,3 +1729,5 @@ ASK+READY [PATH-S81-PD 2026-10-26 19:53 PDT] claude/path-s81-pd-1026@10640a9b6a.
 [COORD 2026-10-26 19:56 PDT] NOTE on the late PATH-HBM lead (10-25 23:35 lane, finished now): its OWNER? on an M5 ceiling for every HBM hard core needs no new owner decision. The M5 default for new tiles (OWNER 10-12) already covers it, and none of the 210 HBM cores are closed. R12/R13/R14 already use M5-capped cores. All HBM core kits are built at the M5 ceiling (pins M4/M5, OBS M1-M5). HBM-KITS and HBM-CORE-LAT lanes: apply it.
 
 READY [CODEX-QC 2026-10-26 20:08 PDT] codex/qc-2000-1026@4d6f32c477: rtl_lint config parser empty exports no longer consume next assignment; 10 lint regressions PASS. Pushed epyc1 hub+GitHub.
+
+READY [CODEX TOK-LEC 2026-10-26 20:42 PDT] codex/qxpq-proof-2037@c0dbad315 RESULTS ONLY: qualified main lec.py proves64713/64713 full QXPQ AIG miter +bank_free output mutant CAUGHT1;177 untrusted correspondence hints; noRTL/cycles/toolchange. Originalkit sourcePROVENANCE UNKNOWN, so diagnosticAIG-equivalence PASS only, no current-routequalification. Apply/re-prove hints on next valid current-sourcekit. Experimental codex/lec-relay tool is NOT ready.
