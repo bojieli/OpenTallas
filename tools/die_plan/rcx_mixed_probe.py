@@ -34,7 +34,7 @@ def marker_rules(stock, widths):
         spacing, coupling, fringe, resistance=row
         return [spacing,coupling*width/R.W0,fringe*width/R.W0,resistance*R.W0/width]
     with mock.patch.object(R,'_scale_row',encode):
-        return R.widen(stock,{},widths)[0]
+        return R.widen(stock,{},list(widths))[0]
 
 
 def rules(out, stock):
