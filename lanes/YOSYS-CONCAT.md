@@ -5,3 +5,6 @@
   Lint: tools/die_plan/rtl_lint.py YC1/YC2 source scan of kit VERILOG_FILES -> FAIL, plus --scan CLI; tests tools/die_plan/test_rtl_lint_yosys_cast.py 4 PASS (13 bad forms all probe-DIFF rejected, 17 good forms pass). FLOW-WATCHED (rtl_lint.py is in canaries.json watch) -> needs the ROOT-MERGE canary.
   Signed kits (CHECKED scanner on kit sources): 27 SIGNED items, 0 contain any hit -> no sign-off affected; kv3_head_eighth_e5 kit LEC EQUIVALENT 29222/29222. Not checked: which unsigned in-flight kits contain the 5 trigger files (their netlists are wrong at those bits) -> re-kit after merge: QC N59/posted users, qfd_native59_svc_obs1 users, S81 finish_sram users, HBM record_calendar + svc_pc_ctrl_leaf_cfg(_h9b) users.
   Merge note: lint will FAIL any kit built from the 274 non-release hit files (test/old-die RTL) - intended; upstream yosys NOT contacted (owner OK needed). Evidence: results/yosys_concat_1026/ on the branch; scratch intel2:/srv/opentallas-scratch2/claude/yosys-concat-1026/.
+
+## CODEX notes 2026-10-26 20:07 PDT
+Known5release mis-elaboration source fixes/lint already ready47aa9825d and upstreamissueYosysHQ/yosys#6408filed(owner16:35). No new upstream action needed. Unsigned affected kits must use correctedsource whenphysicalownersrebuild; signed27had0hits.

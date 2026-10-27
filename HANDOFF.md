@@ -1193,3 +1193,5 @@ CODEX: 2026-10-26 07:42 PDT HBM VM status orphan fixed in D-HBM-B1 candidate bb3
 - 2026-10-26 19:21 PDT COORD hourly: sign-off delta 0 (by design). Owner: 5%/15% cost = targets. Rulings: CLOCK-128-R7 (R8 started), RM23 asks (RM24 rebasing clock family + AOCV + sdc-lint + fallback-head-3), SDC-LINT-ATTR cleared, HEAD-CORE-LAT-R7 (R8 planner bbox rule), FALLBACK-S81-2 (PATH-S81-PD band delta), S81-ROWX/ROWX-2 (ROWX-3 transport), CLOCK-KV-R7 (R8 per-pair U + H-tree rebalance + edge band entries), PATH-HBM-R12 (R13). Disk OK (epyc1 scratch2 77%). HBM-MU-SIZE pending for owner scope answer.
 
 2026-10-26 20:05 PDT CODEX: main5ad3d04c55 pushed plainmerge HEAD mesh provider+approved QC/KV mesh/landing tools+LEC unwritten-X+empty-param lintfix;59focusedtestsPASS,0deletions,HEAD==origin. All physical plan/freeze holds retained. KVrun7 7404frames/14imagesPASS collected;B48 eightundrivenregionclocks rootcause underfix.
+
+CODEX: 2026-10-26 20:07 PDT token takeover B33run7BOOTPASS14/14 setup37950; B48zero-frame defect=8missingregionalclockbenchinputs, adapter91c5d3c1d; LEC85correspondence and DSROWXcompiler active, inherited jobs untouched.

@@ -339,3 +339,6 @@ Independent B33 build9 completed exit0, native boot now LIVE epyc1:codex-kv-boot
 - Targeted whole-die sim (CHECKED): 128/128 slices done&ok by cyc 1061, die_rst_n 1 at 1093, t10 accepted (dcfg_done 1, sealed 1, fault 0), tgt 1 loading.
 - run7 (full boot, default setup wait) RUNNING: epyc1:/srv/opentallas-scratch2/claude/kv-boot-setup-1026/run7/sim.log (~1.5-2 h). Collect: KVSLICE_BOOT line (setup_ready, cycle), KVSLICE_FAIL count, KVBS final fault code.
 - B48 gate3 (tb6, as-built kvpc) will hit the same stop; it needs these three commits. kvpc tile RTL changed -> kvpc closed views must be re-hardened.
+
+## CODEX notes 2026-10-26 20:07 PDT
+B33 fixed run7 COMPLETE PASS:7404/7404frames,14/14images, setup_ready37950, START38080, boot/host/cf faults0. Collected exact log in codex/kv-boot-2005@91c5d3c1d results/kv_tok/codex_boot_2005. B48 build3 rc0,peak254GB; asis stuck0frames5Mcycles because8clk_region inputs are absent from tb DUT instance, all regions unclocked. Generic bench binding fix+4focused tests in91c5d3c1d; native B48 successor being prepared, inherited gate3 top frontend still live1348049. No job killed or duplicated.

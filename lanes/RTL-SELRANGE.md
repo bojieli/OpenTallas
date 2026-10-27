@@ -155,3 +155,6 @@ Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER?
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: Source csa31 fix + source-local waiver work completed in prior pushes. Jobs: Old redo paths absent/PIDs gone already collected. Next: Current lane generators carry gates; actual offending new RTL owned physical. Failure disposition: No new selected-range bug; no old redo duplicate.
+
+## CODEX notes 2026-10-26 20:07 PDT
+Oldcsa31fix/waivers/gate integrated; no live oldredo to duplicate. Current build regression is unrelated8regionalbenchclockpins; addressedKV-TOK.

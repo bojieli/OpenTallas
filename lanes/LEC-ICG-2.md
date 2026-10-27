@@ -6,3 +6,6 @@
 (3) Re-proof on saved AIGs plus converged hyps (CHECKED): 261 -> 234 with the fix -> 85 with one kit hint w_cgt[1]==w_coh[0] (merged twin, never kept by correspondence; inductive, 0 hyp failures). Residual 85 (UNCHECKED per group): relaid-array pairs missed (pa_sg<-q1_sg#t 32, g_pl.r_t<-g_mi q#t 13, drain<-drain#t -> u_ze_r* 8), and RTL regs removed by synthesis (pl[6], line[57], u_c8 r[66]) -> g_fw q 8, err 6, line/valid_out 4.
 COLLECT (each ~3.2 h, started 19:2x/19:44): epyc1:/srv/opentallas-scratch2/claude/lec-icg2-1026/kit_gbcgr8/lec/lec.json (tool only, expect ~234) and kit_gbcgr8_hint/lec/lec.json (with lec_hints.json, expect ~85). kvcore canary: canary/SUMMARY2.
 NEXT: a successor lane should fix the correspondence for relaid #t arrays and for removed-but-live registers in lec.py, and keep the w_cgt[1] hint until a twin-pairing fix exists.
+
+## CODEX notes 2026-10-26 20:07 PDT
+CODEX took over residual85 correspondence on codex/lec-relay-2002 (own sparse clone from12da17af55). Inherited fullproof+kvcorecanary stilllive/no verdict. Candidate hold-cofactor relation discovery always inductively reproved; twin refinement refuses previously rejected relations;66focusedPASS1skip, actual immutable AIG trial viaot-run pending.
