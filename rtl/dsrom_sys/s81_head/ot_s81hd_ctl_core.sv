@@ -59,6 +59,6 @@ module ot_s81hd_ctl_core #(parameter integer SK=11)(
  always@(posedge ck or negedge rst_n)
   if(!rst_n)adapter_fault<=0;
   else if((htv[0]&&rp&&!(send&&rp))||(htv[1]&&sp&&!(send&&!rp)) ||
-    (host_v&&host_frame[3:0]==8&&(|host_frame[32:16]))||host_rf||host_tf||(|txf)||(|rxf)||(|epf))adapter_fault<=1;
+    (host_v&&host_frame[3:0]==8&&(|host_frame[32:16]))||(host_v&&host_frame[3:0]!=6&&host_frame[3:0]!=7&&host_frame[3:0]!=8)||host_rf||host_tf||(|txf)||(|rxf)||(|epf))adapter_fault<=1;
 endmodule
 `default_nettype wire
