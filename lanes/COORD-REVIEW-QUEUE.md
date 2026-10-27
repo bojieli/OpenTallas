@@ -2183,3 +2183,9 @@ READY [AUTOPILOT-SIGNOFF-1 2026-10-27 08:15 PDT] codex/autopilot-signoff-1027@ee
 READY [GEOM-AUTO-1 2026-10-27 08:16 PDT] codex/geom-auto-1027@98156863a: owner08:02 all-kit measured checks +1in5visual/everyFAILvisual implemented (AP_AUTO_GEOM_ALL=1), explicit visualFAIL preserved, no templateexceptions in new-kit mode;159autopilot testsPASS1skip; real e2 probe catches409.54um/5reachFAILs reported Qwen+GEOM. Root merge then enable flag; no physical source/flow settings changed.
 
 READY [AUTOPILOT-SIGNOFF-1 2026-10-27 08:17 PDT] codex/autopilot-signoff-1027@8c3b2dbdd3 SUPERSEDES ee05d9ad37: provisional exit1 gets routedLEC while WAIT-PARENT retained; 90 focused PASS.
+
+READY [GEOM-AUTO-1 final 2026-10-27 08:19 PDT] codex/geom-auto-1027@91be61fb1 supersedes 98156863a: matching-signature template revocation fix, 22 focused tests PASS; real e2/io_cor/hroot checked and FAIL reach as expected, with diagnoses delivered to Qwen/GEOM. Source ready for root merge and AP_AUTO_GEOM_ALL=1 activation.
+
+READY [CODEX INFRA-GATE 2026-10-27 08:21 PDT] codex/infra-gate-1027@fec71b55c5: block false infrastructure freeze PASS for absent/false connected routes or capacity-only qualification; 5 focused PASS. Source only, no old verdicts touched.
+
+READY [AUTOPILOT PREFLIGHT ALL 2026-10-27 08:21 PDT] codex/autopilot-signoff-1027@f4aa309205 (after8c): stage shared source checker/helpers separately for ALL kits, no frozen-kit overwrites; 92 focused PASS; requires codex/preflight-1027 merged first.
