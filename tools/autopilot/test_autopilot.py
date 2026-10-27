@@ -427,7 +427,7 @@ class TestTick(TickBase):
         self.queue(ROW + ["route"])
         self.tick()
         argv = self.f.launched[0][1]
-        self.assertEqual(argv[argv.index("--") + 6], "finish")
+        self.assertEqual(argv[argv.index("--") + 7], "finish")
 
     def test_segfault_is_marked_not_resubmitted(self):
         self.queue(ROW)
