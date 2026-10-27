@@ -36,7 +36,7 @@ module dsdv_hostb_stage_hbc #(
  parameter [63:0] CLOCK_RESET_ID=64'd0,
  parameter [47:0] BOOT_HEADER_EDGE=48'hffffffffffff,
  parameter [47:0] BOOT_COMMIT_EDGE=48'hffffffffffff,
- parameter integer RX_ONLY=0
+ parameter integer RX_ONLY=0, HOST_FRAMES=0
 )(
  input wire ck,rst_n,job_active,starter_armed,
  input wire [1103:0] from_prev,local_ro,return_ro,
@@ -87,7 +87,15 @@ module dsdv_hostb_stage_hbc #(
   end else begin:g_external_return
    assign actual_return=return_ro;assign return_fault=0;
   end
-  if(RX_ONLY!=0)begin:g_rx_only
+  if(HOST_FRAMES!=0)begin:g_host_frames
+   // A HEAD host carries ordinary HSF0 HFWD programme records, not S81 HBE
+   // sequencer words. Retain the real HBC authority loader and its affine book;
+   // consume HBC LOAD/body/COMMIT there and pass ordinary frames to HEAD ctl.
+   // No HEAD HBE consumer or layer-return transmitter exists in this mode.
+   assign to_local=after_hbc;assign next_ro=local_ro;
+   assign f_host=515'd0;assign ks_descriptor=53'd0;assign ks_slot=3'd0;
+   assign arm_mask=6'd0;assign arm_commit=1'b0;assign fault=12'd0;
+  end else if(RX_ONLY!=0)begin:g_rx_only
    // Head host endpoints load the same HBC authority and validate incoming HBE,
    // but have no layer-return producer or NEXT physical ring. Omitting the TX
    // makes return/status inputs dead by this explicit parameter, not a tie-off.

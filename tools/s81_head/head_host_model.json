@@ -29,14 +29,14 @@
     "job_active": "actual ctl issue until matching token retirement"
   },
   "core_changes": {
-    "hbc_parent": "RX_ONLY=1 removes inapplicable layer-return TX; loader/book/rx unchanged",
+    "hbc_parent": "HOST_FRAMES=1 retains actual HBC authority loader/affine book and omits S81 HBE consumer plus layer-return TX, because HEAD carries ordinary HSF0 HFWD frames. RX_ONLY remains for receiver-only S81 use; both new modes default off.",
     "default_hbc_parent_behavior": "RX_ONLY=0 retains existing stage composition",
     "datapath_cycles_added_by_new_mux": 0
   },
   "open": [
-    "full host lane/HBC/control integration token test",
-    "compiled production boot dates and stage/rank identity",
-    "master-plan slice and physical timing"
+    "actual production host/clock/reset identity and compiled boot/START slots",
+    "whole-head mission token pass on current physical views",
+    "master-plan slice and physical TT setup/FF hold timing"
   ],
   "job_active_input_capture_edges": 1,
   "hbc_test_profile_observed": {
@@ -49,5 +49,33 @@
     "hbe_receiver_edge": 1100,
     "f_host_bench_write_cycle": 133,
     "native_consumer_contract_from_existing_bench": "HOST body +4 edges / KS header +2 edges; production native test not rerun here"
+  },
+  "ordinary_HFWD": {
+    "source": "HOST0 HSF0 type7, payload512",
+    "admission": "actual HBC context_valid; precontext HFWD faults",
+    "path": "actual HBC stripping -> host276 -> ctl HFWD -> stage kind6",
+    "class_semantics": "S81 HBE classes are not interpreted as head programmes; HBE consumer is omitted by explicit default-off HOST_FRAMES mode"
+  },
+  "native_two_core_test": {
+    "clock_period_ps": 833,
+    "test_only": true,
+    "hbc_boot_edges": [
+      501,
+      505,
+      511
+    ],
+    "peer_launch_edges": [
+      472,
+      476,
+      482
+    ],
+    "peer_to_hbc_edges": 29,
+    "arrival_phase": "odd HBC boot edges from even peer launch in this clock/reset profile; scalar delay alone was insufficient",
+    "context_bench_cycle": 522,
+    "issue_CSR_config_bench_cycle": 637,
+    "static_START_boot_edge": 750,
+    "config_CSR_frames": 7,
+    "ordinary_HFWD_bits": 512,
+    "two_core_payload_flip_mutant": "caught"
   }
 }

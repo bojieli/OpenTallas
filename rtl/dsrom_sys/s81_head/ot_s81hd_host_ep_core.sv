@@ -16,7 +16,8 @@ module ot_s81hd_host_frame_mux #(parameter integer MUT=0)(
 );
  wire hf=host0_v&&host0_d[552]&&host0_d[3:0]==7;
  assign from_prev={571'd0,host0_d[527:16],8'd0,4'd0,5'd1,3'd6,hf};
- wire fw=local_ring[0]&&local_ring[3:1]==6;
+ wire fw_record=local_ring[0]&&local_ring[3:1]==6;
+ wire fw=fw_record&&context_valid;
  wire cs=host1_v&&host1_d[552]&&host1_d[3:0]==6;
  wire cfg=cs&&(context_valid||MUT==1);
  wire result=ctl_v&&ctl_d[552]&&ctl_d[3:0]==9;
@@ -25,14 +26,14 @@ module ot_s81hd_host_frame_mux #(parameter integer MUT=0)(
  reg[1:0]rx_gap;
  wire status_due=(|(fault&~reported))&&rx_gap==0&&!fw&&!cfg;
  wire rx_request=fw||cfg||status_due;
- wire[552:0]forward_frame={1'b1,24'd0,local_ring[532:21],8'd0,2'd0,2'd0,4'd7};
+ wire[552:0]forward_frame={1'b1,24'd0,local_ring[532:21],8'd0,2'd0,2'd0,4'd7} ^ (MUT==3 ? (553'd1<<527) : 553'd0);
  wire[552:0]fault_frame={1'b1,519'd0,fault,12'd0,4'd8};
  assign ctl_rx_v=rx_request&&rx_gap==0;
  assign ctl_rx_d=fw?forward_frame:cfg?host1_d:fault_frame;
  assign lane_tx_v={status,result};
  assign lane_tx_d={ctl_d,ctl_d};
  wire[16:0]events=source_fault|{
-  10'd0,(ctl_v&&!result&&!status),(rx_request&&rx_gap!=0),
+  9'd0,(fw_record&&!context_valid),(ctl_v&&!result&&!status),(rx_request&&rx_gap!=0),
   (fw&&cfg),(cs&&!context_valid),
   (host1_v&&!cs),(host0_v&&!hf),1'b0};
  always@(posedge ck or negedge rst_n)begin
@@ -76,7 +77,7 @@ module ot_s81hd_host_ep_core #(
  ot_s81hd_host276_rx u_ctl_rx(.ck(ck),.rn(rst_n),.lane(h_tx_i[275:0]),.v(cv),.frame(cd),.fault(crxf));
  ot_s81hd_host276_tx u_ctl_tx(.ck(ck),.rn(rst_n),.v(rxv),.frame(rxframe),.lane(h_rx_o),.fault(crtxf));
  wire[1103:0]from_prev,to_local,next_ro;
- // RX_ONLY=1 omits the layer return TX: the head owns no layer-return producer.
+ // HOST_FRAMES=1 omits the S81 HBE consumer and layer return TX at the head.
  // The live ctl frames remain visible to the diagnostic pass-through output;
  // status/return inputs are unused by this explicit receive-only parameter.
  wire[1103:0]local_ro={571'd0,cd[527:16],8'd0,4'd0,5'd1,3'd6,cv};
@@ -84,7 +85,7 @@ module ot_s81hd_host_ep_core #(
  wire[514:0]f_host;wire[52:0]ks;wire[2:0]ks_slot;wire[5:0]arm_mask;wire arm_commit;
  wire[47:0]receiver_edge,boot_edge;
  dsdv_hostb_stage_hbc #(.ENABLE(1),.LOCAL_STAGE(LOCAL_STAGE),.LOCAL_RANK(LOCAL_RANK),
-  .PHASE_BOUND(PHASE_BOUND),.RETURN_LOCAL(0),.RX_ONLY(1),.CLOCK_RESET_ID(CLOCK_RESET_ID),
+  .PHASE_BOUND(PHASE_BOUND),.RETURN_LOCAL(0),.RX_ONLY(1),.HOST_FRAMES(1),.CLOCK_RESET_ID(CLOCK_RESET_ID),
   .BOOT_HEADER_EDGE(BOOT_HEADER_EDGE),.BOOT_COMMIT_EDGE(BOOT_COMMIT_EDGE))u_hbc(
   .ck(ck),.rst_n(rst_n),.job_active(job_active_pin),.starter_armed(start_i),
   .from_prev(from_prev),.local_ro(local_ro),.return_ro(local_ro),
@@ -93,8 +94,9 @@ module ot_s81hd_host_ep_core #(
   .f_host(f_host),.ks_descriptor(ks),.ks_slot(ks_slot),.arm_mask(arm_mask),
   .arm_commit(arm_commit),.fault(hbc_stage_fault),.context_valid(ctxv),
   .receiver_edge(receiver_edge),.boot_edge(boot_edge),.hbc_fault(hbc_fault));
- // A head endpoint has no HBE/KS consumer; receiving one is a contract fault.
- // Live HBC stripping and validation still happen before configuration passes.
+ // HOST_FRAMES omits the inapplicable layer HBE/KS consumer by parameter;
+ // ordinary HFWD is admitted only after real HBC context commit. All actual
+ // HBC date/CRC/identity failures remain live in the source fault vector.
  wire[16:0]source_fault={
   (f_host[0]||arm_commit||ks[52]),
   (|return_fault),(|hbc_stage_fault),(|hbc_fault),crtxf,crxf,

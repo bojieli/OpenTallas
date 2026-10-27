@@ -27,5 +27,34 @@
     "host_commit": "1e7937b2f7",
     "physical": "NOT_RUN",
     "production_boot": "UNRESOLVED compiler slots"
+  },
+  "head_host_frames": {
+    "status": "PASS real two-core TEST boot and ordinary HFWD mechanism; production token/STA not run",
+    "root_contract": "Explicit default-off HOST_FRAMES omits inapplicable S81 HBE consumer, retains actual HBC authority loader/book and context/date/CRC/job admission",
+    "mux": {
+      "cycles": 2817,
+      "frames": 804,
+      "mutants": "premature CSR, dropped fault, flipped payload all CAUGHT"
+    },
+    "default_hbc": "modes0..5 PASS RX_ONLY0 and RX_ONLY1; HOST_FRAMES defaults0",
+    "test_hbc_boot": [
+      501,
+      505,
+      511
+    ],
+    "test_peer_launch": [
+      472,
+      476,
+      482
+    ],
+    "measured_peer_to_hbc_edges": 29,
+    "observed_context_bench_cycle": 522,
+    "observed_issue_config_bench_cycle": 637,
+    "configuration_records": 7,
+    "ordinary_hfwd": "full512-bit payload survives safe8, HBC stripping, HOST276, ctl stagekind6",
+    "physical_payload_mutant3": "CAUGHT full512 payload mismatch",
+    "test_start_boot_edge": 750,
+    "clock_period_ps": 833,
+    "production_boot": "UNRESOLVED; TEST profile never adopted"
   }
 }

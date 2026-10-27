@@ -19,7 +19,7 @@ def apply(base,params=None):
  t=p['partition_types']['hd_host']
  if len(t['contents'])!=1 or t['contents'][0]['module'] not in ('ot_s81hd_host_ep','ot_s81hd_host_ep_core'):
   raise ValueError('HOST content changed; recompose explicitly')
- t['contents']=[dict(inst='u_core',module='ot_s81hd_host_ep_core',status='new',bind={'ck':'clk','rst_n':'rst_n','start_i':'start'},params=params or {},note='Two real safe8 lanes + HBC1 RX_ONLY loader/book/rx + exact host276 codecs. Compiled dates required; default not admitted.')]
+ t['contents']=[dict(inst='u_core',module='ot_s81hd_host_ep_core',status='new',bind={'ck':'clk','rst_n':'rst_n','start_i':'start'},params=params or {},note='Two real safe8 lanes + HBC1 HOST_FRAMES authority loader/book + exact host276 codecs; S81 HBE consumer omitted. Compiled dates required; default not admitted.')]
  t['sources']=SOURCES
  t.setdefault('reset',{})['start_role']='bootstrap'
  p.setdefault('reset',{})['start']='broadcast'

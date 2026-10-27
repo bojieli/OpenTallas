@@ -9,7 +9,7 @@ mkdir -p "$O"
 cd "$ROOT"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 "$V" --version >"$O/verilator_version.txt"
-for mut in 0 1 2;do
+for mut in 0 1 2 3;do
  "$V" --binary --timing -O1 -Wno-fatal -Wno-TIMESCALEMOD --top-module tb_s81hd_host_mux -GMUT="$mut" -Mdir "$O/mux$mut" \
   rtl/dsrom_sys/s81_head/ot_s81hd_host_ep_core.sv rtl/dsrom_sys/s81_head/test/tb_s81hd_host_mux.sv --build-jobs "${J:-2}" >"$O/mux_build$mut.log" 2>&1
  set +e
