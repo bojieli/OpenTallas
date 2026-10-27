@@ -592,3 +592,31 @@ Scope parked safely while agent takes HBMROOTnext. B2event codex/s81b2-0733@12a0
 
 2026-10-26 11:25 PDT PATH-S81 (fresh lane): (1) inherited die GRT epyc1:path-s81-taps-1026/die_g0fix_i50 at extra it 36/50 at 11:06, signal-only, 0 clock nets -> cannot count for 12.4a; not touched. (2) 12.8 PREDICT build (main ac2ad01a8 die_clock_mesh build, 64x64 m2 4w, --regions 3, no PG json; plan die_plan_phyfit_g0fix.json c6b5e29a) epyc1:/srv/opentallas-scratch2/claude/path-s81-c128-1026/b64 (build only, no route): EXACT BLOCKER = 1322 early-offset taps (12.8d banned): ROM elem q_qxpq_w10 core 864 taps up to 302.3 TT/244.9 FF early; bf_col core (bf_compact199_prepabs_lat) 456 taps up to 394.9 TT/319.9 FF; KITS-SPARE-2 budget bk_sel/gunit 2 taps 270 TT. Also 322 unplaced clock cells, 310 clock-cell overlaps, 95 loadless nets, stub max 2295.9 um, node move max 561.6 -> no 12.8 die clock structure is buildable on this plan. Needed: S81-CORE-LAT rebuild of ROM elem + BF col cores to 250 TT/202.5 FF with centre entry (12.3/12.8a-b), plan centre clock entries per core type + B2 single event (bk_sel B/C ruling, token-DAG join on 12a0c04f0). Needed a scratch patch to die_clock_128.fixed_wires (skip loadless nets, counted) because the tool crashes with max() on empty loads -> CLOCK-128 bug. No die STA possible that counts. UNCHECKED.
 2026-10-26 19:21 PDT PATH-S81/BLEC: final3 (be46916023 refine twin re-add) REGRESSED elemB LEC to NEQ 2315 (best_bits flagged non-const) -> reverted as 7aa0f4f1d2 on claude/path-s81-blec-1025 (tree == c9f120f134, NEQ 5/28924: cerr[11..15] chain-1 valid twins, tool false negative). Branch NOT ready as EQUIVALENT; needs a bounded twin re-add (only hyps never refuted) + rerun. Parked.
+
+## [PATH-S81-PD 2026-10-26 19:53 PDT] Band delta REJECTED as proposed (structural); die GRT collected; price CHECKED. claude/path-s81-pd-1026@10640a9b6a (base feca9a0d94). Evidence results/path_s81_pd_1026/.
+- (1) BAND DELTA band_delta_r1 (22 types/36 faces, outline strips 21.6-38.9 um): NOT accepted. Root causes of the 60 FAILs (band_why.json, CHECKED from the plan geometry):
+  - The band search only tried rectangles as deep as the window length allows. Thin long banks (4-8 rows deep, any length, all corners <=403 um, same area, same legality) fit inside the EXISTING outlines. With only that tool change (runs only when every other search failed, so byte-identical elsewhere): recompose on the unchanged S81 plan = **60 -> 22 FAILs** (CHECKED, compose_thin.log). No outline, lattice, cut or 405-um bay change.
+  - ~37 of the 60 were svc<->svc ports (attn/attnh 1.6-4.0 kb). The G=2 block lattice cuts the 2x8 svc array between each column pair and between the lo and hi rows. svc_lo/svc_hi centres are exactly one block height apart, so no y phase of a G=2 lattice can join them (region_phase.json).
+  - Opt-in fallback_regions --groups with the four 2x2 svc blocks (svc_groups.json) gives an estimated 12 FAILs and landed bits 571k -> 489k. BUT merge_hard then pulls all 16 svc into the PHY region: 11.5 x 6.1 mm, 18 parts, one local tree. That is not acceptable without a ruling (estimator, UNCHECKED).
+  - Residual 22: svc_hi 11 + pvso 2 + svc_lo 2 + col_h10_r1 1 + bk_sel 6. bk_sel has ZERO macro-free area within reach of its 6 S-face buses: the only real strip candidate is 1 type x 1 instance, S 25.92 um.
+  - Strip outline growth across 22 types would shift the abutted svc/slice rows (row/column cuts, port windows, bays), so it is the wrong first tool.
+- **Combined PLAN-DELTA NOT written yet.** It waits for the region ruling (ASK below). When written, it will hold:
+  - thin-bank tool (no plan change);
+  - region groups OR PHY-merge rework;
+  - bk_sel S strip if still needed;
+  - svc_rs ROWX=1 + CFG DP DIE_ID (core content, no outline);
+  - R9: no outline change (l0r L3 straight-leg re-plan, gunit, not an svc type).
+  The 15 svc types are rebuilt once after it.
+- G0 on the thin recompose: 11 errors (vs 24 base). All 11 are cuts. 16 base cut errors are gone, and 3 cuts (18750/19000/20250) still fail but report MORE tracks (5639 -> 8348). The cut supply differs from the FALLBACK-S81-2 G0 on the same base, cause not yet found. UNCHECKED: do not claim "fewer errors" until NUMBER-CHECK diffs g0_thin_report.json.gz vs fallback g0_tap.
+- (2) DIE GRT FALLBACK-S81-2 (epyc1 fallback-s81-2-1026, exit 0, ~4.4 min/corner, 539,404 nets, 50-it setting). Read from combo logs (UNCHECKED pending NUMBER-CHECK):
+  - Overflow 0 on M4-M9, TT and FF; 0 GRT-0113/0114. Usage M4 2.65 / M5 3.98 / M6 4.92 / M7 8.54 / M8 1.28 / M9 1.12 %. The "Total -4.25%" line is an int-overflow print.
+  - **Landed |d| FAILS: 135 TT / 85 FF of 1,199 crossings > 416.5 ps** (mean-tap d; worst-tap form 232/174). Max 1,868 TT / 1,620 FF, eng/svc_14.
+  - Root causes:
+    - (a) the PHY region tree (depth 10) arrives ~12.2 ns vs 9.9-10.8 ns for all other regions -> 66 crossings fail;
+    - (b) the region-root arrival spread is already 640 TT / 567 FF ps > 416.5 (reference tree to roots not equal);
+    - (c) serdes lk_* taps reach slew 980 ps / 14.1 ns (unrepeated legs, the FB-HEAD leaf600 class);
+    - (d) e.g. iqf<->svc_0 699 ps.
+  - Structural next step: equal region-root-to-entry latency (common depth or plan-sized region trunk), repeat the lk legs, and an equal-length reference tree. This is the FALLBACK-S81 tree owner's work.
+  - Insertion 9.8-14.1 ns TT.
+  - GEOM-9 conditions: per-edge routed/Manhattan max +21.4 %, 4 of 1,902 ref-tree edges >10 % (level-9 jogs); die-root->region-root path 27.1-28.8 mm (spread 1.7 mm); root-site displacement from req p50 1.0 / p90 98 / max 402 um; PHY region intra spread 152 TT / 135 FF ps (7 tapped parts; worst related pair <= that). Script results/path_s81_pd_1026/scripts/land_report_regions.py, landed_report_regions.json.
+- (3) NUMBER-CHECK price: compose_tok_ds on the composed tap plan's own regenerated table (gen_lat_tap/s81_latency.json, 873 lanes: +4 lpc lanes of 2 cycles vs the committed lat_plan, off the critical path) = AR 766.4 / MTP 2,689.5 vs base 784.9 / 2,749.3 (base recomputed on this tree) -> **-2.36 % / -2.18 % CHECKED**. It prices the current regions with 60 unplaced bands and the landed-|d| FAIL above, so it is not a closed number.
