@@ -421,6 +421,19 @@ def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, 
     return stamp(sl)
 
 
+def plan_tree_cts(kd, cfg):
+    """Generator hook, AFTER kit_apply and BEFORE config.mk is written (CTS-HOOK-PORT-1): a kit whose slice carries a
+    plan-built core tree gets the shared plan-tree CTS hook (core_infra.kit_cts_hook: TritonCTS only on the plan's
+    CTS-open nets, post-CTS tap balance / leaf affinity report-only); cfg (config.mk lines) is extended in place.
+    Returns False and changes nothing for a kit without a plan tree."""
+    import sys
+    here = str(Path(__file__).resolve().parent)
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import core_infra
+    return core_infra.kit_cts_hook(kd, cfg)
+
+
 # ------------------------------------------------------------------------------------------------ kit <-> slice
 # MASTER-PLAN-R3 (COORD 10-26): kits CONSUME the slice.  The generator's own io placement is rewritten so the core
 # clock entry and every bound M7 entry pin sit where the slice says (no later override), and check_kit() is the
