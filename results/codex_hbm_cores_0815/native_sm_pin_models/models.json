@@ -1,0 +1,136 @@
+{
+ "scope": "PIN MODEL ONLY: compose native parent macros, soft stations and PG/clock before P&R",
+ "source_capacity_sha256": "5d6d151dc556b72d6feffbd41d487d5cfa9f2add689e4f303b5df1f9e494fa63",
+ "source_rtl_commit": "4d6f5439dc",
+ "added_cycles": 0,
+ "models": [
+  {
+   "module": "hnx_xs3",
+   "outline_um": [
+    561.6,
+    289.44
+   ],
+   "pins_file": "hnx_xs3.json",
+   "pins": 6397,
+   "pins_sha256": "cf02c0d55cdc6523ed5bc2d617966b0072144cea80db4501b39033b24867483e",
+   "faces": {
+    "S": {
+     "pins": 2112,
+     "peak_per_um_10um": 3.9
+    },
+    "N": {
+     "pins": 2967,
+     "peak_per_um_10um": 5.5
+    },
+    "E": {
+     "pins": 530,
+     "peak_per_um_10um": 2.0
+    },
+    "W": {
+     "pins": 787,
+     "peak_per_um_10um": 3.0
+    }
+   },
+   "native_std_cells": 84055,
+   "clock_entry_um": [
+    280.824,
+    144.72
+   ],
+   "qualification": "PIN_MODEL_ONLY"
+  },
+  {
+   "module": "ot_hbm_accel_smh_bdc",
+   "outline_um": [
+    112.32,
+    142.56
+   ],
+   "pins_file": "ot_hbm_accel_smh_bdc.json",
+   "pins": 1136,
+   "pins_sha256": "4edef0214eab2009d6616631396d418797e0584d2e8b78c6f4d9ee95c3ac8daf",
+   "faces": {
+    "N": {
+     "pins": 1,
+     "peak_per_um_10um": 0.1
+    },
+    "S": {
+     "pins": 552,
+     "peak_per_um_10um": 5.9
+    },
+    "W": {
+     "pins": 532,
+     "peak_per_um_10um": 4.3
+    },
+    "E": {
+     "pins": 50,
+     "peak_per_um_10um": 0.5
+    }
+   },
+   "native_std_cells": 60097,
+   "clock_entry_um": [
+    56.136,
+    71.28
+   ],
+   "qualification": "PIN_MODEL_ONLY"
+  },
+  {
+   "module": "ot_hbm_accel_smh_tcl",
+   "outline_um": [
+    86.4,
+    120.96
+   ],
+   "pins_file": "ot_hbm_accel_smh_tcl.json",
+   "pins": 517,
+   "pins_sha256": "98c97acc0c27a8e47355b0a392eef653f4ab87a0d6c357c937477d0f836f96a7",
+   "faces": {
+    "N": {
+     "pins": 1,
+     "peak_per_um_10um": 0.1
+    },
+    "W": {
+     "pins": 258,
+     "peak_per_um_10um": 2.5
+    },
+    "S": {
+     "pins": 257,
+     "peak_per_um_10um": 3.8
+    }
+   },
+   "native_std_cells": 48940,
+   "clock_entry_um": [
+    43.224,
+    60.48
+   ],
+   "qualification": "PIN_MODEL_ONLY"
+  },
+  {
+   "module": "ot_hbm_accel_smh_tct",
+   "outline_um": [
+    194.4,
+    71.28
+   ],
+   "pins_file": "ot_hbm_accel_smh_tct.json",
+   "pins": 584,
+   "pins_sha256": "f74cbd35a790b26be2e1504cca8cd95881d234c692167fbef4715dd4e2dc6396",
+   "faces": {
+    "E": {
+     "pins": 1,
+     "peak_per_um_10um": 0.1
+    },
+    "N": {
+     "pins": 532,
+     "peak_per_um_10um": 3.8
+    },
+    "S": {
+     "pins": 50,
+     "peak_per_um_10um": 0.3
+    }
+   },
+   "native_std_cells": 66918,
+   "clock_entry_um": [
+    97.176,
+    35.64
+   ],
+   "qualification": "PIN_MODEL_ONLY"
+  }
+ ]
+}
