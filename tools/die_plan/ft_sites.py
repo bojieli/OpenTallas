@@ -140,6 +140,40 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
     return ledger,explicit
 
 
+
+def reuse(raw, previous, types=None):
+    """Reuse exact sites only when the complete type and slot geometry matches.
+
+    Committed generated plans are a placement seed, like the core placement
+    candidates. A changed outline/core/pin/clock/reset/internal-station contract
+    invalidates the seed. Old depths may be retained but never reduced below
+    the newly generated minimum. Unmatched types must run the allocator.
+    """
+    import copy
+    selected=set(types) if types is not None else set(raw['partition_types'])
+    reused=[]
+    derived={'stations','regs_um','bit_sites_um','bit_site_cell_um'}
+    for name,ty in raw['partition_types'].items():
+        old=previous.get('partition_types',{}).get(name)
+        if name not in selected or not old or not ty.get('ft_slots'):continue
+        if {k:v for k,v in ty.items() if k!='ft_slots'}!={k:v for k,v in old.items() if k!='ft_slots'}:continue
+        slots=ty['ft_slots'];prior=old.get('ft_slots',[])
+        if len(slots)!=len(prior):continue
+        valid=True
+        for slot,seed in zip(slots,prior):
+            if {k:v for k,v in slot.items() if k not in derived}!={k:v for k,v in seed.items() if k not in derived}:
+                valid=False;break
+            sites=seed.get('bit_sites_um');cell=seed.get('bit_site_cell_um')
+            if sites is None or not cell or seed['stations']<slot['stations'] or len(sites)!=seed['stations']-1:
+                valid=False;break
+            if any(len(stage)!=seed['width']+1 for stage in sites):valid=False;break
+        if not valid:continue
+        for slot,seed in zip(slots,prior):
+            for key in derived:slot[key]=copy.deepcopy(seed[key])
+        reused.append(name)
+    return reused
+
+
 def main():
     import argparse
     import json
@@ -148,12 +182,18 @@ def main():
     ap=argparse.ArgumentParser(description='Refresh exact per-bit FT sites in an existing plan, preserving all other fields.')
     ap.add_argument('plan');ap.add_argument('--out',required=True);ap.add_argument('--ledger',required=True)
     ap.add_argument('--types',help='comma-separated type names; default all frame col_ types')
+    ap.add_argument('--all-core-types',action='store_true',help='select every type with hard cores and FT slots')
+    ap.add_argument('--reuse',help='previous generated plan with exact sites; reuse only identical complete type contracts')
     a=ap.parse_args();raw=json.loads(Path(a.plan).read_text())
-    selected=a.types.split(',') if a.types else [n for n in raw['partition_types'] if n.startswith('col_')]
-    ledger,_=place(raw,RowAllocator,types=selected)
+    if a.types and a.all_core_types:ap.error('--types and --all-core-types are mutually exclusive')
+    selected=([n for n,t in raw['partition_types'].items() if t.get('hard_cores') and t.get('ft_slots')]
+              if a.all_core_types else a.types.split(',') if a.types else [n for n in raw['partition_types'] if n.startswith('col_')])
+    reused=reuse(raw,json.loads(Path(a.reuse).read_text()),types=selected) if a.reuse else []
+    ledger,_=place(raw,RowAllocator,types=[n for n in selected if n not in reused])
     Path(a.out).write_text(json.dumps(raw,indent=0)+'\n')
     Path(a.ledger).write_text(json.dumps(ledger,indent=1)+'\n')
-    print(f'Placed {len(ledger)} FT slots; max actual paired-bit hop {max(v["worst_paired_bit_um"] for v in ledger):.2f} um')
+    worst=max((v['worst_paired_bit_um'] for v in ledger),default=0.)
+    print(f'Reused {len(reused)} unchanged exact types; placed {len(ledger)} FT slots; max new actual paired-bit hop {worst:.2f} um')
 
 if __name__=='__main__':
     main()
