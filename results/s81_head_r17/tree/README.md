@@ -32,3 +32,15 @@ clock_entry still FAILs, now as "missing native core clock-pin metadata": plan h
 Needs a plan tap rename (ASK).
 
 Not run: RCX/MC and related-pair STA (die_sta_related.py) on the new tree - next step after the declared-slot delta.
+
+## GEOM-24 PASS-COND (HEAD mesh m5), 2026-10-27 07:25 PDT
+- (a) sibling repeaters: `sibling_rep_findings` (head_mesh_r3.py, recorded as tree.sibling_reps) = PASS, 0 findings over
+  386 families: equal straight legs + equal nseg per family -> same count at the same k/nseg distances; one 45-stage depth
+  on every root->driver path; segments <= 450 um. tests/test_head_mesh_r3_geom24.py (5 pass, incl. fail-closed mutations).
+- (b) the R15 'paired M9 lines' were the solid grey partition outlines drawn beside the cyan M9 straps (not doubled
+  straps). R17 M9 min column gap 172.8 um (gate mesh.m9_spacing >= 168.48 PASS). Render: outlines olive dashed, M9 x labels.
+- (c) head_mesh_export.py emits strap_spans + vias89 + meta.mesh_vias: 11700 VIA89 = 11700 strap crossings by origin/main
+  die_clock_mesh.mesh_via_findings (no findings) and by independent recount. Routed-DB OT_MESH_VIAS: no HEAD clock DB yet.
+- (d) same tool (head_mesh_r3 tree.arrival_ps, plan model, UNCHECKED): driver skew R15 2.58/6.41 -> R17 0.157/0.130 ps
+  TT/FF; insertion R15 3095.9/2492.3 -> R17 3857.9/3103.6 ps (+762/+611, longer symmetric legs, 45 vs 36-37 stages).
+- Re-run of the generator reproduced tree_nodes/straps/stubs/drivers byte-identical.

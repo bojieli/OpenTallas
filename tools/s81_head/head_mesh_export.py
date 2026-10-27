@@ -42,7 +42,24 @@ if "--pitch-from-straps" in sys.argv:
     gy = [b - a for a, b in zip(ty, ty[1:])]
     pitch = [round(gx[len(gx) // 2], 3), round(sum(gy) / len(gy), 3)]
     print("pitch_um from straps", pitch, "max M8 gap", round(max(gy), 3))
-M = dict(meta=dict(ndr="8w", pitch_um=pitch, regions_depth=0, trunk_um=0.0, form="head_mesh_r3 continuous"),
-         htree=ht, drivers=drv, taps=taps, xs=xs, ys=ys)
+# GEOM-24 (c) / COORD PATH-S81-PD12 ruling A: the mesh is ONE net only with a VIA89 at EVERY M8 x M9 crossing.
+# Per-strap spans (die_clock_mesh strap_spans form, region None) so the shared check counts the BUILT crossings (M9
+# columns stop at the tile array / serdes rows), and one VIA89 per crossing where both straps exist.
+spans = {}
+for s in S:
+    L, f, lo, hi = s[0], s[1], s[2], s[3]
+    spans[("H:%d:None" % ys.index(f)) if L == "M8" else ("V:%d:None" % xs.index(f))] = [lo, hi]
+EPS = 1e-6
+vias = []
+for j, y in enumerate(ys):
+    h = spans["H:%d:None" % j]
+    for i, x in enumerate(xs):
+        v = spans["V:%d:None" % i]
+        if h[0] - EPS <= x <= h[1] + EPS and v[0] - EPS <= y <= v[1] + EPS:
+            vias.append([x, y])
+M = dict(meta=dict(ndr="8w", pitch_um=pitch, regions_depth=0, trunk_um=0.0, form="head_mesh_r3 continuous",
+                   mesh_vias={"None": len(vias)}, mesh_via="VIA89 (M8xM9) at every strap crossing"),
+         htree=ht, drivers=drv, taps=taps, xs=xs, ys=ys, strap_spans=spans, vias89=vias)
+print("VIA89", len(vias), "at", len(xs), "x", len(ys), "lattice", len(xs) * len(ys))
 (d / "mesh.json").write_text(json.dumps(M))
 print(len(ht), "edges", len(drv), "drivers", len(taps), "taps", len(xs), "xs", len(ys), "ys")

@@ -252,6 +252,36 @@ def sites_of(nodes):
     return out
 
 
+def sibling_rep_findings(nodes, reach=450.0, tol=1e-6):
+    """GEOM-24 (a): every sibling family (children of one node) carries the SAME repeater count at the SAME positions:
+    equal straight (Manhattan) legs, equal nseg, so the k/nseg sites of sites_of() sit at equal distances from the
+    parent on every sibling; every root->driver path has the same stage count; no segment above reach.  [] = PASS."""
+    by = {n["tag"]: n for n in nodes}
+    out = []
+    for n in nodes:
+        ks = [by[k] for k in n["kids"]]
+        for c in ks:
+            dx, dy = abs(c["xy"][0] - n["xy"][0]), abs(c["xy"][1] - n["xy"][1])
+            if min(dx, dy) > tol:
+                out.append(f"{c['tag']}: diagonal leg from {n['tag']}")
+            if abs(dx + dy - c["leg"]) > 1e-3:
+                out.append(f"{c['tag']}: leg {c['leg']} != geometric {dx + dy:.3f}")
+            if c["leg"] / c["nseg"] > reach + tol:
+                out.append(f"{c['tag']}: segment {c['leg'] / c['nseg']:.1f} um > {reach}")
+        if len({(round(c["leg"], 3), c["nseg"]) for c in ks}) > 1:
+            out.append(f"{n['tag']}: sibling (leg, nseg) differ {sorted({(round(c['leg'], 3), c['nseg']) for c in ks})}")
+    depth = {}
+    for n in nodes:
+        k, m = 0, n
+        while m.get("parent"):
+            k += m["nseg"]; m = by[m["parent"]]
+        if not n["kids"]:
+            depth[n["tag"]] = k
+    if len(set(depth.values())) > 1:
+        out.append(f"root->driver segment counts differ {sorted(set(depth.values()))}")
+    return out
+
+
 def classify(PL, xy, isl):
     c = PL.core_at(xy)
     if c is not None:
@@ -488,7 +518,8 @@ def render(PL, S, nodes, sites, cls, path, box=None, title=""):
     ax.add_patch(Rectangle((0, 0), die[0], die[1], fill=False, lw=0.6))
     for p in PL.parts:
         r = p["rect"]
-        ax.add_patch(Rectangle(r[:2], r[2] - r[0], r[3] - r[1], fill=False, lw=0.2, ec="0.6"))
+        ax.add_patch(Rectangle(r[:2], r[2] - r[0], r[3] - r[1], fill=False, lw=0.3, ec="tab:olive", ls=(0, (4, 3)),
+                               alpha=0.7))
     for c in PL.cores:
         ax.add_patch(Rectangle(c[:2], c[2] - c[0], c[3] - c[1], fc="0.85", ec="0.5", lw=0.15))
     for r in PL.phy:
@@ -498,6 +529,8 @@ def render(PL, S, nodes, sites, cls, path, box=None, title=""):
             ax.plot([lo, hi], [f, f], color="tab:blue", lw=0.35 if box is None else 0.8)
         else:
             ax.plot([f, f], [lo, hi], color="tab:cyan", lw=0.35 if box is None else 0.8)
+            if box and box[0] <= f <= box[2]:
+                ax.text(f, box[3], f"M9 {f:.0f}", rotation=90, fontsize=6, color="tab:cyan", ha="right", va="top")
     by = {n["tag"]: n for n in nodes}
     for n in nodes:
         if n.get("parent"):
@@ -512,7 +545,7 @@ def render(PL, S, nodes, sites, cls, path, box=None, title=""):
         ax.set_xlim(box[0], box[2])
         ax.set_ylim(box[1], box[3])
     ax.set_aspect("equal")
-    ax.set_title(title, fontsize=9)
+    ax.set_title(title + "\n(M8 blue, M9 cyan, partition outlines olive dashed)", fontsize=9)
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)
@@ -630,6 +663,9 @@ def main(argv=None):
     m8 = [s for s in S if s[0] == "M8"]
     m9 = [s for s in S if s[0] == "M9"]
     wire = dict(M8_um=r3(sum(s[3] - s[2] for s in m8)), M9_um=r3(sum(s[3] - s[2] for s in m9)))
+    m9x = sorted(s[1] for s in m9)
+    m9_min = min((b - c for c, b in zip(m9x, m9x[1:])), default=float("inf"))
+    m9_floor = 177.12 - 8.64
     die = PL.P["die"]["outline_um"]
     # M8/M9 track share of the mesh: strap 8w 0.32 um + 0.04 shields at 0.08 spacing both sides (QC fine-mesh form)
     # = 0.32 + 2 x (0.08 + 0.04) + 0.08 = 0.64 um of pitch per strap, over the die span the straps cover (UNCHECKED)
@@ -643,7 +679,11 @@ def main(argv=None):
         drivers_on_strap=dict(verdict="PASS" if drv_on == len(drv) else "FAIL", drivers=len(drv), on=drv_on),
         tap_stubs=dict(verdict="PASS" if edge_ok else "FAIL", limit_um=a.stub_max, by_kind=stub_sum,
                        edge_pin_stub_identical_per_inst={k: sorted(v) for k, v in ident.items()}),
-        wire=wire, track_share=share, lane_jog=lane_jog)
+        wire=wire, track_share=share, lane_jog=lane_jog,
+        m9_spacing=dict(verdict="PASS" if m9_min >= m9_floor else "FAIL", min_um=r3(m9_min), floor_um=r3(m9_floor),
+                        basis="GEOM-24 (b): no doubled M9 straps; min column gap >= 177.12 - 8.64 (one island step)"))
+    sib = sibling_rep_findings(nodes, a.reach)
+    info["sibling_reps"] = dict(verdict="PASS" if not sib else "FAIL", findings=sib[:20], n_findings=len(sib))
     summ = dict(schema="opentallas.head_mesh_r3.v1", plan=a.plan, plan_sha256=__import__("hashlib").sha256(
         Path(a.plan).read_bytes()).hexdigest(), tree=dict(rep, **info), tree_on_islands=tree_gate, mesh=mesh_gate,
         sd_rows=sd_rows, st_rows=st_rows, note="plan model (ngspice stage-table fit); all numbers UNCHECKED")
@@ -661,7 +701,8 @@ def main(argv=None):
     render(PL, S, nodes, sites, cls, od / "r3_zoom_tile.png", box=(2350, 4550, 4600, 6750),
            title="zoom: 3x2 tiles, eA/eB cores grey, edge-pin stubs not drawn")
     print(json.dumps(dict(tree={k: summ["tree"][k] for k in ("drivers", "stages", "arrival_ps", "repeaters", "wire_um",
-                                                              "max_merge_imbalance_ps", "lifted_rows")},
+                                                              "max_merge_imbalance_ps", "lifted_rows",
+                                                              "sibling_reps")},
                           tree_on_islands={k: tree_gate[k] for k in ("verdict", "sites", "by_class", "max_seg_um")},
                           mesh={k: (v if k in ("wire", "track_share") else {kk: vv for kk, vv in v.items()
                                                                             if kk != "edge_pin_stub_identical_per_inst"})

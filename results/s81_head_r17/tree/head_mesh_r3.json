@@ -51,7 +51,12 @@
    "base_mult": 2,
    "nodes_half_drive": 87
   },
-  "lifted_rows": []
+  "lifted_rows": [],
+  "sibling_reps": {
+   "verdict": "PASS",
+   "findings": [],
+   "n_findings": 0
+  }
  },
  "tree_on_islands": {
   "verdict": "PASS",
@@ -159,6 +164,12 @@
    "mean_um": 1.876,
    "straps": 217,
    "rule": "straps on VSS-locked lanes of die.pg.grid; risers <= max_um from island/driver/tap"
+  },
+  "m9_spacing": {
+   "verdict": "PASS",
+   "min_um": 172.8,
+   "floor_um": 168.48,
+   "basis": "GEOM-24 (b): no doubled M9 straps; min column gap >= 177.12 - 8.64 (one island step)"
   }
  },
  "sd_rows": [
