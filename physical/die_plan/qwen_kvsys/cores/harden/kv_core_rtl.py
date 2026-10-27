@@ -1034,9 +1034,41 @@ def hr_src_params(J, ty, name):
     m = re.search(r'\bmodule\s+' + re.escape(name) + r'\s*#\s*\((.*?)\)\s*\(', txt, re.S)
     if not m:
         return set()
-    hdr = re.sub(r'//[^\n]*', '', m.group(1))
-    return set(re.findall(r'\bparameter\s+(?:integer\s+|int\s+|logic\s+|bit\s+|real\s+|string\s+)?'
-                          r'(?:signed\s+)?(?:\[[^\]]*\]\s*)?([A-Za-z_]\w*)\s*=', hdr))
+    hdr = re.sub(r'/\*.*?\*/', '', re.sub(r'//[^\n]*', '', m.group(1)), flags=re.S)
+    return hr_header_params(hdr)
+
+
+def hr_header_params(hdr):
+    """every parameter name of a module header #( ... ) body.  KV-CORES-PV3 10-27 ROOT CAUSE (hr_core_tx face_guard
+    dropped 215 / shared 299): the old regex took only a name directly after the `parameter` keyword, so a
+    comma-continued list `parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,...` kept DIE only; the cut then
+    instantiated u_ctrl (qkd_host_ctrl_token_service_packet_collected_mu) without STRAPPED/ENABLE_SERVICE/ENABLE_TOKEN/
+    MUT -> defaults 0 = service/token logic disabled (bound_r8 u_host passes ENABLE_NATIVE/SERVICE/TOKEN = 1).
+    Split the body on top-level commas; each item is `[parameter|localparam] [type] [signed] [range] NAME = value`."""
+    items, depth, cur = [], 0, []
+    for ch in hdr:
+        if ch in '([{':
+            depth += 1
+        elif ch in ')]}':
+            depth -= 1
+        if ch == ',' and depth == 0:
+            items.append(''.join(cur))
+            cur = []
+        else:
+            cur.append(ch)
+    items.append(''.join(cur))
+    names, local = set(), False
+    for it in items:
+        lhs = it.split('=', 1)[0].strip()
+        if not lhs:
+            continue
+        kw = re.match(r'(parameter|localparam)\b', lhs)
+        if kw:
+            local = kw.group(1) == 'localparam'
+        m = re.search(r'([A-Za-z_]\w*)\s*(\[[^\]]*\]\s*)*$', lhs)
+        if m and not local:
+            names.add(m.group(1))
+    return names
 
 
 def hr_pval(v):
