@@ -1217,3 +1217,5 @@ CODEX: 2026-10-26 20:31 PDT KV R9 hiddenRCXfailure fixed a4f4fa011 (768disconnec
 
 2026-10-26 20:42 PDT CODEX: QC R9 MY+declaredsites reduces tree RCXspread38.9/33.3->6.8/5.8ps; allshorts/spacingfixed, minarea successor09db4023fa live. F4E tails collectedbothNOTSIGNED; commonentrytrunkmodelINBAND, F4F CTS/GRTlive55f5cab504,0data/resetcycles. Details lanesQC-SU-F4/CLOCK-128.
 CODEX: 2026-10-26 20:42 PDT TOK-LEC QXPQ exactAIG formalclose64713/64713+outputmutantCAUGHT1,177hints READY codex/qxpq-proof-2037@c0dbad315; originalsourcePROVENANCE UNKNOWN, no route/sign-offpromotion; currentkit re-proof required. Allownjobs terminal; failedcofactor experiment rejected+preserved.
+
+2026-10-26 20:47 PDT CODEX: userpriorityHBMSUvsMU; fullnative32bank/32FUSED/28tree buddycandidate bothhubcutmodelsPASS<=.553/.588 atH4320; ~530mm2 inferred, no nativeVMserialization credit untilcensus. Fixedboth-axiscutgate/namedendpoints/45.6xexactpacker andactualnativeVMadapter; P3baseline6/6staticimagesPASS, optimizedcostedN-rowcandidate+FUSEDfunctionalbenchlive.
