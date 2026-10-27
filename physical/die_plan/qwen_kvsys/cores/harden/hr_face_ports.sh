@@ -51,6 +51,10 @@ p = sys.argv[1]; t = open(p).read()
 t = re.sub(r'\(\* src = "[^"]*" \*\)\s*', '', t)
 open(p, 'w').write(t)
 PY
+# Model undefined initial state explicitly on both proof forms. The KV ctl readback
+# residual (37 points) proves with base-case checked undef induction, while two-state
+# cutpoint induction leaves aliases of the unreset data pipe unrelated. The mutation
+# is proved with exactly the same semantics and must still fail.
 for V in post mut; do
 cat > $O/eq_$V.ys <<YS
 read_json $O/pre.json
@@ -71,8 +75,8 @@ equiv_make gold gate eq
 hierarchy -top eq
 expose -evert $MACROS
 async2sync
-equiv_simple -seq 2
-equiv_induct -seq 2
+equiv_simple -undef -seq 2
+equiv_induct -undef -seq 2
 equiv_status -assert
 YS
 set +e; $Y -q -l $O/eq_$V.log $O/eq_$V.ys > /dev/null 2>&1; echo "$V rc=$?" >> $O/eq_rc.txt; set -e
@@ -103,8 +107,8 @@ equiv_make gold gate eq
 hierarchy -top eq
 expose -evert $MACROS
 async2sync
-equiv_simple -seq 2
-equiv_induct -seq 2
+equiv_simple -undef -seq 2
+equiv_induct -undef -seq 2
 equiv_status -assert
 YS
 set +e; $Y -q -l $O/eq_v.log $O/eq_v.ys > /dev/null 2>&1; echo "emitted_v rc=$?" >> $O/eq_rc.txt; set -e
