@@ -1667,3 +1667,9 @@ Successor CLOCK-KV-R8 does (1)-(4) and then the die STA (TT setup, FF hold, rela
 (2) Converter --ndr none: APPROVED for ROOT-MERGE.
 (3) Track (b) is accepted as structural: 0/314 edges over 1.10x Manhattan, equal-count re-clustering, plan-computed d1, no trims. The GEOM REQ on clump-row legs gates the build per the owner rule.
 Successor S81-CORE-LAT-R10: core_infra gate change + test; once GEOM passes, build std and double-width through CTS+GRT on idle epyc2/intel1/intel2, measure, and feed MODEL-REFIT.
+[COORD 2026-10-26 19:23 PDT] RULING QC-SU-F4D d4d7ecb341:
+(R) signoff.py arrival fix claude/signoff-ftarc-fix-1026@bffe81c28: APPROVED for ROOT-MERGE (needs a test).
+(F4A rp1) signed off TT 240.8 / FF hold 27.27 / DRC 0 / LEC 3703/3703 (UNCHECKED); it goes to NUMBER-CHECK before it is counted.
+(a) Layer rule: keep clean layer separation, the structural form. Inside these SU cores signals stay at or below M5 (the core default), and M6 is reserved for the clock tree. That removes the 115 nets / 274 um. If the M5 ceiling raises GRT overflow above 0, report back instead of accepting mixed M6.
+(b) rtl_lint is mandatory for every kit; place_m0 must not skip it. Fix the VERILOG_TOP_PARAMS empty-value regex with a test. For the vmr latch/constant-driver at qfd_dv_s5_vm8x.sv:120: classify it. If it is a real RTL latch or multi-driver, fix it in RTL and re-LEC. If it is a lint false positive, fix the lint rule. Never waive it. F4A vmr uses the same RTL, so its sign-off waits for this.
+Successor QC-SU-F4E: collect the F4D kits, (a), (b), and F4A vmr post-hold DRT.
