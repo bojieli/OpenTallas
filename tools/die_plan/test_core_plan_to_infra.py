@@ -124,3 +124,48 @@ def test_pg_bands_block_a_rail_trunk():
     sl2["core_tree"]["nodes"][0]["xy_um"] = [10.0, 4.32 + 30 * SH]
     del sl2["cell_placements"]
     assert CI.trunk_pg_clearance(sl2, CI.compile_slice(sl2))["verdict"] == "FAIL"
+
+
+# S81-CORE-LAT-R10: 12.3a v5.0 band = INFO (opt-in band_policy); window <= 20 + slew <= 80 still gate
+def _oob(policy=None, **tt):
+    p = plan(); p["TT"] = dict(p["TT"], **tt)
+    sl = C.convert(p, sites(), "tiny_core", outline=[37.8, 37.8])
+    if policy is not None:
+        sl["core_tree"]["model_qualification"]["band_policy"] = policy
+    return sl
+
+
+def test_band_info_builds_out_of_band_and_reports_it():
+    tcl = CI.emit_tcl(_oob("info", sink_min=268.0, sink_max=276.0, window=8.0))
+    assert "# core latency band INFO TT: model leaf 268..276 window 8 (target 230..270: OUT; not a gate, 12.3a)" in tcl
+    assert "# core latency band INFO FF: model leaf 195..206 window 6 (target 182.5..222.5: IN; not a gate, 12.3a)" in tcl
+    assert "ot_ci_tree_begin" in tcl
+
+
+def test_band_info_still_gates_window_and_slew():
+    with pytest.raises(CI.InfraError, match="model target"):
+        CI.emit_tcl(_oob("info", window=21.0))
+    with pytest.raises(CI.InfraError, match="model target"):
+        CI.emit_tcl(_oob("info", leaf_out_slew_max=81.0))
+    p = plan(); p["FF"] = dict(p["FF"], window=20.5)
+    sl = C.convert(p, sites(), "tiny_core", outline=[37.8, 37.8])
+    sl["core_tree"]["model_qualification"]["band_policy"] = "info"
+    with pytest.raises(CI.InfraError, match="model target FAIL/NOT RUN at FF"):
+        CI.emit_tcl(sl)
+
+
+def test_band_default_gate_unchanged_and_byte_identical():
+    with pytest.raises(CI.InfraError, match="model target"):
+        CI.emit_tcl(_oob(None, sink_max=290.0))
+    with pytest.raises(CI.InfraError, match="model target"):
+        CI.emit_tcl(_oob("gate", sink_max=290.0))
+    base = CI.emit_tcl(_oob(None))
+    assert "band INFO" not in base and base == CI.emit_tcl(_oob("gate"))
+    info = CI.emit_tcl(_oob("info")).splitlines(keepends=True)
+    assert sum("band INFO" in l for l in info) == 2
+    assert "".join(l for l in info if "band INFO" not in l) == base
+
+
+def test_band_unknown_policy_refused():
+    with pytest.raises(CI.InfraError, match="band_policy"):
+        CI.emit_tcl(_oob("off"))

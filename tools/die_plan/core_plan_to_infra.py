@@ -17,7 +17,8 @@ measurement (12.8 d / d1):
   * pg_obstructions_um for the trunk-PG clearance gate: M5 = the PG straps, M4 = the M2->M5 via-stack landing bands at
     every row boundary (conservative: full-width bands);
   * joint_nldm_plan load balance (leaf sink counts differ) with the plan model's TT/FF sink window as qualification
-    (core_infra refuses the build outside 230-270 TT / 182.5-222.5 FF, window <= 20, slew <= 80).
+    (core_infra refuses the build outside 230-270 TT / 182.5-222.5 FF, window <= 20, slew <= 80; with --band info
+    (12.3a v5.0, COORD RULING S81-CORE-LAT-R9) the band is reported as INFO and only window <= 20 + slew <= 80 gate).
 Sites file = OpenROAD dump (ROW0/ROW/FIXED/MASTER/PG lines) of the kit's 2_4_floorplan_pdn.odb.
 """
 import argparse, gzip, json, math, re, sys
@@ -212,6 +213,9 @@ def main():
     ap.add_argument("--clock-port", default="clk"); ap.add_argument("--calibration", action="store_true")
     ap.add_argument("--die", default="s81"); ap.add_argument("--outline", default=None, help="W,H um (default: rows + symmetric margin)")
     ap.add_argument("--ndr", default="2,2", help="trunk NDR width,spacing multipliers (default 2,2); \"none\" = standard-width clock nets (no clock_ndr)")
+    ap.add_argument("--band", choices=("gate", "info"), default="gate",
+                    help="core latency band policy in core_infra (default gate = unchanged); info = 12.3a design target, "
+                         "only window <= 20 + slew <= 80 gate (COORD RULING S81-CORE-LAT-R9)")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     op = gzip.open if a.plan.endswith(".gz") else open
@@ -226,6 +230,8 @@ def main():
                  ndr=ndr or (2, 2))
     if ndr is None:
         sl.pop("clock_ndr", None)       # standard-width trunk (S81-CORE-LAT-R9 track b)
+    if a.band == "info":
+        sl["core_tree"]["model_qualification"]["band_policy"] = "info"   # 12.3a v5.0 (S81-CORE-LAT-R10)
     # compile through core_infra: the same refusals the kit hook applies (fail before any build)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import core_infra as CI
