@@ -120,7 +120,8 @@ SCHEMA = {
                     "die_layers": {"type": "array", "items": _layer},
                     "die_use": {"type": "array", "items": {"enum": ["clock_spine", "pg", "ft_reserved", "reset"]}},
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
-                                                                            "maximum": 1}}}},
+                                                                            "maximum": 1}},
+                    "ft_route_layers": {"type": "array", "items": _layer, "minItems": 1}}},
                 # die IO (COORD 10-23, S81-P5): pad / bump windows of every off-die signal (SerDes PMA pads, HBM PHY
                 # memory side, host).  Each window sits over its host partition (the PHY / IO partition), offers
                 # `sites` signal bumps/pads, and lists the @die ports it carries (bits <= sites).
