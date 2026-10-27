@@ -1,0 +1,8 @@
+{
+ "verdict": "PASS-COND",
+ "picture": "results/geom_review/hbm_pg_pad70_0828.png",
+ "review": "Viewed 600x420um repeated core PG coupon. Alternating M9 rails continuous; M8 cross-straps continuous; 70um pads above M9 span at least two same-net rails while via-farm contacts only the matching net. M9 gaps4.32um leave2.32um after wide spacing for clock NDR. No signal routing, macro placement or die-clock closure claimed. Identical grid/pad repeated for hub and SM coupons. Conditions: solve VDD+VSS at same load block, inspect pad fallback/connectivity, preserve open-window-edge exclusion450um; PHY domains/lower stack separately owed.",
+ "source": "claude/infra-head5-1027@e5f4fb2cd1",
+ "plan_sha256": "95a333dbcd1f9230219ec7e9de3c52e2c5f577ecda0ee25a2d01621761b34aee",
+ "power": "conservative642.7W non-PHY historical envelope;1.2709W/mm2"
+}
