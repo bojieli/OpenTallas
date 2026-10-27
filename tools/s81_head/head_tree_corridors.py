@@ -48,6 +48,22 @@ def allocate(spec, plan, align_inputs=False):
         _, cell = groups[g][0]
         return D.C128.pin_xy({'c': dict(x=cell['origin_um'][0], y=cell['origin_um'][1],
             orient=cell['orient'])}, 'c', p, D.ROW_Y)
+    grid = {v['layer']: v for v in plan.die['pg']['grid']}
+    original_layers = {g: edges[0]['layer'] for g, edges in bydrv.items()}
+    if align_inputs:
+        for g, cells in groups.items():
+            if original_layers.get(g) == 'M9' or original_layers.get(incoming.get(g)) == 'M9':
+                continue
+            pg = grid['M9']; step = pg['pitch_um']/2
+            phase = pg['offset_um'] + pg['pitch_um']/4
+            ax = pin(g, 'A')[0]
+            desired = phase + round((ax-phase)/step)*step
+            tr = D.DEFAULT_TRACKS['M9']
+            desired = tr['offset_um'] + round((desired-tr['offset_um'])/tr['pitch_um'])*tr['pitch_um']
+            bar = ax - cells[0][1]['origin_um'][0]
+            x = D.snap(desired-bar, D.SITE_X)
+            for _, cell in cells:
+                cell['origin_um'][0] = x
     buckets = defaultdict(list)
     layers = {}
     for g, edges in bydrv.items():
@@ -63,7 +79,6 @@ def allocate(spec, plan, align_inputs=False):
         vals = [d[axis]] + [p[axis] for p in ps]
         # Account for every permitted local-jog displacement before coloring.
         buckets[lay, round(bucket, 3)].append((min(vals)-8.64, max(vals)+8.64, g))
-    grid = {v['layer']: v for v in plan.die['pg']['grid']}
     targets, counts = {}, {}
     for (lay, bucket), rows in sorted(buckets.items()):
         colors, n = color_intervals(rows)
@@ -91,20 +106,6 @@ def allocate(spec, plan, align_inputs=False):
             oldx = cells[0][1]['origin_um'][0]
             bar = pin(g, p)[0] - oldx
             x = D.snap(targets[gx]['c'] - bar, D.SITE_X)
-            for _, cell in cells:
-                cell['origin_um'][0] = x
-        elif align_inputs:
-            # Horizontal branch captures need a short vertical drop. Put the
-            # actual A pin on a PG-gap column before routing, rather than
-            # asking a long M8 local jog to reach a distant free M9 track.
-            pg = grid['M9']; step = pg['pitch_um']/2
-            phase = pg['offset_um'] + pg['pitch_um']/4
-            ax = pin(g, 'A')[0]
-            desired = phase + round((ax-phase)/step)*step
-            tr = D.DEFAULT_TRACKS['M9']
-            desired = tr['offset_um'] + round((desired-tr['offset_um'])/tr['pitch_um'])*tr['pitch_um']
-            bar = ax - cells[0][1]['origin_um'][0]
-            x = D.snap(desired-bar, D.SITE_X)
             for _, cell in cells:
                 cell['origin_um'][0] = x
     corridors = {}
