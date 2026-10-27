@@ -34,7 +34,7 @@ def color_intervals(rows):
     return result, count
 
 
-def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False, separate_drops=False, mesh_straps=None, ndr="16w", spine_landing=False):
+def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False, separate_drops=False, mesh_straps=None, ndr="16w", spine_landing=False, mesh_driver_boundaries=False):
     mesh_straps = mesh_straps or []
     out = copy.deepcopy(spec)
     for edge in out["nets"]:edge["ndr"]=ndr
@@ -130,6 +130,7 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
         hrows = defaultdict(list)
         hbucket = {g: bucket for (lay,bucket), rows in buckets.items() if lay=='M8' for _,_,g in rows}
         for g, edges in bydrv.items():
+            if mesh_driver_boundaries and not edges:continue
             if layers[g] != 'M8':
                 continue
             d = pin(g,'Y')
@@ -177,6 +178,14 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
                             raise D.C128.PlanError([dict(kind='face_gap_capacity',name=str(bucket),
                                 detail=dict(colors=n,required=desired,allowed=[low,high]))])
                 targets[g]=dict(layer='M8',c=round(tr['offset_um']+round((desired-tr['offset_um'])/tr['pitch_um'])*tr['pitch_um'],4),color=c)
+        if mesh_driver_boundaries:
+            for g,edges in bydrv.items():
+                if edges:continue
+                x,y=pin(g,'Y')
+                rows=[ss for ss in mesh_straps if ss[0]=='M8' and ss[2]<=x<=ss[3]]
+                if not rows:raise ValueError('mesh driver has no real row')
+                row=min(rows,key=lambda ss:abs(ss[1]-y))
+                targets[g]=dict(layer='M8',c=row[1],color='mesh_driver')
         for g,cells in groups.items():
             gy=g if layers.get(g)=='M8' else incoming.get(g)
             if gy in targets and targets[gy]['layer']=='M8':
@@ -276,6 +285,17 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
             after=tuple(tuple(c['origin_um']) for c in out['cell_sites'].values())
             if after==before:break
         out['summary']['capture_allocation_passes']=len(seen)
+    if mesh_driver_boundaries:
+        binds=[]
+        for g,edges in bydrv.items():
+            if edges:continue
+            x,y=pin(g,'Y');anchor=targets[g]['c']
+            py=[D.C128.pin_xy({'c':dict(x=c['origin_um'][0],y=c['origin_um'][1],orient=c['orient'])},'c','Y',D.ROW_Y)[1] for _,c in groups[g]]
+            if max(abs(anchor-yy) for yy in py)>D.C128.STACK_RISER_MAX_UM:
+                raise ValueError('mesh driver pin stair exceeds actual island window')
+            binds.append(dict(group=g,xy=[x,anchor],units=[u for u,c in groups[g]],max_m7_riser_um=max(abs(anchor-yy) for yy in py)))
+        out['summary']['mesh_driver_boundaries']=binds
+        out['summary']['must_attach_explicit_mesh_before_route']=True
     corridors = {}
     for g, edges in bydrv.items():
         d = pin(g, 'Y')
@@ -312,6 +332,7 @@ def route(spec, corridors, plan, exact_jogs=False, mesh_straps=None, ndr="16w"):
                 candidates.append((abs(ideal-pts[0][1]),min(y for x,y in pts)-D.C128.STACK_RISER_MAX_UM,
                                    max(y for x,y in pts)+D.C128.STACK_RISER_MAX_UM))
         return min(candidates)[1:] if candidates else None
+    diagnostic_leaves={'ckm_w_'+q['units'][0] for q in spec['summary'].get('mesh_driver_boundaries',[])}
     original = D.C128.TrackRouter
     class CorridorRouter(original):
         def __init__(self, *a, **kw):
@@ -332,6 +353,11 @@ def route(spec, corridors, plan, exact_jogs=False, mesh_straps=None, ndr="16w"):
                 super().reserve(D.C128.clock_shapes(segs,D.NDR['8w'],'VSS'))
             errors = []
             for name, row in sorted(corridors.items(), key=lambda p: -(p[1]['hi']-p[1]['lo'])):
+                if name in diagnostic_leaves:
+                    # Only an abstract boundary placeholder, removed before any
+                    # encoding. Actual driver access is the bounded M7 stair
+                    # into the real mesh conductor, with its source inventory.
+                    self.fixed[name]=(row['c'],D.C128.DRAWN,D.C128.shield_geom(self.nd)[2]);continue
                 c, mode, ext = super().place(row['layer'], row['c'], row['lo'], row['hi'], name,
                     keep=(row['c']-.001, row['c']+.001))
                 if c is None:
@@ -397,6 +423,7 @@ def main():
     ap.add_argument('--exact-local-jogs', action='store_true')
     ap.add_argument('--lower-face-gap', action='store_true')
     ap.add_argument('--separate-drops', action='store_true')
+    ap.add_argument('--mesh-driver-boundaries', action='store_true')
     ap.add_argument('--spine-landing', action='store_true')
     ap.add_argument('--ndr', choices=['8w','16w'], default='16w')
     ap.add_argument('--mesh-straps', type=Path, help='actual continuous mesh strap file reserved before all tree metal')
@@ -404,7 +431,7 @@ def main():
     plan = S.Plan(S.load(a.plan))
     mesh_straps=json.loads(a.mesh_straps.read_text()) if a.mesh_straps else []
     spec, corridors = allocate(json.loads(a.spec.read_text()), plan, align_inputs=a.align_inputs,
-                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap, separate_drops=a.separate_drops, mesh_straps=mesh_straps, ndr=a.ndr, spine_landing=a.spine_landing)
+                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap, separate_drops=a.separate_drops, mesh_straps=mesh_straps, ndr=a.ndr, spine_landing=a.spine_landing, mesh_driver_boundaries=a.mesh_driver_boundaries)
     (a.out/'explicit_tree.json').write_text(json.dumps(spec, indent=1)+'\n')
     (a.out/'corridors.json').write_text(json.dumps(corridors, indent=1)+'\n')
     try:
