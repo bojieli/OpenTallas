@@ -25,6 +25,8 @@ def test_band_root_reuses_upstream_cell_and_phys_edges():
     bt = band(B, 'b', 300.)
     B['btrees'], B['bnodes'] = [bt], bt['nodes']
     B['a0'] = dict(drivers=[dict(x=300., y=0., mult=2.)])
+    from types import SimpleNamespace
+    B['P']=SimpleNamespace(W=2000.,H=2000.,parts={'p':{}},rect=lambda n:(0.,-400.,2000.,2000.))
     cells, _ = M.legalize(B)
     B['cells'] = cells
     assert B['site_of'][('b', 'b')] == B['site_of'][('t', 't0')]
@@ -86,3 +88,24 @@ def test_valid_slot_search_crosses_masked_band_without_enlarging_islands():
     d,k,j=next(M.valid_slot_candidates(gx,gy,ok,*target,1.62))
     assert ok[k,j] and j==60
     assert d==pytest.approx(abs(gx[k]+.81-target[0])+abs(gy[j]+M.ROW_H/2-target[1]))
+
+
+def test_full_clock_group_body_stays_in_one_host_at_seam_and_die_edge():
+    from types import SimpleNamespace
+    rects={'a':(0.,0.,10.,20.),'b':(10.,0.,20.,20.)}
+    B=dict(P=SimpleNamespace(W=20.,H=20.,parts={n:{} for n in rects},rect=rects.__getitem__),cores=[])
+    cells=[dict(kind='fine_driver',site=[10.,5.535],masters=['BUFx24']),
+           dict(kind='col_node',site=[20.,10.665],masters=['BUFx24','BUFx24'])]
+    stats=M.legalize_partition_bodies(B,cells)
+    assert stats['moved']==2 and stats['max_move_um']<2.
+    for c in cells:
+        x,y=c['site'];r=rects[c['body_host']]
+        assert r[0]<=x-.81 and x+.81<=r[2]
+        assert r[1]<=y-M.ROW_H/2 and y+(len(c['masters'])-.5)*M.ROW_H<=r[3]
+
+
+def test_legalized_driver_jog_is_charged_as_mesh_metal():
+    N=M.mesh_seg([(0.,0.,20.)],[(10.,0.,20.)],[(10.81,5.)],[(10.,10.)],
+                 M.RC3['8w'],(M.RC3['8w'],0.),jog_um=1.)
+    assert (10.81,5.) in N['xy']
+    assert any(N['dn'][0] in (a,b) and r>0 for a,b,r in N['R'])

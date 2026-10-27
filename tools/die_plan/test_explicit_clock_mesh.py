@@ -74,7 +74,7 @@ def test_wide_band_ndr_obeys_asap7_spacing_and_via_enclosure():
     import die_clock_mesh as D
     n=D.NDR['2x16w'];v=n['via89']
     assert n['width']==1.28 and n['space']==1.0
-    assert n['wide_merge_um']<=2.0
+    assert n['wide_merge_um']<1.805
     assert (v['cols']-1)*v['pitch']+v['cut']+2*v['enc_m9']<=n['width']
 
 
@@ -106,3 +106,15 @@ def test_mixed_shield_census_uses_wide_segment_actual_spacing_class():
     assert census['spacing']>0
     assert any(r['required_space_um']==1.0 for r in census['rows'])
     assert ties['untied'] # no PG grid was supplied; it cannot qualify shield continuity
+
+
+def test_mixed_rcx_tables_must_cover_every_actual_width():
+    import clock_routed as C
+    def rules(widths):
+        return '\n'.join(f'Metal {lay} RESOVER\nWIDTH Table {len(widths)} entries: '+ ' '.join(map(str,widths))+'\n'
+                         for lay in (8,9))
+    actual=[.16,.32,.64,1.28]
+    old=C.rules_width_inventory_check(rules([.04,.64]),actual)
+    assert not old['ok'] and old['selected_widths_um'][8]['0.16']==.04
+    assert old['selected_widths_um'][9]['1.28']==.64
+    assert C.rules_width_inventory_check(rules([.04]+actual),actual)['ok']

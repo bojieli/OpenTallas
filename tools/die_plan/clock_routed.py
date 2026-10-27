@@ -1041,19 +1041,38 @@ def rcx_tcl(rules="stock", rules_text=None):
 NDR_WIDTH_UM = {"4w": 0.16, "8w": 0.32, "16w": 0.64, "2x16w": 1.28}
 
 
+def rules_width_inventory_check(rules_text, widths):
+    """Require an exact table row for every actual physical clock width.
+
+    The native mixed-width coupon demonstrated normal width selection. A
+    two-entry .04/.64 table falls back below .64 and clamps above it; a genuine
+    multi-width table selects each width. Table coverage is separate from the
+    source-pinned calibration receipt (the generator must also price each W).
+    """
+    tab={}
+    for m in re.finditer(r"Metal (\d+) RESOVER\s*\nWIDTH Table (\d+) entries:\s*([0-9. ]+)",rules_text):
+        tab[int(m.group(1))]=[float(v) for v in m.group(3).split()]
+    requested=sorted(set(float(w) for w in widths))
+    selected={}
+    for lay in (8,9):
+        values=sorted(tab.get(lay,[]))
+        selected[lay]={str(w):(max((q for q in values if q<=w+1e-9),default=values[0]) if values else None)
+                       for w in requested}
+    ok=all(selected[lay][str(w)] is not None and abs(selected[lay][str(w)]-w)<1e-6
+           for lay in (8,9) for w in requested)
+    return dict(requested_widths_um=requested,table_widths_um={lay:tab.get(lay,[]) for lay in (8,9)},
+                selected_widths_um=selected,ok=ok)
+
+
 def rules_width_check(rules_text, ndr):
-    """INFRA-FIRST-QC-R18 root cause of the R17 model-vs-RCX 2x latency gap: the 16w (0.64 um) clock NDR was extracted
-    with the CLOCK-128-R6 0.16-um rules, and OpenRCX uses the SECOND M8/M9 width entry for every wider wire, so a 0.64-um
-    wire got the 0.16-um C (R is width-scaled by -lef_res, C is not): RCX 0.087 vs model 0.50 fF/um.  The second width
-    entry of Metal 8 and 9 must equal the NDR width (an entry below it under-extracts C, one above is never selected)."""
-    import re
-    w = NDR_WIDTH_UM.get(ndr) if ndr else None
-    tab = {}
-    for m in re.finditer(r"Metal (\d+) RESOVER\s*\nWIDTH Table (\d+) entries:\s*([0-9. ]+)", rules_text):
-        tab[int(m.group(1))] = [float(v) for v in m.group(3).split()]
-    sel = {k: (v[1] if len(v) > 1 else v[0]) for k, v in tab.items() if k in (8, 9)}
-    ok = w is None or (len(sel) == 2 and all(abs(v - w) < 1e-6 for v in sel.values()))
-    return dict(ndr=ndr, ndr_width_um=w, selected_width_um=sel, ok=ok)
+    """Single-width compatibility wrapper over the actual width-selection guard."""
+    w=NDR_WIDTH_UM.get(ndr) if ndr else None
+    if w is None:
+        c=rules_width_inventory_check(rules_text,[])
+        return dict(c,ndr=ndr,ndr_width_um=None,selected_width_um={k:(v[1] if len(v)>1 else v[0])
+                    for k,v in c['table_widths_um'].items() if v})
+    c=rules_width_inventory_check(rules_text,[w])
+    return dict(c,ndr=ndr,ndr_width_um=w,selected_width_um={k:v[str(w)] for k,v in c['selected_widths_um'].items()})
 
 
 def actual_ndr_widths(M):
@@ -1080,13 +1099,13 @@ def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock",
     rules_text = None
     width_check = None
     physical_widths = actual_ndr_widths(M)
-    if len(physical_widths) > 1 and not width_mismatch_ok:
-        raise ValueError("mixed-width clock extraction is not qualified by a single-NDR RCX receipt: "
-                         f"actual widths {physical_widths}; qualify per-segment width extraction first "
-                         "(the old top-only 0.64-um calibration does not cover the full clock)")
+    if len(physical_widths) > 1 and rcx_rules == "stock" and not width_mismatch_ok:
+        raise ValueError("mixed-width clock extraction needs the calibrated multi-width rules: "
+                         f"actual widths {physical_widths}; stock/single-NDR rules do not cover the full clock")
     if rcx_rules != "stock":
         rules_text = Path(rcx_rules).read_text()
-        width_check = rules_width_check(rules_text, M["meta"].get("ndr"))
+        width_check = (rules_width_inventory_check(rules_text, physical_widths) if physical_widths
+                       else rules_width_check(rules_text, M["meta"].get("ndr")))
         if not width_check["ok"] and not width_mismatch_ok:
             raise ValueError(f"RCX rules width table does not cover the clock NDR: {width_check}")
         (d / "rcx_ndr.rules").write_text(rules_text)

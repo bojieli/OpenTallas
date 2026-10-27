@@ -78,10 +78,10 @@ NDR = {"4w": dict(width=0.16, space=0.08, rf=0.25, cf=1.3), "8w": dict(width=0.3
                    via89=dict(rows=6, cols=6, cut=0.04, pitch=0.098, enc_m8=0.0, enc_m9=0.02)),
        # R26 band-tree stage table includes 2x16w. The physical 1.28-um conductor
        # exceeds the LEF WIDTH0.99975 row: long-PRL spacing is 1.0um. M8 MAXWIDTH
-       # is2.0um; a merged shield must stay below it. 13V8 cuts fit:12*.098+.04
+       # is2.0um; the merge guard stays below the WIDTH1.805 MINIMUMCUT regime. 13V8 cuts fit:12*.098+.04
        # plus .02 enclosure on both M9 sides =1.256um <=1.28um. Native C is a
        # diagnostic continuation of the stage-table model; routed RC must qualify it.
-       "2x16w": dict(width=1.28, space=1.0, rf=0.03125, cf=4.4, wide_merge_um=1.99975,
+       "2x16w": dict(width=1.28, space=1.0, rf=0.03125, cf=4.4, wide_merge_um=1.80475,
                      via89=dict(rows=13, cols=13, cut=0.04, pitch=0.098, enc_m8=0.0, enc_m9=0.02))}
 VDD = {"TT": 0.70, "FF": 0.77}
 SITE_X, ROW_Y = 0.054, 0.27

@@ -948,7 +948,7 @@ def band_trees(B, st, a):
                     continue
                 if (w, mm, "TT") not in st.fit:
                     continue
-                et = EdgeType(st, w, mm, float(a.col_reach))
+                et = EdgeType(st, w, mm, float(getattr(a, "a0_band_reach", 405.0)))
                 tag = f"b{ct['g']:02d}_{ct['c']:02d}_{len(out):03d}_"
                 nodes, r = band_tree(leaves, xc, anc, et, tag, Sc, B["incore"])
                 if r is None or r["S"] != Sc:
@@ -983,7 +983,7 @@ def band_trees(B, st, a):
     ah = defaultdict(int)
     for bt in out:
         ah[str(bt["anchor_up"])] += 1
-    summ = dict(trees=len(out), leaves=sum(len(bt["leaves"]) for bt in out), equal_levels=all(bt["S"] == bt["S_col"] for bt in out),
+    summ = dict(planned_reach_um=float(getattr(a, "a0_band_reach", 405.0)), trees=len(out), leaves=sum(len(bt["leaves"]) for bt in out), equal_levels=all(bt["S"] == bt["S_col"] for bt in out),
                 anchor_levels_above_tap_hist=dict(sorted(ah.items())),
                 stages=sorted({bt["S"] for bt in out}), et_hist=dict(sorted(cnt.items())),
                 resid_TT_ps=dict(med=r3(rr[len(rr) // 2]), p90=r3(rr[int(0.9 * (len(rr) - 1))]), max=r3(rr[-1])),
@@ -1059,8 +1059,7 @@ def mesh_seg(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=N
         return dist
     jd = [attach(tuple(q)) for q in taps]
     for q in drivers:
-        if attach(tuple(q)) > 0:
-            raise SystemExit(f"mesh_seg: driver {q} not on a strap")
+        attach(tuple(q))
     dset = {tuple(q) for q in drivers}
     nid, xy = {}, []
 
@@ -1569,6 +1568,77 @@ def decompose(mult):
     return best[1]
 
 
+def legalize_partition_bodies(B, cells):
+    """Place a whole clock buffer group within one physical partition.
+
+    A legal centre is insufficient at an abutted seam or die edge. This is a
+    deterministic pre-build placement step; masters stay fixed and all edges
+    are subsequently timed from these actual sites.
+    """
+    P=B["P"]
+    rects={n:P.rect(n) for n in P.parts}
+    byx=defaultdict(list)
+    for n,r in rects.items():
+        for k in range(int(r[0]//500)-1,int(r[2]//500)+2):byx[k].append(n)
+    corex=defaultdict(list)
+    for q in B["cores"]:
+        for k in range(int(q[0]//100)-1,int(q[2]//100)+2):corex[k].append(q)
+    def box(c,site=None):
+        x,y=site or c["site"]
+        width=max(LEF_BUF[m][0] for m in c["masters"])
+        return x-width/2,y-ROW_H/2,x+width/2,y+(len(c["masters"])-.5)*ROW_H
+    boxes={i:box(c) for i,c in enumerate(cells) if c["masters"]}
+    buckets=defaultdict(set)
+    def register(i,b):
+        for x in range(int(b[0]//10)-1,int(b[2]//10)+2):
+            for y in range(int(b[1]//10)-1,int(b[3]//10)+2):buckets[x,y].add(i)
+    for i,b in boxes.items():register(i,b)
+    def intersects(a,b):
+        return a[0]<b[2]-1e-6 and b[0]<a[2]-1e-6 and a[1]<b[3]-1e-6 and b[1]<a[3]-1e-6
+    moved=[]
+    for i,c in enumerate(cells):
+        if not c["masters"] or c.get("island") or c["kind"].startswith("chan"):continue
+        old=tuple(c["site"]);b=boxes[i]
+        if any(r[0]-1e-6<=b[0] and r[1]-1e-6<=b[1] and b[2]<=r[2]+1e-6 and b[3]<=r[3]+1e-6 for r in rects.values()):
+            continue
+        width=b[2]-b[0];height=b[3]-b[1]
+        hosts=byx[int(min(max(old[0],0.),P.W-1e-6)//500)]
+        cand=[]
+        for host in hosts:
+            r=rects[host]
+            if not (r[1]-8.64<=old[1]<=r[3]+8.64 and r[0]-8.64<=old[0]<=r[2]+8.64):continue
+            lo_x=math.ceil((r[0]-1e-6)/.054)*.054
+            hi_x=math.floor((r[2]-width+1e-6)/.054)*.054
+            lo_y=math.ceil((r[1]-1e-6)/ROW_H)*ROW_H
+            hi_y=math.floor((r[3]-height+1e-6)/ROW_H)*ROW_H
+            if lo_x>hi_x or lo_y>hi_y:continue
+            ox=min(max(round((old[0]-width/2)/.054)*.054,lo_x),hi_x)
+            oy=min(max(round((old[1]-ROW_H/2)/ROW_H)*ROW_H,lo_y),hi_y)
+            for dx in (0.,-.054,.054,-width,width,-2*width,2*width):
+                for dy in (0.,-height,height,-2*height,2*height):
+                    x0=round(min(max(round((ox+dx)/.054)*.054,lo_x),hi_x),6)
+                    y0=round(min(max(round((oy+dy)/ROW_H)*ROW_H,lo_y),hi_y),6)
+                    site=(x0+width/2,y0+ROW_H/2)
+                    bb=box(c,site)
+                    cand.append((md(old,site),host,site,bb))
+        pick=None
+        for d,host,site,bb in sorted(cand):
+            # Clock islands keep the documented 4.32-um core halo.
+            if any(intersects(bb,(q[0]-4.32,q[1]-4.32,q[2]+4.32,q[3]+4.32)) for q in corex[int(site[0]//100)]):continue
+            nearby=set()
+            for x in range(int(bb[0]//10)-1,int(bb[2]//10)+2):
+                for y in range(int(bb[1]//10)-1,int(bb[3]//10)+2):nearby |= buckets[x,y]
+            if any(j!=i and intersects(bb,boxes[j]) for j in nearby):continue
+            pick=(d,host,site,bb);break
+        if pick is None:raise RuntimeError(f"no full-body clock host near {c['kind']} {old}")
+        d,host,site,bb=pick
+        c["site"]=list(site);c["body_host"]=host
+        boxes[i]=bb;register(i,bb)
+        moved.append(dict(kind=c["kind"],from_xy=list(old),to_xy=list(site),distance_um=r3(d),host=host))
+    return dict(moved=len(moved),max_move_um=max((m["distance_um"] for m in moved),default=0.),examples=moved[:12],
+                rule="whole buffer group in one host, actual masters, no overlap and 4.32um core halo; reprice actual edges")
+
+
 def legalize(B, fine_masters=None):
     """GEOM-REVIEW-10 (2): one legal site per cell.  Merges the zero-length level (top-tree leaf == column-tree tap
     buffer, one cell), puts tree buffers in lanes beside the fine-driver line, then bumps residual footprint overlaps
@@ -1719,6 +1789,7 @@ def legalize(B, fine_masters=None):
     isl = None
     if I is not None:
         isl = assign_periodic(B, I, cells, TOPK) if B.get("periodic") else assign_islands(B, I, cells, TOPK)
+    body_sites = legalize_partition_bodies(B, cells) if B.get("a0") else None
     B["site_of"] = site_of
     phys = [c for c in cells if c["kind"] != "r9_leaf"]
     post = Counter((r3(c["site"][0]), r3(c["site"][1])) for c in phys)
@@ -1726,7 +1797,7 @@ def legalize(B, fine_masters=None):
     oncore = sum(1 for c in phys if strict(c["site"]))
     near_isl = sum(1 for c in phys if inc(c["site"]))
     # merged-level check: every column tap cell is ALSO the top-tree leaf (one cell, no zero-length edge)
-    stats = dict(cells=len(phys), by_kind=dict(Counter(c["kind"] for c in cells)), raw_coincident_items=pre_coinc,
+    stats = dict(cells=len(phys), body_sites=body_sites, by_kind=dict(Counter(c["kind"] for c in cells)), raw_coincident_items=pre_coinc,
                  instances=sum(c["units"] for c in phys),
                  instances_by_master=dict(Counter(m for c in phys for m in c["masters"])),
                  coincident_items=sum(v for v in post.values() if v > 1), footprint_overlaps=0, cells_on_core=oncore,
@@ -2973,6 +3044,8 @@ def add_common(p):
                    help="12.8 c/d1 band/W driver sizing: drive = computed drive target (each driver's L1-Voronoi strap C on "
                         "the NOMINAL plan netlist / median, quantised to MULT_SET; NUMBER-CHECK-QCR25 (2)); adjcol = R25 x2 "
                         "on A0 columns with < 2 adjacent driver columns")
+    p.add_argument("--a0-band-reach", type=float, default=405.0,
+                   help="planned band repeater reach before physical slot snapping; final pin-to-pin census must remain <=450um")
     p.add_argument("--a0-band-width", choices=["4w", "8w", "16w", "2x16w"], default=None,
                    help="constrain every band tree to a physically supported common NDR; absent searches measured widths")
     p.add_argument("--a0-band-up", type=int, default=4,
