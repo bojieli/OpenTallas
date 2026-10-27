@@ -3617,6 +3617,8 @@ def cmd_combo(a):
     d, kit = Path(a.dir), Path(a.kit)
     import gen_phys as GP
     M = json.loads((d / "mesh.json").read_text())
+    if M.get("meta",{}).get("graded_physical") and not M["meta"].get("physical_encoder_qualified",False):
+        raise SystemExit("graded mesh requires its actual segmented-rail encoder; refusing legacy uniform mesh combo")
     cells = json.loads((d / "place.json").read_text())
     if M.get("unplaced") or M["meta"].get("unplaced", 0):
         raise SystemExit("die_clock_mesh combo: unresolved/STRUCTURAL clock sites; revise before routing")
