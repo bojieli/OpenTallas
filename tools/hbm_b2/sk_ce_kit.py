@@ -39,7 +39,7 @@ def rest_wrapper(module, tail, contract):
     t=t.replace("ot_hbm_hc_tail_rest_core u_core","ot_hbm_hc_tail_rest_core_ce u_core")
     t=t.replace("sink_clk","sk_en_sk").replace("sk_clk","sk_en_sk")
     if contract != "native-trial":
-        cap={"land1-cap3":299,"land0-cap2":298}[contract]
+        cap=299
         t=must(t,"ot_hbm_hc_tail_rest_core_ce u_core (",f"ot_hbm_hc_tail_rest_core_ce #(.CAP({cap})) u_core (")
     return t
 
@@ -52,7 +52,7 @@ def recipes(contract):
         r["top"]=f"ot_hdc_sk_{kind}_en";r["params"]=dict(r["params"],EN_LAND=1)
         r["source"]="QUAD5 CE: results/hbm_mu_quad_5/sk_en (equiv + lockstep + mutants PASS); core enables are landed data."
         if contract != "native-trial":
-            r["params"]["EN_LAND"]=0 if contract=="land0-cap2" else 1
+            r["params"]["EN_LAND"]=1
             if kind=="step0":
                 r["files"]=[x.replace("ot_hdc_sinkhorn_se.sv","ot_hdc_sinkhorn_se_phys.sv") for x in r["files"]]
                 r["top"]="ot_hdc_sk_step0_en_phys";r["params"]["EN_DELAY"]=2

@@ -3,7 +3,7 @@
   "kits": [
     {
       "kit": "ot_hbm_hc_root_static__tailx_sk_steady_61ace215c286-cephys",
-      "source_top": null,
+      "source_top": "ot_hdc_sk_steady_en",
       "face_flops": 1035,
       "dropped": [],
       "phase": {
@@ -21,7 +21,7 @@
     },
     {
       "kit": "ot_hbm_hc_root_static__tailx_sk_step0_7ec50d167c90-cephys",
-      "source_top": null,
+      "source_top": "ot_hdc_sk_step0_en_phys",
       "face_flops": 1030,
       "dropped": [],
       "phase": {
@@ -39,7 +39,7 @@
     },
     {
       "kit": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2_883ac5a8b4ac-cephys",
-      "source_top": null,
+      "source_top": "ot_hbm_hc_tail_rest_core_ce",
       "face_flops": 3432,
       "dropped": [],
       "phase": {
@@ -57,7 +57,7 @@
     },
     {
       "kit": "ot_hbm_hc_root_static__tailx_rest__v4f4566_da71b54f3102-cephys",
-      "source_top": null,
+      "source_top": "ot_hbm_hc_tail_rest_core_ce",
       "face_flops": 3432,
       "dropped": [],
       "phase": {

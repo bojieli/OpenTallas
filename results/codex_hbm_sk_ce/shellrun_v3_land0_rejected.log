@@ -1,0 +1,9 @@
+DIFF edge504 valid=0/0 fault=0/1 data=0
+DIFF edge505 valid=0/0 fault=0/1 data=0
+DIFF edge506 valid=0/0 fault=0/1 data=0
+DIFF edge507 valid=0/0 fault=0/1 data=0
+SHELL FAIL LAND=0 ADV=0 CAPADD=2 DELAY=2 errors=20760 results=40 edges=21263
+- results/codex_hbm_sk_ce/tb_shell_v3.sv:23: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43us; walltime 3.691 s; speed 11.526 us/s
+- Verilator: cpu 3.689 s on 1 threads; allocated 16 MB

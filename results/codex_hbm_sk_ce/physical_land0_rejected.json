@@ -1,0 +1,9 @@
+{
+  "schema": "opentallas.hbm.ce_phase_result.v1",
+  "contract": "land0-cap2",
+  "verdict": "FAIL_REJECTED",
+  "mismatches": 20760,
+  "first_fault_edge": 504,
+  "reason": "Bypassing native enable landing advances steady sample onto the in_valid input-face update edge. It sees old0 and misses first accept slot; the next slot is7 core edges later.",
+  "action": "Rejected; selected land1-cap3 is508 external edges and proved bit-exact. No further retry."
+}
