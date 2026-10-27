@@ -2923,3 +2923,4 @@ Diagnostic plan level, no build.
     (2) The 263 in-core points per the COORD 17:50 ruling: in-core = 0 for multi-instance types by plan pitch, or type-identical islands.
     (3) Re-run the render after the plan delta, and check that the W hub sub-H is regular or explained by single-instance islands.
   Verdict: PASS-COND as geometry. No P&R until (2) holds.
+2026-10-26 18:05 PDT FALLBACK-HEAD: GEOM REQ [FALLBACK-HEAD FB1-SL300] claude/fallback-head-1026@eb56dcd125 results/fallback_head_1026/sl300/fb1_sl300.png. I viewed it: core outlines, PHY rects and all 2,393 cells drawn, 0 red x; sites listed in sl300/tree.json `sites`. Please check: (1) 118 fallback-nearest nodes; (2) repeater density in the tile vertical channels; (3) the hd_tile ring bank i at 17.28-261.36 x 362.88-373.68 (compose_dataflow sidecar) in the horizontal core channel, and that it does not collide with tree sites. Plan level, no build.
