@@ -345,12 +345,29 @@ def _std_cell(master):
     return "_ASAP7_" in master.upper() or master.startswith("$")
 
 
-def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=()):
+def sdc_clock_ports(text):
+    """port names of every `create_clock ... [get_ports NAME]` in a kit SDC (virtual clocks have no port)."""
+    out = []
+    for m in re.finditer(r"^\s*create_clock\b[^\n]*\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)\}?\s*\]", text, re.M):
+        if m.group(1) not in out:
+            out.append(m.group(1))
+    return out
+
+
+def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=()):
     """straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
     parent need no pin register -> exempt (recorded in the result); any other name is refused (ValueError).
     bumps: declared hard-IP line-side ports [(port, dir, width)] (plan bump_ports, KV-KITS-4 10-27): the bump IS the
     hard macro's own pin, so it carries no pin register; instead every bit must wire straight to exactly one pin of
     one hard (non-standard-cell) macro with no other driver or load (anything else fails class "bump")."""
+    # QC-KITS-R1 10-27: extra clock roles of a bound partition (e.g. coll clk_coll / clk_serdes) are clock ports, not
+    # face data: the kit SDC create_clock list (generated from the plan) exempts them like clk / clk_tN.
+    clocks = [c for c in (clocks or ()) if not re.fullmatch(skip_re, c)]
+    if clocks:
+        if pins is not None and set(clocks) & {str(x.get("bus")) for x in pins}:
+            raise ValueError(f"face_guard: SDC clock port(s) also planned as face data bits: "
+                             f"{sorted(set(clocks) & {str(x.get('bus')) for x in pins})}")
+        skip_re = r"(?:" + skip_re + r")|^(?:" + "|".join(re.escape(x) for x in clocks) + r")$"
     bump_names = [b[0] for b in (bumps or ())]
     if bump_names:
         skip_re = r"(?:" + skip_re + r")|^(?:" + "|".join(re.escape(x) for x in bump_names) + r")$"
@@ -546,6 +563,7 @@ def main(argv=None):
     ap.add_argument("--ft", help="kit ft_stations.txt (default: beside --pins): 1-station slots share one register")
     ap.add_argument("--straps", help="kit straps.json (default: beside --pins): declared ID straps, exempt")
     ap.add_argument("--budget-dir", help="kit dir with budget.json (default: beside --pins): declared bump_ports")
+    ap.add_argument("--sdc", help="kit constraint.sdc (default: beside --pins): create_clock ports are clock pins")
     a = ap.parse_args(argv)
     stf = a.straps or (str(Path(a.pins).parent) if a.pins else None)
     sl = kit_strap_list(Path(stf).parent if stf.endswith(".json") else stf) if stf else []
@@ -554,7 +572,9 @@ def main(argv=None):
     ft1 = read_ft1(ftf) if ftf and Path(ftf).exists() else set()
     bd = a.budget_dir or (str(Path(a.pins).parent) if a.pins else None)
     bl = kit_bump_list(bd) if bd else []
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl)
+    sdc = a.sdc or (str(Path(a.pins).with_name("constraint.sdc")) if a.pins else None)
+    ck = sdc_clock_ports(Path(sdc).read_text()) if sdc and Path(sdc).exists() else []
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck)
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")
