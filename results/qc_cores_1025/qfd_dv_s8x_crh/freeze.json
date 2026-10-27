@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.qc.core_freeze.v1",
+ "kit": "qfd_dv_s8x_crh_c",
+ "module": "qfd_dv_s8x_crh",
+ "plan_type": "sle_su_c",
+ "outline_um": [
+  259.2,
+  276.48
+ ],
+ "ref_tile": "physical/ref_tile/qfd_dv_s5_crh",
+ "spec": "physical/ref_tile/qfd_dv_s5_crh/spec.json",
+ "spec_sha256": "76e611c53b73abc2aa219a8254fcb6dd9ecb042d6b567ff709b6e96511d326e7",
+ "pins_file": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh/qfd_dv_s8x_crh.lef",
+ "pins_sha256": "d9c71a471135bb6f2a46e0ffd17c088a5ab63a5f18ae06fb5476406974305b2b",
+ "pins": 998,
+ "plan_lef": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh/qfd_dv_s8x_crh.lef",
+ "clocks": [
+  "ck"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "2d6c6f68fdb806e5afe52c0fd2c4b7ee8d05b56693e9d37c9deb06ef38671593",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "58f80897fa",
+ "sdc_lint_sha256": "370e0378cf5e3fe4a541572a246bae9e9dfaf54e17212839d56df6d71620ae0e",
+ "face_guard_sha256": "21d4f0279e5868e62ce25fd26c8418c1bd7d57e606db1fc5df809004ef6e0811",
+ "signoff_sha256": "a838e83deb185c35f809483df6b1a3c26b9d13e426305f8642ae942d7443bd84",
+ "macros": {
+  "ot_sram_1r1w_1024x256_m2_r2c2": [
+   [
+    43.2,
+    86.4,
+    "R0"
+   ],
+   [
+    43.2,
+    181.44,
+    "R0"
+   ]
+  ]
+ },
+ "rtl_patches": [
+  {
+   "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+   "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+   "sha256": "a72fa1cc213c41bb764453ff4df54a44ffb6d366cf8ba714515d8da8b9233120"
+  }
+ ],
+ "kit_hash": "476e1c20d65958c0"
+}
