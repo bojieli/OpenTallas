@@ -244,11 +244,16 @@ module ot_s81sl_vn_rf8 #(parameter integer W = 128) (
     reg [W-1:0] m [0:7];
     reg [W-1:0] rd;
     integer r;
-    always @(posedge clk)
-        for (r = 0; r < 8; r = r + 1) if (we && wa == r[6:0]) m[r] <= wd;
-    always @* begin
+    // S81-CORES-R1 10-27: one loop variable per process (a module-scope integer shared by a clocked and a combinational
+    // process elaborates as a 32-bit DFF with conflicting constant drivers: rtl_lint check -assert); no logic change.
+    always @(posedge clk) begin : g_wr
+        integer rw;
+        for (rw = 0; rw < 8; rw = rw + 1) if (we && wa == rw[6:0]) m[rw] <= wd;
+    end
+    always @* begin : g_rd
+        integer rr;
         rd = {W{1'b0}};
-        for (r = 0; r < 8; r = r + 1) rd = rd | (m[r] & {W{ra == r[6:0]}});
+        for (rr = 0; rr < 8; rr = rr + 1) rd = rd | (m[rr] & {W{ra == rr[6:0]}});
     end
     always @(posedge clk) q <= rd;
 `ifndef SYNTHESIS
@@ -576,10 +581,14 @@ module ot_s81sl_vn_b #(
             if (go_c) begin run <= 1'b1; nj <= 3'd0; end
             else if (run) begin nj <= nj + 3'd1; if (nj == 3'd7) run <= 1'b0; end
         end
-    always @(posedge clk)
-        for (k = 0; k < 4; k = k + 1)
-            for (i = 0; i < 4; i = i + 1)
-                g_x[(4 * k + i) * 32 +: 32] <= {hm1[(4 * k + i) * 16 +: 16], 16'd0};
+    // S81-CORES-R1 10-27: process-local loop variables (module-scope i shared with the sel priority encoder elaborated a
+    // 32-bit DFF with conflicting constant drivers: rtl_lint check -assert); no logic change.
+    always @(posedge clk) begin : g_gx
+        integer kx, ix;
+        for (kx = 0; kx < 4; kx = kx + 1)
+            for (ix = 0; ix < 4; ix = ix + 1)
+                g_x[(4 * kx + ix) * 32 +: 32] <= {hm1[(4 * kx + ix) * 16 +: 16], 16'd0};
+    end
 
     wire gq, x_v, gy_v; wire [7:0] xi, gy_i; wire [127:0] sq, gy; wire [3:0] lf;
     ot_s81sl_vn_ng4 #(.D(64), .N(8), .LM(LM), .LA(LA)) u_g (.clk(clk), .rst_n(rs_g), .go(g_go), .in_v(g_inv), .in_x(g_x),
@@ -641,9 +650,10 @@ module ot_s81sl_vn_b #(
     assign rdy[5] = np[2] & np[3] & !ni[5];
     assign rdy[6] = np[4] & np[5] & !ni[6];
     reg [2:0] sel; reg any;
-    always @(*) begin
+    always @(*) begin : g_sel
+        integer is;
         any = |rdy; sel = 3'd0;
-        for (i = 6; i >= 0; i = i - 1) if (rdy[i]) sel = i[2:0];
+        for (is = 6; is >= 0; is = is - 1) if (rdy[is]) sel = is[2:0];
     end
     reg [31:0] ta, tb;
     always @(*) begin
