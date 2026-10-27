@@ -1,0 +1,40 @@
+infra_sites.run ...
+census: 3444 paths
+roads: 9724 segments, 9705 rest stops, 0 reach gaps
+layers: 9504 roads, 305 on leftover M8/M9, 220 blocked
+{
+ "die": "qwen_kvsys",
+ "verdict": "FAIL",
+ "gates": {
+  "reach_gap": "PASS",
+  "bay_fill": "FAIL",
+  "corridor_tracks": "FAIL",
+  "entry_pins": "PASS",
+  "clock_shield": "FAIL",
+  "static_ir": "NOT RUN",
+  "lot_fit": "PASS",
+  "clock_entry": "FAIL",
+  "core_reach": "FAIL",
+  "early_taps": "PASS",
+  "tree_balance": "FAIL",
+  "core_insertion_model": "FAIL",
+  "die_pair_skew_model": "FAIL",
+  "tree_commensurate": "FAIL",
+  "clock_sites": "FAIL",
+  "island_lattice": "FAIL",
+  "tree_on_islands": "FAIL",
+  "infra_sites": "FAIL",
+  "clock_rep_sites": "FAIL",
+  "tap_region_containment": "NOT RUN",
+  "footless_stubs": "PASS",
+  "island_ft_inputs": "FAIL"
+ },
+ "census": {
+  "paths": 3444,
+  "lanes": 2404,
+  "internal": 1040,
+  "bits": 432069,
+  "bit_mm": 276315.794,
+  "zero_length": 1970
+ }
+}

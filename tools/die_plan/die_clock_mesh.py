@@ -1087,6 +1087,8 @@ def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None
         if t.get("band_tree"):
             trees[t["band_tree"]].append(t)
     rows = []
+    if feed == "strap":
+        return band_strap_feed(BT, tap_rows, trees, xs, ly, out, hop_max)
     for n, (key, ts) in enumerate(sorted(trees.items())):
         b0 = BT["taps"][tap_rows.index(ts[0])]
         x, ye, dr = xs[b0["i"]], b0["edge_y"], b0["dir"]
@@ -1141,6 +1143,47 @@ def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None
         comb_max_um=max(r["comb_max_um"] for r in rows), root_slide_max_um=max(r["root_slide_um"] for r in rows),
         branch_slide_max_um=max(r["branch_slide_um"] for r in rows),
         islands_single_instance=sum(1 for r in out["pushdown"] if r["role"] in ("band_root", "band_branch")),
+        taps_per_tree=[min(r["taps"] for r in rows), max(r["taps"] for r in rows)])
+    return rows
+
+
+def band_strap_feed(BT, tap_rows, trees, xs, ly, out, hop_max):
+    """CLOCK-KV-R18 (opt-in lattice band_feed "strap", COORD RULING CLOCK-KV-R17 ASK1+2): MESH-FED band with EQUAL
+    insertion.  Each band tree is rooted ON the continuous M9 mesh strap (strap_cover keeps every M9 strap one
+    continuous strap across the band gap, 12.8e1): the band tap's own stub takes its input from that strap at its
+    foot (xs[i], tap y), exactly like every mesh tap (mesh -> stub -> tap).  So a band tap has the SAME stage count as
+    a mesh tap (no root / branch buffer: the R14 +2 stages behind the +68.8 ps band offset are gone by construction),
+    its stub is sized by the same plan-computed stub sizing rule as every other stub (die_clock_128 stub sizing,
+    12.8 plan-computed per-tap sizing, no trim), it is an ordinary mesh load (so the mesh MC signs it off and its
+    CPPR point is the signed mesh), and no band net exists.  Plan check (STRUCTURAL): the strap distance from the
+    foot to the edge leaf's mesh driver on the same strap must be <= hop_max (the tree hop reach), i.e. the foot is on
+    DRIVEN strap metal, never on the undriven middle of the gap."""
+    rows = []
+    for n, (key, ts) in enumerate(sorted(trees.items())):
+        b0 = BT["taps"][tap_rows.index(ts[0])]
+        lj = min(range(len(ly)), key=lambda j_: abs(ly[j_] - b0["edge_y"]))
+        dv = out["drivers"][f"{b0['i']}_{lj}"]
+        reach = []
+        for t in ts:
+            d = abs(t["foot"][1] - dv["site"][1]) + abs(t["foot"][0] - dv["site"][0])
+            reach.append(d)
+            t["band_feed"] = "strap"
+            t["band_driver"] = f"{b0['i']}_{lj}"
+            t["band_reach_um"] = round(d, 2)
+        if max(reach) > hop_max + 1e-6:
+            out["unplaced"].append([key, "STRUCTURAL band stub foot beyond driven strap reach", round(max(reach), 2)])
+        rows.append(dict(tree=key, i=b0["i"], edge_y=b0["edge_y"], dir=b0["dir"], feed="strap",
+                         leaf_driver=f"{b0['i']}_{lj}", strap=["M9", b0["i"]], reach_max_um=round(max(reach), 2),
+                         taps=len(ts)))
+    out["band_roots"] = []
+    out["band_strap"] = rows
+    out["meta"]["band_trees"] = dict(
+        rule=("CLOCK-KV-R18 band_feed strap: continuous M9 mesh strap (driven by the edge leaf driver) -> band tap stub "
+              "-> tap = the mesh taps' stage count (node -> driver -> mesh -> stub -> tap); stub sized by the common "
+              "plan-computed stub rule; no band root/branch, no pad, no trim"),
+        groups=BT["groups"], cover_um=BT["cover_um"], h_um=BT["h_um"], trees=len(rows),
+        taps=sum(r["taps"] for r in rows), feed="strap", stages_below_leaf_node=3, cells=0,
+        reach_max_um=max(r["reach_max_um"] for r in rows), hop_max_um=hop_max,
         taps_per_tree=[min(r["taps"] for r in rows), max(r["taps"] for r in rows)])
     return rows
 
@@ -1893,7 +1936,14 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         g = R[out["part_region"][part]] if regions else R[0]
         rk = dict(region=g["k"]) if regions else {}
         bk = BT["taps"].get(len(tap_rows)) if BT else None
-        if bk is not None:   # CLOCK-KV-R6 band tap: stub foot on its band tree's strap line at the tap y (comb drop)
+        if bk is not None and str(lattice.get("band_feed") or "mesh") == "strap":
+            # CLOCK-KV-R18 band_feed strap: the stub foot sits on the DRIVEN mesh, at the edge leaf row of its group on
+            # V strap i (the edge leaf driver's own row), never on the undriven strap tail inside the band gap (R18
+            # first build: feet at the tap y, 17-118 um into the gap, saw a 200 ps input slew vs <= 97 on the grid);
+            # the stub wire carries the depth, sized by the common plan-computed stub rule.
+            fq, fd = free_along(K, (xs[bk["i"]], bk["edge_y"]), 1, 4 * max_move)
+            axis, i, j = 1, bk["i"], 0
+        elif bk is not None:   # CLOCK-KV-R6 band tap: stub foot on its band tree's strap line at the tap y (comb drop)
             fq, fd = free_along(K, (xs[bk["i"]], y), 1, 4 * max_move)
             axis, i, j = 1, bk["i"], 0
         else:

@@ -91,6 +91,11 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+# CLOCK-KV-R18: default clock AOCV table = the OWNER-approved 0.21 %/mm gate table (METHODOLOGY 12.4a b1, 10-26 18:4x).
+# clk_aocv_table.json keeps the 0.42 %/mm DRAFT (global-variation bound); R16 gate numbers used it by mistake.
+APPROVED_AOCV_TABLE = "clk_aocv_table_g021.json"
+APPROVED_G_PER_MM = 0.0021
+
 PERIOD_PS = 833.333
 UNC_SETUP_PS = 60.0
 UNC_HOLD_PS = 25.0
@@ -231,6 +236,23 @@ def nearest_pairs(d, plan_path, tool, taps):
     return {"seam_nearest_INFO": seam, "landed_nearest_INFO": landed}
 
 
+def seam_bits(d, plan_path, tool, taps):
+    """{(src tap, dst tap): bits} from DC.seam_pairs (nearest tap under each pin register), for the HB4 cell count."""
+    if tool:
+        sys.path.insert(0, str(Path(tool)))
+    import die_clock as DC
+    import schema as S
+    M = json.loads((d / "mesh.json").read_text())
+    tb = defaultdict(list)
+    for t in M["taps"]:
+        if t["port"] in taps:
+            tb[t["part"]].append(dict(port=t["port"], part=t["part"], xy=t["xy"]))
+    out = defaultdict(int)
+    for (a_, b_, pid), n in DC.seam_pairs(S.Plan(S.load(plan_path)), tb).items():
+        out[(a_, b_)] += n
+    return dict(out)
+
+
 def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, models_b):
     """[(setup, hold, real, ma, mb)] over every launch model x capture model (REAL VIEWS).  Model: name, real,
     lat_late, lat_early (clock pin latency below the tap), clkq_max/min (launch arcs), setup/hold (capture arcs)."""
@@ -246,10 +268,11 @@ def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, mo
 
 
 def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None,
-               ocv=None, views=None):
+               ocv=None, views=None, rec=None):
     """ocv: optional callable (a_port, b_port, check) -> clock OCV pessimism ps on the non-common clock (CLK-AOCV,
     opt-in --clock-ocv); None = unchanged (no clock derate in this gate).
-    views: optional {port: [endpoint models]} (REAL VIEWS, opt-in); None = the declared register on every tap."""
+    views: optional {port: [endpoint models]} (REAL VIEWS, opt-in); None = the declared register on every tap.
+    rec: optional dict, filled {(a, b, tag): (gate setup, gate hold, has real endpoint, both real)} (HB4, opt-in)."""
     ws, wh, sk, rows = None, None, 0.0, []
     rv = dict(pairs=0, ws=None, wh=None, nneg_s=0, nneg_h=0, both=0, bs=None, bh=None, bneg_s=0, bneg_h=0,
               dmg=[]) if views is not None else None
@@ -296,6 +319,11 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
             ps_, ph_ = ocv(a, b, "setup"), ocv(a, b, "hold")
             s, h = s - ps_, h - ph_
             ocv_max["setup"], ocv_max["hold"] = max(ocv_max["setup"], ps_), max(ocv_max["hold"], ph_)
+        if rec is not None:
+            rec[(a, b, tag)] = (s, h, views is not None and (any(m["real"] for m in views[a]) or
+                                                             any(m["real"] for m in views[b])),
+                                views is not None and any(m["real"] for m in views[a]) and
+                                any(m["real"] for m in views[b]))
         nneg_s += s < 0
         nneg_h += h < 0
         sk = max(sk, dmg_s, dmg_h)
@@ -373,7 +401,7 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     region None = --droop-region tree, the pre-R17 rule) uses its tree region (cppr_node != 'h')."""
     import clk_aocv as CA
     here = Path(__file__).resolve().parent
-    T = CA.load(table_path or here / "clk_aocv_table.json")
+    T = CA.load(table_path or here / APPROVED_AOCV_TABLE)
     m = json.loads(Path(margins_path or here / "die_ci_margins.json").read_text())
     need = [k for k in ("node_stages", "node_xy_um", "node_late_ps", "node_early_ps") if k not in meta]
     tneed = sum(1 for r in taps.values() if "stages_from_root" not in r or "xy_um" not in r)
@@ -413,6 +441,69 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
 
 
 # ---------------------------------------------------------------- SIGNED MESH (CLOCK-KV-R17, opt-in)
+# CLOCK-KV-R18 (COORD RULING CLOCK-KV-R17, 12.4a a1 data hold buffers): planned HB4 insertion model.  Per cell: FF early
+# +44.6 ps (hold repair) and TT late +83.0 ps (setup cost), area 0.1021 um2 (HOLD-REPAIR estimate basis, kv_hb_count.py).
+HB4 = dict(cell="HB4xp67_ASAP7_75t_R", ff_early_ps=44.6, tt_late_ps=83.0, area_um2=0.1021,
+           basis="HOLD-REPAIR estimate basis (CLOCK-KV-R6/R15 kv_hb_count.py), UNCHECKED")
+
+
+def hold_buffer_model(tt, ff, bits=None, hb=HB4):
+    """per pair k = ceil(-FF hold / ff_early) HB4 cells on the capture data input (0 when hold >= 0); after insertion
+    FF hold += k ff_early, TT setup -= k tt_late.  tt/ff: {(a, b, tag): (setup, hold, real, both_real)} of ONE class at
+    TT / FF (gate form: every endpoint model, clock OCV, mesh U).  bits: optional {(a, b): bit count} (nearest-tap
+    seam bits, DC.seam_pairs) for the cell count; pairs absent from it count per pair-bit (k cells).  Returns the
+    record for all / real-endpoint / both-real subsets plus the k histogram and the cell / area count."""
+    import math as _m
+
+    def blk(sel):
+        ws = wh = None
+        neg_s = neg_h = n = 0
+        negs = []
+        for key in sel:
+            s_, _, _, _ = tt[key]
+            _, h_, _, _ = ff[key]
+            k = max(0, _m.ceil(-h_ / hb["ff_early_ps"] - 1e-9)) if h_ < 0 else 0
+            s2, h2 = s_ - k * hb["tt_late_ps"], h_ + k * hb["ff_early_ps"]
+            n += 1
+            if s2 < 0:
+                negs.append((round(s2, 2), key[0], key[1], key[2], k, round(s_, 2), round(h_, 2)))
+            neg_s += s2 < 0
+            neg_h += h2 < 0
+            if ws is None or s2 < ws[0]:
+                ws = (s2, key, k, s_)
+            if wh is None or h2 < wh[0]:
+                wh = (h2, key, k)
+        if not n:
+            return dict(pairs=0)
+        return dict(pairs=n, tt_setup_after_ps=round(ws[0], 2), setup_neg_pairs_after=int(neg_s),
+                    worst_setup_after=dict(launch=ws[1][0], capture=ws[1][1], where=ws[1][2], hb4_cells=ws[2],
+                                           setup_before_ps=round(ws[3], 2)),
+                    ff_hold_after_ps=round(wh[0], 2), hold_neg_pairs_after=int(neg_h),
+                    setup_neg_after=[dict(zip(("tt_setup_after", "launch", "capture", "where", "hb4_cells",
+                                               "tt_setup_before", "ff_hold_before"), r_)) for r_ in sorted(negs)])
+    keys = [k for k in ff if k in tt]
+    hist, cells, cbits, fbits, seen = defaultdict(int), 0, 0, 0, set()
+    for key in keys:
+        h_ = ff[key][1]
+        k = max(0, _m.ceil(-h_ / hb["ff_early_ps"] - 1e-9)) if h_ < 0 else 0
+        hist[k] += 1
+        if bits is not None and (key[0], key[1]) not in seen:
+            seen.add((key[0], key[1]))       # a tap pair's bits once (INFO keys repeat it per port id)
+            nb = bits.get((key[0], key[1]), 0)
+            cbits += nb
+            if k:
+                fbits += nb
+                cells += k * nb
+    out = dict(model=hb, all=blk(keys), real_view=blk([k for k in keys if ff[k][2]]),
+               both_real=blk([k for k in keys if ff[k][3]]), cells_per_pair_hist=dict(sorted(hist.items())),
+               pairs_needing_hb=sum(v for k, v in hist.items() if k))
+    if bits is not None:
+        out.update(bits_counted=cbits, bits_needing_hb=fbits, hb4_cells=cells,
+                   hb4_area_um2=round(cells * hb["area_um2"], 1), hb4_area_mm2=round(cells * hb["area_um2"] / 1e6, 4),
+                   count_basis="nearest-tap seam bits (DC.seam_pairs: the pin register's own launch/capture taps)")
+    return out
+
+
 def droop_regions(proof_dir, taps, mode, regions_file=None):
     """{port: region} for --droop-region mesh; None for 'tree'."""
     if mode == "tree":
@@ -449,7 +540,11 @@ def mesh_signoff(proof_dir, taps, meta, corner, so_path, band_mode="tree"):
         else:
             load[t["port"]] = t["stub"]
     load = {p: l for p, l in load.items() if l in idx and l in rtj}
-    m0 = sorted(rtj[l]["late"] for l in set(load.values()))
+    # reference = median routed late of the normal mesh stubs (band mesh_in loads excluded so M0 is the same for
+    # --mesh-band tree|sim; M0 is a common offset and cancels in every pair slack)
+    band_in = {t["mesh_in"] for t in M["taps"] if t.get("mesh_in")}
+    m0 = sorted(rtj[l]["late"] for l in set(load.values()) if l not in band_in) \
+        or sorted(rtj[l]["late"] for l in set(load.values()))
     m0 = m0[len(m0) // 2]
     arr_stub = [r["stages_from_root"] for p, r in taps.items() if p in load and not p.startswith("~")
                 and load[p].startswith("ckm_s_")] if all("stages_from_root" in r for r in taps.values()) else []
@@ -705,11 +800,15 @@ def main(argv=None):
     ap.add_argument("--clock-droop", choices=("stated", "shared"),
                     help="clock droop with --clock-ocv: stated +5.1 %% always, or shared (0 in one region); default "
                          "shared for table, stated for flat")
-    ap.add_argument("--clock-aocv-table", help="clock_aocv block (default tools/die_plan/clk_aocv_table.json)")
+    ap.add_argument("--clock-aocv-table", help="clock_aocv block (default tools/die_plan/" + APPROVED_AOCV_TABLE + " = the approved 0.21 %%/mm gate table; "
+                    "clk_aocv_table.json is the 0.42 %%/mm DRAFT, CLOCK-KV-R18)")
     ap.add_argument("--clock-ocv-cell-share", type=float, help="cell share of the die branch (default: table class A)")
     ap.add_argument("--droop-region", choices=("mesh", "tree"), default="mesh",
                     help="shared-droop region (12.4a b1): mesh = mesh/PDN region (default, R17 fix); tree = pre-R17 rule")
     ap.add_argument("--droop-regions", help="JSON {port: region} override (e.g. PDNSim regions)")
+    ap.add_argument("--hold-buffers", choices=("none", "HB4"), default="none",
+                    help="CLOCK-KV-R18 opt-in: model the planned HB4 data hold-buffer insertion (12.4a a1) per pair and "
+                         "report the gate after it (summary.hb4); default none = output unchanged")
     ap.add_argument("--mesh-signoff", help="TT=mc.json,FF=mc.json signed-mesh variation sim (12.8e): CPPR at the mesh "
                     "+ per-pair sim uncertainty (opt-in, CLOCK-KV-R17)")
     ap.add_argument("--mesh-band", choices=("tree", "sim"), default="tree",
@@ -759,6 +858,7 @@ def main(argv=None):
         res["block_model"]["declared_latency_ps"] = {c: S_.common_latency_ps(S_.Plan(plan), c) for c in ("TT", "FF")}
         res["block_model"]["core_part_delay_ps"] = a.core_part_delay_ps
     cov = None
+    hbrec, hbbits = {}, None
     for c in corners:
         meta, taps = load_taps(d, c)
         rng = meta["cppr_node_range_ps"]
@@ -772,6 +872,8 @@ def main(argv=None):
                                       a.seam_wire_um * a.wire_ff_per_um, a.core_part_delay_ps)
             cr_real = rcov
         pairs.update(nearest_pairs(d, a.plan, a.clock_tool, taps))
+        if a.hold_buffers != "none" and hbbits is None:
+            hbbits = seam_bits(d, a.plan, a.clock_tool, taps)
         unc = None
         if a.mesh_signoff:
             so = dict(x.split("=", 1) for x in a.mesh_signoff.split(","))
@@ -801,9 +903,11 @@ def main(argv=None):
             mrec["unc_max_ps"] = umax
             cr["mesh_signoff"] = mrec
         for k, pl in pairs.items():
+            hrec = hbrec.setdefault(c, {}).setdefault(k, {}) if a.hold_buffers != "none" else None
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
                                           landed=k.startswith("landed"), window=window,
-                                          hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv, views=views)
+                                          hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv, views=views,
+                                          rec=hrec)
             cr["classes"][k]["label"] = ("real-view+budget" if real else "declared-budget") + (
                 " / INFO subset" if k.endswith("INFO") else "")
         res["corners"][c] = cr
@@ -826,6 +930,21 @@ def main(argv=None):
     lf = res["corners"].get("FF", {}).get("classes", {}).get("landed", {}).get("plan_landing", {})
     gate["landed"] = dict(tt_setup_margin_ps=lt.get("setup_margin_ps"), ff_hold_margin_ps=lf.get("hold_margin_ps"),
                           verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
+    if a.hold_buffers != "none" and "TT" in hbrec and "FF" in hbrec:
+        hb = {}
+        for k in ("intra", "seam", "seam_nearest_INFO"):
+            if k in hbrec["TT"] and k in hbrec["FF"]:
+                hb[k] = hold_buffer_model(hbrec["TT"][k], hbrec["FF"][k],
+                                          bits=hbbits if k.startswith("seam") else None)
+        for k in ("intra", "seam"):
+            if k in hb:
+                gate[k]["hb4"] = dict(tt_setup_ps=hb[k]["all"].get("tt_setup_after_ps"),
+                                      ff_hold_ps=hb[k]["all"].get("ff_hold_after_ps"),
+                                      real_tt_setup_ps=hb[k]["real_view"].get("tt_setup_after_ps"),
+                                      real_ff_hold_ps=hb[k]["real_view"].get("ff_hold_after_ps"),
+                                      setup_neg_pairs=hb[k]["all"].get("setup_neg_pairs_after"),
+                                      pairs_needing_hb=hb[k]["pairs_needing_hb"])
+        res["hb4"] = hb
     res["summary"] = dict(gate, status="UNCHECKED (NUMBER-CHECK pending)",
                           label=res["block_model"]["label"] if real else "declared-budget (no QC kit)")
     if real:

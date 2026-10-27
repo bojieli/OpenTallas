@@ -202,3 +202,35 @@ def test_mesh_signoff_rereference_and_unc(tmp_path):
                   early_ps=v["abs_early_ps"] if "abs_early_ps" in v else v["early_ps"], cppr_node="h") for k, v in taps.items()}
     U2, rec2 = R.mesh_signoff(tmp_path, t2, {"cppr_node_range_ps": {}}, "TT", tmp_path / "so.json", "sim")
     assert rec2["taps_on_mesh"] == 3 and t2["c"]["cppr_node"] == "m" and t2["c"]["late_ps"] == 4610.0 + 150.0
+
+
+def test_default_aocv_table_is_approved_021():
+    """CLOCK-KV-R18: the default clock AOCV table must be the approved 0.21 %/mm table; fails on the 0.42 draft."""
+    import clk_aocv as CA
+    from pathlib import Path
+    here = Path(R.__file__).resolve().parent
+    T = CA.load(here / R.APPROVED_AOCV_TABLE)
+    g = T["systematic"]["g_per_mm"]
+    assert abs(g - 0.0021) < 1e-12, f"default AOCV table g={g} is not the approved 0.21 %/mm (0.004163 = DRAFT)"
+    assert R.APPROVED_G_PER_MM == g and not T["status"].startswith("DRAFT")
+    # the table the tool actually loads when --clock-aocv-table is omitted: pin it via the resolved default
+    t, meta = _ocv_taps()
+    f_def = R.clock_ocv_fn("table", "shared", meta, t, 250.0)
+    f_021 = R.clock_ocv_fn("table", "shared", meta, t, 250.0, table_path=here / R.APPROVED_AOCV_TABLE)
+    f_dft = R.clock_ocv_fn("table", "shared", meta, t, 250.0, table_path=here / "clk_aocv_table.json")
+    assert f_def("a", "b", "hold") == f_021("a", "b", "hold")
+    assert f_def("a", "b", "hold") != f_dft("a", "b", "hold")
+
+
+def test_hold_buffer_model_hb4():
+    """CLOCK-KV-R18 HB4 model: k = ceil(-hold / 44.6), hold += k 44.6, setup -= k 83.0; cells from bits."""
+    tt = {("a", "b", "p"): (300.0, 0, True, False), ("c", "d", "q"): (100.0, 0, False, False),
+          ("e", "f", "r"): (50.0, 0, False, False)}
+    ff = {("a", "b", "p"): (0, -100.0, True, False), ("c", "d", "q"): (0, -10.0, False, False),
+          ("e", "f", "r"): (0, 5.0, False, False)}
+    r = R.hold_buffer_model(tt, ff, bits={("a", "b"): 4, ("c", "d"): 2})
+    assert r["cells_per_pair_hist"] == {0: 1, 1: 1, 3: 1} and r["pairs_needing_hb"] == 2
+    assert r["hb4_cells"] == 3 * 4 + 1 * 2 and r["bits_needing_hb"] == 6
+    assert r["all"]["ff_hold_after_ps"] == round(min(-100 + 3 * 44.6, -10 + 44.6, 5.0), 2)
+    assert r["all"]["tt_setup_after_ps"] == round(min(300 - 3 * 83.0, 100 - 83.0, 50.0), 2)
+    assert r["real_view"]["pairs"] == 1 and r["real_view"]["tt_setup_after_ps"] == round(300 - 249.0, 2)

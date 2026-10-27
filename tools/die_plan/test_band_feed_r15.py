@@ -128,3 +128,22 @@ def test_read_tree_band_root_lines(tmp_path):
     f.write_text("D ckm_d_0_0_0 10 9 30\nB ckm_br_0 11 10 31\nN ckm_n0 1 1 20\n")
     D, N = CM.read_tree(f)
     assert D["ckm_br_0"] == (11.0, 10.0, 31.0) and "ckm_br_0" not in N and "ckm_n0" in N
+
+
+def test_band_feed_strap_equal_stage_mesh_load():
+    """CLOCK-KV-R18 band_feed strap: band stubs are mesh loads on the continuous M9 strap; no band cell, no band net,
+    no mesh_in, same stage count as a mesh tap; foot reach to the edge leaf driver is checked against hop_max."""
+    _, rows, cells, nets, out = _fixture(feed="strap")
+    assert out["band_roots"] == [] and len(out["band_strap"]) == 1
+    assert not any(c["kind"] in ("broot", "bnode", "bleaf") for c in cells.values())
+    assert all("mesh_in" not in t and t["band_feed"] == "strap" and t["band_driver"] == "0_2" for t in rows)
+    assert [t["band_reach_um"] for t in rows] == [60.0, 100.0] and out["unplaced"] == []
+    assert out["meta"]["band_trees"]["cells"] == 0 and out["meta"]["band_trees"]["stages_below_leaf_node"] == 3
+    assert nets[0]["loads"] == ["ckm_d_0_2_0", "ckm_d_0_2_1"]          # tree net untouched
+    # reach beyond hop_max = STRUCTURAL
+    BT = CM.band_plan([0.0, 100.0, 200.0], [100.0], [(100.0, 260.0), (100.0, 300.0)], hop_max=600.0)
+    o2 = dict(meta={}, pushdown=[], unplaced=[], drivers={"0_2": dict(site=[100.0, 200.0], cells=[])})
+    r2 = [dict(port=f"t{k}", stub=f"s{k}", foot=[100.0, y], xy=[100.0, y], band_tree=BT["taps"][k]["tree"])
+          for k, y in enumerate((260.0, 300.0))]
+    CM.band_trees(BT, r2, {}, [], Box(), [100.0], [0.0, 100.0, 200.0], None, o2, 80.0, feed="strap")
+    assert o2["unplaced"] and "STRUCTURAL" in o2["unplaced"][0][1]
