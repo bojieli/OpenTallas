@@ -10,10 +10,10 @@ set ot_h_fixed {
  {ot_ms_Q1_nd BUFx24_ASAP7_75t_R 43.200 51.840}
  {ot_ms_Q2_nd BUFx24_ASAP7_75t_R 99.360 12.960}
  {ot_ms_Q3_nd BUFx24_ASAP7_75t_R 203.040 47.520}
- {ot_ms_entry1 BUFx16f_ASAP7_75t_R 122.900 169.000}
- {ot_ms_entry2 BUFx16f_ASAP7_75t_R 124.200 169.000}
- {ot_ms_entry3 BUFx16f_ASAP7_75t_R 125.500 169.000}
- {ot_ms_entry4 BUFx16f_ASAP7_75t_R 126.800 169.000}
+ {ot_ms_entry1 BUFx16f_ASAP7_75t_R 127.000 167.920}
+ {ot_ms_entry2 BUFx16f_ASAP7_75t_R 127.000 168.460}
+ {ot_ms_entry3 BUFx16f_ASAP7_75t_R 127.000 169.000}
+ {ot_ms_entry4 BUFx16f_ASAP7_75t_R 127.000 169.540}
 }
 set ot_ms_tree {
  {M0 root 75.600 175.220 BUFx8_ASAP7_75t_R}

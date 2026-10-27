@@ -7,11 +7,11 @@
 #     one BUFx24 per leaf island) are created FIRM at the plan coordinates of OT_MSCTS_SPEC (ot_h_fixed); the CTS build
 #     (mscts_h.tcl) connects them.  Placement flows around FIRM cells; the M1/M2 follow-pins and PG run through.
 source $::env(OT_MSCTS_SPEC)
-set ot_b [ord::get_db_block]; set ot_u [[ord::get_db_tech] getDbUnitsPerMicron]
-set ot_core [$ot_b getCoreArea]
-set ot_row0 [lindex [$ot_b getRows] 0]; set ot_site [$ot_row0 getSite]
-set ot_sw [$ot_site getWidth]; set ot_rh [$ot_site getHeight]
-set ot_taken {}
+set ::ot_b [ord::get_db_block]; set ::ot_u [[ord::get_db_tech] getDbUnitsPerMicron]
+set ::ot_core [$::ot_b getCoreArea]
+set ::ot_row0 [lindex [$::ot_b getRows] 0]; set ::ot_site [$::ot_row0 getSite]
+set ::ot_sw [$::ot_site getWidth]; set ::ot_rh [$::ot_site getHeight]
+set ::ot_taken {}
 proc ot_pd_overlap {x0 y0 x1 y1} {
   foreach r $::ot_taken { lassign $r a0 b0 a1 b1; if {$x0 < $a1 && $x1 > $a0 && $y0 < $b1 && $y1 > $b0} { return 1 } }
   foreach i [$::ot_b getInsts] {
@@ -37,7 +37,7 @@ proc ot_pd_fixed {name master x y} {
       foreach s {1 -1} {
         set xx [expr {$xd0 + $s * $k * $::ot_sw}]
         if {![ot_pd_overlap $xx $yy [expr {$xx + $w}] [expr {$yy + $h}]]} {
-          $i setOrient [ot_pd_row_orient $yy]; $i setLocation $xx $yy; $i setPlacementStatus FIRM; $i setDoNotTouch 1
+          $i setOrient [ot_pd_row_orient $yy]; $i setLocation $xx $yy; $i setPlacementStatus FIRM
           lappend ::ot_taken [list $xx $yy [expr {$xx + $w}] [expr {$yy + $h}]]
           return $i
         }
@@ -50,7 +50,7 @@ proc ot_pd_port {name dir x y} {
   set bt [$::ot_b findBTerm $name]
   if {$bt eq "NULL"} {
     set n [$::ot_b findNet $name]; if {$n eq "NULL"} { set n [odb::dbNet_create $::ot_b $name] }
-    set bt [odb::dbBTerm_create $n $name]; $bt setIoType $dir; $n setDoNotTouch 1
+    set bt [odb::dbBTerm_create $n $name]; $bt setIoType $dir
   }
   place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.024 0.384}
   return [$bt getNet]
@@ -71,5 +71,6 @@ $ni setSigType CLOCK; $no setSigType CLOCK
 set ri [ot_pd_port ft_rst_i INPUT $ot_fx0 [expr {$ot_py - 2.16}]]; set ro [ot_pd_port ft_rst_o OUTPUT $ot_fx1 [expr {$ot_py - 2.16}]]
 set rr [ot_pd_fixed ot_isl_rstft BUFx4f_ASAP7_75t_R $ot_px [expr {$ot_py - 2.16}]]
 foreach it [$rr getITerms] { set mt [$it getMTerm]; if {[$mt getSigType] in {POWER GROUND}} continue; if {[$mt getIoType] eq "INPUT"} { $it connect $ri } else { $it connect $ro } }
+$ci setDoNotTouch 1; $rr setDoNotTouch 1; foreach n {ft_ck_i ft_ck_o ft_rst_i ft_rst_o} { [$::ot_b findNet $n] setDoNotTouch 1 }
 puts [format "OT_PUSHDOWN ck M5 interior (%.3f, %.3f); %d core H-tree drivers FIRM at plan coords; die ft: ft_ck_i->ot_isl_ckft->ft_ck_o, ft_rst_i->ot_isl_rstft->ft_rst_o (FIRM, dont_touch); NO blockage / NO OBS" $ot_px $ot_py [llength $ot_h_fixed]]
-foreach f $ot_h_fixed { set i [$ot_b findInst [lindex $f 0]]; set l [$i getLocation]; puts [format "OT_PUSHDOWN fixed %s %s at (%.3f, %.3f)" [lindex $f 0] [lindex $f 1] [expr {[lindex $l 0]/double($ot_u)}] [expr {[lindex $l 1]/double($ot_u)}]] }
+foreach f $ot_h_fixed { set i [$::ot_b findInst [lindex $f 0]]; set l [$i getLocation]; puts [format "OT_PUSHDOWN fixed %s %s at (%.3f, %.3f)" [lindex $f 0] [lindex $f 1] [expr {[lindex $l 0]/double($::ot_u)}] [expr {[lindex $l 1]/double($::ot_u)}]] }
