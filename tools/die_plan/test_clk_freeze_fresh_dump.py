@@ -12,7 +12,7 @@ class FreshDump(unittest.TestCase):
         t=tempfile.TemporaryDirectory();self.addCleanup(t.cleanup);d=Path(t.name)
         b=d/'run/results/asap7/x/base';b.mkdir(parents=True)
         (b/'6_final.odb').write_text('fixture')
-        table='NET\tclkA\tCLOCK\t3\t64\t0:M3 4:100 4:200\nPIN\tclkA\tbuf/Y ff/CLK\nINST\tbuf\tBUFx4\t10\t20\tR0\tLOCKED\n'
+        table='#CLKDUMP tag fixture nets 1 block top\nNET\tclkA\tCLOCK\t3\t64\t0:M3 4:100 4:200\nPIN\tclkA\tbuf/Y ff/CLK\nINST\tbuf\tBUFx4\t10\t20\tR0\tLOCKED\n'
         for n in ['clk_freeze_pre.tsv','clk_freeze_post.tsv']:(b/n).write_text(table)
         (d/'fresh.tsv').write_text(table);(d/'clk_geom_diff.json').write_text('{"verdict":"PASS","stale":true}')
         for n in ['clk_freeze.tcl','clk_dump_db.tcl','clk_geom_diff.py']:shutil.copyfile(HERE/n,d/n)
