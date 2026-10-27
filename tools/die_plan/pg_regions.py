@@ -91,6 +91,36 @@ def plan_regions(die, grid=None):
     return out
 
 
+def macro_region_grids_tcl(die, part_rects, pin_layer="M7", core_net="VDD"):
+    """OPT-IN (PDN-0233 fix, KV-PDN-M78 10-27): per-region instance grids for a plan with die.pg.domains.
+
+    pdn_tcl(die) puts EVERY die stripe in a region grid (ot_pg_k); the CORE domain then owns no die area and no
+    stripes, so a '-voltage_domains {Core} -default' macro grid finds no M8 to connect the partition M7 PG pins to
+    and pdngen fails with PDN-0232 on every instance + PDN-0233.  Here each partition joins the grid of the CORE-net
+    region (power net == core_net) that holds the largest share of its outline; add_pdn_connect pin_layer -> the
+    region's first grid layer.  part_rects: {inst: (x0, y0, x1, y1) um}.  -> (tcl lines, {region: [inst]})."""
+    regs = [r for r in plan_regions(die) if r[2][0] == core_net and r[4]]
+    if not regs:
+        raise ValueError(f"no {core_net} PG region with a grid")
+
+    def area(a, b):
+        return max(0.0, min(a[2], b[2]) - max(a[0], b[0])) * max(0.0, min(a[3], b[3]) - max(a[1], b[1]))
+    owner = {}
+    for inst in sorted(part_rects):
+        best = max(regs, key=lambda r: area(part_rects[inst], [x / DBU for x in r[1]]))
+        if area(part_rects[inst], [x / DBU for x in best[1]]) <= 0:
+            raise ValueError(f"{inst}: outline overlaps no {core_net} PG region")
+        owner.setdefault(best[0], []).append(inst)
+    lines = []
+    for name, _rect, _nets, _specs, layers in regs:
+        if name not in owner:
+            continue
+        g = "{parts_" + name + "}"
+        lines += [f"define_pdn_grid -name {g} -voltage_domains {{{name}}} -macro -instances {{{' '.join(owner[name])}}} "
+                  "-halo {0 0 0 0}", f"add_pdn_connect -grid {g} -layers {{{pin_layer} {layers[0]}}}"]
+    return lines, owner
+
+
 def stripe_tcl(grid_name, spec):
     """add_pdn_stripe for one row_spec (offset from the region / core lower edge, exact dbu, explicit parity)."""
     typ = 'GROUND' if spec['start'] == 'VSS' else 'POWER'

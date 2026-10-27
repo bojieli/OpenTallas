@@ -1056,7 +1056,7 @@ def psm_tcl(P, lefs, power, bumps):
     return "\n".join(t) + "\n"
 
 
-def psm_pdn_tcl(P):
+def psm_pdn_tcl(P, region_macro_grids=False):
     """die-trial PDN from the plan's PG rows (ONE PDN RULE, COORD 10-26 13:13): explicit offset + parity from the die
     lattice (pg_regions.row_spec); a plan with die.pg.domains (PHY windows) builds its VDDPHY regions exactly as
     pg_regions.pdn_tcl (PG first = real view), so the die-trial kit, the assembly and the die_infra model agree."""
@@ -1078,6 +1078,11 @@ def psm_pdn_tcl(P):
         for a, b in zip(ls, ls[1:]):
             lines.append(f"add_pdn_connect -grid {{top}} -layers {{{a} {b}}}")
         dom = "CORE"
+    if region_macro_grids and dom == "Core":
+        # OPT-IN (--psm-region-macro-grids): the Core domain owns no stripes once every die stripe sits in a region
+        # grid, so the default Core macro grid fails PDN-0233; bind each partition to its own CORE-VDD region grid.
+        lines += pg_regions.macro_region_grids_tcl(die, {n: P.rect(n) for n in P.parts})[0]
+        return "\n".join(lines) + "\n"
     lines += [f"define_pdn_grid -name {{parts}} -voltage_domains {{{dom}}} -macro -orient {{R0 R180 MX MY}} "
               "-halo {0 0 0 0} -default", f"add_pdn_connect -grid {{parts}} -layers {{M7 {g[0]['layer']}}}"]
     return "\n".join(lines) + "\n"
@@ -1327,7 +1332,8 @@ exit $rc
 
 
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
-              island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None):
+              island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
+              psm_region_macro_grids=False):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1434,7 +1440,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     power = part_power(P, plan_dir, density)
     pv = [f"module {sv(P.name)}_psm ();"] + [f"  {smod[p['type']]} {sv(n)} ();" for n, p in sorted(P.parts.items())] + ["endmodule"]
     (out / "psm" / "psm.v").write_text("\n".join(pv) + "\n")
-    (out / "psm" / "pdn.tcl").write_text(psm_pdn_tcl(P))
+    (out / "psm" / "pdn.tcl").write_text(psm_pdn_tcl(P, region_macro_grids=psm_region_macro_grids))
     bumps = bump_grid(P, io)
     (out / "psm" / "bumps.tcl").write_text(bumps_tcl(P, bumps))
     (out / "psm" / "power.tcl").write_text("\n".join(f"set_pdnsim_inst_power -inst {sv(n)} -power {w:.6f}"
@@ -1445,6 +1451,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["psm"] = dict(density_w_mm2=density, total_w=round(sum(power.values()), 2), bumps=len(bumps),
                        bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), bump_pitch_um=150.0,
                        io_windows=len(io), pg=P.die.get("pg", {}).get("grid"))
+    if psm_region_macro_grids:
+        meta["psm"]["region_macro_grids"] = True
     (out / "run_psm.sh").write_text(run_sh("psm", 256, 16, "/usr/bin/time -v openroad -no_init -threads 16 -exit "
                                                          "/work/psm/psm.tcl > /work/psm/psm.log 2>&1"))
     # sta stand-ins
@@ -1953,6 +1961,9 @@ def main(argv=None):
                    "mesh.json (derived trunk sites): open plan-computed island windows (no M1-M3 OBS, M7 PG cut) in "
                    "every partition abstract, identical per type; island_windows.json lists them")
     k.add_argument("--island-margin-um", type=float, default=ISLAND_MARGIN_UM)
+    k.add_argument("--psm-region-macro-grids", action="store_true",
+                   help="KV-PDN-M78 opt-in (PDN-0233 fix): with die.pg.domains, connect each partition's M7 PG "
+                        "to the M8 of its own CORE-VDD region grid (the Core domain owns no stripes)")
     r = sub.add_parser("report")
     r.add_argument("dir")
     r.add_argument("--plan")
@@ -2015,7 +2026,8 @@ def main(argv=None):
     if a.cmd == "kit":
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
-                      site_slide=a.tree_site_slide, regions=a.region_trees)
+                      site_slide=a.tree_site_slide, regions=a.region_trees,
+                      psm_region_macro_grids=a.psm_region_macro_grids)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
