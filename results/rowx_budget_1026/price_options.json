@@ -1,0 +1,208 @@
+{
+ "floor": "OWNER 10-15: S81 MTP > 3,000 tok/s",
+ "options": [
+  {
+   "option": "ledger now (bench pair format, 476 rows x 8)",
+   "ingress_q_cycles": 3809,
+   "export_entry_cycles": 0,
+   "ar": {
+    "tok_s": 1259.6,
+    "loss_pct": 12.996,
+    "delta_tok_s_vs_ledger": 0.0,
+    "delta_loss_pp_vs_ledger": 0.0
+   },
+   "mtp": {
+    "tok_s": 3655.3,
+    "loss_pct": 13.758,
+    "delta_tok_s_vs_ledger": 0.0,
+    "delta_loss_pp_vs_ledger": 0.0
+   },
+   "ar+export": {
+    "tok_s": 1259.6,
+    "loss_pct": 12.996,
+    "delta_tok_s_vs_ledger": 0.0,
+    "delta_loss_pp_vs_ledger": 0.0
+   },
+   "mtp+export": {
+    "tok_s": 3655.3,
+    "loss_pct": 13.758,
+    "delta_tok_s_vs_ledger": 0.0,
+    "delta_loss_pp_vs_ledger": 0.0
+   }
+  },
+  {
+   "option": "data-exact (476 x 4 + 1; needs per-token schedule)",
+   "ingress_q_cycles": 1905,
+   "export_entry_cycles": 0,
+   "ar": {
+    "tok_s": 1280.1,
+    "loss_pct": 11.583,
+    "delta_tok_s_vs_ledger": 20.5,
+    "delta_loss_pp_vs_ledger": -1.413
+   },
+   "mtp": {
+    "tok_s": 3722.7,
+    "loss_pct": 12.166,
+    "delta_tok_s_vs_ledger": 67.4,
+    "delta_loss_pp_vs_ledger": -1.592
+   },
+   "ar+export": {
+    "tok_s": 1280.1,
+    "loss_pct": 11.583,
+    "delta_tok_s_vs_ledger": 20.5,
+    "delta_loss_pp_vs_ledger": -1.413
+   },
+   "mtp+export": {
+    "tok_s": 3722.7,
+    "loss_pct": 12.166,
+    "delta_tok_s_vs_ledger": 67.4,
+    "delta_loss_pp_vs_ledger": -1.592
+   }
+  },
+  {
+   "option": "B=40, 1 pass, NXW=20",
+   "ingress_q_cycles": 2401,
+   "export_entry_cycles": 160,
+   "ar": {
+    "tok_s": 1274.7,
+    "loss_pct": 11.956,
+    "delta_tok_s_vs_ledger": 15.1,
+    "delta_loss_pp_vs_ledger": -1.04
+   },
+   "mtp": {
+    "tok_s": 3704.9,
+    "loss_pct": 12.586,
+    "delta_tok_s_vs_ledger": 49.6,
+    "delta_loss_pp_vs_ledger": -1.172
+   },
+   "ar+export": {
+    "tok_s": 1272.9,
+    "loss_pct": 12.075,
+    "delta_tok_s_vs_ledger": 13.3,
+    "delta_loss_pp_vs_ledger": -0.921
+   },
+   "mtp+export": {
+    "tok_s": 3699.2,
+    "loss_pct": 12.721,
+    "delta_tok_s_vs_ledger": 43.9,
+    "delta_loss_pp_vs_ledger": -1.037
+   }
+  },
+  {
+   "option": "B=80, 1 pass, NXW=40",
+   "ingress_q_cycles": 4801,
+   "export_entry_cycles": 320,
+   "ar": {
+    "tok_s": 1249.2,
+    "loss_pct": 13.715,
+    "delta_tok_s_vs_ledger": -10.4,
+    "delta_loss_pp_vs_ledger": 0.719
+   },
+   "mtp": {
+    "tok_s": 3621.1,
+    "loss_pct": 14.565,
+    "delta_tok_s_vs_ledger": -34.2,
+    "delta_loss_pp_vs_ledger": 0.807
+   },
+   "ar+export": {
+    "tok_s": 1245.9,
+    "loss_pct": 13.945,
+    "delta_tok_s_vs_ledger": -13.7,
+    "delta_loss_pp_vs_ledger": 0.949
+   },
+   "mtp+export": {
+    "tok_s": 3610.2,
+    "loss_pct": 14.822,
+    "delta_tok_s_vs_ledger": -45.1,
+    "delta_loss_pp_vs_ledger": 1.064
+   }
+  },
+  {
+   "option": "B=40 x 2 passes (budget 80), NXW=20+20",
+   "ingress_q_cycles": 4802,
+   "export_entry_cycles": 320,
+   "ar": {
+    "tok_s": 1249.2,
+    "loss_pct": 13.716,
+    "delta_tok_s_vs_ledger": -10.4,
+    "delta_loss_pp_vs_ledger": 0.72
+   },
+   "mtp": {
+    "tok_s": 3621.0,
+    "loss_pct": 14.566,
+    "delta_tok_s_vs_ledger": -34.3,
+    "delta_loss_pp_vs_ledger": 0.808
+   },
+   "ar+export": {
+    "tok_s": 1245.8,
+    "loss_pct": 13.945,
+    "delta_tok_s_vs_ledger": -13.8,
+    "delta_loss_pp_vs_ledger": 0.949
+   },
+   "mtp+export": {
+    "tok_s": 3610.1,
+    "loss_pct": 14.823,
+    "delta_tok_s_vs_ledger": -45.2,
+    "delta_loss_pp_vs_ledger": 1.065
+   }
+  },
+  {
+   "option": "B=120, 2 passes NXW=40+20",
+   "ingress_q_cycles": 7202,
+   "export_entry_cycles": 480,
+   "ar": {
+    "tok_s": 1224.7,
+    "loss_pct": 15.407,
+    "delta_tok_s_vs_ledger": -34.9,
+    "delta_loss_pp_vs_ledger": 2.411
+   },
+   "mtp": {
+    "tok_s": 3540.9,
+    "loss_pct": 16.457,
+    "delta_tok_s_vs_ledger": -114.4,
+    "delta_loss_pp_vs_ledger": 2.699
+   },
+   "ar+export": {
+    "tok_s": 1219.9,
+    "loss_pct": 15.737,
+    "delta_tok_s_vs_ledger": -39.7,
+    "delta_loss_pp_vs_ledger": 2.741
+   },
+   "mtp+export": {
+    "tok_s": 3525.3,
+    "loss_pct": 16.825,
+    "delta_tok_s_vs_ledger": -130.0,
+    "delta_loss_pp_vs_ledger": 3.067
+   }
+  },
+  {
+   "option": "B=160, 2 passes NXW=40+40 (> XN=128: list faults first)",
+   "ingress_q_cycles": 9602,
+   "export_entry_cycles": 640,
+   "ar": {
+    "tok_s": 1201.2,
+    "loss_pct": 17.032,
+    "delta_tok_s_vs_ledger": -58.4,
+    "delta_loss_pp_vs_ledger": 4.036
+   },
+   "mtp": {
+    "tok_s": 3464.2,
+    "loss_pct": 18.266,
+    "delta_tok_s_vs_ledger": -191.1,
+    "delta_loss_pp_vs_ledger": 4.508
+   },
+   "ar+export": {
+    "tok_s": 1195.0,
+    "loss_pct": 17.455,
+    "delta_tok_s_vs_ledger": -64.6,
+    "delta_loss_pp_vs_ledger": 4.459
+   },
+   "mtp+export": {
+    "tok_s": 3444.3,
+    "loss_pct": 18.735,
+    "delta_tok_s_vs_ledger": -211.0,
+    "delta_loss_pp_vs_ledger": 4.977
+   }
+  }
+ ]
+}
