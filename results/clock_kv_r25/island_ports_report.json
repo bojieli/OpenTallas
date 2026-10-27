@@ -1,0 +1,364 @@
+{
+ "tool": "tools/die_plan/kv_r25/kv_island_ports.py",
+ "plan_in": "pd25/hm_r25pre.json",
+ "plan_in_sha256": "238aad615ce48525f4560984537647d83f88620329e3499abce03c855a6e1fb3",
+ "modules": {
+  "kv3_pv_pair": {
+   "instances": 256,
+   "groups": 2,
+   "ports": [
+    {
+     "k": 0,
+     "role": "tree_node",
+     "cells": 1,
+     "masters": [
+      "BUFx24_ASAP7_75t_R"
+     ],
+     "rect_um": [
+      268.11,
+      43.2,
+      269.73,
+      43.47
+     ],
+     "arc": [
+      "ft_ck_i_0",
+      "ft_ck_o_0"
+     ],
+     "pins": [
+      {
+       "name": "ft_ck_i_0",
+       "layer": "M5",
+       "x": 267.0,
+       "y": 43.335
+      },
+      {
+       "name": "ft_ck_o_0",
+       "layer": "M5",
+       "x": 270.84,
+       "y": 43.335
+      }
+     ]
+    },
+    {
+     "k": 1,
+     "role": "mesh_driver",
+     "cells": 2,
+     "masters": [
+      "BUFx24_ASAP7_75t_R"
+     ],
+     "rect_um": [
+      107.46,
+      138.24,
+      110.7,
+      138.51
+     ],
+     "arc": [
+      "ft_ck_i_1",
+      "ft_ck_o_1"
+     ],
+     "pins": [
+      {
+       "name": "ft_ck_i_1",
+       "layer": "M5",
+       "x": 106.344,
+       "y": 138.375
+      },
+      {
+       "name": "ft_ck_o_1",
+       "layer": "M5",
+       "x": 111.816,
+       "y": 138.375
+      }
+     ]
+    }
+   ],
+   "pins_files": [
+    "cores/kv3_pv_pair_pins_fMX_r25.json",
+    "cores/kv3_pv_pair_pins_r25.json"
+   ]
+  },
+  "qkd_ectlk_q0": {
+   "instances": 32,
+   "groups": 1,
+   "ports": [
+    {
+     "k": 0,
+     "role": "tree_node",
+     "cells": 1,
+     "masters": [
+      "BUFx24_ASAP7_75t_R"
+     ],
+     "rect_um": [
+      102.168,
+      8.64,
+      103.788,
+      8.91
+     ],
+     "arc": [
+      "ft_ck_i_0",
+      "ft_ck_o_0"
+     ],
+     "pins": [
+      {
+       "name": "ft_ck_i_0",
+       "layer": "M5",
+       "x": 101.064,
+       "y": 8.775
+      },
+      {
+       "name": "ft_ck_o_0",
+       "layer": "M5",
+       "x": 104.904,
+       "y": 8.775
+      }
+     ]
+    }
+   ],
+   "pins_files": [
+    "cores/qkd_ectlk_q0_pins_r25.json"
+   ]
+  },
+  "qkd_ectlk_q2": {
+   "instances": 32,
+   "groups": 1,
+   "ports": [
+    {
+     "k": 0,
+     "role": "tree_node",
+     "cells": 1,
+     "masters": [
+      "BUFx24_ASAP7_75t_R"
+     ],
+     "rect_um": [
+      102.168,
+      8.64,
+      103.788,
+      8.91
+     ],
+     "arc": [
+      "ft_ck_i_0",
+      "ft_ck_o_0"
+     ],
+     "pins": [
+      {
+       "name": "ft_ck_i_0",
+       "layer": "M5",
+       "x": 101.064,
+       "y": 8.775
+      },
+      {
+       "name": "ft_ck_o_0",
+       "layer": "M5",
+       "x": 104.904,
+       "y": 8.775
+      }
+     ]
+    }
+   ],
+   "pins_files": [
+    "cores/qkd_ectlk_q2_pins_r25.json"
+   ]
+  },
+  "qkd_kvs_pc": {
+   "instances": 124,
+   "groups": 2,
+   "ports": [
+    {
+     "k": 0,
+     "role": "mesh_driver",
+     "cells": 2,
+     "masters": [
+      "BUFx24_ASAP7_75t_R"
+     ],
+     "rect_um": [
+      123.39,
+      86.4,
+      126.63,
+      86.67
+     ],
+     "arc": [
+      "ft_ck_i_0",
+      "ft_ck_o_0"
+     ],
+     "pins": [
+      {
+       "name": "ft_ck_i_0",
+       "layer": "M5",
+       "x": 122.28,
+       "y": 86.535
+      },
+      {
+       "name": "ft_ck_o_0",
+       "layer": "M5",
+       "x": 127.944,
+       "y": 86.535
+      }
+     ]
+    },
+    {
+     "k": 1,
+     "role": "mesh_driver",
+     "cells": 2,
+     "masters": [
+      "BUFx24_ASAP7_75t_R"
+     ],
+     "rect_um": [
+      123.39,
+      276.48,
+      126.63,
+      276.75
+     ],
+     "arc": [
+      "ft_ck_i_1",
+      "ft_ck_o_1"
+     ],
+     "pins": [
+      {
+       "name": "ft_ck_i_1",
+       "layer": "M5",
+       "x": 122.28,
+       "y": 276.615
+      },
+      {
+       "name": "ft_ck_o_1",
+       "layer": "M5",
+       "x": 127.944,
+       "y": 276.615
+      }
+     ]
+    }
+   ],
+   "pins_files": [
+    "cores/qkd_kvs_pc_pins_fMX_r25.json",
+    "cores/qkd_kvs_pc_pins_r25.json"
+   ]
+  },
+  "qkd_kvs_pc_h_head_p": {
+   "instances": 4,
+   "groups": 2,
+   "ports": [
+    {
+     "k": 0,
+     "role": "mesh_driver",
+     "cells": 2,
+     "masters": [
+      "BUFx24_ASAP7_75t_R"
+     ],
+     "rect_um": [
+      123.39,
+      86.4,
+      126.63,
+      86.67
+     ],
+     "arc": [
+      "ft_ck_i_0",
+      "ft_ck_o_0"
+     ],
+     "pins": [
+      {
+       "name": "ft_ck_i_0",
+       "layer": "M5",
+       "x": 122.28,
+       "y": 86.535
+      },
+      {
+       "name": "ft_ck_o_0",
+       "layer": "M5",
+       "x": 127.944,
+       "y": 86.535
+      }
+     ]
+    },
+    {
+     "k": 1,
+     "role": "mesh_driver",
+     "cells": 2,
+     "masters": [
+      "BUFx24_ASAP7_75t_R"
+     ],
+     "rect_um": [
+      123.39,
+      276.48,
+      126.63,
+      276.75
+     ],
+     "arc": [
+      "ft_ck_i_1",
+      "ft_ck_o_1"
+     ],
+     "pins": [
+      {
+       "name": "ft_ck_i_1",
+       "layer": "M5",
+       "x": 122.28,
+       "y": 276.615
+      },
+      {
+       "name": "ft_ck_o_1",
+       "layer": "M5",
+       "x": 127.944,
+       "y": 276.615
+      }
+     ]
+    }
+   ],
+   "pins_files": [
+    "cores/qkd_kvs_pc_h_head_p_pins_fMY_r25.json"
+   ]
+  }
+ },
+ "files": {
+  "cores/kv3_pv_pair_pins_fMX_r25.json": {
+   "out": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "in_sha256": "574659ac8771cfd88eab6b8376ecf684754f5cd3192f79c4e5c1b67e20dd9ea0",
+   "out_sha256": "574659ac8771cfd88eab6b8376ecf684754f5cd3192f79c4e5c1b67e20dd9ea0",
+   "pins_in": 1652,
+   "pins_out": 1656
+  },
+  "cores/kv3_pv_pair_pins_r25.json": {
+   "out": "cores/kv3_pv_pair_pins_r25.json",
+   "in_sha256": "9a43d4b0f9be5d3e49a7aaacbdb21cfe80e9bef011b8a440687db8f8af61bb81",
+   "out_sha256": "9a43d4b0f9be5d3e49a7aaacbdb21cfe80e9bef011b8a440687db8f8af61bb81",
+   "pins_in": 1652,
+   "pins_out": 1656
+  },
+  "cores/qkd_ectlk_q0_pins_r25.json": {
+   "out": "cores/qkd_ectlk_q0_pins_r25.json",
+   "in_sha256": "4cc0cb61c5a91857e5cd11f3971be789e152e4117dd47c2a9ea53fbed42e93ca",
+   "out_sha256": "4cc0cb61c5a91857e5cd11f3971be789e152e4117dd47c2a9ea53fbed42e93ca",
+   "pins_in": 1476,
+   "pins_out": 1478
+  },
+  "cores/qkd_ectlk_q2_pins_r25.json": {
+   "out": "cores/qkd_ectlk_q2_pins_r25.json",
+   "in_sha256": "c3d54c7a9c7099367cb1e97b5cc89bc5b1668035987e22a2a36565de70c5afaa",
+   "out_sha256": "c3d54c7a9c7099367cb1e97b5cc89bc5b1668035987e22a2a36565de70c5afaa",
+   "pins_in": 1955,
+   "pins_out": 1957
+  },
+  "cores/qkd_kvs_pc_pins_fMX_r25.json": {
+   "out": "cores/qkd_kvs_pc_pins_fMX_r25.json",
+   "in_sha256": "b176028b7cbfd645f21892edd74961f596a9aca132e1f94e4915de4471d0c285",
+   "out_sha256": "b176028b7cbfd645f21892edd74961f596a9aca132e1f94e4915de4471d0c285",
+   "pins_in": 4129,
+   "pins_out": 4133
+  },
+  "cores/qkd_kvs_pc_pins_r25.json": {
+   "out": "cores/qkd_kvs_pc_pins_r25.json",
+   "in_sha256": "1c907138e54dd216c189bc455700e7fd6aef939410731c1328ac144e3af411af",
+   "out_sha256": "1c907138e54dd216c189bc455700e7fd6aef939410731c1328ac144e3af411af",
+   "pins_in": 4129,
+   "pins_out": 4133
+  },
+  "cores/qkd_kvs_pc_h_head_p_pins_fMY_r25.json": {
+   "out": "cores/qkd_kvs_pc_h_head_p_pins_fMY_r25.json",
+   "in_sha256": "38858e504f6955b58de1fa399a311a3cec3b018295dbf247a6cedc5ddb1aaec4",
+   "out_sha256": "38858e504f6955b58de1fa399a311a3cec3b018295dbf247a6cedc5ddb1aaec4",
+   "pins_in": 2987,
+   "pins_out": 2991
+  }
+ },
+ "hard_core_entries_repointed": 284,
+ "plan_out": "pd25/hm_r25.json",
+ "plan_out_sha256": "ea491cd01b6dfba0be60a4aa71e8c283ec6ba046d091050bcdb6d7bd6da6e114"
+}

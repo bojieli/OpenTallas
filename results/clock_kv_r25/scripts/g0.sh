@@ -1,0 +1,2 @@
+cd /srv/opentallas-scratch2/claude/clock-kv-r25-1027; ulimit -v 48000000; export PYTHONPATH=/srv/opentallas-scratch2/claude/clock-kv-r19-1027/in/pylib:/srv/opentallas-scratch2/claude/clock-kv-r25-1027/tools/die_plan
+python3 tools/die_plan/check.py pd25/hm_r25.json --out g0_r25 --cells-evidence /srv/opentallas-scratch2/claude/kv-core-slice-1-1027/pd/hm_cells_evidence.json > g0_r25.log 2>&1; echo g0 rc=$? >> g0.done
