@@ -291,6 +291,8 @@ def read_ft1(path):
         f = ln.split()
         if f and not f[0].startswith("#") and len(f) >= 2 and f[1] == "1":
             out.add(f[0])
+        elif f and f[0] == "pair" and len(f) == 3:     # core kit one-station bus pair (gen_core_kit_qc ft1_pairs)
+            out.add(f"{f[1]}>{f[2]}")
     return out
 
 
@@ -299,6 +301,11 @@ def _ft1_pair(bs, ft1):
     is by plan both the in-face and the out-face register (ELEM-S81 10-24: slice_station types)."""
     if len(bs) != 2:
         return False
+    # declared core bus pair "I>O": bit k of input bus I and bit k of output bus O share the one RTL register
+    sp = [re.match(r"^(.+?)(\[\d+\])?$", b) for b in bs]
+    for a_, b_ in ((sp[0], sp[1]), (sp[1], sp[0])):
+        if f"{a_.group(1)}>{b_.group(1)}" in ft1 and a_.group(2) == b_.group(2):
+            return True
     m = [re.match(r"^(.+)_([io])(\[\d+\])?$", b) for b in bs]
     return (all(m) and m[0].group(1) == m[1].group(1) and m[0].group(1) in ft1 and m[0].group(3) == m[1].group(3)
             and {m[0].group(2), m[1].group(2)} == {"i", "o"})

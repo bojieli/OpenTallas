@@ -123,6 +123,31 @@ def test_one_station_ft_slot_shares_its_register(tmp_path):
     assert face_guard.guard(cross, ft1={"ft0", "ft1"})["verdict"] == "FAIL"
 
 
+NET_PAIR = r"""
+module top(clk, t_d, t_out, t_vd, t_vout);
+  input clk; input [1:0] t_d; output [1:0] t_out; input t_vd; output t_vout;
+  DFFHQNx1_ASAP7_75t_R \t_out[0]$_DFF_P_  (.CLK(clk), .D(t_d[0]), .QN(t_out[0]));
+  DFFHQNx1_ASAP7_75t_R \t_out[1]$_DFF_P_  (.CLK(clk), .D(t_d[1]), .QN(t_out[1]));
+  DFFHQNx1_ASAP7_75t_R \t_vout$_DFF_P_  (.CLK(clk), .D(t_vd), .QN(t_vout));
+endmodule
+"""
+
+
+def test_declared_core_bus_pair_shares_its_register(tmp_path):
+    """gen_core_kit_qc ft1_pairs: `pair I O` lines make bit k of I and bit k of O one register (QC-A0 node TOREG)."""
+    (tmp_path / "ft_stations.txt").write_text("# core kit\npair t_d t_out\npair t_vd t_vout\n")
+    ft1 = face_guard.read_ft1(tmp_path / "ft_stations.txt")
+    assert ft1 == {"t_d>t_out", "t_vd>t_vout"}
+    assert face_guard.guard(NET_PAIR)["fail_counts"] == {"merged": 6}            # undeclared: merged
+    r = face_guard.guard(NET_PAIR, ft1=ft1)
+    assert r["verdict"] == "PASS" and r["ok"] == 6 and r["ft1_stations"] == 3, r
+    assert face_guard.guard(NET_PAIR, ft1={"t_d>t_out"})["fail_counts"] == {"merged": 2}
+    assert face_guard.guard(NET_PAIR, ft1={"t_out>t_d"})["verdict"] == "FAIL"   # direction is part of the pair
+    cross = NET_PAIR.replace(".D(t_d[0]), .QN(t_out[0])", ".D(t_d[1]), .QN(t_out[0])").replace(
+        ".D(t_d[1]), .QN(t_out[1])", ".D(t_d[0]), .QN(t_out[1])")
+    assert face_guard.guard(cross, ft1=ft1)["verdict"] == "FAIL"                  # bit k must pair with bit k
+
+
 def test_portless_type_passes_with_empty_pin_table():
     net = "module top(clk);\n  input clk;\nendmodule\n"
     assert face_guard.guard(net, pins=[])["verdict"] == "PASS"
