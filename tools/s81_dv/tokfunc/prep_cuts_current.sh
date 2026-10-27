@@ -36,8 +36,12 @@ print(' '.join(a))
 PY
 )
 if [ ! -f $O/bind/port_bind.json ]; then
+  # TOK-DS-10 (10-27): the manifest's own files/prefer decide every module, exactly as the compiler and bind.py select
+  # (layer_prog/slice_source.manifest_selection).  The fc30-era --prefer-list frame_bench.f / rs_files.sh +
+  # --ref-tile-prefer were appended AFTER the manifest files, i.e. ranked above them, so main rtl/ copies beat the
+  # selected portfix178 sources: dsdv_bk_sel_vmtx (idx/dsdv_idx_l20s.sv, no tpn_i/tpn_o/tps_o) and dsdv_idx_rg3(+_nq)
+  # (no fault) -> TOK-DS-9's 5 port_not_in_rtl + 560 undriven bits (idxn_tp__bk_sel__s_7{N,S}_LP 552, f_irg_* 8).
   python3 tools/die_port_bind.py $O/die.v --top dv_die --rtl-root rtl $ARGS \
-    --prefer-list tools/s81_dv/frame_bench.f --prefer-list tools/s81_dv/svc_rs/rs_files.sh --ref-tile-prefer \
     --allow-model ot_s81_pma_bm --allow-model ot_s81_hbm3e_dev_bm --out $O/bind/port_bind.json > $O/bind/port_bind.log 2>&1
   echo "PORT_BIND rc $? $(tail -n 1 $O/bind/port_bind.log | cut -c1-300)"
 fi
