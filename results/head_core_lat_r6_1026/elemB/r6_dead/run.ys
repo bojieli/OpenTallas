@@ -1,0 +1,8 @@
+read_verilog -sv -DSYNTHESIS -IelemB_r6/rtl elemB_r6/rtl/ot_dsrom_bmul3.sv elemB_r6/rtl/ot_dsrom_head_elem.sv elemB_r6/rtl/ot_prefix.sv elemB_r6/rtl/ot_rom_4096x274_m8_bb.v elemB_r6/rtl/ot_s81hd_elemB_rb.sv elemB_r6/rtl/ot_s81hd_oreg.sv elemB_r6/rtl/ot_v41_bmul2.sv elemB_r6/rtl/ot_v41_fadd.sv
+hierarchy -check -top ot_s81hd_elemB_cv
+proc
+flatten
+opt -full
+opt_clean -purge
+write_json r6_dead/flat_opt.json
+stat

@@ -1,0 +1,65 @@
+{
+ "checks": {
+  "G1": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G3": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G4": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G5": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G6": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G7": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  }
+ },
+ "info": {
+  "n_nodes": 468,
+  "n_leaves": 512,
+  "leaf_load": [
+   50,
+   51
+  ],
+  "depth": [
+   6
+  ],
+  "macro_leaf_in_halo": [],
+  "note": "macro leaf stage sits on the ROM clock pin (within its halo by design, as QC mscts_h)"
+ },
+ "verdict": "PASS",
+ "argv": [
+  "head_plan_gate.py",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r6-1026/p/br6_444222.tcl",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r6-1026/p/br6_444222.seg.json",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r6-1026/p/br6_444222.geo",
+  "kits/elemA_n50/macros/ot_rom_4096x274_m8.lef",
+  "142.56,142.56",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r6-1026/p/br6_444222.gate.json",
+  "py"
+ ],
+ "sha256": {
+  "/srv/opentallas-scratch2/claude/head-core-lat-r6-1026/p/br6_444222.tcl": "0614d35ed4ca461d42a11454db854ae71010f24bf42681d3e8dc0887ed21676a",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r6-1026/p/br6_444222.seg.json": "33508e7544e37f5df5ffab904cd01c806088b5bdf05fdc8c0f136390203c9ec2",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r6-1026/p/br6_444222.geo": "b2dc584ab422862446aebb0e07c2cdbd87cfd2b92eee733eebdf88fbb15459a9",
+  "kits/elemA_n50/macros/ot_rom_4096x274_m8.lef": "a283603bb491073a454f91dac30fa98687366aa2ef2d493eea6512771d876e6d"
+ },
+ "scope": "PLAN gate, UNCHECKED"
+}

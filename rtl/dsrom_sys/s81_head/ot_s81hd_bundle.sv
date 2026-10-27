@@ -78,8 +78,9 @@ module ot_s81hd_bundle #(
     wire [16:0] nc_row;
     generate if (CV) begin : g_cvb
         ot_s81hd_elemB_cv `OT_S81HD_CVP($sformatf("%sb", INSTANCE)) u_eB (
+            // R6 10-26: row0/b_v/b_d = PROVEN-DEAD inputs of the JOIN-0 B macro (declared in the plan, tied 0 here only
+            // under that declaration); the B macro has no l_v/l_d/done/best_* ports any more (removed: unused).
             .clk(clk), .rst_n(rst_n), .go(go_d), .row0(17'd0), .x(xsb), .b_v(1'b0), .b_d(32'd0), .o_v(bo_v), .o_d(bo_d),
-            .l_v(nc_lv), .l_d(nc_ld), .done(nc_done), .best_row(nc_row), .best_bits(nc_bits), .best_key(nc_key),
             .fault(b_fault));
     end else begin : g_rtlb
         ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .INSTANCE($sformatf("%sb", INSTANCE)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4)) u_b (

@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.dead_inputs.flat.v1",
+ "top": "ot_s81hd_elemB_cv",
+ "method": "yosys.proc.flatten.opt.no_fanout",
+ "opaque": [
+  "ot_rom_4096x274_m8 (blackbox: every input counted as a load)"
+ ],
+ "params": "ot_dsrom_head_elem LV 6 PAD 2 JOIN 0 ROWS 128 CUT 0x1ff SPLIT9 1 IOREG 1 SAFE 1",
+ "ports": {
+  "row0": [
+   [
+    0,
+    16
+   ]
+  ],
+  "b_v": [
+   [
+    0,
+    0
+   ]
+  ],
+  "b_d": [
+   [
+    0,
+    31
+   ]
+  ]
+ },
+ "result": {
+  "row0": {
+   "width": 17,
+   "loaded_bits": 0,
+   "examples": {}
+  },
+  "b_v": {
+   "width": 1,
+   "loaded_bits": 0,
+   "examples": {}
+  },
+  "b_d": {
+   "width": 32,
+   "loaded_bits": 0,
+   "examples": {}
+  }
+ },
+ "remaining_loads": 0,
+ "sources": {
+  "ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+  "ot_dsrom_head_elem.sv": "915f06d0423c66f72210132673040c8db4dfc7967aa4f184f7f232bb45506fef",
+  "ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+  "ot_rom_4096x274_m8_bb.v": "51204e69cef7398a0f30a125d53bef197696a51cb587cf499e1d41845226e669",
+  "ot_s81hd_elemB_rb.sv": "210cd9ee49a3b421ea328813aea54b268f98a3aa392c6a2eaa938cee3fdb4c6b",
+  "ot_s81hd_oreg.sv": "1576a8ed1b9f2eca7676178f822dd904967f99db3044df2a9620b861f2ed2444",
+  "ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+  "ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91"
+ },
+ "verdict": "PASS"
+}

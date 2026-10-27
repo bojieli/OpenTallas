@@ -1,0 +1,28 @@
+{
+ "lane": "HEAD-CORE-LAT-R6", "base": "claude/head-core-lat-r5-1026@d5654df8db", "numbers": "ALL UNCHECKED (NUMBER-CHECK not run)",
+ "model": "uf_phys3 v1 (MODEL-REFIT-3 claude/model-refit3-1026@c46af260b, GRT basis); guard TT 250+-9 / FF 202.5+-10 / window <=14 (COORD 10-26). Runner tools/p3_predict.py = uf_phys3.basis_leaf with uf_phys3_v1.json PMAX/PMIN. Sanity on cal2 (in the fit): pred TT 244.0 w31.9 / FF 187.3 w27.4 vs meas 246.2 w27.6 / 191.2 w23.7",
+ "step1_elemA_n_44442_b1_h": {
+   "uf_phys3_unsized": "TT 243.98 w31.87 / FF 187.25 w27.42 OUT_OF_GUARD (HEAD refit R5 gave 248 w27; cal2 measured w27.6 on the same plan)",
+   "sizer": "intel1 head-core-lat-r5-1026/p/n_44442_b1_h_sz.log (su_branch_size, OLD uf_phys objective, 3 passes, started 17:44): pass0 J 32.37; still running at 18:25",
+   "topology_sweep_uf_phys3": "a6_44442 244.0 w31.9 | a6_444222 265.6 w32.2 | a6_444422 265.1 w31.2 | a6_2244442 244.4 w31.9 | a6_4444x8 225.4 w37.4: window ~31 under every topology -> geometry (S fringe + ROM-pin fringe), not tree shape",
+   "verdict": "NOT BUILT: window 31.9 >> 14 (and > 20 under the R5 HEAD refit); a sizer pass cannot remove ~18 ps. Needs the plan fix (fringe sinks get planned leaves / equal leaf count per island), not a build"
+ },
+ "step2_elemB": {
+   "repin": "26 N-face pins (o_v, o_d[24], fault) re-pinned top-down to the S face (x 196.04-200.84, M5 track grid, 2-track pitch; S faces the A elements u_eA2/u_eA3 below u_eB in hd_tile) - none above the N-band ROMs; tools/r6_kit.py",
+   "kit": "epyc2:/srv/opentallas-scratch2/claude/head-core-lat-r5-1026/elemB_r6 (from elemB_n50; ROMs N band 12.96/146.88,211.68 MY; SYNTH_NETLIST_FILES removed -> real synth of the R6 wrapper)",
+   "build": "ot-run epyc2 unit oth-ubuntu-1970334-1793062807: SDC_LINT/SYNTH/FACE_GUARD (406/406, 0 missing/extra)/PATCH/PLACE rc 0, util 39%, sinks 25,981 (R5 26,146: -115 removed oreg outputs -50 u_bin_jn)",
+   "geo_sha256": "84e5167c0c74caa37720c3bc51dc8eb25e87bdb144afdc686c9315265caca2d1",
+   "plan_sweep_uf_phys3": "br6_44442_b1 233.3 w17.2 / 178.9 w14.5 (means LOW) | br6_444222 255.3 w18.5 / 195.2 w15.4 (means IN band, windows OUT) | br6_4442222 276.5 w16.3 | br6_444222_sec 242.9 w53.9 | x16/x12 leaf cells 231 w18-19",
+   "best": "br6_444222 head_plan_gate G1-G7 PASS; group means N0 255.6 N1 251.4 N2 259.0 N3 255.1 -> unequal L1 legs (WS ~150 um vs NE ~90 um) = most of the window; hot leaves E group x 210-225 y 140-190",
+   "render": "pred/br6_444222.png viewed: no sink / pin register above the ROMs (top sinks y~210 < ROM bottom 211.68); S-face pin regs y 5-15 x 180-230; empty std-cell hole x 85-140 y 95-135",
+   "sizer": "intel1 head-core-lat-r6-1026/p/br6_444222_sz.log (su_branch_size with OT_PHYS_FIT=uf_phys3_v1, 3 passes, started 18:19) -> collect, re-predict with p3_predict.py; build only if window <=14",
+   "geom_req": "filed (GEOM-REVIEW.md): S-face re-pin vs GEOM-REVIEW-7 ROM-gap pin channel; equal L1 legs by geometry"
+ },
+ "step3_elemB_bind": {
+   "inputs": "row0[17]/b_v/b_d[32] = PROVEN-DEAD: flattened yosys proc+flatten+opt no-fanout proof on the kit RTL (ROM blackbox conservative) PASS 0/50 loaded bits (elemB/r6_dead/dead_inputs.json); kept face register u_bin_jn (50 flops, q unused) deleted; face_guard skips the declared dead inputs",
+   "outputs": "l_v/l_d/done/best_row/best_bits/best_key (115 bits) REMOVED from ot_s81hd_elemB_cv (wrapper rb.sv, sim model elem_cv.sv, blackbox elem_cv_bb.v, bundle g_cvb connections): unused at the parent (nc_* wires); element cones dead",
+   "bench": "tools/s81_head/hd_tile_bench.sh CV=1 ALL: BENCH_PASS 4/4 at 8,432 cycles (unchanged), Verilator 5.050, intel1 unit oth-ubuntu-1705253-1793062958",
+   "abstract": "elemB/r6_delta/abstract_delta.json + elemB_pins_r6.json: 458 -> 352 pins (-115 outputs, +9 12.2a1 ft ports ft_ck0/ck1/mesh/rst _i/_o + ft_mstrap_i at the island edge 139.68-144.72, 138.96/146.16); clk enters via ft_mstrap_i",
+   "needs_plan_owner": "(a) die_plan.json hd_tile hard_cores u_eB: outline 277.652 -> 285.12, pins_file -> elemB_pins_r6, ROMs N band; (b) regenerate views/ot_s81hd_elemB_cv LEF+lib from the R6 elemB built abstract (no hand timing on ft ports); (c) record the dead_inputs declaration row0/b_v/b_d for ot_s81hd_elemB_cv in the plan (bind ProvenDead); (d) S81 die bind re-run on the 352-port abstract"
+ }
+}
