@@ -42,3 +42,26 @@ def test_lattice_spec_validation():
         DM.build(None, nx=4, lattice=dict(ys_um=[1.0, 2.0, 3.0], driver_rows=[1, 0]))
     with pytest.raises(ValueError):
         DM.build(None, nx=4, regions=1, lattice=dict(ys_um=[1.0, 2.0, 3.0], driver_rows=[0, 2]))
+
+
+def test_leaf_grid_validation():
+    """CLOCK-KV-R4 lattice leaf_grid: [nx = --nx, pow2 ny_leaf]; replaces driver_rows; no --plan-sites."""
+    ys = [1.0, 2.0, 3.0]
+    with pytest.raises(ValueError):
+        DM.build(None, nx=4, lattice=dict(ys_um=ys, leaf_grid=[4, 6]))
+    with pytest.raises(ValueError):
+        DM.build(None, nx=4, lattice=dict(ys_um=ys, leaf_grid=[8, 8]))
+    with pytest.raises(ValueError):
+        DM.build(None, nx=4, lattice=dict(ys_um=ys, leaf_grid=[4, 8], driver_rows=[0, 1]))
+    with pytest.raises(ValueError):
+        DM.build(None, nx=4, plan_sites={}, lattice=dict(ys_um=ys, leaf_grid=[4, 8]))
+
+
+def test_free_toward_and_poly_point():
+    class K:
+        def hit(self, x, y, m=0.0):
+            return 0 <= x <= 50 and -5 <= y <= 5
+    q, d = DM.free_toward(K(), (40.0, 0.0), 0, -100.0, 100.0)
+    assert q is not None and q[0] < 0 and d > 40          # only toward the parent (x < 40)
+    assert DM.free_toward(K(), (40.0, 0.0), 0, 100.0, 5.0) == (None, None)
+    assert DM.poly_point([(0, 0), (0, 10), (5, 10)], 12) == (2.0, 10.0)
