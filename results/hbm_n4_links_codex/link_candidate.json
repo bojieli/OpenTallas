@@ -13,95 +13,149 @@
     "N4EXT": 1
   },
   "root_all_ports": {
-    "clk": {
-      "direction": "input",
-      "bits": 1
-    },
-    "rst_n": {
-      "direction": "input",
-      "bits": 1
-    },
-    "job_v": {
-      "direction": "input",
-      "bits": 1
-    },
-    "job": {
-      "direction": "input",
-      "bits": 217
-    },
-    "done": {
-      "direction": "output",
-      "bits": 1
-    },
-    "fault": {
-      "direction": "output",
-      "bits": 1
-    },
-    "busy": {
-      "direction": "output",
-      "bits": 1
-    },
-    "wsc": {
-      "direction": "input",
-      "bits": 8
-    },
-    "pk4a": {
-      "direction": "input",
-      "bits": 6
-    },
-    "pk4b": {
-      "direction": "input",
-      "bits": 6
-    },
-    "pk5": {
-      "direction": "input",
-      "bits": 6
-    },
-    "pb4a": {
-      "direction": "input",
-      "bits": 1
-    },
-    "pb4b": {
-      "direction": "input",
-      "bits": 1
-    },
-    "pb5": {
-      "direction": "input",
-      "bits": 1
-    },
-    "uq0": {
-      "direction": "input",
-      "bits": 271
-    },
-    "uq1": {
-      "direction": "input",
-      "bits": 271
-    },
-    "uq2": {
-      "direction": "input",
-      "bits": 271
-    },
-    "uq3": {
-      "direction": "input",
-      "bits": 271
-    },
-    "dq0": {
-      "direction": "output",
-      "bits": 173
-    },
-    "dq1": {
-      "direction": "output",
-      "bits": 173
-    },
-    "dq2": {
-      "direction": "output",
-      "bits": 173
-    },
-    "dq3": {
-      "direction": "output",
-      "bits": 173
-    }
+    "clk": [
+      "input",
+      1
+    ],
+    "rst_n": [
+      "input",
+      1
+    ],
+    "job_v": [
+      "input",
+      1
+    ],
+    "job": [
+      "input",
+      217
+    ],
+    "done": [
+      "output",
+      1
+    ],
+    "fault": [
+      "output",
+      1
+    ],
+    "busy": [
+      "output",
+      1
+    ],
+    "wsc": [
+      "input",
+      8
+    ],
+    "pk5": [
+      "input",
+      6
+    ],
+    "pb5": [
+      "input",
+      1
+    ],
+    "up_nw": [
+      "input",
+      271
+    ],
+    "up_ne": [
+      "input",
+      271
+    ],
+    "down_nw": [
+      "output",
+      173
+    ],
+    "down_ne": [
+      "output",
+      173
+    ]
   },
+  "root_wrapper": {
+    "module": "ot_hnx_fused_hub_n4ext",
+    "proposed_new_plan_instance": "u_mu_fused_root",
+    "ports": {
+      "clk": [
+        "input",
+        1
+      ],
+      "rst_n": [
+        "input",
+        1
+      ],
+      "job_v": [
+        "input",
+        1
+      ],
+      "job": [
+        "input",
+        217
+      ],
+      "done": [
+        "output",
+        1
+      ],
+      "fault": [
+        "output",
+        1
+      ],
+      "busy": [
+        "output",
+        1
+      ],
+      "wsc": [
+        "input",
+        8
+      ],
+      "pk5": [
+        "input",
+        6
+      ],
+      "pb5": [
+        "input",
+        1
+      ],
+      "up_nw": [
+        "input",
+        271
+      ],
+      "up_ne": [
+        "input",
+        271
+      ],
+      "down_nw": [
+        "output",
+        173
+      ],
+      "down_ne": [
+        "output",
+        173
+      ]
+    },
+    "source_parameters": {
+      "D": 5120,
+      "RR": 10,
+      "NMAX": 8,
+      "MUT": 0,
+      "N4EXT": 1
+    },
+    "port_identity": {
+      "up_nw": "u_native.uq0",
+      "up_ne": "u_native.uq2",
+      "down_nw": "u_native.dq0",
+      "down_ne": "u_native.dq2"
+    },
+    "removed_dead_abi": {
+      "uq1_uq3": "N4EXT1 generate g_n4ext assigns u4a=uq0,u4b=uq2; no other uses outside unelaborated g_t4",
+      "dq1_dq3": "N4EXT1 assigns constantzero",
+      "pk4a_pk4b_pb4a_pb4b": "Only referenced by unelaborated g_t4 nodes"
+    },
+    "added_cycles": 0,
+    "physical_size": "UNMEASURED",
+    "control_job_native_binding": "PENDING_PLAN_COMPOSER",
+    "root_bus_bits": 888,
+    "whole_kernel_qualified": false
+  },
+  "proposed_new_root_instance": "u_mu_fused_root",
   "total_link_bits": 888,
   "source_hashes": {
     "ot_hnx_fused_tree.sv": "89c4d2bbb5ead4deba511721a87d3ddc0bf2aac1407ebf8fc9bbf01c3faf01ec",
@@ -152,7 +206,7 @@
         "dir": "in",
         "width": 271,
         "kind": "data",
-        "leaf": null,
+        "leaf": "u_mu_fused_root.up_nw",
         "face": "W",
         "window_um": [
           5176.24,
@@ -284,7 +338,7 @@
         "dir": "out",
         "width": 173,
         "kind": "data",
-        "leaf": null,
+        "leaf": "u_mu_fused_root.down_nw",
         "face": "W",
         "window_um": [
           5248.88,
@@ -416,7 +470,7 @@
         "dir": "in",
         "width": 271,
         "kind": "data",
-        "leaf": null,
+        "leaf": "u_mu_fused_root.up_ne",
         "face": "E",
         "window_um": [
           5176.24,
@@ -548,7 +602,7 @@
         "dir": "out",
         "width": 173,
         "kind": "data",
-        "leaf": null,
+        "leaf": "u_mu_fused_root.down_ne",
         "face": "E",
         "window_um": [
           5248.88,
@@ -756,6 +810,7 @@
   "input_sha256": {
     "plan": "ef239e2e267b7ee51f7384ef2d4e0f06f1b6a44f36ba79dfaf7f3409b6a2eea0",
     "abi": "d00e48ba9b94b5b5df716d5dbd2f2b3b2a7d095986a60a88fde455048c5f5d45",
-    "n4_pins": "ad9931e7c3d3c88522554c949e620db1735ac025ea2f275daa68c08155f2ed9c"
+    "n4_pins": "ad9931e7c3d3c88522554c949e620db1735ac025ea2f275daa68c08155f2ed9c",
+    "root_manifest": "74624126ef4679101563551aae63d2924dcc7be50bce8ec027478f2151dab0a6"
   }
 }

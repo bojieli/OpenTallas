@@ -67,7 +67,20 @@ def root_lots(t, size=(345.6, 345.6), target_y=5231.52):
              'score_um':round(s,6)} for s,x,y in sorted(candidates)[:8]]
 
 
-def prepare(plan, abi, pins):
+def wrapper_ports(manifest):
+    expected = {'up_nw': ('input',271,'u_native.uq0'),
+                'up_ne': ('input',271,'u_native.uq2'),
+                'down_nw': ('output',173,'u_native.dq0'),
+                'down_ne': ('output',173,'u_native.dq2')}
+    if manifest['module'] != 'ot_hnx_fused_hub_n4ext' or manifest['added_cycles'] != 0:
+        raise ValueError('unexpected root wrapper or source latency')
+    for name,(direction,width,identity) in expected.items():
+        if manifest['ports'][name] != [direction,width] or manifest['port_identity'][name] != identity:
+            raise ValueError('wrapper changes actual N4 pairing or bit width')
+    return manifest['proposed_new_plan_instance']
+
+
+def prepare(plan, abi, pins, manifest=None):
     expected = {('NW',271,'uo','uq0'), ('NW',173,'dq0','dn'),
                 ('NE',271,'uo','uq2'), ('NE',173,'dq2','dn')}
     seen = set()
@@ -81,6 +94,7 @@ def prepare(plan, abi, pins):
     by_name = {p['name']:p for p in plan['partitions']}
     pins_by_name = {p['name']:p for p in pins}
     links = []
+    root_inst = wrapper_ports(manifest) if manifest else None
     for link in abi['native_links']:
         side, width = link['side'], link['width']
         src, dst = link['source']['port'], link['destination']['port']
@@ -103,6 +117,8 @@ def prepare(plan, abi, pins):
         if abs(edge_x-required_root_x)>1e-6:
             raise ValueError('hub and root no longer abut')
         up=width==271
+        root_port=('up_' if up else 'down_')+side.lower()
+        root_leaf=root_inst+'.'+root_port if root_inst else None
         bus=f'mu_n4_{side.lower()}_'+('up' if up else 'down')
         # Separate windows: <=6 pins/um even under a combined-layer interpretation.
         center=3472.0 if up else 3536.0
@@ -122,7 +138,7 @@ def prepare(plan, abi, pins):
             hub_bus=dict(name=bus,dir='out' if up else 'in',width=width,kind='data',
                 leaf='u_mu_fused_n4.'+nodeport,face='E',window_um=window,layers=['M4','M6'],order='lsb_low'),
             root_bus=dict(name=bus,dir='in' if up else 'out',width=width,kind='data',
-                leaf=None,face='W' if side=='NW' else 'E',window_um=root_window,layers=['M4','M6'],order='lsb_low'),
+                leaf=root_leaf,face='W' if side=='NW' else 'E',window_um=root_window,layers=['M4','M6'],order='lsb_low'),
             port=dict(id=bus,src=dict(part=h['name'] if up else rp['name'],bus=bus),
                 dst=dict(part=rp['name'] if up else h['name'],bus=bus),width=width,kind='data',epoch=False),
             original_orphan=original,
@@ -133,7 +149,7 @@ def prepare(plan, abi, pins):
     if seen!=expected:
         raise ValueError('missing ABI link')
     providers=[c for key in ('contents','hard_cores') for c in root.get(key,[])
-               if c['module']==abi['root_module']]
+               if c['module']==(manifest['module'] if manifest else abi['root_module'])]
     missing=['measured N4EXT1 root master and pin abstract', 'native root instance and exact control/job bindings',
              'root clock/reset/START delivery and release offsets', 'actual per-bit <=405um station sites and macro-avoiding routes',
              'link station latency in token compiler/model and R8 alignment', 'window occupancy/density and PG/clock geometry review']
@@ -141,7 +157,8 @@ def prepare(plan, abi, pins):
         missing.insert(0,'real central root content/hard-core lot (current plan has no provider)')
     return dict(schema='opentallas.hbm-n4-link-prep.v1',route_ready=False,qualification='PLAN PREPARATION ONLY',
         root_provider_found=bool(providers),root_parameters=abi['root_parameters'],
-        root_all_ports=abi['root_all_ports'],total_link_bits=sum(l['width'] for l in links),
+        root_all_ports=manifest['ports'] if manifest else abi['root_all_ports'],
+        root_wrapper=manifest, proposed_new_root_instance=root_inst,total_link_bits=sum(l['width'] for l in links),
         source_hashes=abi['sources'],links=links,root_lot_candidates=root_lots(root),
         lot_exclusions='hard cores, contents, actual FT bit-cell bank bounds, relay sites, clock taps, full die FT bands; halo4.32',
         remaining=missing)
@@ -153,10 +170,14 @@ def main():
     ap.add_argument('--abi',required=True,type=Path)
     ap.add_argument('--n4-pins',required=True,type=Path)
     ap.add_argument('--output',required=True,type=Path)
+    ap.add_argument('--root-manifest',type=Path)
     a=ap.parse_args()
-    result=prepare(json.loads(a.plan.read_text()),json.loads(a.abi.read_text()),json.loads(a.n4_pins.read_text()))
+    result=prepare(json.loads(a.plan.read_text()),json.loads(a.abi.read_text()),json.loads(a.n4_pins.read_text()),
+                   json.loads(a.root_manifest.read_text()) if a.root_manifest else None)
     result['input_sha256']={k:hashlib.sha256(p.read_bytes()).hexdigest() for k,p in
                             [('plan',a.plan),('abi',a.abi),('n4_pins',a.n4_pins)]}
+    if a.root_manifest:
+        result['input_sha256']['root_manifest']=hashlib.sha256(a.root_manifest.read_bytes()).hexdigest()
     a.output.parent.mkdir(parents=True,exist_ok=True)
     a.output.write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps({k:result[k] for k in ('route_ready','root_provider_found','total_link_bits','root_lot_candidates')}))
