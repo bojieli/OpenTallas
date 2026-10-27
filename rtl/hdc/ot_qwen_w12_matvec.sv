@@ -1436,7 +1436,13 @@ module ot_qwen_w12_ladd #(parameter integer LAT = 7, parameter integer ANR = 0) 
     wire [1:0] err;
     wire vo;
     // ANR = 1 (hardcore-1010 D): ot_hdc_fp32_add_lat_nr (valid-only cut resets + HSPLIT), bit-identical
-    generate if (ANR != 0) begin : g_nr
+    // ANR = 2 (QC-CORES-4 10-27, LAT 7 only): ot_hdc_fp32_add_lat_nc (KV-PARAMS3 no-copy form of the same nr adder: the
+    //         constant err[1] is not carried through the six-deep unreset cut chain, no unread valid copy), same ports,
+    //         same cycles, so every RTL register has its own synthesized flop (no X power-up register removed by synthesis)
+    generate if (ANR == 2) begin : g_nc
+        ot_hdc_fp32_add_lat_nc #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                               .valid_out(vo));
+    end else if (ANR != 0) begin : g_nr
         ot_hdc_fp32_add_lat_nr #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
                                                .valid_out(vo));
     end else begin : g_r

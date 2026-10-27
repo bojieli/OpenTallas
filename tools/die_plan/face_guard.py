@@ -296,16 +296,30 @@ def read_ft1(path):
     return out
 
 
-def _ft1_pair(bs, ft1):
+def _pairs(ft1):
+    """declared core bus pairs {(I, O)} of the ft1 set ('I>O' entries written by read_ft1 from `pair I O` lines)."""
+    return {tuple(x.split(">", 1)) for x in ft1 if ">" in x}
+
+
+def _bus_bit(b):
+    m = re.match(r"^(.+?)(?:\[(\d+)\])?$", b)
+    return m.group(1), (None if m.group(2) is None else int(m.group(2)))
+
+
+def _ft1_pair(bs, ft1, dirs=None):
     """True when the bits are exactly S_i[k] and S_o[k] of one 1-station ft slot S: that slot's single station register
-    is by plan both the in-face and the out-face register (ELEM-S81 10-24: slice_station types)."""
+    is by plan both the in-face and the out-face register (ELEM-S81 10-24: slice_station types), or bit k of the input
+    bus I and bit k of the output bus O of a declared core pair `I>O` (direction from the netlist port directions:
+    the input member must belong to I, the output member to O).  The declaration only names the pair; guard() verifies
+    each declared pair structurally (I[k] -> buffers -> exactly one flop D, its Q -> buffers -> O[k], no other load)."""
     if len(bs) != 2:
         return False
-    # declared core bus pair "I>O": bit k of input bus I and bit k of output bus O share the one RTL register
-    sp = [re.match(r"^(.+?)(\[\d+\])?$", b) for b in bs]
-    for a_, b_ in ((sp[0], sp[1]), (sp[1], sp[0])):
-        if f"{a_.group(1)}>{b_.group(1)}" in ft1 and a_.group(2) == b_.group(2):
-            return True
+    if dirs is not None:
+        (n0, k0), (n1, k1) = (_bus_bit(b) for b in bs)
+        d0, d1 = dirs.get(n0), dirs.get(n1)
+        for (ni, di), (no, do_) in (((n0, d0), (n1, d1)), ((n1, d1), (n0, d0))):
+            if di == "input" and do_ == "output" and (ni, no) in _pairs(ft1) and k0 == k1:
+                return True
     m = [re.match(r"^(.+)_([io])(\[\d+\])?$", b) for b in bs]
     return (all(m) and m[0].group(1) == m[1].group(1) and m[0].group(1) in ft1 and m[0].group(3) == m[1].group(3)
             and {m[0].group(2), m[1].group(2)} == {"i", "o"})
@@ -518,14 +532,41 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             claimed[ff[0]].append(b)
             res["flops"][b] = ff[1]
             res["ok"] += 1
+    pair_ok = set()
     for ci, bs in claimed.items():
-        if len(bs) > 1 and _ft1_pair(bs, ft1):
+        if len(bs) > 1 and _ft1_pair(bs, ft1, T.dirs):
             res["ft1_stations"] = res.get("ft1_stations", 0) + 1
+            pair_ok.update(bs)
             continue
         if len(bs) > 1:
             for b in bs:
                 fail("merged", b, f"flop {F.cells[ci][1]} also registers {[x for x in bs if x != b][:3]}")
             res["ok"] -= len(bs)
+    # every declared core pair I>O is verified bit by bit, never trusted from the generator text (COORD 10-27 11:56):
+    # I input / O output of equal width, and each I[k] / O[k] the two (only) bits of one flop: I[k] -> buffers ->
+    # that flop's D, its output -> buffers -> O[k], single driver and no other load on any net of either chain (the
+    # per-bit traces above), so a missing, extra (two-flop), cross-wired, reversed or fanned-out pair fails class "pair"
+    pairs = sorted(_pairs(ft1))
+    res["pairs_declared"] = [f"{i}>{o}" for i, o in pairs]
+    for i, o in pairs:
+        if T.dirs.get(i) != "input" or T.dirs.get(o) != "output":
+            fail("pair", f"{i}>{o}", f"declared pair needs input {i} ({T.dirs.get(i)}) and output {o} ({T.dirs.get(o)})")
+            continue
+        bi, bo = _bits_of(T, i), _bits_of(T, o)
+        if len(bi) != len(bo):
+            fail("pair", f"{i}>{o}", f"widths differ {len(bi)} vs {len(bo)}")
+            continue
+        nv = 0
+        for x, y in zip(bi, bo):
+            fx, fy = res["flops"].get(x), res["flops"].get(y)
+            if x not in pair_ok or y not in pair_ok or fx is None or fx != fy:
+                fail("pair", x, f"declared pair bit is not one flop {x} -> {fx} -> {y} ({fy})")
+                continue
+            if drv[port_root[x]]:
+                fail("pair", x, f"input net also driven by {[F.cells[c][1] for c, _ in drv[port_root[x]]][:2]}")
+                continue
+            nv += 1
+        res.setdefault("pairs_verified", {})[f"{i}>{o}"] = nv
     if pins is not None:
         want = {x['bus'] if x.get('bit') is None else f"{x['bus']}[{x['bit']}]" for x in pins}
         have = {b for p in T.ports if not re.match(skip_re, p) for b in _bits_of(T, p)}
