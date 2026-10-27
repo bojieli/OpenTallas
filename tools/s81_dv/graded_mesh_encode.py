@@ -218,7 +218,6 @@ def phy_clip(g, pgr, space=PHY_SPACE):
     Returns (g2, report)."""
     phx = phy_index(pgr)
     segs = list(g["segments"])
-    vxy = {(round(v["x_um"], 6), round(v["y_um"], 6)) for v in g["vias"]}
     clipped, trimmed = 0, 0
     gone = set()        # (rail, along) endpoints of every dropped segment: only such piece ends are trimmed
     while True:
@@ -240,6 +239,10 @@ def phy_clip(g, pgr, space=PHY_SPACE):
         rails = collections.defaultdict(list)
         for s in keep:
             rails[rail_key(s)].append(s)
+        kc = {k: [seg_span(s) for s in v] for k, v in rails.items()}
+        _cov = lambda lay, c, a: any(lo - 1e-6 <= a <= hi + 1e-6 for lo, hi in kc.get((lay, round(c, 6)), ()))  # noqa: E731
+        vxy = {(round(v["x_um"], 6), round(v["y_um"], 6)) for v in g["vias"]
+               if _cov("M8", v["y_um"], v["x_um"]) and _cov("M9", v["x_um"], v["y_um"])}     # crossings still on both rails
         keep2, nt = [], 0
         on_via = lambda lay, c, a: ((round(a, 6), round(c, 6)) if lay == "M8" else (round(c, 6), round(a, 6))) in vxy  # noqa: E731
         for (lay, c), rs in rails.items():
@@ -278,7 +281,6 @@ def phy_clip(g, pgr, space=PHY_SPACE):
     by_rail = collections.defaultdict(list)
     for s in segs:
         by_rail[rail_key(s)].append(s)
-    pid = {}
     for key, rs in by_rail.items():
         rs.sort(key=lambda s: seg_span(s)[0])
         for s in rs:
@@ -360,6 +362,25 @@ def clip_ends(g, pgr, reach=12.0):
     return sorted({tuple(x) for x in out})
 
 
+def dangling_ends(g):
+    """rail piece ends (rail ends and clip gaps) that do not sit on a VIA89 crossing of g"""
+    vx = {(round(v["x_um"], 6), round(v["y_um"], 6)) for v in g["vias"]}
+    by = collections.defaultdict(list)
+    for s in g["segments"]:
+        by[rail_key(s)].append(seg_span(s))
+    out = []
+    for (lay, c), sp in by.items():
+        sp.sort()
+        ends = [sp[0][0], sp[-1][1]]
+        for (_, b0), (a1, _) in zip(sp, sp[1:]):
+            if abs(a1 - b0) > 1e-6:
+                ends += [b0, a1]
+        for a in ends:
+            if ((round(a, 6), round(c, 6)) if lay == "M8" else (round(c, 6), round(a, 6))) not in vx:
+                out.append(dict(layer=lay, axis=c, end=a))
+    return out
+
+
 def pg_net_at(pgr):
     """{layer: {round(centre, 3): net}} of the core PG grid (one net per stripe centre, checked)"""
     m = {"M8": {}, "M9": {}}
@@ -372,7 +393,7 @@ def pg_net_at(pgr):
     return m
 
 
-def shield_plan(g, pgr, nd, shield="VSS"):
+def shield_plan(g, pgr, nd, shield="VSS", drawn=False):
     """COORD R24 ruling 1 shield accounting, per rail segment side: the adjacent same-layer PG stripe (overlapping the
     segment's run) counts as the clock shield on that side only when it is VSS and at legal spacing (>= the wide-row
     space of the pair); a VDD/VDDPHY neighbour never counts -- that side gets a drawn VSS shield at the rail's wide-row
@@ -408,7 +429,7 @@ def shield_plan(g, pgr, nd, shield="VSS"):
                 else:
                     sneed = rail_gap(w, run) + ws + max(nd["space"], C.wide_spacing(max(ws, pw), run))
                     if gap >= sneed - 1e-6:
-                        k = "vss_drawn"
+                        k = "vss_drawn" if drawn else "missing_vdd_side_drawable"
                         sides.setdefault(id(s), []).append(sg)
                     else:
                         k = "missing_vdd_side"
@@ -419,6 +440,87 @@ def shield_plan(g, pgr, nd, shield="VSS"):
     rep = dict(sides=dict(cnt), side_um={k: round(v, 1) for k, v in um.items()},
                missing_by_width=dict(collections.Counter(str(r["width"]) for r in rows)))
     return sides, rep, rows
+
+
+def subtract(iv, cuts, min_len=0.0):
+    """interval iv minus the union of cuts -> remaining pieces longer than min_len"""
+    out = [list(iv)]
+    for a, b in sorted(cuts):
+        nxt = []
+        for lo, hi in out:
+            if b <= lo or a >= hi:
+                nxt.append([lo, hi]); continue
+            if a > lo:
+                nxt.append([lo, a])
+            if b < hi:
+                nxt.append([b, hi])
+        out = nxt
+    return [(round(lo, 6), round(hi, 6)) for lo, hi in out if hi - lo > min_len + 1e-9]
+
+
+def vss_shields(g, pgr, nd, shield="VSS", space=PHY_SPACE, pitch=4.32, pgw=0.48, junction_frac=0.9, row_limit=400):
+    """--vss-side drawn shields: per rail segment one VSS stripe on its VDD-facing side at the segment's own wide-row
+    gap, drawn only when it fits before the VDD stripe (wide row vs that stripe); then cut (2-D) to keep `space` from
+    every PHY PG stripe and the wide-row space from every wider graded neighbour segment of the same rail (the shield
+    steps with the grading; short gaps remain only at width steps).  A segment side counts vss_drawn when fully
+    covered, vss_drawn_junction_trimmed when >= junction_frac covered and every gap is a width-step cut, else missing.
+    Returns (shapes, report, rows)."""
+    nm = pg_net_at(pgr)
+    phx = phy_index(pgr)
+    rr, _ = rail_rects(g)
+    byrail = collections.defaultdict(list)
+    for t in rr:
+        byrail[(t[1], t[2])].append(t)
+    ws = nd["width"]
+    shapes, cnt, um, rows = [], collections.Counter(), collections.Counter(), []
+    for (lay, c), ts in byrail.items():
+        k = math.floor(c / pitch)
+        lo_c, hi_c = round(k * pitch, 3), round((k + 1) * pitch, 3)
+        vdd = hi_c if nm[lay].get(lo_c) == shield else lo_c if nm[lay].get(hi_c) == shield else None
+        for i, (s, _, _, w, lo, hi) in enumerate(ts):
+            a0, a1 = seg_span(s)
+            cover, why = [], "missing_no_pg"
+            if vdd is not None:
+                why = "missing_vdd_side"
+                sg = 1 if vdd > c else -1
+                run = hi - lo
+                room = abs(vdd - c) - w / 2 - pgw / 2
+                sneed = rail_gap(w, run) + ws + max(nd["space"], C.wide_spacing(max(ws, pgw), run))
+                if room >= sneed - 1e-6:
+                    off = c + sg * (w / 2 + rail_gap(w, run) + ws / 2)
+                    plo, phi = off - ws / 2, off + ws / 2
+                    cuts, jcuts = [], []
+                    for _, st, _ in phx.near(lay, plo - space - 2.0, phi + space + 2.0):
+                        slo, shi, alo, ahi = (st[1], st[3], st[0], st[2]) if lay == "M8" else (st[0], st[2], st[1], st[3])
+                        lat = max(slo - phi, plo - shi, 0.0)
+                        if lat < space - 1e-6:
+                            d = math.sqrt(space * space - lat * lat)
+                            cuts.append((alo - d, ahi + d))
+                    for j in range(max(0, i - 3), min(len(ts), i + 4)):
+                        if j == i:
+                            continue
+                        _, _, _, wn, nlo, nhi = ts[j]
+                        lat = abs(off - c) - ws / 2 - wn / 2
+                        req = rail_gap(wn, 1e9)
+                        if lat < req - 1e-6:
+                            jcuts.append((nlo - req, nhi + req))     # box (census) metric at width steps
+                    cover = subtract((lo, hi), cuts + jcuts, min_len=2 * ws)
+                    for x0, x1 in cover:
+                        shapes.append((lay, shield, "rail_shield", round(plo, 6), round(phi, 6), x0, x1))
+                    got = sum(max(0.0, min(x1, a1) - max(x0, a0)) for x0, x1 in cover)
+                    nophy = not subtract((a0, a1), [(x0, x1) for x0, x1 in cover] + jcuts)   # every gap is a width-step cut
+                    if got >= (a1 - a0) - 1e-6:
+                        why = "vss_drawn"
+                    elif got >= junction_frac * (a1 - a0) and nophy:
+                        why = "vss_drawn_junction_trimmed"
+                    else:
+                        why = "missing_vdd_side_partial" if cover else "missing_vdd_side"
+            cnt[why] += 1; um[why] += a1 - a0
+            if why.startswith("missing") and len(rows) < row_limit:
+                rows.append(dict(layer=lay, axis=c, span=[a0, a1], width=w, vdd=vdd, kind=why))
+    rep = dict(shield_shapes=len(shapes), vdd_sides=dict(cnt), vdd_side_um={k: round(v, 1) for k, v in um.items()},
+               missing_by_width=dict(collections.Counter(str(r["width"]) for r in rows)))
+    return shapes, rep, rows
 
 
 def vss_side_axis(c, wmax, netmap, lay, pitch=4.32, pgw=0.48, track=0.08, toff=0.04):
@@ -568,7 +670,12 @@ def encode(plan, build, out, limit=400, gap_snap=False, phy_clip_on=False, vss_s
         full_cycles = mesh_graph(g)
         g, clip, moved = phy_clip(g, pgr)
     sides, shield_rep, shield_rows = shield_plan(g, pgr, nd, sh)
-    rshapes, rails = rail_shapes(g, nd, sh, drawn=not gap_snap, sides=sides if vss_side else None)
+    rshapes, rails = rail_shapes(g, nd, sh, drawn=not gap_snap)
+    if vss_side:     # VSS stripe = shield on its side (accounted above); VDD side gets a drawn per-piece VSS shield
+        dsh, drep, drows = vss_shields(g, pgr, nd, sh)
+        rshapes += dsh
+        shield_rep = dict(vss_side=dict((k, v) for k, v in shield_rep["sides"].items() if k.startswith("vss_pg")), drawn=drep)
+        shield_rows = drows
     gfit = gap_fit_findings(g, pgr)
     wmax = {L: max([s["width_um"] for s in g["segments"] if s["layer"] == L] or [0]) for L in ("M8", "M9")}
     vbad = via_findings(g, rshapes)
@@ -619,14 +726,14 @@ def encode(plan, build, out, limit=400, gap_snap=False, phy_clip_on=False, vss_s
         router_move_max_um=round(max(router.moves or [0]), 4), pg_rects=len(pgr),
         metal_shapes=census["shapes"], metal_shorts=census["shorts"], metal_spacing=census["spacing"],
         shorts_by_kind=census["shorts_by_kind"], spacing_by_kind=census["spacing_by_kind"],
-        phy_clip=clip, graph_before_clip=full_cycles, phy_band_mesh=len(phyb_mesh), phy_band_other_info=len(phyb_other),
+        rail_ends_off_via=len(dangling_ends(g)), phy_clip=clip, graph_before_clip=full_cycles, phy_band_mesh=len(phyb_mesh), phy_band_other_info=len(phyb_other),
         shield_mode="vss_side" if vss_side else ("pg" if gap_snap else "drawn"), shield=shield_rep)
     rep["rail_end_extensions"] = 2 * (rep["rails"]["M8"] + rep["rails"]["M9"])
     fails = [k for k in ("segments_not_fitting_pg_gap", "m8_maxwidth_violations", "via_outside_incident", "pg_gap_shared", "rail_pg_too_close",
-                         "tie_errors", "tree_plan_errors", "metal_shorts", "metal_spacing", "phy_band_mesh") if rep[k]]
+                         "tie_errors", "tree_plan_errors", "metal_shorts", "metal_spacing", "phy_band_mesh", "rail_ends_off_via") if rep[k]]
     if graph["components"] != 1 or (not phy_clip_on and graph["cycles"] != graph["expected_cycles"]):
         fails.append("graph_topology")
-    if vss_side and (shield_rep["sides"].get("missing_vdd_side") or shield_rep["sides"].get("vss_pg_illegal") or shield_rep["sides"].get("missing_no_pg")):
+    if vss_side and (any(k.startswith("missing") for k in shield_rep["drawn"]["vdd_sides"]) or shield_rep["vss_side"].get("vss_pg_illegal")):
         fails.append("shield_sides_missing")
     rep["fails"] = fails
     rep["status"] = "ENCODED_CENSUS_PASS" if not fails else "ENCODED_CENSUS_FAIL"

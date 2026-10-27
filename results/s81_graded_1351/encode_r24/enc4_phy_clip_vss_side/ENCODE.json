@@ -1,0 +1,133 @@
+{
+ "schema": "opentallas.s81.graded_mesh_encode.v1",
+ "build": "/srv/opentallas-scratch2/claude/codex-s81-graded-1351/p128_stage18",
+ "plan_sha256": "5b91b79891cafabe60423fbd83ed68136378e47cbf4d04e57d7e8329f4df1ede",
+ "graded_metal_sha256": "5bb26a05963e7374d27dbf8ed8676a9ddc7804d8dbb1e9139b08905fdf5f3480",
+ "rails": {
+  "M8": 192,
+  "M9": 192
+ },
+ "segments": 72579,
+ "crossings": 36486,
+ "via_cuts": 1921722,
+ "rail_width_max_um": {
+  "M8": 1.76,
+  "M9": 1.76
+ },
+ "m8_maxwidth_um": 2.0,
+ "m8_maxwidth_violations": 0,
+ "rail_end_extensions": 768,
+ "via_outside_incident": 0,
+ "gap_snap": {
+  "max_um": 1.44,
+  "mean_um": 0.6031,
+  "rails": 384
+ },
+ "rail_shield_mode": "pg",
+ "segments_not_fitting_pg_gap": 0,
+ "segments_not_fitting_by_pg_width": {},
+ "pg_gap_shared": 0,
+ "rail_pg_too_close": 0,
+ "graph": {
+  "components": 1,
+  "cycles": 36094,
+  "expected_cycles": 36481,
+  "full_grid_expected": false
+ },
+ "attachments": {
+  "driver": 3747,
+  "local_tree_input": 7481
+ },
+ "bank_tie_segments": 3756,
+ "stub_drops": 7481,
+ "pin_stacks": 48021,
+ "tie_errors": 0,
+ "tree_nets": 18270,
+ "tree_segments": 77079,
+ "tree_mm": 4032.165,
+ "tree_shield_modes": {
+  "drawn": 77079
+ },
+ "tree_plan_errors": 0,
+ "router_modes": {
+  "M8:drawn": 64235,
+  "M9:drawn": 24081
+ },
+ "router_move_max_um": 6.719,
+ "pg_rects": 49238,
+ "metal_shapes": 449324,
+ "metal_shorts": 0,
+ "metal_spacing": 0,
+ "shorts_by_kind": {},
+ "spacing_by_kind": {},
+ "rail_ends_off_via": 0,
+ "phy_clip": {
+  "phy_stripes": 14014,
+  "segments_clipped": 747,
+  "segments_trimmed": 18,
+  "floating_pieces_dropped": 0,
+  "floating_segments_dropped": 0,
+  "segments_kept": 72579,
+  "vias_dropped": 378,
+  "rails_removed": 0,
+  "attachments_moved": 8,
+  "attachments_moved_by_role": {
+   "driver": 4,
+   "local_tree_input": 4
+  },
+  "attachment_move_max_um": 10.895
+ },
+ "graph_before_clip": {
+  "nodes": 84956,
+  "edges": 121436,
+  "components": 1,
+  "cycles": 36481,
+  "expected_cycles": 36481,
+  "via_edges": 36864,
+  "native_extraction_qualified": false,
+  "driver_pin_metal_encoded": false,
+  "resistance_model": null
+ },
+ "phy_band_mesh": 0,
+ "phy_band_other_info": 95,
+ "shield_mode": "vss_side",
+ "shield": {
+  "vss_side": {
+   "vss_pg": 72579
+  },
+  "drawn": {
+   "shield_shapes": 62559,
+   "vdd_sides": {
+    "missing_vdd_side": 10020,
+    "missing_vdd_side_partial": 2806,
+    "vss_drawn": 52103,
+    "vss_drawn_junction_trimmed": 7650
+   },
+   "vdd_side_um": {
+    "missing_vdd_side": 1429270.8,
+    "missing_vdd_side_partial": 164328.6,
+    "vss_drawn": 6949295.4,
+    "vss_drawn_junction_trimmed": 1960019.0
+   },
+   "missing_by_width": {
+    "0.08": 361,
+    "1.04": 6,
+    "1.2": 6,
+    "1.44": 6,
+    "1.52": 6,
+    "1.6": 12,
+    "1.76": 3
+   }
+  }
+ },
+ "fails": [
+  "shield_sides_missing"
+ ],
+ "status": "ENCODED_CENSUS_FAIL",
+ "physical_encoder_qualified": false,
+ "limits": [
+  "geometry only; extraction/EM/IR/timing OPEN",
+  "M1-M7 pin stacks + M7 risers recorded, not censused against signal routing",
+  "VSS shield ties to the die grid not re-derived here"
+ ]
+}

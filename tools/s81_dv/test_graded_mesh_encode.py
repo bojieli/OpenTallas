@@ -120,10 +120,40 @@ def test_phy_clip_stops_rails_outside_band_at_a_crossing():
             assert (round(max(s["centre_um"][0], s["centre_um"][2]), 6), round(s["centre_um"][1], 6)) in vx   # ends ON a crossing
             assert max(s["centre_um"][0], s["centre_um"][2]) <= 470.0 - 1.0
     assert all(abs(s["width_um"] - 0.8) < 1e-9 for s in g2["segments"])          # kept widths unchanged
+    _assert_piece_ends_on_vias(g2)
     assert rep["segments_clipped"] > 0 and rep["rails_removed"] == rep["floating_pieces_dropped"] == 2   # M9 rails wholly inside the band float
     assert [m["role"] for m in moved] == ["local_tree_input"] and abs(g2["attachments"][0]["xy_um"][0] - 467.96) < 1e-6   # nearest kept rail point
     s = E.mesh_graph(g2)
     assert s["components"] == 1                                                  # M9 rails still tie every piece
+
+
+def _assert_piece_ends_on_vias(g2):
+    import collections
+    vx = {(round(v["x_um"], 6), round(v["y_um"], 6)) for v in g2["vias"]}
+    by = collections.defaultdict(list)
+    for s in g2["segments"]:
+        by[E.rail_key(s)].append(E.seg_span(s))
+    for (lay, c), sp in by.items():
+        sp.sort()
+        ends = [sp[0][0], sp[-1][1]] + [a for (_, b0), (a, _) in zip(sp, sp[1:]) if abs(a - b0) > 1e-6] + [b0 for (_, b0), (a, _) in zip(sp, sp[1:]) if abs(a - b0) > 1e-6]
+        for a in ends:
+            assert ((round(a, 6), round(c, 6)) if lay == "M8" else (round(c, 6), round(a, 6))) in vx, (lay, c, a)
+    assert E.dangling_ends(g2) == []
+
+
+def test_phy_clip_both_layers_band_no_dangling_ends():
+    # PHY band on BOTH M8 and M9 over the east part: rails of both layers clip, every piece still ends on a live via
+    xs = [450.68, 459.32, 467.96, 476.6, 485.24]
+    ys = [248.36, 257.0, 265.64, 274.28]
+    g = mesh(xs, ys, w=lambda x, y: 0.8)
+    g["attachments"] = []
+    pg = (_pg("M8", 56, 65, 440.0, 470.0) + _pg("M8", 56, 65, 470.0, 500.0, w=1.92, phy=True)
+          + _pg("M9", 103, 108, 240.0, 280.0) + _pg("M9", 109, 114, 240.0, 262.0) + _pg("M9", 109, 114, 262.0, 280.0, w=1.92, phy=True))
+    g2, rep, _ = E.phy_clip(g, pg)
+    shapes, _ = E.rail_shapes(g2, ND, drawn=False)
+    assert E.phy_band_findings(shapes, E.phy_index(pg)) == [] and E.via_findings(g2, shapes) == []
+    _assert_piece_ends_on_vias(g2)
+    assert E.mesh_graph(g2)["components"] == 1
 
 
 def test_phy_clip_noop_without_phy_band():
@@ -142,7 +172,7 @@ def test_vss_side_axis_and_shield_accounting():
     assert abs((a - 0.4) - (4.32 * 104 + 0.24) - 0.5) < 0.08 + 1e-9 and (a - 0.4) - (4.32 * 104 + 0.24) >= 0.5 - 1e-9
     seg = lambda x, w: dict(layer="M9", width_um=w, centre_um=[x, 10.0, x, 60.0])  # noqa: E731
     g = dict(segments=[seg(a, 0.8)])
-    sides, rep, rows = E.shield_plan(g, pg, ND)
+    sides, rep, rows = E.shield_plan(g, pg, ND, drawn=True)
     assert rep["sides"] == {"vss_pg": 1, "vss_drawn": 1}                         # VSS counts, VDD side gets a drawn VSS
     shapes, _ = E.rail_shapes(dict(g, vias=[]), ND, drawn=False, sides=sides)
     sh = [s for s in shapes if s[2] == "rail_shield"]
@@ -154,3 +184,31 @@ def test_vss_side_axis_and_shield_accounting():
     # centred narrow rail with VDD both... impossible on the alternating grid; VDD neighbour never counts as shield
     _, rep3, _ = E.shield_plan(dict(segments=[seg(4.32 * 105 - 0.24 - 0.08 - 0.04 - 0.2, 0.08)]), pg, ND)
     assert "vss_pg" in rep3["sides"] and rep3["sides"].get("vss_drawn", 0) + rep3["sides"].get("missing_vdd_side", 0) == 1
+    _, rep4, _ = E.shield_plan(g, pg, ND)                                        # not drawn -> VDD side honestly unshielded
+    assert rep4["sides"] == {"vss_pg": 1, "missing_vdd_side_drawable": 1}
+
+
+def test_vss_shields_per_piece_clear_graded_rail_and_phy_band():
+    import die_clock_128 as C
+    # one M8 rail (y gap 449.28 VSS .. 453.6 VDD) graded 0.4 -> 1.2 -> 0.4, then a PHY band from x=60 on
+    pg = _pg("M8", 100, 110, 0.0, 60.0) + _pg("M8", 100, 110, 60.0, 90.0, w=1.92, phy=True)
+    nm = E.pg_net_at(pg)
+    y = E.vss_side_axis(451.0, 1.2, nm, "M8")
+    xs = [0.0, 10.0, 20.0, 30.0, 58.0, 80.0]
+    ws = [0.4, 1.2, 0.4, 0.4, 0.4]
+    segs = [dict(layer="M8", width_um=w, centre_um=[a, y, b, y], rect_um=[a, y - w / 2, b, y + w / 2]) for a, b, w in zip(xs, xs[1:], ws)]
+    vias = [dict(x_um=x, y_um=y, rows=1, cols=1, cut_um=.04, pitch_um=.098, pad_um=.08) for x in xs]
+    g = dict(segments=segs, vias=vias, xs=xs, ys=[y], attachments=[])
+    sh, rep, rows = E.vss_shields(g, pg, ND)
+    assert sh and all(s[1] == "VSS" and s[3] > y for s in sh)                     # VDD side (above), steps with the grading
+    assert len({(s[3], s[4]) for s in sh}) == 2
+    mesh_shapes, _ = E.rail_shapes(g, ND, drawn=False)
+    cen = C.metal_census(C.pg_shapes(pg) + mesh_shapes + sh, ND["space"])
+    assert cen["shorts_by_kind"].get("mesh-rail_shield", 0) == 0 and cen["spacing_by_kind"].get("mesh-rail_shield", 0) == 0
+    assert E.phy_band_findings(sh, E.phy_index(pg), kinds=("rail_shield",)) == []  # trimmed >= 1.0 um before PHY PG
+    v = rep["vdd_sides"]
+    assert v == {"vss_drawn": 3, "vss_drawn_junction_trimmed": 2}               # the two 0.4 runs beside the 1.2 step are cut there
+    # a shield that WOULD sit < 1.0 um from the PHY band is cut there (shield-side PHY stripe moved next to it)
+    pg2 = _pg("M8", 100, 110, 0.0, 60.0) + [(n, "M8", 60.0, y0 - 0.9, 90.0, y1 - 0.9) for n, _, _, y0, _, y1 in _pg("M8", 105, 105, 0, 1, w=1.92, phy=True)]
+    sh2, rep2, _ = E.vss_shields(g, pg2, ND)
+    assert E.phy_band_findings(sh2, E.phy_index(pg2), kinds=("rail_shield",)) == [] and any(k.startswith("missing") for k in rep2["vdd_sides"])
