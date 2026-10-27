@@ -303,6 +303,22 @@ SCHEMA = {
                                        "face": {"enum": list(FACES)}, "window_um": _win, "layers": _lays,
                                        "order": _order,
                                        "note": {"type": "string"}}}},
+                    # HEAD-BIND-4 10-27 (OWNER 10-25 option B): per-INSTANCE ID strap input ports of the partition
+                    # (strap_* names, exact widths in parent_id_straps.PHYSICAL_ID_WIDTHS).  No pin register, kit SDC
+                    # set_false_path -from, each instance ties its own value (partitions[].id_straps) at the die top;
+                    # leaves bind them as "strap:<name>".
+                    "id_straps": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "width"], "additionalProperties": False,
+                        "properties": {"name": {"type": "string", "pattern": "^strap_[A-Za-z0-9_]+$"},
+                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"}}}},
+                    # HEAD-BIND-4 10-27: off-die PHY pad ports (PMA side of a PHY leaf): NO boundary flop (their
+                    # timing belongs to the PHY's own clocks), bound to the leaf as "pad:<name>", carried to the die
+                    # top as <part>_<name> (behavioural word pads; die.io phy_macro windows hold the bumps)
+                    "pads": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
+                        "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
+                                       "width": {"type": "integer", "minimum": 1}, "clock": {"type": "boolean"},
+                                       "note": {"type": "string"}}}},
                     "ft_slots": {"type": "array", "items": {
                         "type": "object", "required": ["name", "in_face", "out_face", "width"],
                         "additionalProperties": False,
@@ -542,6 +558,9 @@ SCHEMA = {
         "partitions": {"type": "array", "minItems": 1, "items": {
             "type": "object", "required": ["name", "type", "origin_um"], "additionalProperties": False,
             "properties": {"name": _name, "type": _name, "origin_um": _xy, "orient": {"enum": list(ORIENTS)},
+                           # HEAD-BIND-4 10-27 (OWNER 10-25 option B): this INSTANCE's values of its type's declared
+                           # partition ID straps (partition_types.<t>.id_straps), tied at the die top (gen_rtl.die_top)
+                           "id_straps": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
                            "note": {"type": "string"}}}},
         "ports": {"type": "array", "items": {
             "type": "object", "required": ["id", "src", "dst", "width"],   # face/layers/window: or from the type
@@ -781,6 +800,39 @@ def validate_structure(obj):
                 type_parent_id_straps(t)
             except ValueError as e:
                 errs.append(f"partition type {tn}: {e}")
+    if not errs:
+        errs += _id_strap_errors(obj)
+    return errs
+
+
+def _id_strap_errors(obj):
+    """HEAD-BIND-4: partition ID straps = approved strap_* port + exact width; every instance of a declaring type gives
+    exactly one value per declared strap, fitting its width; instances of other types give none."""
+    try:
+        from .parent_id_straps import PHYSICAL_ID_WIDTHS
+    except ImportError:
+        from parent_id_straps import PHYSICAL_ID_WIDTHS
+    errs, decl = [], {}
+    for tn, t in obj.get("partition_types", {}).items():
+        d = {}
+        for s in t.get("id_straps", []):
+            n, w = s["name"], s["width"]
+            if PHYSICAL_ID_WIDTHS.get(n) != w:
+                errs.append(f"partition type {tn}: id_strap {n} width {w}: not an approved ID strap of that width "
+                            f"(parent_id_straps.PHYSICAL_ID_WIDTHS)")
+            if n in d:
+                errs.append(f"partition type {tn}: id_strap {n} declared twice")
+            d[n] = w
+        decl[tn] = d
+    for p in obj.get("partitions", []):
+        d = decl.get(p.get("type"), {})
+        v = p.get("id_straps", {})
+        if set(v) != set(d):
+            errs.append(f"partition {p.get('name')}: id_straps {sorted(v)} != type {p.get('type')} declared {sorted(d)}")
+            continue
+        for n, x in v.items():
+            if x >= 1 << d[n]:
+                errs.append(f"partition {p.get('name')}: id_strap {n}={x} does not fit {d[n]} bits")
     return errs
 
 
