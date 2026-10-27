@@ -39,7 +39,7 @@
         },
         {
           "layer": "M9",
-          "width_um": 6.48,
+          "width_um": 12.96,
           "pitch_um": 34.56,
           "offset_um": 17.28,
           "nets": [
@@ -952,55 +952,55 @@
         "insertion_ps": 250,
         "taps": [
           {
-            "name": "u_core.u_b.g_cv.u_eA0.clk",
+            "name": "u_core.u_b.g_cv.u_eA0.ft_mstrap_i",
             "kind": "core",
             "xy": [
-              177.12,
-              168.48
+              177.144,
+              168.516
             ],
             "insertion_ps": 250.0,
             "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
             "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
           },
           {
-            "name": "u_core.u_b.g_cv.u_eA1.clk",
+            "name": "u_core.u_b.g_cv.u_eA1.ft_mstrap_i",
             "kind": "core",
             "xy": [
-              531.36,
-              168.48
+              531.384,
+              168.516
             ],
             "insertion_ps": 250.0,
             "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
             "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
           },
           {
-            "name": "u_core.u_b.g_cv.u_eA2.clk",
+            "name": "u_core.u_b.g_cv.u_eA2.ft_mstrap_i",
             "kind": "core",
             "xy": [
-              177.12,
-              540.0
+              177.144,
+              540.012
             ],
             "insertion_ps": 250.0,
             "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
             "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
           },
           {
-            "name": "u_core.u_b.g_cv.u_eA3.clk",
+            "name": "u_core.u_b.g_cv.u_eA3.ft_mstrap_i",
             "kind": "core",
             "xy": [
-              531.36,
-              540.0
+              531.384,
+              540.012
             ],
             "insertion_ps": 250.0,
             "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
             "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
           },
           {
-            "name": "u_core.u_b.g_cvb.u_eB.clk",
+            "name": "u_core.u_b.g_cvb.u_eB.ft_mstrap_i",
             "kind": "core",
             "xy": [
-              354.24,
-              876.96
+              360.744,
+              880.572
             ],
             "insertion_ps": 250.0,
             "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv_tt.lib",
@@ -1373,6 +1373,18 @@
             349.92,
             708.48,
             358.56
+          ],
+          [
+            345.6,
+            349.92,
+            354.24,
+            358.56
+          ],
+          [
+            354.24,
+            349.92,
+            362.88,
+            358.56
           ]
         ]
       },
@@ -1423,13 +1435,13 @@
             8.64
           ],
           "outline_um": [
-            317.672,
-            317.672
+            319.68,
+            319.68
           ],
           "orient": "MX",
           "track_offset_um": [
             0.012,
-            0.028
+            0.036
           ],
           "pins_file": "cores/elemA_pins.json",
           "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
@@ -1444,13 +1456,13 @@
             8.64
           ],
           "outline_um": [
-            317.672,
-            317.672
+            319.68,
+            319.68
           ],
           "orient": "R180",
           "track_offset_um": [
-            0.028,
-            0.028
+            0.036,
+            0.036
           ],
           "pins_file": "cores/elemA_pins.json",
           "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
@@ -1465,8 +1477,8 @@
             380.16
           ],
           "outline_um": [
-            317.672,
-            317.672
+            319.68,
+            319.68
           ],
           "orient": "R0",
           "track_offset_um": [
@@ -1486,12 +1498,12 @@
             380.16
           ],
           "outline_um": [
-            317.672,
-            317.672
+            319.68,
+            319.68
           ],
           "orient": "MY",
           "track_offset_um": [
-            0.028,
+            0.036,
             0.012
           ],
           "pins_file": "cores/elemA_pins.json",
@@ -1507,8 +1519,8 @@
             734.4
           ],
           "outline_um": [
-            277.652,
-            277.652
+            285.12,
+            285.12
           ],
           "orient": "R0",
           "track_offset_um": [
@@ -1957,6 +1969,78 @@
             1105.87,
             1386.72,
             1114.51,
+            1395.36
+          ],
+          [
+            0.0,
+            349.92,
+            8.64,
+            358.56
+          ],
+          [
+            0.0,
+            1386.72,
+            8.64,
+            1395.36
+          ],
+          [
+            665.28,
+            349.92,
+            673.92,
+            358.56
+          ],
+          [
+            665.28,
+            1386.72,
+            673.92,
+            1395.36
+          ],
+          [
+            686.88,
+            349.92,
+            695.52,
+            358.56
+          ],
+          [
+            686.88,
+            868.32,
+            695.52,
+            876.96
+          ],
+          [
+            686.88,
+            1386.72,
+            695.52,
+            1395.36
+          ],
+          [
+            686.88,
+            1905.12,
+            695.52,
+            1913.76
+          ],
+          [
+            708.48,
+            349.92,
+            717.12,
+            358.56
+          ],
+          [
+            708.48,
+            1386.72,
+            717.12,
+            1395.36
+          ],
+          [
+            1373.76,
+            349.92,
+            1382.4,
+            358.56
+          ],
+          [
+            1373.76,
+            1386.72,
+            1382.4,
             1395.36
           ]
         ]
@@ -2651,6 +2735,78 @@
             1105.87,
             1386.72,
             1114.51,
+            1395.36
+          ],
+          [
+            0.0,
+            349.92,
+            8.64,
+            358.56
+          ],
+          [
+            0.0,
+            1386.72,
+            8.64,
+            1395.36
+          ],
+          [
+            665.28,
+            349.92,
+            673.92,
+            358.56
+          ],
+          [
+            665.28,
+            1386.72,
+            673.92,
+            1395.36
+          ],
+          [
+            686.88,
+            349.92,
+            695.52,
+            358.56
+          ],
+          [
+            686.88,
+            868.32,
+            695.52,
+            876.96
+          ],
+          [
+            686.88,
+            1386.72,
+            695.52,
+            1395.36
+          ],
+          [
+            686.88,
+            1905.12,
+            695.52,
+            1913.76
+          ],
+          [
+            708.48,
+            349.92,
+            717.12,
+            358.56
+          ],
+          [
+            708.48,
+            1386.72,
+            717.12,
+            1395.36
+          ],
+          [
+            1373.76,
+            349.92,
+            1382.4,
+            358.56
+          ],
+          [
+            1373.76,
+            1386.72,
+            1382.4,
             1395.36
           ]
         ]
@@ -4168,7 +4324,10 @@
             "ck": "clk",
             "rst_n": "rst_n"
           },
-          "note": "2 x stacked MAIN head lane (dsfd_coll_lane_w_safe8_ntf + closed s81hd_lsc_t9/t8/r0m/r1m) + best64 TX decode + copy-A/B slots -> 110-b words {ep_fault12, copy, BEST97} in 2 beats; ctl side ot_s81hd_mesh64_rx"
+          "note": "2 x stacked MAIN head lane (dsfd_coll_lane_w_safe8_ntf + closed s81hd_lsc_t9/t8/r0m/r1m) + best64 TX decode + copy-A/B slots -> 110-b words {ep_fault12, copy, BEST97} in 2 beats; ctl side ot_s81hd_mesh64_rx",
+          "params": {
+            "BQ": "2"
+          }
         }
       ],
       "note": "TP4 mesh endpoint of one SerDes pair (rank argmax all-gather)",
@@ -20325,7 +20484,13 @@
         8760.96,
         8778.24
       ],
-      "topology": "htree"
+      "topology": "htree",
+      "trunk": {
+        "layer": "M9",
+        "node_x_um": 8760.96,
+        "lane_x_um": 8769.6,
+        "riser_um": 8.64
+      }
     }
   },
   "reset": {

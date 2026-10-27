@@ -108,3 +108,49 @@ def test_entry_trunk_insert_remove():
     assert all(n[3] == "BUFx8_ASAP7_75t_R" and n[4] == "trunk" for n in P["nodes"] if n[0].startswith("K_r"))
     F.remove_entry_trunk(P)
     assert P["nodes"] == before
+
+
+# ------------------------------------------------------------------ R20: d1 fail-closed + gate numbers on the shipped masters
+def _fake_model(P, libs, r, c, wc):
+    w = 10.0 if dict((n[0], n[3]) for n in P["nodes"])["L0"] == "BUFx12_ASAP7_75t_R" else 21.0
+    return {k: dict(mean=250.0 if k == "TT" else 202.5, window=w, leaf_out_slew_max=40.0) for k in ("TT", "FF")}, {}
+
+
+def test_refresh_after_d1_reevaluates_shipped_masters(monkeypatch):
+    monkeypatch.setattr(F.M7, "model_x", _fake_model)
+    P = dict(nodes=[("root", None, (0, 0), "BUFx24_ASAP7_75t_R", "entry"), ("L0", "root", (1, 1), "BUFx8_ASAP7_75t_R", "leaf")])
+    F._PLANS["t_r20"] = (P, {}, 0, 0, {})
+    rec0 = dict(name="t_r20", model="R7", **_fake_model(P, 0, 0, 0, 0)[0])
+    assert rec0["TT"]["window"] == 21.0                      # pre-d1 masters fail the window gate
+    rec = dict(name="t_r20_uf3d1", model="R7", TT=rec0["TT"], FF=rec0["FF"],
+               frozen_masters={"root": "BUFx24_ASAP7_75t_R", "L0": "BUFx12_ASAP7_75t_R"},
+               nodes_xy=[["root", None, [0, 0], "BUFx24_ASAP7_75t_R", "entry"], ["L0", "root", [1, 1], "BUFx12_ASAP7_75t_R", "leaf"]])
+    out = F.refresh_after_d1(rec0, rec)
+    assert out["TT"]["window"] == 10.0 and out["FF"]["window"] == 10.0     # gate reads the masters that ship
+    assert out["model_pre_d1"]["TT"]["window"] == 21.0 and "R20" in out["model"]
+
+
+def test_refresh_after_d1_refuses_inconsistent_masters(monkeypatch):
+    monkeypatch.setattr(F.M7, "model_x", _fake_model)
+    P = dict(nodes=[("root", None, (0, 0), "BUFx24_ASAP7_75t_R", "entry"), ("L0", "root", (1, 1), "BUFx8_ASAP7_75t_R", "leaf")])
+    F._PLANS["t_r20b"] = (P, {}, 0, 0, {})
+    rec0 = dict(name="t_r20b", model="R7", **_fake_model(P, 0, 0, 0, 0)[0])
+    with pytest.raises(SystemExit, match="lacks frozen masters"):
+        F.refresh_after_d1(rec0, dict(frozen_masters={"root": "BUFx24_ASAP7_75t_R"}, nodes_xy=[]))
+    P["nodes"] = list(P["nodes"])
+    with pytest.raises(SystemExit, match="differ from frozen_masters"):
+        F.refresh_after_d1(rec0, dict(frozen_masters={"root": "BUFx24_ASAP7_75t_R", "L0": "BUFx12_ASAP7_75t_R"},
+                                      nodes_xy=[["root", None, [0, 0], "BUFx24_ASAP7_75t_R", "entry"],
+                                                ["L0", "root", [1, 1], "BUFx8_ASAP7_75t_R", "leaf"]]))
+
+
+def test_d1_failure_is_fail_closed(monkeypatch, tmp_path):
+    """S81-CORES-R1: the d1 step died (missing results dirs) and the slice silently shipped pre-d1 masters."""
+    import types
+    monkeypatch.setattr(F, "census", lambda kit, work: "clk")
+    monkeypatch.setattr(F, "plan", lambda *a, **k: dict(name="x", TT={}, FF={}))
+    monkeypatch.setattr(F.subprocess, "run", lambda *a, **k: types.SimpleNamespace(returncode=1, stdout="", stderr="ModuleNotFoundError: uf_phys"))
+    fams = {"families": [dict(name="f", members=["m"])]}
+    a = types.SimpleNamespace(trunk_cal=None, replan_cal=None, libtt="t", libff="f", fit="fit.json", libdir="L", d1_steps=1)
+    with pytest.raises(SystemExit, match="d1 step failed"):
+        F.run_core(fams, "m", tmp_path, tmp_path, a)
