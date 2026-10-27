@@ -282,6 +282,131 @@ foreach {master sites} {%s} {
 }
 """
 
+# QC-SU-SRAMHALO (COORD 10-27 05:4x; measured: prog L2 DRT stuck at 55 markers x263-270/y121-128 = the E wd_in pin column
+# of SRAM band 2, 225 M4 pins at 0.096 um + 129 u_twd0 landing flops/INVs anchored by macro_pin_flops at halo+0.54 right in
+# front of it; BTAB r4 same SRAM corner / E pin-column junction).  Structural rule: in front of every DENSE macro pin
+# column a hard std-cell exclusion strip (placement blockage) reserves the pin-escape region, extended past both column
+# ends by the same depth (the corner junction), and macro-pin flops anchor beyond it (OT_MPF_HALO_UM = depth).
+# Plan-computed from the macro LEF + the kit tracks, no measured input:
+#   rho   = pins / um of the column (signal pins touching that LEF edge)
+#   E     = rho * turn_um * p_v / fill  (vertical routing tracks of pitch p_v, at <= fill use, needed by the pins whose
+#           wires turn within turn_um of the edge; p_v = M3 pitch for E/W columns (M4 pins), M4 pitch for N/S columns)
+#   depth = rows halo + E, snapped up to the 0.054 um site; strip = [edge, edge + depth] x [lo - depth, hi + depth].
+# Opt-in: recipe "sram_pincol_halo": true (or {"fill", "turn_um", "rho_min"}); unset = kit unchanged.
+PCH_DEFAULT = dict(fill=0.6, turn_um=None, rho_min=2.0, endcap_um=0.108, row_um=0.27)
+
+
+def _track_pitch(layer):
+    m = re.search(rf"make_tracks {layer} -x_offset [\d.]+ -x_pitch ([\d.]+)", TRACKS)
+    return float(m.group(1))
+
+
+def lef_pin_columns(lef_text, tol=0.1):
+    """signal pin columns of a macro LEF: edge (W/E/S/N in LEF frame) -> (n_pins, lo, hi) along the edge"""
+    sz = re.search(r"SIZE ([\d.]+) BY ([\d.]+)", lef_text)
+    mw, mh = float(sz.group(1)), float(sz.group(2))
+    cols = {}
+    for name, body in re.findall(r"\n\s*PIN (\S+)(.*?)\n\s*END \1", lef_text, re.S):
+        if re.search(r"USE (POWER|GROUND)", body):
+            continue
+        for r in re.findall(r"RECT\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)", body):
+            x0, y0, x1, y1 = map(float, r)
+            e = ("W" if x0 <= tol else "E" if x1 >= mw - tol else "S" if y0 <= tol else "N" if y1 >= mh - tol else None)
+            if e is None:
+                continue
+            c = (y0 + y1) / 2 if e in "WE" else (x0 + x1) / 2
+            n, lo, hi = cols.get(e, (0, c, c))
+            cols[e] = (n + 1, min(lo, c), max(hi, c))
+            break
+    return (mw, mh), cols
+
+
+_ORIENT = {"R0": (False, False), "MY": (True, False), "MX": (False, True), "R180": (True, True)}
+
+
+def pincol_halo_strips(lef_text, sites, halo, opt=None, site_w=0.054):
+    """placement-blockage strips (die um, [x0, y0, x1, y1]) in front of the dense pin columns of every placed macro"""
+    o = dict(PCH_DEFAULT, **(opt or {}))
+    turn = o["turn_um"] if o["turn_um"] is not None else halo
+    (mw, mh), cols = lef_pin_columns(lef_text)
+    out = []
+    for (x, y, orient) in sites:
+        fx, fy = _ORIENT[orient]
+        for e, (n, lo, hi) in sorted(cols.items()):
+            span = max(hi - lo, 1e-9)
+            rho = n / span
+            if n < 2 or rho < o["rho_min"]:
+                continue
+            pv = _track_pitch("M3" if e in "WE" else "M4")
+            ext = rho * turn * pv / o["fill"]
+            depth = round(-(-round((halo + ext) / site_w, 6) // 1) * site_w, 4)
+            if e in "WE":
+                ee = {"W": "E", "E": "W"}[e] if fx else e
+                ylo, yhi = (mh - hi, mh - lo) if fy else (lo, hi)
+                ya, yb = y + ylo - depth, y + yhi + depth
+                r = [x - depth, ya, x, yb] if ee == "W" else [x + mw, ya, x + mw + depth, yb]
+            else:
+                ee = {"S": "N", "N": "S"}[e] if fy else e
+                xlo, xhi = (mw - hi, mw - lo) if fx else (lo, hi)
+                xa, xb = x + xlo - depth, x + xhi + depth
+                r = [xa, y - depth, xb, y] if ee == "S" else [xa, y + mh, xb, y + mh + depth]
+            out.append(dict(site=[x, y, orient], edge=ee, pins=n, rho_per_um=round(rho, 3), p_v_um=pv,
+                            ext_um=round(ext, 4), depth_um=depth, rect=[round(v, 4) for v in r],
+                            macro_rect=[x, y, round(x + mw, 4), round(y + mh, 4)], rows_halo_um=halo))
+            # the rows beside the macro end at the rows halo with a FIXED endcap (tapcell); a blockage over it fails
+            # check_placement (DPL-0004, prog L2h 10-27), so the blockage rects leave out that endcap column
+            rw, cw = o["row_um"], o["endcap_um"] + site_w
+            cy0 = (-(-round((y - halo) / rw, 6) // 1) - 2) * rw
+            cy1 = (round((y + mh + halo) / rw, 6) // 1 + 2) * rw
+            keep = [(x - halo - cw, cy0, x - halo, cy1), (x + mw + halo, cy0, x + mw + halo + cw, cy1)]
+            out[-1]["rects"] = [[round(v, 4) for v in q] for q in _rect_sub(r, keep)]
+    return out
+
+
+def _rect_sub(r, holes):
+    """r minus axis-aligned holes, as disjoint rects (x slabs, then y pieces)"""
+    xs = sorted({r[0], r[2], *[min(max(v, r[0]), r[2]) for h in holes for v in (h[0], h[2])]})
+    out = []
+    for xa, xb in zip(xs, xs[1:]):
+        if xb - xa < 1e-6:
+            continue
+        ys = [r[1], r[3]]
+        cut = [(max(h[1], r[1]), min(h[3], r[3])) for h in holes if h[0] < xb - 1e-6 and h[2] > xa + 1e-6]
+        pieces, lo = [], r[1]
+        for a, b in sorted(c for c in cut if c[1] > c[0]):
+            if a > lo + 1e-6:
+                pieces.append((lo, a))
+            lo = max(lo, b)
+        if r[3] > lo + 1e-6:
+            pieces.append((lo, r[3]))
+        out += [[xa, a, xb, b] for a, b in pieces]
+    return out
+
+
+PCH_TCL = """# GENERATED by gen_core_kit_qc.py (QC-SU-SRAMHALO): hard std-cell exclusion strips in front of dense macro pin columns
+# (sram_pincol_halo.json: rule + per-strip numbers).  Clipped to the core area; tree / repeater sites must stay outside.
+set ot_pch_core [$b getCoreArea]
+foreach r {%s} {
+  lassign $r x0 y0 x1 y1
+  set x0 [expr {max(round($x0 * $dbu), [$ot_pch_core xMin])}]; set y0 [expr {max(round($y0 * $dbu), [$ot_pch_core yMin])}]
+  set x1 [expr {min(round($x1 * $dbu), [$ot_pch_core xMax])}]; set y1 [expr {min(round($y1 * $dbu), [$ot_pch_core yMax])}]
+  if {$x1 > $x0 && $y1 > $y0} { odb::dbBlockage_create $b $x0 $y0 $x1 $y1 }
+}
+puts "SRAM_PINCOL_HALO: [llength {%s}] blockage rects"
+"""
+
+
+def pch_tcl(strips):
+    rs = " ".join("{%g %g %g %g}" % tuple(q) for s in strips for q in s.get("rects", [s["rect"]]))
+    return PCH_TCL % (rs, rs)
+
+
+def pch_hits(strips, points):
+    """names of (name, x, y) points (e.g. clock tree / repeater sites) that fall inside a strip"""
+    return [n for n, px, py in points for s in strips
+            if s["rect"][0] < px < s["rect"][2] and s["rect"][1] < py < s["rect"][3]]
+
+
 RUN_KIT = RUN_KIT.replace("@LINT_STEP@", core_flow.LINT_STEP).replace("@FF_GRT_STEP@", core_flow.FF_GRT_STEP)
 assert "@" not in RUN_KIT.split("bash -lc", 1)[1].split("> \"$K/run_$GOAL.log\"", 1)[0], "RUN_KIT placeholder left"
 
@@ -714,12 +839,31 @@ def main():
     # the kit's own GRT hooks (drv.tcl fanout cap / post_grt_drv.tcl DRV + hold pass) chained into grt_*_core.tcl
     flow_cfg = core_flow.apply(kd, ib, mod, time_unit_ps=TIME_UNIT_PS, rc_cal=not a.stock_rc,
                                hold_ff_margin=float(rec.get("hold_ff_margin", 5.0)),
-                               grt_pre_extra=["/work/drv.tcl"], grt_post_extra=["/work/post_grt_drv.tcl"])
+                               grt_pre_extra=["/work/drv.tcl"] + (["/work/sram_pincol_keepoff.tcl"]
+                                                                   if mplace and rec.get("sram_pincol_halo") else []),
+                               grt_post_extra=["/work/post_grt_drv.tcl"])
+    if mplace and rec.get("sram_pincol_halo"):   # QC-SU-SRAMHALO: pin-face corner M2-M5 routing keep-off (shared hook)
+        shutil.copyfile(REPO / "physical/common_flow/sram_pincol_keepoff.tcl", kd / "sram_pincol_keepoff.tcl")
     (kd / "run_kit.sh").write_text(RUN_KIT)
     (kd / "run_kit.sh").chmod(0o755)
     if mplace:
         (kd / "macro_place.tcl").write_text(MACRO_TCL % " ".join(
             f"{ms} {{{' '.join('{%g %g %s}' % s for s in v)}}}" for ms, v in mplace.items()))
+    pch = rec.get("sram_pincol_halo")
+    pch_strips, pch_depth = [], None
+    if mplace and pch:
+        halo = float(rec.get("macro_rows_halo", 4.32))
+        for ms, v in mplace.items():
+            pch_strips += [dict(s, master=ms) for s in pincol_halo_strips(
+                (kd / "macros" / f"{ms}.lef").read_text(), v, halo, pch if isinstance(pch, dict) else None)]
+        if pch_strips:
+            pch_depth = max(s["depth_um"] for s in pch_strips)
+            with open(kd / "macro_place.tcl", "a") as f_:
+                f_.write(pch_tcl(pch_strips))
+        (kd / "sram_pincol_halo.json").write_text(json.dumps(dict(
+            schema="opentallas.qc.sram_pincol_halo.v1", rule="depth = rows halo + rho*turn*p_v/fill, site-snapped",
+            opt=dict(PCH_DEFAULT, **(pch if isinstance(pch, dict) else {})), rows_halo_um=halo,
+            mpf_halo_um=pch_depth, strips=pch_strips), indent=1) + "\n")
     # register-on-every-pin synthesis hook of the closed kits (keep_pin_regs: distinct pin registers are not folded)
     shutil.copyfile(REPO / "physical/common_flow/ot_keep_regs.tcl", kd / "ot_keep_regs.tcl")
     extra = ["export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl", "export OT_KEEP_PIN_REGS = 1",
@@ -783,6 +927,8 @@ def main():
              if mplace else []),
            # legacy closures used the default Yosys frontend (it keeps 1-bit [0:0] buses: plan pins ck[0], fo[0])
            *(["export SYNTH_HDL_FRONTEND = slang"] if rec.get("slang") else []),
+           # QC-SU-SRAMHALO: macro-pin flops anchor beyond the pin-escape strip
+           *([f"export OT_MPF_HALO_UM = {pch_depth:g}"] if pch_depth else []),
            *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
            # FLOW-FIX 10-25 (core_flow, LAST so its override PRE/POST_GLOBAL_ROUTE_TCL win): OT_VCLK_TT / OT_VCLK_FF,
            # OT_HOLD_FF_MARGIN, chained GRT hooks, RCX-calibrated wire RC (LAYER_PARASITICS_FILE + SET_RC_TCL)
@@ -793,6 +939,7 @@ def main():
                       gpl_hook=kd / "face_flops.tcl", clock_ports=clks, reset_ports=rsts)
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
+    core_flow.install_signal_repair(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
@@ -807,7 +954,7 @@ def main():
               gates=["rtl_lint (pre-synth)", "sdc_lint (pre-synth)", "selrange (synth)", "face_guard (post-synth)",
                      "lec (post-synth)", "pin_audit", "signoff.py tt,ff"], repo_rev=rev,
               sdc_lint_sha256=sha(TOOL / "sdc_lint.py"), face_guard_sha256=sha(TOOL / "face_guard.py"),
-              signoff_sha256=sha(TOOL / "signoff.py"), macros=mplace,
+              signoff_sha256=sha(TOOL / "signoff.py"), macros=mplace, sram_pincol_halo=[s["rect"] for s in pch_strips],
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())
                            for f, pt in patches.items()], kit_hash=kit_hash(kd))
     if ms is not None:

@@ -23,6 +23,64 @@ from pathlib import Path
 TOOL = Path(__file__).resolve().parent
 FF_TT_INSERTION_RATIO = 0.81   # gen_phys.FF_TT_INSERTION_RATIO: routed RCX FF/TT pin-register mean ratio
 RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
+RC_CAL_LAYERS = ("M2", "M3", "M4", "M5", "M6", "M7")
+
+
+def check_rc_cal(path):
+    """FLOW-RC-1 (2026-10-27) fail-closed guard: a kit RC file must carry a SIGNAL-net and a CLOCK-net calibration.
+    Required: '# OT_RC_CAL signal <basis>' and '# OT_RC_CAL clock <basis>' records, 'set_wire_rc -signal' and
+    'set_wire_rc -clock' (placement-stage per-class RC) and 'set_layer_rc -layer' for every routing layer M2-M7
+    (GRT / estimate basis).  Raises SystemExit('RC_CAL_GUARD ...') otherwise; returns the parsed records."""
+    import re
+    path = Path(path)
+    if not path.is_file():
+        raise SystemExit(f"RC_CAL_GUARD missing RC calibration file {path}")
+    txt = path.read_text()
+    rec = dict(re.findall(r"^#\s*OT_RC_CAL\s+(signal|clock)\s+(\S.*)$", txt, re.M))
+    miss = [k for k in ("signal", "clock") if k not in rec]
+    miss += [f"set_wire_rc -{k}" for k in ("signal", "clock")
+             if not re.search(rf"^set_wire_rc\s+-{k}\s+-resistance\s+\S+\s+-capacitance\s+\S+", txt, re.M)]
+    miss += [f"set_layer_rc {L}" for L in RC_CAL_LAYERS
+             if not re.search(rf"^set_layer_rc\s+-layer\s+{L}\s+-resistance\s+\S+\s+-capacitance\s+\S+", txt, re.M)]
+    if miss:
+        raise SystemExit(f"RC_CAL_GUARD {path}: no {', '.join(miss)} (a kit without a signal-net RC calibration fails "
+                         "closed; FLOW-RC-1)")
+    return rec
+
+
+def install_rc(kd, src=None):
+    """copy the shared calibrated RC file into kit dir kd as setRC_rcx.tcl after check_rc_cal (every generator)."""
+    src = Path(src) if src else TOOL / RC_CAL_FILE
+    check_rc_cal(src)
+    shutil.copyfile(src, Path(kd) / RC_CAL_KIT)
+    return check_rc_cal(Path(kd) / RC_CAL_KIT)
+
+
+def install_signal_repair(kd, cfg):
+    """OWNER 10-27: segment long signal wires at placement, before CTS/routing.
+
+    Preserve an existing POST_RESIZE hook first. repair_design skips clock nets;
+    the shared 60 um default changes no register, latency or clock constraint.
+    """
+    import re
+    kd = Path(kd)
+    hook = "/work/signal_maxwire.tcl"
+    previous = None
+    for line in cfg:
+        match = re.match(r"(?:override )?export POST_RESIZE_TCL\s*=\s*(.+)$", line)
+        if match:
+            previous = match.group(1).strip()
+    cfg[:] = [line for line in cfg if not re.match(r"(?:override )?export POST_RESIZE_TCL\s*=", line)]
+    shutil.copyfile(TOOL / "signal_maxwire.tcl", kd / "signal_maxwire.tcl")
+    shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
+    chain = []
+    if previous and previous != hook:
+        chain.append(f"source {previous}")
+    chain.append("source /work/signal_maxwire.tcl")
+    (kd / "post_resize_signal.tcl").write_text("\n".join(chain) + "\n")
+    cfg.append("override export POST_RESIZE_TCL = /work/post_resize_signal.tcl")
+    return cfg
+
 LINT_RC = 8
 
 # first step inside the docker bash -lc string (rc starts at 0 before it)
@@ -76,7 +134,7 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=5.0, grt_
            "override export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_core.tcl",
            "override export POST_GLOBAL_ROUTE_TCL = /work/grt_post_core.tcl"]
     if rc_cal:
-        shutil.copyfile(TOOL / RC_CAL_FILE, kd / RC_CAL_KIT)
+        install_rc(kd)
         cfg += [f"export LAYER_PARASITICS_FILE = /work/{RC_CAL_KIT}", f"export SET_RC_TCL = /work/{RC_CAL_KIT}"]
     (kd / "clock_binding.json").write_text(json.dumps(dict(
         type=design, insertion_ps=dict(tt=b["tt"], ff=b["ff"]), insertion_tol_ps=b["tol"], basis=b["basis"],

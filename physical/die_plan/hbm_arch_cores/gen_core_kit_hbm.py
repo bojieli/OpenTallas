@@ -783,13 +783,17 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 outputs=[b for b in pb if dirs.get(b) == "output"],
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
                 io_floor_ps={b: IO_BUDGET * per for b in pb}, port_latency_ps={})
-    # sdc_lint.lint_kit_files passes this file as lint(**ctx): only lint() keywords (F1 FF basis lives in freeze.json flow.f1)
-    (kd / "sdc_lint.json").write_text(json.dumps({k: v for k, v in lctx.items() if k not in ("insertion_ff_ps", "insertion_basis")}, indent=1) + "\n")
+    # sdc_lint.lint_kit_files passes this file as lint(**ctx): only lint() keywords.  HBM-CORES-R6 10-27: insertion_ff_ps
+    # IS a lint() keyword and is the per-corner FF binding signoff.py reads from this file (collar R5 attempt 3 FF hold
+    # was timed against the single TT vclk = ff_ref_missing because it was dropped here); only the basis text stays
+    # out (freeze.json flow.f1).  sdc_lint.lint_kit_files fails closed if it disagrees with config.mk OT_VCLK_FF.
+    lint_ctx = {k: v for k, v in lctx.items() if k != "insertion_basis"}
+    (kd / "sdc_lint.json").write_text(json.dumps(lint_ctx, indent=1) + "\n")
     rst_in = [r for r in rsts if dirs.get(base(r)) != "output"]   # RECIPES2: a reset-named OUTPUT (remainder relay
     if rst_in != rsts:                                               # output) is a data output, never an input delay
         rsts = rst_in
         (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common))
-    lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **{k: v for k, v in lctx.items() if k not in ("insertion_ff_ps", "insertion_basis")})
+    lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lint_ctx)
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
@@ -815,7 +819,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         for f in ("core_density_taps.tcl", "core_tap_align.tcl"):
             shutil.copyfile(HERE / f, kd / f)
     if not a.stock_rc:
-        shutil.copyfile(TOOL / "setRC_rcx_asap7.tcl", kd / "setRC_rcx.tcl")
+        sys.path.insert(0, str(TOOL)); import core_flow   # FLOW-RC-1 fail-closed signal+clock RC guard
+        core_flow.install_rc(kd, TOOL / "setRC_rcx_asap7.tcl")
     if not a.no_f4:
         shutil.copyfile(HERE / "f4_chain_leaf.tcl", kd / "f4_chain_leaf.tcl")
     (kd / "post_synth_actual.tcl").write_text("source /work/face_keep_release.tcl\n# Preserve the actual post-eliminate_dead_logic graph for face_guard.\nwrite_verilog $::env(RESULTS_DIR)/1_synth.v\n")
@@ -1006,6 +1011,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                       gpl_hook=kd / "face_flops.tcl")
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
+    core_flow.install_signal_repair(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),

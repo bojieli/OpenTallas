@@ -158,6 +158,13 @@ G0C (COORD 10-23): the `hard_cores`, `core_faces` and `complete` findings are ER
 `check.py --completeness`; plain G0 reports them as WARN `[G0C] ...`. `summary.g0c` lists findings per partition type
 (`g3_eligible` = types with none and no die-level gap).
 
+Clock mesh continuity (COORD PATH-S81-PD12 ruling A, 2026-10-27, all dies): `die_clock_mesh.py combo` emits a VIA89 at
+every M8 x M9 mesh strap crossing BY DEFAULT (`--no-mesh-vias` = diagnostic only). `check.py --clock-build DIR` (repeatable)
+is a plain G0 ERROR (G0 and G0C) unless the mesh in DIR is one connected net: `meta.mesh_vias` >= the crossing count of every
+region (macro-clipped straps counted as combo emits them) and, when routed, `OT_MESH_VIAS` >= that count in every
+`combo_<corner>.log`. The same check (`die_clock_mesh.mesh_via_findings`) refuses `die_sta_related.py --mesh-signoff` and
+BLOCKs `die_clock_mesh.py report`; `die_clock_mesh.py meshvias DIR` runs it alone (exit 1 on a finding).
+
 Cross-die G0C rules (PLAN-TOOL5, COORD DIE-PLAN VISUAL REVIEW 10-23 (a)-(e); `die_io.py`, `reach.py`, `xdie.py`; all
 ERROR only under `--completeness`, counts in `summary.xdie_counts`):
 - `die_io_plan` (a): every IO-class content (SerDes, UCIe, HBM PHY; catalog `die_io.CLASSES`, module regex -> off-die
