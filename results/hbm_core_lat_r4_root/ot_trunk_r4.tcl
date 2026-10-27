@@ -32,6 +32,14 @@ if {![llength $tr_rows]} { error "OT_TRUNK no row inside the island" }
 set tr_rows [lsort -integer -index 0 $tr_rows]
 set tr_w [$tr_m getWidth]
 set tr_per [expr {int(floor((round($tr_x1*$tr_dbu) - round($tr_x0*$tr_dbu)) / double($tr_w))) - 1}]
+# the island is a placement blockage (master slice); DPL counts a cell inside a blockage as not placed in a row
+# (DPL-0004/0033).  Replace it by per-row blockage strips that leave exactly the trunk cell footprints open.
+set tr_ib [list [expr {round($tr_x0*$tr_dbu)}] [expr {round($tr_y0*$tr_dbu)}] [expr {round($tr_x1*$tr_dbu)}] [expr {round($tr_y1*$tr_dbu)}]]
+set tr_nbk 0
+foreach k [$tr_blk getBlockages] { set q [$k getBBox]
+  if {[list [$q xMin] [$q yMin] [$q xMax] [$q yMax]] eq $tr_ib} { odb::dbBlockage_destroy $k; incr tr_nbk } }
+if {$tr_nbk != 1} { error "OT_TRUNK expected one island blockage, found $tr_nbk" }
+set tr_used [dict create]
 set tr_prev $tr_pnet; set tr_k 0; set tr_ri 0
 for {set i 0} {$i < $tr_n} {incr i} {
   if {$tr_k >= $tr_per} { incr tr_ri; set tr_k 0 }
@@ -50,12 +58,25 @@ for {set i 0} {$i < $tr_n} {incr i} {
     if {[$mt getIoType] eq "INPUT"} { $it connect $tr_prev } elseif {[$mt getIoType] eq "OUTPUT"} { $it connect $out }
   }
   $inst setDoNotTouch 1
+  dict lappend tr_used [$rb yMin] [list $x [expr {$x + $tr_w}]]
   set tr_prev $out; incr tr_k
+}
+lassign $tr_ib bx0 by0 bx1 by1
+set tr_strips 0
+foreach r [$tr_blk getRows] { set b [$r getBBox]
+  if {[$b yMin] < $by0 || [$b yMax] > $by1} continue
+  set gx $bx0
+  if {[dict exists $tr_used [$b yMin]]} {
+    foreach seg [lsort -integer -index 0 [dict get $tr_used [$b yMin]]] { lassign $seg sx ex
+      if {$sx > $gx} { odb::dbBlockage_create $tr_blk $gx [$b yMin] $sx [$b yMax]; incr tr_strips }
+      set gx $ex }
+  }
+  if {$gx < $bx1} { odb::dbBlockage_create $tr_blk $gx [$b yMin] $bx1 [$b yMax]; incr tr_strips }
 }
 foreach it $tr_loads { $it disconnect; $it connect $tr_prev }
 for {set i 1} {$i <= $tr_n} {incr i} { [$tr_blk findNet ot_trunk_n$i] setDoNotTouch 1 }
 global_connect
-puts "OT_TRUNK inserted $tr_n x $tr_cell in island {$tr_x0 $tr_y0 $tr_x1 $tr_y1} rows_used [expr {$tr_ri + 1}] loads_moved [llength $tr_loads] (FIRM, dont_touch)"
+puts "OT_TRUNK inserted $tr_n x $tr_cell in island {$tr_x0 $tr_y0 $tr_x1 $tr_y1} rows_used [expr {$tr_ri + 1}] loads_moved [llength $tr_loads] (FIRM, dont_touch); island blockage -> $tr_strips row strips around the trunk cells"
 estimate_parasitics -placement
 }
 if {[info exists ::env(OT_TRUNK_NEXT_TCL)] && $::env(OT_TRUNK_NEXT_TCL) ne ""} { source $::env(OT_TRUNK_NEXT_TCL) }
