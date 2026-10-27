@@ -1,5 +1,5 @@
 {
- "note": "Current repository S81 source assembly; preserves adopt178 topology, real Eng boot decoder and source defines. Current canonical RTL replaces frozen caches. Required bind178b parents and generated source assemblies are versioned; no needed module dropped. Source assembly is not current physical or token signoff. | S81-UNBLOCK-2 10-27 PD5 variant: identical to asbuilt_b178_coll.json except dead_input_proofs = the PD5 re-keyed proof (pd5_dead_inputs.py), for the PD5 composed plan d217c071 + dead_inputs declarations.",
+ "note": "Current repository S81 source assembly; preserves adopt178 topology, real Eng boot decoder and source defines. Current canonical RTL replaces frozen caches. Required bind178b parents and generated source assemblies are versioned; no needed module dropped. Source assembly is not current physical or token signoff. | S81-UNBLOCK-2 10-27 PD5 variant: identical to asbuilt_b178_coll.json except dead_input_proofs = the PD5 re-keyed proof (pd5_dead_inputs.py), for the PD5 composed plan d217c071 + dead_inputs declarations. clock_landing_table = the PD5 composed regional landing table (path-s81-pd5-1026 src_b2c/regions/landed_crossings.json, 570 lanes / 1210 ports, +3 per crossing) so the bound partitions carry the landing rings the PD5 latency table prices.",
  "netlist": [
   "physical/die_plan/s81/bind/inputs/die_b178.v"
  ],
@@ -1259,5 +1259,6 @@
    },
    "reason": "PCBASE0 entry sector address has26bits;39bit real entry ABI keeps tags/PC/v exact. Require all4 removedsourcebits to resolve0; no waiver."
   }
- ]
+ ],
+ "clock_landing_table": "physical/die_plan/s81/pd5/landed_crossings_pd5.json"
 }
