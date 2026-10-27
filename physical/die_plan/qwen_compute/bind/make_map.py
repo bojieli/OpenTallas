@@ -36,3 +36,14 @@ parts = {"io_ucie": "coll_core", "bump_pkg_s0": "coll_core", "bump_pkg_s1": "col
          **{x: "glue" for x in ("d2d_rom", "sys_face", "embed_prov", "mu_ctxrx", "mu_dhobs", "bump_fwd_epoch",
                                 "bump_fwd_lrst")}}
 Path(__file__).with_name("asbuilt_map.json").write_text(json.dumps({"parts": parts, "rules": rules}, indent=1) + "\n")
+
+# QC-P6-XT1 10-23: map for the QC plan of QC-P6-G0C @d33d3c4e4 (main 3e05af806), recipe asbuilt_xt1.json:
+#  * QC-P6-R8 @1f5b9bee3 merged r_tap + r_ctl into one partition: the slice u_tap leaf -> sl_<col>_ctl;
+#  * QC-P6-G0C moved the coll UCIe PHY with u_shared + u_gearbox (FDI clock domains) to the W-edge partition coll_ucie
+#    (gen_plan COLL_INST_SEG io_ucie / coll_seg shared_fault -> coll_ucie).
+# asbuilt_map.json above stays the map of the earlier plans (recipes asbuilt.json / asbuilt_r8.json / asbuilt_tie.json).
+rules_x = [[r, "sl_\\1_ctl" if r == S + "u_tap" else p] for r, p in rules]
+ci = rules_x.index([r"io_collective\..*", "coll_core"])
+rules_x[ci:ci] = [[CO + r"u_shared", "coll_ucie"], [CO + r"g_six_five\.u_gearbox", "coll_ucie"]]
+parts_x = dict(parts, io_ucie="coll_ucie")
+Path(__file__).with_name("asbuilt_map_xt1.json").write_text(json.dumps({"parts": parts_x, "rules": rules_x}, indent=1) + "\n")

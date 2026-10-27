@@ -38,9 +38,15 @@ def test_qc_hand_values():
     assert _v(d, "TREQ_CMD_OFFSET") == 0
     assert _v(d, "XDIE_SEAM_C") == "2,2,2,3,2,2"
     assert _v(d, "D2D_TXDP_C") == [8, 3, 1, 10] and d["constants"]["D2D_TXDP_C"]["sv_literal"] == "32'h0a010308"
-    # the bind hook applied the same RTL parameters (param_regen.json): no MISMATCH
-    assert "MISMATCH" not in d["verdict"] and "ERROR" not in d["verdict"], d["verdict"]
+    # the bind hook applied the same RTL parameters (param_regen.json): no MISMATCH; the one ERROR is the unaligned
+    # CB16 reduction tree of qc12 (STEWARD-TOKj 22:00 cause B), see test_qc_tree_alignment
+    assert "MISMATCH" not in d["verdict"] and d["verdict"].get("ERROR") == 1, d["verdict"]
+    assert d["constants"]["QC_TREE_ALIGN"]["status"] == "ERROR"
     assert d["constants"]["COLL_LS"]["bind_applied"] == ["389"]
+    # XT1 head calendar (STEWARD-TOKj 21:47): hr fw->tap 11 vs x fw->stm 2 + stm->tap 3 -> lead >= 3 + 6 = 9 (sweep: lead 8
+    # FAULT heads @181, lead 9 CLEAN)
+    assert _v(d, "XT1_HEAD_LEAD_MIN") == 9 and d["constants"]["XT1_HEAD_LEAD_MIN"]["status"] == "OK"
+    assert {(r["hr_fw_tap"], r["x_fw_stm"], r["x_stm_tap"]) for r in _v(d, "XT1_HEAD_PATHS")} == {(11, 2, 3)}
 
 
 def test_kv_hand_values():
@@ -86,6 +92,58 @@ def test_qc_regenerates_on_new_lanes(tmp_path):
     assert _v(d, "COLL_LS") == 392 and _v(d, "COLL_F2_PHY") == 339 + 15
 
 
+def _tree_padded(src, dst):
+    """the bind with the minimum tree alignment pads applied to its landed depths (what qc_tree_pads.json binds)"""
+    shutil.copytree(src, dst)
+    p = dst / "bus_groups.json.gz"
+    bg = json.load(gzip.open(p, "rt"))
+    ms = [dict(sink=g["sink"], port=m["sink_port"], source=m["source"], asb=m["asbuilt_stages"], bound=m["bound_stages"],
+               landed=m["landed_stages"]) for g in bg["landing"] for m in g["members"]]
+    pads = {(f"{cl}.u_t_{n[0]}_{n[1]}", f"n_{sd}"): x for cl, n, sd, x in RC.tree_pads(ms)}
+    for g in bg["landing"]:
+        for m in g["members"]:
+            m["landed_stages"] += pads.get((g["sink"], m["sink_port"]), 0)
+    json.dump(bg, gzip.open(p, "wt"))
+    return pads
+
+
+def test_qc_tree_alignment(tmp_path):
+    """COORD 23:4x: no as-built ring pads; only the CB16 node sides must land on one cycle.  qc12 (BINDER3 bound_r8,
+    unpadded) skews 3 nodes in all 48 clusters -> ERROR; the minimum pads (earlier side only) make it OK.  On the
+    QC-P6-XT1 bind of the G0C plan (qcx1, pads bound) the rule is OK and the pads it would need on the bare bound depths
+    are a00 +18, b12 +12, a22 +2 (789,504 flops); the per-cluster result shift is a calendar constant."""
+    d = RC.run("qwen_compute", FX / "qc12")
+    t = _v(d, "QC_TREE_ALIGN")
+    assert (t["clusters"], t["nodes"], t["skewed_landed"]) == (48, 15, 144)
+    pads = _tree_padded(FX / "qc12", tmp_path / "qp")
+    assert len(pads) == 144
+    d = RC.run("qwen_compute", tmp_path / "qp")
+    assert d["constants"]["QC_TREE_ALIGN"]["status"] == "OK" and set(d["verdict"]) == {"OK"}, d["verdict"]
+    x = RC.run("qwen_compute", FX / "qcx1")
+    t = _v(x, "QC_TREE_ALIGN")
+    assert x["constants"]["QC_TREE_ALIGN"]["status"] == "OK" and t["skewed_landed"] == 0
+    assert t["pads_needed_on_bound"] == ["u_t_0_0.n_a +18", "u_t_1_2.n_b +12", "u_t_2_2.n_a +2"]
+    assert t["pad_flops"] == 789504
+    assert _v(x, "QC_CLUSTER_RESULT_SHIFT") == {0: -21, 1: -13, 2: -19, 3: -27}
+    # a stale tree (one pad short by one stage) is caught
+    b = _shift(FX / "qcx1", tmp_path / "qs", lambda g, m: g["sink"] == "c16_W5_2.u_t_0_0" and m["sink_port"] == "n_a", -1)
+    assert RC.run("qwen_compute", b)["constants"]["QC_TREE_ALIGN"]["status"] == "ERROR"
+
+
+def test_qc_head_lead_follows_the_lanes(tmp_path):
+    """hr fw->tap +2 stages -> lead 3 + 8 = 11; fw->stm +2 instead -> 3 + 4 = 7; QC-P6-XT1 bind of the G0C plan (tap
+    inside sl_*_ctl): hr fw->ctl 6 vs x 2 + 2 -> 5"""
+    assert _v(RC.run("qwen_compute", FX / "qcx1"), "XT1_HEAD_LEAD_MIN") == 5
+    b = _shift(FX / "qc12", tmp_path / "h1", lambda g, m: g["sink"].endswith("u_tap") and m["sink_port"] == "hr_q", 2)
+    assert _v(RC.run("qwen_compute", b), "XT1_HEAD_LEAD_MIN") == 11
+    b = _shift(FX / "qc12", tmp_path / "h2", lambda g, m: g["sink"].endswith("u_stm") and m["sink_port"] == "sw_i", 2)
+    assert _v(RC.run("qwen_compute", b), "XT1_HEAD_LEAD_MIN") == 7
+    # one slice slower: the calendar takes the max and flags the spread
+    b = _shift(FX / "qc12", tmp_path / "h3", lambda g, m: g["sink"] == "dvs_E3.u_core.u_sub.u_tap" and m["sink_port"] == "hr_q", 1)
+    d = RC.run("qwen_compute", b)
+    assert _v(d, "XT1_HEAD_LEAD_MIN") == 10 and d["constants"]["XT1_HEAD_LEAD_MIN"]["status"] == "WARN"
+
+
 def test_kv_regenerates_on_new_lanes(tmp_path):
     """krq +1 on every frame -> RESPONSE_LAT 13, QK_ISSUE_AGE stays 34 (floor); kvn to seq core +2 -> KVN_A0 36"""
     b = _shift(FX / "kv39", tmp_path / "kv", lambda g, m: m["sink_port"] == "kreq", 1)
@@ -122,11 +180,18 @@ def test_bind_post_gate(tmp_path):
     """the post-bind gate writes regen/constants.json + the SV package + bind_gate.json; a skipped smoke is never PASS"""
     import bind_post
     b = tmp_path / "qc12"
-    shutil.copytree(FX / "qc12", b)
+    _tree_padded(FX / "qc12", b)
     assert bind_post.main(["--die", "qwen_compute", "--bound", str(b), "--smoke", "skip"]) == 1
     g = json.loads((b / "bind_gate.json").read_text())
     assert (g["verdict"], g["regen"]["verdict"], g["smoke"]["verdict"]) == ("INCOMPLETE", "PASS", "SKIPPED")
-    assert "localparam int COLL_LS = 389;" in (b / "regen" / "qwen_compute_sched_pkg.sv").read_text()
+    sv = (b / "regen" / "qwen_compute_sched_pkg.sv").read_text()
+    assert "localparam int COLL_LS = 389;" in sv and "localparam int XT1_HEAD_LEAD_MIN = 9;" in sv
+    # the unaligned tree (qc12 as bound) fails the gate at regen, before any smoke
+    b2 = tmp_path / "qc12u"
+    shutil.copytree(FX / "qc12", b2)
+    assert bind_post.main(["--die", "qwen_compute", "--bound", str(b2), "--smoke", "skip"]) == 1
+    g = json.loads((b2 / "bind_gate.json").read_text())
+    assert (g["verdict"], g["regen"]["verdict"]) == ("FAIL", "FAIL") and "QC_TREE_ALIGN" in g["regen"]["problems"]
 
 
 def test_bound_rtl_must_carry_regen_values(tmp_path):

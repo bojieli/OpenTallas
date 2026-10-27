@@ -114,12 +114,16 @@ def tiles_of(rtl: Path, module: str):
 
 def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
     seed = re.compile(r'^(sl_W5_\w+|c_W5_tn_\d\d' + (r'|c_W5_tf_\d\d' if clusters == 'both' else '') + r')$')
-    nseed = 23 if clusters == 'both' else 19
+    # W5 slice partitions (15 with u_tap in sl_W5_tap, 14 on the G0C plan where u_tap lives in sl_W5_ctl) + 4/8 clusters
     out.mkdir(parents=True, exist_ok=True)
     wires, insts = parse_top(top)
     keep = [i for i in insts if seed.match(i['name'])]
-    if len(keep) != nseed:
-        raise SystemExit(f'carve: {len(keep)} seed partitions != {nseed}: {[i["name"] for i in keep]}')
+    names = {i['name'] for i in keep}
+    need = {'sl_W5_fw', 'sl_W5_stm', 'sl_W5_ctl', 'sl_W5_hc0', 'sl_W5_hc1', 'sl_W5_hc2', 'sl_W5_hc3'}
+    ncl = sum(n.startswith('c_W5_') for n in names)
+    nsl = len(names) - ncl
+    if ncl != (8 if clusters == 'both' else 4) or not need <= names or nsl not in (14, 15):
+        raise SystemExit(f'carve: seed partitions {sorted(names)} (clusters {ncl}, slice {nsl}, missing {sorted(need - names)})')
     drv, rd = {}, {}
     for i in keep:
         pd = ports_of(rtl, i['module'])
@@ -423,7 +427,7 @@ else
   BUILT=0
 fi
 T1=$(date +%s)
-python3 bench/xt1_bench.py gen --gold inputs/gold_near.json --out ev.txt --mode nominal --lead 8 --gap 4 > gen.out 2>&1 \
+python3 bench/xt1_bench.py gen --gold inputs/gold_near.json --out ev.txt --mode nominal --lead __LEAD__ --gap __GAP__ > gen.out 2>&1 \
   || { echo "RESULT SMOKE GEN_FAIL"; tail -5 gen.out; exit 2; }
 GF=inputs/gold_far.json; [ -f $GF ] || GF=inputs/gold_near.json
 for m in 0 __MUT__; do
@@ -431,7 +435,7 @@ for m in 0 __MUT__; do
      +SMOKE_MUT_SKEW=$m > sim_m$m.out 2>&1; echo "sim rc=$?" >> sim_m$m.out
   [ -f log_m$m.txt ] || : > log_m$m.txt
   python3 bench/xt1n_bench.py check --gold-near inputs/gold_near.json --gold-far $GF --log log_m$m.txt --mode nominal \
-     --lead 8 --gap 4 > check_m$m.txt 2>&1
+     --lead __LEAD__ --gap __GAP__ > check_m$m.txt 2>&1
   echo "[mut=$m] $(grep -h '^RESULT' check_m$m.txt | tail -1)"
 done
 T2=$(date +%s)
@@ -466,7 +470,8 @@ def qc_prepare(a, work: Path):
             raise SystemExit(f'bench file {f} not in {a.src_rev}')
         (bench / Path(f).name).write_bytes(r.stdout)
     run = (RUN_SH.replace('__VERILATOR__', VERILATOR).replace('__JOBS__', str(a.jobs)).replace('__BJOBS__', str(a.build_jobs)).replace('__GROUPS__', str(a.output_groups))
-           .replace('__NCYC__', str(a.ncyc)).replace('__MUT__', str(a.mut_skew)))
+           .replace('__NCYC__', str(a.ncyc)).replace('__MUT__', str(a.mut_skew))
+           .replace('__LEAD__', str(a.lead)).replace('__GAP__', str(a.gap)))
     (work / 'run_smoke.sh').write_text(run)
     (work / 'run_smoke.sh').chmod(0o755)
     meta = dict(carve=rep, closure_files=len(flist), files=flist, includes=[str(Path(i).relative_to(S.base)) for i in incs],
@@ -534,12 +539,13 @@ def run_qc(a):
                             partitions=meta['carve']['seeds'], rom_tiles=meta['carve']['rom_tiles'],
                             closure_files=meta['closure_files'], unresolved_modules=meta['unresolved_modules'],
                             ambiguous_modules=sorted(meta['ambiguous']), src_rev=a.src_rev,
-                            bench='xt1_bench gen nominal lead 8 gap 4 -> xt1n_bench check (record gold c2/c3, masks_fixed)',
+                            bench=f'xt1_bench gen nominal lead {a.lead} gap {a.gap} -> xt1n_bench check (record gold c2/c3, masks_fixed)',
+                            lead=a.lead, lead_source=a.lead_source, gap=a.gap,
                             mutant=f'+SMOKE_MUT_SKEW={a.mut_skew} (hr lane end {a.mut_skew} cycle late vs cmd/tl)'),
                cycles=a.ncyc, command=cmd)
     if a.constants:
-        rep['constants_note'] = ('the bound top carries the regenerated RTL parameters (bind param_regen); xt1 uses no '
-                                 'compiler constant beyond lead/gap, so the file is recorded, not consumed')
+        rep['constants_note'] = ('the bound top carries the regenerated RTL parameters (bind param_regen); xt1 takes the '
+                                 'XPF -> first-beat lead from the constants (XT1_HEAD_LEAD_MIN), the rest is recorded')
     if not a.submit:
         print(f'staged {work} ({meta["closure_files"]} files); submit with:\n  rsync -a {work}/ <host>:{remote}/ && {cmd}')
         return rep, None
@@ -616,6 +622,9 @@ def main():
                     help='near (default: 37 min, 43 GB measured) or both (64 min, 76 GB)')
     ap.add_argument('--ncyc', type=int, default=60 + 1600 * 4)
     ap.add_argument('--mut-skew', type=int, default=1)
+    ap.add_argument('--lead', type=int, default=None,
+                    help='xt1 XPF -> first-beat lead (default: XT1_HEAD_LEAD_MIN from --constants, else the record 8)')
+    ap.add_argument('--gap', type=int, default=4)
     ap.add_argument('--mem', type=int, default=None, help='ot-run --mem GB (default: near 56 / both 90; measured peak 43.4 / 75.8 GB)')
     ap.add_argument('--jobs', type=int, default=32)
     ap.add_argument('--build-jobs', type=int, default=96)
@@ -626,6 +635,15 @@ def main():
     a = ap.parse_args()
     if a.mem is None:
         a.mem = 56 if a.clusters == 'near' else 90
+    a.lead_source = 'cli'
+    if a.lead is None:
+        c = json.loads(a.constants.read_text()).get('constants', {}).get('XT1_HEAD_LEAD_MIN', {}) if a.constants else {}
+        if c.get('status') in ('OK', 'WARN') and isinstance(c.get('value'), int):
+            # QC-P6-XT1 (STEWARD-TOKj 21:47): the regenerated calendar lead; the mutant (+SMOKE_MUT_SKEW=1, hr one cycle
+            # late) then sits exactly one cycle below it
+            a.lead, a.lead_source = c['value'], f'{a.constants} XT1_HEAD_LEAD_MIN'
+        else:
+            a.lead, a.lead_source = 8, 'record default (no XT1_HEAD_LEAD_MIN in the constants)'
     a.bound = a.bound.resolve()
     if a.die == 'qwen_compute':
         if not a.src_rev:

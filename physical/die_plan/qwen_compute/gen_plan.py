@@ -1105,6 +1105,11 @@ def coll_internal_links(P):
                  "u_shared.p_frame"))
     rows.append(("cshr_prx", us, "coll_core", 598, "shr_p_rx", "shr_p_rx_i", "u_shared.rx_frames",
                  "u_coll_face_p.phy_rx"))
+    # QC-P6-XT1 10-23 (bind on G0C @d33d3c4e4: UNPLANNED coll_ucie -> coll_core 3 b): the shared rx valid of each
+    # face (u_shared.rx_valid[1:0] -> P/R phy_rx_valid) and the UCIe link-up (io_ucie.tx_up -> both faces' phy_up) were
+    # internal to coll_core before the PHY moved out; the rx frames above carry no spare bit for them
+    rows.append(("cshr_ctl", us, "coll_core", 3, "shr_ctl", "shr_ctl_i", "u_shared.rx_valid",
+                 "u_coll_face_p.phy_rx_valid"))
     for role, a, b, w, sb, db, sl_, dl in rows:
         if a == b:
             P.internal_bits[role] += w
@@ -1180,7 +1185,9 @@ def fault_links(P, variant, geo):
            src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
     P.link("fltv", ["coll_n", "coll_f5", "coll_f4", "coll_f3", "coll_core"], "fltv_o", "fltv_n_i", 17, kind="ctl",
            src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
-    P.link("fltvc", ws_path(P, "coll_core", "glue"), "fltv_o", "coll_fltv_i", 69, kind="ctl",
+    # QC-P6-XT1 10-23: 69 -> 70: the share fault OR (io_shared_fault, ORed in coll_core from the coll_ucie share /
+    # gearbox faults) now takes coll_core__fltc, whose spare bit forwarded one N face fault on the earlier plans
+    P.link("fltvc", ws_path(P, "coll_core", "glue"), "fltv_o", "coll_fltv_i", 70, kind="ctl",
            src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
     P.link("mufl", ws_path(P, "glue", "tt_ctlm"), "mu_flt_o", "mu_flt_i", 2, kind="ctl",
            src_leaf="mu_ctxrx.mu_fault", dst_leaf="core.mu_fault")

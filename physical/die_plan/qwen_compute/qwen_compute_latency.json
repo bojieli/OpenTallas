@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "qwen_compute",
- "plan_digest": "8fd32979888311a1",
+ "plan_digest": "cfb029b7c35606c7",
  "period_ps": 833,
  "lanes": {
   "c_E0_bf_00__a22": {
@@ -14765,7 +14765,7 @@
     "part": "glue",
     "bus": "coll_fltv_i"
    },
-   "width": 69
+   "width": 70
   },
   "coll_core__out_data_rd_wi": {
    "cycles": 5,
@@ -15108,6 +15108,25 @@
     "bus": "tx_v"
    },
    "width": 1
+  },
+  "coll_ucie__cshr_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_COLL_UCIE__CSHR_CTL",
+   "src": {
+    "part": "coll_ucie",
+    "bus": "shr_ctl"
+   },
+   "dst": {
+    "part": "coll_core",
+    "bus": "shr_ctl_i"
+   },
+   "width": 3
   },
   "coll_ucie__cshr_prx": {
    "cycles": 2,

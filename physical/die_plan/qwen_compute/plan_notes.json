@@ -3,8 +3,8 @@
  "partitions": 377,
  "types": 56,
  "types_merged": 135,
- "ports": 3002,
- "lanes": 2015,
+ "ports": 3003,
+ "lanes": 2016,
  "die_um": [
   31216.32,
   25228.8
@@ -3978,6 +3978,12 @@
    "src": "coll_ucie",
    "dst": "coll_core",
    "bits": 598
+  },
+  {
+   "role": "cshr_ctl",
+   "src": "coll_ucie",
+   "dst": "coll_core",
+   "bits": 3
   }
  ],
  "census_dropped_bits": {}

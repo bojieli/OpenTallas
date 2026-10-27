@@ -45,6 +45,8 @@ def main(argv=None):
     ap.add_argument("--asbuilt", type=Path, help="bind_smoke: the bind as-built recipe JSON (QC; default from README)")
     ap.add_argument("--src-root", type=Path, default=RC.REPO)
     ap.add_argument("--hbm-tools", type=Path)
+    ap.add_argument("--clusters", choices=["near", "both"],
+                    help="bind_smoke: QC xt1 carve with the near cluster only (default) or near + far")
     a = ap.parse_args(argv)
     B = a.bound.resolve()
     rd = B / "regen"
@@ -72,6 +74,8 @@ def main(argv=None):
         cmd += ["--src-rev", a.src_rev]
     if a.asbuilt:
         cmd += ["--asbuilt", str(a.asbuilt)]
+    if a.clusters:
+        cmd += ["--clusters", a.clusters]
     smoke = dict(command=" ".join(cmd + ["--submit"]))
     if not smoke_py.exists():
         smoke["verdict"] = "PENDING"

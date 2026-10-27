@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "/srv/opentallas-scratch/claude/qc-p6-xt1/src/physical/die_plan/qwen_compute/die_plan.json",
  "verdict": "PASS",
  "mode": "G0",
  "errors": 0,
@@ -17,9 +17,9 @@
    "near_duplicate_types": 20,
    "mergeable_saving": 10
   },
-  "ports": 3002,
-  "lanes": 2015,
-  "bits": 1355334,
+  "ports": 3003,
+  "lanes": 2016,
+  "bits": 1355339,
   "taps_cores": {
    "taps": 170,
    "hard_cores": 68,
@@ -28,8 +28,8 @@
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/plan_notes.json",
-    "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/plan_notes.json"
+    "/srv/opentallas-scratch/claude/qc-p6-xt1/src/physical/die_plan/qwen_compute/plan_notes.json",
+    "/srv/opentallas-scratch/claude/qc-p6-xt1/src/physical/die_plan/qwen_compute/plan_notes.json"
    ],
    "no_cells": []
   },
@@ -4091,6 +4091,7 @@
    "coll_ucie__cshr_rrx": 2,
    "coll_core__cshr_ptx": 2,
    "coll_ucie__cshr_prx": 2,
+   "coll_ucie__cshr_ctl": 2,
    "c_W5_tf_01__flt": 2,
    "c_W5_tf_11__flt": 2,
    "c_W5_tf_10__flt": 2,
@@ -4467,6 +4468,7 @@
    "groups": 1724,
    "groups_unequal": 0,
    "inversions": 0,
+   "asbuilt_lane_short": 0,
    "replica_sets": 597,
    "replica_unequal": 0,
    "types_conflicting": 0,
@@ -4475,12 +4477,12 @@
    "async_skipped": 1,
    "depth_source": "landing file",
    "checked": true,
-   "groups_file": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/r8/bus_groups.json",
-   "landing_file": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
+   "groups_file": "/srv/opentallas-scratch/claude/qc-p6-xt1/src/physical/die_plan/qwen_compute/r8/bus_groups.json",
+   "landing_file": "/srv/opentallas-scratch/claude/qc-p6-xt1/src/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
   },
   "seams": {
    "nets": {
-    "abutted": 1358336,
+    "abutted": 1358342,
     "channel": 0
    },
    "pairs": {
@@ -6949,7 +6951,7 @@
      "channel": 0
     },
     "coll_core|coll_f3": {
-     "abutted": 2327,
+     "abutted": 2328,
      "channel": 0
     },
     "coll_f4|native59": {
@@ -6957,7 +6959,7 @@
      "channel": 0
     },
     "coll_f3|glue": {
-     "abutted": 78,
+     "abutted": 79,
      "channel": 0
     },
     "coll_n|io_serdes": {
@@ -6977,7 +6979,7 @@
      "channel": 0
     },
     "coll_core|coll_ucie": {
-     "abutted": 2340,
+     "abutted": 2344,
      "channel": 0
     },
     "native59|tt_ctlm": {
@@ -7035,14 +7037,14 @@
     "off_shore": 0,
     "over_sites": 0
    },
-   "source": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/die_io.json"
+   "source": "/srv/opentallas-scratch/claude/qc-p6-xt1/src/physical/die_plan/qwen_compute/die_io.json"
   },
   "cut_lines": {
    "vertical": [
     {
      "at_um": 777.6,
-     "bits": 5277,
-     "abutted_bits": 5277,
+     "bits": 5282,
+     "abutted_bits": 5282,
      "route_bits": 0,
      "tracks": 741096,
      "ratio": 0.0071
@@ -7523,8 +7525,8 @@
     },
     {
      "at_um": 10022.4,
-     "bits": 9671,
-     "abutted_bits": 3503,
+     "bits": 9672,
+     "abutted_bits": 3504,
      "route_bits": 6168,
      "tracks": 916979,
      "ratio": 0.0105
@@ -8316,7 +8318,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/die_plan.png"
+  "png": "/srv/opentallas-scratch/claude/qc-p6-xt1/src/physical/die_plan/qwen_compute/die_plan.png"
  },
  "findings": [
   {

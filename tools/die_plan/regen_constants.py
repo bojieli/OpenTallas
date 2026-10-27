@@ -26,6 +26,12 @@ Laws (one place; sources cited per rule):
       treq: per hop landed(treq_i) - landed(cmd_i) (BINDER3 treq_vs_cmd.py).
       seam: d2d_link_calendar STAGE_NAMES CS_* = as-built seam stage + Delta of the record_bundles bundle members
             (one Delta per bundle, else MISMATCH); TXDP C = producer_txd_c + PINREG_EXT.
+      head: XT1 / tt_ctlm XPF -> first x-beat lead >= XT1_REC_LEAD_MIN + max_k [Delta(hr: fw -> tap -> hc_k) -
+            Delta(x: fw -> stm -> tap -> hc_k)] per slice (STEWARD-TOKj 21:47 / 22:00, QC-P6-XT1): the XPF descriptor
+            rides the hr lane, the beats the x stream; a lead below it lets beats reach the heads before their XPF.
+      tree: the CB16 reduction tree (STEWARD-TOKj 22:00 cause B, COORD 23:4x): n_a / n_b of every node land on one
+            cycle on the landed depths (minimum pads on the earlier side, bind/qc_tree_pads.py), else ERROR; the
+            per-cluster result shift is a calendar constant (the column runs / rs exit run at the shorter bound depth).
   KV  kv_param_regen_check.py (KV-P5) laws on LANDED depths: RESPONSE_LAT = 8 + D(krq) + D(krs) (one value on every
       frame), QK_ISSUE_AGE = max(34, RL + 11), RRL = RL + 7, row_latency_for_calendar = RL + 2, AP_OFS_s = asb +
       Delta(ap_s) + Delta(f_aqm), FR_OFS asb (intra hub_C), TRUNK_D/FLAG_D pv_trunk_gen, KVN_A0 = asb +
@@ -419,6 +425,149 @@ def qc_seam(o):
     return st
 
 
+# XT1 head calendar (STEWARD-TOKj 21:47 / 22:00).  Record: as built the hr and x paths inside dvs_<col> had 0 crossing
+# stages each.  Sweep on BINDER3 bound_r8 (@d4b946c05, same binary, only the xt1_bench lead changed): differential
+# Delta(hr) - Delta(x) = 11 - (2 + 3) = 6, lead 8 FAULT heads @181 / lead 9..60 CLEAN -> record minimum lead 3 (the record
+# runs used lead 4 / 8, both >= 3).
+XT1_REC_LEAD_MIN = 3
+QC_SUB = r"\.u_core\.u_sub\."
+
+
+def qc_head(o):
+    """XT1_HEAD_LEAD_MIN: XPF -> first x-beat lead at the slice fw lane ends (xt1 bench lead, compiler calendar)."""
+    B = o.B
+    sl = lambda m: m["sink"].split(".u_core")[0]
+    D = lambda ms: sorted({m["landed"] - m["asb"] for m in ms})
+    hr = defaultdict(list)
+    for m in B.members(source=QC_SUB + r"u_fdn\.hr_q$", sink=QC_SUB + r"u_tap$", port=r"^hr_q$"):
+        hr[sl(m)].append(m)
+    if not hr:
+        raise RuleError("head: no fw -> tap hr_q crossing (u_fdn.hr_q -> u_tap) on this bind")
+    rows, need = [], []
+    for s in sorted(hr):
+        q = re.escape(s) + QC_SUB
+        legs = dict(hr=hr[s],
+                    fw_stm=B.members(source=q + r"u_fdn\.sw_q$", sink=q + r"u_stm$", port=r"^sw_i$"),
+                    stm_tap=B.members(source=q + r"u_stm\.xt_(d|v|a)$", sink=q + r"u_tap$", port=r"^xt_(d|vcopies|a)$"))
+        dl = {}
+        for k, ms in legs.items():
+            v = D(ms) if ms else [0]          # no member = both ends in one partition (0 crossing stages)
+            if len(v) != 1:
+                raise RuleError(f"head {s}: leg {k} lands at deltas {v} (one depth per leg required)")
+            dl[k] = v[0]
+        heads = {}
+        for k in range(4):
+            ms = B.members(source=q + r"u_tap\.hw$", sink=q + rf"u_xh{k}$", port=r"^a_d$")
+            v = D(ms) if ms else [0]
+            if len(v) != 1:
+                raise RuleError(f"head {s}: tap.hw -> hc{k} lands at deltas {v} (R8 replica heads must be equal)")
+            heads[k] = v[0]
+        diff = max((dl["hr"] + heads[k]) - (dl["fw_stm"] + dl["stm_tap"] + heads[k]) for k in range(4))
+        need.append(XT1_REC_LEAD_MIN + max(diff, 0))
+        rows.append(dict(slice=s, hr_fw_tap=dl["hr"], x_fw_stm=dl["fw_stm"], x_stm_tap=dl["stm_tap"], tap_hc=heads,
+                         differential=diff, lead_min=need[-1]))
+    o.add("XT1_HEAD_LEAD_MIN", max(need), "compiler",
+          f"XPF -> first x-beat lead >= {XT1_REC_LEAD_MIN} (record) + max_k [Delta(hr: fw->tap->hc_k) - Delta(x: fw->stm->tap"
+          "->hc_k)], max over slices (STEWARD-TOKj 21:47; xt1_bench --lead)", dict(slices=len(rows), rec_lead_min=XT1_REC_LEAD_MIN),
+          group="head", status="OK" if len(set(need)) == 1 else "WARN",
+          note=None if len(set(need)) == 1 else f"slices differ {sorted(set(need))}: the calendar takes the max")
+    o.add("XT1_HEAD_PATHS", rows, "compiler", "per slice head path table", group="head")
+
+
+# CB16 reduction tree (rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv, tools/qwen_cluster/cb_base.evaluate): node tile
+# (c, r) takes n_a / n_b from a leaf's t_out or a child node's n_y; identical in all 48 clusters of the QC-P6-XT1 bind.
+# The node adds n_a + n_b on ONE cycle (qfd_tile_nk_rp2_45: sticky mis_q fault when the two valids differ), so the
+# as-built legs were padded to equal arrival; a plan that shortens legs must re-align every node -- nothing else in
+# the tree has a fixed total (column runs, rs exit: a uniform per-cluster shift = calendar constant).
+CB16_TREE = {(0, 0): ("22.n_y", "12.n_y"), (0, 1): ("01.t_out", "11.t_out"), (0, 2): ("02.t_out", "12.t_out"),
+             (0, 3): ("03.t_out", "13.t_out"), (1, 0): ("00.t_out", "10.t_out"), (1, 1): ("10.n_y", "01.n_y"),
+             (1, 2): ("13.n_y", "23.n_y"), (1, 3): ("02.n_y", "03.n_y"), (2, 0): ("20.t_out", "30.t_out"),
+             (2, 1): ("20.n_y", "31.n_y"), (2, 2): ("11.n_y", "21.n_y"), (2, 3): ("32.n_y", "33.n_y"),
+             (3, 1): ("21.t_out", "31.t_out"), (3, 2): ("22.t_out", "32.t_out"), (3, 3): ("23.t_out", "33.t_out")}
+CB16_ROOT = (0, 0)
+
+
+def cb16_tree(members, key="landed"):
+    """per cluster: arrival shift (vs as built) of every tree input and the skew at every node, from the crossing
+    members (dict(sink, port, source, asb, bound, landed)); legs that are not crossings keep their as-built depth.
+    tap(c, r) = column-run arrival at station u_x_c_r (crossings b_d <- previous station a_d / slice); t_out follows
+    its tile's tap; n_y = the later of n_a / n_b (the node fires when both are there)."""
+    leg = {(m["sink"], m["port"]): m for m in members}
+    clusters = sorted({m["sink"].split(".")[0] for m in members if re.match(r"c16_[WE]\d_\d\.", m["sink"])})
+    tap = {}
+
+    def stn(cl, c, r):
+        k = (cl, c, r)
+        if k not in tap:
+            m = leg.get((f"{cl}.u_fab.u_x_{c}_{r}", "b_d"))
+            if m is None:
+                if r == 0:
+                    raise RuleError(f"tree: column run entry {cl}.u_fab.u_x_{c}_0.b_d is not a crossing")
+                tap[k] = stn(cl, c, r - 1)
+            else:
+                src = re.match(r"(c16_[WE]\d_\d)\.u_fab\.u_x_(\d)_(\d)\.a_d$", m["source"])
+                base = stn(src.group(1), int(src.group(2)), int(src.group(3))) if src else 0
+                tap[k] = base + m[key] - m["asb"]
+        return tap[k]
+    out = {}
+    for cl in clusters:
+        ny, nodes = {}, {}
+
+        def fire(c, r):
+            if (c, r) not in ny:
+                arr = {}
+                for side, ref in zip("ab", CB16_TREE[(c, r)]):
+                    sc, sr = int(ref[0]), int(ref[1])
+                    t = stn(cl, sc, sr) if ref.endswith("t_out") else fire(sc, sr)
+                    m = leg.get((f"{cl}.u_t_{c}_{r}", f"n_{side}"))
+                    arr[side] = t + (m[key] - m["asb"] if m else 0)
+                nodes[(c, r)] = arr
+                ny[(c, r)] = max(arr.values())
+            return ny[(c, r)]
+        for n in CB16_TREE:
+            fire(*n)
+        out[cl] = dict(nodes=nodes, root=ny[CB16_ROOT], taps={f"{c}{r}": stn(cl, c, r) for c in range(4) for r in range(4)})
+    return out
+
+
+def tree_pads(members, key="landed"):
+    """minimum alignment pads: on every node, the earlier side waits for the later one -> [(cluster, node, side, pad)]"""
+    res = []
+    for cl, d in cb16_tree(members, key).items():
+        for (c, r), arr in sorted(d["nodes"].items()):
+            hi = max(arr.values())
+            res += [(cl, (c, r), sd, hi - v) for sd, v in sorted(arr.items()) if v < hi]
+    return res
+
+
+def qc_tree(o):
+    """QC_TREE_ALIGN (n_a / n_b equal arrival at every CB16 node on the LANDED depths, else ERROR) + the per-cluster
+    result shift for the calendar (QC_CLUSTER_RESULT_SHIFT, root n_y vs as built, by cluster k = c16_<col>_<k>)."""
+    ms = o.B.members(sink=r"^c16_[WE]\d_\d\.(u_t_\d_\d|u_fab\.u_x_\d_\d)$", port=r"^(n_a|n_b|b_d)$")
+    if not ms:
+        raise RuleError("tree: no CB16 tree / column-run crossing on this bind")
+    T = cb16_tree(ms)
+    bad = tree_pads(ms)
+    need = tree_pads(ms, "bound")        # what an unpadded bound top would need (the table's job)
+    sites = sorted({(f"u_t_{n[0]}_{n[1]}.n_{sd}", p) for _, n, sd, p in need})
+    bits = {f'{m["sink"].split(".", 1)[1]}.{m["port"]}': m["bits"] for m in ms}
+    flops = sum(p * bits.get(x, 514) for x, p in sites)
+    o.add("QC_TREE_ALIGN", dict(clusters=len(T), nodes=len(CB16_TREE), skewed_landed=len(bad),
+                                pads_needed_on_bound=[f"{x} +{p}" for x, p in sites],
+                                pad_flops_per_cluster=flops, pad_flops=flops * len(T)), "check",
+          "every CB16 node's n_a / n_b land on one cycle (Delta model on landed depths, as-built aligned); pads = the "
+          "minimum on the earlier side (bind/qc_tree_pads.py -> land_r8_extra)",
+          dict(examples=[f"{cl} node {n} n_{sd} early by {p}" for cl, n, sd, p in bad[:6]]),
+          group="tree", status="ERROR" if bad else "OK")
+    shift = defaultdict(set)
+    for cl, d in T.items():
+        shift[int(cl[-1])].add(d["root"])
+    o.add("QC_CLUSTER_RESULT_SHIFT", {k: sorted(v)[0] if len(v) == 1 else sorted(v) for k, v in sorted(shift.items())},
+          "compiler", "root n_y arrival vs as built per cluster k (0 bf, 1 bn, 2 tn, 3 tf): tap shift of the column "
+          "runs + tree legs (calendar input; the rs exit leg adds its own landed delta)", group="tree",
+          status="OK" if all(len(v) == 1 for v in shift.values()) else "WARN")
+
+
 # ============================================================================================================ KV
 KV_STACKS = ("WS", "WN", "ES", "EN")
 KV_ANCHOR = dict(FR_OFS=-7, KVN_A0=32, RESPONSE_LAT=80, QK_ISSUE_AGE=91,
@@ -781,6 +930,8 @@ def run(die, bound, src_root=REPO, hbm_tools=None, peer=None):
         o.rule("coll", qc_coll, src_root)
         o.rule("treq", qc_treq)
         o.rule("xdie", qc_seam)
+        o.rule("head", qc_head)
+        o.rule("tree", qc_tree)
     elif die == "qwen_kvsys":
         o.rule("ectl", kv_ectl)
         o.rule("ahub", kv_ahub)
