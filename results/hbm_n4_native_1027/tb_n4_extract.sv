@@ -9,17 +9,16 @@ module tb_n4_extract;
  .uq0(u[0]),.uq1(u[1]),.uq2(u[2]),.uq3(u[3]),.dq0(gd[0]),.dq1(gd[1]),.dq2(gd[2]),.dq3(gd[3]));
  ot_hnx_fused_tnode n4_left(.clk(clk),.rst_n(rst_n),.pad_k(pk4),.pad_b(1'b0),.ua(u[0]),.ub(mutate?u[2]:u[1]),.uo(n4a),.dn(rootd0),.da(cd[0]),.db(cd[1]));
  ot_hnx_fused_tnode n4_right(.clk(clk),.rst_n(rst_n),.pad_k(pk4),.pad_b(1'b0),.ua(mutate?u[1]:u[2]),.ub(u[3]),.uo(n4b),.dn(rootd2),.da(cd[2]),.db(cd[3]));
- ot_hnx_fused_hub #(.N4EXT(1)) dut(.clk(clk),.rst_n(rst_n),.job_v(job_v),.job(job),.done(cdone),.fault(cfault),.busy(cbusy),
- .wsc(8'd115),.pk4a(pk4),.pk4b(pk4),.pk5(pk5),.pb4a(1'b0),.pb4b(1'b0),.pb5(1'b0),
- .uq0(n4a),.uq1(271'd0),.uq2(n4b),.uq3(271'd0),.dq0(rootd0),.dq1(),.dq2(rootd2),.dq3());
+ ot_hnx_fused_hub_n4ext dut(.clk(clk),.rst_n(rst_n),.job_v(job_v),.job(job),.done(cdone),.fault(cfault),.busy(cbusy),
+ .wsc(8'd115),.pk5(pk5),.pb5(1'b0),.up_nw(n4a),.up_ne(n4b),.down_nw(rootd0),.down_ne(rootd2));
  integer checks=0,errors=0,chunks=0,scalars=0,commands=0,finflags=0;reg active=0;
  task automatic bad(input string why);
-  errors=errors+1;if(errors<6)$display("N4_EXTRACT_MISMATCH %s check=%0d gold=%h new=%h",why,checks,gold.ur,dut.ur);
+  errors=errors+1;if(errors<6)$display("N4_EXTRACT_MISMATCH %s check=%0d gold=%h new=%h",why,checks,gold.ur,dut.u_native.ur);
  endtask
  always @(negedge clk)if(active)begin
   checks=checks+1;
-  if(gold.ur[270:256]!==dut.ur[270:256])bad("UP control including independent fin/fault");
-  if(gold.ur[270]&&gold.ur[255:0]!==dut.ur[255:0])bad("UP valid payload");
+  if(gold.ur[270:256]!==dut.u_native.ur[270:256])bad("UP control including independent fin/fault");
+  if(gold.ur[270]&&gold.ur[255:0]!==dut.u_native.ur[255:0])bad("UP valid payload");
   if(gold.ur[270]&&gold.ur[269])begin chunks=chunks+1;if(gold.ur[31:0]!==32'h3e35517a)bad("golden IEEE pair-tree witness");end
   if(gold.ur[270]&&!gold.ur[269])scalars=scalars+1;
   if(gold.ur[258]&&gold.ur[257])finflags=finflags+1;
