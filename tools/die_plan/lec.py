@@ -1570,6 +1570,70 @@ def closest(k, cands, cap=512):
 GENCOPY = re.compile(r"(?<![A-Za-z0-9_])g_[A-Za-z0-9_]+\[\d+\]")
 
 
+def replica_groups(d, points, compare):
+    """Group generated ff: compare keys by (norm(k), input-support set); exact."""
+    norm = lambda k: GENCOPY.sub(lambda m: m[0].split("[")[0] + "[]", k)
+    # Exact support-set grouping, computed one norm(k) bucket at a time over
+    # that bucket's cone only, with bucket-local leaf numbering and freeing of
+    # dead supports.  A design-wide bitset per AND node is O(nodes x symbols)
+    # and exhausted 320 GB on the 841k-input Q2n2 gate (LEC-TOOL-3).
+    pv = {}
+    for k, lit in sorted(points.items()):
+        pv[lit >> 1] = None if k.startswith("ff:") else ("point", k)
+    base = d["I"] + d["L"] + 1
+    ands = d["ands"]
+    buckets = {}
+    for k, lit in compare.items():
+        if k.startswith("ff:") and GENCOPY.search(k):
+            buckets.setdefault(norm(k), []).append(k)
+    out = {}
+    for nk, keys in sorted(buckets.items()):
+        if len(keys) < 2:
+            out[(nk, None)] = keys
+            continue
+        roots = [compare[k] >> 1 for k in keys]
+        cone, todo = set(), list(roots)
+        while todo:
+            v = todo.pop()
+            if v in cone:
+                continue
+            cone.add(v)
+            if v >= base:
+                i = v - base
+                todo.append(ands[2*i] >> 1); todo.append(ands[2*i+1] >> 1)
+        uses = {}
+        for v in cone:
+            if v >= base:
+                i = v - base
+                for c in (ands[2*i] >> 1, ands[2*i+1] >> 1):
+                    uses[c] = uses.get(c, 0) + 1
+        for v in roots:
+            uses[v] = uses.get(v, 0) + (1 << 30)     # roots are never freed
+        local, sup = {}, {}
+        def leaf(t):
+            if t not in local:
+                local[t] = 1 << len(local)
+            return local[t]
+        for v in sorted(cone):
+            if v >= base:
+                i = v - base
+                a, b = ands[2*i] >> 1, ands[2*i+1] >> 1
+                sup[v] = sup[a] | sup[b]
+                for c in (a, b):
+                    uses[c] -= 1
+                    if not uses[c]:
+                        del sup[c]
+            elif v in pv:
+                sup[v] = 0 if pv[v] is None else leaf(pv[v])
+            elif v == 0:
+                sup[v] = 0
+            else:
+                sup[v] = leaf(("anonymous", v))
+        for k, v in zip(keys, roots):
+            out.setdefault((nk, sup[v]), []).append(k)
+    return out
+
+
 def replica_proposals(L, log):
     """Propose interchangeable generated-register cohorts on both designs.
 
@@ -1579,29 +1643,9 @@ def replica_proposals(L, log):
     pass through the normal simultaneous inductive SAT proof/refinement.
     """
     norm = lambda k: GENCOPY.sub(lambda m: m[0].split("[")[0] + "[]", k)
-    symbols = {}
-    def sym(k):
-        if k not in symbols:
-            symbols[k] = 1 << len(symbols)
-        return symbols[k]
-    def groups(d, points, compare, side):
-        support = [0] * (d["I"] + d["L"] + d["A"] + 1)
-        for v in range(1, d["I"] + d["L"] + 1):
-            support[v] = sym(("anonymous", side, v))
-        for k, lit in sorted(points.items()):
-            # State copies are induction candidates; external data bits stay distinct.
-            support[lit >> 1] = 0 if k.startswith("ff:") else sym(("point", k))
-        base = d["I"] + d["L"] + 1
-        for i in range(d["A"]):
-            support[base+i] = support[d["ands"][2*i] >> 1] | support[d["ands"][2*i+1] >> 1]
-        out = {}
-        for k, lit in compare.items():
-            if k.startswith("ff:") and GENCOPY.search(k):
-                out.setdefault((norm(k), support[lit >> 1]), []).append(k)
-        return out
     n = 0
     for side, d, points, compare in (("gold", L.gold, L.gp, L.gc), ("gate", L.gate, L.tp, L.tc)):
-        for keys in groups(d, points, compare, side).values():
+        for keys in replica_groups(d, points, compare).values():
             if len(keys) < 2:
                 continue
             common = sorted(set(keys) & set(L.matched))
