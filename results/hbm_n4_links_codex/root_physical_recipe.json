@@ -2,14 +2,14 @@
   "schema": "opentallas.hbm-n4-root-physical-prep.v1",
   "module": "ot_hnx_fused_hub_n4ext",
   "instance": "u_mu_fused_root",
-  "source": "codex/n4-native-1027 corrected closure1157befa3",
+  "source": "codex/hbm-n4-reset-clean-1027@03577be294; same2RTLblobhashes as1f732fa1ef",
   "status": "PLACEMENT DESIGN ONLY; no placed/routed master or pin abstract",
   "outline_um": [
     388.8,
     259.2
   ],
-  "std_area_um2": 20782.2591,
-  "std_cells": 185551,
+  "std_area_um2": 20845.95912,
+  "std_cells": 185933,
   "macros": [
     {
       "master": "ot_sram_1r1w_128x256_m1_r2c2",
@@ -110,8 +110,8 @@
     "component padded extraction nowPASS721/0; wholekernel qualification and physical timing remain open"
   ],
   "macro_area_um2": 8341.295039999999,
-  "minimum_content_area_um2": 29123.55414,
-  "std_density_in_nonmacro_area": 0.22482944336467076,
+  "minimum_content_area_um2": 29187.254159999997,
+  "std_density_in_nonmacro_area": 0.2255185715277836,
   "central_pin_track_ratio": 0.5753909707878431,
   "macro_actual_face_pin_counts": {
     "large_W": 410,
@@ -170,7 +170,7 @@
     "outer_usable_channel_um": 69.228,
     "outer_signal_demand_bound": 1264,
     "outer_signal_ratio": 0.5216716605172144,
-    "std_density_in_nonmacro_area": 0.23330816479070648,
+    "std_density_in_nonmacro_area": 0.23402328121244964,
     "status": "PLACEMENT DESIGN ONLY; actual native pin anchors/internal r2r must be measured",
     "pg_island_center_um": [
       125.28,
@@ -185,8 +185,8 @@
       5149.44
     ]
   },
-  "mapped_profile_status": "CORRECTED7BIT PROFILE; component native4/4/2 proof721checks0errors per TOK; no route/signoff",
-  "mapped_profile_source": "codex/hbm-n4-profile-1027@b45822a74f:results/hbm_n4_profile_codex/mapped_profile.json",
+  "mapped_profile_status": "ACTUAL KEEP-ENABLED DELIVERED_RESET1 SYNTHESIS PASS; no placement/routed/signoff",
+  "mapped_profile_source": "intel2:codex-hbm-n4-root-kit-1027/keep_delivered1/root_keep_delivered.{stat,mapped.json}",
   "std_cells_corrected_known": 185551,
   "corrected_standard_area_um2": 20782.2591,
   "local_cts_requirements": {
@@ -194,12 +194,22 @@
     "sink_load_target": 1250,
     "minimum_groups": 25,
     "external_clock_pin_is_not_full_internal_cts": true,
-    "signoff": "propagated TT/FF related-pair skew<=80ps; setupTT60ps/holdFF25ps at833ps"
+    "signoff": "propagated TT/FF related-pair skew<=80ps; setupTT60ps/holdFF25ps at833ps",
+    "actual_keep_flop_count": 30326
   },
   "original_bug_profile": {
     "standard_cells": 185460,
     "standard_area_um2": 20770.34724,
     "minimum_content_area_um2": 29111.64228,
     "source": "2c7f9887fa"
-  }
+  },
+  "prior_bare_corrected_profile": {
+    "std_cells": 185551,
+    "std_area_um2": 20782.2591,
+    "minimum_content_area_um2": 29123.55414
+  },
+  "standard_cells_ordinary_keep": 185933,
+  "ff_cells_ordinary_keep": 30326,
+  "actual_anchor_bits": 888,
+  "shared_downlink_launches": 0
 }

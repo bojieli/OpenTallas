@@ -11,7 +11,7 @@ from pathlib import Path
 PORTS=('up_nw','up_ne','down_nw','down_ne')
 
 
-def collect(graph, top='ot_hnx_fused_hub_n4ext'):
+def collect(graph, top='ot_hnx_fused_hub_n4ext', cell_directions=None):
     modules=graph['modules']; fanin=collections.defaultdict(list);fanout=collections.defaultdict(list)
     leaves={}; parent={}
     def canonical(bit):
@@ -44,7 +44,7 @@ def collect(graph, top='ot_hnx_fused_hub_n4ext'):
                         elif p['direction']=='output':alias(cb,net(pb))
                 descend(kind,cp,binds)
                 continue
-            dirs=cell.get('port_directions') or {n:p['direction'] for n,p in (cm or {}).get('ports',{}).items()}
+            dirs=cell.get('port_directions') or (cell_directions or {}).get(kind) or {n:p['direction'] for n,p in (cm or {}).get('ports',{}).items()}
             con={pn:[net(b) for b in bits] for pn,bits in cell['connections'].items()}
             leaves[cp]=(kind,con,dirs)
             for pn,bits in con.items():
@@ -87,12 +87,14 @@ def collect(graph, top='ot_hnx_fused_hub_n4ext'):
             rows.append(dict(port=pn,bit=bi,direction=port['direction'],anchors=anchors,blocked=blocked,
                              verdict='PASS' if len(anchors)==1 and not blocked else 'OPEN'))
     return dict(schema='opentallas.hbm-root-native-anchors.v1',scope='actual mapped sequential frontier; no physical pin placement or route PASS',
-                mapped_leaf_cells=len(leaves),port_bits=len(rows),resolved_bits=sum(r['verdict']=='PASS' for r in rows),
+                mapped_leaf_cells=len(leaves), standard_cells=sum('ASAP7' in k for k,_,_ in leaves.values()),
+                ff_cells=sum('DFF' in k for k,_,_ in leaves.values()),port_bits=len(rows),resolved_bits=sum(r['verdict']=='PASS' for r in rows),
                 open_bits=sum(r['verdict']!='PASS' for r in rows),rows=rows)
 
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('mapped_json',type=Path);p.add_argument('--output',required=True,type=Path)
-    a=p.parse_args();data=a.mapped_json.read_bytes();out=collect(json.loads(data));out['mapped_json_sha256']=hashlib.sha256(data).hexdigest()
+    p.add_argument('--cell-directions',type=Path)
+    a=p.parse_args();data=a.mapped_json.read_bytes();out=collect(json.loads(data),cell_directions=json.loads(a.cell_directions.read_text()) if a.cell_directions else None);out['mapped_json_sha256']=hashlib.sha256(data).hexdigest()
     a.output.write_text(json.dumps(out,indent=2)+'\n');print(json.dumps({k:v for k,v in out.items() if k!='rows'}))
 if __name__=='__main__':main()

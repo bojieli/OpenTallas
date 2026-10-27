@@ -1,0 +1,21 @@
+{
+  "source": "codex/hbm-n4-reset-clean-1027@03577be294; same2RTLblobhashes as1f732fa1ef",
+  "job_unit": "oth-ubuntu-2297458-1793120477",
+  "host": "intel2",
+  "runroot": "/srv/opentallas-scratch2/claude/codex-hbm-n4-root-kit-1027/keep_delivered1",
+  "exit_code": 0,
+  "std_cells": 185933,
+  "ff_cells": 30326,
+  "std_area_um2": 20845.95912,
+  "macro_instances": 3,
+  "content_minimum_um2": 29187.254159999997,
+  "anchor_bits": 888,
+  "open_anchor_bits": 0,
+  "shared_downlink_launches": 0,
+  "mapped_json_sha256": "1c462d575140a57d67d93e4fdec5c1df2a98c39b8cf6a4d0a60968a80388ee60",
+  "hook": "physical/common_flow/ot_keep_regs.tcl afterhierarchy beforesynth",
+  "parameters": {
+    "DELIVERED_RESET": 1
+  },
+  "scope": "SYNTHESIS+ACTUAL REGISTER FRONTIER ONLY; no placement/route/signoff"
+}

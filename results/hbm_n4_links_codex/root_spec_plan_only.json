@@ -29,18 +29,19 @@
     "rtl/lib/ot_rst_relay.sv",
     "rtl/hbm_next/fused/ot_hnx_fused_hub_n4ext.sv"
   ],
-  "source_contract": "codex/n4-native-1027 corrected1157befa3 source_closure.json and source_snapshot.tar.gz; do not use floating main RTL",
+  "source_contract": "codex/hbm-n4-reset-clean-1027@03577be294; same2RTLblobhashes as1f732fa1ef",
   "params": {
     "D": 5120,
     "RR": 10,
     "NMAX": 8,
-    "MUT": 0
+    "MUT": 0,
+    "DELIVERED_RESET": 1
   },
   "clock_port": "clk",
   "reset_ports": [
     "rst_n"
   ],
-  "std_area_um2": 20782.2591,
+  "std_area_um2": 20845.95912,
   "outline_um": [
     250.56,
     388.8
@@ -116,7 +117,7 @@
     "reason": "No unpriced boundary latency; native mapped register anchoring required before physical adoption"
   },
   "keep_pin_regs": true,
-  "physical_status": "SOURCE-KIT PREPARATION ONLY; no P&R launch. Actual source/memoryphase qualification, input/output flop anchors, PG/internalCTS remain open. Canonical native job/control bindings are not fabricated. Ordinarykit must source physical/common_flow/ot_keep_regs.tcl; bare mappedcensus folds equal launch copies and is only a lowerbound. Deliveredreset source mode pending gatedLECcommit.",
+  "physical_status": "ORDINARY KEEP-ENABLED SYNTHESIS PASS with888/888actualDFFanchors; source-kit preparation only, no placement. Nativejob/control/STARTprovider+PG/clock/R2geometry still open.",
   "outline": {
     "w": 250.56,
     "h": 388.8,
