@@ -1,0 +1,14 @@
+{
+ "picture": "results/geom_review/codex_kvsctl_reface.png",
+ "verdict": "PASS-COND PREBUILD",
+ "findings": [
+  "Viewed source pin layout and parent hard-core lots: same371.52square outline, clock/reset entry unchanged",
+  "Whole WS/WN/EN/ES groups on W/N/E/S faces, numeric buses monotone; nativeM4E/W andM5N/S tracks",
+  "6849unique pins; W1774/E1555/N1854/S1664; maximum53pins/10um eachface",
+  "No corelot movement orRTL/cycle change; inheritedboot+1costretained"
+ ],
+ "conditions": [
+  "Parentevent mustchecknewfacealignment, registeredreach andrelaycalendar beforefreeze",
+  "Placement, actualclocktree, TTsetup/FFhold androutedLEC remainNOTRUN"
+ ]
+}
