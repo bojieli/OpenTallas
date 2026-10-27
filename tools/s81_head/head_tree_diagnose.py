@@ -34,18 +34,50 @@ def mirrored(spec):
     return out
 
 
+def spread_rows(spec):
+    """Pack coincident logical groups into distinct rows inside the same 8.64um island.
+
+    No stages or nets are removed. Every group's complete 2.5um M7 riser envelope
+    remains inside that island; the shared builder checks full-body legality.
+    """
+    out = mirrored(spec)
+    groups = defaultdict(list)
+    for cell in out['cell_sites'].values():
+        groups['g' + str(cell['group'])].append(cell)
+    group_of = {}
+    for net in out['nets']:
+        a, b = net['edge'].split('>')
+        group_of[a], group_of[b] = net['drv'], net['load']
+    changes = []
+    for bucket in out['summary']['packed_islands']:
+        gs = [group_of[tag] for tag in bucket['groups']]
+        units = [c for g in gs for c in groups[g]]
+        cy = (min(c['origin_um'][1] for c in units) + max(c['origin_um'][1] for c in units) + D.ROW_Y) / 2
+        limit = min(4.32 - (len(groups[g]) - 1) * D.ROW_Y / 2 - D.C128.STACK_RISER_MAX_UM - .065 for g in gs)
+        amplitude = max(0, int((limit + 1e-6) / D.ROW_Y) * D.ROW_Y)
+        for index, g in enumerate(gs):
+            phase = amplitude * (2 * index / (len(gs) - 1) - 1)
+            cells = sorted(groups[g], key=lambda c: c['origin_um'][1])
+            y = D.snap(cy + phase - len(cells) * D.ROW_Y / 2, D.ROW_Y)
+            for k, cell in enumerate(cells):
+                cell['origin_um'][1] = round(y + k * D.ROW_Y, 4)
+            changes.append(dict(group=g, phase_um=round(phase,4), units=len(cells)))
+    out['summary']['spread_rows'] = changes
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('plan', type=Path)
     ap.add_argument('spec', type=Path)
     ap.add_argument('out', type=Path)
-    ap.add_argument('--only', choices=['exact', 'mirror_exact', 'pg_only_DIAGNOSTIC'], action='append')
+    ap.add_argument('--only', choices=['exact', 'mirror_exact', 'spread_rows', 'pg_only_DIAGNOSTIC'], action='append')
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     plan = S.Plan(S.load(args.plan))
     original = json.loads(args.spec.read_text())
     report = {}
-    for label, spec in [('exact', copy.deepcopy(original)), ('mirror_exact', mirrored(original)),
+    for label, spec in [('exact', copy.deepcopy(original)), ('mirror_exact', mirrored(original)), ('spread_rows', spread_rows(original)),
                         ('pg_only_DIAGNOSTIC', mirrored(original))]:
         if args.only and label not in args.only:
             continue
