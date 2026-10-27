@@ -2759,6 +2759,8 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
             router.nd=nd
             router.wide_merge_um=nd.get("wide_merge_um",C128.WIDE_MERGE_UM) if r8 else None
             router.ix.space=nd["space"] if router.ix.pairwise else max(router.ix.space,nd["space"])
+            reservation_start=len(router.ix.shapes)
+            moves_start=len(router.moves)
             try:
                 pp=C128.fixed_wires(out,proxy,[n0],BUF_W,ROW_Y,off=off,router=router,pin_stack=True,
                     port_on_trunk=r8,ties=ties,l_drops=True,exact_reserve=exact)
@@ -2766,6 +2768,8 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
                 # INFRA-FIRST-QC-R27 opt-in census (OT_V2_COLLECT_PLAN_ERRORS=1): record every failing edge and keep
                 # going, so one dry build lists ALL plan errors; the build still fails closed with the full list.
                 if not collect: raise
+                router.ix.truncate(reservation_start)
+                del router.moves[moves_start:]
                 collected.extend(dict(r, edge=n0.get("physical_edge")) for r in e.rows); continue
             if len(pp)!=1: raise RuntimeError("one edge must produce one physical wire piece")
             w=pp[0]

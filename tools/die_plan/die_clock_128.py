@@ -711,6 +711,17 @@ class MetalIndex:
             b[i].append(k)
         return k
 
+    def truncate(self, size):
+        """Discard only reservations made after a failed planning transaction."""
+        for k in range(len(self.shapes)-1,size-1,-1):
+            s=self.shapes[k];b=self.bins[s[0]]
+            for i in range(int(math.floor(s[3]/self.B)),int(math.floor(s[4]/self.B))+1):
+                if not b[i] or b[i][-1]!=k:raise RuntimeError("metal reservation order differs")
+                b[i].pop()
+                if not b[i]:del b[i]
+        del self.shapes[size:];del self.shape_spaces[size:]
+        # A historical upper bound only widens the bucket scan, never spacing.
+
     def hits(self, s, first=False):
         """[(k, 'short'|'spacing')] of indexed shapes of another net closer than the space to shape s"""
         lay, net, _, plo, phi, alo, ahi = s

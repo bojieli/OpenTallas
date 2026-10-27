@@ -104,3 +104,16 @@ def test_wide_pg_spacing_uses_actual_overlap_of_a_nested_segment():
     # The .5um segment is contained in a10um stripe: PRL is .5, not4.5.
     assert not ix.hits(('M8','clock','tree',2.22,2.38,4.,4.5))
     assert ix.hits(('M8','clock','tree',2.22,2.38,4.,6.))[0][1]=='wide_spacing'
+
+
+def test_failed_edge_reservation_rollback_removes_only_its_shapes():
+    ix=C.MetalIndex(.08);ix.pairwise=True
+    old=('M8','old','tree',.9,1.06,0.,10.)
+    ix.add(old,space=.08);checkpoint=len(ix.shapes)
+    ix.add(('M8','failed','tree',1.,2.28,0.,10.),space=1.)
+    ix.add(('M9','failed','shield',3.,3.64,0.,10.),space=.5)
+    ix.truncate(checkpoint)
+    assert ix.shapes==[old] and ix.shape_spaces==[.08]
+    assert not ix.hits(('M8','next','tree',1.17,1.33,0.,10.))
+    assert ix.hits(('M8','next','tree',1.,1.16,0.,10.))
+    assert not ix.hits(('M9','next','tree',3.,3.16,0.,10.))
