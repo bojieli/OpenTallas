@@ -1,0 +1,205 @@
+{
+  "schema": "opentallas.hr_face_composed_proof.v1",
+  "verdict": "PASS",
+  "mode": "composed_completed_proofs_with_exact_identity",
+  "source_commit": "b5cef30c3",
+  "source_base": "bc1a556176",
+  "core_json": "results/kv_cores_r2/kvsctl3/rtl/qkd_kvs_ctl_core.json",
+  "module": "qkd_kvs_ctl",
+  "added_cycles": 0,
+  "identity": {
+    "pre": "byte-identical freshly elaborated from pinned source",
+    "post": "identical current transform JSON",
+    "mut": "identical current mutant transform JSON",
+    "emitted_v": "byte-identical current emitter output after canonical src stripping"
+  },
+  "proofs": {
+    "post": {
+      "verdict": "EQUIVALENT",
+      "points": 91441,
+      "mode": "completed original JSON proof reused"
+    },
+    "emitted_v": {
+      "verdict": "EQUIVALENT",
+      "points": 92037,
+      "mode": "completed undef base-case+step2 induction reused"
+    },
+    "mut": {
+      "verdict": "CAUGHT",
+      "mode": "fresh undef induction residual plus definite output SAT counterexample",
+      "output": "o_hroot_WS[784]",
+      "bound": 6,
+      "positive_same_cone": "PASS no counterexample at same bound",
+      "trace": [
+        {
+          "step": 1,
+          "signal": "gate_witness",
+          "value": "0"
+        },
+        {
+          "step": 1,
+          "signal": "gold_witness",
+          "value": "0"
+        },
+        {
+          "step": 1,
+          "signal": "in_por_n",
+          "value": "0"
+        },
+        {
+          "step": 1,
+          "signal": "in_rst_n",
+          "value": "0"
+        },
+        {
+          "step": 1,
+          "signal": "trigger",
+          "value": "0"
+        },
+        {
+          "step": 2,
+          "signal": "gate_witness",
+          "value": "0"
+        },
+        {
+          "step": 2,
+          "signal": "gold_witness",
+          "value": "0"
+        },
+        {
+          "step": 2,
+          "signal": "in_por_n",
+          "value": "0"
+        },
+        {
+          "step": 2,
+          "signal": "in_rst_n",
+          "value": "0"
+        },
+        {
+          "step": 2,
+          "signal": "trigger",
+          "value": "0"
+        },
+        {
+          "step": 3,
+          "signal": "gate_witness",
+          "value": "0"
+        },
+        {
+          "step": 3,
+          "signal": "gold_witness",
+          "value": "0"
+        },
+        {
+          "step": 3,
+          "signal": "in_por_n",
+          "value": "1"
+        },
+        {
+          "step": 3,
+          "signal": "in_rst_n",
+          "value": "1"
+        },
+        {
+          "step": 3,
+          "signal": "trigger",
+          "value": "0"
+        },
+        {
+          "step": 4,
+          "signal": "gate_witness",
+          "value": "1"
+        },
+        {
+          "step": 4,
+          "signal": "gold_witness",
+          "value": "0"
+        },
+        {
+          "step": 4,
+          "signal": "in_por_n",
+          "value": "1"
+        },
+        {
+          "step": 4,
+          "signal": "in_rst_n",
+          "value": "1"
+        },
+        {
+          "step": 4,
+          "signal": "trigger",
+          "value": "1"
+        },
+        {
+          "step": 5,
+          "signal": "gate_witness",
+          "value": "1"
+        },
+        {
+          "step": 5,
+          "signal": "gold_witness",
+          "value": "0"
+        },
+        {
+          "step": 5,
+          "signal": "in_por_n",
+          "value": "1"
+        },
+        {
+          "step": 5,
+          "signal": "in_rst_n",
+          "value": "1"
+        },
+        {
+          "step": 5,
+          "signal": "trigger",
+          "value": "1"
+        },
+        {
+          "step": 6,
+          "signal": "gate_witness",
+          "value": "1"
+        },
+        {
+          "step": 6,
+          "signal": "gold_witness",
+          "value": "0"
+        },
+        {
+          "step": 6,
+          "signal": "in_por_n",
+          "value": "1"
+        },
+        {
+          "step": 6,
+          "signal": "in_rst_n",
+          "value": "1"
+        },
+        {
+          "step": 6,
+          "signal": "trigger",
+          "value": "1"
+        }
+      ]
+    }
+  },
+  "sha256": {
+    "eq_mut.log": "2ddbf185f32ae580bcf80b663a03abd3b144294a4e081f8913c4541db8f86095",
+    "eq_mut.ys": "6e3dcd381664f4fdd7c6e42ca0bfdc414af122c474974bc5f224d8268a549bd5",
+    "eq_post.log": "cf47eda07339328e347058a23ecae84c0a8fc98efc92da0f0d53667b0287d965",
+    "eq_post.ys": "dfbc0bb8b2c2ac502fd006537ac674c57c32ee035174858986ff05dc0fe3614b",
+    "eq_v.log": "ae0cc9d27a74878259fa62cc33b5fbaf40bf1b3eaa4ad809e98b941d2b45cfbb",
+    "eq_v.ys": "2dfec6c098b346a6f0ec03284477baad2594a87d229e06617554ddc10f5c02a2",
+    "hr_face_ports.json": "a65ada5ed2a75bafd5229c53fca5005bf2f0fb60bfe04fca1512b42109f45e76",
+    "hr_face_ports_mut.json": "aedb48d266012f2a06d023d59cbd36a5d8f9bdea3eeaf1f3a99365f5c125a7f6",
+    "mut.json": "81b7764b3e6a318f85f0ed530cffd61a4f8d8acb2b258560effee613fb12912a",
+    "mutant_counterexample.log": "8a2c8fa9ca5071942868f210455c18fd46ce09997306ec5f1d043f56e9f95382",
+    "mutant_counterexample.vcd": "17ffe8fe3c716ea207fb66f528bce33f6833b5e050ef7dff96d6fd53efcf1af6",
+    "mutant_counterexample.ys": "ddc01cdb2cb46ab72af9351bd769e8ac92a3bd15643cd46c20df82e6c3edddec",
+    "positive_same_cone.log": "19e9707270f98c44302873a49d6616f1c32c3251b5788296f948686bd1fd869a",
+    "post.json": "e1758113ffd7a0566dfa63600f413fa85db79e578bbe143bba0ed1f37b9faf31",
+    "pre.json": "9826f6f675cf173679ca3b848e8fed3ac15d978a8ad8cfbe7bb9c995510117fd",
+    "qkd_kvs_ctl.v": "acd38c46e764eac882d17acdd9ce55cfe38cad21b20175b0097600d02c64717a"
+  }
+}

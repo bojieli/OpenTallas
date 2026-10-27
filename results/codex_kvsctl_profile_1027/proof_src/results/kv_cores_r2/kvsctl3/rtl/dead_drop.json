@@ -1,0 +1,133 @@
+{
+ "module": "qkd_kvs_ctl",
+ "dropped_bits": 250,
+ "per_port": {
+  "boot__boot_pr": {
+   "width": 143,
+   "dead": 67,
+   "dead_ranges": [
+    [
+     75,
+     141
+    ]
+   ],
+   "live_pieces": [
+    {
+     "port": "boot__boot_pr",
+     "hi": 74,
+     "lo": 0
+    },
+    {
+     "port": "boot__boot_pr_142",
+     "hi": 142,
+     "lo": 142
+    }
+   ]
+  },
+  "cht": {
+   "width": 59,
+   "dead": 12,
+   "dead_ranges": [
+    [
+     0,
+     5
+    ],
+    [
+     37,
+     42
+    ]
+   ],
+   "live_pieces": [
+    {
+     "port": "cht_6",
+     "hi": 36,
+     "lo": 6
+    },
+    {
+     "port": "cht_43",
+     "hi": 58,
+     "lo": 43
+    }
+   ]
+  },
+  "d2d__srx": {
+   "width": 522,
+   "dead": 10,
+   "dead_ranges": [
+    [
+     0,
+     9
+    ]
+   ],
+   "live_pieces": [
+    {
+     "port": "d2d__srx_10",
+     "hi": 521,
+     "lo": 10
+    }
+   ]
+  },
+  "d2d__svc": {
+   "width": 174,
+   "dead": 138,
+   "dead_ranges": [
+    [
+     0,
+     22
+    ],
+    [
+     25,
+     73
+    ],
+    [
+     90,
+     91
+    ],
+    [
+     110,
+     173
+    ]
+   ],
+   "live_pieces": [
+    {
+     "port": "d2d__svc_23",
+     "hi": 24,
+     "lo": 23
+    },
+    {
+     "port": "d2d__svc_74",
+     "hi": 89,
+     "lo": 74
+    },
+    {
+     "port": "d2d__svc_92",
+     "hi": 109,
+     "lo": 92
+    }
+   ]
+  },
+  "kg": {
+   "width": 23,
+   "dead": 23,
+   "dead_ranges": [
+    [
+     0,
+     22
+    ]
+   ],
+   "live_pieces": []
+  }
+ },
+ "rule": "COORD 10-27 01:33 (b): proven dead (no load after flatten/opt_clean) + LEC with the pins removed EQUIVALENT; plan drop, no pin ties",
+ "pins_dropped": 250,
+ "pins_after": 6545,
+ "core_json": {
+  "ports": 65,
+  "pin_bits": 6849,
+  "classes": {
+   "in": 1793,
+   "out": 5055,
+   "clk": 1
+  }
+ }
+}
