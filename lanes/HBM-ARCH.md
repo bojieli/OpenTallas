@@ -626,3 +626,6 @@ CODEX plan continuation codex/hbm-corridor-2149: real fixed-model998223 GRT fail
 
 ## CODEX notes 2026-10-26 20:03 PDT
 CODEX owns current R13 lane multicast/census followup via PATH-HBM. R12 missing21k wire finding handled by R13 direction/multicast model, but unknown RTL direction4354/11750 pin bits, in-surplus2282/1133 and soft-glue2154/hub remain model assumptions: native bit binding still required before freeze. No old 1:1 transport adoption.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Current unified plan work consolidated /root/hbm/plan on codex/hbm-plan-0815 from QUAD6@568934d32a; collects five paused PORTS/CLK/OUTL/EP/HUBPIN results then folds one plan event. Current U6d G0 0/G0C3 phantom partner-face errors. New vmquery50it GRT FAIL3819 -> height/capacity fix before route.

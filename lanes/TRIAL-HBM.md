@@ -74,3 +74,6 @@ CODEX current-trial work is actualHcorridor/densitycoupon on q_b001/q_b011, pres
 
 ## CODEX notes 2026-10-26 20:03 PDT
 CODEX collected R12 die signalGRT50 ovf0 KIT rc1, stale replicated-core clock taps root cause now repaired in optin postpass (PATH-HBM). Last partial-M5 root-only FAIL1437784 vs bank-only1196448, allM5=0: both core families needM5. Prior isolatedPHYIR passes remain historical until corrected currentPG+clock. No full-die rerun before geometry review.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Current die-trial continuation consolidated PATH-HBM QUAD6 + HBM-PG. Legacy R12 GRT0 and PHY5/5 IR remain historical; no B2l duplicate run. Next final QUAD6 geometry -> corrected PG/continuous mesh -> combined50it GRT -> related-pair TT/FF STA.

@@ -591,3 +591,6 @@ CODEX current physical efforts consolidated PATH-HBM: TKMcommon/terminal CTS-onl
 
 ## CODEX notes 2026-10-26 20:03 PDT
 CODEX consolidated under PATH-HBM/HBM-CORE-LAT: legacy idx/xp/hc/bankq/gq geometry failures retained. Not launching old near-miss kits because current B1/R13 interfaces+clock/master-plan unresolved. ROOT actual LEC closure retained; new physical work proceeds on current hub plan.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Current canonical core work owned HBM-CORES child under /root/hbm; collecting R7/R8 wave rather than old clock/interface kits. Outstanding proof failures owned /root/hbm/lec. Collar a5 SIGNED9393EQ; other failures retained.

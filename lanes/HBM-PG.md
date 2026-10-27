@@ -14,3 +14,6 @@ OPEN: pdn_tcl (real PDN, flow-watched) not changed; whether pdngen leaves the LE
 
 ## CODEX notes 2026-10-26 20:03 PDT
 CODEX reviewed latest result: PG model/real parity and domains cause diagnosed; PDN-ONE merged main resolves shared emission contract, so HBM clock must rebuild against corrected PG. Historical PHY isolatedIR5/5 PASS20.993..28.842mV is not current-die freeze evidence. No superseded PG/clock route adopted.
+
+## CODEX notes 2026-10-27 08:13 PDT
+CODEX took over current-unified PG sizing on codex/hbm-pg-0823 (intel2 own sparse worktree). U6d frame unchanged; conservative old-trial642.7W non-PHY core envelope + separately charged PHY, explicitly not a new current-power claim. First ot-run FAIL missing scipy; corrected isolated venv successor live intel2 unit oth-ubuntu-346755-1793114007, /srv/opentallas-scratch2/claude/codex-hbm-pg-0823/{size_scipy.log,pg_envelope642/}. Next compare feasible grid/capacity then clock rebuild on final reviewed QUAD6. No route before review.
