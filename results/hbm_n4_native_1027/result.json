@@ -1,0 +1,28 @@
+{
+  "scope": "Actual native hub N4EXT0 versus two external actual t4 nodes plus N4EXT1; moved-node arithmetic/control/downlink only",
+  "source_snapshot": "source_snapshot.tar.gz",
+  "one_clock_ps": 833,
+  "unit": "oth-ubuntu-714881-1793118647",
+  "host": "intel2",
+  "mem_gb": 32,
+  "threads": 4,
+  "baseline": {
+    "checks": 714,
+    "errors": 0,
+    "chunks": 32,
+    "scalars": 4,
+    "down_commands": 40,
+    "independent_finish_pulses": 1
+  },
+  "negative": {
+    "same_binary_plusarg": "MUT_PAIR",
+    "errors": 32,
+    "correct_rounding": "3e35517a",
+    "crossed_rounding": "3e355179",
+    "caught": true
+  },
+  "added_cycles_against_original_internal_nodes": 0,
+  "whole_fused_kernel_qualified": false,
+  "whole_die_token_qualified": false,
+  "inherited_failure": "Original t0 and N4EXT fulltree pre/post runs both fail done=0 at90000cycles. Pre writes0; post writes expected sector count but mismatches. Runner sd-unbound is distinct from actual protocol failure. Do not erase or reclassify those failures."
+}
