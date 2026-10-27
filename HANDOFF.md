@@ -1233,3 +1233,5 @@ CODEX: 2026-10-26 20:53 PDT HBMprice25d0786c4: frozenP3batch2sixcostsconcrete, b
 2026-10-26 20:58 PDT CODEX: native32VM/32FUSED/full28tree buddy model a810b810f pushed; cuts0.553/0.588,96parallel nativeports,0coreoverlaps. Directgap111/75cyclesremoved+NEupk4; nativepins/clock/root/PG/reset/token/TTFF gates remain.
 
 CODEX: 2026-10-26 21:04 PDT explicitreset PARK S81/HEAD. BstructuralGRTclockPASS12.63/10.58pswindows; actualTT+120.55/FFhold-72.33. QualifiedHB4repair+wholeLEClive; PD2globalplacementmodelall1210meanlandpairsPASS but21bands/24cuts/corefaces remain. Fullhandoff codex_s81_head_20261026_2102.md, no canonicalSIGNOFF.
+
+CODEX: 2026-10-26 21:04 PDT PD2 parked; R864sourcecomposed21band/G024/7faces; exactbanksconsumer+clockcensusfixed,PHYdensity15taps/globalR5reach405nativeTTFFmodelmean178/147; BKTXy64.8no-stripcandidate0/6; fullpacket handoff/codex_s81_pd2_20261026_2103.md; noownedlivejobs/OWNER?.

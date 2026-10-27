@@ -4622,3 +4622,9 @@ ExplicitUSERRESET parked safely; all ownjobs done, no mainedit. Fullpacket /home
 
 ## S81 / HEAD parked for Claude 2026-10-26 21:04 PDT
 Sourcecodex/head-2000@69d379c78: correctedBpins+density/tree closesGRTclockwindow, actualdatahold/LECstillopen. Exactjobs, failures, source refs, all15lanedispositions and nextsteps in handoff/codex_s81_head_20261026_2102.md. Bothchildren explicitlyparked onrootreset; finalchildpackets supplement. OWNER? None new.
+
+## PD2 handback 2026-10-26 21:04 PDT
+
+## CODEX notes 2026-10-26 21:04 PDT — PD2 PARKED explicit Claude reset
+Source codex/s81-pd2-2000@875f1c86a plus final parking receipt pushed. Full packet handoff/codex_s81_pd2_20261026_2103.md. Allownedjobsterminal. CorrectR864B2compose21bandFAIL/G024cuts/G0C242of244(sevenfaces1BK+6gunit). Restoredexact-bankconsumer0765/schemaeb4 andexactclockcensus94b. PHYdensity14types15taps0inside/empty,max129.288um. GlobalclockR5ded7uniqueemitter27515cells/27514edges0>405; nativeplacementRCmeanlandedmax178.474TT/147.152FF,coarsewholepartworst3TT420.696/0FF351.532,notrelated-pairgate. R4INVALIDdupnamescaughtbeforeSTA/pnr,fixded7guard. BKminimaltestedTXy64.8(+38.88)gets0of6storagebandFAIL/nooverlap/nooutlinegrowth; imageVIEWED,deltaNOTAPPLIED untilactualTXphys816 clock/reset/r2r+latency/bind. No newjob/codeafterreset; remainingfaces/epoch/PG/rings/sourceholdsretained. OWNER?none.
+Packet: /home/ubuntu/coord/handoff/codex_s81_pd2_20261026_2103.md
