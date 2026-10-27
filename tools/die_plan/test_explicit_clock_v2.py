@@ -117,3 +117,27 @@ def test_failed_edge_reservation_rollback_removes_only_its_shapes():
     assert not ix.hits(('M8','next','tree',1.17,1.33,0.,10.))
     assert ix.hits(('M8','next','tree',1.,1.16,0.,10.))
     assert not ix.hits(('M9','next','tree',3.,3.16,0.,10.))
+
+
+def test_interval_buckets_preserve_pair_spacing_and_rollback_hits():
+    import math,random
+    rng=random.Random(29);ix=C.MetalIndex(.08);ix.pairwise=True
+    for k in range(180):
+        width,space=rng.choice([(.16,.08),(.32,.08),(.64,.5),(1.28,1.)])
+        p=rng.uniform(-20,20);a=rng.uniform(-1000,1000)
+        ix.add(('M8' if k%2 else 'M9',f'n{k%7}','tree',p,p+width,a,a+rng.uniform(.1,500)),space=space)
+    ix.add(('M8','VDD','pg',2.,3.92,-2000.,2000.),space=.04)
+    fast=ix.nearby
+    def old(lay,plo,phi,alo,ahi):
+        seen=set()
+        for i in range(math.floor(plo/ix.B),math.floor(phi/ix.B)+1):
+            for k in ix.bins[lay].get(i,()):
+                if k not in seen:seen.add(k);yield k
+    for iteration in range(2):
+        for k in range(240):
+            p=rng.uniform(-22,22);a=rng.uniform(-1200,1200)
+            q=('M8' if k%2 else 'M9',f'q{k%5}','tree',p,p+.32,a,a+rng.uniform(.1,600))
+            ix.nearby=fast;got=sorted(ix.hits(q))
+            ix.nearby=old;assert sorted(ix.hits(q))==got
+        ix.nearby=fast
+        if not iteration:ix.truncate(130)

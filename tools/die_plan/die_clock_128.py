@@ -698,6 +698,9 @@ class MetalIndex:
         self.pairwise = False
         self.shape_spaces = []
         self.max_shape_space = 0.
+        self.axis_bin_um = 216.
+        self.axis_bins = {"M8": defaultdict(list), "M9": defaultdict(list)}
+        self.axis_indexed = 0
         self.bins = {"M8": defaultdict(list), "M9": defaultdict(list)}
 
     def add(self, s, space=None):
@@ -709,17 +712,50 @@ class MetalIndex:
         b = self.bins[s[0]]
         for i in range(int(math.floor(s[3] / self.B)), int(math.floor(s[4] / self.B)) + 1):
             b[i].append(k)
+        if self.pairwise:
+            for key in self.axis_keys(s):self.axis_bins[s[0]][key].append(k)
+            self.axis_indexed+=1
         return k
+
+    def axis_keys(self,s):
+        for i in range(int(math.floor(s[3]/self.B)),int(math.floor(s[4]/self.B))+1):
+            for j in range(int(math.floor(s[5]/self.axis_bin_um)),int(math.floor(s[6]/self.axis_bin_um))+1):
+                yield i,j
+
+    def nearby(self,lay,plo,phi,alo,ahi):
+        """Local interval candidates; retain the old buckets for diagnostics."""
+        seen=set()
+        if self.pairwise:
+            if self.axis_indexed!=len(self.shapes):
+                self.axis_bins={"M8":defaultdict(list),"M9":defaultdict(list)}
+                for k,s in enumerate(self.shapes):
+                    for key in self.axis_keys(s):self.axis_bins[s[0]][key].append(k)
+                self.axis_indexed=len(self.shapes)
+            for key in self.axis_keys((lay,None,None,plo,phi,alo,ahi)):
+                for k in self.axis_bins[lay].get(key,()):
+                    if k not in seen:seen.add(k);yield k
+        else:
+            for i in range(int(math.floor(plo/self.B)),int(math.floor(phi/self.B))+1):
+                for k in self.bins[lay].get(i,()):
+                    if k not in seen:seen.add(k);yield k
 
     def truncate(self, size):
         """Discard only reservations made after a failed planning transaction."""
+        indexed=self.axis_indexed==len(self.shapes)
         for k in range(len(self.shapes)-1,size-1,-1):
             s=self.shapes[k];b=self.bins[s[0]]
+            if indexed:
+                for key in self.axis_keys(s):
+                    rows=self.axis_bins[s[0]][key]
+                    if not rows or rows[-1]!=k:raise RuntimeError("interval reservation order differs")
+                    rows.pop()
+                    if not rows:del self.axis_bins[s[0]][key]
             for i in range(int(math.floor(s[3]/self.B)),int(math.floor(s[4]/self.B))+1):
                 if not b[i] or b[i][-1]!=k:raise RuntimeError("metal reservation order differs")
                 b[i].pop()
                 if not b[i]:del b[i]
         del self.shapes[size:];del self.shape_spaces[size:]
+        self.axis_indexed=size if indexed else 0
         # A historical upper bound only widens the bucket scan, never spacing.
 
     def hits(self, s, first=False):
@@ -728,25 +764,24 @@ class MetalIndex:
         sp, eps = self.space, 1e-6
         b, seen, out = self.bins[lay], set(), []
         reach = max(sp, self.max_shape_space if self.pairwise else 0., WIDE_SPACING_ROWS[0][1])
-        for i in range(int(math.floor((plo - reach) / self.B)), int(math.floor((phi + reach) / self.B)) + 1):
-            for k in b.get(i, ()):
-                if k in seen:
-                    continue
-                seen.add(k)
-                t = self.shapes[k]
-                if t[1] == net:
-                    continue
-                gp = max(t[3] - phi, plo - t[4])
-                ga = max(t[5] - ahi, alo - t[6])
-                pair_space=max(sp,self.shape_spaces[k]) if self.pairwise else sp
-                if gp < pair_space - eps and ga < pair_space - eps:
-                    out.append((k, "short" if gp < eps and ga < eps else "spacing"))
-                    if first:
-                        return out
-                elif t[2] == "pg" and ga < -eps and gp < wide_spacing(max(phi - plo, t[4] - t[3]), max(0.,min(ahi,t[6])-max(alo,t[5]))) - eps:
-                    out.append((k, "wide_spacing"))
-                    if first:
-                        return out
+        for k in self.nearby(lay,plo-reach,phi+reach,alo-reach,ahi+reach):
+            if k in seen:
+                continue
+            seen.add(k)
+            t = self.shapes[k]
+            if t[1] == net:
+                continue
+            gp = max(t[3] - phi, plo - t[4])
+            ga = max(t[5] - ahi, alo - t[6])
+            pair_space=max(sp,self.shape_spaces[k]) if self.pairwise else sp
+            if gp < pair_space - eps and ga < pair_space - eps:
+                out.append((k, "short" if gp < eps and ga < eps else "spacing"))
+                if first:
+                    return out
+            elif t[2] == "pg" and ga < -eps and gp < wide_spacing(max(phi - plo, t[4] - t[3]), max(0.,min(ahi,t[6])-max(alo,t[5]))) - eps:
+                out.append((k, "wide_spacing"))
+                if first:
+                    return out
         return out
 
 
@@ -904,13 +939,12 @@ def merged_width(pg_ix, s, net):
     lo, hi, grew = plo, phi, True
     while grew:
         grew = False
-        for i in range(int(math.floor((lo - 1) / pg_ix.B)), int(math.floor((hi + 1) / pg_ix.B)) + 1):
-            for k in pg_ix.bins[lay].get(i, ()):
-                t = pg_ix.shapes[k]
-                if t[1] != net or t[6] <= alo or t[5] >= ahi:
-                    continue
-                if t[3] <= hi + eps and t[4] >= lo - eps and (t[3] < lo - eps or t[4] > hi + eps):
-                    lo, hi, grew = min(lo, t[3]), max(hi, t[4]), True
+        for k in pg_ix.nearby(lay,lo-1,hi+1,alo,ahi):
+            t = pg_ix.shapes[k]
+            if t[1] != net or t[6] <= alo or t[5] >= ahi:
+                continue
+            if t[3] <= hi + eps and t[4] >= lo - eps and (t[3] < lo - eps or t[4] > hi + eps):
+                lo, hi, grew = min(lo, t[3]), max(hi, t[4]), True
     return hi - lo
 
 
