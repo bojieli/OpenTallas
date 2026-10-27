@@ -48,5 +48,17 @@
       ],
       "schedule_sha256": "4cb106a32a229c02fb35973b84c7013c23d04a6070f9e36133898d7bef462241"
     }
+  },
+  "L0": {
+    "source": "8e79b798ead",
+    "die_sha256_prefix": "a5778b981be9",
+    "compiler_exit": 0,
+    "ops": 65,
+    "lowered": 23,
+    "partial": 41,
+    "gap": 1,
+    "rows": 949,
+    "templates": 948,
+    "rtl_replay": false
   }
 }
