@@ -1,0 +1,7669 @@
+[
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane0__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 0,
+  "id_width": 4,
+  "old_buses": {
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "g_lane_0_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_0_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "g_lane_0_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_0_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_0_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_0_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_0_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_0_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_0_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "kv_we_w": [
+    "output",
+    1
+   ],
+   "vi_re_w": [
+    "output",
+    1
+   ],
+   "kv_waddr_w": [
+    "output",
+    24
+   ],
+   "vi_addr_w": [
+    "output",
+    24
+   ],
+   "vi_q_w": [
+    "input",
+    32
+   ],
+   "kv_wdata_w": [
+    "output",
+    32
+   ],
+   "g_lane_0_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_0_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_0_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_0_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_0_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_0_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_0_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_0_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_0_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_0_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "g_lane_0_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_0_g_mono_u_map_ld_terms": "map_ld_terms",
+   "g_lane_0_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_0_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_0_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_0_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_0_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_0_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_0_g_mono_u_map_i_pass": "map_i_pass",
+   "kv_we_w": "sfu_kv_we",
+   "vi_re_w": "sfu_vi_re",
+   "kv_waddr_w": "sfu_kv_waddr",
+   "vi_addr_w": "sfu_vi_addr",
+   "vi_q_w": "sfu_vi_q",
+   "kv_wdata_w": "sfu_kv_wdata",
+   "g_lane_0_u_sfu_coll": "sfu_coll",
+   "g_lane_0_u_sfu_fault": "sfu_fault",
+   "g_lane_0_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_0_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_0_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_0_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_0_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_0_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_0_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_0_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane1__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 1,
+  "id_width": 4,
+  "old_buses": {
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "g_lane_1_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_1_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "kv_we_w": [
+    "output",
+    1
+   ],
+   "vi_re_w": [
+    "output",
+    1
+   ],
+   "kv_waddr_w": [
+    "output",
+    24
+   ],
+   "vi_addr_w": [
+    "output",
+    24
+   ],
+   "vi_q_w": [
+    "input",
+    32
+   ],
+   "kv_wdata_w": [
+    "output",
+    32
+   ],
+   "g_lane_1_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_1_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_1_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_1_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_1_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_1_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_1_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_1_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_1_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_1_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_1_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_1_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_1_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_1_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_1_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_1_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_1_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "g_lane_1_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_1_g_mono_u_map_ld_terms": "map_ld_terms",
+   "kv_we_w": "sfu_kv_we",
+   "vi_re_w": "sfu_vi_re",
+   "kv_waddr_w": "sfu_kv_waddr",
+   "vi_addr_w": "sfu_vi_addr",
+   "vi_q_w": "sfu_vi_q",
+   "kv_wdata_w": "sfu_kv_wdata",
+   "g_lane_1_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_1_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_1_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_1_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_1_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_1_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_1_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_1_u_sfu_coll": "sfu_coll",
+   "g_lane_1_u_sfu_fault": "sfu_fault",
+   "g_lane_1_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_1_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_1_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_1_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_1_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_1_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_1_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_1_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane2__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 2,
+  "id_width": 4,
+  "old_buses": {
+   "g_lane_2_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_2_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "kv_we_w": [
+    "output",
+    1
+   ],
+   "vi_re_w": [
+    "output",
+    1
+   ],
+   "kv_waddr_w": [
+    "output",
+    24
+   ],
+   "vi_addr_w": [
+    "output",
+    24
+   ],
+   "vi_q_w": [
+    "input",
+    32
+   ],
+   "kv_wdata_w": [
+    "output",
+    32
+   ],
+   "g_lane_2_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_2_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_2_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_2_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_2_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_2_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_2_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_2_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_2_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_2_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_2_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_2_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_2_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_2_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_2_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_2_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_2_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "g_lane_2_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_2_g_mono_u_map_ld_terms": "map_ld_terms",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "kv_we_w": "sfu_kv_we",
+   "vi_re_w": "sfu_vi_re",
+   "kv_waddr_w": "sfu_kv_waddr",
+   "vi_addr_w": "sfu_vi_addr",
+   "vi_q_w": "sfu_vi_q",
+   "kv_wdata_w": "sfu_kv_wdata",
+   "g_lane_2_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_2_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_2_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_2_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_2_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_2_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_2_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_2_u_sfu_coll": "sfu_coll",
+   "g_lane_2_u_sfu_fault": "sfu_fault",
+   "g_lane_2_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_2_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_2_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_2_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_2_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_2_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_2_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_2_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane3__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 3,
+  "id_width": 4,
+  "old_buses": {
+   "g_lane_3_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_3_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "g_lane_3_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_3_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_3_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_3_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_3_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_3_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_3_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "kv_we_w": [
+    "output",
+    1
+   ],
+   "vi_re_w": [
+    "output",
+    1
+   ],
+   "kv_waddr_w": [
+    "output",
+    24
+   ],
+   "vi_addr_w": [
+    "output",
+    24
+   ],
+   "vi_q_w": [
+    "input",
+    32
+   ],
+   "kv_wdata_w": [
+    "output",
+    32
+   ],
+   "g_lane_3_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_3_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_3_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_3_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_3_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_3_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_3_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_3_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_3_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_3_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "g_lane_3_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_3_g_mono_u_map_ld_terms": "map_ld_terms",
+   "g_lane_3_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_3_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_3_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_3_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_3_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_3_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_3_g_mono_u_map_i_pass": "map_i_pass",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "kv_we_w": "sfu_kv_we",
+   "vi_re_w": "sfu_vi_re",
+   "kv_waddr_w": "sfu_kv_waddr",
+   "vi_addr_w": "sfu_vi_addr",
+   "vi_q_w": "sfu_vi_q",
+   "kv_wdata_w": "sfu_kv_wdata",
+   "g_lane_3_u_sfu_coll": "sfu_coll",
+   "g_lane_3_u_sfu_fault": "sfu_fault",
+   "g_lane_3_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_3_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_3_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_3_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_3_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_3_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_3_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_3_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane4__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 4,
+  "id_width": 4,
+  "old_buses": {
+   "kv_we_n": [
+    "output",
+    1
+   ],
+   "vi_re_n": [
+    "output",
+    1
+   ],
+   "kv_waddr_n": [
+    "output",
+    24
+   ],
+   "vi_addr_n": [
+    "output",
+    24
+   ],
+   "vi_q_n": [
+    "input",
+    32
+   ],
+   "kv_wdata_n": [
+    "output",
+    32
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "g_lane_4_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_4_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "g_lane_4_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_4_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_4_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_4_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_4_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_4_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_4_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_4_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_4_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_4_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_4_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_4_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_4_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_4_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_4_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_4_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_4_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "kv_we_n": "sfu_kv_we",
+   "vi_re_n": "sfu_vi_re",
+   "kv_waddr_n": "sfu_kv_waddr",
+   "vi_addr_n": "sfu_vi_addr",
+   "vi_q_n": "sfu_vi_q",
+   "kv_wdata_n": "sfu_kv_wdata",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "g_lane_4_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_4_g_mono_u_map_ld_terms": "map_ld_terms",
+   "g_lane_4_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_4_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_4_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_4_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_4_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_4_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_4_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_4_u_sfu_coll": "sfu_coll",
+   "g_lane_4_u_sfu_fault": "sfu_fault",
+   "g_lane_4_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_4_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_4_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_4_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_4_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_4_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_4_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_4_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane5__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 5,
+  "id_width": 4,
+  "old_buses": {
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "kv_we_n": [
+    "output",
+    1
+   ],
+   "vi_re_n": [
+    "output",
+    1
+   ],
+   "kv_waddr_n": [
+    "output",
+    24
+   ],
+   "vi_addr_n": [
+    "output",
+    24
+   ],
+   "vi_q_n": [
+    "input",
+    32
+   ],
+   "kv_wdata_n": [
+    "output",
+    32
+   ],
+   "g_lane_5_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_5_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "g_lane_5_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_5_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_5_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_5_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_5_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_5_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_5_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_5_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_5_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_5_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_5_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_5_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_5_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_5_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_5_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_5_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_5_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "kv_we_n": "sfu_kv_we",
+   "vi_re_n": "sfu_vi_re",
+   "kv_waddr_n": "sfu_kv_waddr",
+   "vi_addr_n": "sfu_vi_addr",
+   "vi_q_n": "sfu_vi_q",
+   "kv_wdata_n": "sfu_kv_wdata",
+   "g_lane_5_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_5_g_mono_u_map_ld_terms": "map_ld_terms",
+   "g_lane_5_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_5_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_5_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_5_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_5_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_5_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_5_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_5_u_sfu_coll": "sfu_coll",
+   "g_lane_5_u_sfu_fault": "sfu_fault",
+   "g_lane_5_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_5_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_5_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_5_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_5_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_5_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_5_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_5_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane6__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 6,
+  "id_width": 4,
+  "old_buses": {
+   "g_lane_6_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_6_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "kv_we_n": [
+    "output",
+    1
+   ],
+   "vi_re_n": [
+    "output",
+    1
+   ],
+   "kv_waddr_n": [
+    "output",
+    24
+   ],
+   "vi_addr_n": [
+    "output",
+    24
+   ],
+   "vi_q_n": [
+    "input",
+    32
+   ],
+   "kv_wdata_n": [
+    "output",
+    32
+   ],
+   "g_lane_6_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_6_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_6_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_6_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_6_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_6_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_6_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_6_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_6_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_6_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_6_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_6_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_6_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_6_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_6_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_6_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_6_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "g_lane_6_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_6_g_mono_u_map_ld_terms": "map_ld_terms",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "kv_we_n": "sfu_kv_we",
+   "vi_re_n": "sfu_vi_re",
+   "kv_waddr_n": "sfu_kv_waddr",
+   "vi_addr_n": "sfu_vi_addr",
+   "vi_q_n": "sfu_vi_q",
+   "kv_wdata_n": "sfu_kv_wdata",
+   "g_lane_6_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_6_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_6_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_6_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_6_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_6_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_6_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_6_u_sfu_coll": "sfu_coll",
+   "g_lane_6_u_sfu_fault": "sfu_fault",
+   "g_lane_6_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_6_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_6_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_6_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_6_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_6_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_6_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_6_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane7__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 7,
+  "id_width": 4,
+  "old_buses": {
+   "g_lane_7_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_7_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "g_lane_7_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_7_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_7_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_7_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_7_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_7_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_7_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "kv_we_n": [
+    "output",
+    1
+   ],
+   "vi_re_n": [
+    "output",
+    1
+   ],
+   "kv_waddr_n": [
+    "output",
+    24
+   ],
+   "vi_addr_n": [
+    "output",
+    24
+   ],
+   "vi_q_n": [
+    "input",
+    32
+   ],
+   "kv_wdata_n": [
+    "output",
+    32
+   ],
+   "g_lane_7_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_7_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_7_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_7_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_7_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_7_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_7_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_7_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_7_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_7_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "g_lane_7_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_7_g_mono_u_map_ld_terms": "map_ld_terms",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "g_lane_7_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_7_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_7_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_7_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_7_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_7_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_7_g_mono_u_map_i_pass": "map_i_pass",
+   "kv_we_n": "sfu_kv_we",
+   "vi_re_n": "sfu_vi_re",
+   "kv_waddr_n": "sfu_kv_waddr",
+   "vi_addr_n": "sfu_vi_addr",
+   "vi_q_n": "sfu_vi_q",
+   "kv_wdata_n": "sfu_kv_wdata",
+   "g_lane_7_u_sfu_coll": "sfu_coll",
+   "g_lane_7_u_sfu_fault": "sfu_fault",
+   "g_lane_7_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_7_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_7_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_7_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_7_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_7_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_7_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_7_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane8__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 8,
+  "id_width": 4,
+  "old_buses": {
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "g_lane_8_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_8_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "g_lane_8_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_8_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_8_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_8_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_8_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_8_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_8_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "kv_we_e": [
+    "output",
+    1
+   ],
+   "g_lane_8_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_8_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_8_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_8_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "vi_re_e": [
+    "output",
+    1
+   ],
+   "g_lane_8_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_8_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "kv_waddr_e": [
+    "output",
+    24
+   ],
+   "g_lane_8_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "vi_addr_e": [
+    "output",
+    24
+   ],
+   "vi_q_e": [
+    "input",
+    32
+   ],
+   "kv_wdata_e": [
+    "output",
+    32
+   ],
+   "g_lane_8_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_8_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_8_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "g_lane_8_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_8_g_mono_u_map_ld_terms": "map_ld_terms",
+   "g_lane_8_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_8_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_8_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_8_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_8_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_8_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_8_g_mono_u_map_i_pass": "map_i_pass",
+   "kv_we_e": "sfu_kv_we",
+   "g_lane_8_u_sfu_coll": "sfu_coll",
+   "g_lane_8_u_sfu_fault": "sfu_fault",
+   "g_lane_8_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_8_u_sfu_vm_we": "sfu_vm_we",
+   "vi_re_e": "sfu_vi_re",
+   "g_lane_8_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_8_u_sfu_rd_src": "sfu_rd_src",
+   "kv_waddr_e": "sfu_kv_waddr",
+   "g_lane_8_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "vi_addr_e": "sfu_vi_addr",
+   "vi_q_e": "sfu_vi_q",
+   "kv_wdata_e": "sfu_kv_wdata",
+   "g_lane_8_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_8_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_8_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane9__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 9,
+  "id_width": 4,
+  "old_buses": {
+   "kv_we_e": [
+    "output",
+    1
+   ],
+   "vi_re_e": [
+    "output",
+    1
+   ],
+   "kv_waddr_e": [
+    "output",
+    24
+   ],
+   "vi_addr_e": [
+    "output",
+    24
+   ],
+   "vi_q_e": [
+    "input",
+    32
+   ],
+   "kv_wdata_e": [
+    "output",
+    32
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "g_lane_9_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_9_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "g_lane_9_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_9_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_9_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_9_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_9_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_9_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_9_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_9_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_9_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_9_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_9_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_9_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_9_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_9_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_9_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_9_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_9_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "kv_we_e": "sfu_kv_we",
+   "vi_re_e": "sfu_vi_re",
+   "kv_waddr_e": "sfu_kv_waddr",
+   "vi_addr_e": "sfu_vi_addr",
+   "vi_q_e": "sfu_vi_q",
+   "kv_wdata_e": "sfu_kv_wdata",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "g_lane_9_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_9_g_mono_u_map_ld_terms": "map_ld_terms",
+   "g_lane_9_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_9_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_9_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_9_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_9_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_9_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_9_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_9_u_sfu_coll": "sfu_coll",
+   "g_lane_9_u_sfu_fault": "sfu_fault",
+   "g_lane_9_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_9_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_9_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_9_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_9_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_9_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_9_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_9_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane10__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 10,
+  "id_width": 4,
+  "old_buses": {
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "kv_we_e": [
+    "output",
+    1
+   ],
+   "vi_re_e": [
+    "output",
+    1
+   ],
+   "kv_waddr_e": [
+    "output",
+    24
+   ],
+   "vi_addr_e": [
+    "output",
+    24
+   ],
+   "vi_q_e": [
+    "input",
+    32
+   ],
+   "kv_wdata_e": [
+    "output",
+    32
+   ],
+   "g_lane_10_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_10_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "g_lane_10_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_10_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_10_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_10_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_10_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_10_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_10_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_10_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_10_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_10_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_10_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_10_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_10_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_10_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_10_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_10_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_10_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "kv_we_e": "sfu_kv_we",
+   "vi_re_e": "sfu_vi_re",
+   "kv_waddr_e": "sfu_kv_waddr",
+   "vi_addr_e": "sfu_vi_addr",
+   "vi_q_e": "sfu_vi_q",
+   "kv_wdata_e": "sfu_kv_wdata",
+   "g_lane_10_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_10_g_mono_u_map_ld_terms": "map_ld_terms",
+   "g_lane_10_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_10_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_10_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_10_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_10_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_10_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_10_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_10_u_sfu_coll": "sfu_coll",
+   "g_lane_10_u_sfu_fault": "sfu_fault",
+   "g_lane_10_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_10_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_10_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_10_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_10_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_10_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_10_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_10_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane11__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 11,
+  "id_width": 4,
+  "old_buses": {
+   "g_lane_11_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_11_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "kv_we_e": [
+    "output",
+    1
+   ],
+   "vi_re_e": [
+    "output",
+    1
+   ],
+   "kv_waddr_e": [
+    "output",
+    24
+   ],
+   "vi_addr_e": [
+    "output",
+    24
+   ],
+   "vi_q_e": [
+    "input",
+    32
+   ],
+   "kv_wdata_e": [
+    "output",
+    32
+   ],
+   "g_lane_11_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_11_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_11_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_11_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_11_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_11_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_11_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_11_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_11_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_11_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_11_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_11_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_11_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_11_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_11_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_11_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_11_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "g_lane_11_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_11_g_mono_u_map_ld_terms": "map_ld_terms",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "kv_we_e": "sfu_kv_we",
+   "vi_re_e": "sfu_vi_re",
+   "kv_waddr_e": "sfu_kv_waddr",
+   "vi_addr_e": "sfu_vi_addr",
+   "vi_q_e": "sfu_vi_q",
+   "kv_wdata_e": "sfu_kv_wdata",
+   "g_lane_11_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_11_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_11_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_11_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_11_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_11_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_11_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_11_u_sfu_coll": "sfu_coll",
+   "g_lane_11_u_sfu_fault": "sfu_fault",
+   "g_lane_11_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_11_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_11_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_11_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_11_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_11_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_11_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_11_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane12__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 12,
+  "id_width": 4,
+  "old_buses": {
+   "g_lane_12_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_12_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "kv_we_s": [
+    "output",
+    1
+   ],
+   "vi_re_s": [
+    "output",
+    1
+   ],
+   "kv_waddr_s": [
+    "output",
+    24
+   ],
+   "vi_addr_s": [
+    "output",
+    24
+   ],
+   "vi_q_s": [
+    "input",
+    32
+   ],
+   "kv_wdata_s": [
+    "output",
+    32
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "g_lane_12_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_12_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_12_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_12_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_12_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_12_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_12_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_12_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_12_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_12_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_12_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_12_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_12_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_12_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_12_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_12_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_12_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "g_lane_12_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_12_g_mono_u_map_ld_terms": "map_ld_terms",
+   "kv_we_s": "sfu_kv_we",
+   "vi_re_s": "sfu_vi_re",
+   "kv_waddr_s": "sfu_kv_waddr",
+   "vi_addr_s": "sfu_vi_addr",
+   "vi_q_s": "sfu_vi_q",
+   "kv_wdata_s": "sfu_kv_wdata",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "g_lane_12_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_12_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_12_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_12_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_12_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_12_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_12_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_12_u_sfu_coll": "sfu_coll",
+   "g_lane_12_u_sfu_fault": "sfu_fault",
+   "g_lane_12_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_12_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_12_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_12_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_12_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_12_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_12_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_12_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane13__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 13,
+  "id_width": 4,
+  "old_buses": {
+   "kv_we_s": [
+    "output",
+    1
+   ],
+   "vi_re_s": [
+    "output",
+    1
+   ],
+   "kv_waddr_s": [
+    "output",
+    24
+   ],
+   "vi_addr_s": [
+    "output",
+    24
+   ],
+   "vi_q_s": [
+    "input",
+    32
+   ],
+   "kv_wdata_s": [
+    "output",
+    32
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "g_lane_13_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_13_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "g_lane_13_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_13_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_13_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_13_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_13_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_13_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_13_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_13_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_13_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_13_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_13_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_13_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_13_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_13_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_13_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_13_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_13_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "kv_we_s": "sfu_kv_we",
+   "vi_re_s": "sfu_vi_re",
+   "kv_waddr_s": "sfu_kv_waddr",
+   "vi_addr_s": "sfu_vi_addr",
+   "vi_q_s": "sfu_vi_q",
+   "kv_wdata_s": "sfu_kv_wdata",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "g_lane_13_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_13_g_mono_u_map_ld_terms": "map_ld_terms",
+   "g_lane_13_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_13_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_13_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_13_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_13_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_13_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_13_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_13_u_sfu_coll": "sfu_coll",
+   "g_lane_13_u_sfu_fault": "sfu_fault",
+   "g_lane_13_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_13_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_13_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_13_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_13_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_13_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_13_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_13_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane14__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 14,
+  "id_width": 4,
+  "old_buses": {
+   "g_lane_14_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_14_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "g_lane_14_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_14_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_14_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_14_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_14_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_14_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_14_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "kv_we_s": [
+    "output",
+    1
+   ],
+   "vi_re_s": [
+    "output",
+    1
+   ],
+   "kv_waddr_s": [
+    "output",
+    24
+   ],
+   "vi_addr_s": [
+    "output",
+    24
+   ],
+   "vi_q_s": [
+    "input",
+    32
+   ],
+   "kv_wdata_s": [
+    "output",
+    32
+   ],
+   "g_lane_14_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_14_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_14_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_14_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "g_lane_14_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_14_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_14_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_14_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_14_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_14_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "g_lane_14_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_14_g_mono_u_map_ld_terms": "map_ld_terms",
+   "g_lane_14_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_14_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_14_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_14_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_14_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_14_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_14_g_mono_u_map_i_pass": "map_i_pass",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "kv_we_s": "sfu_kv_we",
+   "vi_re_s": "sfu_vi_re",
+   "kv_waddr_s": "sfu_kv_waddr",
+   "vi_addr_s": "sfu_vi_addr",
+   "vi_q_s": "sfu_vi_q",
+   "kv_wdata_s": "sfu_kv_wdata",
+   "g_lane_14_u_sfu_coll": "sfu_coll",
+   "g_lane_14_u_sfu_fault": "sfu_fault",
+   "g_lane_14_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_14_u_sfu_ro_x": "sfu_ro_x",
+   "g_lane_14_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_14_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_14_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_14_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_14_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_14_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_sfu_core_split3__lane15__master_id_adapter",
+  "common": "ot_hgi_sfu_split3_lane_core__idpin",
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "id_port": "map_lane_j",
+  "id_value": 15,
+  "id_width": 4,
+  "old_buses": {
+   "g_lane_15_u_sfu_rd_q": [
+    "input",
+    128
+   ],
+   "g_lane_15_g_mono_u_map_ld_terms": [
+    "input",
+    480
+   ],
+   "g_lane_15_g_mono_u_map_i_emit": [
+    "input",
+    1
+   ],
+   "g_lane_15_g_mono_u_map_i_ls": [
+    "input",
+    4
+   ],
+   "g_lane_15_g_mono_u_map_i_lvw": [
+    "input",
+    4
+   ],
+   "g_lane_15_g_mono_u_map_i_i_v": [
+    "input",
+    24
+   ],
+   "g_lane_15_g_mono_u_map_i_krow": [
+    "input",
+    24
+   ],
+   "g_lane_15_g_mono_u_map_i_o_v": [
+    "input",
+    24
+   ],
+   "g_lane_15_g_mono_u_map_i_pass": [
+    "input",
+    461
+   ],
+   "g_lane_15_u_sfu_coll": [
+    "output",
+    1
+   ],
+   "g_lane_15_u_sfu_fault": [
+    "output",
+    1
+   ],
+   "g_lane_15_u_sfu_ro_v": [
+    "output",
+    1
+   ],
+   "g_lane_15_u_sfu_ro_x": [
+    "output",
+    32
+   ],
+   "clk_lane": [
+    "input",
+    1
+   ],
+   "clk_map": [
+    "input",
+    1
+   ],
+   "rst_lane_n": [
+    "input",
+    1
+   ],
+   "rst_map_n": [
+    "input",
+    1
+   ],
+   "kv_we_s": [
+    "output",
+    1
+   ],
+   "vi_re_s": [
+    "output",
+    1
+   ],
+   "kv_waddr_s": [
+    "output",
+    24
+   ],
+   "vi_addr_s": [
+    "output",
+    24
+   ],
+   "vi_q_s": [
+    "input",
+    32
+   ],
+   "kv_wdata_s": [
+    "output",
+    32
+   ],
+   "g_lane_15_u_sfu_vm_we": [
+    "output",
+    1
+   ],
+   "g_lane_15_u_sfu_rd_re": [
+    "output",
+    4
+   ],
+   "g_lane_15_u_sfu_rd_src": [
+    "output",
+    8
+   ],
+   "g_lane_15_u_sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "g_lane_15_u_sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "g_lane_15_u_sfu_rd_addr": [
+    "output",
+    96
+   ]
+  },
+  "port_map": {
+   "g_lane_15_u_sfu_rd_q": "sfu_rd_q",
+   "g_lane_15_g_mono_u_map_ld_terms": "map_ld_terms",
+   "g_lane_15_g_mono_u_map_i_emit": "map_i_emit",
+   "g_lane_15_g_mono_u_map_i_ls": "map_i_ls",
+   "g_lane_15_g_mono_u_map_i_lvw": "map_i_lvw",
+   "g_lane_15_g_mono_u_map_i_i_v": "map_i_i_v",
+   "g_lane_15_g_mono_u_map_i_krow": "map_i_krow",
+   "g_lane_15_g_mono_u_map_i_o_v": "map_i_o_v",
+   "g_lane_15_g_mono_u_map_i_pass": "map_i_pass",
+   "g_lane_15_u_sfu_coll": "sfu_coll",
+   "g_lane_15_u_sfu_fault": "sfu_fault",
+   "g_lane_15_u_sfu_ro_v": "sfu_ro_v",
+   "g_lane_15_u_sfu_ro_x": "sfu_ro_x",
+   "clk_lane": "sfu_clk",
+   "clk_map": "map_clk",
+   "rst_lane_n": "sfu_rst_n",
+   "rst_map_n": "map_rst_n",
+   "kv_we_s": "sfu_kv_we",
+   "vi_re_s": "sfu_vi_re",
+   "kv_waddr_s": "sfu_kv_waddr",
+   "vi_addr_s": "sfu_vi_addr",
+   "vi_q_s": "sfu_vi_q",
+   "kv_wdata_s": "sfu_kv_wdata",
+   "g_lane_15_u_sfu_vm_we": "sfu_vm_we",
+   "g_lane_15_u_sfu_rd_re": "sfu_rd_re",
+   "g_lane_15_u_sfu_rd_src": "sfu_rd_src",
+   "g_lane_15_u_sfu_vm_waddr": "sfu_vm_waddr",
+   "g_lane_15_u_sfu_vm_wdata": "sfu_vm_wdata",
+   "g_lane_15_u_sfu_rd_addr": "sfu_rd_addr"
+  },
+  "top_ports": {
+   "map_clk": [
+    "input",
+    1
+   ],
+   "map_rst_n": [
+    "input",
+    1
+   ],
+   "map_ld_terms": [
+    "input",
+    480
+   ],
+   "map_i_o_v": [
+    "input",
+    24
+   ],
+   "map_i_i_v": [
+    "input",
+    24
+   ],
+   "map_i_krow": [
+    "input",
+    24
+   ],
+   "map_i_ls": [
+    "input",
+    4
+   ],
+   "map_i_lvw": [
+    "input",
+    4
+   ],
+   "map_i_emit": [
+    "input",
+    1
+   ],
+   "map_i_pass": [
+    "input",
+    461
+   ],
+   "sfu_clk": [
+    "input",
+    1
+   ],
+   "sfu_rst_n": [
+    "input",
+    1
+   ],
+   "sfu_vi_q": [
+    "input",
+    32
+   ],
+   "sfu_rd_q": [
+    "input",
+    128
+   ],
+   "map_lane_j": [
+    "input",
+    4
+   ],
+   "sfu_vi_re": [
+    "output",
+    1
+   ],
+   "sfu_vi_addr": [
+    "output",
+    24
+   ],
+   "sfu_rd_addr": [
+    "output",
+    96
+   ],
+   "sfu_rd_re": [
+    "output",
+    4
+   ],
+   "sfu_rd_src": [
+    "output",
+    8
+   ],
+   "sfu_vm_we": [
+    "output",
+    1
+   ],
+   "sfu_vm_waddr": [
+    "output",
+    24
+   ],
+   "sfu_vm_wdata": [
+    "output",
+    32
+   ],
+   "sfu_kv_we": [
+    "output",
+    1
+   ],
+   "sfu_kv_waddr": [
+    "output",
+    24
+   ],
+   "sfu_kv_wdata": [
+    "output",
+    32
+   ],
+   "sfu_ro_v": [
+    "output",
+    1
+   ],
+   "sfu_ro_x": [
+    "output",
+    32
+   ],
+   "sfu_fault": [
+    "output",
+    1
+   ],
+   "sfu_coll": [
+    "output",
+    1
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile0__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 0,
+  "id_width": 6,
+  "old_buses": {
+   "u_u_g_tiles_0_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_0_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_0_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_0_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_0_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_0_e86_u_tile_up_out": [
+    "output",
+    344
+   ],
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_0_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_0_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ]
+  },
+  "port_map": {
+   "u_u_g_tiles_0_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_0_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_0_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_0_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_0_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_0_e86_u_tile_up_out": "tile_up_out",
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_0_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_0_e86_u_tile_ovf_v": "tile_ovf_v"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile1__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 1,
+  "id_width": 6,
+  "old_buses": {
+   "u_u_g_tiles_1_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_1_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_1_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_1_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_1_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_1_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_1_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_1_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "u_u_g_tiles_1_e86_u_tile_ovf_b": "tile_ovf_b",
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_1_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_1_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_1_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_1_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_1_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_1_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_1_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile2__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 2,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_2_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_2_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_2_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_2_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_2_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_2_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_2_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_2_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_2_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_2_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_2_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_2_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_2_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_2_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_2_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_2_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile3__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 3,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_3_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_3_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_3_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_3_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_3_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_3_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_3_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_3_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_3_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_3_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_3_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_3_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_3_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_3_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_3_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_3_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile4__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 4,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_4_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_4_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_4_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_4_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_4_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_4_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_4_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_4_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_4_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_4_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_4_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_4_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_4_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_4_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_4_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_4_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile5__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 5,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_5_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_5_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_5_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_5_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_5_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_5_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_5_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_5_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_5_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_5_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_5_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_5_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_5_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_5_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_5_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_5_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile6__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 6,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_6_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_6_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_6_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_6_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_6_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_6_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_6_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_6_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_6_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_6_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_6_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_6_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_6_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_6_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_6_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_6_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile7__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 7,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_7_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_7_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_7_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_7_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_7_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_7_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_7_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_7_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_7_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_7_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_7_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_7_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_7_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_7_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_7_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_7_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile8__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 8,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_8_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_8_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_8_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_8_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_8_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_8_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_8_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_8_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_8_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_8_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_8_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_8_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_8_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_8_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_8_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_8_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile9__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 9,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_9_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_9_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_9_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_9_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_9_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_9_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_9_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_9_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_9_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_9_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_9_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_9_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_9_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_9_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_9_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_9_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile10__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 10,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_10_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_10_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_10_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_10_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_10_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_10_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_10_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_10_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_10_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_10_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_10_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_10_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_10_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_10_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_10_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_10_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile11__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 11,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_11_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_11_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_11_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_11_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_11_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_11_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_11_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_11_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_11_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_11_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_11_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_11_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_11_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_11_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_11_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_11_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile12__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 12,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_12_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_12_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_12_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_12_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_12_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_12_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_12_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_12_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_12_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_12_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_12_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_12_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_12_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_12_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_12_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_12_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile13__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 13,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_13_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_13_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_13_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_13_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_13_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_13_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_13_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_13_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_13_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_13_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_13_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_13_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_13_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_13_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_13_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_13_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile14__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 14,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_14_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_14_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_14_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_14_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_14_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_14_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_14_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_14_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_14_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_14_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_14_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_14_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_14_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_14_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_14_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_14_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile15__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 15,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_15_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_15_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_15_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_15_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_15_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_15_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_15_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_15_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_15_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_15_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_15_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_15_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_15_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_15_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_15_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_15_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile16__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 16,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_16_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_16_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_16_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_16_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_16_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_16_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_16_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_16_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_16_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_16_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_16_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_16_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_16_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_16_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_16_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_16_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile17__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 17,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_17_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_17_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_17_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_17_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_17_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_17_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_17_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_17_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_17_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_17_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_17_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_17_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_17_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_17_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_17_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_17_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile18__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 18,
+  "id_width": 6,
+  "old_buses": {
+   "u_u_g_tiles_18_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_18_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_18_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_18_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_18_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_18_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_18_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_18_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "u_u_g_tiles_18_e86_u_tile_ovf_b": "tile_ovf_b",
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_18_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_18_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_18_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_18_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_18_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_18_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_18_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile19__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 19,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_19_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_19_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_19_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_19_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_19_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_19_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_19_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_19_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_19_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_19_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_19_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_19_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_19_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_19_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_19_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_19_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile20__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 20,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_20_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_20_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_20_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_20_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_20_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_20_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_20_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_20_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_20_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_20_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_20_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_20_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_20_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_20_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_20_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_20_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile21__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 21,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_21_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_21_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_21_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_21_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_21_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_21_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_21_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_21_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_21_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_21_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_21_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_21_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_21_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_21_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_21_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_21_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile22__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 22,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_22_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_22_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_22_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_22_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_22_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_22_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_22_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_22_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_22_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_22_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_22_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_22_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_22_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_22_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_22_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_22_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile23__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 23,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_23_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_23_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_23_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_23_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_23_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_23_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_23_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_23_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_23_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_23_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_23_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_23_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_23_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_23_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_23_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_23_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile24__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 24,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_24_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_24_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_24_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_24_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_24_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_24_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_24_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_24_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_24_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_24_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_24_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_24_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_24_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_24_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_24_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_24_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile25__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 25,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_25_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_25_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_25_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_25_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_25_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_25_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_25_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_25_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_25_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_25_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_25_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_25_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_25_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_25_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_25_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_25_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile26__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 26,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_26_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_26_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_26_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_26_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_26_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_26_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_26_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_26_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_26_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_26_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_26_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_26_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_26_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_26_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_26_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_26_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile27__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 27,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_27_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_27_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_27_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_27_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_27_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_27_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_27_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_27_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_27_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_27_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_27_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_27_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_27_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_27_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_27_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_27_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile28__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 28,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_28_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_28_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_28_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_28_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_28_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_28_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_28_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_28_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_28_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_28_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_28_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_28_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_28_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_28_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_28_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_28_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile29__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 29,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_29_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "u_u_g_tiles_29_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_29_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_29_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_29_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_29_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_29_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_29_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_29_e86_u_tile_ovf_b": "tile_ovf_b",
+   "u_u_g_tiles_29_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_29_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_29_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_29_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_29_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_29_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_29_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile30__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 30,
+  "id_width": 6,
+  "old_buses": {
+   "u_u_g_tiles_30_e86_u_tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_30_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_30_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_30_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_30_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_30_e86_u_tile_up_in": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_30_e86_u_tile_ovf_v": [
+    "output",
+    1
+   ],
+   "u_u_g_tiles_30_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "u_u_g_tiles_30_e86_u_tile_ovf_b": "tile_ovf_b",
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_30_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_30_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_30_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_30_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_30_e86_u_tile_up_in": "tile_up_in",
+   "u_u_g_tiles_30_e86_u_tile_ovf_v": "tile_ovf_v",
+   "u_u_g_tiles_30_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {}
+ },
+ {
+  "adapter": "ot_hgi_coll_tkm_m_tp192__tile31__master_id_adapter",
+  "common": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "id_port": "tile_tid",
+  "id_value": 31,
+  "id_width": 6,
+  "old_buses": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_31_e86_u_tile_ins_v": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_31_e86_u_tile_clr": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_31_e86_u_tile_conv": [
+    "input",
+    1
+   ],
+   "u_u_g_tiles_31_e86_u_tile_ins_b": [
+    "input",
+    344
+   ],
+   "u_u_g_tiles_31_e86_u_tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "port_map": {
+   "tile_clk": "tile_clk",
+   "u_u_g_tiles_31_e86_u_tile_ins_v": "tile_ins_v",
+   "u_u_g_tiles_31_e86_u_tile_clr": "tile_clr",
+   "u_u_g_tiles_31_e86_u_tile_conv": "tile_conv",
+   "u_u_g_tiles_31_e86_u_tile_ins_b": "tile_ins_b",
+   "u_u_g_tiles_31_e86_u_tile_up_out": "tile_up_out"
+  },
+  "top_ports": {
+   "tile_clk": [
+    "input",
+    1
+   ],
+   "tile_clr": [
+    "input",
+    1
+   ],
+   "tile_conv": [
+    "input",
+    1
+   ],
+   "tile_ins_v": [
+    "input",
+    1
+   ],
+   "tile_ins_b": [
+    "input",
+    344
+   ],
+   "tile_up_in": [
+    "input",
+    344
+   ],
+   "tile_tid": [
+    "input",
+    6
+   ],
+   "tile_ovf_v": [
+    "output",
+    1
+   ],
+   "tile_ovf_b": [
+    "output",
+    344
+   ],
+   "tile_up_out": [
+    "output",
+    344
+   ]
+  },
+  "inherited_ties": {
+   "tile_up_in": "0"
+  }
+ }
+]

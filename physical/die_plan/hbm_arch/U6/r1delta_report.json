@@ -1,0 +1,484 @@
+{
+ "resize": {
+  "L12": {
+   "width": [
+    3143,
+    2996
+   ],
+   "traced_real": 2996,
+   "replicated_type_max_with": null
+  },
+  "L12m": {
+   "width": [
+    3143,
+    2996
+   ],
+   "traced_real": 2184,
+   "replicated_type_max_with": [
+    "L12"
+   ]
+  },
+  "L13": {
+   "width": [
+    3143,
+    2628
+   ],
+   "traced_real": 2628,
+   "replicated_type_max_with": null
+  },
+  "L62": {
+   "width": [
+    376,
+    324
+   ],
+   "traced_real": 324,
+   "replicated_type_max_with": null
+  },
+  "L62m": {
+   "width": [
+    376,
+    330
+   ],
+   "traced_real": 330,
+   "replicated_type_max_with": null
+  },
+  "L74m": {
+   "width": [
+    2341,
+    279
+   ],
+   "traced_real": 279,
+   "replicated_type_max_with": null
+  },
+  "L89": {
+   "width": [
+    66,
+    2
+   ],
+   "traced_real": 2,
+   "replicated_type_max_with": null
+  },
+  "L89m": {
+   "width": [
+    66,
+    1
+   ],
+   "traced_real": 1,
+   "replicated_type_max_with": null
+  }
+ },
+ "removed": {
+  "L13m": {
+   "ports": [
+    "L13m_0"
+   ],
+   "width": 3143,
+   "ends": [
+    {
+     "type": "root",
+     "bus": "L13m_o",
+     "stations_removed": 0,
+     "core_conn_refs_removed": 0
+    },
+    {
+     "type": "q_hub_ne",
+     "bus": "L13_i",
+     "stations_removed": 97,
+     "core_conn_refs_removed": 97
+    }
+   ]
+  }
+ },
+ "new": {
+  "L156": {
+   "path": [
+    "NW_hub",
+    "root"
+   ],
+   "width": 1455,
+   "windows": {
+    "L156_0": [
+     6065.776,
+     6326.104
+    ]
+   },
+   "map": [
+    {
+     "bits": "[273:0]",
+     "root": "u_hb_idx__ctl.cr[273:0]",
+     "hub": "u_hb_vms_Q.cr[547:274]"
+    },
+    {
+     "bits": "[547:274]",
+     "root": "u_hb_argmax.cr[273:0]",
+     "hub": "u_hb_vms_Q.cr[273:0]"
+    },
+    {
+     "bits": "[683:548]",
+     "root": "u_hb_idx__ctl.index_rq[135:0]",
+     "hub": "u_hb_idx__op_Q.vm_rq[135:0]"
+    },
+    {
+     "bits": "[940:684]",
+     "root": "u_hb_idx__ctl.vm_rr[256:0]",
+     "hub": "u_vmb_Q0.rr4[256:0]"
+    },
+    {
+     "bits": "[1197:941]",
+     "root": "u_hb_idx__ctl.vm_rr[513:257]",
+     "hub": "u_vmb_Q1.rr4[256:0]"
+    },
+    {
+     "bits": "[1454:1198]",
+     "root": "u_hb_idx__ctl.vm_rr[770:514]",
+     "hub": "u_vmb_Q2.rr4[256:0]"
+    }
+   ],
+   "hub_open": [
+    "u_hb_vms_Q.cr[547:274]: no such port on the q_hub_nw core (['hfd_hgi_vms_glue_nw_t'])",
+    "u_hb_vms_Q.cr[273:0]: no such port on the q_hub_nw core (['hfd_hgi_vms_glue_nw_t'])"
+   ],
+   "root_chains": [
+    {
+     "capture": "u_hb_argmax.cr",
+     "stations": 5,
+     "worst_hop": 356.5
+    },
+    {
+     "capture": "u_hb_idx__ctl.cr",
+     "stations": 6,
+     "worst_hop": 356.5
+    },
+    {
+     "capture": "u_hb_idx__ctl.index_rq",
+     "stations": 6,
+     "worst_hop": 358.2
+    },
+    {
+     "capture": "u_hb_idx__ctl.vm_rr",
+     "stations": 6,
+     "worst_hop": 356.5
+    }
+   ],
+   "hub_chains": [
+    {
+     "launch": "u_hb_idx__op_Q.vm_rq",
+     "stations": 5,
+     "worst_hop": 358.3
+    },
+    {
+     "launch": "u_vmb_Q0.rr4",
+     "stations": 8,
+     "worst_hop": 358.3
+    },
+    {
+     "launch": "u_vmb_Q1.rr4",
+     "stations": 12,
+     "worst_hop": 358.3
+    },
+    {
+     "launch": "u_vmb_Q2.rr4",
+     "stations": 10,
+     "worst_hop": 350.5
+    }
+   ]
+  },
+  "L157": {
+   "path": [
+    "NW_hub",
+    "NW_b101",
+    "root"
+   ],
+   "width": 1285,
+   "windows": {
+    "L157_0": [
+     12707.776,
+     12937.744
+    ],
+    "L157_1": [
+     4510.576,
+     4740.544
+    ]
+   },
+   "map": [
+    {
+     "bits": "[256:0]",
+     "root": "u_hb_idx__ctl.vm_rr[1027:771]",
+     "hub": "u_vmb_Q3.rr4[256:0]"
+    },
+    {
+     "bits": "[513:257]",
+     "root": "u_hb_idx__ctl.vm_rr[1284:1028]",
+     "hub": "u_vmb_Q4.rr4[256:0]"
+    },
+    {
+     "bits": "[770:514]",
+     "root": "u_hb_idx__ctl.vm_rr[1541:1285]",
+     "hub": "u_vmb_Q5.rr4[256:0]"
+    },
+    {
+     "bits": "[1027:771]",
+     "root": "u_hb_idx__ctl.vm_rr[1798:1542]",
+     "hub": "u_vmb_Q6.rr4[256:0]"
+    },
+    {
+     "bits": "[1284:1028]",
+     "root": "u_hb_idx__ctl.vm_rr[2055:1799]",
+     "hub": "u_vmb_Q7.rr4[256:0]"
+    }
+   ],
+   "hub_open": [],
+   "root_chains": [
+    {
+     "capture": "u_hb_idx__ctl.vm_rr",
+     "stations": 3,
+     "worst_hop": 358.5
+    }
+   ],
+   "hub_chains": [
+    {
+     "launch": "u_vmb_Q3.rr4",
+     "stations": 26,
+     "worst_hop": 358.3
+    },
+    {
+     "launch": "u_vmb_Q4.rr4",
+     "stations": 9,
+     "worst_hop": 358.3
+    },
+    {
+     "launch": "u_vmb_Q5.rr4",
+     "stations": 7,
+     "worst_hop": 358.3
+    },
+    {
+     "launch": "u_vmb_Q6.rr4",
+     "stations": 7,
+     "worst_hop": 335.9
+    },
+    {
+     "launch": "u_vmb_Q7.rr4",
+     "stations": 6,
+     "worst_hop": 358.3
+    }
+   ]
+  }
+ },
+ "restation": {
+  "q_b101_nw.L12x1": {
+   "stations": [
+    4,
+    3
+   ],
+   "lane": "L12"
+  },
+  "q_su31.L12x2": {
+   "stations": [
+    6,
+    6
+   ],
+   "lane": "L12m"
+  },
+  "q_b101.L12x1": {
+   "stations": [
+    4,
+    3
+   ],
+   "lane": "L12m"
+  },
+  "q_b101_nw.L157x1": {
+   "stations": [
+    1,
+    6
+   ],
+   "lane": "L157"
+  },
+  "q_b101.L74x1": {
+   "stations": [
+    3,
+    3
+   ],
+   "lane": "L74m"
+  },
+  "root.internal": 19,
+  "q_hub_nw.internal": 199
+ },
+ "open": [],
+ "direct_banks": [
+  0,
+  1,
+  2
+ ],
+ "via_banks": [
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "bank_root_y": {
+  "0": 5105.486564202334,
+  "1": 4881.619,
+  "2": 4881.619,
+  "3": 4881.619,
+  "4": 4881.619,
+  "5": 4881.619,
+  "6": 4881.619,
+  "7": 4881.619
+ },
+ "moved_windows": {
+  "L12_0": [
+   [
+    4768.16,
+    5330.088
+   ],
+   [
+    4794.408,
+    5330.088
+   ]
+  ],
+  "L12_1": [
+   [
+    5250.664,
+    5812.592
+   ],
+   [
+    4794.408,
+    5330.088
+   ]
+  ],
+  "L12_2": [
+   [
+    11481.672,
+    12043.6
+   ],
+   [
+    11494.8,
+    12030.472
+   ]
+  ],
+  "L12m_0": [
+   [
+    4768.16,
+    5330.088
+   ],
+   [
+    4794.408,
+    5330.088
+   ]
+  ],
+  "L12m_1": [
+   [
+    5250.664,
+    5812.592
+   ],
+   [
+    4794.408,
+    5330.088
+   ]
+  ],
+  "L12m_2": [
+   [
+    16356.08,
+    16918.008
+   ],
+   [
+    16369.208,
+    16904.88
+   ]
+  ],
+  "L13_0": [
+   [
+    6252.656,
+    6814.592
+   ],
+   [
+    6344.624,
+    6814.592
+   ]
+  ],
+  "L62_0": [
+   [
+    7832.224,
+    7900.048
+   ],
+   [
+    7836.872,
+    7895.4
+   ]
+  ],
+  "L62m_0": [
+   [
+    7832.224,
+    7900.048
+   ],
+   [
+    7836.336,
+    7895.936
+   ]
+  ],
+  "L74m_0": [
+   [
+    15042.744,
+    15461.456
+   ],
+   [
+    15226.848,
+    15277.352
+   ]
+  ],
+  "L74m_1": [
+   [
+    5330.568,
+    5749.28
+   ],
+   [
+    5514.672,
+    5565.176
+   ]
+  ],
+  "L89_0": [
+   [
+    6239.712,
+    6252.176
+   ],
+   [
+    6335.504,
+    6344.144
+   ]
+  ],
+  "L89m_0": [
+   [
+    6239.712,
+    6252.176
+   ],
+   [
+    6241.624,
+    6250.264
+   ]
+  ],
+  "L80_0": [
+   [
+    4736.464,
+    4767.68
+   ],
+   [
+    4762.712,
+    4793.928
+   ]
+  ],
+  "L124_0": [
+   [
+    4727.344,
+    4735.984
+   ],
+   [
+    4753.592,
+    4762.232
+   ]
+  ]
+ },
+ "src": "/srv/opentallas-scratch2/claude/path-hbm/stack6_1025/plan",
+ "src_plan_sha256": "17213e6a4e2ac8eda8a53d24de634e97646af6f066f448279b17393cc1c02561",
+ "out_plan_sha256": "9f3d8c997ad278e8848eb5ffc70860b3a5aa5a726a4968cc27f9545012bbf8d4"
+}

@@ -1,0 +1,53 @@
+{
+ "qualification": "PLAN_CAPACITY_ONLY",
+ "added_cycles": 0,
+ "outline_growth": 0,
+ "changes": [
+  {
+   "type": "q_b000",
+   "before": [
+    {
+     "dir": "EW",
+     "span_um": [
+      946.08,
+      2911.6800000000003
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "die_share": 1.0,
+     "note": "Physical bank cores below920.16um; full core-free EW FT corridor"
+    }
+   ],
+   "after": [
+    {
+     "dir": "EW",
+     "span_um": [
+      946.08,
+      2911.6800000000003
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "die_share": 1.0,
+     "note": "Physical bank cores below920.16um; full core-free EW FT corridor"
+    },
+    {
+     "dir": "NS",
+     "span_um": [
+      0,
+      457.92
+     ],
+     "layers": [
+      "M7"
+     ],
+     "die_share": 1.0,
+     "note": "D-HBM-B1 nativeW128: measured vertical FT demand, full free M7 above M5 cores; own vertical glue uses M3/M5"
+    }
+   ]
+  }
+ ],
+ "pending": "actual infrastructure-first leftover GRT + tile own-routing trial"
+}

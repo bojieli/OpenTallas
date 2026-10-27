@@ -1,0 +1,1035 @@
+{
+ "not_release_ready": true,
+ "moves": {
+  "q_su00": {
+   "cores": [
+    {
+     "inst": "u_su_Q0_lane_exp0",
+     "before": [
+      302.4,
+      25.92
+     ],
+     "after": [
+      8.64,
+      915.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp2",
+     "before": [
+      751.68,
+      527.04
+     ],
+     "after": [
+      1192.32,
+      915.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp4",
+     "before": [
+      1200.96,
+      717.12
+     ],
+     "after": [
+      1641.6,
+      915.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp6",
+     "before": [
+      751.68,
+      751.68
+     ],
+     "after": [
+      8.64,
+      1131.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp8",
+     "before": [
+      302.4,
+      250.56
+     ],
+     "after": [
+      1192.32,
+      1131.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp10",
+     "before": [
+      1200.96,
+      492.48
+     ],
+     "after": [
+      1641.6,
+      1131.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp12",
+     "before": [
+      751.68,
+      77.76
+     ],
+     "after": [
+      8.64,
+      1347.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp14",
+     "before": [
+      751.68,
+      302.4
+     ],
+     "after": [
+      1192.32,
+      1347.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lanes_plain0_3",
+     "before": [
+      1650.24,
+      25.92
+     ],
+     "after": [
+      8.64,
+      449.28
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lanes_plain8_11",
+     "before": [
+      1200.96,
+      25.92
+     ],
+     "after": [
+      1192.32,
+      449.28
+     ]
+    },
+    {
+     "inst": "u_su_Q0_side_softplus",
+     "before": [
+      302.4,
+      475.2
+     ],
+     "after": [
+      1641.6,
+      449.28
+     ]
+    },
+    {
+     "inst": "u_su_Q0_pretree",
+     "before": [
+      1658.88,
+      492.48
+     ],
+     "after": [
+      457.92,
+      449.28
+     ]
+    }
+   ],
+   "corridors": [
+    [
+     874.9840000000003,
+     1181.336
+    ]
+   ],
+   "columns": [
+    [
+     8.64,
+     440.64,
+     1563.84
+    ],
+    [
+     457.92,
+     164.16,
+     915.8399999999999
+    ],
+    [
+     630.72,
+     164.16,
+     449.28
+    ],
+    [
+     1192.32,
+     440.64,
+     1563.84
+    ],
+    [
+     1641.6,
+     440.64,
+     1347.84
+    ]
+   ]
+  },
+  "q_su01": {
+   "cores": [
+    {
+     "inst": "u_su_Q0_lane_exp1",
+     "before": [
+      1356.48,
+      25.92
+     ],
+     "after": [
+      319.68,
+      915.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp3",
+     "before": [
+      1356.48,
+      250.56
+     ],
+     "after": [
+      768.96,
+      915.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp5",
+     "before": [
+      319.68,
+      475.2
+     ],
+     "after": [
+      1218.24,
+      915.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp7",
+     "before": [
+      1218.24,
+      475.2
+     ],
+     "after": [
+      319.68,
+      1131.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp9",
+     "before": [
+      907.2,
+      699.84
+     ],
+     "after": [
+      768.96,
+      1131.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp11",
+     "before": [
+      768.96,
+      475.2
+     ],
+     "after": [
+      1218.24,
+      1131.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp13",
+     "before": [
+      457.92,
+      699.84
+     ],
+     "after": [
+      319.68,
+      1347.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lane_exp_l",
+     "before": [
+      1356.48,
+      699.84
+     ],
+     "after": [
+      768.96,
+      1347.84
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lanes_plain4_7",
+     "before": [
+      907.2,
+      8.64
+     ],
+     "after": [
+      319.68,
+      449.28
+     ]
+    },
+    {
+     "inst": "u_su_Q0_lanes_plain12_15",
+     "before": [
+      457.92,
+      8.64
+     ],
+     "after": [
+      768.96,
+      449.28
+     ]
+    },
+    {
+     "inst": "u_su_Q0_side_rest",
+     "before": [
+      8.64,
+      8.64
+     ],
+     "after": [
+      1218.24,
+      449.28
+     ]
+    }
+   ],
+   "corridors": [
+    [
+     0.9759999999999849,
+     307.3280000000001
+    ]
+   ],
+   "columns": [
+    [
+     319.68,
+     440.64,
+     1563.84
+    ],
+    [
+     768.96,
+     440.64,
+     1563.84
+    ],
+    [
+     1218.24,
+     440.64,
+     1347.84
+    ]
+   ]
+  },
+  "q_su11": {
+   "cores": [
+    {
+     "inst": "u_su_Q1_lane_exp1",
+     "before": [
+      682.56,
+      699.84
+     ],
+     "after": [
+      993.6,
+      915.84
+     ]
+    },
+    {
+     "inst": "u_su_Q1_lane_exp3",
+     "before": [
+      1356.48,
+      8.64
+     ],
+     "after": [
+      1442.88,
+      915.84
+     ]
+    },
+    {
+     "inst": "u_su_Q1_lane_exp5",
+     "before": [
+      1356.48,
+      233.28
+     ],
+     "after": [
+      1892.16,
+      915.84
+     ]
+    },
+    {
+     "inst": "u_su_Q1_lane_exp7",
+     "before": [
+      682.56,
+      475.2
+     ],
+     "after": [
+      993.6,
+      1131.84
+     ]
+    },
+    {
+     "inst": "u_su_Q1_lane_exp9",
+     "before": [
+      1131.84,
+      457.92
+     ],
+     "after": [
+      1442.88,
+      1131.84
+     ]
+    },
+    {
+     "inst": "u_su_Q1_lane_exp11",
+     "before": [
+      907.2,
+      8.64
+     ],
+     "after": [
+      1892.16,
+      1131.84
+     ]
+    },
+    {
+     "inst": "u_su_Q1_lane_exp13",
+     "before": [
+      907.2,
+      233.28
+     ],
+     "after": [
+      993.6,
+      1347.84
+     ]
+    },
+    {
+     "inst": "u_su_Q1_lane_exp_l",
+     "before": [
+      233.28,
+      475.2
+     ],
+     "after": [
+      1442.88,
+      1347.84
+     ]
+    },
+    {
+     "inst": "u_su_Q1_lanes_plain4_7",
+     "before": [
+      457.92,
+      8.64
+     ],
+     "after": [
+      993.6,
+      449.28
+     ]
+    },
+    {
+     "inst": "u_su_Q1_lanes_plain12_15",
+     "before": [
+      8.64,
+      8.64
+     ],
+     "after": [
+      1442.88,
+      449.28
+     ]
+    },
+    {
+     "inst": "u_su_Q1_side_rest",
+     "before": [
+      1581.12,
+      457.92
+     ],
+     "after": [
+      1892.16,
+      449.28
+     ]
+    }
+   ],
+   "corridors": [
+    [
+     384.6079999999996,
+     980.5119999999994
+    ]
+   ],
+   "columns": [
+    [
+     8.64,
+     164.16,
+     449.28
+    ],
+    [
+     181.44,
+     164.16,
+     449.28
+    ],
+    [
+     993.6,
+     440.64,
+     1563.84
+    ],
+    [
+     1442.88,
+     440.64,
+     1563.84
+    ],
+    [
+     1892.16,
+     440.64,
+     1347.84
+    ]
+   ]
+  }
+ },
+ "aligned": [],
+ "growth": {
+  "cut_y_um": 10022.4,
+  "growth_um": 535.68,
+  "area_before_mm2": 471.60735805440004,
+  "area_after_mm2": 486.8204986367999,
+  "area_added_mm2": 15.213140582399998,
+  "stretched_types": [
+   "q_b112",
+   "q_b113",
+   "q_spu0",
+   "q_su00",
+   "q_su01",
+   "q_su10",
+   "q_su11",
+   "root"
+  ],
+  "shifted_partitions": [
+   "NW_mca",
+   "NW_mcb",
+   "NW_sm0",
+   "NW_sm1",
+   "NW_spt0",
+   "NW_spt1",
+   "NW_spt2",
+   "PHY_N",
+   "vsN4",
+   "vsN5",
+   "vsN6",
+   "NE_mca",
+   "NE_mcb",
+   "NE_sm0",
+   "NE_sm1",
+   "NE_spt0",
+   "NE_spt1",
+   "NE_spt2"
+  ],
+  "slot_changes": [
+   {
+    "type": "root",
+    "slot": "L9x1",
+    "stations_before": 10,
+    "stations_after": 12,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "root",
+    "slot": "L9mx1",
+    "stations_before": 10,
+    "stations_after": 12,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "root",
+    "slot": "L63x1",
+    "stations_before": 8,
+    "stations_after": 10,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "root",
+    "slot": "L63mx1",
+    "stations_before": 10,
+    "stations_after": 12,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "root",
+    "slot": "L114x4",
+    "stations_before": 4,
+    "stations_after": 6,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": [
+     "bit_sites_um",
+     "bit_site_cell_um"
+    ]
+   },
+   {
+    "type": "root",
+    "slot": "L114mx4",
+    "stations_before": 5,
+    "stations_after": 7,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": [
+     "bit_sites_um",
+     "bit_site_cell_um"
+    ]
+   },
+   {
+    "type": "q_su01",
+    "slot": "L29x1",
+    "stations_before": 6,
+    "stations_after": 8,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_su01",
+    "slot": "L67x1",
+    "stations_before": 4,
+    "stations_after": 6,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_su01",
+    "slot": "L97x1",
+    "stations_before": 5,
+    "stations_after": 7,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_su01",
+    "slot": "L120x1",
+    "stations_before": 3,
+    "stations_after": 5,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L8x1",
+    "stations_before": 7,
+    "stations_after": 9,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L21x5",
+    "stations_before": 8,
+    "stations_after": 10,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L22x5",
+    "stations_before": 6,
+    "stations_after": 8,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L41x1",
+    "stations_before": 5,
+    "stations_after": 7,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L50x1",
+    "stations_before": 5,
+    "stations_after": 7,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L66x1",
+    "stations_before": 5,
+    "stations_after": 7,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L79x1",
+    "stations_before": 6,
+    "stations_after": 8,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L82x4",
+    "stations_before": 4,
+    "stations_after": 6,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L84x1",
+    "stations_before": 5,
+    "stations_after": 7,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L88x1",
+    "stations_before": 4,
+    "stations_after": 6,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L155x1",
+    "stations_before": 3,
+    "stations_after": 5,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_spu0",
+    "slot": "L140x1",
+    "stations_before": 3,
+    "stations_after": 5,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_su10",
+    "slot": "L68x1",
+    "stations_before": 4,
+    "stations_after": 6,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_su10",
+    "slot": "L98x1",
+    "stations_before": 3,
+    "stations_after": 5,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_su10",
+    "slot": "L121x1",
+    "stations_before": 4,
+    "stations_after": 6,
+    "input_delta_um": [
+     0.0,
+     535.68
+    ],
+    "output_delta_um": [
+     0.0,
+     0.0
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_su11",
+    "slot": "L30x1",
+    "stations_before": 5,
+    "stations_after": 7,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_su11",
+    "slot": "L31x1",
+    "stations_before": 5,
+    "stations_after": 7,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": []
+   },
+   {
+    "type": "q_su00",
+    "slot": "L28x3",
+    "stations_before": 12,
+    "stations_after": 14,
+    "input_delta_um": [
+     0.0,
+     0.0
+    ],
+    "output_delta_um": [
+     0.0,
+     535.68
+    ],
+    "mode": "extra registered top-band hops; exact new per-bit sites required",
+    "explicit_sites_need_refresh": [
+     "bit_sites_um",
+     "bit_site_cell_um"
+    ]
+   }
+  ],
+  "inline_io_moved": [
+   "io_PHY_N_u_phy_Q"
+  ],
+  "inline_pg_domains_moved": []
+ },
+ "repair": "NOT RUN; stations/reset/clock regeneration required",
+ "lane_cycle_delta": {
+  "L8": 2,
+  "L8m": 2,
+  "L9": 2,
+  "L9m": 2,
+  "L21": 2,
+  "L21m": 2,
+  "L22": 2,
+  "L22m": 2,
+  "L28": 2,
+  "L28m": 2,
+  "L29": 2,
+  "L29m": 2,
+  "L30": 2,
+  "L30m": 2,
+  "L31": 2,
+  "L31m": 2,
+  "L41": 2,
+  "L41m": 2,
+  "L50": 2,
+  "L50m": 2,
+  "L63": 2,
+  "L63m": 2,
+  "L66": 2,
+  "L66m": 2,
+  "L67": 2,
+  "L67m": 2,
+  "L68": 2,
+  "L68m": 2,
+  "L79": 2,
+  "L79m": 2,
+  "L82": 2,
+  "L82m": 2,
+  "L84": 2,
+  "L84m": 2,
+  "L88": 2,
+  "L88m": 2,
+  "L97": 2,
+  "L97m": 2,
+  "L98": 2,
+  "L98m": 2,
+  "L114": 2,
+  "L114m": 2,
+  "L120": 2,
+  "L120m": 2,
+  "L121": 2,
+  "L121m": 2,
+  "L140": 2,
+  "L140m": 2,
+  "L155": 2,
+  "L155m": 2
+ },
+ "clock_pending": "Full die Htree and moved-core local trees must be regenerated; no STA/route authorized"
+}

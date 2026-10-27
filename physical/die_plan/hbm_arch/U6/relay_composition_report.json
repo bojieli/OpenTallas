@@ -1,0 +1,37 @@
+{
+ "scope": "geometry candidate, clock/PG/GRT pending",
+ "sources": {
+  "q_b000": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/native_ft_q_b000_r1/die_plan.json",
+  "q_b001": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/native_ft_q_b001_r1/die_plan.json",
+  "q_b002": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/native_ft_q_b002_r1/die_plan.json",
+  "q_b003": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/native_ft_q_b003_r1/die_plan.json",
+  "q_b010": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/native_ft_q_b010_r1/die_plan.json",
+  "q_b011": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/native_ft_q_b011_r1/die_plan.json",
+  "q_b012": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/native_ft_q_b012_r1/die_plan.json",
+  "q_b013": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/native_ft_q_b013_r1/die_plan.json",
+  "q_hub_nw": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/native_ft_q_hub_nw_r1/die_plan.json",
+  "q_hub_ne": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1026/native_ft_q_hub_ne_r1/die_plan.json"
+ },
+ "internal_unroutable": [],
+ "lane_cycle_delta": {
+  "L15": 1,
+  "L15m": 1,
+  "L36": 2,
+  "L36m": 2,
+  "L51": 1,
+  "L51m": 1,
+  "L93": 1,
+  "L93m": 1,
+  "L101": 1,
+  "L101m": 1,
+  "L119": 1,
+  "L119m": 1,
+  "L126": 1,
+  "L126m": 1,
+  "L146": 1,
+  "L146m": 1
+ },
+ "log": [
+  "Retained existing auxiliary geometry: bus/core contracts and every core origin unchanged; FT site/depth overlay only"
+ ]
+}

@@ -1,0 +1,284 @@
+{
+ "root_e": {
+  "need_b": 9500,
+  "limit": 0.55,
+  "m5_span_um": [
+   1486.0800000000002,
+   1684.8
+  ],
+  "m7_span_um": [
+   699.84,
+   1684.8
+  ],
+  "m5_tracks": 3680,
+  "m7_tracks": 13680,
+  "capacity_tracks": 17360,
+  "ratio": 0.547235,
+  "source": "explicit9500-bit NE landing bound; parent net-union audit/GRT remains required"
+ },
+ "l126": {
+  "type": "q_b003",
+  "slot": "L126x2",
+  "before": [
+   [
+    4.32,
+    1555.2
+   ],
+   [
+    112.301,
+    1555.2
+   ],
+   [
+    436.243,
+    1555.2
+   ]
+  ],
+  "after": [
+   [
+    4.32,
+    1300.32
+   ],
+   [
+    112.301,
+    1555.2
+   ],
+   [
+    436.243,
+    1555.2
+   ]
+  ],
+  "lanes": {
+   "L126": {
+    "max_hop_um": 362.861,
+    "cycles": 27
+   },
+   "L126m": {
+    "max_hop_um": 362.861,
+    "cycles": 27
+   }
+  },
+  "cycle_delta": 0
+ },
+ "selected_strap_abi": {
+  "instances": [
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile0",
+    "id": 0,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile1",
+    "id": 1,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile2",
+    "id": 2,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile3",
+    "id": 3,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile4",
+    "id": 4,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile5",
+    "id": 5,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile6",
+    "id": 6,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile7",
+    "id": 7,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile8",
+    "id": 8,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile9",
+    "id": 9,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile10",
+    "id": 10,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile11",
+    "id": 11,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile12",
+    "id": 12,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile13",
+    "id": 13,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile14",
+    "id": 14,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile15",
+    "id": 15,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile16",
+    "id": 16,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile17",
+    "id": 17,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile18",
+    "id": 18,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile19",
+    "id": 19,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile20",
+    "id": 20,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile21",
+    "id": 21,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile22",
+    "id": 22,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile23",
+    "id": 23,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile24",
+    "id": 24,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile25",
+    "id": 25,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile26",
+    "id": 26,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile27",
+    "id": 27,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile28",
+    "id": 28,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile29",
+    "id": 29,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile30",
+    "id": 30,
+    "width": 6
+   },
+   {
+    "type": "root",
+    "inst": "u_tkm_SW_tile31",
+    "id": 31,
+    "width": 6
+   }
+  ],
+  "pin_files": [
+   "cores/ot_hgi_coll_tkm_tp192_tile_core__idpin__chain.json",
+   "cores/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__chain.json"
+  ],
+  "removed_legacy_id_stations": [],
+  "data_cycle_delta": 0,
+  "removed_id_face_ff": 192,
+  "scope": "exact strap_tile_tid[5:0] only; actual wrapper and six-bit-only SDC exception required before route"
+ },
+ "partition_tap_before": [
+  833.76,
+  2916.0
+ ],
+ "partition_tap_after": [
+  818.8363636363637,
+  2869.789090909091
+ ],
+ "clock_metric_note": "Moving a partition tap does not alter fixed sink-pair distance853.38um; actual common-branch repeater graph remains required",
+ "station_sites": {
+  "points": 235148,
+  "entries": 13209,
+  "violations": 0,
+  "types": []
+ },
+ "station_findings": [],
+ "lane_cycle_delta": {},
+ "scope": "PLAN CANDIDATE ONLY; EW compact-band repair, fixed-core clock graph, G0/G0C and physical gates remain open"
+}

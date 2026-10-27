@@ -1,0 +1,538 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/path-hbm/g0cfix_1026/plan_b1n6/die_plan.json",
+ "sha256": "60d58330698515c32bff92bb3b474b10e0953494883d9788c0238214f4cbb0b7",
+ "m5_ceiling": {
+  "cores": 578,
+  "obs_not_m5": [],
+  "n_obs_not_m5": 0,
+  "pins_not_m4m5": 33,
+  "pins_examples": [
+   [
+    "root",
+    "u_tkm_SW_tile0",
+    "M3",
+    690
+   ],
+   [
+    "root",
+    "u_tkm_SW_tile1",
+    "M3",
+    690
+   ],
+   [
+    "root",
+    "u_tkm_SW_tile2",
+    "M3",
+    690
+   ],
+   [
+    "root",
+    "u_tkm_SW_tile3",
+    "M3",
+    690
+   ],
+   [
+    "root",
+    "u_tkm_SW_tile4",
+    "M3",
+    690
+   ],
+   [
+    "root",
+    "u_tkm_SW_tile5",
+    "M3",
+    690
+   ],
+   [
+    "root",
+    "u_tkm_SW_tile6",
+    "M3",
+    690
+   ],
+   [
+    "root",
+    "u_tkm_SW_tile7",
+    "M3",
+    690
+   ],
+   [
+    "root",
+    "u_tkm_SW_tile8",
+    "M3",
+    690
+   ],
+   [
+    "root",
+    "u_tkm_SW_tile9",
+    "M3",
+    690
+   ]
+  ]
+ },
+ "clock_taps_off_outline": [],
+ "q_su11_clock": {
+  "tap_um": [
+   1127.52,
+   518.4
+  ],
+  "outline": [
+   2358.72,
+   1572.48
+  ],
+  "off": []
+ },
+ "q_spu1_bands": [
+  {
+   "dir": "NS",
+   "span_um": [
+    276.48,
+    786.24
+   ],
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "die_share": 1.0,
+   "note": "PATH-HBM B1-M5 cut delta (COORD 10-26 01:21): L2 N->W 2999 b bundle (N window 278.59-778.75); H-cut 0.62 -> band"
+  }
+ ],
+ "cut_max_by_type": {
+  "q_b011": 0.5183,
+  "q_b003": 0.4982,
+  "q_spt1": 0.4313,
+  "q_spt2": 0.4313,
+  "q_b000": 0.3875,
+  "q_b010": 0.3825,
+  "vsN4": 0.3657,
+  "vsN5": 0.3657,
+  "vsN6": 0.3657,
+  "q_su21": 0.3609,
+  "q_mcb": 0.3467,
+  "q_spu1": 0.3431,
+  "q_su31": 0.3396,
+  "q_b013": 0.3347,
+  "q_su30": 0.3245,
+  "q_su10": 0.3105,
+  "q_spu0": 0.2731,
+  "root": 0.2578,
+  "q_b100": 0.2293,
+  "q_spt0": 0.2173,
+  "q_spb2": 0.2064,
+  "q_b001": 0.1904,
+  "q_su01": 0.1861,
+  "q_b101_nw": 0.1835,
+  "q_b101": 0.1789,
+  "q_b002": 0.1711,
+  "q_b012": 0.128,
+  "q_su20": 0.1247,
+  "q_b110": 0.1219,
+  "q_b102": 0.1104,
+  "q_b103": 0.1104,
+  "q_b111": 0.1061,
+  "q_su11": 0.1045,
+  "vsN1": 0.0821,
+  "vsN2": 0.0821,
+  "q_su00": 0.0814,
+  "q_spb1": 0.0762,
+  "q_b112": 0.0675,
+  "q_b113": 0.0021
+ },
+ "cut_errors": [],
+ "perbit_census": {
+  "types": {
+   "q_b000": {
+    "slots": 15,
+    "per_bit_slots": 15,
+    "no_sites": [],
+    "ff_sites": 15157,
+    "max_bit_hop_um": 356.94,
+    "worst_slot": "L36x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b001": {
+    "slots": 17,
+    "per_bit_slots": 17,
+    "no_sites": [],
+    "ff_sites": 33683,
+    "max_bit_hop_um": 358.56,
+    "worst_slot": "L36x3",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b002": {
+    "slots": 11,
+    "per_bit_slots": 11,
+    "no_sites": [],
+    "ff_sites": 10400,
+    "max_bit_hop_um": 354.303,
+    "worst_slot": "L51x5",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b003": {
+    "slots": 9,
+    "per_bit_slots": 9,
+    "no_sites": [],
+    "ff_sites": 17130,
+    "max_bit_hop_um": 356.67,
+    "worst_slot": "L18x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b010": {
+    "slots": 18,
+    "per_bit_slots": 18,
+    "no_sites": [],
+    "ff_sites": 43315,
+    "max_bit_hop_um": 358.56,
+    "worst_slot": "L36x2",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b011": {
+    "slots": 14,
+    "per_bit_slots": 14,
+    "no_sites": [],
+    "ff_sites": 15761,
+    "max_bit_hop_um": 359.649,
+    "worst_slot": "L51x4",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b012": {
+    "slots": 10,
+    "per_bit_slots": 10,
+    "no_sites": [],
+    "ff_sites": 16747,
+    "max_bit_hop_um": 310.77,
+    "worst_slot": "L10x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b013": {
+    "slots": 4,
+    "per_bit_slots": 4,
+    "no_sites": [],
+    "ff_sites": 3768,
+    "max_bit_hop_um": 356.4,
+    "worst_slot": "L52x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b100": {
+    "slots": 10,
+    "per_bit_slots": 10,
+    "no_sites": [],
+    "ff_sites": 12849,
+    "max_bit_hop_um": 348.57,
+    "worst_slot": "L70x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b101": {
+    "slots": 8,
+    "per_bit_slots": 8,
+    "no_sites": [],
+    "ff_sites": 9727,
+    "max_bit_hop_um": 387.18,
+    "worst_slot": "L48x11",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b102": {
+    "slots": 2,
+    "per_bit_slots": 2,
+    "no_sites": [],
+    "ff_sites": 1248,
+    "max_bit_hop_um": 374.953,
+    "worst_slot": "L53x11",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b103": {
+    "slots": 2,
+    "per_bit_slots": 2,
+    "no_sites": [],
+    "ff_sites": 3131,
+    "max_bit_hop_um": 352.377,
+    "worst_slot": "L53x10",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b110": {
+    "slots": 6,
+    "per_bit_slots": 6,
+    "no_sites": [],
+    "ff_sites": 3153,
+    "max_bit_hop_um": 333.18,
+    "worst_slot": "L48x9",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b111": {
+    "slots": 2,
+    "per_bit_slots": 2,
+    "no_sites": [],
+    "ff_sites": 3131,
+    "max_bit_hop_um": 352.635,
+    "worst_slot": "L53x9",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b112": {
+    "slots": 7,
+    "per_bit_slots": 7,
+    "no_sites": [],
+    "ff_sites": 4104,
+    "max_bit_hop_um": 374.895,
+    "worst_slot": "L150x3",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b113": {
+    "slots": 2,
+    "per_bit_slots": 2,
+    "no_sites": [],
+    "ff_sites": 108,
+    "max_bit_hop_um": 365.727,
+    "worst_slot": "L125x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_mcb": {
+    "slots": 3,
+    "per_bit_slots": 3,
+    "no_sites": [],
+    "ff_sites": 59811,
+    "max_bit_hop_um": 356.67,
+    "worst_slot": "L8x5",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_spb1": {
+    "slots": 4,
+    "per_bit_slots": 4,
+    "no_sites": [],
+    "ff_sites": 8221,
+    "max_bit_hop_um": 304.577,
+    "worst_slot": "L138x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_spb2": {
+    "slots": 5,
+    "per_bit_slots": 5,
+    "no_sites": [],
+    "ff_sites": 19179,
+    "max_bit_hop_um": 376.497,
+    "worst_slot": "L151x2",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_spt0": {
+    "slots": 6,
+    "per_bit_slots": 6,
+    "no_sites": [],
+    "ff_sites": 51731,
+    "max_bit_hop_um": 387.879,
+    "worst_slot": "L8x2",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_spt1": {
+    "slots": 6,
+    "per_bit_slots": 6,
+    "no_sites": [],
+    "ff_sites": 50532,
+    "max_bit_hop_um": 311.073,
+    "worst_slot": "L82x2",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_spt2": {
+    "slots": 6,
+    "per_bit_slots": 6,
+    "no_sites": [],
+    "ff_sites": 50532,
+    "max_bit_hop_um": 311.073,
+    "worst_slot": "L82x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_spu0": {
+    "slots": 17,
+    "per_bit_slots": 17,
+    "no_sites": [],
+    "ff_sites": 88240,
+    "max_bit_hop_um": 314.687,
+    "worst_slot": "L140x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_spu1": {
+    "slots": 14,
+    "per_bit_slots": 14,
+    "no_sites": [],
+    "ff_sites": 44981,
+    "max_bit_hop_um": 375.087,
+    "worst_slot": "L117x3",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_su00": {
+    "slots": 3,
+    "per_bit_slots": 3,
+    "no_sites": [],
+    "ff_sites": 21182,
+    "max_bit_hop_um": 374.181,
+    "worst_slot": "L28x3",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_su01": {
+    "slots": 12,
+    "per_bit_slots": 12,
+    "no_sites": [],
+    "ff_sites": 23811,
+    "max_bit_hop_um": 388.677,
+    "worst_slot": "L28_detour",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_su10": {
+    "slots": 10,
+    "per_bit_slots": 10,
+    "no_sites": [],
+    "ff_sites": 11202,
+    "max_bit_hop_um": 370.17,
+    "worst_slot": "L0x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_su11": {
+    "slots": 6,
+    "per_bit_slots": 6,
+    "no_sites": [],
+    "ff_sites": 19665,
+    "max_bit_hop_um": 402.987,
+    "worst_slot": "L31x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_su20": {
+    "slots": 2,
+    "per_bit_slots": 2,
+    "no_sites": [],
+    "ff_sites": 8123,
+    "max_bit_hop_um": 380.633,
+    "worst_slot": "L53x8",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_su21": {
+    "slots": 11,
+    "per_bit_slots": 11,
+    "no_sites": [],
+    "ff_sites": 37147,
+    "max_bit_hop_um": 380.7,
+    "worst_slot": "L53x7",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_su30": {
+    "slots": 8,
+    "per_bit_slots": 8,
+    "no_sites": [],
+    "ff_sites": 38513,
+    "max_bit_hop_um": 376.38,
+    "worst_slot": "L48x7",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_su31": {
+    "slots": 8,
+    "per_bit_slots": 8,
+    "no_sites": [],
+    "ff_sites": 52429,
+    "max_bit_hop_um": 375.3,
+    "worst_slot": "L35x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "root": {
+    "slots": 16,
+    "per_bit_slots": 16,
+    "no_sites": [],
+    "ff_sites": 113279,
+    "max_bit_hop_um": 402.84,
+    "worst_slot": "L9x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "vsN1": {
+    "slots": 4,
+    "per_bit_slots": 4,
+    "no_sites": [],
+    "ff_sites": 9479,
+    "max_bit_hop_um": 191.16,
+    "worst_slot": "L154x2",
+    "failures": [],
+    "n_fail": 0
+   },
+   "vsN2": {
+    "slots": 4,
+    "per_bit_slots": 4,
+    "no_sites": [],
+    "ff_sites": 8848,
+    "max_bit_hop_um": 170.1,
+    "worst_slot": "L153x2",
+    "failures": [],
+    "n_fail": 0
+   },
+   "vsN4": {
+    "slots": 6,
+    "per_bit_slots": 6,
+    "no_sites": [],
+    "ff_sites": 33630,
+    "max_bit_hop_um": 336.777,
+    "worst_slot": "L114x3",
+    "failures": [],
+    "n_fail": 0
+   },
+   "vsN5": {
+    "slots": 6,
+    "per_bit_slots": 6,
+    "no_sites": [],
+    "ff_sites": 36121,
+    "max_bit_hop_um": 304.917,
+    "worst_slot": "L114x2",
+    "failures": [],
+    "n_fail": 0
+   },
+   "vsN6": {
+    "slots": 6,
+    "per_bit_slots": 6,
+    "no_sites": [],
+    "ff_sites": 36121,
+    "max_bit_hop_um": 304.917,
+    "worst_slot": "L114x1",
+    "failures": [],
+    "n_fail": 0
+   },
+   "q_b101_nw": {
+    "slots": 7,
+    "per_bit_slots": 7,
+    "no_sites": [],
+    "ff_sites": 9167,
+    "max_bit_hop_um": 387.18,
+    "worst_slot": "L48x11",
+    "failures": [],
+    "n_fail": 0
+   }
+  },
+  "total_ff_sites": 1025356,
+  "fail_types": [],
+  "verdict": "PASS"
+ }
+}

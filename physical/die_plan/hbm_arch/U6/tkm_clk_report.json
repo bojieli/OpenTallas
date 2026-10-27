@@ -1,0 +1,771 @@
+{
+ "src": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1309/joint_reach90",
+ "src_plan_sha256": "8d94779568b098401391ab6b1efdb8b400d5507ba193d68d36ca7b66b4152196",
+ "pins": {
+  "cores/ot_hgi_coll_tkm_tp192_tile_core__idpin__chain.json": {
+   "moved": [
+    {
+     "pin": "tile_clk",
+     "old": [
+      "M7",
+      159.84,
+      345.581
+     ],
+     "new": [
+      "M6",
+      319.661,
+      172.704
+     ]
+    }
+   ],
+   "sha256": "d02f9fd3b77305e12c164bf327832a0f02219ffb5537fb8d512f2b75c17dccb8"
+  },
+  "cores/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__chain.json": {
+   "moved": [
+    {
+     "pin": "tile_clk",
+     "old": [
+      "M7",
+      159.84,
+      345.581
+     ],
+     "new": [
+      "M6",
+      319.661,
+      172.704
+     ]
+    }
+   ],
+   "sha256": "7643bbd80ac028e59257f634cd182c01649e27e5a061e2e12ce6810a9e6822ce"
+  },
+  "cores/ot_hgi_coll_tkm_m_tp192__root__chain.json": {
+   "moved": [
+    {
+     "pin": "clk",
+     "old": [
+      "M5",
+      6.264,
+      0.019
+     ],
+     "new": [
+      "M6",
+      319.661,
+      172.704
+     ]
+    },
+    {
+     "pin": "buffer_clk",
+     "old": [
+      "M5",
+      3.624,
+      0.019
+     ],
+     "new": [
+      "M6",
+      319.661,
+      173.216
+     ]
+    }
+   ],
+   "sha256": "be706c7ef5c5a14a38dcd731a5278191a2b985fd9d93ecb5baf4a6f5e6285481"
+  }
+ },
+ "cts_hop_table_before": {
+  "worst_tap_dist_um": 853.38,
+  "worst_turn_um": 673.88
+ },
+ "cts_hop_table": {
+  "partition_tap_um": [
+   818.8363636363637,
+   2869.789090909091
+  ],
+  "pairs": [
+   {
+    "launch": "u_tkm_SW_root",
+    "capture": "u_tkm_SW_tile0",
+    "kind": "column",
+    "tap_launch": [
+     501.101,
+     1183.584
+    ],
+    "tap_capture": [
+     501.101,
+     1537.824
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2003.9,
+     1649.7
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile0",
+    "capture": "u_tkm_SW_tile1",
+    "kind": "column",
+    "tap_launch": [
+     501.101,
+     1537.824
+    ],
+    "tap_capture": [
+     501.101,
+     1892.064
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1649.7,
+     1295.5
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile1",
+    "capture": "u_tkm_SW_tile2",
+    "kind": "column",
+    "tap_launch": [
+     501.101,
+     1892.064
+    ],
+    "tap_capture": [
+     501.101,
+     2246.304
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1295.5,
+     941.2
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile2",
+    "capture": "u_tkm_SW_tile3",
+    "kind": "column",
+    "tap_launch": [
+     501.101,
+     2246.304
+    ],
+    "tap_capture": [
+     501.101,
+     2600.544
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     941.2,
+     587.0
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile3",
+    "capture": "u_tkm_SW_tile4",
+    "kind": "column",
+    "tap_launch": [
+     501.101,
+     2600.544
+    ],
+    "tap_capture": [
+     501.101,
+     3231.264
+    ],
+    "tap_dist_um": 630.72,
+    "root_dist_um": [
+     587.0,
+     679.2
+    ],
+    "root_dist_delta_um": 92.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile4",
+    "capture": "u_tkm_SW_tile5",
+    "kind": "column",
+    "tap_launch": [
+     501.101,
+     3231.264
+    ],
+    "tap_capture": [
+     501.101,
+     3585.504
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     679.2,
+     1033.5
+    ],
+    "root_dist_delta_um": 354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile5",
+    "capture": "u_tkm_SW_tile6",
+    "kind": "column",
+    "tap_launch": [
+     501.101,
+     3585.504
+    ],
+    "tap_capture": [
+     501.101,
+     3939.744
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1033.5,
+     1387.7
+    ],
+    "root_dist_delta_um": 354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile6",
+    "capture": "u_tkm_SW_tile7",
+    "kind": "column",
+    "tap_launch": [
+     501.101,
+     3939.744
+    ],
+    "tap_capture": [
+     501.101,
+     4345.824
+    ],
+    "tap_dist_um": 406.08,
+    "root_dist_um": [
+     1387.7,
+     1793.8
+    ],
+    "root_dist_delta_um": 406.1,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile7",
+    "capture": "u_tkm_SW_tile8",
+    "kind": "turn",
+    "tap_launch": [
+     501.101,
+     4345.824
+    ],
+    "tap_capture": [
+     829.421,
+     4346.016
+    ],
+    "tap_dist_um": 328.51,
+    "root_dist_um": [
+     1793.8,
+     1486.8
+    ],
+    "root_dist_delta_um": -307.0,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile8",
+    "capture": "u_tkm_SW_tile9",
+    "kind": "column",
+    "tap_launch": [
+     829.421,
+     4346.016
+    ],
+    "tap_capture": [
+     829.421,
+     3939.936
+    ],
+    "tap_dist_um": 406.08,
+    "root_dist_um": [
+     1486.8,
+     1080.7
+    ],
+    "root_dist_delta_um": -406.1,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile9",
+    "capture": "u_tkm_SW_tile10",
+    "kind": "column",
+    "tap_launch": [
+     829.421,
+     3939.936
+    ],
+    "tap_capture": [
+     829.421,
+     3585.696
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1080.7,
+     726.5
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile10",
+    "capture": "u_tkm_SW_tile11",
+    "kind": "column",
+    "tap_launch": [
+     829.421,
+     3585.696
+    ],
+    "tap_capture": [
+     829.421,
+     3231.456
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     726.5,
+     372.3
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile11",
+    "capture": "u_tkm_SW_tile12",
+    "kind": "column",
+    "tap_launch": [
+     829.421,
+     3231.456
+    ],
+    "tap_capture": [
+     829.421,
+     2600.736
+    ],
+    "tap_dist_um": 630.72,
+    "root_dist_um": [
+     372.3,
+     279.6
+    ],
+    "root_dist_delta_um": -92.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile12",
+    "capture": "u_tkm_SW_tile13",
+    "kind": "column",
+    "tap_launch": [
+     829.421,
+     2600.736
+    ],
+    "tap_capture": [
+     829.421,
+     2246.496
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     279.6,
+     633.9
+    ],
+    "root_dist_delta_um": 354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile13",
+    "capture": "u_tkm_SW_tile14",
+    "kind": "column",
+    "tap_launch": [
+     829.421,
+     2246.496
+    ],
+    "tap_capture": [
+     829.421,
+     1892.256
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     633.9,
+     988.1
+    ],
+    "root_dist_delta_um": 354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile14",
+    "capture": "u_tkm_SW_tile15",
+    "kind": "column",
+    "tap_launch": [
+     829.421,
+     1892.256
+    ],
+    "tap_capture": [
+     829.421,
+     1538.016
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     988.1,
+     1342.4
+    ],
+    "root_dist_delta_um": 354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile15",
+    "capture": "u_tkm_SW_tile16",
+    "kind": "turn",
+    "tap_launch": [
+     829.421,
+     1538.016
+    ],
+    "tap_capture": [
+     1157.741,
+     1537.824
+    ],
+    "tap_dist_um": 328.51,
+    "root_dist_um": [
+     1342.4,
+     1670.9
+    ],
+    "root_dist_delta_um": 328.5,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile16",
+    "capture": "u_tkm_SW_tile17",
+    "kind": "column",
+    "tap_launch": [
+     1157.741,
+     1537.824
+    ],
+    "tap_capture": [
+     1157.741,
+     1892.064
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1670.9,
+     1316.6
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile17",
+    "capture": "u_tkm_SW_tile18",
+    "kind": "column",
+    "tap_launch": [
+     1157.741,
+     1892.064
+    ],
+    "tap_capture": [
+     1157.741,
+     2246.304
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1316.6,
+     962.4
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile18",
+    "capture": "u_tkm_SW_tile19",
+    "kind": "column",
+    "tap_launch": [
+     1157.741,
+     2246.304
+    ],
+    "tap_capture": [
+     1157.741,
+     2600.544
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     962.4,
+     608.1
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile19",
+    "capture": "u_tkm_SW_tile20",
+    "kind": "column",
+    "tap_launch": [
+     1157.741,
+     2600.544
+    ],
+    "tap_capture": [
+     1157.741,
+     3231.264
+    ],
+    "tap_dist_um": 630.72,
+    "root_dist_um": [
+     608.1,
+     700.4
+    ],
+    "root_dist_delta_um": 92.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile20",
+    "capture": "u_tkm_SW_tile21",
+    "kind": "column",
+    "tap_launch": [
+     1157.741,
+     3231.264
+    ],
+    "tap_capture": [
+     1157.741,
+     3585.504
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     700.4,
+     1054.6
+    ],
+    "root_dist_delta_um": 354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile21",
+    "capture": "u_tkm_SW_tile22",
+    "kind": "column",
+    "tap_launch": [
+     1157.741,
+     3585.504
+    ],
+    "tap_capture": [
+     1157.741,
+     3939.744
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1054.6,
+     1408.9
+    ],
+    "root_dist_delta_um": 354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile22",
+    "capture": "u_tkm_SW_tile23",
+    "kind": "column",
+    "tap_launch": [
+     1157.741,
+     3939.744
+    ],
+    "tap_capture": [
+     1157.741,
+     4345.824
+    ],
+    "tap_dist_um": 406.08,
+    "root_dist_um": [
+     1408.9,
+     1814.9
+    ],
+    "root_dist_delta_um": 406.1,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile23",
+    "capture": "u_tkm_SW_tile24",
+    "kind": "turn",
+    "tap_launch": [
+     1157.741,
+     4345.824
+    ],
+    "tap_capture": [
+     1486.061,
+     4346.016
+    ],
+    "tap_dist_um": 328.51,
+    "root_dist_um": [
+     1814.9,
+     2143.5
+    ],
+    "root_dist_delta_um": 328.5,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile24",
+    "capture": "u_tkm_SW_tile25",
+    "kind": "column",
+    "tap_launch": [
+     1486.061,
+     4346.016
+    ],
+    "tap_capture": [
+     1486.061,
+     3939.936
+    ],
+    "tap_dist_um": 406.08,
+    "root_dist_um": [
+     2143.5,
+     1737.4
+    ],
+    "root_dist_delta_um": -406.1,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile25",
+    "capture": "u_tkm_SW_tile26",
+    "kind": "column",
+    "tap_launch": [
+     1486.061,
+     3939.936
+    ],
+    "tap_capture": [
+     1486.061,
+     3585.696
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1737.4,
+     1383.1
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile26",
+    "capture": "u_tkm_SW_tile27",
+    "kind": "column",
+    "tap_launch": [
+     1486.061,
+     3585.696
+    ],
+    "tap_capture": [
+     1486.061,
+     3231.456
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1383.1,
+     1028.9
+    ],
+    "root_dist_delta_um": -354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile27",
+    "capture": "u_tkm_SW_tile28",
+    "kind": "column",
+    "tap_launch": [
+     1486.061,
+     3231.456
+    ],
+    "tap_capture": [
+     1486.061,
+     2600.736
+    ],
+    "tap_dist_um": 630.72,
+    "root_dist_um": [
+     1028.9,
+     936.3
+    ],
+    "root_dist_delta_um": -92.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile28",
+    "capture": "u_tkm_SW_tile29",
+    "kind": "column",
+    "tap_launch": [
+     1486.061,
+     2600.736
+    ],
+    "tap_capture": [
+     1486.061,
+     2246.496
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     936.3,
+     1290.5
+    ],
+    "root_dist_delta_um": 354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile29",
+    "capture": "u_tkm_SW_tile30",
+    "kind": "column",
+    "tap_launch": [
+     1486.061,
+     2246.496
+    ],
+    "tap_capture": [
+     1486.061,
+     1892.256
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1290.5,
+     1644.8
+    ],
+    "root_dist_delta_um": 354.2,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile30",
+    "capture": "u_tkm_SW_tile31",
+    "kind": "column",
+    "tap_launch": [
+     1486.061,
+     1892.256
+    ],
+    "tap_capture": [
+     1486.061,
+     1538.016
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1644.8,
+     1999.0
+    ],
+    "root_dist_delta_um": 354.2,
+    "both_dirs": true
+   }
+  ],
+  "worst_tap_dist_um": 630.72,
+  "worst_turn_um": 328.51,
+  "worst_column_um": 630.72,
+  "rule": "GEOM-REVIEW-2 11:35 R1 (3): every chain hop launch/capture taps <= ~400 um; related-pair skew <= 20 ps after CPPR (decision 5); hops are face flop -> face flop in both directions"
+ },
+ "htree": {
+  "root_um": [
+   14199.84,
+   8052.48
+  ],
+  "die_centre_x": 14199.84,
+  "summary": {
+   "method": "symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)",
+   "levels": 12,
+   "path_um": 21904.6,
+   "model_insertion_ps": 2190.5,
+   "ps_per_mm": 100.0,
+   "segments": 4229,
+   "drivers": 1535,
+   "taps": 3031,
+   "drivers_moved": 526,
+   "driver_moved_max_um": 190.08,
+   "tap_driver_max_um": 439.7,
+   "taps_over_reach": 8,
+   "coherence_moves": 101,
+   "max_load": 28,
+   "root_driver": {
+    "xy": [
+     14191.2,
+     8052.48
+    ],
+    "stub_um": 8.64
+   },
+   "wire_mm": 1216.0,
+   "seams_top2": 55,
+   "seams_over_80ps_at_5pct": 75,
+   "intra_over_80ps_at_5pct": 43
+  }
+ },
+ "station_sites": {
+  "points": 235148,
+  "entries": 13209,
+  "violations": 0,
+  "types": []
+ },
+ "lane_cycle_delta": {},
+ "out_plan_sha256": "cc80a3a89f8d230f5fd72b65aeccf06d366a53e68f73fb710a3266999e84a8d7"
+}

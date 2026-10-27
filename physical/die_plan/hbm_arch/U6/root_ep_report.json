@@ -1,0 +1,820 @@
+{
+ "buses": {
+  "L12_o": {
+   "width": 3143,
+   "used": 2996,
+   "open": 147,
+   "open_bits": "[3142:2996]",
+   "map": [
+    {
+     "bits": "[2179:0]",
+     "port": "u_hb_idx__link.tx[2179:0]",
+     "dir": "out",
+     "hub": "u_cij_Q.idx_tx_{r0,r1,h} (+_r1 copies)",
+     "asbuilt": [
+      "cij_"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": "idx_launch_data 2180 (ot_hgi_coll_idx_tkm_join: staging tx -> collective ingress vm_d)"
+    },
+    {
+     "bits": "[2183:2180]",
+     "port": "u_hb_idx__link.tx_v[3:0]",
+     "dir": "out",
+     "hub": "u_cij_Q.idx_tx_v (+_v_r1)",
+     "asbuilt": [
+      "cij_"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[2521:2184]",
+     "port": "u_hb_idx__ctl.cq[337:0]",
+     "dir": "out",
+     "hub": "u_hb_vms_Q.cq[675:338]",
+     "asbuilt": [
+      "hb_vms_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[2859:2522]",
+     "port": "u_hb_argmax.cq[337:0]",
+     "dir": "out",
+     "hub": "u_hb_vms_Q.cq[337:0]",
+     "asbuilt": [
+      "hb_vms_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[2995:2860]",
+     "port": "u_hb_idx__ctl.vm_rq[135:0]",
+     "dir": "out",
+     "hub": "u_vmb_Q0..7.rq4 (17 b each)",
+     "asbuilt": [
+      "vmb_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    }
+   ]
+  },
+  "L12m_o": {
+   "width": 3143,
+   "used": 2184,
+   "open": 959,
+   "open_bits": "[3142:2184]",
+   "map": [
+    {
+     "bits": "[2179:0]",
+     "port": "u_hb_idx__link.tx[2179:0]",
+     "dir": "out",
+     "hub": "u_cij_Q.idx_tx_{r0,r1,h} (+_r1 copies)",
+     "asbuilt": [
+      "cij_"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": "idx_launch_data 2180 (ot_hgi_coll_idx_tkm_join: staging tx -> collective ingress vm_d)"
+    },
+    {
+     "bits": "[2183:2180]",
+     "port": "u_hb_idx__link.tx_v[3:0]",
+     "dir": "out",
+     "hub": "u_cij_Q.idx_tx_v (+_v_r1)",
+     "asbuilt": [
+      "cij_"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    }
+   ]
+  },
+  "L13_o": {
+   "width": 3143,
+   "used": 2628,
+   "open": 515,
+   "open_bits": "[3142:2628]",
+   "map": [
+    {
+     "bits": "[0:0]",
+     "port": "u_tkm_SW_root.w_v[0:0]",
+     "dir": "out",
+     "hub": "q_hub_nw L13_i[0] -> vm writer_tkw (HUBNW)",
+     "asbuilt": [
+      "hb_coll_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[40:1]",
+     "port": "u_tkm_SW_root.w_addr[39:0]",
+     "dir": "out",
+     "hub": "L13_i[40:1] w_addr",
+     "asbuilt": [
+      "hb_coll_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[56:41]",
+     "port": "u_tkm_SW_root.w_mask[15:0]",
+     "dir": "out",
+     "hub": "L13_i[56:41] w_mask",
+     "asbuilt": [
+      "hb_coll_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[568:57]",
+     "port": "u_tkm_SW_root.w_data[511:0]",
+     "dir": "out",
+     "hub": "L13_i[568:57] w_data",
+     "asbuilt": [
+      "hb_coll_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[569:569]",
+     "port": "u_tkm_SW_root.busy[0:0]",
+     "dir": "out",
+     "hub": "L13_i[569] body_core tkx_busy",
+     "asbuilt": [
+      "hb_coll_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[570:570]",
+     "port": "u_tkm_SW_root.done[0:0]",
+     "dir": "out",
+     "hub": "L13_i[570] body_core tkx_done",
+     "asbuilt": [
+      "hb_coll_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[571:571]",
+     "port": "u_tkm_SW_root.fault[0:0]",
+     "dir": "out",
+     "hub": "L13_i[571] body_core tkx_fault",
+     "asbuilt": [
+      "hb_coll_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[2627:572]",
+     "port": "u_hb_idx__ctl.index_rr[2055:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__op_Q.vm_rr",
+     "asbuilt": [
+      "hb_idx__op_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    }
+   ]
+  },
+  "L13m_o": {
+   "width": 3143,
+   "used": 0,
+   "open": 3143,
+   "open_bits": "[3142:0]",
+   "map": []
+  },
+  "L62_o": {
+   "width": 376,
+   "used": 324,
+   "open": 52,
+   "open_bits": "[375:324]",
+   "map": [
+    {
+     "bits": "[0:0]",
+     "port": "u_col_idx.pw_we[0:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.program_we",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[8:1]",
+     "port": "u_col_idx.pw_addr[7:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.program_addr",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[264:9]",
+     "port": "u_col_idx.pw_data[255:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.program_data",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[265:265]",
+     "port": "u_col_idx.start_v[0:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.start",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[277:266]",
+     "port": "u_col_idx.prm[11:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.length",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[309:278]",
+     "port": "u_col_idx.prm[43:12]",
+     "dir": "out",
+     "hub": "u_hb_idx__op_Q.{weight,query}_sector",
+     "asbuilt": [
+      "hb_idx__op_"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[323:310]",
+     "port": "u_col_idx.prm[65:52]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.nkeys",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    }
+   ]
+  },
+  "L62m_o": {
+   "width": 376,
+   "used": 330,
+   "open": 46,
+   "open_bits": "[375:330]",
+   "map": [
+    {
+     "bits": "[0:0]",
+     "port": "u_col_idx.pw_we[0:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.program_we",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[8:1]",
+     "port": "u_col_idx.pw_addr[7:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.program_addr",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[264:9]",
+     "port": "u_col_idx.pw_data[255:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.program_data",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[265:265]",
+     "port": "u_col_idx.start_v[0:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.start",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[277:266]",
+     "port": "u_col_idx.prm[11:0]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.length",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[309:278]",
+     "port": "u_col_idx.prm[43:12]",
+     "dir": "out",
+     "hub": "u_hb_idx__op_Q.{weight,query}_sector",
+     "asbuilt": [
+      "hb_idx__op_"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[323:310]",
+     "port": "u_col_idx.prm[65:52]",
+     "dir": "out",
+     "hub": "u_hb_idx__qctl_Q.nkeys",
+     "asbuilt": [
+      "hb_idx__qctl_"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[324:324]",
+     "port": "u_col_idx.ready[0:0]",
+     "dir": "out",
+     "hub": "u_hleaf_Q.t_ready",
+     "asbuilt": [
+      "hleaf_SE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[325:325]",
+     "port": "u_col_idx.active[0:0]",
+     "dir": "out",
+     "hub": "u_hleaf_Q.t_active",
+     "asbuilt": [
+      "hleaf_SE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[326:326]",
+     "port": "u_col_idx.fault[0:0]",
+     "dir": "out",
+     "hub": "u_hleaf_Q.t_fault",
+     "asbuilt": [
+      "hleaf_SE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[327:327]",
+     "port": "u_hb_argmax.nan_flag[0:0]",
+     "dir": "out",
+     "hub": "u_fr_Q.in",
+     "asbuilt": [
+      "fr_NE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[328:328]",
+     "port": "u_hc_eng_tail0_sk_steady.fault[0:0]",
+     "dir": "out",
+     "hub": "u_hleaf_Q.t_fault (hc_eng.fault)",
+     "asbuilt": null,
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": "UNVERIFIED split-piece attribution: as-built hc_eng.fault -> hleaf_SE.t_fault; B2o put this piece port on the m lanes only"
+    },
+    {
+     "bits": "[329:329]",
+     "port": "u_hc_eng_tail1_sk_steady.fault[0:0]",
+     "dir": "out",
+     "hub": "u_hleaf_Q.t_fault (hc_eng.fault)",
+     "asbuilt": null,
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": "UNVERIFIED split-piece attribution (see tail0)"
+    }
+   ]
+  },
+  "L74m_i": {
+   "width": 2341,
+   "used": 279,
+   "open": 2062,
+   "open_bits": "[2340:279]",
+   "map": [
+    {
+     "bits": "[0:0]",
+     "port": "u_col_idx.cfg_v[0:0]",
+     "dir": "in",
+     "hub": "u_hleaf_Q.a_cfg_v",
+     "asbuilt": [
+      "hleaf_SE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[8:1]",
+     "port": "u_col_idx.cfg_target[7:0]",
+     "dir": "in",
+     "hub": "u_hleaf_Q.a_cfg_target",
+     "asbuilt": [
+      "hleaf_SE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[20:9]",
+     "port": "u_col_idx.cfg_addr[11:0]",
+     "dir": "in",
+     "hub": "u_hleaf_Q.a_cfg_addr",
+     "asbuilt": [
+      "hleaf_SE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[276:21]",
+     "port": "u_col_idx.cfg_data[255:0]",
+     "dir": "in",
+     "hub": "u_hleaf_Q.a_cfg_data",
+     "asbuilt": [
+      "hleaf_SE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[277:277]",
+     "port": "u_col_idx.desc_v[0:0]",
+     "dir": "in",
+     "hub": "u_hleaf_Q.a_desc_v",
+     "asbuilt": [
+      "hleaf_SE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    },
+    {
+     "bits": "[278:278]",
+     "port": "u_col_idx.launch_v[0:0]",
+     "dir": "in",
+     "hub": "u_hleaf_Q.a_launch_v",
+     "asbuilt": [
+      "hleaf_SE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": ""
+    }
+   ]
+  },
+  "L89_i": {
+   "width": 66,
+   "used": 2,
+   "open": 64,
+   "open_bits": "[65:2]",
+   "map": [
+    {
+     "bits": "[0:0]",
+     "port": "u_hb_idx__ctl.qfault[0:0]",
+     "dir": "in",
+     "hub": "u_hb_idx__qctl_Q.fault",
+     "asbuilt": [
+      "hb_idx__qctl_SW"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": "fans out in root to qfault[0] (SW) and qfault[2] (NW): one folded NW qctl",
+     "fanout_port_bit": 2
+    },
+    {
+     "bits": "[1:1]",
+     "port": "u_col_idx.c_fault[4:4]",
+     "dir": "in",
+     "hub": "u_hb_idx__nwsh.fault",
+     "asbuilt": [
+      "hb_idx__nwsh"
+     ],
+     "fold": [
+      "SW",
+      "NW"
+     ],
+     "note": ""
+    }
+   ]
+  },
+  "L89m_i": {
+   "width": 66,
+   "used": 1,
+   "open": 65,
+   "open_bits": "[65:1]",
+   "map": [
+    {
+     "bits": "[0:0]",
+     "port": "u_hb_idx__ctl.qfault[1:1]",
+     "dir": "in",
+     "hub": "u_hb_idx__qctl_Q.fault",
+     "asbuilt": [
+      "hb_idx__qctl_SE"
+     ],
+     "fold": [
+      "SE",
+      "NE"
+     ],
+     "note": "fans out in root to qfault[1] (SE) and qfault[3] (NE)",
+     "fanout_port_bit": 3
+    }
+   ]
+  }
+ },
+ "unlaned": [
+  {
+   "port": "u_hb_idx__ctl.cr[273:0]",
+   "bits": 274,
+   "hub": "u_hb_vms_Q.cr[547:274]",
+   "asbuilt": [
+    "hb_vms_SW"
+   ]
+  },
+  {
+   "port": "u_hb_argmax.cr[273:0]",
+   "bits": 274,
+   "hub": "u_hb_vms_Q.cr[273:0]",
+   "asbuilt": [
+    "hb_vms_SW"
+   ]
+  },
+  {
+   "port": "u_hb_idx__ctl.index_rq[135:0]",
+   "bits": 136,
+   "hub": "u_hb_idx__op_Q.vm_rq",
+   "asbuilt": [
+    "hb_idx__op_SW"
+   ]
+  },
+  {
+   "port": "u_hb_idx__ctl.vm_rr[2055:0]",
+   "bits": 2056,
+   "hub": "u_vmb_Q0..7.rr4 (257 b each)",
+   "asbuilt": [
+    "vmb_SW"
+   ]
+  }
+ ],
+ "removed_targets": 168,
+ "stations_removed": 168,
+ "stations": {
+  "before": 313,
+  "after": 185,
+  "added": 40,
+  "regs_added": 268,
+  "worst_new_hop_um": 359.81,
+  "within_hop": []
+ },
+ "lane_cycles": {
+  "L12": {
+   "boundary": 2,
+   "cycles": 11,
+   "faces": 3,
+   "fixed": 0,
+   "natural": 11,
+   "pad": 0,
+   "stations": 9
+  },
+  "L12m": {
+   "boundary": 2,
+   "cycles": 11,
+   "faces": 3,
+   "fixed": 0,
+   "natural": 11,
+   "pad": 0,
+   "stations": 9
+  },
+  "L13": {
+   "boundary": 2,
+   "cycles": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "stations": 0
+  },
+  "L13m": {
+   "boundary": 2,
+   "cycles": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "stations": 0
+  },
+  "L62": {
+   "boundary": 2,
+   "cycles": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "stations": 0
+  },
+  "L62m": {
+   "boundary": 2,
+   "cycles": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "stations": 0
+  },
+  "L74m": {
+   "boundary": 2,
+   "cycles": 5,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 5,
+   "pad": 0,
+   "stations": 3
+  },
+  "L89": {
+   "boundary": 2,
+   "cycles": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "stations": 0
+  },
+  "L89m": {
+   "boundary": 2,
+   "cycles": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "stations": 0
+  }
+ },
+ "lane_cycle_delta": 0,
+ "src": "/srv/opentallas-scratch2/claude/path-hbm/stack6_1025/p3",
+ "src_plan_sha256": "e1f6290dcece0aa2b502768bd98e0261d54bba3c22baec66fc4593f5d848cfb9",
+ "out_plan_sha256": "17213e6a4e2ac8eda8a53d24de634e97646af6f066f448279b17393cc1c02561"
+}

@@ -1,0 +1,1515 @@
+{
+ "verdict": "PASS",
+ "worst_hop_um": 345.6,
+ "bits_over_reach": 0,
+ "obstacle_violations": [],
+ "root_origin": [
+  1036.8,
+  328.3200000000004
+ ],
+ "tiles": {
+  "0": {
+   "origin": [
+    1036.8,
+    682.5600000000004
+   ],
+   "orient": "R0"
+  },
+  "1": {
+   "origin": [
+    1036.8,
+    1036.8000000000002
+   ],
+   "orient": "R0"
+  },
+  "2": {
+   "origin": [
+    1036.8,
+    1391.0400000000004
+   ],
+   "orient": "R0"
+  },
+  "3": {
+   "origin": [
+    1036.8,
+    1745.2800000000007
+   ],
+   "orient": "R0"
+  },
+  "4": {
+   "origin": [
+    1036.8,
+    2099.5200000000004
+   ],
+   "orient": "R0"
+  },
+  "5": {
+   "origin": [
+    1036.8,
+    2453.76
+   ],
+   "orient": "R0"
+  },
+  "6": {
+   "origin": [
+    1036.8,
+    2808.0000000000005
+   ],
+   "orient": "R0"
+  },
+  "7": {
+   "origin": [
+    1036.8,
+    3162.2400000000007
+   ],
+   "orient": "R0"
+  },
+  "8": {
+   "origin": [
+    1036.8,
+    3516.4800000000005
+   ],
+   "orient": "R0"
+  },
+  "9": {
+   "origin": [
+    1036.8,
+    3870.7200000000003
+   ],
+   "orient": "R0"
+  },
+  "10": {
+   "origin": [
+    1036.8,
+    4224.960000000001
+   ],
+   "orient": "R0"
+  },
+  "11": {
+   "origin": [
+    1036.8,
+    4579.200000000001
+   ],
+   "orient": "R0"
+  },
+  "12": {
+   "origin": [
+    1036.8,
+    4933.4400000000005
+   ],
+   "orient": "R0"
+  },
+  "13": {
+   "origin": [
+    708.48,
+    4933.4400000000005
+   ],
+   "orient": "MX"
+  },
+  "14": {
+   "origin": [
+    708.48,
+    4579.2
+   ],
+   "orient": "MX"
+  },
+  "15": {
+   "origin": [
+    708.48,
+    4224.96
+   ],
+   "orient": "MX"
+  },
+  "16": {
+   "origin": [
+    708.48,
+    3870.7200000000003
+   ],
+   "orient": "MX"
+  },
+  "17": {
+   "origin": [
+    708.48,
+    3516.48
+   ],
+   "orient": "MX"
+  },
+  "18": {
+   "origin": [
+    708.48,
+    3162.24
+   ],
+   "orient": "MX"
+  },
+  "19": {
+   "origin": [
+    708.48,
+    2808.0
+   ],
+   "orient": "MX"
+  },
+  "20": {
+   "origin": [
+    362.88,
+    2808.0
+   ],
+   "orient": "R0"
+  },
+  "21": {
+   "origin": [
+    362.88,
+    3162.24
+   ],
+   "orient": "R0"
+  },
+  "22": {
+   "origin": [
+    362.88,
+    3516.48
+   ],
+   "orient": "R0"
+  },
+  "23": {
+   "origin": [
+    362.88,
+    3870.7200000000003
+   ],
+   "orient": "R0"
+  },
+  "24": {
+   "origin": [
+    362.88,
+    4224.96
+   ],
+   "orient": "R0"
+  },
+  "25": {
+   "origin": [
+    362.88,
+    4579.2
+   ],
+   "orient": "R0"
+  },
+  "26": {
+   "origin": [
+    362.88,
+    4933.4400000000005
+   ],
+   "orient": "R0"
+  },
+  "27": {
+   "origin": [
+    17.28,
+    4933.4400000000005
+   ],
+   "orient": "MX"
+  },
+  "28": {
+   "origin": [
+    17.28,
+    4579.2
+   ],
+   "orient": "MX"
+  },
+  "29": {
+   "origin": [
+    17.28,
+    4224.96
+   ],
+   "orient": "MX"
+  },
+  "30": {
+   "origin": [
+    17.28,
+    3870.7200000000003
+   ],
+   "orient": "MX"
+  },
+  "31": {
+   "origin": [
+    17.28,
+    3516.48
+   ],
+   "orient": "MX"
+  }
+ },
+ "clr_conv_broadcast": {
+  "farthest_um": 3861.7,
+  "registered_depth_at_405": 10,
+  "note": "conv: registered tree root -> tile31 N conv pin only (TOKEN CB21), then in-tile up relay; clr: systolic down chain (in-tile FT)"
+ },
+ "hops": [
+  {
+   "hop": "root->tile0",
+   "src": "x_u_u_g_tiles_0_e86_u_tile_ins_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "root->tile0",
+   "src": "x_u_u_g_tiles_0_e86_u_tile_ins_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "root->tile0",
+   "src": "x_u_u_g_tiles_0_e86_u_tile_clr",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile0->root",
+   "src": "tile_up_out",
+   "dst": "x_u_u_g_tiles_0_e86_u_tile_up_out",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile0->tile1 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile0->tile1 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile1->tile0 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile0->tile1 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile1->tile0 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile1->tile2 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile1->tile2 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile2->tile1 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile1->tile2 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile2->tile1 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile2->tile3 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile2->tile3 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile3->tile2 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile2->tile3 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile3->tile2 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile3->tile4 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile3->tile4 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile4->tile3 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile3->tile4 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile4->tile3 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile4->tile5 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile4->tile5 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile5->tile4 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile4->tile5 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile5->tile4 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile5->tile6 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile5->tile6 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile6->tile5 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile5->tile6 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile6->tile5 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile6->tile7 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile6->tile7 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile7->tile6 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile6->tile7 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile7->tile6 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile7->tile8 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile7->tile8 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile8->tile7 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile7->tile8 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile8->tile7 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile8->tile9 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile8->tile9 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile9->tile8 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile8->tile9 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile9->tile8 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile9->tile10 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile9->tile10 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile10->tile9 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile9->tile10 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile10->tile9 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile10->tile11 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile10->tile11 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile11->tile10 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile10->tile11 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile11->tile10 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile11->tile12 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile11->tile12 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile12->tile11 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile11->tile12 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile12->tile11 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile12->tile13 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 328.32,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile12->tile13 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 328.32,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile13->tile12 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 328.32,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile12->tile13 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 328.32,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile13->tile12 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 328.32,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile13->tile14 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile13->tile14 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile14->tile13 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile13->tile14 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile14->tile13 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile14->tile15 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile14->tile15 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile15->tile14 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile14->tile15 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile15->tile14 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile15->tile16 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile15->tile16 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile16->tile15 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile15->tile16 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile16->tile15 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile16->tile17 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile16->tile17 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile17->tile16 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile16->tile17 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile17->tile16 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile17->tile18 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile17->tile18 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile18->tile17 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile17->tile18 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile18->tile17 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile18->tile19 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile18->tile19 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile19->tile18 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile18->tile19 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile19->tile18 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile19->tile20 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 345.6,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile19->tile20 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 345.6,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile20->tile19 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 345.6,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile19->tile20 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 345.6,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile20->tile19 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 345.6,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile20->tile21 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile20->tile21 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile21->tile20 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile20->tile21 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile21->tile20 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile21->tile22 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile21->tile22 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile22->tile21 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile21->tile22 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile22->tile21 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile22->tile23 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile22->tile23 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile23->tile22 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile22->tile23 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile23->tile22 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile23->tile24 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile23->tile24 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile24->tile23 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile23->tile24 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile24->tile23 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile24->tile25 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile24->tile25 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile25->tile24 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile24->tile25 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile25->tile24 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile25->tile26 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile25->tile26 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile26->tile25 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile25->tile26 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile26->tile25 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile26->tile27 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 345.6,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile26->tile27 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 345.6,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile27->tile26 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 345.6,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile26->tile27 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 345.6,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile27->tile26 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 345.6,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile27->tile28 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile27->tile28 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile28->tile27 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile27->tile28 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile28->tile27 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile28->tile29 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile28->tile29 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile29->tile28 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile28->tile29 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile29->tile28 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile29->tile30 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile29->tile30 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile30->tile29 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile29->tile30 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile30->tile29 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile30->tile31 down",
+   "src": "tile_ovf_b",
+   "dst": "tile_ins_b",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile30->tile31 dv",
+   "src": "tile_ovf_v",
+   "dst": "tile_ins_v",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile31->tile30 up",
+   "src": "tile_up_out",
+   "dst": "tile_up_in",
+   "bits": 344,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile30->tile31 clr",
+   "src": "tile_clr_o",
+   "dst": "tile_clr",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  },
+  {
+   "hop": "tile31->tile30 conv",
+   "src": "tile_conv_o",
+   "dst": "tile_conv",
+   "bits": 1,
+   "max_um": 8.64,
+   "over_reach": 0
+  }
+ ]
+}

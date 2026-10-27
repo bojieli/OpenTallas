@@ -1,0 +1,758 @@
+{
+ "H_old": 3525.12,
+ "H_new": 4320.0,
+ "growth": {
+  "dH_um": 794.88,
+  "insertion_y_um": 9586.08,
+  "hub_row_y_um": [
+   6065.28,
+   9590.4
+  ],
+  "grown_types": [
+   "NE_io",
+   "NW_io",
+   "q_b000",
+   "q_b001",
+   "q_b002",
+   "q_b003",
+   "q_b010",
+   "q_b011",
+   "q_b012",
+   "q_b013",
+   "root"
+  ],
+  "grown_local_y_um": {
+   "q_b000": 3520.8,
+   "q_b001": 3520.8,
+   "q_b002": 3520.8,
+   "q_b003": 3520.8,
+   "q_b010": 3520.8,
+   "q_b011": 3520.8,
+   "q_b012": 3520.8,
+   "q_b013": 3520.8,
+   "NW_io": 3520.8,
+   "root": 5248.8,
+   "NE_io": 3520.8
+  },
+  "spanning_partitions": [
+   "NW_b000",
+   "NW_b001",
+   "NW_b002",
+   "NW_b003",
+   "NW_b010",
+   "NW_b011",
+   "NW_b012",
+   "NW_b013",
+   "NW_io",
+   "root",
+   "NE_b000",
+   "NE_b001",
+   "NE_b002",
+   "NE_b003",
+   "NE_b010",
+   "NE_b011",
+   "NE_b012",
+   "NE_b013",
+   "NE_io"
+  ],
+  "moved_partitions": 32,
+  "windows_moved": 0,
+  "hub_windows_moved": [],
+  "restation": [
+   {
+    "type": "NE_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NE_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NE_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NE_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L106_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "NW_io",
+    "istation": "bus:L125_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "q_b001",
+    "slot": "L36x3",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     7
+    ],
+    "hops_um": [
+     1600.607
+    ]
+   },
+   {
+    "type": "q_b010",
+    "slot": "L28x2",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     4
+    ],
+    "hops_um": [
+     1553.526
+    ]
+   },
+   {
+    "type": "root",
+    "slot": "L9x1",
+    "added_regs": 5,
+    "fails": [],
+    "crossing": [
+     5
+    ],
+    "hops_um": [
+     924.48,
+     1114.56
+    ]
+   },
+   {
+    "type": "root",
+    "slot": "L9mx1",
+    "added_regs": 5,
+    "fails": [],
+    "crossing": [
+     5
+    ],
+    "hops_um": [
+     924.48,
+     1114.56
+    ]
+   },
+   {
+    "type": "root",
+    "slot": "L63x1",
+    "added_regs": 5,
+    "fails": [],
+    "crossing": [
+     3
+    ],
+    "hops_um": [
+     924.48,
+     1114.56
+    ]
+   },
+   {
+    "type": "root",
+    "slot": "L63mx1",
+    "added_regs": 5,
+    "fails": [],
+    "crossing": [
+     5
+    ],
+    "hops_um": [
+     924.48,
+     1114.56
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L106_o",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   },
+   {
+    "type": "root",
+    "istation": "bus:L125_i",
+    "added_regs": 4,
+    "fails": [],
+    "crossing": [
+     0
+    ]
+   }
+  ],
+  "added_regs": 300,
+  "restation_fails": [],
+  "die_outline_um": [
+   28399.68,
+   18541.44
+  ]
+ }
+}

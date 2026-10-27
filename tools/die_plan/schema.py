@@ -449,6 +449,11 @@ SCHEMA = {
                                        "pin_select": {"type": "object", "additionalProperties": {"type": "string"}},
                                        "unused_pins": {"type": "array", "items": {"type": "string"}},
                                        "unused_pins_policy": {"type": "string"},
+                                       # Optional cut-parent mapping and placement halo (fe9b4c1e4d). The halo is
+                                       # a cell-placement keepout, not a routing-layer OBS extension.
+                                       "halo_um": _nonneg,
+                                       "parent_instance": {"type": "string"},
+                                       "cut_instance": {"type": "string"},
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
                                            "type": "object", "required": ["name", "layer", "xy"],
                                            "additionalProperties": False,

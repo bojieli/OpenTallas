@@ -1,0 +1,52 @@
+{
+ "src": "/srv/opentallas-scratch2/claude/path-hbm/g0cfix_1026/b1n6_s2/die_plan.json",
+ "verdict": "PASS",
+ "total_ff_sites_added": 11988,
+ "types": {
+  "q_b101": {
+   "slots_sited": 1,
+   "ff_sites_added": 5994,
+   "max_bit_hop_um": 247.307,
+   "worst_slot": "L12x1",
+   "failures": {}
+  },
+  "q_b101_nw": {
+   "slots_sited": 1,
+   "ff_sites_added": 5994,
+   "max_bit_hop_um": 247.307,
+   "worst_slot": "L12x1",
+   "failures": {}
+  }
+ },
+ "slots": {
+  "q_b101": {
+   "L12x1": {
+    "bits": 2997,
+    "stations": 3,
+    "layered_bits": 0,
+    "regs_based": true,
+    "centroid_vs_regs_um": 0.266,
+    "verdict": "PASS",
+    "ff_sites": 5994,
+    "max_bit_hop_um": 247.307,
+    "sec": 1.0
+   }
+  },
+  "q_b101_nw": {
+   "L12x1": {
+    "bits": 2997,
+    "stations": 3,
+    "layered_bits": 0,
+    "regs_based": true,
+    "centroid_vs_regs_um": 0.266,
+    "verdict": "PASS",
+    "ff_sites": 5994,
+    "max_bit_hop_um": 247.307,
+    "sec": 1.0
+   }
+  }
+ },
+ "failures": {},
+ "lane_cycle_delta": {},
+ "scope": "geometry proposal (per-bit FF sites only); not a route receipt"
+}

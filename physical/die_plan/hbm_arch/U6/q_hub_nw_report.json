@@ -1,0 +1,736 @@
+{
+ "type": "q_hub_nw",
+ "source": "q3 split main a63baaa9a0; tkx ABI codex/hbm-token-1309 a64589a097; projection codex/hbm-hub-1309 d59a276772",
+ "not_done": [
+  "L13_i[571:0] bit map must match the root L13_o driver (root L13_o chains are still name-based placeholders)",
+  "NE_hub keeps q_hub / 2341-b L74m (NE_b101 keeps q_b101): when NE gets its tkx TX (NE NLINK2 re-split, not in this scope) q_b101_nw folds back into q_b101",
+  "pin partners of non-qout body ports remain name-based (q2 slot map) until the build_split_tops conn list",
+  "64 projected flit bits are not in the 2116-b compact root del_flit (fieldmap compact_flit): they face TX but the TX discards them (selected actual core cut)"
+ ],
+ "leaf_moves": {
+  "u_cxij_Q_s": {
+   "old": [
+    [
+     976.32,
+     423.36
+    ],
+    [
+     112.32,
+     388.8
+    ]
+   ],
+   "new": [
+    [
+     1183.68,
+     449.28
+    ],
+    [
+     146.88,
+     302.4
+    ]
+   ]
+  }
+ },
+ "tx_source_pins_on_body_core": 2488,
+ "tkm_source_bits": {
+  "bits": 2488,
+  "faces": {
+   "N": 2488
+  },
+  "stations_hist": {
+   "0": 2488
+  },
+  "stations_min": 0,
+  "stations_max": 0,
+  "max_pin_to_TX_um": 149.04
+ },
+ "pieces": {
+  "u_hb_coll_Q_body_core": {
+   "module": "ot_hfd_coll_q3_body_core",
+   "cells": 229064,
+   "origin_um": [
+    241.92000000000002,
+    34.56
+   ],
+   "outline_um": [
+    578.88,
+    1054.08
+   ],
+   "pins": 16032,
+   "port_bits": 16032,
+   "pins_per_face": {
+    "N": 3188,
+    "S": 3030,
+    "E": 5821,
+    "W": 3993
+   },
+   "pins_per_um_face": {
+    "N": 5.51,
+    "S": 5.23,
+    "E": 5.52,
+    "W": 3.79
+   },
+   "perimeter_slack_at_pin_max": 1.135,
+   "reserved_segment": [
+    {
+     "tag": "tkm",
+     "face": "N",
+     "segment": [
+      127.44,
+      576.72
+     ],
+     "pins": 2488,
+     "centre": 358.56
+    },
+    {
+     "tag": "vm",
+     "face": "E",
+     "segment": [
+      2.16,
+      771.12
+     ],
+     "pins": 4285,
+     "centre": 358.56
+    },
+    {
+     "tag": "red",
+     "face": "E",
+     "segment": [
+      816.48,
+      1023.84
+     ],
+     "pins": 1126,
+     "centre": 920.16
+    },
+    {
+     "tag": "cij",
+     "face": "S",
+     "segment": [
+      386.64,
+      576.72
+     ],
+     "pins": 1056,
+     "centre": 3743.28
+    }
+   ],
+   "pins_file": "cores/ot_hfd_coll_q3_body_core__578.88x1054.08__q_hub_nw_u_hb_coll_Q_body_core.json"
+  },
+  "u_hb_coll_Q_edge": {
+   "module": "ot_hfd_coll_q3_edge_core",
+   "cells": 82038,
+   "origin_um": [
+    34.56,
+    250.56
+   ],
+   "outline_um": [
+    190.08,
+    1054.08
+   ],
+   "pins": 8139,
+   "port_bits": 8139,
+   "pins_per_face": {
+    "E": 4458,
+    "W": 3681
+   },
+   "pins_per_um_face": {
+    "E": 4.23,
+    "W": 3.49
+   },
+   "perimeter_slack_at_pin_max": 1.7,
+   "reserved_segment": [
+    {
+     "tag": "link",
+     "face": "W",
+     "segment": [
+      386.64,
+      1051.92
+     ],
+     "pins": 3681,
+     "centre": 841.96
+    }
+   ],
+   "pins_file": "cores/ot_hfd_coll_q3_edge_core__190.08x1054.08__q_hub_nw_u_hb_coll_Q_edge.json"
+  },
+  "u_hb_coll_Q_vm": {
+   "module": "ot_hfd_coll_q3_vm_core",
+   "cells": 72841,
+   "origin_um": [
+    838.08,
+    34.56
+   ],
+   "outline_um": [
+    328.32,
+    717.12
+   ],
+   "pins": 9231,
+   "port_bits": 9231,
+   "pins_per_face": {
+    "N": 1217,
+    "S": 32,
+    "E": 3991,
+    "W": 3991
+   },
+   "pins_per_um_face": {
+    "N": 3.71,
+    "S": 0.1,
+    "E": 5.57,
+    "W": 5.57
+   },
+   "perimeter_slack_at_pin_max": 1.258,
+   "reserved_segment": null,
+   "pins_file": "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__q_hub_nw_u_hb_coll_Q_vm.json"
+  }
+ },
+ "root_core_conns_L74_i_removed": 17,
+ "body_core_to_TX_box_um": 17.28,
+ "stations": {
+  "before": 4963,
+  "after": 5136,
+  "added": 341,
+  "dropped": {
+   "L74_o placeholder chain (L74 = tkx only, TX)": 90,
+   "old body own chain (regenerated)": 78
+  },
+  "rerouted_existing": 93,
+  "worst_hop_um": 372.0,
+  "worst_hop_conn": "bus:L96_o",
+  "worst_new_or_rerouted_hop_um": 359.9,
+  "worst_new_conn": "u_hcollgi_Q.ra_tx_dst|u_hb_coll_Q_body_core",
+  "regs_inside_cores": [],
+  "station_regs_added": 4483,
+  "station_bit_regs_added": 556425
+ },
+ "tkx": {
+  "bus:L13_i u_hb_coll_Q_body_core.tkx_busy": {
+   "bits": 1,
+   "stations": 26,
+   "max_hop": 358.3
+  },
+  "bus:L13_i u_hb_coll_Q_body_core.tkx_done": {
+   "bits": 1,
+   "stations": 26,
+   "max_hop": 358.3
+  },
+  "bus:L13_i u_hb_coll_Q_body_core.tkx_fault": {
+   "bits": 1,
+   "stations": 26,
+   "max_hop": 358.3
+  },
+  "bus:L13_i u_hb_coll_Q_vm.writer_tkw_v": {
+   "bits": 1,
+   "stations": 23,
+   "max_hop": 358.3
+  },
+  "bus:L13_i u_hb_coll_Q_vm.writer_tkw_d": {
+   "bits": 568,
+   "stations": 24,
+   "max_hop": 358.3
+  },
+  "bus:L74_o u_tkx_tx_Q.beat": {
+   "bits": 1171,
+   "stations": 26,
+   "max_hop": 358.3
+  }
+ },
+ "links": {
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_edge": {
+   "bits": 6481,
+   "max_um": 581
+  },
+  "u_hb_coll_Q_edge->u_hb_coll_Q_body_core": {
+   "bits": 4442,
+   "max_um": 163
+  },
+  "u_hb_coll_Q_vm->u_hb_coll_Q_body_core": {
+   "bits": 4334,
+   "max_um": 64
+  },
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_vm": {
+   "bits": 4285,
+   "max_um": 71
+  },
+  "u_hb_coll_Q_edge->L101_o": {
+   "bits": 3681,
+   "max_um": 563
+  },
+  "u_hb_coll_Q_edge->L126_i": {
+   "bits": 3681,
+   "max_um": 599
+  },
+  "u_hb_coll_Q_edge->L51_o": {
+   "bits": 3681,
+   "max_um": 344
+  },
+  "u_hb_coll_Q_edge->L52_i": {
+   "bits": 3681,
+   "max_um": 454
+  },
+  "u_hb_coll_Q_body_core->u_tkx_tx_Q": {
+   "bits": 2488,
+   "max_um": 149
+  },
+  "u_hb_coll_Q_body_core->L102_o": {
+   "bits": 2344,
+   "max_um": 2985
+  },
+  "u_hb_coll_Q_body_core->L103_o": {
+   "bits": 2344,
+   "max_um": 8378
+  },
+  "u_hb_coll_Q_body_core->L104_o": {
+   "bits": 2344,
+   "max_um": 1439
+  },
+  "u_hb_coll_Q_body_core->L105_o": {
+   "bits": 2344,
+   "max_um": 8211
+  },
+  "u_hb_coll_Q_body_core->L131_i": {
+   "bits": 2344,
+   "max_um": 6967
+  },
+  "u_hb_coll_Q_body_core->L134_i": {
+   "bits": 2344,
+   "max_um": 3239
+  },
+  "u_hb_coll_Q_body_core->L135_i": {
+   "bits": 2344,
+   "max_um": 7266
+  },
+  "u_hb_coll_Q_body_core->L136_i": {
+   "bits": 2344,
+   "max_um": 1929
+  },
+  "u_hb_coll_Q_body_core->L36_o": {
+   "bits": 2344,
+   "max_um": 2871
+  },
+  "u_hb_coll_Q_body_core->L37_o": {
+   "bits": 2344,
+   "max_um": 8502
+  },
+  "u_hb_coll_Q_body_core->L38_o": {
+   "bits": 2344,
+   "max_um": 1306
+  },
+  "u_hb_coll_Q_body_core->L39_o": {
+   "bits": 2344,
+   "max_um": 8334
+  },
+  "u_hb_coll_Q_body_core->L55_i": {
+   "bits": 2344,
+   "max_um": 3129
+  },
+  "u_hb_coll_Q_body_core->L57_i": {
+   "bits": 2344,
+   "max_um": 7317
+  },
+  "u_hb_coll_Q_body_core->L59_i": {
+   "bits": 2344,
+   "max_um": 1820
+  },
+  "u_hb_coll_Q_body_core->L61_i": {
+   "bits": 2344,
+   "max_um": 7018
+  },
+  "u_tkx_tx_Q->L74_o": {
+   "bits": 1171,
+   "max_um": 8923
+  },
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_reduce": {
+   "bits": 1126,
+   "max_um": 17
+  },
+  "u_hb_coll_Q_body_core->u_cij_Q": {
+   "bits": 1056,
+   "max_um": 3774
+  },
+  "u_hb_coll_Q_vm->L13_i": {
+   "bits": 569,
+   "max_um": 7992
+  },
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_ring_ag": {
+   "bits": 3,
+   "max_um": 7236
+  },
+  "u_hb_coll_Q_body_core->L13_i": {
+   "bits": 3,
+   "max_um": 8244
+  }
+ },
+ "pairs": {
+  "u_hb_coll_Q_body_core->L37_o": {
+   "bits": 2344,
+   "bit_mm": 19178.1,
+   "max_pin_um": 8539.8
+  },
+  "u_hb_coll_Q_body_core->L103_o": {
+   "bits": 2344,
+   "bit_mm": 18887.9,
+   "max_pin_um": 8416.0
+  },
+  "u_hb_coll_Q_body_core->L39_o": {
+   "bits": 2344,
+   "bit_mm": 17231.4,
+   "max_pin_um": 8385.7
+  },
+  "u_hb_coll_Q_body_core->L105_o": {
+   "bits": 2344,
+   "bit_mm": 16941.2,
+   "max_pin_um": 8261.9
+  },
+  "u_hb_coll_Q_body_core->L57_i": {
+   "bits": 2344,
+   "bit_mm": 16399.5,
+   "max_pin_um": 7354.4
+  },
+  "u_hb_coll_Q_body_core->L135_i": {
+   "bits": 2344,
+   "bit_mm": 16279.9,
+   "max_pin_um": 7303.4
+  },
+  "u_hb_coll_Q_body_core->L61_i": {
+   "bits": 2344,
+   "bit_mm": 14145.9,
+   "max_pin_um": 7069.3
+  },
+  "u_hb_coll_Q_body_core->L131_i": {
+   "bits": 2344,
+   "bit_mm": 14026.3,
+   "max_pin_um": 7018.3
+  },
+  "u_hb_coll_Q_body_core->L134_i": {
+   "bits": 2344,
+   "bit_mm": 6840.0,
+   "max_pin_um": 3276.2
+  },
+  "u_hb_coll_Q_body_core->L55_i": {
+   "bits": 2344,
+   "bit_mm": 6584.1,
+   "max_pin_um": 3167.0
+  },
+  "u_hb_coll_Q_body_core->L102_o": {
+   "bits": 2344,
+   "bit_mm": 6104.4,
+   "max_pin_um": 3008.2
+  },
+  "u_hb_coll_Q_body_core->L36_o": {
+   "bits": 2344,
+   "bit_mm": 5835.6,
+   "max_pin_um": 2893.5
+  },
+  "u_hb_coll_Q_vm->u_hcollrs_Q": {
+   "bits": 2048,
+   "bit_mm": 4621.4,
+   "max_pin_um": 2754.0
+  },
+  "u_hb_coll_Q_vm->L13_i": {
+   "bits": 569,
+   "bit_mm": 4322.7,
+   "max_pin_um": 7991.6
+  },
+  "u_hb_coll_Q_body_core->u_cij_Q": {
+   "bits": 1056,
+   "bit_mm": 3889.0,
+   "max_pin_um": 3777.8,
+   "station_chains": 2,
+   "station_bit_regs": 11616
+  },
+  "u_hb_coll_Q_body_core->L136_i": {
+   "bits": 2344,
+   "bit_mm": 2216.9,
+   "max_pin_um": 1980.2
+  },
+  "u_hb_coll_Q_body_core->L59_i": {
+   "bits": 2344,
+   "bit_mm": 1961.0,
+   "max_pin_um": 1871.0
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p0": {
+   "bits": 562,
+   "bit_mm": 1744.4,
+   "max_pin_um": 3168.5
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p1": {
+   "bits": 562,
+   "bit_mm": 1710.6,
+   "max_pin_um": 3108.3
+  },
+  "u_hb_coll_Q_body_core->u_hleaf_Q": {
+   "bits": 324,
+   "bit_mm": 1514.6,
+   "max_pin_um": 4911.1
+  },
+  "u_hb_coll_Q_body_core->L104_o": {
+   "bits": 2344,
+   "bit_mm": 1481.3,
+   "max_pin_um": 1453.1
+  },
+  "u_hb_coll_Q_body_core->L38_o": {
+   "bits": 2344,
+   "bit_mm": 1169.7,
+   "max_pin_um": 1320.2
+  },
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_edge": {
+   "bits": 6481,
+   "bit_mm": 1075.1,
+   "max_pin_um": 594.0,
+   "station_chains": 6,
+   "station_bit_regs": 289
+  },
+  "u_hb_coll_Q_edge->L126_i": {
+   "bits": 3681,
+   "bit_mm": 1037.4,
+   "max_pin_um": 599.2
+  },
+  "u_hb_coll_Q_edge->L101_o": {
+   "bits": 3681,
+   "bit_mm": 951.1,
+   "max_pin_um": 562.7
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p2": {
+   "bits": 562,
+   "bit_mm": 861.1,
+   "max_pin_um": 1596.7
+  },
+  "u_hb_coll_Q_edge->L52_i": {
+   "bits": 3681,
+   "bit_mm": 781.5,
+   "max_pin_um": 454.1
+  },
+  "u_hb_coll_Q_edge->L51_o": {
+   "bits": 3681,
+   "bit_mm": 742.9,
+   "max_pin_um": 390.8
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p3": {
+   "bits": 562,
+   "bit_mm": 704.6,
+   "max_pin_um": 1328.3
+  },
+  "u_hb_coll_Q_body_core->u_hcollrs_Q": {
+   "bits": 144,
+   "bit_mm": 325.2,
+   "max_pin_um": 2326.3
+  },
+  "u_hb_coll_Q_body_core->u_cic_Q": {
+   "bits": 162,
+   "bit_mm": 203.7,
+   "max_pin_um": 1337.0
+  },
+  "u_hb_coll_Q_vm->u_hb_coll_Q_body_core": {
+   "bits": 4334,
+   "bit_mm": 171.2,
+   "max_pin_um": 343.3
+  },
+  "u_hb_coll_Q_edge->u_hb_coll_Q_body_core": {
+   "bits": 4442,
+   "bit_mm": 170.6,
+   "max_pin_um": 227.3
+  },
+  "u_hb_coll_Q_body_core->u_tkx_tx_Q": {
+   "bits": 2488,
+   "bit_mm": 130.3,
+   "max_pin_um": 149.0
+  },
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_vm": {
+   "bits": 4285,
+   "bit_mm": 82.3,
+   "max_pin_um": 71.3
+  },
+  "u_hb_coll_Q_body_core->u_obs_Q": {
+   "bits": 50,
+   "bit_mm": 75.6,
+   "max_pin_um": 1518.3
+  },
+  "u_hb_coll_Q_body_core->L13_i": {
+   "bits": 3,
+   "bit_mm": 24.7,
+   "max_pin_um": 8244.4
+  },
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_ring_ag": {
+   "bits": 3,
+   "bit_mm": 21.7,
+   "max_pin_um": 7235.9,
+   "station_chains": 2,
+   "station_bit_regs": 69
+  },
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_reduce": {
+   "bits": 1126,
+   "bit_mm": 19.5,
+   "max_pin_um": 17.3
+  },
+  "u_hb_coll_Q_edge->u_fr_Q": {
+   "bits": 3,
+   "bit_mm": 16.2,
+   "max_pin_um": 5409.5
+  },
+  "u_hb_coll_Q_body_core->u_cxrc_Q_s": {
+   "bits": 4,
+   "bit_mm": 2.3,
+   "max_pin_um": 570.3
+  }
+ },
+ "master_internal": {
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_vm": {
+   "bits": 4285,
+   "max_pin_um": 71.3,
+   "station_chains": 0,
+   "station_bit_regs": 0
+  },
+  "u_hb_coll_Q_vm->u_hb_coll_Q_body_core": {
+   "bits": 4334,
+   "max_pin_um": 343.3,
+   "station_chains": 0,
+   "station_bit_regs": 0
+  },
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_reduce": {
+   "bits": 1126,
+   "max_pin_um": 17.3,
+   "station_chains": 0,
+   "station_bit_regs": 0
+  },
+  "u_hb_coll_Q_body_core->u_hb_coll_Q_edge": {
+   "bits": 6481,
+   "max_pin_um": 594.0,
+   "station_chains": 6,
+   "station_bit_regs": 289
+  },
+  "u_hb_coll_Q_edge->u_hb_coll_Q_body_core": {
+   "bits": 4442,
+   "max_pin_um": 227.3,
+   "station_chains": 0,
+   "station_bit_regs": 0
+  }
+ },
+ "vm_partner_box_um": {
+  "u_hb_coll_Q_body_core": {
+   "old": 1071.36,
+   "new": 17.28
+  },
+  "u_hb_coll_Q_reduce": {
+   "old": 838.08,
+   "new": 86.4
+  },
+  "u_hcollrs_Q": {
+   "old": 501.12,
+   "new": 2039.04
+  },
+  "u_hcollks_Q_p0": {
+   "old": 1477.44,
+   "new": 2453.76
+  },
+  "u_hcollks_Q_p1": {
+   "old": 1270.08,
+   "new": 2522.88
+  },
+  "u_hcollks_Q_p2": {
+   "old": 578.88,
+   "new": 1140.48
+  },
+  "u_hcollks_Q_p3": {
+   "old": 302.4,
+   "new": 1002.24
+  },
+  "L13_i window": {
+   "old": 7998.86,
+   "new": 7560.0
+  }
+ },
+ "box_gaps_um": {
+  "body-vm": 17.28,
+  "body-reduce": 17.28,
+  "body-edge": 17.28,
+  "body-TX": 17.28,
+  "vm-reduce": 86.4
+ },
+ "root": {
+  "L74_i_chains_removed": 17,
+  "L74_i_window_pt": [
+   0.0,
+   1202.644
+  ],
+  "window_to_RX_um": 112.32,
+  "RX_to_root_core_um": 17.28
+ },
+ "lane_latency": {
+  "before": {
+   "L12": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   },
+   "L13": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L74": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L74m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   }
+  },
+  "after": {
+   "L12": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   },
+   "L13": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L74": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "beats": 2,
+    "natural": 5,
+    "pad": 0,
+    "word_cycles": 6
+   },
+   "L74m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   }
+  }
+ }
+}

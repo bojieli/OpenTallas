@@ -1,0 +1,153 @@
+{
+ "release_ready": false,
+ "clock_tree_republish_required": true,
+ "data_cycle_delta": 0,
+ "boot_cycle_delta": 0,
+ "outline_delta_um": [
+  0,
+  0
+ ],
+ "qualification": "/srv/opentallas-scratch2/claude/codex-hbm-corridor-2149/oneclk_qualified",
+ "cuts": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_ring_ag",
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "generated_master": "ot_hfd_coll_q2_ring_ag_core__q3sync__oneclk",
+   "old_pins_file": "cores/ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28__q_hub_u_hb_coll_Q_ring_ag.json",
+   "pins_file": "cores/ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28__q_hub_u_hb_coll_Q_ring_ag__oneclk.json",
+   "old_clock_bits": 17,
+   "new_clock_bits": 1,
+   "selected_primary": "clk_ring[0]",
+   "clk_site": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 2.328,
+    "y": 0.019
+   },
+   "nonclock_bits": 2227,
+   "nonclock_sha256_before": "3dbe0041c0ddd28b3628e1ce7587576541dea536aa59af22c4cecdbfa09cbf57",
+   "nonclock_sha256_after": "3dbe0041c0ddd28b3628e1ce7587576541dea536aa59af22c4cecdbfa09cbf57"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_reduce",
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "generated_master": "ot_hfd_coll_q2_reduce_core__q3sync__oneclk",
+   "old_pins_file": "cores/ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28__q_hub_u_hb_coll_Q_reduce.json",
+   "pins_file": "cores/ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28__q_hub_u_hb_coll_Q_reduce__oneclk.json",
+   "old_clock_bits": 33,
+   "new_clock_bits": 1,
+   "selected_primary": "clk_reduce[0]",
+   "clk_site": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 122.52,
+    "y": 0.019
+   },
+   "nonclock_bits": 1142,
+   "nonclock_sha256_before": "8f281e768f8cfe6c46b96bb470753abb74067197cdbd3ed859fc68ce305fb47a",
+   "nonclock_sha256_after": "8f281e768f8cfe6c46b96bb470753abb74067197cdbd3ed859fc68ce305fb47a"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_body_core",
+   "module": "ot_hfd_coll_q3_body_core",
+   "generated_master": "ot_hfd_coll_q3_body_core__q3sync__oneclk",
+   "old_pins_file": "cores/ot_hfd_coll_q3_body_core__578.88x1054.08__q_hub_nw_u_hb_coll_Q_body_core.json",
+   "pins_file": "cores/ot_hfd_coll_q3_body_core__578.88x1054.08__q_hub_nw_u_hb_coll_Q_body_core__oneclk.json",
+   "old_clock_bits": 49,
+   "new_clock_bits": 1,
+   "selected_primary": "clk_control",
+   "clk_site": {
+    "name": "clk",
+    "layer": "M7",
+    "x": 324.0,
+    "y": 0.019
+   },
+   "nonclock_bits": 15983,
+   "nonclock_sha256_before": "72778e5af2ebd5aa2f2107b1bec98dcbf4f4ed9f01fae54bf574d5646ef62573",
+   "nonclock_sha256_after": "72778e5af2ebd5aa2f2107b1bec98dcbf4f4ed9f01fae54bf574d5646ef62573"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_edge",
+   "module": "ot_hfd_coll_q3_edge_core",
+   "generated_master": "ot_hfd_coll_q3_edge_core__q3sync__oneclk",
+   "old_pins_file": "cores/ot_hfd_coll_q3_edge_core__190.08x1054.08__q_hub_nw_u_hb_coll_Q_edge.json",
+   "pins_file": "cores/ot_hfd_coll_q3_edge_core__190.08x1054.08__q_hub_nw_u_hb_coll_Q_edge__oneclk.json",
+   "old_clock_bits": 16,
+   "new_clock_bits": 1,
+   "selected_primary": "arg_clk",
+   "clk_site": {
+    "name": "clk",
+    "layer": "M4",
+    "x": 190.061,
+    "y": 1048.344
+   },
+   "nonclock_bits": 8123,
+   "nonclock_sha256_before": "251d22a76592b0dd1a65232b3244523ca6e7e44fe358e36c4f49a4a30baa6197",
+   "nonclock_sha256_after": "251d22a76592b0dd1a65232b3244523ca6e7e44fe358e36c4f49a4a30baa6197"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_vm",
+   "module": "ot_hfd_coll_q3_vm_core",
+   "generated_master": "ot_hfd_coll_q3_vm_core__q3sync__oneclk",
+   "old_pins_file": "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__q_hub_nw_u_hb_coll_Q_vm.json",
+   "pins_file": "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__q_hub_nw_u_hb_coll_Q_vm__oneclk.json",
+   "old_clock_bits": 32,
+   "new_clock_bits": 1,
+   "selected_primary": "writer_clk_rgx_ctrl",
+   "clk_site": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 43.896,
+    "y": 0.019
+   },
+   "nonclock_bits": 9199,
+   "nonclock_sha256_before": "9c0a6f003a9494bb1ff7493f903c7e9ac007f184868ca9b4fd1ff166f6253851",
+   "nonclock_sha256_after": "9c0a6f003a9494bb1ff7493f903c7e9ac007f184868ca9b4fd1ff166f6253851"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_coll_Q_ring_ag",
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "generated_master": "ot_hfd_coll_q2_ring_ag_core__q3sync__oneclk",
+   "old_pins_file": "cores/ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28__q_hub_u_hb_coll_Q_ring_ag.json",
+   "pins_file": "cores/ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28__q_hub_u_hb_coll_Q_ring_ag__oneclk.json",
+   "old_clock_bits": 17,
+   "new_clock_bits": 1,
+   "selected_primary": "clk_ring[0]",
+   "clk_site": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 2.328,
+    "y": 0.019
+   },
+   "nonclock_bits": 2227,
+   "nonclock_sha256_before": "3dbe0041c0ddd28b3628e1ce7587576541dea536aa59af22c4cecdbfa09cbf57",
+   "nonclock_sha256_after": "3dbe0041c0ddd28b3628e1ce7587576541dea536aa59af22c4cecdbfa09cbf57"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_coll_Q_reduce",
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "generated_master": "ot_hfd_coll_q2_reduce_core__q3sync__oneclk",
+   "old_pins_file": "cores/ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28__q_hub_u_hb_coll_Q_reduce.json",
+   "pins_file": "cores/ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28__q_hub_u_hb_coll_Q_reduce__oneclk.json",
+   "old_clock_bits": 33,
+   "new_clock_bits": 1,
+   "selected_primary": "clk_reduce[0]",
+   "clk_site": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 122.52,
+    "y": 0.019
+   },
+   "nonclock_bits": 1142,
+   "nonclock_sha256_before": "8f281e768f8cfe6c46b96bb470753abb74067197cdbd3ed859fc68ce305fb47a",
+   "nonclock_sha256_after": "8f281e768f8cfe6c46b96bb470753abb74067197cdbd3ed859fc68ce305fb47a"
+  }
+ ]
+}

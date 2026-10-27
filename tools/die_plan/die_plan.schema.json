@@ -1679,6 +1679,16 @@
         "unused_pins_policy": {
          "type": "string"
         },
+        "halo_um": {
+         "type": "number",
+         "minimum": 0
+        },
+        "parent_instance": {
+         "type": "string"
+        },
+        "cut_instance": {
+         "type": "string"
+        },
         "pins": {
          "type": "array",
          "items": {

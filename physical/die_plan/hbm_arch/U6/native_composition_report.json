@@ -1,0 +1,892 @@
+{
+ "qualification": "NATIVE_HC_GEOMETRY_REPLAN_INPUT",
+ "hc_source_commit": "63c8dad953",
+ "base_sha256": "85d8f9aaaf9e6909cd0783e060e08fc534f4eec01bb5705d9aa351d19889ba5e",
+ "native_report_sha256": "6f387039f41ba3fcc07a6c5eeb33b9b27c07aac863bb207ae3ea37395b2b869a",
+ "non_hc_connectivity_unchanged": true,
+ "hc_connectivity_types": [
+  "q_b000",
+  "q_b001",
+  "q_b002",
+  "q_b003",
+  "q_b010",
+  "q_b011",
+  "q_b012",
+  "q_b013",
+  "q_hub_ne",
+  "q_hub_nw"
+ ],
+ "taps_added": [
+  {
+   "type": "q_b000",
+   "name": "u_hcb_Q0.ot_hbm_hc_bank128_pair0.clk",
+   "xy": [
+    151.128,
+    295.901
+   ],
+   "pin_xy": [
+    151.128,
+    285.101
+   ]
+  },
+  {
+   "type": "q_b000",
+   "name": "u_hcb_Q0.ot_hbm_hc_bank128_pair1.clk",
+   "xy": [
+    151.128,
+    667.421
+   ],
+   "pin_xy": [
+    151.128,
+    656.6210000000001
+   ]
+  },
+  {
+   "type": "q_b000",
+   "name": "u_hcb_Q0.ot_hbm_hc_bank128_pair2.clk",
+   "xy": [
+    151.128,
+    1038.941
+   ],
+   "pin_xy": [
+    151.128,
+    1028.141
+   ]
+  },
+  {
+   "type": "q_b000",
+   "name": "u_hcb_Q0.ot_hbm_hc_bank128_pair3.clk",
+   "xy": [
+    151.128,
+    1410.461
+   ],
+   "pin_xy": [
+    151.128,
+    1399.661
+   ]
+  },
+  {
+   "type": "q_b000",
+   "name": "u_hcb_Q0.ot_hbm_hc_bank128_pair4.clk",
+   "xy": [
+    151.128,
+    1781.981
+   ],
+   "pin_xy": [
+    151.128,
+    1771.181
+   ]
+  },
+  {
+   "type": "q_b000",
+   "name": "u_hcb_Q0.ot_hbm_hc_bank128_pair5.clk",
+   "xy": [
+    151.128,
+    2153.501
+   ],
+   "pin_xy": [
+    151.128,
+    2142.701
+   ]
+  },
+  {
+   "type": "q_b000",
+   "name": "u_hcb_Q0.ot_hbm_hc_bank128_pair6.clk",
+   "xy": [
+    151.128,
+    2525.021
+   ],
+   "pin_xy": [
+    151.128,
+    2514.221
+   ]
+  },
+  {
+   "type": "q_b000",
+   "name": "u_hcb_Q0.ot_hbm_hc_bank128_pair7.clk",
+   "xy": [
+    151.128,
+    2896.541
+   ],
+   "pin_xy": [
+    151.128,
+    2885.741
+   ]
+  },
+  {
+   "type": "q_b001",
+   "name": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.clk",
+   "xy": [
+    151.128,
+    295.901
+   ],
+   "pin_xy": [
+    151.128,
+    285.101
+   ]
+  },
+  {
+   "type": "q_b001",
+   "name": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.clk",
+   "xy": [
+    151.128,
+    667.421
+   ],
+   "pin_xy": [
+    151.128,
+    656.6210000000001
+   ]
+  },
+  {
+   "type": "q_b001",
+   "name": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.clk",
+   "xy": [
+    151.128,
+    1038.941
+   ],
+   "pin_xy": [
+    151.128,
+    1028.141
+   ]
+  },
+  {
+   "type": "q_b001",
+   "name": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.clk",
+   "xy": [
+    151.128,
+    1410.461
+   ],
+   "pin_xy": [
+    151.128,
+    1399.661
+   ]
+  },
+  {
+   "type": "q_b001",
+   "name": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.clk",
+   "xy": [
+    151.128,
+    1781.981
+   ],
+   "pin_xy": [
+    151.128,
+    1771.181
+   ]
+  },
+  {
+   "type": "q_b001",
+   "name": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.clk",
+   "xy": [
+    151.128,
+    2153.501
+   ],
+   "pin_xy": [
+    151.128,
+    2142.701
+   ]
+  },
+  {
+   "type": "q_b001",
+   "name": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.clk",
+   "xy": [
+    151.128,
+    2525.021
+   ],
+   "pin_xy": [
+    151.128,
+    2514.221
+   ]
+  },
+  {
+   "type": "q_b001",
+   "name": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.clk",
+   "xy": [
+    151.128,
+    2896.541
+   ],
+   "pin_xy": [
+    151.128,
+    2885.741
+   ]
+  },
+  {
+   "type": "q_b002",
+   "name": "u_hcb_Q2.ot_hbm_hc_bank128_pair0.clk",
+   "xy": [
+    151.128,
+    295.901
+   ],
+   "pin_xy": [
+    151.128,
+    285.101
+   ]
+  },
+  {
+   "type": "q_b002",
+   "name": "u_hcb_Q2.ot_hbm_hc_bank128_pair1.clk",
+   "xy": [
+    151.128,
+    667.421
+   ],
+   "pin_xy": [
+    151.128,
+    656.6210000000001
+   ]
+  },
+  {
+   "type": "q_b002",
+   "name": "u_hcb_Q2.ot_hbm_hc_bank128_pair2.clk",
+   "xy": [
+    151.128,
+    1038.941
+   ],
+   "pin_xy": [
+    151.128,
+    1028.141
+   ]
+  },
+  {
+   "type": "q_b002",
+   "name": "u_hcb_Q2.ot_hbm_hc_bank128_pair3.clk",
+   "xy": [
+    151.128,
+    1410.461
+   ],
+   "pin_xy": [
+    151.128,
+    1399.661
+   ]
+  },
+  {
+   "type": "q_b002",
+   "name": "u_hcb_Q2.ot_hbm_hc_bank128_pair4.clk",
+   "xy": [
+    151.128,
+    1781.981
+   ],
+   "pin_xy": [
+    151.128,
+    1771.181
+   ]
+  },
+  {
+   "type": "q_b002",
+   "name": "u_hcb_Q2.ot_hbm_hc_bank128_pair5.clk",
+   "xy": [
+    151.128,
+    2153.501
+   ],
+   "pin_xy": [
+    151.128,
+    2142.701
+   ]
+  },
+  {
+   "type": "q_b002",
+   "name": "u_hcb_Q2.ot_hbm_hc_bank128_pair6.clk",
+   "xy": [
+    151.128,
+    2525.021
+   ],
+   "pin_xy": [
+    151.128,
+    2514.221
+   ]
+  },
+  {
+   "type": "q_b002",
+   "name": "u_hcb_Q2.ot_hbm_hc_bank128_pair7.clk",
+   "xy": [
+    151.128,
+    2896.541
+   ],
+   "pin_xy": [
+    151.128,
+    2885.741
+   ]
+  },
+  {
+   "type": "q_b003",
+   "name": "u_hcb_Q3.ot_hbm_hc_bank128_pair0.clk",
+   "xy": [
+    151.128,
+    295.901
+   ],
+   "pin_xy": [
+    151.128,
+    285.101
+   ]
+  },
+  {
+   "type": "q_b003",
+   "name": "u_hcb_Q3.ot_hbm_hc_bank128_pair1.clk",
+   "xy": [
+    151.128,
+    667.421
+   ],
+   "pin_xy": [
+    151.128,
+    656.6210000000001
+   ]
+  },
+  {
+   "type": "q_b003",
+   "name": "u_hcb_Q3.ot_hbm_hc_bank128_pair2.clk",
+   "xy": [
+    151.128,
+    1038.941
+   ],
+   "pin_xy": [
+    151.128,
+    1028.141
+   ]
+  },
+  {
+   "type": "q_b003",
+   "name": "u_hcb_Q3.ot_hbm_hc_bank128_pair3.clk",
+   "xy": [
+    151.128,
+    1410.461
+   ],
+   "pin_xy": [
+    151.128,
+    1399.661
+   ]
+  },
+  {
+   "type": "q_b003",
+   "name": "u_hcb_Q3.ot_hbm_hc_bank128_pair4.clk",
+   "xy": [
+    151.128,
+    1781.981
+   ],
+   "pin_xy": [
+    151.128,
+    1771.181
+   ]
+  },
+  {
+   "type": "q_b003",
+   "name": "u_hcb_Q3.ot_hbm_hc_bank128_pair5.clk",
+   "xy": [
+    151.128,
+    2153.501
+   ],
+   "pin_xy": [
+    151.128,
+    2142.701
+   ]
+  },
+  {
+   "type": "q_b003",
+   "name": "u_hcb_Q3.ot_hbm_hc_bank128_pair6.clk",
+   "xy": [
+    151.128,
+    2525.021
+   ],
+   "pin_xy": [
+    151.128,
+    2514.221
+   ]
+  },
+  {
+   "type": "q_b003",
+   "name": "u_hcb_Q3.ot_hbm_hc_bank128_pair7.clk",
+   "xy": [
+    151.128,
+    2896.541
+   ],
+   "pin_xy": [
+    151.128,
+    2885.741
+   ]
+  },
+  {
+   "type": "q_b010",
+   "name": "u_hcb_Q7.ot_hbm_hc_bank128_pair0.clk",
+   "xy": [
+    151.128,
+    295.901
+   ],
+   "pin_xy": [
+    151.128,
+    285.101
+   ]
+  },
+  {
+   "type": "q_b010",
+   "name": "u_hcb_Q7.ot_hbm_hc_bank128_pair1.clk",
+   "xy": [
+    151.128,
+    667.421
+   ],
+   "pin_xy": [
+    151.128,
+    656.6210000000001
+   ]
+  },
+  {
+   "type": "q_b010",
+   "name": "u_hcb_Q7.ot_hbm_hc_bank128_pair2.clk",
+   "xy": [
+    151.128,
+    1038.941
+   ],
+   "pin_xy": [
+    151.128,
+    1028.141
+   ]
+  },
+  {
+   "type": "q_b010",
+   "name": "u_hcb_Q7.ot_hbm_hc_bank128_pair3.clk",
+   "xy": [
+    151.128,
+    1410.461
+   ],
+   "pin_xy": [
+    151.128,
+    1399.661
+   ]
+  },
+  {
+   "type": "q_b010",
+   "name": "u_hcb_Q7.ot_hbm_hc_bank128_pair4.clk",
+   "xy": [
+    151.128,
+    1781.981
+   ],
+   "pin_xy": [
+    151.128,
+    1771.181
+   ]
+  },
+  {
+   "type": "q_b010",
+   "name": "u_hcb_Q7.ot_hbm_hc_bank128_pair5.clk",
+   "xy": [
+    151.128,
+    2153.501
+   ],
+   "pin_xy": [
+    151.128,
+    2142.701
+   ]
+  },
+  {
+   "type": "q_b010",
+   "name": "u_hcb_Q7.ot_hbm_hc_bank128_pair6.clk",
+   "xy": [
+    151.128,
+    2525.021
+   ],
+   "pin_xy": [
+    151.128,
+    2514.221
+   ]
+  },
+  {
+   "type": "q_b010",
+   "name": "u_hcb_Q7.ot_hbm_hc_bank128_pair7.clk",
+   "xy": [
+    151.128,
+    2896.541
+   ],
+   "pin_xy": [
+    151.128,
+    2885.741
+   ]
+  },
+  {
+   "type": "q_b011",
+   "name": "u_hcb_Q6.ot_hbm_hc_bank128_pair0.clk",
+   "xy": [
+    151.128,
+    295.901
+   ],
+   "pin_xy": [
+    151.128,
+    285.101
+   ]
+  },
+  {
+   "type": "q_b011",
+   "name": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.clk",
+   "xy": [
+    151.128,
+    667.421
+   ],
+   "pin_xy": [
+    151.128,
+    656.6210000000001
+   ]
+  },
+  {
+   "type": "q_b011",
+   "name": "u_hcb_Q6.ot_hbm_hc_bank128_pair2.clk",
+   "xy": [
+    151.128,
+    1038.941
+   ],
+   "pin_xy": [
+    151.128,
+    1028.141
+   ]
+  },
+  {
+   "type": "q_b011",
+   "name": "u_hcb_Q6.ot_hbm_hc_bank128_pair3.clk",
+   "xy": [
+    151.128,
+    1410.461
+   ],
+   "pin_xy": [
+    151.128,
+    1399.661
+   ]
+  },
+  {
+   "type": "q_b011",
+   "name": "u_hcb_Q6.ot_hbm_hc_bank128_pair4.clk",
+   "xy": [
+    151.128,
+    1781.981
+   ],
+   "pin_xy": [
+    151.128,
+    1771.181
+   ]
+  },
+  {
+   "type": "q_b011",
+   "name": "u_hcb_Q6.ot_hbm_hc_bank128_pair5.clk",
+   "xy": [
+    151.128,
+    2153.501
+   ],
+   "pin_xy": [
+    151.128,
+    2142.701
+   ]
+  },
+  {
+   "type": "q_b011",
+   "name": "u_hcb_Q6.ot_hbm_hc_bank128_pair6.clk",
+   "xy": [
+    151.128,
+    2525.021
+   ],
+   "pin_xy": [
+    151.128,
+    2514.221
+   ]
+  },
+  {
+   "type": "q_b011",
+   "name": "u_hcb_Q6.ot_hbm_hc_bank128_pair7.clk",
+   "xy": [
+    151.128,
+    2896.541
+   ],
+   "pin_xy": [
+    151.128,
+    2885.741
+   ]
+  },
+  {
+   "type": "q_b012",
+   "name": "u_hcb_Q5.ot_hbm_hc_bank128_pair0.clk",
+   "xy": [
+    151.128,
+    295.901
+   ],
+   "pin_xy": [
+    151.128,
+    285.101
+   ]
+  },
+  {
+   "type": "q_b012",
+   "name": "u_hcb_Q5.ot_hbm_hc_bank128_pair1.clk",
+   "xy": [
+    151.128,
+    667.421
+   ],
+   "pin_xy": [
+    151.128,
+    656.6210000000001
+   ]
+  },
+  {
+   "type": "q_b012",
+   "name": "u_hcb_Q5.ot_hbm_hc_bank128_pair2.clk",
+   "xy": [
+    151.128,
+    1038.941
+   ],
+   "pin_xy": [
+    151.128,
+    1028.141
+   ]
+  },
+  {
+   "type": "q_b012",
+   "name": "u_hcb_Q5.ot_hbm_hc_bank128_pair3.clk",
+   "xy": [
+    151.128,
+    1410.461
+   ],
+   "pin_xy": [
+    151.128,
+    1399.661
+   ]
+  },
+  {
+   "type": "q_b012",
+   "name": "u_hcb_Q5.ot_hbm_hc_bank128_pair4.clk",
+   "xy": [
+    151.128,
+    1781.981
+   ],
+   "pin_xy": [
+    151.128,
+    1771.181
+   ]
+  },
+  {
+   "type": "q_b012",
+   "name": "u_hcb_Q5.ot_hbm_hc_bank128_pair5.clk",
+   "xy": [
+    151.128,
+    2153.501
+   ],
+   "pin_xy": [
+    151.128,
+    2142.701
+   ]
+  },
+  {
+   "type": "q_b012",
+   "name": "u_hcb_Q5.ot_hbm_hc_bank128_pair6.clk",
+   "xy": [
+    151.128,
+    2525.021
+   ],
+   "pin_xy": [
+    151.128,
+    2514.221
+   ]
+  },
+  {
+   "type": "q_b012",
+   "name": "u_hcb_Q5.ot_hbm_hc_bank128_pair7.clk",
+   "xy": [
+    151.128,
+    2896.541
+   ],
+   "pin_xy": [
+    151.128,
+    2885.741
+   ]
+  },
+  {
+   "type": "q_b013",
+   "name": "u_hcb_Q4.ot_hbm_hc_bank128_pair0.clk",
+   "xy": [
+    151.128,
+    295.901
+   ],
+   "pin_xy": [
+    151.128,
+    285.101
+   ]
+  },
+  {
+   "type": "q_b013",
+   "name": "u_hcb_Q4.ot_hbm_hc_bank128_pair1.clk",
+   "xy": [
+    151.128,
+    667.421
+   ],
+   "pin_xy": [
+    151.128,
+    656.6210000000001
+   ]
+  },
+  {
+   "type": "q_b013",
+   "name": "u_hcb_Q4.ot_hbm_hc_bank128_pair2.clk",
+   "xy": [
+    151.128,
+    1038.941
+   ],
+   "pin_xy": [
+    151.128,
+    1028.141
+   ]
+  },
+  {
+   "type": "q_b013",
+   "name": "u_hcb_Q4.ot_hbm_hc_bank128_pair3.clk",
+   "xy": [
+    151.128,
+    1410.461
+   ],
+   "pin_xy": [
+    151.128,
+    1399.661
+   ]
+  },
+  {
+   "type": "q_b013",
+   "name": "u_hcb_Q4.ot_hbm_hc_bank128_pair4.clk",
+   "xy": [
+    151.128,
+    1781.981
+   ],
+   "pin_xy": [
+    151.128,
+    1771.181
+   ]
+  },
+  {
+   "type": "q_b013",
+   "name": "u_hcb_Q4.ot_hbm_hc_bank128_pair5.clk",
+   "xy": [
+    151.128,
+    2153.501
+   ],
+   "pin_xy": [
+    151.128,
+    2142.701
+   ]
+  },
+  {
+   "type": "q_b013",
+   "name": "u_hcb_Q4.ot_hbm_hc_bank128_pair6.clk",
+   "xy": [
+    151.128,
+    2525.021
+   ],
+   "pin_xy": [
+    151.128,
+    2514.221
+   ]
+  },
+  {
+   "type": "q_b013",
+   "name": "u_hcb_Q4.ot_hbm_hc_bank128_pair7.clk",
+   "xy": [
+    151.128,
+    2896.541
+   ],
+   "pin_xy": [
+    151.128,
+    2885.741
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.clk",
+   "xy": [
+    3879.336,
+    652.301
+   ],
+   "pin_xy": [
+    3998.136,
+    652.3009999999999
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1.clk",
+   "xy": [
+    4356.696,
+    652.301
+   ],
+   "pin_xy": [
+    4235.736000000001,
+    652.3009999999999
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2.clk",
+   "xy": [
+    3998.136,
+    900.701
+   ],
+   "pin_xy": [
+    3998.136,
+    889.9010000000001
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.clk",
+   "xy": [
+    4235.736,
+    900.701
+   ],
+   "pin_xy": [
+    4235.736000000001,
+    889.9010000000001
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.clk",
+   "xy": [
+    3879.336,
+    652.301
+   ],
+   "pin_xy": [
+    3998.136,
+    652.3009999999999
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1.clk",
+   "xy": [
+    4356.696,
+    652.301
+   ],
+   "pin_xy": [
+    4235.736000000001,
+    652.3009999999999
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2.clk",
+   "xy": [
+    3998.136,
+    900.701
+   ],
+   "pin_xy": [
+    3998.136,
+    889.9010000000001
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.clk",
+   "xy": [
+    4235.736,
+    900.701
+   ],
+   "pin_xy": [
+    4235.736000000001,
+    889.9010000000001
+   ]
+  }
+ ],
+ "taps_removed": [],
+ "pending": [
+  "wider face/FT replan",
+  "new-core internal/reset replan",
+  "real M5 core views",
+  "infrastructure-first PG/clock/reset and die GRT/STA/token"
+ ]
+}

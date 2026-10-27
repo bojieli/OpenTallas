@@ -1,0 +1,19 @@
+q_mca  | contents [('u_ft', 0)] | ft_slots 0 buses 0
+q_mcb  | contents [('u_refcfg_Q', 1652), ('u_sfault_Q', 1188)] | ft_slots 3 buses 3
+q_spu0  | contents [('u_ft', 0)] | ft_slots 13 buses 0
+q_spt1  | contents [('u_ft', 0)] | ft_slots 6 buses 0
+vsN5  | contents [('u_ft', 0)] | ft_slots 6 buses 0
+q_spb1  | contents [('u_ft', 0)] | ft_slots 2 buses 0
+PHY_N  | contents [('u_phy_Q', 0)] | ft_slots 0 buses 12
+q_b010 PATH-HBM-R11 hub-row growth: outline +604.8 um in y (N-face pins follow the N edge; cores unchanged; the strip is in-partition street with bays) | HBM-MU-QUAD-3 spanning die growth: +794.88 um at local y 3520.8 (content above moves; strip = street with pushdown stations) | contents [('u_hcb_Q7', 793307)] | ft_slots 10 buses 2
+q_b001 PATH-HBM-R11 hub-row growth: outline +604.8 um in y (N-face pins follow the N edge; cores unchanged; the strip is in-partition street with bays) | HBM-MU-QUAD-3 spanning die growth: +794.88 um at local y 3520.8 (content above moves; strip = street with pushdown stations) | contents [('u_hcb_Q1', 793369)] | ft_slots 9 buses 3
+q_hub_nw soft-on-foreign-hard 0 [] | soft-soft 0 []
+q_hub_ne soft-on-foreign-hard 0 [] | soft-soft 0 []
+root soft-on-foreign-hard 0 [] | soft-soft 0 []
+q_su31 soft-on-foreign-hard 0 [] | soft-soft 0 []
+q_su01 soft-on-foreign-hard 0 [] | soft-soft 0 []
+q_su00 soft-on-foreign-hard 0 [] | soft-soft 0 []
+q_su11 st [] ft []
+q_hub_nw st [] ft []
+root st [] ft []
+q_su21 st [] ft []

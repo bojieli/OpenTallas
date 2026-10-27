@@ -1,0 +1,30 @@
+{
+ "src": "/srv/opentallas-scratch2/claude/path-hbm/g0cfix_1026/plan_b1n4_s1/die_plan.json",
+ "types": {
+  "q_b100": {
+   "L149x4": {
+    "moved": 2,
+    "rerouted_bits": 0,
+    "max_move_um": 8.64,
+    "max_leg_um": 251.373,
+    "stations": 3
+   },
+   "L100x1": {
+    "moved": 115,
+    "rerouted_bits": 23,
+    "max_move_um": 429.84,
+    "max_leg_um": 306.18,
+    "stations": 6
+   },
+   "L5x2": {
+    "moved": 6308,
+    "rerouted_bits": 0,
+    "max_move_um": 17.28,
+    "max_leg_um": 276.813,
+    "stations": 4
+   }
+  }
+ },
+ "lane_cycle_delta": {},
+ "scope": "geometry proposal; not a route receipt"
+}

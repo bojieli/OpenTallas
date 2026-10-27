@@ -1,0 +1,20 @@
+{
+ "renamed": 32,
+ "straps_removed": 32,
+ "pins_removed": {
+  "cores/ot_hgi_coll_tkm_tp192_tile_core__idpin__chain.json": {
+   "removed": 6,
+   "pins": 1383,
+   "sha256": "dc20e09f88dae70a63a7e89129b0cef813601f9b9cea984e2aa920eb5bdf1695"
+  },
+  "cores/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__chain.json": {
+   "removed": 6,
+   "pins": 694,
+   "sha256": "ec86e6a8f5d1078c3eb202ec9aa89f9b290e6b9fc822072a5ae39ff90c47713a"
+  }
+ },
+ "budget_owner": 32,
+ "src": "/srv/opentallas-scratch2/claude/path-hbm/stack6_1025/p1",
+ "src_plan_sha256": "cdeee2157f170985aefa5b5a946ec77e6a65be6bf2072a19e098c6238667764a",
+ "out_plan_sha256": "b4b844b978607532cfb215cecd7fc53bed5c2dbd3b872c93ef7e1654cb567a49"
+}

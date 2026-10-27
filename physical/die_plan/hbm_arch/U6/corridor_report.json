@@ -1,0 +1,339 @@
+{
+ "source": "/srv/opentallas-scratch/claude/codex-hbm-plan-2149/base",
+ "types": {
+  "q_b001": {
+   "prior_core_band_intersections": 4,
+   "moves": [
+    {
+     "inst": "u_hcb_Q1_lanes0_2",
+     "from": [
+      112.32,
+      561.6
+     ],
+     "to": [
+      112.32,
+      8.64
+     ]
+    },
+    {
+     "inst": "u_hcb_Q1_lanes3_5",
+     "from": [
+      112.32,
+      1494.72
+     ],
+     "to": [
+      112.32,
+      1598.4
+     ]
+    },
+    {
+     "inst": "u_hcb_Q1_lanes6_7_bank",
+     "from": [
+      8.64,
+      924.48
+     ],
+     "to": [
+      8.64,
+      362.88
+     ]
+    }
+   ],
+   "after_core_band_intersections": 0
+  },
+  "q_b011": {
+   "prior_core_band_intersections": 6,
+   "moves": [
+    {
+     "inst": "u_hcb_Q6_lanes0_2",
+     "from": [
+      8.64,
+      751.68
+     ],
+     "to": [
+      8.64,
+      561.6
+     ]
+    },
+    {
+     "inst": "u_hcb_Q6_lanes3_5",
+     "from": [
+      198.72,
+      751.68
+     ],
+     "to": [
+      198.72,
+      561.6
+     ]
+    },
+    {
+     "inst": "u_hcb_Q6_lanes6_7_bank",
+     "from": [
+      8.64,
+      1114.56
+     ],
+     "to": [
+      8.64,
+      1477.44
+     ]
+    }
+   ],
+   "after_core_band_intersections": 0
+  },
+  "q_spt0": {
+   "bands": [
+    {
+     "dir": "NS",
+     "span_um": [
+      380.16,
+      1071.36
+     ],
+     "layers": [
+      "M5",
+      "M7"
+     ],
+     "die_share": 1.0,
+     "note": "HBM corridor delta: core-free lane capacity, no obstruction removal"
+    },
+    {
+     "dir": "EW",
+     "span_um": [
+      302.4,
+      457.92
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "die_share": 1.0,
+     "note": "HBM corridor delta: core-free lane capacity, no obstruction removal"
+    }
+   ],
+   "core_intersections": 0
+  },
+  "q_spu0": {
+   "bands": [
+    {
+     "dir": "NS",
+     "span_um": [
+      380.16,
+      1071.36
+     ],
+     "layers": [
+      "M5",
+      "M7"
+     ],
+     "die_share": 1.0,
+     "note": "HBM corridor delta: core-free lane capacity, no obstruction removal"
+    },
+    {
+     "dir": "EW",
+     "span_um": [
+      302.4,
+      457.92
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "die_share": 1.0,
+     "note": "HBM corridor delta: core-free lane capacity, no obstruction removal"
+    }
+   ],
+   "core_intersections": 0
+  }
+ },
+ "lane_cycle_delta": {},
+ "not_release_ready": true,
+ "unproven_face_budgets": {
+  "q_b000": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b001": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b002": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b003": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b010": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b011": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b012": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b013": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b100": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b101": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b102": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b103": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b110": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b111": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_spu1": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_su20": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_su21": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_su30": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_su31": {
+   "E": 12.0,
+   "W": 12.0
+  },
+  "q_b101_nw": {
+   "E": 12.0,
+   "W": 12.0
+  }
+ },
+ "station_rebuild": {
+  "log": [
+   "internal stations: 387 core links over 360 um, 1462 stations"
+  ],
+  "failures": []
+ },
+ "internal_cycle_delta": {
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_3_u_lg_lv_i|u_hcb_Q1_lanes6_7_bank": 2,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_3_u_lg_s_i|u_hcb_Q1_lanes6_7_bank": 3,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_3_u_lg_w_i|u_hcb_Q1_lanes6_7_bank": 3,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_3_u_lg_x_i|u_hcb_Q1_lanes6_7_bank": 2,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_4_u_lg_lv_i|u_hcb_Q1_lanes6_7_bank": 2,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_4_u_lg_s_i|u_hcb_Q1_lanes6_7_bank": 3,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_4_u_lg_w_i|u_hcb_Q1_lanes6_7_bank": 3,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_4_u_lg_x_i|u_hcb_Q1_lanes6_7_bank": 2,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_5_u_lg_lv_i|u_hcb_Q1_lanes6_7_bank": 2,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_5_u_lg_s_i|u_hcb_Q1_lanes6_7_bank": 3,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_5_u_lg_w_i|u_hcb_Q1_lanes6_7_bank": 4,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_5_u_lg_x_i|u_hcb_Q1_lanes6_7_bank": 3,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_3_u_lg_lf|u_hcb_Q1_lanes6_7_bank": 2,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_3_u_lg_y|u_hcb_Q1_lanes6_7_bank": 4,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_4_u_lg_lf|u_hcb_Q1_lanes6_7_bank": 2,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_4_u_lg_y|u_hcb_Q1_lanes6_7_bank": 4,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_5_u_lg_lf|u_hcb_Q1_lanes6_7_bank": 2,
+  "u_hcb_Q1_lanes3_5.g_lg_g_grp_5_u_lg_y|u_hcb_Q1_lanes6_7_bank": 4,
+  "bus:L107_i": 6,
+  "bus:L14_i": 4,
+  "bus:L108_i": 6,
+  "bus:L15_o": 5,
+  "bus:L71_i": 6,
+  "bus:L94_o": 4,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_3_u_lg_lf|u_hcb_Q1_lanes3_5": 2,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_3_u_lg_y|u_hcb_Q1_lanes3_5": 3,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_lf|u_hcb_Q1_lanes3_5": 2,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_y|u_hcb_Q1_lanes3_5": 3,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_lf|u_hcb_Q1_lanes3_5": 2,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_y|u_hcb_Q1_lanes3_5": 3,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_3_u_lg_lv_i|u_hcb_Q1_lanes3_5": 2,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_3_u_lg_s_i|u_hcb_Q1_lanes3_5": 3,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_3_u_lg_w_i|u_hcb_Q1_lanes3_5": 3,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_3_u_lg_x_i|u_hcb_Q1_lanes3_5": 2,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_lv_i|u_hcb_Q1_lanes3_5": 2,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_s_i|u_hcb_Q1_lanes3_5": 2,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_w_i|u_hcb_Q1_lanes3_5": 2,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_x_i|u_hcb_Q1_lanes3_5": 2,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_lv_i|u_hcb_Q1_lanes3_5": 2,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_s_i|u_hcb_Q1_lanes3_5": 3,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_w_i|u_hcb_Q1_lanes3_5": 3,
+  "u_hcb_Q1_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_x_i|u_hcb_Q1_lanes3_5": 2,
+  "bus:L109_o": 1,
+  "bus:L17_i": 1,
+  "bus:L72_o": 1,
+  "bus:L95_i": 1,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_0_u_lg_gov_i|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_0_u_lg_lv_i|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_0_u_lg_ss_i|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_0_u_lg_w_i|u_hcb_Q6_lanes6_7_bank": 3,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_0_u_lg_x_i|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_1_u_lg_lv_i|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_1_u_lg_w_i|u_hcb_Q6_lanes6_7_bank": 3,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_1_u_lg_x_i|u_hcb_Q6_lanes6_7_bank": 3,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_2_u_lg_lv_i|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_2_u_lg_w_i|u_hcb_Q6_lanes6_7_bank": 3,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_2_u_lg_x_i|u_hcb_Q6_lanes6_7_bank": 3,
+  "bus:L11_o": 2,
+  "bus:L145_i": 2,
+  "bus:L86_o": 1,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_0_u_lg_lf|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_1_u_lg_lf|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes0_2.g_lg_g_grp_2_u_lg_lf|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_3_u_lg_lv_i|u_hcb_Q6_lanes6_7_bank": 1,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_3_u_lg_w_i|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_3_u_lg_x_i|u_hcb_Q6_lanes6_7_bank": 1,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_4_u_lg_lv_i|u_hcb_Q6_lanes6_7_bank": 1,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_4_u_lg_w_i|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_4_u_lg_x_i|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_5_u_lg_lv_i|u_hcb_Q6_lanes6_7_bank": 1,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_5_u_lg_w_i|u_hcb_Q6_lanes6_7_bank": 3,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_5_u_lg_x_i|u_hcb_Q6_lanes6_7_bank": 2,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_3_u_lg_lf|u_hcb_Q6_lanes6_7_bank": 1,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_4_u_lg_lf|u_hcb_Q6_lanes6_7_bank": 1,
+  "u_hcb_Q6_lanes3_5.g_lg_g_grp_5_u_lg_lf|u_hcb_Q6_lanes6_7_bank": 1,
+  "bus:L43_i": -1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_0_u_lg_lf|u_hcb_Q6_lanes0_2": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_1_u_lg_lf|u_hcb_Q6_lanes0_2": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_2_u_lg_lf|u_hcb_Q6_lanes0_2": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_3_u_lg_lf|u_hcb_Q6_lanes3_5": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_lf|u_hcb_Q6_lanes3_5": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_lf|u_hcb_Q6_lanes3_5": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_0_u_lg_gov_i|u_hcb_Q6_lanes0_2": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_0_u_lg_lv_i|u_hcb_Q6_lanes0_2": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_0_u_lg_ss_i|u_hcb_Q6_lanes0_2": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_0_u_lg_w_i|u_hcb_Q6_lanes0_2": 2,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_0_u_lg_x_i|u_hcb_Q6_lanes0_2": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_1_u_lg_lv_i|u_hcb_Q6_lanes0_2": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_1_u_lg_w_i|u_hcb_Q6_lanes0_2": 2,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_1_u_lg_x_i|u_hcb_Q6_lanes0_2": 2,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_2_u_lg_lv_i|u_hcb_Q6_lanes0_2": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_2_u_lg_w_i|u_hcb_Q6_lanes0_2": 2,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_2_u_lg_x_i|u_hcb_Q6_lanes0_2": 2,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_3_u_lg_lv_i|u_hcb_Q6_lanes3_5": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_3_u_lg_w_i|u_hcb_Q6_lanes3_5": 2,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_3_u_lg_x_i|u_hcb_Q6_lanes3_5": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_lv_i|u_hcb_Q6_lanes3_5": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_w_i|u_hcb_Q6_lanes3_5": 2,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_x_i|u_hcb_Q6_lanes3_5": 2,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_lv_i|u_hcb_Q6_lanes3_5": 1,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_w_i|u_hcb_Q6_lanes3_5": 2,
+  "u_hcb_Q6_lanes6_7_bank.x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_x_i|u_hcb_Q6_lanes3_5": 2
+ }
+}

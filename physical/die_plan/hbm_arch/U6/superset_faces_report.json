@@ -1,0 +1,3179 @@
+{
+ "orient": [],
+ "orient_rejected": [
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_ctl",
+   "before": "MY",
+   "after": "R0",
+   "type_err": [
+    14,
+    5
+   ],
+   "why": "core has internal stations / clock taps: flip would re-site latency-bearing links"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "before": "R0",
+   "after": "MX",
+   "type_err": [
+    33,
+    25
+   ],
+   "why": "core has internal stations / clock taps: flip would re-site latency-bearing links"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hcollgi_Q",
+   "before": "R180",
+   "after": "MX",
+   "type_err": [
+    17,
+    16
+   ],
+   "why": "core has internal stations / clock taps: flip would re-site latency-bearing links"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "before": "R0",
+   "after": "MX",
+   "type_err": [
+    17,
+    10
+   ],
+   "why": "core has internal stations / clock taps: flip would re-site latency-bearing links"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hcollgi_Q",
+   "before": "R180",
+   "after": "MX",
+   "type_err": [
+    16,
+    15
+   ],
+   "why": "core has internal stations / clock taps: flip would re-site latency-bearing links"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "before": "R0",
+   "after": "MX",
+   "type_err": [
+    16,
+    9
+   ],
+   "why": "core has internal stations / clock taps: flip would re-site latency-bearing links"
+  }
+ ],
+ "superset": [
+  {
+   "master": "ot_hbm_hc_bank128_pair_core",
+   "pins_file": "cores/ot_hbm_hc_bank128_pair_core_pins.json",
+   "port": "weight_we0",
+   "core_face": "E",
+   "copy": "weight_we0__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_hc_bank128_pair_core",
+   "pins_file": "cores/ot_hbm_hc_bank128_pair_core_pins.json",
+   "port": "weight_we1",
+   "core_face": "E",
+   "copy": "weight_we1__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_hc_bank128_pair_core",
+   "pins_file": "cores/ot_hbm_hc_bank128_pair_core_pins.json",
+   "port": "write_addr",
+   "core_face": "E",
+   "copy": "write_addr__E",
+   "pins": 10,
+   "stride_tracks": 8,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_hc_bank128_pair_core",
+   "pins_file": "cores/ot_hbm_hc_bank128_pair_core_pins.json",
+   "port": "x_write",
+   "core_face": "E",
+   "copy": "x_write__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__ctl",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__q_b113_u_sfucore_Q_ctl.json",
+   "port": "fault",
+   "core_face": "S",
+   "copy": "fault__S",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__ctl",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__q_b113_u_sfucore_Q_ctl.json",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll",
+   "core_face": "S",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll__S",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__ctl",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__q_b113_u_sfucore_Q_ctl.json",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault",
+   "core_face": "S",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault__S",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__ctl",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__q_b113_u_sfucore_Q_ctl.json",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v",
+   "core_face": "S",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v__S",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__ctl",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__q_b113_u_sfucore_Q_ctl.json",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x",
+   "core_face": "S",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x__S",
+   "pins": 32,
+   "stride_tracks": 8,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__ctl",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__q_b113_u_sfucore_Q_ctl.json",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll",
+   "core_face": "W",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll__W",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__ctl",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__q_b113_u_sfucore_Q_ctl.json",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault",
+   "core_face": "W",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault__W",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__ctl",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__q_b113_u_sfucore_Q_ctl.json",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v",
+   "core_face": "W",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v__W",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__ctl",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__q_b113_u_sfucore_Q_ctl.json",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x",
+   "core_face": "W",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x__W",
+   "pins": 32,
+   "stride_tracks": 8,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__opstore_a",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__q_b113_u_sfucore_Q_opstore_a.json",
+   "port": "x_u_core_u_vm_scalar_data",
+   "core_face": "W",
+   "copy": "x_u_core_u_vm_scalar_data__W",
+   "pins": 128,
+   "stride_tracks": 4,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__opstore_a",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__q_b113_u_sfucore_Q_opstore_a.json",
+   "port": "x_u_core_u_vm_scalar_load",
+   "core_face": "W",
+   "copy": "x_u_core_u_vm_scalar_load__W",
+   "pins": 4,
+   "stride_tracks": 4,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__opstore_a",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__q_b113_u_sfucore_Q_opstore_a.json",
+   "port": "x_u_core_u_vm_scalar_load_addr",
+   "core_face": "W",
+   "copy": "x_u_core_u_vm_scalar_load_addr__W",
+   "pins": 96,
+   "stride_tracks": 4,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__opstore_a",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__q_b113_u_sfucore_Q_opstore_a.json",
+   "port": "x_u_core_u_vm_stage_group",
+   "core_face": "W",
+   "copy": "x_u_core_u_vm_stage_group__W",
+   "pins": 16,
+   "stride_tracks": 4,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3__opstore_a",
+   "pins_file": "cores/ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__q_b113_u_sfucore_Q_opstore_a.json",
+   "port": "x_u_core_u_vm_stage_v",
+   "core_face": "W",
+   "copy": "x_u_core_u_vm_stage_v__W",
+   "pins": 8,
+   "stride_tracks": 4,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_static_cfg_collar_idx256r",
+   "pins_file": "cores/ot_hbm_static_cfg_collar_idx256r__108x108__root_u_col_idx.json",
+   "port": "c_done",
+   "core_face": "W",
+   "copy": "c_done__W",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_argmax_static_sw_vm_r2",
+   "pins_file": "cores/ot_hbm_argmax_static_sw_vm_r2__118.8x118.8__root_u_hb_argmax.json",
+   "port": "vm_rq",
+   "core_face": "S",
+   "copy": "vm_rq__S",
+   "pins": 136,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_argmax_static_sw_vm_r2",
+   "pins_file": "cores/ot_hbm_argmax_static_sw_vm_r2__118.8x118.8__root_u_hb_argmax.json",
+   "port": "vm_rr",
+   "core_face": "S",
+   "copy": "vm_rr__S",
+   "pins": 264,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "pins_file": "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__root_u_hb_idx__ctl.json",
+   "port": "index_rr",
+   "core_face": "S",
+   "copy": "index_rr__S",
+   "pins": 2056,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "pins_file": "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__root_u_hb_idx__ctl.json",
+   "port": "ingest_v",
+   "core_face": "N",
+   "copy": "ingest_v__N",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "pins_file": "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__root_u_hb_idx__ctl.json",
+   "port": "lf",
+   "core_face": "N",
+   "copy": "lf__N",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "pins_file": "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__root_u_hb_idx__ctl.json",
+   "port": "link_clear",
+   "core_face": "N",
+   "copy": "link_clear__N",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "pins_file": "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__root_u_hb_idx__ctl.json",
+   "port": "link_emit",
+   "core_face": "N",
+   "copy": "link_emit__N",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "pins_file": "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__root_u_hb_idx__ctl.json",
+   "port": "link_flush",
+   "core_face": "N",
+   "copy": "link_flush__N",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "pins_file": "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__root_u_hb_idx__ctl.json",
+   "port": "link_group",
+   "core_face": "N",
+   "copy": "link_group__N",
+   "pins": 4,
+   "stride_tracks": 5,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "pins_file": "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__root_u_hb_idx__ctl.json",
+   "port": "vm_rr",
+   "core_face": "N",
+   "copy": "vm_rr__N",
+   "pins": 2056,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "fault",
+   "core_face": "E",
+   "copy": "fault__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "irq",
+   "core_face": "E",
+   "copy": "irq__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "land_fault",
+   "core_face": "E",
+   "copy": "land_fault__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "link_fault",
+   "core_face": "E",
+   "copy": "link_fault__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "protocol_fault",
+   "core_face": "E",
+   "copy": "protocol_fault__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_araddr",
+   "core_face": "E",
+   "copy": "s_araddr__E",
+   "pins": 12,
+   "stride_tracks": 82,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_arready",
+   "core_face": "E",
+   "copy": "s_arready__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_arvalid",
+   "core_face": "E",
+   "copy": "s_arvalid__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_awaddr",
+   "core_face": "E",
+   "copy": "s_awaddr__E",
+   "pins": 12,
+   "stride_tracks": 82,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_awready",
+   "core_face": "E",
+   "copy": "s_awready__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_awvalid",
+   "core_face": "E",
+   "copy": "s_awvalid__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_bready",
+   "core_face": "E",
+   "copy": "s_bready__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_bresp",
+   "core_face": "E",
+   "copy": "s_bresp__E",
+   "pins": 2,
+   "stride_tracks": 83,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_bvalid",
+   "core_face": "E",
+   "copy": "s_bvalid__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_rdata",
+   "core_face": "E",
+   "copy": "s_rdata__E",
+   "pins": 32,
+   "stride_tracks": 82,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_rready",
+   "core_face": "E",
+   "copy": "s_rready__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_rvalid",
+   "core_face": "E",
+   "copy": "s_rvalid__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_wdata",
+   "core_face": "E",
+   "copy": "s_wdata__E",
+   "pins": 32,
+   "stride_tracks": 82,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_wready",
+   "core_face": "E",
+   "copy": "s_wready__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_wstrb",
+   "core_face": "E",
+   "copy": "s_wstrb__E",
+   "pins": 4,
+   "stride_tracks": 82,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "s_wvalid",
+   "core_face": "E",
+   "copy": "s_wvalid__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_host_cp_rxs",
+   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json",
+   "port": "seq_fault",
+   "core_face": "E",
+   "copy": "seq_fault__E",
+   "pins": 1,
+   "stride_tracks": 2,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_ij_q",
+   "pins_file": "cores/ot_hbm_su_static_cxport_ij_q__250.56x449.28__q_hub_u_cxij_Q_q.json",
+   "port": "ob1",
+   "core_face": "S",
+   "copy": "ob1__S",
+   "pins": 1024,
+   "stride_tracks": 5,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hgi_qw_dec",
+   "pins_file": "cores/ot_hgi_qw_dec__260x260__q_hub_u_hb_quant_Q__u_dec.json",
+   "port": "x",
+   "core_face": "E",
+   "copy": "x__E",
+   "pins": 1024,
+   "stride_tracks": 5,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hgi_coll_gq_issue",
+   "pins_file": "cores/ot_hgi_coll_gq_issue__237.6x237.6__q_hub_u_hcollgi_Q.json",
+   "port": "vm_rr_lo",
+   "core_face": "S",
+   "copy": "vm_rr_lo__S",
+   "pins": 1028,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x388.8__q_hub_u_smw_Q.json",
+   "port": "wq_t1",
+   "core_face": "W",
+   "copy": "wq_t1__W",
+   "pins": 281,
+   "stride_tracks": 9,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x388.8__q_hub_u_smw_Q.json",
+   "port": "wq_t3",
+   "core_face": "W",
+   "copy": "wq_t3__W",
+   "pins": 281,
+   "stride_tracks": 9,
+   "layer": "M4"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_k_addr",
+   "core_face": "N",
+   "copy": "c_k_addr__N",
+   "pins": 120,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_k_len",
+   "core_face": "N",
+   "copy": "c_k_len__N",
+   "pins": 16,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_k_rdy",
+   "core_face": "N",
+   "copy": "c_k_rdy__N",
+   "pins": 4,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_k_tag",
+   "core_face": "N",
+   "copy": "c_k_tag__N",
+   "pins": 68,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_k_v",
+   "core_face": "N",
+   "copy": "c_k_v__N",
+   "pins": 4,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_k_we",
+   "core_face": "N",
+   "copy": "c_k_we__N",
+   "pins": 4,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_k_wr_done",
+   "core_face": "N",
+   "copy": "c_k_wr_done__N",
+   "pins": 4,
+   "stride_tracks": 5,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_k_wstrb",
+   "core_face": "N",
+   "copy": "c_k_wstrb__N",
+   "pins": 128,
+   "stride_tracks": 5,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_kr_beat",
+   "core_face": "N",
+   "copy": "c_kr_beat__N",
+   "pins": 16,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_kr_rdy",
+   "core_face": "N",
+   "copy": "c_kr_rdy__N",
+   "pins": 4,
+   "stride_tracks": 5,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_kr_tag",
+   "core_face": "N",
+   "copy": "c_kr_tag__N",
+   "pins": 68,
+   "stride_tracks": 4,
+   "layer": "M5"
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "pins_file": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "port": "c_kr_v",
+   "core_face": "N",
+   "copy": "c_kr_v__N",
+   "pins": 4,
+   "stride_tracks": 5,
+   "layer": "M5"
+  }
+ ],
+ "variants": [],
+ "clkrst_tap": [
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane0",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane2",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane0",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane2",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane0",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane2",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane0",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane2",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane1",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane2",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane1",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane2",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane1",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane2",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane1",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane2",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane2",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane2",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane2",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane2",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane3"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane3",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane2"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane3",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane2"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane3",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane2"
+   ]
+  },
+  {
+   "type": "q_b110",
+   "core": "u_sfucore_Q_lane3",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane0",
+    "core:u_sfucore_Q_lane1",
+    "core:u_sfucore_Q_lane2"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane4",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane4",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane4",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane4",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane5",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane5",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane5",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane5",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane6",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane6",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane6",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane6",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane7",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane7",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane7",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane7",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane7",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane8"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane8",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane8",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane8",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7"
+   ]
+  },
+  {
+   "type": "q_b111",
+   "core": "u_sfucore_Q_lane8",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane4",
+    "core:u_sfucore_Q_lane5",
+    "core:u_sfucore_Q_lane6",
+    "core:u_sfucore_Q_lane7"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane9",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane9",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane9",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane9",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane10",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane10",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane10",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane10",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane11",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane11",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane11",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane11",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane12",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane12",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane12",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane12",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane13",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane13",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane13",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane13",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "core": "u_sfucore_Q_lane13",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane10",
+    "core:u_sfucore_Q_lane11",
+    "core:u_sfucore_Q_lane12",
+    "core:u_sfucore_Q_lane9"
+   ]
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_lane14",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane15"
+   ]
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_lane14",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane15"
+   ]
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_lane14",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane15"
+   ]
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_lane14",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane15"
+   ]
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_lane15",
+   "port": "sfu_clk",
+   "was": [
+    "core:u_sfucore_Q_lane14"
+   ]
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_lane15",
+   "port": "map_clk",
+   "was": [
+    "core:u_sfucore_Q_lane14"
+   ]
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_lane15",
+   "port": "sfu_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane14"
+   ]
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_lane15",
+   "port": "map_rst_n",
+   "was": [
+    "core:u_sfucore_Q_lane14"
+   ]
+  },
+  {
+   "type": "root",
+   "core": "u_hc_eng_tail0_rest",
+   "port": "x_g_tail_0_u_t_u_tail_sink_clk",
+   "was": [
+    "core:u_hc_eng_hcp_sys1",
+    "core:u_hc_eng_tail0_sk_steady",
+    "core:u_hc_eng_tail0_sk_step0",
+    "core:u_hc_eng_tail1_rest",
+    "core:u_hc_eng_tail1_sk_steady",
+    "core:u_hc_eng_tail1_sk_step0"
+   ]
+  },
+  {
+   "type": "root",
+   "core": "u_hc_eng_tail1_rest",
+   "port": "x_g_tail_1_u_t_u_tail_sink_clk",
+   "was": [
+    "core:u_hc_eng_hcp_sys1",
+    "core:u_hc_eng_tail0_rest",
+    "core:u_hc_eng_tail0_sk_steady",
+    "core:u_hc_eng_tail0_sk_step0",
+    "core:u_hc_eng_tail1_sk_steady",
+    "core:u_hc_eng_tail1_sk_step0"
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_edge",
+   "port": "arg_rst_n",
+   "was": [
+    "core:u_hb_coll_Q_body_core"
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_vm",
+   "port": "writer_rst_n",
+   "was": [
+    "core:u_hb_coll_Q_body_core"
+   ]
+  }
+ ],
+ "stations": [
+  {
+   "conn": "u_sfucore_Q_ctl.fault|u_sfucore_Q_lane14",
+   "why": "superset u_sfucore_Q_ctl.fault",
+   "before": 3,
+   "after": 3
+  },
+  {
+   "conn": "u_sfucore_Q_ctl.fault|u_sfucore_Q_lane15",
+   "why": "superset u_sfucore_Q_ctl.fault",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll|u_sfucore_Q_lane15",
+   "why": "superset u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault|u_sfucore_Q_lane15",
+   "why": "superset u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v|u_sfucore_Q_lane15",
+   "why": "superset u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x|u_sfucore_Q_lane15",
+   "why": "superset u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_addr|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_addr",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_addr|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_addr",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_addr|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_addr",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_addr|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_addr",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_len|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_len",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_len|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_len",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_len|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_len",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_len|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_len",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_rdy|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_rdy|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_rdy|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_rdy",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_rdy|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_tag|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_tag|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_tag|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_tag",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_tag|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_v|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_v|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_v|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_v",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_v|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_we|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_we",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_we|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_we",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_we|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_we",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_we|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_we",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wr_done|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_wr_done",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wr_done|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_wr_done",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wr_done|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_wr_done",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wr_done|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_wr_done",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wstrb|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_wstrb",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wstrb|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_wstrb",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wstrb|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_wstrb",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wstrb|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_wstrb",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_beat|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_kr_beat",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_beat|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_kr_beat",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_beat|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_kr_beat",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_beat|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_kr_beat",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_rdy|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_kr_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_rdy|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_kr_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_rdy|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_kr_rdy",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_rdy|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_kr_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_tag|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_kr_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_tag|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_kr_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_tag|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_kr_tag",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_tag|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_kr_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_v|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_kr_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_v|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_kr_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_v|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_kr_v",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_v|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_kr_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_addr|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_addr",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_addr|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_addr",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_addr|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_addr",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_addr|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_addr",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_len|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_len",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_len|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_len",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_len|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_len",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_len|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_len",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_rdy|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_rdy|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_rdy|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_rdy",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_rdy|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_tag|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_tag|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_tag|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_tag",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_tag|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_v|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_v|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_v|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_v",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_v|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_we|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_we",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_we|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_we",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_we|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_we",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_we|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_we",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wr_done|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_wr_done",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wr_done|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_wr_done",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wr_done|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_wr_done",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wr_done|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_wr_done",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wstrb|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_k_wstrb",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wstrb|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_k_wstrb",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wstrb|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_k_wstrb",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_k_wstrb|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_k_wstrb",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_beat|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_kr_beat",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_beat|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_kr_beat",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_beat|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_kr_beat",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_beat|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_kr_beat",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_rdy|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_kr_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_rdy|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_kr_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_rdy|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_kr_rdy",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_rdy|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_kr_rdy",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_tag|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_kr_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_tag|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_kr_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_tag|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_kr_tag",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_tag|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_kr_tag",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_v|u_ctl_Q_p04",
+   "why": "superset u_vmks_Q1.c_kr_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_v|u_ctl_Q_p05",
+   "why": "superset u_vmks_Q1.c_kr_v",
+   "before": 2,
+   "after": 2
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_v|u_ctl_Q_p06",
+   "why": "superset u_vmks_Q1.c_kr_v",
+   "before": 1,
+   "after": 1
+  },
+  {
+   "conn": "u_vmks_Q1.c_kr_v|u_ctl_Q_p07",
+   "why": "superset u_vmks_Q1.c_kr_v",
+   "before": 2,
+   "after": 2
+  }
+ ],
+ "cycle_delta": {},
+ "fails": [],
+ "per_error": [
+  {
+   "type": "q_b002",
+   "core": "u_hcb_Q2.ot_hbm_hc_bank128_pair3",
+   "port": "weight_we0",
+   "step": "superset",
+   "copy": "weight_we0__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_b002",
+   "core": "u_hcb_Q2.ot_hbm_hc_bank128_pair3",
+   "port": "weight_we1",
+   "step": "superset",
+   "copy": "weight_we1__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_b002",
+   "core": "u_hcb_Q2.ot_hbm_hc_bank128_pair3",
+   "port": "write_addr",
+   "step": "superset",
+   "copy": "write_addr__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_b002",
+   "core": "u_hcb_Q2.ot_hbm_hc_bank128_pair3",
+   "port": "x_write",
+   "step": "superset",
+   "copy": "x_write__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_b011",
+   "core": "u_hcb_Q6.ot_hbm_hc_bank128_pair3",
+   "port": "weight_we0",
+   "step": "superset",
+   "copy": "weight_we0__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_b011",
+   "core": "u_hcb_Q6.ot_hbm_hc_bank128_pair3",
+   "port": "weight_we1",
+   "step": "superset",
+   "copy": "weight_we1__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_b011",
+   "core": "u_hcb_Q6.ot_hbm_hc_bank128_pair3",
+   "port": "write_addr",
+   "step": "superset",
+   "copy": "write_addr__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_b011",
+   "core": "u_hcb_Q6.ot_hbm_hc_bank128_pair3",
+   "port": "x_write",
+   "step": "superset",
+   "copy": "x_write__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_ctl",
+   "port": "fault",
+   "step": "superset",
+   "copy": "fault__S",
+   "type_face": "S",
+   "core_face": "S"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_ctl",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll",
+   "step": "superset",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll__S",
+   "type_face": "S",
+   "core_face": "S"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_ctl",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault",
+   "step": "superset",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault__S",
+   "type_face": "S",
+   "core_face": "S"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_ctl",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v",
+   "step": "superset",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v__S",
+   "type_face": "S",
+   "core_face": "S"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_ctl",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x",
+   "step": "superset",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x__S",
+   "type_face": "S",
+   "core_face": "S"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_ctl",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll",
+   "step": "superset",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll__W",
+   "type_face": "E",
+   "core_face": "W"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_ctl",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault",
+   "step": "superset",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault__W",
+   "type_face": "E",
+   "core_face": "W"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_ctl",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v",
+   "step": "superset",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v__W",
+   "type_face": "E",
+   "core_face": "W"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_ctl",
+   "port": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x",
+   "step": "superset",
+   "copy": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x__W",
+   "type_face": "E",
+   "core_face": "W"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_opstore_a",
+   "port": "x_u_core_u_vm_scalar_data",
+   "step": "superset",
+   "copy": "x_u_core_u_vm_scalar_data__W",
+   "type_face": "W",
+   "core_face": "W"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_opstore_a",
+   "port": "x_u_core_u_vm_scalar_load",
+   "step": "superset",
+   "copy": "x_u_core_u_vm_scalar_load__W",
+   "type_face": "W",
+   "core_face": "W"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_opstore_a",
+   "port": "x_u_core_u_vm_scalar_load_addr",
+   "step": "superset",
+   "copy": "x_u_core_u_vm_scalar_load_addr__W",
+   "type_face": "W",
+   "core_face": "W"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_opstore_a",
+   "port": "x_u_core_u_vm_stage_group",
+   "step": "superset",
+   "copy": "x_u_core_u_vm_stage_group__W",
+   "type_face": "W",
+   "core_face": "W"
+  },
+  {
+   "type": "q_b113",
+   "core": "u_sfucore_Q_opstore_a",
+   "port": "x_u_core_u_vm_stage_v",
+   "step": "superset",
+   "copy": "x_u_core_u_vm_stage_v__W",
+   "type_face": "W",
+   "core_face": "W"
+  },
+  {
+   "type": "root",
+   "core": "u_col_idx",
+   "port": "c_done",
+   "step": "superset",
+   "copy": "c_done__W",
+   "type_face": "W",
+   "core_face": "W"
+  },
+  {
+   "type": "root",
+   "core": "u_hb_argmax",
+   "port": "vm_rq",
+   "step": "superset",
+   "copy": "vm_rq__S",
+   "type_face": "S",
+   "core_face": "S"
+  },
+  {
+   "type": "root",
+   "core": "u_hb_argmax",
+   "port": "vm_rr",
+   "step": "superset",
+   "copy": "vm_rr__S",
+   "type_face": "S",
+   "core_face": "S"
+  },
+  {
+   "type": "root",
+   "core": "u_hb_idx__ctl",
+   "port": "index_rr",
+   "step": "superset",
+   "copy": "index_rr__S",
+   "type_face": "N",
+   "core_face": "S"
+  },
+  {
+   "type": "root",
+   "core": "u_hb_idx__ctl",
+   "port": "ingest_v",
+   "step": "superset",
+   "copy": "ingest_v__N",
+   "type_face": "S",
+   "core_face": "N"
+  },
+  {
+   "type": "root",
+   "core": "u_hb_idx__ctl",
+   "port": "lf",
+   "step": "superset",
+   "copy": "lf__N",
+   "type_face": "S",
+   "core_face": "N"
+  },
+  {
+   "type": "root",
+   "core": "u_hb_idx__ctl",
+   "port": "link_clear",
+   "step": "superset",
+   "copy": "link_clear__N",
+   "type_face": "S",
+   "core_face": "N"
+  },
+  {
+   "type": "root",
+   "core": "u_hb_idx__ctl",
+   "port": "link_emit",
+   "step": "superset",
+   "copy": "link_emit__N",
+   "type_face": "S",
+   "core_face": "N"
+  },
+  {
+   "type": "root",
+   "core": "u_hb_idx__ctl",
+   "port": "link_flush",
+   "step": "superset",
+   "copy": "link_flush__N",
+   "type_face": "S",
+   "core_face": "N"
+  },
+  {
+   "type": "root",
+   "core": "u_hb_idx__ctl",
+   "port": "link_group",
+   "step": "superset",
+   "copy": "link_group__N",
+   "type_face": "S",
+   "core_face": "N"
+  },
+  {
+   "type": "root",
+   "core": "u_hb_idx__ctl",
+   "port": "vm_rr",
+   "step": "superset",
+   "copy": "vm_rr__N",
+   "type_face": "S",
+   "core_face": "N"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "fault",
+   "step": "superset",
+   "copy": "fault__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "irq",
+   "step": "superset",
+   "copy": "irq__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "land_fault",
+   "step": "superset",
+   "copy": "land_fault__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "link_fault",
+   "step": "superset",
+   "copy": "link_fault__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "protocol_fault",
+   "step": "superset",
+   "copy": "protocol_fault__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_araddr",
+   "step": "superset",
+   "copy": "s_araddr__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_arready",
+   "step": "superset",
+   "copy": "s_arready__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_arvalid",
+   "step": "superset",
+   "copy": "s_arvalid__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_awaddr",
+   "step": "superset",
+   "copy": "s_awaddr__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_awready",
+   "step": "superset",
+   "copy": "s_awready__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_awvalid",
+   "step": "superset",
+   "copy": "s_awvalid__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_bready",
+   "step": "superset",
+   "copy": "s_bready__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_bresp",
+   "step": "superset",
+   "copy": "s_bresp__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_bvalid",
+   "step": "superset",
+   "copy": "s_bvalid__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_rdata",
+   "step": "superset",
+   "copy": "s_rdata__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_rready",
+   "step": "superset",
+   "copy": "s_rready__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_rvalid",
+   "step": "superset",
+   "copy": "s_rvalid__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_wdata",
+   "step": "superset",
+   "copy": "s_wdata__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_wready",
+   "step": "superset",
+   "copy": "s_wready__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_wstrb",
+   "step": "superset",
+   "copy": "s_wstrb__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "s_wvalid",
+   "step": "superset",
+   "copy": "s_wvalid__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "root",
+   "core": "u_host_cp_rxs",
+   "port": "seq_fault",
+   "step": "superset",
+   "copy": "seq_fault__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_cxij_Q_q",
+   "port": "ob1",
+   "step": "superset",
+   "copy": "ob1__S",
+   "type_face": "S",
+   "core_face": "S"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_quant_Q__u_dec",
+   "port": "x",
+   "step": "superset",
+   "copy": "x__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hcollgi_Q",
+   "port": "vm_rr_lo",
+   "step": "superset",
+   "copy": "vm_rr_lo__S",
+   "type_face": "N",
+   "core_face": "S"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_smw_Q",
+   "port": "wq_t1",
+   "step": "superset",
+   "copy": "wq_t1__W",
+   "type_face": "E",
+   "core_face": "W"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_smw_Q",
+   "port": "wq_t3",
+   "step": "superset",
+   "copy": "wq_t3__W",
+   "type_face": "E",
+   "core_face": "W"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_k_addr",
+   "step": "superset",
+   "copy": "c_k_addr__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_k_len",
+   "step": "superset",
+   "copy": "c_k_len__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_k_rdy",
+   "step": "superset",
+   "copy": "c_k_rdy__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_k_tag",
+   "step": "superset",
+   "copy": "c_k_tag__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_k_v",
+   "step": "superset",
+   "copy": "c_k_v__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_k_we",
+   "step": "superset",
+   "copy": "c_k_we__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_k_wr_done",
+   "step": "superset",
+   "copy": "c_k_wr_done__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_k_wstrb",
+   "step": "superset",
+   "copy": "c_k_wstrb__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_kr_beat",
+   "step": "superset",
+   "copy": "c_kr_beat__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_kr_rdy",
+   "step": "superset",
+   "copy": "c_kr_rdy__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_kr_tag",
+   "step": "superset",
+   "copy": "c_kr_tag__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmks_Q1",
+   "port": "c_kr_v",
+   "step": "superset",
+   "copy": "c_kr_v__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_quant_Q__u_dec",
+   "port": "x",
+   "step": "superset",
+   "copy": "x__E",
+   "type_face": "E",
+   "core_face": "E"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hcollgi_Q",
+   "port": "vm_rr_lo",
+   "step": "superset",
+   "copy": "vm_rr_lo__S",
+   "type_face": "N",
+   "core_face": "S"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_smw_Q",
+   "port": "wq_t1",
+   "step": "superset",
+   "copy": "wq_t1__W",
+   "type_face": "E",
+   "core_face": "W"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_smw_Q",
+   "port": "wq_t3",
+   "step": "superset",
+   "copy": "wq_t3__W",
+   "type_face": "E",
+   "core_face": "W"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_k_addr",
+   "step": "superset",
+   "copy": "c_k_addr__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_k_len",
+   "step": "superset",
+   "copy": "c_k_len__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_k_rdy",
+   "step": "superset",
+   "copy": "c_k_rdy__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_k_tag",
+   "step": "superset",
+   "copy": "c_k_tag__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_k_v",
+   "step": "superset",
+   "copy": "c_k_v__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_k_we",
+   "step": "superset",
+   "copy": "c_k_we__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_k_wr_done",
+   "step": "superset",
+   "copy": "c_k_wr_done__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_k_wstrb",
+   "step": "superset",
+   "copy": "c_k_wstrb__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_kr_beat",
+   "step": "superset",
+   "copy": "c_kr_beat__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_kr_rdy",
+   "step": "superset",
+   "copy": "c_kr_rdy__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_kr_tag",
+   "step": "superset",
+   "copy": "c_kr_tag__N",
+   "type_face": "N",
+   "core_face": "N"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmks_Q1",
+   "port": "c_kr_v",
+   "step": "superset",
+   "copy": "c_kr_v__N",
+   "type_face": "N",
+   "core_face": "N"
+  }
+ ],
+ "supersets_by_pins_file": {
+  "cores/ot_hbm_hc_bank128_pair_core_pins_ss.json": {
+   "weight_we0__E": {
+    "of": "weight_we0",
+    "core_face": "E"
+   },
+   "weight_we1__E": {
+    "of": "weight_we1",
+    "core_face": "E"
+   },
+   "write_addr__E": {
+    "of": "write_addr",
+    "core_face": "E"
+   },
+   "x_write__E": {
+    "of": "x_write",
+    "core_face": "E"
+   }
+  },
+  "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__q_b113_u_sfucore_Q_ctl.json": {
+   "fault__S": {
+    "of": "fault",
+    "core_face": "S"
+   },
+   "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll__S": {
+    "of": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll",
+    "core_face": "S"
+   },
+   "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault__S": {
+    "of": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault",
+    "core_face": "S"
+   },
+   "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v__S": {
+    "of": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v",
+    "core_face": "S"
+   },
+   "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x__S": {
+    "of": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x",
+    "core_face": "S"
+   },
+   "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll__W": {
+    "of": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll",
+    "core_face": "W"
+   },
+   "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault__W": {
+    "of": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault",
+    "core_face": "W"
+   },
+   "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v__W": {
+    "of": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v",
+    "core_face": "W"
+   },
+   "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x__W": {
+    "of": "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x",
+    "core_face": "W"
+   }
+  },
+  "cores/ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__q_b113_u_sfucore_Q_opstore_a.json": {
+   "x_u_core_u_vm_scalar_data__W": {
+    "of": "x_u_core_u_vm_scalar_data",
+    "core_face": "W"
+   },
+   "x_u_core_u_vm_scalar_load__W": {
+    "of": "x_u_core_u_vm_scalar_load",
+    "core_face": "W"
+   },
+   "x_u_core_u_vm_scalar_load_addr__W": {
+    "of": "x_u_core_u_vm_scalar_load_addr",
+    "core_face": "W"
+   },
+   "x_u_core_u_vm_stage_group__W": {
+    "of": "x_u_core_u_vm_stage_group",
+    "core_face": "W"
+   },
+   "x_u_core_u_vm_stage_v__W": {
+    "of": "x_u_core_u_vm_stage_v",
+    "core_face": "W"
+   }
+  },
+  "cores/ot_hbm_static_cfg_collar_idx256r__108x108__root_u_col_idx.json": {
+   "c_done__W": {
+    "of": "c_done",
+    "core_face": "W"
+   }
+  },
+  "cores/ot_hbm_argmax_static_sw_vm_r2__118.8x118.8__root_u_hb_argmax.json": {
+   "vm_rq__S": {
+    "of": "vm_rq",
+    "core_face": "S"
+   },
+   "vm_rr__S": {
+    "of": "vm_rr",
+    "core_face": "S"
+   }
+  },
+  "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__root_u_hb_idx__ctl.json": {
+   "index_rr__S": {
+    "of": "index_rr",
+    "core_face": "S"
+   },
+   "ingest_v__N": {
+    "of": "ingest_v",
+    "core_face": "N"
+   },
+   "lf__N": {
+    "of": "lf",
+    "core_face": "N"
+   },
+   "link_clear__N": {
+    "of": "link_clear",
+    "core_face": "N"
+   },
+   "link_emit__N": {
+    "of": "link_emit",
+    "core_face": "N"
+   },
+   "link_flush__N": {
+    "of": "link_flush",
+    "core_face": "N"
+   },
+   "link_group__N": {
+    "of": "link_group",
+    "core_face": "N"
+   },
+   "vm_rr__N": {
+    "of": "vm_rr",
+    "core_face": "N"
+   }
+  },
+  "cores/ot_hbm_host_cp_rxs__434.808x432__root_u_host_cp_rxs.json": {
+   "fault__E": {
+    "of": "fault",
+    "core_face": "E"
+   },
+   "irq__E": {
+    "of": "irq",
+    "core_face": "E"
+   },
+   "land_fault__E": {
+    "of": "land_fault",
+    "core_face": "E"
+   },
+   "link_fault__E": {
+    "of": "link_fault",
+    "core_face": "E"
+   },
+   "protocol_fault__E": {
+    "of": "protocol_fault",
+    "core_face": "E"
+   },
+   "s_araddr__E": {
+    "of": "s_araddr",
+    "core_face": "E"
+   },
+   "s_arready__E": {
+    "of": "s_arready",
+    "core_face": "E"
+   },
+   "s_arvalid__E": {
+    "of": "s_arvalid",
+    "core_face": "E"
+   },
+   "s_awaddr__E": {
+    "of": "s_awaddr",
+    "core_face": "E"
+   },
+   "s_awready__E": {
+    "of": "s_awready",
+    "core_face": "E"
+   },
+   "s_awvalid__E": {
+    "of": "s_awvalid",
+    "core_face": "E"
+   },
+   "s_bready__E": {
+    "of": "s_bready",
+    "core_face": "E"
+   },
+   "s_bresp__E": {
+    "of": "s_bresp",
+    "core_face": "E"
+   },
+   "s_bvalid__E": {
+    "of": "s_bvalid",
+    "core_face": "E"
+   },
+   "s_rdata__E": {
+    "of": "s_rdata",
+    "core_face": "E"
+   },
+   "s_rready__E": {
+    "of": "s_rready",
+    "core_face": "E"
+   },
+   "s_rvalid__E": {
+    "of": "s_rvalid",
+    "core_face": "E"
+   },
+   "s_wdata__E": {
+    "of": "s_wdata",
+    "core_face": "E"
+   },
+   "s_wready__E": {
+    "of": "s_wready",
+    "core_face": "E"
+   },
+   "s_wstrb__E": {
+    "of": "s_wstrb",
+    "core_face": "E"
+   },
+   "s_wvalid__E": {
+    "of": "s_wvalid",
+    "core_face": "E"
+   },
+   "seq_fault__E": {
+    "of": "seq_fault",
+    "core_face": "E"
+   }
+  },
+  "cores/ot_hbm_su_static_cxport_ij_q__250.56x449.28__q_hub_u_cxij_Q_q.json": {
+   "ob1__S": {
+    "of": "ob1",
+    "core_face": "S"
+   }
+  },
+  "cores/ot_hgi_qw_dec__260x260__q_hub_u_hb_quant_Q__u_dec.json": {
+   "x__E": {
+    "of": "x",
+    "core_face": "E"
+   }
+  },
+  "cores/ot_hgi_coll_gq_issue__237.6x237.6__q_hub_u_hcollgi_Q.json": {
+   "vm_rr_lo__S": {
+    "of": "vm_rr_lo",
+    "core_face": "S"
+   }
+  },
+  "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x388.8__q_hub_u_smw_Q.json": {
+   "wq_t1__W": {
+    "of": "wq_t1",
+    "core_face": "W"
+   },
+   "wq_t3__W": {
+    "of": "wq_t3",
+    "core_face": "W"
+   }
+  },
+  "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json": {
+   "c_k_addr__N": {
+    "of": "c_k_addr",
+    "core_face": "N"
+   },
+   "c_k_len__N": {
+    "of": "c_k_len",
+    "core_face": "N"
+   },
+   "c_k_rdy__N": {
+    "of": "c_k_rdy",
+    "core_face": "N"
+   },
+   "c_k_tag__N": {
+    "of": "c_k_tag",
+    "core_face": "N"
+   },
+   "c_k_v__N": {
+    "of": "c_k_v",
+    "core_face": "N"
+   },
+   "c_k_we__N": {
+    "of": "c_k_we",
+    "core_face": "N"
+   },
+   "c_k_wr_done__N": {
+    "of": "c_k_wr_done",
+    "core_face": "N"
+   },
+   "c_k_wstrb__N": {
+    "of": "c_k_wstrb",
+    "core_face": "N"
+   },
+   "c_kr_beat__N": {
+    "of": "c_kr_beat",
+    "core_face": "N"
+   },
+   "c_kr_rdy__N": {
+    "of": "c_kr_rdy",
+    "core_face": "N"
+   },
+   "c_kr_tag__N": {
+    "of": "c_kr_tag",
+    "core_face": "N"
+   },
+   "c_kr_v__N": {
+    "of": "c_kr_v",
+    "core_face": "N"
+   }
+  }
+ },
+ "start_errors": {
+  "q_b002": 4,
+  "q_b011": 4,
+  "q_b113": 14,
+  "root": 33,
+  "q_hub_nw": 17,
+  "q_hub_ne": 16
+ },
+ "end_errors": {}
+}

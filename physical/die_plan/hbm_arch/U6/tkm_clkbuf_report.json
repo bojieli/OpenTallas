@@ -1,0 +1,104 @@
+{
+ "src": "/srv/opentallas-scratch2/claude/path-hbm/hubnw3_1025/plan",
+ "src_plan_sha256": "705e9e5e7e6d3033e67b1fd468fcb9f481abdfac79f03f3628ad71b606db8b0e",
+ "buffers": [
+  {
+   "launch": "u_tkm_SW_tile3",
+   "capture": "u_tkm_SW_tile4",
+   "tap_dist_um": 630.72,
+   "buffer": "u_tkmclk_L4_c0",
+   "legs_um": [
+    315.36,
+    315.36
+   ],
+   "corridor": "L4",
+   "corridor_gap_um": 285.12
+  },
+  {
+   "launch": "u_tkm_SW_tile6",
+   "capture": "u_tkm_SW_tile7",
+   "tap_dist_um": 406.08,
+   "buffer": "u_tkmclk_L150_c0",
+   "legs_um": [
+    203.04,
+    203.04
+   ],
+   "corridor": "L150",
+   "corridor_gap_um": 60.48
+  },
+  {
+   "launch": "u_tkm_SW_tile8",
+   "capture": "u_tkm_SW_tile9",
+   "tap_dist_um": 406.08,
+   "buffer": "u_tkmclk_L150_c1",
+   "legs_um": [
+    203.04,
+    203.04
+   ],
+   "corridor": "L150",
+   "corridor_gap_um": 60.48
+  },
+  {
+   "launch": "u_tkm_SW_tile11",
+   "capture": "u_tkm_SW_tile12",
+   "tap_dist_um": 630.72,
+   "buffer": "u_tkmclk_L4_c1",
+   "legs_um": [
+    315.36,
+    315.36
+   ],
+   "corridor": "L4",
+   "corridor_gap_um": 285.12
+  },
+  {
+   "launch": "u_tkm_SW_tile19",
+   "capture": "u_tkm_SW_tile20",
+   "tap_dist_um": 630.72,
+   "buffer": "u_tkmclk_L4_c2",
+   "legs_um": [
+    315.36,
+    315.36
+   ],
+   "corridor": "L4",
+   "corridor_gap_um": 285.12
+  },
+  {
+   "launch": "u_tkm_SW_tile22",
+   "capture": "u_tkm_SW_tile23",
+   "tap_dist_um": 406.08,
+   "buffer": "u_tkmclk_L150_c2",
+   "legs_um": [
+    203.04,
+    203.04
+   ],
+   "corridor": "L150",
+   "corridor_gap_um": 60.48
+  },
+  {
+   "launch": "u_tkm_SW_tile24",
+   "capture": "u_tkm_SW_tile25",
+   "tap_dist_um": 406.08,
+   "buffer": "u_tkmclk_L150_c3",
+   "legs_um": [
+    203.04,
+    203.04
+   ],
+   "corridor": "L150",
+   "corridor_gap_um": 60.48
+  },
+  {
+   "launch": "u_tkm_SW_tile27",
+   "capture": "u_tkm_SW_tile28",
+   "tap_dist_um": 630.72,
+   "buffer": "u_tkmclk_L4_c3",
+   "legs_um": [
+    315.36,
+    315.36
+   ],
+   "corridor": "L4",
+   "corridor_gap_um": 285.12
+  }
+ ],
+ "worst_leg_um": 315.36,
+ "out_plan_sha256": "cdeee2157f170985aefa5b5a946ec77e6a65be6bf2072a19e098c6238667764a"
+}

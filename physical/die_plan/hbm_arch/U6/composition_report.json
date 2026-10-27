@@ -1,0 +1,25 @@
+{
+ "release_ready": false,
+ "clock_pending": true,
+ "physical_proto_pending": true,
+ "repairs": [
+  {
+   "source": "/srv/opentallas-scratch2/claude/codex-hbm-corridor-2149/sfu_repaired",
+   "sha256": "5b6d73d3cd0680debfbfbba054a7d7f9cd8f6ea7ea12bf9da69c31237750c038",
+   "types": [
+    "q_b112",
+    "q_b113"
+   ],
+   "ft_checked": 9,
+   "ft_added": 1
+  }
+ ],
+ "lane_cycle_delta_from_base": {
+  "L150": 3,
+  "L150m": 3
+ },
+ "internal_type_max": {
+  "q_b112": 1,
+  "q_b113": 7
+ }
+}

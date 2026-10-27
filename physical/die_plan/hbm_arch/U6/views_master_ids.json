@@ -1,0 +1,123 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/codex-hbm-ids-0719/plan4/die_plan.json",
+ "view_list": [
+  {
+   "view": "ot_hgi_sfu_split3_lane_core__idpin",
+   "module": "ot_hgi_sfu_split3_lane_core__idpin",
+   "outline_um": [
+    388.8,
+    345.6
+   ],
+   "pins_file": "cores/ot_hgi_sfu_split3_lane_core__idpin__master.json",
+   "pins_sha256": "a0496172bd8d90205feafbf5032526f21059b10b66fa7db08a74f173459c5fa7",
+   "recipe_keys": [
+    "ot_hgi_sfu_split3_lane_core__idpin__388.8x345.6"
+   ],
+   "canonical_type": "sfu_lane_idpin",
+   "replicas": 16,
+   "instances": [
+    "NW_b110.u_sfucore_Q_lane0",
+    "NE_b110.u_sfucore_Q_lane0",
+    "NW_b110.u_sfucore_Q_lane1",
+    "NE_b110.u_sfucore_Q_lane1",
+    "NW_b110.u_sfucore_Q_lane2",
+    "NE_b110.u_sfucore_Q_lane2",
+    "NW_b110.u_sfucore_Q_lane3",
+    "NE_b110.u_sfucore_Q_lane3",
+    "NW_b111.u_sfucore_Q_lane4",
+    "NE_b111.u_sfucore_Q_lane4",
+    "NW_b111.u_sfucore_Q_lane5",
+    "NE_b111.u_sfucore_Q_lane5",
+    "NW_b111.u_sfucore_Q_lane6",
+    "NE_b111.u_sfucore_Q_lane6",
+    "NW_b111.u_sfucore_Q_lane7",
+    "NE_b111.u_sfucore_Q_lane7",
+    "NW_b111.u_sfucore_Q_lane8",
+    "NE_b111.u_sfucore_Q_lane8",
+    "NW_b112.u_sfucore_Q_lane9",
+    "NE_b112.u_sfucore_Q_lane9",
+    "NW_b112.u_sfucore_Q_lane10",
+    "NE_b112.u_sfucore_Q_lane10",
+    "NW_b112.u_sfucore_Q_lane11",
+    "NE_b112.u_sfucore_Q_lane11",
+    "NW_b112.u_sfucore_Q_lane12",
+    "NE_b112.u_sfucore_Q_lane12",
+    "NW_b112.u_sfucore_Q_lane13",
+    "NE_b112.u_sfucore_Q_lane13",
+    "NW_b113.u_sfucore_Q_lane14",
+    "NE_b113.u_sfucore_Q_lane14",
+    "NW_b113.u_sfucore_Q_lane15",
+    "NE_b113.u_sfucore_Q_lane15"
+   ],
+   "placed": 32
+  },
+  {
+   "view": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+   "outline_um": [
+    319.68,
+    345.6
+   ],
+   "pins_file": "cores/ot_hgi_coll_tkm_tp192_tile_core__idpin__master.json",
+   "pins_sha256": "c8ca7e45c0f2c64293f704d711ded3640fe38d75714f9239bc6c3f5b290e90b2",
+   "recipe_keys": [
+    "ot_hgi_coll_tkm_tp192_tile_core__idpin__319.68x345.6"
+   ],
+   "canonical_type": "tkm_tile_idpin",
+   "replicas": 31,
+   "instances": [
+    "root.u_tkm_SW_tile0",
+    "root.u_tkm_SW_tile1",
+    "root.u_tkm_SW_tile2",
+    "root.u_tkm_SW_tile3",
+    "root.u_tkm_SW_tile4",
+    "root.u_tkm_SW_tile5",
+    "root.u_tkm_SW_tile6",
+    "root.u_tkm_SW_tile7",
+    "root.u_tkm_SW_tile8",
+    "root.u_tkm_SW_tile9",
+    "root.u_tkm_SW_tile10",
+    "root.u_tkm_SW_tile11",
+    "root.u_tkm_SW_tile12",
+    "root.u_tkm_SW_tile13",
+    "root.u_tkm_SW_tile14",
+    "root.u_tkm_SW_tile15",
+    "root.u_tkm_SW_tile16",
+    "root.u_tkm_SW_tile17",
+    "root.u_tkm_SW_tile18",
+    "root.u_tkm_SW_tile19",
+    "root.u_tkm_SW_tile20",
+    "root.u_tkm_SW_tile21",
+    "root.u_tkm_SW_tile22",
+    "root.u_tkm_SW_tile23",
+    "root.u_tkm_SW_tile24",
+    "root.u_tkm_SW_tile25",
+    "root.u_tkm_SW_tile26",
+    "root.u_tkm_SW_tile27",
+    "root.u_tkm_SW_tile28",
+    "root.u_tkm_SW_tile29",
+    "root.u_tkm_SW_tile30"
+   ],
+   "placed": 31
+  },
+  {
+   "view": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin",
+   "outline_um": [
+    319.68,
+    345.6
+   ],
+   "pins_file": "cores/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__master.json",
+   "pins_sha256": "c08aca1d1d21b5687d382d164b2623738c7384412ff2ccb31e08f843728bf908",
+   "recipe_keys": [
+    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__319.68x345.6"
+   ],
+   "canonical_type": "tkm_tile_terminal_idpin",
+   "replicas": 1,
+   "instances": [
+    "root.u_tkm_SW_tile31"
+   ],
+   "placed": 1
+  }
+ ]
+}

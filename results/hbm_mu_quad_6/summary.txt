@@ -1,0 +1,36 @@
+HBM-MU-QUAD-6 (2026-10-27) -- planU6 = HBM unified die plan candidate for COORD GEOM re-review.  NOT frozen, NO die GRT.
+Plan bundle: physical/die_plan/hbm_arch/U6/ (die_plan.json sha256 2276f04d33363ff1642d8dd5e41bea0d5d43781f108bd525fd01031252f0133d;
+checkpoint*.json pack artefacts omitted).  Scratch copy intel2:/srv/opentallas-scratch2/claude/hbm-mu-quad-6-1027/planU6.
+
+PROVENANCE (die_plan.json sha256)
+ planU2  claude/hbm-mu-quad-2-1026@03d5f0266f (NE mirror repack, n4)
+ planU3f 86fb58bf...  claude/hbm-mu-quad-3-1027@197e94e48d (spanning compose +794.88, lat_package_planU3f)
+ planU4f 30113b29...  claude/hbm-mu-quad-4-1027@3232ca1c00 (type reduction 224->78, hub re-pin) -- COORD GEOM FAIL 04:17 (B1-B3)
+ planU5e_r 08de1931... QUAD-5 e91031b844 / Codex rescue codex/hbm-1027@e95b335809 (delta A, restation B1/B2, FT row L28/L36 fix)
+ planU6k 485c8044... keybuf_delta.py: 4x 324^2 keybuf -> 32 ot_hnx_idxn_keybuf_slice 241.92x293.76 lots (8/segment), one pin table,
+         per-slice kin 1127 b / kout 1100 b links, 242 displaced station regs re-sited (count kept, hops <=404.89)
+ planU6  2276f04d... b3_delta.py (B3) on U6k
+
+B1/B2 (gchk.py/gchk2.py, COORD tools): station regs in hard cores 0, ft regs in hard cores 0, hard-hard 0, outside 0 (CHECKED,
+ gchk_U6.txt).  check.py G0 rule station_in_core (ERROR) + test_station_in_core.py on the main-based checker.
+B3 = OPTION A (soft region = free area after macros) + capacity proof:
+ step 0: 113 contents that ARE hard cores carried stale as-built boxes -> set to the core rectangle (bookkeeping, G0 ignores them)
+ then every soft box clears every hard core (own or foreign) and every other soft box: 36 unchanged, 97 largest free
+ sub-rectangle of the old box, 71 moved to the nearest free spot of the needed area (max centre move 393 um), 0 failed.
+ Counts U5e_r -> U6 (b3_delta verify, CHECKED; gchk2 agrees): soft-on-hard 655 -> 0, soft-on-foreign-hard 296 -> 0,
+ soft-soft 174 -> 0, soft box centre inside a hard core (kit_istations FIRM site) 105 -> 0.
+ Capacity: A_CELL 0.20 um2/cell (measured 0.122-0.161 pure-logic synth, 4 HBM cores, +25 %), UMAX 0.65.
+  per region (glue = content cells - own-core cells from core notes): max u 0.646 (q_hub_ne u_col_sfu_Q);
+  52 regions whose own-core counts are unknown: partition glue proof, max u 0.4925 (q_sm0; unknown core cells counted as glue = upper bound).
+N1 LEDGER (not cheap): 8 q_b0xx strips 380-829 um wide x 4320; their ft is all E-W (0 N-S bits), so widths are column fill,
+ not ft cut; top 1434 um empty (R11/QUAD-3 growth).  Unifying widths or lifting cores to partners = die column re-layout +
+ re-station -> next die repack, area cost recorded, 0 closure risk (fill 0.15-0.33).
+N2 LEDGER: ft/placeholder partitions = area cost 79.0 mm2 of 526.57: q_mca 2x10.16 (dead), q_mcb 2x10.16 (2840 cells),
+ spu0 2x2.65, spu1 2x2.28, spt1/spt2/spb1 2x2.73 each, vsN1/2/4/5/6 12.07.  Set by PHY_N row height 2074 and SM column width.
+KEYBUF AFFINITY = OPEN (GEOM FAIL candidate): no free space near IDX without moving hard cores.  slice->IDX max/avg um and
+ link regs new vs old: NW0 3893/1754 kin 11 vs 4, kout 11 vs 2; NW1 1472/1046 5 vs 1 / 5 vs 1; NE0 5360/3900 14 vs 2 / 14 vs 0;
+ NE1 1705/1294 5 vs 3 / 5 vs 2 (keybuf_report.json).  Needs an IDX+8-slice district repack.  Also open: strap_lane_id not in
+ parent_id_straps.ID_PORTS (rename to lane_lane_id or ASK), no core_conns keybuf entries (face rule unchecked for slices),
+ slice reset/PG wiring.
+LATENCY PACKAGE lat_package_planU6.json (base planU3f = the last priced package): lanes changed L28/L28m 33->27,
+ L36/L36m 24->13; 37 station conns changed, +227 station cycles (keybuf kin/kout links dominate).  UNCHECKED until TOK-HBM reprices.

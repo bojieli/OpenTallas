@@ -1,0 +1,1300 @@
+{
+ "src": "B2p_base_ids",
+ "src_plan_sha256": "4768c4fa637759b995d8b5aba70e35d9a3d2bf8f05280431ce5dfbd26e8e1862",
+ "pin_files": {
+  "cores/ot_hgi_coll_tkm_tp192_tile_core__idpin__chain.json": {
+   "src": "B2p_inputs/ot_hgi_coll_tkm_tp192_tile_core__idpin__repin.json",
+   "sha256": "0650ff571015099aad9c1c2b70ef1b813b0f01b8eba2904ff0dca1a3ee8c88b0",
+   "pins": 1389
+  },
+  "cores/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__chain.json": {
+   "src": "B2p_inputs/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__repin.json",
+   "sha256": "ac209ae7c5dfd74253e79f52fcbfe1a760c779369c1d1149578b3d0a35ae5bd1",
+   "pins": 700
+  },
+  "cores/ot_hgi_coll_tkm_m_tp192__root__chain.json": {
+   "src": "B2p_inputs/ot_hgi_coll_tkm_m_tp192__root__repin.json",
+   "sha256": "29489797bfc723ffdd57ebba27f4e87d84168f15d09aaf8794c1c7c27e52eef9",
+   "pins": 3575
+  }
+ },
+ "moved": [
+  {
+   "inst": "u_tkm_SW_root",
+   "frm": [
+    1036.8,
+    172.8
+   ],
+   "to": [
+    1036.8,
+    328.32
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_m_tp192__root"
+  },
+  {
+   "inst": "u_tkm_SW_tile0",
+   "frm": [
+    1019.52,
+    518.4
+   ],
+   "to": [
+    1036.8,
+    682.56
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile1",
+   "frm": [
+    1002.24,
+    4734.72
+   ],
+   "to": [
+    1036.8,
+    1036.8
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile2",
+   "frm": [
+    812.16,
+    1503.36
+   ],
+   "to": [
+    1036.8,
+    1391.04
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile3",
+   "frm": [
+    1002.24,
+    1848.96
+   ],
+   "to": [
+    1036.8,
+    1745.28
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile4",
+   "frm": [
+    483.84,
+    1486.08
+   ],
+   "to": [
+    1036.8,
+    2099.52
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile5",
+   "frm": [
+    1002.24,
+    1157.76
+   ],
+   "to": [
+    1036.8,
+    2453.76
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile6",
+   "frm": [
+    691.2,
+    432.0
+   ],
+   "to": [
+    1036.8,
+    2808.0
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile7",
+   "frm": [
+    362.88,
+    432.0
+   ],
+   "to": [
+    1036.8,
+    3162.24
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile8",
+   "frm": [
+    311.04,
+    4855.68
+   ],
+   "to": [
+    1036.8,
+    3516.48
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile9",
+   "frm": [
+    17.28,
+    552.96
+   ],
+   "to": [
+    1036.8,
+    3870.72
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile10",
+   "frm": [
+    604.8,
+    1848.96
+   ],
+   "to": [
+    1036.8,
+    4224.96
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile11",
+   "frm": [
+    449.28,
+    2298.24
+   ],
+   "to": [
+    1036.8,
+    4579.2
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile12",
+   "frm": [
+    1002.24,
+    2661.12
+   ],
+   "to": [
+    1036.8,
+    4933.44
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile13",
+   "frm": [
+    276.48,
+    2730.24
+   ],
+   "to": [
+    708.48,
+    4933.44
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile14",
+   "frm": [
+    639.36,
+    2661.12
+   ],
+   "to": [
+    708.48,
+    4579.2
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile15",
+   "frm": [
+    1002.24,
+    3006.72
+   ],
+   "to": [
+    708.48,
+    4224.96
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile16",
+   "frm": [
+    276.48,
+    3075.84
+   ],
+   "to": [
+    708.48,
+    3870.72
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile17",
+   "frm": [
+    639.36,
+    3006.72
+   ],
+   "to": [
+    708.48,
+    3516.48
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile18",
+   "frm": [
+    276.48,
+    3421.44
+   ],
+   "to": [
+    708.48,
+    3162.24
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile19",
+   "frm": [
+    639.36,
+    3352.32
+   ],
+   "to": [
+    708.48,
+    2808.0
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile20",
+   "frm": [
+    1002.24,
+    3352.32
+   ],
+   "to": [
+    362.88,
+    2808.0
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile21",
+   "frm": [
+    639.36,
+    3697.92
+   ],
+   "to": [
+    362.88,
+    3162.24
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile22",
+   "frm": [
+    1002.24,
+    3697.92
+   ],
+   "to": [
+    362.88,
+    3516.48
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile23",
+   "frm": [
+    311.04,
+    3818.88
+   ],
+   "to": [
+    362.88,
+    3870.72
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile24",
+   "frm": [
+    1002.24,
+    4043.52
+   ],
+   "to": [
+    362.88,
+    4224.96
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile25",
+   "frm": [
+    639.36,
+    4043.52
+   ],
+   "to": [
+    362.88,
+    4579.2
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile26",
+   "frm": [
+    1002.24,
+    4389.12
+   ],
+   "to": [
+    362.88,
+    4933.44
+   ],
+   "orient": "R0",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile27",
+   "frm": [
+    777.6,
+    2194.56
+   ],
+   "to": [
+    17.28,
+    4933.44
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile28",
+   "frm": [
+    639.36,
+    4389.12
+   ],
+   "to": [
+    17.28,
+    4579.2
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile29",
+   "frm": [
+    311.04,
+    4164.48
+   ],
+   "to": [
+    17.28,
+    4224.96
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile30",
+   "frm": [
+    639.36,
+    4734.72
+   ],
+   "to": [
+    17.28,
+    3870.72
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin"
+  },
+  {
+   "inst": "u_tkm_SW_tile31",
+   "frm": [
+    311.04,
+    4510.08
+   ],
+   "to": [
+    17.28,
+    3516.48
+   ],
+   "orient": "MX",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin"
+  }
+ ],
+ "soft_moved": [
+  {
+   "inst": "u_hb_idx__xq_N",
+   "frm": [
+    1002.24,
+    950.4
+   ],
+   "to": [
+    898.56,
+    639.36
+   ],
+   "dist_um": 414.72
+  }
+ ],
+ "stations": {
+  "dropped_tile_clk": 907,
+  "conv_stations": 20,
+  "conv_path_um": 8116.9,
+  "conv_worst_hop_um": 386.6,
+  "conv_src": [
+   1047.753,
+   673.901
+  ],
+  "conv_dst": [
+   28.233,
+   3516.499
+  ],
+  "conv_tree_src": [
+   1047.768,
+   673.9200000000004
+  ],
+  "conv_tree_dst": [
+   28.248,
+   3516.48
+  ]
+ },
+ "cts_hop_table": {
+  "partition_tap_um": [
+   691.2,
+   2656.8
+  ],
+  "pairs": [
+   {
+    "launch": "u_tkm_SW_root",
+    "capture": "u_tkm_SW_tile0",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1043.064,
+     328.339
+    ],
+    "tap_capture": [
+     1196.64,
+     1028.141
+    ],
+    "tap_dist_um": 853.38,
+    "root_dist_um": [
+     2680.3,
+     2134.1
+    ],
+    "root_dist_delta_um": -546.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile0",
+    "capture": "u_tkm_SW_tile1",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     1028.141
+    ],
+    "tap_capture": [
+     1196.64,
+     1382.381
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2134.1,
+     1779.9
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile1",
+    "capture": "u_tkm_SW_tile2",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     1382.381
+    ],
+    "tap_capture": [
+     1196.64,
+     1736.621
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1779.9,
+     1425.6
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile2",
+    "capture": "u_tkm_SW_tile3",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     1736.621
+    ],
+    "tap_capture": [
+     1196.64,
+     2090.861
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1425.6,
+     1071.4
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile3",
+    "capture": "u_tkm_SW_tile4",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     2090.861
+    ],
+    "tap_capture": [
+     1196.64,
+     2445.101
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1071.4,
+     717.1
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile4",
+    "capture": "u_tkm_SW_tile5",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     2445.101
+    ],
+    "tap_capture": [
+     1196.64,
+     2799.341
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     717.1,
+     648.0
+    ],
+    "root_dist_delta_um": -69.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile5",
+    "capture": "u_tkm_SW_tile6",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     2799.341
+    ],
+    "tap_capture": [
+     1196.64,
+     3153.581
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     648.0,
+     1002.2
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile6",
+    "capture": "u_tkm_SW_tile7",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     3153.581
+    ],
+    "tap_capture": [
+     1196.64,
+     3507.821
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1002.2,
+     1356.5
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile7",
+    "capture": "u_tkm_SW_tile8",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     3507.821
+    ],
+    "tap_capture": [
+     1196.64,
+     3862.061
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1356.5,
+     1710.7
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile8",
+    "capture": "u_tkm_SW_tile9",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     3862.061
+    ],
+    "tap_capture": [
+     1196.64,
+     4216.301
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1710.7,
+     2064.9
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile9",
+    "capture": "u_tkm_SW_tile10",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     4216.301
+    ],
+    "tap_capture": [
+     1196.64,
+     4570.541
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2064.9,
+     2419.2
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile10",
+    "capture": "u_tkm_SW_tile11",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     4570.541
+    ],
+    "tap_capture": [
+     1196.64,
+     4924.781
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2419.2,
+     2773.4
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile11",
+    "capture": "u_tkm_SW_tile12",
+    "kind": "column",
+    "col": [
+     3,
+     3
+    ],
+    "tap_launch": [
+     1196.64,
+     4924.781
+    ],
+    "tap_capture": [
+     1196.64,
+     5279.021
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2773.4,
+     3127.7
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile12",
+    "capture": "u_tkm_SW_tile13",
+    "kind": "turn",
+    "col": [
+     3,
+     2
+    ],
+    "tap_launch": [
+     1196.64,
+     5279.021
+    ],
+    "tap_capture": [
+     868.32,
+     4933.459
+    ],
+    "tap_dist_um": 673.88,
+    "root_dist_um": [
+     3127.7,
+     2453.8
+    ],
+    "root_dist_delta_um": -673.9,
+    "data_hop_um": null,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile13",
+    "capture": "u_tkm_SW_tile14",
+    "kind": "column",
+    "col": [
+     2,
+     2
+    ],
+    "tap_launch": [
+     868.32,
+     4933.459
+    ],
+    "tap_capture": [
+     868.32,
+     4579.219
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2453.8,
+     2099.5
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile14",
+    "capture": "u_tkm_SW_tile15",
+    "kind": "column",
+    "col": [
+     2,
+     2
+    ],
+    "tap_launch": [
+     868.32,
+     4579.219
+    ],
+    "tap_capture": [
+     868.32,
+     4224.979
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2099.5,
+     1745.3
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile15",
+    "capture": "u_tkm_SW_tile16",
+    "kind": "column",
+    "col": [
+     2,
+     2
+    ],
+    "tap_launch": [
+     868.32,
+     4224.979
+    ],
+    "tap_capture": [
+     868.32,
+     3870.739
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1745.3,
+     1391.1
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile16",
+    "capture": "u_tkm_SW_tile17",
+    "kind": "column",
+    "col": [
+     2,
+     2
+    ],
+    "tap_launch": [
+     868.32,
+     3870.739
+    ],
+    "tap_capture": [
+     868.32,
+     3516.499
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1391.1,
+     1036.8
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile17",
+    "capture": "u_tkm_SW_tile18",
+    "kind": "column",
+    "col": [
+     2,
+     2
+    ],
+    "tap_launch": [
+     868.32,
+     3516.499
+    ],
+    "tap_capture": [
+     868.32,
+     3162.259
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1036.8,
+     682.6
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile18",
+    "capture": "u_tkm_SW_tile19",
+    "kind": "column",
+    "col": [
+     2,
+     2
+    ],
+    "tap_launch": [
+     868.32,
+     3162.259
+    ],
+    "tap_capture": [
+     868.32,
+     2808.019
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     682.6,
+     328.3
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile19",
+    "capture": "u_tkm_SW_tile20",
+    "kind": "turn",
+    "col": [
+     2,
+     1
+    ],
+    "tap_launch": [
+     868.32,
+     2808.019
+    ],
+    "tap_capture": [
+     522.72,
+     3153.581
+    ],
+    "tap_dist_um": 691.16,
+    "root_dist_um": [
+     328.3,
+     665.3
+    ],
+    "root_dist_delta_um": 336.9,
+    "data_hop_um": null,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile20",
+    "capture": "u_tkm_SW_tile21",
+    "kind": "column",
+    "col": [
+     1,
+     1
+    ],
+    "tap_launch": [
+     522.72,
+     3153.581
+    ],
+    "tap_capture": [
+     522.72,
+     3507.821
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     665.3,
+     1019.5
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile21",
+    "capture": "u_tkm_SW_tile22",
+    "kind": "column",
+    "col": [
+     1,
+     1
+    ],
+    "tap_launch": [
+     522.72,
+     3507.821
+    ],
+    "tap_capture": [
+     522.72,
+     3862.061
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1019.5,
+     1373.7
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile22",
+    "capture": "u_tkm_SW_tile23",
+    "kind": "column",
+    "col": [
+     1,
+     1
+    ],
+    "tap_launch": [
+     522.72,
+     3862.061
+    ],
+    "tap_capture": [
+     522.72,
+     4216.301
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1373.7,
+     1728.0
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile23",
+    "capture": "u_tkm_SW_tile24",
+    "kind": "column",
+    "col": [
+     1,
+     1
+    ],
+    "tap_launch": [
+     522.72,
+     4216.301
+    ],
+    "tap_capture": [
+     522.72,
+     4570.541
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1728.0,
+     2082.2
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile24",
+    "capture": "u_tkm_SW_tile25",
+    "kind": "column",
+    "col": [
+     1,
+     1
+    ],
+    "tap_launch": [
+     522.72,
+     4570.541
+    ],
+    "tap_capture": [
+     522.72,
+     4924.781
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2082.2,
+     2436.5
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile25",
+    "capture": "u_tkm_SW_tile26",
+    "kind": "column",
+    "col": [
+     1,
+     1
+    ],
+    "tap_launch": [
+     522.72,
+     4924.781
+    ],
+    "tap_capture": [
+     522.72,
+     5279.021
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2436.5,
+     2790.7
+    ],
+    "root_dist_delta_um": 354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile26",
+    "capture": "u_tkm_SW_tile27",
+    "kind": "turn",
+    "col": [
+     1,
+     0
+    ],
+    "tap_launch": [
+     522.72,
+     5279.021
+    ],
+    "tap_capture": [
+     177.12,
+     4933.459
+    ],
+    "tap_dist_um": 691.16,
+    "root_dist_um": [
+     2790.7,
+     2790.7
+    ],
+    "root_dist_delta_um": 0.0,
+    "data_hop_um": null,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile27",
+    "capture": "u_tkm_SW_tile28",
+    "kind": "column",
+    "col": [
+     0,
+     0
+    ],
+    "tap_launch": [
+     177.12,
+     4933.459
+    ],
+    "tap_capture": [
+     177.12,
+     4579.219
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2790.7,
+     2436.5
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile28",
+    "capture": "u_tkm_SW_tile29",
+    "kind": "column",
+    "col": [
+     0,
+     0
+    ],
+    "tap_launch": [
+     177.12,
+     4579.219
+    ],
+    "tap_capture": [
+     177.12,
+     4224.979
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2436.5,
+     2082.3
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile29",
+    "capture": "u_tkm_SW_tile30",
+    "kind": "column",
+    "col": [
+     0,
+     0
+    ],
+    "tap_launch": [
+     177.12,
+     4224.979
+    ],
+    "tap_capture": [
+     177.12,
+     3870.739
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     2082.3,
+     1728.0
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   },
+   {
+    "launch": "u_tkm_SW_tile30",
+    "capture": "u_tkm_SW_tile31",
+    "kind": "column",
+    "col": [
+     0,
+     0
+    ],
+    "tap_launch": [
+     177.12,
+     3870.739
+    ],
+    "tap_capture": [
+     177.12,
+     3516.499
+    ],
+    "tap_dist_um": 354.24,
+    "root_dist_um": [
+     1728.0,
+     1373.8
+    ],
+    "root_dist_delta_um": -354.2,
+    "data_hop_um": 345.6,
+    "both_dirs": true
+   }
+  ],
+  "worst_tap_dist_um": 853.38,
+  "worst_root_delta_um": 673.9,
+  "rule": "related-pair skew <= 20 ps after CPPR (decision 5); each chain hop is face flop -> face flop in BOTH directions (ovf/ins/clr down, up_out/conv up), so a pair needs |skew| inside the hold window either way: balance per pair, not just per sink"
+ },
+ "out_plan_sha256": "89d4423df2afebb2b84248f7a502e9a3ceeb1d07e5f7ce099393f046ecaf0a59"
+}

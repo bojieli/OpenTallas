@@ -1,0 +1,4169 @@
+{
+ "types": {
+  "q_b000": {
+   "representative": "NW_b000",
+   "instances": 2,
+   "interfaces": 38
+  },
+  "q_b001": {
+   "representative": "NW_b001",
+   "instances": 2,
+   "interfaces": 40
+  },
+  "q_b002": {
+   "representative": "NW_b002",
+   "instances": 2,
+   "interfaces": 32
+  },
+  "q_b003": {
+   "representative": "NW_b003",
+   "instances": 2,
+   "interfaces": 23
+  },
+  "q_b010": {
+   "representative": "NW_b010",
+   "instances": 2,
+   "interfaces": 41
+  },
+  "q_b011": {
+   "representative": "NW_b011",
+   "instances": 2,
+   "interfaces": 38
+  },
+  "q_b012": {
+   "representative": "NW_b012",
+   "instances": 2,
+   "interfaces": 26
+  },
+  "q_b013": {
+   "representative": "NW_b013",
+   "instances": 2,
+   "interfaces": 15
+  },
+  "q_b100": {
+   "representative": "NW_b100",
+   "instances": 2,
+   "interfaces": 24
+  },
+  "q_b102": {
+   "representative": "NW_b102",
+   "instances": 2,
+   "interfaces": 4
+  },
+  "q_b103": {
+   "representative": "NW_b103",
+   "instances": 2,
+   "interfaces": 4
+  },
+  "q_b110": {
+   "representative": "NW_b110",
+   "instances": 2,
+   "interfaces": 18
+  },
+  "q_b111": {
+   "representative": "NW_b111",
+   "instances": 2,
+   "interfaces": 7
+  },
+  "q_b112": {
+   "representative": "NW_b112",
+   "instances": 2,
+   "interfaces": 17
+  },
+  "q_b113": {
+   "representative": "NW_b113",
+   "instances": 2,
+   "interfaces": 7
+  },
+  "q_mca": {
+   "representative": "NW_mca",
+   "instances": 2,
+   "interfaces": 0
+  },
+  "q_mcb": {
+   "representative": "NW_mcb",
+   "instances": 2,
+   "interfaces": 9
+  },
+  "q_sm0": {
+   "representative": "NW_sm0",
+   "instances": 2,
+   "interfaces": 6
+  },
+  "q_sm1": {
+   "representative": "NW_sm1",
+   "instances": 2,
+   "interfaces": 6
+  },
+  "q_sm2": {
+   "representative": "NW_sm2",
+   "instances": 2,
+   "interfaces": 6
+  },
+  "q_sm3": {
+   "representative": "NW_sm3",
+   "instances": 2,
+   "interfaces": 6
+  },
+  "q_spb0": {
+   "representative": "NW_spb0",
+   "instances": 2,
+   "interfaces": 4
+  },
+  "q_spb1": {
+   "representative": "NW_spb1",
+   "instances": 2,
+   "interfaces": 8
+  },
+  "q_spb2": {
+   "representative": "NW_spb2",
+   "instances": 2,
+   "interfaces": 17
+  },
+  "q_spt0": {
+   "representative": "NW_spt0",
+   "instances": 2,
+   "interfaces": 20
+  },
+  "q_spt1": {
+   "representative": "NW_spt1",
+   "instances": 2,
+   "interfaces": 12
+  },
+  "q_spt2": {
+   "representative": "NW_spt2",
+   "instances": 2,
+   "interfaces": 12
+  },
+  "q_spu0": {
+   "representative": "NW_spu0",
+   "instances": 2,
+   "interfaces": 34
+  },
+  "q_spu1": {
+   "representative": "NW_spu1",
+   "instances": 2,
+   "interfaces": 28
+  },
+  "q_su00": {
+   "representative": "NW_su00",
+   "instances": 2,
+   "interfaces": 14
+  },
+  "q_su01": {
+   "representative": "NW_su01",
+   "instances": 2,
+   "interfaces": 27
+  },
+  "q_su10": {
+   "representative": "NW_su10",
+   "instances": 2,
+   "interfaces": 23
+  },
+  "q_su11": {
+   "representative": "NW_su11",
+   "instances": 2,
+   "interfaces": 21
+  },
+  "q_su20": {
+   "representative": "NW_su20",
+   "instances": 2,
+   "interfaces": 13
+  },
+  "q_su21": {
+   "representative": "NW_su21",
+   "instances": 2,
+   "interfaces": 25
+  },
+  "q_su30": {
+   "representative": "NW_su30",
+   "instances": 2,
+   "interfaces": 19
+  },
+  "q_su31": {
+   "representative": "NW_su31",
+   "instances": 2,
+   "interfaces": 24
+  }
+ },
+ "ports_resolved_from_type": [
+  "L12_1",
+  "L12_2",
+  "L12m_1",
+  "L12m_2",
+  "L0_0",
+  "L0_1",
+  "L0_2",
+  "L0m_0",
+  "L0m_1",
+  "L0m_2",
+  "L1_0",
+  "L1m_0",
+  "L2_0",
+  "L2_1",
+  "L2m_0",
+  "L2m_1",
+  "L3_0",
+  "L3m_0",
+  "L5_0",
+  "L5_1",
+  "L5_2",
+  "L5m_0",
+  "L5m_1",
+  "L5m_2",
+  "L6_0",
+  "L6_1",
+  "L6m_0",
+  "L6m_1",
+  "L7_0",
+  "L7m_0",
+  "L8_0",
+  "L8_1",
+  "L8_2",
+  "L8_3",
+  "L8_4",
+  "L8_5",
+  "L8m_0",
+  "L8m_1",
+  "L8m_2",
+  "L8m_3",
+  "L8m_4",
+  "L8m_5",
+  "L10_0",
+  "L10_1",
+  "L10m_0",
+  "L10m_1",
+  "L11_0",
+  "L11_1",
+  "L11m_0",
+  "L11m_1",
+  "L14_0",
+  "L14_1",
+  "L14m_0",
+  "L14m_1",
+  "L15_0",
+  "L15_1",
+  "L15m_0",
+  "L15m_1",
+  "L16_0",
+  "L16m_0",
+  "L17_0",
+  "L17_1",
+  "L17m_0",
+  "L17m_1",
+  "L18_0",
+  "L18_1",
+  "L18m_0",
+  "L18m_1",
+  "L19_0",
+  "L19m_0",
+  "L20_0",
+  "L20m_0",
+  "L21_0",
+  "L21_1",
+  "L21_2",
+  "L21_3",
+  "L21_4",
+  "L21_5",
+  "L21m_0",
+  "L21m_1",
+  "L21m_2",
+  "L21m_3",
+  "L21m_4",
+  "L21m_5",
+  "L22_0",
+  "L22_1",
+  "L22_2",
+  "L22_3",
+  "L22_4",
+  "L22_5",
+  "L22m_0",
+  "L22m_1",
+  "L22m_2",
+  "L22m_3",
+  "L22m_4",
+  "L22m_5",
+  "L23_0",
+  "L23m_0",
+  "L24_0",
+  "L24m_0",
+  "L25_0",
+  "L25m_0",
+  "L26_0",
+  "L26m_0",
+  "L27_0",
+  "L27m_0",
+  "L28_0",
+  "L28_1",
+  "L28_2",
+  "L28_3",
+  "L28m_0",
+  "L28m_1",
+  "L28m_2",
+  "L28m_3",
+  "L29_0",
+  "L29_1",
+  "L29m_0",
+  "L29m_1",
+  "L30_0",
+  "L30_1",
+  "L30m_0",
+  "L30m_1",
+  "L31_0",
+  "L31_1",
+  "L31m_0",
+  "L31m_1",
+  "L32_0",
+  "L32_1",
+  "L32m_0",
+  "L32m_1",
+  "L33_0",
+  "L33_1",
+  "L33_2",
+  "L33m_0",
+  "L33m_1",
+  "L33m_2",
+  "L34_0",
+  "L34_1",
+  "L34m_0",
+  "L34m_1",
+  "L35_0",
+  "L35_1",
+  "L35m_0",
+  "L35m_1",
+  "L36_0",
+  "L36_1",
+  "L36_2",
+  "L36_3",
+  "L36m_0",
+  "L36m_1",
+  "L36m_2",
+  "L36m_3",
+  "L37_0",
+  "L37m_0",
+  "L38_0",
+  "L38_1",
+  "L38m_0",
+  "L38m_1",
+  "L39_0",
+  "L39m_0",
+  "L40_0",
+  "L40_1",
+  "L40m_0",
+  "L40m_1",
+  "L41_0",
+  "L41_1",
+  "L41m_0",
+  "L41m_1",
+  "L42_0",
+  "L42_1",
+  "L42_2",
+  "L42_3",
+  "L42_4",
+  "L42m_0",
+  "L42m_1",
+  "L42m_2",
+  "L42m_3",
+  "L42m_4",
+  "L43_0",
+  "L43_1",
+  "L43_2",
+  "L43_3",
+  "L43m_0",
+  "L43m_1",
+  "L43m_2",
+  "L43m_3",
+  "L44_0",
+  "L44m_0",
+  "L45_0",
+  "L45m_0",
+  "L46_0",
+  "L46m_0",
+  "L47_0",
+  "L47m_0",
+  "L48_0",
+  "L48_1",
+  "L48_2",
+  "L48_3",
+  "L48_4",
+  "L48_5",
+  "L48_6",
+  "L48_7",
+  "L48_8",
+  "L48_9",
+  "L48_10",
+  "L48m_0",
+  "L48m_1",
+  "L48m_2",
+  "L48m_3",
+  "L48m_4",
+  "L48m_5",
+  "L48m_6",
+  "L48m_7",
+  "L48m_8",
+  "L48m_9",
+  "L48m_10",
+  "L152_0",
+  "L152_1",
+  "L152_2",
+  "L152_3",
+  "L152m_0",
+  "L152m_1",
+  "L152m_2",
+  "L152m_3",
+  "L49_0",
+  "L49_1",
+  "L49m_0",
+  "L49m_1",
+  "L50_0",
+  "L50_1",
+  "L50m_0",
+  "L50m_1",
+  "L151_0",
+  "L151_1",
+  "L151_2",
+  "L151_3",
+  "L151m_0",
+  "L151m_1",
+  "L151m_2",
+  "L151m_3",
+  "L51_0",
+  "L51_1",
+  "L51_2",
+  "L51_3",
+  "L51_4",
+  "L51_5",
+  "L51_6",
+  "L51_7",
+  "L51_8",
+  "L51m_0",
+  "L51m_1",
+  "L51m_2",
+  "L51m_3",
+  "L51m_4",
+  "L51m_5",
+  "L51m_6",
+  "L51m_7",
+  "L51m_8",
+  "L52_0",
+  "L52_1",
+  "L52_2",
+  "L52_3",
+  "L52_4",
+  "L52_5",
+  "L52_6",
+  "L52_7",
+  "L52_8",
+  "L52m_0",
+  "L52m_1",
+  "L52m_2",
+  "L52m_3",
+  "L52m_4",
+  "L52m_5",
+  "L52m_6",
+  "L52m_7",
+  "L52m_8",
+  "L53_1",
+  "L53_2",
+  "L53_3",
+  "L53_4",
+  "L53_5",
+  "L53_6",
+  "L53_7",
+  "L53_8",
+  "L53_9",
+  "L53_10",
+  "L53_11",
+  "L53m_1",
+  "L53m_2",
+  "L53m_3",
+  "L53m_4",
+  "L53m_5",
+  "L53m_6",
+  "L53m_7",
+  "L53m_8",
+  "L53m_9",
+  "L53m_10",
+  "L53m_11",
+  "L150_0",
+  "L150_1",
+  "L150_2",
+  "L150_3",
+  "L150m_0",
+  "L150m_1",
+  "L150m_2",
+  "L150m_3",
+  "L54_0",
+  "L54m_0",
+  "L55_0",
+  "L55_1",
+  "L55m_0",
+  "L55m_1",
+  "L56_0",
+  "L56m_0",
+  "L57_0",
+  "L57m_0",
+  "L58_0",
+  "L58m_0",
+  "L59_0",
+  "L59_1",
+  "L59m_0",
+  "L59m_1",
+  "L60_0",
+  "L60m_0",
+  "L61_0",
+  "L61m_0",
+  "L65_0",
+  "L65m_0",
+  "L66_0",
+  "L66_1",
+  "L66_2",
+  "L66_3",
+  "L66_4",
+  "L66m_0",
+  "L66m_1",
+  "L66m_2",
+  "L66m_3",
+  "L66m_4",
+  "L67_0",
+  "L67_1",
+  "L67m_0",
+  "L67m_1",
+  "L68_0",
+  "L68_1",
+  "L68m_0",
+  "L68m_1",
+  "L69_0",
+  "L69_1",
+  "L69m_0",
+  "L69m_1",
+  "L70_0",
+  "L70_1",
+  "L70m_0",
+  "L70m_1",
+  "L71_0",
+  "L71_1",
+  "L71m_0",
+  "L71m_1",
+  "L72_0",
+  "L72_1",
+  "L72m_0",
+  "L72m_1",
+  "L73_0",
+  "L73_1",
+  "L73_2",
+  "L73_3",
+  "L73_4",
+  "L73_5",
+  "L73_6",
+  "L73_7",
+  "L73m_0",
+  "L73m_1",
+  "L73m_2",
+  "L73m_3",
+  "L73m_4",
+  "L73m_5",
+  "L73m_6",
+  "L73m_7",
+  "L75_0",
+  "L75m_0",
+  "L76_0",
+  "L76m_0",
+  "L77_0",
+  "L77m_0",
+  "L78_0",
+  "L78m_0",
+  "L79_0",
+  "L79_1",
+  "L79_2",
+  "L79_3",
+  "L79_4",
+  "L79m_0",
+  "L79m_1",
+  "L79m_2",
+  "L79m_3",
+  "L79m_4",
+  "L81_0",
+  "L81m_0",
+  "L82_0",
+  "L82_1",
+  "L82_2",
+  "L82_3",
+  "L82_4",
+  "L82m_0",
+  "L82m_1",
+  "L82m_2",
+  "L82m_3",
+  "L82m_4",
+  "L83_0",
+  "L83_1",
+  "L83m_0",
+  "L83m_1",
+  "L84_0",
+  "L84_1",
+  "L84m_0",
+  "L84m_1",
+  "L85_0",
+  "L85_1",
+  "L85m_0",
+  "L85m_1",
+  "L86_0",
+  "L86_1",
+  "L86m_0",
+  "L86m_1",
+  "L87_0",
+  "L87_1",
+  "L87m_0",
+  "L87m_1",
+  "L88_0",
+  "L88_1",
+  "L88m_0",
+  "L88m_1",
+  "L90_0",
+  "L90m_0",
+  "L91_0",
+  "L91m_0",
+  "L92_0",
+  "L92m_0",
+  "L93_0",
+  "L93_1",
+  "L93m_0",
+  "L93m_1",
+  "L94_0",
+  "L94_1",
+  "L94m_0",
+  "L94m_1",
+  "L95_0",
+  "L95_1",
+  "L95m_0",
+  "L95m_1",
+  "L100_0",
+  "L100_1",
+  "L100m_0",
+  "L100m_1",
+  "L97_0",
+  "L97_1",
+  "L97m_0",
+  "L97m_1",
+  "L98_0",
+  "L98_1",
+  "L98m_0",
+  "L98m_1",
+  "L99_0",
+  "L99_1",
+  "L99m_0",
+  "L99m_1",
+  "L101_0",
+  "L101_1",
+  "L101_2",
+  "L101_3",
+  "L101_4",
+  "L101_5",
+  "L101_6",
+  "L101_7",
+  "L101_8",
+  "L101m_0",
+  "L101m_1",
+  "L101m_2",
+  "L101m_3",
+  "L101m_4",
+  "L101m_5",
+  "L101m_6",
+  "L101m_7",
+  "L101m_8",
+  "L102_0",
+  "L102_1",
+  "L102m_0",
+  "L102m_1",
+  "L103_0",
+  "L103m_0",
+  "L104_0",
+  "L104_1",
+  "L104m_0",
+  "L104m_1",
+  "L105_0",
+  "L105m_0",
+  "L106_0",
+  "L106_1",
+  "L106_2",
+  "L106_3",
+  "L106_4",
+  "L106_5",
+  "L106_6",
+  "L106_7",
+  "L106m_0",
+  "L106m_1",
+  "L106m_2",
+  "L106m_3",
+  "L106m_4",
+  "L106m_5",
+  "L106m_6",
+  "L106m_7",
+  "L107_0",
+  "L107_1",
+  "L107m_0",
+  "L107m_1",
+  "L108_0",
+  "L108_1",
+  "L108m_0",
+  "L108m_1",
+  "L109_0",
+  "L109_1",
+  "L109m_0",
+  "L109m_1",
+  "L110_0",
+  "L110m_0",
+  "L111_0",
+  "L111m_0",
+  "L112_0",
+  "L112m_0",
+  "L113_0",
+  "L113m_0",
+  "L114_4",
+  "L114_5",
+  "L114m_4",
+  "L114m_5",
+  "L115_0",
+  "L115_1",
+  "L115_2",
+  "L115_3",
+  "L115_4",
+  "L115m_0",
+  "L115m_1",
+  "L115m_2",
+  "L115m_3",
+  "L115m_4",
+  "L116_0",
+  "L116_1",
+  "L116_2",
+  "L116_3",
+  "L116m_0",
+  "L116m_1",
+  "L116m_2",
+  "L116m_3",
+  "L117_0",
+  "L117_1",
+  "L117_2",
+  "L117_3",
+  "L117_4",
+  "L117_5",
+  "L117_6",
+  "L117_7",
+  "L117m_0",
+  "L117m_1",
+  "L117m_2",
+  "L117m_3",
+  "L117m_4",
+  "L117m_5",
+  "L117m_6",
+  "L117m_7",
+  "L119_0",
+  "L119_1",
+  "L119_2",
+  "L119_3",
+  "L119_4",
+  "L119_5",
+  "L119_6",
+  "L119_7",
+  "L119m_0",
+  "L119m_1",
+  "L119m_2",
+  "L119m_3",
+  "L119m_4",
+  "L119m_5",
+  "L119m_6",
+  "L119m_7",
+  "L120_0",
+  "L120_1",
+  "L120m_0",
+  "L120m_1",
+  "L121_0",
+  "L121_1",
+  "L121m_0",
+  "L121m_1",
+  "L122_0",
+  "L122_1",
+  "L122m_0",
+  "L122m_1",
+  "L123_0",
+  "L123_1",
+  "L123m_0",
+  "L123m_1",
+  "L155_0",
+  "L155_1",
+  "L155_2",
+  "L155_3",
+  "L155_4",
+  "L155m_0",
+  "L155m_1",
+  "L155m_2",
+  "L155m_3",
+  "L155m_4",
+  "L125_0",
+  "L125_1",
+  "L125_2",
+  "L125_3",
+  "L125_4",
+  "L125_5",
+  "L125_6",
+  "L125_7",
+  "L125m_0",
+  "L125m_1",
+  "L125m_2",
+  "L125m_3",
+  "L125m_4",
+  "L125m_5",
+  "L125m_6",
+  "L125m_7",
+  "L126_0",
+  "L126_1",
+  "L126_2",
+  "L126_3",
+  "L126_4",
+  "L126_5",
+  "L126_6",
+  "L126_7",
+  "L126_8",
+  "L126m_0",
+  "L126m_1",
+  "L126m_2",
+  "L126m_3",
+  "L126m_4",
+  "L126m_5",
+  "L126m_6",
+  "L126m_7",
+  "L126m_8",
+  "L127_0",
+  "L127m_0",
+  "L128_0",
+  "L128m_0",
+  "L129_0",
+  "L129m_0",
+  "L130_0",
+  "L130m_0",
+  "L131_0",
+  "L131m_0",
+  "L132_0",
+  "L132_1",
+  "L132_2",
+  "L132_3",
+  "L132_4",
+  "L132m_0",
+  "L132m_1",
+  "L132m_2",
+  "L132m_3",
+  "L132m_4",
+  "L133_0",
+  "L133_1",
+  "L133_2",
+  "L133_3",
+  "L133m_0",
+  "L133m_1",
+  "L133m_2",
+  "L133m_3",
+  "L134_0",
+  "L134_1",
+  "L134m_0",
+  "L134m_1",
+  "L135_0",
+  "L135m_0",
+  "L136_0",
+  "L136_1",
+  "L136m_0",
+  "L136m_1",
+  "L137_0",
+  "L137m_0",
+  "L138_0",
+  "L138_1",
+  "L138_2",
+  "L138_3",
+  "L138_4",
+  "L138_5",
+  "L138_6",
+  "L138_7",
+  "L138m_0",
+  "L138m_1",
+  "L138m_2",
+  "L138m_3",
+  "L138m_4",
+  "L138m_5",
+  "L138m_6",
+  "L138m_7",
+  "L139_0",
+  "L139_1",
+  "L139_2",
+  "L139_3",
+  "L139_4",
+  "L139_5",
+  "L139m_0",
+  "L139m_1",
+  "L139m_2",
+  "L139m_3",
+  "L139m_4",
+  "L139m_5",
+  "L140_0",
+  "L140_1",
+  "L140_2",
+  "L140_3",
+  "L140_4",
+  "L140m_0",
+  "L140m_1",
+  "L140m_2",
+  "L140m_3",
+  "L140m_4",
+  "L142_0",
+  "L142m_0",
+  "L143_0",
+  "L143_1",
+  "L143m_0",
+  "L143m_1",
+  "L144_0",
+  "L144m_0",
+  "L145_0",
+  "L145_1",
+  "L145m_0",
+  "L145m_1",
+  "L146_0",
+  "L146_1",
+  "L146_2",
+  "L146_3",
+  "L146_4",
+  "L146_5",
+  "L146_6",
+  "L146_7",
+  "L146m_0",
+  "L146m_1",
+  "L146m_2",
+  "L146m_3",
+  "L146m_4",
+  "L146m_5",
+  "L146m_6",
+  "L146m_7",
+  "L147_0",
+  "L147_1",
+  "L147_2",
+  "L147_3",
+  "L147m_0",
+  "L147m_1",
+  "L147m_2",
+  "L147m_3",
+  "L148_0",
+  "L148_1",
+  "L148_2",
+  "L148_3",
+  "L148_4",
+  "L148m_0",
+  "L148m_1",
+  "L148m_2",
+  "L148m_3",
+  "L148m_4",
+  "L149_0",
+  "L149_1",
+  "L149_2",
+  "L149_3",
+  "L149_4",
+  "L149_5",
+  "L149m_0",
+  "L149m_1",
+  "L149m_2",
+  "L149m_3",
+  "L149m_4",
+  "L149m_5",
+  "L28_detour",
+  "L28m_detour"
+ ],
+ "intended_core_obstructions": [
+  {
+   "type": "q_b000",
+   "inst": "u_hcb_Q0_lanes0_2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b000",
+   "inst": "u_hcb_Q0_lanes3_5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b000",
+   "inst": "u_hcb_Q0_lanes6_7_bank",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b001",
+   "inst": "u_hcb_Q1_lanes0_2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b001",
+   "inst": "u_hcb_Q1_lanes3_5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b001",
+   "inst": "u_hcb_Q1_lanes6_7_bank",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b002",
+   "inst": "u_hcb_Q2_lanes0_2",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b002",
+   "inst": "u_hcb_Q2_lanes3_5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b002",
+   "inst": "u_hcb_Q2_lanes6_7_bank",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b003",
+   "inst": "u_hcb_Q3_lanes0_2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b003",
+   "inst": "u_hcb_Q3_lanes3_5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b003",
+   "inst": "u_hcb_Q3_lanes6_7_bank",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b010",
+   "inst": "u_hcb_Q7_lanes0_2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b010",
+   "inst": "u_hcb_Q7_lanes3_5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b010",
+   "inst": "u_hcb_Q7_lanes6_7_bank",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b011",
+   "inst": "u_hcb_Q6_lanes0_2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b011",
+   "inst": "u_hcb_Q6_lanes3_5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b011",
+   "inst": "u_hcb_Q6_lanes6_7_bank",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b012",
+   "inst": "u_hcb_Q5_lanes0_2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b012",
+   "inst": "u_hcb_Q5_lanes3_5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b012",
+   "inst": "u_hcb_Q5_lanes6_7_bank",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b013",
+   "inst": "u_hcb_Q4_lanes0_2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b013",
+   "inst": "u_hcb_Q4_lanes3_5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b013",
+   "inst": "u_hcb_Q4_lanes6_7_bank",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k0h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k0h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k1h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k1h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k2h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k2h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k3h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k3h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k0h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k0h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k1h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k1h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k2h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k2h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k3h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k3h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k0h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k0h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k1h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k1h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k2h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k2h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k3h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k3h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k0h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k0h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k1h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k1h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k2h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k2h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k3h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k3h1",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r1c0_k0h0",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k0h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k1h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k1h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k2h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k2h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k3h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k3h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k0h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k0h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k1h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k1h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k2h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k2h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k3h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k3h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c2_k0h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k0h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k1h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k1h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k2h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k2h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k3h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k3h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k0h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k0h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k1h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k1h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k2h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k2h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k3h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k3h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_tail0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_tail1",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b110",
+   "inst": "u_sfucore_Q_lane0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b110",
+   "inst": "u_sfucore_Q_lane1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b110",
+   "inst": "u_sfucore_Q_lane2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b110",
+   "inst": "u_sfucore_Q_lane3",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b111",
+   "inst": "u_sfucore_Q_lane4",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b111",
+   "inst": "u_sfucore_Q_lane5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b111",
+   "inst": "u_sfucore_Q_lane6",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b111",
+   "inst": "u_sfucore_Q_lane7",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b111",
+   "inst": "u_sfucore_Q_lane8",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b112",
+   "inst": "u_sfucore_Q_lane9",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b112",
+   "inst": "u_sfucore_Q_lane10",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b112",
+   "inst": "u_sfucore_Q_lane11",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b112",
+   "inst": "u_sfucore_Q_lane12",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b112",
+   "inst": "u_sfucore_Q_lane13",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b113",
+   "inst": "u_sfucore_Q_lane14",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b113",
+   "inst": "u_sfucore_Q_lane15",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b113",
+   "inst": "u_sfucore_Q_opstore_a",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b113",
+   "inst": "u_sfucore_Q_opstore_b",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b113",
+   "inst": "u_sfucore_Q_ctl",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "NW_io",
+   "inst": "u_lk_N0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "NW_io",
+   "inst": "u_ep_N0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "NW_io",
+   "inst": "u_host_ep",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t00_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t00_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t10_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t10_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t01_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t01_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t11_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t11_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t02_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t02_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t12_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t12_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t03_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t03_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t13_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t13_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t04_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t04_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t14_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t14_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t05_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t05_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t15_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t15_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t06_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t06_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t16_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t16_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t07_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t07_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t17_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_t17_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t00_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t00_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t10_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t10_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t01_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t01_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t11_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t11_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t02_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t02_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t12_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t12_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t03_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t03_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t13_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t13_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t04_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t04_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t14_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t14_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t05_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t05_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t15_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t15_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t06_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t06_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t16_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t16_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t07_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t07_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t17_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_t17_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t00_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t00_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t10_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t10_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t01_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t01_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t11_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t11_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t02_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t02_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t12_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t12_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t03_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t03_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t13_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t13_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t04_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t04_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t14_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t14_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t05_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t05_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t15_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t15_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t06_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t06_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t16_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t16_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t07_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t07_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t17_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_t17_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t00_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t00_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t10_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t10_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t01_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t01_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t11_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t11_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t02_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t02_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t12_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t12_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t03_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t03_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t13_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t13_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t04_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t04_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t14_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t14_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t05_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t05_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t15_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t15_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t06_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t06_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t16_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t16_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t07_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t07_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t17_s",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_t17_n",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_spb0",
+   "inst": "u_lk_S0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_spb0",
+   "inst": "u_ep_S0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_spb2",
+   "inst": "u_xc_Q2",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_spb2",
+   "inst": "u_xc_Q3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_spt0",
+   "inst": "u_xc_Q0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_spt0",
+   "inst": "u_xc_Q1",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp2",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp4",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp6",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp8",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp10",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp12",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp14",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lanes_plain0_3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lanes_plain8_11",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_side_softplus",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_pretree",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lane_exp1",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lane_exp3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lane_exp5",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lane_exp7",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lane_exp9",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lane_exp11",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lane_exp13",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lane_exp_l",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lanes_plain4_7",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lanes_plain12_15",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_side_rest",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp2",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp4",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp6",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp8",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp10",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp12",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp14",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lanes_plain0_3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lanes_plain8_11",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_side_softplus",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_pretree",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp1",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp5",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp7",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp9",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp11",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp13",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp_l",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lanes_plain4_7",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lanes_plain12_15",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_side_rest",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su20",
+   "inst": "u_su_Q2_lanes0_3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su20",
+   "inst": "u_su_Q2_lanes8_11",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su20",
+   "inst": "u_su_Q2_lanes16_19",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su20",
+   "inst": "u_su_Q2_lanes24_27",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su20",
+   "inst": "u_su_Q2_pretree",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su21",
+   "inst": "u_su_Q2_lanes4_7",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su21",
+   "inst": "u_su_Q2_lanes12_15",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su21",
+   "inst": "u_su_Q2_lanes20_23",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su21",
+   "inst": "u_su_Q2_lanes28_31",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su30",
+   "inst": "u_su_Q3_lanes0_3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su30",
+   "inst": "u_su_Q3_lanes8_11",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su30",
+   "inst": "u_su_Q3_lanes16_19",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su30",
+   "inst": "u_su_Q3_lanes24_27",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su30",
+   "inst": "u_su_Q3_pretree",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su31",
+   "inst": "u_su_Q3_lanes4_7",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su31",
+   "inst": "u_su_Q3_lanes12_15",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su31",
+   "inst": "u_su_Q3_lanes20_23",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_su31",
+   "inst": "u_su_Q3_lanes28_31",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile0",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile1",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile2",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile3",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile4",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile5",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile6",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile7",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile8",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile9",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile10",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile11",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile12",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile13",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile14",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile15",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile16",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile17",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile18",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile19",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile20",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile21",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile22",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile23",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile24",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile25",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile26",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile27",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile28",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile29",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile30",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_tile31",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_tkm_SW_root",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hc_eng_tail0_sk_step0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hc_eng_tail0_sk_steady",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hc_eng_tail0_rest",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hc_eng_tail1_sk_step0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hc_eng_tail1_sk_steady",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hc_eng_tail1_rest",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hc_eng_hcp_sys1",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hb_idx__link",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hb_idx__selector",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_host_cp_rxs",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hb_idx__ctl",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_hb_argmax",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "root",
+   "inst": "u_col_idx",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "vsN0",
+   "inst": "u_lk_S1",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "vsN0",
+   "inst": "u_ep_S1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "NE_io",
+   "inst": "u_lk_N2",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "NE_io",
+   "inst": "u_ep_N2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_sfup_Q",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_pgp_Q",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hc_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q0",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q1",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q2",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q3",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_ring_ag",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_reduce",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_body_core",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_edge",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_vm",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_cij_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_vms_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_cxij_Q_q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_smw_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xl_Q_ctl",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_eg",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_eg",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q0",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q1",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q3",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q4",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q6",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q7",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_bd",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_bd",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_bfq0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_bfq1",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_bfq2",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_bfq3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_bfq0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_bfq1",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_bfq2",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_bfq3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_sucore_Q",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_sfus_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_quant_Q__u_dec",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_dbk_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hcollgi_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hcollgl_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_idx__qctl_Q",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_idx__q_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p00",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p01",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p02",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p03",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p04",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p05",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p06",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p07",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p08",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p09",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p10",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p11",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p12",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p13",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p14",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_ctl_Q_p15",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmks_Q0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmks_Q1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmks_Q2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmks_Q3",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_calendar_Q",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_idx__op_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmdel_Q0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmdel_Q1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmdel_Q2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmdel_Q3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmdel_Q4",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmdel_Q5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmdel_Q6",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmdel_Q7",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xl_Q_aqhi",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xl_Q_aqlo",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k0h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k0h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k1h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k1h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k2h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k2h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k3h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k3h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k0h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k0h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k1h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k1h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k2h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k2h1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k3h0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k3h1",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r1c0_k0h0",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_sfup_Q",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_pgp_Q",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hc_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q0",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q1",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q2",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q3",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_coll_Q_ring_ag",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_coll_Q_reduce",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_coll_Q_body_n2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_coll_Q_vm",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_cij_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_vms_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_cxij_Q_q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_smw_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xl_Q_ctl",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_eg",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_eg",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q0",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q1",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q3",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q4",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q6",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q7",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_bd",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_bd",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_bfq0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_bfq1",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_bfq2",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_bfq3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_bfq0",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_bfq1",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_bfq2",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_bfq3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_sucore_Q",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_sfus_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_quant_Q__u_dec",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_dbk_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hcollgi_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hcollgl_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_idx__qctl_Q",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_idx__q_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p00",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p01",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p02",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p03",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p04",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p05",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p06",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p07",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p08",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p09",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p10",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p11",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p12",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p13",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p14",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_ctl_Q_p15",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmks_Q0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmks_Q1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmks_Q2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmks_Q3",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_calendar_Q",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_idx__op_Q",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmdel_Q0",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmdel_Q1",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmdel_Q2",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmdel_Q3",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmdel_Q4",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmdel_Q5",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmdel_Q6",
+   "obs_max": "M5",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmdel_Q7",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xl_Q_aqhi",
+   "obs_max": "M6",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xl_Q_aqlo",
+   "obs_max": "M7",
+   "basis": "plan pin layers and gen_core_kit_hbm auto route ceiling; routed-view qualification pending"
+  }
+ ]
+}

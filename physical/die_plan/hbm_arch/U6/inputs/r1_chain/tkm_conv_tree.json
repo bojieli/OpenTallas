@@ -1,0 +1,26 @@
+{
+ "net": "conv root->tile31 N conv pin",
+ "path": [
+  [
+   192.393,
+   1356.48
+  ],
+  [
+   192.393,
+   1360.8
+  ],
+  [
+   1177.353,
+   1360.8
+  ],
+  [
+   1177.353,
+   1365.12
+  ]
+ ],
+ "path_um": 8116.9,
+ "stations": 20,
+ "max_hop_um": 400,
+ "token_CB": 21,
+ "note": "PATH-HBM/ROOTPACK R1-172.8 conv relay: root N gap -> W edge corridor -> top band -> tile31 N conv pin"
+}

@@ -1,0 +1,412 @@
+{
+ "type": "q_hub_ne",
+ "source": "q2n2 split claude/path-hbm-ne2-1025 (rest_extract of ot_hfd_coll_q2_hard_v8g_s NLINK 2 + q3 vm members)",
+ "not_done": [
+  "second link (NLINK 2: W-EP N2/S3): link0+link1 tx/rx pins face the same q_hub link buses (L51_o/L52_i 612 b, L101_o/L126_i) as NW does for its 3 links; the die SerDes lanes for the 2nd link are not added in this step",
+  "pin partners of master ports are the as-built q2 body core_conns (name level); ring/reduce/vm cut pins are bit-exact from the master parent view"
+ ],
+ "pieces": {
+  "u_hb_coll_Q_body_n2": {
+   "module": "ot_hfd_coll_q2n2_body_core",
+   "cells": 231533,
+   "origin_um": [
+    34.56,
+    561.6
+   ],
+   "outline_um": [
+    786.24,
+    743.04
+   ],
+   "pins": 12131,
+   "port_bits": 12131,
+   "pins_per_um_face": {
+    "N": 1.47,
+    "S": 5.57,
+    "E": 5.57,
+    "W": 3.32
+   },
+   "pins_per_face": {
+    "N": 1152,
+    "S": 4378,
+    "E": 4136,
+    "W": 2465
+   },
+   "pins_file": "cores/ot_hfd_coll_q2n2_body_core__786.24x743.04__q_hub_ne_u_hb_coll_Q_body_n2.json"
+  },
+  "u_hb_coll_Q_vm": {
+   "module": "ot_hfd_coll_q2n2_vm_core",
+   "cells": 69222,
+   "origin_um": [
+    34.56,
+    34.56
+   ],
+   "outline_um": [
+    924.48,
+    509.76
+   ],
+   "pins": 8661,
+   "port_bits": 8661,
+   "pins_per_um_face": {
+    "N": 5.57,
+    "E": 5.55,
+    "W": 1.33
+   },
+   "pins_per_face": {
+    "N": 5152,
+    "E": 2829,
+    "W": 680
+   },
+   "pins_file": "cores/ot_hfd_coll_q2n2_vm_core__924.48x509.76__q_hub_ne_u_hb_coll_Q_vm.json"
+  }
+ },
+ "cells": {
+  "u_hb_coll_Q_before": 465018,
+  "after": 543137,
+  "ring_reduce": {
+   "u_hb_coll_Q_ring_ag": 121663,
+   "u_hb_coll_Q_reduce": 120719
+  }
+ },
+ "stations": {
+  "before": 4963,
+  "after": 5266,
+  "added": 381,
+  "dropped": {
+   "old body own chain (regenerated from the new pins)": 78
+  },
+  "rerouted_existing": 153,
+  "worst_hop_um": 372.0,
+  "worst_hop_conn": "bus:L96_o",
+  "worst_new_or_rerouted_hop_um": 358.9,
+  "worst_new_conn": "core:u_hb_coll_Q_body_n2.program_fault|leaf:u_hleaf_Q",
+  "regs_inside_cores": [],
+  "station_regs_added": 5029,
+  "station_bit_regs_added": 593656
+ },
+ "links": {
+  "u_hb_coll_Q_body_n2->u_hb_coll_Q_vm": {
+   "bits": 4331,
+   "max_um": 17
+  },
+  "u_hb_coll_Q_body_n2->L101_o": {
+   "bits": 2454,
+   "max_um": 636
+  },
+  "u_hb_coll_Q_body_n2->L126_i": {
+   "bits": 2454,
+   "max_um": 673
+  },
+  "u_hb_coll_Q_body_n2->L51_o": {
+   "bits": 2454,
+   "max_um": 417
+  },
+  "u_hb_coll_Q_body_n2->L52_i": {
+   "bits": 2454,
+   "max_um": 527
+  },
+  "u_hb_coll_Q_body_n2->L102_o": {
+   "bits": 2344,
+   "max_um": 2596
+  },
+  "u_hb_coll_Q_body_n2->L103_o": {
+   "bits": 2344,
+   "max_um": 7245
+  },
+  "u_hb_coll_Q_body_n2->L104_o": {
+   "bits": 2344,
+   "max_um": 2103
+  },
+  "u_hb_coll_Q_body_n2->L105_o": {
+   "bits": 2344,
+   "max_um": 8577
+  },
+  "u_hb_coll_Q_body_n2->L131_i": {
+   "bits": 2344,
+   "max_um": 7333
+  },
+  "u_hb_coll_Q_body_n2->L134_i": {
+   "bits": 2344,
+   "max_um": 2105
+  },
+  "u_hb_coll_Q_body_n2->L135_i": {
+   "bits": 2344,
+   "max_um": 6132
+  },
+  "u_hb_coll_Q_body_n2->L136_i": {
+   "bits": 2344,
+   "max_um": 2295
+  },
+  "u_hb_coll_Q_body_n2->L36_o": {
+   "bits": 2344,
+   "max_um": 2481
+  },
+  "u_hb_coll_Q_body_n2->L37_o": {
+   "bits": 2344,
+   "max_um": 7369
+  },
+  "u_hb_coll_Q_body_n2->L38_o": {
+   "bits": 2344,
+   "max_um": 1970
+  },
+  "u_hb_coll_Q_body_n2->L39_o": {
+   "bits": 2344,
+   "max_um": 8701
+  },
+  "u_hb_coll_Q_body_n2->L55_i": {
+   "bits": 2344,
+   "max_um": 1996
+  },
+  "u_hb_coll_Q_body_n2->L57_i": {
+   "bits": 2344,
+   "max_um": 6183
+  },
+  "u_hb_coll_Q_body_n2->L59_i": {
+   "bits": 2344,
+   "max_um": 2186
+  },
+  "u_hb_coll_Q_body_n2->L61_i": {
+   "bits": 2344,
+   "max_um": 7384
+  },
+  "u_hb_coll_Q_vm->u_hcollrs_Q": {
+   "bits": 2048,
+   "max_um": 2822
+  },
+  "u_hb_coll_Q_body_n2->u_hb_coll_Q_reduce": {
+   "bits": 1141,
+   "max_um": 292
+  },
+  "u_hb_coll_Q_body_n2->u_cij_Q": {
+   "bits": 1056,
+   "max_um": 3305
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p0": {
+   "bits": 562,
+   "max_um": 3473
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p1": {
+   "bits": 562,
+   "max_um": 3413
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p2": {
+   "bits": 562,
+   "max_um": 1902
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p3": {
+   "bits": 562,
+   "max_um": 1657
+  },
+  "u_hb_coll_Q_body_n2->u_hleaf_Q": {
+   "bits": 324,
+   "max_um": 4369
+  },
+  "u_hb_coll_Q_body_n2->u_cic_Q": {
+   "bits": 162,
+   "max_um": 1428
+  },
+  "u_hb_coll_Q_body_n2->u_hcollrs_Q": {
+   "bits": 144,
+   "max_um": 2701
+  },
+  "u_hb_coll_Q_body_n2->u_hcollgi_Q": {
+   "bits": 58,
+   "max_um": 2195
+  },
+  "u_hb_coll_Q_body_n2->u_obs_Q": {
+   "bits": 50,
+   "max_um": 1490
+  },
+  "u_hb_coll_Q_body_n2->u_cxrc_Q_s": {
+   "bits": 4,
+   "max_um": 800
+  },
+  "u_hb_coll_Q_body_n2->u_hb_coll_Q_ring_ag": {
+   "bits": 3,
+   "max_um": 7477
+  },
+  "u_hb_coll_Q_body_n2->u_fr_Q": {
+   "bits": 2,
+   "max_um": 4532
+  }
+ },
+ "stations_per_link": {
+  "u_hb_coll_Q_body_n2->bus:L101_o": {
+   "chains": 5,
+   "min": 2,
+   "max": 2
+  },
+  "u_hb_coll_Q_body_n2->bus:L102_o": {
+   "chains": 20,
+   "min": 4,
+   "max": 8
+  },
+  "u_hb_coll_Q_body_n2->bus:L103_o": {
+   "chains": 20,
+   "min": 22,
+   "max": 24
+  },
+  "u_hb_coll_Q_body_n2->bus:L104_o": {
+   "chains": 20,
+   "min": 5,
+   "max": 7
+  },
+  "u_hb_coll_Q_body_n2->bus:L105_o": {
+   "chains": 20,
+   "min": 21,
+   "max": 25
+  },
+  "u_hb_coll_Q_body_n2->bus:L126_i": {
+   "chains": 6,
+   "min": 2,
+   "max": 2
+  },
+  "u_hb_coll_Q_body_n2->bus:L131_i": {
+   "chains": 20,
+   "min": 18,
+   "max": 22
+  },
+  "u_hb_coll_Q_body_n2->bus:L134_i": {
+   "chains": 20,
+   "min": 7,
+   "max": 11
+  },
+  "u_hb_coll_Q_body_n2->bus:L135_i": {
+   "chains": 20,
+   "min": 19,
+   "max": 21
+  },
+  "u_hb_coll_Q_body_n2->bus:L136_i": {
+   "chains": 20,
+   "min": 3,
+   "max": 7
+  },
+  "u_hb_coll_Q_body_n2->bus:L36_o": {
+   "chains": 20,
+   "min": 4,
+   "max": 8
+  },
+  "u_hb_coll_Q_body_n2->bus:L37_o": {
+   "chains": 20,
+   "min": 22,
+   "max": 24
+  },
+  "u_hb_coll_Q_body_n2->bus:L38_o": {
+   "chains": 20,
+   "min": 5,
+   "max": 7
+  },
+  "u_hb_coll_Q_body_n2->bus:L39_o": {
+   "chains": 20,
+   "min": 22,
+   "max": 26
+  },
+  "u_hb_coll_Q_body_n2->bus:L51_o": {
+   "chains": 4,
+   "min": 2,
+   "max": 2
+  },
+  "u_hb_coll_Q_body_n2->bus:L52_i": {
+   "chains": 5,
+   "min": 2,
+   "max": 2
+  },
+  "u_hb_coll_Q_body_n2->bus:L55_i": {
+   "chains": 20,
+   "min": 7,
+   "max": 11
+  },
+  "u_hb_coll_Q_body_n2->bus:L57_i": {
+   "chains": 20,
+   "min": 19,
+   "max": 21
+  },
+  "u_hb_coll_Q_body_n2->bus:L59_i": {
+   "chains": 20,
+   "min": 3,
+   "max": 7
+  },
+  "u_hb_coll_Q_body_n2->bus:L61_i": {
+   "chains": 20,
+   "min": 18,
+   "max": 22
+  },
+  "u_hb_coll_Q_body_n2->u_cic_Q": {
+   "chains": 2,
+   "min": 4,
+   "max": 5
+  },
+  "u_hb_coll_Q_body_n2->u_cij_Q": {
+   "chains": 2,
+   "min": 11,
+   "max": 12
+  },
+  "u_hb_coll_Q_body_n2->u_cxrc_Q_s": {
+   "chains": 2,
+   "min": 2,
+   "max": 3
+  },
+  "u_hb_coll_Q_body_n2->u_fr_Q": {
+   "chains": 2,
+   "min": 16,
+   "max": 16
+  },
+  "u_hb_coll_Q_body_n2->u_hb_coll_Q_ring_ag": {
+   "chains": 2,
+   "min": 25,
+   "max": 25
+  },
+  "u_hb_coll_Q_body_n2->u_hcollgi_Q": {
+   "chains": 2,
+   "min": 7,
+   "max": 8
+  },
+  "u_hb_coll_Q_body_n2->u_hcollrs_Q": {
+   "chains": 3,
+   "min": 8,
+   "max": 9
+  },
+  "u_hb_coll_Q_body_n2->u_hleaf_Q": {
+   "chains": 13,
+   "min": 16,
+   "max": 16
+  },
+  "u_hb_coll_Q_body_n2->u_obs_Q": {
+   "chains": 4,
+   "min": 3,
+   "max": 4
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p0": {
+   "chains": 2,
+   "min": 10,
+   "max": 10
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p1": {
+   "chains": 2,
+   "min": 10,
+   "max": 10
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p2": {
+   "chains": 2,
+   "min": 8,
+   "max": 8
+  },
+  "u_hb_coll_Q_vm->u_hcollks_Q_p3": {
+   "chains": 2,
+   "min": 10,
+   "max": 10
+  },
+  "u_hb_coll_Q_vm->u_hcollrs_Q": {
+   "chains": 1,
+   "min": 9,
+   "max": 9
+  }
+ },
+ "master_internal_station_chains": {
+  "u_hb_coll_Q_body_n2->u_hb_coll_Q_ring_ag": {
+   "chains": 2,
+   "min": 25,
+   "max": 25
+  }
+ },
+ "lane_latency_changes": {}
+}
