@@ -69,7 +69,16 @@ def transform(plan_dir):
             c['outline_um'] = wh[:]
             c['pins_file'] = generated[key]
             c['note'] = c.get('note', '') + '; CODEX measured-content outline TRIAL, no cycle change'
-            entry = entries.get(tn, {}).get(c['inst'])
+            regional_entries = entries.get(tn, {})
+            entry = regional_entries.get(c['inst'])
+            # Pre-QUAD6 sidecars name replicated service entries generically.
+            # Match their declared module, and publish the exact per-core key.
+            if entry is None:
+                matches = [e for e in regional_entries.values()
+                           if isinstance(e, dict) and e.get('module') == mod]
+                if matches:
+                    entry = dict(matches[0])
+                    regional_entries[c['inst']] = entry
             if entry:
                 # Macro-free cores use the centre. wr_q's lone SRAM stays in its
                 # lower band; its centre entry at y108 clears the SRAM top58.4.
@@ -77,6 +86,9 @@ def transform(plan_dir):
                 entry['xy_um'] = [x, y]
                 entry['island_um'] = [round(x-4.32,6),round(y-4.32,6),round(x+4.32,6),round(y+4.32,6)]
                 entry['source'] = 'CODEX measured-content structural outline trial, centre channel'
+                for alias in regional_entries.values():
+                    if isinstance(alias, dict) and alias.get('module') == mod:
+                        alias.update(xy_um=entry['xy_um'][:],island_um=entry['island_um'][:])
             free = (wh[0]-8.64)*(wh[1]-8.64)-macro
             report['cores'].append(dict(type=tn,inst=c['inst'],module=mod,old_outline=old,outline=wh,
                 std_area_um2=area,macro_area_um2=macro,free_fill=round(area/free,4),
