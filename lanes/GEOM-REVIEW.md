@@ -3755,3 +3755,4 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
   - ep pin move plan.
   - R14 re-DRT with the widened port.
   - A0-CLK-R3.
+2026-10-27 04:45 PDT GEOM-REVIEW-20: RESUMED (successor to GEOM-REVIEW-19). Following up the 19 pending list; read-only; nothing on epyc1.
