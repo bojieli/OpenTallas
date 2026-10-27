@@ -237,3 +237,25 @@ def test_cts_hook_written_with_plan_open_count(tmp_path):
 def test_no_cts_hook_without_plan_tree(tmp_path):
     assert CI.install(tmp_path, sample())
     assert not (tmp_path / CI.CTS_HOOK).exists()
+
+
+def test_installed_clock_entry_uses_same_track_and_access_as_kit_io(tmp_path):
+    # Regression: the later pushdown hook used to undo io.tcl's track snap and
+    # via-access shape, causing DRT-0255 at the centre clock entry.
+    sl = sample()
+    original = copy.deepcopy(sl)
+    (tmp_path / "make_tracks.tcl").write_text(
+        "make_tracks M5 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048\n")
+    CI.install(tmp_path, sl)
+    p = json.loads((tmp_path / "core_infra_plan.json").read_text())
+    assert p["clock_entry"]["xy_um"] == [432.012, 432.0]
+    assert "ot_ci_clock_entry {clk} 432.012 432" in (tmp_path / "master_core_infra.tcl").read_text()
+    impl = (tmp_path / "core_infra_impl.tcl").read_text()
+    clock_proc = impl.split("proc ot_ci_clock_entry", 1)[1].split("proc ot_ci_port", 1)[0]
+    assert "-pin_size {0.048 0.48}" in clock_proc
+    assert sl == original  # the frozen slice stays byte-identical
+    # A kit with a nondefault track grid must use that exact grid as io.tcl does.
+    (tmp_path / "make_tracks.tcl").write_text(
+        "make_tracks M5 -x_offset 0.02 -x_pitch 0.08 -y_offset 0.012 -y_pitch 0.048\n")
+    CI.install(tmp_path, sl)
+    assert json.loads((tmp_path / "core_infra_plan.json").read_text())["clock_entry"]["xy_um"] == [432.02, 432.0]
