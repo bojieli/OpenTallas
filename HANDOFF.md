@@ -1266,3 +1266,5 @@ CODEX: 2026-10-26 21:04 PDT PD2 parked; R864sourcecomposed21band/G024/7faces; ex
 2026-10-27 01:38 PDT COORD: ownership gap closed for non-pending work -> S81-KITS-1 (166 S81 types, PD5 plan GRT0 = freeze rule 1, skip PD6 deltas), S81-CORE-LAT-R12 (34 cores + ODB-0370), HEAD-KITS-1 (16 head types + R12 collect), TOK-HBM restarted. Still waiting on plan deltas: QC types (R17), KV plan items (R18), HBM types/MU cores (MU-QUAD-3); HBM 217 cores partly in CORE-LAT-R4 -> widen after its first results.
 2026-10-27 01:41 PDT OWNER: agreed type-reduction plan -- HBM collapse families (canonical pin slots, orientation views, shared FT) in the planU2 delta (MU-QUAD-3); S81 no re-type (PD5 frozen at GRT0), family waves + template-replica auto checks; QC/KV/HEAD near 1 design/family.
 2026-10-27 01:45 PDT COORD: INFRA-FIRST-HEAD-1 started (head infra-first plan event had no owner; holds all 16 head types).
+
+CODEX: 2026-10-27 04:54 PDT HBM takeover: unpushed QUAD5 e91031b844 rescued/pushed codex/hbm-1027; U3f GRT kit stale tap diagnosed; collarR5 NOTSIGNED TT+16.06/FF-22.31/slew65+41, routedLEC9393EQ; q2n2gate2 OOM300G needs proof strategy fix.
