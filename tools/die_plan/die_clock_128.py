@@ -1053,7 +1053,7 @@ def combo_tcl(wires, nd, shield):
     hw, off, ext = shield_geom(nd)
     ob = hw + 2 * nd["space"] + nd["width"]
     L = [f"set pn [$blk findNet {shield}]", f"if {{$pn eq \"NULL\"}} {{ set pn [odb::dbNet_create $blk {shield}] }}",
-         "$pn setSpecial", "$pn setSigType GROUND", "set fsw [odb::dbSWire_create $pn ROUTED]",
+         "$pn setSpecial", "$pn setSigType GROUND", "set fsw [odb::dbSWire_create $pn ROUTED]", "lappend ::ot_clock_shield_swires $fsw",
          "proc fwnet {nm} { global blk; set n [$blk findNet $nm]; if {$n == \"NULL\"} { error \"missing fixed clock "
          "net $nm\" }; $n setSpecial; $n setSigType CLOCK; foreach it [$n getITerms] { $it setSpecial }; "
          "return [odb::dbSWire_create $n ROUTED] }",
@@ -1110,6 +1110,7 @@ def shield_merge_tcl(shield, nd):
     """CLOCK-KV-R10 (opt-in, die_clock_mesh combo --merge-shields): Tcl post-pass, run after every shield / tie shape
     exists, that replaces the shield net's overlapping or abutting same-track M8/M9 boxes of shield width by their
     union (shield_union in Tcl: the same metal, one shape per run, so extraction sees one neighbour)."""
+    from shield_notches import tcl as notch_tcl
     return [
         "proc ot_merge_shields {netname wdbu} { global blk; set n [$blk findNet $netname]; array set g {}; "
         "foreach sw [$n getSWires] { foreach b [$sw getWires] { if {[$b isVia]} { continue }; "
@@ -1131,7 +1132,7 @@ def shield_merge_tcl(shield, nd):
         "if {$dir eq \"V\"} { odb::dbSBox_create $sw $l $c0 $lo $c1 $hi STRIPE } "
         "else { odb::dbSBox_create $sw $l $lo $c0 $hi $c1 STRIPE } } }; "
         "puts \"OT_SHIELD_MERGE in $nin out $nout\" }",
-        f"ot_merge_shields {shield} [expr {{round({nd['width']}*[[ord::get_db_block] getDbUnitsPerMicron])}}]"]
+        f"ot_merge_shields {shield} [expr {{round({nd['width']}*[[ord::get_db_block] getDbUnitsPerMicron])}}]"] + notch_tcl(shield,nd['width'])
 
 
 def shield_stripes(segs, nd):
