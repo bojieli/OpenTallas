@@ -31,8 +31,13 @@ module ot_rst_pipe #(
         if (!rst_n_in) begin s0 <= 1'b0; s1 <= 1'b0; end
         else begin s0 <= 1'b1; s1 <= s0; end
     genvar t;
+    // every stage's register vector on one module-scope wire (stage t = bits [t*REGIONS +: REGIONS]): the copy families
+    // below read their D from here, not through a bit-select of a genblock reference into g_p (Yosys -noautowire
+    // cannot resolve `g_p[..].q[t]` from another generate scope).
+    wire [STAGES*REGIONS-1:0] stage_q;
     generate for (t = 0; t < STAGES; t = t + 1) begin : g_p
         (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] q;
+        assign stage_q[t*REGIONS +: REGIONS] = q;
         if (t == 0) begin : g_first
             always @(posedge clk) q <= {REGIONS{s1}};
         end else begin : g_next
@@ -46,7 +51,16 @@ module ot_rst_pipe #(
         // fam_all names every copy bit without a bracketed scope (ot_rst_copies.py addresses copies through it).
         (* keep = "true" *) wire [REGIONS*COPIES-1:0] fam_all;
         for (t = 0; t < REGIONS; t = t + 1) begin : g_c
-            wire d = (STAGES > 1) ? g_p[(STAGES > 1) ? STAGES-2 : 0].q[t] : s1;
+            // KV-KITS-2 10-27: the copy D is chosen by a NAMED generate block (g_dp: the previous stage, STAGES > 1;
+            // g_ds: the synchroniser, STAGES == 1) -- the old ternary `g_p[(STAGES > 1) ? STAGES-2 : 0].q[t]` was a
+            // bit-select of a genblock reference that Yosys (-noautowire, default_nettype none) cannot resolve
+            // (`q' implicitly declared).  Same D, same flops, same names.
+            wire d;
+            if (STAGES > 1) begin : g_dp
+                assign d = stage_q[(STAGES-2)*REGIONS + t];
+            end else begin : g_ds
+                assign d = s1;
+            end
             (* keep = "true", dont_touch = "true", ot_rst_split = "true" *) reg [COPIES-1:0] qv;
             (* keep = "true", dont_touch = "true" *) always @(posedge clk) qv <= {COPIES{d}};
             assign rst_n[t] = qv[0];

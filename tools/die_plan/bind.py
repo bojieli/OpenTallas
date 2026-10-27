@@ -2594,6 +2594,8 @@ class Binder:
                 json.dumps(self.clock_landings.manifest(), indent=1) + "\n")
         f.write_text(top_text)
         files.append(f)
+        if P is not None:
+            self.write_wavefront_open_pads(P, f, top_text)
         if P is not None and self._por_spec():
             # PATH-KV-POR 10-25: fail-closed die reset pad gate on the emitted RTL (por_gate.py G1-G4)
             import por_gate
@@ -3166,6 +3168,43 @@ class Binder:
                 "".join(x + ";\n" for x in ports) + "\n".join(wires) + "\n" + "\n".join(insts) +
                 f"\nendmodule\n`default_nettype wire\n")
 
+    def write_wavefront_open_pads(self, P, f, top_text):
+        """KV-KITS-2 (COORD 10-27 03:41): declare, with the plan proof, the type-uniform wavefront outs
+        (rst_o_<k> / start_o_<k>) an instance leaves open (reset_tree.wf_open_outs), as instance entries of the
+        strict port-bind's default pad file <top>.pads.json (spare OUTPUT ports: open, never tied).  Only ports the
+        die top really leaves unconnected are declared; anything else stays OUTPUT_OPEN."""
+        import reset_tree as RT
+        oo = RT.wf_open_outs(P)
+        pf = Path(str(f) + ".pads.json")
+        doc = json.loads(pf.read_text()) if pf.exists() else {}
+        inst_m = {m.group(2): m.group(1) for m in
+                  re.finditer(r"^    (\w+)(?: #\(.*?\))? (\w+) \(\n(.*?)\n    \);", top_text, re.S | re.M)}
+        body = {m.group(2): m.group(3) for m in
+                re.finditer(r"^    (\w+)(?: #\(.*?\))? (\w+) \(\n(.*?)\n    \);", top_text, re.S | re.M)}
+        ent = doc.setdefault("instances", {})
+        n = 0
+        for p, ports in sorted(oo.items()):
+            name = sv_id(p)
+            if name not in inst_m:
+                raise BindError(f"wavefront open outs: instance {name} not in the bound top")
+            for port, why in sorted(ports.items()):
+                if re.search(rf"\.{port}\(", body[name]):
+                    raise BindError(f"wavefront open outs: {name}.{port} is connected in the top but wf_open_outs "
+                                    "says it has no child")
+                e = ent.setdefault(name, dict(master=inst_m[name], reason="", ports={}))
+                e["ports"][port] = [[0, 0]]
+                e.setdefault("wavefront_open", {})[port] = why
+                n += 1
+        for name, e in ent.items():
+            if e.get("wavefront_open"):
+                e["reason"] = ("KV-KITS-2 wavefront open outs: type-uniform registered reset/START out pins with no "
+                               "wavefront child on this instance (reset_tree.wf_open_outs proof per port); open, "
+                               "never tied")
+        if n:
+            pf.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n")
+            self.wavefront_open_outs = n
+        return n
+
     # ------------------------------------------------------------------------------------------ report
     def report(self):
         F, G = self.F, self.G
@@ -3560,6 +3599,27 @@ def cmd_bind(a):
     return 1 if (B.errors and a.strict) else 0
 
 
+def declared_strap_file(out, top):
+    """KV-KITS-2 (COORD ruling KV-KITS-1 ASK5): the declared parent ID straps (bind_parent_id_straps.json, OWNER 10-25
+    option B) as the strict port-bind's --strap-file: [[master, port]] for every strap port of every instance in the
+    manifest, the master read from the bound top.  None when the die declares no straps."""
+    mf = out / "bind_parent_id_straps.json"
+    if not mf.exists():
+        return None
+    man = json.loads(mf.read_text())
+    text = Path(top).read_text()
+    inst_m = {m.group(2): m.group(1) for m in re.finditer(r"^    (\w+)(?: #\(.*?\))? (\w+) \(\n", text, re.S | re.M)}
+    straps = set()
+    for inst, ports in man.get("instances", {}).items():
+        name = sv_id(inst)
+        if name not in inst_m:
+            raise BindError(f"declared strap instance {name} not in the bound top {top}")
+        straps |= {(inst_m[name], port) for port in ports}
+    sf = out / "port_bind_straps.json"
+    sf.write_text(json.dumps(dict(source=str(mf), straps=sorted([list(x) for x in straps])), indent=1) + "\n")
+    return sf
+
+
 def cmd_portbind(a):
     """the strict port-bind check (tools/die_port_bind.py, owner NO STUBS rule) on the bound top: indexed against the
     as-built source tree (asbuilt base: rtl roots, files, prefer) + the generated RTL + the plan-cell / variant files."""
@@ -3593,6 +3653,9 @@ def cmd_portbind(a):
         cmd += ["--define", d]
     for m in ab.get("portbind_allow_model", []):
         cmd += ["--allow-model", m]
+    sf = declared_strap_file(out, top)
+    if sf is not None:
+        cmd += ["--strap-file", str(sf)]
     cmd += ["--out", str(out / "port_bind_strict.json")]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=root)
     (out / "port_bind_strict.txt").write_text(r.stdout + r.stderr)
