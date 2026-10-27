@@ -15,7 +15,8 @@
   "OT_ATTN_HCORE",
   "OT_S81ENG_RR_N32",
   "OT_S81C_HCORE_CTLA",
-  "OT_S81C_HCORE_RST_TIMED"
+  "OT_S81C_HCORE_RST_TIMED",
+  "S81_HOSTB_LAND_OBS"
  ],
  "dependency_modules": [
   {
@@ -43,8 +44,8 @@
    "assumption": "opaque child: all inputs conservatively live"
   }
  ],
- "source_commit": "0e770eb9c8f4279dba859b935e21e6dda21c8a4f",
- "note": "Exact optimized top-module ports. Every opaque child input is conservatively live; output aliases are live. Per-type declarations only; no functional ports removed or extra type created. | S81-UNBLOCK-2 10-27: rows re-keyed to PD5 composed type names by exact partition membership (pd5_dead_inputs.py) from results/token_pass/s81_dead_inputs_2148/proof_closing.json sha256 ff21e736f3474612ccc276bb74f3ff2c81e71a831d775ac682e8204878201e09; proof content unchanged.",
+ "source_commit": "c462cc37cc02cca8491e51ec83c550c289dccaca",
+ "note": "Exact optimized top-module ports. Every opaque child input is conservatively live; output aliases are live. Per-type declarations only; no functional ports removed or extra type created. | S81-UNBLOCK-2 10-27: rows re-keyed to PD5 composed type names by exact partition membership (pd5_dead_inputs.py) from results/token_pass/s81_dead_inputs_2148/proof_closing_hostbobs.json sha256 f963b41b65b801803d32b2ea0484752d60a65a42b5dfaa75adfe65840120390f; proof content unchanged.",
  "declarations": [
   {
    "partition_type": "svc_hi_dsdv_svc_rs__t6_phy1026_svc_15",
