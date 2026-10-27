@@ -44,6 +44,10 @@ UNIT_PS = {"1ps": 1.0, "1ns": 1000.0, "10ps": 10.0, "100ps": 100.0, "1fs": 0.001
 EPS = 1e-3
 # AGENTS.md sign-off policy (user decision 2026-09-30), held HERE and not read from the generator under test
 POLICY_SETUP_PS, POLICY_HOLD_PS = 60.0, 25.0
+# seam hold contract floor (die tap skew bound 20 ps + routed-RCX error 5 ps, gen_phys.SEAM_HOLD_MIN_PS), held HERE:
+# kits ship this linter without gen_phys.py (CLOCK-KV-R3 canary e444b9df7: ModuleNotFoundError gen_phys at sdc_lint).
+# test_sdc_lint.py asserts it equals the generator constant.
+SEAM_HOLD_MIN_PS = 25.0
 
 # Standalone kits copy this linter without gen_phys.py; the allowed policy is independent of the generator.
 ROOT_RESET_FALSE_PATH = (
@@ -292,11 +296,10 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     if out_lim > EPS:
         err.append(f"hold: contract min output delay {out_lim:g} ps > 0 (sender hold check waived)")
     if hold_in_min_ps is not None or hold_out_min_ps is not None:
-        import gen_phys
         if seam_hold_ps is None or abs((-out_lim - in_lim) - float(seam_hold_ps)) > EPS \
-                or float(seam_hold_ps) < gen_phys.SEAM_HOLD_MIN_PS - EPS:
+                or float(seam_hold_ps) < SEAM_HOLD_MIN_PS - EPS:
             err.append(f"hold: seam hold contract sender {-out_lim:g} + receiver {-in_lim:g} ps != seam "
-                       f"{seam_hold_ps} ps or below {gen_phys.SEAM_HOLD_MIN_PS:g} ps")
+                       f"{seam_hold_ps} ps or below {SEAM_HOLD_MIN_PS:g} ps")
     # FLOW 10-25 (ruling 9.7 / 5e): the SDC vclk carries the TT-bound insertion; the FF-bound one (FF-only flow steps,
     # vclk_corner.tcl) must be a positive insertion not above TT
     if insertion_ff_ps is not None and not (0 < float(insertion_ff_ps) <= float(insertion_ps) + EPS):
