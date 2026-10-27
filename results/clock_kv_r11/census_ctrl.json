@@ -1,0 +1,353 @@
+{
+ "fail": [
+  "qkd_kvs_pc"
+ ],
+ "modules": {
+  "kv3_head_eighth_e0": {
+   "instances": 128,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     128
+    ]
+   ]
+  },
+  "kv3_head_eighth_e1": {
+   "instances": 256,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     256
+    ]
+   ]
+  },
+  "kv3_head_eighth_e2": {
+   "instances": 128,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     128
+    ]
+   ]
+  },
+  "kv3_head_eighth_e6": {
+   "instances": 256,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     256
+    ]
+   ]
+  },
+  "kv3_head_eighth_e5": {
+   "instances": 256,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     256
+    ]
+   ]
+  },
+  "qkd_ectlk_q0": {
+   "instances": 32,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     32
+    ]
+   ]
+  },
+  "qkd_ectlk_q1": {
+   "instances": 32,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     32
+    ]
+   ]
+  },
+  "qkd_ectlk_q2": {
+   "instances": 32,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     32
+    ]
+   ]
+  },
+  "qkd_ectlk_q3": {
+   "instances": 32,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     32
+    ]
+   ]
+  },
+  "qkd_ahub": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_kvs_ctl": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "kv3_astk": {
+   "instances": 4,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     4
+    ]
+   ]
+  },
+  "qkd_hr_ingest_eng": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_core_order": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_cdc_ch": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_cdc_pc": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_core_peer": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_core_tx": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_core_rx": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_core_guard": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_core_queue": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_core_prompt": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_cdc_hi": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_cdc_ci": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_phy_pad": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_hr_phy_adp": {
+   "instances": 8,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     8
+    ]
+   ]
+  },
+  "qkd_hr_host_qm": {
+   "instances": 1,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "qkd_kvs_pc_h_head_p": {
+   "instances": 4,
+   "patterns": 1,
+   "top": [
+    [
+     [
+      [
+       125.0,
+       86.4
+      ],
+      [
+       125.0,
+       276.48
+      ]
+     ],
+     4
+    ]
+   ]
+  },
+  "qkd_kvs_pc": {
+   "instances": 124,
+   "patterns": 2,
+   "top": [
+    [
+     [
+      [
+       124.984,
+       86.4
+      ],
+      [
+       124.984,
+       276.48
+      ]
+     ],
+     64
+    ],
+    [
+     [
+      [
+       125.0,
+       86.4
+      ],
+      [
+       125.0,
+       276.48
+      ]
+     ],
+     60
+    ]
+   ]
+  },
+  "kv3_pv_pair": {
+   "instances": 256,
+   "patterns": 1,
+   "top": [
+    [
+     [
+      [
+       109.064,
+       138.24
+      ]
+     ],
+     256
+    ]
+   ]
+  },
+  "ot_qwen_tp8_pv_join_t": {
+   "instances": 64,
+   "patterns": 1,
+   "top": [
+    [
+     [],
+     64
+    ]
+   ]
+  }
+ }
+}
