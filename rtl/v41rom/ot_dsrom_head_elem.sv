@@ -170,7 +170,8 @@ module ot_dsrom_head_elem #(
         assign cs[l][0] = 32'd0;
         assign cv[l][0] = pl[5];
         for (s = 0; s < 8; s = s + 1) begin : g_s
-            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(cv[l][s]), .a(cs[l][s]), .b(p[8*l + s]),
+            // s = 0 adds the constant cs[l][0] = +0: no kept round-carry copies (CY_COPY 0, HEAD-CORE-R11)
+            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9), .CY_COPY(s != 0)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(cv[l][s]), .a(cs[l][s]), .b(p[8*l + s]),
                                           .y(cs[l][s+1]), .err(ce[l][s]), .valid_out(cv[l][s+1]));
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) cerr[8*l + s] <= 1'b0;
