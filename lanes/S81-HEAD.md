@@ -417,3 +417,38 @@ READY evidence d745f04d48 on codex/head-1027, results/geom_review/head_ft_halo_1
 
 ## CODEX parked 2026-10-27 10:13 PDT
 Explicit reset. Final independent facehalo review0dcd28d8d4 confirms parent19faf0c75 bothgaps624→312→0potentialfacehalo pairs, viewedPASS_FACE_PLANNING_ONLY. Actualplacement/internalFTcentroidbanks remainOPEN; existing57builderfails remainFAIL. Packet handoff/codex-head-20261027-1013.md; parent owns clockprovider/nextlocaldropstack correction. No newjobs afterreset.
+
+2026-10-27 11:13 PDT HEAD-CORE-R19 RESULT (partial: no HEAD core signed off yet; tree + plan delta READY). Run dirs below are /srv/opentallas-scratch2/claude/head-core-r19 on the named host; launch logs are in intel2:.../head-core-r19/logs.
+CORES (signoff.py actual, FF bound 202.5, 833/60-25; numbers read from signoff.json = CHECKED as tool output):
+| view | TT setup | FF hold WNS / #neg | HB4 | FF ins mean (band 182.5-222.5) | pair TT/FF | DRC/ant | sdc_lint | routed LEC |
+| A m2 HM0 (codex) | +121.10 | -8.86 / 199 | 2456 | 208.6 | 36.6/35.1 | 0/0 | PASS | pending |
+| A m2 R19 (codex) | +121.07 | -7.35 / 25 | 14603 | 208.3 | 38.6/37.0 | 0/0 | PASS | pending |
+| A m2 residual2_clean (codex, margin 2) | +121.09 | -18.45 / 64 | 4108 | 208.5 | 36.6/35.1 | 0/0 | PASS | pending |
+| A m2 r19_residual3 (R19, margin 10) intel1 | +121.07 | -1.10 / 2 | 15186 | 208.3 | 38.5/36.9 | 0/0 | PASS | running |
+| B HM10 (r16) | +101.86 | -8.27 / 19 | 13417 | 189.1 | 33.1/32.6 | 0/0 | FAIL (stale ports) | EQUIVALENT 27594/27594 |
+| B HM0 (codex) | +101.19 | -3.92 / 53 | 1674 | 188.8 | 36.1/35.7 | 0/0 | FAIL (stale ports) | EQUIVALENT |
+| B residual2_clean (codex, margin 2) | +101.17 | -3.65 / 23 | 3001 | 188.8 | 36.3/35.9 | 0/0 | FAIL | running |
+| B residual3 (R19, margin 8 + SDC fix) epyc2 | +101.14 | -8.35 / 6 | 12293 | 189.2 | 35.4/35.1 | 0/0 | PASS | running |
+ - elemA m12 = failed alternate (codex), not continued. HEAD hard-core types in the plan are only elemA_cv (4 per hd_tile) and elemB_cv (1 per hd_tile); there are no other hard-core types.
+ - elemB SDC FIX: the kit constraint.sdc listed the absent outputs best_bits best_key best_row done l_d l_v in 3 get_ports lists, so sdc_lint (fail-closed) FAILed. The R19 kit lists only {fault o_d o_v}, the actual ports per interface_metadata_repair.json. The timing value is unchanged and sdc_lint is now PASS.
+ - The FF insertion condition (202.5+-20) is MET on every A view (mean 208.3, min 192.7 / max 221.6) and on every B view (189).
+ - ROOT CAUSE of residual whack-a-mole (CHECKED on A HM0 vs residual2 SPEF): every post-route ECO re-routes clock leaf nets in DRT, although they are dont_touch for rsz. 390 of 514 ot_ms_*_clk leaf nets changed C (max +0.91 fF). Example: residual2 worst A path r[44]->INV->r[51] has no HB4, a capture leaf of 22.5 ps vs a launch leaf of 4.1 ps, and its flops did not move (DEF identical). The RCX-time repair margin (2/8/10 ps) is therefore eaten by post-DRT leaf-skew changes on new endpoints.
+   STRUCTURAL FIX proposed (flow owner): freeze the clock-net wiring (FIXED/skip-reroute) in head_post_route_eco DRT, so the ECO only routes data nets. Until then, residuals converge slowly: A 25 -> 2 endpoints.
+ - LIVE successors (mine, collect eco_chain.log SIGNOFF + <OUT>.lec_final/lec/lec.json):
+   - intel1 elemA_m2.eco_r19_residual4 (from r19_residual3, margin 10, unit oth-ubuntu-2545089-1793124490)
+   - epyc2 elemB.eco_residual4 (from residual3, margin 10, unit oth-ubuntu-115633-1793124771)
+   - intel1 elemA_m2.eco_residual2_clean_residual3 (margin 10; still in ECO; secondary)
+   SIGNED only when signoff.py says SIGNED AND the routed LEC is EQUIVALENT.
+TREE R19 claude/head-r19-tree-1027@6acfb0b663 (results/s81_head_r19/tree/README.md; numbers UNCHECKED, own tool):
+ - head_mesh_r3 determinism: PASS (byte-identical twice and across PYTHONHASHSEED).
+ - Plan root re-sited to the snap_inside centre (691.2,4.32), the only edge site found.
+ - 32/95 M9 straps re-snapped by 3.24 um onto the 12.96@34.56 PG; 0 off band, residual 0.
+ - Insertion TT/FF 3105.0/2494.5 (R18 3104.4/2494.0; in band = at the pre-R17 level); pair model 78.6/74.2.
+ - tree_balance PASS (313 families); sibling reps PASS; VIA89 = 11538 crossings.
+ - ASK: 26-slot island delta (hd_tile 2; hd_spn/hd_spn_end 12 each). On a trial plan it clears clock_sites + island_lattice (0 displacement).
+ - NEW: the spine trunk x 8760.96 sits on a VDD M9 stripe centre and needs an 8.64-um riser to lane 8769.6.
+PLAN R19 claude/head-r19-plan-1027@df038a2a04 (on main 60b5ddf52; plan sha 5a61dd5e; CHECKED by the sub-lane runs):
+ - BQ=2 emitted: gen ot_s81hd_mesh_ep.sv:325 ot_s81hd_mesh_ep_core #(.BQ(2)) u_core (all 3 hd_mesh).
+ - ft_mstrap_i taps from the built LEFs; main's clock-entry check PASS on 5/5 cores.
+ - G0 0E/6W; G0C 0E (16/16); strict portbind PASS 326 inst.
+ - Fixed: the dead lane's "G0C 0" was stale (30 off-track pin errors). Mirrored track offsets were recomputed for the 319.68 outline and VDD/VSS were dropped from the pin files; 6 new tests pass.
