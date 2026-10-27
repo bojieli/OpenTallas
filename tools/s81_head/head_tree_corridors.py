@@ -120,56 +120,58 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
             x = D.snap(targets[gx]['c'] - bar, D.SITE_X)
             for _, cell in cells:
                 cell['origin_um'][0] = x
-    # Vertical-column placement can move a horizontal corner's actual X end.
-    # Recolor H intervals from those final pins; Y movement cannot alter them.
-    hrows = defaultdict(list)
-    hbucket = {g: bucket for (lay,bucket), rows in buckets.items() if lay=='M8' for _,_,g in rows}
-    for g, edges in bydrv.items():
-        if layers[g] != 'M8':
-            continue
-        d = pin(g,'Y')
-        vals = [d[0]] + ([pin(e['load'],'A')[0] for e in edges] if edges else [d[0]+8.64])
-        pad = .08 if exact_jogs else 8.64
-        hrows[hbucket[g]].append((min(vals)-pad,max(vals)+pad,g))
-    for bucket, rows in hrows.items():
-        colors,n = color_intervals(rows); counts[f'M8@{bucket}'] = n
-        pg = grid['M8']; step=pg['pitch_um']/2; phase=pg['offset_um']+pg['pitch_um']/4
-        base=phase+round((bucket-phase)/step)*step
-        for g,c in colors.items():
-            desired=base+(c-n//2)*step; tr=D.DEFAULT_TRACKS['M8']
-            if lower_face_gap:
-                # Reserve the actual bank body below the first face-flop row.
-                # These dimensions belong only to the measured HEAD lower band;
-                # upper spine bands retain their independent open reservation.
-                limits=[]
-                for _,_,gg in rows:
-                    cc=groups[gg]; part=cc[0][1]['part']; pp=plan.parts[part]
-                    typ=pp['type']; height=plan.types[typ]['outline_um'][1]
-                    oy=pp['origin_um'][1]; cy=sum(v['origin_um'][1] for _,v in cc)/len(cc)
-                    local=cy-oy
-                    if pp.get('orient','R0') in ('MX','R180'):local=height-local
-                    band=1036.8 if typ in ('hd_spn','hd_spn_end') and 1365.12<=local<=1416.8 else 0.0
-                    if typ not in ('hd_tile','hd_spn','hd_spn_end') or not 328.32<=local-band<=380.0:
-                        limits=[];break
-                    lowbody,highbody=330.32+band,352.78+band
-                    half=len(cc)*D.ROW_Y/2
-                    if pp.get('orient','R0') in ('MX','R180'):
-                        limits.append((oy+height-highbody+half,oy+height-lowbody-half))
-                    else:limits.append((oy+lowbody+half,oy+highbody-half))
-                if limits:
-                    low=max(q[0] for q in limits);high=min(q[1] for q in limits)
-                    import math
-                    first=phase+math.ceil((low-phase)/step)*step
-                    desired=first+c*step
-                    if desired>high+1e-6:
-                        raise D.C128.PlanError([dict(kind='face_gap_capacity',name=str(bucket),
-                            detail=dict(colors=n,required=desired,allowed=[low,high]))])
-            targets[g]=dict(layer='M8',c=round(tr['offset_um']+round((desired-tr['offset_um'])/tr['pitch_um'])*tr['pitch_um'],4),color=c)
-    for g,cells in groups.items():
-        gy=g if layers.get(g)=='M8' else incoming.get(g)
-        if gy in targets and targets[gy]['layer']=='M8':
-            y=D.snap(targets[gy]['c']-len(cells)*D.ROW_Y/2,D.ROW_Y)
-            for k,(_,cell) in enumerate(cells):cell['origin_um'][1]=round(y+k*D.ROW_Y,4)
+    def recolor_horizontal():
+        # Vertical-column placement can move a horizontal corner's actual X end.
+        # Recolor H intervals from those final pins; Y movement cannot alter them.
+        hrows = defaultdict(list)
+        hbucket = {g: bucket for (lay,bucket), rows in buckets.items() if lay=='M8' for _,_,g in rows}
+        for g, edges in bydrv.items():
+            if layers[g] != 'M8':
+                continue
+            d = pin(g,'Y')
+            vals = [d[0]] + ([pin(e['load'],'A')[0] for e in edges] if edges else [d[0]+8.64])
+            pad = .08 if exact_jogs else 8.64
+            hrows[hbucket[g]].append((min(vals)-pad,max(vals)+pad,g))
+        for bucket, rows in hrows.items():
+            colors,n = color_intervals(rows); counts[f'M8@{bucket}'] = n
+            pg = grid['M8']; step=pg['pitch_um']/2; phase=pg['offset_um']+pg['pitch_um']/4
+            base=phase+round((bucket-phase)/step)*step
+            for g,c in colors.items():
+                desired=base+(c-n//2)*step; tr=D.DEFAULT_TRACKS['M8']
+                if lower_face_gap:
+                    # Reserve the actual bank body below the first face-flop row.
+                    # These dimensions belong only to the measured HEAD lower band;
+                    # upper spine bands retain their independent open reservation.
+                    limits=[]
+                    for _,_,gg in rows:
+                        cc=groups[gg]; part=cc[0][1]['part']; pp=plan.parts[part]
+                        typ=pp['type']; height=plan.types[typ]['outline_um'][1]
+                        oy=pp['origin_um'][1]; cy=sum(v['origin_um'][1] for _,v in cc)/len(cc)
+                        local=cy-oy
+                        if pp.get('orient','R0') in ('MX','R180'):local=height-local
+                        band=1036.8 if typ in ('hd_spn','hd_spn_end') and 1365.12<=local<=1416.8 else 0.0
+                        if typ not in ('hd_tile','hd_spn','hd_spn_end') or not 328.32<=local-band<=380.0:
+                            limits=[];break
+                        lowbody,highbody=330.32+band,352.78+band
+                        half=len(cc)*D.ROW_Y/2
+                        if pp.get('orient','R0') in ('MX','R180'):
+                            limits.append((oy+height-highbody+half,oy+height-lowbody-half))
+                        else:limits.append((oy+lowbody+half,oy+highbody-half))
+                    if limits:
+                        low=max(q[0] for q in limits);high=min(q[1] for q in limits)
+                        import math
+                        first=phase+math.ceil((low-phase)/step)*step
+                        desired=first+c*step
+                        if desired>high+1e-6:
+                            raise D.C128.PlanError([dict(kind='face_gap_capacity',name=str(bucket),
+                                detail=dict(colors=n,required=desired,allowed=[low,high]))])
+                targets[g]=dict(layer='M8',c=round(tr['offset_um']+round((desired-tr['offset_um'])/tr['pitch_um'])*tr['pitch_um'],4),color=c)
+        for g,cells in groups.items():
+            gy=g if layers.get(g)=='M8' else incoming.get(g)
+            if gy in targets and targets[gy]['layer']=='M8':
+                y=D.snap(targets[gy]['c']-len(cells)*D.ROW_Y/2,D.ROW_Y)
+                for k,(_,cell) in enumerate(cells):cell['origin_um'][1]=round(y+k*D.ROW_Y,4)
+    recolor_horizontal()
     if separate_drops:
         # Distinct clock nets cannot share a local "M9" capture drop. Allocate
         # physical capture columns before routing, bounded by real host and
@@ -220,6 +222,7 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
             for _,cell in cc:cell["origin_um"][0]=xx
             used.append((col,lo,hi,parent));assigned.append(dict(group=g,column=col,dx=round(xx-old,4)))
         out["summary"]["capture_columns"]=assigned
+        recolor_horizontal()
     corridors = {}
     for g, edges in bydrv.items():
         d = pin(g, 'Y')
