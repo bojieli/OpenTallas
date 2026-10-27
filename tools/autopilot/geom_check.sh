@@ -43,7 +43,7 @@ tail -1 "$OUT/dump.log"
 [ $rc = 0 ] || { echo "AP_AUTO_GEOM_ERROR dump rc $rc"; exit $rc; }
 mapfile -t RA < <(python3 -I -c 'import json,sys;[print(a) for a in json.load(open(sys.argv[1])).get("rules_args",[])]' "$OUT/check.json")
 GA=(); [ "$GRT" = true ] && GA=(--grt-log "$OUT/grt.log")
-python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${RA[@]}"
+python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" --kit "$KIT" "${GA[@]}" "${RA[@]}"
 vrc=$?
 python3 -E "$TOOLS/geom_png.py" "$OUT/geom.tsv" "$OUT/auto_geom.json" "$OUT/auto_geom.png" ${GA:+--cong "$OUT/cong.rpt"} \
   >/dev/null 2>&1 && echo "AP_AUTO_GEOM_PNG $OUT/auto_geom.png" || echo "AP_AUTO_GEOM_PNG_ERROR"

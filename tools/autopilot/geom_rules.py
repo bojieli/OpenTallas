@@ -286,6 +286,61 @@ def pin_metrics(D, strap_re):
                 pin_peak_layer_max=max(lpeak.values()) if lpeak else 0.0, face_span=span, pin_table=sorted(table))
 
 
+def declared_clock_transport_pins(D, kit):
+    """Exempt only a matching declared one-buffer clock island proven in the dump.
+
+    Declarations alone never establish clock connectivity or timing coverage.
+    Unknown/stale pairs keep the ordinary pin-registration checks.
+    """
+    if not kit:
+        return frozenset()
+    from pathlib import Path
+    try:
+        island = json.loads((Path(kit) / "island_ft.json").read_text())
+        interface = json.loads((Path(kit) / "ft_interface.json").read_text())
+    except (OSError, ValueError, TypeError):
+        return frozenset()
+    if not isinstance(island, dict) or not isinstance(interface, dict):
+        return frozenset()
+    if not isinstance(island.get("arcs"), list) or not isinstance(interface.get("arcs"), list):
+        return frozenset()
+    pairs = {(a.get("source"), a.get("sink")) for a in interface["arcs"]
+             if isinstance(a, dict) and a.get("kind") == "clock"}
+    pins = {p["name"]: p for p in D.pins}
+    cells = {c[6]: (cid, c) for cid, c in D.cells.items()}
+    exempt = set()
+    for arc in island.get("arcs", []):
+        if not isinstance(arc, dict) or arc.get("kind") != "clock" or arc.get("role") != "tree_node":
+            continue
+        source, sink = arc.get("source"), arc.get("sink")
+        declared = arc.get("cells", [])
+        if (not isinstance(source, str) or not isinstance(sink, str) or (source, sink) not in pairs
+                or not isinstance(declared, list) or len(declared) != 1 or not isinstance(declared[0], dict)):
+            continue
+        entry = cells.get(declared[0].get("name"))
+        sp, tp = pins.get(source), pins.get(sink)
+        if not entry or not sp or not tp or sp["io"] != "INPUT" or tp["io"] != "OUTPUT":
+            continue
+        cid, cell = entry
+        if cell[0] != "B" or cell[1] != arc.get("master"):
+            continue
+        rect = arc.get("rect_um", [])
+        if not isinstance(rect, list) or len(rect) != 4 or any(not isinstance(x, (int, float)) or not math.isfinite(x) for x in rect):
+            continue
+        if any(abs(a-b) > POS_TOL for a,b in zip(cell[2:6], rect)):
+            continue
+        ni, no = D.pin_net.get(sp["k"]), D.pin_net.get(tp["k"])
+        if ni is None or no is None or ni == no:
+            continue
+        _, driver, sinks = D.nets[ni]
+        _, odriver, outputs = D.nets[no]
+        if (driver != ("p", sp["k"], False) or sinks != [("i", cid, False)]
+                or odriver != ("i", cid, False) or outputs != [("p", tp["k"], False)]):
+            continue
+        exempt.update((source, sink))
+    return frozenset(exempt)
+
+
 def pin_reg_metrics(D, strap_re, clock_pins=frozenset()):
     """pin -> nearest register through <= PINREG_DEPTH buffers (layout_review.tcl semantics, directional)"""
     dist, unreg, macro, exempt = [], [], 0, 0
@@ -1171,13 +1226,15 @@ def stage_of_odb(name):
     return "placed" if b.startswith("3_place") else "cts" if b.startswith("4_cts") else "other" if b else ""
 
 
-def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None):
+def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, kit=None):
     D = Design(path)
     sr = re.compile(strap_re)
     m = area_metrics(D)
     m.update(pin_metrics(D, sr))
     ck = clock_metrics(D)
-    m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"])))
+    transport = declared_clock_transport_pins(D, kit)
+    m["declared_clock_transport_pins"] = sorted(transport)
+    m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"]) | transport))
     m.update(r2r_metrics(D))
     m.update(ck)
     m.update(macro_metrics(D))
@@ -1215,8 +1272,9 @@ def main(argv=None):
     ap.add_argument("--odb", default="", help="checkpoint file name (stage: 3_place / 4_cts)")
     ap.add_argument("--max-layer", default="M5", help="kit MAX_ROUTING_LAYER (channel / column capacity)")
     ap.add_argument("--grt-log", default=None, help="geom_grt.tcl log (>= 50 congestion iterations)")
+    ap.add_argument("--kit", help="kit clock island/interface contracts for measured transport classification")
     a = ap.parse_args(argv)
-    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log)
+    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.kit)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)
