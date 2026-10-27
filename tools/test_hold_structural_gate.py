@@ -8,7 +8,7 @@ HELPER = pathlib.Path(__file__).with_name("orfs_hold_mm.tcl")
 
 
 class HoldStructuralGate(unittest.TestCase):
-    def run_case(self, worst, failures, args, guard=1, synced=True):
+    def run_case(self, worst, failures, args, guard=1, synced=True, inputs=0, nports=0, planned=None):
         script = r'''
 source @HELPER@
 set ::ot_mm_synced @SYNCED@
@@ -18,16 +18,25 @@ set ::env(OT_HOLD_GUARD) @GUARD@
 set ::env(REPORTS_DIR) @REPORTS@
 set ::worst @WORST@
 set ::failures @FAILURES@
+set ::inputs @INPUTS@
+set ::nports @NPORTS@
+@PLANNED@
 set ::repairs {}
 proc find_timing_paths {args} {
   if {[lsearch -exact $args -scenes] < 0 || [lindex $args [expr {[lsearch -exact $args -scenes]+1}]] ne "BC"} { error "must measure FF scene BC" }
   if {[lsearch -exact $args -slack_max] >= 0} {
     if {[lindex $args [expr {[lsearch -exact $args -slack_max]+1}]] != 0} { error "must count true failures, not margin" }
-    return [lrepeat $::failures failing_path]
+    return [concat [lrepeat $::inputs in_path] [lrepeat [expr {$::failures - $::inputs}] failing_path]]
   }
   return worst_path
 }
-proc get_property {p prop} { if {$p eq "worst_path"} { return $::worst }; return -1 }
+proc get_ports {args} { set l {}; for {set i 0} {$i < $::nports} {incr i} { lappend l port_$i }; lappend l out_0; return $l }
+proc get_full_name {x} { return $x }
+proc get_property {p prop} {
+  if {$prop eq "direction"} { return [expr {[string match port_* $p] ? "input" : "output"}] }
+  if {$prop eq "startpoint"} { return [expr {$p eq "in_path" ? "port_0" : "u_reg/CLK"}] }
+  if {$p eq "worst_path"} { return $::worst }; return -1
+}
 proc log_cmd {args} { lappend ::repairs $args }
 # In passing cases finish after proving that repair is reached, avoiding the
 # unrelated iterative guard (which needs a changing timing database).
@@ -44,7 +53,10 @@ puts "REPAIRS $::repairs"
                       .replace('@REPORTS@', '{'+directory+'}')
                       .replace('@WORST@', str(worst))
                       .replace('@FAILURES@', str(failures))
-                      .replace('@ARGS@', args))
+                      .replace('@ARGS@', args)
+                      .replace('@INPUTS@', str(inputs))
+                      .replace('@NPORTS@', str(nports))
+                      .replace('@PLANNED@', '' if planned is None else 'set ::env(OT_HOLD_PLANNED_INPUT) %s' % planned))
             result = subprocess.run(['tclsh'], input=script, text=True, capture_output=True, check=True)
             return result.stdout, result.stderr
 
@@ -85,6 +97,42 @@ puts "REPAIRS $::repairs"
         out, _ = self.run_case(20, 0, '-hold', synced=False)
         self.assertIn('synchronized FF scene BC unavailable', out)
         self.assertIn('REPAIRS \n', out)
+
+    # FLOW-SHARED-5 (COORD S81-R24): planned input-hold demand counted apart from internal failures
+    def test_planned_input_demand_does_not_count_as_structural(self):
+        out, _ = self.run_case(-40, 2096, '-hold -hold_margin 5', inputs=1909, nports=2000)
+        self.assertIn('OT_HOLD_PLANNED_INPUT stage=cts: internal 187 endpoints (ws -1.00), planned input 1909 endpoints', out)
+        self.assertNotIn('OT_HOLD_STRUCTURAL', out)
+        self.assertIn('REPAIR_REACHED', out)
+
+    def test_input_endpoints_beyond_port_bits_are_structural(self):
+        out, _ = self.run_case(-40, 2096, '-hold -hold_margin 5', inputs=1909, nports=1000)
+        self.assertIn('OT_HOLD_STRUCTURAL', out)
+        self.assertIn('planned input 1909 endpoints (ws -1.00) of 1000 input-port bits', out)
+        self.assertNotIn('REPAIR_REACHED', out)
+
+    def test_internal_count_still_limited(self):
+        out, _ = self.run_case(-40, 4101, '-hold -hold_margin 5', inputs=2100, nports=4000)
+        self.assertIn('OT_HOLD_STRUCTURAL', out)
+        self.assertIn('internal 2001 endpoints', out)
+        self.assertNotIn('REPAIR_REACHED', out)
+
+    def test_worst_slack_limit_applies_to_input_paths_too(self):
+        out, _ = self.run_case(-120, 2096, '-hold -hold_margin 5', inputs=2096, nports=4000)
+        self.assertIn('OT_HOLD_STRUCTURAL', out)
+        self.assertIn('limits: ws >= -100 ps, endpoints <= 2000', out)
+        self.assertNotIn('REPAIR_REACHED', out)
+
+    def test_planned_split_can_be_disabled(self):
+        out, _ = self.run_case(-40, 2096, '-hold -hold_margin 5', inputs=1909, nports=2000, planned=0)
+        self.assertIn('OT_HOLD_STRUCTURAL', out)
+        self.assertNotIn('OT_HOLD_PLANNED_INPUT', out)
+        self.assertNotIn('REPAIR_REACHED', out)
+
+    def test_split_not_run_when_total_within_limits(self):
+        out, _ = self.run_case(-40, 1500, '-hold -hold_margin 5', inputs=1500, nports=0)
+        self.assertNotIn('OT_HOLD_PLANNED_INPUT', out)
+        self.assertIn('REPAIR_REACHED', out)
 
 
 if __name__ == '__main__':
