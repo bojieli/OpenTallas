@@ -1,0 +1,224 @@
+{
+ "TT": {
+  "insertion_ps": [
+   6777.0,
+   7027.01
+  ],
+  "tap_skew_ps": 250.01,
+  "core_offset_taps": 0,
+  "seam_pairs": 3371,
+  "seam_max_ps": 196.22,
+  "seam_p99_ps": 106.84,
+  "intra_pairs": 21517,
+  "intra_max_ps": 151.25,
+  "pairs_over_80": 1645,
+  "related_pair_max_ps": 196.22,
+  "gate_ps": 80.0,
+  "verdict": "DIAGNOSTIC-FAIL",
+  "tap_slew_max_ps": 69.06,
+  "mesh_stub_in_slew_max_ps": 204.0,
+  "tree_slew_max_ps": 132.46,
+  "mesh_cap_pF": 445.45,
+  "cppr_rule": "METHODOLOGY v4 12.4b: GATE = last common tree node (region root same-region, die root across); mesh-node credit = INFO only",
+  "info_mesh_credit_related_pair_max_ps": 196.22,
+  "info_mesh_credit_pairs_over_80": 1645,
+  "mesh_connected": {},
+  "skew_role": "DIAGNOSTIC (target 80 ps); freeze gate = die STA related-pair setup/hold on tap_arrivals_<corner>.json (12.4a v4.3)",
+  "early_offset_verdict": "PASS",
+  "rule_12_8": {
+   "rule": "12.8 / 12.4b",
+   "gate_ps": 80.0,
+   "related_pair_max_ps": 196.22,
+   "pairs": 24888,
+   "pairs_over_80": 1645,
+   "plain_pair_max_ps": 196.22,
+   "info_mesh_node_cppr_max_ps": 196.22,
+   "info_note": "mesh-node CPPR credit (min stub-input early/late range) is INFO only (12.4b)",
+   "residual": {
+    "core_latency": {
+     "early_offset_taps": 0,
+     "max_declared_early_ps": 0,
+     "pairs_with_core_tap": 0,
+     "core_pair_max_ps": 0
+    },
+    "by_region": {
+     "None": {
+      "tree_imbalance_ps": 214.91,
+      "mesh_spread_ps": 251.57,
+      "stub_spread_ps": 35.02,
+      "plain_tap_spread_ps": 250.01
+     }
+    }
+   },
+   "worst": [
+    [
+     196.22,
+     "t_phy_hbm__clk",
+     "t_eng__clk"
+    ],
+    [
+     196.22,
+     "t_eng__clk",
+     "t_phy_hbm__clk"
+    ],
+    [
+     180.55,
+     "t_phy_hbm__clk",
+     "t_eng__clk_t4"
+    ],
+    [
+     174.63,
+     "t_phy_hbm__clk",
+     "t_iqf__clk_t3"
+    ],
+    [
+     174.63,
+     "t_iqf__clk_t3",
+     "t_phy_hbm__clk"
+    ],
+    [
+     160.44,
+     "t_phy_hbm__clk",
+     "t_iqf__clk_t7"
+    ],
+    [
+     151.25,
+     "t_s_2N_C__clk_t4",
+     "t_s_2N_C__clk_t8"
+    ],
+    [
+     134.58,
+     "t_fW5_p3_b2__clk_t2",
+     "t_fW5_p3_b2__clk_t6"
+    ],
+    [
+     134.51,
+     "t_fW1_p4_b2__clk_t7",
+     "t_fW1_p4_b2__clk_t10"
+    ],
+    [
+     134.38,
+     "t_fW1_p6_b2__clk_t8",
+     "t_fW1_p6_b2__clk_t12"
+    ]
+   ],
+   "verdict": "FAIL",
+   "fails": [
+    "related-pair 196.22 ps > 80.0 (CPPR at last common tree node)"
+   ]
+  },
+  "clock_switched_cap_pF": 919.6,
+  "clock_wire_power_W": 0.541
+ },
+ "FF": {
+  "insertion_ps": [
+   5591.99,
+   5811.97
+  ],
+  "tap_skew_ps": 219.98,
+  "core_offset_taps": 0,
+  "seam_pairs": 3371,
+  "seam_max_ps": 178.68,
+  "seam_p99_ps": 96.43,
+  "intra_pairs": 21517,
+  "intra_max_ps": 131.18,
+  "pairs_over_80": 705,
+  "related_pair_max_ps": 178.68,
+  "gate_ps": 80.0,
+  "verdict": "DIAGNOSTIC-FAIL",
+  "tap_slew_max_ps": 53.27,
+  "mesh_stub_in_slew_max_ps": 183.89,
+  "tree_slew_max_ps": 95.48,
+  "mesh_cap_pF": 445.86,
+  "cppr_rule": "METHODOLOGY v4 12.4b: GATE = last common tree node (region root same-region, die root across); mesh-node credit = INFO only",
+  "info_mesh_credit_related_pair_max_ps": 178.68,
+  "info_mesh_credit_pairs_over_80": 705,
+  "mesh_connected": {},
+  "skew_role": "DIAGNOSTIC (target 80 ps); freeze gate = die STA related-pair setup/hold on tap_arrivals_<corner>.json (12.4a v4.3)",
+  "early_offset_verdict": "PASS",
+  "rule_12_8": {
+   "rule": "12.8 / 12.4b",
+   "gate_ps": 80.0,
+   "related_pair_max_ps": 178.68,
+   "pairs": 24888,
+   "pairs_over_80": 705,
+   "plain_pair_max_ps": 178.68,
+   "info_mesh_node_cppr_max_ps": 178.68,
+   "info_note": "mesh-node CPPR credit (min stub-input early/late range) is INFO only (12.4b)",
+   "residual": {
+    "core_latency": {
+     "early_offset_taps": 0,
+     "max_declared_early_ps": 0,
+     "pairs_with_core_tap": 0,
+     "core_pair_max_ps": 0
+    },
+    "by_region": {
+     "None": {
+      "tree_imbalance_ps": 194.69,
+      "mesh_spread_ps": 220.02,
+      "stub_spread_ps": 25.08,
+      "plain_tap_spread_ps": 219.98
+     }
+    }
+   },
+   "worst": [
+    [
+     178.68,
+     "t_phy_hbm__clk",
+     "t_eng__clk"
+    ],
+    [
+     178.68,
+     "t_eng__clk",
+     "t_phy_hbm__clk"
+    ],
+    [
+     164.55,
+     "t_phy_hbm__clk",
+     "t_eng__clk_t4"
+    ],
+    [
+     160.35,
+     "t_phy_hbm__clk",
+     "t_iqf__clk_t3"
+    ],
+    [
+     160.35,
+     "t_iqf__clk_t3",
+     "t_phy_hbm__clk"
+    ],
+    [
+     147.31,
+     "t_phy_hbm__clk",
+     "t_iqf__clk_t7"
+    ],
+    [
+     131.18,
+     "t_s_2N_C__clk_t4",
+     "t_s_2N_C__clk_t8"
+    ],
+    [
+     123.88,
+     "t_fW1_p4_b2__clk_t7",
+     "t_fW1_p4_b2__clk_t10"
+    ],
+    [
+     122.5,
+     "t_fW1_p4_b2__clk_t6",
+     "t_fW1_p4_b2__clk_t7"
+    ],
+    [
+     120.73,
+     "t_fW5_p3_b2__clk_t2",
+     "t_fW5_p3_b2__clk_t6"
+    ]
+   ],
+   "verdict": "FAIL",
+   "fails": [
+    "related-pair 178.68 ps > 80.0 (CPPR at last common tree node)"
+   ]
+  },
+  "clock_switched_cap_pF": 920.0,
+  "clock_wire_power_W": 0.655
+ }
+}
