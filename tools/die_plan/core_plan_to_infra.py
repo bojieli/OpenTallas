@@ -211,6 +211,7 @@ def main():
     ap.add_argument("--sites", required=True); ap.add_argument("--module", required=True)
     ap.add_argument("--clock-port", default="clk"); ap.add_argument("--calibration", action="store_true")
     ap.add_argument("--die", default="s81"); ap.add_argument("--outline", default=None, help="W,H um (default: rows + symmetric margin)")
+    ap.add_argument("--ndr", default="2,2", help="trunk NDR width,spacing multipliers (default 2,2); \"none\" = standard-width clock nets (no clock_ndr)")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     op = gzip.open if a.plan.endswith(".gz") else open
@@ -220,7 +221,11 @@ def main():
     if rec is None:
         raise SystemExit(f"no record {a.name!r}")
     ol = [float(v) for v in a.outline.split(",")] if a.outline else None
-    sl = convert(rec, read_sites(a.sites), a.module, a.clock_port, outline=ol, calibration=a.calibration, die=a.die)
+    ndr = None if a.ndr == "none" else tuple(int(v) for v in a.ndr.split(","))
+    sl = convert(rec, read_sites(a.sites), a.module, a.clock_port, outline=ol, calibration=a.calibration, die=a.die,
+                 ndr=ndr or (2, 2))
+    if ndr is None:
+        sl.pop("clock_ndr", None)       # standard-width trunk (S81-CORE-LAT-R9 track b)
     # compile through core_infra: the same refusals the kit hook applies (fail before any build)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import core_infra as CI
