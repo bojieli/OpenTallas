@@ -82,6 +82,7 @@ Output OUT/die_sta_related.json (+ worst pairs per class); prints one line per c
 """
 import argparse
 import itertools
+import hashlib
 import json
 import os
 import re
@@ -768,22 +769,43 @@ def map_cores_to_taps(plan, taps):
     return out
 
 
-def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps, match_pins=False):
+def pins_match(view_meta, pins, plan_dir, _cache={}):
+    """CLOCK-KV-R24 (NUMBER-CHECK-KV-R23 finding): the view applies only when the plan pin file's CONTENT is the one
+    the view was signed on (provenance kit.pins_sha256 == sha256 of plan_dir/pins).  The R21/R22 file-NAME match
+    accepted e1/e5 views signed on 544-pin files against the 546-pin files of the same name.  Returns None (match)
+    or the mismatch reason."""
+    want = (view_meta or {}).get("pins_sha256")
+    if not pins:
+        return "no plan pins_file"
+    if not want:
+        return "view has no pins_sha256"
+    f = Path(plan_dir) / pins if plan_dir is not None else Path(pins)
+    if f not in _cache:
+        _cache[f] = hashlib.sha256(f.read_bytes()).hexdigest() if f.exists() else None
+    if _cache[f] is None:
+        return "plan pins_file missing"
+    return None if _cache[f] == want else "pins content differs"
+
+
+def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps, match_pins=False, plan_dir=None):
     """{port: [models]} + coverage record.  core_views {module: dir}; kits {part_or_type: spec}.
-    match_pins (CLOCK-KV-R21; gate default ON since CLOCK-KV-R22): a core view applies only to instances whose plan pins_file is the view's own
-    (provenance kit.pins_file, by file name); other pin views of the module (e.g. an orientation re-pin) are a
-    different physical core and stay budget (listed in pin_view_mismatch)."""
+    match_pins (CLOCK-KV-R21; gate default ON since CLOCK-KV-R22; CONTENT match since CLOCK-KV-R24): a core view
+    applies only to instances whose plan pins_file (resolved under plan_dir) has the sha256 the view was signed on
+    (provenance kit.pins_sha256); other pin views of the module (an orientation re-pin, an added strap pin) are a
+    different physical core and stay budget (listed in pin_view_mismatch, by reason in pin_view_mismatch_reason)."""
     budget = budget_model(reg, lat)
     views = {p: [budget] for p in taps}
     cmodels = {m: core_view_model(m, d, corner, load_ff, part_delay_ps) for m, d in core_views.items()}
     cmap = map_cores_to_taps(plan, taps) if core_views else {}
     real_inst, real_taps = defaultdict(int), set()
     mism = defaultdict(int)
+    why = defaultdict(int)
     for (n, inst), (mod, port, dist, pins) in cmap.items():
         if match_pins and mod in cmodels:
-            vp = cmodels[mod]["meta"].get("pins_file")
-            if not vp or not pins or Path(vp).name != Path(pins).name:
+            r = pins_match(cmodels[mod]["meta"], pins, plan_dir)
+            if r:
                 mism[f"{mod}:{Path(pins).name if pins else None}"] += 1
+                why[f"{mod}:{r}"] += 1
                 continue
         if mod in cmodels and port:
             if cmodels[mod] not in views[port]:
@@ -809,6 +831,8 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
                map_distance_real_um=sorted(v[2] for v in cmap.values() if v[0] in cmodels and v[2] is not None)[::32])
     if match_pins:
         cov["pin_view_mismatch"] = dict(mism)
+        cov["pin_view_mismatch_reason"] = dict(why)
+        cov["pin_view_match"] = "content (sha256 of plan pins_file == view provenance kit.pins_sha256)"
     return views, cov
 
 
@@ -947,7 +971,7 @@ def main(argv=None):
             import schema as S_
             views, rcov = build_views(plan, taps, c, reg, S_.common_latency_ps(S_.Plan(plan), c), core_views, kits,
                                       a.seam_wire_um * a.wire_ff_per_um, a.core_part_delay_ps,
-                                      match_pins=a.core_view_match_pins)
+                                      match_pins=a.core_view_match_pins, plan_dir=Path(a.plan).resolve().parent)
             cr_real = rcov
         pairs.update(nearest_pairs(d, a.plan, a.clock_tool, taps))
         if a.hold_buffers != "none" and hbbits is None:

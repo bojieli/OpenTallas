@@ -310,3 +310,25 @@ def test_time_class_records_every_endpoint_path():
     assert set(rec) == {("a", "b", "p", "budget", "budget"), ("a", "b", "p", "budget", "core:x")}
     assert rec[("a", "b", "p", "budget", "budget")][1] == 40.0 - 20.0
     assert rec[("a", "b", "p", "budget", "core:x")][1] == 250.0 + 40.0 - 300.0
+
+
+def test_core_view_match_pins_compares_content(tmp_path):
+    """CLOCK-KV-R24 (NUMBER-CHECK-KV-R23): a view signed on a 544-pin file must NOT apply to a same-NAME 546-pin
+    plan file (added strap_bsel); match = sha256 of the plan pins_file == view provenance kit.pins_sha256."""
+    import hashlib
+    import json as _j
+    (tmp_path / "cores").mkdir()
+    old = _j.dumps(dict(pins=[dict(name=f"p{i}") for i in range(544)]))
+    new = _j.dumps(dict(pins=[dict(name=f"p{i}") for i in range(544)] + [dict(name="strap_bsel[0]"), dict(name="strap_bsel[1]")]))
+    (tmp_path / "cores" / "e1_pins.json").write_text(new)
+    meta_old = dict(pins_file="cores/e1_pins.json", pins_sha256=hashlib.sha256(old.encode()).hexdigest())
+    meta_new = dict(pins_file="cores/e1_pins.json", pins_sha256=hashlib.sha256(new.encode()).hexdigest())
+    assert R.pins_match(meta_old, "cores/e1_pins.json", tmp_path) == "pins content differs"
+    assert R.pins_match(meta_new, "cores/e1_pins.json", tmp_path) is None
+    # a differently named file with the signed content matches; missing sha / missing file never match
+    (tmp_path / "cores" / "e1_copy.json").write_text(new)
+    assert R.pins_match(meta_new, "cores/e1_copy.json", tmp_path) is None
+    assert R.pins_match(dict(pins_file="cores/e1_pins.json"), "cores/e1_pins.json", tmp_path) == "view has no pins_sha256"
+    assert R.pins_match(meta_new, "cores/nope.json", tmp_path) == "plan pins_file missing"
+    assert R.pins_match(meta_new, None, tmp_path) == "no plan pins_file"
+
