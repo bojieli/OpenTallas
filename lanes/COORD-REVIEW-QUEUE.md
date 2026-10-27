@@ -1917,3 +1917,22 @@ ASK [HBM-CORE-LAT-R5/collar -> HBM-MU-QUAD-3 + COORD 2026-10-27 02:44 PDT] planU
 [2026-10-27 03:11 PDT] READY HBM-EP-CAL-1 -> COORD: hfd_ep_static CTS-only calibration done, measured post-CTS placement-RC TT 185.8 (176.7-189.4) / FF 142.6 (UNCHECKED) <= ~290 -> NO S-face SerDes re-pack REQ to HBM-MU-QUAD-4; READY for the routed build (GRT + RCX insertion on this 4_cts.odb, then 12.8c fixed entry trunk to bring the shallow tree into 250+-20). Plan model error -105 TT / -82 FF (xcal -73 / -55) -> MODEL-REFIT gets this point. claude/hbm-ep-cal-1-1027@39a75475cb.
 [COORD 2026-10-27 03:12 PDT] RULING KV-KVSCTL-3 958c1ffda4: 37 u_lprg points are LIVE (SRAM write data reaches outputs) -> RTL async resets ACCEPTED; landing plan in RTL (166 retimed at 0 cycles, +1 on 305 sealed config + setup_ready) ACCEPTED, declared-retiming LEC 91117/91117 CHECKED with the 40-net exclusion ledgered; hub_C rebind (250 dead bits dropped, kg open, all inputs driven) ACCEPTED. Boot +1 -> TOK-QK adds it to the TOKEN table. Successor KV-KVSCTL-4 collects the fp proof, then kit + [4,2] H-tree + build + GEOM REQ.
 [COORD 2026-10-27 03:13 PDT] RULING HBM-EP-CAL-1 39a75475cb: built TT 185.8 / FF 142.6 (spread 12.7/10.2, placement RC, UNCHECKED) -> no S-face re-pack, no QUAD-4 REQ. Below the 250+-20 band -> add ONE plan-computed fixed entry trunk (12.8c) sized from this CTS result to centre TT ~250 / FF ~202.5, then route on the kept 4_cts.odb -> GRT + RCX in-band check -> sign-off + routed LEC. Owner: HBM-EP-ROUTE-1. Planner over-predicts -105 TT (ep) / -73 (xcal) -> MODEL-REFIT gets both points; no new core plan judged on uf_phys3 absolute latency until refit (use it for ranking only).
+[HEAD-CORE-R13 2026-10-27 03:18 PDT] ASK + READY(evidence) claude/head-core-r13-1027@148ff6a840. Nothing is signed off: elemA hold FF -3.38/6 + slew 8; elemB slew 9/1 + face_guard. Numbers CHECKED by own census; details are in lanes/HEAD-CORE-LAT.md.
+ASK1 (ASK2 band):
+- elemB insertion TT 232.73 / FF 190.95 is in band, so I keep the edge pin.
+- elemA TT mean 228.52 is 1.48 under 230 (FF 184.77 in band). Per your 02:34 ruling that means a centre re-pin (159.84,159.84) in R14. elemA needs a rebuild anyway (hold root cause = an unbalanced edge-entry trunk). OK?
+ASK2: elemB's 50 PROVEN-DEAD inputs (row0/b_v/b_d) fail the main face_guard. Choose:
+  (a) remove the ports from the macro (RTL + LEC + parent bundle ties dropped), or
+  (b) extend face_guard/signoff to accept a declared dead input with its yosys no-fanout proof, mirroring straps.
+  I recommend (a): it is structural, there is no tie, and elemB is re-routed in R14 anyway.
+ASK3 (flow, both cores): repair_design at GRT on unscaled RC, or SLEW_MARGIN 20%, plus a post-route repair_design + repair_timing -hold (HB4 data only, 12.4a a1) + ECO DRT. Chains must run the post-route LEC whatever the signoff exit code. OK?
+ASK4 HEAD.BIND (COORD-decidable spec item; DRAFT results/arch/head_bind_r13/HEAD_HOST_MESH_RANKROW_CONTRACT.md):
+  - host = 553-b HSF0 in N3 beats on the existing 276 wires (P273; h_tx 277 incl job_active). N2 needs 279 wires. The cost is +1 edge, and the rate is not binding.
+  - mesh = mesh64 with 2-beat BEST97 (full 81-b identity); mesh66 is rejected because its summary drops identity; H4 276/278 is moot (IDX_EN=0 deletes tl/ca/cb).
+  - rank-row = head_row_map.py: 264 slots, 1010 bundles 253/253/252/252, bases 0/32384/64768/97024, 129280 rows once (CHECKED).
+  - All of these are already implemented on main; the draft supersedes ADAPTER.md's 10-25 widen-to-279 advice. Adopt?
+  - NEW GAPS that block a meaningful bind:
+    (i) every generated tile wrapper hard-codes ot_s81hd_strap ROW0=0 TEN=1 -> per-instance ID straps needed;
+    (ii) the generated hd_serdes binds only u_phy .rx/.tx (clk/rst/st/pma_* open; coll_o0[513:512] undriven; CHECKED). The port-bind PASS misses it because it checks only top-level instances -> switch hd_serdes to ot_s81hd_serdes_link, add a pma IO pin class in gen.py, and add a leaf-pin connectivity check.
+  - Repo-relative manifest proposal: head_bind_manifest_proposal.txt (100 files, all on main, 0 absolute; recipe modelled on s81 asbuilt_b178_coll.json).
+  - Owner of the fixes: the next HEAD PLAN-DELTA lane (with D-INFRA-FIRST-HEAD).

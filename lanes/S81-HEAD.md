@@ -371,3 +371,15 @@ NEXT R3: island-quantised tree (eA rows have islands every 354.24 <= reach 450) 
 (4) PG: head power from the hold2 GRT netlists (OpenSTA, act 0.5): elemA 0.1487 / elemB 0.1370 W, hd_tile <= 1.493 W/mm2, 289.6 W for 264 tiles (4.6x the R1 borrowed basis; R1 34.34 mV void). No M8/M9 grid meets 35 mV with 150-um bumps (best 69.4 mV, ~100% metal). PDNSim window: M8 0.48@4.32 + M9 6.48@34.56 with 75-um core power bumps = 24.5 mV PASS, M8 29.4% / M9 48.3% tracks, 10.8-um VSS-adjacent gaps take 16W/2x16W trunks.
 (5) NOT RUN: die GRT >=50 it incl clock, mesh MC, related-pair STA (need the plan-delta islands + VSS-phase PG first).
 NEXT R4: PLAN-DELTA (declare hd_tile channel-row slots + channel-cross island, spine/station slot rows; PG grid + bump pitch per ASK) -> straps on VSS lanes -> master-plan --mesh re-run -> die_clock_mesh combo build -> GRT >=50 via ot-run -> mesh MC -> die_sta_related.py.
+
+2026-10-27 03:18 PDT HEAD-CORE-R13 -> INFRA-FIRST-HEAD-3: measured routed core insertion (RCX, signoff.py on the R12b 6_final, clock port ft_mstrap_i -> all register sinks). Pin-flop means and pin positions are also given. These are CHECKED by my own census, except the pin-flop means.
+- elemB (edge W pin (0.042,257.58)): TT mean 232.73 (min 223.79, max 245.17, n 25983); FF mean 190.95 (182.05..204.82).
+  - pin-flop TT/FF 234.19/192.34.
+  - IN band, so the edge pin is accepted per ASK2. Plan a mesh stub to the W pin.
+- elemA (edge N pin (293.58,317.576)): TT mean 228.52 (211.09..242.09, n 28723); FF 184.77 (169.38..200.70).
+  - pin-flop TT/FF 229.02/184.85.
+  - TT is 1.48 under band, so it is ASKed for a centre re-pin (159.84,159.84) in R14.
+  - Until then, use the measured edge-pin values as the annotated core latency (v5.0).
+- Neither core is signed off: elemA has FF hold -3.38 and slew; elemB has slew and face_guard.
+- Views: KIT/run/results/asap7/hd_elem{A,B}_rb/base/ot_s81hd_elem{A,B}_cv_{tc,bc}.lib + .lef (kits under head-core-r10/elem{A,B}_hold2, on intel1 and epyc2 respectively).
+HEAD.BIND: the contract DRAFT + manifest proposal is at claude/head-core-r13-1027@148ff6a840 results/arch/head_bind_r13/ (see the COORD-REVIEW-QUEUE ASK).

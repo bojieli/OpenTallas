@@ -108,3 +108,33 @@ COLLECT: KIT=/srv/opentallas-scratch2/claude/head-core-r10/elem{A,B}_hold2; grep
 (3) elemA: repaired-export LEC still running at 01:43 (intel1 unit oth-ubuntu-3616694-1793085923, lec.py 77 min CPU); its chain now picks up the R12b route fix. Waiter intel1 pid 1160184 (log head-core-r12/r12b_A_waiter.log) launches r12b_route_lec.sh KIT skip-route (post-route LEC, ot-run 24G/8t --hosts intel1) when the chain logs 'R12_CHAIN route+signoff rc=0'. ETA LEC ~02:00, route ~03:30, post-route LEC ~05:00.
 (4) OWNERS.tsv shows ot_s81hd_elemA_cv SIGNED (release cache, an old 10-25 hd_elemA_rb record): NOT the r11/hold2 build -> must not count for HEAD.CLK.
 COLLECT: KIT=/srv/opentallas-scratch2/claude/head-core-r10/elem{A,B}_hold2 (A intel1, B epyc2): grep -E 'R12_|SIGNOFF' KIT/r12_chain.log; grep -E 'R12B_|SIGNOFF' KIT/r12b_chain.log; KIT/signoff_actual.log (+ mtime newer than KIT/run/.../6_final.v), KIT.lec_final/lec/lec.json. SIGNED needs TT setup>=0, FF hold>=0, DRC 0, RCX latency TT 250+-20 / FF 202.5+-20, post-route LEC EQUIVALENT.
+
+2026-10-27 03:18 PDT HEAD-CORE-R13 RESULT (collect R12b; branch claude/head-core-r13-1027@148ff6a840, evidence results/physical/head_core_r13/README.md). **elemA and elemB are both NOT signed off.** The signoff logs are newer than 6_final.v (CHECKED), so they are valid for this build.
+CHECKED = own OpenSTA census (nc_tail.tcl) or raw reports.
+- elemA:
+  - TT setup +122.12/0 (CHECKED).
+  - FF hold reg->reg **-3.38**, 6 endpoints (WNS CHECKED).
+  - DRC 0, antenna 0 (CHECKED).
+  - slew TT 8 (UNCHECKED); face_guard PASS.
+  - RCX insertion ft_mstrap_i->28723 sinks: TT mean **228.52** (211.09..242.09), FF 184.77 (169.38..200.70) (CHECKED).
+  - TT is 1.48 under the 230 band.
+- elemB:
+  - TT setup +115.88/0 and FF hold +2.98/0 (CHECKED).
+  - DRC 0/0 (CHECKED).
+  - slew TT 9 / FF 1 (UNCHECKED).
+  - **face_guard FAIL**: 50 proven-dead inputs (row0, b_v, b_d) are now checked by main's guard, and signoff.py refuses data_pin_exemptions.
+  - RCX insertion TT mean 232.73 (223.79..245.17), FF 190.95 (182.05..204.82) (CHECKED), both in band.
+Root causes:
+(1) Slew, the same cone in both cores: INVx1 -> OA21 .A1 121-146 um away on one row. The GRT repair_design ran on rc_cal 0.8/0.9-scaled RC, so it missed these nets.
+(2) elemA hold: a zero-logic pair across the N1/N0 top branches. The common point is u_isl_root, CPPR 0.18, skew 21 ps. The edge entry gives a 53-57 ps first leg and the N0_2 sub-branch is 40 ps, so the all-sink spread is 31 ps (elemB 21).
+(3) The chains used set -e, so the NOT SIGNED exit skipped the post-route LEC. It was relaunched at 02:56 with skip-route:
+  - elemB: epyc2 oth-ubuntu-3494190-1793095017
+  - elemA: intel1 oth-ubuntu-1585112-1793095018
+  - logs: intel2:/srv/opentallas-scratch2/claude/head-core-r13-elem{A,B}-plec.otrun.log
+  - collect: grep R12B_POSTROUTE_LEC KIT/r12b_chain.log, then KIT.lec_final/lec/lec.json
+  - ETA ~03:45 (B) / ~04:30 (A).
+Stale record: the release cache SIGNED-LEGACY entry intel1:.../codex-head3/elemA_c11_rcx_m5/signoff/signoff.json (10-25 c11 build) is RETIRED via ~/coord/RETIRED_SIGNOFFS.tsv, now read by coord tools/release_tree_plan.py. The cache is patched, and s81_head now shows 0/2 signed hard cores (coord 6bb0623a5).
+NEXT R14 (after ASK):
+- elemA: centre re-pin at (159.84,159.84) with a symmetric trunk. The flow repairs slew on unscaled RC (or SLEW_MARGIN), and then a post-route repair_design + hold (HB4 data only) + ECO DRT runs.
+- elemB: keep the edge pin; run the same route-stage slew fix; face_guard per the ruling.
+- Post-route LEC runs whatever the verdict.
