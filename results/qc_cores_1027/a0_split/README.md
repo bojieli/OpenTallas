@@ -110,3 +110,30 @@ Die plan inputs (not committed, intel2 codex-qwen-1027/pkg/inputs): d43 plan f2c
   M3 1332/1572, M5 998/1179, M7 865/884; Codex 1024-bit budget (UNCHECKED, historical) -> use 0.55 on M5+M7 (0.32 incl. M3) <= 0.6.
   LSL gap 1-2 fault flags <= 250 (UNCHECKED bound) -> 0.29. E strip (8 islands, A0 wide E pin face) keeps M5 175/355: the A0 E-face
   pin positions are not checked against EF0-5/EN1-2 yet (open).
+
+## Clock R3b (QC-CORES-2, COORD 05:5x / GEOM-21): drop form, per-instance identity, the 16 strap-less cores, PG
+Scripts `a0_clk_r3b.py`, `render_r3b.py` -> `clk_r3b/a0_clk_r3b.json` (per-island table + per-instance rows for all 768) and
+`clk_r3b/a0_clk_r3b_instances.png` (viewed: 2 strap-less NK (MX + R0), 1 normal NK, NL MX + NL R0).
+- **PG/clock lane convention (CHECKED from plan json + tool):** die.pg.grid = M8/M9 0.48 um, pitch 8.64, VDD offset 4.32; VSS lanes at 8.64k
+  (qc_clk_mesh3 R15). All 142 R22 M9 straps sit on 8.64k lanes, i.e. a clock strap takes a VSS lane and is shielded by the VDD stripes at
+  +-4.32. FYI to the die owner: one R22 M8 strap is off-lane (25571.52; R23 25580.16).
+- **Drop form (R3b rule):** island drop = crossing of die M9 strap x0+U and die M8 strap y0+V (MX rows y0+1157.76-V), with U, V = the
+  8.64 multiple INSIDE the island's 8.64-um footprint. A straight stacked via M9->M8->M7->M6->M5 at the crossing is the island feed port
+  (M5). **Die stub length 0.** Inside the island the driver input is core M5/M4 wire <= |dU|+|dV| = **7.56 um max** (MW01/ME01).
+  Type lattice: U = {112.32, 224.64, 345.6, 449.28}, V = {8.64, 138.24, 276.48, 406.08, 535.68, 665.28, 820.8, 984.96}.
+  R0-R4 and G1 centres move 2.16 um (228.96 -> 226.8) so the 224.64 lane is inside the footprint; others unchanged from R3; legality
+  re-checked (0 halo). The R3 model numbers move by <= 2.16 um of leg (not re-run).
+- **Identical per instance (CHECKED, all 768, both lattices):** x0, y0 and 1157.76 are 8.64 multiples, so every drop lands on a VSS lane
+  in R0 and MX rows alike; every instance gets **22/22** drop crossings under the R3b straps (histogram {22}). Under R22 (and R23) the
+  same island sites get **0** crossings on every instance.
+- **The 16 strap-less cores** (all NK, W column x0 1650.24, W of the first R22 strap 2177.28): c_W5_{bf,bn}_0{0,1}/u_t0{0..3} (MX) and
+  c_W5_{tn,tf}_0{0,1}/u_t0{0..3} (R0) — full list in `strapless_under_r22`. Under R3b each has 22/22 (the drop straps are per A0 column,
+  pitch = core column pitch 604.8/622.08). 8 required M8 rows also fall outside the R22 strap span (edge A0 rows).
+- **Alternative "keep the R22 pitch, add straps":** the 16 alone need 4 extra full-height M9 straps (x 1762.56/1874.88/1995.84/2099.52),
+  but the other 752 cores still have 0 islands on R22 crossings, so all 192 M9 + 128 M8 drop straps must be added anyway:
+  +4.77 m M9 +3.72 m M8 on top of the 8.46 m R22 mesh (~+100 % mesh wire and cap, UNCHECKED proxy). The re-phase (replace the R22
+  straps over the A0 field by the 192/128 drop straps, the die owner keeping density straps in the inter-row bands) costs about the
+  R22 wire. Recommendation: re-phase in R24.
+- **PG per island:** the clock takes the VSS lane at U/V; the VDD M8/M9 stripes at U+-4.32 / V+-4.32 pass on the footprint edges and can
+  drop a VDD stack M9->M1; VSS for the island cells comes from the core rails (M1/M2 followpins + core PG), since the in-footprint
+  VSS lanes carry the clock. Same on the R23 grid (identical pg_grid). Island driver power is small (one BUFx8-24 per leg).
