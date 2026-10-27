@@ -1213,3 +1213,5 @@ Current all-lane interim handoff: handoff/codex_s81_head_20261027_1004.md. HEAD 
 
 ## CODEX native terminal-via coupon 2026-10-27 10:03 PDT
 READY evidence-only codex/qc-via-coupon-1027@c3aa87418d on QC93362be6bb. Geometry review.png viewed first; two isolated30x20um actual encoder vehicles. Native unit2325388 PASS: M9branch->M5terminal exact VIA89/78/67/56 stack at15,8 (9totalvias); M8branch->M9terminal VIA89 at8,10 (6totalvias). Every graphmetal edge present, exact native via XY/layer multiset and BTerm layer/location match. Results results/qc_terminal_via_coupon_1027 includes ODBs. Initial unit2314011 failed preencoding missingplacepintracks then missingODBreaderabort134; preserved logs, freshcoupon adds tracks/failfastshell only. No drivers/RCX/STA/die/default claim. All ownjobs terminal.
+
+CODEX TOK-QK/TOK-QW 10:10: xhead63a3d2b4c terminal component partial; GU/QKV qualified, O/down no legal GO edge. No live child jobs. Next source programme/profile and O/down data-read authority remain explicit. Native c2d TXDP114 component ready; freshQCv6 LS407 resolved. Parent QK owns live corrected B48 frontend/collector.

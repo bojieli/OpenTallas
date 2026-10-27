@@ -1455,3 +1455,5 @@ CODEX: KV pending event563778e9a integrates legalwidePV+127actualstationmoves/0c
 CODEX: 2026-10-27 10:00 PDT Collected legacy KV reference physical SIGNED TT+12.02/FF+2.93 (0f978 signoff_hold), Qwen owns fit/proof/preservation. QC7fd actual-placement review PASS-COND and continuation live; exact5b canonical canary still repairing hold.
 
 CODEX: 2026-10-27 10:09 PDT RM57 native HEAD public generator/schema fixed47PASS; RM58 main6e1b890791==origin/main GBguard+HBMnative+clocktests,9+11controlsPASS. Interim ROOT-MERGE handoff recorded; no live own jobs, still active until explicit reset.
+
+CODEX: 10:10 PDT actual S8 minimum xhead capsule63a3d2b4c collected: GU/QKV pin/window+3controls PASS; O/down no legal GO failure edge, explicit PARTIAL and no full-row/token claim. Native imagec2d remains programme-blocked; freshQCv6 resolves LS407 hook.
