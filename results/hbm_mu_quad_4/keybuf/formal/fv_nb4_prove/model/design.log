@@ -1,0 +1,998 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `../model/design.ys' --
+
+1. Executing Verilog-2005 frontend: ot_hnx_idxn_keybuf_ser.sv
+Parsing formal SystemVerilog input from `ot_hnx_idxn_keybuf_ser.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_idxn_ser_tx'.
+Generating RTLIL representation for module `\ot_hnx_idxn_ser_rx'.
+Generating RTLIL representation for module `\ot_hnx_idxn_dpipe'.
+Generating RTLIL representation for module `\ot_hnx_idxn_keybuf_ser'.
+Generating RTLIL representation for module `\ot_hnx_idxn_kb_tx'.
+Generating RTLIL representation for module `\ot_hnx_idxn_kb_rx'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: fv_top.sv
+Parsing formal SystemVerilog input from `fv_top.sv' to AST representation.
+Generating RTLIL representation for module `\fv_top'.
+Warning: Replacing memory \he with list of registers. See fv_top.sv:34
+Warning: Replacing memory \ho with list of registers. See fv_top.sv:34
+Warning: Replacing memory \hl with list of registers. See fv_top.sv:32
+Warning: Replacing memory \hk with list of registers. See fv_top.sv:32
+Warning: Replacing memory \hc with list of registers. See fv_top.sv:32
+Successfully finished Verilog frontend.
+Parameter \NB = 4
+Parameter \DW = 12
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\fv_top'.
+Parameter \NB = 4
+Parameter \DW = 12
+Generating RTLIL representation for module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\fv_top'.
+Warning: Replacing memory \he with list of registers. See fv_top.sv:34
+Warning: Replacing memory \ho with list of registers. See fv_top.sv:34
+Warning: Replacing memory \hl with list of registers. See fv_top.sv:32
+Warning: Replacing memory \hk with list of registers. See fv_top.sv:32
+Warning: Replacing memory \hc with list of registers. See fv_top.sv:32
+
+4. Executing PREP pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \fv_top
+Used module:     \ot_hnx_idxn_kb_tx
+Used module:         \ot_hnx_idxn_ser_tx
+Used module:     \ot_hnx_idxn_keybuf_ser
+Used module:         \ot_hnx_idxn_ser_rx
+Used module:         \ot_hnx_idxn_dpipe
+Used module:     \ot_hnx_idxn_kb_rx
+Parameter \DW = 8792
+Parameter \NB = 3
+Parameter \W = 2931
+
+4.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_ser_tx'.
+Parameter \DW = 8792
+Parameter \NB = 3
+Parameter \W = 2931
+Generating RTLIL representation for module `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx'.
+Parameter \DW = 8792
+Parameter \NB = 3
+Parameter \W = 2931
+
+4.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_ser_rx'.
+Parameter \DW = 8792
+Parameter \NB = 3
+Parameter \W = 2931
+Generating RTLIL representation for module `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx'.
+Parameter \N = 28
+Parameter \D = 2
+
+4.1.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_dpipe'.
+Parameter \N = 28
+Parameter \D = 2
+Generating RTLIL representation for module `$paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe'.
+Parameter \DW = 8792
+Parameter \NB = 3
+Parameter \W = 2931
+Found cached RTLIL representation for module `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx'.
+Parameter \N = 9
+Parameter \D = 8
+
+4.1.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_dpipe'.
+Parameter \N = 9
+Parameter \D = 8
+Generating RTLIL representation for module `$paramod$feb758d75989e47aae5b478cb0b08a2f391271ab\ot_hnx_idxn_dpipe'.
+Parameter \DW = 8792
+Parameter \NB = 3
+Parameter \W = 2931
+Found cached RTLIL representation for module `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx'.
+Parameter \NB = 4
+Parameter \DW = 12
+
+4.1.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_kb_tx'.
+Parameter \NB = 4
+Parameter \DW = 12
+Generating RTLIL representation for module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Parameter \NB = 4
+Parameter \DW = 12
+
+4.1.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_keybuf_ser'.
+Parameter \NB = 4
+Parameter \DW = 12
+Generating RTLIL representation for module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Parameter \NB = 4
+Parameter \DW = 12
+
+4.1.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_kb_rx'.
+Parameter \NB = 4
+Parameter \DW = 12
+Generating RTLIL representation for module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+
+4.1.9. Analyzing design hierarchy..
+Top module:  \fv_top
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx
+Used module:         \ot_hnx_idxn_ser_tx
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser
+Used module:         \ot_hnx_idxn_ser_rx
+Used module:         \ot_hnx_idxn_dpipe
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx
+Parameter \DW = 12
+Parameter \NB = 4
+Parameter \W = 3
+
+4.1.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_ser_tx'.
+Parameter \DW = 12
+Parameter \NB = 4
+Parameter \W = 3
+Generating RTLIL representation for module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Parameter \DW = 12
+Parameter \NB = 4
+Parameter \W = 3
+Found cached RTLIL representation for module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Parameter \DW = 12
+Parameter \NB = 4
+Parameter \W = 3
+
+4.1.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_ser_rx'.
+Parameter \DW = 12
+Parameter \NB = 4
+Parameter \W = 3
+Generating RTLIL representation for module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Parameter \N = 28
+Parameter \D = 3
+
+4.1.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_dpipe'.
+Parameter \N = 28
+Parameter \D = 3
+Generating RTLIL representation for module `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Parameter \N = 9
+Parameter \D = 10
+
+4.1.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_dpipe'.
+Parameter \N = 9
+Parameter \D = 10
+Generating RTLIL representation for module `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Parameter \DW = 12
+Parameter \NB = 4
+Parameter \W = 3
+Found cached RTLIL representation for module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+
+4.1.14. Analyzing design hierarchy..
+Top module:  \fv_top
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx
+Used module:         $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser
+Used module:         $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx
+Used module:         $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx
+Used module:         $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe
+
+4.1.15. Analyzing design hierarchy..
+Top module:  \fv_top
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx
+Used module:         $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser
+Used module:         $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx
+Used module:         $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx
+Used module:         $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe
+Removing unused module `$paramod$feb758d75989e47aae5b478cb0b08a2f391271ab\ot_hnx_idxn_dpipe'.
+Removing unused module `$paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe'.
+Removing unused module `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx'.
+Removing unused module `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx'.
+Removing unused module `\ot_hnx_idxn_kb_rx'.
+Removing unused module `\ot_hnx_idxn_kb_tx'.
+Removing unused module `\ot_hnx_idxn_keybuf_ser'.
+Removing unused module `\ot_hnx_idxn_dpipe'.
+Removing unused module `\ot_hnx_idxn_ser_rx'.
+Removing unused module `\ot_hnx_idxn_ser_tx'.
+Removed 10 unused modules.
+Module fv_top directly or indirectly contains formal properties -> setting "keep" attribute.
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$ot_hnx_idxn_keybuf_ser.sv:25$125 in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+Marked 1 switch rules as full_case in process $proc$ot_hnx_idxn_keybuf_ser.sv:87$122 in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+Marked 1 switch rules as full_case in process $proc$ot_hnx_idxn_keybuf_ser.sv:66$118 in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+Marked 1 switch rules as full_case in process $proc$ot_hnx_idxn_keybuf_ser.sv:107$111 in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+Marked 1 switch rules as full_case in process $proc$ot_hnx_idxn_keybuf_ser.sv:100$108 in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+Marked 1 switch rules as full_case in process $proc$ot_hnx_idxn_keybuf_ser.sv:48$131 in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+Marked 1 switch rules as full_case in process $proc$ot_hnx_idxn_keybuf_ser.sv:48$129 in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+Removed a total of 0 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 8 redundant assignments.
+Promoted 40 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\fv_top.$proc$fv_top.sv:12$97'.
+  Set init value: \init = 4'0000
+Found init rule in `\fv_top.$proc$fv_top.sv:14$98'.
+  Set init value: \rec = 3'000
+Found init rule in `\fv_top.$proc$fv_top.sv:29$99'.
+  Set init value: \age = 8'00000000
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:87$122'.
+Found async reset \rst_n in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:66$118'.
+Found async reset \rst_n in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:107$111'.
+Found async reset \rst_n in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:100$108'.
+Found async reset \rst_n in `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.$proc$ot_hnx_idxn_keybuf_ser.sv:48$131'.
+Found async reset \rst_n in `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.$proc$ot_hnx_idxn_keybuf_ser.sv:48$129'.
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~10 debug messages>
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:25$125'.
+     1/2: $0\hold[11:0]
+     2/2: $0\q[2:0]
+Creating decoders for process `\fv_top.$proc$fv_top.sv:12$64'.
+     1/1: $0\init[3:0]
+Creating decoders for process `\fv_top.$proc$fv_top.sv:14$68'.
+Creating decoders for process `\fv_top.$proc$fv_top.sv:15$69'.
+     1/1: $assume$fv_top.sv:15$70_EN
+Creating decoders for process `\fv_top.$proc$fv_top.sv:16$74'.
+     1/1: $assume$fv_top.sv:16$76_EN
+Creating decoders for process `\fv_top.$proc$fv_top.sv:31$82'.
+     1/1: $0\age[7:0]
+Creating decoders for process `\fv_top.$proc$fv_top.sv:37$88'.
+     1/2: \P2_EN
+     2/2: \P1_EN
+Creating decoders for process `\fv_top.$proc$fv_top.sv:41$92'.
+     1/3: \P5_EN
+     2/3: \P4_EN
+     3/3: \P3_EN
+Creating decoders for process `\fv_top.$proc$fv_top.sv:12$97'.
+Creating decoders for process `\fv_top.$proc$fv_top.sv:14$98'.
+Creating decoders for process `\fv_top.$proc$fv_top.sv:29$99'.
+Creating decoders for process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.$proc$ot_hnx_idxn_keybuf_ser.sv:117$124'.
+Creating decoders for process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:87$122'.
+     1/1: $0\fault[0:0]
+Creating decoders for process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:86$121'.
+Creating decoders for process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:66$118'.
+     1/1: $0\ctl_r[27:0]
+Creating decoders for process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:65$117'.
+Creating decoders for process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:107$111'.
+     1/2: $0\gn.recent[3:0]
+     2/2: $0\fault[0:0]
+Creating decoders for process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:100$108'.
+     1/1: $0\c[27:0]
+Creating decoders for process `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.$proc$ot_hnx_idxn_keybuf_ser.sv:48$131'.
+     1/1: $0\gd.p[89:0]
+Creating decoders for process `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.$proc$ot_hnx_idxn_keybuf_ser.sv:48$129'.
+     1/1: $0\gd.p[83:0]
+Creating decoders for process `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.$proc$ot_hnx_idxn_keybuf_ser.sv:39$128'.
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.\key_out_ser' from process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:86$121'.
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.\q' using process `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:25$125'.
+  created $dff cell `$procdff$163' with positive edge clock.
+Creating register for signal `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.\hold' using process `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:25$125'.
+  created $dff cell `$procdff$164' with positive edge clock.
+Creating register for signal `\fv_top.\init' using process `\fv_top.$proc$fv_top.sv:12$64'.
+  created $dff cell `$procdff$165' with positive edge clock.
+Creating register for signal `\fv_top.\rec' using process `\fv_top.$proc$fv_top.sv:14$68'.
+  created $dff cell `$procdff$166' with positive edge clock.
+Creating register for signal `\fv_top.\i' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$167' with positive edge clock.
+Creating register for signal `\fv_top.\hf' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$168' with positive edge clock.
+Creating register for signal `\fv_top.\age' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$169' with positive edge clock.
+Creating register for signal `\fv_top.\hc[0]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$170' with positive edge clock.
+Creating register for signal `\fv_top.\hc[1]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$171' with positive edge clock.
+Creating register for signal `\fv_top.\hc[2]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$172' with positive edge clock.
+Creating register for signal `\fv_top.\hc[3]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$173' with positive edge clock.
+Creating register for signal `\fv_top.\hc[4]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$174' with positive edge clock.
+Creating register for signal `\fv_top.\hk[0]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$175' with positive edge clock.
+Creating register for signal `\fv_top.\hk[1]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$176' with positive edge clock.
+Creating register for signal `\fv_top.\hk[2]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$177' with positive edge clock.
+Creating register for signal `\fv_top.\hk[3]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$178' with positive edge clock.
+Creating register for signal `\fv_top.\hk[4]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$179' with positive edge clock.
+Creating register for signal `\fv_top.\hl[0]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$180' with positive edge clock.
+Creating register for signal `\fv_top.\hl[1]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$181' with positive edge clock.
+Creating register for signal `\fv_top.\hl[2]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$182' with positive edge clock.
+Creating register for signal `\fv_top.\hl[3]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$183' with positive edge clock.
+Creating register for signal `\fv_top.\hl[4]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$184' with positive edge clock.
+Creating register for signal `\fv_top.\ho[0]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$185' with positive edge clock.
+Creating register for signal `\fv_top.\ho[1]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$186' with positive edge clock.
+Creating register for signal `\fv_top.\ho[2]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$187' with positive edge clock.
+Creating register for signal `\fv_top.\ho[3]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$188' with positive edge clock.
+Creating register for signal `\fv_top.\ho[4]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$189' with positive edge clock.
+Creating register for signal `\fv_top.\he[0]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$190' with positive edge clock.
+Creating register for signal `\fv_top.\he[1]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$191' with positive edge clock.
+Creating register for signal `\fv_top.\he[2]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$192' with positive edge clock.
+Creating register for signal `\fv_top.\he[3]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$193' with positive edge clock.
+Creating register for signal `\fv_top.\he[4]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$194' with positive edge clock.
+Creating register for signal `\fv_top.\hc[5]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$195' with positive edge clock.
+Creating register for signal `\fv_top.\hk[5]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$196' with positive edge clock.
+Creating register for signal `\fv_top.\hl[5]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$197' with positive edge clock.
+Creating register for signal `\fv_top.\ho[5]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$198' with positive edge clock.
+Creating register for signal `\fv_top.\he[5]' using process `\fv_top.$proc$fv_top.sv:31$82'.
+  created $dff cell `$procdff$199' with positive edge clock.
+Creating register for signal `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.\b_r' using process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.$proc$ot_hnx_idxn_keybuf_ser.sv:117$124'.
+  created $dff cell `$procdff$200' with positive edge clock.
+Creating register for signal `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.\fault' using process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:87$122'.
+  created $adff cell `$procdff$205' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.\ctl_r' using process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:66$118'.
+  created $adff cell `$procdff$210' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.\kin_r' using process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:65$117'.
+  created $dff cell `$procdff$211' with positive edge clock.
+Creating register for signal `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.\fault' using process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:107$111'.
+  created $adff cell `$procdff$216' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.\gn.recent' using process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:107$111'.
+  created $adff cell `$procdff$221' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.\c' using process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:100$108'.
+  created $adff cell `$procdff$226' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.\gd.p' using process `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.$proc$ot_hnx_idxn_keybuf_ser.sv:48$131'.
+  created $adff cell `$procdff$231' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.\gd.p' using process `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.$proc$ot_hnx_idxn_keybuf_ser.sv:48$129'.
+  created $adff cell `$procdff$236' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.\gn.sh' using process `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.$proc$ot_hnx_idxn_keybuf_ser.sv:39$128'.
+  created $dff cell `$procdff$237' with positive edge clock.
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:25$125'.
+Removing empty process `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:25$125'.
+Found and cleaned up 1 empty switch in `\fv_top.$proc$fv_top.sv:12$64'.
+Removing empty process `fv_top.$proc$fv_top.sv:12$64'.
+Removing empty process `fv_top.$proc$fv_top.sv:14$68'.
+Found and cleaned up 1 empty switch in `\fv_top.$proc$fv_top.sv:15$69'.
+Removing empty process `fv_top.$proc$fv_top.sv:15$69'.
+Found and cleaned up 1 empty switch in `\fv_top.$proc$fv_top.sv:16$74'.
+Removing empty process `fv_top.$proc$fv_top.sv:16$74'.
+Found and cleaned up 1 empty switch in `\fv_top.$proc$fv_top.sv:31$82'.
+Removing empty process `fv_top.$proc$fv_top.sv:31$82'.
+Found and cleaned up 2 empty switches in `\fv_top.$proc$fv_top.sv:37$88'.
+Removing empty process `fv_top.$proc$fv_top.sv:37$88'.
+Found and cleaned up 2 empty switches in `\fv_top.$proc$fv_top.sv:41$92'.
+Removing empty process `fv_top.$proc$fv_top.sv:41$92'.
+Removing empty process `fv_top.$proc$fv_top.sv:12$97'.
+Removing empty process `fv_top.$proc$fv_top.sv:14$98'.
+Removing empty process `fv_top.$proc$fv_top.sv:29$99'.
+Removing empty process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.$proc$ot_hnx_idxn_keybuf_ser.sv:117$124'.
+Removing empty process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:87$122'.
+Removing empty process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:86$121'.
+Removing empty process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:66$118'.
+Removing empty process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$proc$ot_hnx_idxn_keybuf_ser.sv:65$117'.
+Found and cleaned up 1 empty switch in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:107$111'.
+Removing empty process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:107$111'.
+Removing empty process `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$proc$ot_hnx_idxn_keybuf_ser.sv:100$108'.
+Removing empty process `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.$proc$ot_hnx_idxn_keybuf_ser.sv:48$131'.
+Removing empty process `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.$proc$ot_hnx_idxn_keybuf_ser.sv:48$129'.
+Removing empty process `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.$proc$ot_hnx_idxn_keybuf_ser.sv:39$128'.
+Cleaned up 10 empty switches.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+<suppressed ~2 debug messages>
+Optimizing module fv_top.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+<suppressed ~4 debug messages>
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+<suppressed ~6 debug messages>
+Optimizing module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.
+
+4.3. Executing FUTURE pass.
+
+4.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+Optimizing module fv_top.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+Optimizing module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.
+
+4.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+Finding unused cells or wires in module \fv_top..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+Finding unused cells or wires in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+Removed 20 unused cells and 103 unused wires.
+<suppressed ~34 debug messages>
+
+4.6. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx...
+Checking module fv_top...
+Checking module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx...
+Checking module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser...
+Checking module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx...
+Checking module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe...
+Checking module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe...
+Checking module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx...
+Found and reported 0 problems.
+
+4.7. Executing OPT pass (performing simple optimizations).
+
+4.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+Optimizing module fv_top.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+Optimizing module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.
+
+4.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Computing hashes of 4 cells of `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Finding duplicate cells in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Finding identical cells in module `\fv_top'.
+Computing hashes of 74 cells of `\fv_top'.
+Finding duplicate cells in `\fv_top'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Computing hashes of 3 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 7 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Computing hashes of 10 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Computing hashes of 8 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+<suppressed ~6 debug messages>
+Finding identical cells in module `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Computing hashes of 1 cells of `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Finding duplicate cells in `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Finding identical cells in module `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Computing hashes of 1 cells of `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Finding duplicate cells in `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Finding identical cells in module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Computing hashes of 1 cells of `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Finding duplicate cells in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Removed a total of 2 cells.
+
+4.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \fv_top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~26 debug messages>
+
+4.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+  Optimizing cells in module \fv_top.
+  Optimizing cells in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.
+  Optimizing cells in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+  Optimizing cells in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+  Optimizing cells in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+  Optimizing cells in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+  Optimizing cells in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.
+Performed a total of 0 changes.
+
+4.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Computing hashes of 4 cells of `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Finding duplicate cells in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Finding identical cells in module `\fv_top'.
+Computing hashes of 74 cells of `\fv_top'.
+Finding duplicate cells in `\fv_top'.
+Computing hashes of 73 cells of `\fv_top'.
+Finding duplicate cells in `\fv_top'.
+<suppressed ~3 debug messages>
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Computing hashes of 3 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 7 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Computing hashes of 8 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Finding identical cells in module `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Computing hashes of 1 cells of `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Finding duplicate cells in `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Finding identical cells in module `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Computing hashes of 1 cells of `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Finding duplicate cells in `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Finding identical cells in module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Computing hashes of 1 cells of `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Finding duplicate cells in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Removed a total of 1 cells.
+
+4.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+Finding unused cells or wires in module \fv_top..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+Finding unused cells or wires in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+4.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+Optimizing module fv_top.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+Optimizing module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.
+
+4.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \fv_top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+4.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+  Optimizing cells in module \fv_top.
+  Optimizing cells in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.
+  Optimizing cells in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+  Optimizing cells in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+  Optimizing cells in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+  Optimizing cells in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+  Optimizing cells in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.
+Performed a total of 0 changes.
+
+4.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Computing hashes of 4 cells of `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Finding duplicate cells in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Finding identical cells in module `\fv_top'.
+Computing hashes of 73 cells of `\fv_top'.
+Finding duplicate cells in `\fv_top'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Computing hashes of 3 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 7 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Computing hashes of 8 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Finding identical cells in module `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Computing hashes of 1 cells of `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Finding duplicate cells in `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Finding identical cells in module `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Computing hashes of 1 cells of `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Finding duplicate cells in `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Finding identical cells in module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Computing hashes of 1 cells of `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Finding duplicate cells in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Removed a total of 0 cells.
+
+4.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+Finding unused cells or wires in module \fv_top..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+Finding unused cells or wires in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+
+4.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+Optimizing module fv_top.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+Optimizing module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.
+
+4.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+4.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 3 bits (of 12) from mux cell $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.$procmux$134 ($mux).
+Removed top 3 bits (of 12) from wire $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.$0\hold[11:0].
+Removed top 31 bits (of 32) from port B of cell fv_top.$add$fv_top.sv:12$66 ($add).
+Removed top 28 bits (of 32) from port Y of cell fv_top.$add$fv_top.sv:12$66 ($add).
+Removed top 31 bits (of 32) from port B of cell fv_top.$add$fv_top.sv:35$87 ($add).
+Removed top 24 bits (of 32) from port Y of cell fv_top.$add$fv_top.sv:35$87 ($add).
+Removed top 29 bits (of 32) from port B of cell fv_top.$gt$fv_top.sv:37$89 ($gt).
+Removed top 28 bits (of 32) from port B of cell fv_top.$gt$fv_top.sv:41$93 ($gt).
+Removed top 28 bits (of 32) from wire fv_top.$add$fv_top.sv:12$66_Y.
+Removed top 24 bits (of 32) from wire fv_top.$add$fv_top.sv:35$87_Y.
+Removed top 1 bits (of 4) from FF cell $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$procdff$221 ($adff).
+Removed top 1 bits (of 4) from wire $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.gn.recent.
+
+4.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+Finding unused cells or wires in module \fv_top..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+Finding unused cells or wires in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~3 debug messages>
+
+4.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.11. Executing OPT pass (performing simple optimizations).
+
+4.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+Optimizing module fv_top.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+Optimizing module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.
+
+4.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Computing hashes of 4 cells of `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Finding duplicate cells in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Finding identical cells in module `\fv_top'.
+Computing hashes of 73 cells of `\fv_top'.
+Finding duplicate cells in `\fv_top'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Computing hashes of 3 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 7 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Computing hashes of 8 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Finding identical cells in module `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Computing hashes of 1 cells of `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Finding duplicate cells in `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Finding identical cells in module `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Computing hashes of 1 cells of `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Finding duplicate cells in `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Finding identical cells in module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Computing hashes of 1 cells of `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Finding duplicate cells in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Removed a total of 0 cells.
+
+4.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+Finding unused cells or wires in module \fv_top..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+Finding unused cells or wires in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+
+4.11.4. Finished fast OPT passes.
+
+4.12. Executing SORT pass.
+
+4.13. Printing statistics.
+
+=== $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       37 wire bits
+        5 public wires
+       37 public wire bits
+        3 ports
+       16 port bits
+        1 cells
+        1   $dff
+
+=== $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        8 wires
+       53 wire bits
+        6 public wires
+       41 public wire bits
+        4 ports
+       17 port bits
+        4 cells
+        2   $dff
+        2   $mux
+
+=== $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+      142 wire bits
+        5 public wires
+      142 public wire bits
+        4 ports
+       58 port bits
+        1 cells
+        1   $adff
+
+=== $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       38 wire bits
+        7 public wires
+       38 public wire bits
+        6 ports
+       35 port bits
+        1 cells
+        1   $dff
+        2 submodules
+        1   $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx
+        1   $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe
+
+=== $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       25 wires
+      112 wire bits
+       21 public wires
+      105 public wire bits
+       19 ports
+       74 port bits
+        7 cells
+        3   $adff
+        1   $logic_and
+        1   $mux
+        1   $or
+        1   $reduce_or
+        1 submodules
+        1   $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx
+
+=== $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       31 wires
+      206 wire bits
+       30 public wires
+      205 public wire bits
+       16 ports
+       90 port bits
+        4 cells
+        2   $adff
+        1   $dff
+        1   $or
+        3 submodules
+        1   $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx
+        1   $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx
+        1   $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe
+
+=== $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+      110 wire bits
+        5 public wires
+      110 public wire bits
+        4 ports
+       20 port bits
+        1 cells
+        1   $adff
+
+=== fv_top ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       91 wires
+      520 wire bits
+       63 public wires
+      472 public wire bits
+       11 ports
+       54 port bits
+       70 cells
+        2   $add
+        7   $check
+       29   $dff
+        4   $eq
+        2   $gt
+        5   $logic_and
+        5   $logic_not
+       10   $mux
+        2   $ne
+        2   $or
+        1   $reduce_bool
+        1   $reduce_or
+        3 submodules
+        1   $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx
+        1   $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx
+        1   $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+       94 fv_top
+        1 $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx
+        1   $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx
+        1   $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe
+        7 $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx
+        4   $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx
+        4 $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser
+        1   $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx
+        4   $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx
+        1   $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe
+
+        +----------Count including submodules.
+        | 
+      190 wires
+     1308 wire bits
+      153 public wires
+     1228 public wire bits
+       74 ports
+      397 port bits
+        - memories
+        - memory bits
+        - processes
+       94 cells
+        2   $add
+        7   $adff
+        7   $check
+       37   $dff
+        4   $eq
+        2   $gt
+        6   $logic_and
+        5   $logic_not
+       15   $mux
+        2   $ne
+        4   $or
+        1   $reduce_bool
+        2   $reduce_or
+        3 submodules
+        1   $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx
+        1   $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx
+        1   $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser
+
+4.14. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx...
+Checking module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx...
+Checking module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe...
+Checking module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx...
+Checking module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx...
+Checking module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser...
+Checking module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe...
+Checking module fv_top...
+Found and reported 0 problems.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `fv_top'. Setting top module to fv_top.
+
+5.1. Analyzing design hierarchy..
+Top module:  \fv_top
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser
+Used module:         $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx
+Used module:         $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe
+Used module:         $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx
+Used module:         $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx
+
+5.2. Analyzing design hierarchy..
+Top module:  \fv_top
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser
+Used module:         $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx
+Used module:         $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe
+Used module:         $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx
+Used module:         $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe
+Used module:     $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx
+Removed 0 unused modules.
+Module fv_top directly or indirectly contains formal properties -> setting "keep" attribute.
+
+6. Executing jny backend.
+
+7. Executing RTLIL backend.
+Output filename: ../model/design.il
+
+Warnings: 5 unique messages, 10 total
+End of script. Logfile hash: 271b4a6144, time: 0.11s, user: 0.09s, system: 0.03s, MEM: 34.65 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 32% 4x read_verilog (0 sec), 23% 2x hierarchy (0 sec), ...

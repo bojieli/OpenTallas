@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-27T10:14:57" hostname="6333442e4cf8" package="fv_nb3" id="0" name="prove" tests="1" errors="1" failures="0" time="0" skipped="0">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="ERROR"/>
+</properties>
+<testcase classname="prove" name="prove" time="0">
+<error type="ERROR"/>
+</testcase>
+<system-out>SBY 10:14:56 [fv_nb3_prove] Removing directory '/w/fv_nb3_prove'.
+SBY 10:14:56 [fv_nb3_prove] Copy '/w/ot_hnx_idxn_keybuf_ser.sv' to '/w/fv_nb3_prove/src/ot_hnx_idxn_keybuf_ser.sv'.
+SBY 10:14:56 [fv_nb3_prove] Copy '/w/fv_top.sv' to '/w/fv_nb3_prove/src/fv_top.sv'.
+SBY 10:14:56 [fv_nb3_prove] engine_0: abc pdr
+SBY 10:14:56 [fv_nb3_prove] base: starting process &quot;cd fv_nb3_prove/src; yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 10:14:56 [fv_nb3_prove] base: Warning: Replacing memory \he with list of registers. See fv_top.sv:34
+SBY 10:14:56 [fv_nb3_prove] base: Warning: Replacing memory \ho with list of registers. See fv_top.sv:34
+SBY 10:14:56 [fv_nb3_prove] base: Warning: Replacing memory \hl with list of registers. See fv_top.sv:32
+SBY 10:14:56 [fv_nb3_prove] base: Warning: Replacing memory \hk with list of registers. See fv_top.sv:32
+SBY 10:14:56 [fv_nb3_prove] base: Warning: Replacing memory \hc with list of registers. See fv_top.sv:32
+SBY 10:14:56 [fv_nb3_prove] base: finished (returncode=0)
+SBY 10:14:56 [fv_nb3_prove] prep: starting process &quot;cd fv_nb3_prove/model; yosys -ql design_prep.log design_prep.ys&quot;
+SBY 10:14:56 [fv_nb3_prove] prep: finished (returncode=0)
+SBY 10:14:56 [fv_nb3_prove] aig: starting process &quot;cd fv_nb3_prove/model; yosys -ql design_aiger.log design_aiger.ys&quot;
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\clk like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\replay_v like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [0] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [1] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [2] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [3] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [4] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [5] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [6] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [7] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\pre_v like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [0] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [1] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [2] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [3] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [4] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [5] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [6] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [7] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\live_v like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\live_index [0] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\live_index [1] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\live_index [2] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\live_index [3] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\live_index [4] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\live_index [5] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\live_index [6] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\live_index [7] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [0] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [1] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [2] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [3] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [4] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [5] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [6] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [7] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [8] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [9] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\key_in [10] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [0] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [1] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [2] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [3] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [4] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [5] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [6] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [7] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [8] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [9] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [10] like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\fv_fault like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating undriven bit fv_top.\clear like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: Warning: Treating a total of 52 undriven bits in fv_top like $anyseq.
+SBY 10:14:56 [fv_nb3_prove] aig: finished (returncode=0)
+SBY 10:14:56 [fv_nb3_prove] engine_0: starting process &quot;cd fv_nb3_prove; yosys-abc -c 'read_aiger model/design_aiger.aig; fold; strash; pdr -v -l; write_cex -a engine_0/trace.aiw'&quot;
+SBY 10:14:57 [fv_nb3_prove] engine_0: ======== ABC command line &quot;read_aiger model/design_aiger.aig; fold; strash; pdr -v -l; write_cex -a engine_0/trace.aiw&quot;
+SBY 10:14:57 [fv_nb3_prove] engine_0: Warning: The last 3 outputs are interpreted as constraints.
+SBY 10:14:57 [fv_nb3_prove] engine_0: VarMax = 300. FrameMax = 10000. QueMax = 0. TimeMax = 199. MonoCNF = no. SkipGen = no. SolveAll = no.
+SBY 10:14:57 [fv_nb3_prove] engine_0: Frame Clauses                                                     Max Queue Flops Time
+SBY 10:14:57 [fv_nb3_prove] engine_0: 1 : 0 6                                                                 1     6      0.01 sec  T/O =  0  PRV =  0
+SBY 10:14:57 [fv_nb3_prove] engine_0: 2 : 0 3 9                                                               2    10      0.03 sec  T/O =  0  PRV =  0
+SBY 10:14:57 [fv_nb3_prove] engine_0: 3 : 0 2 6 11 ~3                                                          5    14      0.03 sec  T/O =  0  PRV =  0
+SBY 10:14:57 [fv_nb3_prove] engine_0: 4 : 0 2 2 4 11 ~3                                                        1    15      0.04 sec  T/O =  0  PRV =  0
+SBY 10:14:57 [fv_nb3_prove] engine_0: 5 : 0 2 2 6 9 14 ~3                                                      5    15      0.05 sec  T/O =  0  PRV =  0
+SBY 10:14:57 [fv_nb3_prove] engine_0: 6 : 0 2 2 5 7 6 6 ~5                                                     0    15      0.06 sec  T/O =  0  PRV =  0
+SBY 10:14:57 [fv_nb3_prove] engine_0: 7 : 0 2 2 5 7 5 1 6 ~5                                                   8    15      0.06 sec  T/O =  0  PRV =  0
+SBY 10:14:57 [fv_nb3_prove] engine_0: Block =   14  Oblig =    75  Clause =    40  Call =   322 (sat=58.1%)  Cex =   0  Start =   0
+SBY 10:14:57 [fv_nb3_prove] engine_0: SAT solving =     0.01 sec (  9.54 %)
+SBY 10:14:57 [fv_nb3_prove] engine_0: unsat     =     0.00 sec (  0.22 %)
+SBY 10:14:57 [fv_nb3_prove] engine_0: sat       =     0.01 sec (  9.33 %)
+SBY 10:14:57 [fv_nb3_prove] engine_0: Generalize  =     0.00 sec (  4.75 %)
+SBY 10:14:57 [fv_nb3_prove] engine_0: Push clause =     0.00 sec (  4.40 %)
+SBY 10:14:57 [fv_nb3_prove] engine_0: Ternary sim =     0.00 sec (  1.62 %)
+SBY 10:14:57 [fv_nb3_prove] engine_0: Containment =     0.00 sec (  0.02 %)
+SBY 10:14:57 [fv_nb3_prove] engine_0: CNF compute =     0.00 sec (  1.07 %)
+SBY 10:14:57 [fv_nb3_prove] engine_0: Refinement  =     0.00 sec (  0.17 %)
+SBY 10:14:57 [fv_nb3_prove] engine_0: TOTAL       =     0.07 sec (100.00 %)
+SBY 10:14:57 [fv_nb3_prove] engine_0: Output 0 of miter &quot;model/design_aiger&quot; was asserted in frame 7.  Time =     0.07 sec
+SBY 10:14:57 [fv_nb3_prove] engine_0: finished (returncode=0)
+SBY 10:14:57 [fv_nb3_prove] engine_0: Status returned by engine: FAIL
+SBY 10:14:57 [fv_nb3_prove] smt2: starting process &quot;cd fv_nb3_prove/model; yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 10:14:57 [fv_nb3_prove] engine_0: starting process &quot;cd fv_nb3_prove; yosys-witness aiw2yw engine_0/trace.aiw model/design_aiger.ywa engine_0/trace_aiw.yw&quot;
+SBY 10:14:57 [fv_nb3_prove] smt2: finished (returncode=0)
+SBY 10:14:57 [fv_nb3_prove] engine_0: Converting AIGER witness trace 'engine_0/trace.aiw' to Yosys witness trace 'engine_0/trace_aiw.yw'...
+SBY 10:14:57 [fv_nb3_prove] engine_0: Using Yosys witness AIGER map file 'model/design_aiger.ywa'
+SBY 10:14:57 [fv_nb3_prove] engine_0: Converted 8 time steps.
+SBY 10:14:57 [fv_nb3_prove] engine_0: finished (returncode=0)
+SBY 10:14:57 [fv_nb3_prove] engine_0: starting process &quot;cd fv_nb3_prove; yosys-smtbmc -s yices --noprogress --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc --yw engine_0/trace_aiw.yw model/design_smt2.smt2&quot;
+SBY 10:14:57 [fv_nb3_prove] engine_0: ##   0:00:00  Solver: yices
+SBY 10:14:57 [fv_nb3_prove] engine_0: ##   0:00:00  SMT Solver 'yices-smt2' not found in path.
+SBY 10:14:57 [fv_nb3_prove] engine_0: finished (returncode=1)
+SBY 10:14:57 [fv_nb3_prove] ERROR: engine_0: Could not determine aigsmt status.
+SBY 10:14:57 [fv_nb3_prove] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 10:14:57 [fv_nb3_prove] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 10:14:57 [fv_nb3_prove] summary: engine_0 (abc pdr) returned FAIL
+SBY 10:14:57 [fv_nb3_prove] summary: engine_0 did not produce any traces
+SBY 10:14:57 [fv_nb3_prove] DONE (ERROR, rc=16)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

@@ -1,0 +1,1991 @@
+{
+  "$schema": "https://raw.githubusercontent.com/YosysHQ/yosys/main/misc/jny.schema.json",
+  "generator": "Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "version": "0.0.1",
+  "invocation": "write_jny -no-connections ../model/design.json ",
+  "features": ["attributes", "properties"],
+  "modules": [
+      {
+        "name": "$paramod$2884b16db1e887d993e9525eb6564545ee80fe05\\ot_hnx_idxn_dpipe",
+        "cell_sorts": [
+          {
+            "type": "$adff",
+            "ports": [
+                {
+                  "name": "ARST",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "CLK",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "D",
+                  "direction": "io",
+                  "range": [54, 0]
+                },
+                {
+                  "name": "Q",
+                  "direction": "",
+                  "range": [54, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procdff$221",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:48.17-48.97"
+                  },
+                  "parameters": {
+                    "ARST_POLARITY": "00000000000000000000000000000000",
+                    "ARST_VALUE": "000000000000000000000000000000000000000000000000000000",
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000110110"
+                  }
+                }
+            ]
+          }
+        ],
+        "attributes": {
+            "dynports": "00000000000000000000000000000001",
+            "hdlname": "ot_hnx_idxn_dpipe",
+            "src": "ot_hnx_idxn_keybuf_ser.sv:44.1-51.10"
+        }
+      },
+      {
+        "name": "$paramod$92c2ec0b6dc53bfc0308b8fcaad44058cce3e186\\ot_hnx_idxn_kb_rx",
+        "cell_sorts": [
+          {
+            "type": "$paramod$2884b16db1e887d993e9525eb6564545ee80fe05\\ot_hnx_idxn_dpipe",
+            "ports": [
+                {
+                  "name": "clk",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "i",
+                  "direction": "io",
+                  "range": [9, 0]
+                },
+                {
+                  "name": "o",
+                  "direction": "",
+                  "range": [9, 0]
+                },
+                {
+                  "name": "rst_n",
+                  "direction": "io",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "dbeat",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:119.36-119.91"
+                  },
+                  "parameters": {
+
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$paramod$bc0e73a76d38c0502bec07ea273d064874e044c7\\ot_hnx_idxn_ser_rx",
+            "ports": [
+                {
+                  "name": "b",
+                  "direction": "io",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "clk",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "d",
+                  "direction": "",
+                  "range": [10, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "asm",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:118.46-118.81"
+                  },
+                  "parameters": {
+
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$dff",
+            "ports": [
+                {
+                  "name": "CLK",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "D",
+                  "direction": "io",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "Q",
+                  "direction": "",
+                  "range": [5, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procdff$190",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:117.2-117.36"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000101"
+                  }
+                }
+            ]
+          }
+        ],
+        "attributes": {
+            "dynports": "00000000000000000000000000000001",
+            "hdlname": "ot_hnx_idxn_kb_rx",
+            "src": "ot_hnx_idxn_keybuf_ser.sv:112.1-120.10"
+        }
+      },
+      {
+        "name": "$paramod$92c2ec0b6dc53bfc0308b8fcaad44058cce3e186\\ot_hnx_idxn_kb_tx",
+        "cell_sorts": [
+          {
+            "type": "$paramod$bc0e73a76d38c0502bec07ea273d064874e044c7\\ot_hnx_idxn_ser_tx",
+            "ports": [
+                {
+                  "name": "clk",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "d",
+                  "direction": "io",
+                  "range": [10, 0]
+                },
+                {
+                  "name": "ev",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "q",
+                  "direction": "",
+                  "range": [5, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "ser",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:103.46-103.106"
+                  },
+                  "parameters": {
+
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$mux",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "S",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procmux$161",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:108.59-108.93|ot_hnx_idxn_keybuf_ser.sv:108.56-108.103"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$adff",
+            "ports": [
+                {
+                  "name": "ARST",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "CLK",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "D",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Q",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procdff$206",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:107.3-108.106"
+                  },
+                  "parameters": {
+                    "ARST_POLARITY": "00000000000000000000000000000000",
+                    "ARST_VALUE": "0",
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procdff$211",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:107.3-108.106"
+                  },
+                  "parameters": {
+                    "ARST_POLARITY": "00000000000000000000000000000000",
+                    "ARST_VALUE": "0",
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procdff$216",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:100.2-101.75"
+                  },
+                  "parameters": {
+                    "ARST_POLARITY": "00000000000000000000000000000000",
+                    "ARST_VALUE": "0000000000000000000000000000",
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000011100"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$or",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$or$ot_hnx_idxn_keybuf_ser.sv:108$114",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:108.60-108.75"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$logic_and",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$logic_and$ot_hnx_idxn_keybuf_ser.sv:108$116",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:108.59-108.93"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          }
+        ],
+        "attributes": {
+            "dynports": "00000000000000000000000000000001",
+            "hdlname": "ot_hnx_idxn_kb_tx",
+            "src": "ot_hnx_idxn_keybuf_ser.sv:90.1-110.10"
+        }
+      },
+      {
+        "name": "$paramod$92c2ec0b6dc53bfc0308b8fcaad44058cce3e186\\ot_hnx_idxn_keybuf_ser",
+        "cell_sorts": [
+          {
+            "type": "$paramod$bc0e73a76d38c0502bec07ea273d064874e044c7\\ot_hnx_idxn_ser_tx",
+            "ports": [
+                {
+                  "name": "clk",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "d",
+                  "direction": "io",
+                  "range": [10, 0]
+                },
+                {
+                  "name": "ev",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "q",
+                  "direction": "",
+                  "range": [5, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "ser",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:85.46-85.99"
+                  },
+                  "parameters": {
+
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$paramod$9e30515371342824061213ac4e88a0293125ed05\\ot_hnx_idxn_dpipe",
+            "ports": [
+                {
+                  "name": "clk",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "i",
+                  "direction": "io",
+                  "range": [28, 0]
+                },
+                {
+                  "name": "o",
+                  "direction": "",
+                  "range": [28, 0]
+                },
+                {
+                  "name": "rst_n",
+                  "direction": "io",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "dctl",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:69.39-69.88"
+                  },
+                  "parameters": {
+
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$paramod$bc0e73a76d38c0502bec07ea273d064874e044c7\\ot_hnx_idxn_ser_rx",
+            "ports": [
+                {
+                  "name": "b",
+                  "direction": "io",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "clk",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "d",
+                  "direction": "",
+                  "range": [10, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "asm",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:71.46-71.83"
+                  },
+                  "parameters": {
+
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$dff",
+            "ports": [
+                {
+                  "name": "CLK",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "D",
+                  "direction": "io",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "Q",
+                  "direction": "",
+                  "range": [5, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procdff$201",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:65.2-65.41"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000101"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$adff",
+            "ports": [
+                {
+                  "name": "ARST",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "CLK",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "D",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Q",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procdff$195",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:87.2-87.75"
+                  },
+                  "parameters": {
+                    "ARST_POLARITY": "00000000000000000000000000000000",
+                    "ARST_VALUE": "0",
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procdff$200",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:66.2-67.79"
+                  },
+                  "parameters": {
+                    "ARST_POLARITY": "00000000000000000000000000000000",
+                    "ARST_VALUE": "0000000000000000000000000000",
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000011100"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$or",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$or$ot_hnx_idxn_keybuf_ser.sv:85$120",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:85.64-85.76"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          }
+        ],
+        "attributes": {
+            "dynports": "00000000000000000000000000000001",
+            "hdlname": "ot_hnx_idxn_keybuf_ser",
+            "src": "ot_hnx_idxn_keybuf_ser.sv:53.1-88.10"
+        }
+      },
+      {
+        "name": "$paramod$9e30515371342824061213ac4e88a0293125ed05\\ot_hnx_idxn_dpipe",
+        "cell_sorts": [
+          {
+            "type": "$adff",
+            "ports": [
+                {
+                  "name": "ARST",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "CLK",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "D",
+                  "direction": "io",
+                  "range": [28, 0]
+                },
+                {
+                  "name": "Q",
+                  "direction": "",
+                  "range": [28, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procdff$226",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:47.20-47.83"
+                  },
+                  "parameters": {
+                    "ARST_POLARITY": "00000000000000000000000000000000",
+                    "ARST_VALUE": "0000000000000000000000000000",
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000011100"
+                  }
+                }
+            ]
+          }
+        ],
+        "attributes": {
+            "dynports": "00000000000000000000000000000001",
+            "hdlname": "ot_hnx_idxn_dpipe",
+            "src": "ot_hnx_idxn_keybuf_ser.sv:44.1-51.10"
+        }
+      },
+      {
+        "name": "$paramod$bc0e73a76d38c0502bec07ea273d064874e044c7\\ot_hnx_idxn_ser_rx",
+        "cell_sorts": [
+          {
+            "type": "$dff",
+            "ports": [
+                {
+                  "name": "CLK",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "D",
+                  "direction": "io",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "Q",
+                  "direction": "",
+                  "range": [5, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procdff$227",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:38.21-38.48"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000101"
+                  }
+                }
+            ]
+          }
+        ],
+        "attributes": {
+            "dynports": "00000000000000000000000000000001",
+            "hdlname": "ot_hnx_idxn_ser_rx",
+            "src": "ot_hnx_idxn_keybuf_ser.sv:30.1-43.10"
+        }
+      },
+      {
+        "name": "$paramod$bc0e73a76d38c0502bec07ea273d064874e044c7\\ot_hnx_idxn_ser_tx",
+        "cell_sorts": [
+          {
+            "type": "$mux",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "S",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [5, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procmux$134",
+                  "attributes": {
+                    "full_case": "00000000000000000000000000000001",
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:26.6-26.8|ot_hnx_idxn_keybuf_ser.sv:26.3-27.46"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000101"
+                  }
+                },
+                {
+                  "name": "$procmux$137",
+                  "attributes": {
+                    "full_case": "00000000000000000000000000000001",
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:26.6-26.8|ot_hnx_idxn_keybuf_ser.sv:26.3-27.46"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000101"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$dff",
+            "ports": [
+                {
+                  "name": "CLK",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "D",
+                  "direction": "io",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "Q",
+                  "direction": "",
+                  "range": [5, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procdff$163",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:25.2-28.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000101"
+                  }
+                },
+                {
+                  "name": "$procdff$164",
+                  "attributes": {
+                    "src": "ot_hnx_idxn_keybuf_ser.sv:25.2-28.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000001010"
+                  }
+                }
+            ]
+          }
+        ],
+        "attributes": {
+            "dynports": "00000000000000000000000000000001",
+            "hdlname": "ot_hnx_idxn_ser_tx",
+            "src": "ot_hnx_idxn_keybuf_ser.sv:19.1-29.10"
+        }
+      },
+      {
+        "name": "fv_top",
+        "cell_sorts": [
+          {
+            "type": "$add",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [4, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [4, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$add$fv_top.sv:12$66",
+                  "attributes": {
+                    "src": "fv_top.sv:12.83-12.89"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000100",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000100"
+                  }
+                },
+                {
+                  "name": "$add$fv_top.sv:35$87",
+                  "attributes": {
+                    "src": "fv_top.sv:35.46-35.51"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000001000",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000001000"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$eq",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [28, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [28, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$eq$fv_top.sv:38$90",
+                  "attributes": {
+                    "src": "fv_top.sv:38.14-38.26"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000011100",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000011100",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$eq$fv_top.sv:39$91",
+                  "attributes": {
+                    "src": "fv_top.sv:39.26-39.37"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000001010",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000001010",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$eq$fv_top.sv:42$94",
+                  "attributes": {
+                    "src": "fv_top.sv:42.25-42.36"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000001010",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000001010",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$eq$fv_top.sv:43$95",
+                  "attributes": {
+                    "src": "fv_top.sv:43.14-43.20"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$gt",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [8, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [3, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$gt$fv_top.sv:37$89",
+                  "attributes": {
+                    "src": "fv_top.sv:37.15-37.22"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000001000",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000011",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$gt$fv_top.sv:41$93",
+                  "attributes": {
+                    "src": "fv_top.sv:41.15-41.22"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000001000",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000100",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$logic_and",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$logic_and$fv_top.sv:15$72",
+                  "attributes": {
+                    "src": "fv_top.sv:15.31-15.41"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$logic_and$fv_top.sv:16$79",
+                  "attributes": {
+                    "src": "fv_top.sv:16.30-16.43"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$logic_and$fv_top.sv:16$81",
+                  "attributes": {
+                    "src": "fv_top.sv:16.30-16.53"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$logic_and$fv_top.sv:32$83",
+                  "attributes": {
+                    "src": "fv_top.sv:32.38-32.51"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$logic_and$fv_top.sv:35$86",
+                  "attributes": {
+                    "src": "fv_top.sv:35.20-35.39"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$paramod$92c2ec0b6dc53bfc0308b8fcaad44058cce3e186\\ot_hnx_idxn_kb_tx",
+            "ports": [
+                {
+                  "name": "clear",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "clk",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "fault",
+                  "direction": "",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "key_in",
+                  "direction": "io",
+                  "range": [10, 0]
+                },
+                {
+                  "name": "live_index",
+                  "direction": "io",
+                  "range": [8, 0]
+                },
+                {
+                  "name": "live_v",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "o_clear",
+                  "direction": "",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "o_key_ser",
+                  "direction": "",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "o_live_index",
+                  "direction": "",
+                  "range": [8, 0]
+                },
+                {
+                  "name": "o_live_v",
+                  "direction": "",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "o_pre_index",
+                  "direction": "",
+                  "range": [8, 0]
+                },
+                {
+                  "name": "o_pre_v",
+                  "direction": "",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "o_replay_index",
+                  "direction": "",
+                  "range": [8, 0]
+                },
+                {
+                  "name": "o_replay_v",
+                  "direction": "",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "pre_index",
+                  "direction": "io",
+                  "range": [8, 0]
+                },
+                {
+                  "name": "pre_v",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "replay_index",
+                  "direction": "io",
+                  "range": [8, 0]
+                },
+                {
+                  "name": "replay_v",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "rst_n",
+                  "direction": "io",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "tx",
+                  "attributes": {
+                    "src": "fv_top.sv:18.39-20.132"
+                  },
+                  "parameters": {
+
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$logic_not",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$logic_not$fv_top.sv:15$73",
+                  "attributes": {
+                    "src": "fv_top.sv:15.29-15.42"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$logic_not$fv_top.sv:16$77",
+                  "attributes": {
+                    "src": "fv_top.sv:16.30-16.33"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$logic_not$fv_top.sv:16$78",
+                  "attributes": {
+                    "src": "fv_top.sv:16.37-16.43"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$logic_not$fv_top.sv:16$80",
+                  "attributes": {
+                    "src": "fv_top.sv:16.47-16.53"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$logic_not$fv_top.sv:44$96",
+                  "attributes": {
+                    "src": "fv_top.sv:44.14-44.18"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$or",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$or$fv_top.sv:13$67",
+                  "attributes": {
+                    "src": "fv_top.sv:13.10-13.25"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$or$fv_top.sv:34$84",
+                  "attributes": {
+                    "src": "fv_top.sv:34.27-34.41"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000001",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000001",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$reduce_bool",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [4, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$ne$fv_top.sv:12$63",
+                  "attributes": {
+                    "src": "fv_top.sv:12.31-12.38"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000100",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$ne",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [4, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [4, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$ne$fv_top.sv:12$65",
+                  "attributes": {
+                    "src": "fv_top.sv:12.65-12.75"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000000100",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000000100",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$ne$fv_top.sv:35$85",
+                  "attributes": {
+                    "src": "fv_top.sv:35.29-35.39"
+                  },
+                  "parameters": {
+                    "A_SIGNED": "00000000000000000000000000000000",
+                    "A_WIDTH": "00000000000000000000000000001000",
+                    "B_SIGNED": "00000000000000000000000000000000",
+                    "B_WIDTH": "00000000000000000000000000001000",
+                    "Y_WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$mux",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [4, 0]
+                },
+                {
+                  "name": "B",
+                  "direction": "io",
+                  "range": [4, 0]
+                },
+                {
+                  "name": "S",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "Y",
+                  "direction": "",
+                  "range": [4, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procmux$139",
+                  "attributes": {
+                    "src": "fv_top.sv:12.65-12.75|fv_top.sv:12.62-12.90"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000100"
+                  }
+                },
+                {
+                  "name": "$procmux$141",
+                  "attributes": {
+                    "src": "fv_top.sv:15.15-15.20|fv_top.sv:15.12-15.44"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procmux$143",
+                  "attributes": {
+                    "src": "fv_top.sv:16.15-16.21|fv_top.sv:16.12-16.55"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procmux$145",
+                  "attributes": {
+                    "src": "fv_top.sv:35.20-35.39|fv_top.sv:35.17-35.52"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000001000"
+                  }
+                },
+                {
+                  "name": "$procmux$147",
+                  "attributes": {
+                    "src": "fv_top.sv:39.6-39.13|fv_top.sv:39.3-39.39"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procmux$149",
+                  "attributes": {
+                    "src": "fv_top.sv:37.15-37.22|fv_top.sv:37.12-40.5"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procmux$151",
+                  "attributes": {
+                    "src": "fv_top.sv:37.15-37.22|fv_top.sv:37.12-40.5"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procmux$155",
+                  "attributes": {
+                    "src": "fv_top.sv:41.15-41.22|fv_top.sv:41.12-45.5"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procmux$157",
+                  "attributes": {
+                    "src": "fv_top.sv:42.6-42.12|fv_top.sv:42.3-42.38"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procmux$159",
+                  "attributes": {
+                    "src": "fv_top.sv:41.15-41.22|fv_top.sv:41.12-45.5"
+                  },
+                  "parameters": {
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$paramod$92c2ec0b6dc53bfc0308b8fcaad44058cce3e186\\ot_hnx_idxn_keybuf_ser",
+            "ports": [
+                {
+                  "name": "clear",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "clk",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "fault",
+                  "direction": "",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "fv_ctl",
+                  "direction": "",
+                  "range": [28, 0]
+                },
+                {
+                  "name": "fv_fault",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "fv_key_line",
+                  "direction": "",
+                  "range": [10, 0]
+                },
+                {
+                  "name": "fv_key_o",
+                  "direction": "io",
+                  "range": [10, 0]
+                },
+                {
+                  "name": "key_in_ser",
+                  "direction": "io",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "key_out_ser",
+                  "direction": "",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "live_index",
+                  "direction": "io",
+                  "range": [8, 0]
+                },
+                {
+                  "name": "live_v",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "pre_index",
+                  "direction": "io",
+                  "range": [8, 0]
+                },
+                {
+                  "name": "pre_v",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "replay_index",
+                  "direction": "io",
+                  "range": [8, 0]
+                },
+                {
+                  "name": "replay_v",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "rst_n",
+                  "direction": "io",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "dut",
+                  "attributes": {
+                    "src": "fv_top.sv:22.44-24.73"
+                  },
+                  "parameters": {
+
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$check",
+            "ports": [
+                {
+                  "name": "A",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "ARGS",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "EN",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "TRG",
+                  "direction": "io",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "P1",
+                  "attributes": {
+                    "keep": "00000000000000000000000000000001",
+                    "src": "fv_top.sv:38.3-38.27"
+                  },
+                  "parameters": {
+                    "ARGS_WIDTH": "00000000000000000000000000000000",
+                    "FLAVOR": "assert",
+                    "FORMAT": true,
+                    "PRIORITY": "11111111111111111111111111111111",
+                    "TRG_ENABLE": "00000000000000000000000000000000",
+                    "TRG_POLARITY": true,
+                    "TRG_WIDTH": "00000000000000000000000000000000"
+                  }
+                },
+                {
+                  "name": "P2",
+                  "attributes": {
+                    "keep": "00000000000000000000000000000001",
+                    "src": "fv_top.sv:39.15-39.38"
+                  },
+                  "parameters": {
+                    "ARGS_WIDTH": "00000000000000000000000000000000",
+                    "FLAVOR": "assert",
+                    "FORMAT": true,
+                    "PRIORITY": "11111111111111111111111111111110",
+                    "TRG_ENABLE": "00000000000000000000000000000000",
+                    "TRG_POLARITY": true,
+                    "TRG_WIDTH": "00000000000000000000000000000000"
+                  }
+                },
+                {
+                  "name": "P3",
+                  "attributes": {
+                    "keep": "00000000000000000000000000000001",
+                    "src": "fv_top.sv:42.14-42.37"
+                  },
+                  "parameters": {
+                    "ARGS_WIDTH": "00000000000000000000000000000000",
+                    "FLAVOR": "assert",
+                    "FORMAT": true,
+                    "PRIORITY": "11111111111111111111111111111111",
+                    "TRG_ENABLE": "00000000000000000000000000000000",
+                    "TRG_POLARITY": true,
+                    "TRG_WIDTH": "00000000000000000000000000000000"
+                  }
+                },
+                {
+                  "name": "P4",
+                  "attributes": {
+                    "keep": "00000000000000000000000000000001",
+                    "src": "fv_top.sv:43.3-43.21"
+                  },
+                  "parameters": {
+                    "ARGS_WIDTH": "00000000000000000000000000000000",
+                    "FLAVOR": "assert",
+                    "FORMAT": true,
+                    "PRIORITY": "11111111111111111111111111111110",
+                    "TRG_ENABLE": "00000000000000000000000000000000",
+                    "TRG_POLARITY": true,
+                    "TRG_WIDTH": "00000000000000000000000000000000"
+                  }
+                },
+                {
+                  "name": "P5",
+                  "attributes": {
+                    "keep": "00000000000000000000000000000001",
+                    "src": "fv_top.sv:44.3-44.19"
+                  },
+                  "parameters": {
+                    "ARGS_WIDTH": "00000000000000000000000000000000",
+                    "FLAVOR": "assert",
+                    "FORMAT": true,
+                    "PRIORITY": "11111111111111111111111111111101",
+                    "TRG_ENABLE": "00000000000000000000000000000000",
+                    "TRG_POLARITY": true,
+                    "TRG_WIDTH": "00000000000000000000000000000000"
+                  }
+                },
+                {
+                  "name": "_witness_.check_assume_fv_top_sv_15_70",
+                  "attributes": {
+                    "hdlname": "_witness_ check_assume_fv_top_sv_15_70",
+                    "keep": "00000000000000000000000000000001",
+                    "src": "fv_top.sv:15.22-15.43"
+                  },
+                  "parameters": {
+                    "ARGS_WIDTH": "00000000000000000000000000000000",
+                    "FLAVOR": "assume",
+                    "FORMAT": true,
+                    "PRIORITY": "11111111111111111111111111111111",
+                    "TRG_ENABLE": "00000000000000000000000000000000",
+                    "TRG_POLARITY": true,
+                    "TRG_WIDTH": "00000000000000000000000000000000"
+                  }
+                },
+                {
+                  "name": "_witness_.check_assume_fv_top_sv_16_76",
+                  "attributes": {
+                    "hdlname": "_witness_ check_assume_fv_top_sv_16_76",
+                    "keep": "00000000000000000000000000000001",
+                    "src": "fv_top.sv:16.23-16.54"
+                  },
+                  "parameters": {
+                    "ARGS_WIDTH": "00000000000000000000000000000000",
+                    "FLAVOR": "assume",
+                    "FORMAT": true,
+                    "PRIORITY": "11111111111111111111111111111111",
+                    "TRG_ENABLE": "00000000000000000000000000000000",
+                    "TRG_POLARITY": true,
+                    "TRG_WIDTH": "00000000000000000000000000000000"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$dff",
+            "ports": [
+                {
+                  "name": "CLK",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "D",
+                  "direction": "io",
+                  "range": [4, 0]
+                },
+                {
+                  "name": "Q",
+                  "direction": "",
+                  "range": [4, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "$procdff$165",
+                  "attributes": {
+                    "src": "fv_top.sv:12.40-12.90"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000100"
+                  }
+                },
+                {
+                  "name": "$procdff$166",
+                  "attributes": {
+                    "src": "fv_top.sv:14.20-14.56"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procdff$168",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procdff$169",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000001000"
+                  }
+                },
+                {
+                  "name": "$procdff$170",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000011100"
+                  }
+                },
+                {
+                  "name": "$procdff$171",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000011100"
+                  }
+                },
+                {
+                  "name": "$procdff$172",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000011100"
+                  }
+                },
+                {
+                  "name": "$procdff$174",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000001010"
+                  }
+                },
+                {
+                  "name": "$procdff$175",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000001010"
+                  }
+                },
+                {
+                  "name": "$procdff$176",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000001010"
+                  }
+                },
+                {
+                  "name": "$procdff$178",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procdff$179",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procdff$180",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procdff$182",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000001010"
+                  }
+                },
+                {
+                  "name": "$procdff$183",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000001010"
+                  }
+                },
+                {
+                  "name": "$procdff$184",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000001010"
+                  }
+                },
+                {
+                  "name": "$procdff$186",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procdff$187",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                },
+                {
+                  "name": "$procdff$188",
+                  "attributes": {
+                    "src": "fv_top.sv:31.2-36.5"
+                  },
+                  "parameters": {
+                    "CLK_POLARITY": "1",
+                    "WIDTH": "00000000000000000000000000000001"
+                  }
+                }
+            ]
+          },
+          {
+            "type": "$paramod$92c2ec0b6dc53bfc0308b8fcaad44058cce3e186\\ot_hnx_idxn_kb_rx",
+            "ports": [
+                {
+                  "name": "beat_in",
+                  "direction": "io",
+                  "range": [9, 0]
+                },
+                {
+                  "name": "beat_out",
+                  "direction": "",
+                  "range": [9, 0]
+                },
+                {
+                  "name": "clk",
+                  "direction": "io",
+                  "range": [0, 0]
+                },
+                {
+                  "name": "key_line",
+                  "direction": "",
+                  "range": [10, 0]
+                },
+                {
+                  "name": "key_ser",
+                  "direction": "io",
+                  "range": [5, 0]
+                },
+                {
+                  "name": "rst_n",
+                  "direction": "io",
+                  "range": [0, 0]
+                }
+            ],
+            "cells": [
+                {
+                  "name": "rx",
+                  "attributes": {
+                    "src": "fv_top.sv:26.39-26.126"
+                  },
+                  "parameters": {
+
+                  }
+                }
+            ]
+          }
+        ],
+        "attributes": {
+            "keep": "00000000000000000000000000000001",
+            "src": "fv_top.sv:8.1-46.10",
+            "top": "00000000000000000000000000000001",
+            "dynports": "00000000000000000000000000000001",
+            "hdlname": "fv_top"
+        }
+      }
+  ]
+}

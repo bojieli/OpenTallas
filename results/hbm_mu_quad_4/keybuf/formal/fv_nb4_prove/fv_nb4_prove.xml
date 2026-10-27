@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-27T10:14:44" hostname="0f04a4ad12c9" package="fv_nb4" id="0" name="prove" tests="1" errors="0" failures="0" time="12" skipped="0">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="prove" name="prove" time="12">
+</testcase>
+<system-out>SBY 10:14:31 [fv_nb4_prove] Removing directory '/w/fv_nb4_prove'.
+SBY 10:14:31 [fv_nb4_prove] Copy '/w/ot_hnx_idxn_keybuf_ser.sv' to '/w/fv_nb4_prove/src/ot_hnx_idxn_keybuf_ser.sv'.
+SBY 10:14:31 [fv_nb4_prove] Copy '/w/fv_top.sv' to '/w/fv_nb4_prove/src/fv_top.sv'.
+SBY 10:14:31 [fv_nb4_prove] engine_0: abc pdr
+SBY 10:14:31 [fv_nb4_prove] base: starting process &quot;cd fv_nb4_prove/src; yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 10:14:32 [fv_nb4_prove] base: Warning: Replacing memory \he with list of registers. See fv_top.sv:34
+SBY 10:14:32 [fv_nb4_prove] base: Warning: Replacing memory \ho with list of registers. See fv_top.sv:34
+SBY 10:14:32 [fv_nb4_prove] base: Warning: Replacing memory \hl with list of registers. See fv_top.sv:32
+SBY 10:14:32 [fv_nb4_prove] base: Warning: Replacing memory \hk with list of registers. See fv_top.sv:32
+SBY 10:14:32 [fv_nb4_prove] base: Warning: Replacing memory \hc with list of registers. See fv_top.sv:32
+SBY 10:14:32 [fv_nb4_prove] base: finished (returncode=0)
+SBY 10:14:32 [fv_nb4_prove] prep: starting process &quot;cd fv_nb4_prove/model; yosys -ql design_prep.log design_prep.ys&quot;
+SBY 10:14:32 [fv_nb4_prove] prep: finished (returncode=0)
+SBY 10:14:32 [fv_nb4_prove] aig: starting process &quot;cd fv_nb4_prove/model; yosys -ql design_aiger.log design_aiger.ys&quot;
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\clk like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\replay_v like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [0] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [1] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [2] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [3] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [4] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [5] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [6] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\replay_index [7] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\pre_v like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [0] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [1] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [2] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [3] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [4] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [5] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [6] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\pre_index [7] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\live_v like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\live_index [0] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\live_index [1] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\live_index [2] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\live_index [3] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\live_index [4] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\live_index [5] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\live_index [6] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\live_index [7] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [0] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [1] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [2] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [3] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [4] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [5] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [6] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [7] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [8] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [9] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [10] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\key_in [11] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [0] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [1] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [2] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [3] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [4] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [5] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [6] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [7] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [8] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [9] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [10] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_key_o [11] like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\fv_fault like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating undriven bit fv_top.\clear like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: Warning: Treating a total of 54 undriven bits in fv_top like $anyseq.
+SBY 10:14:32 [fv_nb4_prove] aig: finished (returncode=0)
+SBY 10:14:32 [fv_nb4_prove] engine_0: starting process &quot;cd fv_nb4_prove; yosys-abc -c 'read_aiger model/design_aiger.aig; fold; strash; pdr -v -l; write_cex -a engine_0/trace.aiw'&quot;
+SBY 10:14:32 [fv_nb4_prove] engine_0: ======== ABC command line &quot;read_aiger model/design_aiger.aig; fold; strash; pdr -v -l; write_cex -a engine_0/trace.aiw&quot;
+SBY 10:14:32 [fv_nb4_prove] engine_0: Warning: The last 3 outputs are interpreted as constraints.
+SBY 10:14:32 [fv_nb4_prove] engine_0: VarMax = 300. FrameMax = 10000. QueMax = 0. TimeMax = 199. MonoCNF = no. SkipGen = no. SolveAll = no.
+SBY 10:14:32 [fv_nb4_prove] engine_0: Frame Clauses                                                     Max Queue Flops Time
+SBY 10:14:32 [fv_nb4_prove] engine_0: 1 : 0 6                                                                 1     6      0.01 sec  T/O =  0  PRV =  0
+SBY 10:14:32 [fv_nb4_prove] engine_0: 2 : 0 3 38                                                              2    40      0.03 sec  T/O =  0  PRV =  0
+SBY 10:14:32 [fv_nb4_prove] engine_0: 3 : 0 2 2 7 ~29                                                          1    40      0.04 sec  T/O =  0  PRV =  0
+SBY 10:14:32 [fv_nb4_prove] engine_0: 4 : 0 2 2 2 6 ~29                                                        4    41      0.05 sec  T/O =  0  PRV =  0
+SBY 10:14:32 [fv_nb4_prove] engine_0: 5 : 0 2 2 2 1 6 ~29                                                      1    41      0.05 sec  T/O =  0  PRV =  0
+SBY 10:14:32 [fv_nb4_prove] engine_0: 6 : 0 2 2 2 1 1 6 ~29                                                    2    41      0.06 sec  T/O =  0  PRV =  0
+SBY 10:14:32 [fv_nb4_prove] engine_0: 7 : 0 2 2 2 1 1 1 6 ~29                                                  1    41      0.07 sec  T/O =  0  PRV =  0
+SBY 10:14:32 [fv_nb4_prove] engine_0: 8 : 0 2 2 2 3 6 33 24 405 ~29                                            6   293      0.26 sec  T/O =  0  PRV =  0
+SBY 10:14:32 [fv_nb4_prove] engine_0: Timing out on output 0 in frame 8 (retrying in next anytime pass).
+SBY 10:14:32 [fv_nb4_prove] engine_0: 8 : 0 2 2 2 3 6 33 33 641 ~29                                            5   386      0.42 sec  T/O =  1  PRV =  0
+SBY 10:14:32 [fv_nb4_prove] engine_0: 9 : 0 2 2 2 2 2 28 5 146 232 ~369                                        2   386      0.54 sec  T/O =  1  PRV =  0
+SBY 10:14:33 [fv_nb4_prove] engine_0: 10 : 0 2 2 2 2 2 28 5 142 184 25 ~366                                     4   386      0.61 sec  T/O =  1  PRV =  0
+SBY 10:14:33 [fv_nb4_prove] engine_0: Timing out on output 1 in frame 10 (retrying in next anytime pass).
+SBY 10:14:33 [fv_nb4_prove] engine_0: 10 : 0 2 2 2 2 2 28 5 142 184 26 ~366                                     1   386      0.61 sec  T/O =  2  PRV =  0
+SBY 10:14:33 [fv_nb4_prove] engine_0: 11 : 0 2 2 2 2 2 28 5 142 182 25 0 ~369                                   1   386      0.66 sec  T/O =  2  PRV =  0
+SBY 10:14:33 [fv_nb4_prove] engine_0: 12 : 0 2 2 2 2 2 28 5 143 186 32 9 31 ~369                               12   390      0.72 sec  T/O =  2  PRV =  0
+SBY 10:14:33 [fv_nb4_prove] engine_0: 12 : 0 2 2 2 2 2 28 5 143 186 32 9 47 ~369                               12   395      0.73 sec  T/O =  2  PRV =  0
+SBY 10:14:33 [fv_nb4_prove] engine_0: 13 : 0 2 2 2 2 2 28 5 55 134 120 17 2 35 ~412                             1   395      0.78 sec  T/O =  2  PRV =  0
+SBY 10:14:33 [fv_nb4_prove] engine_0: 14 : 0 2 2 3 3 3 29 8 57 135 122 18 3 28 178 ~413                        12   481      0.96 sec  T/O =  2  PRV =  0
+SBY 10:14:33 [fv_nb4_prove] engine_0: Proved output 4 in frame 14.
+SBY 10:14:33 [fv_nb4_prove] engine_0: 15 : 0 2 2 3 3 3 29 7 55 57 23 105 77 41 21 131 ~511                      3   481      1.08 sec  T/O =  2  PRV =  1
+SBY 10:14:33 [fv_nb4_prove] engine_0: Timing out on output 2 in frame 15 (retrying in next anytime pass).
+SBY 10:14:33 [fv_nb4_prove] engine_0: 15 : 0 2 2 3 3 3 29 7 55 57 23 105 77 41 21 132 ~511                      1   481      1.08 sec  T/O =  3  PRV =  1
+SBY 10:14:33 [fv_nb4_prove] engine_0: 16 : 0 2 2 3 3 3 29 7 55 57 23 105 77 20 18 21 35 ~577                    1   481      1.15 sec  T/O =  3  PRV =  1
+SBY 10:14:33 [fv_nb4_prove] engine_0: 17 : 0 2 2 3 3 3 29 7 55 57 23 105 77 20 14 21 3 35 ~567                  2   481      1.21 sec  T/O =  3  PRV =  1
+SBY 10:14:33 [fv_nb4_prove] engine_0: 18 : 0 2 2 3 3 3 29 7 55 57 23 105 77 20 12 21 2 3 34 ~570                2   481      1.27 sec  T/O =  3  PRV =  1
+SBY 10:14:33 [fv_nb4_prove] engine_0: 19 : 0 2 2 3 3 3 29 7 55 57 23 105 77 20 12 21 2 2 3 33 ~573              2   481      1.32 sec  T/O =  3  PRV =  1
+SBY 10:14:33 [fv_nb4_prove] engine_0: 20 : 0 2 2 3 3 3 29 7 55 57 23 105 77 20 12 21 2 2 2 7 26 ~576            2   481      1.38 sec  T/O =  3  PRV =  1
+SBY 10:14:33 [fv_nb4_prove] engine_0: Proved output 3 in frame 20.
+SBY 10:14:33 [fv_nb4_prove] engine_0: 21 : 0 2 2 3 3 3 29 7 55 57 23 105 77 20 12 21 2 2 2 5 17 8 ~578          0   481      1.43 sec  T/O =  3  PRV =  2
+SBY 10:14:33 [fv_nb4_prove] engine_0: 22 : ... 29 7 55 57 23 105 77 20 12 21 2 2 2 5 17 27 -19 ~578      0   481      1.46 sec  T/O =  3  PRV =  2
+SBY 10:14:33 [fv_nb4_prove] engine_0: All outputs solved or timed out in frame 22.
+SBY 10:14:33 [fv_nb4_prove] engine_0: Starting new anytime pass, reusing clauses.
+SBY 10:14:33 [fv_nb4_prove] engine_0: Frame Clauses                                                     Max Queue Flops Time
+SBY 10:14:33 [fv_nb4_prove] engine_0: 1 : 0 455 ~578                                                           0     0      0.06 sec  T/O =  0  PRV =  2
+SBY 10:14:33 [fv_nb4_prove] engine_0: 2 : 0 2 453 ~578                                                         0     0      0.07 sec  T/O =  0  PRV =  2
+SBY 10:14:33 [fv_nb4_prove] engine_0: 3 : 0 2 2 451 ~578                                                       0     0      0.07 sec  T/O =  0  PRV =  2
+SBY 10:14:33 [fv_nb4_prove] engine_0: 4 : 0 2 2 3 448 ~578                                                     0     0      0.08 sec  T/O =  0  PRV =  2
+SBY 10:14:33 [fv_nb4_prove] engine_0: 5 : 0 2 2 3 3 445 ~578                                                   0     0      0.08 sec  T/O =  0  PRV =  2
+SBY 10:14:33 [fv_nb4_prove] engine_0: 6 : 0 2 2 3 3 3 442 ~578                                                 0     0      0.09 sec  T/O =  0  PRV =  2
+SBY 10:14:33 [fv_nb4_prove] engine_0: 7 : 0 2 2 3 3 3 29 413 ~578                                              0     0      0.09 sec  T/O =  0  PRV =  2
+SBY 10:14:33 [fv_nb4_prove] engine_0: 8 : 0 2 2 3 3 3 29 7 411 ~578                                            1    13      0.10 sec  T/O =  0  PRV =  2
+SBY 10:14:34 [fv_nb4_prove] engine_0: 9 : 0 2 2 3 3 3 29 7 59 494 ~578                                         5   279      0.26 sec  T/O =  0  PRV =  2
+SBY 10:14:34 [fv_nb4_prove] engine_0: 10 : 0 2 2 3 3 3 3 7 36 151 295 ~787                                      4   283      0.47 sec  T/O =  0  PRV =  2
+SBY 10:14:34 [fv_nb4_prove] engine_0: Timing out on output 0 in frame 10 (retrying in next anytime pass).
+SBY 10:14:34 [fv_nb4_prove] engine_0: 10 : 0 2 2 3 3 3 3 7 36 179 352 ~787                                      4   340      0.52 sec  T/O =  1  PRV =  2
+SBY 10:14:34 [fv_nb4_prove] engine_0: 11 : 0 2 2 3 3 3 3 7 28 127 192 292 ~827                                  4   360      0.78 sec  T/O =  1  PRV =  2
+SBY 10:14:34 [fv_nb4_prove] engine_0: 12 : 0 2 2 3 3 3 3 7 11 90 135 66 178 ~908                                2   360      0.91 sec  T/O =  1  PRV =  2
+SBY 10:14:34 [fv_nb4_prove] engine_0: Timing out on output 1 in frame 12 (retrying in next anytime pass).
+SBY 10:14:34 [fv_nb4_prove] engine_0: 12 : 0 2 2 3 3 3 3 7 11 90 135 66 178 ~908                                0   360      0.91 sec  T/O =  2  PRV =  2
+SBY 10:14:34 [fv_nb4_prove] engine_0: 13 : 0 2 2 3 3 3 3 7 11 89 120 66 13 148 ~924                             0   360      1.02 sec  T/O =  2  PRV =  2
+SBY 10:14:34 [fv_nb4_prove] engine_0: 14 : 0 2 2 3 3 3 3 7 11 89 120 64 13 3 147 ~924                           0   360      1.05 sec  T/O =  2  PRV =  2
+SBY 10:14:34 [fv_nb4_prove] engine_0: 15 : 0 2 2 3 3 3 3 7 11 89 120 64 13 3 13 144 ~924                        3   379      1.09 sec  T/O =  2  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 16 : 0 2 2 3 3 3 3 7 11 89 120 64 13 3 12 22 188 ~931                     3   407      1.24 sec  T/O =  2  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 17 : 0 2 2 3 3 3 3 7 11 89 120 64 13 3 2 2 51 143 ~980                    4   418      1.39 sec  T/O =  2  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 18 : 0 2 2 3 3 3 3 7 11 89 120 64 13 3 2 2 47 92 157 ~964                 5   423      1.58 sec  T/O =  2  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: Timing out on output 2 in frame 18 (retrying in next anytime pass).
+SBY 10:14:35 [fv_nb4_prove] engine_0: 18 : 0 2 2 3 3 3 3 7 11 89 120 64 13 3 2 2 47 92 157 ~964                 0   423      1.58 sec  T/O =  3  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 19 : 0 2 2 3 3 3 3 7 11 89 120 64 13 3 2 2 23 53 59 91 ~971               0   423      1.68 sec  T/O =  3  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: All outputs solved or timed out in frame 19.
+SBY 10:14:35 [fv_nb4_prove] engine_0: Starting new anytime pass, reusing clauses.
+SBY 10:14:35 [fv_nb4_prove] engine_0: Frame Clauses                                                     Max Queue Flops Time
+SBY 10:14:35 [fv_nb4_prove] engine_0: 1 : 0 381 ~973                                                           0     0      0.16 sec  T/O =  0  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 2 : 0 1 380 ~973                                                         0     0      0.17 sec  T/O =  0  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 3 : 0 1 1 379 ~973                                                       0     0      0.18 sec  T/O =  0  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 4 : 0 1 1 2 377 ~973                                                     0     0      0.18 sec  T/O =  0  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 5 : 0 1 1 2 2 375 ~973                                                   0     0      0.19 sec  T/O =  0  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 6 : 0 1 1 2 2 3 372 ~973                                                 0     0      0.19 sec  T/O =  0  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 7 : 0 1 1 2 2 3 2 370 ~973                                               0     0      0.20 sec  T/O =  0  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 8 : 0 1 1 2 2 3 2 3 367 ~973                                             0     0      0.21 sec  T/O =  0  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 9 : 0 1 1 2 2 3 2 3 9 358 ~973                                           0     0      0.21 sec  T/O =  0  PRV =  2
+SBY 10:14:35 [fv_nb4_prove] engine_0: 10 : 0 1 1 2 2 3 2 3 9 43 332 ~973                                        3    23      0.24 sec  T/O =  0  PRV =  2
+SBY 10:14:36 [fv_nb4_prove] engine_0: 11 : 0 1 1 2 2 3 2 3 9 96 183 560 ~979                                    5   285      0.67 sec  T/O =  0  PRV =  2
+SBY 10:14:36 [fv_nb4_prove] engine_0: 12 : 0 1 1 2 2 3 2 3 9 65 88 146 248 ~1202                                5   287      0.96 sec  T/O =  0  PRV =  2
+SBY 10:14:36 [fv_nb4_prove] engine_0: Timing out on output 0 in frame 12 (retrying in next anytime pass).
+SBY 10:14:36 [fv_nb4_prove] engine_0: 12 : 0 1 1 2 2 3 2 3 9 65 89 151 365 ~1202                                4   364      1.06 sec  T/O =  1  PRV =  2
+SBY 10:14:36 [fv_nb4_prove] engine_0: 13 : 0 1 1 2 2 3 2 3 9 47 62 77 46 145 ~1300                              0   364      1.25 sec  T/O =  1  PRV =  2
+SBY 10:14:36 [fv_nb4_prove] engine_0: 14 : 0 1 1 2 2 3 2 3 9 47 57 77 46 3 142 ~1300                            0   364      1.28 sec  T/O =  1  PRV =  2
+SBY 10:14:36 [fv_nb4_prove] engine_0: 15 : 0 1 1 2 2 3 2 3 9 47 57 77 46 3 2 140 ~1300                          0   364      1.32 sec  T/O =  1  PRV =  2
+SBY 10:14:36 [fv_nb4_prove] engine_0: 16 : 0 1 1 2 2 3 2 3 9 47 57 77 46 3 2 2 162 ~1300                        1   365      1.37 sec  T/O =  1  PRV =  2
+SBY 10:14:37 [fv_nb4_prove] engine_0: 17 : 0 1 1 2 2 3 2 3 9 47 57 77 46 3 2 2 15 167 ~1270                     3   365      1.54 sec  T/O =  1  PRV =  2
+SBY 10:14:37 [fv_nb4_prove] engine_0: 18 : 0 1 1 2 2 3 2 3 9 46 55 78 46 3 2 2 6 29 175 ~1274                   3   374      1.73 sec  T/O =  1  PRV =  2
+SBY 10:14:37 [fv_nb4_prove] engine_0: 19 : 0 1 1 2 2 3 2 3 9 46 55 78 46 3 2 2 6 13 75 240 ~1310                4   434      1.99 sec  T/O =  1  PRV =  2
+SBY 10:14:37 [fv_nb4_prove] engine_0: 20 : 0 1 1 2 2 3 2 3 9 46 55 78 46 3 2 1 1 1 1 1 139 ~1442                1   435      2.15 sec  T/O =  1  PRV =  2
+SBY 10:14:37 [fv_nb4_prove] engine_0: 21 : 0 1 1 2 2 3 2 3 9 46 55 78 46 3 2 1 1 1 1 1 79 208 ~1451             4   438      2.40 sec  T/O =  1  PRV =  2
+SBY 10:14:38 [fv_nb4_prove] engine_0: 22 : 0 1 1 2 2 3 2 3 9 46 55 78 46 3 2 1 1 1 1 1 28 63 198 ~1503          5   438      2.64 sec  T/O =  1  PRV =  2
+SBY 10:14:38 [fv_nb4_prove] engine_0: 23 : ... 1 2 2 3 2 3 9 46 55 78 46 3 2 1 1 1 1 1 11 24 100 295 ~1559      4   441      2.97 sec  T/O =  1  PRV =  2
+SBY 10:14:38 [fv_nb4_prove] engine_0: 24 : ... 2 2 3 2 3 9 46 55 78 46 3 2 1 1 1 1 1 2 1 10 105 190 ~1705       4   441      3.24 sec  T/O =  1  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 25 : ... 2 2 3 2 3 9 46 55 78 46 3 2 1 1 1 1 1 2 1 8 18 37 109 ~1788      4   441      3.43 sec  T/O =  1  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: Timing out on output 2 in frame 25 (retrying in next anytime pass).
+SBY 10:14:39 [fv_nb4_prove] engine_0: 25 : ... 2 2 3 2 3 9 46 55 78 46 3 2 1 1 1 1 1 2 1 8 18 37 109 ~1788      0   441      3.43 sec  T/O =  2  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 26 : ... 9 46 55 78 46 3 2 1 1 1 1 1 2 1 5 9 33 89 -9 ~1823       4   441      3.62 sec  T/O =  2  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 27 : ... 55 78 46 3 2 1 1 1 1 1 2 1 5 9 27 85 100 -111 ~1830        2   441      3.80 sec  T/O =  2  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: Timing out on output 1 in frame 27 (retrying in next anytime pass).
+SBY 10:14:39 [fv_nb4_prove] engine_0: 27 : ... 55 78 46 3 2 1 1 1 1 1 2 1 5 9 27 85 100 -111 ~1830        0   441      3.80 sec  T/O =  3  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 28 : ... 55 78 46 3 2 1 1 1 1 1 2 1 5 9 27 85 96 46 -165 ~1838      0   441      3.95 sec  T/O =  3  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: All outputs solved or timed out in frame 28.
+SBY 10:14:39 [fv_nb4_prove] engine_0: Starting new anytime pass, reusing clauses.
+SBY 10:14:39 [fv_nb4_prove] engine_0: Frame Clauses                                                     Max Queue Flops Time
+SBY 10:14:39 [fv_nb4_prove] engine_0: 1 : 0 364 ~1838                                                          0     0      0.12 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 2 : 0 1 363 ~1838                                                        0     0      0.13 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 3 : 0 1 1 362 ~1838                                                      0     0      0.14 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 4 : 0 1 1 2 360 ~1838                                                    0     0      0.16 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 5 : 0 1 1 2 2 358 ~1838                                                  0     0      0.17 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 6 : 0 1 1 2 2 3 355 ~1838                                                0     0      0.18 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 7 : 0 1 1 2 2 3 2 353 ~1838                                              0     0      0.20 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 8 : 0 1 1 2 2 3 2 3 350 ~1838                                            0     0      0.21 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 9 : 0 1 1 2 2 3 2 3 9 341 ~1838                                          0     0      0.23 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 10 : 0 1 1 2 2 3 2 3 9 46 295 ~1838                                       0     0      0.25 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 11 : 0 1 1 2 2 3 2 3 9 46 55 240 ~1838                                    0     0      0.28 sec  T/O =  0  PRV =  2
+SBY 10:14:39 [fv_nb4_prove] engine_0: 12 : 0 1 1 2 2 3 2 3 9 60 69 92 235 ~1838                                 5   133      0.40 sec  T/O =  0  PRV =  2
+SBY 10:14:40 [fv_nb4_prove] engine_0: 13 : 0 1 1 2 2 3 2 3 9 47 53 67 91 379 ~1869                              6   264      0.83 sec  T/O =  0  PRV =  2
+SBY 10:14:40 [fv_nb4_prove] engine_0: 14 : 0 1 1 2 2 3 2 3 8 3 10 5 3 3 -5 ~2098                        0   264      1.10 sec  T/O =  0  PRV =  2
+SBY 10:14:40 [fv_nb4_prove] engine_0: 15 : 0 1 1 2 2 3 2 3 8 3 10 5 3 3 3 -8 ~2098                      0   264      1.12 sec  T/O =  0  PRV =  2
+SBY 10:14:40 [fv_nb4_prove] engine_0: 16 : 0 1 1 2 2 3 2 3 8 3 10 5 3 3 3 1 19 ~2098                            1   265      1.16 sec  T/O =  0  PRV =  2
+SBY 10:14:40 [fv_nb4_prove] engine_0: 17 : 0 1 1 2 2 3 2 3 8 3 10 5 3 3 3 1 3 -12 ~1971                  2   265      1.38 sec  T/O =  0  PRV =  2
+SBY 10:14:41 [fv_nb4_prove] engine_0: 18 : 0 1 1 2 2 3 2 3 8 3 10 5 3 3 3 1 3 31 15 ~1955                       3   265      1.51 sec  T/O =  0  PRV =  2
+SBY 10:14:41 [fv_nb4_prove] engine_0: 19 : 0 1 1 2 2 3 2 3 8 3 10 5 3 3 3 1 2 2 2 -31 ~2009              4   265      1.73 sec  T/O =  0  PRV =  2
+SBY 10:14:41 [fv_nb4_prove] engine_0: 20 : 0 1 1 2 2 3 2 3 8 3 9 5 3 3 3 1 1 1 1 1 -20 ~2019             1   266      1.96 sec  T/O =  0  PRV =  2
+SBY 10:14:41 [fv_nb4_prove] engine_0: 21 : 0 1 1 2 2 3 2 3 8 3 9 5 3 3 3 1 1 1 1 1 4 -23 ~2015           3   266      2.17 sec  T/O =  0  PRV =  2
+SBY 10:14:42 [fv_nb4_prove] engine_0: 22 : 0 1 1 2 2 3 2 3 8 3 9 5 3 3 3 1 1 1 1 1 2 29 29 ~2015                2   267      2.45 sec  T/O =  0  PRV =  2
+SBY 10:14:42 [fv_nb4_prove] engine_0: 23 : 0 1 1 2 2 3 2 3 8 3 9 5 3 3 3 1 1 1 1 1 2 2 4 6 ~2069                4   268      2.69 sec  T/O =  0  PRV =  2
+SBY 10:14:42 [fv_nb4_prove] engine_0: 24 : 0 1 1 2 2 3 2 3 8 3 9 5 3 3 3 1 1 1 1 1 1 1 2 7 0 ~2072              2   268      2.92 sec  T/O =  0  PRV =  2
+SBY 10:14:42 [fv_nb4_prove] engine_0: 25 : ... 2 3 2 3 8 3 9 5 3 3 3 1 1 1 1 1 1 1 2 6 18 -2 ~2072      4   300      3.02 sec  T/O =  0  PRV =  2
+SBY 10:14:42 [fv_nb4_prove] engine_0: 26 : ... 2 3 8 3 9 5 3 3 3 1 1 1 1 1 1 1 2 2 12 29 -29 ~2084       4   300      3.25 sec  T/O =  0  PRV =  2
+SBY 10:14:43 [fv_nb4_prove] engine_0: 27 : ... 3 8 3 9 5 3 3 3 1 1 1 1 1 1 1 2 2 6 26 22 -44 ~2096       4   324      3.49 sec  T/O =  0  PRV =  2
+SBY 10:14:43 [fv_nb4_prove] engine_0: 28 : ... 3 9 5 3 3 3 1 1 1 1 1 1 1 2 2 3 22 16 131 -112 ~2115       3   356      3.76 sec  T/O =  0  PRV =  2
+SBY 10:14:43 [fv_nb4_prove] engine_0: 29 : ... 9 5 3 3 3 1 1 1 1 1 1 1 2 2 3 20 7 109 77 -89 ~2180       3   371      4.11 sec  T/O =  0  PRV =  2
+SBY 10:14:43 [fv_nb4_prove] engine_0: Proved output 1 in frame 29.
+SBY 10:14:43 [fv_nb4_prove] engine_0: 30 : ... 9 5 3 3 3 1 1 1 1 1 1 1 2 2 3 20 7 54 1 2 -277 ~2347       0   371      4.32 sec  T/O =  0  PRV =  3
+SBY 10:14:43 [fv_nb4_prove] engine_0: 31 : ... 5 3 3 3 1 1 1 1 1 1 1 2 2 3 20 7 54 1 2 33 -250 ~2347      4   371      4.41 sec  T/O =  0  PRV =  3
+SBY 10:14:44 [fv_nb4_prove] engine_0: 32 : ... 3 3 3 1 1 1 1 1 1 1 2 2 3 20 7 54 1 2 4 37 -290 ~2389      4   371      4.64 sec  T/O =  0  PRV =  3
+SBY 10:14:44 [fv_nb4_prove] engine_0: 33 : ... 3 3 1 1 1 1 1 1 1 2 2 3 20 7 54 1 1 1 9 8 -345 ~2445       4   378      4.84 sec  T/O =  0  PRV =  3
+SBY 10:14:44 [fv_nb4_prove] engine_0: Proved output 0 in frame 33.
+SBY 10:14:44 [fv_nb4_prove] engine_0: Proved output 2 in frame 33.
+SBY 10:14:44 [fv_nb4_prove] engine_0: 34 : ... 3 1 1 1 1 1 1 1 2 2 3 20 7 54 1 1 1 0 0 0 -369 ~2463       0   378      5.01 sec  T/O =  0  PRV =  5
+SBY 10:14:44 [fv_nb4_prove] engine_0: Block = 1467  Oblig =  7876  Clause =  4984  Call = 66107 (sat=67.3%)  Cex =   0  Start = 172
+SBY 10:14:44 [fv_nb4_prove] engine_0: SAT solving =     3.92 sec ( 32.24 %)
+SBY 10:14:44 [fv_nb4_prove] engine_0: unsat     =     0.20 sec (  1.64 %)
+SBY 10:14:44 [fv_nb4_prove] engine_0: sat       =     3.72 sec ( 30.60 %)
+SBY 10:14:44 [fv_nb4_prove] engine_0: Generalize  =     2.22 sec ( 18.26 %)
+SBY 10:14:44 [fv_nb4_prove] engine_0: Push clause =     2.27 sec ( 18.64 %)
+SBY 10:14:44 [fv_nb4_prove] engine_0: Ternary sim =     0.12 sec (  1.01 %)
+SBY 10:14:44 [fv_nb4_prove] engine_0: Containment =     0.08 sec (  0.66 %)
+SBY 10:14:44 [fv_nb4_prove] engine_0: CNF compute =     0.47 sec (  3.89 %)
+SBY 10:14:44 [fv_nb4_prove] engine_0: Refinement  =     0.00 sec (  0.00 %)
+SBY 10:14:44 [fv_nb4_prove] engine_0: TOTAL       =    12.17 sec (100.00 %)
+SBY 10:14:44 [fv_nb4_prove] engine_0: Property proved.  Time =    12.19 sec
+SBY 10:14:44 [fv_nb4_prove] engine_0: Counter-example is not available.
+SBY 10:14:44 [fv_nb4_prove] engine_0: finished (returncode=0)
+SBY 10:14:44 [fv_nb4_prove] engine_0: Status returned by engine: PASS
+SBY 10:14:44 [fv_nb4_prove] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:12 (12)
+SBY 10:14:44 [fv_nb4_prove] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:12 (12)
+SBY 10:14:44 [fv_nb4_prove] summary: engine_0 (abc pdr) returned PASS
+SBY 10:14:44 [fv_nb4_prove] summary: engine_0 did not produce any traces
+SBY 10:14:44 [fv_nb4_prove] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

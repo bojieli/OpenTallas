@@ -1,0 +1,147 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `design_prep.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: design.il
+
+2. Executing SCC pass (detecting logic loops).
+Found 0 SCCs in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.
+Found 0 SCCs in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+Found 0 SCCs in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+Found 0 SCCs in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.
+Found 0 SCCs in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+Found 0 SCCs in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+Found 0 SCCs in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+Found 0 SCCs in module fv_top.
+Found 0 SCCs.
+
+3. Executing SIMPLEMAP pass (map simple cells to gate primitives).
+
+4. Executing MEMORY_NORDFF pass (extracting $dff cells from memories).
+
+5. Executing ASYNC2SYNC pass.
+Replacing $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.$procdff$236 ($adff): ARST=\rst_n, D={ \gd.p [55:0] \i }, Q=\gd.p
+Replacing $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$procdff$216 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$procdff$221 ($adff): ARST=\rst_n, D={ \gn.recent [1:0] $0\gn.recent[3:0] [0] }, Q=\gn.recent
+Replacing $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.$procdff$226 ($adff): ARST=\rst_n, D={ \clear \live_v \live_index \pre_v \pre_index \replay_v \replay_index }, Q=\c
+Replacing $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$procdff$205 ($adff): ARST=\rst_n, D=\fv_fault, Q=\fault
+Replacing $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.$procdff$210 ($adff): ARST=\rst_n, D={ \clear \live_v \live_index \pre_v \pre_index \replay_v \replay_index }, Q=\ctl_r
+Replacing $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.$procdff$231 ($adff): ARST=\rst_n, D={ \gd.p [80:0] \i }, Q=\gd.p
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+Finding unused cells or wires in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+Finding unused cells or wires in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module \fv_top..
+Removed 14 unused cells and 14 unused wires.
+<suppressed ~15 debug messages>
+
+7. Executing FORMALFF pass.
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+Finding unused cells or wires in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+Finding unused cells or wires in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module \fv_top..
+Removed 8 unused cells and 8 unused wires.
+<suppressed ~16 debug messages>
+
+9. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx...
+Checking module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx...
+Checking module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe...
+Checking module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx...
+Checking module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx...
+Checking module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser...
+Checking module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe...
+Checking module fv_top...
+Found and reported 0 problems.
+
+10. Executing SETUNDEF pass (replace undef values with defined constants).
+
+11. Executing OPT pass (performing simple optimizations).
+
+11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx.
+Optimizing module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx.
+Optimizing module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx.
+Optimizing module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser.
+Optimizing module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe.
+Optimizing module fv_top.
+
+11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Computing hashes of 1 cells of `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Finding duplicate cells in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx'.
+Finding identical cells in module `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Computing hashes of 4 cells of `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Finding duplicate cells in `$paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx'.
+Finding identical cells in module `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Computing hashes of 3 cells of `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Finding duplicate cells in `$paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Computing hashes of 3 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Computing hashes of 14 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx'.
+Finding identical cells in module `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 11 cells of `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `$paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser'.
+Finding identical cells in module `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Computing hashes of 3 cells of `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Finding duplicate cells in `$paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe'.
+Finding identical cells in module `\fv_top'.
+Computing hashes of 73 cells of `\fv_top'.
+Finding duplicate cells in `\fv_top'.
+Removed a total of 0 cells.
+
+11.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+11.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+Finding unused cells or wires in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+Finding unused cells or wires in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module \fv_top..
+
+11.5. Finished fast OPT passes.
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_rx..
+Finding unused cells or wires in module $paramod$444bffb29759c6c887bbcc628d757a0b62e3578c\ot_hnx_idxn_ser_tx..
+Finding unused cells or wires in module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_rx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_kb_tx..
+Finding unused cells or wires in module $paramod$c63b793c88523e4467225a3c67c7b491105324c8\ot_hnx_idxn_keybuf_ser..
+Finding unused cells or wires in module $paramod$e67d79aa87b92b34934ab2f3fc4d54c8810a55dd\ot_hnx_idxn_dpipe..
+Finding unused cells or wires in module \fv_top..
+Removed 0 unused cells and 7 unused wires.
+<suppressed ~4 debug messages>
+
+13. Executing RTLIL backend.
+Output filename: ../model/design_prep.il
+
+End of script. Logfile hash: 7879261059, time: 0.04s, user: 0.03s, system: 0.02s, MEM: 30.73 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 45% 4x opt_clean (0 sec), 12% 1x setundef (0 sec), ...

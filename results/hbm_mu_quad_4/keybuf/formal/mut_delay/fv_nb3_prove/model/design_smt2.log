@@ -1,0 +1,262 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `design_smt2.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: design_prep.il
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `fv_top'. Setting top module to fv_top.
+
+2.1. Analyzing design hierarchy..
+Top module:  \fv_top
+Used module:     $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_keybuf_ser
+Used module:         $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_rx
+Used module:         $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe
+Used module:         $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_tx
+Used module:     $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_rx
+Used module:         $paramod$feb758d75989e47aae5b478cb0b08a2f391271ab\ot_hnx_idxn_dpipe
+Used module:     $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_tx
+
+2.2. Analyzing design hierarchy..
+Top module:  \fv_top
+Used module:     $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_keybuf_ser
+Used module:         $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_rx
+Used module:         $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe
+Used module:         $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_tx
+Used module:     $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_rx
+Used module:         $paramod$feb758d75989e47aae5b478cb0b08a2f391271ab\ot_hnx_idxn_dpipe
+Used module:     $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_tx
+Removed 0 unused modules.
+Module fv_top directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3. Executing FORMALFF pass.
+
+4. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+5. Printing statistics.
+
+=== $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_rx ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        8 wires
+       40 wire bits
+        7 public wires
+       39 public wire bits
+        6 ports
+       35 port bits
+        3 cells
+        1   $anyinit
+        1   $assume
+        1   $not
+        2 submodules
+        1   $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_rx
+        1   $paramod$feb758d75989e47aae5b478cb0b08a2f391271ab\ot_hnx_idxn_dpipe
+
+=== $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_tx ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       32 wires
+      173 wire bits
+       24 public wires
+      135 public wire bits
+       19 ports
+       74 port bits
+       15 cells
+        3   $anyinit
+        1   $assume
+        1   $logic_and
+        7   $mux
+        1   $not
+        1   $or
+        1   $reduce_or
+        1 submodules
+        1   $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_tx
+
+=== $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_keybuf_ser ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       36 wires
+      265 wire bits
+       32 public wires
+      234 public wire bits
+       16 ports
+       90 port bits
+       10 cells
+        3   $anyinit
+        1   $assume
+        4   $mux
+        1   $not
+        1   $or
+        3 submodules
+        1   $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe
+        1   $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_rx
+        1   $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_tx
+
+=== $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        8 wires
+      311 wire bits
+        6 public wires
+      226 public wire bits
+        4 ports
+       58 port bits
+        5 cells
+        1   $anyinit
+        1   $assume
+        2   $mux
+        1   $not
+
+=== $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_rx ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+       37 wire bits
+        5 public wires
+       36 public wire bits
+        3 ports
+       16 port bits
+        3 cells
+        1   $anyinit
+        1   $assume
+        1   $not
+
+=== $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_tx ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       54 wire bits
+        6 public wires
+       41 public wire bits
+        4 ports
+       17 port bits
+        6 cells
+        2   $anyinit
+        1   $assume
+        2   $mux
+        1   $not
+
+=== $paramod$feb758d75989e47aae5b478cb0b08a2f391271ab\ot_hnx_idxn_dpipe ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        8 wires
+      237 wire bits
+        6 public wires
+      164 public wire bits
+        4 ports
+       20 port bits
+        5 cells
+        1   $anyinit
+        1   $assume
+        2   $mux
+        1   $not
+
+=== fv_top ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       87 wires
+      456 wire bits
+       58 public wires
+      407 public wire bits
+       11 ports
+       52 port bits
+       67 cells
+        2   $add
+       21   $anyinit
+        5   $assert
+        3   $assume
+        4   $eq
+        3   $ff
+        2   $gt
+        5   $logic_and
+        5   $logic_not
+       10   $mux
+        2   $ne
+        1   $not
+        2   $or
+        1   $reduce_bool
+        1   $reduce_or
+        3 submodules
+        1   $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_rx
+        1   $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_tx
+        1   $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_keybuf_ser
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      123 fv_top
+        3 $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_rx
+        3   $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_rx
+        5   $paramod$feb758d75989e47aae5b478cb0b08a2f391271ab\ot_hnx_idxn_dpipe
+       15 $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_tx
+        6   $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_tx
+       10 $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_keybuf_ser
+        5   $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe
+        3   $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_rx
+        6   $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_tx
+
+        +----------Count including submodules.
+        | 
+      209 wires
+     1664 wire bits
+      155 public wires
+     1359 public wire bits
+       74 ports
+      395 port bits
+        - memories
+        - memory bits
+        - processes
+      123 cells
+        2   $add
+       36   $anyinit
+        5   $assert
+       12   $assume
+        4   $eq
+        3   $ff
+        2   $gt
+        6   $logic_and
+        5   $logic_not
+       29   $mux
+        2   $ne
+       10   $not
+        4   $or
+        1   $reduce_bool
+        2   $reduce_or
+        3 submodules
+        1   $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_rx
+        1   $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_tx
+        1   $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_keybuf_ser
+
+6. Executing SMT2 backend.
+
+6.1. Executing BMUXMAP pass.
+
+6.2. Executing DEMUXMAP pass.
+Creating SMT-LIBv2 representation of module $paramod$feb758d75989e47aae5b478cb0b08a2f391271ab\ot_hnx_idxn_dpipe.
+Creating SMT-LIBv2 representation of module $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_tx.
+Creating SMT-LIBv2 representation of module $paramod$db011dfea44460cce68b613b709e580e8a727315\ot_hnx_idxn_ser_rx.
+Creating SMT-LIBv2 representation of module $paramod$a0974d7e608dfb354219595d3b8c0ce0e1ea29be\ot_hnx_idxn_dpipe.
+Creating SMT-LIBv2 representation of module $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_keybuf_ser.
+Creating SMT-LIBv2 representation of module $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_tx.
+Creating SMT-LIBv2 representation of module $paramod$70babbe8485282b3cb69d5d839a5bd4fbd500b90\ot_hnx_idxn_kb_rx.
+Creating SMT-LIBv2 representation of module fv_top.
+
+End of script. Logfile hash: fbc5144056, time: 0.01s, user: 0.01s, system: 0.01s, MEM: 29.87 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 68% 2x write_smt2 (0 sec), 14% 2x read_rtlil (0 sec), ...

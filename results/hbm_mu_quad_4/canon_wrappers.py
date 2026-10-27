@@ -39,6 +39,15 @@ def main():
         body = re.sub(rf"\bmodule {re.escape(mem[0])}\b", f"module {cn}", body)
         straps = g["straps"]
         decl = []
+        lanek = bool(straps) and all(re.match(r"^lane[0-9]+_lane_id$", k) for k in straps)
+        if lanek:  # lane k id = {lane_lane_id, k}: one approved ID strap (OWNER 10-25 rule B), pure wiring
+            n = len(straps); sh = (n - 1).bit_length(); w0 = None
+            for k in straps:
+                m = re.search(rf"\.{k}\((\{{[^}}]*\}}|\d+'[bhd][0-9a-fA-F_]+)\)", body)
+                w0 = width(m.group(1)); kk = int(k[4:].split("_")[0])
+                body = body[:m.start()] + f".{k}({{lane_lane_id, {sh}'d{kk}}})" + body[m.end():]
+            decl.append(f"    input wire [{w0 - sh - 1}:0] lane_lane_id,")
+            straps = []
         for k in straps:
             m = re.search(rf"\.{k}\((\{{[^}}]*\}}|\d+'[bhd][0-9a-fA-F_]+)\)", body)
             w = width(m.group(1))
@@ -50,7 +59,10 @@ def main():
         canon_top = re.search(r"canonical top (\w+)", src).group(1)
         for m in mem:
             ms = (wd / f"{m}.sv").read_text()
-            cons = {k: re.search(rf"\.{k}\((\{{[^}}]*\}}|\d+'[bhd][0-9a-fA-F_]+)\)", ms).group(1) for k in straps}
+            cons = {k: re.search(rf"\.{k}\((\{{[^}}]*\}}|\d+'[bhd][0-9a-fA-F_]+)\)", ms).group(1) for k in g["straps"]}
+            if lanek:
+                bits = "".join(x.strip().split("'")[1][1:] for x in cons["lane0_lane_id"][1:-1].split(","))
+                cons = {"lane_lane_id": f"{w0 - sh}'d{int(bits, 2) >> sh}"}
             # shim: member port names -> canonical (index-normalised) names + strap constants
             ports = re.findall(r"^\s*(input|output) wire (\[[^\]]+\] )?(\w+)", ms, re.M)
             pl = ",\n".join(f"    {d} wire {w or ''}{n}" for d, w, n in ports)

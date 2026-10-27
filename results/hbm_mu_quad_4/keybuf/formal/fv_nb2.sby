@@ -1,0 +1,15 @@
+[tasks]
+prove
+[options]
+prove: mode prove
+prove: depth 12
+[engines]
+abc pdr
+[script]
+read_verilog -sv -formal -DOT_KB_FORMAL ot_hnx_idxn_keybuf_ser.sv
+read_verilog -sv -formal fv_top.sv
+chparam -set NB 2 -set DW 10 fv_top
+prep -top fv_top
+[files]
+ot_hnx_idxn_keybuf_ser.sv
+fv_top.sv

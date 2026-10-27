@@ -261,9 +261,6 @@ module ot_hbm_su_static_pgslice_lg__lanes_plain0_3 (
         .g_lane_k2_g_plain_u_lane_rd_addr(g_lane_18_g_plain_u_lane_rd_addr),
         .g_lane_k3_g_plain_u_lane_rd_addr(g_lane_19_g_plain_u_lane_rd_addr),
         .g_bank_k3_u_bank_read_data(g_bank_19_u_bank_read_data),
-        .lane0_lane_id({1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0}),
-        .lane1_lane_id({1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1}),
-        .lane2_lane_id({1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0}),
-        .lane3_lane_id({1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1})
+        .lane_lane_id(9'd16)
     );
 endmodule

@@ -96,37 +96,25 @@
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd16"
    }
   },
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd19"
    }
   },
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd17"
    }
   },
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd18"
    }
   }
  ],
@@ -135,64 +123,43 @@
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes0_3",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd8"
    }
   },
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes12_15",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd11"
    }
   },
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes16_19",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd24"
    }
   },
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes20_23",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd25"
    }
   },
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes24_27",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b0, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd26"
    }
   },
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes28_31",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd27"
    }
   },
   {
    "member": "ot_hbm_su_static_pgslice_lg__lanes4_7",
    "straps": {
-    "lane0_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0}",
-    "lane1_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1}",
-    "lane2_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0}",
-    "lane3_lane_id": "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1}"
+    "lane_lane_id": "9'd9"
    }
   }
  ],

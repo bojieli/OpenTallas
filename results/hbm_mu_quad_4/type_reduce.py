@@ -111,8 +111,17 @@ def lit_val(lit):
     return int(w), int(v[1:].replace("_", ""), {"b": 2, "h": 16, "d": 10}[v[0].lower()])
 
 
+LANEK = re.compile(r"^lane([0-9]+)_lane_id$")
+
+
 def strap_decl(cons, keys):
-    return {k: dict(zip(("width", "value"), lit_val(cons[k]))) for k in keys}
+    d = {k: dict(zip(("width", "value"), lit_val(cons[k]))) for k in keys}
+    # 4-lane groups: lane k id = {lane_lane_id, 2'dk} (ids consecutive, 4-aligned) -> ONE approved ID strap (rule B)
+    if keys and all(LANEK.match(k) for k in keys):
+        n = len(keys); sh = (n - 1).bit_length(); w0 = d["lane0_lane_id"]["width"]; base = d["lane0_lane_id"]["value"]
+        assert base % n == 0 and all(d[f"lane{i}_lane_id"]["value"] == base + i for i in range(n)), d
+        return {"lane_lane_id": {"width": w0 - sh, "value": base >> sh}}
+    return d
 
 
 def canon_name(fn, mem):

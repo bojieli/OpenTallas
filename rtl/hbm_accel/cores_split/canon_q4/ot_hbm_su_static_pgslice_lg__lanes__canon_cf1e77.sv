@@ -6,10 +6,7 @@
 // physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l.json (per-bit map results/split_wrappers_b2l/).
 `default_nettype none
 module ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77 (
-    input wire [10:0] lane0_lane_id,
-    input wire [10:0] lane1_lane_id,
-    input wire [10:0] lane2_lane_id,
-    input wire [10:0] lane3_lane_id,
+    input wire [8:0] lane_lane_id,
     output wire [127:0] inj_q,
     output wire [35:0] g_bank_k0_u_bank_read_addr_1,
     output wire [35:0] g_bank_k1_u_bank_read_addr,
@@ -281,10 +278,10 @@ module ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77 (
         .lane3_clk_insert(clk_insert[15:12]),
         .lane3_rst_n(rst_lane_n[3]),
         .lane3_rd_q(g_lane_k3_g_plain_u_lane_rd_q[127:0]),
-        .lane2_lane_id(lane2_lane_id),
-        .lane0_lane_id(lane0_lane_id),
-        .lane3_lane_id(lane3_lane_id),
-        .lane1_lane_id(lane1_lane_id),
+        .lane2_lane_id({lane_lane_id, 2'd2}),
+        .lane0_lane_id({lane_lane_id, 2'd0}),
+        .lane3_lane_id({lane_lane_id, 2'd3}),
+        .lane1_lane_id({lane_lane_id, 2'd1}),
         .lane0_rd_addr(c_lane0_rd_addr),
         .bank0_read_data(c_bank0_read_data),
         .lane1_rd_addr(c_lane1_rd_addr),

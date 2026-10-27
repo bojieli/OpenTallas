@@ -1,0 +1,9 @@
+# running in fv_nb4_prove/src/
+read_verilog -sv -formal -DOT_KB_FORMAL ot_hnx_idxn_keybuf_ser.sv
+read_verilog -sv -formal fv_top.sv
+chparam -set NB 4 -set DW 12 fv_top
+prep -top fv_top
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

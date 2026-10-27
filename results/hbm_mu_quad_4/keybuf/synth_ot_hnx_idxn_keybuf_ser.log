@@ -1,0 +1,671 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command `read_verilog -sv -lib /wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf.sv; read_verilog -sv /wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv; chparam -set NB 3 ot_hnx_idxn_keybuf_ser; synth -top ot_hnx_idxn_keybuf_ser -flatten; stat' --
+
+1. Executing Verilog-2005 frontend: /wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf.sv
+Parsing SystemVerilog input from `/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_idxn_keybuf'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv
+Parsing SystemVerilog input from `/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_idxn_ser_tx'.
+Generating RTLIL representation for module `\ot_hnx_idxn_ser_rx'.
+Generating RTLIL representation for module `\ot_hnx_idxn_dpipe'.
+Generating RTLIL representation for module `\ot_hnx_idxn_keybuf_ser'.
+Generating RTLIL representation for module `\ot_hnx_idxn_kb_tx'.
+Generating RTLIL representation for module `\ot_hnx_idxn_kb_rx'.
+Successfully finished Verilog frontend.
+Parameter \NB = 3
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_keybuf_ser'.
+Parameter \NB = 3
+Generating RTLIL representation for module `$paramod\ot_hnx_idxn_keybuf_ser\NB=s32'00000000000000000000000000000011'.
+
+4. Executing SYNTH pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \ot_hnx_idxn_keybuf_ser
+Used module:     \ot_hnx_idxn_dpipe
+Used module:     \ot_hnx_idxn_ser_rx
+Used module:     \ot_hnx_idxn_ser_tx
+Parameter \N = 28
+Parameter \D = 2
+
+4.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_dpipe'.
+Parameter \N = 28
+Parameter \D = 2
+Generating RTLIL representation for module `$paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe'.
+Parameter \DW = 8792
+Parameter \NB = 3
+Parameter \W = 2931
+
+4.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_ser_rx'.
+Parameter \DW = 8792
+Parameter \NB = 3
+Parameter \W = 2931
+Generating RTLIL representation for module `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx'.
+Parameter \DW = 8792
+Parameter \NB = 3
+Parameter \W = 2931
+
+4.1.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hnx_idxn_ser_tx'.
+Parameter \DW = 8792
+Parameter \NB = 3
+Parameter \W = 2931
+Generating RTLIL representation for module `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx'.
+
+4.1.5. Analyzing design hierarchy..
+Top module:  \ot_hnx_idxn_keybuf_ser
+Used module:     $paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe
+Used module:     $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx
+Used module:     $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx
+
+4.1.6. Analyzing design hierarchy..
+Top module:  \ot_hnx_idxn_keybuf_ser
+Used module:     $paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe
+Used module:     $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx
+Used module:     $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx
+Removing unused module `\ot_hnx_idxn_kb_rx'.
+Removing unused module `\ot_hnx_idxn_kb_tx'.
+Removing unused module `\ot_hnx_idxn_dpipe'.
+Removing unused module `\ot_hnx_idxn_ser_rx'.
+Removing unused module `\ot_hnx_idxn_ser_tx'.
+Removed 5 unused modules.
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:66$30 in module ot_hnx_idxn_keybuf_ser.
+Marked 1 switch rules as full_case in process $proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:87$34 in module ot_hnx_idxn_keybuf_ser.
+Marked 1 switch rules as full_case in process $proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:48$36 in module $paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe.
+Marked 1 switch rules as full_case in process $proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:25$39 in module $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx.
+Removed a total of 0 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 5 redundant assignments.
+Promoted 3 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:66$30'.
+Found async reset \rst_n in `\ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:87$34'.
+Found async reset \rst_n in `$paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:48$36'.
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~1 debug messages>
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:65$29'.
+Creating decoders for process `\ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:66$30'.
+     1/1: $0\ctl_r[27:0]
+Creating decoders for process `\ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:86$33'.
+Creating decoders for process `\ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:87$34'.
+     1/1: $0\fault[0:0]
+Creating decoders for process `$paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:48$36'.
+     1/1: $0\gd.p[55:0]
+Creating decoders for process `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:25$39'.
+     1/2: $0\hold[8792:0]
+     2/2: $0\q[2930:0]
+Creating decoders for process `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:39$38'.
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_hnx_idxn_keybuf_ser.\key_out_ser' from process `\ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:86$33'.
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hnx_idxn_keybuf_ser.\kin_r' using process `\ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:65$29'.
+  created $dff cell `$procdff$48' with positive edge clock.
+Creating register for signal `\ot_hnx_idxn_keybuf_ser.\ctl_r' using process `\ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:66$30'.
+  created $adff cell `$procdff$53' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hnx_idxn_keybuf_ser.\fault' using process `\ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:87$34'.
+  created $adff cell `$procdff$58' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe.\gd.p' using process `$paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:48$36'.
+  created $adff cell `$procdff$63' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx.\q' using process `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:25$39'.
+  created $dff cell `$procdff$64' with positive edge clock.
+Creating register for signal `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx.\hold' using process `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:25$39'.
+  created $dff cell `$procdff$65' with positive edge clock.
+Creating register for signal `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx.\gn.sh' using process `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:39$38'.
+  created $dff cell `$procdff$66' with positive edge clock.
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:65$29'.
+Removing empty process `ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:66$30'.
+Removing empty process `ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:86$33'.
+Removing empty process `ot_hnx_idxn_keybuf_ser.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:87$34'.
+Removing empty process `$paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:48$36'.
+Found and cleaned up 1 empty switch in `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:25$39'.
+Removing empty process `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:25$39'.
+Removing empty process `$paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx.$proc$/wt/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_ser.sv:39$38'.
+Cleaned up 1 empty switch.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+<suppressed ~4 debug messages>
+Optimizing module $paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx.
+
+4.3. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hnx_idxn_keybuf_ser...
+Checking module $paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe...
+Checking module $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx...
+Checking module $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx...
+Found and reported 0 problems.
+
+4.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$838ade1f57b936f858deb329c27ae0a1d655dcd6\ot_hnx_idxn_dpipe.
+Deleting now unused module $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_tx.
+Deleting now unused module $paramod$34d58c961d18c4944d2553d116dcb825cbdef89f\ot_hnx_idxn_ser_rx.
+<suppressed ~3 debug messages>
+
+4.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+Removed 6 unused cells and 22 unused wires.
+<suppressed ~7 debug messages>
+
+4.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hnx_idxn_keybuf_ser...
+Found and reported 0 problems.
+
+4.8. Executing OPT pass (performing simple optimizations).
+
+4.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 14 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_idxn_keybuf_ser..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+4.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_idxn_keybuf_ser.
+Performed a total of 0 changes.
+
+4.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 14 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.8.9. Finished fast OPT passes. (There is nothing left to do.)
+
+4.9. Executing FSM pass (extract and optimize FSM).
+
+4.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+4.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+4.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+4.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+4.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+4.10. Executing OPT pass (performing simple optimizations).
+
+4.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 14 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_idxn_keybuf_ser..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+4.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_idxn_keybuf_ser.
+Performed a total of 0 changes.
+
+4.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 14 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\ser.$procdff$65 ($dff) from module ot_hnx_idxn_keybuf_ser (D = \ser.hold [8792], Q = \ser.hold [5861], rval = 1'0).
+
+4.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_idxn_keybuf_ser..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+4.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_idxn_keybuf_ser.
+Performed a total of 0 changes.
+
+4.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 15 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+4.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 2932 bits (of 8793) from mux cell ot_hnx_idxn_keybuf_ser.$flatten\ser.$procmux$43 ($mux).
+Removed top 2931 bits (of 8792) from FF cell ot_hnx_idxn_keybuf_ser.$auto$ff.cc:337:slice$71 ($dff).
+Removed cell ot_hnx_idxn_keybuf_ser.$auto$ff.cc:337:slice$70 ($sdff).
+Removed top 2932 bits (of 8793) from wire ot_hnx_idxn_keybuf_ser.$flatten\ser.$0\hold[8792:0].
+
+4.12. Executing PEEPOPT pass (run peephole optimizers).
+
+4.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+4.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_hnx_idxn_keybuf_ser:
+  created 0 $alu and 0 $macc cells.
+
+4.15. Executing SHARE pass (SAT-based resource sharing).
+
+4.16. Executing OPT pass (performing simple optimizations).
+
+4.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 14 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_idxn_keybuf_ser..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+4.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_idxn_keybuf_ser.
+Performed a total of 0 changes.
+
+4.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 14 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $auto$ff.cc:337:slice$71 ($dff) from module ot_hnx_idxn_keybuf_ser (D = \key_o [8791:5861], Q = \ser.hold [5860:2930], rval = 2931'000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).
+
+4.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_idxn_keybuf_ser..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+4.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_idxn_keybuf_ser.
+Performed a total of 0 changes.
+
+4.16.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 15 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.16.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.16.16. Finished fast OPT passes. (There is nothing left to do.)
+
+4.17. Executing MEMORY pass.
+
+4.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+4.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+4.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+4.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+4.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+4.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+4.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+4.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.19. Executing OPT pass (performing simple optimizations).
+
+4.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 15 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.19.5. Finished fast OPT passes.
+
+4.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+4.21. Executing OPT pass (performing simple optimizations).
+
+4.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 15 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hnx_idxn_keybuf_ser..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+4.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hnx_idxn_keybuf_ser.
+Performed a total of 0 changes.
+
+4.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 15 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.21.6. Executing OPT_SHARE pass.
+
+4.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+
+4.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+4.22. Executing TECHMAP pass (map to technology primitives).
+
+4.22.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+4.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $sdff.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $mux.
+No more expansions possible.
+<suppressed ~88 debug messages>
+
+4.23. Executing OPT pass (performing simple optimizations).
+
+4.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 26467 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+Removed 2931 unused cells and 0 unused wires.
+<suppressed ~2931 debug messages>
+
+4.23.5. Finished fast OPT passes.
+
+4.24. Executing ABC pass (technology mapping using ABC).
+
+4.24.1. Extracting gate netlist of module `\ot_hnx_idxn_keybuf_ser' to `<abc-temp-dir>/input.blif'..
+
+4.24.1.1. Executed ABC.
+Extracted 5862 gates and 17586 wires to a netlist network with 11724 inputs and 5862 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               MUX cells:     5861
+ABC RESULTS:                OR cells:        1
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:    11724
+ABC RESULTS:          output signals:     5862
+Removing temp directory.
+Removing global temp directory.
+
+4.25. Executing OPT pass (performing simple optimizations).
+
+4.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hnx_idxn_keybuf_ser.
+
+4.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hnx_idxn_keybuf_ser'.
+Computing hashes of 23536 cells of `\ot_hnx_idxn_keybuf_ser'.
+Finding duplicate cells in `\ot_hnx_idxn_keybuf_ser'.
+Removed a total of 0 cells.
+
+4.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hnx_idxn_keybuf_ser..
+Removed 0 unused cells and 11727 unused wires.
+<suppressed ~1 debug messages>
+
+4.25.5. Finished fast OPT passes.
+
+4.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_hnx_idxn_keybuf_ser'. Setting top module to ot_hnx_idxn_keybuf_ser.
+
+4.26.1. Analyzing design hierarchy..
+Top module:  \ot_hnx_idxn_keybuf_ser
+
+4.26.2. Analyzing design hierarchy..
+Top module:  \ot_hnx_idxn_keybuf_ser
+Removed 0 unused modules.
+
+4.27. Printing statistics.
+
+=== ot_hnx_idxn_keybuf_ser ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     5903 wires
+    91089 wire bits
+       42 public wires
+    85228 public wire bits
+       12 ports
+     5893 port bits
+    23536 cells
+       85   $_DFF_PN0_
+    14654   $_DFF_P_
+     5861   $_MUX_
+        1   $_OR_
+     2931   $_SDFF_PN0_
+        3   $scopeinfo
+        1   ot_hnx_idxn_keybuf
+
+4.28. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hnx_idxn_keybuf_ser...
+Found and reported 0 problems.
+
+5. Printing statistics.
+
+=== ot_hnx_idxn_keybuf_ser ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     5903 wires
+    91089 wire bits
+       42 public wires
+    85228 public wire bits
+       12 ports
+     5893 port bits
+    23536 cells
+       85   $_DFF_PN0_
+    14654   $_DFF_P_
+     5861   $_MUX_
+        1   $_OR_
+     2931   $_SDFF_PN0_
+        3   $scopeinfo
+        1   ot_hnx_idxn_keybuf
+
+End of script. Logfile hash: 2a544eb450, time: 19.94s, user: 18.98s, system: 0.41s, MEM: 150.42 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 62% 9x opt_dff (12 sec), 14% 3x check (2 sec), ...
