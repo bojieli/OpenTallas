@@ -1188,7 +1188,26 @@ def main():
             "if {![llength [info commands kr_default_repair_timing_helper]]} {\n"
             " rename repair_timing_helper kr_default_repair_timing_helper\n"
             " proc repair_timing_helper {args} {kr_default_repair_timing_helper -max_buffer_percent 100 {*}$args}\n}\n")
-    (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)
+    land = rec.get("land_slots") or {}
+    if land:
+        # S81-CORE-LAT-R21 (COORD S81-CORE-LAT-R20 ruling (a)): DECLARED landing-ring input buses {bus: D}; the D gated
+        # ring slots are the pin's face registers (face_guard class land_slot checks D flop D pins on D own ICGs of one
+        # clock).  Kits without the declaration keep the byte-identical face_guard_core.py.
+        bad = sorted(b for b in land if b not in buses_in or int(land[b]) < 2)
+        if bad:
+            raise SystemExit(f"{mod}: land_slots {bad} are not plan input buses with D >= 2")
+        (kd / "land_slots.json").write_text(json.dumps(dict(
+            schema="opentallas.core_land_slots.v1", buses={b: int(land[b]) for b in sorted(land)},
+            why=rec.get("why_land_slots", "")), indent=1) + "\n")
+        fgc = FACE_GUARD_CORE.replace(
+            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())",
+            "_lf = Path(__file__).resolve().parent / \"land_slots.json\"\n"
+            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(),\n"
+            "            land=G.kit_land(_lf) if _lf.is_file() else None)")
+        assert fgc != FACE_GUARD_CORE, "FACE_GUARD_CORE guard call anchor changed"
+        (kd / "face_guard_core.py").write_text(fgc)
+    else:
+        (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)
     # one-station bus pairs of the core's RTL contract (reviewed per recipe; face_guard / signoff read ft_stations.txt)
     pairs = rec.get("ft1_pairs", [])
     for i_, o_ in pairs:

@@ -333,6 +333,12 @@ def kit_strap_list(kitdir):
     return []
 
 
+def kit_land(path):
+    """declared landing-ring buses of a kit land_slots.json {"schema": ..., "buses": {bus: D}} (S81-CORE-LAT-R21)."""
+    d = json.loads(Path(path).read_text())
+    return {str(k): int(v) for k, v in (d.get("buses") or {}).items()}
+
+
 def kit_bump_list(kitdir):
     """the kit's declared hard-IP line side (budget.json bump_ports, gen_phys KV-KITS-4): [(port, dir, width)]."""
     b = Path(kitdir) / "budget.json"
@@ -345,12 +351,18 @@ def _std_cell(master):
     return "_ASAP7_" in master.upper() or master.startswith("$")
 
 
-def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=()):
+def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), land=None):
     """straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
     parent need no pin register -> exempt (recorded in the result); any other name is refused (ValueError).
     bumps: declared hard-IP line-side ports [(port, dir, width)] (plan bump_ports, KV-KITS-4 10-27): the bump IS the
     hard macro's own pin, so it carries no pin register; instead every bit must wire straight to exactly one pin of
-    one hard (non-standard-cell) macro with no other driver or load (anything else fails class "bump")."""
+    one hard (non-standard-cell) macro with no other driver or load (anything else fails class "bump").
+    land: declared landing-ring input buses {bus: D} (S81-CORE-LAT-R21, COORD S81-CORE-LAT-R20 ruling (a): face register
+    per landing slot, no added cycle): every bit of such a bus must load EXACTLY D cell pins, each the D pin of a
+    distinct flop (no buffer, no logic: the slots are the face registers), the D flops clocked by D DISTINCT integrated
+    clock gates (one ICG* per slot; its GCLK net feeds flop clock pins only), all D ICGs gated from ONE clock net (the
+    lane's forwarded clock).  Anything else
+    fails class "land_slot"; a declared bus that is not an input port fails too."""
     bump_names = [b[0] for b in (bumps or ())]
     if bump_names:
         skip_re = r"(?:" + skip_re + r")|^(?:" + "|".join(re.escape(x) for x in bump_names) + r")$"
@@ -407,6 +419,46 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                                 f"{[F.cells[c][0] for c, _ in hard[:3]]})")
                 continue
             res["bump_bits"] = res.get("bump_bits", 0) + 1
+    land = dict(land or {})
+    for x, dd in land.items():                   # a declared landing bus: an input port, D >= 2
+        if T.dirs.get(x) != "input" or int(dd) < 2:
+            fail("land_slot", x, f"declared landing bus is {T.dirs.get(x)} with D {dd} (want input, D >= 2)")
+
+    def land_slot(b, r, D):
+        """None = OK (the D slot flops), else the failure text."""
+        ld = loads[r]
+        if len(ld) != D:
+            return f"{len(ld)} loads on {r}, declared D {D}"
+        ffs, icgs, roots = [], set(), set()
+        for ci, pin in ld:
+            m, path, pp = F.cells[ci]
+            if not is_ff(m) or pin != "D":
+                return f"load {m} {path}.{pin} is not a slot flop D pin"
+            ck = [v for k, (dd_, v) in pp.items() if k in ("CLK", "C", "CK") and len(v) == 1]
+            if len(ck) != 1:
+                return f"slot flop {path} clock pin not found"
+            cn = F.find(ck[0][0])
+            g = [(cj, pn) for cj, pn in drv[cn] + loads[cn]
+                 if pn == "GCLK" and F.cells[cj][0].upper().startswith("ICG")]
+            # the slot's ICG gates the whole slot word (other bits' slot flops): every other pin on the gated clock
+            # net must be a flop clock pin (no logic, no second driver)
+            others = [(cj, pn) for cj, pn in drv[cn] + loads[cn]
+                      if (cj, pn) not in g and not (is_ff(F.cells[cj][0]) and pn in ("CLK", "C", "CK"))]
+            if len(g) != 1 or others:
+                return f"slot flop {path} clock net {cn} is not one ICG GCLK feeding flop clocks only ({len(g)} ICG, {len(others)} other pins)"
+            gi = g[0][0]
+            gck = [v for k, (dd_, v) in F.cells[gi][2].items() if k == "CLK" and len(v) == 1]
+            if len(gck) != 1:
+                return f"ICG {F.cells[gi][1]} CLK pin not found"
+            ffs.append(ci)
+            icgs.add(gi)
+            roots.add(F.find(gck[0][0]))
+        if len(set(ffs)) != D or len(icgs) != D:
+            return f"{len(set(ffs))} distinct slot flops / {len(icgs)} distinct ICGs, declared D {D}"
+        if len(roots) != 1:
+            return f"slot ICGs gated from {len(roots)} clock nets (want one forwarded clock)"
+        return None
+
     for x in (straps or ()):                     # an exempt strap must be an input port of this block (rule 1)
         if T.dirs.get(x) != "input":
             fail("strap", x, f"declared ID strap is not an input port ({T.dirs.get(x)})")
@@ -465,6 +517,17 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                         break
                 if not ok:
                     continue
+            elif p in land:
+                why = land_slot(b, r, int(land[p]))
+                if why:
+                    fail("land_slot", b, why)
+                    continue
+                for ci, pin in loads[r]:
+                    claimed[ci].append(b)
+                res["flops"][b] = F.cells[loads[r][0][0]][1]
+                res["land_slot_bits"] = res.get("land_slot_bits", 0) + 1
+                res["ok"] += 1
+                continue
             else:
                 cur, ff, ok = r, None, True
                 seen = set()
@@ -546,6 +609,7 @@ def main(argv=None):
     ap.add_argument("--ft", help="kit ft_stations.txt (default: beside --pins): 1-station slots share one register")
     ap.add_argument("--straps", help="kit straps.json (default: beside --pins): declared ID straps, exempt")
     ap.add_argument("--budget-dir", help="kit dir with budget.json (default: beside --pins): declared bump_ports")
+    ap.add_argument("--land", help="kit land_slots.json (default: beside --pins): declared landing-ring buses {bus: D}")
     a = ap.parse_args(argv)
     stf = a.straps or (str(Path(a.pins).parent) if a.pins else None)
     sl = kit_strap_list(Path(stf).parent if stf.endswith(".json") else stf) if stf else []
@@ -554,7 +618,9 @@ def main(argv=None):
     ft1 = read_ft1(ftf) if ftf and Path(ftf).exists() else set()
     bd = a.budget_dir or (str(Path(a.pins).parent) if a.pins else None)
     bl = kit_bump_list(bd) if bd else []
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl)
+    lf = a.land or (str(Path(a.pins).with_name("land_slots.json")) if a.pins else None)
+    land = kit_land(lf) if lf and Path(lf).exists() else None
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, land=land)
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")

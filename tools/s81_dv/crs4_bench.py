@@ -45,16 +45,18 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', type=Path, default=ROOT / 'results/arch/s81_dv_1016/landing/crs4_bench.json')
     ap.add_argument('--variant', choices=[v for v, _ in VARIANTS])
+    ap.add_argument('--lgate', action='store_true', help='S81-CORE-LAT-R21: build the DUT with DSFD_CRS4_LGATE (gated landing slots)')
     a = ap.parse_args()
     tmp = Path(tempfile.mkdtemp(prefix='crs4_'))
     res = dict(schema='opentallas.s81_land.crs4_bench.v1', tb=TB, sources=SRC, T_ps=T, skew_sweep_ps=SWEEP, margin_ps=MARGIN,
-               rule='E = ceil((max dL + 80 + margin)/T); K = E + G - R0; one K for the 4 lanes; predicted offset = E - REF_LAT', R0=R0, REF_LAT=REF_LAT, variants={})
+               lgate=bool(a.lgate), rule='E = ceil((max dL + 80 + margin)/T); K = E + G - R0; one K for the 4 lanes; predicted offset = E - REF_LAT', R0=R0, REF_LAT=REF_LAT, variants={})
     verdict = True
     for var, dfn in VARIANTS:
         if a.variant and var != a.variant:
             continue
         b = str(tmp / var)
-        subprocess.run(['iverilog', '-g2012', '-o', b, str(ROOT / TB)] + [str(ROOT / s) for s in SRC] + ([f'-D{dfn}'] if dfn else []), check=True)
+        subprocess.run(['iverilog', '-g2012', '-o', b, str(ROOT / TB)] + [str(ROOT / s) for s in SRC] + ([f'-D{dfn}'] if dfn else [])
+                       + (['-DDSFD_CRS4_LGATE'] if a.lgate else []), check=True)
         vr = dict(expect='PASS' if var == 'base' else 'FAIL', runs=[])
         for g in GEOM:
             e = math.ceil((max(g['dl']) + SKEW + MARGIN) / T)
