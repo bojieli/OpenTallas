@@ -64,7 +64,18 @@ import die_clock_128 as C128  # noqa: E402
 BUF = DC.BUF
 STEP_UM = 2.16
 MAX_MOVE_UM = 250.0             # COORD 23:53: driver-site moves within 250 um
-NDR = {"4w": dict(width=0.16, space=0.08, rf=0.25, cf=1.3), "8w": dict(width=0.32, space=0.08, rf=0.125, cf=1.6)}
+NDR = {"4w": dict(width=0.16, space=0.08, rf=0.25, cf=1.3), "8w": dict(width=0.32, space=0.08, rf=0.125, cf=1.6),
+       # INFRA-FIRST-QC-R12 (mesh3 top tree, 16W M8/M9).  width = 16 x the 0.04 LEF WIDTH; rf = 0.04 / width as for
+       # 4w/8w; cf = the 4w->8w model slope (+0.3 per 0.16 um) carried to 0.64 (UNCHECKED: replace by the ndr064 RCX).
+       # space: 4w/8w keep 2S = 0.08, but a 0.64-um wire sits in the asap7_tech_1x_201209.lef M8/M9 SPACINGTABLE row
+       # WIDTH 0.49975 (0.5 um at PRL >= 1.79975), so every clock / shield clearance is 0.5.  Its drawn shields are 0.64
+       # wide too: a shield merged with same-net PG is only a NEW spacing class at the 0.99975 row (1.0 um), so the R8
+       # wide-merge gate threshold is 0.99975 for 16w.  VIA89 at a 16w M8 x M9 junction: a 6 x 6 V8 array (LEF
+       # VIARULE M9_M8 GENERATE: cut 0.04, pitch >= 0.097, M9 enclosure 0.02; pitch 0.098 keeps the cuts on the 1x DBU
+       # grid; 5 x 0.098 + 0.04 + 2 x 0.02 = 0.57 <= 0.64).  VIA78 stays the single tech via: its M7 side is the
+       # 0.032-um default-width pin riser of the R7 straight stack.
+       "16w": dict(width=0.64, space=0.5, rf=0.0625, cf=2.2, wide_merge_um=0.99975,
+                   via89=dict(rows=6, cols=6, cut=0.04, pitch=0.098, enc_m8=0.0, enc_m9=0.02))}
 VDD = {"TT": 0.70, "FF": 0.77}
 SITE_X, ROW_Y = 0.054, 0.27
 # Actual current ORFS asap7sc7p5t_28_R_1x_220121a.lef SIZE, not the obsolete 25-site estimate.
@@ -1829,6 +1840,8 @@ def write_verilog(cells, nets, ports, path):
     drv_net, in_net = {}, {}
     for n in nets:
         drv_net[n["drv"]] = n["name"]
+        for u in n.get("drv_units", ()):     # R12 stacked-buffer group: every parallel unit drives the group net
+            drv_net[u] = n["name"]
         for ld in n["loads"]:
             if not ld.startswith("port:"):
                 in_net[ld] = n["name"]
@@ -2148,6 +2161,241 @@ def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, trac
     return cells, nets, ports, out
 
 
+EXPLICIT_KINDS = {"top_node": "node", "top_rep": "rep", "col_tap": "node"}
+
+
+def _body_keepout_violations(K, W, H, cells):
+    """cell bodies outside the die or overlapping a hard / PHY keep-out rect of index K (hard_keepout_violations
+    without the plan object)"""
+    bad = []
+    for name, c in cells.items():
+        x0, y0 = c["x"], c["y"]
+        x1, y1 = x0 + cell_width(c), y0 + ROW_Y
+        if x0 < 0 or y0 < 0 or x1 > W or y1 > H:
+            bad.append(dict(cell=name, keepout="outside die", rect_um=[x0, y0, x1, y1]))
+            continue
+        seen = set()
+        for i in range(int(x0 // K.b), int(x1 // K.b) + 1):
+            for j in range(int(y0 // K.b), int(y1 // K.b) + 1):
+                for r in K.g.get((i, j), []):
+                    if tuple(r) in seen:
+                        continue
+                    seen.add(tuple(r))
+                    if x0 < r[2] and x1 > r[0] and y0 < r[3] and y1 > r[1]:
+                        bad.append(dict(cell=name, keepout=r[4], rect_um=[x0, y0, x1, y1], keepout_um=list(r[:4])))
+    return bad
+
+
+def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, die=None, parts=None, keepouts=None,
+                   root_um=None, leaf_stub_um=8.64, stack_offset=0.0, stack_r8=True):
+    """INFRA-FIRST-QC-R12: the die clock tree from an EXPLICIT cell + net list (the planner's delay-balanced mesh3 top
+    tree, results/qc_clk_mesh3/r11/r11_top_sites.json format) instead of build_lattice's binary / midpoint / equal-cut
+    H-tree.  No midpoint, equal-cut, arity or path-spread check (the planner balanced the delays); kept fail-closed
+    geometry checks: every cell on the site/row grid, its full body in exactly its declared host partition and clear of
+    every hard keep-out and of every other clock cell, a stacked group = consecutive rows in one column (same x,
+    orient, master), every net Manhattan (straight leg, or L = trunk + one perpendicular drop) on the declared trunk
+    layer, every group driven once, one root.
+
+    spec: {cell_sites: {name: dict(origin_um=[x, y] lower-left, part, master, orient, group, kind[, w])},
+           nets: [dict(drv="g<i>", load="g<j>", layer="M8"|"M9", ndr="16w", edge=...)]}
+    A net's drv / load are GROUPS; a group of k > 1 BUFx24 units (stacked rows) is one driver: the R7 pin stack of the
+    unit nearest the junction is extended by an M7 TIE strap along the bar column through every unit's pin row, with
+    a straight VIA67..VIA12 stack + min-area pads onto each unit's bar (A tie on the upstream net, Y tie on the group
+    net; die_clock_128._fixed_wires_stack ties=, clock_routed._stack_net_tcl).  Nets of one driver group merge into
+    one net (its loads = every unit of every load group).  The group without a driver is fed by port 'root'
+    (root_um, default leaf_stub_um west / east of its A bar); every group without loads drives one output port
+    t_<group> leaf_stub_um beside its Y bar on the M8 track grid (R8 port_on_trunk).
+    P: the die plan (hosts, keep-outs, PG); or die=(W, H), parts={name: rect}, keepouts=[(x0, y0, x1, y1, tag)].
+    Returns (cells, nets, ports, M) as build_lattice does (M.fixed_wires: R7 pin-stack wires, short-stack pads)."""
+    nd = NDR[ndr]
+    if P is not None:
+        W, H = float(P.W), float(P.H)
+        ko = DC.keepouts(P)
+        prt = [(n_, P.rect(n_)) for n_ in P.parts]
+    else:
+        W, H = map(float, die)
+        ko = list(keepouts or [])
+        prt = list((parts or {}).items())
+    K = DC.KeepIndex(ko, die=(W, H))
+    part_rects = dict(prt)
+
+    def host(xy, half):
+        for dx in (-half[0], half[0]):
+            for dy in (-half[1], half[1]):
+                if K.hit(xy[0] + dx, xy[1] + dy, m=0.0):
+                    return None, "on_hard_keepout"
+        for name, r in prt:
+            if r[0] <= xy[0] <= r[2] and r[1] <= xy[1] <= r[3]:
+                return name, None
+        return None, "outside_partitions"
+    perr, cells, groups = [], {}, defaultdict(list)
+    for name, v in sorted((spec.get("cell_sites") or {}).items()):
+        master = v.get("master", BUF)
+        if master not in BUF_WIDTHS or master not in C128.PIN_BAR_X:
+            perr.append(dict(kind="cell_model", name=name, detail=f"no width / pin-bar model for {master}"))
+            continue
+        w = BUF_WIDTHS[master]
+        x, y = map(float, v["origin_um"])
+        if abs(snap(x, SITE_X) - x) > 1e-6 or abs(snap(y, ROW_Y) - y) > 1e-6:
+            perr.append(dict(kind="cell_site_off_row", name=name, detail=str([x, y])))
+        if v.get("w") is not None and abs(float(v["w"]) - w) > 1e-6:
+            perr.append(dict(kind="cell_width", name=name, detail=f"declared w {v['w']} != {master} {w}"))
+        part, why = host((x + w / 2, y + ROW_Y / 2), (w / 2, ROW_Y / 2))
+        if why or part != v.get("part"):
+            perr.append(dict(kind="cell_site_host", name=name, detail=f"{part}/{why} vs {v.get('part')}"))
+        r = part_rects.get(part)
+        if r is not None and not (r[0] <= x and r[1] <= y and x + w <= r[2] and y + ROW_Y <= r[3]):
+            perr.append(dict(kind="cell_site_seam", name=name, detail=f"cell body leaves host {part}"))
+        orient = v.get("orient", "R0")
+        if orient not in ("R0", "MX", "MY", "R180"):
+            perr.append(dict(kind="cell_orient", name=name, detail=str(orient)))
+        c = dict(x=x, y=y, kind=EXPLICIT_KINDS.get(v.get("kind"), "node"), orient=orient, group=v.get("group"),
+                 plan_kind=v.get("kind"), part=v.get("part"))
+        if master != BUF:
+            c["lib"] = master
+        cells[name] = c
+        groups[f"g{v.get('group')}"].append(name)
+    for g, us in groups.items():
+        us.sort(key=lambda u: cells[u]["y"])
+        c0 = cells[us[0]]
+        for i, u in enumerate(us):
+            c = cells[u]
+            if abs(c["x"] - c0["x"]) > 1e-6 or c["orient"] != c0["orient"] or c.get("lib") != c0.get("lib") or \
+                    abs(c["y"] - (c0["y"] + i * ROW_Y)) > 1e-6:
+                perr.append(dict(kind="tie_stack", name=u, detail=f"group {g}: units must stack in consecutive rows of "
+                                 "one column (same x, orient, master)"))
+    rep_of = {u: us[0] for us in groups.values() for u in us}
+    by_drv, loaded = defaultdict(list), defaultdict(int)
+    for n in spec.get("nets") or []:
+        bad = [k for k in ("drv", "load") if n.get(k) not in groups]
+        if bad:
+            perr.append(dict(kind="net_group", name=str(n.get("edge")), detail=f"unknown {bad}: {n.get('drv')}->{n.get('load')}"))
+            continue
+        if n.get("ndr", ndr) != ndr:
+            perr.append(dict(kind="net_ndr", name=str(n.get("edge")), detail=f"net ndr {n.get('ndr')} != build {ndr}"))
+        if n.get("layer") not in ("M8", "M9"):
+            perr.append(dict(kind="net_layer", name=str(n.get("edge")), detail=str(n.get("layer"))))
+        by_drv[n["drv"]].append(n)
+        loaded[n["load"]] += 1
+    for g, k in loaded.items():
+        if k > 1:
+            perr.append(dict(kind="multi_driven", name=g, detail=f"{k} driver nets"))
+    roots = sorted(g for g in groups if g not in loaded)
+    if len(roots) != 1:
+        perr.append(dict(kind="tree_root", name="explicit", detail=f"{len(roots)} undriven groups {roots[:5]}"))
+    if perr:
+        raise C128.PlanError(perr)
+    rt = roots[0]
+    trk = (track_profile or DEFAULT_TRACKS)["M8"]
+
+    def on_m8(y):
+        return round(trk["offset_um"] + round((y - trk["offset_um"]) / trk["pitch_um"]) * trk["pitch_um"], 4)
+    r0 = groups[rt][0]
+    if root_um is None:
+        ax, ay = C128.pin_xy(cells, r0, "A", ROW_Y, cells[r0].get("lib", BUF))
+        root_um = (round(ax + (leaf_stub_um if cells[r0]["orient"] in ("MY", "R180") else -leaf_stub_um), 4), on_m8(ay))
+    ports, nets, tap_rows, lv = [("input", "root")], [], [], {rt: 0}
+    nets.append(dict(name="root", drv="port:root", loads=list(groups[rt]), level=-1))
+    order, seen = [rt], {rt}
+    for g in order:                       # breadth-first: level = driver depth
+        for n in by_drv.get(g, []):
+            if n["load"] not in seen:
+                seen.add(n["load"])
+                lv[n["load"]] = lv[g] + 1
+                order.append(n["load"])
+    unreached = sorted(set(groups) - seen)
+    if unreached:
+        raise C128.PlanError([dict(kind="unreached_group", name=g, detail="not reached from the root") for g in unreached[:50]])
+    for g in order:
+        us, r_ = groups[g], groups[g][0]
+        ns = by_drv.get(g, [])
+        if ns:
+            loads = [u for n in ns for u in groups[n["load"]]]
+            nets.append(dict(name=f"ckm_w_{r_}", drv=r_, drv_units=list(us), loads=loads, level=lv[g],
+                             plan_layers=sorted({n["layer"] for n in ns}), plan_edges=[n.get("edge") for n in ns]))
+            continue
+        yx, yy = C128.pin_xy(cells, r_, "Y", ROW_Y, cells[r_].get("lib", BUF))
+        west = cells[r_]["orient"] in ("MY", "R180")
+        tp = f"t_{g}"
+        ports.append(("output", tp))
+        pxy = [round(yx - leaf_stub_um if west else yx + leaf_stub_um, 4), on_m8(yy)]
+        nets.append(dict(name=f"ckm_w_{r_}", drv=r_, drv_units=list(us), loads=["port:" + tp], level=99))
+        tap_rows.append(dict(part=cells[r_]["part"], tap="explicit_leaf", port=tp, xy=pxy, layer="M8",
+                             pin_size_um=[round(2 * nd["width"], 4), nd["width"]], group=g, early_ps=0.0, stub=r_,
+                             foot=[yx, yy], strap=None, slide_um=0.0, stub_um=leaf_stub_um))
+    # Manhattan legs on the declared trunk layer (same axis rule as die_clock_128.fixed_wires: dominant extent)
+    for n in nets:
+        if n["drv"].startswith("port:") or not n.get("plan_layers"):
+            continue
+        D = C128.pin_xy(cells, n["drv"], "Y", ROW_Y, cells[n["drv"]].get("lib", BUF))
+        Ls = [C128.pin_xy(cells, ld, "A", ROW_Y, cells[ld].get("lib", BUF)) for ld in n["loads"]]
+        horiz = max(abs(p[0] - D[0]) for p in Ls) >= max(abs(p[1] - D[1]) for p in Ls)
+        if n["plan_layers"] != ["M8" if horiz else "M9"]:
+            perr.append(dict(kind="net_trunk_layer", name=n["name"], detail=f"plan {n['plan_layers']} vs trunk "
+                             f"{'M8' if horiz else 'M9'} (dominant extent)"))
+    overlaps = placement_overlaps(cells)
+    kov = _body_keepout_violations(K, W, H, cells)
+    if overlaps:
+        perr.append(dict(kind="cell_overlap", name="cells", detail=str(overlaps[:3])))
+    if kov:
+        perr.append(dict(kind="hard_keepout", name="cells", detail=str(kov[:3])))
+    if perr:
+        raise C128.PlanError(perr)
+    out = dict(meta=dict(nx=0, ny=0, m=0, rep_um=None, ndr=ndr, sites="explicit_cells", W=W, H=H,
+                         root_um=list(root_um), tap_layer="M8", tap_pin_size_um=[round(2 * nd["width"], 4), nd["width"]],
+                         explicit_tree=dict(source=spec.get("summary", {}).get("schema", "explicit cells"),
+                                            groups=len(groups), units=len(cells),
+                                            stacked_groups=sum(1 for us in groups.values() if len(us) > 1),
+                                            plan_nets=len(spec.get("nets") or []), nets=len(nets), leaves=len(tap_rows),
+                                            checks="geometry only (sites, host, seam, keep-out, overlap, tie column, "
+                                                   "Manhattan trunk layer); no midpoint / equal-cut (planner-balanced)")),
+               xs=[], ys=[], drivers={}, htree=[], stubs=[], unplaced=[], taps=tap_rows,
+               clock_cell_overlaps=overlaps, clock_hard_keepout_violations=kov)
+    if pg_shapes is not None:
+        pgr = pg_shapes
+    elif P is not None:
+        import die_infra as DI
+        pgr = DI.pg_rects(P, C128.pg_grid(P))
+    else:
+        pgr = []
+    sh = "VSS"
+    router = C128.TrackRouter(nd, sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM,
+                              **(dict(wide_merge_um=nd.get("wide_merge_um", C128.WIDE_MERGE_UM)) if stack_r8 else {}))
+    router.reserve(C128.pg_shapes(pgr))
+    ties = {us[0]: list(us) for us in groups.values() if len(us) > 1}
+    # physical view: one pin stack per GROUP (the tie reaches the other units); logical nets keep every unit
+    phys = [dict(n, loads=[ld for ld in n["loads"] if ld.startswith("port:") or rep_of[ld] == ld]) for n in nets]
+    wires = C128.fixed_wires(out, cells, phys, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=True,
+                             port_on_trunk=stack_r8, ties=ties, l_drops=True)
+    for w in wires:
+        w["ndr"] = ndr
+        for s_ in w.get("stacks", []):
+            s_["short_stack"] = True
+        if stack_r8:
+            w["enc"] = "r8"
+    out["fixed_wires"] = wires
+    out["meta"]["tree_tracks"] = dict(
+        method="C128.TrackRouter: nearest PG-aware track, clock metal + VSS shields clear of PG/clock/shields by the NDR "
+               "space", tracks=track_profile or DEFAULT_TRACKS, max_move_um=TRACK_MOVE_UM, segments=len(router.moves),
+        moved=sum(1 for v in router.moves if v > 1e-6), modes=dict(router.modes),
+        move_max_um=round(max(router.moves or [0.0]), 4), pg_rects=len(pgr),
+        pin_stack=dict(rule="R7 straight stacks + short-stack pads; stacked groups: M7 tie strap along the bar column "
+                            "through every unit pin row (A tie / Y tie), L nets = trunk + one M9 (M8) drop + M8 jog",
+                       stacks=sum(len(w["stacks"]) for w in wires),
+                       ties=sum(1 for w in wires for s_ in w["stacks"] if s_.get("tie")),
+                       l_drops=sum(1 for w in wires for s_ in w["stacks"] if s_.get("drop")), pads=C128.STACK_PAD,
+                       **(dict(r8=dict(wide_merge_um=nd.get("wide_merge_um", C128.WIDE_MERGE_UM))) if stack_r8 else {})))
+    out["meta"]["clock_shield"] = C128.shield_record(wires, sh, 0, 0)
+    out["rule_12_8"] = dict(early_offset_taps=[], early_offset_cores={}, stub_sizing=None)
+    out["meta"]["rule_12_8"] = dict(methodology="v5.1 12.8 (explicit planner tree)", shield_net=sh,
+                                    sizing="BUFx24 groups (planner)", early_offset_taps=0)
+    out["meta"].update(cells=len(cells), nodes=sum(1 for c in cells.values() if c["kind"] == "node"),
+                       reps=sum(1 for c in cells.values() if c["kind"] == "rep"), stubs=len(tap_rows),
+                       clock_cell_overlap_pairs=0, clock_hard_keepout_violations=0, unplaced=0,
+                       tree_wire_mm=round(sum(w["wire_um"] for w in wires) / 1e3, 3))
+    return cells, nets, ports, out
+
+
 def cmd_build(a):
     P = S.Plan(S.load(a.plan))
     if getattr(a, "rule_12_8", False):
@@ -2185,7 +2433,11 @@ def cmd_build(a):
         plan_sites["source"] = str(a.plan_sites)
         plan_sites["sha256"] = hashlib.sha256(Path(a.plan_sites).read_bytes()).hexdigest()
     try:
-        if getattr(a, "tree_plan", None):
+        if getattr(a, "explicit_cells", None):     # INFRA-FIRST-QC-R12: planner cells + nets (r11_top_sites format)
+            cells, nets, ports, M = build_explicit(json.loads(Path(a.explicit_cells).read_text()), P, a.ndr, pg_shapes,
+                                                   tracks, root_um=a.explicit_root, stack_r8=not a.explicit_r7)
+            M["meta"]["explicit_tree"]["file"] = str(a.explicit_cells)
+        elif getattr(a, "tree_plan", None):
             import hashlib
             rule = dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps) if getattr(a, "rule_12_8", False) else None
             cells, nets, ports, M = build_lattice(P, json.loads(Path(a.tree_plan).read_text()),
@@ -2717,7 +2969,8 @@ def cmd_combo(a):
             ports_ = {t_["port"]: dict(layer=t_.get("layer", M["meta"].get("tap_layer", "M7")), xy=t_["xy"])
                       for t_ in M["taps"]}
             ports_["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
-            rl, rrec = CR.routed_tcl(wires, cells, ports_, BUF, "ot_mesh_ndr")
+            rl, rrec = CR.routed_tcl(wires, cells, ports_, BUF, "ot_mesh_ndr",
+                                     **(dict(via89=nd["via89"]) if nd.get("via89") else {}))
             L += rl
             sh_ = CR.stair_census(CR.stair_shapes(wires, cells, ports_, BUF))
             rrec["stair_census"] = sh_
@@ -3563,6 +3816,13 @@ def main(argv=None):
     b.add_argument("--stack-r8", action="store_true", help="CLOCK-128-R8 (implies --pin-stack): shields never merge "
                    "with same-net PG into a wide (>= 0.49975 um) VSS shape, leaf ports on the M8 trunk end, downward vias "
                    "encoded as junction splits; default off = R7 output unchanged")
+    b.add_argument("--explicit-cells", help="INFRA-FIRST-QC-R12: build from an explicit cell + group-net list "
+                   "(results/qc_clk_mesh3/r11/r11_top_sites.json format; use with --ndr 16w): geometry checks only, "
+                   "R7 pin stacks + R8 encoding, M7 A/Y tie straps for stacked groups")
+    b.add_argument("--explicit-root", type=float, nargs=2, metavar=("X", "Y"),
+                   help="with --explicit-cells: die clock input xy (default 8.64 um beside the root group's A bar)")
+    b.add_argument("--explicit-r7", action="store_true", help="with --explicit-cells: R7 encoding (no R8 wide-merge "
+                   "gate / port_on_trunk / junction splits)")
     b.add_argument("--tree-only", action="store_true", help="with --tree-plan: build only the plan-declared die tree "
                    "(root -> lattice leaves, one region-entry port per leaf); diagnostic, never freeze evidence")
     b.add_argument("--allow-plan-errors", action="store_true",

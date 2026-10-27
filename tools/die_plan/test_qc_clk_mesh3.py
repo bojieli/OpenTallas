@@ -101,3 +101,61 @@ if __name__ == "__main__":
         if k.startswith("test_"):
             f()
             print("PASS", k)
+
+
+class FakePlan:
+    """two instances of one partition type (R0 + MX, stacked) with one hard core each, + a narrow second type."""
+
+    def __init__(self):
+        self.W, self.H = 2000.0, 2000.0
+        self.parts = {"a0": dict(type="A", origin_um=[0.0, 0.0], orient="R0"),
+                      "a1": dict(type="A", origin_um=[0.0, 1000.08], orient="MX"),
+                      "b0": dict(type="B", origin_um=[1000.08, 0.0], orient="R0")}
+        self.size = {"A": (1000.08, 1000.08), "B": (500.04, 1000.08)}
+
+    def rect(self, n):
+        x0, y0 = self.parts[n]["origin_um"]
+        w, h = self.size[self.parts[n]["type"]]
+        return (x0, y0, x0 + w, y0 + h)
+
+
+def islands():
+    P = FakePlan()
+    # core of type A at type-frame (100..400, 100..300): die frame R0 as is, MX mirrored in y inside a1
+    cores = [(100.0, 100.0, 400.0, 300.0, "a0", "u", "m"), (100.0, 1000.08 + 1000.08 - 300.0, 400.0, 1000.08 + 1000.08 - 100.0, "a1", "u", "m")]
+    return P, M.Islands(P, cores, pitch=50.0, pitch_x=20.0)
+
+
+def test_islands_identical_per_type_and_off_core():
+    P, I = islands()
+    gx, gy, ok = I.tgrid["A"]
+    assert I.types["A"]["slots"] < I.types["A"]["grid"]          # the core removed slots
+    for n in ("a0", "a1"):
+        x0, y0, x1, y1 = P.rect(n)
+        for k in range(len(gx)):
+            for j in range(len(gy)):
+                if not ok[k, j]:
+                    continue
+                ox, oy = I.to_die(n, float(gx[k]), float(gy[j]))
+                assert x0 <= ox and ox + I.CW <= x1 and y0 <= oy and oy + I.BH <= y1      # body in ONE partition
+                for c in ([(100.0, 100.0, 400.0, 300.0)] if n == "a0" else [(100.0, 1700.16, 400.0, 1900.16)]):
+                    assert not (ox < c[2] and c[0] < ox + I.CW and oy < c[3] and c[1] < oy + I.BH)
+    # the grid is symmetric: MX maps it onto itself (identical type-frame slot set on both instances)
+    h = P.size["A"][1]
+    assert sorted(round(h - I.BH - v, 3) for v in gy) == sorted(round(v, 3) for v in gy)
+    assert all(abs(round(v / 0.27) * 0.27 - v) < 1e-6 for v in gy) and all(abs(round(v / 0.054) * 0.054 - v) < 1e-6 for v in gx)
+
+
+def test_islands_row_uses_one_slot_row_per_partition():
+    P, I = islands()
+    xs, m = I.row_x(500.0)
+    assert xs and len({round(m[x], 3) for x in xs if x < 1000.0}) == 1
+    # a row on the a0/a1 seam takes the partition HOLDING the line (the upper one, a1)
+    xs2, m2 = I.row_x(1000.08)
+    assert all(m2[x] > 1000.08 for x in xs2 if x < 1000.0)
+    # snapped chain: segments stay within reach - margin
+    st = FakeStage()
+    et = M.EdgeType(st, "16w", 2, 450.0)
+    I.et = et
+    n = M.nseg_snap(I, et, "x", 500.0, xs[0], xs[-1])
+    assert I.chain_max_seg("x", 500.0, xs[0], xs[-1], n) <= 450.0 - I.margin + 1e-6

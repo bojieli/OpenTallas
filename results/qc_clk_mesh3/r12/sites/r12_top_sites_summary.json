@@ -1,0 +1,344 @@
+{
+ "schema": "opentallas.r12_top_sites.v1",
+ "label": "UNCHECKED (plan export; no route)",
+ "config": {
+  "top_w": "16w",
+  "top_m": 2,
+  "top_reach": 450.0,
+  "no_spine": true
+ },
+ "groups": 4703,
+ "groups_by_kind": {
+  "top_node": 930,
+  "col_tap": 912,
+  "top_rep": 2861
+ },
+ "instances": 8494,
+ "instances_by_master": {
+  "BUFx24_ASAP7_75t_R": 8494
+ },
+ "mirrored": 3498,
+ "nets": 4702,
+ "nets_by_layer": {
+  "M8": 4547,
+  "M9": 155
+ },
+ "leaf_rows": 19,
+ "leaf_rows_y": [
+  1313.28,
+  2617.92,
+  3913.92,
+  5227.2,
+  6540.48,
+  7845.12,
+  9141.12,
+  10471.68,
+  11802.24,
+  13132.8,
+  14463.36,
+  15793.92,
+  17115.84,
+  18420.48,
+  19725.12,
+  21038.4,
+  22343.04,
+  23647.68,
+  24952.32
+ ],
+ "leaves": 912,
+ "seam_fix_moves": {
+  "n": 0,
+  "max_um": 0.0
+ },
+ "off_island_lattice": 0,
+ "gate": {
+  "errors": {},
+  "examples": {},
+  "overlaps": 0,
+  "overlap_examples": [],
+  "verdict": "PASS"
+ },
+ "hosts": 360,
+ "types_hosting": 74,
+ "type_window_union_worst": [
+  [
+   "cbf_q00",
+   {
+    "instances": 23,
+    "union_sites": 295,
+    "max_inst_sites": 58,
+    "union_over_max": 5.09
+   }
+  ],
+  [
+   "cbx_q10",
+   {
+    "instances": 48,
+    "union_sites": 219,
+    "max_inst_sites": 48,
+    "union_over_max": 4.56
+   }
+  ],
+  [
+   "cbn_q00",
+   {
+    "instances": 24,
+    "union_sites": 337,
+    "max_inst_sites": 74,
+    "union_over_max": 4.55
+   }
+  ],
+  [
+   "cbn_q01",
+   {
+    "instances": 24,
+    "union_sites": 266,
+    "max_inst_sites": 60,
+    "union_over_max": 4.43
+   }
+  ],
+  [
+   "cbf_q01",
+   {
+    "instances": 23,
+    "union_sites": 240,
+    "max_inst_sites": 56,
+    "union_over_max": 4.29
+   }
+  ],
+  [
+   "sle_ctl",
+   {
+    "instances": 12,
+    "union_sites": 146,
+    "max_inst_sites": 35,
+    "union_over_max": 4.17
+   }
+  ],
+  [
+   "cbf_q11",
+   {
+    "instances": 24,
+    "union_sites": 188,
+    "max_inst_sites": 46,
+    "union_over_max": 4.09
+   }
+  ],
+  [
+   "cbn_q11",
+   {
+    "instances": 24,
+    "union_sites": 188,
+    "max_inst_sites": 46,
+    "union_over_max": 4.09
+   }
+  ]
+ ],
+ "r9_tool_gaps_r11": [
+  "die_clock_mesh.NDR has 4w/8w only; mesh3 top tree is 16W (0.64 um) M8/M9: TrackRouter/shield/short-stack pads/via arrays need a 16w NDR (wide-metal spacing + VIA78/89 arrays) before route",
+  "build_lattice() accepts only binary, midpoint, equal-cut, equal-length H-trees (plan errors node_midpoint/leg_reps/path_spread); mesh3 is DELAY-balanced (node off-midpoint, lifts arity 1, extra repeaters) -> needs an explicit-cells build path (cells+nets from this export) into C128.fixed_wires",
+  "multi-unit groups (2 x BUFx24 stacked rows) need the unit A/Y tie straps encoded as fixed wires"
+ ],
+ "islands": {
+  "slots_total": 3857531,
+  "types": 88,
+  "groups_on_slots": 4703,
+  "exact": 16,
+  "moved_gt_1um": 4269,
+  "max_move_um": 24.165,
+  "examples": [
+   {
+    "kind": "top_node",
+    "xy0": [
+     3110.508,
+     1313.28
+    ],
+    "slot": [
+     3110.508,
+     1308.825
+    ],
+    "d_um": 4.455
+   },
+   {
+    "kind": "top_node",
+    "xy0": [
+     2789.91,
+     1313.28
+    ],
+    "slot": [
+     2789.91,
+     1308.825
+    ],
+    "d_um": 4.455
+   },
+   {
+    "kind": "top_node",
+    "xy0": [
+     4954.338,
+     1313.28
+    ],
+    "slot": [
+     4954.338,
+     1308.825
+    ],
+    "d_um": 4.455
+   },
+   {
+    "kind": "top_node",
+    "xy0": [
+     4652.64,
+     1313.28
+    ],
+    "slot": [
+     4652.64,
+     1308.825
+    ],
+    "d_um": 4.455
+   },
+   {
+    "kind": "top_node",
+    "xy0": [
+     3713.958,
+     1313.28
+    ],
+    "slot": [
+     3713.958,
+     1308.825
+    ],
+    "d_um": 4.455
+   },
+   {
+    "kind": "top_node",
+    "xy0": [
+     6817.068,
+     1313.28
+    ],
+    "slot": [
+     6817.068,
+     1308.825
+    ],
+    "d_um": 4.455
+   },
+   {
+    "kind": "top_node",
+    "xy0": [
+     6496.47,
+     1313.28
+    ],
+    "slot": [
+     6496.47,
+     1308.825
+    ],
+    "d_um": 4.455
+   },
+   {
+    "kind": "top_node",
+    "xy0": [
+     8675.532,
+     1313.28
+    ],
+    "slot": [
+     8675.532,
+     1308.825
+    ],
+    "d_um": 4.455
+   }
+  ],
+  "pitch_um": [
+   4.86,
+   19.3
+  ],
+  "rule": "slot grid identical per type (type frame, symmetric), slots on a core in ANY instance removed",
+  "lattice_identical_per_type": true,
+  "reserved_slots_per_type": {
+   "cbf_q00_s2": 11085,
+   "cbf_q01_s2": 11397,
+   "cbx_q10": 11085,
+   "cbf_q11": 11397,
+   "cbn_q00": 11085,
+   "cbn_q01": 11397,
+   "cbn_q11": 11397,
+   "cbf_q00": 11085,
+   "cbf_q01": 11397,
+   "slw_hc0": 8625,
+   "slw_hc1": 8487,
+   "slw_hc2": 8487,
+   "slw_hc3": 8625,
+   "slw_st_b_v2": 8625,
+   "sle_ctl": 17319,
+   "slw_st_a_v2": 8625,
+   "slw_fw_v3": 8625,
+   "slw_stm_v3": 8487,
+   "slw_sc_v3": 8487,
+   "slw_fe_v2__clacbd6592": 8625,
+   "slw_su_l1__clbd68af58": 3809,
+   "slw_su_c__cl77ab230a": 11399,
+   "slw_su_l0__cl72211ea3": 3809,
+   "slw_st_b_v1": 8625,
+   "slw_st_a_v1": 8625,
+   "slw_fw_v1__cl80b8d16f": 8625,
+   "slw_stm_v1__cl522749b8": 8487,
+   "slw_sc_v1": 8487,
+   "slw_fe_v1__clcb7b024a": 8625,
+   "slw_su_l1__cl766bacee": 3809,
+   "slw_fw_v2": 8625,
+   "slw_stm_v2": 8487,
+   "slw_sc_v2": 8487,
+   "slw_fe_v2__cle5354d4d": 8625,
+   "slw_su_l0__cl0cf5548e": 3809,
+   "slw_fw_v1__cl82aac3aa": 8625,
+   "slw_su_l1__cl8312485b": 3809,
+   "slw_su_c__clbb0c543d": 11399,
+   "slw_stm_v1__cla56d6dd9": 8487,
+   "slw_sc_v1r": 8487,
+   "slw_fe_v1__cl8ba3358f": 8625,
+   "slw_su_c__cl49a25f5f": 11399,
+   "slw_su_l0__cle4811ba5": 3809,
+   "sle_hc0": 8625,
+   "sle_hc1": 8487,
+   "sle_hc2": 8487,
+   "sle_st_b_v1": 8625,
+   "sle_st_a_v1": 8625,
+   "sle_fw_v1__cl3b7cacba": 8625,
+   "sle_stm_v1": 8487,
+   "sle_sc_v1": 8487,
+   "sle_fe_v1__clfcc50df9": 8625,
+   "sle_su_l1__cl15735621": 3809,
+   "sle_su_c__cl78b6fe86": 11399,
+   "sle_su_l0__clad02be3b": 3809,
+   "sle_st_b_v2": 8625,
+   "sle_st_a_v2": 8625,
+   "sle_fw_v2__cl2b5fc15e": 8625,
+   "sle_stm_v2": 8487,
+   "sle_sc_v2": 8487,
+   "sle_fe_v2": 8625,
+   "sle_su_l1__cl9c71a39d": 3809,
+   "sle_fw_v1_e2": 8625,
+   "sle_fe_v1__clad8c146b": 8625,
+   "sle_su_c__cl99d49f55": 11399,
+   "sle_su_l0__cld14716fc": 3809,
+   "sle_fw_v2__clf90441df": 8625,
+   "sle_su_l1__cl3c610c2d": 3809,
+   "sle_su_c__cl3c67a3d5": 11399,
+   "sle_fw_v1__cl39c71cef": 8625,
+   "sle_fw_v3": 8625,
+   "sle_stm_v3": 8487,
+   "sle_sc_v3": 8487,
+   "sle_fe_v3": 8625,
+   "phy_serdes_b": 38599,
+   "phy_serdes": 38599,
+   "coll_s": 6837,
+   "coll_ft": 8427,
+   "coll_core": 13197,
+   "coll_ftm": 12243,
+   "coll_ftc": 8745,
+   "coll_ftn": 5883,
+   "coll_n": 6519,
+   "phy_ucie_kv": 6437,
+   "coll_ucie": 13345,
+   "glue": 12089,
+   "native59": 4239,
+   "tt_ctlm": 4239
+  }
+ }
+}
