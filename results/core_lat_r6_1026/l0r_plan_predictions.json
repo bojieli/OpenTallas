@@ -1,0 +1,443 @@
+{
+ "schema": "opentallas.s81_core_lat_r6.l0r.v1",
+ "scope": "PLAN MODEL predictions, UNCHECKED (ASAP7 NLDM + Elmore, setRC 0.8/0.9; uf_asbuilt adds MODEL-REFIT TT +1.9 / FF -5.1)",
+ "geometry": "kit dsdv_gunit_l0r_r6p (fixed plan pins, trial) 3_3_place_gp.odb: 13,238 sinks; entry = outline centre 133.92,133.92 (12.8a)",
+ "pins": "core_pin_sites_gate PASS 737/737, 0 stacked",
+ "core_infra_htree": [
+  {
+   "plan": "l0r_htree",
+   "splits": [
+    2,
+    2,
+    4,
+    4
+   ],
+   "stages": [
+    8
+   ],
+   "repeaters_per_edge": [
+    1,
+    0,
+    1,
+    0
+   ],
+   "leaf_load": [
+    206,
+    207
+   ],
+   "TT": {
+    "mean": 299.78,
+    "leaf_mean_min": 279.43,
+    "leaf_mean_max": 355.06,
+    "window": 75.63,
+    "sink_min": 271.67,
+    "sink_max": 392.27
+   },
+   "FF": {
+    "mean": 248.87,
+    "leaf_mean_min": 227.79,
+    "leaf_mean_max": 307.8,
+    "window": 80.02,
+    "sink_min": 220.35,
+    "sink_max": 347.59
+   },
+   "leg_mean": {
+    "TT": {
+     "T00": 297.71,
+     "T01": 297.59,
+     "T10": 300.64,
+     "T11": 303.18
+    },
+    "FF": {
+     "T00": 246.77,
+     "T01": 246.79,
+     "T10": 249.48,
+     "T11": 252.43
+    }
+   },
+   "in_band": false
+  },
+  {
+   "plan": "l0r_htree_2_2_4_4_4",
+   "splits": [
+    2,
+    2,
+    4,
+    4,
+    4
+   ],
+   "stages": [
+    9
+   ],
+   "repeaters_per_edge": [
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   "leaf_load": [
+    51,
+    52
+   ],
+   "TT": {
+    "mean": 291.96,
+    "leaf_mean_min": 282.02,
+    "leaf_mean_max": 304.59,
+    "window": 22.57,
+    "sink_min": 281.57,
+    "sink_max": 310.66
+   },
+   "FF": {
+    "mean": 236.85,
+    "leaf_mean_min": 227.07,
+    "leaf_mean_max": 249.36,
+    "window": 22.28,
+    "sink_min": 226.58,
+    "sink_max": 256.26
+   },
+   "leg_mean": {
+    "TT": {
+     "T00": 292.44,
+     "T01": 290.15,
+     "T10": 293.29,
+     "T11": 291.97
+    },
+    "FF": {
+     "T00": 237.36,
+     "T01": 235.07,
+     "T10": 238.17,
+     "T11": 236.84
+    }
+   },
+   "in_band": false
+  },
+  {
+   "plan": "l0r_htree_2_2_4_4_4_s100",
+   "splits": [
+    2,
+    2,
+    4,
+    4,
+    4
+   ],
+   "stages": [
+    7
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_load": [
+    51,
+    52
+   ],
+   "TT": {
+    "mean": 261.5,
+    "leaf_mean_min": 235.74,
+    "leaf_mean_max": 287.5,
+    "window": 51.76,
+    "sink_min": 234.68,
+    "sink_max": 294.28
+   },
+   "FF": {
+    "mean": 216.07,
+    "leaf_mean_min": 191.17,
+    "leaf_mean_max": 241.67,
+    "window": 50.51,
+    "sink_min": 190.02,
+    "sink_max": 248.89
+   },
+   "leg_mean": {
+    "TT": {
+     "T00": 274.47,
+     "T01": 264.25,
+     "T10": 254.02,
+     "T11": 253.26
+    },
+    "FF": {
+     "T00": 228.48,
+     "T01": 218.39,
+     "T10": 209.17,
+     "T11": 208.28
+    }
+   },
+   "in_band": false
+  },
+  {
+   "plan": "l0r_htree_2_2_4_4_8",
+   "splits": [
+    2,
+    2,
+    4,
+    4,
+    8
+   ],
+   "stages": [
+    9
+   ],
+   "repeaters_per_edge": [
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   "leaf_load": [
+    25,
+    26
+   ],
+   "TT": {
+    "mean": 296.1,
+    "leaf_mean_min": 280.38,
+    "leaf_mean_max": 312.87,
+    "window": 32.49,
+    "sink_min": 280.27,
+    "sink_max": 314.6
+   },
+   "FF": {
+    "mean": 241.19,
+    "leaf_mean_min": 225.26,
+    "leaf_mean_max": 257.77,
+    "window": 32.5,
+    "sink_min": 225.14,
+    "sink_max": 259.6
+   },
+   "leg_mean": {
+    "TT": {
+     "T00": 295.47,
+     "T01": 293.67,
+     "T10": 298.53,
+     "T11": 296.76
+    },
+    "FF": {
+     "T00": 240.62,
+     "T01": 238.76,
+     "T10": 243.62,
+     "T11": 241.78
+    }
+   },
+   "in_band": false
+  },
+  {
+   "plan": "l0r_htree_2_2_4_8",
+   "splits": [
+    2,
+    2,
+    4,
+    8
+   ],
+   "stages": [
+    8
+   ],
+   "repeaters_per_edge": [
+    1,
+    0,
+    1,
+    0
+   ],
+   "leaf_load": [
+    103,
+    104
+   ],
+   "TT": {
+    "mean": 287.33,
+    "leaf_mean_min": 278.07,
+    "leaf_mean_max": 336.78,
+    "window": 58.71,
+    "sink_min": 274.0,
+    "sink_max": 357.84
+   },
+   "FF": {
+    "mean": 236.72,
+    "leaf_mean_min": 227.5,
+    "leaf_mean_max": 288.14,
+    "window": 60.64,
+    "sink_min": 223.54,
+    "sink_max": 310.41
+   },
+   "leg_mean": {
+    "TT": {
+     "T00": 286.52,
+     "T01": 285.31,
+     "T10": 289.3,
+     "T11": 288.17
+    },
+    "FF": {
+     "T00": 235.93,
+     "T01": 234.76,
+     "T10": 238.6,
+     "T11": 237.57
+    }
+   },
+   "in_band": false
+  },
+  {
+   "plan": "l0r_htree_2_2_8_8",
+   "splits": [
+    2,
+    2,
+    8,
+    8
+   ],
+   "stages": [
+    9
+   ],
+   "repeaters_per_edge": [
+    1,
+    1,
+    1,
+    0
+   ],
+   "leaf_load": [
+    51,
+    52
+   ],
+   "TT": {
+    "mean": 301.96,
+    "leaf_mean_min": 296.56,
+    "leaf_mean_max": 313.64,
+    "window": 17.08,
+    "sink_min": 293.72,
+    "sink_max": 315.52
+   },
+   "FF": {
+    "mean": 246.32,
+    "leaf_mean_min": 241.33,
+    "leaf_mean_max": 257.24,
+    "window": 15.91,
+    "sink_min": 237.33,
+    "sink_max": 260.16
+   },
+   "leg_mean": {
+    "TT": {
+     "T00": 301.5,
+     "T01": 300.78,
+     "T10": 303.35,
+     "T11": 302.2
+    },
+    "FF": {
+     "T00": 245.9,
+     "T01": 245.2,
+     "T10": 247.62,
+     "T11": 246.56
+    }
+   },
+   "in_band": false
+  },
+  {
+   "plan": "l0r_htree_2_2_8_8_s100",
+   "splits": [
+    2,
+    2,
+    8,
+    8
+   ],
+   "stages": [
+    6
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_load": [
+    51,
+    52
+   ],
+   "TT": {
+    "mean": 269.73,
+    "leaf_mean_min": 238.78,
+    "leaf_mean_max": 299.71,
+    "window": 60.93,
+    "sink_min": 237.58,
+    "sink_max": 302.33
+   },
+   "FF": {
+    "mean": 228.96,
+    "leaf_mean_min": 199.16,
+    "leaf_mean_max": 257.15,
+    "window": 57.99,
+    "sink_min": 197.55,
+    "sink_max": 260.57
+   },
+   "leg_mean": {
+    "TT": {
+     "T00": 276.07,
+     "T01": 268.17,
+     "T10": 269.21,
+     "T11": 265.51
+    },
+    "FF": {
+     "T00": 234.88,
+     "T01": 227.38,
+     "T10": 228.63,
+     "T11": 224.97
+    }
+   },
+   "in_band": false
+  }
+ ],
+ "su_kit_gate_k4": {
+  "verdict": "FAIL",
+  "gates": {
+   "G1_macro_orient": "PASS",
+   "G2_island_rows": "PASS",
+   "G3_cell_rows": "PASS",
+   "G4_detour_sites": "PASS",
+   "G5_sram_structure": "FAIL",
+   "P_asbuilt": "FAIL"
+  },
+  "P_asbuilt": {
+   "verdict": "FAIL",
+   "TT": {
+    "mean_raw": 262.26,
+    "mean": 264.16,
+    "min": 247.61,
+    "max": 291.14,
+    "window": 43.53
+   },
+   "FF": {
+    "mean_raw": 211.39,
+    "mean": 206.29,
+    "min": 198.52,
+    "max": 239.63,
+    "window": 41.11
+   },
+   "FF_early": {
+    "mean_raw": 209.29,
+    "mean": 204.19,
+    "min": 196.26,
+    "max": 237.68,
+    "window": 41.42
+   },
+   "FF_late": {
+    "mean_raw": 211.27,
+    "mean": 206.17,
+    "min": 198.85,
+    "max": 239.28,
+    "window": 40.43
+   },
+   "TT_early": {
+    "mean_raw": 258.35,
+    "mean": 260.25,
+    "min": 243.32,
+    "max": 287.63,
+    "window": 44.31
+   },
+   "TT_late": {
+    "mean_raw": 261.46,
+    "mean": 263.36,
+    "min": 247.8,
+    "max": 289.8,
+    "window": 41.99
+   },
+   "band": "TT mean 250 +- 20 (rise/fall-average model), TT window <= 20, FF EARLY window <= 20"
+  }
+ },
+ "build": "NOT STARTED: no plan in 250+-20 / window<=20 (12.9d)"
+}
