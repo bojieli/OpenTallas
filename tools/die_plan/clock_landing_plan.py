@@ -261,9 +261,9 @@ def _storage_band(t,bus,width,used,*,has_epoch=True):
         # S81 svc has hundreds of such edges; the unfiltered product dominates
         # the compose although every far-away box is immediately rejected.
         reach=405-2.16
-        xs=[x for x in xs if margin<=x<=w-margin-bw and
+        xs=[x for x in xs if x>=margin and x+bw<=w-margin and
             max(abs(x-px),abs(x+bw-px))<=reach]
-        ys=[y for y in ys if margin<=y<=h-margin-bh and
+        ys=[y for y in ys if y>=margin and y+bh<=h-margin and
             max(abs(y-py),abs(y+bh-py))<=reach]
         for x0 in xs:
             for y0 in ys:
