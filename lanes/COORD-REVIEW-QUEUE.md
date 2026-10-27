@@ -1690,3 +1690,4 @@ Successor QC-SU-F4E: collect the F4D kits, (a), (b), and F4A vmr post-hold DRT.
 - hd_host: derive job-active/armed, the 1104-bit rings and the compiled dates from the existing dsdv_hostb_stage_hbc contract on the S81 dies (same function). Add whatever the plan lacks through a plan delta.
 - Observers (task 3): a fault-state input plus the start gate, as suggested.
 HEAD-RTL-2 writes a contract note FIRST (one page in lanes/HEAD-RTL.md), then the RTL plus benches; the port-bind check must reach 0. Release blocker.
+[COORD 2026-10-26 19:35 PDT] APPROVED claude/s81-core-lat-r10-1026@dd3dfa0026 (core_infra band_policy info, opt-in, default byte-identical; 4 tests). Handed to ROOT-MERGE-25. Collect: the l0r std (intel2 oth-ubuntu-2495395) and dw (intel1 oth-ubuntu-2121809) builds via bin/collect_r10.sh once 5_1_grt.odb exists (~21:00), then go to MODEL-REFIT. COORD starts the collector lane at the next drive.
