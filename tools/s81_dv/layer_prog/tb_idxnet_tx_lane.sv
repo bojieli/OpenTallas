@@ -8,17 +8,17 @@ reg rn=0;reg[275:0]vi=0,vo=0;wire[275:0]lo;wire[15:0]st;
 wire[275:0]reflo;wire[15:0]refst;
 dsdv_idx_tx_n32 #(.D(8192),.IB(64),.SRAM_MACRO(1))refdut(.ck(ck),.rst(rn),.vi(vi),.vo(vo),.lo(reflo),.st(refst));
 dsdv_idx_tx_n32 #(.PHYS_LANE(2),.MUT(`TX_LANE_MUTANT),.D(8192),.IB(64),.SRAM_MACRO(1))dut(.ck(ck),.rst(rn),.vi(vi),.vo(vo),.lo(lo),.st(st));
-integer cycle=0,poison=0,lane=2,headers=0,beats=0;reg[275:0]a;reg[185:0]p;reg[511:0]w;
+integer cycle=0,poison=0,lane=2,dst=1,headers=0,beats=0;reg[275:0]a;reg[185:0]p;reg[511:0]w;
 always@(posedge ck)begin
  #0.001;cycle++;
  if(rn)begin
   if((lo & ~(276'd3<<4)) !== (reflo & ~(276'd3<<4)) || st !== refst)$fatal(1,"TX_LANE_LOCKSTEP cycle%0d",cycle);
-  if(lo[0] && lo[5:4] !== 2'd2)$fatal(1,"TX_PHYSICAL_LANE cycle%0d got%0d",cycle,lo[5:4]);
+  if(lo[0] && lo[5:4] !== (dst==1||dst==2 ? 2'd2 : 2'(lane)))$fatal(1,"TX_PHYSICAL_LANE cycle%0d got%0d",cycle,lo[5:4]);
  end
  if(lo[0])begin
   if(lo[7]&&lo[19:16]==1)begin
    headers++;$display("IDXNET_TX_HEADER physical_lane%0d quarter%0d",lo[5:4],lo[51:50]);
-   if(lo[5:4]!==2'd2||lo[51:50]!==2'(lane))$fatal(1,"TX lane/qslot encoding unexpected");
+   if(lo[5:4] !== (dst==1||dst==2 ? 2'd2 : 2'(lane))||lo[51:50]!==2'(lane))$fatal(1,"TX lane/qslot encoding unexpected");
   end
   if(!lo[6]&&!lo[7]&&lo[19:16]==2)begin
    beats++;
@@ -44,10 +44,11 @@ end endtask
 initial begin
  if($value$plusargs("POISON=%d",poison))begin end
  if($value$plusargs("LANE=%d",lane))begin end
+ if($value$plusargs("DST=%d",dst))begin end
  idle(8);rn=1;idle(20);
  scores(0,16'h3f80,8'h11,0);
  if(poison)scores(131072,16'h4000,8'h22,1);
- p=0;p[7:0]=8'h5c;p[10:8]=2;p[20:16]=8;p[22:21]=2'(lane);p[30:23]=8'h77;p[40:31]=16;p[60:41]=0;p[68:61]=8'h45;p[84:69]=80;p[87:85]=4;p[99:88]=100;
+ p=0;p[101:100]=2'(dst);p[7:0]=8'h5c;p[10:8]=2;p[20:16]=8;p[22:21]=2'(lane);p[30:23]=8'h77;p[40:31]=16;p[60:41]=0;p[68:61]=8'h45;p[84:69]=80;p[87:85]=4;p[99:88]=100;
  a=0;a[0]=1;a[21+:186]=p;drive(0,a);idle(8);
  w=0;w[511:508]=3;w[507:500]=8'h45;w[335:320]=16'hffff;
  for(integer j=0;j<16;j++)w[20*j+:20]=20'(j);packet(w);

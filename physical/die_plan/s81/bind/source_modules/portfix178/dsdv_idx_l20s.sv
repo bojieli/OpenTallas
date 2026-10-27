@@ -380,7 +380,7 @@ endmodule
 // ===================================================================================================================
 module dsdv_idx_tx_n32 #(
     parameter integer V = 276,
-    parameter integer PHYS_LANE = -1, // -1 legacy: physical lane = HDR qslot; explicit TP lane leaves HDR identity intact
+    parameter integer PHYS_LANE = -1, // -1 legacy: physical lane = HDR qslot; override only CTL dst1/2, never tree dst0
     parameter integer IK = 4,
     parameter integer EK = 5,
     parameter integer UID = 8'h5C,
@@ -503,9 +503,9 @@ module dsdv_idx_tx_n32 #(
     wire         o_v  = vo_r[0];
     wire [185:0] cp   = vo_r[21 +: 186];
     wire         o_eg = o_v && vo_r[3:1] == 3'(EK);
-    reg  [1:0]  j_l; reg [7:0] j_pt, j_ot; reg [9:0] j_k; reg [19:0] j_hb; reg [15:0] j_dly; reg [2:0] j_r; reg [11:0] j_sm;
+    reg  [1:0] j_dst; reg  [1:0]  j_l; reg [7:0] j_pt, j_ot; reg [9:0] j_k; reg [19:0] j_hb; reg [15:0] j_dly; reg [2:0] j_r; reg [11:0] j_sm;
     always @(posedge ck) begin
-        if(okk[0])begin j_l<=cp[22:21];j_pt<=cp[30:23];end
+        if(okk[0])begin j_l<=cp[22:21];j_pt<=cp[30:23];j_dst<=cp[101:100];end
         if(okk[1])begin j_k<=cp[40:31];j_r<=cp[87:85];end
         if(okk[2])j_hb[9:0]<=cp[50:41];
         if(okk[3])j_hb[19:10]<=cp[60:51];
@@ -817,7 +817,7 @@ module dsdv_idx_tx_n32 #(
             s_b0 <= nx_pop && nx_isb0; s_b1 <= nx_pop && nx_isb1; s_h <= nx_pop && nx_d_h; s_p <= nx_pop;
             lo[0] <= s_p;
         end
-    wire [1:0] physical_lane = (PHYS_LANE < 0 || MUT == 6) ? j_l : 2'(PHYS_LANE);
+    wire [1:0] physical_lane = (PHYS_LANE < 0 || MUT == 6 || (j_dst != 2'd1 && j_dst != 2'd2)) ? j_l : 2'(PHYS_LANE);
     wire s_h_data;
     dsdv_tx_copy #(.W(1),.RESET(1),.ID(5000))u_shd(.ck(ck),.rn(rl[3]),.d(nx_pop&&nx_d_h),.q(s_h_data));
     wire [255:0] wmk0 = wscb[0] & lvmask(wlvb[0]), wmk1 = wscb[1] & lvmask(wlvb[1]);   // stale fields masked
