@@ -9,3 +9,5 @@ Sys_c 18 structured taps in3rows replace6bottom taps, reset release7->9 (+2 BOOT
 PG39 preserved-axis static mesh build closes unplaced and shield ties, but measured canonical IR50.596mV FAIL35. Grid remains UNADOPTED; root prohibited another PSM pending phase diagnosis. Current sys_SDx6 physical provider inventory/real footprint/1043ps clock+CDC fit delegated FLOW sta_pg with TOK; no old S81/morning modeled view adoption.
 
 trunk_model_audit.json inventories actual R9/R10 .20ps/um consumers and sensitivity only; no universal .50 replacement or timing closure claim.
+
+Follow-up schema correction: removed own descriptive clock.note key only; G0 rejects that undocumented key. Candidate geometry unchanged and active coupon inputs preserved. Current combined candidate carries S1/sys_c plus split FT26/FT6, with coupons and PG still held.

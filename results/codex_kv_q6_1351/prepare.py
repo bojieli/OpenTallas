@@ -13,7 +13,7 @@ while True:
 out=copy.deepcopy(raw);ports={p['id']:p for p in out['ports']};ledger=[]
 for pid in sorted(selected):
  p=ports[pid];a,b=p['window_um'];c=(a+b)/2;before=p['window_um'];p['window_um']=[round(c-64,6),round(c+64,6)];ledger.append(dict(port=pid,old=before,new=p['window_um'],reason='Q5 .75GRT 1056-bit entry band overflows; spread registered pins across128um, common replicated-type closure'))
-t=out['partition_types']['kv3_sys_c'];before=S.tap_grid(P,'kv3_sys_c');t['clock'].pop('tap_edge_y_um',None);t['clock']['note']='Q6: remove bottom-only core clock row; shared structured2D tap grid prunes actual macro keepouts, same250ps insertion target.'
+t=out['partition_types']['kv3_sys_c'];before=S.tap_grid(P,'kv3_sys_c');t['clock'].pop('tap_edge_y_um',None)
 Q=S.Plan(out,src);after=S.tap_grid(Q,'kv3_sys_c')
 (R/'q6_window_tap_delta.json').write_text(json.dumps(dict(source_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),ports=ledger,type_bus_closure=sorted(keys),sys_c_taps_before=before,sys_c_taps_after=after,cycles_added=0),indent=1)+'\n')
 (R/'pd/hm_r26q6_windows.json').write_text(json.dumps(out,indent=1)+'\n');print('ports',len(selected),'types',len({k[0] for k in keys}),'sysc',before,after)
