@@ -261,7 +261,8 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
 def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None):
     """CLK-AOCV (METHODOLOGY 12.4a b1, DRAFT, opt-in): per pair clock OCV pessimism on the branches below the last
     common node.  Needs per-tap 'stages_from_root' + 'xy_um' and per-node meta 'node_stages' / 'node_xy_um' plus the
-    node arrivals 'spine_late' / 'spine_early' in tap_arrivals_<C>.json (fold export); refuses when they are missing.
+    node arrivals 'node_late_ps' / 'node_early_ps' in tap_arrivals_<C>.json (CLOCK-128-R7 --aocv-fold export names;
+    CLOCK-128-R8); refuses when they are missing.
     Branch = tap arrival - node arrival (+ declared core latency, class-B stages), cell share from the table (class A
     die stage) unless cell_share is given.  mode 'flat' = die_ci_margins.json cell/net derates, 'table' = clk_aocv.
     droop 'stated' = +5.1 % late on the late branch always; 'shared' = 0 when both taps share a region (cppr_node
@@ -270,7 +271,7 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     here = Path(__file__).resolve().parent
     T = CA.load(table_path or here / "clk_aocv_table.json")
     m = json.loads(Path(margins_path or here / "die_ci_margins.json").read_text())
-    need = [k for k in ("node_stages", "node_xy_um", "spine_late", "spine_early") if k not in meta]
+    need = [k for k in ("node_stages", "node_xy_um", "node_late_ps", "node_early_ps") if k not in meta]
     tneed = sum(1 for r in taps.values() if "stages_from_root" not in r or "xy_um" not in r)
     if need or tneed:
         raise SystemExit(f"--clock-ocv {mode}: tap_arrivals lacks {need} / {tneed} taps without stages_from_root+xy_um "
@@ -281,7 +282,7 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     nB = max(1, round(core_lat / B["mu_stage_ps"]))
 
     def branch(r, node, late):
-        arr = (r["late_ps"] if late else r["early_ps"]) - float(meta["spine_late" if late else "spine_early"][node])
+        arr = (r["late_ps"] if late else r["early_ps"]) - float(meta["node_late_ps" if late else "node_early_ps"][node])
         return dict(cell_ps=fc * arr + B["cell_share"] * core_lat, net_ps=(1 - fc) * arr + (1 - B["cell_share"]) * core_lat,
                     stages={"A": int(r["stages_from_root"]) - int(meta["node_stages"][node]), "B": nB})
 
