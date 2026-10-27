@@ -1,0 +1,7 @@
+XS3 macro/channel MODEL paused on parent priority switch to compact EP clock plan, 2026-10-27 about09:32 PDT.
+No fresh kit, CTS, STA or P&R; no completed macro plan/render/verdict yet.
+Actual native XS3 mapped JSON: mapped.json; flattened analysis JSON: flat.json (70MB, alias-preserving Yosys flatten; job699854 exit0). Original mapped source readonly at codex-hbm-native-capacity-0835/hnx_xs3.
+LEF SRAM128x256 width94.824 height41.064; actual12instances u_leaf.g_ln[0..2].g_xm[0..3].u_x.
+Outline561.6x289.44; clock centre280.824,144.72. Parent native pin model at codex-hbm-cores-0815/results/codex_hbm_cores_0815/native_sm_pin_models/hnx_xs3.json.
+Native source already has per-macro posedge kreg -> negedge lockup -> SRAM; read capture ix E4 (no extra stages). Bank3 only20payloadbits live; upper236 write/mask constant0/read unused. W-face live RD256 +WD137+addresses/controls; E-face WD119+WM256 (repair pins constant). Use actual mapped adjacency rather than all819physicalpins as live demand.
+NEXT: extract actual macro pin->launch/capture FF adjacency from flat.json; solve macro positions/orients with clear4.32halos and centreclock island, place existingFF anchors<=20umF6, demand/channel census<=0.6, register reach405. Render/view onlyMODEL before any kit/route. A tentative3columnx4row grid and bank-wise R0/MY orientations was considered mentally, not committed as a plan.
