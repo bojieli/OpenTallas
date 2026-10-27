@@ -1425,3 +1425,5 @@ CODEX: 2026-10-27 09:23 PDT ROOT-priority thinLEC7b97aa307 on mainf108 only: pro
 CODEX: 2026-10-27 09:23 PDT RM53 main b61dbfa6d4 == origin/main; HBM RX iterator fix + SAT-reproved ctlx/VMS hints, positives/mutants PASS; diagnostic scope only, 0 deletions.
 
 CODEX: 2026-10-27 09:23 PDT HBM cores: ctlxEQ42320/VMS107998 source gaps closed; nativeSM4hard hierarchy13children max84055,parent58218/38853,noaddededges;5placedG1/full582503pairs0>405,pretreeCOND/4pin6FAIL retained; HCcallerREADY3c51+2sourcejobs live; SK508tail/emit509 exact provider+5cycles, quartergeometry active.
+
+CODEX: 2026-10-27 09:27 PDT LEC phase-resume cache audit: existing receipts lack original netlist/tool/input identities; no safe general reuse, no proof skipped. LEC owner concurs; identical-write speedup remains separate.
