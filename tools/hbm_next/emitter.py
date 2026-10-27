@@ -55,6 +55,7 @@ import static_check as SC  # noqa: E402
 VW, VO = SC.VM_WORDS, SC.VM_OFF
 SLOT_OFF = 1 << 28
 ALIGN = 8
+NATIVE_FUSED_ALIGN = False
 HPRE = ((0, 20480), (40960, 40964))
 PINNED = list(HPRE)     # pinned row arrays at fixed addresses: h / PRE + (whole token) the carried values
 VM_GROWN = VW + 5 * 30000
@@ -393,6 +394,41 @@ def build_objects(vals, uf, n_rows):
     return objs, comp2obj
 
 
+def constrain_fused_objects(seg,s,objs,c2o,uf,opmap):
+    """Constrain actual value objects, so writers and every reader share alignment.
+
+    Padding applies to object rows before placement. Incompatible offsets inside
+    one object are refused; no consumer-only pointer fix is permitted.
+    """
+    count=0
+    for i,(k,L,_) in enumerate(s['ex']):
+        r=seg[k]
+        op=getattr(r,'orig_op',f'{r.unit}.{r.op}')
+        if op not in ('FUSED.HC_PRE_NORM','FUSED.HC_POST'):continue
+        for operand in 'ABO':
+            d=r.desc.get(operand)
+            if d is None or d.space!='VM':continue
+            for (ix,key,cp),value in opmap.items():
+                if ix!=i or key!=operand:continue
+                oi,row=c2o[uf.f(value)];o=objs[oi]
+                phase=(-amap(o,d.base))%256
+                if 'base_phase' in o and o['base_phase']!=phase:
+                    raise ValueError(f'FUSED object phase conflict {op}.{operand}: {o["base_phase"]} vs {phase}')
+                o['base_align']=256;o['base_phase']=phase
+                if o['rows']>1:
+                    if o['kind']=='pinned_column' and o['size']%256:
+                        raise ValueError('pinned FUSED stride needs a revised token-wide layout')
+                    o['size']=-(-o['size']//256)*256
+                    o['stride']=o['size']
+                count+=1
+    return count
+
+
+def _aligned_base(a,o):
+    align=o.get('base_align',1);phase=o.get('base_phase',0)
+    return a+(phase-a)%align
+
+
 def _need(o):
     return o["size"] * max(1, o["rows"]) if o["kind"] != "pinned_column" else o["rows"] * o["stride"]
 
@@ -431,11 +467,11 @@ def _first_fit_by_time(objs, floor):
                        key=lambda no: (no[1]["t0"], -no[1]["size"])):
         live = [x for x in live if x[0] > o["t0"]]
         need = _need(o)
-        a = floor
+        a = _aligned_base(floor,o)
         for b0, b1 in sorted((b, b + s_) for _, b, s_ in live):
             if a + need <= b0:
                 break
-            a = max(a, b1)
+            a = _aligned_base(max(a,b1),o)
         out[n] = a
         live.append((o["t1"], a, need))
         hw = max(hw, a + need)
@@ -451,11 +487,11 @@ def _greedy_by_size(objs, floor):
     for n in order:
         o, need = objs[n], _need(objs[n])
         occ = sorted((b, b + s_) for (t0, t1, b, s_) in placed if t0 < o["t1"] and o["t0"] < t1)
-        best, a = None, floor
+        best, a = None, _aligned_base(floor,o)
         for b0, b1 in occ:
             if b0 - a >= need and (best is None or b0 - a < best[1]):
                 best = (a, b0 - a)
-            a = max(a, b1)
+            a = _aligned_base(max(a,b1),o)
         base = best[0] if best else a
         out[n] = base
         placed.append((o["t0"], o["t1"], base, need))
@@ -526,6 +562,8 @@ def pinned_layout(n_rows):
     in every segment, whether or not the segment touches it) -> ({lo: base}, floor words)"""
     addr, out = 0, {}
     for lo, hi in sorted(PINNED):
+        if NATIVE_FUSED_ALIGN and hi-lo>=5120 and (hi-lo)%256==0:
+            addr=-(-addr//256)*256
         out[lo] = addr
         addr += n_rows * (-(-(hi - lo) // ALIGN) * ALIGN)
     return out, addr
@@ -539,6 +577,9 @@ def place(objs, pinmap=None):
     for o in sorted([o for o in objs if o["kind"] == "pinned_column"], key=lambda o: o["lo"]):
         o["base"] = addr if pinmap is None else pinmap[0][o["lo"]]
         addr += _need(o)
+    for o in objs:
+        if o["kind"]=="pinned_column" and o["base"]!=_aligned_base(o["base"],o):
+            raise ValueError("pinned FUSED object requires a token-wide aligned base")
     floor = addr if pinmap is None else pinmap[1]
     tries = dict(first_fit_by_time=_first_fit_by_time(objs, floor), greedy_by_size=_greedy_by_size(objs, floor))
     meth = min(tries, key=lambda k: tries[k][0])
@@ -960,7 +1001,7 @@ def emit_segment(seg, s, dyn, objs, comp2obj, uf, opmap, n_rows, se=None):
         rec.unit, rec.op = r0.orig_op.split(".") if getattr(r0, "orig_op", "") else (r0.unit, r0.op)
         rs, omap = {}, {}
         ok = True
-        relocate = n_rows > 1
+        relocate = n_rows > 1 or NATIVE_FUSED_ALIGN
         for opk in (desc_ivs(r0, dyn, L) if relocate else ()):
             cps = sorted(cps_of.get((i, opk), ()))
             if not cps:
@@ -1174,6 +1215,7 @@ def main():
     ap.add_argument("--mode", default="mtp", choices=("mtp", "ar", "mu"))
     ap.add_argument("--layers", default="0,1")
     ap.add_argument("--P", type=int, default=3)      # owner 0le 10-19: next die P = 3
+    ap.add_argument("--fused-align",action="store_true",help="opt-in: align actual FUSED A/B/O value objects and row strides before placement")
     ap.add_argument("--legacy", action="store_true", help="step-3 behaviour (union records skipped, no ATT plan)")
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--N", type=int, default=0, help="rows (mu: users 1..4; default mtp 6 / mu 4 / ar 1)")
@@ -1181,6 +1223,8 @@ def main():
                     help="step 5: every segment + the head, ONE VM map (common aux base = the largest high-water mark), "
                          "assembled into one whole-token image with the head tail (TOKX / ACCEPT / END)")
     a = ap.parse_args()
+    global NATIVE_FUSED_ALIGN
+    NATIVE_FUSED_ALIGN=a.fused_align
     from hgi_sim import hbm_plane_model as M
     from hgi_sim import ds_native_timing as DT
     from hgi_sim import timing as T
@@ -1224,6 +1268,7 @@ def main():
         joins = () if (a.legacy or N == 1) else union_join_families(seg, s, skip)
         vals, uf, opmap, seg_end = values(seg, s, fps, dyn, skip, joins)
         objs, comp2obj = build_objects(vals, uf, N)
+        if a.fused_align:constrain_fused_objects(seg,s,objs,comp2obj,uf,opmap)
         pl = place(objs, pinmap)
         pl["pinned_bases"] = {str(o["lo"]): o["base"] for o in objs if o["kind"] == "pinned_column"}
         se = None
