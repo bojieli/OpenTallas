@@ -1,0 +1,48 @@
+{
+ "argv": [
+  "head_tree_plan.py",
+  "geo/elemB_r6.geo",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r6-1026/pw/w_4844_b0",
+  "--entry",
+  "142.56,142.56",
+  "--seg",
+  "1000",
+  "--fanouts",
+  "4,8,4,4",
+  "--balance",
+  "0"
+ ],
+ "geo_sha256": "84e5167c0c74caa37720c3bc51dc8eb25e87bdb144afdc686c9315265caca2d1",
+ "entry": [
+  142.56,
+  142.56
+ ],
+ "n_sinks": 25981,
+ "n_leaves": 512,
+ "leaf_sinks": [
+  50,
+  51
+ ],
+ "n_tree": 164,
+ "n_rep": 0,
+ "macros": [
+  [
+   "u_m.u_rom0",
+   "N1_7_3_2",
+   [
+    135.252,
+    207.34
+   ]
+  ],
+  [
+   "u_m.u_rom1",
+   "N3_7_3_3",
+   [
+    269.172,
+    207.34
+   ]
+  ]
+ ],
+ "l1": [],
+ "eq": []
+}
