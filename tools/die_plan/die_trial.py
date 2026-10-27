@@ -1101,7 +1101,8 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     band_layers, band_regs = band_region_adjust(P, dict(adjust).get("M4", 0.75))
     for L, a in adjust:
         t.append(f"set_global_routing_layer_adjustment {L} {0 if L in band_layers else a:g}")
-    t += ["global_route -congestion_iterations 50 -allow_congestion -verbose "
+    # KV-GRT-STALL 10-27: congestion-only die GRT, no timing-driven critical-net slack pass (see die_clock_mesh combo)
+    t += ["global_route -congestion_iterations 50 -critical_nets_percentage 0 -allow_congestion -verbose "
           "-congestion_report_file /work/grt/congestion.rpt",
           "puts \"OT_T grt [expr {[clock seconds]-$t0}]\"",
           "if {[catch {grt::report_layer_wire_lengths} e]} { puts \"OT_NO_LAYER_WL $e\" }",
