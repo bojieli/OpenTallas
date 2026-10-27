@@ -1,0 +1,30 @@
+{
+ "info": {
+  "mode": "base",
+  "r2_xs": 142,
+  "r2_ys": 170,
+  "drops": 16896
+ },
+ "corner": "TT",
+ "sigma": {
+  "vt_mV": 10.0,
+  "wire_rel": 0.05,
+  "tree_ps_per_stage": 2.0
+ },
+ "samples": [
+  {
+   "sample": 0,
+   "nodes": 149570,
+   "drivers": 6156,
+   "taps_attached": 377,
+   "c_total_pf": 2243.2,
+   "crossing_spread_ps": 157.294,
+   "part_tap_skew_ps": 43.455,
+   "drop_n": 0,
+   "drop_skew_ps": null,
+   "all_tap_skew_ps": 43.455,
+   "t_first": 68.583,
+   "t_last": 112.038
+  }
+ ]
+}

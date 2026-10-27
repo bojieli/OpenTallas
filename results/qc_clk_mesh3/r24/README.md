@@ -85,3 +85,45 @@ above the centre channel moves +8.64 um (centre gap 336.96 -> 345.60), x unchang
 3. Port kv_r18/mesh_mc18.py to the QC mesh with the ~20k A0 drop loads; then die_sta_related per endpoint; HB4 (per-endpoint) and
    launch-side latch in parallel, first to close wins.
 4. guard51 clock-alone DRC (west-column M9 VSS spacing class) and east-edge pin box.
+
+## 8. COORD 06:2x (GEOM-22) items -- R24b
+### (2) R17 DRC: 48 M9 Metal Spacing to VSS at the west-column centre rows -- ROOT CAUSE + STRUCTURAL FIX (generator)
+- Root cause: NOT the PG grid (the combo has no PG M9) and not the centre channel. Two different clock nets on M9 sit 2.80 um apart
+  (e.g. ckm_w_ckt_85_0 row-end leg x 2175.72 and the column trunk ckm_w_ckt_98_0 x 2178.52). Their drawn VSS shields (0.64 at +-1.14)
+  overlap and merge into one 1.16-um VSS shape. ASAP7 M9 SPACINGTABLE WIDTH 0.99975 at PRL >= 1.8 then needs 1.0 um, but both clock
+  metals are 0.50 um away. TrackRouter's R8 wide-merge check (`merged_width`) only counted PG stripes, not the drawn shields of other
+  clock nets.
+- Fix: `tools/die_plan/die_clock_128.py` TrackRouter.place now runs merged_width over self.ix, which holds PG plus every reserved
+  shape. Regression test `test_clock128_r8.py::test_wide_merge_counts_other_clock_nets_drawn_shields` fails without the fix and passes
+  with it; r8 5/5 and shield 11/11 tests pass.
+- guard51 dry build re-run with the fix ($S/dryfix/dry, 8.2 s, the same plan sha 37937a86): proxy check `wide_vss_check.py` gives
+  baseline 24 wide M9 VSS pairs / 48 metal violations (= the R17 count; columns x 2176, 4647, ...), fixed 0 / 0.
+  48 nets move by one 0.08-um track; tree wire 1562.338 -> 1562.348 mm; 120 M9:wide_merge_skip. UNCHECKED (NUMBER-CHECK-QC-R24c
+  running). A die DRC re-run on the fixed build is owed (combo + DRT DRC, >30 min).
+### (1) A0-CLK-R3b strap re-phase adopted in the R24 lattice + mesh RC with the 16,896 drop loads -- FAIL as specified
+- `r24_rephase.py` keeps the R23 straps outside the A0 field (channels, inter-row and centre bands) and every driver column. It
+  replaces every M9 over an A0 column and every M8 over an A0 row by the R3b drop straps. The W-column extension is included:
+  M9 from 1762.56 and M8 from 250.56..26066.88.
+- Result: 240 M9 (48 kept + 192 drop), 178 M8 (50 kept + 128 drop); 16,896/16,896 drops on M9xM8 crossings. Loads are 1 island
+  driver input each at the crossing, with stub 0.
+- Whole-die linear RC mesh (qc_clk_mesh2 netlist/solve, thev_r2, 6,156 drivers unchanged), TT nominal:
+| lattice | C_total pF | crossing spread ps | drop skew ps | in-core drop spread med/p90/max ps |
+|---|---|---|---|---|
+| R23 base (no drops attach: 0 crossings at islands) | 2243.2 | 157.29 | - | - |
+| re-phase (R3b) | 3081.8 | 363.96 | 336.41 | 63.3 / 149.3 / 217.1 |
+| keep R23 + add drop straps (R3b alt) | 4660.5 | 418.84 | 365.10 | 51.1 / 138.0 / 209.2 |
+- CAUSE (structural): (a) the 192 drop M9 straps lie inside the cores and run the full die height. They are fed only through M8
+  crossings from the channel driver columns. (b) The W column (x0 1650.24) has no driver column W of it (first one 2177.28), so its
+  4 drop straps are driven from 400 um away; the worst cores are c_W5_*_01/11. MC samples were not run because the nominal already
+  fails; droop is not re-run (mesh C +37 % -> switching current +37 % into the shared droop model).
+- NEXT (plan tool, 12.8 d1): re-plan the mesh drivers on the A0-commensurate lattice. Put drivers ON the drop straps: one driver
+  per drop M9 per A0 row band, fed from the tree like the R23 row drivers, plus a W-edge driver column at x 1650.24-8.64. Segment the
+  drop M9 straps per A0 row (no full-height interior straps). Then rerun this check with MC + droop.
+  Shared pieces: 0.5022 basis, thev, 377/960 partition taps attach (pre-existing in base too, needs the d51 tap snap).
+### (3) E-strip islands vs the A0 E pin face -- NOT CONFIRMED (geometry conflict)
+- R3b E strip EF0-5/EN1-2 centre x 452.0, footprint 447.68..456.32. The A0 E face is at 457.92, leaving a 1.60-um gap (not ~4 um).
+  A 4.32-um pin-access keep-off (the BTAB ruling value) needs centre <= 449.28, i.e. footprint 444.96..453.60. But NK hard children
+  reach x 441.936 + 5.4 halo = 447.34, so 8.64-um islands cannot meet both (6.26 um free). NL has room (435.456 + 5.4 = 440.86).
+- The A0 E-face pin y/layer list ("original y/layer values retained", Codex b7da9afaa) is not in a file I could find, so the pin-y
+  overlap with the 8 island y-bands is NOT CHECKED. Options for QC-CORES: E-strip islands 4.32 wide on NK; E halo 5.4 -> 2.16 for the
+  strip; or the pin plan keeps M4/M5 pins out of the 8 island y-windows (+-4.32 + spacing).

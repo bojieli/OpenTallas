@@ -799,8 +799,12 @@ class TrackRouter:
                 sh = seg_shapes(layer, c, a0, a1, net, self.nd, self.shield, ext=e)
                 if self.ix.hits(sh[0], first=True):
                     continue
+                # R24 (QC R17 DRC: 48 M9 spacing-to-VSS markers at the west-column centre rows): the merged VSS shape
+                # includes the DRAWN shields of other clock nets too (self.ix holds PG + every reserved shape), not only
+                # PG -- a leg shield overlapping a trunk shield 2.80 um away merged to 1.16 um (>= 0.99975 -> 1.0 um
+                # spacing row) while both clock metals sit 0.50 um from it
                 if self.wide_merge_um is not None and any(
-                        merged_width(self.pg, s, self.shield) >= self.wide_merge_um - 1e-9 for s in sh[1:]):
+                        merged_width(self.ix, s, self.shield) >= self.wide_merge_um - 1e-9 for s in sh[1:]):
                     self.modes[f"{layer}:wide_merge_skip"] += 1
                     continue
                 if not any(self.ix.hits(s, first=True) for s in sh[1:]):

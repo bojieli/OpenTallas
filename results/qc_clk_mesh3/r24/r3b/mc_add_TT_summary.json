@@ -1,0 +1,66 @@
+{
+ "info": {
+  "mode": "add",
+  "r2_xs": 142,
+  "r2_ys": 170,
+  "drops": 16896,
+  "kept_m9": 142,
+  "kept_m8": 170,
+  "drop_m9": 192,
+  "drop_m8": 128,
+  "m9": 334,
+  "m8": 298,
+  "removed_m9": 0,
+  "removed_m8": 0,
+  "driver_cols_over_a0": [],
+  "x_span": [
+   1762.56,
+   31207.68
+  ],
+  "y_span": [
+   250.56,
+   26066.88
+  ],
+  "r2_x_span": [
+   2177.28,
+   31207.68
+  ],
+  "r2_y_span": [
+   734.4000000000001,
+   25580.16
+  ],
+  "drops_on_crossing": 16896,
+  "mesh_m": {
+   "m9": 8622.65,
+   "m8": 8774.65
+  }
+ },
+ "corner": "TT",
+ "sigma": {
+  "vt_mV": 10.0,
+  "wire_rel": 0.05,
+  "tree_ps_per_stage": 2.0
+ },
+ "samples": [
+  {
+   "sample": 0,
+   "nodes": 321958,
+   "drivers": 6156,
+   "taps_attached": 17273,
+   "c_total_pf": 4660.5,
+   "crossing_spread_ps": 418.835,
+   "part_tap_skew_ps": 188.735,
+   "drop_n": 16896,
+   "drop_skew_ps": 365.101,
+   "all_tap_skew_ps": 412.55,
+   "t_first": 86.8,
+   "t_last": 499.351,
+   "in_core_drop_spread_ps": {
+    "n": 768,
+    "median": 51.084,
+    "p90": 137.971,
+    "max": 209.208
+   }
+  }
+ ]
+}
