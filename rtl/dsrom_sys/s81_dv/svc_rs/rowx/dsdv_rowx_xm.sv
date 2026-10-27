@@ -30,41 +30,53 @@
 //   [4] late (broadcast landing)  [5] ovf (broadcast)  [6] re-pair input off its booked cycle  [7] slot (broadcast).
 // Mutants (bench only): MUT 1 egress keeps the receiver's own halves; MUT 2 no overlap check; MUT 3 re-pair bank
 //   (dsdv_rowx_rp); MUT 4 egress keeps the padding slot of rank NR.
+//   MUT 5 (PK) broadcast unpack reuses the low slot of the beat for the high slot.
+// PK (cfg [62], S81-ROWX-3b 2026-10-26): LINK PACKING.  With PK = 1 every reduce / broadcast link carries one
+//   1,024-b beat = two consecutive slots {slot 2m + 1, slot 2m} every OTHER cycle (0.5 beats / cycle), i.e. one XB
+//   ring beat (1,024-b payload) every 2 cycles.  Why: both PK2 halves of a slot are 512 b; a slot a cycle as its own
+//   ring beat is 1 beat / cycle on the end-slice lep, whose UCIe lane pair carries only 0.764 beats / cycle (lep
+//   header: 456/596 x 1023/1024); packed, each half's stream needs 0.5 <= 0.764 on its OWN tier's end-slice lep
+//   (half 0 = tier S s_0S / s_7S, half 1 = tier N s_0N / s_7N), so the lane never backs up and the landing FIFO only
+//   absorbs jitter.  The transport never uses the pvrd leaf store (nw = 160 wrap) or the xr send (1 row pair / cycle):
+//   the re-pair stage holds its own 120 x 512-b staging with the bank-reuse proof in dsdv_rowx_rp.
+//   Reduce: the packed beat leaves one cycle after slot 2m + 1 (HOP + 1 vs PK = 0); the downstream stage pops a beat at
+//   its slot 2m and uses the high half (held in a register) at slot 2m + 1.  Broadcast: the beat is relayed upstream at
+//   the pop (slot 2m), unchanged.  NS and the 2,048 kept slots are even.  PK = 0 = the ROWX-3 behaviour (low 512 b).
 // Window order assumed identity (window k of a pass = tile HB*8 + k): the compiler books pvs_t = PV0 + 40 (t & 7).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_rowx_xm #(parameter integer MUT = 0, parameter integer D = 16) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          cfg_v,
-    input  wire [63:0]   cfg_d,          // [3:0] POS [4] head [5] tail [6] HB [22:7] XOFF [38:23] BC_OFF [50:39] NS [61:51] NR
+    input  wire [63:0]   cfg_d,          // [3:0] POS [4] head [5] tail [6] HB [22:7] XOFF [38:23] BC_OFF [50:39] NS [61:51] NR [62] PK
     input  wire          hdr_v,
     input  wire [511:0]  hdr_d,          // the ROWS PK2 header word for this half's ingress
     input  wire          go,
     input  wire          x_v,            // export words of this half (from the entry P.V lane / pvrd)
     input  wire [512:0]  x_d,
     input  wire          ri_v,           // reduce partial from POS - 1
-    input  wire [511:0]  ri_d,
+    input  wire [1023:0] ri_d,
     output reg           ro_v,           // reduce partial to POS + 1
-    output reg  [511:0]  ro_d,
+    output reg  [1023:0] ro_d,
     input  wire          bi_v,           // broadcast from POS + 1
-    input  wire [511:0]  bi_d,
+    input  wire [1023:0] bi_d,
     output reg           bo_v,           // broadcast to POS - 1
-    output reg  [511:0]  bo_d,
+    output reg  [1023:0] bo_d,
     output reg           e_v,            // to the svc entry q (ROWS PK2 frame)
     output reg  [511:0]  e_d,
     output wire          fault,
     output wire [7:0]    fcode
 );
     // ---------------------------------------------------------------- configuration (CFG-written, static per frame)
-    reg [3:0] pos; reg head, tail, hb; reg [15:0] xoff, bc_off; reg [11:0] ns; reg [10:0] nr; reg [511:0] hdr;
+    reg [3:0] pos; reg head, tail, hb; reg [15:0] xoff, bc_off; reg [11:0] ns; reg [10:0] nr; reg [511:0] hdr; reg pk;
     reg go_r;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin pos <= 0; head <= 0; tail <= 0; hb <= 0; xoff <= 16'd2; bc_off <= 16'd2; ns <= 12'd2240; nr <= 11'd512;
+        if (!rst_n) begin pos <= 0; head <= 0; tail <= 0; hb <= 0; xoff <= 16'd2; bc_off <= 16'd2; ns <= 12'd2240; nr <= 11'd512; pk <= 1'b0;
                           go_r <= 0; end
         else begin
             go_r <= go;
             if (cfg_v) begin pos <= cfg_d[3:0]; head <= cfg_d[4]; tail <= cfg_d[5]; hb <= cfg_d[6]; xoff <= cfg_d[22:7];
-                             bc_off <= cfg_d[38:23]; ns <= cfg_d[50:39]; nr <= cfg_d[61:51]; end
+                             bc_off <= cfg_d[38:23]; ns <= cfg_d[50:39]; nr <= cfg_d[61:51]; pk <= cfg_d[62]; end
         end
     always @(posedge clk) if (hdr_v) hdr <= hdr_d;
 
@@ -87,24 +99,29 @@ module dsdv_rowx_xm #(parameter integer MUT = 0, parameter integer D = 16) (
     endfunction
 
     // ---------------------------------------------------------------- (2) reduce
-    wire [511:0] rl_d; wire rl_late, rl_ovf;
-    dsdv_rowx_lc #(.W(512), .D(D)) u_lr (.clk(clk), .rst_n(rst_n), .i_v(ri_v && !head), .i_d(ri_d), .pop(o_v && !head),
-                                         .o_d(rl_d), .f_late(rl_late), .f_ovf(rl_ovf));
-    wire [511:0] rin = head ? 512'd0 : rl_d;
+    function automatic [255:0] stamp(input [255:0] h, input [3:0] p);
+        reg [255:0] x; x = h; if (h[0]) x[171:168] = p; stamp = x;
+    endfunction
+    wire [1023:0] rl_d; wire rl_late, rl_ovf;
+    reg rpar; reg [511:0] rh, rhold;                       // PK: slot parity, unpacked high half, packed low half
+    dsdv_rowx_lc #(.W(1024), .D(D)) u_lr (.clk(clk), .rst_n(rst_n), .i_v(ri_v && !head), .i_d(ri_d),
+                                          .pop(o_v && !head && !(pk && rpar)), .o_d(rl_d), .f_late(rl_late), .f_ovf(rl_ovf));
+    wire [511:0] rin = head ? 512'd0 : (pk && rpar) ? rh : rl_d[511:0];
+    wire [511:0] rcur = rin | {stamp(o_d[511:256], pos), stamp(o_d[255:0], pos)};
     reg [6:0] rn; reg [1:0] rq; reg [10:0] rrb;
     wire [10:0] er = srank(rrb, rn);
     wire [3:0] et0 = {hb, rq, 1'b0}, et1 = {hb, rq, 1'b1};
     reg f_ovl, f_slot, f_bslot;
-    function automatic [255:0] stamp(input [255:0] h, input [3:0] p);
-        reg [255:0] x; x = h; if (h[0]) x[171:168] = p; stamp = x;
-    endfunction
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin ro_v <= 0; ro_d <= 0; rn <= 0; rq <= 0; rrb <= 0; f_ovl <= 0; f_slot <= 0; end
+        if (!rst_n) begin ro_v <= 0; ro_d <= 0; rn <= 0; rq <= 0; rrb <= 0; f_ovl <= 0; f_slot <= 0; rpar <= 0; rh <= 0; rhold <= 0; end
         else begin
-            if (go_r) begin rn <= 0; rq <= 0; rrb <= 0; end
-            ro_v <= o_v;
+            if (go_r) begin rn <= 0; rq <= 0; rrb <= 0; rpar <= 0; end
+            ro_v <= o_v && (!pk || rpar);
             if (o_v) begin
-                ro_d <= rin | {stamp(o_d[511:256], pos), stamp(o_d[255:0], pos)};
+                if (!pk) ro_d <= {512'd0, rcur};
+                else if (!rpar) begin rhold <= rcur; if (!head) rh <= rl_d[1023:512]; end
+                else ro_d <= {rcur, rhold};
+                rpar <= ~rpar;
                 if (MUT != 2 && ((o_d[0] && rin[0]) || (o_d[256] && rin[256]))) f_ovl <= 1'b1;
                 if (bad(o_d[255:0], er, et0) || bad(o_d[511:256], er, et1) || bad(rin[255:0], er, et0) || bad(rin[511:256], er, et1))
                     f_slot <= 1'b1;
@@ -114,9 +131,12 @@ module dsdv_rowx_xm #(parameter integer MUT = 0, parameter integer D = 16) (
 
     // ---------------------------------------------------------------- (3) broadcast + (4) egress
     reg barm, bhdr, bact; reg [15:0] bd; reg [11:0] bcu; reg [6:0] bn; reg [1:0] bq; reg [10:0] brb;
-    wire [511:0] bl_d; wire bl_late, bl_ovf;
-    dsdv_rowx_lc #(.W(512), .D(D)) u_lb (.clk(clk), .rst_n(rst_n), .i_v(tail ? ro_v : bi_v), .i_d(tail ? ro_d : bi_d),
-                                         .pop(bact), .o_d(bl_d), .f_late(bl_late), .f_ovf(bl_ovf));
+    wire [1023:0] bl_d; wire bl_late, bl_ovf;
+    reg bpar; reg [511:0] bh;
+    wire bpop = bact && !(pk && bpar);
+    dsdv_rowx_lc #(.W(1024), .D(D)) u_lb (.clk(clk), .rst_n(rst_n), .i_v(tail ? ro_v : bi_v), .i_d(tail ? ro_d : bi_d),
+                                          .pop(bpop), .o_d(bl_d), .f_late(bl_late), .f_ovf(bl_ovf));
+    wire [511:0] bsl = (pk && bpar) ? bh : bl_d[511:0];   // this slot's word (unpacked)
     wire [10:0] eb = srank(brb, bn);
     wire keep = (MUT == 4) ? (eb <= nr) : (eb < nr);
     function automatic [255:0] filt(input [255:0] h, input [3:0] p);
@@ -125,18 +145,19 @@ module dsdv_rowx_xm #(parameter integer MUT = 0, parameter integer D = 16) (
     endfunction
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin barm <= 0; bhdr <= 0; bact <= 0; bd <= 0; bcu <= 0; bn <= 0; bq <= 0; brb <= 0; bo_v <= 0; bo_d <= 0;
-                          e_v <= 0; e_d <= 0; f_bslot <= 0; end
+                          e_v <= 0; e_d <= 0; f_bslot <= 0; bpar <= 0; bh <= 0; end
         else begin
             bhdr <= 1'b0;
             if (go_r) begin barm <= 1'b1; bd <= bc_off - 16'd2; end
             else if (barm) begin if (bd == 0) begin barm <= 1'b0; bhdr <= 1'b1; end else bd <= bd - 1'b1; end
-            if (bhdr) begin bact <= 1'b1; bcu <= 0; bn <= 0; bq <= 0; brb <= 0; end
-            bo_v <= bact; e_v <= bhdr || (bact && keep);
+            if (bhdr) begin bact <= 1'b1; bcu <= 0; bn <= 0; bq <= 0; brb <= 0; bpar <= 0; end
+            bo_v <= bpop; e_v <= bhdr || (bact && keep);
             if (bhdr) e_d <= hdr;
             if (bact) begin
-                bo_d <= bl_d;
-                e_d <= {filt(bl_d[511:256], pos), filt(bl_d[255:0], pos)};
-                if (bad(bl_d[255:0], eb, {hb, bq, 1'b0}) || bad(bl_d[511:256], eb, {hb, bq, 1'b1})) f_bslot <= 1'b1;
+                if (bpop) begin bo_d <= pk ? bl_d : {512'd0, bl_d[511:0]}; bh <= (MUT == 5) ? bl_d[511:0] : bl_d[1023:512]; end
+                bpar <= ~bpar;
+                e_d <= {filt(bsl[511:256], pos), filt(bsl[255:0], pos)};
+                if (bad(bsl[255:0], eb, {hb, bq, 1'b0}) || bad(bsl[511:256], eb, {hb, bq, 1'b1})) f_bslot <= 1'b1;
                 if (bn == 7'd79) begin bn <= 0; bq <= bq + 1'b1; if (bq == 2'd3) brb <= brb + 11'd80; end else bn <= bn + 1'b1;
                 bcu <= bcu + 1'b1;
                 if (bcu == ns - 12'd1) bact <= 1'b0;

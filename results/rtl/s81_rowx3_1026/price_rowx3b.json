@@ -1,0 +1,180 @@
+{
+ "floor": "OWNER 10-15: S81 MTP > 3,000 tok/s",
+ "options": [
+  {
+   "option": "ledger now (bench pair format 3809)",
+   "ingress_q_cycles": 3809,
+   "export_entry_cycles": 0,
+   "ar": {
+    "tok_s": 1259.6,
+    "loss_pct": 12.996
+   },
+   "mtp": {
+    "tok_s": 3655.3,
+    "loss_pct": 13.758
+   },
+   "ab_e2e_pct": 3.404,
+   "ar+export": {
+    "tok_s": 1259.6,
+    "loss_pct": 12.996
+   },
+   "mtp+export": {
+    "tok_s": 3655.3,
+    "loss_pct": 13.758
+   },
+   "ab_e2e_pct+export": 3.404,
+   "ledger_pct": 17.045,
+   "ledger_pct+export": 17.045
+  },
+  {
+   "option": "B=80 fallback (held list, NXW 40, 1 pass)",
+   "ingress_q_cycles": 4801,
+   "export_entry_cycles": 320,
+   "ar": {
+    "tok_s": 1249.2,
+    "loss_pct": 13.715
+   },
+   "mtp": {
+    "tok_s": 3621.1,
+    "loss_pct": 14.565
+   },
+   "ab_e2e_pct": 4.589,
+   "ar+export": {
+    "tok_s": 1245.9,
+    "loss_pct": 13.945
+   },
+   "mtp+export": {
+    "tok_s": 3610.2,
+    "loss_pct": 14.822
+   },
+   "ab_e2e_pct+export": 4.968999999999999,
+   "ledger_pct": 18.23,
+   "ledger_pct+export": 18.61
+  },
+  {
+   "option": "RO rank-order slots (NP 7 x NXW 40, XP 320), transport NOT counted (ROWX-2 row)",
+   "ingress_q_cycles": 2049,
+   "export_entry_cycles": 2240,
+   "ar": {
+    "tok_s": 1278.5,
+    "loss_pct": 11.691
+   },
+   "mtp": {
+    "tok_s": 3717.6,
+    "loss_pct": 12.288
+   },
+   "ab_e2e_pct": 1.263,
+   "ar+export": {
+    "tok_s": 1254.5,
+    "loss_pct": 13.346
+   },
+   "mtp+export": {
+    "tok_s": 3638.6,
+    "loss_pct": 14.15
+   },
+   "ab_e2e_pct+export": 3.979,
+   "ledger_pct": 14.904,
+   "ledger_pct+export": 17.62
+  },
+  {
+   "option": "RO + transport, 16 dies, 15 d2d hops L37 J4 (bench span 3614)",
+   "ingress_q_cycles": 3712,
+   "export_entry_cycles": 0,
+   "ar": {
+    "tok_s": 1260.6,
+    "loss_pct": 12.926
+   },
+   "mtp": {
+    "tok_s": 3658.6,
+    "loss_pct": 13.678
+   },
+   "ab_e2e_pct": 3.2880000000000003,
+   "ar+export": {
+    "tok_s": 1260.6,
+    "loss_pct": 12.926
+   },
+   "mtp+export": {
+    "tok_s": 3658.6,
+    "loss_pct": 13.678
+   },
+   "ab_e2e_pct+export": 3.2880000000000003,
+   "ledger_pct": 16.929,
+   "ledger_pct+export": 16.929
+  },
+  {
+   "option": "RO + transport, 4 dies x 4 stacks, 3 d2d L37 + 12 on-die L6 (bench span 2870)",
+   "ingress_q_cycles": 2968,
+   "export_entry_cycles": 0,
+   "ar": {
+    "tok_s": 1268.5,
+    "loss_pct": 12.378
+   },
+   "mtp": {
+    "tok_s": 3684.8,
+    "loss_pct": 13.062
+   },
+   "ab_e2e_pct": 2.386,
+   "ar+export": {
+    "tok_s": 1268.5,
+    "loss_pct": 12.378
+   },
+   "mtp+export": {
+    "tok_s": 3684.8,
+    "loss_pct": 13.062
+   },
+   "ab_e2e_pct+export": 2.386,
+   "ledger_pct": 16.027,
+   "ledger_pct+export": 16.027
+  },
+  {
+   "option": "RO + transport PK (ROWX-3b, 2 slots / beat, lanes capped 0.764), 16 dies L37 J4 (bench span 3629)",
+   "ingress_q_cycles": 3727,
+   "export_entry_cycles": 0,
+   "ar": {
+    "tok_s": 1260.5,
+    "loss_pct": 12.937
+   },
+   "mtp": {
+    "tok_s": 3658.1,
+    "loss_pct": 13.691
+   },
+   "ab_e2e_pct": 3.306,
+   "ar+export": {
+    "tok_s": 1260.5,
+    "loss_pct": 12.937
+   },
+   "mtp+export": {
+    "tok_s": 3658.1,
+    "loss_pct": 13.691
+   },
+   "ab_e2e_pct+export": 3.306,
+   "ledger_pct": 16.947,
+   "ledger_pct+export": 16.947
+  },
+  {
+   "option": "RO + transport, 16 dies, lane-capped 0.764 (UNCHECKED arithmetic)",
+   "ingress_q_cycles": 4397,
+   "export_entry_cycles": 0,
+   "ar": {
+    "tok_s": 1253.4,
+    "loss_pct": 13.424
+   },
+   "mtp": {
+    "tok_s": 3634.9,
+    "loss_pct": 14.238
+   },
+   "ab_e2e_pct": 4.109,
+   "ar+export": {
+    "tok_s": 1253.4,
+    "loss_pct": 13.424
+   },
+   "mtp+export": {
+    "tok_s": 3634.9,
+    "loss_pct": 14.238
+   },
+   "ab_e2e_pct+export": 4.109,
+   "ledger_pct": 17.75,
+   "ledger_pct+export": 17.75
+  }
+ ]
+}
