@@ -1,0 +1,704 @@
+{
+ "proof": "/srv/opentallas-scratch2/claude/qc-mesh-r18/run/f64_t0/sta_in",
+ "timed_dir": "/srv/opentallas-scratch2/claude/qc-mesh-r18/run/f64_t0/sta_in",
+ "plan": "/srv/opentallas-scratch2/claude/qc-mesh-r17/pkg/inputs/d43/plan_d43.json",
+ "period_ps": 833.333,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gate": "METHODOLOGY 12.4a v4.3: TT setup >= 0 and FF hold >= 0 on every related pair; CPPR at last common tree node (12.4b); skew = DIAGNOSTIC",
+ "block_model": {
+  "label": "declared-budget",
+  "core_latency_ps": {
+   "TT": 250.0,
+   "FF": 250.0
+  },
+  "cancels": "same declared latency both sides",
+  "core_tol_sensitivity_ps": 20.0,
+  "register": "DFFHQNx1_ASAP7_75t_R",
+  "seam_wire": {
+   "um": 40.0,
+   "ff_per_um": 0.15,
+   "applied": "setup only"
+  },
+  "kits_found": 0
+ },
+ "corners": {
+  "TT": {
+   "basis": "qc_clk_mesh3 solve nominal (legal geometry, feed periodic); per-pair MC+AOCV in pair_unc.json",
+   "tap_slew_max_ps": 201.01,
+   "register": {
+    "key": {
+     "corner": "TT",
+     "slew_ps": 201.006,
+     "load_ff": 6.0,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 107.63,
+    "clkq_min_nowire_ps": 76.112,
+    "setup_ps": 4.846,
+    "hold_ps": 37.372,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "intra": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "intra_cross_region": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "seam": {
+     "pairs": 997,
+     "worst_setup_slack_ps": 581.39,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "sl_E0_su_l1",
+      "capture": "c_E0_bn_00",
+      "where": "sl_E0_su_l1->c_E0_bn_00",
+      "clock_damage_ps": 17.1,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -65.73,
+     "hold_neg_pairs": 991,
+     "worst_hold": {
+      "launch": "c_E0_bn_00",
+      "capture": "sl_E0_su_l1",
+      "where": "c_E0_bn_00->sl_E0_su_l1",
+      "clock_damage_ps": 17.1,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 27.16,
+     "skew_diag_over_80": 0,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 541.39,
+      "worst_hold_slack_ps": -105.73
+     },
+     "worst_skew": [
+      [
+       27.16,
+       "coll_f5",
+       "coll_f4"
+      ],
+      [
+       27.16,
+       "coll_f4",
+       "coll_f5"
+      ],
+      [
+       26.19,
+       "sl_E1_stm",
+       "sl_E1_fw"
+      ],
+      [
+       26.19,
+       "sl_E1_fw",
+       "sl_E1_stm"
+      ],
+      [
+       26.03,
+       "sl_E1_st_a",
+       "sl_E1_ctl"
+      ]
+     ],
+     "clock_ocv_pessimism_max_ps": {
+      "setup": 62.81,
+      "hold": 62.81
+     },
+     "label": "declared-budget"
+    },
+    "landed": {
+     "pairs": 0,
+     "label": "declared-budget"
+    }
+   },
+   "clock_ocv": {
+    "mode": "pair-unc",
+    "file": "/srv/opentallas-scratch2/claude/qc-mesh-r18/run/f64_t0/sta_in/pair_unc.json",
+    "status": "UNCHECKED"
+   }
+  },
+  "FF": {
+   "basis": "qc_clk_mesh3 solve nominal (legal geometry, feed periodic); per-pair MC+AOCV in pair_unc.json",
+   "tap_slew_max_ps": 163.08,
+   "register": {
+    "key": {
+     "corner": "FF",
+     "slew_ps": 163.077,
+     "load_ff": 6.0,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 73.125,
+    "clkq_min_nowire_ps": 51.614,
+    "setup_ps": 3.914,
+    "hold_ps": 25.134,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "intra": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "intra_cross_region": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "seam": {
+     "pairs": 997,
+     "worst_setup_slack_ps": 635.13,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "sl_E0_su_l1",
+      "capture": "c_E0_bn_00",
+      "where": "sl_E0_su_l1->c_E0_bn_00",
+      "clock_damage_ps": 13.39,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -59.68,
+     "hold_neg_pairs": 997,
+     "worst_hold": {
+      "launch": "c_E0_bn_00",
+      "capture": "sl_E0_su_l1",
+      "where": "c_E0_bn_00->sl_E0_su_l1",
+      "clock_damage_ps": 13.39,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 22.46,
+     "skew_diag_over_80": 0,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 595.13,
+      "worst_hold_slack_ps": -99.68
+     },
+     "worst_skew": [
+      [
+       22.46,
+       "sl_E1_hc1",
+       "sl_E1_hc0"
+      ],
+      [
+       22.46,
+       "sl_E1_hc0",
+       "sl_E1_hc1"
+      ],
+      [
+       22.42,
+       "sl_E1_stm",
+       "sl_E1_fw"
+      ],
+      [
+       22.42,
+       "sl_E1_fw",
+       "sl_E1_stm"
+      ],
+      [
+       22.11,
+       "sl_E1_st_a",
+       "sl_E1_ctl"
+      ]
+     ],
+     "clock_ocv_pessimism_max_ps": {
+      "setup": 47.77,
+      "hold": 47.77
+     },
+     "kit_contract_hold": {
+      "window_ps": 40.0,
+      "basis": "legacy: receiver in_min -insertion_tol, sender out_min 0 (gen_phys.seam_hold)",
+      "worst_hold_bound_ps": 17.54,
+      "neg_pairs": 0,
+      "window_needed_ps": 22.46,
+      "worst": {
+       "launch": "sl_E1_hc0",
+       "capture": "sl_E1_hc1",
+       "where": "sl_E1_hc0->sl_E1_hc1",
+       "damage_ps": 22.46
+      },
+      "damage_pctl_ps": {
+       "50": -0.02,
+       "99": 18.53,
+       "99.9": 22.46
+      },
+      "verdict": "PASS"
+     },
+     "kit_contract_hold_ocv": {
+      "window_ps": 40.0,
+      "worst_hold_bound_ps": -21.16,
+      "neg_pairs": 83,
+      "window_needed_ps": 61.16,
+      "worst": {
+       "launch": "c_E0_bn_00",
+       "capture": "sl_E0_su_l1",
+       "where": "c_E0_bn_00->sl_E0_su_l1",
+       "damage_plus_ocv_ps": 61.16
+      },
+      "damage_plus_ocv_pctl_ps": {
+       "50": 23.34,
+       "90": 35.88,
+       "99": 51.6
+      },
+      "residual_ps": [
+       [
+        21.16,
+        "c_E0_bn_00",
+        "sl_E0_su_l1"
+       ],
+       [
+        20.51,
+        "sl_E0_su_c",
+        "sl_E0_su_l1"
+       ],
+       [
+        17.69,
+        "sl_E0_stm",
+        "sl_E0_fw"
+       ],
+       [
+        17.06,
+        "c_E0_tn_00",
+        "sl_E0_hc0"
+       ],
+       [
+        16.9,
+        "sl_E0_hc1",
+        "sl_E0_hc0"
+       ],
+       [
+        15.43,
+        "sl_E0_ctl",
+        "sl_E0_st_a"
+       ],
+       [
+        14.21,
+        "sl_E3_fw",
+        "sl_E2_fe"
+       ],
+       [
+        13.82,
+        "sl_W2_su_c",
+        "sl_W2_su_l1"
+       ],
+       [
+        13.33,
+        "c_W2_bn_00",
+        "sl_W2_su_l1"
+       ],
+       [
+        11.6,
+        "sl_E1_st_a",
+        "sl_E1_ctl"
+       ],
+       [
+        10.92,
+        "c_W2_tn_00",
+        "sl_W2_hc0"
+       ],
+       [
+        10.67,
+        "sl_E1_fw",
+        "sl_E1_stm"
+       ],
+       [
+        10.66,
+        "sl_W2_ctl",
+        "sl_W2_st_a"
+       ],
+       [
+        10.54,
+        "sl_E1_hc0",
+        "c_E1_tn_00"
+       ],
+       [
+        10.2,
+        "sl_E1_hc0",
+        "sl_E1_hc1"
+       ],
+       [
+        9.84,
+        "sl_W2_stm",
+        "sl_W2_fw"
+       ],
+       [
+        9.57,
+        "sl_W2_hc1",
+        "sl_W2_hc0"
+       ],
+       [
+        8.37,
+        "sl_W4_st_a",
+        "sl_W4_ctl"
+       ],
+       [
+        8.33,
+        "coll_f5",
+        "coll_n"
+       ],
+       [
+        8.21,
+        "sl_W4_su_l1",
+        "sl_W4_su_c"
+       ],
+       [
+        7.48,
+        "coll_f5",
+        "coll_f4"
+       ],
+       [
+        7.48,
+        "sl_E4_st_a",
+        "sl_E4_ctl"
+       ],
+       [
+        7.08,
+        "sl_W4_hc0",
+        "sl_W4_hc1"
+       ],
+       [
+        6.29,
+        "sl_W4_fw",
+        "sl_W4_stm"
+       ],
+       [
+        5.52,
+        "sl_E2_fe",
+        "sl_E2_st_b"
+       ],
+       [
+        5.23,
+        "sl_W2_fe",
+        "sl_W1_fw"
+       ],
+       [
+        5.15,
+        "sl_W0_sc",
+        "sl_W0_ctl"
+       ],
+       [
+        4.72,
+        "sl_W0_fe",
+        "sl_W0_st_b"
+       ],
+       [
+        4.48,
+        "sl_E4_su_l1",
+        "sl_E4_su_c"
+       ],
+       [
+        4.46,
+        "sl_E4_fw",
+        "sl_E4_stm"
+       ],
+       [
+        4.2,
+        "sl_W2_sc",
+        "sl_W2_ctl"
+       ],
+       [
+        4.06,
+        "sl_E4_hc0",
+        "c_E4_tn_00"
+       ],
+       [
+        4.01,
+        "sl_E1_su_l1",
+        "sl_E1_su_c"
+       ],
+       [
+        3.98,
+        "sl_E0_sc",
+        "sl_E0_ctl"
+       ],
+       [
+        3.8,
+        "sl_E4_hc0",
+        "sl_E4_hc1"
+       ],
+       [
+        3.48,
+        "sl_E1_su_l1",
+        "c_E1_bn_00"
+       ],
+       [
+        2.57,
+        "c_E2_bn_00",
+        "sl_E2_su_l1"
+       ],
+       [
+        2.44,
+        "sl_E4_stm",
+        "sl_E4_ctl"
+       ],
+       [
+        2.39,
+        "sl_E3_stm",
+        "sl_E3_ctl"
+       ],
+       [
+        2.32,
+        "c_E3_tf_00",
+        "c_E3_tn_01"
+       ],
+       [
+        2.3,
+        "sl_E2_sc",
+        "sl_E2_ctl"
+       ],
+       [
+        2.24,
+        "sl_W4_stm",
+        "sl_W4_ctl"
+       ],
+       [
+        2.08,
+        "sl_E5_sc",
+        "sl_E5_ctl"
+       ],
+       [
+        1.96,
+        "sl_W5_fw",
+        "sl_W5_st_a"
+       ],
+       [
+        1.96,
+        "sl_E3_fw",
+        "sl_E3_st_a"
+       ],
+       [
+        1.88,
+        "sl_W1_stm",
+        "sl_W1_ctl"
+       ],
+       [
+        1.78,
+        "sl_E4_sc",
+        "sl_E4_ctl"
+       ],
+       [
+        1.74,
+        "sl_W0_fw",
+        "sl_W0_st_a"
+       ],
+       [
+        1.71,
+        "sl_W3_sc",
+        "sl_W3_ctl"
+       ],
+       [
+        1.7,
+        "sl_W3_fw",
+        "sl_W3_st_a"
+       ],
+       [
+        1.7,
+        "sl_W5_sc",
+        "sl_W5_ctl"
+       ],
+       [
+        1.68,
+        "sl_E5_fw",
+        "sl_E5_st_a"
+       ],
+       [
+        1.67,
+        "sl_W0_stm",
+        "sl_W0_ctl"
+       ],
+       [
+        1.67,
+        "sl_E4_fw",
+        "sl_E4_st_a"
+       ],
+       [
+        1.62,
+        "sl_W2_fw",
+        "sl_W2_st_a"
+       ],
+       [
+        1.62,
+        "sl_W2_stm",
+        "sl_W2_ctl"
+       ],
+       [
+        1.59,
+        "sl_W4_sc",
+        "sl_W4_ctl"
+       ],
+       [
+        1.57,
+        "sl_E4_su_l1",
+        "c_E4_bn_00"
+       ],
+       [
+        1.57,
+        "sl_E1_fe",
+        "sl_E1_st_b"
+       ],
+       [
+        1.57,
+        "sl_E2_stm",
+        "sl_E2_ctl"
+       ],
+       [
+        1.57,
+        "sl_E1_stm",
+        "sl_E1_ctl"
+       ],
+       [
+        1.53,
+        "sl_W1_fe",
+        "sl_W1_st_b"
+       ],
+       [
+        1.45,
+        "sl_W1_fw",
+        "sl_W1_st_a"
+       ],
+       [
+        1.36,
+        "sl_W4_fw",
+        "sl_W4_st_a"
+       ],
+       [
+        1.35,
+        "sl_E4_fe",
+        "sl_E4_st_b"
+       ],
+       [
+        1.33,
+        "sl_E0_stm",
+        "sl_E0_ctl"
+       ],
+       [
+        1.26,
+        "sl_W5_fe",
+        "sl_W5_st_b"
+       ],
+       [
+        1.19,
+        "sl_W4_hc0",
+        "c_W4_tn_00"
+       ],
+       [
+        1.15,
+        "sl_W4_fe",
+        "sl_W4_st_b"
+       ],
+       [
+        1.13,
+        "sl_E0_fe",
+        "sl_E0_st_b"
+       ],
+       [
+        1.12,
+        "sl_E2_fw",
+        "sl_E2_st_a"
+       ],
+       [
+        1.1,
+        "sl_W3_stm",
+        "sl_W3_ctl"
+       ],
+       [
+        1.03,
+        "sl_E1_fw",
+        "sl_E1_st_a"
+       ],
+       [
+        1.01,
+        "sl_W3_fe",
+        "sl_W3_st_b"
+       ],
+       [
+        0.97,
+        "sl_W2_fe",
+        "sl_W2_st_b"
+       ],
+       [
+        0.61,
+        "sl_E5_stm",
+        "sl_E5_ctl"
+       ],
+       [
+        0.49,
+        "sl_E3_fe",
+        "sl_E3_st_b"
+       ],
+       [
+        0.47,
+        "c_E2_tn_00",
+        "sl_E2_hc0"
+       ],
+       [
+        0.34,
+        "sl_W1_ctl",
+        "sl_W1_sc"
+       ],
+       [
+        0.28,
+        "sl_E1_sc",
+        "sl_E1_ctl"
+       ],
+       [
+        0.12,
+        "sl_E3_sc",
+        "sl_E3_ctl"
+       ],
+       [
+        0.06,
+        "sl_E0_st_a",
+        "sl_E0_ctl"
+       ],
+       [
+        0.01,
+        "c_E3_tn_00",
+        "c_E3_tn_01"
+       ]
+      ],
+      "verdict": "FAIL",
+      "note": "R18 additive: kit window vs nominal damage + clock OCV (pair_unc); INFO until COORD rules"
+     },
+     "label": "declared-budget"
+    },
+    "landed": {
+     "pairs": 0,
+     "label": "declared-budget"
+    }
+   },
+   "clock_ocv": {
+    "mode": "pair-unc",
+    "file": "/srv/opentallas-scratch2/claude/qc-mesh-r18/run/f64_t0/sta_in/pair_unc.json",
+    "status": "UNCHECKED"
+   }
+  }
+ },
+ "coverage": {
+  "partitions_with_taps": 377,
+  "connected_part_pairs": 997,
+  "uncovered_bits": {}
+ },
+ "summary": {
+  "intra": {
+   "tt_setup_ps": null,
+   "ff_hold_ps": null,
+   "verdict": "FAIL"
+  },
+  "seam": {
+   "tt_setup_ps": 581.39,
+   "ff_hold_ps": -59.68,
+   "verdict": "FAIL",
+   "ff_hold_kit_contract_ps": 17.54,
+   "kit_contract_window_ps": 40.0,
+   "kit_contract_window_needed_ps": 22.46,
+   "kit_contract_verdict": "PASS"
+  },
+  "landed": {
+   "tt_setup_margin_ps": null,
+   "ff_hold_margin_ps": null,
+   "verdict": "FAIL"
+  },
+  "status": "UNCHECKED (NUMBER-CHECK pending)",
+  "label": "declared-budget (no QC kit)"
+ }
+}

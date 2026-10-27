@@ -251,6 +251,21 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
             worst=dict(launch=hd[0][1], capture=hd[0][2], where=hd[0][3], damage_ps=round(hd[0][0], 2)),
             damage_pctl_ps={q: round(hd[min(len(hd) - 1, int(len(hd) * (1 - q / 100.0)))][0], 2) for q in (50, 99, 99.9)},
             verdict="PASS" if hd[0][0] <= w else "FAIL")
+        if ocv is not None:
+            # INFRA-FIRST-QC-R18 (additive, gate unchanged): the kit contract only holds if the die delivers the tap
+            # pair INSIDE the window including the clock OCV (pair MC mesh skew + AOCV below the mesh) that the
+            # zero-logic slack charges; the bound above uses the nominal damage only.  residual_ps = what die-level
+            # data hold buffers must still cover per ordered pair (max(0, damage + ocv - W)).
+            ho = sorted(((v + ocv(a, b, "hold"), a, b, tag) for v, a, b, tag in hd), reverse=True)
+            res = [(round(v - w, 2), a, b) for v, a, b, _ in ho if v > w]
+            out["kit_contract_hold_ocv"] = dict(
+                window_ps=w, worst_hold_bound_ps=round(w - ho[0][0], 2), neg_pairs=len(res),
+                window_needed_ps=round(max(0.0, ho[0][0]), 2),
+                worst=dict(launch=ho[0][1], capture=ho[0][2], where=ho[0][3], damage_plus_ocv_ps=round(ho[0][0], 2)),
+                damage_plus_ocv_pctl_ps={q: round(ho[min(len(ho) - 1, int(len(ho) * (1 - q / 100.0)))][0], 2)
+                                         for q in (50, 90, 99)},
+                residual_ps=res, verdict="PASS" if ho[0][0] <= w else "FAIL",
+                note="R18 additive: kit window vs nominal damage + clock OCV (pair_unc); INFO until COORD rules")
     if landed:
         out["plan_landing"] = dict(window_ps=round(window, 2), setup_margin_ps=round(window - mds, 2),
                                    hold_margin_ps=round(window - mdh, 2),

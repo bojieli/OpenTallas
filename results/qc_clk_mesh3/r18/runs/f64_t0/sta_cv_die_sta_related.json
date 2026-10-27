@@ -1,0 +1,859 @@
+{
+ "proof": "/srv/opentallas-scratch2/claude/qc-mesh-r18/run/f64_t0/sta_in_cv",
+ "timed_dir": "/srv/opentallas-scratch2/claude/qc-mesh-r18/run/f64_t0/sta_in_cv",
+ "plan": "/srv/opentallas-scratch2/claude/qc-mesh-r17/pkg/inputs/d43/plan_d43.json",
+ "period_ps": 833.333,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gate": "METHODOLOGY 12.4a v4.3: TT setup >= 0 and FF hold >= 0 on every related pair; CPPR at last common tree node (12.4b); skew = DIAGNOSTIC",
+ "block_model": {
+  "label": "declared-budget",
+  "core_latency_ps": {
+   "TT": 250.0,
+   "FF": 250.0
+  },
+  "cancels": "same declared latency both sides",
+  "core_tol_sensitivity_ps": 20.0,
+  "register": "DFFHQNx1_ASAP7_75t_R",
+  "seam_wire": {
+   "um": 40.0,
+   "ff_per_um": 0.15,
+   "applied": "setup only"
+  },
+  "kits_found": 0
+ },
+ "corners": {
+  "TT": {
+   "basis": "qc_clk_mesh3 solve nominal (legal geometry, feed periodic); per-pair MC+AOCV in pair_unc.json",
+   "tap_slew_max_ps": 201.01,
+   "register": {
+    "key": {
+     "corner": "TT",
+     "slew_ps": 201.006,
+     "load_ff": 6.0,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 107.63,
+    "clkq_min_nowire_ps": 76.112,
+    "setup_ps": 4.846,
+    "hold_ps": 37.372,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "intra": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "intra_cross_region": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "seam": {
+     "pairs": 997,
+     "worst_setup_slack_ps": 572.53,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "sl_W2_su_l1",
+      "capture": "sl_W2_su_c",
+      "where": "sl_W2_su_l1->sl_W2_su_c",
+      "clock_damage_ps": 43.32,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -74.59,
+     "hold_neg_pairs": 991,
+     "worst_hold": {
+      "launch": "sl_W2_su_c",
+      "capture": "sl_W2_su_l1",
+      "where": "sl_W2_su_c->sl_W2_su_l1",
+      "clock_damage_ps": 43.32,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 43.32,
+     "skew_diag_over_80": 0,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 532.53,
+      "worst_hold_slack_ps": -114.59
+     },
+     "worst_skew": [
+      [
+       43.32,
+       "sl_W2_su_l1",
+       "sl_W2_su_c"
+      ],
+      [
+       43.32,
+       "sl_W2_su_c",
+       "sl_W2_su_l1"
+      ],
+      [
+       34.71,
+       "sl_W4_su_l1",
+       "sl_W4_su_c"
+      ],
+      [
+       34.71,
+       "sl_W4_su_c",
+       "sl_W4_su_l1"
+      ],
+      [
+       30.12,
+       "sl_E1_su_l1",
+       "sl_E1_su_c"
+      ]
+     ],
+     "clock_ocv_pessimism_max_ps": {
+      "setup": 62.81,
+      "hold": 62.81
+     },
+     "label": "declared-budget"
+    },
+    "landed": {
+     "pairs": 0,
+     "label": "declared-budget"
+    }
+   },
+   "clock_ocv": {
+    "mode": "pair-unc",
+    "file": "/srv/opentallas-scratch2/claude/qc-mesh-r18/run/f64_t0/sta_in_cv/pair_unc.json",
+    "status": "UNCHECKED"
+   }
+  },
+  "FF": {
+   "basis": "qc_clk_mesh3 solve nominal (legal geometry, feed periodic); per-pair MC+AOCV in pair_unc.json",
+   "tap_slew_max_ps": 163.08,
+   "register": {
+    "key": {
+     "corner": "FF",
+     "slew_ps": 163.077,
+     "load_ff": 6.0,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 73.125,
+    "clkq_min_nowire_ps": 51.614,
+    "setup_ps": 3.914,
+    "hold_ps": 25.134,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "intra": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "intra_cross_region": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "seam": {
+     "pairs": 997,
+     "worst_setup_slack_ps": 621.88,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "sl_W2_su_l1",
+      "capture": "sl_W2_su_c",
+      "where": "sl_W2_su_l1->sl_W2_su_c",
+      "clock_damage_ps": 41.89,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -72.94,
+     "hold_neg_pairs": 997,
+     "worst_hold": {
+      "launch": "sl_W2_su_c",
+      "capture": "sl_W2_su_l1",
+      "where": "sl_W2_su_c->sl_W2_su_l1",
+      "clock_damage_ps": 41.89,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 41.89,
+     "skew_diag_over_80": 0,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 581.88,
+      "worst_hold_slack_ps": -112.94
+     },
+     "worst_skew": [
+      [
+       41.89,
+       "sl_W2_su_l1",
+       "sl_W2_su_c"
+      ],
+      [
+       41.89,
+       "sl_W2_su_c",
+       "sl_W2_su_l1"
+      ],
+      [
+       26.91,
+       "sl_W0_su_l1",
+       "sl_W0_su_c"
+      ],
+      [
+       26.91,
+       "sl_W0_su_c",
+       "sl_W0_su_l1"
+      ],
+      [
+       26.84,
+       "sl_W3_su_l1",
+       "sl_W3_su_c"
+      ]
+     ],
+     "clock_ocv_pessimism_max_ps": {
+      "setup": 47.77,
+      "hold": 47.77
+     },
+     "kit_contract_hold": {
+      "window_ps": 40.0,
+      "basis": "legacy: receiver in_min -insertion_tol, sender out_min 0 (gen_phys.seam_hold)",
+      "worst_hold_bound_ps": -1.89,
+      "neg_pairs": 1,
+      "window_needed_ps": 41.89,
+      "worst": {
+       "launch": "sl_W2_su_c",
+       "capture": "sl_W2_su_l1",
+       "where": "sl_W2_su_c->sl_W2_su_l1",
+       "damage_ps": 41.89
+      },
+      "damage_pctl_ps": {
+       "50": 0.0,
+       "99": 23.61,
+       "99.9": 41.89
+      },
+      "verdict": "FAIL"
+     },
+     "kit_contract_hold_ocv": {
+      "window_ps": 40.0,
+      "worst_hold_bound_ps": -34.42,
+      "neg_pairs": 114,
+      "window_needed_ps": 74.42,
+      "worst": {
+       "launch": "sl_W2_su_c",
+       "capture": "sl_W2_su_l1",
+       "where": "sl_W2_su_c->sl_W2_su_l1",
+       "damage_plus_ocv_ps": 74.42
+      },
+      "damage_plus_ocv_pctl_ps": {
+       "50": 24.05,
+       "90": 41.15,
+       "99": 54.21
+      },
+      "residual_ps": [
+       [
+        34.42,
+        "sl_W2_su_c",
+        "sl_W2_su_l1"
+       ],
+       [
+        28.95,
+        "sl_E0_su_c",
+        "sl_E0_su_l1"
+       ],
+       [
+        21.16,
+        "c_E0_bn_00",
+        "sl_E0_su_l1"
+       ],
+       [
+        17.69,
+        "sl_E0_stm",
+        "sl_E0_fw"
+       ],
+       [
+        17.06,
+        "c_E0_tn_00",
+        "sl_E0_hc0"
+       ],
+       [
+        16.9,
+        "sl_E0_hc1",
+        "sl_E0_hc0"
+       ],
+       [
+        15.77,
+        "sl_W0_su_c",
+        "sl_W0_su_l1"
+       ],
+       [
+        15.43,
+        "sl_E0_ctl",
+        "sl_E0_st_a"
+       ],
+       [
+        14.32,
+        "sl_W3_su_c",
+        "sl_W3_su_l1"
+       ],
+       [
+        14.21,
+        "sl_E3_fw",
+        "sl_E2_fe"
+       ],
+       [
+        13.33,
+        "c_W2_bn_00",
+        "sl_W2_su_l1"
+       ],
+       [
+        12.37,
+        "sl_W4_su_l1",
+        "sl_W4_su_c"
+       ],
+       [
+        11.6,
+        "sl_E1_st_a",
+        "sl_E1_ctl"
+       ],
+       [
+        10.92,
+        "c_W2_tn_00",
+        "sl_W2_hc0"
+       ],
+       [
+        10.67,
+        "sl_E1_fw",
+        "sl_E1_stm"
+       ],
+       [
+        10.66,
+        "sl_W2_ctl",
+        "sl_W2_st_a"
+       ],
+       [
+        10.54,
+        "sl_E1_hc0",
+        "c_E1_tn_00"
+       ],
+       [
+        10.2,
+        "sl_E1_hc0",
+        "sl_E1_hc1"
+       ],
+       [
+        9.84,
+        "sl_W2_stm",
+        "sl_W2_fw"
+       ],
+       [
+        9.57,
+        "sl_W2_hc1",
+        "sl_W2_hc0"
+       ],
+       [
+        9.51,
+        "sl_W1_su_c",
+        "sl_W1_sc"
+       ],
+       [
+        8.73,
+        "sl_W1_su_c",
+        "c_W1_bn_10"
+       ],
+       [
+        8.64,
+        "sl_E4_su_l1",
+        "sl_E4_su_c"
+       ],
+       [
+        8.37,
+        "sl_W4_st_a",
+        "sl_W4_ctl"
+       ],
+       [
+        8.33,
+        "coll_f5",
+        "coll_n"
+       ],
+       [
+        8.17,
+        "sl_E1_su_l1",
+        "sl_E1_su_c"
+       ],
+       [
+        7.94,
+        "sl_W2_su_c",
+        "sl_W2_stm"
+       ],
+       [
+        7.52,
+        "sl_W3_su_c",
+        "sl_W3_sc"
+       ],
+       [
+        7.48,
+        "coll_f5",
+        "coll_f4"
+       ],
+       [
+        7.48,
+        "sl_E4_st_a",
+        "sl_E4_ctl"
+       ],
+       [
+        7.45,
+        "sl_W5_su_c",
+        "sl_W5_su_l1"
+       ],
+       [
+        7.28,
+        "sl_W5_su_c",
+        "sl_W5_stm"
+       ],
+       [
+        7.21,
+        "sl_W3_su_c",
+        "sl_W3_stm"
+       ],
+       [
+        7.12,
+        "sl_W0_su_c",
+        "sl_W0_stm"
+       ],
+       [
+        7.08,
+        "sl_W4_hc0",
+        "sl_W4_hc1"
+       ],
+       [
+        6.64,
+        "sl_W3_su_c",
+        "c_W3_bn_10"
+       ],
+       [
+        6.64,
+        "sl_W1_su_c",
+        "sl_W1_su_l0"
+       ],
+       [
+        6.29,
+        "sl_W4_fw",
+        "sl_W4_stm"
+       ],
+       [
+        5.91,
+        "sl_W2_su_c",
+        "sl_W2_sc"
+       ],
+       [
+        5.77,
+        "sl_W0_su_c",
+        "c_W0_bn_00"
+       ],
+       [
+        5.7,
+        "sl_W2_su_c",
+        "c_W2_bn_00"
+       ],
+       [
+        5.52,
+        "sl_E2_fe",
+        "sl_E2_st_b"
+       ],
+       [
+        5.23,
+        "sl_W2_fe",
+        "sl_W1_fw"
+       ],
+       [
+        5.15,
+        "sl_W0_sc",
+        "sl_W0_ctl"
+       ],
+       [
+        4.73,
+        "sl_W2_su_c",
+        "c_W2_bn_10"
+       ],
+       [
+        4.72,
+        "sl_W0_fe",
+        "sl_W0_st_b"
+       ],
+       [
+        4.69,
+        "sl_W3_su_c",
+        "sl_W3_su_l0"
+       ],
+       [
+        4.66,
+        "sl_W3_su_c",
+        "c_W3_bn_00"
+       ],
+       [
+        4.46,
+        "sl_E4_fw",
+        "sl_E4_stm"
+       ],
+       [
+        4.2,
+        "sl_W2_sc",
+        "sl_W2_ctl"
+       ],
+       [
+        4.06,
+        "sl_E4_hc0",
+        "c_E4_tn_00"
+       ],
+       [
+        4.06,
+        "sl_W5_su_c",
+        "c_W5_bn_00"
+       ],
+       [
+        3.98,
+        "sl_W5_su_c",
+        "sl_W5_sc"
+       ],
+       [
+        3.98,
+        "sl_E0_sc",
+        "sl_E0_ctl"
+       ],
+       [
+        3.86,
+        "sl_W4_su_c",
+        "sl_W4_stm"
+       ],
+       [
+        3.84,
+        "sl_W1_su_c",
+        "sl_W1_stm"
+       ],
+       [
+        3.8,
+        "sl_E4_hc0",
+        "sl_E4_hc1"
+       ],
+       [
+        3.48,
+        "sl_E1_su_l1",
+        "c_E1_bn_00"
+       ],
+       [
+        3.15,
+        "sl_W4_su_c",
+        "sl_W4_sc"
+       ],
+       [
+        2.73,
+        "sl_W0_su_c",
+        "sl_W0_sc"
+       ],
+       [
+        2.57,
+        "c_E2_bn_00",
+        "sl_E2_su_l1"
+       ],
+       [
+        2.44,
+        "sl_E4_stm",
+        "sl_E4_ctl"
+       ],
+       [
+        2.39,
+        "sl_E3_stm",
+        "sl_E3_ctl"
+       ],
+       [
+        2.32,
+        "sl_E2_su_c",
+        "sl_E2_su_l1"
+       ],
+       [
+        2.32,
+        "c_E3_tf_00",
+        "c_E3_tn_01"
+       ],
+       [
+        2.3,
+        "sl_E2_sc",
+        "sl_E2_ctl"
+       ],
+       [
+        2.24,
+        "sl_W4_stm",
+        "sl_W4_ctl"
+       ],
+       [
+        2.19,
+        "sl_E5_su_c",
+        "sl_E5_su_l1"
+       ],
+       [
+        2.08,
+        "sl_E5_sc",
+        "sl_E5_ctl"
+       ],
+       [
+        1.96,
+        "sl_W5_fw",
+        "sl_W5_st_a"
+       ],
+       [
+        1.96,
+        "sl_E3_fw",
+        "sl_E3_st_a"
+       ],
+       [
+        1.89,
+        "sl_W2_su_c",
+        "sl_W2_su_l0"
+       ],
+       [
+        1.88,
+        "sl_W1_stm",
+        "sl_W1_ctl"
+       ],
+       [
+        1.78,
+        "sl_E4_sc",
+        "sl_E4_ctl"
+       ],
+       [
+        1.74,
+        "sl_W0_fw",
+        "sl_W0_st_a"
+       ],
+       [
+        1.71,
+        "sl_W3_sc",
+        "sl_W3_ctl"
+       ],
+       [
+        1.7,
+        "sl_W3_fw",
+        "sl_W3_st_a"
+       ],
+       [
+        1.7,
+        "sl_W5_sc",
+        "sl_W5_ctl"
+       ],
+       [
+        1.68,
+        "sl_E5_fw",
+        "sl_E5_st_a"
+       ],
+       [
+        1.67,
+        "sl_W0_stm",
+        "sl_W0_ctl"
+       ],
+       [
+        1.67,
+        "sl_E4_fw",
+        "sl_E4_st_a"
+       ],
+       [
+        1.62,
+        "sl_W2_fw",
+        "sl_W2_st_a"
+       ],
+       [
+        1.62,
+        "sl_W2_stm",
+        "sl_W2_ctl"
+       ],
+       [
+        1.59,
+        "sl_W4_sc",
+        "sl_W4_ctl"
+       ],
+       [
+        1.57,
+        "sl_E4_su_l1",
+        "c_E4_bn_00"
+       ],
+       [
+        1.57,
+        "sl_E1_fe",
+        "sl_E1_st_b"
+       ],
+       [
+        1.57,
+        "sl_E2_stm",
+        "sl_E2_ctl"
+       ],
+       [
+        1.57,
+        "sl_E1_stm",
+        "sl_E1_ctl"
+       ],
+       [
+        1.53,
+        "sl_W1_fe",
+        "sl_W1_st_b"
+       ],
+       [
+        1.45,
+        "sl_W1_fw",
+        "sl_W1_st_a"
+       ],
+       [
+        1.36,
+        "sl_W4_fw",
+        "sl_W4_st_a"
+       ],
+       [
+        1.35,
+        "sl_E4_fe",
+        "sl_E4_st_b"
+       ],
+       [
+        1.33,
+        "sl_E0_stm",
+        "sl_E0_ctl"
+       ],
+       [
+        1.31,
+        "sl_W1_su_c",
+        "sl_W1_su_l1"
+       ],
+       [
+        1.31,
+        "sl_W5_su_c",
+        "sl_W5_su_l0"
+       ],
+       [
+        1.31,
+        "sl_W4_su_c",
+        "sl_W4_su_l0"
+       ],
+       [
+        1.31,
+        "sl_W0_su_c",
+        "sl_W0_su_l0"
+       ],
+       [
+        1.26,
+        "sl_W5_fe",
+        "sl_W5_st_b"
+       ],
+       [
+        1.19,
+        "sl_W4_hc0",
+        "c_W4_tn_00"
+       ],
+       [
+        1.15,
+        "sl_W4_fe",
+        "sl_W4_st_b"
+       ],
+       [
+        1.13,
+        "sl_E0_fe",
+        "sl_E0_st_b"
+       ],
+       [
+        1.12,
+        "sl_E2_fw",
+        "sl_E2_st_a"
+       ],
+       [
+        1.1,
+        "sl_W3_stm",
+        "sl_W3_ctl"
+       ],
+       [
+        1.03,
+        "sl_E1_fw",
+        "sl_E1_st_a"
+       ],
+       [
+        1.01,
+        "sl_W3_fe",
+        "sl_W3_st_b"
+       ],
+       [
+        0.97,
+        "sl_W2_fe",
+        "sl_W2_st_b"
+       ],
+       [
+        0.61,
+        "sl_E5_stm",
+        "sl_E5_ctl"
+       ],
+       [
+        0.49,
+        "sl_E3_fe",
+        "sl_E3_st_b"
+       ],
+       [
+        0.47,
+        "c_E2_tn_00",
+        "sl_E2_hc0"
+       ],
+       [
+        0.34,
+        "sl_W1_ctl",
+        "sl_W1_sc"
+       ],
+       [
+        0.28,
+        "sl_E1_sc",
+        "sl_E1_ctl"
+       ],
+       [
+        0.12,
+        "sl_E3_sc",
+        "sl_E3_ctl"
+       ],
+       [
+        0.06,
+        "sl_E0_st_a",
+        "sl_E0_ctl"
+       ],
+       [
+        0.01,
+        "c_E3_tn_00",
+        "c_E3_tn_01"
+       ]
+      ],
+      "verdict": "FAIL",
+      "note": "R18 additive: kit window vs nominal damage + clock OCV (pair_unc); INFO until COORD rules"
+     },
+     "label": "declared-budget"
+    },
+    "landed": {
+     "pairs": 0,
+     "label": "declared-budget"
+    }
+   },
+   "clock_ocv": {
+    "mode": "pair-unc",
+    "file": "/srv/opentallas-scratch2/claude/qc-mesh-r18/run/f64_t0/sta_in_cv/pair_unc.json",
+    "status": "UNCHECKED"
+   }
+  }
+ },
+ "coverage": {
+  "partitions_with_taps": 377,
+  "connected_part_pairs": 997,
+  "uncovered_bits": {}
+ },
+ "summary": {
+  "intra": {
+   "tt_setup_ps": null,
+   "ff_hold_ps": null,
+   "verdict": "FAIL"
+  },
+  "seam": {
+   "tt_setup_ps": 572.53,
+   "ff_hold_ps": -72.94,
+   "verdict": "FAIL",
+   "ff_hold_kit_contract_ps": -1.89,
+   "kit_contract_window_ps": 40.0,
+   "kit_contract_window_needed_ps": 41.89,
+   "kit_contract_verdict": "FAIL"
+  },
+  "landed": {
+   "tt_setup_margin_ps": null,
+   "ff_hold_margin_ps": null,
+   "verdict": "FAIL"
+  },
+  "status": "UNCHECKED (NUMBER-CHECK pending)",
+  "label": "declared-budget (no QC kit)"
+ }
+}

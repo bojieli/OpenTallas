@@ -1827,16 +1827,25 @@ def cmd_solve(a):
     th_dir = seeded("grad", s).uniform(0, 2 * math.pi)
     u = (math.cos(th_dir), math.sin(th_dir))
 
+    ecorr = json.loads(Path(a.top_edge_corr).read_text())["corr"][c] if getattr(a, "top_edge_corr", None) else {}
+
     def edge_var_phys(ns, tag, et):
-        """LEGAL geometry: one stage per real driver->load net (pin-to-pin), sigma per real stage, gradient per net."""
+        """LEGAL geometry: one stage per real driver->load net (pin-to-pin), sigma per real stage, gradient per net.
+        R18 --top-edge-corr (opt-in): top-tree edge nominal = RCX (model + per-edge RCX-model delta, routed clock
+        extracted with the NDR-width rules); its random sigma and gradient scale with the RCX/model delay ratio k."""
         d = v = s2 = 0.0
+        k_ = 1.0
+        if ns == "t" and tag in ecorr:
+            k_ = ecorr[tag]["k"]
         for a_, b_, L in PE[(ns, tag)]:
-            di = et.st.seg(et.w, et.m, c, L)
+            di = et.st.seg(et.w, et.m, c, L) * k_
             d += di
-            s2 += et.st.sigma(et.w, et.m, c, L) ** 2
+            s2 += (et.st.sigma(et.w, et.m, c, L) * k_) ** 2
             if g_mm:
                 mx, my = (a_["site"][0] + b_["site"][0]) / 2 - cx, (a_["site"][1] + b_["site"][1]) / 2 - cy
                 v += di * g_mm * (mx * u[0] + my * u[1]) / 1000.0
+        if ns == "t" and tag in ecorr:
+            d += ecorr[tag]["d"] - (k_ - 1.0) * sum(et.st.seg(et.w, et.m, c, L) for _, _, L in PE[(ns, tag)])
         if s and sg.get("tree", 1.0):
             v += seeded("e", s, tag).gauss(0.0, math.sqrt(s2) * sg.get("tree", 1.0))
         return d + v
@@ -2231,6 +2240,9 @@ def main(argv=None):
                    help="legal (default, r10): time the legalize() cells with units expanded and pin-to-pin nets; "
                         "ideal = the r3 plan-model geometry (comparison only)")
     s.add_argument("--trunk-ps", default='{"TT": 319.5, "FF": 261.1}', help="die input -> tree root (r2 insertion_spice_r6.json)")
+    s.add_argument("--top-edge-corr", default=None,
+                   help="R18 (legal geometry): json {corr: {TT|FF: {edge_tag: {d: RCX - model nominal ps, k: RCX/model}}}} "
+                        "from r18 fold (routed clock RCX with NDR-width rules, real tap loads); default none = model only")
     s.add_argument("--out", required=True)
     s.set_defaults(fn=cmd_solve)
     k = sub.add_parser("collect")
