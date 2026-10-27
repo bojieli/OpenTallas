@@ -523,7 +523,7 @@ foreach n [$blk getNets] { if {[$n getSigType] eq "CLOCK"} { incr nn; if {[$n ge
 puts "OT_CLOCK_NETS $nn with_wire $nw special $nsp"
 puts "OT_OBS [llength [$blk getObstructions]]"
 write_def /out/routed.def
-extract_parasitics -ext_model_file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules
+@RCX@
 write_spef /out/rcx.spef
 write_db /out/routed.odb
 puts "OT_T total [expr {[clock seconds]-$t0}] s"
@@ -584,7 +584,31 @@ def drc_boxes(wires, cells, ports, buf, pad=1.0, cell_pad=2.0):
     return "\n".join(f"{q(a)} {q(b)} {q(c)} {q(d_)}" for a, b, c, d_ in out) + "\n"
 
 
-def write_route(d, kit, image="openroad/orfs:latest", mem=64):
+STOCK_RULES = "/OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules"
+
+
+def rcx_tcl(rules="stock", rules_text=None):
+    """the extraction lines of route.tcl.  stock (default, R5 behaviour): the platform rules, which carry ONE M8/M9
+    width (0.04) and give a 0.16-um clock NDR wire the 0.04-um R and C (CLOCK-128-R6 probe, CHECKED).  ndr
+    (CLOCK-128-R6, opt-in): the width-characterised rules (rcx_width_rules.py: 0.16-um M8/M9 entries, field-solver
+    width ratios on the rules' own calibration, rules copied into the run dir as /out/rcx_ndr.rules) + OpenRCX -lef_res
+    with every routing layer's RPERSQ set to the rules' own sheet resistance (r_table x table width), so R scales as
+    1/w and default-width wires extract exactly as with the stock rules."""
+    if rules == "stock":
+        return f"extract_parasitics -ext_model_file {STOCK_RULES}"
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import rcx_width_rules as RW
+    L = ["# CLOCK-128-R6 width-aware extraction: RPERSQ (ohm/sq) = rules r(w0) x w0 per layer, R = RPERSQ x L / w",
+         "set ot_tech [ord::get_db_tech]"]
+    for lay, rsq in sorted(RW.rpersq(rules_text).items()):
+        L.append(f"[$ot_tech findLayer {lay}] setResistance {rsq:.6g}")
+    L.append("extract_parasitics -ext_model_file /out/rcx_ndr.rules -lef_res")
+    return "\n".join(L)
+
+
+def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock"):
     import json
     from pathlib import Path
     d, kit = Path(d), Path(kit)
@@ -592,7 +616,13 @@ def write_route(d, kit, image="openroad/orfs:latest", mem=64):
     cells = json.loads((d / "place.json").read_text())
     ports = {t["port"]: dict(layer=t.get("layer", M["meta"].get("tap_layer", "M7")), xy=t["xy"]) for t in M["taps"]}
     ports["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
-    (d / "route.tcl").write_text(ROUTE_TCL)
+    rules_text = None
+    if rcx_rules != "stock":
+        rules_text = Path(rcx_rules).read_text()
+        (d / "rcx_ndr.rules").write_text(rules_text)
+    (d / "route.tcl").write_text(ROUTE_TCL.replace("@RCX@", rcx_tcl("stock" if rcx_rules == "stock" else "ndr",
+                                                                    rules_text)))
+    (d / "rcx_basis.json").write_text(json.dumps(dict(rules="stock" if rcx_rules == "stock" else str(rcx_rules))))
     (d / "sta.tcl").write_text(STA_TCL)
     (d / "drc.tcl").write_text(DRC_TCL)
     (d / "drc_boxes.txt").write_text(drc_boxes(M["fixed_wires"], cells, ports, BUF_DEFAULT))
@@ -742,7 +772,8 @@ def report(d):
         plan_check={k: v for k, v in chk.items()}, drt_check_drc=dict(boxes_checked=nbox, total=drc, by_kind=dict(kinds)),
         latency={k: {kk: vv for kk, vv in v.items() if kk != "per_leaf"} for k, v in tab.items()},
         per_leaf={k: v["per_leaf"] for k, v in tab.items()}, rcx_minus_native=delta,
-        per_net_rc={n: dict(rcx=rc.get(n), native=nat.get(n)) for n in names})
+        per_net_rc={n: dict(rcx=rc.get(n), native=nat.get(n)) for n in names},
+        rcx_basis=json.loads((d / "rcx_basis.json").read_text()) if (d / "rcx_basis.json").exists() else dict(rules="stock"))
     (d / "route_report.json").write_text(json.dumps(out, indent=1) + "\n")
     return out
 
@@ -756,11 +787,14 @@ def main(argv=None):
     r.add_argument("dir")
     r.add_argument("--kit", required=True)
     r.add_argument("--mem", type=int, default=64)
+    r.add_argument("--rcx-rules", default="stock",
+                   help="stock (default) or a width-characterised rules file (rcx_width_rules.py write), extracted "
+                        "with -lef_res and per-layer RPERSQ from the same rules (CLOCK-128-R6)")
     p = sub.add_parser("report", help="route_report.json from the routed build dir")
     p.add_argument("dir")
     a = ap.parse_args(argv)
     if a.cmd == "route":
-        write_route(a.dir, a.kit, mem=a.mem)
+        write_route(a.dir, a.kit, mem=a.mem, rcx_rules=a.rcx_rules)
         print("route written", a.dir)
     else:
         o = report(a.dir)
