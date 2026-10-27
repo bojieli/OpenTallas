@@ -852,6 +852,20 @@ def detour_sites(K, pa, pb, hop, grid=10.8, margin=900.0):
     return sites or None
 
 
+def annotate_stub_splits(tap_rows, splits):
+    """CLOCK-KV-R20 (NUMBER-CHECK-KV-R19): a tap whose stub split_long cut into repeater hops keeps its unsplit
+    driver-to-tap length as stub_total_um; stub_um becomes the longest electrical hop (the net the tap slew sees),
+    stub_hops_um / stub_reps list the hops.  Taps without a split are unchanged."""
+    for t in tap_rows:
+        sp = (splits or {}).get(t["port"])
+        if not sp:
+            continue
+        t["stub_total_um"] = t["stub_um"]
+        t["stub_um"] = max(sp["hops_um"])
+        t["stub_hops_um"] = sp["hops_um"]
+        t["stub_reps"] = sp["reps"]
+
+
 def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, both_l=False):
     """every driver -> load branch longer than hop_max (a slide / jog / node move made it long) gets equal-cut
     repeaters on its own L path (x first, then y), each at the nearest free site: no hop exceeds ~hop_max, so slew
@@ -952,6 +966,12 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, b
                 added += 1
                 chain.append(nm)
             loads.append(chain[0])
+            if out is not None and ld.startswith("port:"):
+                # CLOCK-KV-R20 (NUMBER-CHECK-KV-R19): record the split so the tap row states its real hops
+                pts = [pa] + [(cells[c_]["x"], cells[c_]["y"]) for c_ in chain] + [pb]
+                out.setdefault("stub_splits", {})[ld[5:]] = dict(
+                    driver=n["drv"], reps=list(chain),
+                    hops_um=[round(abs(u[0] - w[0]) + abs(u[1] - w[1]), 2) for u, w in zip(pts, pts[1:])])
             for u, w in zip(chain, chain[1:]):
                 new_nets.append(dict(name=f"ckm_w_{u}", drv=u, loads=[w], level=n.get("level")))
             new_nets.append(dict(name=f"ckm_w_{chain[-1]}", drv=chain[-1], loads=[ld], level=n.get("level")))
@@ -1982,6 +2002,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         sl_nets = [n for n in nets if n.get("level") == 99] if lg else nets
         out["meta"]["split_reps"] = split_long(cells, sl_nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows},
                                                hop_max, cell, out, yfirst=split_yfirst, both_l=fp is not None)
+        annotate_stub_splits(tap_rows, out.get("stub_splits"))
         if lg:
             nets += sl_nets[len([n for n in nets if n.get("level") == 99]):]
     if rule128 is not None:   # METHODOLOGY 12.8: plan-model stub sizing (d1), early-tap FAIL list, fixed shielded tree
@@ -2031,7 +2052,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                        mesh_wire_mm=round(sum((g["j1"] - g["j0"]) * (strap_bounds(g, xs, ys, 0)[1] - strap_bounds(g, xs, ys, 0)[0]) +
                                               (g["i1"] - g["i0"]) * (strap_bounds(g, xs, ys, 1)[1] - strap_bounds(g, xs, ys, 1)[0]) for g in R) / 1e3, 2)
                        if "strap_spans" not in out else round(sum(s_[1] - s_[0] for s_ in out["strap_spans"].values() if s_) / 1e3, 2),
-                       stub_wire_mm=round(sum(t["stub_um"] for t in tap_rows) / 1e3, 2))
+                       stub_wire_mm=round(sum(t.get("stub_total_um", t["stub_um"]) for t in tap_rows) / 1e3, 2))
     if fp is not None:
         sh = fp.get("shield_net")
         tree_mm = 0.0

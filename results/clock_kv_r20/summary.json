@@ -1,0 +1,69 @@
+{
+ "lane": "CLOCK-KV-R20",
+ "status": "UNCHECKED own-script unless noted",
+ "hb4": {
+  "gate_model_r19": {
+   "cells": 821795,
+   "mm2": 0.0839,
+   "note": "die_sta_related memoised nearest-tap"
+  },
+  "nc_pair_bound": {
+   "cells": [
+    689221,
+    821795
+   ],
+   "mm2": [
+    0.07,
+    0.084
+   ],
+   "source": "NUMBER-CHECK-KV-R19"
+  },
+  "per_bit_list": {
+   "bits": 603026,
+   "cells_per_endpoint": 821426,
+   "cells_pairworst": 821426,
+   "mm2": 0.0839,
+   "check": "CHECKED-equal NC own non-memo 821,426"
+  },
+  "template_replicated": {
+   "cells": 882663,
+   "mm2": 0.0901,
+   "templates": 262960
+  },
+  "receivers": {
+   "glue": {
+    "bits": 603026,
+    "cells_endpoint": 821426,
+    "cells_gate": 821426
+   }
+  },
+  "real_insertion": "NOT RUN: every receiver = partition glue of a planned partition type (no KV partition kits; gate kits_found 0); every k from budget>budget path"
+ },
+ "gate_repro": {
+  "seam": {
+   "tt": 292.87,
+   "ff": -200.9,
+   "hb4_tt": 64.91,
+   "hb4_ff": 0.0
+  },
+  "intra": {
+   "tt": 366.22,
+   "ff": -174.77,
+   "hb4_tt": 138.89,
+   "hb4_ff": 0.0
+  },
+  "check": "hb4 block byte-identical to R19 G_r19"
+ },
+ "stub_fix": {
+  "taps_annotated": 6,
+  "stub_um_max_after": 268.84,
+  "over405_after": 0,
+  "netlist": "ctree.v/place.json/nets.json byte-identical to r19"
+ },
+ "coverage_gap": {
+  "rows": 272,
+  "die_instances": 1024,
+  "all_types": "kv3_hgi_*",
+  "modules": "kv3_head_eighth_e0..e7 incl e1/e5 (real views exist)"
+ }
+}

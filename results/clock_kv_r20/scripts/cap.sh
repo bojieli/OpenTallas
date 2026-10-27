@@ -1,0 +1,5 @@
+#!/bin/bash
+# CLOCK-KV-R20: R19 gate (identical args) + per-endpoint record capture
+export PYTHONPATH=/srv/opentallas-scratch2/claude/clock-kv-r19-1027/in/pylib:/srv/opentallas-scratch2/claude/wt/clock-kv-r20/tools/die_plan; cd /srv/opentallas-scratch2/claude/clock-kv-r20-1027; ulimit -v 32000000
+python3 /srv/opentallas-scratch2/claude/wt/clock-kv-r20/tools/die_plan/kv_r20_hb4_capture.py /srv/opentallas-scratch2/claude/clock-kv-r19-1027/r19 --plan /srv/opentallas-scratch2/claude/clock-kv-r19-1027/in/hm_r12.json --out sta/G_r20cap --clock-tool /srv/opentallas-scratch2/claude/wt/clock-kv-r20/tools/die_plan   --core-view kv3_head_eighth_e1=/srv/opentallas-scratch2/claude/clock-kv-r16-1026/views/kv3_head_eighth_e1 --core-view kv3_head_eighth_e5=/srv/opentallas-scratch2/claude/clock-kv-r16-1026/views/kv3_head_eighth_e5   --clock-ocv table --mesh-signoff TT=/srv/opentallas-scratch2/claude/clock-kv-r18-1027/mc/r18_TT.json,FF=/srv/opentallas-scratch2/claude/clock-kv-r18-1027/mc/r18_FF.json --hold-buffers HB4 --core-latency-ff 202.5   --dump sta/G_r20cap.pkl > sta/G_r20cap.log 2>&1
+echo "rc=$? $(date -Is)" > sta/G_r20cap.run

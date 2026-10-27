@@ -1,0 +1,293 @@
+{
+ "schema": "opentallas.kv_r20.hb4_list.v1",
+ "status": "UNCHECKED (plan-side list, own script)",
+ "model": {
+  "cell": "HB4xp67_ASAP7_75t_R",
+  "ff_early_ps": 44.6,
+  "tt_late_ps": 83.0,
+  "area_um2": 0.1021,
+  "basis": "HOLD-REPAIR estimate basis (CLOCK-KV-R6/R15 kv_hb_count.py), UNCHECKED"
+ },
+ "bits": 603026,
+ "records_fallback_to_budget": 0,
+ "cells_gate_pairworst": 821426,
+ "cells_per_endpoint": 821426,
+ "cells_template_replicated": 882663,
+ "area_mm2": {
+  "gate": 0.0839,
+  "per_endpoint": 0.0839,
+  "template": 0.0901
+ },
+ "bits_needing_hb_per_endpoint": 603026,
+ "templates": 262960,
+ "templates_needing_hb": 262960,
+ "by_receiver_kind": {
+  "glue": {
+   "bits": 603026,
+   "cells_endpoint": 821426,
+   "cells_gate": 821426
+  }
+ },
+ "by_dst_type": {
+  "kv3_pc_v1": {
+   "bits": 81024,
+   "cells_endpoint": 119883,
+   "cells_gate": 119883
+  },
+  "kv3_hgi_v7": {
+   "bits": 36906,
+   "cells_endpoint": 54797,
+   "cells_gate": 54797
+  },
+  "kv3_hgi_v4": {
+   "bits": 31164,
+   "cells_endpoint": 42741,
+   "cells_gate": 42741
+  },
+  "kv3_phy_v1": {
+   "bits": 36904,
+   "cells_endpoint": 36956,
+   "cells_gate": 36956
+  },
+  "kv3_hgi_v1": {
+   "bits": 32016,
+   "cells_endpoint": 32016,
+   "cells_gate": 32016
+  },
+  "kv3_hg_v1p4": {
+   "bits": 18640,
+   "cells_endpoint": 31784,
+   "cells_gate": 31784
+  },
+  "kv3_hg_v1p3": {
+   "bits": 18620,
+   "cells_endpoint": 29628,
+   "cells_gate": 29628
+  },
+  "kv3_hg_v1p2": {
+   "bits": 18600,
+   "cells_endpoint": 27839,
+   "cells_gate": 27839
+  },
+  "kv3_hg_v1p6": {
+   "bits": 18680,
+   "cells_endpoint": 27398,
+   "cells_gate": 27398
+  },
+  "kv3_hg_v1p5": {
+   "bits": 18660,
+   "cells_endpoint": 25589,
+   "cells_gate": 25589
+  },
+  "kv3_hg_v1": {
+   "bits": 18580,
+   "cells_endpoint": 25237,
+   "cells_gate": 25237
+  },
+  "kv3_hg_v3": {
+   "bits": 16600,
+   "cells_endpoint": 18941,
+   "cells_gate": 18941
+  },
+  "kv3_pv_v4": {
+   "bits": 8716,
+   "cells_endpoint": 18596,
+   "cells_gate": 18596
+  },
+  "kv3_pv_v3": {
+   "bits": 9434,
+   "cells_endpoint": 18572,
+   "cells_gate": 18572
+  },
+  "kv3_hg": {
+   "bits": 13608,
+   "cells_endpoint": 18188,
+   "cells_gate": 18188
+  },
+  "kv3_pv_v3n": {
+   "bits": 9434,
+   "cells_endpoint": 16778,
+   "cells_gate": 16778
+  },
+  "kv3_pv_v5": {
+   "bits": 9310,
+   "cells_endpoint": 16492,
+   "cells_gate": 16492
+  },
+  "kv3_pc_v3": {
+   "bits": 13496,
+   "cells_endpoint": 15328,
+   "cells_gate": 15328
+  },
+  "kv3_pv_v4n": {
+   "bits": 8716,
+   "cells_endpoint": 15235,
+   "cells_gate": 15235
+  },
+  "kv3_pv_v5n": {
+   "bits": 9310,
+   "cells_endpoint": 14861,
+   "cells_gate": 14861
+  },
+  "kv3_pv_v2n": {
+   "bits": 7816,
+   "cells_endpoint": 13447,
+   "cells_gate": 13447
+  },
+  "kv3_pv_v6": {
+   "bits": 7568,
+   "cells_endpoint": 11930,
+   "cells_gate": 11930
+  },
+  "kv3_pc": {
+   "bits": 10772,
+   "cells_endpoint": 11884,
+   "cells_gate": 11884
+  },
+  "kv3_pv_v1": {
+   "bits": 7510,
+   "cells_endpoint": 11591,
+   "cells_gate": 11591
+  },
+  "kv3_pv_v6n": {
+   "bits": 7568,
+   "cells_endpoint": 11308,
+   "cells_gate": 11308
+  },
+  "kv3_hroot": {
+   "bits": 8628,
+   "cells_endpoint": 11232,
+   "cells_gate": 11232
+  },
+  "kv3_pv_v1n": {
+   "bits": 7510,
+   "cells_endpoint": 11081,
+   "cells_gate": 11081
+  },
+  "kv3_pv_v2": {
+   "bits": 7816,
+   "cells_endpoint": 10593,
+   "cells_gate": 10593
+  },
+  "kv3_hub_C": {
+   "bits": 7834,
+   "cells_endpoint": 9934,
+   "cells_gate": 9934
+  },
+  "kv3_pv_v7": {
+   "bits": 7136,
+   "cells_endpoint": 8891,
+   "cells_gate": 8891
+  },
+  "kv3_hub_Wi": {
+   "bits": 7671,
+   "cells_endpoint": 8620,
+   "cells_gate": 8620
+  },
+  "kv3_hgi_v6": {
+   "bits": 6200,
+   "cells_endpoint": 8376,
+   "cells_gate": 8376
+  },
+  "kv3_hgi_v8": {
+   "bits": 6931,
+   "cells_endpoint": 8238,
+   "cells_gate": 8238
+  },
+  "kv3_pv_v12": {
+   "bits": 7659,
+   "cells_endpoint": 7918,
+   "cells_gate": 7918
+  },
+  "kv3_hub_Ei": {
+   "bits": 7303,
+   "cells_endpoint": 7842,
+   "cells_gate": 7842
+  },
+  "kv3_hgi_v3": {
+   "bits": 5243,
+   "cells_endpoint": 5906,
+   "cells_gate": 5906
+  },
+  "kv3_hub_Eo": {
+   "bits": 5886,
+   "cells_endpoint": 5886,
+   "cells_gate": 5886
+  },
+  "kv3_hub_Wo": {
+   "bits": 5886,
+   "cells_endpoint": 5886,
+   "cells_gate": 5886
+  },
+  "kv3_hgi_v5": {
+   "bits": 5451,
+   "cells_endpoint": 5872,
+   "cells_gate": 5872
+  },
+  "kv3_hgi_v2": {
+   "bits": 5850,
+   "cells_endpoint": 5850,
+   "cells_gate": 5850
+  },
+  "kv3_hgi": {
+   "bits": 5434,
+   "cells_endpoint": 5434,
+   "cells_gate": 5434
+  },
+  "kv3_phy": {
+   "bits": 5272,
+   "cells_endpoint": 5278,
+   "cells_gate": 5278
+  },
+  "kv3_pv_v8": {
+   "bits": 3827,
+   "cells_endpoint": 5026,
+   "cells_gate": 5026
+  },
+  "kv3_pv": {
+   "bits": 3827,
+   "cells_endpoint": 4412,
+   "cells_gate": 4412
+  },
+  "kv3_io_cor": {
+   "bits": 3483,
+   "cells_endpoint": 3515,
+   "cells_gate": 3515
+  },
+  "kv3_io_cor_v1": {
+   "bits": 3053,
+   "cells_endpoint": 3143,
+   "cells_gate": 3143
+  },
+  "kv3_sys_c": {
+   "bits": 2321,
+   "cells_endpoint": 2321,
+   "cells_gate": 2321
+  },
+  "kv3_io_ft": {
+   "bits": 1052,
+   "cells_endpoint": 1052,
+   "cells_gate": 1052
+  },
+  "kv3_io_ft_v1": {
+   "bits": 1050,
+   "cells_endpoint": 1050,
+   "cells_gate": 1050
+  },
+  "kv3_sys_SD": {
+   "bits": 526,
+   "cells_endpoint": 526,
+   "cells_gate": 526
+  },
+  "kv3_sys_SD_v1": {
+   "bits": 525,
+   "cells_endpoint": 525,
+   "cells_gate": 525
+  }
+ },
+ "k_hist_endpoint": {
+  "1": 406304,
+  "2": 175044,
+  "3": 21678
+ }
+}
