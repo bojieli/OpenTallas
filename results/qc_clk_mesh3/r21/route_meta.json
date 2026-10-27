@@ -1,0 +1,26 @@
+{
+ "plan": "/r/basekit_in/plan_d43.json",
+ "plan_sha256": "f2c91d0338ee83f24741d805af1a34ce68117adb1586fca4c9f8e4135c24d0ff",
+ "ft_bits": 485897,
+ "old_route_v_identical_without_channel": true,
+ "channel_nets": {
+  "ports": 304,
+  "bits": 143144,
+  "new_net_bits": 33702,
+  "ft_joined_bits": 109442
+ },
+ "channel_pairs": 49,
+ "channel_prefix": {
+  "sl": 300,
+  "coll": 4
+ },
+ "abutted_pin_check": {
+  "ports": 2689,
+  "bits": 1137335,
+  "bad_bits": 0,
+  "bad_ports": 0,
+  "examples": [],
+  "verdict": "PASS"
+ },
+ "checked": "UNCHECKED"
+}

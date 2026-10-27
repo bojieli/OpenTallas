@@ -1,0 +1,236 @@
+{
+ "plan": "inputs/d43/plan_d43.json",
+ "error": "46 plan error(s): no_pin_stack 35, reserve_overflow 11",
+ "rows": [
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_1198_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_1198_0",
+   "detail": "M8 trunk 15364.040..16189.240 outside reservation 15365.457..16187.553"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20107_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20144_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20108_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20145_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20109_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20109_0",
+   "detail": "M8 trunk 14128.520..14540.175 outside reservation 14129.937..14540.175"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20146_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20146_0",
+   "detail": "M8 trunk 17012.781..17424.760 outside reservation 17012.781..17423.073"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20110_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20147_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20111_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20148_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20112_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20112_0",
+   "detail": "M8 trunk 12893.000..13304.655 outside reservation 12894.417..13304.655"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20149_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20149_0",
+   "detail": "M8 trunk 18248.301..18660.280 outside reservation 18248.301..18658.593"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20113_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20150_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20114_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20151_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20115_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20115_0",
+   "detail": "M8 trunk 11657.480..12069.135 outside reservation 11658.897..12069.135"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20152_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20152_0",
+   "detail": "M8 trunk 19483.821..19895.800 outside reservation 19483.821..19894.113"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20116_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20153_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20117_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20154_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20118_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20118_0",
+   "detail": "M8 trunk 10421.960..10833.615 outside reservation 10423.377..10833.615"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20155_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20155_0",
+   "detail": "M8 trunk 20719.341..21131.320 outside reservation 20719.341..21129.633"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20119_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20156_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20120_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20157_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20121_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20121_0",
+   "detail": "M8 trunk 9186.440..9598.095 outside reservation 9187.857..9598.095"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20158_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20158_0",
+   "detail": "M8 trunk 21954.861..22366.840 outside reservation 21954.861..22365.153"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20122_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20159_0",
+   "detail": "Y tie: M7 riser 3.375 um / M7 extent 3.645 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20123_0",
+   "detail": "Y tie: M7 riser 3.955 um / M7 extent 4.225 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20160_0",
+   "detail": "Y tie: M7 riser 3.955 um / M7 extent 4.225 um outside the island window"
+  }
+ ]
+}

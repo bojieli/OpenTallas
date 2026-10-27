@@ -1,0 +1,136 @@
+{
+ "plan": "inputs/d43/plan_d43.json",
+ "error": "26 plan error(s): no_clock_track 2, no_pin_stack 16, reserve_overflow 8",
+ "rows": [
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_1191_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_1191_0",
+   "detail": "M8 trunk 11657.480..12478.280 outside reservation 11657.871..12478.347"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_1194_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_1194_0",
+   "detail": "M8 trunk 19070.600..19891.400 outside reservation 19070.991..19891.791"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_18476_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_18476_0",
+   "detail": "M8 trunk 11242.760..11656.305 outside reservation 11244.555..11656.305"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20097_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20097_0",
+   "detail": "M8 trunk 12479.913..12888.760 outside reservation 12479.913..12887.019"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_19079_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_19079_0",
+   "detail": "M8 trunk 18655.880..19069.425 outside reservation 18657.675..19069.425"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20124_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_20124_0",
+   "detail": "M8 trunk 19893.357..20301.880 outside reservation 19893.357..20300.787"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_18477_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20098_0",
+   "detail": "Y tie: M7 riser 6.655 um / M7 extent 6.925 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_19080_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_20125_0",
+   "detail": "Y tie: M7 riser 6.655 um / M7 extent 6.925 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_18478_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_19081_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_18479_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_18479_0",
+   "detail": "M8 trunk 10004.040..10416.303 outside reservation 10004.499..10416.303"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_19082_0",
+   "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"
+  },
+  {
+   "kind": "reserve_overflow",
+   "name": "ckm_w_ckt_19082_0",
+   "detail": "M8 trunk 17417.160..17829.423 outside reservation 17417.619..17829.423"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_18480_0",
+   "detail": "Y tie: M7 riser 6.655 um / M7 extent 6.925 um outside the island window"
+  },
+  {
+   "kind": "no_pin_stack",
+   "name": "ckt_19083_0",
+   "detail": "Y tie: M7 riser 6.655 um / M7 extent 6.925 um outside the island window"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ckm_w_ckt_494_0",
+   "detail": "driver jog M8 ideal 13150.215"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ckm_w_ckt_791_0",
+   "detail": "driver jog M8 ideal 13150.215"
+  }
+ ]
+}
