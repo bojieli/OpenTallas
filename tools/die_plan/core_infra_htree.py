@@ -517,11 +517,19 @@ def main():
     ap.add_argument('--cap-balance', action='store_true', help='equal estimated C (pin + MST share) per group instead of equal count')
     ap.add_argument('--ring-islands', action='store_true', help='propose islands moved onto one maze ring about the entry')
     ap.add_argument('--r6', action='store_true'); ap.add_argument('--no-side-hub', action='store_true')
+    ap.add_argument('--hb-axes', default=None, help='balanced binary H-tree over 2^n --islands: split axis per level, e.g. x,y,x (plan_hb)')
+    ap.add_argument('--hb-tol', type=float, default=2.2, help='plan_hb: level spread (um) above which a level is length-equalised')
     a = ap.parse_args()
     keep = [tuple(map(float, k.split(','))) for k in a.keepout]
     isl = [tuple(map(float, p.split(','))) for p in a.islands.split(';')] if a.islands else None
     kr0, kc0 = map(float, a.rc.split(','))
-    if a.r6:
+    if a.hb_axes:
+        cw = None
+        if a.cap_balance:
+            _, _, _s, _ = read_geo(a.geo); cw = sink_weights(_s, 0.5 * (1.78475e-1 + 1.64264e-1) * kc0)
+        P = plan_hb(a.geo, isl, ['xy'.index(x) for x in a.hb_axes.split(',')], [int(x) for x in a.nb.split(',')], a.leaf_n, a.smax,
+                    tol_um=a.hb_tol, keepout=keep, cap_w=cw)
+    elif a.r6:
         cw = None
         if a.cap_balance:
             _, _, _s, _ = read_geo(a.geo); cw = sink_weights(_s, 0.5 * (1.78475e-1 + 1.64264e-1) * kc0)
@@ -551,6 +559,7 @@ def main():
                leaf_load=[min(len(v) for v in P['leafsinks'].values()), max(len(v) for v in P['leafsinks'].values())],
                level_len_um=P['T'], repeaters_per_edge=[k - 1 for k in P['K']], stages_per_path=sorted(depths),
                path_wire_um=round(sum(P['T']), 2), level_range_um=P.get('level_range_um'),
+               island_snap_um=P.get('island_snap_um'), hub_snap_um=P.get('hub_snap_um'),
                leaf_displacement_um=P.get('leaf_displacement_um'), b_displacement_um=P.get('b_displacement_um'), n_cells=len(P['nodes']) + len(P['macros']), shared_wire=sw,
                pred={k: {kk: vv for kk, vv in v.items() if kk != 'leaf'} for k, v in pred.items()}, pred_leaf=pred,
                nodes=[(n[0], n[1], mz.xy(n[2]), n[3], n[4]) for n in P['nodes']], macros=[(x, y, mz.xy(z)) for x, y, z in P['macros']])
@@ -915,6 +924,106 @@ def split_w(pts, k, weight):
         grp = [g for g in grp if g] or grp
         cs = [(sorted(p[0] for p in g)[len(g) // 2], sorted(p[1] for p in g)[len(g) // 2]) for g in grp]
     return grp
+
+
+# ---------------------------------------------------------------- balanced binary H-tree over 2^n master-plan islands
+def plan_hb(geo, islands, axes, nb, leaf_n=4, smax=150.0, tol_um=2.2, keepout=(), cap_w=None):
+    """Balanced BINARY H-tree from the centre entry over 2^n FIXED master-plan islands (12.8b, 12.2a1), then
+    nb B branches per island and leaf_n leaves per B (R6 buffer-per-branch form, one point-to-point wire per net).
+    axes[l] = split axis of level l+1 (0 = x, 1 = y): the island set is cut in two halves on that axis at every
+    level, so every internal node has exactly 2 children.  Internal node site = geometric midpoint of its two
+    children (plan geometry only, snapped to the nearest legal node cell), so mirrored islands give equal legs per
+    level by construction.  Per level every edge gets the same legal length T_l (repeater waypoints on exact
+    shortest paths when the level spread exceeds tol_um).  No measured input; no pads."""
+    core, entry, sinks, macros = read_geo(geo)
+    mz = Maze(core, macros, keepout=keepout); ent = mz.cell(entry, node=False)
+    nl = len(axes); ni = len(islands)
+    assert ni == 2 ** nl, 'need 2^len(axes) islands (%d islands, %d axes)' % (ni, nl)
+    nbk = nb if len(nb) == ni else nb * ni
+    assert len(nbk) == ni
+    isl = [mz.cell(p) for p in islands]
+    disp = [round(abs(mz.xy(c_)[0] - p[0]) + abs(mz.xy(c_)[1] - p[1]), 3) for c_, p in zip(isl, islands)]
+    # binary island hierarchy
+    key_of = {}
+    def rec(key, idx, lv):
+        if lv == nl:
+            key_of[idx[0]] = key; return
+        ax = axes[lv]; idx = sorted(idx, key=lambda i: (islands[i][ax], islands[i][1 - ax])); h = len(idx) // 2
+        if not islands[idx[h - 1]][ax] < islands[idx[h]][ax]:
+            raise ValueError('islands do not split cleanly on axis %d at level %d' % (ax, lv + 1))
+        rec(key + (0,), idx[:h], lv + 1); rec(key + (1,), idx[h:], lv + 1)
+    rec((), list(range(ni)), 0)
+    nleaf = sum(nbk) * leaf_n; n = len(sinks)
+    tgt = [n * nbk[i] * leaf_n // nleaf for i in range(ni)]
+    for i in range(n - sum(tgt)): tgt[i] += 1
+    Q = assign(mz, sinks, isl, tgt)
+    if cap_w is not None:
+        sc = {s_: mz.cell(s_[:2], node=False) for s_ in sinks}; Wt = {s_: cap_w[s_] for s_ in sinks}
+        tot = sum(Wt.values()); Dm = {s_: [mz.md(isl[j], sc[s_]) for j in range(ni)] for s_ in sinks}
+        tw = [tot * nbk[j] * leaf_n / nleaf for j in range(ni)]; w = [0.0] * ni; best = None
+        for it in range(500):
+            a_ = {s_: min(range(ni), key=lambda j: Dm[s_][j] + w[j]) for s_ in sinks}; load = [0.0] * ni
+            for s_, j in a_.items(): load[j] += Wt[s_]
+            err = max(abs(load[j] - tw[j]) / tw[j] for j in range(ni))
+            if best is None or err < best[0]: best = (err, dict(a_))
+            if err < 0.01: break
+            for j in range(ni): w[j] += 0.5 * (load[j] - tw[j]) / tw[j] * 20 / (1 + it / 50)
+        Q = [[s_ for s_ in sinks if best[1][s_] == j] for j in range(ni)]
+    groups = {(): sinks}; site = {(): ent}
+    for k in range(ni):
+        g = key_of[k]; groups[g] = Q[k]; site[g] = isl[k]
+        for d in range(1, nl):
+            groups.setdefault(g[:d], []); groups[g[:d]] = groups[g[:d]] + Q[k]
+        bgs = split(Q[k], nbk[k]) if cap_w is None else split_w(Q[k], nbk[k], cap_w)
+        for bi, bg in enumerate(bgs):
+            groups[g + (bi,)] = bg
+            for li, lg in enumerate(split(bg, leaf_n) if cap_w is None else split_w(bg, leaf_n, cap_w)): groups[g + (bi, li)] = lg
+    depth = max(len(g) for g in groups)
+    for g in [x for x in groups if len(x) == depth]:
+        pts = groups[g]; site[g] = mz.cell((sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)))
+    for g in [x for x in groups if len(x) == depth - 1]:
+        ch = [site[g + (i,)] for i in range(leaf_n)]
+        site[g] = minimax_site(mz, ch, (round(sum(c[0] for c in ch) / leaf_n), round(sum(c[1] for c in ch) / leaf_n)))
+    hub_disp = {}
+    for lv in range(nl - 1, 0, -1):
+        for g in [x for x in groups if len(x) == lv]:
+            a0 = mz.xy(site[g + (0,)]); a1 = mz.xy(site[g + (1,)]); mid = ((a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2)
+            site[g] = mz.cell(mid); hub_disp[g] = round(abs(mz.xy(site[g])[0] - mid[0]) + abs(mz.xy(site[g])[1] - mid[1]), 3)
+    def nm(g): return 'R' if not g else 'T' + ''.join(str(i) for i in g)
+    nodes = [('root', None, ent, BIG, 'entry')]; wires = []; last = {(): 'root'}; land = {}; T = []; K = []; spread = {}
+    for lv in range(depth):
+        gl = sorted(x for x in groups if len(x) == lv + 1)
+        offs = {}
+        for g in gl:
+            par = g[:-1]; pc = site[par]; nsib = len([x for x in gl if x[:-1] == par])
+            i_ = g[-1]; nrow = math.ceil(nsib / 2); col = i_ % 2 if nsib > 1 else 0.5; row = i_ // 2 if nsib > 1 else 0
+            offs[g] = mz.cell((mz.xy(pc)[0] + (col - 0.5) * 1.08, mz.xy(pc)[1] + (row - (nrow - 1) / 2) * 1.08))
+        L = {g: mz.md(offs[g], site[g]) for g in gl}; t = max(L.values()); sp = t - min(L.values())
+        k = max(1, math.ceil(t / smax)); k = max(k, 2) if sp > tol_um else k
+        T.append(t); K.append(k); spread[lv + 1] = round(sp, 2)
+        for g in gl:
+            bname = nm(g) + '_br'; nodes.append((bname, last[g[:-1]], offs[g], BIG, 'branch'))
+            pts = exact_points(mz, offs[g], site[g], t if k > 1 else L[g], k); prev = bname; chain = [offs[g]] + pts + [site[g]]
+            for i, c in enumerate(pts):
+                nn = nm(g) + '_r%d' % i; nodes.append((nn, prev, c, REP, 'rep')); prev = nn
+            segs = [mz.md(chain[i], chain[i + 1]) for i in range(len(chain) - 1)]
+            wires.append(dict(level=lv + 1, edge=nm(g), segs=segs, cells=[mz.path(chain[i], chain[i + 1]) for i in range(len(chain) - 1)]))
+            if lv == depth - 1: nodes.append((nm(g), prev, site[g], BIG, 'leaf'))
+            else: land[prev] = (segs[-1], nm(g))
+            last[g] = prev
+    leaves = sorted(x for x in groups if len(x) == depth)
+    leafsinks = {nm(g): groups[g] for g in leaves}
+    mac = []
+    for name, rect, ck in macros:
+        c = mz.cell((ck[0] + 2.2, ck[1])); lf = min(leaves, key=lambda g: mz.md(site[g], c))
+        mac.append((name, nm(lf), mz.cell((mz.xy(site[lf])[0] + 1.08, mz.xy(site[lf])[1]))))
+    lvl = collections.defaultdict(list)
+    for w_ in wires: lvl[w_['level']].append(round(sum(w_['segs']), 2))
+    isl_groups = [key_of[k] for k in range(ni)]
+    return dict(mz=mz, entry=entry, ent=ent, groups=groups, leaves=leaves, site=site, T=T, K=K, nodes=nodes, wires=wires, land=land,
+                leafsinks=leafsinks, macros=mac, splits=['H' + ''.join('xy'[a] for a in axes), nbk, leaf_n], nm=nm, isl_groups=isl_groups,
+                level_range_um={l: [min(v), max(v)] for l, v in lvl.items()}, level_spread_um=spread, islands_moved=None,
+                island_snap_um=disp, hub_snap_um={nm(g): v for g, v in hub_disp.items()})
 
 
 if __name__ == '__main__':
