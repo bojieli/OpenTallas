@@ -490,9 +490,9 @@ def tap_window_io_shift(P):
     return -w, w
 
 
-def hold_out_min_sdc_ps(P):
+def hold_out_min_sdc_ps(P, tn=None):
     """the output min delay WRITTEN in the kit SDC / gate / sign-off overlay: contract hold_out_min_ps + window."""
-    return hold_out_min_ps(P) + tap_window_io_shift(P)[1]
+    return hold_out_min_ps(P, tn) + tap_window_io_shift(P)[1]
 
 
 def hold_in_min_ps(P):
@@ -500,9 +500,17 @@ def hold_in_min_ps(P):
     return seam_hold(P)["in_min_ps"]
 
 
-def hold_out_min_ps(P):
-    """the kit's min output delay vs vclk (ps, <= 0): the sender's share of the seam hold contract."""
-    return seam_hold(P)["out_min_ps"]
+def hold_out_min_ps(P, tn=None):
+    """Contract output-min, tightened by the type's own checked sender guarantee."""
+    base = seam_hold(P)["out_min_ps"]
+    guarantee = out_hold_check_ps(P, tn) if tn is not None else None
+    return base if guarantee is None else min(base, (1 - UNC_SPLIT) * UNC_HOLD_PS - guarantee)
+
+
+def out_hold_check_ps(P, tn):
+    """Declared guarantee checked by this sender kit, not a measured clock trim."""
+    value = (P.types.get(tn, {}).get("clock", {}) or {}).get("out_hold_check_ps")
+    return None if value is None else float(value)
 
 
 # IO-HOLD option A (COORD ruling 2026-10-25 10:23, KITS-SPARE PROPOSAL IO-HOLD-2; opt-in: plan clock.io_hold =
@@ -531,10 +539,12 @@ IO_HOLD_MODES = ("legacy", "sender_min", "plan_demand")
 # (ot_io_hold_apply_structural): the declared demand is an obligation for the repair, not a structural failure.
 
 
-def io_hold_mode(P):
+def io_hold_mode(P, tn=None):
     """'legacy' (flat in_min on every input, default) or 'sender_min' (option A): plan clock.io_hold > env OT_IO_HOLD."""
     import os
-    v = P.clock.get("io_hold")
+    v = (P.types.get(tn, {}).get("clock", {}) or {}).get("io_hold") if tn is not None else None
+    if v is None:
+        v = P.clock.get("io_hold")
     if v is None:
         v = os.environ.get("OT_IO_HOLD") or "legacy"
     if v not in IO_HOLD_MODES:
@@ -547,8 +557,11 @@ def sender_out_guarantee_ps(P, snd_type):
     signed-off output hold check guarantees: the signed view's published types[].clock.out_hold_guarantee_ps,
     else the plan contract (1 - UNC_SPLIT) x UNC_HOLD_PS - hold_out_min_ps."""
     ck = P.types.get(snd_type, {}).get("clock", {}) or {}
-    if ck.get("out_hold_guarantee_ps") is not None:
+    checked = out_hold_check_ps(P, snd_type)
+    if ck.get("out_hold_guarantee_ps") is not None and (checked is None or float(ck["out_hold_guarantee_ps"]) >= checked):
         return float(ck["out_hold_guarantee_ps"]), f"signed view {snd_type}"
+    if checked is not None:
+        return checked, f"sender kit check {snd_type}"
     return (1 - UNC_SPLIT) * UNC_HOLD_PS - hold_out_min_ps(P), "plan contract"
 
 
@@ -622,7 +635,7 @@ def die_sta_sdc_lines(P, tn, side):
         base = lambda bus: A[bus]["in_min_ps"] if bus in A else hold_in_min_ps(P)
         cmd = "set_input_delay"
     else:
-        base = lambda bus: hold_out_min_sdc_ps(P)
+        base = lambda bus: hold_out_min_sdc_ps(P, tn)
         cmd = "set_output_delay"
     g = {}
     for bus, bits in dd[side].items():
@@ -643,7 +656,7 @@ def input_hold_min(P, tn, structural=False):
     (the type is hardened once): the minimum over every instance's driver.  plan_demand (HOLD-REPAIR): each value
     is the sender guarantee minus the plan's seam hold demand D (hold_demand_ps); structural=True returns the plain
     option A values (the structural hold gate's view)."""
-    mode = io_hold_mode(P)
+    mode = io_hold_mode(P, tn)
     if mode not in ("sender_min", "plan_demand"):
         return {}
     demand = mode == "plan_demand" and not structural
@@ -716,7 +729,7 @@ def io_hold_tcl(P, tn):
     m = input_hold_min(P, tn)
     if not m:
         return None
-    mode = io_hold_mode(P)
+    mode = io_hold_mode(P, tn)
 
     def proc(name, vals, msg):
         out = [f"proc {name} {{vclk}} {{"]
@@ -937,7 +950,7 @@ def sdc(P, tn, pins):
     # IO-HOLD option A (opt-in clock.io_hold sender_min): partition-driven inputs take their sender's guaranteed
     # output-min instead; the related tap pair skew is checked at the parent (io_hold_parent.py)
     for v, ports in _group_in_min(input_hold_min(P, tn)):
-        out += ((f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n" if io_hold_mode(P) != "plan_demand"
+        out += ((f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n" if io_hold_mode(P, tn) != "plan_demand"
                  else f"# HOLD-REPAIR plan_demand: sender guarantee - plan seam hold demand ({v:g} ps vs vclk)\n")
                 + f"set_input_delay -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
     out += die_sta_sdc_lines(P, tn, "inputs")
@@ -947,7 +960,7 @@ def sdc(P, tn, pins):
     # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
-    out += (f"set_output_delay -min {t_lib(hold_out_min_sdc_ps(P)):.4f} -clock vclk [all_outputs]\n")
+    out += (f"set_output_delay -min {t_lib(hold_out_min_sdc_ps(P, tn)):.4f} -clock vclk [all_outputs]\n")
     out += die_sta_sdc_lines(P, tn, "outputs")
     import reset_tree as RT
     fp = RT.pad_false_path_pins(P, tn)
@@ -1432,7 +1445,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export DESIGN_NAME = {t['module']}",
            "export PLATFORM = asap7",
            "export VERILOG_FILES = " + " ".join(srcs),
-           "export VERILOG_DEFINES = -DSYNTHESIS",
+           "export VERILOG_DEFINES = " + " ".join(type_verilog_defines(t)),
            "export SDC_FILE = /work/constraint.sdc",
            f"export DIE_AREA = 0 0 {_um(w)} {_um(h)}",
            f"export CORE_AREA = {_um(m)} {_um(m)} {_um(w - m)} {_um(h - m)}",
@@ -1502,7 +1515,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export OT_VCLK_FF = {t_lib(ib['ff']):.4f}",
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
-           f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_sdc_ps(P)):.4f}",
+           f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_sdc_ps(P, tn)):.4f}",
            *([f"export OT_TAP_WINDOW = {t_lib(tap_window_ps(P)):.4f}"] if tap_window_ps(P) else []),
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
            # RCX (setRC_rcx_asap7.tcl; the stock setRC.tcl put clock sinks 11-57 ps above RCX).  ORFS reads
@@ -1554,7 +1567,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
     # grt_post.tcl: density GRT-RC tap pass + vclk back to the SDC value before 5_1_grt.sdc is written)
     cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
-    if io_hold_mode(P) == "plan_demand" or die_sta_hold_demand(P, tn):
+    if io_hold_mode(P, tn) == "plan_demand" or die_sta_hold_demand(P, tn):
         # CLOCK-KV-R21: a die_sta per-bit demand (die_sta_hold_demand) uses the same HB4 hook + buffer cap
         # HOLD-REPAIR 10-26 (12.4a a1): the FF GRT hold repair pads the declared seam demand on the input paths with
         # HB4 (hold_pad_hb4.tcl) and a raised buffer cap; hold_repair_pre.tcl sources grt_pre.tcl first
@@ -1630,6 +1643,29 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
     import master_slice as MS
     ms = MS.kit_apply(kd, tn, [w, h], master_slice, P.raw, trial, kind="partition", gpl_hook=kd / "face_flops.tcl")
+    stages = t.get("reset", {}).get("physical_stages", [])
+    if stages:
+        import fup_reset_groups as FGR
+        for stage in stages:
+            re.compile(stage["selector"])
+            x, y = stage["xy_um"]
+            if not (0 <= x <= w and 0 <= y <= h):
+                raise ValueError(f"{tn}: private reset stage outside outline")
+        # Preserve independent first stages through synthesis. The source module
+        # itself carries keep_hierarchy; missing source attributes fail closed.
+        text = "\n".join((kd / "rtl" / Path(f).name).read_text() for f in rtl_files)
+        for module in t.get("reset", {}).get("keep_modules", []):
+            pattern = r"\(\*[^*]*\bkeep_hierarchy\b[^*]*\*\)\s*module\s+" + re.escape(module) + r"\b"
+            if not re.search(pattern, text):
+                raise ValueError(f"{tn}: private reset module {module} lacks keep_hierarchy source")
+        manifest = dict(type=tn, anchors=[[s["selector"], *s["xy_um"]] for s in stages])
+        (kd / "reset_physical_stages.json").write_text(json.dumps(manifest, indent=1) + "\n")
+        (kd / "reset_physical_stages.tcl").write_text(FGR.tcl(manifest))
+        (kd / "reset_physical_stages_release.tcl").write_text(FGR.tcl(manifest, True))
+        with (kd / "face_flops.tcl").open("a") as f:
+            f.write("\nsource /work/reset_physical_stages.tcl\n")
+        with (kd / "face_flops_release.tcl").open("a") as f:
+            f.write("\nsource /work/reset_physical_stages_release.tcl\n")
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
@@ -1694,7 +1730,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if ioh:
         from io_hold_qualification import plan_digest
         bud['io_hold'] = dict(mode='sender_min',plan_sha256=plan_digest(P.raw),requires_parent=True)
-        if io_hold_mode(P) == 'plan_demand':
+        if io_hold_mode(P, tn) == 'plan_demand':
             hd = P.clock['hold_demand']
             bud['io_hold'].update(mode='plan_demand', hold_demand=dict(
                 derate=hd.get('derate'), cell=hd.get('cell'), windows_ps=hd.get('windows_ps'),
@@ -1732,7 +1768,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(cf / f, kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
     from signoff import copy_signoff_bundle
-    copy_signoff_bundle(kd)
+    copy_signoff_bundle(kd, extra=("kit_preflight.py",))
     # CRASH-TRIAGE 10-25: 6_report PDNSim IR is deferred out of the route container (partition_ir.py patch +
     # OT_DEFER_PARTITION_IR=1 in run_kit.sh).  10 autopilot CRASH rows (kv3_io_ft/_v1 x8, coll_ftm x2) were killed
     # at the memory cap (25/33/50 GB at --mem 24/32/48) inside analyze_power_grid AFTER 6_final.odb/.spef existed.
@@ -1748,6 +1784,15 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     port_pins += [dict(bus=b["port"], bit=i) for b in (bump_ports or []) for i in range(b["width"])]
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
     return kd
+
+
+def type_verilog_defines(t):
+    """One declared source profile for synthesis, RTL lint and the LEC gold reader."""
+    values = t.get("verilog_defines", [])
+    if not isinstance(values, list) or any(not isinstance(v, str) or
+            not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", v) for v in values):
+        raise ValueError("type verilog_defines must be a list of bare Verilog macro names")
+    return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values]))
 
 
 RUN_KIT = r"""#!/bin/bash
@@ -1770,6 +1815,12 @@ HISTORY="$K/preflight_history/$(date +%Y%m%d_%H%M%S)_$$"
 for f in rtl_lint.json sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
   if [ -f "$K/$f" ]; then mkdir -p "$HISTORY"; cp -p "$K/$f" "$HISTORY/$f"; fi
 done
+# Static checks run before starting the expensive synthesis/route container.
+PREFLIGHT="$K/kit_preflight_$(date +%Y%m%d_%H%M%S)_$$.json"
+if ! python3 -I "$K/kit_preflight.py" "$K" --out "$PREFLIGHT"; then
+  echo 'FAIL_PREFLOOR kit_preflight' | tee -a "$K/FAIL_PREFLOOR"
+  exit 10
+fi
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \

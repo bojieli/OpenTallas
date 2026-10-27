@@ -44,7 +44,7 @@
 //   the pop (slot 2m), unchanged.  NS and the 2,048 kept slots are even.  PK = 0 = the ROWX-3 behaviour (low 512 b).
 // Window order assumed identity (window k of a pass = tile HB*8 + k): the compiler books pvs_t = PV0 + 40 (t & 7).
 // ---------------------------------------------------------------------------------------------------------------------
-module dsdv_rowx_xm #(parameter integer MUT = 0, parameter integer D = 16) (
+module dsdv_rowx_xm #(parameter integer MUT = 0, parameter integer D = 16, parameter integer USE_SRAM = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          cfg_v,
@@ -82,8 +82,13 @@ module dsdv_rowx_xm #(parameter integer MUT = 0, parameter integer D = 16) (
 
     // ---------------------------------------------------------------- (1) re-pair
     wire o_v; wire [511:0] o_d; wire f_mis;
+    generate if (USE_SRAM) begin:g_u_rp_sram
+    dsdv_rowx_rp_sram #(.MUT(MUT)) u_rp (.clk(clk), .rst_n(rst_n), .go(go), .xoff(xoff), .ns(ns), .x_v(x_v), .x_d(x_d),
+                                    .o_v(o_v), .o_d(o_d), .f_mis(f_mis));
+    end else begin:g_u_rp_flop
     dsdv_rowx_rp #(.MUT(MUT)) u_rp (.clk(clk), .rst_n(rst_n), .go(go), .xoff(xoff), .ns(ns), .x_v(x_v), .x_d(x_d),
                                     .o_v(o_v), .o_d(o_d), .f_mis(f_mis));
+    end endgenerate
 
     // ---------------------------------------------------------------- half fields
     function automatic hv(input [255:0] h); hv = h[0]; endfunction
@@ -104,8 +109,13 @@ module dsdv_rowx_xm #(parameter integer MUT = 0, parameter integer D = 16) (
     endfunction
     wire [1023:0] rl_d; wire rl_late, rl_ovf;
     reg rpar; reg [511:0] rh, rhold;                       // PK: slot parity, unpacked high half, packed low half
+    generate if (USE_SRAM) begin:g_u_lr_sram
+    dsdv_rowx_lc_sram #(.W(1024), .D(D)) u_lr (.clk(clk), .rst_n(rst_n), .i_v(ri_v && !head), .i_d(ri_d),
+                                          .pop(o_v && !head && !(pk && rpar)), .o_d(rl_d), .f_late(rl_late), .f_ovf(rl_ovf));
+    end else begin:g_u_lr_flop
     dsdv_rowx_lc #(.W(1024), .D(D)) u_lr (.clk(clk), .rst_n(rst_n), .i_v(ri_v && !head), .i_d(ri_d),
                                           .pop(o_v && !head && !(pk && rpar)), .o_d(rl_d), .f_late(rl_late), .f_ovf(rl_ovf));
+    end endgenerate
     wire [511:0] rin = head ? 512'd0 : (pk && rpar) ? rh : rl_d[511:0];
     wire [511:0] rcur = rin | {stamp(o_d[511:256], pos), stamp(o_d[255:0], pos)};
     reg [6:0] rn; reg [1:0] rq; reg [10:0] rrb;
@@ -134,8 +144,13 @@ module dsdv_rowx_xm #(parameter integer MUT = 0, parameter integer D = 16) (
     wire [1023:0] bl_d; wire bl_late, bl_ovf;
     reg bpar; reg [511:0] bh;
     wire bpop = bact && !(pk && bpar);
+    generate if (USE_SRAM) begin:g_u_lb_sram
+    dsdv_rowx_lc_sram #(.W(1024), .D(D)) u_lb (.clk(clk), .rst_n(rst_n), .i_v(tail ? ro_v : bi_v), .i_d(tail ? ro_d : bi_d),
+                                          .pop(bpop), .o_d(bl_d), .f_late(bl_late), .f_ovf(bl_ovf));
+    end else begin:g_u_lb_flop
     dsdv_rowx_lc #(.W(1024), .D(D)) u_lb (.clk(clk), .rst_n(rst_n), .i_v(tail ? ro_v : bi_v), .i_d(tail ? ro_d : bi_d),
                                           .pop(bpop), .o_d(bl_d), .f_late(bl_late), .f_ovf(bl_ovf));
+    end endgenerate
     wire [511:0] bsl = (pk && bpar) ? bh : bl_d[511:0];   // this slot's word (unpacked)
     wire [10:0] eb = srank(brb, bn);
     wire keep = (MUT == 4) ? (eb <= nr) : (eb < nr);

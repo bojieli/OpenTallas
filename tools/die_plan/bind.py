@@ -2621,6 +2621,11 @@ class Binder:
             f.write_text(txt)
             import native_istations
             native_istations.materialize(self, tn, f)
+            import bound_groups
+            try:
+                files.extend(bound_groups.materialize(self, tn, f))
+            except (bound_groups.BoundGroupError, ValueError) as exc:
+                raise BindError(str(exc)) from exc
             files.append(f)
         if self._native_glue is not None:
             files.extend(self._native_glue.files)
@@ -2676,7 +2681,7 @@ class Binder:
             self.parent_id_ports, self.parent_id_values = {}, {}
         id_decls = {}
         if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", [])):
-            from parent_id_straps import type_parent_id_straps, validate_parent_id_straps
+            from parent_id_straps import type_parent_id_straps, validate_parent_id_straps, validate_bound_id_bits
             try:
                 id_decls = type_parent_id_straps(t)
             except ValueError as e:
@@ -2704,11 +2709,11 @@ class Binder:
                     validate_parent_id_straps({"parent_id_straps": id_decls[r]}, actual_inputs)
                 except ValueError as e:
                     raise BindError(f"parent ID {tn}.{r}: {e}") from e
-                if set(bitsv) != set(range(w)) or any(vals[0] not in "01" for vals in bitsv.values()):
-                    raise BindError(f"parent ID {tn}.{r}.{pn}: every bit must be a declared known strap")
                 expected = id_decls[r][pn]["value"]
-                if int(''.join(reversed(v0)), 2) != expected:
-                    raise BindError(f"parent ID {tn}.{r}.{pn}: representative as-built value disagrees with {expected}")
+                try:
+                    validate_bound_id_bits(bitsv, w, expected)
+                except ValueError as e:
+                    raise BindError(f"parent ID {tn}.{r}.{pn}: {e}") from e
                 id_ports[nm] = dict(leaf=r, port=pn, width=w)
             else:
                 pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")
@@ -2781,6 +2786,18 @@ class Binder:
         if rtree is not None:
             for target in rtree.get("core_resets", []):
                 pin = target["pin"]
+                hc = next((h for h in t.get("hard_cores", []) if h["inst"] == target["inst"] and h.get("bound_group")), None)
+                if hc is not None:
+                    import bound_groups
+                    try:
+                        group = bound_groups.reset_members(F.cells, self.members[p], self.rel_of, target, hc, rtree, RT.leaf_tap(P, ptn))
+                    except bound_groups.BoundGroupError as exc:
+                        raise BindError(str(exc)) from exc
+                    for key in group:
+                        if key in core_reset:
+                            raise BindError("overlapping bound-group reset projection")
+                        core_reset[key] = f"rst_n_t{target['tap']}"
+                    continue
                 candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
                               target["inst"] in {self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
                 if not candidates:
@@ -2827,9 +2844,18 @@ class Binder:
                     # Plan-local matrix names commonly compact coordinate
                     # separators (u_t00 versus RTL u_t_0_0). Accept only a unique
                     # punctuation-only alias; never select a different replica.
-                    key = target["inst"].replace("_", "")
+                    modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
+                    # SU plan names flatten dots to underscores (u_suvm_u_vm8q_u_va).
+                    # Keep all original tokens/digits, then retain the older matrix
+                    # punctuation alias only if that exact flattening did not match.
+                    key = target["inst"].replace(".", "_")
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
-                                  self.rel_of(ci).replace("_", "") == key]
+                                  (not modules or F.cells[ci].module in modules) and
+                                  self.rel_of(ci).replace(".", "_") == key]
+                    if not candidates:
+                        key = target["inst"].replace("_", "")
+                        candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
+                                      self.rel_of(ci).replace("_", "") == key]
                 if not candidates:
                     modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and F.cells[ci].module in modules]
@@ -3176,8 +3202,10 @@ class Binder:
                     if nm in self.__dict__.get("parent_id_ports", {}).get(tn, {}):
                         actual_bits = {kk[3]: val for kk, val in self.tvals[tn][p].items()
                                        if kk[0] == "strap" and kk[1] == r and kk[2] == port}
-                        if set(actual_bits) != set(range(width)) or any(val not in "01" for val in actual_bits.values()):
-                            raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID bits")
+                        parameter_bits = {kk[3] for kk in self.tparams[tn]
+                                          if kk[0] == "strap" and kk[1] == r and kk[2] == port}
+                        if not parameter_bits or set(actual_bits) != parameter_bits or any(val not in "01" for val in actual_bits.values()):
+                            raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID parameter bits")
                         expr = f"{width}'b{''.join(reversed(v))}"
                         parent_ids.append((nm, expr))
                         self.__dict__.setdefault("parent_id_values", {}).setdefault(p, {})[nm] = dict(width=width,
@@ -3534,6 +3562,11 @@ def _write_provenance(a, step):
 
 def cmd_elab(a):
     raw = load_plan(a.plan)
+    import manifest_paths
+    missing = manifest_paths.required_prefer_files(raw["asbuilt"], plan_base(a.plan, raw))
+    if missing:
+        raise BindError(f"{a.plan}: {len(missing)} required preferred RTL file(s) missing before elaboration; "
+                        "restore the declared source instead of falling back to an automatic stub:\n" + "\n".join(missing))
     _write_provenance(a, "elab")
     rec = E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem)
     print(json.dumps({k: (v if k not in ("ambiguous", "undefined") else len(v)) for k, v in rec.items()}))
@@ -3611,6 +3644,7 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    rep["bound_groups"] = getattr(B, "bound_group_records", {})
     if getattr(B, "inner_uniform_stats", None):
         rep["inner_uniform"] = B.inner_uniform_stats
     if getattr(B, "position_bank_layout", None):
@@ -3627,7 +3661,9 @@ def cmd_bind(a):
     names = {}
     for ci, p in B.cpart.items():
         if B.G.kind[ci] != "glue":
-            names[f"{sv_id(p)}.{short_id('u_' + B.rel_of(ci), 90)}"] = B.F.cells[ci].path
+            import bound_groups
+            scope = bound_groups.scope_for_member(B.types[B.parts[p]["type"]], B.rel_of(ci))
+            names[f"{sv_id(p)}.{scope}{short_id('u_' + B.rel_of(ci), 90)}"] = B.F.cells[ci].path
     (out / "bind_names.json").write_text(json.dumps(names, indent=0))
     sinks = {}
     for (ci, pn, i), d in B.sinks.items():
