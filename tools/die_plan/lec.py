@@ -794,6 +794,10 @@ class Aig:
         self.outs, self.onames = [], []
         self.strash = {}
         self.parity_expr, self.parity_cache = {}, {}
+        # Expanding every prefix of a wide CRC makes normalization quadratic.
+        # Above this support size keep the exact ordinary AIG XOR; SAT still
+        # proves the same Boolean function without an expanded parity cache.
+        self.parity_terms = max(2, int(os.environ.get("OT_LEC_PARITY_TERMS", "256")))
 
     def add_input(self, name):
         if self.ands:
@@ -843,6 +847,8 @@ class Aig:
     def XOR(self, a, b):
         aa, ac = self._parity(a)
         bb, bc = self._parity(b)
+        if len(aa) + len(bb) > self.parity_terms:
+            return self._and(self._and(a, b ^ 1) ^ 1, self._and(a ^ 1, b) ^ 1) ^ 1
         terms, const = aa ^ bb, ac ^ bc
         if not terms:
             return const
