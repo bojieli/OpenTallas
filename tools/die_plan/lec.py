@@ -2056,12 +2056,13 @@ def structural_constant_closure(L, log):
 
 
 
-def structural_twin_closure(L, log):
+def structural_twin_closure(L, log, tried=None):
     """Propose same-side duplicate FFs by exact next-state literal identity.
 
     Unlike random signatures this finds rare carry bits and arbitrarily deep
     merged valid pipes. All proposals enter the next induction miter.
     """
+    tried = {} if tried is None else tried
     total = 0
     while True:
         L.build(with_compare=False, with_hyp=False)
@@ -2078,7 +2079,8 @@ def structural_twin_closure(L, log):
                 d = L.dlit.get((side, k), 0)
                 if not k.startswith("ff:") or (side, k) in L.hyp or k in paired_roots or d <= 1:
                     continue
-                choices = twins.get(d >> 1, [])
+                choices = [(c, dc) for c, dc in twins.get(d >> 1, [])
+                           if not tried.get((side, k, c, (d ^ dc) & 1), 0)]
                 if choices:
                     c, dc = min(choices)
                     new.append(((side, k), ("eq", side, c, (d ^ dc) & 1)))
@@ -2094,7 +2096,8 @@ def structural_twin_closure(L, log):
             d = L.dlit.get(("gate", k), 0)
             if not k.startswith("ff:") or ("gate", k) in L.hyp or d <= 1:
                 continue
-            choices = gold.get(d >> 1, [])
+            choices = [(c, dc) for c, dc in gold.get(d >> 1, [])
+                       if not tried.get(("gate", k, c, (d ^ dc) & 1), 0)]
             if choices:
                 c = closest(k, [q for q, _ in choices])[0]
                 dc = dict(choices)[c]
@@ -2107,6 +2110,51 @@ def structural_twin_closure(L, log):
         log.append(f"structural twin closure: {total} relations proposed")
     return total
 
+
+
+def structural_cofactor_pairs(L, log, tried=None):
+    """Propose remaining side-only flops with identical 0/1 hold cofactors.
+
+    A load-enabled register's next-state cone includes its free current state,
+    so exact D-literal matching alone cannot discover a relaid array. Compare
+    both cofactors with every side-only state held at 0 and at 1, after the
+    earlier hypotheses have converged. These are proposals only: the ordinary
+    simultaneous induction miter proves every relation with real free state.
+    Failed candidates are never retried by this completion pass.
+    """
+    tried = {} if tried is None else tried
+    cof = []
+    for c in (0, 1):
+        L.build(with_compare=False, with_hyp=False, free_const=c)
+        cof.append(dict(L.dlit))
+    L.build(with_compare=False, with_hyp=False)
+    bound = bound_keys(L)
+    gold = {}
+    for k in L.gonly:
+        if not k.startswith("ff:") or ("gold", k) in L.hyp:
+            continue
+        a = tuple(v.get(("gold", k), -1) for v in cof)
+        if min(a) < 0 or a[0] == a[1] and a[0] in (0, 1):
+            continue
+        gold.setdefault(a, []).append(k)
+    new = 0
+    for k in L.tonly:
+        if not k.startswith("ff:") or ("gate", k) in L.hyp or k in bound:
+            continue
+        a = tuple(v.get(("gate", k), -1) for v in cof)
+        if min(a) < 0 or a[0] == a[1] and a[0] in (0, 1):
+            continue
+        for inv in (0, 1):
+            cs = gold.get(tuple(x ^ inv for x in a), [])
+            c = next((c for c in closest(k, cs)
+                      if not tried.get(("gate", k, c, inv), 0)), None)
+            if c is not None:
+                L.hyp[("gate", k)] = ("eq", "gold", c, inv)
+                new += 1
+                break
+    if new:
+        log.append(f"structural hold-cofactor pairs: {new} relations proposed")
+    return new
 
 
 def slang_elements(aliases_file):
@@ -3027,6 +3075,10 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # State relations rejected before aliases/copies settled can become
             # inductive later; retry while candidates are still being added.
             fsm_proposals(L, log)
+        if not adding:
+            # Refill deep exact twins only when their relation was never refuted;
+            # rejected proposals stay free, preserving refinement termination.
+            structural_twin_closure(L, log, tried)
         if not L.hyp:
             return
         m, kind = L.build(with_compare=False, with_hyp=True)
@@ -3036,7 +3088,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         log.append(f"correspondence round {rnd}: {len(st)} hypotheses, {len(bad)} failed "
                    f"({sum(st[n] == 'undecided' for n in bad)} undecided) {bad[:6]}")
         if not bad:
-            if structural_constant_closure(L, log) or structural_twin_closure(L, log):
+            if structural_constant_closure(L, log) or structural_twin_closure(L, log, tried) or \
+                    structural_cofactor_pairs(L, log, tried):
                 continue     # prove the new constants before returning
             if L.hyp == before or not adding:
                 return
