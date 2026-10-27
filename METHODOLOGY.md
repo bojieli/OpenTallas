@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4.6, 2026-10-26 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4.7, 2026-10-26 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -322,6 +322,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 06:39 OWNER: in-core islands built by PUSHDOWN (12.2a1); no parent cells inside core outlines = CURRENT.
   - 10-26 16:5x OWNER: core latency band/window = design target, die related-pair STA decides (12.3a) = CURRENT. Supersedes treating 250+-20/window<=20 as hard core FAIL. Same exchange: bottom-up landed fallback (IF.FALLBACK) run IN PARALLEL now on S81, s81_head, KV; first to pass wins (QC/HBM stay master-plan, fallback costs 8-12%).
   - 10-26 17:0x OWNER: MSCTS die clock (12.8e) = CURRENT: M8/M9 global H-tree + regional meshes signed off by variation sim (mesh = common point, sim skew as uncertainty) + short local trees; landed crossings only for remaining seams. Supersedes the 06:07 blanket ban on mesh-node CPPR credit for SIGNED meshes only (unsigned: still banned).
+  - 10-26 17:3x OWNER: "if continuous mesh can work, switch to it" (12.8e1) = CURRENT: continuous die mesh cut only at landed crossings is the preferred form; per-region meshes = fallback when the continuous mesh fails its evaluation. Reason: seam pairs between separate regional meshes still see unshared global-tree delay (~1.5-2 ns, UNCHECKED estimate).
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 05:58, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
@@ -369,6 +370,10 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      (SPICE-class, ASAP7 models, routed RC) with driver/wire variation; the worst simulated skew is a declared uncertainty, and the signed
      mesh is a common point for CPPR (12.4a b exception). Unsigned meshes get NO credit. Landed crossings (IF.FALLBACK) only for seams
      that still fail after this. QC first; KV and HBM follow the same pattern.
+     e1. (OWNER 10-26 17:3x) PREFERRED form = ONE CONTINUOUS mesh across all region boundaries (straps joined at seams), driven at many
+     points by the global tree, cut ONLY where a landed/forwarded crossing sits; every related pair then shares the mesh as common point.
+     Adopt it on a die when its measured evaluation works (variation sim tractable + signed, power, M8/M9 tracks, EM within budget);
+     otherwise per-region meshes (e) are the fallback.
      A measured miss goes back to the structure/plan model (12.8e), then the plan is re-frozen as one PLAN-DELTA.
   e. A measured failure goes back to the structure (plan or core architecture), recorded with its root cause before any rebuild.
   f. Existing results obtained with the banned means (QC early-tap 154/143, any stub-trimmed mesh result incl. KV c3t 63.95/54.71) are
