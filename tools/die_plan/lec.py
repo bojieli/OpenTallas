@@ -1712,7 +1712,7 @@ def fsm_proposals(L, log, words=2, max_bits=4):
         dl = [L.dlit[("gold", k)] for k in gk] + [L.dlit[("gate", k)] for k in tk]
         R = {}
         for c in range(1 << n):
-            for j in range(nt):
+            for j in range(-1, nt):
                 ones = (1 << (64 * words)) - 1
                 fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
                 fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
@@ -1721,36 +1721,58 @@ def fsm_proposals(L, log, words=2, max_bits=4):
                 for lane in range(64 * words):
                     gn = sum(((vals[b] >> lane) & 1) << b for b in range(n))
                     tn = [(vals[n + i] >> lane) & 1 for i in range(nt)]
-                    obs[(gn, tn.index(1) if sum(tn) == 1 else -1)] += 1
+                    obs[(gn, tn.index(1) if sum(tn) == 1 else -1 if sum(tn) == 0 else -2)] += 1
                 R[(c, j)] = obs
         # the next states also depend on registers not yet paired (a renamed alias of a state flag is a free input
         # on each side), so a transition agrees only where those agree: pick the map with the most agreeing
         # transitions (unique best, a majority of all lanes); the induction proof decides
         import itertools
         lanes = 64 * words
-        best, second, pi = -1, -1, None
-        for codes in itertools.combinations(range(1 << n), nt):
-            for perm in itertools.permutations(range(nt)):
-                cand = dict(zip(codes, perm))
-                sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
-                         if ti >= 0 and cand.get(gn) == ti)
-                if sc > best:
-                    best, second, pi = sc, best, cand
-                elif sc > second:
-                    second = sc
-        if pi is None or best == second or 2 * best <= nt * lanes:
+        if not hasattr(L, "rst_val"):
+            noreset_classify(L)
+        gv = [L.rst_val.get(("gold", k), (None, None))[0] for k in gk]
+        tv = [L.rst_val.get(("gate", k), (None, None))[0] for k in tk]
+        reset_encoding = None
+        if None not in gv and None not in tv and sum(tv) <= 1:
+            reset_encoding = (sum(v << i for i, v in enumerate(gv)), tv.index(1) if sum(tv) else -1)
+        pi = None
+        for zero_hot in (False, True):
+            # Synthesis can omit the idle state's flop: all gate bits zero
+            # then represents one additional legal state. This is a candidate
+            # encoding only; cube and state-preservation obligations remain.
+            count = nt + int(zero_hot)
+            if count > 1 << n or math.comb(1 << n, count) * math.factorial(count) > 200000:
+                continue
+            best, second, candidate = -1, -1, None
+            encodings = range(-1, nt) if zero_hot else range(nt)
+            for codes in itertools.combinations(range(1 << n), count):
+                for perm in itertools.permutations(encodings):
+                    cand = dict(zip(codes, perm))
+                    if reset_encoding is not None and cand.get(reset_encoding[0]) != reset_encoding[1]:
+                        continue                    # candidate must include its actual reset code
+                    sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
+                             if ti >= (-1 if zero_hot else 0) and cand.get(gn) == ti)
+                    if sc > best:
+                        best, second, candidate = sc, best, cand
+                    elif sc > second:
+                        second = sc
+            if candidate is not None and best != second and 2 * best > count * lanes:
+                pi = candidate
+                break
+        if pi is None:
             log.append(f"fsm: {base} ({n} gold / {nt} gate bits): no unique encoding (best {best}, next {second} of "
-                       f"{nt * lanes} transitions), none proposed")
+                       f"{count * lanes} transitions), none proposed")
             continue
         for c, j in sorted(pi.items()):
-            L.hyp[("gate", tk[j])] = ("cube", "gold", list(gk), [(c >> b) & 1 for b in range(n)])
-            n_new += 1
+            if j >= 0:                     # the zero-hot code has no physical gate flop
+                L.hyp[("gate", tk[j])] = ("cube", "gold", list(gk), [(c >> b) & 1 for b in range(n)])
+                n_new += 1
         # a later round can re-propose the same state vector (its cube hypotheses were dropped and its gate bits are
         # unbound again): the new encoding replaces the earlier constraint over the same gold bits instead of adding
         # a second one with the same proof-output name (cons:gold:<first key>, rejected by build() as a duplicate)
         L.cons = [c for c in L.cons if not (c[0] == "gold" and list(c[1]) == list(gk))]
         L.cons.append(("gold", list(gk), [[(c >> b) & 1 for b in range(n)] for c in sorted(pi)]))
-        log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j]}" for c, j in sorted(pi.items())))
+        log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j] if j >= 0 else 'all-zero'}" for c, j in sorted(pi.items())))
     return n_new
 
 
