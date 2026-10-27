@@ -4192,6 +4192,59 @@ def ft_parallel_normalise(kit, top, netlist, out, rec):
     return str(dst)
 
 
+RESET_DEFAULT = 4
+
+
+def reset_contract_gate(kit, top, environ=None):
+    """The reset window of the no-reset constant base cases (OT_LEC_RESET_CYCLES) beyond the default 4 edges is a
+    DECLARED die reset length (COORD 10-27): used only when KIT/reset_contract.json (or OT_LEC_RESET_CONTRACT)
+    records an RTL proof that the die's reset generator holds reset for that many clocked edges, with a caught
+    mutant control and a receipt file whose sha256 matches, and lists this core.  Otherwise it fails CLOSED to the
+    default (a larger request is recorded and refused).  Schema opentallas.reset_contract.v1:
+      {die, edges, modules: [core top, ...], proof: {verdict: PASS, assert_edges, mutant: CAUGHT,
+       receipt: path relative to the contract, receipt_sha256}}
+    Sets environ[OT_LEC_RESET_CYCLES] to the length used. -> report dict."""
+    environ = os.environ if environ is None else environ
+    req = environ.get("OT_LEC_RESET_CYCLES")
+    path = environ.get("OT_LEC_RESET_CONTRACT") or str(Path(kit) / "reset_contract.json")
+    rep = dict(default=RESET_DEFAULT, requested=int(req) if req else None, contract=None, used=RESET_DEFAULT)
+
+    def refuse(why):
+        rep["refused"] = why
+        environ["OT_LEC_RESET_CYCLES"] = str(RESET_DEFAULT)
+        return rep
+    if not Path(path).is_file():
+        if req and int(req) > RESET_DEFAULT:
+            return refuse("no reset contract: a reset window above the default needs a proven die reset length")
+        if req:
+            rep["used"] = int(req)         # a SHORTER window only removes base cases: always sound
+        environ["OT_LEC_RESET_CYCLES"] = str(rep["used"])
+        return rep
+    try:
+        c = json.loads(Path(path).read_text())
+        pr = c["proof"]
+        rcpt = (Path(path).parent / pr["receipt"]).resolve()
+        rep["contract"] = dict(file=str(path), die=c.get("die"), edges=int(c["edges"]),
+                               assert_edges=int(pr["assert_edges"]), receipt=str(rcpt))
+        if c.get("schema") != "opentallas.reset_contract.v1":
+            return refuse("reset contract schema")
+        if pr.get("verdict") != "PASS" or pr.get("mutant") != "CAUGHT":
+            return refuse("reset contract proof not PASS with a CAUGHT mutant control")
+        if top not in c.get("modules", []):
+            return refuse(f"reset contract does not list {top}")
+        if not rcpt.is_file() or hashlib.sha256(rcpt.read_bytes()).hexdigest() != pr.get("receipt_sha256"):
+            return refuse("reset contract receipt missing or sha256 mismatch")
+        proven = min(int(c["edges"]), int(pr["assert_edges"]))
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        return refuse(f"reset contract unreadable: {e}")
+    want = int(req) if req else proven
+    if want > proven:
+        return refuse(f"requested {want} edges > proven {proven}")
+    rep["used"] = max(want, 1)
+    environ["OT_LEC_RESET_CYCLES"] = str(rep["used"])
+    return rep
+
+
 def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
@@ -4202,6 +4255,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
     try:
         env = parse_config(kit)
         top = env["DESIGN_NAME"]
+        rec["reset_contract"] = reset_contract_gate(kit, top)
         netlist = netlist or find_netlist(kit)
         gate_fe = env.get("SYNTH_HDL_FRONTEND", "") or "verilog"
         gold_fe = gold_frontend or ("verilog" if gate_fe == "slang" else "slang")

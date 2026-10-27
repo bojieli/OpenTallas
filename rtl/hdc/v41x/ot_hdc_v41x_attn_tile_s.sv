@@ -679,8 +679,8 @@ endmodule
 
 module ot_hdc_v41x_attn_deq_b (
     input  wire [20:0] d,
-    output reg  [15:0] y,
-    output reg         flt
+    output wire [15:0] y,
+    output wire        flt
 );
     wire pad = d[20];
     wire nan = d[18];
@@ -699,18 +699,16 @@ module ot_hdc_v41x_attn_deq_b (
             if (prod[i]) msb = i[2:0];
         bx = bx0 + $signed({8'd0, msb}) + 11'sd127;
         man = ({1'b0, prod} << (3'd6 - msb));
-        if (pad) begin
-            y = 16'd0; flt = 1'b0;
-        end else if (nan) begin
-            y = 16'd0; flt = 1'b1;
-        end else if (zero) begin
-            y = {sgn, 15'd0}; flt = 1'b0;
-        end else if ((bx < 11'sd1) || (bx > 11'sd254)) begin
-            y = 16'd0; flt = 1'b1;
-        end else begin
-            y = {sgn, bx[7:0], man[5:0], 1'b0}; flt = 1'b0;
-        end
     end
+    // LEC-FPREG-2 10-27: the select is a continuous priority mux (same priority, same values).  The procedural
+    // if/else-if chain read by yosys-slang + proc left x arms in every mux level (unreachable, but x sources in the
+    // gold cone of y[0] == 0 and so of the bmul operand register u_cut0 b[0]); this form has none.
+    wire oor = (bx < 11'sd1) || (bx > 11'sd254);
+    assign y = pad  ? 16'd0 :
+               nan  ? 16'd0 :
+               zero ? {sgn, 15'd0} :
+               oor  ? 16'd0 : {sgn, bx[7:0], man[5:0], 1'b0};
+    assign flt = !pad && (nan || (!zero && oor));
 endmodule
 
 // ---------------------------------------------------------------------------
