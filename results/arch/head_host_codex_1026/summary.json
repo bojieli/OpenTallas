@@ -16,5 +16,16 @@
   "leaf_bind": "PASS gen.py rtl --types hd_host --rtl-root",
   "boot_dates": "UNRESOLVED explicit compiler params; defaults not admitted",
   "rx_only_return_probe": "PASS all6 modes at RX_ONLY1 with nonzero local/return rings; original RX_ONLY0 control passes all6",
-  "staging_failure": "First probe NOT RUN after helper imported unstaged die_plan/gen; fixed with standalone source closure and reran successfully."
+  "staging_failure": "First probe NOT RUN after helper imported unstaged die_plan/gen; fixed with standalone source closure and reran successfully.",
+  "combined_source_providers": {
+    "candidate_only": true,
+    "partition_types": 16,
+    "ports": 427,
+    "leaf_binding": "PASS ctl,host,lep0N,mesh --rtl-root",
+    "module_check": "PASS missing0/unresolved0",
+    "ctl_commit": "e58bbcd7da",
+    "host_commit": "1e7937b2f7",
+    "physical": "NOT_RUN",
+    "production_boot": "UNRESOLVED compiler slots"
+  }
 }
