@@ -1,0 +1,18 @@
+{
+  "status": "COMPONENT_PASS; physical and token NOT_RUN",
+  "base": "5ad3d04c55",
+  "mux": {
+    "cycles": 2812,
+    "frames": 803,
+    "positive": "PASS",
+    "mutant1": "CAUGHT premature CSR",
+    "mutant2": "CAUGHT dropped fault"
+  },
+  "hbc": {
+    "rx_only0_modes": "0..5 PASS",
+    "rx_only1_modes": "0..5 PASS"
+  },
+  "provider_lint": "Elaboration PASS; no changed-file WIDTH/SELRANGE; inherited primitive warnings retained",
+  "leaf_bind": "PASS gen.py rtl --types hd_host --rtl-root",
+  "boot_dates": "UNRESOLVED explicit compiler params; defaults not admitted"
+}
