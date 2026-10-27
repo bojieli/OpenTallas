@@ -68,8 +68,20 @@ def targets_arclength(polyline, depth, pitch=403.):
 def _allocate_candidate(allocator, a, b, in_face, out_face, depth, reach, radius, end_anchor, tfun=targets):
     common_spine = spine(a.mean(axis=0), end_anchor, in_face, out_face)
     path = tfun(common_spine, depth)
-    bits = [spine(x,y,in_face,out_face) for x,y in zip(a,b)]
-    if len(common_spine)==2:bits=[[x,y] for x,y in zip(a,b)]
+    # Keep the common spine's topology even when one bit has a zero-length
+    # knee leg. Collapsed per-bit spines otherwise lose a vertex and make
+    # requested(segment) index beyond that bit's route.
+    if len(common_spine)==2:
+        bits=[[x,y] for x,y in zip(a,b)]
+    elif len(common_spine)==3:
+        bits=[[x,np.array([y[0],x[1]]) if in_face in 'EW' else np.array([x[0],y[1]]),y]
+              for x,y in zip(a,b)]
+    elif in_face in 'EW':
+        bits=[[x,np.array([(x[0]+y[0])/2,x[1]]),np.array([(x[0]+y[0])/2,y[1]]),y]
+              for x,y in zip(a,b)]
+    else:
+        bits=[[x,np.array([x[0],(x[1]+y[1])/2]),np.array([y[0],(x[1]+y[1])/2]),y]
+              for x,y in zip(a,b)]
     def requested(target):
         choices=[]
         for j,(left,right) in enumerate(zip(common_spine,common_spine[1:])):
