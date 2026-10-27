@@ -1,0 +1,19 @@
+{
+ "schema":"opentallas.geom_clock_transport.v1",
+ "source":"c47a9f9d09",
+ "row":"d6a89ab35738",
+ "existing_dump":"intel2:/srv/opentallas-scratch2/claude/autopilot/auto_geom/d6a89ab35738/geom.tsv",
+ "existing_grt":"intel2:/srv/opentallas-scratch2/claude/autopilot/auto_geom/d6a89ab35738/grt.log",
+ "kit":"intel2:/srv/opentallas-scratch2/claude/kv-cores-r8/r9/kits/qkd_ectlk_q0__216x172.8",
+ "verified_transport":["ft_ck_i_0","ft_ck_o_0"],
+ "actual_cell":"mp_isl0_ck0 BUFx24_ASAP7_75t_R",
+ "pins_unregistered_before":2,
+ "pins_unregistered_after":0,
+ "verdict":"FAIL",
+ "remaining_failures":{"fill":0.1475,"empty":0.5953},
+ "grt_overflow":0,
+ "new_tests_passed":8,
+ "composition_tests_passed":36,
+ "physical_jobs_launched":0,
+ "scope":"One-buffer declared clock transport only; no clock timing coverage or fill/empty relaxation"
+}
