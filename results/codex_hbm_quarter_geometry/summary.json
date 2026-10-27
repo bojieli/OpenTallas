@@ -1,0 +1,576 @@
+{
+  "schema": "opentallas.native_quarter_geometry.v1",
+  "source": "ef994fe770 /44a5cccc2d",
+  "added_cycles": 0,
+  "hard_hcol": 64,
+  "hard_tail": 2,
+  "soft_sram": 17,
+  "illegal_source_ff_points": [],
+  "soft_standard_cells": 227684,
+  "outline_um": [
+    1808.352,
+    2347.488
+  ],
+  "clock_pair_count": 128,
+  "stage_ages": {
+    "kl_r": 1,
+    "f_key": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "rkey": [
+      3,
+      5,
+      7,
+      9
+    ],
+    "HCOL_key_p": [
+      4,
+      6,
+      8,
+      10
+    ]
+  },
+  "arcs": {
+    "q_r_to_first_f_q": {
+      "count": 1136,
+      "max_um": 401.339
+    },
+    "f_q_to_rq": {
+      "count": 4544,
+      "max_um": 400.0
+    },
+    "rq_to_hcol_q_p": {
+      "count": 36352,
+      "max_um": 395.92
+    },
+    "f_q_to_g_q": {
+      "count": 3408,
+      "max_um": 398.547
+    },
+    "g_q_to_next_f_q": {
+      "count": 3408,
+      "max_um": 387.421
+    },
+    "f_key_to_rkey": {
+      "count": 17408,
+      "max_um": 373.12
+    },
+    "rkey_to_hcol_key_p": {
+      "count": 34816,
+      "max_um": 390.304
+    },
+    "kl_r_to_first_f_key": {
+      "count": 4352,
+      "max_um": 388.174
+    },
+    "f_key_to_g_key": {
+      "count": 13056,
+      "max_um": 319.68
+    },
+    "g_key_to_next_f_key": {
+      "count": 13056,
+      "max_um": 390.4
+    },
+    "SRAM_rd_to_kl_r_corner_bound": {
+      "count": 4352,
+      "max_um": 350.489
+    },
+    "control_window_to_SRAM_corner_bound": {
+      "count": 68,
+      "max_um": 400.92
+    }
+  },
+  "reach_failures": [],
+  "hub": [
+    {
+      "type": "q_hub_nw",
+      "candidate_rect_um": [
+        3974.4,
+        829.44,
+        5782.752,
+        3176.928
+      ],
+      "fixed_collisions": [],
+      "movable_collisions": [
+        {
+          "inst": "u_xq_Q_p0_bfq2",
+          "module": "ot_hgi_sm_xload_cl2_bfqg",
+          "rect_with_halo_um": [
+            5447.52,
+            2674.08,
+            5758.5599999999995,
+            2980.8
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_xq_Q_p1_bfq0",
+          "module": "ot_hgi_sm_xload_cl2_bfqg",
+          "rect_with_halo_um": [
+            5119.200000000001,
+            2458.08,
+            5430.24,
+            2764.8
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_xq_Q_p1_bfq1",
+          "module": "ot_hgi_sm_xload_cl2_bfqg",
+          "rect_with_halo_um": [
+            4790.88,
+            2458.08,
+            5101.919999999999,
+            2764.8
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_ctl_Q_p13",
+          "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+          "rect_with_halo_um": [
+            4281.12,
+            3002.3999999999996,
+            4467.744,
+            3189.024
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_vmks_Q3",
+          "module": "ot_hbm_svc_vm_kshare_splitstrap__v700685",
+          "rect_with_halo_um": [
+            4505.76,
+            2993.7599999999998,
+            4868.639999999999,
+            3456.0
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_xl_Q_aqhi",
+          "module": "ot_hbm_xp_aq_tree13_fmt",
+          "rect_with_halo_um": [
+            5179.68,
+            3002.3999999999996,
+            5371.92,
+            3119.04
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_xl_Q_aqlo",
+          "module": "ot_hbm_xp_aq_tree13_fmt",
+          "rect_with_halo_um": [
+            5680.8,
+            2276.64,
+            5873.04,
+            2393.28
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0",
+          "module": "ot_hbm_hc_subtree32_core",
+          "rect_with_halo_um": [
+            4890.24,
+            2998.08,
+            5127.84,
+            3235.68
+          ],
+          "halo_um": 8.64
+        },
+        {
+          "inst": "u_hb_idx__q_Q__q1",
+          "module": "ot_hbm_idx_query_static",
+          "rect_with_halo_um": [
+            5352.4800000000005,
+            730.0799999999999,
+            5531.76,
+            902.88
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_pgp_Q__q1",
+          "module": "ot_hbm_su_programme_pslice_c5",
+          "rect_with_halo_um": [
+            4929.12,
+            1101.6000000000001,
+            5877.36,
+            1870.5600000000002
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_cxij_Q_q__q1",
+          "module": "ot_hbm_su_static_cxport_ij_q",
+          "rect_with_halo_um": [
+            3987.3599999999997,
+            3002.3999999999996,
+            4246.5599999999995,
+            3460.32
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_sucore_Q__q1",
+          "module": "ot_hbm_su_static_qcore_r13",
+          "rect_with_halo_um": [
+            4013.2799999999997,
+            1360.8,
+            4246.5599999999995,
+            1576.8
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_wbk_Q__q1",
+          "module": "ot_hbm_svc_wb_kport_q",
+          "rect_with_halo_um": [
+            5395.68,
+            3002.3999999999996,
+            5879.5199999999995,
+            3486.24
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hb_coll_Q_reduce__q1",
+          "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+          "rect_with_halo_um": [
+            4065.12,
+            1101.6000000000001,
+            4307.04,
+            1343.52
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hb_coll_Q_ring_ag__q1",
+          "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+          "rect_with_halo_um": [
+            5637.6,
+            2414.8799999999997,
+            5879.5199999999995,
+            2656.8
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hb_coll_Q_body_core__q1",
+          "module": "ot_hfd_coll_q3_body_core",
+          "rect_with_halo_um": [
+            4324.320000000001,
+            1101.6000000000001,
+            4911.84,
+            2164.32
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hb_coll_Q_edge__q1",
+          "module": "ot_hfd_coll_q3_edge_core",
+          "rect_with_halo_um": [
+            4030.56,
+            21.6,
+            4229.28,
+            1084.32
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hcollgi_Q__q1",
+          "module": "ot_hgi_coll_gq_issue",
+          "rect_with_halo_um": [
+            4281.12,
+            2458.08,
+            4527.36,
+            2704.32
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hcollgl_Q__q1",
+          "module": "ot_hgi_coll_gq_land",
+          "rect_with_halo_um": [
+            4039.2,
+            2751.8399999999997,
+            4190.4,
+            2967.84
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hb_quant_Q__u_dec__q1",
+          "module": "ot_hgi_qw_dec",
+          "rect_with_halo_um": [
+            3987.3599999999997,
+            2458.08,
+            4256.0,
+            2726.7200000000003
+          ],
+          "halo_um": 4.32
+        }
+      ],
+      "adoption": "NOT ADOPTED; source-aware relocation and reprice required"
+    },
+    {
+      "type": "q_hub_ne",
+      "candidate_rect_um": [
+        3974.4,
+        829.44,
+        5782.752,
+        3176.928
+      ],
+      "fixed_collisions": [],
+      "movable_collisions": [
+        {
+          "inst": "u_xq_Q_p0_bfq2",
+          "module": "ot_hgi_sm_xload_cl2_bfqg",
+          "rect_with_halo_um": [
+            5447.52,
+            2674.08,
+            5758.5599999999995,
+            2980.8
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_xq_Q_p1_bfq0",
+          "module": "ot_hgi_sm_xload_cl2_bfqg",
+          "rect_with_halo_um": [
+            5119.200000000001,
+            2458.08,
+            5430.24,
+            2764.8
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_xq_Q_p1_bfq1",
+          "module": "ot_hgi_sm_xload_cl2_bfqg",
+          "rect_with_halo_um": [
+            4790.88,
+            2458.08,
+            5101.919999999999,
+            2764.8
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_ctl_Q_p13",
+          "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+          "rect_with_halo_um": [
+            4281.12,
+            2855.52,
+            4467.744,
+            3042.1440000000002
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_ctl_Q_p15",
+          "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+          "rect_with_halo_um": [
+            4488.4800000000005,
+            2786.3999999999996,
+            4675.104,
+            2973.024
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_vmks_Q0",
+          "module": "ot_hbm_svc_vm_kshare_splitstrap__v700685",
+          "rect_with_halo_um": [
+            3961.44,
+            3062.8799999999997,
+            4324.32,
+            3525.12
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_vmks_Q3",
+          "module": "ot_hbm_svc_vm_kshare_splitstrap__v700685",
+          "rect_with_halo_um": [
+            4505.76,
+            2993.7599999999998,
+            4868.639999999999,
+            3456.0
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_xl_Q_aqhi",
+          "module": "ot_hbm_xp_aq_tree13_fmt",
+          "rect_with_halo_um": [
+            5179.68,
+            3002.3999999999996,
+            5371.92,
+            3119.04
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_xl_Q_aqlo",
+          "module": "ot_hbm_xp_aq_tree13_fmt",
+          "rect_with_halo_um": [
+            5680.8,
+            2276.64,
+            5873.04,
+            2393.28
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hb_idx__q_Q__q1",
+          "module": "ot_hbm_idx_query_static",
+          "rect_with_halo_um": [
+            5628.96,
+            730.0799999999999,
+            5808.24,
+            902.88
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_pgp_Q__q1",
+          "module": "ot_hbm_su_programme_pslice_c5",
+          "rect_with_halo_um": [
+            4929.12,
+            1101.6000000000001,
+            5877.36,
+            1870.5600000000002
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_cxij_Q_q__q1",
+          "module": "ot_hbm_su_static_cxport_ij_q",
+          "rect_with_halo_um": [
+            3987.3599999999997,
+            2587.68,
+            4246.5599999999995,
+            3045.6
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_sucore_Q__q1",
+          "module": "ot_hbm_su_static_qcore_r13",
+          "rect_with_halo_um": [
+            4013.2799999999997,
+            1023.84,
+            4246.5599999999995,
+            1239.84
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_sfus_Q__q1",
+          "module": "ot_hbm_su_static_sfustore_hw",
+          "rect_with_halo_um": [
+            5266.08,
+            660.9599999999999,
+            5611.679999999999,
+            997.92
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_wbk_Q__q1",
+          "module": "ot_hbm_svc_wb_kport_q",
+          "rect_with_halo_um": [
+            5395.68,
+            3002.3999999999996,
+            5879.5199999999995,
+            3486.24
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hb_coll_Q_reduce__q1",
+          "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+          "rect_with_halo_um": [
+            4618.08,
+            997.92,
+            4859.999999999999,
+            1239.84
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hb_coll_Q_ring_ag__q1",
+          "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+          "rect_with_halo_um": [
+            5637.6,
+            2414.8799999999997,
+            5879.5199999999995,
+            2656.8
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hb_coll_Q_body_n2__q1",
+          "module": "ot_hfd_coll_q2n2_body_core",
+          "rect_with_halo_um": [
+            4116.96,
+            1257.1200000000001,
+            4911.839999999999,
+            2008.8
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hcollgi_Q__q1",
+          "module": "ot_hgi_coll_gq_issue",
+          "rect_with_halo_um": [
+            4281.12,
+            2458.08,
+            4527.36,
+            2704.32
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hcollgl_Q__q1",
+          "module": "ot_hgi_coll_gq_land",
+          "rect_with_halo_um": [
+            4039.2,
+            2060.64,
+            4190.4,
+            2276.6400000000003
+          ],
+          "halo_um": 4.32
+        },
+        {
+          "inst": "u_hb_quant_Q__u_dec__q1",
+          "module": "ot_hgi_qw_dec",
+          "rect_with_halo_um": [
+            3987.3599999999997,
+            2293.9199999999996,
+            4256.0,
+            2562.56
+          ],
+          "halo_um": 4.32
+        }
+      ],
+      "adoption": "NOT ADOPTED; source-aware relocation and reprice required"
+    }
+  ],
+  "required_h1_pin_reorder": [],
+  "clock_stack_nominal_min_pg_clearance_um": 3.216,
+  "clock_stack_outside_actual_islands": 0,
+  "unclosed": [
+    "Native H1 outputs through b_w/e_bus and E-glue into exact tail pins",
+    "Whole hub mover relocation with native connected-source reach",
+    "Full soft cell placement/cut congestion/parent clock and reset distribution",
+    "Actual die PG offsets, M8/M9 via geometries and hold/STA"
+  ],
+  "qualification": "MODEL_ONLY; no plan edit, no P&R; clock stacks analytical candidates only"
+}
