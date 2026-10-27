@@ -11,7 +11,7 @@ drop_const_pins.drop().  Writes inputs/core_pins/<mod>_xm.json (plan pin table) 
 abstract: pins + OBS M1-M7, MACRO = the RTL module like the _lfp stubs; the closed variant needs its own GDS cell name,
 e.g. <mod>_xm, at kit time).  Re-run after repin.py.
 usage (repo root): python3 physical/die_plan/s81/cores/leaf/xmirror.py"""
-import hashlib, json, os, sys
+import hashlib, json, os, re, sys
 D = "physical/die_plan/s81"
 sys.path.insert(0, os.path.join(D, "cores/leaf"))
 sys.path.insert(0, D)
@@ -21,7 +21,7 @@ import drop_const_pins       # noqa: E402
 # variant -> (source plan pin table, LEF the directions come from, outline W x H)
 SRC = {   # vn: superseded by the split views (cores/leaf/split.py builds vn_a / vn_b / ve_s / ve_m and their _xm)
     "ot_s81sl_vq": ("ot_s81sl_vq_lfp", "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef", (172.8, 129.6)),
-    "ot_s81sl_vs": ("ot_s81sl_vs_lfp", "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef", (172.8, 172.8)),
+    "ot_s81sl_vs": ("ot_s81sl_vs_lfp", "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vs_lfp.lef", (172.8, 172.8)),
 }
 VLAY = ("M3", "M5", "M7")
 GRID = dict(repin.LAY, M7=(0.064, 0.032))
@@ -65,8 +65,21 @@ def mirror(mod):
     pins.sort(key=lambda q: q["name"])
     lp = os.path.join(D, "cores/leaf/lef/%s_xm.lef" % mod)
     os.makedirs(os.path.dirname(lp), exist_ok=True)
-    open(lp, "w").write(repin.lef(mod, W, H, pins, repin.lef_dirs(lef_src)))
-    out = dict(module=mod, lef=lp,
+    dirs = repin.lef_dirs(lef_src)
+    # RTLA can widen packed buses before a physical view is rebuilt. Extend a
+    # bus direction only when its existing bits agree; never emit INOUT by default.
+    families = {}
+    for name, direction in dirs.items():
+        families.setdefault(re.sub(r"\[\d+\]$", "", name), set()).add(direction)
+    for p in pins:
+        if p["name"] not in dirs:
+            known = families.get(re.sub(r"\[\d+\]$", "", p["name"]), set())
+            if len(known) != 1:
+                raise SystemExit("xmirror: missing unambiguous direction for " + p["name"])
+            dirs[p["name"]] = next(iter(known))
+    marker = "# OT const_rename %d: inherited from source pin table\n" % int(j.get("const_rename") or 0)
+    open(lp, "w").write(marker + repin.lef(mod, W, H, pins, dirs))
+    out = dict(module=mod, lef=lp, const_rename=int(j.get("const_rename") or 0),
                source="S81/LEAFPLAN 10-24 x-mirror pin variant (cores/leaf/xmirror.py) of inputs/core_pins/%s.json "
                       "(%s): same module / ports, %gx%g, pins x' = W - x, V-layer pins snapped to the plan tracks "
                       "(max shift %.3f um)" % (src, j.get("lef"), W, H, moved),
