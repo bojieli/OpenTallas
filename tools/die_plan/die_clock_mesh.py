@@ -1788,7 +1788,9 @@ def mesh_segments(M, jogs=True):
     """[(layer, x0, y0, x1, y1, net, kind)] centre lines of the mesh straps and island jogs exactly as cmd_combo draws
     them (strap spans clipped at macro holes with --clock-floorplan)."""
     xs, ys = M["xs"], M["ys"]
-    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") else
+    # INFRA-FIRST-QC-R17: an explicit-cells tree with no mesh straps (xs = ys = []) has no region to draw
+    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") or (M["meta"].get("explicit_tree")
+                                                                                and not xs and not ys) else
                                         [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))])
     md = {L: (M["meta"].get("strap_shield") or {}).get(L, C128.DRAWN) for L in ("M8", "M9")}
     out = []
@@ -2874,7 +2876,9 @@ def cmd_combo(a):
           "proc um {v} { global dbu; return [expr {round($v*$dbu)}] }"]
     # the strap footprint (+ NDR spacing) is also a routing obstruction: GRT does not derate special wires
     hs = hw + nd["space"]
-    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") else
+    # INFRA-FIRST-QC-R17: an explicit-cells tree with no mesh straps (xs = ys = []) has no region to draw
+    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") or (M["meta"].get("explicit_tree")
+                                                                                and not xs and not ys) else
                                         [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))])
     vias_meta, cross_meta = {}, {}
     if getattr(a, "routed_clock", False) and regs:
