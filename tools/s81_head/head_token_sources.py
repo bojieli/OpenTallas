@@ -58,10 +58,21 @@ def prepare(root, plan_path, manifest, out, rom_load='parameters', hierarchical=
     for s in src:
         if s.endswith('_bb.v'):
             aliases[s] = s[:-5]+'.v'
+    # Native infrastructure interfaces have a declared functional substitution;
+    # never guess their filename or fall back to a logical-port-only model.
+    declared = {}
+    for typ in plan['partition_types'].values():
+        for physical, functional in typ.get('simulation_substitutions', {}).items():
+            if physical in declared and declared[physical] != functional:
+                raise ValueError('conflicting simulation substitution '+physical)
+            declared[physical] = functional
+    aliases.update({physical: functional for physical, functional in declared.items() if physical in src})
     cv = 'rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_bb.v'
-    if cv not in src:
-        raise ValueError('physical element CV interface must be explicit')
-    aliases[cv] = 'rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv.sv'
+    native_cv = 'rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_bb_native.v'
+    if cv in src:
+        aliases[cv] = 'rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv.sv'
+    elif native_cv not in src or native_cv not in declared:
+        raise ValueError('physical element CV interface needs explicit functional substitution')
     models = [aliases.get(s, s) for s in src]
     models.append('rtl/dsrom_sys/s81_head/ot_s81hd_oreg.sv')
     models = list(dict.fromkeys(models))
@@ -82,6 +93,9 @@ def prepare(root, plan_path, manifest, out, rom_load='parameters', hierarchical=
         models[models.index(macro)] = str(target.relative_to(root))
     tile = plan['partition_types']['hd_tile']
     wrapper = tile['module']
+    content = tile.get('contents', [{}])[0].get('module', 'ot_s81hd_tile')
+    if content not in ('ot_s81hd_tile', 'ot_s81hd_tile_native'):
+        raise ValueError('unsupported HEAD tile content '+content)
     generated = [s for s in models if Path(s).name == wrapper+'.sv']
     if len(generated) != 1:
         raise ValueError('expected exactly one generated tile wrapper')
@@ -91,7 +105,7 @@ def prepare(root, plan_path, manifest, out, rom_load='parameters', hierarchical=
         text = replace_once(text, r'\bmodule\s+'+re.escape(wrapper)+r'\s*\(',
                             'module '+wrapper+' #(parameter INSTANCE = "") (', 'tile wrapper header')
     # Keep all existing physical content parameters verbatim.
-        text = replace_once(text, r'(\bot_s81hd_tile\s*#\s*\()', r'\1.INSTANCE(INSTANCE), ', 'tile content parameter list')
+        text = replace_once(text, r'(\b'+re.escape(content)+r'\s*#\s*\()', r'\1.INSTANCE(INSTANCE), ', 'tile content parameter list')
     if hierarchical:
         text = replace_once(text, r'(?s)(\bmodule\s+'+re.escape(wrapper)+r'\s*\(.*?\);)', r'\1\n/*verilator hier_block*/', 'shared tile module')
     target = out/(wrapper+'.sv'); target.write_text(text)
@@ -127,7 +141,7 @@ def prepare(root, plan_path, manifest, out, rom_load='parameters', hierarchical=
         part, rest = path.split('.',1)
         scope_images.append('s81_head_top.'+part+'.'+(wrapper+'.' if hierarchical else '')+rest[:-4]+'.viamap.hex')
     report = dict(schema='opentallas.head.native_sources.v1', replacements=aliases,
-        defines=defines, include_dirs=include_dirs, tile_instances=len(names), required_weight_images=image_names,
+        defines=defines, include_dirs=include_dirs, tile_content=content, infra_ports_per_tile=len(tile.get('infra_ports', [])), tile_instances=len(names), required_weight_images=image_names,
         unique_weight_images=len(set(image_names)), rom_load=rom_load, hierarchical=hierarchical, image_bindings=bindings, required_scope_images=scope_images if rom_load == 'scope' else [], added_cycles=0,
         source_sha256={s: hashlib.sha256((root/s).read_bytes()).hexdigest() for s in models},
         qualification='source staging only; current physical-view equivalence, boot schedule and real numerical token execution pending')
