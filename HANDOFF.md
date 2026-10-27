@@ -1323,3 +1323,5 @@ CODEX: 2026-10-27 08:22 PDT KV adopted-body GRT0/mesh2048vias/RCX4372connected P
 CODEX: 2026-10-27 08:23 PDT FT boundary overlay79a0cfe0a READY: mixedFT/core bus per-port filters, sender demands;45focusedPASS+6byte-identicaldefaults. PG160->47032terminalprepPASS; actualPDNSim LIVEintel1codex-sta-pg-1027.
 
 CODEX: 2026-10-27 08:23 PDT RM36 main00ecb92c4c==origin/main;supersedingKV io_cor/hroot fullr2rFAIL evidencecommitted,historicalPASSretained;0deletions.
+
+CODEX: 2026-10-27 08:25 PDT FLOW-WATCH READY3400e5da8: helper-only fingerprint bypass fixed for5sharedkit modules,33testsPASS; S81b458 missingunit metadata diagnosed liveDocker40754 notorphan. Combinedab3 placementcohort continues.

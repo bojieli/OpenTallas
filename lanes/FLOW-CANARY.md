@@ -132,3 +132,6 @@ Current cohort8404ea2f0 collected; design stops preserved, no false signoff prom
 
 ## CODEX notes 2026-10-27 08:19 PDT
 Collected latest canonical refs: QC/HEAD/HBM_SRAM a14244 NO-REGRESSION (absolute design FAIL); S81b89 NO-REGRESSION; live HBM8810/KVcore0f978/S81471 clients preserved. Applied COORD07:20/RM33 KVtype constraint rebaseline ONLY hold_ff_wns -94.57/hold_ff_ep2213; old3352 stored runs/baselines/qwen_kvsys__kv3_io_ft.json.pre-5ca97-1027, old insertion/overflow/DRV metrics retained, tolerances unchanged. Canonical verdict now INFO/design-stop, not physical PASS. Combined RC/snap/FF-bound/60um AB cohort ab3ae7c3a launched PLACE-only (FLOW-RC notes); all actual placements reviewed before route.
+
+## CODEX notes 2026-10-27 08:25 PDT
+READY codex/flow-watch-1027@3400e5da8: missing five shared Python helper paths allowed helper-only flow edits to bypass canary/provenance classification. Explicit watch additions; unrelated analysis/tests still excluded.33focusedwatch/trigger/canary testsPASS. Three old drysubmit fixtures failed because sourcechecker pin7689 now requires sourceface_guard; supplied fixturedependency, runtimeunchanged. Inherited S81b458 manual canary is LIVE (intel2 PID40754/Dockerdpkit-slice_station__t12-40754), not orphan despite missingclient_unit; preserve/no retry.

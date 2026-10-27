@@ -2191,3 +2191,5 @@ READY [CODEX INFRA-GATE 2026-10-27 08:21 PDT] codex/infra-gate-1027@fec71b55c5: 
 READY [AUTOPILOT PREFLIGHT ALL 2026-10-27 08:21 PDT] codex/autopilot-signoff-1027@f4aa309205 (after8c): stage shared source checker/helpers separately for ALL kits, no frozen-kit overwrites; 92 focused PASS; requires codex/preflight-1027 merged first.
 
 READY [CODEX FLOW 2026-10-27 08:23 PDT] codex/ft-overlay-1027@79a0cfe0a: signoff per-port sender demand+die-timedFT exclusion after expansion,45focusedPASS inclmutant,6default-byte-identical; sourceonactualintel2main8fcd97ac44; noRTL/physicalchange.
+
+READY [CODEX FLOW-WATCH 2026-10-27 08:25 PDT] codex/flow-watch-1027@3400e5da8: explicit core_flow/core_infra/master_slice/native_bb/kit_preflight watch paths close helper-only fingerprint bypass;33focusedwatch/trigger/canary testsPASS incl3oldempty-sourcefixtures fixed aftercheckerpin7689. Dispatch/test-only; no physicalcanary rerun needed; no unreadyRC60um ancestry.
