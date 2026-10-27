@@ -395,3 +395,18 @@ HEAD.BIND: the contract DRAFT + manifest proposal is at claude/head-core-r13-102
 COLLECT: R14 elemA_rb_m2/m12 (intel1) + elemB_rb (epyc2) are in GRT HOLD repair (not setup; 0 setup viol): 15194 endpoints, WNS stuck -97.7/-99.9/-67.5 at input pin registers g_pin.x_q (min input delay vs vclk 250), ~1 buffer/iter, >1 h: likely hours; HOLD padding at GRT duplicates the post-route HB4 ECO -- consider stopping and running the eco flow. PG: NUMBER-CHECK-HEADPG (not rerun, COORD 05:2x).
 NEXT R16: symmetric node re-site + denser M8 rows + 12.8c L1-L6 sizing in head_mesh_r3 -> master_plan; plan cores/*_pins.json -> real views; ROOT-MERGE of the infra delta.
 - 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 carries (a) core-view match-pins default ON + pin-file content sha (gate-pins-content 03a0552428): views signed off on old pin files no longer count -- regenerate; (b) mc-gapfold dffd539c3c: RC gap folded per MC sample in die STA; (c) clock entry port centre snapped onto its track + check-kit on-track/>=0.048x0.48 check (clock-port-track 51646a5c4d); (d) R24 apply_clkmesh_sites in-core islands, opt-in --hb4-delay.
+
+2026-10-27 06:39 PDT HEAD-CORE-R16 RESULT (PARTIAL: rulings 1, 2 and 4 done; 3 tree and 5 RTL NOT STARTED). Branch claude/head-r16-1027@0289584f08 (off feab2cd94e). Evidence results/s81_head_r16/README.md. Worktree intel2:/srv/opentallas-scratch2/claude/wt/head-r15-1027.
+(1) Stopped the R14 m2/m12 builds (intel1 pids 2580773/2581051 + containers) and the elemB_rb build (epyc2 pid 94241 + container) at 06:07; run data deleted, logs kept.
+ - HBM generator bug: NOT present in HEAD. Every kit has insertion_ff_ps = OT_VCLK_FF = 202.5 (CHECKED).
+ - ROOT CAUSE (CHECKED, logs + 4_cts probes): the R14 GRT ran a single-mode tc+bc session with bind_ff's GLOBAL vclk 202.5, so the TT scene hold (not a gate) was timed vs the FF vclk.
+   - probe x_q[137]: TT -173.0 vs FF -114.4 (global 202.5); TT -125.5 vs FF -66.9 (global 250).
+   - elemB's kit is OT_HOLD_MM=1, but the orfs_hold_mm patch ran only in the place container, so CTS/GRT were unpatched single-mode (0 OT_HOLD_MM lines). Its vclk_ff.sdc also held a stale 170.
+ - FIX (fail-closed, in head_core_r14_rebuild.sh): every stage runs the mm patch (tc = TT setup mode, BC = FF hold mode); vclk_ff.sdc is generated from OT_VCLK_FF, which must equal insertion_ff_ps; the global latency is stripped from the hook; single-mode MCMM kits FAIL unless OT_R16_MM_CONVERT=1.
+ - RERUN via ot-run --mem 16: intel1 head-core-r16/elemA_m2 and elemA_m12 (units oth-ubuntu-3884804/3884805-1793107589), epyc2 head-core-r16/elemB (oth-ubuntu-574953-1793107694).
+   - First GRT read (UNCHECKED): TT setup +122.9 / FF hold -102.8 (m2), +123.1 / -103.0 (m12) = the true FF need, about 3 HB4 at the worst pin register. The R14 tree is about 25 ps later at FF than hold2.
+   - COLLECT: R14RB done line + R10_HOLD_DONE in each r14_rebuild.log (hours). Then actual_head_route -> head_post_route_eco -> sign-off + LEC.
+ - OPEN: head_post_route_eco.sh is still single-mode with a global 202.5 and needs the same per-mode fix before these reach the ECO.
+(2) The strap LEC pid 3013060 had already exited. The monolithic run FINISHED 05:41 EQUIVALENT 264 inst, 1,682,472 proven / 0 unproven (CHECKED lec.txt), matching the 264/264 chunked result.
+(4) READY ROOT-MERGE posted for the infra delta (d07748a7fc, inside feab2cd94e).
+NEXT R17: (3) symmetric re-site + M8 rows <=144 um + L1-L6 sizing (predict -> build -> RCX/MC/die_sta_related.py) + plan cores/*_pins.json -> real views. (5) mesh endpoint copy-B replay-burst buffer sizing (bench + mutant, static schedule). ECO per-mode fix.
