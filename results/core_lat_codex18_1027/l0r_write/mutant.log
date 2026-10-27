@@ -1,0 +1,8 @@
+STORE_DIFF edge20 word108
+STORE_DIFF edge20 word109
+STORE_DIFF edge20 word110
+STORE_DIFF edge20 word111
+L0R_WRITE FAIL 64552
+[1100000] %Fatal: tb.sv:26: Assertion failed in tb_l0r_write: miter
+%Error: /srv/opentallas-scratch2/claude/codex-s81-core-1027/l0r_write/tb.sv:26: Verilog $stop
+Aborting...

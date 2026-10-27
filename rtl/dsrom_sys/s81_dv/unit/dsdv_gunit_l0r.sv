@@ -18,7 +18,8 @@
 // r_f (sticky): a go while the previous stream still runs.  MUT (bench only): 6 = roots 1 / 2 of g = 1 mod 4 swapped.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l0r #(
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer WRITE_DECODE = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -41,10 +42,30 @@ module dsdv_gunit_l0r #(
     always @(posedge clk) begin agh <= wr_agh; ad <= wr_ad; bgh <= wr_bgh; bd <= wr_bd; wb <= wr_b; gacc <= go_acc; gb <= go_b; end
     // ---------------------------------------------------------------- root store (2 window buffers)
     reg [31:0] rs [0:2*16*2*6-1];                       // buffer b, slice g, half h, word j (0..5)
-    always @(posedge clk) begin
-        if (av) for (j = 0; j < 6; j = j + 1) rs[192 * wb + 6 * agh + j] <= ad[32 * j +: 32];
-        if (bv) for (j = 0; j < 6; j = j + 1) rs[192 * wb + 6 * bgh + j] <= bd[32 * j +: 32];
-    end
+    // Optional write-side distribution: decode the INPUT address on the same
+    // edge as ad/bd and av/bv. Static store indices remove the x192/x6 carry
+    // chain from the registered group -> store path. No added data edge.
+    generate if (WRITE_DECODE != 0) begin : g_write_decode
+        (* keep = "true" *) reg [63:0] a_sel, b_sel;
+        always @(posedge clk) begin
+            a_sel <= 64'b1 << {wr_b, wr_agh};
+            b_sel <= 64'b1 << {wr_b, wr_bgh};
+        end
+        for (genvar wg = 0; wg < 64; wg = wg + 1) begin : g_group
+            for (genvar wj = 0; wj < 6; wj = wj + 1) begin : g_word
+                always @(posedge clk) begin
+                    if (av && a_sel[wg]) rs[6*wg+wj] <= ad[32*wj +: 32];
+                    // B remains the last assignment, including an A/B collision.
+                    if (bv && b_sel[wg]) rs[6*wg+wj] <= bd[32*wj +: 32];
+                end
+            end
+        end
+    end else begin : g_write_legacy
+        always @(posedge clk) begin
+            if (av) for (j = 0; j < 6; j = j + 1) rs[192 * wb + 6 * agh + j] <= ad[32 * j +: 32];
+            if (bv) for (j = 0; j < 6; j = j + 1) rs[192 * wb + 6 * bgh + j] <= bd[32 * j +: 32];
+        end
+    end endgenerate
     // ---------------------------------------------------------------- group stream (16 groups an accumulation)
     reg a_on; reg [3:0] a_i; reg [4:0] a_acc;
     // S81-CORE-LAT-R13 (10-27): REGISTERED ONE-HOT read select.  The old read rs[wad(sel)] computed a 9-bit word address
