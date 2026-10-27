@@ -545,3 +545,9 @@ KVWIP1e3bd778cc on codex/s81-kv-realization2144:135normalcores+actualFTsites all
 
 ## CODEX notes 2026-10-26 20:12 PDT takeover
 Legacy VS/VQ source merged; latest VQ CTS notSIGNED, VSLEC old record pending currentflowcollection. No broadwaves; currentcoreclosure S81-CORE-LAT/masterplan.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Current centre-entry/ICG/leaf rebuild owned S81 physical agent; no obsolete kit wave.
+
+## CODEX notes 2026-10-27 08:28 PDT — S81 legacy coverage
+Historical VS alias-layout failure resolved EQ20372/20372; VQ EQ13045/13045,109826r2rarcs max278um (0>405), but old physical FF202.5 retimeFAIL4.64ps and current master slice needed. Do not repeat old wave. Current families own successors in S81-CORE-LAT: qbank/sstn fresh c18 clock-entryfix trials39efbb5ba931/c0f7dd8e8002; l1c pipelined+1cycle tree trial448245f79f4f; l0 RSZ0060 IOhold needs output clock/reference contract review; l0r c17 LEC15691EQ/placing; xrt3 oldLECmissingJSON=24GBPythonOOM,64GB diagnostic live. capc5r blocked unsigned hard children+multi-root; cfifo_crs4 LFACE1 adds1cycle (approval/planpricing required); qxpq gb204diff historical source/formal mismatch needs current native gate after r14/R15 fixes; rxsf no current master slice. Old geometry-failed cfg/vn/vsw/vs/hcore/eng rows remain superseded by current centre-tree/native path families, no historical reroutes.
