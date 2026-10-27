@@ -477,7 +477,7 @@ def pg_free_axis(ideal, shapes, layer, axis, span, profile, half_width, spacing,
     Shapes are die_infra.pg_rects tuples (net, layer, x0, y0, x1, y1). A full mesh strap must avoid every
     parallel PG shape on its span; an impossible PHY band fails here instead of silently shorting its supply.
     """
-    if tie_break not in (None, "positive"):
+    if tie_break not in (None, "positive", "outward"):
         raise ValueError(f"unknown PG-axis tie policy: {tie_break}")
     clearance = half_width + spacing + .001   # one actual 1x-LEF DBU beyond the NDR boundary
     intervals = sorted((r[2 + axis] - clearance, r[4 + axis] + clearance) for r in shapes if r[1] == layer)
@@ -492,8 +492,10 @@ def pg_free_axis(ideal, shapes, layer, axis, span, profile, half_width, spacing,
     out = []
     for target in ideal:
         # Plan-computed half-track ties retain one phase after lattice translation.
-        k0 = (math.floor(round((target - offset) / pitch, 8) + .5)
-              if tie_break == "positive" else round((target - offset) / pitch))
+        phase = round((target - offset) / pitch, 8)
+        k0 = (math.ceil(phase - .5) if tie_break == "outward" and target < span / 2 else
+              math.floor(phase + .5) if tie_break in ("positive", "outward") else
+              round((target - offset) / pitch))
         best = None
         for d in range(math.ceil(max_move / pitch) + 2):
             ks = [k0] if d == 0 else sorted((k0 - d, k0 + d), key=lambda k: abs(offset + k * pitch - target))
