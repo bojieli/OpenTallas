@@ -8,10 +8,10 @@ class RouteSegments(unittest.TestCase):
     def run_hook(self, write=True, routes=True):
         with tempfile.TemporaryDirectory() as d:
             if write:
-                (Path(d)/'eco_global_route.segments').write_text('actual saved segments')
+                (Path(d)/'eco_global_route.segments').write_text('n\n(\n1 2 M3 1 2 M3\n1 2 M3 2 2 M3\n)\n')
             hook=Path(__file__).with_name('eco_pre_drt.tcl')
             s='set ::env(RESULTS_DIR) {'+d+'}\nnamespace eval grt {}\n'
-            s+='proc read_global_route_segments {p} {puts "EXACT_READ $p"}\n'
+            s+='proc read_global_route_segments {p} {set f [open $p r];set s [read $f];close $f;if {[string first "1 2 M3 1 2 M3" $s]>=0} {error "zero placeholder retained"};if {[string first "1 2 M3 2 2 M3" $s]<0} {error "real conductor lost"};puts "EXACT_READ $p"}\n'
             s+='proc grt::have_routes {} {return '+str(int(routes))+'}\n'
             s+='source {'+str(hook)+'}\n'
             return subprocess.run(['tclsh'],input=s,text=True,capture_output=True)

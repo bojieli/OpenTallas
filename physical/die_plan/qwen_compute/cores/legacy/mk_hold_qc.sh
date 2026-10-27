@@ -6,7 +6,10 @@ K=$(cd "$1" && pwd); O=$2; MG=${3:-3}; HERE=$(cd "$(dirname "$0")" && pwd)
 RS=$(ls -d $K/run/results/asap7/*/base); NICK=$(basename $(dirname $RS))
 rm -rf $O; mkdir -p $O; rsync -a --exclude run --exclude signoff $K/ $O/
 B=$O/run/results/asap7/$NICK/base; mkdir -p $B $O/run/logs/asap7/$NICK/base $O/run/reports/asap7/$NICK/base $O/run/objects/asap7/$NICK/base
-cp $RS/5_2_route.odb $B/4_cts.odb; cp $RS/6_final.spef $RS/1_2_yosys.v $RS/1_synth.v $RS/clock_period.txt $B/
+# The ODB and SPEF must be the SAME completed route. Local ECOs can update
+# 6_final without changing the earlier 5_2 checkpoint (VMR F4K: 72 data cells).
+test -s "$RS/6_final.odb" && test -s "$RS/6_final.spef" || { echo "QC_ECO FAIL: missing matched final ODB/SPEF"; exit 2; }
+cp "$RS/6_final.odb" "$B/4_cts.odb"; cp $RS/6_final.spef $RS/1_2_yosys.v $RS/1_synth.v $RS/clock_period.txt $B/
 rsync -a $K/run/objects/asap7/$NICK/base/ $O/run/objects/asap7/$NICK/base/
 { cat $O/constraint.sdc; echo 'set_propagated_clock [get_clocks clk]'; } > $B/4_cts.sdc
 cp $HERE/hold_route.tcl $HERE/eco_pre_grt.tcl $HERE/eco_pre_drt.tcl $O/
@@ -33,5 +36,5 @@ printf "OT_HOLD_MARGIN=$MG\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORN
 # FF-only session in the FF vclk frame when the kit binds one (SIGNOFF-MODES-2 finding; same as KV mk_eco variant b)
 [ -f $O/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $O/variant.env
 python3 -I "$O/signoff.py" bundle "$O/so/tools/die_plan" || exit 1
-printf '{"source_kit": "%s", "source_route": "%s/5_2_route.odb", "recipe": "ELEM-QK hold_eco b", "margin_ps": %s}\n' $K $RS $MG > $O/HOLD_ECO.json
+printf '{"source_kit": "%s", "source_route": "%s/6_final.odb", "recipe": "ELEM-QK hold_eco b", "margin_ps": %s}\n' $K $RS $MG > $O/HOLD_ECO.json
 echo "ready $O"
