@@ -2730,8 +2730,8 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
     hetero = {}
     ties = {us[0]: list(us) for us in groups.values() if len(us)>1}
     for us in groups.values():
-        mixed = len({cells[u].get("lib", BUF) for u in us})>1 or len({cells[u]["x"] for u in us})>1
-        if not mixed: continue
+        # Every V2 tied unit carries its true row-transformed access point.
+        if len(us) < 2: continue
         rep=us[0]
         # One BUFx24-width backbone model at the group centre. This is not a cell
         # resize: unit_points below retains every original M1 bar coordinate.
@@ -2779,7 +2779,13 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
                         raise C128.PlanError([dict(kind="no_pin_stack",name=u0,detail="V2 shared driver entry leaves the group island")])
                 if st["cell"] in hetero:
                     us=hetero[st["cell"]]
-                    pts=[[u,*C128.pin_xy(cells,u,st["pin"],ROW_Y)] for u in us]
+                    from clock_routed import pin_point
+                    pts=[[u,*pin_point(cells,u,st["pin"],cells[u].get("lib",BUF))] for u in us]
+                    entry=next(p[1:] for p in pts if p[0]==st["entry"])
+                    st["xy"][1]=entry[1]
+                    st["riser_um"]=round(abs(entry[1]-st["riser_from"][1]),4)
+                    st["tie"]["units"]=[[u,py] for u,px,py in pts]
+                    st["tie"]["strap_um"]=round(max(p[2] for p in pts)-min(p[2] for p in pts),4)
                     st["tie"]["unit_points"]=pts
                     st["tie"]["heterogeneous"]=True
                     st["entry_xy"]=next(p[1:] for p in pts if p[0]==st["entry"])
@@ -2887,7 +2893,8 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         for i, u in enumerate(us):
             c = cells[u]
             if ((not v2 and (abs(c["x"] - c0["x"]) > 1e-6 or c.get("lib") != c0.get("lib")))
-                    or c["orient"] != c0["orient"]
+                    or (not v2 and c["orient"] != c0["orient"])
+                    or (v2 and c["orient"] != ("MX" if round(c["y"]/ROW_Y)%2 else "R0"))
                     or abs(c["y"] - (c0["y"] + i * ROW_Y)) > 1e-6):
                 perr.append(dict(kind="tie_stack", name=u, detail=f"group {g}: units must stack in consecutive rows of "
                                  "one column (same x, orient, master)"))

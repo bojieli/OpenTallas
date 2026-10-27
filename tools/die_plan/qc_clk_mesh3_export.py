@@ -180,17 +180,13 @@ def export(B):
             continue
         if len(set(c['masters'])) != 1:
             adapter_constraints['mixed_master_stack_needs_general_pin_tie'] += 1
-        # Keep the model's R0 pin geometry; no unmodelled orientation changes.
-        orient = c.get('orient','R0')
-        if orient != 'R0': errors['pin_model_orientation_not_R0'] += 1
+        # The model is authoritative for every physical unit and transformed pin.
         host = (c.get('island') or {}).get('part') or c.get('body_host')
-        yc = c['site'][1] - ROW_Y/2
-        if c['kind'].startswith('chan'): yc = c['site'][1]
-        y0 = snap(yc, ROW_Y)
-        for u, m in enumerate(c['masters']):
+        for u, unit in enumerate(M.unit_sites(c)):
+            m, orient = unit['master'], unit['orient']
+            x, y = unit['origin_um']
             w = M.LEF_BUF[m][0]
             widths[m] = w
-            x, y = snap(c['site'][0]-w/2,SITE_X), round(y0+u*ROW_Y,6)
             hs = [n for n,r in part_rects.items() if dbu(r[0])<=dbu(x+w/2)<=dbu(r[2]) and dbu(r[1])<=dbu(y+ROW_Y/2)<=dbu(r[3])]
             if host is None: host = hs[0] if hs else None
             r = part_rects.get(host)

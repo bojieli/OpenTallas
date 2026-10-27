@@ -9,6 +9,8 @@ from test_clock128_r12 import spec,build
 
 def branching():
     s=spec(); s['clock_topology_version']=2
+    for v in s['cell_sites'].values():
+        v['orient']='MX' if round(v['origin_um'][1]/D.ROW_Y)%2 else 'R0'
     s['nets'][0]['ndr']='4w'
     s['cell_sites']['ckt_0_1']['master']='BUFx16f_ASAP7_75t_R'
     s['cell_sites']['ckt_0_1']['w']=1.188
@@ -29,7 +31,7 @@ def test_v2_keeps_widths_true_mixed_masters_and_one_logical_net():
         st=next(s for s in p['stacks'] if s['pin']=='Y')
         ys.append(st['xy'])
         assert st['entry']=='ckt_0_0'
-        assert st['tie']['unit_points']==[[u,*C.pin_xy(cells,u,'Y',D.ROW_Y)] for u in ('ckt_0_0','ckt_0_1')]
+        assert st['tie']['unit_points']==[[u,*R.pin_point(cells,u,'Y',cells[u].get('lib',D.BUF))] for u in ('ckt_0_0','ckt_0_1')]
     assert ys[0]==ys[1] # same physical source junction, regardless of piece trunk track
     pp={t['port']:dict(layer=t['layer'],xy=t['xy']) for t in m['taps']}
     pp['root']=dict(layer='M9',xy=m['meta']['root_um'])
@@ -59,9 +61,14 @@ def test_mixed_tie_has_actual_lateral_m7_shape_and_true_pin_pads():
     w=next(w for w in m['fixed_wires'] if w['name']=='ckm_w_ckt_0_0')['pieces'][0]
     st=next(s for s in w['stacks'] if s['pin']=='Y')
     pads=R.stack_pad_layers(st)
-    p0=C.pin_xy(cells,'ckt_0_0','Y',D.ROW_Y)
-    p1=C.pin_xy(cells,'ckt_0_1','Y',D.ROW_Y)
+    p0=R.pin_point(cells,'ckt_0_0','Y',cells['ckt_0_0'].get('lib',D.BUF))
+    p1=R.pin_point(cells,'ckt_0_1','Y',cells['ckt_0_1'].get('lib',D.BUF))
     assert p0[0]!=p1[0]
     assert 'M2' in pads[p0] and 'M2' in pads[p1]
     shapes=R.stack_shapes(w)
     assert any(s[1]=='M7' and s[2]<=p1[0]<=s[4] and s[2]<=st['xy'][0]<=s[4] for s in shapes)
+
+
+def test_v2_wrong_row_orientation_fails_before_encoding():
+    s=branching();s['cell_sites']['ckt_0_1']['orient']='R0'
+    with pytest.raises(C.PlanError,match='tie_stack'):build(s)
