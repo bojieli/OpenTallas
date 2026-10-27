@@ -80,9 +80,9 @@ def conductor_graph(mesh):
         if terminal not in ('M4','M5','M6','M7','M8','M9'):
             raise ValueError(f'unsupported declared mesh terminal layer {terminal}')
         upper=int(port_at[0][1:]);lower=int(terminal[1:])
-        if lower>upper:raise ValueError('mesh terminal stack cannot rise above branch metal')
-        for k in range(upper,lower,-1):
-            below=point('M'+str(k-1),port_at[1],port_at[2])
+        step=1 if lower>upper else -1
+        for k in range(upper,lower,step):
+            below=point('M'+str(k+step),port_at[1],port_at[2])
             tap_jogs.append((port_at,below));port_at=below
         taps.append(dict(t, anchor=list(at), port_node=list(port_at), jog_um=dist))
     edges = set()

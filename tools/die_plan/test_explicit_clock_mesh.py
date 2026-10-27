@@ -138,3 +138,10 @@ def test_declared_entry_terminal_has_actual_stack_and_keeps_location():
         assert tuple(sorted((('M'+str(k),10.,3.),('M'+str(k+1),10.,3.)))) in edges
     with pytest.raises(ValueError,match='terminal layer'):
         m['taps'][0]['terminal_layer']='M2';E.conductor_graph(m)
+
+
+def test_declared_m9_entry_can_rise_from_m8_branch():
+    m=mesh();m['taps']=[dict(xy=[3.,5.],terminal_layer='M9')];m['tap_jog_um']=4.
+    g=E.conductor_graph(m)
+    assert g['taps'][0]['port_node']==['M9',3.,5.]
+    assert g['vias']==6
