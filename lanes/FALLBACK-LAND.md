@@ -47,3 +47,27 @@ Correction to the brief: of the 2,280 FF-failing seams, only 406 cross regions (
 LIVE (do not duplicate): epyc1 /srv/opentallas-scratch2/claude/fallback-kv-1026/sta_w80_{FF,TT} (W=80 stand-ins, --intra-pairs 200, scopes oth-ubuntu-3597816/3597819-1793059126, started 16:58, ~1-1.5 h). Collect die_sta.json, then run fallback_land.py gate --run-bhold-ps 80 (command in README).
 NEXT, for whoever owns the KV GEN: (a) GEN = B48 codex/kv-land-1026 region landings (same 8 boxes) + the 346 PHY landings through clock_landing_plan compose (kv-land-adapter, ROOT-MERGE HOLD). Every receiving type changes kit, so re-GRT is needed for the fclk pins. (b) The 5 residual seams + 11 wide partitions need per-partition single-root CTS or the 12.8 sites (CLOCK-KV-R2). (c) Real signed views replace the stand-ins before any freeze claim.
 2026-10-26 17:04 PDT GEOM-REVIEW-7 -> FALLBACK-KV: regions render (a) PASS: 662/662 landed ports cross exactly one region cut between abutting parts, 0 unlanded cross-region ports (CHECKED vs plan); (b) PASS: both blue pairs same-region, abutting, different subtrees -> align subtree split or land the 2 lanes (no padding); (c) PASS: 0/160 parts straddle a cut (CHECKED). Details lanes/GEOM-REVIEW.md.
+
+## [FALLBACK-HEAD 2026-10-26 17:16 PDT] s81_head landed fallback: plan + tools + die GRT incl. clock + landing window. Every number is UNCHECKED; NUMBER-CHECK please.
+
+Branch claude/fallback-head-1026@bd084a517d (main 63f0898a3 + tools/s81_head/fallback_land{,_report}.py, test_fallback_land.py, die_trial --htree-full-depth opt-in, clock_landing_plan buses fix). Results: results/fallback_head_1026/README.md.
+
+**Plan.**
+- Regions = 326 partitions, one die clock entry each. hd_serdes entry moved to the digital strip, out of VDDPHY.
+- 428 landed crossings / 212,622 bits, +3 cycles each (proved ot_dp_clk_landing contract). clock_landings.requirements: 16 -> 16 types (0 splits), 1,712 scalar pins, 1.07 M live ring FF, ring area 0.99 mm² (0.32 %, UNMAPPED).
+- Cores reused as-is: 1,320 elemA/elemB cv views, fed by the hd_tile-local tree.
+- Head pass: 37 serial crossings + 2 x 10 all-gather = +171 cycles. TOK-DS (compose_tok_ds 63f0898a3): AR 784.9 -> 784.81 (-0.011 %), MTP 2,749.3 -> 2,747.75 (-0.056 %, 6 head passes on the critical path).
+
+**Die GRT incl. clock.** Combined global_route: signals M4-M7 adj 0.75 + die ctree M8-M9 adj 0.4, 50 congestion iterations, TT+FF.
+- FB1 fd300 (`--htree-full-depth --leaf-um 300`): overflow 0 on every layer, 0 GRT-0113/0114.
+- Entry slew max 96.7 ps. Insertion TT 5,816-5,995 / FF 5,035-5,195.
+- Landed phase |d| max 89.3 TT / 80.1 FF vs P/2 = 416.5 budget: PASS, margin 327 ps (~5.5 % of insertion = the OCV allowance on the unshared tree, UNCHECKED). Drift TT->FF 9.2 ps.
+- The default die_trial tree (leaf600) FAILS 444.4 ps on 4 corner serdes<->frame crossings. Root cause: single-tap regions stopped bisecting, giving unrepeated legs (slew 786) and unequal depth (spread 649). That run's data is deleted; its report is kept.
+- Run dir: epyc1:/srv/opentallas-scratch2/claude/fallback-head-1026/fd300. Render viewed: fd300/fb1_fd300.png.
+
+**Not done (12.4a gate still open):**
+- Die STA on real views needs the 16 types rebuilt with rings/fclk/monitor and signed off, ring-window STA, and die_sta --spine-tree fd300.
+- clock_landing_plan.compose run 1 FAILED on KeyError 'buses' (fixed on this branch). The rerun is live: epyc1:/srv/opentallas-scratch2/claude/fallback-head-1026/compose2/{compose_report.json,landed_plan.json}, log compose2.log, ~15 min.
+- hd_ctl observer fault/ready ports are OPEN.
+
+HEAD-CORE-LAT-R4 is untouched: the fallback uses the existing cv cores and does not depend on R4.
