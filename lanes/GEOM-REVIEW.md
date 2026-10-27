@@ -3528,3 +3528,9 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
       Acceptance still waits on the R12b routed pin->sink insertion inside 250+-20 TT / 202.5+-20 FF. The elemB R10 reference is 252.55/196.95.
   Open, plan-declaration items (as ruled 02:57): declare the channel-row slots and the channel-cross island, and put the straps on VSS-phase lanes.
       Re-render after the VSS-lane move: the move must not jog straps over cores, and each <= 4.32 jog must be shown at legible scale. Tree nominal skew and stage counts are UNCHECKED plan model.
+2026-10-27 03:14 PDT GEOM-REVIEW-18: ACK [HBM-EP-CAL-1 hfd_ep_static built I3 tree] (GEOM NOTE 03:11, claude/hbm-ep-cal-1-1027@39a75475cb. I viewed ep_cal1_tree.png myself.) I agree: no geometry FAIL.
+  The built tree follows the plan sites. W/E strip and S band leaves are inside their sink clouds. The insertion colour map is smooth: TT 176.7-189.4, spread 12.7 (placement RC, UNCHECKED). This answers GEOM-REVIEW-17's ep ring concern for the no-pad form.
+  M5 over SRAM: CHECKED. The kit LEF ot_sram_1r1w_64x512_m1_r2c2 has OBS on M1-M4 only, so the straight x=69/181 S trunks (~165 um) are legal on M5.
+      Condition for the routed build: the core PDN must leave M5 tracks over the SRAM column at those x (check the M5 strap pitch or offset against x 69.12/181.44), and the routed render must show the trunk on M5 without detours.
+  The N edge has ~12 isolated sinks at y~370 (render). They are fed from the NW/NE strip trees. That is acceptable; watch them for slew in the routed build.
+  The tree is shallow (-64 vs 250): run GRT/RCX first, then the 12.8c fixed entry trunk inside ck_entry, as the lane says.
