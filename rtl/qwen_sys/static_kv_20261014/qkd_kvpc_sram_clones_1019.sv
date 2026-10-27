@@ -713,12 +713,12 @@ module qkd_kvpc_s_ctrl #(
         .idle_core(idle_core), .drain_fault_core(drain_fault_core),
         .s_cr(s_cr), .p_em_v(p_em_v), .p_em_d(p_em_d), .c_v(c_v), .c_d(c_d), .c_context(c_context), .f_ecdc(f_ecdc),
         .col_v(po[28]), .col_we(po[29]), .col_sr(physical_col_sr));
-    qkd_kvpc_s_obs_child #(.PROFILE(PROFILE)) u_obs (
+    qkd_kvpc_s_obs_child #(.CORE_CLOCK(CORE_CLOCK),.PROFILE(PROFILE)) u_obs (
         .pll_hbm(pll_hbm_obs), .hrst(hrst), .po(po), .static_column(physical_col_sr), .expected_static_column(expected_sr),
         .context_word(physical_context), .obs_commit_valid(obs_commit_valid), .native_commit_valid(native_commit_valid),
         .native_commit_identity(native_commit_identity), .native_commit_address(native_commit_address),
         .fault(native_observer_fault));
-    qkd_kvpc_s_port_child #(.RQD(TQD), .MUT(MUT == 2 ? 4 : 0)) u_port (
+    qkd_kvpc_s_port_child #(.CORE_CLOCK(CORE_CLOCK),.RQD(TQD), .MUT(MUT == 2 ? 4 : 0)) u_port (
         .hclk(pll_hbm_port), .hrst(hrst), .col_v_e(p_col_v), .col_we_e(p_col_we), .col_sr_e(p_col_sr),
         .w_v(p_w_v), .w_d(p_w_d), .pi(pi),
         .wd(p_wd), .kv_v(p_kv_v), .kv_d(p_kv_d), .em_v(p_em_v), .em_d(p_em_d), .fault(p_fault));
@@ -1236,7 +1236,7 @@ module qkd_kvpc_s_cdc_child #(
 endmodule
 
 // ---- qkd_kvpc_s_obs_child: clone of qkd_ctrl_pc_obs_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv) with 2 substitution(s); kept copy families hr_q[1]x16(1) ----
-module qkd_kvpc_s_obs_child #(parameter integer PROFILE = 0)(
+module qkd_kvpc_s_obs_child #(parameter integer PROFILE = 0, CORE_CLOCK = 0)(
     input  wire         pll_hbm,
     input  wire         hrst,
     input  wire [327:0] po,
@@ -1264,7 +1264,7 @@ module qkd_kvpc_s_obs_child #(parameter integer PROFILE = 0)(
     always @(posedge hclk or negedge h_rn) if(!h_rn)begin po_q_d<=0;pob__qv<=135'd0;sc_q<=0;esc_q<=0;end else begin po_q_d<=po;pob__qv<={27{po[34:30]}};sc_q<=static_column;esc_q<=expected_static_column;end
     always @(posedge hclk) ctx_q<=context_word;
     wire [60:0] obs_commit_identity; wire [28:0] obs_commit_address;
-    qkd_static_kv_write_observer #(.STRICT(PROFILE==0)) u_native_write_observer(
+    qkd_static_kv_write_observer #(.STRICT(PROFILE==0),.WL(CORE_CLOCK ? 7 : 5)) u_native_write_observer(
         .hclk(hclk),.rst_n(h_rn),.po(po_q),.static_column(sc_q),.expected_static_column(esc_q),.context_word(ctx_q),
         .commit_valid(obs_commit_valid),.commit_identity(obs_commit_identity),.commit_address(obs_commit_address),.fault(fault));
     (* keep *) reg nc_v_q;(* keep *) reg [60:0] nc_id_q;(* keep *) reg [28:0] nc_ad_q;
@@ -1275,6 +1275,7 @@ endmodule
 
 // ---- qkd_kvpc_s_port_child: clone of qkd_ctrl_pc_port_child_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 1 substitution(s); kept copy families rv_q[1]x56(2), col_sr_q[1]x2(2) ----
 module qkd_kvpc_s_port_child #(
+    parameter integer CORE_CLOCK = 0,
     parameter integer RQD = 64,
     parameter integer MUT = 0
 ) (
@@ -1291,6 +1292,16 @@ module qkd_kvpc_s_port_child #(
     output wire [257:0] em_d,
     output wire         fault
 );
+    // CORE833 PHY write latency is7 cycles (ceil5x1024/833).
+    // The legacy controller data path is5 cycles; add2 data-only stages.
+    wire [287:0] wd_raw;
+    generate if(CORE_CLOCK)begin:g_wdata2
+        reg [287:0] wd_q1,wd_q2;
+        always @(posedge hclk)begin wd_q1<=wd_raw;wd_q2<=wd_q1;end
+        assign wd=wd_q2;
+    end else begin:g_wdata0
+        assign wd=wd_raw;
+    end endgenerate
     (* keep *) reg hr_q;
     always @(posedge hclk) hr_q <= hrst;
     wire h_rn = hr_q;
@@ -1310,7 +1321,7 @@ module qkd_kvpc_s_port_child #(
     always @(posedge hclk) begin rd_q <= pi[288:1]; w_d_q <= w_d; end
     ot_qfd_emb_pcport_nkw_kvpc_s #(.RQD(RQD), .MUT(MUT)) u_port (
         .clk(hclk), .rst_n(h_rn), .col_v(col_v_q), .col_we(col_we_q), .col_sr(col_sr_q),
-        .w_v(w_v_q), .w_d(w_d_q), .wd(wd),
+        .w_v(w_v_q), .w_d(w_d_q), .wd(wd_raw),
         .r_v(rv_q), .r_d(rd_q), .kv_v(kv_v), .kv_d(kv_d), .em_v(em_v), .em_d(em_d), .fault(fault));
 endmodule
 

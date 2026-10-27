@@ -5,6 +5,8 @@
 set -u
 H=$(cd "$(dirname "$0")" && pwd); V=$(readlink -f $1); O=$(mkdir -p $2 && readlink -f $2); MODE=${3:-build}
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
+# seed_extras/resolve_missing can add this generated leaf after initial staging.
+python3 "$H/reset_selfcheck_guard.py" "$V/src" || exit 2
 if [ -z "${NOREGEN:-}" ] || [ ! -f $O/vl.f ]; then   # NOREGEN=1: keep the lists (incremental hierarchical re-run)
 P0=$(head -1 $V/files.f | sed 's#/src/.*##')
 for f in files.f incdirs.f hostside.f; do sed "s#$P0#$V#g" $V/$f > $O/$f; done

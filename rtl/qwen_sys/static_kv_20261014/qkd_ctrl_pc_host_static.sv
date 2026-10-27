@@ -120,12 +120,12 @@ module qkd_ctrl_pc_host_static #(
         .idle_core(idle_core), .drain_fault_core(drain_fault_core),
         .s_cr(s_cr), .p_em_v(p_em_v), .p_em_d(p_em_d), .c_v(c_v), .c_d(c_d), .c_context(c_context), .f_ecdc(f_ecdc),
         .col_v(po[28]), .col_we(po[29]), .col_sr(physical_col_sr));
-    qkd_ctrl_pc_obs_child #(.PROFILE(PROFILE)) u_obs (
+    qkd_ctrl_pc_obs_child #(.CORE_CLOCK(CORE_CLOCK),.PROFILE(PROFILE)) u_obs (
         .pll_hbm(pll_hbm_obs), .hrst(hrst), .po(po), .static_column(physical_col_sr), .expected_static_column(expected_sr),
         .context_word(physical_context), .obs_commit_valid(obs_commit_valid), .native_commit_valid(native_commit_valid),
         .native_commit_identity(native_commit_identity), .native_commit_address(native_commit_address),
         .fault(native_observer_fault));
-    qkd_ctrl_pc_port_child #(.RQD(TQD), .MUT(MUT == 2 ? 4 : 0)) u_port (
+    qkd_ctrl_pc_port_child #(.CORE_CLOCK(CORE_CLOCK),.RQD(TQD), .MUT(MUT == 2 ? 4 : 0)) u_port (
         .hclk(pll_hbm_port), .hrst(hrst), .col_v_e(p_col_v), .col_we_e(p_col_we), .col_sr_e(p_col_sr),
         .w_v(p_w_v), .w_d(p_w_d), .kw_vi(ci[28]), .kw_di(ci[308:53]), .pi(pi),
         .wd(p_wd), .kv_v(p_kv_v), .kv_d(p_kv_d), .em_v(p_em_v), .em_d(p_em_d), .fault(p_fault));
@@ -218,7 +218,7 @@ module qkd_ctrl_pc_host_static_r2 #(
         .p_col_v(p_col_v), .p_col_we(p_col_we), .p_col_sr(p_col_sr), .p_w_v(p_w_v), .p_w_d(p_w_d),
         .p_wd(p_wd), .p_kv_v(p_kv_v), .p_em_v(p_em_v), .p_em_d(p_em_d), .p_fault(p_fault),
         .e_sec(e_sec), .e_row(e_row), .e_l_v(e_l_v), .e_fault(e_fault));
-    qkd_ctrl_pc_port_child #(.RQD(TQD), .MUT(MUT == 2 ? 4 : 0)) u_port (
+    qkd_ctrl_pc_port_child #(.CORE_CLOCK(CORE_CLOCK),.RQD(TQD), .MUT(MUT == 2 ? 4 : 0)) u_port (
         .hclk(pll_hbm_b), .hrst(hrst), .col_v_e(p_col_v), .col_we_e(p_col_we), .col_sr_e(p_col_sr),
         .w_v(p_w_v), .w_d(p_w_d), .kw_vi(ci[28]), .kw_di(ci[308:53]), .pi(pi),
         .wd(p_wd), .kv_v(p_kv_v), .kv_d(p_kv_d), .em_v(p_em_v), .em_d(p_em_d), .fault(p_fault));
