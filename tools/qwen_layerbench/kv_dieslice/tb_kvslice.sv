@@ -216,6 +216,7 @@ module tb_kvslice;
                  cyc_core, $time, sent, credits, n_ready, t_setup >= 0, bpr_n, rx_words, host_faults);
         $fflush;
     end
+    reg boot_pass = 0;
     initial begin
         integer fd, t; reg [63:0] d;
         if (!$value$plusargs("PHASE=%s", phase)) phase = "boot";
@@ -252,10 +253,13 @@ module tb_kvslice;
         while (cyc_core < maxcyc && !(n_ready >= n_exp && n_exp > 0 && (t_setup >= 0 || cyc_core > t_last + setup_wait)) && t_bfault < 0)
             @(posedge ck_core);
         repeat (2000) @(posedge ck_core);
+        boot_pass = errors == 0 && n_ready == n_exp && n_exp > 0 && t_bfault < 0 && t_setup >= 0 && !cf_fault;
         $display("KVSLICE_BOOT %s frames_sent %0d/%0d images_ready %0d/%0d errors %0d boot_fault %0d setup_ready %0d (cyc %0d) cf_fault %0d pll_locked %0d host_faults %b die_to_host_words %0d last_ready_cyc %0d cyc %0d",
-            (errors == 0 && n_ready == n_exp && n_exp > 0 && t_bfault < 0 && t_setup >= 0 && !cf_fault) ? "PASS" : "FAIL",
+            boot_pass ? "PASS" : "FAIL",
             sent, nfr, n_ready, n_exp, errors, (t_bfault >= 0), (t_setup >= 0), t_setup, cf_fault, locked, host_faults, rx_words,
             t_last, cyc_core);
+        // TOK-QK-3 10-27: a FAIL verdict is never a clean exit (no token phase after a failed boot; exit 0 = PASS only).
+        if (!boot_pass) $fatal(1, "KVSLICE_BOOT verdict FAIL: bench exits nonzero");
         if (post > 0) begin
             repeat (post) @(posedge ck_core);
             $display("KVSLICE_POST cyc %0d events %0d fdi_tx_words %0d", cyc_core, po_n, ftx_n);

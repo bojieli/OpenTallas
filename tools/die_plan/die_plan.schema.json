@@ -714,6 +714,64 @@
        }
       }
      },
+     "id_straps": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "width"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "type": "string",
+         "pattern": "^strap_[A-Za-z0-9_]+$"
+        },
+        "width": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "pads": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "dir",
+        "width"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "type": "string",
+         "minLength": 1
+        },
+        "dir": {
+         "enum": [
+          "in",
+          "out"
+         ]
+        },
+        "width": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "clock": {
+         "type": "boolean"
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
      "ft_slots": {
       "type": "array",
       "items": {
@@ -2404,6 +2462,13 @@
        "MY",
        "R180"
       ]
+     },
+     "id_straps": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "integer",
+       "minimum": 0
+      }
      },
      "note": {
       "type": "string"

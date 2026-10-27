@@ -776,6 +776,10 @@ def kit_context(P, tn):
         floor[ni] = (1 - gen_phys.ft_hop_in_share(P)) * per
         floor[no] = gen_phys.ft_hop_in_share(P) * per
     floor["arst_n"] = gen_phys.IO_BUDGET * per
+    ids = [sp["name"] for sp in t.get("id_straps", [])]      # HEAD-BIND-4: partition ID straps (OWNER 10-25 B)
+    for n in ids:
+        ins.append(n)
+        floor[n] = gen_phys.IO_BUDGET * per
     import reset_tree as RT
     if RT.start_broadcast(P) and not t.get("hard"):     # decision 13c START in: timed like arst_n
         ins.append("start_i")
@@ -792,7 +796,7 @@ def kit_context(P, tn):
                 port_period_mult=edge, **_seam_ctx(P), **_io_hold_ctx(P, tn),
                 **({"tap_window_ps": gen_phys.tap_window_ps(P)} if gen_phys.tap_window_ps(P) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
-                **_landing_ctx(P, tn))
+                **({"straps": ids} if ids else {}), **_landing_ctx(P, tn))
 
 
 def _landing_ctx(P, tn):

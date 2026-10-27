@@ -925,8 +925,8 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, b
                     release_cell_reservation(K, r)
                 if len(planned) == k:
                     break
-            if both_l and len(planned) != k and k == 1 and L <= 2 * (750.0 - BUF_W - ROW_Y):
-                # one repeater anywhere on either L whose two hops both stay inside the 750-um reach (the
+            if both_l and len(planned) != k and k == 1 and L <= 2 * (hop_max - BUF_W - ROW_Y):
+                # one repeater anywhere on either L whose two hops both stay inside the requested reach (the
                 # equal-split site sits in a macro): scan the path, keep the most balanced legal site
                 best_q = None
                 for orient in ("xy", "yx"):
@@ -947,7 +947,7 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, b
                                 continue
                         h1 = abs(p[0] - pa[0]) + abs(p[1] - pa[1]) + BUF_W + ROW_Y
                         h2 = abs(pb[0] - p[0]) + abs(pb[1] - p[1]) + BUF_W + ROW_Y
-                        if max(h1, h2) <= 750.0 and (best_q is None or max(h1, h2) < best_q[0]):
+                        if max(h1, h2) <= hop_max and (best_q is None or max(h1, h2) < best_q[0]):
                             best_q = (max(h1, h2), p)
                 if best_q is not None:
                     planned = [best_q[1]]
@@ -962,13 +962,14 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, b
                                                                   reps=len(det)))
             if len(planned) != k:
                 # A clock tail can traverse a PHY with its driver outside it. Never manufacture an illegal cell.
-                # Keep the direct tail only within the binding 750-um reach; actual routed slew still decides.
+                # Keep the direct tail only within the requested reach; actual routed slew still decides.
                 bound = L + BUF_W + ROW_Y
                 if out is not None:
                     out.setdefault("unsplit_clock_branches", []).append(dict(driver=n["drv"], load=ld,
                         span_bound_um=round(bound, 3), reason="no legal repeater outside hard/PHY keepouts"))
-                    if bound > 750.0:
-                        out["unplaced"].append([n["drv"], ld, "STRUCTURAL clock span exceeds 750 um", round(bound, 3)])
+                    if bound > hop_max:
+                        out.setdefault("unplaced", []).append([n["drv"], ld,
+                            f"STRUCTURAL clock span exceeds {hop_max:g} um", round(bound, 3)])
                 loads.append(ld)
                 continue
             chain = []
@@ -3987,7 +3988,8 @@ def mesh_crossings(M, g):
 def routed_mesh_vias(d):
     """{mesh net: min over corners of OT_MESH_VIAS in DIR/combo_<corner>.log}, and the combo logs read.  Fail closed:
     a net reported by one corner's log but absent from another's counts 0 there (that corner's DB had no vias)."""
-    per, logs = [], sorted(Path(d).glob("combo_*.log")) if d else []
+    per, logs = [], sorted(p for p in Path(d).glob("combo_*.log")
+                           if re.fullmatch(r"combo_[A-Z][A-Z0-9]*\.log", p.name)) if d else []
     for lg in logs:
         per.append({m_.group(1): int(m_.group(2)) for m_ in
                     re.finditer(r"^OT_MESH_VIAS (\S+) (\d+)", lg.read_text(errors="replace"), re.M)})
