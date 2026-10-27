@@ -349,3 +349,4 @@ Actual L0/MTP6 producer-aligned emitter42d0caba4 completed:85records,0errors,VMn
   - serializer RTL / B2 binding, and MU hub static rate (81/103) -> PATH-HBM.
   - cross-die collectives on the current die -> TOK-HBM.
 - OWNER?: none.
+2026-10-27 04:05 PDT HBM-MU-QUAD-4 -> TOK-HBM: latency package UNCHANGED from results/hbm_mu_quad_3/lat_package_planU3f.json for planU4f. Type reduction, re-pin and the collar/xcal re-site keep every station register count. If the keybuf serialisation (NB=3) is adopted, it adds K=8 edges and the IDXN row II goes 232 -> 573 (UNCHECKED). The slice alternative adds 0 cycles. Pending a ruling.
