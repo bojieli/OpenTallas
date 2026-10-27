@@ -1,0 +1,318 @@
+{
+ "schema": "opentallas.hbm_core_lat_r5.multiclock.v1",
+ "lane": "HBM-CORE-LAT-R5",
+ "ruling": "COORD RULING HBM-CORE-LAT-R4 (6) 2026-10-27 02:11",
+ "plan": {
+  "name": "planU2",
+  "host_path": "epyc2:/srv/opentallas-scratch2/claude/hbm-mu-quad-2-1026/planU2",
+  "die_plan_sha256": "55ea5ec620f581d53d97866b86d36dfe17d1b12f240b834f5fe0f3ec5e6d9642",
+  "clock_entries_sha256": "7b158771e53acc0945dff0aecdde16162e35eb17aafe7beb665d25c411147dc5"
+ },
+ "result": "All 6 types have ONE independent clock (the die core clock) -> ONE centre entry each; 0 generated clocks. planU2 clock_entries.json already merges every clock port into one entry (port None, merged_clock_ports) -> consistent with ruling (6); the kit RTL wrapper must expose a single clk pin at that entry.",
+ "flags": [
+  "cl2_bfqg '20 domains' (R4 wording) = 20 local roots of one clock, not 20 domains (AGENTS one-core-clock rule holds).",
+  "kshare_splitstrap carries an async Gray FIFO between hbm_clk and stream_clk although both are the same core clock on the release die (AGENTS: separate clocks only inside off-die PHY macros). Functionally safe; latency cost of the same-clock CDC FIFO = RTL-owner question (keep, or a synchronous variant behind an opt-in parameter). Legacy ref_tile SDCs with hbm_clk 1024 ps are not the release contract.",
+  "clk_cal (wr_q lanes4, ctlx) is an early-phase entry for the SRAM (die 'phi - R'): with one entry it becomes an earlier in-core branch; the core's tree generator must support one early macro branch."
+ ],
+ "rows": [
+  {
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "instances": [
+    "q_hub_nw.u_smw_Q",
+    "q_hub_ne.u_smw_Q"
+   ],
+   "n_instances": 2,
+   "clock_ports": [
+    "clk",
+    "clk_cal",
+    "clk_l0",
+    "clk_l1",
+    "clk_l2",
+    "clk_l3"
+   ],
+   "n_ports": 6,
+   "independent_clocks": 1,
+   "generated_clocks": 0,
+   "classification": "SAME-CLOCK + SRAM early branch",
+   "evidence": {
+    "rtl": "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_lanes4.sv",
+    "note": "header l.19-20: 'clk, clk_cal and clk_l0..7 are the same PLL output at phase 0 (die: pll_stream)'; clk_cal = raw entry of the 128x256 table SRAM"
+   },
+   "slice_entry": {
+    "n_entries": 1,
+    "port": "clk (single core clock pin at the entry; the plan's merged_clock_ports become internal branches)",
+    "xy_um": [
+     69.12,
+     194.4
+    ],
+    "island_um": [
+     64.8,
+     190.08,
+     73.44,
+     198.72
+    ],
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5
+   },
+   "in_core": "structured tree from the one entry; each former root port = one equal-load branch of it; the SRAM clk_cal pin is fed from an earlier branch of the same tree (12.3 v5.0 macro insertion balancing from the core's own tree), NOT a generated clock",
+   "sdc": "create_clock -name clk -period 833 [get_ports clk] only; no create_generated_clock (no divided clocks in the RTL); no set_clock_groups -asynchronous"
+  },
+  {
+   "module": "ot_hbm_svc_vm_kshare_splitstrap",
+   "instances": [
+    "q_hub_nw.u_vmks_Q0",
+    "q_hub_nw.u_vmks_Q1",
+    "q_hub_nw.u_vmks_Q2",
+    "q_hub_nw.u_vmks_Q3",
+    "q_hub_ne.u_vmks_Q0",
+    "q_hub_ne.u_vmks_Q1",
+    "q_hub_ne.u_vmks_Q2",
+    "q_hub_ne.u_vmks_Q3"
+   ],
+   "n_instances": 8,
+   "clock_ports": [
+    "hbm_clk",
+    "stream_clk"
+   ],
+   "n_ports": 2,
+   "independent_clocks": 1,
+   "generated_clocks": 0,
+   "classification": "SAME-CLOCK (nominal 2-domain RTL; release die drives both from the one core clock)",
+   "evidence": {
+    "rtl": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+    "note": "hbm_clk/stream_clk with a Gray-pointer SPSC FIFO per lane (l.15 'the only on-die CDC'); but the HBM kit SDC (gen_core_kit_hbm.py sdc()) defines ONE create_clock clk at the core period on every clock port and planU2 die_plan.clock has one source (@die clk), so on the release die both are the same core clock"
+   },
+   "slice_entry": {
+    "n_entries": 1,
+    "port": "clk (single core clock pin at the entry; the plan's merged_clock_ports become internal branches)",
+    "xy_um": [
+     177.12,
+     224.64
+    ],
+    "island_um": [
+     172.8,
+     220.32,
+     181.44,
+     228.96
+    ],
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5
+   },
+   "in_core": "structured tree from the one entry; each former root port = one equal-load branch of it",
+   "sdc": "create_clock -name clk -period 833 [get_ports clk] only; no create_generated_clock (no divided clocks in the RTL); no set_clock_groups -asynchronous"
+  },
+  {
+   "module": "ot_hgi_coll_inj_idx_join_rg",
+   "instances": [
+    "q_hub_nw.u_cij_Q",
+    "q_hub_ne.u_cij_Q"
+   ],
+   "n_instances": 2,
+   "clock_ports": [
+    "clk_r0",
+    "clk_r1"
+   ],
+   "n_ports": 2,
+   "independent_clocks": 1,
+   "generated_clocks": 0,
+   "classification": "SAME-CLOCK regional roots",
+   "evidence": {
+    "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv",
+    "note": "l.9: 'die drives clk_r0/clk_r1 from one regional source (phase-aligned)'; l.51 ck = r ? clk_r1 : clk_r0 with r a genvar (static root select, not a mux)"
+   },
+   "slice_entry": {
+    "n_entries": 1,
+    "port": "clk (single core clock pin at the entry; the plan's merged_clock_ports become internal branches)",
+    "xy_um": [
+     103.68,
+     155.52
+    ],
+    "island_um": [
+     99.36,
+     151.2,
+     108.0,
+     159.84
+    ],
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5
+   },
+   "in_core": "structured tree from the one entry; each former root port = one equal-load branch of it",
+   "sdc": "create_clock -name clk -period 833 [get_ports clk] only; no create_generated_clock (no divided clocks in the RTL); no set_clock_groups -asynchronous"
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_bfqg",
+   "instances": [
+    "q_hub_nw.u_xq_Q_p0_bfq0",
+    "q_hub_nw.u_xq_Q_p0_bfq1",
+    "q_hub_nw.u_xq_Q_p0_bfq2",
+    "q_hub_nw.u_xq_Q_p0_bfq3",
+    "q_hub_nw.u_xq_Q_p1_bfq0",
+    "q_hub_nw.u_xq_Q_p1_bfq1",
+    "q_hub_nw.u_xq_Q_p1_bfq2",
+    "q_hub_nw.u_xq_Q_p1_bfq3",
+    "q_hub_ne.u_xq_Q_p0_bfq0",
+    "q_hub_ne.u_xq_Q_p0_bfq1",
+    "q_hub_ne.u_xq_Q_p0_bfq2",
+    "q_hub_ne.u_xq_Q_p0_bfq3",
+    "q_hub_ne.u_xq_Q_p1_bfq0",
+    "q_hub_ne.u_xq_Q_p1_bfq1",
+    "q_hub_ne.u_xq_Q_p1_bfq2",
+    "q_hub_ne.u_xq_Q_p1_bfq3"
+   ],
+   "n_instances": 16,
+   "clock_ports": [
+    "clk",
+    "clk_ctrl",
+    "clk_l0",
+    "clk_l1",
+    "clk_l2",
+    "clk_l3",
+    "clk_l4",
+    "clk_l5",
+    "clk_l6",
+    "clk_l7",
+    "clk_m0",
+    "clk_m1",
+    "clk_m2",
+    "clk_m3",
+    "clk_m4",
+    "clk_m5",
+    "clk_m6",
+    "clk_m7",
+    "clk_n",
+    "clk_s"
+   ],
+   "n_ports": 20,
+   "independent_clocks": 1,
+   "generated_clocks": 0,
+   "classification": "SAME-CLOCK regional roots",
+   "evidence": {
+    "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_bfqg.sv",
+    "note": "l.1-7: 8 per-bank mask-capture roots clk_m*, 8 lane roots clk_l*, ctrl/n/s roots; 'the caller supplies identical mask copies at the same compiled edge' = one clock, 20 roots"
+   },
+   "slice_entry": {
+    "n_entries": 1,
+    "port": "clk (single core clock pin at the entry; the plan's merged_clock_ports become internal branches)",
+    "xy_um": [
+     151.2,
+     146.88
+    ],
+    "island_um": [
+     146.88,
+     142.56,
+     155.52,
+     151.2
+    ],
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5
+   },
+   "in_core": "structured tree from the one entry; each former root port = one equal-load branch of it",
+   "sdc": "create_clock -name clk -period 833 [get_ports clk] only; no create_generated_clock (no divided clocks in the RTL); no set_clock_groups -asynchronous"
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_ctlx",
+   "instances": [
+    "q_hub_nw.u_xl_Q_ctl",
+    "q_hub_ne.u_xl_Q_ctl"
+   ],
+   "n_instances": 2,
+   "clock_ports": [
+    "clk",
+    "clk_cal"
+   ],
+   "n_ports": 2,
+   "independent_clocks": 1,
+   "generated_clocks": 0,
+   "classification": "SAME-CLOCK + SRAM early branch",
+   "evidence": {
+    "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+    "note": "l.644: clk_cal = 'hard clock entry of the issuer's calendar SRAM only (die: phi - R)' = same clock, early by the SRAM insertion R"
+   },
+   "slice_entry": {
+    "n_entries": 1,
+    "port": "clk (single core clock pin at the entry; the plan's merged_clock_ports become internal branches)",
+    "xy_um": [
+     194.4,
+     194.4
+    ],
+    "island_um": [
+     190.08,
+     190.08,
+     198.72,
+     198.72
+    ],
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5
+   },
+   "in_core": "structured tree from the one entry; each former root port = one equal-load branch of it; the SRAM clk_cal pin is fed from an earlier branch of the same tree (12.3 v5.0 macro insertion balancing from the core's own tree), NOT a generated clock",
+   "sdc": "create_clock -name clk -period 833 [get_ports clk] only; no create_generated_clock (no divided clocks in the RTL); no set_clock_groups -asynchronous"
+  },
+  {
+   "module": "ot_hgi_sm_xload_xq_pegress",
+   "instances": [
+    "q_hub_nw.u_xq_Q_p0_eg",
+    "q_hub_nw.u_xq_Q_p1_eg",
+    "q_hub_ne.u_xq_Q_p0_eg",
+    "q_hub_ne.u_xq_Q_p1_eg"
+   ],
+   "n_instances": 4,
+   "clock_ports": [
+    "clk",
+    "clk_c",
+    "clk_e",
+    "clk_s",
+    "clk_w"
+   ],
+   "n_ports": 5,
+   "independent_clocks": 1,
+   "generated_clocks": 0,
+   "classification": "SAME-CLOCK regional roots",
+   "evidence": {
+    "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+    "note": "l.47: 'four regional clock entries of the one die clock (same PLL, phase 0; ordinary related STA across them)' + clk_c"
+   },
+   "slice_entry": {
+    "n_entries": 1,
+    "port": "clk (single core clock pin at the entry; the plan's merged_clock_ports become internal branches)",
+    "xy_um": [
+     185.76,
+     185.76
+    ],
+    "island_um": [
+     181.44,
+     181.44,
+     190.08,
+     190.08
+    ],
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5
+   },
+   "in_core": "structured tree from the one entry; each former root port = one equal-load branch of it",
+   "sdc": "create_clock -name clk -period 833 [get_ports clk] only; no create_generated_clock (no divided clocks in the RTL); no set_clock_groups -asynchronous"
+  }
+ ]
+}
