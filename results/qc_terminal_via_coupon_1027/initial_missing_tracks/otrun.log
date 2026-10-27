@@ -1,0 +1,7 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-qc-via-coupon-1027
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-qc-via-coupon-1027
+ot-run: localhost      admits   375 GB (avail 736, reserve 0, fresh 244.3, peak 52.7, headroom 0, waiters 0/0 GB) load 44/112 running 33 disk 824 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2314011-1793120526 after 1 s
+bash: line 1:    15 Aborted                 (core dumped) openroad -no_init -python -exit /w/check.py > /w/check.log 2>&1
+ot-run: RAN on localhost (unit oth-ubuntu-2314011-1793120526): exit 134

@@ -1,0 +1,23 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO IFP-0001] Added 74 rows of 555 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 30.000 20.000 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 29.970 19.980 ) um
+[INFO IFP-0102] Core area:                          598.801 um^2
+[INFO IFP-0103] Total instances area:                 0.000 um^2
+[INFO IFP-0104] Effective utilization:                0.000
+[INFO IFP-0105] Number of instances:                      0
+[WARNING ODB-1003] (M1) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M2) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M3) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M4) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M5) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M6) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M7) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (Pad) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.04
+[ERROR PPL-0022] Routing tracks not found for layer M8.
+Error: down_m5.tcl, 10 PPL-0022
