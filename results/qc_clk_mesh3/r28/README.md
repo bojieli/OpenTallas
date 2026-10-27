@@ -45,3 +45,32 @@ VSS solve added. check_power_grid VDD + VSS OK in every run.
   no drawn-shield clock track at all, so the whole tree/mesh track model changes. The QC PG grid must be decided
   (plan grid + more metal elsewhere, e.g. M9 width as on HEAD, or the dense grid + flank-mode clock) before die STA
   numbers can count (12.4e: PG IR closed before signal GRT).
+
+## 3. Dry build on the cut grid (task 3): NOT 0. Root cause = track geometry, not the VSS shorts
+Run intel2:/srv/opentallas-scratch2/claude/qc-infra-r28/c_dry10 (prototype8 plan + R28 cut, same export8 clock_spec,
+OT_V2_COLLECT_PLAN_ERRORS=1): **15,916 errors** (R27 uncut 15,774; own runs). The cut removes the 3,299 mesh/VSS shorts.
+It frees no tree track, because the strap itself sits on the cut lane. Errors by edge NDR (`dry10_plan_errors.json.gz`):
+driver jog 4w 6,547 / 16w 1,186 / 2x16w 223 / 8w 23; trunk 16w 4,343 / 2x16w 1,631 / 8w 438 / 4w 312; reserve_overflow
+109; net_trunk_layer 12. Failing edges: 16w 5,361/7,513, 2x16w 2,118/4,770, 8w 461/1,238, 4w 7,303/19,895.
+Probe (`probe_block.py`, monkeypatched TrackRouter.place, no source change; `probe_block.json.gz`): 15,500 M8 failures
+lie inside the island pin keep window (4.91-5.72 um = pin +-2.455 riser). 13,432 have another tree net in the window,
+and 2,069 have only PG plus the drawn shields of other trees. 295 are M9 trunk failures (free 17.28-um window, tree-blocked).
+Geometry (CHECKED arithmetic from the NDR table + 0.48@8.64 VDD/VSS, VSS on the island pin lane). Legal centre band per
+4.32-um PG gap: 4w ~[0.64,3.60] (~4 tracks); 8w [0.80,3.44] (~2-3); 16w drawn [1.70,2.12] (**1 track**, because the
+shield may not merge with VSS: 1.12 > 0.99975); 2x16w drawn **none** (needs 4.54 um > 4.32), flank [1.88,2.44] (1).
+The island window covers exactly 2 gaps. So an island row holds at most 2 wide (16w/2x16w) conductors that overlap in x,
+and the shields of each wide conductor fill its gap for the 4w jogs too. Demand is higher than that, hence the errors.
+=> Planner fix needed (task 2, NOT done here): allot tracks in the planner (qc_clk_mesh3 export) per island row and per
+PG gap, using this capacity table. Wide trunks leave the island window via an M9 drop to a free gap (L-form, like the
+R12 l_drops), or drop to 8w where the stage RC allows; driver jogs stay on 4w. This is a planner/stage re-solve owned
+by the QC clock planner. It depends on the PG grid ruling (section 2): on the dense IR grid no drawn 16w track exists at all.
+
+## 4. Not run (blocked)
+GRT0 >=50 it and related-pair die STA (die_sta_related.py, TT 250 / FF 202.5) did not run. The clock component still
+does not dry-build (15,916 plan errors), so there is no clock to route or time. Same blocker as R27.
+R25 DRC unit oth-ubuntu-1828381-1793110415 (intel2 qc-mesh-r25/drc, old R24b geometry, no PG): 19,213/20,857 boxes at
+11:56, still LIVE. Collect drccls.json + samenet_gaps_drc.json when chain.sh prints R25_DRC_DONE.
+
+Note: the PG cut was applied to main's physical/die_plan/qwen_compute/die_plan.json (H 26265.6). The dry build and its
+mesh come from the prototype8 plan (H 26317.44, Codex candidate lineage). The straps lie inside both outlines, and
+the cut depends only on the strap coordinates.
