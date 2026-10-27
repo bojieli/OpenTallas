@@ -151,3 +151,14 @@ def test_lock_uses_fixed_wire_and_locked_placement():
     assert "setPlacementStatus LOCKED" in t and "setDoNotTouch 1" in t
     # fail closed: a re-encode that is not byte-identical errors out
     assert "is not byte-identical" in t
+
+
+def test_qc_hold_chain_runs_its_hook_on_routed_kits():
+    # QC kits 'override export' both GRT hooks; the warm ECO must override them too (else neither ECO nor lock runs) and
+    # survive ORFS's pre-POST 'estimate_parasitics -global_routing' on a fully routed DB (EST-0005 canary 10-27 11:53)
+    lg = ROOT / "physical/die_plan/qwen_compute/cores/legacy"
+    t = (lg / "mk_hold_qc.sh").read_text()
+    assert "override export POST_GLOBAL_ROUTE_TCL = /work/hold_route.tcl" in t
+    assert "override export PRE_GLOBAL_ROUTE_TCL = /work/eco_pre_grt.tcl" in t and "OT_KIT_PRE_GRT = $KPRE" in t
+    p = (lg / "eco_pre_grt.tcl").read_text()
+    assert "![grt::have_routes]" in p and "read_spef $s" in p and "source $::env(OT_KIT_PRE_GRT)" in p
