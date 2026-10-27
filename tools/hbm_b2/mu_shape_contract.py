@@ -56,6 +56,32 @@ def evaluate(lanes=16, nm=20, vector_words=5120, vm_banks=16,
     )
 
 
+def vm_tradeoffs():
+    """Capacity and service floors for the three compared physical inventories.
+
+    Source: native q0 bank body reserves exactly one read and one write per
+    bank/cycle. Existing hnx VM is 32 banks with A0/A1, C and B (four macros).
+    Claude's seven-macro shape is an inferred new four-data-array controller.
+    """
+    cases=[]
+    for name,banks,data_rows,macros,height,qualified_source in (
+        ('current_B2_SU',16,1024,3,313.2,True),
+        ('claude_grown16_proxy',16,4096,7,561.6,False),
+        ('native_grown32',32,2048,4,403.92,True)):
+        cases.append(dict(name=name,banks=banks,regular_words=banks*data_rows*8,
+            macros=banks*macros,bank_outline_mm2=banks*270*height/1e6,
+            full_5120_word_fused_read_floor=dict(pre=math.ceil(32*80/banks),post=math.ceil(32*100/banks)),
+            existing_RTL_shape=qualified_source,
+            memory_timing_and_combined_calendar_qualified=False))
+    return dict(cases=cases,
+        native32_extra_outline_vs_proxy_mm2=cases[2]['bank_outline_mm2']-cases[1]['bank_outline_mm2'],
+        native32_extra_macros_vs_proxy=cases[2]['macros']-cases[1]['macros'],
+        native32_extra_macro_area_vs_proxy_mm2=16*12317/1e6,
+        inference='Two logical lanes on a 1R bank cannot sustain the native measured 81/103 row II: read floors are 160/200. Native32 has 80/100 floors, necessary but not sufficient.',
+        shared_SU_blocker='Current B2 PRE/POST SFU lowering and PRE norm/gain producer join remain unqualified; dedicated FUSED is not exclusively a MU semantic requirement.',
+        performance_scope='Old 16-SM CMTP rates cannot be transplanted to the current 8-SM B2 plan.')
+
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--lanes',type=int,default=16)
@@ -68,6 +94,7 @@ def main():
     a=ap.parse_args()
     r=evaluate(a.lanes,a.nm,a.vector_words,a.vm_banks,
                external_tree_nodes=a.external_tree_nodes,hub_instances=a.hubs)
+    r['vm_inventory_comparison']=vm_tradeoffs()
     s=json.dumps(r,indent=2)+'\n'
     if a.out:
         from pathlib import Path

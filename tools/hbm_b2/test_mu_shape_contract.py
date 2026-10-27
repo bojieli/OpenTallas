@@ -25,3 +25,13 @@ def test_time_multiplexing_requires_new_storage_and_counters():
     assert r['x_store_rows']==160
     assert any('NM > 31' in e for e in r['errors'])
     assert any('128-row' in e for e in r['errors'])
+
+
+def test_native_bank_option_preserves_capacity_without_hidden_read_ports():
+    r=m.vm_tradeoffs();a,b,c=r['cases']
+    assert a['regular_words']==131072
+    assert b['regular_words']==c['regular_words']==524288
+    assert b['full_5120_word_fused_read_floor']==dict(pre=160,post=200)
+    assert c['full_5120_word_fused_read_floor']==dict(pre=80,post=100)
+    assert r['native32_extra_macros_vs_proxy']==16
+    assert not b['existing_RTL_shape']

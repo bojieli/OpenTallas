@@ -25,5 +25,54 @@
   "external_tree_outline_mm2": 0.8360755200000002,
   "hub_outline_mm2": 0.11943936000000001,
   "latency_status": "81/103 row-II measurements require the full native shape and a compatible memory calendar",
-  "nm40_alternative": "16 lanes * 8 words * 40 sectors cover 5120, but NM40 violates both the native NM31 bound and KX4*NM<=128"
+  "nm40_alternative": "16 lanes * 8 words * 40 sectors cover 5120, but NM40 violates both the native NM31 bound and KX4*NM<=128",
+  "vm_inventory_comparison": {
+    "cases": [
+      {
+        "name": "current_B2_SU",
+        "banks": 16,
+        "regular_words": 131072,
+        "macros": 48,
+        "bank_outline_mm2": 1.353024,
+        "full_5120_word_fused_read_floor": {
+          "pre": 160,
+          "post": 200
+        },
+        "existing_RTL_shape": true,
+        "memory_timing_and_combined_calendar_qualified": false
+      },
+      {
+        "name": "claude_grown16_proxy",
+        "banks": 16,
+        "regular_words": 524288,
+        "macros": 112,
+        "bank_outline_mm2": 2.426112,
+        "full_5120_word_fused_read_floor": {
+          "pre": 160,
+          "post": 200
+        },
+        "existing_RTL_shape": false,
+        "memory_timing_and_combined_calendar_qualified": false
+      },
+      {
+        "name": "native_grown32",
+        "banks": 32,
+        "regular_words": 524288,
+        "macros": 128,
+        "bank_outline_mm2": 3.4898688000000004,
+        "full_5120_word_fused_read_floor": {
+          "pre": 80,
+          "post": 100
+        },
+        "existing_RTL_shape": true,
+        "memory_timing_and_combined_calendar_qualified": false
+      }
+    ],
+    "native32_extra_outline_vs_proxy_mm2": 1.0637568000000006,
+    "native32_extra_macros_vs_proxy": 16,
+    "native32_extra_macro_area_vs_proxy_mm2": 0.197072,
+    "inference": "Two logical lanes on a 1R bank cannot sustain the native measured 81/103 row II: read floors are 160/200. Native32 has 80/100 floors, necessary but not sufficient.",
+    "shared_SU_blocker": "Current B2 PRE/POST SFU lowering and PRE norm/gain producer join remain unqualified; dedicated FUSED is not exclusively a MU semantic requirement.",
+    "performance_scope": "Old 16-SM CMTP rates cannot be transplanted to the current 8-SM B2 plan."
+  }
 }
