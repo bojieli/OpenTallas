@@ -1,0 +1,141 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "die": "hbm",
+ "kind": "core",
+ "type": "ot_hbm_svc_sm_xcal_rel_t",
+ "module": "ot_hbm_svc_sm_xcal_rel_t",
+ "instances": [],
+ "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+ "frozen": false,
+ "outline_um": [
+  241.92,
+  224.64
+ ],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250,
+   "FF": 202.5
+  },
+  "tol_ps": 20,
+  "early_taps": false
+ },
+ "keepouts": [],
+ "bays": [],
+ "entry_pins": [],
+ "hard_cores": [],
+ "corridors": [],
+ "gates": {},
+ "core_clock_port": "clk",
+ "islands": [
+  {
+   "name": "ck_entry",
+   "rect_um": [
+    116.64,
+    108.0,
+    125.28,
+    116.64
+   ],
+   "centre_um": [
+    120.96,
+    112.32
+   ],
+   "use": "clock_driver",
+   "via_stack": [
+    "M9",
+    "M5"
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     120.984,
+     112.32
+    ]
+   }
+  },
+  {
+   "name": "ck_l1_s",
+   "rect_um": [
+    116.64,
+    84.24,
+    125.28,
+    88.56
+   ],
+   "centre_um": [
+    120.96,
+    86.4
+   ],
+   "use": "clock_driver"
+  },
+  {
+   "name": "ck_l1_n",
+   "rect_um": [
+    116.64,
+    136.08,
+    125.28,
+    140.4
+   ],
+   "centre_um": [
+    120.96,
+    138.24
+   ],
+   "use": "clock_driver"
+  },
+  {
+   "name": "ck_l2_sw",
+   "rect_um": [
+    12.96,
+    84.24,
+    21.6,
+    88.56
+   ],
+   "centre_um": [
+    17.28,
+    86.4
+   ],
+   "use": "clock_driver"
+  },
+  {
+   "name": "ck_l2_se",
+   "rect_um": [
+    220.32,
+    84.24,
+    228.96,
+    88.56
+   ],
+   "centre_um": [
+    224.64,
+    86.4
+   ],
+   "use": "clock_driver"
+  },
+  {
+   "name": "ck_l2_nw",
+   "rect_um": [
+    12.96,
+    136.08,
+    21.6,
+    140.4
+   ],
+   "centre_um": [
+    17.28,
+    138.24
+   ],
+   "use": "clock_driver"
+  },
+  {
+   "name": "ck_l2_ne",
+   "rect_um": [
+    220.32,
+    136.08,
+    228.96,
+    140.4
+   ],
+   "centre_um": [
+    224.64,
+    138.24
+   ],
+   "use": "clock_driver"
+  }
+ ],
+ "note": "TRIAL R4 re-pack: centre std pocket (tab row) + full-width bands y83.45-89.64 / 135.02-140.94 + W/E strips; 7 in-core islands, identical for all 4 pin variants"
+}

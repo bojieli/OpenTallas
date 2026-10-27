@@ -1,0 +1,141 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-27T07:14:09+0000",
+ "verdict": "EQUIVALENT",
+ "top": "ot_hbm_svc_sm_xcal_rel_t",
+ "netlist": "/work/run/results/asap7/hbc_ot_hbm_svc_sm_xcal_rel_t/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_sram_1r1w_1024x256_m2_r2c2": 12,
+  "ot_sram_1r1w_128x256_m1_r2c2": 12
+ },
+ "ports": {
+  "inputs": 330,
+  "outputs": 177
+ },
+ "t_aig_s": 6.4,
+ "t_corr_s": 158.4,
+ "keypoints": {
+  "gold": {
+   "inputs": 3065,
+   "flops": 6615,
+   "outputs": 0,
+   "ands": 26613
+  },
+  "gate": {
+   "inputs": 1127,
+   "flops": 9757,
+   "outputs": 0,
+   "ands": 11343
+  },
+  "matched": 4496,
+  "gold_constant_flops": {
+   "n": 1,
+   "first": [
+    "ff:u_dut.u_fcore.u_tgt.s_base[8]"
+   ]
+  },
+  "paired_flops": {
+   "n": 0,
+   "first": []
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 2735,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 797,
+  "gold_only_compare": {
+   "n": 0,
+   "first": []
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 3.2,
+ "x_dont_care_points": {
+  "n": 712,
+  "first": [
+   "ff:u_dut.u_fcore.u_tgt.a_addr[0]",
+   "ff:u_dut.u_fcore.u_tgt.a_addr[10]",
+   "ff:u_dut.u_fcore.u_tgt.a_addr[1]",
+   "ff:u_dut.u_fcore.u_tgt.a_addr[2]",
+   "ff:u_dut.u_fcore.u_tgt.a_addr[3]",
+   "ff:u_dut.u_fcore.u_tgt.a_addr[4]",
+   "ff:u_dut.u_fcore.u_tgt.a_addr[5]",
+   "ff:u_dut.u_fcore.u_tgt.a_addr[6]",
+   "ff:u_dut.u_fcore.u_tgt.a_addr[7]",
+   "ff:u_dut.u_fcore.u_tgt.a_addr[8]",
+   "ff:u_dut.u_fcore.u_tgt.a_addr[9]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[0]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[100]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[101]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[102]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[103]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[104]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[105]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[106]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[107]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[108]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[109]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[10]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[110]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[111]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[112]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[113]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[114]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[115]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[116]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[117]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[118]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[119]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[11]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[120]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[121]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[122]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[123]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[124]",
+   "ff:u_dut.u_fcore.u_tgt.a_data[125]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 505,
+  "in_netlist": 505,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "counts": {
+  "compare_points": 5593,
+  "proved": 5593,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "5593 compare points proved; 4496 key points matched by name, 0 register pairs / merges and 1 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 712 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 168.4,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'"
+ }
+}

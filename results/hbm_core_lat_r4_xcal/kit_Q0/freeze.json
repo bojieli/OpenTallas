@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "ot_hbm_svc_sm_xcal_rel_t@d66b700ee2f0",
+ "module": "ot_hbm_svc_sm_xcal_rel_t",
+ "design": "ot_hbm_svc_sm_xcal_rel_t",
+ "rtl_top": "ot_hbm_svc_sm_xcal_rel_t",
+ "recipe_key": "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6",
+ "recipe_sha256": "8b3a530fcdfccaf8e0b29a1b16ef2f5a60ec3071bc0c99b4d56463074cb739f0",
+ "canonical_type": null,
+ "wrapper": null,
+ "outline_um": [
+  241.92,
+  224.64
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/hbm-core-lat-r4-xcal/planR4/die_plan.json",
+ "plan_sha256": "e876baf4156b28464764965fbc8de764153823644774d1df11afb4f83760c24a",
+ "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__241.92x224.64__q_spt0_u_xc_Q0.json",
+ "pins_sha256": "d66b700ee2f0fa7360cff96c1b0334034f68569c0b058f46ad519238230f17aa",
+ "pins": 507,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [],
+ "sdc_lint": "PASS (gen)",
+ "macros": [
+  "ot_sram_1r1w_1024x256_m2_r2c2",
+  "ot_sram_1r1w_128x256_m1_r2c2"
+ ],
+ "face_shell": {
+  "core": "ot_hbm_svc_sm_xcal_rel_t__fcore",
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "face_flops": 505,
+  "dropped": 0,
+  "unread_kept": 0,
+  "const_out_bits": 0,
+  "dup_out_bits": 0,
+  "plan_pins": 507
+ },
+ "kit_hash": "3f1064df40ad690c",
+ "flow_defaults": {
+  "rc_cal": true,
+  "f1": {
+   "io_tt_ps": 250.0,
+   "io_ff_ps": 202.5,
+   "mechanism": "vclk_corner FF-only GRT + gates",
+   "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "f4": true,
+  "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+ },
+ "master_plan": {
+  "slice_sha256": "26335ed1b6ea755306371ab69f71bf0e28fd2cb87a9ed3891b7077a6f22d64a2",
+  "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+  "type": "ot_hbm_svc_sm_xcal_rel_t",
+  "frozen": false
+ }
+}

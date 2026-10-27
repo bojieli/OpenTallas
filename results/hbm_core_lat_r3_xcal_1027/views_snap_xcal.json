@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.hbm_arch.core_views.v1",
+ "plan": "planS2snap/die_plan.json",
+ "plan_sha256": "e876baf4156b28464764965fbc8de764153823644774d1df11afb4f83760c24a",
+ "views": 219,
+ "placed": 953,
+ "modules": 159,
+ "by_family": {
+  "HC": 10,
+  "IDXS": 66,
+  "MISC": 20,
+  "SFU": 3,
+  "LINK": 1,
+  "SM": 2,
+  "SMSVC": 18,
+  "PGS": 55,
+  "COLL": 12,
+  "TKM": 1,
+  "IDX": 6,
+  "VM": 20,
+  "SU": 5
+ },
+ "view_list": [
+  {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@0c84ca9ada62",
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "outline_um": [
+    207.36,
+    207.36
+   ],
+   "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__207.36x207.36__q_spb2_u_xc_Q3.json",
+   "pins_sha256": "0c84ca9ada62f29648dc962e50e22e49d74c0181734fb2c07dfcdeabdfc90fab",
+   "pins": 507,
+   "family": "SMSVC",
+   "instances": [
+    "q_spb2.u_xc_Q3"
+   ],
+   "placed": 2,
+   "tables_for_module": 4,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6"
+   ],
+   "blockers": [
+    "MULTI_TABLE: same module, several pin tables (HBM-ARCH request (a))"
+   ]
+  },
+  {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@61cc4ec358c5",
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "outline_um": [
+    207.36,
+    207.36
+   ],
+   "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__207.36x207.36__q_spt0_u_xc_Q1.json",
+   "pins_sha256": "61cc4ec358c52ff6dc16d4bea1aa48e33dc397ebcca7b51f630d0a3dfe40cab7",
+   "pins": 507,
+   "family": "SMSVC",
+   "instances": [
+    "q_spt0.u_xc_Q1"
+   ],
+   "placed": 2,
+   "tables_for_module": 4,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6"
+   ],
+   "blockers": [
+    "MULTI_TABLE: same module, several pin tables (HBM-ARCH request (a))"
+   ]
+  },
+  {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@76450e8267cf",
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "outline_um": [
+    207.36,
+    207.36
+   ],
+   "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__207.36x207.36__q_spb2_u_xc_Q2.json",
+   "pins_sha256": "76450e8267cf74b8594acb0835e300b24fea7ff4e432b1014f7858b45dfd11db",
+   "pins": 507,
+   "family": "SMSVC",
+   "instances": [
+    "q_spb2.u_xc_Q2"
+   ],
+   "placed": 2,
+   "tables_for_module": 4,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6"
+   ],
+   "blockers": [
+    "MULTI_TABLE: same module, several pin tables (HBM-ARCH request (a))"
+   ]
+  },
+  {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@991af17b4632",
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "outline_um": [
+    207.36,
+    207.36
+   ],
+   "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__207.36x207.36__q_spt0_u_xc_Q0.json",
+   "pins_sha256": "991af17b4632755b938549c3d0b7b73353dd818448eda744150d199ec468dd8f",
+   "pins": 507,
+   "family": "SMSVC",
+   "instances": [
+    "q_spt0.u_xc_Q0"
+   ],
+   "placed": 2,
+   "tables_for_module": 4,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6"
+   ],
+   "blockers": [
+    "MULTI_TABLE: same module, several pin tables (HBM-ARCH request (a))"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,189 @@
+[
+ {
+  "partition": "q_spb2",
+  "inst": "u_xc_Q2",
+  "old_origin": [
+   825.12,
+   1265.76
+  ],
+  "new_origin": [
+   790.56,
+   1248.48
+  ],
+  "new_rect": [
+   790.56,
+   1248.48,
+   1032.48,
+   1473.12
+  ],
+  "in_partition": true,
+  "edge_margin": 30.24,
+  "nearest_core": [
+   [
+    30.24,
+    "u_cp_svg_Q2"
+   ],
+   [
+    99.36,
+    "u_cp_svg_Q3"
+   ]
+  ],
+  "nearest_station_reg": [
+   [
+    25.92,
+    "bus:L49_i"
+   ],
+   [
+    25.92,
+    "bus:L49_i"
+   ],
+   [
+    25.92,
+    "bus:L49_i"
+   ]
+  ],
+  "station_regs_inside": [],
+  "die_ft_band_overlap": []
+ },
+ {
+  "partition": "q_spb2",
+  "inst": "u_xc_Q3",
+  "old_origin": [
+   1429.92,
+   1265.76
+  ],
+  "new_origin": [
+   1395.36,
+   1248.48
+  ],
+  "new_rect": [
+   1395.36,
+   1248.48,
+   1637.28,
+   1473.12
+  ],
+  "in_partition": true,
+  "edge_margin": 30.24,
+  "nearest_core": [
+   [
+    211.68,
+    "u_cp_svg_Q3"
+   ],
+   [
+    280.8,
+    "u_cp_svg_Q2"
+   ]
+  ],
+  "nearest_station_reg": [
+   [
+    8.64,
+    "bus:L76_o"
+   ],
+   [
+    8.64,
+    "bus:L76_o"
+   ],
+   [
+    12.96,
+    "bus:L83_i"
+   ]
+  ],
+  "station_regs_inside": [],
+  "die_ft_band_overlap": []
+ },
+ {
+  "partition": "q_spt0",
+  "inst": "u_xc_Q0",
+  "old_origin": [
+   151.2,
+   30.24
+  ],
+  "new_origin": [
+   116.64,
+   30.24
+  ],
+  "new_rect": [
+   116.64,
+   30.24,
+   358.56,
+   254.88
+  ],
+  "in_partition": true,
+  "edge_margin": 30.24,
+  "nearest_core": [
+   [
+    116.64,
+    "u_cp_svg_Q0"
+   ],
+   [
+    185.76,
+    "u_cp_svg_Q1"
+   ]
+  ],
+  "nearest_station_reg": [
+   [
+    0,
+    "bus:L77_o"
+   ],
+   [
+    0,
+    "bus:L77_o"
+   ],
+   [
+    30.24,
+    "L66x2"
+   ]
+  ],
+  "station_regs_inside": [
+   "bus:L77_o",
+   "bus:L77_o"
+  ],
+  "die_ft_band_overlap": []
+ },
+ {
+  "partition": "q_spt0",
+  "inst": "u_xc_Q1",
+  "old_origin": [
+   1533.6,
+   30.24
+  ],
+  "new_origin": [
+   1499.04,
+   30.24
+  ],
+  "new_rect": [
+   1499.04,
+   30.24,
+   1740.96,
+   254.88
+  ],
+  "in_partition": true,
+  "edge_margin": 30.24,
+  "nearest_core": [
+   [
+    902.88,
+    "u_cp_svg_Q1"
+   ],
+   [
+    972.0,
+    "u_cp_svg_Q0"
+   ]
+  ],
+  "nearest_station_reg": [
+   [
+    8.64,
+    "bus:L78_o"
+   ],
+   [
+    17.28,
+    "bus:L50_i"
+   ],
+   [
+    30.24,
+    "bus:L88_o"
+   ]
+  ],
+  "station_regs_inside": [],
+  "die_ft_band_overlap": []
+ }
+]
