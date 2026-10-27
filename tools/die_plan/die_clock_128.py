@@ -269,14 +269,21 @@ def load_plan_sites(path, plan_sha256=None):
 
 
 # ------------------------------------------------------------------------------------------------ fixed wires
+DROP_SPLIT_UM = 0.48   # CLOCK-KV-R13: one shielded clock track pair (4W NDR wire + VSS shields) between split drops
+
+
 def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_stack=False, port_on_trunk=False,
-                ties=None, l_drops=False, exact_reserve=False):
+                split_drops=False, ties=None, l_drops=False, exact_reserve=False):
     """every tree net (root, H-tree legs/nodes/leaves, split tails, stubs) as a fixed comb pre-route: one trunk on the
     net's dominant axis (M8 horizontal / M9 vertical), offset `off` from the driver pin line, plus one perpendicular
     drop per load, offset `off` from the load pin line.  Returns [dict(name, drv, pins, segs, rc_nodes)].
     router (TrackRouter, CLOCK-128 shield lane): each trunk / drop goes on the nearest PG-aware routing track whose
     clock metal + both VSS shields clear every same-layer shape of another net (die PG grid, mesh straps + shields,
-    earlier tree wires + shields); a segment with no legal track within router.max_move is a plan error."""
+    earlier tree wires + shields); a segment with no legal track within router.max_move is a plan error.
+    split_drops (CLOCK-KV-R13, opt-in; default unchanged): two drops of one net that leave the trunk at the same
+    point toward opposite sides (a leaf-row pair: one shared VIA89 / VIA78 junction feeding both drops) are put on
+    their own tracks DROP_SPLIT_UM apart, so each drop has its own trunk via (OpenRCX resolved the shared-via node
+    asymmetrically: +11.2 ps odd/even leaf offset, CLOCK-KV-R12)."""
     txy = {t["port"]: tuple(t["xy"]) for t in M["taps"]}
     root = tuple(M["meta"]["root_um"])
 
@@ -293,10 +300,10 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                                   **(dict(exact_reserve=True) if exact_reserve else {}))
     out, errs = [], []
 
-    def track(layer, ideal, a0, a1, name, what):
+    def track(layer, ideal, a0, a1, name, what, avoid=()):
         if router is None:
             return ideal, DRAWN
-        c, mode, e = router.place(layer, ideal, a0, a1, name)
+        c, mode, e = router.place(layer, ideal, a0, a1, name, avoid=avoid)
         last_ext[0] = e
         if c is None:
             errs.append(dict(kind="no_clock_track", name=name, detail=f"{what} {layer} ideal {ideal:.3f} span "
@@ -332,9 +339,15 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                            max([D[0]] + [p[0] + off for _, p in Ls]) + mm, nm, "trunk")
             te = last_ext[0]
             xs_, modes, exts = [], [], []
+            used = []
             for ld, p in Ls:
                 if abs(p[1] - ty) > 1e-6:
-                    bx, bm = track("M9", p[0] + off, ty, p[1], nm, f"drop {ld}")
+                    ix = p[0] + off
+                    av = [ux for ux, uy in used if (uy - ty) * (p[1] - ty) < 0] if split_drops else []
+                    if any(abs(u_ - ix) < DROP_SPLIT_UM - 1e-6 for u_ in av):
+                        ix += DROP_SPLIT_UM
+                    bx, bm = track("M9", ix, ty, p[1], nm, f"drop {ld}", avoid=av)
+                    used.append((bx, p[1]))
                     segs.append(("M9", bx, min(ty, p[1]), bx, max(ty, p[1])))
                     modes.append(bm)
                     exts.append(last_ext[0])
@@ -354,9 +367,15 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                            max([D[1]] + [p[1] + off for _, p in Ls]) + mm, nm, "trunk")
             te = last_ext[0]
             ys_, modes, exts = [], [], []
+            used = []
             for ld, p in Ls:
                 if abs(p[0] - tx) > 1e-6:
-                    by, bm = track("M8", p[1] + off, tx, p[0], nm, f"drop {ld}")
+                    iy = p[1] + off
+                    av = [uy for uy, ux in used if (ux - tx) * (p[0] - tx) < 0] if split_drops else []
+                    if any(abs(u_ - iy) < DROP_SPLIT_UM - 1e-6 for u_ in av):
+                        iy += DROP_SPLIT_UM
+                    by, bm = track("M8", iy, tx, p[0], nm, f"drop {ld}", avoid=av)
+                    used.append((by, p[0]))
                     segs.append(("M8", min(tx, p[0]), by, max(tx, p[0]), by))
                     modes.append(bm)
                     exts.append(last_ext[0])
@@ -757,9 +776,11 @@ class TrackRouter:
             return None
         return round(max(e0, best), 4)
 
-    def place(self, layer, ideal, a0, a1, net, keep=None, dry=False):
+    def place(self, layer, ideal, a0, a1, net, keep=None, dry=False, avoid=()):
         """(centre, mode) of the nearest legal track, or (None, None).  keep (R20, optional): (lo, hi) band the track
-        centre must lie in (a clock-channel keep-in: the riser of a host-less channel cell never leaves the channel)."""
+        centre must lie in (a clock-channel keep-in: the riser of a host-less channel cell never leaves the channel).
+        avoid: track centres this segment must not take (CLOCK-KV-R13 split_drops: the opposite drop of the same
+        junction, within DROP_SPLIT_UM)"""
         tr = self.tracks[layer]
         pitch, offs = tr["pitch_um"], tr["offset_um"]
         k0 = round((ideal - offs) / pitch)
@@ -771,6 +792,8 @@ class TrackRouter:
                 if abs(c - ideal) > self.max_move + 1e-9:
                     continue
                 if keep is not None and not (keep[0] - 1e-9 <= c <= keep[1] + 1e-9):
+                    continue
+                if any(abs(c - v) < DROP_SPLIT_UM - 1e-6 for v in avoid):
                     continue
                 e = self.tie_ext(layer, c, a0, a1)
                 sh = seg_shapes(layer, c, a0, a1, net, self.nd, self.shield, ext=e)
@@ -1019,6 +1042,58 @@ def combo_tcl(wires, nd, shield):
             nseg += 1
     L.append(f"puts \"OT_FIXED_CLOCK nets {len(wires)} segs {nseg}\"")
     return L
+
+
+def shield_union(boxes):
+    """CLOCK-KV-R10: union of same-net shield boxes [(layer, vertical, c_lo, c_hi, a_lo, a_hi)] per (layer, direction,
+    track): overlapping or abutting boxes on one track become ONE box (the same metal).  Coincident/overlapping shield
+    shapes (a trunk and the H-tree leg that retraces it share a shield track) are one piece of metal, but OpenRCX
+    counts the lateral coupling to EACH shape (KV b5 L2 h01 legs 128 fF vs 86 fF, +105 ps TT tree spread).
+    Returns (merged boxes, number of input boxes that were merged)."""
+    g = defaultdict(list)
+    for b in boxes:
+        g[tuple(b[:4])].append((b[4], b[5]))
+    out, nmerged = [], 0
+    for k in sorted(g):
+        runs = []
+        for lo, hi in sorted(g[k]):
+            if runs and lo <= runs[-1][1]:
+                runs[-1][1] = max(runs[-1][1], hi)
+                runs[-1][2] += 1
+            else:
+                runs.append([lo, hi, 1])
+        for lo, hi, n in runs:
+            out.append(k + (lo, hi))
+            nmerged += n if n > 1 else 0
+    return out, nmerged
+
+
+def shield_merge_tcl(shield, nd):
+    """CLOCK-KV-R10 (opt-in, die_clock_mesh combo --merge-shields): Tcl post-pass, run after every shield / tie shape
+    exists, that replaces the shield net's overlapping or abutting same-track M8/M9 boxes of shield width by their
+    union (shield_union in Tcl: the same metal, one shape per run, so extraction sees one neighbour)."""
+    return [
+        "proc ot_merge_shields {netname wdbu} { global blk; set n [$blk findNet $netname]; array set g {}; "
+        "foreach sw [$n getSWires] { foreach b [$sw getWires] { if {[$b isVia]} { continue }; "
+        "set ly [[$b getTechLayer] getName]; if {$ly ne \"M8\" && $ly ne \"M9\"} { continue }; "
+        "set dx [$b getDX]; set dy [$b getDY]; "
+        "if {$dy > $dx} { if {$dx != $wdbu} { continue }; "
+        "lappend g($ly,V,[$b xMin],[$b xMax]) [list [$b yMin] [$b yMax] $b $sw] } "
+        "else { if {$dy != $wdbu} { continue }; "
+        "lappend g($ly,H,[$b yMin],[$b yMax]) [list [$b xMin] [$b xMax] $b $sw] } } }; "
+        "set nin 0; set nout 0; "
+        "foreach k [array names g] { if {[llength $g($k)] < 2} { continue }; lassign [split $k ,] ly dir c0 c1; "
+        "set l [[ord::get_db_tech] findLayer $ly]; set runs {}; set cur {}; "
+        "foreach it [lsort -integer -index 0 $g($k)] { lassign $it lo hi b sw; "
+        "if {[llength $cur] && $lo <= [lindex $cur 1]} { lset cur 1 [expr {max([lindex $cur 1], $hi)}]; "
+        "lset cur 2 [concat [lindex $cur 2] [list $b]] } "
+        "else { if {[llength $cur]} { lappend runs $cur }; set cur [list $lo $hi [list $b] $sw] } }; lappend runs $cur; "
+        "foreach r $runs { lassign $r lo hi bs sw; if {[llength $bs] < 2} { continue }; incr nin [llength $bs]; "
+        "incr nout; foreach b $bs { odb::dbSBox_destroy $b }; "
+        "if {$dir eq \"V\"} { odb::dbSBox_create $sw $l $c0 $lo $c1 $hi STRIPE } "
+        "else { odb::dbSBox_create $sw $l $lo $c0 $hi $c1 STRIPE } } }; "
+        "puts \"OT_SHIELD_MERGE in $nin out $nout\" }",
+        f"ot_merge_shields {shield} [expr {{round({nd['width']}*[[ord::get_db_block] getDbUnitsPerMicron])}}]"]
 
 
 def shield_stripes(segs, nd):
@@ -1369,11 +1444,39 @@ def stage_depths(nets):
     return out, by_load
 
 
-def aocv_fold_fields(M, nets, place, nodes_arr):
+def mesh_walk_nets(nets, place, drv_kinds=("drv",), load_kinds=("stub", "broot")):
+    """CLK-AOCV opt-in (CLOCK-KV-R15, shared by every die_clock_mesh / die_clock_128 die): the multi-driver mesh is not
+    a nets.json net (mesh drivers drive the special ck_mesh[_r<k>] net), so stage_depths cannot walk from a mesh-fed
+    stub back to the root.  Return one synthetic multi-driver net per mesh region: drv = every mesh driver cell of
+    that region (place kind in drv_kinds), loads = every cell of a load kind that no nets.json net drives (its input
+    is on the mesh).  The mesh itself is wire: a mesh-fed cell's depth = 1 + the deepest driver's depth (the
+    stage_depths multi-driver rule).  Raises when mesh loads exist but no driver does."""
+    driven = {ld for n in nets for ld in n["loads"]}
+    drv, lds = defaultdict(list), defaultdict(list)
+    for c, v in sorted(place.items()):
+        k = v.get("kind")
+        if k in drv_kinds:
+            drv[v.get("region")].append(c)
+        elif k in load_kinds and c not in driven:
+            lds[v.get("region")].append(c)
+    out = []
+    for r in sorted(set(drv) | set(lds), key=lambda z: (z is None, z)):
+        if not lds.get(r):
+            continue
+        if not drv.get(r):
+            raise ValueError(f"mesh_walk_nets: region {r} has {len(lds[r])} mesh loads but no mesh driver")
+        out.append(dict(name="ck_mesh" if r is None else f"ck_mesh_r{r}", drv=drv[r], loads=lds[r], level=50,
+                        synthetic="mesh_walk"))
+    return out
+
+
+def aocv_fold_fields(M, nets, place, nodes_arr, mesh_walk=False):
     """CLK-AOCV table-mode inputs (opt-in, die_clock_mesh report --aocv-fold): per tap 'stages_from_root' (buffers
     from the die root up to the cell driving the tap) + 'xy_um'; per CPPR node ('h' = die root node ckm_n0, else the
     region root ckm_n<l>_<tag>) 'node_stages', 'node_xy_um' and the node cell's output arrival 'node_late_ps' /
     'node_early_ps' (tree STA at this corner)."""
+    if mesh_walk:
+        nets = list(nets) + mesh_walk_nets(nets, place)
     dep, by_load = stage_depths(nets)
     taps = {}
     for t in M["taps"]:

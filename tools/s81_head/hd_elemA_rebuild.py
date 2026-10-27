@@ -164,6 +164,16 @@ def main():
     (K / "macros").mkdir()
     for s in SRCS:
         (K / "rtl" / Path(s).name).write_bytes(subprocess.check_output(["git", "-C", str(R), "show", f"{SRC_REV}:{s}"]))
+    # HEAD-CORE-R11 (COORD RULING HEAD-CORE-R10 KEEP FAIL): the closed element carried four (* keep *) SPLIT9 round-carry
+    # copies on each chain-head adder (a = +0), dead by construction -> 8 declared kept bits absent from every netlist
+    # (lec.py KEEP FAIL).  Main RTL fixed at source (ot_v41_fadd CY_COPY, head element CY_COPY(s != 0)); the kit applies
+    # the SAME patch (cy_copy_const.py, exact-once anchors) to the closed f11f3cc47 text, so the kit RTL -- and the kept-
+    # register set lec.py derives from its keep attributes -- no longer declares them.  Nothing else in the RTL changes.
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from cy_copy_const import apply_fadd, apply_head_elem
+    for n, fn in (("ot_v41_fadd.sv", apply_fadd), ("ot_dsrom_head_elem.sv", apply_head_elem)):
+        (K / "rtl" / n).write_text(fn((K / "rtl" / n).read_text()))
     if a.rom_local_issue:
         from rom_addr_local import transform
         native = K / "rtl/ot_dsrom_head_elem.sv"

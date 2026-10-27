@@ -1,0 +1,33 @@
+EGRESS_DATA pos 0 rank 30 t 8
+EGRESS_DATA pos 0 rank 30 t 9
+EGRESS_DATA pos 0 rank 22 t 8
+EGRESS_DATA pos 0 rank 22 t 9
+EGRESS_DATA pos 0 rank 56 t 8
+EGRESS_DATA pos 0 rank 56 t 9
+EGRESS_DATA pos 0 rank 62 t 8
+EGRESS_DATA pos 0 rank 62 t 9
+EGRESS_DATA pos 0 rank 62 t 8
+EGRESS_DATA pos 0 rank 62 t 9
+FAULT pos 0 fcode 80
+FAULT pos 1 fcode 80
+FAULT pos 2 fcode 80
+FAULT pos 3 fcode b0
+FAULT pos 5 fcode 83
+FAULT pos 6 fcode 83
+FAULT pos 7 fcode b3
+FAULT pos 8 fcode 8f
+FAULT pos 9 fcode 83
+FAULT pos 10 fcode 83
+FAULT pos 11 fcode b3
+FAULT pos 12 fcode 8f
+FAULT pos 13 fcode 83
+FAULT pos 14 fcode 83
+FAULT pos 15 fcode 83
+NEG ovl 0 short 0 skew 0 rate 1 expect fcode 04 at pos 4 got 8f
+TRANSPORT_TIMING first_export 22 span 2738 hop_sum 474 (re-pair 42 + reduce/broadcast 2 x 15 hops + slots 2240 + hdr) J 2 LON 3 LX 37
+LINK pk 0 rate 764 lane_lag_max 1 (cycles a beat waited for the rate cap)
+ROWXM seed 5 pk 0 rate 764 fix 0 perm 1 j 2 ovl 0 short 0 skew 0 words0 2049 err 0 mut 0 verdict=PASS
+- /srv/opentallas-scratch2/claude/wt/s81-rowx3-1026/rtl/dsrom_sys/s81_dv/svc_rs/rowx/test/tb_dsdv_rowx_xm.sv:175: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.042 s; speed 70.231 us/s
+- Verilator: cpu 0.043 s on 1 threads; allocated 10 MB

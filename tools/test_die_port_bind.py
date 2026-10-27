@@ -18,6 +18,17 @@ endmodule
 module wrap (input wire ck, input wire [15:0] i, output wire [15:0] o);
   a #(.N(2)) u (.ck(ck), .i(i), .o(o), .en(1'b1));
 endmodule
+module selfw (input wire ck, input wire rst_n, input wire [3:0] x, output wire [3:0] y, output reg r);
+  always @(posedge ck) r <= rst_n;
+  selfw u_core (.ck(ck), .rst_n(rst_n), .x(x), .y(y), .r());
+endmodule
+module feed (input wire [3:0] x, output wire [3:0] y);
+  assign y = {x[1:0], x[3:2]};
+endmodule
+module rec #(parameter integer D = 2) (input wire [3:0] x, output wire [3:0] y);
+  generate if (D == 0) begin : g_leaf assign y = ~x; end
+  else begin : g_up rec #(.D(D - 1)) u (.x(x), .y(y)); end endgenerate
+endmodule
 """
 
 
@@ -33,6 +44,28 @@ def run(die, extra=()):
 
 
 class T(unittest.TestCase):
+    def test_self_instance_stub(self):
+        # HEAD-RTL-4: a wrapper that instantiates ITSELF as u_core (missing content provider) is a STUB even though
+        # its own reset register makes it look real
+        rc, r = run("module top (ck, x, y);\n  input ck;\n  input [3:0] x;\n  output [3:0] y;\n"
+                    "  selfw u0 (.ck(ck), .rst_n(ck), .x(x), .y(y), .r());\nendmodule\n")
+        self.assertNotEqual(rc, 0)
+        self.assertEqual(r['summary']['stub_masters'], 1, r['summary'])
+        self.assertEqual(r['masters']['selfw']['stub_reason'], 'self_instance')
+
+    def test_logic_free_wiring_stub(self):
+        die = "module top (x, y);\n  input [3:0] x;\n  output [3:0] y;\n  feed u0 (.x(x), .y(y));\nendmodule\n"
+        rc, r = run(die)
+        self.assertEqual(r['summary']['stub_masters'], 0, r['summary'])   # opt-in only
+        rc, r = run(die, ['--logic-free-stub'])
+        self.assertNotEqual(rc, 0)
+        self.assertEqual(r['summary']['stub_masters'], 1, r['summary'])
+        self.assertEqual(r['masters']['feed']['stub_reason'], 'logic_free_wiring')
+
+    def test_parameterised_recursion_real(self):
+        rc, r = run("module top (x, y);\n  input [3:0] x;\n  output [3:0] y;\n  rec u0 (.x(x), .y(y));\nendmodule\n")
+        self.assertEqual(r['summary']['stub_masters'], 0, r['summary'])
+
     def test_pass(self):
         rc, r = run("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [15:0] n2;\n"
                     "  a u0 (.ck(ck), .i(n2), .o(n1), .en(ck));\n  wrap w (.ck(ck), .i(n1), .o(n2));\nendmodule\n")
@@ -326,4 +359,95 @@ class G6(unittest.TestCase):
         self.assertEqual(cc['ambiguous_children'], {})
         self.assertTrue(cc['variant_children']['c']['chosen'].endswith('c_rne.sv'))
         self.assertEqual(cc['variant_children']['c']['by'], 'prefer')
+
+
+def run_manifest(entries, extra=(), snapshot=True):  # extra: list or fn(tmpdir) -> list
+    """HEAD-RTL-5: die whose child c has a SNAPSHOT copy (old interface, as physical/ref_tile/*/src) in the indexed tree"""
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        (d / 'rtl').mkdir()
+        (d / 'rtl' / 'p.sv').write_text(G6_P)
+        (d / 'rtl' / 'c_rne.sv').write_text(G6_C_RNE)
+        (d / 'rtl' / 'c_base.sv').write_text(G6_C_BASE)
+        if snapshot:
+            (d / 'rtl' / 'ref_tile' / 'src').mkdir(parents=True)
+            (d / 'rtl' / 'ref_tile' / 'src' / 'c.sv').write_text(G6_C_BASE)
+        (d / 'm.f').write_text(''.join(f'{d / "rtl" / e}\n' for e in entries))
+        (d / 'd.v').write_text(G6_DIE)
+        out = d / 'o.json'
+        p = subprocess.run([sys.executable, str(TOOL), str(d / 'd.v'), '--top', 'die', '-f', str(d / 'm.f'),
+                            '--out', str(out)] + list(extra(d) if callable(extra) else extra), capture_output=True, text=True)
+        return p.returncode, (json.loads(out.read_text()) if out.exists() else None), p.stdout + p.stderr
+
+
+class ManifestOnly(unittest.TestCase):
+    def test_snapshot_never_indexed(self):
+        rc, rec, so = run_manifest(['p.sv', 'c_rne.sv'], ['--manifest-only'])
+        self.assertEqual(rc, 0, so)
+        self.assertEqual(rec['source_mode'], 'manifest_only')
+        self.assertEqual(rec['rtl_roots'], [])
+        self.assertEqual(rec['child_closure']['variant_children'], {})      # the snapshot copy is not even seen
+        self.assertEqual(rec['child_closure']['ambiguous_children'], {})
+
+    def test_tree_mode_reproduces_snapshot_ambiguity(self):
+        # negative control = the HEAD-RTL-4 cand failure: c not in the manifest, tree index finds rtl/ c_rne + snapshot c
+        rc, rec, so = run_manifest(['p.sv'], lambda d: ['--rtl-root', str(d / 'rtl'), '--no-macro-dirs'])
+        self.assertEqual(rc, 1)
+        self.assertIn('ambiguous_children', rec['failing'])
+        self.assertEqual(rec['child_closure']['ambiguous_children']['c']['by'], 'first')
+
+    def test_child_missing_from_manifest_fails(self):
+        # the child is NOT taken silently from some tree copy: it is unresolved
+        rc, rec, so = run_manifest(['p.sv'], ['--manifest-only'])
+        self.assertEqual(rc, 1)
+        self.assertIn('unresolved_children', rec['failing'])
+        self.assertIn('c', rec['child_closure']['unresolved_children'])
+
+    def test_iface_conflict_inside_manifest_fails(self):
+        # two manifest entries with different ports/parameters: the prefer rank (later wins) must not hide it
+        rc, rec, so = run_manifest(['p.sv', 'c_base.sv', 'c_rne.sv'], ['--manifest-only'])
+        self.assertEqual(rc, 1)
+        self.assertIn('ambiguous_children', rec['failing'])
+        self.assertEqual(rec['child_closure']['ambiguous_children']['c']['by'], 'prefer')
+        rc, rec, so = run_manifest(['p.sv', 'c_base.sv', 'c_rne.sv'],                       # tree mode: rank decides
+                                   lambda d: ['--rtl-root', str(d / 'none'), '--no-macro-dirs'])
+        self.assertNotIn('ambiguous_children', rec['failing'])
+
+    def test_missing_entry_fails(self):
+        rc, rec, so = run_manifest(['p.sv', 'c_rne.sv', 'gone.sv'], ['--manifest-only'])
+        self.assertEqual(rc, 1)
+        self.assertIn('manifest_missing', rec['failing'])
+        self.assertEqual(rec['summary']['manifest_missing'], 1)
+
+    def test_macro_model_and_bb_same_iface(self):
+        # a macro behavioural model (body localparams) and its _bb.v abstract have the same pins: not an iface conflict
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            (d / 'm.v').write_text("module m (input wire ck, input wire [3:0] a, output reg [3:0] q);\n"
+                                   "  localparam integer W = 4, D = 2;\n  always @(posedge ck) q <= a;\nendmodule\n")
+            (d / 'm_bb.v').write_text("(* blackbox *)\nmodule m (input wire ck, input wire [3:0] a, output wire [3:0] q);\nendmodule\n")
+            (d / 'w.sv').write_text("module w (input wire ck, input wire [3:0] a, output wire [3:0] q);\n"
+                                    "  m u (.ck(ck), .a(a), .q(q));\nendmodule\n")
+            (d / 'm.f').write_text(f"{d / 'w.sv'}\n{d / 'm.v'}\n{d / 'm_bb.v'}\n")
+            (d / 'd.v').write_text("module die (ck, a, q);\n  input ck;\n  input [3:0] a;\n  output [3:0] q;\n"
+                                   "  w u_w (.ck(ck), .a(a), .q(q));\nendmodule\n")
+            out = d / 'o.json'
+            p = subprocess.run([sys.executable, str(TOOL), str(d / 'd.v'), '--top', 'die', '-f', str(d / 'm.f'),
+                                '--manifest-only', '--out', str(out)], capture_output=True, text=True)
+            rec = json.loads(out.read_text())
+            self.assertEqual(p.returncode, 0, p.stdout)
+            self.assertEqual(rec['child_closure']['ambiguous_children'], {})
+            self.assertEqual(rec['child_closure']['variant_children']['m']['iface_differ'], [])
+            # a real extra parameter still differs
+            (d / 'm_bb.v').write_text("(* blackbox *)\nmodule m #(parameter integer X = 0) (input wire ck, input wire [3:0] a, "
+                                      "output wire [3:0] q);\nendmodule\n")
+            p = subprocess.run([sys.executable, str(TOOL), str(d / 'd.v'), '--top', 'die', '-f', str(d / 'm.f'),
+                                '--manifest-only', '--out', str(out)], capture_output=True, text=True)
+            self.assertEqual(p.returncode, 1, p.stdout)
+            self.assertIn('m', json.loads(out.read_text())['child_closure']['ambiguous_children'])
+
+    def test_no_tree_options(self):
+        rc, rec, so = run_manifest(['p.sv', 'c_rne.sv'], ['--manifest-only', '--rtl-root', 'rtl'])
+        self.assertEqual(rc, 2)
+        self.assertIn('--manifest-only', so)
 

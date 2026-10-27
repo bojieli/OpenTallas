@@ -23,6 +23,7 @@ Gaps:
   (8) AMBIGUOUS-GEOM         a REPLY under a tag shared by several queued rows names none of them by type / kit dir /
                              row id, only a token they share (the branch sha): no verdict is applied to any of them
 """
+import os
 import re
 import time
 
@@ -404,7 +405,7 @@ def gaps_hosts(status_text, queue_waiting, now):
         m = STATUS_RE.search(part)
         if m:
             h, adm, load, cores = m.group(1), int(m.group(2)), int(m.group(3)), int(m.group(4))
-            h = "epyc1" if h == "localhost" else h                # ot-run --status runs on the hub
+            h = os.environ.get("OT_HUB_NAME", "epyc1") if h == "localhost" else h   # ot-run --status runs on the hub
             if adm > 100 and load < 0.6 * cores:
                 out.append((now, f"HOST-IDLE {h} admits {adm} GB at load {load}/{cores} and nothing waits in the autopilot queue"))
     return out

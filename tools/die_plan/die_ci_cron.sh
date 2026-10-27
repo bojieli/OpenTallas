@@ -45,13 +45,15 @@ MEM=$(python3 "$TOOLS/die_ci.py" job-mem hbm)          # the largest per-die job
 # hosts that have the run root and a repo clone (intel2's ~/OpenTallas is a symlink into scratch2; every run fetches
 # hub main first, so a lagging clone is fine)
 CANDS=""
-for h in intel1 intel2 epyc2; do
+RUNHOSTS="intel1 intel2 epyc2"                         # EPYC1-RETIRE 2026-10-26: the hub itself is "localhost" in ot-run
+[ "${OT_HUB_NAME:-epyc1}" = epyc1 ] || RUNHOSTS=$(echo " $RUNHOSTS " | sed "s/ ${OT_HUB_NAME} / localhost /")
+for h in $RUNHOSTS; do
   ssh -o BatchMode=yes -o ConnectTimeout=10 "$h" "mkdir -p $R && git -C ~/OpenTallas rev-parse --git-dir >/dev/null 2>&1" \
     && CANDS="$CANDS,$h"
 done
 CANDS=${CANDS#,}
 [ -n "$CANDS" ] || { log "$MODE $SHA: NOT RUN (no scratch2 host with a repo clone)"; exit 1; }
-HOST=$(ot-run --pick --mem "$MEM" --threads 16 --disk 150 --dir "$R" --hosts "$CANDS" 2>&1 | grep -oE '^(intel1|intel2|epyc2)\b' | head -1)
+HOST=$(ot-run --pick --mem "$MEM" --threads 16 --disk 150 --dir "$R" --hosts "$CANDS" 2>&1 | grep -oE '^(intel1|intel2|epyc2|localhost)\b' | head -1)
 [ -n "$HOST" ] || HOST=${CANDS%%,*}
 log "$MODE $SHA: run on $HOST (mem $MEM G, g2 $G2)"
 

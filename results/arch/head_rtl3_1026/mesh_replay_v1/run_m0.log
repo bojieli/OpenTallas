@@ -1,0 +1,7 @@
+MESH_STATS sent=400/401 copyA=400/401 copyB=400/401 max_latency=40/42 errors=0 phase1_fault=0 epf=100/000 rf=0/0
+MESH_REPLAY crc_err_b X=1 Y=0 crc_err_a X=0 Y=0 replays_b X=0 Y=1 retx_flits_b X=0 Y=0
+MESH_EP FAIL forced CRC windows did not force a replay in both directions
+- rtl/dsrom_sys/s81_head/test/tb_s81hd_mesh_ep.sv:97: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 1.541 s; speed 7.138 us/s
+- Verilator: cpu 1.541 s on 1 threads; allocated 10 MB

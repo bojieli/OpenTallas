@@ -14,6 +14,16 @@
 //   frame for rx only.  PASS needs: ex and rx export words exactly golden, rx land[128 + r][143:0] == ex piece and
 //   pres for every ex-held rank, every rx-held rank landed with rx's own piece (fetch), no decoy rank landed, no fault.
 //   Directed negatives: a PK2 word with both halves of tile T -> rx fault 29; a ROWX with NXW 7 -> ex fault 25.
+// S81-ROWX2 (2026-10-26): +ro=1 runs the RANK-ORDER SLOT export (ROWX [30] RO, NP passes of NXW words, period XP)
+//   and its rank-order PK2 ingress; +ro=0 (default) is the held-list export = the B = 2 NXW fallback (B = 80 at the
+//   default NXW 40).  RO golden: word i of pass p = ranks 2 (p NXW + i), + 1, a half valid iff that rank's gid is held
+//   by ex's (die, stack); word (p, i) at first + p XP + i.  RO ingress to rx = the slot-wise OR of ex's ACTUAL RO export
+//   and a synthetic RO stream of the other 14 peers (disjoint: asserted), re-paired into rank-order PK2 words
+//   (512 ranks x 4 tile pairs of the half, the other tiles' halves are decoys) = 2,048 words + 1 header sent
+//   back-to-back; PASS needs every one of the 512 rx slots landed with the right piece (own fetch / ex export / peer).
+//   +fix=<hex> loads the 512 gids of a fixture layer (results/rtl/s81_rowx2_1026/fix, the 1M golden token) with
+//   +exd/+rxd/+st = the die positions / stack of ex / rx; +stress=N makes ex hold the first N ranks (random mode).
+//   A held-list run whose ex list exceeds 2 NXW (or XN) must raise fault 26 (24): verdict PASS = overflow caught.
 // Phase 2 (regression miter): a ROWX = 0 and a ROWX = 1 share, same parameters, driven by one legacy stream (CFG,
 //   OWN_ROW, WIN_LOAD, SEL_IDS, pair ROWS, ATTN_Q, GO, PV, IK_ROW, SMJ) with one shared HBM model; every output port
 //   is compared every cycle (PASS = 0 mismatching cycles, and the job really ran: scores / P.V words seen).
@@ -23,6 +33,7 @@ module tb_dsdv_svc_rowx;
     reg rst_n = 0;
     integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     integer XO = 8, NXW = 40, SEED = 1;
+    integer RO = 0, NP = 7, XP = 320, EXD = 0, RXD = 1, STK = 2, STRESS = 0; string FIX;
 
     // ------------------------------------------------------------------ HBM model (one per share)
     function automatic [255:0] mem(input integer die, input integer pc, input [29:0] a);
@@ -46,6 +57,9 @@ module tb_dsdv_svc_rowx;
         pc = g[8];
         for (int s = 0; s < 9; s++) blk[256*s +: 256] = mem(die, pc, SB + 30'd9 * 30'(g[20:9]) + 30'(s));
         piece = blk[144 * g[3:0] +: 144];
+    endfunction
+    function automatic [143:0] ppiece(input [31:0] g, input integer r);   // RO bench: a synthetic peer die's piece
+        reg [255:0] w; w = mem(16 + 32'(g[7:4]), 32'(g[8]), 30'(r)); ppiece = w[143:0];
     endfunction
     function automatic [255:0] half(input v, input [3:0] t, input [9:0] r, input [143:0] b);
         half = v ? {88'd0, b[127:89], 9'd0, b[88:0], b[143:128], r, t, 1'b1} : 256'd0;
@@ -102,23 +116,34 @@ module tb_dsdv_svc_rowx;
     task automatic idle(input integer n); for (int k = 0; k < n; k++) send2('0, 0, 0); endtask
 
     integer held_e [$], held_r [$], decoy [$];
-    integer err = 0, rowx_hdr_cyc = 0, neg29 = 0, neg25 = 0;
+    integer err = 0, rowx_hdr_cyc = 0, neg29 = 0, neg25 = 0, neg26 = 0, ovf = 0, ing_q = 0, ing_t0 = 0, peer_n = 0;
     // ------------------------------------------------------------------ phase 2 miter (defined below)
     reg m_run = 0; integer m_mis = 0, m_sc = 0, m_pv = 0, m_cyc = 0;
 
     initial begin
         void'($value$plusargs("seed=%d", SEED)); void'($value$plusargs("xo=%d", XO)); void'($value$plusargs("nxw=%d", NXW));
+        void'($value$plusargs("ro=%d", RO)); void'($value$plusargs("np=%d", NP)); void'($value$plusargs("xp=%d", XP));
+        void'($value$plusargs("exd=%d", EXD)); void'($value$plusargs("rxd=%d", RXD)); void'($value$plusargs("st=%d", STK));
+        void'($value$plusargs("stress=%d", STRESS));
         void'($urandom(SEED));
+        if ($value$plusargs("fix=%s", FIX)) $readmemh(FIX, gid);
+        else
         // selection: 512 gids, owner (die, stack) uniform over 16, blocks 0..63, all different rows
         for (int r = 0; r < 512; r++) begin
             reg [31:0] g; integer o;
-            o = $urandom % 16; if (r % 37 == 5) o = 4'(ST) << 2;          // a few extra die-0 rows (uneven owners)
+            o = $urandom % 16; if (r % 37 == 5) o = 4'(STK) << 2 | EXD;  // a few extra ex rows (uneven owners)
+            if (STRESS > 0) begin                                        // ex holds exactly the first STRESS ranks
+                o = (STK << 2) | EXD; if (r >= STRESS) while (o == ((STK << 2) | EXD)) o = $urandom % 16;
+            end
             g = 0; g[3:0] = 4'(r % 16); g[5:4] = 2'(o & 3); g[7:6] = 2'(o >> 2); g[8] = 1'($urandom % 2);
             g[20:9] = 12'(r / 16 + 64 * ($urandom % 4));
             gid[r] = g;
-            if (g[5:4] == 0 && g[7:6] == ST) held_e.push_back(r);
-            else if (g[5:4] == 1 && g[7:6] == ST) held_r.push_back(r);
-            else if (g[5:4] == 2) decoy.push_back(r);
+        end
+        for (int r = 0; r < 512; r++) begin
+            reg [31:0] g; g = gid[r];
+            if (g[5:4] == 2'(EXD) && g[7:6] == 2'(STK)) held_e.push_back(r);
+            else if (g[5:4] == 2'(RXD) && g[7:6] == 2'(STK)) held_r.push_back(r);
+            else begin decoy.push_back(r); peer_n++; end
         end
 `ifdef TB_MITER
         m_run = 1;
@@ -130,8 +155,9 @@ module tb_dsdv_svc_rowx;
 `else
         repeat (6) @(posedge clk); #0.2 rst_n = 1; repeat (4) @(posedge clk);
         begin   // CFG: WB, ST valid, ALLQ
-            reg [511:0] h, hr; h = hdr(4'd12, 12'd0); h[29:0] = WB; h[32] = 1'b1; h[31:30] = 2'(ST); h[54] = 1'b1;
-            hr = h; hr[57] = 1'b1; hr[56:55] = 2'd1;                    // rx: die position 1 from CFG
+            reg [511:0] h, hr; h = hdr(4'd12, 12'd0); h[29:0] = WB; h[32] = 1'b1; h[31:30] = 2'(STK); h[54] = 1'b1;
+            hr = h; hr[57] = 1'b1; hr[56:55] = 2'(RXD);                 // rx: die position from CFG
+            h[57] = 1'b1; h[56:55] = 2'(EXD);                           // ex: die position from CFG
             #0.2; qv_e = 1; qd_e = h; qv_r = 1; qd_r = hr; @(posedge clk);
         end
         begin   // WIN_LOAD: SB, wcount 128, nsel 512, first pos 0, user 0, tag 0x21
@@ -143,28 +169,73 @@ module tb_dsdv_svc_rowx;
             reg [511:0] h; h = hdr(4'd7, 12'd32); h[9:0] = 0; h[19:10] = 10'd512; send2(h, 1, 1);
             for (int w = 0; w < 32; w++) begin reg [511:0] x; for (int i = 0; i < 16; i++) x[32*i +: 32] = gid[16*w + i]; send2(x, 1, 1); end
         end
-        idle(1400);                                                    // scanner 512 ids + held-row fetch
+        idle(1400 + 4 * STRESS);                                       // scanner 512 ids + held-row fetch
         begin   // ROWX
             reg [511:0] h; h = hdr(4'd11, 12'd0); h[15:0] = 16'(XO); h[21:16] = 6'(NXW); h[28:22] = 7'd0; h[29] = 1'b1;
+            if (RO) begin h[30] = 1'b1; h[34:31] = 4'(NP - 1); h[46:35] = 12'(XP); end
             rowx_hdr_cyc = cyc; send2(h, 1, 1);
         end
-        idle(XO + PVS + GD + NXW + 20);
+        idle(XO + PVS + GD + NXW + 20 + (RO ? (NP - 1) * XP : 0));
+        ovf = !RO && held_e.size() > 2 * NXW;                          // held-list budget overflow expected
         // ---- export checks
         for (int d = 0; d < 2; d++) begin
             integer hl [$]; reg [512:0] got [$];
             hl = d ? held_r : held_e; got = d ? xw_r : xw_e;
-            if (got.size() != NXW) begin err++; $display("ROWX_COUNT die %0d words %0d want %0d", d, got.size(), NXW); end
-            for (int i = 0; i < got.size() && i < NXW; i++) begin
+            if (got.size() != (RO ? NP * NXW : NXW)) begin err++; $display("ROWX_COUNT die %0d words %0d", d, got.size()); end
+            for (int i = 0; i < got.size() && i < (RO ? NP * NXW : NXW); i++) begin
                 reg [512:0] g; integer k0, k1;
+                if (RO) begin   // rank-order slot: ranks 2 i, 2 i + 1 (i = p NXW + word), valid iff held by this die / stack
+                    reg h0, h1; reg [31:0] dd;
+                    dd = d ? RXD : EXD; k0 = 2 * i; k1 = 2 * i + 1;
+                    h0 = k0 < 512 && gid[k0 % 512][5:4] == 2'(dd) && gid[k0 % 512][7:6] == 2'(STK);
+                    h1 = k1 < 512 && gid[k1 % 512][5:4] == 2'(dd) && gid[k1 % 512][7:6] == 2'(STK);
+                    g = {(i % NXW) % 5 == 0, half(h1, 4'(T), 10'(k1), h1 ? piece(d, gid[k1 % 512]) : 144'd0),
+                                             half(h0, 4'(T), 10'(k0), h0 ? piece(d, gid[k0 % 512]) : 144'd0)};
+                end else begin
                 k0 = 2 * i; k1 = 2 * i + 1;
                 g = {i % 5 == 0, half(k1 < hl.size(), 4'(T), k1 < hl.size() ? 10'(hl[k1]) : 10'd0,
                                       k1 < hl.size() ? piece(d, gid[hl[k1]]) : 144'd0),
                                  half(k0 < hl.size(), 4'(T), k0 < hl.size() ? 10'(hl[k0]) : 10'd0,
                                       k0 < hl.size() ? piece(d, gid[hl[k0]]) : 144'd0)};
+                end
                 if (got[i] !== g) begin err++; if (err <= 6) $display("ROWX_WORD die %0d i %0d mismatch", d, i); end
             end
         end
-        for (int i = 1; i < xc_e.size(); i++) if (xc_e[i] != xc_e[0] + i) begin err++; $display("ROWX_GAP i %0d", i); end
+        for (int i = 1; i < xc_e.size(); i++)
+            if (xc_e[i] != xc_e[0] + (RO ? (i / NXW) * XP + i % NXW : i)) begin err++; if (err <= 8) $display("ROWX_GAP i %0d", i); end
+        if (ovf) begin   // held-list fallback over budget: fault 26 (24 above XN) must flag it; nothing else is judged
+            if (!fc_e[26] || (held_e.size() > 128 && !fc_e[24])) err++;
+            $display("ROWX build P1 ro 0 nxw %0d held_ex %0d budget %0d fc26 %0d fc24 %0d (overflow caught) err %0d mut %0d verdict=%s",
+                     NXW, held_e.size(), 2 * NXW, fc_e[26], fc_e[24], err, `TB_MUT, err == 0 ? "PASS" : "FAIL");
+            $finish;
+        end
+        if (RO) begin   // ---- rank-order PK2 ingress to rx: OR merge of ex's actual export and the synthetic peers
+            reg [255:0] ex_h [0:511]; integer wq;
+            for (int r = 0; r < 512; r++) ex_h[r] = (r / 2 < xw_e.size()) ? xw_e[r / 2][256 * (r % 2) +: 256] : 256'd0;
+            begin reg [511:0] h; h = hdr(4'd6, 12'(2048)); h[0] = 1'b1; ing_t0 = cyc; send2(h, 0, 1); end
+            wq = 1;
+            for (int r = 0; r < 512; r++) begin
+                reg [255:0] pe, mt; reg [31:0] g; g = gid[r];
+                pe = (g[7:6] == 2'(STK) && (g[5:4] == 2'(EXD) || g[5:4] == 2'(RXD))) ? 256'd0 :
+                     half(1, 4'(T), 10'(r), ppiece(g, r));
+                if (|(pe & ex_h[r]) || (pe != 0 && ex_h[r] != 0)) begin err++; $display("RO_MERGE_OVERLAP rank %0d", r); end
+                mt = pe | ex_h[r];                                     // the slot-wise OR merge
+                for (int p = 0; p < 4; p++) begin
+                    reg [255:0] lo, hi; reg [3:0] t0;
+                    t0 = 4'((T & 8) + 2 * p);
+                    lo = (t0 == 4'(T)) ? mt : ((g[7:6] == 2'(STK) && g[5:4] == 2'(RXD)) ? 256'd0 : half(1, t0, 10'(r), {16'hd0c0, 128'(rnd512())}));
+                    hi = (t0 + 1 == 4'(T)) ? mt : ((g[7:6] == 2'(STK) && g[5:4] == 2'(RXD)) ? 256'd0 : half(1, t0 + 4'd1, 10'(r), {16'hd0c1, 128'(rnd512())}));
+                    send2({hi, lo}, 0, 1); wq++;
+                end
+            end
+            ing_q = wq; idle(8);
+            foreach (decoy[i]) begin
+                integer s; reg [31:0] g; s = WC + decoy[i]; g = gid[decoy[i]];
+                if (u_rx.land[s][143:0] !== ppiece(g, decoy[i]) || !u_rx.pres[s]) begin
+                    err++; if (err <= 8) $display("RX_PEER rank %0d", decoy[i]); end
+            end
+        end else
+        // ---- PK2 ingress to rx: ex halves re-paired with decoy halves (tile T ^ 3)
         // ---- PK2 ingress to rx: ex halves re-paired with decoy halves (tile T ^ 3)
         begin
             reg [255:0] hv [$]; integer nd = 0;
@@ -190,11 +261,11 @@ module tb_dsdv_svc_rowx;
             integer s; s = WC + held_r[i];
             if (u_rx.land[s][143:0] !== piece(1, gid[held_r[i]]) || !u_rx.pres[s]) begin err++; if (err <= 8) $display("RX_OWN rank %0d", held_r[i]); end
         end
-        foreach (decoy[i]) if (u_rx.pres[WC + decoy[i]]) begin err++; if (err <= 8) $display("RX_DECOY rank %0d landed", decoy[i]); end
+        if (!RO) foreach (decoy[i]) if (u_rx.pres[WC + decoy[i]]) begin err++; if (err <= 8) $display("RX_DECOY rank %0d landed", decoy[i]); end
         if (flt_e || flt_r) begin err++; $display("ROWX_FAULT ex %08x rx %08x", fc_e, fc_r); end
-        $display("ROWX_TIMING rowx_hdr %0d first_word %0d offset %0d (gd %0d + xo %0d + pvs %0d) words %0d held ex %0d rx %0d decoys %0d",
-                 rowx_hdr_cyc, xc_e.size() ? xc_e[0] : -1, xc_e.size() ? xc_e[0] - rowx_hdr_cyc : -1, GD, XO, PVS, xw_e.size(),
-                 held_e.size(), held_r.size(), decoy.size());
+        $display("ROWX_TIMING ro %0d rowx_hdr %0d first_word %0d offset %0d (gd %0d + xo %0d + pvs %0d) words %0d span %0d held ex %0d rx %0d peers %0d ingress_q %0d",
+                 RO, rowx_hdr_cyc, xc_e.size() ? xc_e[0] : -1, xc_e.size() ? xc_e[0] - rowx_hdr_cyc : -1, GD, XO, PVS, xw_e.size(),
+                 xc_e.size() ? xc_e[$] - xc_e[0] + 1 : 0, held_e.size(), held_r.size(), peer_n, ing_q);
         // ---- directed negatives
         begin
             reg [511:0] h; integer r1, r2; r1 = decoy[0]; r2 = decoy[1];
@@ -203,10 +274,13 @@ module tb_dsdv_svc_rowx;
             neg29 = fc_r[29];
             h = hdr(4'd11, 12'd0); h[21:16] = 6'd7; send2(h, 1, 0); idle(4);
             neg25 = fc_e[25];
+            // RO coverage: one pass of NXW 40 covers 80 < nsel 512 ranks -> rx fault 26 (static frame error)
+            h = hdr(4'd11, 12'd0); h[21:16] = 6'd40; h[30] = 1'b1; h[34:31] = 4'd0; h[46:35] = 12'd320; send2(h, 0, 1); idle(4);
+            neg26 = fc_r[26];
         end
-        if (!neg29 || !neg25) err++;
-        $display("ROWX build P1 nxw %0d xo %0d held_ex %0d held_rx %0d export_words %0d err %0d neg29 %0d neg25 %0d mut %0d verdict=%s",
-                 NXW, XO, held_e.size(), held_r.size(), xw_e.size(), err, neg29, neg25, `TB_MUT, err == 0 ? "PASS" : "FAIL");
+        if (!neg29 || !neg25 || !neg26) err++;
+        $display("ROWX build P1 ro %0d nxw %0d np %0d xp %0d xo %0d held_ex %0d held_rx %0d export_words %0d ingress_q %0d err %0d neg29 %0d neg25 %0d neg26 %0d mut %0d verdict=%s",
+                 RO, NXW, NP, XP, XO, held_e.size(), held_r.size(), xw_e.size(), ing_q, err, neg29, neg25, neg26, `TB_MUT, err == 0 ? "PASS" : "FAIL");
         $finish;
 `endif
     end

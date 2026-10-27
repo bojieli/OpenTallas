@@ -96,6 +96,22 @@
 //               without an open ALLQ job / bad NXW / while armed, running or after GO, 26 LAST pass and the list
 //               holds more than XB + 2 NXW rows (budget overflow), 27 an exported row not landed at its cycle,
 //               28 an export word in the same cycle as a P.V drain word.
+//   S81-ROWX2 (2026-10-26, OWNER 18:4x: rank-order slots APPROVED, B = 80 the temporary fallback): ROWX header [30] RO
+//               selects the RANK-ORDER SLOT export (no per-owner budget, cannot overflow); RO = 0 is the held-list export
+//               above (the B = 2 NXW fallback; compiler fallback config B = 80 = one pass NXW 40, LAST).  RO = 1 fields:
+//               [15:0] XO, [21:16] NXW (as above), [34:31] NP - 1 (passes), [46:35] XP (pass period, cycles > NXW;
+//               on the die = the half's 8-tile window span 8 x 40 = 320).  Word i of pass p (i < NXW, p < NP) leaves
+//               pv_od in share cycle XO + pvs + 1 + p XP + i and carries RANKS 2 (p NXW + i) (half 0) and + 1 (half 1):
+//               a half is valid iff its rank < nsel and the scanner marked it HELD by this die / stack (x_own, 1 b per
+//               rank, written for every scanned rank like sel_held).  Every rank thus has one fixed slot on every die,
+//               whichever die holds it: the slot schedule is data-independent and no count can overflow it.  Fault 26
+//               (RO) = the passes do not cover the selection (2 NP NXW < nsel: a static frame error, no data
+//               dependence); faults 25 / 27 / 28 as above.  Fault 24 = a held-list (RO = 0) export after the list
+//               overflowed XN (RO exports never read the list).  Transport (TOK-DS compiler, not this RTL): the 15 peer
+//               dies' RO streams are slot-aligned and disjoint (one holder per rank), so the peer ingress is their
+//               slot-wise OR merge re-paired into PK2 words in rank order: 512 ranks x 8 tiles / 2 = 2,048 words + 1
+//               header per half, independent of the selection.  The receiver's own export must not be merged into its
+//               own ingress (its held ranks are already landed: fault 29).
 //   12 CFG      (ROWX = 1) [57] DP valid, [56:55] DP = the die's TP position (the held-row owner test g[5:4] == DP for
 //               the fetch and the export; DP valid 0 keeps the parameter DIE_ID).
 //   ROW HALF    (256 b, both the export word halves and the PK2 ingress word halves; bits [128:120] stay 0: on head
@@ -108,7 +124,7 @@
 // MUT (bench negative controls): 1 = window scale byte of the neighbouring slot, 2 = ROWS half of the other tile of
 // the pair, 3 = q chunk of the neighbouring tile, 4 = IK_ROW region hash without the j[15:12] term (wrong owner slice
 // for p >= 2^16), 5 = IK_ROW scale bytes of the neighbouring key c ^ 1, 6 = ROWX export rank field rank ^ 1,
-// 7 = PK2 ingress lands the half of the OTHER tile.
+// 7 = PK2 ingress lands the half of the OTHER tile, 8 = RO export valid bit from sel_held (stack only, not die).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_att #(
     parameter integer MUT = 0,
@@ -315,6 +331,7 @@ module dsdv_svc_att #(
     always @(posedge clk) if (hdr_mine && h_type == 4'd7) begin s_first <= q_d[9:0]; s_cnt <= q_d[19:10]; end
     wire sel_pay = pay_mine && f_type == 4'd7;
     reg [511:0] sel_held;                            // rank -> the row is this stack's (all 16 tiles arrive)
+    reg [511:0] x_own;                               // S81-ROWX2: rank -> the row is held by this die / stack (RO export)
     // fetch FIFOs per PC {k 4, rank 10, block 12}
     reg [25:0] fq [0:1][0:15]; reg [4:0] fq_w [0:1], fq_r [0:1];
     wire [511:0] swd = sw[sw_r[4:0]];
@@ -427,9 +444,15 @@ module dsdv_svc_att #(
     reg [9:0] x_rk [0:XN-1];                         // ranks of the rows this die / stack holds, rank order
     reg [XW:0] x_n;
     reg x_arm, x_on, x_em; reg [7:0] x_gc; reg [15:0] xo, xc; reg [5:0] nxw, xi; reg [6:0] xb; reg x_last; reg [2:0] x5;
+    // S81-ROWX2 rank-order slots: x_ro mode, x_np passes left after this one, x_xp pass period, x_t the next word-0
+    // cycle (- 1), x_wb = p NXW (the pass's first word index), x_ovf the held list overflowed (RO = 0 exports: fault 24)
+    reg x_ro, x_ovf; reg [3:0] x_np; reg [11:0] x_xp; reg [15:0] x_t; reg [9:0] x_wb;
     wire [7:0] x_k0 = 8'(xb) + {1'b0, xi, 1'b0}, x_k1 = x_k0 + 8'd1;  // list entries of export word xi
-    wire x_v0 = RX && x_em && 9'(x_k0) < 9'(x_n), x_v1 = RX && x_em && 9'(x_k1) < 9'(x_n);
-    wire [9:0] x_r0 = x_rk[x_k0[XW-1:0]], x_r1 = x_rk[x_k1[XW-1:0]];
+    wire [10:0] x_o0 = {x_wb + 10'(xi), 1'b0}, x_o1 = x_o0 + 11'd1;     // RO: the ranks of export word xi of the pass
+    wire [511:0] x_hm = (MUT == 8) ? sel_held : x_own;
+    wire x_ov0 = x_o0 < 11'(nsel) && x_hm[x_o0[8:0]], x_ov1 = x_o1 < 11'(nsel) && x_hm[x_o1[8:0]];
+    wire x_v0 = RX && x_em && (x_ro ? x_ov0 : 9'(x_k0) < 9'(x_n)), x_v1 = RX && x_em && (x_ro ? x_ov1 : 9'(x_k1) < 9'(x_n));
+    wire [9:0] x_r0 = x_ro ? x_o0[9:0] : x_rk[x_k0[XW-1:0]], x_r1 = x_ro ? x_o1[9:0] : x_rk[x_k1[XW-1:0]];
     wire [9:0] x_s0 = 10'(wcount) + x_r0, x_s1 = 10'(wcount) + x_r1;
     // the land row read ports 0 / 1 are shared with the export (the engine program never runs during an export:
     // fault 25 / 27), so the export adds no landing read port
@@ -571,7 +594,7 @@ module dsdv_svc_att #(
             end
             sw_w <= 0; sw_r <= 0; sw_i <= 0; sel_held <= 0; pres <= 0; spres <= 0; q_have <= 0;
             x_n <= 0; x_arm <= 0; x_on <= 0; x_em <= 0; x_gc <= 0; xo <= 0; xc <= 0; nxw <= 0; xi <= 0; xb <= 0;
-            x_last <= 0; x5 <= 0;
+            x_last <= 0; x5 <= 0; x_ro <= 0; x_ovf <= 0; x_np <= 0; x_xp <= 0; x_t <= 0; x_wb <= 0; x_own <= 0;
             job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0;
             po <= 0; pvo <= 0; pio <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
             ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0;
@@ -630,8 +653,9 @@ module dsdv_svc_att #(
                 if (sw_i < sw_n[sw_r[4:0]]) begin
                     sel_held[s_rank] <= sid_g[7:6] == st_r;
                     if (g_own) fq_w[sid_g[8]] <= fq_w[sid_g[8]] + 1'b1;
+                    if (RX) x_own[s_rank] <= g_own;                                   // RO held mask
                     if (RX && g_own) begin
-                        if (32'(x_n) < XN) x_n <= x_n + 1'b1; else fc[24] <= 1'b1;       // held list overflow
+                        if (32'(x_n) < XN) x_n <= x_n + 1'b1; else x_ovf <= 1'b1;        // held list overflow
                     end
                 end
                 if (sw_i == 5'd15 || sw_i + 1'b1 >= sw_n[sw_r[4:0]]) begin sw_i <= 0; sw_r <= sw_r + 1'b1; end
@@ -642,7 +666,7 @@ module dsdv_svc_att #(
                 if (job_open) fc[6] <= 1'b1;                                  // a job while one is open
                 if (h_len != 0 || q_d[88:81] > 8'd128 || q_d[98:89] > 10'd512) fc[7] <= 1'b1;
                 job_open <= 1'b1; done <= 1'b0; pres <= 0; spres <= 0; q_have <= 0;
-                if (RX) begin x_n <= 0; if (x_arm || x_on) fc[25] <= 1'b1; end
+                if (RX) begin x_n <= 0; x_ovf <= 1'b0; if (x_arm || x_on) fc[25] <= 1'b1; end
                 wr_r[0] <= 8'(q_d[99] ^ 1'b0); wr_r[1] <= 8'(q_d[99] ^ 1'b1);
                 wr_on[0] <= 32'(q_d[99]) < 32'(q_d[88:81]); wr_on[1] <= 32'(!q_d[99]) < 32'(q_d[88:81]);
                 sc_n[0] <= 2'd2; sc_n[1] <= 2'd2;
@@ -657,19 +681,29 @@ module dsdv_svc_att #(
 `else
                     fc[25] <= 1'b1;                                                  // export needs the ALLQ share
 `endif
+                    if (q_d[30] && q_d[34:31] != 0 && 12'(q_d[46:35]) <= 12'(q_d[21:16])) fc[25] <= 1'b1;   // RO XP <= NXW
+                    if (q_d[30] && 32'(q_d[34:31]) * 32'(q_d[21:16]) * 2 + 2 * 32'(q_d[21:16]) < 32'(nsel))
+                        fc[26] <= 1'b1;                              // RO: the NP passes do not cover nsel (static)
+                    if (!q_d[30] && x_ovf) fc[24] <= 1'b1;           // held-list export after the list overflowed XN
                     x_arm <= 1'b1; x_gc <= gd; xo <= q_d[15:0]; nxw <= q_d[21:16]; xb <= q_d[28:22]; x_last <= q_d[29];
+                    x_ro <= q_d[30]; x_np <= q_d[30] ? q_d[34:31] : 4'd0; x_xp <= q_d[46:35]; x_wb <= 0;
+                    x_t <= q_d[15:0] + 16'(pvs);
                 end else if (x_arm) begin
                     if (x_gc == 0) begin x_arm <= 1'b0; x_on <= 1'b1; xc <= 16'd1; end
                     else x_gc <= x_gc - 1'b1;
                 end else if (x_on) begin
                     xc <= xc + 1'b1;
-                    if (!x_em && xc == xo + 16'(pvs)) begin
+                    if (!x_em && xc == x_t) begin
                         x_em <= 1'b1; xi <= 0; x5 <= 0;
-                        if (x_last && 32'(x_n) > 32'(xb) + 2 * 32'(nxw)) fc[26] <= 1'b1;   // budget overflow
+                        if (!x_ro && x_last && 32'(x_n) > 32'(xb) + 2 * 32'(nxw)) fc[26] <= 1'b1;   // budget overflow
                     end
                     if (x_em) begin
                         xi <= xi + 1'b1; x5 <= (x5 == 3'd4) ? 3'd0 : x5 + 1'b1;
-                        if (xi + 1'b1 == nxw) begin x_em <= 1'b0; x_on <= 1'b0; end
+                        if (xi + 1'b1 == nxw) begin
+                            x_em <= 1'b0;
+                            if (x_np == 0) x_on <= 1'b0;
+                            else begin x_np <= x_np - 1'b1; x_wb <= x_wb + 10'(nxw); x_t <= x_t + 16'(x_xp); end
+                        end
                     end
                 end
                 if (x_em && ((x_v0 && !pres[x_s0]) || (x_v1 && !pres[x_s1]) || go || run)) fc[27] <= 1'b1;

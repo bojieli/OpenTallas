@@ -1,0 +1,14 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/head-rtl5-1026
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/head-rtl5-1026
+ot-run: localhost      admits   513 GB (avail 882, reserve 0, fresh 121.5, peak 182.8, headroom 0, waiters 0/0 GB) load 28/112 running 18 disk 1544 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3819966-1793085477 after 1 s
+MODULE_CHECK missing=4 rc=1
+pads: 288 instances, 830 open wavefront outs
+FAIL ot_s81hd_ctl                       x1      STUB 
+FAIL ot_s81hd_host_ep                   x1      STUB 
+FAIL ot_s81hd_mesh_ep                   x3      STUB 
+DIE_PORT_BIND FAIL masters=16 instances=326 unbound_masters=0 stub_masters=3 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0 spare_out_bits=830 unresolved_children=0 ambiguous_children=0 variant_children=0 manifest_missing=0
+ 
+HEAD_DIE_PORTBIND FAIL module_missing=4 port_bind_rc=1
+ot-run: RAN on localhost (unit oth-ubuntu-3819966-1793085477): exit 1

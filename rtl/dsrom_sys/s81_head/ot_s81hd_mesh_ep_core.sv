@@ -17,14 +17,14 @@
 //   m_rx_o  [63:0]  to hd_ctl:   ot_s81hd_beat_tx (W 110, N 2, P 62) words, decoded by ot_s81hd_mesh64_rx below
 // TX: m_tx_i -> best64 decode -> the identical 553-b frame into BOTH lanes on the same edge (copy A on a, copy B on b).
 // RX: each lane's flits land in the adapter pin flops; a canonical BEST (last 1, type 1, payload[551:97] 0) is held in
-//   its copy slot; the slots drain to hd_ctl one word per 2 cycles, A first.  Word (110 b) =
+//   its copy FIFO (BQ records); the FIFOs drain to hd_ctl one word per 2 cycles, A first.  Word (110 b) =
 //   {ep_fault[11:0], copy, header+BEST[96:0]}, copy 0 = lane a, 1 = lane b.  Two words a position (4 lane cycles); the
 //   static position period (>= 8,357 cycles) is far above it.  The copies are NOT compared here: both reach the rank
 //   merge, which owns the copy check (copy_fault), exactly as the historical controller.
 // ep_fault (sticky, control reset only) is carried IN-BAND on every word, so the endpoint status is live at hd_ctl
 //   without a new plan bus: [3:0] lane a flt {adapter, meso, gearbox, endpoint}, [7:4] lane b flt, [8] m_tx_i decode
-//   fault (beat order / pad / non-BEST), [9] non-canonical lane frame (dropped), [10] copy slot overwrite (a second
-//   record landed before the first drained; the slot keeps the newer one), [11] m_rx_o word rate fault.  A dead link delivers no
+//   fault (beat order / pad / non-BEST), [9] non-canonical lane frame (dropped), [10] copy FIFO overflow (a record
+//   landed into a full BQ-record FIFO; HEAD-RTL-4: it is dropped, order kept), [11] m_rx_o word rate fault.  A dead link delivers no
 //   word: hd_ctl's rank merge then never fires for that position, which hd_ctl must flag at the position's compiled
 //   date (hd_ctl obligation, recorded in the ASK; no completion or credit is fed back here).
 // Flow control exists only inside the lanes (off-die boundary, owner 10-14); the core faces are valid-only, fixed phase.
@@ -34,7 +34,8 @@
 // Reset: rst_n -> ot_rst_relay_tree3 (release on edge 3, the lane children's own trees release on edge 3 too);
 //   only control / valid bits are reset; data holds are unreset.
 // MUT (bench negative controls; 0 = production): 1 copy id stuck at 0, 2 copy-B identity bit 96 flipped,
-//   3 lane b never transmits, 4 ep_fault not carried (zeros in the word).
+//   3 lane b never transmits, 4 ep_fault not carried (zeros in the word), 7 burst FIFO one record short (BQ - 1).
+// HEAD-RTL-4: the 1-entry copy slot is now a BQ-record burst FIFO per copy (see the RX section).
 // ---------------------------------------------------------------------------------------------------------------------
 
 // The stacked MAIN head lane block (byte-equivalent composition of the archived ot_s81hd_lane_sc6 MAIN parent, renamed
@@ -73,6 +74,7 @@ endmodule
 
 module ot_s81hd_mesh_ep_core #(
     parameter [1:0]   CH_B = 2'b11,          // board-lane straps of lanes a / b (as ot_s81hd_lep0N_core CH_B)
+    parameter integer BQ   = 7,              // per-copy burst FIFO depth (HEAD-RTL-4 bound, see the RX section)
     parameter integer MUT  = 0
 ) (
     input  wire          ck,
@@ -105,39 +107,71 @@ module ot_s81hd_mesh_ep_core #(
     wire can_a = rd_a[552] && rd_a[3:0] == 4'd1 && !(|rd_a[551:97]);
     wire can_b = rd_b[552] && rd_b[3:0] == 4'd1 && !(|rd_b[551:97]);
     wire en_a = rv_a && can_a, en_b = rv_b && can_b;
-    wire [127:0] da = {31'd0, rd_a[96:0]}, db = {31'd0, rd_b[96:0]};
-    wire [127:0] qa, qb;
-    genvar g;
-    generate for (g = 0; g < 4; g = g + 1) begin : g_slot
-        ot_s81hd_hreg32 u_ha (.ck(ck), .en(en_a), .d(da[32*g +: 32]), .q(qa[32*g +: 32]));
-        ot_s81hd_hreg32 u_hb (.ck(ck), .en(en_b), .d(db[32*g +: 32]), .q(qb[32*g +: 32]));
-    end endgenerate
-    reg  la, lb, pa, pb;                      // landed enables (aligned with the hold), slot pending
+    // HEAD-RTL-4 (RULING HEAD-RTL-3 ASK2): per-copy BURST FIFO of BQ records (was a 1-entry hold slot).  After a lane
+    // replay the link delivers the replayed backlog back to back (lsc_r0m li_r = li_v registered, gearbox 3 flits / 4
+    // edges) while the shared word port drains one word per 2 edges, A first; BQ = the worst replay backlog of
+    // results/arch/head_rtl4_1026/README.md (tools/s81_head/mesh_bq_bound.py: replay window N = floor(S / T) + 1 records
+    // at stall S and record spacing T, delivered 3 per 4 edges against the copy-B drain gap; S 79 / T 7 -> 7; the
+    // production position period T >= 8,357 > any NAK or ACK-timeout stall gives N = 1).  Static storage: flops, one-hot write / read
+    // pointers, no flow control towards the lane (the closed lsc_r0m child is unchanged).  A landing into a full FIFO
+    // is DROPPED (order kept) and sets the sticky ep_fault[10].  Same edges as the slot: landing register (edge 1),
+    // FIFO write + count (edge 2), decision -> word register (edge 3).  MUT 7 = BQ - 1 (bench negative control).
+    localparam integer BQE = (MUT == 7) ? BQ - 1 : BQ;
+    localparam integer BCW = $clog2(BQE + 1);
+    reg  la, lb;                              // landed enables (aligned with the landing registers)
+    reg  [96:0] ld_a, ld_b;                   // landing registers (data, unreset)
+    always @(posedge ck) begin ld_a <= rd_a[96:0]; ld_b <= rd_b[96:0]; end
+    reg  [96:0] fq_a [0:BQE-1];
+    reg  [96:0] fq_b [0:BQE-1];
+    reg  [BQE-1:0] wp_a, wp_b, rp_a, rp_b;    // one-hot pointers
+    reg  [BCW-1:0] na, nb;                    // records held
     reg  iss_q;                               // a word was issued on the previous decision edge
-    (* keep = "true" *) reg [3:0] selb;       // kept copies of "this word is copy B" (<= 28 mux bits each)
+    (* keep = "true" *) reg [3:0] selb;       // kept copies of "this word is copy B"
+    wire pa = (na != 0), pb = (nb != 0);
     wire dec  = !iss_q && (pa || pb);
     wire tk_a = dec && pa;
     wire tk_b = dec && !pa;
+    wire wa = la && ((na - (tk_a ? 1'b1 : 1'b0)) < BQE);   // room after this edge's read
+    wire wb = lb && ((nb - (tk_b ? 1'b1 : 1'b0)) < BQE);
     reg  [11:0] fv;
     reg  ovw_q, ncan_q;
+    function automatic [BQE-1:0] rot(input [BQE-1:0] p);
+        rot = (BQE == 1) ? p : {p[BQE-2:0], p[BQE-1]};
+    endfunction
+    function automatic [96:0] pick(input [97*BQE-1:0] m, input [BQE-1:0] p);
+        integer j; begin pick = 97'd0; for (j = 0; j < BQE; j = j + 1) pick = pick | (m[97*j +: 97] & {97{p[j]}}); end
+    endfunction
+    wire [97*BQE-1:0] fa_flat, fb_flat;
+    genvar g;
+    generate for (g = 0; g < BQE; g = g + 1) begin : g_fq
+        assign fa_flat[97*g +: 97] = fq_a[g];
+        assign fb_flat[97*g +: 97] = fq_b[g];
+        always @(posedge ck) begin
+            if (wa && wp_a[g]) fq_a[g] <= ld_a;
+            if (wb && wp_b[g]) fq_b[g] <= ld_b;
+        end
+    end endgenerate
+    reg  [96:0] ow;                           // the word being sent (copy A or B head)
+    always @(posedge ck) if (dec) ow <= tk_a ? pick(fa_flat, rp_a) : pick(fb_flat, rp_b);
     always @(posedge ck or negedge r_rx)
         if (!r_rx) begin
-            la <= 1'b0; lb <= 1'b0; pa <= 1'b0; pb <= 1'b0; iss_q <= 1'b0; selb <= 4'd0; ovw_q <= 1'b0; ncan_q <= 1'b0;
+            la <= 1'b0; lb <= 1'b0; na <= 0; nb <= 0; iss_q <= 1'b0; selb <= 4'd0; ovw_q <= 1'b0; ncan_q <= 1'b0;
+            wp_a <= 1; wp_b <= 1; rp_a <= 1; rp_b <= 1;
         end else begin
             la <= en_a; lb <= en_b;
-            pa <= (pa && !tk_a) || la;
-            pb <= (pb && !tk_b) || lb;
+            na <= na + (wa ? 1'b1 : 1'b0) - (tk_a ? 1'b1 : 1'b0);
+            nb <= nb + (wb ? 1'b1 : 1'b0) - (tk_b ? 1'b1 : 1'b0);
+            if (wa) wp_a <= rot(wp_a);
+            if (wb) wp_b <= rot(wp_b);
+            if (tk_a) rp_a <= rot(rp_a);
+            if (tk_b) rp_b <= rot(rp_b);
             iss_q <= dec;
             if (dec) selb <= {4{tk_b}};
-            ovw_q  <= (la && pa && !tk_a) || (lb && pb && !tk_b);
+            ovw_q  <= (la && !wa) || (lb && !wb);
             ncan_q <= (rv_a && !can_a) || (rv_b && !can_b);
         end
     // ------------------------------------------------------------------ word to hd_ctl
-    wire [96:0] body;
-    assign body[27:0]  = selb[0] ? qb[27:0]  : qa[27:0];
-    assign body[55:28] = selb[1] ? qb[55:28] : qa[55:28];
-    assign body[83:56] = selb[2] ? qb[83:56] : qa[83:56];
-    assign body[96:84] = selb[3] ? (qb[96:84] ^ ((MUT == 2) ? 13'h1000 : 13'h0)) : qa[96:84];
+    wire [96:0] body = {ow[96:84] ^ ((MUT == 2 && selb[3]) ? 13'h1000 : 13'h0), ow[83:0]};
     wire copy = (MUT == 1) ? 1'b0 : selb[0];
     wire wf;
     wire [11:0] fv_word = (MUT == 4) ? 12'd0 : fv;

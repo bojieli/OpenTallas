@@ -1,0 +1,44 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-lec-relay-2002
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-lec-relay-2002
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-lec-relay-2002
+ot-run: localhost      admits   207 GB (avail 550, reserve 0, fresh 84.5, peak 194.3, headroom 0, waiters 0/0 GB) load 44/256 running 21 disk 767 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-2229792-1793072386 after 1 s
+all_induction {'proved': 11138}
+all_compare {'proved': 64713}
+mutant_output {'proved': 64712, 'differs': 1}
+{
+  "schema": 1,
+  "kind": "exact_saved_AIG_formal_equivalence",
+  "verdict": "PASS",
+  "top": "ot_v41_rom_elem_q_qxpq_w10_gb",
+  "induction_proved": 11138,
+  "semantic_compare_proved": 53575,
+  "full_miter_proved": 64713,
+  "differs": 0,
+  "undecided": 0,
+  "supplemental_hints": 177,
+  "mutant": {
+    "type": "invert one gate output bit",
+    "target": "po:bank_free",
+    "caught": true,
+    "differences": {
+      "po:bank_free": "differs"
+    }
+  },
+  "inputs": {
+    "gold.aig": "e13d27025fc7882048c09a34e5dba4d6b9e70db8933f5c4ae0844b674edea099",
+    "gate.aig": "e0c9d70ab9df09c585d55d45e1109d73499eb2ffd6f39acecb6fc8b6abf5ddf0",
+    "gold.map": "34218028cff402609388b2f3ce75dbe6d99274847ea291163746a2803a57c172",
+    "gate.map": "025a636a2f2724e16bee4fe7e31a426fa4a663b0960f1491b7a2e9857d2517ee",
+    "gold.aliases.json": "f0eb1924536c52cb70b1ec293b5314f3be9169af4d82e9298bc389a7fdcfc6a9",
+    "hyp.json": "9434c1ef87e829fd3e4b5fdbb011e75eb2ea489ec6f313e5e586ff1bdeb76949"
+  },
+  "qualified_tool_sha256": "0b650fe626086893d76d17781a13257e34e98ab1de2e3e0480fcd009dbb4a058",
+  "original_source_commit": null,
+  "source_provenance": "UNKNOWN: original kit PROVENANCE.json absent; no current-RTL release qualification claimed",
+  "rtl_changed": false,
+  "added_cycles": 0,
+  "proof_scope": "Every current-state relation is included as an obligation and re-proved by lec.py; every original compare point is re-proved. Saved status dictionaries are not evidence inputs."
+}
+ot-run: RAN on localhost (unit oth-ubuntu-2229792-1793072386): exit 0

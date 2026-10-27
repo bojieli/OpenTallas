@@ -40,6 +40,7 @@ beat_one() {  # $1 = beat, $2 = mode (base | mutnormimm)
     -Mdir $O/obj $(sort -u physical/hbm_norm_split_20261008/sources.f | tr '\n' ' ') rtl/hdc/v41x/ot_dsrom_su_add6.sv \
     physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
     physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v rtl/lib/ot_rst_relay.sv \
+    physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.v \
     rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv \
     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv \
     rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv --build-jobs 1 -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" \
@@ -81,6 +82,7 @@ leg_wave() {
   # Keep completed wave objects; results are separate from build inventory.
 }
 
-leg_xfin & leg_beat & leg_egress & leg_bundle & leg_tp4 & leg_wave &
+# LEGS (TOK-DS-7): optional subset, default all six
+for l in ${LEGS:-xfin beat egress bundle tp4 wave}; do leg_$l & done
 wait
 echo "HEAD_MTP_FLEET DONE"
