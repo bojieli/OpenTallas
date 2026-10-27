@@ -5016,3 +5016,6 @@ AdditionalS81/HEAD packets handoff/codex-head-20261027-1013.md, handoff/codex_s8
 
 ## Final plan park acknowledgement
 Plan sourcecodex/hbm-plan-0815@fdc89866a8 pushed/WTclean; narrowtypedHCschema7e334cab51, adapterintegration91a7f6ae4c. c11b runtimeUNCHANGED/UNADOPTED, quarter/VMS/FUSEDrestorationNOTfolded. Allplan/descendantjobsNONE. Channelsparkc911a9c663 clean:420exactbarePASS/142FAIL(44VMS,94emptyintersection,2constant,2r9); isolated332bays5280FF405um envelopes areNOTplacement/G1. Quarter71648c3daf input401.339/output394.997/H0H1294.096um,0newcycles;20NW/21NEcolliders/jointbay/fullcontrol/meta/clock/PGremainopen.47pin6defects+12baseclockcontractsremain. PretreeactualcompactBPinresolved,newoutlineNOTfolded. AllHBMteam safelyparked.
+
+## Handoff to Claude 2026-10-27 10:16 PDT — shared flow
+Explicit reset: PARKED flow and all descendants; existing jobs continue, no kills/new launches. Full final delta and all shas/branches/jobs/results/failures/OWNER/pendingREADY: /home/ubuntu/coord/handoff/codex_flow_interim_20261027_1008.md plus its four linked final packets. Top unfinished action: approved VMR nativeSIGNED+5342EQ publication queued98d3c304f548 at hubrow792, no state/archive yet; do not rerun proof. Canaries4NR/1QCreg/4active. Root-approved STA/RCX/Htree intake in progress; verify finalROOT-MERGE log rather than original-tip ancestry.
