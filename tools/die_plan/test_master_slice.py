@@ -331,3 +331,103 @@ def test_kit_check_clock_entry_on_track_and_size(tmp_path):
     assert any("pin_size" in i and "GEOM-21" in i for i in iss) and not any("off the" in i for i in iss), iss
     # signal entry pins keep their size and are not snapped
     assert MS.slice_pins(sl, "clk")["din[0]"] == ("M7", (0.0, 210.0))
+
+
+# ---- S81-CORE-LAT-R21: multi-root slices (clock_entries[], one entry per root pin) ---------------------------------
+def mr_slice(**kw):
+    isl = [{"name": f"isl_{n}", "rect_um": r, "centre_um": [(r[0] + r[2]) / 2, (r[1] + r[3]) / 2], "use": "clock_driver"}
+           for n, r in (("cr", [100.0, 40.0, 120.0, 60.0]), ("xk0", [20.0, 0.0, 40.0, 10.0]))]
+    ce = [{"port": "cr", "clock": "clk", "island": "isl_cr", "clock_pin": {"layer": "M5", "xy_um": [110.0, 50.0]},
+           "latency": {"common_clock_latency_ps": {"TT": 250.0, "FF": 202.5}, "tol_ps": 40}},
+          {"port": "xk[0]", "clock": "clk_xk", "island": "isl_xk0", "clock_pin": {"layer": "M5", "xy_um": [30.0, 5.0]},
+           "latency": {"common_clock_latency_ps": {"TT": 250.0, "FF": 202.5}, "tol_ps": 40}}]
+    # 12.2a1: core islands are pushdown islands (one root driver cell each), not strip blockages
+    pd = {"islands": [{"name": i["name"], "rect_um": i["rect_um"],
+                       "cells": [{"name": f"mp_{i['name']}_root", "master": "BUFx4_ASAP7_75t_R", "xy_um": i["centre_um"]}]}
+                      for i in isl]}
+    sl = good_slice(kind="core", type="mr", module="mr_core", outline_um=[200.0, 69.12], keepouts=[], islands=isl,
+                    bays=[], entry_pins=[], corridors=[], clock_entries=ce, pushdown=pd)
+    sl.update(kw)
+    return sl
+
+
+def test_multi_root_slice_valid_and_pins():
+    sl = mr_slice()
+    assert MS.validate(sl) == []
+    assert MS.clock_entry_ports(sl) == ["cr", "xk[0]"]
+    assert MS.slice_pins(sl) == {"cr": ("M5", (110.0, 50.0)), "xk[0]": ("M5", (30.0, 5.0))}
+
+
+@pytest.mark.parametrize("mut,frag", [
+    (lambda s: s["clock_entries"][1].update(port="cr"), "listed twice"),
+    (lambda s: s["clock_entries"][1].update(island="isl_cr"), "one island per root"),
+    (lambda s: s["clock_entries"][1].update(island="nope"), "not an island"),
+    (lambda s: s["clock_entries"][1]["clock_pin"].update(xy_um=[90.0, 5.0]), "outside island"),
+    (lambda s: s["clock_entries"][0]["latency"]["common_clock_latency_ps"].pop("FF"), "one budget per root"),
+    (lambda s: s["islands"][0].update(clock_pin={"layer": "M5", "xy_um": [110.0, 50.0]}), "not islands[].clock_pin"),
+    (lambda s: s.update(core_clock_port="cr"), "per-root plan trees"),
+    (lambda s: s.update(clock_entries=[]), "non-empty list"),
+])
+def test_multi_root_slice_bad(mut, frag):
+    sl = mr_slice()
+    mut(sl)
+    errs = MS.validate(sl)
+    assert any(frag in e for e in errs), errs
+
+
+def _mr_kit(tmp_path, budget=(250.0, 202.5), pins=("cr", "xk[0]")):
+    kd = tmp_path / "kit"
+    kd.mkdir(parents=True)
+    (kd / "config.mk").write_text("export DIE_AREA = 0 0 200 69.12\n")
+    (kd / "io.tcl").write_text("place_pin -pin_name {cr} -layer M5 -location {0 0} -pin_size {0.024 0.084}\n"
+                               "place_pin -pin_name {xk[0]} -layer M5 -location {0 0} -pin_size {0.024 0.084}\n")
+    (kd / "clock_roots.json").write_text(json.dumps(dict(
+        budget_ps=dict(tt=budget[0], ff=budget[1]),
+        entries=[dict(pin=p, clock="clk" if p == "cr" else "clk_xk") for p in pins])))
+    sl = mr_slice()
+    (kd / "master_slice.json").write_text(json.dumps(sl))
+    return kd, sl
+
+
+def _ck_issues(kd):
+    return [i for i in MS.check_kit(kd)["issues"] if "clock" in i]
+
+
+def test_multi_root_consume_and_check(tmp_path):
+    kd, sl = _mr_kit(tmp_path)
+    assert _ck_issues(kd)                                   # generator placement != slice -> FAIL before consuming
+    MS._consume_io(kd, sl, None)
+    io = (kd / "io.tcl").read_text()
+    assert "{cr} -layer M5 -location {109.9800 50.0000} -pin_size {0.048 0.48}" in io      # M5 track snap
+    assert "{xk[0]} -layer M5 -location {30.0120 5.0000} -pin_size {0.048 0.48}" in io
+    assert _ck_issues(kd) == []
+    rep = MS.check_kit(kd)
+    assert rep["checks"]["slice_pins"]["clock_entries"] == ["cr", "xk[0]"]
+
+
+def test_multi_root_check_clock_roots(tmp_path):
+    kd, sl = _mr_kit(tmp_path, budget=(250.0, 190.0))
+    MS._consume_io(kd, sl, None)
+    assert any("FF budget 190.0 != slice latency 202.5" in i for i in _ck_issues(kd))
+    kd2, sl2 = _mr_kit(tmp_path / "b", pins=("cr",))
+    MS._consume_io(kd2, sl2, None)
+    assert any("root pins ['cr'] != slice clock_entries" in i for i in _ck_issues(kd2))
+
+
+def test_multi_root_kit_apply_refusals(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_MASTER_PLAN_REQUIRED", raising=False)
+    kd, sl = _mr_kit(tmp_path)
+    (kd / "face_flops.tcl").write_text("puts ff\n")
+    sd = tmp_path / "s"
+    sd.mkdir()
+    (sd / "mr_core.json").write_text(json.dumps(sl))
+    with pytest.raises(MS.SliceError, match="generator root pins"):
+        MS.kit_apply(kd, "mr_core", [200.0, 69.12], sd, None, kind="core", clock_ports=["cr"])
+    st = MS.kit_apply(kd, "mr_core", [200.0, 69.12], sd, None, kind="core", gpl_hook=kd / "face_flops.tcl",
+                      clock_ports=["xk[0]", "cr"])
+    assert st["type"] == "mr" and MS.check_kit(kd)["verdict"] == "PASS", MS.check_kit(kd)["issues"]
+    one = good_slice(kind="core", type="one", module="one_core", outline_um=[200.0, 69.12], keepouts=[], islands=[],
+                     bays=[], entry_pins=[], corridors=[])
+    (sd / "one_core.json").write_text(json.dumps(one))
+    with pytest.raises(MS.SliceError, match="needs a slice with clock_entries"):
+        MS.kit_apply(kd, "one_core", [200.0, 69.12], sd, None, kind="core", clock_ports=["cr", "xk[0]"])
