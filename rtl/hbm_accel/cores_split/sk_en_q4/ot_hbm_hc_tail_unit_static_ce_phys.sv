@@ -11,7 +11,7 @@ ot_hbm_ce_face_reg a(clk,launch,li);ot_hbm_ce_face_reg#(768)b(clk,mixes,mi);ot_h
 wire en,iv,ird,ov,sf;wire[511:0]ie,y;
 wire en_o,iv_o,ird_i,ov_i,sf_i;wire[511:0]ie_o,y_i;
 ot_hbm_ce_face_reg e(clk,en_o,en);ot_hbm_ce_face_reg f(clk,iv_o,iv);ot_hbm_ce_face_reg#(512)g(clk,ie_o,ie);ot_hbm_ce_face_reg h(clk,ird,ird_i);ot_hbm_ce_face_reg i(clk,ov,ov_i);ot_hbm_ce_face_reg j(clk,sf,sf_i);ot_hbm_ce_face_reg#(512)k(clk,y,y_i);
-ot_hbm_hc_tail_rest_core_ce#(.MUT_PRE(MUT_PRE),.CAP(299-((SMUT!=0)?7:0)))u(.clk(clk),.rst_n(rst_n),.launch(li),.mixes(mi),.bases(bi),.scales(si),.result_v(rv),.result(rr),.fault(ff),.sk_en_sk(en_o),.sk_in_valid(iv_o),.sk_in_e(ie_o),.sk_in_ready(ird_i),.sk_out_valid(ov_i),.sk_fault(sf_i),.sk_y(y_i));
+ot_hbm_hc_tail_rest_core_ce#(.MUT_PRE(MUT_PRE),.CAP(299-((SMUT==1)?7:0)))u(.clk(clk),.rst_n(rst_n),.launch(li),.mixes(mi),.bases(bi),.scales(si),.result_v(rv),.result(rr),.fault(ff),.sk_en_sk(en_o),.sk_in_valid(iv_o),.sk_in_e(ie_o),.sk_in_ready(ird_i),.sk_out_valid(ov_i),.sk_fault(sf_i),.sk_y(y_i));
 ot_hbm_ce_face_reg l(clk,rv,result_v);ot_hbm_ce_face_reg#(768)m(clk,rr,result);ot_hbm_ce_face_reg n(clk,ff,fault);
 wire lo,pa,pb;wire[511:0]bq;wire bb,ab;
 wire en0,lo0,pa0,pb0;wire[511:0]ie0,bq0;wire bb0,ab0;

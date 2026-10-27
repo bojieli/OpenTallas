@@ -1,0 +1,8 @@
+
+-- Running command `read_verilog -sv root_ce.sv' --
+
+1. Executing Verilog-2005 frontend: root_ce.sv
+Parsing SystemVerilog input from `root_ce.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_hc_root_static_ce_phys'.
+Warning: Replacing memory \tpos with list of registers. See root_ce.sv:244
+Successfully finished Verilog frontend.

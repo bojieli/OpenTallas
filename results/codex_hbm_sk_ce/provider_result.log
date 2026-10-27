@@ -1,0 +1,5 @@
+PROVIDER PASS errors=0 results=40 edges=21263 due509_fault=0 early508_fault=1
+- results/codex_hbm_sk_ce/tb_provider.sv:24: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43us; walltime 2.883 s; speed 14.754 us/s
+- Verilator: cpu 2.882 s on 1 threads; allocated 15 MB
