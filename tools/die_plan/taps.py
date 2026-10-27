@@ -73,6 +73,8 @@ def planned_sinks(P, tn, bit_sites=False):
     slots = {s["name"]: s for s in t.get("ft_slots", [])}
     pins = gen_phys.type_pins(P, tn)
     at = {(p[0], p[1]): (p[3], p[4], p[5]) for p in pins}
+    exact_faces = {e["conn"][4:]: e for e in t.get("internal_stations", [])
+                   if e.get("conn", "").startswith("bus:") and e.get("face_bit_sites_um")}
     out = []
     for name, bit, _ln, x, y, face in pins:
         base, sfx = (name[:-2], name[-2:]) if name[-2:] in ("_i", "_o") else (name, "")
@@ -99,7 +101,18 @@ def planned_sinks(P, tn, bit_sites=False):
                 xy = tuple(regs[j]) if len(regs) >= k else _point_at(pts, L * j / k)
                 out.append((xy[0], xy[1], f"ft_s{j}"))
         else:
-            out.append(_inset(x, y, face, w, h) + ("face",))
+            if name in exact_faces:
+                e=exact_faces[name];cw,ch=e["bit_site_cell_um"];bx,by=e["face_bit_sites_um"][bit]
+                out.append((bx+cw/2,by+ch/2,"face"))
+            else:
+                out.append(_inset(x, y, face, w, h) + ("face",))
+    for bus,e in exact_faces.items():
+        # Payload face bits were counted above. Exact-bank physical metadata
+        # also carries the epoch FF, which is not a payload bus pin.
+        n=max((bit for name,bit,*_ in pins if name==bus),default=-1)+1
+        cw,ch=e["bit_site_cell_um"]
+        for bx,by in e["face_bit_sites_um"][n:]:
+            out.append((bx+cw/2,by+ch/2,"face_epoch"))
     out += per_bit_station_sites(t, pins)
     return out
 
@@ -115,6 +128,11 @@ def per_bit_station_sites(t, pins):
         at.setdefault(name, {})[bit] = (x, y, face)
     out = []
     for e in t.get("internal_stations", []):
+        if e.get("bit_sites_um"):
+            cw,ch=e["bit_site_cell_um"]
+            for bank in e["bit_sites_um"]:
+                out.extend((bx+cw/2,by+ch/2,"ist") for bx,by in bank)
+            continue
         if e.get("bit_route") != "per_bit" or not e.get("conn", "").startswith("bus:"):
             continue
         bus = e["conn"][4:]
