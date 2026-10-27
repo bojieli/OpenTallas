@@ -17,3 +17,9 @@ CODEX reviewed latest result: PG model/real parity and domains cause diagnosed; 
 
 ## CODEX notes 2026-10-27 08:13 PDT
 CODEX took over current-unified PG sizing on codex/hbm-pg-0823 (intel2 own sparse worktree). U6d frame unchanged; conservative old-trial642.7W non-PHY core envelope + separately charged PHY, explicitly not a new current-power claim. First ot-run FAIL missing scipy; corrected isolated venv successor live intel2 unit oth-ubuntu-346755-1793114007, /srv/opentallas-scratch2/claude/codex-hbm-pg-0823/{size_scipy.log,pg_envelope642/}. Next compare feasible grid/capacity then clock rebuild on final reviewed QUAD6. No route before review.
+
+## CODEX notes 2026-10-27 08:21 PDT: narrow-grid failure diagnosed; finite-pad structural coupons live
+- Initial642.7W envelope size finished exit0 but feasible=false FAIL: core125.921mV; SerDes112.31..140.811mV vs35; M8.48@2.88/M9.48@1.728 consumes44.2/70.1%tracks. Tool limits to thin stripes and its approximate PHY model ignores actual domain45um bump contract, so no adoption. Retained output intel2 codex-hbm-pg-0823/pg_envelope642/pg.json.
+- Successor codex/hbm-pg-pad-0828@db7baec13b (based exact HEAD5 e5f4fb2cd1) builds currentU6d core-only hub/SM PDNSim coupons at1.2709W/mm2, M8.48@4.32/M9 12.96@34.56,150um bumps/70um pads, bothVDD+VSS. Render VIEWED PASS-COND results/geom_review/hbm_pg_pad70_0828. No PHY/lower-stack/current-power/release claim.
+- LIVE epyc2:/srv/opentallas-scratch2/claude/codex-hbm-pg-0823/pad70/hub unit1899402-1793114324 and /sm unit1902779-1793114341, ot-run40GB8threads; launcher logs intel2 codex-hbm-pg-0823/{hub_psm,sm_psm}.log. Hub pdngen complete+padfallback0; collectpsm/psm.log+ir_VDD/VSS.csv then co-located sum450um interior.
+- Reset wavefront model onU6d still running intel2 unit376393-1793114067, python377288,99.8%CPU; reset.log. No duplicate started.
