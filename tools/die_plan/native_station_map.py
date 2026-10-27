@@ -172,6 +172,7 @@ for entry in report['unresolved']:
    sn,source_ports=connections(tn,t,source);tnative,target_ports=connections(tn,t,target)
    if sp not in source_ports:raise ValueError('explicit source port absent in original native alias; split/canonical map required')
    sourcevector=source_ports[sp];sourcebits=set(sourcevector)-{None}
+   row.update(source_native=sn,source_port=sp,target_native=tnative,source_variable_bits=len(sourcebits),target_mapped_ports=len(target_ports),target_alias_binding_failures=alias_binding_failures.get(f'{tn}:{target["inst"]}',{}))
    if not sourcebits:raise ValueError('source contains no variable native bits')
    pf=pd/target['pins_file'];pins=json.load(open(pf));pnames={p['name'] for p in pins};selected=[];matched=set();matches=[]
    for port,resolved in target_ports.items():
@@ -186,7 +187,8 @@ for entry in report['unresolved']:
      selected.append(logical);targets.append(dict(target_pin=logical,source_net=b[0],source_bit=b[1]));matched.add(b)
     matches.append(dict(target_port=port,bits=targets))
    expected=s.get('bits_parallel',s.get('bits'))
-   if not matched or len(matched)>expected:raise ValueError(f'exact native bit coverage {len(matched)} exceeds/does not fit priced station width {expected}; bundle/canonical mapping required')
+   if not matched:raise ValueError('exact supplied-source bit intersection is empty; peer graph is not a native binding')
+   if len(matched)>expected:raise ValueError(f'exact native bit coverage {len(matched)} exceeds priced station width {expected}; real bundle/source contract required')
    if not selected:raise ValueError('no exact native target-port intersection')
    key=f'{tn}:{i}:{field}';source_selected=[];source_physical=source.get('pin_select',{}).get(sp,sp);sourcepins={p['name'] for p in json.load(open(pd/source['pins_file']))}
    for k,b in enumerate(sourcevector):
