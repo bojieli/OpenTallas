@@ -1,0 +1,328 @@
+## /srv/opentallas-scratch2/claude/path-hbm-r15-1026/planS2 vs /srv/opentallas-scratch2/claude/hbm-mu-quad-2-1026/planU2
+IDENTICAL	hfd_ep_static	B2o={'7e1768be83': 5, '0d2c6a1d6c': 1}	U={'7e1768be83': 5, '0d2c6a1d6c': 1}	outl_same=True
+IDENTICAL	hfd_hgi_vm_calendar_f20	B2o={'ba7ea510df': 4}	U={'ba7ea510df': 4}	outl_same=True
+IDENTICAL	hfd_hgi_vms_glue_nw_t	B2o={'a04c5a2701': 4}	U={'a04c5a2701': 4}	outl_same=True
+ONLY_B2o	hfd_vms_bank_native_q0_faces	B2o={'9c3f7832f8': 2, '1790865078': 2, 'c69dc96fdf': 2, '48b2c32181': 2, '9d8cd33b05': 2, '7ecaf52c8f': 2, 'a43d59a0e2': 2, '9c4dc329ca': 2}	U={}	outl_same=False
+ONLY_U	hnx_fused_lane	B2o={}	U={'NONE': 32}	outl_same=True
+ONLY_U	hnx_idxn_keybuf	B2o={}	U={'NONE': 4}	outl_same=True
+IDENTICAL	hnx_rp3lp3h_n	B2o={'40707c9c31': 128}	U={'40707c9c31': 128}	outl_same=True
+IDENTICAL	hnx_rp3lp3h_s	B2o={'3417b2a03c': 128}	U={'3417b2a03c': 128}	outl_same=True
+ONLY_U	hnx_vms_bank_q0_faces	B2o={}	U={'9c3f7832f8': 2, '1790865078': 2, 'c69dc96fdf': 2, '48b2c32181': 2, '9d8cd33b05': 2, '7ecaf52c8f': 2, 'a43d59a0e2': 2, '9c4dc329ca': 2, 'NONE': 16}	outl_same=False
+IDENTICAL	ot_hbm_argmax_static_sw_vm_r2	B2o={'1cd057fd4b': 1}	U={'1cd057fd4b': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_bank128_pair_core	B2o={'0813239839': 112}	U={'0813239839': 112}	outl_same=True
+IDENTICAL	ot_hbm_hc_bank128_pair_first_core	B2o={'aea89332bf': 16}	U={'aea89332bf': 16}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__hcp_sys1	B2o={'4736a2db82': 1}	U={'4736a2db82': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail0_rest	B2o={'dc844e49c2': 1}	U={'dc844e49c2': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail0_sk_steady	B2o={'4e227acf88': 1}	U={'4e227acf88': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail0_sk_step0	B2o={'6266017348': 1}	U={'6266017348': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail1_rest	B2o={'9e704ec178': 1}	U={'9e704ec178': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail1_sk_steady	B2o={'fa080c256e': 1}	U={'fa080c256e': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail1_sk_step0	B2o={'1dd61af24f': 1}	U={'1dd61af24f': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_subtree32_core	B2o={'040f3e432f': 8}	U={'040f3e432f': 8}	outl_same=True
+IDENTICAL	ot_hbm_host_cp_rxs	B2o={'afc6301db3': 1}	U={'afc6301db3': 1}	outl_same=True
+IDENTICAL	ot_hbm_idx_qctl_static	B2o={'9a72c261f4': 4}	U={'9a72c261f4': 4}	outl_same=True
+IDENTICAL	ot_hbm_idx_query_static	B2o={'d8352c01e1': 4}	U={'d8352c01e1': 4}	outl_same=True
+IDENTICAL	ot_hbm_idx_rootctl_static_am	B2o={'584452962e': 1}	U={'584452962e': 1}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k0h0	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k0h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k2h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k2h1	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k3h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k3h1	B2o={'0d5a6adc1c': 2}	U={'0d5a6adc1c': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k0h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k0h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k2h0	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k2h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k3h0	B2o={'0250614af6': 2}	U={'0250614af6': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k3h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k0h0	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k0h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k2h0	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k2h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k3h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k3h1	B2o={'0d5a6adc1c': 2}	U={'0d5a6adc1c': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k0h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k0h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k2h0	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k2h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k3h0	B2o={'0250614af6': 2}	U={'0250614af6': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k3h1	B2o={'3d53d4c97f': 2}	U={'3d53d4c97f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k0h0	B2o={'c5a69b5fc3': 2}	U={'c5a69b5fc3': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k0h1	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k2h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k2h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k3h0	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k3h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k0h0	B2o={'0d5a6adc1c': 2}	U={'0d5a6adc1c': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k0h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k2h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k2h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k3h0	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k3h1	B2o={'0250614af6': 2}	U={'0250614af6': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k0h0	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k0h1	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k2h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k2h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k3h0	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k3h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k0h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k0h1	B2o={'0d5a6adc1c': 2}	U={'0d5a6adc1c': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k2h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k2h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k3h0	B2o={'0250614af6': 2}	U={'0250614af6': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k3h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__tail0	B2o={'3717620466': 2}	U={'3717620466': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__tail1	B2o={'1c9a0dea9e': 2}	U={'1c9a0dea9e': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_selector_static_sel	B2o={'3f4e216fc6': 1}	U={'3f4e216fc6': 1}	outl_same=True
+IDENTICAL	ot_hbm_idx_topk_link_static	B2o={'8464a609cd': 1}	U={'8464a609cd': 1}	outl_same=True
+IDENTICAL	ot_hbm_idx_vm_query_static_n12	B2o={'7736f603aa': 4}	U={'7736f603aa': 4}	outl_same=True
+IDENTICAL	ot_hbm_sm_vm_wr_q_t_lanes4	B2o={'1abc1c973e': 4}	U={'1abc1c973e': 4}	outl_same=True
+IDENTICAL	ot_hbm_static_cfg_collar_idx256r	B2o={'befc58ef7a': 1}	U={'befc58ef7a': 1}	outl_same=True
+IDENTICAL	ot_hbm_su_programme_pslice_c5	B2o={'39bad722ac': 4}	U={'39bad722ac': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_cxport_ij_q	B2o={'ddcfd82abc': 4}	U={'ddcfd82abc': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp0	B2o={'a03c7639be': 4}	U={'a03c7639be': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp1	B2o={'058675b54b': 2, '1c877b8062': 2}	U={'058675b54b': 2, '1c877b8062': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp10	B2o={'0916a20969': 2, '02c38d680a': 2}	U={'0916a20969': 2, '02c38d680a': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp11	B2o={'84b0688f98': 2, 'da0721eedf': 2}	U={'84b0688f98': 2, 'da0721eedf': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp12	B2o={'697be80571': 2, 'c7747689ce': 2}	U={'697be80571': 2, 'c7747689ce': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp13	B2o={'b0c4625dbf': 2, '05ebd4eb89': 2}	U={'b0c4625dbf': 2, '05ebd4eb89': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp14	B2o={'4e1b274e87': 2, 'ca6a325b0c': 2}	U={'4e1b274e87': 2, 'ca6a325b0c': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp2	B2o={'b357f180f8': 2, '406f795cff': 2}	U={'b357f180f8': 2, '406f795cff': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp3	B2o={'a5111e1e18': 2, '73919c1746': 2}	U={'a5111e1e18': 2, '73919c1746': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp4	B2o={'f6de03a122': 2, '0b0b133518': 2}	U={'f6de03a122': 2, '0b0b133518': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp5	B2o={'f176802034': 2, 'ec605c5a61': 2}	U={'f176802034': 2, 'ec605c5a61': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp6	B2o={'4535d89475': 2, 'f663fdb9a4': 2}	U={'4535d89475': 2, 'f663fdb9a4': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp7	B2o={'c29e7eb1cd': 2, '7c10a4f8ed': 2}	U={'c29e7eb1cd': 2, '7c10a4f8ed': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp8	B2o={'1d7f1785f2': 4}	U={'1d7f1785f2': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp9	B2o={'6eacf49b41': 2, '25f8860ddd': 2}	U={'6eacf49b41': 2, '25f8860ddd': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp_l	B2o={'eab900449d': 2, '02ab6bef8a': 2}	U={'eab900449d': 2, '02ab6bef8a': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes0_3	B2o={'406ae92763': 4}	U={'406ae92763': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes12_15	B2o={'88a670ae47': 2, 'eab7dac7d7': 2}	U={'88a670ae47': 2, 'eab7dac7d7': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes16_19	B2o={'cdddad9470': 2, '1d12bffb26': 2}	U={'cdddad9470': 2, '1d12bffb26': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes20_23	B2o={'2f2ec1580f': 2, '5eba5e28dc': 2}	U={'2f2ec1580f': 2, '5eba5e28dc': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes24_27	B2o={'0bf81647f1': 2, 'bdb34527a2': 2}	U={'0bf81647f1': 2, 'bdb34527a2': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes28_31	B2o={'9de1e7dbbb': 2, 'f49fd22cb2': 2}	U={'9de1e7dbbb': 2, 'f49fd22cb2': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes4_7	B2o={'c1b2329b1f': 2, '678bca2846': 2}	U={'c1b2329b1f': 2, '678bca2846': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes8_11	B2o={'5665cb15e3': 2, '1e3c9ff291': 2}	U={'5665cb15e3': 2, '1e3c9ff291': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes_plain0_3	B2o={'877c341d3c': 4}	U={'877c341d3c': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes_plain12_15	B2o={'35fcf66986': 2, '1e640e0e6c': 2}	U={'35fcf66986': 2, '1e640e0e6c': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes_plain4_7	B2o={'4fb1a867be': 2, '83bcc18e91': 2}	U={'4fb1a867be': 2, '83bcc18e91': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes_plain8_11	B2o={'9bbf368aa1': 4}	U={'9bbf368aa1': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__pretree	B2o={'9e0fe270ea': 6, '4f9bd0c7dc': 2}	U={'9e0fe270ea': 6, '4f9bd0c7dc': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__side_rest	B2o={'6d3044af78': 4}	U={'6d3044af78': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__side_softplus	B2o={'a9143c10fd': 4}	U={'a9143c10fd': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_qcore_r13	B2o={'ce29919068': 4}	U={'ce29919068': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_sfustore_hw	B2o={'283b59a861': 4}	U={'283b59a861': 4}	outl_same=True
+IDENTICAL	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	B2o={'9859ab63b7': 8, '238692f6de': 2, '1209083e4b': 8, 'de0b0cd746': 2, '663208ad6d': 2, 'cf642ec7fd': 2, '8fb4bf48a8': 2, 'ca64d662a3': 2, 'c3951b1093': 2, '777995188c': 2}	U={'9859ab63b7': 8, '238692f6de': 2, '1209083e4b': 8, 'de0b0cd746': 2, '663208ad6d': 2, 'cf642ec7fd': 2, '8fb4bf48a8': 2, 'ca64d662a3': 2, 'c3951b1093': 2, '777995188c': 2}	outl_same=True
+IDENTICAL	ot_hbm_svc_sm_group_rel_id	B2o={'2234219435': 2, '365a7d55da': 2, 'c5c02061eb': 2, '088a4ce816': 2}	U={'2234219435': 2, '365a7d55da': 2, 'c5c02061eb': 2, '088a4ce816': 2}	outl_same=True
+IDENTICAL	ot_hbm_svc_sm_xcal_rel_t	B2o={'14fddb1d21': 2, '2a2a83d809': 2, '499014472d': 2, '78c9cba7a0': 2}	U={'14fddb1d21': 2, '2a2a83d809': 2, '499014472d': 2, '78c9cba7a0': 2}	outl_same=True
+IDENTICAL	ot_hbm_svc_vm_kshare_splitstrap	B2o={'08949d325b': 2, 'bc413e298d': 2, 'a207cb2ffc': 2, '3bc917201b': 2}	U={'08949d325b': 2, 'bc413e298d': 2, 'a207cb2ffc': 2, '3bc917201b': 2}	outl_same=True
+IDENTICAL	ot_hbm_svc_vmdel_lane_n	B2o={'3cd133df7b': 6, 'a435d85469': 2, 'f8c3cc28fd': 4, '07e3b9fbdd': 2, '89674aebd6': 2}	U={'3cd133df7b': 6, 'a435d85469': 2, 'f8c3cc28fd': 4, '07e3b9fbdd': 2, '89674aebd6': 2}	outl_same=True
+IDENTICAL	ot_hbm_svc_wb_kport_q	B2o={'a15ebd9c89': 4}	U={'a15ebd9c89': 4}	outl_same=True
+IDENTICAL	ot_hbm_xp_aq_tree13_fmt	B2o={'72c65d1671': 2, '8b957bae3c': 2}	U={'72c65d1671': 2, '8b957bae3c': 2}	outl_same=True
+IDENTICAL	ot_hfd_coll_q2_hard_v8g__reduce	B2o={'f1c8f66eec': 4}	U={'f1c8f66eec': 4}	outl_same=True
+IDENTICAL	ot_hfd_coll_q2_hard_v8g__ring_ag	B2o={'0ae620d4b5': 4}	U={'0ae620d4b5': 4}	outl_same=True
+IDENTICAL	ot_hfd_coll_q2n2_body_core	B2o={'e60925741f': 2}	U={'e60925741f': 2}	outl_same=True
+IDENTICAL	ot_hfd_coll_q2n2_vm_core	B2o={'a36d866364': 2}	U={'a36d866364': 2}	outl_same=True
+IDENTICAL	ot_hfd_coll_q3_body_core	B2o={'2daaa6270a': 2}	U={'2daaa6270a': 2}	outl_same=True
+IDENTICAL	ot_hfd_coll_q3_edge_core	B2o={'30a69cce92': 2}	U={'30a69cce92': 2}	outl_same=True
+IDENTICAL	ot_hfd_coll_q3_vm_core	B2o={'6d0981889f': 2}	U={'6d0981889f': 2}	outl_same=True
+IDENTICAL	ot_hgi_coll_gq_issue	B2o={'e72b0aadd6': 4}	U={'e72b0aadd6': 4}	outl_same=True
+IDENTICAL	ot_hgi_coll_gq_land	B2o={'11dcf63a1b': 4}	U={'11dcf63a1b': 4}	outl_same=True
+IDENTICAL	ot_hgi_coll_inj_idx_join_rg	B2o={'cf389bf754': 4}	U={'cf389bf754': 4}	outl_same=True
+IDENTICAL	ot_hgi_coll_tkm_m_tp192__root	B2o={'e3a70cc4e7': 1}	U={'e3a70cc4e7': 1}	outl_same=True
+IDENTICAL	ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	B2o={'c928220e54': 31}	U={'c928220e54': 31}	outl_same=True
+IDENTICAL	ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap	B2o={'2409a7be8b': 1}	U={'2409a7be8b': 1}	outl_same=True
+IDENTICAL	ot_hgi_dma_back_static_vp4_banks_cp	B2o={'bceef03a68': 4}	U={'bceef03a68': 4}	outl_same=True
+IDENTICAL	ot_hgi_qw_dec	B2o={'5339a9c09b': 4}	U={'5339a9c09b': 4}	outl_same=True
+IDENTICAL	ot_hgi_sfu_core_split3__ctl	B2o={'c0814e5f68': 2}	U={'c0814e5f68': 2}	outl_same=True
+IDENTICAL	ot_hgi_sfu_core_split3__opstore_a	B2o={'549e6e8304': 2}	U={'549e6e8304': 2}	outl_same=True
+IDENTICAL	ot_hgi_sfu_core_split3__opstore_b	B2o={'606ced5417': 2}	U={'606ced5417': 2}	outl_same=True
+IDENTICAL	ot_hgi_sfu_programme_store_r10	B2o={'7db987eebb': 4}	U={'7db987eebb': 4}	outl_same=True
+IDENTICAL	ot_hgi_sfu_split3_lane_core__idpin	B2o={'226f30e434': 32}	U={'226f30e434': 32}	outl_same=True
+IDENTICAL	ot_hgi_sm_xload_cl2_bdring	B2o={'cad9f13f20': 2, 'c21740cbcd': 2}	U={'cad9f13f20': 2, 'c21740cbcd': 2}	outl_same=True
+IDENTICAL	ot_hgi_sm_xload_cl2_bfqg	B2o={'ab3fc5aaf7': 6, '47d92dd968': 2, '75fd8386bf': 6, 'ffaa31647f': 2}	U={'ab3fc5aaf7': 6, '47d92dd968': 2, '75fd8386bf': 6, 'ffaa31647f': 2}	outl_same=True
+IDENTICAL	ot_hgi_sm_xload_cl2_ctlx	B2o={'f9e8b6ac77': 4}	U={'f9e8b6ac77': 4}	outl_same=True
+IDENTICAL	ot_hgi_sm_xload_xq_pegress	B2o={'3fd49c4012': 2, 'dee29a309a': 2}	U={'3fd49c4012': 2, 'dee29a309a': 2}	outl_same=True
+ONLY_U	ot_hnx_fused_tnode	B2o={}	U={'NONE': 30}	outl_same=True
+IDENTICAL	ot_pdie_serdes	B2o={'8e4806e4d3': 5}	U={'8e4806e4d3': 5}	outl_same=True
+## /srv/opentallas-scratch2/claude/path-hbm-r15-1026/planS2 vs /srv/opentallas-scratch2/claude/hbm-mu-quad-3-1027/planU3
+IDENTICAL	hfd_ep_static	B2o={'7e1768be83': 5, '0d2c6a1d6c': 1}	U={'7e1768be83': 5, '0d2c6a1d6c': 1}	outl_same=True
+IDENTICAL	hfd_hgi_vm_calendar_f20	B2o={'ba7ea510df': 4}	U={'ba7ea510df': 4}	outl_same=True
+IDENTICAL	hfd_hgi_vms_glue_nw_t	B2o={'a04c5a2701': 4}	U={'a04c5a2701': 4}	outl_same=True
+ONLY_B2o	hfd_vms_bank_native_q0_faces	B2o={'9c3f7832f8': 2, '1790865078': 2, 'c69dc96fdf': 2, '48b2c32181': 2, '9d8cd33b05': 2, '7ecaf52c8f': 2, 'a43d59a0e2': 2, '9c4dc329ca': 2}	U={}	outl_same=False
+ONLY_U	hnx_fused_lane	B2o={}	U={'NONE': 32}	outl_same=True
+ONLY_U	hnx_idxn_keybuf	B2o={}	U={'NONE': 4}	outl_same=True
+IDENTICAL	hnx_rp3lp3h_n	B2o={'40707c9c31': 128}	U={'40707c9c31': 128}	outl_same=True
+IDENTICAL	hnx_rp3lp3h_s	B2o={'3417b2a03c': 128}	U={'3417b2a03c': 128}	outl_same=True
+ONLY_U	hnx_vms_bank_q0_faces	B2o={}	U={'9c3f7832f8': 2, '1790865078': 2, 'c69dc96fdf': 2, '48b2c32181': 2, '9d8cd33b05': 2, '7ecaf52c8f': 2, 'a43d59a0e2': 2, '9c4dc329ca': 2, 'NONE': 16}	outl_same=False
+IDENTICAL	ot_hbm_argmax_static_sw_vm_r2	B2o={'1cd057fd4b': 1}	U={'1cd057fd4b': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_bank128_pair_core	B2o={'0813239839': 112}	U={'0813239839': 112}	outl_same=True
+IDENTICAL	ot_hbm_hc_bank128_pair_first_core	B2o={'aea89332bf': 16}	U={'aea89332bf': 16}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__hcp_sys1	B2o={'4736a2db82': 1}	U={'4736a2db82': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail0_rest	B2o={'dc844e49c2': 1}	U={'dc844e49c2': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail0_sk_steady	B2o={'4e227acf88': 1}	U={'4e227acf88': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail0_sk_step0	B2o={'6266017348': 1}	U={'6266017348': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail1_rest	B2o={'9e704ec178': 1}	U={'9e704ec178': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail1_sk_steady	B2o={'fa080c256e': 1}	U={'fa080c256e': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_root_static__tail1_sk_step0	B2o={'1dd61af24f': 1}	U={'1dd61af24f': 1}	outl_same=True
+IDENTICAL	ot_hbm_hc_subtree32_core	B2o={'040f3e432f': 8}	U={'040f3e432f': 8}	outl_same=True
+IDENTICAL	ot_hbm_host_cp_rxs	B2o={'afc6301db3': 1}	U={'afc6301db3': 1}	outl_same=True
+IDENTICAL	ot_hbm_idx_qctl_static	B2o={'9a72c261f4': 4}	U={'9a72c261f4': 4}	outl_same=True
+IDENTICAL	ot_hbm_idx_query_static	B2o={'d8352c01e1': 4}	U={'d8352c01e1': 4}	outl_same=True
+IDENTICAL	ot_hbm_idx_rootctl_static_am	B2o={'584452962e': 1}	U={'584452962e': 1}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k0h0	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k0h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k2h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k2h1	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k3h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c0_k3h1	B2o={'0d5a6adc1c': 2}	U={'0d5a6adc1c': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k0h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k0h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k2h0	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k2h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k3h0	B2o={'0250614af6': 2}	U={'0250614af6': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c1_k3h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k0h0	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k0h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k2h0	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k2h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k3h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c2_k3h1	B2o={'0d5a6adc1c': 2}	U={'0d5a6adc1c': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k0h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k0h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k2h0	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k2h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k3h0	B2o={'0250614af6': 2}	U={'0250614af6': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r0c3_k3h1	B2o={'3d53d4c97f': 2}	U={'3d53d4c97f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k0h0	B2o={'c5a69b5fc3': 2}	U={'c5a69b5fc3': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k0h1	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k2h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k2h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k3h0	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c0_k3h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k0h0	B2o={'0d5a6adc1c': 2}	U={'0d5a6adc1c': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k0h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k2h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k2h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k3h0	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c1_k3h1	B2o={'0250614af6': 2}	U={'0250614af6': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k0h0	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k0h1	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k2h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k2h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k3h0	B2o={'3a3c8e1e0f': 2}	U={'3a3c8e1e0f': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c2_k3h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k0h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k0h1	B2o={'0d5a6adc1c': 2}	U={'0d5a6adc1c': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k1h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k1h1	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k2h0	B2o={'422c382646': 2}	U={'422c382646': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k2h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k3h0	B2o={'0250614af6': 2}	U={'0250614af6': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__r1c3_k3h1	B2o={'9a9afe2b4b': 2}	U={'9a9afe2b4b': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__tail0	B2o={'3717620466': 2}	U={'3717620466': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_score_quarter_static__tail1	B2o={'1c9a0dea9e': 2}	U={'1c9a0dea9e': 2}	outl_same=True
+IDENTICAL	ot_hbm_idx_selector_static_sel	B2o={'3f4e216fc6': 1}	U={'3f4e216fc6': 1}	outl_same=True
+IDENTICAL	ot_hbm_idx_topk_link_static	B2o={'8464a609cd': 1}	U={'8464a609cd': 1}	outl_same=True
+IDENTICAL	ot_hbm_idx_vm_query_static_n12	B2o={'7736f603aa': 4}	U={'7736f603aa': 4}	outl_same=True
+IDENTICAL	ot_hbm_sm_vm_wr_q_t_lanes4	B2o={'1abc1c973e': 4}	U={'1abc1c973e': 4}	outl_same=True
+IDENTICAL	ot_hbm_static_cfg_collar_idx256r	B2o={'befc58ef7a': 1}	U={'befc58ef7a': 1}	outl_same=True
+IDENTICAL	ot_hbm_su_programme_pslice_c5	B2o={'39bad722ac': 4}	U={'39bad722ac': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_cxport_ij_q	B2o={'ddcfd82abc': 4}	U={'ddcfd82abc': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp0	B2o={'a03c7639be': 4}	U={'a03c7639be': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp1	B2o={'058675b54b': 2, '1c877b8062': 2}	U={'058675b54b': 2, '1c877b8062': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp10	B2o={'0916a20969': 2, '02c38d680a': 2}	U={'0916a20969': 2, '02c38d680a': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp11	B2o={'84b0688f98': 2, 'da0721eedf': 2}	U={'84b0688f98': 2, 'da0721eedf': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp12	B2o={'697be80571': 2, 'c7747689ce': 2}	U={'697be80571': 2, 'c7747689ce': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp13	B2o={'b0c4625dbf': 2, '05ebd4eb89': 2}	U={'b0c4625dbf': 2, '05ebd4eb89': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp14	B2o={'4e1b274e87': 2, 'ca6a325b0c': 2}	U={'4e1b274e87': 2, 'ca6a325b0c': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp2	B2o={'b357f180f8': 2, '406f795cff': 2}	U={'b357f180f8': 2, '406f795cff': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp3	B2o={'a5111e1e18': 2, '73919c1746': 2}	U={'a5111e1e18': 2, '73919c1746': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp4	B2o={'f6de03a122': 2, '0b0b133518': 2}	U={'f6de03a122': 2, '0b0b133518': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp5	B2o={'f176802034': 2, 'ec605c5a61': 2}	U={'f176802034': 2, 'ec605c5a61': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp6	B2o={'4535d89475': 2, 'f663fdb9a4': 2}	U={'4535d89475': 2, 'f663fdb9a4': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp7	B2o={'c29e7eb1cd': 2, '7c10a4f8ed': 2}	U={'c29e7eb1cd': 2, '7c10a4f8ed': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp8	B2o={'1d7f1785f2': 4}	U={'1d7f1785f2': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp9	B2o={'6eacf49b41': 2, '25f8860ddd': 2}	U={'6eacf49b41': 2, '25f8860ddd': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lane_exp_l	B2o={'eab900449d': 2, '02ab6bef8a': 2}	U={'eab900449d': 2, '02ab6bef8a': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes0_3	B2o={'406ae92763': 4}	U={'406ae92763': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes12_15	B2o={'88a670ae47': 2, 'eab7dac7d7': 2}	U={'88a670ae47': 2, 'eab7dac7d7': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes16_19	B2o={'cdddad9470': 2, '1d12bffb26': 2}	U={'cdddad9470': 2, '1d12bffb26': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes20_23	B2o={'2f2ec1580f': 2, '5eba5e28dc': 2}	U={'2f2ec1580f': 2, '5eba5e28dc': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes24_27	B2o={'0bf81647f1': 2, 'bdb34527a2': 2}	U={'0bf81647f1': 2, 'bdb34527a2': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes28_31	B2o={'9de1e7dbbb': 2, 'f49fd22cb2': 2}	U={'9de1e7dbbb': 2, 'f49fd22cb2': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes4_7	B2o={'c1b2329b1f': 2, '678bca2846': 2}	U={'c1b2329b1f': 2, '678bca2846': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes8_11	B2o={'5665cb15e3': 2, '1e3c9ff291': 2}	U={'5665cb15e3': 2, '1e3c9ff291': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes_plain0_3	B2o={'877c341d3c': 4}	U={'877c341d3c': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes_plain12_15	B2o={'35fcf66986': 2, '1e640e0e6c': 2}	U={'35fcf66986': 2, '1e640e0e6c': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes_plain4_7	B2o={'4fb1a867be': 2, '83bcc18e91': 2}	U={'4fb1a867be': 2, '83bcc18e91': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__lanes_plain8_11	B2o={'9bbf368aa1': 4}	U={'9bbf368aa1': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__pretree	B2o={'9e0fe270ea': 6, '4f9bd0c7dc': 2}	U={'9e0fe270ea': 6, '4f9bd0c7dc': 2}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__side_rest	B2o={'6d3044af78': 4}	U={'6d3044af78': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_pgslice_lg__side_softplus	B2o={'a9143c10fd': 4}	U={'a9143c10fd': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_qcore_r13	B2o={'ce29919068': 4}	U={'ce29919068': 4}	outl_same=True
+IDENTICAL	ot_hbm_su_static_sfustore_hw	B2o={'283b59a861': 4}	U={'283b59a861': 4}	outl_same=True
+IDENTICAL	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	B2o={'9859ab63b7': 8, '238692f6de': 2, '1209083e4b': 8, 'de0b0cd746': 2, '663208ad6d': 2, 'cf642ec7fd': 2, '8fb4bf48a8': 2, 'ca64d662a3': 2, 'c3951b1093': 2, '777995188c': 2}	U={'9859ab63b7': 8, '238692f6de': 2, '1209083e4b': 8, 'de0b0cd746': 2, '663208ad6d': 2, 'cf642ec7fd': 2, '8fb4bf48a8': 2, 'ca64d662a3': 2, 'c3951b1093': 2, '777995188c': 2}	outl_same=True
+IDENTICAL	ot_hbm_svc_sm_group_rel_id	B2o={'2234219435': 2, '365a7d55da': 2, 'c5c02061eb': 2, '088a4ce816': 2}	U={'2234219435': 2, '365a7d55da': 2, 'c5c02061eb': 2, '088a4ce816': 2}	outl_same=True
+IDENTICAL	ot_hbm_svc_sm_xcal_rel_t	B2o={'14fddb1d21': 2, '2a2a83d809': 2, '499014472d': 2, '78c9cba7a0': 2}	U={'14fddb1d21': 2, '2a2a83d809': 2, '499014472d': 2, '78c9cba7a0': 2}	outl_same=True
+IDENTICAL	ot_hbm_svc_vm_kshare_splitstrap	B2o={'08949d325b': 2, 'bc413e298d': 2, 'a207cb2ffc': 2, '3bc917201b': 2}	U={'08949d325b': 2, 'bc413e298d': 2, 'a207cb2ffc': 2, '3bc917201b': 2}	outl_same=True
+IDENTICAL	ot_hbm_svc_vmdel_lane_n	B2o={'3cd133df7b': 6, 'a435d85469': 2, 'f8c3cc28fd': 4, '07e3b9fbdd': 2, '89674aebd6': 2}	U={'3cd133df7b': 6, 'a435d85469': 2, 'f8c3cc28fd': 4, '07e3b9fbdd': 2, '89674aebd6': 2}	outl_same=True
+IDENTICAL	ot_hbm_svc_wb_kport_q	B2o={'a15ebd9c89': 4}	U={'a15ebd9c89': 4}	outl_same=True
+IDENTICAL	ot_hbm_xp_aq_tree13_fmt	B2o={'72c65d1671': 2, '8b957bae3c': 2}	U={'72c65d1671': 2, '8b957bae3c': 2}	outl_same=True
+IDENTICAL	ot_hfd_coll_q2_hard_v8g__reduce	B2o={'f1c8f66eec': 4}	U={'f1c8f66eec': 4}	outl_same=True
+IDENTICAL	ot_hfd_coll_q2_hard_v8g__ring_ag	B2o={'0ae620d4b5': 4}	U={'0ae620d4b5': 4}	outl_same=True
+IDENTICAL	ot_hfd_coll_q2n2_body_core	B2o={'e60925741f': 2}	U={'e60925741f': 2}	outl_same=True
+IDENTICAL	ot_hfd_coll_q2n2_vm_core	B2o={'a36d866364': 2}	U={'a36d866364': 2}	outl_same=True
+IDENTICAL	ot_hfd_coll_q3_body_core	B2o={'2daaa6270a': 2}	U={'2daaa6270a': 2}	outl_same=True
+IDENTICAL	ot_hfd_coll_q3_edge_core	B2o={'30a69cce92': 2}	U={'30a69cce92': 2}	outl_same=True
+IDENTICAL	ot_hfd_coll_q3_vm_core	B2o={'6d0981889f': 2}	U={'6d0981889f': 2}	outl_same=True
+IDENTICAL	ot_hgi_coll_gq_issue	B2o={'e72b0aadd6': 4}	U={'e72b0aadd6': 4}	outl_same=True
+IDENTICAL	ot_hgi_coll_gq_land	B2o={'11dcf63a1b': 4}	U={'11dcf63a1b': 4}	outl_same=True
+IDENTICAL	ot_hgi_coll_inj_idx_join_rg	B2o={'cf389bf754': 4}	U={'cf389bf754': 4}	outl_same=True
+IDENTICAL	ot_hgi_coll_tkm_m_tp192__root	B2o={'e3a70cc4e7': 1}	U={'e3a70cc4e7': 1}	outl_same=True
+IDENTICAL	ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	B2o={'c928220e54': 31}	U={'c928220e54': 31}	outl_same=True
+IDENTICAL	ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap	B2o={'2409a7be8b': 1}	U={'2409a7be8b': 1}	outl_same=True
+IDENTICAL	ot_hgi_dma_back_static_vp4_banks_cp	B2o={'bceef03a68': 4}	U={'bceef03a68': 4}	outl_same=True
+IDENTICAL	ot_hgi_qw_dec	B2o={'5339a9c09b': 4}	U={'5339a9c09b': 4}	outl_same=True
+IDENTICAL	ot_hgi_sfu_core_split3__ctl	B2o={'c0814e5f68': 2}	U={'c0814e5f68': 2}	outl_same=True
+IDENTICAL	ot_hgi_sfu_core_split3__opstore_a	B2o={'549e6e8304': 2}	U={'549e6e8304': 2}	outl_same=True
+IDENTICAL	ot_hgi_sfu_core_split3__opstore_b	B2o={'606ced5417': 2}	U={'606ced5417': 2}	outl_same=True
+IDENTICAL	ot_hgi_sfu_programme_store_r10	B2o={'7db987eebb': 4}	U={'7db987eebb': 4}	outl_same=True
+IDENTICAL	ot_hgi_sfu_split3_lane_core__idpin	B2o={'226f30e434': 32}	U={'226f30e434': 32}	outl_same=True
+IDENTICAL	ot_hgi_sm_xload_cl2_bdring	B2o={'cad9f13f20': 2, 'c21740cbcd': 2}	U={'cad9f13f20': 2, 'c21740cbcd': 2}	outl_same=True
+IDENTICAL	ot_hgi_sm_xload_cl2_bfqg	B2o={'ab3fc5aaf7': 6, '47d92dd968': 2, '75fd8386bf': 6, 'ffaa31647f': 2}	U={'ab3fc5aaf7': 6, '47d92dd968': 2, '75fd8386bf': 6, 'ffaa31647f': 2}	outl_same=True
+IDENTICAL	ot_hgi_sm_xload_cl2_ctlx	B2o={'f9e8b6ac77': 4}	U={'f9e8b6ac77': 4}	outl_same=True
+IDENTICAL	ot_hgi_sm_xload_xq_pegress	B2o={'3fd49c4012': 2, 'dee29a309a': 2}	U={'3fd49c4012': 2, 'dee29a309a': 2}	outl_same=True
+ONLY_U	ot_hnx_fused_tnode	B2o={}	U={'NONE': 30}	outl_same=True
+IDENTICAL	ot_pdie_serdes	B2o={'8e4806e4d3': 5}	U={'8e4806e4d3': 5}	outl_same=True
