@@ -17,6 +17,7 @@ def generated_tail(request, tmp_path):
     if request.param == 'phy':
         phy_ir._window_kit(plan, out, [0, 0, 345.6, 345.6])
     else:
+        pytest.importorskip('scipy')  # infra_pg.estimate solves the window with scipy.sparse
         p = D.S.Plan(D.S.load(plan), plan)
         grid = [{'layer': x, 'width_um': .48, 'pitch_um': 8.64,
                  'offset_um': 4.32, 'nets': ['VDD', 'VSS']} for x in ('M8', 'M9')]

@@ -255,5 +255,6 @@ def test_ff_grt_step_also_runs_for_goal_grt():
     import core_flow
     s = core_flow.FF_GRT_STEP
     gates = [seg for seg in s.split("if [ ")[1:] if "GOAL" in seg]
-    assert len(gates) == 2 and all("[ $GOAL = grt ]" in g and "[ $GOAL = finish ]" in g and "[ $GOAL = route ]" in g
+    # SIGNOFF-MODES-2 (ROOT-MERGE-36): 4 goal gates = kit_modes cts check, kit-corner cts, two-mode GRT, FF-only GRT
+    assert len(gates) == 4 and all("[ $GOAL = grt ]" in g and "[ $GOAL = finish ]" in g and "[ $GOAL = route ]" in g
                                    for g in gates)
