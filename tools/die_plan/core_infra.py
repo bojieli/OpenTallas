@@ -434,16 +434,30 @@ def emit_tcl(sl):
     pgc = trunk_pg_clearance(sl, plan)
     if pgc["verdict"] not in ("PASS", "NOT APPLICABLE"):
         raise InfraError(f"core clock trunk PG clearance {pgc['verdict']}: {pgc.get('issue') or pgc['examples'][:3]}")
+    band_info = []
     if tree and not tree.get("equal_load", True):
         q = tree.get("model_qualification", {})
         if q.get("measured_timing_used") is not False:
             raise InfraError("unequal-count tree refuses build until joint NLDM plan model qualifies both corners")
+        # band_policy "gate" (default, unchanged for every existing caller): the 250+-20 TT / 202.5+-20 FF band gates.
+        # band_policy "info" (METHODOLOGY 12.3a v5.0, COORD RULING S81-CORE-LAT-R9 19:22): the band is a design target,
+        # reported only; the gates are tap window <= 20 ps and slew <= 80 ps at TT and FF (die related-pair STA decides).
+        policy = q.get("band_policy", "gate")
+        if policy not in ("gate", "info"):
+            raise InfraError(f"unknown model_qualification band_policy {policy!r}")
         for corner, low, high in (("TT", 230., 270.), ("FF", 182.5, 222.5)):
             result = q.get("corners", {}).get(corner, {})
-            if not result or result["leaf_window"] > 20 or result["leaf_min"] < low or result["leaf_max"] > high or result["slew_max"] > 80:
+            if not result or result["leaf_window"] > 20 or result["slew_max"] > 80 or (
+                    policy == "gate" and (result["leaf_min"] < low or result["leaf_max"] > high)):
                 raise InfraError(f"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build")
+            if policy == "info":
+                inb = low <= result["leaf_min"] and result["leaf_max"] <= high
+                band_info.append(f"# core latency band INFO {corner}: model leaf {result['leaf_min']:g}..{result['leaf_max']:g} "
+                                 f"window {result['leaf_window']:g} (target {low:g}..{high:g}: {'IN' if inb else 'OUT'}; not a gate, 12.3a)")
     lines = ["# Shared core infrastructure: plan-defined identities only; no measured adjustments.",
              "source /work/native_pg_binding.tcl", "source /work/core_infra_impl.tcl", "ot_ci_begin"]
+    if band_info:
+        lines[1:1] = band_info
     if plan["clock_entry"]:
         x, y = plan["clock_entry"]["xy_um"]
         lines.append(f"ot_ci_clock_entry {word(plan['core_clock_port'])} {x:g} {y:g}")
