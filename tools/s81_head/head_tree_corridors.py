@@ -46,6 +46,15 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False):
         incoming[edge['load']] = edge['drv']
     for g in groups:
         bydrv.setdefault(g, [])       # leaf output stubs are physical nets too
+    for g, edges in bydrv.items():
+        if edges and all(e['layer']=='M8' for e in edges):
+            dx = sum(groups[e['load']][0][1]['origin_um'][0]-groups[g][0][1]['origin_um'][0]
+                     for e in edges)
+            if dx < -1e-6:
+                # Put Y on the west-facing side. The arriving A-pin jog then
+                # does not cross the departing clock trunk through the bank.
+                for _,cell in groups[g]:
+                    cell['orient'] = 'MY'
     def pin(g, p):
         _, cell = groups[g][0]
         return D.C128.pin_xy({'c': dict(x=cell['origin_um'][0], y=cell['origin_um'][1],
