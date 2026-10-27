@@ -11,8 +11,8 @@
 1. Executing Verilog-2005 frontend: /r/proof_core.sv
 Parsing formal SystemVerilog input from `/r/proof_core.sv' to AST representation.
 Generating RTLIL representation for module `\ot_hbm_argmax_static_sw_vm_r2__rtl'.
-Warning: Replacing memory \ap with list of registers. See /r/proof_core.sv:143
-Warning: Replacing memory \dp with list of registers. See /r/proof_core.sv:93
+Warning: Replacing memory \ap with list of registers. See /r/proof_core.sv:147
+Warning: Replacing memory \dp with list of registers. See /r/proof_core.sv:97
 Successfully finished Verilog frontend.
 
 2. Executing Verilog-2005 frontend: /r/kit/rtl/ot_rst_relay.sv
@@ -59,13 +59,13 @@ Cleaned up 1 empty switch.
 5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
 Marked 1 switch rules as full_case in process $proc$/r/kit/rtl/ot_rst_relay.sv:40$248 in module $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.
 Marked 1 switch rules as full_case in process $proc$/r/kit/rtl/ot_rst_relay.sv:28$246 in module $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.
-Marked 1 switch rules as full_case in process $proc$/r/proof_core.sv:205$226 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
-Marked 6 switch rules as full_case in process $proc$/r/proof_core.sv:152$185 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
-Marked 1 switch rules as full_case in process $proc$/r/proof_core.sv:142$165 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
-Marked 1 switch rules as full_case in process $proc$/r/proof_core.sv:119$95 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
-Marked 1 switch rules as full_case in process $proc$/r/proof_core.sv:114$89 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
-Marked 8 switch rules as full_case in process $proc$/r/proof_core.sv:105$61 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
-Marked 2 switch rules as full_case in process $proc$/r/proof_core.sv:92$40 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
+Marked 1 switch rules as full_case in process $proc$/r/proof_core.sv:209$226 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
+Marked 6 switch rules as full_case in process $proc$/r/proof_core.sv:156$185 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
+Marked 1 switch rules as full_case in process $proc$/r/proof_core.sv:146$165 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
+Marked 1 switch rules as full_case in process $proc$/r/proof_core.sv:123$95 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
+Marked 1 switch rules as full_case in process $proc$/r/proof_core.sv:118$89 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
+Marked 8 switch rules as full_case in process $proc$/r/proof_core.sv:109$61 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
+Marked 2 switch rules as full_case in process $proc$/r/proof_core.sv:96$40 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
 Marked 1 switch rules as full_case in process $proc$/r/proof_core.sv:63$15 in module ot_hbm_argmax_static_sw_vm_r2__rtl.
 Removed a total of 0 dead cases.
 
@@ -78,11 +78,11 @@ Promoted 26 assignments to connections.
 5.5. Executing PROC_ARST pass (detect async resets in processes).
 Found async reset \rst_n_in in `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.$proc$/r/kit/rtl/ot_rst_relay.sv:40$248'.
 Found async reset \rst_n_in in `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.$proc$/r/kit/rtl/ot_rst_relay.sv:28$246'.
-Found async reset \rst_ctl in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:205$226'.
-Found async reset \rst_ctl in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
-Found async reset \rst_ctl in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
-Found async reset \rst_rd in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:114$89'.
-Found async reset \rst_rd in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Found async reset \rst_ctl in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:209$226'.
+Found async reset \rst_ctl in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
+Found async reset \rst_ctl in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
+Found async reset \rst_rd in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:118$89'.
+Found async reset \rst_rd in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
 Found async reset \rst_ctl in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:63$15'.
 
 5.6. Executing PROC_ROM pass (convert switches to ROMs).
@@ -94,11 +94,11 @@ Creating decoders for process `$paramod\ot_rst_relay\REGIONS=s32'000000000000000
      1/1: $0\relay_q[0][2:0]
 Creating decoders for process `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.$proc$/r/kit/rtl/ot_rst_relay.sv:28$246'.
      1/1: $0\sync_q[1:0]
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:208$231'.
-     1/1: $assert$/r/proof_core.sv:212$239_EN
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:205$226'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:212$231'.
+     1/1: $assert$/r/proof_core.sv:216$239_EN
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:209$226'.
      1/1: $0\ld[0:0]
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
      1/18: $0\wr_now[0:0]
      2/18: $0\cq_v[0:0]
      3/18: $0\fault[0:0]
@@ -117,10 +117,10 @@ Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proo
     16/18: $0\busy_i[0:0]
     17/18: $0\nan_flag[0:0]
     18/18: $0\cq_seq[1:0]
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:150$176'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:154$176'.
      1/1: $0\cq_d[336:0]
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:148$171'.
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$171'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
      1/17: $1$fordecl_block$12.d[31:0]$170
      2/17: $0\ap[13][2:0]
      3/17: $0\ap[12][2:0]
@@ -138,7 +138,7 @@ Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proo
     15/17: $0\ap[0][2:0]
     16/17: $0\cr_v[0:0]
     17/17: $1$fordecl_block$10.d[31:0]$169
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:119$95'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:123$95'.
      1/12: $0\e_m[7:0] [7]
      2/12: $0\e_m[7:0] [6]
      3/12: $0\e_m[7:0] [5]
@@ -151,10 +151,10 @@ Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proo
     10/12: $0\e_vals[255:0]
     11/12: $0\e_be[0:0]
     12/12: $1$fordecl_block$8.l[31:0]$97
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:114$89'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:118$89'.
      1/2: $0\e_last[0:0]
      2/2: $0\e_v[0:0]
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:105$61'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:109$61'.
      1/8: $8\rd_bad[0:0]
      2/8: $7\rd_bad[0:0]
      3/8: $6\rd_bad[0:0]
@@ -163,13 +163,13 @@ Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proo
      6/8: $3\rd_bad[0:0]
      7/8: $2\rd_bad[0:0]
      8/8: $1\rd_bad[0:0]
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:103$60'.
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:107$60'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
      1/21: $2$lookahead\rq_v$39[7:0]$51
-     2/21: $2$bitselwrite$pos$/r/proof_core.sv:98$14[2:0]$50
+     2/21: $2$bitselwrite$pos$/r/proof_core.sv:102$14[2:0]$50
      3/21: $0\cap_v[0:0]
      4/21: $1$lookahead\rq_v$39[7:0]$49
-     5/21: $1$bitselwrite$pos$/r/proof_core.sv:98$14[2:0]$48
+     5/21: $1$bitselwrite$pos$/r/proof_core.sv:102$14[2:0]$48
      6/21: $1$fordecl_block$4.d[31:0]$47
      7/21: $0\dp[13][11:0]
      8/21: $0\dp[12][11:0]
@@ -186,7 +186,7 @@ Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proo
     19/21: $0\dp[1][11:0]
     20/21: $0\dp[0][11:0]
     21/21: $1$fordecl_block$2.d[31:0]$46
-Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
+Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
      1/8: $0\legal_q[0:0]
      2/8: $0\ois_q[15:0]
      3/8: $0\ob_q[17:0]
@@ -200,173 +200,173 @@ Creating decoders for process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proo
      1/1: $0\go_p[0:0]
 
 5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
-No latch inferred for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\rd_bad' from process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:105$61'.
-No latch inferred for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$6.l' from process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:105$61'.
+No latch inferred for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\rd_bad' from process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:109$61'.
+No latch inferred for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$6.l' from process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:109$61'.
 
 5.9. Executing PROC_DFF pass (convert process syncs to FFs).
 Creating register for signal `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.\relay_q[0]' using process `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.$proc$/r/kit/rtl/ot_rst_relay.sv:40$248'.
   created $adff cell `$procdff$512' with positive edge clock and positive level reset.
 Creating register for signal `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.\sync_q' using process `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.$proc$/r/kit/rtl/ot_rst_relay.sv:28$246'.
   created $adff cell `$procdff$517' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ld' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:205$226'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ld' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:209$226'.
   created $adff cell `$procdff$522' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cq_seq' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cq_seq' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$527' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\done' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\done' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$532' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\fault' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\fault' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$537' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\nan_flag' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\nan_flag' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$542' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\busy_i' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\busy_i' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$547' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\busy_x' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\busy_x' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$552' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cq_v' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cq_v' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$557' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\st' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\st' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$562' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cnt' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cnt' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$567' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\flt' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\flt' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$572' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\i_sec' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\i_sec' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $dff cell `$procdff$579' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\i_left' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\i_left' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $dff cell `$procdff$586' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\i_first' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\i_first' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $dff cell `$procdff$593' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\le' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\le' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $dff cell `$procdff$600' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\res_val' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\res_val' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $dff cell `$procdff$607' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\res_id_r' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\res_id_r' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $dff cell `$procdff$614' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\res_bad' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\res_bad' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$619' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\wr_now' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\wr_now' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
   created $adff cell `$procdff$624' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cq_d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:150$176'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cq_d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:154$176'.
   created $dff cell `$procdff$625' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cr_tag' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:148$171'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cr_tag' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$171'.
   created $dff cell `$procdff$626' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cr_we' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:148$171'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cr_we' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$171'.
   created $dff cell `$procdff$627' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cr_v' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cr_v' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$632' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$10.d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$10.d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$637' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$12.d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$12.d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $dff cell `$procdff$644' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[0]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[0]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$649' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[1]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[1]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$654' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[2]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[2]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$659' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[3]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[3]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$664' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[4]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[4]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$669' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[5]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[5]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$674' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[6]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[6]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$679' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[7]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[7]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$684' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[8]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[8]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$689' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[9]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[9]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$694' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[10]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[10]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$699' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[11]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[11]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$704' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[12]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[12]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$709' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[13]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ap[13]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
   created $adff cell `$procdff$714' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_be' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:119$95'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_be' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:123$95'.
   created $dff cell `$procdff$715' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_m' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:119$95'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_m' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:123$95'.
   created $dff cell `$procdff$716' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_vals' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:119$95'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_vals' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:123$95'.
   created $dff cell `$procdff$717' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_bias' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:119$95'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_bias' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:123$95'.
   created $dff cell `$procdff$718' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$8.l' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:119$95'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$8.l' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:123$95'.
   created $dff cell `$procdff$719' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_v' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:114$89'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_v' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:118$89'.
   created $adff cell `$procdff$724' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_last' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:114$89'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\e_last' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:118$89'.
   created $adff cell `$procdff$729' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\rq_d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:103$60'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\rq_d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:107$60'.
   created $dff cell `$procdff$730' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_first' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:103$60'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_first' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:107$60'.
   created $dff cell `$procdff$731' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_last' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:103$60'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_last' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:107$60'.
   created $dff cell `$procdff$732' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_off' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:103$60'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_off' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:107$60'.
   created $dff cell `$procdff$733' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_lastw' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:103$60'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_lastw' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:107$60'.
   created $dff cell `$procdff$734' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:103$60'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:107$60'.
   created $dff cell `$procdff$735' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\rq_v' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\rq_v' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$740' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_v' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\cap_v' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$745' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$2.d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$2.d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$750' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$4.d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$fordecl_block$4.d' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $dff cell `$procdff$757' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$bitselwrite$pos$/r/proof_core.sv:98$14' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$bitselwrite$pos$/r/proof_core.sv:102$14' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$762' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[0]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[0]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$767' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[1]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[1]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$772' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[2]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[2]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$777' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[3]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[3]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$782' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[4]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[4]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$787' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[5]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[5]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$792' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[6]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[6]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$797' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[7]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[7]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$802' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[8]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[8]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$807' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[9]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[9]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$812' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[10]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[10]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$817' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[11]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[11]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$822' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[12]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[12]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$827' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[13]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\dp[13]' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$832' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$lookahead\rq_v$39' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.$lookahead\rq_v$39' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
   created $adff cell `$procdff$837' with positive edge clock and positive level reset.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\mode_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\mode_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
   created $dff cell `$procdff$838' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\am_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\am_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
   created $dff cell `$procdff$839' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\imm_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\imm_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
   created $dff cell `$procdff$840' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ab_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ab_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
   created $dff cell `$procdff$841' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\n_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\n_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
   created $dff cell `$procdff$842' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ob_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ob_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
   created $dff cell `$procdff$843' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ois_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\ois_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
   created $dff cell `$procdff$844' with positive edge clock.
-Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\legal_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
+Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\legal_q' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
   created $dff cell `$procdff$845' with positive edge clock.
 Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\mode_p' using process `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:64$17'.
   created $dff cell `$procdff$846' with positive edge clock.
@@ -396,26 +396,26 @@ Creating register for signal `\ot_hbm_argmax_static_sw_vm_r2__rtl.\go_p' using p
 5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
 Removing empty process `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.$proc$/r/kit/rtl/ot_rst_relay.sv:40$248'.
 Removing empty process `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000011.$proc$/r/kit/rtl/ot_rst_relay.sv:28$246'.
-Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:208$231'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:208$231'.
-Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:205$226'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:205$226'.
-Found and cleaned up 13 empty switches in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$185'.
-Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:150$176'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:150$176'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:148$171'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:142$165'.
-Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:119$95'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:119$95'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:114$89'.
-Found and cleaned up 8 empty switches in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:105$61'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:105$61'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:103$60'.
-Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:92$40'.
-Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
-Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:81$33'.
+Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:212$231'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:212$231'.
+Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:209$226'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:209$226'.
+Found and cleaned up 13 empty switches in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:156$185'.
+Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:154$176'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:154$176'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:152$171'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:146$165'.
+Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:123$95'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:123$95'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:118$89'.
+Found and cleaned up 8 empty switches in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:109$61'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:109$61'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:107$60'.
+Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:96$40'.
+Found and cleaned up 1 empty switch in `\ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
+Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:85$33'.
 Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:64$17'.
 Removing empty process `ot_hbm_argmax_static_sw_vm_r2__rtl.$proc$/r/proof_core.sv:63$15'.
 Cleaned up 27 empty switches.
@@ -525,11 +525,11 @@ Adding EN signal on $procdff$844 ($dff) from module ot_hbm_argmax_static_sw_vm_r
 Adding EN signal on $procdff$843 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = \ob_p, Q = \ob_q).
 Adding EN signal on $procdff$842 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = \n_p, Q = \n_q).
 Adding EN signal on $procdff$845 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = \legal, Q = \legal_q).
-Adding EN signal on $procdff$625 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = { 13'1000000000000 \wa [17:3] 5'00000 \wdat \wdat \wdat \wdat \wdat \wdat \wdat \wdat $ternary$/r/proof_core.sv:151$184_Y 14'01111010000000 $ternary$/r/proof_core.sv:151$181_Y }, Q = \cq_d).
-Adding SRST signal on $auto$ff.cc:337:slice$1064 ($dffe) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $shl$/r/proof_core.sv:151$183_Y, Q = \cq_d [47:16], rval = 0).
-Adding EN signal on $procdff$614 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $sub$/r/proof_core.sv:179$214_Y, Q = \res_id_r).
+Adding EN signal on $procdff$625 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = { 13'1000000000000 \wa [17:3] 5'00000 \wdat \wdat \wdat \wdat \wdat \wdat \wdat \wdat $ternary$/r/proof_core.sv:155$184_Y 14'01111010000000 $ternary$/r/proof_core.sv:155$181_Y }, Q = \cq_d).
+Adding SRST signal on $auto$ff.cc:337:slice$1064 ($dffe) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $shl$/r/proof_core.sv:155$183_Y, Q = \cq_d [47:16], rval = 0).
+Adding EN signal on $procdff$614 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $sub$/r/proof_core.sv:183$214_Y, Q = \res_id_r).
 Adding EN signal on $procdff$607 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = \o_val, Q = \res_val).
-Adding EN signal on $procdff$600 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $sub$/r/proof_core.sv:163$199_Y, Q = \le).
+Adding EN signal on $procdff$600 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $sub$/r/proof_core.sv:167$199_Y, Q = \le).
 Adding EN signal on $procdff$593 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $0\i_first[0:0], Q = \i_first).
 Adding EN signal on $procdff$586 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $0\i_left[14:0], Q = \i_left).
 Adding EN signal on $procdff$841 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = \ab_p, Q = \ab_q).
@@ -554,7 +554,7 @@ Adding SRST signal on $procdff$664 ($dff) from module ot_hbm_argmax_static_sw_vm
 Adding SRST signal on $procdff$817 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $auto$async2sync.cc:253:execute$922, Q = $auto$async2sync.cc:253:execute$936, rval = 12'000000000000).
 Adding SRST signal on $procdff$777 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $auto$async2sync.cc:253:execute$950, Q = $auto$async2sync.cc:253:execute$934, rval = 12'000000000000).
 Adding SRST signal on $procdff$659 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $auto$async2sync.cc:253:execute$928, Q = $auto$async2sync.cc:253:execute$932, rval = 3'000).
-Adding SRST signal on $procdff$532 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $logic_not$/r/proof_core.sv:191$222_Y, Q = $auto$async2sync.cc:253:execute$930, rval = 1'0).
+Adding SRST signal on $procdff$532 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $logic_not$/r/proof_core.sv:195$222_Y, Q = $auto$async2sync.cc:253:execute$930, rval = 1'0).
 Adding SRST signal on $procdff$654 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $auto$async2sync.cc:253:execute$924, Q = $auto$async2sync.cc:253:execute$928, rval = 3'000).
 Adding SRST signal on $procdff$860 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = \go, Q = $auto$async2sync.cc:253:execute$926, rval = 1'0).
 Adding SRST signal on $procdff$649 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = { \wr_now \cq_seq }, Q = $auto$async2sync.cc:253:execute$924, rval = 3'000).
@@ -568,8 +568,8 @@ Adding SRST signal on $procdff$807 ($dff) from module ot_hbm_argmax_static_sw_vm
 Adding SRST signal on $procdff$619 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $0\res_bad[0:0], Q = $auto$async2sync.cc:253:execute$906, rval = 1'0).
 Adding SRST signal on $procdff$704 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $auto$async2sync.cc:253:execute$894, Q = $auto$async2sync.cc:253:execute$904, rval = 3'000).
 Adding SRST signal on $procdff$802 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $auto$async2sync.cc:253:execute$896, Q = $auto$async2sync.cc:253:execute$902, rval = 12'000000000000).
-Adding SRST signal on $procdff$740 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $or$/r/proof_core.sv:98$58_Y, Q = $auto$async2sync.cc:253:execute$900, rval = 8'00000000).
-Adding SRST signal on $procdff$729 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $logic_and$/r/proof_core.sv:117$93_Y, Q = $auto$async2sync.cc:253:execute$898, rval = 1'0).
+Adding SRST signal on $procdff$740 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $or$/r/proof_core.sv:102$58_Y, Q = $auto$async2sync.cc:253:execute$900, rval = 8'00000000).
+Adding SRST signal on $procdff$729 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $logic_and$/r/proof_core.sv:121$93_Y, Q = $auto$async2sync.cc:253:execute$898, rval = 1'0).
 Adding SRST signal on $procdff$797 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $auto$async2sync.cc:253:execute$890, Q = $auto$async2sync.cc:253:execute$896, rval = 12'000000000000).
 Adding SRST signal on $procdff$699 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $auto$async2sync.cc:253:execute$888, Q = $auto$async2sync.cc:253:execute$894, rval = 3'000).
 Adding SRST signal on $flatten\u_rst.$procdff$517 ($dff) from module ot_hbm_argmax_static_sw_vm_r2__rtl (D = $auto$async2sync.cc:253:execute$892 [0], Q = $auto$async2sync.cc:253:execute$892 [1], rval = 1'0).
@@ -714,8 +714,8 @@ Using SAT solver `minisat`.
 Setting up time step 1:
 Final constraint equation: { } = { }
 Imported 245 cells to SAT database.
-Import proof for assert: $eq$/r/proof_core.sv:210$233_Y when 1'1.
-Import proof for assert: \ld when $assert$/r/proof_core.sv:212$239_EN.
+Import proof for assert: $eq$/r/proof_core.sv:214$233_Y when 1'1.
+Import proof for assert: \ld when $assert$/r/proof_core.sv:216$239_EN.
 
 ** Trying induction with length 1 **
 
@@ -723,8 +723,8 @@ Setting up time step 1:
 Final constraint equation: { } = { }
 Imported 245 cells to SAT database.
 Final init constraint equation: { $auto$async2sync.cc:253:execute$884 $auto$async2sync.cc:253:execute$892 [0] $auto$async2sync.cc:253:execute$940 [5:3] \rr_p \cq_d [323:309] \cq_d [303:48] \cq_d [1:0] \ois_q \ob_q $auto$async2sync.cc:253:execute$874 \n_q $auto$async2sync.cc:253:execute$872 \ois_p \legal_q $auto$async2sync.cc:253:execute$888 \cr_we \cr_tag \cq_d [47:16] $auto$async2sync.cc:253:execute$886 \ob_p \rq_d \res_id_r \res_val \le \cap_last \i_first \ab_p \i_left \ab_q $auto$async2sync.cc:253:execute$876 \i_sec \cr_p \imm_p $auto$async2sync.cc:253:execute$882 $auto$async2sync.cc:253:execute$940 [10:6] $auto$async2sync.cc:253:execute$940 [2:0] \am_q $auto$async2sync.cc:253:execute$880 $auto$async2sync.cc:253:execute$866 $auto$async2sync.cc:253:execute$862 \am_p $auto$async2sync.cc:253:execute$954 $auto$async2sync.cc:253:execute$952 \n_p $auto$async2sync.cc:253:execute$890 $auto$async2sync.cc:253:execute$950 $auto$async2sync.cc:253:execute$948 $auto$async2sync.cc:253:execute$946 $auto$async2sync.cc:253:execute$944 $auto$async2sync.cc:253:execute$942 $auto$async2sync.cc:253:execute$864 $auto$async2sync.cc:253:execute$940 [11] $auto$async2sync.cc:253:execute$938 $auto$async2sync.cc:253:execute$936 $auto$async2sync.cc:253:execute$934 $auto$async2sync.cc:253:execute$932 $auto$async2sync.cc:253:execute$878 $auto$async2sync.cc:253:execute$930 $auto$async2sync.cc:253:execute$928 $auto$async2sync.cc:253:execute$926 $auto$async2sync.cc:253:execute$924 $auto$async2sync.cc:253:execute$922 $auto$async2sync.cc:253:execute$920 $auto$async2sync.cc:253:execute$918 $auto$async2sync.cc:253:execute$916 $auto$async2sync.cc:253:execute$868 $auto$async2sync.cc:253:execute$914 $auto$async2sync.cc:253:execute$912 $auto$async2sync.cc:253:execute$870 $auto$async2sync.cc:253:execute$910 $auto$async2sync.cc:253:execute$892 [1] $auto$async2sync.cc:253:execute$906 $auto$async2sync.cc:253:execute$904 $auto$async2sync.cc:253:execute$902 $auto$async2sync.cc:253:execute$900 $auto$async2sync.cc:253:execute$898 $auto$async2sync.cc:253:execute$896 $auto$async2sync.cc:253:execute$894 } = 1372'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-Import proof for assert: $eq$/r/proof_core.sv:210$233_Y when 1'1.
-Import proof for assert: \ld when $assert$/r/proof_core.sv:212$239_EN.
+Import proof for assert: $eq$/r/proof_core.sv:214$233_Y when 1'1.
+Import proof for assert: \ld when $assert$/r/proof_core.sv:216$239_EN.
 Import show expression: $auto$async2sync.cc:253:execute$892
 Import show expression: \rr_p
 Import show expression: \ois_p
@@ -743,8 +743,8 @@ Base case for induction length 1 proven.
 Setting up time step 2:
 Final constraint equation: { } = { }
 Imported 245 cells to SAT database.
-Import proof for assert: $eq$/r/proof_core.sv:210$233_Y when 1'1.
-Import proof for assert: \ld when $assert$/r/proof_core.sv:212$239_EN.
+Import proof for assert: $eq$/r/proof_core.sv:214$233_Y when 1'1.
+Import proof for assert: \ld when $assert$/r/proof_core.sv:216$239_EN.
 Import show expression: $auto$async2sync.cc:253:execute$892
 Import show expression: \rr_p
 Import show expression: \ois_p
@@ -771,6 +771,6 @@ Induction step proven: SUCCESS!
                        \__/                              
 
 Warnings: 4 unique messages, 5 total
-End of script. Logfile hash: e79e07a5db, time: 0.31s, user: 0.29s, system: 0.02s, MEM: 43.99 MB peak
+End of script. Logfile hash: afc61db011, time: 0.26s, user: 0.25s, system: 0.01s, MEM: 44.38 MB peak
 Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
-Time spent: 48% 1x sat (0 sec), 16% 6x read_verilog (0 sec), ...
+Time spent: 54% 1x sat (0 sec), 13% 4x opt_clean (0 sec), ...

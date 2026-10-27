@@ -199,6 +199,6 @@ SAT proof finished - no model found: SUCCESS!
                  \____ $$$|__/|________/|__/|_______/|__/
                        \__/                              
 
-End of script. Logfile hash: b6553724ed, time: 0.01s, user: 0.01s, system: 0.00s, MEM: 24.30 MB peak
+End of script. Logfile hash: b6553724ed, time: 0.01s, user: 0.01s, system: 0.01s, MEM: 24.43 MB peak
 Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
-Time spent: 23% 1x sat (0 sec), 17% 4x opt_clean (0 sec), ...
+Time spent: 19% 4x opt_clean (0 sec), 14% 1x sat (0 sec), ...

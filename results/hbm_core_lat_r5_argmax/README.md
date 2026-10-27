@@ -27,3 +27,11 @@ load, same enable; the redundant 13 flops are gone from the RTL itself.
   edge, 8000 cycles): seeds 1/2/3 mismatches 0/0/0 (seed 2 prints FAIL only on the coverage floor resets 3 <= 3, not on a mismatch);
   OT_ARGMAX_BUSY_EXPORT_MUT mutant 1356 mismatches (caught). CHECKED. Coverage note: dones 0 in all seeds (commands end in fault), but
   falls_end 76-80 per seed, i.e. the W0/W1 cq writes with res_id are compared.
+
+## R5a LEC (res_id fix only): UNPROVEN 13104/13345, 241 differ (lec_r5a/lec.json, 1890.8 s) CHECKED
+With res_id fixed, every remaining unproven cone runs through the recoded FSM (`st` 669 / `st#t` 314 cone references): lec.py could
+map only codes 0..3 to one-hot gate flops ("encoding search too large" for the full 4-gold/8-gate search), so the E_W0..E_END cubes
+are never hypothesised and the write/ack/engine-capture cones (cq_d, res_val, res_id_r, le, i_sec, i_left, dp, rq_v, cnt, done,
+fault, engine out_*) stay unproven. Root cause = the synthesis one-hot recode, not a design difference (P1: only 8 codes reachable).
+## Fix 2 (RTL): `(* fsm_encoding = "none" *) reg [3:0] st;` -- Yosys keeps the RTL binary code (gate st[0..2] $_DFFE_PN0P_, st[3] const 0,
+CHECKED in 1_2_yosys.v). P1/P2/P3 re-proved on the final RTL (SUCCESS). Lockstep sim unaffected (attribute only).

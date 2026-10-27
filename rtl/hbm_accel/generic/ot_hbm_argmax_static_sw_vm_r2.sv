@@ -73,7 +73,11 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     for (genvar l = 0; l < 8; l = l + 1) begin : g_rq assign vm_rq[17*l +: 17] = {rq_v[l], rq_d}; end   // sector is don't-care when !v
     assign cq = {cq_v, cq_d};
     localparam [3:0] E_IDLE=0, E_CHK=1, E_ROW=2, E_RD=3, E_WAIT=4, E_W0=5, E_W1=6, E_END=7;
-    reg [3:0] st; reg [5:0] cnt; reg flt;
+    // HBM-CORE-LAT-R5 10-27: keep the RTL binary state code (no Yosys one-hot recode). The recode is legal (only the 8 codes
+    // E_IDLE..E_END are reachable, st[3] == 0: proof in results/hbm_core_lat_r5_argmax) but the LEC cannot certify the
+    // one-hot cubes (R4/R5a NOT EQUIVALENT/UNPROVEN cones all through st#t). Binary = same 4 flops as the RTL.
+    (* fsm_encoding = "none" *) reg [3:0] st;
+    reg [5:0] cnt; reg flt;
     reg mode_q, am_q; reg [17:0] imm_q, ab_q, n_q, ob_q; reg [15:0] ois_q; reg legal_q;
     wire legal = n_p != 18'd0 && imm_p < 18'd262143 &&
                  (mode_p || (am_p ? ab_p[17:16] == 2'd0 : ab_p[17:16] == sid)) &&
