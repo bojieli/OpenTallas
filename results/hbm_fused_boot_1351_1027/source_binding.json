@@ -153,5 +153,13 @@
     "ot_hnx_fused_host_boot.sv": "1aa81c28e1f6e1678cbee3f7284fb24a7b74feada82b327bd4a989e0677843b1",
     "ot_hnx_fused_host_program.sv": "2eb7dfdfe0f53cc81502c4f3be98576ce06410729aa116fbb7afe5a4f7b3a4f7",
     "ot_hnx_fused_job217_provider.sv": "9be13ccf2acda8bc3e113b9d55d0251461744911223b4a7c461ffdcbbbbfc5ae"
-  }
+  },
+  "selected_local_release_edges": {
+    "SW": 9,
+    "SE": 9,
+    "NW": 9,
+    "NE": 9,
+    "root": 6
+  },
+  "physical_reset_bound_obligation": "The root delivery bound must cover nested central6 and both externalN4 delivery+3. No offset/START value inferred."
 }
