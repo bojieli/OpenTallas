@@ -66,5 +66,10 @@
     "host": "intel2",
     "clock_ps": 833,
     "scope": "Control-only scalar/fin helper, actual root decoder, two real programme SRAMs; no32leaf/VM/numeric-token qualification"
+  },
+  "delivered_reset": {
+    "parameter": "DELIVERED_RESET=1",
+    "local_release_edges": 3,
+    "implementation": "three kept synchronous relay stages from actual deliveredreset; defaults0 legacy; normal calendar waits actual maxboot+6+padwarm"
   }
 }

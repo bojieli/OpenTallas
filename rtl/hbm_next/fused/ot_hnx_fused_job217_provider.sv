@@ -2,7 +2,7 @@
 `default_nettype none
 // Finite static programme: entry={deadline32,launch32,job217}. No traffic until
 // sequential preload and a source-calendar-bound configuration commit succeed.
-module ot_hnx_fused_job217_provider (
+module ot_hnx_fused_job217_provider #(parameter integer DELIVERED_RESET=0) (
  input wire clk,rst_n,
  input wire load_v,input wire [7:0] load_addr,input wire [280:0] load_entry,
  input wire cfg_commit,cfg_calendar_bound,input wire [8:0] cfg_count,
@@ -13,6 +13,14 @@ module ot_hnx_fused_job217_provider (
  input wire root_done,root_fault,root_busy,
  output reg done,fault,output wire busy,output reg armed
 );
+ wire local_rst_n;
+ generate if(DELIVERED_RESET!=0)begin:g_delivered
+ (* keep="true",dont_touch="true" *) reg [2:0] reset_pipe;
+ always @(posedge clk)reset_pipe<={reset_pipe[1:0],rst_n};
+ assign local_rst_n=reset_pipe[2];
+ end else begin:g_legacy
+ assign local_rst_n=rst_n;
+ end endgenerate
  localparam IDLE=0,FETCH0=1,FETCH1=2,WAIT_EDGE=3,RUN=4;
  reg [2:0] state;reg [8:0] loaded,count;reg load_error;
  reg [7:0] ptr;reg [31:0] cycle,launch,deadline;
@@ -25,8 +33,8 @@ module ot_hnx_fused_job217_provider (
  ot_sram_1r1w_256x256_m2_r2c2 hi(.clk(clk),.r_ce_in(read_en),.r_addr_in(ptr),.rd_out(qhi),
  .w_ce_in(write_en),.w_addr_in(load_addr),.wd_in({231'b0,load_entry[280:256]}),.w_mask_in({256{1'b1}}),.rr_en(2'b0),.rr_addr(16'b0),.cr_en(2'b0),.cr_sel(16'b0));
  assign busy=(state!=IDLE);
- always @(posedge clk or negedge rst_n)begin
- if(!rst_n)begin state<=IDLE;loaded<=0;count<=0;load_error<=0;ptr<=0;cycle<=0;launch<=0;deadline<=0;queued_job<=0;seen_done<=0;seen_fault<=0;rd_done<=0;rd_fault<=0;rd_busy<=0;job_v<=0;job<=0;wsc<=0;pk5<=0;pb5<=0;done<=0;fault<=0;armed<=0;end
+ always @(posedge clk or negedge local_rst_n)begin
+ if(!local_rst_n)begin state<=IDLE;loaded<=0;count<=0;load_error<=0;ptr<=0;cycle<=0;launch<=0;deadline<=0;queued_job<=0;seen_done<=0;seen_fault<=0;rd_done<=0;rd_fault<=0;rd_busy<=0;job_v<=0;job<=0;wsc<=0;pk5<=0;pb5<=0;done<=0;fault<=0;armed<=0;end
  else begin
  job_v<=0;done<=0;rd_done<=root_done;rd_fault<=root_fault;rd_busy<=root_busy;
  if(state!=IDLE)cycle<=cycle+1;

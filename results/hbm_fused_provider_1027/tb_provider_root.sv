@@ -5,7 +5,7 @@ module tb_provider_root;
  wire jv,pdone,pfault,pbusy,armed;wire[216:0]job;wire[7:0]wsc;wire[5:0]pk5;wire pb5;
  wire rdone,rfault,rbusy;wire[172:0]dnw,dne;reg[270:0]unw=0,une=0;
  reg mutate=0;wire[216:0]delivered_job=job^(mutate?(217'd1<<5):217'd0);
- ot_hnx_fused_job217_provider provider(.clk(clk),.rst_n(rst_n),.load_v(load_v),.load_addr(8'd0),.load_entry(entry),.cfg_commit(commit),.cfg_calendar_bound(bound),.cfg_count(9'd1),.cfg_wsc(8'd24),.cfg_pk5(6'd0),.cfg_pb5(1'b0),.start(start),.job_v(jv),.job(job),.wsc(wsc),.pk5(pk5),.pb5(pb5),.root_done(rdone),.root_fault(rfault),.root_busy(rbusy),.done(pdone),.fault(pfault),.busy(pbusy),.armed(armed));
+ ot_hnx_fused_job217_provider #(.DELIVERED_RESET(1)) provider(.clk(clk),.rst_n(rst_n),.load_v(load_v),.load_addr(8'd0),.load_entry(entry),.cfg_commit(commit),.cfg_calendar_bound(bound),.cfg_count(9'd1),.cfg_wsc(8'd24),.cfg_pk5(6'd0),.cfg_pb5(1'b0),.start(start),.job_v(jv),.job(job),.wsc(wsc),.pk5(pk5),.pb5(pb5),.root_done(rdone),.root_fault(rfault),.root_busy(rbusy),.done(pdone),.fault(pfault),.busy(pbusy),.armed(armed));
  ot_hnx_fused_hub_n4ext root(.clk(clk),.rst_n(rst_n),.job_v(jv),.job(delivered_job),.done(rdone),.fault(rfault),.busy(rbusy),.wsc(wsc),.pk5(pk5),.pb5(pb5),.up_nw(unw),.up_ne(une),.down_nw(dnw),.down_ne(dne));
  integer cc=0,start_edge=0,checks=0,errors=0,pulses=0,scalars=0,rootdones=0,pdones=0,tracehits=0,finwait=0;reg active=0;
  always @(posedge clk)begin cc<=cc+1;if(start)start_edge<=cc;end
