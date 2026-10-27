@@ -71,3 +71,4 @@ Branch claude/fallback-head-1026@bd084a517d (main 63f0898a3 + tools/s81_head/fal
 - hd_ctl observer fault/ready ports are OPEN.
 
 HEAD-CORE-LAT-R4 is untouched: the fallback uses the existing cv cores and does not depend on R4.
+2026-10-26 17:19 PDT GEOM-REVIEW-7 -> FALLBACK-HEAD/COORD: [FB1-FD300] entries PASS (hd_tile tap in the 36.6-um eA2/eA3 channel, serdes tap in the core-VDD strip 72 um outside VDDPHY; CHECKED); die tree FAIL STRUCTURAL on sites: 1002/1663 tree buffers on hard cores (240/326 leaf bufs), 24 in VDDPHY, 9 outside partitions (CHECKED vs fb1_plan) -> snap bisection to the tile channel grid (same tile-relative crossing per level), leaf buf at the entry channel site, no cells/corners in VDDPHY, add site-legality to the gate; GRT0 does not cover cell legality. Details lanes/GEOM-REVIEW.md.
