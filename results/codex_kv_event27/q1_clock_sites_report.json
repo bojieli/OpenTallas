@@ -1,0 +1,83 @@
+{
+ "plan_sha256": "3b08558c9a0a533ca8714fb2ba4567d099a1bdc4aa6f9127d50b4eca357812b7",
+ "cells": 12563,
+ "in_partitions": {
+  "drv_part": 7168,
+  "drv_pushdown_part": 1024,
+  "node_part": 1727,
+  "node_pushdown_part": 320,
+  "rep_part": 404,
+  "stub_part": 1920
+ },
+ "cell_body_overlaps": 0,
+ "unreserved_body_parts": 0,
+ "boundary_spanning_cells": 0,
+ "types_with_islands": 39,
+ "island_overlaps_hard_core": 0,
+ "max_type_frac": 0.000215,
+ "islands_per_type": {
+  "kv3_hg": 169,
+  "kv3_hg_v1": 135,
+  "kv3_hg_v1p2": 134,
+  "kv3_hg_v1p3": 127,
+  "kv3_hg_v1p4": 142,
+  "kv3_hg_v1p5": 123,
+  "kv3_hg_v1p6": 167,
+  "kv3_hg_v3": 154,
+  "kv3_hgi": 117,
+  "kv3_hgi_v1": 213,
+  "kv3_hgi_v2": 125,
+  "kv3_hgi_v3": 105,
+  "kv3_hgi_v4": 147,
+  "kv3_hgi_v5": 105,
+  "kv3_hgi_v6": 105,
+  "kv3_hgi_v7": 147,
+  "kv3_hgi_v8": 105,
+  "kv3_hub_C": 3,
+  "kv3_pc": 126,
+  "kv3_pc_v1": 151,
+  "kv3_pc_v3": 120,
+  "kv3_phy": 45,
+  "kv3_phy_v1": 55,
+  "kv3_pv": 104,
+  "kv3_pv_v1": 109,
+  "kv3_pv_v12": 114,
+  "kv3_pv_v1n": 109,
+  "kv3_pv_v2": 112,
+  "kv3_pv_v2n": 112,
+  "kv3_pv_v3": 108,
+  "kv3_pv_v3n": 108,
+  "kv3_pv_v4": 111,
+  "kv3_pv_v4n": 111,
+  "kv3_pv_v5": 116,
+  "kv3_pv_v5n": 116,
+  "kv3_pv_v6": 112,
+  "kv3_pv_v6n": 112,
+  "kv3_pv_v7": 114,
+  "kv3_pv_v8": 110
+ },
+ "pushdown_cells": 1344,
+ "core_islands": {
+  "kv3_pv_pair": {
+   "instances": 256,
+   "rects": 3
+  },
+  "qkd_ectlk_q0": {
+   "instances": 32,
+   "rects": 1
+  },
+  "qkd_ectlk_q2": {
+   "instances": 32,
+   "rects": 1
+  },
+  "qkd_kvs_pc": {
+   "instances": 124,
+   "rects": 4
+  },
+  "qkd_kvs_pc_h_head_p": {
+   "instances": 4,
+   "rects": 4
+  }
+ }
+}
+written physical/die_plan/qwen_kvsys/die_plan.json physical/die_plan/qwen_kvsys/clock_mesh_sites_event27.json

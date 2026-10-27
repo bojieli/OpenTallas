@@ -1450359,6 +1450359,20 @@
     "insertion_tol_ps": 40.0,
     "tap_edge_y_um": [
      21.6
+    ],
+    "edge_clocks": [
+     {
+      "port": "clk_clk_phy",
+      "tap_um": [
+       1890.144,
+       354.024
+      ],
+      "layer": "M5",
+      "period_ps": 1043.0,
+      "cdc_contract": "ot_fdi_phy_cdc",
+      "source": "qkd_pll_analog_model.PHY_HALF=0.521500ns -> nativebind clk_clk_phy -> ot_fdi_phy_cdc/rawPHY",
+      "note": "Independent PHY clock. Explicit Gray/data/synchronizer CDC fences, never clock groups. PLL-to-PHY physical clock distribution pending; core mesh unchanged."
+     }
     ]
    },
    "reset": {
@@ -1450436,6 +1450450,20 @@
     "insertion_tol_ps": 40.0,
     "tap_edge_y_um": [
      21.6
+    ],
+    "edge_clocks": [
+     {
+      "port": "clk_clk_phy",
+      "tap_um": [
+       1890.144,
+       354.024
+      ],
+      "layer": "M5",
+      "period_ps": 1043.0,
+      "cdc_contract": "ot_fdi_phy_cdc",
+      "source": "qkd_pll_analog_model.PHY_HALF=0.521500ns -> nativebind clk_clk_phy -> ot_fdi_phy_cdc/rawPHY",
+      "note": "Independent PHY clock. Explicit Gray/data/synchronizer CDC fences, never clock groups. PLL-to-PHY physical clock distribution pending; core mesh unchanged."
+     }
     ]
    },
    "reset": {
@@ -1899382,14 +1899410,14 @@
     346.14,
     380.89014084507045
    ],
-   "delta": "D-KV-CODEX-R27-PV",
+   "delta": "D-KV-CODEX-R27-Q1",
    "layers": {
     "straps_h": "M8",
     "straps_v": "M9"
    },
    "tool": "tools/die_plan/die_clock_mesh.py build",
    "sites_file": "clock_mesh_sites_event27.json",
-   "sites_sha256": "e30c67ec09e5f7f39e1dbf10ba5c51428b2fc313b267b4f1e4cd03f1d8a89aa9",
+   "sites_sha256": "b191fa6c88f17a4768b6c9cfb97cc1c5e2bcd6e3ed2d337ba5e3fae450693148",
    "cells": 12563,
    "core_islands": {
     "kv3_pv_pair": {
