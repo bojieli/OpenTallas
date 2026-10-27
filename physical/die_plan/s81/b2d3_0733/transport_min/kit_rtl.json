@@ -1,0 +1,19 @@
+{
+ "bound_module": "s81_egress_min",
+ "files": [
+  "/home/ubuntu/wt/codex-s81b2-0733/physical/die_plan/s81/b2d3_0733/transport_min/s81_egress_min.sv"
+ ],
+ "kit_istations": [
+  {
+   "conn": "bus:xtier_o0",
+   "planned": 2,
+   "bound_pads": 0,
+   "inserted": 2,
+   "stations": [
+    "u_ist_xtier_o0_0",
+    "u_ist_xtier_o0_1"
+   ],
+   "exact_bank_sites": true
+  }
+ ]
+}
