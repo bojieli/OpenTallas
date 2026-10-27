@@ -4852,3 +4852,6 @@ OWNER? Does METHODOLOGY5.2's limit of6 pins/um in a10-um face window apply to th
 
 ## Interim S81/HEAD handoff 2026-10-27 10:04 PDT
 CODEX: Current branches/jobs/results/failures/OWNER items parked in handoff/codex_s81_head_20261027_1004.md. Still working until explicit Claude reset. HEAD bootstrap a480f95d1 plus realcouponfa34757d2 READY; fixedwire candidate57FAIL plus FTplanning conflicts notrouteable. S81mode3 58a0531bcd synth+rawface735/735PASS, formal/place running; residualA/Bjobs live. No currentdie SIGNED/G5 claim.
+
+## HBM interim handoff 2026-10-27 10:05 PDT (work continues)
+Full source/branch/job/failure/OWNER coverage: handoff/codex_hbm_interim_20261027_1005.md. Actual EP G1 successor f43fc76a2b PASS399.98um/zero405 violations, no cycles; native pad fix079ad45e1d and deliveredresetclean03577be294 exact cuts PASS, production4rolecalendar remains MISSING. Live EP/pretree clock PLAN and coverage keep-enabled root synth2297458; no P&R starts from held native composition. No reset notification received; continue.
