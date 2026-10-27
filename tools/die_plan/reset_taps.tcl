@@ -20,6 +20,15 @@ foreach bt [$rt_blk getBTerms] {
   set bb [$bt getBBox]
   lappend rt_taps [list $i [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]]
 }
+# Opt-in independent local reset consumers generated from the plan. Clock
+# BTerms remain unchanged; reset relay geometry drives final-hop assignment.
+if {[info exists rt_consumer_taps_um]} {
+  set rt_taps {}
+  foreach tp $rt_consumer_taps_um {
+    lassign $tp i x y
+    lappend rt_taps [list $i [expr {round($x * $rt_dbu)}] [expr {round($y * $rt_dbu)}]]
+  }
+}
 proc rt_is_inv {inst} { return [string match "INV*" [[$inst getMaster] getName]] }
 proc rt_is_buf {inst} {
   set m [[$inst getMaster] getName]
