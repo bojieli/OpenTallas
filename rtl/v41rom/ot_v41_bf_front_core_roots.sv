@@ -1147,11 +1147,11 @@ module ot_v41_bf_front_core_roots #(
     reg [6:0] ntot_r, ltot_r;
     reg [6:0] gtot_f;
     reg [8:0] ce_, hq_, hb_;
-    integer bf;
+    // S81-CORE-LAT-R20: loop variable bf is process-local (for (int bf ...)); the shared module-scope integer was elaborated as multi-driven DFFs (rtl_lint check -assert 32-36 problems)
     reg [8:0] cend_r [0:NSEG-1];
-    always @(posedge fclk) for (bf = 0; bf < NSEG; bf = bf + 1) cend_r[bf] <= {1'b0, c_u0[bf]} + {2'd0, c_nu[bf]};
+    always @(posedge fclk) for (int bf = 0; bf < NSEG; bf = bf + 1) cend_r[bf] <= {1'b0, c_u0[bf]} + {2'd0, c_nu[bf]};
     always @(posedge fclk) begin
-        for (bf = 0; bf < NSEG; bf = bf + 1) begin
+        for (int bf = 0; bf < NSEG; bf = bf + 1) begin
             ce_ = cend_r[bf];
             hq_ = (ce_ < {1'b0, c_u0[bf]} + 9'd8) ? ce_ : {1'b0, c_u0[bf]} + 9'd8;
             hb_ = (ce_ < {1'b0, c_u0[bf]} + ((BP == 2) ? 9'd1 : (BP != 0) ? 9'd2 : 9'd8)) ? ce_
@@ -1165,7 +1165,7 @@ module ot_v41_bf_front_core_roots #(
     reg [4:0] tq_r [0:3];
     reg [4:0] tb_r [0:3];
     always @(posedge fclk) begin
-        for (bf = 0; bf < 4; bf = bf + 1) begin
+        for (int bf = 0; bf < 4; bf = bf + 1) begin
             tq_r[bf] <= ((c_v[2*bf] && !c_bf[2*bf]) ? {1'b0, glq_r[2*bf]} : 5'd0)
                       + ((c_v[2*bf+1] && !c_bf[2*bf+1]) ? {1'b0, glq_r[2*bf+1]} : 5'd0);
             tb_r[bf] <= ((c_v[2*bf] && c_bf[2*bf]) ? {1'b0, glb_r[2*bf]} : 5'd0)
@@ -1180,11 +1180,11 @@ module ot_v41_bf_front_core_roots #(
     reg [5:0] ps_r [0:3];
     if (N32 == 0) begin : g_e8
     always @(posedge gclk) if (cen[8]) begin
-        for (bf = 0; bf < NSEG; bf = bf + 1) begin
+        for (int bf = 0; bf < NSEG; bf = bf + 1) begin
             nlo_r[bf] <= nlo[bf]; nhi_r[bf] <= nhi[bf];
             dk_r[bf] <= (base_live[bf] && nhi_r[bf] > nlo_r[bf]) ? nhi_r[bf][3:0] - nlo_r[bf][3:0] : 4'd0;
         end
-        for (bf = 0; bf < 4; bf = bf + 1) ps_r[bf] <= {2'd0, dk_r[2*bf]} + {2'd0, dk_r[2*bf+1]};
+        for (int bf = 0; bf < 4; bf = bf + 1) ps_r[bf] <= {2'd0, dk_r[2*bf]} + {2'd0, dk_r[2*bf+1]};
         ntot_r <= {1'b0, ps_r[0]} + {1'b0, ps_r[1]} + {1'b0, ps_r[2]} + {1'b0, ps_r[3]};
         ltot_r <= fam ? tot1_r : tot0_r;
     end

@@ -32,15 +32,22 @@ module ot_s81sl_cap_tr #(
     output wire          o_e,
     output reg           fault
 );
-    integer i;
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
 
     // lane pin flops: only the valid bits are reset flops
-    reg [279:0] rt_q; reg [3:0] rv_q;
-    always @(posedge clk or negedge rsv[0]) if (!rsv[0]) rv_q <= 4'd0;
-        else for (i = 0; i < 4; i = i + 1) rv_q[i] <= rt[70 * i + 1] && rt[70 * i];
+    // S81-CORE-LAT-R20 10-27 (RAW face_guard: rt[70 i +: 2] loaded an AND before the valid flop, the 8 lane bits the tree
+    // never reads lost their flops): every rt bit lands in its own pin flop (rt_q, kept: the plan's face registers), the
+    // valid AND follows the flops, gated by a reset-armed flag -> rv_q(t) = arm(t) & rt_q[70 i + 1](t) & rt_q[70 i](t),
+    // edge for edge the old reset flop rv_q (0 cycles).
+    (* keep = "true" *) reg [279:0] rt_q;
+    reg rv_arm; wire [3:0] rv_q;
+    always @(posedge clk or negedge rsv[0]) if (!rsv[0]) rv_arm <= 1'b0; else rv_arm <= 1'b1;
     always @(posedge clk) rt_q <= rt;
+    genvar gv;
+    generate for (gv = 0; gv < 4; gv = gv + 1) begin : g_rv
+        assign rv_q[gv] = rv_arm && rt_q[70 * gv + 1] && rt_q[70 * gv];
+    end endgenerate
     wire [3:0] l_v, l_e, l_f; wire [31:0] l_t [0:3], l_d [0:3];
     wire [3:0] drop;
     genvar gl;
@@ -78,8 +85,13 @@ module ot_s81sl_cap_tr #(
         .b_v(n_v[1]), .b_t(n_t[1]), .b_d(n_d[1]), .b_e(n_e[1]),
         .o_v(o_v), .o_t(o_t), .o_d(o_d), .o_e(o_e), .fault(n_f[2]));
 
+    // S81-CORE-LAT-R20 10-27 (RAW face_guard: the sticky fault flop fed its own D and the port): the sticky lives in f_s
+    (* keep = "true" *) reg f_s;
+    wire f_set = (|n_f) || (|(l_v & l_e)) || (|l_f);
     always @(posedge clk or negedge rsv[0])
-        if (!rsv[0]) fault <= 1'b0;
-        else if ((|n_f) || (|(l_v & l_e)) || (|l_f)) fault <= 1'b1;
+        if (!rsv[0]) f_s <= 1'b0;
+        else if (f_set) f_s <= 1'b1;
+    // the pin: a copy flop (f_s kept: no merge) with the SAME next state as the sticky (0 extra edges), its only load the port
+    always @(posedge clk or negedge rsv[0]) if (!rsv[0]) fault <= 1'b0; else fault <= f_s || f_set;
 endmodule
 `default_nettype wire
