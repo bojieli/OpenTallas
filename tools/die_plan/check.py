@@ -1590,6 +1590,9 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     li_errs = LI.check(raw)
     for e in li_errs:
         R.err("landing_islands", e)
+    for e in LI.check_die_islands(raw):
+        R.err("die_islands", e)
+        li_errs.append(e)
     summ["landing_islands"] = dict(islands=sum(len(t.get("landing_islands") or []) for t in raw["partition_types"].values()),
                                    errors=len(li_errs))
     fp = check_abutment(P, R)

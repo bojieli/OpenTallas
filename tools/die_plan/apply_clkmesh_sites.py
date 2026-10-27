@@ -115,6 +115,10 @@ def main():
                 if r[0] < k[2] and k[0] < r[2] and r[1] < k[3] and k[1] < r[3]:
                     bad.append((tn, r, k))
         w, h = t["outline_um"]
+        # CLOCK-KV-R22: clip to the type outline on the site/row lattice (a halo outside the outline belongs to the
+        # abutted neighbour, reserved there); KV pc-family rects at x = -0.54 blocked gen_phys
+        merged = [(max(r[0], 0.0), max(r[1], 0.0), min(r[2], w), min(r[3], h)) for r in merged]
+        merged = [r for r in merged if r[0] < r[2] and r[1] < r[3]]
         area = sum((r[2] - r[0]) * (r[3] - r[1]) for r in merged)
         out_types[tn] = dict(islands=len(merged), area_um2=round(area, 1), frac=round(area / (w * h), 6),
                              rects=[list(r) for r in merged])

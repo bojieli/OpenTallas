@@ -133,3 +133,16 @@ def propose(t, port, window_um, bits, k, demand, cell="HB4xp67_ASAP7_75t_R", nam
                 demand=dict(demand, bits=bits, k=k),
                 note=("CLOCK-KV-R22 declared landing island (COORD RULING CLOCK-KV-R21 ASK1): die-top HB4 data hold "
                       "cells for the hard->hard seam into this input (no P&R kit on either side); type-hardened"))
+
+
+def check_die_islands(raw):
+    """CLOCK-KV-R22 (KV-KITS-2): every partition_types[*].clock.die_islands_um rect lies inside the type outline
+    (a reservation outside the outline is the abutted neighbour's area; gen_phys rejects it at kit time)."""
+    errs = []
+    for tn, t in raw["partition_types"].items():
+        W, H = t["outline_um"]
+        bad = [r for r in (t.get("clock") or {}).get("die_islands_um", []) or []
+               if r[0] < -1e-9 or r[1] < -1e-9 or r[2] > W + 1e-9 or r[3] > H + 1e-9]
+        if bad:
+            errs.append(f"type {tn}: {len(bad)} clock.die_islands_um rects outside the outline {[W, H]}, e.g. {bad[0]}")
+    return errs
