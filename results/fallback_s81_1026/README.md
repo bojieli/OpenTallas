@@ -60,8 +60,17 @@ would cost -1.4 / -1.3 % but needs new tooling. G=4 saves only another ~0.5 % an
     (125 MB, not committed), with matching side_*.json.
   - The FAILs are all "no macro-free clock landing storage band" on wide svc/slice inputs (svc_hi/lo_rs, slice_c1x,
     pvso_entry, lep*, bk_sel). Those types need band reservations or outline growth in the plan before any kit.
-- G0 (check.py, with the S81 explicit-tap schema support cherry-picked from codex/s81b2-0733 9917e9a37e): see G0
-  section below.
+- G0 (main check.py, plus the S81 explicit-tap schema support cherry-picked from codex/s81b2-0733 9917e9a37e). The
+  plan-dir inputs were copied from the PATH-S81 src tree and are untracked. Results are in g0/*.summary.txt and the gz
+  reports:
+  - base g0fix: G0 FAIL, 24 errors. These already exist on the main tools (8 cut-capacity errors and others); the
+    PATH-S81 src tree reported 0.
+  - G=2 fallback: 611 errors = the same 24 + **587 latency-table errors, exactly the 587 landed lanes**. Each reads
+    "table says N, plan gives N+3k": the composed plan's latency.lanes is not regenerated yet, and that table is
+    lat_face.json. 244/244 types are G0C clean, with no landing-contract, pin or schema error.
+  - partition fallback: 858 = 24 + 834 (its 834 landed lanes). 222/222 types are G0C clean.
+  So the die GEN is consistent. The remaining G0 work is mechanical (write the lat_face lanes into latency.lanes), plus
+  the 126/186 ring storage-band placement FAILs (plan outline / band reservation).
 
 ## 3. Die GRT / die STA: NOT RUN (stated, not hidden)
 
