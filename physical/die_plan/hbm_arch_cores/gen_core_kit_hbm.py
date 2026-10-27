@@ -789,6 +789,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # out (freeze.json flow.f1).  sdc_lint.lint_kit_files fails closed if it disagrees with config.mk OT_VCLK_FF.
     lint_ctx = {k: v for k, v in lctx.items() if k != "insertion_basis"}
     (kd / "sdc_lint.json").write_text(json.dumps(lint_ctx, indent=1) + "\n")
+    # Hints are untrusted correspondences: lec.py proves every relation by induction.
+    if rec.get("lec_hints"):
+        (kd / "lec_hints.json").write_text(json.dumps(rec["lec_hints"], indent=1) + "\n")
     rst_in = [r for r in rsts if dirs.get(base(r)) != "output"]   # RECIPES2: a reset-named OUTPUT (remainder relay
     if rst_in != rsts:                                               # output) is a data output, never an input delay
         rsts = rst_in
