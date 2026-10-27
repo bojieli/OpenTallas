@@ -1,0 +1,25 @@
+{
+ "source_cut": "R9 kit febf45556cc31b04; exact functional staged RTL in thiscapsule",
+ "odb": "intel2:/srv/opentallas-scratch2/claude/kv-cores-r8/r9/kits_pv/kv3_pv_pair__380.16x190.08/run/results/asap7/hc_kv3_pv_pair__380_16x190_08/base/3_place.odb",
+ "total_clock_mterm_sinks": 29724,
+ "covered": 29724,
+ "missing": [],
+ "overlap": 0,
+ "roots": {
+  "s0__clk[0]": {
+   "sinks": 0,
+   "nets": 1
+  },
+  "s1__clk[0]": {
+   "sinks": 29724,
+   "nets": 824
+  }
+ },
+ "primary": "s1__clk[0]",
+ "unused": "s0__clk[0]",
+ "period_ps": 833,
+ "added_data_cycles": 0,
+ "added_taps": 0,
+ "plan_action": "Q6renameS0deliveredtap to existingS1pin, sameisland/clockdomain",
+ "STA": "NOTRUN with corrected primary; old S0-onlySTA invalid"
+}
