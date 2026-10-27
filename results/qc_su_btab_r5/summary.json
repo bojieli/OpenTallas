@@ -1,0 +1,21 @@
+{
+ "lane": "QC-SU-BTAB-R5 (Claude) 2026-10-26",
+ "base": "claude/qc-su-kits3-1026@3585b6bf25 (btab_m0_r4 kit, same synth + floorplan + SRAM sites + clock planner/params)",
+ "numbers": "UNCHECKED (lane STA meas_ck.tcl + resid.py on GRT parasitics rc_cal 0.8/0.9; plan model as-built predictor)",
+ "kit": "intel1:/srv/opentallas-scratch2/claude/qc-su-btab-r5-1026/btab_m0_r5 (nickname kq_qfd_dv_s8x_btab_mif0r5)",
+ "structural_fix": {
+  "1_corner_keepoff": "pre_grt_r5.tcl: 80 M2-M5 routing obstructions at all 16 SRAM pin-face corners (W+E, N+S): 1.08 um outside the pin face, from 0.30 inside the top/bottom edge to 2.16 into the gap (+ M5 over the macro corner); 0 overlapped PDN (kit/r5_corner_keepoff.txt)",
+  "2_gap_centre": "gap-crossing nets cannot enter a gap within 2.16 um of the macro edge; clock legs (planner) may cross a pin column only through the 6.5-um gap centre",
+  "3_Q0_L1": "su_tree_uf_ls_r5.py LEG keep-off = SRAM clock-pin column + 4.32 (x 224.42-243.86, SRAM rows +-4.32) for every maze leg: Q0 L1 now runs at x~244 (r4: x 233 on the pin-flop column)",
+  "4_E_logic": "pre_gpl_r5.tcl: INCLUSIVE GPL region x 255.04-339.98 for the 512 E read-mux cells (AO22/AO221 fed only by E-face macro-pin capture flops), released before DPL; E pin-column bin x 230-240 'other' cells 2388 -> 1332. CAVEAT: GPL packed the mux into a ~6-um band at x 252-258 y 85-155 (not spread over 255-340); GRT shows a new M2/M3/M5 hot band there",
+  "tries": "try1 partial density blockage x 237.6-254.9 had no effect (logic sits at x 229-237); try2 region off-grid -> DPL region check fail; try3 region kept in DPL -> 9 tap overlaps; try4 = final (region at GPL only)"
+ },
+ "plan": {"cmd": "su_kit_gate.py btab_r5_k6_L3 btab_m0_r5.geo 6 <invbuf libs> su_tree_uf_ls_r5.py <lef> --trunk 250 --chain --straight L3 (= r4 args)", "gates": "G1-G5 + P_asbuilt PASS (48 repeaters, 0 nodes in pin columns, 0 legs across SRAM)",
+          "pred_asbuilt": {"TT_avg": [258.35, 12.26], "FF_early": [191.98, 12.48]}, "spec_sha256": "5bbd752b37510ef66a703ed8032ea39a876b8cab17a3d8d7bf5bb009d93e1ab9"},
+ "meas_grt": {"grt_overflow": 0, "usage_pct": {"M2": 6.86, "M3": 7.86, "M4": 2.58, "M5": 2.79},
+   "TT_rise_max": {"mean": 242.63, "range": [231.4, 254.72], "tap_window": 19.54}, "TT_late": {"mean": 256.53, "tap_window": 19.71},
+   "FF_early": {"mean": 184.96, "range": [175.07, 194.68], "tap_window": 16.52},
+   "macro_ck_TT": [234.35, 238.47], "resid_TT_rise_vs_avg_model": {"mean": -15.79, "sd": 3.8}, "resid_FF_early": -10.65,
+   "verdict": "12.3 in band at GRT (TT mean 242.6 in 230-270, TT window 19.54 <= 20 with 0.46 margin, FF early 185.0 in 182.5-222.5 with 2.5 margin, window 16.5)"},
+ "route": "DRT+fill+finish (RCX 6_final.spef) running on intel1 via ot-run (route_r5.sh, log btab_m0_r5/route_r5.log); not signed off"
+}
