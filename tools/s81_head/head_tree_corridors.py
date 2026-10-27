@@ -315,6 +315,9 @@ def route(spec, corridors, plan, exact_jogs=False, mesh_straps=None, ndr="16w"):
     original = D.C128.TrackRouter
     class CorridorRouter(original):
         def __init__(self, *a, **kw):
+            # Ground shields reach the nearest actual VSS stripe; clock track
+            # displacement remains the shared 8.64um limit.
+            kw['tie_reach_um']=max(row['pitch_um'] for row in plan.die['pg']['grid'])/2+D.C128.VIA_HALF
             super().__init__(*a, **kw)
             self.preloaded, self.fixed, self.used = False, {}, set()
             self.pending_drops = {}
