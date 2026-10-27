@@ -209,7 +209,7 @@ def _stack_pad():
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import die_clock_128 as C128
-    return C128.STACK_PAD
+    return {**C128.STACK_PAD, **C128.SHORT_STACK_PAD}
 
 
 def stack_down(s):
@@ -225,7 +225,12 @@ def stack_down(s):
 
 def stack_pad_layers(s):
     """{(x, y): set(layers)} of the min-area pads of one stack (M2..M6 at the pin row)"""
-    return {(round(s["xy"][0], 4), round(s["xy"][1], 4)): {"M2", "M3", "M4", "M5", "M6"}}
+    xy = (round(s["xy"][0], 4), round(s["xy"][1], 4))
+    pads = {xy: {"M2", "M3", "M4", "M5", "M6"}}
+    if s.get("short_stack"):
+        pads[xy].add("M7")
+        pads.setdefault((xy[0], round(s["riser_from"][1], 4)), set()).add("M8")
+    return pads
 
 
 def _emit_stack(L, pts, pads, final_junction=False, split_down=False):
@@ -236,14 +241,20 @@ def _emit_stack(L, pts, pads, final_junction=False, split_down=False):
     _emit_steps(tmp, pts, final_junction=final_junction, split_down=split_down)
     # re-walk the vertices to know where each via op lands
     vs = [(l_, round(a, 4), round(b, 4)) for l_, a, b in pts]
-    lands = [(l1, (x1, y1)) for (l0, x0, y0), (l1, x1, y1) in zip(vs, vs[1:]) if l0 != l1]
+    lands = [(l0, l1, (x1, y1)) for (l0, x0, y0), (l1, x1, y1) in zip(vs, vs[1:]) if l0 != l1]
     k = 0
     for s in tmp:
         L.append(s)
         if "addTechVia" in s:
-            l1, xy = lands[k]
+            l0, l1, xy = lands[k]
             k += 1
-            if l1 in pads.get(xy, ()) and not s.startswith("set jt"):
+            # Short-stack junction pads belong on the existing M8 path BEFORE its downward VIA78.
+            if l0 in ("M7", "M8") and l0 in pads.get(xy, ()) and LAYER_ORDER.index(l1) < LAYER_ORDER.index(l0):
+                hx, hy = P[l0]
+                L.insert(len(L) - 1, f"$e addRect {-q(hx)} {-q(hy)} {q(hx)} {q(hy)}")
+            if l1 in pads.get(xy, ()) and (not s.startswith("set jt") or l1 == "M8"):
+                if s.startswith("set jt"):
+                    L.append("$e newPath $jt FIXED [RL M8]")
                 hx, hy = P[l1]
                 L.append(f"$e addRect {-q(hx)} {-q(hy)} {q(hx)} {q(hy)}")
     # a pad emitted between 'set jv [VIA78]' and its 'newPath $jv' belongs after the new path is opened
