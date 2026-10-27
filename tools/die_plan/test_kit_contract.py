@@ -48,6 +48,8 @@ def write_kit(kd):
     (kd / "macro_place.tcl").write_text("foreach {master sites} {m {{40 10 R0}}} {\n  puts $master\n}\n")
     (kd / "mesh.json").write_text(json.dumps(dict(xs=[0.0, 100.0, 200.0], ys=[0.0, 50.0], taps=[], drivers={},
                                                   meta=dict(ndr="4w", mesh_vias={"None": 6}))))
+    # a plan clock island clear of the static macro m (40..60 x 10..30): island_macro_clear applies and PASSes
+    (kd / "island_ft.json").write_text(json.dumps(dict(arcs=[dict(rect_um=[5.0, 60.0, 25.0, 80.0])])))
     canon = KC._canon(KC.placed_pins(kd), [100.0, 100.0])
     (kd / "freeze.json").write_text(json.dumps(dict(schema="opentallas.test.core_freeze.v1", outline_um=[100.0, 100.0],
                                                     pins_canon_sha256=canon,
@@ -247,3 +249,15 @@ def test_gen_phys_partition_freeze_from_plan_pins(tmp_path, monkeypatch):
     (kd / "io.tcl").write_text((kd / "io.tcl").read_text().replace("{99.9040 20.0160}", "{99.9040 20.2560}"))
     with pytest.raises(ValueError):
         G.write_partition_freeze(P, "tp", kd, recs)
+
+
+def test_island_macro_clear_mutants(kit):
+    assert verdicts(kit)["island_macro_clear"] == "PASS"
+    (kit / "island_ft.json").write_text(json.dumps(dict(arcs=[dict(rect_um=[55.0, 25.0, 70.0, 40.0])])))
+    assert verdicts(kit)["island_macro_clear"] == "FAIL"           # island under the static macro
+    (kit / "island_ft.json").write_text(json.dumps(dict(arcs=[dict(rect_um=[61.0, 10.0, 70.0, 30.0])])))
+    assert verdicts(kit)["island_macro_clear"] == "PASS"
+    _sub(kit / "config.mk", "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl\n", "export MACRO_PLACE_HALO = 2 2\n")
+    assert verdicts(kit)["island_macro_clear"] == "FAIL"           # rtl_macro_placer without the island guard
+    (kit / "island_ft.json").unlink()
+    assert verdicts(kit)["island_macro_clear"] == "NA"
