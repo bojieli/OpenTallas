@@ -1,0 +1,27 @@
+{
+ "mesh_unc": {
+  "TT": 203.83,
+  "FF": 183.23
+ },
+ "mesh_unc_pairs": "TT=lin_rcx/die_TT.json,FF=lin_rcx/die_FF.json",
+ "endpoints_bits": 603026,
+ "hb4_cells": 873222,
+ "hb4_area_um2": 89156.0,
+ "by_class": {
+  "array_bits": 603026,
+  "array_bits_fail": 603026,
+  "array_cells": 873222
+ },
+ "cells_per_bit_hist": {
+  "1": 366061,
+  "2": 219663,
+  "3": 2104,
+  "4": 14467,
+  "5": 731
+ },
+ "tt_setup_worst_after_insertion_ps": 68.92,
+ "tt_setup_fail_bits_after": 0,
+ "basis": "CLOCK-KV-R6 data hold-buffer count from the REAL endpoint list (12.4a a1): every abutted plan port bit",
+ "status": "UNCHECKED",
+ "clock_ocv": "table /srv/opentallas-scratch2/claude/codex-kv-clock-2001/clk_aocv_table_g021.json"
+}

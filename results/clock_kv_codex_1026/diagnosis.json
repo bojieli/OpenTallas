@@ -1,0 +1,27 @@
+{
+ "status": "WORK_IN_PROGRESS",
+ "approved_tool_branches": [
+  "codex/clock-rcx-drop-1026@a4f4fa011",
+  "codex/kv-edge-schema-1026@fca1d5945",
+  "codex/kv-pg-axis-1026@84d8a185b"
+ ],
+ "rcx": "All4406 fixed-wire nets connected after sharedVIA89 repair; original768nets/3036unreachablepins retained on a4f4fa011.",
+ "clock": "ConnectedndR016 tree174.36/152.63ps driverinputspread. DominantL2h01 oddthreelegs128fFgroundC vs86fF peers; causeofgroundCenvironment notfullyresolved. No selfcoupling. Do not trim.",
+ "diagnostic_related_pair_sta_ps": {
+  "TT_setup_intra": 450.44,
+  "TT_setup_seam": 400.98,
+  "FF_hold_kit_contract_intra": 49.74,
+  "FF_hold_kit_contract_seam": 35.47,
+  "FF_hold_zero_logic_intra": -188.6,
+  "FF_hold_zero_logic_seam": -226.53
+ },
+ "hb4_cells": 873222,
+ "TT_setup_after_HB4": 68.92,
+ "mesh": "12sampleTT/FF onconnectedRCXarrivals done; certificate remainsdiagnostic until allinput-slew/sourcevariation/realviewconditions close.",
+ "spice": "140/140windowdecks complete onR8b5native-source vehicle; allwindowsnonempty; maxlinear-SPICEgap1.79TT/.75FF. This does not certify changedRCXtreearrivals.",
+ "island": "JointCSP fixes coordinate-search false negatives. Fractionalorigincandidate full2D0overlap/0nonuniform, but NOTG0legal. Commensurate345.6grid plus.192subgrid givesPV/PCxSAT,HGxUNSAT; dominanthead319.68grid successor running. All y axes8.64gridSAT.",
+ "band": "R9 inheritededge_tree model remainsFAIL hubC488/hubWi413um longlegs andunequalstage/window; no physicalbuild.",
+ "jobs": "/srv/opentallas-scratch2/claude/codex-kv-clock-2001 onhub; no new P&R submitted.",
+ "checked": "UNCHECKED; noSIGNED/FROZENclaim",
+ "added_data_cycles": 0
+}
