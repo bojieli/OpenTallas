@@ -944,15 +944,6 @@
         "type": "number",
         "exclusiveMinimum": 0
        },
-       "tap_edge_y_um": {
-        "type": "array",
-        "minItems": 1,
-        "uniqueItems": true,
-        "items": {
-         "type": "number",
-         "minimum": 0
-        }
-       },
        "tap_mode": {
         "enum": [
          "grid",
@@ -2126,6 +2117,39 @@
          "enum": [
           "per_bit"
          ]
+        },
+        "bit_sites_um": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          }
+         }
+        },
+        "bit_site_cell_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "face_bit_sites_um": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+         }
         }
        }
       }
