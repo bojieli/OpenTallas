@@ -2763,10 +2763,13 @@ def cmd_combo(a):
               "$tn setSpecial", "$tn setSigType GROUND", "set tsw [odb::dbSWire_create $tn ROUTED]"]
         L += C128.grid_tcl(pgr, "$tsw", shield_net, used=ties["used_grid"])
         L += C128.tie_tcl(ties, "$tsw")
-        if getattr(a, "merge_shields", False):
-            # CLOCK-KV-R10: one shape per overlapping same-track shield run (RCX double-counts coincident shields)
+        merge_sh = bool(getattr(a, "merge_shields", True))
+        if merge_sh:
+            # CLOCK-KV-R10 (COORD 10-26 21:28: DEFAULT for every new die clock build): one shape per overlapping
+            # same-track shield run -- the same metal; RCX double-counted coincident shield shapes
             L += C128.shield_merge_tcl(shield_net, nd)
         cs = M["meta"].get("clock_shield") or {}
+        cs["shield_merge"] = merge_sh
         cs.update(C128.tie_record(ties))
         cs.update(metal_shorts=census["shorts"], metal_spacing=census["spacing"],
                   pg_flanked_segments=census["flank_mode_segments"], unflanked_segments=len(census["unflanked"]),
@@ -3606,8 +3609,9 @@ def main(argv=None):
     c.add_argument("--mesh-vias", action="store_true",
                    help="emit an M8-M9 VIA89 at every mesh strap crossing (mesh = one connected net in the DB); "
                         "mesh-node CPPR stays INFO only (METHODOLOGY v4 12.4b)")
-    c.add_argument("--merge-shields", action="store_true",
-                   help="CLOCK-KV-R10: union overlapping same-track shield boxes after the ties (default off)")
+    c.add_argument("--merge-shields", action=argparse.BooleanOptionalAction, default=True,
+                   help="CLOCK-KV-R10 (default ON, COORD 10-26 21:28): union overlapping/abutting same-track shield "
+                        "boxes after the ties (same metal, fewer shapes); --no-merge-shields = the pre-R10 shapes")
     c.add_argument("--routed-clock", action="store_true",
                    help="CLOCK-128-R5: 12.8 fixed tree as regular nets with FIXED dbWire (RCX-extractable), see clock_routed.py")
     m = sub.add_parser("mesh")
