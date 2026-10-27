@@ -64,20 +64,26 @@ module dsdv_gunit_l0r #(
         // Direct input -> FF captures preserve native pin registration. Each
         // group has a local six-bit constant decode, with no address arithmetic
         // or global write-enable tree. Group zero uses the original named FFs.
-        for (genvar wg = 0; wg < 64; wg = wg + 1) begin : g_group
-            wire [5:0] a_key, b_key;
-            if (wg == 0) begin : g_original
-                assign a_key = {wb, agh};
-                assign b_key = {wb, bgh};
+        wire [5:0] raw_a [0:15], raw_b [0:15];
+        for (genvar wc = 0; wc < 16; wc = wc + 1) begin : g_cluster
+            if (wc == 0) begin : g_original
+                assign raw_a[wc] = {wb, agh};
+                assign raw_b[wc] = {wb, bgh};
             end else begin : g_copy
                 (* keep = "true" *) reg [5:0] a_capture, b_capture;
                 always @(posedge clk) begin
                     a_capture <= {wr_b, wr_agh};
                     b_capture <= {wr_b, wr_bgh};
                 end
-                assign a_key = a_capture;
-                assign b_key = b_capture;
+                assign raw_a[wc] = a_capture;
+                assign raw_b[wc] = b_capture;
             end
+        end
+        // Sixteen raw capture clusters: address pin fanout16, bank fanout31
+        // before any synthesis merging, below32. One cluster serves4groups.
+        for (genvar wg = 0; wg < 64; wg = wg + 1) begin : g_group
+            wire [5:0] a_key = raw_a[wg/4];
+            wire [5:0] b_key = raw_b[wg/4];
             for (genvar wj = 0; wj < 6; wj = wj + 1) begin : g_word
                 always @(posedge clk) begin
                     if (av && a_key == 6'(wg)) rs[6*wg+wj] <= ad[32*wj +: 32];

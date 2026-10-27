@@ -9,3 +9,7 @@ Old/new actual-module miter compares all384 store words every edge and all valid
 ## Preferred native-boundary variant WRITE_DECODE=2
 
 Mode1's input predecode may remove the original planned raw face registers; it is not adopted. Mode2 captures raw six-bit bank/group separately per group (kept), then uses local constant6bit comparisons. Group0 uses the original named agh/bgh/wb captures, so they remain meaningful. Every new pin path lands directly in an FF at the original edge. No dynamic address arithmetic or global decoded-enable tree remains. The price is~756extra raw address FFs, requiring a fresh clock-sink census and face placement. Same full-store/output miter PASS368beats/246collisions/1050writes, priority mutant caught. Candidate recipe selects mode2; defaultsource remains0. Synthesis/formal/face_guard/slice gates remain before adoption.
+
+## Final candidate refinement:16 raw capture clusters
+
+Four adjacent groups share each raw capture pair. Cluster0 still owns original agh/bgh/wb captures,15additional kept A/B pairs add180FFs. Input address pin fanout16 and bank pin fanout31 before merging stay below32. Actual local decode fanout and face placement require synthesis qualification. Golden full-store/output miter again PASS368beats/246collisions/1050writes; priority mutant caught. Same mode2 opt-in and default0; prior mode2 receipts remain historical evidence.
