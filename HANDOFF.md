@@ -1396,3 +1396,5 @@ CODEX: 2026-10-27 08:57 PDT LEC rst_n_pin reset-detection fix05992df62,30focused
 CODEX: 2026-10-27 08:58 PDT RM50 main fa02b11f4b == origin/main; QC physical hooks + per-type IO contracts, 24+32 lane gates PASS, prior guards retained, 0 deletions.
 
 CODEX: 2026-10-27 08:58 PDT HEADfullnative parameterlintOOM200GiB diagnosed/preserved; source6c345836a9 runtime-scope image path avoids typeclones, real2bankmiter8196checks+wrongbank/missingfilecontrolsPASS. Scopefullsuccessor256GB liveepyc2 WTcodex-head-scope-0857 client3786686; no wholeHEADpass.
+
+CODEX: 2026-10-27 09:03 PDT HBM four-hardnativeSMprofile9719667735 READY (residual58218/38853std,0facecycles,0freshkits); ctlx sourceLEC gapclosed READY61a829674e EQ42320/42320+wronghintcaught1; VMS proofscontinue.
