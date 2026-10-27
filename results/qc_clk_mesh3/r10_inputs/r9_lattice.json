@@ -1,0 +1,379 @@
+{
+ "source": "codex/qc-r9-2000@c540e671da results/geom_review/codex_qc_r9_1026/die_tree_plan_shortstack.json lattice.nodes (+ leg_repeater_sites count per leg)",
+ "plan_sha256": "e4829ce26d222eac5fb51ab34454e28d0174585995bc0e837fc7e29d660f48d2",
+ "nodes": [
+  {
+   "tag": "t",
+   "parent": null,
+   "depth": 0,
+   "xy_um": [
+    17016.48,
+    13132.8
+   ],
+   "host": "sl_E0_ctl",
+   "leg_route": null
+  },
+  {
+   "tag": "t0",
+   "parent": "t",
+   "depth": 1,
+   "xy_um": [
+    9603.36,
+    13132.8
+   ],
+   "host": "sl_W2_ctl",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t00",
+   "parent": "t0",
+   "depth": 2,
+   "xy_um": [
+    9603.36,
+    6531.84
+   ],
+   "host": "c_W2_bn_01",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t000",
+   "parent": "t00",
+   "depth": 3,
+   "xy_um": [
+    5896.8,
+    6531.84
+   ],
+   "host": "c_W4_bn_11",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t0000",
+   "parent": "t000",
+   "depth": 4,
+   "xy_um": [
+    5896.8,
+    3918.24
+   ],
+   "host": "c_W4_bf_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t0001",
+   "parent": "t000",
+   "depth": 4,
+   "xy_um": [
+    5896.8,
+    9145.44
+   ],
+   "host": "c_W4_bn_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t001",
+   "parent": "t00",
+   "depth": 3,
+   "xy_um": [
+    13309.92,
+    6531.84
+   ],
+   "host": "c_W1_bn_11",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t0010",
+   "parent": "t001",
+   "depth": 4,
+   "xy_um": [
+    13309.92,
+    3918.24
+   ],
+   "host": "c_W1_bf_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t0011",
+   "parent": "t001",
+   "depth": 4,
+   "xy_um": [
+    13309.92,
+    9145.44
+   ],
+   "host": "c_W1_bn_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t01",
+   "parent": "t0",
+   "depth": 2,
+   "xy_um": [
+    9603.36,
+    19733.76
+   ],
+   "host": "c_W2_tn_01",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t010",
+   "parent": "t01",
+   "depth": 3,
+   "xy_um": [
+    5896.8,
+    19733.76
+   ],
+   "host": "c_W4_tn_11",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t0100",
+   "parent": "t010",
+   "depth": 4,
+   "xy_um": [
+    5896.8,
+    17120.16
+   ],
+   "host": "c_W4_tn_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t0101",
+   "parent": "t010",
+   "depth": 4,
+   "xy_um": [
+    5896.8,
+    22347.36
+   ],
+   "host": "c_W4_tf_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t011",
+   "parent": "t01",
+   "depth": 3,
+   "xy_um": [
+    13309.92,
+    19733.76
+   ],
+   "host": "c_W1_tn_11",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t0110",
+   "parent": "t011",
+   "depth": 4,
+   "xy_um": [
+    13309.92,
+    17120.16
+   ],
+   "host": "c_W1_tn_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t0111",
+   "parent": "t011",
+   "depth": 4,
+   "xy_um": [
+    13309.92,
+    22347.36
+   ],
+   "host": "c_W1_tf_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t1",
+   "parent": "t",
+   "depth": 1,
+   "xy_um": [
+    24429.6,
+    13132.8
+   ],
+   "host": "sl_E3_ctl",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t10",
+   "parent": "t1",
+   "depth": 2,
+   "xy_um": [
+    24429.6,
+    6531.84
+   ],
+   "host": "c_E3_bn_01",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t100",
+   "parent": "t10",
+   "depth": 3,
+   "xy_um": [
+    20723.04,
+    6531.84
+   ],
+   "host": "c_E1_bn_11",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t1000",
+   "parent": "t100",
+   "depth": 4,
+   "xy_um": [
+    20723.04,
+    3918.24
+   ],
+   "host": "c_E1_bf_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t1001",
+   "parent": "t100",
+   "depth": 4,
+   "xy_um": [
+    20723.04,
+    9145.44
+   ],
+   "host": "c_E1_bn_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t101",
+   "parent": "t10",
+   "depth": 3,
+   "xy_um": [
+    28136.16,
+    6531.84
+   ],
+   "host": "c_E4_bn_11",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t1010",
+   "parent": "t101",
+   "depth": 4,
+   "xy_um": [
+    28136.16,
+    3918.24
+   ],
+   "host": "c_E4_bf_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t1011",
+   "parent": "t101",
+   "depth": 4,
+   "xy_um": [
+    28136.16,
+    9145.44
+   ],
+   "host": "c_E4_bn_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t11",
+   "parent": "t1",
+   "depth": 2,
+   "xy_um": [
+    24429.6,
+    19733.76
+   ],
+   "host": "c_E3_tn_01",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t110",
+   "parent": "t11",
+   "depth": 3,
+   "xy_um": [
+    20723.04,
+    19733.76
+   ],
+   "host": "c_E1_tn_11",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t1100",
+   "parent": "t110",
+   "depth": 4,
+   "xy_um": [
+    20723.04,
+    17120.16
+   ],
+   "host": "c_E1_tn_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t1101",
+   "parent": "t110",
+   "depth": 4,
+   "xy_um": [
+    20723.04,
+    22347.36
+   ],
+   "host": "c_E1_tf_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t111",
+   "parent": "t11",
+   "depth": 3,
+   "xy_um": [
+    28136.16,
+    19733.76
+   ],
+   "host": "c_E4_tn_11",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t1110",
+   "parent": "t111",
+   "depth": 4,
+   "xy_um": [
+    28136.16,
+    17120.16
+   ],
+   "host": "c_E4_tn_10",
+   "leg_route": "x_first"
+  },
+  {
+   "tag": "t1111",
+   "parent": "t111",
+   "depth": 4,
+   "xy_um": [
+    28136.16,
+    22347.36
+   ],
+   "host": "c_E4_tf_10",
+   "leg_route": "x_first"
+  }
+ ],
+ "leg_repeaters": {
+  "t0": 16,
+  "t00": 14,
+  "t000": 8,
+  "t0000": 5,
+  "t0001": 5,
+  "t001": 8,
+  "t0010": 5,
+  "t0011": 5,
+  "t01": 14,
+  "t010": 8,
+  "t0100": 5,
+  "t0101": 5,
+  "t011": 8,
+  "t0110": 5,
+  "t0111": 5,
+  "t1": 16,
+  "t10": 14,
+  "t100": 8,
+  "t1000": 5,
+  "t1001": 5,
+  "t101": 8,
+  "t1010": 5,
+  "t1011": 5,
+  "t11": 14,
+  "t110": 8,
+  "t1100": 5,
+  "t1101": 5,
+  "t111": 8,
+  "t1110": 5,
+  "t1111": 5
+ }
+}

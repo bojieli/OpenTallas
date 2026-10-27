@@ -1,0 +1,268 @@
+{
+ "proof": "/srv/opentallas-scratch2/claude/qc-mesh-r10/pkg/out/legal/sta_in",
+ "timed_dir": "/srv/opentallas-scratch2/claude/qc-mesh-r10/pkg/out/legal/sta_in",
+ "plan": "/srv/opentallas-scratch2/claude/qc-mesh-r10/pkg/inputs/candidate_oneqc0733.json",
+ "period_ps": 833.333,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gate": "METHODOLOGY 12.4a v4.3: TT setup >= 0 and FF hold >= 0 on every related pair; CPPR at last common tree node (12.4b); skew = DIAGNOSTIC",
+ "block_model": {
+  "label": "declared-budget",
+  "core_latency_ps": {
+   "TT": 250.0,
+   "FF": 250.0
+  },
+  "cancels": "same declared latency both sides",
+  "core_tol_sensitivity_ps": 20.0,
+  "register": "DFFHQNx1_ASAP7_75t_R",
+  "seam_wire": {
+   "um": 40.0,
+   "ff_per_um": 0.15,
+   "applied": "setup only"
+  },
+  "kits_found": 0
+ },
+ "corners": {
+  "TT": {
+   "basis": "qc_clk_mesh3 solve nominal (legal geometry, feed mesh3); per-pair MC+AOCV in pair_unc.json",
+   "tap_slew_max_ps": 189.0,
+   "register": {
+    "key": {
+     "corner": "TT",
+     "slew_ps": 188.999,
+     "load_ff": 6.0,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 106.638,
+    "clkq_min_nowire_ps": 75.06,
+    "setup_ps": 5.107,
+    "hold_ps": 36.349,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "intra": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "intra_cross_region": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "seam": {
+     "pairs": 997,
+     "worst_setup_slack_ps": 563.51,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "coll_f4",
+      "capture": "coll_f5",
+      "where": "coll_f4->coll_f5",
+      "clock_damage_ps": 5.72,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -84.36,
+     "hold_neg_pairs": 997,
+     "worst_hold": {
+      "launch": "coll_f5",
+      "capture": "coll_f4",
+      "where": "coll_f5->coll_f4",
+      "clock_damage_ps": 5.72,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 11.66,
+     "skew_diag_over_80": 0,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 523.51,
+      "worst_hold_slack_ps": -124.36
+     },
+     "worst_skew": [
+      [
+       11.66,
+       "c_W4_bf_11",
+       "c_W4_bf_01"
+      ],
+      [
+       11.66,
+       "c_W4_bf_00",
+       "c_W4_bf_10"
+      ],
+      [
+       10.45,
+       "c_W0_tn_11",
+       "c_W0_tn_01"
+      ],
+      [
+       10.43,
+       "c_W0_tf_00",
+       "c_W0_tf_10"
+      ],
+      [
+       10.24,
+       "c_E3_bf_11",
+       "c_E3_bf_01"
+      ]
+     ],
+     "clock_ocv_pessimism_max_ps": {
+      "setup": 97.14,
+      "hold": 97.14
+     },
+     "label": "declared-budget"
+    },
+    "landed": {
+     "pairs": 0,
+     "label": "declared-budget"
+    }
+   },
+   "clock_ocv": {
+    "mode": "pair-unc",
+    "file": "/srv/opentallas-scratch2/claude/qc-mesh-r10/pkg/out/legal/sta_in/pair_unc.json",
+    "status": "UNCHECKED"
+   }
+  },
+  "FF": {
+   "basis": "qc_clk_mesh3 solve nominal (legal geometry, feed mesh3); per-pair MC+AOCV in pair_unc.json",
+   "tap_slew_max_ps": 154.87,
+   "register": {
+    "key": {
+     "corner": "FF",
+     "slew_ps": 154.871,
+     "load_ff": 6.0,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 72.579,
+    "clkq_min_nowire_ps": 51.022,
+    "setup_ps": 4.1,
+    "hold_ps": 24.772,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "intra": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "intra_cross_region": {
+     "pairs": 0,
+     "label": "declared-budget"
+    },
+    "seam": {
+     "pairs": 997,
+     "worst_setup_slack_ps": 603.92,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "c_E5_bn_01",
+      "capture": "c_E5_bn_00",
+      "where": "c_E5_bn_01->c_E5_bn_00",
+      "clock_damage_ps": 7.39,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -91.48,
+     "hold_neg_pairs": 997,
+     "worst_hold": {
+      "launch": "c_E5_bn_00",
+      "capture": "c_E5_bn_01",
+      "where": "c_E5_bn_00->c_E5_bn_01",
+      "clock_damage_ps": 7.39,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 10.26,
+     "skew_diag_over_80": 0,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 563.92,
+      "worst_hold_slack_ps": -131.48
+     },
+     "worst_skew": [
+      [
+       10.26,
+       "c_W4_bf_11",
+       "c_W4_bf_01"
+      ],
+      [
+       10.25,
+       "c_W4_bf_00",
+       "c_W4_bf_10"
+      ],
+      [
+       8.8,
+       "c_W0_tn_11",
+       "c_W0_tn_01"
+      ],
+      [
+       8.78,
+       "c_W0_tf_00",
+       "c_W0_tf_10"
+      ],
+      [
+       8.66,
+       "c_W0_bf_11",
+       "c_W0_bf_01"
+      ]
+     ],
+     "clock_ocv_pessimism_max_ps": {
+      "setup": 91.68,
+      "hold": 91.68
+     },
+     "kit_contract_hold": {
+      "window_ps": 40.0,
+      "basis": "legacy: receiver in_min -insertion_tol, sender out_min 0 (gen_phys.seam_hold)",
+      "worst_hold_bound_ps": 29.74,
+      "neg_pairs": 0,
+      "window_needed_ps": 10.26,
+      "worst": {
+       "launch": "c_W4_bf_11",
+       "capture": "c_W4_bf_01",
+       "where": "c_W4_bf_11->c_W4_bf_01",
+       "damage_ps": 10.26
+      },
+      "damage_pctl_ps": {
+       "50": 0.0,
+       "99": 8.31,
+       "99.9": 10.26
+      },
+      "verdict": "PASS"
+     },
+     "label": "declared-budget"
+    },
+    "landed": {
+     "pairs": 0,
+     "label": "declared-budget"
+    }
+   },
+   "clock_ocv": {
+    "mode": "pair-unc",
+    "file": "/srv/opentallas-scratch2/claude/qc-mesh-r10/pkg/out/legal/sta_in/pair_unc.json",
+    "status": "UNCHECKED"
+   }
+  }
+ },
+ "coverage": {
+  "partitions_with_taps": 377,
+  "connected_part_pairs": 997,
+  "uncovered_bits": {}
+ },
+ "summary": {
+  "intra": {
+   "tt_setup_ps": null,
+   "ff_hold_ps": null,
+   "verdict": "FAIL"
+  },
+  "seam": {
+   "tt_setup_ps": 563.51,
+   "ff_hold_ps": -91.48,
+   "verdict": "FAIL",
+   "ff_hold_kit_contract_ps": 29.74,
+   "kit_contract_window_ps": 40.0,
+   "kit_contract_window_needed_ps": 10.26,
+   "kit_contract_verdict": "PASS"
+  },
+  "landed": {
+   "tt_setup_margin_ps": null,
+   "ff_hold_margin_ps": null,
+   "verdict": "FAIL"
+  },
+  "status": "UNCHECKED (NUMBER-CHECK pending)",
+  "label": "declared-budget (no QC kit)"
+ }
+}

@@ -1,0 +1,27 @@
+{
+ "8w": {
+  "drivers": 6156,
+  "mesh_C_nF": 2.248,
+  "tree_C_nF": 0.615,
+  "P_TT_W": 1.684,
+  "C_per_driver_fF": 365.2,
+  "I_avg_driver_mA": 0.307,
+  "I_peak_driver_mA": 10.22,
+  "J_avg_branch_MA_cm2": 0.369,
+  "J_rms_branch_MA_cm2": 1.74,
+  "J_peak_branch_MA_cm2": 12.29
+ },
+ "16w": {
+  "drivers": 6156,
+  "mesh_C_nF": 3.231,
+  "tree_C_nF": 0.615,
+  "P_TT_W": 2.263,
+  "C_per_driver_fF": 524.9,
+  "I_avg_driver_mA": 0.441,
+  "I_peak_driver_mA": 14.7,
+  "J_avg_branch_MA_cm2": 0.265,
+  "J_rms_branch_MA_cm2": 1.25,
+  "J_peak_branch_MA_cm2": 8.83
+ },
+ "budget": "declared: J_avg (DC-equivalent) <= 1.0 MA/cm2 Cu (industry Cu design rule ~1e6 A/cm2, Cunningham/Semiconductor Digest; Hunter 1997 self-consistent peak/rms); J_rms <= 1.0 MA/cm2 used conservatively for Joule heating; t = 65 nm from Rs 0.338 ohm/sq at bulk Cu rho (thinner -> higher J, conservative); IRDS 7nm table not found; UNCHECKED"
+}

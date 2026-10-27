@@ -1,0 +1,5345 @@
+{
+ "corner": "TT",
+ "basis": "qc_clk_mesh3 solve nominal (legal geometry, feed mesh3); per-pair MC+AOCV in pair_unc.json",
+ "cppr_node_range_ps": {
+  "m": 0.0,
+  "h": 0.0
+ },
+ "core_views": {
+  "views": {
+   "qfd_dv_s8_crh_rp1": [
+    219.69,
+    268.91
+   ],
+   "qfd_dv_s8x_vmr": [
+    249.66,
+    263.16
+   ]
+  },
+  "declared_ps": 250.0,
+  "partitions": [
+   "sl_E0_su_c",
+   "sl_E1_su_c",
+   "sl_E2_su_c",
+   "sl_E3_su_c",
+   "sl_E4_su_c",
+   "sl_E5_su_c",
+   "sl_W0_su_c",
+   "sl_W1_su_c",
+   "sl_W2_su_c",
+   "sl_W3_su_c",
+   "sl_W4_su_c",
+   "sl_W5_su_c"
+  ]
+ },
+ "taps": [
+  {
+   "port": "c_E0_bf_00",
+   "part": "c_E0_bf_00",
+   "late_ps": 6487.169,
+   "early_ps": 6487.169,
+   "cppr_node": "m",
+   "slew_ps": 179.033,
+   "xy_um": [
+    17012.16,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_bf_01",
+   "part": "c_E0_bf_01",
+   "late_ps": 6487.432,
+   "early_ps": 6487.432,
+   "cppr_node": "m",
+   "slew_ps": 180.312,
+   "xy_um": [
+    17012.16,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_bf_10",
+   "part": "c_E0_bf_10",
+   "late_ps": 6487.284,
+   "early_ps": 6487.284,
+   "cppr_node": "m",
+   "slew_ps": 179.194,
+   "xy_um": [
+    18247.68,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_bf_11",
+   "part": "c_E0_bf_11",
+   "late_ps": 6487.549,
+   "early_ps": 6487.549,
+   "cppr_node": "m",
+   "slew_ps": 180.492,
+   "xy_um": [
+    18247.68,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_bn_00",
+   "part": "c_E0_bn_00",
+   "late_ps": 6487.204,
+   "early_ps": 6487.204,
+   "cppr_node": "m",
+   "slew_ps": 179.021,
+   "xy_um": [
+    17012.16,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_bn_01",
+   "part": "c_E0_bn_01",
+   "late_ps": 6487.125,
+   "early_ps": 6487.125,
+   "cppr_node": "m",
+   "slew_ps": 178.962,
+   "xy_um": [
+    17012.16,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_bn_10",
+   "part": "c_E0_bn_10",
+   "late_ps": 6487.266,
+   "early_ps": 6487.266,
+   "cppr_node": "m",
+   "slew_ps": 178.842,
+   "xy_um": [
+    18247.68,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_bn_11",
+   "part": "c_E0_bn_11",
+   "late_ps": 6487.246,
+   "early_ps": 6487.246,
+   "cppr_node": "m",
+   "slew_ps": 179.724,
+   "xy_um": [
+    18247.68,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_tf_00",
+   "part": "c_E0_tf_00",
+   "late_ps": 6487.381,
+   "early_ps": 6487.381,
+   "cppr_node": "m",
+   "slew_ps": 178.744,
+   "xy_um": [
+    17012.16,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_tf_01",
+   "part": "c_E0_tf_01",
+   "late_ps": 6488.739,
+   "early_ps": 6488.739,
+   "cppr_node": "m",
+   "slew_ps": 176.821,
+   "xy_um": [
+    17012.16,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_tf_10",
+   "part": "c_E0_tf_10",
+   "late_ps": 6487.377,
+   "early_ps": 6487.377,
+   "cppr_node": "m",
+   "slew_ps": 177.804,
+   "xy_um": [
+    18247.68,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_tf_11",
+   "part": "c_E0_tf_11",
+   "late_ps": 6488.732,
+   "early_ps": 6488.732,
+   "cppr_node": "m",
+   "slew_ps": 175.142,
+   "xy_um": [
+    18247.68,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_tn_00",
+   "part": "c_E0_tn_00",
+   "late_ps": 6487.428,
+   "early_ps": 6487.428,
+   "cppr_node": "m",
+   "slew_ps": 178.255,
+   "xy_um": [
+    17012.16,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_tn_01",
+   "part": "c_E0_tn_01",
+   "late_ps": 6487.75,
+   "early_ps": 6487.75,
+   "cppr_node": "m",
+   "slew_ps": 181.344,
+   "xy_um": [
+    17012.16,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_tn_10",
+   "part": "c_E0_tn_10",
+   "late_ps": 6487.544,
+   "early_ps": 6487.544,
+   "cppr_node": "m",
+   "slew_ps": 178.813,
+   "xy_um": [
+    18247.68,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E0_tn_11",
+   "part": "c_E0_tn_11",
+   "late_ps": 6488.015,
+   "early_ps": 6488.015,
+   "cppr_node": "m",
+   "slew_ps": 181.836,
+   "xy_um": [
+    18247.68,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_bf_00",
+   "part": "c_E1_bf_00",
+   "late_ps": 6486.624,
+   "early_ps": 6486.624,
+   "cppr_node": "m",
+   "slew_ps": 179.545,
+   "xy_um": [
+    19483.2,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_bf_01",
+   "part": "c_E1_bf_01",
+   "late_ps": 6486.645,
+   "early_ps": 6486.645,
+   "cppr_node": "m",
+   "slew_ps": 178.927,
+   "xy_um": [
+    19483.2,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_bf_10",
+   "part": "c_E1_bf_10",
+   "late_ps": 6485.382,
+   "early_ps": 6485.382,
+   "cppr_node": "m",
+   "slew_ps": 187.06,
+   "xy_um": [
+    20718.72,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_bf_11",
+   "part": "c_E1_bf_11",
+   "late_ps": 6485.628,
+   "early_ps": 6485.628,
+   "cppr_node": "m",
+   "slew_ps": 187.922,
+   "xy_um": [
+    20718.72,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_bn_00",
+   "part": "c_E1_bn_00",
+   "late_ps": 6487.096,
+   "early_ps": 6487.096,
+   "cppr_node": "m",
+   "slew_ps": 180.585,
+   "xy_um": [
+    19483.2,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_bn_01",
+   "part": "c_E1_bn_01",
+   "late_ps": 6486.562,
+   "early_ps": 6486.562,
+   "cppr_node": "m",
+   "slew_ps": 179.235,
+   "xy_um": [
+    19483.2,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_bn_10",
+   "part": "c_E1_bn_10",
+   "late_ps": 6485.417,
+   "early_ps": 6485.417,
+   "cppr_node": "m",
+   "slew_ps": 187.139,
+   "xy_um": [
+    20718.72,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_bn_11",
+   "part": "c_E1_bn_11",
+   "late_ps": 6485.34,
+   "early_ps": 6485.34,
+   "cppr_node": "m",
+   "slew_ps": 187.061,
+   "xy_um": [
+    20718.72,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_tf_00",
+   "part": "c_E1_tf_00",
+   "late_ps": 6487.223,
+   "early_ps": 6487.223,
+   "cppr_node": "m",
+   "slew_ps": 180.537,
+   "xy_um": [
+    19483.2,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_tf_01",
+   "part": "c_E1_tf_01",
+   "late_ps": 6488.64,
+   "early_ps": 6488.64,
+   "cppr_node": "m",
+   "slew_ps": 178.856,
+   "xy_um": [
+    19483.2,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_tf_10",
+   "part": "c_E1_tf_10",
+   "late_ps": 6485.533,
+   "early_ps": 6485.533,
+   "cppr_node": "m",
+   "slew_ps": 186.941,
+   "xy_um": [
+    20718.72,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_tf_11",
+   "part": "c_E1_tf_11",
+   "late_ps": 6486.957,
+   "early_ps": 6486.957,
+   "cppr_node": "m",
+   "slew_ps": 185.205,
+   "xy_um": [
+    20718.72,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_tn_00",
+   "part": "c_E1_tn_00",
+   "late_ps": 6486.924,
+   "early_ps": 6486.924,
+   "cppr_node": "m",
+   "slew_ps": 179.141,
+   "xy_um": [
+    19483.2,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_tn_01",
+   "part": "c_E1_tn_01",
+   "late_ps": 6478.458,
+   "early_ps": 6478.458,
+   "cppr_node": "m",
+   "slew_ps": 171.666,
+   "xy_um": [
+    19483.2,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_tn_10",
+   "part": "c_E1_tn_10",
+   "late_ps": 6485.7,
+   "early_ps": 6485.7,
+   "cppr_node": "m",
+   "slew_ps": 186.974,
+   "xy_um": [
+    20718.72,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E1_tn_11",
+   "part": "c_E1_tn_11",
+   "late_ps": 6485.607,
+   "early_ps": 6485.607,
+   "cppr_node": "m",
+   "slew_ps": 187.0,
+   "xy_um": [
+    20718.72,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_bf_00",
+   "part": "c_E2_bf_00",
+   "late_ps": 6473.991,
+   "early_ps": 6473.991,
+   "cppr_node": "m",
+   "slew_ps": 169.657,
+   "xy_um": [
+    21954.24,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_bf_01",
+   "part": "c_E2_bf_01",
+   "late_ps": 6474.055,
+   "early_ps": 6474.055,
+   "cppr_node": "m",
+   "slew_ps": 168.757,
+   "xy_um": [
+    21954.24,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_bf_10",
+   "part": "c_E2_bf_10",
+   "late_ps": 6482.779,
+   "early_ps": 6482.779,
+   "cppr_node": "m",
+   "slew_ps": 182.521,
+   "xy_um": [
+    23189.76,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_bf_11",
+   "part": "c_E2_bf_11",
+   "late_ps": 6473.727,
+   "early_ps": 6473.727,
+   "cppr_node": "m",
+   "slew_ps": 170.416,
+   "xy_um": [
+    23189.76,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_bn_00",
+   "part": "c_E2_bn_00",
+   "late_ps": 6474.033,
+   "early_ps": 6474.033,
+   "cppr_node": "m",
+   "slew_ps": 169.531,
+   "xy_um": [
+    21954.24,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_bn_01",
+   "part": "c_E2_bn_01",
+   "late_ps": 6473.946,
+   "early_ps": 6473.946,
+   "cppr_node": "m",
+   "slew_ps": 169.575,
+   "xy_um": [
+    21954.24,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_bn_10",
+   "part": "c_E2_bn_10",
+   "late_ps": 6482.317,
+   "early_ps": 6482.317,
+   "cppr_node": "m",
+   "slew_ps": 180.833,
+   "xy_um": [
+    23189.76,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_bn_11",
+   "part": "c_E2_bn_11",
+   "late_ps": 6473.628,
+   "early_ps": 6473.628,
+   "cppr_node": "m",
+   "slew_ps": 172.352,
+   "xy_um": [
+    23189.76,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_tf_00",
+   "part": "c_E2_tf_00",
+   "late_ps": 6474.155,
+   "early_ps": 6474.155,
+   "cppr_node": "m",
+   "slew_ps": 169.271,
+   "xy_um": [
+    21954.24,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_tf_01",
+   "part": "c_E2_tf_01",
+   "late_ps": 6475.592,
+   "early_ps": 6475.592,
+   "cppr_node": "m",
+   "slew_ps": 167.629,
+   "xy_um": [
+    21954.24,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_tf_10",
+   "part": "c_E2_tf_10",
+   "late_ps": 6474.173,
+   "early_ps": 6474.173,
+   "cppr_node": "m",
+   "slew_ps": 173.136,
+   "xy_um": [
+    23189.76,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_tf_11",
+   "part": "c_E2_tf_11",
+   "late_ps": 6475.266,
+   "early_ps": 6475.266,
+   "cppr_node": "m",
+   "slew_ps": 169.962,
+   "xy_um": [
+    23189.76,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_tn_00",
+   "part": "c_E2_tn_00",
+   "late_ps": 6474.316,
+   "early_ps": 6474.316,
+   "cppr_node": "m",
+   "slew_ps": 169.471,
+   "xy_um": [
+    21954.24,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_tn_01",
+   "part": "c_E2_tn_01",
+   "late_ps": 6474.218,
+   "early_ps": 6474.218,
+   "cppr_node": "m",
+   "slew_ps": 169.681,
+   "xy_um": [
+    21954.24,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_tn_10",
+   "part": "c_E2_tn_10",
+   "late_ps": 6473.993,
+   "early_ps": 6473.993,
+   "cppr_node": "m",
+   "slew_ps": 172.22,
+   "xy_um": [
+    23189.76,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E2_tn_11",
+   "part": "c_E2_tn_11",
+   "late_ps": 6482.994,
+   "early_ps": 6482.994,
+   "cppr_node": "m",
+   "slew_ps": 182.267,
+   "xy_um": [
+    23189.76,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_bf_00",
+   "part": "c_E3_bf_00",
+   "late_ps": 6475.242,
+   "early_ps": 6475.242,
+   "cppr_node": "m",
+   "slew_ps": 168.149,
+   "xy_um": [
+    24425.28,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_bf_01",
+   "part": "c_E3_bf_01",
+   "late_ps": 6475.306,
+   "early_ps": 6475.306,
+   "cppr_node": "m",
+   "slew_ps": 167.031,
+   "xy_um": [
+    24425.28,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_bf_10",
+   "part": "c_E3_bf_10",
+   "late_ps": 6485.306,
+   "early_ps": 6485.306,
+   "cppr_node": "m",
+   "slew_ps": 185.26,
+   "xy_um": [
+    25660.8,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_bf_11",
+   "part": "c_E3_bf_11",
+   "late_ps": 6485.55,
+   "early_ps": 6485.55,
+   "cppr_node": "m",
+   "slew_ps": 186.649,
+   "xy_um": [
+    25660.8,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_bn_00",
+   "part": "c_E3_bn_00",
+   "late_ps": 6475.588,
+   "early_ps": 6475.588,
+   "cppr_node": "m",
+   "slew_ps": 169.248,
+   "xy_um": [
+    24425.28,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_bn_01",
+   "part": "c_E3_bn_01",
+   "late_ps": 6475.504,
+   "early_ps": 6475.504,
+   "cppr_node": "m",
+   "slew_ps": 169.271,
+   "xy_um": [
+    24425.28,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_bn_10",
+   "part": "c_E3_bn_10",
+   "late_ps": 6485.28,
+   "early_ps": 6485.28,
+   "cppr_node": "m",
+   "slew_ps": 184.44,
+   "xy_um": [
+    25660.8,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_bn_11",
+   "part": "c_E3_bn_11",
+   "late_ps": 6485.203,
+   "early_ps": 6485.203,
+   "cppr_node": "m",
+   "slew_ps": 184.566,
+   "xy_um": [
+    25660.8,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_tf_00",
+   "part": "c_E3_tf_00",
+   "late_ps": 6475.406,
+   "early_ps": 6475.406,
+   "cppr_node": "m",
+   "slew_ps": 167.738,
+   "xy_um": [
+    24425.28,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_tf_01",
+   "part": "c_E3_tf_01",
+   "late_ps": 6477.143,
+   "early_ps": 6477.143,
+   "cppr_node": "m",
+   "slew_ps": 167.276,
+   "xy_um": [
+    24425.28,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_tf_10",
+   "part": "c_E3_tf_10",
+   "late_ps": 6485.456,
+   "early_ps": 6485.456,
+   "cppr_node": "m",
+   "slew_ps": 185.019,
+   "xy_um": [
+    25660.8,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_tf_11",
+   "part": "c_E3_tf_11",
+   "late_ps": 6486.817,
+   "early_ps": 6486.817,
+   "cppr_node": "m",
+   "slew_ps": 182.518,
+   "xy_um": [
+    25660.8,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_tn_00",
+   "part": "c_E3_tn_00",
+   "late_ps": 6475.869,
+   "early_ps": 6475.869,
+   "cppr_node": "m",
+   "slew_ps": 169.117,
+   "xy_um": [
+    24425.28,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_tn_01",
+   "part": "c_E3_tn_01",
+   "late_ps": 6475.776,
+   "early_ps": 6475.776,
+   "cppr_node": "m",
+   "slew_ps": 169.39,
+   "xy_um": [
+    24425.28,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_tn_10",
+   "part": "c_E3_tn_10",
+   "late_ps": 6485.564,
+   "early_ps": 6485.564,
+   "cppr_node": "m",
+   "slew_ps": 184.553,
+   "xy_um": [
+    25660.8,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E3_tn_11",
+   "part": "c_E3_tn_11",
+   "late_ps": 6485.472,
+   "early_ps": 6485.472,
+   "cppr_node": "m",
+   "slew_ps": 184.578,
+   "xy_um": [
+    25660.8,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_bf_00",
+   "part": "c_E4_bf_00",
+   "late_ps": 6484.025,
+   "early_ps": 6484.025,
+   "cppr_node": "m",
+   "slew_ps": 180.895,
+   "xy_um": [
+    26896.32,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_bf_01",
+   "part": "c_E4_bf_01",
+   "late_ps": 6484.232,
+   "early_ps": 6484.232,
+   "cppr_node": "m",
+   "slew_ps": 181.359,
+   "xy_um": [
+    26896.32,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_bf_10",
+   "part": "c_E4_bf_10",
+   "late_ps": 6481.924,
+   "early_ps": 6481.924,
+   "cppr_node": "m",
+   "slew_ps": 180.54,
+   "xy_um": [
+    28131.84,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_bf_11",
+   "part": "c_E4_bf_11",
+   "late_ps": 6482.19,
+   "early_ps": 6482.19,
+   "cppr_node": "m",
+   "slew_ps": 181.766,
+   "xy_um": [
+    28131.84,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_bn_00",
+   "part": "c_E4_bn_00",
+   "late_ps": 6484.06,
+   "early_ps": 6484.06,
+   "cppr_node": "m",
+   "slew_ps": 180.87,
+   "xy_um": [
+    26896.32,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_bn_01",
+   "part": "c_E4_bn_01",
+   "late_ps": 6483.984,
+   "early_ps": 6483.984,
+   "cppr_node": "m",
+   "slew_ps": 180.997,
+   "xy_um": [
+    26896.32,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_bn_10",
+   "part": "c_E4_bn_10",
+   "late_ps": 6481.961,
+   "early_ps": 6481.961,
+   "cppr_node": "m",
+   "slew_ps": 180.735,
+   "xy_um": [
+    28131.84,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_bn_11",
+   "part": "c_E4_bn_11",
+   "late_ps": 6481.683,
+   "early_ps": 6481.683,
+   "cppr_node": "m",
+   "slew_ps": 180.015,
+   "xy_um": [
+    28131.84,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_tf_00",
+   "part": "c_E4_tf_00",
+   "late_ps": 6484.176,
+   "early_ps": 6484.176,
+   "cppr_node": "m",
+   "slew_ps": 180.633,
+   "xy_um": [
+    26896.32,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_tf_01",
+   "part": "c_E4_tf_01",
+   "late_ps": 6485.592,
+   "early_ps": 6485.592,
+   "cppr_node": "m",
+   "slew_ps": 178.914,
+   "xy_um": [
+    26896.32,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_tf_10",
+   "part": "c_E4_tf_10",
+   "late_ps": 6482.077,
+   "early_ps": 6482.077,
+   "cppr_node": "m",
+   "slew_ps": 180.485,
+   "xy_um": [
+    28131.84,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_tf_11",
+   "part": "c_E4_tf_11",
+   "late_ps": 6483.353,
+   "early_ps": 6483.353,
+   "cppr_node": "m",
+   "slew_ps": 178.867,
+   "xy_um": [
+    28131.84,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_tn_00",
+   "part": "c_E4_tn_00",
+   "late_ps": 6484.344,
+   "early_ps": 6484.344,
+   "cppr_node": "m",
+   "slew_ps": 180.89,
+   "xy_um": [
+    26896.32,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_tn_01",
+   "part": "c_E4_tn_01",
+   "late_ps": 6484.253,
+   "early_ps": 6484.253,
+   "cppr_node": "m",
+   "slew_ps": 180.991,
+   "xy_um": [
+    26896.32,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_tn_10",
+   "part": "c_E4_tn_10",
+   "late_ps": 6481.994,
+   "early_ps": 6481.994,
+   "cppr_node": "m",
+   "slew_ps": 179.354,
+   "xy_um": [
+    28131.84,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E4_tn_11",
+   "part": "c_E4_tn_11",
+   "late_ps": 6482.206,
+   "early_ps": 6482.206,
+   "cppr_node": "m",
+   "slew_ps": 181.669,
+   "xy_um": [
+    28131.84,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_bf_00",
+   "part": "c_E5_bf_00",
+   "late_ps": 6471.664,
+   "early_ps": 6471.664,
+   "cppr_node": "m",
+   "slew_ps": 172.768,
+   "xy_um": [
+    29367.36,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_bf_01",
+   "part": "c_E5_bf_01",
+   "late_ps": 6471.388,
+   "early_ps": 6471.388,
+   "cppr_node": "m",
+   "slew_ps": 170.881,
+   "xy_um": [
+    29367.36,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_bf_10",
+   "part": "c_E5_bf_10",
+   "late_ps": 6480.928,
+   "early_ps": 6480.928,
+   "cppr_node": "m",
+   "slew_ps": 187.73,
+   "xy_um": [
+    30602.88,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_bf_11",
+   "part": "c_E5_bf_11",
+   "late_ps": 6481.164,
+   "early_ps": 6481.164,
+   "cppr_node": "m",
+   "slew_ps": 188.4,
+   "xy_um": [
+    30602.88,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_bn_00",
+   "part": "c_E5_bn_00",
+   "late_ps": 6471.699,
+   "early_ps": 6471.699,
+   "cppr_node": "m",
+   "slew_ps": 172.53,
+   "xy_um": [
+    29367.36,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_bn_01",
+   "part": "c_E5_bn_01",
+   "late_ps": 6480.14,
+   "early_ps": 6480.14,
+   "cppr_node": "m",
+   "slew_ps": 180.65,
+   "xy_um": [
+    29367.36,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_bn_10",
+   "part": "c_E5_bn_10",
+   "late_ps": 6480.966,
+   "early_ps": 6480.966,
+   "cppr_node": "m",
+   "slew_ps": 187.936,
+   "xy_um": [
+    30602.88,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_bn_11",
+   "part": "c_E5_bn_11",
+   "late_ps": 6480.889,
+   "early_ps": 6480.889,
+   "cppr_node": "m",
+   "slew_ps": 187.943,
+   "xy_um": [
+    30602.88,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_tf_00",
+   "part": "c_E5_tf_00",
+   "late_ps": 6471.822,
+   "early_ps": 6471.822,
+   "cppr_node": "m",
+   "slew_ps": 172.309,
+   "xy_um": [
+    29367.36,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_tf_01",
+   "part": "c_E5_tf_01",
+   "late_ps": 6481.29,
+   "early_ps": 6481.29,
+   "cppr_node": "m",
+   "slew_ps": 177.13,
+   "xy_um": [
+    29367.36,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_tf_10",
+   "part": "c_E5_tf_10",
+   "late_ps": 6481.1,
+   "early_ps": 6481.1,
+   "cppr_node": "m",
+   "slew_ps": 188.223,
+   "xy_um": [
+    30602.88,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_tf_11",
+   "part": "c_E5_tf_11",
+   "late_ps": 6482.516,
+   "early_ps": 6482.516,
+   "cppr_node": "m",
+   "slew_ps": 186.275,
+   "xy_um": [
+    30602.88,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_tn_00",
+   "part": "c_E5_tn_00",
+   "late_ps": 6480.954,
+   "early_ps": 6480.954,
+   "cppr_node": "m",
+   "slew_ps": 181.637,
+   "xy_um": [
+    29367.36,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_tn_01",
+   "part": "c_E5_tn_01",
+   "late_ps": 6471.549,
+   "early_ps": 6471.549,
+   "cppr_node": "m",
+   "slew_ps": 171.398,
+   "xy_um": [
+    29367.36,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_tn_10",
+   "part": "c_E5_tn_10",
+   "late_ps": 6481.253,
+   "early_ps": 6481.253,
+   "cppr_node": "m",
+   "slew_ps": 188.256,
+   "xy_um": [
+    30602.88,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_E5_tn_11",
+   "part": "c_E5_tn_11",
+   "late_ps": 6481.155,
+   "early_ps": 6481.155,
+   "cppr_node": "m",
+   "slew_ps": 187.58,
+   "xy_um": [
+    30602.88,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_bf_00",
+   "part": "c_W0_bf_00",
+   "late_ps": 6486.237,
+   "early_ps": 6486.237,
+   "cppr_node": "m",
+   "slew_ps": 181.327,
+   "xy_um": [
+    14541.12,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_bf_01",
+   "part": "c_W0_bf_01",
+   "late_ps": 6486.444,
+   "early_ps": 6486.444,
+   "cppr_node": "m",
+   "slew_ps": 181.729,
+   "xy_um": [
+    14541.12,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_bf_10",
+   "part": "c_W0_bf_10",
+   "late_ps": 6476.086,
+   "early_ps": 6476.086,
+   "cppr_node": "m",
+   "slew_ps": 167.351,
+   "xy_um": [
+    15776.64,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_bf_11",
+   "part": "c_W0_bf_11",
+   "late_ps": 6476.251,
+   "early_ps": 6476.251,
+   "cppr_node": "m",
+   "slew_ps": 167.501,
+   "xy_um": [
+    15776.64,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_bn_00",
+   "part": "c_W0_bn_00",
+   "late_ps": 6486.272,
+   "early_ps": 6486.272,
+   "cppr_node": "m",
+   "slew_ps": 181.362,
+   "xy_um": [
+    14541.12,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_bn_01",
+   "part": "c_W0_bn_01",
+   "late_ps": 6486.196,
+   "early_ps": 6486.196,
+   "cppr_node": "m",
+   "slew_ps": 181.491,
+   "xy_um": [
+    14541.12,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_bn_10",
+   "part": "c_W0_bn_10",
+   "late_ps": 6476.129,
+   "early_ps": 6476.129,
+   "cppr_node": "m",
+   "slew_ps": 167.484,
+   "xy_um": [
+    15776.64,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_bn_11",
+   "part": "c_W0_bn_11",
+   "late_ps": 6476.046,
+   "early_ps": 6476.046,
+   "cppr_node": "m",
+   "slew_ps": 167.595,
+   "xy_um": [
+    15776.64,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_tf_00",
+   "part": "c_W0_tf_00",
+   "late_ps": 6486.387,
+   "early_ps": 6486.387,
+   "cppr_node": "m",
+   "slew_ps": 181.012,
+   "xy_um": [
+    14541.12,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_tf_01",
+   "part": "c_W0_tf_01",
+   "late_ps": 6487.805,
+   "early_ps": 6487.805,
+   "cppr_node": "m",
+   "slew_ps": 179.421,
+   "xy_um": [
+    14541.12,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_tf_10",
+   "part": "c_W0_tf_10",
+   "late_ps": 6475.953,
+   "early_ps": 6475.953,
+   "cppr_node": "m",
+   "slew_ps": 166.243,
+   "xy_um": [
+    15776.64,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_tf_11",
+   "part": "c_W0_tf_11",
+   "late_ps": 6477.722,
+   "early_ps": 6477.722,
+   "cppr_node": "m",
+   "slew_ps": 166.887,
+   "xy_um": [
+    15776.64,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_tn_00",
+   "part": "c_W0_tn_00",
+   "late_ps": 6486.555,
+   "early_ps": 6486.555,
+   "cppr_node": "m",
+   "slew_ps": 181.355,
+   "xy_um": [
+    14541.12,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_tn_01",
+   "part": "c_W0_tn_01",
+   "late_ps": 6486.464,
+   "early_ps": 6486.464,
+   "cppr_node": "m",
+   "slew_ps": 181.329,
+   "xy_um": [
+    14541.12,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_tn_10",
+   "part": "c_W0_tn_10",
+   "late_ps": 6476.407,
+   "early_ps": 6476.407,
+   "cppr_node": "m",
+   "slew_ps": 167.35,
+   "xy_um": [
+    15776.64,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W0_tn_11",
+   "part": "c_W0_tn_11",
+   "late_ps": 6476.009,
+   "early_ps": 6476.009,
+   "cppr_node": "m",
+   "slew_ps": 166.441,
+   "xy_um": [
+    15776.64,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_bf_00",
+   "part": "c_W1_bf_00",
+   "late_ps": 6480.218,
+   "early_ps": 6480.218,
+   "cppr_node": "m",
+   "slew_ps": 168.971,
+   "xy_um": [
+    12070.08,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_bf_01",
+   "part": "c_W1_bf_01",
+   "late_ps": 6480.285,
+   "early_ps": 6480.285,
+   "cppr_node": "m",
+   "slew_ps": 168.546,
+   "xy_um": [
+    12070.08,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_bf_10",
+   "part": "c_W1_bf_10",
+   "late_ps": 6487.973,
+   "early_ps": 6487.973,
+   "cppr_node": "m",
+   "slew_ps": 187.276,
+   "xy_um": [
+    13305.6,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_bf_11",
+   "part": "c_W1_bf_11",
+   "late_ps": 6488.22,
+   "early_ps": 6488.22,
+   "cppr_node": "m",
+   "slew_ps": 188.399,
+   "xy_um": [
+    13305.6,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_bn_00",
+   "part": "c_W1_bn_00",
+   "late_ps": 6480.26,
+   "early_ps": 6480.26,
+   "cppr_node": "m",
+   "slew_ps": 168.951,
+   "xy_um": [
+    12070.08,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_bn_01",
+   "part": "c_W1_bn_01",
+   "late_ps": 6480.175,
+   "early_ps": 6480.175,
+   "cppr_node": "m",
+   "slew_ps": 169.085,
+   "xy_um": [
+    12070.08,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_bn_10",
+   "part": "c_W1_bn_10",
+   "late_ps": 6488.008,
+   "early_ps": 6488.008,
+   "cppr_node": "m",
+   "slew_ps": 187.258,
+   "xy_um": [
+    13305.6,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_bn_11",
+   "part": "c_W1_bn_11",
+   "late_ps": 6487.932,
+   "early_ps": 6487.932,
+   "cppr_node": "m",
+   "slew_ps": 187.408,
+   "xy_um": [
+    13305.6,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_tf_00",
+   "part": "c_W1_tf_00",
+   "late_ps": 6480.383,
+   "early_ps": 6480.383,
+   "cppr_node": "m",
+   "slew_ps": 168.717,
+   "xy_um": [
+    12070.08,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_tf_01",
+   "part": "c_W1_tf_01",
+   "late_ps": 6481.819,
+   "early_ps": 6481.819,
+   "cppr_node": "m",
+   "slew_ps": 167.19,
+   "xy_um": [
+    12070.08,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_tf_10",
+   "part": "c_W1_tf_10",
+   "late_ps": 6488.123,
+   "early_ps": 6488.123,
+   "cppr_node": "m",
+   "slew_ps": 187.001,
+   "xy_um": [
+    13305.6,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_tf_11",
+   "part": "c_W1_tf_11",
+   "late_ps": 6489.548,
+   "early_ps": 6489.548,
+   "cppr_node": "m",
+   "slew_ps": 185.25,
+   "xy_um": [
+    13305.6,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_tn_00",
+   "part": "c_W1_tn_00",
+   "late_ps": 6480.544,
+   "early_ps": 6480.544,
+   "cppr_node": "m",
+   "slew_ps": 168.983,
+   "xy_um": [
+    12070.08,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_tn_01",
+   "part": "c_W1_tn_01",
+   "late_ps": 6480.445,
+   "early_ps": 6480.445,
+   "cppr_node": "m",
+   "slew_ps": 169.047,
+   "xy_um": [
+    12070.08,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_tn_10",
+   "part": "c_W1_tn_10",
+   "late_ps": 6488.291,
+   "early_ps": 6488.291,
+   "cppr_node": "m",
+   "slew_ps": 187.308,
+   "xy_um": [
+    13305.6,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W1_tn_11",
+   "part": "c_W1_tn_11",
+   "late_ps": 6488.201,
+   "early_ps": 6488.201,
+   "cppr_node": "m",
+   "slew_ps": 187.366,
+   "xy_um": [
+    13305.6,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_bf_00",
+   "part": "c_W2_bf_00",
+   "late_ps": 6490.324,
+   "early_ps": 6490.324,
+   "cppr_node": "m",
+   "slew_ps": 184.075,
+   "xy_um": [
+    9599.04,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_bf_01",
+   "part": "c_W2_bf_01",
+   "late_ps": 6490.562,
+   "early_ps": 6490.562,
+   "cppr_node": "m",
+   "slew_ps": 185.475,
+   "xy_um": [
+    9599.04,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_bf_10",
+   "part": "c_W2_bf_10",
+   "late_ps": 6490.606,
+   "early_ps": 6490.606,
+   "cppr_node": "m",
+   "slew_ps": 185.073,
+   "xy_um": [
+    10834.56,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_bf_11",
+   "part": "c_W2_bf_11",
+   "late_ps": 6490.845,
+   "early_ps": 6490.845,
+   "cppr_node": "m",
+   "slew_ps": 186.224,
+   "xy_um": [
+    10834.56,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_bn_00",
+   "part": "c_W2_bn_00",
+   "late_ps": 6490.358,
+   "early_ps": 6490.358,
+   "cppr_node": "m",
+   "slew_ps": 184.046,
+   "xy_um": [
+    9599.04,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_bn_01",
+   "part": "c_W2_bn_01",
+   "late_ps": 6490.282,
+   "early_ps": 6490.282,
+   "cppr_node": "m",
+   "slew_ps": 184.208,
+   "xy_um": [
+    9599.04,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_bn_10",
+   "part": "c_W2_bn_10",
+   "late_ps": 6490.641,
+   "early_ps": 6490.641,
+   "cppr_node": "m",
+   "slew_ps": 185.056,
+   "xy_um": [
+    10834.56,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_bn_11",
+   "part": "c_W2_bn_11",
+   "late_ps": 6490.565,
+   "early_ps": 6490.565,
+   "cppr_node": "m",
+   "slew_ps": 185.205,
+   "xy_um": [
+    10834.56,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_tf_00",
+   "part": "c_W2_tf_00",
+   "late_ps": 6490.474,
+   "early_ps": 6490.474,
+   "cppr_node": "m",
+   "slew_ps": 183.8,
+   "xy_um": [
+    9599.04,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_tf_01",
+   "part": "c_W2_tf_01",
+   "late_ps": 6491.889,
+   "early_ps": 6491.889,
+   "cppr_node": "m",
+   "slew_ps": 182.065,
+   "xy_um": [
+    9599.04,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_tf_10",
+   "part": "c_W2_tf_10",
+   "late_ps": 6490.756,
+   "early_ps": 6490.756,
+   "cppr_node": "m",
+   "slew_ps": 184.798,
+   "xy_um": [
+    10834.56,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_tf_11",
+   "part": "c_W2_tf_11",
+   "late_ps": 6492.177,
+   "early_ps": 6492.177,
+   "cppr_node": "m",
+   "slew_ps": 183.048,
+   "xy_um": [
+    10834.56,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_tn_00",
+   "part": "c_W2_tn_00",
+   "late_ps": 6490.642,
+   "early_ps": 6490.642,
+   "cppr_node": "m",
+   "slew_ps": 184.106,
+   "xy_um": [
+    9599.04,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_tn_01",
+   "part": "c_W2_tn_01",
+   "late_ps": 6490.551,
+   "early_ps": 6490.551,
+   "cppr_node": "m",
+   "slew_ps": 184.169,
+   "xy_um": [
+    9599.04,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_tn_10",
+   "part": "c_W2_tn_10",
+   "late_ps": 6490.924,
+   "early_ps": 6490.924,
+   "cppr_node": "m",
+   "slew_ps": 185.105,
+   "xy_um": [
+    10834.56,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W2_tn_11",
+   "part": "c_W2_tn_11",
+   "late_ps": 6490.833,
+   "early_ps": 6490.833,
+   "cppr_node": "m",
+   "slew_ps": 185.164,
+   "xy_um": [
+    10834.56,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_bf_00",
+   "part": "c_W3_bf_00",
+   "late_ps": 6480.316,
+   "early_ps": 6480.316,
+   "cppr_node": "m",
+   "slew_ps": 174.756,
+   "xy_um": [
+    7128.0,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_bf_01",
+   "part": "c_W3_bf_01",
+   "late_ps": 6480.006,
+   "early_ps": 6480.006,
+   "cppr_node": "m",
+   "slew_ps": 171.139,
+   "xy_um": [
+    7128.0,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_bf_10",
+   "part": "c_W3_bf_10",
+   "late_ps": 6489.223,
+   "early_ps": 6489.223,
+   "cppr_node": "m",
+   "slew_ps": 186.599,
+   "xy_um": [
+    8363.52,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_bf_11",
+   "part": "c_W3_bf_11",
+   "late_ps": 6489.464,
+   "early_ps": 6489.464,
+   "cppr_node": "m",
+   "slew_ps": 187.422,
+   "xy_um": [
+    8363.52,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_bn_00",
+   "part": "c_W3_bn_00",
+   "late_ps": 6489.683,
+   "early_ps": 6489.683,
+   "cppr_node": "m",
+   "slew_ps": 185.38,
+   "xy_um": [
+    7128.0,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_bn_01",
+   "part": "c_W3_bn_01",
+   "late_ps": 6489.595,
+   "early_ps": 6489.595,
+   "cppr_node": "m",
+   "slew_ps": 185.343,
+   "xy_um": [
+    7128.0,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_bn_10",
+   "part": "c_W3_bn_10",
+   "late_ps": 6489.258,
+   "early_ps": 6489.258,
+   "cppr_node": "m",
+   "slew_ps": 186.52,
+   "xy_um": [
+    8363.52,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_bn_11",
+   "part": "c_W3_bn_11",
+   "late_ps": 6489.185,
+   "early_ps": 6489.185,
+   "cppr_node": "m",
+   "slew_ps": 186.945,
+   "xy_um": [
+    8363.52,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_tf_00",
+   "part": "c_W3_tf_00",
+   "late_ps": 6489.238,
+   "early_ps": 6489.238,
+   "cppr_node": "m",
+   "slew_ps": 182.082,
+   "xy_um": [
+    7128.0,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_tf_01",
+   "part": "c_W3_tf_01",
+   "late_ps": 6491.203,
+   "early_ps": 6491.203,
+   "cppr_node": "m",
+   "slew_ps": 183.478,
+   "xy_um": [
+    7128.0,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_tf_10",
+   "part": "c_W3_tf_10",
+   "late_ps": 6489.375,
+   "early_ps": 6489.375,
+   "cppr_node": "m",
+   "slew_ps": 186.255,
+   "xy_um": [
+    8363.52,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_tf_11",
+   "part": "c_W3_tf_11",
+   "late_ps": 6490.798,
+   "early_ps": 6490.798,
+   "cppr_node": "m",
+   "slew_ps": 184.789,
+   "xy_um": [
+    8363.52,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_tn_00",
+   "part": "c_W3_tn_00",
+   "late_ps": 6489.424,
+   "early_ps": 6489.424,
+   "cppr_node": "m",
+   "slew_ps": 182.903,
+   "xy_um": [
+    7128.0,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_tn_01",
+   "part": "c_W3_tn_01",
+   "late_ps": 6489.878,
+   "early_ps": 6489.878,
+   "cppr_node": "m",
+   "slew_ps": 185.615,
+   "xy_um": [
+    7128.0,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_tn_10",
+   "part": "c_W3_tn_10",
+   "late_ps": 6489.544,
+   "early_ps": 6489.544,
+   "cppr_node": "m",
+   "slew_ps": 186.637,
+   "xy_um": [
+    8363.52,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W3_tn_11",
+   "part": "c_W3_tn_11",
+   "late_ps": 6489.453,
+   "early_ps": 6489.453,
+   "cppr_node": "m",
+   "slew_ps": 186.941,
+   "xy_um": [
+    8363.52,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_bf_00",
+   "part": "c_W4_bf_00",
+   "late_ps": 6492.257,
+   "early_ps": 6492.257,
+   "cppr_node": "m",
+   "slew_ps": 177.897,
+   "xy_um": [
+    4656.96,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_bf_01",
+   "part": "c_W4_bf_01",
+   "late_ps": 6492.431,
+   "early_ps": 6492.431,
+   "cppr_node": "m",
+   "slew_ps": 177.863,
+   "xy_um": [
+    4656.96,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_bf_10",
+   "part": "c_W4_bf_10",
+   "late_ps": 6480.6,
+   "early_ps": 6480.6,
+   "cppr_node": "m",
+   "slew_ps": 167.994,
+   "xy_um": [
+    5892.48,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_bf_11",
+   "part": "c_W4_bf_11",
+   "late_ps": 6480.769,
+   "early_ps": 6480.769,
+   "cppr_node": "m",
+   "slew_ps": 167.823,
+   "xy_um": [
+    5892.48,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_bn_00",
+   "part": "c_W4_bn_00",
+   "late_ps": 6483.266,
+   "early_ps": 6483.266,
+   "cppr_node": "m",
+   "slew_ps": 167.74,
+   "xy_um": [
+    4656.96,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_bn_01",
+   "part": "c_W4_bn_01",
+   "late_ps": 6483.495,
+   "early_ps": 6483.495,
+   "cppr_node": "m",
+   "slew_ps": 169.094,
+   "xy_um": [
+    4656.96,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_bn_10",
+   "part": "c_W4_bn_10",
+   "late_ps": 6480.813,
+   "early_ps": 6480.813,
+   "cppr_node": "m",
+   "slew_ps": 170.425,
+   "xy_um": [
+    5892.48,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_bn_11",
+   "part": "c_W4_bn_11",
+   "late_ps": 6480.705,
+   "early_ps": 6480.705,
+   "cppr_node": "m",
+   "slew_ps": 169.745,
+   "xy_um": [
+    5892.48,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_tf_00",
+   "part": "c_W4_tf_00",
+   "late_ps": 6483.699,
+   "early_ps": 6483.699,
+   "cppr_node": "m",
+   "slew_ps": 168.553,
+   "xy_um": [
+    4656.96,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_tf_01",
+   "part": "c_W4_tf_01",
+   "late_ps": 6484.826,
+   "early_ps": 6484.826,
+   "cppr_node": "m",
+   "slew_ps": 166.43,
+   "xy_um": [
+    4656.96,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_tf_10",
+   "part": "c_W4_tf_10",
+   "late_ps": 6480.913,
+   "early_ps": 6480.913,
+   "cppr_node": "m",
+   "slew_ps": 169.339,
+   "xy_um": [
+    5892.48,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_tf_11",
+   "part": "c_W4_tf_11",
+   "late_ps": 6482.742,
+   "early_ps": 6482.742,
+   "cppr_node": "m",
+   "slew_ps": 171.184,
+   "xy_um": [
+    5892.48,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_tn_00",
+   "part": "c_W4_tn_00",
+   "late_ps": 6483.549,
+   "early_ps": 6483.549,
+   "cppr_node": "m",
+   "slew_ps": 167.813,
+   "xy_um": [
+    4656.96,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_tn_01",
+   "part": "c_W4_tn_01",
+   "late_ps": 6483.767,
+   "early_ps": 6483.767,
+   "cppr_node": "m",
+   "slew_ps": 169.139,
+   "xy_um": [
+    4656.96,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_tn_10",
+   "part": "c_W4_tn_10",
+   "late_ps": 6481.096,
+   "early_ps": 6481.096,
+   "cppr_node": "m",
+   "slew_ps": 170.198,
+   "xy_um": [
+    5892.48,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W4_tn_11",
+   "part": "c_W4_tn_11",
+   "late_ps": 6480.975,
+   "early_ps": 6480.975,
+   "cppr_node": "m",
+   "slew_ps": 169.714,
+   "xy_um": [
+    5892.48,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_bf_00",
+   "part": "c_W5_bf_00",
+   "late_ps": 6492.214,
+   "early_ps": 6492.214,
+   "cppr_node": "m",
+   "slew_ps": 173.235,
+   "xy_um": [
+    2185.92,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_bf_01",
+   "part": "c_W5_bf_01",
+   "late_ps": 6493.71,
+   "early_ps": 6493.71,
+   "cppr_node": "m",
+   "slew_ps": 179.716,
+   "xy_um": [
+    2185.92,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_bf_10",
+   "part": "c_W5_bf_10",
+   "late_ps": 6483.711,
+   "early_ps": 6483.711,
+   "cppr_node": "m",
+   "slew_ps": 167.382,
+   "xy_um": [
+    3421.44,
+    3922.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_bf_11",
+   "part": "c_W5_bf_11",
+   "late_ps": 6484.054,
+   "early_ps": 6484.054,
+   "cppr_node": "m",
+   "slew_ps": 170.313,
+   "xy_um": [
+    3421.44,
+    1304.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_bn_00",
+   "part": "c_W5_bn_00",
+   "late_ps": 6491.228,
+   "early_ps": 6491.228,
+   "cppr_node": "m",
+   "slew_ps": 174.131,
+   "xy_um": [
+    2185.92,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_bn_01",
+   "part": "c_W5_bn_01",
+   "late_ps": 6490.856,
+   "early_ps": 6490.856,
+   "cppr_node": "m",
+   "slew_ps": 172.54,
+   "xy_um": [
+    2185.92,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_bn_10",
+   "part": "c_W5_bn_10",
+   "late_ps": 6483.889,
+   "early_ps": 6483.889,
+   "cppr_node": "m",
+   "slew_ps": 167.684,
+   "xy_um": [
+    3421.44,
+    9149.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_bn_11",
+   "part": "c_W5_bn_11",
+   "late_ps": 6483.802,
+   "early_ps": 6483.802,
+   "cppr_node": "m",
+   "slew_ps": 167.794,
+   "xy_um": [
+    3421.44,
+    6531.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_tf_00",
+   "part": "c_W5_tf_00",
+   "late_ps": 6490.218,
+   "early_ps": 6490.218,
+   "cppr_node": "m",
+   "slew_ps": 169.927,
+   "xy_um": [
+    2185.92,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_tf_01",
+   "part": "c_W5_tf_01",
+   "late_ps": 6492.098,
+   "early_ps": 6492.098,
+   "cppr_node": "m",
+   "slew_ps": 173.15,
+   "xy_um": [
+    2185.92,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_tf_10",
+   "part": "c_W5_tf_10",
+   "late_ps": 6484.012,
+   "early_ps": 6484.012,
+   "cppr_node": "m",
+   "slew_ps": 167.504,
+   "xy_um": [
+    3421.44,
+    22343.04
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_tf_11",
+   "part": "c_W5_tf_11",
+   "late_ps": 6485.826,
+   "early_ps": 6485.826,
+   "cppr_node": "m",
+   "slew_ps": 169.558,
+   "xy_um": [
+    3421.44,
+    24960.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_tn_00",
+   "part": "c_W5_tn_00",
+   "late_ps": 6490.532,
+   "early_ps": 6490.532,
+   "cppr_node": "m",
+   "slew_ps": 172.569,
+   "xy_um": [
+    2185.92,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_tn_01",
+   "part": "c_W5_tn_01",
+   "late_ps": 6492.785,
+   "early_ps": 6492.785,
+   "cppr_node": "m",
+   "slew_ps": 176.183,
+   "xy_um": [
+    2185.92,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_tn_10",
+   "part": "c_W5_tn_10",
+   "late_ps": 6484.2,
+   "early_ps": 6484.2,
+   "cppr_node": "m",
+   "slew_ps": 168.622,
+   "xy_um": [
+    3421.44,
+    17115.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "c_W5_tn_11",
+   "part": "c_W5_tn_11",
+   "late_ps": 6484.102,
+   "early_ps": 6484.102,
+   "cppr_node": "m",
+   "slew_ps": 169.122,
+   "xy_um": [
+    3421.44,
+    19733.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "coll_core",
+   "part": "coll_core",
+   "late_ps": 6488.686,
+   "early_ps": 6488.686,
+   "cppr_node": "m",
+   "slew_ps": 173.139,
+   "xy_um": [
+    1166.4,
+    9227.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "coll_f0",
+   "part": "coll_f0",
+   "late_ps": 6489.243,
+   "early_ps": 6489.243,
+   "cppr_node": "m",
+   "slew_ps": 172.074,
+   "xy_um": [
+    1166.4,
+    5952.96
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "coll_f1",
+   "part": "coll_f1",
+   "late_ps": 6492.662,
+   "early_ps": 6492.662,
+   "cppr_node": "m",
+   "slew_ps": 173.819,
+   "xy_um": [
+    1166.4,
+    6946.56
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "coll_f2",
+   "part": "coll_f2",
+   "late_ps": 6497.654,
+   "early_ps": 6497.654,
+   "cppr_node": "m",
+   "slew_ps": 180.548,
+   "xy_um": [
+    1166.4,
+    7940.16
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "coll_f3",
+   "part": "coll_f3",
+   "late_ps": 6495.145,
+   "early_ps": 6495.145,
+   "cppr_node": "m",
+   "slew_ps": 188.999,
+   "xy_um": [
+    1166.4,
+    10756.8
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "coll_f4",
+   "part": "coll_f4",
+   "late_ps": 6494.786,
+   "early_ps": 6494.786,
+   "cppr_node": "m",
+   "slew_ps": 178.66,
+   "xy_um": [
+    1166.4,
+    12009.6
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "coll_f5",
+   "part": "coll_f5",
+   "late_ps": 6489.065,
+   "early_ps": 6489.065,
+   "cppr_node": "m",
+   "slew_ps": 174.696,
+   "xy_um": [
+    1166.4,
+    12873.6
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "coll_n",
+   "part": "coll_n",
+   "late_ps": 6492.69,
+   "early_ps": 6492.69,
+   "cppr_node": "m",
+   "slew_ps": 178.635,
+   "xy_um": [
+    1166.4,
+    13616.64
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "coll_s",
+   "part": "coll_s",
+   "late_ps": 6497.366,
+   "early_ps": 6497.366,
+   "cppr_node": "m",
+   "slew_ps": 177.871,
+   "xy_um": [
+    1166.4,
+    5045.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "coll_ucie",
+   "part": "coll_ucie",
+   "late_ps": 6492.323,
+   "early_ps": 6492.323,
+   "cppr_node": "m",
+   "slew_ps": 175.673,
+   "xy_um": [
+    388.8,
+    8424.0
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "glue",
+   "part": "glue",
+   "late_ps": 6495.145,
+   "early_ps": 6495.145,
+   "cppr_node": "m",
+   "slew_ps": 188.999,
+   "xy_um": [
+    388.8,
+    10756.8
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "io_serdes",
+   "part": "io_serdes",
+   "late_ps": 6489.762,
+   "early_ps": 6489.762,
+   "cppr_node": "m",
+   "slew_ps": 171.491,
+   "xy_um": [
+    777.6,
+    15171.84
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "io_serdes_1",
+   "part": "io_serdes_1",
+   "late_ps": 6490.609,
+   "early_ps": 6490.609,
+   "cppr_node": "m",
+   "slew_ps": 172.064,
+   "xy_um": [
+    777.6,
+    3481.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "io_serdes_2",
+   "part": "io_serdes_2",
+   "late_ps": 6491.432,
+   "early_ps": 6491.432,
+   "cppr_node": "m",
+   "slew_ps": 179.169,
+   "xy_um": [
+    777.6,
+    1157.76
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "native59",
+   "part": "native59",
+   "late_ps": 6494.998,
+   "early_ps": 6494.998,
+   "cppr_node": "m",
+   "slew_ps": 178.625,
+   "xy_um": [
+    388.8,
+    11750.4
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_ctl",
+   "part": "sl_E0_ctl",
+   "late_ps": 6486.099,
+   "early_ps": 6486.099,
+   "cppr_node": "m",
+   "slew_ps": 178.887,
+   "xy_um": [
+    17625.6,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_fe",
+   "part": "sl_E0_fe",
+   "late_ps": 6486.0,
+   "early_ps": 6486.0,
+   "cppr_node": "m",
+   "slew_ps": 177.489,
+   "xy_um": [
+    18550.08,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_fw",
+   "part": "sl_E0_fw",
+   "late_ps": 6478.843,
+   "early_ps": 6478.843,
+   "cppr_node": "m",
+   "slew_ps": 172.505,
+   "xy_um": [
+    16701.12,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_hc0",
+   "part": "sl_E0_hc0",
+   "late_ps": 6482.984,
+   "early_ps": 6482.984,
+   "cppr_node": "m",
+   "slew_ps": 179.991,
+   "xy_um": [
+    16701.12,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_hc1",
+   "part": "sl_E0_hc1",
+   "late_ps": 6485.626,
+   "early_ps": 6485.626,
+   "cppr_node": "m",
+   "slew_ps": 179.574,
+   "xy_um": [
+    17323.2,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_hc2",
+   "part": "sl_E0_hc2",
+   "late_ps": 6485.906,
+   "early_ps": 6485.906,
+   "cppr_node": "m",
+   "slew_ps": 180.712,
+   "xy_um": [
+    17936.64,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_hc3",
+   "part": "sl_E0_hc3",
+   "late_ps": 6485.906,
+   "early_ps": 6485.906,
+   "cppr_node": "m",
+   "slew_ps": 180.712,
+   "xy_um": [
+    18550.08,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_sc",
+   "part": "sl_E0_sc",
+   "late_ps": 6486.0,
+   "early_ps": 6486.0,
+   "cppr_node": "m",
+   "slew_ps": 177.489,
+   "xy_um": [
+    17936.64,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_st_a",
+   "part": "sl_E0_st_a",
+   "late_ps": 6483.433,
+   "early_ps": 6483.433,
+   "cppr_node": "m",
+   "slew_ps": 179.019,
+   "xy_um": [
+    16701.12,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_st_b",
+   "part": "sl_E0_st_b",
+   "late_ps": 6486.513,
+   "early_ps": 6486.513,
+   "cppr_node": "m",
+   "slew_ps": 181.708,
+   "xy_um": [
+    18550.08,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_stm",
+   "part": "sl_E0_stm",
+   "late_ps": 6485.535,
+   "early_ps": 6485.535,
+   "cppr_node": "m",
+   "slew_ps": 175.559,
+   "xy_um": [
+    17323.2,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_su_c",
+   "part": "sl_E0_su_c",
+   "late_ps": 6494.032999999999,
+   "early_ps": 6480.532999999999,
+   "cppr_node": "m",
+   "slew_ps": 174.457,
+   "xy_um": [
+    17625.6,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_E0_su_l0",
+   "part": "sl_E0_su_l0",
+   "late_ps": 6481.102,
+   "early_ps": 6481.102,
+   "cppr_node": "m",
+   "slew_ps": 176.535,
+   "xy_um": [
+    18550.08,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E0_su_l1",
+   "part": "sl_E0_su_l1",
+   "late_ps": 6477.942,
+   "early_ps": 6477.942,
+   "cppr_node": "m",
+   "slew_ps": 170.958,
+   "xy_um": [
+    16701.12,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_ctl",
+   "part": "sl_E1_ctl",
+   "late_ps": 6480.72,
+   "early_ps": 6480.72,
+   "cppr_node": "m",
+   "slew_ps": 172.127,
+   "xy_um": [
+    20096.64,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_fe",
+   "part": "sl_E1_fe",
+   "late_ps": 6484.073,
+   "early_ps": 6484.073,
+   "cppr_node": "m",
+   "slew_ps": 187.717,
+   "xy_um": [
+    21021.12,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_fw",
+   "part": "sl_E1_fw",
+   "late_ps": 6480.789,
+   "early_ps": 6480.789,
+   "cppr_node": "m",
+   "slew_ps": 171.319,
+   "xy_um": [
+    19172.16,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_hc0",
+   "part": "sl_E1_hc0",
+   "late_ps": 6481.394,
+   "early_ps": 6481.394,
+   "cppr_node": "m",
+   "slew_ps": 174.763,
+   "xy_um": [
+    19172.16,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_hc1",
+   "part": "sl_E1_hc1",
+   "late_ps": 6484.493,
+   "early_ps": 6484.493,
+   "cppr_node": "m",
+   "slew_ps": 178.928,
+   "xy_um": [
+    19794.24,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_hc2",
+   "part": "sl_E1_hc2",
+   "late_ps": 6483.793,
+   "early_ps": 6483.793,
+   "cppr_node": "m",
+   "slew_ps": 187.576,
+   "xy_um": [
+    20407.68,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_hc3",
+   "part": "sl_E1_hc3",
+   "late_ps": 6483.793,
+   "early_ps": 6483.793,
+   "cppr_node": "m",
+   "slew_ps": 187.576,
+   "xy_um": [
+    21021.12,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_sc",
+   "part": "sl_E1_sc",
+   "late_ps": 6484.073,
+   "early_ps": 6484.073,
+   "cppr_node": "m",
+   "slew_ps": 187.717,
+   "xy_um": [
+    20407.68,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_st_a",
+   "part": "sl_E1_st_a",
+   "late_ps": 6486.219,
+   "early_ps": 6486.219,
+   "cppr_node": "m",
+   "slew_ps": 179.794,
+   "xy_um": [
+    19172.16,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_st_b",
+   "part": "sl_E1_st_b",
+   "late_ps": 6484.137,
+   "early_ps": 6484.137,
+   "cppr_node": "m",
+   "slew_ps": 186.372,
+   "xy_um": [
+    21021.12,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_stm",
+   "part": "sl_E1_stm",
+   "late_ps": 6485.781,
+   "early_ps": 6485.781,
+   "cppr_node": "m",
+   "slew_ps": 180.558,
+   "xy_um": [
+    19794.24,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_su_c",
+   "part": "sl_E1_su_c",
+   "late_ps": 6493.8189999999995,
+   "early_ps": 6480.3189999999995,
+   "cppr_node": "m",
+   "slew_ps": 177.403,
+   "xy_um": [
+    20096.64,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_E1_su_l0",
+   "part": "sl_E1_su_l0",
+   "late_ps": 6478.513,
+   "early_ps": 6478.513,
+   "cppr_node": "m",
+   "slew_ps": 184.206,
+   "xy_um": [
+    21021.12,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E1_su_l1",
+   "part": "sl_E1_su_l1",
+   "late_ps": 6479.854,
+   "early_ps": 6479.854,
+   "cppr_node": "m",
+   "slew_ps": 169.888,
+   "xy_um": [
+    19172.16,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_ctl",
+   "part": "sl_E2_ctl",
+   "late_ps": 6477.128,
+   "early_ps": 6477.128,
+   "cppr_node": "m",
+   "slew_ps": 172.528,
+   "xy_um": [
+    22567.68,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_fe",
+   "part": "sl_E2_fe",
+   "late_ps": 6477.44,
+   "early_ps": 6477.44,
+   "cppr_node": "m",
+   "slew_ps": 177.385,
+   "xy_um": [
+    23492.16,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_fw",
+   "part": "sl_E2_fw",
+   "late_ps": 6484.432,
+   "early_ps": 6484.432,
+   "cppr_node": "m",
+   "slew_ps": 183.338,
+   "xy_um": [
+    21643.2,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_hc0",
+   "part": "sl_E2_hc0",
+   "late_ps": 6483.76,
+   "early_ps": 6483.76,
+   "cppr_node": "m",
+   "slew_ps": 180.248,
+   "xy_um": [
+    21643.2,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_hc1",
+   "part": "sl_E2_hc1",
+   "late_ps": 6476.632,
+   "early_ps": 6476.632,
+   "cppr_node": "m",
+   "slew_ps": 173.234,
+   "xy_um": [
+    22265.28,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_hc2",
+   "part": "sl_E2_hc2",
+   "late_ps": 6476.998,
+   "early_ps": 6476.998,
+   "cppr_node": "m",
+   "slew_ps": 177.225,
+   "xy_um": [
+    22878.72,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_hc3",
+   "part": "sl_E2_hc3",
+   "late_ps": 6476.998,
+   "early_ps": 6476.998,
+   "cppr_node": "m",
+   "slew_ps": 177.225,
+   "xy_um": [
+    23492.16,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_sc",
+   "part": "sl_E2_sc",
+   "late_ps": 6477.44,
+   "early_ps": 6477.44,
+   "cppr_node": "m",
+   "slew_ps": 177.385,
+   "xy_um": [
+    22878.72,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_st_a",
+   "part": "sl_E2_st_a",
+   "late_ps": 6484.224,
+   "early_ps": 6484.224,
+   "cppr_node": "m",
+   "slew_ps": 179.417,
+   "xy_um": [
+    21643.2,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_st_b",
+   "part": "sl_E2_st_b",
+   "late_ps": 6477.533,
+   "early_ps": 6477.533,
+   "cppr_node": "m",
+   "slew_ps": 177.086,
+   "xy_um": [
+    23492.16,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_stm",
+   "part": "sl_E2_stm",
+   "late_ps": 6482.628,
+   "early_ps": 6482.628,
+   "cppr_node": "m",
+   "slew_ps": 184.745,
+   "xy_um": [
+    22265.28,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_su_c",
+   "part": "sl_E2_su_c",
+   "late_ps": 6490.391,
+   "early_ps": 6476.891,
+   "cppr_node": "m",
+   "slew_ps": 180.692,
+   "xy_um": [
+    22567.68,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_E2_su_l0",
+   "part": "sl_E2_su_l0",
+   "late_ps": 6475.672,
+   "early_ps": 6475.672,
+   "cppr_node": "m",
+   "slew_ps": 179.42,
+   "xy_um": [
+    23492.16,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E2_su_l1",
+   "part": "sl_E2_su_l1",
+   "late_ps": 6483.319,
+   "early_ps": 6483.319,
+   "cppr_node": "m",
+   "slew_ps": 180.972,
+   "xy_um": [
+    21643.2,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_ctl",
+   "part": "sl_E3_ctl",
+   "late_ps": 6479.288,
+   "early_ps": 6479.288,
+   "cppr_node": "m",
+   "slew_ps": 172.796,
+   "xy_um": [
+    25038.72,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_fe",
+   "part": "sl_E3_fe",
+   "late_ps": 6484.026,
+   "early_ps": 6484.026,
+   "cppr_node": "m",
+   "slew_ps": 185.173,
+   "xy_um": [
+    25963.2,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_fw",
+   "part": "sl_E3_fw",
+   "late_ps": 6478.211,
+   "early_ps": 6478.211,
+   "cppr_node": "m",
+   "slew_ps": 170.928,
+   "xy_um": [
+    24114.24,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_hc0",
+   "part": "sl_E3_hc0",
+   "late_ps": 6478.773,
+   "early_ps": 6478.773,
+   "cppr_node": "m",
+   "slew_ps": 173.574,
+   "xy_um": [
+    24114.24,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_hc1",
+   "part": "sl_E3_hc1",
+   "late_ps": 6478.773,
+   "early_ps": 6478.773,
+   "cppr_node": "m",
+   "slew_ps": 173.574,
+   "xy_um": [
+    24736.32,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_hc2",
+   "part": "sl_E3_hc2",
+   "late_ps": 6483.658,
+   "early_ps": 6483.658,
+   "cppr_node": "m",
+   "slew_ps": 185.219,
+   "xy_um": [
+    25349.76,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_hc3",
+   "part": "sl_E3_hc3",
+   "late_ps": 6483.658,
+   "early_ps": 6483.658,
+   "cppr_node": "m",
+   "slew_ps": 185.219,
+   "xy_um": [
+    25963.2,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_sc",
+   "part": "sl_E3_sc",
+   "late_ps": 6484.026,
+   "early_ps": 6484.026,
+   "cppr_node": "m",
+   "slew_ps": 185.173,
+   "xy_um": [
+    25349.76,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_st_a",
+   "part": "sl_E3_st_a",
+   "late_ps": 6479.288,
+   "early_ps": 6479.288,
+   "cppr_node": "m",
+   "slew_ps": 172.796,
+   "xy_um": [
+    24114.24,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_st_b",
+   "part": "sl_E3_st_b",
+   "late_ps": 6483.995,
+   "early_ps": 6483.995,
+   "cppr_node": "m",
+   "slew_ps": 184.12,
+   "xy_um": [
+    25963.2,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_stm",
+   "part": "sl_E3_stm",
+   "late_ps": 6478.211,
+   "early_ps": 6478.211,
+   "cppr_node": "m",
+   "slew_ps": 170.928,
+   "xy_um": [
+    24736.32,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_su_c",
+   "part": "sl_E3_su_c",
+   "late_ps": 6491.681,
+   "early_ps": 6478.181,
+   "cppr_node": "m",
+   "slew_ps": 177.707,
+   "xy_um": [
+    25038.72,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_E3_su_l0",
+   "part": "sl_E3_su_l0",
+   "late_ps": 6478.572,
+   "early_ps": 6478.572,
+   "cppr_node": "m",
+   "slew_ps": 180.766,
+   "xy_um": [
+    25963.2,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E3_su_l1",
+   "part": "sl_E3_su_l1",
+   "late_ps": 6478.521,
+   "early_ps": 6478.521,
+   "cppr_node": "m",
+   "slew_ps": 177.707,
+   "xy_um": [
+    24114.24,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_ctl",
+   "part": "sl_E4_ctl",
+   "late_ps": 6480.859,
+   "early_ps": 6480.859,
+   "cppr_node": "m",
+   "slew_ps": 180.742,
+   "xy_um": [
+    27509.76,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_fe",
+   "part": "sl_E4_fe",
+   "late_ps": 6480.493,
+   "early_ps": 6480.493,
+   "cppr_node": "m",
+   "slew_ps": 179.888,
+   "xy_um": [
+    28434.24,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_fw",
+   "part": "sl_E4_fw",
+   "late_ps": 6483.384,
+   "early_ps": 6483.384,
+   "cppr_node": "m",
+   "slew_ps": 184.412,
+   "xy_um": [
+    26585.28,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_hc0",
+   "part": "sl_E4_hc0",
+   "late_ps": 6483.11,
+   "early_ps": 6483.11,
+   "cppr_node": "m",
+   "slew_ps": 185.106,
+   "xy_um": [
+    26585.28,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_hc1",
+   "part": "sl_E4_hc1",
+   "late_ps": 6482.457,
+   "early_ps": 6482.457,
+   "cppr_node": "m",
+   "slew_ps": 181.547,
+   "xy_um": [
+    27207.36,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_hc2",
+   "part": "sl_E4_hc2",
+   "late_ps": 6480.269,
+   "early_ps": 6480.269,
+   "cppr_node": "m",
+   "slew_ps": 180.865,
+   "xy_um": [
+    27820.8,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_hc3",
+   "part": "sl_E4_hc3",
+   "late_ps": 6480.269,
+   "early_ps": 6480.269,
+   "cppr_node": "m",
+   "slew_ps": 180.865,
+   "xy_um": [
+    28434.24,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_sc",
+   "part": "sl_E4_sc",
+   "late_ps": 6480.493,
+   "early_ps": 6480.493,
+   "cppr_node": "m",
+   "slew_ps": 179.888,
+   "xy_um": [
+    27820.8,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_st_a",
+   "part": "sl_E4_st_a",
+   "late_ps": 6483.565,
+   "early_ps": 6483.565,
+   "cppr_node": "m",
+   "slew_ps": 184.14,
+   "xy_um": [
+    26585.28,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_st_b",
+   "part": "sl_E4_st_b",
+   "late_ps": 6480.859,
+   "early_ps": 6480.859,
+   "cppr_node": "m",
+   "slew_ps": 180.742,
+   "xy_um": [
+    28434.24,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_stm",
+   "part": "sl_E4_stm",
+   "late_ps": 6482.733,
+   "early_ps": 6482.733,
+   "cppr_node": "m",
+   "slew_ps": 180.728,
+   "xy_um": [
+    27207.36,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_su_c",
+   "part": "sl_E4_su_c",
+   "late_ps": 6488.553,
+   "early_ps": 6475.053,
+   "cppr_node": "m",
+   "slew_ps": 177.891,
+   "xy_um": [
+    27509.76,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_E4_su_l0",
+   "part": "sl_E4_su_l0",
+   "late_ps": 6475.393,
+   "early_ps": 6475.393,
+   "cppr_node": "m",
+   "slew_ps": 177.891,
+   "xy_um": [
+    28434.24,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E4_su_l1",
+   "part": "sl_E4_su_l1",
+   "late_ps": 6482.315,
+   "early_ps": 6482.315,
+   "cppr_node": "m",
+   "slew_ps": 182.567,
+   "xy_um": [
+    26585.28,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_ctl",
+   "part": "sl_E5_ctl",
+   "late_ps": 6479.623,
+   "early_ps": 6479.623,
+   "cppr_node": "m",
+   "slew_ps": 187.054,
+   "xy_um": [
+    29980.8,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_fe",
+   "part": "sl_E5_fe",
+   "late_ps": 6485.311,
+   "early_ps": 6485.311,
+   "cppr_node": "m",
+   "slew_ps": 186.809,
+   "xy_um": [
+    30905.28,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_fw",
+   "part": "sl_E5_fw",
+   "late_ps": 6476.162,
+   "early_ps": 6476.162,
+   "cppr_node": "m",
+   "slew_ps": 171.386,
+   "xy_um": [
+    29056.32,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_hc0",
+   "part": "sl_E5_hc0",
+   "late_ps": 6476.558,
+   "early_ps": 6476.558,
+   "cppr_node": "m",
+   "slew_ps": 173.216,
+   "xy_um": [
+    29056.32,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_hc1",
+   "part": "sl_E5_hc1",
+   "late_ps": 6478.055,
+   "early_ps": 6478.055,
+   "cppr_node": "m",
+   "slew_ps": 180.401,
+   "xy_um": [
+    29678.4,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_hc2",
+   "part": "sl_E5_hc2",
+   "late_ps": 6479.17,
+   "early_ps": 6479.17,
+   "cppr_node": "m",
+   "slew_ps": 188.209,
+   "xy_um": [
+    30291.84,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_hc3",
+   "part": "sl_E5_hc3",
+   "late_ps": 6485.095,
+   "early_ps": 6485.095,
+   "cppr_node": "m",
+   "slew_ps": 187.531,
+   "xy_um": [
+    30905.28,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_sc",
+   "part": "sl_E5_sc",
+   "late_ps": 6479.435,
+   "early_ps": 6479.435,
+   "cppr_node": "m",
+   "slew_ps": 187.353,
+   "xy_um": [
+    30291.84,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_st_a",
+   "part": "sl_E5_st_a",
+   "late_ps": 6480.212,
+   "early_ps": 6480.212,
+   "cppr_node": "m",
+   "slew_ps": 176.127,
+   "xy_um": [
+    29056.32,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_st_b",
+   "part": "sl_E5_st_b",
+   "late_ps": 6485.486,
+   "early_ps": 6485.486,
+   "cppr_node": "m",
+   "slew_ps": 186.579,
+   "xy_um": [
+    30905.28,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_stm",
+   "part": "sl_E5_stm",
+   "late_ps": 6479.114,
+   "early_ps": 6479.114,
+   "cppr_node": "m",
+   "slew_ps": 180.518,
+   "xy_um": [
+    29678.4,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_su_c",
+   "part": "sl_E5_su_c",
+   "late_ps": 6487.282999999999,
+   "early_ps": 6473.782999999999,
+   "cppr_node": "m",
+   "slew_ps": 185.011,
+   "xy_um": [
+    29980.8,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_E5_su_l0",
+   "part": "sl_E5_su_l0",
+   "late_ps": 6480.682,
+   "early_ps": 6480.682,
+   "cppr_node": "m",
+   "slew_ps": 182.638,
+   "xy_um": [
+    30905.28,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_E5_su_l1",
+   "part": "sl_E5_su_l1",
+   "late_ps": 6475.078,
+   "early_ps": 6475.078,
+   "cppr_node": "m",
+   "slew_ps": 169.192,
+   "xy_um": [
+    29056.32,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_ctl",
+   "part": "sl_W0_ctl",
+   "late_ps": 6479.839,
+   "early_ps": 6479.839,
+   "cppr_node": "m",
+   "slew_ps": 171.105,
+   "xy_um": [
+    15154.56,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_fe",
+   "part": "sl_W0_fe",
+   "late_ps": 6483.971,
+   "early_ps": 6483.971,
+   "cppr_node": "m",
+   "slew_ps": 177.474,
+   "xy_um": [
+    16079.04,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_fw",
+   "part": "sl_W0_fw",
+   "late_ps": 6487.018,
+   "early_ps": 6487.018,
+   "cppr_node": "m",
+   "slew_ps": 183.014,
+   "xy_um": [
+    14230.08,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_hc0",
+   "part": "sl_W0_hc0",
+   "late_ps": 6486.744,
+   "early_ps": 6486.744,
+   "cppr_node": "m",
+   "slew_ps": 183.799,
+   "xy_um": [
+    14230.08,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_hc1",
+   "part": "sl_W0_hc1",
+   "late_ps": 6484.655,
+   "early_ps": 6484.655,
+   "cppr_node": "m",
+   "slew_ps": 182.019,
+   "xy_um": [
+    14852.16,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_hc2",
+   "part": "sl_W0_hc2",
+   "late_ps": 6479.319,
+   "early_ps": 6479.319,
+   "cppr_node": "m",
+   "slew_ps": 171.89,
+   "xy_um": [
+    15465.6,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_hc3",
+   "part": "sl_W0_hc3",
+   "late_ps": 6479.319,
+   "early_ps": 6479.319,
+   "cppr_node": "m",
+   "slew_ps": 171.89,
+   "xy_um": [
+    16079.04,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_sc",
+   "part": "sl_W0_sc",
+   "late_ps": 6483.971,
+   "early_ps": 6483.971,
+   "cppr_node": "m",
+   "slew_ps": 177.474,
+   "xy_um": [
+    15465.6,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_st_a",
+   "part": "sl_W0_st_a",
+   "late_ps": 6487.2,
+   "early_ps": 6487.2,
+   "cppr_node": "m",
+   "slew_ps": 182.874,
+   "xy_um": [
+    14230.08,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_st_b",
+   "part": "sl_W0_st_b",
+   "late_ps": 6479.839,
+   "early_ps": 6479.839,
+   "cppr_node": "m",
+   "slew_ps": 171.105,
+   "xy_um": [
+    16079.04,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_stm",
+   "part": "sl_W0_stm",
+   "late_ps": 6484.931,
+   "early_ps": 6484.931,
+   "cppr_node": "m",
+   "slew_ps": 181.58,
+   "xy_um": [
+    14852.16,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_su_c",
+   "part": "sl_W0_su_c",
+   "late_ps": 6498.01,
+   "early_ps": 6448.79,
+   "cppr_node": "m",
+   "slew_ps": 176.434,
+   "xy_um": [
+    15154.56,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8_crh_rp1",
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_W0_su_l0",
+   "part": "sl_W0_su_l0",
+   "late_ps": 6479.1,
+   "early_ps": 6479.1,
+   "cppr_node": "m",
+   "slew_ps": 176.434,
+   "xy_um": [
+    16079.04,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W0_su_l1",
+   "part": "sl_W0_su_l1",
+   "late_ps": 6485.927,
+   "early_ps": 6485.927,
+   "cppr_node": "m",
+   "slew_ps": 181.406,
+   "xy_um": [
+    14230.08,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_ctl",
+   "part": "sl_W1_ctl",
+   "late_ps": 6483.436,
+   "early_ps": 6483.436,
+   "cppr_node": "m",
+   "slew_ps": 171.859,
+   "xy_um": [
+    12683.52,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_fe",
+   "part": "sl_W1_fe",
+   "late_ps": 6486.659,
+   "early_ps": 6486.659,
+   "cppr_node": "m",
+   "slew_ps": 187.09,
+   "xy_um": [
+    13608.0,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_fw",
+   "part": "sl_W1_fw",
+   "late_ps": 6483.233,
+   "early_ps": 6483.233,
+   "cppr_node": "m",
+   "slew_ps": 171.947,
+   "xy_um": [
+    11759.04,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_hc0",
+   "part": "sl_W1_hc0",
+   "late_ps": 6482.939,
+   "early_ps": 6482.939,
+   "cppr_node": "m",
+   "slew_ps": 172.772,
+   "xy_um": [
+    11759.04,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_hc1",
+   "part": "sl_W1_hc1",
+   "late_ps": 6482.939,
+   "early_ps": 6482.939,
+   "cppr_node": "m",
+   "slew_ps": 172.772,
+   "xy_um": [
+    12381.12,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_hc2",
+   "part": "sl_W1_hc2",
+   "late_ps": 6486.384,
+   "early_ps": 6486.384,
+   "cppr_node": "m",
+   "slew_ps": 187.97,
+   "xy_um": [
+    12994.56,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_hc3",
+   "part": "sl_W1_hc3",
+   "late_ps": 6486.384,
+   "early_ps": 6486.384,
+   "cppr_node": "m",
+   "slew_ps": 187.97,
+   "xy_um": [
+    13608.0,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_sc",
+   "part": "sl_W1_sc",
+   "late_ps": 6486.659,
+   "early_ps": 6486.659,
+   "cppr_node": "m",
+   "slew_ps": 187.09,
+   "xy_um": [
+    12994.56,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_st_a",
+   "part": "sl_W1_st_a",
+   "late_ps": 6483.436,
+   "early_ps": 6483.436,
+   "cppr_node": "m",
+   "slew_ps": 171.859,
+   "xy_um": [
+    11759.04,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_st_b",
+   "part": "sl_W1_st_b",
+   "late_ps": 6486.73,
+   "early_ps": 6486.73,
+   "cppr_node": "m",
+   "slew_ps": 186.991,
+   "xy_um": [
+    13608.0,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_stm",
+   "part": "sl_W1_stm",
+   "late_ps": 6483.233,
+   "early_ps": 6483.233,
+   "cppr_node": "m",
+   "slew_ps": 171.947,
+   "xy_um": [
+    12381.12,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_su_c",
+   "part": "sl_W1_su_c",
+   "late_ps": 6501.442,
+   "early_ps": 6452.222,
+   "cppr_node": "m",
+   "slew_ps": 175.914,
+   "xy_um": [
+    12683.52,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8_crh_rp1",
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_W1_su_l0",
+   "part": "sl_W1_su_l0",
+   "late_ps": 6481.1,
+   "early_ps": 6481.1,
+   "cppr_node": "m",
+   "slew_ps": 183.952,
+   "xy_um": [
+    13608.0,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W1_su_l1",
+   "part": "sl_W1_su_l1",
+   "late_ps": 6482.532,
+   "early_ps": 6482.532,
+   "cppr_node": "m",
+   "slew_ps": 175.914,
+   "xy_um": [
+    11759.04,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_ctl",
+   "part": "sl_W2_ctl",
+   "late_ps": 6489.197,
+   "early_ps": 6489.197,
+   "cppr_node": "m",
+   "slew_ps": 183.772,
+   "xy_um": [
+    10212.48,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_fe",
+   "part": "sl_W2_fe",
+   "late_ps": 6489.332,
+   "early_ps": 6489.332,
+   "cppr_node": "m",
+   "slew_ps": 184.859,
+   "xy_um": [
+    11136.96,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_fw",
+   "part": "sl_W2_fw",
+   "late_ps": 6487.676,
+   "early_ps": 6487.676,
+   "cppr_node": "m",
+   "slew_ps": 185.617,
+   "xy_um": [
+    9288.0,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_hc0",
+   "part": "sl_W2_hc0",
+   "late_ps": 6487.405,
+   "early_ps": 6487.405,
+   "cppr_node": "m",
+   "slew_ps": 187.099,
+   "xy_um": [
+    9288.0,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_hc1",
+   "part": "sl_W2_hc1",
+   "late_ps": 6488.731,
+   "early_ps": 6488.731,
+   "cppr_node": "m",
+   "slew_ps": 184.683,
+   "xy_um": [
+    9910.08,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_hc2",
+   "part": "sl_W2_hc2",
+   "late_ps": 6489.056,
+   "early_ps": 6489.056,
+   "cppr_node": "m",
+   "slew_ps": 185.74,
+   "xy_um": [
+    10523.52,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_hc3",
+   "part": "sl_W2_hc3",
+   "late_ps": 6489.056,
+   "early_ps": 6489.056,
+   "cppr_node": "m",
+   "slew_ps": 185.74,
+   "xy_um": [
+    11136.96,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_sc",
+   "part": "sl_W2_sc",
+   "late_ps": 6489.332,
+   "early_ps": 6489.332,
+   "cppr_node": "m",
+   "slew_ps": 184.859,
+   "xy_um": [
+    10523.52,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_st_a",
+   "part": "sl_W2_st_a",
+   "late_ps": 6487.865,
+   "early_ps": 6487.865,
+   "cppr_node": "m",
+   "slew_ps": 186.096,
+   "xy_um": [
+    9288.0,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_st_b",
+   "part": "sl_W2_st_b",
+   "late_ps": 6489.403,
+   "early_ps": 6489.403,
+   "cppr_node": "m",
+   "slew_ps": 184.763,
+   "xy_um": [
+    11136.96,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_stm",
+   "part": "sl_W2_stm",
+   "late_ps": 6489.005,
+   "early_ps": 6489.005,
+   "cppr_node": "m",
+   "slew_ps": 183.72,
+   "xy_um": [
+    9910.08,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_su_c",
+   "part": "sl_W2_su_c",
+   "late_ps": 6502.873,
+   "early_ps": 6453.652999999999,
+   "cppr_node": "m",
+   "slew_ps": 180.569,
+   "xy_um": [
+    10212.48,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8_crh_rp1",
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_W2_su_l0",
+   "part": "sl_W2_su_l0",
+   "late_ps": 6484.06,
+   "early_ps": 6484.06,
+   "cppr_node": "m",
+   "slew_ps": 181.823,
+   "xy_um": [
+    11136.96,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W2_su_l1",
+   "part": "sl_W2_su_l1",
+   "late_ps": 6486.626,
+   "early_ps": 6486.626,
+   "cppr_node": "m",
+   "slew_ps": 184.06,
+   "xy_um": [
+    9288.0,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_ctl",
+   "part": "sl_W3_ctl",
+   "late_ps": 6482.736,
+   "early_ps": 6482.736,
+   "cppr_node": "m",
+   "slew_ps": 172.577,
+   "xy_um": [
+    7741.44,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_fe",
+   "part": "sl_W3_fe",
+   "late_ps": 6487.598,
+   "early_ps": 6487.598,
+   "cppr_node": "m",
+   "slew_ps": 182.865,
+   "xy_um": [
+    8665.92,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_fw",
+   "part": "sl_W3_fw",
+   "late_ps": 6489.755,
+   "early_ps": 6489.755,
+   "cppr_node": "m",
+   "slew_ps": 178.76,
+   "xy_um": [
+    6816.96,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_hc0",
+   "part": "sl_W3_hc0",
+   "late_ps": 6489.483,
+   "early_ps": 6489.483,
+   "cppr_node": "m",
+   "slew_ps": 179.926,
+   "xy_um": [
+    6816.96,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_hc1",
+   "part": "sl_W3_hc1",
+   "late_ps": 6487.968,
+   "early_ps": 6487.968,
+   "cppr_node": "m",
+   "slew_ps": 185.038,
+   "xy_um": [
+    7439.04,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_hc2",
+   "part": "sl_W3_hc2",
+   "late_ps": 6487.665,
+   "early_ps": 6487.665,
+   "cppr_node": "m",
+   "slew_ps": 187.366,
+   "xy_um": [
+    8052.48,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_hc3",
+   "part": "sl_W3_hc3",
+   "late_ps": 6487.665,
+   "early_ps": 6487.665,
+   "cppr_node": "m",
+   "slew_ps": 187.366,
+   "xy_um": [
+    8665.92,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_sc",
+   "part": "sl_W3_sc",
+   "late_ps": 6487.598,
+   "early_ps": 6487.598,
+   "cppr_node": "m",
+   "slew_ps": 182.865,
+   "xy_um": [
+    8052.48,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_st_a",
+   "part": "sl_W3_st_a",
+   "late_ps": 6489.565,
+   "early_ps": 6489.565,
+   "cppr_node": "m",
+   "slew_ps": 175.42,
+   "xy_um": [
+    6816.96,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_st_b",
+   "part": "sl_W3_st_b",
+   "late_ps": 6488.009,
+   "early_ps": 6488.009,
+   "cppr_node": "m",
+   "slew_ps": 185.732,
+   "xy_um": [
+    8665.92,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_stm",
+   "part": "sl_W3_stm",
+   "late_ps": 6487.894,
+   "early_ps": 6487.894,
+   "cppr_node": "m",
+   "slew_ps": 180.951,
+   "xy_um": [
+    7439.04,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_su_c",
+   "part": "sl_W3_su_c",
+   "late_ps": 6501.898999999999,
+   "early_ps": 6452.678999999999,
+   "cppr_node": "m",
+   "slew_ps": 181.067,
+   "xy_um": [
+    7741.44,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8_crh_rp1",
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_W3_su_l0",
+   "part": "sl_W3_su_l0",
+   "late_ps": 6482.532,
+   "early_ps": 6482.532,
+   "cppr_node": "m",
+   "slew_ps": 181.807,
+   "xy_um": [
+    8665.92,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W3_su_l1",
+   "part": "sl_W3_su_l1",
+   "late_ps": 6488.919,
+   "early_ps": 6488.919,
+   "cppr_node": "m",
+   "slew_ps": 179.408,
+   "xy_um": [
+    6816.96,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_ctl",
+   "part": "sl_W4_ctl",
+   "late_ps": 6483.884,
+   "early_ps": 6483.884,
+   "cppr_node": "m",
+   "slew_ps": 170.635,
+   "xy_um": [
+    5270.4,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_fe",
+   "part": "sl_W4_fe",
+   "late_ps": 6483.834,
+   "early_ps": 6483.834,
+   "cppr_node": "m",
+   "slew_ps": 173.089,
+   "xy_um": [
+    6194.88,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_fw",
+   "part": "sl_W4_fw",
+   "late_ps": 6491.46,
+   "early_ps": 6491.46,
+   "cppr_node": "m",
+   "slew_ps": 177.417,
+   "xy_um": [
+    4345.92,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_hc0",
+   "part": "sl_W4_hc0",
+   "late_ps": 6491.182,
+   "early_ps": 6491.182,
+   "cppr_node": "m",
+   "slew_ps": 178.021,
+   "xy_um": [
+    4345.92,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_hc1",
+   "part": "sl_W4_hc1",
+   "late_ps": 6485.849,
+   "early_ps": 6485.849,
+   "cppr_node": "m",
+   "slew_ps": 171.744,
+   "xy_um": [
+    4968.0,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_hc2",
+   "part": "sl_W4_hc2",
+   "late_ps": 6483.539,
+   "early_ps": 6483.539,
+   "cppr_node": "m",
+   "slew_ps": 173.795,
+   "xy_um": [
+    5581.44,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_hc3",
+   "part": "sl_W4_hc3",
+   "late_ps": 6483.539,
+   "early_ps": 6483.539,
+   "cppr_node": "m",
+   "slew_ps": 173.795,
+   "xy_um": [
+    6194.88,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_sc",
+   "part": "sl_W4_sc",
+   "late_ps": 6483.834,
+   "early_ps": 6483.834,
+   "cppr_node": "m",
+   "slew_ps": 173.089,
+   "xy_um": [
+    5581.44,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_st_a",
+   "part": "sl_W4_st_a",
+   "late_ps": 6491.899,
+   "early_ps": 6491.899,
+   "cppr_node": "m",
+   "slew_ps": 179.119,
+   "xy_um": [
+    4345.92,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_st_b",
+   "part": "sl_W4_st_b",
+   "late_ps": 6483.884,
+   "early_ps": 6483.884,
+   "cppr_node": "m",
+   "slew_ps": 170.635,
+   "xy_um": [
+    6194.88,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_stm",
+   "part": "sl_W4_stm",
+   "late_ps": 6486.143,
+   "early_ps": 6486.143,
+   "cppr_node": "m",
+   "slew_ps": 170.974,
+   "xy_um": [
+    4968.0,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_su_c",
+   "part": "sl_W4_su_c",
+   "late_ps": 6502.012,
+   "early_ps": 6452.7919999999995,
+   "cppr_node": "m",
+   "slew_ps": 177.558,
+   "xy_um": [
+    5270.4,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8_crh_rp1",
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_W4_su_l0",
+   "part": "sl_W4_su_l0",
+   "late_ps": 6483.102,
+   "early_ps": 6483.102,
+   "cppr_node": "m",
+   "slew_ps": 177.558,
+   "xy_um": [
+    6194.88,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W4_su_l1",
+   "part": "sl_W4_su_l1",
+   "late_ps": 6490.949,
+   "early_ps": 6490.949,
+   "cppr_node": "m",
+   "slew_ps": 179.564,
+   "xy_um": [
+    4345.92,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_ctl",
+   "part": "sl_W5_ctl",
+   "late_ps": 6487.074,
+   "early_ps": 6487.074,
+   "cppr_node": "m",
+   "slew_ps": 172.152,
+   "xy_um": [
+    2799.36,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_fe",
+   "part": "sl_W5_fe",
+   "late_ps": 6486.868,
+   "early_ps": 6486.868,
+   "cppr_node": "m",
+   "slew_ps": 171.873,
+   "xy_um": [
+    3723.84,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_fw",
+   "part": "sl_W5_fw",
+   "late_ps": 6490.536,
+   "early_ps": 6490.536,
+   "cppr_node": "m",
+   "slew_ps": 174.851,
+   "xy_um": [
+    1874.88,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_hc0",
+   "part": "sl_W5_hc0",
+   "late_ps": 6489.762,
+   "early_ps": 6489.762,
+   "cppr_node": "m",
+   "slew_ps": 171.491,
+   "xy_um": [
+    1874.88,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_hc1",
+   "part": "sl_W5_hc1",
+   "late_ps": 6489.762,
+   "early_ps": 6489.762,
+   "cppr_node": "m",
+   "slew_ps": 171.491,
+   "xy_um": [
+    2496.96,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_hc2",
+   "part": "sl_W5_hc2",
+   "late_ps": 6486.509,
+   "early_ps": 6486.509,
+   "cppr_node": "m",
+   "slew_ps": 171.367,
+   "xy_um": [
+    3110.4,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_hc3",
+   "part": "sl_W5_hc3",
+   "late_ps": 6486.509,
+   "early_ps": 6486.509,
+   "cppr_node": "m",
+   "slew_ps": 171.367,
+   "xy_um": [
+    3723.84,
+    15145.92
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_sc",
+   "part": "sl_W5_sc",
+   "late_ps": 6486.868,
+   "early_ps": 6486.868,
+   "cppr_node": "m",
+   "slew_ps": 171.873,
+   "xy_um": [
+    3110.4,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_st_a",
+   "part": "sl_W5_st_a",
+   "late_ps": 6495.578,
+   "early_ps": 6495.578,
+   "cppr_node": "m",
+   "slew_ps": 180.13,
+   "xy_um": [
+    1874.88,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_st_b",
+   "part": "sl_W5_st_b",
+   "late_ps": 6487.074,
+   "early_ps": 6487.074,
+   "cppr_node": "m",
+   "slew_ps": 172.152,
+   "xy_um": [
+    3723.84,
+    13806.72
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_stm",
+   "part": "sl_W5_stm",
+   "late_ps": 6490.536,
+   "early_ps": 6490.536,
+   "cppr_node": "m",
+   "slew_ps": 174.851,
+   "xy_um": [
+    2496.96,
+    12467.52
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_su_c",
+   "part": "sl_W5_su_c",
+   "late_ps": 6505.027,
+   "early_ps": 6455.807,
+   "cppr_node": "m",
+   "slew_ps": 175.767,
+   "xy_um": [
+    2799.36,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": [
+    "qfd_dv_s8_crh_rp1",
+    "qfd_dv_s8x_vmr"
+   ]
+  },
+  {
+   "port": "sl_W5_su_l0",
+   "part": "sl_W5_su_l0",
+   "late_ps": 6486.117,
+   "early_ps": 6486.117,
+   "cppr_node": "m",
+   "slew_ps": 175.767,
+   "xy_um": [
+    3723.84,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "sl_W5_su_l1",
+   "part": "sl_W5_su_l1",
+   "late_ps": 6492.889,
+   "early_ps": 6492.889,
+   "cppr_node": "m",
+   "slew_ps": 187.282,
+   "xy_um": [
+    1874.88,
+    11128.32
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "tt_ctlm",
+   "part": "tt_ctlm",
+   "late_ps": 6492.836,
+   "early_ps": 6492.836,
+   "cppr_node": "m",
+   "slew_ps": 175.926,
+   "xy_um": [
+    388.8,
+    12268.8
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  },
+  {
+   "port": "ucie_kv",
+   "part": "ucie_kv",
+   "late_ps": 6491.451,
+   "early_ps": 6491.451,
+   "cppr_node": "m",
+   "slew_ps": 175.361,
+   "xy_um": [
+    388.8,
+    9633.6
+   ],
+   "stages_from_root": null,
+   "core_view": null
+  }
+ ]
+}

@@ -1,0 +1,261 @@
+{
+ "schema": "opentallas.qc_clk_mesh2.v1",
+ "checked": "UNCHECKED",
+ "plan": "/srv/opentallas-scratch2/claude/codex-qc-master0733/physical/die_plan/qwen_compute/candidate_oneqc0733.json",
+ "plan_sha256": "e4829ce26d222eac5fb51ab34454e28d0174585995bc0e837fc7e29d660f48d2",
+ "argv": [
+  "tools/die_plan/qc_clk_mesh2.py",
+  "plan",
+  "/srv/opentallas-scratch2/claude/codex-qc-master0733/physical/die_plan/qwen_compute/candidate_oneqc0733.json",
+  "--tree-plan",
+  "/srv/opentallas-scratch2/claude/qc-mp-region-1026/gates_r1/die_tree_plan.json",
+  "--rows",
+  "gaps",
+  "--gap-m",
+  "4",
+  "--gap-dy",
+  "144",
+  "--ky",
+  "1",
+  "--tap-at-driver",
+  "--out",
+  "/srv/opentallas-scratch2/claude/qc-clk-mesh-1026/r2_plan_m4f"
+ ],
+ "rc": "CLOCK-128-R6 shielded 4W M8/M9 R 2.115/2.228 ohm/um C 0.188/0.194 fF/um; 8W/16W derived (R/2,R/4; C x1.6/1.3 x1.13, x2.3/1.3 x1.13) -- R6 says 8W still ~13% low on C, not characterised",
+ "lattice": {
+  "driver_columns": 36,
+  "blocked_channels_no_driver": [
+   1572.48,
+   2799.36,
+   5270.400000000001,
+   7732.8,
+   10212.480000000001,
+   12683.52,
+   15145.920000000002,
+   17616.960000000003,
+   20096.640000000003,
+   22567.68,
+   25038.72,
+   27509.760000000002,
+   29980.800000000003
+  ],
+  "keepout_x_um": 1564.0,
+  "straps": {
+   "M9_vertical": 142,
+   "M8_horizontal": 171,
+   "pitch_x_um": 205.889,
+   "pitch_y_um": 145.847
+  },
+  "counts": {
+   "drivers": {
+    "channel": 5724,
+    "seam_channel": 432,
+    "in_core_pushdown": 0,
+    "glue_pushdown_request": 0
+   },
+   "tree_nodes": {
+    "channel": 5454,
+    "seam_channel": 719,
+    "in_core_pushdown": 0,
+    "glue_pushdown_request": 0
+   },
+   "repeaters": {
+    "channel": 4968,
+    "seam_channel": 0,
+    "in_core_pushdown": 0,
+    "glue_pushdown_request": 0
+   },
+   "taps": {
+    "channel": 377,
+    "seam_channel": 0,
+    "in_core_pushdown": 0,
+    "glue_pushdown_request": 0
+   }
+  },
+  "in_core_total": 0,
+  "identity_fail": [],
+  "tree": {
+   "levels": 16,
+   "repeaters": 4968,
+   "root_to_driver_um": {
+    "min": 27204.48,
+    "max": 27204.48
+   },
+   "stages_root_to_driver": [
+    70
+   ]
+  }
+ },
+ "insertion": {
+  "plan_model_old_stage": {
+   "TT": {
+    "min": 5583.85,
+    "max": 5583.85,
+    "spread": 0.0
+   },
+   "FF": {
+    "min": 4578.835,
+    "max": 4578.835,
+    "spread": 0.0
+   }
+  },
+  "spice_r6_refit": {
+   "TT": {
+    "tree_min": 6214.8,
+    "tree_max": 6251.7,
+    "trunk": 319.5,
+    "die_input_to_driver": 6534.3,
+    "per_stage_L450": 103.2
+   },
+   "FF": {
+    "tree_min": 5127.6,
+    "tree_max": 5172.5,
+    "trunk": 261.1,
+    "die_input_to_driver": 5388.6,
+    "per_stage_L450": 85.9
+   }
+  },
+  "r6_reference": "CLOCK-128-R6 QC tree TT 5310-5324 / FF 4402-4414",
+  "stage_chain_ps_per_stage_L_um": {
+   "R6_FF_4w_L225_m1": 43.0,
+   "R6_FF_4w_L225_m2": 38.4,
+   "R6_FF_4w_L450_m1": 85.9,
+   "R6_FF_4w_L450_m2": 79.0,
+   "R6_FF_4w_L900_m1": 219.9,
+   "R6_FF_4w_L900_m2": 208.6,
+   "R6_FF_8w_L225_m1": 43.4,
+   "R6_FF_8w_L225_m2": 35.9,
+   "R6_FF_8w_L450_m1": 79.6,
+   "R6_FF_8w_L450_m2": 67.6,
+   "R6_FF_8w_L900_m1": 184.5,
+   "R6_FF_8w_L900_m2": 164.7,
+   "R6_TT_4w_L225_m1": 54.2,
+   "R6_TT_4w_L225_m2": 47.2,
+   "R6_TT_4w_L450_m1": 103.2,
+   "R6_TT_4w_L450_m2": 92.5,
+   "R6_TT_4w_L900_m1": 250.7,
+   "R6_TT_4w_L900_m2": 233.8,
+   "R6_TT_8w_L225_m1": 56.4,
+   "R6_TT_8w_L225_m2": 45.6,
+   "R6_TT_8w_L450_m1": 99.1,
+   "R6_TT_8w_L450_m2": 81.7,
+   "R6_TT_8w_L900_m1": 217.3,
+   "R6_TT_8w_L900_m2": 189.2
+  }
+ },
+ "whole_die": {
+  "die_m4f_8w_TT": {
+   "nominal_crossing_spread": 152.25,
+   "nominal_tap_skew": 43.401,
+   "mc": 12,
+   "mc_worst_crossing_spread": 222.307,
+   "mc_worst_tap_skew": 116.024,
+   "sigma": {
+    "vt_mV": 10.0,
+    "wire_rel": 0.05,
+    "tree_ps_per_stage": 2.0
+   }
+  },
+  "die_m4f_8w_FF": {
+   "nominal_crossing_spread": 140.22,
+   "nominal_tap_skew": 32.523,
+   "mc": 12,
+   "mc_worst_crossing_spread": 212.364,
+   "mc_worst_tap_skew": 110.796,
+   "sigma": {
+    "vt_mV": 10.0,
+    "wire_rel": 0.05,
+    "tree_ps_per_stage": 2.0
+   }
+  },
+  "die_m4f_8w_TT_notree": {
+   "nominal_crossing_spread": 152.25,
+   "nominal_tap_skew": 43.401,
+   "mc": 4,
+   "mc_worst_crossing_spread": 154.301,
+   "mc_worst_tap_skew": 45.108,
+   "sigma": {
+    "vt_mV": 10.0,
+    "wire_rel": 0.05,
+    "tree_ps_per_stage": 0.0
+   }
+  },
+  "die_m4f_16w_TT": {
+   "nominal_crossing_spread": 143.326,
+   "nominal_tap_skew": 63.601,
+   "mc": 4,
+   "mc_worst_crossing_spread": 202.315,
+   "mc_worst_tap_skew": 100.684,
+   "sigma": {
+    "vt_mV": 10.0,
+    "wire_rel": 0.05,
+    "tree_ps_per_stage": 2.0
+   }
+  }
+ },
+ "spice_vs_linear": {
+  "window": "edge FF m4t (prior column set)",
+  "spice": {
+   "crossing_spread": 81.627,
+   "tap_skew": 21.87
+  },
+  "linear": {
+   "crossing_spread": 85.534,
+   "tap_skew": 23.403
+  }
+ },
+ "pairs": {
+  "pairs": 773,
+  "mesh_skew_source": {
+   "TT": "/srv/opentallas-scratch2/claude/qc-clk-mesh-1026/lin/die_m4f_8w_TT.json",
+   "FF": "/srv/opentallas-scratch2/claude/qc-clk-mesh-1026/lin/die_m4f_8w_FF.json"
+  },
+  "TT": {
+   "mesh_uncertainty_max": 61.418,
+   "noncommon_max": 411.473,
+   "flat_max": 49.615,
+   "flat_b1_max": 35.645,
+   "total_flat_max": 102.842,
+   "total_b1_max": 91.178,
+   "aocv_max": 35.446,
+   "total_aocv_max": 91.502
+  },
+  "FF": {
+   "mesh_uncertainty_max": 63.723,
+   "noncommon_max": 352.55,
+   "flat_max": 39.984,
+   "flat_b1_max": 29.43,
+   "total_flat_max": 91.181,
+   "total_b1_max": 83.933,
+   "aocv_max": 22.05,
+   "total_aocv_max": 83.561
+  }
+ },
+ "em": {
+  "8w": {
+   "drivers": 6156,
+   "mesh_C_nF": 2.248,
+   "tree_C_nF": 0.615,
+   "P_TT_W": 1.684,
+   "C_per_driver_fF": 365.2,
+   "I_avg_driver_mA": 0.307,
+   "I_peak_driver_mA": 10.22,
+   "J_avg_branch_MA_cm2": 0.369,
+   "J_rms_branch_MA_cm2": 1.74,
+   "J_peak_branch_MA_cm2": 12.29
+  },
+  "16w": {
+   "drivers": 6156,
+   "mesh_C_nF": 3.231,
+   "tree_C_nF": 0.615,
+   "P_TT_W": 2.263,
+   "C_per_driver_fF": 524.9,
+   "I_avg_driver_mA": 0.441,
+   "I_peak_driver_mA": 14.7,
+   "J_avg_branch_MA_cm2": 0.265,
+   "J_rms_branch_MA_cm2": 1.25,
+   "J_peak_branch_MA_cm2": 8.83
+  },
+  "budget": "declared: J_avg (DC-equivalent) <= 1.0 MA/cm2 Cu (industry Cu design rule ~1e6 A/cm2, Cunningham/Semiconductor Digest; Hunter 1997 self-consistent peak/rms); J_rms <= 1.0 MA/cm2 used conservatively for Joule heating; t = 65 nm from Rs 0.338 ohm/sq at bulk Cu rho (thinner -> higher J, conservative); IRDS 7nm table not found; UNCHECKED"
+ }
+}
