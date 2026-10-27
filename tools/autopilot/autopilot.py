@@ -73,8 +73,16 @@ OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 IMAGE = os.environ.get("AP_IMAGE", "openroad/orfs:asap7lock")
 ARCHIVE_ROOT = "/srv/opentallas-scratch2/claude/autopilot/closed"
 REVIEW_ROOT = "/srv/opentallas-scratch2/claude/autopilot/review"
-MIRROR = {"intel2": "localhost"}                       # archive mirror host per source host (default intel2)
-MIRROR_DEFAULT = "intel2"                               # EPYC3-RETIRE 2026-10-25: was epyc3 (terminated); intel2 = hub standby
+# EPYC1-RETIRE 2026-10-26: the hub moves epyc1 -> intel2.  OT_HUB_NAME (set in the hub units) names the host this runs on;
+# that host is "localhost" for ssh, every other alias (incl. a retired/old hub) is a plain worker.
+HUB_NAME = os.environ.get("OT_HUB_NAME", "epyc1")
+HUB_ALIASES = {"epyc1": ("epyc1", "tender-ray", "ubuntu-epyc1"), "intel2": ("intel2", "tolerant-swine")}
+if HUB_NAME == "epyc1":
+    MIRROR = {"intel2": "localhost"}                   # archive mirror host per source host (default intel2)
+    MIRROR_DEFAULT = "intel2"                           # EPYC3-RETIRE 2026-10-25: was epyc3 (terminated); intel2 = hub standby
+else:
+    MIRROR = {"localhost": "intel1", HUB_NAME: "intel1"}   # the hub's own archives mirror to intel1
+    MIRROR_DEFAULT = "localhost"                        # every other host's archives mirror to the hub
 CELL_CAP = 400_000
 NEAR_WNS_PS = -30.0
 NEAR_DRC_MAX = 50
@@ -148,7 +156,7 @@ def sh(cmd, timeout=300, input=None):
 
 
 def ssh_host(host):
-    return "localhost" if host in ("epyc1", "tender-ray", "localhost", "ubuntu-epyc1") else host
+    return "localhost" if host == "localhost" or host in HUB_ALIASES.get(HUB_NAME, (HUB_NAME,)) else host
 
 
 def rpy(host, code, args, timeout=600):
