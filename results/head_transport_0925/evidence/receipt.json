@@ -1,0 +1,52 @@
+{
+  "verdict": "PASS",
+  "scope": "generated transport/reset coupon, no production dates or PHY traffic/token claim",
+  "source_provider": "bf4bf660a",
+  "pre_START": {
+    "real_host276_frames_new": 3,
+    "real_host276_frames_old": 3,
+    "raw_payload_moves_in_old": true,
+    "bootstrap_epoch_new": 1,
+    "bootstrap_epoch_old": 0,
+    "phy_reset_new": 1,
+    "phy_reset_old": 0,
+    "mission_spo_spr_reset": 0
+  },
+  "post_START": {
+    "lockstep_checks": 201,
+    "added_data_cycles": 0
+  },
+  "old_role_mutant": "CAUGHT: missing raw epoch and PHY reset, not payload suppression",
+  "source_sha256": {
+    "coupon_phy_new.sv": "39373c72f268a8bfb8440ec5ac3c59b2810181cc55829be1b39fd2de5b39b925",
+    "coupon_phy_old.sv": "79efc4b44592321249561d19fef1b128e3fb45f4440b55235da50756dbcb8d9e",
+    "coupon_sp_new.sv": "7244ed804d6997893dbf35135f2e344962cbc362cf8b231cccec076232b06f5d",
+    "coupon_sp_old.sv": "01c61052ad3d3a628abe9f47e93c5c54a89c1cc525fbb604c2117a5c37157216",
+    "coupon_st_new.sv": "da92faabe13fd948fc15b2c6feedbc4b256ae236c9c24f3b73898332898c0aaa",
+    "coupon_st_old.sv": "f50d1505df100e7f870b5d7c6475f823895cd840c75ebfa168078eb526ba6a6e",
+    "ot_dp_cells.sv": "7926db02ce52e74f2fe54bd5480c9c92db3f62a3252842cd62e6d1a26e193fa9",
+    "ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855",
+    "ot_s81_kp4_bm.sv": "b2b76fcd25e601a1d9e02625e3f3524305df3ffd84c6a763b9b6dff322e54a98",
+    "ot_s81_kp4_common.sv": "261a00d6db06bab0c3add28489c8f3e1bc6ddf3a0a6b8af1b4158068c05a1afb",
+    "ot_s81_kp4_dchn.sv": "83caa7fe35c87cc9178bc035da41dea02f3d6c552f3729e06722268299db0172",
+    "ot_s81_kp4_ddly.sv": "fb1160f86a33901a1ba0328dc296329fa53812145930817b633695fcb2e63b93",
+    "ot_s81_kp4_dec.sv": "69d23bb69dc1b2f4921afa17ceeab38f9cfbc897b8c15dfc841b7a6c94fc82bf",
+    "ot_s81_kp4_dout.sv": "198059532724f05fc47dafbfc122e5c6aaf42e14bec1866bc59c36251c4fc1bf",
+    "ot_s81_kp4_dsyn.sv": "904afcf6c24331f77dbf55381ba3e574a4d1263eb5bc055068a62d7494e6fa76",
+    "ot_s81_kp4_enc.sv": "0caaa3a8048bce76f6dbe902824e570e563e9c39a006ca34d07d4f648419c1fd",
+    "ot_s81_kp4_enc_mat.svh": "f35e2b018bbc00ac7da81ecbd7b2b9a114a3aa4edcc43a7f1effb23aaedc2f70",
+    "ot_s81_kp4_syn_mat.svh": "5f8c6c1718cb04488bb34a074571736bca6299d2fec487bf9534696a9d10068e",
+    "ot_s81hd_beat_link.sv": "53608ba9cd469a0504a45abba60d8a93e3cb2f4ea605e3eaf6a592866d6e49db",
+    "ot_s81hd_host276.sv": "74cc4c6226ef8fb3b8b22fe6fa7fe9e9c45e7db7e3c083ee51960e3c8971b6f2",
+    "ot_s81hd_serdes_link.sv": "70a30f8b1bf529e8153d0329aefcc16254a654efad6626d7f4c71230a93b9cc9",
+    "ot_s81hd_spo.sv": "fb71f1a497b0ebbcf879ceeeeec54db73fba60c129ed99ee4604a8e0b2eaae3e",
+    "ot_s81hd_spr.sv": "cd3c9003216532349deb7d8adac365bab01d8eaff3f3b2c8d2abaa8ef527fbe9",
+    "ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+    "ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+    "run.sh": "ae92672090bd42728d69648b040da8932bbf342c66bbfeb47a6562b4a73ef822",
+    "sources.f": "f5c5e5af2293bbe5d57861118b9bc6728be581f2abdc38c3e7aa74f75c98586f",
+    "tb_head_transport.sv": "3d72fd59afc496711ba8c8b0f3e6161a07546711915c314c5874c6ddd0ce625b"
+  },
+  "reproducer_file_match": 29
+}

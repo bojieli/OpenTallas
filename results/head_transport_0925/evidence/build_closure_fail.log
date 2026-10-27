@@ -1,0 +1,54 @@
+%Error: ot_s81_kp4_common.sv:22:10: Cannot find include file: 'ot_s81_gf1024.svh'
+   22 | `include "ot_s81_gf1024.svh"
+      |          ^~~~~~~~~~~~~~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+        ... This may be because there's no search path specified with -I<dir>.
+        ... Looked in:
+             ot_s81_gf1024.svh
+             ot_s81_gf1024.svh.v
+             ot_s81_gf1024.svh.sv
+             obj/ot_s81_gf1024.svh
+             obj/ot_s81_gf1024.svh.v
+             obj/ot_s81_gf1024.svh.sv
+        ... With current working directory '/srv/opentallas-scratch2/claude/codex-head-transport-0930'
+%Error: ot_s81_kp4_common.sv:27:10: Cannot find include file: 'ot_s81_gf1024.svh'
+   27 | `include "ot_s81_gf1024.svh"
+      |          ^~~~~~~~~~~~~~~~~~~
+%Error: ot_s81_kp4_common.sv:32:10: Cannot find include file: 'ot_s81_gf1024.svh'
+   32 | `include "ot_s81_gf1024.svh"
+      |          ^~~~~~~~~~~~~~~~~~~
+%Error: ot_s81_kp4_dchn.sv:27:10: Cannot find include file: 'ot_s81_gf1024.svh'
+   27 | `include "ot_s81_gf1024.svh"
+      |          ^~~~~~~~~~~~~~~~~~~
+%Error: ot_s81_kp4_dsyn.sv:25:10: Cannot find include file: 'ot_s81_gf1024.svh'
+   25 | `include "ot_s81_gf1024.svh"
+      |          ^~~~~~~~~~~~~~~~~~~
+%Error: ot_s81_kp4_dsyn.sv:87:10: Cannot find include file: 'ot_s81_kp4_syn_mat.svh'
+   87 | `include "ot_s81_kp4_syn_mat.svh"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error: ot_s81_kp4_enc.sv:34:10: Cannot find include file: 'ot_s81_gf1024.svh'
+   34 | `include "ot_s81_gf1024.svh"
+      |          ^~~~~~~~~~~~~~~~~~~
+%Error: ot_s81_kp4_enc.sv:89:10: Cannot find include file: 'ot_s81_kp4_enc_mat.svh'
+   89 | `include "ot_s81_kp4_enc_mat.svh"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-ENDLABEL: coupon_st_new.sv:243:13: End label 'ot_s81hd_st_k5' does not match begin label 'coupon_st_new'
+  243 | endmodule : ot_s81hd_st_k5
+      |             ^~~~~~~~~~~~~~
+                 ... For error description see https://verilator.org/warn/ENDLABEL?v=5.050
+%Error-ENDLABEL: coupon_st_old.sv:211:13: End label 'ot_s81hd_st_k5' does not match begin label 'coupon_st_old'
+  211 | endmodule : ot_s81hd_st_k5
+      |             ^~~~~~~~~~~~~~
+%Error-ENDLABEL: coupon_sp_new.sv:791:13: End label 'ot_s81hd_spn_end' does not match begin label 'coupon_sp_new'
+  791 | endmodule : ot_s81hd_spn_end
+      |             ^~~~~~~~~~~~~~~~
+%Error-ENDLABEL: coupon_sp_old.sv:717:13: End label 'ot_s81hd_spn_end' does not match begin label 'coupon_sp_old'
+  717 | endmodule : ot_s81hd_spn_end
+      |             ^~~~~~~~~~~~~~~~
+%Error-ENDLABEL: coupon_phy_new.sv:686:13: End label 'ot_s81hd_serdes' does not match begin label 'coupon_phy_new'
+  686 | endmodule : ot_s81hd_serdes
+      |             ^~~~~~~~~~~~~~~
+%Error-ENDLABEL: coupon_phy_old.sv:621:13: End label 'ot_s81hd_serdes' does not match begin label 'coupon_phy_old'
+  621 | endmodule : ot_s81hd_serdes
+      |             ^~~~~~~~~~~~~~~
+%Error: Exiting due to 14 error(s)

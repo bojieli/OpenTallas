@@ -38,7 +38,7 @@ class HeadBootRecipe(unittest.TestCase):
         csr=next(x for x in r['frames'] if x.get('csr_address')==9)
         self.assertEqual(csr['csr_value'],(20<<16)|100)
         self.assertEqual((int(csr['frame553'],16)>>24)&((1<<64)-1),csr['csr_value'])
-    def test_mission_transport_is_a_real_boot_deadlock(self):
+    def test_mission_transport_has_no_pre_start_reset_contract(self):
         p,o,a=fixture();p['partition_types']['s']['reset']['start_role']='mission'
         o['start']['bootstrap_types'].remove('s')
         r=compile_recipe(p,o,PARAMS,a)
@@ -49,6 +49,16 @@ class HeadBootRecipe(unittest.TestCase):
         invalid=dict(PARAMS,PHASE_BOUND=0,CLOCK_RESET_ID=0,LOCAL_STAGE=255,LOCAL_RANK=4)
         r=compile_recipe(p,o,invalid,a)
         self.assertEqual(r['status'],'BLOCKED');self.assertEqual(r['frames'],[])
+    def test_transport_overrides_preserve_mission_leaf_role(self):
+        p,o,a=fixture()
+        for t,buses in (('l',['a','b']),('s',['hu_i','hu_o'])):
+            p['partition_types'][t]['reset']=dict(start_role='mission',bootstrap_buses=buses)
+            o['start']['bootstrap_types'].remove(t)
+        r=compile_recipe(p,o,PARAMS,a)
+        self.assertEqual(r['status'],'TEST_RECIPE',r['blockers'])
+        self.assertEqual(p['partition_types']['s']['reset']['start_role'],'mission')
+        p['partition_types']['s']['reset']['bootstrap_buses'].remove('hu_o')
+        self.assertEqual(compile_recipe(p,o,PARAMS,a)['status'],'BLOCKED')
     def test_source_authority_and_configuration_mutants(self):
         for change in ('producer','start','run','header','old_offsets'):
             with self.subTest(change=change):

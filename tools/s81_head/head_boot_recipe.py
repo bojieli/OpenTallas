@@ -68,10 +68,20 @@ def boot_routes(plan, host, ctl):
             typ = plan['partition_types'][parts[name]['type']]
             role = 'raw_hard_reset' if typ.get('hard') else typ.get('reset', {}).get('start_role', 'mission')
             if role == 'mission':
-                held.append({'part': name, 'type': parts[name]['type'], 'role': role})
+                used = {r[side]['bus'] for r in rows for side in ('src', 'dst') if r[side]['part'] == name}
+                reset = typ.get('reset', {})
+                contents = {c['inst'] for c in typ.get('contents', [])}
+                leaves = {b.get('leaf', '').split('.')[0] for b in typ.get('buses', []) if b['name'] in used} & contents
+                missing_buses = sorted(used - set(reset.get('bootstrap_buses', [])))
+                missing_contents = sorted(leaves - set(reset.get('bootstrap_contents', [])))
+                if missing_buses or missing_contents:
+                    held.append({'part': name, 'type': parts[name]['type'], 'role': role,
+                                 'missing_bootstrap_buses': missing_buses,
+                                 'missing_bootstrap_contents': missing_contents})
         routes.append({'lane': lane['id'], 'purpose': 'config' if config else 'HBC ingress',
                        'ports': [r['id'] for r in rows], 'parts': names,
                        'mission_reset_blockers': held,
+                       'literal_payload_motion': 'NOT INFERRED: ot_dp_st payload may advance with epoch held low; actual PHY/valid/epoch consumption needs RTL measurement',
                        'plan_cycles': plan.get('latency', {}).get('lanes', {}).get(lane['id'], {}).get('cycles')})
     if len([r for r in routes if r['purpose'] == 'HBC ingress']) != 2 or len([r for r in routes if r['purpose'] == 'config']) != 1:
         raise ValueError('expected the two real HOST ingress routes and one HOST-to-CTL config route')
@@ -101,7 +111,7 @@ def compile_recipe(plan, offsets, source_defaults, programme=None):
     routes = boot_routes(plan, hp['name'], cp['name'])
     for route in routes:
         if route['mission_reset_blockers']:
-            blockers.append(f"{route['lane']}: pre-START {route['purpose']} transport is held in mission reset")
+            blockers.append(f"{route['lane']}: pre-START {route['purpose']} route lacks an explicit raw-reset/epoch transport contract")
     result = {'kind': 'HEAD_PRODUCTION_BOOT_SOURCE_RECIPE', 'status': 'BLOCKED',
               'host_part': hp['name'], 'ctl_part': cp['name'], 'host_params': params,
               'explicit_host_params': hc.get('params', {}), 'routes': routes,

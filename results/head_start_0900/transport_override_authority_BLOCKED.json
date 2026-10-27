@@ -1,0 +1,118 @@
+{
+  "kind": "HEAD_PRODUCTION_BOOT_SOURCE_RECIPE",
+  "status": "BLOCKED",
+  "host_part": "host",
+  "ctl_part": "ctl",
+  "host_params": {
+    "LOCAL_STAGE": 255,
+    "LOCAL_RANK": 4,
+    "PHASE_BOUND": 0,
+    "CLOCK_RESET_ID": 0,
+    "BOOT_HEADER_EDGE": 281474976710655,
+    "BOOT_COMMIT_EDGE": 281474976710655
+  },
+  "explicit_host_params": {},
+  "routes": [
+    {
+      "lane": "host_rx",
+      "purpose": "config",
+      "ports": [
+        "host_rx__0",
+        "host_rx__1",
+        "host_rx__2",
+        "host_rx__3",
+        "host_rx__4",
+        "host_rx__5",
+        "host_rx__6"
+      ],
+      "parts": [
+        "ctl",
+        "host",
+        "sp0",
+        "sp1",
+        "sp2",
+        "sp3",
+        "sp4",
+        "sp5"
+      ],
+      "mission_reset_blockers": [],
+      "literal_payload_motion": "NOT INFERRED: ot_dp_st payload may advance with epoch held low; actual PHY/valid/epoch consumption needs RTL measurement",
+      "plan_cycles": 38
+    },
+    {
+      "lane": "coll_HOST1_u",
+      "purpose": "HBC ingress",
+      "ports": [
+        "coll_HOST1_u__0"
+      ],
+      "parts": [
+        "host",
+        "lk_HOST1"
+      ],
+      "mission_reset_blockers": [],
+      "literal_payload_motion": "NOT INFERRED: ot_dp_st payload may advance with epoch held low; actual PHY/valid/epoch consumption needs RTL measurement",
+      "plan_cycles": 2
+    },
+    {
+      "lane": "coll_HOST0_u",
+      "purpose": "HBC ingress",
+      "ports": [
+        "coll_HOST0_u__0",
+        "coll_HOST0_u__1"
+      ],
+      "parts": [
+        "host",
+        "lk_HOST0",
+        "sst5"
+      ],
+      "mission_reset_blockers": [],
+      "literal_payload_motion": "NOT INFERRED: ot_dp_st payload may advance with epoch held low; actual PHY/valid/epoch consumption needs RTL measurement",
+      "plan_cycles": 6
+    }
+  ],
+  "host_reset_release": 35,
+  "ctl_reset_release": 47,
+  "symbolic_contract": {
+    "parts": {
+      "host": {
+        "type": "hd_host",
+        "role": "bootstrap",
+        "reset_release": 35,
+        "mission_release": "max(35, S+35)",
+        "control_release": 35,
+        "start_offset": 35
+      },
+      "ctl": {
+        "type": "hd_ctl",
+        "role": "bootstrap",
+        "reset_release": 47,
+        "mission_release": "max(47, S+47)",
+        "control_release": 47,
+        "start_offset": 47
+      }
+    },
+    "partition_count": 326,
+    "element_GO": {
+      "pin_capture_after_delivered_reset": 3,
+      "command_accept_after_delivered_reset": 4,
+      "activation_word_a_after_GO_pin": "6+a",
+      "relationship_to_die_START": "separate command; no alias"
+    },
+    "die_START_edge_status": "UNRESOLVED: actual selected controller/host boot completion must drive S"
+  },
+  "blockers": [
+    "selected HOST binding has an invalid HBC production profile; bind real stage/rank/phase/clock identity/header/commit values",
+    "production programme/START authority not supplied; TEST501/505/511/750 are not defaults"
+  ],
+  "frames": [],
+  "scope": "source dates/frames only; HBC payload/CRC, RTL, physical and token gates remain separate",
+  "steady_state_cycles_added": 0,
+  "required_production_inputs": [
+    "start.producer and start.die_edge (actual die START authority)",
+    "host_boot_counter_zero_global_edge (actual reset/clock phase identity)",
+    "transport.peer_to_hbc_input, peer_to_host_frame, peer_to_ctl_csr_apply, hbc_commit_to_context_valid, peer_frame_period",
+    "hbc_records: three real {receive_edge,payload} records from the native image compiler",
+    "config: plen,glen,group,rbase,issue_offset,issue_period,merge_deadline",
+    "csr_apply_edges: actual compiler dates for CSR0,1,3,4,8,9,10"
+  ]
+}
