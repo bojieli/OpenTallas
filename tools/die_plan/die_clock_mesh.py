@@ -2763,6 +2763,9 @@ def cmd_combo(a):
               "$tn setSpecial", "$tn setSigType GROUND", "set tsw [odb::dbSWire_create $tn ROUTED]"]
         L += C128.grid_tcl(pgr, "$tsw", shield_net, used=ties["used_grid"])
         L += C128.tie_tcl(ties, "$tsw")
+        if getattr(a, "merge_shields", False):
+            # CLOCK-KV-R10: one shape per overlapping same-track shield run (RCX double-counts coincident shields)
+            L += C128.shield_merge_tcl(shield_net, nd)
         cs = M["meta"].get("clock_shield") or {}
         cs.update(C128.tie_record(ties))
         cs.update(metal_shorts=census["shorts"], metal_spacing=census["spacing"],
@@ -3603,6 +3606,8 @@ def main(argv=None):
     c.add_argument("--mesh-vias", action="store_true",
                    help="emit an M8-M9 VIA89 at every mesh strap crossing (mesh = one connected net in the DB); "
                         "mesh-node CPPR stays INFO only (METHODOLOGY v4 12.4b)")
+    c.add_argument("--merge-shields", action="store_true",
+                   help="CLOCK-KV-R10: union overlapping same-track shield boxes after the ties (default off)")
     c.add_argument("--routed-clock", action="store_true",
                    help="CLOCK-128-R5: 12.8 fixed tree as regular nets with FIXED dbWire (RCX-extractable), see clock_routed.py")
     m = sub.add_parser("mesh")

@@ -938,6 +938,58 @@ def combo_tcl(wires, nd, shield):
     return L
 
 
+def shield_union(boxes):
+    """CLOCK-KV-R10: union of same-net shield boxes [(layer, vertical, c_lo, c_hi, a_lo, a_hi)] per (layer, direction,
+    track): overlapping or abutting boxes on one track become ONE box (the same metal).  Coincident/overlapping shield
+    shapes (a trunk and the H-tree leg that retraces it share a shield track) are one piece of metal, but OpenRCX
+    counts the lateral coupling to EACH shape (KV b5 L2 h01 legs 128 fF vs 86 fF, +105 ps TT tree spread).
+    Returns (merged boxes, number of input boxes that were merged)."""
+    g = defaultdict(list)
+    for b in boxes:
+        g[tuple(b[:4])].append((b[4], b[5]))
+    out, nmerged = [], 0
+    for k in sorted(g):
+        runs = []
+        for lo, hi in sorted(g[k]):
+            if runs and lo <= runs[-1][1]:
+                runs[-1][1] = max(runs[-1][1], hi)
+                runs[-1][2] += 1
+            else:
+                runs.append([lo, hi, 1])
+        for lo, hi, n in runs:
+            out.append(k + (lo, hi))
+            nmerged += n if n > 1 else 0
+    return out, nmerged
+
+
+def shield_merge_tcl(shield, nd):
+    """CLOCK-KV-R10 (opt-in, die_clock_mesh combo --merge-shields): Tcl post-pass, run after every shield / tie shape
+    exists, that replaces the shield net's overlapping or abutting same-track M8/M9 boxes of shield width by their
+    union (shield_union in Tcl: the same metal, one shape per run, so extraction sees one neighbour)."""
+    return [
+        "proc ot_merge_shields {netname wdbu} { global blk; set n [$blk findNet $netname]; array set g {}; "
+        "foreach sw [$n getSWires] { foreach b [$sw getWires] { if {[$b isVia]} { continue }; "
+        "set ly [[$b getTechLayer] getName]; if {$ly ne \"M8\" && $ly ne \"M9\"} { continue }; "
+        "set dx [$b getDX]; set dy [$b getDY]; "
+        "if {$dy > $dx} { if {$dx != $wdbu} { continue }; "
+        "lappend g($ly,V,[$b xMin],[$b xMax]) [list [$b yMin] [$b yMax] $b $sw] } "
+        "else { if {$dy != $wdbu} { continue }; "
+        "lappend g($ly,H,[$b yMin],[$b yMax]) [list [$b xMin] [$b xMax] $b $sw] } } }; "
+        "set nin 0; set nout 0; "
+        "foreach k [array names g] { if {[llength $g($k)] < 2} { continue }; lassign [split $k ,] ly dir c0 c1; "
+        "set l [[ord::get_db_tech] findLayer $ly]; set runs {}; set cur {}; "
+        "foreach it [lsort -integer -index 0 $g($k)] { lassign $it lo hi b sw; "
+        "if {[llength $cur] && $lo <= [lindex $cur 1]} { lset cur 1 [expr {max([lindex $cur 1], $hi)}]; "
+        "lset cur 2 [concat [lindex $cur 2] [list $b]] } "
+        "else { if {[llength $cur]} { lappend runs $cur }; set cur [list $lo $hi [list $b] $sw] } }; lappend runs $cur; "
+        "foreach r $runs { lassign $r lo hi bs sw; if {[llength $bs] < 2} { continue }; incr nin [llength $bs]; "
+        "incr nout; foreach b $bs { odb::dbSBox_destroy $b }; "
+        "if {$dir eq \"V\"} { odb::dbSBox_create $sw $l $c0 $lo $c1 $hi STRIPE } "
+        "else { odb::dbSBox_create $sw $l $lo $c0 $hi $c1 STRIPE } } }; "
+        "puts \"OT_SHIELD_MERGE in $nin out $nout\" }",
+        f"ot_merge_shields {shield} [expr {{round({nd['width']}*[[ord::get_db_block] getDbUnitsPerMicron])}}]"]
+
+
 def shield_stripes(segs, nd):
     """the drawn VSS shield stripes of clock segments [(layer, x0, y0, x1, y1)] (centre lines): one stripe on each
     side, one NDR space away, running shield_geom ext past both clock-metal ends (same geometry as combo_tcl / cmd_combo's psw).  Returns
