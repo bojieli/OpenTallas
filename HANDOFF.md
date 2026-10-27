@@ -1419,3 +1419,5 @@ CODEX: 2026-10-27 09:15 PDT mixed-width RCX native selection 20/20 PASS refutes 
 CODEX: 2026-10-27 09:15 PDT RM52 main 37c7a1f9c0 == origin/main; early preferred-RTL errors + opt-in PHY clock-driver pruning, 15+3 lane gates PASS; current S81 FAIL retained.
 
 CODEX: 2026-10-27 09:22 PDT mixed-width RCX READY166adab391: physical .16/.32/.64/1.28 table qualified 20/20 native controls, W-cache bug fixed; committed packet delivered to QC clock owner, independent check pending. All child jobs terminal.
+
+CODEX: 2026-10-27 09:23 PDT ROOT-priority thinLEC7b97aa307 on mainf108 only: properreset/cycle1basecase +_pinpolarity +closureprogress;171focusedPASS/2skip, actualBFp0lemmaPROVED. No22b/Q2/arrayancestry. READY root.
