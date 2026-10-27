@@ -124,8 +124,10 @@ module ot_s81_retn_static #(
     wire xa_v = p2a_v, xb_v = p2b_v;
     wire m_ab = xa_v && xb_v && sibling(na, nb);               // same-edge siblings
     reg  [WE-1:0] ma, mb;                                      // a vs window b, b vs window a
-    integer k;
-    always @* begin
+    // S81-CORE-LAT-R20 10-27: one loop variable per process (a module-scope integer shared by several processes
+    // elaborates as conflicting-driver DFFs / latches: rtl_lint check -assert); loop bodies unchanged, no logic change.
+    always @* begin : g_mk
+        integer k;
         for (k = 0; k < WE; k = k + 1) begin
             ma[k] = xa_v && wb_v[k] && sibling(na, wb_t[k]);
             mb[k] = xb_v && wa_v[k] && sibling(nb, wa_t[k]);
@@ -181,7 +183,8 @@ module ot_s81_retn_static #(
     wire [31:0] fw_d = fa ? wa_d[WE-1] : wb_d[WE-1];
     wire        fw_e = fa ? wa_e[WE-1] : wb_e[WE-1];
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin : g_wv
+        integer k;
         if (!rst_n) begin
             for (k = 0; k < WE; k = k + 1) begin wa_v[k] <= 1'b0; wb_v[k] <= 1'b0; end
         end else begin
@@ -192,7 +195,8 @@ module ot_s81_retn_static #(
             end
         end
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : g_wd
+        integer k;
         wa_t[0] <= na; wa_d[0] <= pa_d; wa_e[0] <= pa_e;
         wb_t[0] <= nb; wb_d[0] <= pb_d; wb_e[0] <= pb_e;
         for (k = 1; k < WE; k = k + 1) begin
@@ -251,7 +255,8 @@ module ot_s81_retn_static #(
     wire coll = (sv && cal_v[slot_a]) || (fwd_v5 && cal_v[slot_f]) || (sv && fwd_v5 && slot_a == slot_f);   // F4
     reg         r_v, r_e;
     reg  [31:0] r_t, r_d;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin : g_cal
+        integer k;
         if (!rst_n) begin
             now <= '0; r_v <= 1'b0; fault <= 1'b0;
             for (k = 0; k < SL; k = k + 1) cal_v[k] <= 1'b0;

@@ -70,7 +70,6 @@ module ot_s81sl_cap_rt #(
     assign cw_s_v = cw_v[5:0];   assign cw_s_a = cw_a_p[71:0];   assign cw_s_d = cw_d_p[191:0];
     assign cw_n_v = cw_v[9:6];   assign cw_n_a = cw_a_p[119:72]; assign cw_n_d = cw_d_p[319:192];
     assign fault = fault_p;
-    integer i, j;
     wire [19:0] rsv;
     ot_rst_relay #(.REGIONS(20), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_n = rsv[0], rs_f = rsv[1], rs_o = rsv[2], rs_c = rsv[3];
@@ -304,7 +303,11 @@ module ot_s81sl_cap_rt #(
     function automatic [1:0] div5(input [3:0] c);
         div5 = (c >= 4'd15) ? 2'd3 : (c >= 4'd10) ? 2'd2 : (c >= 4'd5) ? 2'd1 : 2'd0;
     endfunction
-    always @(posedge clk or negedge rs_o) if (!rs_o) begin d2_v <= 2'b00; d3_v <= 2'b00; f9 <= 2'b00; end
+    // S81-CORE-LAT-R20 10-27: one loop variable per process (a module-scope integer shared by several processes
+    // elaborates as conflicting-driver DFFs / latches: rtl_lint check -assert); loop bodies unchanged, no logic change.
+    always @(posedge clk or negedge rs_o) begin : g_d23v
+        integer j;
+        if (!rs_o) begin d2_v <= 2'b00; d3_v <= 2'b00; f9 <= 2'b00; end
         else begin
             for (j = 0; j < 2; j = j + 1) begin
                 d2_v[j] <= d1_v[j];
@@ -312,9 +315,11 @@ module ot_s81sl_cap_rt #(
                 f9[j] <= d2_v[j] && d2_r[j];
             end
         end
+    end
     reg [15:0] e16 [0:1];
-    always @* for (j = 0; j < 2; j = j + 1) e16[j] = d1_t[j][28:13] - c_rbase;
-    always @(posedge clk) begin
+    always @* begin : g_e16 integer j; for (j = 0; j < 2; j = j + 1) e16[j] = d1_t[j][28:13] - c_rbase; end
+    always @(posedge clk) begin : g_d23
+        integer j;
         for (j = 0; j < 2; j = j + 1) begin
             d2_r[j] <= (e16[j] >= {5'd0, c_rcnt}) || d1_t[j][31:29] > c_np || c_fmt == 2'd3 || d1_e[j];
             d2_e[j] <= e16[j][9:0] + ((MUT == 3) ? 10'd64 : 10'd0);
@@ -328,7 +333,8 @@ module ot_s81sl_cap_rt #(
     end
     // D4: output flops, fixed port rule port = address bit 2
     reg f8;
-    always @(posedge clk or negedge rs_o)
+    always @(posedge clk or negedge rs_o) begin : g_cwv
+        integer j;
         if (!rs_o) begin cw_v <= 10'd0; f8 <= 1'b0; end
         else begin
             cw_v <= 10'd0; f8 <= 1'b0;
@@ -336,8 +342,10 @@ module ot_s81sl_cap_rt #(
                 if (d3_v[j] && d3_k[j] < 3'd5) cw_v[2 * d3_k[j] + d3_a[j][2]] <= 1'b1;
             f8 <= d3_v[0] && d3_v[1] && d3_k[0] == d3_k[1] && d3_a[0][2] == d3_a[1][2];
         end
+    end
     reg [119:0] cw_a_n; reg [319:0] cw_d_n;                // next state of the held capture words (internal + pin copy)
-    always @* begin
+    always @* begin : g_cwn
+        integer i, j;
         cw_a_n = cw_a; cw_d_n = cw_d;
         for (j = 0; j < 2; j = j + 1)
             if (d3_v[j])
@@ -414,7 +422,6 @@ module ot_s81sl_cap_grp (
     reg [23:0] key_g [0:7];
     reg [31:0] es_g [0:7];
     reg        any_q;
-    integer q;
     (* keep = "true" *) reg [2:0] la_sl, lb_sl;
     (* keep = "true" *) reg [4:0] la_hv, la_hs, lb_hv, lb_hs;
     always @(posedge clk) begin
@@ -430,14 +437,19 @@ module ot_s81sl_cap_grp (
             es_g[s_sl][s_h] <= s_side;
             if (!slot_busy) key_g[s_sl] <= s_key;
         end
-    always @(posedge clk or negedge rs_e)
+    // S81-CORE-LAT-R20 10-27: one loop variable per process (a module-scope integer shared by several processes
+    // elaborates as conflicting-driver DFFs / latches: rtl_lint check -assert); loop bodies unchanged, no logic change.
+    always @(posedge clk or negedge rs_e) begin : g_ev
+        integer q;
         if (!rs_e) begin
             for (q = 0; q < 8; q = q + 1) ev_g[q] <= 32'd0;
         end else begin
             if (do_ins && s_in) ev_g[s_sl][s_h] <= 1'b1;
             if (do_mrg && s_in) ev_g[s_sl][s_h] <= 1'b0;
         end
-    always @(posedge clk or negedge rs_c)
+    end
+    always @(posedge clk or negedge rs_c) begin : g_cnt
+        integer q;
         if (!rs_c) begin
             for (q = 0; q < 8; q = q + 1) cnt_g[q] <= 6'd0;
             any_q <= 1'b0;
@@ -447,6 +459,7 @@ module ot_s81sl_cap_grp (
             any_q <= 1'b0;
             for (q = 0; q < 8; q = q + 1) if (cnt_g[q] != 6'd0) any_q <= 1'b1;
         end
+    end
     assign any_o = any_q;
 endmodule
 
@@ -556,8 +569,10 @@ module ot_s81sl_cap_rt_retn #(
     wire xa_v = p2a_v, xb_v = p2b_v;
     wire m_ab = xa_v && xb_v && sibling(na, nb);               // same-edge siblings
     reg  [WE-1:0] ma, mb;                                      // a vs window b, b vs window a
-    integer k;
-    always @* begin
+    // S81-CORE-LAT-R20 10-27: one loop variable per process (a module-scope integer shared by several processes
+    // elaborates as conflicting-driver DFFs / latches: rtl_lint check -assert); loop bodies unchanged, no logic change.
+    always @* begin : g_mk
+        integer k;
         for (k = 0; k < WE; k = k + 1) begin
             ma[k] = xa_v && wb_v[k] && sibling(na, wb_t[k]);
             mb[k] = xb_v && wa_v[k] && sibling(nb, wa_t[k]);
@@ -613,7 +628,8 @@ module ot_s81sl_cap_rt_retn #(
     wire [31:0] fw_d = fa ? wa_d[WE-1] : wb_d[WE-1];
     wire        fw_e = fa ? wa_e[WE-1] : wb_e[WE-1];
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin : g_wv
+        integer k;
         if (!rst_n) begin
             for (k = 0; k < WE; k = k + 1) begin wa_v[k] <= 1'b0; wb_v[k] <= 1'b0; end
         end else begin
@@ -624,7 +640,8 @@ module ot_s81sl_cap_rt_retn #(
             end
         end
     end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : g_wd
+        integer k;
         wa_t[0] <= na; wa_d[0] <= pa_d; wa_e[0] <= pa_e;
         wb_t[0] <= nb; wb_d[0] <= pb_d; wb_e[0] <= pb_e;
         for (k = 1; k < WE; k = k + 1) begin
@@ -683,7 +700,8 @@ module ot_s81sl_cap_rt_retn #(
     wire coll = (sv && cal_v[slot_a]) || (fwd_v5 && cal_v[slot_f]) || (sv && fwd_v5 && slot_a == slot_f);   // F4
     reg         r_v, r_e;
     reg  [31:0] r_t, r_d;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin : g_cal
+        integer k;
         if (!rst_n) begin
             now <= '0; r_v <= 1'b0; fault <= 1'b0;
             for (k = 0; k < SL; k = k + 1) cal_v[k] <= 1'b0;

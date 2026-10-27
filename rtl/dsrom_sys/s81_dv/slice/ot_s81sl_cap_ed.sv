@@ -36,17 +36,35 @@ module ot_s81sl_cap_ed #(
 );
     wire [1:0] rsv;
     ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
+    // S81-CORE-LAT-R20 10-27 (RAW face_guard 'unregistered' on the valid output): the valid bit leaves through its OWN
+    // pin flop, masked BEFORE that flop instead of after the line's output register.  The valid bit runs a (D-1)-edge
+    // register-file line, its output flop takes it AND the primed flag's next state -> o_v(t) = i_v(t-D) & primed(t),
+    // edge for edge the old q[0] && primed (0 cycles).  The other bits keep the D-edge line.
     wire [65:0] q;
-    ot_hdc_delay_rf #(.W(66), .D(D)) u_dl (.clk(clk), .rst_n(rsv[0]), .d({i_e, i_d, i_t, i_v}), .q(q));
+    ot_hdc_delay_rf #(.W(65), .D(D)) u_dl (.clk(clk), .rst_n(rsv[0]), .d({i_e, i_d, i_t}), .q(q[65:1]));
+    wire v1;
+    ot_hdc_delay_rf #(.W(1), .D(D - 1)) u_dv (.clk(clk), .rst_n(rsv[0]), .d(i_v), .q(v1));
     localparam integer CW = $clog2(D + 2);
     reg [CW-1:0] cnt; reg primed;
     always @(posedge clk or negedge rsv[1])
         if (!rsv[1]) begin cnt <= {CW{1'b0}}; primed <= 1'b0; end
         else if (!primed) begin cnt <= cnt + 1'b1; primed <= (cnt == D[CW-1:0]); end
-    assign o_v = q[0] && primed;
+    wire primed_n = primed || (cnt == D[CW-1:0]);              // next state of primed (out of reset)
+    reg o_v_q;
+    always @(posedge clk or negedge rsv[1]) if (!rsv[1]) o_v_q <= 1'b0; else o_v_q <= v1 && primed_n;
+    assign o_v = o_v_q;
+    assign q[0] = 1'b0;                                         // unused (valid: o_v_q)
     assign o_t = q[32:1];
     assign o_d = q[64:33];
     assign o_e = q[65];
-    always @(posedge clk or negedge rsv[1]) if (!rsv[1]) o_f <= 1'b0; else if (i_f) o_f <= 1'b1;
+    // S81-CORE-LAT-R20 10-27 (RAW face_guard: i_f unregistered, o_f shared by its own sticky loop): i_f gets a pin
+    // flop (+1 edge on fault visibility ONLY: the sticky fault is phase-end checked, OWNERS-S81/CAP2 fault_p
+    // precedent), the sticky lives in f_s and the pin o_f is a kept copy flop with the SAME next state (0 extra edges).
+    reg i_f_q, f_s;
+    always @(posedge clk or negedge rsv[1]) if (!rsv[1]) i_f_q <= 1'b0; else i_f_q <= i_f;
+    always @(posedge clk or negedge rsv[1]) if (!rsv[1]) f_s <= 1'b0; else if (i_f_q) f_s <= 1'b1;
+    (* keep = "true" *) reg o_f_k;
+    always @(posedge clk or negedge rsv[1]) if (!rsv[1]) o_f_k <= 1'b0; else o_f_k <= f_s || i_f_q;
+    always @* o_f = o_f_k;
 endmodule
 `default_nettype wire
