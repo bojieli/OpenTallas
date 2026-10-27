@@ -8,6 +8,11 @@
 // Phase 2 (directed fault): a lone out-of-order beat is forced onto X.m_tx_i; Y then sends one more record.  Check: the
 //   word X delivers carries ep_fault[8] (m_tx decode) at ctl X, and ctl Y stays clean.
 // Mutants (MUT 1..4 in ot_s81hd_mesh_ep_core, applied to both endpoints) must FAIL.
+// HEAD-RTL-3 (RULING HEAD-RTL 19:35, forced-CRC replay test): the lane-b receivers' CRC error counters and the lane-b
+//   senders' replay counters (link endpoint st_crc_err / st_replays, read hierarchically) must be NONZERO in BOTH
+//   directions while every record still lands exactly once per copy (so the windows really force CRC failures that the
+//   link replays), and lane a must see 0 CRC errors.  Link mutants (bench defines) OT_DSROM_LINK_MUT_NOREPLAY and
+//   OT_DSROM_LINK_MUT_NOCRC must FAIL.
 module tb_s81hd_mesh_ep;
     parameter integer MUT = 0, NREC = 400, P2 = 9000, NCYC = 11000;
     reg ck = 0, rst_n = 0; always #0.5 ck = ~ck;
@@ -30,6 +35,10 @@ module tb_s81hd_mesh_ep;
         .coll_ib({2'b10, ob[1] ^ imp[1]}), .coll_ob(ob[0]), .m_tx_i(mtx_drv[0]), .m_rx_o(mrx[0]));
     ot_s81hd_mesh_ep_core #(.MUT(MUT)) u_y (.ck(ck), .rst_n(rst_n), .coll_ia({2'b10, oa[0]}), .coll_oa(oa[1]),
         .coll_ib({2'b10, ob[0] ^ imp[0]}), .coll_ob(ob[1]), .m_tx_i(mtx_drv[1]), .m_rx_o(mrx[1]));
+    wire [31:0] ce_xb = u_x.u_lb.u_ln.u.u_ep.st_crc_err, ce_yb = u_y.u_lb.u_ln.u.u_ep.st_crc_err;
+    wire [31:0] ce_xa = u_x.u_la.u_ln.u.u_ep.st_crc_err, ce_ya = u_y.u_la.u_ln.u.u_ep.st_crc_err;
+    wire [31:0] rp_xb = u_x.u_lb.u_ln.u.u_ep.st_replays, rp_yb = u_y.u_lb.u_ln.u.u_ep.st_replays;
+    wire [31:0] rx_xb = u_x.u_lb.u_ln.u.u_ep.st_retx_flits, rx_yb = u_y.u_lb.u_ln.u.u_ep.st_retx_flits;
     function automatic [96:0] body(input integer side, input integer k);
         reg [31:0] h; reg [80:0] r; integer b; begin
             h = 32'h9e3779b9 * (k + 7) ^ (side * 32'h85ebca6b);
@@ -63,8 +72,11 @@ module tb_s81hd_mesh_ep;
         if (c < P2 && (epf[0] != 0 || epf[1] != 0 || rf[0] || rf[1] || fa[0] || fa[1])) f1 = 1;
         rng = rng ^ (rng << 13); rng = rng ^ (rng >> 17); rng = rng ^ (rng << 5);
         imp[0] = 0; imp[1] = 0;
-        if (c >= 3000 && c < 3004) imp[0] = {rng, rng[15:0]} << 96;
-        if (c >= 5000 && c < 5010) imp[1] = {rng[7:0], rng} << 300;
+        // HEAD-RTL-3: the first windows (4 / 10 consecutive beats) mostly hit idle beats (1 CRC error, 0 retransmitted
+        // flits in one direction only); now one corrupted beat every 16 cycles over 200 cycles per direction, so data
+        // beats are hit and each corruption is replayed before the next.
+        if (c >= 3000 && c < 3200 && c % 16 == 0) imp[0] = {rng, rng[15:0]} << 96;
+        if (c >= 5000 && c < 5200 && c % 16 == 8) imp[1] = {rng[7:0], rng} << 300;
         for (i = 0; i < 2; i = i + 1) begin
             tv[i] = rst_n && c > 60 && c < P2 - 600 && sk[i] < NREC && gap[i] >= 6 && rng[i * 3 + 1];
             if (c == P2 + 200 && i == 1) tv[i] = 1'b1;                      // phase 2: one more record Y -> X
@@ -74,9 +86,14 @@ module tb_s81hd_mesh_ep;
         if (c == NCYC) begin
             $display("MESH_STATS sent=%0d/%0d copyA=%0d/%0d copyB=%0d/%0d max_latency=%0d/%0d errors=%0d phase1_fault=%0d epf=%h/%h rf=%b/%b",
                 sk[0], sk[1], ra[1], ra[0], rb[1], rb[0], lmax, lmaxb, err, f1, epf[0], epf[1], rf[0], rf[1]);
+            $display("MESH_REPLAY crc_err_b X=%0d Y=%0d crc_err_a X=%0d Y=%0d replays_b X=%0d Y=%0d retx_flits_b X=%0d Y=%0d",
+                ce_xb, ce_yb, ce_xa, ce_ya, rp_xb, rp_yb, rx_xb, rx_yb);
             if (err != 0 || ra[0] != sk[1] || rb[0] != sk[1] || ra[1] != sk[0] || rb[1] != sk[0] || sk[0] < NREC)
                 $display("MESH_EP FAIL data: errors %0d", err);
             else if (f1 != 0) $display("MESH_EP FAIL fault on the static schedule");
+            else if (ce_xb == 0 || ce_yb == 0 || rp_xb == 0 || rp_yb == 0)
+                $display("MESH_EP FAIL forced CRC windows did not force a replay in both directions");
+            else if (ce_xa != 0 || ce_ya != 0) $display("MESH_EP FAIL CRC errors on the unimpaired lane a");
             else if (epf[0][8] !== 1'b1) $display("MESH_EP FAIL m_tx decode fault not delivered in-band (epf X %h)", epf[0]);
             else if (epf[1] !== 12'd0 || rf[1]) $display("MESH_EP FAIL spurious fault on Y (epf %h)", epf[1]);
             else $display("MESH_EP PASS records %0d/%0d x 2 copies exact, in-band fault delivered", ra[1], ra[0]);
