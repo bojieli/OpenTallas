@@ -4305,6 +4305,10 @@
         "rtl/hdc/ot_hdc_prefix.sv",
         "rtl/hdc/ot_hdc_fastfp.sv",
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"
+      ],
+      "verilog_defines": [
+        "OT_COLL_NATIVE32",
+        "OT_COLL_NATIVE32_OFF"
       ]
     },
     "hd_lep0N": {
@@ -4663,6 +4667,10 @@
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
         "rtl/hdc/ot_hdc_prefix.sv",
         "rtl/hdc/ot_hdc_fastfp.sv"
+      ],
+      "verilog_defines": [
+        "OT_COLL_NATIVE32",
+        "OT_COLL_NATIVE32_OFF"
       ]
     },
     "hd_ctl": {
@@ -5097,6 +5105,10 @@
         "rtl/hdc/ot_hdc_prefix.sv",
         "rtl/hdc/ot_hdc_fastfp.sv",
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"
+      ],
+      "verilog_defines": [
+        "OT_COLL_NATIVE32",
+        "OT_COLL_NATIVE32_OFF"
       ]
     },
     "hd_host": {
@@ -5379,6 +5391,10 @@
         "rtl/hdc/ot_hdc_prefix.sv",
         "rtl/hdc/ot_hdc_fastfp.sv",
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"
+      ],
+      "verilog_defines": [
+        "OT_COLL_NATIVE32",
+        "OT_COLL_NATIVE32_OFF"
       ]
     }
   },

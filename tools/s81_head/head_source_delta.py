@@ -23,7 +23,7 @@ def apply(plan, root, supplement):
         definitions[src] = re.findall(r'\bmodule\s+(\w+)', text)
         if not definitions[src]:
             raise ValueError('supplement defines no module: ' + src)
-    report = dict(sources={}, copy_b=[], taps=[])
+    report = dict(sources={}, copy_b=[], taps=[], source_profiles=[])
     assigned = set()
     for tn, ty in out['partition_types'].items():
         sources = list(ty.get('sources', []))
@@ -41,6 +41,12 @@ def apply(plan, root, supplement):
             ty['sources'] = sources
             report['sources'][tn] = added
         assigned.update(s for s in extras if s in sources)
+        if any(s.endswith('/ot_s81ph_link_ep_safe4.sv') for s in sources):
+            defines = ty.setdefault('verilog_defines', [])
+            for token in ('OT_COLL_NATIVE32', 'OT_COLL_NATIVE32_OFF'):
+                if token not in defines:
+                    defines.append(token)
+            report['source_profiles'].append(tn)
         for c in ty.get('contents', []):
             if c['module'] == 'ot_s81hd_mesh_ep_core':
                 c.setdefault('params', {})['BQ'] = 2

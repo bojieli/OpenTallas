@@ -61,6 +61,12 @@
       "u_core.u_b.g_cvb.u_eB.ft_mstrap_i"
     ]
   ],
+  "source_profiles": [
+    "hd_mesh",
+    "hd_lep0N",
+    "hd_ctl",
+    "hd_host"
+  ],
   "plan_relative_pin_assets": [
     [
       "cores/elemA_pins.json",
