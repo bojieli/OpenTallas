@@ -57,7 +57,7 @@ lie inside the island pin keep window (4.91-5.72 um = pin +-2.455 riser). 13,432
 and 2,069 have only PG plus the drawn shields of other trees. 295 are M9 trunk failures (free 17.28-um window, tree-blocked).
 Geometry (CHECKED arithmetic from the NDR table + 0.48@8.64 VDD/VSS, VSS on the island pin lane). Legal centre band per
 4.32-um PG gap: 4w ~[0.64,3.60] (~4 tracks); 8w [0.80,3.44] (~2-3); 16w drawn [1.70,2.12] (**1 track**, because the
-shield may not merge with VSS: 1.12 > 0.99975); 2x16w drawn **none** (needs 4.54 um > 4.32), flank [1.88,2.44] (1).
+shield may not merge with VSS: 1.12 > 0.99975); 2x16w drawn **none** (VSS-edge to VDD-edge needs 1.0+1.28+1.0+1.28+1.0 = 5.56 um > 3.84), flank [1.88,2.44] (1).
 The island window covers exactly 2 gaps. So an island row holds at most 2 wide (16w/2x16w) conductors that overlap in x,
 and the shields of each wide conductor fill its gap for the 4w jogs too. Demand is higher than that, hence the errors.
 => Planner fix needed (task 2, NOT done here): allot tracks in the planner (qc_clk_mesh3 export) per island row and per
