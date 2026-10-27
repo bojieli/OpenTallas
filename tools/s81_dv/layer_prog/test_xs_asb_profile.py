@@ -21,6 +21,7 @@ def main():
         assert XB.frame_variant('col_h9_l4_lp_asb_nx') == 'asb_nx'
         assert XB.frame_variant('col_h9_l4_lp') == 'lp'
         assert XB.frame_variant('col_h9_l4') is None
+        assert XB.meas_for({XB.shape_key('col_h9', 2, 'asb_x'): {'pv': {}}}, 'col_h9', 5, 'asb_x') == (None, None)
         with patch.dict(os.environ, {'OT_XS_BF_FRAME':'lp'}):
             try: XB.frame_variant('col_h9_l4_lp_asb_x')
             except ValueError as e: assert 'older frame calendar' in str(e)

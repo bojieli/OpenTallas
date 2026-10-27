@@ -249,7 +249,7 @@ def meas_for(meas, master, land_e, frame=None):
     k = shape_key(master, land_e, frame)
     if k in meas:
         return meas[k], 'measured_shape'
-    if frame == 'lp':
+    if frame in ('lp', 'asb_x', 'asb_nx'):
         # NOT on the LP frame: measured vgcs col_h9 E2 -> E5 moved every BF partial +5 edges, not E - E' = +3 (the q plan
         # set at LK 5 is +2 vs frame_return_plan.x_shift too, LDLY 3 and 4): every LP lane latency is measured itself
         return None, None
