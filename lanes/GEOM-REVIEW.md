@@ -3475,3 +3475,15 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
       Accepted for this delta, because the hub-row height is forced by the o5 hub types. In QUAD-4, when the hub row is repacked, re-place the q_b0xx core arrays so they use the strip (spread the growth across the column) instead of leaving an empty band on the L28/L36/L9/L63 paths.
   Note: P_summary reports same_site_pairs 1238 (pre-existing; '0 new' per summary). Check that these are intended (bus pins sharing a site?) before kits.
   No geometry blocker for the GRT probe (unit oth-ubuntu-3192279-1793093005). The (a) ruling and the (b) window fix go into the QUAD-4 delta.
+2026-10-27 02:46 PDT GEOM-REVIEW-18: REPLY [CLOCK-KV-R18] VERDICT PASS-COND (claude/clock-kv-r18-1027@21a943ee06, on the intel2 hub. Posted in lanes/CLOCK-KV.md line 101. I viewed r18_render.png, r18_zoom_E.png and r18_zoom_W.png and read summary.json, band_offset_r18.txt, grt_r18.txt and slice/taps_report.json myself.)
+  (1) Whole die: PASS. The H-tree is regular and symmetric, with the root on the centre spine (x~5560). The leaf grid and mesh are uniform in both halves. In the hub gap (y~12170-13840) no mesh rows cross, only the V straps, which run continuous across it.
+      There are no tree segments in the gap except the spine. There is no wire padding or meander on the tree.
+  (2) Band stub shape: PASS. Each magenta band stub starts on the driven mesh node at the edge leaf row (x foot on a red driver at y 13940/12070), runs one horizontal leg along that row, then drops ~117 um into the gap to the tap at y 13820/12185.
+      These are single L shapes with no loops, and no band cells, as the strap feed intends. Most stubs have a lateral leg of 110-150 um, so the total is ~230-270 um.
+      Band-mesh median TT 20.41 / FF 14.39 (file value, UNCHECKED; R15 leaf was 6.8/4.81) is the cost of zero band cells, which COORD accepted at 02:37.
+  (3) Outer-column taps: COND. The four t_hroot_{EN,ES,WN,WS} taps sit at x~10890 (E) and x~190 (W), about 390-400 um OUTSIDE the last driven leaf driver and H strap of the edge row (x 10490 / 580, zoom).
+      Their stubs are 506.44-510.76 um and give TT slew 120.2-122.9 at BUFx24 (file values, UNCHECKED). The geometry fault is that the mesh hull stops ~400 um short of the outermost core column in the band rows. The stub is not misshapen.
+      Fix (plan-computed, no trims): add an edge leaf driver/strap stub on the edge row at the outer column (x ~190/10890), so these four stubs get the same ~230 um shape as the others and keep the same stage count.
+      Do NOT split the stub with a repeater: that adds a stage to 4 taps only, and they would no longer be mesh-equivalent loads. A larger driver alone does not fix ~510 um of M8 into a BUFx24 load.
+  (4) GRT combo 50 it, overflow 0/0/0, U 3.76 %, RCX 4366/4366 connected: CHECKED from grt_r18.txt and taps_report.json.
+  Mesh MC skew and seam STA numbers are not geometry. They are UNCHECKED and go to NUMBER-CHECK-KV-R18. Re-submit only the edge-row zooms after the (3) fix.
