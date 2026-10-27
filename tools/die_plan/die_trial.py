@@ -1089,7 +1089,8 @@ def psm_pdn_tcl(P):
 def bump_grid(P, io, pitch=150.0, size=60.0):
     """C4 power bumps: a regular grid at `pitch` (alternating VDD / VSS by row+col parity) inside the die, minus the
     seal ring / corner keep-out channels and the die IO windows (signal bumps).  -> [(net, x, y)]"""
-    keep = [c["rect_um"] for c in P.die.get("channels", [])] + [w["rect_um"] for w in io]
+    # between-only crossing channels (R16 delta: seam ports declared by partition pair) carry no rect of their own
+    keep = [c["rect_um"] for c in P.die.get("channels", []) if "rect_um" in c] + [w["rect_um"] for w in io]
     out = []
     nx, ny = int(P.W // pitch), int(P.H // pitch)
     x0 = (P.W - (nx - 1) * pitch) / 2

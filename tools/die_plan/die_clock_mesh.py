@@ -2103,7 +2103,9 @@ def mesh_segments(M, jogs=True):
     """[(layer, x0, y0, x1, y1, net, kind)] centre lines of the mesh straps and island jogs exactly as cmd_combo draws
     them (strap spans clipped at macro holes with --clock-floorplan)."""
     xs, ys = M["xs"], M["ys"]
-    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") else
+    # INFRA-FIRST-QC-R17: an explicit-cells tree with no mesh straps (xs = ys = []) has no region to draw
+    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") or (M["meta"].get("explicit_tree")
+                                                                                and not xs and not ys) else
                                         [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))])
     md = {L: (M["meta"].get("strap_shield") or {}).get(L, C128.DRAWN) for L in ("M8", "M9")}
     out = []
@@ -2502,7 +2504,7 @@ def _body_keepout_violations(K, W, H, cells):
 
 
 def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, die=None, parts=None, keepouts=None,
-                   root_um=None, leaf_stub_um=8.64, stack_offset=0.0, stack_r8=True):
+                   root_um=None, leaf_stub_um=8.64, stack_offset=0.0, stack_r8=True, exact_reserve=None):
     """INFRA-FIRST-QC-R12: the die clock tree from an EXPLICIT cell + net list (the planner's delay-balanced mesh3 top
     tree, results/qc_clk_mesh3/r11/r11_top_sites.json format) instead of build_lattice's binary / midpoint / equal-cut
     H-tree.  No midpoint, equal-cut, arity or path-spread check (the planner balanced the delays); kept fail-closed
@@ -2533,6 +2535,12 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         prt = list((parts or {}).items())
     K = DC.KeepIndex(ko, die=(W, H))
     part_rects = dict(prt)
+    # R17 (opt-in spec "channel_hosts"): a die-level cell (part None, plan kind chan_*) may sit wholly inside a plan die
+    # channel declared clock_channel (the QC 43.2-um centre clock channel PLAN-DELTA); every other cell keeps its host check
+    chan_rects = []
+    if spec.get("channel_hosts") and P is not None:
+        chan_rects = [tuple(ch["rect_um"]) for ch in (P.die.get("channels", []) or [])
+                      if ch.get("clock_channel") and ch.get("rect_um")]
 
     def host(xy, half):
         for dx in (-half[0], half[0]):
@@ -2542,6 +2550,9 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         for name, r in prt:
             if r[0] <= xy[0] <= r[2] and r[1] <= xy[1] <= r[3]:
                 return name, None
+        for r in chan_rects:
+            if r[0] <= xy[0] - half[0] and xy[0] + half[0] <= r[2] and r[1] <= xy[1] - half[1] and xy[1] + half[1] <= r[3]:
+                return None, None
         return None, "outside_partitions"
     perr, cells, groups = [], {}, defaultdict(list)
     for name, v in sorted((spec.get("cell_sites") or {}).items()):
@@ -2681,7 +2692,8 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
     # physical view: one pin stack per GROUP (the tie reaches the other units); logical nets keep every unit
     phys = [dict(n, loads=[ld for ld in n["loads"] if ld.startswith("port:") or rep_of[ld] == ld]) for n in nets]
     wires = C128.fixed_wires(out, cells, phys, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=True,
-                             port_on_trunk=stack_r8, ties=ties, l_drops=True)
+                             port_on_trunk=stack_r8, ties=ties, l_drops=True,
+                             exact_reserve=bool(spec.get("exact_reserve") if exact_reserve is None else exact_reserve))
     for w in wires:
         w["ndr"] = ndr
         for s_ in w.get("stacks", []):
@@ -3179,7 +3191,9 @@ def cmd_combo(a):
           "proc um {v} { global dbu; return [expr {round($v*$dbu)}] }"]
     # the strap footprint (+ NDR spacing) is also a routing obstruction: GRT does not derate special wires
     hs = hw + nd["space"]
-    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") else
+    # INFRA-FIRST-QC-R17: an explicit-cells tree with no mesh straps (xs = ys = []) has no region to draw
+    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") or (M["meta"].get("explicit_tree")
+                                                                                and not xs and not ys) else
                                         [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))])
     vias_meta, cross_meta = {}, {}
     if getattr(a, "routed_clock", False) and regs:
