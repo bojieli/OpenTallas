@@ -1,0 +1,1746 @@
+{
+ "schema": "opentallas.s81_core_lat_r7.l0r.v1",
+ "scope": "PLAN MODEL predictions, UNCHECKED: R6 predictor chain (core_infra_htree.plan geometry + ASAP7 NLDM/Elmore, setRC stock M4/M5 x 0.8/0.9) extended by l0r_r7_model.py (per-level NDR 2W wire class R x0.5 C x1.25, 12.8 d1 per-driver sizing, INV/BUF families)",
+ "geometry": "kit dsdv_gunit_l0r_r6p 3_3_place_gp (R6 geo l0r_r6p_gp.geo, 13,238 sinks, centre entry 133.92,133.92)",
+ "chosen": "F1_s70_ndr_buf_d1",
+ "sweep": [
+  {
+   "name": "r6_base",
+   "splits": "2,2,8,8",
+   "smax": 70.0,
+   "wire": {},
+   "masters": {},
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    1,
+    1,
+    1,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "TT": {
+    "mean": 301.96,
+    "leaf_mean_min": 296.56,
+    "leaf_mean_max": 313.64,
+    "window": 17.08,
+    "sink_min": 293.72,
+    "sink_max": 315.52,
+    "leaf_slew_in_max": 15.7,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 32.2
+   },
+   "FF": {
+    "mean": 246.32,
+    "leaf_mean_min": 241.33,
+    "leaf_mean_max": 257.24,
+    "window": 15.91,
+    "sink_min": 237.33,
+    "sink_max": 260.16,
+    "leaf_slew_in_max": 14.1,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 27.0
+   }
+  },
+  {
+   "name": "ndr_trunk",
+   "splits": "2,2,8,8",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w"
+   },
+   "masters": {},
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    1,
+    1,
+    1,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "TT": {
+    "mean": 275.69,
+    "leaf_mean_min": 270.59,
+    "leaf_mean_max": 287.18,
+    "window": 16.6,
+    "sink_min": 267.79,
+    "sink_max": 289.15,
+    "leaf_slew_in_max": 15.4,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 32.2
+   },
+   "FF": {
+    "mean": 216.92,
+    "leaf_mean_min": 212.21,
+    "leaf_mean_max": 227.69,
+    "window": 15.47,
+    "sink_min": 208.26,
+    "sink_max": 230.81,
+    "leaf_slew_in_max": 13.6,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 27.0
+   }
+  },
+  {
+   "name": "ndr_all",
+   "splits": "2,2,8,8",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w"
+   },
+   "masters": {},
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    1,
+    1,
+    1,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "TT": {
+    "mean": 275.4,
+    "leaf_mean_min": 270.55,
+    "leaf_mean_max": 285.68,
+    "window": 15.13,
+    "sink_min": 267.48,
+    "sink_max": 289.0,
+    "leaf_slew_in_max": 14.4,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 32.2
+   },
+   "FF": {
+    "mean": 216.51,
+    "leaf_mean_min": 212.13,
+    "leaf_mean_max": 225.84,
+    "window": 13.71,
+    "sink_min": 207.81,
+    "sink_max": 230.57,
+    "leaf_slew_in_max": 12.0,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 27.0
+   }
+  },
+  {
+   "name": "s70_ndr_buf24",
+   "splits": "2,2,8,8",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w"
+   },
+   "masters": {
+    "rep": "BUFx24_ASAP7_75t_R"
+   },
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    1,
+    1,
+    1,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "TT": {
+    "mean": 284.76,
+    "leaf_mean_min": 279.93,
+    "leaf_mean_max": 295.02,
+    "window": 15.09,
+    "sink_min": 276.86,
+    "sink_max": 298.35,
+    "leaf_slew_in_max": 14.4,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 32.2
+   },
+   "FF": {
+    "mean": 223.96,
+    "leaf_mean_min": 219.59,
+    "leaf_mean_max": 233.28,
+    "window": 13.69,
+    "sink_min": 215.26,
+    "sink_max": 238.01,
+    "leaf_slew_in_max": 12.0,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 27.0
+   }
+  },
+  {
+   "name": "s70_ndr_inv_rootbuf",
+   "splits": "2,2,8,8",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w"
+   },
+   "masters": {
+    "entry": "BUFx24_ASAP7_75t_R",
+    "branch": "INVx13_ASAP7_75t_R",
+    "rep": "INVx13_ASAP7_75t_R",
+    "leaf": "INVx13_ASAP7_75t_R"
+   },
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    1,
+    1,
+    1,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "TT": {
+    "mean": 251.46,
+    "leaf_mean_min": 243.95,
+    "leaf_mean_max": 266.85,
+    "window": 22.9,
+    "sink_min": 243.0,
+    "sink_max": 268.73,
+    "leaf_slew_in_max": 28.8,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 39.4
+   },
+   "FF": {
+    "mean": 212.66,
+    "leaf_mean_min": 206.08,
+    "leaf_mean_max": 226.0,
+    "window": 19.93,
+    "sink_min": 204.7,
+    "sink_max": 227.98,
+    "leaf_slew_in_max": 24.5,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 31.8
+   }
+  },
+  {
+   "name": "s70_ndr_allinv",
+   "error": "odd inverter count per path {9: 256}"
+  },
+  {
+   "name": "F1_s70_ndr_inv_d1",
+   "splits": "2,2,8,8",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {
+    "entry": "BUFx24_ASAP7_75t_R",
+    "branch": "INVx13_ASAP7_75t_R",
+    "rep": "INVx13_ASAP7_75t_R",
+    "leaf": "INVx13_ASAP7_75t_R"
+   },
+   "d1": true,
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    1,
+    1,
+    1,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "sized_masters": {
+    "entry:BUFx24_ASAP7_75t_R": 1,
+    "branch:INVx13_ASAP7_75t_R": 23,
+    "rep:INVx13_ASAP7_75t_R": 6,
+    "rep:INVx11_ASAP7_75t_R": 4,
+    "branch:INVx8_ASAP7_75t_R": 20,
+    "rep:INVx5_ASAP7_75t_R": 15,
+    "rep:INVx6_ASAP7_75t_R": 4,
+    "rep:INVx8_ASAP7_75t_R": 9,
+    "branch:INVx4_ASAP7_75t_R": 239,
+    "leaf:INVx5_ASAP7_75t_R": 130,
+    "leaf:INVx6_ASAP7_75t_R": 96,
+    "leaf:INVx4_ASAP7_75t_R": 11,
+    "leaf:INVx8_ASAP7_75t_R": 15,
+    "branch:INVx5_ASAP7_75t_R": 6,
+    "branch:INVx6_ASAP7_75t_R": 6,
+    "leaf:INVx13_ASAP7_75t_R": 2,
+    "leaf:INVx11_ASAP7_75t_R": 2
+   },
+   "TT": {
+    "mean": 238.31,
+    "leaf_mean_min": 224.8,
+    "leaf_mean_max": 247.29,
+    "window": 22.49,
+    "sink_min": 223.71,
+    "sink_max": 252.38,
+    "leaf_slew_in_max": 34.1,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 60.0
+   },
+   "FF": {
+    "mean": 192.73,
+    "leaf_mean_min": 180.2,
+    "leaf_mean_max": 204.56,
+    "window": 24.36,
+    "sink_min": 179.02,
+    "sink_max": 208.86,
+    "leaf_slew_in_max": 26.6,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 45.9
+   }
+  },
+  {
+   "name": "F1_s70_ndr_buf24_d1",
+   "splits": "2,2,8,8",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {
+    "rep": "BUFx24_ASAP7_75t_R"
+   },
+   "d1": true,
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    1,
+    1,
+    1,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "sized_masters": {
+    "entry:BUFx24_ASAP7_75t_R": 1,
+    "branch:BUFx12f_ASAP7_75t_R": 40,
+    "rep:BUFx12f_ASAP7_75t_R": 7,
+    "rep:BUFx16f_ASAP7_75t_R": 9,
+    "rep:BUFx6f_ASAP7_75t_R": 4,
+    "rep:BUFx24_ASAP7_75t_R": 18,
+    "branch:BUFx10_ASAP7_75t_R": 94,
+    "leaf:BUFx8_ASAP7_75t_R": 108,
+    "branch:BUFx4f_ASAP7_75t_R": 44,
+    "leaf:BUFx12_ASAP7_75t_R": 32,
+    "leaf:BUFx6f_ASAP7_75t_R": 81,
+    "branch:BUFx12_ASAP7_75t_R": 41,
+    "branch:BUFx5_ASAP7_75t_R": 17,
+    "leaf:BUFx10_ASAP7_75t_R": 18,
+    "leaf:BUFx24_ASAP7_75t_R": 10,
+    "branch:BUFx16f_ASAP7_75t_R": 28,
+    "leaf:BUFx4f_ASAP7_75t_R": 3,
+    "branch:BUFx8_ASAP7_75t_R": 14,
+    "branch:BUFx24_ASAP7_75t_R": 10,
+    "branch:BUFx6f_ASAP7_75t_R": 6,
+    "leaf:BUFx16f_ASAP7_75t_R": 3,
+    "leaf:BUFx5_ASAP7_75t_R": 1
+   },
+   "TT": {
+    "mean": 254.99,
+    "leaf_mean_min": 251.75,
+    "leaf_mean_max": 258.28,
+    "window": 6.52,
+    "sink_min": 243.71,
+    "sink_max": 260.66,
+    "leaf_slew_in_max": 21.3,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 59.8
+   },
+   "FF": {
+    "mean": 197.7,
+    "leaf_mean_min": 193.84,
+    "leaf_mean_max": 200.6,
+    "window": 6.76,
+    "sink_min": 185.15,
+    "sink_max": 206.44,
+    "leaf_slew_in_max": 15.9,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 46.0
+   }
+  },
+  {
+   "name": "F2_s1000_ndr_buf_d1",
+   "splits": "2,2,8,8",
+   "smax": 1000,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {},
+   "d1": true,
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    6
+   ],
+   "sized_masters": {
+    "entry:BUFx24_ASAP7_75t_R": 1,
+    "branch:BUFx12f_ASAP7_75t_R": 9,
+    "branch:BUFx10_ASAP7_75t_R": 68,
+    "branch:BUFx16f_ASAP7_75t_R": 41,
+    "branch:BUFx12_ASAP7_75t_R": 19,
+    "branch:BUFx5_ASAP7_75t_R": 42,
+    "branch:BUFx24_ASAP7_75t_R": 28,
+    "branch:BUFx4f_ASAP7_75t_R": 26,
+    "branch:BUFx8_ASAP7_75t_R": 57,
+    "leaf:BUFx8_ASAP7_75t_R": 144,
+    "leaf:BUFx6f_ASAP7_75t_R": 35,
+    "leaf:BUFx12_ASAP7_75t_R": 11,
+    "leaf:BUFx5_ASAP7_75t_R": 39,
+    "leaf:BUFx4f_ASAP7_75t_R": 3,
+    "leaf:BUFx10_ASAP7_75t_R": 18,
+    "leaf:BUFx24_ASAP7_75t_R": 5,
+    "branch:BUFx6f_ASAP7_75t_R": 4,
+    "leaf:BUFx16f_ASAP7_75t_R": 1
+   },
+   "TT": {
+    "mean": 223.03,
+    "leaf_mean_min": 205.94,
+    "leaf_mean_max": 228.93,
+    "window": 22.99,
+    "sink_min": 204.19,
+    "sink_max": 232.32,
+    "leaf_slew_in_max": 21.5,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 59.9
+   },
+   "FF": {
+    "mean": 174.47,
+    "leaf_mean_min": 158.69,
+    "leaf_mean_max": 182.0,
+    "window": 23.31,
+    "sink_min": 157.31,
+    "sink_max": 185.7,
+    "leaf_slew_in_max": 16.2,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 45.6
+   }
+  },
+  {
+   "name": "F2_s1000_std_buf_d1",
+   "splits": "2,2,8,8",
+   "smax": 1000,
+   "wire": {},
+   "masters": {},
+   "d1": true,
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    6
+   ],
+   "sized_masters": {
+    "entry:BUFx24_ASAP7_75t_R": 1,
+    "branch:BUFx12f_ASAP7_75t_R": 8,
+    "branch:BUFx4f_ASAP7_75t_R": 19,
+    "branch:BUFx16f_ASAP7_75t_R": 14,
+    "branch:BUFx10_ASAP7_75t_R": 36,
+    "branch:BUFx24_ASAP7_75t_R": 47,
+    "branch:BUFx5_ASAP7_75t_R": 48,
+    "branch:BUFx12_ASAP7_75t_R": 12,
+    "branch:BUFx8_ASAP7_75t_R": 104,
+    "leaf:BUFx5_ASAP7_75t_R": 79,
+    "leaf:BUFx8_ASAP7_75t_R": 159,
+    "branch:BUFx6f_ASAP7_75t_R": 6,
+    "leaf:BUFx24_ASAP7_75t_R": 2,
+    "leaf:BUFx6f_ASAP7_75t_R": 8,
+    "leaf:BUFx16f_ASAP7_75t_R": 1,
+    "leaf:BUFx10_ASAP7_75t_R": 5,
+    "leaf:BUFx12_ASAP7_75t_R": 2
+   },
+   "TT": {
+    "mean": 252.54,
+    "leaf_mean_min": 221.52,
+    "leaf_mean_max": 271.68,
+    "window": 50.16,
+    "sink_min": 218.65,
+    "sink_max": 276.79,
+    "leaf_slew_in_max": 20.4,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 60.0
+   },
+   "FF": {
+    "mean": 203.22,
+    "leaf_mean_min": 176.48,
+    "leaf_mean_max": 222.69,
+    "window": 46.21,
+    "sink_min": 173.64,
+    "sink_max": 227.85,
+    "leaf_slew_in_max": 15.6,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 45.6
+   }
+  },
+  {
+   "name": "F1h5_s70_ndr_inv_d1",
+   "splits": "2,2,4,4,4",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {
+    "entry": "BUFx24_ASAP7_75t_R",
+    "branch": "INVx13_ASAP7_75t_R",
+    "rep": "INVx13_ASAP7_75t_R",
+    "leaf": "INVx13_ASAP7_75t_R"
+   },
+   "d1": true,
+   "level_len_um": [
+    97.74,
+    68.58,
+    74.52,
+    43.2,
+    30.78
+   ],
+   "repeaters_per_edge": [
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "sized_masters": {
+    "entry:BUFx24_ASAP7_75t_R": 1,
+    "branch:INVx13_ASAP7_75t_R": 18,
+    "rep:INVx13_ASAP7_75t_R": 4,
+    "rep:INVx8_ASAP7_75t_R": 9,
+    "rep:INVx11_ASAP7_75t_R": 2,
+    "branch:INVx11_ASAP7_75t_R": 12,
+    "rep:INVx6_ASAP7_75t_R": 3,
+    "branch:INVx4_ASAP7_75t_R": 254,
+    "branch:INVx6_ASAP7_75t_R": 20,
+    "branch:INVx5_ASAP7_75t_R": 21,
+    "branch:INVx8_ASAP7_75t_R": 17,
+    "leaf:INVx5_ASAP7_75t_R": 142,
+    "leaf:INVx4_ASAP7_75t_R": 11,
+    "leaf:INVx6_ASAP7_75t_R": 87,
+    "leaf:INVx8_ASAP7_75t_R": 14,
+    "leaf:INVx13_ASAP7_75t_R": 1,
+    "leaf:INVx11_ASAP7_75t_R": 1
+   },
+   "TT": {
+    "mean": 225.37,
+    "leaf_mean_min": 212.49,
+    "leaf_mean_max": 234.87,
+    "window": 22.39,
+    "sink_min": 212.03,
+    "sink_max": 240.38,
+    "leaf_slew_in_max": 26.6,
+    "leaf_ct_ff": [
+     27.0,
+     47.8
+    ],
+    "leaf_out_slew_max": 59.9
+   },
+   "FF": {
+    "mean": 183.5,
+    "leaf_mean_min": 172.14,
+    "leaf_mean_max": 193.96,
+    "window": 21.82,
+    "sink_min": 171.65,
+    "sink_max": 198.82,
+    "leaf_slew_in_max": 20.7,
+    "leaf_ct_ff": [
+     29.5,
+     50.3
+    ],
+    "leaf_out_slew_max": 46.1
+   }
+  },
+  {
+   "name": "F2h5_s1000_ndr_buf_d1",
+   "splits": "2,2,4,4,4",
+   "smax": 1000,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {},
+   "d1": true,
+   "level_len_um": [
+    97.74,
+    68.58,
+    74.52,
+    43.2,
+    30.78
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    7
+   ],
+   "sized_masters": {
+    "entry:BUFx24_ASAP7_75t_R": 1,
+    "branch:BUFx12f_ASAP7_75t_R": 13,
+    "branch:BUFx8_ASAP7_75t_R": 30,
+    "branch:BUFx16f_ASAP7_75t_R": 40,
+    "branch:BUFx24_ASAP7_75t_R": 34,
+    "branch:BUFx12_ASAP7_75t_R": 29,
+    "branch:BUFx5_ASAP7_75t_R": 42,
+    "branch:BUFx10_ASAP7_75t_R": 102,
+    "branch:BUFx6f_ASAP7_75t_R": 19,
+    "branch:BUFx4f_ASAP7_75t_R": 33,
+    "leaf:BUFx8_ASAP7_75t_R": 163,
+    "leaf:BUFx5_ASAP7_75t_R": 23,
+    "leaf:BUFx6f_ASAP7_75t_R": 45,
+    "leaf:BUFx10_ASAP7_75t_R": 7,
+    "leaf:BUFx12_ASAP7_75t_R": 13,
+    "leaf:BUFx24_ASAP7_75t_R": 2,
+    "leaf:BUFx16f_ASAP7_75t_R": 1,
+    "leaf:BUFx4f_ASAP7_75t_R": 2
+   },
+   "TT": {
+    "mean": 229.96,
+    "leaf_mean_min": 220.94,
+    "leaf_mean_max": 233.72,
+    "window": 12.78,
+    "sink_min": 219.16,
+    "sink_max": 238.32,
+    "leaf_slew_in_max": 17.7,
+    "leaf_ct_ff": [
+     27.0,
+     47.8
+    ],
+    "leaf_out_slew_max": 59.9
+   },
+   "FF": {
+    "mean": 178.63,
+    "leaf_mean_min": 168.82,
+    "leaf_mean_max": 184.58,
+    "window": 15.76,
+    "sink_min": 167.28,
+    "sink_max": 191.45,
+    "leaf_slew_in_max": 12.9,
+    "leaf_ct_ff": [
+     29.5,
+     50.3
+    ],
+    "leaf_out_slew_max": 45.5
+   }
+  },
+  {
+   "name": "F2_2248_s1000_ndr_buf_d1",
+   "splits": "2,2,4,8",
+   "smax": 1000,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {},
+   "d1": true,
+   "level_len_um": [
+    93.96,
+    68.04,
+    73.98,
+    50.76
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    6
+   ],
+   "sized_masters": {
+    "entry:BUFx24_ASAP7_75t_R": 1,
+    "branch:BUFx12f_ASAP7_75t_R": 14,
+    "branch:BUFx4f_ASAP7_75t_R": 16,
+    "branch:BUFx16f_ASAP7_75t_R": 23,
+    "branch:BUFx24_ASAP7_75t_R": 17,
+    "branch:BUFx12_ASAP7_75t_R": 11,
+    "branch:BUFx8_ASAP7_75t_R": 18,
+    "branch:BUFx5_ASAP7_75t_R": 16,
+    "branch:BUFx10_ASAP7_75t_R": 27,
+    "leaf:BUFx12_ASAP7_75t_R": 68,
+    "leaf:BUFx12f_ASAP7_75t_R": 25,
+    "leaf:BUFx10_ASAP7_75t_R": 11,
+    "leaf:BUFx24_ASAP7_75t_R": 23,
+    "branch:BUFx6f_ASAP7_75t_R": 8,
+    "leaf:BUFx16f_ASAP7_75t_R": 1
+   },
+   "TT": {
+    "mean": 225.33,
+    "leaf_mean_min": 203.68,
+    "leaf_mean_max": 268.41,
+    "window": 64.73,
+    "sink_min": 199.33,
+    "sink_max": 289.46,
+    "leaf_slew_in_max": 21.2,
+    "leaf_ct_ff": [
+     54.1,
+     88.1
+    ],
+    "leaf_out_slew_max": 60.0
+   },
+   "FF": {
+    "mean": 178.13,
+    "leaf_mean_min": 157.71,
+    "leaf_mean_max": 224.78,
+    "window": 67.07,
+    "sink_min": 153.07,
+    "sink_max": 247.05,
+    "leaf_slew_in_max": 15.8,
+    "leaf_ct_ff": [
+     59.0,
+     93.0
+    ],
+    "leaf_out_slew_max": 47.8
+   }
+  },
+  {
+   "name": "F1_s70_ndr_buf_d1",
+   "splits": "2,2,8,8",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {
+    "rep": "BUFx24_ASAP7_75t_R"
+   },
+   "d1": true,
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    1,
+    1,
+    1,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "sized_masters": {
+    "entry:BUFx24_ASAP7_75t_R": 1,
+    "branch:BUFx12f_ASAP7_75t_R": 40,
+    "rep:BUFx12f_ASAP7_75t_R": 7,
+    "rep:BUFx16f_ASAP7_75t_R": 9,
+    "rep:BUFx6f_ASAP7_75t_R": 4,
+    "rep:BUFx24_ASAP7_75t_R": 18,
+    "branch:BUFx10_ASAP7_75t_R": 94,
+    "leaf:BUFx8_ASAP7_75t_R": 108,
+    "branch:BUFx4f_ASAP7_75t_R": 44,
+    "leaf:BUFx12_ASAP7_75t_R": 32,
+    "leaf:BUFx6f_ASAP7_75t_R": 81,
+    "branch:BUFx12_ASAP7_75t_R": 41,
+    "branch:BUFx5_ASAP7_75t_R": 17,
+    "leaf:BUFx10_ASAP7_75t_R": 18,
+    "leaf:BUFx24_ASAP7_75t_R": 10,
+    "branch:BUFx16f_ASAP7_75t_R": 28,
+    "leaf:BUFx4f_ASAP7_75t_R": 3,
+    "branch:BUFx8_ASAP7_75t_R": 14,
+    "branch:BUFx24_ASAP7_75t_R": 10,
+    "branch:BUFx6f_ASAP7_75t_R": 6,
+    "leaf:BUFx16f_ASAP7_75t_R": 3,
+    "leaf:BUFx5_ASAP7_75t_R": 1
+   },
+   "TT": {
+    "mean": 254.99,
+    "leaf_mean_min": 251.75,
+    "leaf_mean_max": 258.28,
+    "window": 6.52,
+    "sink_min": 243.71,
+    "sink_max": 260.66,
+    "leaf_slew_in_max": 21.3,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 59.8
+   },
+   "FF": {
+    "mean": 197.7,
+    "leaf_mean_min": 193.84,
+    "leaf_mean_max": 200.6,
+    "window": 6.76,
+    "sink_min": 185.15,
+    "sink_max": 206.44,
+    "leaf_slew_in_max": 15.9,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 46.0
+   },
+   "frozen_masters_variants": [
+    {
+     "name": "ndr_c1.5",
+     "ndr_c": 1.5,
+     "TT": {
+      "mean": 264.43,
+      "window": 6.87,
+      "sink_min": 254.89,
+      "sink_max": 270.16,
+      "leaf_out_slew_max": 59.8
+     },
+     "FF": {
+      "mean": 204.92,
+      "window": 6.53,
+      "sink_min": 193.38,
+      "sink_max": 213.64,
+      "leaf_out_slew_max": 46.0
+     }
+    },
+    {
+     "name": "ndr_r0.6",
+     "ndr_r": 0.6,
+     "TT": {
+      "mean": 260.92,
+      "window": 6.56,
+      "sink_min": 249.14,
+      "sink_max": 266.66,
+      "leaf_out_slew_max": 59.8
+     },
+     "FF": {
+      "mean": 203.94,
+      "window": 7.61,
+      "sink_min": 190.85,
+      "sink_max": 212.7,
+      "leaf_out_slew_max": 46.0
+     }
+    },
+    {
+     "name": "leaf_ndr",
+     "leaf_ndr": true,
+     "TT": {
+      "mean": 255.49,
+      "window": 8.36,
+      "sink_min": 247.27,
+      "sink_max": 259.8,
+      "leaf_out_slew_max": 63.1
+     },
+     "FF": {
+      "mean": 197.73,
+      "window": 6.37,
+      "sink_min": 189.38,
+      "sink_max": 200.91,
+      "leaf_out_slew_max": 47.7
+     }
+    },
+    {
+     "name": "stock_rc",
+     "rc": "1.0,1.0",
+     "TT": {
+      "mean": 269.24,
+      "window": 7.76,
+      "sink_min": 253.97,
+      "sink_max": 278.87,
+      "leaf_out_slew_max": 60.6
+     },
+     "FF": {
+      "mean": 210.92,
+      "window": 9.1,
+      "sink_min": 194.0,
+      "sink_max": 223.76,
+      "leaf_out_slew_max": 46.6
+     }
+    },
+    {
+     "name": "rcx_clockC",
+     "rc": "0.8,0.65",
+     "TT": {
+      "mean": 239.95,
+      "window": 7.84,
+      "sink_min": 229.34,
+      "sink_max": 245.37,
+      "leaf_out_slew_max": 57.6
+     },
+     "FF": {
+      "mean": 186.17,
+      "window": 8.0,
+      "sink_min": 175.27,
+      "sink_max": 193.53,
+      "leaf_out_slew_max": 44.4
+     }
+    },
+    {
+     "name": "worst",
+     "ndr_c": 1.5,
+     "ndr_r": 0.6,
+     "rc": "1.0,1.0",
+     "TT": {
+      "mean": 289.23,
+      "window": 9.84,
+      "sink_min": 275.07,
+      "sink_max": 298.95,
+      "leaf_out_slew_max": 60.6
+     },
+     "FF": {
+      "mean": 228.78,
+      "window": 10.37,
+      "sink_min": 212.2,
+      "sink_max": 241.59,
+      "leaf_out_slew_max": 46.6
+     }
+    }
+   ]
+  },
+  {
+   "name": "F1_s70_ndr_buf_d1_leafndr_sized",
+   "splits": "2,2,8,8",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {
+    "rep": "BUFx24_ASAP7_75t_R"
+   },
+   "d1": true,
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    1,
+    1,
+    1,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "sized_masters": {
+    "entry:BUFx24_ASAP7_75t_R": 1,
+    "branch:BUFx12f_ASAP7_75t_R": 40,
+    "rep:BUFx12f_ASAP7_75t_R": 7,
+    "rep:BUFx16f_ASAP7_75t_R": 9,
+    "rep:BUFx6f_ASAP7_75t_R": 4,
+    "rep:BUFx24_ASAP7_75t_R": 18,
+    "branch:BUFx10_ASAP7_75t_R": 91,
+    "leaf:BUFx8_ASAP7_75t_R": 46,
+    "branch:BUFx4f_ASAP7_75t_R": 47,
+    "leaf:BUFx6f_ASAP7_75t_R": 104,
+    "leaf:BUFx10_ASAP7_75t_R": 31,
+    "leaf:BUFx12_ASAP7_75t_R": 63,
+    "branch:BUFx12_ASAP7_75t_R": 40,
+    "branch:BUFx5_ASAP7_75t_R": 17,
+    "leaf:BUFx24_ASAP7_75t_R": 10,
+    "branch:BUFx16f_ASAP7_75t_R": 29,
+    "branch:BUFx8_ASAP7_75t_R": 13,
+    "branch:BUFx24_ASAP7_75t_R": 11,
+    "branch:BUFx6f_ASAP7_75t_R": 6,
+    "leaf:BUFx16f_ASAP7_75t_R": 1,
+    "leaf:BUFx12f_ASAP7_75t_R": 1
+   },
+   "TT": {
+    "mean": 254.22,
+    "leaf_mean_min": 250.52,
+    "leaf_mean_max": 256.85,
+    "window": 6.33,
+    "sink_min": 248.3,
+    "sink_max": 258.31,
+    "leaf_slew_in_max": 21.3,
+    "leaf_ct_ff": [
+     27.6,
+     56.6
+    ],
+    "leaf_out_slew_max": 59.1
+   },
+   "FF": {
+    "mean": 196.82,
+    "leaf_mean_min": 193.75,
+    "leaf_mean_max": 200.12,
+    "window": 6.37,
+    "sink_min": 189.38,
+    "sink_max": 201.75,
+    "leaf_slew_in_max": 15.9,
+    "leaf_ct_ff": [
+     30.1,
+     59.1
+    ],
+    "leaf_out_slew_max": 44.9
+   },
+   "frozen_masters_variants": [
+    {
+     "name": "ndr_c1.5",
+     "ndr_c": 1.5,
+     "TT": {
+      "mean": 265.05,
+      "window": 7.22,
+      "sink_min": 258.9,
+      "sink_max": 269.84,
+      "leaf_out_slew_max": 63.6
+     },
+     "FF": {
+      "mean": 205.04,
+      "window": 6.34,
+      "sink_min": 197.35,
+      "sink_max": 210.56,
+      "leaf_out_slew_max": 48.2
+     }
+    },
+    {
+     "name": "ndr_r0.6",
+     "ndr_r": 0.6,
+     "TT": {
+      "mean": 260.36,
+      "window": 6.79,
+      "sink_min": 252.56,
+      "sink_max": 265.45,
+      "leaf_out_slew_max": 59.1
+     },
+     "FF": {
+      "mean": 203.28,
+      "window": 7.61,
+      "sink_min": 193.92,
+      "sink_max": 209.65,
+      "leaf_out_slew_max": 44.9
+     }
+    }
+   ]
+  },
+  {
+   "name": "h5_ndr_buf24",
+   "splits": "2,2,4,4,4",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {
+    "rep": "BUFx24_ASAP7_75t_R"
+   },
+   "level_len_um": [
+    97.74,
+    68.58,
+    74.52,
+    43.2,
+    30.78
+   ],
+   "repeaters_per_edge": [
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "TT": {
+    "mean": 276.41,
+    "leaf_mean_min": 268.75,
+    "leaf_mean_max": 288.4,
+    "window": 19.65,
+    "sink_min": 268.3,
+    "sink_max": 294.49,
+    "leaf_slew_in_max": 12.0,
+    "leaf_ct_ff": [
+     27.0,
+     47.8
+    ],
+    "leaf_out_slew_max": 31.1
+   },
+   "FF": {
+    "mean": 216.38,
+    "leaf_mean_min": 209.21,
+    "leaf_mean_max": 228.69,
+    "window": 19.47,
+    "sink_min": 208.72,
+    "sink_max": 235.13,
+    "leaf_slew_in_max": 9.6,
+    "leaf_ct_ff": [
+     29.5,
+     50.3
+    ],
+    "leaf_out_slew_max": 26.0
+   }
+  },
+  {
+   "name": "h5_ndr_inv_rootbuf",
+   "splits": "2,2,4,4,4",
+   "smax": 70.0,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {
+    "entry": "BUFx24_ASAP7_75t_R",
+    "branch": "INVx13_ASAP7_75t_R",
+    "rep": "INVx13_ASAP7_75t_R",
+    "leaf": "INVx13_ASAP7_75t_R"
+   },
+   "level_len_um": [
+    97.74,
+    68.58,
+    74.52,
+    43.2,
+    30.78
+   ],
+   "repeaters_per_edge": [
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   "stages": [
+    9
+   ],
+   "TT": {
+    "mean": 229.3,
+    "leaf_mean_min": 217.24,
+    "leaf_mean_max": 243.98,
+    "window": 26.74,
+    "sink_min": 216.65,
+    "sink_max": 249.23,
+    "leaf_slew_in_max": 19.5,
+    "leaf_ct_ff": [
+     27.0,
+     47.8
+    ],
+    "leaf_out_slew_max": 36.2
+   },
+   "FF": {
+    "mean": 193.74,
+    "leaf_mean_min": 182.35,
+    "leaf_mean_max": 207.66,
+    "window": 25.31,
+    "sink_min": 181.45,
+    "sink_max": 213.97,
+    "leaf_slew_in_max": 16.3,
+    "leaf_ct_ff": [
+     29.5,
+     50.3
+    ],
+    "leaf_out_slew_max": 29.0
+   }
+  },
+  {
+   "name": "h5_ndr_allinv",
+   "error": "odd inverter count per path {9: 256}"
+  },
+  {
+   "name": "h5s110_ndr_buf24",
+   "splits": "2,2,4,4,4",
+   "smax": 110,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {
+    "rep": "BUFx24_ASAP7_75t_R"
+   },
+   "level_len_um": [
+    97.74,
+    68.58,
+    74.52,
+    43.2,
+    30.78
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    7
+   ],
+   "TT": {
+    "mean": 232.29,
+    "leaf_mean_min": 215.73,
+    "leaf_mean_max": 252.01,
+    "window": 36.28,
+    "sink_min": 214.69,
+    "sink_max": 258.79,
+    "leaf_slew_in_max": 12.0,
+    "leaf_ct_ff": [
+     27.0,
+     47.8
+    ],
+    "leaf_out_slew_max": 31.1
+   },
+   "FF": {
+    "mean": 185.1,
+    "leaf_mean_min": 169.28,
+    "leaf_mean_max": 204.4,
+    "window": 35.12,
+    "sink_min": 168.15,
+    "sink_max": 211.62,
+    "leaf_slew_in_max": 9.6,
+    "leaf_ct_ff": [
+     29.5,
+     50.3
+    ],
+    "leaf_out_slew_max": 26.0
+   }
+  },
+  {
+   "name": "h5s110_ndr_inv_rootbuf",
+   "splits": "2,2,4,4,4",
+   "smax": 110,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w",
+    "5": "ndr2w"
+   },
+   "masters": {
+    "entry": "BUFx24_ASAP7_75t_R",
+    "branch": "INVx13_ASAP7_75t_R",
+    "rep": "INVx13_ASAP7_75t_R",
+    "leaf": "INVx13_ASAP7_75t_R"
+   },
+   "level_len_um": [
+    97.74,
+    68.58,
+    74.52,
+    43.2,
+    30.78
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    7
+   ],
+   "TT": {
+    "mean": 221.38,
+    "leaf_mean_min": 194.33,
+    "leaf_mean_max": 250.0,
+    "window": 55.67,
+    "sink_min": 193.29,
+    "sink_max": 255.47,
+    "leaf_slew_in_max": 20.2,
+    "leaf_ct_ff": [
+     27.0,
+     47.8
+    ],
+    "leaf_out_slew_max": 36.2
+   },
+   "FF": {
+    "mean": 189.86,
+    "leaf_mean_min": 164.34,
+    "leaf_mean_max": 216.44,
+    "window": 52.1,
+    "sink_min": 163.21,
+    "sink_max": 223.36,
+    "leaf_slew_in_max": 17.0,
+    "leaf_ct_ff": [
+     29.5,
+     50.3
+    ],
+    "leaf_out_slew_max": 29.1
+   }
+  },
+  {
+   "name": "h5s110_ndr_allinv",
+   "error": "odd inverter count per path {7: 256}"
+  },
+  {
+   "name": "s110_ndr_buf24",
+   "splits": "2,2,8,8",
+   "smax": 110,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w"
+   },
+   "masters": {
+    "rep": "BUFx24_ASAP7_75t_R"
+   },
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    6
+   ],
+   "TT": {
+    "mean": 227.94,
+    "leaf_mean_min": 208.89,
+    "leaf_mean_max": 248.28,
+    "window": 39.39,
+    "sink_min": 207.78,
+    "sink_max": 251.51,
+    "leaf_slew_in_max": 15.2,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 32.2
+   },
+   "FF": {
+    "mean": 186.27,
+    "leaf_mean_min": 167.91,
+    "leaf_mean_max": 205.75,
+    "window": 37.84,
+    "sink_min": 166.69,
+    "sink_max": 209.17,
+    "leaf_slew_in_max": 12.9,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 27.0
+   }
+  },
+  {
+   "name": "s110_ndr_inv_rootbuf",
+   "error": "odd inverter count per path {5: 256}"
+  },
+  {
+   "name": "s110_ndr_allinv",
+   "splits": "2,2,8,8",
+   "smax": 110,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w"
+   },
+   "masters": {
+    "entry": "INVx13_ASAP7_75t_R",
+    "branch": "INVx13_ASAP7_75t_R",
+    "rep": "INVx13_ASAP7_75t_R",
+    "leaf": "INVx13_ASAP7_75t_R"
+   },
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    6
+   ],
+   "TT": {
+    "mean": 243.0,
+    "leaf_mean_min": 211.39,
+    "leaf_mean_max": 275.16,
+    "window": 63.77,
+    "sink_min": 209.69,
+    "sink_max": 278.39,
+    "leaf_slew_in_max": 36.6,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 40.9
+   },
+   "FF": {
+    "mean": 216.59,
+    "leaf_mean_min": 184.39,
+    "leaf_mean_max": 247.52,
+    "window": 63.12,
+    "sink_min": 182.07,
+    "sink_max": 250.94,
+    "leaf_slew_in_max": 31.7,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 33.3
+   }
+  },
+  {
+   "name": "s110_std_buf",
+   "splits": "2,2,8,8",
+   "smax": 110,
+   "wire": {},
+   "masters": {},
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    6
+   ],
+   "TT": {
+    "mean": 269.73,
+    "leaf_mean_min": 238.78,
+    "leaf_mean_max": 299.71,
+    "window": 60.93,
+    "sink_min": 237.58,
+    "sink_max": 302.33,
+    "leaf_slew_in_max": 17.6,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 32.2
+   },
+   "FF": {
+    "mean": 228.96,
+    "leaf_mean_min": 199.16,
+    "leaf_mean_max": 257.15,
+    "window": 57.99,
+    "sink_min": 197.55,
+    "sink_max": 260.57,
+    "leaf_slew_in_max": 15.5,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 27.0
+   }
+  },
+  {
+   "name": "s200_ndr_buf24",
+   "splits": "2,2,8,8",
+   "smax": 200,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w"
+   },
+   "masters": {
+    "rep": "BUFx24_ASAP7_75t_R"
+   },
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    6
+   ],
+   "TT": {
+    "mean": 227.94,
+    "leaf_mean_min": 208.89,
+    "leaf_mean_max": 248.28,
+    "window": 39.39,
+    "sink_min": 207.78,
+    "sink_max": 251.51,
+    "leaf_slew_in_max": 15.2,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 32.2
+   },
+   "FF": {
+    "mean": 186.27,
+    "leaf_mean_min": 167.91,
+    "leaf_mean_max": 205.75,
+    "window": 37.84,
+    "sink_min": 166.69,
+    "sink_max": 209.17,
+    "leaf_slew_in_max": 12.9,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 27.0
+   }
+  },
+  {
+   "name": "s200_ndr_inv_rootbuf",
+   "error": "odd inverter count per path {5: 256}"
+  },
+  {
+   "name": "s200_ndr_allinv",
+   "splits": "2,2,8,8",
+   "smax": 200,
+   "wire": {
+    "1": "ndr2w",
+    "2": "ndr2w",
+    "3": "ndr2w",
+    "4": "ndr2w"
+   },
+   "masters": {
+    "entry": "INVx13_ASAP7_75t_R",
+    "branch": "INVx13_ASAP7_75t_R",
+    "rep": "INVx13_ASAP7_75t_R",
+    "leaf": "INVx13_ASAP7_75t_R"
+   },
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    6
+   ],
+   "TT": {
+    "mean": 243.0,
+    "leaf_mean_min": 211.39,
+    "leaf_mean_max": 275.16,
+    "window": 63.77,
+    "sink_min": 209.69,
+    "sink_max": 278.39,
+    "leaf_slew_in_max": 36.6,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 40.9
+   },
+   "FF": {
+    "mean": 216.59,
+    "leaf_mean_min": 184.39,
+    "leaf_mean_max": 247.52,
+    "window": 63.12,
+    "sink_min": 182.07,
+    "sink_max": 250.94,
+    "leaf_slew_in_max": 31.7,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 33.3
+   }
+  },
+  {
+   "name": "s200_std_buf",
+   "splits": "2,2,8,8",
+   "smax": 200,
+   "wire": {},
+   "masters": {},
+   "level_len_um": [
+    88.56,
+    70.74,
+    89.64,
+    48.06
+   ],
+   "repeaters_per_edge": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "stages": [
+    6
+   ],
+   "TT": {
+    "mean": 269.73,
+    "leaf_mean_min": 238.78,
+    "leaf_mean_max": 299.71,
+    "window": 60.93,
+    "sink_min": 237.58,
+    "sink_max": 302.33,
+    "leaf_slew_in_max": 17.6,
+    "leaf_ct_ff": [
+     27.0,
+     50.2
+    ],
+    "leaf_out_slew_max": 32.2
+   },
+   "FF": {
+    "mean": 228.96,
+    "leaf_mean_min": 199.16,
+    "leaf_mean_max": 257.15,
+    "window": 57.99,
+    "sink_min": 197.55,
+    "sink_max": 260.57,
+    "leaf_slew_in_max": 15.5,
+    "leaf_ct_ff": [
+     29.5,
+     52.6
+    ],
+    "leaf_out_slew_max": 27.0
+   }
+  }
+ ]
+}
