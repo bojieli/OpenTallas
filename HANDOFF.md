@@ -1221,3 +1221,5 @@ CODEX: 2026-10-26 20:42 PDT TOK-LEC QXPQ exactAIG formalclose64713/64713+outputm
 2026-10-26 20:47 PDT CODEX: userpriorityHBMSUvsMU; fullnative32bank/32FUSED/28tree buddycandidate bothhubcutmodelsPASS<=.553/.588 atH4320; ~530mm2 inferred, no nativeVMserialization credit untilcensus. Fixedboth-axiscutgate/namedendpoints/45.6xexactpacker andactualnativeVMadapter; P3baseline6/6staticimagesPASS, optimizedcostedN-rowcandidate+FUSEDfunctionalbenchlive.
 
 2026-10-26 20:48 PDT CODEX: HEAD ctl825fe511a7 realMTPqvalid/datafailurefixed (j0beforej1),5stepSEQring+legacybugmutantPASS;sourcecandidate0missing0unresolved;currentphysicalcodec2tokenPASS;realMarkovRTLreusefound,currentnative/physicalcompositionstillopen.
+
+2026-10-26 20:50 PDT CODEX: HEADactualHOSTprogrammepath PASS throughsafe8/HBC/HOST276->CTL512-bitstageforward,3HBC+7CSRs; physicalpayloadmutantCAUGHT. DefaultoffHOST_FRAMES fixesS81consumer mismatch; phaseawareTEST501/505/511. CombinedREADYbceaec7caf includesCTL825MTPfix; nolivejobs,canonicalheld.
