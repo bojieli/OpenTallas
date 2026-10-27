@@ -123,3 +123,6 @@ QCpeer supersedes fresh_v3 with fresh_v6/source5d2ce53210: existing hook restore
     - Live corrected B48 (Codex intel1 1384010, no gate) lists kcmd_tap.sv first, so it uses the kept 1-stage copy (CHECKED).
     - No KV die-slice bench waits on the gate. KVL is disarmed.
     - After RM36: confirm main kv_desc.sv blob = e9bceb27. Then the next die-slice build passes the gate.
+
+## CODEX notes 2026-10-27 14:01 PDT — fresh takeover / B48 collection
+CODEX resumed on own codex/qk-native-1351 from main5b3; prior10am components are historical. Existing corrected B48 BUILD_DONE12:40:22 (252.7GBalloc), nominal remains live intel1 PID3377055, own scope1384010-1793114832/client2469678, light collector1435980. All128slice checks now PASS by1098, die reset1136: source-mix cause fixed.13/14images at33338, host faults0; dcal fault1 first27998 duringtarget11 replay now actively diagnosed, no terminal verdict. Own minimum actual ROM64/BC4+66target11word replay and stale/data-shift controls launched intel2 codex-qk-native-1351/dcal,client3604159,8GB4t. No wholeoldB48rerun. Currentprogramme source binding child qcbench uses actualbound native100+typedTT receipt; no newELAB whileR29pending.
