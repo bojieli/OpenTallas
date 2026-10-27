@@ -1,0 +1,18 @@
+HBM-MU-QUAD-2 (2026-10-27 00:43 PDT) -- predecessor claude/hbm-mu-quad-1026@bc954e9152
+Data: epyc2:/srv/opentallas-scratch2/claude/hbm-mu-quad-2-1026 (planU2 = unified die plan, die_plan.json sha256 55ea5ec620f5)
+1 NE repack (o5_ne): desired = NW candidate (true die mirror), alias body_n2=body_core, pair reduce:body_n2 -> reduce_q0 beside body_n2_q0.
+  NE k3 max axis 0.586 (whole x0.48/y0.555; seg0 x0.48/y0.572; seg1 x0.458/y0.586); NW k3 0.594 (bound 3957.12 unchanged).
+  0 overlaps, 0 buddy>405, 0 failed station routes both hubs. 65 quad members identical origin+orient NW/NE. CHECKED (re-derived from composed planU2 types with diag_cut.py).
+2 n4 order (n4_order_check.py -> n4_order.json): 2-input root over per-hub n4 = golden 5-level pairwise tree; 0 bit mismatches / 200k binary32 vectors;
+  mutants caught (cross-hub L4 pairing 76118 mism., lane2/4 swap 19003). RTL: ot_hnx_fused_tree hub = u_t4a(uq0,uq1),u_t4b(uq2,uq3),u_t5(u4a,u4b): n4 = hoisted t4a/t4b.
+  CONDITION: binder lane map NW hub = global lanes 0..15, NE = 16..31. Not yet built: 2-input root RTL variant + fushub bench (t0+m8). UNCHECKED beyond model.
+3 root face pin on N-street row (8216.64,3503.52), given in input frame (realise rescales y by H/H_in -- the old corner bend cause). n4->root leg straight 3311.28 um / 9 regs (was 3788/10).
+  Failed route u_hb_vms_Q.b3_xq|u_vmb_Q3 fixed: slot orientation (input orient captured once) + vmdel street 43.2 above hb_vms. UNCHECKED.
+4 planU2: +794.88 row shift, die 28399.68 x 18541.44 = 526.571 mm2 (CHECKED arithmetic).
+  R13 price ds_ar lower/mid/upper loss 2.388/2.668/7.882 %, tok/s 2031.1/2025.28/1916.8 (base 2080.80) -> lower+mid PASS 5% + 1973; upper FAIL both. qwen_ar 0.037/0.151/1.241 %.
+  (U0 was 2.746/3.324/9.933 %). CHECKED arithmetic (loss=added/cycles, same base all modes).
+  G0/G0C FAIL. (a) schema: check.py @8dba47653 does not know the R9-R13 station keys (serial_k, bits_parallel, r9_segments, r11_cc_serial, r10*, r13*) -- same on planS2 baseline;
+  stripped gate copy -> 82 errors = pins_file None for the new MU cores (u_mu_fused_*, u_vmb_Q*_mu*, u_mu_keybuf_*). (b) diagnostic G0C (schema bypassed): 994 vs 690 baseline;
+  new die-level: 8 abutment (NW/NE_b113.S|io.N, b010.N|su01.S, b001.N|su00.S at 9590.4 vs 10385.3 = straddling partitions not moved with the row shift),
+  hop/reach L125/L28 (795/1554 um) and L9/L63 grown 924->1719 um; +206 hub internal-station hops >405.
+5 die GRT NOT started (plan gates fail).

@@ -1,0 +1,203 @@
+WARN  [types] near-duplicate types ['NE_io', 'NW_io'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['q_spt1', 'q_spt2'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['vsN5', 'vsN6'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+ERROR [hard_cores] type q_spb2 core u_xc_Q2: origin [825.12, 1265.76] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_spb2 core u_xc_Q2 pin active M5: x 827.0470 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spb2 core u_xc_Q2 pin cfg_v M5: x 827.6420 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spb2 core u_xc_Q2 pin configured M5: x 828.1990 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spb2 core u_xc_Q2 pin desc_v M5: x 828.7940 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spb2 core u_xc_Q2 pin done M5: x 829.3900 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spb2 core u_xc_Q2: 507 pins off the plan tracks
+ERROR [hard_cores] type q_spb2 core u_xc_Q3: origin [1429.92, 1265.76] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_spb2 core u_xc_Q3 pin kv_desc[0] M4: y 1267.5670 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spb2 core u_xc_Q3 pin kv_desc[1] M4: y 1268.7590 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spb2 core u_xc_Q3 pin kv_desc[2] M4: y 1269.9510 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spb2 core u_xc_Q3 pin kv_desc[3] M4: y 1271.1030 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spb2 core u_xc_Q3 pin kv_desc[4] M4: y 1272.2950 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spb2 core u_xc_Q3: 507 pins off the plan tracks
+ERROR [hard_cores] type q_spt0 core u_xc_Q0: origin [151.2, 30.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_spt0 core u_xc_Q0 pin active M5: x 153.1270 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spt0 core u_xc_Q0 pin cfg_v M5: x 153.7220 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spt0 core u_xc_Q0 pin configured M5: x 154.2790 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spt0 core u_xc_Q0 pin desc_v M5: x 154.8740 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spt0 core u_xc_Q0 pin done M5: x 155.4310 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spt0 core u_xc_Q0: 507 pins off the plan tracks
+ERROR [hard_cores] type q_spt0 core u_xc_Q1: origin [1533.6, 30.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_spt0 core u_xc_Q1 pin kv_desc[0] M4: y 32.0470 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spt0 core u_xc_Q1 pin kv_desc[1] M4: y 33.2390 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spt0 core u_xc_Q1 pin kv_desc[2] M4: y 34.4310 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spt0 core u_xc_Q1 pin kv_desc[3] M4: y 35.5830 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spt0 core u_xc_Q1 pin kv_desc[4] M4: y 36.7750 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_spt0 core u_xc_Q1: 507 pins off the plan tracks
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q0: origin [2052.0, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q1: origin [2052.0, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q2: origin [3289.68, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q3: origin [3289.68, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q4: origin [6302.88, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q5: origin [6302.88, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q6: origin [7540.56, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q7: origin [7540.56, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmdel_Q0: origin [2544.48, 2877.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmdel_Q1: origin [2810.16, 2877.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmdel_Q2: origin [2544.48, 2989.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmdel_Q3: origin [2810.16, 2989.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmdel_Q4: origin [6795.36, 2877.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmdel_Q5: origin [7061.04, 2877.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmdel_Q6: origin [6795.36, 2989.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmdel_Q7: origin [7061.04, 2989.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q0_mu1: origin [2052.0, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q0_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q1_mu1: origin [2052.0, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q1_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q2_mu1: origin [3289.68, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q2_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q3_mu1: origin [3289.68, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q3_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q4_mu1: origin [6302.88, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q4_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q5_mu1: origin [6302.88, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q5_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q6_mu1: origin [7540.56, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q6_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q7_mu1: origin [7540.56, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_vmb_Q7_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_0: origin [1697.76, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_1: origin [1697.76, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_2: origin [1697.76, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_3: origin [1697.76, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_5: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_6: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_7: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_8: origin [5948.64, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_8: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_9: origin [5948.64, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_9: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_10: origin [5948.64, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_10: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_11: origin [5948.64, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_11: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_12: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_13: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_14: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_15: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q0_0: origin [1784.16, 1365.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q0_0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q0_1: origin [1784.16, 2782.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q0_1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q0_2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q0_3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n2L_q0: origin [1784.16, 2073.6] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n2L_q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n2R_q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n3_q0: origin [2719.44, 3309.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n3_q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q1_0: origin [6035.04, 1365.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q1_0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q1_1: origin [6035.04, 2782.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q1_1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q1_2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n1_q1_3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n2L_q1: origin [6035.04, 2073.6] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n2L_q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n2R_q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n3_q1: origin [6970.32, 3309.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n3_q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n4: origin [4844.88, 3525.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_mu_fused_n4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q0: origin [2913.84, 1096.2] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q0 pin active M4: y 1210.6560 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q0 pin cfg_v M4: y 1210.3680 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q0 pin desc_v M4: y 1210.1280 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q0 pin fault M4: y 1209.8400 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q0 pin launch_v M4: y 1209.5520 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q0: 419 pins off the plan tracks
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q1: origin [7164.72, 1096.2] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q1 pin active M4: y 1210.6560 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q1 pin cfg_v M4: y 1210.3680 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q1 pin desc_v M4: y 1210.1280 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q1 pin fault M4: y 1209.8400 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q1 pin launch_v M4: y 1209.5520 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_calendar_Q__q1: 419 pins off the plan tracks
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q0: origin [2370.924, 1494.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q0 pin b3_xq_done M5: x 2373.2520 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q0 pin b3_xq2_done M5: x 2373.4440 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q0 pin b2_flt M5: x 2373.6840 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q0 pin b6_flt M5: x 2373.8760 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q0 pin b6_xq_done M5: x 2374.1160 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q0: 4221 pins off the plan tracks
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q1: origin [6621.804, 1494.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q1 pin b3_xq_done M5: x 6624.1320 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q1 pin b3_xq2_done M5: x 6624.3240 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q1 pin b2_flt M5: x 6624.5640 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q1 pin b6_flt M5: x 6624.7560 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q1 pin b6_xq_done M5: x 6624.9960 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_hb_vms_Q__q1: 4221 pins off the plan tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_keybuf_0__q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_mu_keybuf_0__q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_nw core u_smw_Q__q0: origin [2762.64, 846.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_smw_Q__q1: origin [7013.52, 846.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q0 pin rf_drain_cmd[0] M5: x 1254.5290 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q0 pin rf_drain_cmd[1] M5: x 1254.7430 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q0 pin rf_rd_cmd[0] M5: x 1254.9570 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q0 pin rf_rd_cmd[1] M5: x 1255.1710 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q0 pin rf_rd_cmd[2] M5: x 1255.3850 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q0: 1455 pins off the plan tracks
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q1 pin rf_drain_cmd[0] M5: x 4019.3290 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q1 pin rf_drain_cmd[1] M5: x 4019.5430 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q1 pin rf_rd_cmd[0] M5: x 4019.7570 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q1 pin rf_rd_cmd[1] M5: x 4019.9710 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q1 pin rf_rd_cmd[2] M5: x 4020.1850 off the plan track (offset 0.024, pitch 0.048) in the type frame
+ERROR [hard_cores] type q_hub_nw core u_sucore_Q__q1: 1455 pins off the plan tracks
+ERROR [hard_cores] type q_hub_nw core u_hb_dbk_Q__q0: origin [2913.84, 846.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_hb_dbk_Q__q1: origin [7164.72, 846.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_xl_Q_ctl__q0: origin [2365.2, 846.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_nw core u_xl_Q_ctl__q1: origin [6616.08, 846.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q0: origin [2052.0, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q1: origin [2052.0, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q2: origin [3289.68, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q3: origin [3289.68, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q4: origin [6302.88, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q5: origin [6302.88, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q6: origin [7540.56, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q7: origin [7540.56, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmdel_Q0: origin [2544.48, 2877.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmdel_Q1: origin [2810.16, 2877.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmdel_Q2: origin [2544.48, 2989.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmdel_Q3: origin [2810.16, 2989.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmdel_Q4: origin [6795.36, 2877.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmdel_Q5: origin [7061.04, 2877.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmdel_Q6: origin [6795.36, 2989.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmdel_Q7: origin [7061.04, 2989.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q0_mu1: origin [2052.0, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q0_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q1_mu1: origin [2052.0, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q1_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q2_mu1: origin [3289.68, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q2_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q3_mu1: origin [3289.68, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q3_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q4_mu1: origin [6302.88, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q4_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q5_mu1: origin [6302.88, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q5_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q6_mu1: origin [7540.56, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q6_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q7_mu1: origin [7540.56, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_vmb_Q7_mu1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_mu_fused_0: origin [1697.76, 838.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_mu_fused_0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_mu_fused_1: origin [1697.76, 1546.56] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_mu_fused_1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_mu_fused_2: origin [1697.76, 2255.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_mu_fused_2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_mu_fused_3: origin [1697.76, 2963.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+ERROR [hard_cores] type q_hub_ne core u_mu_fused_3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+ERROR [hard_cores] type q_hub_ne core u_mu_fused_4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks
+... 1187 more in g0_report.json
+G0C per type: 43/51 types clean (G3-eligible: 0); die-level {'reach': 4}; ERRORs
+G0C FAIL: 994 errors, 393 warnings; 51 types / 88 partitions (6 in near-duplicate groups); worst cut {'ratio': 0.1734, 'at': 'horizontal@6000'}, worst partition segment {'ratio': 0.5183, 'at': 'horizontal@8000:NE_b011'}; report gates/diag_g0c/g0_report.json

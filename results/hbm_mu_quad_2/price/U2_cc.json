@@ -1,0 +1,165 @@
+{
+ "per_hub": {
+  "q_hub_nw": {
+   "matched": 1742,
+   "new_conns": 113,
+   "gone_conns": 0,
+   "delta_hist": {
+    "-11": 1,
+    "-10": 7,
+    "-9": 2,
+    "-7": 2,
+    "-6": 4,
+    "-4": 15,
+    "-3": 13,
+    "-2": 23,
+    "-1": 4,
+    "0": 367,
+    "1": 475,
+    "2": 132,
+    "3": 83,
+    "4": 96,
+    "5": 78,
+    "6": 64,
+    "7": 104,
+    "8": 61,
+    "9": 71,
+    "10": 40,
+    "11": 26,
+    "12": 40,
+    "13": 13,
+    "14": 9,
+    "15": 12
+   },
+   "max": 15,
+   "sum_pos": 5642
+  },
+  "q_hub_ne": {
+   "matched": 1725,
+   "new_conns": 113,
+   "gone_conns": 0,
+   "delta_hist": {
+    "-14": 1,
+    "-12": 2,
+    "-9": 7,
+    "-7": 15,
+    "-6": 15,
+    "-5": 3,
+    "-4": 17,
+    "-3": 17,
+    "-2": 12,
+    "-1": 20,
+    "0": 420,
+    "1": 499,
+    "2": 49,
+    "3": 86,
+    "4": 45,
+    "5": 32,
+    "6": 95,
+    "7": 97,
+    "8": 82,
+    "9": 85,
+    "10": 40,
+    "11": 23,
+    "12": 30,
+    "13": 8,
+    "14": 20,
+    "15": 5
+   },
+   "max": 15,
+   "sum_pos": 5337
+  }
+ },
+ "ops": {
+  "SU.*": {
+   "families": [
+    "SU",
+    "SU_BANK"
+   ],
+   "lower": 8,
+   "upper": 15
+  },
+  "ARGMAX.*": {
+   "families": [
+    "SU",
+    "ARGMAX"
+   ],
+   "lower": 5,
+   "upper": 5
+  },
+  "SFU.*": {
+   "families": [
+    "SFU"
+   ],
+   "lower": 0,
+   "upper": 0
+  },
+  "HC.*|FUSED.HC_*": {
+   "families": [
+    "HC"
+   ],
+   "lower": 6,
+   "upper": 11
+  },
+  "FUSED.QDQ*": {
+   "families": [
+    "QUANT"
+   ],
+   "lower": 0,
+   "upper": 0
+  },
+  "FUSED.*": {
+   "families": [
+    "SU"
+   ],
+   "lower": 5,
+   "upper": 5
+  },
+  "IDX.TOPK": {
+   "families": [
+    "IDX",
+    "TOPK"
+   ],
+   "lower": 7,
+   "upper": 13
+  },
+  "IDX.*": {
+   "families": [
+    "IDX",
+    "COLL_INJ"
+   ],
+   "lower": 7,
+   "upper": 13
+  },
+  "COLL.TOPK_MERGE": {
+   "families": [
+    "COLL",
+    "TOPK"
+   ],
+   "lower": 15,
+   "upper": 21
+  },
+  "COLL.*": {
+   "families": [
+    "COLL",
+    "COLL_INJ"
+   ],
+   "lower": 15,
+   "upper": 21
+  },
+  "SM.*|ATT.*": {
+   "families": [
+    "SM"
+   ],
+   "lower": 12,
+   "upper": 42
+  },
+  "DMA.*": {
+   "families": [
+    "VM"
+   ],
+   "lower": 12,
+   "upper": 34
+  }
+ }
+}

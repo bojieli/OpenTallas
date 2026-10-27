@@ -1,0 +1,33 @@
+{
+ "nw_top": "u_mu_fused_n4",
+ "ne_top": "u_mu_fused_n4",
+ "nw_nodes": 15,
+ "ne_nodes": 15,
+ "external_nodes_plan": 30,
+ "root_inputs": 2,
+ "internal_adds_plan": 31,
+ "internal_adds_golden": 31,
+ "plan_eq_golden_structure": true,
+ "rtl_hub_eq_golden_structure": true,
+ "plan_eq_rtl_structure": true,
+ "vectors": 200000,
+ "bit_mismatch_plan_vs_golden": 0,
+ "bit_mismatch_plan_vs_rtl": 0,
+ "mutants": {
+  "cross_hub_level4": {
+   "structure_eq": false,
+   "bit_mismatch": 76118
+  },
+  "n4_q0q1_swapped": {
+   "structure_eq": false,
+   "bit_mismatch": 0,
+   "note": "a+b is commutative in binary32 RNE: caught by the structure check (left = even), not by values"
+  },
+  "lanes_2_4_swapped(RTL MUT8)": {
+   "structure_eq": false,
+   "bit_mismatch": 19003
+  }
+ },
+ "lane_map": "global lane = 16*hub + local (hub NW=0, NE=1); local lane u_mu_fused_L reads only VM bank L (u_vmb_Q{L//2}[_mu1]); chunk c = global lane c at ph = 0",
+ "verdict": "PASS"
+}
