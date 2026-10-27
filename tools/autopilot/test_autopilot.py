@@ -429,7 +429,9 @@ class TestTick(TickBase):
         argv=self.f.launched[0][1]
         command=argv[argv.index("--")+1:]
         self.assertEqual(command[:2],["python3","-c"])
-        self.assertIn("def continue_kit",command[2])
+        # The portable bootstrap now fetches the immutable chain on the chosen worker.
+        self.assertIn("ADMISSION_TOOLS READY",command[2])
+        self.assertIn("os.execv",command[2])
         compile(command[2],"<inline-chain>","exec")
         self.assertFalse(any(p.endswith("/signoff_chain.py") for p in argv))
 
