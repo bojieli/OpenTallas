@@ -1,0 +1,41 @@
+{
+  "vanilla": {
+    "top_ff": {
+      "$_DFF_PN0_": 8396,
+      "$_DFF_P_": 24975,
+      "$_SDFF_PN0_": 194,
+      "$_SDFF_PP0_": 704,
+      "$_SDFF_PP1_": 38,
+      "$_SDFF_PN1_": 84,
+      "$_DFFE_PN0P_": 16
+    },
+    "top_ff_total": 34407,
+    "real24": 0,
+    "real_clocks": {},
+    "real_D": {},
+    "constant_output_bits": 24,
+    "output_bits": 302
+  },
+  "preserved": {
+    "top_ff": {
+      "$_DFF_PN0_": 8396,
+      "$_DFF_P_": 25019,
+      "$_SDFF_PN0_": 194,
+      "$_SDFF_PP0_": 704,
+      "$_SDFF_PP1_": 38,
+      "$_SDFF_PN1_": 84,
+      "$_DFFE_PN0P_": 16,
+      "DFFHQNx2_ASAP7_75t_R": 24
+    },
+    "top_ff_total": 34475,
+    "real24": 24,
+    "real_clocks": {
+      "[2]": 24
+    },
+    "real_D": {
+      "['1']": 24
+    },
+    "constant_output_bits": 0,
+    "output_bits": 302
+  }
+}
