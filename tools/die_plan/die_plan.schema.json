@@ -2723,8 +2723,39 @@
     "io_hold": {
      "enum": [
       "legacy",
-      "sender_min"
+      "sender_min",
+      "plan_demand"
      ]
+    },
+    "hold_demand": {
+     "type": "object",
+     "required": [
+      "source"
+     ],
+     "properties": {
+      "source": {
+       "enum": [
+        "plan"
+       ]
+      },
+      "pairs": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+       }
+      },
+      "landed": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "default_ps": {
+       "type": "number",
+       "minimum": 0
+      }
+     }
     },
     "io_hold_driver_views": {
      "type": "object",
