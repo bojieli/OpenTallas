@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.core.v1",
  "name": "A0",
- "owner": "QC-A0 10-23 (claude/qc-a0-1023)",
+ "owner": "QC-A0 10-23 (claude/qc-a0-1023) | D-QC-A0-R3B QC-A0-KITS 2026-10-27",
  "source_plan": "claude/qc-p2-1023 @6587487a5 physical/die_plan/qwen_compute/die_plan.json (variant B)",
  "modules": {
   "nk": "qfd_tile_nk_a0c",
@@ -500,23 +500,327 @@
  ],
  "clock": {
   "ports": [
-   "ck"
+   "ck_isl_EF0",
+   "ck_isl_EF1",
+   "ck_isl_EF2",
+   "ck_isl_EF3",
+   "ck_isl_EF4",
+   "ck_isl_EF5",
+   "ck_isl_EN1",
+   "ck_isl_EN2",
+   "ck_isl_G0",
+   "ck_isl_G1",
+   "ck_isl_G2",
+   "ck_isl_ME01",
+   "ck_isl_ME23",
+   "ck_isl_ME4",
+   "ck_isl_MW01",
+   "ck_isl_MW23",
+   "ck_isl_MW4",
+   "ck_isl_R0",
+   "ck_isl_R1",
+   "ck_isl_R2",
+   "ck_isl_R3",
+   "ck_isl_R4"
   ],
-  "pin_um": [
-   457.824,
-   668.076
-  ],
-  "face": "E",
-  "layer": "M4",
-  "tap": "one die spine tap per core at the core ck pin (COORD 10-23 07:24 ruling 2); MX partitions: y -> partition_h - y",
+  "form": "R3b drop islands (QC-CORES-2 claude/qc-cores-1027-a0clk-r3@f217587b2, GEOM-22 PASS-COND; INFRA-FIRST-QC-R25 form ADOPTED COORD 2026-10-27 07:18): 22 in-core pushdown islands (12.2a1) per instance, identical in R0 and MX; each island feed port = M5 end of a straight M9-M8-M7-M6-M5 stack at the crossing of die M9 drop strap x0+U and die M8 drop strap y0+V (MX rows y0+1157.76-V); die stub 0; island wire <= 7.56 um",
+  "type_lattice": {
+   "m9_u": [
+    112.32,
+    224.64,
+    345.6,
+    449.28
+   ],
+   "m8_v": [
+    8.64,
+    138.24,
+    276.48,
+    406.08,
+    535.68,
+    665.28,
+    820.8,
+    984.96
+   ]
+  },
+  "islands": {
+   "EF0": {
+    "centre": [
+     452.0,
+     11.088
+    ],
+    "drop_core_frame": [
+     449.28,
+     8.64
+    ],
+    "where": "E strip, ROM gap 0"
+   },
+   "EF1": {
+    "centre": [
+     452.0,
+     142.344
+    ],
+    "drop_core_frame": [
+     449.28,
+     138.24
+    ],
+    "where": "E strip, ROM gap 1"
+   },
+   "EF2": {
+    "centre": [
+     452.0,
+     272.52
+    ],
+    "drop_core_frame": [
+     449.28,
+     276.48
+    ],
+    "where": "E strip, ROM gap 2"
+   },
+   "EF3": {
+    "centre": [
+     452.0,
+     402.696
+    ],
+    "drop_core_frame": [
+     449.28,
+     406.08
+    ],
+    "where": "E strip, ROM gap 3"
+   },
+   "EF4": {
+    "centre": [
+     452.0,
+     532.872
+    ],
+    "drop_core_frame": [
+     449.28,
+     535.68
+    ],
+    "where": "E strip, ROM gap 4"
+   },
+   "EF5": {
+    "centre": [
+     452.0,
+     663.48
+    ],
+    "drop_core_frame": [
+     449.28,
+     665.28
+    ],
+    "where": "E strip, ROM gap 5"
+   },
+   "EN1": {
+    "centre": [
+     452.0,
+     824.376
+    ],
+    "drop_core_frame": [
+     449.28,
+     820.8
+    ],
+    "where": "E strip, LSL row gap 0-1"
+   },
+   "EN2": {
+    "centre": [
+     452.0,
+     984.888
+    ],
+    "drop_core_frame": [
+     449.28,
+     984.96
+    ],
+    "where": "E strip, LSL row gap 1-2"
+   },
+   "G0": {
+    "centre": [
+     108.864,
+     984.888
+    ],
+    "drop_core_frame": [
+     112.32,
+     984.96
+    ],
+    "where": "LSL row gap 1-2, lattice column 0"
+   },
+   "G1": {
+    "centre": [
+     226.8,
+     984.888
+    ],
+    "drop_core_frame": [
+     224.64,
+     984.96
+    ],
+    "where": "LSL row gap 1-2, lattice column 1"
+   },
+   "G2": {
+    "centre": [
+     349.056,
+     984.888
+    ],
+    "drop_core_frame": [
+     345.6,
+     984.96
+    ],
+    "where": "LSL row gap 1-2, lattice column 2"
+   },
+   "ME01": {
+    "centre": [
+     349.056,
+     142.344
+    ],
+    "drop_core_frame": [
+     345.6,
+     138.24
+    ],
+    "where": "ROM E column gap rows (0, 1)"
+   },
+   "ME23": {
+    "centre": [
+     349.056,
+     402.696
+    ],
+    "drop_core_frame": [
+     345.6,
+     406.08
+    ],
+    "where": "ROM E column gap rows (2, 3)"
+   },
+   "ME4": {
+    "centre": [
+     349.056,
+     663.48
+    ],
+    "drop_core_frame": [
+     345.6,
+     665.28
+    ],
+    "where": "ROM E column gap rows (4,)"
+   },
+   "MW01": {
+    "centre": [
+     108.864,
+     142.344
+    ],
+    "drop_core_frame": [
+     112.32,
+     138.24
+    ],
+    "where": "ROM W column gap rows (0, 1)"
+   },
+   "MW23": {
+    "centre": [
+     108.864,
+     402.696
+    ],
+    "drop_core_frame": [
+     112.32,
+     406.08
+    ],
+    "where": "ROM W column gap rows (2, 3)"
+   },
+   "MW4": {
+    "centre": [
+     108.864,
+     663.48
+    ],
+    "drop_core_frame": [
+     112.32,
+     665.28
+    ],
+    "where": "ROM W column gap rows (4,)"
+   },
+   "R0": {
+    "centre": [
+     226.8,
+     142.344
+    ],
+    "drop_core_frame": [
+     224.64,
+     138.24
+    ],
+    "where": "A0 channel cross, gap above ROM row 0"
+   },
+   "R1": {
+    "centre": [
+     226.8,
+     272.52
+    ],
+    "drop_core_frame": [
+     224.64,
+     276.48
+    ],
+    "where": "A0 channel cross, gap above ROM row 1"
+   },
+   "R2": {
+    "centre": [
+     226.8,
+     402.696
+    ],
+    "drop_core_frame": [
+     224.64,
+     406.08
+    ],
+    "where": "A0 channel cross, gap above ROM row 2"
+   },
+   "R3": {
+    "centre": [
+     226.8,
+     532.872
+    ],
+    "drop_core_frame": [
+     224.64,
+     535.68
+    ],
+    "where": "A0 channel cross, gap above ROM row 3"
+   },
+   "R4": {
+    "centre": [
+     226.8,
+     663.48
+    ],
+    "drop_core_frame": [
+     224.64,
+     665.28
+    ],
+    "where": "A0 channel cross, gap above ROM row 4"
+   }
+  },
+  "die_side": "192 M9 + 128 M8 drop straps over the A0 field (qc_clk_mesh3 --a0-mesh inputs/a0_drop_r3b.json); die clock owner (INFRA-FIRST-QC) adopts them in the QC plan event, not this delta",
+  "children": {
+   "budget_ps": {
+    "TT": 201.0,
+    "FF": 161.5
+   },
+   "centre_pins_child_frame": {
+    "rawleaf": [
+     57.672,
+     70.2
+    ],
+    "romleaf": [
+     86.4,
+     55.08
+    ],
+    "node": [
+     23.76,
+     216.0
+    ]
+   },
+   "obs_max_layer": "M5",
+   "note": "B_child = R3 model (UNCHECKED-model); early taps from real views allowed (12.3 v5.0)"
+  },
+  "legacy_ck_pin": {
+   "pin_um": [
+    457.824,
+    668.076
+   ],
+   "status": "RETIRED (not an entry, 12.8a)"
+  },
   "insertion_budget_ps": {
    "target": 250,
-   "tol": 40,
-   "at": "core boundary flops, TT",
-   "status": "to be MEASURED by the a0ck/a0cs gates; deviation reported to QC-P2"
-  },
-  "spread_ps_max": 80,
-  "internal": "former 34 (NL) / 38 (NK) entry ports are internal nets of ck; macros balanced via Liberty clock_tree_path"
+   "at": "core boundary flops, TT (12.3 design target)",
+   "status": "to be measured"
+  }
  },
  "reset": {
   "port": "rst_n",
