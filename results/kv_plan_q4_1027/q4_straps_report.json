@@ -1,0 +1,81 @@
+{
+ "repointed": 140,
+ "files": [
+  {
+   "file": "cores/kv3_astk_pins.json",
+   "new_file": "cores/kv3_astk_pins_r26q4.json",
+   "module": "kv3_astk",
+   "moved": [
+    "strap_corner[0]@W",
+    "strap_corner[1]@W"
+   ],
+   "canon_old": "55e06416f5c80181f0fab11ef2b7e71b9c930ab9ff254990f83307f524f25d8d",
+   "canon_new": "51f910ba31de777105c299583012ebee678d4591ea0346d49943737c9da0ef17"
+  },
+  {
+   "file": "cores/kv3_head_eighth_e0_pins_fMX_r25.json",
+   "new_file": "cores/kv3_head_eighth_e0_pins_fMX_r25_r26q4.json",
+   "module": "kv3_head_eighth_e0",
+   "moved": [
+    "strap_hid[0]@N",
+    "strap_hid[1]@N",
+    "strap_bsel[0]@W",
+    "strap_bsel[1]@W"
+   ],
+   "canon_old": "9731d9e0019dd9f7064b8e1bbdc728fd7ef1e0864131251bc72f873d6af99cfd",
+   "canon_new": "fd5157a1c4dcd5f4cf3a15b2c5f8e551cb4b2e4ef6cf8f3c779f64f7606d541d"
+  },
+  {
+   "file": "cores/kv3_head_eighth_e0_pins_r25.json",
+   "new_file": "cores/kv3_head_eighth_e0_pins_r25_r26q4.json",
+   "module": "kv3_head_eighth_e0",
+   "moved": [
+    "strap_hid[0]@S",
+    "strap_hid[1]@S",
+    "strap_bsel[0]@W",
+    "strap_bsel[1]@W"
+   ],
+   "canon_old": "3750faf652daffdf24939d2d1bdb158aad71650ca5117a103fd4afedd769feef",
+   "canon_new": "15204698f2a3d3b6fe06e427f52d1dde75879806a47dbb4fd4b7c5861d75f647"
+  },
+  {
+   "file": "cores/kv3_head_eighth_e2_pins.json",
+   "new_file": "cores/kv3_head_eighth_e2_pins_r26q4.json",
+   "module": "kv3_head_eighth_e2",
+   "moved": [
+    "strap_hid[0]@W",
+    "strap_hid[1]@W",
+    "strap_bsel[0]@W",
+    "strap_bsel[1]@W"
+   ],
+   "canon_old": "3a20139b722c92016a1e959be97fc8ca5f3a42bc3e840651234ea0762537a393",
+   "canon_new": "ed14b96bb006fd6bf249607fa3fb403387fed181be9c78445de4b51d1351b426"
+  },
+  {
+   "file": "cores/kv3_head_eighth_e6_pins_fMX_r25.json",
+   "new_file": "cores/kv3_head_eighth_e6_pins_fMX_r25_r26q4.json",
+   "module": "kv3_head_eighth_e6",
+   "moved": [
+    "strap_hid[0]@S",
+    "strap_hid[1]@S",
+    "strap_bsel[0]@W",
+    "strap_bsel[1]@W"
+   ],
+   "canon_old": "d9e1c2d80aebbd8a8984e983df67df3ecfdd7e4cae666870f9ba25b5da3932b4",
+   "canon_new": "47549693fde82ac6000e414f63b16b00baf9933c6ef344c1683c70c47e2b4cb4"
+  },
+  {
+   "file": "cores/kv3_head_eighth_e6_pins_r25.json",
+   "new_file": "cores/kv3_head_eighth_e6_pins_r25_r26q4.json",
+   "module": "kv3_head_eighth_e6",
+   "moved": [
+    "strap_hid[0]@N",
+    "strap_hid[1]@N",
+    "strap_bsel[0]@W",
+    "strap_bsel[1]@W"
+   ],
+   "canon_old": "cea6ec6289c33b11ab56296e56d64bdde1338832dd8175c3c796797942394816",
+   "canon_new": "f604d5d612e1cf55521f3cf8365672cfe5d0c3fdbd96205c77861260c9b89661"
+  }
+ ]
+}

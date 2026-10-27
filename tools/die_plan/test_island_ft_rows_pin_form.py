@@ -61,6 +61,17 @@ def test_pin_form():
     P, v = _plan(pins, None, w=216.0, h=216.0)
     e = run(C.check_core_pin_forms, P, v)[1]
     assert e and "strap_bsel[0]" in e[0]["msg"]
-    # a face with only edge-form pins is one form
-    P, v = _plan([dict(name="s", layer="M4", x=0.0, y=108.0)], None, w=216.0, h=216.0)
+    # COORD 10-27 hm_r26q4: a face with only edge-form pins fails too (plan = kit centre form)
+    cen = [dict(name=f"d[{i}]", layer="M5", x=10.0 + i, y=215.904) for i in range(4)]
+    P, v = _plan(cen + [dict(name="strap_bsel[0]", layer="M4", x=0.0, y=108.0)], None, w=216.0, h=216.0)
+    e = run(C.check_core_pin_forms, P, v)[1]
+    assert e and "no centre-form" in e[0]["msg"]
+    # a data-pin edge face in a centre-form view (qkd_hr_* style) is a warning only
+    P, v = _plan(cen + [dict(name="s", layer="M4", x=0.0, y=108.0)], None, w=216.0, h=216.0)
+    assert not run(C.check_core_pin_forms, P, v)[1]
+    P, v = _plan(cen + [dict(name="strap_bsel[0]", layer="M4", x=0.096, y=108.0)], None, w=216.0, h=216.0)
+    assert not run(C.check_core_pin_forms, P, v)[1]
+    # an all-edge-form view (qkd_hr_* style) is one form and legal
+    P, v = _plan([dict(name="s", layer="M4", x=0.0, y=108.0), dict(name="t", layer="M5", x=10.0, y=216.0)], None,
+                 w=216.0, h=216.0)
     assert not run(C.check_core_pin_forms, P, v)[1]

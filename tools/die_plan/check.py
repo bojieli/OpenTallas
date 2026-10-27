@@ -1080,6 +1080,20 @@ def check_core_pin_forms(P, R, plan_dir=None, views=None):
             forms.setdefault(face, {}).setdefault(form, []).append(q.get("name"))
         for face, fm in sorted(forms.items()):
             out["faces"] += 1
+            if len(fm) == 1 and "edge" in fm and any("centre" in f2 for f2 in forms.values()) \
+                    and not all(str(n).startswith("strap_") for n in fm["edge"]):
+                # data-pin faces of mixed-form views (qkd_hr_* edge N/S + centre W): kitted as is -> WARNING only
+                R.warn("core_pin_form", f"{pf} ({mod}) face {face}: {len(fm['edge'])} edge-form pins in a view with "
+                       f"centre-form faces")
+                continue
+            if len(fm) == 1 and "edge" in fm and any("centre" in f2 for f2 in forms.values()):
+                # COORD 10-27 (hm_r26q4): one VIEW uses one form.  In a centre-form view (0 < d < 0.5 um, e.g. 0.096 /
+                # 215.904, what the kits emit) a face whose only pins are edge form (x=0 / y=h; e.g. the e0/e2/e6
+                # strap faces) breaks PREFLIGHT pins_canonical against the kits.  All-edge views (qkd_hr_*) stay legal.
+                out["edge_only"] = out.get("edge_only", 0) + 1
+                R.err("core_pin_form", f"{pf} ({mod}) face {face}: {len(fm['edge'])} edge-form pins and no centre-form "
+                      f"pin; plan pins use the centre form ({', '.join(fm['edge'][:6])})")
+                continue
             if len(fm) > 1:
                 out["mixed"] += 1
                 few = min(fm, key=lambda k: len(fm[k]))

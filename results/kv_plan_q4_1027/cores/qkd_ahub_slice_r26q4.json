@@ -1,0 +1,924 @@
+{
+ "schema": "opentallas.kv_core_slice.v1",
+ "lane": "KV-CORE-SLICE-1",
+ "plan": "pd/hm_r12.json",
+ "plan_sha256": "96e6d1cb6054a2b0405554574ffdf898980bbcde78cc647a6b930f525f0aff7c",
+ "census": "r15_census.json",
+ "census_sha256": "0185cf34f73276bdb8bcac66cb72889b98dc694a4ca45d488dec07bb7772c2d1",
+ "mesh": "r15_mesh.json",
+ "mesh_sha256": "39f0de2abc732ad62dee8384e2c7de0291f59bc4c6a646017dc8057878402a23",
+ "applied_plan_sha256": "1814a2d8105739d949c5a203b68723f2967af0b0909125174ac64de55ba9e634",
+ "common_latency_ps": 250.0,
+ "model": {
+  "A": 86.86,
+  "B": 0.8057,
+  "FF_RATIO": 0.8118,
+  "rms_ps": 4.8,
+  "loo_max_ps": 10.9
+ },
+ "slice": {
+  "module": "qkd_ahub",
+  "outline_um": [
+   604.8,
+   440.64
+  ],
+  "instances": 1,
+  "partition_types": [
+   "kv3_hub_C"
+  ],
+  "pin_views": {
+   "cores/qkd_ahub_pins.json": 1
+  },
+  "die_clocked": true,
+  "entry": {
+   "xy_um": [
+    302.4,
+    241.92
+   ],
+   "island_um": [
+    298.08,
+    237.6,
+    306.72,
+    246.24
+   ],
+   "layer": "M5",
+   "via_stack": [
+    "VIA89",
+    "VIA78",
+    "VIA67",
+    "VIA56"
+   ],
+   "stack_from": "M9",
+   "pins": [
+    {
+     "pin": "ck[0]",
+     "from_": [
+      "M7",
+      185.632,
+      0.096
+     ],
+     "to": [
+      "M5",
+      302.376,
+      241.92
+     ]
+    },
+    {
+     "pin": "rst_n[0]",
+     "from_": [
+      "M7",
+      185.888,
+      0.096
+     ],
+     "to": [
+      "M5",
+      302.808,
+      241.92
+     ]
+    }
+   ],
+   "rule": "12.8a centre (outline centre on the 4.32 PG lattice) | hm_r26q4 D-KV-AHUB-ENTRY: y moved into the free H channel 220.32..263.52 (x centre kept); hard children FIRM"
+  },
+  "phy_clocks": [],
+  "far_corner_um": 522.72,
+  "core_tree": {
+   "form": "internal H-tree from the entry (12.8b)",
+   "grid": [
+    8,
+    4
+   ],
+   "grid_candidates": [
+    {
+     "leaf_reach_limit_um": 200.0,
+     "grid": [
+      4,
+      2
+     ],
+     "islands": 8,
+     "pred_TT_ps": 304.8
+    },
+    {
+     "leaf_reach_limit_um": 150.0,
+     "grid": [
+      4,
+      4
+     ],
+     "islands": 16,
+     "pred_TT_ps": 270.7
+    },
+    {
+     "leaf_reach_limit_um": 110.0,
+     "grid": [
+      8,
+      4
+     ],
+     "islands": 32,
+     "pred_TT_ps": 247.2
+    }
+   ],
+   "leaf_reach_um": 92.88,
+   "islands": [
+    {
+     "centre_um": [
+      38.88,
+      56.16
+     ],
+     "rect_um": [
+      34.56,
+      51.84,
+      43.2,
+      60.48
+     ]
+    },
+    {
+     "centre_um": [
+      17.28,
+      164.16
+     ],
+     "rect_um": [
+      12.96,
+      159.84,
+      21.6,
+      168.48
+     ]
+    },
+    {
+     "centre_um": [
+      38.88,
+      254.88
+     ],
+     "rect_um": [
+      34.56,
+      250.56,
+      43.2,
+      259.2
+     ]
+    },
+    {
+     "centre_um": [
+      17.28,
+      384.48
+     ],
+     "rect_um": [
+      12.96,
+      380.16,
+      21.6,
+      388.8
+     ]
+    },
+    {
+     "centre_um": [
+      112.32,
+      56.16
+     ],
+     "rect_um": [
+      108.0,
+      51.84,
+      116.64,
+      60.48
+     ]
+    },
+    {
+     "centre_um": [
+      112.32,
+      228.96
+     ],
+     "rect_um": [
+      108.0,
+      224.64,
+      116.64,
+      233.28
+     ]
+    },
+    {
+     "centre_um": [
+      112.32,
+      254.88
+     ],
+     "rect_um": [
+      108.0,
+      250.56,
+      116.64,
+      259.2
+     ]
+    },
+    {
+     "centre_um": [
+      112.32,
+      423.36
+     ],
+     "rect_um": [
+      108.0,
+      419.04,
+      116.64,
+      427.68
+     ]
+    },
+    {
+     "centre_um": [
+      190.08,
+      56.16
+     ],
+     "rect_um": [
+      185.76,
+      51.84,
+      194.4,
+      60.48
+     ]
+    },
+    {
+     "centre_um": [
+      190.08,
+      164.16
+     ],
+     "rect_um": [
+      185.76,
+      159.84,
+      194.4,
+      168.48
+     ]
+    },
+    {
+     "centre_um": [
+      190.08,
+      276.48
+     ],
+     "rect_um": [
+      185.76,
+      272.16,
+      194.4,
+      280.8
+     ]
+    },
+    {
+     "centre_um": [
+      190.08,
+      384.48
+     ],
+     "rect_um": [
+      185.76,
+      380.16,
+      194.4,
+      388.8
+     ]
+    },
+    {
+     "centre_um": [
+      263.52,
+      56.16
+     ],
+     "rect_um": [
+      259.2,
+      51.84,
+      267.84,
+      60.48
+     ]
+    },
+    {
+     "centre_um": [
+      263.52,
+      228.96
+     ],
+     "rect_um": [
+      259.2,
+      224.64,
+      267.84,
+      233.28
+     ]
+    },
+    {
+     "centre_um": [
+      263.52,
+      254.88
+     ],
+     "rect_um": [
+      259.2,
+      250.56,
+      267.84,
+      259.2
+     ]
+    },
+    {
+     "centre_um": [
+      263.52,
+      423.36
+     ],
+     "rect_um": [
+      259.2,
+      419.04,
+      267.84,
+      427.68
+     ]
+    },
+    {
+     "centre_um": [
+      341.28,
+      56.16
+     ],
+     "rect_um": [
+      336.96,
+      51.84,
+      345.6,
+      60.48
+     ]
+    },
+    {
+     "centre_um": [
+      358.56,
+      164.16
+     ],
+     "rect_um": [
+      354.24,
+      159.84,
+      362.88,
+      168.48
+     ]
+    },
+    {
+     "centre_um": [
+      358.56,
+      276.48
+     ],
+     "rect_um": [
+      354.24,
+      272.16,
+      362.88,
+      280.8
+     ]
+    },
+    {
+     "centre_um": [
+      358.56,
+      384.48
+     ],
+     "rect_um": [
+      354.24,
+      380.16,
+      362.88,
+      388.8
+     ]
+    },
+    {
+     "centre_um": [
+      414.72,
+      56.16
+     ],
+     "rect_um": [
+      410.4,
+      51.84,
+      419.04,
+      60.48
+     ]
+    },
+    {
+     "centre_um": [
+      414.72,
+      125.28
+     ],
+     "rect_um": [
+      410.4,
+      120.96,
+      419.04,
+      129.6
+     ]
+    },
+    {
+     "centre_um": [
+      362.88,
+      267.84
+     ],
+     "rect_um": [
+      358.56,
+      263.52,
+      367.2,
+      272.16
+     ]
+    },
+    {
+     "centre_um": [
+      414.72,
+      384.48
+     ],
+     "rect_um": [
+      410.4,
+      380.16,
+      419.04,
+      388.8
+     ]
+    },
+    {
+     "centre_um": [
+      492.48,
+      56.16
+     ],
+     "rect_um": [
+      488.16,
+      51.84,
+      496.8,
+      60.48
+     ]
+    },
+    {
+     "centre_um": [
+      492.48,
+      125.28
+     ],
+     "rect_um": [
+      488.16,
+      120.96,
+      496.8,
+      129.6
+     ]
+    },
+    {
+     "centre_um": [
+      492.48,
+      358.56
+     ],
+     "rect_um": [
+      488.16,
+      354.24,
+      496.8,
+      362.88
+     ]
+    },
+    {
+     "centre_um": [
+      492.48,
+      384.48
+     ],
+     "rect_um": [
+      488.16,
+      380.16,
+      496.8,
+      388.8
+     ]
+    },
+    {
+     "centre_um": [
+      565.92,
+      56.16
+     ],
+     "rect_um": [
+      561.6,
+      51.84,
+      570.24,
+      60.48
+     ]
+    },
+    {
+     "centre_um": [
+      596.16,
+      164.16
+     ],
+     "rect_um": [
+      591.84,
+      159.84,
+      600.48,
+      168.48
+     ]
+    },
+    {
+     "centre_um": [
+      596.16,
+      276.48
+     ],
+     "rect_um": [
+      591.84,
+      272.16,
+      600.48,
+      280.8
+     ]
+    },
+    {
+     "centre_um": [
+      565.92,
+      384.48
+     ],
+     "rect_um": [
+      561.6,
+      380.16,
+      570.24,
+      388.8
+     ]
+    }
+   ],
+   "trunk_um": [
+    427.68,
+    319.68,
+    319.68,
+    427.68,
+    354.24,
+    246.24,
+    246.24,
+    354.24,
+    276.48,
+    168.48,
+    168.48,
+    276.48,
+    203.04,
+    95.04,
+    95.04,
+    203.04,
+    203.04,
+    95.04,
+    95.04,
+    203.04,
+    276.48,
+    168.48,
+    168.48,
+    276.48,
+    354.24,
+    246.24,
+    246.24,
+    354.24,
+    427.68,
+    319.68,
+    319.68,
+    427.68
+   ]
+  },
+  "die_islands": {
+   "points": [],
+   "source": "hm_r24 53cc76e3 clock.mesh.core_islands (replaces R15 die_islands of slice-1)"
+  },
+  "island_conflicts": [],
+  "insertion_model": {
+   "L_max_um": 522.72,
+   "pred_TT_ps": 247.2,
+   "pred_FF_ps": 200.7,
+   "target_TT_ps": 250.0,
+   "htree": {
+    "leaf_TT_ps": 161.7,
+    "leaf_FF_ps": 131.3,
+    "trunk_um": 427.68,
+    "trunk_TT_ps": 85.5,
+    "pred_TT_ps": 247.2,
+    "pred_FF_ps": 200.7,
+    "form": "leaf = core_insertion(leaf reach) + trunk 0.20 ps/um x centre->island Manhattan (MODEL UNCHECKED)"
+   },
+   "in_cal_range": false,
+   "band": "IN",
+   "form": "master_plan.core_insertion (CTS-grown centre-entry fit, MODEL UNCHECKED)",
+   "note": "H-tree cores: plan-built tree, predicted by core_infra_htree at kit time"
+  },
+  "trunk": null,
+  "m6_m7_pins": {},
+  "outline_delta": null,
+  "macro_sinks": {
+   "form": "hard-child clk pins = sinks fed by direct stubs from the entry (v5.0 early-tap form); arrival = 0.20 ps/um x Manhattan + signed insertion (MODEL UNCHECKED)",
+   "sinks": [
+    {
+     "inst": "g_zh[0].u_zh",
+     "master": "ot_nhb_zh",
+     "orient": "R180",
+     "pin_um": [
+      177.078,
+      71.94
+     ],
+     "insertion_ps": {
+      "tt": 246.3,
+      "ff": 202.7
+     },
+     "stub_um": 295.3,
+     "arrival_TT_ps": 305.4,
+     "arrival_FF_ps": 250.6,
+     "vs_target_TT_ps": 55.4,
+     "vs_target_FF_ps": 48.1
+    },
+    {
+     "inst": "g_zh[1].u_zh",
+     "master": "ot_nhb_zh",
+     "orient": "MX",
+     "pin_um": [
+      198.762,
+      71.94
+     ],
+     "insertion_ps": {
+      "tt": 246.3,
+      "ff": 202.7
+     },
+     "stub_um": 273.62,
+     "arrival_TT_ps": 301.0,
+     "arrival_FF_ps": 247.1,
+     "vs_target_TT_ps": 51.0,
+     "vs_target_FF_ps": 44.6
+    },
+    {
+     "inst": "g_zh[2].u_zh",
+     "master": "ot_nhb_zh",
+     "orient": "MY",
+     "pin_um": [
+      177.078,
+      411.9
+     ],
+     "insertion_ps": {
+      "tt": 246.3,
+      "ff": 202.7
+     },
+     "stub_um": 295.3,
+     "arrival_TT_ps": 305.4,
+     "arrival_FF_ps": 250.6,
+     "vs_target_TT_ps": 55.4,
+     "vs_target_FF_ps": 48.1
+    },
+    {
+     "inst": "g_zh[3].u_zh",
+     "master": "ot_nhb_zh",
+     "orient": "R0",
+     "pin_um": [
+      198.762,
+      411.9
+     ],
+     "insertion_ps": {
+      "tt": 246.3,
+      "ff": 202.7
+     },
+     "stub_um": 273.62,
+     "arrival_TT_ps": 301.0,
+     "arrival_FF_ps": 247.1,
+     "vs_target_TT_ps": 51.0,
+     "vs_target_FF_ps": 44.6
+    },
+    {
+     "inst": "u_recip",
+     "master": "ot_qkh_recip_leaf",
+     "orient": "R0",
+     "pin_um": [
+      371.562,
+      247.836
+     ],
+     "insertion_ps": {
+      "tt": 224.3,
+      "ff": 181.6
+     },
+     "stub_um": 75.08,
+     "arrival_TT_ps": 239.3,
+     "arrival_FF_ps": 193.8,
+     "vs_target_TT_ps": -10.7,
+     "vs_target_FF_ps": -8.7
+    }
+   ]
+  },
+  "hard_children_boxes_um": [
+   [
+    25.92,
+    69.12,
+    177.12,
+    220.32
+   ],
+   [
+    198.72,
+    69.12,
+    349.91999999999996,
+    220.32
+   ],
+   [
+    25.92,
+    263.52,
+    177.12,
+    414.71999999999997
+   ],
+   [
+    198.72,
+    263.52,
+    349.91999999999996,
+    414.71999999999997
+   ],
+   [
+    371.52,
+    133.92,
+    587.52,
+    349.91999999999996
+   ]
+  ]
+ },
+ "q4_delta": {
+  "entry_old": [
+   302.4,
+   220.32
+  ],
+  "entry_new": [
+   302.4,
+   241.92
+  ],
+  "island_moves": [
+   {
+    "island": 1,
+    "old": [
+     38.88,
+     164.16
+    ],
+    "new": [
+     17.28,
+     164.16
+    ],
+    "move_um": 21.6
+   },
+   {
+    "island": 2,
+    "old": [
+     38.88,
+     276.48
+    ],
+    "new": [
+     38.88,
+     254.88
+    ],
+    "move_um": 21.6
+   },
+   {
+    "island": 3,
+    "old": [
+     38.88,
+     384.48
+    ],
+    "new": [
+     17.28,
+     384.48
+    ],
+    "move_um": 21.6
+   },
+   {
+    "island": 5,
+    "old": [
+     112.32,
+     164.16
+    ],
+    "new": [
+     112.32,
+     228.96
+    ],
+    "move_um": 64.8
+   },
+   {
+    "island": 6,
+    "old": [
+     112.32,
+     276.48
+    ],
+    "new": [
+     112.32,
+     254.88
+    ],
+    "move_um": 21.6
+   },
+   {
+    "island": 7,
+    "old": [
+     112.32,
+     384.48
+    ],
+    "new": [
+     112.32,
+     423.36
+    ],
+    "move_um": 38.88
+   },
+   {
+    "island": 13,
+    "old": [
+     263.52,
+     164.16
+    ],
+    "new": [
+     263.52,
+     228.96
+    ],
+    "move_um": 64.8
+   },
+   {
+    "island": 14,
+    "old": [
+     263.52,
+     276.48
+    ],
+    "new": [
+     263.52,
+     254.88
+    ],
+    "move_um": 21.6
+   },
+   {
+    "island": 15,
+    "old": [
+     263.52,
+     384.48
+    ],
+    "new": [
+     263.52,
+     423.36
+    ],
+    "move_um": 38.88
+   },
+   {
+    "island": 17,
+    "old": [
+     341.28,
+     164.16
+    ],
+    "new": [
+     358.56,
+     164.16
+    ],
+    "move_um": 17.28
+   },
+   {
+    "island": 18,
+    "old": [
+     341.28,
+     276.48
+    ],
+    "new": [
+     358.56,
+     276.48
+    ],
+    "move_um": 17.28
+   },
+   {
+    "island": 19,
+    "old": [
+     341.28,
+     384.48
+    ],
+    "new": [
+     358.56,
+     384.48
+    ],
+    "move_um": 17.28
+   },
+   {
+    "island": 21,
+    "old": [
+     414.72,
+     164.16
+    ],
+    "new": [
+     414.72,
+     125.28
+    ],
+    "move_um": 38.88
+   },
+   {
+    "island": 22,
+    "old": [
+     414.72,
+     276.48
+    ],
+    "new": [
+     362.88,
+     267.84
+    ],
+    "move_um": 60.48
+   },
+   {
+    "island": 25,
+    "old": [
+     492.48,
+     164.16
+    ],
+    "new": [
+     492.48,
+     125.28
+    ],
+    "move_um": 38.88
+   },
+   {
+    "island": 26,
+    "old": [
+     492.48,
+     276.48
+    ],
+    "new": [
+     492.48,
+     358.56
+    ],
+    "move_um": 82.08
+   },
+   {
+    "island": 29,
+    "old": [
+     565.92,
+     164.16
+    ],
+    "new": [
+     596.16,
+     164.16
+    ],
+    "move_um": 30.24
+   },
+   {
+    "island": 30,
+    "old": [
+     565.92,
+     276.48
+    ],
+    "new": [
+     596.16,
+     276.48
+    ],
+    "move_um": 30.24
+   }
+  ]
+ }
+}
