@@ -92,7 +92,9 @@ def test_densify_m8_max_gap():
 def test_pins_from_lef(tmp_path):
     lef = tmp_path / "c.lef"
     lef.write_text("MACRO m\n  SIZE 10 BY 20 ;\n  PIN ft_mstrap_i\n    PORT\n      LAYER M5 ;\n        RECT 4.904 9.904 5.096 10.096 ;\n"
-                   "    END\n  END ft_mstrap_i\n  PIN a\n    PORT\n      LAYER M4 ;\n        RECT 0 1 0.1 1.2 ;\n    END\n  END a\nEND m\n")
+                   "    END\n  END ft_mstrap_i\n  PIN a\n    PORT\n      LAYER M4 ;\n        RECT 0 1.188 0.1 1.212 ;\n    END\n  END a\n"
+                   # HEAD-R19 tool: multi-track pads snap to the narrow-pin track residue -> one single-track M5 pin
+                   "  PIN b\n    PORT\n      LAYER M5 ;\n        RECT 4.988 0 5.012 0.1 ;\n    END\n  END b\nEND m\n")
     out = tmp_path / "p.json"
     PF.main([str(lef), str(out), "--source-label", "x"])
     d = json.loads(out.read_text())

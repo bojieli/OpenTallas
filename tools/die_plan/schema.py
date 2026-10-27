@@ -735,7 +735,13 @@ SCHEMA = {
                 # regions <= branch_leaf_um (default budgets.tap_pitch_um)
                 "die_root_um": _xy, "die_outline_um": _xy,
                 "part_die_origin_um": {"type": "object", "additionalProperties": _xy},
-                "branch_ps_per_mm": _pos, "branch_leaf_um": _pos}}}},
+                "branch_ps_per_mm": _pos, "branch_leaf_um": _pos,
+                # HEAD-CORE-R20 (COORD 2026-10-27 11:15): vertical trunk legs run on a PG-free lane of `layer` when the
+                # trunk node column sits on a die PG stripe; riser_um = |lane_x_um - node_x_um| jog at each trunk node
+                "trunk": {"type": "object", "additionalProperties": False,
+                          "required": ["layer", "node_x_um", "lane_x_um", "riser_um"],
+                          "properties": {"layer": _layer, "node_x_um": {"type": "number"},
+                                         "lane_x_um": {"type": "number"}, "riser_um": {"type": "number", "minimum": 0}}}}}}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
             "source": _reset_source, "sync_stages": {"type": "integer", "minimum": 2},
             "data_reset": {"const": False}, "epoch_bit": {"const": True},
