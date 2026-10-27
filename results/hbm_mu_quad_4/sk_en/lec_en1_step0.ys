@@ -1,0 +1,16 @@
+# gold = old ot_hdc_sk_step0 (on the old divided clock), gate = ot_hdc_sk_step0_en with sk_en tied 1 (EN_LAND=0)
+read_verilog -sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/hdc/v41/ot_hdc_sinkhorn_s.sv
+read_verilog -sv rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv results/hbm_mu_quad_4/sk_en/lec_wrap.sv
+hierarchy -check
+proc
+flatten gold_step0 en1_step0
+memory gold_step0 en1_step0
+opt_clean
+opt -full en1_step0
+opt -full gold_step0
+equiv_make gold_step0 en1_step0 equiv
+hierarchy -top equiv
+equiv_simple -seq 1
+equiv_induct
+tee -o results/hbm_mu_quad_4/sk_en/formal/equiv_status_step0.txt equiv_status
+equiv_status -assert

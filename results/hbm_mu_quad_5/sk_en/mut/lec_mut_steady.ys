@@ -1,0 +1,32 @@
+# HBM-MU-QUAD-5 10-27: LEC modulo uninterpreted arithmetic. gold = old ot_hdc_sk_steady (old divided-clock form),
+# gate = ot_hdc_sk_steady_en with sk_en tied 1 (EN_LAND=0). The combinational arithmetic cells (sk_add/seed/quot/norm,
+# copied verbatim by gen_sk_en.py, same instance names on both sides) are CUT: their output nets become shared free
+# primary inputs (matched by name), their input nets become checked primary outputs, the cells are deleted.
+# PASS = every $equiv proven (flops, outputs, arithmetic inputs). Proof holds for ANY arithmetic function.
+read_verilog -sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/hdc/v41/ot_hdc_sinkhorn_s.sv
+read_verilog -sv results/hbm_mu_quad_5/sk_en/mut/se_mut_steady.sv results/hbm_mu_quad_4/sk_en/lec_wrap.sv
+hierarchy -check
+blackbox =ot_hdc_sk_add =ot_hdc_sk_seed =ot_hdc_sk_norm =$paramod*ot_hdc_sk_quot*
+proc
+flatten gold_steady en1_steady
+memory gold_steady en1_steady
+opt_clean gold_steady en1_steady
+select -set bb_gold_steady gold_steady/t:ot_hdc_sk_* gold_steady/t:$paramod*
+tee -a results/hbm_mu_quad_5/sk_en/mut/bbcount_steady.txt select -count @bb_gold_steady
+expose -cut @bb_gold_steady %co:+[eg,up,e,m,ovf,r,y,range,z] @bb_gold_steady %d
+expose @bb_gold_steady %ci:-[eg,up,e,m,ovf,r,y,range,z] @bb_gold_steady %d
+delete @bb_gold_steady
+select -set bb_en1_steady en1_steady/t:ot_hdc_sk_* en1_steady/t:$paramod*
+tee -a results/hbm_mu_quad_5/sk_en/mut/bbcount_steady.txt select -count @bb_en1_steady
+expose -cut @bb_en1_steady %co:+[eg,up,e,m,ovf,r,y,range,z] @bb_en1_steady %d
+expose @bb_en1_steady %ci:-[eg,up,e,m,ovf,r,y,range,z] @bb_en1_steady %d
+delete @bb_en1_steady
+async2sync en1_steady gold_steady
+opt -full en1_steady
+opt -full gold_steady
+equiv_make gold_steady en1_steady equiv
+hierarchy -top equiv
+equiv_simple -seq 1
+equiv_induct
+tee -o results/hbm_mu_quad_5/sk_en/mut/equiv_status_steady.txt equiv_status
+equiv_status -assert

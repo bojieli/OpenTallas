@@ -1,0 +1,1458 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `results/hbm_mu_quad_5/sk_en/hold_bb_step0.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/hdc/v41/ot_hdc_sk_arith.sv
+Parsing SystemVerilog input from `rtl/hdc/v41/ot_hdc_sk_arith.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_sk_cadd'.
+Generating RTLIL representation for module `\ot_hdc_sk_csa'.
+Generating RTLIL representation for module `\ot_hdc_sk_mul'.
+Generating RTLIL representation for module `\ot_hdc_sk_add'.
+Generating RTLIL representation for module `\ot_hdc_sk_seed'.
+Generating RTLIL representation for module `\ot_hdc_sk_quot'.
+Generating RTLIL representation for module `\ot_hdc_sk_norm'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hdc/v41/ot_hdc_sk_recip_rom.sv
+Parsing SystemVerilog input from `rtl/hdc/v41/ot_hdc_sk_recip_rom.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_sk_recip_rom'.
+Generating RTLIL representation for module `\ot_hdc_sk_sq_rom'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/hdc/v41/ot_hdc_sinkhorn_s.sv
+Parsing SystemVerilog input from `rtl/hdc/v41/ot_hdc_sinkhorn_s.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_sk_step0'.
+Warning: Replacing memory \a_te with list of registers. See rtl/hdc/v41/ot_hdc_sinkhorn_s.sv:114
+Warning: Replacing memory \a_tm with list of registers. See rtl/hdc/v41/ot_hdc_sinkhorn_s.sv:113
+Warning: Replacing memory \a_xz with list of registers. See rtl/hdc/v41/ot_hdc_sinkhorn_s.sv:108
+Warning: Replacing memory \a_xe with list of registers. See rtl/hdc/v41/ot_hdc_sinkhorn_s.sv:107
+Warning: Replacing memory \a_xm with list of registers. See rtl/hdc/v41/ot_hdc_sinkhorn_s.sv:106
+Warning: Replacing memory \er with list of registers. See rtl/hdc/v41/ot_hdc_sinkhorn_s.sv:104
+Generating RTLIL representation for module `\ot_hdc_sk_steady'.
+Warning: Replacing memory \st with list of registers. See rtl/hdc/v41/ot_hdc_sinkhorn_s.sv:240
+Generating RTLIL representation for module `\ot_hdc_sinkhorn_s'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_sk_step0_en'.
+Warning: Replacing memory \a_te with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:121
+Warning: Replacing memory \a_tm with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:120
+Warning: Replacing memory \a_xz with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:115
+Warning: Replacing memory \a_xe with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:114
+Warning: Replacing memory \a_xm with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:113
+Warning: Replacing memory \er with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:111
+Generating RTLIL representation for module `\ot_hdc_sk_steady_en'.
+Warning: Replacing memory \st with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:252
+Generating RTLIL representation for module `\ot_hdc_sinkhorn_se'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: results/hbm_mu_quad_4/sk_en/lec_wrap.sv
+Parsing SystemVerilog input from `results/hbm_mu_quad_4/sk_en/lec_wrap.sv' to AST representation.
+Generating RTLIL representation for module `\en1_step0'.
+Generating RTLIL representation for module `\en1_steady'.
+Generating RTLIL representation for module `\en0_step0'.
+Generating RTLIL representation for module `\en0_steady'.
+Generating RTLIL representation for module `\gold_step0'.
+Generating RTLIL representation for module `\gold_steady'.
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \en0_step0
+Used module:     \ot_hdc_sk_step0_en
+Used module:         \ot_hdc_sk_add
+Used module:             \ot_hdc_sk_cadd
+Used module:         \ot_hdc_sk_quot
+Used module:             \ot_hdc_sk_csa
+Used module:             \ot_hdc_sk_mul
+Used module:         \ot_hdc_sk_seed
+Used module:             \ot_hdc_sk_sq_rom
+Used module:             \ot_hdc_sk_recip_rom
+Used module:         \ot_hdc_sk_norm
+Parameter \W = 48
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_cadd'.
+Parameter \W = 48
+Generating RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110000'.
+Parameter \N = 24
+Parameter \W = 48
+
+6.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_csa'.
+Parameter \N = 24
+Parameter \W = 48
+Generating RTLIL representation for module `$paramod$400f5c05525e2ed7424df3c78f2bf91fce8a18f3\ot_hdc_sk_csa'.
+Parameter \W = 8
+
+6.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_cadd'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000'.
+Parameter \W = 24
+
+6.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_cadd'.
+Parameter \W = 24
+Generating RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000'.
+Reprocessing module ot_hdc_sk_add because instantiated module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000 has become available.
+Generating RTLIL representation for module `\ot_hdc_sk_add'.
+Parameter \W = 48
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110000'.
+Parameter \N = 31
+Parameter \W = 48
+
+6.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_csa'.
+Parameter \N = 31
+Parameter \W = 48
+Generating RTLIL representation for module `$paramod$47ab3f72b673a2d2b3cfd585f7b81d3fbe605576\ot_hdc_sk_csa'.
+Parameter \W = 23
+
+6.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_cadd'.
+Parameter \W = 23
+Generating RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000010111'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000'.
+Parameter \W = 27
+
+6.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_cadd'.
+Parameter \W = 27
+Generating RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011'.
+Parameter \W = 27
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011'.
+Parameter \N = 27
+Parameter \W = 27
+
+6.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_csa'.
+Parameter \N = 27
+Parameter \W = 27
+Generating RTLIL representation for module `$paramod$a533ebb9ab58eefa338c552d9b8bb70a538bb895\ot_hdc_sk_csa'.
+Parameter \WA = 24
+Parameter \WB = 29
+Parameter \DROP = 20
+
+6.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_mul'.
+Parameter \WA = 24
+Parameter \WB = 29
+Parameter \DROP = 20
+Generating RTLIL representation for module `$paramod$9202fdd792f499efae0fc46788e0ae36e6d15811\ot_hdc_sk_mul'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000'.
+Parameter \SUBN = 1
+
+6.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_quot'.
+Parameter \SUBN = 1
+Generating RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Reprocessing module ot_hdc_sk_step0_en because instantiated module $paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001 has become available.
+Generating RTLIL representation for module `\ot_hdc_sk_step0_en'.
+Warning: Replacing memory \a_te with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:121
+Warning: Replacing memory \a_tm with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:120
+Warning: Replacing memory \a_xz with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:115
+Warning: Replacing memory \a_xe with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:114
+Warning: Replacing memory \a_xm with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:113
+Warning: Replacing memory \er with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:111
+Parameter \EN_LAND = 0
+
+6.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_step0_en'.
+Parameter \EN_LAND = 0
+Generating RTLIL representation for module `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000'.
+Warning: Replacing memory \a_te with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:121
+Warning: Replacing memory \a_tm with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:120
+Warning: Replacing memory \a_xz with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:115
+Warning: Replacing memory \a_xe with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:114
+Warning: Replacing memory \a_xm with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:113
+Warning: Replacing memory \er with list of registers. See rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:111
+
+6.13. Analyzing design hierarchy..
+Top module:  \en0_step0
+Used module:     $paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000
+Used module:         \ot_hdc_sk_add
+Used module:             \ot_hdc_sk_cadd
+Used module:         \ot_hdc_sk_quot
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000010111
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011
+Used module:             $paramod$a533ebb9ab58eefa338c552d9b8bb70a538bb895\ot_hdc_sk_csa
+Used module:             $paramod$9202fdd792f499efae0fc46788e0ae36e6d15811\ot_hdc_sk_mul
+Used module:                 \ot_hdc_sk_csa
+Used module:         \ot_hdc_sk_seed
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110000
+Used module:             $paramod$47ab3f72b673a2d2b3cfd585f7b81d3fbe605576\ot_hdc_sk_csa
+Used module:             \ot_hdc_sk_sq_rom
+Used module:             \ot_hdc_sk_recip_rom
+Used module:         \ot_hdc_sk_norm
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000'.
+Parameter \W = 53
+
+6.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_cadd'.
+Parameter \W = 53
+Generating RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110101'.
+Parameter \N = 29
+Parameter \W = 53
+
+6.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_sk_csa'.
+Parameter \N = 29
+Parameter \W = 53
+Generating RTLIL representation for module `$paramod$c60a2599610b7f252d90deed1eabe21d5297a603\ot_hdc_sk_csa'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+Parameter \SUBN = 1
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001'.
+
+6.16. Analyzing design hierarchy..
+Top module:  \en0_step0
+Used module:     $paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000
+Used module:         \ot_hdc_sk_add
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000
+Used module:         $paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001
+Used module:             \ot_hdc_sk_cadd
+Used module:             \ot_hdc_sk_csa
+Used module:             \ot_hdc_sk_mul
+Used module:                 $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110000
+Used module:                 $paramod$400f5c05525e2ed7424df3c78f2bf91fce8a18f3\ot_hdc_sk_csa
+Used module:         \ot_hdc_sk_seed
+Used module:             $paramod$47ab3f72b673a2d2b3cfd585f7b81d3fbe605576\ot_hdc_sk_csa
+Used module:             \ot_hdc_sk_sq_rom
+Used module:             \ot_hdc_sk_recip_rom
+Used module:         \ot_hdc_sk_norm
+Parameter \W = 23
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000010111'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000'.
+Parameter \W = 27
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011'.
+Parameter \W = 27
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011'.
+Parameter \N = 27
+Parameter \W = 27
+Found cached RTLIL representation for module `$paramod$a533ebb9ab58eefa338c552d9b8bb70a538bb895\ot_hdc_sk_csa'.
+Parameter \WA = 24
+Parameter \WB = 29
+Parameter \DROP = 20
+Found cached RTLIL representation for module `$paramod$9202fdd792f499efae0fc46788e0ae36e6d15811\ot_hdc_sk_mul'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000'.
+
+6.17. Analyzing design hierarchy..
+Top module:  \en0_step0
+Used module:     $paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000
+Used module:         \ot_hdc_sk_add
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000
+Used module:         $paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000010111
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011
+Used module:             $paramod$a533ebb9ab58eefa338c552d9b8bb70a538bb895\ot_hdc_sk_csa
+Used module:             $paramod$9202fdd792f499efae0fc46788e0ae36e6d15811\ot_hdc_sk_mul
+Used module:                 $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110101
+Used module:                 $paramod$c60a2599610b7f252d90deed1eabe21d5297a603\ot_hdc_sk_csa
+Used module:         \ot_hdc_sk_seed
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110000
+Used module:             $paramod$47ab3f72b673a2d2b3cfd585f7b81d3fbe605576\ot_hdc_sk_csa
+Used module:             \ot_hdc_sk_sq_rom
+Used module:             \ot_hdc_sk_recip_rom
+Used module:         \ot_hdc_sk_norm
+
+6.18. Analyzing design hierarchy..
+Top module:  \en0_step0
+Used module:     $paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000
+Used module:         \ot_hdc_sk_add
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000
+Used module:         $paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000010111
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011
+Used module:             $paramod$a533ebb9ab58eefa338c552d9b8bb70a538bb895\ot_hdc_sk_csa
+Used module:             $paramod$9202fdd792f499efae0fc46788e0ae36e6d15811\ot_hdc_sk_mul
+Used module:                 $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110101
+Used module:                 $paramod$c60a2599610b7f252d90deed1eabe21d5297a603\ot_hdc_sk_csa
+Used module:         \ot_hdc_sk_seed
+Used module:             $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110000
+Used module:             $paramod$47ab3f72b673a2d2b3cfd585f7b81d3fbe605576\ot_hdc_sk_csa
+Used module:             \ot_hdc_sk_sq_rom
+Used module:             \ot_hdc_sk_recip_rom
+Used module:         \ot_hdc_sk_norm
+Removing unused module `\ot_hdc_sk_step0_en'.
+Removing unused module `$paramod$400f5c05525e2ed7424df3c78f2bf91fce8a18f3\ot_hdc_sk_csa'.
+Removing unused module `\gold_steady'.
+Removing unused module `\gold_step0'.
+Removing unused module `\en0_steady'.
+Removing unused module `\en1_steady'.
+Removing unused module `\en1_step0'.
+Removing unused module `\ot_hdc_sinkhorn_se'.
+Removing unused module `\ot_hdc_sk_steady_en'.
+Removing unused module `\ot_hdc_sinkhorn_s'.
+Removing unused module `\ot_hdc_sk_steady'.
+Removing unused module `\ot_hdc_sk_step0'.
+Removing unused module `\ot_hdc_sk_quot'.
+Removing unused module `\ot_hdc_sk_mul'.
+Removing unused module `\ot_hdc_sk_csa'.
+Removing unused module `\ot_hdc_sk_cadd'.
+Removed 16 unused modules.
+
+7. Executing PROC pass (convert processes to netlists).
+
+7.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 1 dead cases from process $proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:538$763 in module ot_hdc_sk_sq_rom.
+Marked 1 switch rules as full_case in process $proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:538$763 in module ot_hdc_sk_sq_rom.
+Removed 1 dead cases from process $proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:13$762 in module ot_hdc_sk_recip_rom.
+Marked 1 switch rules as full_case in process $proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:13$762 in module ot_hdc_sk_recip_rom.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255 in module $paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.
+Removed a total of 2 dead cases.
+
+7.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 110 assignments to connections.
+
+7.4. Executing PROC_INIT pass (extract init attributes).
+
+7.5. Executing PROC_ARST pass (detect async resets in processes).
+
+7.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 2 switches.
+<suppressed ~55 debug messages>
+
+7.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hdc_sk_sq_rom.$proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:538$763'.
+     1/1: $1\sq[13:0]
+Creating decoders for process `\ot_hdc_sk_recip_rom.$proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:13$762'.
+     1/1: { $1\c2[12:0] $1\c1[22:0] $1\c0[32:0] }
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6570'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6568'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6566'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6564'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6562'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6560'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6558'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6556'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6554'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6552'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6550'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6548'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6546'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6544'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6542'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6540'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6539'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6538'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6536'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6533'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6531'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6528'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6526'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6523'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6521'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6518'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6517'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6516'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6514'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6511'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6509'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6506'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6504'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6501'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6499'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6496'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6495'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6494'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6492'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6489'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6487'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6484'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6482'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6479'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6477'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6474'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6473'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6472'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6470'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6467'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6465'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6462'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6460'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6457'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6455'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6452'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6451'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6450'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6449'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6448'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6447'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6446'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6445'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6444'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6443'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6442'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6441'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6440'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6439'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6438'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6437'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6436'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6435'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6434'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6433'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6432'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6431'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6430'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6429'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6428'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6427'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6426'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6425'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6424'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6423'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6422'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6421'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6420'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6419'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6418'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6417'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6416'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6415'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6414'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6413'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6412'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6411'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6410'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6409'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6408'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6407'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6406'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6405'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6404'.
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+     1/91: $0\b_q[511:0] [511:480]
+     2/91: $0\b_q[511:0] [479:448]
+     3/91: $0\b_q[511:0] [447:416]
+     4/91: $0\b_q[511:0] [415:384]
+     5/91: $0\b_q[511:0] [383:352]
+     6/91: $0\b_q[511:0] [351:320]
+     7/91: $0\b_q[511:0] [319:288]
+     8/91: $0\b_q[511:0] [287:256]
+     9/91: $0\b_q[511:0] [255:224]
+    10/91: $0\b_q[511:0] [223:192]
+    11/91: $0\b_q[511:0] [191:160]
+    12/91: $0\b_q[511:0] [159:128]
+    13/91: $0\b_q[511:0] [127:96]
+    14/91: $0\b_q[511:0] [95:64]
+    15/91: $0\b_q[511:0] [63:32]
+    16/91: $0\b_q[511:0] [31:0]
+    17/91: $0\a_te[3][9:0]
+    18/91: $0\a_te[2][9:0]
+    19/91: $0\a_te[1][9:0]
+    20/91: $0\a_te[0][9:0]
+    21/91: $0\a_tm[3][23:0]
+    22/91: $0\a_tm[2][23:0]
+    23/91: $0\a_tm[1][23:0]
+    24/91: $0\a_tm[0][23:0]
+    25/91: $0\a_xz[15][0:0]
+    26/91: $0\a_xz[14][0:0]
+    27/91: $0\a_xz[13][0:0]
+    28/91: $0\a_xz[12][0:0]
+    29/91: $0\a_xz[11][0:0]
+    30/91: $0\a_xz[10][0:0]
+    31/91: $0\a_xz[9][0:0]
+    32/91: $0\a_xz[8][0:0]
+    33/91: $0\a_xz[7][0:0]
+    34/91: $0\a_xz[6][0:0]
+    35/91: $0\a_xz[5][0:0]
+    36/91: $0\a_xz[4][0:0]
+    37/91: $0\a_xz[3][0:0]
+    38/91: $0\a_xz[2][0:0]
+    39/91: $0\a_xz[1][0:0]
+    40/91: $0\a_xz[0][0:0]
+    41/91: $0\a_xe[15][9:0]
+    42/91: $0\a_xe[14][9:0]
+    43/91: $0\a_xe[13][9:0]
+    44/91: $0\a_xe[12][9:0]
+    45/91: $0\a_xe[11][9:0]
+    46/91: $0\a_xe[10][9:0]
+    47/91: $0\a_xe[9][9:0]
+    48/91: $0\a_xe[8][9:0]
+    49/91: $0\a_xe[7][9:0]
+    50/91: $0\a_xe[6][9:0]
+    51/91: $0\a_xe[5][9:0]
+    52/91: $0\a_xe[4][9:0]
+    53/91: $0\a_xe[3][9:0]
+    54/91: $0\a_xe[2][9:0]
+    55/91: $0\a_xe[1][9:0]
+    56/91: $0\a_xe[0][9:0]
+    57/91: $0\a_xm[15][23:0]
+    58/91: $0\a_xm[14][23:0]
+    59/91: $0\a_xm[13][23:0]
+    60/91: $0\a_xm[12][23:0]
+    61/91: $0\a_xm[11][23:0]
+    62/91: $0\a_xm[10][23:0]
+    63/91: $0\a_xm[9][23:0]
+    64/91: $0\a_xm[8][23:0]
+    65/91: $0\a_xm[7][23:0]
+    66/91: $0\a_xm[6][23:0]
+    67/91: $0\a_xm[5][23:0]
+    68/91: $0\a_xm[4][23:0]
+    69/91: $0\a_xm[3][23:0]
+    70/91: $0\a_xm[2][23:0]
+    71/91: $0\a_xm[1][23:0]
+    72/91: $0\a_xm[0][23:0]
+    73/91: $0\er[15][31:0]
+    74/91: $0\er[14][31:0]
+    75/91: $0\er[13][31:0]
+    76/91: $0\er[12][31:0]
+    77/91: $0\er[11][31:0]
+    78/91: $0\er[10][31:0]
+    79/91: $0\er[9][31:0]
+    80/91: $0\er[8][31:0]
+    81/91: $0\er[7][31:0]
+    82/91: $0\er[6][31:0]
+    83/91: $0\er[5][31:0]
+    84/91: $0\er[4][31:0]
+    85/91: $0\er[3][31:0]
+    86/91: $0\er[2][31:0]
+    87/91: $0\er[1][31:0]
+    88/91: $0\er[0][31:0]
+    89/91: $0\abad_q[0:0]
+    90/91: $0\bbad_q[0:0]
+    91/91: $1\k[31:0]
+Creating decoders for process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:106$6254'.
+
+7.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_hdc_sk_sq_rom.\sq' from process `\ot_hdc_sk_sq_rom.$proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:538$763'.
+No latch inferred for signal `\ot_hdc_sk_recip_rom.\c0' from process `\ot_hdc_sk_recip_rom.$proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:13$762'.
+No latch inferred for signal `\ot_hdc_sk_recip_rom.\c1' from process `\ot_hdc_sk_recip_rom.$proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:13$762'.
+No latch inferred for signal `\ot_hdc_sk_recip_rom.\c2' from process `\ot_hdc_sk_recip_rom.$proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:13$762'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[15]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6570'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[11]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6568'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[7]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6566'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6564'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[14]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6562'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[10]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6560'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[6]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6558'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6556'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[13]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6554'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[9]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6552'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[5]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6550'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6548'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[12]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6546'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[8]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6544'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[4]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6542'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_out[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6540'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nt_e[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6539'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nt_m[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6538'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[3].mm[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6536'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[3].ee[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6533'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[3].mm[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6531'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[3].ee[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6528'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[3].mm[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6526'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[3].ee[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6523'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[3].mm[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6521'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[3].ee[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6518'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nt_e[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6517'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nt_m[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6516'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[2].mm[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6514'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[2].ee[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6511'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[2].mm[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6509'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[2].ee[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6506'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[2].mm[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6504'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[2].ee[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6501'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[2].mm[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6499'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[2].ee[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6496'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nt_e[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6495'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nt_m[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6494'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[1].mm[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6492'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[1].ee[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6489'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[1].mm[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6487'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[1].ee[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6484'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[1].mm[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6482'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[1].ee[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6479'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[1].mm[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6477'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[1].ee[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6474'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nt_e[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6473'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nt_m[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6472'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[0].mm[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6470'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[0].ee[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6467'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[0].mm[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6465'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[0].ee[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6462'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[0].mm[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6460'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[0].ee[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6457'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[0].mm[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6455'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\g_arow[0].ee[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6452'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[15]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6451'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[15]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6450'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[15]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6449'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[14]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6448'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[14]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6447'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[14]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6446'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[13]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6445'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[13]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6444'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[13]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6443'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[12]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6442'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[12]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6441'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[12]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6440'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[11]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6439'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[11]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6438'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[11]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6437'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[10]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6436'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[10]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6435'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[10]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6434'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[9]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6433'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[9]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6432'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[9]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6431'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[8]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6430'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[8]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6429'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[8]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6428'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[7]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6427'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[7]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6426'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[7]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6425'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[6]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6424'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[6]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6423'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[6]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6422'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[5]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6421'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[5]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6420'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[5]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6419'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[4]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6418'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[4]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6417'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[4]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6416'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6415'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6414'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[3]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6413'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6412'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6411'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[2]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6410'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6409'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6408'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[1]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6407'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_z[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6406'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_e[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6405'.
+No latch inferred for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\nx_m[0]' from process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6404'.
+
+7.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\k' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8270' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\b_q' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8271' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\bbad_q' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8272' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\abad_q' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8273' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[0]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8274' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[1]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8275' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[2]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8276' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[3]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8277' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[4]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8278' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[5]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8279' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[6]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8280' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[7]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8281' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[8]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8282' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[9]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8283' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[10]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8284' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[11]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8285' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[12]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8286' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[13]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8287' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[14]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8288' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\er[15]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8289' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[0]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8290' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[1]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8291' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[2]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8292' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[3]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8293' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[4]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8294' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[5]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8295' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[6]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8296' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[7]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8297' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[8]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8298' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[9]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8299' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[10]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8300' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[11]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8301' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[12]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8302' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[13]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8303' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[14]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8304' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xm[15]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8305' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[0]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8306' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[1]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8307' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[2]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8308' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[3]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8309' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[4]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8310' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[5]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8311' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[6]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8312' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[7]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8313' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[8]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8314' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[9]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8315' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[10]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8316' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[11]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8317' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[12]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8318' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[13]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8319' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[14]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8320' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xe[15]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8321' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[0]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8322' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[1]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8323' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[2]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8324' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[3]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8325' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[4]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8326' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[5]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8327' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[6]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8328' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[7]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8329' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[8]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8330' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[9]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8331' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[10]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8332' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[11]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8333' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[12]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8334' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[13]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8335' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[14]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8336' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_xz[15]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8337' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_tm[0]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8338' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_tm[1]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8339' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_tm[2]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8340' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_tm[3]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8341' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_te[0]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8342' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_te[1]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8343' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_te[2]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8344' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\a_te[3]' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+  created $dff cell `$procdff$8345' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.\sk_en_q' using process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:106$6254'.
+  created $dff cell `$procdff$8346' with positive edge clock.
+
+7.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_hdc_sk_sq_rom.$proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:538$763'.
+Removing empty process `ot_hdc_sk_sq_rom.$proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:538$763'.
+Found and cleaned up 1 empty switch in `\ot_hdc_sk_recip_rom.$proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:13$762'.
+Removing empty process `ot_hdc_sk_recip_rom.$proc$rtl/hdc/v41/ot_hdc_sk_recip_rom.sv:13$762'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6570'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6568'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6566'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6564'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6562'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6560'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6558'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6556'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6554'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6552'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6550'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6548'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6546'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6544'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6542'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6540'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6539'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6538'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6536'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6533'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6531'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6528'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6526'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6523'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6521'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6518'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6517'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6516'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6514'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6511'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6509'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6506'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6504'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6501'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6499'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6496'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6495'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6494'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6492'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6489'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6487'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6484'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6482'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6479'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6477'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6474'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6473'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:72$6472'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6470'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6467'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6465'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6462'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6460'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6457'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:60$6455'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:59$6452'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6451'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6450'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6449'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6448'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6447'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6446'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6445'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6444'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6443'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6442'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6441'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6440'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6439'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6438'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6437'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6436'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6435'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6434'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6433'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6432'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6431'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6430'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6429'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6428'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6427'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6426'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6425'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6424'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6423'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6422'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6421'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6420'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6419'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6418'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6417'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6416'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6415'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6414'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6413'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6412'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6411'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6410'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6409'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6408'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6407'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6406'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6405'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:52$6404'.
+Found and cleaned up 55 empty switches in `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:109$6255'.
+Removing empty process `$paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:106$6254'.
+Cleaned up 57 empty switches.
+
+7.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module en0_step0.
+Optimizing module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011.
+Optimizing module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000010111.
+Optimizing module $paramod$47ab3f72b673a2d2b3cfd585f7b81d3fbe605576\ot_hdc_sk_csa.
+Optimizing module $paramod$c60a2599610b7f252d90deed1eabe21d5297a603\ot_hdc_sk_csa.
+Optimizing module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110101.
+Optimizing module ot_hdc_sk_sq_rom.
+Optimizing module ot_hdc_sk_recip_rom.
+Optimizing module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110000.
+Optimizing module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000.
+Optimizing module $paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.
+<suppressed ~80 debug messages>
+Optimizing module $paramod$9202fdd792f499efae0fc46788e0ae36e6d15811\ot_hdc_sk_mul.
+<suppressed ~29 debug messages>
+Optimizing module $paramod$a533ebb9ab58eefa338c552d9b8bb70a538bb895\ot_hdc_sk_csa.
+
+8. Executing MEMORY pass.
+
+8.1. Executing OPT_MEM pass (optimize memories).
+ot_hdc_sk_recip_rom.$auto$proc_rom.cc:155:do_switch$7812: removing const-1 lane 31
+ot_hdc_sk_recip_rom.$auto$proc_rom.cc:155:do_switch$7812: removing const-0 lane 32
+ot_hdc_sk_recip_rom.$auto$proc_rom.cc:155:do_switch$7812: removing const-0 lane 55
+ot_hdc_sk_recip_rom.$auto$proc_rom.cc:155:do_switch$7812: removing const-0 lane 68
+Performed a total of 1 transformations.
+
+8.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+8.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+8.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+8.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+Checking read port `$auto$proc_rom.cc:155:do_switch$7808'[0] in module `\ot_hdc_sk_sq_rom': no output FF found.
+Checking read port address `$auto$proc_rom.cc:155:do_switch$7808'[0] in module `\ot_hdc_sk_sq_rom': no address FF found.
+Checking read port `$auto$proc_rom.cc:155:do_switch$7812'[0] in module `\ot_hdc_sk_recip_rom': no output FF found.
+Checking read port address `$auto$proc_rom.cc:155:do_switch$7812'[0] in module `\ot_hdc_sk_recip_rom': no address FF found.
+
+8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \en0_step0..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000010111..
+Finding unused cells or wires in module $paramod$47ab3f72b673a2d2b3cfd585f7b81d3fbe605576\ot_hdc_sk_csa..
+Finding unused cells or wires in module $paramod$c60a2599610b7f252d90deed1eabe21d5297a603\ot_hdc_sk_csa..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110101..
+Finding unused cells or wires in module \ot_hdc_sk_sq_rom..
+Finding unused cells or wires in module \ot_hdc_sk_recip_rom..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110000..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000..
+Finding unused cells or wires in module $paramod$9202fdd792f499efae0fc46788e0ae36e6d15811\ot_hdc_sk_mul..
+Finding unused cells or wires in module $paramod$a533ebb9ab58eefa338c552d9b8bb70a538bb895\ot_hdc_sk_csa..
+Removed 3 unused cells and 2513 unused wires.
+<suppressed ~18 debug messages>
+
+8.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+8.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+8.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \en0_step0..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000010111..
+Finding unused cells or wires in module $paramod$47ab3f72b673a2d2b3cfd585f7b81d3fbe605576\ot_hdc_sk_csa..
+Finding unused cells or wires in module $paramod$c60a2599610b7f252d90deed1eabe21d5297a603\ot_hdc_sk_csa..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110101..
+Finding unused cells or wires in module \ot_hdc_sk_sq_rom..
+Finding unused cells or wires in module \ot_hdc_sk_recip_rom..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110000..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000..
+Finding unused cells or wires in module $paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000..
+Finding unused cells or wires in module $paramod$9202fdd792f499efae0fc46788e0ae36e6d15811\ot_hdc_sk_mul..
+Finding unused cells or wires in module $paramod$a533ebb9ab58eefa338c552d9b8bb70a538bb895\ot_hdc_sk_csa..
+
+8.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+8.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+Mapping memory $auto$proc_rom.cc:155:do_switch$7808 in module \ot_hdc_sk_sq_rom:
+  created 512 $dff cells and 0 static cells of width 14.
+  read interface: 0 $dff and 511 $mux cells.
+  write interface: 0 write mux blocks.
+Mapping memory $auto$proc_rom.cc:155:do_switch$7812 in module \ot_hdc_sk_recip_rom:
+  created 512 $dff cells and 0 static cells of width 65.
+  read interface: 0 $dff and 511 $mux cells.
+  write interface: 0 write mux blocks.
+
+9. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011011.
+Deleting now unused module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000010111.
+Deleting now unused module $paramod$47ab3f72b673a2d2b3cfd585f7b81d3fbe605576\ot_hdc_sk_csa.
+Deleting now unused module $paramod$c60a2599610b7f252d90deed1eabe21d5297a603\ot_hdc_sk_csa.
+Deleting now unused module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000001000.
+Deleting now unused module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110101.
+Deleting now unused module ot_hdc_sk_sq_rom.
+Deleting now unused module ot_hdc_sk_recip_rom.
+Deleting now unused module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000110000.
+Deleting now unused module $paramod\ot_hdc_sk_cadd\W=s32'00000000000000000000000000011000.
+Deleting now unused module $paramod\ot_hdc_sk_step0_en\EN_LAND=s32'00000000000000000000000000000000.
+Deleting now unused module $paramod$9202fdd792f499efae0fc46788e0ae36e6d15811\ot_hdc_sk_mul.
+Deleting now unused module $paramod$a533ebb9ab58eefa338c552d9b8bb70a538bb895\ot_hdc_sk_csa.
+<suppressed ~1 debug messages>
+
+10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \en0_step0..
+
+11. Printing statistics.
+
+=== en0_step0 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      702 wires
+    12030 wire bits
+      445 public wires
+     8494 public wire bits
+        8 ports
+     1030 port bits
+      536 cells
+       75   $dff
+       16   $eq
+       16   $logic_and
+       32   $logic_not
+       16   $logic_or
+      232   $mux
+       29   $or
+       16   $paramod\ot_hdc_sk_quot\SUBN=s32'00000000000000000000000000000001
+       48   $reduce_bool
+        3   $reduce_or
+        1   $scopeinfo
+       28   ot_hdc_sk_add
+       20   ot_hdc_sk_norm
+        4   ot_hdc_sk_seed
+
+12. Executing OPT pass (performing simple optimizations).
+
+12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module en0_step0.
+<suppressed ~90 debug messages>
+
+12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\en0_step0'.
+Computing hashes of 446 cells of `\en0_step0'.
+Finding duplicate cells in `\en0_step0'.
+Removed a total of 0 cells.
+
+12.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \en0_step0..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6541.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6541.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6543.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6543.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6545.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6545.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6547.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6547.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6549.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6549.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6551.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6551.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6553.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6553.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6555.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6555.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6557.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6557.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6559.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6559.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6561.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6561.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6563.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6563.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6565.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6565.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6567.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6567.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6569.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6569.
+    dead port 1/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6571.
+    dead port 2/2 on $mux $flatten\u.$ternary$rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv:98$6571.
+    dead port 1/2 on $mux $flatten\u.$procmux$7818.
+    dead port 2/2 on $mux $flatten\u.$procmux$7818.
+    dead port 1/2 on $mux $flatten\u.$procmux$7823.
+    dead port 2/2 on $mux $flatten\u.$procmux$7823.
+    dead port 1/2 on $mux $flatten\u.$procmux$7828.
+    dead port 2/2 on $mux $flatten\u.$procmux$7828.
+    dead port 1/2 on $mux $flatten\u.$procmux$7833.
+    dead port 2/2 on $mux $flatten\u.$procmux$7833.
+    dead port 1/2 on $mux $flatten\u.$procmux$7838.
+    dead port 2/2 on $mux $flatten\u.$procmux$7838.
+    dead port 1/2 on $mux $flatten\u.$procmux$7843.
+    dead port 2/2 on $mux $flatten\u.$procmux$7843.
+    dead port 1/2 on $mux $flatten\u.$procmux$7848.
+    dead port 2/2 on $mux $flatten\u.$procmux$7848.
+    dead port 1/2 on $mux $flatten\u.$procmux$7853.
+    dead port 2/2 on $mux $flatten\u.$procmux$7853.
+    dead port 1/2 on $mux $flatten\u.$procmux$7858.
+    dead port 2/2 on $mux $flatten\u.$procmux$7858.
+    dead port 1/2 on $mux $flatten\u.$procmux$7863.
+    dead port 2/2 on $mux $flatten\u.$procmux$7863.
+    dead port 1/2 on $mux $flatten\u.$procmux$7868.
+    dead port 2/2 on $mux $flatten\u.$procmux$7868.
+    dead port 1/2 on $mux $flatten\u.$procmux$7873.
+    dead port 2/2 on $mux $flatten\u.$procmux$7873.
+    dead port 1/2 on $mux $flatten\u.$procmux$7878.
+    dead port 2/2 on $mux $flatten\u.$procmux$7878.
+    dead port 1/2 on $mux $flatten\u.$procmux$7883.
+    dead port 2/2 on $mux $flatten\u.$procmux$7883.
+    dead port 1/2 on $mux $flatten\u.$procmux$7888.
+    dead port 2/2 on $mux $flatten\u.$procmux$7888.
+    dead port 1/2 on $mux $flatten\u.$procmux$7893.
+    dead port 2/2 on $mux $flatten\u.$procmux$7893.
+    dead port 1/2 on $mux $flatten\u.$procmux$7898.
+    dead port 2/2 on $mux $flatten\u.$procmux$7898.
+    dead port 1/2 on $mux $flatten\u.$procmux$7903.
+    dead port 2/2 on $mux $flatten\u.$procmux$7903.
+    dead port 1/2 on $mux $flatten\u.$procmux$7908.
+    dead port 2/2 on $mux $flatten\u.$procmux$7908.
+    dead port 1/2 on $mux $flatten\u.$procmux$7913.
+    dead port 2/2 on $mux $flatten\u.$procmux$7913.
+    dead port 1/2 on $mux $flatten\u.$procmux$7918.
+    dead port 2/2 on $mux $flatten\u.$procmux$7918.
+    dead port 1/2 on $mux $flatten\u.$procmux$7923.
+    dead port 2/2 on $mux $flatten\u.$procmux$7923.
+    dead port 1/2 on $mux $flatten\u.$procmux$7928.
+    dead port 2/2 on $mux $flatten\u.$procmux$7928.
+    dead port 1/2 on $mux $flatten\u.$procmux$7933.
+    dead port 2/2 on $mux $flatten\u.$procmux$7933.
+    dead port 1/2 on $mux $flatten\u.$procmux$7938.
+    dead port 2/2 on $mux $flatten\u.$procmux$7938.
+    dead port 1/2 on $mux $flatten\u.$procmux$7943.
+    dead port 2/2 on $mux $flatten\u.$procmux$7943.
+    dead port 1/2 on $mux $flatten\u.$procmux$7948.
+    dead port 2/2 on $mux $flatten\u.$procmux$7948.
+    dead port 1/2 on $mux $flatten\u.$procmux$7953.
+    dead port 2/2 on $mux $flatten\u.$procmux$7953.
+    dead port 1/2 on $mux $flatten\u.$procmux$7958.
+    dead port 2/2 on $mux $flatten\u.$procmux$7958.
+    dead port 1/2 on $mux $flatten\u.$procmux$7963.
+    dead port 2/2 on $mux $flatten\u.$procmux$7963.
+    dead port 1/2 on $mux $flatten\u.$procmux$7968.
+    dead port 2/2 on $mux $flatten\u.$procmux$7968.
+    dead port 1/2 on $mux $flatten\u.$procmux$7973.
+    dead port 2/2 on $mux $flatten\u.$procmux$7973.
+    dead port 1/2 on $mux $flatten\u.$procmux$7978.
+    dead port 2/2 on $mux $flatten\u.$procmux$7978.
+    dead port 1/2 on $mux $flatten\u.$procmux$7983.
+    dead port 2/2 on $mux $flatten\u.$procmux$7983.
+    dead port 1/2 on $mux $flatten\u.$procmux$7988.
+    dead port 2/2 on $mux $flatten\u.$procmux$7988.
+    dead port 1/2 on $mux $flatten\u.$procmux$7993.
+    dead port 2/2 on $mux $flatten\u.$procmux$7993.
+    dead port 1/2 on $mux $flatten\u.$procmux$7998.
+    dead port 2/2 on $mux $flatten\u.$procmux$7998.
+    dead port 1/2 on $mux $flatten\u.$procmux$8003.
+    dead port 2/2 on $mux $flatten\u.$procmux$8003.
+    dead port 1/2 on $mux $flatten\u.$procmux$8008.
+    dead port 2/2 on $mux $flatten\u.$procmux$8008.
+    dead port 1/2 on $mux $flatten\u.$procmux$8013.
+    dead port 2/2 on $mux $flatten\u.$procmux$8013.
+    dead port 1/2 on $mux $flatten\u.$procmux$8018.
+    dead port 2/2 on $mux $flatten\u.$procmux$8018.
+    dead port 1/2 on $mux $flatten\u.$procmux$8023.
+    dead port 2/2 on $mux $flatten\u.$procmux$8023.
+    dead port 1/2 on $mux $flatten\u.$procmux$8028.
+    dead port 2/2 on $mux $flatten\u.$procmux$8028.
+    dead port 1/2 on $mux $flatten\u.$procmux$8033.
+    dead port 2/2 on $mux $flatten\u.$procmux$8033.
+    dead port 1/2 on $mux $flatten\u.$procmux$8038.
+    dead port 2/2 on $mux $flatten\u.$procmux$8038.
+    dead port 1/2 on $mux $flatten\u.$procmux$8043.
+    dead port 2/2 on $mux $flatten\u.$procmux$8043.
+    dead port 1/2 on $mux $flatten\u.$procmux$8048.
+    dead port 2/2 on $mux $flatten\u.$procmux$8048.
+    dead port 1/2 on $mux $flatten\u.$procmux$8053.
+    dead port 2/2 on $mux $flatten\u.$procmux$8053.
+    dead port 1/2 on $mux $flatten\u.$procmux$8058.
+    dead port 2/2 on $mux $flatten\u.$procmux$8058.
+    dead port 1/2 on $mux $flatten\u.$procmux$8063.
+    dead port 2/2 on $mux $flatten\u.$procmux$8063.
+    dead port 1/2 on $mux $flatten\u.$procmux$8068.
+    dead port 2/2 on $mux $flatten\u.$procmux$8068.
+    dead port 1/2 on $mux $flatten\u.$procmux$8073.
+    dead port 2/2 on $mux $flatten\u.$procmux$8073.
+    dead port 1/2 on $mux $flatten\u.$procmux$8078.
+    dead port 2/2 on $mux $flatten\u.$procmux$8078.
+    dead port 1/2 on $mux $flatten\u.$procmux$8083.
+    dead port 2/2 on $mux $flatten\u.$procmux$8083.
+    dead port 1/2 on $mux $flatten\u.$procmux$8088.
+    dead port 2/2 on $mux $flatten\u.$procmux$8088.
+    dead port 1/2 on $mux $flatten\u.$procmux$8093.
+    dead port 2/2 on $mux $flatten\u.$procmux$8093.
+    dead port 1/2 on $mux $flatten\u.$procmux$8098.
+    dead port 2/2 on $mux $flatten\u.$procmux$8098.
+    dead port 1/2 on $mux $flatten\u.$procmux$8103.
+    dead port 2/2 on $mux $flatten\u.$procmux$8103.
+    dead port 1/2 on $mux $flatten\u.$procmux$8108.
+    dead port 2/2 on $mux $flatten\u.$procmux$8108.
+    dead port 1/2 on $mux $flatten\u.$procmux$8113.
+    dead port 2/2 on $mux $flatten\u.$procmux$8113.
+    dead port 1/2 on $mux $flatten\u.$procmux$8118.
+    dead port 2/2 on $mux $flatten\u.$procmux$8118.
+    dead port 1/2 on $mux $flatten\u.$procmux$8123.
+    dead port 2/2 on $mux $flatten\u.$procmux$8123.
+    dead port 1/2 on $mux $flatten\u.$procmux$8128.
+    dead port 2/2 on $mux $flatten\u.$procmux$8128.
+    dead port 1/2 on $mux $flatten\u.$procmux$8133.
+    dead port 2/2 on $mux $flatten\u.$procmux$8133.
+    dead port 1/2 on $mux $flatten\u.$procmux$8138.
+    dead port 2/2 on $mux $flatten\u.$procmux$8138.
+    dead port 1/2 on $mux $flatten\u.$procmux$8143.
+    dead port 2/2 on $mux $flatten\u.$procmux$8143.
+    dead port 1/2 on $mux $flatten\u.$procmux$8148.
+    dead port 2/2 on $mux $flatten\u.$procmux$8148.
+    dead port 1/2 on $mux $flatten\u.$procmux$8153.
+    dead port 2/2 on $mux $flatten\u.$procmux$8153.
+    dead port 1/2 on $mux $flatten\u.$procmux$8158.
+    dead port 2/2 on $mux $flatten\u.$procmux$8158.
+    dead port 1/2 on $mux $flatten\u.$procmux$8163.
+    dead port 2/2 on $mux $flatten\u.$procmux$8163.
+    dead port 1/2 on $mux $flatten\u.$procmux$8168.
+    dead port 2/2 on $mux $flatten\u.$procmux$8168.
+    dead port 1/2 on $mux $flatten\u.$procmux$8173.
+    dead port 2/2 on $mux $flatten\u.$procmux$8173.
+    dead port 1/2 on $mux $flatten\u.$procmux$8178.
+    dead port 2/2 on $mux $flatten\u.$procmux$8178.
+    dead port 1/2 on $mux $flatten\u.$procmux$8183.
+    dead port 2/2 on $mux $flatten\u.$procmux$8183.
+    dead port 1/2 on $mux $flatten\u.$procmux$8188.
+    dead port 2/2 on $mux $flatten\u.$procmux$8188.
+    dead port 1/2 on $mux $flatten\u.$procmux$8193.
+    dead port 2/2 on $mux $flatten\u.$procmux$8193.
+    dead port 1/2 on $mux $flatten\u.$procmux$8198.
+    dead port 2/2 on $mux $flatten\u.$procmux$8198.
+    dead port 1/2 on $mux $flatten\u.$procmux$8203.
+    dead port 2/2 on $mux $flatten\u.$procmux$8203.
+    dead port 1/2 on $mux $flatten\u.$procmux$8208.
+    dead port 2/2 on $mux $flatten\u.$procmux$8208.
+    dead port 1/2 on $mux $flatten\u.$procmux$8213.
+    dead port 2/2 on $mux $flatten\u.$procmux$8213.
+    dead port 1/2 on $mux $flatten\u.$procmux$8218.
+    dead port 2/2 on $mux $flatten\u.$procmux$8218.
+    dead port 1/2 on $mux $flatten\u.$procmux$8223.
+    dead port 2/2 on $mux $flatten\u.$procmux$8223.
+    dead port 1/2 on $mux $flatten\u.$procmux$8228.
+    dead port 2/2 on $mux $flatten\u.$procmux$8228.
+    dead port 1/2 on $mux $flatten\u.$procmux$8233.
+    dead port 2/2 on $mux $flatten\u.$procmux$8233.
+    dead port 1/2 on $mux $flatten\u.$procmux$8238.
+    dead port 2/2 on $mux $flatten\u.$procmux$8238.
+    dead port 1/2 on $mux $flatten\u.$procmux$8243.
+    dead port 2/2 on $mux $flatten\u.$procmux$8243.
+    dead port 1/2 on $mux $flatten\u.$procmux$8248.
+    dead port 2/2 on $mux $flatten\u.$procmux$8248.
+    dead port 1/2 on $mux $flatten\u.$procmux$8253.
+    dead port 2/2 on $mux $flatten\u.$procmux$8253.
+    dead port 1/2 on $mux $flatten\u.$procmux$8258.
+    dead port 2/2 on $mux $flatten\u.$procmux$8258.
+    dead port 1/2 on $mux $flatten\u.$procmux$8263.
+    dead port 2/2 on $mux $flatten\u.$procmux$8263.
+Removed 212 multiplexer ports.
+<suppressed ~72 debug messages>
+
+12.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \en0_step0.
+Performed a total of 0 changes.
+
+12.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\en0_step0'.
+Computing hashes of 340 cells of `\en0_step0'.
+Finding duplicate cells in `\en0_step0'.
+Removed a total of 0 cells.
+
+12.6. Executing OPT_SHARE pass.
+
+12.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+12.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \en0_step0..
+Removed 336 unused cells and 652 unused wires.
+<suppressed ~732 debug messages>
+
+12.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module en0_step0.
+<suppressed ~47 debug messages>
+
+12.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+12.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \en0_step0..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+12.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \en0_step0.
+Performed a total of 0 changes.
+
+12.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\en0_step0'.
+Computing hashes of 4 cells of `\en0_step0'.
+Finding duplicate cells in `\en0_step0'.
+Removed a total of 0 cells.
+
+12.14. Executing OPT_SHARE pass.
+
+12.15. Executing OPT_DFF pass (perform DFF optimizations).
+Handling D = Q on $flatten\u.$procdff$8271 ($dff) from module en0_step0 (removing D path).
+Handling D = Q on $flatten\u.$procdff$8273 ($dff) from module en0_step0 (removing D path).
+Handling D = Q on $flatten\u.$procdff$8272 ($dff) from module en0_step0 (removing D path).
+
+12.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \en0_step0..
+
+12.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module en0_step0.
+
+12.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+12.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \en0_step0..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+12.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \en0_step0.
+Performed a total of 0 changes.
+
+12.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\en0_step0'.
+Computing hashes of 1 cells of `\en0_step0'.
+Finding duplicate cells in `\en0_step0'.
+Removed a total of 0 cells.
+
+12.22. Executing OPT_SHARE pass.
+
+12.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+12.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \en0_step0..
+
+12.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module en0_step0.
+
+12.26. Finished fast OPT passes. (There is nothing left to do.)
+
+13. Executing OPT_DFF pass (perform DFF optimizations).
+
+14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \en0_step0..
+
+15. Printing statistics.
+
+=== en0_step0 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       50 wires
+     2958 wire bits
+       50 public wires
+     2958 public wire bits
+        8 ports
+     1030 port bits
+        1 cells
+        1   $scopeinfo
+
+Warnings: 14 unique messages, 26 total
+End of script. Logfile hash: 5dfe7874df, time: 1.89s, user: 1.84s, system: 0.06s, MEM: 63.09 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 58% 1x hierarchy (1 sec), 14% 7x read_verilog (0 sec), ...

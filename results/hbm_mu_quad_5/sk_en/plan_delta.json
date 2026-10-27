@@ -1,0 +1,23 @@
+{
+ "owner": "HBM-MU-QUAD-5 sk sub-lane, 2026-10-27 (COORD 03:02 ruling GEOM-18 (a))",
+ "rtl": "rtl/hbm_accel/cores_split/sk_en_q4/{ot_hdc_sinkhorn_se,ot_hgi_hc_tail_static_se,ot_hbm_hc_tail_unit_static_se}.sv (unchanged from QUAD-4)",
+ "generated_clocks.json": {"delete": ["tail0_sk_clk", "tail1_sk_clk"], "after": []},
+ "cores": {
+  "ot_hbm_hc_root_static__tailx_sk_step0 (155.52x241.92, u_hc_eng_tail{0,1}_sk_step0)": {
+    "clk": {"now": [153.192, 0.019, "M5", "S edge, driven by rest sink_clk"], "new": [77.784, 120.96, "M5", "centre entry, die clock (on M5 track 0.024+k*0.048, y on 4.32 PG lattice)"]},
+    "add": [{"name": "sk_en_i", "bits": 1, "dir": "in", "face": "toward u_hc_eng_tailN_rest", "registered": "landing flop sk_en_q (EN_LAND=1)"}],
+    "remove": []},
+  "ot_hbm_hc_root_static__tailx_sk_steady (155.52x198.72, u_hc_eng_tail{0,1}_sk_steady)": {
+    "clk": {"now": [152.904, 0.019, "M5", "S edge"], "new": [77.784, 99.36, "M5", "centre entry, die clock"]},
+    "add": [{"name": "sk_en_i", "bits": 1, "dir": "in", "face": "toward u_hc_eng_tailN_rest", "registered": "landing flop sk_en_q, async reset"}],
+    "remove": []},
+  "ot_hbm_hc_root_static__tail{0,1}_rest (155.52x172.8)": {
+    "remove": ["x_g_tail_N_u_t_u_tail_sink_clk (generated clock output)"],
+    "add": [{"name": "x_g_tail_N_u_t_u_tail_sk_en_sk", "bits": 1, "dir": "out", "registered": "sk_en_o flop", "note": "name UNCHECKED: follows the split naming x_<hier path>; confirm when the core split is re-run on the _se twins"}],
+    "clk": {"now": "S edge (tail0 2.328,0.019 / tail1 71.688,0.019)", "new": [77.784, 86.4, "M5", "centre entry (clock_entries.json already says 77.76,86.4 -> snap x to M5 track)"]}}
+ },
+ "core_conns": {"remove": "u_hc_eng_tailN_rest.x_g_tail_N_u_t_u_tail_sink_clk -> u_hc_eng_tailN_sk_step0.clk, u_hc_eng_tailN_sk_steady.clk",
+                "add": "u_hc_eng_tailN_rest.x_g_tail_N_u_t_u_tail_sk_en_sk -> u_hc_eng_tailN_sk_step0.sk_en_i, u_hc_eng_tailN_sk_steady.sk_en_i (data net, flop->flop, NSTA=0 if hop < 405 um; else NSTA stations, tail param NSTA)"},
+ "clock_entries.json": "STALE for sk: entries say (77.76,86.4) for both sk types (old 172.8-high outline); new centres (77.784,120.96) step0 / (77.784,99.36) steady",
+ "latency": "tail result latency L 496 -> 503 (+SDIV=7, one sink edge; from the _se header, UNCHECKED here; sim compares old vs new lock-step incl. results so the bench used the matching L)"
+}

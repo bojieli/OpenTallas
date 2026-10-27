@@ -1,0 +1,5 @@
+SK_EN PASS mode=0 NSTA=0 MUT_EN=0 launches=150 results=150 edges=78355 slow_edges=11193 sk_busy_edges=44100 sk_compares=78354 faults old=0 new=0
+- results/hbm_mu_quad_4/sk_en/tb_sk_en_equiv.sv:86: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 157us; walltime 9.499 s; speed 16.499 us/s
+- Verilator: cpu 9.498 s on 1 threads; allocated 16 MB

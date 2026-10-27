@@ -1,0 +1,15 @@
+# sk_en tied 0 (EN_LAND=0), arithmetic blackboxed: every flop must be a pure hold flop -> opt_dff removes it; list what remains.
+read_verilog -sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/hdc/v41/ot_hdc_sinkhorn_s.sv
+read_verilog -sv rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv results/hbm_mu_quad_4/sk_en/lec_wrap.sv
+hierarchy -check -top en0_step0
+blackbox =ot_hdc_sk_add =ot_hdc_sk_seed =ot_hdc_sk_norm =$paramod*ot_hdc_sk_quot*
+proc
+memory
+flatten
+opt_clean
+tee -o results/hbm_mu_quad_5/sk_en/formal/hold_before_step0.txt stat
+opt -full
+opt_dff -sat
+opt_clean
+tee -o results/hbm_mu_quad_5/sk_en/formal/hold_after_step0.txt stat
+tee -o results/hbm_mu_quad_5/sk_en/formal/hold_after_list_step0.txt select -list t:$*dff* t:$*dlatch*

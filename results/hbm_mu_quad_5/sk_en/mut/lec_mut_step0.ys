@@ -1,0 +1,31 @@
+# HBM-MU-QUAD-5 10-27: LEC modulo uninterpreted arithmetic. gold = old ot_hdc_sk_step0 (old divided-clock form),
+# gate = ot_hdc_sk_step0_en with sk_en tied 1 (EN_LAND=0). The combinational arithmetic cells (sk_add/seed/quot/norm,
+# copied verbatim by gen_sk_en.py, same instance names on both sides) are CUT: their output nets become shared free
+# primary inputs (matched by name), their input nets become checked primary outputs, the cells are deleted.
+# PASS = every $equiv proven (flops, outputs, arithmetic inputs). Proof holds for ANY arithmetic function.
+read_verilog -sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/hdc/v41/ot_hdc_sinkhorn_s.sv
+read_verilog -sv results/hbm_mu_quad_5/sk_en/mut/se_mut_step0.sv results/hbm_mu_quad_4/sk_en/lec_wrap.sv
+hierarchy -check
+blackbox =ot_hdc_sk_add =ot_hdc_sk_seed =ot_hdc_sk_norm =$paramod*ot_hdc_sk_quot*
+proc
+flatten gold_step0 en1_step0
+memory gold_step0 en1_step0
+opt_clean gold_step0 en1_step0
+select -set bb_gold_step0 gold_step0/t:ot_hdc_sk_* gold_step0/t:$paramod*
+tee -a results/hbm_mu_quad_5/sk_en/mut/bbcount_step0.txt select -count @bb_gold_step0
+expose -cut @bb_gold_step0 %co:+[eg,up,e,m,ovf,r,y,range,z] @bb_gold_step0 %d
+expose @bb_gold_step0 %ci:-[eg,up,e,m,ovf,r,y,range,z] @bb_gold_step0 %d
+delete @bb_gold_step0
+select -set bb_en1_step0 en1_step0/t:ot_hdc_sk_* en1_step0/t:$paramod*
+tee -a results/hbm_mu_quad_5/sk_en/mut/bbcount_step0.txt select -count @bb_en1_step0
+expose -cut @bb_en1_step0 %co:+[eg,up,e,m,ovf,r,y,range,z] @bb_en1_step0 %d
+expose @bb_en1_step0 %ci:-[eg,up,e,m,ovf,r,y,range,z] @bb_en1_step0 %d
+delete @bb_en1_step0
+opt -full en1_step0
+opt -full gold_step0
+equiv_make gold_step0 en1_step0 equiv
+hierarchy -top equiv
+equiv_simple -seq 1
+equiv_induct
+tee -o results/hbm_mu_quad_5/sk_en/mut/equiv_status_step0.txt equiv_status
+equiv_status -assert

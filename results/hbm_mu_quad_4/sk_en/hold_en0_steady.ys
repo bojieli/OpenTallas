@@ -1,0 +1,16 @@
+# sk_en tied 0: after constant propagation every flop of ot_hdc_sk_steady_en must be a hold flop (removed by opt_dff)
+# or an async-reset flop whose data input is its own output; list what remains.
+read_verilog -sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/hdc/v41/ot_hdc_sinkhorn_s.sv
+read_verilog -sv rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv results/hbm_mu_quad_4/sk_en/lec_wrap.sv
+hierarchy -check -top en0_steady
+proc
+memory
+flatten
+opt_clean
+tee -o results/hbm_mu_quad_4/sk_en/formal/ff_before_en0_steady.txt select -count t:$*dff* t:$*dlatch*
+tee -o results/hbm_mu_quad_4/sk_en/formal/ff_before_en0_steady_bits.txt stat
+opt -full
+opt_dff -sat
+opt_clean
+tee -o results/hbm_mu_quad_4/sk_en/formal/ff_after_en0_steady.txt select -list t:$*dff* t:$*dlatch*
+tee -o results/hbm_mu_quad_4/sk_en/formal/ff_after_en0_steady_dump.txt dump t:$*dff* t:$*dlatch*

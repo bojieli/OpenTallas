@@ -1,0 +1,7 @@
+# word-level (pre-techmap) cell census old vs new core, landing register kept (EN_LAND=1)
+read_verilog -sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/hdc/v41/ot_hdc_sinkhorn_s.sv
+read_verilog -sv rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv
+hierarchy -check
+proc; flatten ot_hdc_sk_step0 ot_hdc_sk_step0_en; memory ot_hdc_sk_step0 ot_hdc_sk_step0_en; opt -full
+tee -o results/hbm_mu_quad_4/sk_en/formal/stat_old_step0.txt stat ot_hdc_sk_step0
+tee -o results/hbm_mu_quad_4/sk_en/formal/stat_new_step0.txt stat ot_hdc_sk_step0_en
