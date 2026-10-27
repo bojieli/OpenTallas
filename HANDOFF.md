@@ -1437,3 +1437,4 @@ CODEX: 2026-10-27 09:39 PDT RM55 fallback/geometry artifacts; RM56 main a76dafea
 CODEX: 2026-10-27 09:39 PDT nativePHYsynth823107um2/12115FFexit0(dbeb4611f); realdigital6tiles, analogshapeOPEN; physicalpinFFmodeldecoder+6proven/encoderglobal+2FAILframephase. SerDesbenchclockquantizationfixed3f0a76341(833/833.25ps,+300.120ppm); payloadphysicalprofilebencheslive. PGindependentterminalsFAIL1165.654mV(original468.441), actualsource-starvationcorrectionactiveKVowner.
 
 CODEX: 2026-10-27 09:41 PDT TOK-DS L0 programme now zero GAP:24 LOWERED/41 PARTIAL, source5c27db4d4; no extra residency cycles. L2 later-hop compile live unit1913762 on intel1.
+CODEX: HBM N4 fourorphans diagnosed entirelymissingcentralprovider; exact888bit additive linkprep+reviewedlotprobe `codex/hbm-n4-links-1027@366f79971`. TOK owns realwrapper24d4f93a6, LEC mappedrootprofile, HBMplan nativejob/controlbindings. No aliases/no routepass; actualpins/405stations/modelcycles remain batchrequirements.
