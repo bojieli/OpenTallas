@@ -38,3 +38,17 @@ both PASS at 75-um pitch (22.6 / 24.6 above M7). HBM edge band 88-112 mV: first 
 so the strip x<147 is fed one-sided -- an edge-row placement fix, UNCHECKED. KV/HBM power maps are not activity-measured (owner 10-27:
 PG on measured toggle rates) -- a lower measured density may move them under 35.
 Next: KV/HBM measured-activity power maps; edge-aligned bump row on HBM; below-M7 slice per die; adopt pad_um into main (HEAD-5 merge).
+
+## 2026-10-27 12:18 PDT PG-ACTIVITY-KVHBM result (claude/pg-act-kvhbm-1027@48f939873f, results/pg_activity_kvhbm_1027/README.md)
+150-um bumps, 70-um pads, G12 grid (M8 0.48@4.32 / M9 12.96@34.56), PDNSim VDD+VSS co-located, interior. The PDNSim numbers are CHECKED: they are the run outputs, with pad_fallback 0, PG_CHECK OK and EXIT 0 on every kit, and KV agrees with linear scaling (21.7 vs 21.8). The power bases are UNCHECKED.
+| die | power basis (window W/mm2) | above M7 | below M7 | total | verdict |
+|---|---|---|---|---|---|
+| KV | old vectorless 1.818 | 37.6 | - | - | FAIL |
+| KV | MEASURED 1.050 (head_eighth e1 x0.580, pv_pair x0.520) | 21.8 | 6.05 (e1 slice; 3.88 at measured W) | 27.9 | PASS |
+| HBM | old 10-24 map 2.179 | 39.8 | - | - | FAIL |
+| HBM | SM FLAT 0.5 upper bound 1.366 (real hnx_rp3lp3h halves + CTS x1.189) | 25.0 | 5.13 est (no SM final odb) | 30.1 | PASS (upper) |
+| HBM | SM vectorless lower bound 0.755 | 13.8 | | | |
+Measured activity: KV types hg 2.054->1.191, hgi 1.971->1.143, pv 1.257->0.654 W/mm2. The other KV types are scaled by ratio (UNCHECKED-ESTIMATE). HBM SM measured is still running: tb_hgi_sm_e2e --ds, ot-run unit oth-ubuntu-1788511-1793125212 (intel2 pg-act-kvhbm-1027/hbm/sim). Collect with tools/pg_activity/collect_hbm.sh + make_hbm_map.py. It can only land between 0.755 and 1.366, i.e. 13.8-25.0 mV above M7. HBM non-SM blocks keep their 10-24 values.
+HBM die edge (task 3): EDGE-FILL lattice (pitch 150 kept, 168 columns, first column 72.12 um from the edge instead of 147.12; pg_meas_psm.py --edge-margin 60). Die-edge band goes 112.3 -> 38.5 mV on the old map (= inner 39.5), and is 24.2 on the flat-0.5 map. Render hbm_edge_lattice.png viewed. KV edge windows are cold (0.23 W/mm2).
+Denser M8 H8 (M8 0.96@4.32), old maps, run at 96 GB: KV 37.6->28.4, HBM 39.8->30.6. It needs 88% of M8 tracks, so it is not needed. KV H8 on the measured map is still running (intel2 pg-act-kvhbm-1027/kits/kv_meas/H8_p70_int); this is informational only.
+Next: collect the HBM SM measured run; adopt the bump lattice (edge-fill) + pad_um into the plans (HEAD-5 merge); rerun HBM on the current unified plan once it is adopted.
