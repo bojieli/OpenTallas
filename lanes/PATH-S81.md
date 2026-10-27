@@ -776,3 +776,4 @@ CODEX 2026-10-27 05:01 PDT MC gradient fix completed TT+FF24 samples each (own a
   - The band trees also need one more equal level (PD11: half-depth 482).
   - Note: the split-line U is dominated by the unshared-tree GRADIENT term (0.21 %/mm over a ~6.7 ns insertion). An extra level ADDS insertion delay, so (D) alone will not cut the split-line U. A shorter/faster upper tree (L1-L6 sizing) is what reduces the gradient term.
 - Live jobs of mine: none. Worktrees on intel1: wt/path-s81-pd12-1027 and wt/mesh-vias-g0-1027 (sparse); both pushed.
+- 2026-10-27 07:18 PDT ROOT-MERGE-32 NOTICE: mesh-vias-g0 ad7c8d2e0a on main a14244af63 (G0 --clock-build only; plain gate baselines unchanged). Builds without vias: HEAD infra-head4 m4c / head-r15 m5 (4940), KV codex-kv-clock-2001 proof/mcp_rcx (2272), S81 (PD12). QC r24 dryfix/guard51 clean. HBM not checked.
