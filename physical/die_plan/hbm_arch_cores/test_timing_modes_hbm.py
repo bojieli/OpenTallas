@@ -84,3 +84,36 @@ def test_run_script_grt_session_checked():
     assert "kit_modes.py check /work --step grt --session 'tc bc' --hold-repair" in s
     assert 'kit_modes.py check /work --step grt --session bc --vclk-corner ff --hold-repair' in s
     assert s.index('orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts') < s.index('$M synth')
+
+
+def _plan_tree(kd):
+    import json
+    (kd / 'core_infra_plan.json').write_text(json.dumps({'core_tree': {'cts_open': []}}))
+    (kd / 'core_infra_cts.tcl').write_text('set ::ot_ci_cts_plan_open 0\n')
+
+
+def test_setup_hook_then_shared_plan_tree_hook(tmp_path):
+    # HBM-CORES-R13: generator order = post_cts_setup_hook, then master_slice.plan_tree_cts (sees the final chain)
+    import pytest
+    MS = coregen._ms()
+    cfg = [ln for ln in mini_kit(tmp_path) if 'f4_chain_leaf' not in ln]
+    (tmp_path / 'ignored.tcl').write_text('lappend ::ev TAP\n')
+    _plan_tree(tmp_path)
+    coregen.post_cts_setup_hook(tmp_path, cfg)
+    assert MS.plan_tree_cts(tmp_path, cfg) is True
+    assert coregen._effective_hook(cfg, 'POST_CTS_TCL') == '/work/post_cts_setup.tcl'
+    t = (tmp_path / 'post_cts_setup.tcl').read_text()
+    ro = t.index('OT_TAP_REPORT_ONLY) 1')
+    src = t.index('source {/work/ignored.tcl}')
+    rt = t.index('repair_timing_helper -setup')
+    assert ro < src < rt   # report-only balance env, then the kit's balance hook, then setup-only repair
+    assert (tmp_path / 'ignored.tcl').read_text() == 'lappend ::ev TAP\n'
+    # a clock editor anywhere in the chain is still refused by the shared hook
+    kd = tmp_path / 'e'
+    kd.mkdir()
+    cfg2 = mini_kit(kd)
+    (kd / 'f4_chain_leaf.tcl').write_text('\n')
+    _plan_tree(kd)
+    coregen.post_cts_setup_hook(kd, cfg2)
+    with pytest.raises(SystemExit):
+        MS.plan_tree_cts(kd, cfg2)

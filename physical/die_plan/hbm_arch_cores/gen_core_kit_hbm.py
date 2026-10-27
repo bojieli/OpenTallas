@@ -1080,10 +1080,13 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, module, [w, h], a.master_slice, plan, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl")
-    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
-    MS.plan_tree_cts(kd, cfg)
+    # HBM-CORES-R13 (RM36 hold): every kit-own CTS hook is installed BEFORE the shared plan-tree hook, so
+    # core_infra.kit_cts_hook sees the final POST_CTS chain (incl. post_cts_setup.tcl and what it sources) when it
+    # adds the report-only tap/leaf lines and refuses clock editors; nothing edits cfg after it.
     if not a.no_cts_setup:
         flow["cts_setup_tt"] = post_cts_setup_hook(kd, cfg)
+    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
+    MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     flow["timing_modes"] = timing_modes_stage(kd, not a.single_mode_grt)
     if flow.get("f1") and not a.single_mode_grt:
