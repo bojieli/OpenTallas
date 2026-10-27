@@ -1,6 +1,8 @@
 #!/bin/bash
-# Placement-only physical trial; takes an exact existing proved synth netlist.
-# This never routes, runs STA, or claims sign-off.
+# Placement-only physical trial from byte-identical, previously proved RTL.
+# Copied synthesis outputs are cache seeds: ORFS may rebuild dependencies.
+# A prior LEC receipt never qualifies a newly mapped output netlist.
+# This never routes or claims sign-off; later promotion needs ordinary LEC.
 set -euo pipefail
 k=$1
 mem=${2:-32}
