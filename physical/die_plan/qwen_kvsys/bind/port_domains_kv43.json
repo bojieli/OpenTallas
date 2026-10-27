@@ -1,0 +1,9331 @@
+{
+ "qkd_ckbump": {
+  "clock_pins": [],
+  "module": "qkd_ckbump",
+  "ports": {
+   "pll_ck": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "rs": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   }
+  }
+ },
+ "qkd_ctrl_kc": {
+  "clock_pins": [
+   "ck",
+   "pll_hbm"
+  ],
+  "module": "qkd_ctrl_kc",
+  "ports": {
+   "ck": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "clock"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "fi": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sync2": 1
+    },
+    "width": 1
+   },
+   "hrst": {
+    "bits": null,
+    "clocks": {
+     "pll_hbm": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 1
+    },
+    "width": 1
+   },
+   "kc": {
+    "bits": null,
+    "clocks": {
+     "ck": 33
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 33
+    },
+    "width": 33
+   },
+   "kf": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "ko": {
+    "bits": null,
+    "clocks": {
+     "pll_hbm": 33
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 33
+   },
+   "pll_hbm": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "clock"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "rsi": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 1
+    },
+    "width": 1
+   }
+  }
+ },
+ "qkd_kvs_grp_h_r2c": {
+  "clock_pins": [
+   "ck",
+   "hck"
+  ],
+  "module": "qkd_kvs_grp_h_r2c",
+  "ports": {
+   "af__fault": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "afk": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "afv": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "ck": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "clock"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "hck": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "clock"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "hrst_n": {
+    "bits": null,
+    "clocks": {
+     "hck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "reset"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "i_ctl": {
+    "bits": null,
+    "clocks": {
+     "ck": 271
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 202
+    },
+    "width": 271
+   },
+   "i_pc0": {
+    "bits": null,
+    "clocks": {
+     "ck": 305
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 305
+    },
+    "width": 305
+   },
+   "i_pc1": {
+    "bits": null,
+    "clocks": {
+     "ck": 305
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 305
+    },
+    "width": 305
+   },
+   "i_pc2": {
+    "bits": null,
+    "clocks": {
+     "ck": 305
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 305
+    },
+    "width": 305
+   },
+   "i_pc3": {
+    "bits": null,
+    "clocks": {
+     "ck": 305
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 305
+    },
+    "width": 305
+   },
+   "kreq": {
+    "bits": null,
+    "clocks": {
+     "ck": 38
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 38
+    },
+    "width": 38
+   },
+   "krsp": {
+    "bits": null,
+    "clocks": {
+     "ck": 1062
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1062
+   },
+   "o_ctl": {
+    "bits": [
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ]
+    ],
+    "clocks": {
+     "ck": 104
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "const",
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 144
+   },
+   "o_dn": {
+    "bits": null,
+    "clocks": {
+     "ck": 271
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 271
+   },
+   "o_pc0": {
+    "bits": [
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 32,
+     "hck": 95
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "const",
+     "data"
+    ],
+    "mixed": true,
+    "sync": null,
+    "width": 128
+   },
+   "o_pc1": {
+    "bits": [
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 32,
+     "hck": 95
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "const",
+     "data"
+    ],
+    "mixed": true,
+    "sync": null,
+    "width": 128
+   },
+   "o_pc2": {
+    "bits": [
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 32,
+     "hck": 95
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "const",
+     "data"
+    ],
+    "mixed": true,
+    "sync": null,
+    "width": 128
+   },
+   "o_pc3": {
+    "bits": [
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 32,
+     "hck": 95
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "const",
+     "data"
+    ],
+    "mixed": true,
+    "sync": null,
+    "width": 128
+   },
+   "rsp": {
+    "bits": null,
+    "clocks": {
+     "ck": 1056
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1056
+   },
+   "rst_n": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "reset"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "slg__cfg_group": {
+    "bits": null,
+    "clocks": {
+     "ck": 3
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 3
+   },
+   "slg__cfg_stack": {
+    "bits": null,
+    "clocks": {
+     "ck": 2
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 2
+   },
+   "vreq": {
+    "bits": null,
+    "clocks": {
+     "ck": 15
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 14
+    },
+    "width": 15
+   },
+   "x__est": {
+    "bits": [
+     [
+      "ck"
+     ],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     []
+    ],
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data",
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 1
+    },
+    "width": 13
+   },
+   "x__tep": {
+    "bits": null,
+    "clocks": {
+     "ck": 16
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 16
+    },
+    "width": 16
+   },
+   "x__tok": {
+    "bits": null,
+    "clocks": {
+     "ck": 18
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 18
+    },
+    "width": 18
+   },
+   "y__est__0_1": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "y__tep": {
+    "bits": null,
+    "clocks": {
+     "ck": 16
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 16
+   },
+   "y__tok": {
+    "bits": null,
+    "clocks": {
+     "ck": 18
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 18
+   }
+  }
+ },
+ "qkd_kvs_grp_r2c": {
+  "clock_pins": [
+   "ck",
+   "hck"
+  ],
+  "module": "qkd_kvs_grp_r2c",
+  "ports": {
+   "af__fault": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "afk": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "afu": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "afv": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "ck": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "clock"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "hck": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "clock"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "hrst_n": {
+    "bits": null,
+    "clocks": {
+     "hck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "reset"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "i_ctl": {
+    "bits": null,
+    "clocks": {
+     "ck": 271
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 271
+    },
+    "width": 271
+   },
+   "i_pc0": {
+    "bits": null,
+    "clocks": {
+     "ck": 305
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 305
+    },
+    "width": 305
+   },
+   "i_pc1": {
+    "bits": null,
+    "clocks": {
+     "ck": 305
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 305
+    },
+    "width": 305
+   },
+   "i_pc2": {
+    "bits": null,
+    "clocks": {
+     "ck": 305
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 305
+    },
+    "width": 305
+   },
+   "i_pc3": {
+    "bits": null,
+    "clocks": {
+     "ck": 305
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 305
+    },
+    "width": 305
+   },
+   "i_up": {
+    "bits": [
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     []
+    ],
+    "clocks": {
+     "ck": 126
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data",
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 126
+    },
+    "width": 144
+   },
+   "kreq": {
+    "bits": null,
+    "clocks": {
+     "ck": 38
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 38
+    },
+    "width": 38
+   },
+   "krsp": {
+    "bits": null,
+    "clocks": {
+     "ck": 1062
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1062
+   },
+   "o_ctl": {
+    "bits": [
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ]
+    ],
+    "clocks": {
+     "ck": 139
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "const",
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 144
+   },
+   "o_dn": {
+    "bits": null,
+    "clocks": {
+     "ck": 271
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 271
+   },
+   "o_pc0": {
+    "bits": [
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 32,
+     "hck": 95
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "const",
+     "data"
+    ],
+    "mixed": true,
+    "sync": null,
+    "width": 128
+   },
+   "o_pc1": {
+    "bits": [
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 32,
+     "hck": 95
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "const",
+     "data"
+    ],
+    "mixed": true,
+    "sync": null,
+    "width": 128
+   },
+   "o_pc2": {
+    "bits": [
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 32,
+     "hck": 95
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "const",
+     "data"
+    ],
+    "mixed": true,
+    "sync": null,
+    "width": 128
+   },
+   "o_pc3": {
+    "bits": [
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 32,
+     "hck": 95
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "const",
+     "data"
+    ],
+    "mixed": true,
+    "sync": null,
+    "width": 128
+   },
+   "rsp": {
+    "bits": null,
+    "clocks": {
+     "ck": 1056
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1056
+   },
+   "rst_n": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "reset"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "slg__cfg_group": {
+    "bits": null,
+    "clocks": {
+     "ck": 3
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 3
+   },
+   "slg__cfg_stack": {
+    "bits": null,
+    "clocks": {
+     "ck": 2
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 2
+   },
+   "vreq": {
+    "bits": null,
+    "clocks": {
+     "ck": 15
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 14
+    },
+    "width": 15
+   },
+   "x__est": {
+    "bits": [
+     [
+      "ck"
+     ],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     []
+    ],
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data",
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 1
+    },
+    "width": 13
+   },
+   "x__tep": {
+    "bits": null,
+    "clocks": {
+     "ck": 16
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 16
+    },
+    "width": 16
+   },
+   "x__tok": {
+    "bits": null,
+    "clocks": {
+     "ck": 18
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 18
+    },
+    "width": 18
+   },
+   "y__est__0_1": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "y__tep": {
+    "bits": null,
+    "clocks": {
+     "ck": 16
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 16
+   },
+   "y__tok": {
+    "bits": null,
+    "clocks": {
+     "ck": 18
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 18
+   }
+  }
+ },
+ "qkd_kvs_pc": {
+  "clock_pins": [
+   "ck",
+   "hck"
+  ],
+  "module": "qkd_kvs_pc",
+  "ports": {
+   "ck": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "hck": {
+    "bits": null,
+    "clocks": {
+     "hck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "hrst_n": {
+    "bits": null,
+    "clocks": {
+     "hck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "i_grp": {
+    "bits": [
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 33,
+     "hck": 95
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": true,
+    "sync": {
+     "sampled1": 128
+    },
+    "width": 128
+   },
+   "i_next": {
+    "bits": null,
+    "clocks": {
+     "ck": 780
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 775
+    },
+    "width": 780
+   },
+   "i_prev": {
+    "bits": null,
+    "clocks": {
+     "ck": 299
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 299
+    },
+    "width": 299
+   },
+   "o_grp": {
+    "bits": [
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 295,
+     "hck": 10
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": true,
+    "sync": null,
+    "width": 305
+   },
+   "o_next": {
+    "bits": null,
+    "clocks": {
+     "ck": 299
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 299
+   },
+   "o_prev": {
+    "bits": null,
+    "clocks": {
+     "ck": 780
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 780
+   },
+   "pc__cfg_stack": {
+    "bits": null,
+    "clocks": {
+     "ck": 2
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 2
+   },
+   "pc__completion_v": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__completion_we": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__er": {
+    "bits": null,
+    "clocks": {
+     "ck": 261
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 261
+   },
+   "pc__fi": {
+    "bits": null,
+    "clocks": {
+     "hck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__fo": {
+    "bits": null,
+    "clocks": {
+     "hck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__front_hbm_data": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 4
+   },
+   "pc__hcompletion_v": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__hcompletion_we": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__her": {
+    "bits": null,
+    "clocks": {
+     "ck": 261
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 261
+   },
+   "pc__hes": {
+    "bits": null,
+    "clocks": {
+     "ck": 288
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 288
+    },
+    "width": 288
+   },
+   "pc__ki": {
+    "bits": null,
+    "clocks": {
+     "hck": 33
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 24
+    },
+    "width": 33
+   },
+   "pc__ko": {
+    "bits": null,
+    "clocks": {
+     "hck": 33
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 33
+   },
+   "pc__land_er": {
+    "bits": [
+     [
+      "ck"
+     ],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ]
+    ],
+    "clocks": {
+     "ck": 3
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data",
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 3
+    },
+    "width": 261
+   },
+   "pc__land_es": {
+    "bits": null,
+    "clocks": {
+     "ck": 288
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 288
+   },
+   "pc__pc": {
+    "bits": null,
+    "clocks": {
+     "ck": 5
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 5
+   },
+   "pc__pi": {
+    "bits": null,
+    "clocks": {
+     "hck": 289
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 288
+    },
+    "width": 289
+   },
+   "pc__po": {
+    "bits": null,
+    "clocks": {
+     "hck": 328
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 328
+   },
+   "pc__return_hbm_data": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 4
+   },
+   "rst_n": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "x__est__0_1": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   }
+  }
+ },
+ "qkd_kvs_pc_h_head_p": {
+  "clock_pins": [
+   "ck",
+   "hck"
+  ],
+  "module": "qkd_kvs_pc_h_head_p",
+  "ports": {
+   "ck": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "hck": {
+    "bits": null,
+    "clocks": {
+     "hck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "hrst_n": {
+    "bits": null,
+    "clocks": {
+     "hck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "i_grp": {
+    "bits": [
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 33,
+     "hck": 95
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": true,
+    "sync": {
+     "sampled1": 128
+    },
+    "width": 128
+   },
+   "i_next": {
+    "bits": null,
+    "clocks": {
+     "ck": 780
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 775
+    },
+    "width": 780
+   },
+   "o_grp": {
+    "bits": [
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ],
+     [
+      "ck"
+     ],
+     [
+      "hck"
+     ]
+    ],
+    "clocks": {
+     "ck": 295,
+     "hck": 10
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": true,
+    "sync": null,
+    "width": 305
+   },
+   "o_next": {
+    "bits": null,
+    "clocks": {
+     "ck": 299
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 299
+   },
+   "pc__cfg_stack": {
+    "bits": null,
+    "clocks": {
+     "ck": 2
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 2
+   },
+   "pc__completion_v": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__completion_we": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__er": {
+    "bits": null,
+    "clocks": {
+     "ck": 261
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 261
+   },
+   "pc__fo": {
+    "bits": null,
+    "clocks": {
+     "hck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__front_hbm_data": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 4
+   },
+   "pc__hcompletion_v": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__hcompletion_we": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "pc__her": {
+    "bits": null,
+    "clocks": {
+     "ck": 261
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 261
+   },
+   "pc__hes": {
+    "bits": null,
+    "clocks": {
+     "ck": 288
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 288
+    },
+    "width": 288
+   },
+   "pc__ki": {
+    "bits": null,
+    "clocks": {
+     "hck": 33
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 24
+    },
+    "width": 33
+   },
+   "pc__ko": {
+    "bits": null,
+    "clocks": {
+     "hck": 33
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 33
+   },
+   "pc__land_er": {
+    "bits": [
+     [
+      "ck"
+     ],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [],
+     [
+      "ck"
+     ],
+     [
+      "ck"
+     ]
+    ],
+    "clocks": {
+     "ck": 3
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data",
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 3
+    },
+    "width": 261
+   },
+   "pc__land_es": {
+    "bits": null,
+    "clocks": {
+     "ck": 288
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 288
+   },
+   "pc__pi": {
+    "bits": null,
+    "clocks": {
+     "hck": 289
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": {
+     "sampled1": 288
+    },
+    "width": 289
+   },
+   "pc__po": {
+    "bits": null,
+    "clocks": {
+     "hck": 328
+    },
+    "dir": "output",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 328
+   },
+   "pc__return_hbm_data": {
+    "bits": null,
+    "clocks": {},
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "unloaded"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 4
+   },
+   "rst_n": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   },
+   "x__est__0_1": {
+    "bits": null,
+    "clocks": {
+     "ck": 1
+    },
+    "dir": "input",
+    "feedthrough": null,
+    "kind": [
+     "data"
+    ],
+    "mixed": false,
+    "sync": null,
+    "width": 1
+   }
+  }
+ }
+}

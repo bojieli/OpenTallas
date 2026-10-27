@@ -30,8 +30,11 @@ module tb_kvslice;
     wire         c2k_v;
     wire [582:0] c2k_flit;
     qwen_kvsys_bound_top dut (
-        .rst_n(rst_n), .clk_clk_fwd(ck_core), .clk_clk_hbm_EN(ck_hbm), .clk_clk_hbm_ES(ck_hbm), .clk_clk_hbm_WN(ck_hbm),
-        .clk_clk_hbm_WS(ck_hbm), .clk_clk_host(ck_host), .clk_clk_ingest(ck_ing), .clk_clk_phy(ck_phy), .clk_core(ck_core),
+        .rst_n(rst_n), .clk_clk_fwd(ck_core),
+`ifndef KV_DFI_CORE   // TOK-QK/D dfi-core (owner decision 14): the HBM PHY DFI clock is clk_core -> the top has no HBM clock input
+        .clk_clk_hbm_EN(ck_hbm), .clk_clk_hbm_ES(ck_hbm), .clk_clk_hbm_WN(ck_hbm), .clk_clk_hbm_WS(ck_hbm),
+`endif
+        .clk_clk_host(ck_host), .clk_clk_ingest(ck_ing), .clk_clk_phy(ck_phy), .clk_core(ck_core),
         .pad_die_id(die_id), .pad_por_n(por_n), .pad_refclk(ck_ref));
     // ------------------------------------------------------------------ compute-die far end on the UCIe link (+FAR=1)
     // KV-TOK 10-24 token phase: kvs_compute_end.sv (the compute die's real d2d master + calendar sequencer + record codec
