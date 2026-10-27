@@ -1,0 +1,9 @@
+{
+  "verdict": "PASS-COND",
+  "images": [
+    "results/physical/head_core_r14/elemA_m2_4cts_floorplan.png",
+    "results/physical/head_core_r14/elemA_m2_4cts_density.png"
+  ],
+  "findings": "Viewed: symmetric separated north ROM pair, centre clock island in open logic; 30.9% total fill, open side/bottom channels. Density concentrated in lower logic without hot red bins. Reach census 0 over405, max244.37um. Approved bounded I2R HB4-only data hold ECO leaves clock/macro/faces unchanged; final actual signoff+LEC required.",
+  "scope": "elemA_m2/m12 unchanged R16 placement, R17 routed views; scoped I2R repair admission per COORD 07:47 plus CODEX ruling"
+}
