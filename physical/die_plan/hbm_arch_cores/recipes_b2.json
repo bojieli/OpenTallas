@@ -475,7 +475,7 @@
    "rtl/hbm_next/sm/hnx_rp4l_children.sv",
    "rtl/hbm_next/sm/hnx_xs4.sv",
    "rtl/hbm_next/sm/hnx_xs3.sv",
-   "rtl/hbm_next/sm/hnx_rp4lp4_leaf.sv",
+   "physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv",
    "rtl/hbm_next/common/hnx_pl_pad_sram.sv",
    "rtl/hbm_next/sm/hnx_rp3lp3h.sv"
   ],
@@ -505,7 +505,9 @@
   ],
   "util": 0.5,
   "source": "Same immutable flat half recipe as hbm_arch_cores/sm/gen_sm_kit.py; 12 actual 128x256 SRAMs; benchmarked SM4P source; HBM-CORES-R8 10-27: recipe taken unchanged from a5ad3aec30 (HBM FACE: supply pinned SM half recipes, branch claude/hbm-tkm-lec-1025, not on this base); RTL read at 4d6f5439dc (rtl/hbm_next removed from the tree)",
-  "src_spec": "physical/hbm_next/sm4/hnx_rp3lp3h_n_spec.json@4d6f5439dcee43b97baffaa731aae826fdcb6a66"
+  "src_spec": "physical/hbm_next/sm4/hnx_rp3lp3h_n_spec.json@4d6f5439dcee43b97baffaa731aae826fdcb6a66",
+  "files_at": {"physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv": "4673cf757e"},
+  "preprocessor_fix": "Only leaf macro scope changes; body byte-identical to pinned source; Slang and read_verilog get the same reset-edge expression."
  },
  "hnx_rp3lp3h_s": {
   "top": "hnx_rp3lp3h_s",
@@ -555,7 +557,7 @@
    "rtl/hbm_next/sm/hnx_rp4l_children.sv",
    "rtl/hbm_next/sm/hnx_xs4.sv",
    "rtl/hbm_next/sm/hnx_xs3.sv",
-   "rtl/hbm_next/sm/hnx_rp4lp4_leaf.sv",
+   "physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv",
    "rtl/hbm_next/common/hnx_pl_pad_sram.sv",
    "rtl/hbm_next/sm/hnx_rp3lp3h.sv"
   ],
@@ -585,7 +587,9 @@
   ],
   "util": 0.5,
   "source": "Same immutable flat half recipe as hbm_arch_cores/sm/gen_sm_kit.py; 12 actual 128x256 SRAMs; benchmarked SM4P source; HBM-CORES-R8 10-27: recipe taken unchanged from a5ad3aec30 (HBM FACE: supply pinned SM half recipes, branch claude/hbm-tkm-lec-1025, not on this base); RTL read at 4d6f5439dc (rtl/hbm_next removed from the tree)",
-  "src_spec": "physical/hbm_next/sm4/hnx_rp3lp3h_s_spec.json@4d6f5439dcee43b97baffaa731aae826fdcb6a66"
+  "src_spec": "physical/hbm_next/sm4/hnx_rp3lp3h_s_spec.json@4d6f5439dcee43b97baffaa731aae826fdcb6a66",
+  "files_at": {"physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv": "4673cf757e"},
+  "preprocessor_fix": "Only leaf macro scope changes; body byte-identical to pinned source; Slang and read_verilog get the same reset-edge expression."
  },
  "ot_hgi_sfu_split3_lane_core__idpin": {
   "top": "ot_hgi_sfu_split3_lane_core",
