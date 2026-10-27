@@ -39,3 +39,7 @@ Viewed hbm.actual_place.png from ab3ae7c3a TKMtile0 3_place.odb. Registered pin 
 ## KV core actual placement, 09:12 PDT
 
 Viewed qwen_kvsys_core.actual_place.png from ab3ae7c3a head_e1 3_place.odb. Logic clusters retain open intervening routes; west/north pin bands and the north clock input remain in the legacy reference positions, no macros or new walls/overlaps. Shared60um repair135610->135999cells (+389); area17501->17561um² (41%util); PG271998terms/0open. Verdict PASS-COND for one diagnostic CTS/route, retaining native setup/hold/DRV and required standard hold-step checks. All seven combined placements have now been viewed before routing.
+
+## QC control/sender40/C60 diagnostic actual placement, 09:45 PDT
+
+Viewed qc_ctltrial_7fd.actual_place.png from the isolated source7fd3cec6d876 concrete-kit trial. Regular horizontal station/repeater banks leave open routing area; no macros, new walls, overlaps or spill.21 clock entries now include the dedicated east control tap clk_t13[768.464,918.112]. Actual reset DFF[777.06,918.27] and run DFF[776.25,920.43] lie about9.3/10.9um away, correcting the far-control-tap geometry behind the old regression. Qwen independently viewed the same image and gave PASS-COND. All nine pre-floorplan stages (lint/SDC/SELRANGE/synth/LEC/face/cover/fanout/RC) PASS. Verdict PASS-COND for ONE isolated CTS/GRT/sign-off diagnostic. This changed-profile trial cannot overwrite or claim NO-REGRESSION against the older canonical reference; production AP/type holds remain unchanged.
