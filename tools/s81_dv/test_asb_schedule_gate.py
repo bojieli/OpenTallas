@@ -60,8 +60,37 @@ def main():
         candidate['station_inputs']['e1'] = {}
         expect_raise(lambda: X.qualify_frame_source(candidate, M, d), 'mixed legacy/GB'); n += 1
         expect_raise(lambda: X.qualify_frame_source({}, M, d), 'lacks exact source'); n += 1
+        class Die:
+            inst = {'frame': {'master': M}}
+            value = None
+            def strap(self, frame, port): return self.value
+        die = Die()
+        # the measured-LK checks run on a schedule bound to the CURRENT selected source (GB737 above)
+        sp.write_text(json.dumps(dict(schema='opentallas.s81.frame_schedule.v1', source_sha256=hashes)))
+        cp.write_text(json.dumps(dict(verdict='PASS', fails=[], schedule_sha256=hashlib.sha256(sp.read_bytes()).hexdigest())))
+        expect_raise(lambda: X.frame_lk(die, 'frame'), 'lacks its measured'); n += 1
+        sp.write_text(json.dumps(dict(schema='opentallas.s81.frame_schedule.v1', landing_lk=0x492, source_sha256=hashes)))
+        cp.write_text(json.dumps(dict(verdict='PASS', fails=[], schedule_sha256=hashlib.sha256(sp.read_bytes()).hexdigest())))
+        lkp = Path(d) / 'frame_lk.json'
+        os.environ['OT_S81_FRAME_LK_PLAN'] = str(lkp)
+        expect_raise(lambda: X.frame_lk(die, 'frame'), 'per-frame landing plan (frame_lk.json) missing'); n += 1
+        row = dict(master='col_h10_l4_lp', K=2, legal_E=[1, 2, 3])
+        lkp.write_text(json.dumps(dict(schema='opentallas.s81.frame_lk.v1', rows={'other': row})))
+        expect_raise(lambda: X.frame_lk(die, 'frame'), 'no per-frame landing plan row'); n += 1
+        lkp.write_text(json.dumps(dict(schema='opentallas.s81.frame_lk.v1', rows={'frame': dict(row, K=3)})))
+        expect_raise(lambda: X.frame_lk(die, 'frame'), 'plan K 3'); n += 1
+        lkp.write_text(json.dumps(dict(schema='opentallas.s81.frame_lk.v1', rows={'frame': row})))
+        assert X.frame_lk(die, 'frame') == 0x492; n += 1
+        sp.write_text(json.dumps(dict(schema='opentallas.s81.frame_schedule.v1', landing_lk=0x4a2, source_sha256=hashes)))
+        cp.write_text(json.dumps(dict(verdict='PASS', fails=[], schedule_sha256=hashlib.sha256(sp.read_bytes()).hexdigest())))
+        expect_raise(lambda: X.frame_lk(die, 'frame'), 'lands at E [2, 4]'); n += 1
+        sp.write_text(json.dumps(dict(schema='opentallas.s81.frame_schedule.v1', landing_lk=0x492, source_sha256=hashes)))
+        cp.write_text(json.dumps(dict(verdict='PASS', fails=[], schedule_sha256=hashlib.sha256(sp.read_bytes()).hexdigest())))
+        die.value = 0x924
+        expect_raise(lambda: X.frame_lk(die, 'frame'), 'differs from measured'); n += 1
         del os.environ['OT_XS_ASB_SCHEDULE_DIR']
         del os.environ['OT_S81_SELECTED_SOURCE_ROOT']
+        del os.environ['OT_S81_FRAME_LK_PLAN']
     c = json.loads((ROOT / 'results/arch/s81_dv_1016/frame_lp/asb_schedule' / (M + '_check.json')).read_text())
     assert c['validation']['links'] > 0 and not c['validation']['fails'], c['validation']['fails']
     assert c['verdict'] == 'FAIL' and all(f.startswith('frame_int ') for f in c['fails']), c['fails']

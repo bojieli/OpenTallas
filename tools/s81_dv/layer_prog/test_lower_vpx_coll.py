@@ -1,9 +1,10 @@
 """TOK-DS-8: lower_vpx placements of the shared collectives (router_allgather, substage_hop0, out_allreduce RS + AG)."""
 import sys
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path[:0] = [str(Path(__file__).resolve().parent), str(Path(__file__).resolve().parents[1])]
 import lower_vpx as LV  # noqa: E402
 
 
@@ -33,6 +34,19 @@ class T(unittest.TestCase):
         pins = [c['cycle'] for c in leg['ctl']]
         self.assertEqual(len(pins), len(set(pins)))
         self.assertEqual(LV.beat_period(), 6)
+    def test_later_substage_hop_uses_identical_abi(self):
+        """Every numbered stage hop is the same rank-local static NEXT circuit, with its own issue dates."""
+        class Die:
+            def slices(self): return {'u_s_0N': {'sid': 1}}
+        with patch('dv_layer_compile.ctl_path', return_value={'edges': 10}):
+            first=LV.lower(Die(),{'op':'substage_hop0'},{'t_issue':100})
+            second=LV.lower(Die(),{'op':'substage_hop1'},{'t_issue':1100})
+        self.assertEqual(second['status'],'PARTIAL')  # producer/consumer row binding is still held
+        self.assertEqual(len(second['templates']),320)
+        self.assertEqual(first['templates'],second['templates'])
+        self.assertEqual([r['issue']+1000 for r in first['rows']],[r['issue'] for r in second['rows']])
+        self.assertEqual([r['cycle']+1000 for r in first['events']],[r['cycle'] for r in second['events']])
+
     def test_placements_fit_and_disjoint(self):
         """on one die (rank d): every rank's gathered a / router rows, the 4 partial quarters and d's 3 RS slots are
         disjoint leaf rows inside 5 leaves x 1024 rows"""

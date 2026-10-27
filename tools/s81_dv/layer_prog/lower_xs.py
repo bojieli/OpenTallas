@@ -196,7 +196,7 @@ def placement(die, sl, fx=None):
     frames = die.frames_of(sl)
     g = slice_index(die, sl)
     if dense_split2() == 'X':
-        return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=[]) for f in frames]
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=[]) for f in frames]
     if aproj_topology_enabled():
         # One real phase on EVERY real frame: preserve tensor row order, keep
         # wq_a/wkv in separate frames, and never exceed the measured four rows.
@@ -255,12 +255,12 @@ def placement(die, sl, fx=None):
         assert fi == sum(counts) and row0 == (total if own is None else own[1])
         for frame in all_frames:
             assigned.setdefault(frame, [])
-        return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=assigned[f]) for f in frames]
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=assigned[f]) for f in frames]
     out = []
     for j, f in enumerate(frames):
         r0 = ROWS_PER_SLICE * g + ROWS_PER_FRAME * j
         rows = list(range(r0, r0 + ROWS_PER_FRAME)) if ROWS_PER_FRAME * (j + 1) <= ROWS_PER_SLICE else []
-        out.append(dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=rows))
+        out.append(dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=rows))
     return g, out
 
 
@@ -325,6 +325,44 @@ def qualify_frame_source(schedule, master, source_root):
         if any(s.get('required_go_issue_advance_edges') != 1 or
                s.get('native_provider_qualified') is not True for s in gb):
             raise ValueError('GB frame requires its qualified one-edge-early GO/TAG provider: ' + master)
+
+
+def frame_lk(die, frame):
+    """Use the actual cfifo constant of an as-built wrapper which has no parent lk pin."""
+    master = die.inst[frame]['master']
+    value = die.strap(frame, 'lk')
+    if is_asbuilt(master):
+        path = source_frame_schedule(master)
+        measured = json.loads(path.read_text()).get('landing_lk')
+        if type(measured) is not int or not 0 <= measured < 4096:
+            raise ValueError('as-built frame schedule lacks its measured cfifo lk: ' + master)
+        if value is not None and value != measured:
+            raise ValueError('as-built frame parent lk differs from measured cfifo lk: ' + frame)
+        check_plan_lk(frame, measured)
+        return measured
+    return value
+
+
+def frame_lk_plan():
+    """TOK-DS-12 (COORD ruling TOK-DS-11 (b), 10-27): the per-frame landing K comes from the measured landing window
+    (S81-UNBLOCK-3 frame_lk.json, one row per die frame instance).  OT_S81_FRAME_LK_PLAN overrides the path."""
+    path = Path(os.environ.get('OT_S81_FRAME_LK_PLAN', str(ROOT / 'results/s81_unblock3_1027/fi_seam/frame_lk.json')))
+    if not path.is_file():
+        raise ValueError('per-frame landing plan (frame_lk.json) missing: ' + str(path))
+    plan = json.loads(path.read_text())
+    if plan.get('schema') != 'opentallas.s81.frame_lk.v1' or not isinstance(plan.get('rows'), dict):
+        raise ValueError('per-frame landing plan has an unknown schema: ' + str(path))
+    return plan
+
+
+def check_plan_lk(frame, measured):
+    """Every lane of the as-built cfifo constant must land at the plan's per-frame K (no blanket value)."""
+    row = frame_lk_plan()['rows'].get(frame)
+    if row is None:
+        raise ValueError('as-built frame has no per-frame landing plan row: ' + frame)
+    lanes = sorted({(measured >> (3 * k)) & 7 for k in range(4)})
+    if lanes != [row['K']] or row['K'] not in row.get('legal_E', [row['K']]):
+        raise ValueError(f'as-built frame cfifo lk {measured:03x} lands at E {lanes}, plan K {row["K"]}: ' + frame)
 
 
 def source_frame_schedule(master):

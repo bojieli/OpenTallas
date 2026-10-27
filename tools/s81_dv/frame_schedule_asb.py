@@ -23,11 +23,12 @@ Method (one tracer for both frames, so every number is measured the same way):
   3. read every end-point input pin: station x inputs / go / cfg_v of each element, node a / b, cfifo ri (root) and
      the frame-boundary links (x -> cfifo lanes, x -> xo, cfifo rd -> ret).
 
-The schedule written is frame_schedule.v1 (plan_phase input): the LP schedule's topology/station structure with every
-link value REPLACED by the as-built measurement: node links = measured as-built edges; station added_edges = LP added
-+ (as-built - LP) measured x depth (the flat base off(pair) of frame_return_plan.emission is the LP frame's flat
-calendar).  Validation: the same tracer on the LP frame must reproduce the LP schedule's every link (flat + added), or
-the extraction FAILS.
+The schedule written is frame_schedule.v1 (plan_phase input). Return node and root link depths come directly
+from the measured current as-built RTL. The old LP schedule supplies topology names, never an offset to a return
+link: its col_h9 return calendar misplaces five region crossings even at its own revision. Historical discrepancies
+remain in the check receipt. Station/control emission uses LP added_edges + measured (as-built - historical twin)
+depth, since the flat emission model already incorporates the cfg7 sequencer's protocol. Every historical station
+baseline must reproduce its schedule; otherwise the extraction FAILS.
 
 Consistency check (the plan side): every frame link latency is compared with the die plan's declared latency
 (frame_lp/plan/<M>_l4_lp_plan_map.json latency_edges + frame_int seams of the band types): x_i0 -> xo_o0 = plan
@@ -371,6 +372,12 @@ def measure(yjs, top):
                                   if p in cells[cn]['connections']}
         elif m == 'dsfd_cfifo_crs4':
             res['root'] = sorted(pin_labels(cells, labels, cn, 'ri', -1))
+            lk = cells[cn]['connections'].get('lk')
+            if lk is not None and all(b in ('0', '1') for b in lk):
+                assert len(lk) == 12, ('landing lk width differs', cn, lk)
+                value = sum(int(b) << k for k, b in enumerate(lk))
+                assert 'landing_lk' not in res or res['landing_lk'] == value, ('landing lk differs', cn)
+                res['landing_lk'] = value
             for p in ('xl0', 'xl1', 'xl2', 'xl3', 'cr'):
                 if p in cells[cn]['connections']:
                     res['links'][f'x->{inst}.{p}'] = sorted(pin_labels(cells, labels, cn, p))
@@ -459,8 +466,13 @@ def plan_lanes(master):
 
 
 def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
-    """the as-built frame_schedule.v1 (LP schedule + measured as-built - validated-twin delta, link by link) and the
-    plan latency consistency table"""
+    """Use direct return depths and validated station deltas; retain every physical plan latency check.
+
+    Historical LP return calendars can themselves contain wrong region-crossing assignments (col_h9 has five).
+    A current return path is completely measured between its two opaque endpoint pins, so its depth never needs
+    an old calendar offset. Station emission retains the measured delta because its flat compiler calendar
+    incorporates the cfg sequencer protocol; those historical station baselines must still validate.
+    """
     rows, fails = [], []
     topo = json.loads(json.dumps(lp_sched['topology']))
     for n, nd in sorted(lp_sched['topology']['nodes'].items(), key=lambda kv: int(kv[0][1:])):
@@ -472,23 +484,23 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
             v0 = pick_src(meas_v['nodes'][n][pin], src, f'{n}.{pin}')
             vt = pick_src(meas_t['nodes'][n][pin], src, f'{n}.{pin}')
             va = pick_src(meas_ab['nodes'][n][pin], src, f'{n}.{pin}')
-            new = lpv + va - v0
+            new = va
             topo['nodes'][n]['link_' + pin] = new
             ev = dict(topo['nodes'][n]['evidence_' + pin])
-            ev.update(link_edges=new, added_edges=ev['added_edges'] + va - v0, lp_link_edges=lpv,
-                      basis='as-built RTL trace: LP schedule + (as-built - LP twin at the schedule revision)')
+            ev.update(link_edges=new, added_edges=new - ev['flat_link_edges'], lp_link_edges=lpv,
+                      basis='as-built RTL trace: measured endpoint-to-endpoint flop depth')
             ev.pop('crossings', None)
             topo['nodes'][n]['evidence_' + pin] = ev
-            rows.append(dict(kind='return', link=f'{src} -> {n}.{pin}', lp_schedule=lpv, twin_head=lpv + vt - v0,
+            rows.append(dict(kind='return', link=f'{src} -> {n}.{pin}', lp_schedule=lpv, twin_head=vt,
                              asbuilt=new))
     rs = lp_sched['topology']['root']
     assert {x[0] for x in meas_ab['root']} == {rs}, ('as-built return root differs', meas_ab['root'])
     v0, vt, va = (pick_src(m_['root'], rs, 'root') for m_ in (meas_v, meas_t, meas_ab))
-    topo['root_link'] = lp_sched['topology']['root_link'] + va - v0
+    topo['root_link'] = va
     topo['root_evidence'] = dict(source=rs, link_edges=topo['root_link'], lp_link_edges=lp_sched['topology']['root_link'],
                                  basis='as-built RTL trace')
     rows.append(dict(kind='return', link=f'{rs} -> cf.ri', lp_schedule=lp_sched['topology']['root_link'],
-                     twin_head=lp_sched['topology']['root_link'] + vt - v0, asbuilt=topo['root_link']))
+                     twin_head=vt, asbuilt=topo['root_link']))
     st_out = {}
     for e, st in sorted(lp_sched['station_inputs'].items(), key=lambda kv: int(kv[0][1:])):
         add_lp, = st['added_edges']
@@ -506,13 +518,14 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
             inputs[pin] = dict(paths=[dict(source=p_['source'], flat_link_edges=p_['flat_link_edges'],
                                            added_edges=p_['added_edges'] + va - v0)], aligned=True)
             rows.append(dict(kind='station', link=f"{p_['source']} -> {e}.{pin}", lp_schedule=tot,
-                             twin_head=tot + vt - v0, asbuilt=tot + va - v0))
+                             twin_head=vt, asbuilt=tot + va - v0))
         assert len(deltas) == 1, ('as-built x inputs of one station misaligned', e, deltas)
         dx = deltas.pop()
         control = {}
         for pin, cv in st['control'].items():
             v0, vt, va = (pick_src(m_['stations'][e]['control'][pin], cv['source'], f'{e}.{pin}')
                           for m_ in (meas_v, meas_t, meas_ab))
+            assert {x[0] for x in meas_ab['stations'][e]['control'][pin]} == {cv['source']}, ('control source differs', e, pin)
             control[pin] = dict(cv, added_edges=cv['added_edges'] + va - v0, link_edges=cv['link_edges'] + va - v0,
                                 crossings='as-built RTL trace')
             rows.append(dict(kind='control', link=f"{cv['source']} -> {e}.{pin}", lp_schedule=cv['link_edges'],
@@ -546,11 +559,12 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
             prow(f'seam lpl_{mm.group(1)} {mm.group(2)[2:]}->{mm.group(3)} (writer data to reader station)', v,
                  [le['seam_K_plus_1']], f'{PLAN_MAP.format(m=master)} latency_edges.seam_K_plus_1')
     sched = dict(schema='opentallas.s81.frame_schedule.v1', source_sha256=src_sha,
+                 landing_lk=meas_ab.get('landing_lk'),
                  spec=lp_sched['spec'], added_edges_per_crossing=lp_sched['added_edges_per_crossing'],
                  station_inputs=st_out, topology=topo,
                  asbuilt=dict(master=f'{master}_l4_lp_asb_{var}', lp_schedule=LP_SCHED.format(m=master),
                               plan_map=PLAN_MAP.format(m=master),
-                              rule='every link = LP schedule + (as-built RTL - LP seam twin at the LP schedule revision), '
+                              rule='return links = measured as-built flop depth; station/control = LP + measured depth delta, '
                                    'one tracer (tools/s81_dv/frame_schedule_asb.py)'),
                  qualification='EXTRACTED ONLY (as-built RTL trace): emission/go/reset alignment, legalised return '
                                'calendar and actual frame bench required')
@@ -601,6 +615,7 @@ def main():
     js_ab, sha_ab = elaborate(ab_top, True, work, a.mem_gb)
     meas_t = measure(json.loads(js_t.read_text()), lp_top)
     meas_ab = measure(json.loads(js_ab.read_text()), ab_top)
+    assert 'landing_lk' in meas_ab, ('as-built landing lk is not constant', ab_top)
     for nm, me in (('validate_' + lp_top, meas_v), (lp_top, meas_t), (ab_top, meas_ab)):
         (work / f'{nm}.meas.json').write_text(json.dumps(me, indent=1))
     src = dict(sha_ab)
@@ -608,20 +623,19 @@ def main():
               'physical/die_plan/s81/die_plan.json'):
         src[f] = sha(f)
     a.out.mkdir(parents=True, exist_ok=True)
-    fails = ['VALIDATION ' + f for f in vfails]
-    if not vfails:
-        sched, rows, plan, pf = schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, m, v, src)
-        fails += pf
-        sp = a.out / f'{ab_top}_schedule.json'
-        sp.write_text(json.dumps(sched, indent=1) + '\n')
-        ssha = hashlib.sha256(sp.read_bytes()).hexdigest()
-    else:
-        rows, plan, ssha = [], [], None
+    # Return links are measured directly; station deltas still require their historic flat-calendar baseline.
+    fails = ['VALIDATION ' + f for f in vfails if '.xs_' in f]
+    sched, rows, plan, pf = schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, m, v, src)
+    fails += pf
+    sp = a.out / f'{ab_top}_schedule.json'
+    sp.write_text(json.dumps(sched, indent=1) + '\n')
+    ssha = hashlib.sha256(sp.read_bytes()).hexdigest()
     changed = [r for r in rows if r['asbuilt'] != r['lp_schedule']]
     verdict = 'FAIL' if fails else 'PASS'
     (a.out / f'{ab_top}_check.json').write_text(json.dumps(dict(
         schema='opentallas.s81.frame_schedule_asb_check.v1', master=ab_top, verdict=verdict, schedule_sha256=ssha,
-        fails=fails, validation=dict(rev=rev, twin=LP_TWIN.format(m=m), links=len(vrows), fails=vfails, rows=vrows),
+        fails=fails, validation=dict(rev=rev, twin=LP_TWIN.format(m=m), links=len(vrows), fails=vfails, rows=vrows,
+                                role='station baselines must match; return links come directly from current RTL'),
         lp_schedule_stale_sources_at_head=stale, plan_consistency=plan, links=rows, changed_vs_lp_schedule=changed),
         indent=1) + '\n')
     print(f'FRAME_SCHEDULE_ASB {ab_top} {verdict} validation {len(vrows) - len(vfails)}/{len(vrows)} links '
