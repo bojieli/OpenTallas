@@ -6,6 +6,7 @@ from pathlib import Path
 def records(words,target,count,wsc,pk5,pb5):
  if not 16<=target<=255:raise ValueError('plan-allocated target16..255 required; no default target')
  if not 1<=count<=256 or len(words)!=count:raise ValueError('exact finiteprogramme count required')
+ if not 0<=wsc<=255 or not 0<=pk5<=32 or pb5 not in (0,1):raise ValueError('root strap bounds')
  out=[]
  def write(a,d):out.append({'addr':a,'data':d})
  def cfg256(word):
