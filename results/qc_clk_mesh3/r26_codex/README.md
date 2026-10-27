@@ -11,3 +11,13 @@ The inherited four-level anchor search is an **analytic feed FAIL**, not a route
 The existing physical exporter emitted the top 16w tree only. A complete clock needs column trees, band trees, mesh segments, crossing vias, and the actual loads. Mixed per-edge NDR and heterogeneous tied groups must be handled by the physical builder before it can import the whole clock. The pending all-stage exporter exposes those limitations explicitly.
 
 Data on intel2: `/srv/opentallas-scratch2/claude/codex-qc-clock-1027/`. The inherited R25 top-tree DRC continues in `/srv/opentallas-scratch2/claude/qc-mesh-r25/drc/`; its scope does not include the complete fine mesh.
+
+The V2 adapter now preserves per-edge NDRs, mixed-master parallel pin ties and actual cell sites. `explicit_clock_mesh.py` replaces the diagnostic leaf stubs with one physical continuous mesh, imports every conductor and one VIA89 per crossing, retains all driver units and all boundary ports, and includes tap jog metal instead of moving ports. It supplies the mesh pin-access census and width-aware diagnostic native RC; extracted RC remains required for timing.
+
+Native OpenDB primitives passed on the fleet using the actual ASAP7 LEF. The joint V2 + continuous-mesh vehicle retains both real driver Y pins and both boundary BTerms on `ck_mesh_explicit`, with 266.24 um actual/planned mesh metal, exactly four VIA89s, and 0.32-um mesh width. The separate mixed-width vehicle retained five true ITerms and both 0.16/0.32-um widths. Small readback receipts are in `native_mesh/`; complete sources/logs/ODB remain on intel2 in `qc-export-v2-mesh-probe/` and `qc-export-v2-probe2/`. These were geometry encode/readback checks, not P&R, STA or sign-off.
+
+Focused source gates after integration: **43 passed** (mesh import, V2 adapter, export, R26 band solver, prior mesh solver and prior routed encoder). No RTL changes.
+
+Nominal R26 ideal-geometry diagnostics, now with the unequal band-tree feed arrivals and approved `adjcol` sizing, are retained separately in `model_TT.json` and `model_FF.json` (UNCHECKED). The partition tap spreads are 20.263/24.931 ps. A0 within-core drop spread medians are 29.218/29.620 ps, p90 50.018/46.472, maximum 85.061/97.190 ps. The band-feed condition still fails (1,200/3,620 TT, 2,594/3,620 FF arrivals outside +/-10 ps). No related-flop-pair gate follows from a max-min drop spread.
+
+Actual all-stage physical legalization fails before routing: the old 88-type plan has no common free island slot for class `('cbf_q00', 341, 216, False)`. Native100 source cohorts are being tried next against unchanged physical rectangles. The failed geometry remains a failure; none of these tool changes freezes the die or lifts a route hold.
