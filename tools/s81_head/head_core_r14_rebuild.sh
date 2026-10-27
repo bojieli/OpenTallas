@@ -7,7 +7,7 @@
 # PLAN_ARGS head_tree_plan.py options for the in-core plan tree, computed on THIS build's 3_place geometry before CTS
 #          (12.8a/b/d1: plan-computed, no measured input), e.g. "--entry 159.84,159.84 --fanouts 4,4,2,4,4 --l1_mirror 1".
 # CLK_X,CLK_Y  optional new location of the core clock pin ft_mstrap_i (M5, 0.192 square) in io.tcl (elemA: centre).
-# Flow (R14, ASK3): place -> geo dump -> plan tree -> CTS (plan-built, TritonCTS off) -> do-5_1_grt MCMM (CORNER TC,
+# Flow (R14, ASK3): place -> geo dump -> plan tree -> CTS (plan-built, TritonCTS off) -> do-5_1_grt MCMM (kit CORNER TC,
 #   CORNERS "tc bc": the R10 GRT repair ran BC-only, so TT slew was never repaired) with repair_design on UNSCALED RC
 #   + 20 % slew/cap margin (head_grt_drv_unscaled.tcl) and HB4-only data hold repair (FF bound 202.5) -> read-only GRT
 #   STA TT/FF (actual_head_sta.tcl, rc_cal estimate) -> STOP.  Route/ECO/sign-off/LEC follow after GEOM PASS.
@@ -47,7 +47,10 @@ export OT_GRT_DRV_MARGIN = 20
 CFG
 DK() { docker run --rm --name "hd-r14-$NICK-$$-$1" --memory="${MEM}g" --memory-swap="${MEM}g" --cpus="$CPUS" -v "$OUT":/work \
   -e CPUS="$CPUS" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "set -euo pipefail; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $2"; }
-M="make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=\$CPUS CORNER=TC CORNERS='tc bc'"
+# corners come from the kit config.mk (MCMM CORNER TC + CORNERS e.g. "tc bc" / "tc BC" = the orfs_hold_mm scene names);
+# a command-line CORNERS override with the wrong scene case breaks report_power (STA-0102 'bc is not the name of a scene').
+grep -q '^export CORNERS = tc ' "$OUT/config.mk" || { echo "R14RB FAIL kit config.mk is not MCMM (CORNERS tc ...)"; exit 2; }
+M="make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=\$CPUS"
 B=$OUT/run/results/asap7/$NICK/base
 # a placeholder spec so the PRE_CTS file exists during place (not read before CTS)
 echo "# R14 placeholder: replaced by the plan computed on 3_place before CTS" > "$OUT/mscts_spec_r14.tcl"
