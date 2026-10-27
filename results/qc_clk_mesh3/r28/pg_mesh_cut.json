@@ -1,0 +1,89 @@
+{
+ "schema": "opentallas.pg_mesh_cut.v1",
+ "plan": "../../physical/die_plan/qwen_compute/die_plan.json",
+ "spec": "../../results/qc_clk_mesh3/r28/mesh_straps.json",
+ "net": "VSS",
+ "ndr": "8w",
+ "rule": {
+  "across_half_um": 0.24,
+  "along_ext_um": 0.64,
+  "runs": {
+   "M8": 178,
+   "M9": 433
+  },
+  "floating_tail_holes": {
+   "M8": 178,
+   "M9": 0
+  }
+ },
+ "holes": {
+  "M8": 356,
+  "M9": 433
+ },
+ "removed": {
+  "M8": {
+   "uncut_mm": 94866.4,
+   "cut_mm": 89600.4,
+   "removed_mm": 5266.0,
+   "removed_pct": 5.55
+  },
+  "M9": {
+   "uncut_mm": 94871.3,
+   "cut_mm": 89601.4,
+   "removed_mm": 5269.9,
+   "removed_pct": 5.55
+  }
+ },
+ "other_nets_removed_um": {
+  "VDD": [
+   0.0,
+   0.0
+  ]
+ },
+ "mesh_vs_pg_uncut": {
+  "segments": 3299,
+  "conflicts": 3299,
+  "by_kind": {
+   "M8:mesh:short:VSS": 178,
+   "M9:mesh:short:VSS": 3121
+  },
+  "shield_wide_merge": 6598
+ },
+ "mesh_vs_pg_cut": {
+  "segments": 3299,
+  "conflicts": 0,
+  "by_kind": {},
+  "shield_wide_merge": 0,
+  "examples": []
+ },
+ "vss_continuity_uncut": {
+  "m8_pieces": 3039,
+  "m9_pieces": 3612,
+  "via89": 10976868,
+  "floating_m8": 0,
+  "floating_m9": 0,
+  "dangling_end_m8": 0,
+  "dangling_end_m9": 0,
+  "components": 1,
+  "edge_stub_max_um": 8.64
+ },
+ "vss_continuity_cut": {
+  "m8_pieces": 3039,
+  "m9_pieces": 3853,
+  "via89": 9793625,
+  "floating_m8": 0,
+  "floating_m9": 0,
+  "dangling_end_m8": 0,
+  "dangling_end_m9": 0,
+  "components": 1,
+  "edge_stub_max_um": 17.28,
+  "examples": {
+   "floating_m8": [],
+   "floating_m9": [],
+   "dangling_m8": [],
+   "dangling_m9": []
+  }
+ },
+ "verdict": "PASS",
+ "scope": "plan PG model (die_infra.pg_rects) + pdngen POST_PDN cut; IR needs a PDNSim re-solve on this grid"
+}
