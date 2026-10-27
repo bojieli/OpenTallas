@@ -32,3 +32,12 @@ pulled to the pin faces, long local clock tree. COORD: no more trunk; shrink the
 - chain_r5.sh (finish -> signoff tt,ff -> routed LEC with the flag): unit oth-ubuntu-763084-1793094169, started 02:42:50 PDT.
   Collect: /srv/opentallas-scratch2/claude/hbm-core-lat-r5-collar/kit/{chain_r5.status, postcts_gate_TT.log, postcts_gate_FF.log,
   signoff/signoff.json, lec_routed/lec.json, FAIL_POSTCTS|FAIL_PREFLOOR}.
+
+## Measured (GRT RC, postcts_gate.tcl on 5_1_grt.odb; CHECKED from postcts/*.json)
+- Attempt 1 (unit oth-ubuntu-763084-1793094169): pin-register insertion TT 261.79 / FF 202.93 (both in band, PASS; R4 108^2: 282.89 / 220.23),
+  stopped FAIL_POSTCTS on FF pre-route hold estimate -1.25 ps after 1457 flow hold buffers at margin 0 (postcts/attempt1_*).
+- Attempt 2 (unit oth-ubuntu-950607-1793094930, from 4_cts.odb, CTS/clock unchanged): OT_HOLD_FF_MARGIN 0 -> 5 ps (flow data-path hold
+  repair target, 12.4a a1; no clock edit): TT 262.04 / FF 203.17 PASS, FF hold est +1.92, TT setup est +36.58; 1535 hold buffers
+  (R4: 2003); GRT util 59%. Prediction ~264/205 vs measured 262.0/203.2 (prediction UNCHECKED, measurement CHECKED).
+- DRT -> finish -> abstract -> signoff tt,ff -> routed LEC (OT_LEC_SUPERSET_VEC=1) RUNNING in attempt 2 at 03:05 PDT.
+  Collect kit/{chain_r5.status, signoff/signoff.json, lec_routed/lec.json (superset_vec.extra_bits)}.

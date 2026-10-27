@@ -30,7 +30,7 @@ export PRE_GLOBAL_ROUTE_TCL = /work/core_grt_pre.tcl
 export POST_GLOBAL_ROUTE_TCL = /work/core_grt_post.tcl
 export OT_VCLK_TT = 250
 export OT_VCLK_FF = 202.5
-export OT_HOLD_FF_MARGIN = 0
+export OT_HOLD_FF_MARGIN = 5
 export OT_PRE_ROUTE_FF_HOLD = 1
 export OT_TAP_TARGET_PS = 250
 export OT_TAP_WINDOW_PS = 40
@@ -53,3 +53,4 @@ export OT_TRUNK_N = 7
 export OT_TRUNK_ISLAND = 38.88 38.88 47.52 47.52
 export OT_TAP_REPORT_ONLY = 1
 # HBM-CORE-LAT-R5 2026-10-27: trial outline 86.4^2 (was 108^2, ~35% empty) + rebalanced pins (gen_r5_collar.py); same 12.8c trunk 7x BUFx10 (plan pick unchanged, see README); PLACE_DENSITY 0.65 >= util
+# HBM-CORE-LAT-R5 02:55: OT_HOLD_FF_MARGIN 0 -> 5 ps (GRT data-path hold repair target; METHODOLOGY 12.4a a1; attempt 1 residual FF hold est -1.25 ps after 1457 flow hold buffers). Clock untouched.
