@@ -1,0 +1,284 @@
+{
+ "elemA": {
+  "nets": {
+   "ft_ck0_i": {
+    "net": "ft_ck0_i",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   },
+   "ft_ck0_o": {
+    "net": "ft_ck0_o",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "Y",
+      "direction": "OUTPUT"
+     }
+    ]
+   },
+   "ft_ck1_i": {
+    "net": "ft_ck1_i",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   },
+   "ft_ck1_o": {
+    "net": "ft_ck1_o",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "Y",
+      "direction": "OUTPUT"
+     }
+    ]
+   },
+   "ft_mesh_i": {
+    "net": "ft_mesh_i",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_m0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   },
+   "ft_mesh_o": {
+    "net": "ft_mesh_o",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_m0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "Y",
+      "direction": "OUTPUT"
+     }
+    ]
+   },
+   "ft_rst_i": {
+    "net": "ft_rst_i",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_rstft",
+      "master": "BUFx4_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   },
+   "ft_rst_o": {
+    "net": "ft_rst_o",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_rstft",
+      "master": "BUFx4_ASAP7_75t_R",
+      "pin": "Y",
+      "direction": "OUTPUT"
+     }
+    ]
+   },
+   "ft_mstrap_i": {
+    "net": "ft_mstrap_i",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_root",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   },
+   "rst_n": {
+    "net": "rst_n",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "hold19499",
+      "master": "HB4xp67_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   }
+  },
+  "local_ft_output_internal_input_loads": {
+   "ft_ck0_o": 0,
+   "ft_ck1_o": 0,
+   "ft_mesh_o": 0,
+   "ft_rst_o": 0
+  },
+  "external_use_classified": false
+ },
+ "elemB": {
+  "nets": {
+   "ft_ck0_i": {
+    "net": "ft_ck0_i",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   },
+   "ft_ck0_o": {
+    "net": "ft_ck0_o",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "Y",
+      "direction": "OUTPUT"
+     }
+    ]
+   },
+   "ft_ck1_i": {
+    "net": "ft_ck1_i",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   },
+   "ft_ck1_o": {
+    "net": "ft_ck1_o",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "Y",
+      "direction": "OUTPUT"
+     }
+    ]
+   },
+   "ft_mesh_i": {
+    "net": "ft_mesh_i",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_m0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   },
+   "ft_mesh_o": {
+    "net": "ft_mesh_o",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_m0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "Y",
+      "direction": "OUTPUT"
+     }
+    ]
+   },
+   "ft_rst_i": {
+    "net": "ft_rst_i",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_rstft",
+      "master": "BUFx4_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   },
+   "ft_rst_o": {
+    "net": "ft_rst_o",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_rstft",
+      "master": "BUFx4_ASAP7_75t_R",
+      "pin": "Y",
+      "direction": "OUTPUT"
+     }
+    ]
+   },
+   "ft_mstrap_i": {
+    "net": "ft_mstrap_i",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "u_isl_root",
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   },
+   "rst_n": {
+    "net": "rst_n",
+    "iterms": 1,
+    "bterms": 1,
+    "terms": [
+     {
+      "inst": "hold5111",
+      "master": "HB4xp67_ASAP7_75t_R",
+      "pin": "A",
+      "direction": "INPUT"
+     }
+    ]
+   }
+  },
+  "local_ft_output_internal_input_loads": {
+   "ft_ck0_o": 0,
+   "ft_ck1_o": 0,
+   "ft_mesh_o": 0,
+   "ft_rst_o": 0
+  },
+  "external_use_classified": false
+ }
+}

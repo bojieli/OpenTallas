@@ -63,7 +63,7 @@ def prepare(root, plan_path, manifest, out, rom_load='parameters', hierarchical=
     # Native infrastructure interfaces have a declared functional substitution;
     # never guess their filename or fall back to a logical-port-only model.
     declared = {}
-    for typ in plan['partition_types'].values():
+    for typ in list(plan['partition_types'].values()) + [plan.get('infrastructure') or {}]:
         for physical, functional in typ.get('simulation_substitutions', {}).items():
             if physical in declared and declared[physical] != functional:
                 raise ValueError('conflicting simulation substitution '+physical)

@@ -85,6 +85,18 @@ endmodule''',
    self.assertFalse((r/'partition/s81_head_top.sv').exists())
    self.assertIn('parameter INSTANCE',(r/'partition/ot_s81hd_tile_p.sv').read_text())
    with self.assertRaisesRegex(ValueError,'exactly one generated die top'):prepare(r,r/'plan.json',f,r/'mut_no_provider')
+ def test_infrastructure_functional_substitution_is_explicit(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);self.setup_tree(r)
+   physical='gen/clock_physical.v';functional='gen/clock_functional.v'
+   (r/physical).write_text('(* blackbox *) module CLKBUF(input A,output Y); endmodule')
+   (r/functional).write_text('module CLKBUF(input A,output Y);assign Y=A;endmodule')
+   f=r/'physical.f';f.write_text(f.read_text()+'\n'+physical)
+   p=r/'plan.json';plan=json.loads(p.read_text());plan['infrastructure']={'sources':[physical],'simulation_substitutions':{physical:functional}};p.write_text(json.dumps(plan))
+   res=prepare(r,p,f,r/'native')
+   self.assertEqual(res['replacements'][physical],functional)
+   del plan['infrastructure']['simulation_substitutions'];p.write_text(json.dumps(plan))
+   with self.assertRaisesRegex(ValueError,'still contains blackbox'):prepare(r,p,f,r/'mut_unqualified_clock_model')
  def test_missing_tile_mutant_is_rejected(self):
   with tempfile.TemporaryDirectory() as d:
    r=Path(d);self.setup_tree(r);p=r/'gen/s81_head_top.sv';p.write_text(p.read_text().replace('tile1','lost_tile'))

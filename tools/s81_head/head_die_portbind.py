@@ -83,7 +83,7 @@ print('TIE_AUDIT %s accepted=%d rejected=%d' % (aud['verdict'], len(aud['accepte
 (out / 'pads.json').write_text(json.dumps({'pads': {}, 'instances': pads}, indent=1) + '\n')
 plan = json.loads(Path(a.plan).read_text())
 src = []
-for ty in plan['partition_types'].values():
+for ty in list(plan['partition_types'].values()) + [plan.get('infrastructure') or {}]:
     for s in ty.get('sources', []):
         if Path(s).is_absolute():
             raise SystemExit('absolute source path in plan: ' + s)
