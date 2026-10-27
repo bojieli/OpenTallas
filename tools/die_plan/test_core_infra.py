@@ -101,7 +101,7 @@ def test_kit_manifest_binds_clock_without_rewriting_slice(tmp_path):
     assert stamp["slice_sha256"] == MS.digest(s)
     assert (kd/"master_slice.json").read_bytes() == path.read_bytes()
     assert "ot_ci_clock_entry {clk}" in (kd/"master_core_infra.tcl").read_text()
-    with pytest.raises(MS.SliceError,match="exactly one"):
+    with pytest.raises(MS.SliceError,match="needs a slice with clock_entries"):  # R21: two root pins, single-entry slice
         MS.kit_apply(kd,s["type"],s["outline_um"],src,clock_ports=["ck","other"])
 
 

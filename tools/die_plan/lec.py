@@ -794,6 +794,10 @@ class Aig:
         self.outs, self.onames = [], []
         self.strash = {}
         self.parity_expr, self.parity_cache = {}, {}
+        # Expanding every prefix of a wide CRC makes normalization quadratic.
+        # Above this support size keep the exact ordinary AIG XOR; SAT still
+        # proves the same Boolean function without an expanded parity cache.
+        self.parity_terms = max(2, int(os.environ.get("OT_LEC_PARITY_TERMS", "256")))
 
     def add_input(self, name):
         if self.ands:
@@ -843,6 +847,8 @@ class Aig:
     def XOR(self, a, b):
         aa, ac = self._parity(a)
         bb, bc = self._parity(b)
+        if len(aa) + len(bb) > self.parity_terms:
+            return self._and(self._and(a, b ^ 1) ^ 1, self._and(a ^ 1, b) ^ 1) ^ 1
         terms, const = aa ^ bb, ac ^ bc
         if not terms:
             return const
@@ -1564,6 +1570,70 @@ def closest(k, cands, cap=512):
 GENCOPY = re.compile(r"(?<![A-Za-z0-9_])g_[A-Za-z0-9_]+\[\d+\]")
 
 
+def replica_groups(d, points, compare):
+    """Group generated ff: compare keys by (norm(k), input-support set); exact."""
+    norm = lambda k: GENCOPY.sub(lambda m: m[0].split("[")[0] + "[]", k)
+    # Exact support-set grouping, computed one norm(k) bucket at a time over
+    # that bucket's cone only, with bucket-local leaf numbering and freeing of
+    # dead supports.  A design-wide bitset per AND node is O(nodes x symbols)
+    # and exhausted 320 GB on the 841k-input Q2n2 gate (LEC-TOOL-3).
+    pv = {}
+    for k, lit in sorted(points.items()):
+        pv[lit >> 1] = None if k.startswith("ff:") else ("point", k)
+    base = d["I"] + d["L"] + 1
+    ands = d["ands"]
+    buckets = {}
+    for k, lit in compare.items():
+        if k.startswith("ff:") and GENCOPY.search(k):
+            buckets.setdefault(norm(k), []).append(k)
+    out = {}
+    for nk, keys in sorted(buckets.items()):
+        if len(keys) < 2:
+            out[(nk, None)] = keys
+            continue
+        roots = [compare[k] >> 1 for k in keys]
+        cone, todo = set(), list(roots)
+        while todo:
+            v = todo.pop()
+            if v in cone:
+                continue
+            cone.add(v)
+            if v >= base:
+                i = v - base
+                todo.append(ands[2*i] >> 1); todo.append(ands[2*i+1] >> 1)
+        uses = {}
+        for v in cone:
+            if v >= base:
+                i = v - base
+                for c in (ands[2*i] >> 1, ands[2*i+1] >> 1):
+                    uses[c] = uses.get(c, 0) + 1
+        for v in roots:
+            uses[v] = uses.get(v, 0) + (1 << 30)     # roots are never freed
+        local, sup = {}, {}
+        def leaf(t):
+            if t not in local:
+                local[t] = 1 << len(local)
+            return local[t]
+        for v in sorted(cone):
+            if v >= base:
+                i = v - base
+                a, b = ands[2*i] >> 1, ands[2*i+1] >> 1
+                sup[v] = sup[a] | sup[b]
+                for c in (a, b):
+                    uses[c] -= 1
+                    if not uses[c]:
+                        del sup[c]
+            elif v in pv:
+                sup[v] = 0 if pv[v] is None else leaf(pv[v])
+            elif v == 0:
+                sup[v] = 0
+            else:
+                sup[v] = leaf(("anonymous", v))
+        for k, v in zip(keys, roots):
+            out.setdefault((nk, sup[v]), []).append(k)
+    return out
+
+
 def replica_proposals(L, log):
     """Propose interchangeable generated-register cohorts on both designs.
 
@@ -1573,29 +1643,9 @@ def replica_proposals(L, log):
     pass through the normal simultaneous inductive SAT proof/refinement.
     """
     norm = lambda k: GENCOPY.sub(lambda m: m[0].split("[")[0] + "[]", k)
-    symbols = {}
-    def sym(k):
-        if k not in symbols:
-            symbols[k] = 1 << len(symbols)
-        return symbols[k]
-    def groups(d, points, compare, side):
-        support = [0] * (d["I"] + d["L"] + d["A"] + 1)
-        for v in range(1, d["I"] + d["L"] + 1):
-            support[v] = sym(("anonymous", side, v))
-        for k, lit in sorted(points.items()):
-            # State copies are induction candidates; external data bits stay distinct.
-            support[lit >> 1] = 0 if k.startswith("ff:") else sym(("point", k))
-        base = d["I"] + d["L"] + 1
-        for i in range(d["A"]):
-            support[base+i] = support[d["ands"][2*i] >> 1] | support[d["ands"][2*i+1] >> 1]
-        out = {}
-        for k, lit in compare.items():
-            if k.startswith("ff:") and GENCOPY.search(k):
-                out.setdefault((norm(k), support[lit >> 1]), []).append(k)
-        return out
     n = 0
     for side, d, points, compare in (("gold", L.gold, L.gp, L.gc), ("gate", L.gate, L.tp, L.tc)):
-        for keys in groups(d, points, compare, side).values():
+        for keys in replica_groups(d, points, compare).values():
             if len(keys) < 2:
                 continue
             common = sorted(set(keys) & set(L.matched))
@@ -2748,10 +2798,15 @@ def _noreset_held(L, consts, sides, cycles, extra, banned):
     for (sd, k), c in consts.items():
         for s in sides(sd):
             v, e = L.rst_val.get((s, k), (None, None))
+            edges = [e or 1] if v == c else []
             if getattr(L, "raw_constant_status", {}).get((s, k, c)) == "proved":
-                held[(s, k)] = 1           # D == c for ALL inputs/state, including every RTL X
-            elif v == c:
-                held[(s, k)] = e or 1
+                edges.append(1)           # D == c for ALL inputs/state, including every RTL X
+            prefix = getattr(L, "raw_prefix_edges", {}).get((s, k, c))
+            if prefix is not None and (prefix <= cycles or
+                    (sd != "both" and k not in matched and (s, k) not in banned)):
+                edges.append(prefix)
+            if edges:
+                held[(s, k)] = min(edges)
     hyp_side = lambda s, j: (("both", j) in consts) or ((s, j) in consts)
     for e in range(1, cycles + extra + 1):
         new = {}
@@ -2816,6 +2871,87 @@ def raw_constant_bases(L, work, conflicts, log):
     L._raw_constant_batch = batch
 
 
+def raw_prefix_miter(d, roots, steps):
+    """Unroll raw source literals after `steps` clocks from entirely free state.
+
+    Each source PI (including RTL X) is fresh at EACH edge. Latches at time
+    zero are independent inputs. Only the requested time-expanded cones are
+    copied; shared state aliases and within-edge PI correlations are preserved.
+    No reset, hypothesis, X mask or state constraint enters this AIG.
+    Roots are logical next-state literals, so frame steps-1 is state at steps.
+    """
+    if not isinstance(steps, int) or steps < 1:
+        raise ValueError("raw prefix steps must be a positive integer")
+    roots = list(roots)
+    I, N, a = d["I"], d["L"], d["ands"]
+    base = I + N + 1
+    order, seen, leaves = [], set(), set()
+    stack = [(steps - 1, lit >> 1, False) for lit in roots]
+    while stack:
+        t, v, done = stack.pop()
+        key = (t, v)
+        if v == 0 or key in seen:
+            continue
+        if v <= I or (v < base and t == 0):
+            seen.add(key)
+            leaves.add(key)
+        elif done:
+            seen.add(key)
+            order.append(key)
+        else:
+            stack.append((t, v, True))
+            if v < base:
+                stack.append((t - 1, d["latches"][v - I - 1] >> 1, False))
+            else:
+                j = 2 * (v - base)
+                stack.extend(((t, a[j] >> 1, False), (t, a[j + 1] >> 1, False)))
+    m = Aig()
+    vals = {key: m.add_input(f"raw_t{key[0]}_v{key[1]}") for key in sorted(leaves)}
+
+    def value(t, lit):
+        return (vals[(t, lit >> 1)] if lit >> 1 else 0) ^ (lit & 1)
+
+    for t, v in order:
+        if v < base:
+            vals[(t, v)] = value(t - 1, d["latches"][v - I - 1])
+        else:
+            j = 2 * (v - base)
+            vals[(t, v)] = m.AND(value(t, a[j]), value(t, a[j + 1]))
+    m.outs = [value(steps - 1, lit) for lit in roots]
+    return m
+
+
+def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
+    """Prove requested constant bases after an exact finite prefix, unconditionally.
+
+    This is opt-in proof work, not a duration contract: all initial state and
+    every time-step input remain free. Late bases still pass release_unmasked
+    before use; final induction proves preservation. SAT/undecided prove no base.
+    """
+    cache = L.__dict__.setdefault("raw_prefix_status", {})
+    edges = L.__dict__.setdefault("raw_prefix_edges", {})
+    for side, d, points in (("gold", L.gold, L.gc), ("gate", L.gate, L.tc)):
+        todo = sorted({(k, c) for s, k, c in candidates if s == side
+                       and (s, k, c, steps) not in cache})
+        if not todo:
+            continue
+        if any(k not in points or c not in (0, 1) for k, c in todo):
+            raise LecError("invalid raw prefix base candidate")
+        m = raw_prefix_miter(d, [points[k] for k, c in todo], steps)
+        m.outs = [lit ^ c for lit, (k, c) in zip(m.outs, todo)]
+        m.onames = [f"raw-prefix:{side}:{k}:{c}:{steps}" for k, c in todo]
+        batch = L.__dict__.get("_raw_prefix_batch", 0)
+        status = prove(m, work, conflicts, log, tag=f"rawprefix{batch}_{side}_{steps}")
+        L._raw_prefix_batch = batch + 1
+        for (k, c), name in zip(todo, m.onames):
+            result = status.get(name, "undecided")
+            cache[(side, k, c, steps)] = result
+            if result == "proved":
+                edges[(side, k, c)] = min(steps, edges.get((side, k, c), steps))
+        log.append(f"universal raw prefix {side} at edge {steps}: "
+                   f"{sum(status.get(n) == 'proved' for n in m.onames)} / {len(todo)} bases")
+
+
 def noreset_filter(L, log, tried, work=None, conflicts=1000):
     """Constant hypotheses on registers that are not that constant in the reset state (LEC-TOOL-4 10-27, COORD
     ruling on no-reset constants).  The correspondence induction proves Q == c -> D(Q) == c; its base case is the
@@ -2828,6 +2964,12 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
     power-up value equals a constant. -> number dropped."""
     if work is not None:
         raw_constant_bases(L, work, conflicts, log)
+        steps = int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0"))
+        if steps > 1:
+            ok = noreset_sound(L)
+            candidates = [(s, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok
+                          for s in (("gold", "gate") if sd == "both" else (sd,))]
+            raw_prefix_bases(L, candidates, steps, work, conflicts, log)
     total = 0
     while True:                     # dropping one can unseat a register reloaded from it
         ok = noreset_sound(L)
@@ -2860,8 +3002,10 @@ def noreset_report(L):
         cyc = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
         sides = ("gold", "gate") if sd == "both" else (sd,)
         raw = all(getattr(L, "raw_constant_status", {}).get((s, k, h[1])) == "proved" for s in sides)
+        prefix = all(getattr(L, "raw_prefix_edges", {}).get((s, k, h[1])) == edge for s in sides)
         kept.append(dict(register=k, side=sd, value=h[1], edge=edge,
                          basis="universal_raw_D" if raw else
+                               "universal_raw_prefix" if prefix else
                                "reset" if edge <= 1 else "reloaded" if edge <= cyc else "release"))
     dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
                if (sd, k) not in L.hyp]
@@ -2871,6 +3015,9 @@ def noreset_report(L):
                 release=[e for e in kept if e["basis"] == "release"][:500],
                 n_universal_raw_D=sum(1 for e in kept if e["basis"] == "universal_raw_D"),
                 universal_raw_D=[e for e in kept if e["basis"] == "universal_raw_D"][:500],
+                raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0")),
+                n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
+                universal_raw_prefix=[e for e in kept if e["basis"] == "universal_raw_prefix"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
                 n_dropped=len(dropped), reloaded=[e for e in kept if e["basis"] == "reloaded"][:500],
                 dropped=dropped[:500],
@@ -3176,41 +3323,68 @@ def memory_layout(g, t, geom):
     Gate (synthesised netlist, one flop vector per element): [a][b] = address a, bit b.  When the gate has K = W/w
     times more elements than the gold memory has words (slang folds the inner unpacked dimension of
     `reg [w-1:0] x [0:N-1][0:K-1]` into one W-bit word, element 0 at the MSB, like its flat vectors), gate element
-    a is word a//K, sub-element K-1-a%K.  -> {gate key: gold key} when every gate bit lands on a distinct gold bit,
+    a is word a//K, sub-element K-1-a%K (K = the one divisor of W that places every gate bit on a distinct gold bit;
+    trailing elements may be absent).  -> {gate key: gold key} when every gate bit lands on a distinct gold bit,
     else None (never a guess)."""
     if not geom or not g or not t:
         return None
     W, S, O = geom
-    if W <= 0 or S <= 0 or any(len(v) != 2 for v in g.values()) or any(len(v) != 2 for v in t.values()):
+    if W <= 0 or S <= 0 or any(len(v) != 2 for v in g.values()):
+        return None
+    # one-bit elements: the gate names them x[a] (one index); bit 0 of element a (HBM argmax tvl[0:3][0:7])
+    one = all(len(v) == 1 for v in t.values())
+    if one:
+        t = {k: (v[0], 0) for k, v in t.items()}
+    elif any(len(v) != 2 for v in t.values()):
         return None
     words = {v[0] for v in g.values()}
-    if S % len(words):
-        return None
-    F = S // len(words)
+    # widening factor F: wide word w holds addresses w*F .. w*F+F-1.  When the present words do not divide S, F is
+    # read off the widest bit present: the LAST wide word may be partial (hcp_sys1 u_div r_rem [0:26] x 25 b ->
+    # r_rem[0][0..399] = addresses 0..15, r_rem[1][0..274] = 16..26), or trailing words may be absent altogether
+    # (HBM argmax tk / tvl [0:3]: the last tree level is unused, F = 1).  Every bit must land at an address < S.
+    if S % len(words) == 0:
+        F = S // len(words)
+    else:
+        F = max(j for _, j in g.values()) // W + 1
+        if max(words) >= -(-S // F):
+            return None
     gold = {}
     for k, (w, j) in g.items():
-        if j >= F * W:
+        if j >= F * W or w * F + j // W >= S:
             return None
         gold[(w * F + j // W, j % W)] = k
     if len(gold) != len(g):
         return None
+
+    def place(elem):
+        mp = {}
+        for k, e in elem.items():
+            if e not in gold:
+                return None
+            mp[k] = gold[e]
+        return mp if len(set(mp.values())) == len(mp) else None
+
     amax = max(a for a, _ in t.values())
-    if all(O <= a < O + S and 0 <= b < W for a, b in t.values()):
-        elem = dict(t)
-    elif F == 1 and O == 0 and (amax + 1) % S == 0 and W % ((amax + 1) // S) == 0:
-        K = (amax + 1) // S                          # inner elements per gold word; every word's last one present
-        w = W // K
-        if K < 2 or any(a < 0 or not 0 <= b < w for a, b in t.values()):
-            return None
-        elem = {k: (a // K, (K - 1 - a % K) * w + b) for k, (a, b) in t.items()}
-    else:
-        return None
-    mp = {}
-    for k, e in elem.items():
-        if e not in gold:
-            return None
-        mp[k] = gold[e]
-    return mp if len(set(mp.values())) == len(mp) else None
+    bmax = max(b for _, b in t.values())
+    elem = False
+    if all(O <= a < O + S and 0 <= b < W for a, b in t.values()) and (W == 1 or not one):
+        elem = None
+    elif F == 1 and O == 0 and min(min(v) for v in t.values()) >= 0:
+        # inner elements per gold word K (element width w = W / K): read off the gate's highest element and bit.
+        # Trailing elements may be absent (a reduction tree `x [0:LL][0:LP-1]` uses LP >> lv elements at level lv:
+        # HBM argmax ti / tvl last level keeps element 0 only, gate ti#t[24] = level 3 element 0 = gold
+        # ti[3][126..143]); K must be the ONLY divisor of W that places every gate bit on a distinct gold bit
+        # (tk: 264 b words, gate element 17 bit 32 fits K = 6 and K = 8; only K = 8 lands on gold bits), else no guess.
+        fits = []
+        for K in range(2, W + 1):
+            w = W // K
+            if W % K or amax >= K * S or bmax >= w or (one and w != 1):
+                continue
+            mp = place({k: (a // K, (K - 1 - a % K) * w + b) for k, (a, b) in t.items()})
+            if mp:
+                fits.append(mp)
+        return fits[0] if len(fits) == 1 else None
+    return place(t) if elem is None else None
 
 
 def alias_arrays(L, log, words=4, work=None):
@@ -3289,7 +3463,20 @@ def alias_arrays(L, log, words=4, work=None):
             votes[gb + "#t"] = len(g)                # index it differently (slang gt[row][4 words] vs gt[q][j])
         for tb, n in votes.most_common(1):
             t = T[tb]
-            if 2 * n < len(g) or 2 * len(t) < len(g) or len(t) > len(g):
+            if 2 * n < len(g):
+                continue
+            # The source memory's own geometry places every gate bit exactly, so the size guards below (made for
+            # guessed layouts) do not apply: synthesis may keep far fewer bits than the gold memory has (hcp_sys1
+            # u_div r_rem: gate 313 of 675, a triangular remainder pipeline whose constant low bits were dropped)
+            gmp = memory_layout(g, t, geom.get(gb))
+            if gmp:
+                apply(gmp)
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
+                           f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
+                continue
+            if 2 * len(t) < len(g) or len(t) > len(g):
                 continue
             cands = []
             for gr in (False, True):
@@ -3304,14 +3491,6 @@ def alias_arrays(L, log, words=4, work=None):
             # 192 b, gold a_pr[w][j] = element 8w + j/24, bit j%24), and the gate may have dropped constant high
             # bits (a_pr#t[r][3..16]), so radices read off either side's maximal indices give none of the four
             # flat variants above the right stride (QC slw_hc0 10-26: 223 a_pr + 268 b_emin false differences).
-            gmp = memory_layout(g, t, geom.get(gb))
-            if gmp:
-                apply(gmp)
-                del T[tb]
-                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
-                           f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
-                           f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
-                continue
             if not cands:
                 continue
             if len(cands) == 1:
@@ -4251,7 +4430,9 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             ins = m.cone_inputs(m.outs[idx[n]])
             kinds = sorted({kind[v][0] for v in ins if kind[v][0] not in ("matched", "paired")})
             keys = sorted(kind[v][1] for v in ins if kind[v][0] not in ("matched", "paired"))[:8]
-            e = dict(point=n, status=st, cone_unmatched=kinds, cone_unmatched_keys=keys)
+            e = dict(point=n, status=st, cone_unmatched=kinds, cone_unmatched_keys=keys,
+                     cone_support_count=len(ins),
+                     cone_state_keys=sorted({f"{kind[v][0]}:{kind[v][1]}" for v in ins})[:64])
             # a difference whose cone sees only matched key points, constants, partners and RTL registers that
             # synthesis removed although their next state is not constant is a real function difference
             if st == "differs" and set(kinds) <= {"gold_only", "gold_x"}:
@@ -4349,6 +4530,8 @@ def via_docker(args, image, mem):
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
+    if "OT_LEC_RAW_BASE_STEPS" in os.environ:
+        cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
     sol = os.environ.get("OT_LEC_SOLVER", "")
     if sol and os.path.isdir(sol):
         cmd += ["-v", f"{os.path.abspath(sol)}:/lecsolver:ro", "-e", "LEC_SOLVER_PATH=/lecsolver"]

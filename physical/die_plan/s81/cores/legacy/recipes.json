@@ -79,10 +79,22 @@
   "suffix": "r2",
   "note": "CLOCK-RESET/relay2 10-25: main RTL is the 2-flop station (S81-KITS-RTLC dc23a738f, +1 edge priced in gen_plan_v4 FRAME_BAND_STATION_EDGES); no one-station pair (rejected 10-24 20:42), canonical face_guard"
  },
+ "dsfd_bf_front_roots": {
+  "ref_tile": "physical/ref_tile/s81bf_front_five_roots_nlock_h03",
+  "multi_root": true,
+  "why_multi_root": "S81-CORE-LAT-R20 10-27: 228 replicas, 5 declared roots (ck + io_clk/io_n/io_w/io_e, spec clock_entry_domains); ref_tile = the plan-outline (116.64x198.72) nlock_h03 kit",
+  "defines": ["DSFD_BF_N32=1", "DSFD_BF_DEADPIN=1"], "why_deadpin": "S81-CORE-LAT-R21 (COORD R20 ruling b): x0[281:280], cfg[52:48], cfg[46:34] have no reader in the STATIC_PROGRAM front and no die-level proven-dead declaration -> own kept io_clk face register each (no cycle on any used path); the die bind must build dsfd_bf_front_roots with the same defines",
+  "includes": ["rtl/v41rom/ot_s81_so_label_q.sv", "rtl/v41rom/ot_bf6_n32.sv"],
+  "why_n32": "S81-CORE-LAT-R20: N32=1 = the native-census (<=32 loads) form of the CLOSED RTAG front (n32_soq_roomy kit defines); same ports as the plan view. N32=0 is not lint-clean (N32==0 alias always@* and the unconditional sequential copy writes both drive w_ca_r2/3, n_ca_r2: rtl_lint check -assert 4 problems). The die bind must build dsfd_bf_front_roots with the same define."
+ },
  "dsfd_cfifo_crs4": {
   "ref_tile": "physical/ref_tile/s81coll_cfifo_crs4",
   "multi_root": true,
-  "why_multi_root": "S81-CORE-LAT-R20 10-27 (COORD S81-CORES-R1 ruling 2): DECLARED multi-root core (spec clock_entry_domains, same_pll_fixed_phase 1:1): one clock / entry per root pin, each at the 12.3 budget, inter-root paths timed as related pairs"
+  "why_multi_root": "S81-CORE-LAT-R20 10-27 (COORD S81-CORES-R1 ruling 2): DECLARED multi-root core (spec clock_entry_domains, same_pll_fixed_phase 1:1): one clock / entry per root pin, each at the 12.3 budget, inter-root paths timed as related pairs",
+  "defines": ["DSFD_CRS4_LGATE"],
+  "includes": ["rtl/hdc/ot_hdc_cg.sv"],
+  "land_slots": {"xl0": 4, "xl1": 4, "xl2": 4, "xl3": 4},
+  "why_land_slots": "S81-CORE-LAT-R21 10-27 (COORD S81-CORE-LAT-R20 ruling (a)): face register per landing slot, no added cycle: DSFD_CRS4_LGATE = ot_s81_land GSLOT 1 (each of the D = 4 ring slots written through its own ICG at the same ck_f edges), so every xl<k> bit drives exactly 4 slot flop D pins on xk[k]; bench tools/s81_dv/crs4_bench.py --lgate. The die bind must build dsfd_cfifo_crs4 with the same define."
  },
  "dsfd_qbank_N": {
   "ref_tile": "physical/ref_tile/s81fill2_qbank_n",

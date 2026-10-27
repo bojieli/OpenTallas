@@ -78,7 +78,9 @@ class ShieldOnlyTest(unittest.TestCase):
         S = CR.shield_only_tcl(L)
         fw = [s for s in S if s.startswith("proc fw ")][0]
         self.assertNotIn("dbSBox_create $sw", fw)
-        self.assertEqual(fw.count("dbSBox_create $fsw"), 2)               # both shield stripes, both directions
+        # RM76 (5512b607f4): shield stripes go through the provenance helper ot_shield_box (still on $fsw).
+        self.assertEqual(fw.count("ot_shield_box $fsw"), 2)               # both shield stripes, both directions
+        self.assertNotIn("dbSBox_create $fsw", fw)
         self.assertEqual(fw.count("lappend ::ot_clk_obs"), 2)
         self.assertIn("proc fwnet {nm} { return {} }", S)
 

@@ -285,3 +285,99 @@ def test_recursive_physical_buffer_chains_and_negative_controls():
     assert r["verdict"] == "FAIL" and any("cycle" in x for x in r["fails"]["unregistered"]), r
     merged = net.replace(".QN(oq)", ".QN(q)")
     assert face_guard.guard(merged)["verdict"] == "FAIL"
+
+
+NET_CK2 = r"""
+module top(clk, clk_coll, a, o);
+  input clk; input clk_coll; input [1:0] a; output [1:0] o;
+  wire _0_; wire _1_; wire [1:0] q;
+  DFFHQNx1_ASAP7_75t_R \u_bin_a.q[0]$_DFF_P_  (.CLK(clk_coll), .D(a[0]), .QN(q[0]));
+  DFFHQNx1_ASAP7_75t_R \u_bin_a.q[1]$_DFF_P_  (.CLK(clk_coll), .D(a[1]), .QN(q[1]));
+  DFFHQNx1_ASAP7_75t_R \u_bout_o.q[0]$_DFF_P_  (.CLK(clk), .D(q[0]), .QN(_0_));
+  DFFHQNx1_ASAP7_75t_R \u_bout_o.q[1]$_DFF_P_  (.CLK(clk), .D(q[1]), .QN(_1_));
+  INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o[0]));
+  INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));
+endmodule
+"""
+
+
+# ---- S81-CORE-LAT-R21: declared landing ring (face register per landing slot, gated slots) --------------------------
+def _land_net(icg_shared=False, mux=False, two_roots=False, logic_on_gck=False):
+    g1 = "g0" if icg_shared else "g1"
+    ck1 = "ckb" if two_roots else "ck"
+    d1 = "m" if mux else "x"
+    extra = "  AND2x2_ASAP7_75t_R u_m (.A(x), .B(e), .Y(m));\n" if mux else ""
+    if logic_on_gck:
+        extra += "  AND2x2_ASAP7_75t_R u_l (.A(g0), .B(e), .Y(m));\n"
+    return f"""
+module top(ck, ckb, e, x, o);
+  input ck; input ckb; input e; input x; output o;
+  wire g0; wire g1; wire q0; wire q1; wire m; wire _0_;
+  ICGx1_ASAP7_75t_R u_cg0 (.CLK(ck), .ENA(e), .SE(1'b0), .GCLK(g0));
+  ICGx1_ASAP7_75t_R u_cg1 (.CLK({ck1}), .ENA(e), .SE(1'b0), .GCLK(g1));
+{extra}  DFFHQNx1_ASAP7_75t_R s0 (.CLK(g0), .D(x), .QN(q0));
+  DFFHQNx1_ASAP7_75t_R s1 (.CLK({g1}), .D({d1}), .QN(q1));
+  DFFHQNx1_ASAP7_75t_R \\u_bout_o.q$_DFF_P_ (.CLK(ck), .D(q0), .QN(_0_));
+  INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o));
+endmodule
+"""
+
+
+def test_sdc_clock_ports_parse():
+    sdc = ("create_clock -name core -period 833 [get_ports clk]\n"
+           "create_clock -name clk_coll -period 833.0000 [get_ports clk_coll]\n"
+           "create_clock -name vclk -period 833\n")
+    assert face_guard.sdc_clock_ports(sdc) == ["clk", "clk_coll"]
+
+
+def test_extra_sdc_clock_role_is_exempt():
+    # without the SDC clock list the extra clock role is a shared (data) input -> FAIL (coll_n 10-27 case)
+    assert face_guard.guard(NET_CK2)["verdict"] == "FAIL"
+    r = face_guard.guard(NET_CK2, clocks=["clk", "clk_coll"])
+    assert r["verdict"] == "PASS", r["fail_counts"]
+
+
+def test_sdc_clock_port_planned_as_data_is_refused():
+    with pytest.raises(ValueError):
+        face_guard.guard(NET_CK2, pins=[{"bus": "clk_coll", "bit": 0}], clocks=["clk_coll"])
+
+
+def test_main_reads_sdc_beside_pins(tmp_path):
+    (tmp_path / "net.v").write_text(NET_CK2)
+    (tmp_path / "pins.json").write_text("[]")
+    (tmp_path / "constraint.sdc").write_text("create_clock -name clk_coll -period 833 [get_ports clk_coll]\n")
+    assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json"),
+                            "--out", str(tmp_path / "fg.json")]) == 0
+
+
+SKIP_LAND = r"^(ck|ckb|e)$"
+
+
+def test_land_slot_word_shares_slot_icg():
+    net = _land_net().replace("input x;", "input x; input y;").replace("module top(ck, ckb, e, x, o);", "module top(ck, ckb, e, x, y, o);")
+    net = net.replace("endmodule", "  DFFHQNx1_ASAP7_75t_R t0 (.CLK(g0), .D(y), .QN());\n  DFFHQNx1_ASAP7_75t_R t1 (.CLK(g1), .D(y), .QN());\nendmodule")
+    r = face_guard.guard(net, "top", skip_re=SKIP_LAND, land={"x": 2, "y": 2})
+    assert r["verdict"] == "PASS" and r["land_slot_bits"] == 2, r["fails"]
+
+
+def test_land_slot_pass():
+    r = face_guard.guard(_land_net(), "top", skip_re=SKIP_LAND, land={"x": 2})
+    assert r["verdict"] == "PASS", r["fails"]
+    assert r["land_slot_bits"] == 1
+
+
+def test_land_slot_undeclared_is_shared():
+    r = face_guard.guard(_land_net(), "top", skip_re=SKIP_LAND)
+    assert r["verdict"] == "FAIL" and "shared" in r["fail_counts"]
+
+
+@pytest.mark.parametrize("kw,cls", [(dict(icg_shared=True), "land_slot"), (dict(mux=True), "land_slot"),
+                                    (dict(two_roots=True), "land_slot"), (dict(logic_on_gck=True), "land_slot")])
+def test_land_slot_negative(kw, cls):
+    r = face_guard.guard(_land_net(**kw), "top", skip_re=SKIP_LAND, land={"x": 2})
+    assert r["verdict"] == "FAIL" and cls in r["fail_counts"], r
+
+
+def test_land_slot_wrong_depth():
+    r = face_guard.guard(_land_net(), "top", skip_re=SKIP_LAND, land={"x": 4})
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"]
