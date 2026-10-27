@@ -25,6 +25,6 @@ ax.set(xlim=(0,W),ylim=(0,H),xlabel='um',ylabel='um',aspect='equal',title='ROWX 
 fig.tight_layout();fig.savefig(R/'render/macro_plan.png',dpi=160)
 report=dict(verdict='PASS-COND PLAN FORM ONLY',outline_um=[W,H],macro_count=7,macro_halo_um=4.32,channel_min_um=48,
  usable_channel_after_halos_um=39.36,assumed_derated_horizontal_tracks_per_um=35,
- worst_RP_W_dynamic_pins=791,channel_util_est=791/(39.36*35),
+ worst_RP_W_dynamic_pins=793,channel_util_est=793/(39.36*35),
  conditions=['Actual parent lot FAIL: no build until S81 plan owner reserves a legal dedicated/repacked lot.','Complete pin/FF placement, reach census, PG and clock-tree plan are still needed before physical trial.','No routed timing or signoff claim.'])
 (R/'recipe_geom_review.json').write_text(json.dumps(report,indent=2)+'\n')

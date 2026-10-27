@@ -17,5 +17,11 @@
   "added_boot_cycles": 0,
   "signoff": "NOT RUN",
   "existing_parent_lot": "FAIL",
-  "next": "ParentS81plan repack/adjacentlot; sourcepriorityguard followup rechecks minimum before finalREADY."
+  "next": "S81 parent repack/adjacentlot; prepareplacementclockpincontract beforeanyphysicaltrial",
+  "final_native_minimum_source": "da91c09872",
+  "restart_priority_miter": "PASS bad0",
+  "existing_default_build_lint": "PASS",
+  "explicit_native_physical_top_lint": "PASS",
+  "final_native_transport_source": "da91c09872",
+  "final_16_owner_smoke": "PASS exact baseline timing/link/score rows"
 }

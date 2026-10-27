@@ -46,10 +46,10 @@
       ]
     },
     "core_margin": 8.64,
-    "macro_halo": 4.32,
     "orfs_vars": {
       "SYNTH_HDL_FRONTEND": "slang"
     },
-    "source": "ROWX SRAM noaddedcycle native miter+production shape PASS; parent lot stillFAIL, plan-form only"
+    "source": "ROWX SRAM noaddedcycle native miter+production shape PASS; parent lot stillFAIL, plan-form only",
+    "macro_rows_halo": 4.32
   }
 }

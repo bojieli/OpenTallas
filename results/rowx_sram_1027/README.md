@@ -4,7 +4,7 @@
 
 RP reads the next output index one edge early, including index0 at ci40. SRAM read-before-write collisions forward the actual write payload, which is essential for B[0] at ci40. LC reads rp_next on every edge and forwards empty-push and last-pop+push, preserving the combinational head on every cycle.
 
-Native raw and p192-macro minimal lockstep: bad0,640RP slots, LC bypass mutant105 mismatches, RP bypass mutant320 mismatches, RP fault0. Production16-owner packed transport using real p192 models: seed9/rate764/all15links37cycles/jitter4 PASS,2049words per receiver,err0. TRANSPORT_TIMING first_export22/span3629/hop_sum1365 exactly matches committed gold bench3b run_base_pk16_s9.log. These are RTL gates, not timing sign-off.
+Native raw and p192-macro minimal lockstep (including final active-restart corner): bad0,640RP slots, LC bypass mutant105 mismatches, RP bypass mutant320 mismatches, RP fault0. Final restart miter bad0; existing default XM and explicit native physical top build lint PASS. Production16-owner packed transport using real p192 models: seed9/rate764/all15links37cycles/jitter4 PASS,2049words per receiver,err0. TRANSPORT_TIMING first_export22/span3629/hop_sum1365 exactly matches committed gold bench3b run_base_pk16_s9.log. These are RTL gates, not timing sign-off.
 
 Seven physical macros per XM:3 existing64x512p192_mir and4 mask32/RW-preserving32x512p192_mir.94208logical bits use163840physical bits because unusedrows are padded. Pin-access-correct total macro area148883.58um² (raw dense-core minimum75393.30um² is not the physicallot). New32x512p192 generator uses the existing calibrated p192 pin-lead timing method; originalmacro views are immutable. TT/FF are the closure corners; generatedSSlib is informational only.
 
