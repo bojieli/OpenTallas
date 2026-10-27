@@ -34,7 +34,8 @@ def color_intervals(rows):
     return result, count
 
 
-def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False, separate_drops=False):
+def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False, separate_drops=False, mesh_straps=None):
+    mesh_straps = mesh_straps or []
     out = copy.deepcopy(spec)
     groups, bydrv, incoming = defaultdict(list), defaultdict(list), {}
     for name, cell in out['cell_sites'].items():
@@ -99,8 +100,10 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
         step = pg['pitch_um'] / 2
         phase = pg['offset_um'] + pg['pitch_um'] / 4
         base = phase + round((bucket-phase)/step) * step
+        legal_cols = [base+k*step for k in range(-n//2, 2*n+2)
+                      if not any(ss[0]==lay and abs(ss[1]-(base+k*step))<1.5 for ss in mesh_straps)]
         for g, c in colors.items():
-            desired = base + (c - n//2) * step
+            desired = legal_cols[c]
             tr = D.DEFAULT_TRACKS[lay]
             targets[g] = dict(layer=lay, c=round(tr['offset_um'] +
                 round((desired-tr['offset_um'])/tr['pitch_um']) * tr['pitch_um'], 4), color=c)
@@ -177,7 +180,7 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
         # physical capture columns before routing, bounded by real host and
         # actual pin-to-pin clock repeater reach; no extra logic stages.
         pg=grid["M9"]; step=pg["pitch_um"]/2; phase=pg["offset_um"]+pg["pitch_um"]/4
-        used=[]
+        used=[(ss[1],ss[2],ss[3],'ck_mesh') for ss in mesh_straps if ss[0]=='M9']
         for g,edges in bydrv.items():
             if layers[g]=="M9":
                 yy=[pin(g,"Y")[1]]+[pin(e["load"],"A")[1] for e in edges]
@@ -239,7 +242,7 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
     return out, corridors
 
 
-def route(spec, corridors, plan, exact_jogs=False):
+def route(spec, corridors, plan, exact_jogs=False, mesh_straps=None):
     original = D.C128.TrackRouter
     class CorridorRouter(original):
         def __init__(self, *a, **kw):
@@ -251,6 +254,10 @@ def route(spec, corridors, plan, exact_jogs=False):
             if self.preloaded:
                 return
             self.preloaded = True
+            if mesh_straps:
+                segs=[(ss[0],ss[2],ss[1],ss[3],ss[1],'ck_mesh','mesh') if ss[0]=='M8'
+                      else (ss[0],ss[1],ss[2],ss[1],ss[3],'ck_mesh','mesh') for ss in mesh_straps]
+                super().reserve(D.C128.clock_shapes(segs,D.NDR['8w'],'VSS'))
             errors = []
             for name, row in sorted(corridors.items(), key=lambda p: -(p[1]['hi']-p[1]['lo'])):
                 c, mode, ext = super().place(row['layer'], row['c'], row['lo'], row['hi'], name,
@@ -313,14 +320,16 @@ def main():
     ap.add_argument('--exact-local-jogs', action='store_true')
     ap.add_argument('--lower-face-gap', action='store_true')
     ap.add_argument('--separate-drops', action='store_true')
+    ap.add_argument('--mesh-straps', type=Path, help='actual continuous mesh strap file reserved before all tree metal')
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True)
     plan = S.Plan(S.load(a.plan))
+    mesh_straps=json.loads(a.mesh_straps.read_text()) if a.mesh_straps else []
     spec, corridors = allocate(json.loads(a.spec.read_text()), plan, align_inputs=a.align_inputs,
-                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap, separate_drops=a.separate_drops)
+                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap, separate_drops=a.separate_drops, mesh_straps=mesh_straps)
     (a.out/'explicit_tree.json').write_text(json.dumps(spec, indent=1)+'\n')
     (a.out/'corridors.json').write_text(json.dumps(corridors, indent=1)+'\n')
     try:
-        cells, nets, ports, meta = route(spec, corridors, plan, exact_jogs=a.exact_local_jogs)
+        cells, nets, ports, meta = route(spec, corridors, plan, exact_jogs=a.exact_local_jogs, mesh_straps=mesh_straps)
     except D.C128.PlanError as error:
         from collections import Counter
         summary = dict(verdict='FAIL', counts=dict(Counter(r['kind'] for r in error.rows)), errors=len(error.rows))
@@ -330,6 +339,7 @@ def main():
         (a.out/'mesh.json').write_text(json.dumps(meta)+'\n')
         (a.out/'place.json').write_text(json.dumps(cells)+'\n')
         (a.out/'nets.json').write_text(json.dumps(dict(nets=nets, ports=ports))+'\n')
+    summary['mesh_straps_reserved']=len(mesh_straps)
     summary['corridor_colors'] = spec['summary']['corridor_colors']
     (a.out/'summary.json').write_text(json.dumps(summary, indent=1)+'\n')
     print(json.dumps(summary), flush=True)
