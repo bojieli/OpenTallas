@@ -1704,7 +1704,7 @@ LAT_TOL_UM = 0.01            # plan coordinates are r3-rounded: equal-cut / midp
 
 
 def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, track_profile=None, rule128=None,
-                  tree_only=False):
+                  tree_only=False, pin_stack=False):
     """CLOCK-128-R4 (COORD RULING MASTER-PLAN-R5 12:58): the die H-tree built FROM the master plan's die_tree_plan.json
     lattice.nodes (binding xy, no search, no slide).  Every node = a partition pushdown island (binding
     new_partition_island / existing_island), every leg straight with n = ceil(L / rep_um) equal segments whose cuts are
@@ -1909,7 +1909,7 @@ def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, trac
         pgr = DI.pg_rects(P, C128.pg_grid(P))
     router = C128.TrackRouter(NDR[ndr], sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM)
     router.reserve(C128.pg_shapes(pgr))
-    wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, router=router)
+    wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, router=router, pin_stack=pin_stack)
     out["fixed_wires"] = wires
     out["meta"]["tree_tracks"] = dict(
         method="C128.TrackRouter: nearest PG-aware track, clock metal + VSS shields clear of PG/clock/shields by the NDR "
@@ -1917,6 +1917,10 @@ def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, trac
         moved=sum(1 for v in router.moves if v > 1e-6), modes=dict(router.modes),
         move_max_um=round(max(router.moves or [0.0]), 4), pg_rects=len(pgr),
         pg_source="--pg-json" if pg_shapes is not None else "plan die.pg.grid")
+    if pin_stack:   # CLOCK-128-R7 opt-in (absent from meta otherwise: default output byte-identical)
+        out["meta"]["tree_tracks"]["pin_stack"] = dict(
+            rule="M8 junction over each cell pin bar; VIA78 + M7 riser along the bar column; straight VIA67..VIA12 stack; min-area pads M2-M6",
+            stacks=sum(len(w["stacks"]) for w in wires), pads=C128.STACK_PAD)
     out["meta"]["clock_shield"] = C128.shield_record(wires, sh, 0, 0)
     out["meta"]["rule_12_8"] = dict(methodology="v4.4 12.8 + 12.4b", shield_net=sh, sizing="BUFx24 nodes/repeaters (plan)",
                                     early_offset_taps=0, tap_slew_max_ps=rule128.get("tap_slew_max_ps", C128.TAP_SLEW_MAX_PS))
@@ -1974,7 +1978,8 @@ def cmd_build(a):
             rule = dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps) if getattr(a, "rule_12_8", False) else None
             cells, nets, ports, M = build_lattice(P, json.loads(Path(a.tree_plan).read_text()),
                                                   hashlib.sha256(Path(a.plan).read_bytes()).hexdigest(), a.rep_um,
-                                                  a.ndr, pg_shapes, tracks, rule, tree_only=a.tree_only)
+                                                  a.ndr, pg_shapes, tracks, rule, tree_only=a.tree_only,
+                                                  pin_stack=getattr(a, "pin_stack", False))
             M["meta"]["lattice_tree"]["tree_plan"] = str(a.tree_plan)
             M["meta"]["lattice_tree"]["tree_plan_sha256"] = hashlib.sha256(Path(a.tree_plan).read_bytes()).hexdigest()
         else:
@@ -3168,7 +3173,11 @@ def cmd_report(a):
                       early_offset_verdict="FAIL" if g12["residual"]["core_latency"]["early_offset_taps"] else "PASS",
                       rule_12_8=g12)
             r_.pop("compensated_sink_insertion_ps", None)
-            C128.write_tap_arrivals(d / f"tap_arrivals_{corner}.json", M, corner, arr, rng, regd)
+            fold = None
+            if getattr(a, "aocv_fold", False):   # CLK-AOCV opt-in fields (default: export unchanged)
+                fold = C128.aocv_fold_fields(M, json.loads((d / "nets.json").read_text())["nets"],
+                                             json.loads((d / "place.json").read_text()), Nn)
+            C128.write_tap_arrivals(d / f"tap_arrivals_{corner}.json", M, corner, arr, rng, regd, fold=fold)
     # clock power: C V^2 f over every die clock wire + pin (mesh from the transient, tree/stub wire from length)
     nd = NDR[M["meta"]["ndr"]]
     cw = (DC.LAYER_RC["M8"][1] + DC.LAYER_RC["M9"][1]) / 2 * nd["cf"]
@@ -3315,6 +3324,9 @@ def main(argv=None):
                    "(tree split order, e.g. yyyyxxxxxyy); other rows are driverless straps of the same mesh")
     b.add_argument("--tree-plan", help="CLOCK-128-R4: build the die H-tree from the master plan's die_tree_plan.json "
                    "lattice.nodes (binding xy; fail closed on any plan inconsistency)")
+    b.add_argument("--pin-stack", action="store_true", help="CLOCK-128-R7 (with --tree-plan): every clock-cell pin "
+                   "reached from an M8 junction over its M1 bar: VIA78, M7 riser along the bar column, straight VIA67..VIA12 "
+                   "stack with min-area pads (plan error when the riser exceeds the island window); default off = unchanged geometry")
     b.add_argument("--tree-only", action="store_true", help="with --tree-plan: build only the plan-declared die tree "
                    "(root -> lattice leaves, one region-entry port per leaf); diagnostic, never freeze evidence")
     b.add_argument("--allow-plan-errors", action="store_true",
@@ -3367,6 +3379,8 @@ def main(argv=None):
     r.add_argument("dir")
     r.add_argument("--plan", required=True)
     r.add_argument("--corner", action="append")
+    r.add_argument("--aocv-fold", action="store_true", help="CLK-AOCV: add per-tap stages_from_root/xy_um and per-CPPR-"
+                   "node node_stages/node_xy_um/node_late_ps/node_early_ps to tap_arrivals_<C>.json (default: unchanged)")
     r.add_argument("--landing-cycles", type=int, default=2,
                    help="fixed cycles a LANDED crossing adds (forwarded-clock land + local-clock read), --regions only")
     r.add_argument("--landing-budget-ps", type=float, default=DC.PERIOD_PS / 2,
