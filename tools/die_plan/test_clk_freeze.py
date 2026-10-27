@@ -147,7 +147,8 @@ def test_check_script_fails_closed_without_pre_dump(tmp_path):
 
 def test_lock_uses_fixed_wire_and_locked_placement():
     t = (DP / "clk_freeze.tcl").read_text()
-    assert "newPath {*}$a" in t and "FIXED" in t
+    assert "newPath [$dec getLayer] FIXED" in t and "$enc {*}$a" in t
+    assert "ot_clk_encode_wire $n $::ot_clk_ops($nm) $::ot_clk_tok($nm)" in t  # post-GRT restore
     assert "setPlacementStatus LOCKED" in t and "setDoNotTouch 1" in t
     # fail closed: a re-encode that is not byte-identical errors out
     assert "is not byte-identical" in t

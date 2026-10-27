@@ -139,21 +139,14 @@ proc ot_clk_dump {path {tag ""} {nets_file ""}} {
     [expr {([clock milliseconds] - $t0) / 1000.0}]]
 }
 
-# re-encode one net's wire with wire type FIXED; returns 1 if changed, 0 if already FIXED / no wire; errors on any
-# opcode-stream mismatch (fail closed: the ECO must not run on a half-locked clock)
-proc ot_clk_fix_wire {net} {
+# decode one net's wire into an encoder op list (wire type forced FIXED); [] when the net has no wire
+proc ot_clk_wire_ops {net} {
   set w [$net getWire]
-  if {$w eq "NULL" || $w eq ""} { return 0 }
-  if {[ot_clk_wire_types $net] eq {64}} { return 0 }
-  set before [ot_clk_wire_tokens $net]
-  set block [$net getBlock]
-  set nw [odb::dbWire_create $block]
-  set enc [odb::dbWireEncoder]
-  $enc begin $nw
+  if {$w eq "NULL" || $w eq ""} { return {} }
+  set ops {}
   set dec [odb::dbWireDecoder]
   $dec begin $w
   set END $odb::dbWireDecoder_END_DECODE
-  set lastx 0; set lasty 0
   while {1} {
     set op [$dec next]
     if {$op == $END} break
@@ -163,58 +156,62 @@ proc ot_clk_fix_wire {net} {
         set rule ""
         if {[$dec peek] == 11} { $dec next; set rule [$dec getRule] }
         switch $op {
-          0 { set a [list [$dec getLayer] FIXED] }
-          1 { set a [list [$dec getJunctionValue] FIXED] }
-          2 { set a [list [$dec getJunctionValue] [$dec getLayer] FIXED] }
-          3 { set a [list [$dec getJunctionValue] [$dec getLayer] FIXED] }
+          0 { set a [list newPath [$dec getLayer] FIXED] }
+          1 { set a [list newPath [$dec getJunctionValue] FIXED] }
+          2 { set a [list newPathShort [$dec getJunctionValue] [$dec getLayer] FIXED] }
+          3 { set a [list newPathVirtualWire [$dec getJunctionValue] [$dec getLayer] FIXED] }
         }
         if {$rule ne ""} { lappend a $rule }
-        switch $op {
-          0 - 1 { $enc newPath {*}$a }
-          2 { $enc newPathShort {*}$a }
-          3 { $enc newPathVirtualWire {*}$a }
-        }
+        lappend ops $a
       }
-      4 { lassign [$dec getPoint] lastx lasty; $enc addPoint $lastx $lasty }
-      5 { lassign [$dec getPoint_ext] lastx lasty e; $enc addPoint $lastx $lasty $e }
-      6 { $enc addVia [$dec getVia] }
-      7 { $enc addTechVia [$dec getTechVia] }
+      4 { lappend ops [list addPoint {*}[lrange [$dec getPoint] 0 1]] }
+      5 { lappend ops [list addPoint {*}[lrange [$dec getPoint_ext] 0 2]] }
+      6 { lappend ops [list addVia [$dec getVia]] }
+      7 { lappend ops [list addTechVia [$dec getTechVia]] }
       8 {
         # RECT: operands = kRect + 3 kOperand at the op index (decoder has no Tcl getter for the deltas)
         set j [$dec getJunctionId]
-        $enc addRect [$w getData $j] [$w getData [expr {$j+1}]] [$w getData [expr {$j+2}]] [$w getData [expr {$j+3}]]
+        lappend ops [list addRect [$w getData $j] [$w getData [expr {$j+1}]] [$w getData [expr {$j+2}]] [$w getData [expr {$j+3}]]]
       }
-      9 { $enc addITerm [$dec getITerm] }
-      10 { $enc addBTerm [$dec getBTerm] }
+      9 { lappend ops [list addITerm [$dec getITerm]] }
+      10 { lappend ops [list addBTerm [$dec getBTerm]] }
       11 { error "OT_CLK_FREEZE FAIL: stray RULE op in [$net getName]" }
       default { error "OT_CLK_FREEZE FAIL: unsupported wire op $op in [$net getName]" }
     }
   }
+  return $ops
+}
+
+# encode OPS as the net's new (FIXED) wire, replacing any current wire; the result must reproduce TOKENS exactly
+# (fail closed: the ECO must not run, or continue, on a half-locked clock)
+proc ot_clk_encode_wire {net ops tokens} {
+  set nw [odb::dbWire_create [$net getBlock]]
+  set enc [odb::dbWireEncoder]
+  $enc begin $nw
+  foreach a $ops { $enc {*}$a }
   $enc end
-  # verify on the unattached copy before swapping
-  set after {}
-  set n [$nw length]
-  set types {}
-  for {set i 0} {$i < $n} {incr i} {
-    set o [$nw getOpcode $i]
-    if {($o & 0x1F) in {0 1 2 13}} { lappend types [expr {$o & 0xE0}]; set o [expr {$o & 0x1F}] }
-    lappend after $o
-  }
-  set bops {}
-  foreach t $before { lappend bops [lindex [split $t :] 0] }
-  set ok [expr {$n == [$w length] && $after eq $bops && [lsort -unique $types] eq {64}}]
-  if {$ok} {
-    for {set i 0} {$i < $n} {incr i} {
-      if {[$nw getData $i] != [$w getData $i]} { set ok 0; break }
-    }
-  }
-  if {!$ok} {
-    odb::dbWire_destroy $nw
-    error "OT_CLK_FREEZE FAIL: FIXED re-encode of [$net getName] is not byte-identical (ops [$w length] -> $n)"
-  }
-  odb::dbWire_destroy $w
+  set w [$net getWire]
+  if {$w ne "NULL" && $w ne ""} { odb::dbWire_destroy $w }
   $nw attach $net
-  if {[ot_clk_wire_tokens $net] ne $before} { error "OT_CLK_FREEZE FAIL: [$net getName] tokens changed after attach" }
+  if {[ot_clk_wire_tokens $net] ne $tokens || [ot_clk_wire_types $net] ne {64}} {
+    error "OT_CLK_FREEZE FAIL: FIXED encode of [$net getName] is not byte-identical to the routed wire"
+  }
+}
+
+# re-encode one net's wire with wire type FIXED; returns 1 if changed, 0 if already FIXED / no wire.  Keeps the op list
+# + tokens in ::ot_clk_ops / ::ot_clk_tok for ot_clk_freeze_assert's restore.
+proc ot_clk_fix_wire {net} {
+  set w [$net getWire]
+  if {$w eq "NULL" || $w eq ""} { return 0 }
+  set nm [$net getName]
+  set before [ot_clk_wire_tokens $net]
+  set ops [ot_clk_wire_ops $net]
+  set n0 [$w length]
+  set ::ot_clk_ops($nm) $ops
+  set ::ot_clk_tok($nm) $before
+  if {[ot_clk_wire_types $net] eq {64}} { return 0 }
+  ot_clk_encode_wire $net $ops $before
+  if {[[$net getWire] length] != $n0} { error "OT_CLK_FREEZE FAIL: FIXED re-encode of [$net getName] is not byte-identical (ops $n0 -> [[$net getWire] length])" }
   return 1
 }
 
@@ -231,14 +228,18 @@ proc ot_clk_freeze {{dump_dir ""}} {
     set ::ot_clk_frozen 0
     return
   }
-  set nfix 0; set nwire 0; set insts [dict create]
+  set nfix 0; set nwire 0; set insts [dict create]; set drv [dict create]
+  array unset ::ot_clk_ops; array unset ::ot_clk_tok
   foreach n $nets {
     if {[$n getWire] ne "NULL" && [$n getWire] ne ""} { incr nwire }
     incr nfix [ot_clk_fix_wire $n]
     $n setDoNotTouch 1
-    foreach it [$n getITerms] { dict set insts [[$it getInst] getName] [$it getInst] }
+    foreach it [$n getITerms] {
+      dict set insts [[$it getInst] getName] [$it getInst]
+      if {[$it isOutputSignal]} { dict set drv [[$it getInst] getName] 1 }
+    }
   }
-  set nmoved 0
+  set nmoved 0; set ndt 0
   foreach k [dict keys $insts] {
     set i [dict get $insts $k]
     # odb LOCKED = DEF FIXED (DPL / rsz never move LOCKED, FIRM or COVER instances)
@@ -246,27 +247,37 @@ proc ot_clk_freeze {{dump_dir ""}} {
       incr nmoved
       $i setPlacementStatus LOCKED
     }
-    $i setDoNotTouch 1
+    # dont_touch only on clock-tree cells (an output pin on a clock net); sink flops stay touchable so hold repair can
+    # insert buffers before their D pins (dont_touch sinks -> RSZ-3006, HEAD canary 10-27 11:57).  A sink resize would
+    # change the clock-net pin geometry -> caught by the blocking check (inst master diff).
+    if {[dict exists $drv $k]} { $i setDoNotTouch 1; incr ndt }
   }
   set ::ot_clk_frozen 1
   set ::ot_clk_frozen_nets {}
   foreach n $nets { if {[$n getWire] ne "NULL" && [$n getWire] ne ""} { lappend ::ot_clk_frozen_nets [$n getName] } }
-  puts "OT_CLK_FREEZE ON clock nets [llength $nets] (with wire $nwire, re-encoded FIXED $nfix) instances [dict size $insts] (placement -> LOCKED: $nmoved were movable) dont_touch nets+instances"
+  puts "OT_CLK_FREEZE ON clock nets [llength $nets] (with wire $nwire, re-encoded FIXED $nfix) instances [dict size $insts] (placement -> LOCKED: $nmoved were movable) dont_touch nets + $ndt clock-tree cells"
 }
 
-# assert inside the ECO session (after global_route -end_incremental): no clock net lost / changed its wire
+# inside the ECO session, after each global_route -end_incremental.  OpenROAD GlobalRouter::updateDirtyNets destroys the
+# dbWire of EVERY dirty net regardless of wire type (no FIXED guard; a clock net gets dirty when e.g. pin access points of
+# a sink are reset next to a new hold buffer: QC canary 10-27 11:57, 20/106 nets), so the lock restores each frozen
+# net's FIXED wire byte-identically from the op list taken at freeze (before DRT sees the net), then asserts every
+# frozen net carries exactly its pre-ECO wire.  Restored nets are listed; the chain's clock-geometry diff stays blocking.
 proc ot_clk_freeze_assert {tag} {
   if {![info exists ::ot_clk_frozen] || !$::ot_clk_frozen} { return }
-  set bad {}
+  set bad {}; set restored {}
   set block [ord::get_db_block]
   foreach nm $::ot_clk_frozen_nets {
     set n [$block findNet $nm]
     if {$n eq "NULL" || $n eq ""} { lappend bad $nm; continue }
     set w [$n getWire]
-    if {($w eq "NULL" || $w eq "") || [ot_clk_wire_types $n] ne {64}} { lappend bad $nm }
+    if {($w eq "NULL" || $w eq "") || [ot_clk_wire_types $n] ne {64} || [ot_clk_wire_tokens $n] ne $::ot_clk_tok($nm)} {
+      if {[catch {ot_clk_encode_wire $n $::ot_clk_ops($nm) $::ot_clk_tok($nm)} msg]} { lappend bad $nm; puts $msg; continue }
+      lappend restored $nm
+    }
   }
   if {[llength $bad]} {
-    error "OT_CLK_FREEZE FAIL $tag: [llength $bad] clock nets lost the FIXED wire: [lrange $bad 0 19]"
+    error "OT_CLK_FREEZE FAIL $tag: [llength $bad] clock nets cannot carry their pre-ECO FIXED wire: [lrange $bad 0 19]"
   }
-  puts "OT_CLK_FREEZE $tag OK (all clock nets still FIXED-wired)"
+  puts "OT_CLK_FREEZE $tag OK: all [llength $::ot_clk_frozen_nets] clock nets carry their pre-ECO FIXED wire (restored [llength $restored] destroyed by GRT updateDirtyNets: [lrange $restored 0 19][expr {[llength $restored] > 20 ? { ...} : {}}])"
 }
