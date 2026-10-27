@@ -1,0 +1,177 @@
+{
+ "cell_sites": {
+  "ckt_0_0": {
+   "origin_um": [
+    10.8,
+    10.8
+   ],
+   "part": "p",
+   "master": "BUFx24_ASAP7_75t_R",
+   "w": 1.62,
+   "orient": "R0",
+   "group": 0,
+   "kind": "top_node"
+  },
+  "ckt_0_1": {
+   "origin_um": [
+    10.8,
+    11.07
+   ],
+   "part": "p",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "w": 1.188,
+   "orient": "R0",
+   "group": 0,
+   "kind": "top_node"
+  },
+  "ckt_1_0": {
+   "origin_um": [
+    60.48,
+    10.8
+   ],
+   "part": "p",
+   "master": "BUFx24_ASAP7_75t_R",
+   "w": 1.62,
+   "orient": "R0",
+   "group": 1,
+   "kind": "top_rep"
+  },
+  "ckt_1_1": {
+   "origin_um": [
+    60.48,
+    11.07
+   ],
+   "part": "p",
+   "master": "BUFx24_ASAP7_75t_R",
+   "w": 1.62,
+   "orient": "R0",
+   "group": 1,
+   "kind": "top_rep"
+  },
+  "ckt_2_0": {
+   "origin_um": [
+    120.42,
+    6.75
+   ],
+   "part": "p",
+   "master": "BUFx24_ASAP7_75t_R",
+   "w": 1.62,
+   "orient": "R0",
+   "group": 2,
+   "kind": "col_tap"
+  },
+  "ckt_3_0": {
+   "origin_um": [
+    10.8,
+    30.24
+   ],
+   "part": "p",
+   "master": "BUFx24_ASAP7_75t_R",
+   "w": 1.62,
+   "orient": "R0",
+   "group": 3,
+   "kind": "col_tap"
+  }
+ },
+ "nets": [
+  {
+   "drv": "g0",
+   "load": "g1",
+   "layer": "M8",
+   "ndr": "4w",
+   "edge": "e0"
+  },
+  {
+   "drv": "g1",
+   "load": "g2",
+   "layer": "M8",
+   "ndr": "16w",
+   "edge": "e1"
+  },
+  {
+   "drv": "g0",
+   "load": "g3",
+   "layer": "M9",
+   "ndr": "8w",
+   "edge": "e2"
+  }
+ ],
+ "clock_topology_version": 2,
+ "mesh": {
+  "ndr": "8w",
+  "M8": [
+   {
+    "y": 6.92,
+    "x0": 11.72,
+    "x1": 121.4
+   },
+   {
+    "y": 30.36,
+    "x0": 11.72,
+    "x1": 121.4
+   }
+  ],
+  "M9": [
+   {
+    "x": 11.72,
+    "y0": 6.92,
+    "y1": 30.36
+   },
+   {
+    "x": 121.4,
+    "y0": 6.92,
+    "y1": 30.36
+   }
+  ],
+  "vias": [
+   {
+    "x": 11.72,
+    "y": 6.92
+   },
+   {
+    "x": 11.72,
+    "y": 30.36
+   },
+   {
+    "x": 121.4,
+    "y": 6.92
+   },
+   {
+    "x": 121.4,
+    "y": 30.36
+   }
+  ],
+  "drivers": [
+   {
+    "group": "g2",
+    "xy": [
+     121.4,
+     6.92
+    ]
+   },
+   {
+    "group": "g3",
+    "xy": [
+     11.72,
+     30.36
+    ]
+   }
+  ],
+  "taps": [
+   {
+    "part": "p",
+    "xy": [
+     11.72,
+     6.92
+    ]
+   },
+   {
+    "part": "p",
+    "xy": [
+     121.4,
+     30.36
+    ]
+   }
+  ]
+ }
+}

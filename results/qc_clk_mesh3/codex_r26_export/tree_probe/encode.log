@@ -1,0 +1,67 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 148 rows of 3703 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 200.000 40.000 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 199.962 39.960 ) um
+[INFO IFP-0102] Core area:                         7990.482 um^2
+[INFO IFP-0103] Total instances area:                 2.508 um^2
+[INFO IFP-0104] Effective utilization:                0.000
+[INFO IFP-0105] Number of instances:                      6
+[WARNING ODB-1003] (M1) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M2) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M3) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M4) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M5) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M6) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M7) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (Pad) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.04
+[WARNING ODB-1003] (M1) layer's width from (ot_mesh_ndr__16w) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M2) layer's width from (ot_mesh_ndr__16w) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M3) layer's width from (ot_mesh_ndr__16w) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M4) layer's width from (ot_mesh_ndr__16w) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M5) layer's width from (ot_mesh_ndr__16w) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M6) layer's width from (ot_mesh_ndr__16w) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M7) layer's width from (ot_mesh_ndr__16w) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (Pad) layer's width from (ot_mesh_ndr__16w) NDR is not defined. Using the default value 0.04
+[WARNING ODB-1003] (M1) layer's width from (ot_mesh_ndr__4w) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M2) layer's width from (ot_mesh_ndr__4w) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M3) layer's width from (ot_mesh_ndr__4w) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M4) layer's width from (ot_mesh_ndr__4w) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M5) layer's width from (ot_mesh_ndr__4w) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M6) layer's width from (ot_mesh_ndr__4w) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M7) layer's width from (ot_mesh_ndr__4w) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (Pad) layer's width from (ot_mesh_ndr__4w) NDR is not defined. Using the default value 0.04
+[WARNING ODB-1003] (M1) layer's width from (ot_mesh_ndr__8w) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M2) layer's width from (ot_mesh_ndr__8w) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M3) layer's width from (ot_mesh_ndr__8w) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M4) layer's width from (ot_mesh_ndr__8w) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M5) layer's width from (ot_mesh_ndr__8w) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M6) layer's width from (ot_mesh_ndr__8w) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M7) layer's width from (ot_mesh_ndr__8w) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (Pad) layer's width from (ot_mesh_ndr__8w) NDR is not defined. Using the default value 0.04
+OT_ROUTED_CLOCK nets 5 pin_stairs 8 port_joins 3
+V2_ENCODER_DONE

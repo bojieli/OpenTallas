@@ -301,6 +301,60 @@ def render(B, spec, path):
     fig.savefig(path,dpi=130,bbox_inches='tight'); plt.close(fig)
 
 
+def common_slot_failure(B, path, error):
+    """Diagnose the actual failed allocator frame; no placement is retried here."""
+    tb=error.__traceback__; loc=None
+    while tb:
+        if tb.tb_frame.f_code.co_name=='assign_periodic': loc=tb.tb_frame.f_locals
+        tb=tb.tb_next
+    if not loc or 'key' not in loc or 'mem' not in loc: return None
+    key,mem,I=loc['key'],loc['mem'],loc['I']
+    typ,fx,fy,_=key; gx,gy,valid=I.tgrid[typ]
+    used=loc['used'][typ]; ov=loc['ov']
+    candidates=[]
+    for k,j in zip(*valid.nonzero()):
+        sites=[I.to_die(n,float(gx[k]),float(gy[j])) for _,n in mem]
+        blocked=[n for (_,n),(x,y) in zip(mem,sites) if ov(x,y)]
+        state='used' if (int(k),int(j)) in used else 'blocked' if blocked else 'free'
+        candidates.append(dict(k=int(k),j=int(j),x=float(gx[k]),y=float(gy[j]),state=state,
+                               d=abs(float(gx[k])+I.CW/2-fx)+abs(float(gy[j])+ROW_Y/2-fy),blocked_by_instances=blocked))
+    nearest={(int(k),int(j)) for _,k,j in loc.get('cand',[])}
+    counts=Counter(c['state'] for c in candidates)
+    bounded=Counter(c['state'] for c in candidates if (c['k'],c['j']) in nearest)
+    free=sorted((c for c in candidates if c['state']=='free'),key=lambda c:c['d'])
+    result=dict(type=typ,failed_class=list(key),members=[n for _,n in mem],
+                 bounded_candidates=dict(bounded),all_valid_slots=dict(counts),
+                 nearest_free_slots=free[:8],rule='same site must be unused and clear in every member; no island growth or placement change',slots=candidates)
+    (path/'common_slot_failure.json').write_text(json.dumps(result,indent=1)+'\n')
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
+    fig,ax=plt.subplots(figsize=(12,9))
+    colors={'used':'#004d99','blocked':'#c62828','free':'#2e7d32'}
+    for state,col in colors.items():
+        q=[c for c in candidates if c['state']==state]
+        if q: ax.scatter([c['x']+I.CW/2 for c in q],[c['y']+ROW_Y/2 for c in q],s=10,c=col,label=state+' '+str(len(q)))
+    ax.scatter([fx],[fy],marker='x',s=80,c='black',label='failing class')
+    cells=loc['cells']; members={n for _,n in mem}
+    # Show the actual non-top cell footprints causing slot exclusion, in each
+    # member's master frame. The union is precisely what common-slot fit sees.
+    for c in cells:
+        if c['kind'] in loc['topk'] or not c['masters']: continue
+        w=max(M.LEF_BUF[m][0] for m in c['masters']); h=ROW_Y*len(c['masters'])
+        x,y=c['site'][0]-w/2,c['site'][1]-ROW_Y/2
+        for n in members:
+            r=B['P'].rect(n)
+            if x>=r[2] or x+w<=r[0] or y>=r[3] or y+h<=r[1]: continue
+            a,b=frame_xy(B['P'],n,x,y),frame_xy(B['P'],n,x+w,y+h)
+            xx,yy=min(a[0],b[0]),min(a[1],b[1]); ww,hh=abs(a[0]-b[0]),abs(a[1]-b[1])
+            ax.add_patch(Rectangle((xx,yy),ww,hh,fc='#777777',alpha=.35,ec='none'))
+    ax.set_xlim(fx-180,fx+180);ax.set_ylim(fy-180,fy+180);ax.set_aspect('equal');ax.legend(fontsize=8)
+    ax.set_title(f'Common slot FAIL {key}: nearest {dict(bounded)}, whole type {dict(counts)}')
+    fig.savefig(path/'common_slot_failure.png',dpi=150,bbox_inches='tight');plt.close(fig)
+    return {k:v for k,v in result.items() if k!='slots'}
+
+
 def failed_placement(B, path, error):
     """Keep a useful raw-geometry failure artifact if placement cannot complete."""
     rows=[]
@@ -314,7 +368,8 @@ def failed_placement(B, path, error):
                 hit=any(c[0]<q[0]<c[2] and c[1]<q[1]<c[3] for c in B['cores'])
                 rows.append(dict(namespace=ns,tag=n['tag'],stage=k,xy=q,on_core=hit,
                                  plan_stage_reach_um=M.md(p,n['xy'])/n['nseg']))
-    rec=dict(verdict='FAIL',stage='legalization',error=str(error),
+    slot=common_slot_failure(B,path,error)
+    rec=dict(verdict='FAIL',stage='legalization',error=str(error),common_slot=slot,
              raw_buffer_sites=len(rows),raw_sites_on_hard_core=sum(r['on_core'] for r in rows),
              raw_stage_reach_over_450=sum(r['plan_stage_reach_um']>450.0001 for r in rows),sites=rows)
     (path/'placement_failure.json').write_text(json.dumps(rec,indent=1)+'\n')

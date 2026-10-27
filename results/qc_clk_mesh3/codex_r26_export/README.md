@@ -1,0 +1,13 @@
+# QC R26 complete clock export and V2 fixed-wire adapter
+
+The R25/R26 model had new band trees but the old physical exporter retained only the top tree. This successor exports all top, column and band stages, their real cell groups/repeaters, and the complete segmented mesh graph. It preserves per-edge NDR and heterogeneous parallel buffer masters.
+
+`tree_probe/result.json`: actual ASAP7 OpenDB encode/readback PASS. One logical source net retains both differently sized Y drivers and all three A loads. Decoded M8/M9 shapes retain both 0.16 and 0.32 um widths. Physical source stacks are emitted once when branches use different widths.
+
+`mesh_probe/result.json`: joint actual ASAP7 OpenDB encode/readback PASS with the parent's `explicit_clock_mesh.py` importer and output aliases. The common mesh net retains both Y drivers and both boundary BTerms. Decoded mesh length is 266.24 um (exactly the planned conductor length), four VIA89 cuts (exactly the geometric crossings), and 0.32 um wire width. The complete generated Tcl and input spec are included.
+
+25 focused Python checks passed (existing explicit/routed tests plus four V2 and eight export regressions). These are geometry/encoding results. P&R, extraction timing, local clock trees, TT setup and FF hold sign-off are NOT RUN.
+
+A first native encoder harness failed before encoding because unqualified `make_tracks` inherited a negative M2 offset; explicit M8/M9 tracks corrected the harness in a new run directory. The failed log remains at intel2 `/srv/opentallas-scratch2/claude/qc-export-v2-probe/encode.log`. The successful tree and mesh vehicles remain at intel2 `/srv/opentallas-scratch2/claude/qc-export-v2-probe2/` and `qc-export-v2-mesh-probe/`.
+
+The old 88-cohort full export failed physical legalization at `('cbf_q00', 341, 216, False)` (no common slot). Its successor uses the native 100-cohort plan after exact checks that die dimensions, every partition/core rectangle, core module/instance, orientation and per-part clock-entry dictionaries are unchanged. Its inherited tree-plan diagnostic FAIL is retained; the checksum rebind is only for `qc_clk_mesh3` geometry loading, and does not qualify the old tree gates. Collection is in the lane notes.
