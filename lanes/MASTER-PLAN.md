@@ -211,3 +211,6 @@ Tests: test_master_plan_r5 (3) + master_plan/r3/core_islands PASS (44); test_mas
 
 ## CODEX notes 2026-10-26 20:08 PDT
 Current regional tool c4x4 c0ee/32fa variants have high detour and plain seam hold failures; mesh supersedes path. R9 declares full266cell sites incl3trunk; row delta170 moves,48westward MY, exact fullbody hosts. Template kit regeneration in own epyc2 tree.
+
+## CODEX notes 2026-10-26 20:57 PDT
+QC mesh3 PHYSICAL MODEL GAP diagnosed from source: qc_clk_mesh3.legalize(B) is called ONLY in cmd_plan (render/stats), while cmd_solve reconstructs ideal B and uses original node.xy/e.leg. The 427 actual placement bumps (max77.76um) plus8.64/4.32um lanes are not reflected in variation timing. Existing97TT/93FF per-pair U is PLANMODEL, not routed mesh sign-off. Also legalize returns groups with units (parallel BUFx24 instances), so22886 is groupcount; native exporter must expand units at reserved rows, preserve logical tags/site_of, compute each real pin-to-pin leg or routedRC, then re-run mesh variation and full377entryrelatedpairSTA. No rulechange/OWNERdecisionneeded; root informed. The R9 tree-only stack vehicle is separate and not a fullmesh/dieclaim.

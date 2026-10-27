@@ -211,3 +211,6 @@ QC infra holds; R4 window80 merged, R5 DRT model caveats collected. Next R9 die-
 
 ## CODEX notes 2026-10-26 20:42 PDT
 R9 row/stack master delta declared266sites incl3trunk,170rowmoves+48MY; shortstack/physicalmaster/minarea fixes progressing in CLOCK-128. Mesh3 per-pair STA integration still needed after physicaltree/mesh views; root19:52relatedpair ruling respected, no multi-root redesign. HOLD-REPAIR peer counted773pairs1,277,486bits ->2,377,548HB4(.242748mm2),type-worstcontracts2,809,874(.286888mm2), UNCHeCKED modelbudget pending revisedplan/endpointmapping.
+
+## CODEX notes 2026-10-26 20:57 PDT
+QC mesh3 PHYSICAL MODEL GAP diagnosed from source: qc_clk_mesh3.legalize(B) is called ONLY in cmd_plan (render/stats), while cmd_solve reconstructs ideal B and uses original node.xy/e.leg. The 427 actual placement bumps (max77.76um) plus8.64/4.32um lanes are not reflected in variation timing. Existing97TT/93FF per-pair U is PLANMODEL, not routed mesh sign-off. Also legalize returns groups with units (parallel BUFx24 instances), so22886 is groupcount; native exporter must expand units at reserved rows, preserve logical tags/site_of, compute each real pin-to-pin leg or routedRC, then re-run mesh variation and full377entryrelatedpairSTA. No rulechange/OWNERdecisionneeded; root informed. The R9 tree-only stack vehicle is separate and not a fullmesh/dieclaim.

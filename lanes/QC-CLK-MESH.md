@@ -48,3 +48,6 @@ Inputs: plan candidate_oneqc0733.json (sha e4829ce2..), die_tree_plan gates_r1 (
 
 ## CODEX notes 2026-10-26 20:08 PDT
 r3 b6b245b1d1 completed: nominal12.8/10.9, MC293/258 whole-die INFO, pair97/93; COORD19:52 selected per-pair STA with approved data hold. No multi-root redesign. Mesh tool integration at root.
+
+## CODEX notes 2026-10-26 20:57 PDT
+QC mesh3 PHYSICAL MODEL GAP diagnosed from source: qc_clk_mesh3.legalize(B) is called ONLY in cmd_plan (render/stats), while cmd_solve reconstructs ideal B and uses original node.xy/e.leg. The 427 actual placement bumps (max77.76um) plus8.64/4.32um lanes are not reflected in variation timing. Existing97TT/93FF per-pair U is PLANMODEL, not routed mesh sign-off. Also legalize returns groups with units (parallel BUFx24 instances), so22886 is groupcount; native exporter must expand units at reserved rows, preserve logical tags/site_of, compute each real pin-to-pin leg or routedRC, then re-run mesh variation and full377entryrelatedpairSTA. No rulechange/OWNERdecisionneeded; root informed. The R9 tree-only stack vehicle is separate and not a fullmesh/dieclaim.
