@@ -10,7 +10,8 @@
     "three mesh64 peer pairs with both copies preserved",
     "one real merged spine record retains old two-edge local pick",
     "real stage kind7 carries SEED/DHSTEP/DHRES/ROWS; no draft PHYs",
-    "independent ROWS/DHRES holds avoid ROWS user corruption"
+    "independent ROWS/DHRES holds avoid ROWS user corruption",
+    "ROWS/DHRES valid advertised only after hreg payload is stable; legacy early-valid behavior retained as negative control"
   ],
   "capacity": {
     "xstore_bits": 81920,
@@ -30,7 +31,11 @@
     "HOST_codec_serialization_extra_vs_fullwidth": 2,
     "LEP_notification_registered_edges": 1,
     "LEP_memory_cycles_added": 0,
-    "start": "separate compiled CSR dates; caller must price actual relay+codec path"
+    "start": "separate compiled CSR dates; caller must price actual relay+codec path",
+    "ROWS_landing_valid_added_stages": 1,
+    "DHRES_landing_valid_added_stages": 1,
+    "five_DHRES_one_ROWS_wave_added_stages": 6,
+    "consumer_phase": "actual sequencer/grant phase can add visibility cycles; fixture first DHSTEP is30cycles after SEED, phase must be compiled, not priced as only6cycles"
   },
   "new_lep_contract": {
     "provider": "ot_s81hd_lep0N_noidx_core",

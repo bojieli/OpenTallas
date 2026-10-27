@@ -2,7 +2,7 @@
 `default_nettype none
 // Current physical-plan provider. All codecs are existing exact transports.
 // h_tx[276] is live job-active; draft traffic uses real stage kind7, no draft PHY.
-module ot_s81hd_ctl_core #(parameter integer SK=11)(
+module ot_s81hd_ctl_core #(parameter integer SK=11,parameter integer MUT_DRAFT_EARLY=0)(
  input wire ck,rst_n,start_i,lep_fault_i, input wire[10:0]lw_i,
  input wire[1103:0]lepk_i0, output wire[1103:0]lepk_o0,
  output wire lepf_o0, output wire[44:0]unit_o0,input wire[31:0]ctrl_i0,
@@ -46,7 +46,7 @@ module ot_s81hd_ctl_core #(parameter integer SK=11)(
  // Input kind7 carries HSF0 type in gidx[3:0] and its payload in flit512.
  wire dvalid=lepk_i0[0]&&lepk_i0[3:1]==7;
  wire[552:0]dframe={1'b1,24'd0,lepk_i0[532:21],12'd0,lepk_i0[16:13]};
- ot_s81hd_ctl_hsf0_static #(.SK(SK))u_logic(
+ ot_s81hd_ctl_hsf0_static #(.SK(SK),.MUT_DRAFT_EARLY(MUT_DRAFT_EARLY))u_logic(
   .ck(ck),.rst_n(rst_n),.start_i(start_i),.adapter_fault(adapter_fault),.job_active_o(job),
   .ri(lepk_i0),.mu_rt(ctrl_i0),.lw(lw_i),.lep_f(lep_fault_i),.ro(core_ro),.mu_c(muc),.mu_rc(murc),.ctl_f(lepf_o0),
   .sn_o(x_o),.ss_o(unused_duplicate),.sn_i(b_i),.ss_i(b_i),
