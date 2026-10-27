@@ -126,3 +126,15 @@ def test_mesh_reserved_before_tree_with_physical_vss_shields():
     assert any(s[1]=='VSS' and s[2]=='pg' for s in shapes)
     # All mesh metal keeps its real 0.32um width; no global16w substitution.
     assert all(abs(s[4]-s[3]-.32)<1e-6 for s in shapes)
+
+
+def test_declared_entry_terminal_has_actual_stack_and_keeps_location():
+    m=mesh();m['taps']=[dict(xy=[10.,3.],terminal_layer='M4')];m['tap_jog_um']=4.
+    g=E.conductor_graph(m)
+    assert g['taps'][0]['port_node']==['M4',10.,3.]
+    assert g['vias']==10  # four crossings, one jog turn, five M9..M4 cuts
+    edges={tuple(map(tuple,e)) for e in g['edges']}
+    for k in range(4,9):
+        assert tuple(sorted((('M'+str(k),10.,3.),('M'+str(k+1),10.,3.)))) in edges
+    with pytest.raises(ValueError,match='terminal layer'):
+        m['taps'][0]['terminal_layer']='M2';E.conductor_graph(m)

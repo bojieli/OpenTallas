@@ -76,6 +76,14 @@ def conductor_graph(mesh):
             joint = point(layer, at[1], at[2])
             port_at = point(layer, *t['xy'])
             tap_jogs.extend([(at, joint), (joint, port_at)])
+        terminal=t.get('terminal_layer',port_at[0])
+        if terminal not in ('M4','M5','M6','M7','M8','M9'):
+            raise ValueError(f'unsupported declared mesh terminal layer {terminal}')
+        upper=int(port_at[0][1:]);lower=int(terminal[1:])
+        if lower>upper:raise ValueError('mesh terminal stack cannot rise above branch metal')
+        for k in range(upper,lower,-1):
+            below=point('M'+str(k-1),port_at[1],port_at[2])
+            tap_jogs.append((port_at,below));port_at=below
         taps.append(dict(t, anchor=list(at), port_node=list(port_at), jog_um=dist))
     edges = set()
     def edge(a, b):
@@ -201,7 +209,7 @@ def routed_mesh_tcl(L, w, cells, ports, buf, rec):
             target=f'emj{len(jid)}' if fresh else f'emch{len(emitted)}'
             if a[0]!=b[0]:
                 if a[1:]!=b[1:]: raise ValueError('mesh via has noncoincident ends')
-                L.append(f'set {target} [$e addTechVia [V {{VIA89}}]]');nv+=1
+                L.append(f'set {target} [$e addTechVia [V {{{C.via(a[0],b[0])}}}]]');nv+=1
             else:
                 if a[1]!=b[1] and a[2]!=b[2]: raise ValueError('non-Manhattan mesh edge')
                 L.append(f'set {target} [$e addPoint {C.q(b[1])} {C.q(b[2])}]')
@@ -238,9 +246,13 @@ def routed_mesh_tcl(L, w, cells, ports, buf, rec):
 
 def access_paths(w,cells,buf):
     import clock_routed as C
-    return [C.stair(d['anchor'][0],d['anchor'][1],d['anchor'][2],
+    paths=[C.stair(d['anchor'][0],d['anchor'][1],d['anchor'][2],
                     *C.pin_point(cells,u,'Y',cells[u].get('lib',buf)))
             for d in w['mesh_graph']['drivers'] for u in d['units']]
+    # Actual declared terminal via stacks participate in cross-net geometry.
+    paths += [[tuple(a),tuple(b)] for a,b in w['mesh_graph']['edges']
+              if a[0]!=b[0] and min(int(a[0][1:]),int(b[0][1:]))<8]
+    return paths
 
 
 def access_shapes(w,cells,buf):
@@ -274,7 +286,7 @@ def mesh_spef_section(w,cells,buf,layer_rc,via_kohm):
     for aa,bb in g['edges']:
         a,b=tuple(aa),tuple(bb);pa,pb=ids[a],ids[b]
         if a[0]!=b[0]:
-            res.append((pa,pb,max(1e-9,via_kohm['M9']-via_kohm['M8'])))
+            res.append((pa,pb,max(1e-9,abs(via_kohm[a[0]]-via_kohm[b[0]]))))
             continue
         length=abs(b[1]-a[1])+abs(b[2]-a[2]);rr,cc=layer_rc[a[0]]
         count=max(1,math.ceil(length/54.));prev=pa
