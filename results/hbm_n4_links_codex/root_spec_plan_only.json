@@ -75,34 +75,34 @@
   },
   "macros": [
     {
-      "instance": "u_native.u_scb",
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
       "at": [
         77.868,
         48.0
       ],
       "orient": "R0",
-      "count": 1
+      "count": 1,
+      "inst": "u_native.u_scb"
     },
     {
-      "instance": "u_native.u_t5.u_pad.u_d",
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
       "at": [
         77.868,
         194.4
       ],
       "orient": "R0",
-      "count": 1
+      "count": 1,
+      "inst": "u_native.u_t5.u_pad.u_d"
     },
     {
-      "instance": "u_native.u_t5.u_pad.u_c",
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
       "at": [
         109.284,
         324
       ],
       "orient": "R0",
-      "count": 1
+      "count": 1,
+      "inst": "u_native.u_t5.u_pad.u_c"
     }
   ],
   "route": {
@@ -116,5 +116,16 @@
     "reason": "No unpriced boundary latency; native mapped register anchoring required before physical adoption"
   },
   "keep_pin_regs": true,
-  "physical_status": "SOURCE-KIT PREPARATION ONLY; no P&R launch. Actual source/memoryphase qualification, input/output flop anchors, PG/internalCTS remain open. Canonical native job/control bindings are not fabricated."
+  "physical_status": "SOURCE-KIT PREPARATION ONLY; no P&R launch. Actual source/memoryphase qualification, input/output flop anchors, PG/internalCTS remain open. Canonical native job/control bindings are not fabricated. Ordinarykit must source physical/common_flow/ot_keep_regs.tcl; bare mappedcensus folds equal launch copies and is only a lowerbound. Deliveredreset source mode pending gatedLECcommit.",
+  "outline": {
+    "w": 250.56,
+    "h": 388.8,
+    "exact": true
+  },
+  "recipe": 4,
+  "hold_budget": "die",
+  "clock": "cts",
+  "layer_cap": "M5",
+  "inhold": false,
+  "outhold": false
 }
