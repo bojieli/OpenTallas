@@ -43,6 +43,7 @@ from pathlib import Path
 
 
 CORE_MODE = "early"
+GROUPS = []
 
 
 def legacy_cores(t):
@@ -77,6 +78,12 @@ def regions(P, block, mode):
         x0, y0, x1, y1 = rect[n]
         return (int(((x0 + x1) / 2) // (block * cw)), int(((y0 + y1) / 2) // (block * ch)))
     key = {n: (cls[n], blk(n)) for n in parts}
+    # PATH-S81-PD 10-26 (opt-in --groups): plan-declared region groups (e.g. one 2x2 svc block whose wide attn buses
+    # must stay synchronous) replace the G x G block key of their members; ports still decide connectivity.
+    for i, grp in enumerate(GROUPS):
+        for n in grp:
+            if n in key:
+                key[n] = (cls[n], ("g", i))
     # connected components of same-key partitions through plan ports (a region is one connected local tree)
     par = {n: n for n in parts}
 
@@ -129,9 +136,11 @@ def main():
     a.add_argument("--mode", choices=("class", "partition"), default="class")
     a.add_argument("--cycles", type=int, default=3)
     a.add_argument("--core", choices=("early", "land", "rebuild", "tap"), default="early")
+    a.add_argument("--groups", help="JSON {groups: [[part, ...], ...]}: each group is one region key (opt-in)")
     g = ap.parse_args()
-    global CORE_MODE
+    global CORE_MODE, GROUPS
     CORE_MODE = g.core
+    GROUPS = json.load(open(g.groups))["groups"] if g.groups else []
     P = json.load(open(g.plan))
     L = json.load(open(g.lat))
     d = Path(g.out)

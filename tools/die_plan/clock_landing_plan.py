@@ -101,6 +101,11 @@ def _grid_scan(w,h,obstacles,margin,px,py,area,depth,length,g=2.16,reach=405-2.1
         L=int(math.ceil(a_cells/d))
         if L>=4:shapes.update({(d,L),(L,d)})
     s0=int(math.ceil(math.sqrt(a_cells)));shapes.add((s0,s0))
+    # PATH-S81-PD 10-26: thin long banks (4..8 rows/cols deep, any length) along a face edge or a free channel,
+    # still every corner within reach and the same reserved area. Only reached when every search above failed.
+    for d in range(4,9):
+        L=int(math.ceil(a_cells/d))
+        if L>=4:shapes.update({(d,L),(L,d)})
     out=[]
     for bw,bh in sorted(shapes):
         if bw>nx or bh>ny:continue
