@@ -1,0 +1,46 @@
+ot-run: intel1         admits   724 GB (avail 849, reserve 0, fresh 55.9, peak 4.7, headroom 0, waiters 0/0 GB) load 13/112 running 8 disk 1707 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-3082856-1793083404 after 1 s
+fatal: not a git repository: /home/ubuntu/OpenTallas/.git/worktrees/path-s81-pd5-1026
+START Mon Oct 26 23:43:25 PDT 2026 code plan 5249306e7e4b
+{"observer": "s_4S_L3", "types_before": 215, "types_after": 247, "ports_before": 2372, "ports_after": 2372, "infra_edges": 2187, "placement_failures": 17, "max_monitor_hop_um": 377.984000000004, "boot_ready_cycles": 463, "secs": 1079.0}
+G0C per type: 245/247 types clean (G3-eligible: 245); die-level {}; reported as WARN (run --completeness)
+G0 FAIL: 13 errors, 1583 warnings; 247 types / 398 partitions (88 in near-duplicate groups); worst cut {'ratio': 0.3344, 'at': 'horizontal@18750'}, worst partition segment {'ratio': 1.023, 'at': 'horizontal@5000:svc_1'}; report /srv/opentallas-scratch2/claude/path-s81-pd5-1026/g0_composed/g0_report.json
+  ]
+ }
+}
+KIT_DONE Tue Oct 27 00:32:11 PDT 2026
+fatal: not a git repository: /home/ubuntu/OpenTallas/.git/worktrees/path-s81-pd5-1026
+START Tue Oct 27 00:32:11 PDT 2026 host key-cardinal code plan d217c071881b
+b4b149dcef37f6bc19d00d53c77b1567bba459f6613a9384060dbad0a4c0fdfb
+178f6e46e79d40a5374825d43ce4db00f92d3003b01d9817744276e22868dc7b
+0
+0
+COMBO_DONE Tue Oct 27 00:36:39 PDT 2026
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           246693782       6957607            2.82%             0 /  0 /  0
+M5           248079887       10104995            4.07%             0 /  0 /  0
+M6           206875064       10426374            5.04%             0 /  0 /  0
+M7           208279009       17868966            8.58%             0 /  0 /  0
+M8           914635584       10202475            1.12%             0 /  0 /  0
+M9           914589360       9890183            1.08%             0 /  0 /  0
+Total        -1555814610       65450600           -4.21%             0 /  0 /  0
+0
+	Exit status: 0
+EXIT 0
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           246693782       6957607            2.82%             0 /  0 /  0
+M5           248079887       10104995            4.07%             0 /  0 /  0
+M6           206875064       10426374            5.04%             0 /  0 /  0
+M7           208279009       17868966            8.58%             0 /  0 /  0
+M8           914635584       10202475            1.12%             0 /  0 /  0
+M9           914589360       9890183            1.08%             0 /  0 /  0
+Total        -1555814610       65450600           -4.21%             0 /  0 /  0
+0
+	Exit status: 0
+EXIT 0
+ot-run: RAN on intel1 (unit oth-ubuntu-3082856-1793083404): exit 0
