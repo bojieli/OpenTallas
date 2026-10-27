@@ -3,7 +3,12 @@
 # and every later stage carry constraint.sdc unchanged.
 set gq_dir [file dirname [file normalize [info script]]]
 if {[info exists ::env(OT_TAP_GRT_MODE)] && $::env(OT_TAP_GRT_MODE) ne ""} { source [file join $gq_dir tap_balance_grt.tcl] }
-if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq "ff"} { ot_vclk_bind tt }
+# S81-ECO-2 10-27: FF hold repaired in the sign-off frame (measured pin-register mean for 'rebind' kits), then TT.
+if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq "ff"} {
+  source [file join $gq_dir vclk_measured_hold.tcl]
+  ot_vclk_measured_hold
+  ot_vclk_bind tt
+}
 # Repair buffers do not replace registered reset stations or waive their reach.
 if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "1"} {
   uplevel #0 [list source [file join $gq_dir reset_pair_place.tcl]]

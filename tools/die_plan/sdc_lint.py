@@ -885,6 +885,30 @@ def ff_binding_errors(kitdir, ctx):
     if abs(float(ctx["insertion_ff_ps"]) - ff * unit) > FF_BINDING_TOL_PS:
         return [f"clocks: sdc_lint.json insertion_ff_ps {float(ctx['insertion_ff_ps']):g} ps != config.mk OT_VCLK_FF "
                 f"{ff:g} x {unit:g} ps (flow repair and sign-off would use different FF references)"]
+    return measured_frame_errors(kitdir)
+
+
+def measured_frame_errors(kitdir):
+    """S81-ECO-2 10-27 (qbank_S / sstn_base566 c18 FF -6.19 / -6.32, CHECKED): a 'rebind' kit is signed off against
+    the routed FF pin-register mean, so its FF-only GRT step must also repair hold in that measured frame
+    (grt_post.tcl -> vclk_measured_hold.tcl, decision vclk_ref.py).  A kit without that step repairs against the bound
+    OT_VCLK_FF only and fails sign-off by the bound-vs-measured gap.  Fail closed before synth.  -> [errors]"""
+    kd = Path(kitdir)
+    try:
+        import vclk_ref
+        ref = vclk_ref.ff_reference(kd)["ref"]
+    except Exception as e:                       # noqa: BLE001  (fail closed on any decision error)
+        return [f"clocks: FF sign-off reference undecidable ({type(e).__name__}: {e})"]
+    if ref != "rebind":
+        return []
+    miss = [f for f in ("vclk_measured_hold.tcl", "vclk_ref.py") if not (kd / f).is_file()]
+    gp = kd / "grt_post.tcl"
+    if not gp.is_file() or "ot_vclk_measured_hold" not in gp.read_text(errors="replace"):
+        miss.append("grt_post.tcl with ot_vclk_measured_hold")
+    if miss:
+        return ["clocks: FF sign-off reference 'rebind' (measured pin-register mean) but the FF-only GRT hold repair "
+                "runs only in the bound OT_VCLK_FF frame (kit lacks " + ", ".join(miss) + "); regenerate the kit "
+                "with main tools (S81-ECO-2 measured-frame hold)"]
     return []
 
 
