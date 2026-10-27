@@ -26,7 +26,7 @@ def tcl(script):
     if not shutil.which("tclsh"):
         pytest.skip("tclsh unavailable")
     p = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
-    assert p.returncode == 0, p.stderr
+    assert p.returncode == 0 and not p.stderr, p.stderr
     return p.stdout
 
 
@@ -34,16 +34,19 @@ SIM = r'''
 # true pad delay per cell (unknown to the tool) and initial means of the f6s taps (TT, placement RC)
 set true 13.0
 set means {h3_7 314.6 h2_1 333.0 h3_2 330.1 h3_5 320.4 mtap0 336.9}
-set step 10.0; set prev {}; set last {}
+if {![info exists drift]} { set drift 0.0 }
+set step 16.0; set prev {}; set last {}
 for {set it 0} {$it < 8} {incr it} {
   if {[dict size $last]} { set step [rb_learn $prev $means $last $step] }
-  set plan [rb_plan $means $step 5.0]
+  set plan [rb_plan $means $step 5.0 20.0]
   if {![dict size $plan]} break
   set prev $means; set last $plan
   dict for {t nb} $plan { dict set means $t [expr {[dict get $means $t] + $nb * $true}] }
+  # re-placement after a pass moves an untouched tap (f6s: h3_7 never padded vs the frozen it0 target)
+  if {$it == 0} { dict set means h2_1 [expr {[dict get $means h2_1] + $drift}] }
 }
 set lo 1e9; set hi -1e9; dict for {t v} $means { set lo [expr {min($lo,$v)}]; set hi [expr {max($hi,$v)}] }
-puts "WIN [format %.2f [expr {$hi-$lo}]] STEP [format %.2f $step] IT $it"
+puts "WIN [format %.2f [expr {$hi-$lo}]] STEP [format %.2f $step] IT $it GROW [format %.2f [expr {$hi-336.9}]]"
 '''
 
 
@@ -52,23 +55,35 @@ def test_balance_converges_inside_window_with_unknown_cell_delay():
     win, step = map(float, re.search(r"WIN (\S+) STEP (\S+)", out).groups())
     assert win <= 10.0, out                 # inside 20 with margin, not at the edge
     assert abs(step - 13.0) < 0.5, out      # the per-cell delay was measured, not assumed
+    assert float(re.search(r"GROW (\S+)", out).group(1)) <= 10.0, out   # latest tap barely moves (f6s probe: +87 ps)
+
+
+def test_overshoot_mutant_walks_insertion_up():
+    """mutant: the round()-based plan with a low step guess overshoots and drags every tap up."""
+    bad = proc("regional_taps_balance.tcl", "rb_plan").replace(
+        "set nb [expr {int(floor(($d + $tol) / $step))}]", "set nb [expr {max(1, int(round($d / $step)))}]")
+    out = tcl(bad + "\n" + proc("regional_taps_balance.tcl", "rb_learn")
+              + SIM.replace("set true 13.0", "set true 17.6").replace("set step 16.0", "set step 10.0"))
+    assert float(re.search(r"GROW (\S+)", out).group(1)) > 10.0, out
 
 
 def test_target_is_retaken_every_pass():
-    """mutant: the old tool froze the target at the it0 maximum -> the window stays wider than 20."""
-    frozen = proc("regional_taps_balance.tcl", "rb_plan").replace(
-        "set hi -1e18; dict for {t v} $means { set hi [expr {max($hi,$v)}] }", "global hi0; set hi $hi0")
-    out = tcl(frozen + "\n" + proc("regional_taps_balance.tcl", "rb_learn")
-              + "\nset hi0 336.9\nset ::true 22.0\n" + SIM.replace("set true 13.0", "set true 22.0"))
+    """a tap that moves late (+25 ps after pass 0) becomes the target; mutant with the it0 target frozen ends > 20."""
+    good = proc("regional_taps_balance.tcl", "rb_plan") + "\n" + proc("regional_taps_balance.tcl", "rb_learn")
+    frozen = good.replace(
+        "set hi -1e18; set lo 1e18; dict for {t v} $means { set hi [expr {max($hi,$v)}]; set lo [expr {min($lo,$v)}] }",
+        "global hi0; set lo 1e18; set hi -1e18; dict for {t v} $means { set lo [expr {min($lo,$v)}]; set hi [expr {max($hi,$v)}] }; set w [expr {$hi-$lo}]; set hi $hi0")
+    assert frozen != good
+    sim = "\nset drift 25.0\nset hi0 336.9\n" + SIM
+    assert float(re.search(r"WIN (\S+)", tcl(good + sim)).group(1)) <= 20.0
+    out = tcl(frozen + sim)
     assert float(re.search(r"WIN (\S+)", out).group(1)) > 20.0, out
-    out = tcl(proc("regional_taps_balance.tcl", "rb_plan") + "\n" + proc("regional_taps_balance.tcl", "rb_learn")
-              + SIM.replace("set true 13.0", "set true 22.0"))
-    assert float(re.search(r"WIN (\S+)", out).group(1)) <= 20.0, out
 
 
 def test_plan_skips_gaps_inside_tolerance_and_half_step():
-    out = tcl(proc("regional_taps_balance.tcl", "rb_plan") + '\nputs [rb_plan {a 100 b 96 c 80 d 70} 10.0 5.0]\n')
-    assert out.split() == ["c", "2", "d", "3"], out
+    out = tcl(proc("regional_taps_balance.tcl", "rb_plan") + '\nputs [rb_plan {a 100 b 96 c 80 d 70} 10.0 5.0 20.0]\n')
+    assert out.split() == ["c", "2", "d", "3"], out   # floor((d + tol) / step); b inside win/2
+    assert tcl(proc("regional_taps_balance.tcl", "rb_plan") + '\nputs "<[rb_plan {a 100 b 90 c 86} 10.0 5.0 20.0]>"\n').strip() == "<>"
 
 
 def test_small_regions_fold_into_nearest_full_tap():

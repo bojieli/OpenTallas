@@ -25,15 +25,19 @@ proc rb_sinks {net} {
   }
   return $out
 }
-# pure planner (testable without OpenDB/STA): means = tap -> mean arrival; target = the CURRENT latest mean; a tap gets
-# round(d / step) cells when its gap d exceeds max(tol, step/2) (one more cell would overshoot by more than it closes).
-proc rb_plan {means step tol} {
-  set hi -1e18; dict for {t v} $means { set hi [expr {max($hi,$v)}] }
+# pure planner (testable without OpenDB/STA): means = tap -> mean arrival; target = the CURRENT latest mean; a tap with
+# gap d > win/2 gets floor((d + tol) / step) cells (done once the window is <= win - tol): it never passes the target by more than tol, so the latest mean (and the die
+# insertion) grows at most tol per pass (a real f6s probe with round() and a 10-ps guess vs 17.6 measured overshot every
+# pass and walked all taps up 87 ps).
+proc rb_plan {means step tol win} {
+  set hi -1e18; set lo 1e18; dict for {t v} $means { set hi [expr {max($hi,$v)}]; set lo [expr {min($lo,$v)}] }
   set out {}
+  if {$hi - $lo <= $win - $tol} { return $out }
   dict for {t v} $means {
     set d [expr {$hi - $v}]
-    if {$d <= max($tol, $step / 2.0)} continue
-    dict set out $t [expr {max(1, int(round($d / $step)))}]
+    if {$d <= $win / 2.0} continue
+    set nb [expr {int(floor(($d + $tol) / $step))}]
+    if {$nb > 0} { dict set out $t $nb }
   }
   return $out
 }
@@ -80,7 +84,7 @@ for {set it 0} {$it < 8} {incr it} {
   if {[dict size $rb_last]} { set rb_step [rb_learn $rb_prev $means $rb_last $rb_step] }
   set line "OT_RT_BAL it$it (step [format %.1f $rb_step] ps):"; dict for {t v} $m { append line " $t=[format %.1f [lindex $v 0]]([format %.0f [lindex $v 1]]-[format %.0f [lindex $v 2]],[lindex $v 3])" }
   puts $line
-  set plan [rb_plan $means $rb_step $rb_tol]
+  set plan [rb_plan $means $rb_step $rb_tol $rb_win]
   if {![dict size $plan]} break
   dict for {t nb} $plan {
     set ti [$rb_blk findInst $t]
@@ -119,9 +123,10 @@ for {set mi 0} {$mi < 3} {incr mi} {
     foreach x $mp { lassign $x it a
       set d [expr {$g - $a}]
       puts "OT_RT_MACRO pass$mi [[$it getInst] getName] clk [format %.0f $a] vs interface regs mean [format %.0f $g] ($k regs): [format %+.0f [expr {-$d}]] ps"
-      if {$d <= max(8.0, $::rb_step / 2.0)} continue
+      if {$d <= 8.0} continue
       set todo 1
-      set nb [expr {max(1, int(round($d / $::rb_step)))}]
+      set nb [expr {int(floor(($d + $::rb_tol) / $::rb_step))}]
+      if {$nb < 1} continue
       set src [$it getNet]; set bb [$it getBBox]
       set prev $src
       for {set j 0} {$j < $nb} {incr j} {
