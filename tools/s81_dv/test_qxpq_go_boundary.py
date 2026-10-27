@@ -69,3 +69,9 @@ def test_bare_actual_band_requires_explicit_selected_profile():
     assert '.GO_BOUNDARY(1)' in out and '.CGR(8)' in out
     assert '.xs_sv' not in out and r['instances']==['u_e0']
     with pytest.raises(ValueError,match='NB2'):G.lower_frame_text(src,hard_params=dict(NB='1'))
+
+
+@pytest.mark.parametrize('field', ['libTT','libFF','lib_tt','lib_ff'])
+def test_no_corner_library_carryover(field):
+    raw=dict(partition_types={'a':dict(hard_cores=[dict(module=G.LEGACY, **{field:'old.lib'})])})
+    with pytest.raises(ValueError,match='signed'):G.lower_plan(raw,['a'])
