@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """unit tests: tools/die_plan/adder_map_dontuse.py (python3 -m pytest tools/die_plan/test_adder_map_dontuse.py)"""
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -64,6 +65,23 @@ class T(unittest.TestCase):
         self.assertEqual(r["verdict"], "PASS")
         self.assertEqual([x["cell"] for x in r["replaced"]], ["HAxp5_ASAP7_75t_R"])
         self.assertEqual(r["cells_kept"], ["FAx1_ASAP7_75t_R"])
+
+    def test_gen_preserves_mtime_only_when_generated_bytes_match(self):
+        out = self.d / "m.v"
+        args = ["gen", "--platform-dir", str(self.d), "--out", str(out)]
+        self.assertEqual(A.main(args), 0)
+        original = out.read_bytes()
+        sentinel = 1234567890000000000
+        os.utime(out, ns=(sentinel, sentinel))
+        self.assertEqual(A.main(args), 0)
+        self.assertEqual(out.read_bytes(), original)
+        self.assertEqual(out.stat().st_mtime_ns, sentinel)
+        source = self.d / "yoSys" / "cells_adders_R.v"
+        source.write_text(MAP + "// source changed\n")
+        self.assertEqual(A.main(args), 0)
+        self.assertNotEqual(out.read_bytes(), original)
+        self.assertIn(b"// source changed", out.read_bytes())
+        self.assertNotEqual(out.stat().st_mtime_ns, sentinel)
 
     def test_gen_fails_on_unknown_dont_use(self):
         (self.d / "yoSys" / "cells_adders_R.v").write_text(MAP.replace(
