@@ -1,0 +1,89 @@
+{
+ "info": {
+  "mode": "nobands",
+  "a0_cols": 48,
+  "a0_rows": 16,
+  "kept_m9": 48,
+  "kept_m8": 50,
+  "drop_m9": 192,
+  "drop_m8": 128,
+  "wedge_skipped_on_core": 8,
+  "bands": 18,
+  "band_drivers": 0,
+  "wedge_drivers": 170,
+  "r23_drivers": 6156,
+  "drivers": 6326,
+  "m9_segments": 3121,
+  "m8": 178,
+  "new_on_core": 0,
+  "band_on_seam": 0,
+  "feed": {
+   "n": 170,
+   "leg_um_max": 1022.4,
+   "leg_um_med": 573.12,
+   "stages_max": 3,
+   "D_TT_range_ps": [
+    131.364,
+    231.647
+   ],
+   "D_FF_range_ps": [
+    103.969,
+    184.989
+   ],
+   "rho": 0.799,
+   "ff_residual_ps": [
+    -0.935,
+    1.802
+   ],
+   "rule": "plan-computed per-leaf sizing (12.8 d1): every new leaf arrives at its parent column driver arrival at TT; FF residual = sizing tracking error, applied to FF arrivals"
+  }
+ },
+ "nominal": {
+  "sample": 0,
+  "nodes": 201152,
+  "crossings": 36370,
+  "vias": 36370,
+  "drivers": 6326,
+  "taps_attached": 17273,
+  "taps_unattached": 0,
+  "c_total_pf": 2837.971,
+  "crossing_spread_ps": 398.871,
+  "a0_field_crossing_spread_ps": 365.125,
+  "part_tap_skew_ps": 81.196,
+  "drop_n": 16896,
+  "drop_skew_ps": 362.022,
+  "all_tap_skew_ps": 394.918,
+  "t_first": 62.622,
+  "t_last": 457.54,
+  "secs": 25.8,
+  "in_core_drop_spread_ps": {
+   "n": 768,
+   "median": 63.481,
+   "p90": 190.894,
+   "max": 247.083,
+   "worst": "c_W3_bf_11/u_t33"
+  },
+  "latest": [
+   [
+    "drop:c_W3_bf_01/u_t13:EN2",
+    457.54
+   ],
+   [
+    "drop:c_E0_bf_01/u_t13:EN2",
+    457.54
+   ],
+   [
+    "drop:c_E1_bf_01/u_t13:EN2",
+    457.382
+   ],
+   [
+    "drop:c_W2_bf_01/u_t13:EN2",
+    457.382
+   ],
+   [
+    "drop:c_E2_bf_01/u_t13:EN2",
+    457.382
+   ]
+  ]
+ }
+}

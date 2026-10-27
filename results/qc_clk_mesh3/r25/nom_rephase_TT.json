@@ -1,0 +1,69 @@
+{
+ "info": {
+  "mode": "rephase",
+  "a0_cols": 48,
+  "a0_rows": 16,
+  "kept_m9": 48,
+  "kept_m8": 50,
+  "drop_m9": 192,
+  "drop_m8": 128,
+  "bands": 18,
+  "band_drivers": 0,
+  "wedge_drivers": 0,
+  "r23_drivers": 6156,
+  "drivers": 6156,
+  "m9_segments": 240,
+  "m8": 178,
+  "new_on_core": 0,
+  "band_on_seam": 0,
+  "feed": {}
+ },
+ "nominal": {
+  "sample": 0,
+  "nodes": 215814,
+  "crossings": 42720,
+  "vias": 42720,
+  "drivers": 6156,
+  "taps_attached": 17273,
+  "taps_unattached": 0,
+  "c_total_pf": 3081.84,
+  "crossing_spread_ps": 363.957,
+  "a0_field_crossing_spread_ps": 336.409,
+  "part_tap_skew_ps": 92.915,
+  "drop_n": 16896,
+  "drop_skew_ps": 336.409,
+  "all_tap_skew_ps": 359.023,
+  "t_first": -5503.011,
+  "t_last": -5143.988,
+  "secs": 31.1,
+  "in_core_drop_spread_ps": {
+   "n": 768,
+   "median": 63.264,
+   "p90": 149.269,
+   "max": 217.076,
+   "worst": "c_W5_bf_11/u_t23"
+  },
+  "latest": [
+   [
+    "drop:c_W5_bf_01/u_t13:G2",
+    -5143.988
+   ],
+   [
+    "drop:c_W5_tf_01/u_t13:G2",
+    -5144.005
+   ],
+   [
+    "drop:c_W5_bf_01/u_t13:EN2",
+    -5144.654
+   ],
+   [
+    "drop:c_W5_tf_01/u_t13:EN2",
+    -5144.668
+   ],
+   [
+    "drop:c_W5_bf_01/u_t13:G1",
+    -5145.744
+   ]
+  ]
+ }
+}

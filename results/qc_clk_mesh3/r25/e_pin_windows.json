@@ -1,0 +1,160 @@
+{
+ "rule": "R25 task 3 (COORD ruling R24b): A0 E-face pins vs the 8 E-strip island y-windows (R3b EF0-5/EN1-2, 8.64 islands, NK halo",
+ "windows_um": {
+  "EF0": [
+   6.268,
+   15.908
+  ],
+  "EF1": [
+   137.524,
+   147.164
+  ],
+  "EF2": [
+   267.7,
+   277.34
+  ],
+  "EF3": [
+   397.876,
+   407.516
+  ],
+  "EF4": [
+   528.052,
+   537.692
+  ],
+  "EF5": [
+   658.66,
+   668.3
+  ],
+  "EN1": [
+   819.556,
+   829.196
+  ],
+  "EN2": [
+   980.068,
+   989.708
+  ]
+ },
+ "nk": {
+  "e_pins": 528,
+  "layers": {
+   "M4": 528
+  },
+  "buses": {
+   "ck": 1,
+   "rst_n": 1,
+   "tap": 508,
+   "tie_hi": 1,
+   "tie_lo": 1,
+   "tile_id": 16
+  },
+  "y_span": [
+   561.036,
+   674.028
+  ],
+  "span_um": 112.992,
+  "hits_now": {
+   "EF0": 0,
+   "EF1": 0,
+   "EF2": 0,
+   "EF3": 0,
+   "EF4": 0,
+   "EF5": 24,
+   "EN1": 0,
+   "EN2": 0
+  },
+  "pins_in_windows_now": 24,
+  "shift_um": -15.408,
+  "new_span": [
+   545.628,
+   658.62
+  ],
+  "gap": [
+   537.692,
+   658.66
+  ],
+  "hits_after": {
+   "EF0": 0,
+   "EF1": 0,
+   "EF2": 0,
+   "EF3": 0,
+   "EF4": 0,
+   "EF5": 0,
+   "EN1": 0,
+   "EN2": 0
+  },
+  "clearance_um": [
+   7.936,
+   0.04
+  ],
+  "ck_pin": [
+   {
+    "name": "ck",
+    "layer": "M4",
+    "x": 457.824,
+    "y": 668.076
+   }
+  ]
+ },
+ "nl": {
+  "e_pins": 528,
+  "layers": {
+   "M4": 528
+  },
+  "buses": {
+   "ck": 1,
+   "rst_n": 1,
+   "tap": 508,
+   "tie_hi": 1,
+   "tie_lo": 1,
+   "tile_id": 16
+  },
+  "y_span": [
+   561.036,
+   674.028
+  ],
+  "span_um": 112.992,
+  "hits_now": {
+   "EF0": 0,
+   "EF1": 0,
+   "EF2": 0,
+   "EF3": 0,
+   "EF4": 0,
+   "EF5": 24,
+   "EN1": 0,
+   "EN2": 0
+  },
+  "pins_in_windows_now": 24,
+  "shift_um": -15.408,
+  "new_span": [
+   545.628,
+   658.62
+  ],
+  "gap": [
+   537.692,
+   658.66
+  ],
+  "hits_after": {
+   "EF0": 0,
+   "EF1": 0,
+   "EF2": 0,
+   "EF3": 0,
+   "EF4": 0,
+   "EF5": 0,
+   "EN1": 0,
+   "EN2": 0
+  },
+  "clearance_um": [
+   7.936,
+   0.04
+  ],
+  "ck_pin": [
+   {
+    "name": "ck",
+    "layer": "M4",
+    "x": 457.824,
+    "y": 668.076
+   }
+  ]
+ },
+ "verdict": "POSSIBLE: identical 8.64 E islands + 5.4 halo kept; one rigid E-block shift per type, 0 pins in any window"
+}
