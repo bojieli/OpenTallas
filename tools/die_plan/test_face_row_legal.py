@@ -35,6 +35,19 @@ foreach dr $offsets {
   if {[ff_find_x c 4320 $cy 1080 270] ne ""} {set found 1;break}
 }
 if {!$found || $cy != 153630} {error expanded_nearest_row}
+# Greedy whole-column search would choose the far row before a nearby column.
+set ff_x0 4320;set ff_y0 4320;set ff_x1 40000;set ff_y1 40000
+set ff_legal_rows [dict create 4320 {{4320 40000}} 30240 {{4320 40000}}]
+set ff_legal_occ {}
+ff_reserve_rect tap0 4320 4320 4428 4590
+ff_reserve_rect existing 4428 4320 5508 4590
+ff_reserve_rect tap1 6480 4320 6588 4590
+set ff_ew_order [ff_order_offsets 400 [ff_near_offsets 111] $ff_cpitch $ff_rh]
+set ff_ns_order [ff_order_offsets 400 [ff_near_offsets 13] $ff_rh $ff_cpitch]
+proc master {method} {if {$method eq "getWidth"} {return 1080};return 270}
+proc cell {method} {if {$method eq "getMaster"} {return master};return newff}
+set nearest [ff_best_face_site cell W 4320 4320]
+if {$nearest ne {6588 4320}} {error "not globally nearest: $nearest"}
 puts PASS
 '''
     fixture=tmp_path/'allocator.tcl';fixture.write_text(script)

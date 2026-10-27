@@ -84,6 +84,53 @@ proc ff_find_x {name x y w h} {
   if {![llength $choices]} { return "" }
   return [lindex [lsort -integer -index 0 $choices] 0 1]
 }
+proc ff_order_offsets {depth_count along depth_pitch along_pitch} {
+  set choices {}
+  for {set depth 0} {$depth < $depth_count} {incr depth} {
+    foreach offset $along { lappend choices [list [expr {$depth*$depth_pitch+abs($offset)*$along_pitch}] $depth $offset] }
+  }
+  return [lsort -integer -index 0 $choices]
+}
+proc ff_best_face_site {f face px py} {
+  global ff_x0 ff_y0 ff_x1 ff_y1 ff_sw ff_rh ff_cpitch ff_ew_order ff_ns_order
+  set master [$f getMaster]; set w [$master getWidth]; set h [$master getHeight]
+  set name [$f getName]
+  set row [expr {int(($py-$ff_y0)/$ff_rh)}]
+  set col [expr {int(($px-$ff_x0)/$ff_cpitch)}]
+  if {$face in {E W}} {
+    set order $ff_ew_order
+    set bx [expr {$face eq "W" ? $ff_x0 : $ff_x1-$w}]
+    set by [expr {$ff_y0+$row*$ff_rh}]
+  } else {
+    set order $ff_ns_order
+    set bx [expr {min($ff_x0+$col*$ff_cpitch,$ff_x1-$w)}]
+    set by [expr {$face eq "S" ? $ff_y0 : $ff_y1-$ff_rh}]
+  }
+  set anchor_offset [expr {abs($bx-$px)+abs($by-$py)}]
+  set best {}; set distance -1
+  foreach item $order {
+    lassign $item score depth along
+    # A legalized x moves by at most cpitch. Beyond this conservative bound
+    # no later nominal candidate can improve the actual Manhattan distance.
+    if {$distance >= 0 && $score > $distance+$anchor_offset+2*$ff_cpitch+$ff_rh} break
+    if {$face in {E W}} {
+      set r [expr {$row+$along}]
+      if {$r < 0 || $r >= int(($ff_y1-$ff_y0)/$ff_rh)} continue
+      set cy [expr {$ff_y0+$r*$ff_rh}]
+      set cx [expr {$face eq "W" ? $ff_x0+$depth*$ff_cpitch : $ff_x1-$depth*$ff_cpitch-$w}]
+    } else {
+      set c [expr {$col+$along}]
+      if {$c < 0} continue
+      set cx [expr {min($ff_x0+$c*$ff_cpitch,$ff_x1-$w)}]
+      set cy [expr {$face eq "S" ? $ff_y0+$depth*$ff_rh : $ff_y1-($depth+1)*$ff_rh}]
+    }
+    set cx [ff_find_x $name $cx $cy $w $h]
+    if {$cx eq ""} continue
+    set candidate [expr {abs($cx-$px)+abs($cy-$py)}]
+    if {$distance < 0 || $candidate < $distance} { set best [list $cx $cy]; set distance $candidate }
+  }
+  return $best
+}
 proc ff_claim_site {f x y} {
   set master [$f getMaster]
   ff_reserve_rect [$f getName] $x $y [expr {$x+[$master getWidth]}] [expr {$y+[$master getHeight]}]
@@ -130,6 +177,8 @@ set ff_cpitch [expr {$ff_sw * 40}]
 # A cut-row or fixed-tap hole can consume those first five rows completely.
 set ff_near_rows [ff_near_offsets [expr {int(30.0*$ff_dbu/$ff_rh)}]]
 set ff_near_cols [ff_near_offsets [expr {int(30.0*$ff_dbu/$ff_cpitch)}]]
+set ff_ew_order [ff_order_offsets 400 $ff_near_rows $ff_cpitch $ff_rh]
+set ff_ns_order [ff_order_offsets 400 $ff_near_cols $ff_rh $ff_cpitch]
 proc ff_is_ff {inst} { return [string match "*DFF*" [[$inst getMaster] getName]] }
 proc ff_is_buf {inst} {
   set m [[$inst getMaster] getName]
@@ -241,41 +290,9 @@ foreach pass {INPUT OUTPUT} {
     # face = nearest core edge
     set d [list [list [expr {$px - $ff_x0}] W] [list [expr {$ff_x1 - $px}] E] [list [expr {$py - $ff_y0}] S] [list [expr {$ff_y1 - $py}] N]]
     set face [lindex [lsort -integer -index 0 $d] 0 1]
-    if {$face in {E W}} {
-      set row [expr {max(0, min((int(($ff_y1-$ff_y0)/$ff_rh) - 1), ($py - $ff_y0) / $ff_rh))}]
-      # nearest free (row, column) slot: columns inward, alternate rows around the pin row
-      set placed 0
-      for {set c 0} {$c < 400 && !$placed} {incr c} {
-        foreach dr $ff_near_rows {
-          set r [expr {$row + $dr}]
-          if {$r < 0 || $r >= int(($ff_y1-$ff_y0)/$ff_rh) || [dict exists $ff_occ "$face,$r,$c"]} continue
-          set cy [expr {$ff_y0 + $r * $ff_rh}]
-          set cx [expr {$face eq "W" ? $ff_x0 + $c * $ff_cpitch : $ff_x1 - $c * $ff_cpitch - $w}]
-          set legal_x [ff_find_x [$f getName] $cx $cy $w [[$f getMaster] getHeight]]
-          if {$legal_x eq ""} continue
-          set cx $legal_x
-          dict set ff_occ "$face,$r,$c" 1
-          set placed 1; break
-        }
-      }
-    } else {
-      set col [expr {($px - $ff_x0) / $ff_cpitch}]
-      set placed 0
-      for {set r 0} {$r < 400 && !$placed} {incr r} {
-        foreach dc $ff_near_cols {
-          set c [expr {$col + $dc}]
-          if {$c < 0 || [dict exists $ff_occ "$face,$r,$c"]} continue
-          set cx [expr {min($ff_x0 + $c * $ff_cpitch, $ff_x1 - $w)}]
-          set cy [expr {$face eq "S" ? $ff_y0 + $r * $ff_rh : $ff_y1 - ($r + 1) * $ff_rh}]
-          set legal_x [ff_find_x [$f getName] $cx $cy $w [[$f getMaster] getHeight]]
-          if {$legal_x eq ""} continue
-          set cx $legal_x
-          dict set ff_occ "$face,$r,$c" 1
-          set placed 1; break
-        }
-      }
-    }
-    if {!$placed} { error "no legal row fragment for face register [$f getName] at $nm ($face)" }
+    set chosen [ff_best_face_site $f $face $px $py]
+    if {$chosen eq ""} { error "no legal row fragment for face register [$f getName] at $nm ($face)" }
+    lassign $chosen cx cy
     # orient BEFORE location: dbInst::setOrient keeps the bbox, so a later MX flip moved the flop one row down (onto
     # its neighbour: KV-P5 10-23, two FIRM flops in one site -> DPL-0033)
     if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
