@@ -3588,3 +3588,9 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
       If the mesh MC shows the 691-um spread is not absorbed, the principle-first fix is a per-region lattice commensurate with the core-array pitch, so nodes land in the inter-core channels (12.7 city model). Prefer that over larger per-branch sizing on a displaced tree.
   (3) bk_sel row-60 drivers (top centre, x 16.2-18.2k): too small to judge at die scale, so a zoom is needed. On the method, I agree with ruling (b): drop the 2 row-60 drivers (the continuous mesh is fed by its neighbours on the same strap), plus a y-first leg for ckm_r9_h110101011_1. There is no core variant, and identity holds across the 4 dsdv_bksel_q instances.
       Condition: the mesh transient/MC must report the node arrivals at row 60 with those drivers removed, and the re-render must show 0 clock cells inside any hard core (census_pd PASS on all 9 multi-instance modules).
+
+## 10-27 03:40 PDT GEOM REQ KV-KITS-1 (qwen_kvsys gen51, plan 1814a2d8, 3_place)
+- PNGs intel2:/srv/opentallas-scratch2/claude/kv-kits-1-1027/render/{kv3_io_ft_v1,kv3_io_cor}.place.png, intel1:same/render/{kv3_io_ft,kv3_io_cor_v1}.place.png (dump: 3_place.odb under gen51/T/T/run/results).
+- kv3_io_ft / io_ft_v1: straight E-W feedthrough, pins L/R in two bands (y~180-260, ~600-690), station flops in vertical columns ~100-130 um apart, repeaters between; clean (my view).
+- kv3_io_cor_v1: L-turns L/R/bottom faces; stations mostly straight rows/columns, some diagonal repeater chains near x 300 / 650 / 1200 -- please check.
+- kv3_io_cor: CONCERN -- station columns and repeater chains are slanted/diagonal and scattered (not lattice-aligned, cf. io_cor_v1); looks like GPL drag on multi-stage chains (GPL collapses relay chains 10-22). Ask PASS/FAIL before route.
