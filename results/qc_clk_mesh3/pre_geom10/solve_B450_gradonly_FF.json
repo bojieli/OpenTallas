@@ -1,0 +1,67 @@
+{
+ "corner": "FF",
+ "samples": 4,
+ "nominal_tap_skew_ps": 18.107,
+ "mc_worst_tap_skew_ps": 220.358,
+ "mc_mean_tap_skew_ps": 219.501,
+ "insertion_ps": {
+  "min": 5124.509,
+  "max": 5354.407
+ },
+ "nominal": {
+  "schema": "ot_qc_clk_mesh3_solve/1",
+  "corner": "FF",
+  "sample": 0,
+  "sigma": {
+   "vt_mV": 0.0,
+   "wire_rel": 0.0,
+   "tree": 0.0,
+   "grad_per_mm": 0.0021
+  },
+  "sizing": "d1",
+  "grad_dir": null,
+  "spine": {
+   "nodes": 0,
+   "drivers": 684,
+   "mult_hist": {
+    "0.0": 1
+   },
+   "arr_spread_ps": 0.915,
+   "top_arr_ps": {
+    "min": 4954.439,
+    "max": 4955.354
+   },
+   "tap_spread_ps": 0.915,
+   "tap_slew_ps": {
+    "min": 150.0,
+    "max": 150.0
+   }
+  },
+  "fine": {
+   "nodes": 149815,
+   "drivers": 6156,
+   "mult_hist": {
+    "1.0": 174,
+    "1.334": 1433,
+    "2.0": 3865,
+    "3.0": 684
+   },
+   "driver_arr_spread_ps": 1.568,
+   "voronoi_C_fF": {
+    "min": 176.715,
+    "med": 533.957,
+    "max": 702.929
+   },
+   "entry_slew_ps": {
+    "min": 172.185,
+    "max": 258.123
+   }
+  },
+  "insertion_ps": {
+   "min": 5234.27,
+   "max": 5252.377
+  },
+  "tap_skew_ps": 18.107,
+  "checked": "UNCHECKED"
+ }
+}
