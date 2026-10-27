@@ -1,0 +1,9 @@
+# QC canonical native source on guard51 physical placement
+
+Candidate only: source types, capacity and clock are not adopted. Native input = af589e572a (valid R8-applied + landing source, 100 types); physical input = paused QC-R26 plan_d51e/plan_d43.json (88 types, guard51, approved E-pin shift). Compose preserves every original physical partition origin/orientation, outline, bus, hard-core, internal station and lane. It changes 127 partition type names into twelve existing canonical source classes. Clock island lists and cell estimates are inherited pending final actual clock and mapped census.
+
+`python3 results/qc_bind_guard51_1027/compose.py results/qc_bind_guard51_1027` reproduces the pre-latency candidate; run gen.py latency --inplace before binding. The physical cores in the candidate come from the physical input; supplied su_exact and A0 pin tables accompany the event. The top-level die_plan.json is unchanged.
+
+Current source bridge 7a1172e830 ports exact ID/SU-group/reset hooks with 44 focused tests passing (26 identity/group; 18 schema/cut). FUP original is unchanged; new variant and sixteen grouped source modules are byte-identical to the earlier qualified native source. The consumer inventory traces actual canonical final3 RTL: 1968 semantic constant-output bits across 96 groups/24 SU_L partitions, all with live registered consumers. 1920 kv_wdata bits go via x_ctl_o; 48 wrom address high bits go via x_su_c_o. An output-drop candidate must carry its parent replacement contract; this inventory does not authorize dropping them.
+
+Fresh bind v2 FAIL232 errors/73392 unbound from the historical SUVM parent-only map. Fixed exact descendant map, preserved source/failed result. Fresh v3 uses the completed v2 elaboration (unchanged read RTL sources) and current mapping/SU group hooks; collection is pending. No P&R or STA launched.

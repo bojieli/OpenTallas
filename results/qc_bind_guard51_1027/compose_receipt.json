@@ -1,0 +1,21 @@
+{
+  "input_types": 88,
+  "native_types": 100,
+  "output_types": 100,
+  "changed_partitions": 127,
+  "new_types": [
+    "cbf_q00_na00d15",
+    "cbf_q01_nb12d10",
+    "cbf_q11_na22d3",
+    "cbn_q00_xb00d1_xb10d0_na00d15",
+    "cbn_q00_xb10d0_na00d15",
+    "cbn_q01_nb12d10",
+    "cbn_q11_na22d3",
+    "cbx_q10_xb30d1",
+    "cbx_q10_xb30d2",
+    "sle_ctl_r8p01",
+    "sle_ctl_r8p02",
+    "sle_ctl_r8p03"
+  ],
+  "gates": "CANDIDATE: strict bind, actual FF capacity, final clock islands and G0 remain required"
+}
