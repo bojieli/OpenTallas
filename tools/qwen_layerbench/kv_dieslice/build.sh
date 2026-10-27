@@ -24,6 +24,7 @@ fi
     case $m in kv3_phy*|kv3_sys_SD*|kv3_sys_c_part) ;; *) echo "hier_block -module \"$m\"";; esac; done; } > $O/hier.vlt
 TB="$H/tb_kvslice.sv"
 [ "${NATIVE_BOOT:-0}" = 0 ] || TB="$H/tb_kvslice_native.sv"
+printf "%s\n" "${NATIVE_BOOT:-0}" > "$O/native_boot.profile"
 python3 $H/bind_tb_clocks.py "$TOPF" "$TB" "$O/tb_kvslice.sv" || exit 2
 R=$(cd $H/../../.. && pwd)
 IMGD=${D2D_IMG:-$R/physical/die_plan/qwen_kvsys/boot_v36/image_kv41}   # the pair image the KV boot image carries
