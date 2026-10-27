@@ -121,7 +121,10 @@ def track_phase_x0(x0: float, w: float) -> float:
 
 
 def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, west: bool = False,
-              track_phase: bool = False, pg_access_layer: str = "M4"):
+              track_phase: bool = False, pg_access_layer: str = "M4", line_pins: list[Pin] | None = None):
+    """line_pins (KV-KITS-3 10-27): the hard IP's declared LINE SIDE (die-plan bump_ports, e.g. UCIe link_* / far_*), placed
+    on the same top edge as a second block that starts 4 pitches right of the FDI block (FDI pins stay byte-identical).
+    None = the previous LEF byte for byte."""
     L = [f"# OpenTallas tools/qwen_missing/link_phy_gen.py: {name} hard-macro ABSTRACT (licensed PHY IP; FDI side only)",
          "VERSION 5.7 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {name}",
          f"  FOREIGN {name} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;", "  CLASS BLOCK ;"]
@@ -133,8 +136,15 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, wes
     if track_phase and not west:
         x0 = track_phase_x0(x0, w)
     pw, pl = 0.024, 0.192
+    nfdi = len(bits)
+    if line_pins:
+        if west:
+            raise SystemExit(f"{name}: line-side pins are top-edge only")
+        bits += [(p, b) for p in line_pins for b in p.bits()]
+        if x0 + (len(bits) + 4) * pitch > w - 2.0:
+            raise SystemExit(f"{name}: FDI + line-side pins ({len(bits)}) do not fit the {w} um top edge at {pitch} um")
     for i, (p, b) in enumerate(bits):
-        x = x0 + i * pitch
+        x = x0 + (i if i < nfdi else i + 4) * pitch
         y = 600.0 + i * pitch
         if west and y + pw > h:
             raise SystemExit(f"{name}: west FDI pin {b} outside the macro")
@@ -179,7 +189,8 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, wes
     if depth > 0:
         lay = 4 if west else 5
         prs = [(b, f"M{lay}", (0.0, 600.0 + i * pitch, pl, 600.0 + i * pitch + pw) if west else
-                (x0 + i * pitch, h - pl, x0 + i * pitch + pw, h)) for i, (_p, b) in enumerate(bits)]
+                (x0 + (i if i < nfdi else i + 4) * pitch, h - pl, x0 + (i if i < nfdi else i + 4) * pitch + pw, h))
+               for i, (_p, b) in enumerate(bits)]
         win = APW.windows(w, h, prs, depth, lay, lay)
         for k in range(1, 6):
             base = (0.4 if west and k >= 4 else 0.0, 0.0, w, h - 0.4 if k == 5 else h)
@@ -191,12 +202,17 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, wes
             L += [f"    LAYER {layer} ;", f"    RECT {xobs} 0 {w:.3f} {h:.3f} ;"]
         L += ["    LAYER M5 ;", f"    RECT {'0.400' if west else '0'} 0 {w:.3f} {h - 0.4:.3f} ;"]
     L += ["  END", f"END {name}", "", "END LIBRARY"]
-    pin_info = dict(signal_pins=len(bits), pin_pitch_um=pitch, pin_layer="M4" if west else "M5",
+    pin_info = dict(signal_pins=nfdi, pin_pitch_um=pitch, pin_layer="M4" if west else "M5",
                     pin_edge="west (adapter-facing)" if west else "top (core-facing)")
     if pg_access_layer != "M4":
         pin_info["pg_access_layer"] = pg_access_layer
         pin_info["pg_claim"] = "generated-model external PG interface; no licensed macro internal GDS claim"
     pin_info["pin_block_y_um" if west else "pin_block_x_um"] = [600.0, round(600.0 + span, 3)] if west else [x0, round(x0 + span, 3)]
+    if line_pins:
+        lx0 = round(x0 + (nfdi + 4) * pitch, 3)
+        pin_info["line_pins"] = len(bits) - nfdi
+        pin_info["line_pin_block_x_um"] = [lx0, round(lx0 + (len(bits) - nfdi) * pitch, 3)]
+        pin_info["line_pin_edge"] = "top, right of the FDI block (declared bump_ports; untimed line side)"
     return "\n".join(L) + "\n", pin_info
 
 

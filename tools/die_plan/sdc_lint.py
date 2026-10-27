@@ -196,9 +196,17 @@ class Ctx:
         self.clocks = {}
 
 
+BITSEL = re.compile(r"^(.+)\[(\d+)\]$")
+
+
 def _glob_ports(ctx, pats):
     r = []
     for p in pats:
+        m = BITSEL.match(p)
+        if m and m.group(1) in ctx.allp:
+            # CLOCK-KV-R21 (hold_demand die_sta): one bit of a declared bus port -> the bus port
+            r.append(m.group(1))
+            continue
         base = re.sub(r"\[\*\]$", "", p)
         hit = [q for q in ctx.allp if q == base or re.fullmatch(re.escape(base).replace(r"\*", ".*"), q)]
         if not hit:
@@ -503,6 +511,18 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 val = _num(rest[0], "delay") * u
                 k, ps = _eval_obj(ctx, rest[1])
                 tab = idly if c == "set_input_delay" else odly
+                bitsel = rest[1].startswith("[get_ports") and all(
+                    BITSEL.match(x) for x in _words(rest[1][1:-1])[1:][-1].strip("{}").split())
+                if bitsel:
+                    # CLOCK-KV-R21: per-bit lines may only TIGHTEN a bus-level -min (hold demand die_sta); the bus
+                    # record keeps the bus-level value (the max over its bits) for the checks below
+                    if mm != ["min"]:
+                        err.append(f"ports: per-bit {c} must be -min only: {cmd}")
+                    for p in ps:
+                        if "min" not in tab[p] or val > tab[p]["min"][1] + EPS or tab[p]["min"][0] != ck:
+                            err.append(f"hold: per-bit {c} -min {val:g} ps on {p} relaxes or precedes its bus-level "
+                                       f"-min ({tab[p].get('min')})")
+                    continue
                 for p in ps:
                     for m in mm:
                         tab[p][m] = (ck, val)
