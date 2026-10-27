@@ -681,11 +681,17 @@ class MetalIndex:
     def __init__(self, space, bin_um=1.0):
         self.space, self.B = space, bin_um
         self.shapes = []
+        self.pairwise = False
+        self.shape_spaces = []
+        self.max_shape_space = 0.
         self.bins = {"M8": defaultdict(list), "M9": defaultdict(list)}
 
-    def add(self, s):
+    def add(self, s, space=None):
         k = len(self.shapes)
         self.shapes.append(s)
+        pair_space=self.space if space is None else space
+        self.shape_spaces.append(pair_space)
+        self.max_shape_space=max(self.max_shape_space,pair_space)
         b = self.bins[s[0]]
         for i in range(int(math.floor(s[3] / self.B)), int(math.floor(s[4] / self.B)) + 1):
             b[i].append(k)
@@ -696,7 +702,8 @@ class MetalIndex:
         lay, net, _, plo, phi, alo, ahi = s
         sp, eps = self.space, 1e-6
         b, seen, out = self.bins[lay], set(), []
-        for i in range(int(math.floor((plo - sp) / self.B)), int(math.floor((phi + sp) / self.B)) + 1):
+        reach = max(sp, self.max_shape_space if self.pairwise else 0., WIDE_SPACING_ROWS[0][1])
+        for i in range(int(math.floor((plo - reach) / self.B)), int(math.floor((phi + reach) / self.B)) + 1):
             for k in b.get(i, ()):
                 if k in seen:
                     continue
@@ -706,11 +713,33 @@ class MetalIndex:
                     continue
                 gp = max(t[3] - phi, plo - t[4])
                 ga = max(t[5] - ahi, alo - t[6])
-                if gp < sp - eps and ga < sp - eps:
+                pair_space=max(sp,self.shape_spaces[k]) if self.pairwise else sp
+                if gp < pair_space - eps and ga < pair_space - eps:
                     out.append((k, "short" if gp < eps and ga < eps else "spacing"))
                     if first:
                         return out
+                elif t[2] == "pg" and ga < -eps and gp < wide_spacing(max(phi - plo, t[4] - t[3]), max(0.,min(ahi,t[6])-max(alo,t[5]))) - eps:
+                    out.append((k, "wide_spacing"))
+                    if first:
+                        return out
         return out
+
+
+# INFRA-FIRST-QC-R28 (COORD 10-27 PG ruling: wide coarse-pitch PG stripes, e.g. QC M8 1.92 / M9 2.26 um): the ASAP7
+# M8/M9 SPACINGTABLE width rows (asap7_tech_1x_201209.lef, = die_infra.PG_SPACING_TABLE) apply to a clock wire next to
+# a WIDE shape: 0.5 um at width >= 0.49975, 1.0 um at width >= 0.99975, both at PRL >= 1.8 um.  The NDR space alone
+# (0.08 um at 8w) let the router put a strap 0.08 um from a 1.92 um PG stripe.  NDRs whose space already covers their
+# own width row (16w 0.5, 2x16w 1.0) are unchanged; 0.48 um PG grids are below the first row (unchanged).  Scoped to
+# die PG shapes (kind "pg") so clock-vs-clock reservations on every other die are byte-identical.
+WIDE_SPACING_ROWS = ((0.99975, 1.0), (0.49975, 0.5))
+WIDE_SPACING_PRL = 1.79975
+
+
+def wide_spacing(w, prl):
+    """wide-metal spacing (um) for the wider shape width w at parallel run length prl (0 below the table rows)"""
+    if prl < WIDE_SPACING_PRL:
+        return 0.0
+    return next((v for t, v in WIDE_SPACING_ROWS if w >= t), 0.0)
 
 
 VIA_HALF = 0.02     # ASAP7 1x VIA89 cut half-size (asap7_tech_1x_201209.lef RECT -0.02 -0.02 0.02 0.02)
@@ -745,7 +774,13 @@ class TrackRouter:
 
     def reserve(self, shapes):
         for s in shapes:
-            self.ix.add(s)
+            # The V2 router uses each conductor's own NDR when checking a
+            # later mixed-width pair. PG table spacing remains checked in hits.
+            reserve_space=None
+            if self.ix.pairwise and s[2] in ("pg","mesh"):
+                w=s[4]-s[3]
+                reserve_space=1. if abs(w-1.28)<1e-6 else .5 if abs(w-.64)<1e-6 else .08 if abs(w-.32)<1e-6 or abs(w-.16)<1e-6 else .04
+            self.ix.add(s,space=reserve_space)
             if s[2] == "pg":
                 self.pg.add(s)
                 if s[1] == self.shield:
