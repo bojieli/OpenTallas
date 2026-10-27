@@ -43,7 +43,8 @@ def main():
     import schema as S
     raw = json.loads(args.plan.read_text())
     raw['die']['pg'].pop('domains', None)
-    args.out.mkdir(parents=True, exist_ok=True)
+    # A coupon directory is immutable once generated or submitted.
+    args.out.mkdir(parents=True, exist_ok=False)
     nd = args.out / 'plan_nodomains.json'
     nd.write_text(json.dumps(raw))
     plan = S.Plan(S.load(str(nd)), nd)
@@ -89,6 +90,9 @@ def main():
                 tracks=G.tracks_of(plan, grid), stripe_phase=phases,
                 clock_columns_um=[583.2 + 319.68*k for k in range(32)],
                 clock_centre_to_pg_edge_um=round(min(distances)-args.width9/2, 6),
+                clock_phase_basis='ideal583.2+319.68k lattice; actual validated driver axes may differ by up to0.68um',
+                actual_axis_offset_bound_um=.68,
+                actual_axis_to_pg_edge_lower_bound_um=round(min(distances)-args.width9/2-.68, 6),
                 below_m7_mv=6.05,
                 below_m7_basis='PG-ACTIVITY-KVHBM e1 slice; inherited conservative full-power result, not a new measurement',
                 scope='canonical 150um bumps/70um pads, co-located VDD drop + VSS bounce, measured type map; independent grid candidate, no plan adoption')

@@ -13,7 +13,7 @@ controls pass; crop-reset and wrong-first-net mutants are caught.
 
 Candidate: M8 0.48@4.32 offset2.16; M9 12.96@39.96 offset13.77.
 Fixed clock x=583.2+319.68k is exactly midway between alternate M9 supply
-straps, leaving3.51um centre-to-PG-edge. `pg_clock_phase.png` was viewed:
+straps, leaving3.51um IDEAL centre-to-PG-edge. Actual validated driver axes differ by up to0.68um, giving a conservative2.83um lower bound; only the KV owner full-tree dry result can qualify those shapes. `pg_clock_phase.png` was viewed:
 straight-column clearance is plausible; full H-tree/mesh dry validation remains
 with the KV owner. No routing or STA was launched by this experiment.
 
