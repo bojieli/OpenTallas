@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4.7, 2026-10-26 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4.8, 2026-10-26 17:4x; v4.7 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -297,6 +297,12 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      no credit at the mesh node. The mesh-node-credited number (COORD 10-26 early ruling) is INFO only.
      EXCEPTION (12.8e, OWNER 10-26 17:0x): a regional mesh SIGNED OFF by variation circuit simulation counts as a common point; its
      worst simulated mesh skew is added as explicit clock uncertainty on every pair through it; flat OCV applies only below the mesh.
+  b1. (OWNER 10-26 17:4x) CLOCK OCV = depth- and distance-based derate table (AOCV-style, industry practice when no LVF/POCV), replacing
+     the flat clock-path cell 1.05/0.95 + net 1.03/0.97 of die_ci_margins.json. Derate per clock path = f(stage count from the last
+     common point, bounding-box distance of launch/capture), random part scaling ~1/sqrt(depth) plus a non-averaging systematic part.
+     The table is built from ASAP7 device-model Monte Carlo if the models carry variation statistics, else from cited published 7 nm
+     data; every assumption documented. Owner reviews the table before it gates. Data paths keep flat derates. IR droop handling
+     unchanged (still the stated +5.1 % late) unless the owner decides otherwise.
   c. Site sufficiency: max gap between legal station/repeater sites along each die net corridor <= 405 um; corridor track use <= 0.6;
      via-field porosity + per-gcell pin-stack limit on every M8/M9 -> bay drop and every island stack; bay fill <= 60 %; mesh-driver
      power density / EM in islands.
@@ -323,6 +329,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 16:5x OWNER: core latency band/window = design target, die related-pair STA decides (12.3a) = CURRENT. Supersedes treating 250+-20/window<=20 as hard core FAIL. Same exchange: bottom-up landed fallback (IF.FALLBACK) run IN PARALLEL now on S81, s81_head, KV; first to pass wins (QC/HBM stay master-plan, fallback costs 8-12%).
   - 10-26 17:0x OWNER: MSCTS die clock (12.8e) = CURRENT: M8/M9 global H-tree + regional meshes signed off by variation sim (mesh = common point, sim skew as uncertainty) + short local trees; landed crossings only for remaining seams. Supersedes the 06:07 blanket ban on mesh-node CPPR credit for SIGNED meshes only (unsigned: still banned).
   - 10-26 17:3x OWNER: "if continuous mesh can work, switch to it" (12.8e1) = CURRENT: continuous die mesh cut only at landed crossings is the preferred form; per-region meshes = fallback when the continuous mesh fails its evaluation. Reason: seam pairs between separate regional meshes still see unshared global-tree delay (~1.5-2 ns, UNCHECKED estimate).
+  - 10-26 17:4x OWNER: "replace the flat clock margin with a depth- and distance-based table, the standard practice" (12.4a b1) = CURRENT. Supersedes flat 5 %/3 % clock derates (die CI lane choice 10-24, never an owner decision). Gates after owner review of the table.
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 05:58, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
