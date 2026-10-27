@@ -184,3 +184,5 @@ PREFLIGHT-2 preflight.json: not yet landed; the chain already runs main kit_pref
 
 ## CODEX 13:51 fresh VMR publication collection
 98d3c304f548 is TERMINAL SIGNED-UNVERSIONED, not pending: archive+mirror completed10:22 at closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059. Only failure is no flowrelease watchedfingerprint matches77013. ROOT explicitly accepts exactas-run view as realclosure/usable perprecedent; VMR COMPLETE atthat scope. No historicaltag, no broadenedQC/freezequalification, no rerun. Originalroot-approved exact113eq/0const proof/pairedexport/rootapproval manifest retained. CanonicalHEADfreeze tag is separate ROOT path.
+
+CODEX source-scoped invalidation: appended WITHDRAW/GEOMFAIL for exactR9 row0396d971068e/source1fdc08d9cd63c0e0, WAIT-GEOM/notSIGNED, because native29724FF onS1 whileSDCprimaryS0. Historicalreceipts preserved; no R9 view published. fMX/legacy0689 NOT invalidated pendingidentity. KVowner owns connection/SDCfix.
