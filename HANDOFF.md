@@ -1206,3 +1206,5 @@ CODEX: 2026-10-26 20:20 PDT FLOW fixed implicit setup+holdHB4dispatch f7dd829445
 CODEX: 2026-10-26 20:19 PDT HBM SU/MU audit7a36d5f76: exactS2hubcost reproduced; previouslyunchargedbankk4 conditional+40..4144cycles/token;8SMRPL/publish/HBMshare scaling constraints identified; no old16SMheadlinepromotion.
 
 2026-10-26 20:19 PDT CODEX: HEAD HOST provider962ca7e740 pushed; actualHBC RX_ONLY defaultoff fixes fabricatedreturnTX,803framemiter+2mutants+12HBCtestsPASS,hostleafbind+lintPASS; compilerbootdates/token/physical remainopen.
+
+2026-10-26 20:25 PDT CODEX: HEAD ctl provider e58bbcd7da pushed;2x8269 exactstream+2token component/mutantsPASS;real noidx/lw11 contract fixes candidateonly;HOST provider parallel ready, combinedbind next.
