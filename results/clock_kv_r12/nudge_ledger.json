@@ -1,0 +1,4254 @@
+[
+ {
+  "type": "kv3_hgi_v5",
+  "slot": "ft16",
+  "width": 59,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 180,
+  "max_move_um": 21.65
+ },
+ {
+  "type": "kv3_hgi_v6",
+  "slot": "ft23",
+  "width": 3,
+  "stations": 5,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 4.27
+ },
+ {
+  "type": "kv3_hgi_v6",
+  "slot": "ft27",
+  "width": 523,
+  "stations": 5,
+  "mode": "bit_sites",
+  "bits_moved": 25,
+  "max_move_um": 5.89
+ },
+ {
+  "type": "kv3_hgi_v8",
+  "slot": "ft6",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 6,
+  "max_move_um": 16.9
+ },
+ {
+  "type": "kv3_hgi_v8",
+  "slot": "ft23",
+  "width": 523,
+  "stations": 5,
+  "mode": "bit_sites",
+  "bits_moved": 25,
+  "max_move_um": 5.35
+ },
+ {
+  "type": "kv3_hgi_v8",
+  "slot": "ft26",
+  "width": 1056,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 59,
+  "max_move_um": 11.66
+ },
+ {
+  "type": "kv3_pv",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 10,
+  "max_hop_um": 368.7,
+  "mode": "regs",
+  "len_um": 3653.7,
+  "max_slide_um": 22.4
+ },
+ {
+  "type": "kv3_pv",
+  "slot": "ft2",
+  "width": 15,
+  "stations": 9,
+  "max_hop_um": 378.5,
+  "mode": "regs",
+  "len_um": 3361.7,
+  "max_slide_um": 25.6
+ },
+ {
+  "type": "kv3_pv",
+  "slot": "ft3",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 262.7,
+  "mode": "regs",
+  "len_um": 1528.8,
+  "max_slide_um": 14.9
+ },
+ {
+  "type": "kv3_pv",
+  "slot": "ft4",
+  "width": 15,
+  "stations": 5,
+  "max_hop_um": 252.5,
+  "mode": "regs",
+  "len_um": 1239.3,
+  "max_slide_um": 16.7
+ },
+ {
+  "type": "kv3_pv_v1",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 307.5,
+  "mode": "regs",
+  "len_um": 1527.4,
+  "max_slide_um": 24.4
+ },
+ {
+  "type": "kv3_pv_v1",
+  "slot": "ft2",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 307.5,
+  "mode": "regs",
+  "len_um": 1527.5,
+  "max_slide_um": 24.9
+ },
+ {
+  "type": "kv3_pv_v1",
+  "slot": "ft3",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 307.6,
+  "mode": "regs",
+  "len_um": 1527.9,
+  "max_slide_um": 26.0
+ },
+ {
+  "type": "kv3_pv_v1",
+  "slot": "ft4",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 308.5,
+  "mode": "regs",
+  "len_um": 1527.4,
+  "max_slide_um": 26.7
+ },
+ {
+  "type": "kv3_pv_v1",
+  "slot": "ft5",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 309.0,
+  "mode": "regs",
+  "len_um": 1530.0,
+  "max_slide_um": 33.7
+ },
+ {
+  "type": "kv3_pv_v1",
+  "slot": "ft6",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 309.5,
+  "mode": "regs",
+  "len_um": 1530.0,
+  "max_slide_um": 34.3
+ },
+ {
+  "type": "kv3_pv_v1",
+  "slot": "ft7",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 310.0,
+  "mode": "regs",
+  "len_um": 1530.1,
+  "max_slide_um": 34.8
+ },
+ {
+  "type": "kv3_pv_v1",
+  "slot": "ft8",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 310.0,
+  "mode": "regs",
+  "len_um": 1530.1,
+  "max_slide_um": 35.4
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft0",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 8.64
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft5",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft6",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 15.12
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft7",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 6.48
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.4
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 17.55
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 19.71
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 17.55
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft23",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 17.55
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft24",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 17.28
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft25",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 17.28
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft26",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 17.28
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft27",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 15.12
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft28",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 15.12
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft29",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 398.3,
+  "mode": "regs",
+  "len_um": 1964.7,
+  "max_slide_um": 20.3
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft30",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 396.2,
+  "mode": "regs",
+  "len_um": 1956.1,
+  "max_slide_um": 20.0
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft31",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 394.6,
+  "mode": "regs",
+  "len_um": 1947.8,
+  "max_slide_um": 298.6
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft32",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 392.7,
+  "mode": "regs",
+  "len_um": 1939.4,
+  "max_slide_um": 16.9
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft33",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 334.1,
+  "mode": "regs",
+  "len_um": 2002.2,
+  "max_slide_um": 36.4
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft34",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 402.8,
+  "mode": "regs",
+  "len_um": 1993.7,
+  "max_slide_um": 16.1
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft35",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 401.0,
+  "mode": "regs",
+  "len_um": 1985.2,
+  "max_slide_um": 15.6
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft36",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 399.3,
+  "mode": "regs",
+  "len_um": 1976.7,
+  "max_slide_um": 15.3
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft37",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 5.67
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft38",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 4.32
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft39",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 338.1,
+  "mode": "regs",
+  "len_um": 2022.5,
+  "max_slide_um": 38.4
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft40",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 336.4,
+  "mode": "regs",
+  "len_um": 2013.9,
+  "max_slide_um": 36.4
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft41",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 8.64
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft42",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 8.64
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft43",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 8.64
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft44",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 7.83
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft45",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 367.3,
+  "mode": "regs",
+  "len_um": 2515.8,
+  "max_slide_um": 31.9
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft46",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 368.2,
+  "mode": "regs",
+  "len_um": 2507.4,
+  "max_slide_um": 48.8
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft47",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 6.48
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft48",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 6.48
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft49",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 4.32
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft50",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 364.6,
+  "mode": "regs",
+  "len_um": 2545.0,
+  "max_slide_um": 4.2
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft51",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 364.2,
+  "mode": "regs",
+  "len_um": 2536.5,
+  "max_slide_um": 4.0
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft52",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 365.6,
+  "mode": "regs",
+  "len_um": 2528.0,
+  "max_slide_um": 19.0
+ },
+ {
+  "type": "kv3_pv_v12",
+  "slot": "ft53",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 1,
+  "max_move_um": 4.32
+ },
+ {
+  "type": "kv3_pv_v1n",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 307.5,
+  "mode": "regs",
+  "len_um": 1527.4,
+  "max_slide_um": 24.4
+ },
+ {
+  "type": "kv3_pv_v1n",
+  "slot": "ft2",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 307.5,
+  "mode": "regs",
+  "len_um": 1527.5,
+  "max_slide_um": 24.9
+ },
+ {
+  "type": "kv3_pv_v1n",
+  "slot": "ft3",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 307.6,
+  "mode": "regs",
+  "len_um": 1527.9,
+  "max_slide_um": 26.0
+ },
+ {
+  "type": "kv3_pv_v1n",
+  "slot": "ft4",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 308.5,
+  "mode": "regs",
+  "len_um": 1527.4,
+  "max_slide_um": 26.7
+ },
+ {
+  "type": "kv3_pv_v1n",
+  "slot": "ft5",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 309.0,
+  "mode": "regs",
+  "len_um": 1530.0,
+  "max_slide_um": 33.7
+ },
+ {
+  "type": "kv3_pv_v1n",
+  "slot": "ft6",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 309.5,
+  "mode": "regs",
+  "len_um": 1530.0,
+  "max_slide_um": 34.3
+ },
+ {
+  "type": "kv3_pv_v1n",
+  "slot": "ft7",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 310.0,
+  "mode": "regs",
+  "len_um": 1530.1,
+  "max_slide_um": 34.8
+ },
+ {
+  "type": "kv3_pv_v1n",
+  "slot": "ft8",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 310.0,
+  "mode": "regs",
+  "len_um": 1530.1,
+  "max_slide_um": 35.4
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft2",
+  "width": 32,
+  "stations": 5,
+  "max_hop_um": 308.8,
+  "mode": "regs",
+  "len_um": 1536.6,
+  "max_slide_um": 37.5
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft3",
+  "width": 28,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 29,
+  "max_move_um": 15.12
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft4",
+  "width": 2,
+  "stations": 5,
+  "max_hop_um": 311.1,
+  "mode": "regs",
+  "len_um": 1528.3,
+  "max_slide_um": 37.4
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft6",
+  "width": 15,
+  "stations": 6,
+  "max_hop_um": 221.3,
+  "mode": "regs",
+  "len_um": 1282.9,
+  "max_slide_um": 49.5
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft8",
+  "width": 15,
+  "stations": 9,
+  "max_hop_um": 384.2,
+  "mode": "regs",
+  "len_um": 3385.8,
+  "max_slide_um": 55.7
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 36.72
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.71
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.71
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.71
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 22.68
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 22.68
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 24.3
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 24.84
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft23",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft24",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v2",
+  "slot": "ft25",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft2",
+  "width": 32,
+  "stations": 5,
+  "max_hop_um": 308.8,
+  "mode": "regs",
+  "len_um": 1536.6,
+  "max_slide_um": 37.5
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft3",
+  "width": 28,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 29,
+  "max_move_um": 15.12
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft4",
+  "width": 2,
+  "stations": 5,
+  "max_hop_um": 311.1,
+  "mode": "regs",
+  "len_um": 1528.3,
+  "max_slide_um": 37.4
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft6",
+  "width": 15,
+  "stations": 6,
+  "max_hop_um": 221.3,
+  "mode": "regs",
+  "len_um": 1282.9,
+  "max_slide_um": 49.5
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft8",
+  "width": 15,
+  "stations": 9,
+  "max_hop_um": 384.2,
+  "mode": "regs",
+  "len_um": 3385.8,
+  "max_slide_um": 55.7
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 36.72
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.71
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.71
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.71
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 22.68
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 22.68
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 24.3
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 24.84
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft23",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft24",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v2n",
+  "slot": "ft25",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft0",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 320.0,
+  "mode": "regs",
+  "len_um": 1520.2,
+  "max_slide_um": 59.9
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 371.3,
+  "mode": "regs",
+  "len_um": 2483.3,
+  "max_slide_um": 60.5
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft2",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 371.8,
+  "mode": "regs",
+  "len_um": 2483.4,
+  "max_slide_um": 63.1
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft3",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 371.8,
+  "mode": "regs",
+  "len_um": 2483.6,
+  "max_slide_um": 63.6
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft4",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 392.4,
+  "mode": "regs",
+  "len_um": 1926.8,
+  "max_slide_um": 26.5
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft5",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 392.4,
+  "mode": "regs",
+  "len_um": 1927.1,
+  "max_slide_um": 294.6
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft6",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 392.1,
+  "mode": "regs",
+  "len_um": 1927.3,
+  "max_slide_um": 294.6
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft7",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 391.7,
+  "mode": "regs",
+  "len_um": 1927.4,
+  "max_slide_um": 22.2
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft8",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 391.6,
+  "mode": "regs",
+  "len_um": 1927.8,
+  "max_slide_um": 21.2
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 391.0,
+  "mode": "regs",
+  "len_um": 1927.9,
+  "max_slide_um": 20.4
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 390.6,
+  "mode": "regs",
+  "len_um": 1928.0,
+  "max_slide_um": 19.8
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 390.6,
+  "mode": "regs",
+  "len_um": 1928.1,
+  "max_slide_um": 298.6
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 389.9,
+  "mode": "regs",
+  "len_um": 1927.7,
+  "max_slide_um": 16.4
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 389.0,
+  "mode": "regs",
+  "len_um": 1925.2,
+  "max_slide_um": 15.7
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 389.1,
+  "mode": "regs",
+  "len_um": 1925.3,
+  "max_slide_um": 15.0
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 389.1,
+  "mode": "regs",
+  "len_um": 1925.4,
+  "max_slide_um": 302.6
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 388.7,
+  "mode": "regs",
+  "len_um": 1925.6,
+  "max_slide_um": 11.6
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 388.1,
+  "mode": "regs",
+  "len_um": 1925.7,
+  "max_slide_um": 10.9
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 388.1,
+  "mode": "regs",
+  "len_um": 1925.5,
+  "max_slide_um": 10.2
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 387.8,
+  "mode": "regs",
+  "len_um": 1925.8,
+  "max_slide_um": 306.6
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 387.3,
+  "mode": "regs",
+  "len_um": 1926.6,
+  "max_slide_um": 5.9
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 392.5,
+  "mode": "regs",
+  "len_um": 1537.4,
+  "max_slide_um": 35.9
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 391.8,
+  "mode": "regs",
+  "len_um": 1537.4,
+  "max_slide_um": 35.2
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft23",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 391.2,
+  "mode": "regs",
+  "len_um": 1537.5,
+  "max_slide_um": 34.7
+ },
+ {
+  "type": "kv3_pv_v3",
+  "slot": "ft24",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 390.5,
+  "mode": "regs",
+  "len_um": 1537.5,
+  "max_slide_um": 33.9
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft0",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 320.0,
+  "mode": "regs",
+  "len_um": 1520.2,
+  "max_slide_um": 59.9
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 371.3,
+  "mode": "regs",
+  "len_um": 2483.3,
+  "max_slide_um": 60.5
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft2",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 371.8,
+  "mode": "regs",
+  "len_um": 2483.4,
+  "max_slide_um": 63.1
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft3",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 371.8,
+  "mode": "regs",
+  "len_um": 2483.6,
+  "max_slide_um": 63.6
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft4",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 392.4,
+  "mode": "regs",
+  "len_um": 1926.8,
+  "max_slide_um": 26.5
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft5",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 392.4,
+  "mode": "regs",
+  "len_um": 1927.1,
+  "max_slide_um": 294.6
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft6",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 392.1,
+  "mode": "regs",
+  "len_um": 1927.3,
+  "max_slide_um": 294.6
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft7",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 391.7,
+  "mode": "regs",
+  "len_um": 1927.4,
+  "max_slide_um": 22.2
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft8",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 391.6,
+  "mode": "regs",
+  "len_um": 1927.8,
+  "max_slide_um": 21.2
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 391.0,
+  "mode": "regs",
+  "len_um": 1927.9,
+  "max_slide_um": 20.4
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 390.6,
+  "mode": "regs",
+  "len_um": 1928.0,
+  "max_slide_um": 19.8
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 390.6,
+  "mode": "regs",
+  "len_um": 1928.1,
+  "max_slide_um": 298.6
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 389.9,
+  "mode": "regs",
+  "len_um": 1927.7,
+  "max_slide_um": 16.4
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 389.0,
+  "mode": "regs",
+  "len_um": 1925.2,
+  "max_slide_um": 15.7
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 389.1,
+  "mode": "regs",
+  "len_um": 1925.3,
+  "max_slide_um": 15.0
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 389.1,
+  "mode": "regs",
+  "len_um": 1925.4,
+  "max_slide_um": 302.6
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 388.7,
+  "mode": "regs",
+  "len_um": 1925.6,
+  "max_slide_um": 11.6
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 388.1,
+  "mode": "regs",
+  "len_um": 1925.7,
+  "max_slide_um": 10.9
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 388.1,
+  "mode": "regs",
+  "len_um": 1925.5,
+  "max_slide_um": 10.2
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 387.8,
+  "mode": "regs",
+  "len_um": 1925.8,
+  "max_slide_um": 306.6
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 387.3,
+  "mode": "regs",
+  "len_um": 1926.6,
+  "max_slide_um": 5.9
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 392.5,
+  "mode": "regs",
+  "len_um": 1537.4,
+  "max_slide_um": 35.9
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 391.8,
+  "mode": "regs",
+  "len_um": 1537.4,
+  "max_slide_um": 35.2
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft23",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 391.2,
+  "mode": "regs",
+  "len_um": 1537.5,
+  "max_slide_um": 34.7
+ },
+ {
+  "type": "kv3_pv_v3n",
+  "slot": "ft24",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 390.5,
+  "mode": "regs",
+  "len_um": 1537.5,
+  "max_slide_um": 33.9
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 30.24
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft2",
+  "width": 64,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 130,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft3",
+  "width": 56,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 57,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft4",
+  "width": 4,
+  "stations": 6,
+  "max_hop_um": 356.0,
+  "mode": "regs",
+  "len_um": 2088.2,
+  "max_slide_um": 35.5
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft8",
+  "width": 15,
+  "stations": 8,
+  "max_hop_um": 308.5,
+  "mode": "regs",
+  "len_um": 2411.0,
+  "max_slide_um": 81.1
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 317.6,
+  "mode": "regs",
+  "len_um": 1528.0,
+  "max_slide_um": 46.5
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 317.6,
+  "mode": "regs",
+  "len_um": 1528.2,
+  "max_slide_um": 47.0
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 317.6,
+  "mode": "regs",
+  "len_um": 1528.0,
+  "max_slide_um": 47.7
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 317.9,
+  "mode": "regs",
+  "len_um": 1527.9,
+  "max_slide_um": 48.3
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.4
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 34.83
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 35.1
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 35.64
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.07
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.34
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.34
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.34
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.07
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft23",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft24",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft25",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft26",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 363.4,
+  "mode": "regs",
+  "len_um": 2084.7,
+  "max_slide_um": 63.4
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft27",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 363.3,
+  "mode": "regs",
+  "len_um": 2084.9,
+  "max_slide_um": 63.8
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft34",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 391.1,
+  "mode": "regs",
+  "len_um": 1910.5,
+  "max_slide_um": 35.9
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft35",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 391.1,
+  "mode": "regs",
+  "len_um": 1910.5,
+  "max_slide_um": 286.6
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft36",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 390.8,
+  "mode": "regs",
+  "len_um": 1910.5,
+  "max_slide_um": 32.7
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft37",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 390.2,
+  "mode": "regs",
+  "len_um": 1910.8,
+  "max_slide_um": 31.9
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft38",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 390.2,
+  "mode": "regs",
+  "len_um": 1910.9,
+  "max_slide_um": 31.4
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft39",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 392.1,
+  "mode": "regs",
+  "len_um": 1533.2,
+  "max_slide_um": 28.8
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft40",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 391.5,
+  "mode": "regs",
+  "len_um": 1533.1,
+  "max_slide_um": 28.2
+ },
+ {
+  "type": "kv3_pv_v4",
+  "slot": "ft41",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 390.9,
+  "mode": "regs",
+  "len_um": 1533.0,
+  "max_slide_um": 27.7
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 30.24
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft2",
+  "width": 64,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 130,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft3",
+  "width": 56,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 57,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft4",
+  "width": 4,
+  "stations": 6,
+  "max_hop_um": 356.0,
+  "mode": "regs",
+  "len_um": 2088.2,
+  "max_slide_um": 35.5
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft8",
+  "width": 15,
+  "stations": 8,
+  "max_hop_um": 308.5,
+  "mode": "regs",
+  "len_um": 2411.0,
+  "max_slide_um": 81.1
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 317.6,
+  "mode": "regs",
+  "len_um": 1528.0,
+  "max_slide_um": 46.5
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 317.6,
+  "mode": "regs",
+  "len_um": 1528.2,
+  "max_slide_um": 47.0
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 317.6,
+  "mode": "regs",
+  "len_um": 1528.0,
+  "max_slide_um": 47.7
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 317.9,
+  "mode": "regs",
+  "len_um": 1527.9,
+  "max_slide_um": 48.3
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.4
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 34.83
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 35.1
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 35.64
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.07
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.34
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.34
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.34
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.07
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft23",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft24",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft25",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft26",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 363.4,
+  "mode": "regs",
+  "len_um": 2084.7,
+  "max_slide_um": 63.4
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft27",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 363.3,
+  "mode": "regs",
+  "len_um": 2084.9,
+  "max_slide_um": 63.8
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft34",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 391.1,
+  "mode": "regs",
+  "len_um": 1910.5,
+  "max_slide_um": 35.9
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft35",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 391.1,
+  "mode": "regs",
+  "len_um": 1910.5,
+  "max_slide_um": 286.6
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft36",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 390.8,
+  "mode": "regs",
+  "len_um": 1910.5,
+  "max_slide_um": 32.7
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft37",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 390.2,
+  "mode": "regs",
+  "len_um": 1910.8,
+  "max_slide_um": 31.9
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft38",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 390.2,
+  "mode": "regs",
+  "len_um": 1910.9,
+  "max_slide_um": 31.4
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft39",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 392.1,
+  "mode": "regs",
+  "len_um": 1533.2,
+  "max_slide_um": 28.8
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft40",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 391.5,
+  "mode": "regs",
+  "len_um": 1533.1,
+  "max_slide_um": 28.2
+ },
+ {
+  "type": "kv3_pv_v4n",
+  "slot": "ft41",
+  "width": 1,
+  "stations": 4,
+  "max_hop_um": 390.9,
+  "mode": "regs",
+  "len_um": 1533.0,
+  "max_slide_um": 27.7
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft0",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 30.24
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 30.24
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft2",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.67
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft3",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.67
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft4",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.67
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft5",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.67
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft6",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 35.91
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft7",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.34
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft8",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.88
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.88
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.88
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 44.01
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 44.28
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 14.31
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 14.85
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 352.1,
+  "mode": "regs",
+  "len_um": 2094.5,
+  "max_slide_um": 14.2
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 351.8,
+  "mode": "regs",
+  "len_um": 2092.5,
+  "max_slide_um": 13.9
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 351.8,
+  "mode": "regs",
+  "len_um": 2092.6,
+  "max_slide_um": 13.9
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft31",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 34.56
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft32",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 34.56
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft33",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 32.94
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft34",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 30.24
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft35",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 35.1
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft36",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 30.51
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft37",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 34.83
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft38",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 3,
+  "max_move_um": 36.72
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft39",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 3,
+  "max_move_um": 26.19
+ },
+ {
+  "type": "kv3_pv_v5",
+  "slot": "ft40",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 34.83
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft0",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 30.24
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 30.24
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft2",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.67
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft3",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.67
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft4",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.67
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft5",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.67
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft6",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 35.91
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft7",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.34
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft8",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.88
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.88
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.88
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 44.01
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 44.28
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 14.31
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 14.85
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 352.1,
+  "mode": "regs",
+  "len_um": 2094.5,
+  "max_slide_um": 14.2
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 351.8,
+  "mode": "regs",
+  "len_um": 2092.5,
+  "max_slide_um": 13.9
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 351.8,
+  "mode": "regs",
+  "len_um": 2092.6,
+  "max_slide_um": 13.9
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft31",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 34.56
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft32",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 34.56
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft33",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 32.94
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft34",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 30.24
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft35",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 35.1
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft36",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 30.51
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft37",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 34.83
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft38",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 3,
+  "max_move_um": 36.72
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft39",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 3,
+  "max_move_um": 26.19
+ },
+ {
+  "type": "kv3_pv_v5n",
+  "slot": "ft40",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 34.83
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 308.6,
+  "mode": "regs",
+  "len_um": 1542.0,
+  "max_slide_um": 43.7
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft2",
+  "width": 96,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 133,
+  "max_move_um": 19.17
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft3",
+  "width": 84,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 170,
+  "max_move_um": 44.28
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft4",
+  "width": 6,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 7,
+  "max_move_um": 22.95
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft6",
+  "width": 15,
+  "stations": 9,
+  "max_hop_um": 384.9,
+  "mode": "regs",
+  "len_um": 3384.8,
+  "max_slide_um": 56.8
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 8.37
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 22.68
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 24.57
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 25.11
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 24.57
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 25.92
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 26.46
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 27.0
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 27.54
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 28.08
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft23",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 28.08
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft24",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 28.08
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft25",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 27.81
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft26",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 27.81
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft27",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft28",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft29",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 22.14
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft30",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft31",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft32",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 19.71
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft33",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 18.09
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft34",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft35",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft36",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft37",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 24.03
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft38",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 24.3
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft39",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft40",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 22.68
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft41",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 19.98
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft42",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 22.41
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft43",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 20.79
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft44",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft45",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft46",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 39.42
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft47",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 39.42
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft48",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 39.42
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft49",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 39.42
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft50",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 39.69
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft51",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.61
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft52",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.61
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft53",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.61
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft54",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.61
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft55",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 36.72
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft56",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 36.72
+ },
+ {
+  "type": "kv3_pv_v6",
+  "slot": "ft57",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 36.72
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 308.6,
+  "mode": "regs",
+  "len_um": 1542.0,
+  "max_slide_um": 43.7
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft2",
+  "width": 96,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 133,
+  "max_move_um": 19.17
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft3",
+  "width": 84,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 170,
+  "max_move_um": 44.28
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft4",
+  "width": 6,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 7,
+  "max_move_um": 22.95
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft6",
+  "width": 15,
+  "stations": 9,
+  "max_hop_um": 384.9,
+  "mode": "regs",
+  "len_um": 3384.8,
+  "max_slide_um": 56.8
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 8.37
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 22.68
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 24.57
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 25.11
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 24.57
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 25.38
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 25.92
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 26.46
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 27.0
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 27.54
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 28.08
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft23",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 28.08
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft24",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 28.08
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft25",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 27.81
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft26",
+  "width": 1,
+  "stations": 10,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 27.81
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft27",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft28",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft29",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 22.14
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft30",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft31",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft32",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 19.71
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft33",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 18.09
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft34",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft35",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft36",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft37",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 24.03
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft38",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 24.3
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft39",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft40",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 22.68
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft41",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 19.98
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft42",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 22.41
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft43",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 20.79
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft44",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft45",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 41.04
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft46",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 39.42
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft47",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 39.42
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft48",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 39.42
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft49",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 39.42
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft50",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 39.69
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft51",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.61
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft52",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.61
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft53",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.61
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft54",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 38.61
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft55",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 36.72
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft56",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 36.72
+ },
+ {
+  "type": "kv3_pv_v6n",
+  "slot": "ft57",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 36.72
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft0",
+  "width": 1,
+  "stations": 9,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 8.64
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft9",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft10",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft11",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft12",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.87
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft13",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft14",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft15",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft16",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft17",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft18",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft19",
+  "width": 1,
+  "stations": 8,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 21.6
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft20",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 32.4
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft21",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 23.76
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft22",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft23",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 4,
+  "max_move_um": 19.44
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft24",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 19.71
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft25",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 17.28
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft26",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 17.28
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft27",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 15.12
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft28",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 15.12
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft29",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 15.12
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft30",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 15.12
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft31",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 12.96
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft32",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 12.96
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft33",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 12.96
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft34",
+  "width": 1,
+  "stations": 7,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 12.96
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft35",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 365.2,
+  "mode": "regs",
+  "len_um": 2528.7,
+  "max_slide_um": 15.6
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft36",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 367.3,
+  "mode": "regs",
+  "len_um": 2520.1,
+  "max_slide_um": 15.0
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft37",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 367.7,
+  "mode": "regs",
+  "len_um": 2511.6,
+  "max_slide_um": 31.9
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft38",
+  "width": 1,
+  "stations": 7,
+  "max_hop_um": 368.6,
+  "mode": "regs",
+  "len_um": 2503.0,
+  "max_slide_um": 46.8
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft39",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 10.8
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft40",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 10.8
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft41",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 8.64
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft42",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 8.64
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft43",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 8.64
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft44",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 7.83
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft45",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 5.94
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft46",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 5.13
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft47",
+  "width": 1,
+  "stations": 6,
+  "mode": "bit_sites",
+  "bits_moved": 2,
+  "max_move_um": 4.59
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft48",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 337.4,
+  "mode": "regs",
+  "len_um": 2018.3,
+  "max_slide_um": 38.4
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft49",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 403.7,
+  "mode": "regs",
+  "len_um": 2010.0,
+  "max_slide_um": 4.7
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft50",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 401.5,
+  "mode": "regs",
+  "len_um": 2001.5,
+  "max_slide_um": 4.2
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft51",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 399.6,
+  "mode": "regs",
+  "len_um": 1993.0,
+  "max_slide_um": 3.8
+ },
+ {
+  "type": "kv3_pv_v7",
+  "slot": "ft52",
+  "width": 1,
+  "stations": 5,
+  "max_hop_um": 397.9,
+  "mode": "regs",
+  "len_um": 1984.5,
+  "max_slide_um": 3.4
+ },
+ {
+  "type": "kv3_pv_v8",
+  "slot": "ft1",
+  "width": 1,
+  "stations": 8,
+  "max_hop_um": 390.0,
+  "mode": "regs",
+  "len_um": 3100.9,
+  "max_slide_um": 14.4
+ },
+ {
+  "type": "kv3_pv_v8",
+  "slot": "ft2",
+  "width": 15,
+  "stations": 8,
+  "max_hop_um": 390.0,
+  "mode": "regs",
+  "len_um": 3096.2,
+  "max_slide_um": 17.6
+ },
+ {
+  "type": "kv3_pv_v8",
+  "slot": "ft3",
+  "width": 1,
+  "stations": 6,
+  "max_hop_um": 170.5,
+  "mode": "regs",
+  "len_um": 975.9,
+  "max_slide_um": 14.9
+ },
+ {
+  "type": "kv3_pv_v8",
+  "slot": "ft4",
+  "width": 15,
+  "stations": 5,
+  "max_hop_um": 199.9,
+  "mode": "regs",
+  "len_um": 973.8,
+  "max_slide_um": 14.1
+ }
+]
