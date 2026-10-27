@@ -166,8 +166,16 @@ def cmd_compose(a):
     rep["requirements"] = {k: req[k] for k in ("crossings", "required_new_scalar_pins", "added_live_data_storage_flops",
                                                 "type_count_before", "type_count_after")}
     rep["requirements"]["split_types"] = sorted(req["split_types"])
+    observer = load(a.observer_spec) if a.observer_spec else None
+    if observer:
+        required = ("module", "instance_suffix", "fault_port", "ready_port")
+        missing = [k for k in required if not observer.get(k) or observer[k] == "OPEN"]
+        if missing:
+            raise ValueError("explicit observer spec missing actual binding: " + repr(missing))
+        observer = {k: observer[k] for k in required}
     try:
-        raw, side = CLP.compose(plan, tab, a.plan, observer_part=a.observer, monitor=a.monitor)
+        raw, side = CLP.compose(plan, tab, a.plan, observer_part=a.observer,
+                               observer=observer, monitor=a.monitor)
     except Exception as e:  # report the exact first blocker; do not invent geometry
         rep["compose"] = dict(status="FAIL", error=f"{type(e).__name__}: {e}")
         (out / "compose_report.json").write_text(json.dumps(rep, indent=1) + "\n")
@@ -175,7 +183,7 @@ def cmd_compose(a):
         return 1
     # HEAD observer: the real local controller is hd_ctl (module ot_s81hd_ctl).  Its fault/ready observation inputs
     # are NOT declared yet (open item), so the sidecar names the part and leaves the ports explicitly OPEN.
-    obs = dict(part=a.observer, module=plan["partition_types"][next(p["type"] for p in plan["partitions"]
+    obs = dict(part=a.observer, **observer) if observer else dict(part=a.observer, module=plan["partition_types"][next(p["type"] for p in plan["partitions"]
                                                                     if p["name"] == a.observer)]["module"],
                instance_suffix="OPEN", fault_port="OPEN", ready_port="OPEN")
     side["collector"]["observer"] = obs
@@ -265,6 +273,7 @@ def main(argv=None):
     c.add_argument("--table", required=True)
     c.add_argument("--out", required=True)
     c.add_argument("--observer", default="ctl")
+    c.add_argument("--observer-spec", help="JSON actual {module,instance_suffix,fault_port,ready_port}; binding is checked by clock_landings, default stays OPEN")
     c.add_argument("--monitor", default="reset", choices=["reset", "dataflow"], help="monitor network: reset-wavefront cohorts (default) or uniform dataflow (no type split)")
     v = sub.add_parser("variant")
     v.add_argument("plan")
