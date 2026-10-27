@@ -1219,3 +1219,5 @@ CODEX: 2026-10-26 20:31 PDT KV R9 hiddenRCXfailure fixed a4f4fa011 (768disconnec
 CODEX: 2026-10-26 20:42 PDT TOK-LEC QXPQ exactAIG formalclose64713/64713+outputmutantCAUGHT1,177hints READY codex/qxpq-proof-2037@c0dbad315; originalsourcePROVENANCE UNKNOWN, no route/sign-offpromotion; currentkit re-proof required. Allownjobs terminal; failedcofactor experiment rejected+preserved.
 
 2026-10-26 20:47 PDT CODEX: userpriorityHBMSUvsMU; fullnative32bank/32FUSED/28tree buddycandidate bothhubcutmodelsPASS<=.553/.588 atH4320; ~530mm2 inferred, no nativeVMserialization credit untilcensus. Fixedboth-axiscutgate/namedendpoints/45.6xexactpacker andactualnativeVMadapter; P3baseline6/6staticimagesPASS, optimizedcostedN-rowcandidate+FUSEDfunctionalbenchlive.
+
+2026-10-26 20:48 PDT CODEX: HEAD ctl825fe511a7 realMTPqvalid/datafailurefixed (j0beforej1),5stepSEQring+legacybugmutantPASS;sourcecandidate0missing0unresolved;currentphysicalcodec2tokenPASS;realMarkovRTLreusefound,currentnative/physicalcompositionstillopen.
