@@ -1552,7 +1552,7 @@ ROW_H = 0.27        # ASAP7 row
 
 # ASAP7 R 1x LEF (asap7sc7p5t_28_R_1x_220121a.lef, ORFS asap7lock): master -> (width, A-pin access centroid x, Y-pin
 # access centroid x) from the cell origin, um; both pins span the row (y centroid = row middle).
-LEF_BUF = {"BUFx24": (1.62, 0.048, 0.956), "BUFx16f": (1.188, 0.039, 0.74), "BUFx12f": (0.972, 0.046, 0.632)}
+LEF_BUF = {"BUFx24": (1.62, 0.027, 1.593), "BUFx16f": (1.188, 0.027, 1.161), "BUFx12f": (0.972, 0.027, 0.945)}
 BUF_STRENGTH = {"BUFx24": 1.0, "BUFx16f": 0.667, "BUFx12f": 0.5}
 
 
@@ -1601,7 +1601,8 @@ def legalize_partition_bodies(B, cells):
     for i,c in enumerate(cells):
         if not c["masters"] or c.get("island") or c["kind"].startswith("chan"):continue
         old=tuple(c["site"]);b=boxes[i]
-        if any(r[0]-1e-6<=b[0] and r[1]-1e-6<=b[1] and b[2]<=r[2]+1e-6 and b[3]<=r[3]+1e-6 for r in rects.values()):
+        die_clear = 1.-1e-6 <= b[0] and 1.-1e-6 <= b[1] and b[2] <= P.W-1.+1e-6 and b[3] <= P.H-1.+1e-6
+        if die_clear and any(r[0]-1e-6<=b[0] and r[1]-1e-6<=b[1] and b[2]<=r[2]+1e-6 and b[3]<=r[3]+1e-6 for r in rects.values()):
             continue
         width=b[2]-b[0];height=b[3]-b[1]
         hosts=byx[int(min(max(old[0],0.),P.W-1e-6)//500)]
@@ -1609,10 +1610,10 @@ def legalize_partition_bodies(B, cells):
         for host in hosts:
             r=rects[host]
             if not (r[1]-8.64<=old[1]<=r[3]+8.64 and r[0]-8.64<=old[0]<=r[2]+8.64):continue
-            lo_x=math.ceil((r[0]-1e-6)/.054)*.054
-            hi_x=math.floor((r[2]-width+1e-6)/.054)*.054
-            lo_y=math.ceil((r[1]-1e-6)/ROW_H)*ROW_H
-            hi_y=math.floor((r[3]-height+1e-6)/ROW_H)*ROW_H
+            lo_x=math.ceil((max(r[0],1.)-1e-6)/.054)*.054
+            hi_x=math.floor((min(r[2],P.W-1.)-width+1e-6)/.054)*.054
+            lo_y=math.ceil((max(r[1],1.)-1e-6)/ROW_H)*ROW_H
+            hi_y=math.floor((min(r[3],P.H-1.)-height+1e-6)/ROW_H)*ROW_H
             if lo_x>hi_x or lo_y>hi_y:continue
             ox=min(max(round((old[0]-width/2)/.054)*.054,lo_x),hi_x)
             oy=min(max(round((old[1]-ROW_H/2)/ROW_H)*ROW_H,lo_y),hi_y)
@@ -1994,16 +1995,38 @@ def assign_periodic(B, I, cells, topk):
                 rule="one slot per (type, frame point) class, free + clear in every instance -> identical slot set per type")
 
 
+def unit_sites(c):
+    """Actual lower-left origins and row-compatible orientations of a group.
+
+    Use this same representation in the predictor and physical exporter. Channel
+    nodes are already row origins; other model sites denote unit-0 centres.
+    """
+    if not c["masters"]:return []
+    base_y=c["site"][1] if c.get("kind", "").startswith("chan") else c["site"][1]-ROW_H/2
+    base_y=round(round(base_y/ROW_H)*ROW_H,6)
+    out=[]
+    for i,m in enumerate(c["masters"]):
+        w=LEF_BUF[m][0]
+        x=round(round((c["site"][0]-w/2)/.054)*.054,6)
+        y=round(base_y+i*ROW_H,6)
+        out.append(dict(origin_um=[x,y],master=m,orient="MX" if round(y/ROW_H)%2 else "R0"))
+    return out
+
+
+def unit_pin(c, i, which, access=False):
+    """Transformed true1x library pin: bar-centre or distinct access-row point."""
+    u=unit_sites(c)[i];x,y=u["origin_um"]
+    _,ax,yx=LEF_BUF[u["master"]]
+    py=(.090 if which=="A" else .180) if access else ROW_H/2
+    if u["orient"]=="MX":py=ROW_H-py
+    return round(x+(ax if which=="A" else yx),6),round(y+py,6)
+
+
 def pin_xy(c, which):
-    """centroid of a cell group's A (input) or Y (output) pins + the tie strap joining its stacked units (um)."""
-    if not c["masters"]:
-        return (c["site"][0], c["site"][1]), 0.0
-    xs, ys = [], []
-    for u, m in enumerate(c["masters"]):
-        w, ax, yx = LEF_BUF[m]
-        xs.append(c["site"][0] - w / 2 + (ax if which == "A" else yx))
-        ys.append(c["site"][1] + u * ROW_H + ROW_H / 2)
-    return (sum(xs) / len(xs), sum(ys) / len(ys)), (len(xs) - 1) * ROW_H
+    """Centroid of actual, row-oriented unit pins and their physical tie span."""
+    if not c["masters"]:return (tuple(c["site"]),0.)
+    points=[unit_pin(c,i,which) for i in range(len(c["masters"]))]
+    return (sum(x for x,y in points)/len(points),sum(y for x,y in points)/len(points)),max(y for x,y in points)-min(y for x,y in points)
 
 
 def net_um(src, dst):

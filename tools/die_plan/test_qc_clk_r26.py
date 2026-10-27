@@ -97,7 +97,7 @@ def test_full_clock_group_body_stays_in_one_host_at_seam_and_die_edge():
     cells=[dict(kind='fine_driver',site=[10.,5.535],masters=['BUFx24']),
            dict(kind='col_node',site=[20.,10.665],masters=['BUFx24','BUFx24'])]
     stats=M.legalize_partition_bodies(B,cells)
-    assert stats['moved']==2 and stats['max_move_um']<2.
+    assert stats['moved']==2 and stats['max_move_um']<3.
     for c in cells:
         x,y=c['site'];r=rects[c['body_host']]
         assert r[0]<=x-.81 and x+.81<=r[2]

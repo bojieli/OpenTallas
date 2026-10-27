@@ -64,7 +64,7 @@ def test_phys_edges_use_legal_sites_not_ideal_legs():
     assert st["bumped"] >= 1 and abs(bump) > 10.0           # the blocked repeater moved off its ideal site
     L1, L2 = top[0][2], top[1][2]
     # the legal pieces carry the bump (ideal model: 450 / 450)
-    assert abs(L1 - (450.0 - bump)) < 2.0 and abs(L2 - (450.0 + bump)) < 2.0
+    assert abs(L1 - (450.0 - bump)) < 3.0 and abs(L2 - (450.0 + bump)) < 3.0  # includes true LEF pin offsets
     assert abs(L1 - 450.0) > 10.0
     # the merged level: top leaf == column-tap cell (one cell)
     assert B["site_of"][("t", "t0")] == B["site_of"][("c", "c_tap")]
@@ -81,8 +81,8 @@ def test_phys_edges_use_legal_sites_not_ideal_legs():
 def test_pin_model_from_lef():
     c = dict(site=[10.0, 5.0], masters=["BUFx24"])
     (a, _), (y, _) = M.pin_xy(c, "A"), M.pin_xy(c, "Y")
-    assert abs((y[0] - a[0]) - (0.956 - 0.048)) < 1e-9       # A left edge, Y bar centre (asap7 R 1x LEF)
-    assert abs(a[1] - (5.0 + M.ROW_H / 2)) < 1e-9
+    assert abs((y[0] - a[0]) - (1.593 - 0.027)) < 1e-9       # A left edge, Y bar centre (asap7 R 1x LEF)
+    assert abs(a[1] - 4.995) < 1e-9
 
 
 def test_r9_inputs_parse():
@@ -212,3 +212,19 @@ def test_grid_tree_odd_counts():
     nodes, root, info = M.grid_tree(drv, et)
     rep, _ = M.grid_report(nodes, root)
     assert rep["drivers"] == 15 and len(rep["stages"]) == 1 and rep["arrival_ps"]["TT"]["skew"] <= 0.5
+
+
+def test_stacked_units_share_same_pg_rail_and_transform_access():
+    c = dict(site=[10., 1.215], masters=["BUFx24"] * 2)
+    us = M.unit_sites(c)
+    assert [u["orient"] for u in us] == ["R0", "MX"]
+    assert us[1]["origin_um"][1] - us[0]["origin_um"][1] == M.ROW_H
+    # LEF VDD [.261,.279] of lower R0 equals VDD [-.009,.009]
+    # after mirroring upper MX about its .27um row centre.
+    low = us[0]["origin_um"][1]
+    high = us[1]["origin_um"][1]
+    assert all(abs(a-b)<1e-9 for a,b in zip((low+.261,low+.279),(high-.009,high+.009)))
+    a0 = M.unit_pin(c,0,"A",access=True)
+    a1 = M.unit_pin(c,1,"A",access=True)
+    assert abs(a0[1]-(low+.09))<1e-9
+    assert abs(a1[1]-(high+.18))<1e-9
