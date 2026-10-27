@@ -1,0 +1,317 @@
+{
+ "before": {
+  "J": 55.175,
+  "TT_rise": {
+   "mean": 226.8,
+   "min": 213.27,
+   "max": 259.27,
+   "window": 46.01
+  },
+  "FF_early": {
+   "mean": 174.17,
+   "min": 163.06,
+   "max": 202.63,
+   "window": 39.57
+  },
+  "max_slew": 85.68
+ },
+ "after": {
+  "J": 31.77,
+  "TT_rise": {
+   "mean": 235.0,
+   "min": 222.79,
+   "max": 247.56,
+   "window": 24.77
+  },
+  "FF_early": {
+   "mean": 178.5,
+   "min": 168.02,
+   "max": 190.25,
+   "window": 22.24
+  },
+  "max_slew": 75.36
+ },
+ "slew_limit": 85.68,
+ "passes": [
+  {
+   "pass_": 0,
+   "J": 35.83,
+   "changed": 24
+  },
+  {
+   "pass_": 1,
+   "J": 33.39,
+   "changed": 7
+  },
+  {
+   "pass_": 2,
+   "J": 31.77,
+   "changed": 5
+  }
+ ],
+ "sizes": [
+  "BUFx8_ASAP7_75t_R",
+  "BUFx10_ASAP7_75t_R",
+  "BUFx12f_ASAP7_75t_R",
+  "BUFx16f_ASAP7_75t_R",
+  "BUFx24_ASAP7_75t_R"
+ ],
+ "changes": {
+  "T0_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "T1_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T3_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx16f_ASAP7_75t_R"
+  ],
+  "T3_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "T00_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T00_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T01_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T02_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T03_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T04_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "T04_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "T10_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T11_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T12_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T13_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T14_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T20_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T21_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx16f_ASAP7_75t_R"
+  ],
+  "T21_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "T22_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T23_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T23_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T30_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "T30_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "T31_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T040_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T210_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "T211_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "T302_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "T303_br": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx16f_ASAP7_75t_R"
+  ]
+ },
+ "cells": {
+  "T0_br": "BUFx8_ASAP7_75t_R",
+  "T0_r0": "BUFx12f_ASAP7_75t_R",
+  "T1_br": "BUFx8_ASAP7_75t_R",
+  "T1_r0": "BUFx8_ASAP7_75t_R",
+  "T2_br": "BUFx24_ASAP7_75t_R",
+  "T2_r0": "BUFx16f_ASAP7_75t_R",
+  "T3_br": "BUFx16f_ASAP7_75t_R",
+  "T3_r0": "BUFx24_ASAP7_75t_R",
+  "T00_br": "BUFx8_ASAP7_75t_R",
+  "T00_r0": "BUFx8_ASAP7_75t_R",
+  "T01_br": "BUFx24_ASAP7_75t_R",
+  "T01_r0": "BUFx8_ASAP7_75t_R",
+  "T02_br": "BUFx24_ASAP7_75t_R",
+  "T02_r0": "BUFx8_ASAP7_75t_R",
+  "T03_br": "BUFx24_ASAP7_75t_R",
+  "T03_r0": "BUFx8_ASAP7_75t_R",
+  "T04_br": "BUFx12f_ASAP7_75t_R",
+  "T04_r0": "BUFx24_ASAP7_75t_R",
+  "T10_br": "BUFx24_ASAP7_75t_R",
+  "T10_r0": "BUFx8_ASAP7_75t_R",
+  "T11_br": "BUFx24_ASAP7_75t_R",
+  "T11_r0": "BUFx8_ASAP7_75t_R",
+  "T12_br": "BUFx24_ASAP7_75t_R",
+  "T12_r0": "BUFx8_ASAP7_75t_R",
+  "T13_br": "BUFx24_ASAP7_75t_R",
+  "T13_r0": "BUFx8_ASAP7_75t_R",
+  "T14_br": "BUFx24_ASAP7_75t_R",
+  "T14_r0": "BUFx8_ASAP7_75t_R",
+  "T20_br": "BUFx24_ASAP7_75t_R",
+  "T20_r0": "BUFx8_ASAP7_75t_R",
+  "T21_br": "BUFx16f_ASAP7_75t_R",
+  "T21_r0": "BUFx24_ASAP7_75t_R",
+  "T22_br": "BUFx24_ASAP7_75t_R",
+  "T22_r0": "BUFx8_ASAP7_75t_R",
+  "T23_br": "BUFx8_ASAP7_75t_R",
+  "T23_r0": "BUFx8_ASAP7_75t_R",
+  "T30_br": "BUFx12f_ASAP7_75t_R",
+  "T30_r0": "BUFx12f_ASAP7_75t_R",
+  "T31_br": "BUFx24_ASAP7_75t_R",
+  "T31_r0": "BUFx8_ASAP7_75t_R",
+  "T000_br": "BUFx24_ASAP7_75t_R",
+  "T001_br": "BUFx24_ASAP7_75t_R",
+  "T002_br": "BUFx24_ASAP7_75t_R",
+  "T003_br": "BUFx24_ASAP7_75t_R",
+  "T010_br": "BUFx24_ASAP7_75t_R",
+  "T011_br": "BUFx24_ASAP7_75t_R",
+  "T012_br": "BUFx24_ASAP7_75t_R",
+  "T013_br": "BUFx24_ASAP7_75t_R",
+  "T020_br": "BUFx24_ASAP7_75t_R",
+  "T021_br": "BUFx24_ASAP7_75t_R",
+  "T022_br": "BUFx24_ASAP7_75t_R",
+  "T023_br": "BUFx24_ASAP7_75t_R",
+  "T030_br": "BUFx24_ASAP7_75t_R",
+  "T031_br": "BUFx24_ASAP7_75t_R",
+  "T032_br": "BUFx24_ASAP7_75t_R",
+  "T033_br": "BUFx24_ASAP7_75t_R",
+  "T040_br": "BUFx8_ASAP7_75t_R",
+  "T041_br": "BUFx24_ASAP7_75t_R",
+  "T042_br": "BUFx24_ASAP7_75t_R",
+  "T043_br": "BUFx24_ASAP7_75t_R",
+  "T100_br": "BUFx24_ASAP7_75t_R",
+  "T101_br": "BUFx24_ASAP7_75t_R",
+  "T102_br": "BUFx24_ASAP7_75t_R",
+  "T103_br": "BUFx24_ASAP7_75t_R",
+  "T110_br": "BUFx24_ASAP7_75t_R",
+  "T111_br": "BUFx24_ASAP7_75t_R",
+  "T112_br": "BUFx24_ASAP7_75t_R",
+  "T113_br": "BUFx24_ASAP7_75t_R",
+  "T120_br": "BUFx24_ASAP7_75t_R",
+  "T121_br": "BUFx24_ASAP7_75t_R",
+  "T122_br": "BUFx24_ASAP7_75t_R",
+  "T123_br": "BUFx24_ASAP7_75t_R",
+  "T130_br": "BUFx24_ASAP7_75t_R",
+  "T131_br": "BUFx24_ASAP7_75t_R",
+  "T132_br": "BUFx24_ASAP7_75t_R",
+  "T133_br": "BUFx24_ASAP7_75t_R",
+  "T140_br": "BUFx24_ASAP7_75t_R",
+  "T141_br": "BUFx24_ASAP7_75t_R",
+  "T142_br": "BUFx24_ASAP7_75t_R",
+  "T143_br": "BUFx24_ASAP7_75t_R",
+  "T200_br": "BUFx24_ASAP7_75t_R",
+  "T201_br": "BUFx24_ASAP7_75t_R",
+  "T202_br": "BUFx24_ASAP7_75t_R",
+  "T203_br": "BUFx24_ASAP7_75t_R",
+  "T210_br": "BUFx10_ASAP7_75t_R",
+  "T211_br": "BUFx10_ASAP7_75t_R",
+  "T212_br": "BUFx24_ASAP7_75t_R",
+  "T213_br": "BUFx24_ASAP7_75t_R",
+  "T220_br": "BUFx24_ASAP7_75t_R",
+  "T221_br": "BUFx24_ASAP7_75t_R",
+  "T222_br": "BUFx24_ASAP7_75t_R",
+  "T223_br": "BUFx24_ASAP7_75t_R",
+  "T230_br": "BUFx24_ASAP7_75t_R",
+  "T231_br": "BUFx24_ASAP7_75t_R",
+  "T232_br": "BUFx24_ASAP7_75t_R",
+  "T233_br": "BUFx24_ASAP7_75t_R",
+  "T300_br": "BUFx24_ASAP7_75t_R",
+  "T301_br": "BUFx24_ASAP7_75t_R",
+  "T302_br": "BUFx8_ASAP7_75t_R",
+  "T303_br": "BUFx16f_ASAP7_75t_R",
+  "T310_br": "BUFx24_ASAP7_75t_R",
+  "T311_br": "BUFx24_ASAP7_75t_R",
+  "T312_br": "BUFx24_ASAP7_75t_R",
+  "T313_br": "BUFx24_ASAP7_75t_R"
+ },
+ "provenance": {
+  "argv": [
+   "/usr/bin/python3",
+   "/srv/opentallas-scratch2/claude/wt/hbm-core-lat-r5/results/qc_su_prog_l1_1026/su_branch_size.py",
+   "sw/nb5452_m100.tcl",
+   "asb.json",
+   "/srv/opentallas-scratch2/claude/hbm-core-lat-r4-xcal/kits/ot_hbm_svc_sm_xcal_rel_t_d66b700ee2f0-_r4A/geo_place.txt",
+   "/srv/opentallas-scratch2/claude/hbm-core-lat-r3-ep/lib",
+   "nb5452_m100_sized.tcl",
+   "--passes",
+   "3"
+  ],
+  "sha256": {
+   "sw/nb5452_m100.tcl": "7dc1494227d5e871663b4522ebcd571851ce3f39d11f249984355881cf788dea",
+   "asb.json": "d554b915eb3eb019d7f5f77566d05d6c08775632ab877f8c55a6c670bffabf1d",
+   "/srv/opentallas-scratch2/claude/hbm-core-lat-r4-xcal/kits/ot_hbm_svc_sm_xcal_rel_t_d66b700ee2f0-_r4A/geo_place.txt": "2f88c9041303ee3f86b2c016040d9378ad72717c270055f7cef30fa6425508ef",
+   "/srv/opentallas-scratch2/claude/wt/hbm-core-lat-r5/results/qc_su_prog_l1_1026/su_branch_size.py": "112ac246210502de812254c6ca2b16930aa053c193ec8bcb4528d1270f588da8",
+   "/srv/opentallas-scratch2/claude/wt/hbm-core-lat-r5/results/qc_su_prog_l1_1026/phys_gate.py": "8b0cd6026724baa0c446eb3b5816b6ef71c8549d593530cd98205cbb0d294e14",
+   "/srv/opentallas-scratch2/claude/wt/hbm-core-lat-r5/results/model_refit2_1026/py/uf_phys.py": "d7427e6d1f1ca699558cb42e89100192e8975b517832d345f7f2ebedf4b041ea",
+   "nb5452_m100_sized.tcl": "99840f5aeeae8f84859a3ea87f23c84f08969c68870478fdb7c6ee98e141fbcd"
+  }
+ }
+}

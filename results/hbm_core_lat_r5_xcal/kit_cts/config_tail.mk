@@ -1,0 +1,25 @@
+export OT_PRE_ROUTE_FF_HOLD = 1
+export OT_TAP_TARGET_PS = 250
+export OT_TAP_WINDOW_PS = 40
+export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl
+export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl
+export CORNERS = tc bc
+export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) /work/macros/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/macros/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib /work/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+export ADDITIONAL_LIBS =
+override export LIB_FILES = $(TC_LIB_FILES)
+export ADDITIONAL_LEFS = /work/macros/ot_sram_1r1w_1024x256_m2_r2c2.lef /work/macros/ot_sram_1r1w_128x256_m1_r2c2.lef
+export GDS_ALLOW_EMPTY = ^(ot_sram_1r1w_1024x256_m2_r2c2|ot_sram_1r1w_128x256_m1_r2c2)$
+export MACRO_PLACE_HALO = 2.16 2.16
+export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5
+export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl
+export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl
+export SET_RC_TCL = /work/setRC_rcx.tcl
+override export POST_CTS_TCL = /work/f4_chain_leaf.tcl
+export OT_F4_NEXT_TCL = /work/tap_balance.tcl
+# ---- HBM-CORE-LAT-R5 2026-10-27: plan-built structured clock (no-pad R6 + plan-computed per-branch sizing), predict-then-build.
+export PRE_CTS_TCL = /work/pre_cts_r5.tcl
+export OT_MSCTS_SPEC = /work/mscts_spec.tcl
+export OT_H_NO_TRITON = 1
+export OT_MSCTS_ITERS = 0
+override export POST_CTS_TCL = /work/post_cts_r5.tcl

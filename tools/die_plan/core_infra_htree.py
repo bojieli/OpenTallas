@@ -535,6 +535,7 @@ def main():
     ap.add_argument('--cap-balance', action='store_true', help='equal estimated C (pin + MST share) per group instead of equal count')
     ap.add_argument('--ring-islands', action='store_true', help='propose islands moved onto one maze ring about the entry')
     ap.add_argument('--r6', action='store_true'); ap.add_argument('--no-side-hub', action='store_true')
+    ap.add_argument('--no-pad', action='store_true', help='R6: no level padding (edges at their own shortest length; balance by per-branch sizing)')
     ap.add_argument('--macro-vertical-pass', action='store_true', help='macros = node keep-outs that clock wires cross '
                     'vertically only (macro OBS below the vertical clock layer; default: macros are wire walls)')
     a = ap.parse_args()
@@ -547,7 +548,8 @@ def main():
         cw = None
         if a.cap_balance:
             _, _, _s, _ = read_geo(a.geo); cw = sink_weights(_s, 0.5 * (1.78475e-1 + 1.64264e-1) * kc0)
-        P = plan_r6(a.geo, isl, [int(x) for x in a.nb.split(',')], a.leaf_n, not a.no_side_hub, a.smax, keepout=keep, cap_w=cw, ring_islands=a.ring_islands)
+        P = plan_r6(a.geo, isl, [int(x) for x in a.nb.split(',')], a.leaf_n, not a.no_side_hub, a.smax, keepout=keep, cap_w=cw, ring_islands=a.ring_islands,
+                    no_pad=a.no_pad)
     elif a.nb: P = plan_ring(a.geo, isl, [int(x) for x in a.nb.split(',')], a.leaf_n, a.smax, keep)
     else: P = plan(a.geo, [int(x) for x in a.splits.split(',')], a.smax, keep, isl)
     kr, kc = map(float, a.rc.split(','))
@@ -795,11 +797,16 @@ def assign(mz, sinks, centres, targets, iters=600):
     return [[sinks[i] for i in range(n) if a[i] == j] for j in range(k)]
 
 
-def plan_r6(geo, islands, nb, leaf_n=4, side_hub=True, smax=150.0, tol_um=2.2, keepout=(), cap_w=None, ring_islands=False):
+def plan_r6(geo, islands, nb, leaf_n=4, side_hub=True, smax=150.0, tol_um=2.2, keepout=(), cap_w=None, ring_islands=False,
+            no_pad=False):
     """R6: entry -> [W/E branch -> side hub ->] 2 islands per side (master-plan sites, fixed) -> nb[i] B -> leaf_n leaves.
     Buffer at every branch point (k co-located branch buffers, one point-to-point wire each).  Per level all
     edges get the same length T_l: if the level spread exceeds tol_um, every edge is split into K_l>=2
-    segments by repeaters on exact shortest-path waypoints (so GRT cannot shortcut the pad)."""
+    segments by repeaters on exact shortest-path waypoints (so GRT cannot shortcut the pad).
+    no_pad (HBM-CORE-LAT-R5, COORD RULING HBM-CORE-LAT-R4 (5), 12.8c/d1): NO level padding -- every edge keeps its own
+    SHORTEST legal length; the level keeps one repeater count K_l (same cell chain on every root->leaf path), repeaters on
+    evenly spaced shortest-path waypoints.  Unequal edge delays are then balanced by plan-computed per-branch cell sizing
+    (results/qc_su_prog_l1_1026/su_branch_size.py) before any build, not by wire."""
     core, entry, sinks, macros = read_geo(geo)
     mz = Maze(core, macros, keepout=keepout); ent = mz.cell(entry, node=False)
     isl = [mz.cell(p) for p in islands]; nleaf = sum(nb) * leaf_n; n = len(sinks)
@@ -866,11 +873,11 @@ def plan_r6(geo, islands, nb, leaf_n=4, side_hub=True, smax=150.0, tol_um=2.2, k
             i_ = g[-1]; nrow = math.ceil(nsib / 2); col = i_ % 2 if nsib > 1 else 0.5; row = i_ // 2 if nsib > 1 else 0
             offs[g] = mz.cell((mz.xy(pc)[0] + (col - 0.5) * 1.08, mz.xy(pc)[1] + (row - (nrow - 1) / 2) * 1.08))
         L = {g: mz.md(offs[g], site[g]) for g in gl}; t = max(L.values()); sp = t - min(L.values())
-        k = max(1, math.ceil(t / smax)); k = max(k, 2) if sp > tol_um else k
+        k = max(1, math.ceil(t / smax)); k = max(k, 2) if (sp > tol_um and not no_pad) else k
         T.append(t); K.append(k); spread[lv + 1] = round(sp, 2)
         for g in gl:
             bname = nm(g) + '_br'; nodes.append((bname, last[g[:-1]], offs[g], BIG, 'branch'))
-            pts = exact_points(mz, offs[g], site[g], t if k > 1 else L[g], k); prev = bname; chain = [offs[g]] + pts + [site[g]]
+            pts = exact_points(mz, offs[g], site[g], L[g] if (no_pad or k == 1) else t, k); prev = bname; chain = [offs[g]] + pts + [site[g]]
             for i, c in enumerate(pts):
                 nn = nm(g) + '_r%d' % i; nodes.append((nn, prev, c, REP, 'rep')); prev = nn
             segs = [mz.md(chain[i], chain[i + 1]) for i in range(len(chain) - 1)]
