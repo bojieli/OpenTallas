@@ -28,6 +28,11 @@ vid=rest[rest.index('--view')+1];selected=next((v for v in views['view_list'] if
 if selected is None and '--views' in rest:selected=next((v for v in json.loads(Path(rest[rest.index('--views')+1]).read_text())['view_list'] if v['view']==vid and v['module'] in receipts),None)
 if selected is None:raise SystemExit('view '+vid+' is not a native W128 HC view')
 mod=selected['module'];receipt=receipts[mod]
+# Composed-plan inventories list shape recipe keys. This qualified source
+# profile must select the exact emitted native master, independently of shape.
+if '--recipe-key' in rest:
+ if rest[rest.index('--recipe-key')+1]!=mod:raise SystemExit('--recipe-key must match native master '+mod)
+else:rest.extend(['--recipe-key',mod])
 for name,want in [('--face-shell','off'),('--sigmax','M5')]:
  if name in rest and rest[rest.index(name)+1]!=want:raise SystemExit(name+' must be '+want+' for this native HC candidate')
  if name not in rest:rest.extend([name,want])
