@@ -1409,3 +1409,5 @@ CODEX: 2026-10-27 09:08 PDT RM51 main f108b501fd == origin/main; HBM pre-synth l
 CODEX: 2026-10-27 09:08 PDT QC BTABR9e placement+alltimedreachPASS max366.174/0over405 and3442rowPASS; clockmodelnext. VMR72DATA-buffer ECO resumedasF4K afterM6-gridcrash diagnosis; progPG-clipped fullstripGRTqueued after64/80boxskipfound. No newSIGNEDclaim.
 
 CODEX: 2026-10-27 09:10 PDT HBM full-root CE provider READY370a701a36; actual508tail40/40 PASS; native consumer emit509PASS/508mutantcaught; opt-in alias only, wholebind/planTOKadoption pending; steady synth live3743419.
+
+CODEX: 2026-10-27 09:13 PDT TOK-HBM actualnativekeyprogrammePASS2516/0+tagmutant855; SOFT17SRAMquarter227684cells under400k,c131a8087/ef994fe77. True4roleVMSbitgraph/canonicalkeyregages delivered63f0317cf; physicalrestore andnativewholepathremainopen.
