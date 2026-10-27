@@ -68,7 +68,7 @@ def check(d, logname='run.log'):
             errs.append(f'{die}: {len(wr)} received row-pair writes, expected {len(ew)}')
         deltas = set()
         for k, (g, e) in enumerate(zip(wr, ew)):
-            if g['leaf'] != 0 or g['row'] != e['row'] or g['data'] != int(e['data'], 16) or g['mask'] != 'ff':
+            if g['leaf'] != e.get('leaf', 0) or g['row'] != e['row'] or g['data'] != int(e['data'], 16) or g['mask'] != 'ff':
                 errs.append(f'{die} rx pair {k}: leaf {g["leaf"]} row {g["row"]} (exp {e["row"]}) data/mask mismatch'
                             if g['data'] != int(e['data'], 16) else f'{die} rx pair {k}: row {g["row"]} exp {e["row"]}')
             if e['beat'] < len(lri):

@@ -187,6 +187,38 @@ def core_entry(h, entries):
 
 
 
+SIGNED_FACE_BAND_PS = 20.0   # 12.3 core band half-width (250 +-20 TT / 202.5 +-20 FF)
+
+
+def signed_face_entry_check(P, sfe, band_ps=SIGNED_FACE_BAND_PS):
+    """CLOCK-KV-R22 (COORD RULINGS INFRA-FIRST-HEAD-2 02:34 + CLOCK-KV-R21 04:02): a hard core whose SIGNED view enters
+    the clock on a face pin (not the 12.8a centre entry) is accepted when the declared signed-face-entry form names the
+    view (lib sha256 TT+FF) and its routed RCX insertion (native clock pin -> sinks, post-route SPEF) is inside the 12.3
+    band at BOTH corners: mean within common +- band, TT and FF.  Returns (ok, record, issues)."""
+    issues, rec = [], {}
+    if not isinstance(sfe, dict):
+        return False, rec, ["invalid signed face entry (not a dict)"]
+    sha = sfe.get("lib_sha256") or {}
+    if not all(isinstance(sha.get(c), str) and len(sha.get(c)) == 64 for c in ("tt", "ff")):
+        issues.append("signed face entry lacks the view lib sha256 (tt, ff)")
+    rcx = sfe.get("rcx_insertion_ps") or {}
+    for c in ("TT", "FF"):
+        try:
+            mean = float((rcx.get(c) or {})["mean"])
+        except (KeyError, TypeError, ValueError):
+            issues.append(f"signed face entry lacks the RCX {c} insertion mean")
+            continue
+        centre = float(S.common_latency_ps(P, c))
+        lo, hi = centre - band_ps, centre + band_ps
+        rec[c] = dict(mean=mean, min=(rcx.get(c) or {}).get("min"), max=(rcx.get(c) or {}).get("max"),
+                      band=[r3(lo), r3(hi)])
+        if not lo <= mean <= hi:
+            issues.append(f"signed face entry RCX {c} insertion {mean:.2f} outside the 12.3 band "
+                          f"{lo:.1f}-{hi:.1f} ps: rebuild with centre entry")
+    rec["view"] = sfe.get("view")
+    return not issues, rec, issues
+
+
 def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5):
     """Check one real native clock pin and its declared tap against the proposed entry.
 
@@ -196,7 +228,7 @@ def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5):
     inst = h["inst"]
     row = dict(inst=inst, module=h["module"], entry_um=list(proposed), issues=[])
     candidates = [tp for tp in taps if tp.get("name") in (inst, inst+".ck", inst+".clk")
-                  or (tp.get("kind") == "core" and tp.get("name", "").startswith(inst+"."))]
+                  or (tp.get("kind") in ("core", "landed") and tp.get("name", "").startswith(inst+"."))]
     if len(candidates) != 1:
         row["issues"].append("ambiguous plan core clock taps" if candidates else "no plan clock tap")
     tp = candidates[0] if len(candidates) == 1 else None
@@ -237,7 +269,19 @@ def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5):
         row.update(native_pin=name, native_core_um=list(xy))
         d = abs(xy[0]-proposed[0])+abs(xy[1]-proposed[1])
         row["native_to_entry_um"] = r3(d)
-        if d > tolerance:
+        landed = bool(tp and tp.get("kind") == "landed")
+        if landed:
+            # CLOCK-KV-R19: a landed (forwarded-clock) entry is the core's own non-die clock pin; the die-clock entry
+            # proposal does not apply.  It must name its clock domain = the native pin and be forwarded.
+            row.update(landed=True, clock_domain=tp.get("clock_domain"))
+            if tp.get("clock_domain") != name or not tp.get("forwarded"):
+                row["issues"].append("landed entry must be forwarded on its native clock pin domain")
+        face_ok = False
+        if tp and not landed and tp.get("signed_face_entry") is not None and d > tolerance:
+            face_ok, rec, fi = signed_face_entry_check(P, tp["signed_face_entry"])
+            row.update(signed_face_entry=dict(rec, accepted=face_ok))
+            row["issues"].extend(fi)
+        if not landed and d > tolerance and not face_ok:
             row["issues"].append("native clock pin differs from proposed entry")
         if tp:
             placed = dict(h, origin_um=[a+b for a,b in zip(h["origin_um"],h.get("track_offset_um",[0,0]))])
@@ -248,7 +292,7 @@ def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5):
                        tap_to_native_um=r3(dn), off_um=r3(de))
             if dn > tolerance:
                 row["issues"].append("plan clock tap differs from native clock pin")
-            if de > tolerance:
+            if de > tolerance and not landed and not face_ok:
                 row["issues"].append("plan clock tap differs from proposed entry")
     row["verdict"] = "FAIL" if row["issues"] else "PASS"
     if row["issues"]:

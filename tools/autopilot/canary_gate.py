@@ -145,7 +145,9 @@ def _kv_core_kit(row):
 
 
 def reference_die(row):
-    die = row['die']
+    # Historical queue rows use the same KV alias accepted by per-die flow tags.
+    # Canonicalise before deciding whether the core or partition flow applies.
+    die = {'kv': 'qwen_kvsys'}.get(row['die'], row['die'])
     if die == 'qwen_kvsys' and _kv_core_kit(row):
         return 'qwen_kvsys_core'
     return {'cp1': 's81'}.get(die, die)

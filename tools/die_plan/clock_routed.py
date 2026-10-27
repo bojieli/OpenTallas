@@ -111,7 +111,7 @@ LAYER_ORDER = ("M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9")
 _JD = [0]
 
 
-def _emit_steps(L, pts, final_junction=False, split_down=False):
+def _emit_steps(L, pts, final_junction=False, split_down=False, m8_end_ext=None):
     """encoder calls for a vertex list (as from stair): via on a layer change, a point on a move.
     The clock NDR (0.16 um) applies on M8/M9 only: an encoder path keeps the rule it was opened with, so the path is
     split at every VIA78 -- above it a path under the NDR layer rule, below it a default-width path (a lower-layer
@@ -140,7 +140,14 @@ def _emit_steps(L, pts, final_junction=False, split_down=False):
             L.append(op)
         elif (x0, y0) != (x1, y1):
             assert x0 == x1 or y0 == y1, ("non-Manhattan step", pts)
-            L.append(f"$e addPoint {q(x1)} {q(y1)}")
+            nxt = steps[k + 1] if k + 1 < len(steps) else None
+            if m8_end_ext and l0 == "M8" and nxt and nxt[1][0] == "M7":
+                # R19 DRC: the wide M8 drop ends ON the VIA78 (stair riser); its default end extension left the
+                # VIA78 M8 enclosure (+-0.027) 5 nm outside the wire end -> Min Step @ M8.  Extend the wire end to
+                # m8_end_ext (flush with the 0.16 um junction pad), plan geometry unchanged otherwise.
+                L.append(f"$e addPoint {q(x1)} {q(y1)} {q(m8_end_ext)}")
+            else:
+                L.append(f"$e addPoint {q(x1)} {q(y1)}")
     if final_junction:
         L[-1] = f"set jt [{L[-1]}]"
 
@@ -220,6 +227,12 @@ def stack_down(s):
     pts = [("M8", x, jy), ("M7", x, jy)]
     if jy != py:
         pts.append(("M7", x, py))
+    if s.get("entry_xy"):
+        px, ey = map(float, s["entry_xy"])
+        if abs(ey-py)>1e-6:
+            raise ValueError("heterogeneous tie entry must share its backbone row")
+        if abs(px-x)>1e-6: pts.append(("M7",px,py))
+        x=px
     return pts + [(L_, x, py) for L_ in ("M6", "M5", "M4", "M3", "M2", "M1")]
 
 
@@ -232,6 +245,13 @@ def stack_pad_layers(s):
         pads.setdefault((xy[0], round(s["riser_from"][1], 4)), set()).add("M8")
     for _, uy in (s.get("tie") or {}).get("units", ()):     # R12: every tied unit's straight stack (M7 = the strap)
         pads.setdefault((xy[0], round(uy, 4)), set()).update({"M2", "M3", "M4", "M5", "M6"})
+    if (s.get("tie") or {}).get("unit_points"):
+        # Proxy backbone has no pin below M7. Pads belong at each actual bar.
+        for pt in list(pads):
+            pads[pt] &= {"M7","M8"}
+            if not pads[pt]: del pads[pt]
+        for _,ux,uy in s["tie"]["unit_points"]:
+            pads.setdefault((round(ux,4),round(uy,4)),set()).update({"M2","M3","M4","M5","M6","M7"})
     return pads
 
 
@@ -251,6 +271,22 @@ def _tie_units(L, s, pads, split_down):
     """R12 stacked-buffer tie: from the entry unit's M7 junction ($<s['_jtie']>) the M7 strap runs along the bar column
     to every other unit's pin row (one junction per row, nearest first on each side); each row drops the straight
     VIA67..VIA12 stack with its min-area pads onto that unit's bar."""
+    if s["tie"].get("unit_points"):
+        x,py=map(float,s["xy"])
+        others=[(u,float(ux),float(uy)) for u,ux,uy in s["tie"]["unit_points"] if u!=s["entry"]]
+        for side in (1,-1):
+            prev="$"+s["_jtie"]
+            for u,ux,uy in sorted([p for p in others if (p[2]-py)*side>0],key=lambda p:abs(p[2]-py)):
+                _TJ[0]+=1; v=f"jtu{_TJ[0]}"
+                L.append(f"$e newPath {prev} FIXED")
+                L.append(f"set {v} [$e addPoint {q(x)} {q(uy)}]")
+                pts=[("M7",x,uy)]
+                if abs(ux-x)>1e-6: pts.append(("M7",ux,uy))
+                pts += [(lay,ux,uy) for lay in ("M6","M5","M4","M3","M2","M1")]
+                _emit_stack(L,pts,pads,split_down=split_down)
+                L.append(f"$e addITerm [IT {u} {s['pin']}]")
+                prev="$"+v
+        return
     x = round(s["xy"][0], 4)
     py = round(s["xy"][1], 4)
     others = [(u, round(y, 4)) for u, y in s["tie"]["units"] if u != s["entry"]]
@@ -267,12 +303,12 @@ def _tie_units(L, s, pads, split_down):
             prev = "$" + v
 
 
-def _emit_stack(L, pts, pads, final_junction=False, split_down=False):
+def _emit_stack(L, pts, pads, final_junction=False, split_down=False, m8_end_ext=None):
     """_emit_steps + one centred min-area pad (dbWireEncoder addRect) after every via that lands on a pad layer at a
     stack point.  pads: {(x, y): set(layers)}."""
     P = _stack_pad()
     tmp = []
-    _emit_steps(tmp, pts, final_junction=final_junction, split_down=split_down)
+    _emit_steps(tmp, pts, final_junction=final_junction, split_down=split_down, m8_end_ext=m8_end_ext)
     # re-walk the vertices to know where each via op lands
     vs = [(l_, round(a, 4), round(b, 4)) for l_, a, b in pts]
     lands = [(l0, l1, (x1, y1)) for (l0, x0, y0), (l1, x1, y1) in zip(vs, vs[1:]) if l0 != l1]
@@ -304,7 +340,7 @@ def _emit_stack(L, pts, pads, final_junction=False, split_down=False):
             i += 1
 
 
-def _stack_net_tcl(L, w, ports, rec):
+def _stack_net_tcl(L, w, ports, rec, start=True, end=True, net_ctx=None):
     """one pin-stack wire (die_clock_128._fixed_wires_stack) -> encoder Tcl appended to L"""
     nm = w["name"]
     horiz = w["horiz"]
@@ -316,9 +352,10 @@ def _stack_net_tcl(L, w, ports, rec):
     for s in w["stacks"]:
         for k, v in stack_pad_layers(s).items():
             pads[k] |= v
-    rec["nets"] += 1
-    L.append(f"set w [rnet {nm}]")
-    L.append("$e begin $w")
+    if start:
+        rec["nets"] += 1
+        L.append(f"set w [rnet {nm}]")
+        L.append("$e begin $w")
     # 1. driver -> trunk tap (junction $jt)
     if w["drv"].startswith("port:"):
         pn = w["drv"][5:]
@@ -337,23 +374,44 @@ def _stack_net_tcl(L, w, ports, rec):
         pts = stack_down(s)[::-1]                  # M1 .. M8 at the bar, junction row
         if not horiz:                              # M8 jog to the M9 trunk
             pts += [("M8", t0[0], t0[1]), ("M9", t0[0], t0[1])]
-        L.append("$e newPath [LY M1] FIXED")
-        L.append(f"$e addPoint {q(pts[0][1])} {q(pts[0][2])}")
-        L.append(f"$e addITerm [IT {s.get('entry', w['drv'])} Y]")
-        rec["pin_stairs"] += 1
-        if s.get("tie"):       # R12: Y tie -- entry stack up to M7, junction, M7 riser on to the trunk, strap to units
-            i = next(k for k, p_ in enumerate(pts) if p_[0] == "M7")
-            n0 = len(L)
-            _emit_stack(L, pts[:i + 1], pads, final_junction=True, split_down=r8)
-            _TJ[0] += 1
-            s["_jtie"] = f"jtie{_TJ[0]}"
-            _rename_last_jt(L, n0, s["_jtie"])
-            L.append(f"$e newPath ${s['_jtie']} FIXED")
-            _emit_stack(L, pts[i:], pads, final_junction=True, split_down=r8)
-            _tie_units(L, s, pads, r8)
-            rec["ties"] = rec.get("ties", 0) + 1
+        if net_ctx is not None:
+            # A source shared by different-width pieces has ONE physical pin
+            # stack and M7 tie. Branch every piece from that shared junction.
+            anchor=("M7",round(s["xy"][0],4),round(s["xy"][1],4))
+            i=max(k for k,p0 in enumerate(pts) if p0==anchor)
+            key=(s["cell"],s["pin"])
+            if key not in net_ctx:
+                L.append("$e newPath [LY M1] FIXED")
+                L.append(f"$e addPoint {q(pts[0][1])} {q(pts[0][2])}")
+                L.append(f"$e addITerm [IT {s.get('entry',w['drv'])} Y]")
+                n0=len(L)
+                _emit_stack(L,pts[:i+1],pads,final_junction=True,split_down=r8)
+                _TJ[0]+=1; var=f"jdrv{_TJ[0]}"
+                _rename_last_jt(L,n0,var); net_ctx[key]=var
+                rec["pin_stairs"]+=1
+                if s.get("tie"):
+                    s["_jtie"]=var; _tie_units(L,s,pads,r8)
+                    rec["ties"]=rec.get("ties",0)+1
+            L.append(f"$e newPath ${net_ctx[key]} FIXED")
+            _emit_stack(L,pts[i:],pads,final_junction=True,split_down=r8)
         else:
-            _emit_stack(L, pts, pads, final_junction=True, split_down=r8)
+            L.append("$e newPath [LY M1] FIXED")
+            L.append(f"$e addPoint {q(pts[0][1])} {q(pts[0][2])}")
+            L.append(f"$e addITerm [IT {s.get('entry', w['drv'])} Y]")
+            rec["pin_stairs"] += 1
+            if s.get("tie"):       # R12: Y tie -- entry stack up to M7, junction, M7 riser on to the trunk, strap to units
+                i = next(k for k, p_ in enumerate(pts) if p_[0] == "M7")
+                n0 = len(L)
+                _emit_stack(L, pts[:i + 1], pads, final_junction=True, split_down=r8)
+                _TJ[0] += 1
+                s["_jtie"] = f"jtie{_TJ[0]}"
+                _rename_last_jt(L, n0, s["_jtie"])
+                L.append(f"$e newPath ${s['_jtie']} FIXED")
+                _emit_stack(L, pts[i:], pads, final_junction=True, split_down=r8)
+                _tie_units(L, s, pads, r8)
+                rec["ties"] = rec.get("ties", 0) + 1
+            else:
+                _emit_stack(L, pts, pads, final_junction=True, split_down=r8)
     # 2. trunk
     ax = 0 if horiz else 1
     tapv = round(t0[ax], 4)
@@ -383,6 +441,7 @@ def _stack_net_tcl(L, w, ports, rec):
             jline[v] = len(L) - 1
     # 3. loads
     anchors = []
+    ext8 = None if horiz else _stack_pad()["M8"][0]      # R19: vertical nets, M8 drop end flush with the junction pad
     for ld, bx, by in w["branches"]:
         v = round(bx if horiz else by, 4)
         root = tp(v)
@@ -420,9 +479,10 @@ def _stack_net_tcl(L, w, ports, rec):
             pts += [("M9", root[0], root[1]), ("M9", d_["x"], d_["y1"]), ("M8", d_["x"], d_["y1"])]
         pts += stack_down(s)[1:] if (pts[-1][0], pts[-1][1], pts[-1][2]) == stack_down(s)[0] else stack_down(s)
         if s.get("tie"):       # R12: A tie -- down to the entry unit's M7 pin row, junction, its stack, strap to units
-            i = max(k for k, p_ in enumerate(pts) if p_[0] == "M7")
+            i = max(k for k,p_ in enumerate(pts) if p_[0]=="M7" and
+                    (not s.get("entry_xy") or (p_[1],p_[2])==tuple(s["xy"])))
             n0 = len(L)
-            _emit_stack(L, pts[:i + 1], pads, final_junction=True, split_down=r8)
+            _emit_stack(L, pts[:i + 1], pads, final_junction=True, split_down=r8, m8_end_ext=ext8)
             _TJ[0] += 1
             s["_jtie"] = f"jtie{_TJ[0]}"
             _rename_last_jt(L, n0, s["_jtie"])
@@ -432,12 +492,12 @@ def _stack_net_tcl(L, w, ports, rec):
             _tie_units(L, s, pads, r8)
             rec["ties"] = rec.get("ties", 0) + 1
         else:
-            _emit_stack(L, pts, pads, split_down=r8)
+            _emit_stack(L, pts, pads, split_down=r8, m8_end_ext=ext8)
             L.append(f"$e addITerm [IT {ld} A]")
         rec["pin_stairs"] += 1
     for i, pn in sorted(anchors, reverse=True):    # R8 ports on trunk points: BTerm right after that point
         L.insert(i + 1, f"$e addBTerm [BT {pn}]")
-    L.append("$e end")
+    if end: L.append("$e end")
 
 
 def stack_shapes(w):
@@ -455,6 +515,8 @@ def stack_shapes(w):
         if s.get("tie"):                             # R12 M7 tie strap through every unit pin row
             t = s["tie"]
             out.append((w["name"], "M7", x - h, t["y_lo"] - h, x + h, t["y_hi"] + h))
+        for _,ux,uy in (s.get("tie") or {}).get("unit_points",[]):
+            out.append((w["name"],"M7",min(x,ux)-h,uy-h,max(x,ux)+h,uy+h))
     return out
 
 
@@ -480,6 +542,18 @@ def via_array_tcl(spec, name="ot_via89_arr", var="ot_v89"):
             L.append(f"  odb::dbBox_create ${var} [LY V8] {db(x0)} {db(y0)} {db(x0 + cut)} {db(y0 + cut)}")
     L.append("}")
     return L
+
+
+def mixed_shield_tcl(wires,nd,shield):
+    """Shield/obstruct each V2 piece at its actual NDR; V1 uses its old rules."""
+    import die_clock_128 as C128
+    from die_clock_mesh import NDR
+    lines=[]
+    for w in wires:
+        for piece in w.get("pieces",[w]):
+            rules=NDR[piece["ndr"]] if piece.get("clock_topology_version")==2 or w.get("pieces") or piece.get("explicit_mesh") else nd
+            lines+=shield_only_tcl(C128.combo_tcl([piece],rules,shield))
+    return lines
 
 
 def routed_tcl(wires, cells, ports, buf, ndr_name, via89=None):
@@ -508,7 +582,29 @@ def routed_tcl(wires, cells, ports, buf, ndr_name, via89=None):
         for (l0, x0, y0), (l1, x1, y1) in zip(pts, pts[1:]):
             if l0 == l1 and l0 in ("M8", "M9") and (x0, y0) != (x1, y1):
                 rec["extra_top"].append((name, l0, x0, y0, x1, y1))
+    v2_arrays=set()
     for w in wires:
+        if w.get("explicit_mesh"):
+            from explicit_clock_mesh import routed_mesh_tcl
+            routed_mesh_tcl(L,w,cells,ports,buf,rec)
+            continue
+        if w.get("clock_topology_version")==2 or w.get("pieces"):
+            from die_clock_mesh import NDR as _NDR
+            pieces=w.get("pieces",[w]); ctx={}
+            for j,piece in enumerate(pieces):
+                ndr=piece["ndr"]; nd=_NDR[ndr]
+                nm=ndr_name+"__"+ndr
+                if ndr not in v2_arrays:
+                    L.append(f"if {{[$blk findNonDefaultRule {nm}] == \"NULL\"}} {{ create_ndr -name {nm} -width {{M8 {nd['width']} M9 {nd['width']}}} -spacing {{M8 {nd['space']} M9 {nd['space']}}} }}")
+                    if nd.get("via89"):
+                        L+=via_array_tcl(nd["via89"],name="ot_via89_arr_"+ndr,var="ot_v89_"+ndr)
+                    v2_arrays.add(ndr)
+                L.append(f"set ot_ndr [$blk findNonDefaultRule {nm}]")
+                begin=len(L)
+                _stack_net_tcl(L,piece,ports,rec,start=j==0,end=j==len(pieces)-1,net_ctx=ctx)
+                repl=(f"addVia $ot_v89_{ndr}" if nd.get("via89") else "addTechVia [V {VIA89}]")
+                L[begin:]=[line.replace("addTechVia [V VIA89]",repl) for line in L[begin:]]
+            continue
         if w.get("pin_stack"):       # CLOCK-128-R7: straight pin stacks (die_clock_128._fixed_wires_stack)
             _stack_net_tcl(L, w, ports, rec)
             continue
@@ -755,6 +851,10 @@ def stair_shapes(wires, cells, ports, buf):
     vr = via_rects()
     out = []
     for w in wires:
+        if w.get("explicit_mesh"):
+            from explicit_clock_mesh import access_shapes
+            out += access_shapes(w, cells, buf)
+            continue
         if w.get("pin_stack"):
             out += stack_shapes(w)
             continue
@@ -877,11 +977,22 @@ create_clock -name vclk -period 833.000
 set_driving_cell -lib_cell BUFx24_ASAP7_75t_R -pin Y [get_ports root]
 set_input_delay 0 -clock vclk [get_ports root]
 set_load 3.0 [get_ports t_*]
+# INFRA-FIRST-QC-R18: optional per-tap real downstream load (column-tree first net C + pin caps), overrides the 3 fF
+if {[file exists /out/tap_loads.tcl]} { source /out/tap_loads.tcl; puts "OT_TAP_LOADS /out/tap_loads.tcl" }
+set_output_delay 0 -clock vclk [get_ports -quiet t_*]
 # build the timing graph before get_property (a bare read_db + get_property arrival segfaults in Graph::pinVertices)
 report_checks -path_delay min_max -format end
 set fh [open /out/tree_$::env(CORNER)_$::env(BASIS).txt w]
 foreach c [get_cells -quiet ckm_d_*] { set p [get_pins [get_full_name $c]/A]; puts $fh "D [get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] [get_property $p slew_max_rise]" }
-foreach c [get_cells {ckm_n* ckm_r* ckm_t*}] { set p [get_pins [get_full_name $c]/Y]; puts $fh "N [get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] [get_property $p slew_max_rise]" }
+foreach c [get_cells -quiet {ckm_n* ckm_r* ckm_t*}] { set p [get_pins [get_full_name $c]/Y]; puts $fh "N [get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] [get_property $p slew_max_rise]" }
+# INFRA-FIRST-QC-R12+ explicit-cell builds name every tree buffer ckt_<group>_<unit> (R17: the ckm_* match above saw
+# none of them): Y as N lines, the A pin as A lines (A:<cell>); the leaves = the col_tap cells (place.json plan_kind;
+# OpenSTA get_property gives no arrival on a top output port)
+foreach c [get_cells -quiet ckt_*] {
+  set n [get_full_name $c]; set y [get_pins $n/Y]; set a [get_pins $n/A]
+  puts $fh "N $n [get_property $y arrival_max_rise] [get_property $y arrival_min_rise] [get_property $y slew_max_rise]"
+  puts $fh "A A:$n [get_property $a arrival_max_rise] [get_property $a arrival_min_rise] [get_property $a slew_max_rise]"
+}
 close $fh
 report_check_types -max_slew -max_capacitance -violators
 puts OT_DONE
@@ -927,7 +1038,25 @@ def rcx_tcl(rules="stock", rules_text=None):
     return "\n".join(L)
 
 
-def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock"):
+NDR_WIDTH_UM = {"4w": 0.16, "8w": 0.32, "16w": 0.64, "2x16w": 1.28}
+
+
+def rules_width_check(rules_text, ndr):
+    """INFRA-FIRST-QC-R18 root cause of the R17 model-vs-RCX 2x latency gap: the 16w (0.64 um) clock NDR was extracted
+    with the CLOCK-128-R6 0.16-um rules, and OpenRCX uses the SECOND M8/M9 width entry for every wider wire, so a 0.64-um
+    wire got the 0.16-um C (R is width-scaled by -lef_res, C is not): RCX 0.087 vs model 0.50 fF/um.  The second width
+    entry of Metal 8 and 9 must equal the NDR width (an entry below it under-extracts C, one above is never selected)."""
+    import re
+    w = NDR_WIDTH_UM.get(ndr) if ndr else None
+    tab = {}
+    for m in re.finditer(r"Metal (\d+) RESOVER\s*\nWIDTH Table (\d+) entries:\s*([0-9. ]+)", rules_text):
+        tab[int(m.group(1))] = [float(v) for v in m.group(3).split()]
+    sel = {k: (v[1] if len(v) > 1 else v[0]) for k, v in tab.items() if k in (8, 9)}
+    ok = w is None or (len(sel) == 2 and all(abs(v - w) < 1e-6 for v in sel.values()))
+    return dict(ndr=ndr, ndr_width_um=w, selected_width_um=sel, ok=ok)
+
+
+def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock", width_mismatch_ok=False):
     import json
     from pathlib import Path
     d, kit = Path(d), Path(kit)
@@ -936,8 +1065,12 @@ def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock")
     ports = {t["port"]: dict(layer=t.get("layer", M["meta"].get("tap_layer", "M7")), xy=t["xy"]) for t in M["taps"]}
     ports["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
     rules_text = None
+    width_check = None
     if rcx_rules != "stock":
         rules_text = Path(rcx_rules).read_text()
+        width_check = rules_width_check(rules_text, M["meta"].get("ndr"))
+        if not width_check["ok"] and not width_mismatch_ok:
+            raise ValueError(f"RCX rules width table does not cover the clock NDR: {width_check}")
         (d / "rcx_ndr.rules").write_text(rules_text)
     rt = ROUTE_TCL
     if any(w.get("enc") == "r8" for w in M["fixed_wires"]):
@@ -950,7 +1083,8 @@ def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock")
         assert rt.count("write_db /out/routed.odb") == 1 and "routed_rcx.odb" in rt
     (d / "route.tcl").write_text(rt.replace("@RCX@", rcx_tcl("stock" if rcx_rules == "stock" else "ndr",
                                                              rules_text)))
-    (d / "rcx_basis.json").write_text(json.dumps(dict(rules="stock" if rcx_rules == "stock" else str(rcx_rules))))
+    (d / "rcx_basis.json").write_text(json.dumps(dict(rules="stock" if rcx_rules == "stock" else str(rcx_rules),
+                                                      width_check=width_check)))
     (d / "sta.tcl").write_text(STA_TCL)
     (d / "drc.tcl").write_text(DRC_TCL)
     (d / "drc_boxes.txt").write_text(drc_boxes(M["fixed_wires"], cells, ports, BUF_DEFAULT))
@@ -1072,6 +1206,10 @@ def report(d):
                 continue
             T = read_tree(f)
             lv = {k: v for k, v in T.items() if k.startswith("ckm_n4_")}
+            if not lv:      # R18: explicit-cell build (ckt_* cells): the leaves are the col_tap cells (Y pin)
+                lv = {k: v for k, v in T.items() if cells.get(k, {}).get("plan_kind") == "col_tap"}
+            if not lv:
+                continue
             late = [v[0] for v in lv.values()]
             early = [v[1] for v in lv.values()]
             tab[f"{c}_{b}"] = dict(leaves=len(lv), late_min=round(min(late), 2), late_max=round(max(late), 2),
@@ -1123,6 +1261,8 @@ def main(argv=None):
     r.add_argument("dir")
     r.add_argument("--kit", required=True)
     r.add_argument("--mem", type=int, default=64)
+    r.add_argument("--rcx-width-mismatch-ok", action="store_true",
+                   help="R18: allow rules whose selected M8/M9 width differs from the clock NDR width (C under/over)")
     r.add_argument("--rcx-rules", default="stock",
                    help="stock (default) or a width-characterised rules file (rcx_width_rules.py write), extracted "
                         "with -lef_res and per-layer RPERSQ from the same rules (CLOCK-128-R6)")
@@ -1130,7 +1270,7 @@ def main(argv=None):
     p.add_argument("dir")
     a = ap.parse_args(argv)
     if a.cmd == "route":
-        write_route(a.dir, a.kit, mem=a.mem, rcx_rules=a.rcx_rules)
+        write_route(a.dir, a.kit, mem=a.mem, rcx_rules=a.rcx_rules, width_mismatch_ok=a.rcx_width_mismatch_ok)
         print("route written", a.dir)
     else:
         o = report(a.dir)

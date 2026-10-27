@@ -20,6 +20,15 @@ foreach bt [$rt_blk getBTerms] {
   set bb [$bt getBBox]
   lappend rt_taps [list $i [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]]
 }
+# Opt-in independent local reset consumers generated from the plan. Clock
+# BTerms remain unchanged; reset relay geometry drives final-hop assignment.
+if {[info exists rt_consumer_taps_um]} {
+  set rt_taps {}
+  foreach tp $rt_consumer_taps_um {
+    lassign $tp i x y
+    lappend rt_taps [list $i [expr {round($x * $rt_dbu)}] [expr {round($y * $rt_dbu)}]]
+  }
+}
 proc rt_is_inv {inst} { return [string match "INV*" [[$inst getMaster] getName]] }
 proc rt_is_buf {inst} {
   set m [[$inst getMaster] getName]
@@ -59,10 +68,16 @@ proc rt_launch_xy {net seen} {
 # the table must live at global scope ('global' is a no-op at true top level). (canary s81_head 0372e55a4:
 # cts.tcl 6 can't read "rt_named_nets": no such variable)
 global rt_named_nets
-set rt_named_nets {}; set rt_zero_aliases {}
+global rt_boot_named_nets
+set rt_named_nets {}; set rt_boot_named_nets {}; set rt_zero_aliases {}
 foreach net [$rt_blk getNets] {
   set name [$net getName]
-  if {[regexp {(^|[/.])rst_n_t([0-9]+)$} $name -> prefix i]} {
+  if {[regexp {(^|[/.])rst_boot_t([0-9]+)$} $name -> prefix i]} {
+    if {[dict exists $rt_boot_named_nets $i] && [dict get $rt_boot_named_nets $i] ne $net} {
+      error "OT_RESET_TAPS ambiguous bootstrap reset net for tap $i"
+    }
+    dict set rt_boot_named_nets $i $net
+  } elseif {[regexp {(^|[/.])rst_n_t([0-9]+)$} $name -> prefix i]} {
     if {[dict exists $rt_named_nets $i] && [dict get $rt_named_nets $i] ne $net} {
       error "OT_RESET_TAPS ambiguous synchroniser net for tap $i"
     }
@@ -107,6 +122,15 @@ proc rt_tapnet {blk i} {
   if {[dict exists $rt_named_nets $i]} { return [dict get $rt_named_nets $i] }
   return "NULL"
 }
+set rt_role_tables [list [list mission $rt_named_nets $rt_zero_aliases]]
+if {[dict size $rt_boot_named_nets]} {
+  lappend rt_role_tables [list bootstrap_transport $rt_boot_named_nets {}]
+}
+# Re-point and reach-check each reset flavour separately. A transport reset
+# can never be replaced by a mission-gated terminal (or the reverse).
+foreach rt_role_row $rt_role_tables {
+lassign $rt_role_row rt_reset_role rt_named_nets rt_zero_aliases
+puts "OT_RESET_TAPS role $rt_reset_role"
 set rt_have 0
 foreach tp $rt_taps { if {[rt_tapnet $rt_blk [lindex $tp 0]] ne "NULL"} { incr rt_have } }
 if {[llength $rt_taps] < 2 || $rt_have < 2} {
@@ -140,7 +164,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     foreach ins [$rt_blk getInsts] {
       if {![string match "*DFF*" [[$ins getMaster] getName]]} continue
       if {[$ins getPlacementStatus] ni {FIRM PLACED LOCKED}} continue
-      if {[regexp {(^|[/.])(u_rsync_t[0-9]+|u_rst_root|u_rst_in|u_rrl_[0-9]+)[/.]} [$ins getName]]} continue
+      if {[regexp {(^|[/.])(u_rsync_t[0-9]+|u_rst_root|u_rst_in|u_run_root|u_run_in|u_[rs]rl_[0-9]+(_[rgb])?)[/.]} [$ins getName]]} continue
       lassign [$ins getLocation] x y
       foreach it [$ins getITerms] {
         if {[[$it getMTerm] getIoType] ne "INPUT"} continue
@@ -241,7 +265,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
       if {[$ins getPlacementStatus] ni {FIRM PLACED LOCKED}} continue
     } elseif {[$ins getPlacementStatus] ne "FIRM"} { continue }
     if {[regexp {(^|[/.])u_rsync_t[0-9]+[/.]} [$ins getName]]} continue
-    if {[regexp {(^|[/.])(u_rst_root|u_rst_in|u_rrl_[0-9]+)[/.]} [$ins getName]]} continue
+    if {[regexp {(^|[/.])(u_rst_root|u_rst_in|u_run_root|u_run_in|u_[rs]rl_[0-9]+(_[rgb])?)[/.]} [$ins getName]]} continue
     lassign [$ins getLocation] x y
     foreach it [$ins getITerms] {
       if {[[$it getMTerm] getIoType] ne "INPUT"} continue
@@ -277,3 +301,5 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
   }
   puts "OT_RESET_TAPS [llength $rt_taps] taps ([llength $rt_bad] without a synchroniser: their flops use the nearest tap that has one), $rt_sync synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: $rt_moved re-pointed to the nearest tap's synchroniser, $rt_keep already there, $rt_nopol without a same-polarity net (kept); per tap: [lsort -stride 2 -integer -index 0 $rt_cnt]"
 }
+}
+lassign [lindex $rt_role_tables 0] rt_reset_role rt_named_nets rt_zero_aliases

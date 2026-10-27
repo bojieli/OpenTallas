@@ -35,6 +35,9 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               every lib corner view has setup+hold on every input and clk->q on every output (fail closed)
   clock/reset every non-hard type has a clock tap inside its outline on a die layer and a reset synchronizer;
               data_reset false, epoch bit true (schema)
+  clock_mesh  (--clock-build DIR, repeatable; COORD PATH-S81-PD12 ruling A 10-27) the die clock mesh build in DIR is
+              ONE connected net: an M8-M9 VIA89 at every strap crossing, emitted (mesh.json meta.mesh_vias) and in the
+              routed DB (OT_MESH_VIAS of combo_<corner>.log); ERROR in G0 and G0C (die_clock_mesh.mesh_via_findings)
   G0C (--completeness): hard_cores, core_faces, complete; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -1547,6 +1550,26 @@ def check_r8(P, R, plan_dir=None, groups=None, landing=None):
 
 
 # ------------------------------------------------------------------------------------------------------- run
+def check_clock_mesh(R, builds):
+    """--clock-build DIRs: fail-closed mesh continuity (die_clock_mesh.mesh_via_findings); a plain G0 ERROR."""
+    import die_clock_mesh as DCM
+    out = []
+    for b in builds or []:
+        p = Path(b) / "mesh.json"
+        if not p.is_file():
+            R.err("clock_mesh", f"--clock-build {b}: no mesh.json")
+            out.append(dict(build=str(b), continuous=False, findings=["no mesh.json"]))
+            continue
+        M = json.loads(p.read_text())
+        f_ = DCM.mesh_via_findings(M, b)
+        for m_ in f_:
+            R.err("clock_mesh", f"{b}: {m_}")
+        out.append(dict(build=str(b), continuous=not f_, crossings={str(g["k"]): DCM.mesh_crossings(M, g)
+                                                                     for g in DCM.mesh_regions(M)},
+                        emitted=M["meta"].get("mesh_vias"), routed=DCM.routed_mesh_vias(b)[0], findings=f_))
+    return out
+
+
 def g0c_summary(P, R):
     """per partition type: G0C findings by check; types with none are G3-eligible (as far as the plan goes)."""
     by = {tn: defaultdict(int) for tn in P.types}
@@ -1561,7 +1584,8 @@ def g0c_summary(P, R):
                 g3_eligible=sorted(tn for tn in P.types if tn not in bad and not die), by_type=bad)
 
 
-def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False):
+def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
+        clock_builds=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -1579,6 +1603,12 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     P = S.Plan(raw, Path(plan_dir) / "die_plan.json" if plan_dir else None)
     summ = dict(die=P.name, partitions=len(P.parts), types=len(P.types), ports=len(P.ports), lanes=len(P.lanes),
                 bits=sum(p["width"] for p in P.ports.values()))
+    if any(t.get("infra_ports") for t in P.types.values()):
+        import infra_rtl as IR
+        try:
+            IR.die_lines(P)
+        except (ValueError, KeyError, TypeError) as ex:
+            R.err("infrastructure", str(ex))
     summ["types"] = check_types(P, R)
     summ["taps_cores"] = check_taps_cores(P, R, plan_dir, evidence)
     summ["core_faces"] = check_core_faces(P, R, plan_dir, core_conns)
@@ -1586,6 +1616,15 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
                                           side=load_core_conns(plan_dir, core_conns))
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
+    import landing_islands as LI
+    li_errs = LI.check(raw)
+    for e in li_errs:
+        R.err("landing_islands", e)
+    for e in LI.check_die_islands(raw):
+        R.err("die_islands", e)
+        li_errs.append(e)
+    summ["landing_islands"] = dict(islands=sum(len(t.get("landing_islands") or []) for t in raw["partition_types"].values()),
+                                   errors=len(li_errs))
     fp = check_abutment(P, R)
     summ["worst_faces"] = check_faces(P, R, fp)
     geo = {lid: lane_geometry(P, lid) for lid in P.lanes}
@@ -1622,6 +1661,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["xdie_counts"] = {c: sum(1 for i in R.items if i["check"] == c and i.get("g0c")) for c in G0C_CHECKS}
     import census_cov
     summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
+    if clock_builds:
+        summ["clock_mesh"] = check_clock_mesh(R, clock_builds)
     if png:
         import render
         render.render(P, geo, R, png)
@@ -1645,13 +1686,16 @@ def main(argv=None):
                     help="G0C: plan-completeness + hard-core rules are ERRORs (default: WARN '[G0C]'); per-type "
                          "summary in summary.g0c (types with 0 findings = G3-eligible)")
     ap.add_argument("--core-conns", help="hard-core connectivity sidecar (default PLANDIR/core_conns.json)")
+    ap.add_argument("--clock-build", action="append", default=[],
+                    help="die clock mesh build dir (die_clock_mesh build/combo); repeatable: ERROR unless the mesh is one "
+                         "connected net (VIA89 at every strap crossing, emitted + routed DB)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
-                  completeness=a.completeness)
+                  completeness=a.completeness, clock_builds=a.clock_build)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)

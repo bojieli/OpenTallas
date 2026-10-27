@@ -75,7 +75,14 @@ NDR = {"4w": dict(width=0.16, space=0.08, rf=0.25, cf=1.3), "8w": dict(width=0.3
        # grid; 5 x 0.098 + 0.04 + 2 x 0.02 = 0.57 <= 0.64).  VIA78 stays the single tech via: its M7 side is the
        # 0.032-um default-width pin riser of the R7 straight stack.
        "16w": dict(width=0.64, space=0.5, rf=0.0625, cf=2.2, wide_merge_um=0.99975,
-                   via89=dict(rows=6, cols=6, cut=0.04, pitch=0.098, enc_m8=0.0, enc_m9=0.02))}
+                   via89=dict(rows=6, cols=6, cut=0.04, pitch=0.098, enc_m8=0.0, enc_m9=0.02)),
+       # R26 band-tree stage table includes 2x16w. The physical 1.28-um conductor
+       # exceeds the LEF WIDTH0.99975 row: long-PRL spacing is 1.0um. M8 MAXWIDTH
+       # is2.0um; a merged shield must stay below it. 13V8 cuts fit:12*.098+.04
+       # plus .02 enclosure on both M9 sides =1.256um <=1.28um. Native C is a
+       # diagnostic continuation of the stage-table model; routed RC must qualify it.
+       "2x16w": dict(width=1.28, space=1.0, rf=0.03125, cf=4.4, wide_merge_um=1.99975,
+                     via89=dict(rows=13, cols=13, cut=0.04, pitch=0.098, enc_m8=0.0, enc_m9=0.02))}
 VDD = {"TT": 0.70, "FF": 0.77}
 SITE_X, ROW_Y = 0.054, 0.27
 # Actual current ORFS asap7sc7p5t_28_R_1x_220121a.lef SIZE, not the obsolete 25-site estimate.
@@ -118,6 +125,28 @@ def bisection_congruent(vals, what):
         rec(a[h:])
     rec(v)
     return True
+
+
+def strap_cover_spans(xs, ys, ly):
+    """CLOCK-KV-R14 strap_cover (pure helper, see build): ({'H:j:None' | 'V:i:None': [lo, hi] or None}, meta)."""
+    out = dict(meta={})
+    p_ = min(b - a for a, b in zip(ly, ly[1:]))
+    grp, g0_ = [], ly[0]
+    for a_, b_ in zip(ly, ly[1:]):
+        if b_ - a_ > 1.5 * p_:
+            grp.append((g0_, a_))
+            g0_ = b_
+    grp.append((g0_, ly[-1]))
+    cov = [(a_ - p_ / 2, b_ + p_ / 2) for a_, b_ in grp]
+    keep = [j for j, y in enumerate(ys) if any(lo - 1e-6 <= y <= hi + 1e-6 for lo, hi in cov)]
+    vlo, vhi = min([ly[0]] + [ys[j] for j in keep]), max([ly[-1]] + [ys[j] for j in keep])
+    spans = {f"H:{j}:None": ([xs[0], xs[-1]] if j in keep else None) for j in range(len(ys))}
+    spans.update({f"V:{i}:None": [vlo, vhi] for i in range(len(xs))})
+    out["strap_spans"] = spans
+    out["meta"]["strap_cover"] = dict(cover_um=[[round(a_, 3), round(b_, 3)] for a_, b_ in cov],
+                                      m8_removed=[j for j in range(len(ys)) if j not in keep],
+                                      m9_span_um=[round(vlo, 3), round(vhi, 3)])
+    return out["strap_spans"], out["meta"]["strap_cover"]
 
 
 def band_plan(ly, xs, tap_xy, hop_max, gap_factor=1.5):
@@ -596,7 +625,7 @@ def hard_keepout_violations(P, cells, islands=None):
                         continue
                     seen.add(tuple(r))
                     if x0 < r[2] and x1 > r[0] and y0 < r[3] and y1 > r[1]:
-                        if islands and c.get("kind") in ("drv", "broot", "bnode", "node") and any(
+                        if islands and c.get("kind") in ("drv", "broot", "bleaf", "bnode", "node") and any(
                                 w[4] == r[4] and w[0] <= x0 and x1 <= w[2] and w[1] <= y0 and y1 <= w[3] for w in islands):
                             continue
                         bad.append(dict(cell=name, keepout=r[4], rect_um=[x0, y0, x1, y1], keepout_um=list(r[:4])))
@@ -841,6 +870,20 @@ def detour_sites(K, pa, pb, hop, grid=10.8, margin=900.0):
     return sites or None
 
 
+def annotate_stub_splits(tap_rows, splits):
+    """CLOCK-KV-R20 (NUMBER-CHECK-KV-R19): a tap whose stub split_long cut into repeater hops keeps its unsplit
+    driver-to-tap length as stub_total_um; stub_um becomes the longest electrical hop (the net the tap slew sees),
+    stub_hops_um / stub_reps list the hops.  Taps without a split are unchanged."""
+    for t in tap_rows:
+        sp = (splits or {}).get(t["port"])
+        if not sp:
+            continue
+        t["stub_total_um"] = t["stub_um"]
+        t["stub_um"] = max(sp["hops_um"])
+        t["stub_hops_um"] = sp["hops_um"]
+        t["stub_reps"] = sp["reps"]
+
+
 def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, both_l=False):
     """every driver -> load branch longer than hop_max (a slide / jog / node move made it long) gets equal-cut
     repeaters on its own L path (x first, then y), each at the nearest free site: no hop exceeds ~hop_max, so slew
@@ -889,8 +932,8 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, b
                     release_cell_reservation(K, r)
                 if len(planned) == k:
                     break
-            if both_l and len(planned) != k and k == 1 and L <= 2 * (750.0 - BUF_W - ROW_Y):
-                # one repeater anywhere on either L whose two hops both stay inside the 750-um reach (the
+            if both_l and len(planned) != k and k == 1 and L <= 2 * (hop_max - BUF_W - ROW_Y):
+                # one repeater anywhere on either L whose two hops both stay inside the requested reach (the
                 # equal-split site sits in a macro): scan the path, keep the most balanced legal site
                 best_q = None
                 for orient in ("xy", "yx"):
@@ -911,7 +954,7 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, b
                                 continue
                         h1 = abs(p[0] - pa[0]) + abs(p[1] - pa[1]) + BUF_W + ROW_Y
                         h2 = abs(pb[0] - p[0]) + abs(pb[1] - p[1]) + BUF_W + ROW_Y
-                        if max(h1, h2) <= 750.0 and (best_q is None or max(h1, h2) < best_q[0]):
+                        if max(h1, h2) <= hop_max and (best_q is None or max(h1, h2) < best_q[0]):
                             best_q = (max(h1, h2), p)
                 if best_q is not None:
                     planned = [best_q[1]]
@@ -926,13 +969,14 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, b
                                                                   reps=len(det)))
             if len(planned) != k:
                 # A clock tail can traverse a PHY with its driver outside it. Never manufacture an illegal cell.
-                # Keep the direct tail only within the binding 750-um reach; actual routed slew still decides.
+                # Keep the direct tail only within the requested reach; actual routed slew still decides.
                 bound = L + BUF_W + ROW_Y
                 if out is not None:
                     out.setdefault("unsplit_clock_branches", []).append(dict(driver=n["drv"], load=ld,
                         span_bound_um=round(bound, 3), reason="no legal repeater outside hard/PHY keepouts"))
-                    if bound > 750.0:
-                        out["unplaced"].append([n["drv"], ld, "STRUCTURAL clock span exceeds 750 um", round(bound, 3)])
+                    if bound > hop_max:
+                        out.setdefault("unplaced", []).append([n["drv"], ld,
+                            f"STRUCTURAL clock span exceeds {hop_max:g} um", round(bound, 3)])
                 loads.append(ld)
                 continue
             chain = []
@@ -941,6 +985,12 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, b
                 added += 1
                 chain.append(nm)
             loads.append(chain[0])
+            if out is not None and ld.startswith("port:"):
+                # CLOCK-KV-R20 (NUMBER-CHECK-KV-R19): record the split so the tap row states its real hops
+                pts = [pa] + [(cells[c_]["x"], cells[c_]["y"]) for c_ in chain] + [pb]
+                out.setdefault("stub_splits", {})[ld[5:]] = dict(
+                    driver=n["drv"], reps=list(chain),
+                    hops_um=[round(abs(u[0] - w[0]) + abs(u[1] - w[1]), 2) for u, w in zip(pts, pts[1:])])
             for u, w in zip(chain, chain[1:]):
                 new_nets.append(dict(name=f"ckm_w_{u}", drv=u, loads=[w], level=n.get("level")))
             new_nets.append(dict(name=f"ckm_w_{chain[-1]}", drv=chain[-1], loads=[ld], level=n.get("level")))
@@ -1032,7 +1082,8 @@ def single_instance_cores(P):
     return {k: count[v] == 1 for k, v in owner.items()}
 
 
-def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None, single=None):
+def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None, single=None, root_reach=0.0,
+               feed="mesh", root_depth=""):
     """CLOCK-KV-R6: create the equal-structure band trees of band_plan (see there).  Per tree: root ckm_br_<n> on the
     V strap beside the edge leaf's mesh driver (input = the continuous mesh at that driven point) and branch ckm_bn_<n>
     exactly h further into the band on the same strap line, each at its ideal point (a step of <= BAND_SLIDE_UM off neighbouring clock cells only); nets root -> branch
@@ -1043,10 +1094,20 @@ def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None
     ko = ko or []
     single = single or {}
 
-    def site(p, role, name):
+    def site(p, role, name, dr=0):
         q, d = free_along(K, p, 1, BAND_SLIDE_UM)
         if q is not None:
             return q, d
+        if role == "band_root" and root_reach > 0 and dr:
+            # CLOCK-KV-R14 (opt-in lattice band_root_reach_um): the edge leaf driver is a pushdown island inside a
+            # multi-instance core, so the root input moves along the SAME driven V strap toward the band to the first
+            # free site past the core edge (<= root_reach); it stays on the continuous mesh, the trunk stays h.
+            k = 1
+            while k * STEP_UM <= root_reach + 1e-9:
+                q = (p[0], p[1] + dr * k * STEP_UM)
+                if not hitf(K, q):
+                    return q, k * STEP_UM
+                k += 1
         core = core_at(ko, p) or next((str(r[4]) for r in ko if r[0] - 2.0 <= p[0] <= r[2] + 2.0 and
                                        r[1] - 2.0 <= p[1] <= r[3] + 2.0), None)   # footprint halo on a core edge
         if core is not None and single.get(core):
@@ -1065,6 +1126,8 @@ def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None
         if t.get("band_tree"):
             trees[t["band_tree"]].append(t)
     rows = []
+    if feed == "strap":
+        return band_strap_feed(BT, tap_rows, trees, xs, ly, out, hop_max)
     for n, (key, ts) in enumerate(sorted(trees.items())):
         b0 = BT["taps"][tap_rows.index(ts[0])]
         x, ye, dr = xs[b0["i"]], b0["edge_y"], b0["dir"]
@@ -1072,32 +1135,148 @@ def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None
         # branch exactly h further into the band: every trunk = h by construction
         lj = min(range(len(ly)), key=lambda j_: abs(ly[j_] - ye))
         dsite = out["drivers"][f"{b0['i']}_{lj}"]["site"]
-        qr, dr_ = site((x, dsite[1]), "band_root", f"ckm_br_{n}")
-        qb, db_ = site((x, qr[1] + dr * h), "band_branch", f"ckm_bn_{n}")
-        rt = cell(f"ckm_br_{n}", qr[0], qr[1], "broot")
-        br = cell(f"ckm_bn_{n}", qb[0], qb[1], "bnode")
-        nets.append(dict(name=f"ckm_w_{rt}", drv=rt, loads=[br], level=97))
-        nets.append(dict(name=f"ckm_w_{br}", drv=br, loads=[t["stub"] for t in ts], level=98))
-        trunk = abs(qb[1] - qr[1])
-        comb = [abs(t["foot"][1] - qb[1]) + abs(t["foot"][0] - qb[0]) for t in ts]
+        qr, dr_ = site((x, dsite[1]), "band_root", f"ckm_br_{n}", dr=dr)
+        if feed == "leaf":
+            # CLOCK-KV-R15 (opt-in lattice band_feed "leaf", COORD RULING CLOCK-KV-R14 ASK1): EQUAL-STAGE band feed.  The
+            # root is a PEER of the edge leaf's mesh driver: its input joins the tree leaf-node net that drives that
+            # driver (not the mesh), and it drives the band stubs directly (no branch stage), so a band tap sees
+            # leaf node -> root -> stub -> tap exactly like a mesh tap's leaf node -> driver -> mesh -> stub -> tap.
+            dc = out["drivers"][f"{b0['i']}_{lj}"]["cells"]
+            ln = [n_ for n_ in nets if set(dc) <= set(n_["loads"])]
+            if len(ln) != 1:
+                raise ValueError(f"band_feed leaf: {len(ln)} tree nets drive mesh driver {b0['i']}_{lj}")
+            nd = cells.get(ln[0]["drv"])
+            npt = (nd["x"] + BUF_W / 2, nd["y"] + ROW_Y / 2) if nd is not None else None
+            node_move = 0.0
+            if root_depth == "balance" and npt is None:
+                raise ValueError(f"band_root_depth balance: leaf node {ln[0]['drv']} has no placed cell")
+            if root_depth == "balance" and abs(npt[0] - x) > 1e-6:
+                # the leaf node drives only this V strap drivers (+ this root): re-site it onto the strap line (first free site
+                # from its y toward the band edge row) when the parent leg and every load stay <= hop_max -- plan geometry, no stage;
+                # it shortens the node -> band root path by |dx| (the deepest band foot is then within 2 x hop_max)
+                pn = [n_ for n_ in nets if ln[0]["drv"] in n_["loads"]]
+                # nearest free site on the strap line, searched from the node y toward the band edge row
+                q_, k_ = None, 0
+                while q_ is None and k_ * STEP_UM <= abs(npt[1] - qr[1]) + 1e-9:
+                    c_ = (x, npt[1] + dr * k_ * STEP_UM)
+                    q_ = None if hitf(K, c_) else c_
+                    k_ += 1
+                if len(pn) == 1 and q_ is not None:
+                    pc = cells[pn[0]["drv"]]
+                    ppt = (pc["x"] + BUF_W / 2, pc["y"] + ROW_Y / 2)
+                    if abs(ppt[0] - q_[0]) + abs(ppt[1] - q_[1]) <= hop_max + 1e-6 and all(
+                            abs(cells[l_]["x"] + BUF_W / 2 - q_[0]) + abs(cells[l_]["y"] + ROW_Y / 2 - q_[1]) <= hop_max
+                            for l_ in ln[0]["loads"] if l_ in cells):
+                        node_move = abs(npt[0] - q_[0]) + abs(npt[1] - q_[1])
+                        nd["x"], nd["y"] = snap(q_[0] - BUF_W / 2, SITE_X), snap(q_[1] - ROW_Y / 2, ROW_Y)
+                        npt = (nd["x"] + BUF_W / 2, nd["y"] + ROW_Y / 2)
+                        out.setdefault("band_node_resites", []).append(dict(node=ln[0]["drv"], tree=key,
+                                                                            dx_um=round(node_move, 3)))
+                if not node_move:
+                    out.setdefault("band_node_keep", []).append(dict(node=ln[0]["drv"], tree=key, parents=len(pn),
+                                                                     site=None if q_ is None else list(q_)))
+            if root_depth == "balance":
+                # PATH-S81-PD8 (opt-in lattice band_root_depth "balance"; COORD RULING PATH-S81-PD7 ASK2: legal driver
+                # column, same die-wide stage count): the leaf-fed band root stays a PEER of the edge leaf's mesh driver
+                # (leaf node -> root -> stub -> tap, no added stage) and stays on its own V strap line, but sits at the
+                # depth that minimises max(leaf-node -> root input net, root -> farthest stub-foot comb net).  Plan
+                # geometry only (no measurement, no pad); legal site = site() (free_along <= BAND_SLIDE_UM).
+                fy = [t["foot"][1] for t in ts]
+                lo_, hi_ = min(fy + [qr[1]]), max(fy + [qr[1]])
+                best, k_ = None, 0
+                while lo_ + k_ * STEP_UM <= hi_ + 1e-9:
+                    y_ = lo_ + k_ * STEP_UM
+                    cst = max(abs(npt[0] - x) + abs(npt[1] - y_), max(abs(f - y_) for f in fy))
+                    if best is None or cst < best[0] - 1e-9 or (abs(cst - best[0]) <= 1e-9 and
+                                                                abs(y_ - qr[1]) < abs(best[1] - qr[1])):
+                        best = (cst, y_)
+                    k_ += 1
+                qr, dr_ = site((x, best[1]), "band_root", f"ckm_br_{n}", dr=dr)
+            rt = cell(f"ckm_br_{n}", qr[0], qr[1], "bleaf")
+            in_um = abs(npt[0] - qr[0]) + abs(npt[1] - qr[1]) if npt is not None else 0.0
+            ln[0]["loads"].append(rt)
+            nets.append(dict(name=f"ckm_w_{rt}", drv=rt, loads=[t["stub"] for t in ts], level=97))
+            qb, db_, br = qr, 0.0, None
+            trunk = max(abs(t["foot"][1] - qr[1]) for t in ts)
+            comb = [abs(t["foot"][1] - qr[1]) + abs(t["foot"][0] - qr[0]) for t in ts]
+        else:
+            qb, db_ = site((x, qr[1] + dr * h), "band_branch", f"ckm_bn_{n}")
+            rt = cell(f"ckm_br_{n}", qr[0], qr[1], "broot")
+            br = cell(f"ckm_bn_{n}", qb[0], qb[1], "bnode")
+            nets.append(dict(name=f"ckm_w_{rt}", drv=rt, loads=[br], level=97))
+            nets.append(dict(name=f"ckm_w_{br}", drv=br, loads=[t["stub"] for t in ts], level=98))
+            trunk = abs(qb[1] - qr[1])
+            comb = [abs(t["foot"][1] - qb[1]) + abs(t["foot"][0] - qb[0]) for t in ts]
         for t in ts:
             t["mesh_in"] = rt
         if trunk > hop_max + 1e-6 or max(comb) > hop_max + 1e-6:
             out["unplaced"].append([key, "STRUCTURAL band tree net > hop_max", round(trunk, 2), round(max(comb), 2)])
-        rows.append(dict(tree=key, i=b0["i"], edge_y=ye, dir=dr, root=rt, branch=br, foot=[round(qr[0], 3), round(qr[1], 3)],
+        if feed == "leaf" and in_um > hop_max + 1e-6:
+            out["unplaced"].append([key, "STRUCTURAL band root input net > hop_max", round(in_um, 2)])
+        rows.append(dict(tree=key, i=b0["i"], edge_y=ye, dir=dr, root=rt, branch=br, feed=feed,
+                         leaf_driver=f"{b0['i']}_{lj}", foot=[round(qr[0], 3), round(qr[1], 3)],
                          strap=["M9", b0["i"]], root_slide_um=round(dr_, 2), branch_slide_um=round(db_, 2),
                          trunk_um=round(trunk, 2), comb_max_um=round(max(comb), 2),
                          comb_span_um=round(max(t["foot"][1] for t in ts) - min(t["foot"][1] for t in ts), 2),
-                         taps=len(ts)))
+                         taps=len(ts), input_um=round(in_um, 2) if feed == "leaf" else None,
+                         node_move_um=round(node_move, 2) if feed == "leaf" else None,
+                         root_depth=root_depth or "edge"))
     out["band_roots"] = rows
     out["meta"]["band_trees"] = dict(
-        rule="CLOCK-KV-R6 / 12.8e(3): mesh(edge leaf point) -> root -> trunk h -> branch -> comb -> stub -> tap; one "
-             "structure for every band tree, h from plan geometry, no pad / no equalising stage",
+        rule=("CLOCK-KV-R15 band_feed leaf: tree leaf node -> root (peer of the edge leaf's mesh driver) -> comb -> "
+              "stub -> tap = the mesh taps' stage count (node -> driver -> mesh -> stub -> tap); no branch, no pad"
+              if feed == "leaf" else
+              "CLOCK-KV-R6 / 12.8e(3): mesh(edge leaf point) -> root -> trunk h -> branch -> comb -> stub -> tap; one "
+              "structure for every band tree, h from plan geometry, no pad / no equalising stage"),
         groups=BT["groups"], cover_um=BT["cover_um"], h_um=h, trees=len(rows), taps=sum(r["taps"] for r in rows),
-        cells=2 * len(rows), trunk_um=[min(r["trunk_um"] for r in rows), max(r["trunk_um"] for r in rows)],
+        feed=feed, stages_below_leaf_node=2 if feed == "leaf" else 4,
+        cells=(1 if feed == "leaf" else 2) * len(rows), trunk_um=[min(r["trunk_um"] for r in rows), max(r["trunk_um"] for r in rows)],
         comb_max_um=max(r["comb_max_um"] for r in rows), root_slide_max_um=max(r["root_slide_um"] for r in rows),
         branch_slide_max_um=max(r["branch_slide_um"] for r in rows),
         islands_single_instance=sum(1 for r in out["pushdown"] if r["role"] in ("band_root", "band_branch")),
+        taps_per_tree=[min(r["taps"] for r in rows), max(r["taps"] for r in rows)],
+        root_depth=root_depth or "edge",
+        input_um=[min(r["input_um"] for r in rows), max(r["input_um"] for r in rows)] if feed == "leaf" else None)
+    return rows
+
+
+def band_strap_feed(BT, tap_rows, trees, xs, ly, out, hop_max):
+    """CLOCK-KV-R18 (opt-in lattice band_feed "strap", COORD RULING CLOCK-KV-R17 ASK1+2): MESH-FED band with EQUAL
+    insertion.  Each band tree is rooted ON the continuous M9 mesh strap (strap_cover keeps every M9 strap one
+    continuous strap across the band gap, 12.8e1): the band tap's own stub takes its input from that strap at its
+    foot (xs[i], tap y), exactly like every mesh tap (mesh -> stub -> tap).  So a band tap has the SAME stage count as
+    a mesh tap (no root / branch buffer: the R14 +2 stages behind the +68.8 ps band offset are gone by construction),
+    its stub is sized by the same plan-computed stub sizing rule as every other stub (die_clock_128 stub sizing,
+    12.8 plan-computed per-tap sizing, no trim), it is an ordinary mesh load (so the mesh MC signs it off and its
+    CPPR point is the signed mesh), and no band net exists.  Plan check (STRUCTURAL): the strap distance from the
+    foot to the edge leaf's mesh driver on the same strap must be <= hop_max (the tree hop reach), i.e. the foot is on
+    DRIVEN strap metal, never on the undriven middle of the gap."""
+    rows = []
+    for n, (key, ts) in enumerate(sorted(trees.items())):
+        b0 = BT["taps"][tap_rows.index(ts[0])]
+        lj = min(range(len(ly)), key=lambda j_: abs(ly[j_] - b0["edge_y"]))
+        dv = out["drivers"][f"{b0['i']}_{lj}"]
+        reach = []
+        for t in ts:
+            d = abs(t["foot"][1] - dv["site"][1]) + abs(t["foot"][0] - dv["site"][0])
+            reach.append(d)
+            t["band_feed"] = "strap"
+            t["band_driver"] = f"{b0['i']}_{lj}"
+            t["band_reach_um"] = round(d, 2)
+        if max(reach) > hop_max + 1e-6:
+            out["unplaced"].append([key, "STRUCTURAL band stub foot beyond driven strap reach", round(max(reach), 2)])
+        rows.append(dict(tree=key, i=b0["i"], edge_y=b0["edge_y"], dir=b0["dir"], feed="strap",
+                         leaf_driver=f"{b0['i']}_{lj}", strap=["M9", b0["i"]], reach_max_um=round(max(reach), 2),
+                         taps=len(ts)))
+    out["band_roots"] = []
+    out["band_strap"] = rows
+    out["meta"]["band_trees"] = dict(
+        rule=("CLOCK-KV-R18 band_feed strap: continuous M9 mesh strap (driven by the edge leaf driver) -> band tap stub "
+              "-> tap = the mesh taps' stage count (node -> driver -> mesh -> stub -> tap); stub sized by the common "
+              "plan-computed stub rule; no band root/branch, no pad, no trim"),
+        groups=BT["groups"], cover_um=BT["cover_um"], h_um=BT["h_um"], trees=len(rows),
+        taps=sum(r["taps"] for r in rows), feed="strap", stages_below_leaf_node=3, cells=0,
+        reach_max_um=max(r["reach_max_um"] for r in rows), hop_max_um=hop_max,
         taps_per_tree=[min(r["taps"] for r in rows), max(r["taps"] for r in rows)])
     return rows
 
@@ -1140,7 +1319,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 raise ValueError("--lattice-spec: leaf_grid replaces driver_rows (drivers decoupled from strap rows)")
             if plan_sites is not None:
                 raise ValueError("--lattice-spec leaf_grid: in-core slides are plan rules, not --plan-sites")
+            io_policy = lattice.get("io_macro_drivers", "slide")
+            if io_policy not in ("slide", "drop_inside"):
+                raise ValueError("leaf-grid io_macro_drivers must be slide or drop_inside")
             lg = dict(nx=int(lattice["leaf_grid"][0]), ny=int(lattice["leaf_grid"][1]),
+                      drop_io_ideal=(io_policy == "drop_inside"),
                       drv_reach=float(lattice.get("drv_reach_um", 200.0)),
                       hop_reach=float(lattice.get("hop_reach_um", 600.0)),
                       wire_levels={int(v) for v in lattice.get("wire_levels", [])},
@@ -1148,6 +1331,14 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                       # a hard core stays at its ideal point as a 12.2a1 in-core PUSHDOWN island (type-identical coords
                       # checked by the census), so every root->driver path keeps its equal-structure legs by construction
                       in_core=str(lattice.get("in_core", "slide")),
+                      off_core=bool(lattice.get("off_core_resite", False)),
+                      # PATH-S81-PD9 (opt-in, COORD RULING PATH-S81-PD8 ASK1 (b)): a leaf mesh driver with no die-top site
+                      # (V strap or M8 row within drv_reach) is DROPPED instead of becoming an in-core island; the continuous
+                      # mesh is driven there by its neighbours (its leaf-node sibling must remain)
+                      off_core_drop=bool(lattice.get("off_core_drop_driver", False)),
+                      # PATH-S81-PD9 (opt-in): a leg repeater with no die-top site on its leg L takes the alternate L
+                      # orientation of the same leg (same length, same stage count) before any in-core pushdown
+                      alt_l=bool(lattice.get("off_core_alt_l", False)),
                       # CLOCK-KV-R11 (opt-in): {module: [[u, v], ...]} canonical in-core island sites in the CORE frame
                       # (origin + track_offset, core orient); a pushdown driver in such a core snaps onto the nearest
                       # site within canon_tol_um so every instance of the module carries one identical island
@@ -1339,6 +1530,17 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
 
         def span(axis, idx, g=None):
             return strap_span(out, g, xs, ys, axis, idx)
+    elif lattice and lattice.get("strap_cover") and lg and not regions:
+        # CLOCK-KV-R14 (opt-in lattice strap_cover, one die mesh): the mesh metal covers exactly the DRIVEN area.
+        # Leaf rows form groups (gap > 1.5 pitch, as band_plan); an M8 strap whose y lies outside every group cover
+        # [first - p/2, last + p/2] has no driver near it and is removed (taps there are band-tree taps); every M9
+        # strap spans from the lowest to the highest driver row / kept M8 strap, so every leaf driver sits ON its
+        # strap (the uniform ys lattice left the bottom leaf row 172 um below the strap end) and nothing dangles past
+        # the last driver.  M9 stays one continuous strap across a band gap (12.8e1 continuous mesh).
+        out["strap_spans"], out["meta"]["strap_cover"] = strap_cover_spans(xs, ys, ly)
+
+        def span(axis, idx, g=None):
+            return strap_span(out, dict(k=None), xs, ys, axis, idx)
 
     def cell(name, x, y, kind, **kw):
         cells[name] = dict(x=snap(x - BUF_W / 2, SITE_X), y=snap(y - ROW_Y / 2, ROW_Y), kind=kind, **kw)
@@ -1355,10 +1557,35 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         out["meta"]["driver_pair_fixes"] = []
         for i, x in enumerate(xs):
             for j, y in enumerate(ly):
+                if lg.get("drop_io_ideal"):
+                    im = next((r[4] for r in ko if str(r[4]).startswith("io/")
+                               and in_rect(r, x, y)), None)
+                    if im is not None:
+                        # The analog window needs no parent clock cells. Retaining
+                        # a near-edge relocated driver otherwise keeps an interior
+                        # subtree whose nodes still lie in the analog macro body.
+                        out.setdefault("dropped_drivers", []).append(dict(
+                            name=f"ckm_d_{i}_{j}", i=i, j=j, ideal=[round(x, 3), round(y, 3)],
+                            core=im, reason="io_macro_ideal_inside"))
+                        continue
                 q, d = free_along(K, (x, y), 1, lg["drv_reach"], bounds=(0.0, H))
                 if lg["in_core"] in ("pushdown", "drivers", "level", "upstream") and d:
                     q = None   # CLOCK-KV-R8: no slide, pushdown island at the ideal point
+                dstrap = "M9"
+                if q is None and lg.get("off_core"):
+                    # PATH-S81-PD8 off_core_resite: no free site on the V strap within drv_reach -> slide along the M8
+                    # row (the same continuous mesh node line) within drv_reach instead of an in-core island
+                    q, d = free_along(K, (x, y), 0, lg["drv_reach"], bounds=(0.0, W))
+                    if q is not None:
+                        dstrap = "M8"
+                        out.setdefault("off_core_resites", []).append(dict(role="mesh_driver", name=f"ckm_d_{i}_{j}",
+                                                                           d_um=round(d, 2), strap="M8"))
                 isl = None
+                if q is None and lg.get("off_core_drop"):
+                    out.setdefault("dropped_drivers", []).append(dict(name=f"ckm_d_{i}_{j}", i=i, j=j,
+                                                                      ideal=[round(x, 3), round(y, 3)],
+                                                                      core=core_at(ko, (x, y))))
+                    continue
                 if q is None:
                     q, d, isl = (x, y), 0.0, core_at(ko, (x, y))
                     if lg.get("canon"):
@@ -1375,7 +1602,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 names = [cell(f"ckm_d_{i}_{j}_{k}", q[0] + (k - (m - 1) / 2) * BUF_W, q[1], "drv", i=i, j=j)
                          for k in range(m)]
                 out["drivers"][f"{i}_{j}"] = dict(i=i, j=j, ideal=[x, y], site=[round(q[0], 3), round(q[1], 3)],
-                                                  move_um=round(d, 2), strap="M9", cells=names,
+                                                  move_um=round(d, 2), strap=dstrap, cells=names,
                                                   **(dict(pushdown=isl) if isl else {}))
     elif SI is None:
         cand = {}
@@ -1537,10 +1764,23 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         kids = [(i0, h, j0, j1), (h, i1, j0, j1)] if ax == 0 else [(i0, i1, j0, h), (i0, i1, h, j1)]
         loads = []
         for c, kr in enumerate(kids):
+            # A dropped mesh-driver subtree has no electrical loads.  Prune it before
+            # placing any interior node, just as rec() does for macro-hole branches.
+            # Leaf-grid indices address the driver lattice directly (not strap rows).
+            if (lg.get("off_core_drop") or lg.get("drop_io_ideal")) and not any(
+                    f"{i_}_{j_}" in out["drivers"]
+                    for i_ in range(kr[0], kr[1]) for j_ in range(kr[2], kr[3])):
+                out.setdefault("pruned_branches", []).append(f"{path}{c}")
+                continue
             tag = f"{path}{c}"
             kp = node_xy(*kr)
             if (kr[1] - kr[0]) * (kr[3] - kr[2]) == 1:
-                dvr = out["drivers"][f"{kr[0]}_{kr[2]}"]
+                dvr = out["drivers"].get(f"{kr[0]}_{kr[2]}")
+                if dvr is None and (lg.get("off_core_drop") or lg.get("drop_io_ideal")):
+                    # PATH-S81-PD9: dropped driver (no die-top site) -> no leaf leg; the sibling keeps the node loaded
+                    out["htree"].append(dict(level=level + 1, tag=tag, a=list(here), b=list(kp), len_um=0.0,
+                                             n_seg=1, reps=[], leaf=True, dropped=f"ckm_d_{kr[0]}_{kr[2]}"))
+                    continue
                 b = tuple(dvr["site"])
                 L = abs(b[0] - here[0]) + abs(b[1] - here[1])
                 if L > lg["hop_reach"] + 1e-6:
@@ -1592,6 +1832,17 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                     # the re-site lengthens both child legs by the slide: keep their hops within reach
                     lim = min(abs(kp[inc] - here[inc]), max(0.0, hop_slack(kr, level + 1)))
                     q, d = free_toward(K, kp, inc, here[inc], lim)
+                if q is None and lg.get("off_core"):
+                    # PATH-S81-PD8 (opt-in lattice off_core_resite): 12.2a1 islands must be one pattern per core type;
+                    # on S81 the lattice cannot coincide with the multi-instance ROM/bf_col core arrays, so a node whose
+                    # ideal point is on a hard core takes the nearest free die-top site within its child-hop slack
+                    # (plan geometry; stage count stays the ideal-leg count; the parent hop is re-checked below)
+                    lim2 = max(0.0, hop_slack(kr, level + 1))
+                    if lim2 > 0:
+                        q, d = free_near(K, kp, limit=lim2, step=STEP_UM * 2)
+                        if q is not None:
+                            out.setdefault("off_core_resites", []).append(dict(role="tree_node", name=f"ckm_n{level + 1}_{tag}",
+                                                                               d_um=round(abs(q[0] - kp[0]) + abs(q[1] - kp[1]), 2)))
                 if q is None:
                     q, d, isl = kp, 0.0, core_at(ko, kp)
                     out["pushdown"].append(dict(role="tree_node", name=f"ckm_n{level + 1}_{tag}", level=level + 1,
@@ -1608,6 +1859,24 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             if L / n_seg > lg["hop_reach"] + 1e-6:
                 out["unplaced"].append([tag, "STRUCTURAL re-sited leg hop beyond reach", round(L / n_seg, 2)])
             reps, prev, first = [], None, None
+            if lg.get("alt_l") and n_seg > 1:
+                def _rep_free(pl_):
+                    for k_ in range(1, n_seg):
+                        s_ = L * k_ / n_seg
+                        ok_ = any(not hitf(K, poly_point(pl_, s_ + sg * kk * STEP_UM))
+                                  for kk in range(0, int(L / n_seg / 2 / STEP_UM) + 1) for sg in (1, -1))
+                        if not ok_ and free_near(K, poly_point(pl_, s_), limit=max(0.0, (lg["hop_reach"] - L / n_seg) / 2),
+                                                 step=STEP_UM * 2)[0] is None:
+                            return False
+                    return True
+                if not _rep_free(poly):
+                    c2 = list(here)
+                    c2[inc] = q[inc]
+                    p2 = [tuple(here), tuple(c2), tuple(q)]
+                    if _rep_free(p2):
+                        poly = p2
+                        out.setdefault("alt_l_legs", []).append(dict(tag=tag, level=level + 1, corner=[round(c2[0], 3), round(c2[1], 3)],
+                                                                    first_axis="x" if inc == 0 else "y"))
             for k in range(1, n_seg):
                 s0 = L * k / n_seg
                 rq, rd = None, None
@@ -1620,6 +1889,15 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                     if rq is not None:
                         break
                 risl = None
+                if rq is None and lg.get("off_core"):
+                    # PATH-S81-PD8 off_core_resite: nearest free site to the ideal on-leg point, so that both sub-hops
+                    # stay <= hop_reach (checked: ideal sub-hop L/n_seg plus twice the jog)
+                    jl = max(0.0, (lg["hop_reach"] - L / n_seg) / 2)
+                    if jl > 0:
+                        rq, rd = free_near(K, poly_point(poly, s0), limit=jl, step=STEP_UM * 2)
+                        if rq is not None:
+                            out.setdefault("off_core_resites", []).append(dict(role="leg_rep", name=f"ckm_r{level + 1}_{tag}_{k}",
+                                                                               d_um=round(rd, 2)))
                 if rq is None:
                     rq, rd = poly_point(poly, s0), 0.0
                     risl = core_at(ko, rq)
@@ -1818,6 +2096,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                                                  ko=ko, inst_module=inst_module)
             out["meta"]["upstream_slides"] = lvl_rec
         rec_lg(0, nx, 0, nty, 0, n0, "h", (cells[n0]["x"] + BUF_W / 2, cells[n0]["y"] + ROW_Y / 2), 0.0)
+        if out.get("dropped_drivers"):
+            for n_ in nets:
+                if not n_["loads"]:
+                    out["unplaced"].append([n_["name"], "STRUCTURAL dropped drivers left a loadless tree net"])
+            out["meta"]["dropped_drivers"] = [d_["name"] for d_ in out["dropped_drivers"]]
         pl = [dv["path_um"] for dv in out["drivers"].values()]
         pd = out["pushdown"]
         out["meta"]["leaf_grid"].update(
@@ -1850,14 +2133,21 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         g = R[out["part_region"][part]] if regions else R[0]
         rk = dict(region=g["k"]) if regions else {}
         bk = BT["taps"].get(len(tap_rows)) if BT else None
-        if bk is not None:   # CLOCK-KV-R6 band tap: stub foot on its band tree's strap line at the tap y (comb drop)
+        if bk is not None and str(lattice.get("band_feed") or "mesh") == "strap":
+            # CLOCK-KV-R18 band_feed strap: the stub foot sits on the DRIVEN mesh, at the edge leaf row of its group on
+            # V strap i (the edge leaf driver's own row), never on the undriven strap tail inside the band gap (R18
+            # first build: feet at the tap y, 17-118 um into the gap, saw a 200 ps input slew vs <= 97 on the grid);
+            # the stub wire carries the depth, sized by the common plan-computed stub rule.
+            fq, fd = free_along(K, (xs[bk["i"]], bk["edge_y"]), 1, 4 * max_move)
+            axis, i, j = 1, bk["i"], 0
+        elif bk is not None:   # CLOCK-KV-R6 band tap: stub foot on its band tree's strap line at the tap y (comb drop)
             fq, fd = free_along(K, (xs[bk["i"]], y), 1, 4 * max_move)
             axis, i, j = 1, bk["i"], 0
         else:
             fq, fd, axis, i, j = stub_foot(K, xs, ys, x, y, 4 * max_move,
                                            box=(g["i0"], g["i1"], g["j0"], g["j1"]) if regions else None,
                                            extent=g.get("strap_box_um"),
-                                           span=(lambda ax_, k_, g=g: span(ax_, k_, g)) if fp is not None else None)
+                                           span=(lambda ax_, k_, g=g: span(ax_, k_, g)) if span is not None else None)
         if fp is not None and any(in_rect(h["rect_um"], x, y) and h["name"] != part for h in holes):
             out["unplaced"].append([tp, "tap inside a declared macro hole"])
         if fq is None:
@@ -1873,7 +2163,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             tap_rows[-1]["band_tree"] = bk["tree"]
     if BT:
         band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, lg["hop_reach"], ko=DC.keepouts(P),
-                   single=single_instance_cores(P))
+                   single=single_instance_cores(P), root_reach=float(lattice.get("band_root_reach_um") or 0.0),
+                   feed=str(lattice.get("band_feed") or "mesh"),
+                   root_depth=str(lattice.get("band_root_depth") or ""))
     out["taps"] = tap_rows
     if uniform_regions is not None:
         ug = uniform_region_gate(P, R, tap_rows)
@@ -1888,6 +2180,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         sl_nets = [n for n in nets if n.get("level") == 99] if lg else nets
         out["meta"]["split_reps"] = split_long(cells, sl_nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows},
                                                hop_max, cell, out, yfirst=split_yfirst, both_l=fp is not None)
+        annotate_stub_splits(tap_rows, out.get("stub_splits"))
         if lg:
             nets += sl_nets[len([n for n in nets if n.get("level") == 99]):]
     if rule128 is not None:   # METHODOLOGY 12.8: plan-model stub sizing (d1), early-tap FAIL list, fixed shielded tree
@@ -1936,8 +2229,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                        htree_wire_mm=round(sum(h["len_um"] for h in out["htree"]) / 1e3 + trunk / 1e3, 2),
                        mesh_wire_mm=round(sum((g["j1"] - g["j0"]) * (strap_bounds(g, xs, ys, 0)[1] - strap_bounds(g, xs, ys, 0)[0]) +
                                               (g["i1"] - g["i0"]) * (strap_bounds(g, xs, ys, 1)[1] - strap_bounds(g, xs, ys, 1)[0]) for g in R) / 1e3, 2)
-                       if fp is None else round(sum(s_[1] - s_[0] for s_ in out["strap_spans"].values() if s_) / 1e3, 2),
-                       stub_wire_mm=round(sum(t["stub_um"] for t in tap_rows) / 1e3, 2))
+                       if "strap_spans" not in out else round(sum(s_[1] - s_[0] for s_ in out["strap_spans"].values() if s_) / 1e3, 2),
+                       stub_wire_mm=round(sum(t.get("stub_total_um", t["stub_um"]) for t in tap_rows) / 1e3, 2))
     if fp is not None:
         sh = fp.get("shield_net")
         tree_mm = 0.0
@@ -2037,7 +2330,9 @@ def mesh_segments(M, jogs=True):
     """[(layer, x0, y0, x1, y1, net, kind)] centre lines of the mesh straps and island jogs exactly as cmd_combo draws
     them (strap spans clipped at macro holes with --clock-floorplan)."""
     xs, ys = M["xs"], M["ys"]
-    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") else
+    # INFRA-FIRST-QC-R17: an explicit-cells tree with no mesh straps (xs = ys = []) has no region to draw
+    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") or (M["meta"].get("explicit_tree")
+                                                                                and not xs and not ys) else
                                         [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))])
     md = {L: (M["meta"].get("strap_shield") or {}).get(L, C128.DRAWN) for L in ("M8", "M9")}
     out = []
@@ -2105,10 +2400,14 @@ def write_verilog(cells, nets, ports, path):
         if a is None or y is None:
             raise SystemExit(f"die_clock_mesh: unconnected cell {c} A={a} Y={y}")
         L.append(f"  {cells[c].get('lib', BUF)} {c} (.A({a}), .Y({y}));")
+    for n in nets:
+        for pn in n.get("port_aliases", []):
+            L.append(f"  assign {pn} = {n['name']};")
     L.append("endmodule")
     txt = "\n".join(L) + "\n"
     # a net that drives a tap port IS that port (no assign statements in the GRT netlist)
-    ren = {n["name"]: ld[5:] for n in nets for ld in n["loads"] if ld.startswith("port:")}
+    ren = {n["name"]: ld[5:] for n in nets if not n.get("port_aliases")
+           for ld in n["loads"] if ld.startswith("port:")}
     txt = re.sub(r"\b(ckm_w_[A-Za-z0-9_]+)\b", lambda q: ren.get(q.group(1), q.group(1)), txt)
     txt = "\n".join(l for l in txt.split("\n") if not re.match(r"\s*wire t_", l)) + "\n"
     Path(path).write_text(txt)
@@ -2435,8 +2734,88 @@ def _body_keepout_violations(K, W, H, cells):
     return bad
 
 
+def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default_ndr):
+    """V2 keeps per-edge widths on pieces of ONE logical net.
+
+    For mixed-master parallel groups the M7 tie backbone is virtual routing
+    geometry only. Actual instance origins/masters are never changed; each unit's
+    true pin point is carried in tie.unit_points for the fixed-wire encoder.
+    """
+    proxy = {k: dict(c) for k,c in cells.items()}
+    hetero = {}
+    ties = {us[0]: list(us) for us in groups.values() if len(us)>1}
+    for us in groups.values():
+        mixed = len({cells[u].get("lib", BUF) for u in us})>1 or len({cells[u]["x"] for u in us})>1
+        if not mixed: continue
+        rep=us[0]
+        # One BUFx24-width backbone model at the group centre. This is not a cell
+        # resize: unit_points below retains every original M1 bar coordinate.
+        xc=sum(cells[u]["x"]+cell_width(cells[u])/2 for u in us)/len(us)
+        for u in us:
+            proxy[u].update(x=xc-BUF_W/2,lib=BUF)
+        hetero[rep]=us
+    wires=[]
+    for n in nets:
+        pieces=[]
+        conns=n.get("plan_connections")
+        if conns:
+            branches=[(e.get("ndr",default_ndr),dict(n,loads=[e["loads"][0]],plan_connections=None,
+                        physical_edge=e.get("edge"),physical_layer=e.get("layer"))) for e in conns]
+        else:
+            branches=[(default_ndr,n)]
+        for ndr,n0 in branches:
+            if ndr not in NDR:
+                raise C128.PlanError([dict(kind="net_ndr",name=n0["name"],detail=f"unmodelled NDR {ndr}")])
+            nd=NDR[ndr]
+            # The metal occupancy is shared across widths. The largest spacing
+            # is conservative for narrow pieces; no pre-existing shape is lost.
+            router.nd=nd
+            router.wide_merge_um=nd.get("wide_merge_um",C128.WIDE_MERGE_UM) if r8 else None
+            router.ix.space=max(router.ix.space,nd["space"])
+            pp=C128.fixed_wires(out,proxy,[n0],BUF_W,ROW_Y,off=off,router=router,pin_stack=True,
+                port_on_trunk=r8,ties=ties,l_drops=True,exact_reserve=exact)
+            if len(pp)!=1: raise RuntimeError("one edge must produce one physical wire piece")
+            w=pp[0]
+            expected=n0.get("physical_layer")
+            if expected and expected != ("M8" if w["horiz"] else "M9"):
+                raise C128.PlanError([dict(kind="net_trunk_layer",name=n0["name"],detail=f"edge {n0.get('physical_edge')}: planned {expected} disagrees with actual pin geometry")])
+            w.update(ndr=ndr,enc="r8" if r8 else "r7",clock_topology_version=2,physical_edge=n0.get("physical_edge"))
+            for st in w["stacks"]:
+                st["short_stack"]=True
+                if st["pin"]=="Y" and st.get("tie"):
+                    # All branch pieces share ONE M7 entry junction; choosing
+                    # the nearest unit independently would create disconnected
+                    # dbWire branch anchors on different unit rows.
+                    u0=ties[st["cell"]][0]
+                    st["entry"]=u0
+                    st["xy"]=list(C128.pin_xy(proxy,u0,"Y",ROW_Y))
+                    st["riser_um"]=round(abs(st["xy"][1]-st["riser_from"][1]),4)
+                    if st["riser_um"]>C128.STACK_RISER_MAX_UM+(len(ties[st["cell"]])-1)*ROW_Y+1e-6:
+                        raise C128.PlanError([dict(kind="no_pin_stack",name=u0,detail="V2 shared driver entry leaves the group island")])
+                if st["cell"] in hetero:
+                    us=hetero[st["cell"]]
+                    pts=[[u,*C128.pin_xy(cells,u,st["pin"],ROW_Y)] for u in us]
+                    st["tie"]["unit_points"]=pts
+                    st["tie"]["heterogeneous"]=True
+                    st["entry_xy"]=next(p[1:] for p in pts if p[0]==st["entry"])
+            pieces.append(w)
+        if len(pieces)==1:
+            wires.append(pieces[0]); continue
+        # Downstream emits these pieces into a single dbWire. Aggregate arrays
+        # remain available to shielding/obstruction/DRC footprint collectors.
+        w=dict(pieces[0]); w["pieces"]=pieces; w["piecewise"]=True
+        for key in ("segs","branches","stacks","shield_modes","shield_ext"):
+            w[key]=[v for p in pieces for v in p.get(key,[])]
+        w["segment_ndr"]=[p["ndr"] for p in pieces for _ in p["segs"]]
+        w["loads"]=list(n["loads"])
+        w["wire_um"]=round(sum(p["wire_um"] for p in pieces),3)
+        wires.append(w)
+    out["meta"]["ndr_rules"]={k:dict(NDR[k]) for k in sorted({p["ndr"] for w in wires for p in w.get("pieces",[w])})}
+    return wires
+
+
 def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, die=None, parts=None, keepouts=None,
-                   root_um=None, leaf_stub_um=8.64, stack_offset=0.0, stack_r8=True):
+                   root_um=None, leaf_stub_um=8.64, stack_offset=0.0, stack_r8=True, exact_reserve=None):
     """INFRA-FIRST-QC-R12: the die clock tree from an EXPLICIT cell + net list (the planner's delay-balanced mesh3 top
     tree, results/qc_clk_mesh3/r11/r11_top_sites.json format) instead of build_lattice's binary / midpoint / equal-cut
     H-tree.  No midpoint, equal-cut, arity or path-spread check (the planner balanced the delays); kept fail-closed
@@ -2457,6 +2836,7 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
     P: the die plan (hosts, keep-outs, PG); or die=(W, H), parts={name: rect}, keepouts=[(x0, y0, x1, y1, tag)].
     Returns (cells, nets, ports, M) as build_lattice does (M.fixed_wires: R7 pin-stack wires, short-stack pads)."""
     nd = NDR[ndr]
+    v2 = spec.get("clock_topology_version", 1) == 2
     if P is not None:
         W, H = float(P.W), float(P.H)
         ko = DC.keepouts(P)
@@ -2467,6 +2847,12 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         prt = list((parts or {}).items())
     K = DC.KeepIndex(ko, die=(W, H))
     part_rects = dict(prt)
+    # R17 (opt-in spec "channel_hosts"): a die-level cell (part None, plan kind chan_*) may sit wholly inside a plan die
+    # channel declared clock_channel (the QC 43.2-um centre clock channel PLAN-DELTA); every other cell keeps its host check
+    chan_rects = []
+    if spec.get("channel_hosts") and P is not None:
+        chan_rects = [tuple(ch["rect_um"]) for ch in (P.die.get("channels", []) or [])
+                      if ch.get("clock_channel") and ch.get("rect_um")]
 
     def host(xy, half):
         for dx in (-half[0], half[0]):
@@ -2476,6 +2862,9 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         for name, r in prt:
             if r[0] <= xy[0] <= r[2] and r[1] <= xy[1] <= r[3]:
                 return name, None
+        for r in chan_rects:
+            if r[0] <= xy[0] - half[0] and xy[0] + half[0] <= r[2] and r[1] <= xy[1] - half[1] and xy[1] + half[1] <= r[3]:
+                return None, None
         return None, "outside_partitions"
     perr, cells, groups = [], {}, defaultdict(list)
     for name, v in sorted((spec.get("cell_sites") or {}).items()):
@@ -2509,8 +2898,9 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         c0 = cells[us[0]]
         for i, u in enumerate(us):
             c = cells[u]
-            if abs(c["x"] - c0["x"]) > 1e-6 or c["orient"] != c0["orient"] or c.get("lib") != c0.get("lib") or \
-                    abs(c["y"] - (c0["y"] + i * ROW_Y)) > 1e-6:
+            if ((not v2 and (abs(c["x"] - c0["x"]) > 1e-6 or c.get("lib") != c0.get("lib")))
+                    or c["orient"] != c0["orient"]
+                    or abs(c["y"] - (c0["y"] + i * ROW_Y)) > 1e-6):
                 perr.append(dict(kind="tie_stack", name=u, detail=f"group {g}: units must stack in consecutive rows of "
                                  "one column (same x, orient, master)"))
     rep_of = {u: us[0] for us in groups.values() for u in us}
@@ -2520,7 +2910,7 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         if bad:
             perr.append(dict(kind="net_group", name=str(n.get("edge")), detail=f"unknown {bad}: {n.get('drv')}->{n.get('load')}"))
             continue
-        if n.get("ndr", ndr) != ndr:
+        if n.get("ndr", ndr) not in NDR or (not v2 and n.get("ndr", ndr) != ndr):
             perr.append(dict(kind="net_ndr", name=str(n.get("edge")), detail=f"net ndr {n.get('ndr')} != build {ndr}"))
         if n.get("layer") not in ("M8", "M9"):
             perr.append(dict(kind="net_layer", name=str(n.get("edge")), detail=str(n.get("layer"))))
@@ -2561,7 +2951,8 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         if ns:
             loads = [u for n in ns for u in groups[n["load"]]]
             nets.append(dict(name=f"ckm_w_{r_}", drv=r_, drv_units=list(us), loads=loads, level=lv[g],
-                             plan_layers=sorted({n["layer"] for n in ns}), plan_edges=[n.get("edge") for n in ns]))
+                             plan_layers=sorted({n["layer"] for n in ns}), plan_edges=[n.get("edge") for n in ns],
+                             **(dict(plan_connections=[dict(n, loads=list(groups[n["load"]])) for n in ns]) if v2 else {})))
             continue
         yx, yy = C128.pin_xy(cells, r_, "Y", ROW_Y, cells[r_].get("lib", BUF))
         west = cells[r_]["orient"] in ("MY", "R180")
@@ -2579,7 +2970,7 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         D = C128.pin_xy(cells, n["drv"], "Y", ROW_Y, cells[n["drv"]].get("lib", BUF))
         Ls = [C128.pin_xy(cells, ld, "A", ROW_Y, cells[ld].get("lib", BUF)) for ld in n["loads"]]
         horiz = max(abs(p[0] - D[0]) for p in Ls) >= max(abs(p[1] - D[1]) for p in Ls)
-        if n["plan_layers"] != ["M8" if horiz else "M9"]:
+        if not v2 and n["plan_layers"] != ["M8" if horiz else "M9"]:
             perr.append(dict(kind="net_trunk_layer", name=n["name"], detail=f"plan {n['plan_layers']} vs trunk "
                              f"{'M8' if horiz else 'M9'} (dominant extent)"))
     overlaps = placement_overlaps(cells)
@@ -2612,12 +3003,23 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
                               **(dict(wide_merge_um=nd.get("wide_merge_um", C128.WIDE_MERGE_UM)) if stack_r8 else {}))
     router.reserve(C128.pg_shapes(pgr))
     ties = {us[0]: list(us) for us in groups.values() if len(us) > 1}
+    if chan_rects and spec.get("channel_keep", False):   # opt-in: R20 found no legal in-channel track for lane 0
+        # R20: channel-hosted cells keep their trunk (and so the M7 riser) inside the clock channel
+        out["meta"]["clock_channel_keep"] = [list(r) for r in chan_rects]
     # physical view: one pin stack per GROUP (the tie reaches the other units); logical nets keep every unit
     phys = [dict(n, loads=[ld for ld in n["loads"] if ld.startswith("port:") or rep_of[ld] == ld]) for n in nets]
-    wires = C128.fixed_wires(out, cells, phys, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=True,
-                             port_on_trunk=stack_r8, ties=ties, l_drops=True)
+    if v2:
+        wires = _explicit_v2_wires(out, cells, phys, groups, router, stack_offset, stack_r8,
+                                   bool(spec.get("exact_reserve") if exact_reserve is None else exact_reserve), ndr)
+        out["meta"]["explicit_tree"].update(clock_topology_version=2,
+            edge_ndrs=sorted({n.get("ndr", ndr) for n in spec.get("nets", [])}),
+            heterogeneous_groups=sum(len({cells[u].get("lib", BUF) for u in us}) > 1 for us in groups.values()))
+    else:
+        wires = C128.fixed_wires(out, cells, phys, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=True,
+                                 port_on_trunk=stack_r8, ties=ties, l_drops=True,
+                                 exact_reserve=bool(spec.get("exact_reserve") if exact_reserve is None else exact_reserve))
     for w in wires:
-        w["ndr"] = ndr
+        w.setdefault("ndr", ndr)
         for s_ in w.get("stacks", []):
             s_["short_stack"] = True
         if stack_r8:
@@ -2642,6 +3044,9 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
                        reps=sum(1 for c in cells.values() if c["kind"] == "rep"), stubs=len(tap_rows),
                        clock_cell_overlap_pairs=0, clock_hard_keepout_violations=0, unplaced=0,
                        tree_wire_mm=round(sum(w["wire_um"] for w in wires) / 1e3, 3))
+    if v2 and spec.get("mesh"):
+        from explicit_clock_mesh import attach_mesh
+        cells, nets, ports, out = attach_mesh(spec, cells, nets, ports, out)
     return cells, nets, ports, out
 
 
@@ -3113,7 +3518,9 @@ def cmd_combo(a):
           "proc um {v} { global dbu; return [expr {round($v*$dbu)}] }"]
     # the strap footprint (+ NDR spacing) is also a routing obstruction: GRT does not derate special wires
     hs = hw + nd["space"]
-    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") else
+    # INFRA-FIRST-QC-R17: an explicit-cells tree with no mesh straps (xs = ys = []) has no region to draw
+    regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") or (M["meta"].get("explicit_tree")
+                                                                                and not xs and not ys) else
                                         [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))])
     vias_meta, cross_meta = {}, {}
     if getattr(a, "routed_clock", False) and regs:
@@ -3214,7 +3621,7 @@ def cmd_combo(a):
             import clock_routed as CR
             L.append(f"create_ndr -name ot_mesh_ndr -width {{M8 {nd['width']} M9 {nd['width']}}} "
                      f"-spacing {{M8 {nd['space']} M9 {nd['space']}}}")
-            L += CR.shield_only_tcl(C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"]))
+            L += CR.mixed_shield_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"]) if M["meta"].get("explicit_tree", {}).get("clock_topology_version")==2 else CR.shield_only_tcl(C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"]))
             ports_ = {t_["port"]: dict(layer=t_.get("layer", M["meta"].get("tap_layer", "M7")), xy=t_["xy"])
                       for t_ in M["taps"]}
             ports_["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
@@ -3229,7 +3636,12 @@ def cmd_combo(a):
                                  f"{sh_['spacing']} spacing: {sh_['short_list'][:3]} {sh_['spacing_list'][:3]}")
         else:
             L += C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"])
-        sp = C128.spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
+        if any(w.get("pieces") or w.get("explicit_mesh") for w in wires):
+            from explicit_clock_mesh import native_spef
+            sp = native_spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
+            M["meta"]["native_rc_basis"] = "diagnostic width-aware ladder; lumped pin stacks; extracted RC gates timing"
+        else:
+            sp = C128.spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
         for c_ in ("TT", "FF"):
             (d / f"native_{c_}.spef").write_text(sp)
         shield_segs_all += [tuple(r_[:5]) + (r_[8],) for r_ in C128.tree_segs(wires) if r_[7] == C128.DRAWN]
@@ -3319,6 +3731,9 @@ def cmd_combo(a):
           "set fh [open /out/tree_$::env(CORNER).txt w]",
           "foreach c [get_cells ckm_d_*] { set p [get_pins [get_full_name $c]/A]; puts $fh \"D [get_full_name $c] "
           "[get_property $p arrival_max_rise] [get_property $p arrival_min_rise] [get_property $p slew_max_rise]\" }",
+          "foreach c [get_cells -quiet ckm_br_*] { set p [get_pins [get_full_name $c]/A]; set v [get_property $p "
+          "arrival_max_rise]; if {$v != \"\" && $v < 1e20} { puts $fh \"B [get_full_name $c] $v "
+          "[get_property $p arrival_min_rise] [get_property $p slew_max_rise]\" } }",
           "foreach c [get_cells {ckm_n* ckm_r*}] { set p [get_pins [get_full_name $c]/Y]; puts $fh \"N "
           "[get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] "
           "[get_property $p slew_max_rise]\" }",
@@ -3382,7 +3797,7 @@ def read_tree(path):
         if len(f) < 5:
             continue
         rec = (float(f[2]), float(f[3]), float(f[4]))
-        (D if f[0] == "D" else N)[f[1]] = rec
+        (D if f[0] in ("D", "B") else N)[f[1]] = rec     # B = leaf-fed band root input (CLOCK-KV-R15)
     return D, N
 
 
@@ -3442,7 +3857,7 @@ def cmd_mesh(a):
         drv_at.append((key, dv))
     stub_at = []
     for t in M["taps"] + [dict(stub=r["root"], port=None, strap=r["strap"], foot=r["foot"], band_root=True)
-                          for r in M.get("band_roots", [])]:
+                          for r in M.get("band_roots", []) if r.get("feed", "mesh") != "leaf"]:
         if t.get("mesh_in"):     # CLOCK-KV-R6 band tap: fed by its band tree root, not by the mesh
             continue
         L_, idx = t["strap"]
@@ -3516,7 +3931,8 @@ def cmd_mesh(a):
         libs = C128.lib_cells(a.corner, a.libdir, sorted({t.get("stub_lib") or BUF for t in M["taps"]}))
         scap = {t["stub"]: libs[t.get("stub_lib") or BUF]["cap"] for t in M["taps"]}
         if M.get("band_roots"):
-            scap.update({r["root"]: C128.lib_cells(a.corner, a.libdir, [BUF])[BUF]["cap"] for r in M["band_roots"]})
+            scap.update({r["root"]: C128.lib_cells(a.corner, a.libdir, [BUF])[BUF]["cap"] for r in M["band_roots"]
+                     if r.get("feed", "mesh") != "leaf"})
     for key, t in stub_at:
         k = node(key)
         kk = len(caps)
@@ -3576,6 +3992,14 @@ def cmd_mesh(a):
     lat = [s["late"] for s in out["stubs"].values()]
     out["stub_in_late_ps"] = [round(min(lat), 2), round(max(lat), 2)]
     out["stub_in_slew_max_ps"] = round(max(max(s["slew_late"], s["slew_early"]) for s in out["stubs"].values()), 2)
+    # CLOCK-KV-R15 band_feed leaf: a leaf-fed band root's input is a TREE pin (tree STA 'B' line), not a mesh node
+    for r in M.get("band_roots", []):
+        if r.get("feed", "mesh") == "leaf":
+            if r["root"] not in D:
+                raise SystemExit(f"mesh: leaf-fed band root {r['root']} has no tree arrival (tree STA 'B' line)")
+            lv, ev, sv = D[r["root"]]
+            out["stubs"][r["root"]] = dict(port=None, late=round(lv, 3), early=round(ev, 3), slew_late=round(sv, 3),
+                                           slew_early=round(sv, 3), feed="leaf")
     (d / f"mesh_{a.corner}.json").write_text(json.dumps(out) + "\n")
     print(json.dumps({k: v for k, v in out.items() if k != "stubs"}))
     return 0
@@ -3669,25 +4093,93 @@ def lca(a, b):
     return a[:k]
 
 
-def mesh_connected(M, d=None):
-    """{region k: bool}: True when region k's mesh is ONE connected net in the emitted geometry: the crossings carry
-    emitted M8-M9 vias (meta.mesh_vias, written by combo --mesh-vias, >= every strap crossing) and, given the run dir,
-    the routed-DB count (OT_MESH_VIAS in combo_<corner>.log, min over corners) agrees.  INFO input only (v4 12.4b)."""
-    vias = M["meta"].get("mesh_vias") or {}
-    db = {}
-    for lg in sorted(Path(d).glob("combo_*.log")) if d else []:
-        for m_ in re.finditer(r"^OT_MESH_VIAS (\S+) (\d+)", lg.read_text(errors="replace"), re.M):
-            db[m_.group(1)] = min(db.get(m_.group(1), 1 << 60), int(m_.group(2)))
-    out = {}
-    for g in M["meta"].get("regions") or []:
-        nh, nv = g["j1"] - g["j0"], g["i1"] - g["i0"]
-        # macro-clipped straps (--clock-floorplan holes): the need is the emitted crossing count; else the full grid
-        need = max(1, int(vias.get(str(g["k"]), 0))) if M["meta"].get("macro_holes") else nh * nv
-        ok = nh > 0 and nv > 0 and int(vias.get(str(g["k"]), 0)) >= need
-        if d is not None:
-            ok = ok and db.get(mesh_net(g["k"]), 0) >= need
-        out[g["k"]] = bool(ok)
+def mesh_regions(M):
+    """the mesh regions of a build; a continuous (regionless) mesh is ONE region k=None spanning the grid."""
+    return (M.get("meta") or {}).get("regions") or [dict(k=None, i0=0, i1=len(M.get("xs") or []), j0=0, j1=len(M.get("ys") or []))]
+
+
+def mesh_crossings(M, g):
+    """strap crossings of region g that carry a VIA89 when the mesh is one connected net: every M8 row x M9 column
+    crossing where both (possibly macro-clipped, --clock-floorplan) straps exist -- the same rule combo emits."""
+    xs, ys = M.get("xs") or [], M.get("ys") or []
+    if not (xs and ys):     # index-only record (no strap coordinates, no clipping): the full region grid
+        return max(0, g["i1"] - g["i0"]) * max(0, g["j1"] - g["j0"])
+    rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
+    hsp = [(y, strap_span(M, g, xs, ys, 0, j)) for j, y in zip(range(g["j0"], g["j1"]), ry)]
+    vsp = [(x, strap_span(M, g, xs, ys, 1, i)) for i, x in zip(range(g["i0"], g["i1"]), rx)]
+    n = 0
+    for y, sh in hsp:
+        if not sh:
+            continue
+        for x, sv in vsp:
+            if sv and sh[0] - 1e-6 <= x <= sh[1] + 1e-6 and sv[0] - 1e-6 <= y <= sv[1] + 1e-6:
+                n += 1
+    return n
+
+
+def routed_mesh_vias(d):
+    """{mesh net: min over corners of OT_MESH_VIAS in DIR/combo_<corner>.log}, and the combo logs read.  Fail closed:
+    a net reported by one corner's log but absent from another's counts 0 there (that corner's DB had no vias)."""
+    per, logs = [], sorted(p for p in Path(d).glob("combo_*.log")
+                           if re.fullmatch(r"combo_[A-Z][A-Z0-9]*\.log", p.name)) if d else []
+    for lg in logs:
+        per.append({m_.group(1): int(m_.group(2)) for m_ in
+                    re.finditer(r"^OT_MESH_VIAS (\S+) (\d+)", lg.read_text(errors="replace"), re.M)})
+    nets = set().union(*per) if per else set()
+    return {n: min(p.get(n, 0) for p in per) for n in nets}, logs
+
+
+def mesh_via_findings(M, d=None):
+    """FAIL-CLOSED mesh continuity (COORD PATH-S81-PD12 ruling A, 10-27; 12.8e1 continuous mesh): a die clock mesh is
+    ONE connected net only with an M8-M9 VIA89 at EVERY strap crossing.  Findings (empty = continuous):
+      - meta.mesh_vias absent (combo run without vias, e.g. --no-mesh-vias or a pre-default build);
+      - emitted vias of a region below its crossing count (mesh_crossings);
+      - given the run dir with routed combo logs: OT_MESH_VIAS of the region's net missing or below the crossing count.
+    A build with no strap crossings has no mesh and no findings.  The transient (cmd_mesh) and the mesh MC model
+    every crossing as a shorted node, so a build without these vias does not match its own sign-off model."""
+    out = []
+    vias = (M.get("meta") or {}).get("mesh_vias")
+    logs_db, logs = routed_mesh_vias(d) if d is not None else ({}, [])
+    for g in mesh_regions(M):
+        need = mesh_crossings(M, g)
+        if need == 0:
+            continue
+        net = mesh_net(g["k"])
+        if vias is None:
+            out.append(f"{net}: no M8-M9 vias at its {need} strap crossings (meta.mesh_vias absent: combo run without "
+                       f"vias); the straps are not one connected net")
+            continue
+        got = int(vias.get(str(g["k"]), 0))
+        if got < need:
+            out.append(f"{net}: {got} emitted M8-M9 vias < {need} strap crossings")
+        if logs:
+            nd_ = logs_db.get(net)
+            if nd_ is None:
+                out.append(f"{net}: routed DB via count missing (no OT_MESH_VIAS line in {', '.join(p.name for p in logs)})")
+            elif nd_ < need:
+                out.append(f"{net}: routed DB has {nd_} M8-M9 vias < {need} strap crossings")
     return out
+
+
+def mesh_connected(M, d=None):
+    """{region k: bool}: True when region k's mesh is ONE connected net in the emitted geometry (mesh_via_findings:
+    a VIA89 at every strap crossing, emitted and, given the run dir, in the routed DB).  A continuous (regionless)
+    mesh is region None."""
+    out = {}
+    for g in mesh_regions(M):
+        sub = dict(M, meta=dict(M["meta"], regions=[g])) if (M.get("meta") or {}).get("regions") else M
+        out[g["k"]] = mesh_crossings(M, g) > 0 and not mesh_via_findings(sub, d)
+    return out
+
+
+def cmd_meshvias(a):
+    """die_clock_mesh.py meshvias DIR: the fail-closed continuity check on its own (exit 1 on any finding)."""
+    M = json.loads((Path(a.dir) / "mesh.json").read_text())
+    f_ = mesh_via_findings(M, a.dir)
+    rows = [dict(region=g["k"], net=mesh_net(g["k"]), crossings=mesh_crossings(M, g)) for g in mesh_regions(M)]
+    print(json.dumps(dict(dir=str(a.dir), continuous=not f_, regions=rows, emitted=M["meta"].get("mesh_vias"),
+                          routed=routed_mesh_vias(a.dir)[0], findings=f_), indent=1))
+    return 1 if f_ else 0
 
 
 def sink_arrivals(M, arr, corner, early_by_plan):
@@ -3903,7 +4395,8 @@ def cmd_report(a):
             fold = None
             if getattr(a, "aocv_fold", False):   # CLK-AOCV opt-in fields (default: export unchanged)
                 fold = C128.aocv_fold_fields(M, json.loads((d / "nets.json").read_text())["nets"],
-                                             json.loads((d / "place.json").read_text()), Nn)
+                                             json.loads((d / "place.json").read_text()), Nn,
+                                             mesh_walk=getattr(a, "aocv_mesh_walk", False))
             C128.write_tap_arrivals(d / f"tap_arrivals_{corner}.json", M, corner, arr, rng, regd, fold=fold)
     # clock power: C V^2 f over every die clock wire + pin (mesh from the transient, tree/stub wire from length)
     nd = NDR[M["meta"]["ndr"]]
@@ -3926,6 +4419,11 @@ def cmd_report(a):
     rep["qualification"] = regional_qualification(M, rep["corners"], crossing_table["crossings"] if crossing_table else 0)
     if blocker:
         rep["qualification"]["blockers"].append(blocker)
+        rep["qualification"]["release_verdict"] = "BLOCKED"
+    mv_ = mesh_via_findings(M, d)     # fail closed: a mesh without a VIA89 at every crossing is not one net (PD12 A)
+    rep["mesh_continuity"] = dict(continuous=not mv_, findings=mv_)
+    if mv_:
+        rep["qualification"]["blockers"].append("mesh not continuous: " + "; ".join(mv_[:4]))
         rep["qualification"]["release_verdict"] = "BLOCKED"
     (d / "clock_report.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps({c: {k: v for k, v in r.items() if k != "worst"} for c, r in rep["corners"].items()}, indent=1))
@@ -3983,13 +4481,14 @@ def cmd_render(a):
         pl_ = json.loads((d / "place.json").read_text())
         ctr = {k: (v["x"] + BUF_W / 2, v["y"] + ROW_Y / 2) for k, v in pl_.items()}
         for r in M["band_roots"]:
-            a_, b_ = ctr[r["root"]], ctr[r["branch"]]
+            a_, b_ = ctr[r["root"]], ctr[r.get("branch") or r["root"]]
             ax.plot([a_[0], b_[0]], [a_[1], b_[1]], color="tab:pink", lw=0.9)
             fy = [t["foot"][1] for t in M["taps"] if t.get("mesh_in") == r["root"]] + [b_[1]]
             ax.plot([b_[0] + 15, b_[0] + 15], [min(fy), max(fy)], color="m", lw=0.5)
         ax.scatter([ctr[r["root"]][0] for r in M["band_roots"]], [ctr[r["root"]][1] for r in M["band_roots"]], s=2.5,
                    c="m", marker="^", lw=0)
-        ax.scatter([ctr[r["branch"]][0] for r in M["band_roots"]], [ctr[r["branch"]][1] for r in M["band_roots"]], s=2.5,
+        ax.scatter([ctr[r["branch"]][0] for r in M["band_roots"] if r.get("branch")],
+                   [ctr[r["branch"]][1] for r in M["band_roots"] if r.get("branch")], s=2.5,
                    c="m", marker="o", lw=0)
     ax.scatter([t["xy"][0] for t in M["taps"]], [t["xy"][1] for t in M["taps"]], s=0.6, c="tab:green", lw=0)
     ax.set_xlim(0, W)
@@ -4109,14 +4608,20 @@ def main(argv=None):
     c.add_argument("dir")
     c.add_argument("--kit", required=True)
     c.add_argument("--plan", help="pinned physical plan for the all-clock-cell hard-keepout census")
-    c.add_argument("--mesh-vias", action="store_true",
-                   help="emit an M8-M9 VIA89 at every mesh strap crossing (mesh = one connected net in the DB); "
-                        "mesh-node CPPR stays INFO only (METHODOLOGY v4 12.4b)")
+    c.add_argument("--mesh-vias", dest="mesh_vias", action="store_true", default=True,
+                   help="DEFAULT (COORD PATH-S81-PD12 ruling A, 10-27): emit an M8-M9 VIA89 at every mesh strap crossing "
+                        "(mesh = one connected net in the DB); kept for old scripts; mesh-node CPPR stays INFO only "
+                        "(METHODOLOGY v4 12.4b)")
+    c.add_argument("--no-mesh-vias", dest="mesh_vias", action="store_false",
+                   help="DIAGNOSTIC ONLY: straps without crossing vias; the build then FAILS mesh_via_findings "
+                        "(check.py --clock-build, die_sta_related --mesh-signoff, report)")
     c.add_argument("--merge-shields", action=argparse.BooleanOptionalAction, default=True,
                    help="CLOCK-KV-R10 (default ON, COORD 10-26 21:28): union overlapping/abutting same-track shield "
                         "boxes after the ties (same metal, fewer shapes); --no-merge-shields = the pre-R10 shapes")
     c.add_argument("--routed-clock", action="store_true",
                    help="CLOCK-128-R5: 12.8 fixed tree as regular nets with FIXED dbWire (RCX-extractable), see clock_routed.py")
+    mv = sub.add_parser("meshvias", help="fail-closed mesh continuity check: a VIA89 at every strap crossing")
+    mv.add_argument("dir")
     m = sub.add_parser("mesh")
     m.add_argument("dir")
     m.add_argument("--corner", default="TT")
@@ -4135,6 +4640,8 @@ def main(argv=None):
     r.add_argument("--corner", action="append")
     r.add_argument("--aocv-fold", action="store_true", help="CLK-AOCV: add per-tap stages_from_root/xy_um and per-CPPR-"
                    "node node_stages/node_xy_um/node_late_ps/node_early_ps to tap_arrivals_<C>.json (default: unchanged)")
+    r.add_argument("--aocv-mesh-walk", action="store_true", help="CLK-AOCV (with --aocv-fold): count stages THROUGH "
+                   "the multi-driver mesh (mesh-fed stub depth = 1 + deepest mesh driver; CLOCK-KV-R15, shared opt-in)")
     r.add_argument("--landing-cycles", type=int, default=2,
                    help="fixed cycles a LANDED crossing adds (forwarded-clock land + local-clock read), --regions only")
     r.add_argument("--landing-budget-ps", type=float, default=DC.PERIOD_PS / 2,
@@ -4147,7 +4654,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "report" and not a.corner:
         a.corner = ["TT", "FF"]
-    return dict(build=cmd_build, balance=cmd_balance, stubtrim=cmd_stubtrim, combo=cmd_combo, mesh=cmd_mesh, stubsta=cmd_stubsta, report=cmd_report,
+    return dict(build=cmd_build, balance=cmd_balance, stubtrim=cmd_stubtrim, combo=cmd_combo, mesh=cmd_mesh, meshvias=cmd_meshvias, stubsta=cmd_stubsta, report=cmd_report,
                 render=cmd_render)[a.cmd](a)
 
 

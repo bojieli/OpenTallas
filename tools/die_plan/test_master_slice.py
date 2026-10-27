@@ -269,3 +269,65 @@ def test_core_generators_wired(gen):
     assert s.index('(kd / "face_flops.tcl").write_text(') < i < s.index('(kd / "config.mk").write_text(')
     assert 'gpl_hook=kd / "face_flops.tcl"' in s and 'kind="core"' in s
     assert s.index('fz["master_plan"] = ms') < s.index('(kd / "freeze.json").write_text(')
+
+
+def test_clock_entry_has_routable_via_access(tmp_path):
+    io = tmp_path / "io.tcl"
+    io.write_text("place_pin -pin_name {clk} -layer M5 -location {0 0} -pin_size {0.032 0.192}\n"
+                  "place_pin -pin_name {din[0]} -layer M7 -location {0 0} -pin_size {0.032 0.192}\n")
+    MS._consume_io(tmp_path, good_slice(kind="core"), "clk")
+    lines = io.read_text().splitlines()
+    assert "-pin_size {0.048 0.48}" in lines[0]
+    # GEOM-21: centre snapped onto the nearest M5 track (ASAP7 platform x_offset 0.012 / pitch 0.048; 432.0 is 12 nm off)
+    assert "-location {432.0120 432.0000}" in lines[0]
+    assert "-pin_size {0.032 0.192}" in lines[1]
+
+
+def _clock_kit(tmp_path, tracks=None, place=None):
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    (kd / "config.mk").write_text("export DIE_AREA = 0 0 864 864\n")
+    if tracks:
+        (kd / "make_tracks.tcl").write_text(tracks)
+    (kd / "io.tcl").write_text(place or "place_pin -pin_name {clk} -layer M5 -location {0 0} -pin_size {0.032 0.192}\n")
+    sl = good_slice(kind="core", core_clock_port="clk")
+    (kd / "master_slice.json").write_text(json.dumps(sl))
+    return kd, sl
+
+
+def _clock_issues(kd):
+    return [i for i in MS.check_kit(kd)["issues"] if "clock entry" in i or "clk placed" in i]
+
+
+@pytest.mark.parametrize("x,want", [(432.0, 432.012), (431.99, 432.012), (432.035, 432.012), (432.037, 432.06),
+                                    (43.2, 43.212), (30.24, 30.252), (42.12, 42.108)])
+def test_clock_entry_snap_on_m5_track(tmp_path, x, want):
+    assert MS.snap_on_track(tmp_path, "M5", x, 7.0) == (want, 7.0)
+    assert MS.on_track(tmp_path, "M5", want, 7.0) and not MS.on_track(tmp_path, "M5", want + 0.012, 7.0)
+
+
+def test_clock_entry_snap_uses_kit_tracks_and_origin(tmp_path):
+    (tmp_path / "make_tracks.tcl").write_text("make_tracks M5 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048\n")
+    (tmp_path / "config.mk").write_text("export DIE_AREA = 1.0 0 100 100\n")
+    assert MS.snap_on_track(tmp_path, "M5", 43.2, 5.0) == (43.216, 5.0)       # 1.0 + 0.024 + 879 x 0.048
+    assert MS.snap_on_track(tmp_path, "M4", 3.0, 5.001) == (3.0, 5.004)      # horizontal layer snaps y (platform M4)
+    (tmp_path / "make_tracks.tcl").write_text("make_tracks M5 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048\n" * 2)
+    with pytest.raises(ValueError, match="ambiguous"):
+        MS.snap_on_track(tmp_path, "M5", 43.2, 5.0)
+
+
+def test_kit_check_clock_entry_on_track_and_size(tmp_path):
+    kd, sl = _clock_kit(tmp_path)
+    MS._consume_io(kd, sl, "clk")
+    assert "-location {432.0120 432.0000} -pin_size {0.048 0.48}" in (kd / "io.tcl").read_text()
+    assert _clock_issues(kd) == []
+    # off-track centre (the c15b form: slice centre unsnapped) -> FAIL
+    (kd / "io.tcl").write_text("place_pin -pin_name {clk} -layer M5 -location {432.0000 432.0000} -pin_size {0.048 0.48}\n")
+    iss = _clock_issues(kd)
+    assert any("off the M5 routing track" in i for i in iss), iss
+    # on-track but the old small shape -> FAIL
+    (kd / "io.tcl").write_text("place_pin -pin_name {clk} -layer M5 -location {432.0120 432.0000} -pin_size {0.032 0.192}\n")
+    iss = _clock_issues(kd)
+    assert any("pin_size" in i and "GEOM-21" in i for i in iss) and not any("off the" in i for i in iss), iss
+    # signal entry pins keep their size and are not snapped
+    assert MS.slice_pins(sl, "clk")["din[0]"] == ("M7", (0.0, 210.0))

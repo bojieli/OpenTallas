@@ -419,6 +419,7 @@ st = _txt(os.path.join(K, "signoff.py"))
 need = {"pair_skew.tcl": '"pair_skew.tcl"' in st, "sdc_lint.py": "import sdc_lint" in st,
         "face_guard.py": "import face_guard" in st, "io_hold_qualification.py": "io_hold_qualification import" in st}
 out["signoff_missing"] = sorted(n for n, v in need.items() if v and not os.path.isfile(os.path.join(K, n)))
+if not os.path.isfile(os.path.join(K, "lec.py")): out["signoff_missing"].append("lec.py")
 # the goals on which the runner runs signoff.py (the 'if' guarding the signoff.py call); macro kits without GDS
 rt = _txt(out["runner"]).splitlines() if out["runner"] else []
 goals = set()
@@ -483,7 +484,7 @@ pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
        "oom": r"Error 137[^\n]*|\] Error 247[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
        # design gates that print their verdict but write no FAIL_PREFLOOR/FAIL_POSTCTS marker (custom runners)
-       "gate_fail": r"(?m)^(?:CORE_PREFLIGHT|RP1_GATE|SDC_LINT|S6_GRT_GATE|OT_HOLD_GATE) FAIL\b[^\n]*",
+       "gate_fail": r"(?m)^(?:CORE_PREFLIGHT|KIT_PREFLIGHT|RP1_GATE|SDC_LINT|S6_GRT_GATE|OT_HOLD_GATE) FAIL\b[^\n]*",
        "orfs_error": r"\[ERROR [A-Z]+-\d+\][^\n]*"}
 for k, p in pat.items():
     m = re.search(p, alltxt)
@@ -499,6 +500,8 @@ g = rd(next(iter(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", 
 tot = re.findall(r"^Total\s+.*?(\d+)\s*$", g, re.M)
 out["grt_overflow"] = int(tot[-1]) if tot else None
 out["goal"] = goal
+chain_records = glob.glob(os.path.join(K, "autopilot_chain*.json"))
+out["chain"] = jl(max(chain_records, key=os.path.getmtime)) if chain_records else None
 cts = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "4_cts.odb")) if os.path.getmtime(p) >= since]
 if cts: out["cts_odb"] = max(cts, key=os.path.getmtime)
 grt = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "5_1_grt.odb")) if os.path.getmtime(p) >= since]
@@ -561,6 +564,11 @@ for f in sorted(os.listdir(K)):
 for d in ("views",):
     if os.path.isdir(os.path.join(K, d)): cp(os.path.join(K, d), os.path.join("kit", d))
 cp(so, os.path.join("kit", os.path.basename(so)))
+for p in glob.glob(os.path.join(K, "lec_routed_autopilot_*")):
+    if os.path.isdir(p):
+        for f in ("lec.json", "lec.log"):
+            if os.path.isfile(os.path.join(p, f)):
+                cp(os.path.join(p, f), os.path.join("kit", os.path.basename(p), f))
 for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base")):
     cp(p, "logs")
 with open(os.path.join(A, "AUTOPILOT.json"), "w") as f:
@@ -601,6 +609,10 @@ print("AP_JSON " + json.dumps(out))
 def classify(c, client):
     """pure function: (classify-probe result, client outcome) -> (class, kind, reasons)
     class: SIGNED | NEAR-MISS | STRUCTURAL | CRASH ; kind refines it (infra / tool / ...)"""
+    if client.get("admission_tools_fail"):
+        return "CRASH", "admission-tools", client["admission_tools_fail"]
+    if client.get("preflight_fail"):
+        return "STRUCTURAL", "preflight", client["preflight_fail"]
     so = c.get("signoff")
     if c.get("goal") == "grt" and (so or c.get("route_odb")):
         return "STRUCTURAL", "diagnostic-overrun", "GRT-only runner produced detailed-route/signoff output; no release scope"
@@ -669,6 +681,12 @@ INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan")
 def parse_client_log(text):
     """ot-run client log (+ our AP_RC line) -> outcome dict"""
     o = {}
+    for key, prefix in (("admission_tools_fail", "ADMISSION_TOOLS FAIL:"), ("preflight_fail", "KIT_PREFLIGHT FAIL")):
+        lines = text.splitlines()
+        for index, line in enumerate(lines):
+            if line.startswith(prefix):
+                o[key] = "\n".join(lines[index:index+6])[:600]
+                break
     m = re.findall(r"ot-run: RAN on ([^\s:(]+)(?: \(unit [^)]*\))?:? exit (\d+)", text)
     if m:
         o["ran_on"], o["exit"] = m[-1][0], int(m[-1][1])
@@ -805,6 +823,85 @@ def runner_goal(goal, p):
     return goal
 
 
+ADMISSION_BOOTSTRAP = r'''
+import base64,json,os,shlex,subprocess,sys,tempfile
+from pathlib import Path
+meta=json.loads(base64.b64decode(sys.argv[1]))
+dest=Path(meta["dir"])
+def ready():
+    try:
+        return json.loads((dest/"BUNDLE.json").read_text())["sha256"] == meta["sha256"]
+    except (OSError,ValueError,KeyError):
+        return False
+try:
+    if not ready():
+        if dest.exists():
+            raise RuntimeError("existing admission bundle is incomplete or differs; retained for diagnosis")
+        if not str(dest).startswith("/srv/opentallas-scratch") or "/claude/" not in str(dest):
+            raise RuntimeError("admission bundle must be under an owned scratch lane")
+        dest.parent.mkdir(parents=True,exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix=".fetch-",dir=dest.parent) as temporary:
+            target=Path(temporary)/"bundle";target.mkdir()
+            command="tar -C "+shlex.quote(str(dest))+" -cf - ."
+            source=subprocess.Popen(["ssh","-o","BatchMode=yes","-o","ControlPath=none",meta["source_host"],command],
+                                    stdin=subprocess.DEVNULL,stdout=subprocess.PIPE)
+            try:
+                extracted=subprocess.run(["tar","-C",str(target),"-xf","-"],stdin=source.stdout)
+            finally:
+                source.stdout.close()
+            if source.wait() or extracted.returncode:
+                raise RuntimeError("admission tool transfer failed; physical runner not started")
+            manifest=json.loads((target/"BUNDLE.json").read_text())
+            if manifest.get("sha256") != meta["sha256"]:
+                raise RuntimeError("admission tool version differs; physical runner not started")
+            if not dest.exists():target.rename(dest)
+        if not ready():raise RuntimeError("admission tool installation incomplete")
+    print("ADMISSION_TOOLS READY "+meta["sha256"],flush=True)
+    os.execv(sys.executable,[sys.executable,str(dest/"signoff_chain.py"),"--preflight",
+                           str(dest/"die_plan/kit_preflight.py")]+sys.argv[2:])
+except Exception as error:
+    print("ADMISSION_TOOLS FAIL: "+str(error),flush=True)
+    sys.exit(3)
+'''
+
+
+def stage_admission_tools(source_chain=None, source_tools=None, root=None):
+    """Own immutable scratch bundle: never rsync tools into another repo checkout."""
+    import hashlib
+    import tempfile
+    chain = Path(source_chain or Path(__file__).with_name("signoff_chain.py")).resolve()
+    tools = Path(source_tools or Path(__file__).resolve().parents[1] / "die_plan").resolve()
+    root = Path(root or Path(ARCHIVE_ROOT).parent / "admission_tools")
+    files = [p for p in tools.rglob("*") if p.is_file() and
+             not any(x in ("__pycache__", ".pytest_cache", ".git") for x in p.relative_to(tools).parts)]
+    chain_bytes = chain.read_bytes()
+    payload = {path.relative_to(tools): path.read_bytes() for path in sorted(files)}
+    digest = hashlib.sha256(chain_bytes)
+    for relative, content in payload.items():
+        digest.update(str(relative).encode()+b"\0")
+        digest.update(content)
+    version = digest.hexdigest()
+    dest = root / version[:20]
+    if not dest.exists() and not DRY:
+        root.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix=".staging-", dir=root) as temporary:
+            temp = Path(temporary) / "bundle"
+            (temp / "die_plan").mkdir(parents=True)
+            (temp / "signoff_chain.py").write_bytes(chain_bytes)
+            for relative, content in payload.items():
+                target = temp / "die_plan" / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(content)
+            (temp / "BUNDLE.json").write_text(json.dumps(dict(sha256=version, source=str(tools),
+                note="current scheduler admission tools; frozen kit source/tools untouched"), indent=1)+"\n")
+            # One scheduler tick submits serially; a second process may already
+            # have installed the same immutable content while we copied it.
+            if not dest.exists():
+                temp.rename(dest)
+    return dict(dir=str(dest), chain=str(dest / "signoff_chain.py"),
+                preflight=str(dest / "die_plan/kit_preflight.py"), sha256=version)
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
@@ -813,7 +910,18 @@ def submit(st, j, attempt_note=""):
     argv = [OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit]
     if not runner.startswith(kit + "/"):
         argv += ["--stage", runner]
-    argv += ["--", "bash", runner, kit, j["goal"], str(mem), str(thr)]
+    if j["goal"] not in ("cts", "grt"):
+        import base64
+        bundle = stage_admission_tools()
+        bundle["source_host"] = os.environ.get("AP_ADMISSION_HUB", "hub")
+        encoded = base64.b64encode(json.dumps(bundle).encode()).decode()
+        # --stage is spill-only. Fetch the immutable tool bundle on the
+        # actual selected worker before executing any frozen kit runner.
+        argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded,
+                 runner, kit, j["goal"], str(mem), str(thr)]
+        j.update(chain_required=True, admission_tools_sha256=bundle["sha256"])
+    else:
+        argv += ["--", "bash", runner, kit, j["goal"], str(mem), str(thr)]
     if DRY:
         log(f"would SUBMIT {j['id']} {j['die']}/{j['type']} {attempt_note}: {' '.join(argv)}")
         return
@@ -875,6 +983,11 @@ def geom_fail_after_submit(st, j, r):
 CLOSURE = {}                                           # per tick: parsed PATH-FREEZE / PLAN-DELTA + flow tags
 
 
+def canonical_die(die):
+    """Use the same canonical die for closure guards and legacy queue canaries."""
+    return {"kv": "qwen_kvsys"}.get(die, die)
+
+
 def parse_path_freeze(text):
     """-> ({PATH: {"pass": bool, "why": str, "items": {item: state}}}, {PATH: set(types)})
     lines 'PATH | GRT0 / CLOCK-ROUTE / PATH-STA | PASS|FAIL|RUNNING|NOT RUN ... | evidence | date' (latest line per
@@ -920,7 +1033,7 @@ def parse_plan_delta(text):
         line = raw.strip()
         m = re.match(r"^PENDING-DELTA\s+(\S+)\s+(\S+)\s+(\S+)", line)
         if m:
-            pend[m.group(1)] = (m.group(2), {t for t in m.group(3).split(",") if t})
+            pend[m.group(1)] = (canonical_die(m.group(2)), {t for t in m.group(3).split(",") if t})
             continue
         m = re.match(r"^(?:CLOSED|MERGED|DROPPED)-DELTA\s+(\S+)", line)
         if m:
@@ -944,7 +1057,7 @@ def _base_type(t):
 
 def path_of(r):
     """the path name of a queue row / job when it is a path part, else None"""
-    path = DIE_PATH.get(r.get("die") or "")
+    path = DIE_PATH.get(canonical_die(r.get("die") or ""))
     if not path:
         return None
     lane = (r.get("lane") or "").upper()
@@ -958,6 +1071,7 @@ def path_of(r):
 def die_frozen(die):
     """the FROZEN line of the die's plan when lanes/PATH-FREEZE.md freezes it (no later FAIL gate line of that name)"""
     gates = CLOSURE.get("gates", {})
+    die = canonical_die(die)
     for name, key in FROZEN_DIE.items():
         g = gates.get(name)
         if key == die and g and g.get("frozen"):
@@ -979,8 +1093,9 @@ def path_gate_hold(r):
 
 
 def plan_delta_hold(r):
-    did = CLOSURE.get("delta", {}).get((r.get("die"), r.get("type"))) or \
-        CLOSURE.get("delta", {}).get((r.get("die"), _base_type(r.get("type"))))
+    die = canonical_die(r.get("die"))
+    did = CLOSURE.get("delta", {}).get((die, r.get("type"))) or \
+        CLOSURE.get("delta", {}).get((die, _base_type(r.get("type"))))
     return (f"pending plan delta {did} in lanes/PLAN-DELTA.md touches {r.get('die')}/{r.get('type')} "
             f"(closure order rule 4: no kit run until the delta is CLOSED/MERGED/DROPPED)") if did else ""
 
@@ -1384,6 +1499,14 @@ def poll_running(st):
 
 def finish(st, j, c, client):
     cls, kind, reasons = classify(c, client)
+    if j.get("chain_required") and cls in ("SIGNED", "WAIT-PARENT"):
+        chain = c.get("chain") or {}
+        if chain.get("verdict") == "LEC_OOM":
+            cls, kind, reasons = "CRASH", "proof-oom", str(chain.get("reason"))
+        elif (chain.get("started", 0) < j.get("started", 0) - 120
+                or chain.get("verdict") != "PASS" or chain.get("lec_verdict") != "EQUIVALENT"
+                or chain.get("lec_exit") != 0):
+            cls, kind, reasons = "STRUCTURAL", "routed-lec", "autopilot chain incomplete: " + str(chain.get("reason") or "missing current routed LEC")
     if client.get("orphan") and cls == "CRASH" and kind not in ("tool-segfault",):
         kind, reasons = "infra-orphan", client["msg"]
     j.update(cls=cls, kind=kind, reasons=reasons[:600], probe=c.get("probe_host"),
@@ -1432,7 +1555,9 @@ def after_class(st, j):
                    (j.get("signoff") or {}).get("local_verdict"), j.get("reasons", ""), j.get("lane", "")])
         log(f"KEEP {j['id']} local physical PASS needs actual parent receipt; no release archive or failure cleanup")
     elif cls in ("NEAR-MISS", "STRUCTURAL", "CRASH"):
-        if (j.get("signoff") or {}).get("odb"):
+        if j.get("kind") == "proof-oom":
+            record_failure(st, j)  # proof admission failure; no geometry reroute
+        elif (j.get("signoff") or {}).get("odb"):
             start_review(st, j)
         else:
             record_failure(st, j)
@@ -1579,6 +1704,13 @@ def retry_pending(st):
     for j in list(st["jobs"].values()):
         if j.get("status") == "SIGNED" and not DRY:
             after_class(st, j)                         # trial check (rule 1) before an archive retry
+        elif j.get("status") == "DONE-CRASH" and j.get("kind") == "proof-oom":
+            if hub_procs(j["path"]):
+                continue
+            c = probe_job(j)
+            chain = (c or {}).get("chain") or {}
+            if chain.get("verdict") == "PASS" and chain.get("started", 0) > j.get("finished", 0):
+                finish(st, j, c, {"proof_only_resume": True})
         elif j.get("status") == "WAIT-PARENT":
             if hub_procs(j["path"]):
                 continue
@@ -1615,6 +1747,9 @@ def tick(args):
     geom_text = read_coord("lanes/GEOM-REVIEW.md")
     global GEOM_TEXT
     GEOM_TEXT = geom_text
+    # Resolve explicit visual verdicts before promoting pending requests to measured checks.
+    # Resolve again after prepare to apply a later reviewer FAIL on an AUTO-GEOM result.
+    resolve_geom(rows, geom_text)
     AG.prepare(sys.modules[__name__], st, rows)
     resolve_geom(rows, geom_text)
     load_closure()
@@ -1840,7 +1975,8 @@ def ownership_inputs(st, geom_text, trows):
     lane_texts.pop("GEOM-REVIEW", None)               # read once, as geom_text
     return dict(plans=plans, proto=proto, cache=cache, jobs=list(st["jobs"].values()), trows=trows,
                 geom_text=geom_text, lane_texts=lane_texts, live=hub_otrun_clients(), core_pins=core_pins, bound_rtl=bound_rtl,
-                canonical=_json(read_repo(OWN.CANONICAL_SPLIT)))
+                canonical=_json(read_repo(OWN.CANONICAL_SPLIT)),
+                retired=OWN.parse_retired(read_coord("autopilot/OWNERS-RETIRED.tsv")))
 
 
 def status(args):

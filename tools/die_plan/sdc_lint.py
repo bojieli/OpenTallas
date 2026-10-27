@@ -26,6 +26,17 @@ liberty files before synthesis):
              select them in the built core, so the SDC must name core IO explicitly), never a clock source; every
              declared arc must exist in the kit interface model ft_interface.json.  No new exception: set_false_path
              stays banned; an undeclared port is core IO (delays required) or does not resolve.
+  landing    (COORD 10-27 RULING S81-KITS-1, landing_contract.py c467e5cea) a type with a plan clock.landing_contract
+             may carry exactly these three forms, nothing wider:
+             - `set V [remove_from_collection A B]` (B a subset of A, same object kind; V defined before use);
+             - `create_generated_clock -name N -master_clock M -source [get_ports S] -divide_by 1 [get_ports P]` on
+               each declared forwarded-clock output P (lint(forwarded_clock_outputs=...)), M a real tap clock with
+               source port S; no other generated-clock option; P carries no IO delay and N is referenced by no IO
+               delay or exception (it times no path inside the partition, so it needs no uncertainty);
+             - `set_max_delay -ignore_clock_latency W` / `set_min_delay -ignore_clock_latency 0`
+               `-from [get_clocks A] -to [get_clocks B]` between each declared landed receive clock
+               (lint(landed_clock_inputs=...)) and a real tap clock, both directions, W = period/2 - setup
+               uncertainty (the meso-ring phase window, held HERE); every landed clock needs all four.
 """
 import argparse
 import gzip
@@ -187,18 +198,29 @@ def _words(s):
 
 
 class Ctx:
-    def __init__(self, inputs, outputs, clock_ports, ft_in=(), ft_out=()):
+    def __init__(self, inputs, outputs, clock_ports, ft_in=(), ft_out=(), clock_out=()):
         self.inputs, self.outputs, self.clock_ports = list(inputs), list(outputs), list(clock_ports)
         # declared 12.2a1 ft ports exist in the built core: all_inputs / all_outputs select them too
         self.ft_in, self.ft_out = list(ft_in), list(ft_out)
-        self.allp = self.inputs + self.outputs + self.clock_ports + self.ft_in + self.ft_out
+        # declared forwarded-clock outputs (landing exports) are real output ports: all_outputs selects them too
+        self.clock_out = list(clock_out)
+        self.allp = self.inputs + self.outputs + self.clock_ports + self.ft_in + self.ft_out + self.clock_out
         self.vars = {}
         self.clocks = {}
+        self.gclocks = {}             # generated clock -> [target port]
+
+
+BITSEL = re.compile(r"^(.+)\[(\d+)\]$")
 
 
 def _glob_ports(ctx, pats):
     r = []
     for p in pats:
+        m = BITSEL.match(p)
+        if m and m.group(1) in ctx.allp:
+            # CLOCK-KV-R21 (hold_demand die_sta): one bit of a declared bus port -> the bus port
+            r.append(m.group(1))
+            continue
         base = re.sub(r"\[\*\]$", "", p)
         hit = [q for q in ctx.allp if q == base or re.fullmatch(re.escape(base).replace(r"\*", ".*"), q)]
         if not hit:
@@ -227,9 +249,9 @@ def _eval_obj(ctx, w):
             raise SdcLintError(f"unsupported all_inputs options: {w}")
         return ("ports", ctx.inputs + ctx.clock_ports + ctx.ft_in)
     if c == "all_outputs":
-        return ("ports", ctx.outputs + ctx.ft_out)
+        return ("ports", ctx.outputs + ctx.ft_out + ctx.clock_out)
     if c == "all_clocks":
-        return ("clocks", list(ctx.clocks))
+        return ("clocks", list(ctx.clocks) + list(ctx.gclocks))
     if c == "get_ports":
         pats = []
         for x in a[1:]:
@@ -240,9 +262,21 @@ def _eval_obj(ctx, w):
         for x in a[1:]:
             names += x[1:-1].split() if x.startswith("{") else [x]
         for nm in names:
-            if nm not in ctx.clocks:
+            if nm not in ctx.clocks and nm not in ctx.gclocks:
                 raise SdcLintError(f"get_clocks {nm}: clock not defined")
         return ("clocks", names)
+    if c == "remove_from_collection":
+        # landing contract form: [remove_from_collection A B], B a subset of A of the same kind (no options)
+        if len(a) != 3 or any(_isopt(x) for x in a[1:]):
+            raise SdcLintError(f"unsupported remove_from_collection: {w}")
+        ka, la = _eval_obj(ctx, a[1])
+        kb, lb = _eval_obj(ctx, a[2])
+        if ka != kb:
+            raise SdcLintError(f"remove_from_collection of {kb} from {ka}: {w}")
+        miss = [x for x in lb if x not in la]
+        if miss:
+            raise SdcLintError(f"remove_from_collection removes objects not in the collection {miss}: {w}")
+        return (ka, [x for x in la if x not in lb])
     if c == "lsearch":
         fl = [x for x in a[1:] if x.startswith("-")]
         rest = [x for x in a[1:] if not x.startswith("-")]
@@ -274,7 +308,8 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
          hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
-         ft_require_characterised=False, tap_window_ps=None):
+         ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None,
+         landed_clock_inputs=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -288,7 +323,10 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     tap_window_ps: the plan's per-tap latency window W (gen_phys
     .tap_window_ps, COORD 11:24): every non-core clock port then carries source -early -W / -late 0, input max delays
     may sit W below their IO budget and output min delays W above the contract limit (the exact IO shift of the
-    early tap); without it no -early / -late source latency is allowed.  -> [errors]"""
+    early tap); without it no -early / -late source latency is allowed.
+    forwarded_clock_outputs / landed_clock_inputs: the plan clock.landing_contract export (clock out) and receive
+    (clock in) ports (see the 'landing' check above); without them the three landing forms stay forbidden.
+    -> [errors]"""
     err = []
     u = time_unit_ps
     in_lim = -float(insertion_tol_ps) if hold_in_min_ps is None else float(hold_in_min_ps)
@@ -317,7 +355,17 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         err += [f"ft: {e}" for e in ft_model_errors(ft_ports, ft_interface, ft_require_characterised)]
     elif ft_interface is not None:
         err.append("ft: interface model ft arcs without an ft declaration")
-    ctx = Ctx(inputs, outputs, clock_ports, ft_in, ft_out)
+    fwd_l, land_l = list(forwarded_clock_outputs or []), list(landed_clock_inputs or [])
+    for x in land_l:
+        if x not in clock_ports:
+            err.append(f"landing: landed clock input {x} is not a clock tap port")
+    clash = set(fwd_l) & set(list(inputs) + list(outputs) + list(clock_ports))
+    if clash:
+        err.append(f"landing: forwarded clock outputs also listed as data / clock ports {sorted(clash)}")
+    ctx = Ctx(inputs, outputs, clock_ports, ft_in, ft_out, fwd_l)
+    gen_src = {}                      # forwarded output port -> generated clock
+    land_ex = {}                      # (max|min, from, to) -> ps : landed-crossing delay exceptions
+    land_window = float(period_ps) / 2 - float(unc_setup_ps)
     ft_env = set()                    # ft ports reached by set_load / set_driving_cell
     clk_src = {}                      # port -> clock
     latency = {}                      # clock -> source latency (ps)
@@ -374,6 +422,69 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                     err.append(f"straps: set_false_path -from on non-strap object(s) {bad or k} (fail-closed): {cmd}")
                     continue
                 strap_fp.update(ps)
+                continue
+            if c == "create_generated_clock" and fwd_l:
+                opts, objs, i = {}, [], 1
+                while i < len(w):
+                    if w[i] in ("-name", "-master_clock", "-source", "-divide_by"):
+                        if w[i] in opts:
+                            raise SdcLintError(f"create_generated_clock: {w[i]} twice: {cmd}")
+                        opts[w[i]] = w[i + 1]
+                        i += 2
+                    elif _isopt(w[i]):
+                        raise SdcLintError(f"create_generated_clock option {w[i]} outside the landing form: {cmd}")
+                    else:
+                        objs.append(w[i])
+                        i += 1
+                if set(opts) != {"-name", "-master_clock", "-source", "-divide_by"} or len(objs) != 1:
+                    raise SdcLintError(f"create_generated_clock needs exactly -name -master_clock -source "
+                                       f"-divide_by and one target port: {cmd}")
+                nm, mc = opts["-name"], opts["-master_clock"]
+                if abs(_num(opts["-divide_by"], "divide_by") - 1) > EPS:
+                    err.append(f"landing: generated clock {nm} -divide_by {opts['-divide_by']} (forwarded clock "
+                               "must run at the core period)")
+                if nm in ctx.clocks or nm in ctx.gclocks:
+                    err.append(f"clocks: {nm} created twice")
+                if mc not in ctx.clocks or not ctx.clocks[mc] or mc in {clk_src.get(p) for p in land_l}:
+                    err.append(f"landing: generated clock {nm} master {mc} is not a real tap clock defined before it")
+                ks, sp = _eval_obj(ctx, opts["-source"])
+                if ks != "ports" or len(sp) != 1 or clk_src.get(sp[0]) != mc:
+                    err.append(f"landing: generated clock {nm} -source {opts['-source']} is not one source port "
+                               f"of master clock {mc}")
+                kt, tp = _eval_obj(ctx, objs[0])
+                if kt != "ports" or len(tp) != 1 or tp[0] not in fwd_l:
+                    err.append(f"landing: generated clock {nm} target {objs[0]} is not one declared forwarded "
+                               "clock output")
+                for p in tp:
+                    if p in gen_src:
+                        err.append(f"landing: forwarded clock output {p} carries two generated clocks")
+                    gen_src[p] = nm
+                ctx.gclocks[nm] = tp
+                continue
+            if c in ("set_max_delay", "set_min_delay") and land_l:
+                kind = "max" if c == "set_max_delay" else "min"
+                ok = (len(w) == 7 and w[1] == "-ignore_clock_latency" and w[3] == "-from" and w[5] == "-to")
+                if ok:
+                    v = _num(w[2], "delay") * u
+                    kf, fr = _eval_obj(ctx, w[4])
+                    kt, to = _eval_obj(ctx, w[6])
+                    ok = kf == kt == "clocks" and len(fr) == len(to) == 1
+                if not ok:
+                    err.append(f"landing: only '{c} -ignore_clock_latency V -from [get_clocks A] -to [get_clocks B]' "
+                               f"is allowed (fail-closed): {cmd}")
+                    continue
+                a_, b_ = fr[0], to[0]
+                landed = {clk_src.get(p) for p in land_l}
+                core = {n for n, s in ctx.clocks.items() if s and n not in landed}
+                if not ((a_ in landed and b_ in core) or (a_ in core and b_ in landed)):
+                    err.append(f"landing: {c} {a_}->{b_} is not between a landed receive clock and a real tap clock")
+                    continue
+                want = land_window if kind == "max" else 0.0
+                if abs(v - want) > EPS:
+                    err.append(f"landing: {c} {a_}->{b_} = {v:g} ps, landed-crossing window {want:g} ps")
+                if (kind, a_, b_) in land_ex:
+                    err.append(f"landing: {c} {a_}->{b_} given twice")
+                land_ex[(kind, a_, b_)] = v
                 continue
             if c not in ALLOWED:
                 err.append(f"forbidden / unknown SDC command (fail-closed): {cmd}")
@@ -503,6 +614,18 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 val = _num(rest[0], "delay") * u
                 k, ps = _eval_obj(ctx, rest[1])
                 tab = idly if c == "set_input_delay" else odly
+                bitsel = rest[1].startswith("[get_ports") and all(
+                    BITSEL.match(x) for x in _words(rest[1][1:-1])[1:][-1].strip("{}").split())
+                if bitsel:
+                    # CLOCK-KV-R21: per-bit lines may only TIGHTEN a bus-level -min (hold demand die_sta); the bus
+                    # record keeps the bus-level value (the max over its bits) for the checks below
+                    if mm != ["min"]:
+                        err.append(f"ports: per-bit {c} must be -min only: {cmd}")
+                    for p in ps:
+                        if "min" not in tab[p] or val > tab[p]["min"][1] + EPS or tab[p]["min"][0] != ck:
+                            err.append(f"hold: per-bit {c} -min {val:g} ps on {p} relaxes or precedes its bus-level "
+                                       f"-min ({tab[p].get('min')})")
+                    continue
                 for p in ps:
                     for m in mm:
                         tab[p][m] = (ck, val)
@@ -520,6 +643,25 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
             err.append(f"ft: declared ft port {p} is a clock source in the core SDC")
     for p in sorted(ft_env):
         err.append(f"ft: set_load / set_driving_cell reaches declared ft port {p} (IO environment is die-owned)")
+    for p in fwd_l:
+        if p not in gen_src:
+            err.append(f"landing: forwarded clock output {p} has no create_generated_clock")
+        if idly[p] or odly[p]:
+            err.append(f"landing: IO delay on forwarded clock output {p}")
+    for n in ctx.gclocks:
+        if n in refs or any(n in (a_, b_) for _k, a_, b_ in land_ex):
+            err.append(f"landing: generated clock {n} times a path (IO delay / exception); not the landing form")
+    for p in land_l:
+        n = clk_src.get(p)
+        core = sorted(x for x, s in ctx.clocks.items() if s and x not in {clk_src.get(q) for q in land_l})
+        if n is None:
+            continue                  # reported as 'clock tap port has no create_clock'
+        for k in ("max", "min"):
+            for a_, b_ in ((n, None), (None, n)):
+                if not any(kk == k and (a_ is None or a2 == a_) and (b_ is None or b2 == b_)
+                           for kk, a2, b2 in land_ex):
+                    err.append(f"landing: landed clock {n} has no set_{k}_delay -ignore_clock_latency "
+                               f"{'from' if a_ else 'to'} a core clock {core}")
     for x in strap_l:
         if x not in strap_fp:
             err.append(f"straps: declared strap {x} has no set_false_path -from (quasi-static ID input)")
@@ -651,10 +793,18 @@ def kit_context(P, tn):
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
-                port_period_mult=edge, **_seam_ctx(P), **_io_hold_ctx(P, tn),
+                port_period_mult=edge, **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
                 **({"tap_window_ps": gen_phys.tap_window_ps(P)} if gen_phys.tap_window_ps(P) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
-                **({"straps": ids} if ids else {}))
+                **({"straps": ids} if ids else {}), **_landing_ctx(P, tn))
+
+
+def _landing_ctx(P, tn):
+    """plan clock.landing_contract export / receive clock ports (none without a contract: byte-identical json)."""
+    pins = P.types[tn].get("clock", {}).get("landing_contract", {}).get("pins", [])
+    fwd = [p["name"] for p in pins if p.get("kind") == "clock" and p.get("dir") == "out"]
+    land = [p["name"] for p in pins if p.get("kind") == "clock" and p.get("dir") == "in"]
+    return dict(**({"forwarded_clock_outputs": fwd} if fwd else {}), **({"landed_clock_inputs": land} if land else {}))
 
 
 def _io_hold_ctx(P, tn):
@@ -664,13 +814,16 @@ def _io_hold_ctx(P, tn):
     return dict(hold_in_min_ports_ps={p: d["in_min_ps"] for p, d in sorted(m.items())}) if m else {}
 
 
-def _seam_ctx(P):
-    """opt-in seam hold contract fields of the lint context (none for the legacy contract: byte-identical json)."""
+def _seam_ctx(P, tn=None):
+    """Keep the sender's checked output-min consistent in lint and sign-off."""
     import gen_phys
-    if not P.clock.get("seam_hold"):
+    checked = gen_phys.out_hold_check_ps(P, tn) if tn is not None else None
+    if not P.clock.get("seam_hold") and checked is None:
         return {}
     sh = gen_phys.seam_hold(P)
-    return dict(hold_in_min_ps=sh["in_min_ps"], hold_out_min_ps=sh["out_min_ps"], seam_hold_ps=sh["seam_ps"])
+    out_min = gen_phys.hold_out_min_ps(P, tn)
+    return dict(hold_in_min_ps=sh["in_min_ps"], hold_out_min_ps=out_min,
+                seam_hold_ps=sh["seam_ps"] if checked is None else round(-out_min-sh["in_min_ps"], 6))
 
 
 def lint_kit_files(kitdir, liberties=()):
@@ -698,7 +851,41 @@ def lint_kit_files(kitdir, liberties=()):
     if not ctx.get("straps") and (kd / "straps.json").is_file():
         d = json.loads((kd / "straps.json").read_text())   # OWNER 10-25 option B: the kit's declared ID straps
         ctx["straps"] = list(d.get("straps", []) if isinstance(d, dict) else d)
+    err += ff_binding_errors(kd, ctx)
     return err + lint((kd / "constraint.sdc").read_text(), liberty_unit_ps=lu, **ctx)
+
+
+_VCLK_FF_RE = re.compile(r"^\s*(?:override\s+)?export\s+OT_VCLK_FF\s*[:?]?=\s*(\S+)\s*$", re.M)
+FF_BINDING_TOL_PS = 0.5
+
+
+def kit_vclk_ff(kitdir):
+    """the kit's config.mk OT_VCLK_FF (SDC time units; the FF basis of the in-flow FF-only GRT hold repair and the
+    post-CTS / pre-route FF gates), last assignment wins; None when the kit has no per-corner binding."""
+    cm = Path(kitdir) / "config.mk"
+    if not cm.is_file():
+        return None
+    m = _VCLK_FF_RE.findall(cm.read_text(errors="replace"))
+    return float(m[-1]) if m else None
+
+
+def ff_binding_errors(kitdir, ctx):
+    """HBM-CORES-R6 10-27 (collar_idx256r R5 attempt 3): the flow repaired FF hold against OT_VCLK_FF while the kit's
+    sdc_lint.json carried no insertion_ff_ps, so signoff.py silently timed FF hold against the single TT vclk and
+    failed ff_ref_missing after a 40-min route.  Fail closed BEFORE synth when the flow's FF binding and the sign-off
+    reference disagree or one is missing.  -> [errors]"""
+    ff = kit_vclk_ff(kitdir)
+    if ff is None:
+        return []
+    unit = float(ctx.get("time_unit_ps") or 1.0)
+    if ctx.get("insertion_ff_ps") is None:
+        return [f"clocks: config.mk OT_VCLK_FF {ff:g} (flow FF hold-repair basis) but sdc_lint.json has no "
+                "insertion_ff_ps: sign-off would time FF hold against the single TT vclk (ff_ref_missing); "
+                "regenerate the kit with the per-corner FF binding in sdc_lint.json"]
+    if abs(float(ctx["insertion_ff_ps"]) - ff * unit) > FF_BINDING_TOL_PS:
+        return [f"clocks: sdc_lint.json insertion_ff_ps {float(ctx['insertion_ff_ps']):g} ps != config.mk OT_VCLK_FF "
+                f"{ff:g} x {unit:g} ps (flow repair and sign-off would use different FF references)"]
+    return []
 
 
 def main(argv=None):

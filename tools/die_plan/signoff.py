@@ -235,6 +235,7 @@ def require_signoff_bundle():
 # Dependencies of standalone kit hooks.  Existing custom hooks stay byte-identical;
 # their missing shared helpers are shipped by the same bundle as the sign-off tool.
 KIT_TOOL_DEPENDENCIES = {
+    "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "pinreg_pad.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "tap_balance.tcl": ("clock_family.tcl",),
@@ -632,6 +633,7 @@ if {[llength $so_vclk] == 1 && $so_reference_ok} {
   if {[llength $so_din]} { set_input_delay -min @IN_MIN@ -clock [lindex $so_vclk 0] $so_din }
   if {[llength [all_outputs]]} { set_output_delay -min @OUT_MIN@ -clock [lindex $so_vclk 0] [all_outputs] }
 @IN_MIN_PORTS@
+@OUT_MIN_PORTS@
   so OVERLAY applied [get_full_name [lindex $so_vclk 0]] in_min @IN_MIN_LOG@ out_min @OUT_MIN@
 } else {
   so OVERLAY skipped vclks [llength $so_vclk]
@@ -772,7 +774,7 @@ def ft_fill_model(decl, model, corners):
 
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
-                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False,
+                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
                 ft_decl=None, tap_window=None):
     """tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
     golden SDC times every clock port W early, so the overlay's min output delay is the contract + W (exact IO shift);
@@ -821,15 +823,34 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@CORE_TAPS_FF@", "read_sdc /sdc/core_taps_ff.sdc" if corner == "ff" and core_taps_ff else ""),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@IN_MIN@", f"[expr {{-{ins_tol:g}}}]" if hold_in_min is None else f"{hin:g}"),
                  ("@IN_MIN_LOG@", f"{hin:g}"), ("@OUT_MIN@", f"{hout:g}"),
-                 ("@IN_MIN_PORTS@\n", "".join(
-                     f"  set_input_delay -min {v:g} -clock [lindex $so_vclk 0] [get_ports {{{' '.join(p + '[*]' for p in ps)}}}]\n"
-                     for v, ps in _group_ports(hold_in_min_ports))),
+                 ("@IN_MIN_PORTS@\n", _port_hold_overlay("input", hold_in_min_ports, ft_decl)),
+                 # Sender-owned demand is shifted by the same tap window as the uniform output contract.
+                 ("@OUT_MIN_PORTS@\n", _port_hold_overlay("output", hold_out_min_ports, ft_decl,
+                                                         float(tap_window or 0.0))),
                  ("@FANOUT_MAX@", str(int(fanout_max))),
                  ("@CLOCK_FAMILY@", _clock_family_tcl()),
                  ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text()),
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
     return t
+
+
+def _port_hold_overlay(direction, values, ft_decl, shift=0.0):
+    """Keep die-timed FT endpoints out of per-port overrides after bus expansion."""
+    out = []
+    for value, ports in _group_ports(values):
+        selected = f"[get_ports {{{' '.join(p + '[*]' for p in ports)}}}]"
+        command = f"set_{direction}_delay -min {value + shift:g} -clock [lindex $so_vclk 0]"
+        if ft_decl:
+            excluded = "$so_ft_in" if direction == "input" else "$so_ft_out"
+            # Filter resolved pins, not bus strings: an override can contain a mix
+            # of core-owned and die-owned bits of the same bus.
+            out += [f"  set so_override_ports {selected}\n",
+                    f"  set so_override_ports [lmap p $so_override_ports {{if {{[get_full_name $p] in {excluded}}} continue; set p}}]\n",
+                    f"  if {{[llength $so_override_ports]}} {{ {command} $so_override_ports }}\n"]
+        else:
+            out.append(f"  {command} {selected}\n")
+    return "".join(out)
 
 
 def _group_ports(m):
@@ -1012,6 +1033,7 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 hold_in_min=lctx.get("hold_in_min_ps"),
                                                 hold_out_min=lctx.get("hold_out_min_ps"),
                                                 hold_in_min_ports=lctx.get("hold_in_min_ports_ps"), core_taps_ff=core_overlay,
+                                                hold_out_min_ports=lctx.get("hold_out_min_ports_ps"),
                                                 tap_window=lctx.get("tap_window_ps")))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
@@ -1151,6 +1173,11 @@ def run_face_guard(disc, clock_ports=()):
     except Exception as e:
         return dict(verdict="FAIL", reason=f"invalid boundary control context: {e}", fail_counts={"context": 1})
     skip = sorted(set(clock_ports) | set(typed_controls) | {"arst_n", "rst_n"})
+    # 12.2a1 (COORD 10-26 12:55): declared die-timed ft ports (kit ft_ports.json) are not core IO, so not face registers;
+    # their structure (port -> fixed BUF -> port) is checked by the kit's own ft gate (KV core_preflight island_ft)
+    ftp = Path(disc["kit"]) / "ft_ports.json" if disc.get("kit") else None
+    if ftp is not None and ftp.is_file():
+        skip = sorted(set(skip) | {p["name"] for p in json.loads(ftp.read_text()).get("ports", [])})
     # Keep the guard's canonical clock/reset contract (including registered wavefront rst_o_<k>
     # controls). Supplying the native-clock override must not turn reset-tree fanout into a data-face failure.
     skip_re = r"(?:" + face_guard.SKIP_RE + r")|^(?:" + "|".join(re.escape(x) for x in skip) + r")$"
@@ -1198,6 +1225,54 @@ def ff_reference_problem(rec, cff, requested):
         return (f"FAIL_SIGNOFF ff_ref_missing: FF IO latency {float(b['ff']):g} ps equals the TT value while the measured "
                 f"FF pin-register mean is {ffm:.1f} ps (> {FF_REF_TOL_PS:g} ps apart)")
     return None
+
+
+ROUTED_NETLIST = re.compile(r"(^6_|final|route)", re.I)
+
+
+def lec_superset_problems(receipts):
+    """COORD RULING HBM-CORE-LAT-R4 (3) / R5 collar: OT_LEC_SUPERSET_VEC=1 is accepted only with a per-run list of the
+    extra kept gate bits shown unobservable (lec.py superset_vec in lec.json), and the routed LEC must pass the same
+    flag explicitly.  receipts: [(path, lec.json dict)] of one kit.  -> None when no receipt used the flag (no
+    obligation), else the list of problems ([] = PASS)."""
+    used = [(p, r) for p, r in receipts if isinstance(r, dict) and (r.get("superset_vec") or {}).get("enabled")]
+    if not used:
+        return None
+    probs = []
+    for p, r in used:
+        sv = r["superset_vec"]
+        bits = sv.get("extra_bits")
+        if r.get("verdict") != "EQUIVALENT":
+            probs.append(f"{p}: verdict {r.get('verdict')}")
+        if not isinstance(bits, list) or sv.get("n_extra") != len(bits) or \
+                any(not isinstance(e, dict) or "shown" not in e for e in bits):
+            probs.append(f"{p}: no per-bit superset_vec.extra_bits list (lec.py before ROOT-MERGE-30)")
+            continue
+        bad = [e.get("bit") for e in bits if not e["shown"]]
+        if bad or not sv.get("all_shown"):
+            probs.append(f"{p}: {len(bad)} extra bit(s) not shown unobservable (first: {', '.join(map(str, bad[:4]))})")
+    routed = [(p, r) for p, r in receipts if isinstance(r, dict) and
+              ROUTED_NETLIST.search(Path(str(r.get("netlist") or "")).name)]
+    if not routed:
+        probs.append("no routed-netlist LEC receipt (lec.json whose netlist is 6_*.v / *final* / *route*)")
+    for p, r in routed:
+        if not (r.get("superset_vec") or {}).get("enabled"):
+            probs.append(f"{p}: routed LEC did not pass OT_LEC_SUPERSET_VEC=1 explicitly")
+    return probs
+
+
+def kit_lec_receipts(kit):
+    """[(path, dict)] of KIT/lec.json and KIT/*/lec.json (lec, lec_post, lec_routed, ...); unreadable ones as None."""
+    out = []
+    if not kit or not Path(kit).is_dir():
+        return out
+    for p in sorted([Path(kit) / "lec.json"] + list(Path(kit).glob("*/lec.json"))):
+        if p.is_file():
+            try:
+                out.append((str(p), json.loads(p.read_text())))
+            except (OSError, ValueError):
+                out.append((str(p), None))
+    return out
 
 
 def evaluate(rec, insertion_target=None):
@@ -1355,7 +1430,13 @@ def evaluate(rec, insertion_target=None):
         e = sdc_lint.ft_model_errors(fm.get("declaration") or {}, fm.get("model"), require_characterised=True)
         put("ft_interface", "FAIL" if e else "PASS", errors=e[:10], model=fm.get("path"),
             arcs=(fm.get("model") or {}).get("arcs"))
-    for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()):
+    # OT_LEC_SUPERSET_VEC obligation (only kits whose LEC receipts used the flag; re-read on every evaluation, so a
+    # 'verdict' re-run sees a routed LEC finished after the corner sessions)
+    lp = lec_superset_problems(kit_lec_receipts((rec.get("inputs") or {}).get("kit")))
+    if lp is not None:
+        put("lec_superset", "FAIL" if lp else "PASS", problems=lp[:10])
+    for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()) + \
+            (("lec_superset",) if "lec_superset" in ch else ()):
         v = ch[k]["verdict"]
         if v != "PASS":
             reasons.append(f"{k}: {v}" + _detail(k, ch[k]))
@@ -1394,6 +1475,8 @@ def _detail(k, c):
         return f" {c['count']} ({c.get('source')})"
     if k == "macro_libs":
         return f" {c.get('missing')}"
+    if k == "lec_superset" and c.get("problems"):
+        return " " + "; ".join(c["problems"][:3])
     if k == "pg" and c.get("open_terms"):
         return f" {c['open_terms']} of {c.get('pg_terms')} supply terminals unbound (first {c.get('first')})"
     return ""
@@ -1427,6 +1510,11 @@ def cmd_run(a):
     disc["library_config"] = str(Path(a.library_config).resolve()) if getattr(a, "library_config", None) else None
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
+    # An explicit source-pinned FF reference applies to every kit family.  Keep
+    # it outside the hard-core branch: die-plan kits otherwise reach the FF
+    # session with bound-ff selected but no value, despite a valid CLI request.
+    if getattr(a, "ff_bound_ps", None) is not None:
+        disc["ff_bound_ps"] = float(a.ff_bound_ps)
     bound = None
     if core_contract:
         # COORD ruling 10-24: a hard core carries a core-latency contract -- its measured insertion is published
@@ -1555,11 +1643,21 @@ def main(argv=None):
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)
+    lc = sub.add_parser("lec-check", help="OT_LEC_SUPERSET_VEC obligation of one kit's LEC receipts (exit 0 PASS / "
+                                         "no obligation, 1 FAIL)")
+    lc.add_argument("kit")
     b = sub.add_parser("bundle", help="Copy the complete standalone signoff tool bundle")
     b.add_argument("out")
     b.add_argument("--with", dest="extra", action="append", default=[],
                    help="Additional kit hook with its standalone helper dependencies (repeatable)")
     a = ap.parse_args(argv)
+    if a.cmd == "lec-check":
+        lp = lec_superset_problems(kit_lec_receipts(a.kit))
+        print("LEC_SUPERSET " + ("NONE (no receipt used OT_LEC_SUPERSET_VEC)" if lp is None else
+                                 ("PASS" if not lp else "FAIL")))
+        for x in lp or ():
+            print(f"  - {x}")
+        return 1 if lp else 0
     if a.cmd == "bundle":
         print("SIGNOFF_BUNDLE " + " ".join(copy_signoff_bundle(a.out, extra=a.extra)))
         return 0

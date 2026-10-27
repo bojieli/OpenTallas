@@ -479,3 +479,29 @@ def test_ft_char_reads_arrival_from_last_path_point():
     assert "[get_property [lindex $so_ft_p 0] arrival]" not in t
     assert "so_ps [get_property" not in t
     assert 'puts "SO_FT_ARC ft_ck_i ft_ck_o $so_ft_v(min) $so_ft_v(max)"' in t
+
+
+def test_explicit_ff_bound_reaches_die_plan_session(tmp_path, monkeypatch, capsys):
+    """The public CLI must pass an explicit bound through the non-core branch."""
+    kit = tmp_path / 'kit'
+    kit.mkdir()
+    (kit / 'constraint.sdc').write_text(GOOD_SDC)
+    ctx = kit / 'sdc_lint.json'
+    ctx.write_text(json.dumps(dict(insertion_ps=250, insertion_ff_ps=202.5)))
+    monkeypatch.setattr(signoff, 'find_base', lambda _: kit)
+    monkeypatch.setattr(signoff, 'discover', lambda *a, **kw: dict(
+        sdc=str(kit / 'constraint.sdc'), sdc_lint_ctx=str(ctx), design='blk'))
+    monkeypatch.setattr(signoff, 'require_signoff_bundle', lambda: None)
+    monkeypatch.setattr(signoff, 'hard_core_latency_contract', lambda _: False)
+    monkeypatch.setattr(signoff, '_git_head', lambda: 'test')
+    seen = {}
+    def corner(c, disc, *args):
+        seen[c] = disc.get('ff_bound_ps')
+        # Exercise the real FF template, where the missing value used to crash.
+        signoff.session_tcl(c, [], None, ff_vclk='bound-ff', ff_bound_ps=disc.get('ff_bound_ps'))
+        return {}
+    monkeypatch.setattr(signoff, 'run_corner', corner)
+    assert signoff.main(['run', '--run-dir', str(kit), '--out', str(tmp_path / 'out'),
+                         '--ff-vclk', 'bound-ff', '--ff-bound-ps', '198.4',
+                         '--ff-vclk-contract', 'test@sha', '--dry']) == 0
+    assert seen == {'tt': 198.4, 'ff': 198.4}

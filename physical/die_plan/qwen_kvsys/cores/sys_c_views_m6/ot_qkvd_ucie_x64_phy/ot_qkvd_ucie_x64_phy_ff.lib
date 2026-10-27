@@ -65,6 +65,22 @@ library (ot_qkvd_ucie_x64_phy_ff) {
     bit_to : 0;
     downto : true;
   }
+  type (ot_qkvd_ucie_x64_phy_link_flit_t) {
+    base_type : array;
+    data_type : bit;
+    bit_width : 583;
+    bit_from : 582;
+    bit_to : 0;
+    downto : true;
+  }
+  type (ot_qkvd_ucie_x64_phy_far_flit_t) {
+    base_type : array;
+    data_type : bit;
+    bit_width : 583;
+    bit_from : 582;
+    bit_to : 0;
+    downto : true;
+  }
   cell (ot_qkvd_ucie_x64_phy) {
     area : 604661.7600;
     dont_use : true;
@@ -433,6 +449,32 @@ library (ot_qkvd_ucie_x64_phy_ff) {
           );
         }
       }
+    }
+    pin (link_v) {
+      direction : output;
+      related_power_pin : VDD;
+      related_ground_pin : VSS;
+      max_capacitance : 46.08;
+    }
+    bus (link_flit) {
+      bus_type : ot_qkvd_ucie_x64_phy_link_flit_t;
+      direction : output;
+      related_power_pin : VDD;
+      related_ground_pin : VSS;
+      max_capacitance : 46.08;
+    }
+    pin (far_v) {
+      direction : input;
+      related_power_pin : VDD;
+      related_ground_pin : VSS;
+      capacitance : 1.3674;
+    }
+    bus (far_flit) {
+      bus_type : ot_qkvd_ucie_x64_phy_far_flit_t;
+      direction : input;
+      related_power_pin : VDD;
+      related_ground_pin : VSS;
+      capacitance : 1.3674;
     }
   }
 }

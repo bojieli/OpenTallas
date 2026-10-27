@@ -199,6 +199,36 @@ def rtl_standard_libs(env, kit):
     return [f"{NLDM}/{l}" for l in STD_LIBS if needed and needed.intersection(lib_cells(f"{NLDM}/{l}"))]
 
 
+def blackbox_local_constant_cleanup(env, kit):
+    """Slang exports module-scope genvars and localparams as parameters even on blackboxed hard macros.
+
+    Genvars and localparams cannot be overridden as module parameters. Remove only names
+    literally declared as a genvar or localparam in that exact hard macro's source before replacing it by a pin-only stub.
+    Formal parameters and unknown names remain untouched, so bad overrides still fail hierarchy checks.
+    """
+    commands = []
+    files = [Path(kpath(kit, f)) for f in env["VERILOG_FILES"].split()]
+    for master in env.get("SYNTH_BLACKBOXES", "").split():
+        declarations = []
+        for path in files:
+            text = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*', " ", path.read_text(), flags=re.S)
+            match = re.search(r"\bmodule\s+" + re.escape(master) + r"\b(.*?)\bendmodule\b", text, re.S)
+            if match:
+                names = set()
+                for declaration in re.findall(r"\bgenvar\s+([^;]+);", match.group(1)):
+                    for name in declaration.split(","):
+                        name = name.strip()
+                        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", name):
+                            names.add(name)
+                for declaration in re.findall(r"\blocalparam\s+([^;]+);", match.group(1)):
+                    names.update(re.findall(r"([A-Za-z_][A-Za-z0-9_$]*)\s*=", declaration))
+                declarations.append(names)
+        if declarations and all(names == declarations[0] for names in declarations):
+            for name in sorted(declarations[0]):
+                commands.append(f"setparam -unset {name} t:{master}")
+    return commands
+
+
 def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
     cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
@@ -223,6 +253,7 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
             for c in lib_cells(l):
                 a += ["--blackboxed-module", c]
         cmds += ["read_slang " + " ".join(shlex.quote(x) for x in a), "setattr -unset init"]
+        cmds += blackbox_local_constant_cleanup(env, kit)
     else:
         cmds += ["verilog_defaults -push", "verilog_defaults -add " + " ".join(defs)]
         cmds += ["read_verilog -defer -sv " + " ".join(f"-I{i}" for i in incs) + " " + f for f in files]
@@ -944,8 +975,20 @@ class Lec:
                 if k.startswith("ff:") and m:
                     d.setdefault(m.group(1), set()).add(m.group(2))
         self.relaid = sorted(b for b in tidx if b in gidx and not tidx[b] <= gidx[b])
+        # OT_LEC_SUPERSET_VEC=1 (opt-in, default off): a 1-D vector whose gate bits are a strict superset of the gold
+        # bits (the gold frontend dropped dead bits the gate kept, e.g. inside a keep_hierarchy cell) is laid out
+        # identically on both sides; keep the common bit names and re-key only the gate-only extra bits.  Every
+        # name match is still a correspondence obligation, so a wrong pairing can only fail, never hide a difference.
+        superset_vec = os.environ.get("OT_LEC_SUPERSET_VEC") == "1"
+        one_dim = lambda s: all(ix.count("[") == 1 for ix in s)
+        self.superset_extra = []                  # [(gate bit, re-keyed gate key)]: the per-run list (lec.json)
         for b in self.relaid:
+            sub = superset_vec and gidx[b] < tidx[b] and one_dim(tidx[b])
             for ix in tidx[b]:
+                if sub and ix in gidx[b]:
+                    continue
+                if sub:
+                    self.superset_extra.append((b + ix, f"{b}#t{ix}"))
                 self.tp[f"{b}#t{ix}"] = self.tp.pop(b + ix)
                 self.tc[f"{b}#t{ix}"] = self.tc.pop(b + ix)
         self.matched = sorted(set(self.gp) & set(self.tp))
@@ -1129,6 +1172,7 @@ class Lec:
         for k in self.tc:
             self.dlit[("gate", k)] = T(self.tc[k])
         nx = lambda k: lgx.get(self.gc[k] & ~1, 0) ^ 1          # gold next state of k is not X
+        self.dxlit = {k: lgx.get(self.gc[k] & ~1, 0) for k in self.gc}   # gold next state of k is X (sim_refine)
         self.xpoints = sorted(k for k in self.gc if lgx.get(self.gc[k] & ~1, 0))
         if with_compare:
             for k in sorted(set(self.gc) & set(self.tc)):
@@ -1701,6 +1745,10 @@ def fsm_proposals(L, log, words=2, max_bits=4):
         for c, j in sorted(pi.items()):
             L.hyp[("gate", tk[j])] = ("cube", "gold", list(gk), [(c >> b) & 1 for b in range(n)])
             n_new += 1
+        # a later round can re-propose the same state vector (its cube hypotheses were dropped and its gate bits are
+        # unbound again): the new encoding replaces the earlier constraint over the same gold bits instead of adding
+        # a second one with the same proof-output name (cons:gold:<first key>, rejected by build() as a duplicate)
+        L.cons = [c for c in L.cons if not (c[0] == "gold" and list(c[1]) == list(gk))]
         L.cons.append(("gold", list(gk), [[(c >> b) & 1 for b in range(n)] for c in sorted(pi)]))
         log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j]}" for c, j in sorted(pi.items())))
     return n_new
@@ -1757,8 +1805,12 @@ def seq_traces(L, log, words=4, warm=2, cycles=48, seed=2718):
                         acc[(side, k)] = (hash((h[0], v)), hash((h[1], v ^ mask)), h[2] and v == 0,
                                           h[3] and v == mask) if h else (hash(v), hash(v ^ mask), v == 0, v == mask)
             states[si] = [val[l >> 1] ^ (mask if l & 1 else 0) for l in d["latches"]]
+    const = {}
     for key, (hp, hn, c0, c1) in acc.items():
         out[key] = None if (c0 or c1) else (hp, hn)
+        if c0 or c1:
+            const[key] = 1 if c1 else 0
+    L.trace_const = const            # (side, key) -> the constant value of a constant trace (trace_constant_closure)
     log.append(f"sequential traces: {len(out)} registers, {sum(v is None for v in out.values())} constant, "
                f"{warm}+{cycles} cycles x {W} lanes")
     return out
@@ -1838,6 +1890,166 @@ def drop_failed(L, bad):
         L.hyp.pop(("both" if sd == "bothg" else sd, k), None)
 
 
+
+
+def _sim_given(m, ivals, mask):
+    """bit-parallel simulation of builder m with the given input values (var -> int)."""
+    val = [0] * (m.ni + len(m.ands) // 2 + 1)
+    for v, x in ivals.items():
+        val[v] = x
+    a, base = m.ands, m.ni + 1
+    for k in range(len(a) // 2):
+        r0, r1 = a[2 * k], a[2 * k + 1]
+        val[base + k] = (val[r0 >> 1] ^ (mask if r0 & 1 else 0)) & (val[r1 >> 1] ^ (mask if r1 & 1 else 0))
+    return val
+
+
+def sim_refine(L, log, tried, words=8, quiet=3, seed=4242):
+    """Witness-based refinement by simulation (LEC-TOOL-1 10-27), run before every ABC hypothesis round.
+
+    van Eijk refinement drops, per round, the hypotheses that fail from a state satisfying all current hypotheses.
+    On a long delay line of wrong duplicate / constant hypotheses only the head stage fails per round (its
+    successor stage becomes refutable only once the head is free), so the ABC loop peels one stage per round:
+    HBM hcp_sys1 R5 peeled dld[] one 47-bit stage per ~80 s round, hit OT_LEC_REFINE_S after 64 rounds and then
+    cleared EVERY hypothesis (1075 points 'differ', 0 constants / pairs kept).
+
+    Here the free miter (no hypotheses bound) is built once; each iteration draws random states, forces them onto
+    the current hypotheses (every bound register takes its partner's / constant value, lanes left inconsistent are
+    masked out), simulates one step and drops every hypothesis whose next-state relation is violated in a valid
+    lane.  Such a lane is a concrete state satisfying every current hypothesis (and FSM constraint) whose successor
+    violates the dropped one: exactly the counterexample the ABC round would find, so a dropped hypothesis can
+    never be part of the inductive fixpoint.  Nothing is ever accepted here: the surviving set still goes to the
+    ABC induction proof, so this can only save rounds, never prove a point.  -> number of hypotheses dropped."""
+    if not L.hyp:
+        return 0
+    hyp, cons = L.hyp, L.cons
+    L.hyp, L.cons = {}, []
+    try:
+        m, kind = L.build(with_compare=False, with_hyp=False)
+        dl, xl = dict(L.dlit), dict(L.dxlit)
+    finally:
+        L.hyp, L.cons = hyp, cons
+    import random
+    rnd = random.Random(seed)
+    W = 64 * words
+    mask = (1 << W) - 1
+    mvar, svar = {}, {"gold": {}, "gate": {}}
+    for v, (t, k) in kind.items():
+        if t == "matched":
+            mvar[k] = v
+        elif t in ("gold_only", "gate_only"):
+            svar[t[:4]][k] = v
+
+    def var(side, k):
+        return mvar.get(k) if k in mvar else svar.get(side, {}).get(k)
+
+    dropped, still, it = 0, 0, 0
+    while still < quiet:
+        it += 1
+        ivals = {v: rnd.getrandbits(W) for v in range(1, m.ni + 1)}
+        items = sorted(L.hyp.items())
+
+        def src(h):
+            if h[0] == "const":
+                return mask if h[1] else 0
+            if h[0] == "eq":
+                v = var(h[1], h[2])
+                return None if v is None else ivals[v] ^ (mask if h[3] else 0)
+            if h[0] == "cube":
+                c = mask
+                for ok, ov in zip(h[2], h[3]):
+                    v = var(h[1], ok)
+                    if v is None:
+                        return None
+                    c &= ivals[v] ^ (0 if ov else mask)
+                return c
+            return None
+
+        tgt = {key: var("gold" if key[0] == "both" else key[0], key[1]) for key, _ in items}
+        for _ in range(64):                         # chains resolve in passes (cycles stay inconsistent: masked)
+            changed = False
+            for key, h in items:
+                tv, s = tgt[key], src(h)
+                if tv is not None and s is not None and ivals[tv] != s:
+                    ivals[tv], changed = s, True
+            if not changed:
+                break
+        valid = mask
+        for key, h in items:
+            tv, s = tgt[key], src(h)
+            if tv is not None and s is not None:
+                valid &= ~(ivals[tv] ^ s)
+        cur = lambda sd, k: ivals.get(var(sd, k), 0)
+
+        def member(vals, allowed):
+            acc = 0
+            for t in allowed:
+                c = mask
+                for x, b in zip(vals, t):
+                    c &= x if b else ~x & mask
+                acc |= c
+            return acc
+        for sd, keys, allowed in L.cons:
+            if all(var(sd, k) is not None for k in keys):
+                valid &= member([cur(sd, k) for k in keys], allowed)
+        if not valid:
+            still += 1
+            continue
+        val = _sim_given(m, ivals, mask)
+        D = lambda sd, k: lit_val(val, mask, dl[(sd, k)])
+        NX = lambda k: ~lit_val(val, mask, xl[k]) & mask if k in xl else mask
+        bad = []
+        for key, h in items:
+            side, k = key
+            if tgt[key] is None:
+                continue
+            try:
+                if side == "both":
+                    if h[0] == "const":
+                        c = mask if h[1] else 0
+                        v = ((D("gold", k) ^ c) & NX(k)) | (D("gate", k) ^ c)
+                    elif h[0] == "eq":
+                        inv = mask if h[3] else 0
+                        v = ((D("gold", k) ^ D("gold", h[2]) ^ inv) & NX(k)) | (D("gate", k) ^ D("gate", h[2]) ^ inv)
+                    else:
+                        continue
+                elif h[0] == "const":
+                    v = (D(side, k) ^ (mask if h[1] else 0)) & (NX(k) if side == "gold" else mask)
+                elif h[0] == "eq":
+                    od = D(h[1], h[2]) if (h[1], h[2]) in dl else D("gold", h[2])
+                    xm = NX(k) if side == "gold" else (NX(h[2]) if h[1] == "gold" and h[2] in L.gc else mask)
+                    v = (D(side, k) ^ od ^ (mask if h[3] else 0)) & xm
+                elif h[0] == "cube":
+                    c = mask
+                    for ok, ov in zip(h[2], h[3]):
+                        c &= D(h[1], ok) ^ (0 if ov else mask)
+                    v = D(side, k) ^ c
+                else:
+                    continue
+            except KeyError:
+                continue
+            if v & valid:
+                bad.append((key, h))
+        badc = [f"cons:{sd}:{keys[0]}" for sd, keys, allowed in L.cons
+                if all((sd, k) in dl for k in keys) and
+                ~member([D(sd, k) for k in keys], allowed) & mask & valid]
+        if not bad and not badc:
+            still += 1
+            continue
+        still = 0
+        for key, h in bad:
+            if L.hyp.pop(key, None) is None:
+                continue
+            side, k = key
+            tried[(side, k, "c") if h[0] == "const" else (side, k, h[2], h[3]) if h[0] == "eq" else
+                  (side, k, str(h[2]), str(h[3]))] += 1
+            dropped += 1
+        if badc:
+            drop_failed(L, badc)
+            dropped += len(badc)
+    if dropped:
+        log.append(f"simulation refinement: {dropped} hypotheses refuted by concrete witnesses in {it} iterations")
+    return dropped
 
 
 def proved_state_constant(L, side, key, seen=None):
@@ -2148,6 +2360,333 @@ def structural_twin_closure(L, log):
         log.append(f"structural twin closure: {total} relations proposed")
     return total
 
+
+
+def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
+    """Propose MATCHED registers equal to a matched copy of the same function (LEC-TOOL-2 10-27).
+
+    Both frontends may keep several copies of one value, each a matched register of its own name, while the
+    downstream logic reads a DIFFERENT copy on each side (HBM ot_hgi_coll_gq_land r4: the eight landing lanes'
+    sector high bits ln_s[*][15:13] all load base_q[*][15:13] == g_dst[15:13], holding while rn is low; synthesis
+    kept four copies per bit and each side's record mux reads its own choice, so the miter left ln_s[0][29] and
+    ln_s[0][45] free of each other and 24 record bits 277..279 'differed' with every cone input matched).  The
+    name-based pairing never relates two matched registers, and merged_proposals only relates same-support
+    siblings (here the lanes read different le_k entries, whose selection drops out only for the high bits).
+
+    Candidates: matched, not yet merged, non-constant registers whose sequential traces from the zero state (seq_traces)
+    are equal on both sides and to each other (either polarity).  Each is bound to the first copy of its class and
+    kept only if, with that binding (the copies hold themselves), its next state simulates equal to the copy's on
+    BOTH sides (gold X lanes are don't care); then it enters the simultaneous induction proof with every other
+    hypothesis: a register that is not a copy (other load condition, other data) is refuted there and dropped,
+    never assumed.  Each pair is proposed at most once.  -> number of relations proposed."""
+    if T is None:
+        return 0
+    nat = lambda k: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", k)]
+    groups = collections.defaultdict(list)
+    for k in sorted(L.matched, key=nat):
+        if not k.startswith("ff:") or ("both", k) in L.hyp or k not in L.gc or k not in L.tc:
+            continue
+        tg, tt = T.get(("gold", k)), T.get(("gate", k))
+        if not tg or tg != tt:
+            continue
+        groups[min(tg)].append((k, int(tg[0] > tg[1])))
+    pending = {}
+    for ks in groups.values():
+        if len(ks) < 2:
+            continue
+        rk, rp = ks[0]       # a copy that already is some register's partner may be bound too (build() follows chains)
+        for k, p in ks:
+            if k != rk and not tried[("both", k, rk, p ^ rp)] and not tried[("cc", k, rk)]:
+                pending[k] = ("eq", "gold", rk, p ^ rp)
+    for it in range(rounds):
+        if not pending:
+            break
+        for k, h in pending.items():
+            L.hyp[("both", k)] = h
+        m, _ = L.build(with_compare=False, with_hyp=False)
+        val, mask = m.simulate(words, seed=seed + it)
+        bad = []
+        for k, (_, _, rk, inv) in pending.items():
+            im = mask if inv else 0
+            care = mask ^ (lit_val(val, mask, L.dxlit[k]) | lit_val(val, mask, L.dxlit[rk]))
+            g = (lit_val(val, mask, L.dlit[("gold", k)]) ^ lit_val(val, mask, L.dlit[("gold", rk)]) ^ im) & care
+            t = lit_val(val, mask, L.dlit[("gate", k)]) ^ lit_val(val, mask, L.dlit[("gate", rk)]) ^ im
+            if g or t:
+                bad.append(k)
+        for k in bad:
+            L.hyp.pop(("both", k), None)
+            tried[("cc", k, pending.pop(k)[2])] += 1
+        if not bad:
+            break
+    else:
+        for k in pending:                          # undecided after `rounds`: not proposed
+            L.hyp.pop(("both", k), None)
+        pending = {}
+    for k, h in pending.items():
+        tried[("cc", k, h[2])] += 1
+    if pending:
+        log.append(f"matched copy closure: {len(pending)} matched registers proposed equal to a matched copy of equal "
+                   f"trace and next state")
+    return len(pending)
+
+
+def trace_constant_closure(L, log, tried):
+    """Constant-from-reset candidates (LEC-TOOL-2 10-27): a register whose sequential trace (seq_traces: from the
+    zero state, random inputs including the reset each cycle) is one constant on every side that has it is proposed
+    that constant -- matched registers on both sides, gold-only / gate-only on their side -- and enters the
+    simultaneous induction proof with every other hypothesis.  HBM hcp_sys1 R5: nout_r[1] resets to 0 and reloads
+    the tied cmd_nout[1] = 0 (async reset, kept by synthesis as a matched DFFASRHQN), so gold d0[F_NV] =
+    last_r ? nlast_r : 256 is 256 (nlast_r[7:0] == nout_r[1] == 0, proved) while the gate folded sd_nv[7:0] to 0; with
+    nout_r[1] a free matched input the 9 sd_nv face bits 'differed'.  The random-state signature search never
+    proposes it (its next state depends on its own state) unless the self-hold cofactor also happens to fire, so only
+    self-holding registers are proposed here.
+    A register that is constant only from reset but not inductively (it needs another invariant that is not
+    proposed) is refuted and dropped, never assumed.  Each register is proposed at most once.  -> number proposed."""
+    tc = getattr(L, "trace_const", None)
+    if not tc:
+        return 0
+    m, kind = L.build(with_compare=False, with_hyp=False)
+    var_of = {(t.split("_")[0] if t != "matched" else "both", kk): v for v, (t, kk) in kind.items()
+              if t in ("matched", "gold_only", "gate_only")}
+    # only self-holding registers (own Q within 8 AND levels of the next state: hold mux + async2sync reset mux);
+    # a constant register whose next state does not read itself is found by the random-state signature search
+    holds = lambda sd, k: (sd, k) in var_of and var_of[(sd, k)] in m.near_inputs(
+        L.dlit[("gold" if sd == "both" else sd, k)], 8)
+    n = 0
+    for k in L.matched:
+        if not k.startswith("ff:") or ("both", k) in L.hyp or tried[("tc", "both", k)]:
+            continue
+        g, t = tc.get(("gold", k)), tc.get(("gate", k))
+        if g is not None and g == t and holds("both", k):
+            tried[("tc", "both", k)] += 1
+            L.hyp[("both", k)] = ("const", g)
+            n += 1
+    partners = anchored(L)
+    for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
+        for k in keys:
+            c = tc.get((side, k))
+            if c is None or not k.startswith("ff:") or (side, k) in L.hyp or k in partners or tried[("tc", side, k)] \
+                    or not holds(side, k):
+                continue
+            tried[("tc", side, k)] += 1
+            L.hyp[(side, k)] = ("const", c)
+            n += 1
+    if n:
+        log.append(f"trace constant closure: {n} registers of constant sequential trace proposed constant")
+    return n
+
+
+# ------------------------------------------------------------------------------------------------ no-reset constants
+RESET_PORT = re.compile(r"^(?:\w+_)?(?:rst|reset|rn|rstn|nrst|arst|srst)(?:_?n|_ni|_b|_l)?(?:_pin)?$", re.I)
+
+
+def reset_vars(d, pis):
+    """{var: asserted value} of the reset ports of one side (pi keys; OT_LEC_RESET_PORTS=a,b overrides the name
+    pattern).  Active low when the name ends in n / _ni / _b / _l (rst_n, rn, core_rst_n)."""
+    names = [n for n in os.environ.get("OT_LEC_RESET_PORTS", "").split(",") if n]
+    R = {}
+    for k, lit in pis.items():
+        if not k.startswith("pi:"):
+            continue
+        base = re.sub(r"\[\d+\]$", "", k[3:]).split(".")[-1]
+        if not (base in names if names else RESET_PORT.match(base)):
+            continue
+        stem = re.sub(r"_pin$", "", base, flags=re.I)
+        low = bool(re.search(r"(n|_ni|_b|_l)$", stem, re.I))
+        R[lit >> 1] = (0 if low else 1) ^ (lit & 1)
+    return R
+
+
+def reset_state(d, R, cycles):
+    """Ternary constant propagation of one side's AIG with every reset port asserted for `cycles` clock edges from
+    an all-unknown power-up state -> {latch var: 0 / 1} for the registers whose value is then a proved constant (a
+    register with a reset, a reset synchroniser, a register reloaded every cycle from those), plus {latch var: the
+    edge it first became constant}.  Pure constant propagation (AND with a definite 0 is 0): no assumption on any
+    unknown value, so a register that only holds itself until a load stays unknown."""
+    I, Lc, a = d["I"], d["L"], d["ands"]
+    base = I + Lc + 1
+    st, first = {}, {}
+    for cyc in range(1, cycles + 1):
+        val = [None] * (base + d["A"])
+        val[0] = 0
+        for v, b in R.items():
+            val[v] = b
+        for v, b in st.items():
+            val[v] = b
+        for k in range(d["A"]):
+            r0, r1 = a[2 * k], a[2 * k + 1]
+            x, y = val[r0 >> 1], val[r1 >> 1]
+            x = None if x is None else x ^ (r0 & 1)
+            y = None if y is None else y ^ (r1 & 1)
+            val[base + k] = 0 if (x == 0 or y == 0) else 1 if (x == 1 and y == 1) else None
+        nst = {}
+        for i, nxt in enumerate(d["latches"]):
+            x = val[nxt >> 1]
+            if x is not None:
+                nst[I + 1 + i] = x ^ (nxt & 1)
+        for v, b in nst.items():
+            if st.get(v) != b:
+                first[v] = cyc
+        st = nst
+    return st, first
+
+
+def noreset_classify(L):
+    """per side: the reset-state value of every register (reset_state, OT_LEC_RESET_CYCLES edges, default 4) ->
+    L.rst_val[(side, key)] = (value or None, first edge)."""
+    cycles = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
+    L.rst_val, L.rst_ports = {}, {}
+    for side, d, p in (("gold", L.gold, L.gp), ("gate", L.gate, L.tp)):
+        R = reset_vars(d, p)
+        L.rst_ports[side] = sorted(k for k, lit in p.items() if (lit >> 1) in R and k.startswith("pi:"))
+        st, first = reset_state(d, R, cycles)
+        for k, lit in p.items():
+            if k.startswith("ff:"):
+                v = lit >> 1
+                L.rst_val[(side, k)] = (None if v not in st else st[v] ^ (lit & 1), first.get(v))
+
+
+def latch_cone(L, side, k, cap=200000):
+    """The registers in D(k)'s own-side cone. Unknown/X sources, anonymous
+    state or a cone over cap return None: none can establish a base case.
+    Cached because the AIGs never change."""
+    cache = L.__dict__.setdefault("_latch_cone", {})
+    if (side, k) in cache:
+        return cache[(side, k)]
+    d, c = (L.gold, L.gc) if side == "gold" else (L.gate, L.tc)
+    if "_qkey" not in L.__dict__:
+        L._qkey = {sd: {lit >> 1: kk for kk, lit in p.items() if kk.startswith("ff:")}
+                   for sd, p in (("gold", L.gp), ("gate", L.tp))}
+    I, Lc, a = d["I"], d["L"], d["ands"]
+    if "_noreset_xvars" not in L.__dict__:
+        L._noreset_xvars = {"gold": {v >> 1 for v in L.gx}, "gate": {v >> 1 for v in L.tx}}
+    xvars = L._noreset_xvars[side]
+    seen, stack, regs, n = set(), [c[k] >> 1], set(), 0
+    while stack:
+        v = stack.pop()
+        if v == 0 or v in seen:
+            continue
+        seen.add(v)
+        if v <= I + Lc:
+            if v in xvars:
+                cache[(side, k)] = None   # X-masked induction is not a constant's base case
+                return None
+            if v > I:
+                if v not in L._qkey[side]:
+                    cache[(side, k)] = None   # anonymous state: no untracked base-case assumptions
+                    return None
+                regs.add(L._qkey[side][v])
+            continue
+        n += 1
+        if n > cap:
+            cache[(side, k)] = None
+            return None
+        q = v - I - Lc - 1
+        stack += (a[2 * q] >> 1, a[2 * q + 1] >> 1)
+    cache[(side, k)] = frozenset(regs)
+    return cache[(side, k)]
+
+
+def noreset_sound(L):
+    """{(side, key): first edge} of the constant hypotheses that hold in the reset state (base case), by a fixpoint
+    over OT_LEC_RESET_CYCLES edges: a hypothesis holds from edge e when the reset state gives the constant
+    (reset_state), or when D(k) does not read k and every constant-hypothesised register in its cone holds from
+    edge e - 1 (D(k) == c is proved by the induction for every value of the other, free, registers).
+    Unestablished equality/FSM hypotheses cannot supply that base case."""
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    cycles = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
+    consts = {(sd, k): h[1] for (sd, k), h in L.hyp.items() if h[0] == "const"}
+    sides = lambda sd: ("gold", "gate") if sd == "both" else (sd,)
+    held = {}                                 # (side, key) -> edge, per side
+    for (sd, k), c in consts.items():
+        for s in sides(sd):
+            v, e = L.rst_val.get((s, k), (None, None))
+            if v == c:
+                held[(s, k)] = e or 1
+    hyp_side = lambda s, j: (("both", j) in consts) or ((s, j) in consts)
+    for e in range(1, cycles + 1):
+        new = {}
+        for (sd, k), c in consts.items():
+            for s in sides(sd):
+                if (s, k) in held:
+                    continue
+                cone = latch_cone(L, s, k)
+                if cone is None or k in cone:
+                    continue
+                dc, qp = (L.gc, L.gp) if s == "gold" else (L.tc, L.tp)
+                if any(dc.get(j) == qp[j] for j in cone):
+                    continue     # an unwritten register's X rail cannot seed another constant
+                # Equality/FSM hypotheses can be inductive without being true in
+                # the power-up state. They are not a base case for a constant.
+                if any(h is not None and h[0] != "const" for j in cone
+                       for h in (L.hyp.get(("both", j)), L.hyp.get((s, j)))):
+                    continue
+                if any(cs in (s, "both") and set(ks) & cone for cs, ks, _ in L.cons):
+                    continue
+                if all((s, j) in held and held[(s, j)] < e for j in cone if hyp_side(s, j)):
+                    new[(s, k)] = e
+        if not new:
+            break
+        held.update(new)
+    out = {}
+    for (sd, k) in consts:
+        es = [held.get((s, k)) for s in sides(sd)]
+        if all(x is not None for x in es):
+            out[(sd, k)] = max(es)
+    return out
+
+
+def noreset_filter(L, log, tried):
+    """Constant hypotheses on registers that are not that constant in the reset state (LEC-TOOL-4 10-27, COORD
+    ruling on no-reset constants).  The correspondence induction proves Q == c -> D(Q) == c; its base case is the
+    reset state.  A register with no reset (an X power-up, e.g. hcp_sys1 db <= nf_r on rs_take, argmax ti) that only
+    holds itself until its first load is X there, and binding it to c would assume X == c for every output that can
+    observe it before that load.  A constant hypothesis is kept only when noreset_sound shows it holds within
+    OT_LEC_RESET_CYCLES edges of reset (the register resets to c, or is reloaded every cycle from registers that
+    do); the others are dropped and never re-proposed (the register stays a free input, so an observable difference
+    is reported, never assumed away). There is no switch to assume an unknown
+    power-up value equals a constant. -> number dropped."""
+    total = 0
+    while True:                     # dropping one can unseat a register reloaded from it
+        ok = noreset_sound(L)
+        bad = [(sd, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok]
+        if not bad:
+            break
+        L.noreset_dropped = getattr(L, "noreset_dropped", {})
+        for sd, k, c in bad:
+            del L.hyp[(sd, k)]
+            tried[(sd, k, "c")] += 6
+            tried[("tc", sd, k)] += 1
+            L.noreset_dropped[(sd, k)] = c
+        total += len(bad)
+        log.append(f"no-reset constants: {len(bad)} constant hypotheses dropped (not that constant in the reset "
+                   f"state: X power-up until a load) {[f'{s}:{k}={c}' for s, k, c in bad[:6]]}")
+    return total
+
+
+def noreset_report(L):
+    """lec.json 'noreset_constants': every constant hypothesis kept, with the reset-state basis, and every one
+    dropped by noreset_filter."""
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    kept = []
+    ok = noreset_sound(L)
+    for (sd, k), h in sorted(L.hyp.items()):
+        if h[0] != "const":
+            continue
+        edge = ok.get((sd, k), -1)
+        kept.append(dict(register=k, side=sd, value=h[1], basis="reset" if edge <= 1 else "reloaded", edge=edge))
+    dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
+               if (sd, k) not in L.hyp]
+    return dict(enabled=True, reset_ports=L.rst_ports, reset_cycles=int(os.environ.get("OT_LEC_RESET_CYCLES", "4")),
+                n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
+                n_dropped=len(dropped), reloaded=[e for e in kept if e["basis"] == "reloaded"][:500],
+                dropped=dropped[:500],
+                basis=("a constant hypothesis is kept only when the reset state (every reset port asserted for "
+                       "reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic "
+                       "reload is inductively constant from already established constants; equality/FSM "
+                       "assumptions never establish a constant's base case"))
 
 
 def slang_elements(aliases_file):
@@ -3040,13 +3579,23 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # dropped in early rounds and becomes constant only once the cb_q -> r8 -> baddr chain is proved)
             m, kind = L.build(with_compare=False, with_hyp=False, free_const=0)
             zdl = dict(L.dlit)
+            # constant 1 from hold / reset (LEC-TOOL-1 10-27): a register that only ever holds or (re)loads 1 --
+            # reset value 1 and every load 1, or no reset (X power-up) and every load 1 (synthesis folds it to 1:
+            # HBM argmax ti[lv][e] low index bits, hcp_sys1 d0 = last ? nlast : 256) -- has next state 1 once the
+            # unpaired registers (itself) are held at 1.  Trying only 0 first made it fail twice and stay free.
+            # Candidate only: the induction below proves D == 1 with the reset input free, so a register that
+            # resets to 0 or ever loads a non-1 value is refuted.
+            m, kind = L.build(with_compare=False, with_hyp=False, free_const=1)
+            odl = dict(L.dlit)
             m, kind = L.build(with_compare=False, with_hyp=False)
             for side, keys in (("gold", L.gonly), ("gate", L.tonly)):    # gate-only flops: constant candidates too
                 for k in keys:
+                    one = odl.get((side, k)) == 1 and zdl.get((side, k)) != 0
                     if k.startswith("ff:") and (side, k) not in L.hyp and k not in partners and \
                             (tried[(side, k, "c")] < 2 or L.dlit.get((side, k), 2) in (0, 1) or
-                             (zdl.get((side, k)) == 0 and tried[(side, k, "c")] < 6)):
-                        L.hyp[(side, k)] = ("const", L.dlit.get((side, k)) if L.dlit.get((side, k)) in (0, 1) else 0)
+                             ((zdl.get((side, k)) == 0 or one) and tried[(side, k, "c")] < 6)):
+                        d = L.dlit.get((side, k))
+                        L.hyp[(side, k)] = ("const", d if d in (0, 1) else 1 if one else 0)
             # matched flops whose next state simulates constant on both sides (synthesis may have merged such a
             # flop into another constant one, so the gate's copy is a different, free register)
             m, kind = L.build(with_compare=False, with_hyp=False)
@@ -3103,6 +3652,16 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # State relations rejected before aliases/copies settled can become
             # inductive later; retry while candidates are still being added.
             fsm_proposals(L, log)
+        if os.environ.get("OT_LEC_SIM_REFINE", "1") != "0":
+            sim_refine(L, log, tried, seed=4242 + rnd)
+        if not L.hyp:
+            if traces is None:
+                traces = seq_traces(L, log)
+            if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
+                matched_copy_closure(L, log, traces, tried)     # (each pair / register at most once: no loop)
+            if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0":
+                trace_constant_closure(L, log, tried)
+        noreset_filter(L, log, tried)
         if not L.hyp:
             return
         m, kind = L.build(with_compare=False, with_hyp=True)
@@ -3112,8 +3671,27 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         log.append(f"correspondence round {rnd}: {len(st)} hypotheses, {len(bad)} failed "
                    f"({sum(st[n] == 'undecided' for n in bad)} undecided) {bad[:6]}")
         if not bad:
-            if structural_constant_closure(L, log) or structural_twin_closure(L, log):
-                continue     # prove the new constants before returning
+            # A closure can re-propose a constant rejected by the reset-state check.
+            # Only surviving changes need another proof round; otherwise empty
+            # rounds repeat until the time budget discards valid correspondence.
+            snap = dict(L.hyp)
+
+            def surviving_change():
+                noreset_filter(L, log, tried)
+                return L.hyp != snap
+
+            if structural_constant_closure(L, log) and surviving_change():
+                continue     # prove the new surviving relations before returning
+            if structural_twin_closure(L, log) and surviving_change():
+                continue     # rejected constants must not starve the twin closure
+            if traces is None:
+                traces = seq_traces(L, log)
+            if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
+                if matched_copy_closure(L, log, traces, tried) and surviving_change():
+                    continue
+            if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried) \
+                    and surviving_change():
+                continue
             if L.hyp == before or not adding:
                 return
             continue
@@ -3194,6 +3772,7 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
                 L.hyp[(side, k)] = ("eq", osd, c, inv)
                 rec["anon"] += 1
     for rnd in range(rounds):
+        noreset_filter(L, log, collections.Counter())
         m, _ = L.build(with_compare=False, with_hyp=True)
         st = prove(m, work, conflicts, log, tag=f"hint{rnd}")
         bad = [n for n, s in st.items() if s != "proved"]
@@ -3262,6 +3841,99 @@ def run_yosys(script, path, log):
     return r
 
 
+def superset_report(L, m, kind, verdict):
+    """COORD RULING HBM-CORE-LAT-R4 (3) / R5 collar: the per-run list of the gate-only extra bits that
+    OT_LEC_SUPERSET_VEC=1 re-keyed, each with the reason it cannot change a compare point.
+
+    binding  free   the bit is a free input of the miter (no hypothesis): an EQUIVALENT miter proves no compare
+                    point (outputs, matched next states, black-box pins) depends on it, i.e. it is unobservable;
+             const / eq / cube   the bit is bound by a register-correspondence hypothesis that the same induction
+                    proved (the bit equals a constant / a matched register): it carries no independent value;
+             rekeyed / not built   a later pass renamed the key or no miter exists: NOT shown (fail closed).
+    observers  compare / hypothesis outputs whose AIG cone structurally contains the free bit (0 = no fan-out to
+               any compare point at all; > 0 = fan-out that the proof showed is functionally masked).
+    -> dict(enabled, n_extra, all_shown, extra_bits=[...], basis)"""
+    ex = list(getattr(L, "superset_extra", []) or [])
+    free = {k: v for v, (kd, k) in kind.items() if kd == "gate_only"}
+    bit_of = {}
+    for i, (b, k) in enumerate(ex):
+        if k in free:
+            bit_of[free[k]] = i
+    # one forward pass: bitmask of the free extra bits each AIG node depends on (only nodes that depend on one)
+    dep = {v: 1 << i for v, i in bit_of.items()}
+    if dep:
+        ands, base = m.ands, m.ni + 1
+        for k in range(len(ands) // 2):
+            a, b = dep.get(ands[2 * k] >> 1, 0), dep.get(ands[2 * k + 1] >> 1, 0)
+            if a or b:
+                dep[base + k] = a | b
+    obs = collections.defaultdict(list)
+    for o, n in zip(m.outs, m.onames):
+        d = dep.get(o >> 1, 0)
+        while d:
+            low = d & -d
+            obs[low.bit_length() - 1].append(n)
+            d ^= low
+    rows, eq = [], verdict == "EQUIVALENT"
+    for i, (b, k) in enumerate(ex):
+        if k in free:
+            binding = "free"
+        elif k in L.tp and ("gate", k) in L.hyp:
+            binding = L.hyp[("gate", k)][0]
+        elif k in L.tp:
+            binding = "bound"
+        else:
+            binding = "rekeyed"
+        ok = eq and binding in ("free", "const", "eq", "cube")
+        rows.append(dict(bit=b, key=k, binding=binding, observers=len(obs.get(i, ())),
+                         first_observers=obs.get(i, [])[:4], shown=ok))
+    return dict(enabled=True, n_extra=len(rows), all_shown=all(r["shown"] for r in rows), extra_bits=rows,
+                basis=("free bits: free inputs of the proved miter (unobservable); const/eq/cube bits: bound by "
+                       "inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"))
+
+
+def ft_parallel_normalise(kit, top, netlist, out, rec):
+    """KV-CORES-PV2 10-27 (12.2a1 island ft arcs, kit island_ft.json): an arc with n > 1 parallel drivers (island
+    mesh_driver) is one logical driver in RTL -- driver j >= 1 drives its own net <sink>__p<j> -- and a physical short in
+    the placed/routed ODB (ot_ft_short).  Parallel identical buffers on one input are one driver functionally, so the gate
+    netlist's short is mapped back to the RTL form (Y of driver j -> <sink>__p<j>) before the AIG build; fail-closed: every
+    declared driver must be found with Y on <sink> or <sink>__p<j>.  No island_ft.json or no parallel arc -> unchanged."""
+    fj = Path(kit) / "island_ft.json"
+    if not fj.is_file():
+        return netlist
+    par = [(a["sink"], j, c["name"]) for a in json.loads(fj.read_text())["arcs"]
+           for j, c in enumerate(a["cells"]) if j]
+    if not par:
+        return netlist
+    op = gzip.open if str(netlist).endswith(".gz") else open
+    with op(netlist, "rt", errors="replace") as f:
+        t = f.read()
+    m = re.search(r"^module\s+\\?" + re.escape(top) + r"\s*\(.*?\);", t, re.M | re.S)
+    if not m:
+        raise Unproven(f"ft_parallel: module {top} not found in {netlist}")
+    wires, done = [], []
+    for sink, j, name in par:
+        cm = re.compile(r"(^\s*\S+\s+\\?" + re.escape(name) + r"\s*\((?:[^;])*?\.Y\s*\(\s*)\\?([^\s()]+)(\s*\))", re.M | re.S)
+        hits = cm.findall(t)
+        if len(hits) != 1:
+            raise Unproven(f"ft_parallel: driver {name} found {len(hits)} times")
+        net = hits[0][1]
+        pn = f"{sink}__p{j}"
+        if net == sink:
+            t = cm.sub(lambda q: q[1] + pn + q[3], t)
+            wires.append(pn)
+        elif net != pn:
+            raise Unproven(f"ft_parallel: driver {name} Y on {net}, not {sink} / {pn}")
+        done.append(name)
+    if wires:
+        m = re.search(r"^module\s+\\?" + re.escape(top) + r"\s*\(.*?\);", t, re.M | re.S)
+        t = t[:m.end()] + "".join(f"\n  wire {w};" for w in wires) + t[m.end():]
+    rec["ft_parallel"] = dict(drivers=done, remapped=wires, source=str(netlist))
+    dst = Path(out) / "gate_ft_parallel.v"
+    dst.write_text(t)
+    return str(dst)
+
+
 def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
@@ -3278,6 +3950,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         rec.update(top=top, netlist=netlist, synth_frontend=gate_fe, gold_frontend=gold_fe)
         if gold_fe == gate_fe:
             rec["warning"] = "gold frontend == synthesis frontend (frontend bugs are not independent)"
+        netlist = ft_parallel_normalise(kit, top, netlist, out, rec)
         types = netlist_cell_types(netlist)
         bad = sorted(c for c in types if UNSUPPORTED_CELLS.match(c) and not ICG_CELLS.match(c))
         if bad:
@@ -3352,6 +4025,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             rec["hints"]["dropped"] = dict(n=len(rec["hints"]["dropped"]), first=rec["hints"]["dropped"][:40])
         elif hints:
             raise LecError(f"hints file {hints} not found")
+        noreset_filter(L, log, collections.Counter())
+        rec["noreset_constants"] = noreset_report(L)
         (out / "hyp.json").write_text(json.dumps([[sd, k, list(h)] for (sd, k), h in sorted(L.hyp.items())]) + "\n")
         m, kind = L.build(with_compare=True, with_hyp=True)
         rec["t_corr_s"] = round(time.time() - t1, 1)
@@ -3436,6 +4111,13 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             if rec["x_dont_care_points"]["n"]:
                 rec["note"] += (f"; {rec['x_dont_care_points']['n']} of them reach an RTL X (don't care: equal "
                                 f"wherever the RTL is not X)")
+        if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
+            rec["superset_vec"] = superset_report(L, m, kind, rec["verdict"])
+            if rec["verdict"] == "EQUIVALENT" and not rec["superset_vec"]["all_shown"]:
+                bad = [e["bit"] for e in rec["superset_vec"]["extra_bits"] if not e["shown"]]
+                rec["verdict"] = "UNPROVEN"
+                rec["reason"] = (f"OT_LEC_SUPERSET_VEC: {len(bad)} extra gate bit(s) not shown unobservable "
+                                 f"(first: " + ", ".join(bad[:6]) + ")")
     except LintFail:
         pass
     except Unproven as e:
@@ -3448,6 +4130,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
     if lc is not None and getattr(lc, "cycle_dropped", None):   # hypotheses dropped to break binding cycles
         rec["cycle_dropped"] = dict(n=len(lc.cycle_dropped),
                                     first=[f"{sd}:{k} {list(h)}" for (sd, k), h in lc.cycle_dropped[:40]])
+    if os.environ.get("OT_LEC_SUPERSET_VEC") == "1" and "superset_vec" not in rec:   # the check did not finish
+        ex = list(getattr(lc, "superset_extra", []) or []) if lc is not None else []
+        rec["superset_vec"] = dict(enabled=True, n_extra=len(ex), all_shown=False,
+                                   extra_bits=[dict(bit=b, key=k, binding="not built", observers=None, shown=False)
+                                               for b, k in ex],
+                                   basis=f"not shown: verdict {rec.get('verdict')} before the miter was proved")
     rec["t_total_s"] = round(time.time() - t0, 1)
     rec["provenance"] = _provenance(kit)
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
@@ -3468,6 +4156,8 @@ def via_docker(args, image, mem):
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
            "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}"]
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
+    if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
+        cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
     sol = os.environ.get("OT_LEC_SOLVER", "")
     if sol and os.path.isdir(sol):
         cmd += ["-v", f"{os.path.abspath(sol)}:/lecsolver:ro", "-e", "LEC_SOLVER_PATH=/lecsolver"]

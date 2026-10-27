@@ -86,3 +86,31 @@ def test_pin_gate_refusal_message():
     msg = G.pin_gate_refusal("dsdv_x", pg)
     assert msg.startswith("dsdv_x: plan pin table fails core_pin_sites_gate {'stacked': 2, 'off_face': 1} (2 stacked pins")
     assert "['c']" in msg and msg.endswith("fix the plan pin assignment, not the kit")
+
+
+def test_planned_tree_cts_hooks(tmp_path):
+    # S81-CORE-LAT-R12: only a kit with a plan core tree gets the CTS-open-only TritonCTS + report-only post-CTS
+    hold, post = "source /work/face_capture_release.tcl\n", "source /work/tap_balance.tcl\nsource /work/leaf_affinity.tcl\n"
+    (tmp_path / "hold_budget.tcl").write_text(hold)
+    (tmp_path / "cts_post.tcl").write_text(post)
+    cfg = ["export SKIP_CTS_REPAIR_TIMING = 1", "export POST_CTS_TCL = /work/cts_post.tcl",
+           "export PRE_CTS_TCL = /work/hold_budget.tcl"]
+    cfg0 = list(cfg)
+    assert G.planned_tree_cts(tmp_path, cfg) is False          # no core_infra_plan.json: byte-identical
+    (tmp_path / "core_infra_plan.json").write_text(json.dumps({"core_tree": None}))
+    assert G.planned_tree_cts(tmp_path, cfg) is False
+    assert (tmp_path / "hold_budget.tcl").read_text() == hold and (tmp_path / "cts_post.tcl").read_text() == post
+    (tmp_path / "core_infra_plan.json").write_text(json.dumps({"core_tree": {"cts_open": []}}))
+    with pytest.raises(SystemExit, match="core_infra_cts.tcl"):
+        G.planned_tree_cts(tmp_path, cfg)
+    (tmp_path / "core_infra_cts.tcl").write_text("set ::ot_ci_cts_plan_open 0\n")
+    assert G.planned_tree_cts(tmp_path, cfg) is True
+    h = (tmp_path / "hold_budget.tcl").read_text()
+    assert h.startswith(hold) and h.rstrip().endswith("source /work/core_infra_cts.tcl")
+    c = (tmp_path / "cts_post.tcl").read_text()
+    assert c.endswith(post) and "set ::env(OT_TAP_REPORT_ONLY) 1" in c and "set ::env(OT_LEAF_AFF_REPORT_ONLY) 1" in c
+    # CTS-HOOK-PORT-1: same bytes as the R12 in-generator form; config.mk lines unchanged (hooks edited in place)
+    assert h == hold + "# S81-CORE-LAT-R12: plan-built tree -> TritonCTS only on CTS-open nets\nsource /work/core_infra_cts.tcl\n"
+    assert c == ("# S81-CORE-LAT-R12: plan-built tree -> tap balance + leaf affinity measure/report only\n"
+                 "set ::env(OT_TAP_REPORT_ONLY) 1\nset ::env(OT_LEAF_AFF_REPORT_ONLY) 1\n" + post)
+    assert cfg == cfg0

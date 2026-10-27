@@ -96,11 +96,17 @@ module tb_kvslice;
         hc_rx_cr <= hc_rx_v;                       // host consumes every die->host word at once (returns its credit)
         if (hc_rx_v) rx_words <= rx_words + 1;
     end
+    // KV-BOOT-SETUP 10-26 host boot ordering: the die accepts boot images only after the HOST sequencer released die reset
+    // (die_rst_n: cold-boot HBM check of all 128 slices passed). The board issues its FIRST frame DIE_READY_CORE core cycles
+    // after link up: a DECLARED static bound (measured link up 531 -> die_rst_n 1093 = 562 cycles, CHECKED, boot fix B
+    // vehicle); no die status feedback. Fail-closed: any boot_pr word while die_rst_n is 0 is an error (lost words).
+    localparam integer DIE_READY_CORE = 1024;
+    integer hold_first = 0;
     // credit-based host sender (IBUF 4 of the host CDC write face)
     always @(posedge ck_host) if (host_up) begin
         automatic integer c = credits + (hc_tx_cr ? 1 : 0);
         hc_tx_v <= 1'b0;
-        if (sent < nfr && c > 0) begin
+        if (sent < nfr && c > 0 && cyc_core >= hold_first) begin
             hc_tx_v <= 1'b1; hc_tx_d <= frames[sent] ^ ((sent == mut_frame) ? (528'd1 << 19) : 528'd0);
             sent <= sent + 1; c = c - 1;
         end
@@ -144,10 +150,14 @@ module tb_kvslice;
     // boot-path observation (hub_Wi HOST outputs at the top lanes): reset / boot_go levels to hub_C, boot_pr words
     wire [4:0] bo_sig = {dut.x_hub_Wi_o_host_boot_go_d1_hgi_WN_7[0], dut.x_hub_Wi_o_host_host_rst_n_d1_hub_Wo[0], dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0],
                          dut.x_hub_Wi_o_host_die_rst_n_hub_C[0], dut.x_hub_Wi_o_host_boot_go_hub_C[0]};
-    reg [4:0] bo_q = 0; reg [142:0] bpr_q = 0; integer bpr_n = 0;
+    reg [4:0] bo_q = 0; reg [142:0] bpr_q = 0; integer bpr_n = 0, n_pre_rst = 0;
     always @(posedge ck_core) begin
         bo_q <= bo_sig; bpr_q <= dut.x_hub_Wi_o_host_boot_pr_hub_C[142:0];
         if (dut.x_hub_Wi_o_host_boot_pr_hub_C[142:0] != bpr_q) bpr_n <= bpr_n + 1;
+        if (dut.x_hub_Wi_o_host_boot_pr_hub_C[74] && !bo_sig[1]) begin
+            if (n_pre_rst == 0) $display("KVSLICE_FAIL boot_pr word before die reset release cyc %0d", cyc_core);
+            n_pre_rst = n_pre_rst + 1; errors = errors + 1;
+        end
         if (bo_sig != bo_q) $display("BOOTOBS cyc %0d boot_go_d1_hgi_WN_7 %b host_rst_n %b hbm_rst_n %b die_rst_n %b boot_go %b", cyc_core,
                                      bo_sig[4], bo_sig[3], bo_sig[2], bo_sig[1], bo_sig[0]);
     end
@@ -216,6 +226,7 @@ module tb_kvslice;
                  cyc_core, $time, sent, credits, n_ready, t_setup >= 0, bpr_n, rx_words, host_faults);
         $fflush;
     end
+    reg boot_pass = 0;
     initial begin
         integer fd, t; reg [63:0] d;
         if (!$value$plusargs("PHASE=%s", phase)) phase = "boot";
@@ -246,16 +257,24 @@ module tb_kvslice;
         // board link up only once the die's link end can receive: its HOST is out of reset (host_rst_n at the hub) and
         // both SerDes halves report tx_up, + 64 host cycles for the 30-cycle lanes.  Before this the board adapter's
         // idle flits are lost and its FDI sequence is ahead of the die's (die adapter f_seq on the first flit).
-        wait (bo_sig[3] && dut.sys_SW.u_core.tx_up && dut.sys_SE.u_core.tx_up);
-        repeat (64) @(posedge ck_host); host_up = 1;
+        while (!(bo_sig[3] && dut.sys_SW.u_core.tx_up && dut.sys_SE.u_core.tx_up) && cyc_core < maxcyc)
+            @(posedge ck_core);
+        if (!(bo_sig[3] && dut.sys_SW.u_core.tx_up && dut.sys_SE.u_core.tx_up))
+            $fatal(1, "KVSLICE_BOOT FAIL link wait exceeded MAXCYC=%0d host_reset=%0b SW=%0b SE=%0b",
+                   maxcyc, bo_sig[3], dut.sys_SW.u_core.tx_up, dut.sys_SE.u_core.tx_up);
+
+        repeat (64) @(posedge ck_host); hold_first = cyc_core + DIE_READY_CORE; host_up = 1;
         $display("KVSLICE host board link up at core cycle %0d", cyc_core);
         while (cyc_core < maxcyc && !(n_ready >= n_exp && n_exp > 0 && (t_setup >= 0 || cyc_core > t_last + setup_wait)) && t_bfault < 0)
             @(posedge ck_core);
         repeat (2000) @(posedge ck_core);
+        boot_pass = errors == 0 && n_ready == n_exp && n_exp > 0 && t_bfault < 0 && t_setup >= 0 && !cf_fault;
         $display("KVSLICE_BOOT %s frames_sent %0d/%0d images_ready %0d/%0d errors %0d boot_fault %0d setup_ready %0d (cyc %0d) cf_fault %0d pll_locked %0d host_faults %b die_to_host_words %0d last_ready_cyc %0d cyc %0d",
-            (errors == 0 && n_ready == n_exp && n_exp > 0 && t_bfault < 0 && t_setup >= 0 && !cf_fault) ? "PASS" : "FAIL",
+            boot_pass ? "PASS" : "FAIL",
             sent, nfr, n_ready, n_exp, errors, (t_bfault >= 0), (t_setup >= 0), t_setup, cf_fault, locked, host_faults, rx_words,
             t_last, cyc_core);
+        // TOK-QK-3 10-27: a FAIL verdict is never a clean exit (no token phase after a failed boot; exit 0 = PASS only).
+        if (!boot_pass) $fatal(1, "KVSLICE_BOOT verdict FAIL: bench exits nonzero");
         if (post > 0) begin
             repeat (post) @(posedge ck_core);
             $display("KVSLICE_POST cyc %0d events %0d fdi_tx_words %0d", cyc_core, po_n, ftx_n);

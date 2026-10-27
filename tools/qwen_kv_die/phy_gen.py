@@ -49,15 +49,27 @@ SPEC = dict(
                      "(bump field + D2D adapter); 777.6 um of die edge on each die",
         "fdi_clock": "1.2 GHz, the local core clock of each die (both dies run off the KV-die PLL; the macro's receiver "
                      "retimes the forwarded lane clock into it)",
-        "boundary_timing": "registered FDI pins: ASAP7 flop clk->q / setup + 3 FO4"})
+        "boundary_timing": "registered FDI pins: ASAP7 flop clk->q / setup + 3 FO4",
+        "line_side": "link_v/link_flit out, far_v/far_flit in (583-bit word) = the bump lanes to the far die, M5 pins on the "
+                     "top edge right of the FDI block; untimed in the LIB (forwarded-clock lanes retimed inside the macro)"})
+
+
+def line_pins(fw: int = FW) -> list:
+    """the declared LINE SIDE (die-plan contents[].bump_ports of u_ucie_rom; the functional model's link_* / far_*):
+    the bump lanes to the far die, absent from the as-built FDI netlist and bound by bind.py bump_pins to die ports."""
+    P = G.Pin
+    return [P("link_v", 1, "output", "line"), P("link_flit", fw, "output", "line"),
+            P("far_v", 1, "input", "line"), P("far_flit", fw, "input", "line")]
 
 
 def generate(out: Path, pg_access_layer: str = "M4") -> dict:
     cal = asap7.calibration()
-    plist = G.pins(FW)
+    fdi = G.pins(FW)
+    line = line_pins(FW)
+    plist = fdi + line
     w = asap7.snap_up(SPEC["width_um"], asap7.METAL["width_snap_um"])
     h = asap7.snap_up(SPEC["height_um"], asap7.METAL["height_snap_um"])
-    lef, pin_info = G.write_lef(NAME, w, h, plist, 0.192, pg_access_layer=pg_access_layer)
+    lef, pin_info = G.write_lef(NAME, w, h, fdi, 0.192, pg_access_layer=pg_access_layer, line_pins=line)
     lef = lef.replace("tools/qwen_missing/link_phy_gen.py", "tools/qwen_kv_die/phy_gen.py")
     assumed = dict(SPEC["assumed"])
     if pg_access_layer == "M6":
@@ -79,7 +91,11 @@ def generate(out: Path, pg_access_layer: str = "M4") -> dict:
     comment = f"{NAME}: licensed UCIe PHY abstract, FDI boundary timing only (ASSUMED registered pins)"
     for c, t in per.items():
         (d / f"{NAME}_{c}.lib").write_text(write_liberty(NAME, t, plist, w * h, None, comment))
-    (d / f"{NAME}_bb.v").write_text(blackbox_verilog(NAME, plist, comment))
+    (d / f"{NAME}_bb.v").write_text(blackbox_verilog(NAME, plist, comment).replace(
+        "// Blackbox view for synthesis and place-and-route (the hard macro).\n",
+        "// Blackbox view for synthesis and place-and-route (the hard macro).\n"
+        "// Line-side ports are the offshore bump interface already exported by the die plan;\n"
+        "// they match the functional ot_qkvd_ucie_x64_phy in rtl/qwen_split/qfd_link_slots.sv.\n"))
     model = G.model_sv(NAME, FW, LAT["typical"]).replace(
         "tools/qwen_missing/link_phy_gen.py", "tools/qwen_kv_die/phy_gen.py")
     # Benches also exercise the legacy adapter-only word. Keep FW configurable

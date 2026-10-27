@@ -52,7 +52,9 @@ import core_flow  # noqa: E402  (FLOW-FIX 10-25 core-kit flow defaults: RC cal, 
 TIME_UNIT_PS = 1.0   # constraint.sdc time unit (ASAP7 liberty: ps)
 
 CORE_MARGIN_UM = 4.32
-RECT = {"M3": (0.018, 0.038), "M4": (0.084, 0.024), "M5": (0.024, 0.084)}   # repin.py: (w, h) of a pin shape
+RECT = {"M3": (0.018, 0.038), "M4": (0.084, 0.024), "M5": (0.024, 0.084),   # repin.py: (w, h) of a pin shape
+        "M6": (0.084, 0.032)}   # M6 pin-only grant (E/W faces; ASAP7 M6 width 0.032, area 0.002688 >= 0.0021875)
+M6_LATTICE = (0.064, 0.032)    # die/parent M6 tracks (pitch, offset): tools/die_plan/pin_template.LATTICE, delta_kitsspare2_1025.TRACK
 IO_BUDGET = 0.2
 UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 60.0, 25.0, 0.5, 2.0
 
@@ -324,6 +326,77 @@ def face_of(x, y, w, h):
     return min([(x, "W"), (w - x, "E"), (y, "S"), (h - y, "N")])[1]
 
 
+def hard_children_refusal(mod, spec, repo):
+    """S81-CORE-LAT-R14: the hard-children refusal names, per distinct child view, exactly what a parent kit would need
+    from it (the refusal itself stays: children must be SIGNED first, METHODOLOGY 12.3 v5.0 early taps need the child's
+    own signed insertion delay).  Per view: instance count, LEF / TT lib / FF lib / black-box _bb.v present, insertion.json
+    present, signoff/signoff.json verdict (missing = not signed)."""
+    views = {}
+    for c in spec["children"]:
+        views.setdefault(c["view"], []).append(c.get("inst", "?"))
+    rows = []
+    for v, insts in sorted(views.items()):
+        d, m = repo / v, Path(v).name
+        have = {k: (d / f"{m}{ext}").is_file() for k, ext in (("lef", ".lef"), ("tt", "_tt.lib"), ("ff", "_ff.lib"),
+                                                                ("bb", "_bb.v"))}
+        have["insertion"] = (d / "insertion.json").is_file()
+        so = None
+        for f in (d / "signoff.json", d.parents[1] / "signoff" / "signoff.json"):
+            if f.is_file():
+                try:
+                    so = json.loads(f.read_text()).get("verdict")
+                except (ValueError, AttributeError):
+                    so = "UNREADABLE"
+                break
+        miss = [k for k, ok in have.items() if not ok] + ([] if so == "SIGNED" else [f"signoff={so or 'none'}"])
+        rows.append(f"{m} x{len(insts)} missing [{', '.join(miss) or 'nothing'}]")
+    return (f"{mod}: {len(spec['children'])} hard children must be SIGNED first (refused): " + "; ".join(rows))
+
+
+def m6_pin_grant(pins, hc, plan):
+    """S81-CORE-LAT-R14 (xrt3 KeyError 'M6'): a plan core whose pin table carries M6 pins (OWNER 10-12 "pin-bound edge
+    tiles get an M6 pin-only grant", KITS-SPARE-2 10-25 xrt3 E/W = M4+M6) needs (1) the plan to grant M6 to the core
+    (hard_cores[].obs_max == "M6": the core obstructs M1..M6; the kit never routes above the plan's grant), (2) M6
+    pins only on E/W faces (M6 is horizontal), and (3) the kit M6 tracks on the DIE M6 lattice as seen in the core frame
+    (origin + track_offset_um + orient), identical for every plan instance of the pin view and matching every pin.
+    -> None when there are no M6 pins (kit byte-identical), else the kit-frame M6 y track offset (um)."""
+    m6 = [q for q in pins if q["layer"] == "M6"]
+    if not m6:
+        return None
+    if hc.get("obs_max") != "M6":
+        raise SystemExit(f"{hc['module']}: {len(m6)} M6 pins but the plan grants obs_max {hc.get('obs_max')!r} "
+                         "(an M6 pin needs the plan M6 grant; the kit never raises a core's layer ceiling)")
+    w, h = hc["outline_um"]
+    bad = [q["name"] for q in m6 if face_of(q["x"], q["y"], w, h) not in "EW"]
+    if bad:
+        raise SystemExit(f"{hc['module']}: {len(bad)} M6 pins off the E/W faces (M6 is horizontal): {bad[:4]}")
+    pn, on = round(M6_LATTICE[0] * 1000), round(M6_LATTICE[1] * 1000)       # integer nm: no float modulo
+    ph = {round(q["y"] * 1000) % pn for q in m6}
+    if len(ph) != 1:
+        raise SystemExit(f"{hc['module']}: M6 pins on {len(ph)} track phases {sorted(ph)} nm (pitch {pn} nm)")
+    ph = ph.pop()
+    insts = [c for t in plan["partition_types"].values() for c in t.get("hard_cores", [])
+             if c.get("module") == hc["module"] and c.get("pins_file") == hc.get("pins_file")]
+    for c in insts:
+        oy = round(c["origin_um"][1] * 1000) + round(c.get("track_offset_um", [0.0, 0.0])[1] * 1000)
+        mir = c.get("orient", "R0") in ("MX", "R180")
+        loc = (round(c["outline_um"][1] * 1000) + oy - on) % pn if mir else (on - oy) % pn
+        if loc != ph:
+            raise SystemExit(f"{hc['module']}: plan instance {c.get('inst')} puts the die M6 lattice at {loc} nm in the "
+                             f"core frame, pins sit at {ph} nm")
+    return ph / 1000.0
+
+
+def kit_tracks(m6_off):
+    """the kit make_tracks.tcl: TRACKS unchanged unless the core has an M6 pin grant (then M6 y on the die lattice)."""
+    if m6_off is None:
+        return TRACKS
+    old = "make_tracks M6 -x_offset 0.016 -x_pitch 0.064 -y_offset 0.016 -y_pitch 0.064\n"
+    assert TRACKS.count(old) == 1
+    return TRACKS.replace(old, f"make_tracks M6 -x_offset 0.016 -x_pitch 0.064 -y_offset {m6_off:.3f} -y_pitch 0.064"
+                               "  ;# M6 pin grant: die M6 lattice in the core frame\n")
+
+
 def lef_dirs(path):
     d, cur = {}, None
     for ln in Path(path).read_text().splitlines():
@@ -591,10 +664,51 @@ def _ms():
     return m
 
 
+def clock_roots(spec):
+    """clock-root port BASES of a kit spec (clock_port + clock_ports[], bus bits folded: xk[0..3] -> xk), clock_port
+    first.  S81-CORE-LAT-R14 10-27: the face_guard skip set must name EVERY clock root, not only clock_port (the
+    dsfd_cfifo_crs4 census kit checked cr_s / xk[3:0] as data pins: 5 false 'shared' fails, and its SDC left them
+    unclocked)."""
+    base = lambda n: re.sub(r"\[\d+\]$", "", n)
+    out = [spec["clock_port"]]
+    for c in spec.get("clock_ports") or []:
+        if base(c) not in out:
+            out.append(base(c))
+    return out
+
+
+def multi_root_refusal(module, spec):
+    """None for a single-root core, else the refusal message.  This generator writes ONE kit clock (clk on clock_port,
+    one vclk IO frame, one 12.3 latency target / one plan clock entry, tap_balance on that port).  A multi-root core
+    (spec clock_ports with more than one base, e.g. dsfd_cfifo_crs4 cr + cr_s + forwarded lane clocks xk[0..3],
+    ot_s81sl_capc5r ck_rt/ck_cw/ck_ce/ck_rn/ck_rs) would get a kit whose other roots are unclocked data pins -- refuse
+    (fail closed) until per-root clocks, per-entry-domain IO frames (spec clock_entry_domains) and per-root 12.3 entries
+    exist here."""
+    roots = clock_roots(spec)
+    if len(roots) <= 1:
+        return None
+    return (f"{module}: multi-root core {roots} (spec clock_ports {spec.get('clock_ports')}): gen_core_kit_legacy writes "
+            f"one kit clock on {roots[0]} only; the other roots would be unclocked data pins (refused: needs per-root "
+            f"create_clock + clock_entry_domains IO frames + one 12.3 entry per root)")
+
+
 def pin_gate_refusal(module, pg):
     """refusal message for a core_pin_sites_gate FAIL (ROOT-MERGE-23: the f-string used bare names -> NameError)"""
     return (f"{module}: plan pin table fails core_pin_sites_gate {pg['counts']} ({pg['stacked_pins']} stacked "
             f"pins, e.g. {pg['examples']}) -- fix the plan pin assignment, not the kit")
+
+
+def planned_tree_cts(kd, cfg):
+    """S81-CORE-LAT-R12 (ODB-0370 root cause): a master-plan core tree (core_infra, 12.7c/12.8b) is built from the
+    plan before GPL with dont_touch cells and nets.  TritonCTS ignores dont_touch nets, re-buffers the planned tree and
+    stops on the first planned buffer (R10 l0r std + NDR: mp_ck_T1_br).  So, for such a kit only:
+      PRE_CTS  sources core_infra_cts.tcl (TritonCTS on the plan's CTS-open nets only, none for a leaf-complete tree;
+               fail-closed census of every register clock pin);
+      POST_CTS tap_balance.tcl and leaf_affinity.tcl run REPORT-ONLY (the plan sets latency, d1 sizing and the
+               same-leaf pairs; a post-CTS delay chain or leaf move would be an unplanned residual edit, 12.8 d2).
+    Kits without a plan tree are byte-identical.  CTS-HOOK-PORT-1: the one shared implementation is
+    tools/die_plan/core_infra.py kit_cts_hook (via master_slice.plan_tree_cts), used by every core-kit generator."""
+    return _ms().plan_tree_cts(kd, cfg)
 
 
 def main():
@@ -668,7 +782,10 @@ def main():
     mod = spec["top"]
     assert mod == hc["module"], (mod, hc["module"])
     if spec.get("children"):
-        raise SystemExit(f"{mod}: hard children {[c['view'] for c in spec['children']]} must be signed first (refused)")
+        raise SystemExit(hard_children_refusal(mod, spec, REPO))
+    _mr = multi_root_refusal(mod, spec)
+    if _mr:
+        raise SystemExit(_mr)
     w, h = hc["outline_um"]
     per = float(plan["die"]["period_ps"])
     if modern:
@@ -753,10 +870,16 @@ def main():
                 raise SystemExit(f"{master}: site {x},{y} ({mw}x{mh}) outside the core area of {w}x{h}")
             mplace[master].append((x, y, o))
     # pins: exact plan centres + plan shapes, on the kit tracks
+    m6_off = m6_pin_grant(pins, hc, plan)
     bad = []
     for q in pins:
         L, x, y = q["layer"], q["x"], q["y"]
-        c, o, p = {"M3": (x, 0.009, 0.036), "M5": (x, 0.012, 0.048), "M4": (y, 0.012, 0.048)}[L]
+        lay = {"M3": (x, 0.009, 0.036), "M5": (x, 0.012, 0.048), "M4": (y, 0.012, 0.048)}
+        if m6_off is not None:
+            lay["M6"] = (y, m6_off, 0.064)
+        if L not in lay:
+            raise SystemExit(f"{mod}: pin {q['name']} on {L}: no kit track table entry (plan grant M3-M5, M6 via obs_max)")
+        c, o, p = lay[L]
         if abs((c - o) / p - round((c - o) / p)) > 1e-3:
             bad.append(q["name"])
     if bad:
@@ -890,7 +1013,7 @@ def main():
     (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
         schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json", clock_ports=[ckb],
         unused_clock_ports=[], reset_ports=rsb, data_pin_exemptions=[]), indent=1) + "\n")
-    skip = "^(" + "|".join(re.escape(x) for x in [ckb] + rsb) + r")(\[[0-9]+\])?$"
+    skip = "^(" + "|".join(re.escape(x) for x in clock_roots(spec) + rsb) + r")(\[[0-9]+\])?$"
     (kd / "face_guard_skip.txt").write_text(skip + "\n")
     ff = (TOOL / "face_flops.tcl").read_text()
     # the skip line = exactly one "set ff_skip_re {...}" line (main 6c39897574 added rst_o_<k> + a trailing comment)
@@ -947,7 +1070,7 @@ def main():
     shutil.copyfile(S81 / "cores/svc/pin_audit_core.py", kd / "pin_audit.py")
     shutil.copyfile(S81 / "cores/svc/dump_placed.py", kd / "dump_placed.py")
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if mplace else ""))
-    (kd / "make_tracks.tcl").write_text(TRACKS)
+    (kd / "make_tracks.tcl").write_text(kit_tracks(m6_off))
     (kd / "corners.tcl").write_text(CORNERS_TCL)
     (kd / "drv.tcl").write_text("# GENERATED by gen_core_kit_legacy.py: fanout cap for repair_design (resize + GRT stages)\n"
                                 f"set_max_fanout {rec.get('max_fanout', 24)} [current_design]\n")
@@ -1001,7 +1124,7 @@ def main():
            "export PDN_TCL = /work/pdn.tcl",
            "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
-           "export MAX_ROUTING_LAYER = M5",
+           f"export MAX_ROUTING_LAYER = {'M5' if m6_off is None else 'M6'}",   # M6 only under the plan M6 pin grant
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
@@ -1049,6 +1172,7 @@ def main():
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, mod, [w, h], a.master_slice, plan, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl")
+    planned_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"

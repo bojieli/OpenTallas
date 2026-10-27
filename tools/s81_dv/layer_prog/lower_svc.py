@@ -295,8 +295,21 @@ class Job:
             assert 0 < len(sel) <= NSEL_MAX and np.all(np.diff(sel) > 0) and sel.min() >= 0 and sel.max() < 1 << 21, \
                 'selection ids outside the SEL_IDS ABI'
             li = self.meta['layer_index']
-            ck = ld(f'state/kv.ckv{li}.codes.bin', files[f'state/kv.ckv{li}.codes.bin'])[sel].astype(np.int64)
-            cs = ld(f'state/kv.ckv{li}.scale.bin', files[f'state/kv.ckv{li}.scale.bin'])[sel].astype(np.int64)
+            ck_all = ld(f'state/kv.ckv{li}.codes.bin', files[f'state/kv.ckv{li}.codes.bin'])
+            cs_all = ld(f'state/kv.ckv{li}.scale.bin', files[f'state/kv.ckv{li}.scale.bin'])
+            n_state = len(ck_all)
+            if sel.max() >= n_state:
+                # TOK-DS-7 (10-27): the stored rows entering attention are the state rows + the compressed row this
+                # token appends (attn.cmp.row_qdq; same writer/packing as dv_layer_fixtures.state_images, cf.
+                # toksim_gl24_attnfix "1,048,575 rows + the row L20 appends this token").  At ratio 1 (L20) the
+                # indexer selects that row (id n_state); it is written to the ckv region before the held-row fetch.
+                assert sel.max() == n_state and 'attn.cmp.row_qdq' in ops, 'selection beyond the appended row'
+                import rtl_v41_fullshape_layer_campaign as LC
+                onib, osc = LC.pack_fp4_e4m3(op('attn.cmp.row_qdq')[None])
+                ck_all = np.vstack([ck_all, np.asarray(onib).reshape(1, -1).astype(ck_all.dtype)])
+                cs_all = np.vstack([cs_all, np.asarray(osc).reshape(1, -1).astype(cs_all.dtype)])
+            ck = ck_all[sel].astype(np.int64)
+            cs = cs_all[sel].astype(np.int64)
             nib = np.stack([ck & 15, ck >> 4], axis=2).reshape(len(sel), D)      # E2M1 packed low nibble first
             fmt = np.concatenate([fmt, np.ones(len(sel), np.int64)])
             codes_all, sc_all = np.vstack([codes_all, nib]), np.vstack([sc_all, cs])

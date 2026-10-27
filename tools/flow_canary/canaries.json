@@ -2,6 +2,8 @@
  "schema": "opentallas.flow_canary.spec.v1",
  "note": "One reference partition per die, regenerated from main's tools by the ot-run job and run through the die's full kit flow. golden = the known result of the same item (verdict + TT setup / FF hold WNS ps); null = BASELINE (the first canary PASS on all non-signoff stages sets it). FLOW-CANARY 2026-10-25.",
  "watch": ["tools/die_plan/gen_phys.py", "tools/die_plan/gen.py", "tools/die_plan/gen_rtl.py", "tools/die_plan/*.tcl",
+           "tools/die_plan/core_flow.py", "tools/die_plan/core_infra.py", "tools/die_plan/core_infra_htree.py", "tools/die_plan/master_slice.py",
+           "tools/die_plan/native_bb.py", "tools/die_plan/kit_preflight.py",
            "tools/die_plan/face_guard.py", "tools/die_plan/signoff.py", "tools/die_plan/lec.py",
            "tools/die_plan/selrange_gate.py", "tools/die_plan/sdc_lint.py", "tools/die_plan/port_bind_gate.py",
            "tools/die_plan/reg_fanout_gate.py", "tools/die_plan/rtl_lint.py", "tools/die_plan/reset_tree.py", "tools/die_plan/setRC_rcx_asap7.tcl",

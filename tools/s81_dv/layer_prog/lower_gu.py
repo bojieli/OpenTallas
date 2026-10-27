@@ -65,7 +65,7 @@ NE, NEMAX, K = 384, 448, 6
 # fixed latencies, measured on the RTL of record by run_gu_bench.sh (asserted there: any drift fails the bench)
 #   from the edge the LAST beat is on vi_n (the matching S beat is on vi_s 2 edges later; both reach the stop together)
 HC_LAT_N, HC_LAT_S = 759, 757   # -> first coefficient row on vo_n / vo_s (rows i = 1..5 follow one an edge)
-RT_LAT_N, RT_LAT_S = 67, 65     # -> ids row on vo_n / vo_s
+RT_LAT_N, RT_LAT_S = 68, 66     # -> ids row on vo_n / vo_s (S81-CORE-LAT-R17: +1, l1c order sort CPS 3 -> 2)
 RW_GAP = 121                    # ids row -> first weights row on the same port (L3 ot_s81_su_rw, measured)
 import sys as _sys                                  # noqa: E402
 _sys.path.insert(0, str(Path(__file__).resolve().parent))

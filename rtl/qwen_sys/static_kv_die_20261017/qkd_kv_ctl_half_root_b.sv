@@ -107,7 +107,9 @@ module qkd_kv_es_fan_stack_b #(parameter integer MUT = 0) (
                        F_SS = 719, F_TOK = 720, F_EP = 738, F_CV = 754, F_CPC = 755, F_CRG = 760, F_CVL = 763, F_BT = 779,
                        W = 780;
     (* keep *) reg rs_q;
-    always @(posedge ck) rs_q <= rst_n;
+    // KV-KITS-2 10-27: keep on the PROCESS (the $dff cell inherits it; survives $paramod renaming): this pin reset
+    // flop and qkd_ctrl_kc.rs_q share D in kv3_hroot, opt_merge folded them (LEC KEEP FAIL); each resets its own fanout.
+    (* keep *) always @(posedge ck) rs_q <= rst_n;
     wire [1:0] s = (MUT == 1) ? (stack ^ 2'd1) : stack;
     function automatic [W-1:0] head(input [W-1:0] prev, input [783:0] x);
         reg [W-1:0] o; reg [1:0] v, e;

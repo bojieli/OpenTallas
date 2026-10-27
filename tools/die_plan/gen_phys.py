@@ -82,6 +82,11 @@ def io_tcl(P, tn, pins):
             cx = x
         lines.append(f"place_pin -pin_name {{{bus}[{bit}]}} -layer {ln} -location {{{cx:.4f} {cy:.4f}}} "
                      f"-pin_size {{{size[0]:.4f} {size[1]:.4f}}}")
+    import infra_rtl as IR
+    for ip in IR.type_ports(t):
+        x, y = ip["xy_um"]
+        lines.append(f"place_pin -pin_name {{{ip['name']}}} -layer {ip['layer']} -location {{{x:.4f} {y:.4f}}} "
+                     "-pin_size {0.0480 0.4800}   ;# native infrastructure via-field, die-timed")
     top = P.layer_budget["partition_signal_max"]
     for name, x, y in tap_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
@@ -225,6 +230,112 @@ def reset_out_pins(P, tn):
     """[(port, x, y)] interior registered reset OUT pins of a wavefront plan type (reset_tree.out_pins)."""
     import reset_tree as RT
     return RT.out_pins(P, tn) + RT.start_out_pins(P, tn)
+
+
+# KV-KITS-4 10-27: declared hard-IP LINE SIDE (plan contents[]/hard_cores[].bump_ports, bind.py bump_pins) in the kit
+# port contract.  The binder exports each declared bump pin of a hard core as a partition port (bind_report.json
+# bump_ports[].part_port, named from the as-built leaf); kit-rtl keeps it as a bound-only wrapper pin.  Without it in
+# port_bind_pins.json the pre-floorplan port_bind gate counts the line side as extra ports (kv3_sys_c: 1168 bits of
+# u_ucie_rom link_*/far_*).  Names come from the bind (never re-derived here); the plan declaration, the bind report
+# and the kit-rtl wrapper must agree or the kit is refused.
+def declared_bumps(P, tn):
+    """[(inst, module, pin, dir, width)] of the plan type's declared hard-IP line side (contents[] + hard_cores[])."""
+    t = P.types[tn]
+    out = []
+    for e in t.get("contents", []) + t.get("hard_cores", []):
+        for b in e.get("bump_ports") or []:
+            out.append((e["inst"], e.get("module", e["inst"]), b["pin"], b["dir"], int(b["width"])))
+    return out
+
+
+def kit_bump_ports(P, tn, kit_rtl_filelist):
+    """[dict(port, inst, module, pin, dir, width)]: the declared bump pins of a kit-rtl type with the bound partition
+    port names, read from <filelist dir>/kit_rtl.json -> bind_out/bind_report.json.  [] when the plan declares none."""
+    import gen_rtl
+    dec = declared_bumps(P, tn)
+    if not dec:
+        return []
+    kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
+    if not kj.is_file():
+        raise gen_rtl.GenError(f"type {tn}: declares bump_ports but kit-rtl {kj} is missing (bound port names unknown)")
+    kr = json.loads(kj.read_text())
+    rep_f = Path(kr["bind_out"]) / "bind_report.json"
+    if not rep_f.is_file():
+        raise gen_rtl.GenError(f"type {tn}: declares bump_ports but {rep_f} is missing")
+    rep = json.loads(rep_f.read_text())
+    insts = set(kr.get("instances") or [])
+    bound = {}
+    for b in rep.get("bump_ports", []):
+        if b["partition"] not in insts:
+            continue
+        k = (b["pin"], b["dir"], int(b["width"]))
+        if bound.setdefault(k, b["part_port"]) != b["part_port"]:
+            raise gen_rtl.GenError(f"type {tn}: bump {b['pin']} bound under two port names "
+                                   f"{bound[k]} / {b['part_port']} across instances")
+    want = {(pin, d, w): (inst, mod) for inst, mod, pin, d, w in dec}
+    if set(want) != set(bound):
+        raise gen_rtl.GenError(f"type {tn}: plan bump_ports {sorted(set(want) - set(bound))[:4]} not bound / bound "
+                               f"{sorted(set(bound) - set(want))[:4]} not declared ({rep_f})")
+    bop = {b["port"]: (b["dir"], int(b["width"])) for b in kr.get("bound_only_pins", [])}
+    out = []
+    for (pin, d, w), port in sorted(bound.items(), key=lambda kv: kv[1]):
+        if bop.get(port) != (d, w):
+            raise gen_rtl.GenError(f"type {tn}: bump port {port} ({d} {w}) is not a bound-only pin of the kit-rtl "
+                                   f"wrapper ({bop.get(port)})")
+        inst, mod = want[(pin, d, w)]
+        out.append(dict(port=port, inst=inst, module=mod, pin=pin, dir=d, width=w))
+    return out
+
+
+def _lef_macro_pins(lef, module):
+    """{pin bit name: (layer, x0, y0, x1, y1)} (first PORT rect) and the SIZE (w, h) of MACRO module in a LEF."""
+    text = Path(lef).read_text()
+    m = re.search(r"\bMACRO\s+" + re.escape(module) + r"\b(.*?)\bEND\s+" + re.escape(module) + r"\b", text, re.S)
+    if m is None:
+        raise ValueError(f"{lef}: no MACRO {module}")
+    body = m[1]
+    sz = re.search(r"\bSIZE\s+([0-9.]+)\s+BY\s+([0-9.]+)", body)
+    if sz is None:
+        raise ValueError(f"{lef}: MACRO {module} has no SIZE")
+    pins = {}
+    for pm in re.finditer(r"^\s*PIN\s+(\S+)\s*$(.*?)^\s*END\s+\1\s*$", body, re.S | re.M):
+        g = re.search(r"\bLAYER\s+(\S+)\s*;\s*RECT\s+([-0-9.]+)\s+([-0-9.]+)\s+([-0-9.]+)\s+([-0-9.]+)", pm[2])
+        if g:
+            pins[pm[1]] = (g[1],) + tuple(float(v) for v in g.groups()[1:])
+    return pins, (float(sz[1]), float(sz[2]))
+
+
+def _orient_rect(o, w, h, x0, y0, x1, y1):
+    f = {"R0": lambda x, y: (x, y), "MX": lambda x, y: (x, h - y), "MY": lambda x, y: (w - x, y),
+         "R180": lambda x, y: (w - x, h - y)}.get(o)
+    if f is None:
+        raise ValueError(f"bump pin placement: macro orient {o} not supported (R0/MX/MY/R180)")
+    (a, b), (c, d) = f(x0, y0), f(x1, y1)
+    return min(a, c), min(b, d), max(a, c), max(b, d)
+
+
+def bump_pin_sites(P, tn, bumps, macros, base):
+    """[(port, bit, layer, cx, cy, w, h)] type frame: every bump bit ON its hard core's own LEF pin shape (the bump is
+    the hard IP's pin: no partition wiring, the die connects to it from above)."""
+    by_inst = {m[0]: m for m in macros}
+    out = []
+    cache = {}
+    for b in bumps:
+        if b["inst"] not in by_inst:
+            raise ValueError(f"type {tn}: bump {b['port']}: hard core {b['inst']} has no placed view (lef/origin)")
+        inst, mod, lef, lib, x, y, o = by_inst[b["inst"]]
+        if lef not in cache:
+            cache[lef] = _lef_macro_pins(Path(base) / lef, mod)
+        pins, (mw, mh) = cache[lef]
+        for i in range(b["width"]):
+            key = f"{b['pin']}[{i}]" if f"{b['pin']}[{i}]" in pins or b["width"] > 1 else b["pin"]
+            if key not in pins:
+                raise ValueError(f"type {tn}: bump {b['port']}[{i}]: {lef} MACRO {mod} has no pin {key}")
+            ln, *r = pins[key]
+            x0, y0, x1, y1 = _orient_rect(o, mw, mh, *r)
+            out.append((b["port"], i, ln, round(x + (x0 + x1) / 2, 4), round(y + (y0 + y1) / 2, 4),
+                        round(x1 - x0, 4), round(y1 - y0, 4)))
+    return out
 
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
@@ -384,9 +495,9 @@ def tap_window_io_shift(P):
     return -w, w
 
 
-def hold_out_min_sdc_ps(P):
+def hold_out_min_sdc_ps(P, tn=None):
     """the output min delay WRITTEN in the kit SDC / gate / sign-off overlay: contract hold_out_min_ps + window."""
-    return hold_out_min_ps(P) + tap_window_io_shift(P)[1]
+    return hold_out_min_ps(P, tn) + tap_window_io_shift(P)[1]
 
 
 def hold_in_min_ps(P):
@@ -394,9 +505,17 @@ def hold_in_min_ps(P):
     return seam_hold(P)["in_min_ps"]
 
 
-def hold_out_min_ps(P):
-    """the kit's min output delay vs vclk (ps, <= 0): the sender's share of the seam hold contract."""
-    return seam_hold(P)["out_min_ps"]
+def hold_out_min_ps(P, tn=None):
+    """Contract output-min, tightened by the type's own checked sender guarantee."""
+    base = seam_hold(P)["out_min_ps"]
+    guarantee = out_hold_check_ps(P, tn) if tn is not None else None
+    return base if guarantee is None else min(base, (1 - UNC_SPLIT) * UNC_HOLD_PS - guarantee)
+
+
+def out_hold_check_ps(P, tn):
+    """Declared guarantee checked by this sender kit, not a measured clock trim."""
+    value = (P.types.get(tn, {}).get("clock", {}) or {}).get("out_hold_check_ps")
+    return None if value is None else float(value)
 
 
 # IO-HOLD option A (COORD ruling 2026-10-25 10:23, KITS-SPARE PROPOSAL IO-HOLD-2; opt-in: plan clock.io_hold =
@@ -425,10 +544,12 @@ IO_HOLD_MODES = ("legacy", "sender_min", "plan_demand")
 # (ot_io_hold_apply_structural): the declared demand is an obligation for the repair, not a structural failure.
 
 
-def io_hold_mode(P):
+def io_hold_mode(P, tn=None):
     """'legacy' (flat in_min on every input, default) or 'sender_min' (option A): plan clock.io_hold > env OT_IO_HOLD."""
     import os
-    v = P.clock.get("io_hold")
+    v = (P.types.get(tn, {}).get("clock", {}) or {}).get("io_hold") if tn is not None else None
+    if v is None:
+        v = P.clock.get("io_hold")
     if v is None:
         v = os.environ.get("OT_IO_HOLD") or "legacy"
     if v not in IO_HOLD_MODES:
@@ -441,8 +562,11 @@ def sender_out_guarantee_ps(P, snd_type):
     signed-off output hold check guarantees: the signed view's published types[].clock.out_hold_guarantee_ps,
     else the plan contract (1 - UNC_SPLIT) x UNC_HOLD_PS - hold_out_min_ps."""
     ck = P.types.get(snd_type, {}).get("clock", {}) or {}
-    if ck.get("out_hold_guarantee_ps") is not None:
+    checked = out_hold_check_ps(P, snd_type)
+    if ck.get("out_hold_guarantee_ps") is not None and (checked is None or float(ck["out_hold_guarantee_ps"]) >= checked):
         return float(ck["out_hold_guarantee_ps"]), f"signed view {snd_type}"
+    if checked is not None:
+        return checked, f"sender kit check {snd_type}"
     return (1 - UNC_SPLIT) * UNC_HOLD_PS - hold_out_min_ps(P), "plan contract"
 
 
@@ -467,13 +591,77 @@ def hold_demand_ps(P, snd_part, rcv_part):
     return float(v)
 
 
+# CLOCK-KV-R21 (RULING CLOCK-KV-R20 (a)): opt-in clock.hold_demand source "die_sta" = the per-port-bit FF hold demand
+# the SHARED die gate (die_sta_related.py) measured on the assembled die (tools/die_plan/hold_demand_die_sta.py).  The
+# plan names the demand file + its sha256 and the provenance (gate JSON sha256, gate tool sha256); the file is checked
+# against all three.  Type-hardened (worst instance per template bit).  The kit SDC then TIGHTENS, per bit, the min
+# input delay (receiver pads: inputs[type]) or the min output delay (sender pads, receiver is a macro without a P&R
+# kit: outputs[type]) by demand_ps, so the kit's own FF hold repair inserts the hold delay on that data path; the
+# parent die gate re-verifies with the real kit views.  "unplaced" bits (no kit on either side) are never emitted.
+# It is independent of io_hold (legacy / sender_min) and of source "plan" (hold_demand_ps keeps refusing it).
+HOLD_DEMAND_DIE_STA_SCHEMA = "opentallas.hold_demand.die_sta.v1"
+_DIE_STA_CACHE = {}
+
+
+def die_sta_hold_demand(P, tn):
+    """None (no / plan-source hold_demand) or {'inputs': {sv_bus: {bit: [k, demand_ps]}}, 'outputs': {...}} for tn."""
+    import hashlib
+    hd = P.clock.get("hold_demand")
+    if not hd or hd.get("source") != "die_sta":
+        return None
+    for k in ("file", "sha256", "gate_json_sha256", "tool_sha256"):
+        if not hd.get(k):
+            raise ValueError(f"clock.hold_demand source die_sta needs '{k}' (provenance)")
+    f = Path(hd["file"])
+    if not f.is_absolute():
+        f = (Path(P.path).parent if getattr(P, "path", None) else Path.cwd()) / f
+    if str(f) not in _DIE_STA_CACHE:
+        raw = f.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != hd["sha256"]:
+            raise ValueError(f"clock.hold_demand die_sta: {f} sha256 differs from the plan's")
+        d = json.loads(raw)
+        pv = d.get("provenance") or {}
+        if d.get("schema") != HOLD_DEMAND_DIE_STA_SCHEMA:
+            raise ValueError(f"clock.hold_demand die_sta: {f} schema {d.get('schema')}")
+        if pv.get("gate_json_sha256") != hd["gate_json_sha256"] or pv.get("tool_sha256") != hd["tool_sha256"]:
+            raise ValueError("clock.hold_demand die_sta: gate JSON / tool sha256 differ between plan and demand file")
+        _DIE_STA_CACHE[str(f)] = d
+    d = _DIE_STA_CACHE[str(f)]
+    return dict(inputs=(d.get("inputs") or {}).get(tn, {}), outputs=(d.get("outputs") or {}).get(tn, {}))
+
+
+def die_sta_sdc_lines(P, tn, side):
+    """per-bit tightening lines (side 'inputs' | 'outputs'), one command per distinct value, after the bus-level -min."""
+    dd = die_sta_hold_demand(P, tn)
+    if not dd or not dd[side]:
+        return ""
+    if side == "inputs":
+        A = input_hold_min(P, tn)
+        base = lambda bus: A[bus]["in_min_ps"] if bus in A else hold_in_min_ps(P)
+        cmd = "set_input_delay"
+    else:
+        base = lambda bus: hold_out_min_sdc_ps(P, tn)
+        cmd = "set_output_delay"
+    g = {}
+    for bus, bits in dd[side].items():
+        for bit, (k, dem) in bits.items():
+            if k and float(dem) > 0:
+                g.setdefault(round(base(bus) - float(dem), 4), []).append(f"{bus}[{int(bit)}]")
+    hd = P.clock["hold_demand"]
+    out = [f"# HOLD-DEMAND die_sta ({side}): per-bit FF hold demand of the shared die gate (gate json "
+           f"{hd['gate_json_sha256'][:12]}, tool {hd['tool_sha256'][:12]}), type-hardened; tightens the bus-level -min"]
+    for v, ports in sorted(g.items()):
+        out.append(f"{cmd} -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(sorted(ports))}}}]")
+    return "\n".join(out) + "\n"
+
+
 def input_hold_min(P, tn, structural=False):
     """IO-HOLD option A: {sv input port: dict(in_min_ps, basis, senders)} for every bus / ft-slot input of type tn
     whose min input delay differs from the fallback hold_in_min_ps(P).  Empty in legacy mode.  One value per port
     (the type is hardened once): the minimum over every instance's driver.  plan_demand (HOLD-REPAIR): each value
     is the sender guarantee minus the plan's seam hold demand D (hold_demand_ps); structural=True returns the plain
     option A values (the structural hold gate's view)."""
-    mode = io_hold_mode(P)
+    mode = io_hold_mode(P, tn)
     if mode not in ("sender_min", "plan_demand"):
         return {}
     demand = mode == "plan_demand" and not structural
@@ -546,7 +734,7 @@ def io_hold_tcl(P, tn):
     m = input_hold_min(P, tn)
     if not m:
         return None
-    mode = io_hold_mode(P)
+    mode = io_hold_mode(P, tn)
 
     def proc(name, vals, msg):
         out = [f"proc {name} {{vclk}} {{"]
@@ -767,16 +955,18 @@ def sdc(P, tn, pins):
     # IO-HOLD option A (opt-in clock.io_hold sender_min): partition-driven inputs take their sender's guaranteed
     # output-min instead; the related tap pair skew is checked at the parent (io_hold_parent.py)
     for v, ports in _group_in_min(input_hold_min(P, tn)):
-        out += ((f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n" if io_hold_mode(P) != "plan_demand"
+        out += ((f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n" if io_hold_mode(P, tn) != "plan_demand"
                  else f"# HOLD-REPAIR plan_demand: sender guarantee - plan seam hold demand ({v:g} ps vs vclk)\n")
                 + f"set_input_delay -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
+    out += die_sta_sdc_lines(P, tn, "inputs")
     if root_async_reset(P, tn):
         out += "# Sole asynchronous die-root reset CDC (owner reset rule); forwarded reset remains timed.\n"
         out += ROOT_RESET_FALSE_PATH + "\n"
     # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
-    out += (f"set_output_delay -min {t_lib(hold_out_min_sdc_ps(P)):.4f} -clock vclk [all_outputs]\n")
+    out += (f"set_output_delay -min {t_lib(hold_out_min_sdc_ps(P, tn)):.4f} -clock vclk [all_outputs]\n")
+    out += die_sta_sdc_lines(P, tn, "outputs")
     import reset_tree as RT
     fp = RT.pad_false_path_pins(P, tn)
     if fp:
@@ -1115,7 +1305,8 @@ def _corner_libs(mlib, kd, corner):
     return out
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
-                   skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False):
+                   skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
+                   bump_ports=None):
     t = P.types[tn]
     import core_clock_groups as CG
     grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
@@ -1167,7 +1358,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
     pins = type_pins(P, tn)
-    (kd / "io.tcl").write_text(io_tcl(P, tn, pins))
+    bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
+        if bump_ports else []
+    io_text = io_tcl(P, tn, pins)
+    for port, i, ln, cx, cy, pw, ph in bump_sites:
+        io_text += (f"place_pin -pin_name {{{port}[{i}]}} -layer {ln} -location {{{cx:.4f} {cy:.4f}}} "
+                    f"-pin_size {{{pw:.4f} {ph:.4f}}}   ;# interior: hard-IP line side (bump) on the macro pin\n")
+    (kd / "io.tcl").write_text(io_text)
     top = P.type_top_layer(tn)
     pdn = PDN
     if int(top[1:]) > int(P.layer_budget["partition_signal_max"][1:]):
@@ -1237,7 +1434,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export DESIGN_NAME = {t['module']}",
            "export PLATFORM = asap7",
            "export VERILOG_FILES = " + " ".join(srcs),
-           "export VERILOG_DEFINES = -DSYNTHESIS",
+           "export VERILOG_DEFINES = " + " ".join(type_verilog_defines(t)),
            "export SDC_FILE = /work/constraint.sdc",
            f"export DIE_AREA = 0 0 {_um(w)} {_um(h)}",
            f"export CORE_AREA = {_um(m)} {_um(m)} {_um(w - m)} {_um(h - m)}",
@@ -1298,7 +1495,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export OT_VCLK_FF = {t_lib(ib['ff']):.4f}",
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
-           f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_sdc_ps(P)):.4f}",
+           f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_sdc_ps(P, tn)):.4f}",
            *([f"export OT_TAP_WINDOW = {t_lib(tap_window_ps(P)):.4f}"] if tap_window_ps(P) else []),
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
            # RCX (setRC_rcx_asap7.tcl; the stock setRC.tcl put clock sinks 11-57 ps above RCX).  ORFS reads
@@ -1350,7 +1547,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
     # grt_post.tcl: density GRT-RC tap pass + vclk back to the SDC value before 5_1_grt.sdc is written)
     cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
-    if io_hold_mode(P) == "plan_demand":
+    if io_hold_mode(P, tn) == "plan_demand" or die_sta_hold_demand(P, tn):
+        # CLOCK-KV-R21: a die_sta per-bit demand (die_sta_hold_demand) uses the same HB4 hook + buffer cap
         # HOLD-REPAIR 10-26 (12.4a a1): the FF GRT hold repair pads the declared seam demand on the input paths with
         # HB4 (hold_pad_hb4.tcl) and a raised buffer cap; hold_repair_pre.tcl sources grt_pre.tcl first
         cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
@@ -1371,7 +1569,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
-            hook.write_text(f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n" + hook.read_text())
+            reset_prefix = f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n"
+            if t.get("reset", {}).get("local_taps_um"):
+                # These are terminal relay sites, not additional clock BTerms.
+                reset_prefix += "set rt_consumer_taps_um {" + " ".join(
+                    f"{{{i} {x:.5f} {y:.5f}}}" for i, (_, x, y) in enumerate(RT.consumer_taps(P, tn))) + "}\n"
+            hook.write_text(reset_prefix + hook.read_text())
     islands = die_islands_tcl(P, tn)
     if islands:
         (kd / "die_islands.tcl").write_text(islands)
@@ -1420,6 +1623,29 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
     import master_slice as MS
     ms = MS.kit_apply(kd, tn, [w, h], master_slice, P.raw, trial, kind="partition", gpl_hook=kd / "face_flops.tcl")
+    stages = t.get("reset", {}).get("physical_stages", [])
+    if stages:
+        import fup_reset_groups as FGR
+        for stage in stages:
+            re.compile(stage["selector"])
+            x, y = stage["xy_um"]
+            if not (0 <= x <= w and 0 <= y <= h):
+                raise ValueError(f"{tn}: private reset stage outside outline")
+        # Preserve independent first stages through synthesis. The source module
+        # itself carries keep_hierarchy; missing source attributes fail closed.
+        text = "\n".join((kd / "rtl" / Path(f).name).read_text() for f in rtl_files)
+        for module in t.get("reset", {}).get("keep_modules", []):
+            pattern = r"\(\*[^*]*\bkeep_hierarchy\b[^*]*\*\)\s*module\s+" + re.escape(module) + r"\b"
+            if not re.search(pattern, text):
+                raise ValueError(f"{tn}: private reset module {module} lacks keep_hierarchy source")
+        manifest = dict(type=tn, anchors=[[s["selector"], *s["xy_um"]] for s in stages])
+        (kd / "reset_physical_stages.json").write_text(json.dumps(manifest, indent=1) + "\n")
+        (kd / "reset_physical_stages.tcl").write_text(FGR.tcl(manifest))
+        (kd / "reset_physical_stages_release.tcl").write_text(FGR.tcl(manifest, True))
+        with (kd / "face_flops.tcl").open("a") as f:
+            f.write("\nsource /work/reset_physical_stages.tcl\n")
+        with (kd / "face_flops_release.tcl").open("a") as f:
+            f.write("\nsource /work/reset_physical_stages_release.tcl\n")
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
@@ -1484,18 +1710,29 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if ioh:
         from io_hold_qualification import plan_digest
         bud['io_hold'] = dict(mode='sender_min',plan_sha256=plan_digest(P.raw),requires_parent=True)
-        if io_hold_mode(P) == 'plan_demand':
+        if io_hold_mode(P, tn) == 'plan_demand':
             hd = P.clock['hold_demand']
             bud['io_hold'].update(mode='plan_demand', hold_demand=dict(
                 derate=hd.get('derate'), cell=hd.get('cell'), windows_ps=hd.get('windows_ps'),
                 pairs=len(hd.get('pairs') or {}), landed=len(hd.get('landed') or ())))
+    _dsd = die_sta_hold_demand(P, tn)
+    if _dsd:
+        hd = P.clock['hold_demand']
+        bud['hold_demand_die_sta'] = dict(
+            file=hd['file'], sha256=hd['sha256'], gate_json_sha256=hd['gate_json_sha256'], tool_sha256=hd['tool_sha256'],
+            input_bits=sum(1 for b in _dsd['inputs'].values() for v in b.values() if v[0]),
+            output_bits=sum(1 for b in _dsd['outputs'].values() for v in b.values() if v[0]),
+            hb4_cells=sum(v[0] for side in ('inputs', 'outputs') for b in _dsd[side].values() for v in b.values()))
     if ms is not None:
         bud["master_plan"] = ms
+    if bump_ports:
+        bud["bump_ports"] = [dict(b) for b in bump_ports]
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
     shutil.copyfile(Path(__file__).with_name("selrange_gate.py"), kd / "selrange_gate.py")
+    shutil.copyfile(Path(__file__).with_name("native_bb.py"), kd / "native_bb.py")
     # FLOW-CANARY / COORD 10-25: register fanout gate right after face_guard (kv3_astk B: Yosys merged replicas -> 2048 loads)
     shutil.copyfile(Path(__file__).with_name("reg_fanout_gate.py"), kd / "reg_fanout_gate.py")
     for helper in ("port_bind_gate.py", "hold_gate.tcl"):
@@ -1507,7 +1744,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
     from signoff import copy_signoff_bundle
-    copy_signoff_bundle(kd)
+    copy_signoff_bundle(kd, extra=("kit_preflight.py",))
     # CRASH-TRIAGE 10-25: 6_report PDNSim IR is deferred out of the route container (partition_ir.py patch +
     # OT_DEFER_PARTITION_IR=1 in run_kit.sh).  10 autopilot CRASH rows (kv3_io_ft/_v1 x8, coll_ftm x2) were killed
     # at the memory cap (25/33/50 GB at --mem 24/32/48) inside analyze_power_grid AFTER 6_final.odb/.spef existed.
@@ -1519,8 +1756,31 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # pins explicitly for exact top-level port binding (including wavefront outs).
     port_pins = [dict(bus=b, bit=i) for b, i, _l, _x, _y, _f in pins]
     port_pins += [dict(bus=n, bit=None) for n, _x, _y in tap_pins(P, tn) + reset_out_pins(P, tn)]
+    # declared hard-IP line side (bump_ports): exact bound bits, never a wildcard waiver of extras
+    port_pins += [dict(bus=b["port"], bit=i) for b in (bump_ports or []) for i in range(b["width"])]
+    import infra_rtl as IR
+    infra = IR.type_ports(t)
+    port_pins += [dict(bus=p["name"], bit=None) for p in infra]
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
+    if infra:
+        import ft_ports as FT
+        decl = FT.declaration(t.get("infra_arcs", []), f"die plan {P.name} type {tn}: explicit native hard-core interfaces")
+        if {p["name"] for p in infra} != {p["name"] for p in decl["ports"]}:
+            raise ValueError("native infrastructure ports/arcs disagree")
+        FT.install(kd, decl)
+        (kd / "infra_ports.json").write_text(json.dumps(infra, indent=1) + "\n")
+        bud["native_infrastructure"] = dict(pins=len(infra), arcs=len(decl["arcs"]), data_cycles_added=0, timing="die-timed FT interfaces; actual characterisation required")
+        (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     return kd
+
+
+def type_verilog_defines(t):
+    """One declared source profile for synthesis, RTL lint and the LEC gold reader."""
+    values = t.get("verilog_defines", [])
+    if not isinstance(values, list) or any(not isinstance(v, str) or
+            not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", v) for v in values):
+        raise ValueError("type verilog_defines must be a list of bare Verilog macro names")
+    return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values]))
 
 
 RUN_KIT = r"""#!/bin/bash
@@ -1543,9 +1803,16 @@ HISTORY="$K/preflight_history/$(date +%Y%m%d_%H%M%S)_$$"
 for f in rtl_lint.json sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
   if [ -f "$K/$f" ]; then mkdir -p "$HISTORY"; cp -p "$K/$f" "$HISTORY/$f"; fi
 done
+# Static checks run before starting the expensive synthesis/route container.
+PREFLIGHT="$K/kit_preflight_$(date +%Y%m%d_%H%M%S)_$$.json"
+if ! python3 -I "$K/kit_preflight.py" "$K" --out "$PREFLIGHT"; then
+  echo 'FAIL_PREFLOOR kit_preflight' | tee -a "$K/FAIL_PREFLOOR"
+  exit 10
+fi
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
+  python3 -I /work/native_bb.py /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl --physical-synth /OpenROAD-flow-scripts/flow/scripts/synth.tcl || exit 9; \
   if [ -f /work/partition_ir.py ] && [ \"\$OT_KIT_IR\" = defer ]; then python3 -I /work/partition_ir.py patch /OpenROAD-flow-scripts/flow/scripts && export OT_DEFER_PARTITION_IR=1 || echo 'PARTITION_IR WARNING: patch refused, kit IR runs inline in 6_report'; fi; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
@@ -1649,8 +1916,9 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             mine = fl
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
+        bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
-                                   skip_ir, max_wire_um, rc_cal, master_slice, trial))
+                                   skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

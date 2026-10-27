@@ -82,6 +82,28 @@ def check(ab, manifest_dir, repo=REPO, override=True):
     return errs
 
 
+def required_prefer_files(ab, base):
+    """Missing literal preferred RTL files. Module names/globs keep existing selection semantics.
+
+    `base` is supplied by bind.plan_base so override and in-plan manifests use
+    exactly the same resolution as elaboration. This does not change path policy.
+    """
+    import glob
+    values = ab.get("prefer") or []
+    if isinstance(values, str):
+        values = [values]
+    missing = []
+    for value in values:
+        if not isinstance(value, str) or glob.has_magic(value):
+            continue
+        if Path(value).suffix.lower() not in (".sv", ".v"):
+            continue
+        source = Path(value) if Path(value).is_absolute() else Path(base) / value
+        if not source.is_file():
+            missing.append(f"prefer: required RTL file {value!r} is missing ({source})")
+    return missing
+
+
 def _strings(obj, where=""):
     if isinstance(obj, dict):
         for k, v in obj.items():

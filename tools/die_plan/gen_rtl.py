@@ -260,6 +260,8 @@ def wrapper(P, tn, epochs, rtl_root=None):
     for b in t.get("buses", []):
         buses.append(dict(b, ep=epochs.get((tn, b["name"]), b.get("kind", "data") in ("data", "ctl"))))
     slots = t.get("ft_slots", [])
+    import infra_rtl as IR
+    infra = IR.type_ports(t)
     ports = [("input  wire clk", "clock entry: spine tap 0 (one root per tap; R4 tap grid)")]
     for n, x, y in S.tap_grid(P, tn)[1:]:
         ports.append((f"input  wire {n}", f"spine tap at ({x:.0f}, {y:.0f}) um: the kit (clock_taps.tcl) moves the "
@@ -298,6 +300,8 @@ def wrapper(P, tn, epochs, rtl_root=None):
         ports.append(("input  wire arst_n", f"SYNCHRONOUS reset from the die reset tree (OWNER RESET RULE 10-24): pin "
                       f"register u_rst_in + {rtree['depth']} relay stages; every tap released "
                       f"{RT.release_clocks(rtree)} clocks after this pin"))
+    for ip in infra:
+        ports.append((f"{'input' if ip['dir'] == 'in' else 'output'} wire {ip['name']}", "die-owned clock/reset pass-through, no data register"))
     decl, body = [], []
     for b in buses:
         w = b["width"] + (1 if b["ep"] else 0)
@@ -316,7 +320,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
             w = s["width"] + (1 if epochs.get((tn, s["name"] + sfx), True) else 0)
             ports.append((f"{d} wire [{w - 1}:0] {sv_id(s['name'] + sfx)}", f"ft slot {s['name']} "
                           f"({s['in_face']} -> {s['out_face']}, {s.get('stations', 1)} station(s))"))
-    taps = S.tap_grid(P, tn)
+    taps = RT.consumer_taps(P, tn) if rtree is not None else S.tap_grid(P, tn)
     if rtree is not None or len(taps) > 1:
         # one local synchroniser per tap region (u_rsync_t<i>, rst_n_t<i>); rst_n = tap 0 (leaves).  Boundary flops and
         # ft stations take the synchroniser of the tap NEAREST their planned site (S81-P9 10-23: the bus's pin centroid;
@@ -350,13 +354,15 @@ def wrapper(P, tn, epochs, rtl_root=None):
             cen = {}
 
         def rsel(key=None, key2=None, f=0.0):
+            bootstrap = key in (rtree or {}).get('bootstrap_buses', [])
             if key in cen:
                 x, y = cen[key]
                 if key2 in cen:
                     x, y = x + (cen[key2][0] - x) * f, y + (cen[key2][1] - y) * f
                 i = min(range(len(taps)), key=lambda k: abs(taps[k][1] - x) + abs(taps[k][2] - y))
-                return f"rst_n_t{i}"
-            r = f"rst_n_t{rr[0] % len(taps)}"
+                return f"rst_boot_t{i}" if bootstrap else f"rst_n_t{i}"
+            i = rr[0] % len(taps)
+            r = f"rst_boot_t{i}" if bootstrap else f"rst_n_t{i}"
             rr[0] += 1
             return r
     else:
@@ -428,14 +434,23 @@ def wrapper(P, tn, epochs, rtl_root=None):
         decl.append(f"    wire [{nt['width'] - 1}:0] n_{sv_id(nt['name'])};")
         sig[f"net:{nt['name']}"] = f"n_{sv_id(nt['name'])}"
     sig["clk"], sig["rst_n"], sig["rst"] = "clk", "rst_n", "rst"
+    if (rtree or {}).get('bootstrap_contents'):
+        sig['bootstrap_rst_n'] = f'rst_boot_t{RT.leaf_tap(P, tn)}'
+        sig['bootstrap_rst'] = 'bootstrap_rst'
+        decl.append(f"    wire bootstrap_rst = ~{sig['bootstrap_rst_n']};")
     for sp in t.get("id_straps", []):
         sig[f"strap:{sp['name']}"] = sp["name"]
     for pd in t.get("pads", []):
         sig[f"pad:{pd['name']}"] = sv_id(pd["name"])
     if rtree is not None and rtree.get("start_tap") is not None:
         sig["start"] = f"start_t{rtree['start_tap']}"     # bootstrap type: local registered START (reset AND run)
+    for ip in infra:
+        sig[f"infra:{ip['name']}"] = ip["name"]
     # leaf bindings: contents[].bind plus bus.leaf
     binds = {c["inst"]: dict(c.get("bind", {})) for c in t.get("contents", [])}
+    for inst in (rtree or {}).get('bootstrap_contents', []):
+        binds[inst] = {p: ('bootstrap_' + k if k in ('rst_n', 'rst') else k)
+                       for p, k in binds[inst].items()}
     for b in buses:
         if b.get("leaf"):
             inst, port = b["leaf"].split(".", 1)
@@ -444,6 +459,11 @@ def wrapper(P, tn, epochs, rtl_root=None):
             if port in binds[inst] and binds[inst][port] != f"bus:{b['name']}":
                 raise GenError(f"type {tn}: {b['leaf']} bound twice")
             binds[inst][port] = f"bus:{b['name']}"
+    for ip in infra:
+        inst, port = ip["leaf"].split(".", 1)
+        if inst not in binds or port in binds[inst]:
+            raise GenError(f"type {tn}: duplicate/unknown infrastructure leaf {ip['leaf']}")
+        binds[inst][port] = f"infra:{ip['name']}"
     use = {}
     for inst, bd in binds.items():
         for port, key in bd.items():
@@ -495,7 +515,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
         f"\nendmodule : {mod}\n`default_nettype wire\n"
 
 
-def die_top(P, epochs, dropped=None):
+def die_top(P, epochs, dropped=None, rtl_root=None):
     io, wires, insts = [], [], []
     for pid, pr in P.ports.items():
         n = S.port_pins_count(pr)
@@ -521,6 +541,32 @@ def die_top(P, epochs, dropped=None):
         for side in ("src", "dst"):
             if pr[side]["part"] != S.DIE_PART:
                 conn.setdefault(pr[side]["part"], []).append((pr[side]["bus"], net))
+    import infra_rtl as IR
+    provider_ports = None
+    if any(t.get("infra_ports") for t in P.types.values()):
+        if not rtl_root:
+            raise GenError("native infrastructure requires --rtl-root for actual provider validation")
+        srcs = (P.raw.get("infrastructure") or {}).get("sources") or []
+        if not srcs:
+            raise GenError("infrastructure providers require explicit repo-relative source closure")
+        base = Path(rtl_root).resolve()
+        for f in srcs:
+            if Path(f).is_absolute() or not (base / f).resolve().is_relative_to(base):
+                raise GenError("infrastructure provider source must stay repo-relative")
+        ih = leaf_headers(dict(sources=srcs), rtl_root)
+        provider_ports = lambda mod: IR.provider_ports(ih, mod, parse_leaf_ports)
+    iw, ii, ic = IR.die_lines(P, provider_ports)
+    wires += iw
+    insts += ii
+    clock_conn = {}
+    clock_names = {tn: {n for n, _, _ in S.tap_grid(P, tn)} | {n for n, _, _, _ in S.core_taps(P, tn)}
+                   for tn in {p["type"] for p in P.parts.values()}} if ic else {}
+    for pn, rows in ic.items():
+        for port, net in rows:
+            if port in clock_names[P.parts[pn]["type"]]:
+                clock_conn[(pn, port)] = net
+            else:
+                conn.setdefault(pn, []).append((port, net))
     import reset_tree as RT
     rlines, rnet = RT.die_rtl(P) if RT.pipelined(P) else ([], {})
     wouts, snet = {}, {}
@@ -538,8 +584,8 @@ def die_top(P, epochs, dropped=None):
         t = P.types[p["type"]]
         # dropped taps (kit clock_taps.tcl: no sinks, COORD 10-23) stay unconnected: no dead spine drop
         dr = (dropped or {}).get(p["type"], ())
-        cs = [f"        .{n}({'' if n in dr else 'clk'})" for n, _, _ in S.tap_grid(P, p["type"])] + \
-            [f"        .{n}(clk)" for n, _, _, _ in S.core_taps(P, p["type"])] + \
+        cs = [f"        .{n}({'' if n in dr else clock_conn.get((name,n), 'clk')})" for n, _, _ in S.tap_grid(P, p["type"])] + \
+            [f"        .{n}({clock_conn.get((name,n), 'clk')})" for n, _, _, _ in S.core_taps(P, p["type"])] + \
             [f"        .arst_n({rnet.get(name, 'rst_n')})"] + \
             [f"        .{n}({wouts.get(name, {}).get(n, '')})" for n, _, _ in RT.out_pins(P, p["type"])] + \
             ([f"        .start_i({snet[name]})"] if name in snet else []) + \
@@ -574,7 +620,7 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None):
         f.write_text(wrapper(P, tn, ep, rtl_root))
         files.append(f)
     f = out / f"{sv_id(P.name)}_top.sv"
-    f.write_text(die_top(P, ep))
+    f.write_text(die_top(P, ep, rtl_root=rtl_root))
     files.append(f)
     man = parent_id_manifest(P)
     if man["types"]:

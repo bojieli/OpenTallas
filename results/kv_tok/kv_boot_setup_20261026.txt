@@ -1,0 +1,20 @@
+# KV-BOOT-SETUP 2026-10-26 17:28 PDT: why run6 (epyc1 kvtok-bootabi-1026/run6) never raised kvs_ctl boot_setup_ready
+# vehicle: B33 build9 + TOK-QK private hub_Wi (boot ABI) + tb6, copied to epyc1:/srv/opentallas-scratch2/claude/kv-boot-setup-1026 (probes: KVBS hub_C dispatcher, KVBP pc_*_0)
+RUN6 (as built), CHECKED from probes:
+  setup_ready 0 because u_kvs_ctl.u_boot dispatcher is held in reset the whole run (exp_t 1, installed 0, have_epoch 0 even
+  while img_ready=1 tgt 10 is presented at hubC cyc 1107): its rst_n = die_rst_n, which never rises (BOOTOBS).
+  die_rst_n 0 because ot_qwen_sys_rst_seq waits for &boot_done && &boot_ok: all 128 slices end done=1 ok=0 at cyc 20718-20873
+  (= qkd_hbm_boot_pc TIMEOUT 20000 after boot_go 690).
+  slices time out because the kvpc controller never issues the boot check WR (pc_EN_0: n_es 1, n_er 0, n_cv 0; PHY commands =
+  refresh only): a static column needs a calendar reservation, the calendar comes from the boot image (via kvs_ctl, die reset).
+  => boot-order deadlock in RTL (FINDING B class of 10-24; fix B 865fd8826 was never merged to main).
+FIX 1 (RTL): fix B controller boot window ported onto main (d28fc3d800) + kv_pc_sram_gen regen of the kvpc_s clones.
+  lockstep gate vs main 63f0898a3: PASS (kv_boot_setup_lockstep_vs_main_20261026.txt): 12 eq + 2 dis runs 0 mismatches, never-close mutant FAIL.
+FIX 2 (bench model): qkd_hbm3e_phy_pc4_bench stores WR data WL=5 edges after the column (13a3c79b9, also unmerged).
+  FIX 1 only: all slices done ok=0 at cyc ~810-870 (stale-data mismatch).  FIX 1+2: 128/128 done&ok by cyc 1061, die_rst_n 1 at cyc 1093.  CHECKED
+FIX 3 (bench host ordering): tb sent the first image at link up (cyc 531); the t10 replay (AUTH 838 ns) overlapped the die reset
+  release (cyc 1093) -> dispatcher fault_code[3] (word address != next_word: early words lost in reset).  CHECKED
+  tb7 / main tb: first frame >= link up + DIE_READY_CORE 1024 (declared static bound; measured 562) + fail-closed KVSLICE_FAIL
+  on any boot_pr word while die_rst_n=0.  Targeted: t10 BEGIN 1398 ns, dcfg_done 1, dcfg_sealed 1, fault 0, then tgt 1 loading.  CHECKED
+RUN7 (full, FIX 1+2+3, default setup wait): epyc1:/srv/opentallas-scratch2/claude/kv-boot-setup-1026/run7 (ot-run unit in otrun_run7.log), result PENDING
+YOSYS-CONCAT: no cast-in-concat on the traced path (casts only outside concats: word_count 11'(..), 19'(ROW0)+{13'b0,..}); Verilator sim unaffected.

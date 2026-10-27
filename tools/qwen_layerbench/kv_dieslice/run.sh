@@ -8,4 +8,10 @@ run() { local n=$1; shift; mkdir -p $O/$n; ( cd $O/$n && /usr/bin/time -f "%e s 
 run nominal &
 [ -n "$MF" ] && run mut_frame +MUT_FRAME=$MF &
 wait
-for d in $O/*/; do echo "$(basename $d) exit=$(cat $d/exit) $(cat $d/time) $(grep -m1 '^KVSLICE_BOOT' $d/sim.log)"; done | tee $O/summary.txt
+# TOK-QK-3 10-27: VERDICT from the bench verdict line (kv_verdict.py), never from exit 0; mut_* runs are negative controls.
+H=$(cd "$(dirname "$0")" && pwd)
+for d in $O/*/; do n=$(basename $d); x=pass; case $n in mut_*) x=fail ;; esac
+  v=$(python3 -I $H/kv_verdict.py $d --expect $x)
+  echo "$n exit=$(cat $d/exit) $(cat $d/time) VERDICT $v | $(grep -m1 '^KVSLICE_BOOT' $d/sim.log)"; done | tee $O/summary.txt
+grep -q -e ' VERDICT FAIL' -e ' VERDICT MUTANT_MISSED' $O/summary.txt && exit 3
+exit 0
