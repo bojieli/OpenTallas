@@ -60,3 +60,6 @@ B33 run7 boot now PASS (KV-TOK collection); B48 build3 DONErc0 but inherited asi
 - KV real history: post.log DONE 03:11 (hist_check min_corr 0.99641, FP8 equal_frac K 0.595/V 0.510 vs ISA prefill rows 0..15 = HF-arithmetic caveat; vectors ref@isa-splits 0 diff 288/288) (CHECKED). vec_real differs from declared vec in kv/gold/isa all layers, q from L1 (CHECKED spot).
 - KV 12 sims NOT RUN yet: intel2 per-layer top build oth-ubuntu-231395-1793092035 still in the Verilator frontend (2189 cpp at 03:48, ETA ~05:30 UNCHECKED); chain.sh PID 883480 armed -> launch_all.sh on vec_real. Then ~2 h boot + ~13.5 h token per nominal (UNCHECKED) -> verdict ~21:00 PDT. COLLECT: tok-qk-kvl/chain.log, runs/*/sim.log FAR_LAYER_SUMMARY (8 nominal 36/36 PASS each; m1/m3/m4 FAIL, m5 L0+L1 FAIL L2 PASS). Also LIVE: B48 boot r4 nominal (oth-ubuntu-3129816, cyc 22548 at 03:21) -> tok-qk-b48r4/{nominal,mut_frame}/exit; smoke_old (oth-ubuntu-365470).
 - LAYERS: QC compute 36/36 (CHECKED, current main); KV per-layer attention 0/36 run; whole QC+KV layer 0/36. No whole-token pass claimed.
+
+## CODEX notes 2026-10-27 04:54 PDT
+CODEX took over collection of live KVL and B48 sims. Latest QCL compute259/259 remains valid component result. KVL build path currently locating chain (directory name differs brief); no whole-token PASS claimed.

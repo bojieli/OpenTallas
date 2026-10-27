@@ -73,3 +73,6 @@
 | kv3_hgi_v7, kv3_hgi_v4 | kit RTL BLOCKED: head_eighth core views |
 | kv3_hub_Ei | GPL running (KV-KITS-1 unit) |
 | io_ft, io_ft_v1, io_cor_v1 | placed; awaiting GEOM verdict |
+
+## CODEX notes 2026-10-27 04:54 PDT
+CODEX took over: KV-KITS-3 PHY regeneration + pc_v1 island/demand kit + placed hroot review. hroot 3_place.odb exists intel1 kits/kv3_hroot/kv3_hroot/run/results/asap7/dp_kv3_hroot/base/3_place.odb; no route started. R22 approved island clip available (5386e39260). io_cor +1 station on5 lanes already COORD approved; must update latency table before kit. sys_c PHY current model far/link ports absent from libs/LEF: regenerating additive view.
