@@ -615,10 +615,17 @@ def default_windows(P, pg, margin=600.0, core_um=1500.0):
     return win
 
 
-def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.37, core_w_mm2=None):
+def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.37, core_w_mm2=None,
+               nets=("VDD",), loads=None):
     """PDNSim on a die window (phy_ir._window_kit style): the sized die grid, the die's own bumps inside the window,
-    load blocks (M7 PG pins, as the partition kits) tiling the window, each at the region density under it."""
+    load blocks (M7 PG pins, as the partition kits) tiling the window, each at the region density under it.
+    nets: optional VDD/VSS analyses; default VDD is diagnostic, not combined-supply qualification.
+    loads: optional [(rect_um, W/mm2)] replacing the region-model load map.
+    Pad geometry comes only from resolved_bumps, not a separate legacy pad alias."""
     import numpy as np
+    nets = tuple(nets)
+    if not nets or len(set(nets)) != len(nets) or set(nets) - {"VDD", "VSS"}:
+        raise ValueError("window nets must be unique VDD/VSS names")
     q = max(s["pitch_um"] for s in pg["grid"])
     q = max(q, BASE_PITCH)
     x0, y0 = _snap(rect[0], q), _snap(rect[1], q)
@@ -627,6 +634,7 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     local_grid = window_grid(pg["grid"], x0, y0)
     Pg = _PG(P, pg["grid"])
     model = load_model(P, plan_dir, power, phy_w, core_w_mm2 if core_w_mm2 is not None else pg.get("core_w_mm2"))
+    lmap = loads if loads is not None else model["loads"]
     io = _pg_io(P, plan_dir)
     bump_cfg = resolved_bumps(P, pg)
     Pg.die["pg"]["bumps"] = bump_cfg
@@ -656,7 +664,7 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     for i in range(nx_t):
         for j in range(ny_t):
             r = [x0 + i * bw, y0 + j * bh, x0 + (i + 1) * bw, y0 + (j + 1) * bh]
-            pw = sum(d * _ov(r, lr) for lr, d in model["loads"]) * 1e-6
+            pw = sum(d * _ov(r, lr) for lr, d in lmap) * 1e-6
             blks.append((f"u_b{i}_{j}", i * bw, j * bh, max(0.0, pw)))
     (out / "psm" / "psm.v").write_text("module irwin ();\n" + "".join(f"  irblk {n} ();\n" for n, *_ in blks) + "endmodule\n")
     (out / "psm" / "pdn.tcl").write_text(D.psm_pdn_tcl(Pw))
@@ -674,8 +682,8 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     t += [f"set_pdnsim_inst_power -inst {n} -power {pw:.8f}" for n, _, _, pw in blks if pw > 0]
     t += ["foreach n {VDD VSS} { if {[catch {check_power_grid -net $n} e]} { puts \"OT_PG_CHECK_FAIL $n $e\"; error $e } "
           "else { puts \"OT_PG_CHECK_OK $n\" } }",
-          "if {[catch {analyze_power_grid -net VDD -error_file /work/psm/psm_VDD.rpt -voltage_file /work/psm/ir_VDD.csv} e]} "
-          "{ puts \"OT_PSM_FAIL $e\"; error $e } else { puts OT_PSM_OK }",
+          f"foreach n {{{' '.join(nets)}}} {{ if {{[catch {{analyze_power_grid -net $n -error_file /work/psm/psm_$n.rpt "
+          "-voltage_file /work/psm/ir_$n.csv} e]} { puts \"OT_PSM_FAIL $n $e\"; error $e } else { puts \"OT_PSM_OK $n\" } }",
           "puts \"OT_T psm [expr {[clock seconds]-$t0}]\"", "puts OT_DONE"]
     (out / "psm" / "tracks.tcl").write_text(D.coarse_tracks(P, 0.72))
     (out / "psm" / "psm.tcl").write_text("\n".join(t) + "\n")
@@ -691,6 +699,9 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
                 window_grid=local_grid, grid_phase_scope="core grid rows only; PHY domains are not cropped/translated",
                 power_w=round(sum(b[3] for b in blks), 4), load_blocks=len(blks), bumps=len(bumps),
                 bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), bump_contract=bump_cfg,
+                nets=list(nets), power_map="loads" if loads is not None else "region model",
+                supply_metric="requires co-located VDD drop + VSS bounce collector" if set(nets) == {"VDD", "VSS"}
+                else "single-net diagnostic; combined supply NOT RUN",
                 bump_pitch_um=bp, bump_pad_um=bump_cfg["pad_um"], est_regions_mv=est, est_worst_mv=worst, est_detail=det,
                 scope="window PDNSim: window edges open (no feed from outside), window-local bumps; the estimate "
                       "above is the same model on the same domain")
@@ -755,6 +766,14 @@ def report(run):
     r["ir_budget_mv"] = budget
     r["ir_verdict"] = ("NOT RUN" if r.get("status") != "OK" or budget is None or drop is None
                        else "PASS" if drop <= budget else "FAIL")
+    r["nets"] = m.get("nets", ["VDD"])
+    r["power_map"] = m.get("power_map", "region model")
+    r["supply_metric"] = "single-net diagnostic; combined supply NOT RUN"
+    if "VSS" in r["nets"]:
+        # This legacy reporter reads only VDD; never turn its drop into a
+        # combined-supply PASS when an opt-in two-net window was requested.
+        r["ir_verdict"] = "NOT RUN"
+        r["supply_metric"] = "requires co-located VDD drop + VSS bounce collector"
     r.update({k: m.get(k) for k in ("die", "window", "window_um", "grid", "power_w", "est_regions_mv", "est_worst_mv")})
     (run / "result.json").write_text(json.dumps(r, indent=1) + "\n")
     return r
