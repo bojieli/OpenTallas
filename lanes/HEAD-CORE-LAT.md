@@ -147,3 +147,20 @@ NEXT R14 (after ASK):
   - routed LEC on 6_final.v always runs (no set -e gate on the signoff exit code).
 - Gaps (ROW0/TEN straps, hd_serdes open pins, PMA pin class, leaf-pin check) go to INFRA-FIRST-HEAD-4.
 - Still to collect: the R13 post-route LEC of the R12b netlists (flow-path proof only), B ~03:45, A ~04:30.
+
+2026-10-27 04:17 PDT HEAD-CORE-R14 RESULT (claude/head-core-r14-1027@5f0904471; evidence results/physical/head_core_r14/README.md). Nothing is signed off yet; all builds LIVE.
+(1) R13 routed LEC: elemB EQUIVALENT 27498/27498, 0 differ, kept missing 0 (CHECKED raw lec.json). elemA still running (intel1 oth-ubuntu-1585112-1793095018).
+(2) ASK3 flow change behind canary = elemA R12b routed kit:
+  - head_grt_drv_unscaled.tcl: GRT repair_design on unscaled setRC, margin >= 20.
+  - 2nd root cause: R10 GRT repair ran BC-only, so TT slew was never repaired; the rebuild GRT is MCMM tc+bc.
+  - head_post_route_eco.sh / head_eco_post.tcl: RCX repair_design + setup + HB4-only hold, then DRT, signoff, and the routed LEC ALWAYS.
+  - Canary run intel1 head-core-r14/elemA_eco (oth-ubuntu-2273451-1793098716). At GRT (UNCHECKED): slew 8 -> 0 (74 buffers), RCX hold -4.06/6 -> +10.02/0 (263 HB4), setup +118.47. DRT was running at 04:15.
+(3) elemA: the old pin was already near the centre (162.00,163.44), 4.2 um off (CHECKED LEF). The skew came from the plan trunk: root legs 122/145/107/109, N1 BUFx10.
+  - R14 moves the pin to (159.84,159.84) and uses an L1-mirror trunk with root legs 121x4.
+  - Two variants run in parallel: m2 (--eq_levels 2, preferred, symmetric H in render) and m12 (eq 1,2).
+  - Warm start from the kit 3_place. CTS rc 0 at 04:14; GRT running on intel1 head-core-r14/elemA_rb_{m2,m12}.
+(4) elemB: removed the 50 dead ports from RTL _rb (now also carries the kit ft_* ports), the sim model, the bb and the bundle; parent ties dropped.
+  - LEC new RTL vs proven hold2 export: epyc2 head-core-r14/elemB_rtl_lec (oth-ubuntu-3964732-1793099267).
+  - Rebuild re-synthesises: epyc2 head-core-r14/elemB_rb, in floorplan at 04:15.
+  - The elemB pin is also near the centre (144.72,146.16); it is not an edge pin.
+COLLECT: see the Collect table in the README. Next step: GRT STA -> render 4_cts/5_1_grt + GEOM REQ -> route (actual_head_route_r12.sh) -> head_post_route_eco.sh -> SIGNED check.
