@@ -51,3 +51,17 @@ With land/rebuild/tap every partition is std class, so G=2 gives 168 regions, 1,
 - v5.0 kit (kit_tap/): adds the early core taps as tree leaves. die_trial's ctree does not model the early-by-insertion
   offset: the macro latency is a die-STA annotation, and the GRT geometry is the same.
 - Renders: kit*/tree_regions.png (viewed). Black = reference tree, blue = local trees, red = region roots.
+- v5.0 kit_tap result: 168 regions, 9,209 entries (7,887 partition + 1,322 early core taps), 31,550 cells (2,203
+  repeaters), 0 illegal sites, wire 5.66 m. Render s81_fb2_tap_tree_regions.png (viewed). One root per region; local
+  trees stay inside their region boxes.
+- Seen in the render: (1) the site-legal greedy snap puts jogs in the reference-tree legs (unequal length, as in
+  FALLBACK-HEAD fs300), so the cross-region landed |d| needs the GRT arrivals; (2) the PHY region (8.7 x 3.7 mm) is one
+  local tree from one root, the longest unshared tree.
+
+## 5. Die GRT incl. clock: SUBMITTED, not collected
+
+`ot-run --mem 120 --threads 16 --priority die --dir epyc1:/srv/opentallas-scratch2/claude/fallback-s81-2-1026 --
+bash scripts/go_grt.sh`. Combined global_route: signals M4-M7 adj 0.75 + region ctree M8-M9 adj 0.4, 50 congestion
+iterations, TT + FF (docker fbs81b-TT/FF). Log: grt.otrun.log. Outputs: out_{TT,FF}/combo_*.log, arr_*.txt,
+congestion_*.rpt. Collect: per-layer overflow + GRT-0113/0114 count, then the landed |d| <= 416.5 window with
+FALLBACK-HEAD fallback_land_report.py (needs a regions adapter).
