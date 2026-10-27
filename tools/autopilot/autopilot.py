@@ -88,6 +88,7 @@ NEAR_WNS_PS = -30.0
 NEAR_DRC_MAX = 50
 RENDER_MEM_GB = 8
 ORPHAN_IDLE_S = 3 * 3600
+CHAIN_VERSION = 2
 MAX_SUBMIT_PER_TICK = int(os.environ.get("AP_MAX_SUBMIT", "12"))
 MAX_NOTRUN = 3                                          # 'NOT RUN' (never admitted) resubmits
 KIT_RE = re.compile(r"^([A-Za-z0-9_.-]+):(/srv/opentallas-scratch2?/claude/[A-Za-z0-9_./+=-]+)$")
@@ -1042,7 +1043,9 @@ def submit(st, j, attempt_note=""):
         # actual selected worker before executing any frozen kit runner.
         argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded,
                  runner, kit, j["goal"], str(mem), str(thr)]
-        j.update(chain_required=True, admission_tools_sha256=bundle["sha256"])
+        # chain v2 (AUTOPILOT-SIGNOFF-2): main lec.py + all_shown + mtime proof, FAILED notice + data delete.
+        # Jobs launched by an earlier chain keep the earlier rules (no retroactive demotion or deletion).
+        j.update(chain_required=True, admission_tools_sha256=bundle["sha256"], chain_version=CHAIN_VERSION)
     else:
         argv += ["--", "bash", runner, kit, j["goal"], str(mem), str(thr)]
     if DRY:
@@ -1637,7 +1640,7 @@ def finish(st, j, c, client):
             cls, kind, reasons = "CRASH", "proof-oom", str(chain.get("reason"))
         elif (chain.get("started", 0) < j.get("started", 0) - 120
                 or chain.get("verdict") != "PASS" or chain.get("lec_verdict") != "EQUIVALENT"
-                or chain.get("lec_exit") != 0 or chain.get("lec_all_shown") is not True):
+                or chain.get("lec_exit") != 0 or (j.get("chain_version", 1) >= 2 and chain.get("lec_all_shown") is not True)):
             cls, kind, reasons = "STRUCTURAL", "routed-lec", "autopilot chain incomplete: " + str(chain.get("reason") or "missing current routed LEC")
     if client.get("orphan") and cls == "CRASH" and kind not in ("tool-segfault",):
         kind, reasons = "infra-orphan", client["msg"]
@@ -1709,7 +1712,7 @@ def archive(st, j):
                                  "src_commit", "flow_tag", "prov_error")}
     rec.update(signoff=so, archived=now_s(), host=host)
     view = {}
-    if j.get("chain_required"):
+    if j.get("chain_version", 1) >= 2:
         vr = rpy(host, PROBE_VIEW_READ, {"kit": j["path"], "base": so["base"],
                                          "signoff_dir": os.path.dirname(so["path"])}, timeout=300)
         if vr.get("error"):
@@ -1746,7 +1749,7 @@ def archive(st, j):
     if w.get("error"):
         log(f"PROVENANCE write failed {j['id']}: {w['error'][:200]} (AUTOPILOT.json carries the same fields)")
     versioned = record_signed(st, j, host, so)
-    if versioned and j.get("chain_required"):
+    if versioned and j.get("chain_version", 1) >= 2:
         coord_append("lanes/SIGN-RATE.tsv",
                      f"{now_s()}\tAUTOPILOT +1 {j['die']}/{j['type']} signed off (signoff + routed LEC EQUIVALENT "
                      f"all_shown) archive {j['archive']} view {r.get('view') or 'none'}"
@@ -1834,7 +1837,7 @@ def record_failure(st, j):
         log(f"KEEP {j['id']}: flow exit 0 without signoff.json (sign-off tool problem?) -- data kept for a GOAL=post re-sign")
         set_status(st, j, "DONE-" + cls, j.get("reasons", "")[:200])
         return
-    if j.get("chain_required") and not j.get("adopted"):
+    if j.get("chain_version", 1) >= 2 and not j.get("adopted"):
         # AUTOPILOT-SIGNOFF-2 (owner speed-up 10-27): stop the kit, tell the owning lane + COORD, delete the failed
         # run data at once (logs, reports, review bundle and receipts kept), never retry it blindly
         failed_notice(j, cls, host)

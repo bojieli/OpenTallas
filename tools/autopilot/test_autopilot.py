@@ -532,6 +532,27 @@ class TestTick(TickBase):
         self.assertIn("FAILED", lines[0][1])
         self.assertTrue(j["data_deleted"])
 
+    def test_job_from_earlier_chain_is_never_demoted_or_deleted(self):
+        lines = []
+        self.ap.coord_append = lambda rel, line: lines.append((rel, line))
+        self.queue(ROW)
+        self.tick()
+        st = json.loads((Path(self.tmp.name) / "state.json").read_text())
+        (j,) = st["jobs"].values()
+        self.assertEqual(j["chain_version"], 2)
+        j.pop("chain_version")                           # launched before AUTOPILOT-SIGNOFF-2
+        (Path(self.tmp.name) / "state.json").write_text(json.dumps(st))
+        path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
+        c = so("SIGNED", 3.0, 2.0, ())
+        c["chain"].pop("lec_all_shown")
+        self.f.kits[path] = {"classify": c, "mtime": 9e9}
+        self.finish_client(self.f.launched[0][0], "ot-run: RAN on epyc2: exit 0\nAP_RC=0\n")
+        j = list(self.tick().values())[0]
+        self.assertEqual(j["status"], "ARCHIVED")
+        self.assertEqual(self.f.archived["view"], {})
+        self.assertEqual(lines, [])
+        self.assertFalse(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
+
     def test_admission_priority_kv_qc_head_s81_hbm(self):
         rows = []
         for i, die in enumerate(("hbm", "s81", "s81_head", "qwen_compute", "kv")):
