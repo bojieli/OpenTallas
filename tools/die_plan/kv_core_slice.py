@@ -74,6 +74,12 @@ def main(argv=None):
     ap.add_argument("--out", required=True)
     ap.add_argument("--hr-price")
     ap.add_argument("--outline", action="append", default=[], help="MODULE=W,H,anchor (anchor SE|SW|NE|NW) outline delta")
+    ap.add_argument("--heads", default="", help="KV-CORES-R3 (opt-in): comma list of kv3_head_eighth_* modules sliced like every "
+                    "other core (12.8a centre entry, R15 die islands); default = heads out of slice (KV-CORE-SLICE-1)")
+    ap.add_argument("--single-tree-in-band", action="store_true",
+                    help="KV-CORES-R3 (opt-in): keep one CTS tree from the centre entry (no 12.8b in-core H-tree) when the plan "
+                         "insertion model of the single tree (master_plan.core_insertion(L_max)) is already inside 250+-20 TT; "
+                         "basis PATH-KV R5 heads centre entry measured 239.0-244.6 TT (CTS-only)")
     a = ap.parse_args(argv)
     pd = Path(a.plan_dir)
     plan_path = pd / a.plan
@@ -109,7 +115,7 @@ def main(argv=None):
     new_views = {}
     for mod in sorted(mods):
         m = mods[mod]
-        if mod.startswith("kv3_head_eighth_"):
+        if mod.startswith("kv3_head_eighth_") and mod not in set(filter(None, a.heads.split(","))):
             # heads: out of this slice (PATH-KV R5 centre entry measured 239-245 TT; e1/e5 signed views are the only
             # KV real views for R15 die STA) -> listed, pins untouched
             slices[mod] = dict(module=mod, outline_um=m["outline"], instances=sum(u["n"] for u in m["uses"]),
@@ -127,7 +133,8 @@ def main(argv=None):
         far = max(abs(cx - ex) + abs(cy - ey) for cx in (0, w) for cy in (0, h))
         tree = None
         grid_choice = None
-        if far > 200.0:
+        single_ok = a.single_tree_in_band and abs(MP.core_insertion(far)[0] - common) <= 20.0
+        if far > 200.0 and not single_ok:
             # 12.8b + 12.9d: smallest island grid whose plan-model insertion is in band (250 +-20); else the lowest
             cands = []
             for reach in (200.0, 150.0, 110.0):

@@ -1,0 +1,44 @@
+{
+ "plan": "F1_s70_ndr_buf_d1_strip",
+ "fit": "uf_phys3 v1 (MODEL-REFIT-3 2026-10-26): uf_phys + KSTAGE + BLEAF, GRT basis, 10 builds",
+ "basis": "GRT",
+ "gate": {
+  "TT_rise": {
+   "mean": 274.84,
+   "min": 263.6,
+   "max": 281.13,
+   "window": 17.54
+  },
+  "FF_early": {
+   "mean": 208.95,
+   "min": 198.77,
+   "max": 214.79,
+   "window": 16.02
+  }
+ },
+ "ndr2w_trunk_extrapolation": {
+  "TT_rise": {
+   "mean": 258.26,
+   "min": 251.3,
+   "max": 262.61,
+   "window": 11.31
+  },
+  "FF_early": {
+   "mean": 193.6,
+   "min": 187.34,
+   "max": 197.68,
+   "window": 10.34
+  }
+ },
+ "guard": {
+  "rule": "COORD 18:1x: TT 250+-9, FF 202.5+-10, window <= 14 (uf_phys3 v1, std-width trunk = gate number)",
+  "checks": {
+   "TT_mean": false,
+   "FF_mean": true,
+   "TT_window": false,
+   "FF_window": false
+  },
+  "verdict": "FAIL"
+ },
+ "scope": "PLAN MODEL uf_phys3 v1 via record adapter, UNCHECKED"
+}
