@@ -12,6 +12,15 @@ def test_default_preserves_direct_tap_assignment():
     assert len(place) == 1
 
 
+def test_inter_node_repeater_names_and_parent_chain_are_distinct():
+    nodes={0:dict(x=0.,y=0.,parent=None,taps=[]),
+           1:dict(x=1500.,y=0.,parent=0,taps=[("p","clk",1500.,0.)])}
+    v,place,_,_,parent=D.tree_netlist(nodes,[],rep_um=405.)
+    assert len({name for name,*_ in place})==len(place)==5
+    assert parent==dict(r1_0="b0",r1_1="r1_0",r1_2="r1_1",b1="r1_2")
+    assert all(a!=b for a,b in parent.items())
+
+
 def test_long_last_mile_is_repeated_along_manhattan_route():
     v, place, taps, _, parent = D.tree_netlist(_nodes(), [], tap_rep_um=405.)
     assert len(place) == 3

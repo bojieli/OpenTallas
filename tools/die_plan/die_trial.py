@@ -557,7 +557,6 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_rep_um=None):
                 f = (j + 1) / (nrep + 1)
                 x = p["x"] + (nd["x"] - p["x"]) * f
                 y = p["y"] + (nd["y"] - p["y"]) * f
-                inst = f"r{i}_{j}"
                 if site is not None:
                     x, y = site.nearest((x, y), "x" if abs(nd["x"] - p["x"]) >= abs(nd["y"] - p["y"]) else "y")
                 anchors.append((x,y))
@@ -566,6 +565,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_rep_um=None):
                 if any(abs(a[0]-b[0])+abs(a[1]-b[1])>tap_rep_um+1e-6 for a,b in zip(points,points[1:])):
                     anchors=legal_repeater_chain(points[0],points[-1],site,tap_rep_um)
             for j,(x,y) in enumerate(anchors):
+                inst = f"r{i}_{j}"
                 o = f"rn{i}_{j}"
                 cells.append(f"  {BUF} {inst} (.A({src}), .Y({o}));")
                 wires.append(o)
@@ -616,6 +616,8 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_rep_um=None):
                                      f"last_cell={(px,py)}, tap={(x,y)}, nearest_legal={nearest}, "
                                      f"nearest_tap_gap={gap:.3f}")
             cells.append(f"  assign {tp} = {src};")
+    if len({name for name,*_ in place}) != len(place):
+        raise ValueError("clock tree contains duplicate instance names")
     v = ["module ctree (root, " + ", ".join(t[0] for t in tap_ports) + ");", "  input root;"]
     v += [f"  output {t[0]};" for t in tap_ports]
     v += [f"  wire {w};" for w in wires]
