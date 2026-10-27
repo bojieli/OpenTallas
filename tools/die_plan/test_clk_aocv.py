@@ -78,7 +78,7 @@ def test_die_sta_related_default_unchanged_and_hook_subtracts(tmp_path):
     t = tmp_path / "t.json"
     t.write_text(json.dumps(dict(clock_aocv=_T(g=0.004))))
     meta = dict(corner="TT", node_stages={"h0": 4, "h": 0}, node_xy_um={"h0": [50, 50], "h": [0, 0]},
-                spine_late={"h0": 400.0, "h": 0.0}, spine_early={"h0": 395.0, "h": 0.0})
+                node_late_ps={"h0": 400.0, "h": 0.0}, node_early_ps={"h0": 395.0, "h": 0.0})
     fn = R.clock_ocv_fn("table", "shared", meta, taps, 250.0, t)
     r = R.time_class(pairs, taps, rng, REG, 20.0, 833.333, 60.0, 25.0, ocv=fn)
     p = r["clock_ocv_pessimism_max_ps"]
