@@ -44,11 +44,17 @@ def main():
     plan = S.Plan(S.load(args.plan))
     original = json.loads(args.spec.read_text())
     report = {}
-    for label, spec in [('exact', copy.deepcopy(original)), ('mirror_exact', mirrored(original))]:
+    for label, spec in [('exact', copy.deepcopy(original)), ('mirror_exact', mirrored(original)),
+                        ('pg_only_DIAGNOSTIC', mirrored(original))]:
         spec['exact_reserve'] = True
         target = args.out / label
         target.mkdir(exist_ok=True)
         (target / 'explicit_tree.json').write_text(json.dumps(spec, indent=1) + '\n')
+        reserve = D.C128.TrackRouter.reserve
+        if label == 'pg_only_DIAGNOSTIC':
+            # Root-cause isolation only: this intentionally omits inter-clock
+            # clearance. Such an output can never qualify as a physical plan.
+            D.C128.TrackRouter.reserve = lambda self, shapes: reserve(self, [s for s in shapes if s[2] == 'pg'])
         try:
             cells, nets, ports, meta = D.build_explicit(spec, plan, ndr='16w',
                 root_um=plan.raw['clock']['spine']['root_um'] if hasattr(plan, 'raw') else None)
@@ -60,6 +66,10 @@ def main():
             (target / 'mesh.json').write_text(json.dumps(meta) + '\n')
             (target / 'place.json').write_text(json.dumps(cells) + '\n')
             (target / 'nets.json').write_text(json.dumps(dict(nets=nets, ports=ports)) + '\n')
+        finally:
+            D.C128.TrackRouter.reserve = reserve
+        if label == 'pg_only_DIAGNOSTIC':
+            row['diagnostic_only_ignores_inter_clock_clearance'] = True
         report[label] = row
         print(label, json.dumps(row), flush=True)
         (args.out / 'summary.json').write_text(json.dumps(report, indent=1) + '\n')
