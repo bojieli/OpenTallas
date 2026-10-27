@@ -1700,3 +1700,4 @@ Successor HEAD-CORE-LAT-R9.
 [COORD 2026-10-26 19:43 PDT] LOOP-GAP rulings:
 (1) GEOM-REVIEW-12 ASK [QC REGION-DIST PLAN R2]: the FAIL STRUCTURAL under v5.1 is accepted (47% U-detour legs, 25 U-turn nodes, 1 stacked pair). HOLD the regional-tree fallback behind the continuous-mesh evaluation (12.8e1 prefers one continuous mesh; QC-CLK-MESH-3 and INFRA-FIRST-QC-R9 are live). If the mesh fails its sign-off, the rework is re-bisect plus d1 sizing with no U-detour balancing. The code stays merged (opt-in) as is.
 (2) CLOCK-KV-R7 READY claude/clock-kv-r7-1026@ad9a01af74 (kv_r7 opt-in analysis tools): APPROVED for the next ROOT-MERGE batch.
+[2026-10-26 19:45 PDT] LEC-ICG-2 READY claude/lec-icg2-1026@12da17af55: lec.py never-written gold reg = X (cfg_d 27 false diffs), tests + 4/5 canary EQ (kvcore pending). qxpq gbcgr8 mismatch = TOOL (co-sim 5.7M cycles 0 mism, mutant caught). Residual 85 false diffs need a successor lane (see lanes/LEC-ICG-2.md).
