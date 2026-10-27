@@ -19,3 +19,5 @@ preserved scratch, not adopted.
 Scratch intel2:/srv/opentallas-scratch2/claude/codex-qc-event-1351-1027.
 Selected hard2/plan.json +soft3/plan.json, combined/ audits/checks.
 No P&R/STA job launched.
+
+Finalcorrected-context G0C0errors/111warnings, unit4088418 EXIT0; g0c_with_views.json preserves the actualresult. Initialsparse-context FAIL retained separately. FTdelta is ready for the ONE R29event.
