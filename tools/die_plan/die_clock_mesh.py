@@ -2374,6 +2374,9 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
                               **(dict(wide_merge_um=nd.get("wide_merge_um", C128.WIDE_MERGE_UM)) if stack_r8 else {}))
     router.reserve(C128.pg_shapes(pgr))
     ties = {us[0]: list(us) for us in groups.values() if len(us) > 1}
+    if chan_rects and spec.get("channel_keep", False):   # opt-in: R20 found no legal in-channel track for lane 0
+        # R20: channel-hosted cells keep their trunk (and so the M7 riser) inside the clock channel
+        out["meta"]["clock_channel_keep"] = [list(r) for r in chan_rects]
     # physical view: one pin stack per GROUP (the tie reaches the other units); logical nets keep every unit
     phys = [dict(n, loads=[ld for ld in n["loads"] if ld.startswith("port:") or rep_of[ld] == ld]) for n in nets]
     wires = C128.fixed_wires(out, cells, phys, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=True,

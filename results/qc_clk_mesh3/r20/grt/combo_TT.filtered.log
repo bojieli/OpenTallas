@@ -1,0 +1,122 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 97440 rows of 578080 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 31216.320 26308.800 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 31216.320 26308.800 ) um
+[INFO IFP-0102] Core area:                    821263919.616 um^2
+[INFO IFP-0103] Total instances area:         800934131.862 um^2
+[INFO IFP-0104] Effective utilization:                0.975
+[INFO IFP-0105] Number of instances:                   8707
+OT_T floorplan 17
+OT_T placed 17
+[WARNING ODB-1003] (M1) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M2) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M3) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M4) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M5) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M6) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M7) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (Pad) layer's width from (ot_mesh_ndr) NDR is not defined. Using the default value 0.04
+OT_FIXED_CLOCK nets 4646 segs 11566
+OT_ROUTED_CLOCK nets 4646 pin_stairs 9290 port_joins 961
+OT_SHIELD_TIES grid 117326 shield 38924 untied 0 shorts 0
+OT_MESH regions 0 straps 0
+OT_NDR nets=4646
+[INFO GRT-0020] Min routing layer: M4
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0088] Layer M9      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[WARNING GRT-0037] Found blockage outside die area.
+[INFO GRT-0003] Macros: 377
+[INFO GRT-0004] Blockages: 49087
+[INFO GRT-0019] Found 4646 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 378
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   764075444      190365807          75.09%
+M5         Vertical     755689777      188281790          75.08%
+M6         Horizontal   869179712      216885324          75.05%
+M7         Vertical     1100596414      273222568          75.18%
+M8         Horizontal   840128407      504025400          40.01%
+M9         Vertical     840709681      504385234          40.00%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 533587
+[INFO GRT-0198] Via related Steiner nodes: 47
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1237389
+[INFO GRT-0112] Final usage 3D: 58034158
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           190365807       6437295            3.38%             0 /  0 /  0
+M5           188281790       11448376            6.08%             0 /  0 /  0
+M6           216885324       8252029            3.80%             0 /  0 /  0
+M7           273222568       19924470            7.29%             0 /  0 /  0
+M8           504025400       2913392            0.58%             0 /  0 /  0
+M9           504385234       5346429            1.06%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        1877166123       54321991            2.89%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 598266334 um
+[INFO GRT-0014] Routed nets: 485898
+[INFO GRT-0303] Global routing runtime = 00:03:37
+OT_CLK_OBS_REMOVED 11566
+[WARNING STA-0349] instance 'ckm_d_*' not found.
+[WARNING STA-0349] instance 'ckm_d_*' not found.
+[WARNING STA-0349] instance 'ckm_n*' not found.
+[WARNING STA-0349] instance 'ckm_r*' not found.
+OT_DONE
+EXIT 0

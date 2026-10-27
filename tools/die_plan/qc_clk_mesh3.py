@@ -1983,6 +1983,10 @@ def cmd_solve(a):
                insertion_ps=dict(min=r3(float(np.nanmin(t_ent))), max=r3(float(np.nanmax(t_ent)))),
                tap_skew_ps=r3(float(np.nanmax(t_ent) - np.nanmin(t_ent))), tap_arr_ps=tap_arr,
                tap_slew_ps={p: r3(v) for p, v in zip(parts, sl_ent)}, geometry=a.geometry, feed=getattr(a, "feed", "mesh3"),
+               # R20 (NUMBER-CHECK-QC-R19): the solver states its own MC segment so the pair_u guard can fire.  The fine
+               # mesh netlist ends at the partition tap node on the strap (taps = rec taps[].tap); the tap buffer and
+               # the tap->entry stub are NOT in it (they are priced by AOCV in pair_u).
+               mc_includes_stub=False, mc_segment="die input -> fine-mesh tap node",
                checked="UNCHECKED")
     if legal:
         ets = dict(t=B["et"]["top"], c=B["et"]["col"])
@@ -2020,8 +2024,13 @@ def cmd_collect(a):
     summ["nominal"] = {k: v for k, v in (summ["nominal"] or {}).items() if k != "tap_arr_ps"}
     if mc and "physical" in mc[0]:
         summ["mc_net_um_max"] = max(r["physical"]["net_um"]["max"] for r in rows)
+    flags = {r.get("mc_includes_stub") for r in rows}
+    if None in flags:
+        raise SystemExit("collect: a solve json does not state mc_includes_stub (pre-R20 solver); re-run the solve")
+    if len(flags) != 1:
+        raise SystemExit("collect: solves disagree on mc_includes_stub")
     out = dict(summary=summ, samples=[dict(sample=r["sample"], tap_skew_ps=r["tap_skew_ps"], tap_arr_ps=r["tap_arr_ps"]) for r in rows],
-               checked="UNCHECKED")
+               mc_includes_stub=flags.pop(), checked="UNCHECKED")
     Path(a.out).write_text(json.dumps(out, indent=1))
     print(json.dumps({k: v for k, v in summ.items() if k != "nominal"}, indent=1))
     return 0
@@ -2061,6 +2070,13 @@ def pair_u(x, y, tap, solve_, aocv, g):
     return r
 
 
+def _set_mc_stub_flag(docs):
+    """R20: pair_u.mc_includes_stub from the collected solve docs (absent = legacy pre-R20 solve: not asserted)."""
+    vals = {d.get("mc_includes_stub") for d in docs}
+    pair_u.mc_includes_stub = bool(True in vals)
+    return pair_u.mc_includes_stub
+
+
 def cmd_sta_export(a):
     """die_sta_related.py input from the mesh solves: OUT/tap_arrivals_<C>.json (one entry tap per partition, nominal
     arrival late = early, one cppr node 'm' = the signed mesh with range 0: no mesh-node credit) + OUT/pair_unc.json
@@ -2070,6 +2086,7 @@ def cmd_sta_export(a):
     rec = json.loads(Path(a.r2).read_text())
     P, dtp, parts, cores, psha = Q.load(rec["plan"], rec["tree_plan"])
     solve_ = {c: json.loads(Path(v).read_text()) for c, v in json.loads(a.mesh_skew).items()}
+    _set_mc_stub_flag(solve_.values())
     aocv = json.loads(Path(a.aocv).read_text())["clock_aocv"]
     tap = {t["part"]: t for t in rec["taps"]}
     out = Path(a.out)
@@ -2144,7 +2161,9 @@ def cmd_pairs(a):
     rec = json.loads(Path(a.r2).read_text())
     P, dtp, parts, cores, psha = Q.load(rec["plan"], rec["tree_plan"])
     pairs = RC.seam_pairs(P, parts)
-    solve_ = {c: json.loads(Path(v).read_text())["samples"] for c, v in json.loads(a.mesh_skew).items()}
+    docs_ = {c: json.loads(Path(v).read_text()) for c, v in json.loads(a.mesh_skew).items()}
+    _set_mc_stub_flag(docs_.values())
+    solve_ = {c: d["samples"] for c, d in docs_.items()}
     aocv = json.loads(Path(a.aocv).read_text())["clock_aocv"]
     g = a.g_per_mm
     tap = {t["part"]: t for t in rec["taps"]}

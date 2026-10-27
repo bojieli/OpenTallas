@@ -1,0 +1,2 @@
+shield ties {"vss_tied": true, "tie_net": "VSS", "shield_stripes": 23132, "stripes_with_grid_via": 22580, "grid_vias": 117326, "stripes_grid_contact": 11026, "shield_shield_vias": 38924, "untied_stripes": 0, "pg_shorts": 0, "pg_short_nets": [], "tie_method": "VIA89 at every shield x die-VSS-stripe crossing + every M8 x M9 shield crossing; tied = shield component holds >= 1 grid via (die_clock_128.shield_ties)"} metal shorts 0 spacing 0 {} {}
+combo written /srv/opentallas-scratch2/claude/qc-mesh-r20/sig/combo.tcl clock nets 4646

@@ -21,7 +21,12 @@ LIB_HOLD, UNC_SHARE, GUAR = 12.28, 12.5, 12.5
 UTIL = 0.6
 
 
-def main(plan, frag, out):
+def ncell(pad, d_ff):
+    """HB4 cells for a hold pad (ps); 0 when no pad is needed."""
+    return math.ceil(pad / d_ff - 1e-9) if pad > 0 else 0
+
+
+def main(plan, frag, out, per_endpoint=False):
     P = json.load(open(plan))
     hd = json.load(open(frag))["clock"]["hold_demand"]
     pairs, dflt = hd["pairs"], hd.get("default_ps")
@@ -33,7 +38,9 @@ def main(plan, frag, out):
         k = "|".join(sorted((s, t)))
         return pairs.get(k, dflt), (k in pairs)
     # type-port demand = max D over every instance's senders
-    tport = defaultdict(float)
+    # R20 (NUMBER-CHECK-QC-R19): start at -inf, not 0.0 -- a 0.0 floor made every zero-residual bus pad 12.28 ps
+    # (1 cell/bit); a bus whose demand + lib hold is <= 0 gets 0 cells.
+    tport = defaultdict(lambda: float("-inf"))
     rows, used_default, scal = [], 0, 0
     for pr in P["ports"]:
         s, t = pr["src"]["part"], pr["dst"]["part"]
@@ -52,8 +59,10 @@ def main(plan, frag, out):
     total = inst_total = bits = 0
     cpb_hist = defaultdict(int)
     for pid, s, t, key, w, d in rows:
-        n_t = math.ceil((tport[key] + LIB_HOLD) / d_ff - 1e-9)       # type value (what the kit actually pads)
-        n_i = math.ceil((d + LIB_HOLD) / d_ff - 1e-9)                # per-instance lower bound (INFO)
+        n_t = ncell(tport[key] + LIB_HOLD, d_ff)                     # type value (one pad per type port)
+        n_i = ncell(d + LIB_HOLD, d_ff)                              # per endpoint (capture instance bus)
+        if per_endpoint:              # R20 / KV NUMBER-CHECK-KV-R18: size each capture endpoint for its own demand
+            n_t = n_i
         per_part[t]["cells"] += w * n_t
         per_part[t]["cells_inst_d"] += w * n_i
         per_part[t]["bits"] += w
@@ -79,13 +88,15 @@ def main(plan, frag, out):
                         cells_before=ty.get("cells"), cells_after=(ty.get("cells") or 0) + v["cells"]))
     fit.sort(key=lambda r: -(r["hb4_frac_of_headroom"] or r["hb4_frac_of_free"] or 0))
     die_area = P["die"]["outline_um"][0] * P["die"]["outline_um"][1]
-    worst_cpb = max(cpb_hist)
+    worst_cpb = max(cpb_hist) if cpb_hist else 0
+    bits_fix = sum(v for k, v in cpb_hist.items() if k > 0)
     rec = dict(
         schema="opentallas.r11_hb_count.v1", label="UNCHECKED plan estimate (HB4 from the r10 legal demand fragment)",
         plan=plan, fragment=frag, fragment_pairs=len(pairs), default_ps=dflt, ports_on_default=used_default,
         rule=dict(pad_ps="D + 12.28 (lib hold) ; sender guarantee 12.5 cancels uncertainty share 12.5",
                   cell="HB4xp67", d_ff_ps=round(d_ff, 3), area_um2=HB4_AREA, type_port="max D over instances"),
-        vector_ports=len(rows), scalar_ports_fallback=scal, bits=bits,
+        vector_ports=len(rows), scalar_ports_fallback=scal, bits=bits, bits_needing_fix=bits_fix,
+        sizing="per_endpoint" if per_endpoint else "type_port",
         hb4_cells=total, hb4_area_mm2=round(total * HB4_AREA / 1e6, 6), hb4_area_frac_die=round(total * HB4_AREA / die_area, 6),
         hb4_cells_per_instance_D_info=inst_total, cells_per_bit_hist={str(k): v for k, v in sorted(cpb_hist.items())},
         tt_setup_cost_ps_worst=round(worst_cpb * HB4_TT_LATE, 2),
@@ -102,4 +113,4 @@ def main(plan, frag, out):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    main(*sys.argv[1:4], per_endpoint="--per-endpoint" in sys.argv[4:])
