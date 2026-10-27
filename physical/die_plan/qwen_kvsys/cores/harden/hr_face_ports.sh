@@ -6,6 +6,9 @@ CJ=$1; O=$2; mkdir -p $O
 HERE=$(cd $(dirname $0) && pwd)
 Y=${YOSYS:-/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys}
 MOD=$(python3 -c "import json;print(json.load(open('$CJ'))['module'])")
+# KV-CORES-R2/KVSCTL 10-27: expose EVERY memory black box of the core (ot_sram* and the ctl_sram* family of qkd_kvs_ctl),
+# derived from the core json _bb.v files; was a fixed eq/t:ot_sram* (a ctl_sram macro would stay an unmatched free box)
+MACROS=$(python3 -c "import json,os;print(' '.join('eq/t:'+os.path.basename(f)[:-5] for f in json.load(open('$CJ'))['files'] if f.endswith('_bb.v')) or 'eq/t:ot_sram*')")
 FILES=$(python3 -c "import json;print(' '.join(json.load(open('$CJ'))['files']))")
 INC=$(for f in $FILES; do echo -n "-I$(dirname $f) "; done)
 cat > $O/pre.ys <<YS
@@ -39,16 +42,20 @@ cat > $O/eq_$V.ys <<YS
 read_json $O/pre.json
 memory_share
 memory_map
+setattr -mod -unset keep_hierarchy
+flatten
 rename $MOD gold
 design -stash g
 read_json $O/$V.json
 memory_share
 memory_map
+setattr -mod -unset keep_hierarchy
+flatten
 rename $MOD gate
 design -copy-from g -as gold gold
 equiv_make gold gate eq
 hierarchy -top eq
-expose -evert eq/t:ot_sram*
+expose -evert $MACROS
 async2sync
 equiv_simple -seq 2
 equiv_induct -seq 2
@@ -63,6 +70,8 @@ cat > $O/eq_v.ys <<YS
 read_json $O/pre.json
 memory_share
 memory_map
+setattr -mod -unset keep_hierarchy
+flatten
 rename $MOD gold
 design -stash g
 read_verilog -sv $O/$MOD.v
@@ -72,11 +81,13 @@ proc
 memory_collect
 memory_share
 memory_map
+setattr -mod -unset keep_hierarchy
+flatten
 rename $MOD gate
 design -copy-from g -as gold gold
 equiv_make gold gate eq
 hierarchy -top eq
-expose -evert eq/t:ot_sram*
+expose -evert $MACROS
 async2sync
 equiv_simple -seq 2
 equiv_induct -seq 2

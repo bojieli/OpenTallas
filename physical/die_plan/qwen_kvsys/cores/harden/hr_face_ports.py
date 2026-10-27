@@ -119,6 +119,83 @@ def transform(J, top, mutant=False):
                 attributes=dict(keep=ONE, init=init_by_bit[original_q]))
         return q, nc
 
+    # KV-CORES-R2/KVSCTL 10-27: a (* keep_hierarchy *) REGISTER LEAF (qkd_kvs_ctl: qkd_kv_die_cfg_c32_fld, one
+    # async-clear enable register per config field, kept so synthesis cannot fold the field write decode into every bit)
+    # that drives a face pin is a register too: its private port copy is a second instance of the SAME leaf (same ck/rn/
+    # en/d, its own q nets, keep), one copy per (leaf instance, port); the original keeps its other loads.  0 cycles.
+    def reg_leaf_out(typ):
+        m = J["modules"].get(typ)
+        if m is None or m.get("attributes", {}).get("blackbox"):
+            return None
+        qbits = {b for fc in m.get("cells", {}).values() if fc["type"] in FF for b in fc["connections"].get("Q", [])}
+        outs = [pn_ for pn_, pp_ in m["ports"].items() if pp_["direction"] == "output"]
+        # every output bit is directly the Q of a register of the leaf (enable / clear logic in front is fine: the
+        # copy is an identical instance)
+        if len(outs) != 1 or not m["ports"][outs[0]]["bits"] or not set(m["ports"][outs[0]]["bits"]) <= qbits:
+            return None
+        return outs[0]
+    inst_copy = {}
+
+    def leaf_bit_map(cn, typ):
+        """leaf net bit -> instance net bit (ports and constants only)"""
+        m = J["modules"][typ]
+        mp = {}
+        for pn_, pp_ in m["ports"].items():
+            for k, lb in enumerate(pp_["bits"]):
+                if isinstance(lb, int):
+                    mp[lb] = cells[cn]["connections"][pn_][k]
+        return m, mp
+
+    def leafcopy(cn, pn, op, k):
+        """private top-level copy of bit k of a register leaf instance: a plain FF of the leaf register's type/params
+        whose D is the leaf's next-state mux rebuilt on the INSTANCE nets (S = en pin, B = d pin, A = the original q),
+        so the copy's Q loads nothing but the face pin (an enable copy inside a leaf would re-load its own Q)."""
+        typ = cells[cn]["type"]
+        m, mp = leaf_bit_map(cn, typ)
+        lq = m["ports"][op]["bits"][k]
+        lc = m["cells"]
+        ff = [c for c in lc.values() if c["type"] in FF and lq in c["connections"]["Q"]]
+        if len(ff) != 1:
+            return None
+        ff = ff[0]; j = ff["connections"]["Q"].index(lq)
+        dbit = ff["connections"]["D"][j]
+        mux = [c for c in lc.values() if c["type"] == "$mux" and dbit in c["connections"]["Y"]]
+        if len(mux) != 1:
+            return None
+        mx = mux[0]; t = mx["connections"]["Y"].index(dbit)
+
+        def tr(x):
+            if not isinstance(x, int):
+                return x
+            if x == lq:
+                return cells[cn]["connections"][op][k]
+            return mp.get(x)
+        a_, b_ = tr(mx["connections"]["A"][t]), tr(mx["connections"]["B"][t])
+        s_ = tr(mx["connections"]["S"][0])
+        ctl = {kk: [tr(v) for v in ff["connections"][kk]] for kk in CTRL if kk in ff["connections"]}
+        if None in (a_, b_, s_) or any(None in v for v in ctl.values()):
+            return None
+        dn, q = new(), new()
+        tag = f"hrfp_{re.sub(r'[^A-Za-z0-9_]', '_', cn)}__{pn}_{k}"
+        cells[tag + "_mux"] = {"hide_name": 0, "type": "$mux", "parameters": {"WIDTH": format(1, "032b")},
+                               "attributes": {"src": "hr_face_ports.py private leaf next state"},
+                               "port_directions": {"A": "input", "B": "input", "S": "input", "Y": "output"},
+                               "connections": {"A": [a_], "B": [b_], "S": [s_], "Y": [dn]}}
+        nc = copy.deepcopy(ff)
+        w = len(ff["connections"]["Q"])
+        nc["parameters"]["WIDTH"] = format(1, "032b")
+        for kk in VAL:
+            if kk in nc["parameters"]:
+                nc["parameters"][kk] = pbits(ff["parameters"][kk], w)[::-1][j]
+        nc["connections"] = dict(ctl, D=[dn], Q=[q])
+        nc["port_directions"] = {kk: ("output" if kk == "Q" else "input") for kk in nc["connections"]}
+        nc["attributes"] = {"keep": ONE, "src": "hr_face_ports.py private port flop (register leaf)"}
+        cells[tag] = nc
+        cells[cn].setdefault("attributes", {})["keep"] = ONE
+        inst_copy[(cn, pn, k)] = q
+        return q, cells[tag + "_mux"]
+    rep["private_leaf_copies"] = []
+
     for pn, p in ports.items():
         if CLKRST.search(pn):
             continue
@@ -133,6 +210,33 @@ def transform(J, top, mutant=False):
                     rep["feedthrough"].append(f"{nm_} <- {inp[0][0]}[{inp[0][1]}]")
                     continue
                 d = drv.get(b)
+                lo = reg_leaf_out(cells[d[0]]["type"]) if d is not None else None
+                if lo is not None and d[1] == lo:
+                    cells[d[0]].setdefault("attributes", {})["keep"] = ONE
+                    M["netnames"][pn].setdefault("attributes", {})["keep"] = ONE
+                    occ = [x for x in pin_of[b] if ports[x[0]]["direction"] == "output"]
+                    internal = len(loads[b])
+                    # always a private copy: the leaf register holds through its own Q (enable mux), so even a
+                    # single-port leaf bit loads more than the pin after synthesis
+                    rq = leafcopy(d[0], pn, lo, d[2])
+                    if rq is None:
+                        rep["unregistered_out"].append(f"{nm_}: register leaf {cells[d[0]]['type']} not a mux+FF")
+                        continue
+                    q, mx = rq
+                    if mutant and nm == 0:
+                        # inject: the private copy's next state takes the inverse of the d pin (the proof must catch it)
+                        nb = new()
+                        cells["hrfp_mutant_not"] = {"hide_name": 0, "type": "$not", "parameters": {
+                            "A_SIGNED": "0" * 32, "A_WIDTH": format(1, "032b"), "Y_WIDTH": format(1, "032b")},
+                            "attributes": {}, "port_directions": {"A": "input", "Y": "output"},
+                            "connections": {"A": mx["connections"]["B"], "Y": [nb]}}
+                        mx["connections"]["B"] = [nb]
+                    p["bits"][i] = q
+                    M["netnames"][pn]["bits"][i] = q
+                    nm += 1
+                    rep["private_out"].append(dict(pin=nm_, orig_ff=d[0], orig_bit=d[2], internal_loads=internal,
+                                                   other_ports=len(occ) - 1, cycles=0, leaf=cells[d[0]]["type"]))
+                    continue
                 if d is None or cells[d[0]]["type"] not in FF or d[1] != "Q":
                     rep["unregistered_out"].append(f"{nm_}: {cells[d[0]]['type'] if d else 'undriven'}")
                     continue
@@ -207,6 +311,7 @@ def transform(J, top, mutant=False):
         if any(bit in init_by_bit for bit in net["bits"]):
             net.setdefault("attributes", {})["init"] = "".join(
                 init_by_bit.get(bit, "x") for bit in reversed(net["bits"]))
+    rep["private_leaf_copies"] = len(inst_copy)
     rep["added_ff_bits"] = len(rep["private_out"])
     for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out"):
         rep["n_" + k] = len(rep[k])
