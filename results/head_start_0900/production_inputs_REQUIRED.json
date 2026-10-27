@@ -1,0 +1,46 @@
+{
+  "start": {
+    "producer": null,
+    "die_edge": null
+  },
+  "host_boot_counter_zero_global_edge": null,
+  "transport": {
+    "peer_to_hbc_input": null,
+    "peer_to_host_frame": null,
+    "peer_to_ctl_csr_apply": null,
+    "hbc_commit_to_context_valid": null,
+    "peer_frame_period": null
+  },
+  "hbc_records": [
+    {
+      "receive_edge": null,
+      "payload": null
+    },
+    {
+      "receive_edge": null,
+      "payload": null
+    },
+    {
+      "receive_edge": null,
+      "payload": null
+    }
+  ],
+  "config": {
+    "plen": null,
+    "glen": null,
+    "group": null,
+    "rbase": null,
+    "issue_offset": null,
+    "issue_period": null,
+    "merge_deadline": null
+  },
+  "csr_apply_edges": {
+    "0": null,
+    "1": null,
+    "3": null,
+    "4": null,
+    "8": null,
+    "9": null,
+    "10": null
+  }
+}
