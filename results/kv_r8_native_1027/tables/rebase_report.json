@@ -1,0 +1,980 @@
+{
+ "source": "codex/kv-native-bind-1027@db605b665d bind3",
+ "effective_members": 5797,
+ "all_ids_matched": true,
+ "actual_bound_changed": 16,
+ "changed": 60,
+ "extra_pad_flops": 330,
+ "position_bank_members_preserved": 52,
+ "vreq_types": 24,
+ "uniform_vreq_pad": 1,
+ "model": {
+  "EST_EN_ES_added": 2,
+  "EST_WN_WS_added": 0,
+  "extra_VREQ_added": 1,
+  "pv_calendar_cycles_added": 0,
+  "steady_token_exposed": "final native programme decides overlap"
+ },
+ "changes": [
+  {
+   "id": "slg_EN_0.x__est[0:12]<-embgw.est@34",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    57,
+    59
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    57,
+    59
+   ]
+  },
+  {
+   "id": "slg_EN_0.vreq[1:14]<-vport_EN_0.vq0_t@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    18,
+    18
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    18,
+    19
+   ]
+  },
+  {
+   "id": "slg_EN_0.vreq[0:0]<-vport_EN_0.vq0_valid@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    18,
+    18
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    18,
+    19
+   ]
+  },
+  {
+   "id": "slg_EN_1.x__est[0:12]<-embgw.est@30",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    52,
+    54
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    52,
+    54
+   ]
+  },
+  {
+   "id": "slg_EN_1.vreq[1:14]<-vport_EN_0.vq1_t@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_EN_1.vreq[0:0]<-vport_EN_0.vq1_valid@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_EN_2.x__est[0:12]<-embgw.est@26",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    47,
+    49
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    47,
+    49
+   ]
+  },
+  {
+   "id": "slg_EN_2.vreq[1:14]<-vport_EN_1.vq0_t@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    20,
+    20
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    20,
+    21
+   ]
+  },
+  {
+   "id": "slg_EN_2.vreq[0:0]<-vport_EN_1.vq0_valid@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    20,
+    20
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    20,
+    21
+   ]
+  },
+  {
+   "id": "slg_EN_3.x__est[0:12]<-embgw.est@22",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    42,
+    44
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    42,
+    44
+   ]
+  },
+  {
+   "id": "slg_EN_4.x__est[0:12]<-embgw.est@42",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    67,
+    69
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    67,
+    69
+   ]
+  },
+  {
+   "id": "slg_EN_5.x__est[0:12]<-embgw.est@38",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    62,
+    64
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    62,
+    64
+   ]
+  },
+  {
+   "id": "slg_EN_5.vreq[1:14]<-vport_EN_2.vq1_t@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_EN_5.vreq[0:0]<-vport_EN_2.vq1_valid@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_EN_6.x__est[0:12]<-embgw.est@18",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    37,
+    39
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    37,
+    39
+   ]
+  },
+  {
+   "id": "slg_EN_6.vreq[1:14]<-vport_EN_3.vq0_t@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    21,
+    21
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    21,
+    22
+   ]
+  },
+  {
+   "id": "slg_EN_6.vreq[0:0]<-vport_EN_3.vq0_valid@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    21,
+    21
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    21,
+    22
+   ]
+  },
+  {
+   "id": "slg_EN_7.x__est[0:12]<-embgw.est@14",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    29,
+    31
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    29,
+    31
+   ]
+  },
+  {
+   "id": "slg_ES_0.x__est[0:12]<-embgw.est@68",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    54,
+    56
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    54,
+    56
+   ]
+  },
+  {
+   "id": "slg_ES_0.vreq[1:14]<-vport_ES_0.vq0_t@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    18,
+    18
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    18,
+    19
+   ]
+  },
+  {
+   "id": "slg_ES_0.vreq[0:0]<-vport_ES_0.vq0_valid@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    18,
+    18
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    18,
+    19
+   ]
+  },
+  {
+   "id": "slg_ES_1.x__est[0:12]<-embgw.est@64",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    49,
+    51
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    49,
+    51
+   ]
+  },
+  {
+   "id": "slg_ES_1.vreq[1:14]<-vport_ES_0.vq1_t@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_ES_1.vreq[0:0]<-vport_ES_0.vq1_valid@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_ES_2.x__est[0:12]<-embgw.est@60",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    44,
+    46
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    44,
+    46
+   ]
+  },
+  {
+   "id": "slg_ES_2.vreq[1:14]<-vport_ES_1.vq0_t@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    20,
+    20
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    20,
+    21
+   ]
+  },
+  {
+   "id": "slg_ES_2.vreq[0:0]<-vport_ES_1.vq0_valid@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    20,
+    20
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    20,
+    21
+   ]
+  },
+  {
+   "id": "slg_ES_3.x__est[0:12]<-embgw.est@56",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    39,
+    41
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    39,
+    41
+   ]
+  },
+  {
+   "id": "slg_ES_4.x__est[0:12]<-embgw.est@77",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    64,
+    66
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    64,
+    66
+   ]
+  },
+  {
+   "id": "slg_ES_5.x__est[0:12]<-embgw.est@73",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    59,
+    61
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    59,
+    61
+   ]
+  },
+  {
+   "id": "slg_ES_5.vreq[1:14]<-vport_ES_2.vq1_t@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_ES_5.vreq[0:0]<-vport_ES_2.vq1_valid@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_ES_6.x__est[0:12]<-embgw.est@52",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    34,
+    36
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    34,
+    36
+   ]
+  },
+  {
+   "id": "slg_ES_6.vreq[1:14]<-vport_ES_3.vq0_t@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    21,
+    21
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    21,
+    22
+   ]
+  },
+  {
+   "id": "slg_ES_6.vreq[0:0]<-vport_ES_3.vq0_valid@9",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    21,
+    21
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    21,
+    22
+   ]
+  },
+  {
+   "id": "slg_ES_7.x__est[0:12]<-embgw.est@48",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    26,
+    28
+   ],
+   "pad": [
+    0,
+    0
+   ],
+   "landed": [
+    26,
+    28
+   ]
+  },
+  {
+   "id": "slg_WN_0.vreq[1:14]<-vport_WN_0.vq0_t@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    21,
+    21
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    21,
+    22
+   ]
+  },
+  {
+   "id": "slg_WN_0.vreq[0:0]<-vport_WN_0.vq0_valid@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    21,
+    21
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    21,
+    22
+   ]
+  },
+  {
+   "id": "slg_WN_1.vreq[1:14]<-vport_WN_0.vq1_t@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WN_1.vreq[0:0]<-vport_WN_0.vq1_valid@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WN_2.vreq[1:14]<-vport_WN_1.vq0_t@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    20,
+    20
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    20,
+    21
+   ]
+  },
+  {
+   "id": "slg_WN_2.vreq[0:0]<-vport_WN_1.vq0_valid@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    20,
+    20
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    20,
+    21
+   ]
+  },
+  {
+   "id": "slg_WN_3.vreq[1:14]<-vport_WN_1.vq1_t@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WN_3.vreq[0:0]<-vport_WN_1.vq1_valid@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WN_5.vreq[1:14]<-vport_WN_2.vq1_t@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WN_5.vreq[0:0]<-vport_WN_2.vq1_valid@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WN_6.vreq[1:14]<-vport_WN_3.vq0_t@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    19,
+    19
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    19,
+    20
+   ]
+  },
+  {
+   "id": "slg_WN_6.vreq[0:0]<-vport_WN_3.vq0_valid@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    19,
+    19
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    19,
+    20
+   ]
+  },
+  {
+   "id": "slg_WS_0.vreq[1:14]<-vport_WS_0.vq0_t@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    21,
+    21
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    21,
+    22
+   ]
+  },
+  {
+   "id": "slg_WS_0.vreq[0:0]<-vport_WS_0.vq0_valid@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    21,
+    21
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    21,
+    22
+   ]
+  },
+  {
+   "id": "slg_WS_1.vreq[1:14]<-vport_WS_0.vq1_t@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WS_1.vreq[0:0]<-vport_WS_0.vq1_valid@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WS_2.vreq[1:14]<-vport_WS_1.vq0_t@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    20,
+    20
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    20,
+    21
+   ]
+  },
+  {
+   "id": "slg_WS_2.vreq[0:0]<-vport_WS_1.vq0_valid@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    20,
+    20
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    20,
+    21
+   ]
+  },
+  {
+   "id": "slg_WS_3.vreq[1:14]<-vport_WS_1.vq1_t@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WS_3.vreq[0:0]<-vport_WS_1.vq1_valid@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WS_5.vreq[1:14]<-vport_WS_2.vq1_t@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WS_5.vreq[0:0]<-vport_WS_2.vq1_valid@4",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    12,
+    12
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    12,
+    13
+   ]
+  },
+  {
+   "id": "slg_WS_6.vreq[1:14]<-vport_WS_3.vq0_t@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    19,
+    19
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    19,
+    20
+   ]
+  },
+  {
+   "id": "slg_WS_6.vreq[0:0]<-vport_WS_3.vq0_valid@8",
+   "table": "physical/die_plan/qwen_kvsys/bind/kvbind1025/r8_position_2144/qwen_kvsys_r8_landing.json",
+   "bound": [
+    19,
+    19
+   ],
+   "pad": [
+    0,
+    1
+   ],
+   "landed": [
+    19,
+    20
+   ]
+  }
+ ]
+}
