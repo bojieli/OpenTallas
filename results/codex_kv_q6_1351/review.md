@@ -2,3 +2,5 @@ Personally VIEWED hgi128_review.png and sys_c_taps_review.png before P&R/STA. HG
 Wi E-corridor: personallyVIEWED wi_east_review.png. 1118-bit ft5 avoids the S small-core band via x1220; ft4 x1160 outercorridor; ft6 uses the large middle horizontal channel. Two already-legal2-bit chains ft30/31 retain their16 FF bodies, reserved before otherallocation. PASS-COND for FT-only50it/.75M4-M7 coupon; fullpartitionroutes remainheld.
 
 14:44 v8 split image personally viewed: FT26 uses two 528-bit jog columns in separate glue channels; bodies stay outside hard-core lots, first/last ports and stage counts unchanged. PASS-COND for bounded 50-iteration .75 FT-only comparison, full partition route held.
+
+14:57 Source-qualified PV correction applied exact7371668398 mapping of256 current instances: S0 zero-load alias -> S1 actual29724sink entry. Transformed384nm pin delta uses core orient/origin/track offset with oldtap exact checks. No clockcount/domain/RTL/cycle change; actual timedS1 CTS/signoff remains held pending fullq6.
