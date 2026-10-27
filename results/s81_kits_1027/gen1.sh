@@ -1,0 +1,2 @@
+#!/bin/bash
+t=$1; cd /srv/opentallas-scratch2/claude/wt/s81-kits-1027; python3 -I tools/die_plan/gen.py phys /srv/opentallas-scratch2/claude/s81-kits-1027/src/die_plan_pd5_composed.json --out /srv/opentallas-scratch2/claude/s81-kits-1027/gen/$t --types $t --rtl-root /srv/opentallas-scratch2/claude/wt/s81-kits-1027 --hold-ff-margin 5 --max-wire-um 100 > /srv/opentallas-scratch2/claude/s81-kits-1027/logs/gen_$t.log 2>&1; echo "$t rc=$?" >> /srv/opentallas-scratch2/claude/s81-kits-1027/gen_status.log
