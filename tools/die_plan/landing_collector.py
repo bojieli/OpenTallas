@@ -111,3 +111,43 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
     return dict(rtl=lines, instances=insts, active=True, depth=max(depth.values())+1,
                 max_hop_um=max([h["hop_um"] for h in hops]+[max_source_hop]), hops=hops,
                 source_count=len(sources), data_cycles_added=0)
+
+
+def build_hard_chain(tree, sources, *, reach_um=405):
+    """Registered ready/fault chain in a HARD partition's soft wrapper.
+
+    tree = clock_landing_plan._hard_tree: root rst_root_n at the delivered
+    reset entry, relays cland_h* (<= reach) toward the landing ring. Every stage
+    is an ot_dp_landing_collect on the wrapper's delivered reset rst_n (the reset
+    its own stations use). Boot-only; zero data cycles. No child is tied.
+    """
+    relays={r["q"]:r for r in tree["relays"]}
+    xy={"rst_root_n":tree["root"],**{q:r["xy"] for q,r in relays.items()}}
+    leaf=tree["leaf_node"];lines,insts,hops=[],[],[]
+    if not sources:raise ValueError("hard collector without a landing source")
+    for src in sources:
+        if src.get("node",leaf)!=leaf:raise ValueError(f"hard collector source {src['name']} not at the chain leaf")
+        p=src.get("xy_um",xy[leaf]);hop=abs(p[0]-xy[leaf][0])+abs(p[1]-xy[leaf][1])
+        if hop>reach_um+1e-6:raise ValueError(f"hard collector source {src['name']}: {hop:.3f}um exceeds {reach_um}")
+        hops.append(dict(src=src["name"],dst=leaf,hop_um=hop))
+    chain=[leaf]
+    while chain[-1]!="rst_root_n":chain.append(relays[chain[-1]]["d"])
+    def nets(n):
+        return ("cland_up_ready","cland_up_fault") if n=="rst_root_n" else (f"cland_r_{safe(n)}",f"cland_f_{safe(n)}")
+    for i,n in enumerate(chain):
+        if i==0:ready=[s["ready"] for s in sources];fault=[s["fault"] for s in sources]
+        else:
+            r,f=nets(chain[i-1]);ready,fault=[r],[f]
+            d=abs(xy[chain[i-1]][0]-xy[n][0])+abs(xy[chain[i-1]][1]-xy[n][1])
+            if d>reach_um+1e-6:raise ValueError(f"hard collector {chain[i-1]}->{n}: {d:.3f}um exceeds {reach_um}")
+            hops.append(dict(src=chain[i-1],dst=n,hop_um=d))
+        rn,fn=nets(n)
+        if n!="rst_root_n":lines.append(f"    wire {rn}, {fn};")
+        name="u_cland_collect_"+safe(n)
+        lines += [f"    ot_dp_landing_collect #(.N({len(ready)})) {name} (",
+                  f"        .clk(clk), .rst_n(rst_n), .ready_i({{{', '.join(ready)}}}),",
+                  f"        .fault_i({{{', '.join(fault)}}}), .ready_o({rn}), .fault_o({fn}));"]
+        insts.append(dict(name=name,module="ot_dp_landing_collect",xy_um=xy[n],flops=2,active_inputs=len(ready),
+                          raw_reset="rst_n (delivered, hard wrapper)",depth_to_root=len(chain)-i))
+    return dict(rtl=lines,instances=insts,active=True,depth=len(chain),max_hop_um=max(h["hop_um"] for h in hops),
+                hops=hops,source_count=len(sources),data_cycles_added=0,hard_wrapper=True)

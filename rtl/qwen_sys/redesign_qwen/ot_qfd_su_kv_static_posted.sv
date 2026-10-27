@@ -56,6 +56,11 @@ module ot_qfd_su_kv_static_posted #(
  reg [NBYTES*8-1:0] bytes_r,bytes_n;
  reg [7:0] err;
  reg choose;integer selected,li,idx,dim,head,kind,halfidx;
+// YOSYS-CONCAT 10-26 (QC-LEC-4): the 3-bit slot tag is built in its own named wires, then concatenated.  The
+// former inline {3'b010,5'd0,({1'(..),1'(..),1'(..)}^3'(..))} lost the 3'b010 constant in yosys read_verilog -sv
+// (a cast inside an operator inside a concat member is sized at its uncast width; rtl_lint.py YC1).  Same bits.
+ wire signed [31:0] tag_q2=selected/(HEADS*2),tag_q1=(selected/2)%HEADS,tag_q0=selected%2;
+ wire [2:0] word_tag_lo={tag_q2[0],tag_q1[0],tag_q0[0]}^((MUT_TAG!=0)?3'd1:3'd0);
  reg [23:0] e;reg [19:0] a;reg [16:0] w;reg [12:0] pp;
  reg [8:0] code;reg [2:0] allowed;
  wire take=word_v; // one-cycle pulse; delivery time belongs to the compiler
@@ -233,7 +238,7 @@ module ot_qfd_su_kv_static_posted #(
      end
      if(|err)begin fault<=1;fault_code<=fault_code|err;end
      if(!fault&&!(|err)&&choose&&(!word_v||take))begin
-      word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
+      word_v<=1;word_tag<={3'b010,5'd0,word_tag_lo};
       if(LOCAL_CTL==0)begin
       case(selected)
        0:word_data<=bytes_r[0+:512];1:word_data<=bytes_r[512+:512];
@@ -265,7 +270,7 @@ module ot_qfd_su_kv_static_posted #(
      if(iv_q&&bad_issue)begin fault<=1;fault_code[5]<=1;end
      if(|err)begin fault<=1;fault_code<=fault_code|err;end
      if(!fault&&!(|err)&&choose&&(!word_v||take))begin
-      word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
+      word_v<=1;word_tag<={3'b010,5'd0,word_tag_lo};
      end else if(take||fault||(|err))word_v<=0;
     end
    end

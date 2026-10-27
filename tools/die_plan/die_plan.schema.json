@@ -911,6 +911,35 @@
          "maxItems": 4
         }
        },
+       "reserved_sites_um": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "rect_um",
+          "kind"
+         ],
+         "properties": {
+          "rect_um": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          },
+          "kind": {
+           "enum": [
+            "die_clock_tree",
+            "landing_ring_bank"
+           ]
+          },
+          "ref": {
+           "type": "string"
+          }
+         }
+        }
+       },
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0
@@ -2265,6 +2294,9 @@
         }
        }
       }
+     },
+     "landing_base_type": {
+      "type": "string"
      }
     }
    }
@@ -2723,8 +2755,39 @@
     "io_hold": {
      "enum": [
       "legacy",
-      "sender_min"
+      "sender_min",
+      "plan_demand"
      ]
+    },
+    "hold_demand": {
+     "type": "object",
+     "required": [
+      "source"
+     ],
+     "properties": {
+      "source": {
+       "enum": [
+        "plan"
+       ]
+      },
+      "pairs": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+       }
+      },
+      "landed": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "default_ps": {
+       "type": "number",
+       "minimum": 0
+      }
+     }
     },
     "io_hold_driver_views": {
      "type": "object",

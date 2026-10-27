@@ -83,6 +83,32 @@ def pow2(n):
     return n > 0 and (n & (n - 1)) == 0
 
 
+def bisection_congruent(vals, what):
+    """CLOCK-KV-R5 explicit leaf lattice gate: strictly increasing, power-of-two count, and at every index bisection
+    the upper half is a pure translate of the lower half (recursively).  Then every H-tree node sits at the midpoint
+    of its block extremes and sibling legs are equal BY CONSTRUCTION (no balance branch).  A uniform grid passes; so
+    does a grid of congruent groups with gaps between them (one group per partition row, a gap at a hub band)."""
+    v = [float(x) for x in vals]
+    if any(b <= a for a, b in zip(v, v[1:])):
+        raise ValueError(f"--lattice-spec {what}: strictly increasing values")
+    if not pow2(len(v)):
+        raise ValueError(f"--lattice-spec {what}: power-of-two count")
+
+    def rec(a):
+        if len(a) == 1:
+            return
+        h = len(a) // 2
+        t = a[h] - a[0]
+        bad = max(abs(a[h + k] - a[k] - t) for k in range(h))
+        if bad > 1e-3:
+            raise ValueError(f"--lattice-spec {what}: halves of {a[0]:.3f}..{a[-1]:.3f} are not translates "
+                             f"(max deviation {bad:.4f} um): unequal H-tree legs")
+        rec(a[:h])
+        rec(a[h:])
+    rec(v)
+    return True
+
+
 def split_axis(ni, nj, level, axes=""):
     axis = (0 if axes[level] == "x" else 1) if level < len(axes) else (0 if ni >= nj and ni > 1 else 1)
     if (ni if axis == 0 else nj) <= 1:
@@ -276,6 +302,39 @@ def island_site(wins, core, x, y, max_move, jog_max, spans):
             if best is None or slide + jog < best[3] + best[4]:
                 best = ((cx, cy), foot, axis, slide, jog)
     return best
+
+
+def core_at(rects, p):
+    """name of the first keep-out rect (hard core / PHY macro) holding p, else None (CLOCK-KV-R4 pushdown census)."""
+    return next((str(r[4]) for r in rects if r[0] <= p[0] <= r[2] and r[1] <= p[1] <= r[3]), None)
+
+
+def free_toward(K, p, axis, target, limit, step=None):
+    """nearest free point moving p along axis TOWARD the coordinate target only, by <= limit (CLOCK-KV-R4 node
+    re-site: sliding toward the parent along the incoming leg keeps every root->leaf Manhattan length)."""
+    step = step or STEP_UM
+    if not hitf(K, p):
+        return p, 0.0
+    sgn = 1.0 if target >= p[axis] else -1.0
+    k = 1
+    while k * step <= limit + 1e-9:
+        q = (p[0] + sgn * k * step, p[1]) if axis == 0 else (p[0], p[1] + sgn * k * step)
+        if not hitf(K, q):
+            return q, k * step
+        k += 1
+    return None, None
+
+
+def poly_point(pts, s):
+    """point at arc length s along the Manhattan polyline pts (clamped to its ends)."""
+    s = max(0.0, s)
+    for a, b in zip(pts, pts[1:]):
+        L = abs(b[0] - a[0]) + abs(b[1] - a[1])
+        if s <= L + 1e-9 and L > 0:
+            t = s / L
+            return (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
+        s -= L
+    return tuple(pts[-1])
 
 
 def in_rect(r, x, y, m=0.0):
@@ -693,6 +752,61 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, b
     return added
 
 
+def uniform_region_boxes(xs, ys, W, H, spec):
+    """--uniform-regions (CLOCK-KV-R2, opt-in): clock regions = strap boxes cut at the declared dataflow seams
+    (x_cuts_um / y_cuts_um, partition edges) on the UNIFORM die lattice xs/ys.  The H-tree stays the plain index
+    bisection of the whole nx x ny grid (equal-length by construction, independent of the cuts); a region is only a
+    mesh (its own straps, special net ck_mesh_r<k>, landed seams to its neighbours).  The region's CPPR node is the
+    lowest common H-tree node of ALL its intersections (htree_tag common prefix): the mesh shorts every driver of
+    the region, so no lower node is common to its taps.  Intersection (i, j) belongs to the box holding (xs[i], ys[j])."""
+    def intervals(cuts, span, vals, axis):
+        e = [0.0] + [float(c) for c in cuts] + [float(span)]
+        if any(b <= a for a, b in zip(e, e[1:])):
+            raise ValueError(f"--uniform-regions: {axis}_cuts_um must be ordered internal seams")
+        out = []
+        for a, b in zip(e, e[1:]):
+            idx = [k for k, v in enumerate(vals) if a <= v < b or (b == float(span) and v == b)]
+            if not idx:
+                raise ValueError(f"--uniform-regions: {axis} interval [{a}, {b}] holds no lattice line (pitch too coarse)")
+            out.append((a, b, idx[0], idx[-1] + 1))
+        return out
+    nx, ny = len(xs), len(ys)
+    R = []
+    for ya, yb, j0, j1 in intervals(spec.get("y_cuts_um", []), H, ys, "y"):
+        for xa, xb, i0, i1 in intervals(spec.get("x_cuts_um", []), W, xs, "x"):
+            tags = [htree_tag(i, j, nx, ny) for i in range(i0, i1) for j in range(j0, j1)]
+            lca = tags[0]
+            for t in tags[1:]:
+                k = 0
+                while k < min(len(lca), len(t)) and lca[k] == t[k]:
+                    k += 1
+                lca = lca[:k]
+            R.append(dict(k=len(R), tag=lca, i0=i0, i1=i1, j0=j0, j1=j1,
+                          box_um=[round(xa, 3), round(ya, 3), round(xb, 3), round(yb, 3)]))
+    if len(R) > 1 and any(g["i1"] - g["i0"] < 2 or g["j1"] - g["j0"] < 2 for g in R):
+        raise ValueError("--uniform-regions: every region needs >= 2 x 2 intersections (a mesh)")
+    return R
+
+
+def uniform_region_gate(P, R, taps, reach_um=750.0):
+    """--uniform-regions plan gate: every partition lies wholly in one region box and each of its taps reaches a
+    strap of its OWN region within the clock reach (stub foot distance); a cut that strands a partition (the
+    u32x64r3 plan error: t_sys_c clk_t11 1431 um) is a structural FAIL, never a slide into a foreign region."""
+    strad, far = [], []
+    for n in P.parts:
+        r = P.rect(n)
+        if not any(g["box_um"][0] - 1e-3 <= r[0] and r[2] <= g["box_um"][2] + 1e-3 and
+                   g["box_um"][1] - 1e-3 <= r[1] and r[3] <= g["box_um"][3] + 1e-3 for g in R):
+            strad.append(n)
+    for t in taps:
+        if t["stub_um"] < 0 or t["stub_um"] + BUF_W + ROW_Y > reach_um:
+            far.append([t["port"], t.get("region"), t["stub_um"]])
+    return dict(verdict="PASS" if not strad and not far else "FAIL", reach_um=reach_um, straddling_parts=strad,
+                stubs_beyond_reach=far, max_stub_um=round(max((t["stub_um"] for t in taps), default=0.0), 2),
+                regions=[dict(k=g["k"], tag=g["tag"], box_um=g["box_um"], i=[g["i0"], g["i1"]], j=[g["j0"], g["j1"]])
+                         for g in R])
+
+
 def part_regions(P, R):
     """every partition -> the clock region whose geometric box holds its centre (whole partition, never split)."""
     out = {}
@@ -706,7 +820,7 @@ def part_regions(P, R):
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
           regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None,
           region_spec=None, trunk_repeaters=False, driver_pair_span_um=0.0, split_yfirst=False, floorplan=None,
-          rule128=None, plan_sites=None):
+          rule128=None, plan_sites=None, uniform_regions=None, lattice=None):
     """opt-in PATH-KV 10-26 site fixes (defaults keep the prior QC/S81 builds unchanged): trunk_repeaters = equal-cut
     BUFx24 repeaters on a root->ckm_n0 trunk > 750 um; driver_pair_span_um > 0 = a leaf driver pair whose nearest sites
     span more than this takes the shortest-span candidate combination; split_yfirst = split_long also tries the y-first L.
@@ -717,7 +831,44 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     error (no slide, no free-site search).  Under 12.8 dead branches are pruned by construction and every unplaced /
     off-site cell or loadless net is a plan error: the build raises C128.PlanError unless rule128["allow_plan_errors"]
     (diagnostic only; the report then never qualifies)."""
-    assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
+    # lattice (--lattice-spec, CLOCK-KV-R3, opt-in, METHODOLOGY 12.8e/12.8e1 continuous mesh): explicit strap rows
+    # ys_um (commensurate pitch, any count) of ONE continuous die mesh; mesh drivers (global-tree leaves) only on the
+    # declared driver_rows (a power-of-two count); tree = index bisection over the driver rows in the declared split
+    # order `axes` (y-first keeps the upper levels on the single-instance centre column), equal by construction when
+    # the driver rows are mirror-symmetric.  Rows not in driver_rows are driverless mesh straps (fed by the mesh).
+    # leaf_grid (CLOCK-KV-R4, opt-in inside --lattice-spec, COORD RULING CLOCK-KV-R3 ASK 1/2): the mesh DRIVERS are
+    # decoupled from the strap rows.  The global tree is a 2-D equal-structure H-tree whose leaves sit on a uniform
+    # power-of-two grid over the die box (x = the nx V straps, y = (j + 1/2) H / ny_leaf); each leaf drives the
+    # continuous mesh on its own V strap (M9) at the leaf y, i.e. within half a strap pitch of its nearest crossing,
+    # so no strap row is undriven.  In-core points (ASK 2): a driver slides along its V strap to the nearest channel
+    # (<= drv_reach_um); a tree node slides toward its parent along its incoming leg (path length to every leaf
+    # unchanged; only when the node's own split axis is perpendicular to that leg); a leg repeater slides along its
+    # leg (<= half a segment).  Anything with no channel in reach stays at its ideal point as a 12.2a1 PUSHDOWN
+    # island request (out["pushdown"]), never a free-site jog.  No balance branch exists in this mode.
+    jm, lg = None, None
+    if lattice is not None:
+        if regions or region_spec is not None or floorplan is not None or uniform_regions is not None:
+            raise ValueError("--lattice-spec is one continuous mesh: no --regions/--region-spec/--clock-floorplan/"
+                             "--uniform-regions")
+        if lattice.get("leaf_grid") is not None:
+            if lattice.get("driver_rows") is not None:
+                raise ValueError("--lattice-spec: leaf_grid replaces driver_rows (drivers decoupled from strap rows)")
+            if plan_sites is not None:
+                raise ValueError("--lattice-spec leaf_grid: in-core slides are plan rules, not --plan-sites")
+            lg = dict(nx=int(lattice["leaf_grid"][0]), ny=int(lattice["leaf_grid"][1]),
+                      drv_reach=float(lattice.get("drv_reach_um", 200.0)),
+                      hop_reach=float(lattice.get("hop_reach_um", 600.0)),
+                      wire_levels={int(v) for v in lattice.get("wire_levels", [])})
+            if lg["nx"] != nx or not pow2(lg["ny"]):
+                raise ValueError("--lattice-spec leaf_grid: [nx, ny_leaf] with nx = --nx (leaves on the V straps), "
+                                 "ny_leaf a power of two")
+            jm = list(range(lg["ny"]))
+        else:
+            jm = [int(k) for k in lattice["driver_rows"]]
+            if not pow2(len(jm)) or jm != sorted(set(jm)) or jm[-1] >= len(lattice["ys_um"]):
+                raise ValueError("--lattice-spec driver_rows: sorted unique strap-row indices, power-of-two count")
+        ny = len(lattice["ys_um"])
+    assert pow2(nx) and (jm is not None or pow2(ny)), "nx, ny must be powers of two (complete H-tree)"
     SI, perr = None, []
     if plan_sites is not None:
         if rule128 is None:
@@ -742,6 +893,17 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     xs = [(i + 0.5) * W / nx for i in range(nx)]
     ys = [(j + 0.5) * H / ny for j in range(ny)]
     axes, x_edges, y_edges = "", None, None
+    if jm is not None:
+        ys = [float(v) for v in lattice["ys_um"]]
+        if lg and lattice.get("xs_um") is not None:   # CLOCK-KV-R5: explicit V strap x (leaf columns), equal by bisection
+            xs = [float(v) for v in lattice["xs_um"]]
+            if len(xs) != nx:
+                raise ValueError("--lattice-spec xs_um: exactly --nx V strap positions")
+            bisection_congruent(xs, "xs_um")
+        axes = str(lattice.get("axes", "")).lower()
+    drv_rows = set(jm) if jm is not None else set(range(ny))
+    nty = len(jm) if jm is not None else ny          # tree index rows
+    jt = jm if jm is not None else list(range(ny))   # tree row index -> strap row index
     if region_spec is not None:
         axes = region_spec["split_axes"].lower()
         if not axes or set(axes) - {"x", "y"} or regions not in (0, len(axes)):
@@ -749,6 +911,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         regions = len(axes)
         xs, x_edges = cohort_axis_grid(nx, W, region_spec.get("x_cuts_um", []), axes.count("x"))
         ys, y_edges = cohort_axis_grid(ny, H, region_spec.get("y_cuts_um", []), axes.count("y"))
+    if uniform_regions is not None and (regions or region_spec is not None or floorplan is not None):
+        raise ValueError("--uniform-regions declares its own regions on the uniform lattice; do not combine with "
+                         "--regions/--region-spec/--clock-floorplan")
     fp = floorplan
     if fp is not None:
         if regions or region_spec is not None:
@@ -802,11 +967,32 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     out["meta"]["tap_pin_size_um"] = [GP.LAYER_W.get(out["meta"]["tap_layer"], .04), 4 * GP.PIN_LEN_UM]
     if region_spec is not None:
         out["meta"].update(region_spec=region_spec, region_axes=axes)
+    if jm is not None:
+        out["meta"].update(lattice_spec=dict(lattice, ys_um=None, rows=len(ys)), tree_axes=axes,
+                           driverless_rows=[] if lg else [j for j in range(len(ys)) if j not in drv_rows])
+        if lg:
+            ly = [(j + 0.5) * H / lg["ny"] for j in range(lg["ny"])]
+            if lattice.get("leaf_ys_um") is not None:   # CLOCK-KV-R5: explicit leaf rows (e.g. partition-row groups)
+                ly = [float(v) for v in lattice["leaf_ys_um"]]
+                if len(ly) != lg["ny"]:
+                    raise ValueError("--lattice-spec leaf_ys_um: exactly ny_leaf rows")
+                bisection_congruent(ly, "leaf_ys_um")
+            px = min(b - a for a, b in zip(xs, xs[1:])) if lattice.get("xs_um") is not None else W / nx
+            py = min(b - a for a, b in zip(ly, ly[1:])) if lattice.get("leaf_ys_um") is not None else H / lg["ny"]
+            out["meta"]["leaf_grid"] = dict(nx=nx, ny=lg["ny"], pitch_um=[round(px, 4), round(py, 4)],
+                                            **({"explicit_xs": True} if lattice.get("xs_um") is not None else {}),
+                                            **({"explicit_leaf_ys": True} if lattice.get("leaf_ys_um") is not None else {}),
+                                            drv_reach_um=lg["drv_reach"], drive="V strap (M9) at the leaf y")
+            out["pushdown"] = []
     if delta_id:
         out["meta"]["delta_id"] = delta_id
     if fp is not None:
         R, regions = R_fp, 1
         out["meta"].update(clock_floorplan=fp, macro_holes=holes, driverless_hard_cores=len(cores))
+    elif uniform_regions is not None:
+        R = uniform_region_boxes(xs, ys, W, H, uniform_regions)
+        regions = len(R)
+        out["meta"].update(uniform_regions=uniform_regions)
     else:
         R = region_boxes(nx, ny, regions, W, H, axes, x_edges, y_edges)
     if region_edge_straps:
@@ -852,10 +1038,28 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     # PATH-KV 10-26: candidates on both straps first; a leaf pair (i, 2k)/(i, 2k+1) whose nearest sites land on
     # opposite sides of a PHY/hard macro (pair span > 700 um, i.e. past the 750-um clock reach) takes the candidate combination with the shortest pair
     # span instead, so the leaf node can reach both drivers around the macro.
-    if SI is None:
+    if lg:
+        # CLOCK-KV-R4 leaf drivers: ideal (xs[i], ly[j]) on V strap i; slide along the strap only; else pushdown
+        out["meta"]["driver_pair_fixes"] = []
+        for i, x in enumerate(xs):
+            for j, y in enumerate(ly):
+                q, d = free_along(K, (x, y), 1, lg["drv_reach"], bounds=(0.0, H))
+                isl = None
+                if q is None:
+                    q, d, isl = (x, y), 0.0, core_at(ko, (x, y))
+                    out["pushdown"].append(dict(role="mesh_driver", name=f"ckm_d_{i}_{j}", xy=[round(x, 3), round(y, 3)],
+                                                core=isl))
+                names = [cell(f"ckm_d_{i}_{j}_{k}", q[0] + (k - (m - 1) / 2) * BUF_W, q[1], "drv", i=i, j=j)
+                         for k in range(m)]
+                out["drivers"][f"{i}_{j}"] = dict(i=i, j=j, ideal=[x, y], site=[round(q[0], 3), round(q[1], 3)],
+                                                  move_um=round(d, 2), strap="M9", cells=names,
+                                                  **(dict(pushdown=isl) if isl else {}))
+    elif SI is None:
         cand = {}
         for i, x in enumerate(xs):
             for j, y in enumerate(ys):
+                if j not in drv_rows:
+                    continue
                 g = R[reg_ij[(i, j)]]
                 cs = []
                 if fp is not None:
@@ -886,6 +1090,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         out["meta"]["driver_pair_fixes"] = pair_fix
         for i, x in enumerate(xs):
             for j, y in enumerate(ys):
+                if j not in drv_rows:
+                    continue
                 g = R[reg_ij[(i, j)]]
                 rk = dict(region=g["k"]) if regions else {}
                 if cand[(i, j)] is None:      # --clock-floorplan macro hole: driverless, recorded in pass 1
@@ -931,6 +1137,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         out["meta"]["driver_pair_fixes"] = []
         for i, x in enumerate(xs):
             for j, y in enumerate(ys):
+                if j not in drv_rows:
+                    continue
                 g = R[reg_ij[(i, j)]]
                 rk = dict(region=g["k"]) if regions else {}
                 if fp is not None:
@@ -955,10 +1163,121 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         if region_spec is not None:
             # Mean children give equal sibling leg lengths even for unequal physical cohort widths.
             return (sum(xs[i0:i1])/(i1-i0), sum(ys[j0:j1])/(j1-j0))
-        return ((xs[i0] + xs[i1 - 1]) / 2, (ys[j0] + ys[j1 - 1]) / 2)
+        if lg:
+            return ((xs[i0] + xs[i1 - 1]) / 2, (ly[j0] + ly[j1 - 1]) / 2)
+        return ((xs[i0] + xs[i1 - 1]) / 2, (ys[jt[j0]] + ys[jt[j1 - 1]]) / 2)
 
     def live(i0, i1, j0, j1):
-        return any(f"{i}_{j}" in out["drivers"] for i in range(i0, i1) for j in range(j0, j1))
+        return any(f"{i}_{jt[j]}" in out["drivers"] for i in range(i0, i1) for j in range(j0, j1))
+
+    def hop_slack(kr, lvl):
+        """largest re-site slide of the node kr (level lvl) that keeps its first downstream hop within reach: a
+        buffered child leg of n equal cuts allows n * hop_reach - L; a wire_levels child / leaf adds its ideal
+        unbuffered run down to the next buffer (leaves: + drv_reach for the driver slide)."""
+        a = split_axis(kr[1] - kr[0], kr[3] - kr[2], lvl, axes)
+        h = (kr[0] + kr[1]) // 2 if a == 0 else (kr[2] + kr[3]) // 2
+        ch = (kr[0], h, kr[2], kr[3]) if a == 0 else (kr[0], kr[1], kr[2], h)
+        p0, p1 = node_xy(*kr), node_xy(*ch)
+        L = abs(p1[0] - p0[0]) + abs(p1[1] - p0[1])
+        if (ch[1] - ch[0]) * (ch[3] - ch[2]) == 1:
+            return lg["hop_reach"] - L - lg["drv_reach"]
+        if lvl + 1 in lg["wire_levels"]:
+            return hop_slack(ch, lvl + 1) - L
+        return max(1, math.ceil(L / rep_um - 1e-9)) * lg["hop_reach"] - L
+
+    def rec_lg(i0, i1, j0, j1, level, drv_cell, path, here, plen, wire_pt=False):
+        """CLOCK-KV-R4 leaf-grid H-tree: same bisection as rec(), actual positions carried down (see build doc).
+        wire_pt: this node level is in lattice wire_levels = a wire Steiner point of the parent's net (no buffer,
+        uniform for the whole level); its loads are returned to the parent net instead of forming a net."""
+        ax = split_axis(i1 - i0, j1 - j0, level, axes)
+        h = (i0 + i1) // 2 if ax == 0 else (j0 + j1) // 2
+        kids = [(i0, h, j0, j1), (h, i1, j0, j1)] if ax == 0 else [(i0, i1, j0, h), (i0, i1, h, j1)]
+        loads = []
+        for c, kr in enumerate(kids):
+            tag = f"{path}{c}"
+            kp = node_xy(*kr)
+            if (kr[1] - kr[0]) * (kr[3] - kr[2]) == 1:
+                dvr = out["drivers"][f"{kr[0]}_{kr[2]}"]
+                b = tuple(dvr["site"])
+                L = abs(b[0] - here[0]) + abs(b[1] - here[1])
+                if L > lg["hop_reach"] + 1e-6:
+                    out["unplaced"].append([tag, "leaf leg beyond hop_reach after the driver slide", round(L, 2)])
+                loads += dvr["cells"]
+                dvr["path_um"] = round(plen + L, 3)
+                dvr["leaf_leg_delta_um"] = round(L - (abs(kp[0] - here[0]) + abs(kp[1] - here[1])), 3)
+                out["htree"].append(dict(level=level + 1, tag=tag, a=list(here), b=list(b), len_um=round(L, 2),
+                                         n_seg=1, reps=[], leaf=True))
+                continue
+            inc = ax
+            cax = split_axis(kr[1] - kr[0], kr[3] - kr[2], level + 1, axes)
+            if level + 1 in lg["wire_levels"]:
+                L = abs(kp[0] - here[0]) + abs(kp[1] - here[1])
+                if L > rep_um + 1e-6:
+                    out["unplaced"].append([tag, "wire_levels leg longer than rep_um", round(L, 2)])
+                out["htree"].append(dict(level=level + 1, tag=tag, a=list(here), b=list(kp), len_um=round(L, 2),
+                                         n_seg=1, reps=[], node=None, wire_point=True, node_move_um=0.0, leaf=False))
+                loads += rec_lg(*kr, level + 1, drv_cell, tag, tuple(kp), plen + L, wire_pt=True)
+                continue
+            q, d, isl = kp, 0.0, None
+            if hitf(K, kp):
+                q = None
+                if cax != inc:
+                    # the re-site lengthens both child legs by the slide: keep their hops within reach
+                    lim = min(abs(kp[inc] - here[inc]), max(0.0, hop_slack(kr, level + 1)))
+                    q, d = free_toward(K, kp, inc, here[inc], lim)
+                if q is None:
+                    q, d, isl = kp, 0.0, core_at(ko, kp)
+                    out["pushdown"].append(dict(role="tree_node", name=f"ckm_n{level + 1}_{tag}", level=level + 1,
+                                                xy=[round(kp[0], 3), round(kp[1], 3)], core=isl,
+                                                same_axis_split=cax == inc))
+            nb = cell(f"ckm_n{level + 1}_{tag}", q[0], q[1], "node", level=level + 1)
+            corner = list(q)
+            corner[inc] = here[inc]
+            poly = [tuple(here), tuple(corner), tuple(q)]
+            L = abs(q[0] - here[0]) + abs(q[1] - here[1])
+            # stage count fixed by the IDEAL leg (same structure for every leg of the level, whatever the re-sites)
+            ip = node_xy(i0, i1, j0, j1)
+            n_seg = max(1, math.ceil((abs(kp[0] - ip[0]) + abs(kp[1] - ip[1])) / rep_um - 1e-9))
+            if L / n_seg > lg["hop_reach"] + 1e-6:
+                out["unplaced"].append([tag, "STRUCTURAL re-sited leg hop beyond reach", round(L / n_seg, 2)])
+            reps, prev, first = [], None, None
+            for k in range(1, n_seg):
+                s0 = L * k / n_seg
+                rq, rd = None, None
+                for kk in range(0, int(L / n_seg / 2 / STEP_UM) + 1):
+                    for sg in ((1,) if kk == 0 else (1, -1)):
+                        pt = poly_point(poly, s0 + sg * kk * STEP_UM)
+                        if not hitf(K, pt):
+                            rq, rd = pt, kk * STEP_UM
+                            break
+                    if rq is not None:
+                        break
+                risl = None
+                if rq is None:
+                    rq, rd = poly_point(poly, s0), 0.0
+                    risl = core_at(ko, rq)
+                    out["pushdown"].append(dict(role="leg_rep", name=f"ckm_r{level + 1}_{tag}_{k}", level=level + 1,
+                                                xy=[round(rq[0], 3), round(rq[1], 3)], core=risl))
+                rn = cell(f"ckm_r{level + 1}_{tag}_{k}", rq[0], rq[1], "rep", level=level + 1)
+                reps.append(dict(cell=rn, slide_um=round(rd, 2), **(dict(pushdown=risl) if risl else {})))
+                if prev is None:
+                    first = rn
+                else:
+                    nets.append(dict(name=f"ckm_w_{prev}", drv=prev, loads=[rn], level=level + 1))
+                prev = rn
+            if prev is not None:
+                nets.append(dict(name=f"ckm_w_{prev}", drv=prev, loads=[nb], level=level + 1))
+                loads.append(first)
+            else:
+                loads.append(nb)
+            out["htree"].append(dict(level=level + 1, tag=tag, a=list(here), b=list(q), len_um=round(L, 2),
+                                     n_seg=n_seg, reps=reps, node=nb, node_move_um=round(d, 2), leaf=False,
+                                     **(dict(pushdown=isl) if isl else {})))
+            rec_lg(*kr, level + 1, nb, tag, tuple(q), plen + L)
+        if wire_pt:
+            return loads
+        nets.append(dict(name=f"ckm_w_{drv_cell}", drv=drv_cell, loads=loads, level=level))
+        return None
 
     def rec(i0, i1, j0, j1, level, drv_cell, path, kids=None, here=None):
         """drv_cell drives the branch point of this region (already at node_xy).  kids/here (--clock-floorplan
@@ -990,7 +1309,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             leaf = (kr[1] - kr[0]) * (kr[3] - kr[2]) == 1
             if leaf:
                 assert n_seg == 1, f"leaf leg {L:.0f} um > rep_um: use a finer mesh"
-                d = out["drivers"].get(f"{kr[0]}_{kr[2]}")
+                d = out["drivers"].get(f"{kr[0]}_{jt[kr[2]]}")
                 loads += d["cells"] if d else []
                 out["htree"].append(dict(level=level + 1, tag=tag, a=list(here), b=list(kp), len_um=round(L, 2),
                                          n_seg=1, reps=[], leaf=True))
@@ -1053,7 +1372,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         nets.append(dict(name=f"ckm_w_{drv_cell}" if not drv_cell.startswith("port:") else "root",
                          drv=drv_cell, loads=loads, level=level))
 
-    c0 = node_xy(0, nx, 0, ny)
+    c0 = node_xy(0, nx, 0, nty)
     sp = P.clock.get("spine", {}) or {}
     root = tuple(sp.get("die_root_um") or sp.get("root_um") or c0)
     if pg_shapes is not None:
@@ -1116,8 +1435,26 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         nets.append(dict(name=f"ckm_w_{a_}", drv=a_, loads=[b_], level=-1))
     if fp is not None:
         rec(0, nx, 0, ny, 0, n0, "h", kids=[(g["i0"], g["i1"], g["j0"], g["j1"]) for g in R], here=c0)
+    elif lg:
+        rec_lg(0, nx, 0, nty, 0, n0, "h", (cells[n0]["x"] + BUF_W / 2, cells[n0]["y"] + ROW_Y / 2), 0.0)
+        pl = [dv["path_um"] for dv in out["drivers"].values()]
+        pd = out["pushdown"]
+        out["meta"]["leaf_grid"].update(
+            leaf_path_um=[round(min(pl), 3), round(max(pl), 3)],
+            leaf_path_minus_driver_slide_um=[round(min(dv["path_um"] - dv["leaf_leg_delta_um"] for dv in
+                                                       out["drivers"].values()), 3),
+                                             round(max(dv["path_um"] - dv["leaf_leg_delta_um"] for dv in
+                                                       out["drivers"].values()), 3)],
+            hop_reach_um=lg["hop_reach"], wire_levels=sorted(lg["wire_levels"]), hop_max_um=round(max(h_["len_um"] / h_["n_seg"] for h_ in out["htree"]), 2),
+            driver_slides=sum(1 for dv in out["drivers"].values() if dv["move_um"] > 0),
+            driver_slide_max_um=max(dv["move_um"] for dv in out["drivers"].values()),
+            node_resites=sum(1 for h_ in out["htree"] if h_.get("node_move_um", 0) > 0),
+            node_resite_max_um=max([h_.get("node_move_um", 0) for h_ in out["htree"]] or [0]),
+            rep_slides=sum(1 for h_ in out["htree"] for r_ in h_["reps"] if r_["slide_um"] > 0),
+            pushdown={r_: sum(1 for x_ in pd if x_["role"] == r_) for r_ in ("mesh_driver", "tree_node", "leg_rep")},
+            pushdown_same_axis_nodes=sum(1 for x_ in pd if x_.get("same_axis_split")))
     else:
-        rec(0, nx, 0, ny, 0, n0, "h")
+        rec(0, nx, 0, nty, 0, n0, "h")
     # --- stubs: every partition tap
     taps = DC.plan_taps(P)
     early_c = DC.plan_tap_early(P)
@@ -1145,9 +1482,21 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                              round(fq[1], 3)], strap=("M8", j) if axis == 0 else ("M9", i), slide_um=round(fd, 2),
                              stub_um=round(abs(fq[0] - x) + abs(fq[1] - y), 2)))
     out["taps"] = tap_rows
+    if uniform_regions is not None:
+        ug = uniform_region_gate(P, R, tap_rows)
+        out["meta"]["uniform_regions_gate"] = ug
+        if ug["verdict"] != "PASS":
+            out["unplaced"] += [[n, "STRUCTURAL partition straddles a uniform-regions cut"] for n in ug["straddling_parts"]]
+            out["unplaced"] += [[p, "STRUCTURAL tap beyond clock reach of its own region strap", d]
+                                for p, _, d in ug["stubs_beyond_reach"]]
     if hop_max:
-        out["meta"]["split_reps"] = split_long(cells, nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows}, hop_max,
-                                               cell, out, yfirst=split_yfirst, both_l=fp is not None)
+        # CLOCK-KV-R4 leaf grid: the tree's stage count is fixed per level (equal structure), so split_long only
+        # serves the stub nets; tree hops are bounded by lattice hop_reach_um instead (a STRUCTURAL plan error)
+        sl_nets = [n for n in nets if n.get("level") == 99] if lg else nets
+        out["meta"]["split_reps"] = split_long(cells, sl_nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows},
+                                               hop_max, cell, out, yfirst=split_yfirst, both_l=fp is not None)
+        if lg:
+            nets += sl_nets[len([n for n in nets if n.get("level") == 99]):]
     if rule128 is not None:   # METHODOLOGY 12.8: plan-model stub sizing (d1), early-tap FAIL list, fixed shielded tree
         libs = C128.lib_cells("TT", rule128["libdir"])
         sizing = C128.size_stubs(cells, nets, tap_rows, libs, NDR[ndr], DC.LAYER_RC, DC.TAP_LOAD_FF, BUF, BUF_W, ROW_Y,
@@ -1393,7 +1742,11 @@ def cmd_build(a):
                                   split_yfirst=a.split_yfirst, floorplan=fp,
                                   rule128=(dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps,
                                                 allow_plan_errors=getattr(a, "allow_plan_errors", False))
-                                           if getattr(a, "rule_12_8", False) else None), plan_sites=plan_sites)
+                                           if getattr(a, "rule_12_8", False) else None), plan_sites=plan_sites,
+                                  lattice=(json.loads(Path(a.lattice_spec).read_text())
+                                           if getattr(a, "lattice_spec", None) else None),
+                                  uniform_regions=(json.loads(Path(a.uniform_regions).read_text())
+                                                   if getattr(a, "uniform_regions", None) else None))
     except C128.PlanError as e:
         (out / "plan_errors.json").write_text(json.dumps(dict(plan=str(a.plan), error=str(e), rows=e.rows), indent=1)
                                               + "\n")
@@ -2410,6 +2763,8 @@ def cmd_report(a):
     nx, ny = len(xs), len(ys)
 
     def path_of(i, j):
+        if (M["meta"].get("leaf_grid")):   # CLOCK-KV-R4: every tap sits on the one continuous mesh -> LCA = die root
+            return "h"
         if M["meta"].get("clock_floorplan"):
             return floorplan_tag(i, j, M["meta"]["regions"], ny)
         return htree_tag(i, j, nx, ny, M["meta"].get("region_axes", ""))
@@ -2436,7 +2791,14 @@ def cmd_report(a):
         def on_own_edge(p):   # --region-edge-straps: a foot ON its own region edge strap is nearest a foreign index
             b = sbox.get(reg[p])
             return bool(b) and b[0] - 1e-3 <= foot[p][0] <= b[2] + 1e-3 and b[1] - 1e-3 <= foot[p][1] <= b[3] + 1e-3
-        bad = [p for p, tg in tagof.items() if tags.get(tg[:1 + regd]) != reg[p] and not on_own_edge(p)]
+        if M["meta"].get("uniform_regions"):   # regions are strap boxes, not H-tree subtrees: check the index box
+            gk = {g["k"]: g for g in M["meta"]["regions"]}
+            near = {t["port"]: (int(np.argmin(abs(xa - t["foot"][0]))), int(np.argmin(abs(ya - t["foot"][1]))))
+                    for t in M["taps"]}
+            bad = [p for p, (i, j) in near.items()
+                   if not (gk[reg[p]]["i0"] <= i < gk[reg[p]]["i1"] and gk[reg[p]]["j0"] <= j < gk[reg[p]]["j1"])]
+        else:
+            bad = [p for p, tg in tagof.items() if tags.get(tg[:1 + regd]) != reg[p] and not on_own_edge(p)]
         if bad:
             raise SystemExit(f"die_clock_mesh report: {len(bad)} taps fed from another region's strap, e.g. {bad[:3]}")
     landed = [x for x in seam if reg[x[0]] != reg[x[1]]]
@@ -2615,9 +2977,16 @@ def cmd_render(a):
     ax.set_ylim(0, H)
     ax.set_aspect("equal")
     m_ = M["meta"]
-    ax.set_title(f"{Path(m_.get('plan', 'die')).parent.name} die clock mesh {m_['nx']}x{m_['ny']} ({m_['pitch_um'][0]:.0f}x{m_['pitch_um'][1]:.0f} um, "
-                 f"{m_['ndr']}), {m_['drivers']} driver sites x{m_['m']} (orange = moved, max "
-                 f"{m_['driver_move_max_um']:.0f} um), H-tree red, {m_['stubs']} stubs green", fontsize=7)
+    lgm = m_.get("leaf_grid")
+    if lgm:   # CLOCK-KV-R4: name the build (delta id + build dir), not the plan's parent folder
+        ax.set_title(f"{m_.get('delta_id') or 'die'} {d.name}: continuous mesh {m_['nx']}x{m_['ny']} straps "
+                     f"({m_['ndr']}), leaf grid {lgm['nx']}x{lgm['ny']} ({lgm['pitch_um'][0]:.0f}x{lgm['pitch_um'][1]:.0f} um)"
+                     f", {m_['drivers']} drivers x{m_['m']} on V straps (max slide {m_['driver_move_max_um']:.0f} um), "
+                     f"H-tree red, {m_['stubs']} stubs green", fontsize=7)
+    else:
+        ax.set_title(f"{Path(m_.get('plan', 'die')).parent.name} die clock mesh {m_['nx']}x{m_['ny']} ({m_['pitch_um'][0]:.0f}x{m_['pitch_um'][1]:.0f} um, "
+                     f"{m_['ndr']}), {m_['drivers']} driver sites x{m_['m']} (orange = moved, max "
+                     f"{m_['driver_move_max_um']:.0f} um), H-tree red, {m_['stubs']} stubs green", fontsize=7)
     out = a.out or str(d / "mesh.png")
     fig.savefig(out, bbox_inches="tight")
     print(out)
@@ -2666,6 +3035,13 @@ def main(argv=None):
     b.add_argument("--tap-slew-max-ps", type=float, default=C128.TAP_SLEW_MAX_PS)
     b.add_argument("--plan-sites", help="12.8: ot_clock_sites/1 reserved lattice island sites (clock_plan_sites.py from "
                                         "the master-plan slices); drivers/nodes/repeaters on plan sites, move <= PG snap")
+    b.add_argument("--uniform-regions", help="opt-in JSON (CLOCK-KV-R2): x_cuts_um / y_cuts_um dataflow seams (partition "
+                   "edges); regions = strap boxes on the UNIFORM nx x ny lattice, H-tree = whole-grid bisection "
+                   "independent of the cuts, CPPR node per region = lowest common tree node of its intersections, "
+                   "gate: every partition inside one box, every tap within 750 um of its own region strap")
+    b.add_argument("--lattice-spec", help="opt-in JSON (CLOCK-KV-R3, 12.8e1 continuous mesh): ys_um (all strap rows, "
+                   "any count), driver_rows (power-of-two list of strap-row indices carrying mesh drivers), axes "
+                   "(tree split order, e.g. yyyyxxxxxyy); other rows are driverless straps of the same mesh")
     b.add_argument("--allow-plan-errors", action="store_true",
                    help="DIAGNOSTIC: write the build despite plan errors (never qualifies; combo refuses it)")
     b.add_argument("--clock-floorplan", help="opt-in JSON: x_cuts_um (region seams on partition edges) + region_nx "

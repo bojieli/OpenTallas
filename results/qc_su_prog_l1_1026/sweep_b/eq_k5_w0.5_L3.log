@@ -1,0 +1,7 @@
+EQ sites R 257.04 ls reach [199.8, 106.9, 150.1, 257.0, 169.6] eq reach [199.8, 106.9, 150.1, 257.0, 173.9]
+5 [965, 305, 847, 707, 467] [5, 2, 4, 4, 3] {'T1': 257.04, 'T2': 70.74, 'T3': 30.24} {'mean': 259.15, 'min': 253.23, 'max': 266.79, 'window': 13.56} {'mean': 206.88, 'min': 200.74, 'max': 213.44, 'window': 12.7}
+BEST 5 {'TT': {'mean': 259.15, 'min': 253.23, 'max': 266.79, 'window': 13.56}, 'FF': {'mean': 206.88, 'min': 200.74, 'max': 213.44, 'window': 12.7}}
+CHAIN L1 K 5 unpinned ['Q1', 'Q3']
+CHAIN L2 K 3 unpinned []
+CHAIN L3 K 1 unpinned []
+PASS 0 J 17.952 changed 51

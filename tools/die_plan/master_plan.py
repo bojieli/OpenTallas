@@ -70,7 +70,7 @@ import json
 import math
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -159,6 +159,7 @@ def census(P):
                         layers = list(b.get("layers", []))
             length = sum(IS.seg_len(a, b) for a, b in zip(pts, pts[1:]))
             paths.append(dict(id=f"{part}:istn{k}", kind="internal", bits=bits, ports=0, src=f"{part}.{st.get('conn')}",
+                              group=f"{part}|{st.get('launch')}|{st['from_um'][0]},{st['from_um'][1]}",
                               dst=f"{part}.{st.get('capture', '')}", length_um=r3(length),
                               legs=[dict(part=part, slot=f"istn{k}", pts=pts, band_um=band, layers=layers,
                                          bit_sites=None)]))
@@ -348,6 +349,7 @@ def core_lattice(centres, q=0.01, lat=8.64):
     the gaps that are not an integer multiple of it.  A die tree whose node/leaf pitch is an integer multiple of
     this pitch (leaf pitch 2 x pitch puts every node midpoint on a core centre) lands every node/driver on a
     core-centre island."""
+    import numpy as _np
     res = {}
     for ax in (0, 1):
         raw = sorted(c[ax] for c in centres)
@@ -366,8 +368,16 @@ def core_lattice(centres, q=0.01, lat=8.64):
         p = min(gaps)
         bad = sorted({g for g in gaps if abs(g / p - round(g / p)) > 1e-3})
 
+        va = _np.array(vs)
+
         def cover(L):        # share of lines whose +L translate is a line too (or falls past the array end)
-            hit = sum(1 for v in vs if v + L > vs[-1] + lat or any(abs(v + L - u) <= lat / 2 for u in vs))
+            # vectorised (ROOT-MERGE-20: S81 > 25 min in the O(n^3) form); same float expressions, the nearest line by
+            # bisection decides "any line within lat / 2" -> identical result
+            t = va + L
+            i = _np.searchsorted(va, t)
+            lo = _np.abs(t - va[_np.clip(i - 1, 0, len(va) - 1)])
+            hi = _np.abs(t - va[_np.clip(i, 0, len(va) - 1)])
+            hit = int(_np.count_nonzero((t > vs[-1] + lat) | (_np.minimum(lo, hi) <= lat / 2)))
             return hit / len(vs)
         # commensurate leaf pitch: smallest pairwise line distance that maps >= 90 % of the core-centre lines onto
         # lines (the repeat of the abutted core array); a tree node then lands on a centre when its half-span
@@ -382,6 +392,141 @@ def core_lattice(centres, q=0.01, lat=8.64):
                              breaks=[[r3(a), r3(b)] for a, b in zip(vs, vs[1:])
                                      if leaf and b - a > leaf + lat][:10])
     return res
+
+
+def _lines(vals, lat=8.64):
+    """merge coordinates closer than one island (orientation snapping of the same column) -> sorted lines."""
+    vs, grp = [], []
+    for v in sorted(vals):
+        if grp and v - grp[0] > lat + 1e-6:
+            vs.append(sum(grp) / len(grp))
+            grp = []
+        grp.append(v)
+    if grp:
+        vs.append(sum(grp) / len(grp))
+    return vs
+
+
+def _repeat(vs, lat=8.64, need=0.9):
+    """smallest translation (> one island) that maps >= need of the lines whose translate stays inside the array
+    onto lines, with at least half of the lines staying inside (a translate as long as the array is no repeat);
+    None when the lines have no repeat."""
+    def ok(L):
+        ins = [v for v in vs if v + L <= vs[-1] + lat / 2]
+        if len(ins) < math.ceil(len(vs) / 2):
+            return False
+        return sum(1 for v in ins if any(abs(v + L - u) <= lat / 2 for u in vs)) / len(ins) >= need
+    for L in sorted({round(b - a, 3) for i, a in enumerate(vs) for b in vs[i + 1:] if b - a > lat}):
+        if ok(L):
+            return L
+    return None
+
+
+def clock_regions(P, mode="partition"):
+    """MASTER-PLAN-R6 clock regions: the plan's declared clock.regions [{name, parts}] when present, else one region
+    per partition instance (a hardened partition is the unit whose crossings are its registered face pins)."""
+    decl = (P.clock or {}).get("regions") if isinstance(P.clock, dict) else None
+    if decl:
+        return [(r["name"], list(r["parts"])) for r in decl], "declared clock.regions"
+    return [(p, [p]) for p in P.parts], "partition instance (one region per partition)"
+
+
+def regional_tree_commensurate(P, core_rows, tree_pts, lat=8.64, tol=0.5, need=0.9):
+    """COORD 13:05 RULING HBM-B1E (1): tree_commensurate in the REGIONAL form (12.2a1 applied per clock region).
+
+    core_rows : [(part, inst, module, (x, y) die-frame clock-entry island centre)]
+    tree_pts  : [(tag, (x, y))] die tree nodes / mesh drivers (die frame)
+    Per region and axis:
+      * island lattice: per core type (module) with >= 2 instances in the region, its entry-island lines and their
+        repeat (smallest translate mapping >= 90 % of the in-array lines onto lines, an integer multiple of `lat`);
+      * region tree lattice: the tree points inside the region.  With >= 2 tree lines on the axis, every type must
+        have a repeat and the line offsets must be integer multiples of half the dominant type's repeat (an H-tree
+        arm = k x repeat/2): every tree point at the same phase of the island lattice -> equal sub-trees per leaf.
+        With <= 1 tree line the region is fed from one point: no lattice to coincide (irregular types reported as
+        INFO, regions_irregular_islands);
+    regions join only through landed crossings: the die tree above them and the registered partition face pins
+    (counted, not re-verified here)."""
+    regions, how = clock_regions(P)
+    rects = {p: P.rect(p) for p in P.parts}
+    rows = []
+    n_fail = 0
+    for name, parts in regions:
+        cs = [r for r in core_rows if r[0] in parts]
+        inside = [t for t in tree_pts if any(rects[p][0] - tol <= t[1][0] <= rects[p][2] + tol and
+                                             rects[p][1] - tol <= t[1][1] <= rects[p][3] + tol for p in parts)]
+        by_mod = defaultdict(list)
+        for r in cs:
+            by_mod[r[2]].append(r[3])
+        dom = max(by_mod, key=lambda m: (len(by_mod[m]), m)) if by_mod else None
+        row = dict(region=name, parts=len(parts), cores=len(cs), types=len(by_mod), dominant=dom,
+                   tree_points=len(inside), axes={}, issues=[])
+        for ax in (0, 1):
+            a = "xy"[ax]
+            irr = []
+            rep_dom = None
+            for m, pts in sorted(by_mod.items()):
+                if len(pts) < 2:
+                    continue
+                vs = _lines([q[ax] for q in pts], lat)
+                if len(vs) < 2:
+                    rep = 0.0
+                else:
+                    rep = _repeat(vs, lat, need)
+                if rep is None or (rep and abs(rep / lat - round(rep / lat)) > 1e-3):
+                    irr.append(dict(module=m, n=len(pts), lines=len(vs), repeat_um=r3(rep) if rep else None))
+                if m == dom:
+                    rep_dom = rep
+            tl = _lines([t[1][ax] for t in inside], 1.0)
+            tree_ok, off = True, []
+            if len(tl) >= 2:
+                if not rep_dom:
+                    tree_ok = False
+                    off = ["no island repeat to coincide with"]
+                else:
+                    half = rep_dom / 2.0
+                    for v in tl[1:]:
+                        k = (v - tl[0]) / half
+                        if abs(k - round(k)) * half > tol:
+                            tree_ok = False
+                            off.append(r3(v - tl[0]))
+            row["axes"][a] = dict(dominant_repeat_um=r3(rep_dom) if rep_dom else rep_dom, irregular_types=irr[:10],
+                                  n_irregular_types=len(irr), tree_lines=len(tl), tree_coincides=tree_ok,
+                                  tree_off_phase_um=off[:10])
+            # coincidence is a property of a region tree LATTICE: with >= 2 tree lines on the axis the dominant
+            # type must have a repeat and every tree line must sit on its half-repeat phase; with <= 1 line the
+            # region is fed from one point and there is no lattice to coincide (irregular types = INFO, listed)
+            if irr:
+                row.setdefault("info", []).append(f"{a}: {len(irr)} type(s) without an island repeat")
+                if len(tl) >= 2:
+                    row["issues"].append(f"{a}: {len(irr)} type(s) without an island repeat under a {len(tl)}-line "
+                                         f"region tree")
+            if not tree_ok:
+                row["issues"].append(f"{a}: tree lines not on the island lattice phase")
+        row["verdict"] = "FAIL" if row["issues"] else "PASS"
+        n_fail += bool(row["issues"])
+        rows.append(row)
+    # crossings between regions (die links / partition-to-partition lanes): landed at registered face pins
+    reg_of = {p: name for name, parts in regions for p in parts}
+    xing = 0
+    for lid in P.lanes:
+        pr = {reg_of.get(c[0]) for c in P.lane_crossings(lid) if c[0] in reg_of}
+        xing += len(pr) > 1
+    fails = [r for r in rows if r["verdict"] == "FAIL"]
+    return dict(verdict="PASS" if rows and not fails else ("NOT RUN" if not rows else "FAIL"), form="regional",
+                regions=len(rows), regions_fail=len(fails), regions_from=how,
+                regions_with_tree_points=sum(1 for r in rows if r["tree_points"]),
+                fail_examples=[{k: v for k, v in r.items()} for r in fails[:40]],
+                fail_by_type=dict(sorted(Counter(P.parts[r["region"]]["type"] for r in fails
+                                                 if r["region"] in P.parts).items())),
+                regions_irregular_islands=sum(1 for r in rows if r.get("info")),
+                irregular_islands_by_type=dict(sorted(Counter(P.parts[r["region"]]["type"] for r in rows
+                                                              if r.get("info") and r["region"] in P.parts).items())),
+                inter_region_lanes=xing,
+                rule="COORD 13:05 RULING HBM-B1E (1) / 12.2a1 per region: within each clock region the region tree "
+                     "lattice coincides with that region's per-type island lattice; regions join only through landed "
+                     "crossings (die tree above the regions; registered partition face pins = partition kit default, "
+                     "counted here, not re-verified)",
+                rows=rows)
 
 
 def clock_sites(M, islands_die, glue_parts, macros_die, tol=0.5):
@@ -600,6 +745,277 @@ def island_tree(sites, leaves, B=200.0, spread_tol_um=20.0, rep_um=None, band_um
                 worst_leg_island_gap_um=r3(worst_gap), leg_gap_examples=rep_gaps[:20], causes=causes,
                 rule="12.2a1/12.2c: die tree nodes, leg repeaters and mesh drivers are declared islands (pushdown "
                      "cells in cores/partitions); the die build consumes die_tree_plan.json sites, never free sites"), nodes
+
+
+def array_repeat(cores, ax, lat=8.64, need=0.9):
+    """repeat (um) of the dominant hard-core array along axis ax: the smallest translation that maps >= need of the
+    dominant module's core lines onto lines (or past the array end).  QC: x 2471.04 (4 nk columns), y 5227.2
+    (4 nk rows; the two nk bands are NOT commensurate across the centre band)."""
+    from collections import Counter as _C
+    if not cores:
+        return None
+    dom = _C(c[6] for c in cores).most_common(1)[0][0]
+    vs = sorted({round(c[ax], 3) for c in cores if c[6] == dom})
+    if len(vs) < 2:
+        return None
+    # array bands: split where a line gap exceeds 3 x the median gap (QC y: the centre band between two nk bands);
+    # a translate past the end of its own band counts as covered (the repeat is a within-band property)
+    gaps = sorted(b - a for a, b in zip(vs, vs[1:]))
+    med = gaps[len(gaps) // 2]
+    band_end, end = {}, vs[-1]
+    for i in range(len(vs) - 1, -1, -1):
+        if i < len(vs) - 1 and vs[i + 1] - vs[i] > 3 * med:
+            end = vs[i]
+        band_end[vs[i]] = end
+
+    def cover(L):
+        return sum(1 for v in vs if v + L > band_end[v] + lat or any(abs(v + L - u) <= lat / 2 for u in vs)) / len(vs)
+    for L in sorted({round(b - a, 3) for i, a in enumerate(vs) for b in vs[i + 1:] if b - a > lat}):
+        if cover(L) >= need:
+            return L
+    return None
+
+
+def commensurate_axis(cores, lo, hi, ax, n, rep_um, grid=4.32, margin=8.64, kmax=12, bridge_root=True):
+    """MASTER-PLAN-R5 (COORD ruling R4 (5), 12.2a1): one axis of the die H-tree with every node coordinate inside a
+    full-extent core-free channel (so nodes sit on channel crosses and every straight H-tree leg, hence every equal-cut
+    leg repeater, runs in a channel).  Leaves = c + sum_l (+-d_l), levels l = 1..log2(n): symmetric arms per level ->
+    equal root->leaf length by construction.  Arms are integer multiples of rep_um / 2 (leaf pitch 2 d = k x the
+    core-array repeat); only the ROOT arm may be a 'bridge' (any grid value) when the axis has an array break the
+    repeat does not cross (QC y: centre band between the two nk bands).  Choice: smallest region half-width
+    (array end to outer leaf, half the largest leaf gap), then fewer bridges, then the largest channel margin, then
+    the root nearest the array centre.  Plan geometry only, deterministic."""
+    import numpy as _np
+    m = int(round(math.log2(n)))
+    if 2 ** m != n or not rep_um or n < 2:
+        return None
+    N = int(math.floor((hi - lo) / grid)) + 1
+    coord = lo + _np.arange(N) * grid
+    occ = _np.zeros(N, dtype=bool)
+    for c in cores:                                    # occupied = strictly inside a core span widened by margin
+        a = int(math.floor((c[ax] - margin - lo) / grid)) + 1
+        b = int(math.ceil((c[ax + 2] + margin - lo) / grid)) - 1
+        occ[max(0, a):min(N, b + 1)] = True
+    free = ~occ
+    amin = min(c[ax] for c in cores)
+    amax = max(c[ax + 2] for c in cores)
+    unit = rep_um / 2.0 / grid
+    if abs(unit - round(unit)) > 1e-6:
+        return None
+    unit = int(round(unit))
+    best = None
+
+    def margin_of(vals):
+        out = 1e18
+        for v in vals:
+            i = int(round((v - lo) / grid))
+            j = i
+            while j < N and free[j]:
+                j += 1
+            k = i
+            while k >= 0 and free[k]:
+                k -= 1
+            out = min(out, (min(j - i, i - k)) * grid + margin - grid)
+        return out
+
+    def expand(nodes, d):
+        return sorted({v + s * d for v in nodes for s in (-1, 1)})
+
+    def ok(vals):
+        idx = [int(round((v - lo) / grid)) for v in vals]
+        return all(0 <= i < N and free[i] for i in idx)
+
+    def rec(level, nodes, arms, bridges, c):
+        nonlocal best
+        if level == m:
+            lv = sorted(nodes)
+            if len(lv) != n or min(b - a for a, b in zip(lv, lv[1:])) < rep_um / 2 - 1e-6:
+                return                                # overlapping / sub-repeat leaves: not an H-tree lattice
+            gaps = [b - a for a, b in zip(lv, lv[1:])]
+            rad = max(lv[0] - amin, amax - lv[-1], max(gaps) / 2 if gaps else 0.0)
+            key = (int(rad // (rep_um / 4)), bridges, -margin_of(lv), round(rad / grid), abs(c - (amin + amax) / 2))
+            if best is None or key < best[0]:
+                best = (key, c, list(arms), lv)
+            return
+        prev = arms[-1] if arms else None
+        cand = [k * unit for k in range(1, kmax + 1)]
+        if level == 0 and bridge_root:              # vectorised: a with both c - a and c + a free
+            i0 = int(round((c - lo) / grid))
+            r = _np.arange(1, min(i0, N - 1 - i0) + 1)
+            cand += [int(a) for a in r[free[i0 + r] & free[i0 - r]]]
+        seen = set()
+        for a in cand:
+            if a in seen:
+                continue
+            seen.add(a)
+            d = a * grid
+            if prev is not None and d >= prev:       # arms shrink level by level (an H-tree, not a comb)
+                continue
+            if arms and any(arms[j] <= sum(arms[j + 1:]) + d for j in range(len(arms))):
+                continue                              # nested H-tree: each arm > sum of the arms below (no interleave)
+            nxt = expand(nodes, d)
+            if ok(nxt):
+                rec(level + 1, nxt, arms + [d], bridges + (1 if a % unit else 0), c)
+    for i in _np.nonzero(free)[0]:
+        c = float(coord[i])
+        rec(0, [c], [], 0, c)
+    if best is None:
+        return None
+    key, c, arms, lv = best
+    return dict(axis="xy"[ax], n=n, repeat_um=r3(rep_um), root_um=r3(c), arms_um=[r3(d) for d in arms],
+                arm_multiples_of_half_repeat=[r3(d / (rep_um / 2)) for d in arms],
+                bridge_arms=[l for l, d in enumerate(arms) if abs(d / (rep_um / 2) - round(d / (rep_um / 2))) > 1e-6],
+                leaves_um=[r3(v) for v in lv], leaf_gaps_um=[r3(b - a) for a, b in zip(lv, lv[1:])],
+                region_half_width_um=r3(key[3] * grid), channel_margin_um=r3(-key[2]),
+                array_um=[r3(amin), r3(amax)])
+
+
+def lattice_tree(sites, leaf_xy, parts, cores, nx=8, ny=8, snap_um=8.64, spread_tol_um=20.0, axes=None):
+    """MASTER-PLAN-R4 (QC item 3): the die H-tree on a REGULAR lattice (12.2c / 12.8d), not on whatever islands the
+    partitions happen to have.  island_tree() bisects the 1337 irregular leaf islands and cannot balance them (QC R3
+    spread 8.4 mm).  Here the tree is fixed by geometry: an nx x ny lattice of region leaves over the bounding box of
+    the clock consumers (default 8 x 8 = the INFRA-FIRST-R3 partition-aligned region spec), binary H-tree splits
+    of the index box (longer side first), every node at the exact midpoint of its children -> every root->leaf
+    path has identical length by construction.  Each lattice node is then bound to an island:
+      * an existing declared island within snap_um            -> reuse (displacement reported);
+      * else inside a partition and outside every hard core   -> NEW partition pushdown island declared AT the node
+        (plan delta: the partition kit gets the island + ft ports, 12.2a1);
+      * else (inside a hard core)                              -> listed as in_core_conflict (plan must move the
+        lattice origin / pitch or the core; never a free die cell inside a core).
+    Regional meshes (or the region's local tree) hang below each leaf and feed the core clock entries.
+    Plan geometry only; deterministic; no measured input.
+
+    axes (MASTER-PLAN-R5, opt-in): explicit per-axis leaf coordinates from commensurate_axis() (symmetric per-level
+    arms -> equal paths by construction, every node coordinate inside a core-free channel)."""
+    xs = [p[0] for p in leaf_xy]
+    ys = [p[1] for p in leaf_xy]
+    X0, Y0, X1, Y1 = min(xs), min(ys), max(xs), max(ys)
+    px, py = (X1 - X0) / nx, (Y1 - Y0) / ny
+    if axes:
+        xl, yl = list(axes[0]), list(axes[1])
+        nx, ny = len(xl), len(yl)
+        X0, X1, Y0, Y1 = xl[0], xl[-1], yl[0], yl[-1]
+        px = (X1 - X0) / max(1, nx - 1)
+        py = (Y1 - Y0) / max(1, ny - 1)
+    bins = defaultdict(list)
+    Bq = max(snap_um, 1.0)
+    for q in sites:
+        bins[(int(q["xy"][0] // Bq), int(q["xy"][1] // Bq))].append(q)
+
+    def near(xy):
+        i, j = int(xy[0] // Bq), int(xy[1] // Bq)
+        best = None
+        for di in (-1, 0, 1):
+            for dj in (-1, 0, 1):
+                for q in bins.get((i + di, j + dj), []):
+                    d = abs(q["xy"][0] - xy[0]) + abs(q["xy"][1] - xy[1])
+                    if d <= snap_um and (best is None or d < best[0]):
+                        best = (d, q)
+        return best
+
+    def host(xy):
+        if any(c[0] <= xy[0] <= c[2] and c[1] <= xy[1] <= c[3] for c in cores):
+            return None, "in_core_conflict"
+        for name, r in parts:
+            if r[0] <= xy[0] <= r[2] and r[1] <= xy[1] <= r[3]:
+                return name, "new_partition_island"
+        return None, "outside_partitions"
+    nodes = []
+
+    def build(i0, i1, j0, j1, tag, parent, depth):
+        if i1 - i0 == 1 and j1 - j0 == 1:
+            xy = (xl[i0], yl[j0]) if axes else (X0 + (i0 + 0.5) * px, Y0 + (j0 + 0.5) * py)
+            kids = []
+        else:
+            if axes:
+                wide = (xl[i1 - 1] - xl[i0]) >= (yl[j1 - 1] - yl[j0]) and i1 - i0 > 1 or j1 - j0 == 1
+            else:
+                # a 1-row box must split along i (KV: py >> px -> the old test split an empty j range forever)
+                wide = i1 - i0 > 1 and (j1 - j0 == 1 or (i1 - i0) * px >= (j1 - j0) * py)
+            if wide:
+                m = (i0 + i1) // 2
+                kids = [(i0, m, j0, j1), (m, i1, j0, j1)]
+            else:
+                m = (j0 + j1) // 2
+                kids = [(i0, i1, j0, m), (i0, i1, m, j1)]
+            xy = None
+        idx = len(nodes)
+        nodes.append(dict(tag=tag, parent=parent, depth=depth, leaves=(i1 - i0) * (j1 - j0)))
+        ch = [build(*k, tag + str(n), tag, depth + 1) for n, k in enumerate(kids)]
+        if ch:
+            xy = ((ch[0][0] + ch[1][0]) / 2, (ch[0][1] + ch[1][1]) / 2)
+        nodes[idx]["ideal_xy_um"] = [r3(xy[0]), r3(xy[1])]
+        return xy
+    build(0, nx, 0, ny, "t", None, 0)
+    kinds = defaultdict(int)
+    disp = 0.0
+    for n_ in nodes:
+        xy = tuple(n_["ideal_xy_um"])
+        b = near(xy)
+        if b:
+            n_.update(site=b[1]["id"], role=b[1]["role"], inst=b[1].get("inst"), xy_um=[r3(b[1]["xy"][0]),
+                      r3(b[1]["xy"][1])], displacement_um=r3(b[0]), binding="existing_island")
+            disp = max(disp, b[0])
+        else:
+            part, kind = host(xy)
+            n_.update(site=None, xy_um=list(n_["ideal_xy_um"]), displacement_um=0.0, binding=kind, host=part)
+        kinds[n_["binding"]] += 1
+    pos = {n_["tag"]: n_["xy_um"] for n_ in nodes}
+    plen = {}
+    for n_ in nodes:                                # parents precede children in `nodes`
+        p_ = n_["parent"]
+        plen[n_["tag"]] = 0.0 if p_ is None else plen[p_] + abs(pos[p_][0] - n_["xy_um"][0]) + abs(
+            pos[p_][1] - n_["xy_um"][1])
+    # leg repeaters (12.1e <= 450 um, equal cuts) at plan sites in PARTITION bays: per leg pick the L orientation
+    # (x-first / y-first) with fewer cuts inside hard cores (QC R3: 583 die repeater sites inside qfd_tile_nk_a0c)
+    def cuts(a, b, xfirst):
+        L = abs(a[0] - b[0]) + abs(a[1] - b[1])
+        k = int(math.ceil(L / CLOCK_REP_UM - 1e-9)) - 1
+        out = []
+        for i in range(1, k + 1):
+            s = L * i / (k + 1)
+            d1 = abs(b[0] - a[0]) if xfirst else abs(b[1] - a[1])
+            if xfirst:
+                pt = (a[0] + math.copysign(min(s, d1), b[0] - a[0]), a[1] + (math.copysign(s - d1, b[1] - a[1])
+                                                                            if s > d1 else 0.0))
+            else:
+                pt = (a[0] + (math.copysign(s - d1, b[0] - a[0]) if s > d1 else 0.0),
+                      a[1] + math.copysign(min(s, d1), b[1] - a[1]))
+            out.append(pt)
+        return out
+    reps = []
+    for n_ in nodes:
+        if not n_["parent"]:
+            continue
+        a, b = pos[n_["parent"]], n_["xy_um"]
+        best = None
+        for xf in (True, False):
+            pts = [(q, host(q)) for q in cuts(a, b, xf)]
+            nbad = sum(1 for _, h in pts if h[1] != "new_partition_island")
+            if best is None or nbad < best[0]:
+                best = (nbad, xf, pts)
+        n_["leg_route"] = "x_first" if best[1] else "y_first"
+        for q, (part, kind) in best[2]:
+            reps.append(dict(leg=n_["tag"], xy_um=[r3(q[0]), r3(q[1])], part=part,
+                             binding="partition_bay" if kind == "new_partition_island" else kind))
+    rep_bad = [r for r in reps if r["binding"] != "partition_bay"]
+    lv = [plen[n_["tag"]] for n_ in nodes if n_["leaves"] == 1]
+    spread = max(lv) - min(lv)
+    legs = [plen[n_["tag"]] - plen[n_["parent"]] for n_ in nodes if n_["parent"]]
+    bad = kinds.get("in_core_conflict", 0) + kinds.get("outside_partitions", 0) + len(rep_bad)
+    verdict = "PASS" if not bad and spread <= spread_tol_um else "FAIL"
+    return dict(verdict=verdict, lattice=[nx, ny], box_um=[r3(X0), r3(Y0), r3(X1), r3(Y1)],
+                pitch_um=[r3(px), r3(py)], nodes=len(nodes), leaves=nx * ny, bindings=dict(kinds),
+                max_snap_displacement_um=r3(disp), path_len_um=dict(min=r3(min(lv)), max=r3(max(lv)),
+                                                                    spread=r3(spread)),
+                max_leg_um=r3(max(legs) if legs else 0.0), spread_tol_um=spread_tol_um,
+                leg_repeaters=len(reps), leg_repeaters_in_core=len(rep_bad), leg_repeater_sites=reps,
+                new_partition_islands=[dict(tag=n_["tag"], part=n_["host"], xy_um=n_["xy_um"]) for n_ in nodes
+                                       if n_["binding"] == "new_partition_island"],
+                in_core_conflicts=[dict(tag=n_["tag"], xy_um=n_["xy_um"]) for n_ in nodes
+                                   if n_["binding"] == "in_core_conflict"],
+                rule="12.2c/12.8d: die H-tree on a regular lattice, nodes at exact child midpoints (equal paths by "
+                     "construction); nodes bound to existing islands (<= snap) or new partition pushdown islands"), nodes
 
 
 # ---- 12.8 d1 / 12.2a1 island driver sizing from plan geometry only (deterministic, frozen with the slice)
@@ -888,6 +1304,33 @@ def fit_rect(r, box, blockers, horiz, step=2.16, slide=81.0, narrow=True):
     return base
 
 
+def add_onramp_bays(m89_segs, bays_die, reach):
+    """12.7a on-ramps: every M8/M9 die-net segment drops to its partition only at an M7 entry pin beside a bay.  A
+    short leg (< reach, no station register inside the partition) gets no rest stop from place_stops, so its leftover-
+    M8/M9 segment had nowhere to drop (QC R3: 109,008 unplaced entry pins, c_W*_{bf,bn,tn,tf}_10 __a22 legs).  Add ONE
+    repeater bay (role onramp) at the segment midpoint whenever no bay of the same path in the same partition lies
+    within reach of both segment ends; plan geometry only, sized/legalised/filled like every other bay."""
+    by = defaultdict(list)
+    for b in bays_die:
+        by[(b["part"], b["path"])].append(b["xy"])
+
+    def md(p, q):
+        return abs(p[0] - q[0]) + abs(p[1] - q[1])
+    n = 0
+    for s in m89_segs:
+        key = (s["part"], s["path"])
+        a, b = s["a"], s["b"]
+        if any(md(x, a) <= reach and md(x, b) <= reach for x in by[key]):
+            continue
+        mid = (r3((a[0] + b[0]) / 2), r3((a[1] + b[1]) / 2))
+        bays_die.append(dict(part=s["part"], xy=mid, kind="repeater", role="onramp", bits=s["bits"],
+                             band=s["band_um"], horiz=abs(b[1] - a[1]) < abs(b[0] - a[0]), path=s["path"],
+                             sites=None))
+        by[key].append(mid)
+        n += 1
+    return n
+
+
 def bay_rect(xy, horiz, band, area, row=ROW):
     """bay rect centred on xy: band width across the road x depth along it (rounded up to rows)."""
     w = max(band, 2 * G / 4)
@@ -1075,18 +1518,71 @@ def tree_balance(M, stub_tol=20.0, leg_tol=1.0):
 
 
 # ------------------------------------------------------------------------------------------------------ clock model
-# 12.9d plan-level analytic core insertion model, calibrated ONCE (not per run) on the measured QC SU trials
-# (QC-SU-LAT results/qc_su_lat/trials_1026.json @ claude/qc-su-lat-1026 ad22ae2b28, variant B = structured BUFx16f
-# trunks SEG 110 um, GRT RC): insertion_TT = K_PS_PER_UM x L_max, L_max = entry -> farthest core corner (Manhattan);
-# routed RCX = RCX_FACTOR x GRT (trial basis note: vmr_s6kc 386.5 routed vs 409.9 GRT).  FF = FF_RATIO x TT
-# (same trials, mean FF/TT).  Calibration points (L_max from the S-face centre pin of the trial kits):
-CAL_POINTS = [("qfd_dv_s8x_vmr", 406.08, 341.8, 271.8), ("qfd_dv_s8x_prog", 436.32, 419.4, 337.1),
-              ("qfd_dv_s8x_btab", 436.32, 384.9, 308.1)]
-K_PS_PER_UM = sum(t for _, _, t, _ in CAL_POINTS) / sum(L for _, L, _, _ in CAL_POINTS)
-FF_RATIO = sum(f / t for _, _, t, f in CAL_POINTS) / len(CAL_POINTS)
+# 12.9d plan-level analytic core insertion model (MODEL-REFIT 10-26, COORD ruling NUMBER-CHECK-3 (4): intercept + slope).
+# Scope: a CTS-grown core tree (TritonCTS or count/regional-tap H-tree) from a CENTRE clock entry (12.8a), predicted before
+# any tree is designed.  TT_GRT = CAL_A + CAL_B x L_max, L_max = entry -> farthest core corner (Manhattan); FF = FF_RATIO x TT.
+# Basis = global-route RC (GRT), the basis of every calibration point; routed RCX is ~5.7 % lower on the one measured pair
+# (vmr_s6kc 386.5 vs 409.9 GRT) -> RCX_FACTOR is reported only, not applied (the high-side FAIL stays conservative).
+# Fitted ONCE on every measured centre-entry GRT trial across dies (all-sink mean insertion, 0 pads):
+#   (name, L_max um, TT mean ps, FF mean ps, source)
+# Rejected forms (results/model_refit_1026): K x L through the origin (+77.6 ps bias on these points); one line over
+# edge + centre + placement-RC points (PL->GRT delta varies 10-45 ps, LOO rms 23-71); log2(sinks) term (no gain).
+# Edge entries are not calibrated (12.8a bans them).  Plan-BUILT trees (core_infra_htree / su_tree_model: TritonCTS not
+# run) are predicted by their own NLDM tree model + PLAN_TREE_OFFSETS below, not by this line.
+CAL_POINTS = [("hbm:ot_hgi_coll_gq_issue centre", 241.92, 272.8, 219.4, "PATH-HBM b1d calibration_centre_entry.json"),
+              ("hbm:pc_ctrl_leaf_cfg_h9b centre", 181.44, 231.2, 185.3, "PATH-HBM b1d calibration_centre_entry.json"),
+              ("s81:dsdv_gunit_l0 r3rt42 4x2", 259.2, 294.74, 240.52, "core-lat-r3 kits ins_probe_{tt,ff}.json"),
+              ("s81:dsdv_gunit_l0 r3rt41 4x1", 259.2, 299.90, 247.81, "core-lat-r3 kits ins_probe_{tt,ff}.json"),
+              ("s81:dsdv_gunit_l2 r3rt42 4x2", 259.2, 297.51, 243.92, "core-lat-r3 kits ins_probe_{tt,ff}.json"),
+              ("s81:dsdv_gunit_l4 cl26rt 4x1", 207.36, 259.69, 208.55, "NUMBER-CHECK 06:59")]
+
+
+def _line_fit(pts):
+    n = len(pts)
+    mx = sum(L for _, L, _, _, _ in pts) / n
+    my = sum(t for _, _, t, _, _ in pts) / n
+    b = sum((L - mx) * (t - my) for _, L, t, _, _ in pts) / sum((L - mx) ** 2 for _, L, _, _, _ in pts)
+    return my - b * mx, b
+
+
+CAL_A, CAL_B = _line_fit(CAL_POINTS)
+FF_RATIO = sum(f / t for _, _, t, f, _ in CAL_POINTS) / len(CAL_POINTS)
 RCX_FACTOR = 386.5 / 409.9
-CAL_ERR = [round(K_PS_PER_UM * L - t, 1) for _, L, t, _ in CAL_POINTS]
+CAL_ERR = [round(CAL_A + CAL_B * L - t, 1) for _, L, t, _, _ in CAL_POINTS]
 CAL_RMS_PS = round(math.sqrt(sum(e * e for e in CAL_ERR) / len(CAL_ERR)), 1)
+
+
+def _loo(pts):
+    out = []
+    for i, (_, L, t, _, _) in enumerate(pts):
+        a, b = _line_fit(pts[:i] + pts[i + 1:])
+        out.append(round(a + b * L - t, 1))     # pred - meas, as CAL_ERR
+    return out
+
+
+CAL_LOO_ERR = _loo(CAL_POINTS)
+CAL_LOO_MAX_PS = max(abs(e) for e in CAL_LOO_ERR)
+CAL_RANGE_UM = (min(L for _, L, _, _, _ in CAL_POINTS), max(L for _, L, _, _, _ in CAL_POINTS))
+
+# Plan-built core trees: measured = raw tree-model prediction + offset, per MODEL (offsets are model-specific; one
+# model's offset must never be applied to another).  meas - model, GRT RC, btab (QC SU) calibration builds:
+PLAN_TREE_OFFSETS = {
+    "core_infra_htree_nldm": dict(TT=-12.8, FF=-24.5, points="btab R5 TT 279.8 vs 292.3 (-12.5); R6 TT 260.8/FF 200.5 vs "
+                                  "273.9/225.0 (-13.1/-24.5); FF from R6 only"),
+    "su_tree_model_nldm": dict(TT=1.9, FF=-5.1, points="btab R5 279.8/221.6 vs su_tree_model 277.88/226.72 "
+                               "(val100_btab_r5.tcl.json); one point"),
+}
+
+
+def core_insertion(far_um):
+    tt = CAL_A + CAL_B * far_um
+    return round(tt, 1), round(tt * FF_RATIO, 1)
+
+
+def plan_tree_insertion(raw_tt, raw_ff, model):
+    """measured-basis (GRT) mean insertion of a plan-built core tree from that tree model's raw prediction."""
+    o = PLAN_TREE_OFFSETS[model]
+    return round(raw_tt + o["TT"], 1), round(raw_ff + o["FF"], 1)
 
 
 # 12.9d die related-pair skew per clock region, CPPR at the last common tree node (= the region root for same-mesh
@@ -1119,11 +1615,6 @@ def pair_skew_pred(M, corner, core_term=0.0):
                 below_root_um=round(total - above, 1), regions=len(meta.get("regions") or [1]))
 
 
-def core_insertion(far_um):
-    tt = RCX_FACTOR * K_PS_PER_UM * far_um
-    return round(tt, 1), round(tt * FF_RATIO, 1)
-
-
 # ------------------------------------------------------------------------------------------------------ IR
 def static_ir(files):
     if not files:
@@ -1149,7 +1640,8 @@ def static_ir(files):
 def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entries=None, sites_json=None,
         reach=None, detour=405.0, core_obs_top="M5", lower_pg_frac=0.25, fill_max=0.6, bay_fill=0.5,
         track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, skew_gate_ps=80.0, render=True, log=print,
-        core_islands=None):
+        core_islands=None, tree_lattice=None, tree_comm_form="die", onramp_bays=False, drop_mesh_early=False,
+        tree_roads=False):
     reach = float(reach or P.reach)
     out = Path(out)
     (out / "slices").mkdir(parents=True, exist_ok=True)
@@ -1202,10 +1694,21 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
 
     # ---- roads + rest stops
     segs_all = []                         # (bits, path, leg index, a, b, band, layers, part)
+    seg_group = {}                        # segs_all index -> multi-sink tree group (PATH-HBM-R8 --tree-roads)
     bays_die = []                         # dict(part, xy, kind, bits, horiz, band, path, rect)
     gap_fail, in_core = [], []
     gap_max = (0.0, None)
     route_cache = {}
+    seen_stop = set()                     # PATH-HBM-R8 --tree-roads: one rest stop per (tree, site)
+
+    def _dup_stop(pth, xy):
+        if not tree_roads or not pth.get("group"):
+            return False
+        key = (pth["group"], round(xy[0], 1), round(xy[1], 1))
+        if key in seen_stop:
+            return True
+        seen_stop.add(key)
+        return False
     for pth in paths:
         for li, lg in enumerate(pth["legs"]):
             part = lg["part"]
@@ -1219,7 +1722,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                 # station register at a (k > 0) -> station bay
                 if 0 < k:
                     grp, face = station_sites(P, part, a, lg["bit_sites"])
-                    if not face:          # a face register is the partition's registered pin (rest stop, no bay)
+                    if not face and not _dup_stop(pth, a):   # face register = registered pin (no bay)
                         bays_die.append(dict(part=part, xy=a, kind="station", bits=pth["bits"], band=band,
                                              horiz=abs(b[1] - a[1]) < abs(b[0] - a[0]), path=pth["id"],
                                              sites=grp))
@@ -1251,6 +1754,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                             horiz = abs(p1[1] - p0[1]) < 1e-9
                             break
                         acc += L
+                    if _dup_stop(pth, xy):
+                        continue
                     bays_die.append(dict(part=part, xy=xy, kind="repeater", bits=pth["bits"], band=band,
                                          horiz=horiz, path=pth["id"], sites=None))
                 gap_max = max(gap_max, (T - prev, pth["id"]))
@@ -1271,13 +1776,18 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                 for p0, p1 in zip(route, route[1:]):
                     if IS.seg_len(p0, p1) > 1e-6:
                         segs_all.append((pth["bits"], pth["id"], li, p0, p1, band, lg["layers"], part))
+                        seg_group[len(segs_all) - 1] = pth.get("group")
     log(f"roads: {len(segs_all)} segments, {len(bays_die)} rest stops, {len(gap_fail)} reach gaps")
 
     # ---- layer assignment (greedy by bits)
     roads = []
     m89_segs = []
     blocked = []
-    for bits, pid, li, a, b, band, decl, part in sorted(segs_all, key=lambda s: -s[0]):
+    tree_cells = {}                       # (group, layer) -> set of flat gcell ids already carrying that tree
+    order = sorted(range(len(segs_all)), key=lambda k: -segs_all[k][0])
+    for kseg in order:
+        bits, pid, li, a, b, band, decl, part = segs_all[kseg]
+        grp = seg_group.get(kseg) if tree_roads else None
         sl, horiz = grid.band(a, b, band)
         d = "H" if horiz else "V"
         top = lnum(P.type_top_layer(P.parts[part]["type"]))
@@ -1290,6 +1800,12 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             add = grid.load(L, sl, horiz, bits)
             if add is None:
                 continue
+            if grp is not None and (grp, L) in tree_cells:     # a tree branch shares the gcells it already uses
+                i0, j0, i1, j1 = sl
+                jj, ii = grid.np.mgrid[j0:j1, i0:i1]
+                fl_ = (jj * grid.nx + ii).ravel()
+                have = grid.np.isin(fl_, grid.np.fromiter(tree_cells[(grp, L)], dtype=grid.np.int64))
+                add = grid.np.where(have.reshape(add.shape), 0.0, add).astype(grid.np.float32)
             u = grid.worst(L, sl, add)
             if best is None or (u <= track_max and best[1] > track_max) or (u < best[1] and best[1] > track_max):
                 best = (L, u, add)
@@ -1300,12 +1816,20 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             continue
         L, u, add = best
         grid.commit(L, sl, add)
+        if grp is not None:
+            i0, j0, i1, j1 = sl
+            jj, ii = grid.np.nonzero(add > 0)
+            tree_cells.setdefault((grp, L), set()).update(((jj + j0) * grid.nx + (ii + i0)).tolist())
         roads.append(dict(path=pid, part=part, layer=L, bits=bits, a=[r3(v) for v in a], b=[r3(v) for v in b],
                           band_um=r3(band), leg=li))
         if lnum(L) >= 8:
             m89_segs.append(roads[-1])
     use, worst_cells = grid.use_report(track_max)
     log(f"layers: {len(roads)} roads, {len(m89_segs)} on leftover M8/M9, {len(blocked)} blocked")
+    n_onramp = None
+    if onramp_bays:                   # MASTER-PLAN-R4 opt-in (--onramp-bays; QC plan event): ROOT-MERGE-20 byte-identity
+        n_onramp = add_onramp_bays(m89_segs, bays_die, reach)
+        log(f"on-ramp bays: {n_onramp} added (M8/M9 segments with no rest stop of their path in reach)")
 
     # ---- bays: rects, legality, fill
     bays = []
@@ -1349,6 +1873,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                    fill=r3(fill), path=bd["path"], horiz=bd["horiz"], band=bd["band"], issues=bad,
                    regions_um=[[r3(v) for v in q] for q in regions], legal_area_um2=r3(area),
                    explicit_sites=bool(bd["sites"]))
+        if bd.get("role"):
+            row["role"] = bd["role"]
         bays.append(row)
         if bad:
             bay_fail.append(row)
@@ -1487,7 +2013,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         far = max(abs(cx - x) + abs(cy - y) for cx in (0, w) for cy in (0, h))
         tt, ff = core_insertion(far)
         row = dict(module=mod, entry_um=entry[mod]["xy"], farthest_um=r3(far), pred_TT_ps=tt, pred_FF_ps=ff,
-                   target_TT_ps=common, tol_ps=core_tol_ps)
+                   target_TT_ps=common, tol_ps=core_tol_ps,
+                   in_cal_range=CAL_RANGE_UM[0] - 1e-6 <= far <= CAL_RANGE_UM[1] + 1e-6)
         ins_rows.append(row)
         if abs(tt - common) > core_tol_ps + 1e-6 and tt > common:
             ins_fail.append(row)
@@ -1508,7 +2035,16 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         shield = clock_shield(P, pg_grid, crects, ndr_space=ndr[1], roads=road_rects)
         shield["mesh"] = str(mesh_dir)
         bal = tree_balance(M)
-        mesh_early = [t for t in M.get("taps", []) if abs(float(t.get("early_ps") or 0.0)) > 1e-9]
+        # 12.8 (GEOM-REVIEW-3 10-26): early taps are banned as design; the plan does NOT carry the input mesh's early
+        # offsets -- every tap is planned at the common latency, the dropped ones are listed for the clock owner's
+        # rebuild (the mesh build itself is INFRA-FIRST's; MASTER-PLAN never edits the QC clock).
+        # opt-in (--drop-mesh-early; QC plan event); without it the main form (input early taps FAIL the gate) is kept
+        mesh_early = [dict(name=t.get("name"), early_ps=t.get("early_ps"), xy=t.get("xy") or t.get("foot"))
+                      for t in M.get("taps", []) if abs(float(t.get("early_ps") or 0.0)) > 1e-9]
+        if drop_mesh_early:
+            for t in M.get("taps", []):
+                if "early_ps" in t:
+                    t["early_ps"] = 0.0
     else:
         shield = dict(verdict="NOT RUN", note="no --mesh")
         bal = dict(verdict="NOT RUN", note="no --mesh")
@@ -1516,6 +2052,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     # ---- declared islands (die frame): core-centre entries + in-core leaves + partition islands + PHY strips
     phy = phy_entries(P)
     isl_decl, centres, glue_parts, macros_die = [], [], [], []
+    centre_rows = []
     for part in P.parts:
         tn = P.parts[part]["type"]
         t = P.types[tn]
@@ -1528,6 +2065,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             r = IS.rect_pts(P, part, core_to_type(h, e["island"]))
             isl_decl.append(r)
             centres.append(((r[0] + r[2]) / 2, (r[1] + r[3]) / 2))
+            centre_rows.append((part, h["inst"], h["module"], centres[-1]))
             for q in (e.get("in_core_islands") or {}).get("islands", []):
                 isl_decl.append(IS.rect_pts(P, part, core_to_type(h, q["rect_um"])))
             macros_die.append(IS.rect_pts(P, part, core_to_type(h, (0, 0) + tuple(h["outline_um"]))))
@@ -1610,8 +2148,48 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                                       [q["xy"] for q in t_sites], [])
         tree_plan["island_lattice_of_plan_tree"] = dict(verdict=isl_lat_plan["verdict"],
                                                         displacement=isl_lat_plan["displacement"])
-    else:
+    lat_gate, lat_nodes = None, []
+    if t_leaves and tree_lattice:     # MASTER-PLAN-R4/R5 opt-in (--tree-lattice NXxNY | cNXxNY): die H-tree lattice
+        comm_mode = len(tree_lattice) == 3 and tree_lattice[0] == "c"
+        lat_nx, lat_ny = tree_lattice[-2:]
+        axes, comm = None, None
+        if comm_mode:                 # MASTER-PLAN-R5 opt-in: nodes on channel crosses, pitch = core-array multiple
+            X1d = max(p_[2] for p_ in parts_die)
+            Y1d = max(p_[3] for p_ in parts_die)
+            comm = {}
+            for ax, n_, hi_ in ((0, lat_nx, X1d), (1, lat_ny, Y1d)):
+                rep_ = array_repeat(cores_die, ax)
+                comm["xy"[ax]] = commensurate_axis(cores_die, 0.0, hi_, ax, n_, rep_) or dict(
+                    axis="xy"[ax], n=n_, repeat_um=rep_, verdict="FAIL", note="no channel-cross solution")
+            if all(v.get("leaves_um") for v in comm.values()):
+                axes = (comm["x"]["leaves_um"], comm["y"]["leaves_um"])
+        lat_gate, lat_nodes = lattice_tree(t_sites, [t_sites[i]["xy"] for i in t_leaves],
+                                           [(pn, P.rect(pn)) for pn in P.parts], [c[:4] for c in cores_die],
+                                           lat_nx, lat_ny, axes=axes,
+                                           **(dict(snap_um=0.5) if comm_mode else {}))
+        if comm_mode:
+            lat_gate["commensurate"] = comm
+            if axes is None:
+                lat_gate["verdict"] = "FAIL"
+        dtp = json.loads((out / "die_tree_plan.json").read_text())
+        dtp["lattice"] = dict(gate=lat_gate, nodes=lat_nodes)
+        dtp["consume"] = ("CLOCK-128: build the die H-tree from lattice.nodes (xy_um, binding); island_tree 'nodes' "
+                          "kept as the R3 diagnostic")
+        (out / "die_tree_plan.json").write_text(json.dumps(dtp, indent=None) + "\n")
+    if not t_leaves:
         tree_plan = dict(verdict="NOT RUN", note="no declared islands")
+        if tree_lattice:
+            lat_gate = dict(verdict="NOT RUN", note="no declared islands")
+    if tree_comm_form == "regional":     # MASTER-PLAN-R6 opt-in (COORD 13:05): per clock region, plan tree = lattice nodes
+        die_form = tree_comm
+        src = lat_nodes if lat_nodes else (tree_nodes if t_leaves else [])
+        tpts = [(n_["tag"], tuple(n_["xy_um"])) for n_ in src if n_.get("xy_um")]
+        tree_comm = regional_tree_commensurate(P, centre_rows, tpts)
+        tree_comm["tree_source"] = ("die_tree_plan.json lattice.nodes (the plan tree CLOCK-128 builds)" if lat_nodes
+                                    else "die_tree_plan.json nodes (island_tree; no --tree-lattice)")
+        tree_comm["die_wide_form"] = dict(verdict=die_form["verdict"], no_leaf_axes=die_form.get("no_leaf_axes"),
+                                          note="R5 die-wide form, INFO only under the regional ruling")
+        tree_comm["core_lattice"] = die_form.get("core_lattice")
     rulings = dict(clock_rep_sites=rep_gate, tap_region_containment=MR.tap_region_containment(Mx, P),
                    footless_stubs=MR.footless_stubs(Mx), island_ft_inputs=MR.island_ft_inputs(Mx, isl_inst))
     tap_in_phy = sorted(tn for tn, v in phy.items() if v.get("plan_tap_inside_phy"))
@@ -1640,6 +2218,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                        worst_path=gap_max[1], fails=len(gap_fail), in_core_bays_proposed=len(in_core),
                        examples=gap_fail[:30]),
         bay_fill=dict(verdict="PASS" if not bay_fail and not part_fill_fail else "FAIL", bays=len(bays),
+                      **(dict(onramp_bays=n_onramp) if onramp_bays else {}),
                       max_fill=r3(max([b["fill"] for b in bays] or [0])), bay_fails=len(bay_fail),
                       bay_fail_kinds=dict(_count(i.split(":")[0] for b in bay_fail for i in b["issues"])),
                       partition_fill_fails=len(part_fill_fail), examples=bay_fail[:20] + part_fill_fail[:10]),
@@ -1658,14 +2237,21 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                          fails=len(entry_fail), examples=entry_fail[:40]),
         core_reach=dict(verdict="PASS" if not restructure else "FAIL", limit_um=core_reach_um,
                         restructure=restructure),
-        early_taps=dict(verdict="PASS" if not early and not mesh_early else "FAIL", plan_taps_offset=dict(early),
-                        mesh_taps_early=len(mesh_early), examples=early_rows),
+        early_taps=dict(verdict="PASS" if not early else "FAIL", plan_taps_offset=dict(early),
+                        mesh_taps_early=0, mesh_input_early_dropped=len(mesh_early),
+                        dropped=mesh_early[:200], examples=early_rows,
+                        note="input-mesh early offsets dropped from the plan (12.8); the clock owner rebuilds the mesh "
+                             "from die_tree_plan.json without them" if mesh_early else None) if drop_mesh_early else
+        dict(verdict="PASS" if not early and not mesh_early else "FAIL", plan_taps_offset=dict(early),
+             mesh_taps_early=len(mesh_early), examples=early_rows),
         tree_balance=bal,
         core_insertion_model=dict(
             verdict="PASS" if not ins_fail else "FAIL", fails=len(ins_fail), cores=len(ins_rows),
-            model=dict(form="TT = RCX x K x L_max(entry -> farthest corner); FF = FF_RATIO x TT", K_ps_per_um=round(
-                K_PS_PER_UM, 4), RCX=round(RCX_FACTOR, 4), FF_RATIO=round(FF_RATIO, 4), calibration=CAL_POINTS,
-                calibration_err_ps=CAL_ERR, calibration_rms_ps=CAL_RMS_PS,
+            model=dict(form="TT_GRT = A + B x L_max(entry -> farthest corner); FF = FF_RATIO x TT (centre entry, CTS-grown tree)",
+                A_ps=round(CAL_A, 2), B_ps_per_um=round(CAL_B, 4), FF_RATIO=round(FF_RATIO, 4), basis="GRT",
+                RCX_FACTOR_info=round(RCX_FACTOR, 4), calibration=CAL_POINTS, calibration_err_ps=CAL_ERR,
+                calibration_rms_ps=CAL_RMS_PS, loo_err_ps=CAL_LOO_ERR, loo_max_ps=CAL_LOO_MAX_PS,
+                calibrated_L_um=list(CAL_RANGE_UM), plan_tree_offsets=PLAN_TREE_OFFSETS,
                 note="shallow cores (pred < target) pad up with a designed fixed trunk (12.8c): not a FAIL"),
             examples=ins_fail[:40], all=ins_rows),
         die_pair_skew_model=skew_model,
@@ -1673,6 +2259,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         clock_sites=sites,
         island_lattice=isl_lat,
         tree_on_islands=tree_plan,
+        **(dict(tree_lattice=lat_gate) if lat_gate is not None else {}),
         infra_sites=sites_gate,
         **rulings,
     )
@@ -1697,7 +2284,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     write_slices.extra = dict(phy=phy, die_tree=tree_comm, clock_reps=rep_by_type, reach=reach)
     write_slices(P, out / "slices", bays, pins, roads, islands, entry, core_types, in_core, gates, common,
                  plan_sha, mp_sha)
-    (out / "master_plan.json").write_text(json.dumps(dict(mp, paths=[{k: v for k, v in p.items() if k != "legs"}
+    (out / "master_plan.json").write_text(json.dumps(dict(mp, paths=[{k: v for k, v in p.items() if k not in ("legs", "group")}
                                                                     for p in paths]), indent=1, default=str))
     (out / "gates.json").write_text(json.dumps(dict(die=P.name, verdict=verdict, plan_sha256=plan_sha,
                                                     master_plan_sha256=mp_sha, gates=gates), indent=1, default=str))
@@ -1811,6 +2398,10 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
         if hcs and ex.get("die_tree"):
             sl["die_tree"] = dict(rule=ex["die_tree"]["rule"], core_lattice=ex["die_tree"]["core_lattice"],
                                   verdict=ex["die_tree"]["verdict"])
+            if ex["die_tree"].get("form") == "regional":      # MASTER-PLAN-R6 opt-in: this type's region rows
+                sl["die_tree"]["regions"] = [dict(region=r["region"], verdict=r["verdict"], issues=r["issues"])
+                                             for r in ex["die_tree"]["rows"]
+                                             if r["region"] in P.parts and P.parts[r["region"]]["type"] == tn]
         (d / f"{tn}.json").write_text(json.dumps(sl, indent=1))
     for mod, c in core_types.items():
         e = entry[mod]
@@ -1957,6 +2548,29 @@ def add_args(p):
     p.add_argument("--core-reach-um", type=float, default=200.0)
     p.add_argument("--no-render", action="store_true")
     p.add_argument("--core-islands", help="core_islands.py JSON {core module: SRAM-aware sited in-core islands}")
+    p.add_argument("--tree-lattice", default=None, help="opt-in die H-tree lattice (die_tree_plan.json lattice + gate "
+                                                         "tree_lattice): NXxNY regular bbox lattice (R4) or cNXxNY = "
+                                                         "channel-cross lattice, pitch = core-array multiple (R5)")
+    p.add_argument("--onramp-bays", action="store_true", help="opt-in R4 12.7a on-ramp repeater bays on M8/M9 legs")
+    p.add_argument("--drop-mesh-early", action="store_true", help="opt-in R4 12.8: drop input-mesh early tap offsets "
+                                                                  "from the plan (listed for the clock owner)")
+    p.add_argument("--tree-roads", action="store_true", help="opt-in PATH-HBM-R8: route each multi-sink internal "
+                   "station group (one launch) as ONE tree: shared gcells counted once per layer, one rest stop per site")
+    p.add_argument("--tree-commensurate", default="die", choices=("die", "regional"),
+                   help="tree_commensurate gate form: die-wide core lattice (R5 default) or REGIONAL (MASTER-PLAN-R6, "
+                        "COORD 13:05: per clock region tree lattice == region island lattice)")
+
+
+def parse_tree_lattice(v):
+    """'8x8' -> (8, 8) regular bbox lattice (R4 default); 'c8x4' / 'commensurate:8x4' -> ('c', 8, 4) channel-cross
+    commensurate lattice (MASTER-PLAN-R5, opt-in)."""
+    v = v.lower()
+    if v.startswith("commensurate:"):
+        v = "c" + v.split(":", 1)[1]
+    if v.startswith("c"):
+        nx, ny = (int(t) for t in v[1:].split("x"))
+        return ("c", nx, ny)
+    return tuple(int(t) for t in v.split("x"))
 
 
 def cmd(a):
@@ -1966,7 +2580,10 @@ def cmd(a):
                     sites_json=a.sites, reach=a.reach, detour=a.detour_um, core_obs_top=a.core_obs_top,
                     lower_pg_frac=a.lower_pg_frac, bay_fill=a.bay_fill, core_reach_um=a.core_reach_um,
                     render=not a.no_render,
-                    core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None)
+                    core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None,
+                    tree_lattice=parse_tree_lattice(a.tree_lattice) if a.tree_lattice else None,
+                    tree_comm_form=a.tree_commensurate, onramp_bays=a.onramp_bays, drop_mesh_early=a.drop_mesh_early,
+                    tree_roads=a.tree_roads)
     print(json.dumps(dict(die=mp["die"], verdict=mp["verdict"], gates=mp["gates"], census=mp["census"]), indent=1))
     return 0 if mp["verdict"] == "PASS" else 1
 

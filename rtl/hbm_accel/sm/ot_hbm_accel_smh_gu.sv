@@ -139,7 +139,7 @@ module ot_hbm_accel_smh_bmul_gu (
         else if (t3_bad) begin s4_y <= 32'd0; s4_bad <= 1'b1; end
         else if (t3_norm) s4_y <= t3_n;
         else if (t3_sq == 23'd0 && !t3_rinc) s4_y <= 32'd0;           // rounds to zero: canonical +0
-        else s4_y <= {t3_ss, 31'({8'd0, t3_sq}) + 31'(t3_rinc)};
+        else s4_y <= {t3_ss, {8'd0, t3_sq} + {30'd0, t3_rinc}}; // YOSYS-CONCAT 10-26: zero-extend by concat, no cast inside the concat member (rtl_lint YC1)
     end
     // stage 5: output register
 `ifdef OT_SMH_DRST0

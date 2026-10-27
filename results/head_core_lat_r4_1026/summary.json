@@ -1,0 +1,30 @@
+{
+ "lane": "HEAD-CORE-LAT-R4", "date": "2026-10-26 16:50 PDT", "numbers": "UNCHECKED (plan model)",
+ "predictor": {
+  "model": "uf_phys_predict (MODEL-REFIT-2, frozen fit PMAX a.2/b.5/g5, PMIN a.2/b.4/g4, kleaf 1.2955) + phys_gate guard band 238..262 TT rise / 187.5..217.5 FF early / windows <=20",
+  "source": "claude/qc-su-prog-l1-1026@d03d4aa38 results/model_refit2_1026/py + results/qc_su_prog_l1_1026/phys_gate.py (copied byte-identical, sha256 below)",
+  "calibration_status": "NOT CALIBRATED for HEAD cores: fitted on 3 QC SU builds (~3.3k sinks, 64 leaves x ~51 sinks, 4-6 stage mscts_h trees, BUFx8..x24). HEAD elemA plans = 28,721 sinks, 512-1024 leaves, 4-5 stages, 340 nodes: leaf load inside the calibrated range (56-57 sinks, BUFx24), tree size/fanout-net count outside it. Stated error band (S81/QC as-built method): LOO max per-leaf 7.1 TT / 4.8 FF, plus extrapolation allowance -> use +-15 ps TT / +-10 ps FF on means; windows over-predicted by +3..+5 on SU.",
+  "sha256": {"uf_phys.py": "d8b7fc02d6f57b34f3aa376d434ebe8f85000b6df4aab44c6958e4cca60aacf8", "uf_phys_predict.py": "37311b8df3c3b849294a0b1217dc037b3b3fe71e6656e915f424b31ff10bdd94", "common.py": "9ecbd3cf512a19a8ef090869eef8f803e473b30a0857841a802980cda16c6a7e", "lib.py": "993fd4175bb75d7f72101ead4c3af9b8abd43a51d90af95651bd0e105682d630", "invbuf_tt.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e", "invbuf_ff.lib": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26"}
+ },
+ "inputs": {
+  "elemA_placement": "intel1:/srv/opentallas-scratch2/claude/codex-head0733/elemA_v4q_r2/run/results/asap7/hd_elemA_rb/base/3_place.odb sha256 8999fd3e672bd4fd0222b0676947ff487665251a40395065a7d63d81173492bc (Codex v4q r2 placement, outline 319.68, ROMs u_rom0 95.04,86.40-220.34,149.35 / u_rom1 95.04,172.80-220.34,235.75)",
+  "elemA_geo": "intel1:/srv/opentallas-scratch2/claude/head-core-lat-r4-1026/geo/elemA_v4q_r2_3place.geo sha256 cc1e72e172a986aaca884966c773e6a00a7312cd7ecb174634e7d09fce6fe010 (tools/dump_geo_head.tcl: 28,721 CLK sinks on net clk + 2 ROM clk pins)",
+  "elemB": "NO placed geometry exists (c2 run dirs deleted 06:34; epyc2 elemB_c2/elemB_c3q kits are the banned v1 cut-hole island kits; elemB_l4_native netlist has 293 ports vs 458 on the die-bound ot_s81hd_elemB_cv abstract) -> no as-built prediction possible"
+ },
+ "commands": {
+  "plan": "python3 tools/s81_head/head_tree_plan.py geo/elemA_v4q_r2_3place.geo p/<v> --fanouts F --seg S [--balance 1] [--sector 1 --sector_phase PH]  (plan argv + geo sha per variant in variants.json/pred/*.plan.json)",
+  "predict": "cd py && python3 uf_phys_predict.py ../p/<v>.tcl ../p/<v>.seg.json ../p/<v>.geo ../lib ../p/<v>.pred.json  (argv + sha16 of spec/seg/geo/model in each pred provenance)",
+  "work_dir": "intel1:/srv/opentallas-scratch2/claude/head-core-lat-r4-1026 (specs p/*.tcl kept there: a_4448_b0.tcl sha256 a5f81ebc76d1020dd0f0c7a432543102f84dad67dd0c62603ef61acfd8fa54cf, a_44442_b0.tcl 1d11fb3eed0a063d8eed599b17b32635c26775214427019441e311e88d6d4c2b)"
+ },
+ "result_elemA": {
+  "load_balance": "FIXED in the plan: count-balanced recursive bisection of the actual placed sinks -> every leaf 56-57 sinks (512 leaves), every node at a level drives the same sink count (v4q geometric quadrants: 8200/2953/8613/8955).",
+  "best_mean": "a_44442_b0 (4,4,4,4,2; 5 stages, 0 repeaters): TT rise 255.94 w52.33 / FF early 191.63 w37.57 -> means IN guard band, windows FAIL",
+  "best_alt": "a_4448_b0 (4,4,4,8; 4 stages): TT 238.93 w58.15 / FF early 178.82 w41.41 -> FAIL (FF mean low, windows)",
+  "verdict": "PREDICTED FAIL (window). NOT BUILT (12.9d).",
+  "root_cause": "fixed centre entry + ring-shaped sink mass around the two ROMs: root->leaf wire paths 106-308 um; the count-balanced L1 split puts one L1 node next to the entry (channel/W group) and three at ~160 um (render). Path length explains ~0.17 ps/um x 200 um = ~34 ps of the 52 ps window; the rest is per-net Steiner/load spread. Equal-path bound (regression at the max path): 251-268 TT / 188-200 FF early -> an equal-length tree from the centre entry is predicted at or just above the 262 guard edge.",
+  "rejected": "repeaters every 60-200 um (+5 stages, 329-345 TT); fanout-8 / binary top levels (Z-route detours round the ROMs, unequal stage counts, w99-128); angular count-balanced sectors at a common L1 radius (w115-251: sector subtrees cross the ROMs); bottom-up DME tapping points with the root fixed (no window gain, the top level stays unequal)"
+ },
+ "result_elemB": "NOT PREDICTED (no placement). Static scaling from the elemA plan (outline 285.12, max path ~35 um shorter): equal-path bound ~245-262 TT, UNCHECKED, not a gate number.",
+ "gates": {"core_kit_gates": "NOT RUN (no kit regenerated: no in-band plan)", "clock_foot_gate": "NOT RE-RUN: die-plan gate (lat1 FAIL 778 = elemB clk_c4 242 + hd_tile glue 360 + serdes 164 + turn_a 12, CORE-LAT-R3 11:46); only the elemB clk_c4 class depends on the core entry; no die-plan change made here"},
+ "build": "none (prediction out of band)"
+}

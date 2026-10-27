@@ -964028,7 +964028,16 @@
    ],
    "topology": "fishbone"
   },
-  "common_latency_ps": 250.0
+  "common_latency_ps": 250.0,
+  "tap_window": {
+   "window_ps": 80.0,
+   "note": "COORD 2026-10-26 13:27 RULING PATH-KV die STA: declared kit window keys replace the stand-in 40 ps boundary hold contract until a signed kit gives real margins"
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 80.0,
+   "note": "COORD 2026-10-26 13:27 RULING PATH-KV die STA: declared kit window keys replace the stand-in 40 ps boundary hold contract until a signed kit gives real margins"
+  }
  },
  "reset": {
   "source": {

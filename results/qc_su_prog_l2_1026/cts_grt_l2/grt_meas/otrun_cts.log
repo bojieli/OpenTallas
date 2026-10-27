@@ -1,0 +1,8 @@
+ot-run: epyc2          admits   840 GB (avail 936, reserve 0, fresh 31.1, peak 0.8, headroom 0, waiters 0/0 GB) load 6/128 running 3 disk 134 GB 
+ot-run: -> epyc2
+ot-heavy: request 10G is charged 9G (class 'cts_l#.sh' measured peak 1.0G, n=1+0 proved); the cap stays 10G
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-1699079-1793059580 after 0 s
+{"scope": "GRT clock structural diagnostic only; native records rounded to0.1ps; NOT SIGNED; no independent number-check", "source": "cts_grt.log", "corners": {"TT": {"n": 3291, "mean_ps": 259.65484655120025, "min_ps": 247.8, "max_ps": 272.2, "tap_mean_window_ps": 21.0, "target_ps": 250.0, "latency_target": "PASS", "window": "FAIL"}, "FF": {"n": 3291, "mean_ps": 196.74436341537526, "min_ps": 187.3, "max_ps": 208.5, "tap_mean_window_ps": 17.30000000000001, "target_ps": 202.5, "latency_target": "PASS", "window": "PASS"}}}
+CTS_L2_DONE rc 0
+ot-run: RAN on epyc2 (unit oth-ubuntu-1699079-1793059580): exit 0
+EXIT 0

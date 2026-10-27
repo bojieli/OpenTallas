@@ -112,10 +112,25 @@ def test_entry_island_lattice_and_restructure_islands():
 
 
 def test_core_insertion_model_calibrated_once():
-    assert MP.CAL_RMS_PS < 25.0 and len(MP.CAL_POINTS) == 3
-    tt, ff = MP.core_insertion(298.6)      # vmr from its centre entry
-    assert 240 < tt < 270 and ff < tt
+    # MODEL-REFIT 10-26: intercept + slope on the 6 measured centre-entry GRT trials (HBM + S81), FF = ratio x TT
+    assert len(MP.CAL_POINTS) == 6 and MP.CAL_RMS_PS < 6.0 and MP.CAL_LOO_MAX_PS < 12.0
+    assert 80.0 < MP.CAL_A < 95.0 and 0.78 < MP.CAL_B < 0.83 and 0.80 < MP.FF_RATIO < 0.82
+    tt, ff = MP.core_insertion(207.36)     # S81 gunit_l4 cl26rt measured 259.69 / 208.55 GRT
+    assert abs(tt - 259.69) < 8.0 and abs(ff - 208.55) < 8.0
+    tt, ff = MP.core_insertion(181.44)     # HBM pc_ctrl_leaf centre trial 231.2 / 185.3
+    assert abs(tt - 231.2) < 5.0 and abs(ff - 185.3) < 5.0
     assert MP.core_insertion(1000.0)[0] > 800
+    assert MP.CAL_RANGE_UM == (181.44, 259.2)
+
+
+def test_plan_tree_offsets_are_model_specific_and_signed():
+    # btab R6 build measured 260.8 / 200.5 GRT; core_infra_htree NLDM raw 273.9 / 225.0 -> offset is NEGATIVE
+    tt, ff = MP.plan_tree_insertion(273.9, 225.0, "core_infra_htree_nldm")
+    assert abs(tt - 260.8) < 0.5 and abs(ff - 200.5) < 0.5
+    # btab R5 measured 279.8 / 221.6; su_tree_model raw 277.88 / 226.72
+    tt, ff = MP.plan_tree_insertion(277.88, 226.72, "su_tree_model_nldm")
+    assert abs(tt - 279.8) < 0.5 and abs(ff - 221.6) < 0.5
+    assert MP.PLAN_TREE_OFFSETS["core_infra_htree_nldm"]["TT"] < 0 < MP.PLAN_TREE_OFFSETS["su_tree_model_nldm"]["TT"]
 
 
 def _with_core(raw, tap_xy=(432.0, 432.0), insertion=None, core=((332.64, 332.64), (198.72, 198.72))):

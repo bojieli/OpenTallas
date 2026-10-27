@@ -4,8 +4,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "tools" / "s81_head"))
+# ROOT-MERGE-22: tools/die_plan/fallback_land.py (FALLBACK-KV) shares the module name; s81_head must win.
 sys.path.insert(0, str(ROOT / "tools" / "die_plan"))
+sys.path.insert(0, str(ROOT / "tools" / "s81_head"))
 import fallback_land as F  # noqa: E402
 
 PLAN = ROOT / "physical" / "die_plan" / "s81_head" / "die_plan.json"

@@ -607,7 +607,13 @@ SCHEMA = {
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
             # input's min input delay is its driving partition's guaranteed output-min, the related tap pair skew is
             # checked at the parent (io_hold_parent.py); "legacy" / absent = the flat contract above
-            "io_hold": {"enum": ["legacy", "sender_min"]},
+            "io_hold": {"enum": ["legacy", "sender_min", "plan_demand"]},
+            # HOLD-REPAIR 10-26 (12.4a a1, opt-in io_hold plan_demand; gen_phys.hold_demand_ps): plan-declared FF seam
+            # hold demand per seam pair (tools/die_plan/hold_demand.py from the plan clock arrival model, source
+            # "plan" only); the receiving kit's min input delay = sender guarantee - demand, landed seams keep fallback
+            "hold_demand": {"type": "object", "required": ["source"], "properties": {
+                "source": {"enum": ["plan"]}, "pairs": {"type": "object", "additionalProperties": _nonneg},
+                "landed": {"type": "array", "items": {"type": "string"}}, "default_ps": _nonneg}},
             # CP1 proof harness (COORD 2026-10-25 23:26 ruling (3), CLOCK-RESET): a cut-out proof die keeps, for each
             # die-edge input that the FULL plan drives from a registered partition, an explicit registered upstream
             # driver view {port id: part, type, bus, out_hold_guarantee_ps, basis}; under io_hold sender_min that
@@ -696,6 +702,8 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 
 
 def _check(v, s, path, errs):

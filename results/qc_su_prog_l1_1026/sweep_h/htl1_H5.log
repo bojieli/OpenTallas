@@ -1,0 +1,5 @@
+PASS 0 J 36.195 changed 32
+PASS 1 J 30.45 changed 15
+PASS 2 J 29.925 changed 9
+HT_L1 htl1_H5 trunk {'TE': 112.31, 'TW': 112.31} legs {'Q0': 57.26, 'Q1': 55.1, 'Q2': 57.24, 'Q3': 55.08, 'Q4': 57.24} reps {'L1a': 2, 'L1b': 1} struct PASS bad 0 0 0 0
+  PHYS TT rise 272.73 w24.56 | FF early 202.75 w18.56 | TT late 286.57 w28.30 | FAIL | textbook dTT -2.83 dwTT +7.74 dFF +9.25 VERDICT FAIL
