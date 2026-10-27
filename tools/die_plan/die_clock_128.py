@@ -269,7 +269,7 @@ def load_plan_sites(path, plan_sha256=None):
 
 
 # ------------------------------------------------------------------------------------------------ fixed wires
-def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_stack=False):
+def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_stack=False, port_on_trunk=False):
     """every tree net (root, H-tree legs/nodes/leaves, split tails, stubs) as a fixed comb pre-route: one trunk on the
     net's dominant axis (M8 horizontal / M9 vertical), offset `off` from the driver pin line, plus one perpendicular
     drop per load, offset `off` from the load pin line.  Returns [dict(name, drv, pins, segs, rc_nodes)].
@@ -287,7 +287,7 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
     if empty:   # CLOCK-128-R2: the build prunes dead branches by construction; a loadless net here is a plan error
         raise PlanError([dict(kind="empty_tree_net", name=x, detail="tree net without loads") for x in empty])
     if pin_stack:   # CLOCK-128-R7 opt-in: straight pin stacks (the default path below is unchanged)
-        return _fixed_wires_stack(M, cells, nets, row_y, off, router)
+        return _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=port_on_trunk)
     out, errs = [], []
 
     def track(layer, ideal, a0, a1, name, what):
@@ -408,10 +408,11 @@ def pin_xy(cells, c, pin, row_y, buf="BUFx24_ASAP7_75t_R"):
     return round(v["x"] + PIN_BAR_X[lib][pin], 4), round(v["y"] + row_y / 2, 4)
 
 
-def _fixed_wires_stack(M, cells, nets, row_y, off, router):
+def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False):
     txy = {t["port"]: tuple(t["xy"]) for t in M["taps"]}
     root = tuple(M["meta"]["root_um"])
     errs, out, last_ext = [], [], [None]
+    port_moves = {}
     mm = router.max_move if router is not None else 0.0
 
     def port_xy(p):
@@ -455,6 +456,14 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router):
             if dcell:
                 stacks.append(stack(n["drv"], "Y", D, (D[0], ty)))
             for ld, p in Ls:
+                if ld.startswith("port:") and port_on_trunk:
+                    # CLOCK-128-R8 opt-in: the leaf port sits ON the M8 trunk end (no M9 drop, no M8 jog back over
+                    # the core OBS); the tap moves to (bx, ty) and is recorded in port_moves
+                    bx = round(p[0] + off, 4)
+                    port_moves[ld[5:]] = (bx, ty)
+                    branches.append((ld, bx, ty))
+                    xs_.append(bx)
+                    continue
                 if ld.startswith("port:"):           # port loads: as the default comb (drop one track pair off)
                     if abs(p[1] - ty) > 1e-6:
                         bx, bm = track("M9", p[0] + off, ty, p[1], nm, f"drop {ld}")
@@ -514,6 +523,12 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router):
                         wire_um=round(sum(abs(s[3] - s[1]) + abs(s[4] - s[2]) for s in segs), 3)))
     if errs:
         raise PlanError(errs)
+    if port_on_trunk:
+        for t in M["taps"]:
+            if t["port"] in port_moves:
+                t["xy_r7"] = list(t["xy"])
+                t["xy"] = [round(v, 4) for v in port_moves[t["port"]]]
+                t["port_on_trunk"] = True
     return out
 
 
@@ -616,8 +631,12 @@ class TrackRouter:
     only option on a PG grid too dense for drawn stripes, e.g. KV M9 0.48 um every 0.864 um).  Chosen segments are
     reserved for the following ones."""
 
-    def __init__(self, nd, shield, tracks, max_move=8.64, space=None):
+    def __init__(self, nd, shield, tracks, max_move=8.64, space=None, wide_merge_um=None):
         self.nd, self.shield, self.tracks, self.max_move = nd, shield, tracks, max_move
+        # CLOCK-128-R8 opt-in: a drawn VSS shield may touch a same-net PG stripe only while the merged VSS shape stays
+        # narrower than the layer's wide-metal spacing row (ASAP7 M8/M9 SPACINGTABLE WIDTH 0.49975 -> 0.5 um at
+        # PRL >= 1.8 um); None = R7 behaviour (any overlap allowed)
+        self.wide_merge_um = wide_merge_um
         self.ix = MetalIndex(nd["space"] if space is None else space)
         self.pg = MetalIndex(self.ix.space)
         self.moves, self.modes = [], defaultdict(int)
@@ -673,6 +692,10 @@ class TrackRouter:
                 sh = seg_shapes(layer, c, a0, a1, net, self.nd, self.shield, ext=e)
                 if self.ix.hits(sh[0], first=True):
                     continue
+                if self.wide_merge_um is not None and any(
+                        merged_width(self.pg, s, self.shield) >= self.wide_merge_um - 1e-9 for s in sh[1:]):
+                    self.modes[f"{layer}:wide_merge_skip"] += 1
+                    continue
                 if not any(self.ix.hits(s, first=True) for s in sh[1:]):
                     if e is None:
                         untied = untied or (c, sh)
@@ -693,6 +716,27 @@ class TrackRouter:
         self.moves.append(abs(c - ideal))
         self.modes[f"{layer}:{mode}"] += 1
         return c, mode, e
+
+
+WIDE_MERGE_UM = 0.49975    # ASAP7 asap7_tech_1x_201209.lef M8/M9 SPACINGTABLE wide row (0.5 um spacing at PRL >= 1.8)
+
+
+def merged_width(pg_ix, s, net):
+    """across-axis width of drawn shield s merged with the same-net PG stripes it touches or overlaps along its span
+    (the shape DRT applies the width-dependent spacing table to)"""
+    lay, _, _, plo, phi, alo, ahi = s
+    eps = 1e-6
+    lo, hi, grew = plo, phi, True
+    while grew:
+        grew = False
+        for i in range(int(math.floor((lo - 1) / pg_ix.B)), int(math.floor((hi + 1) / pg_ix.B)) + 1):
+            for k in pg_ix.bins[lay].get(i, ()):
+                t = pg_ix.shapes[k]
+                if t[1] != net or t[6] <= alo or t[5] >= ahi:
+                    continue
+                if t[3] <= hi + eps and t[4] >= lo - eps and (t[3] < lo - eps or t[4] > hi + eps):
+                    lo, hi, grew = min(lo, t[3]), max(hi, t[4]), True
+    return hi - lo
 
 
 def flanked(pg_ix, s, gap):

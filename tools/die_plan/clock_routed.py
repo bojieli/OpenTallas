@@ -107,12 +107,20 @@ def stair(top, ax, ay, px, py):
     return [(L, round(a, 4), round(b, 4)) for L, a, b in out]
 
 
-def _emit_steps(L, pts, final_junction=False):
+LAYER_ORDER = ("M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9")
+_JD = [0]
+
+
+def _emit_steps(L, pts, final_junction=False, split_down=False):
     """encoder calls for a vertex list (as from stair): via on a layer change, a point on a move.
     The clock NDR (0.16 um) applies on M8/M9 only: an encoder path keeps the rule it was opened with, so the path is
     split at every VIA78 -- above it a path under the NDR layer rule, below it a default-width path (a lower-layer
     path under the NDR gets zero width: DRT check_drc Min Area on every via pad, CLOCK-128-R5 first run).
-    final_junction: the last op becomes `set jt [...]` (the trunk-tap junction) and is never followed by a split."""
+    final_junction: the last op becomes `set jt [...]` (the trunk-tap junction) and is never followed by a split.
+    split_down (CLOCK-128-R8, --stack-r8): every DOWNWARD via is a junction split (`set jdN [via]`, `newPath $jdN`).
+    odb's own decoder places a shape after a downward via on the lower layer, but DRT's dbWire reader (check_drc)
+    puts the next RECT / segment on the via's TOP layer; a path opened at the via junction is read on the right layer
+    by both (CLOCK-128-R8 e8/e12: 23 -> 1 markers on one stack, port jog M9 shorts gone), geometry unchanged."""
     pts = [(l_, round(a, 4), round(b, 4)) for l_, a, b in pts]
     steps = list(zip(pts, pts[1:]))
     for k, ((l0, x0, y0), (l1, x1, y1)) in enumerate(steps):
@@ -123,6 +131,11 @@ def _emit_steps(L, pts, final_junction=False):
             if {l0, l1} == {"M7", "M8"} and not (last and final_junction):
                 L.append(f"set jv [{op}]")
                 L.append("$e newPath $jv FIXED" + (" [RL M8]" if l1 == "M8" else ""))
+                continue
+            if split_down and LAYER_ORDER.index(l1) < LAYER_ORDER.index(l0) and not (last and final_junction):
+                _JD[0] += 1
+                L.append(f"set jd{_JD[0]} [{op}]")
+                L.append(f"$e newPath $jd{_JD[0]} FIXED" + (f" [RL {l1}]" if l1 in ("M8", "M9") else ""))
                 continue
             L.append(op)
         elif (x0, y0) != (x1, y1):
@@ -215,12 +228,12 @@ def stack_pad_layers(s):
     return {(round(s["xy"][0], 4), round(s["xy"][1], 4)): {"M2", "M3", "M4", "M5", "M6"}}
 
 
-def _emit_stack(L, pts, pads, final_junction=False):
+def _emit_stack(L, pts, pads, final_junction=False, split_down=False):
     """_emit_steps + one centred min-area pad (dbWireEncoder addRect) after every via that lands on a pad layer at a
     stack point.  pads: {(x, y): set(layers)}."""
     P = _stack_pad()
     tmp = []
-    _emit_steps(tmp, pts, final_junction=final_junction)
+    _emit_steps(tmp, pts, final_junction=final_junction, split_down=split_down)
     # re-walk the vertices to know where each via op lands
     vs = [(l_, round(a, 4), round(b, 4)) for l_, a, b in pts]
     lands = [(l1, (x1, y1)) for (l0, x0, y0), (l1, x1, y1) in zip(vs, vs[1:]) if l0 != l1]
@@ -237,7 +250,9 @@ def _emit_stack(L, pts, pads, final_junction=False):
     # move pads that were emitted between 'set jv [VIA78]' and its 'newPath $jv' after the newPath
     i = 0
     while i < len(L) - 2:
-        if L[i].startswith("set jv [") and L[i + 1].startswith("$e addRect") and L[i + 2].startswith("$e newPath $jv"):
+        if ((L[i].startswith("set jv [") and L[i + 2].startswith("$e newPath $jv"))
+                or (L[i].startswith("set jd") and L[i + 2].startswith("$e newPath $jd"))) \
+                and L[i + 1].startswith("$e addRect"):
             L[i + 1], L[i + 2] = L[i + 2], L[i + 1]
             i += 3
         else:
@@ -248,6 +263,7 @@ def _stack_net_tcl(L, w, ports, rec):
     """one pin-stack wire (die_clock_128._fixed_wires_stack) -> encoder Tcl appended to L"""
     nm = w["name"]
     horiz = w["horiz"]
+    r8 = w.get("enc") == "r8"
     tl, bl = ("M8", "M9") if horiz else ("M9", "M8")
     t0 = tuple(w["trunk_tap"])
     st = {(s["cell"], s["pin"]): s for s in w["stacks"]}
@@ -267,7 +283,7 @@ def _stack_net_tcl(L, w, ports, rec):
         L.append(f"$e addPoint {q(pts[0][1])} {q(pts[0][2])}")
         L.append(f"$e addBTerm [BT {pn}]")
         rec["port_joins"] += 1
-        _emit_steps(L, pts, final_junction=True)
+        _emit_steps(L, pts, final_junction=True, split_down=r8)
         for (l0, x0, y0), (l1, x1, y1) in zip(pts, pts[1:]):
             if l0 == l1 and l0 in ("M8", "M9") and (x0, y0) != (x1, y1):
                 rec["extra_top"].append((nm, l0, x0, y0, x1, y1))
@@ -280,7 +296,7 @@ def _stack_net_tcl(L, w, ports, rec):
         L.append(f"$e addPoint {q(pts[0][1])} {q(pts[0][2])}")
         L.append(f"$e addITerm [IT {w['drv']} Y]")
         rec["pin_stairs"] += 1
-        _emit_stack(L, pts, pads, final_junction=True)
+        _emit_stack(L, pts, pads, final_junction=True, split_down=r8)
     # 2. trunk
     ax = 0 if horiz else 1
     tapv = round(t0[ax], 4)
@@ -292,6 +308,7 @@ def _stack_net_tcl(L, w, ports, rec):
         lo = hi = tapv
     roots = sorted({round(bx if horiz else by, 4) for _, bx, by in w["branches"]})
     jn = {tapv: "$jt"}
+    jline = {}      # trunk value -> index in L of its `set j.. [$e addPoint ..]` (R8 port-on-trunk BTerm anchor)
 
     def tp(v):
         return (v, t0[1]) if horiz else (t0[0], v)
@@ -306,12 +323,20 @@ def _stack_net_tcl(L, w, ports, rec):
             x_, y_ = tp(v)
             L.append(f"set j{side}{k} [$e addPoint {q(x_)} {q(y_)}]")
             jn[v] = f"$j{side}{k}"
+            jline[v] = len(L) - 1
     # 3. loads
+    anchors = []
     for ld, bx, by in w["branches"]:
         v = round(bx if horiz else by, 4)
         root = tp(v)
         if v not in jn:
             raise ValueError(f"clock_routed: {nm}: drop root {root} not on the trunk")
+        if r8 and ld.startswith("port:") and v in jline and \
+                max(abs(a - b) for a, b in zip(ports[ld[5:]]["xy"], root)) < 1e-6 and \
+                abs(root[0] - bx) + abs(root[1] - by) < 1e-6:
+            anchors.append((jline[v], ld[5:]))      # R8: the port sits on the trunk point itself
+            rec["port_joins"] += 1
+            continue
         L.append(f"$e newPath {jn[v]} FIXED [RL {tl}]")
         pts = [(tl, root[0], root[1])]
         if ld.startswith("port:"):
@@ -323,7 +348,7 @@ def _stack_net_tcl(L, w, ports, rec):
                 lay = bl
             pj = _port_join(L, lay, (bx, by), pt["layer"], tuple(pt["xy"]), entering=False)
             pts += pj[1:]
-            _emit_steps(L, pts)
+            _emit_steps(L, pts, split_down=r8)
             L.append(f"$e addBTerm [BT {pn}]")
             for (l0, x0, y0), (l1, x1, y1) in zip(pj, pj[1:]):
                 if l0 == l1 and l0 in ("M8", "M9") and (x0, y0) != (x1, y1):
@@ -334,9 +359,11 @@ def _stack_net_tcl(L, w, ports, rec):
         if not horiz:                              # M9 trunk -> M8 drop to the bar
             pts += [("M8", root[0], root[1])]
         pts += stack_down(s)[1:] if (pts[-1][0], pts[-1][1], pts[-1][2]) == stack_down(s)[0] else stack_down(s)
-        _emit_stack(L, pts, pads)
+        _emit_stack(L, pts, pads, split_down=r8)
         L.append(f"$e addITerm [IT {ld} A]")
         rec["pin_stairs"] += 1
+    for i, pn in sorted(anchors, reverse=True):    # R8 ports on trunk points: BTerm right after that point
+        L.insert(i + 1, f"$e addBTerm [BT {pn}]")
     L.append("$e end")
 
 
@@ -790,8 +817,17 @@ def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock")
     if rcx_rules != "stock":
         rules_text = Path(rcx_rules).read_text()
         (d / "rcx_ndr.rules").write_text(rules_text)
-    (d / "route.tcl").write_text(ROUTE_TCL.replace("@RCX@", rcx_tcl("stock" if rcx_rules == "stock" else "ndr",
-                                                                    rules_text)))
+    rt = ROUTE_TCL
+    if any(w.get("enc") == "r8" for w in M["fixed_wires"]):
+        # CLOCK-128-R8: OpenRCX rewrites every dbWire (junction/RC ids) and drops the encoder RECT pads, so the drawn
+        # geometry is saved BEFORE extraction (routed.odb = what DRC checks and what ships); the post-RCX db is
+        # routed_rcx.odb (CLOCK-128-R8 e5: w0 52 ops without RECT vs 98 drawn)
+        rt = rt.replace("write_def /out/routed.def\n", "write_def /out/routed.def\nwrite_db /out/routed.odb\n", 1)
+        rt = rt.replace("write_spef /out/rcx.spef\nwrite_db /out/routed.odb\n",
+                        "write_spef /out/rcx.spef\nwrite_db /out/routed_rcx.odb\n", 1)
+        assert rt.count("write_db /out/routed.odb") == 1 and "routed_rcx.odb" in rt
+    (d / "route.tcl").write_text(rt.replace("@RCX@", rcx_tcl("stock" if rcx_rules == "stock" else "ndr",
+                                                             rules_text)))
     (d / "rcx_basis.json").write_text(json.dumps(dict(rules="stock" if rcx_rules == "stock" else str(rcx_rules))))
     (d / "sta.tcl").write_text(STA_TCL)
     (d / "drc.tcl").write_text(DRC_TCL)
