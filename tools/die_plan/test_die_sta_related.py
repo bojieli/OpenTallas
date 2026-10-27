@@ -234,3 +234,34 @@ def test_hold_buffer_model_hb4():
     assert r["all"]["ff_hold_after_ps"] == round(min(-100 + 3 * 44.6, -10 + 44.6, 5.0), 2)
     assert r["all"]["tt_setup_after_ps"] == round(min(300 - 3 * 83.0, 100 - 83.0, 50.0), 2)
     assert r["real_view"]["pairs"] == 1 and r["real_view"]["tt_setup_after_ps"] == round(300 - 249.0, 2)
+
+
+def test_hold_buffer_model_per_endpoint_path():
+    """CLOCK-KV-R19 (NUMBER-CHECK-KV-R18): HB4 sized per endpoint path.  One tap pair, two endpoint paths: a declared
+    budget->budget path (hold -160 -> 4 HB4, setup 400) and a budget->real-core path (hold -50 -> 2 HB4, setup 200).
+    The R18 artefact (4 cells sized from the budget path, charged to the core path setup: 200 - 332 < 0) is gone."""
+    k1, k2 = ("a", "b", "p", "budget", "budget"), ("a", "b", "p", "budget", "core:x")
+    tt = {k1: (400.0, 0, False, False), k2: (200.0, 0, True, False)}
+    ff = {k1: (0, -160.0, False, False), k2: (0, -50.0, True, False)}
+    r = R.hold_buffer_model(tt, ff, bits={("a", "b"): 3})
+    assert r["all"]["setup_neg_pairs_after"] == 0
+    assert r["all"]["tt_setup_after_ps"] == round(min(400 - 4 * 83.0, 200 - 2 * 83.0), 2)
+    assert r["real_view"]["tt_setup_after_ps"] == round(200 - 2 * 83.0, 2)
+    assert r["cells_per_pair_hist"] == {2: 1, 4: 1} and r["pairs_needing_hb"] == 1 and r["paths_needing_hb"] == 2
+    assert r["hb4_cells"] == 4 * 3      # cell-count bound: pair bits at the pair's worst endpoint-path k
+
+
+def test_time_class_records_every_endpoint_path():
+    """time_class rec holds one entry per (launch model, capture model) combo, each with its own setup/hold."""
+    taps = {p: dict(late_ps=100.0, early_ps=100.0, cppr_node="m", slew_ps=20.0) for p in ("a", "b")}
+    reg = dict(clkq_max_wire_ps=50.0, clkq_min_nowire_ps=40.0, setup_ps=10.0, hold_ps=20.0)
+    bud = dict(name="budget", real=False, lat_late=250.0, lat_early=250.0, clkq_max=50.0, clkq_min=40.0, setup=10.0,
+               hold=20.0)
+    core = dict(name="core:x", real=True, lat_late=0.0, lat_early=0.0, clkq_max=330.0, clkq_min=300.0, setup=-260.0,
+                hold=300.0)
+    rec = {}
+    R.time_class([("a", "b", "p")], taps, {"m": 0.0}, reg, 20.0, 833.0, 0.0, 0.0,
+                 views={"a": [bud], "b": [bud, core]}, rec=rec)
+    assert set(rec) == {("a", "b", "p", "budget", "budget"), ("a", "b", "p", "budget", "core:x")}
+    assert rec[("a", "b", "p", "budget", "budget")][1] == 40.0 - 20.0
+    assert rec[("a", "b", "p", "budget", "core:x")][1] == 250.0 + 40.0 - 300.0

@@ -1,0 +1,49 @@
+{
+ "window": [
+  7000.0,
+  6700.0,
+  8300.0,
+  8000.0
+ ],
+ "ring_um": 1000.0,
+ "corner": "FF",
+ "ndr": "4w",
+ "sigma": {
+  "vt_mV": 10.0,
+  "wire_rel": 0.05,
+  "tree_ps_per_stage": 2.0,
+  "tree_wire_rel": 0.03,
+  "tree_wire_share": {
+   "TT": 0.4674,
+   "FF": 0.5415
+  }
+ },
+ "samples": 1,
+ "errors": 0,
+ "deck0": {
+  "sample": 0,
+  "nodes": 1321,
+  "resistors": 1390,
+  "drivers": 187,
+  "drivers_in_window": 28,
+  "taps_in_window": 17,
+  "crossings_in_window": 16,
+  "t0": 3805.572754,
+  "span": 22.91589350000004
+ },
+ "nominal": {
+  "sample": "s000",
+  "taps": {
+   "n": 17,
+   "min": 54.41,
+   "max": 67.55,
+   "skew": 13.14
+  },
+  "crossings": {
+   "n": 16,
+   "min": 55.073,
+   "max": 62.231,
+   "spread": 7.158
+  }
+ }
+}

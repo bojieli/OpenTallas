@@ -28,6 +28,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("plan"); ap.add_argument("entries"); ap.add_argument("out_plan"); ap.add_argument("out_report")
     ap.add_argument("--tol", type=float, default=0.5)
+    ap.add_argument("--phy-landed", action="store_true", help="CLOCK-KV-R19: PHY-domain cores get a kind 'landed' "
+                    "forwarded-clock entry tap on their native PHY clock pin (RULING CLOCK-KV-R18)")
     a = ap.parse_args()
     src = Path(a.plan)
     raw = src.read_bytes()
@@ -62,6 +64,29 @@ def main():
                 cand.append((d, nm, xy))
             near = sorted(c for c in cand if c[0] <= a.tol)
             row = dict(type=tn, inst=h["inst"], module=h["module"], entry_um=e, clock_pins=len(cand))
+            phyp = [p for p in pins if NOT_DIE.search(p.get("name", ""))]
+            if not near and not cand and phyp and a.phy_landed:
+                # CLOCK-KV-R19 (RULING CLOCK-KV-R18): a PHY-domain core is NOT a die-clock sink.  Its clock entry is a
+                # LANDED crossing with a forwarded clock: the plan tap sits on the native PHY clock pin, kind 'landed',
+                # clock_domain = that pin; the die clock tree does not tap it (die_clock.plan_taps reads kind 'core'
+                # only) and the data crossing into the die clock is the landed CDC (qkd_hr_cdc_*).
+                if len(phyp) != 1:
+                    raise SystemExit(f"{h['inst']}: {len(phyp)} PHY clock pins, expected exactly one")
+                p0 = phyp[0]
+                xy = p0.get("xy") or [p0.get("x"), p0.get("y")]
+                ox, oy = h["origin_um"]
+                tx, ty = (h.get("track_offset_um") or [0.0, 0.0])
+                o = h.get("orient", "R0")
+                x, y = {"R0": (xy[0], xy[1]), "MX": (xy[0], hh - xy[1]), "MY": (w - xy[0], xy[1]),
+                        "R180": (w - xy[0], hh - xy[1])}[o]
+                new.append(dict(name=f"{h['inst']}.{p0['name']}", kind="landed", clock_domain=p0["name"],
+                                forwarded=True, xy=[round(ox + tx + x, 4), round(oy + ty + y, 4)],
+                                budget_owner=h["module"],
+                                note="CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; "
+                                     "not a die-clock sink (no die tap, no die latency)"))
+                rep.setdefault("landed", []).append(dict(row, pin=p0["name"], reason="PHY domain: landed crossing, "
+                                                         "forwarded clock"))
+                continue
             if not near:
                 phy = [p.get("name") for p in pins if NOT_DIE.search(p.get("name", ""))]
                 row["reason"] = ("PHY clock domain only (" + ",".join(phy[:2]) + "), no die clock pin" if phy and not cand
@@ -90,8 +115,8 @@ def main():
     out = json.dumps(P, indent=1)
     Path(a.out_plan).write_text(out)
     rep["out_plan_sha256"] = hashlib.sha256(out.encode()).hexdigest()
-    rep["summary"] = dict(cores=len(rep["tapped"]) + len(rep["untapped"]), tapped=len(rep["tapped"]),
-                          untapped=len(rep["untapped"]))
+    rep["summary"] = dict(cores=len(rep["tapped"]) + len(rep["untapped"]) + len(rep.get("landed", [])),
+                          tapped=len(rep["tapped"]), landed=len(rep.get("landed", [])), untapped=len(rep["untapped"]))
     Path(a.out_report).write_text(json.dumps(rep, indent=1))
     print(json.dumps(rep["summary"]), rep["out_plan_sha256"][:8])
 

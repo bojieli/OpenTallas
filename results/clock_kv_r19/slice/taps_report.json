@@ -1,0 +1,8773 @@
+{
+ "lane": "CLOCK-KV-R18",
+ "plan": "/srv/opentallas-scratch2/claude/kv-core-slice-1-1027/out/pd_slice/hm_r12.json",
+ "plan_sha256": "1814a2d8105739d949c5a203b68723f2967af0b0909125174ac64de55ba9e634",
+ "tol_um": 0.5,
+ "rule": "CLOCK-KV-R18 task 4: partition clock trees END at the KV core slice entries (12.8a, plan 1814a2d8, KV-CORE-SLICE-1).\n\nFor every hard core of every partition type, the partition tree gets one leaf tap (plan clock.taps[], kind 'core',\nname '<inst>.<pin>') placed exactly on the core's NATIVE clock pin, which must be the single die-clock pin of the core\nview within --tol of the slice entry (entries.json; absent -> core centre on the 4.32 lattice, master_plan.core_entry).\nNo pin is invented and no entry is moved: a core whose view has no such pin (head eighths: per-tile face clk pins, out\nof the slice; PHY cores: ck_phy domain, not the die clock) gets NO tap and is listed with the reason, so master_plan\nclock_entry still FAILs it honestly.  clock.core_taps is NOT set to 'early', so the die clock taps (die_clock.plan_taps)\nare unchanged: no die routing change.  insertion_ps = the plan common core latency (12.3 250 TT), no early offset.\nusage: slice_core_taps.py PLAN.json ENTRIES.json OUT_PLAN.json OUT_REPORT.json [--tol 0.5]",
+ "tapped": [
+  {
+   "type": "kv3_hg",
+   "inst": "ectl_q0",
+   "module": "qkd_ectlk_q0",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "ectl_q1",
+   "module": "qkd_ectlk_q1",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "ectl_q2",
+   "module": "qkd_ectlk_q2",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "ectl_q3",
+   "module": "qkd_ectlk_q3",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "ectl_q0",
+   "module": "qkd_ectlk_q0",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "ectl_q1",
+   "module": "qkd_ectlk_q1",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "ectl_q2",
+   "module": "qkd_ectlk_q2",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "ectl_q3",
+   "module": "qkd_ectlk_q3",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_C",
+   "inst": "ahub",
+   "module": "qkd_ahub",
+   "entry_um": [
+    302.4,
+    220.32
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_C",
+   "inst": "kvs_ctl",
+   "module": "qkd_kvs_ctl",
+   "entry_um": [
+    185.76,
+    185.76
+   ],
+   "clock_pins": 1,
+   "pin": "ck",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "inst": "astk_EN",
+   "module": "kv3_astk",
+   "entry_um": [
+    95.04,
+    90.72
+   ],
+   "clock_pins": 1,
+   "pin": "ck[None]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "inst": "astk_ES",
+   "module": "kv3_astk",
+   "entry_um": [
+    95.04,
+    90.72
+   ],
+   "clock_pins": 1,
+   "pin": "ck[None]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_ingest_eng",
+   "module": "qkd_hr_ingest_eng",
+   "entry_um": [
+    181.44,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_order",
+   "module": "qkd_hr_core_order",
+   "entry_um": [
+    164.16,
+    164.16
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_cdc_ch",
+   "module": "qkd_hr_cdc_ch",
+   "entry_um": [
+    159.84,
+    159.84
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_cdc_pc",
+   "module": "qkd_hr_cdc_pc",
+   "entry_um": [
+    159.84,
+    159.84
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "entry_um": [
+    155.52,
+    155.52
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_tx",
+   "module": "qkd_hr_core_tx",
+   "entry_um": [
+    138.24,
+    133.92
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_rx",
+   "module": "qkd_hr_core_rx",
+   "entry_um": [
+    129.6,
+    129.6
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "entry_um": [
+    129.6,
+    125.28
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_queue",
+   "module": "qkd_hr_core_queue",
+   "entry_um": [
+    120.96,
+    120.96
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_prompt",
+   "module": "qkd_hr_core_prompt",
+   "entry_um": [
+    116.64,
+    116.64
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_cdc_hi",
+   "module": "qkd_hr_cdc_hi",
+   "entry_um": [
+    112.32,
+    112.32
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_cdc_ci",
+   "module": "qkd_hr_cdc_ci",
+   "entry_um": [
+    112.32,
+    108.0
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_host_qm",
+   "module": "qkd_hr_host_qm",
+   "entry_um": [
+    38.88,
+    38.88
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "inst": "astk_WN",
+   "module": "kv3_astk",
+   "entry_um": [
+    95.04,
+    90.72
+   ],
+   "clock_pins": 1,
+   "pin": "ck[None]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "inst": "astk_WS",
+   "module": "kv3_astk",
+   "entry_um": [
+    95.04,
+    90.72
+   ],
+   "clock_pins": 1,
+   "pin": "ck[None]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc",
+   "inst": "kvpc0",
+   "module": "qkd_kvs_pc_h_head_p",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc",
+   "inst": "kvpc1",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc",
+   "inst": "kvpc2",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc",
+   "inst": "kvpc3",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc_v3",
+   "inst": "kvpc0",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc_v3",
+   "inst": "kvpc1",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc_v3",
+   "inst": "kvpc2",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc_v3",
+   "inst": "kvpc3",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "ectl_q0",
+   "module": "qkd_ectlk_q0",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "ectl_q1",
+   "module": "qkd_ectlk_q1",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "ectl_q2",
+   "module": "qkd_ectlk_q2",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "ectl_q3",
+   "module": "qkd_ectlk_q3",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc_v1",
+   "inst": "kvpc0",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc_v1",
+   "inst": "kvpc1",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc_v1",
+   "inst": "kvpc2",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pc_v1",
+   "inst": "kvpc3",
+   "module": "qkd_kvs_pc",
+   "entry_um": [
+    198.72,
+    181.44
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg0_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg0_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg0_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg0_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pv__u_g0_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg1_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg1_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg1_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg1_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pv__u_g1_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg2_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg2_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg2_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg2_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pv__u_g2_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg3_p0",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg3_p1",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg3_p2",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pvg3_p3",
+   "module": "kv3_pv_pair",
+   "entry_um": [
+    190.08,
+    95.04
+   ],
+   "clock_pins": 2,
+   "pin": "s0__clk[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": [
+    "s1__clk[0]"
+   ]
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "inst": "pv__u_g3_j",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "entry_um": [
+    86.4,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "clk",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "ectl_q0",
+   "module": "qkd_ectlk_q0",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "ectl_q1",
+   "module": "qkd_ectlk_q1",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "ectl_q2",
+   "module": "qkd_ectlk_q2",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "ectl_q3",
+   "module": "qkd_ectlk_q3",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "ectl_q0",
+   "module": "qkd_ectlk_q0",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "ectl_q1",
+   "module": "qkd_ectlk_q1",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "ectl_q2",
+   "module": "qkd_ectlk_q2",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "ectl_q3",
+   "module": "qkd_ectlk_q3",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "ectl_q0",
+   "module": "qkd_ectlk_q0",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "ectl_q1",
+   "module": "qkd_ectlk_q1",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "ectl_q2",
+   "module": "qkd_ectlk_q2",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "ectl_q3",
+   "module": "qkd_ectlk_q3",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "ectl_q0",
+   "module": "qkd_ectlk_q0",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "ectl_q1",
+   "module": "qkd_ectlk_q1",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "ectl_q2",
+   "module": "qkd_ectlk_q2",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "ectl_q3",
+   "module": "qkd_ectlk_q3",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "ectl_q0",
+   "module": "qkd_ectlk_q0",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "ectl_q1",
+   "module": "qkd_ectlk_q1",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "ectl_q2",
+   "module": "qkd_ectlk_q2",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "ectl_q3",
+   "module": "qkd_ectlk_q3",
+   "entry_um": [
+    108.0,
+    86.4
+   ],
+   "clock_pins": 1,
+   "pin": "ck[0]",
+   "pin_to_entry_um": 0.024,
+   "extra_pins": []
+  }
+ ],
+ "untapped": [
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head0_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head0_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head0_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head0_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head0_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head0_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head0_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head1_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head1_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head1_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head1_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head1_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head1_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head1_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head0_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head0_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head0_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head0_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head0_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head0_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head0_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head1_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head1_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head1_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head1_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head1_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head1_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head1_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head0_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head0_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head0_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head0_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head0_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head0_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head0_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head1_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head1_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head1_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head1_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head1_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head1_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head1_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head0_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head0_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head0_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head0_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head0_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head0_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head0_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head1_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head1_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head1_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head1_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head1_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head1_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head1_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head0_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head0_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head0_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head0_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head0_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head0_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head0_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head1_e0",
+   "module": "kv3_head_eighth_e0",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 8,
+   "reason": "no die clock pin within 0.5 um of the slice entry (8 clock pins, nearest 130.87 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head1_e1",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head1_e2",
+   "module": "kv3_head_eighth_e2",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 206.28 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head1_e3",
+   "module": "kv3_head_eighth_e1",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 118.49 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head1_e4",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head1_e6",
+   "module": "kv3_head_eighth_e6",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 7,
+   "reason": "no die clock pin within 0.5 um of the slice entry (7 clock pins, nearest 195.29 um)"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head1_e7",
+   "module": "kv3_head_eighth_e5",
+   "entry_um": [
+    108.0,
+    108.0
+   ],
+   "clock_pins": 6,
+   "reason": "no die clock pin within 0.5 um of the slice entry (6 clock pins, nearest 109.27 um)"
+  }
+ ],
+ "types": {
+  "kv3_hg": {
+   "cores": 20,
+   "taps": 4
+  },
+  "kv3_hg_v3": {
+   "cores": 20,
+   "taps": 4
+  },
+  "kv3_hgi": {
+   "cores": 16,
+   "taps": 0
+  },
+  "kv3_hgi_v1": {
+   "cores": 16,
+   "taps": 0
+  },
+  "kv3_hgi_v2": {
+   "cores": 16,
+   "taps": 0
+  },
+  "kv3_hgi_v3": {
+   "cores": 16,
+   "taps": 0
+  },
+  "kv3_hgi_v4": {
+   "cores": 16,
+   "taps": 0
+  },
+  "kv3_hgi_v5": {
+   "cores": 16,
+   "taps": 0
+  },
+  "kv3_hgi_v6": {
+   "cores": 16,
+   "taps": 0
+  },
+  "kv3_hgi_v7": {
+   "cores": 16,
+   "taps": 0
+  },
+  "kv3_hgi_v8": {
+   "cores": 16,
+   "taps": 0
+  },
+  "kv3_hub_C": {
+   "cores": 2,
+   "taps": 2
+  },
+  "kv3_hub_Eo": {
+   "cores": 2,
+   "taps": 2
+  },
+  "kv3_hub_Wi": {
+   "cores": 22,
+   "taps": 22
+  },
+  "kv3_hub_Wo": {
+   "cores": 2,
+   "taps": 2
+  },
+  "kv3_pc": {
+   "cores": 4,
+   "taps": 4
+  },
+  "kv3_pc_v3": {
+   "cores": 4,
+   "taps": 4
+  },
+  "kv3_pv": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v2": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v4": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v6": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v7": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v8": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v12": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_hg_v1": {
+   "cores": 20,
+   "taps": 4
+  },
+  "kv3_pc_v1": {
+   "cores": 4,
+   "taps": 4
+  },
+  "kv3_pv_v1": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v3": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v5": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v1n": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v2n": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v3n": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v4n": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v5n": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_pv_v6n": {
+   "cores": 20,
+   "taps": 20
+  },
+  "kv3_hg_v1p2": {
+   "cores": 20,
+   "taps": 4
+  },
+  "kv3_hg_v1p3": {
+   "cores": 20,
+   "taps": 4
+  },
+  "kv3_hg_v1p4": {
+   "cores": 20,
+   "taps": 4
+  },
+  "kv3_hg_v1p5": {
+   "cores": 20,
+   "taps": 4
+  },
+  "kv3_hg_v1p6": {
+   "cores": 20,
+   "taps": 4
+  }
+ },
+ "landed": [
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_pad",
+   "module": "qkd_hr_phy_pad",
+   "entry_um": [
+    43.2,
+    47.52
+   ],
+   "clock_pins": 0,
+   "pin": "ck_phy[0]",
+   "reason": "PHY domain: landed crossing, forwarded clock"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_0",
+   "module": "qkd_hr_phy_adp",
+   "entry_um": [
+    51.84,
+    47.52
+   ],
+   "clock_pins": 0,
+   "pin": "ck_phy[0]",
+   "reason": "PHY domain: landed crossing, forwarded clock"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_1",
+   "module": "qkd_hr_phy_adp",
+   "entry_um": [
+    51.84,
+    47.52
+   ],
+   "clock_pins": 0,
+   "pin": "ck_phy[0]",
+   "reason": "PHY domain: landed crossing, forwarded clock"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_2",
+   "module": "qkd_hr_phy_adp",
+   "entry_um": [
+    51.84,
+    47.52
+   ],
+   "clock_pins": 0,
+   "pin": "ck_phy[0]",
+   "reason": "PHY domain: landed crossing, forwarded clock"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_3",
+   "module": "qkd_hr_phy_adp",
+   "entry_um": [
+    51.84,
+    47.52
+   ],
+   "clock_pins": 0,
+   "pin": "ck_phy[0]",
+   "reason": "PHY domain: landed crossing, forwarded clock"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_4",
+   "module": "qkd_hr_phy_adp",
+   "entry_um": [
+    51.84,
+    47.52
+   ],
+   "clock_pins": 0,
+   "pin": "ck_phy[0]",
+   "reason": "PHY domain: landed crossing, forwarded clock"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_5",
+   "module": "qkd_hr_phy_adp",
+   "entry_um": [
+    51.84,
+    47.52
+   ],
+   "clock_pins": 0,
+   "pin": "ck_phy[0]",
+   "reason": "PHY domain: landed crossing, forwarded clock"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_6",
+   "module": "qkd_hr_phy_adp",
+   "entry_um": [
+    51.84,
+    47.52
+   ],
+   "clock_pins": 0,
+   "pin": "ck_phy[0]",
+   "reason": "PHY domain: landed crossing, forwarded clock"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_7",
+   "module": "qkd_hr_phy_adp",
+   "entry_um": [
+    51.84,
+    47.52
+   ],
+   "clock_pins": 0,
+   "pin": "ck_phy[0]",
+   "reason": "PHY domain: landed crossing, forwarded clock"
+  }
+ ],
+ "out_plan_sha256": "c76f9cf1180e3fc479a01ff7c78b8009caf567103fe661261c15a809e7e3cfe3",
+ "summary": {
+  "cores": 664,
+  "tapped": 383,
+  "landed": 9,
+  "untapped": 272
+ }
+}

@@ -320,10 +320,16 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
             s, h = s - ps_, h - ph_
             ocv_max["setup"], ocv_max["hold"] = max(ocv_max["setup"], ps_), max(ocv_max["hold"], ph_)
         if rec is not None:
-            rec[(a, b, tag)] = (s, h, views is not None and (any(m["real"] for m in views[a]) or
-                                                             any(m["real"] for m in views[b])),
-                                views is not None and any(m["real"] for m in views[a]) and
-                                any(m["real"] for m in views[b]))
+            if views is None:
+                rec[(a, b, tag, "budget", "budget")] = (s, h, False, False)
+            else:
+                # CLOCK-KV-R19 (NUMBER-CHECK-KV-R18): one record PER ENDPOINT PATH (launch model x capture model).  HB4
+                # cells sit on one capture register's data input and are sized from THAT path's hold; R18 keyed per tap
+                # pair, sized k from the worst endpoint (declared budget->budget) and charged it to another endpoint's
+                # (real core) setup -> 121 artefact negatives.
+                po_s, po_h = (ocv(a, b, "setup"), ocv(a, b, "hold")) if ocv is not None else (0.0, 0.0)
+                for c_ in combos:
+                    rec[(a, b, tag, c_[3], c_[4])] = (c_[0] - po_s, c_[1] - po_h, c_[2], c_[5])
         nneg_s += s < 0
         nneg_h += h < 0
         sk = max(sk, dmg_s, dmg_h)
@@ -448,8 +454,10 @@ HB4 = dict(cell="HB4xp67_ASAP7_75t_R", ff_early_ps=44.6, tt_late_ps=83.0, area_u
 
 
 def hold_buffer_model(tt, ff, bits=None, hb=HB4):
-    """per pair k = ceil(-FF hold / ff_early) HB4 cells on the capture data input (0 when hold >= 0); after insertion
-    FF hold += k ff_early, TT setup -= k tt_late.  tt/ff: {(a, b, tag): (setup, hold, real, both_real)} of ONE class at
+    """per ENDPOINT PATH k = ceil(-FF hold / ff_early) HB4 cells on the capture data input (0 when hold >= 0); after
+    insertion FF hold += k ff_early, TT setup -= k tt_late, both of THAT path (CLOCK-KV-R19, NUMBER-CHECK-KV-R18: keys
+    (a, b, tag, launch_model, capture_model); never size k from one endpoint and charge it to another).
+    tt/ff: {key: (setup, hold, real, both_real)} of ONE class at
     TT / FF (gate form: every endpoint model, clock OCV, mesh U).  bits: optional {(a, b): bit count} (nearest-tap
     seam bits, DC.seam_pairs) for the cell count; pairs absent from it count per pair-bit (k cells).  Returns the
     record for all / real-endpoint / both-real subsets plus the k histogram and the cell / area count."""
@@ -477,26 +485,31 @@ def hold_buffer_model(tt, ff, bits=None, hb=HB4):
             return dict(pairs=0)
         return dict(pairs=n, tt_setup_after_ps=round(ws[0], 2), setup_neg_pairs_after=int(neg_s),
                     worst_setup_after=dict(launch=ws[1][0], capture=ws[1][1], where=ws[1][2], hb4_cells=ws[2],
-                                           setup_before_ps=round(ws[3], 2)),
+                                           setup_before_ps=round(ws[3], 2),
+                                           endpoint=list(ws[1][3:5]) if len(ws[1]) > 3 else None),
                     ff_hold_after_ps=round(wh[0], 2), hold_neg_pairs_after=int(neg_h),
                     setup_neg_after=[dict(zip(("tt_setup_after", "launch", "capture", "where", "hb4_cells",
                                                "tt_setup_before", "ff_hold_before"), r_)) for r_ in sorted(negs)])
     keys = [k for k in ff if k in tt]
     hist, cells, cbits, fbits, seen = defaultdict(int), 0, 0, 0, set()
+    kpair = defaultdict(int)
     for key in keys:
         h_ = ff[key][1]
         k = max(0, _m.ceil(-h_ / hb["ff_early_ps"] - 1e-9)) if h_ < 0 else 0
         hist[k] += 1
-        if bits is not None and (key[0], key[1]) not in seen:
-            seen.add((key[0], key[1]))       # a tap pair's bits once (INFO keys repeat it per port id)
-            nb = bits.get((key[0], key[1]), 0)
+        kpair[(key[0], key[1])] = max(kpair[(key[0], key[1])], k)
+    for pk, k in kpair.items():
+        if bits is not None and pk not in seen:
+            seen.add(pk)       # a tap pair's bits once (INFO keys repeat it per port id / endpoint path)
+            nb = bits.get(pk, 0)
             cbits += nb
-            if k:
+            if k:              # cell-count bound: every bit of the pair at the pair's worst endpoint-path k
                 fbits += nb
                 cells += k * nb
     out = dict(model=hb, all=blk(keys), real_view=blk([k for k in keys if ff[k][2]]),
                both_real=blk([k for k in keys if ff[k][3]]), cells_per_pair_hist=dict(sorted(hist.items())),
-               pairs_needing_hb=sum(v for k, v in hist.items() if k))
+               pairs_needing_hb=sum(1 for k in kpair.values() if k), endpoint_paths=len(keys),
+               paths_needing_hb=sum(v for k, v in hist.items() if k))
     if bits is not None:
         out.update(bits_counted=cbits, bits_needing_hb=fbits, hb4_cells=cells,
                    hb4_area_um2=round(cells * hb["area_um2"], 1), hb4_area_mm2=round(cells * hb["area_um2"] / 1e6, 4),

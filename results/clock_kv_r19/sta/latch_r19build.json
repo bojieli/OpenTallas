@@ -1,0 +1,39 @@
+{
+ "model": {
+  "period_ps": 833.333,
+  "latch_ckq_ps": 60.0,
+  "form": "neg-level lockup latch, release at falling edge"
+ },
+ "intra": {
+  "paths": 42410,
+  "tt_setup_after_ps": -110.44,
+  "setup_neg_after": 6914,
+  "worst_setup": [
+   "t_hg_ES_5__clk_t9",
+   "t_hg_ES_5__clk_t3",
+   "hg_ES_5",
+   "core:kv3_head_eighth_e5",
+   "core:kv3_head_eighth_e1"
+  ],
+  "ff_hold_after_ps": 241.9,
+  "hold_neg_after": 0,
+  "real_setup_neg_after": 6908,
+  "setup_before_min_ps": 366.22
+ },
+ "seam": {
+  "paths": 152624,
+  "tt_setup_after_ps": -183.79,
+  "setup_neg_after": 26740,
+  "worst_setup": [
+   "t_hub_Eo__clk_t2",
+   "t_hg_EN_7__clk_t3",
+   "hub_Eo->hg_EN_7",
+   "budget",
+   "core:kv3_head_eighth_e1"
+  ],
+  "ff_hold_after_ps": 215.76,
+  "hold_neg_after": 0,
+  "real_setup_neg_after": 26189,
+  "setup_before_min_ps": 292.87
+ }
+}

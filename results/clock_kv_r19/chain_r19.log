@@ -1,0 +1,20 @@
+start 2026-10-27T02:54:38-07:00 host key-cardinal
+shield ties {"vss_tied": true, "tie_net": "VSS", "shield_stripes": 34062, "stripes_with_grid_via": 34062, "grid_vias": 237891, "stripes_grid_contact": 1926, "shield_shield_vias": 92622, "untied_stripes": 0, "pg_shorts": 0, "pg_short_nets": [], "tie_method": "VIA89 at every shield x die-VSS-stripe crossing + every M8 x M9 shield crossing; tied = shield component holds >= 1 grid via (die_clock_128.shield_ties)"} metal shorts 0 spacing 0 {} {}
+combo written /srv/opentallas-scratch2/claude/clock-kv-r19-1027/r19/combo.tcl clock nets 4372
+/srv/opentallas-scratch2/claude/clock-kv-r19-1027/r19/combo_TT.log:EXIT 0
+---------------------------------------------------------------------------------------
+Total        680412407       25580976            3.76%             0 /  0 /  0
+
+2
+{"nets": 4372, "nets_with_drivers": 4372, "nets_disconnected": 0, "unreachable_pins": 0}
+tree_TT_rcx.txt L1:0.6 L2:9.7 L3:16.2 L4:18.9 L5:26.9 L6:25.7 L7:27.5 L8:27.2 L9:55.5 L10:30.2 L99:33.2
+tree_FF_rcx.txt L1:1.2 L2:8.4 L3:14.8 L4:17.1 L5:23.2 L6:23.0 L7:24.1 L8:23.9 L9:50.0 L10:28.3 L99:30.1
+{"corner": "TT", "R_drv_kohm": 0.2998, "cin_ff": 2.34978, "nodes": 23008, "mesh_cap_pF": 186.54, "stub_in_late_ps": [4679.27, 4716.15], "stub_in_slew_max_ps": 104.92}
+stub sta tcl r19/stubs_TT.tcl cells 1926 nets 1926
+stub nets 1926 of 1926
+taps 1920 slew>120 0 max 92.098671
+{"corner": "FF", "R_drv_kohm": 0.2294, "cin_ff": 2.60735, "nodes": 23008, "mesh_cap_pF": 186.62, "stub_in_late_ps": [3860.03, 3893.26], "stub_in_slew_max_ps": 90.07}
+stub sta tcl r19/stubs_FF.tcl cells 1926 nets 1926
+stub nets 1926 of 1926
+taps 1920 slew>120 0 max 68.483025
+CHAIN_DONE 2026-10-27T03:01:21-07:00

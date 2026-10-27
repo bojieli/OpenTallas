@@ -1296,8 +1296,16 @@
            "enum": [
             "core",
             "glue",
-            "leaf"
+            "leaf",
+            "landed"
            ]
+          },
+          "clock_domain": {
+           "type": "string",
+           "minLength": 1
+          },
+          "forwarded": {
+           "type": "boolean"
           },
           "orient": {
            "enum": [

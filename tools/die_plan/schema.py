@@ -418,7 +418,11 @@ SCHEMA = {
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {
                             "type": "object", "required": ["name", "xy"], "additionalProperties": False,
-                            "properties": {"name": _name, "xy": _xy, "kind": {"enum": ["core", "glue", "leaf"]},
+                            "properties": {"name": _name, "xy": _xy, "kind": {"enum": ["core", "glue", "leaf", "landed"]},
+                                           # CLOCK-KV-R19: kind landed = PHY-domain core entry, forwarded clock on
+                                           # the native non-die clock pin (clock_domain); never a die-clock tap
+                                           "clock_domain": {"type": "string", "minLength": 1},
+                                           "forwarded": {"type": "boolean"},
                                            "orient": {"enum": list(ORIENTS)}, "insertion_ps": _pos,
                                            # CORELAT 10-25: the core's FF insertion (SIGNED FF pin-register mean,
                                            # or the FF budget); absent -> FF_TT_INSERTION_RATIO x insertion_ps
