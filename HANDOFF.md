@@ -1469,3 +1469,5 @@ CODEX: 2026-10-27 10:16 PDT sharedflowPARK explicitreset; finalpacket handoff/co
 - 2026-10-27 12:47 PDT QC-KITS-R1 PARKED: 0 kits (all QC types in R28 event); face_guard fix READY claude/qc-kits-r1-1027@f73174ec4b; plan-fix items 1-8 in lanes/INFRA-FIRST-QC.md; coll_ft pre-kit LEC EQUIVALENT 8946/8946.
 
 CODEX: ROOT-MERGE60/61 main d6cea9e2d0 == origin/main; approved KV partition/QC closure fixes + urgent HBM tree13 revert pushed, legacy lint block retained; ownWT clean, continuing until explicit reset.
+
+CODEX: 2026-10-27 14:00 PDT takeover1351ALLlanesactive; mainRM60+RM61d6cea9e2d0 includesKVslice/QCnode+romleaf+macrofix andurgentHBMtree13restoreafter1056LECdiff. HEADplan/PGcombinedeventapprovedintegration, clockrowlegsFAILheld. HEAD264hierelabPASS305s/13.7GB, runtimeimagesmissing; B48nominalLIVE/dcalfaultdiagnosedTOK. QCcanonicalLIGHT32.902aboveM7, cut/belowstackstillowed. Continueuntilexplicitreset.
