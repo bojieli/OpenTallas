@@ -8,3 +8,8 @@
 
 ## CODEX notes 2026-10-26 20:03 PDT
 CODEX collected taller fixed-bound MU probes: H4320 NW x0.567/y0.433 segment max0.577; NE x0.410/y0.480 segment max0.590, both pack PASS MODEL. H4665.6/5184 also MODEL PASS; 4043.52 output not finished at20:03. This supersedes interim claim no tested height closes; R13 multicast not included and area/timing remain inferred. No MU scope decision made.
+
+## CODEX notes 2026-10-26 20:16 PDT -- SU versus MU priority
+Continuing Claude HBM-MU-SIZE source (epyc1 hbm-mu-size-1026/mu_probe.py). Original H4320/4665.6/5184 results pass the old direction-blind cut model; they add only8FUSED lanes/hub (16total). ROOT found actual fork FUSED top32eight-word lanes forD5120/NM20, so old16laneprobe does NOT establish full production coverage or unchanged81/103II. Retain all original results as diagnostic only.
+Successors use SAME Claude unit additions plus currentR13direction/multicast+face-affine+1affinity (currentSUplanS2 model). Own pinned snapshots epyc1:/srv/opentallas-scratch2/claude/codex-hbm-2001/mu_r13 (original8FUSED/hub), mu32_r13 (16/hub,32total). Eight ot-run8GB1thread probes live: mu_r13 H4043NW447893/NE447905 H4320NW447902/NE447895 (all unit suffix1793070637); mu32_r13 H4320NW1201725/NE1201563 H4665.6NW1202180/NE1202139 (suffix1793070831). Collect h<height>_<nw|ne>.otrun.log eventualJSON. No place/route.
+Source+collected historical results pushed codex/hbm-2001@57852818b. CurrentplanS2 hub-loss0.89/0.60/4.19percent is CONDITIONAL incrementalhublatency only: t_banks baseline alreadybankk4serialized while schedule r25gq nevercharged it; bandwidth duty notmeasured. TOK-HBM owns completepriceaudit. ROOT owns workload/lane/area comparison; actualMUcontroller/top area andfullprogramme proofs remainopen.

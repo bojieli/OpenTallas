@@ -1198,3 +1198,5 @@ CODEX: 2026-10-26 20:07 PDT token takeover B33run7BOOTPASS14/14 setup37950; B48z
 CODEX: 2026-10-26 20:12 PDT TOK-DS ROWX payload compiler READY4b08bbdc9 (17PASS); diagnosed pvrd160word wrap requires streaming XR evacuation before overwrite; actualdie-link programme stillGAP. L14 inherited build terminal94/95libs,no binary; no duplicate.
 
 CODEX: 2026-10-26 20:12 PDT S81/HEAD all physical lanes claimed; HEAD elemB r7 pin+density geometry trial via ot-run client326565 (placement-only); PD2 directedPHY/2x2svc+ROWX delta active; inherited R10 std/NDR trials progressing.
+
+2026-10-26 20:16 PDT CODEX: HBM MU continuation now8R13multicast probes (16/32FUSEDtotal, H4043/4320/4665) live; old16laneMUcoverage invalid forD5120 unlessproven2pass. Urgent sharedLEFaliasc222f3d2b +hubclockretarget09bd4a632 ready. Source/results57852818b.
